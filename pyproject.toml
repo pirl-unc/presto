@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "presto"
+dynamic = ["version"]
+description = "PRESTO — Unified immunoinformatics for MHC presentation and TCR recognition."
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+  "torch>=2.1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.0",
+  "ruff>=0.3.0",
+  "mkdocs>=1.5.0",
+]
+
+[project.scripts]
+presto = "presto.cli.main:main"
+
+[tool.setuptools]
+packages = [
+  "presto",
+  "presto.cli",
+  "presto.data",
+  "presto.inference",
+  "presto.models",
+  "presto.training",
+  "presto.scripts",
+]
+package-dir = { "presto" = "." }
+
+[tool.setuptools.dynamic]
+version = {attr = "presto.__version__"}
