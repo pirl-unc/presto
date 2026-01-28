@@ -24,3 +24,9 @@ python -m presto predict presentation --checkpoint presto.pt --peptide SIINFEKL 
 ./lint.sh
 ./test.sh
 ```
+
+If you use `uv`, you can also run:
+
+```bash
+uv run presto --help
+```
