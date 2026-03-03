@@ -1,9 +1,12 @@
-site_name: PRESTO
+site_name: Presto
 site_description: Unified immunoinformatics for MHC presentation and TCR recognition
 theme:
   name: readthedocs
 nav:
   - Home: index.md
+  - Design: design.md
+  - Training Spec: training_spec.md
+  - TCR Spec: tcr_spec.md
   - CLI: cli.md
-  - Architecture: architecture.md
-  - Curriculum: curriculum.md
+  - Notes:
+      - Ablation Backlog: notes/ablation_backlog.md
