@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from ..scripts import train_curriculum, train_synthetic
+from ..scripts import train_iedb, train_synthetic
 
 
 def cmd_train_synthetic(args: Any) -> int:
@@ -11,7 +11,12 @@ def cmd_train_synthetic(args: Any) -> int:
     return 0
 
 
-def cmd_train_curriculum(args: Any) -> int:
-    """Run curriculum training (synthetic curriculum demo)."""
-    train_curriculum.run(args)
+def cmd_train_unified(args: Any) -> int:
+    """Run unified multi-source training."""
+    train_iedb.run(args)
     return 0
+
+
+def cmd_train_iedb(args: Any) -> int:
+    """Backward-compatible alias for unified multi-source training."""
+    return cmd_train_unified(args)

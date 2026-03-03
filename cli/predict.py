@@ -6,20 +6,37 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from ..data import AlleleResolver
+from ..data.mhc_index import load_mhc_index
 from ..inference.predictor import Predictor
 
 
 def _load_allele_sequences(
     imgt_fasta: Optional[str],
     ipd_mhc_dir: Optional[str],
+    index_csv: Optional[str] = None,
 ) -> Dict[str, str]:
-    if not imgt_fasta and not ipd_mhc_dir:
-        return {}
+    sequences: Dict[str, str] = {}
 
-    resolver = AlleleResolver(imgt_fasta=imgt_fasta, ipd_mhc_dir=ipd_mhc_dir)
-    sequences: Dict[str, str] = {name: record.sequence for name, record in resolver.records.items()}
-    for alias, canonical in resolver._aliases.items():
-        sequences[alias] = resolver.records[canonical].sequence
+    if imgt_fasta or ipd_mhc_dir:
+        resolver = AlleleResolver(imgt_fasta=imgt_fasta, ipd_mhc_dir=ipd_mhc_dir)
+        sequences.update({name: record.sequence for name, record in resolver.records.items()})
+        for alias, canonical in resolver._aliases.items():
+            sequences[alias] = resolver.records[canonical].sequence
+
+    if index_csv:
+        records = load_mhc_index(index_csv)
+        for record in records.values():
+            for token in {record.normalized, record.allele_raw}:
+                if not token:
+                    continue
+                sequences[token] = record.sequence
+                if ":" in token:
+                    parts = token.split(":")
+                    for i in range(1, len(parts)):
+                        sequences.setdefault(":".join(parts[:i]), record.sequence)
+
+    if not sequences:
+        return {}
     return sequences
 
 
@@ -27,7 +44,11 @@ def _build_predictor(args: Any) -> Predictor:
     if not args.checkpoint:
         raise ValueError("Missing --checkpoint")
 
-    allele_sequences = _load_allele_sequences(args.imgt_fasta, args.ipd_mhc_dir)
+    allele_sequences = _load_allele_sequences(
+        getattr(args, "imgt_fasta", None),
+        getattr(args, "ipd_mhc_dir", None),
+        getattr(args, "index_csv", None),
+    )
     return Predictor.from_checkpoint(
         checkpoint_path=args.checkpoint,
         d_model=args.d_model,
@@ -61,6 +82,7 @@ def cmd_predict_presentation(args: Any) -> int:
         mhc_sequence=args.mhc_sequence,
         mhc_b_sequence=args.mhc_b_sequence,
         mhc_class=args.mhc_class,
+        species=args.species,
         flank_n=args.flank_n,
         flank_c=args.flank_c,
     )
@@ -71,13 +93,57 @@ def cmd_predict_presentation(args: Any) -> int:
 def cmd_predict_recognition(args: Any) -> int:
     """Predict TCR-pMHC recognition and immunogenicity."""
     predictor = _build_predictor(args)
-    result = predictor.predict_recognition(
-        peptide=args.peptide,
+    raise NotImplementedError(
+        "predict recognition is reserved for a future TCR pathway and is "
+        "currently disabled in canonical Presto."
+    )
+
+
+def _read_single_sequence(path: Path) -> str:
+    text = path.read_text(encoding="utf-8").strip()
+    if not text:
+        raise ValueError(f"Protein file is empty: {path}")
+
+    if text.startswith(">"):
+        seq_parts = []
+        for line in text.splitlines():
+            line = line.strip()
+            if not line or line.startswith(">"):
+                continue
+            seq_parts.append(line)
+        sequence = "".join(seq_parts)
+    else:
+        sequence = "".join(line.strip() for line in text.splitlines())
+
+    sequence = sequence.strip()
+    if not sequence:
+        raise ValueError(f"No sequence content found in: {path}")
+    return sequence
+
+
+def cmd_predict_tile(args: Any) -> int:
+    """Tile presentation predictions across all protein subsequences."""
+    if bool(args.protein_sequence) == bool(args.protein_file):
+        raise ValueError("Provide exactly one of --protein-sequence or --protein-file")
+    if args.protein_file:
+        protein_sequence = _read_single_sequence(Path(args.protein_file))
+    else:
+        protein_sequence = args.protein_sequence
+
+    predictor = _build_predictor(args)
+    result = predictor.predict_tiled_presentation(
+        protein_sequence=protein_sequence,
         allele=args.allele,
         mhc_sequence=args.mhc_sequence,
-        tcr_alpha=args.tcr_alpha,
-        tcr_beta=args.tcr_beta,
+        mhc_b_sequence=args.mhc_b_sequence,
         mhc_class=args.mhc_class,
+        species=args.species,
+        min_length=args.min_length,
+        max_length=args.max_length,
+        flank_size=args.flank_size,
+        batch_size=args.batch_size,
+        top_k=args.top_k,
+        sort_by=args.sort_by,
     )
     _emit_output(asdict(result), args)
     return 0

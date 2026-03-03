@@ -3,10 +3,142 @@
 Resolves MHC allele names to sequences using IMGT/HLA and IPD-MHC databases.
 """
 
+import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
+
+from .vocab import MHC_SPECIES_CATEGORIES, N_MHC_SPECIES, normalize_organism
+
+logger = logging.getLogger(__name__)
+
+
+_MHC_CLASS_I_ALIASES = {
+    "I",
+    "IA",
+    "IB",
+    "IC",
+    "CLASSI",
+    "CLASS-I",
+    "MHCI",
+    "MHC-I",
+}
+_MHC_CLASS_II_ALIASES = {
+    "II",
+    "IIA",
+    "IIB",
+    "CLASSII",
+    "CLASS-II",
+    "MHCII",
+    "MHC-II",
+}
+
+# Expanded to 6-class (aligned with MHC_SPECIES_CATEGORIES from vocab.py)
+PROCESSING_SPECIES_BUCKETS = tuple(MHC_SPECIES_CATEGORIES)  # human, nhp, murine, other_mammal, bird, fish
+PROCESSING_SPECIES_TO_IDX = {
+    name: idx for idx, name in enumerate(PROCESSING_SPECIES_BUCKETS)
+}
+
+HUMAN_B2M_SEQUENCE = (
+    "MSRSVALAVLALLSLSGLEAIQRTPKIQVYSRHPAENGKSNFLNCYVSGFHPSDIEVDLLKNGERIEKVEHSDLSFSKDWSFYLLYYTEFTPTEKDEYACRVNHVTLSQPKIVKWDRDM"
+)
+MOUSE_B2M_SEQUENCE = (
+    "MSRSVALAVLALLSLSGLEAIQRTPKIQVYSRHPPENGKSNFLNCYVSGFHPSDIEVDLLKNGERIEKVEHSDLSFSKDWSFYLLSHAEFTPQATDEYACRVNHVTLSQPKIVKWDRDM"
+)
+MACAQUE_B2M_SEQUENCE = HUMAN_B2M_SEQUENCE
+
+
+def normalize_mhc_class(value: Optional[str], default: Optional[str] = None) -> Optional[str]:
+    """Normalize MHC class labels to canonical "I" / "II".
+
+    Accepts aliases such as Ia, Ib, IIa, Class-I, etc.
+    """
+    if value is None:
+        return default
+    normalized = str(value).strip().upper().replace("_", "").replace(" ", "")
+    normalized = normalized.replace("/", "").replace("*", "")
+    if normalized in _MHC_CLASS_I_ALIASES or (
+        normalized.startswith("I") and not normalized.startswith("II")
+    ):
+        return "I"
+    if normalized in _MHC_CLASS_II_ALIASES or normalized.startswith("II"):
+        return "II"
+    return default
+
+
+def normalize_species_label(species: Optional[str]) -> Optional[str]:
+    """Normalize species labels used by MHC/B2M helpers."""
+    if species is None:
+        return None
+    s = str(species).strip().lower()
+    if not s:
+        return None
+    if "murine" in s:
+        return "mouse"
+    if "nhp" in s:
+        return "macaque"
+    if "human" in s or "homo sapiens" in s:
+        return "human"
+    if "rat" in s or "rattus" in s:
+        return "mouse"
+    if "mouse" in s or "mus musculus" in s:
+        return "mouse"
+    if "chimp" in s or "pan troglodytes" in s:
+        return "macaque"
+    if "macaque" in s or "macaca" in s:
+        return "macaque"
+    if s in {"human", "mouse", "macaque", "other"}:
+        return s
+    return "other"
+
+
+def normalize_processing_species_label(
+    species: Optional[str],
+    default: Optional[str] = None,
+) -> Optional[str]:
+    """Normalize species labels to MHC species buckets (6-class).
+
+    Buckets: `human`, `nhp`, `murine`, `other_mammal`, `bird`, `fish`.
+    Non-animal categories (viruses, bacteria, etc.) map to default.
+    """
+    if species is None:
+        return default
+    s = str(species).strip()
+    if not s:
+        return default
+
+    # Delegate to unified normalizer
+    category = normalize_organism(s)
+    if category is None:
+        return default
+
+    # Only animal categories are valid MHC species
+    if category in PROCESSING_SPECIES_TO_IDX:
+        return category
+
+    # Non-animal organism categories → default
+    return default
+
+
+def infer_processing_species_from_allele(allele: Optional[str]) -> Optional[str]:
+    """Infer processing species bucket from allele naming conventions."""
+    if not allele:
+        return None
+    normalized = normalize_processing_species_label(infer_species(str(allele)))
+    return normalized or None
+
+
+def class_i_beta2m_sequence(species: Optional[str]) -> Optional[str]:
+    """Return species-matched beta2m sequence for Class I MHC."""
+    norm = normalize_species_label(species)
+    if norm == "human":
+        return HUMAN_B2M_SEQUENCE
+    if norm == "mouse":
+        return MOUSE_B2M_SEQUENCE
+    if norm == "macaque":
+        return MACAQUE_B2M_SEQUENCE
+    return None
 
 
 @dataclass
@@ -109,19 +241,62 @@ def infer_gene(allele: str) -> str:
     return allele
 
 
-def infer_species(allele: str) -> str:
+def infer_species(allele: str) -> Optional[str]:
     """Infer species from allele name.
 
-    Returns one of: human, mouse, macaque, other.
+    Returns one of the MHC species categories:
+    human, nhp, murine, other_mammal, bird, fish.
+    Returns None when the species cannot be determined from the allele name.
     """
-    allele = allele.upper()
-    if allele.startswith("HLA-"):
+    allele_upper = allele.upper()
+    if allele_upper.startswith("HLA-"):
         return "human"
-    if allele.startswith("H2-"):
-        return "mouse"
-    if allele.startswith("MAMU-"):
-        return "macaque"
-    return "other"
+    if allele_upper.startswith("H2-") or allele_upper.startswith("H-2"):
+        return "murine"
+    # NHP allele prefixes
+    _nhp_prefixes = ("MAMU-", "PAAN-", "AONA-", "PATR-", "GOGO-", "PAPA-")
+    if any(allele_upper.startswith(p) for p in _nhp_prefixes):
+        return "nhp"
+    # Other mammal allele prefixes
+    _mammal_prefixes = ("BOLA-", "SLA-", "DLA-", "ELA-", "OLA-")
+    if any(allele_upper.startswith(p) for p in _mammal_prefixes):
+        return "other_mammal"
+    # Bird allele prefixes
+    if allele_upper.startswith("GAGA-") or allele_upper.startswith("BF-"):
+        return "bird"
+    # Fish — no standard prefix convention, but check common patterns
+    _fish_prefixes = ("ONMY-", "SASA-")
+    if any(allele_upper.startswith(p) for p in _fish_prefixes):
+        return "fish"
+    return None
+
+
+def validate_mhc_species_coverage(mhc_index: Dict[str, str]) -> Dict[str, int]:
+    """Check that all alleles in an MHC index map to a known species.
+
+    Args:
+        mhc_index: Dict mapping allele name → sequence.
+
+    Returns:
+        Dict mapping species category → count of alleles in that category.
+    """
+    from collections import Counter
+    counts: Counter = Counter()
+    unmapped: list = []
+    for allele_name in mhc_index:
+        sp = infer_processing_species_from_allele(allele_name)
+        counts[sp] += 1
+        # Log if we couldn't infer a specific species (fell through to default)
+        if sp == "human" and not allele_name.upper().startswith("HLA-"):
+            unmapped.append(allele_name)
+    if unmapped:
+        logger.warning(
+            "MHC species coverage: %d alleles fell through to default 'human' "
+            "but don't start with HLA-: %s",
+            len(unmapped),
+            unmapped[:10],
+        )
+    return dict(counts)
 
 
 class AlleleResolver:
@@ -151,7 +326,7 @@ class AlleleResolver:
             self.load_ipd_mhc(ipd_mhc_dir)
 
         # Add common beta2m sequence
-        self.beta2m = "MSRSVALAVLALLSLSGLEAIQRTPKIQVYSRHPAENGKSNFLNCYVSGFHPSDIEVDLLKNGERIEKVEHSDLSFSKDWSFYLLYYTEFTPTEKDEYACRVNHVTLSQPKIVKWDRDM"
+        self.beta2m = HUMAN_B2M_SEQUENCE
 
     def load_imgt_fasta(self, path: str) -> int:
         """Load allele sequences from IMGT/HLA FASTA file.

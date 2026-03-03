@@ -5,13 +5,15 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "presto"
 dynamic = ["version"]
-description = "PRESTO — Unified immunoinformatics for MHC presentation and TCR recognition."
+description = "Presto — Unified immunoinformatics for presentation, recognition, and immunogenicity."
 readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
   "torch>=2.1.0",
   "numpy>=1.24.0",
   "pyyaml>=6.0",
+  "mhcgnomes",
+  "tqdm>=4.66.0",
 ]
 
 [project.optional-dependencies]

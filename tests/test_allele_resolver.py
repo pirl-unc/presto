@@ -10,6 +10,8 @@ from presto.data.allele_resolver import (
     normalize_allele_name,
     infer_mhc_class,
     infer_gene,
+    normalize_processing_species_label,
+    infer_processing_species_from_allele,
 )
 
 
@@ -129,6 +131,28 @@ class TestInferGene:
     def test_non_human_prefix_gene(self):
         """Extract gene from non-human prefix alleles."""
         assert infer_gene("Aona-DQA1*27:01") == "DQA1"
+
+
+class TestProcessingSpeciesNormalization:
+    """Tests for coarse processing-species bucket normalization."""
+
+    def test_normalize_processing_species_label(self):
+        assert normalize_processing_species_label("Homo sapiens (human)") == "human"
+        assert normalize_processing_species_label("Mus musculus C57BL/6") == "murine"
+        assert normalize_processing_species_label("Rattus norvegicus") == "murine"
+        assert normalize_processing_species_label("Macaca mulatta (rhesus macaque)") == "nhp"
+        assert normalize_processing_species_label("Pan troglodytes (chimpanzee)") == "nhp"
+        assert normalize_processing_species_label("Gallus gallus") == "bird"
+        assert normalize_processing_species_label("Bos taurus") == "other_mammal"
+        assert normalize_processing_species_label("Salmo salar") == "fish"
+
+    def test_infer_processing_species_from_allele(self):
+        assert infer_processing_species_from_allele("HLA-A*02:01") == "human"
+        assert infer_processing_species_from_allele("H2-Kd") == "murine"
+        assert infer_processing_species_from_allele("Mamu-A*01:01") == "nhp"
+        assert infer_processing_species_from_allele("Aona-DQA1*27:01") == "nhp"
+        assert infer_processing_species_from_allele("BoLA-2*01:01") == "other_mammal"
+        assert infer_processing_species_from_allele("Gaga-BF1*01:01") == "bird"
 
 
 class TestAlleleResolver:
