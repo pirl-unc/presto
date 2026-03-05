@@ -21,6 +21,7 @@ import zipfile
 from tqdm.auto import tqdm
 
 from .allele_resolver import infer_species
+from .vocab import normalize_organism
 
 try:
     import mhcgnomes
@@ -98,23 +99,28 @@ class UnifiedRecord:
     raw_data: Dict[str, str] = field(default_factory=dict)
 
     def dedup_key(self) -> str:
-        """Generate key for deduplication."""
+        """Generate key for deduplication.
+
+        Includes normalized species to prevent merging records from
+        experiments in different host organisms (e.g. human vs murine).
+        """
+        sp = self.species or ""
         if self.record_type == "tcr":
             # For TCR data, include CDR3 sequences
             return (
                 f"{self.peptide}|{self.mhc_allele}|{self.cdr3_alpha or ''}|"
-                f"{self.cdr3_beta or ''}|{self.record_type}"
+                f"{self.cdr3_beta or ''}|{sp}|{self.record_type}"
             )
         elif self.record_type == "binding":
-            return f"{self.peptide}|{self.mhc_allele}|{self.value_type or 'binding'}|{self.record_type}"
+            return f"{self.peptide}|{self.mhc_allele}|{self.value_type or 'binding'}|{sp}|{self.record_type}"
         elif self.record_type == "tcell":
             response = normalize_binary_response(self.response) or "unknown"
-            return f"{self.peptide}|{self.mhc_allele}|{response}|{self.record_type}"
+            return f"{self.peptide}|{self.mhc_allele}|{response}|{sp}|{self.record_type}"
         elif self.record_type == "bcell":
             response = normalize_binary_response(self.response) or "unknown"
-            return f"{self.peptide}|{self.mhc_allele}|{response}|{self.record_type}"
+            return f"{self.peptide}|{self.mhc_allele}|{response}|{sp}|{self.record_type}"
         else:
-            return f"{self.peptide}|{self.mhc_allele}|{self.record_type}"
+            return f"{self.peptide}|{self.mhc_allele}|{sp}|{self.record_type}"
 
     def reference_key(self) -> str:
         """Generate key based on reference."""
@@ -290,9 +296,9 @@ def _normalize_mhc_class(raw_class: str, allele: str) -> str:
     text = (raw_class or "").strip().upper()
     if text in {"I", "II"}:
         return text
-    if "CLASS II" in text or text.endswith(" II") or text.startswith("II"):
+    if text in {"MHCII"} or "CLASS II" in text or text.endswith(" II") or text.startswith("II"):
         return "II"
-    if "CLASS I" in text or text.endswith(" I") or text.startswith("I"):
+    if text in {"MHCI"} or "CLASS I" in text or text.endswith(" I") or text.startswith("I"):
         return "I"
     return _infer_mhc_class_from_allele(allele)
 
@@ -426,16 +432,16 @@ def _parse_iedb_binding_stream(f, source: str) -> Iterator[UnifiedRecord]:
                 elif ">" in qual_str:
                     qualifier = 1
 
-            species = None
+            species_raw = None
             antigen_species_raw = ""
             if "species_epitope" in col_indices:
                 antigen_species_raw = row[col_indices["species_epitope"]].strip()
             if "species_host" in col_indices:
                 species_host = row[col_indices["species_host"]].strip()
                 if species_host:
-                    species = species_host
-            if not species and allele:
-                species = infer_species(allele)
+                    species_raw = species_host
+            if not species_raw and allele:
+                species_raw = infer_species(allele)
 
             yield UnifiedRecord(
                 peptide=peptide,
@@ -452,8 +458,8 @@ def _parse_iedb_binding_stream(f, source: str) -> Iterator[UnifiedRecord]:
                 response=qualitative or None,
                 assay_type=response_measured or None,
                 assay_method=method or None,
-                species=species.lower() if species else None,
-                antigen_species=antigen_species_raw or None,
+                species=normalize_organism(species_raw),
+                antigen_species=normalize_organism(antigen_species_raw) if antigen_species_raw else None,
                 raw_data={
                     "reference_raw": reference_raw,
                     "doi_raw": doi_raw,
@@ -482,22 +488,142 @@ def parse_iedb_tcell(file_path: Path) -> Iterator[UnifiedRecord]:
         yield from _parse_iedb_tcell_stream(text, source)
 
 
-def parse_iedb_bcell(file_path: Path) -> Iterator[UnifiedRecord]:
-    """Parse IEDB/CEDAR B-cell data via canonical loader."""
-    from .loaders import load_iedb_bcell  # local import to avoid heavy import at module load
+def _parse_iedb_bcell_stream(f, source: str) -> Iterator[UnifiedRecord]:
+    """Parse IEDB/CEDAR B-cell rows from a text stream.
 
+    Uses category-aware column matching (like binding/tcell parsers) to correctly
+    distinguish Host species (col 44) from Epitope species (col 25).
+    """
+    reader = csv.reader(f)
+    category_row = next(reader, None)
+    header = next(reader, None)
+    if category_row is None or header is None:
+        return
+
+    category_lower = [(c or "").strip().lower() for c in category_row]
+    header_lower = [(h or "").strip().lower() for h in header]
+
+    col_indices: Dict[str, int] = {}
+    reference_text_cols: List[int] = []
+    for i, (cat, h) in enumerate(zip(category_lower, header_lower)):
+        if "reference" in cat:
+            if "pmid" in h and "pmid" not in col_indices:
+                col_indices["pmid"] = i
+            elif "doi" in h and "doi" not in col_indices:
+                col_indices["doi"] = i
+            elif h not in {"cedar iri", "submission id", "pmid", "doi", "iri"}:
+                reference_text_cols.append(i)
+            continue
+
+        if "epitope" in cat:
+            if h in {"name", "description", "linear sequence"} and "peptide" not in col_indices:
+                col_indices["peptide"] = i
+            elif h == "source organism" and "species_epitope" not in col_indices:
+                col_indices["species_epitope"] = i
+            continue
+
+        if "host" in cat and h in {"name", "species", "organism"} and "species_host" not in col_indices:
+            col_indices["species_host"] = i
+            continue
+
+        if "assay" == cat:
+            if h == "qualitative measure":
+                col_indices["response"] = i
+            elif h == "response measured":
+                col_indices["assay_type"] = i
+            elif h == "method":
+                col_indices["assay_method"] = i
+            continue
+
+        if "assay antibody" in cat:
+            if "heavy chain isotype" in h and "heavy_isotype" not in col_indices:
+                col_indices["heavy_isotype"] = i
+            elif "light chain isotype" in h and "light_isotype" not in col_indices:
+                col_indices["light_isotype"] = i
+
+    if "peptide" not in col_indices:
+        return
+
+    for row in reader:
+        if not row:
+            continue
+        if len(row) < len(header):
+            row = list(row) + [""] * (len(header) - len(row))
+
+        try:
+            peptide = row[col_indices["peptide"]].strip()
+            if not peptide or len(peptide) < 5:
+                continue
+
+            pmid_raw = row[col_indices["pmid"]].strip() if "pmid" in col_indices else ""
+            doi_raw = row[col_indices["doi"]].strip() if "doi" in col_indices else ""
+            reference_parts = [
+                row[idx].strip()
+                for idx in reference_text_cols
+                if idx < len(row) and row[idx].strip()
+            ]
+            reference_raw = " | ".join(dict.fromkeys(reference_parts))
+
+            response = row[col_indices["response"]].strip() if "response" in col_indices else ""
+            # Normalize to positive/negative
+            response_lower = response.lower()
+            if "positive" in response_lower or "reactive" in response_lower:
+                response_label = "positive"
+            elif "negative" in response_lower or "non-reactive" in response_lower:
+                response_label = "negative"
+            else:
+                response_label = response or None
+
+            # Host species from Host category (NOT Epitope category)
+            species_raw = None
+            if "species_host" in col_indices:
+                species_host = row[col_indices["species_host"]].strip()
+                if species_host:
+                    species_raw = species_host
+
+            # Antigen species from Epitope Source Organism
+            antigen_species_raw = (
+                row[col_indices["species_epitope"]].strip()
+                if "species_epitope" in col_indices
+                else ""
+            )
+
+            yield UnifiedRecord(
+                peptide=peptide,
+                mhc_allele="",  # B-cell entries generally do not carry MHC alleles
+                mhc_class="",
+                pmid=normalize_pmid(pmid_raw),
+                doi=normalize_doi(doi_raw),
+                reference_text=_normalize_reference_text(reference_raw),
+                source=source,
+                record_type="bcell",
+                response=response_label,
+                assay_type=row[col_indices["assay_type"]].strip() if "assay_type" in col_indices else None,
+                assay_method=row[col_indices["assay_method"]].strip() if "assay_method" in col_indices else None,
+                species=normalize_organism(species_raw),
+                antigen_species=normalize_organism(antigen_species_raw) if antigen_species_raw else None,
+            )
+        except (IndexError, KeyError):
+            continue
+
+
+def parse_iedb_bcell(file_path: Path) -> Iterator[UnifiedRecord]:
+    """Parse IEDB/CEDAR B-cell data with category-aware column matching."""
     source = "cedar" if "cedar" in str(file_path).lower() else "iedb"
-    for rec in load_iedb_bcell(file_path):
-        response_label = "positive" if float(rec.response) > 0.5 else "negative"
-        yield UnifiedRecord(
-            peptide=rec.peptide,
-            mhc_allele="",  # B-cell entries generally do not carry MHC alleles.
-            mhc_class="",
-            source=source,
-            record_type="bcell",
-            response=response_label,
-            species=(rec.species or "human").lower(),
-        )
+
+    if file_path.suffix == ".zip":
+        with zipfile.ZipFile(file_path) as zf:
+            csv_files = [n for n in zf.namelist() if n.endswith(".csv")]
+            if not csv_files:
+                return
+            csv_files.sort(key=lambda name: zf.getinfo(name).file_size, reverse=True)
+            with zf.open(csv_files[0]) as raw:
+                with io.TextIOWrapper(raw, encoding="utf-8", errors="replace", newline="") as text:
+                    yield from _parse_iedb_bcell_stream(text, source)
+        return
+
+    with open(file_path, "r", encoding="utf-8", errors="replace", newline="") as text:
+        yield from _parse_iedb_bcell_stream(text, source)
 
 
 def _parse_iedb_tcell_stream(f, source: str) -> Iterator[UnifiedRecord]:
@@ -624,13 +750,13 @@ def _parse_iedb_tcell_stream(f, source: str) -> Iterator[UnifiedRecord]:
                 if "in_vitro_stimulator_cell" in col_indices
                 else ""
             )
-            species = (
-                row[col_indices["species_host"]].strip().lower()
+            species_raw = (
+                row[col_indices["species_host"]].strip()
                 if "species_host" in col_indices
                 else None
             )
-            if not species and allele:
-                species = infer_species(allele)
+            if not species_raw and allele:
+                species_raw = infer_species(allele)
             antigen_species_raw = (
                 row[col_indices["species_epitope"]].strip()
                 if "species_epitope" in col_indices
@@ -655,8 +781,8 @@ def _parse_iedb_tcell_stream(f, source: str) -> Iterator[UnifiedRecord]:
                 in_vitro_process_type=in_vitro_process or None,
                 in_vitro_responder_cell=in_vitro_responder or None,
                 in_vitro_stimulator_cell=in_vitro_stimulator or None,
-                species=species or None,
-                antigen_species=antigen_species_raw or None,
+                species=normalize_organism(species_raw),
+                antigen_species=normalize_organism(antigen_species_raw) if antigen_species_raw else None,
                 raw_data={
                     "reference_raw": reference_raw,
                     "doi_raw": doi_raw,
@@ -734,10 +860,12 @@ def _parse_vdjdb_content(content: str) -> Iterator[UnifiedRecord]:
             normalized_pmid = normalize_pmid(ref_id)
             normalized_doi = normalize_doi(ref_id)
 
+            species_raw = species if species else (infer_species(mhc_a) if mhc_a else None)
+
             yield UnifiedRecord(
                 peptide=epitope,
                 mhc_allele=normalize_allele(mhc_a),
-                mhc_class=mhc_class or "I",
+                mhc_class=_normalize_mhc_class(mhc_class, mhc_a),
                 pmid=normalized_pmid,
                 doi=normalized_doi,
                 reference_text=_normalize_reference_text(ref_id),
@@ -747,8 +875,8 @@ def _parse_vdjdb_content(content: str) -> Iterator[UnifiedRecord]:
                 cdr3_beta=cdr3 if gene == "TRB" else None,
                 trav=v_gene if gene == "TRA" else None,
                 trbv=v_gene if gene == "TRB" else None,
-                species=species.lower() if species else infer_species(mhc_a) if mhc_a else None,
-                antigen_species=antigen_species_raw or None,
+                species=normalize_organism(species_raw),
+                antigen_species=normalize_organism(antigen_species_raw) if antigen_species_raw else None,
             )
         except (IndexError, KeyError):
             continue
@@ -764,6 +892,11 @@ def parse_mcpas(file_path: Path) -> Iterator[UnifiedRecord]:
                 if not epitope or len(epitope) < 5:
                     continue
 
+                mcpas_species = row.get("Species", "").strip() or None
+                if not mcpas_species and row.get("MHC", "").strip():
+                    mcpas_species = infer_species(row.get("MHC", ""))
+                mcpas_pathology = row.get("Pathology", "").strip() or None
+
                 yield UnifiedRecord(
                     peptide=epitope,
                     mhc_allele=normalize_allele(row.get("MHC", "")),
@@ -778,8 +911,8 @@ def parse_mcpas(file_path: Path) -> Iterator[UnifiedRecord]:
                     cdr3_beta=row.get("CDR3.beta.aa", ""),
                     trav=row.get("TRAV", ""),
                     trbv=row.get("TRBV", ""),
-                    species=row.get("Species", "").strip().lower() or (infer_species(row.get("MHC", "")) if row.get("MHC", "").strip() else None),
-                    antigen_species=row.get("Pathology", "").strip() or None,
+                    species=normalize_organism(mcpas_species),
+                    antigen_species=normalize_organism(mcpas_pathology),
                 )
             except (KeyError, ValueError):
                 continue

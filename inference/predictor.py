@@ -412,6 +412,9 @@ class Predictor:
         mhc_b_sequence: str = None,
         mhc_class: str = None,
         species: str = None,
+        mhc_species: str = None,
+        immune_species: str = None,
+        species_of_origin: str = None,
         flank_n: str = None,
         flank_c: str = None,
         require_species_for_class_i_b2m: bool = True,
@@ -425,6 +428,9 @@ class Predictor:
             mhc_b_sequence: MHC beta chain sequence (beta2m for Class I)
             mhc_class: Optional hard class override, "I"/"II"
             species: Species label used to pick class-I beta2m when needed
+            mhc_species: Optional override for MHC species latent path
+            immune_species: Optional override for host immune-system context
+            species_of_origin: Optional override for peptide source organism latent
             flank_n: N-terminal processing flank
             flank_c: C-terminal processing flank
             require_species_for_class_i_b2m: If True, raise when class-I beta2m
@@ -442,7 +448,7 @@ class Predictor:
             mhc_class=class_for_chain_resolution,
             mhc_b_sequence=mhc_b_sequence,
             allele=allele,
-            species=species,
+            species=species or immune_species or mhc_species,
             require_species_for_class_i_b2m=require_species_for_class_i_b2m,
         )
 
@@ -460,6 +466,9 @@ class Predictor:
             mhc_b_tok=mhc_b_tok,
             mhc_class=model_class_input,
             species=species,
+            mhc_species=mhc_species,
+            immune_species=immune_species,
+            species_of_origin=species_of_origin,
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
         )
@@ -513,6 +522,9 @@ class Predictor:
         mhc_b_sequence: str = None,
         mhc_class: str = None,
         species: str = None,
+        mhc_species: str = None,
+        immune_species: str = None,
+        species_of_origin: str = None,
         min_length: int = 8,
         max_length: int = 15,
         flank_size: int = 15,
@@ -521,7 +533,13 @@ class Predictor:
         sort_by: str = "presentation",
         require_species_for_class_i_b2m: bool = True,
     ) -> TiledPresentationResult:
-        """Tile presentation predictions across all subsequences of a protein."""
+        """Tile presentation predictions across all subsequences of a protein.
+
+        Override controls:
+            mhc_species: Optional override for MHC species latent path
+            immune_species: Optional override for host immune-system context
+            species_of_origin: Optional override for peptide source organism latent
+        """
         sequence = (protein_sequence or "").strip().upper()
         if not sequence:
             raise ValueError("protein_sequence must be non-empty")
@@ -547,7 +565,7 @@ class Predictor:
             mhc_class=class_for_chain_resolution,
             mhc_b_sequence=mhc_b_sequence,
             allele=allele,
-            species=species,
+            species=species or immune_species or mhc_species,
             require_species_for_class_i_b2m=require_species_for_class_i_b2m,
         )
 
@@ -612,6 +630,9 @@ class Predictor:
                 mhc_b_tok=mhc_b_tok,
                 mhc_class=model_class_input,
                 species=species,
+                mhc_species=mhc_species,
+                immune_species=immune_species,
+                species_of_origin=species_of_origin,
                 flank_n_tok=flank_n_tok,
                 flank_c_tok=flank_c_tok,
             )
@@ -688,6 +709,9 @@ class Predictor:
         mhc_sequences: List[str] = None,
         mhc_class: Optional[str] = None,
         species: str = None,
+        mhc_species: str = None,
+        immune_species: str = None,
+        species_of_origin: str = None,
         require_species_for_class_i_b2m: bool = True,
     ) -> Dict[str, Any]:
         """Predict presentation with multiple alleles (MS/EL scenario).
@@ -700,6 +724,9 @@ class Predictor:
             mhc_sequences: List of MHC sequences (alternative)
             mhc_class: "I" or "II"
             species: Species label used for class-I beta2m defaults
+            mhc_species: Optional override for MHC species latent path
+            immune_species: Optional override for host immune-system context
+            species_of_origin: Optional override for peptide source organism latent
             require_species_for_class_i_b2m: Enforce explicit class-I beta2m resolution
 
         Returns:
@@ -727,6 +754,9 @@ class Predictor:
                 mhc_sequence=seq,
                 mhc_class=mhc_class,
                 species=species,
+                mhc_species=mhc_species,
+                immune_species=immune_species,
+                species_of_origin=species_of_origin,
                 require_species_for_class_i_b2m=require_species_for_class_i_b2m,
             )
             per_allele.append({
@@ -817,6 +847,9 @@ class Predictor:
         mhc_b_sequence: str = None,
         mhc_class: str = None,
         species: str = None,
+        mhc_species: str = None,
+        immune_species: str = None,
+        species_of_origin: str = None,
         require_species_for_class_i_b2m: bool = True,
     ) -> torch.Tensor:
         """Get pMHC embedding.
@@ -828,6 +861,9 @@ class Predictor:
             mhc_b_sequence: MHC beta chain sequence (beta2m for Class I)
             mhc_class: "I" or "II"
             species: Species label used to pick class-I beta2m when needed
+            mhc_species: Optional override for MHC species latent path
+            immune_species: Optional override for host immune-system context
+            species_of_origin: Optional override for peptide source organism latent
             require_species_for_class_i_b2m: If True, require class-I beta2m resolution
 
         Returns:
@@ -839,7 +875,7 @@ class Predictor:
             mhc_class=mhc_class,
             mhc_b_sequence=mhc_b_sequence,
             allele=allele,
-            species=species,
+            species=species or immune_species or mhc_species,
             require_species_for_class_i_b2m=require_species_for_class_i_b2m,
         )
 
@@ -847,7 +883,17 @@ class Predictor:
         mhc_a_tok = self._tokenize(mhc_a_seq, max_len=400)
         mhc_b_tok = self._tokenize(mhc_b_seq, max_len=400)
 
-        return self.model.encode_pmhc(pep_tok, mhc_a_tok, mhc_b_tok, mhc_class)
+        outputs = self.model(
+            pep_tok=pep_tok,
+            mhc_a_tok=mhc_a_tok,
+            mhc_b_tok=mhc_b_tok,
+            mhc_class=mhc_class,
+            species=species,
+            mhc_species=mhc_species,
+            immune_species=immune_species,
+            species_of_origin=species_of_origin,
+        )
+        return outputs["pmhc_vec"]
 
     @torch.no_grad()
     def embed_tcr(

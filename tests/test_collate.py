@@ -299,12 +299,15 @@ class TestPrestoCollator:
         assert "apc_type_idx" in batch.tcell_context
         assert "culture_context_idx" in batch.tcell_context
         assert "stim_context_idx" in batch.tcell_context
+        assert "peptide_format_idx" in batch.tcell_context
+        assert "culture_duration_hours" in batch.tcell_context
 
         assert "tcell_assay_method" in batch.targets
         assert "tcell_assay_readout" in batch.targets
         assert "tcell_apc_type" in batch.targets
         assert "tcell_culture_context" in batch.targets
         assert "tcell_stim_context" in batch.targets
+        assert "tcell_peptide_format" in batch.targets
         assert batch.target_masks["tcell_assay_method"].tolist() == [1.0, 0.0]
 
     def test_collator_with_elution_labels(self, collator):

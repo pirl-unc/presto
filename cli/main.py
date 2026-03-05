@@ -973,8 +973,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Disable bf16 automatic mixed precision",
     )
     train_iedb.add_argument(
-        "--compile", dest="use_compile", action="store_true", default=True,
-        help="Enable torch.compile for kernel fusion (default: true)",
+        "--compile", dest="use_compile", action="store_true", default=False,
+        help="Enable torch.compile for kernel fusion (default: false)",
     )
     train_iedb.add_argument(
         "--no-compile", dest="use_compile", action="store_false",
@@ -983,6 +983,14 @@ def create_parser() -> argparse.ArgumentParser:
     train_iedb.add_argument(
         "--max-mil-instances", dest="max_mil_instances", type=int, default=128,
         help="Max MIL instances per batch (0=unlimited, default: 128)",
+    )
+    train_iedb.add_argument(
+        "--max-batches", dest="max_batches", type=int, default=0,
+        help="Max training batches per epoch (0=unlimited)",
+    )
+    train_iedb.add_argument(
+        "--max-val-batches", dest="max_val_batches", type=int, default=0,
+        help="Max validation batches per epoch (0=unlimited)",
     )
     train_iedb.add_argument("--d_model", type=int, default=128, help="Model dimension")
     train_iedb.add_argument("--n_layers", type=int, default=2, help="Number of layers")
@@ -1278,6 +1286,9 @@ def create_parser() -> argparse.ArgumentParser:
     predict_presentation.add_argument("--mhc-b-sequence", type=str, default=None, help="MHC beta sequence")
     predict_presentation.add_argument("--mhc-class", type=str, choices=["I", "II"], default=None, help="MHC class")
     predict_presentation.add_argument("--species", type=str, default=None, help="Species label for class-I beta2m resolution")
+    predict_presentation.add_argument("--mhc-species", type=str, default=None, help="Override MHC species latent/probability path")
+    predict_presentation.add_argument("--immune-species", type=str, default=None, help="Override immune-system species conditioning")
+    predict_presentation.add_argument("--species-of-origin", type=str, default=None, help="Override peptide species-of-origin latent")
     predict_presentation.add_argument("--flank-n", type=str, default=None, help="N-terminal flank")
     predict_presentation.add_argument("--flank-c", type=str, default=None, help="C-terminal flank")
     predict_presentation.add_argument("--index-csv", type=str, default=None, help="Optional built MHC index CSV for allele sequence lookup")
@@ -1303,6 +1314,9 @@ def create_parser() -> argparse.ArgumentParser:
     predict_tile.add_argument("--mhc-b-sequence", type=str, default=None, help="MHC beta sequence")
     predict_tile.add_argument("--mhc-class", type=str, choices=["I", "II"], default=None, help="MHC class")
     predict_tile.add_argument("--species", type=str, default=None, help="Species label for class-I beta2m resolution")
+    predict_tile.add_argument("--mhc-species", type=str, default=None, help="Override MHC species latent/probability path")
+    predict_tile.add_argument("--immune-species", type=str, default=None, help="Override immune-system species conditioning")
+    predict_tile.add_argument("--species-of-origin", type=str, default=None, help="Override peptide species-of-origin latent")
     predict_tile.add_argument("--min-length", type=int, default=8, help="Minimum peptide length for tiling")
     predict_tile.add_argument("--max-length", type=int, default=15, help="Maximum peptide length for tiling")
     predict_tile.add_argument("--flank-size", type=int, default=15, help="Context flank size on each side")
@@ -1337,6 +1351,9 @@ def create_parser() -> argparse.ArgumentParser:
     predict_recognition.add_argument("--mhc-b-sequence", type=str, default=None, help="MHC beta sequence")
     predict_recognition.add_argument("--mhc-class", type=str, choices=["I", "II"], default=None, help="MHC class")
     predict_recognition.add_argument("--species", type=str, default=None, help="Species label for class-I beta2m resolution")
+    predict_recognition.add_argument("--mhc-species", type=str, default=None, help="Override MHC species latent/probability path")
+    predict_recognition.add_argument("--immune-species", type=str, default=None, help="Override immune-system species conditioning")
+    predict_recognition.add_argument("--species-of-origin", type=str, default=None, help="Override peptide species-of-origin latent")
     predict_recognition.add_argument("--tcr-alpha", type=str, required=False, help="TCR alpha sequence")
     predict_recognition.add_argument("--tcr-beta", type=str, required=False, help="TCR beta sequence")
     predict_recognition.add_argument("--index-csv", type=str, default=None, help="Optional built MHC index CSV for allele sequence lookup")

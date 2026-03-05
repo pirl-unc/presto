@@ -95,8 +95,9 @@ class TestAssayHeads:
     def test_assay_heads_all_outputs(self):
         from presto.models.heads import AssayHeads
         heads = AssayHeads(d_model=64)
-        z = torch.randn(2, 64)
-        outputs = heads(z)
+        ba_vec = torch.randn(2, 64)
+        bs_vec = torch.randn(2, 64)
+        outputs = heads(ba_vec, bs_vec)
         # Should have all assay types
         expected_keys = ["KD_nM", "IC50_nM", "EC50_nM", "kon", "koff", "t_half", "Tm"]
         for key in expected_keys:
@@ -106,23 +107,26 @@ class TestAssayHeads:
     def test_assay_heads_gradient_flow(self):
         from presto.models.heads import AssayHeads
         heads = AssayHeads(d_model=64)
-        z = torch.randn(2, 64, requires_grad=True)
-        outputs = heads(z)
+        ba_vec = torch.randn(2, 64, requires_grad=True)
+        bs_vec = torch.randn(2, 64, requires_grad=True)
+        outputs = heads(ba_vec, bs_vec)
         loss = sum(v.sum() for v in outputs.values())
         loss.backward()
-        assert z.grad is not None
+        assert ba_vec.grad is not None
+        assert bs_vec.grad is not None
 
     def test_assay_heads_clamp_weak_affinity_to_100k_nm(self):
         from presto.models.heads import AssayHeads
 
         heads = AssayHeads(d_model=64, max_log10_nM=5.0)
-        z = torch.randn(2, 64)
+        ba_vec = torch.randn(2, 64)
+        bs_vec = torch.randn(2, 64)
         latents = {
             "log_koff": torch.full((2, 1), 3.0),  # very fast off-rate
             "log_kon_intrinsic": torch.full((2, 1), -3.0),
             "log_kon_chaperone": torch.full((2, 1), -3.0),
         }
-        outputs = heads(z, binding_latents=latents)
+        outputs = heads(ba_vec, bs_vec, binding_latents=latents)
 
         assert torch.all(outputs["KD_nM"] <= 5.0 + 1e-6)
         assert torch.all(outputs["IC50_nM"] <= 5.0 + 1e-6)
@@ -132,13 +136,14 @@ class TestAssayHeads:
         from presto.models.heads import AssayHeads
 
         heads = AssayHeads(d_model=16, max_log10_nM=5.0)
-        z = torch.randn(2, 16)
+        ba_vec = torch.randn(2, 16)
+        bs_vec = torch.randn(2, 16)
         latents = {
             "log_koff": torch.full((2, 1), 2.0, requires_grad=True),
             "log_kon_intrinsic": torch.full((2, 1), 5.0, requires_grad=True),
             "log_kon_chaperone": torch.full((2, 1), 5.0, requires_grad=True),
         }
-        outputs = heads(z, binding_latents=latents)
+        outputs = heads(ba_vec, bs_vec, binding_latents=latents)
         outputs["KD_nM"].sum().backward()
 
         assert latents["log_koff"].grad is not None
@@ -150,13 +155,14 @@ class TestAssayHeads:
         from presto.models.heads import AssayHeads
 
         heads = AssayHeads(d_model=64, max_log10_nM=5.0)
-        z = torch.randn(2, 64)
+        ba_vec = torch.randn(2, 64)
+        bs_vec = torch.randn(2, 64)
         latents = {
             "log_koff": torch.full((2, 1), 1000.0),
             "log_kon_intrinsic": torch.full((2, 1), -1000.0),
             "log_kon_chaperone": torch.full((2, 1), 1000.0),
         }
-        outputs = heads(z, binding_latents=latents)
+        outputs = heads(ba_vec, bs_vec, binding_latents=latents)
         for value in outputs.values():
             assert torch.isfinite(value).all()
 
@@ -188,9 +194,13 @@ class TestTCellHead:
         from presto.models.heads import TCellAssayHead
 
         head = TCellAssayHead(d_model=64)
-        pmhc_vec = torch.randn(2, 64)
-        tcr_vec = torch.randn(2, 64)
-        ig = torch.randn(2)
+        ig_cd8_vec = torch.randn(2, 64)
+        ig_cd4_vec = torch.randn(2, 64)
+        pres1 = torch.randn(2, 1)
+        pres2 = torch.randn(2, 1)
+        bind1 = torch.randn(2, 1)
+        bind2 = torch.randn(2, 1)
+        class_probs = torch.tensor([[0.8, 0.2], [0.1, 0.9]], dtype=torch.float32)
         context = {
             "assay_method_idx": torch.tensor([1, 0], dtype=torch.long),
             "assay_readout_idx": torch.tensor([1, 0], dtype=torch.long),
@@ -199,10 +209,14 @@ class TestTCellHead:
             "stim_context_idx": torch.tensor([1, 0], dtype=torch.long),
         }
 
-        logit, ctx_logits = head(
-            pmhc_vec=pmhc_vec,
-            immunogenicity_logit=ig,
-            tcr_vec=tcr_vec,
+        logit = head(
+            immunogenicity_cd8_vec=ig_cd8_vec,
+            immunogenicity_cd4_vec=ig_cd4_vec,
+            presentation_class1_logit=pres1,
+            presentation_class2_logit=pres2,
+            binding_class1_logit=bind1,
+            binding_class2_logit=bind2,
+            class_probs=class_probs,
             assay_method_idx=context["assay_method_idx"],
             assay_readout_idx=context["assay_readout_idx"],
             apc_type_idx=context["apc_type_idx"],
@@ -211,35 +225,30 @@ class TestTCellHead:
         )
 
         assert logit.shape == (2, 1)
-        assert set(ctx_logits.keys()) == {
-            "assay_method",
-            "assay_readout",
-            "apc_type",
-            "culture_context",
-            "stim_context",
-        }
 
-    def test_tcell_assay_head_accepts_cd4_cd8_latents(self):
+    def test_tcell_assay_head_output_shape_no_context(self):
         from presto.models.heads import TCellAssayHead
 
         head = TCellAssayHead(d_model=64)
-        pmhc_vec = torch.randn(2, 64)
-        ig = torch.randn(2)
-        cd4 = torch.randn(2, 1)
-        cd8 = torch.randn(2, 1)
+        ig_cd8_vec = torch.randn(2, 64)
+        ig_cd4_vec = torch.randn(2, 64)
+        pres1 = torch.randn(2, 1)
+        pres2 = torch.randn(2, 1)
+        bind1 = torch.randn(2, 1)
+        bind2 = torch.randn(2, 1)
         class_probs = torch.tensor([[0.8, 0.2], [0.1, 0.9]], dtype=torch.float32)
 
-        base_logit, _ = head(pmhc_vec=pmhc_vec, immunogenicity_logit=ig)
-        lineage_logit, _ = head(
-            pmhc_vec=pmhc_vec,
-            immunogenicity_logit=ig,
-            immunogenicity_cd4_logit=cd4,
-            immunogenicity_cd8_logit=cd8,
+        logit = head(
+            immunogenicity_cd8_vec=ig_cd8_vec,
+            immunogenicity_cd4_vec=ig_cd4_vec,
+            presentation_class1_logit=pres1,
+            presentation_class2_logit=pres2,
+            binding_class1_logit=bind1,
+            binding_class2_logit=bind2,
             class_probs=class_probs,
         )
 
-        assert base_logit.shape == (2, 1)
-        assert lineage_logit.shape == (2, 1)
+        assert logit.shape == (2, 1)
 
 
 # --------------------------------------------------------------------------
@@ -251,23 +260,24 @@ class TestElutionHead:
 
     def test_elution_head(self):
         from presto.models.heads import ElutionHead
-        head = ElutionHead(d_model=64)
-        pmhc_vec = torch.randn(2, 64)
-        logit = head(pmhc_vec)
+        head = ElutionHead()
+        pres = torch.randn(2, 1)
+        ms_detect = torch.randn(2, 1)
+        logit = head(pres, ms_detect)
         assert logit.shape == (2, 1)
 
     def test_elution_head_uses_presentation_signal(self):
         from presto.models.heads import ElutionHead
 
-        head = ElutionHead(d_model=16)
+        head = ElutionHead()
         head.eval()
-        pmhc_vec = torch.zeros(2, 16)
+        ms_detect = torch.zeros(2, 1)
         pres_low = torch.full((2, 1), -5.0)
         pres_high = torch.full((2, 1), 5.0)
 
         with torch.no_grad():
-            low = head(pmhc_vec, presentation_logit=pres_low)
-            high = head(pmhc_vec, presentation_logit=pres_high)
+            low = head(pres_low, ms_detect)
+            high = head(pres_high, ms_detect)
 
         assert torch.all(high > low)
 
@@ -284,15 +294,18 @@ class TestMultiTaskHeads:
         from presto.models.heads import AssayHeads, ElutionHead, TCellHead
         d_model = 64
         assay = AssayHeads(d_model=d_model)
-        elution = ElutionHead(d_model=d_model)
+        elution = ElutionHead()
         tcell = TCellHead(d_model=d_model)
 
+        ba_vec = torch.randn(2, d_model)
+        bs_vec = torch.randn(2, d_model)
         pmhc_vec = torch.randn(2, d_model)
         tcr_vec = torch.randn(2, d_model)
+        pres = torch.randn(2, 1)
+        ms_detect = torch.randn(2, 1)
 
-        # All should work with same pMHC vector.
-        _ = assay(pmhc_vec)
-        _ = elution(pmhc_vec)
+        _ = assay(ba_vec, bs_vec)
+        _ = elution(pres, ms_detect)
         _ = tcell(pmhc_vec, tcr_vec)
 
     def test_heads_independent_gradients(self):

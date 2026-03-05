@@ -397,6 +397,21 @@ IDX_TO_TCELL_STIM_CONTEXT = {
     i: name for i, name in enumerate(TCELL_STIM_CONTEXTS)
 }
 
+TCELL_PEPTIDE_FORMATS = [
+    "unknown",
+    "MINIMAL_EPITOPE",
+    "LONG_PEPTIDE",
+    "PEPTIDE_POOL",
+    "WHOLE_PROTEIN",
+    "OTHER",
+]
+TCELL_PEPTIDE_FORMAT_TO_IDX = {
+    name: i for i, name in enumerate(TCELL_PEPTIDE_FORMATS)
+}
+IDX_TO_TCELL_PEPTIDE_FORMAT = {
+    i: name for i, name in enumerate(TCELL_PEPTIDE_FORMATS)
+}
+
 # Biological validity: which chain types can appear in which cell types
 VALID_CHAIN_CELL: dict[str, Set[str]] = {
     # Full-length chains

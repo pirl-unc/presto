@@ -220,6 +220,27 @@ class TestPredictPresentation:
         assert class_override == "I"
         assert result.mhc_class == "I"
 
+    def test_predict_presentation_passes_named_override_controls(self):
+        model = self._CaptureModel()
+        predictor = Predictor(
+            model,
+            device="cpu",
+            auto_load_index_csv=False,
+            strict_allele_resolution=False,
+        )
+        predictor.predict_presentation(
+            peptide="SIINFEKL",
+            allele="HLA-A*02:01",
+            mhc_species="murine",
+            immune_species="human",
+            species_of_origin="viruses",
+            require_species_for_class_i_b2m=False,
+        )
+        assert model.last_kwargs is not None
+        assert model.last_kwargs["mhc_species"] == "murine"
+        assert model.last_kwargs["immune_species"] == "human"
+        assert model.last_kwargs["species_of_origin"] == "viruses"
+
     def test_predict_presentation_unresolved_allele_raises_in_strict_mode(self):
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         predictor = Predictor(

@@ -468,24 +468,6 @@ class TestPresentationBottleneck:
 
 
 # --------------------------------------------------------------------------
-# MS Detection Head Tests
-# --------------------------------------------------------------------------
-
-class TestMSDetectionHead:
-    """Mass spec detection head (orthogonal to biological presentation)."""
-
-    def test_ms_head(self):
-        from presto.models.pmhc import MSDetectionHead
-        ms = MSDetectionHead(d_model=64)
-        z = torch.randn(2, 64)
-        pep_tok = torch.randint(4, 24, (2, 10))
-        proc_logit = torch.randn(2, 1)
-        pres_logit = torch.randn(2, 1)
-        logit = ms(z, pep_tok=pep_tok, proc_logit=proc_logit, pres_logit=pres_logit)
-        assert logit.shape == (2, 1)
-
-
-# --------------------------------------------------------------------------
 # Multi-Allele Aggregation Tests
 # --------------------------------------------------------------------------
 

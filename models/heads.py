@@ -45,6 +45,17 @@ def smooth_upper_bound(value: torch.Tensor, max_value: float) -> torch.Tensor:
     return max_tensor - F.softplus(max_tensor - value)
 
 
+def noisy_or_logit(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
+    """Combine two logits via noisy-OR in probability space, return logit.
+
+    P(A or B) = P(A) + P(B) - P(A)*P(B)
+    """
+    p_a = torch.sigmoid(a)
+    p_b = torch.sigmoid(b)
+    p_or = (p_a + p_b - p_a * p_b).clamp(1e-7, 1 - 1e-7)
+    return torch.logit(p_or)
+
+
 # --------------------------------------------------------------------------
 # Individual prediction heads
 # --------------------------------------------------------------------------
@@ -190,13 +201,15 @@ class AssayHeads(nn.Module):
 
     def forward(
         self,
-        z: torch.Tensor,
+        binding_affinity_vec: torch.Tensor,
+        binding_stability_vec: torch.Tensor,
         binding_latents: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, torch.Tensor]:
         """Predict all assay values.
 
         Args:
-            z: pMHC embedding (batch, d_model)
+            binding_affinity_vec: Binding affinity latent vector (batch, d_model)
+            binding_stability_vec: Binding stability latent vector (batch, d_model)
             binding_latents: Dict with log_koff, log_kon_intrinsic, log_kon_chaperone
                            If provided, KD/koff/kon/t_half are derived from these.
 
@@ -224,7 +237,7 @@ class AssayHeads(nn.Module):
             # KD = koff / kon (in M), convert to nM (+9).
             # Keep a smooth upper cap so weak-affinity regions still backpropagate.
             log_kd_nM = torch.clamp(log_koff - log_kon_total + 9, min=-3.0)
-            affinity_obs = self.derive_affinity_observables(z, log_kd_nM)
+            affinity_obs = self.derive_affinity_observables(binding_affinity_vec, log_kd_nM)
 
             # t_half = ln(2) / koff, convert to minutes
             # log10(t_half_min) = log10(ln(2)/60) - log_koff = -1.937 - log_koff
@@ -239,29 +252,29 @@ class AssayHeads(nn.Module):
         else:
             # Fallback: predict everything directly (less constrained)
             results["KD_nM"] = smooth_upper_bound(
-                torch.clamp(self._direct_predict(z, "kd"), min=-3.0),
+                torch.clamp(self._direct_predict(binding_affinity_vec, "kd"), min=-3.0),
                 self.max_log10_nM,
             )
             results["IC50_nM"] = smooth_upper_bound(
-                torch.clamp(self._direct_predict(z, "ic50"), min=-3.0),
+                torch.clamp(self._direct_predict(binding_affinity_vec, "ic50"), min=-3.0),
                 self.max_log10_nM,
             )
             results["EC50_nM"] = smooth_upper_bound(
-                torch.clamp(self._direct_predict(z, "ec50"), min=-3.0),
+                torch.clamp(self._direct_predict(binding_affinity_vec, "ec50"), min=-3.0),
                 self.max_log10_nM,
             )
-            results["kon"] = self._direct_predict(z, "kon")
-            results["koff"] = self._direct_predict(z, "koff")
-            results["t_half"] = self._direct_predict(z, "t_half")
+            results["kon"] = self._direct_predict(binding_affinity_vec, "kon")
+            results["koff"] = self._direct_predict(binding_affinity_vec, "koff")
+            results["t_half"] = self._direct_predict(binding_stability_vec, "t_half")
 
         # Tm always predicted directly (complex protein stability)
-        results["Tm"] = self.tm(z)
+        results["Tm"] = self.tm(binding_stability_vec)
 
         return results
 
     def derive_affinity_observables(
         self,
-        z: torch.Tensor,
+        binding_affinity_vec: torch.Tensor,
         kd_log10_nM: torch.Tensor,
     ) -> Dict[str, torch.Tensor]:
         """Derive KD/IC50/EC50 from a shared KD latent with assay-specific bias."""
@@ -270,11 +283,11 @@ class AssayHeads(nn.Module):
             self.max_log10_nM,
         )
         ic50 = smooth_upper_bound(
-            torch.clamp(kd_base + self.ic50_residual(z), min=-3.0),
+            torch.clamp(kd_base + self.ic50_residual(binding_affinity_vec), min=-3.0),
             self.max_log10_nM,
         )
         ec50 = smooth_upper_bound(
-            torch.clamp(kd_base + self.ec50_residual(z), min=-3.0),
+            torch.clamp(kd_base + self.ec50_residual(binding_affinity_vec), min=-3.0),
             self.max_log10_nM,
         )
         return {
@@ -339,10 +352,11 @@ class TCellHead(nn.Module):
 
 
 class TCellAssayHead(nn.Module):
-    """Context-conditioned T-cell assay head.
+    """Context-conditioned T-cell assay head (S10.3).
 
-    Models observed assay outcome as:
-        biological immunogenicity latent + assay context bias.
+    Receives immunogenicity latent *vectors* and upstream logits — never pmhc_vec.
+    Uses gated signal projection with context-dependent bias, and noisy-OR
+    ambiguity mixing for class-ambiguous assays.
     """
 
     def __init__(
@@ -353,143 +367,300 @@ class TCellAssayHead(nn.Module):
         n_apc_types: int = 9,
         n_culture_contexts: int = 9,
         n_stim_contexts: int = 6,
+        n_peptide_formats: int = 6,
     ):
         super().__init__()
         ctx_dim = max(8, d_model // 8)
+        self.ctx_dim = ctx_dim
+        self.d_model = d_model
 
         self.assay_method_embed = nn.Embedding(n_assay_methods, ctx_dim)
         self.assay_readout_embed = nn.Embedding(n_assay_readouts, ctx_dim)
         self.apc_type_embed = nn.Embedding(n_apc_types, ctx_dim)
         self.culture_context_embed = nn.Embedding(n_culture_contexts, ctx_dim)
         self.stim_context_embed = nn.Embedding(n_stim_contexts, ctx_dim)
-
-        self.base_with_tcr = nn.Sequential(
-            nn.Linear(d_model * 2, d_model),
+        self.peptide_format_embed = nn.Embedding(n_peptide_formats, ctx_dim)
+        self.duration_default = nn.Embedding(n_culture_contexts, 1)
+        self.duration_proj = nn.Sequential(
+            nn.Linear(1, ctx_dim),
             nn.GELU(),
-            nn.Linear(d_model, 1),
+            nn.Linear(ctx_dim, ctx_dim),
         )
-        self.base_without_tcr = nn.Sequential(
+
+        self.n_assay_methods = n_assay_methods
+        self.n_assay_readouts = n_assay_readouts
+        self.n_apc_types = n_apc_types
+        self.n_culture_contexts = n_culture_contexts
+        self.n_stim_contexts = n_stim_contexts
+        self.n_peptide_formats = n_peptide_formats
+
+        # Context-conditioned projections from shared context embedding.
+        self.bias_proj = nn.Sequential(
+            nn.Linear(ctx_dim, ctx_dim),
+            nn.GELU(),
+            nn.Linear(ctx_dim, 1),
+        )
+        self.gate_proj = nn.Sequential(
+            nn.Linear(ctx_dim, d_model),
+        )
+        self.signal_proj = nn.Sequential(
             nn.Linear(d_model, d_model // 2),
             nn.GELU(),
             nn.Linear(d_model // 2, 1),
         )
-
-        ctx_in_dim = d_model + ctx_dim * 5
-        self.context_bias = nn.Sequential(
-            nn.Linear(ctx_in_dim, d_model // 2),
-            nn.GELU(),
-            nn.Linear(d_model // 2, 1),
+        self.proc_gate = nn.Sequential(
+            nn.Linear(ctx_dim, 1),
+        )
+        self.ambiguity_gate = nn.Sequential(
+            nn.Linear(ctx_dim, 1),
         )
 
-        self.w_bio = nn.Parameter(torch.tensor(1.0))
-        self.w_base = nn.Parameter(torch.tensor(0.6))
-        self.w_ctx = nn.Parameter(torch.tensor(0.6))
-        self.w_lineage = nn.Parameter(torch.tensor(0.5))
-        self.bias = nn.Parameter(torch.zeros(1))
-        self.lineage_projection = nn.Sequential(
-            nn.Linear(4, max(8, d_model // 8)),
-            nn.GELU(),
-            nn.Linear(max(8, d_model // 8), 1),
-        )
+    def _idx_or_default(
+        self,
+        idx: Optional[torch.Tensor],
+        batch_size: int,
+        device: torch.device,
+        n_values: int,
+    ) -> torch.Tensor:
+        if idx is None:
+            return torch.zeros(batch_size, dtype=torch.long, device=device)
+        x = idx.to(device=device, dtype=torch.long).view(batch_size)
+        return x.clamp(min=0, max=max(n_values - 1, 0))
 
-        # Auxiliary heads: encourage latent/embedding compatibility with assay strata.
-        self.assay_method_classifier = nn.Linear(d_model, n_assay_methods)
-        self.assay_readout_classifier = nn.Linear(d_model, n_assay_readouts)
-        self.apc_type_classifier = nn.Linear(d_model, n_apc_types)
-        self.culture_context_classifier = nn.Linear(d_model, n_culture_contexts)
-        self.stim_context_classifier = nn.Linear(d_model, n_stim_contexts)
+    def _resolve_duration_vec(
+        self,
+        culture_idx: torch.Tensor,
+        culture_duration_hours: Optional[torch.Tensor],
+    ) -> torch.Tensor:
+        batch_size = culture_idx.shape[0]
+        device = culture_idx.device
+        if culture_duration_hours is None:
+            duration_hours = torch.zeros(batch_size, 1, dtype=torch.float32, device=device)
+        else:
+            duration_hours = culture_duration_hours.to(device=device, dtype=torch.float32).view(batch_size, 1)
+        known_duration = (duration_hours > 0.0).float()
+        default_log_dur = self.duration_default(culture_idx)
+        log_duration = torch.log1p(duration_hours.clamp(min=0.0))
+        mixed_log_duration = known_duration * log_duration + (1.0 - known_duration) * default_log_dur
+        return self.duration_proj(mixed_log_duration)
 
-    def _context_embedding(
+    def _context_parts(
         self,
         assay_method_idx: Optional[torch.Tensor],
         assay_readout_idx: Optional[torch.Tensor],
         apc_type_idx: Optional[torch.Tensor],
         culture_context_idx: Optional[torch.Tensor],
         stim_context_idx: Optional[torch.Tensor],
+        peptide_format_idx: Optional[torch.Tensor],
+        culture_duration_hours: Optional[torch.Tensor],
         batch_size: int,
         device: torch.device,
-    ) -> torch.Tensor:
-        def _idx_or_zeros(idx: Optional[torch.Tensor]) -> torch.Tensor:
-            if idx is None:
-                return torch.zeros(batch_size, dtype=torch.long, device=device)
-            return idx.to(device=device, dtype=torch.long).view(batch_size)
+    ) -> Dict[str, torch.Tensor]:
+        method_i = self._idx_or_default(
+            assay_method_idx, batch_size, device, self.n_assay_methods
+        )
+        readout_i = self._idx_or_default(
+            assay_readout_idx, batch_size, device, self.n_assay_readouts
+        )
+        apc_i = self._idx_or_default(
+            apc_type_idx, batch_size, device, self.n_apc_types
+        )
+        culture_i = self._idx_or_default(
+            culture_context_idx, batch_size, device, self.n_culture_contexts
+        )
+        stim_i = self._idx_or_default(
+            stim_context_idx, batch_size, device, self.n_stim_contexts
+        )
+        pepfmt_i = self._idx_or_default(
+            peptide_format_idx, batch_size, device, self.n_peptide_formats
+        )
 
-        method = self.assay_method_embed(_idx_or_zeros(assay_method_idx))
-        readout = self.assay_readout_embed(_idx_or_zeros(assay_readout_idx))
-        apc = self.apc_type_embed(_idx_or_zeros(apc_type_idx))
-        culture = self.culture_context_embed(_idx_or_zeros(culture_context_idx))
-        stim = self.stim_context_embed(_idx_or_zeros(stim_context_idx))
-        return torch.cat([method, readout, apc, culture, stim], dim=-1)
+        return {
+            "assay_method": self.assay_method_embed(method_i),
+            "assay_readout": self.assay_readout_embed(readout_i),
+            "apc_type": self.apc_type_embed(apc_i),
+            "culture_context": self.culture_context_embed(culture_i),
+            "stim_context": self.stim_context_embed(stim_i),
+            "peptide_format": self.peptide_format_embed(pepfmt_i),
+            "duration": self._resolve_duration_vec(culture_i, culture_duration_hours),
+        }
 
-    def forward(
+    @staticmethod
+    def _sum_parts(parts: Dict[str, torch.Tensor]) -> torch.Tensor:
+        return sum(parts.values())
+
+    def _predict_with_ctx(
         self,
-        pmhc_vec: torch.Tensor,
-        immunogenicity_logit: torch.Tensor,
-        tcr_vec: Optional[torch.Tensor] = None,
-        immunogenicity_cd4_logit: Optional[torch.Tensor] = None,
-        immunogenicity_cd8_logit: Optional[torch.Tensor] = None,
-        class_probs: Optional[torch.Tensor] = None,
+        ctx_vec: torch.Tensor,
+        immunogenicity_cd8_vec: torch.Tensor,
+        immunogenicity_cd4_vec: torch.Tensor,
+        presentation_class1_logit: torch.Tensor,
+        presentation_class2_logit: torch.Tensor,
+        binding_class1_logit: torch.Tensor,
+        binding_class2_logit: torch.Tensor,
+        class_probs: torch.Tensor,
+    ) -> torch.Tensor:
+        panel_mode = ctx_vec.ndim == 3
+        if panel_mode:
+            batch_size, n_panel, _ = ctx_vec.shape
+            ctx_flat = ctx_vec.reshape(batch_size * n_panel, self.ctx_dim)
+            def _expand(t: torch.Tensor) -> torch.Tensor:
+                if t.ndim == 1:
+                    t = t.unsqueeze(-1)
+                return t.unsqueeze(1).expand(-1, n_panel, -1).reshape(batch_size * n_panel, -1)
+
+            cd8_vec = _expand(immunogenicity_cd8_vec)
+            cd4_vec = _expand(immunogenicity_cd4_vec)
+            p1 = _expand(presentation_class1_logit)
+            p2 = _expand(presentation_class2_logit)
+            b1 = _expand(binding_class1_logit)
+            b2 = _expand(binding_class2_logit)
+            cls = _expand(class_probs)
+        else:
+            ctx_flat = ctx_vec
+            cd8_vec = immunogenicity_cd8_vec
+            cd4_vec = immunogenicity_cd4_vec
+            p1 = presentation_class1_logit
+            p2 = presentation_class2_logit
+            b1 = binding_class1_logit
+            b2 = binding_class2_logit
+            cls = class_probs
+
+        bias = self.bias_proj(ctx_flat)
+        gate = torch.sigmoid(self.gate_proj(ctx_flat))
+        cd8_signal = self.signal_proj(gate * cd8_vec)
+        cd4_signal = self.signal_proj(gate * cd4_vec)
+        proc_weight = torch.sigmoid(self.proc_gate(ctx_flat))
+
+        cd8_upstream = proc_weight * p1 + (1 - proc_weight) * b1
+        cd4_upstream = proc_weight * p2 + (1 - proc_weight) * b2
+        cd8_logit = cd8_upstream + cd8_signal + bias
+        cd4_logit = cd4_upstream + cd4_signal + bias
+
+        class_ambiguity = torch.sigmoid(self.ambiguity_gate(ctx_flat))
+        known = cls[:, 0:1] * cd8_logit + cls[:, 1:2] * cd4_logit
+        ambiguous = noisy_or_logit(cd8_logit, cd4_logit)
+        out = (1 - class_ambiguity) * known + class_ambiguity * ambiguous
+
+        if panel_mode:
+            return out.view(batch_size, n_panel)
+        return out
+
+    def predict_panel(
+        self,
+        immunogenicity_cd8_vec: torch.Tensor,
+        immunogenicity_cd4_vec: torch.Tensor,
+        presentation_class1_logit: torch.Tensor,
+        presentation_class2_logit: torch.Tensor,
+        binding_class1_logit: torch.Tensor,
+        binding_class2_logit: torch.Tensor,
+        class_probs: torch.Tensor,
         assay_method_idx: Optional[torch.Tensor] = None,
         assay_readout_idx: Optional[torch.Tensor] = None,
         apc_type_idx: Optional[torch.Tensor] = None,
         culture_context_idx: Optional[torch.Tensor] = None,
         stim_context_idx: Optional[torch.Tensor] = None,
-    ) -> tuple[torch.Tensor, Dict[str, torch.Tensor]]:
-        """Predict assay outcome and context-category logits."""
-        if tcr_vec is not None:
-            base = self.base_with_tcr(torch.cat([pmhc_vec, tcr_vec], dim=-1))
-        else:
-            base = self.base_without_tcr(pmhc_vec)
-
-        batch_size = pmhc_vec.shape[0]
-        ctx_emb = self._context_embedding(
+        peptide_format_idx: Optional[torch.Tensor] = None,
+        culture_duration_hours: Optional[torch.Tensor] = None,
+    ) -> Dict[str, torch.Tensor]:
+        """Predict panel logits across categorical assay axes."""
+        batch_size = immunogenicity_cd8_vec.shape[0]
+        device = immunogenicity_cd8_vec.device
+        parts = self._context_parts(
             assay_method_idx=assay_method_idx,
             assay_readout_idx=assay_readout_idx,
             apc_type_idx=apc_type_idx,
             culture_context_idx=culture_context_idx,
             stim_context_idx=stim_context_idx,
+            peptide_format_idx=peptide_format_idx,
+            culture_duration_hours=culture_duration_hours,
             batch_size=batch_size,
-            device=pmhc_vec.device,
+            device=device,
         )
-        ctx_bias = self.context_bias(torch.cat([pmhc_vec, ctx_emb], dim=-1))
 
-        ig = immunogenicity_logit
-        if ig.ndim == 1:
-            ig = ig.unsqueeze(-1)
-        logit = (
-            F.softplus(self.w_bio) * ig
-            + F.softplus(self.w_base) * base
-            + F.softplus(self.w_ctx) * ctx_bias
-            + self.bias
-        )
-        # Optional lineage-aware signal: lets non-sorted assays consume
-        # both CD4 and CD8 immunogenicity latents with class-mixture context.
-        if immunogenicity_cd4_logit is not None and immunogenicity_cd8_logit is not None:
-            cd4 = immunogenicity_cd4_logit
-            cd8 = immunogenicity_cd8_logit
-            if cd4.ndim == 1:
-                cd4 = cd4.unsqueeze(-1)
-            if cd8.ndim == 1:
-                cd8 = cd8.unsqueeze(-1)
+        def _axis_logits(
+            axis: str,
+            weight: torch.Tensor,
+        ) -> torch.Tensor:
+            fixed = sum(v for k, v in parts.items() if k != axis)
+            ctx_axis = fixed.unsqueeze(1) + weight.unsqueeze(0)
+            return self._predict_with_ctx(
+                ctx_axis,
+                immunogenicity_cd8_vec=immunogenicity_cd8_vec,
+                immunogenicity_cd4_vec=immunogenicity_cd4_vec,
+                presentation_class1_logit=presentation_class1_logit,
+                presentation_class2_logit=presentation_class2_logit,
+                binding_class1_logit=binding_class1_logit,
+                binding_class2_logit=binding_class2_logit,
+                class_probs=class_probs,
+            )
 
-            if class_probs is None:
-                p_i = torch.full_like(cd4, 0.5)
-                p_ii = torch.full_like(cd4, 0.5)
-            else:
-                p_i = class_probs[:, :1]
-                p_ii = class_probs[:, 1:2]
-            lineage_feat = torch.cat([cd4, cd8, p_i, p_ii], dim=-1)
-            lineage_bias = self.lineage_projection(lineage_feat)
-            logit = logit + F.softplus(self.w_lineage) * lineage_bias
-
-        context_logits = {
-            "assay_method": self.assay_method_classifier(pmhc_vec),
-            "assay_readout": self.assay_readout_classifier(pmhc_vec),
-            "apc_type": self.apc_type_classifier(pmhc_vec),
-            "culture_context": self.culture_context_classifier(pmhc_vec),
-            "stim_context": self.stim_context_classifier(pmhc_vec),
+        return {
+            "assay_method": _axis_logits("assay_method", self.assay_method_embed.weight),
+            "assay_readout": _axis_logits("assay_readout", self.assay_readout_embed.weight),
+            "apc_type": _axis_logits("apc_type", self.apc_type_embed.weight),
+            "culture_context": _axis_logits("culture_context", self.culture_context_embed.weight),
+            "stim_context": _axis_logits("stim_context", self.stim_context_embed.weight),
+            "peptide_format": _axis_logits("peptide_format", self.peptide_format_embed.weight),
         }
-        return logit, context_logits
+
+    def forward(
+        self,
+        immunogenicity_cd8_vec: torch.Tensor,
+        immunogenicity_cd4_vec: torch.Tensor,
+        presentation_class1_logit: torch.Tensor,
+        presentation_class2_logit: torch.Tensor,
+        binding_class1_logit: torch.Tensor,
+        binding_class2_logit: torch.Tensor,
+        class_probs: torch.Tensor,
+        assay_method_idx: Optional[torch.Tensor] = None,
+        assay_readout_idx: Optional[torch.Tensor] = None,
+        apc_type_idx: Optional[torch.Tensor] = None,
+        culture_context_idx: Optional[torch.Tensor] = None,
+        stim_context_idx: Optional[torch.Tensor] = None,
+        peptide_format_idx: Optional[torch.Tensor] = None,
+        culture_duration_hours: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
+        """Predict T-cell assay outcome from immunogenicity vecs + upstream logits.
+
+        Args:
+            immunogenicity_cd8_vec: CD8 immunogenicity latent (batch, d_model)
+            immunogenicity_cd4_vec: CD4 immunogenicity latent (batch, d_model)
+            presentation_class1_logit: Class-I presentation logit (batch, 1)
+            presentation_class2_logit: Class-II presentation logit (batch, 1)
+            binding_class1_logit: Class-I binding logit (batch, 1)
+            binding_class2_logit: Class-II binding logit (batch, 1)
+            class_probs: MHC class probabilities (batch, 2) [p_I, p_II]
+            assay_method_idx..stim_context_idx: optional context indices
+
+        Returns:
+            T-cell assay logit (batch, 1)
+        """
+        batch_size = immunogenicity_cd8_vec.shape[0]
+        device = immunogenicity_cd8_vec.device
+
+        parts = self._context_parts(
+            assay_method_idx=assay_method_idx,
+            assay_readout_idx=assay_readout_idx,
+            apc_type_idx=apc_type_idx,
+            culture_context_idx=culture_context_idx,
+            stim_context_idx=stim_context_idx,
+            peptide_format_idx=peptide_format_idx,
+            culture_duration_hours=culture_duration_hours,
+            batch_size=batch_size,
+            device=device,
+        )
+        ctx_vec = self._sum_parts(parts)
+        return self._predict_with_ctx(
+            ctx_vec,
+            immunogenicity_cd8_vec=immunogenicity_cd8_vec,
+            immunogenicity_cd4_vec=immunogenicity_cd4_vec,
+            presentation_class1_logit=presentation_class1_logit,
+            presentation_class2_logit=presentation_class2_logit,
+            binding_class1_logit=binding_class1_logit,
+            binding_class2_logit=binding_class2_logit,
+            class_probs=class_probs,
+        )
 
 
 # --------------------------------------------------------------------------
@@ -497,41 +668,33 @@ class TCellAssayHead(nn.Module):
 # --------------------------------------------------------------------------
 
 class ElutionHead(nn.Module):
-    """Predicts elution/MS detection probability."""
+    """Elution logit = presentation + MS detectability (S9.3).
 
-    def __init__(self, d_model: int = 256):
+    No pmhc_vec shortcut — information flows only through designated latent paths.
+    """
+
+    def __init__(self):
         super().__init__()
-        self.context_head = nn.Sequential(
-            nn.Linear(d_model, d_model // 2),
-            nn.GELU(),
-            nn.Linear(d_model // 2, 1),
-        )
-        self.w_context = nn.Parameter(torch.tensor(1.0))
         self.w_presentation = nn.Parameter(torch.tensor(1.0))
-        self.w_processing = nn.Parameter(torch.tensor(0.4))
+        self.w_ms_detectability = nn.Parameter(torch.tensor(1.0))
         self.bias = nn.Parameter(torch.zeros(1))
 
     def forward(
         self,
-        pmhc_vec: torch.Tensor,
-        presentation_logit: Optional[torch.Tensor] = None,
-        processing_logit: Optional[torch.Tensor] = None,
+        presentation_logit: torch.Tensor,
+        ms_detectability_logit: torch.Tensor,
     ) -> torch.Tensor:
-        """Predict detection logit.
+        """Predict elution/detection logit.
 
         Args:
-            pmhc_vec: pMHC vector representation (batch, d_model)
-            presentation_logit: Optional upstream presentation logit (batch, 1)
-            processing_logit: Optional upstream processing logit (batch, 1)
+            presentation_logit: Upstream presentation logit (batch, 1)
+            ms_detectability_logit: MS detectability logit (batch, 1)
 
         Returns:
             Detection logit (batch, 1)
         """
-        out = F.softplus(self.w_context) * self.context_head(pmhc_vec) + self.bias
-        if presentation_logit is not None:
-            out = out + F.softplus(self.w_presentation) * presentation_logit
-        if processing_logit is not None:
-            out = out + F.softplus(self.w_processing) * processing_logit
-        return out
-
-
+        return (
+            F.softplus(self.w_presentation) * presentation_logit
+            + F.softplus(self.w_ms_detectability) * ms_detectability_logit
+            + self.bias
+        )

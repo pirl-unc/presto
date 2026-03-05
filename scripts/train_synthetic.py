@@ -193,15 +193,6 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         mask_attr="elution_mask",
     ),
     TaskLossSpec(
-        name="ms",
-        target_key="elution",
-        mask_key="elution",
-        pred_paths=(("ms_logit",),),
-        loss_type="bce",
-        target_attr="elution_label",
-        mask_attr="elution_mask",
-    ),
-    TaskLossSpec(
         name="tcell",
         target_key="tcell",
         mask_key="tcell",
@@ -223,35 +214,60 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         name="tcell_assay_method",
         target_key="tcell_assay_method",
         mask_key="tcell_assay_method",
-        pred_paths=(("tcell_context_logits", "assay_method"),),
+        pred_paths=(
+            ("tcell_panel_logits", "assay_method"),
+            ("tcell_context_logits", "assay_method"),
+        ),
         loss_type="ce",
     ),
     TaskLossSpec(
         name="tcell_assay_readout",
         target_key="tcell_assay_readout",
         mask_key="tcell_assay_readout",
-        pred_paths=(("tcell_context_logits", "assay_readout"),),
+        pred_paths=(
+            ("tcell_panel_logits", "assay_readout"),
+            ("tcell_context_logits", "assay_readout"),
+        ),
         loss_type="ce",
     ),
     TaskLossSpec(
         name="tcell_apc_type",
         target_key="tcell_apc_type",
         mask_key="tcell_apc_type",
-        pred_paths=(("tcell_context_logits", "apc_type"),),
+        pred_paths=(
+            ("tcell_panel_logits", "apc_type"),
+            ("tcell_context_logits", "apc_type"),
+        ),
         loss_type="ce",
     ),
     TaskLossSpec(
         name="tcell_culture_context",
         target_key="tcell_culture_context",
         mask_key="tcell_culture_context",
-        pred_paths=(("tcell_context_logits", "culture_context"),),
+        pred_paths=(
+            ("tcell_panel_logits", "culture_context"),
+            ("tcell_context_logits", "culture_context"),
+        ),
         loss_type="ce",
     ),
     TaskLossSpec(
         name="tcell_stim_context",
         target_key="tcell_stim_context",
         mask_key="tcell_stim_context",
-        pred_paths=(("tcell_context_logits", "stim_context"),),
+        pred_paths=(
+            ("tcell_panel_logits", "stim_context"),
+            ("tcell_context_logits", "stim_context"),
+        ),
+        loss_type="ce",
+    ),
+    TaskLossSpec(
+        name="tcell_peptide_format",
+        target_key="tcell_peptide_format",
+        mask_key="tcell_peptide_format",
+        pred_paths=(
+            ("tcell_panel_logits", "peptide_format"),
+            ("tcell_context_logits", "peptide_format"),
+        ),
         loss_type="ce",
     ),
     TaskLossSpec(
@@ -1006,20 +1022,33 @@ def _compute_consistency_losses(
     if assay_pres_w > 0:
         pres_vec = _as_float_vector(outputs["presentation_logit"])
         loss_terms = []
+        elut_mask = getattr(batch, "elution_mask", None)
+        elution_vec = None
         if "elution_logit" in outputs:
-            elut_vec = _as_float_vector(outputs["elution_logit"])
-            elut_mask = getattr(batch, "elution_mask", None)
-            mse = (elut_vec - pres_vec).square()
-            reduced = _masked_mean(mse, elut_mask)
-            if reduced is not None:
-                loss_terms.append(reduced)
-        if "ms_logit" in outputs:
-            ms_vec = _as_float_vector(outputs["ms_logit"])
-            elut_mask = getattr(batch, "elution_mask", None)
-            mse = (ms_vec - pres_vec).square()
-            reduced = _masked_mean(mse, elut_mask)
-            if reduced is not None:
-                loss_terms.append(reduced)
+            elution_vec = _as_float_vector(outputs["elution_logit"])
+        elif "ms_logit" in outputs:
+            elution_vec = _as_float_vector(outputs["ms_logit"])
+
+        if elution_vec is not None:
+            if "ms_detectability_logit" in outputs:
+                ms_detect_vec = _as_float_vector(outputs["ms_detectability_logit"])
+                expected_elution = pres_vec + ms_detect_vec
+                mse = (elution_vec - expected_elution).square()
+                reduced = _masked_mean(mse, elut_mask)
+                if reduced is not None:
+                    loss_terms.append(reduced)
+            elif "ms_logit" in outputs:
+                ms_vec = _as_float_vector(outputs["ms_logit"])
+                mse = (elution_vec - ms_vec).square()
+                reduced = _masked_mean(mse, elut_mask)
+                if reduced is not None:
+                    loss_terms.append(reduced)
+            else:
+                # Backward-compatible fallback for minimal output dictionaries.
+                mse = (elution_vec - pres_vec).square()
+                reduced = _masked_mean(mse, elut_mask)
+                if reduced is not None:
+                    loss_terms.append(reduced)
         if loss_terms:
             losses["consistency_assay_presentation"] = (
                 assay_pres_w * (sum(loss_terms) / len(loss_terms))
@@ -1210,7 +1239,7 @@ def compute_loss(
         supervised_loss_support: Dict[str, float] = {}
         supervised_start = time.perf_counter() if profile_performance else 0.0
         for spec in LOSS_TASK_SPECS:
-            if has_mil_elution and spec.name in {"elution", "presentation", "ms"}:
+            if has_mil_elution and spec.name in {"elution", "presentation"}:
                 # These tasks are trained at bag-level via Noisy-OR MIL below.
                 continue
             target = _get_batch_target(batch, spec)
@@ -1361,6 +1390,7 @@ def train_epoch(
     perf_log_interval_batches: int = 0,
     use_amp: bool = False,
     max_mil_instances: int = 0,
+    max_batches: int = 0,
 ) -> Tuple[float, Dict[str, float]]:
     """Train for one epoch."""
     model.train()
@@ -1506,6 +1536,8 @@ def train_epoch(
             window_mil_sec = 0.0
             window_regularization_sec = 0.0
         prev_batch_end = time.perf_counter()
+        if max_batches > 0 and n_batches >= max_batches:
+            break
 
     if show_progress and hasattr(iterator, "close"):
         iterator.close()
@@ -1550,6 +1582,7 @@ def evaluate(
     supervised_loss_aggregation: str = "sample_weighted",
     use_amp: bool = False,
     max_mil_instances: int = 0,
+    max_batches: int = 0,
 ) -> Tuple[float, Dict[str, float]]:
     """Evaluate model on validation set."""
     model.eval()
@@ -1598,6 +1631,8 @@ def evaluate(
                     },
                     refresh=False,
                 )
+            if max_batches > 0 and n_batches >= max_batches:
+                break
 
     if show_progress and hasattr(iterator, "close"):
         iterator.close()

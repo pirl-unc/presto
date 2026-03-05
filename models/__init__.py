@@ -7,7 +7,6 @@ from .pmhc import (
     BindingModule,
     StableBindingHead,
     PresentationBottleneck,
-    MSDetectionHead,
     stable_noisy_or,
     posterior_attribution,
     enumerate_core_windows,

@@ -70,6 +70,7 @@ from presto.models.affinity import (
     binding_prob_from_kd_log10,
 )
 from presto.scripts.train_synthetic import (
+    LOSS_TASK_NAMES,
     _regularization_config_from_args,
     evaluate,
     train_epoch,
@@ -236,33 +237,9 @@ SYNTHETIC_CASCADE_TCELL_NEGATIVE_SCALE = 0.5
 MHC_SEQUENCE_ALLOWED_AA = set("ACDEFGHIKLMNPQRSTVWYX")
 MIN_MHC_SEQUENCE_LEN = 101  # strict >100 aa guard
 
-# Keep this local to avoid a hard runtime dependency on train_synthetic internals.
-IEDB_LOSS_TASK_NAMES = (
-    "binding",
-    "binding_kd",
-    "binding_ic50",
-    "binding_ec50",
-    "elution",
-    "presentation",
-    "ms",
-    "tcell",
-    "immunogenicity",
-    "tcell_assay_method",
-    "tcell_assay_readout",
-    "tcell_apc_type",
-    "tcell_culture_context",
-    "tcell_stim_context",
-    "kon",
-    "koff",
-    "t_half",
-    "tm",
-    "processing",
-    "mhc_class",
-    "mhc_species",
-    "chain_species",
-    "chain_type",
-    "chain_phenotype",
-)
+# Keep uncertainty-weighting task indexing aligned with the actual
+# supervised loss registry used by train/eval (`train_synthetic`).
+IEDB_LOSS_TASK_NAMES = tuple(LOSS_TASK_NAMES)
 
 
 def summarize_uncertainty_weights(
@@ -297,6 +274,7 @@ def _call_train_epoch_compat(
     perf_log_interval_batches: int = 0,
     use_amp: bool = False,
     max_mil_instances: int = 0,
+    max_batches: int = 0,
 ) -> Tuple[float, Dict[str, float]]:
     """Call train_epoch across old/new script signatures."""
     kwargs = {}
@@ -321,6 +299,8 @@ def _call_train_epoch_compat(
         kwargs["use_amp"] = bool(use_amp)
     if "max_mil_instances" in params:
         kwargs["max_mil_instances"] = int(max_mil_instances)
+    if "max_batches" in params:
+        kwargs["max_batches"] = int(max_batches)
 
     result = train_epoch(model, train_loader, optimizer, device, **kwargs)
     if isinstance(result, tuple) and len(result) == 2 and isinstance(result[1], dict):
@@ -336,6 +316,7 @@ def _call_evaluate_compat(
     supervised_loss_aggregation: str = "sample_weighted",
     use_amp: bool = False,
     max_mil_instances: int = 0,
+    max_val_batches: int = 0,
 ) -> Tuple[float, Dict[str, float]]:
     """Call evaluate across old/new script signatures."""
     kwargs = {}
@@ -350,6 +331,8 @@ def _call_evaluate_compat(
         kwargs["use_amp"] = bool(use_amp)
     if "max_mil_instances" in params:
         kwargs["max_mil_instances"] = int(max_mil_instances)
+    if "max_batches" in params:
+        kwargs["max_batches"] = int(max_val_batches)
     result = evaluate(model, val_loader, device, **kwargs)
     if isinstance(result, tuple) and len(result) == 2 and isinstance(result[1], dict):
         return float(result[0]), result[1]
@@ -2311,14 +2294,13 @@ def _generate_mhc_only_samples(
         valid.append(rec)
 
     if rejected:
-        logger.info(
-            "MHC augmentation: rejected %d alleles with invalid sequences:",
-            len(rejected),
+        print(
+            f"MHC augmentation: rejected {len(rejected)} alleles with invalid sequences:"
         )
         for allele, reason, chars in rejected[:50]:
-            logger.info("  %-30s  reason=%-20s  chars=%s", allele, reason, chars)
+            print(f"  {allele:30s}  reason={reason:20s}  chars={chars}")
         if len(rejected) > 50:
-            logger.info("  ... and %d more", len(rejected) - 50)
+            print(f"  ... and {len(rejected) - 50} more")
 
     if not valid:
         return []
@@ -4424,6 +4406,8 @@ def run(args: argparse.Namespace) -> None:
                 epoch_idx=epoch,
                 total_epochs=args.epochs,
             )
+            max_batches_per_epoch = int(getattr(args, "max_batches", 0))
+            max_val_batches_per_epoch = int(getattr(args, "max_val_batches", 0))
             train_loss, train_task_losses = _call_train_epoch_compat(
                 model,
                 train_loader,
@@ -4440,6 +4424,7 @@ def run(args: argparse.Namespace) -> None:
                 perf_log_interval_batches=perf_log_interval_batches,
                 use_amp=use_amp,
                 max_mil_instances=max_mil_instances,
+                max_batches=max_batches_per_epoch,
             )
             val_loss, val_task_losses = _call_evaluate_compat(
                 model,
@@ -4451,6 +4436,7 @@ def run(args: argparse.Namespace) -> None:
                 ),
                 use_amp=use_amp,
                 max_mil_instances=max_mil_instances,
+                max_val_batches=max_val_batches_per_epoch,
             )
             probe_metrics: Dict[str, float] = {}
             probe_rows: List[Dict[str, Any]] = []
@@ -4873,8 +4859,8 @@ def main(argv=None):
         "--compile",
         dest="use_compile",
         action="store_true",
-        default=True,
-        help="Enable torch.compile for kernel fusion (default: true)",
+        default=False,
+        help="Enable torch.compile for kernel fusion (default: false)",
     )
     parser.add_argument(
         "--no-compile",
@@ -4888,6 +4874,20 @@ def main(argv=None):
         type=int,
         default=128,
         help="Max MIL instances per batch (0=unlimited, default: 128)",
+    )
+    parser.add_argument(
+        "--max-batches",
+        dest="max_batches",
+        type=int,
+        default=0,
+        help="Max training batches per epoch (0=unlimited, default: 0)",
+    )
+    parser.add_argument(
+        "--max-val-batches",
+        dest="max_val_batches",
+        type=int,
+        default=0,
+        help="Max validation batches per epoch (0=unlimited, default: 0)",
     )
     parser.add_argument("--d_model", type=int, default=128, help="Model dimension")
     parser.add_argument("--n_layers", type=int, default=2, help="Number of layers")

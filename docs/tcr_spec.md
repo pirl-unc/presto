@@ -19,7 +19,7 @@ When enabled in a future release, TCR support will:
 4. Support optional chain/cell auxiliary supervision.
 
 Current canonical behavior:
-- recognition remains peptide-only,
+- recognition uses peptide + foreignness (no TCR token path),
 - no TCR-conditioned matching output is used,
 - no TCR objective is active in canonical training.
 
@@ -124,7 +124,7 @@ Not active in canonical training.
 
 | Situation | Planned strategy |
 |-----------|------------------|
-| No TCR | Skip TCR pathway; recognition remains peptide-only |
+| No TCR | Skip TCR pathway; recognition remains peptide + foreignness |
 | Single-chain TCR | Use `<MISSING>` in absent chain segment |
 | Paired TCR | Full TCR encoding |
 

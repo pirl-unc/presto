@@ -122,7 +122,7 @@ Each epoch uses mixed-task mini-batches. Samples can carry any subset of labels.
 - Processing
 - Elution / MS
 - T-cell assays and context labels
-- Recognition supervision from peptide/context labels (peptide-only canonical branch)
+- Recognition supervision from peptide/context labels (peptide+foreignness canonical branch)
 - Chain attribute supervision from 10x
 
 ## 3.2 Sparse-Label Collation

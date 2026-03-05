@@ -169,6 +169,7 @@ class BCellRecord:
     heavy_chain_type: Optional[str] = None  # IGH
     light_chain_type: Optional[str] = None  # IGK or IGL
     species: Optional[str] = None
+    antigen_species: Optional[str] = None
     source: str = "iedb"
 
 
@@ -1058,7 +1059,11 @@ def load_iedb_bcell(path: Union[str, Path]) -> Iterator[BCellRecord]:
     )
     species_idx = _sniff_column(
         header,
-        ['epitope species', 'host organism', 'organism', 'species'],
+        ['host name', 'host organism', 'host species'],
+    )
+    antigen_species_idx = _sniff_column(
+        header,
+        ['epitope source organism', 'epitope species', 'source organism'],
     )
 
     for row in rows:
@@ -1094,6 +1099,7 @@ def load_iedb_bcell(path: Union[str, Path]) -> Iterator[BCellRecord]:
             heavy_chain_type=heavy_chain_type,
             light_chain_type=light_chain_type,
             species=_get_column(row, species_idx) or None,
+            antigen_species=_get_column(row, antigen_species_idx) or None,
             source='iedb',
         )
 

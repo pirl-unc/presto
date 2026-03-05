@@ -53,11 +53,20 @@ def test_parser_predict_presentation_accepts_species_and_index():
             "MAVMAPRTLLLLLSGALALTQTWAG",
             "--species",
             "human",
+            "--mhc-species",
+            "murine",
+            "--immune-species",
+            "human",
+            "--species-of-origin",
+            "viruses",
             "--index-csv",
             "mhc_index.csv",
         ]
     )
     assert args.species == "human"
+    assert args.mhc_species == "murine"
+    assert args.immune_species == "human"
+    assert args.species_of_origin == "viruses"
     assert args.index_csv == "mhc_index.csv"
 
 
@@ -114,6 +123,9 @@ def test_cmd_predict_tile_reads_fasta_file(tmp_path, monkeypatch):
         mhc_b_sequence=None,
         mhc_class="I",
         species="human",
+        mhc_species="murine",
+        immune_species="human",
+        species_of_origin="viruses",
         min_length=8,
         max_length=8,
         flank_size=0,
@@ -126,5 +138,7 @@ def test_cmd_predict_tile_reads_fasta_file(tmp_path, monkeypatch):
     code = predict_cli.cmd_predict_tile(args)
     assert code == 0
     assert captured["protein_sequence"] == "MPEPTIDESEQ"
+    assert captured["mhc_species"] == "murine"
+    assert captured["immune_species"] == "human"
+    assert captured["species_of_origin"] == "viruses"
     assert Path(args.output).exists()
-

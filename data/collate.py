@@ -4,6 +4,7 @@ Handles batching of variable-length sequences with proper padding.
 """
 
 import math
+import re
 from dataclasses import dataclass, field
 from typing import Any, Callable, Dict, List, Optional
 
@@ -20,6 +21,7 @@ from .vocab import (
     TCELL_ASSAY_METHOD_TO_IDX,
     TCELL_ASSAY_READOUT_TO_IDX,
     TCELL_CULTURE_CONTEXT_TO_IDX,
+    TCELL_PEPTIDE_FORMAT_TO_IDX,
     TCELL_STIM_CONTEXT_TO_IDX,
 )
 
@@ -149,6 +151,8 @@ class PrestoSample:
     tcell_in_vitro_process: Optional[str] = None
     tcell_in_vitro_responder: Optional[str] = None
     tcell_in_vitro_stimulator: Optional[str] = None
+    tcell_peptide_format: Optional[str] = None
+    tcell_culture_duration_hours: Optional[float] = None
 
     # Elution
     elution_label: Optional[float] = None
@@ -660,6 +664,87 @@ class PrestoCollator:
             return "IN_VITRO_STIM"
         return "OTHER"
 
+    def _categorize_tcell_peptide_format(
+        self,
+        peptide: Optional[str],
+        explicit_format: Optional[str],
+        assay_method: Optional[str],
+        assay_readout: Optional[str],
+    ) -> str:
+        explicit = self._norm_text(explicit_format)
+        if explicit:
+            if "minimal" in explicit or "epitope" in explicit:
+                return "MINIMAL_EPITOPE"
+            if "long" in explicit:
+                return "LONG_PEPTIDE"
+            if "pool" in explicit or "mix" in explicit:
+                return "PEPTIDE_POOL"
+            if "protein" in explicit or "whole" in explicit:
+                return "WHOLE_PROTEIN"
+            return "OTHER"
+
+        method = self._norm_text(assay_method)
+        readout = self._norm_text(assay_readout)
+        combined = f"{method} {readout}".strip()
+        if "pool" in combined:
+            return "PEPTIDE_POOL"
+        if "whole protein" in combined:
+            return "WHOLE_PROTEIN"
+
+        pep = (peptide or "").strip()
+        if not pep:
+            return "unknown"
+        if any(sep in pep for sep in (";", ",", "|", "/")):
+            return "PEPTIDE_POOL"
+        pep_len = len(pep)
+        if pep_len <= 15:
+            return "MINIMAL_EPITOPE"
+        return "LONG_PEPTIDE"
+
+    def _infer_tcell_culture_duration_hours(
+        self,
+        explicit_duration_hours: Optional[float],
+        effector_culture: Optional[str],
+        apc_culture: Optional[str],
+        in_vitro_process: Optional[str],
+        in_vitro_responder: Optional[str],
+        in_vitro_stimulator: Optional[str],
+    ) -> Optional[float]:
+        if explicit_duration_hours is not None:
+            try:
+                value = float(explicit_duration_hours)
+                if value > 0.0:
+                    return value
+            except (TypeError, ValueError):
+                pass
+
+        combined = " ".join([
+            self._norm_text(effector_culture),
+            self._norm_text(apc_culture),
+            self._norm_text(in_vitro_process),
+            self._norm_text(in_vitro_responder),
+            self._norm_text(in_vitro_stimulator),
+        ]).strip()
+        if not combined:
+            return None
+
+        match = re.search(
+            r"(\\d+(?:\\.\\d+)?)\\s*(h|hr|hrs|hour|hours|d|day|days|wk|wks|week|weeks)",
+            combined,
+        )
+        if not match:
+            return None
+
+        value = float(match.group(1))
+        unit = match.group(2)
+        if unit in {"h", "hr", "hrs", "hour", "hours"}:
+            return value
+        if unit in {"d", "day", "days"}:
+            return value * 24.0
+        if unit in {"wk", "wks", "week", "weeks"}:
+            return value * 24.0 * 7.0
+        return None
+
     def _collate_tcell_context(
         self,
         samples: List[PrestoSample],
@@ -670,6 +755,8 @@ class PrestoCollator:
             "apc_type_idx": [],
             "culture_context_idx": [],
             "stim_context_idx": [],
+            "peptide_format_idx": [],
+            "culture_duration_hours": [],
         }
         targets: Dict[str, List[int]] = {
             "tcell_assay_method": [],
@@ -677,6 +764,7 @@ class PrestoCollator:
             "tcell_apc_type": [],
             "tcell_culture_context": [],
             "tcell_stim_context": [],
+            "tcell_peptide_format": [],
         }
         masks: Dict[str, List[float]] = {
             "tcell_assay_method": [],
@@ -684,6 +772,8 @@ class PrestoCollator:
             "tcell_apc_type": [],
             "tcell_culture_context": [],
             "tcell_stim_context": [],
+            "tcell_peptide_format": [],
+            "tcell_culture_duration": [],
         }
 
         for sample in samples:
@@ -707,6 +797,20 @@ class PrestoCollator:
                 sample.tcell_in_vitro_responder,
                 sample.tcell_in_vitro_stimulator,
             )
+            pep_format = self._categorize_tcell_peptide_format(
+                peptide=sample.peptide,
+                explicit_format=sample.tcell_peptide_format,
+                assay_method=sample.tcell_assay_method,
+                assay_readout=sample.tcell_assay_readout,
+            )
+            culture_duration_hours = self._infer_tcell_culture_duration_hours(
+                explicit_duration_hours=sample.tcell_culture_duration_hours,
+                effector_culture=sample.tcell_effector_culture,
+                apc_culture=sample.tcell_apc_culture,
+                in_vitro_process=sample.tcell_in_vitro_process,
+                in_vitro_responder=sample.tcell_in_vitro_responder,
+                in_vitro_stimulator=sample.tcell_in_vitro_stimulator,
+            )
 
             method_idx = TCELL_ASSAY_METHOD_TO_IDX.get(method, TCELL_ASSAY_METHOD_TO_IDX["OTHER"])
             readout_idx = TCELL_ASSAY_READOUT_TO_IDX.get(readout, TCELL_ASSAY_READOUT_TO_IDX["OTHER"])
@@ -717,18 +821,27 @@ class PrestoCollator:
             stim_idx = TCELL_STIM_CONTEXT_TO_IDX.get(
                 stim, TCELL_STIM_CONTEXT_TO_IDX["OTHER"]
             )
+            pep_format_idx = TCELL_PEPTIDE_FORMAT_TO_IDX.get(
+                pep_format,
+                TCELL_PEPTIDE_FORMAT_TO_IDX["OTHER"],
+            )
 
             context_ids["assay_method_idx"].append(method_idx)
             context_ids["assay_readout_idx"].append(readout_idx)
             context_ids["apc_type_idx"].append(apc_idx)
             context_ids["culture_context_idx"].append(culture_idx)
             context_ids["stim_context_idx"].append(stim_idx)
+            context_ids["peptide_format_idx"].append(pep_format_idx)
+            context_ids["culture_duration_hours"].append(
+                float(culture_duration_hours) if culture_duration_hours is not None else 0.0
+            )
 
             targets["tcell_assay_method"].append(method_idx)
             targets["tcell_assay_readout"].append(readout_idx)
             targets["tcell_apc_type"].append(apc_idx)
             targets["tcell_culture_context"].append(culture_idx)
             targets["tcell_stim_context"].append(stim_idx)
+            targets["tcell_peptide_format"].append(pep_format_idx)
 
             has_tcell = sample.tcell_label is not None
             masks["tcell_assay_method"].append(
@@ -746,11 +859,22 @@ class PrestoCollator:
             masks["tcell_stim_context"].append(
                 1.0 if has_tcell and stim_idx != 0 else 0.0
             )
+            masks["tcell_peptide_format"].append(
+                1.0 if has_tcell and pep_format_idx != 0 else 0.0
+            )
+            masks["tcell_culture_duration"].append(
+                1.0 if has_tcell and culture_duration_hours is not None else 0.0
+            )
 
         context_tensors = {
             key: torch.tensor(values, dtype=torch.long)
             for key, values in context_ids.items()
+            if key != "culture_duration_hours"
         }
+        context_tensors["culture_duration_hours"] = torch.tensor(
+            context_ids["culture_duration_hours"],
+            dtype=torch.float32,
+        )
         target_tensors = {
             key: torch.tensor(values, dtype=torch.long)
             for key, values in targets.items()

@@ -102,7 +102,10 @@ into neural network inputs (token sequences and conditioning embeddings).
 | `mhc_a` | AA string or resolvable allele name | No | Sentinel token | MHC alpha chain amino acid sequence. If an allele label is provided (e.g., "HLA-A*02:01"), it must resolve to sequence before tokenization. Unresolved labels are treated as errors in canonical training. |
 | `mhc_b` | AA string or resolvable allele name | No | Canonical beta2m for species (class I) or sentinel (class II) | MHC beta chain amino acid sequence. Class I defaults to species beta2m; class II expects DRB/DQB/DPB-like sequence when available. |
 | `mhc_class` | Enum: {I, II} | No | inferred from MHC chains | Optional hard override for class-specific downstream heads. |
-| `species` | Enum: {human, nhp, murine, cattle, other_mammal, bird, fish} | No | `human` | See "Conditioning metadata" below. |
+| `mhc_species` | Enum or probs over `{human, nhp, murine, other_mammal, bird, fish}` | No | inferred from MHC chains | Optional hard override for the MHC species latent/probability path. |
+| `immune_species` | Enum or probs over `{human, nhp, murine, other_mammal, bird, fish}` | No | `human` | Optional immune-system context override used in global conditioning (non-peptide segments only). |
+| `species_of_origin` | Enum or probs over 12-category organism taxonomy | No | inferred from peptide sequence | Optional hard override for the `species_of_origin` latent. |
+| `species` | Backward-compat alias | No | -- | If provided, applies to both `mhc_species` and `immune_species` unless those are explicitly set. |
 | `tcr_alpha` | AA string | No | None | TCR alpha chain (reserved for future TCR pathway). |
 | `tcr_beta` | AA string | No | None | TCR beta chain (reserved for future TCR pathway). |
 
@@ -115,15 +118,20 @@ The API inputs are translated into two categories of neural network input:
    by the base encoder. `tcr_alpha` and `tcr_beta` are tokenized separately
    for the TCR encoder (`tcr_spec.md`).
 
-2. **Conditioning metadata** — `species` and chain completeness flags are
+2. **Conditioning metadata** — immune-system species and chain completeness flags are
    NOT token sequences. They are encoded as the
    **global conditioning embedding** (S3.2.4), a single learned vector
-   that is summed into every token representation. This provides the model
+   that is summed into non-peptide token representations. This provides the model
    with metadata about the input context:
-   - `species` tells the model which organism's proteasomal and MHC
-     biology to apply. Defaults to `human`.
+   - `immune_species` tells the model which host immune context to apply.
+     Defaults to `human`.
 
-   MHC class is inferred from MHC chain sequences (S5) as internal
+   `mhc_species` and `species_of_origin` are latent-level controls:
+   - `mhc_species` overrides the inferred MHC species probabilities (S5.2).
+   - `species_of_origin` overrides the peptide-source latent (S7.1), which
+     in turn determines `foreignness`.
+
+   MHC class is inferred from MHC chain sequences (S5.1) as internal
    `pI/pII`, then used only in class-specific downstream mixing/gating.
    User `mhc_class` input is an optional hard override for that mixing path,
    not a token-level conditioning embedding.
@@ -151,6 +159,68 @@ predictions.
 - **MHC sequences**: Full-length amino acid sequences. Allele names are resolved to full sequences via the allele resolver (`data/allele_resolver.py`). Maximum chain length ~400 residues.
 - **No allele-token fallback**: Raw allele strings are not valid sequence inputs. If an allele cannot be resolved to amino-acid sequence, canonical training fails fast.
 - **TCR**: Reserved for a future pathway. Canonical production training/inference currently ignores TCR inputs. See `tcr_spec.md`.
+
+## 2.5 Enumerated Override Contract
+
+Latent-level override controls are explicit API options:
+
+| Override Input | Overrides | Scope |
+|---|---|---|
+| `mhc_class` | `mhc_class_probs` | Class-specific mixing/readout gates |
+| `mhc_species` | `mhc_species_probs` | MHC species path (S5.2) |
+| `immune_species` | global conditioning species id | Non-peptide stream conditioning only |
+| `species_of_origin` | `species_of_origin` latent | Upstream of `foreignness` and recognition |
+| `species` (compat alias) | both `mhc_species` + `immune_species` | Compatibility behavior |
+
+## 2.6 Canonical IO-Latent-Output Contract
+
+### 2.6.1 Inputs
+
+- Sequence inputs: `peptide`, `nflank`, `cflank`, `mhc_a`, `mhc_b` (and optional `tcr_alpha`, `tcr_beta` for future path).
+- Side-information overrides: `mhc_class`, `mhc_species`, `immune_species`, `species_of_origin` (plus compat alias `species`).
+
+### 2.6.2 Latents (with token access + deps + overrideability)
+
+| Latent | Token Access | Upstream Latent Deps | API Override |
+|---|---|---|---|
+| `processing_class1` | peptide+nflank+cflank | none | no |
+| `processing_class2` | peptide+nflank+cflank | none | no |
+| `ms_detectability` | peptide | none | no |
+| `species_of_origin` | peptide | none | yes (`species_of_origin`) |
+| `foreignness` | none (derived projection) | `species_of_origin` | indirect via `species_of_origin` |
+| `binding_affinity` | peptide+mhc_a+mhc_b | none | no |
+| `binding_stability` | peptide+mhc_a+mhc_b | none | no |
+| `presentation_class1` | no token access | processing+binding latents | no |
+| `presentation_class2` | no token access | processing+binding latents (+core context token) | no |
+| `recognition_cd8` | peptide | `foreignness` | no |
+| `recognition_cd4` | peptide | `foreignness` | no |
+| `immunogenicity_cd8` | no token access (MLP) | binding+recognition_cd8 | no |
+| `immunogenicity_cd4` | no token access (MLP) | binding+recognition_cd4 | no |
+
+Recognition information-flow constraint:
+- allowed: peptide token states + `foreignness`,
+- disallowed: MHC tokens, flanks, TCR tokens, and core-context tokens.
+
+### 2.6.3 Outputs
+
+Canonical output families:
+
+- MHC inference: `mhc_*_type_logits`, `mhc_*_species_logits`, `mhc_class_probs`, `mhc_species_probs`.
+- Processing/binding/presentation/elution: `processing_*`, `binding_*`, `presentation_*`, `elution_*`, `ms_*`, assay scalars.
+- Core and attention diagnostics: `core_*`, optional binding attention stats.
+- Recognition/immunogenicity: `recognition_cd8/cd4`, `recognition_repertoire`, `immunogenicity_cd8/cd4`, `immunogenicity`.
+- Species/foreignness: `species_of_origin_logits`, `foreignness_logit/prob`.
+- T-cell outputs:
+  - `tcell_logit` (observed-context logit),
+  - `tcell_panel_logits` / `tcell_context_logits` with per-axis panel logits over:
+    `assay_method`, `assay_readout`, `apc_type`, `culture_context`,
+    `stim_context`, `peptide_format`.
+- Split-mixture convenience outputs (class-prob weighted):
+  - logits/probs: `processing_mixed_*`, `binding_mixed_*`,
+    `presentation_mixed_*`, `recognition_mixed_*`,
+    `immunogenicity_mixed_*`,
+  - latent vectors: `processing_mixed`, `presentation_mixed`,
+    `recognition_mixed`, `immunogenicity_mixed`.
 
 ---
 
@@ -550,12 +620,11 @@ core_context_vec = (core_weights.unsqueeze(-1) * peptide_H).sum(dim=0)  # (d_mod
 This vector captures "what the core region of the peptide looks like"
 as a differentiable summary. It is consumed by:
 - `presentation_class2` latent (PFR/core context for DM editing)
-- `recognition_cd4` latent (core vs PFR distinction matters for CD4 TCR contact)
 
 ## 6.4 Core-Relative Positional Encoding
 
 After core identification, peptide residues receive additional positional
-encoding injected into binding and recognition latent queries:
+encoding injected into non-recognition latent queries:
 
 ```python
 for each peptide residue i:
@@ -591,7 +660,8 @@ for each peptide residue i:
 ```
 
 Core-relative encoding is summed with the base triple-frame encoding in
-latents that use it (binding_affinity, binding_stability, recognition_cd4).
+non-recognition pathways (notably binding/presentation). Recognition
+latents are explicitly kept peptide+foreignness only.
 
 ## 6.5 Supervision
 
@@ -635,9 +705,10 @@ latents that use it (binding_affinity, binding_stability, recognition_cd4).
    latent vectors only. This forces all information through the
    processing/binding bottlenecks, preventing shortcut learning that
    bypasses the causal biology.
-3. **Recognition sees peptide only**: No MHC tokens, no upstream latent
-   dependencies. Recognition captures peptide-intrinsic features
-   (foreignness, unusual residues at solvent-exposed positions).
+3. **Recognition sees peptide + foreignness only**: No MHC tokens, no flanks,
+   no TCR tokens, and no other upstream latent dependencies. `foreignness`
+   is derived from peptide-driven species-of-origin inference (or explicit
+   override), giving a controlled self/nonself channel.
 4. **Immunogenicity depends on {affinity, stability, recognition}**:
    Drops presentation from dependencies. Presentation is already a
    function of processing + binding, so including it would create
@@ -680,11 +751,11 @@ latents that use it (binding_affinity, binding_stability, recognition_cd4).
                             |                          |
     Level 2.5       +-------+--------+       +---------+------+
    (parallel,       | recognition_   |       | recognition_   |
-    no latent deps) |   cd8          |       |   cd4          |
-                    | peptide only   |       | peptide only   |
-                    | (+-TCR)        |       | + core_ctx_vec |
-                    +-------+--------+       | (+-TCR)        |
-                            |                +--------+-------+
+    foreignness dep)|   cd8          |       |   cd4          |
+                    | peptide +      |       | peptide +      |
+                    | foreignness    |       | foreignness    |
+                    +-------+--------+       +--------+-------+
+                            |                         |
                             |                         |
     Level 3         +-------+--------+       +--------+-------+
                     | immunogenicity_|       | immunogenicity_|
@@ -700,10 +771,9 @@ latents that use it (binding_affinity, binding_stability, recognition_cd4).
 ```
 
 **Note**: Recognition latents (recognition_cd8/recognition_cd4) are at
-Level 2.5 because they have no upstream latent dependencies -- they are
-computed from tokens only. They could be computed in parallel with
-Level 0/1/2 latents, but are shown here to indicate their logical
-position in the biological cascade.
+Level 2.5 because they depend on `foreignness` (derived from peptide-only
+species-of-origin inference) and peptide tokens, but not on MHC/flank/TCR
+token channels.
 
 ## 7.3 Latent Computation Mechanism
 
@@ -929,7 +999,7 @@ the full peptide for class I.
 
 ---
 
-### Level 2.5: Recognition (parallel, no upstream latent deps)
+### Level 2.5: Recognition (parallel, depends on foreignness)
 
 ---
 
@@ -940,8 +1010,9 @@ the full peptide for class I.
 | Source | Tokens | Positional Encoding |
 |--------|--------|---------------------|
 | Peptide | p_1 ... p_L | Triple-frame |
+| `foreignness` | (1, d_model) | -- |
 
-**Does NOT attend to:** MHC alpha, MHC beta, flanks, any upstream latent.
+**Does NOT attend to:** MHC alpha, MHC beta, flanks, TCR tokens, or core-context token.
 
 **Planned future extension (currently disabled):** gated cross-attention
 from recognition to TCR tokens (see `tcr_spec.md`):
@@ -963,11 +1034,11 @@ typical repertoire to recognize this peptide?" This depends on:
 **Why no MHC tokens for recognition?** The TCR contacts primarily the
 peptide residues at solvent-exposed positions plus the MHC alpha-helices
 flanking the groove. In this canonical design we intentionally keep the
-recognition branch peptide-only and do NOT explicitly model allele-specific
+recognition branch peptide+foreignness only and do NOT explicitly model allele-specific
 solvent accessibility yet. Allele-specific effects are routed through the
 binding/presentation pathway and can be added later as a dedicated extension.
 
-Restricting recognition to peptide-only forces the model to learn
+Restricting recognition to peptide+foreignness forces the model to learn
 peptide-intrinsic features of immunogenicity (foreignness, unusual residues)
 rather than confounding them with binding/presentation.
 
@@ -980,25 +1051,17 @@ rather than confounding them with binding/presentation.
 | Source | Tokens/Vectors | Positional Encoding |
 |--------|---------------|---------------------|
 | Peptide | p_1 ... p_L | Triple-frame |
-| `core_context_vec` | (1, d_model) | -- |
+| `foreignness` | (1, d_model) | -- |
 
-**Does NOT attend to:** MHC, flanks, upstream latents.
+**Does NOT attend to:** MHC, flanks, TCR tokens, core-context token, or any other upstream latent.
 
 **Planned future extension (currently disabled):** gated TCR cross-attention
 (same mechanism as recognition_cd8; see `tcr_spec.md`).
 
-**Why core_context_vec for CD4 but not CD8?** For MHC-II, the peptide
-extends beyond both ends of the groove. The core residues (P1-P9) are
-groove-bound, while PFRs are solvent-exposed. CD4 TCRs contact both
-core-exposed positions (P2, P5, P8) AND N-terminal PFR residues. The
-core_context_vec tells the recognition latent WHERE the core is, so it
-can weight PFR vs core contributions appropriately.
-
-Arnold et al. (J Immunol 2002) showed 78% of MHC-II epitopes have
-PFR-dependent T cells. The core_context_vec is essential for modeling this.
-
-For class I (CD8), the core IS the full peptide, so core_context_vec
-adds no information.
+**Why foreignness for both CD4 and CD8?** The repertoire-level recognition
+branch models self/nonself likelihood directly through `foreignness`, while
+keeping token access peptide-only to avoid leakage from MHC/flank/TCR
+channels.
 
 ---
 
@@ -1069,8 +1132,8 @@ Same structure as immunogenicity_cd8, using recognition_cd4_vec.
 | binding_stability | -- | YES | -- | YES | YES | -- | context_vec, core_rel_pos |
 | presentation_class1 | -- | -- | -- | -- | -- | processing_class1, binding_affinity, binding_stability | context_vec |
 | presentation_class2 | -- | -- | -- | -- | -- | processing_class2, binding_affinity, binding_stability | context_vec, core_context_vec |
-| recognition_cd8 | -- | YES | -- | -- | -- | -- | (+-TCR) |
-| recognition_cd4 | -- | YES | -- | -- | -- | -- | core_context_vec, (+-TCR) |
+| recognition_cd8 | -- | YES | -- | -- | -- | foreignness | -- |
+| recognition_cd4 | -- | YES | -- | -- | -- | foreignness | -- |
 | immunogenicity_cd8 | -- | -- | -- | -- | -- | binding_affinity, binding_stability, recognition_cd8 | (MLP, no cross-attn) |
 | immunogenicity_cd4 | -- | -- | -- | -- | -- | binding_affinity, binding_stability, recognition_cd4 | (MLP, no cross-attn) |
 | ms_detectability | -- | YES | -- | -- | -- | -- | -- |
@@ -1088,9 +1151,8 @@ chain identity.
 hidden states, where weights come from the core-start predictor. It
 summarizes "what the binding core looks like" as a single vector, telling
 downstream latents where the MHC-II core is relative to the peptide
-flanking regions. Only consumed by latents where the core/PFR distinction
-matters: `presentation_class2` (DM editing depends on core register) and
-`recognition_cd4` (CD4 TCRs contact both core-exposed and PFR positions).
+flanking regions. In canonical wiring it is consumed by
+`presentation_class2` (DM editing depends on core register).
 
 ---
 
@@ -1145,10 +1207,11 @@ def per_allele_forward(peptide, flanks, allele, species, tcr=None):
         kv=[processing_class2_vec, binding_affinity_vec,
             binding_stability_vec, core_context_vec, context_vec])
 
-    # Level 2.5: Recognition (peptide only in canonical path)
-    # Planned future extension: gated TCR integration (disabled for now).
-    recognition_cd8_vec = compute_latent(recognition_cd8_query, kv=pep_H)
-    recognition_cd4_vec = compute_latent(recognition_cd4_query, kv=[pep_H, core_context_vec])
+    # Level 2.5: Recognition (peptide + foreignness)
+    recognition_cd8_vec = compute_latent(
+        recognition_cd8_query, kv=[pep_H, foreignness_vec])
+    recognition_cd4_vec = compute_latent(
+        recognition_cd4_query, kv=[pep_H, foreignness_vec])
 
     # Level 3: Immunogenicity (MLP)
     immunogenicity_cd8_vec = MLP_immunogenicity_cd8(
