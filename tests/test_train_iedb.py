@@ -21,6 +21,7 @@ from presto.scripts.train_iedb import (
     _audit_mhc_sequence_coverage,
     _effective_mhc_augmentation_sample_limit,
     _filter_records_to_resolved_mhc,
+    _generate_mhc_only_samples,
     _resolve_run_args,
     _write_mhc_sequence_coverage_report,
     audit_loaded_mhc_sequence_quality,
@@ -227,22 +228,25 @@ def test_pmhc_information_flow_detects_joint_interaction_signal():
     assert metrics["pmhc_flow_status_code"] in {2.0, 3.0}
 
 
-def test_audit_loaded_mhc_sequence_quality_flags_noncanonical_x_and_short():
+def test_audit_loaded_mhc_sequence_quality_flags_noncanonical_x_nucleotide_and_short():
     quality = audit_loaded_mhc_sequence_quality(
         {
             "HLA-A*02:01": "A" * 181,
             "HLA-A*24:02": ("A" * 170) + "X",
             "HLA-B*07:02": ("A" * 110) + "J",
+            "Mamu-A1*001:01": "ACG" * 366,
             "HLA-C*04:01": "C" * (MIN_MHC_CHAIN_LENGTH - 1),
         }
     )
 
-    assert quality["total_sequences"] == 4
+    assert quality["total_sequences"] == 5
     assert quality["x_sequence_count"] == 1
     assert quality["x_residue_total"] == 1
     assert quality["noncanonical_count"] == 1
+    assert quality["nucleotide_like_count"] == 1
     assert quality["short_count"] == 1
     assert any(example[0] == "HLA-B*07:02" for example in quality["noncanonical_examples"])
+    assert any(example[0] == "Mamu-A1*001:01" for example in quality["nucleotide_like_examples"])
     assert any(example[0] == "HLA-C*04:01" for example in quality["short_examples"])
 
 
@@ -255,7 +259,34 @@ def test_audit_loaded_mhc_sequence_quality_accepts_groove_length_fragments():
     )
 
     assert quality["noncanonical_count"] == 0
+    assert quality["nucleotide_like_count"] == 0
     assert quality["short_count"] == 0
+
+
+def test_generate_mhc_only_samples_filters_short_and_nucleotide_like_sequences(tmp_path):
+    index_csv = tmp_path / "mhc_index.csv"
+    index_csv.write_text(
+        (
+            "allele_raw,normalized,gene,mhc_class,species,source,seq_len,sequence\n"
+            "HLA-A*02:01,HLA-A*02:01,A,I,human,imgt,181,"
+            + ("A" * 181)
+            + "\n"
+            "Mamu-A1*001:01,Mamu-A1*001:01,A1,I,Macaca mulatta,ipd_mhc,1098,"
+            + ("ACG" * 366)
+            + "\n"
+            "HLA-DRB1*01:01,HLA-DRB1*01:01,DRB1,II,human,imgt,69,"
+            + ("A" * 69)
+            + "\n"
+        ),
+        encoding="utf-8",
+    )
+
+    samples = _generate_mhc_only_samples(str(index_csv), max_samples=10, seed=13)
+
+    assert len(samples) == 1
+    assert samples[0].primary_allele == "HLA-A*02:01"
+    assert samples[0].mhc_a == "A" * 181
+    assert samples[0].sample_source == "mhc_augmentation"
 
 
 def test_resolve_run_args_canary_keeps_explicit_caps():
@@ -1351,3 +1382,46 @@ def test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved(tmp_path, mo
     assert "category" in allele_rows.splitlines()[0]
     detail_rows = unresolved_detail.read_text(encoding="utf-8")
     assert "modality,source,allele,category,count" in detail_rows.splitlines()[0]
+
+
+def test_filter_records_to_resolved_mhc_drops_invalid_direct_mhc_sequences():
+    binding = [
+        BindingRecord(
+            peptide="SIINFEKL",
+            mhc_allele="Mamu-A1*001:01",
+            mhc_sequence="ACG" * 366,
+            value=50.0,
+            mhc_class="I",
+            species="macaque",
+            source="iedb",
+        )
+    ]
+
+    (
+        out_binding,
+        out_kinetics,
+        out_stability,
+        out_processing,
+        out_elution,
+        out_tcell,
+        out_vdjdb,
+        stats,
+    ) = _filter_records_to_resolved_mhc(
+        binding_records=binding,
+        kinetics_records=[],
+        stability_records=[],
+        processing_records=[],
+        elution_records=[],
+        tcell_records=[],
+        vdjdb_records=[],
+        mhc_sequences={},
+    )
+
+    assert out_binding == []
+    assert out_kinetics == []
+    assert out_stability == []
+    assert out_processing == []
+    assert out_elution == []
+    assert out_tcell == []
+    assert out_vdjdb == []
+    assert stats["binding_dropped"] == 1

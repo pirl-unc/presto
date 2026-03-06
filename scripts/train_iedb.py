@@ -65,6 +65,7 @@ from presto.data.loaders import (
     MHC_ALLOWED_AA,
     MIN_MHC_CHAIN_LENGTH,
     UniProtProtein,
+    _looks_like_nucleotide_sequence as _looks_like_nucleotide_mhc_sequence,
     load_uniprot_proteins,
 )
 from presto.data.mhc_index import classify_unresolved_allele, load_mhc_index, resolve_alleles
@@ -2293,17 +2294,28 @@ def _generate_mhc_only_samples(
     valid = []
     rejected: list[tuple[str, str, str]] = []  # (allele, reason, bad_chars)
     for rec in records.values():
-        if not rec.sequence or len(rec.sequence) < 50:
+        seq = str(rec.sequence or "").strip().upper()
+        if not seq:
             continue
-        if "X" in rec.sequence:
+        if len(seq) < MIN_MHC_SEQUENCE_LEN:
+            rejected.append((rec.normalized or rec.allele, f"short_len={len(seq)}", ""))
+            continue
+        if "X" in seq:
             rejected.append((rec.normalized or rec.allele, "contains_X", "X"))
             continue
-        bad_chars = set(rec.sequence.upper()) - MHC_SEQUENCE_ALLOWED_AA
+        bad_chars = set(seq) - MHC_SEQUENCE_ALLOWED_AA
         if bad_chars:
             rejected.append((
                 rec.normalized or rec.allele,
                 "non_canonical_chars",
                 "".join(sorted(bad_chars)),
+            ))
+            continue
+        if _looks_like_nucleotide_mhc_sequence(seq):
+            rejected.append((
+                rec.normalized or rec.allele,
+                f"nucleotide_like_len={len(seq)}",
+                "",
             ))
             continue
         valid.append(rec)
@@ -2531,9 +2543,11 @@ def audit_loaded_mhc_sequence_quality(
     """Validate loaded MHC sequence alphabet and summarize ambiguous residues."""
     noncanonical_examples: List[Tuple[str, str]] = []
     x_examples: List[Tuple[str, int]] = []
+    nucleotide_like_examples: List[Tuple[str, int]] = []
     short_examples: List[Tuple[str, int]] = []
     x_residue_total = 0
     noncanonical_count = 0
+    nucleotide_like_count = 0
     x_sequence_count = 0
     short_count = 0
 
@@ -2552,6 +2566,10 @@ def audit_loaded_mhc_sequence_quality(
             x_residue_total += n_x
             if len(x_examples) < 12:
                 x_examples.append((str(allele), n_x))
+        if len(seq) >= MIN_MHC_SEQUENCE_LEN and _looks_like_nucleotide_mhc_sequence(seq):
+            nucleotide_like_count += 1
+            if len(nucleotide_like_examples) < 12:
+                nucleotide_like_examples.append((str(allele), len(seq)))
         if len(seq) < MIN_MHC_SEQUENCE_LEN:
             short_count += 1
             if len(short_examples) < 12:
@@ -2564,6 +2582,8 @@ def audit_loaded_mhc_sequence_quality(
         "x_sequence_count": int(x_sequence_count),
         "x_residue_total": int(x_residue_total),
         "x_examples": x_examples,
+        "nucleotide_like_count": int(nucleotide_like_count),
+        "nucleotide_like_examples": nucleotide_like_examples,
         "short_count": int(short_count),
         "short_examples": short_examples,
     }
@@ -2576,6 +2596,14 @@ def _is_mhc_sequence_resolved(
     mhc_sequences: Mapping[str, str],
 ) -> bool:
     if direct_seq and str(direct_seq).strip():
+        seq = str(direct_seq).strip().upper()
+        bad = sorted({ch for ch in seq if ch not in MHC_SEQUENCE_ALLOWED_AA})
+        if bad:
+            return False
+        if len(seq) >= MIN_MHC_SEQUENCE_LEN and _looks_like_nucleotide_mhc_sequence(seq):
+            return False
+        if len(seq) < MIN_MHC_SEQUENCE_LEN:
+            return False
         return True
     token = str(allele or "").strip()
     if not token:
@@ -3995,6 +4023,8 @@ def run(args: argparse.Namespace) -> None:
             bad = sorted({ch for ch in seq if ch not in MHC_SEQUENCE_ALLOWED_AA})
             if bad:
                 invalid_alleles[str(allele)] = f"noncanonical={''.join(bad)}"
+            elif len(seq) >= MIN_MHC_SEQUENCE_LEN and _looks_like_nucleotide_mhc_sequence(seq):
+                invalid_alleles[str(allele)] = f"nucleotide_like_len={len(seq)}"
             elif len(seq) < MIN_MHC_SEQUENCE_LEN:
                 invalid_alleles[str(allele)] = f"short_len={len(seq)}"
 

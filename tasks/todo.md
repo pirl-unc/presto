@@ -136,6 +136,17 @@
     - scanned `3,163,395` merged rows under canary caps
     - resolved-only filtering dropped the expected unresolved rows and reached `resolved=2117/2117`
     - optimizer entered `train` on 24 batches with probe tracking enabled before the CPU run was stopped for throughput reasons
+  - first full Modal epoch retry (`refactor-e1-57725c3a`, app `ap-vH91pB9Ocqs9k7pS04GcNY`) got past the unresolved-MHC gate but failed during dataset construction on `Likely nucleotide sequence loaded for MHC chain: allele=Mamu-A1*001:01, chain=mhc_a, len=1098`.
+  - follow-up repair:
+    - `scripts/train_iedb.py` now treats nucleotide-like sequences as invalid in three places:
+      - resolved-index sequence audit / invalid-allele pruning
+      - resolved-row filtering for direct MHC sequences
+      - MHC-only augmentation sampling from the index
+    - MHC-only augmentation now uses the canonical `70 aa` floor instead of a stale `50 aa` threshold.
+  - regression coverage for the nucleotide-like failure mode:
+    - `python -m py_compile scripts/train_iedb.py tests/test_train_iedb.py`
+    - `pytest -q tests/test_train_iedb.py tests/test_train_cli.py` -> `62 passed`
+    - `pytest -q tests/test_collate.py tests/test_loaders.py tests/test_train_synthetic.py tests/test_train_iedb.py tests/test_training_e2e.py tests/test_train_cli.py` -> `144 passed`
 
 # Unified Training Failure Audit + Repair (2026-03-06)
 
