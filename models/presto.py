@@ -299,8 +299,11 @@ class Presto(nn.Module):
         )
         self.stream_norm = nn.LayerNorm(d_model)
 
-        # pmhc_vec from interaction + presentation vectors.
-        self.pmhc_vec_proj = nn.Linear(self.pmhc_interaction_vec_dim + d_model, d_model)
+        # pmhc_vec from interaction, presentation, peptide, and direct MHC summaries.
+        self.pmhc_vec_proj = nn.Linear(
+            self.pmhc_interaction_vec_dim + 4 * d_model,
+            d_model,
+        )
         self.pmhc_interaction_token_proj = nn.Linear(d_model, self.pmhc_interaction_token_dim)
         self.pmhc_interaction_vec_norm = nn.LayerNorm(self.pmhc_interaction_vec_dim)
         self.binding_affinity_readout_proj = nn.Sequential(
@@ -314,7 +317,7 @@ class Presto(nn.Module):
             nn.Linear(d_model, d_model),
         )
         self.presentation_mlp = nn.Sequential(
-            nn.Linear(d_model + self.pmhc_interaction_vec_dim, d_model),
+            nn.Linear(2 * d_model + self.pmhc_interaction_vec_dim, d_model),
             nn.GELU(),
             nn.Linear(d_model, d_model),
         )
@@ -447,6 +450,14 @@ class Presto(nn.Module):
                 for _ in range(pmhc_interaction_layers)
             ])
 
+        self.groove_attn = nn.MultiheadAttention(
+            d_model,
+            n_heads,
+            dropout=0.1,
+            batch_first=True,
+        )
+        self.groove_query = nn.Parameter(torch.randn(1, d_model) * 0.02)
+
         # Variant D: groove attention prior
         if use_groove_prior:
             # Sigmoid decay: ~1.0 before cutoff, smooth falloff, ~0.0 past it.
@@ -564,6 +575,7 @@ class Presto(nn.Module):
 
         for param in self.latent_queries.values():
             nn.init.normal_(param.data, std=query_std)
+        nn.init.normal_(self.groove_query.data, std=query_std)
 
         for module in self.modules():
             if isinstance(module, nn.Embedding):
@@ -588,6 +600,11 @@ class Presto(nn.Module):
                         nn.init.zeros_(module.out_proj.bias)
         with torch.no_grad():
             self.aa_embedding.weight[self.x_token_idx].zero_()
+
+    @property
+    def apc_cell_type_context_proj(self) -> nn.Sequential:
+        """Renamed APC/cell-type context projection module."""
+        return self.context_token_proj
 
     def _load_from_state_dict(
         self,
@@ -1159,6 +1176,66 @@ class Presto(nn.Module):
             parts.append(h[:, prev_end:, :])
         return torch.cat(parts, dim=1)
 
+    def _compute_groove_vec(
+        self,
+        h: torch.Tensor,
+        seg_masks: Dict[str, torch.Tensor],
+        offsets: Dict[str, slice],
+        class_probs: torch.Tensor,
+    ) -> torch.Tensor:
+        """Summarize the allele-specific peptide-binding groove.
+
+        Class I uses the alpha1/alpha2 region of chain A only.
+        Class II uses the alpha1 region of chain A and beta1 region of chain B.
+        When class is uncertain, mix the two summaries by `class_probs`.
+        """
+        mhc_a_slice = offsets["mhc_a"]
+        mhc_b_slice = offsets["mhc_b"]
+        mhc_a_h = h[:, mhc_a_slice, :]
+        mhc_b_h = h[:, mhc_b_slice, :]
+        mhc_a_mask = seg_masks["mhc_a"][:, mhc_a_slice]
+        mhc_b_mask = seg_masks["mhc_b"][:, mhc_b_slice]
+        mhc_h = torch.cat([mhc_a_h, mhc_b_h], dim=1)
+
+        batch_size = h.shape[0]
+        a_pos = torch.arange(mhc_a_h.shape[1], device=h.device).view(1, -1)
+        b_pos = torch.arange(mhc_b_h.shape[1], device=h.device).view(1, -1)
+
+        class1_mask = torch.cat(
+            [
+                mhc_a_mask & (a_pos < 180),
+                torch.zeros_like(mhc_b_mask),
+            ],
+            dim=1,
+        )
+        class2_mask = torch.cat(
+            [
+                mhc_a_mask & (a_pos < 90),
+                mhc_b_mask & (b_pos < 90),
+            ],
+            dim=1,
+        )
+
+        query = self.groove_query.unsqueeze(0).expand(batch_size, -1, -1)
+
+        def _attend(valid_mask: torch.Tensor) -> torch.Tensor:
+            valid_mask = self._ensure_nonempty_kv_mask(valid_mask)
+            groove_out, _ = self.groove_attn(
+                query,
+                mhc_h,
+                mhc_h,
+                key_padding_mask=~valid_mask,
+                need_weights=False,
+            )
+            return groove_out.squeeze(1)
+
+        groove_class1 = _attend(class1_mask)
+        groove_class2 = _attend(class2_mask)
+        return (
+            class_probs[:, :1] * groove_class1
+            + class_probs[:, 1:2] * groove_class2
+        )
+
     def _binding_latent_query(
         self,
         name: str,
@@ -1541,6 +1618,7 @@ class Presto(nn.Module):
         mhc_a_vec = self._masked_mean(h, seg_masks["mhc_a"])
         mhc_b_vec = self._masked_mean(h, seg_masks["mhc_b"])
 
+        outputs["pep_vec"] = pep_vec
         outputs["mhc_a_vec"] = mhc_a_vec
         outputs["mhc_b_vec"] = mhc_b_vec
 
@@ -1665,15 +1743,24 @@ class Presto(nn.Module):
         # ------------------------------------------------------------------
         context_mhc_a_species = species_probs if species_override_active else mhc_a_species_probs
         context_mhc_b_species = species_probs if species_override_active else mhc_b_species_probs
-        context_token = self.context_token_proj(
+        apc_cell_type_context = self.apc_cell_type_context_proj(
             torch.cat(
                 [class_probs, context_mhc_a_species, context_mhc_b_species, chain_compat_prob],
                 dim=-1,
             )
         ).unsqueeze(1)
+        groove_vec = self._compute_groove_vec(
+            h=h,
+            seg_masks=seg_masks,
+            offsets=offsets,
+            class_probs=class_probs,
+        )
+        outputs["apc_cell_type_context_vec"] = apc_cell_type_context.squeeze(1)
+        outputs["groove_vec"] = groove_vec
 
         # Which latents receive APC context token.
-        _gets_context = {"processing", "pmhc_interaction"}
+        _gets_apc_context = {"processing", "pmhc_interaction"}
+        _gets_groove = {"pmhc_interaction"}
         # Which latents receive tcr_vec (design S7.5)
         _gets_tcr: set[str] = set()
 
@@ -1693,8 +1780,10 @@ class Presto(nn.Module):
                 allowed = allowed | seg_masks[seg_name]
 
             extra_tokens: List[torch.Tensor] = []
-            if name in _gets_context:
-                extra_tokens.append(context_token)
+            if name in _gets_apc_context:
+                extra_tokens.append(apc_cell_type_context)
+            if name in _gets_groove:
+                extra_tokens.append(groove_vec.unsqueeze(1))
             if name in _gets_tcr and tcr_vec is not None:
                 extra_tokens.append(tcr_vec.unsqueeze(1))
 
@@ -1764,7 +1853,9 @@ class Presto(nn.Module):
         binding_affinity_vec = self.binding_affinity_readout_proj(interaction_vec)
         binding_stability_vec = self.binding_stability_readout_proj(interaction_vec)
         presentation_vec = self.presentation_vec_norm(
-            self.presentation_mlp(torch.cat([processing_vec, interaction_vec], dim=-1))
+            self.presentation_mlp(
+                torch.cat([processing_vec, interaction_vec, groove_vec], dim=-1)
+            )
         )
         immunogenicity_vec = self.immunogenicity_vec_norm(
             self.immunogenicity_mlp(torch.cat([interaction_vec, recognition_vec], dim=-1))
@@ -1813,6 +1904,9 @@ class Presto(nn.Module):
         pmhc_vec = self.pmhc_vec_proj(torch.cat([
             interaction_vec,
             presentation_vec,
+            pep_vec,
+            mhc_a_vec,
+            mhc_b_vec,
         ], dim=-1))
         outputs["pmhc_vec"] = pmhc_vec
         outputs["pmhc_interaction_vec"] = interaction_vec

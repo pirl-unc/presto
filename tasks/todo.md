@@ -18,8 +18,8 @@
 - [x] Phase 1 verification: forward/output contract checks, dependency-flow checks, and regression coverage for the new latent structure.
 - [x] Phase 2: implement `B1` coupled core enumeration with explicit PFR representation on top of the new interaction latent.
 - [x] Phase 2 verification: core-candidate enumeration sanity, shape/compute checks, and targeted biological edge cases (`8mer`, `9mer`, long class II peptides).
-- [ ] Phase 3: implement `C1`-`C3` context-token cleanup, `groove_vec`, and `pmhc_vec` signal repair.
-- [ ] Phase 3 verification: confirm processing isolation, binding/presentation access to groove context, and direct allele signal in `pmhc_vec`.
+- [x] Phase 3: implement `C1`-`C3` context-token cleanup, `groove_vec`, and `pmhc_vec` signal repair.
+- [x] Phase 3 verification: confirm processing isolation, binding/presentation access to groove context, and direct allele signal in `pmhc_vec`.
 - [ ] Phase 4: implement `D2` class-split MIL bags and `D3` pathway-MIL handling for ambiguous T-cell assays.
 - [ ] Phase 4 verification: dataset/batch audits showing correct bag construction and class/pathway separation.
 - [ ] Phase 5: implement `E1` contrastive MIL and `E2` bag sparsity regularization.
@@ -79,6 +79,24 @@
     - mixed-length train-mode backward pass stays finite with `core_counts=[1, 3, 7, 7]` and `core_lengths=[8, 9, 9, 9]`.
   - `pytest -q tests/test_presto.py tests/test_training_e2e.py` -> `46 passed`
   - `pytest -q tests/test_presto.py tests/test_train_synthetic.py tests/test_train_iedb.py tests/test_training_e2e.py tests/test_pmhc.py` -> `128 passed`
+- Phase 3 completed.
+- `C1`:
+  - the APC/cell-type conditioning path is now named and surfaced as `apc_cell_type_context`, with the projection accessible via `apc_cell_type_context_proj`.
+  - semantics are unchanged: it still carries class/species/chain-compatibility context, not allele identity.
+- `C2`:
+  - added a learned `groove_vec` summary in `models/presto.py` using a dedicated groove attention query over class-conditional MHC groove masks.
+  - Class I groove summary uses early chain-A positions only; Class II groove summary uses early chain-A plus early chain-B positions; uncertain cases mix the two by `class_probs`.
+  - `groove_vec` is injected into the `pmhc_interaction` latent as an extra KV token and into the presentation MLP as an explicit input, while processing remains isolated from this allele-specific signal.
+- `C3`:
+  - `pmhc_vec` now includes `interaction_vec + presentation_vec + pep_vec + mhc_a_vec + mhc_b_vec`.
+  - this removes the dead `pep_vec` path and gives downstream TCR matching a direct allele/peptide skip connection instead of relying purely on latent bottlenecks.
+- Phase 3 verification:
+  - `python -m py_compile models/presto.py tests/test_presto.py`
+  - mini-batch trainer sanity:
+    - 5 repeated trainer steps on one collated batch stayed finite.
+    - losses moved `25.95 -> 10.76 -> 38.46 -> 8.05 -> 10.92`; non-monotone but clearly trainable and numerically stable.
+  - `pytest -q tests/test_presto.py tests/test_training_e2e.py` -> `49 passed`
+  - `pytest -q tests/test_presto.py tests/test_train_synthetic.py tests/test_train_iedb.py tests/test_training_e2e.py tests/test_pmhc.py` -> `131 passed`
 
 # Unified Training Failure Audit + Repair (2026-03-06)
 

@@ -358,6 +358,7 @@ class TestPrestoOutputConsistency:
                         [
                             out["latent_vecs"]["processing"],
                             out["latent_vecs"]["pmhc_interaction"],
+                            out["groove_vec"],
                         ],
                         dim=-1,
                     )
@@ -617,8 +618,8 @@ class TestDesignAlignment:
         assert out["ms_detectability_logit"].shape == (2, 1)
         assert "ms_detectability" in out["latent_vecs"]
 
-    def test_pmhc_vec_from_latent_vectors(self):
-        """Design S9.7: pmhc_vec from latent vectors, not segment pools."""
+    def test_pmhc_vec_includes_latent_and_direct_sequence_summaries(self):
+        """Phase 3 refactor: pmhc_vec includes interaction/presentation plus direct pep+MHC summaries."""
         from presto.models.presto import Presto
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -633,9 +634,18 @@ class TestDesignAlignment:
             expected = model.pmhc_vec_proj(torch.cat([
                 lvecs["pmhc_interaction"],
                 lvecs["presentation"],
+                out["pep_vec"],
+                out["mhc_a_vec"],
+                out["mhc_b_vec"],
             ], dim=-1))
 
         assert torch.allclose(out["pmhc_vec"], expected, atol=1e-5)
+
+    def test_apc_cell_type_context_alias_exists(self):
+        from presto.models.presto import Presto
+
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        assert hasattr(model, "apc_cell_type_context_proj")
 
     def test_segment_specific_positional_encoding(self):
         """Design S3.2.3: segment-specific positional encoding tables exist."""
@@ -717,6 +727,36 @@ class TestDesignAlignment:
         assert "binding_mhc_attention_mass" in out
         assert out["binding_mhc_attention_effective_residues"].shape[0] == pep_tok.shape[0]
         assert torch.all(out["binding_mhc_attention_effective_residues"] >= 0)
+
+    def test_groove_vec_changes_with_class_masking(self):
+        from presto.models.presto import Presto
+
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        model.eval()
+        pep_tok = torch.randint(4, 24, (2, 12))
+        mhc_a_tok = torch.randint(4, 24, (2, 80))
+        mhc_b_tok = torch.randint(4, 24, (2, 40))
+
+        with torch.no_grad():
+            out_class1 = model(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class="I",
+            )
+            out_class2 = model(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class="II",
+            )
+
+        assert out_class1["groove_vec"].shape == (2, 64)
+        assert not torch.allclose(
+            out_class1["groove_vec"],
+            out_class2["groove_vec"],
+            atol=1e-6,
+        )
 
     def test_core_window_enumeration_respects_short_and_long_peptides(self):
         from presto.models.presto import Presto
@@ -945,5 +985,30 @@ class TestDesignAlignment:
         assert not torch.allclose(
             out_before["binding_logit"],
             out_after["binding_logit"],
+            atol=1e-6,
+        )
+
+    def test_groove_context_does_not_leak_into_processing(self):
+        from presto.models.presto import Presto
+
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        model.eval()
+        pep_tok = torch.randint(4, 24, (2, 12))
+        mhc_a_tok = torch.randint(4, 24, (2, 80))
+        mhc_b_tok = torch.randint(4, 24, (2, 40))
+
+        with torch.no_grad():
+            out_before = model(pep_tok=pep_tok, mhc_a_tok=mhc_a_tok, mhc_b_tok=mhc_b_tok)
+            model.groove_query.uniform_(-10.0, 10.0)
+            out_after = model(pep_tok=pep_tok, mhc_a_tok=mhc_a_tok, mhc_b_tok=mhc_b_tok)
+
+        assert torch.allclose(
+            out_before["processing_logit"],
+            out_after["processing_logit"],
+            atol=1e-6,
+        )
+        assert not torch.allclose(
+            out_before["groove_vec"],
+            out_after["groove_vec"],
             atol=1e-6,
         )
