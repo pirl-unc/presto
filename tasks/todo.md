@@ -154,6 +154,14 @@
   - regression coverage for the bf16 fix:
     - local repro script under `torch.autocast('cpu', dtype=torch.bfloat16)` now completes
     - `pytest -q tests/test_presto.py tests/test_training_e2e.py tests/test_train_synthetic.py tests/test_train_iedb.py` -> `106 passed`
+  - third full Modal retry (`refactor-e1-bfa88c7a`, app `ap-aPyOEBVofEDqTmXnvASvsA`) got further but still failed on the first CUDA bf16 batch with the inverse mixed-dtype indexed-write shape (`destination Float`, `source BFloat16`).
+  - final bf16 repair in this pass:
+    - `models/presto.py` no longer preallocates a float positional buffer and fills slices; `_build_single_stream()` now builds segment positional embeddings independently and concatenates them, eliminating another autocast-sensitive indexed-write pattern.
+    - added a focused regression in `tests/test_presto.py` that forces one positional subpath (`pep_frac_mlp`) to emit bf16 while the rest of the stream stays default dtype.
+  - regression coverage for the positional bf16 fix:
+    - focused local repro with a bf16-wrapped positional submodule now completes
+    - `python -m py_compile models/presto.py tests/test_presto.py`
+    - `pytest -q tests/test_presto.py tests/test_training_e2e.py tests/test_train_synthetic.py tests/test_train_iedb.py` -> `107 passed`
 
 # Unified Training Failure Audit + Repair (2026-03-06)
 

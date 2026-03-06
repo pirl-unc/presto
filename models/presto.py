@@ -756,9 +756,6 @@ class Presto(nn.Module):
         seq_len = tokens.shape[1]
         tok_ids = tokens.clamp(min=0, max=len(AA_VOCAB) - 1)
 
-        # Build segment-specific positional embeddings (design S3.2.3)
-        pos_embed = torch.zeros(batch_size, seq_len, self.d_model, device=device)
-
         # Peptide: triple-frame (N-term distance, C-term distance, fractional)
         pep_sl = offsets["peptide"]
         pep_len_per = (tokens[:, pep_sl] != 0).sum(dim=1).clamp(min=1)  # (B,)
@@ -767,7 +764,7 @@ class Presto(nn.Module):
         cterm_dist = (pep_len_per.unsqueeze(1) - 1 - pep_idx).clamp(min=0)
         cterm_idx = cterm_dist.clamp(max=self.pep_cterm_pos.num_embeddings - 1)
         frac_pos = pep_idx.float() / (pep_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-        pos_embed[:, pep_sl, :] = (
+        pep_pos_embed = (
             self.pep_nterm_pos(nterm_idx)
             + self.pep_cterm_pos(cterm_idx)
             + self.pep_frac_mlp(frac_pos.unsqueeze(-1))
@@ -778,29 +775,39 @@ class Presto(nn.Module):
         nfl_len_per = (tokens[:, nfl_sl] != 0).sum(dim=1).clamp(min=1)
         nfl_idx = torch.arange(nfl_sl.stop - nfl_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
         nfl_dist = (nfl_len_per.unsqueeze(1) - 1 - nfl_idx).clamp(min=0)
-        pos_embed[:, nfl_sl, :] = self.nflank_dist_pos(
+        nfl_pos_embed = self.nflank_dist_pos(
             nfl_dist.clamp(max=self.nflank_dist_pos.num_embeddings - 1)
         )
 
         # C-flank: distance-from-cleavage (first position = closest to cleavage)
         cfl_sl = offsets["cflank"]
         cfl_idx = torch.arange(cfl_sl.stop - cfl_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
-        pos_embed[:, cfl_sl, :] = self.cflank_dist_pos(
+        cfl_pos_embed = self.cflank_dist_pos(
             cfl_idx.clamp(max=self.cflank_dist_pos.num_embeddings - 1)
         )
 
         # MHC alpha: sequential
         mhc_a_sl = offsets["mhc_a"]
         mhc_a_idx = torch.arange(mhc_a_sl.stop - mhc_a_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
-        pos_embed[:, mhc_a_sl, :] = self.mhc_a_pos(
+        mhc_a_pos_embed = self.mhc_a_pos(
             mhc_a_idx.clamp(max=self.mhc_a_pos.num_embeddings - 1)
         )
 
         # MHC beta: sequential
         mhc_b_sl = offsets["mhc_b"]
         mhc_b_idx = torch.arange(mhc_b_sl.stop - mhc_b_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
-        pos_embed[:, mhc_b_sl, :] = self.mhc_b_pos(
+        mhc_b_pos_embed = self.mhc_b_pos(
             mhc_b_idx.clamp(max=self.mhc_b_pos.num_embeddings - 1)
+        )
+        pos_embed = torch.cat(
+            [
+                nfl_pos_embed,
+                pep_pos_embed,
+                cfl_pos_embed,
+                mhc_a_pos_embed,
+                mhc_b_pos_embed,
+            ],
+            dim=1,
         )
 
         # Global conditioning embedding (design S3.2.4)

@@ -222,6 +222,41 @@ class TestPrestoModel:
         assert torch.isfinite(outputs["binding_logit"]).all()
         assert torch.isfinite(outputs["presentation_logit"]).all()
 
+    def test_model_forward_tolerates_bf16_positional_segment_source(self):
+        """Segment positional assembly should not rely on fp32 slice writes."""
+        from presto.models.presto import Presto
+
+        class _BFloat16Wrap(torch.nn.Module):
+            def __init__(self, inner: torch.nn.Module):
+                super().__init__()
+                self.inner = inner
+
+            def forward(self, x: torch.Tensor) -> torch.Tensor:
+                return self.inner(x).to(torch.bfloat16)
+
+        model = Presto(d_model=64, n_layers=1, n_heads=4)
+        model.pep_frac_mlp = _BFloat16Wrap(model.pep_frac_mlp)
+        model.eval()
+
+        pep_tok = torch.randint(4, 24, (2, 10))
+        mhc_a_tok = torch.randint(4, 24, (2, 180))
+        mhc_b_tok = torch.randint(4, 24, (2, 90))
+        flank_n_tok = torch.randint(4, 24, (2, 5))
+        flank_c_tok = torch.randint(4, 24, (2, 5))
+
+        with torch.no_grad():
+            outputs = model(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class=["I", "II"],
+                species=["human", "mouse"],
+                flank_n_tok=flank_n_tok,
+                flank_c_tok=flank_c_tok,
+            )
+
+        assert torch.isfinite(outputs["binding_logit"]).all()
+
 
 class TestPrestoGradients:
     """Test gradient flow through full model."""
