@@ -43,7 +43,7 @@ def test_parser_train_iedb_default_record_caps_unlimited():
     assert args.track_pmhc_flow is True
     assert args.pmhc_flow_batches == 2
     assert args.pmhc_flow_max_samples == 512
-    assert args.filter_unresolved_mhc is False
+    assert args.filter_unresolved_mhc is True
     assert args.strict_mhc_resolution is True
     # Synthetic negative categories are enabled by default.
     assert args.synthetic_pmhc_negative_ratio > 0.0
@@ -215,6 +215,13 @@ def test_parser_train_unified_filter_unresolved_mhc_flag():
     args = parser.parse_args(["train", "unified", "--filter-unresolved-mhc"])
     assert args.func is train_cli.cmd_train_unified
     assert args.filter_unresolved_mhc is True
+
+
+def test_parser_train_unified_no_filter_unresolved_mhc_flag():
+    parser = create_parser()
+    args = parser.parse_args(["train", "unified", "--no-filter-unresolved-mhc"])
+    assert args.func is train_cli.cmd_train_unified
+    assert args.filter_unresolved_mhc is False
 
 
 def test_parser_train_unified_accepts_mhc_attention_sparsity_flags():

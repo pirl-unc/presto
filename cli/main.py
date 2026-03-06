@@ -849,7 +849,7 @@ def create_parser() -> argparse.ArgumentParser:
         "--filter-unresolved-mhc",
         dest="filter_unresolved_mhc",
         action="store_true",
-        default=False,
+        default=True,
         help=(
             "Drop unresolved-MHC rows before dataset construction "
             "(resolved-only training subset)"

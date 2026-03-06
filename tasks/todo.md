@@ -24,7 +24,9 @@
 - [x] Phase 4 verification: dataset/batch audits showing correct bag construction and class/pathway separation.
 - [x] Phase 5: implement `E1` contrastive MIL and `E2` bag sparsity regularization.
 - [x] Phase 5 verification: loss wiring tests plus small-run diagnostics that show allele-discrimination pressure is present.
-- [ ] End-to-end verification: targeted local training smoke run, batch/prediction inspection, then Modal epoch/full-run only after local dynamics look sane.
+- [ ] End-to-end verification: close the unresolved-MHC default/config gap, rerun targeted parser/trainer regression checks, and prove the full profile enters resolved-only training mode by default.
+- [ ] End-to-end verification: run a fresh 1-epoch full unified Modal training job, pull artifacts, and analyze losses, probes, gradients/latents, and allele separation (`SLLQHLIGL`, `HLA-A*02:01` vs `HLA-A*24:02`).
+- [ ] End-to-end verification: if the epoch looks healthy, launch a longer full training run; otherwise, document the failure mode, implement the next training-dynamics fix, and re-verify locally before relaunch.
 
 ## Review
 
@@ -124,6 +126,16 @@
   - synthetic CLI smoke run:
     - `python -m presto.scripts.train_synthetic --epochs 1 --batch_size 8 --n_binding 16 --n_elution 16 --n_tcr 8 --d_model 64 --n_layers 1 --n_heads 4 --run-dir /tmp/presto_sanity_refactor`
     - completed successfully with `train_loss=2.3767`, `val_loss=1.0607`
+- End-to-end verification in progress:
+  - fixed the full-profile config contract so `filter_unresolved_mhc` defaults to `True` consistently in `IEDB_DEFAULTS`, the script parser, the public CLI parser, and `run()`'s programmatic fallback.
+  - targeted regression coverage:
+    - `python -m py_compile cli/main.py scripts/train_iedb.py tests/test_train_cli.py tests/test_train_iedb.py`
+    - `pytest -q tests/test_train_cli.py tests/test_train_iedb.py` -> `60 passed`
+    - `pytest -q tests/test_collate.py tests/test_loaders.py tests/test_train_synthetic.py tests/test_train_iedb.py tests/test_training_e2e.py tests/test_train_cli.py` -> `142 passed`
+  - local full-pipeline canary on real merged/index data reached live optimization without loader/config errors:
+    - scanned `3,163,395` merged rows under canary caps
+    - resolved-only filtering dropped the expected unresolved rows and reached `resolved=2117/2117`
+    - optimizer entered `train` on 24 batches with probe tracking enabled before the CPU run was stopped for throughput reasons
 
 # Unified Training Failure Audit + Repair (2026-03-06)
 

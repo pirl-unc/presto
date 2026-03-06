@@ -148,6 +148,14 @@ def test_resolve_run_args_canary_profile_applies_fast_caps():
     assert resolved.pmhc_flow_max_samples == 512
 
 
+def test_resolve_run_args_full_profile_filters_unresolved_mhc_by_default():
+    args = argparse.Namespace(profile="full", config=None)
+    resolved = _resolve_run_args(args)
+    assert resolved.profile == "full"
+    assert resolved.filter_unresolved_mhc is True
+    assert resolved.strict_mhc_resolution is True
+
+
 def test_resolve_run_args_diagnostic_profile_enables_richer_diagnostics():
     args = argparse.Namespace(profile="diagnostic", config=None)
     resolved = _resolve_run_args(args)
@@ -1328,6 +1336,7 @@ def test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved(tmp_path, mo
         merged_tsv=str(merged_tsv),
         run_dir=str(run_dir),
         strict_mhc_resolution=True,
+        filter_unresolved_mhc=False,
         index_csv=None,
     )
     with pytest.raises(RuntimeError, match="Unresolved MHC alleles are present"):

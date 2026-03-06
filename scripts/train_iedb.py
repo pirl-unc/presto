@@ -200,7 +200,7 @@ IEDB_DEFAULTS = {
     "track_output_latent_stats": True,
     "output_latent_stats_batches": 2,
     "output_latent_stats_max_samples": 512,
-    "filter_unresolved_mhc": False,
+    "filter_unresolved_mhc": True,
     "mhc_augmentation_samples": 60000,
     "mhc_augmentation_max_fraction": 0.05,
     "seed": 42,
@@ -3960,7 +3960,7 @@ def run(args: argparse.Namespace) -> None:
         raise RuntimeError("No usable unified training records were loaded.")
 
     strict_mhc_resolution = bool(getattr(args, "strict_mhc_resolution", True))
-    filter_unresolved_mhc = bool(getattr(args, "filter_unresolved_mhc", False))
+    filter_unresolved_mhc = bool(getattr(args, "filter_unresolved_mhc", True))
 
     mhc_sequences: Dict[str, str] = {}
     if args.index_csv:
@@ -4796,7 +4796,7 @@ def main(argv=None):
         "--filter-unresolved-mhc",
         dest="filter_unresolved_mhc",
         action="store_true",
-        default=False,
+        default=True,
         help=(
             "Drop unresolved-MHC rows before dataset construction "
             "(resolved-only training subset)"
