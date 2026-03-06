@@ -1415,11 +1415,14 @@ class Presto(nn.Module):
         core_window_logit = core_window_logit.masked_fill(~candidate_mask, -1e4)
 
         core_window_posterior = F.softmax(core_window_logit, dim=1)
-        core_window_posterior = core_window_posterior * candidate_mask.float()
+        core_window_posterior = core_window_posterior * candidate_mask.to(
+            dtype=core_window_posterior.dtype
+        )
         core_window_posterior = core_window_posterior / core_window_posterior.sum(
             dim=1,
             keepdim=True,
         ).clamp(min=1e-8)
+        core_window_posterior = core_window_posterior.to(dtype=candidate_vec.dtype)
 
         interaction_vec = torch.sum(
             core_window_posterior.unsqueeze(-1) * candidate_vec,
@@ -1447,10 +1450,12 @@ class Presto(nn.Module):
 
         core_membership = pep_h.new_zeros((batch_size, pep_h.shape[1]))
         for offset in range(self.core_window_size):
-            contrib = core_window_posterior * core_token_mask[:, :, offset].float()
+            contrib = core_window_posterior * core_token_mask[:, :, offset].to(
+                dtype=core_window_posterior.dtype
+            )
             pos = core_positions[:, :, offset].clamp(max=pep_h.shape[1] - 1)
             core_membership.scatter_add_(1, pos, contrib)
-        core_membership = core_membership * pep_valid.float()
+        core_membership = core_membership * pep_valid.to(dtype=core_membership.dtype)
         core_membership = core_membership / core_membership.sum(dim=1, keepdim=True).clamp(
             min=1e-8,
         )

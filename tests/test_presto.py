@@ -195,6 +195,33 @@ class TestPrestoModel:
         assert outputs["mhc_species_logits"].shape[0] == 2
         assert "presentation_logit" in outputs
 
+    def test_model_forward_under_cpu_bf16_autocast(self):
+        """Autocast forward should not hit mixed-dtype indexed writes."""
+        from presto.models.presto import Presto
+
+        model = Presto(d_model=64, n_layers=1, n_heads=4)
+        model.eval()
+
+        pep_tok = torch.randint(4, 24, (2, 10))
+        mhc_a_tok = torch.randint(4, 24, (2, 180))
+        mhc_b_tok = torch.randint(4, 24, (2, 90))
+        flank_n_tok = torch.randint(4, 24, (2, 5))
+        flank_c_tok = torch.randint(4, 24, (2, 5))
+
+        with torch.no_grad(), torch.autocast("cpu", dtype=torch.bfloat16):
+            outputs = model(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class=["I", "II"],
+                species=["human", "mouse"],
+                flank_n_tok=flank_n_tok,
+                flank_c_tok=flank_c_tok,
+            )
+
+        assert torch.isfinite(outputs["binding_logit"]).all()
+        assert torch.isfinite(outputs["presentation_logit"]).all()
+
 
 class TestPrestoGradients:
     """Test gradient flow through full model."""

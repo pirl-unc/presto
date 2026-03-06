@@ -147,6 +147,13 @@
     - `python -m py_compile scripts/train_iedb.py tests/test_train_iedb.py`
     - `pytest -q tests/test_train_iedb.py tests/test_train_cli.py` -> `62 passed`
     - `pytest -q tests/test_collate.py tests/test_loaders.py tests/test_train_synthetic.py tests/test_train_iedb.py tests/test_training_e2e.py tests/test_train_cli.py` -> `144 passed`
+  - second full Modal retry (`refactor-e1-dabcd3da`, app `ap-mr0QF2doBlrtj7GPH8bNp4`) reached the first training batch on CUDA/bf16 and then failed with a mixed-dtype indexed write: `Index put requires the source and destination dtypes match, got Float for the destination and BFloat16 for the source.`
+  - bf16 follow-up repair:
+    - `models/presto.py` now keeps `core_window_posterior` and related mask/scatter tensors dtype-consistent through the `core_start_prob[...] = ...` write and `core_membership.scatter_add_` path inside `_binding_latent_query`.
+    - added a CPU bf16-autocast regression in `tests/test_presto.py` that reproduces the exact forward path without requiring a GPU.
+  - regression coverage for the bf16 fix:
+    - local repro script under `torch.autocast('cpu', dtype=torch.bfloat16)` now completes
+    - `pytest -q tests/test_presto.py tests/test_training_e2e.py tests/test_train_synthetic.py tests/test_train_iedb.py` -> `106 passed`
 
 # Unified Training Failure Audit + Repair (2026-03-06)
 
