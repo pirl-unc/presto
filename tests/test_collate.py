@@ -20,7 +20,7 @@ class TestPrestoSample:
         sample = PrestoSample(peptide="SIINFEKL")
         assert sample.peptide == "SIINFEKL"
         assert sample.mhc_a == ""
-        assert sample.mhc_class == "I"
+        assert sample.mhc_class is None
         assert sample.tcr_a is None
 
     def test_full_sample(self):
@@ -147,7 +147,7 @@ class TestPrestoCollator:
         """Collate samples with processing flanks."""
         samples = [
             PrestoSample(peptide="SIINFEKL", flank_n="AAA", flank_c="GGG"),
-            PrestoSample(peptide="GILGFVFTL", flank_n="BBB", flank_c="HHH"),
+            PrestoSample(peptide="GILGFVFTL", flank_n="GGG", flank_c="HHH"),
         ]
         batch = collator(samples)
 
@@ -189,11 +189,40 @@ class TestPrestoCollator:
         assert batch.tcr_a_tok is None
         assert batch.tcr_b_tok is None
 
+    def test_collator_sanitizes_missing_optional_sequence_tokens(self, collator):
+        samples = [
+            PrestoSample(
+                peptide="SIINFEKL",
+                mhc_a="MAVMAPRTL",
+                mhc_b="NONE",
+                flank_n="NULL",
+                tcr_a="N/A",
+            ),
+            PrestoSample(
+                peptide="GILGFVFTL",
+                mhc_a="MAVMAPRTL",
+                mhc_b="MKM",
+                flank_n="AAA",
+                tcr_a="CAVRD",
+            ),
+        ]
+        batch = collator(samples)
+
+        # Placeholder optional strings are mapped to missing (all-pad row).
+        assert int(batch.mhc_b_tok[0].sum().item()) == 0
+        assert int(batch.mhc_b_tok[1].sum().item()) > 0
+        assert batch.flank_n_tok is not None
+        assert int(batch.flank_n_tok[0].sum().item()) == 0
+        assert int(batch.flank_n_tok[1].sum().item()) > 0
+        assert batch.tcr_a_tok is not None
+        assert int(batch.tcr_a_tok[0].sum().item()) == 0
+        assert int(batch.tcr_a_tok[1].sum().item()) > 0
+
     def test_collator_with_binding_labels(self, collator):
         """Collate samples with binding labels."""
         samples = [
             PrestoSample(peptide="AAA", mhc_a="", bind_value=4.5, bind_qual=0),
-            PrestoSample(peptide="BBB", mhc_a="", bind_value=6.0, bind_qual=-1),
+            PrestoSample(peptide="GGG", mhc_a="", bind_value=6.0, bind_qual=-1),
         ]
         batch = collator(samples)
 
@@ -206,6 +235,20 @@ class TestPrestoCollator:
         assert batch.bind_target.shape == (2, 1)
         assert torch.all(batch.bind_mask == 1.0)
 
+    def test_collator_includes_core_start_targets_when_present(self, collator):
+        samples = [
+            PrestoSample(peptide="SIINFEKL", mhc_a="", core_start=2),
+            PrestoSample(peptide="GILGFVFTL", mhc_a="", core_start=None),
+            PrestoSample(peptide="AAA", mhc_a="", core_start=8),  # invalid for peptide len=3
+        ]
+        batch = collator(samples)
+
+        assert "core_start" in batch.targets
+        assert "core_start" in batch.target_masks
+        assert batch.targets["core_start"].dtype == torch.long
+        assert batch.targets["core_start"].tolist() == [2, 0, 0]
+        assert batch.target_masks["core_start"].tolist() == [1.0, 0.0, 0.0]
+
     def test_collator_splits_binding_targets_by_measurement_type(self, collator):
         samples = [
             PrestoSample(
@@ -216,7 +259,7 @@ class TestPrestoCollator:
                 bind_measurement_type="KD",
             ),
             PrestoSample(
-                peptide="BBB",
+                peptide="GGG",
                 mhc_a="",
                 bind_value=3.0,
                 bind_qual=-1,
@@ -256,7 +299,7 @@ class TestPrestoCollator:
         """Bind mask is 0 for samples without binding labels."""
         samples = [
             PrestoSample(peptide="AAA", mhc_a="", bind_value=4.5),
-            PrestoSample(peptide="BBB", mhc_a=""),  # No binding label
+            PrestoSample(peptide="GGG", mhc_a=""),  # No binding label
         ]
         batch = collator(samples)
 
@@ -267,7 +310,7 @@ class TestPrestoCollator:
         """Collate samples with T-cell labels."""
         samples = [
             PrestoSample(peptide="AAA", mhc_a="", tcell_label=1.0),
-            PrestoSample(peptide="BBB", mhc_a="", tcell_label=0.0),
+            PrestoSample(peptide="GGG", mhc_a="", tcell_label=0.0),
         ]
         batch = collator(samples)
 
@@ -290,7 +333,7 @@ class TestPrestoCollator:
                 tcell_in_vitro_responder="PBMC",
                 tcell_in_vitro_stimulator="T2 cell (B cell)",
             ),
-            PrestoSample(peptide="BBB", mhc_a="", tcell_label=None),
+            PrestoSample(peptide="GGG", mhc_a="", tcell_label=None),
         ]
         batch = collator(samples)
 
@@ -314,7 +357,7 @@ class TestPrestoCollator:
         """Collate samples with elution labels."""
         samples = [
             PrestoSample(peptide="AAA", mhc_a="", elution_label=1.0),
-            PrestoSample(peptide="BBB", mhc_a="", elution_label=0.0),
+            PrestoSample(peptide="GGG", mhc_a="", elution_label=0.0),
         ]
         batch = collator(samples)
 
@@ -331,7 +374,7 @@ class TestPrestoCollator:
                 elution_label=1.0,
                 species="human",
                 sample_id="elut_a",
-                mil_mhc_a_list=["HLAASEQ", "HLABSEQ"],
+                mil_mhc_a_list=["HLAASEQ", "HLADSEQ"],
                 mil_mhc_b_list=["MKMSEQ", "MKMSEQ"],
                 mil_mhc_class_list=["I", "I"],
                 mil_species_list=["human", "human"],
@@ -363,11 +406,66 @@ class TestPrestoCollator:
         assert batch.mil_bag_label.tolist() == [1.0, 0.0]
         assert batch.mil_bag_sample_ids == ["elut_a", "elut_b"]
 
+    def test_collator_splits_mixed_class_elution_mil_bags(self, collator):
+        samples = [
+            PrestoSample(
+                peptide="SIINFEKL",
+                mhc_a="HLAASEQ",
+                mhc_b="MKMSEQ",
+                mhc_class=None,
+                elution_label=1.0,
+                species="human",
+                sample_id="elut_mix",
+                mil_mhc_a_list=["HLAASEQ", "HLADSEQ", "HLAESEQ"],
+                mil_mhc_b_list=["MKMSEQ", "", "MKMSEQ"],
+                mil_mhc_class_list=["I", "II", "I"],
+                mil_species_list=["human", "human", "human"],
+            ),
+        ]
+
+        batch = collator(samples)
+
+        assert batch.mil_instance_to_bag is not None
+        assert batch.mil_instance_to_bag.tolist() == [0, 0, 1]
+        assert batch.mil_bag_label.tolist() == [1.0, 1.0]
+        assert batch.mil_bag_sample_ids == ["elut_mix:I", "elut_mix:II"]
+
+    def test_collator_builds_tcell_pathway_mil_and_masks_direct_target(self, collator):
+        samples = [
+            PrestoSample(
+                peptide="ACDEFGHIKLMN",
+                mhc_a="HLAASEQ",
+                mhc_b="MKMSEQ",
+                mhc_class=None,
+                tcell_label=1.0,
+                species="human",
+                sample_id="tcell_mix",
+                use_tcell_pathway_mil=True,
+                tcell_mil_mhc_a_list=["HLAASEQ", "HLADSEQ"],
+                tcell_mil_mhc_b_list=["MKMSEQ", ""],
+                tcell_mil_mhc_class_list=["I", "II"],
+                tcell_mil_species_list=["human", "human"],
+            ),
+        ]
+
+        batch = collator(samples)
+
+        assert batch.tcell_label is None
+        assert batch.tcell_mask is None
+        assert batch.tcell_mil_pep_tok is not None
+        assert batch.tcell_mil_instance_to_bag is not None
+        assert batch.tcell_mil_bag_label is not None
+        assert "assay_method_idx" in batch.tcell_mil_context
+        assert batch.tcell_mil_context["assay_method_idx"].shape[0] == 2
+        assert batch.tcell_mil_instance_to_bag.tolist() == [0, 0]
+        assert batch.tcell_mil_bag_label.tolist() == [1.0]
+        assert batch.tcell_mil_bag_sample_ids == ["tcell_mix"]
+
     def test_collator_sample_ids(self, collator):
         """Collator preserves sample IDs."""
         samples = [
             PrestoSample(peptide="AAA", sample_id="id_1"),
-            PrestoSample(peptide="BBB", sample_id="id_2"),
+            PrestoSample(peptide="GGG", sample_id="id_2"),
         ]
         batch = collator(samples)
 
@@ -377,7 +475,7 @@ class TestPrestoCollator:
         """Stability targets are emitted with per-target masks."""
         samples = [
             PrestoSample(peptide="AAA", mhc_a="", t_half=1.0, tm=50.0),  # 1 hour
-            PrestoSample(peptide="BBB", mhc_a="", t_half=None, tm=65.0),
+            PrestoSample(peptide="GGG", mhc_a="", t_half=None, tm=65.0),
         ]
 
         batch = collator(samples)
@@ -439,7 +537,7 @@ class TestCollateDictBatch:
         """Collate preserves MHC class."""
         batch = [
             {"peptide": "AAA", "mhc_class": "I"},
-            {"peptide": "BBB", "mhc_class": "II"},
+            {"peptide": "GGG", "mhc_class": "II"},
         ]
         result = collate_dict_batch(batch)
 
@@ -456,18 +554,33 @@ class TestCollateDictBatch:
         """Collate dict batch with TCR sequences."""
         batch = [
             {"peptide": "AAA", "tcr_a": "CAVRD", "tcr_b": "CASSIR"},
-            {"peptide": "BBB", "tcr_a": "CAVMD", "tcr_b": "CASSLG"},
+            {"peptide": "GGG", "tcr_a": "CAVMD", "tcr_b": "CASSLG"},
         ]
         result = collate_dict_batch(batch)
 
         assert "tcr_a_tok" in result
         assert "tcr_b_tok" in result
 
+    def test_collate_dict_sanitizes_missing_optional_sequence_tokens(self):
+        batch = [
+            {"peptide": "AAA", "mhc_a": "NONE", "mhc_b": "N/A", "tcr_a": "NULL"},
+            {"peptide": "GGG", "mhc_a": "MAVMAPRTL", "mhc_b": "MKM", "tcr_a": "CAVRD"},
+        ]
+        result = collate_dict_batch(batch)
+
+        assert int(result["mhc_a_tok"][0].sum().item()) == 0
+        assert int(result["mhc_a_tok"][1].sum().item()) > 0
+        assert int(result["mhc_b_tok"][0].sum().item()) == 0
+        assert int(result["mhc_b_tok"][1].sum().item()) > 0
+        assert "tcr_a_tok" in result
+        assert int(result["tcr_a_tok"][0].sum().item()) == 0
+        assert int(result["tcr_a_tok"][1].sum().item()) > 0
+
     def test_collate_dict_with_binding(self):
         """Collate dict batch with binding labels."""
         batch = [
             {"peptide": "AAA", "bind_value": 4.5, "bind_qual": 0},
-            {"peptide": "BBB", "bind_value": 6.0, "bind_qual": -1},
+            {"peptide": "GGG", "bind_value": 6.0, "bind_qual": -1},
         ]
         result = collate_dict_batch(batch)
 
@@ -484,7 +597,7 @@ class TestCollateDictBatch:
         """Collate dict batch with T-cell labels."""
         batch = [
             {"peptide": "AAA", "tcell_label": 1.0},
-            {"peptide": "BBB", "tcell_label": 0.0},
+            {"peptide": "GGG", "tcell_label": 0.0},
         ]
         result = collate_dict_batch(batch)
 
@@ -497,7 +610,7 @@ class TestCollateDictBatch:
         """Collate dict batch with elution labels."""
         batch = [
             {"peptide": "AAA", "elution_label": 1.0},
-            {"peptide": "BBB", "elution_label": 0.0},
+            {"peptide": "GGG", "elution_label": 0.0},
         ]
         result = collate_dict_batch(batch)
 

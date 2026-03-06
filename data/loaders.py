@@ -145,6 +145,7 @@ class TCellRecord:
     peptide: str
     mhc_allele: str
     response: float                 # 0 or 1
+    alleles: Optional[List[str]] = None
     assay_type: Optional[str] = None  # Assay response measured (e.g. IFNg release)
     assay_method: Optional[str] = None  # Method (ELISPOT/ICS/multimer/etc.)
     effector_culture_condition: Optional[str] = None
@@ -1016,6 +1017,7 @@ def load_iedb_tcell(path: Union[str, Path]) -> Iterator[TCellRecord]:
         yield TCellRecord(
             peptide=peptide,
             mhc_allele=allele,
+            alleles=alleles or None,
             response=response,
             assay_type=_get_column(row, assay_idx) or None,
             assay_method=_get_column(row, assay_method_idx) or None,
@@ -1574,13 +1576,48 @@ class PrestoDataset(Dataset):
 
         # Add T-cell samples
         for rec in (tcell_records or []):
-            mhc_class = self._resolve_mhc_class_value(rec.mhc_class, rec.mhc_allele)
+            explicit_mhc_class = normalize_mhc_class(rec.mhc_class, default=None)
+            mhc_class = self._resolve_mhc_class_optional_value(rec.mhc_class, rec.mhc_allele)
             mhc_seq = self._get_mhc_sequence(rec.mhc_allele, rec.mhc_sequence)
             mhc_b_seq = self._resolve_mhc_b_sequence(
                 mhc_class=mhc_class,
                 species=rec.species,
                 allele=rec.mhc_allele,
             )
+            tcell_mil_mhc_a_list: Optional[List[str]] = None
+            tcell_mil_mhc_b_list: Optional[List[str]] = None
+            tcell_mil_mhc_class_list: Optional[List[str]] = None
+            tcell_mil_species_list: Optional[List[str]] = None
+            use_tcell_pathway_mil = False
+            tcell_alleles = [a for a in (rec.alleles or []) if a]
+            if (
+                explicit_mhc_class is None
+                and len(tcell_alleles) > 1
+                and self._assay_supports_tcell_pathway_mil(rec)
+            ):
+                pathway_instances: List[Tuple[str, str, str, str]] = []
+                class_set = set()
+                for allele in tcell_alleles:
+                    pathway_class = self._resolve_mhc_class_optional_value(None, allele)
+                    if pathway_class not in {"I", "II"}:
+                        continue
+                    mhc_seq_i = self._get_mhc_sequence(allele, None)
+                    mhc_b_seq_i = self._resolve_mhc_b_sequence(
+                        mhc_class=pathway_class,
+                        species=rec.species,
+                        allele=allele,
+                    )
+                    pathway_instances.append(
+                        (mhc_seq_i, mhc_b_seq_i, pathway_class, rec.species or "")
+                    )
+                    class_set.add(pathway_class)
+                if class_set == {"I", "II"} and pathway_instances:
+                    pathway_instances.sort(key=lambda item: (item[2], item[0], item[1]))
+                    tcell_mil_mhc_a_list = [item[0] for item in pathway_instances]
+                    tcell_mil_mhc_b_list = [item[1] for item in pathway_instances]
+                    tcell_mil_mhc_class_list = [item[2] for item in pathway_instances]
+                    tcell_mil_species_list = [item[3] for item in pathway_instances]
+                    use_tcell_pathway_mil = True
             chain_type = _preferred_chain_type(
                 rec.tcr_a_cdr3,
                 rec.tcr_b_cdr3,
@@ -1605,6 +1642,11 @@ class PrestoDataset(Dataset):
                 tcell_in_vitro_process=rec.in_vitro_process_type,
                 tcell_in_vitro_responder=rec.in_vitro_responder_cell,
                 tcell_in_vitro_stimulator=rec.in_vitro_stimulator_cell,
+                use_tcell_pathway_mil=use_tcell_pathway_mil,
+                tcell_mil_mhc_a_list=tcell_mil_mhc_a_list,
+                tcell_mil_mhc_b_list=tcell_mil_mhc_b_list,
+                tcell_mil_mhc_class_list=tcell_mil_mhc_class_list,
+                tcell_mil_species_list=tcell_mil_species_list,
                 chain_type=chain_type,
                 phenotype=phenotype,
                 species=rec.species,
@@ -1712,6 +1754,59 @@ class PrestoDataset(Dataset):
             if inferred is not None:
                 return inferred
         return "I"
+
+    @staticmethod
+    def _resolve_mhc_class_optional_value(
+        mhc_class: Optional[str],
+        allele: Optional[str],
+    ) -> Optional[str]:
+        """Resolve canonical MHC class label, preserving ambiguity when unresolved."""
+        resolved = normalize_mhc_class(mhc_class, default=None)
+        if resolved is not None:
+            return resolved
+        if allele:
+            inferred = infer_mhc_class_optional(allele)
+            if inferred is not None:
+                return inferred
+            allele_upper = allele.upper()
+            if any(gene in allele_upper for gene in ("DRA", "DRB", "DQA", "DQB", "DPA", "DPB", "DR", "DQ", "DP")):
+                return "II"
+        return None
+
+    @staticmethod
+    def _assay_supports_tcell_pathway_mil(rec: TCellRecord) -> bool:
+        """Whether a T-cell assay is ambiguous enough to require pathway MIL."""
+        peptide_len = len((rec.peptide or "").strip())
+        if peptide_len < 11 or peptide_len > 15:
+            return False
+
+        combined = " ".join(
+            str(v or "")
+            for v in (
+                rec.assay_method,
+                rec.assay_type,
+                rec.apc_name,
+                rec.effector_culture_condition,
+                rec.apc_culture_condition,
+                rec.in_vitro_process_type,
+                rec.in_vitro_responder_cell,
+                rec.in_vitro_stimulator_cell,
+            )
+        ).lower()
+        if not combined:
+            return False
+        if "ics" in combined or "intracellular cytokine" in combined:
+            return False
+        if "multimer" in combined or "tetramer" in combined:
+            return False
+        if "cd4" in combined or "cd8" in combined:
+            return False
+        return (
+            "elispot" in combined
+            or "prolifer" in combined
+            or "pbmc" in combined
+            or "bulk" in combined
+        )
 
     def _default_class_i_beta2m(
         self,

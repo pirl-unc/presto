@@ -17,7 +17,7 @@ import tempfile
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Dict, Mapping, Optional, Sequence, Tuple
+from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple
 
 import torch
 import torch.nn as nn
@@ -102,6 +102,11 @@ SYNTHETIC_DEFAULTS = {
     "mhc_attention_sparsity_weight": 0.1,
     "mhc_attention_sparsity_min_residues": 25.0,
     "mhc_attention_sparsity_max_residues": 45.0,
+    "mil_contrastive_weight": 0.0,
+    "mil_contrastive_margin": 0.5,
+    "mil_contrastive_max_pairs": 32,
+    "mil_bag_sparsity_weight": 0.0,
+    "mil_bag_sparsity_target_sum": 1.5,
 }
 
 
@@ -530,6 +535,21 @@ def _regularization_config_from_args(args: argparse.Namespace) -> Dict[str, floa
         "mhc_attention_sparsity_max_residues": float(
             getattr(args, "mhc_attention_sparsity_max_residues", 60.0)
         ),
+        "mil_contrastive_weight": float(
+            getattr(args, "mil_contrastive_weight", 0.0)
+        ),
+        "mil_contrastive_margin": float(
+            getattr(args, "mil_contrastive_margin", 0.5)
+        ),
+        "mil_contrastive_max_pairs": float(
+            getattr(args, "mil_contrastive_max_pairs", 32)
+        ),
+        "mil_bag_sparsity_weight": float(
+            getattr(args, "mil_bag_sparsity_weight", 0.0)
+        ),
+        "mil_bag_sparsity_target_sum": float(
+            getattr(args, "mil_bag_sparsity_target_sum", 1.5)
+        ),
     }
 
 
@@ -554,6 +574,11 @@ def _resolve_regularization_config(
         "mhc_attention_sparsity_weight": 0.0,
         "mhc_attention_sparsity_min_residues": 30.0,
         "mhc_attention_sparsity_max_residues": 60.0,
+        "mil_contrastive_weight": 0.0,
+        "mil_contrastive_margin": 0.5,
+        "mil_contrastive_max_pairs": 32.0,
+        "mil_bag_sparsity_weight": 0.0,
+        "mil_bag_sparsity_target_sum": 1.5,
     }
     if regularization is None:
         return defaults
@@ -929,87 +954,292 @@ def _bag_aware_instance_cap(
     return keep
 
 
-def _compute_mil_elution_losses(
-    model,
+def _get_mil_channel(
     batch,
+    prefix: str,
+) -> Optional[Dict[str, Any]]:
+    channel = {
+        "pep_tok": getattr(batch, f"{prefix}_pep_tok", None),
+        "mhc_a_tok": getattr(batch, f"{prefix}_mhc_a_tok", None),
+        "mhc_b_tok": getattr(batch, f"{prefix}_mhc_b_tok", None),
+        "mhc_class": getattr(batch, f"{prefix}_mhc_class", None),
+        "species": getattr(batch, f"{prefix}_species", None),
+        "flank_n_tok": getattr(batch, f"{prefix}_flank_n_tok", None),
+        "flank_c_tok": getattr(batch, f"{prefix}_flank_c_tok", None),
+        "instance_to_bag": getattr(batch, f"{prefix}_instance_to_bag", None),
+        "bag_label": getattr(batch, f"{prefix}_bag_label", None),
+        "bag_sample_ids": getattr(batch, f"{prefix}_bag_sample_ids", []),
+    }
+    required = (
+        channel["pep_tok"],
+        channel["mhc_a_tok"],
+        channel["mhc_b_tok"],
+        channel["instance_to_bag"],
+        channel["bag_label"],
+    )
+    if any(value is None for value in required):
+        return None
+    return channel
+
+
+def _slice_mil_channel(
+    channel: Dict[str, Any],
+    keep: torch.Tensor,
+) -> Dict[str, Any]:
+    keep_list = keep.tolist()
+    sliced = dict(channel)
+    for key in ("pep_tok", "mhc_a_tok", "mhc_b_tok", "flank_n_tok", "flank_c_tok", "instance_to_bag"):
+        value = channel.get(key)
+        if isinstance(value, torch.Tensor):
+            sliced[key] = value[keep]
+    for key in ("mhc_class", "species"):
+        value = channel.get(key)
+        if isinstance(value, list):
+            sliced[key] = [value[i] for i in keep_list]
+    return sliced
+
+
+def _group_mil_instances(
+    instance_to_bag: torch.Tensor,
+    n_bags: int,
+) -> List[List[int]]:
+    grouped: List[List[int]] = [[] for _ in range(n_bags)]
+    for idx in range(int(instance_to_bag.shape[0])):
+        bag_idx = int(instance_to_bag[idx].item())
+        if 0 <= bag_idx < n_bags:
+            grouped[bag_idx].append(idx)
+    return grouped
+
+
+def _token_sequence_identity(a: torch.Tensor, b: torch.Tensor) -> float:
+    mask = (a != 0) & (b != 0)
+    if int(mask.sum().item()) <= 0:
+        return 0.0
+    return float((a[mask] == b[mask]).float().mean().item())
+
+
+def _bag_max_mhc_identity(
+    mhc_a_tok: torch.Tensor,
+    bag_instances_a: Sequence[int],
+    bag_instances_b: Sequence[int],
+) -> float:
+    max_identity = 0.0
+    for idx_a in bag_instances_a:
+        seq_a = mhc_a_tok[idx_a]
+        for idx_b in bag_instances_b:
+            identity = _token_sequence_identity(seq_a, mhc_a_tok[idx_b])
+            if identity > max_identity:
+                max_identity = identity
+    return max_identity
+
+
+def _select_mil_contrastive_pairs(
+    *,
+    mhc_a_tok: torch.Tensor,
+    mhc_class: Sequence[str],
+    bag_label: torch.Tensor,
+    instance_to_bag: torch.Tensor,
+    max_pairs: int,
+    max_identity: float = 0.90,
+) -> List[tuple[int, int, float]]:
+    n_bags = int(bag_label.shape[0])
+    grouped = _group_mil_instances(instance_to_bag, n_bags)
+    bag_classes: List[str] = []
+    for bag_idx in range(n_bags):
+        if not grouped[bag_idx]:
+            bag_classes.append("")
+            continue
+        class_name = normalize_mhc_class(
+            mhc_class[grouped[bag_idx][0]] if mhc_class else None,
+            default=None,
+        ) or ""
+        bag_classes.append(class_name)
+
+    pairs: List[tuple[int, int, float]] = []
+    positive_bags = torch.nonzero(bag_label > 0.5, as_tuple=False).squeeze(-1).tolist()
+    for bag_idx in positive_bags:
+        if not grouped[bag_idx]:
+            continue
+        bag_class = bag_classes[bag_idx]
+        if bag_class not in {"I", "II"}:
+            continue
+        best_candidate: Optional[int] = None
+        best_identity = 1.0
+        for cand_idx in range(n_bags):
+            if cand_idx == bag_idx or not grouped[cand_idx]:
+                continue
+            if bag_classes[cand_idx] != bag_class:
+                continue
+            identity = _bag_max_mhc_identity(
+                mhc_a_tok=mhc_a_tok,
+                bag_instances_a=grouped[bag_idx],
+                bag_instances_b=grouped[cand_idx],
+            )
+            if identity >= max_identity:
+                continue
+            if identity < best_identity:
+                best_identity = identity
+                best_candidate = cand_idx
+        if best_candidate is not None:
+            pairs.append((bag_idx, best_candidate, best_identity))
+
+    pairs.sort(key=lambda item: item[2])
+    if max_pairs > 0:
+        pairs = pairs[:max_pairs]
+    return pairs
+
+
+def _build_contrastive_mil_channel(
+    channel: Dict[str, Any],
+    pairs: Sequence[tuple[int, int, float]],
+) -> Optional[Dict[str, Any]]:
+    if not pairs:
+        return None
+    instance_to_bag = channel["instance_to_bag"].to(dtype=torch.long)
+    n_bags = int(channel["bag_label"].shape[0])
+    grouped = _group_mil_instances(instance_to_bag, n_bags)
+
+    anchor_instance_idx: List[int] = []
+    candidate_instance_idx: List[int] = []
+    contrastive_instance_to_bag: List[int] = []
+    anchor_bag_indices: List[int] = []
+
+    for new_bag_idx, (anchor_bag_idx, candidate_bag_idx, _) in enumerate(pairs):
+        anchor_instances = grouped[anchor_bag_idx]
+        candidate_instances = grouped[candidate_bag_idx]
+        if not anchor_instances or not candidate_instances:
+            continue
+        anchor_seed = anchor_instances[0]
+        anchor_bag_indices.append(anchor_bag_idx)
+        for cand_instance in candidate_instances:
+            anchor_instance_idx.append(anchor_seed)
+            candidate_instance_idx.append(cand_instance)
+            contrastive_instance_to_bag.append(new_bag_idx)
+
+    if not candidate_instance_idx:
+        return None
+
+    anchor_index_t = torch.tensor(
+        anchor_instance_idx,
+        device=channel["pep_tok"].device,
+        dtype=torch.long,
+    )
+    candidate_index_t = torch.tensor(
+        candidate_instance_idx,
+        device=channel["pep_tok"].device,
+        dtype=torch.long,
+    )
+    contrastive: Dict[str, Any] = {
+        "pep_tok": channel["pep_tok"][anchor_index_t],
+        "mhc_a_tok": channel["mhc_a_tok"][candidate_index_t],
+        "mhc_b_tok": channel["mhc_b_tok"][candidate_index_t],
+        "mhc_class": [channel["mhc_class"][i] for i in candidate_instance_idx],
+        "species": [channel["species"][i] for i in candidate_instance_idx],
+        "instance_to_bag": torch.tensor(
+            contrastive_instance_to_bag,
+            device=channel["pep_tok"].device,
+            dtype=torch.long,
+        ),
+        "anchor_bag_indices": torch.tensor(
+            anchor_bag_indices,
+            device=channel["pep_tok"].device,
+            dtype=torch.long,
+        ),
+    }
+    if isinstance(channel.get("flank_n_tok"), torch.Tensor):
+        contrastive["flank_n_tok"] = channel["flank_n_tok"][anchor_index_t]
+    else:
+        contrastive["flank_n_tok"] = None
+    if isinstance(channel.get("flank_c_tok"), torch.Tensor):
+        contrastive["flank_c_tok"] = channel["flank_c_tok"][anchor_index_t]
+    else:
+        contrastive["flank_c_tok"] = None
+    return contrastive
+
+
+def _run_mil_forward(
+    model,
+    *,
+    channel: Dict[str, Any],
     device: str,
-    max_mil_instances: int = 0,
-) -> tuple[Dict[str, torch.Tensor], Dict[str, float]]:
-    """Compute bag-level MIL losses for elution/presentation/MS outputs."""
-    mil_losses: Dict[str, torch.Tensor] = {}
-    mil_metrics: Dict[str, float] = {}
-
-    if (
-        getattr(batch, "mil_pep_tok", None) is None
-        or getattr(batch, "mil_mhc_a_tok", None) is None
-        or getattr(batch, "mil_mhc_b_tok", None) is None
-        or getattr(batch, "mil_instance_to_bag", None) is None
-        or getattr(batch, "mil_bag_label", None) is None
-    ):
-        return mil_losses, mil_metrics
-
-    mil_bag_label = batch.mil_bag_label.to(device=device, dtype=torch.float32)
-    if mil_bag_label.numel() == 0:
-        return mil_losses, mil_metrics
-
-    # Subsample MIL instances when exceeding cap to bound GPU cost.
-    mil_pep_tok = batch.mil_pep_tok
-    mil_mhc_a_tok = batch.mil_mhc_a_tok
-    mil_mhc_b_tok = batch.mil_mhc_b_tok
-    mil_mhc_class = batch.mil_mhc_class
-    mil_species = batch.mil_species
-    mil_flank_n_tok = getattr(batch, "mil_flank_n_tok", None)
-    mil_flank_c_tok = getattr(batch, "mil_flank_c_tok", None)
-    mil_instance_to_bag = batch.mil_instance_to_bag
-
-    n_instances = mil_pep_tok.shape[0]
-    if max_mil_instances > 0 and n_instances > max_mil_instances:
-        keep = _bag_aware_instance_cap(
-            instance_to_bag=mil_instance_to_bag.to(dtype=torch.long),
-            max_mil_instances=max_mil_instances,
-        ).cpu()
-        mil_pep_tok = mil_pep_tok[keep]
-        mil_mhc_a_tok = mil_mhc_a_tok[keep]
-        mil_mhc_b_tok = mil_mhc_b_tok[keep]
-        mil_mhc_class = [mil_mhc_class[i] for i in keep.tolist()]
-        mil_species = [mil_species[i] for i in keep.tolist()]
-        if mil_flank_n_tok is not None:
-            mil_flank_n_tok = mil_flank_n_tok[keep]
-        if mil_flank_c_tok is not None:
-            mil_flank_c_tok = mil_flank_c_tok[keep]
-        mil_instance_to_bag = mil_instance_to_bag[keep]
-
-    mil_outputs = model(
-        pep_tok=mil_pep_tok.to(device),
-        mhc_a_tok=mil_mhc_a_tok.to(device),
-        mhc_b_tok=mil_mhc_b_tok.to(device),
-        mhc_class=mil_mhc_class,
-        species=mil_species,
+    tcell_context: Optional[Dict[str, torch.Tensor]] = None,
+) -> Dict[str, Any]:
+    return model(
+        pep_tok=channel["pep_tok"].to(device),
+        mhc_a_tok=channel["mhc_a_tok"].to(device),
+        mhc_b_tok=channel["mhc_b_tok"].to(device),
+        mhc_class=channel["mhc_class"],
+        species=channel["species"],
         tcr_a_tok=None,
         tcr_b_tok=None,
         flank_n_tok=(
-            mil_flank_n_tok.to(device)
-            if mil_flank_n_tok is not None
+            channel["flank_n_tok"].to(device)
+            if isinstance(channel.get("flank_n_tok"), torch.Tensor)
             else None
         ),
         flank_c_tok=(
-            mil_flank_c_tok.to(device)
-            if mil_flank_c_tok is not None
+            channel["flank_c_tok"].to(device)
+            if isinstance(channel.get("flank_c_tok"), torch.Tensor)
             else None
         ),
-        tcell_context=None,
+        tcell_context=tcell_context,
     )
 
-    instance_to_bag = mil_instance_to_bag.to(device=device, dtype=torch.long)
-    n_bags = int(mil_bag_label.shape[0])
 
-    task_to_output = {
-        "elution": "elution_logit",
-        "presentation": "presentation_logit",
-        "ms": "ms_logit",
-    }
+def _compute_mil_channel_losses(
+    model,
+    *,
+    batch,
+    device: str,
+    channel_prefix: str,
+    task_to_output: Mapping[str, str],
+    regularization: Mapping[str, float],
+    max_mil_instances: int = 0,
+    tcell_context: Optional[Dict[str, torch.Tensor]] = None,
+    enable_contrastive: bool = False,
+) -> tuple[Dict[str, torch.Tensor], Dict[str, torch.Tensor], Dict[str, float]]:
+    """Compute bag-level MIL supervision and regularization for one channel."""
+    mil_losses: Dict[str, torch.Tensor] = {}
+    mil_regularization: Dict[str, torch.Tensor] = {}
+    mil_metrics: Dict[str, float] = {}
+
+    channel = _get_mil_channel(batch, channel_prefix)
+    if channel is None:
+        return mil_losses, mil_regularization, mil_metrics
+
+    bag_label = channel["bag_label"].to(device=device, dtype=torch.float32)
+    if bag_label.numel() == 0:
+        return mil_losses, mil_regularization, mil_metrics
+
+    n_instances = int(channel["pep_tok"].shape[0])
+    if max_mil_instances > 0 and n_instances > max_mil_instances:
+        keep = _bag_aware_instance_cap(
+            instance_to_bag=channel["instance_to_bag"].to(dtype=torch.long),
+            max_mil_instances=max_mil_instances,
+        )
+        channel = _slice_mil_channel(channel, keep)
+        if tcell_context:
+            tcell_context = {
+                key: value[keep]
+                for key, value in tcell_context.items()
+                if isinstance(value, torch.Tensor)
+            }
+
+    outputs = _run_mil_forward(
+        model,
+        channel=channel,
+        device=device,
+        tcell_context=tcell_context,
+    )
+    instance_to_bag = channel["instance_to_bag"].to(device=device, dtype=torch.long)
+    n_bags = int(bag_label.shape[0])
+    bag_probs_by_task: Dict[str, torch.Tensor] = {}
+
+    sparsity_weight = float(regularization.get("mil_bag_sparsity_weight", 0.0))
+    sparsity_target = float(regularization.get("mil_bag_sparsity_target_sum", 1.5))
+
     for task_name, output_key in task_to_output.items():
-        logits = mil_outputs.get(output_key)
+        logits = outputs.get(output_key)
         if not isinstance(logits, torch.Tensor):
             continue
         inst_probs = torch.sigmoid(_as_float_vector(logits))
@@ -1020,18 +1250,90 @@ def _compute_mil_elution_losses(
         )
         bag_loss, bag_probs = mil_bag_loss(
             inst_probs=prob_matrix,
-            bag_labels=mil_bag_label,
+            bag_labels=bag_label,
             mask=mask_matrix,
         )
         mil_losses[task_name] = bag_loss
-        mil_metrics[f"out_mil_{task_name}_prob_mean"] = float(
+        bag_probs_by_task[task_name] = bag_probs
+        mil_metrics[f"out_{channel_prefix}_{task_name}_prob_mean"] = float(
             bag_probs.detach().mean().item()
         )
-        mil_metrics[f"out_mil_{task_name}_prob_var"] = float(
+        mil_metrics[f"out_{channel_prefix}_{task_name}_prob_var"] = float(
             bag_probs.detach().var(unbiased=False).item()
         )
+        if sparsity_weight > 0.0:
+            bag_sum = (prob_matrix * mask_matrix).sum(dim=-1)
+            sparsity_loss = F.softplus(
+                bag_sum - torch.tensor(sparsity_target, device=bag_sum.device)
+            ).mean()
+            mil_regularization[f"{task_name}_mil_sparsity"] = (
+                sparsity_weight * sparsity_loss
+            )
+            mil_metrics[f"out_{channel_prefix}_{task_name}_bag_sum_mean"] = float(
+                bag_sum.detach().mean().item()
+            )
 
-    return mil_losses, mil_metrics
+    contrastive_weight = float(regularization.get("mil_contrastive_weight", 0.0))
+    if (
+        enable_contrastive
+        and contrastive_weight > 0.0
+        and "presentation" in bag_probs_by_task
+    ):
+        pairs = _select_mil_contrastive_pairs(
+            mhc_a_tok=channel["mhc_a_tok"],
+            mhc_class=channel["mhc_class"] or [],
+            bag_label=bag_label,
+            instance_to_bag=instance_to_bag,
+            max_pairs=int(regularization.get("mil_contrastive_max_pairs", 32)),
+        )
+        contrastive_channel = _build_contrastive_mil_channel(channel, pairs)
+        if contrastive_channel is not None:
+            contrastive_outputs = _run_mil_forward(
+                model,
+                channel=contrastive_channel,
+                device=device,
+                tcell_context=None,
+            )
+            contrastive_logits = contrastive_outputs.get("presentation_logit")
+            if isinstance(contrastive_logits, torch.Tensor):
+                contrastive_probs = torch.sigmoid(_as_float_vector(contrastive_logits))
+                contrastive_prob_matrix, contrastive_mask = _build_mil_prob_matrix(
+                    inst_probs=contrastive_probs,
+                    instance_to_bag=contrastive_channel["instance_to_bag"],
+                    n_bags=int(contrastive_channel["anchor_bag_indices"].shape[0]),
+                )
+                _, contrastive_bag_probs = mil_bag_loss(
+                    inst_probs=contrastive_prob_matrix,
+                    bag_labels=torch.zeros(
+                        int(contrastive_channel["anchor_bag_indices"].shape[0]),
+                        device=device,
+                        dtype=torch.float32,
+                    ),
+                    mask=contrastive_mask,
+                )
+                original_bag_probs = bag_probs_by_task["presentation"][
+                    contrastive_channel["anchor_bag_indices"]
+                ]
+                eps = 1e-6
+                original_scores = torch.logit(original_bag_probs.clamp(eps, 1.0 - eps))
+                contrastive_scores = torch.logit(
+                    contrastive_bag_probs.clamp(eps, 1.0 - eps)
+                )
+                margin = float(regularization.get("mil_contrastive_margin", 0.5))
+                contrastive_loss = F.relu(
+                    contrastive_scores - original_scores + margin
+                ).mean()
+                mil_regularization["presentation_mil_contrastive"] = (
+                    contrastive_weight * contrastive_loss
+                )
+                mil_metrics["out_mil_contrastive_pairs"] = float(
+                    int(contrastive_channel["anchor_bag_indices"].shape[0])
+                )
+                mil_metrics["out_mil_presentation_contrastive_gap_mean"] = float(
+                    (original_scores - contrastive_scores).detach().mean().item()
+                )
+
+    return mil_losses, mil_regularization, mil_metrics
 
 
 def _compute_consistency_losses(
@@ -1342,6 +1644,10 @@ def compute_loss(
             getattr(batch, "mil_bag_label", None) is not None
             and getattr(batch, "mil_instance_to_bag", None) is not None
         )
+        has_tcell_mil = (
+            getattr(batch, "tcell_mil_bag_label", None) is not None
+            and getattr(batch, "tcell_mil_instance_to_bag", None) is not None
+        )
         if profile_performance:
             mil_instance_to_bag = getattr(batch, "mil_instance_to_bag", None)
             mil_bag_label = getattr(batch, "mil_bag_label", None)
@@ -1352,6 +1658,18 @@ def compute_loss(
             )
             perf_metrics["perf_mil_bags"] = float(
                 int(mil_bag_label.numel()) if isinstance(mil_bag_label, torch.Tensor) else 0
+            )
+            tcell_mil_instance_to_bag = getattr(batch, "tcell_mil_instance_to_bag", None)
+            tcell_mil_bag_label = getattr(batch, "tcell_mil_bag_label", None)
+            perf_metrics["perf_tcell_mil_instances"] = float(
+                int(tcell_mil_instance_to_bag.numel())
+                if isinstance(tcell_mil_instance_to_bag, torch.Tensor)
+                else 0
+            )
+            perf_metrics["perf_tcell_mil_bags"] = float(
+                int(tcell_mil_bag_label.numel())
+                if isinstance(tcell_mil_bag_label, torch.Tensor)
+                else 0
             )
 
         supervised_losses: Dict[str, torch.Tensor] = {}
@@ -1386,27 +1704,69 @@ def compute_loss(
                 time.perf_counter() - supervised_start
             )
 
-        if has_mil_elution:
+        if has_mil_elution or has_tcell_mil:
             mil_start = time.perf_counter() if profile_performance else 0.0
-            mil_losses, mil_metrics = _compute_mil_elution_losses(
-                model=model,
-                batch=batch,
-                device=device,
-                max_mil_instances=max_mil_instances,
-            )
-            supervised_losses.update(mil_losses)
-            mil_bag_label = getattr(batch, "mil_bag_label", None)
-            mil_support = (
-                float(mil_bag_label.numel())
-                if isinstance(mil_bag_label, torch.Tensor)
-                else 1.0
-            )
-            for name in mil_losses:
-                supervised_loss_support[name] = mil_support
-            output_metrics.update(mil_metrics)
+            if has_mil_elution:
+                mil_losses, mil_regularization, mil_metrics = _compute_mil_channel_losses(
+                    model=model,
+                    batch=batch,
+                    device=device,
+                    channel_prefix="mil",
+                    task_to_output={
+                        "elution": "elution_logit",
+                        "presentation": "presentation_logit",
+                        "ms": "ms_logit",
+                    },
+                    regularization=regularization_cfg,
+                    max_mil_instances=max_mil_instances,
+                    enable_contrastive=True,
+                )
+                supervised_losses.update(mil_losses)
+                mil_bag_label = getattr(batch, "mil_bag_label", None)
+                mil_support = (
+                    float(mil_bag_label.numel())
+                    if isinstance(mil_bag_label, torch.Tensor)
+                    else 1.0
+                )
+                for name in mil_losses:
+                    supervised_loss_support[name] = mil_support
+                output_metrics.update(mil_metrics)
+            else:
+                mil_regularization = {}
+
+            tcell_mil_regularization: Dict[str, torch.Tensor] = {}
+            if has_tcell_mil:
+                tcell_mil_losses, tcell_mil_regularization, tcell_mil_metrics = _compute_mil_channel_losses(
+                    model=model,
+                    batch=batch,
+                    device=device,
+                    channel_prefix="tcell_mil",
+                    task_to_output={
+                        "tcell_mil": "tcell_logit",
+                        "immunogenicity_mil": "immunogenicity_logit",
+                    },
+                    regularization=regularization_cfg,
+                    max_mil_instances=max_mil_instances,
+                    tcell_context=batch.tcell_mil_context if batch.tcell_mil_context else None,
+                    enable_contrastive=False,
+                )
+                supervised_losses.update(tcell_mil_losses)
+                tcell_mil_bag_label = getattr(batch, "tcell_mil_bag_label", None)
+                tcell_mil_support = (
+                    float(tcell_mil_bag_label.numel())
+                    if isinstance(tcell_mil_bag_label, torch.Tensor)
+                    else 1.0
+                )
+                for name in tcell_mil_losses:
+                    supervised_loss_support[name] = tcell_mil_support
+                output_metrics.update(tcell_mil_metrics)
+
             if profile_performance:
                 perf_metrics["perf_mil_sec"] = float(time.perf_counter() - mil_start)
-        elif profile_performance:
+        else:
+            mil_regularization = {}
+            tcell_mil_regularization = {}
+        if not (has_mil_elution or has_tcell_mil) and profile_performance:
             perf_metrics["perf_mil_sec"] = 0.0
 
         regularization_start = time.perf_counter() if profile_performance else 0.0
@@ -1415,6 +1775,8 @@ def compute_loss(
             batch=batch,
             regularization=regularization_cfg,
         )
+        regularization_losses.update(mil_regularization)
+        regularization_losses.update(tcell_mil_regularization)
         if profile_performance:
             perf_metrics["perf_regularization_sec"] = float(
                 time.perf_counter() - regularization_start
@@ -2056,6 +2418,36 @@ def main(argv=None):
         type=float,
         default=60.0,
         help="Upper target bound for effective attended MHC residues",
+    )
+    parser.add_argument(
+        "--mil-contrastive-weight",
+        type=float,
+        default=0.0,
+        help="Weight for presentation-vs-substituted-genotype MIL contrastive loss",
+    )
+    parser.add_argument(
+        "--mil-contrastive-margin",
+        type=float,
+        default=0.5,
+        help="Required logit margin between true and substituted-genotype MIL bags",
+    )
+    parser.add_argument(
+        "--mil-contrastive-max-pairs",
+        type=int,
+        default=32,
+        help="Maximum positive MIL bags per batch used for genotype-substitution contrastive loss",
+    )
+    parser.add_argument(
+        "--mil-bag-sparsity-weight",
+        type=float,
+        default=0.0,
+        help="Weight for MIL bag sparsity prior on summed instance probabilities",
+    )
+    parser.add_argument(
+        "--mil-bag-sparsity-target-sum",
+        type=float,
+        default=1.5,
+        help="MIL bag summed-probability target before sparsity penalty activates",
     )
     parser.add_argument(
         "--tcell-in-vitro-margin",

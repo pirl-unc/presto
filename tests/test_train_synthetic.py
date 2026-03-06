@@ -258,6 +258,134 @@ def test_compute_loss_uses_mil_noisy_or_for_elution_family_tasks():
     assert "out_mil_ms_prob_mean" in metrics
 
 
+def test_compute_loss_uses_tcell_pathway_mil_with_context():
+    class _TCellMilModel(nn.Module):
+        def forward(self, **kwargs):
+            n = kwargs["pep_tok"].shape[0]
+            context = kwargs.get("tcell_context")
+            if n == 2:
+                assert context is not None
+                assert context["assay_method_idx"].shape[0] == 2
+                return {
+                    "tcell_logit": torch.tensor([[2.0], [-1.0]], dtype=torch.float32),
+                    "immunogenicity_logit": torch.tensor([[1.5], [-0.5]], dtype=torch.float32),
+                }
+            return {
+                "tcell_logit": torch.zeros((n, 1), dtype=torch.float32),
+                "immunogenicity_logit": torch.zeros((n, 1), dtype=torch.float32),
+            }
+
+    sample = PrestoSample(
+        peptide="ACDEFGHIKLMN",
+        mhc_a="MAVMAPRTLLLLLSGALALTQTA",
+        mhc_b="MSRSVALAVLALLSLSGLEA",
+        mhc_class=None,
+        tcell_label=1.0,
+        tcell_assay_method="ELISPOT",
+        tcell_assay_readout="IFNg release",
+        tcell_in_vitro_responder="PBMC",
+        use_tcell_pathway_mil=True,
+        tcell_mil_mhc_a_list=[
+            "MAVMAPRTLLLLLSGALALTQTA",
+            "DAVMAPRTLLLLLSGALALTQTA",
+        ],
+        tcell_mil_mhc_b_list=[
+            "MSRSVALAVLALLSLSGLEA",
+            "",
+        ],
+        tcell_mil_mhc_class_list=["I", "II"],
+        tcell_mil_species_list=["human", "human"],
+    )
+    batch = PrestoCollator(max_pep_len=16, max_mhc_len=64)([sample])
+
+    total, losses, metrics = compute_loss(
+        model=_TCellMilModel(),
+        batch=batch,
+        device="cpu",
+        regularization=None,
+    )
+
+    assert torch.isfinite(total)
+    assert "tcell_mil" in losses
+    assert "immunogenicity_mil" in losses
+    assert float(losses["tcell_mil"].item()) > 0.0
+    assert float(losses["immunogenicity_mil"].item()) > 0.0
+    assert "out_tcell_mil_tcell_mil_prob_mean" in metrics
+
+
+def test_compute_loss_adds_mil_contrastive_and_sparsity_penalties():
+    class _ContrastiveMilModel(nn.Module):
+        def forward(self, **kwargs):
+            mhc_signal = kwargs["mhc_a_tok"][:, 0].float().unsqueeze(-1) / 10.0
+            return {
+                "elution_logit": mhc_signal,
+                "presentation_logit": mhc_signal,
+                "ms_logit": mhc_signal,
+            }
+
+    samples = [
+        PrestoSample(
+            peptide="SIINFEKL",
+            mhc_a="MMMMMMMMMMMMMMMMMMMMMMMM",
+            mhc_b="MSRSVALAVLALLSLSGLEA",
+            mhc_class="I",
+            elution_label=1.0,
+            species="human",
+            mil_mhc_a_list=[
+                "MMMMMMMMMMMMMMMMMMMMMMMM",
+                "NNNNNNNNNNNNNNNNNNNNNNNN",
+            ],
+            mil_mhc_b_list=[
+                "MSRSVALAVLALLSLSGLEA",
+                "MSRSVALAVLALLSLSGLEA",
+            ],
+            mil_mhc_class_list=["I", "I"],
+            mil_species_list=["human", "human"],
+        ),
+        PrestoSample(
+            peptide="GILGFVFTL",
+            mhc_a="YYYYYYYYYYYYYYYYYYYYYYYY",
+            mhc_b="MSRSVALAVLALLSLSGLEA",
+            mhc_class="I",
+            elution_label=0.0,
+            species="human",
+            mil_mhc_a_list=[
+                "YYYYYYYYYYYYYYYYYYYYYYYY",
+                "WWWWWWWWWWWWWWWWWWWWWWWW",
+            ],
+            mil_mhc_b_list=[
+                "MSRSVALAVLALLSLSGLEA",
+                "MSRSVALAVLALLSLSGLEA",
+            ],
+            mil_mhc_class_list=["I", "I"],
+            mil_species_list=["human", "human"],
+        ),
+    ]
+    batch = PrestoCollator(max_pep_len=16, max_mhc_len=64)(samples)
+
+    total, losses, metrics = compute_loss(
+        model=_ContrastiveMilModel(),
+        batch=batch,
+        device="cpu",
+        regularization={
+            "mil_contrastive_weight": 1.0,
+            "mil_contrastive_margin": 0.5,
+            "mil_contrastive_max_pairs": 4,
+            "mil_bag_sparsity_weight": 1.0,
+            "mil_bag_sparsity_target_sum": 1.5,
+        },
+    )
+
+    assert torch.isfinite(total)
+    assert "presentation_mil_contrastive" in losses
+    assert "elution_mil_sparsity" in losses
+    assert "presentation_mil_sparsity" in losses
+    assert "ms_mil_sparsity" in losses
+    assert float(losses["presentation_mil_contrastive"].item()) > 0.0
+    assert float(losses["presentation_mil_sparsity"].item()) > 0.0
+    assert metrics["out_mil_contrastive_pairs"] == pytest.approx(1.0)
+
+
 def test_mil_instance_cap_preserves_at_least_one_instance_per_bag():
     class _TrackingMilModel(nn.Module):
         def __init__(self):

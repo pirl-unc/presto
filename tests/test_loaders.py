@@ -171,6 +171,23 @@ def test_load_iedb_tcell_parses_assay_context_columns(tmp_path):
     assert rec.in_vitro_stimulator_cell == "T2 cell (B cell)"
 
 
+def test_load_iedb_tcell_preserves_multiple_restriction_alleles(tmp_path):
+    path = tmp_path / "iedb_tcell_multi_allele.csv"
+    rows = [
+        ["Epitope", "MHC Restriction", "Assay", "Method"],
+        ["Name", "Name", "Qualitative Measurement", "Assay Method"],
+        ["ACDEFGHIKLMN", "HLA-A*02:01/HLA-DRB1*04:01", "Positive", "ELISPOT"],
+    ]
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerows(rows)
+
+    records = list(load_iedb_tcell(path))
+    assert len(records) == 1
+    assert records[0].mhc_allele == "HLA-A*02:01"
+    assert records[0].alleles == ["HLA-A*02:01", "HLA-DRB1*04:01"]
+
+
 def test_load_iedb_binding_parses_multilevel_export(tmp_path):
     path = tmp_path / "iedb_binding.csv"
     rows = [
@@ -505,6 +522,37 @@ def test_presto_dataset_elution_preserves_multi_allele_bag_instances():
     assert len(sample.mil_mhc_b_list) == 2
     assert sample.mil_mhc_class_list == ["I", "I"]
     assert sample.mil_species_list == ["human", "human"]
+
+
+def test_presto_dataset_tcell_builds_pathway_mil_for_mixed_class_ambiguous_assay():
+    records = [
+        TCellRecord(
+            peptide="ACDEFGHIKLMN",
+            mhc_allele="HLA-A*02:01",
+            alleles=["HLA-A*02:01", "HLA-DRB1*04:01"],
+            response=1.0,
+            mhc_class=None,
+            assay_method="ELISPOT",
+            assay_type="IFNg release",
+            effector_culture_condition="Direct Ex Vivo",
+            in_vitro_responder_cell="PBMC",
+            species="human",
+            source="iedb",
+        )
+    ]
+    dataset = PrestoDataset(
+        tcell_records=records,
+        mhc_sequences={
+            "HLA-A*02:01": MHC_ALPHA_SEQ,
+            "HLA-DRB1*04:01": MHC_ALT_SEQ,
+        },
+    )
+
+    sample = dataset[0]
+    assert sample.use_tcell_pathway_mil is True
+    assert sample.tcell_mil_mhc_class_list == ["I", "II"]
+    assert sample.tcell_mil_mhc_a_list == [MHC_ALPHA_SEQ, MHC_ALT_SEQ]
+    assert sample.tcell_mil_species_list == ["human", "human"]
 
 
 def test_presto_dataset_rejects_noncanonical_mhc_residues():

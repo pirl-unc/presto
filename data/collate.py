@@ -10,20 +10,25 @@ from typing import Any, Callable, Dict, List, Optional
 
 import torch
 
+from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
 from .vocab import (
+    CHAIN_SPECIES_TO_IDX,
     CHAIN_TO_IDX,
     CELL_TO_IDX,
+    FINE_TO_CHAIN_SPECIES,
     FOREIGN_CATEGORIES,
     ORGANISM_TO_IDX,
-    SPECIES_TO_IDX,
     TCELL_APC_TYPE_TO_IDX,
     TCELL_ASSAY_METHOD_TO_IDX,
     TCELL_ASSAY_READOUT_TO_IDX,
     TCELL_CULTURE_CONTEXT_TO_IDX,
     TCELL_PEPTIDE_FORMAT_TO_IDX,
     TCELL_STIM_CONTEXT_TO_IDX,
+    normalize_species,
 )
+
+OPTIONAL_MISSING_SEQ_TOKENS = {"NA", "N/A", "NONE", "NULL", "-", "?"}
 
 
 @dataclass(frozen=True)
@@ -121,7 +126,7 @@ class PrestoSample:
     # MHC
     mhc_a: str = ""  # Alpha chain sequence or allele name
     mhc_b: str = ""  # Beta chain / beta2m
-    mhc_class: str = "I"
+    mhc_class: Optional[str] = None
 
     # TCR (optional)
     tcr_a: Optional[str] = None
@@ -162,9 +167,15 @@ class PrestoSample:
     mil_mhc_b_list: Optional[List[str]] = None
     mil_mhc_class_list: Optional[List[str]] = None
     mil_species_list: Optional[List[str]] = None
+    use_tcell_pathway_mil: bool = False
+    tcell_mil_mhc_a_list: Optional[List[str]] = None
+    tcell_mil_mhc_b_list: Optional[List[str]] = None
+    tcell_mil_mhc_class_list: Optional[List[str]] = None
+    tcell_mil_species_list: Optional[List[str]] = None
 
     # Processing
     processing_label: Optional[float] = None
+    core_start: Optional[int] = None
 
     # Peptide source organism (unified 12-class taxonomy)
     species_of_origin: Optional[str] = None
@@ -191,7 +202,7 @@ class PrestoBatch:
     pep_tok: torch.Tensor
     mhc_a_tok: torch.Tensor
     mhc_b_tok: torch.Tensor
-    mhc_class: List[str]
+    mhc_class: List[Optional[str]]
 
     # Optional sequences
     flank_n_tok: Optional[torch.Tensor] = None
@@ -231,6 +242,7 @@ class PrestoBatch:
     # Optional T-cell assay context (categorical IDs + masks)
     tcell_context: Dict[str, torch.Tensor] = field(default_factory=dict)
     tcell_context_masks: Dict[str, torch.Tensor] = field(default_factory=dict)
+    tcell_mil_context: Dict[str, torch.Tensor] = field(default_factory=dict)
 
     # Optional multi-allele MIL bag tensors for elution/presentation/MS tasks.
     mil_pep_tok: Optional[torch.Tensor] = None
@@ -243,6 +255,16 @@ class PrestoBatch:
     mil_instance_to_bag: Optional[torch.Tensor] = None
     mil_bag_label: Optional[torch.Tensor] = None
     mil_bag_sample_ids: List[str] = field(default_factory=list)
+    tcell_mil_pep_tok: Optional[torch.Tensor] = None
+    tcell_mil_mhc_a_tok: Optional[torch.Tensor] = None
+    tcell_mil_mhc_b_tok: Optional[torch.Tensor] = None
+    tcell_mil_mhc_class: Optional[List[str]] = None
+    tcell_mil_species: Optional[List[str]] = None
+    tcell_mil_flank_n_tok: Optional[torch.Tensor] = None
+    tcell_mil_flank_c_tok: Optional[torch.Tensor] = None
+    tcell_mil_instance_to_bag: Optional[torch.Tensor] = None
+    tcell_mil_bag_label: Optional[torch.Tensor] = None
+    tcell_mil_bag_sample_ids: List[str] = field(default_factory=list)
 
     # Lengths for masking
     pep_lengths: Optional[torch.Tensor] = None
@@ -313,6 +335,9 @@ class PrestoBatch:
             tcell_context_masks={
                 name: _move(tensor) for name, tensor in self.tcell_context_masks.items()
             },
+            tcell_mil_context={
+                name: _move(tensor) for name, tensor in self.tcell_mil_context.items()
+            },
             mil_pep_tok=_move(self.mil_pep_tok),
             mil_mhc_a_tok=_move(self.mil_mhc_a_tok),
             mil_mhc_b_tok=_move(self.mil_mhc_b_tok),
@@ -323,6 +348,16 @@ class PrestoBatch:
             mil_instance_to_bag=_move(self.mil_instance_to_bag),
             mil_bag_label=_move(self.mil_bag_label),
             mil_bag_sample_ids=self.mil_bag_sample_ids,
+            tcell_mil_pep_tok=_move(self.tcell_mil_pep_tok),
+            tcell_mil_mhc_a_tok=_move(self.tcell_mil_mhc_a_tok),
+            tcell_mil_mhc_b_tok=_move(self.tcell_mil_mhc_b_tok),
+            tcell_mil_mhc_class=self.tcell_mil_mhc_class,
+            tcell_mil_species=self.tcell_mil_species,
+            tcell_mil_flank_n_tok=_move(self.tcell_mil_flank_n_tok),
+            tcell_mil_flank_c_tok=_move(self.tcell_mil_flank_c_tok),
+            tcell_mil_instance_to_bag=_move(self.tcell_mil_instance_to_bag),
+            tcell_mil_bag_label=_move(self.tcell_mil_bag_label),
+            tcell_mil_bag_sample_ids=self.tcell_mil_bag_sample_ids,
         )
 
 
@@ -335,7 +370,7 @@ class PrestoCollator:
         max_pep_len: int = 50,
         max_mhc_len: int = 400,
         max_tcr_len: int = 200,
-        max_flank_len: int = 30,
+        max_flank_len: int = 25,
     ):
         self.tokenizer = tokenizer or Tokenizer()
         self.max_pep_len = max_pep_len
@@ -360,8 +395,11 @@ class PrestoCollator:
                     continue
                 value = spec.transform(raw) if spec.transform is not None else float(raw)
                 values.append(float(value))
-                mask.append(1.0)
-                has_any = True
+                is_enabled = not (
+                    spec.task_name == "tcell" and sample.use_tcell_pathway_mil
+                )
+                mask.append(1.0 if is_enabled else 0.0)
+                has_any = has_any or is_enabled
 
             if not has_any:
                 continue
@@ -388,6 +426,109 @@ class PrestoCollator:
         if len(out) < n_instances:
             out = out + [out[-1]] * (n_instances - len(out))
         return out[:n_instances]
+
+    @staticmethod
+    def _sanitize_optional_sequence(value: Optional[str]) -> str:
+        text = str(value or "").strip()
+        if not text:
+            return ""
+        if text.upper() in OPTIONAL_MISSING_SEQ_TOKENS:
+            return ""
+        return text
+
+    @staticmethod
+    def _split_indices_by_mhc_class(
+        mhc_classes: List[Optional[str]],
+    ) -> List[tuple[str, List[int]]]:
+        groups: Dict[str, List[int]] = {}
+        order: List[str] = []
+        for idx, raw_cls in enumerate(mhc_classes):
+            cls = normalize_mhc_class(raw_cls, default=None) or ""
+            if cls not in groups:
+                groups[cls] = []
+                order.append(cls)
+            groups[cls].append(idx)
+
+        resolved_classes = {cls for cls in groups if cls in {"I", "II"}}
+        if len(resolved_classes) < 2:
+            whole = list(range(len(mhc_classes)))
+            default_label = normalize_mhc_class(
+                mhc_classes[0] if mhc_classes else None,
+                default=None,
+            ) or ""
+            return [(default_label, whole)]
+
+        ordered_classes = [cls for cls in ("I", "II") if cls in groups]
+        ordered_classes.extend(cls for cls in order if cls not in {"I", "II"})
+        return [(cls, groups[cls]) for cls in ordered_classes]
+
+    def _materialize_mil_tensors(
+        self,
+        *,
+        peptides: List[str],
+        mhc_as: List[str],
+        mhc_bs: List[str],
+        mhc_classes: List[str],
+        species: List[str],
+        flank_ns: List[str],
+        flank_cs: List[str],
+        instance_to_bag: List[int],
+        bag_labels: List[float],
+        bag_sample_ids: List[str],
+    ) -> Dict[str, Any]:
+        outputs: Dict[str, Any] = {
+            "pep_tok": None,
+            "mhc_a_tok": None,
+            "mhc_b_tok": None,
+            "mhc_class": None,
+            "species": None,
+            "flank_n_tok": None,
+            "flank_c_tok": None,
+            "instance_to_bag": None,
+            "bag_label": None,
+            "bag_sample_ids": bag_sample_ids,
+        }
+        if not peptides:
+            return outputs
+
+        outputs["pep_tok"] = self.tokenizer.batch_encode(
+            peptides,
+            max_len=self.max_pep_len,
+            pad=True,
+        )
+        outputs["mhc_a_tok"] = self.tokenizer.batch_encode(
+            mhc_as,
+            max_len=self.max_mhc_len,
+            pad=True,
+        )
+        outputs["mhc_b_tok"] = self.tokenizer.batch_encode(
+            mhc_bs,
+            max_len=self.max_mhc_len,
+            pad=True,
+        )
+        outputs["mhc_class"] = mhc_classes
+        outputs["species"] = species
+        if any(v for v in flank_ns):
+            outputs["flank_n_tok"] = self.tokenizer.batch_encode(
+                flank_ns,
+                max_len=self.max_flank_len,
+                pad=True,
+            )
+        if any(v for v in flank_cs):
+            outputs["flank_c_tok"] = self.tokenizer.batch_encode(
+                flank_cs,
+                max_len=self.max_flank_len,
+                pad=True,
+            )
+        outputs["instance_to_bag"] = torch.tensor(
+            instance_to_bag,
+            dtype=torch.long,
+        )
+        outputs["bag_label"] = torch.tensor(
+            bag_labels,
+            dtype=torch.float32,
+        )
+        return outputs
 
     @staticmethod
     def _normalize_binding_measurement(value: Optional[str]) -> str:
@@ -452,20 +593,13 @@ class PrestoCollator:
 
     @staticmethod
     def _normalize_species(species: Optional[str]) -> Optional[str]:
+        """Normalize to 6-class chain species via unified fine-grained parser."""
         if not species:
             return None
-        s = str(species).strip().lower()
-        if not s:
+        fine = normalize_species(species)
+        if fine is None:
             return None
-        if "human" in s or "homo sapiens" in s:
-            return "human"
-        if "mouse" in s or "mus musculus" in s:
-            return "mouse"
-        if "macaque" in s or "macaca" in s:
-            return "macaque"
-        if s in SPECIES_TO_IDX:
-            return s
-        return "other"
+        return FINE_TO_CHAIN_SPECIES[fine]
 
     def _collate_chain_attribute_labels(
         self, samples: List[PrestoSample]
@@ -486,8 +620,8 @@ class PrestoCollator:
 
             # Species label
             norm_species = self._normalize_species(sample.species) if has_chain_seq else None
-            if norm_species is not None and norm_species in SPECIES_TO_IDX:
-                labels["chain_species_label"].append(SPECIES_TO_IDX[norm_species])
+            if norm_species is not None and norm_species in CHAIN_SPECIES_TO_IDX:
+                labels["chain_species_label"].append(CHAIN_SPECIES_TO_IDX[norm_species])
                 masks["chain_species_mask"].append(1.0)
             else:
                 labels["chain_species_label"].append(0)
@@ -843,7 +977,7 @@ class PrestoCollator:
             targets["tcell_stim_context"].append(stim_idx)
             targets["tcell_peptide_format"].append(pep_format_idx)
 
-            has_tcell = sample.tcell_label is not None
+            has_tcell = sample.tcell_label is not None and not sample.use_tcell_pathway_mil
             masks["tcell_assay_method"].append(
                 1.0 if has_tcell and method_idx != 0 else 0.0
             )
@@ -903,13 +1037,15 @@ class PrestoCollator:
             pad=True,
             return_lengths=True,
         )
+        mhc_a_values = [self._sanitize_optional_sequence(s.mhc_a) for s in samples]
+        mhc_b_values = [self._sanitize_optional_sequence(s.mhc_b) for s in samples]
         mhc_a_tok = self.tokenizer.batch_encode(
-            [s.mhc_a for s in samples],
+            mhc_a_values,
             max_len=self.max_mhc_len,
             pad=True,
         )
         mhc_b_tok = self.tokenizer.batch_encode(
-            [s.mhc_b for s in samples],
+            mhc_b_values,
             max_len=self.max_mhc_len,
             pad=True,
         )
@@ -918,15 +1054,17 @@ class PrestoCollator:
         # Optional flanks
         flank_n_tok = None
         flank_c_tok = None
-        if any(s.flank_n for s in samples):
+        flank_n_values = [self._sanitize_optional_sequence(s.flank_n) for s in samples]
+        flank_c_values = [self._sanitize_optional_sequence(s.flank_c) for s in samples]
+        if any(flank_n_values):
             flank_n_tok = self.tokenizer.batch_encode(
-                [s.flank_n or "" for s in samples],
+                flank_n_values,
                 max_len=self.max_flank_len,
                 pad=True,
             )
-        if any(s.flank_c for s in samples):
+        if any(flank_c_values):
             flank_c_tok = self.tokenizer.batch_encode(
-                [s.flank_c or "" for s in samples],
+                flank_c_values,
                 max_len=self.max_flank_len,
                 pad=True,
             )
@@ -934,15 +1072,17 @@ class PrestoCollator:
         # Optional TCR
         tcr_a_tok = None
         tcr_b_tok = None
-        if any(s.tcr_a for s in samples):
+        tcr_a_values = [self._sanitize_optional_sequence(s.tcr_a) for s in samples]
+        tcr_b_values = [self._sanitize_optional_sequence(s.tcr_b) for s in samples]
+        if any(tcr_a_values):
             tcr_a_tok = self.tokenizer.batch_encode(
-                [s.tcr_a or "" for s in samples],
+                tcr_a_values,
                 max_len=self.max_tcr_len,
                 pad=True,
             )
-        if any(s.tcr_b for s in samples):
+        if any(tcr_b_values):
             tcr_b_tok = self.tokenizer.batch_encode(
-                [s.tcr_b or "" for s in samples],
+                tcr_b_values,
                 max_len=self.max_tcr_len,
                 pad=True,
             )
@@ -975,6 +1115,29 @@ class PrestoCollator:
         if has_so:
             targets["species_of_origin"] = torch.tensor(so_labels, dtype=torch.long)
             target_masks["species_of_origin"] = torch.tensor(so_mask, dtype=torch.float32)
+
+        # Optional core-start supervision (class-II core pointer target).
+        core_start_labels: List[int] = []
+        core_start_mask: List[float] = []
+        has_core_start = False
+        for idx, sample in enumerate(samples):
+            raw = sample.core_start
+            if raw is None:
+                core_start_labels.append(0)
+                core_start_mask.append(0.0)
+                continue
+            start_idx = int(raw)
+            pep_len = int(pep_lengths[idx].item())
+            if 0 <= start_idx < pep_len:
+                core_start_labels.append(start_idx)
+                core_start_mask.append(1.0)
+                has_core_start = True
+            else:
+                core_start_labels.append(0)
+                core_start_mask.append(0.0)
+        if has_core_start:
+            targets["core_start"] = torch.tensor(core_start_labels, dtype=torch.long)
+            target_masks["core_start"] = torch.tensor(core_start_mask, dtype=torch.float32)
 
         target_quals: Dict[str, torch.Tensor] = {}
         if "binding" in targets:
@@ -1014,6 +1177,17 @@ class PrestoCollator:
         mil_instance_to_bag: List[int] = []
         mil_bag_labels: List[float] = []
         mil_bag_sample_ids: List[str] = []
+        tcell_mil_peptides: List[str] = []
+        tcell_mil_mhc_as: List[str] = []
+        tcell_mil_mhc_bs: List[str] = []
+        tcell_mil_mhc_classes: List[str] = []
+        tcell_mil_species: List[str] = []
+        tcell_mil_flank_ns: List[str] = []
+        tcell_mil_flank_cs: List[str] = []
+        tcell_mil_instance_to_bag: List[int] = []
+        tcell_mil_bag_labels: List[float] = []
+        tcell_mil_bag_sample_ids: List[str] = []
+        tcell_mil_source_samples: List[PrestoSample] = []
 
         for sample in samples:
             if sample.elution_label is None:
@@ -1048,67 +1222,100 @@ class PrestoCollator:
                 fallback=sample.species or "",
             )
 
-            bag_index = len(mil_bag_labels)
-            mil_bag_labels.append(float(sample.elution_label))
-            mil_bag_sample_ids.append(sample.sample_id)
+            grouped_indices = self._split_indices_by_mhc_class(mhc_class_list)
+            for class_label, indices in grouped_indices:
+                bag_index = len(mil_bag_labels)
+                mil_bag_labels.append(float(sample.elution_label))
+                bag_sample_id = sample.sample_id
+                if len(grouped_indices) > 1 and class_label:
+                    bag_sample_id = f"{sample.sample_id}:{class_label}"
+                mil_bag_sample_ids.append(bag_sample_id)
+
+                for i in indices:
+                    mil_peptides.append(sample.peptide)
+                    mil_mhc_as.append(self._sanitize_optional_sequence(mhc_a_list[i]))
+                    mil_mhc_bs.append(self._sanitize_optional_sequence(mhc_b_list[i]))
+                    mil_mhc_classes.append(mhc_class_list[i])
+                    mil_species.append(species_list[i])
+                    mil_flank_ns.append(self._sanitize_optional_sequence(sample.flank_n))
+                    mil_flank_cs.append(self._sanitize_optional_sequence(sample.flank_c))
+                    mil_instance_to_bag.append(bag_index)
+
+        for sample in samples:
+            if sample.tcell_label is None or not sample.use_tcell_pathway_mil:
+                continue
+
+            n_instances = max(
+                len(sample.tcell_mil_mhc_a_list or []),
+                len(sample.tcell_mil_mhc_b_list or []),
+                len(sample.tcell_mil_mhc_class_list or []),
+                len(sample.tcell_mil_species_list or []),
+                1,
+            )
+            mhc_a_list = self._expand_with_fallback(
+                sample.tcell_mil_mhc_a_list,
+                n_instances=n_instances,
+                fallback=sample.mhc_a or "",
+            )
+            mhc_b_list = self._expand_with_fallback(
+                sample.tcell_mil_mhc_b_list,
+                n_instances=n_instances,
+                fallback=sample.mhc_b or "",
+            )
+            mhc_class_list = self._expand_with_fallback(
+                sample.tcell_mil_mhc_class_list,
+                n_instances=n_instances,
+                fallback=sample.mhc_class or "",
+            )
+            species_list = self._expand_with_fallback(
+                sample.tcell_mil_species_list,
+                n_instances=n_instances,
+                fallback=sample.species or "",
+            )
+
+            bag_index = len(tcell_mil_bag_labels)
+            tcell_mil_bag_labels.append(float(sample.tcell_label))
+            tcell_mil_bag_sample_ids.append(sample.sample_id)
 
             for i in range(n_instances):
-                mil_peptides.append(sample.peptide)
-                mil_mhc_as.append(mhc_a_list[i])
-                mil_mhc_bs.append(mhc_b_list[i])
-                mil_mhc_classes.append(mhc_class_list[i])
-                mil_species.append(species_list[i])
-                mil_flank_ns.append(sample.flank_n or "")
-                mil_flank_cs.append(sample.flank_c or "")
-                mil_instance_to_bag.append(bag_index)
+                tcell_mil_peptides.append(sample.peptide)
+                tcell_mil_mhc_as.append(self._sanitize_optional_sequence(mhc_a_list[i]))
+                tcell_mil_mhc_bs.append(self._sanitize_optional_sequence(mhc_b_list[i]))
+                tcell_mil_mhc_classes.append(mhc_class_list[i])
+                tcell_mil_species.append(species_list[i])
+                tcell_mil_flank_ns.append(self._sanitize_optional_sequence(sample.flank_n))
+                tcell_mil_flank_cs.append(self._sanitize_optional_sequence(sample.flank_c))
+                tcell_mil_instance_to_bag.append(bag_index)
+                tcell_mil_source_samples.append(sample)
 
-        mil_pep_tok = None
-        mil_mhc_a_tok = None
-        mil_mhc_b_tok = None
-        mil_mhc_class = None
-        mil_species_out = None
-        mil_flank_n_tok = None
-        mil_flank_c_tok = None
-        mil_instance_to_bag_t = None
-        mil_bag_label_t = None
-        if mil_peptides:
-            mil_pep_tok = self.tokenizer.batch_encode(
-                mil_peptides,
-                max_len=self.max_pep_len,
-                pad=True,
-            )
-            mil_mhc_a_tok = self.tokenizer.batch_encode(
-                mil_mhc_as,
-                max_len=self.max_mhc_len,
-                pad=True,
-            )
-            mil_mhc_b_tok = self.tokenizer.batch_encode(
-                mil_mhc_bs,
-                max_len=self.max_mhc_len,
-                pad=True,
-            )
-            mil_mhc_class = mil_mhc_classes
-            mil_species_out = mil_species
-            if any(v for v in mil_flank_ns):
-                mil_flank_n_tok = self.tokenizer.batch_encode(
-                    mil_flank_ns,
-                    max_len=self.max_flank_len,
-                    pad=True,
-                )
-            if any(v for v in mil_flank_cs):
-                mil_flank_c_tok = self.tokenizer.batch_encode(
-                    mil_flank_cs,
-                    max_len=self.max_flank_len,
-                    pad=True,
-                )
-            mil_instance_to_bag_t = torch.tensor(
-                mil_instance_to_bag,
-                dtype=torch.long,
-            )
-            mil_bag_label_t = torch.tensor(
-                mil_bag_labels,
-                dtype=torch.float32,
-            )
+        mil_tensors = self._materialize_mil_tensors(
+            peptides=mil_peptides,
+            mhc_as=mil_mhc_as,
+            mhc_bs=mil_mhc_bs,
+            mhc_classes=mil_mhc_classes,
+            species=mil_species,
+            flank_ns=mil_flank_ns,
+            flank_cs=mil_flank_cs,
+            instance_to_bag=mil_instance_to_bag,
+            bag_labels=mil_bag_labels,
+            bag_sample_ids=mil_bag_sample_ids,
+        )
+        tcell_mil_tensors = self._materialize_mil_tensors(
+            peptides=tcell_mil_peptides,
+            mhc_as=tcell_mil_mhc_as,
+            mhc_bs=tcell_mil_mhc_bs,
+            mhc_classes=tcell_mil_mhc_classes,
+            species=tcell_mil_species,
+            flank_ns=tcell_mil_flank_ns,
+            flank_cs=tcell_mil_flank_cs,
+            instance_to_bag=tcell_mil_instance_to_bag,
+            bag_labels=tcell_mil_bag_labels,
+            bag_sample_ids=tcell_mil_bag_sample_ids,
+        )
+        if tcell_mil_source_samples:
+            tcell_mil_context, _, _ = self._collate_tcell_context(tcell_mil_source_samples)
+        else:
+            tcell_mil_context = {}
 
         return PrestoBatch(
             pep_tok=pep_tok,
@@ -1151,16 +1358,27 @@ class PrestoCollator:
             target_quals=target_quals,
             tcell_context=tcell_context,
             tcell_context_masks=tcell_context_masks,
-            mil_pep_tok=mil_pep_tok,
-            mil_mhc_a_tok=mil_mhc_a_tok,
-            mil_mhc_b_tok=mil_mhc_b_tok,
-            mil_mhc_class=mil_mhc_class,
-            mil_species=mil_species_out,
-            mil_flank_n_tok=mil_flank_n_tok,
-            mil_flank_c_tok=mil_flank_c_tok,
-            mil_instance_to_bag=mil_instance_to_bag_t,
-            mil_bag_label=mil_bag_label_t,
-            mil_bag_sample_ids=mil_bag_sample_ids,
+            tcell_mil_context=tcell_mil_context,
+            mil_pep_tok=mil_tensors["pep_tok"],
+            mil_mhc_a_tok=mil_tensors["mhc_a_tok"],
+            mil_mhc_b_tok=mil_tensors["mhc_b_tok"],
+            mil_mhc_class=mil_tensors["mhc_class"],
+            mil_species=mil_tensors["species"],
+            mil_flank_n_tok=mil_tensors["flank_n_tok"],
+            mil_flank_c_tok=mil_tensors["flank_c_tok"],
+            mil_instance_to_bag=mil_tensors["instance_to_bag"],
+            mil_bag_label=mil_tensors["bag_label"],
+            mil_bag_sample_ids=mil_tensors["bag_sample_ids"],
+            tcell_mil_pep_tok=tcell_mil_tensors["pep_tok"],
+            tcell_mil_mhc_a_tok=tcell_mil_tensors["mhc_a_tok"],
+            tcell_mil_mhc_b_tok=tcell_mil_tensors["mhc_b_tok"],
+            tcell_mil_mhc_class=tcell_mil_tensors["mhc_class"],
+            tcell_mil_species=tcell_mil_tensors["species"],
+            tcell_mil_flank_n_tok=tcell_mil_tensors["flank_n_tok"],
+            tcell_mil_flank_c_tok=tcell_mil_tensors["flank_c_tok"],
+            tcell_mil_instance_to_bag=tcell_mil_tensors["instance_to_bag"],
+            tcell_mil_bag_label=tcell_mil_tensors["bag_label"],
+            tcell_mil_bag_sample_ids=tcell_mil_tensors["bag_sample_ids"],
         )
 
 
@@ -1186,25 +1404,31 @@ def collate_dict_batch(batch: List[Dict[str, Any]], tokenizer: Tokenizer = None)
 
     if "mhc_a" in batch[0]:
         result["mhc_a_tok"] = tokenizer.batch_encode(
-            [b.get("mhc_a", "") for b in batch], max_len=400, pad=True
+            [PrestoCollator._sanitize_optional_sequence(b.get("mhc_a", "")) for b in batch],
+            max_len=400,
+            pad=True,
         )
 
     if "mhc_b" in batch[0]:
         result["mhc_b_tok"] = tokenizer.batch_encode(
-            [b.get("mhc_b", "") for b in batch], max_len=200, pad=True
+            [PrestoCollator._sanitize_optional_sequence(b.get("mhc_b", "")) for b in batch],
+            max_len=200,
+            pad=True,
         )
 
     result["mhc_class"] = [b.get("mhc_class", "I") for b in batch]
 
     # Optional TCR
-    if any(b.get("tcr_a") for b in batch):
+    tcr_a_values = [PrestoCollator._sanitize_optional_sequence(b.get("tcr_a", "")) for b in batch]
+    if any(tcr_a_values):
         result["tcr_a_tok"] = tokenizer.batch_encode(
-            [b.get("tcr_a", "") for b in batch], max_len=200, pad=True
+            tcr_a_values, max_len=200, pad=True
         )
 
-    if any(b.get("tcr_b") for b in batch):
+    tcr_b_values = [PrestoCollator._sanitize_optional_sequence(b.get("tcr_b", "")) for b in batch]
+    if any(tcr_b_values):
         result["tcr_b_tok"] = tokenizer.batch_encode(
-            [b.get("tcr_b", "") for b in batch], max_len=200, pad=True
+            tcr_b_values, max_len=200, pad=True
         )
 
     targets: Dict[str, torch.Tensor] = {}

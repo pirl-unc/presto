@@ -171,6 +171,11 @@ IEDB_DEFAULTS = {
     "mhc_attention_sparsity_weight": 0.1,
     "mhc_attention_sparsity_min_residues": 25.0,
     "mhc_attention_sparsity_max_residues": 45.0,
+    "mil_contrastive_weight": 0.1,
+    "mil_contrastive_margin": 0.5,
+    "mil_contrastive_max_pairs": 32,
+    "mil_bag_sparsity_weight": 0.02,
+    "mil_bag_sparsity_target_sum": 1.5,
     "tcell_in_vitro_margin": 0.1,
     "tcell_ex_vivo_margin": 0.0,
     "val_frac": 0.2,
@@ -5099,6 +5104,36 @@ def main(argv=None):
         type=float,
         default=60.0,
         help="Upper target bound for effective attended MHC residues",
+    )
+    parser.add_argument(
+        "--mil-contrastive-weight",
+        type=float,
+        default=0.1,
+        help="Weight for presentation-vs-substituted-genotype MIL contrastive loss",
+    )
+    parser.add_argument(
+        "--mil-contrastive-margin",
+        type=float,
+        default=0.5,
+        help="Required logit margin between true and substituted-genotype MIL bags",
+    )
+    parser.add_argument(
+        "--mil-contrastive-max-pairs",
+        type=int,
+        default=32,
+        help="Maximum positive MIL bags per batch used for genotype-substitution contrastive loss",
+    )
+    parser.add_argument(
+        "--mil-bag-sparsity-weight",
+        type=float,
+        default=0.02,
+        help="Weight for MIL bag sparsity prior on summed instance probabilities",
+    )
+    parser.add_argument(
+        "--mil-bag-sparsity-target-sum",
+        type=float,
+        default=1.5,
+        help="MIL bag summed-probability target before sparsity penalty activates",
     )
     parser.add_argument(
         "--tcell-in-vitro-margin",

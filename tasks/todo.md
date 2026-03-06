@@ -20,10 +20,10 @@
 - [x] Phase 2 verification: core-candidate enumeration sanity, shape/compute checks, and targeted biological edge cases (`8mer`, `9mer`, long class II peptides).
 - [x] Phase 3: implement `C1`-`C3` context-token cleanup, `groove_vec`, and `pmhc_vec` signal repair.
 - [x] Phase 3 verification: confirm processing isolation, binding/presentation access to groove context, and direct allele signal in `pmhc_vec`.
-- [ ] Phase 4: implement `D2` class-split MIL bags and `D3` pathway-MIL handling for ambiguous T-cell assays.
-- [ ] Phase 4 verification: dataset/batch audits showing correct bag construction and class/pathway separation.
-- [ ] Phase 5: implement `E1` contrastive MIL and `E2` bag sparsity regularization.
-- [ ] Phase 5 verification: loss wiring tests plus small-run diagnostics that show allele-discrimination pressure is present.
+- [x] Phase 4: implement `D2` class-split MIL bags and `D3` pathway-MIL handling for ambiguous T-cell assays.
+- [x] Phase 4 verification: dataset/batch audits showing correct bag construction and class/pathway separation.
+- [x] Phase 5: implement `E1` contrastive MIL and `E2` bag sparsity regularization.
+- [x] Phase 5 verification: loss wiring tests plus small-run diagnostics that show allele-discrimination pressure is present.
 - [ ] End-to-end verification: targeted local training smoke run, batch/prediction inspection, then Modal epoch/full-run only after local dynamics look sane.
 
 ## Review
@@ -97,6 +97,33 @@
     - losses moved `25.95 -> 10.76 -> 38.46 -> 8.05 -> 10.92`; non-monotone but clearly trainable and numerically stable.
   - `pytest -q tests/test_presto.py tests/test_training_e2e.py` -> `49 passed`
   - `pytest -q tests/test_presto.py tests/test_train_synthetic.py tests/test_train_iedb.py tests/test_training_e2e.py tests/test_pmhc.py` -> `131 passed`
+- Phase 4 completed.
+- `D2`:
+  - `data/collate.py` now splits mixed-class elution MIL bags into separate class-I and class-II bags instead of a single biologically invalid shared Noisy-OR bag.
+  - split bags keep explicit `:<class>` suffixes in `mil_bag_sample_ids` so audits can still trace them back to the source sample.
+- `D3`:
+  - `data/loaders.py` now preserves all parsed restriction alleles on T-cell records and only builds pathway MIL for genuinely ambiguous mixed-class assays.
+  - `data/collate.py` suppresses direct T-cell supervision for those ambiguous samples and emits `tcell_mil_*` tensors plus replicated `tcell_mil_context`, so the pathway bags still reach the T-cell assay head with assay metadata.
+- Phase 4 verification:
+  - `python -m py_compile data/collate.py data/loaders.py tests/test_collate.py tests/test_loaders.py`
+  - `pytest -q tests/test_collate.py tests/test_loaders.py` -> `64 passed`
+- Phase 5 completed.
+- `E1`:
+  - `scripts/train_synthetic.py` now applies genotype-substitution contrastive MIL regularization on positive presentation bags by swapping in a sufficiently dissimilar same-class genotype from another bag in the batch.
+  - contrastive pairing uses token-level MHC-alpha sequence identity `<0.90` as the in-batch dissimilarity gate.
+- `E2`:
+  - MIL bag sparsity regularization now penalizes `softplus(sum(p_i) - target_sum)` for elution/presentation/MS bags and pathway-T-cell MIL bags.
+  - the trainer now also consumes `tcell_mil_*` bags directly via noisy-OR supervision on `tcell_logit` and `immunogenicity_logit`; before this patch, the new pathway bags would have been ignored.
+- Phase 5 verification:
+  - `python -m py_compile scripts/train_synthetic.py scripts/train_iedb.py tests/test_train_synthetic.py`
+  - `pytest -q tests/test_collate.py tests/test_loaders.py tests/test_train_synthetic.py tests/test_train_iedb.py tests/test_training_e2e.py` -> `120 passed`
+  - real-model minibatch sanity after Phase 5:
+    - loss trace over 5 optimizer steps on a mixed supervision batch: `2.2402 -> 2.6259 -> 2.0863 -> 1.7115 -> 1.7107`
+    - gradient norms stayed finite: `11.84, 7.97, 5.90, 2.52, 6.51`
+    - active loss terms included `elution_mil_sparsity`, `presentation_mil_contrastive`, and `immunogenicity_mil`, confirming the new MIL path is live.
+  - synthetic CLI smoke run:
+    - `python -m presto.scripts.train_synthetic --epochs 1 --batch_size 8 --n_binding 16 --n_elution 16 --n_tcr 8 --d_model 64 --n_layers 1 --n_heads 4 --run-dir /tmp/presto_sanity_refactor`
+    - completed successfully with `train_loss=2.3767`, `val_loss=1.0607`
 
 # Unified Training Failure Audit + Repair (2026-03-06)
 
