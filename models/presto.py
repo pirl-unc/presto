@@ -241,6 +241,9 @@ class Presto(nn.Module):
         self.pmhc_interaction_vec_dim = (
             max(1, self.binding_n_queries) * self.pmhc_interaction_token_dim
         )
+        self.core_window_size = 9
+        self.max_pfr_length = 50
+        self.pfr_length_dim = 32
         self.use_groove_prior = use_groove_prior
         self._has_binding_enhancements = (
             binding_n_latent_layers != self.N_LATENT_LAYERS
@@ -272,8 +275,9 @@ class Presto(nn.Module):
         # MHC: per-chain sequential
         self.mhc_a_pos = nn.Embedding(400, d_model)
         self.mhc_b_pos = nn.Embedding(400, d_model)
-        # Core-relative peptide positions (used after core inference).
-        self.core_rel_pos = nn.Embedding(65, d_model)  # bins for offsets [-32, 32]
+        # Binding-core positions within the candidate window.
+        self.core_position_embed = nn.Embedding(self.core_window_size, d_model)
+        self.pfr_length_embed = nn.Embedding(self.max_pfr_length + 1, self.pfr_length_dim)
 
         # Global conditioning embedding (design S3.2.4)
         self.species_cond_embed = nn.Embedding(7, d_model)    # 7 species categories
@@ -321,6 +325,25 @@ class Presto(nn.Module):
             nn.Linear(d_model, d_model),
         )
         self.immunogenicity_vec_norm = nn.LayerNorm(d_model)
+        self.core_window_fuse = nn.Sequential(
+            nn.Linear(
+                self.pmhc_interaction_vec_dim + 2 * d_model + 2 * self.pfr_length_dim,
+                d_model,
+            ),
+            nn.GELU(),
+            nn.Linear(d_model, self.pmhc_interaction_vec_dim),
+        )
+        self.core_window_vec_norm = nn.LayerNorm(self.pmhc_interaction_vec_dim)
+        self.core_window_score = nn.Sequential(
+            nn.Linear(self.pmhc_interaction_vec_dim, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, 1),
+        )
+        self.core_window_prior = nn.Sequential(
+            nn.Linear(5, d_model // 2),
+            nn.GELU(),
+            nn.Linear(d_model // 2, 1),
+        )
 
         # ------------------------------------------------------------------
         # Per-chain MHC inference heads (design S5.1-S5.3)
@@ -482,17 +505,6 @@ class Presto(nn.Module):
         self.recognition_cd4_head = nn.Linear(d_model, 1)
         self.immunogenicity_cd8_latent_head = nn.Linear(d_model, 1)
         self.immunogenicity_cd4_latent_head = nn.Linear(d_model, 1)
-
-        self.core_start_head = nn.Sequential(
-            nn.Linear(d_model * 3, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, 1),
-        )
-        self.core_width_head = nn.Sequential(
-            nn.Linear(d_model * 2, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, 1),
-        )
 
         # Presentation bottleneck (kept as canonical additive-logit path).
         self.presentation = PresentationBottleneck()
@@ -878,7 +890,75 @@ class Presto(nn.Module):
     ) -> tuple[torch.Tensor, Optional[List[torch.Tensor]]]:
         """Compute one latent via N_LATENT_LAYERS of segmented cross-attention."""
         batch_size = h.shape[0]
+        kv, kv_valid = self._prepare_latent_kv(
+            h=h,
+            allowed_mask=allowed_mask,
+            latent_store=latent_store,
+            dep_names=dep_names,
+            extra_tokens=extra_tokens,
+        )
 
+        q = self.latent_queries[name].view(1, 1, -1).expand(batch_size, 1, -1)
+        collected_attn: List[torch.Tensor] = []
+        for layer in self.latent_layers[name]:
+            attn_out, attn_weights = layer["attn"](
+                layer["norm1"](q),
+                kv,
+                kv,
+                key_padding_mask=~kv_valid,
+                need_weights=collect_attn,
+                average_attn_weights=False,
+            )
+            if collect_attn and isinstance(attn_weights, torch.Tensor):
+                collected_attn.append(attn_weights)
+            q = q + attn_out
+            q = q + layer["ffn"](layer["norm2"](q))
+        return q.squeeze(1), (collected_attn if collect_attn else None)
+
+    @staticmethod
+    def _ensure_nonempty_kv_mask(kv_valid: torch.Tensor) -> torch.Tensor:
+        empty = ~kv_valid.any(dim=1)
+        if empty.any():
+            kv_valid = kv_valid.clone()
+            kv_valid[empty, 0] = True
+        return kv_valid
+
+    @staticmethod
+    def _gather_prefix_states(
+        prefix: torch.Tensor,
+        indices: torch.Tensor,
+    ) -> torch.Tensor:
+        batch_idx = torch.arange(prefix.shape[0], device=prefix.device).unsqueeze(1)
+        batch_idx = batch_idx.expand_as(indices)
+        clipped = indices.clamp(min=0, max=prefix.shape[1] - 1)
+        return prefix[batch_idx, clipped]
+
+    @staticmethod
+    def _gather_sequence_positions(
+        seq: torch.Tensor,
+        positions: torch.Tensor,
+    ) -> torch.Tensor:
+        batch_idx = torch.arange(seq.shape[0], device=seq.device).view(-1, 1, 1)
+        batch_idx = batch_idx.expand_as(positions)
+        clipped = positions.clamp(min=0, max=seq.shape[1] - 1)
+        return seq[batch_idx, clipped]
+
+    @staticmethod
+    def _repeat_candidates(x: torch.Tensor, n_candidates: int) -> torch.Tensor:
+        return x.unsqueeze(1).expand(-1, n_candidates, *x.shape[1:]).reshape(
+            x.shape[0] * n_candidates,
+            *x.shape[1:],
+        )
+
+    def _prepare_latent_kv(
+        self,
+        h: torch.Tensor,
+        allowed_mask: torch.Tensor,
+        latent_store: Dict[str, torch.Tensor],
+        dep_names: List[str],
+        extra_tokens: Optional[List[torch.Tensor]] = None,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        batch_size = h.shape[0]
         kv = h
         kv_valid = allowed_mask
 
@@ -906,19 +986,61 @@ class Presto(nn.Module):
             kv = torch.cat([kv, dep_cat], dim=1)
             kv_valid = torch.cat([kv_valid, dep_valid], dim=1)
 
-        empty = ~kv_valid.any(dim=1)
-        if empty.any():
-            kv_valid = kv_valid.clone()
-            kv_valid[empty, 0] = True
+        return kv, self._ensure_nonempty_kv_mask(kv_valid)
 
-        q = self.latent_queries[name].view(1, 1, -1).expand(batch_size, 1, -1)
+    def _run_binding_query(
+        self,
+        name: str,
+        kv: torch.Tensor,
+        kv_valid: torch.Tensor,
+        collect_attn: bool = False,
+        attn_mask: Optional[torch.Tensor] = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, Optional[List[torch.Tensor]]]:
+        batch_size = kv.shape[0]
+        kv_valid = self._ensure_nonempty_kv_mask(kv_valid)
+
+        query_param = self.latent_queries[name]
+        if query_param.ndim == 1:
+            q = query_param.view(1, 1, -1).expand(batch_size, 1, -1)
+            n_q = 1
+        else:
+            q = query_param.unsqueeze(0).expand(batch_size, -1, -1)
+            n_q = query_param.shape[0]
+
+        if attn_mask is not None and attn_mask.shape[0] != n_q:
+            attn_mask = attn_mask[:1, :].expand(n_q, -1)
+
         collected_attn: List[torch.Tensor] = []
-        for layer in self.latent_layers[name]:
+        layers = self.latent_layers[name]
+        has_self_attn = (
+            self.binding_n_queries > 1
+            and self.binding_use_decoder_layers
+            and hasattr(self, "binding_query_self_attn")
+        )
+
+        for layer_idx, layer in enumerate(layers):
+            if has_self_attn:
+                sa_layer = self.binding_query_self_attn[name][layer_idx]
+                sa_out, _ = sa_layer["self_attn"](
+                    sa_layer["norm"](q),
+                    sa_layer["norm"](q),
+                    sa_layer["norm"](q),
+                    need_weights=False,
+                )
+                q = q + sa_out
+
+            key_padding_mask = ~kv_valid
+            if attn_mask is not None:
+                key_padding_mask = key_padding_mask.float().masked_fill(
+                    key_padding_mask,
+                    float("-inf"),
+                )
             attn_out, attn_weights = layer["attn"](
                 layer["norm1"](q),
                 kv,
                 kv,
-                key_padding_mask=~kv_valid,
+                key_padding_mask=key_padding_mask,
+                attn_mask=attn_mask,
                 need_weights=collect_attn,
                 average_attn_weights=False,
             )
@@ -926,7 +1048,15 @@ class Presto(nn.Module):
                 collected_attn.append(attn_weights)
             q = q + attn_out
             q = q + layer["ffn"](layer["norm2"](q))
-        return q.squeeze(1), (collected_attn if collect_attn else None)
+
+        interaction_tokens = q
+        interaction_vec = self.pmhc_interaction_token_proj(interaction_tokens).reshape(
+            batch_size,
+            -1,
+        )
+        return interaction_vec, interaction_tokens, (
+            collected_attn if collect_attn else None
+        )
 
     def _run_pmhc_interaction(
         self,
@@ -1033,136 +1163,281 @@ class Presto(nn.Module):
         self,
         name: str,
         h: torch.Tensor,
-        allowed_mask: torch.Tensor,
+        seg_masks: Dict[str, torch.Tensor],
+        offsets: Dict[str, slice],
         latent_store: Dict[str, torch.Tensor],
         dep_names: List[str],
-        mhc_a_mask: torch.Tensor,
-        offsets: Dict[str, slice],
+        class_probs: torch.Tensor,
         extra_tokens: Optional[List[torch.Tensor]] = None,
         collect_attn: bool = False,
-    ) -> tuple[torch.Tensor, torch.Tensor, Optional[List[torch.Tensor]]]:
-        """Compute the pMHC interaction latent with multi-query detail preserved.
-
-        Supports:
-        - Deeper cross-attention (Variant A via binding_n_latent_layers)
-        - Multi-token queries with optional self-attention (Variant B)
-        - Groove attention prior as additive bias (Variant D)
-        """
+    ) -> tuple[torch.Tensor, torch.Tensor, Dict[str, torch.Tensor]]:
+        """Enumerate peptide core windows, score them, and marginalize binding."""
         batch_size = h.shape[0]
+        pep_slice = offsets["peptide"]
+        pep_h = h[:, pep_slice, :]
+        pep_valid = seg_masks["peptide"][:, pep_slice]
+        pep_len = pep_valid.sum(dim=1).clamp(min=1)
 
-        kv = h
-        kv_valid = allowed_mask
-
-        dep_tokens: List[torch.Tensor] = []
-        for dep in dep_names:
-            dep_tensor = latent_store[dep]
-            if dep_tensor.ndim == 2:
-                dep_tokens.append(dep_tensor.unsqueeze(1))
-            elif dep_tensor.ndim == 3:
-                dep_tokens.append(dep_tensor)
-            else:
-                raise ValueError(
-                    f"latent dependency {dep} has unsupported rank {dep_tensor.ndim}"
-                )
-        if extra_tokens:
-            dep_tokens.extend(extra_tokens)
-
-        if dep_tokens:
-            dep_cat = torch.cat(dep_tokens, dim=1)
-            dep_valid = torch.ones(
-                (batch_size, dep_cat.shape[1]),
-                dtype=torch.bool,
-                device=h.device,
-            )
-            kv = torch.cat([kv, dep_cat], dim=1)
-            kv_valid = torch.cat([kv_valid, dep_valid], dim=1)
-
-        empty = ~kv_valid.any(dim=1)
-        if empty.any():
-            kv_valid = kv_valid.clone()
-            kv_valid[empty, 0] = True
-
-        # Build groove attention bias mask (Variant D)
-        attn_mask = None
-        if self.use_groove_prior:
-            # Additive attention bias for MHC-A (α chain) and MHC-B (β chain)
-            kv_len = kv.shape[1]
-            attn_bias = torch.zeros(kv_len, device=h.device)
-            # Alpha chain groove bias
-            mhc_a_sl = offsets["mhc_a"]
-            mhc_a_len = mhc_a_sl.stop - mhc_a_sl.start
-            attn_bias[mhc_a_sl] = self.groove_bias_a[:mhc_a_len]
-            # Beta chain groove bias (β1 domain for Class II, β2m for Class I)
-            mhc_b_sl = offsets["mhc_b"]
-            mhc_b_len = mhc_b_sl.stop - mhc_b_sl.start
-            attn_bias[mhc_b_sl] = self.groove_bias_b[:mhc_b_len]
-            # Fixed structural penalty: positions past 250 in either chain
-            # are alpha3/TM/cytoplasmic and never contact peptide.
-            _HARD_CUTOFF = 250
-            if mhc_a_len > _HARD_CUTOFF:
-                attn_bias[mhc_a_sl.start + _HARD_CUTOFF : mhc_a_sl.stop] += -10.0
-            if mhc_b_len > _HARD_CUTOFF:
-                attn_bias[mhc_b_sl.start + _HARD_CUTOFF : mhc_b_sl.stop] += -10.0
-
-            # Expand for multi-head attention: (n_queries, kv_len)
-            n_q = self.binding_n_queries
-            attn_mask = attn_bias.unsqueeze(0).expand(n_q, -1)
-
-        # Initialize query tokens
-        query_param = self.latent_queries[name]
-        if query_param.ndim == 1:
-            # Single query token: (d_model,) -> (B, 1, d_model)
-            q = query_param.view(1, 1, -1).expand(batch_size, 1, -1)
-        else:
-            # Multi-token queries: (K, d_model) -> (B, K, d_model)
-            q = query_param.unsqueeze(0).expand(batch_size, -1, -1)
-
-        collected_attn: List[torch.Tensor] = []
-        layers = self.latent_layers[name]
-        has_self_attn = (
-            self.binding_n_queries > 1
-            and self.binding_use_decoder_layers
-            and hasattr(self, "binding_query_self_attn")
+        core_len = torch.minimum(
+            pep_len,
+            pep_len.new_full((batch_size,), self.core_window_size),
         )
+        num_candidates = (pep_len - core_len + 1).clamp(min=1)
+        max_candidates = int(num_candidates.max().item())
 
-        for layer_idx, layer in enumerate(layers):
-            # Optional self-attention among query tokens (Variant B)
-            if has_self_attn:
-                sa_layer = self.binding_query_self_attn[name][layer_idx]
-                sa_out, _ = sa_layer["self_attn"](
-                    sa_layer["norm"](q), sa_layer["norm"](q), sa_layer["norm"](q),
-                    need_weights=False,
-                )
-                q = q + sa_out
-
-            # Cross-attention to KV
-            # When groove prior is active, convert key_padding_mask to float
-            # to match attn_mask type and avoid PyTorch deprecation warning.
-            kpm = ~kv_valid
-            if attn_mask is not None:
-                kpm = kpm.float().masked_fill(kpm, float("-inf"))
-            attn_out, attn_weights = layer["attn"](
-                layer["norm1"](q),
-                kv,
-                kv,
-                key_padding_mask=kpm,
-                attn_mask=attn_mask,
-                need_weights=collect_attn,
-                average_attn_weights=False,
-            )
-            if collect_attn and isinstance(attn_weights, torch.Tensor):
-                collected_attn.append(attn_weights)
-            q = q + attn_out
-            q = q + layer["ffn"](layer["norm2"](q))
-
-        interaction_tokens = q
-        interaction_vec = self.pmhc_interaction_token_proj(interaction_tokens).reshape(
+        starts = torch.arange(max_candidates, device=h.device).view(1, -1).expand(
             batch_size,
             -1,
         )
-        return interaction_vec, interaction_tokens, (
-            collected_attn if collect_attn else None
+        candidate_mask = starts < num_candidates.unsqueeze(1)
+        ends = starts + core_len.unsqueeze(1)
+
+        core_offsets = torch.arange(self.core_window_size, device=h.device).view(1, 1, -1)
+        core_positions = starts.unsqueeze(-1) + core_offsets
+        core_token_mask = (
+            candidate_mask.unsqueeze(-1)
+            & (core_offsets < core_len.view(batch_size, 1, 1))
+            & (core_positions < pep_len.view(batch_size, 1, 1))
         )
+        core_tokens = self._gather_sequence_positions(pep_h, core_positions)
+        core_pos_embed = self.core_position_embed(
+            torch.arange(self.core_window_size, device=h.device)
+        ).view(1, 1, self.core_window_size, -1)
+        core_tokens = (
+            core_tokens + core_pos_embed * core_token_mask.unsqueeze(-1).float()
+        ) * core_token_mask.unsqueeze(-1).float()
+
+        pep_prefix = torch.cat(
+            [
+                pep_h.new_zeros((batch_size, 1, self.d_model)),
+                (pep_h * pep_valid.unsqueeze(-1).float()).cumsum(dim=1),
+            ],
+            dim=1,
+        )
+        pep_total = self._gather_prefix_states(
+            pep_prefix,
+            pep_len.unsqueeze(1).expand(-1, max_candidates),
+        )
+        npfr_sum = self._gather_prefix_states(pep_prefix, starts)
+        cpfr_sum = pep_total - self._gather_prefix_states(pep_prefix, ends)
+        npfr_len = starts
+        cpfr_len = (pep_len.unsqueeze(1) - ends).clamp(min=0)
+        npfr_repr = npfr_sum / npfr_len.float().unsqueeze(-1).clamp(min=1.0)
+        cpfr_repr = cpfr_sum / cpfr_len.float().unsqueeze(-1).clamp(min=1.0)
+        npfr_repr = npfr_repr * candidate_mask.unsqueeze(-1).float()
+        cpfr_repr = cpfr_repr * candidate_mask.unsqueeze(-1).float()
+
+        npfr_len_embed = self.pfr_length_embed(npfr_len.clamp(max=self.max_pfr_length))
+        cpfr_len_embed = self.pfr_length_embed(cpfr_len.clamp(max=self.max_pfr_length))
+
+        mhc_a_slice = offsets["mhc_a"]
+        mhc_b_slice = offsets["mhc_b"]
+        mhc_a_h = h[:, mhc_a_slice, :]
+        mhc_b_h = h[:, mhc_b_slice, :]
+        mhc_h = torch.cat([mhc_a_h, mhc_b_h], dim=1)
+        mhc_mask = torch.cat(
+            [
+                seg_masks["mhc_a"][:, mhc_a_slice],
+                seg_masks["mhc_b"][:, mhc_b_slice],
+            ],
+            dim=1,
+        )
+
+        core_flat = core_tokens.reshape(batch_size * max_candidates, self.core_window_size, self.d_model)
+        core_mask_flat = core_token_mask.reshape(batch_size * max_candidates, self.core_window_size)
+        mhc_flat = self._repeat_candidates(mhc_h, max_candidates)
+        mhc_mask_flat = self._repeat_candidates(mhc_mask, max_candidates)
+
+        kv_parts = [core_flat, mhc_flat]
+        kv_valid_parts = [core_mask_flat, mhc_mask_flat]
+        dep_token_list: List[torch.Tensor] = []
+        for dep in dep_names:
+            dep_tensor = latent_store[dep]
+            if dep_tensor.ndim == 2:
+                dep_tensor = dep_tensor.unsqueeze(1)
+            elif dep_tensor.ndim != 3:
+                raise ValueError(
+                    f"latent dependency {dep} has unsupported rank {dep_tensor.ndim}"
+                )
+            dep_token_list.append(dep_tensor)
+        if extra_tokens:
+            dep_token_list.extend(extra_tokens)
+        for token_tensor in dep_token_list:
+            kv_parts.append(self._repeat_candidates(token_tensor, max_candidates))
+            kv_valid_parts.append(
+                torch.ones(
+                    (batch_size * max_candidates, token_tensor.shape[1]),
+                    dtype=torch.bool,
+                    device=h.device,
+                )
+            )
+
+        kv = torch.cat(kv_parts, dim=1)
+        kv_valid = torch.cat(kv_valid_parts, dim=1)
+
+        attn_mask = None
+        if self.use_groove_prior:
+            kv_len = kv.shape[1]
+            attn_bias = torch.zeros(kv_len, device=h.device)
+            mhc_offset = self.core_window_size
+            mhc_a_len = mhc_a_h.shape[1]
+            mhc_b_len = mhc_b_h.shape[1]
+            attn_bias[mhc_offset : mhc_offset + mhc_a_len] = self.groove_bias_a[:mhc_a_len]
+            attn_bias[
+                mhc_offset + mhc_a_len : mhc_offset + mhc_a_len + mhc_b_len
+            ] = self.groove_bias_b[:mhc_b_len]
+            hard_cutoff = 250
+            if mhc_a_len > hard_cutoff:
+                attn_bias[mhc_offset + hard_cutoff : mhc_offset + mhc_a_len] += -10.0
+            if mhc_b_len > hard_cutoff:
+                start = mhc_offset + mhc_a_len + hard_cutoff
+                stop = mhc_offset + mhc_a_len + mhc_b_len
+                attn_bias[start:stop] += -10.0
+            n_q = 1 if self.latent_queries[name].ndim == 1 else self.latent_queries[name].shape[0]
+            attn_mask = attn_bias.unsqueeze(0).expand(n_q, -1)
+
+        candidate_interaction_flat, candidate_tokens_flat, attn_layers = self._run_binding_query(
+            name=name,
+            kv=kv,
+            kv_valid=kv_valid,
+            collect_attn=collect_attn,
+            attn_mask=attn_mask,
+        )
+
+        candidate_vec = self.core_window_vec_norm(
+            self.core_window_fuse(
+                torch.cat(
+                    [
+                        candidate_interaction_flat,
+                        npfr_repr.reshape(batch_size * max_candidates, -1),
+                        npfr_len_embed.reshape(batch_size * max_candidates, -1),
+                        cpfr_repr.reshape(batch_size * max_candidates, -1),
+                        cpfr_len_embed.reshape(batch_size * max_candidates, -1),
+                    ],
+                    dim=-1,
+                )
+            )
+        ).reshape(batch_size, max_candidates, -1)
+
+        pep_len_f = pep_len.float().unsqueeze(1).clamp(min=1.0)
+        core_len_expanded = core_len.unsqueeze(1).expand(-1, max_candidates)
+        prior_features = torch.cat(
+            [
+                core_len_expanded.float().unsqueeze(-1) / pep_len_f.unsqueeze(-1),
+                npfr_len.float().unsqueeze(-1) / pep_len_f.unsqueeze(-1),
+                cpfr_len.float().unsqueeze(-1) / pep_len_f.unsqueeze(-1),
+                class_probs.unsqueeze(1).expand(-1, max_candidates, -1),
+            ],
+            dim=-1,
+        )
+        core_window_prior_logit = self.core_window_prior(prior_features).squeeze(-1)
+        core_window_score_logit = self.core_window_score(candidate_vec).squeeze(-1)
+        core_window_logit = core_window_score_logit + core_window_prior_logit
+        core_window_prior_logit = core_window_prior_logit.masked_fill(~candidate_mask, -1e4)
+        core_window_score_logit = core_window_score_logit.masked_fill(~candidate_mask, -1e4)
+        core_window_logit = core_window_logit.masked_fill(~candidate_mask, -1e4)
+
+        core_window_posterior = F.softmax(core_window_logit, dim=1)
+        core_window_posterior = core_window_posterior * candidate_mask.float()
+        core_window_posterior = core_window_posterior / core_window_posterior.sum(
+            dim=1,
+            keepdim=True,
+        ).clamp(min=1e-8)
+
+        interaction_vec = torch.sum(
+            core_window_posterior.unsqueeze(-1) * candidate_vec,
+            dim=1,
+        )
+        candidate_tokens = candidate_tokens_flat.reshape(
+            batch_size,
+            max_candidates,
+            candidate_tokens_flat.shape[1],
+            candidate_tokens_flat.shape[2],
+        )
+        interaction_tokens = torch.sum(
+            core_window_posterior.unsqueeze(-1).unsqueeze(-1) * candidate_tokens,
+            dim=1,
+        )
+
+        core_start_logit = pep_h.new_full((batch_size, pep_h.shape[1]), -1e4)
+        core_start_prob = pep_h.new_zeros((batch_size, pep_h.shape[1]))
+        batch_idx = torch.arange(batch_size, device=h.device).unsqueeze(1).expand_as(starts)
+        valid_batch_idx = batch_idx[candidate_mask]
+        valid_starts = starts[candidate_mask]
+        core_start_logit[valid_batch_idx, valid_starts] = core_window_logit[candidate_mask]
+        core_start_prob[valid_batch_idx, valid_starts] = core_window_posterior[candidate_mask]
+        core_start_logit = core_start_logit.masked_fill(~pep_valid, -1e4)
+
+        core_membership = pep_h.new_zeros((batch_size, pep_h.shape[1]))
+        for offset in range(self.core_window_size):
+            contrib = core_window_posterior * core_token_mask[:, :, offset].float()
+            pos = core_positions[:, :, offset].clamp(max=pep_h.shape[1] - 1)
+            core_membership.scatter_add_(1, pos, contrib)
+        core_membership = core_membership * pep_valid.float()
+        core_membership = core_membership / core_membership.sum(dim=1, keepdim=True).clamp(
+            min=1e-8,
+        )
+
+        map_idx = core_window_logit.argmax(dim=1, keepdim=True)
+        map_start = starts.gather(1, map_idx).squeeze(1)
+        pos = torch.arange(pep_h.shape[1], device=h.device).view(1, -1).expand(batch_size, -1)
+        core_relative_position_index = pos - map_start.unsqueeze(1)
+
+        weighted_attn_layers: List[torch.Tensor] = []
+        if collect_attn and attn_layers:
+            mhc_start = self.core_window_size
+            mhc_stop = mhc_start + mhc_h.shape[1]
+            attn_weight = core_window_posterior.view(batch_size, max_candidates, 1, 1, 1)
+            for layer_attn in attn_layers:
+                layer_attn = layer_attn.reshape(
+                    batch_size,
+                    max_candidates,
+                    layer_attn.shape[1],
+                    layer_attn.shape[2],
+                    layer_attn.shape[3],
+                )
+                weighted_attn_layers.append(
+                    (attn_weight * layer_attn[..., mhc_start:mhc_stop]).sum(dim=1)
+                )
+
+        expected_start = torch.sum(
+            core_window_posterior * starts.float(),
+            dim=1,
+            keepdim=True,
+        )
+        expected_core_len = torch.sum(
+            core_window_posterior * core_len.unsqueeze(1).float(),
+            dim=1,
+            keepdim=True,
+        )
+        expected_cpfr = torch.sum(
+            core_window_posterior * cpfr_len.float(),
+            dim=1,
+            keepdim=True,
+        )
+
+        diagnostics: Dict[str, torch.Tensor] = {
+            "core_window_mask": candidate_mask,
+            "core_window_start": starts,
+            "core_window_length": core_len.unsqueeze(1).expand_as(starts),
+            "core_window_prior_logit": core_window_prior_logit,
+            "core_window_score_logit": core_window_score_logit,
+            "core_window_logit": core_window_logit,
+            "core_window_posterior_prob": core_window_posterior,
+            "core_start_logit": core_start_logit,
+            "core_start_prob": core_start_prob,
+            "core_start_probs": core_start_prob,
+            "core_membership_prob": core_membership,
+            "core_relative_position_index": core_relative_position_index,
+            "core_length": core_len.unsqueeze(1).expand_as(pos),
+            "npfr_length": pos,
+            "cpfr_length": (pep_len.view(-1, 1) - pos - core_len.view(-1, 1)).clamp(min=0),
+            "core_length_norm": expected_core_len / pep_len.float().unsqueeze(-1),
+            "npfr_length_norm": expected_start / pep_len.float().unsqueeze(-1),
+            "cpfr_length_norm": expected_cpfr / pep_len.float().unsqueeze(-1),
+            "attn_layers": weighted_attn_layers,
+        }
+        return interaction_vec, interaction_tokens, diagnostics
 
     @staticmethod
     def _binding_attention_stats(
@@ -1363,82 +1638,7 @@ class Presto(nn.Module):
         outputs["species_probs"] = species_probs
 
         # ------------------------------------------------------------------
-        # 3) Core summary from peptide stream
-        # ------------------------------------------------------------------
-        pep_slice = offsets["peptide"]
-        pep_h = h[:, pep_slice, :]
-        pep_valid = valid_mask[:, pep_slice]
-
-        pep_len = pep_valid.sum(dim=1).clamp(min=1)
-        pos = torch.arange(pep_h.shape[1], device=pep_h.device).view(1, -1).expand(batch_size, -1)
-
-        mhc_pair_vec = torch.cat([mhc_a_vec, mhc_b_vec], dim=-1)
-        mhc_expanded = mhc_pair_vec.unsqueeze(1).expand(-1, pep_h.shape[1], -1)
-        core_start_logit = self.core_start_head(
-            torch.cat([pep_h, mhc_expanded], dim=-1)
-        ).squeeze(-1)
-        core_start_logit = core_start_logit.masked_fill(~pep_valid, -1e4)
-
-        core_position_mask = pep_valid.clone()
-        empty_core = ~core_position_mask.any(dim=1)
-        if empty_core.any():
-            core_position_mask[empty_core, 0] = True
-            core_start_logit = core_start_logit.clone()
-            core_start_logit[empty_core, 0] = 0.0
-
-        core_start_prob = F.softmax(core_start_logit, dim=1)
-        core_start_prob = core_start_prob * core_position_mask.float()
-        core_start_prob = core_start_prob / core_start_prob.sum(dim=1, keepdim=True).clamp(min=1e-8)
-
-        core_width = 8.0 + 2.0 * torch.sigmoid(self.core_width_head(mhc_pair_vec))
-        expected_start = (core_start_prob * pos.float()).sum(dim=1, keepdim=True)
-        pep_len_f = pep_len.float().unsqueeze(-1)
-        core_length_norm = core_width / pep_len_f
-        npfr_length_norm = expected_start / pep_len_f
-        cpfr_length_norm = (pep_len_f - core_width - expected_start).clamp(min=0.0) / pep_len_f
-
-        # Width-aware soft core membership:
-        # m_i = sum_s p(start=s) * I[s <= i < s + width]
-        # Smooth window edges keep gradients stable for fractional width.
-        pos_f = pos.float()
-        start_pos = pos_f.unsqueeze(1)  # (B, 1, S)
-        token_pos = pos_f.unsqueeze(2)  # (B, I, 1)
-        edge_temp = 0.5
-        left_in = torch.sigmoid((token_pos - start_pos + 0.5) / edge_temp)
-        right_in = torch.sigmoid((start_pos + core_width.unsqueeze(1) - token_pos - 0.5) / edge_temp)
-        soft_window = left_in * right_in  # (B, I, S)
-        core_membership = torch.einsum("bs,bis->bi", core_start_prob, soft_window)
-        core_membership = core_membership * core_position_mask.float()
-        core_membership = core_membership / core_membership.sum(dim=1, keepdim=True).clamp(min=1e-8)
-
-        core_context_vec = (pep_h * core_membership.unsqueeze(-1)).sum(dim=1)
-
-        # Inject core-relative position encoding into peptide token states for
-        # non-recognition latents (recognition remains peptide + foreignness only).
-        core_rel = torch.round(pos_f - expected_start).to(dtype=torch.long).clamp(min=-32, max=32)
-        core_rel_idx = core_rel + 32
-        core_rel_embed = self.core_rel_pos(core_rel_idx) * core_position_mask.unsqueeze(-1).float()
-        h_coreaware = h.clone()
-        h_coreaware[:, pep_slice, :] = h_coreaware[:, pep_slice, :] + core_rel_embed
-
-        outputs["core_position_mask"] = core_position_mask
-        outputs["core_start_logit"] = core_start_logit.masked_fill(~core_position_mask, -1e4)
-        outputs["core_start_prob"] = core_start_prob
-        outputs["core_membership_prob"] = core_membership
-        outputs["core_relative_position_index"] = core_rel
-        outputs["core_start_index"] = pos
-        outputs["core_length"] = torch.round(core_width).long().expand(-1, pep_h.shape[1])
-        outputs["npfr_length"] = pos
-        outputs["cpfr_length"] = (
-            pep_len.view(-1, 1) - pos - outputs["core_length"]
-        ).clamp(min=0)
-        outputs["core_length_norm"] = core_length_norm
-        outputs["npfr_length_norm"] = npfr_length_norm
-        outputs["cpfr_length_norm"] = cpfr_length_norm
-        outputs["core_context_vec"] = core_context_vec
-
-        # ------------------------------------------------------------------
-        # 4) Optional TCR encoding (future feature; disabled by default)
+        # 3) Optional TCR encoding (future feature; disabled by default)
         # ------------------------------------------------------------------
         tcr_vec = None
         if self.enable_tcr and has_tcr_input:
@@ -1461,11 +1661,8 @@ class Presto(nn.Module):
             outputs["chain_phenotype_logits"] = chain_attr_logits["phenotype_logits"]
 
         # ------------------------------------------------------------------
-        # 5) Latent query DAG with segmented attention
+        # 4) Latent query DAG with segmented attention
         # ------------------------------------------------------------------
-        # Per design S5.4 / S7.5: context_vec goes to processing, binding,
-        # and presentation latents. core_context_vec goes to presentation_class2 only.
-        # Recognition latents use peptide states + foreignness dep only.
         context_mhc_a_species = species_probs if species_override_active else mhc_a_species_probs
         context_mhc_b_species = species_probs if species_override_active else mhc_b_species_probs
         context_token = self.context_token_proj(
@@ -1474,7 +1671,6 @@ class Presto(nn.Module):
                 dim=-1,
             )
         ).unsqueeze(1)
-        core_context_token = core_context_vec.unsqueeze(1)
 
         # Which latents receive APC context token.
         _gets_context = {"processing", "pmhc_interaction"}
@@ -1483,10 +1679,9 @@ class Presto(nn.Module):
 
         # Variant C: pMHC interaction block (enriched representations for pMHC interaction only)
         if self.use_pmhc_interaction_block:
-            h_binding = self._run_pmhc_interaction(h_coreaware, seg_masks, offsets)
+            h_binding = self._run_pmhc_interaction(h, seg_masks, offsets)
         else:
-            h_binding = h_coreaware
-        _coreaware_latents = {"pmhc_interaction"}
+            h_binding = h
 
         latent_vals: Dict[str, torch.Tensor] = {}
         latent_store: Dict[str, torch.Tensor] = {}
@@ -1507,25 +1702,34 @@ class Presto(nn.Module):
             collect = bool(
                 return_binding_attention and is_binding
             )
+            attn_layers = None
 
             if is_binding:
-                latent_vec, latent_tokens, attn_layers = self._binding_latent_query(
+                latent_vec, latent_tokens, binding_diag = self._binding_latent_query(
                     name=name,
                     h=h_binding,
-                    allowed_mask=allowed,
+                    seg_masks=seg_masks,
+                    offsets=offsets,
                     latent_store=latent_store,
                     dep_names=self.LATENT_DEPS[name],
-                    mhc_a_mask=seg_masks["mhc_a"],
-                    offsets=offsets,
+                    class_probs=class_probs,
                     extra_tokens=extra_tokens if extra_tokens else None,
                     collect_attn=collect,
                 )
                 latent_store[name] = latent_tokens
+                outputs.update(
+                    {
+                        key: value
+                        for key, value in binding_diag.items()
+                        if key != "attn_layers"
+                    }
+                )
+                if binding_diag.get("attn_layers"):
+                    binding_attention[name] = list(binding_diag["attn_layers"])
             else:
-                h_for_latent = h_coreaware if name in _coreaware_latents else h
                 latent_vec, attn_layers = self._latent_query(
                     name=name,
-                    h=h_for_latent,
+                    h=h,
                     allowed_mask=allowed,
                     latent_store=latent_store,
                     dep_names=self.LATENT_DEPS[name],
@@ -1588,7 +1792,13 @@ class Presto(nn.Module):
 
         outputs["latent_vecs"] = latent_vals
         if return_binding_attention and binding_attention:
-            mhc_mask = seg_masks["mhc_a"] | seg_masks["mhc_b"]
+            mhc_mask = torch.cat(
+                [
+                    seg_masks["mhc_a"][:, offsets["mhc_a"]],
+                    seg_masks["mhc_b"][:, offsets["mhc_b"]],
+                ],
+                dim=1,
+            )
             outputs.update(self._binding_attention_stats(binding_attention, mhc_mask))
 
         # Species of origin and foreignness readouts

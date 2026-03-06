@@ -16,8 +16,8 @@
 - [x] Phase 0 verification: targeted tests for loader/class handling, model initialization sanity, and trainer scheduler behavior.
 - [x] Phase 1: implement `A1`-`A4` together as one coupled latent-DAG refactor.
 - [x] Phase 1 verification: forward/output contract checks, dependency-flow checks, and regression coverage for the new latent structure.
-- [ ] Phase 2: implement `B1` coupled core enumeration with explicit PFR representation on top of the new interaction latent.
-- [ ] Phase 2 verification: core-candidate enumeration sanity, shape/compute checks, and targeted biological edge cases (`8mer`, `9mer`, long class II peptides).
+- [x] Phase 2: implement `B1` coupled core enumeration with explicit PFR representation on top of the new interaction latent.
+- [x] Phase 2 verification: core-candidate enumeration sanity, shape/compute checks, and targeted biological edge cases (`8mer`, `9mer`, long class II peptides).
 - [ ] Phase 3: implement `C1`-`C3` context-token cleanup, `groove_vec`, and `pmhc_vec` signal repair.
 - [ ] Phase 3 verification: confirm processing isolation, binding/presentation access to groove context, and direct allele signal in `pmhc_vec`.
 - [ ] Phase 4: implement `D2` class-split MIL bags and `D3` pathway-MIL handling for ambiguous T-cell assays.
@@ -65,6 +65,20 @@
   - `pytest -q tests/test_presto.py tests/test_train_synthetic.py tests/test_train_iedb.py` -> `93 passed`
   - `pytest -q tests/test_presto.py tests/test_training_e2e.py` -> `45 passed`
   - `pytest -q tests/test_loaders.py tests/test_presto.py tests/test_train_synthetic.py tests/test_train_iedb.py tests/test_allele_resolver.py tests/test_predictor.py tests/test_training_e2e.py tests/test_pmhc.py tests/test_heads.py` -> `260 passed`
+- Phase 2 completed.
+- `B1`:
+  - `models/presto.py` no longer predicts a global soft core start/width from pooled MHC vectors and no longer injects a shared core-relative position field back into the peptide stream.
+  - the `pmhc_interaction` latent now enumerates candidate peptide core windows directly from encoder states, with per-candidate core tokens cross-attending to MHC tokens and explicit N-/C-terminal PFR summaries folded into the candidate interaction vector.
+  - 8-mers are handled as a one-candidate special case with width `8`; all longer peptides use the canonical 9-residue binding window, so `11mer -> 3` candidates and `15mer -> 7` candidates without any peptide tiling step.
+  - candidate scores are normalized into a posterior over core placements; the downstream interaction vector is the posterior-weighted mixture, so binding and core placement are now coupled in one differentiable path.
+  - compatibility outputs remain available: `core_start_logit`, `core_start_prob`, `core_membership_prob`, plus new candidate-level diagnostics (`core_window_mask`, `core_window_start`, `core_window_length`, `core_window_prior_logit`, `core_window_logit`, `core_window_posterior_prob`).
+- Phase 2 verification:
+  - `python -m py_compile models/presto.py tests/test_presto.py`
+  - direct runtime sanity:
+    - mixed-length batch forward pass emits finite `core_window_*`, `binding_logit`, and attention-support stats.
+    - mixed-length train-mode backward pass stays finite with `core_counts=[1, 3, 7, 7]` and `core_lengths=[8, 9, 9, 9]`.
+  - `pytest -q tests/test_presto.py tests/test_training_e2e.py` -> `46 passed`
+  - `pytest -q tests/test_presto.py tests/test_train_synthetic.py tests/test_train_iedb.py tests/test_training_e2e.py tests/test_pmhc.py` -> `128 passed`
 
 # Unified Training Failure Audit + Repair (2026-03-06)
 

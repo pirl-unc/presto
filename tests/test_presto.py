@@ -95,6 +95,9 @@ class TestPrestoModel:
         assert "mhc_species_logits" in outputs
         assert "core_start_logit" in outputs
         assert "core_start_prob" in outputs
+        assert "core_window_mask" in outputs
+        assert "core_window_start" in outputs
+        assert "core_window_posterior_prob" in outputs
         assert "processing_mixed_logit" in outputs
         assert "binding_mixed_logit" in outputs
         assert "presentation_mixed_logit" in outputs
@@ -715,6 +718,37 @@ class TestDesignAlignment:
         assert out["binding_mhc_attention_effective_residues"].shape[0] == pep_tok.shape[0]
         assert torch.all(out["binding_mhc_attention_effective_residues"] >= 0)
 
+    def test_core_window_enumeration_respects_short_and_long_peptides(self):
+        from presto.models.presto import Presto
+
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        model.eval()
+
+        pep_tok = torch.randint(4, 24, (3, 15))
+        pep_tok[0, 8:] = 0   # 8-mer -> 1 candidate, width 8
+        pep_tok[1, 11:] = 0  # 11-mer -> 3 candidates, width 9
+        mhc_a_tok = torch.randint(4, 24, (3, 64))
+        mhc_b_tok = torch.randint(4, 24, (3, 32))
+
+        with torch.no_grad():
+            out = model(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class=["I", "I", "II"],
+            )
+
+        assert out["core_window_mask"].sum(dim=1).tolist() == [1, 3, 7]
+        assert out["core_window_length"][0, 0].item() == 8
+        assert out["core_window_length"][1, 0].item() == 9
+        assert out["core_window_length"][2, 0].item() == 9
+        assert torch.allclose(
+            out["core_window_posterior_prob"].sum(dim=1),
+            torch.ones(3),
+            atol=1e-6,
+        )
+        assert torch.all(out["core_start_prob"].sum(dim=1) > 0.999)
+
     def test_presentation_latent_branch_has_step1_gradients(self):
         from presto.models.presto import Presto
 
@@ -884,7 +918,7 @@ class TestDesignAlignment:
             atol=1e-6,
         )
 
-    def test_core_relative_embedding_does_not_leak_into_processing_or_ms(self):
+    def test_core_position_embedding_does_not_leak_into_processing_or_ms(self):
         from presto.models.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
@@ -895,7 +929,7 @@ class TestDesignAlignment:
 
         with torch.no_grad():
             out_before = model(pep_tok=pep_tok, mhc_a_tok=mhc_a_tok, mhc_b_tok=mhc_b_tok)
-            model.core_rel_pos.weight.uniform_(-10.0, 10.0)
+            model.core_position_embed.weight.uniform_(-10.0, 10.0)
             out_after = model(pep_tok=pep_tok, mhc_a_tok=mhc_a_tok, mhc_b_tok=mhc_b_tok)
 
         assert torch.allclose(
