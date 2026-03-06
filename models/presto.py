@@ -165,58 +165,37 @@ class Presto(nn.Module):
     SEG_MHC_B = 4
 
     LATENT_ORDER = [
-        "processing_class1",
-        "processing_class2",
+        "processing",
         "ms_detectability",
         "species_of_origin",
-        "binding_affinity",
-        "binding_stability",
-        "presentation_class1",
-        "presentation_class2",
-        "recognition_cd8",
-        "recognition_cd4",
-        "immunogenicity_cd8",
-        "immunogenicity_cd4",
+        "pmhc_interaction",
+        "recognition",
     ]
 
     # Per design S7.5: segment access table
     LATENT_SEGMENTS = {
-        "processing_class1": ["nflank", "peptide", "cflank"],
-        "processing_class2": ["nflank", "peptide", "cflank"],
+        "processing": ["nflank", "peptide", "cflank"],
         "ms_detectability": ["peptide"],
         "species_of_origin": ["peptide"],  # peptide-only cross-attention
-        "binding_affinity": ["peptide", "mhc_a", "mhc_b"],
-        "binding_stability": ["peptide", "mhc_a", "mhc_b"],
-        "presentation_class1": [],       # pure bottleneck: no token access
-        "presentation_class2": [],       # pure bottleneck: no token access
-        "recognition_cd8": ["peptide"],
-        "recognition_cd4": ["peptide"],
-        "immunogenicity_cd8": [],        # MLP only, no cross-attention
-        "immunogenicity_cd4": [],        # MLP only, no cross-attention
+        "pmhc_interaction": ["peptide", "mhc_a", "mhc_b"],
+        "recognition": ["peptide"],
     }
 
     # Per design S7.2: DAG dependencies
     LATENT_DEPS = {
-        "processing_class1": [],
-        "processing_class2": [],
+        "processing": [],
         "ms_detectability": [],
         "species_of_origin": [],
-        "binding_affinity": [],
-        "binding_stability": [],
-        "presentation_class1": ["processing_class1", "binding_affinity", "binding_stability"],
-        "presentation_class2": ["processing_class2", "binding_affinity", "binding_stability"],
-        "recognition_cd8": ["foreignness"],
-        "recognition_cd4": ["foreignness"],
-        "immunogenicity_cd8": ["binding_affinity", "binding_stability", "recognition_cd8"],
-        "immunogenicity_cd4": ["binding_affinity", "binding_stability", "recognition_cd4"],
+        "pmhc_interaction": [],
+        "recognition": ["foreignness"],
     }
 
-    # Latents computed via cross-attention (excludes MLP-only immunogenicity)
-    CROSS_ATTN_LATENTS = [n for n in LATENT_ORDER if not n.startswith("immunogenicity_")]
+    # Latents computed via cross-attention.
+    CROSS_ATTN_LATENTS = list(LATENT_ORDER)
     N_LATENT_LAYERS = 2
 
     # Binding latent names that use enhanced query path when available
-    BINDING_LATENT_NAMES = {"binding_affinity", "binding_stability"}
+    BINDING_LATENT_NAMES = {"pmhc_interaction"}
 
     def __init__(
         self,
@@ -230,7 +209,7 @@ class Presto(nn.Module):
         binding_log10_scale: float = DEFAULT_BINDING_LOG10_SCALE,
         # --- Binding latent architecture flags ---
         binding_n_latent_layers: int = 2,           # A: depth per binding latent
-        binding_n_queries: int = 1,                  # B: multi-token queries
+        binding_n_queries: int = 8,                  # B: multi-token queries
         binding_use_decoder_layers: bool = False,    # B: self-attn among queries
         binding_query_pool: str = "mean",            # B: pooling strategy
         use_pmhc_interaction_block: bool = False,    # C: pMHC interaction block
@@ -258,6 +237,10 @@ class Presto(nn.Module):
         self.binding_query_pool = binding_query_pool
         self.use_pmhc_interaction_block = use_pmhc_interaction_block
         self.pmhc_interaction_layers = pmhc_interaction_layers
+        self.pmhc_interaction_token_dim = min(64, d_model)
+        self.pmhc_interaction_vec_dim = (
+            max(1, self.binding_n_queries) * self.pmhc_interaction_token_dim
+        )
         self.use_groove_prior = use_groove_prior
         self._has_binding_enhancements = (
             binding_n_latent_layers != self.N_LATENT_LAYERS
@@ -312,15 +295,39 @@ class Presto(nn.Module):
         )
         self.stream_norm = nn.LayerNorm(d_model)
 
-        # pmhc_vec from latent vectors (design S9.7)
-        self.pmhc_vec_proj = nn.Linear(d_model * 3, d_model)
+        # pmhc_vec from interaction + presentation vectors.
+        self.pmhc_vec_proj = nn.Linear(self.pmhc_interaction_vec_dim + d_model, d_model)
+        self.pmhc_interaction_token_proj = nn.Linear(d_model, self.pmhc_interaction_token_dim)
+        self.pmhc_interaction_vec_norm = nn.LayerNorm(self.pmhc_interaction_vec_dim)
+        self.binding_affinity_readout_proj = nn.Sequential(
+            nn.Linear(self.pmhc_interaction_vec_dim, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
+        )
+        self.binding_stability_readout_proj = nn.Sequential(
+            nn.Linear(self.pmhc_interaction_vec_dim, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
+        )
+        self.presentation_mlp = nn.Sequential(
+            nn.Linear(d_model + self.pmhc_interaction_vec_dim, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
+        )
+        self.presentation_vec_norm = nn.LayerNorm(d_model)
+        self.immunogenicity_mlp = nn.Sequential(
+            nn.Linear(self.pmhc_interaction_vec_dim + d_model, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
+        )
+        self.immunogenicity_vec_norm = nn.LayerNorm(d_model)
 
         # ------------------------------------------------------------------
         # Per-chain MHC inference heads (design S5.1-S5.3)
         # ------------------------------------------------------------------
         n_species = N_MHC_SPECIES
-        # Per-chain fine type (6 classes):
-        # {MHC_Ia, MHC_Ib, MHC_IIa, MHC_IIb, B2M, unknown}
+        # Per-chain fine type (5 classes):
+        # {MHC_I, MHC_IIa, MHC_IIb, B2M, unknown}
         from ..data.vocab import N_MHC_CHAIN_FINE_TYPES
         self.mhc_a_type_head = nn.Linear(d_model, N_MHC_CHAIN_FINE_TYPES)
         self.mhc_b_type_head = nn.Linear(d_model, N_MHC_CHAIN_FINE_TYPES)
@@ -419,17 +426,18 @@ class Presto(nn.Module):
 
         # Variant D: groove attention prior
         if use_groove_prior:
-            # MHC-A (alpha chain): favor α1+α2 domains (pos 0-180) for Class I,
-            # α1 domain (pos 0-90) for Class II — learnable, so model adapts.
-            groove_init_a = torch.zeros(400)
-            groove_init_a[:180] = 1.0  # α1+α2 groove residues
-            self.groove_bias_a = nn.Parameter(groove_init_a)
-            # MHC-B (beta chain): favor β1 domain (pos 0-90) for Class II groove.
-            # For Class I, beta = β2m (~99 residues, does not contact peptide
-            # directly); model can learn to zero this out for Class I.
-            groove_init_b = torch.zeros(400)
-            groove_init_b[:90] = 1.0  # β1 groove residues
-            self.groove_bias_b = nn.Parameter(groove_init_b)
+            # Sigmoid decay: ~1.0 before cutoff, smooth falloff, ~0.0 past it.
+            # Accounts for signal peptide (~24aa) shifting groove start.
+            def _groove_decay(length: int, cutoff: int, width: float) -> torch.Tensor:
+                pos = torch.arange(length, dtype=torch.float)
+                return torch.sigmoid((cutoff - pos) / width)
+
+            # MHC-A (alpha chain): SP~24 + α1+α2~182 = ~206, cutoff=210, width=15
+            # Positions 0-180: ~1.0, 180-240: smooth decay, 240+: ~0.0
+            self.groove_bias_a = nn.Parameter(_groove_decay(400, cutoff=210, width=15.0))
+            # MHC-B (beta chain): SP~26 + β1~94 = ~120, cutoff=120, width=10
+            # Positions 0-100: ~1.0, 100-140: smooth decay, 140+: ~0.0
+            self.groove_bias_b = nn.Parameter(_groove_decay(400, cutoff=120, width=10.0))
 
         # Immunogenicity MLPs (design S7.4 Level 3: MLP, not cross-attention)
         self.immunogenicity_cd8_mlp = nn.Sequential(
@@ -456,24 +464,19 @@ class Presto(nn.Module):
         self.processing_class1_head = nn.Linear(d_model, 1)
         self.processing_class2_head = nn.Linear(d_model, 1)
 
-        self.binding_fuse = nn.Sequential(
-            nn.Linear(d_model * 2, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
-        )
         self.binding_affinity_probe = nn.Sequential(
             nn.Linear(d_model, d_model // 2),
             nn.GELU(),
             nn.Linear(d_model // 2, 1),
         )
-        self.binding = BindingModule(d_model=d_model)
+        self.binding = BindingModule(d_model=self.pmhc_interaction_vec_dim)
 
         self.presentation_class1_latent_head = nn.Linear(d_model, 1)
         self.presentation_class2_latent_head = nn.Linear(d_model, 1)
-        # Small positive init keeps additive path near baseline while allowing
-        # latent branch gradients from the first optimization step.
-        self.w_presentation_class1_latent = nn.Parameter(torch.tensor(0.05))
-        self.w_presentation_class2_latent = nn.Parameter(torch.tensor(0.05))
+        # Keep latent residual positive and non-trivial from step 1.
+        # softplus(-1.5) ~= 0.20
+        self.w_presentation_class1_latent = nn.Parameter(torch.tensor(-1.5))
+        self.w_presentation_class2_latent = nn.Parameter(torch.tensor(-1.5))
 
         self.recognition_cd8_head = nn.Linear(d_model, 1)
         self.recognition_cd4_head = nn.Linear(d_model, 1)
@@ -541,6 +544,38 @@ class Presto(nn.Module):
         self.species_of_origin_head = nn.Linear(d_model, N_ORGANISM_CATEGORIES)
         self.foreignness_head = nn.Linear(d_model, 1)
         self.species_override_embed = nn.Embedding(N_ORGANISM_CATEGORIES, d_model)
+        self._init_weights()
+
+    def _init_weights(self) -> None:
+        """Initialize transformer-style components to a stable working scale."""
+        query_std = 1.0 / math.sqrt(self.d_model)
+
+        for param in self.latent_queries.values():
+            nn.init.normal_(param.data, std=query_std)
+
+        for module in self.modules():
+            if isinstance(module, nn.Embedding):
+                nn.init.normal_(module.weight, std=query_std)
+                if module.padding_idx is not None:
+                    with torch.no_grad():
+                        module.weight[module.padding_idx].zero_()
+            elif isinstance(module, nn.MultiheadAttention):
+                if getattr(module, "in_proj_weight", None) is not None:
+                    nn.init.xavier_uniform_(module.in_proj_weight)
+                if getattr(module, "in_proj_bias", None) is not None:
+                    nn.init.zeros_(module.in_proj_bias)
+                if getattr(module, "q_proj_weight", None) is not None:
+                    nn.init.xavier_uniform_(module.q_proj_weight)
+                if getattr(module, "k_proj_weight", None) is not None:
+                    nn.init.xavier_uniform_(module.k_proj_weight)
+                if getattr(module, "v_proj_weight", None) is not None:
+                    nn.init.xavier_uniform_(module.v_proj_weight)
+                if getattr(module, "out_proj", None) is not None:
+                    nn.init.xavier_uniform_(module.out_proj.weight)
+                    if module.out_proj.bias is not None:
+                        nn.init.zeros_(module.out_proj.bias)
+        with torch.no_grad():
+            self.aa_embedding.weight[self.x_token_idx].zero_()
 
     def _load_from_state_dict(
         self,
@@ -849,7 +884,15 @@ class Presto(nn.Module):
 
         dep_tokens: List[torch.Tensor] = []
         for dep in dep_names:
-            dep_tokens.append(latent_store[dep].unsqueeze(1))
+            dep_tensor = latent_store[dep]
+            if dep_tensor.ndim == 2:
+                dep_tokens.append(dep_tensor.unsqueeze(1))
+            elif dep_tensor.ndim == 3:
+                dep_tokens.append(dep_tensor)
+            else:
+                raise ValueError(
+                    f"latent dependency {dep} has unsupported rank {dep_tensor.ndim}"
+                )
         if extra_tokens:
             dep_tokens.extend(extra_tokens)
 
@@ -924,11 +967,33 @@ class Presto(nn.Module):
             mhc_pad = mhc_pad.clone()
             mhc_pad[mhc_all_masked, 0] = False
 
+        # Fixed structural penalty for pep→MHC attention: positions past 250
+        # in either sub-chain are alpha3/TM/cytoplasmic and never contact peptide.
+        _HARD_CUTOFF = 250
+        mhc_a_len = mhc_a_sl.stop - mhc_a_sl.start
+        mhc_b_len = mhc_b_sl.stop - mhc_b_sl.start
+        mhc_total = mhc_a_len + mhc_b_len
+        pmhc_hard_bias: Optional[torch.Tensor] = None
+        if mhc_a_len > _HARD_CUTOFF or mhc_b_len > _HARD_CUTOFF:
+            pmhc_hard_bias = torch.zeros(mhc_total, device=h.device)
+            if mhc_a_len > _HARD_CUTOFF:
+                pmhc_hard_bias[_HARD_CUTOFF:mhc_a_len] = -10.0
+            if mhc_b_len > _HARD_CUTOFF:
+                pmhc_hard_bias[mhc_a_len + _HARD_CUTOFF:mhc_total] = -10.0
+            # Shape for MHA attn_mask: (query_len, kv_len)
+            # Broadcast across query positions (peptide length)
+            pmhc_hard_bias = pmhc_hard_bias.unsqueeze(0)
+
         for layer in self.pmhc_interaction:
-            # Peptide cross-attends to MHC
+            # Peptide cross-attends to MHC (with structural position penalty)
+            # Convert key_padding_mask to float when using attn_mask
+            mhc_kpm = mhc_pad
+            if pmhc_hard_bias is not None:
+                mhc_kpm = mhc_pad.float().masked_fill(mhc_pad, float("-inf"))
             pep_out, _ = layer["pep_to_mhc_attn"](
                 layer["pep_norm1"](pep_h), mhc_h, mhc_h,
-                key_padding_mask=mhc_pad,
+                key_padding_mask=mhc_kpm,
+                attn_mask=pmhc_hard_bias,
                 need_weights=False,
             )
             pep_h = pep_h + pep_out
@@ -945,18 +1010,20 @@ class Presto(nn.Module):
 
         # Construct new tensor with enriched peptide/MHC, original elsewhere
         mhc_a_len = mhc_a_sl.stop - mhc_a_sl.start
+        replacements = sorted(
+            [
+                (pep_sl, pep_h),
+                (mhc_a_sl, mhc_h[:, :mhc_a_len, :]),
+                (mhc_b_sl, mhc_h[:, mhc_a_len:, :]),
+            ],
+            key=lambda pair: pair[0].start,
+        )
         parts = []
         prev_end = 0
-        # Ordered segment slices: nflank, peptide, cflank, mhc_a, mhc_b
-        replacements = {
-            pep_sl: pep_h,
-            mhc_a_sl: mhc_h[:, :mhc_a_len, :],
-            mhc_b_sl: mhc_h[:, mhc_a_len:, :],
-        }
-        for sl in sorted(replacements.keys(), key=lambda s: s.start):
+        for sl, replacement in replacements:
             if sl.start > prev_end:
                 parts.append(h[:, prev_end:sl.start, :])
-            parts.append(replacements[sl])
+            parts.append(replacement)
             prev_end = sl.stop
         if prev_end < h.shape[1]:
             parts.append(h[:, prev_end:, :])
@@ -973,8 +1040,8 @@ class Presto(nn.Module):
         offsets: Dict[str, slice],
         extra_tokens: Optional[List[torch.Tensor]] = None,
         collect_attn: bool = False,
-    ) -> tuple[torch.Tensor, Optional[List[torch.Tensor]]]:
-        """Compute binding latent with enhanced architecture (Variants A/B/D).
+    ) -> tuple[torch.Tensor, torch.Tensor, Optional[List[torch.Tensor]]]:
+        """Compute the pMHC interaction latent with multi-query detail preserved.
 
         Supports:
         - Deeper cross-attention (Variant A via binding_n_latent_layers)
@@ -988,7 +1055,15 @@ class Presto(nn.Module):
 
         dep_tokens: List[torch.Tensor] = []
         for dep in dep_names:
-            dep_tokens.append(latent_store[dep].unsqueeze(1))
+            dep_tensor = latent_store[dep]
+            if dep_tensor.ndim == 2:
+                dep_tokens.append(dep_tensor.unsqueeze(1))
+            elif dep_tensor.ndim == 3:
+                dep_tokens.append(dep_tensor)
+            else:
+                raise ValueError(
+                    f"latent dependency {dep} has unsupported rank {dep_tensor.ndim}"
+                )
         if extra_tokens:
             dep_tokens.extend(extra_tokens)
 
@@ -1021,6 +1096,14 @@ class Presto(nn.Module):
             mhc_b_sl = offsets["mhc_b"]
             mhc_b_len = mhc_b_sl.stop - mhc_b_sl.start
             attn_bias[mhc_b_sl] = self.groove_bias_b[:mhc_b_len]
+            # Fixed structural penalty: positions past 250 in either chain
+            # are alpha3/TM/cytoplasmic and never contact peptide.
+            _HARD_CUTOFF = 250
+            if mhc_a_len > _HARD_CUTOFF:
+                attn_bias[mhc_a_sl.start + _HARD_CUTOFF : mhc_a_sl.stop] += -10.0
+            if mhc_b_len > _HARD_CUTOFF:
+                attn_bias[mhc_b_sl.start + _HARD_CUTOFF : mhc_b_sl.stop] += -10.0
+
             # Expand for multi-head attention: (n_queries, kv_len)
             n_q = self.binding_n_queries
             attn_mask = attn_bias.unsqueeze(0).expand(n_q, -1)
@@ -1072,19 +1155,14 @@ class Presto(nn.Module):
             q = q + attn_out
             q = q + layer["ffn"](layer["norm2"](q))
 
-        # Pool multi-token queries down to single vector
-        if self.binding_n_queries > 1 and q.shape[1] > 1:
-            if self.binding_query_pool == "attention":
-                # Attention-weighted pooling
-                pool_weights = F.softmax(
-                    self.binding_pool_attn(q).squeeze(-1), dim=1
-                )  # (B, K)
-                q = (q * pool_weights.unsqueeze(-1)).sum(dim=1, keepdim=True)
-            else:
-                # Mean pooling
-                q = q.mean(dim=1, keepdim=True)
-
-        return q.squeeze(1), (collected_attn if collect_attn else None)
+        interaction_tokens = q
+        interaction_vec = self.pmhc_interaction_token_proj(interaction_tokens).reshape(
+            batch_size,
+            -1,
+        )
+        return interaction_vec, interaction_tokens, (
+            collected_attn if collect_attn else None
+        )
 
     @staticmethod
     def _binding_attention_stats(
@@ -1107,7 +1185,7 @@ class Presto(nn.Module):
                 k = layer_attn.shape[-1]
                 if k > base_k:
                     layer_attn = layer_attn[..., :base_k]
-                attn_per_layer.append(layer_attn.mean(dim=1).squeeze(1))
+                attn_per_layer.append(layer_attn.mean(dim=(1, 2)))
         if not attn_per_layer:
             return {}
 
@@ -1213,11 +1291,11 @@ class Presto(nn.Module):
         outputs["mhc_b_species_logits"] = mhc_b_species_logits
 
         # Compositional class probabilities (design S5.1)
-        # Fine type indices: MHC_Ia=0, MHC_Ib=1, MHC_IIa=2, MHC_IIb=3, B2M=4, unknown=5
-        # Class I = (MHC_Ia + MHC_Ib) × B2M
+        # Fine type indices: MHC_I=0, MHC_IIa=1, MHC_IIb=2, B2M=3, unknown=4
+        # Class I = MHC_I × B2M
         # Class II = MHC_IIa × MHC_IIb
-        class1_prob_raw = (mhc_a_type_probs[:, 0] + mhc_a_type_probs[:, 1]) * mhc_b_type_probs[:, 4]
-        class2_prob_raw = mhc_a_type_probs[:, 2] * mhc_b_type_probs[:, 3]
+        class1_prob_raw = mhc_a_type_probs[:, 0] * mhc_b_type_probs[:, 3]
+        class2_prob_raw = mhc_a_type_probs[:, 1] * mhc_b_type_probs[:, 2]
         class_sum = (class1_prob_raw + class2_prob_raw).clamp(min=1e-8)
         inferred_class_probs = torch.stack([
             class1_prob_raw / class_sum,
@@ -1262,6 +1340,7 @@ class Presto(nn.Module):
         else:
             class_probs = inferred_class_probs
 
+        species_override_active = mhc_species_input is not None
         if isinstance(mhc_species_input, torch.Tensor):
             species_probs = _species_probs_from_input(
                 batch_size=batch_size,
@@ -1311,7 +1390,7 @@ class Presto(nn.Module):
         core_start_prob = core_start_prob * core_position_mask.float()
         core_start_prob = core_start_prob / core_start_prob.sum(dim=1, keepdim=True).clamp(min=1e-8)
 
-        core_width = 8.0 + 4.0 * torch.sigmoid(self.core_width_head(mhc_pair_vec))
+        core_width = 8.0 + 2.0 * torch.sigmoid(self.core_width_head(mhc_pair_vec))
         expected_start = (core_start_prob * pos.float()).sum(dim=1, keepdim=True)
         pep_len_f = pep_len.float().unsqueeze(-1)
         core_length_norm = core_width / pep_len_f
@@ -1387,29 +1466,30 @@ class Presto(nn.Module):
         # Per design S5.4 / S7.5: context_vec goes to processing, binding,
         # and presentation latents. core_context_vec goes to presentation_class2 only.
         # Recognition latents use peptide states + foreignness dep only.
+        context_mhc_a_species = species_probs if species_override_active else mhc_a_species_probs
+        context_mhc_b_species = species_probs if species_override_active else mhc_b_species_probs
         context_token = self.context_token_proj(
-            torch.cat([class_probs, mhc_a_species_probs, mhc_b_species_probs, chain_compat_prob], dim=-1)
+            torch.cat(
+                [class_probs, context_mhc_a_species, context_mhc_b_species, chain_compat_prob],
+                dim=-1,
+            )
         ).unsqueeze(1)
         core_context_token = core_context_vec.unsqueeze(1)
 
-        # Which latents receive context_token (design S7.5)
-        _gets_context = {
-            "processing_class1", "processing_class2",
-            "binding_affinity", "binding_stability",
-            "presentation_class1", "presentation_class2",
-        }
-        # Which latents receive core_context_token (design S6.3)
-        _gets_core_context = {"presentation_class2"}
+        # Which latents receive APC context token.
+        _gets_context = {"processing", "pmhc_interaction"}
         # Which latents receive tcr_vec (design S7.5)
         _gets_tcr: set[str] = set()
 
-        # Variant C: pMHC interaction block (enriched representations for binding only)
+        # Variant C: pMHC interaction block (enriched representations for pMHC interaction only)
         if self.use_pmhc_interaction_block:
             h_binding = self._run_pmhc_interaction(h_coreaware, seg_masks, offsets)
         else:
             h_binding = h_coreaware
+        _coreaware_latents = {"pmhc_interaction"}
 
         latent_vals: Dict[str, torch.Tensor] = {}
+        latent_store: Dict[str, torch.Tensor] = {}
         binding_attention: Dict[str, List[torch.Tensor]] = {}
         for name in self.CROSS_ATTN_LATENTS:
             seg_names = self.LATENT_SEGMENTS[name]
@@ -1420,8 +1500,6 @@ class Presto(nn.Module):
             extra_tokens: List[torch.Tensor] = []
             if name in _gets_context:
                 extra_tokens.append(context_token)
-            if name in _gets_core_context:
-                extra_tokens.append(core_context_token)
             if name in _gets_tcr and tcr_vec is not None:
                 extra_tokens.append(tcr_vec.unsqueeze(1))
 
@@ -1430,29 +1508,31 @@ class Presto(nn.Module):
                 return_binding_attention and is_binding
             )
 
-            if is_binding and self._has_binding_enhancements:
-                latent_vec, attn_layers = self._binding_latent_query(
+            if is_binding:
+                latent_vec, latent_tokens, attn_layers = self._binding_latent_query(
                     name=name,
                     h=h_binding,
                     allowed_mask=allowed,
-                    latent_store=latent_vals,
+                    latent_store=latent_store,
                     dep_names=self.LATENT_DEPS[name],
                     mhc_a_mask=seg_masks["mhc_a"],
                     offsets=offsets,
                     extra_tokens=extra_tokens if extra_tokens else None,
                     collect_attn=collect,
                 )
+                latent_store[name] = latent_tokens
             else:
-                h_for_latent = h_coreaware if name not in {"species_of_origin", "recognition_cd8", "recognition_cd4"} else h
+                h_for_latent = h_coreaware if name in _coreaware_latents else h
                 latent_vec, attn_layers = self._latent_query(
                     name=name,
                     h=h_for_latent,
                     allowed_mask=allowed,
-                    latent_store=latent_vals,
+                    latent_store=latent_store,
                     dep_names=self.LATENT_DEPS[name],
                     extra_tokens=extra_tokens if extra_tokens else None,
                     collect_attn=collect,
                 )
+                latent_store[name] = latent_vec
             latent_vals[name] = latent_vec
             if attn_layers:
                 binding_attention[name] = list(attn_layers)
@@ -1466,39 +1546,45 @@ class Presto(nn.Module):
                         latent_vec.device,
                     )
                     latent_vals["species_of_origin"] = self.species_override_embed(species_idx_t)
+                    latent_store["species_of_origin"] = latent_vals["species_of_origin"]
                 latent_vals["foreignness"] = self.foreignness_proj(
                     F.gelu(latent_vals["species_of_origin"])
                 )
+                latent_store["foreignness"] = latent_vals["foreignness"]
 
-        # Immunogenicity: MLP from upstream latent vecs (design S7.4 Level 3)
-        latent_vals["immunogenicity_cd8"] = self.immunogenicity_cd8_mlp(torch.cat([
-            latent_vals["binding_affinity"],
-            latent_vals["binding_stability"],
-            latent_vals["recognition_cd8"],
-        ], dim=-1))
-        latent_vals["immunogenicity_cd4"] = self.immunogenicity_cd4_mlp(torch.cat([
-            latent_vals["binding_affinity"],
-            latent_vals["binding_stability"],
-            latent_vals["recognition_cd4"],
-        ], dim=-1))
+        processing_vec = latent_vals["processing"]
+        interaction_vec = self.pmhc_interaction_vec_norm(latent_vals["pmhc_interaction"])
+        latent_vals["pmhc_interaction"] = interaction_vec
+        recognition_vec = latent_vals["recognition"]
 
-        # Class-probability mixtures for split latents (class I vs class II).
-        latent_vals["processing_mixed"] = (
-            class_probs[:, :1] * latent_vals["processing_class1"]
-            + class_probs[:, 1:2] * latent_vals["processing_class2"]
+        binding_affinity_vec = self.binding_affinity_readout_proj(interaction_vec)
+        binding_stability_vec = self.binding_stability_readout_proj(interaction_vec)
+        presentation_vec = self.presentation_vec_norm(
+            self.presentation_mlp(torch.cat([processing_vec, interaction_vec], dim=-1))
         )
-        latent_vals["presentation_mixed"] = (
-            class_probs[:, :1] * latent_vals["presentation_class1"]
-            + class_probs[:, 1:2] * latent_vals["presentation_class2"]
+        immunogenicity_vec = self.immunogenicity_vec_norm(
+            self.immunogenicity_mlp(torch.cat([interaction_vec, recognition_vec], dim=-1))
         )
-        latent_vals["recognition_mixed"] = (
-            class_probs[:, :1] * latent_vals["recognition_cd8"]
-            + class_probs[:, 1:2] * latent_vals["recognition_cd4"]
-        )
-        latent_vals["immunogenicity_mixed"] = (
-            class_probs[:, :1] * latent_vals["immunogenicity_cd8"]
-            + class_probs[:, 1:2] * latent_vals["immunogenicity_cd4"]
-        )
+
+        latent_vals["presentation"] = presentation_vec
+        latent_vals["immunogenicity"] = immunogenicity_vec
+
+        # Compatibility aliases for downstream training/inference code while the
+        # canonical latent DAG moves to unified concept vectors.
+        latent_vals["binding_affinity"] = binding_affinity_vec
+        latent_vals["binding_stability"] = binding_stability_vec
+        latent_vals["processing_class1"] = processing_vec
+        latent_vals["processing_class2"] = processing_vec
+        latent_vals["presentation_class1"] = presentation_vec
+        latent_vals["presentation_class2"] = presentation_vec
+        latent_vals["recognition_cd8"] = recognition_vec
+        latent_vals["recognition_cd4"] = recognition_vec
+        latent_vals["immunogenicity_cd8"] = immunogenicity_vec
+        latent_vals["immunogenicity_cd4"] = immunogenicity_vec
+        latent_vals["processing_mixed"] = processing_vec
+        latent_vals["presentation_mixed"] = presentation_vec
+        latent_vals["recognition_mixed"] = recognition_vec
+        latent_vals["immunogenicity_mixed"] = immunogenicity_vec
 
         outputs["latent_vecs"] = latent_vals
         if return_binding_attention and binding_attention:
@@ -1515,17 +1601,17 @@ class Presto(nn.Module):
 
         # pmhc_vec from latent vectors (design S9.7)
         pmhc_vec = self.pmhc_vec_proj(torch.cat([
-            latent_vals["binding_affinity"],
-            latent_vals["presentation_class1"],
-            latent_vals["presentation_class2"],
+            interaction_vec,
+            presentation_vec,
         ], dim=-1))
         outputs["pmhc_vec"] = pmhc_vec
+        outputs["pmhc_interaction_vec"] = interaction_vec
 
         # ------------------------------------------------------------------
         # 6) Processing logits (from proc latents)
         # ------------------------------------------------------------------
-        proc_class1_logit = self.processing_class1_head(latent_vals["processing_class1"])
-        proc_class2_logit = self.processing_class2_head(latent_vals["processing_class2"])
+        proc_class1_logit = self.processing_class1_head(processing_vec)
+        proc_class2_logit = self.processing_class2_head(processing_vec)
         proc_logit = class_probs[:, :1] * proc_class1_logit + class_probs[:, 1:2] * proc_class2_logit
 
         outputs["processing_class1_logit"] = proc_class1_logit
@@ -1540,14 +1626,15 @@ class Presto(nn.Module):
         # ------------------------------------------------------------------
         # 7) Binding latents and calibrated binding logit
         # ------------------------------------------------------------------
-        binding_vec = self.binding_fuse(
-            torch.cat([latent_vals["binding_affinity"], latent_vals["binding_stability"]], dim=-1)
-        )
         # Auxiliary probe: shortcut gradient path from binding_affinity latent → KD
-        probe_kd = self.binding_affinity_probe(latent_vals["binding_affinity"])
+        probe_kd = self.binding_affinity_probe(binding_affinity_vec)
         outputs["binding_affinity_probe_kd"] = torch.clamp(probe_kd, min=-3.0, max=8.0)
 
-        binding_latents = self.binding(binding_vec, mhc_class=mhc_class, class_probs=class_probs)
+        binding_latents = self.binding(
+            interaction_vec,
+            mhc_class=mhc_class,
+            class_probs=class_probs,
+        )
         outputs["binding_latents"] = binding_latents
         stability_score = -binding_latents["log_koff"]
 
@@ -1565,8 +1652,6 @@ class Presto(nn.Module):
             self.binding_midpoint_log10_nM
             - self.binding_log10_scale * binding_logit_from_core
         ).unsqueeze(-1)
-        binding_affinity_vec = latent_vals["binding_affinity"]
-        binding_stability_vec = latent_vals["binding_stability"]
         kd_bias = torch.tanh(self.kd_assay_bias(binding_affinity_vec)) * F.softplus(self.kd_assay_bias_scale)
 
         assays = self.assay_heads(binding_affinity_vec, binding_stability_vec, binding_latents=binding_latents)
@@ -1613,33 +1698,10 @@ class Presto(nn.Module):
         outputs["binding_mixed_prob"] = outputs["binding_prob"].unsqueeze(-1)
 
         # ------------------------------------------------------------------
-        # 8) Presentation logits (class-specific additive logit path)
+        # 8) Presentation logits from the shared presentation vector
         # ------------------------------------------------------------------
-        class1_pres_base = self.presentation(
-            proc_class1_logit,
-            binding_class1_logit,
-        )
-        class2_pres_base = self.presentation(
-            proc_class2_logit,
-            binding_class2_logit,
-        )
-
-        # Latent residual is gated by explicitly initialized zero coefficients.
-        class1_pres_base = class1_pres_base + self.w_presentation_class1_latent * self.presentation_class1_latent_head(latent_vals["presentation_class1"])
-        class2_pres_base = class2_pres_base + self.w_presentation_class2_latent * self.presentation_class2_latent_head(latent_vals["presentation_class2"])
-
-        class1_prob_logit = torch.logit(class_probs[:, :1].clamp(min=1e-4, max=1.0 - 1e-4))
-        class2_prob_logit = torch.logit(class_probs[:, 1:2].clamp(min=1e-4, max=1.0 - 1e-4))
-        class1_pres_logit = (
-            class1_pres_base
-            + F.softplus(self.w_class1_presentation_stability) * stability_score
-            + F.softplus(self.w_class1_presentation_class) * class1_prob_logit
-        )
-        class2_pres_logit = (
-            class2_pres_base
-            + F.softplus(self.w_class2_presentation_stability) * stability_score
-            + F.softplus(self.w_class2_presentation_class) * class2_prob_logit
-        )
+        class1_pres_logit = self.presentation_class1_latent_head(presentation_vec)
+        class2_pres_logit = self.presentation_class2_latent_head(presentation_vec)
         pres_logit = class_probs[:, :1] * class1_pres_logit + class_probs[:, 1:2] * class2_pres_logit
 
         outputs["presentation_class1_logit"] = class1_pres_logit
@@ -1668,8 +1730,8 @@ class Presto(nn.Module):
         # ------------------------------------------------------------------
         # 10) Recognition and immunogenicity readouts
         # ------------------------------------------------------------------
-        recognition_cd8_logit = self.recognition_cd8_head(latent_vals["recognition_cd8"])
-        recognition_cd4_logit = self.recognition_cd4_head(latent_vals["recognition_cd4"])
+        recognition_cd8_logit = self.recognition_cd8_head(recognition_vec)
+        recognition_cd4_logit = self.recognition_cd4_head(recognition_vec)
         outputs["recognition_cd8_logit"] = recognition_cd8_logit
         outputs["recognition_cd4_logit"] = recognition_cd4_logit
         outputs["recognition_cd8_prob"] = torch.sigmoid(recognition_cd8_logit)
@@ -1697,8 +1759,8 @@ class Presto(nn.Module):
             recognition_evidence = recognition_evidence.unsqueeze(-1)
 
         # Immunogenicity readout from MLP-computed latent vecs (design S9.5)
-        immunogenicity_cd8_logit = self.immunogenicity_cd8_latent_head(latent_vals["immunogenicity_cd8"])
-        immunogenicity_cd4_logit = self.immunogenicity_cd4_latent_head(latent_vals["immunogenicity_cd4"])
+        immunogenicity_cd8_logit = self.immunogenicity_cd8_latent_head(immunogenicity_vec)
+        immunogenicity_cd4_logit = self.immunogenicity_cd4_latent_head(immunogenicity_vec)
         outputs["immunogenicity_cd8_logit"] = immunogenicity_cd8_logit
         outputs["immunogenicity_cd4_logit"] = immunogenicity_cd4_logit
         outputs["immunogenicity_cd8_prob"] = torch.sigmoid(immunogenicity_cd8_logit)
@@ -1719,8 +1781,8 @@ class Presto(nn.Module):
         # ------------------------------------------------------------------
         context = tcell_context or {}
         tcell_logit = self.tcell_assay_head(
-            immunogenicity_cd8_vec=latent_vals["immunogenicity_cd8"],
-            immunogenicity_cd4_vec=latent_vals["immunogenicity_cd4"],
+            immunogenicity_cd8_vec=immunogenicity_vec,
+            immunogenicity_cd4_vec=immunogenicity_vec,
             presentation_class1_logit=class1_pres_logit,
             presentation_class2_logit=class2_pres_logit,
             binding_class1_logit=binding_class1_logit,
@@ -1735,8 +1797,8 @@ class Presto(nn.Module):
             culture_duration_hours=context.get("culture_duration_hours"),
         )
         tcell_panel_logits = self.tcell_assay_head.predict_panel(
-            immunogenicity_cd8_vec=latent_vals["immunogenicity_cd8"],
-            immunogenicity_cd4_vec=latent_vals["immunogenicity_cd4"],
+            immunogenicity_cd8_vec=immunogenicity_vec,
+            immunogenicity_cd4_vec=immunogenicity_vec,
             presentation_class1_logit=class1_pres_logit,
             presentation_class2_logit=class2_pres_logit,
             binding_class1_logit=binding_class1_logit,

@@ -1,5 +1,7 @@
 """Tests for synthetic training loss utilities."""
 
+import types
+
 import pytest
 import torch
 import torch.nn as nn
@@ -12,7 +14,11 @@ from presto.data.vocab import (
     TCELL_CULTURE_CONTEXTS,
     TCELL_STIM_CONTEXTS,
 )
-from presto.scripts.train_synthetic import compute_loss
+from presto.scripts.train_synthetic import (
+    build_warmup_cosine_scheduler,
+    compute_loss,
+    train_epoch,
+)
 
 
 class _DummyOutputsModel(nn.Module):
@@ -554,3 +560,66 @@ def test_compute_loss_applies_auxiliary_base_weights_before_support_aggregation(
     mhc_class_loss = float(losses["mhc_class"].item())
     expected = (binding_loss * 1.0 + mhc_class_loss * 0.1 * 2.0) / (1.0 + 0.1 * 2.0)
     assert float(total.item()) == pytest.approx(expected, rel=1e-6)
+
+
+def test_build_warmup_cosine_scheduler_warms_then_decays():
+    param = nn.Parameter(torch.tensor(1.0))
+    optimizer = torch.optim.AdamW([param], lr=1e-3)
+    scheduler = build_warmup_cosine_scheduler(
+        optimizer,
+        base_lr=1e-3,
+        total_steps=40,
+    )
+
+    assert scheduler is not None
+    lrs = []
+    for _ in range(40):
+        optimizer.step()
+        scheduler.step()
+        lrs.append(float(optimizer.param_groups[0]["lr"]))
+
+    assert lrs[0] < lrs[1]
+    assert max(lrs) <= 1e-3 * (1.0 + 1e-6)
+    assert lrs[-1] < lrs[1]
+    assert lrs[-1] == pytest.approx(1e-4, rel=1e-3)
+
+
+def test_train_epoch_steps_scheduler(monkeypatch):
+    class _ToyModel(nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.weight = nn.Parameter(torch.tensor(1.0))
+
+    model = _ToyModel()
+    base_lr = 1e-3
+    optimizer = torch.optim.AdamW(model.parameters(), lr=base_lr)
+    scheduler = build_warmup_cosine_scheduler(
+        optimizer,
+        base_lr=base_lr,
+        total_steps=2,
+    )
+    batches = [
+        types.SimpleNamespace(pep_tok=torch.ones((1, 1), dtype=torch.long)),
+        types.SimpleNamespace(pep_tok=torch.ones((1, 1), dtype=torch.long)),
+    ]
+
+    def _fake_compute_loss(model, batch, device, uncertainty_weighting=None, **kwargs):
+        loss = model.weight.square()
+        return loss, {"toy": loss}, {}
+
+    monkeypatch.setattr("presto.scripts.train_synthetic.compute_loss", _fake_compute_loss)
+    initial_lr = float(optimizer.param_groups[0]["lr"])
+
+    train_loss, metrics = train_epoch(
+        model,
+        batches,
+        optimizer,
+        device="cpu",
+        scheduler=scheduler,
+        show_progress=False,
+    )
+
+    assert train_loss > 0.0
+    assert metrics["train_batches"] == 2.0
+    assert float(optimizer.param_groups[0]["lr"]) > initial_lr
+    assert float(optimizer.param_groups[0]["lr"]) == pytest.approx(base_lr * 0.1, rel=1e-3)

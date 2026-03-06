@@ -20,6 +20,24 @@ class TestPrestoModel:
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert model is not None
 
+    def test_model_init_scales_latent_queries_and_embeddings(self):
+        from presto.models.presto import Presto
+
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        query_norms = []
+        for param in model.latent_queries.values():
+            rows = param.detach().reshape(-1, param.shape[-1])
+            query_norms.extend(rows.norm(dim=-1).tolist())
+
+        assert query_norms
+        assert min(query_norms) > 0.4
+        assert max(query_norms) < 2.0
+        assert torch.allclose(
+            model.aa_embedding.weight[0],
+            torch.zeros_like(model.aa_embedding.weight[0]),
+        )
+        assert 0.05 < float(model.segment_embedding.weight.std().item()) < 0.25
+
     def test_model_forward_pmhc_only(self):
         """Forward pass with just pMHC (no TCR)."""
         from presto.models.presto import Presto
@@ -319,9 +337,8 @@ class TestPrestoOutputConsistency:
         assert torch.all(kd > 4.8)
         assert torch.all(kd < model.max_log10_nM + 1e-6)
 
-    def test_presentation_uses_class_specific_additive_logit_path(self):
+    def test_presentation_logits_are_readouts_of_shared_presentation_vector(self):
         from presto.models.presto import Presto
-        import torch.nn.functional as F
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -332,35 +349,23 @@ class TestPrestoOutputConsistency:
 
         with torch.no_grad():
             out = model(pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I")
-            class1_base = model.presentation(
-                out["processing_class1_logit"],
-                out["binding_class1_logit"],
+            presentation_vec = model.presentation_vec_norm(
+                model.presentation_mlp(
+                    torch.cat(
+                        [
+                            out["latent_vecs"]["processing"],
+                            out["latent_vecs"]["pmhc_interaction"],
+                        ],
+                        dim=-1,
+                    )
+                )
             )
-            class1_base = class1_base + model.w_presentation_class1_latent * model.presentation_class1_latent_head(
-                out["latent_vecs"]["presentation_class1"]
-            )
-            class2_base = model.presentation(
-                out["processing_class2_logit"],
-                out["binding_class2_logit"],
-            )
-            class2_base = class2_base + model.w_presentation_class2_latent * model.presentation_class2_latent_head(
-                out["latent_vecs"]["presentation_class2"]
-            )
+            class1_base = model.presentation_class1_latent_head(presentation_vec)
+            class2_base = model.presentation_class2_latent_head(presentation_vec)
             class1_prob = out["mhc_class_probs"][:, :1]
             class2_prob = out["mhc_class_probs"][:, 1:2]
-            stability = -out["binding_latents"]["log_koff"]
-            class1_prob_logit = torch.logit(class1_prob.clamp(min=1e-4, max=1.0 - 1e-4))
-            class2_prob_logit = torch.logit(class2_prob.clamp(min=1e-4, max=1.0 - 1e-4))
-            expected_class1 = (
-                class1_base
-                + F.softplus(model.w_class1_presentation_stability) * stability
-                + F.softplus(model.w_class1_presentation_class) * class1_prob_logit
-            )
-            expected_class2 = (
-                class2_base
-                + F.softplus(model.w_class2_presentation_stability) * stability
-                + F.softplus(model.w_class2_presentation_class) * class2_prob_logit
-            )
+            expected_class1 = class1_base
+            expected_class2 = class2_base
             expected = class1_prob * expected_class1 + class2_prob * expected_class2
 
         assert torch.allclose(out["presentation_class1_logit"], expected_class1, atol=1e-5)
@@ -369,7 +374,7 @@ class TestPrestoOutputConsistency:
 
     def test_ic50_ec50_share_kd_latent_calibration(self):
         from presto.models.presto import Presto
-        from presto.models.heads import smooth_upper_bound
+        from presto.models.heads import smooth_lower_bound, smooth_upper_bound
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -382,16 +387,16 @@ class TestPrestoOutputConsistency:
             out = model(pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I")
             ba_vec = out["latent_vecs"]["binding_affinity"]
             expected_ic50 = smooth_upper_bound(
-                torch.clamp(
+                smooth_lower_bound(
                     out["assays"]["KD_nM"] + model.assay_heads.ic50_residual(ba_vec),
-                    min=-3.0,
+                    -3.0,
                 ),
                 model.max_log10_nM,
             )
             expected_ec50 = smooth_upper_bound(
-                torch.clamp(
+                smooth_lower_bound(
                     out["assays"]["KD_nM"] + model.assay_heads.ec50_residual(ba_vec),
-                    min=-3.0,
+                    -3.0,
                 ),
                 model.max_log10_nM,
             )
@@ -423,10 +428,8 @@ class TestPrestoOutputConsistency:
     def test_binding_latent_does_not_see_flank_tokens(self):
         """Binding latent segments exclude flanks (design S7.5)."""
         from presto.models.presto import Presto
-        assert "nflank" not in Presto.LATENT_SEGMENTS["binding_affinity"]
-        assert "cflank" not in Presto.LATENT_SEGMENTS["binding_affinity"]
-        assert "nflank" not in Presto.LATENT_SEGMENTS["binding_stability"]
-        assert "cflank" not in Presto.LATENT_SEGMENTS["binding_stability"]
+        assert "nflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
+        assert "cflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
 
 
 # --------------------------------------------------------------------------
@@ -512,33 +515,40 @@ class TestPrestoConfig:
 class TestDesignAlignment:
     """Tests verifying code matches design.md specification."""
 
-    def test_latent_order_has_12_latents(self):
-        """Design S7.1: 12 latent query tokens (11 original + species_of_origin)."""
+    def test_latent_order_has_refactored_core_latents(self):
+        """Phase 1 refactor: cross-attention DAG is reduced to shared core concepts."""
         from presto.models.presto import Presto
-        assert len(Presto.LATENT_ORDER) == 12
+        assert Presto.LATENT_ORDER == [
+            "processing",
+            "ms_detectability",
+            "species_of_origin",
+            "pmhc_interaction",
+            "recognition",
+        ]
 
     def test_ms_detectability_in_latent_order(self):
         """Design S7.1: ms_detectability is the 11th latent."""
         from presto.models.presto import Presto
         assert "ms_detectability" in Presto.LATENT_ORDER
 
-    def test_presentation_latents_have_no_token_access(self):
-        """Design S7.5: presentation latents have empty segment lists."""
+    def test_presentation_uses_mlp_not_cross_attention(self):
+        """Phase 1 refactor: presentation is derived from vectors, not a latent query."""
         from presto.models.presto import Presto
-        assert Presto.LATENT_SEGMENTS["presentation_class1"] == []
-        assert Presto.LATENT_SEGMENTS["presentation_class2"] == []
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        assert "presentation" not in Presto.CROSS_ATTN_LATENTS
+        assert hasattr(model, "presentation_mlp")
 
     def test_recognition_latents_see_peptide_only(self):
         """Design S7.5: recognition latents see only peptide tokens."""
         from presto.models.presto import Presto
-        assert Presto.LATENT_SEGMENTS["recognition_cd8"] == ["peptide"]
-        assert Presto.LATENT_SEGMENTS["recognition_cd4"] == ["peptide"]
+        assert Presto.LATENT_SEGMENTS["recognition"] == ["peptide"]
 
-    def test_immunogenicity_latents_have_no_token_access(self):
-        """Design S7.5: immunogenicity latents are MLP only."""
+    def test_immunogenicity_uses_mlp_not_cross_attention(self):
+        """Phase 1 refactor: immunogenicity is MLP-only over interaction + recognition."""
         from presto.models.presto import Presto
-        assert Presto.LATENT_SEGMENTS["immunogenicity_cd8"] == []
-        assert Presto.LATENT_SEGMENTS["immunogenicity_cd4"] == []
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        assert "immunogenicity" not in Presto.CROSS_ATTN_LATENTS
+        assert hasattr(model, "immunogenicity_mlp")
 
     def test_ms_detectability_is_peptide_only(self):
         """Design S7.5: ms_detectability sees only peptide."""
@@ -548,27 +558,14 @@ class TestDesignAlignment:
     def test_recognition_depends_on_foreignness(self):
         """Recognition latents depend on peptide-attended foreignness signal."""
         from presto.models.presto import Presto
-        assert Presto.LATENT_DEPS["recognition_cd8"] == ["foreignness"]
-        assert Presto.LATENT_DEPS["recognition_cd4"] == ["foreignness"]
+        assert Presto.LATENT_DEPS["recognition"] == ["foreignness"]
 
-    def test_immunogenicity_deps_match_design(self):
-        """Design S7.2: immunogenicity depends on binding + recognition."""
+    def test_pmhc_interaction_is_the_only_mhc_aware_cross_attention_latent(self):
+        """Phase 1 refactor: MHC sequence enters the DAG through pmhc_interaction."""
         from presto.models.presto import Presto
-        assert set(Presto.LATENT_DEPS["immunogenicity_cd8"]) == {
-            "binding_affinity", "binding_stability", "recognition_cd8"
-        }
-        assert set(Presto.LATENT_DEPS["immunogenicity_cd4"]) == {
-            "binding_affinity", "binding_stability", "recognition_cd4"
-        }
-
-    def test_immunogenicity_uses_mlp_not_cross_attention(self):
-        """Design S7.4: immunogenicity is MLP, not cross-attention."""
-        from presto.models.presto import Presto
-        model = Presto(d_model=64, n_layers=2, n_heads=4)
-        assert "immunogenicity_cd8" not in model.latent_layers
-        assert "immunogenicity_cd4" not in model.latent_layers
-        assert hasattr(model, "immunogenicity_cd8_mlp")
-        assert hasattr(model, "immunogenicity_cd4_mlp")
+        assert Presto.LATENT_SEGMENTS["pmhc_interaction"] == ["peptide", "mhc_a", "mhc_b"]
+        assert "nflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
+        assert "cflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
 
     def test_two_layer_cross_attention_per_latent(self):
         """Design S7.3: N_latent = 2 cross-attention layers per latent."""
@@ -631,9 +628,8 @@ class TestDesignAlignment:
             out = model(pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I")
             lvecs = out["latent_vecs"]
             expected = model.pmhc_vec_proj(torch.cat([
-                lvecs["binding_affinity"],
-                lvecs["presentation_class1"],
-                lvecs["presentation_class2"],
+                lvecs["pmhc_interaction"],
+                lvecs["presentation"],
             ], dim=-1))
 
         assert torch.allclose(out["pmhc_vec"], expected, atol=1e-5)
@@ -736,17 +732,17 @@ class TestDesignAlignment:
         loss = outputs["presentation_logit"].mean()
         loss.backward()
 
-        q1_grad = model.latent_queries["presentation_class1"].grad
-        q2_grad = model.latent_queries["presentation_class2"].grad
+        interaction_grad = model.latent_queries["pmhc_interaction"].grad
+        mlp_grad = model.presentation_mlp[0].weight.grad
         h1_grad = model.presentation_class1_latent_head.weight.grad
         h2_grad = model.presentation_class2_latent_head.weight.grad
 
-        assert q1_grad is not None
-        assert q2_grad is not None
+        assert interaction_grad is not None
+        assert mlp_grad is not None
         assert h1_grad is not None
         assert h2_grad is not None
-        assert float(q1_grad.abs().max().item()) > 0.0
-        assert float(q2_grad.abs().max().item()) > 0.0
+        assert float(interaction_grad.abs().max().item()) > 0.0
+        assert float(mlp_grad.abs().max().item()) > 0.0
         assert float(h1_grad.abs().max().item()) > 0.0
         assert float(h2_grad.abs().max().item()) > 0.0
 
@@ -858,3 +854,62 @@ class TestDesignAlignment:
         assert torch.allclose(out["presentation_mixed_logit"], expected_presentation, atol=1e-6)
         assert torch.allclose(out["recognition_mixed_logit"], expected_recognition, atol=1e-6)
         assert torch.allclose(out["immunogenicity_mixed_logit"], out["immunogenicity_mixture_logit"], atol=1e-6)
+
+    def test_mhc_species_override_conditions_processing_path(self):
+        from presto.models.presto import Presto
+
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        model.eval()
+        pep_tok = torch.randint(4, 24, (2, 12))
+        mhc_a_tok = torch.randint(4, 24, (2, 80))
+        mhc_b_tok = torch.randint(4, 24, (2, 40))
+
+        with torch.no_grad():
+            out_human = model(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_species="human",
+            )
+            out_fish = model(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_species="other_vertebrate",
+            )
+
+        assert not torch.allclose(
+            out_human["processing_logit"],
+            out_fish["processing_logit"],
+            atol=1e-6,
+        )
+
+    def test_core_relative_embedding_does_not_leak_into_processing_or_ms(self):
+        from presto.models.presto import Presto
+
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        model.eval()
+        pep_tok = torch.randint(4, 24, (2, 12))
+        mhc_a_tok = torch.randint(4, 24, (2, 80))
+        mhc_b_tok = torch.randint(4, 24, (2, 40))
+
+        with torch.no_grad():
+            out_before = model(pep_tok=pep_tok, mhc_a_tok=mhc_a_tok, mhc_b_tok=mhc_b_tok)
+            model.core_rel_pos.weight.uniform_(-10.0, 10.0)
+            out_after = model(pep_tok=pep_tok, mhc_a_tok=mhc_a_tok, mhc_b_tok=mhc_b_tok)
+
+        assert torch.allclose(
+            out_before["processing_logit"],
+            out_after["processing_logit"],
+            atol=1e-6,
+        )
+        assert torch.allclose(
+            out_before["ms_detectability_logit"],
+            out_after["ms_detectability_logit"],
+            atol=1e-6,
+        )
+        assert not torch.allclose(
+            out_before["binding_logit"],
+            out_after["binding_logit"],
+            atol=1e-6,
+        )

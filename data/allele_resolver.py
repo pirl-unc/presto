@@ -3,13 +3,23 @@
 Resolves MHC allele names to sequences using IMGT/HLA and IPD-MHC databases.
 """
 
+import csv
 import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from .vocab import MHC_SPECIES_CATEGORIES, N_MHC_SPECIES, normalize_organism
+from .vocab import (
+    CHAIN_SPECIES_CATEGORIES,
+    CHAIN_SPECIES_TO_IDX,
+    FINE_TO_B2M_KEY,
+    FINE_TO_CHAIN_SPECIES,
+    MHC_SPECIES_CATEGORIES,
+    N_MHC_SPECIES,
+    normalize_organism,
+    normalize_species,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -40,13 +50,27 @@ PROCESSING_SPECIES_TO_IDX = {
     name: idx for idx, name in enumerate(PROCESSING_SPECIES_BUCKETS)
 }
 
-HUMAN_B2M_SEQUENCE = (
-    "MSRSVALAVLALLSLSGLEAIQRTPKIQVYSRHPAENGKSNFLNCYVSGFHPSDIEVDLLKNGERIEKVEHSDLSFSKDWSFYLLYYTEFTPTEKDEYACRVNHVTLSQPKIVKWDRDM"
-)
-MOUSE_B2M_SEQUENCE = (
-    "MSRSVALAVLALLSLSGLEAIQRTPKIQVYSRHPPENGKSNFLNCYVSGFHPSDIEVDLLKNGERIEKVEHSDLSFSKDWSFYLLSHAEFTPQATDEYACRVNHVTLSQPKIVKWDRDM"
-)
-MACAQUE_B2M_SEQUENCE = HUMAN_B2M_SEQUENCE
+# ---------------------------------------------------------------------------
+# B2M sequences — loaded from external CSV
+# ---------------------------------------------------------------------------
+_B2M_CSV = Path(__file__).parent / "b2m_sequences.csv"
+
+
+def _load_b2m_sequences() -> Dict[str, str]:
+    """Load B2M sequences from CSV alongside this module."""
+    seqs: Dict[str, str] = {}
+    with open(_B2M_CSV, newline="") as f:
+        for row in csv.DictReader(f):
+            seqs[row["species_key"]] = row["sequence"]
+    return seqs
+
+
+_B2M_SEQUENCES: Dict[str, str] = _load_b2m_sequences()
+
+# Backward-compatible aliases
+HUMAN_B2M_SEQUENCE = _B2M_SEQUENCES["human"]
+MOUSE_B2M_SEQUENCE = _B2M_SEQUENCES["mouse"]
+MACAQUE_B2M_SEQUENCE = _B2M_SEQUENCES["human"]  # chimp/macaque ≈ human
 
 
 def normalize_mhc_class(value: Optional[str], default: Optional[str] = None) -> Optional[str]:
@@ -68,29 +92,18 @@ def normalize_mhc_class(value: Optional[str], default: Optional[str] = None) -> 
 
 
 def normalize_species_label(species: Optional[str]) -> Optional[str]:
-    """Normalize species labels used by MHC/B2M helpers."""
+    """Normalize species labels to 6-class chain species.
+
+    Returns one of: human, nhp, murine, other_mammal, bird, fish.
+    Returns None for non-animal or unrecognizable inputs.
+    Delegates to the unified fine-grained parser in vocab.py.
+    """
     if species is None:
         return None
-    s = str(species).strip().lower()
-    if not s:
+    fine = normalize_species(species)
+    if fine is None:
         return None
-    if "murine" in s:
-        return "mouse"
-    if "nhp" in s:
-        return "macaque"
-    if "human" in s or "homo sapiens" in s:
-        return "human"
-    if "rat" in s or "rattus" in s:
-        return "mouse"
-    if "mouse" in s or "mus musculus" in s:
-        return "mouse"
-    if "chimp" in s or "pan troglodytes" in s:
-        return "macaque"
-    if "macaque" in s or "macaca" in s:
-        return "macaque"
-    if s in {"human", "mouse", "macaque", "other"}:
-        return s
-    return "other"
+    return FINE_TO_CHAIN_SPECIES[fine]
 
 
 def normalize_processing_species_label(
@@ -101,24 +114,15 @@ def normalize_processing_species_label(
 
     Buckets: `human`, `nhp`, `murine`, `other_mammal`, `bird`, `fish`.
     Non-animal categories (viruses, bacteria, etc.) map to default.
+    Delegates to the unified fine-grained parser.
     """
     if species is None:
         return default
-    s = str(species).strip()
-    if not s:
+    fine = normalize_species(species)
+    if fine is None:
         return default
-
-    # Delegate to unified normalizer
-    category = normalize_organism(s)
-    if category is None:
-        return default
-
-    # Only animal categories are valid MHC species
-    if category in PROCESSING_SPECIES_TO_IDX:
-        return category
-
-    # Non-animal organism categories → default
-    return default
+    chain_sp = FINE_TO_CHAIN_SPECIES[fine]
+    return chain_sp if chain_sp is not None else default
 
 
 def infer_processing_species_from_allele(allele: Optional[str]) -> Optional[str]:
@@ -130,15 +134,20 @@ def infer_processing_species_from_allele(allele: Optional[str]) -> Optional[str]
 
 
 def class_i_beta2m_sequence(species: Optional[str]) -> Optional[str]:
-    """Return species-matched beta2m sequence for Class I MHC."""
-    norm = normalize_species_label(species)
-    if norm == "human":
-        return HUMAN_B2M_SEQUENCE
-    if norm == "mouse":
-        return MOUSE_B2M_SEQUENCE
-    if norm == "macaque":
-        return MACAQUE_B2M_SEQUENCE
-    return None
+    """Return species-matched beta2m sequence for Class I MHC.
+
+    Delegates to the unified fine-grained parser to determine the B2M key,
+    then looks up the sequence from the externalized CSV.
+    """
+    if species is None:
+        return None
+    fine = normalize_species(species)
+    if fine is None:
+        return None
+    b2m_key = FINE_TO_B2M_KEY.get(fine)
+    if b2m_key is None:
+        return None
+    return _B2M_SEQUENCES.get(b2m_key)
 
 
 @dataclass
@@ -191,15 +200,28 @@ def normalize_allele_name(name: str) -> str:
     return name
 
 
-def infer_mhc_class(allele: str) -> str:
-    """Infer MHC class from allele name.
+def _infer_mhc_class_with_mhcgnomes(allele: Optional[str]) -> Optional[str]:
+    """Infer MHC class via mhcgnomes when available."""
+    if not allele:
+        return None
+    try:
+        import mhcgnomes  # type: ignore
+    except ImportError:
+        return None
+    try:
+        parsed = mhcgnomes.parse(allele)
+    except Exception:
+        return None
+    return normalize_mhc_class(getattr(parsed, "mhc_class", None), default=None)
 
-    Args:
-        allele: Allele name
 
-    Returns:
-        "I" or "II"
-    """
+def infer_mhc_class_optional(allele: Optional[str]) -> Optional[str]:
+    """Infer MHC class from allele name, returning None when unresolved."""
+    inferred = _infer_mhc_class_with_mhcgnomes(allele)
+    if inferred is not None:
+        return inferred
+    if not allele:
+        return None
     allele = allele.upper()
 
     # Class II genes
@@ -214,7 +236,52 @@ def infer_mhc_class(allele: str) -> str:
         if re.search(r"H2-[AE][AB]", allele):
             return "II"
 
-    return "I"
+    # Preserve legacy class-I behavior for obviously class-I-like prefixes.
+    class_i_prefixes = (
+        "HLA-A",
+        "HLA-B",
+        "HLA-C",
+        "H2-K",
+        "H2-D",
+        "H2-L",
+        "H-2-K",
+        "H-2-D",
+        "H-2-L",
+        "MAMU-A",
+        "MAMU-B",
+        "PATR-A",
+        "PATR-B",
+        "AONA-A",
+        "AONA-B",
+        "PAAN-A",
+        "PAAN-B",
+        "GOGO-A",
+        "GOGO-B",
+        "PAPA-A",
+        "PAPA-B",
+        "BOLA-",
+        "SLA-",
+        "DLA-",
+        "ELA-",
+        "OLA-",
+        "BF-",
+    )
+    if allele.startswith(class_i_prefixes):
+        return "I"
+
+    return None
+
+
+def infer_mhc_class(allele: Optional[str]) -> str:
+    """Infer MHC class from allele name.
+
+    Args:
+        allele: Allele name
+
+    Returns:
+        "I" or "II"
+    """
+    return infer_mhc_class_optional(allele) or "I"
 
 
 def infer_gene(allele: str) -> str:
@@ -264,10 +331,10 @@ def infer_species(allele: str) -> Optional[str]:
     # Bird allele prefixes
     if allele_upper.startswith("GAGA-") or allele_upper.startswith("BF-"):
         return "bird"
-    # Fish — no standard prefix convention, but check common patterns
+    # Fish/other vertebrate — no standard prefix convention, but check common patterns
     _fish_prefixes = ("ONMY-", "SASA-")
     if any(allele_upper.startswith(p) for p in _fish_prefixes):
-        return "fish"
+        return "other_vertebrate"
     return None
 
 

@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 import torch
 
+import presto.scripts.train_iedb as train_iedb_module
 from presto.data import PrestoDataset
 from presto.data.collate import PrestoBatch
 from presto.data.cross_source_dedup import UnifiedRecord
@@ -160,6 +161,31 @@ def test_resolve_run_args_diagnostic_profile_enables_richer_diagnostics():
     assert resolved.output_latent_stats_max_samples == 2048
     assert resolved.filter_unresolved_mhc is True
     assert resolved.strict_mhc_resolution is True
+
+
+def test_call_train_epoch_compat_forwards_scheduler(monkeypatch):
+    seen = {}
+
+    def _fake_train_epoch(model, train_loader, optimizer, device, scheduler=None, **kwargs):
+        seen["scheduler"] = scheduler
+        return 0.25, {"loss_binding": 0.1}
+
+    scheduler = object()
+    monkeypatch.setattr(train_iedb_module, "train_epoch", _fake_train_epoch)
+
+    loss, metrics = train_iedb_module._call_train_epoch_compat(
+        model=None,
+        train_loader=[],
+        optimizer=None,
+        device="cpu",
+        scheduler=scheduler,
+        uncertainty_weighting=None,
+        pcgrad=None,
+    )
+
+    assert loss == pytest.approx(0.25)
+    assert metrics == {"loss_binding": 0.1}
+    assert seen["scheduler"] is scheduler
 
 
 def test_pmhc_information_flow_detects_peptide_dominant_behavior():

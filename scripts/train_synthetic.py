@@ -22,6 +22,7 @@ from typing import Any, Callable, Dict, Mapping, Optional, Sequence, Tuple
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.optim.lr_scheduler import CosineAnnealingLR, LinearLR, SequentialLR
 from torch.utils.data import random_split
 from tqdm.auto import tqdm
 
@@ -102,6 +103,41 @@ SYNTHETIC_DEFAULTS = {
     "mhc_attention_sparsity_min_residues": 25.0,
     "mhc_attention_sparsity_max_residues": 45.0,
 }
+
+
+def build_warmup_cosine_scheduler(
+    optimizer: torch.optim.Optimizer,
+    *,
+    base_lr: float,
+    total_steps: int,
+    warmup_fraction: float = 0.05,
+    min_lr_scale: float = 0.1,
+) -> Optional[SequentialLR]:
+    """Build a linear-warmup + cosine-decay scheduler for step-wise updates."""
+    total_steps = int(total_steps)
+    if total_steps <= 1:
+        return None
+
+    warmup_steps = int(round(total_steps * warmup_fraction))
+    warmup_steps = max(1, min(total_steps - 1, warmup_steps))
+    start_factor = min(1.0, max(1e-4, 1e-6 / max(float(base_lr), 1e-12)))
+
+    warmup = LinearLR(
+        optimizer,
+        start_factor=start_factor,
+        end_factor=1.0,
+        total_iters=warmup_steps,
+    )
+    cosine = CosineAnnealingLR(
+        optimizer,
+        T_max=max(1, total_steps - warmup_steps),
+        eta_min=float(base_lr) * float(min_lr_scale),
+    )
+    return SequentialLR(
+        optimizer,
+        schedulers=[warmup, cosine],
+        milestones=[warmup_steps],
+    )
 
 
 @dataclass(frozen=True)
@@ -1464,6 +1500,7 @@ def train_epoch(
     train_loader,
     optimizer,
     device,
+    scheduler=None,
     uncertainty_weighting=None,
     pcgrad: PCGrad = None,
     regularization: Optional[Mapping[str, float]] = None,
@@ -1531,9 +1568,10 @@ def train_epoch(
         if isinstance(pep_tok, torch.Tensor) and pep_tok.ndim >= 1:
             batch_samples = int(pep_tok.shape[0])
 
+        stepped_optimizer = False
         if pcgrad is not None and len(loss_dict) > 1:
             step_start = time.perf_counter()
-            pcgrad.step(list(loss_dict.values()), model.parameters())
+            stepped_optimizer = pcgrad.step(list(loss_dict.values()), model.parameters()) is not None
             backward_elapsed = time.perf_counter() - step_start
             optimizer_elapsed = 0.0
             perf_backward_sec += backward_elapsed
@@ -1546,8 +1584,11 @@ def train_epoch(
             perf_backward_sec += backward_elapsed
             optim_start = time.perf_counter()
             optimizer.step()
+            stepped_optimizer = True
             optimizer_elapsed = time.perf_counter() - optim_start
             perf_optimizer_sec += optimizer_elapsed
+        if stepped_optimizer and scheduler is not None:
+            scheduler.step()
 
         total_loss += loss.item()
         for name, value in loss_dict.items():
@@ -1805,6 +1846,12 @@ def run(args: argparse.Namespace) -> None:
     if args.use_uncertainty_weighting:
         uncertainty_weighting = UncertaintyWeighting(n_tasks=len(LOSS_TASK_NAMES)).to(device)
         optimizer.add_param_group({"params": uncertainty_weighting.parameters()})
+    total_steps = max(1, int(args.epochs) * max(len(train_loader), 1))
+    scheduler = build_warmup_cosine_scheduler(
+        optimizer,
+        base_lr=args.lr,
+        total_steps=total_steps,
+    )
     pcgrad = PCGrad(optimizer) if args.use_pcgrad else None
     regularization_cfg = _regularization_config_from_args(args)
 
@@ -1819,7 +1866,8 @@ def run(args: argparse.Namespace) -> None:
                 train_loader,
                 optimizer,
                 device,
-                uncertainty_weighting,
+                scheduler=scheduler,
+                uncertainty_weighting=uncertainty_weighting,
                 pcgrad=pcgrad,
                 regularization=regularization_cfg,
                 supervised_loss_aggregation=args.supervised_loss_aggregation,
@@ -1832,13 +1880,17 @@ def run(args: argparse.Namespace) -> None:
                 supervised_loss_aggregation=args.supervised_loss_aggregation,
             )
             uw_metrics = summarize_uncertainty_weights(uncertainty_weighting)
+            current_lr = float(optimizer.param_groups[0]["lr"])
 
-            print(f"Epoch {epoch+1}/{args.epochs}: train_loss={train_loss:.4f}, val_loss={val_loss:.4f}")
+            print(
+                f"Epoch {epoch+1}/{args.epochs}: "
+                f"train_loss={train_loss:.4f}, val_loss={val_loss:.4f}, lr={current_lr:.6g}"
+            )
             if run_logger is not None:
                 run_logger.log(
                     epoch + 1,
                     "train",
-                    {"loss": train_loss, **train_task_losses, **uw_metrics},
+                    {"loss": train_loss, "lr": current_lr, **train_task_losses, **uw_metrics},
                 )
                 run_logger.log(epoch + 1, "val", {"loss": val_loss, **val_task_losses})
 

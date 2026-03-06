@@ -36,6 +36,7 @@ from .allele_resolver import (
     AlleleResolver,
     HUMAN_B2M_SEQUENCE,
     class_i_beta2m_sequence,
+    infer_mhc_class_optional,
     infer_species as infer_species_from_allele,
     normalize_mhc_class,
     normalize_species_label,
@@ -69,7 +70,7 @@ class BindingRecord:
     unit: str = "nM"
     assay_type: Optional[str] = None
     mhc_sequence: Optional[str] = None
-    mhc_class: str = "I"
+    mhc_class: Optional[str] = None
     species: Optional[str] = None
     antigen_species: Optional[str] = None  # Source organism of the epitope
     source: str = "iedb"
@@ -86,7 +87,7 @@ class KineticsRecord:
     koff_qualifier: int = 0
     assay_type: Optional[str] = None
     mhc_sequence: Optional[str] = None
-    mhc_class: str = "I"
+    mhc_class: Optional[str] = None
     species: Optional[str] = None
     antigen_species: Optional[str] = None
     source: str = "iedb"
@@ -103,7 +104,7 @@ class StabilityRecord:
     tm_qualifier: int = 0
     assay_type: Optional[str] = None
     mhc_sequence: Optional[str] = None
-    mhc_class: str = "I"
+    mhc_class: Optional[str] = None
     species: Optional[str] = None
     antigen_species: Optional[str] = None
     source: str = "iedb"
@@ -118,7 +119,7 @@ class ProcessingRecord:
     label: float = 1.0              # Processing outcome (0-1)
     processing_type: str = "cleavage"  # cleavage, tap, processing
     mhc_allele: Optional[str] = None
-    mhc_class: str = "I"
+    mhc_class: Optional[str] = None
     species: Optional[str] = None
     antigen_species: Optional[str] = None
     source: str = "iedb"
@@ -132,7 +133,7 @@ class ElutionRecord:
     detected: bool = True           # Was peptide detected?
     cell_type: Optional[str] = None
     tissue: Optional[str] = None
-    mhc_class: str = "I"
+    mhc_class: Optional[str] = None
     species: Optional[str] = None
     antigen_species: Optional[str] = None
     source: str = "iedb"
@@ -161,7 +162,7 @@ class TCellRecord:
     v_beta: Optional[str] = None
     j_beta: Optional[str] = None
     mhc_sequence: Optional[str] = None
-    mhc_class: str = "I"
+    mhc_class: Optional[str] = None
     species: Optional[str] = None
     antigen_species: Optional[str] = None
     source: str = "iedb"
@@ -213,7 +214,7 @@ class VDJdbRecord:
     v_beta: Optional[str] = None
     j_beta: Optional[str] = None
     gene: str = "TRB"               # TRA, TRB, etc.
-    mhc_class: str = "I"
+    mhc_class: Optional[str] = None
     species: Optional[str] = None
     antigen_species: Optional[str] = None  # Pathogen species
     source: str = "vdjdb"
@@ -343,14 +344,27 @@ def _is_binding_affinity_measurement(measurement: str, unit: str) -> bool:
     return False
 
 
-def _infer_mhc_class(allele: str) -> str:
-    """Infer MHC class from allele name."""
+def _infer_mhc_class(allele: Optional[str]) -> Optional[str]:
+    """Infer MHC class from allele name, preferring mhcgnomes."""
+    if not allele:
+        return None
+    inferred = infer_mhc_class_optional(allele)
+    if inferred is not None:
+        return inferred
     allele_upper = allele.upper()
     class2_genes = ['DRA', 'DRB', 'DQA', 'DQB', 'DPA', 'DPB', 'DR', 'DQ', 'DP']
     for gene in class2_genes:
         if gene in allele_upper:
             return "II"
     return "I"
+
+
+def _resolve_mhc_class(value: Optional[str], allele: Optional[str] = None) -> Optional[str]:
+    """Normalize explicit MHC class labels and otherwise infer from allele."""
+    normalized = normalize_mhc_class(value, default=None)
+    if normalized is not None:
+        return normalized
+    return _infer_mhc_class(allele)
 
 
 def _open_file(path: Union[str, Path]) -> Iterator[str]:
@@ -510,9 +524,7 @@ def load_iedb_binding(path: Union[str, Path]) -> Iterator[BindingRecord]:
         if not _is_binding_affinity_measurement(measurement_type, unit):
             continue
 
-        mhc_class = _get_column(row, class_idx) or _infer_mhc_class(allele)
-        if mhc_class not in ('I', 'II'):
-            mhc_class = 'I' if '1' in mhc_class or 'i' == mhc_class.lower() else 'II'
+        mhc_class = _resolve_mhc_class(_get_column(row, class_idx) or None, allele)
 
         yield BindingRecord(
             peptide=peptide,
@@ -639,7 +651,7 @@ def load_iedb_kinetics(path: Union[str, Path]) -> Iterator[KineticsRecord]:
             kon_qualifier=kon_qual,
             koff_qualifier=koff_qual,
             assay_type=_get_column(row, assay_idx) or None,
-            mhc_class=_get_column(row, class_idx) or _infer_mhc_class(allele),
+            mhc_class=_resolve_mhc_class(_get_column(row, class_idx) or None, allele),
             species=_get_column(row, species_idx) or infer_species_from_allele(allele) or None,
             antigen_species=_get_column(row, antigen_species_idx) or None,
             source='iedb',
@@ -781,7 +793,7 @@ def load_iedb_stability(path: Union[str, Path]) -> Iterator[StabilityRecord]:
             t_half_qualifier=thalf_qual,
             tm_qualifier=tm_qual,
             assay_type=_get_column(row, assay_idx) or None,
-            mhc_class=_get_column(row, class_idx) or _infer_mhc_class(allele),
+            mhc_class=_resolve_mhc_class(_get_column(row, class_idx) or None, allele),
             species=_get_column(row, species_idx) or infer_species_from_allele(allele) or None,
             antigen_species=_get_column(row, antigen_species_idx) or None,
             source='iedb',
@@ -838,7 +850,7 @@ def load_iedb_processing(path: Union[str, Path]) -> Iterator[ProcessingRecord]:
             label=label,
             processing_type=processing_type,
             mhc_allele=allele or None,
-            mhc_class=_get_column(row, class_idx, 'I'),
+            mhc_class=_resolve_mhc_class(_get_column(row, class_idx) or None, allele),
             species=_get_column(row, species_idx) or infer_species_from_allele(allele) or None,
             antigen_species=_get_column(row, antigen_species_idx) or None,
             source='iedb',
@@ -890,7 +902,7 @@ def load_iedb_elution(path: Union[str, Path]) -> Iterator[ElutionRecord]:
         if detected is None:
             detected = 1.0
 
-        mhc_class = _get_column(row, class_idx) or _infer_mhc_class(alleles[0])
+        mhc_class = _resolve_mhc_class(_get_column(row, class_idx) or None, alleles[0])
 
         yield ElutionRecord(
             peptide=peptide,
@@ -1021,7 +1033,7 @@ def load_iedb_tcell(path: Union[str, Path]) -> Iterator[TCellRecord]:
             j_alpha=_get_column(row, ja_idx) or None,
             v_beta=_get_column(row, vb_idx) or None,
             j_beta=_get_column(row, jb_idx) or None,
-            mhc_class=_get_column(row, class_idx) or _infer_mhc_class(allele),
+            mhc_class=_resolve_mhc_class(_get_column(row, class_idx) or None, allele),
             species=_get_column(row, species_idx) or infer_species_from_allele(allele) or None,
             antigen_species=_get_column(row, antigen_species_idx) or None,
             source='iedb',
@@ -1189,7 +1201,7 @@ def load_vdjdb(path: Union[str, Path]) -> Iterator[VDJdbRecord]:
 
         gene = _get_column(row, gene_idx, 'TRB')
         mhc_a = _get_column(row, mhca_idx)
-        mhc_class = _get_column(row, class_idx) or _infer_mhc_class(mhc_a)
+        mhc_class = _resolve_mhc_class(_get_column(row, class_idx) or None, mhc_a)
 
         # Assign CDR3 to alpha or beta based on gene
         cdr3_alpha = cdr3 if gene.upper() in ('TRA', 'TRAD') else None
@@ -1696,7 +1708,9 @@ class PrestoDataset(Dataset):
         if resolved is not None:
             return resolved
         if allele:
-            return _infer_mhc_class(allele)
+            inferred = _infer_mhc_class(allele)
+            if inferred is not None:
+                return inferred
         return "I"
 
     def _default_class_i_beta2m(

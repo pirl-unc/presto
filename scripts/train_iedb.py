@@ -77,6 +77,7 @@ from presto.models.affinity import (
 from presto.scripts.train_synthetic import (
     LOSS_TASK_NAMES,
     _regularization_config_from_args,
+    build_warmup_cosine_scheduler,
     evaluate,
     train_epoch,
 )
@@ -271,6 +272,7 @@ def _call_train_epoch_compat(
     train_loader,
     optimizer,
     device: str,
+    scheduler,
     uncertainty_weighting,
     pcgrad,
     regularization_config: Optional[Dict[str, float]] = None,
@@ -287,6 +289,8 @@ def _call_train_epoch_compat(
     params = inspect.signature(train_epoch).parameters
     if "uncertainty_weighting" in params:
         kwargs["uncertainty_weighting"] = uncertainty_weighting
+    if "scheduler" in params:
+        kwargs["scheduler"] = scheduler
     if "pcgrad" in params:
         kwargs["pcgrad"] = pcgrad
     if "regularization" in params:
@@ -4375,6 +4379,15 @@ def run(args: argparse.Namespace) -> None:
     if args.use_uncertainty_weighting:
         uncertainty_weighting = UncertaintyWeighting(n_tasks=len(IEDB_LOSS_TASK_NAMES)).to(device)
         optimizer.add_param_group({"params": uncertainty_weighting.parameters()})
+    max_epoch_batches = int(getattr(args, "max_batches", 0))
+    train_steps_per_epoch = len(train_loader)
+    if max_epoch_batches > 0:
+        train_steps_per_epoch = min(train_steps_per_epoch, max_epoch_batches)
+    scheduler = build_warmup_cosine_scheduler(
+        optimizer,
+        base_lr=args.lr,
+        total_steps=max(1, int(args.epochs) * max(train_steps_per_epoch, 1)),
+    )
     pcgrad = PCGrad(optimizer) if args.use_pcgrad else None
     regularization_cfg = _regularization_config_from_args(args)
     track_probe_affinity = bool(getattr(args, "track_probe_affinity", True))
@@ -4450,13 +4463,14 @@ def run(args: argparse.Namespace) -> None:
                 epoch_idx=epoch,
                 total_epochs=args.epochs,
             )
-            max_batches_per_epoch = int(getattr(args, "max_batches", 0))
+            max_batches_per_epoch = max_epoch_batches
             max_val_batches_per_epoch = int(getattr(args, "max_val_batches", 0))
             train_loss, train_task_losses = _call_train_epoch_compat(
                 model,
                 train_loader,
                 optimizer,
                 device,
+                scheduler=scheduler,
                 uncertainty_weighting=uncertainty_weighting,
                 pcgrad=pcgrad,
                 regularization_config=epoch_regularization_cfg,
@@ -4545,10 +4559,11 @@ def run(args: argparse.Namespace) -> None:
                     "gpu_peak_reserved_gib": peak_reserved / float(1024**3),
                     "gpu_peak_allocated_bytes_per_batch_row": peak_allocated / float(rows),
                 }
+            current_lr = float(optimizer.param_groups[0]["lr"])
 
             print(
                 f"Epoch {epoch + 1}/{args.epochs}: "
-                f"train_loss={train_loss:.4f}, val_loss={val_loss:.4f}"
+                f"train_loss={train_loss:.4f}, val_loss={val_loss:.4f}, lr={current_lr:.6g}"
             )
             perf_wait = float(train_task_losses.get("perf_data_wait_sec_per_batch", 0.0))
             perf_compute = float(train_task_losses.get("perf_compute_loss_sec_per_batch", 0.0))
@@ -4648,6 +4663,7 @@ def run(args: argparse.Namespace) -> None:
                     "train",
                     {
                         "loss": train_loss,
+                        "lr": current_lr,
                         **train_task_losses,
                         **uw_metrics,
                         "schedule_consistency_factor": epoch_regularization_cfg.get(

@@ -13,9 +13,13 @@ from presto.data.loaders import load_iedb_bcell, load_10x_vdj
 from presto.data.loaders import (
     BindingRecord,
     ElutionRecord,
+    KineticsRecord,
     PrestoDataset,
+    ProcessingRecord,
+    StabilityRecord,
     TCellRecord,
     Sc10xVDJRecord,
+    VDJdbRecord,
     create_dataloader,
 )
 from presto.data.allele_resolver import HUMAN_B2M_SEQUENCE
@@ -216,6 +220,47 @@ def test_load_iedb_binding_preserves_measurement_type_for_split_targets(tmp_path
     assert batch.target_masks["binding_kd"].tolist() == [1.0, 0.0, 0.0]
     assert batch.target_masks["binding_ic50"].tolist() == [0.0, 1.0, 0.0]
     assert batch.target_masks["binding_ec50"].tolist() == [0.0, 0.0, 1.0]
+
+
+def test_record_defaults_leave_mhc_class_unknown():
+    assert BindingRecord(peptide="SIINFEKL", mhc_allele="HLA-A*02:01", value=50.0).mhc_class is None
+    assert KineticsRecord(peptide="SIINFEKL", mhc_allele="HLA-A*02:01").mhc_class is None
+    assert StabilityRecord(peptide="SIINFEKL", mhc_allele="HLA-A*02:01").mhc_class is None
+    assert ProcessingRecord(peptide="SIINFEKL").mhc_class is None
+    assert ElutionRecord(peptide="SIINFEKL", alleles=["HLA-A*02:01"]).mhc_class is None
+    assert TCellRecord(peptide="SIINFEKL", mhc_allele="HLA-A*02:01", response=1.0).mhc_class is None
+    assert VDJdbRecord(peptide="SIINFEKL", mhc_a="HLA-A*02:01").mhc_class is None
+
+
+def test_load_iedb_processing_leaves_class_none_when_absent(tmp_path):
+    path = tmp_path / "iedb_processing_unknown_class.csv"
+    rows = [
+        ["Peptide", "Outcome"],
+        ["SIINFEKL", "positive"],
+    ]
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerows(rows)
+
+    records = list(load_iedb_processing(path))
+    assert len(records) == 1
+    assert records[0].mhc_class is None
+
+
+def test_load_iedb_binding_infers_class_without_source_column(tmp_path):
+    path = tmp_path / "iedb_binding_infer_class.csv"
+    rows = [
+        ["Epitope", "MHC Restriction", "Assay", "Assay"],
+        ["Name", "Name", "Response measured", "Quantitative measurement"],
+        ["PKYVKQNTLKLAT", "HLA-DRB1*01:01", "dissociation constant KD", "75"],
+    ]
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerows(rows)
+
+    records = list(load_iedb_binding(path))
+    assert len(records) == 1
+    assert records[0].mhc_class == "II"
 
 
 def test_load_iedb_elution_parses_multilevel_export(tmp_path):

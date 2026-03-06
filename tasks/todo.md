@@ -1,3 +1,71 @@
+# Learning Refactor Execution (2026-03-06)
+
+## Spec
+
+- Canonical analysis: `tasks/training_analysis.md`
+- Canonical checklist: `tasks/learning_refactor.md`
+- Canonical implementation order: `tasks/learning_refactor_plan.md`
+- Execution rule for this pass:
+  - implement by dependency phase, not by scattered TODO item
+  - prove each phase locally before moving on
+  - keep Phase 0 independent so training-dynamics fixes are isolated from the latent-DAG rewrite
+
+## Plan
+
+- [x] Phase 0: implement `E3` weight initialization, `E4` LR scheduler, and `D1` `mhc_class` default/inference cleanup.
+- [x] Phase 0 verification: targeted tests for loader/class handling, model initialization sanity, and trainer scheduler behavior.
+- [x] Phase 1: implement `A1`-`A4` together as one coupled latent-DAG refactor.
+- [x] Phase 1 verification: forward/output contract checks, dependency-flow checks, and regression coverage for the new latent structure.
+- [ ] Phase 2: implement `B1` coupled core enumeration with explicit PFR representation on top of the new interaction latent.
+- [ ] Phase 2 verification: core-candidate enumeration sanity, shape/compute checks, and targeted biological edge cases (`8mer`, `9mer`, long class II peptides).
+- [ ] Phase 3: implement `C1`-`C3` context-token cleanup, `groove_vec`, and `pmhc_vec` signal repair.
+- [ ] Phase 3 verification: confirm processing isolation, binding/presentation access to groove context, and direct allele signal in `pmhc_vec`.
+- [ ] Phase 4: implement `D2` class-split MIL bags and `D3` pathway-MIL handling for ambiguous T-cell assays.
+- [ ] Phase 4 verification: dataset/batch audits showing correct bag construction and class/pathway separation.
+- [ ] Phase 5: implement `E1` contrastive MIL and `E2` bag sparsity regularization.
+- [ ] Phase 5 verification: loss wiring tests plus small-run diagnostics that show allele-discrimination pressure is present.
+- [ ] End-to-end verification: targeted local training smoke run, batch/prediction inspection, then Modal epoch/full-run only after local dynamics look sane.
+
+## Review
+
+- Phase 0 completed.
+- `D1`:
+  - `data/loaders.py` record dataclasses no longer default `mhc_class="I"`; they now preserve `None` for genuinely missing class labels.
+  - loader class resolution now normalizes explicit class labels first, then prefers mhcgnomes-backed inference via `data/allele_resolver.py`, with the old heuristic retained only as fallback.
+  - `load_iedb_processing()` no longer silently injects class I when both source class and allele are absent.
+- `E3`:
+  - `models/presto.py` now applies explicit transformer-scale initialization.
+  - latent queries use `std=1/sqrt(d_model)`.
+  - embeddings use the same scale, while preserving both the padding row and the fixed-zero `X` row semantics.
+  - multi-head attention projection weights are explicitly Xavier-initialized with zero biases.
+- `E4`:
+  - `scripts/train_synthetic.py` now provides `build_warmup_cosine_scheduler()` and steps the scheduler once per successful optimizer step inside `train_epoch()`.
+  - `scripts/train_iedb.py` now constructs the same warmup+cosine schedule using the effective per-epoch step count and forwards it through the compatibility wrapper.
+  - both training scripts now log current LR per epoch.
+- Verification:
+  - `python -m py_compile data/allele_resolver.py data/loaders.py models/presto.py scripts/train_synthetic.py scripts/train_iedb.py tests/test_loaders.py tests/test_presto.py tests/test_train_synthetic.py tests/test_train_iedb.py`
+  - `pytest -q tests/test_loaders.py tests/test_presto.py tests/test_train_synthetic.py tests/test_train_iedb.py` -> `121 passed`
+  - `pytest -q tests/test_allele_resolver.py tests/test_predictor.py` -> `83 passed`
+  - scheduler tests emit PyTorch's known `lr_scheduler` deprecation warning from inside `SequentialLR`; behavior is correct and the warning is non-blocking for now.
+- Phase 1 completed.
+- `A1` + `A2`:
+  - `models/presto.py` now uses a single MHC-aware cross-attention latent, `pmhc_interaction`, instead of separate `binding_affinity`/`binding_stability` latents.
+  - default interaction query count is now `8`, and the interaction path preserves multi-query detail by flattening projected query outputs instead of mean-pooling them back to one vector.
+  - attention-stat diagnostics were updated to average over both heads and query slots so multi-query attention remains measurable.
+- `A3`:
+  - the scalar bottleneck between binding and presentation was removed from the main information path.
+  - binding kinetics remain physics-aware readouts through `BindingModule`, but presentation and immunogenicity now consume the full normalized interaction vector.
+  - `pmhc_vec` is now projected from `pmhc_interaction + presentation`, not from the old scalar-bottlenecked latent tuple.
+  - added vector normalization on the flattened interaction path plus presentation/immunogenicity vectors to keep optimization stable at the higher-dimensional Phase 1 interface.
+- `A4`:
+  - the cross-attention DAG now has five canonical latents: `processing`, `ms_detectability`, `species_of_origin`, `pmhc_interaction`, and `recognition`.
+  - presentation and immunogenicity are now derived MLP stages, not duplicated latent queries.
+  - class-specific output heads are retained only as a compatibility/readout layer (`*_class1`, `*_class2`, `*_cd8`, `*_cd4`) so existing training and inference code continues to run while the internal architecture is unified.
+- Phase 1 verification:
+  - `pytest -q tests/test_presto.py tests/test_train_synthetic.py tests/test_train_iedb.py` -> `93 passed`
+  - `pytest -q tests/test_presto.py tests/test_training_e2e.py` -> `45 passed`
+  - `pytest -q tests/test_loaders.py tests/test_presto.py tests/test_train_synthetic.py tests/test_train_iedb.py tests/test_allele_resolver.py tests/test_predictor.py tests/test_training_e2e.py tests/test_pmhc.py tests/test_heads.py` -> `260 passed`
+
 # Unified Training Failure Audit + Repair (2026-03-06)
 
 ## Plan
