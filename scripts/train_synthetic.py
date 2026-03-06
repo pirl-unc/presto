@@ -21,6 +21,7 @@ from typing import Any, Callable, Dict, Mapping, Optional, Sequence, Tuple
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torch.utils.data import random_split
 from tqdm.auto import tqdm
 
@@ -90,6 +91,7 @@ SYNTHETIC_DEFAULTS = {
     "consistency_no_b2m_weight": 0.0,
     "consistency_tcell_context_weight": 0.0,
     "consistency_tcell_upstream_weight": 0.0,
+    "binding_orthogonality_weight": 0.01,
     "consistency_prob_margin": 0.02,
     "consistency_parent_low_threshold": 0.1,
     "consistency_presentation_high_threshold": 0.9,
@@ -116,6 +118,7 @@ class TaskLossSpec:
     qual_key: Optional[str] = None
     qual_attr: Optional[str] = None
     target_transform: Optional[Callable[[torch.Tensor], torch.Tensor]] = None
+    base_weight: float = 1.0
 
 
 LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
@@ -321,6 +324,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
             max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
             assume_log10=False,
         ),
+        base_weight=0.3,
     ),
     TaskLossSpec(
         name="processing",
@@ -332,11 +336,19 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         mask_attr="processing_mask",
     ),
     TaskLossSpec(
+        name="core_start",
+        target_key="core_start",
+        mask_key="core_start",
+        pred_paths=(("core_start_logit",),),
+        loss_type="ce",
+    ),
+    TaskLossSpec(
         name="mhc_class",
         target_key="mhc_class",
         mask_key="mhc_class",
         pred_paths=(("mhc_class_logits",),),
         loss_type="ce",
+        base_weight=0.1,
     ),
     TaskLossSpec(
         name="mhc_species",
@@ -344,6 +356,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         mask_key="mhc_species",
         pred_paths=(("mhc_species_logits",),),
         loss_type="ce",
+        base_weight=0.1,
     ),
     TaskLossSpec(
         name="mhc_a_fine_type",
@@ -351,6 +364,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         mask_key="mhc_a_fine_type",
         pred_paths=(("mhc_a_type_logits",),),
         loss_type="ce",
+        base_weight=0.1,
     ),
     TaskLossSpec(
         name="mhc_b_fine_type",
@@ -358,6 +372,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         mask_key="mhc_b_fine_type",
         pred_paths=(("mhc_b_type_logits",),),
         loss_type="ce",
+        base_weight=0.1,
     ),
     TaskLossSpec(
         name="chain_species",
@@ -367,6 +382,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         loss_type="ce",
         target_attr="chain_species_label",
         mask_attr="chain_species_mask",
+        base_weight=0.1,
     ),
     TaskLossSpec(
         name="chain_type",
@@ -376,6 +392,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         loss_type="ce",
         target_attr="chain_type_label",
         mask_attr="chain_type_mask",
+        base_weight=0.1,
     ),
     TaskLossSpec(
         name="chain_phenotype",
@@ -385,6 +402,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         loss_type="ce",
         target_attr="chain_phenotype_label",
         mask_attr="chain_phenotype_mask",
+        base_weight=0.1,
     ),
     TaskLossSpec(
         name="species_of_origin",
@@ -405,6 +423,9 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
 LOSS_TASK_NAMES: Tuple[str, ...] = tuple(spec.name for spec in LOSS_TASK_SPECS)
 LOSS_TASK_NAME_TO_INDEX: Dict[str, int] = {
     name: idx for idx, name in enumerate(LOSS_TASK_NAMES)
+}
+LOSS_TASK_NAME_TO_SPEC: Dict[str, TaskLossSpec] = {
+    spec.name: spec for spec in LOSS_TASK_SPECS
 }
 
 
@@ -449,6 +470,9 @@ def _regularization_config_from_args(args: argparse.Namespace) -> Dict[str, floa
         "consistency_tcell_upstream_weight": float(
             getattr(args, "consistency_tcell_upstream_weight", 0.0)
         ),
+        "binding_orthogonality_weight": float(
+            getattr(args, "binding_orthogonality_weight", 0.01)
+        ),
         "consistency_prob_margin": float(getattr(args, "consistency_prob_margin", 0.02)),
         "consistency_parent_low_threshold": float(
             getattr(args, "consistency_parent_low_threshold", 0.1)
@@ -484,6 +508,7 @@ def _resolve_regularization_config(
         "consistency_no_b2m_weight": 0.0,
         "consistency_tcell_context_weight": 0.0,
         "consistency_tcell_upstream_weight": 0.0,
+        "binding_orthogonality_weight": 0.01,
         "consistency_prob_margin": 0.02,
         "consistency_parent_low_threshold": 0.1,
         "consistency_presentation_high_threshold": 0.9,
@@ -825,6 +850,49 @@ def _build_mil_prob_matrix(
     return probs, mask
 
 
+def _bag_aware_instance_cap(
+    instance_to_bag: torch.Tensor,
+    max_mil_instances: int,
+) -> torch.Tensor:
+    """Select capped MIL instances while preserving at least one per bag."""
+    n_instances = int(instance_to_bag.shape[0])
+    if max_mil_instances <= 0 or n_instances <= max_mil_instances:
+        return torch.arange(n_instances, device=instance_to_bag.device, dtype=torch.long)
+
+    n_bags = int(instance_to_bag.max().item()) + 1 if n_instances > 0 else 0
+    target_n = max(max_mil_instances, n_bags)
+    if n_instances <= target_n:
+        return torch.arange(n_instances, device=instance_to_bag.device, dtype=torch.long)
+
+    perm = torch.randperm(n_instances, device=instance_to_bag.device)
+    bag_selected = torch.zeros((n_bags,), dtype=torch.bool, device=instance_to_bag.device)
+    chosen = []
+    for idx_t in perm:
+        idx = int(idx_t.item())
+        bag_idx = int(instance_to_bag[idx].item())
+        if not bag_selected[bag_idx]:
+            bag_selected[bag_idx] = True
+            chosen.append(idx)
+            if bool(bag_selected.all()):
+                break
+
+    chosen_mask = torch.zeros((n_instances,), dtype=torch.bool, device=instance_to_bag.device)
+    if chosen:
+        chosen_mask[torch.tensor(chosen, dtype=torch.long, device=instance_to_bag.device)] = True
+
+    remaining = target_n - len(chosen)
+    if remaining > 0:
+        remainder = torch.nonzero(~chosen_mask, as_tuple=False).squeeze(-1)
+        if remainder.numel() > 0:
+            extra_perm = torch.randperm(remainder.numel(), device=instance_to_bag.device)
+            extra = remainder[extra_perm[:remaining]]
+            chosen.extend(extra.tolist())
+
+    keep = torch.tensor(chosen, dtype=torch.long, device=instance_to_bag.device)
+    keep, _ = torch.sort(keep)
+    return keep
+
+
 def _compute_mil_elution_losses(
     model,
     batch,
@@ -860,7 +928,10 @@ def _compute_mil_elution_losses(
 
     n_instances = mil_pep_tok.shape[0]
     if max_mil_instances > 0 and n_instances > max_mil_instances:
-        keep = torch.randperm(n_instances)[:max_mil_instances].sort().values
+        keep = _bag_aware_instance_cap(
+            instance_to_bag=mil_instance_to_bag.to(dtype=torch.long),
+            max_mil_instances=max_mil_instances,
+        ).cpu()
         mil_pep_tok = mil_pep_tok[keep]
         mil_mhc_a_tok = mil_mhc_a_tok[keep]
         mil_mhc_b_tok = mil_mhc_b_tok[keep]
@@ -942,6 +1013,7 @@ def _compute_consistency_losses(
     no_b2m_w = float(regularization.get("consistency_no_b2m_weight", 0.0))
     tcell_ctx_w = float(regularization.get("consistency_tcell_context_weight", 0.0))
     tcell_upstream_w = float(regularization.get("consistency_tcell_upstream_weight", 0.0))
+    orthogonality_w = float(regularization.get("binding_orthogonality_weight", 0.01))
     mhc_attn_sparse_w = float(regularization.get("mhc_attention_sparsity_weight", 0.0))
     mhc_attn_sparse_min = float(regularization.get("mhc_attention_sparsity_min_residues", 30.0))
     mhc_attn_sparse_max = float(regularization.get("mhc_attention_sparsity_max_residues", 60.0))
@@ -961,6 +1033,17 @@ def _compute_consistency_losses(
     ex_vivo_margin = float(regularization.get("tcell_ex_vivo_margin", 0.0))
 
     device = batch.pep_tok.device
+
+    if orthogonality_w > 0:
+        latent_vecs = outputs.get("latent_vecs")
+        if isinstance(latent_vecs, dict):
+            affinity_vec = latent_vecs.get("binding_affinity")
+            stability_vec = latent_vecs.get("binding_stability")
+            if isinstance(affinity_vec, torch.Tensor) and isinstance(stability_vec, torch.Tensor):
+                affinity_unit = F.normalize(affinity_vec.float(), dim=-1, eps=1e-8)
+                stability_unit = F.normalize(stability_vec.float(), dim=-1, eps=1e-8)
+                cosine_abs = torch.abs((affinity_unit * stability_unit).sum(dim=-1))
+                losses["consistency_binding_orthogonality"] = orthogonality_w * cosine_abs.mean()
 
     if cascade_w > 0:
         proc_prob = torch.sigmoid(_as_float_vector(outputs["processing_logit"]))
@@ -1300,12 +1383,6 @@ def compute_loss(
             perf_metrics["perf_regularization_sec"] = float(
                 time.perf_counter() - regularization_start
             )
-        # Scale auxiliary binding probe loss (shortcut gradient path, not dominant)
-        if "binding_affinity_probe" in supervised_losses:
-            supervised_losses["binding_affinity_probe"] = (
-                0.3 * supervised_losses["binding_affinity_probe"]
-            )
-
         losses: Dict[str, torch.Tensor] = {}
         losses.update(supervised_losses)
         losses.update(regularization_losses)
@@ -1318,10 +1395,17 @@ def compute_loss(
             weighted_terms = []
             total_weight = 0.0
             for task_name, task_loss in supervised_losses.items():
+                spec = LOSS_TASK_NAME_TO_SPEC.get(task_name)
+                base_weight = max(float(spec.base_weight), 0.0) if spec is not None else 1.0
+                if base_weight <= 0.0:
+                    continue
                 if aggregation_mode == "task_mean":
-                    task_weight = 1.0
+                    task_weight = base_weight
                 else:
-                    task_weight = max(float(supervised_loss_support.get(task_name, 1.0)), 1e-6)
+                    task_weight = (
+                        base_weight
+                        * max(float(supervised_loss_support.get(task_name, 1.0)), 1e-6)
+                    )
                 total_weight += task_weight
 
                 if uncertainty_weighting is not None:
@@ -1872,6 +1956,12 @@ def main(argv=None):
         type=float,
         default=0.0,
         help="Weight for T-cell outputs requiring strong upstream binding/presentation",
+    )
+    parser.add_argument(
+        "--binding-orthogonality-weight",
+        type=float,
+        default=0.01,
+        help="Weight for |cos(binding_affinity_vec, binding_stability_vec)| regularization",
     )
     parser.add_argument(
         "--consistency-prob-margin",

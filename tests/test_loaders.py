@@ -22,7 +22,7 @@ from presto.data.allele_resolver import HUMAN_B2M_SEQUENCE
 
 MHC_ALPHA_SEQ = "A" * 181
 MHC_ALT_SEQ = "C" * 181
-MHC_SHORT_SEQ = "A" * 100
+MHC_SHORT_SEQ = "A" * 60
 MHC_WITH_X_SEQ = ("A" * 180) + "X"
 
 
@@ -491,7 +491,7 @@ def test_presto_dataset_rejects_short_mhc_alpha_chain():
             source="iedb",
         )
     ]
-    with pytest.raises(ValueError, match="shorter than biologically expected"):
+    with pytest.raises(ValueError, match="minimum accepted groove-bearing fragment"):
         PrestoDataset(
             binding_records=records,
             mhc_sequences={"HLA-A*02:01": MHC_SHORT_SEQ},
@@ -515,6 +515,24 @@ def test_presto_dataset_warns_on_ambiguous_x_in_mhc_sequence():
             mhc_sequences={"HLA-A*02:01": MHC_WITH_X_SEQ},
         )
     assert dataset[0].mhc_a == MHC_WITH_X_SEQ
+
+
+def test_presto_dataset_rejects_nucleotide_like_mhc_chain():
+    records = [
+        BindingRecord(
+            peptide="SIINFEKL",
+            mhc_allele="HLA-A*02:01",
+            value=50.0,
+            mhc_class="I",
+            species="human",
+            source="iedb",
+        )
+    ]
+    with pytest.raises(ValueError, match="Likely nucleotide sequence loaded for MHC chain"):
+        PrestoDataset(
+            binding_records=records,
+            mhc_sequences={"HLA-A*02:01": "ACG" * 60},
+        )
 
 
 def test_presto_dataset_includes_10x_chain_supervision_samples():

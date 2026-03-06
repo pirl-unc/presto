@@ -13,6 +13,11 @@ def _write_fasta(path: Path, records: list[tuple[str, str]]) -> None:
             f.write(f"{sequence}\n")
 
 
+LONG_SEQ_A = "A" * 80
+LONG_SEQ_C = "C" * 80
+LONG_SEQ_D = "D" * 80
+
+
 def test_build_mhc_index_writes_outputs_and_deduplicates(tmp_path, monkeypatch):
     imgt_fasta = tmp_path / "imgt.fasta"
     ipd_fasta = tmp_path / "ipd.fasta"
@@ -22,14 +27,14 @@ def test_build_mhc_index_writes_outputs_and_deduplicates(tmp_path, monkeypatch):
     _write_fasta(
         imgt_fasta,
         [
-            ("HLA-A*02:01 desc", "AAAA"),
+            ("HLA-A*02:01 desc", LONG_SEQ_A),
         ],
     )
     _write_fasta(
         ipd_fasta,
         [
-            ("HLA-A*02:01 alt", "BBBB"),
-            ("Mamu-A*01:01 alt", "CCCC"),
+            ("HLA-A*02:01 alt", LONG_SEQ_D),
+            ("Mamu-A*01:01 alt", LONG_SEQ_C),
         ],
     )
 
@@ -62,12 +67,91 @@ def test_build_mhc_index_writes_outputs_and_deduplicates(tmp_path, monkeypatch):
     assert len(rows) == 2
     by_norm = {row["normalized"]: row for row in rows}
     assert by_norm["HLA-A*02:01"]["source"] == "imgt"
-    assert by_norm["HLA-A*02:01"]["sequence"] == "AAAA"
+    assert by_norm["HLA-A*02:01"]["sequence"] == LONG_SEQ_A
     assert by_norm["Mamu-A*01:01"]["source"] == "ipd_mhc"
 
     fasta_text = out_fasta.read_text(encoding="utf-8")
     assert ">HLA-A*02:01 source=imgt" in fasta_text
-    assert "AAAA" in fasta_text
+    assert LONG_SEQ_A in fasta_text
+
+
+def test_build_mhc_index_prefers_protein_fasta_and_skips_nucleotide_entries(tmp_path, monkeypatch):
+    imgt_fasta = tmp_path / "imgt.fasta"
+    ipd_dir = tmp_path / "ipd_mhc"
+    ipd_dir.mkdir()
+    ipd_nuc = ipd_dir / "ipd_mhc_nuc.fasta"
+    ipd_prot = ipd_dir / "ipd_mhc_prot.fasta"
+    out_csv = tmp_path / "mhc_index.csv"
+
+    _write_fasta(imgt_fasta, [])
+    _write_fasta(
+        ipd_nuc,
+        [("Mamu-A*01:01 nuc", "ACG" * 120)],
+    )
+    _write_fasta(
+        ipd_prot,
+        [("Mamu-A*01:01 prot", "M" + ("A" * 180))],
+    )
+
+    monkeypatch.setattr(mhc_index, "_require_mhcgnomes", lambda: object())
+
+    def fake_resolve(header: str):
+        token = header.split()[0]
+        if token == "Mamu-A*01:01":
+            return "Mamu-A*01:01", "A", "I", "macaque", token
+        raise AssertionError(f"Unexpected header: {header}")
+
+    monkeypatch.setattr(mhc_index, "_resolve_header_allele", fake_resolve)
+
+    stats = mhc_index.build_mhc_index(
+        imgt_fasta=str(imgt_fasta),
+        ipd_mhc_dir=str(ipd_dir),
+        out_csv=str(out_csv),
+    )
+
+    assert stats["total"] == 2
+    assert stats["parsed"] == 1
+    assert stats["skipped_nucleotide"] == 1
+
+    rows = list(csv.DictReader(open(out_csv, "r", encoding="utf-8")))
+    assert len(rows) == 1
+    assert rows[0]["normalized"] == "Mamu-A*01:01"
+    assert rows[0]["sequence"] == "M" + ("A" * 180)
+
+
+def test_build_mhc_index_skips_trivially_short_fragments(tmp_path, monkeypatch):
+    imgt_fasta = tmp_path / "imgt.fasta"
+    out_csv = tmp_path / "mhc_index.csv"
+
+    _write_fasta(
+        imgt_fasta,
+        [
+            ("HLA-DRB1*03:03 short", "A" * 60),
+            ("HLA-DRB1*03:03 okay", "A" * 89),
+        ],
+    )
+
+    monkeypatch.setattr(mhc_index, "_require_mhcgnomes", lambda: object())
+    monkeypatch.setattr(
+        mhc_index,
+        "_resolve_header_allele",
+        lambda header: ("HLA-DRB1*03:03", "DRB1", "II", "human", "HLA-DRB1*03:03"),
+    )
+
+    stats = mhc_index.build_mhc_index(
+        imgt_fasta=str(imgt_fasta),
+        ipd_mhc_dir=None,
+        out_csv=str(out_csv),
+    )
+
+    assert stats["total"] == 2
+    assert stats["parsed"] == 1
+    assert stats["skipped_short"] == 1
+
+    rows = list(csv.DictReader(open(out_csv, "r", encoding="utf-8")))
+    assert len(rows) == 1
+    assert rows[0]["normalized"] == "HLA-DRB1*03:03"
+    assert rows[0]["seq_len"] == "89"
 
 
 def test_resolve_alleles_uses_aliases_from_index(tmp_path, monkeypatch):
@@ -83,8 +167,8 @@ def test_resolve_alleles_uses_aliases_from_index(tmp_path, monkeypatch):
                 "mhc_class": "I",
                 "species": "human",
                 "source": "imgt",
-                "seq_len": "4",
-                "sequence": "AAAA",
+                "seq_len": "80",
+                "sequence": LONG_SEQ_A,
             }
         )
 
@@ -129,8 +213,8 @@ def test_resolve_alleles_supports_h2_alias_forms(tmp_path, monkeypatch):
                 "mhc_class": "I",
                 "species": "mouse",
                 "source": "ipd_mhc",
-                "seq_len": "4",
-                "sequence": "AAAA",
+                "seq_len": "80",
+                "sequence": LONG_SEQ_A,
             }
         )
 
@@ -167,8 +251,8 @@ def test_resolve_alleles_falls_back_when_mhcgnomes_query_parse_fails(tmp_path, m
                 "mhc_class": "I",
                 "species": "macaque",
                 "source": "ipd_mhc",
-                "seq_len": "4",
-                "sequence": "CCCC",
+                "seq_len": "80",
+                "sequence": LONG_SEQ_C,
             }
         )
 
@@ -204,6 +288,66 @@ def test_resolve_header_allele_has_non_mhcgnomes_fallback(monkeypatch):
     assert gene == "K"
     assert mhc_class == "I"
     assert species == "murine"
+
+
+def test_validate_mhc_index_rejects_nucleotide_like_sequences(tmp_path, monkeypatch):
+    index_csv = tmp_path / "mhc_index.csv"
+    with open(index_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=mhc_index.INDEX_FIELDS)
+        writer.writeheader()
+        writer.writerow(
+            {
+                "allele_raw": "Mamu-A*01:01",
+                "normalized": "Mamu-A*01:01",
+                "gene": "A",
+                "mhc_class": "I",
+                "species": "macaque",
+                "source": "ipd_mhc",
+                "seq_len": "180",
+                "sequence": "ACG" * 60,
+            }
+        )
+
+    monkeypatch.setattr(mhc_index, "_require_mhcgnomes", lambda: object())
+    monkeypatch.setattr(
+        mhc_index,
+        "_normalize_with_mhcgnomes",
+        lambda allele: (allele, None, None, None),
+    )
+
+    report = mhc_index.validate_mhc_index(str(index_csv))
+    assert report["valid"] is False
+    assert any(error["code"] == "nucleotide_like_sequence" for error in report["errors"])
+
+
+def test_validate_mhc_index_rejects_trivially_short_sequences(tmp_path, monkeypatch):
+    index_csv = tmp_path / "mhc_index.csv"
+    with open(index_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=mhc_index.INDEX_FIELDS)
+        writer.writeheader()
+        writer.writerow(
+            {
+                "allele_raw": "HLA-DRB1*03:03",
+                "normalized": "HLA-DRB1*03:03",
+                "gene": "DRB1",
+                "mhc_class": "II",
+                "species": "human",
+                "source": "imgt",
+                "seq_len": "60",
+                "sequence": "A" * 60,
+            }
+        )
+
+    monkeypatch.setattr(mhc_index, "_require_mhcgnomes", lambda: object())
+    monkeypatch.setattr(
+        mhc_index,
+        "_normalize_with_mhcgnomes",
+        lambda allele: (allele, None, None, None),
+    )
+
+    report = mhc_index.validate_mhc_index(str(index_csv))
+    assert report["valid"] is False
+    assert any(error["code"] == "sequence_too_short" for error in report["errors"])
 
 
 def test_classify_unresolved_allele_uses_mhcgnomes_parse_kinds(monkeypatch):
@@ -319,8 +463,8 @@ def test_summarize_mhc_index_counts(tmp_path):
                 "mhc_class": "I",
                 "species": "human",
                 "source": "imgt",
-                "seq_len": "4",
-                "sequence": "AAAA",
+                "seq_len": "80",
+                "sequence": LONG_SEQ_A,
             }
         )
         writer.writerow(
@@ -331,8 +475,8 @@ def test_summarize_mhc_index_counts(tmp_path):
                 "mhc_class": "I",
                 "species": "macaque",
                 "source": "ipd_mhc",
-                "seq_len": "4",
-                "sequence": "CCCC",
+                "seq_len": "80",
+                "sequence": LONG_SEQ_C,
             }
         )
         writer.writerow(
@@ -368,8 +512,8 @@ def test_validate_mhc_index_detects_duplicates_and_seq_len_mismatch(tmp_path, mo
                 "mhc_class": "I",
                 "species": "human",
                 "source": "imgt",
-                "seq_len": "4",
-                "sequence": "AAAA",
+                "seq_len": "80",
+                "sequence": LONG_SEQ_A,
             }
         )
         writer.writerow(
@@ -381,7 +525,7 @@ def test_validate_mhc_index_detects_duplicates_and_seq_len_mismatch(tmp_path, mo
                 "species": "human",
                 "source": "imgt",
                 "seq_len": "9",
-                "sequence": "AAAA",
+                "sequence": LONG_SEQ_A,
             }
         )
 
@@ -412,8 +556,8 @@ def test_validate_mhc_index_detects_non_canonical_alleles(tmp_path, monkeypatch)
                 "mhc_class": "I",
                 "species": "human",
                 "source": "imgt",
-                "seq_len": "4",
-                "sequence": "AAAA",
+                "seq_len": "80",
+                "sequence": LONG_SEQ_A,
             }
         )
 

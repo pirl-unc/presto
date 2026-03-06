@@ -1,4 +1,104 @@
+# Unified Training Failure Audit + Repair (2026-03-06)
+
+## Plan
+
+- [x] Read the canonical docs and inspect the concrete source paths for unified data generation, collation, model forward/loss wiring, and Modal training orchestration.
+- [x] Reproduce the "doesn't learn" behavior with targeted local diagnostics: dataset sanity probes, batch/label audits, forward/loss checks, and a short train/probe run.
+- [x] Identify the highest-impact bugs or design/implementation mismatches causing failed learning, with file-level evidence.
+- [x] Implement the smallest defensible fixes for the most egregious issues in data generation, model architecture, or training wiring.
+- [x] Add or update targeted tests and run focused verification plus at least one end-to-end local training sanity check.
+- [x] Regenerate unified merged data and confirm the generated output matches the intended semantics.
+- [x] Run a fresh 1-epoch unified Modal training job on the regenerated data, collect artifacts/logs, and analyze training dynamics.
+- [ ] Commit the full resulting change set and push it to the current branch.
+
+## Review
+
+- Root-cause data bug fixed: `scripts/train_iedb.py` had a stale hard-coded `MIN_MHC_SEQUENCE_LEN = 101` while `data/mhc_index.py` and `data/loaders.py` had already been corrected to accept groove-bearing fragments at `>=70 aa`. This caused the training path to silently drop valid short class II chains even when the index and loader accepted them.
+- Canonicalized MHC fragment handling:
+  - `data/mhc_index.py`: reject `<70 aa` fragments and nucleotide-like entries during index build/validation.
+  - `data/loaders.py`: fail fast on nucleotide-like chains and `<70 aa` sequences.
+  - `scripts/train_iedb.py`: import the canonical MHC AA alphabet and minimum chain length from `presto.data.loaders` instead of duplicating its own threshold.
+- Sampler/loss repair already in this audit remains in place and validated:
+  - synthetic binding negatives no longer form their own top-level task group;
+  - MHC-only augmentation samples are explicitly isolated as `mhc_aux`;
+  - MHC augmentation sample count is capped by dataset fraction;
+  - auxiliary MHC losses and affinity-probe loss use explicit base weights before support aggregation.
+- Focused verification:
+  - `pytest -q tests/test_mhc_index.py tests/test_loaders.py tests/test_train_synthetic.py tests/test_train_iedb.py` -> `85 passed`.
+  - additional regression after the train-path threshold fix:
+    - `python -m py_compile scripts/train_iedb.py tests/test_train_iedb.py`
+    - `pytest -q tests/test_train_iedb.py tests/test_mhc_index.py tests/test_loaders.py` -> `75 passed`.
+- Regenerated index outcome:
+  - `data/mhc_index.csv` rebuilt with `lt70=0`, `lt80=421`, `lt100=5883`, `nucleotide_like=0`.
+  - `70-99 aa` bucket is dominated by class II, especially human class II, so the old `>100 aa` filter was biologically and statistically incorrect.
+- Diagnostic Modal comparison:
+  - Pre-fix run `diag-repair-20260306a`:
+    - `train_loss=1.1332`, `val_loss=0.7220`
+    - `SLLQHLIGL` probe:
+      - `HLA-A*02:01`: `KD≈1486 nM`, `bind≈0.2056`, `present≈0.8972`
+      - `HLA-A*24:02`: `KD≈1596 nM`, `bind≈0.1916`, `present≈0.8844`
+      - delta: binding `+0.0141`, presentation `+0.0128`
+    - pMHC flow: binding-logit norms `mhc=1.0817`, `peptide=0.1026`, `interaction=0.1021`
+  - Post-fix run `diag-repair-20260306c`:
+    - no more `short_len=81/89` invalid-sequence drops in the live training path
+    - resolved MHC coverage improved from `44960` to `44974` rows in the diagnostic cap
+    - `train_loss=1.1285`, `val_loss=0.8165`
+    - `SLLQHLIGL` probe:
+      - `HLA-A*02:01`: `KD≈840.8 nM`, `bind≈0.3441`, `present≈0.9376`
+      - `HLA-A*24:02`: `KD≈856.1 nM`, `bind≈0.3391`, `present≈0.9360`
+      - delta: binding `+0.0050`, presentation `+0.0016`
+    - pMHC flow: binding-logit norms `mhc=1.1418`, `peptide=0.3769`, `interaction=0.2672`
+- Interpretation:
+  - The model is no longer in a "learns nothing" regime. One epoch produces stable monotone loss reduction, correct `A*02:01 > A*24:02` ordering on the probe, and nontrivial joint peptide-MHC interaction.
+  - The corrected path increases peptide/interactions entering the binding head substantially, which is a positive mechanistic sign.
+  - The one-epoch validation-loss comparison is not apples-to-apples because adding accepted short-fragment rows changes dataset cardinality and thus the random train/val split.
+  - Probe discrimination is still weak after one epoch, especially on presentation; this remains the main open modeling concern.
+- Long run launched:
+  - Detached full-profile Modal run: `full-repair-20260306a`
+  - app id: `ap-EWy6JjrqiOA3i3xKzEk5Nk`
+  - uses corrected `70 aa` index and strict resolved-only MHC filtering.
+
 # Improve pMHC Binding Latent Architecture
+
+# Unified Merge Rerun + Sanity Debug (2026-03-05)
+
+## Plan
+
+- [x] Confirm rerun completion and capture merge stats JSON/logs.
+- [x] Sanity-check regenerated `data/merged_deduped.tsv` for strict allele-set semantics (`cell_hla_allele_set` only allele-like tokens).
+- [x] Verify strict retention policy: cellular rows are kept only when allele set is known.
+- [x] Identify and patch merge bottlenecks before rerun.
+- [x] Re-run targeted tests and re-run merge sanity probes; record results below.
+
+## Review
+
+- Performance fixes applied in `data/cross_source_dedup.py`:
+  - `UnifiedRecord` now uses `@dataclass(slots=True)` and `raw_data=None` default (removes per-record empty dict allocation).
+  - IEDB/CEDAR parsers now compute `reference_text` only when PMID/DOI is unavailable (preserves fuzzy fallback semantics while removing unnecessary per-row string/regex work).
+  - TSV write path switched from `csv.DictWriter` per-row dict materialization to `csv.writer` list rows.
+  - tqdm overhead reduced by batching updates and coarser refresh intervals.
+- Full merge rerun command:
+  - `env TQDM_DISABLE=1 python -m presto data merge --datadir ./data`
+- Full merge timings (from run log):
+  - `load: 302.52s`
+  - `dedup: 66.29s`
+  - `cell_hla_lookup: 10.25s`
+  - `cell_hla_annotate_filter: 9.37s`
+  - `write_tsv: 12.08s`
+  - `write_funnel: 3.47s`
+  - `total: 405.11s` (~6.75 min)
+- Throughput/scale:
+  - loaded `12,459,631` records at `41,186.7/s`.
+  - final output `3,317,673` rows.
+- Sanity results on regenerated `data/merged_deduped.tsv`:
+  - `invalid_token_count_total=0` for `cell_hla_allele_set` (only allele-like tokens remain).
+  - `missing_cell_hla_by_assay={}` for cellular assays present in final output.
+  - final assay composition:
+    - `elution_ms: 2,727,347`
+    - `binding_affinity: 251,418`
+    - `tcell_response: 159,847`
+    - `tcr_pmhc: 166,321`
+    - kinetic assays: `12,740` total
 
 ## Plan
 
@@ -51,6 +151,39 @@
 - Processing latent isolation confirmed with weight-copying test
 
 ---
+
+# Implementation-vs-Design Audit + Latent Flow Critique (2026-03-04)
+
+## Plan
+
+- [x] Extract canonical architecture and latent-flow requirements from docs.
+- [x] Inspect implementation paths (`models/presto.py`, encoders/heads, training loss wiring) against those requirements.
+- [x] Identify concrete design/implementation mismatches with file-level evidence.
+- [x] Evaluate information flow and gradient flow through latent DAG (including activations, residual pathways, bottlenecks).
+- [x] Propose targeted architecture improvements ranked by expected impact and implementation risk.
+- [x] Record findings in this review section with explicit verdicts.
+
+## Review
+
+- Overall: core latent-DAG wiring is mostly faithful, but there are high-impact mismatches in override routing, processing/MS isolation, and multi-allele architecture implementation depth.
+- Design/implementation mismatches found:
+  - `mhc_species` override is computed and surfaced in outputs but not used in `context_token` construction; downstream latent path still uses inferred per-chain species probs.
+  - core-relative peptide embedding is injected into all non-recognition latents, which leaks MHC-informed core signals into `processing_*` and `ms_detectability` despite the documented isolation contract.
+  - `design.md` token layout specifies explicit segment boundary tokens (`[NFLANK]`, `[CLEAVE_N]`, `[MHC_A]`, etc.), but runtime vocabulary/stream builder uses plain AA tokens + segment IDs without those markers.
+  - `design.md` section 7.1 still states 11 latents, while code includes 12 (`species_of_origin` added).
+  - `design.md` MIL section specifies competition-transformer + attention pooling over allele vectors, while current inference/training uses per-allele forward + external Noisy-OR aggregation.
+  - `training_spec.md` lists core-start CE and binding-orthogonality regularization, but canonical loss wiring currently does not include explicit core-start or orthogonality losses.
+- Information/gradient-flow assessment:
+  - Strong: pre-norm residual latent cross-attention blocks are stable; strict segment-blocked base attention plus peptide-only recognition path prevents obvious shortcut leakage into recognition.
+  - Risk: presentation output is dominated by additive logit path from processing/binding logits, so presentation-latent branch gets comparatively weak supervision signal.
+  - Risk: MIL instance capping subsamples globally and can drop all instances for some bags, introducing noisy bag losses with no instance-level corrective gradient.
+  - Risk: hard clamping of kinetic latents/logits improves numeric safety but can flatten gradients on extreme examples.
+- Recommended improvement priorities:
+  - P1: route `mhc_species` override into `context_token` and downstream species-conditioned paths.
+  - P1: restrict core-relative injection to latents that are allowed to use MHC-informed core context (binding/presentation), excluding processing/MS latents.
+  - P1: make MIL cap bag-aware (preserve at least one instance per bag) and consider soft attention MIL to reduce noisy-or saturation.
+  - P2: add explicit core-start supervision when labels exist; add binding affinity/stability orthogonality penalty as documented.
+  - P2: increase presentation-latent contribution via scheduled/gated residual scaling so presentation supervision meaningfully trains presentation latents.
 
 # Align Presto Code to Design Specification
 
@@ -1749,3 +1882,245 @@ Non-goals for this plan:
     - `pytest -q tests/test_presto.py tests/test_heads.py tests/test_losses.py tests/test_trainer.py tests/test_train_iedb.py tests/test_training_e2e.py tests/test_training_logging.py tests/test_collate.py tests/test_train_synthetic.py tests/test_predictor.py tests/test_predict_cli.py`
     - result: `217 passed`;
   - compile checks passed for touched inference/cli/model/training files.
+
+---
+
+# Close Remaining Design/Flow Gaps (2026-03-05)
+
+## Spec
+
+Goal: resolve all remaining mismatches identified in the latest implementation-vs-design audit, including latent conditioning, information/gradient-flow issues, and docs drift.
+
+## Plan
+
+- [x] Wire `mhc_species` override into downstream latent conditioning (`context_token`) instead of inferred per-chain species when override is present.
+- [x] Prevent core-relative peptide injection from leaking into processing/MS latents; keep it only on intended pathways.
+- [x] Make MIL capping bag-aware so instance subsampling preserves at least one instance per bag.
+- [x] Add canonical core-start CE supervision path (optional when labels exist) in collation + training loss wiring.
+- [x] Add binding affinity/stability orthogonality regularization and expose a training knob for it.
+- [x] Improve presentation latent gradient utilization by strengthening latent residual contribution with stable initialization.
+- [x] Replace remaining hard clamp points in assay heads with smooth bounds where feasible to preserve extreme-example gradients.
+- [x] Align predictor AA validation with the new 26-token AA vocabulary (remove B/Z/O/U acceptance).
+- [x] Update design/training docs to match implemented token layout and training objective details.
+- [x] Add/update focused tests for each fix and run verification suite.
+
+## Review
+
+- `models/presto.py`
+  - `mhc_species` override now conditions `context_token` directly (replicated into both chain-species slots when override is active).
+  - Core-relative peptide embedding no longer leaks into processing/MS latents; only binding/presentation pathways use core-aware states.
+  - Presentation latent residual branch now uses positive `softplus`-gated scale with stronger initialization (`softplus(-1.5) ~= 0.20`).
+- `scripts/train_synthetic.py`
+  - Added `core_start` CE task wiring (`core_start_logit` vs `targets["core_start"]`).
+  - Added bag-aware MIL cap helper preserving at least one instance per bag even when capped.
+  - Added binding orthogonality regularization (`consistency_binding_orthogonality`) with configurable `binding_orthogonality_weight` (default `0.01`).
+- `data/collate.py`
+  - Added optional `PrestoSample.core_start` and collation into `targets["core_start"]` + mask.
+- `models/heads.py`
+  - Replaced several hard clamps with smooth lower/range bounds to preserve extreme-gradient flow.
+- `inference/predictor.py`
+  - AA sequence validator updated to match 26-token vocabulary (removed B/Z/O/U acceptance).
+- Docs updated
+  - `docs/design.md`: token-stream layout now reflects residue-only runtime layout with segment IDs (no explicit boundary tokens).
+  - `docs/training_spec.md`: explicit notes for optional core-start CE activation and orthogonality knob/default.
+- Verification
+  - `python -m py_compile models/presto.py models/heads.py data/collate.py scripts/train_synthetic.py inference/predictor.py tests/test_presto.py tests/test_train_synthetic.py tests/test_collate.py tests/test_predictor.py`
+  - `pytest -q tests/test_presto.py tests/test_train_synthetic.py tests/test_collate.py tests/test_predictor.py tests/test_heads.py`
+  - Result: `155 passed`.
+
+---
+
+# Modal Small-Run Trajectory Analysis (2026-03-05)
+
+## Spec
+
+Goal: run a short Modal unified-training job and analyze trajectory signals across epochs for:
+- losses,
+- latent/output diagnostics,
+- gradient/backprop magnitude proxies from logged train metrics,
+- SLLQHLIGL probe predictions (A*02:01 vs A*24:02 discrimination).
+
+## Plan
+
+- [x] Launch a small capped Modal unified run with probe + latent diagnostics enabled.
+- [x] Pull run artifacts (`metrics.csv`, probe artifacts) from Modal volume.
+- [x] Parse epoch trajectories for train/val loss and key per-task losses.
+- [x] Parse latent/output diagnostics trajectory (`output_latent` split metrics).
+- [x] Parse gradient-magnitude proxies from training logs (backward/optimizer timing and any grad-like metrics if present).
+- [x] Parse SLLQHLIGL probe trajectory and discrimination deltas across epochs.
+- [x] Summarize findings with concrete trend calls and caveats.
+
+## Review
+
+- First attempt (`traj-small-20260305T090347`) failed before epoch 1 due strict unresolved-MHC enforcement (`176` unresolved rows). This was a data-resolution strictness gate, not a model runtime bug.
+- Successful run: `traj-small-20260305T090854-filt` (`--filter-unresolved-mhc`, `6` epochs, `--max-batches 80`, `--max-val-batches 20`, probe + pMHC flow + output-latent diagnostics enabled).
+- Artifacts downloaded to:
+  - `modal_runs/traj-small-20260305T090854-filt/traj-small-20260305T090854-filt/metrics.csv`
+  - `modal_runs/traj-small-20260305T090854-filt/traj-small-20260305T090854-filt/probe_affinity_over_epochs.csv`
+- Loss trajectory:
+  - train loss dropped `0.6374 -> 0.1984` (`-68.9%`) by epoch 6;
+  - validation loss was best at epoch 1 (`0.19865`) and rose afterward (`0.31338` at epoch 6), indicating early overfitting/shift under this tiny capped run.
+- Latent/output trajectory (selected diagnostics):
+  - `diag_pmhc_vec_feature_var_mean`: `0.146 -> 0.976` (monotonic growth);
+  - `diag_binding_logit_var`: `0.078 -> 12.048` (strong spread increase);
+  - `diag_presentation_logit_var`: `4.365 -> 23.003` (peaked at `37.802` on epoch 5);
+  - `diag_latent_presentation_mixed_norm_mean`: `12.455 -> 42.576`;
+  - `diag_latent_binding_affinity_norm_mean`: `18.819 -> 20.533`.
+- Gradient-magnitude signals:
+  - no direct gradient-norm metric is logged in this pipeline;
+  - used timing proxies: `perf_backward_sec_per_batch` remained stable (`~0.094–0.100s`), optimizer step stable (`~0.0048–0.0059s`), and throughput improved (`train_samples_per_sec 134.4 -> 145.7`).
+- SLLQHLIGL probe trajectory:
+  - `HLA-A*02:01` KD: `51960 nM -> 167.5 nM` (about `310x` tighter);
+  - `HLA-A*24:02` KD: `52028 nM -> 167.7 nM` (about `310x` tighter);
+  - inter-allele separation remained near zero across all epochs (`delta_log10` around `0`, final `-0.000408`; final KD delta `-0.158 nM`).
+- pMHC flow signal:
+  - MHC-shuffle effect remained dominant (`~0.95–1.01` normalized),
+  - peptide and interaction terms increased by epoch 6 (`peptide_norm 0.0097`, `interaction_norm 0.0088`, `interaction_ratio 0.0090`), but are still much smaller than the MHC term.
+
+---
+
+# Modal 1-Epoch Trajectory Re-Run (2026-03-05)
+
+## Spec
+
+Goal: run a fresh 1-epoch Modal unified training pass and repeat the same analysis slices (losses, latent/output diagnostics, gradient proxies, SLLQHLIGL probe metrics) on this 1-epoch run.
+
+## Plan
+
+- [x] Launch 1-epoch Modal unified run with the same diagnostics enabled.
+- [x] Pull run artifacts (`metrics.csv`, `probe_affinity_over_epochs.csv`) from Modal volume.
+- [x] Recompute loss/latent/perf/probe tables from this new run only.
+- [x] Summarize findings and compare against prior 6-epoch behavior.
+
+## Review
+
+- Successful run: `traj-1ep-20260305T115512-filt` (`--epochs 1`, `--max-batches 80`, `--max-val-batches 20`, `--filter-unresolved-mhc`).
+- Artifacts downloaded to:
+  - `modal_runs/traj-1ep-20260305T115512-filt/traj-1ep-20260305T115512-filt/metrics.csv`
+  - `modal_runs/traj-1ep-20260305T115512-filt/traj-1ep-20260305T115512-filt/probe_affinity_over_epochs.csv`
+  - `modal_runs/traj-1ep-20260305T115512-filt/traj-1ep-20260305T115512-filt/probe_affinity_over_epochs.png`
+- 1-epoch metrics snapshot:
+  - loss: `train=0.7989`, `val=0.3451`; binding-loss `train=3.6782`, `val=1.4399`; presentation-loss `train=0.4006`, `val=0.5989`.
+  - perf proxies: wait `0.262s/batch` (34.1%), compute `0.297s/batch`, backward `0.168s/batch` (21.8%), optimizer `0.010s/batch` (1.3%), throughput `83.17 samples/s`.
+  - latent/output diagnostics: `diag_pmhc_vec_feature_var_mean=0.0877`, `diag_binding_logit_var=0.00191`, `diag_presentation_logit_var=7.3963`, `diag_latent_presentation_mixed_norm_mean=11.0755`.
+  - pMHC flow: `mhc_norm=0.9125`, `peptide_norm=0.00460`, `interaction_norm=0.00553`, `interaction_ratio=0.00642`.
+  - probe: `SLLQHLIGL + A*02:01 KD=85597.3 nM`, `SLLQHLIGL + A*24:02 KD=85590.9 nM`; separation remains effectively zero (`delta_log10=3.24e-05`, `delta_binding_prob=-1.56e-07`).
+- Comparison to prior 6-epoch run:
+  - this 1-epoch run is early-training only and remains in weak-binding regime for both probe alleles;
+  - like the 6-epoch run, allele discrimination is still absent at this stage.
+
+---
+
+# Full-Data 1-Epoch Preflight (2026-03-05)
+
+## Spec
+
+Goal: before launching a true full-data 1-epoch Modal run, estimate:
+- expected mini-batch count,
+- whether epoch sampling uses all real + synthetic rows,
+- per-mini-batch sample-type balance under the run configuration.
+
+## Plan
+
+- [ ] Compute full-profile post-augmentation sample counts (real + synthetic + augmentation) with the exact train_iedb logic.
+- [ ] Evaluate epoch coverage semantics for balanced vs non-balanced loaders and pick the setting that guarantees full data usage.
+- [ ] Produce per-mini-batch sample-type balance summary (expected and empirical) for the chosen setting.
+- [ ] Confirm final launch command for the full-data 1-epoch Modal run and proceed.
+
+## Review
+
+- In progress.
+
+---
+
+# Merge Enrichment + Funnel Artifacts (2026-03-05)
+
+## Spec
+
+Goal: extend `presto data merge` so merged output includes cell-level HLA context for cellular assays, requires MS rows to have resolvable allele-set context, and emits funnel artifacts that show per-assay filtering stages into the unified dataset.
+
+## Plan
+
+- [x] Add cell-context fields to unified records/TSV schema and parse ligand-cell metadata from IEDB/CEDAR ligand streams.
+- [x] Build `cell_context -> allele_set` map from detected elution-like ligand rows and annotate merged records with `cell_hla_allele_set`.
+- [x] Filter out MS/elution rows lacking resolvable allele-set context and report retained/dropped counts and fractions.
+- [x] Emit merge funnel artifacts (TSV + PNG) summarizing per-assay raw→loaded→deduped→post-filter counts.
+- [x] Add/update tests for schema fields, annotation/filter behavior, and funnel artifact generation.
+- [x] Run focused test suite for merge/dedup path.
+
+## Review
+
+- Implemented in `data/cross_source_dedup.py` with new unified fields (`cell_hla_allele_set`, `cell_hla_n_alleles`), ligand APC parsing, lookup/annotation/filter stats, and funnel artifact emission (`*_funnel.tsv`, `*_funnel.png` when matplotlib exists).
+- Added/updated tests in `tests/test_cross_source_dedup.py`; focused suites passed (`tests/test_cross_source_dedup.py`, `tests/test_data_cli.py`, `tests/test_train_iedb.py`).
+
+---
+
+# Merge Streamlining + Dedup/Allele-Set Optimization (2026-03-05)
+
+## Spec
+
+Goal: streamline `presto data merge` runtime by optimizing the expensive dedup and elution cell-HLA allele-set stages, while adding high-visibility progress instrumentation (tqdm + detailed stage logging) directly in the unification path.
+
+## Plan
+
+- [x] Profile/trim hot loops in cross-source dedup logic while preserving dedup semantics.
+- [x] Optimize cell-HLA allele-set generation with caching and a single-pass annotate+filter path.
+- [x] Add generous per-stage logging (counts, rates, elapsed time) and tqdm progress bars for long-running merge stages.
+- [x] Keep funnel artifact generation in the streamlined path and surface outputs clearly in logs/stats.
+- [x] Add/adjust tests for optimized helpers and instrumentation-compatible behavior.
+- [x] Run focused merge-related tests and a local merge smoke benchmark to validate speed and correctness.
+
+## Review
+
+- Core optimizations:
+  - dedup now partitions by sample-signature buckets and uses indexed candidate matching per bucket (`pmid`, `doi`, no-ref payload), avoiding worst-case pairwise scans;
+  - assay bucket classification now caches per record (`_assay_bucket_cache`) to reduce repeated string parsing;
+  - allele-set generation now uses cached cell-context normalization and cached informative-allele tokenization;
+  - replaced two passes (`annotate` + `filter`) with a single pass helper (`_annotate_and_filter_cell_hla`) in `deduplicate_all`.
+- Instrumentation added:
+  - tqdm bars for grouping, dedup groups, cell-HLA lookup, annotate+filter;
+  - detailed stage timing/rate logging and `stats["timing_sec"]` output.
+- Validation:
+  - `pytest -q tests/test_cross_source_dedup.py tests/test_data_cli.py tests/test_train_iedb.py` -> `59 passed`.
+  - full local merge smoke benchmark completed on full local data set and emitted stage timings:
+    - `load=886.73s`, `dedup=727.28s`, `cell_hla_lookup=76.06s`, `cell_hla_annotate_filter=65.17s`, `write_tsv=142.47s`, `write_assay_csvs=137.42s`, `total=2059.64s`.
+    - final elution retention with resolvable cell-HLA set: `3441254 / 4091824` (`84.10%`).
+
+---
+
+# Merge CLI Output Defaults + Artifact Cleanup (2026-03-05)
+
+## Spec
+
+Goal: switch `presto data merge` so per-assay CSV materialization is opt-in (`--per-assay-csv`) instead of opt-out, remove stale generated assay artifacts, and audit why `cell_hla_allele_set` dominates merged text volume with concrete value examples.
+
+## Plan
+
+- [x] Replace `--no-assay-csv` with `--per-assay-csv` and make no-assay output the default in CLI wiring.
+- [x] Update merge command implementation to respect the new flag semantics.
+- [x] Update parser/CLI/docs tests and user docs for the new default/flag.
+- [x] Remove stale generated per-assay artifacts from recent local runs.
+- [x] Extract example values for `cell_hla_allele_set` and `reference_text` (including longest rows) and summarize root cause of size skew.
+- [x] Run focused CLI + merge tests.
+
+## Review
+
+- CLI changes:
+  - `cli/main.py`: removed `--no-assay-csv`; added opt-in `--per-assay-csv`.
+  - `cli/data.py`: default now writes only merged TSV; per-assay CSVs only when `args.per_assay_csv` is true.
+- Tests/docs:
+  - `tests/test_data_cli.py` updated for new flag semantics and added default-no-assay regression.
+  - `docs/cli.md` and `docs/training_spec.md` updated to state per-assay CSV output is optional/opt-in.
+- Artifact cleanup completed:
+  - removed stale `data/merged_assays` and local scratch outputs from `/tmp` (`merged_assays_opt`, `merged_deduped_opt*.{tsv,png}`, CSV microbench outputs).
+- Field-value audit summary:
+  - `cell_hla_allele_set` can become very long because it stores the **union** of alleles for broad cell-context labels (e.g., `B cell`, `PBMC`, `splenocyte`) across many studies; one mapping example reached `len=2699` (`n=240` alleles).
+  - `reference_text` is long but less dominant (longest seen around `len=2368` in this corpus).
+  - sample `cell_hla_allele_set` values from artifacts include short singletons (e.g., `HLA-DR`) and very large semicolon-delimited unions for generic contexts.
+- Follow-up fix:
+  - tightened allele-set token filtering so `cell_hla_allele_set` only keeps allele-like identifiers (canonical `*` alleles and murine `H2-*` shorthand), excluding generic tokens like `HLA class I`, `H2 class II`, `MHC class I`, serotype/mutant-style labels.
+  - switched lookup from broad `cell_context` unions to strict `(pmid, cell_context)` keys to avoid cross-study allele inflation.
+  - single-pass cellular handling now keeps cellular rows only when an allele set is truly known (direct informative `mhc_allele` or strict lookup hit).
+  - added tests in `tests/test_cross_source_dedup.py` for the stricter token contract and mixed-token lookup behavior.
+- Verification:
+  - `pytest -q tests/test_cross_source_dedup.py tests/test_data_cli.py tests/test_train_cli.py` -> `49 passed`.

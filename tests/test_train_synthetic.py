@@ -252,6 +252,142 @@ def test_compute_loss_uses_mil_noisy_or_for_elution_family_tasks():
     assert "out_mil_ms_prob_mean" in metrics
 
 
+def test_mil_instance_cap_preserves_at_least_one_instance_per_bag():
+    class _TrackingMilModel(nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.call_ns = []
+
+        def forward(self, **kwargs):
+            n = kwargs["pep_tok"].shape[0]
+            self.call_ns.append(n)
+            return {
+                "elution_logit": torch.zeros((n, 1), dtype=torch.float32),
+                "presentation_logit": torch.zeros((n, 1), dtype=torch.float32),
+                "ms_logit": torch.zeros((n, 1), dtype=torch.float32),
+            }
+
+    samples = [
+        PrestoSample(
+            peptide="SIINFEKL",
+            mhc_a="MAVMAPRTLLLLLSGALALTQTA",
+            mhc_b="MSRSVALAVLALLSLSGLEA",
+            mhc_class="I",
+            elution_label=1.0,
+            species="human",
+            mil_mhc_a_list=[
+                "MAVMAPRTLLLLLSGALALTQTA",
+                "CAVMAPRTLLLLLSGALALTQTA",
+            ],
+            mil_mhc_b_list=["MSRSVALAVLALLSLSGLEA", "MSRSVALAVLALLSLSGLEA"],
+            mil_mhc_class_list=["I", "I"],
+            mil_species_list=["human", "human"],
+        ),
+        PrestoSample(
+            peptide="GILGFVFTL",
+            mhc_a="DAVMAPRTLLLLLSGALALTQTA",
+            mhc_b="MSRSVALAVLALLSLSGLEA",
+            mhc_class="I",
+            elution_label=0.0,
+            species="human",
+            mil_mhc_a_list=[
+                "DAVMAPRTLLLLLSGALALTQTA",
+                "EAVMAPRTLLLLLSGALALTQTA",
+            ],
+            mil_mhc_b_list=["MSRSVALAVLALLSLSGLEA", "MSRSVALAVLALLSLSGLEA"],
+            mil_mhc_class_list=["I", "I"],
+            mil_species_list=["human", "human"],
+        ),
+    ]
+    batch = PrestoCollator(max_pep_len=16, max_mhc_len=64)(samples)
+    model = _TrackingMilModel()
+
+    total, losses, _ = compute_loss(
+        model=model,
+        batch=batch,
+        device="cpu",
+        regularization=None,
+        max_mil_instances=1,
+    )
+
+    assert torch.isfinite(total)
+    assert "elution" in losses
+    assert len(model.call_ns) >= 2
+    assert model.call_ns[1] >= 2
+
+
+def test_compute_loss_adds_binding_orthogonality_regularization():
+    sample = PrestoSample(
+        peptide="SIINFEKL",
+        mhc_a="MAVMAPRTLLLLLSGALALTQTWAG",
+        mhc_b="MSRSVALAVLALLSLSGLEA",
+        mhc_class="I",
+    )
+    batch = PrestoCollator(max_pep_len=16, max_mhc_len=64)([sample])
+
+    aligned_model = _DummyOutputsModel(
+        {
+            "latent_vecs": {
+                "binding_affinity": torch.tensor([[1.0, 0.0]], dtype=torch.float32),
+                "binding_stability": torch.tensor([[1.0, 0.0]], dtype=torch.float32),
+            }
+        }
+    )
+    orth_model = _DummyOutputsModel(
+        {
+            "latent_vecs": {
+                "binding_affinity": torch.tensor([[1.0, 0.0]], dtype=torch.float32),
+                "binding_stability": torch.tensor([[0.0, 1.0]], dtype=torch.float32),
+            }
+        }
+    )
+
+    total_aligned, losses_aligned, _ = compute_loss(
+        model=aligned_model,
+        batch=batch,
+        device="cpu",
+        regularization={"binding_orthogonality_weight": 1.0},
+    )
+    total_orth, losses_orth, _ = compute_loss(
+        model=orth_model,
+        batch=batch,
+        device="cpu",
+        regularization={"binding_orthogonality_weight": 1.0},
+    )
+
+    assert torch.isfinite(total_aligned)
+    assert torch.isfinite(total_orth)
+    assert "consistency_binding_orthogonality" in losses_aligned
+    assert "consistency_binding_orthogonality" in losses_orth
+    assert float(losses_aligned["consistency_binding_orthogonality"].item()) > 0.9
+    assert losses_orth["consistency_binding_orthogonality"].item() == pytest.approx(0.0, abs=1e-6)
+
+
+def test_compute_loss_includes_core_start_ce_when_labels_present():
+    sample = PrestoSample(
+        peptide="SIINFEKL",
+        mhc_a="MAVMAPRTLLLLLSGALALTQTWAG",
+        mhc_b="MSRSVALAVLALLSLSGLEA",
+        mhc_class="II",
+        core_start=1,
+    )
+    batch = PrestoCollator(max_pep_len=16, max_mhc_len=64)([sample])
+    logits = torch.full((1, 16), -4.0, dtype=torch.float32)
+    logits[0, 1] = 4.0
+    model = _DummyOutputsModel({"core_start_logit": logits})
+
+    total, losses, _ = compute_loss(
+        model=model,
+        batch=batch,
+        device="cpu",
+        regularization=None,
+    )
+
+    assert torch.isfinite(total)
+    assert "core_start" in losses
+    assert float(losses["core_start"].item()) >= 0.0
+
+
 def test_compute_loss_adds_binding_mhc_attention_sparsity_penalty_when_out_of_range():
     sample = PrestoSample(
         peptide="SIINFEKL",
@@ -375,3 +511,46 @@ def test_compute_loss_support_weighted_aggregation_reduces_rare_task_influence()
         expected_sample_weighted, rel=1e-6
     )
     assert float(total_sample_weighted.item()) < float(total_task_mean.item())
+
+
+def test_compute_loss_applies_auxiliary_base_weights_before_support_aggregation():
+    samples = [
+        PrestoSample(
+            peptide="SIINFEKL",
+            mhc_a="MAVMAPRTLLLLLSGALALTQTWAG",
+            mhc_b="MSRSVALAVLALLSLSGLEA",
+            mhc_class="I",
+            bind_value=10_000.0,
+            primary_allele="HLA-A*02:01",
+        ),
+        PrestoSample(
+            peptide="GILGFVFTL",
+            mhc_a="MAVMAPRTLLLLLSGALALTQTWAG",
+            mhc_b="MSRSVALAVLALLSLSGLEA",
+            mhc_class="I",
+            primary_allele="HLA-A*02:01",
+        ),
+    ]
+    batch = PrestoCollator(max_pep_len=16, max_mhc_len=64)(samples)
+    model = _DummyOutputsModel(
+        {
+            "assays": {"KD_nM": torch.tensor([[2.0], [2.0]], dtype=torch.float32)},
+            "mhc_class_logits": torch.tensor([[-2.0, 2.0], [-2.0, 2.0]], dtype=torch.float32),
+        }
+    )
+
+    total, losses, _ = compute_loss(
+        model=model,
+        batch=batch,
+        device="cpu",
+        regularization=None,
+        supervised_loss_aggregation="sample_weighted",
+    )
+
+    assert torch.isfinite(total)
+    assert set(losses) == {"binding", "mhc_class"}
+
+    binding_loss = float(losses["binding"].item())
+    mhc_class_loss = float(losses["mhc_class"].item())
+    expected = (binding_loss * 1.0 + mhc_class_loss * 0.1 * 2.0) / (1.0 + 0.1 * 2.0)
+    assert float(total.item()) == pytest.approx(expected, rel=1e-6)

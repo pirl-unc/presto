@@ -48,7 +48,7 @@ python -m presto data merge --datadir ./data
 
 This writes:
 - one merged deduplicated table (`merged_deduped.tsv`),
-- one simplified CSV per assay bucket (`merged_assays/*.csv`).
+- optional per-assay CSVs (`merged_assays/*.csv`) when `--per-assay-csv` is used.
 
 ## 2.2 Source Inventory
 
@@ -90,7 +90,7 @@ Current merged snapshot:
 
 ## 2.4 Canonical Assay Buckets
 
-The merge step writes one CSV per assay bucket in `merged_assays/`.
+When `--per-assay-csv` is enabled, the merge step writes one CSV per assay bucket in `merged_assays/`.
 
 | Assay CSV | Current rows | Primary supervision target(s) |
 |-----------|-------------|-------------------------------|
@@ -238,6 +238,9 @@ Derived downstream rates from `--synthetic-pmhc-negative-ratio`:
 | MHC class/species | CE | Auxiliary heads |
 | Contrastive TCR-pMHC | InfoNCE (future) | Reserved; not active in canonical loop |
 
+Core-start CE is applied when `core_start` labels are present in the collated
+batch (`targets["core_start"]`, `target_masks["core_start"]`).
+
 ### Censor-aware regression
 
 Binding data often carries inequality qualifiers (<, =, >). The censor-aware
@@ -279,6 +282,15 @@ log_var = nn.Parameter(torch.zeros(n_tasks))
 task_loss_weighted = task_loss / (2 * exp(log_var)) + log_var / 2
 ```
 
+Low-value sequence-labeling auxiliaries should also carry a smaller fixed base
+weight before aggregation. Canonical defaults:
+- `mhc_class`, `mhc_species`, `mhc_a_fine_type`, `mhc_b_fine_type`: `0.1`
+- `chain_species`, `chain_type`, `chain_phenotype`: `0.1`
+- `binding_affinity_probe`: `0.3`
+
+This keeps `sample_weighted` aggregation focused on assay supervision instead
+of letting always-labeled bookkeeping heads dominate by raw support count.
+
 Optional **PCGrad** for conflicting gradients (project conflicting gradient
 components to reduce task interference).
 
@@ -314,6 +326,9 @@ Weighted regularizers (soft constraints):
 | T-cell context ordering | In-vitro vs ex-vivo sensitivity ordering (see design.md S10.5) | 0-70% |
 | T-cell upstream prior | Strong T-cell outputs require strong upstream biology | 0-70% |
 | Binding orthogonality | \|cos(binding_affinity_vec, binding_stability_vec)\| minimized | From start |
+
+Binding orthogonality is controlled by `binding_orthogonality_weight`
+(canonical default: `0.01`).
 
 ---
 

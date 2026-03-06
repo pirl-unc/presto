@@ -61,7 +61,12 @@ from presto.data.cross_source_dedup import (
     parse_iedb_binding,
     parse_iedb_tcell,
 )
-from presto.data.loaders import UniProtProtein, load_uniprot_proteins
+from presto.data.loaders import (
+    MHC_ALLOWED_AA,
+    MIN_MHC_CHAIN_LENGTH,
+    UniProtProtein,
+    load_uniprot_proteins,
+)
 from presto.data.mhc_index import classify_unresolved_allele, load_mhc_index, resolve_alleles
 from presto.data.vocab import FOREIGN_CATEGORIES, normalize_organism
 from presto.models.presto import Presto
@@ -191,6 +196,7 @@ IEDB_DEFAULTS = {
     "output_latent_stats_max_samples": 512,
     "filter_unresolved_mhc": False,
     "mhc_augmentation_samples": 60000,
+    "mhc_augmentation_max_fraction": 0.05,
     "seed": 42,
     "device": None,
 }
@@ -234,8 +240,8 @@ AMINO_ACIDS = "ACDEFGHIKLMNPQRSTVWY"
 SYNTHETIC_ELUTION_NEGATIVE_SCALE = 0.5
 SYNTHETIC_CASCADE_ELUTION_NEGATIVE_SCALE = 0.5
 SYNTHETIC_CASCADE_TCELL_NEGATIVE_SCALE = 0.5
-MHC_SEQUENCE_ALLOWED_AA = set("ACDEFGHIKLMNPQRSTVWYX")
-MIN_MHC_SEQUENCE_LEN = 101  # strict >100 aa guard
+MHC_SEQUENCE_ALLOWED_AA = set(MHC_ALLOWED_AA)
+MIN_MHC_SEQUENCE_LEN = int(MIN_MHC_CHAIN_LENGTH)
 
 # Keep uncertainty-weighting task indexing aligned with the actual
 # supervised loss registry used by train/eval (`train_synthetic`).
@@ -1748,7 +1754,7 @@ def augment_binding_records_with_synthetic_negatives(
                 mhc_allele=allele,
                 value=rng.uniform(neg_min, neg_max),
                 qualifier=0,
-                measurement_type=source_label,
+                measurement_type=source.measurement_type or "IC50",
                 unit="nM",
                 assay_type=source_label,
                 mhc_sequence=direct_mhc_sequence,
@@ -1782,7 +1788,7 @@ def augment_binding_records_with_synthetic_negatives(
                     mhc_allele=source.mhc_allele,
                     value=rng.uniform(neg_min, neg_max),
                     qualifier=0,
-                    measurement_type="synthetic_negative_no_mhc_beta",
+                    measurement_type=source.measurement_type or "IC50",
                     unit="nM",
                     assay_type="synthetic_negative_no_mhc_beta",
                     mhc_sequence=source.mhc_sequence or mhc_sequences.get(source.mhc_allele),
@@ -2343,11 +2349,29 @@ def _generate_mhc_only_samples(
             mhc_class=mhc_class,
             species=species,
             sample_source="mhc_augmentation",
+            assay_group="mhc_aux",
             synthetic_kind="mhc_only",
             primary_allele=rec.normalized,
             sample_id=f"mhc_aug_{len(samples)}",
         ))
     return samples
+
+
+def _effective_mhc_augmentation_sample_limit(
+    requested_samples: int,
+    current_dataset_size: int,
+    max_fraction: float,
+) -> int:
+    """Bound fixed-size MHC-only augmentation so capped runs stay label-dense."""
+    requested = max(0, int(requested_samples))
+    current_size = max(0, int(current_dataset_size))
+    fraction = max(0.0, float(max_fraction))
+    if requested <= 0 or current_size <= 0:
+        return 0
+    if fraction <= 0.0:
+        return requested
+    fraction_cap = max(1, int(round(current_size * fraction)))
+    return min(requested, fraction_cap)
 
 
 def generate_uniprot_samples(
@@ -3980,7 +4004,8 @@ def run(args: argparse.Namespace) -> None:
             else:
                 raise ValueError(
                     "Invalid loaded MHC sequences found (non-canonical residues "
-                    "and/or shorter than biologically expected >100 aa). "
+                    "and/or shorter than the minimum accepted groove-bearing "
+                    f"fragment ({MIN_MHC_SEQUENCE_LEN} aa)). "
                     f"examples={example_text}"
                 )
 
@@ -4224,10 +4249,29 @@ def run(args: argparse.Namespace) -> None:
         strict_mhc_resolution=strict_mhc_resolution,
     )
     mhc_augmentation_samples = int(getattr(args, "mhc_augmentation_samples", 0))
-    if mhc_augmentation_samples > 0 and args.index_csv:
+    mhc_augmentation_max_fraction = float(
+        getattr(args, "mhc_augmentation_max_fraction", 0.05)
+    )
+    effective_mhc_augmentation_samples = _effective_mhc_augmentation_sample_limit(
+        requested_samples=mhc_augmentation_samples,
+        current_dataset_size=len(dataset),
+        max_fraction=mhc_augmentation_max_fraction,
+    )
+    if (
+        mhc_augmentation_samples > 0
+        and effective_mhc_augmentation_samples < mhc_augmentation_samples
+    ):
+        print(
+            "MHC augmentation: capped fixed sample request to preserve label-dense batches "
+            f"(requested={mhc_augmentation_samples}, "
+            f"cap_fraction={mhc_augmentation_max_fraction:.3f}, "
+            f"effective={effective_mhc_augmentation_samples}, "
+            f"base_dataset={len(dataset)})"
+        )
+    if effective_mhc_augmentation_samples > 0 and args.index_csv:
         mhc_only = _generate_mhc_only_samples(
             index_csv=args.index_csv,
-            max_samples=mhc_augmentation_samples,
+            max_samples=effective_mhc_augmentation_samples,
             seed=args.seed,
         )
         if mhc_only:
@@ -4804,6 +4848,26 @@ def main(argv=None):
         type=float,
         default=DEFAULT_MAX_AFFINITY_NM,
         help="Maximum synthetic weak-affinity value (nM)",
+    )
+    parser.add_argument(
+        "--mhc-augmentation-samples",
+        dest="mhc_augmentation_samples",
+        type=int,
+        default=60000,
+        help=(
+            "Requested count of MHC-only auxiliary samples drawn from the MHC index "
+            "(capped by --mhc-augmentation-max-fraction)"
+        ),
+    )
+    parser.add_argument(
+        "--mhc-augmentation-max-fraction",
+        dest="mhc_augmentation_max_fraction",
+        type=float,
+        default=0.05,
+        help=(
+            "Maximum fraction of the current non-MHC-only dataset that fixed-size "
+            "MHC augmentation may add (0 disables the cap)"
+        ),
     )
     parser.add_argument("--val-frac", type=float, default=0.2, help="Validation fraction")
     parser.add_argument("--epochs", type=int, default=5, help="Number of epochs")

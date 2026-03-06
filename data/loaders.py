@@ -47,7 +47,16 @@ from .allele_resolver import (
 # =============================================================================
 
 MHC_ALLOWED_AA = set("ACDEFGHIKLMNPQRSTVWYX")
-MIN_MHC_CHAIN_LENGTH = 101  # strict >100 aa guard for full MHC chains
+MIN_MHC_CHAIN_LENGTH = 70  # allow groove-bearing fragments, reject trivial truncations
+NUCLEOTIDE_LIKE_SEQUENCE_CHARS = set("ACGTUNWSMKRYBDHV")
+
+
+def _looks_like_nucleotide_sequence(sequence: str) -> bool:
+    """Detect DNA/RNA-like full-length chains that would silently pass AA validation."""
+    seq = "".join(ch for ch in str(sequence or "").strip().upper() if ch.isalpha())
+    chars = set(seq)
+    nucleotide_chars = chars & set("ACGTU")
+    return bool(seq) and chars <= NUCLEOTIDE_LIKE_SEQUENCE_CHARS and len(nucleotide_chars) >= 3
 
 @dataclass
 class BindingRecord:
@@ -1368,9 +1377,6 @@ class PrestoDataset(Dataset):
             return "positive" if float(value) > 0.5 else "negative"
 
         def _binding_assay_group(measurement_type: Optional[str], source: Optional[str]) -> str:
-            src = _source_label(source)
-            if src.startswith("synthetic_negative"):
-                return src
             label = (measurement_type or "").strip().lower()
             if "kon" in label or "association rate" in label or "on rate" in label:
                 return "binding_kon"
@@ -1816,6 +1822,13 @@ class PrestoDataset(Dataset):
             if allele_text and allele_text not in self._mhc_x_allele_examples and len(self._mhc_x_allele_examples) < 8:
                 self._mhc_x_allele_examples.append(allele_text)
 
+        if len(seq) >= MIN_MHC_CHAIN_LENGTH and _looks_like_nucleotide_sequence(seq):
+            allele_text = str(allele or "").strip() or "<unknown>"
+            raise ValueError(
+                "Likely nucleotide sequence loaded for MHC chain: "
+                f"allele={allele_text}, chain={chain_label}, len={len(seq)}"
+            )
+
         if len(seq) < MIN_MHC_CHAIN_LENGTH:
             normalized_class = normalize_mhc_class(mhc_class)
             is_class_i_beta = (
@@ -1827,7 +1840,7 @@ class PrestoDataset(Dataset):
                 allele_text = str(allele or "").strip() or "<unknown>"
                 if self.strict_mhc_resolution:
                     raise ValueError(
-                        "MHC chain shorter than biologically expected (>100 aa): "
+                        "MHC chain shorter than minimum accepted groove-bearing fragment: "
                         f"allele={allele_text}, chain={chain_label}, len={len(seq)}"
                     )
                 # Non-strict mode: accept the short sequence with a warning
@@ -1961,6 +1974,8 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
     def _sample_task_group(sample: PrestoSample) -> str:
         if sample.assay_group:
             return sample.assay_group
+        if (sample.sample_source or "").strip() == "mhc_augmentation":
+            return "mhc_aux"
         if sample.bind_value is not None:
             return "binding_affinity"
         if sample.kon is not None or sample.koff is not None:

@@ -6,11 +6,19 @@ from pathlib import Path
 import pytest
 import torch
 
+from presto.data import PrestoDataset
 from presto.data.collate import PrestoBatch
 from presto.data.cross_source_dedup import UnifiedRecord
-from presto.data.loaders import BindingRecord, ElutionRecord, ProcessingRecord, TCellRecord
+from presto.data.loaders import (
+    BindingRecord,
+    ElutionRecord,
+    MIN_MHC_CHAIN_LENGTH,
+    ProcessingRecord,
+    TCellRecord,
+)
 from presto.scripts.train_iedb import (
     _audit_mhc_sequence_coverage,
+    _effective_mhc_augmentation_sample_limit,
     _filter_records_to_resolved_mhc,
     _resolve_run_args,
     _write_mhc_sequence_coverage_report,
@@ -190,8 +198,8 @@ def test_audit_loaded_mhc_sequence_quality_flags_noncanonical_x_and_short():
         {
             "HLA-A*02:01": "A" * 181,
             "HLA-A*24:02": ("A" * 170) + "X",
-            "HLA-B*07:02": ("A" * 110) + "Z",
-            "HLA-C*04:01": "C" * 90,
+            "HLA-B*07:02": ("A" * 110) + "J",
+            "HLA-C*04:01": "C" * (MIN_MHC_CHAIN_LENGTH - 1),
         }
     )
 
@@ -202,6 +210,18 @@ def test_audit_loaded_mhc_sequence_quality_flags_noncanonical_x_and_short():
     assert quality["short_count"] == 1
     assert any(example[0] == "HLA-B*07:02" for example in quality["noncanonical_examples"])
     assert any(example[0] == "HLA-C*04:01" for example in quality["short_examples"])
+
+
+def test_audit_loaded_mhc_sequence_quality_accepts_groove_length_fragments():
+    quality = audit_loaded_mhc_sequence_quality(
+        {
+            "HLA-A*02:01": "A" * MIN_MHC_CHAIN_LENGTH,
+            "HLA-A*24:02": "C" * (MIN_MHC_CHAIN_LENGTH + 12),
+        }
+    )
+
+    assert quality["noncanonical_count"] == 0
+    assert quality["short_count"] == 0
 
 
 def test_resolve_run_args_canary_keeps_explicit_caps():
@@ -960,7 +980,7 @@ def test_augment_binding_records_with_synthetic_negatives_range_and_modes():
     assert len(synthetic) == 3
     for rec in synthetic:
         assert 50000.0 <= rec.value <= 100000.0
-        assert rec.measurement_type == rec.source
+        assert rec.measurement_type == "IC50"
         assert rec.assay_type == rec.source
         assert rec.unit == "nM"
         assert rec.mhc_allele in mhc_sequences
@@ -1007,8 +1027,50 @@ def test_augment_binding_records_adds_class_i_no_mhc_beta_negatives():
     rec = synthetic[0]
     assert rec.mhc_class == "I"
     assert rec.mhc_allele == "HLA-A*02:01"
-    assert rec.measurement_type == "synthetic_negative_no_mhc_beta"
+    assert rec.measurement_type == "IC50"
     assert rec.assay_type == "synthetic_negative_no_mhc_beta"
+
+
+def test_synthetic_binding_negatives_stay_in_parent_binding_task_group():
+    base = [
+        BindingRecord(
+            peptide="SIINFEKL",
+            mhc_allele="HLA-A*02:01",
+            value=50.0,
+            measurement_type="IC50",
+            mhc_class="I",
+            source="iedb",
+        ),
+    ]
+    mhc_sequences = {"HLA-A*02:01": "A" * 181}
+
+    augmented, _ = augment_binding_records_with_synthetic_negatives(
+        binding_records=base,
+        mhc_sequences=mhc_sequences,
+        negative_ratio=1.0,
+        weak_value_min_nM=50000.0,
+        weak_value_max_nM=100000.0,
+        seed=11,
+    )
+    dataset = PrestoDataset(
+        binding_records=augmented,
+        mhc_sequences=mhc_sequences,
+    )
+
+    synthetic_samples = [
+        sample for sample in dataset.samples
+        if (sample.sample_source or "").startswith("synthetic_negative_")
+    ]
+    assert synthetic_samples
+    assert all(sample.assay_group == "binding_ic50" for sample in synthetic_samples)
+    assert all((sample.synthetic_kind or "").startswith("synthetic_negative_") for sample in synthetic_samples)
+
+
+def test_effective_mhc_augmentation_sample_limit_caps_fixed_request():
+    assert _effective_mhc_augmentation_sample_limit(60000, 125055, 0.05) == 6253
+    assert _effective_mhc_augmentation_sample_limit(1000, 125055, 0.05) == 1000
+    assert _effective_mhc_augmentation_sample_limit(1000, 125055, 0.0) == 1000
+    assert _effective_mhc_augmentation_sample_limit(1000, 0, 0.05) == 0
 
 
 def test_augment_elution_records_with_synthetic_negatives():

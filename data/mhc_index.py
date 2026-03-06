@@ -37,6 +37,22 @@ INDEX_FIELDS = [
     "sequence",
 ]
 
+_NUCLEOTIDE_LIKE_CHARS = set("ACGTUNWSMKRYBDHV")
+_PROTEIN_FASTA_HINTS = ("prot", "protein", ".faa", "_aa", "-aa", "_pep", "-pep")
+_NUCLEOTIDE_FASTA_HINTS = (
+    "nuc",
+    "nucleotide",
+    ".fna",
+    ".ffn",
+    "_dna",
+    "-dna",
+    "_rna",
+    "-rna",
+    "cdna",
+    "cds",
+)
+MIN_MHC_SEQUENCE_LEN = 70  # allow groove-bearing fragments, reject trivial truncations
+
 
 @dataclass
 class MHCIndexRecord:
@@ -138,6 +154,31 @@ def _iter_fasta(path: Path) -> Iterator[Tuple[str, str]]:
             seq_parts.append(line)
     if header is not None:
         yield header, "".join(seq_parts)
+
+
+def _looks_like_nucleotide_sequence(sequence: str) -> bool:
+    """Return True when a FASTA entry is overwhelmingly nucleotide-like.
+
+    MHC protein chains should contain a broad amino-acid alphabet. Pure
+    nucleotide FASTAs (`A/C/G/T/U/...`) can otherwise slip through because
+    those letters are also valid amino-acid tokens.
+    """
+    seq = re.sub(r"\s+", "", str(sequence or "").strip().upper())
+    if not seq:
+        return False
+    chars = {ch for ch in seq if ch.isalpha()}
+    nucleotide_chars = chars & set("ACGTU")
+    return bool(chars) and chars <= _NUCLEOTIDE_LIKE_CHARS and len(nucleotide_chars) >= 3
+
+
+def _fasta_path_priority(path: Path) -> Tuple[int, str]:
+    """Sort protein-like FASTA files ahead of nucleotide dumps."""
+    name = path.name.lower()
+    if any(token in name for token in _PROTEIN_FASTA_HINTS):
+        return (0, name)
+    if any(token in name for token in _NUCLEOTIDE_FASTA_HINTS):
+        return (2, name)
+    return (1, name)
 
 
 def _candidate_tokens(header: str) -> List[str]:
@@ -276,9 +317,12 @@ def _iter_fasta_paths(imgt_fasta: Optional[str], ipd_mhc_dir: Optional[str]) -> 
             paths.append((root, "ipd_mhc"))
         else:
             fasta_paths = sorted(
-                p
-                for p in root.rglob("*")
-                if p.suffix in {".fa", ".fasta", ".faa", ".gz", ".zip"}
+                (
+                    p
+                    for p in root.rglob("*")
+                    if p.suffix in {".fa", ".fasta", ".faa", ".gz", ".zip"}
+                ),
+                key=_fasta_path_priority,
             )
             if not fasta_paths:
                 raise MHCIndexError(f"No FASTA files found under {root}")
@@ -304,6 +348,8 @@ def build_mhc_index(
         "total": 0,
         "parsed": 0,
         "skipped": 0,
+        "skipped_nucleotide": 0,
+        "skipped_short": 0,
         "duplicates": 0,
         "replaced": 0,
     }
@@ -311,6 +357,12 @@ def build_mhc_index(
     for path, source in _iter_fasta_paths(imgt_fasta, ipd_mhc_dir):
         for header, seq in _iter_fasta(path):
             stats["total"] += 1
+            if _looks_like_nucleotide_sequence(seq):
+                stats["skipped_nucleotide"] += 1
+                continue
+            if len(seq) < MIN_MHC_SEQUENCE_LEN:
+                stats["skipped_short"] += 1
+                continue
             try:
                 normalized, gene, mhc_class, species, allele_token = _resolve_header_allele(header)
             except MHCIndexError:
@@ -336,7 +388,11 @@ def build_mhc_index(
             )
 
             if normalized in records:
-                if records[normalized].source != "imgt" and source == "imgt":
+                existing = records[normalized]
+                if _looks_like_nucleotide_sequence(existing.sequence):
+                    records[normalized] = record
+                    stats["replaced"] += 1
+                elif existing.source != "imgt" and source == "imgt":
                     records[normalized] = record
                     stats["replaced"] += 1
                 else:
@@ -395,9 +451,9 @@ def infer_fine_chain_type(
     mhc_class: Optional[str],
     sequence_len: Optional[int] = None,
 ) -> str:
-    """Infer fine-grained MHC chain type (6 classes) from gene and class info.
+    """Infer fine-grained MHC chain type (5 classes) from gene and class info.
 
-    Returns one of: MHC_Ia, MHC_Ib, MHC_IIa, MHC_IIb, B2M, unknown.
+    Returns one of: MHC_I, MHC_IIa, MHC_IIb, B2M, unknown.
     """
     g = (gene or "").strip().upper()
     mc = normalize_mhc_class(mhc_class or "", default="")
@@ -418,19 +474,17 @@ def infer_fine_chain_type(
         # Ambiguous class II — default to alpha if in α slot
         return "MHC_IIa"
 
-    # Class I: distinguish classical vs non-classical
+    # Class I: both classical and non-classical return MHC_I
     if mc == "I" or g:
-        # Check non-classical first
         for nc_gene in _NONCLASSICAL_CLASS_I_GENES:
             if g.startswith(nc_gene.upper()):
-                return "MHC_Ib"
-        # Check classical
+                return "MHC_I"
         for cl_gene in _CLASSICAL_CLASS_I_GENES:
             if g.startswith(cl_gene.upper()):
-                return "MHC_Ia"
-        # Fallback: if class I but gene not recognized, assume classical
+                return "MHC_I"
+        # Fallback: if class I but gene not recognized
         if mc == "I":
-            return "MHC_Ia"
+            return "MHC_I"
 
     return "unknown"
 
@@ -593,13 +647,7 @@ def resolve_alleles(
 
 def _category_species_prefix(species: Optional[str]) -> str:
     normalized = normalize_species_label(species)
-    if normalized == "mouse":
-        return "murine"
-    if normalized == "human":
-        return "human"
-    if normalized == "macaque":
-        return "nhp"
-    return "other"
+    return normalized or "other"
 
 
 def _fallback_unresolved_category(token: str) -> str:
@@ -791,6 +839,25 @@ def validate_mhc_index(index_csv: str) -> Dict[str, object]:
                         "row": row_idx,
                         "code": "missing_sequence",
                         "message": "Missing sequence value",
+                    }
+                )
+            elif _looks_like_nucleotide_sequence(sequence):
+                errors.append(
+                    {
+                        "row": row_idx,
+                        "code": "nucleotide_like_sequence",
+                        "message": "Sequence looks nucleotide-like; expected protein FASTA content",
+                    }
+                )
+            elif len(sequence) < MIN_MHC_SEQUENCE_LEN:
+                errors.append(
+                    {
+                        "row": row_idx,
+                        "code": "sequence_too_short",
+                        "message": (
+                            "Sequence shorter than minimum accepted groove-bearing "
+                            f"MHC fragment ({MIN_MHC_SEQUENCE_LEN} aa)"
+                        ),
                     }
                 )
 
