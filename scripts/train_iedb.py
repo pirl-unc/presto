@@ -16,6 +16,7 @@ import json
 import math
 import random
 import re
+import sys
 from collections import Counter, defaultdict
 from dataclasses import replace
 from pathlib import Path
@@ -218,8 +219,8 @@ CANARY_PROFILE_OVERRIDES = {
     "max_elution": 512,
     "max_tcell": 512,
     "max_vdjdb": 256,
-    # Canary prioritizes speed over representativeness.
-    "cap_sampling": "head",
+    # Canary should stay small, but still preserve allele/task diversity.
+    "cap_sampling": "reservoir",
     "track_probe_motif_scan": False,
 }
 
@@ -369,7 +370,34 @@ def _pick_unified_train_section(config: Mapping[str, Any]) -> Dict[str, Any]:
     return dict(config)
 
 
-def _apply_profile_overrides(args: argparse.Namespace) -> argparse.Namespace:
+def _explicit_cli_dests(
+    parser: argparse.ArgumentParser,
+    argv: Optional[Sequence[str]],
+) -> set[str]:
+    """Infer which argparse destinations were explicitly set on the CLI."""
+    option_to_dest: Dict[str, str] = {}
+    for action in parser._actions:
+        for option in action.option_strings:
+            option_to_dest[option] = action.dest
+
+    raw_args = list(sys.argv[1:] if argv is None else argv)
+    explicit: set[str] = set()
+    for token in raw_args:
+        text = str(token)
+        if not text.startswith("-"):
+            continue
+        option = text.split("=", 1)[0]
+        dest = option_to_dest.get(option)
+        if dest:
+            explicit.add(dest)
+    return explicit
+
+
+def _apply_profile_overrides(
+    args: argparse.Namespace,
+    *,
+    explicit_dests: Optional[set[str]] = None,
+) -> argparse.Namespace:
     """Apply profile presets after config merge."""
     profile = str(getattr(args, "profile", "full") or "full").lower()
     if profile not in {"full", "canary", "diagnostic"}:
@@ -383,7 +411,10 @@ def _apply_profile_overrides(args: argparse.Namespace) -> argparse.Namespace:
         if profile == "canary"
         else DIAGNOSTIC_PROFILE_OVERRIDES
     )
+    explicit_dests = explicit_dests or set()
     for key, value in overrides.items():
+        if key in explicit_dests:
+            continue
         if not hasattr(args, key):
             setattr(args, key, value)
             continue
@@ -403,7 +434,8 @@ def _resolve_run_args(args: argparse.Namespace) -> argparse.Namespace:
         config = load_config_file(config_path)
         section = _pick_unified_train_section(config)
         args = merge_namespace_with_config(args, IEDB_DEFAULTS, section)
-    return _apply_profile_overrides(args)
+    explicit_dests = getattr(args, "_explicit_cli_dests", None)
+    return _apply_profile_overrides(args, explicit_dests=explicit_dests)
 
 
 def _regularization_for_epoch(
@@ -5290,7 +5322,9 @@ def main(argv=None):
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
     parser.add_argument("--device", type=str, default=None, help="Device override")
+    explicit_dests = _explicit_cli_dests(parser, argv)
     args = parser.parse_args(argv)
+    setattr(args, "_explicit_cli_dests", explicit_dests)
     run(args)
 
 

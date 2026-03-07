@@ -307,7 +307,9 @@ def main():
         "consistency_assay_affinity_weight": 0.1,
         "consistency_no_b2m_weight": 0.5,
         "binding_orthogonality_weight": 0.01,
-        "mhc_attention_sparsity_weight": 0.5,
+        # Strong attention-sparsity priors made allele-separation diagnostics
+        # collapse to near-identical weak-binder predictions.
+        "mhc_attention_sparsity_weight": 0.0,
         "mhc_attention_sparsity_min_residues": 20.0,
         "mhc_attention_sparsity_max_residues": 50.0,
     }

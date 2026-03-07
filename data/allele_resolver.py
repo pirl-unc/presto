@@ -4,11 +4,12 @@ Resolves MHC allele names to sequences using IMGT/HLA and IPD-MHC databases.
 """
 
 import csv
+import importlib
 import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from .vocab import (
     CHAIN_SPECIES_CATEGORIES,
@@ -44,8 +45,9 @@ _MHC_CLASS_II_ALIASES = {
     "MHC-II",
 }
 
-# Expanded to 6-class (aligned with MHC_SPECIES_CATEGORIES from vocab.py)
-PROCESSING_SPECIES_BUCKETS = tuple(MHC_SPECIES_CATEGORIES)  # human, nhp, murine, other_mammal, bird, fish
+# Coarse network buckets. Keep these distinct from fine-grained species identity
+# returned by `infer_species_identity`.
+PROCESSING_SPECIES_BUCKETS = tuple(MHC_SPECIES_CATEGORIES)
 PROCESSING_SPECIES_TO_IDX = {
     name: idx for idx, name in enumerate(PROCESSING_SPECIES_BUCKETS)
 }
@@ -72,6 +74,154 @@ HUMAN_B2M_SEQUENCE = _B2M_SEQUENCES["human"]
 MOUSE_B2M_SEQUENCE = _B2M_SEQUENCES["mouse"]
 MACAQUE_B2M_SEQUENCE = _B2M_SEQUENCES["human"]  # chimp/macaque ≈ human
 
+_RAW_DEFAULT_DR_ALPHA_BY_PREFIX: Dict[str, str] = {
+    # Use two-field names where they are sequence-unique in the local index.
+    # Preserve higher resolution only where two-field collapse is protein-ambiguous.
+    "Aona": "Aona-DRA*01:01",
+    "Aovo": "Aovo-DRA*01:01",
+    "BoLA": "BoLA-DRA*001:01",
+    "Chsa": "Chsa-DRA*01:01:01",
+    "Eqca": "Eqca-DRA*001:01",
+    "Gogo": "Gogo-DRA*01:01",
+    "HLA": "HLA-DRA*01:01",
+    "Mafa": "Mafa-DRA*01:01:01:01",
+    "Malo": "Malo-DRA*01:01",
+    "Mamu": "Mamu-DRA*01:01",
+    "Mane": "Mane-DRA*01:01",
+    "Ovar": "Ovar-DRA*01:01",
+    "Ovca": "Ovca-DRA*01:01",
+    "Paan": "Paan-DRA*01:01",
+    "Patr": "Patr-DRA*01:01",
+    "Poab": "Poab-DRA*01:01",
+    "Popy": "Popy-DRA*01:01",
+    "SLA": "SLA-DRA*01:01",
+}
+
+_DEFAULT_DR_ALPHA_PREFIX_BY_SPECIES: Dict[str, str] = {
+    "Aotus nancymaae": "Aona",
+    "Aotus vociferans": "Aovo",
+    "Bos sp.": "BoLA",
+    "Chlorocebus sabaeus": "Chsa",
+    "Equus caballus": "Eqca",
+    "Gorilla gorilla": "Gogo",
+    "Homo sapiens": "HLA",
+    "Macaca fascicularis": "Mafa",
+    "Macaca leonina": "Malo",
+    "Macaca mulatta": "Mamu",
+    "Macaca nemestrina": "Mane",
+    "Ovar aries": "Ovar",
+    "Ovis aries": "Ovar",
+    "Ovis canadensis": "Ovca",
+    "Pan troglodytes": "Patr",
+    "Papio anubis": "Paan",
+    "Pongo abelii": "Poab",
+    "Pongo pygmaeus": "Popy",
+    "Sus sp.": "SLA",
+}
+
+_DEFAULT_DR_ALPHA_PREFIX_BY_FINE_SPECIES: Dict[str, str] = {
+    "cattle": "BoLA",
+    "chimpanzee": "Patr",
+    "gorilla": "Gogo",
+    "horse": "Eqca",
+    "human": "HLA",
+    "pig": "SLA",
+    "sheep": "Ovar",
+}
+
+
+def _require_mhcgnomes() -> Any:
+    try:
+        mhcgnomes = importlib.import_module("mhcgnomes")
+    except ImportError as exc:
+        raise RuntimeError(
+            "mhcgnomes is a required dependency for allele parsing and class inference."
+        ) from exc
+    if callable(getattr(mhcgnomes, "parse", None)):
+        return mhcgnomes
+    try:
+        function_api = importlib.import_module("mhcgnomes.function_api")
+    except ImportError as exc:
+        raise RuntimeError(
+            "mhcgnomes is installed but its parse API could not be imported. "
+            "Expected `mhcgnomes.parse` or `mhcgnomes.function_api.parse`."
+        ) from exc
+    parse_fn = getattr(function_api, "parse", None)
+    if not callable(parse_fn):
+        raise RuntimeError(
+            "mhcgnomes is installed but does not expose a callable parse API."
+        )
+    setattr(mhcgnomes, "parse", parse_fn)
+    return mhcgnomes
+
+
+def require_mhcgnomes() -> Any:
+    """Return the canonical mhcgnomes module with a guaranteed parse API."""
+    return _require_mhcgnomes()
+
+
+def _coerce_allele_name_for_parse(allele: Optional[str]) -> str:
+    token = str(allele or "").strip().strip(",;")
+    if not token:
+        return ""
+    token = token.replace("_", "-")
+    upper = token.upper()
+    if upper.startswith("H-2-"):
+        token = "H2-" + token[4:]
+        upper = token.upper()
+    if upper.startswith("H-2"):
+        token = "H2-" + token[3:]
+        upper = token.upper()
+    short_match = re.match(r"^(?:HLA-)?([A-Z]+)(\d)$", upper)
+    if short_match:
+        gene, field = short_match.groups()
+        return f"HLA-{gene}*0{field}"
+    return token
+
+
+def _canonicalize_parsed_allele(parsed: Any, allele_fields: int = 2) -> str:
+    if parsed is None:
+        raise ValueError("Cannot canonicalize an empty mhcgnomes parse result")
+    target_fields = max(1, int(allele_fields))
+    restrict_fn = getattr(parsed, "restrict_allele_fields", None)
+    if callable(restrict_fn):
+        parsed = restrict_fn(target_fields)
+    to_string = getattr(parsed, "to_string", None)
+    if callable(to_string):
+        return str(to_string())
+    return str(parsed)
+
+
+def parse_allele_name(allele: Optional[str]) -> Optional[Any]:
+    """Parse an allele string with mhcgnomes.
+
+    Tries the raw token first, then a lightly coerced allele-like form when the
+    raw parse returns no object. This keeps mhcgnomes as the source of truth
+    while still accepting compact user/data-entry formats and minor separator
+    inconsistencies without recursing through `normalize_allele_name()`.
+    """
+    if not allele:
+        return None
+    parse_fn = _require_mhcgnomes().parse
+    raw = str(allele).strip()
+    if not raw:
+        return None
+    coerced = _coerce_allele_name_for_parse(raw)
+    candidates = []
+    if coerced:
+        candidates.append(coerced)
+    if raw not in candidates:
+        candidates.append(raw)
+    for candidate in candidates:
+        parsed = parse_fn(candidate)
+        if parsed is not None:
+            return parsed
+    return None
+
+
+def _parse_with_mhcgnomes(allele: Optional[str]) -> Optional[Any]:
+    return parse_allele_name(allele)
+
 
 def normalize_mhc_class(value: Optional[str], default: Optional[str] = None) -> Optional[str]:
     """Normalize MHC class labels to canonical "I" / "II".
@@ -94,7 +244,8 @@ def normalize_mhc_class(value: Optional[str], default: Optional[str] = None) -> 
 def normalize_species_label(species: Optional[str]) -> Optional[str]:
     """Normalize species labels to 6-class chain species.
 
-    Returns one of: human, nhp, murine, other_mammal, bird, fish.
+    Returns one of the coarse network buckets:
+    `human`, `nhp`, `murine`, `other_mammal`, `bird`, `other_vertebrate`.
     Returns None for non-animal or unrecognizable inputs.
     Delegates to the unified fine-grained parser in vocab.py.
     """
@@ -112,7 +263,8 @@ def normalize_processing_species_label(
 ) -> Optional[str]:
     """Normalize species labels to MHC species buckets (6-class).
 
-    Buckets: `human`, `nhp`, `murine`, `other_mammal`, `bird`, `fish`.
+    Buckets: `human`, `nhp`, `murine`, `other_mammal`, `bird`,
+    `other_vertebrate`.
     Non-animal categories (viruses, bacteria, etc.) map to default.
     Delegates to the unified fine-grained parser.
     """
@@ -131,6 +283,79 @@ def infer_processing_species_from_allele(allele: Optional[str]) -> Optional[str]
         return None
     normalized = normalize_processing_species_label(infer_species(str(allele)))
     return normalized or None
+
+
+def _canonical_mhc_prefix(prefix: Optional[str]) -> Optional[str]:
+    token = str(prefix or "").strip()
+    if not token:
+        return None
+    return _DEFAULT_DR_ALPHA_CANONICAL_PREFIXES.get(token.upper())
+
+
+def _infer_mhc_prefix(allele: Optional[str]) -> Optional[str]:
+    if not allele:
+        return None
+    try:
+        parsed = parse_allele_name(allele)
+    except Exception:
+        return None
+    species = getattr(parsed, "species", None)
+    prefix = getattr(species, "mhc_prefix", None)
+    return _canonical_mhc_prefix(prefix)
+
+
+def _resolve_native_dr_alpha_prefix(species: Optional[str]) -> Optional[str]:
+    raw = str(species or "").strip()
+    if not raw:
+        return None
+    direct_prefix = _canonical_mhc_prefix(raw)
+    if direct_prefix is not None:
+        return direct_prefix
+    if raw in _DEFAULT_DR_ALPHA_PREFIX_BY_SPECIES:
+        return _DEFAULT_DR_ALPHA_PREFIX_BY_SPECIES[raw]
+    fine = normalize_species(raw)
+    if fine is None:
+        return None
+    return _DEFAULT_DR_ALPHA_PREFIX_BY_FINE_SPECIES.get(fine)
+
+
+def is_class_ii_dr_beta_allele(allele: Optional[str]) -> bool:
+    """Whether an allele names a class-II DR beta chain."""
+    if not allele:
+        return False
+    try:
+        parsed = parse_allele_name(allele)
+    except Exception:
+        parsed = None
+    gene_name = getattr(getattr(parsed, "gene", None), "name", None)
+    if gene_name:
+        return str(gene_name).upper().startswith("DRB")
+    try:
+        return infer_gene(str(allele)).upper().startswith("DRB")
+    except Exception:
+        return False
+
+
+def class_ii_default_dra_allele(
+    species: Optional[str] = None,
+    beta_allele: Optional[str] = None,
+) -> Optional[str]:
+    """Return the native default DRA allele for a DR beta chain.
+
+    Resolution order:
+    1. Fine-grained species inferred from the beta allele name
+    2. Exact species identity string
+    3. Stable MHC prefix (`HLA`, `SLA`, `Mamu`, etc.)
+    4. Unambiguous fine-species aliases (human, cattle, pig, horse, sheep, chimp, gorilla)
+    """
+    if beta_allele and not is_class_ii_dr_beta_allele(beta_allele):
+        return None
+    prefix = _infer_mhc_prefix(beta_allele) if beta_allele else None
+    if prefix is None:
+        prefix = _resolve_native_dr_alpha_prefix(species)
+    if prefix is None:
+        return None
+    return DEFAULT_DR_ALPHA_BY_PREFIX.get(prefix)
 
 
 def class_i_beta2m_sequence(species: Optional[str]) -> Optional[str]:
@@ -161,115 +386,49 @@ class AlleleRecord:
 
 
 def normalize_allele_name(name: str) -> str:
-    """Normalize allele name to standard format.
+    """Normalize an allele name to canonical two-field protein resolution.
 
     Examples:
         "HLA-A*02:01" -> "HLA-A*02:01"
         "A*02:01" -> "HLA-A*02:01"
         "A0201" -> "HLA-A*02:01"
         "HLA-A2" -> "HLA-A*02"
+        "HLA-A*02:01:01:02L" -> "HLA-A*02:01L"
     """
-    name = name.strip().upper()
+    parsed = parse_allele_name(name)
+    if parsed is None:
+        raise ValueError(f"mhcgnomes failed to parse allele: {name!r}")
+    return _canonicalize_parsed_allele(parsed, allele_fields=2)
 
-    # Preserve non-human prefixes (e.g., H2-, MAMU-, AONA-)
-    if name.startswith("H2-") or name.startswith("MAMU-"):
-        return name
-    if re.match(r"^[A-Z0-9]{2,}-", name) and not name.startswith("HLA-"):
-        return name
 
-    # Remove common HLA prefixes
-    name = name.replace("HLA-", "").replace("HLA_", "")
-
-    # Handle compact format (A0201 -> A*02:01)
-    compact_match = re.match(r"^([A-Z]+)(\d{2})(\d{2})$", name)
-    if compact_match:
-        gene, group, protein = compact_match.groups()
-        name = f"{gene}*{group}:{protein}"
-
-    # Handle short format (A2 -> A*02)
-    short_match = re.match(r"^([A-Z]+)(\d)$", name)
-    if short_match:
-        gene, group = short_match.groups()
-        name = f"{gene}*0{group}"
-
-    # Add HLA- prefix for human alleles
-    if not name.startswith("H2-") and not name.startswith("MAMU-"):
-        if not name.startswith("HLA-"):
-            name = "HLA-" + name
-
-    return name
+# Default DR alpha-chain alleles selected from the local MHC index.
+# Canonical keys are stable MHC prefixes; species names are convenience aliases.
+DEFAULT_DR_ALPHA_BY_PREFIX: Dict[str, str] = dict(_RAW_DEFAULT_DR_ALPHA_BY_PREFIX)
+DEFAULT_DR_ALPHA_BY_SPECIES: Dict[str, str] = {
+    species: DEFAULT_DR_ALPHA_BY_PREFIX[prefix]
+    for species, prefix in _DEFAULT_DR_ALPHA_PREFIX_BY_SPECIES.items()
+}
+_DEFAULT_DR_ALPHA_CANONICAL_PREFIXES = {
+    prefix.upper(): prefix for prefix in DEFAULT_DR_ALPHA_BY_PREFIX
+}
 
 
 def _infer_mhc_class_with_mhcgnomes(allele: Optional[str]) -> Optional[str]:
-    """Infer MHC class via mhcgnomes when available."""
+    """Infer MHC class via mhcgnomes."""
     if not allele:
         return None
     try:
-        import mhcgnomes  # type: ignore
-    except ImportError:
-        return None
-    try:
-        parsed = mhcgnomes.parse(allele)
+        parsed = _parse_with_mhcgnomes(allele)
     except Exception:
+        return None
+    if parsed is None:
         return None
     return normalize_mhc_class(getattr(parsed, "mhc_class", None), default=None)
 
 
 def infer_mhc_class_optional(allele: Optional[str]) -> Optional[str]:
-    """Infer MHC class from allele name, returning None when unresolved."""
-    inferred = _infer_mhc_class_with_mhcgnomes(allele)
-    if inferred is not None:
-        return inferred
-    if not allele:
-        return None
-    allele = allele.upper()
-
-    # Class II genes
-    class_ii_genes = ["DRA", "DRB", "DQA", "DQB", "DPA", "DPB", "DM", "DO"]
-    for gene in class_ii_genes:
-        if gene in allele:
-            return "II"
-
-    # Mouse Class II
-    if "H2-A" in allele or "H2-E" in allele:
-        # H2-Ab, H2-Eb are Class II
-        if re.search(r"H2-[AE][AB]", allele):
-            return "II"
-
-    # Preserve legacy class-I behavior for obviously class-I-like prefixes.
-    class_i_prefixes = (
-        "HLA-A",
-        "HLA-B",
-        "HLA-C",
-        "H2-K",
-        "H2-D",
-        "H2-L",
-        "H-2-K",
-        "H-2-D",
-        "H-2-L",
-        "MAMU-A",
-        "MAMU-B",
-        "PATR-A",
-        "PATR-B",
-        "AONA-A",
-        "AONA-B",
-        "PAAN-A",
-        "PAAN-B",
-        "GOGO-A",
-        "GOGO-B",
-        "PAPA-A",
-        "PAPA-B",
-        "BOLA-",
-        "SLA-",
-        "DLA-",
-        "ELA-",
-        "OLA-",
-        "BF-",
-    )
-    if allele.startswith(class_i_prefixes):
-        return "I"
-
-    return None
+    """Infer MHC class from an allele name via mhcgnomes only."""
+    return _infer_mhc_class_with_mhcgnomes(allele)
 
 
 def infer_mhc_class(allele: Optional[str]) -> str:
@@ -281,7 +440,10 @@ def infer_mhc_class(allele: Optional[str]) -> str:
     Returns:
         "I" or "II"
     """
-    return infer_mhc_class_optional(allele) or "I"
+    inferred = infer_mhc_class_optional(allele)
+    if inferred is None:
+        raise ValueError(f"mhcgnomes failed to infer MHC class for allele: {allele!r}")
+    return inferred
 
 
 def infer_gene(allele: str) -> str:
@@ -293,7 +455,19 @@ def infer_gene(allele: str) -> str:
     Returns:
         Gene name (e.g., "A", "B", "DRB1")
     """
-    allele = normalize_allele_name(allele)
+    try:
+        parsed = _parse_with_mhcgnomes(allele)
+    except Exception:
+        parsed = None
+    if parsed is not None and getattr(parsed, "gene", None) is not None:
+        gene_name = getattr(parsed.gene, "name", None)
+        if gene_name:
+            return str(gene_name).upper()
+
+    try:
+        allele = normalize_allele_name(allele)
+    except Exception:
+        allele = str(allele).strip()
 
     # Remove species prefix (HLA-, H2-, MAMU-, or generic species codes)
     if "-" in allele:
@@ -312,30 +486,27 @@ def infer_species(allele: str) -> Optional[str]:
     """Infer species from allele name.
 
     Returns one of the MHC species categories:
-    human, nhp, murine, other_mammal, bird, fish.
+    human, nhp, murine, other_mammal, bird, other_vertebrate.
     Returns None when the species cannot be determined from the allele name.
     """
-    allele_upper = allele.upper()
-    if allele_upper.startswith("HLA-"):
-        return "human"
-    if allele_upper.startswith("H2-") or allele_upper.startswith("H-2"):
-        return "murine"
-    # NHP allele prefixes
-    _nhp_prefixes = ("MAMU-", "PAAN-", "AONA-", "PATR-", "GOGO-", "PAPA-")
-    if any(allele_upper.startswith(p) for p in _nhp_prefixes):
-        return "nhp"
-    # Other mammal allele prefixes
-    _mammal_prefixes = ("BOLA-", "SLA-", "DLA-", "ELA-", "OLA-")
-    if any(allele_upper.startswith(p) for p in _mammal_prefixes):
-        return "other_mammal"
-    # Bird allele prefixes
-    if allele_upper.startswith("GAGA-") or allele_upper.startswith("BF-"):
-        return "bird"
-    # Fish/other vertebrate — no standard prefix convention, but check common patterns
-    _fish_prefixes = ("ONMY-", "SASA-")
-    if any(allele_upper.startswith(p) for p in _fish_prefixes):
-        return "other_vertebrate"
-    return None
+    species_identity = infer_species_identity(allele)
+    if species_identity is None:
+        return None
+    return normalize_processing_species_label(species_identity)
+
+
+def infer_species_identity(allele: Optional[str]) -> Optional[str]:
+    """Infer fine-grained species identity from an allele via mhcgnomes."""
+    if not allele:
+        return None
+    try:
+        parsed = _parse_with_mhcgnomes(allele)
+    except Exception:
+        return None
+    if parsed is None or getattr(parsed, "species", None) is None:
+        return None
+    species_name = getattr(parsed.species, "name", None)
+    return str(species_name).strip() or None
 
 
 def validate_mhc_species_coverage(mhc_index: Dict[str, str]) -> Dict[str, int]:
@@ -443,7 +614,10 @@ class AlleleResolver:
 
     def _add_record(self, allele_name: str, sequence: str) -> None:
         """Add an allele record and its aliases."""
-        normalized = normalize_allele_name(allele_name)
+        parsed = parse_allele_name(allele_name)
+        if parsed is None:
+            raise ValueError(f"mhcgnomes failed to parse allele: {allele_name!r}")
+        normalized = _canonicalize_parsed_allele(parsed, allele_fields=99)
         record = AlleleRecord(
             name=normalized,
             sequence=sequence,
@@ -454,8 +628,7 @@ class AlleleResolver:
 
         self.records[normalized] = record
 
-        # Also add truncated versions as aliases
-        # HLA-A*02:01:01:01 -> HLA-A*02:01:01 -> HLA-A*02:01 -> HLA-A*02
+        # Also add truncated versions as aliases under the protein-resolution key.
         parts = normalized.split(":")
         for i in range(1, len(parts)):
             alias = ":".join(parts[:i])

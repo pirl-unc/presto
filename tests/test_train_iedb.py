@@ -140,10 +140,22 @@ def test_resolve_run_args_canary_profile_applies_fast_caps():
     assert resolved.max_elution == 512
     assert resolved.max_tcell == 512
     assert resolved.max_vdjdb == 256
+    assert resolved.cap_sampling == "reservoir"
     assert resolved.supervised_loss_aggregation == "sample_weighted"
     assert resolved.track_pmhc_flow is True
     assert resolved.pmhc_flow_batches == 2
     assert resolved.pmhc_flow_max_samples == 512
+
+
+def test_resolve_run_args_profile_does_not_override_explicit_cli_destinations():
+    args = argparse.Namespace(
+        profile="canary",
+        config=None,
+        cap_sampling="head",
+        _explicit_cli_dests={"cap_sampling"},
+    )
+    resolved = _resolve_run_args(args)
+    assert resolved.cap_sampling == "head"
 
 
 def test_collect_unique_alleles_includes_default_dra_for_drb_inputs():

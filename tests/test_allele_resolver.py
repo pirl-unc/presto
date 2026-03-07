@@ -1,5 +1,6 @@
 """Tests for allele resolver module."""
 
+import types
 import pytest
 import tempfile
 import os
@@ -7,12 +8,19 @@ import os
 from presto.data.allele_resolver import (
     AlleleResolver,
     AlleleRecord,
+    DEFAULT_DR_ALPHA_BY_PREFIX,
+    DEFAULT_DR_ALPHA_BY_SPECIES,
+    class_ii_default_dra_allele,
+    is_class_ii_dr_beta_allele,
+    require_mhcgnomes,
     normalize_allele_name,
     infer_mhc_class,
     infer_gene,
+    infer_species_identity,
     normalize_processing_species_label,
     infer_processing_species_from_allele,
 )
+from presto.data.mhc_index import resolve_alleles
 
 
 class TestNormalizeAlleleName:
@@ -47,21 +55,31 @@ class TestNormalizeAlleleName:
 
     def test_mouse_alleles_preserved(self):
         """Mouse H2- alleles don't get HLA- prefix."""
-        assert normalize_allele_name("H2-Kb") == "H2-KB"
-        assert normalize_allele_name("H2-Db") == "H2-DB"
+        assert normalize_allele_name("H2-Kb") == "H2-K*b"
+        assert normalize_allele_name("H2-Db") == "H2-D*b"
 
     def test_macaque_alleles_preserved(self):
         """Macaque MAMU- alleles don't get HLA- prefix."""
-        assert normalize_allele_name("Mamu-A*01") == "MAMU-A*01"
+        assert normalize_allele_name("Mamu-A*01") == "Mamu-A*01"
 
     def test_non_human_prefix_preserved(self):
         """Non-human species prefixes are preserved."""
-        assert normalize_allele_name("Aona-DQA1*27:01") == "AONA-DQA1*27:01"
+        assert normalize_allele_name("Aona-DQA1*27:01") == "Aona-DQA1*27:01"
 
     def test_class_ii_drb1(self):
         """Class II DRB1 alleles normalized correctly."""
         assert normalize_allele_name("DRB1*01:01") == "HLA-DRB1*01:01"
         assert normalize_allele_name("HLA-DRB1*01:01") == "HLA-DRB1*01:01"
+
+    def test_full_resolution_truncates_to_two_fields(self):
+        """Synonymous fields are dropped at protein resolution."""
+        assert normalize_allele_name("HLA-DRA*01:01:01:01") == "HLA-DRA*01:01"
+        assert normalize_allele_name("Mafa-DRA*01:01:01:01") == "Mafa-DRA*01:01"
+
+    def test_suffixes_are_preserved(self):
+        """Expression/annotation suffixes survive two-field normalization."""
+        assert normalize_allele_name("HLA-DRA*01:01:01:01N") == "HLA-DRA*01:01N"
+        assert normalize_allele_name("HLA-A*02:01:01:02L") == "HLA-A*02:01L"
 
 
 class TestInferMHCClass:
@@ -121,7 +139,7 @@ class TestInferGene:
 
     def test_mouse_genes(self):
         """Extract gene from mouse alleles."""
-        assert infer_gene("H2-Kb") == "KB"
+        assert infer_gene("H2-Kb") == "K"
 
     def test_normalizes_first(self):
         """Gene extraction normalizes the allele first."""
@@ -131,6 +149,10 @@ class TestInferGene:
     def test_non_human_prefix_gene(self):
         """Extract gene from non-human prefix alleles."""
         assert infer_gene("Aona-DQA1*27:01") == "DQA1"
+
+    def test_coarse_dr_shorthand_falls_back_without_parse_error(self):
+        """Coarse DR shorthands should degrade to heuristic gene extraction."""
+        assert infer_gene("HLA-DR*03") == "DR"
 
 
 class TestProcessingSpeciesNormalization:
@@ -144,7 +166,7 @@ class TestProcessingSpeciesNormalization:
         assert normalize_processing_species_label("Pan troglodytes (chimpanzee)") == "nhp"
         assert normalize_processing_species_label("Gallus gallus") == "bird"
         assert normalize_processing_species_label("Bos taurus") == "other_mammal"
-        assert normalize_processing_species_label("Salmo salar") == "fish"
+        assert normalize_processing_species_label("Salmo salar") == "other_vertebrate"
 
     def test_infer_processing_species_from_allele(self):
         assert infer_processing_species_from_allele("HLA-A*02:01") == "human"
@@ -153,6 +175,64 @@ class TestProcessingSpeciesNormalization:
         assert infer_processing_species_from_allele("Aona-DQA1*27:01") == "nhp"
         assert infer_processing_species_from_allele("BoLA-2*01:01") == "other_mammal"
         assert infer_processing_species_from_allele("Gaga-BF1*01:01") == "bird"
+
+    def test_infer_species_identity_keeps_fine_grained_mhc_species(self):
+        assert infer_species_identity("Onmy-UBA*01:01:01") == "Oncorhynchus mykiss"
+        assert infer_species_identity("Sasa-DAB*03:02") == "Salmo salar"
+        assert infer_species_identity("Gaga-BF1*01:01") == "Gallus gallus"
+
+
+class TestMHCGnomesIntegration:
+    """Tests for the canonical mhcgnomes integration layer."""
+
+    def test_require_mhcgnomes_handles_namespace_package(self, monkeypatch):
+        namespace_pkg = types.SimpleNamespace()
+        function_api = types.SimpleNamespace(parse=lambda allele: f"parsed:{allele}")
+
+        def fake_import_module(name):
+            if name == "mhcgnomes":
+                return namespace_pkg
+            if name == "mhcgnomes.function_api":
+                return function_api
+            raise AssertionError(f"unexpected import: {name}")
+
+        monkeypatch.setattr(
+            "presto.data.allele_resolver.importlib.import_module",
+            fake_import_module,
+        )
+
+        module = require_mhcgnomes()
+        assert module is namespace_pkg
+        assert callable(module.parse)
+        assert module.parse("HLA-A*02:01") == "parsed:HLA-A*02:01"
+
+
+class TestDefaultDRAlphaMapping:
+    """Tests for native DRA default pairing support."""
+
+    def test_detects_dr_beta_alleles(self):
+        assert is_class_ii_dr_beta_allele("HLA-DRB1*01:01") is True
+        assert is_class_ii_dr_beta_allele("Mamu-DRB*W002:01") is True
+        assert is_class_ii_dr_beta_allele("HLA-DQB1*02:01") is False
+
+    def test_default_dra_mapping_resolves_from_beta_allele(self):
+        assert class_ii_default_dra_allele(beta_allele="HLA-DRB1*04:01") == "HLA-DRA*01:01"
+        assert class_ii_default_dra_allele(beta_allele="Mamu-DRB1*03:03") == "Mamu-DRA*01:01"
+        assert class_ii_default_dra_allele(beta_allele="SLA-DRB1*04:02") == "SLA-DRA*01:01"
+
+    def test_default_dra_mapping_resolves_from_prefix(self):
+        assert class_ii_default_dra_allele(species="HLA") == "HLA-DRA*01:01"
+        assert class_ii_default_dra_allele(species="SLA") == "SLA-DRA*01:01"
+
+    def test_default_dra_prefix_mapping_alleles_exist_in_index(self):
+        resolved = resolve_alleles("data/mhc_index.csv", DEFAULT_DR_ALPHA_BY_PREFIX.values(), include_sequence=False)
+        missing = [row["input"] for row in resolved if not row["found"]]
+        assert missing == []
+
+    def test_default_dra_mapping_alleles_exist_in_index(self):
+        resolved = resolve_alleles("data/mhc_index.csv", DEFAULT_DR_ALPHA_BY_SPECIES.values(), include_sequence=False)
+        missing = [row["input"] for row in resolved if not row["found"]]
+        assert missing == []
 
 
 class TestAlleleResolver:

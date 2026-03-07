@@ -112,7 +112,7 @@ SANITY_CHECK_ARGS = [
     "--max-kinetics", "0",
     "--max-stability", "0",
     "--max-vdjdb", "0",
-    "--cap-sampling", "head",
+    "--cap-sampling", "reservoir",
     # Probe: SLLQHLIGL A0201 vs A2402
     "--track-probe-affinity",
     "--probe-peptide", "SLLQHLIGL",

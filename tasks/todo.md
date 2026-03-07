@@ -2567,7 +2567,47 @@ Goal: before launching a true full-data 1-epoch Modal run, estimate:
 
 ## Review
 
-- In progress.
+- Probe input path is correct:
+  - `HLA-A*02:01` and `HLA-A*24:02` resolve to distinct 365 aa representatives and distinct groove-half token streams.
+  - class-I groove halves differ at `11` positions in half 1 and `9` positions in half 2 for the control probe path.
+- Minimal architecture sanity:
+  - a 2-sample binding-only fit (`SLLQHLIGL` against A0201 vs A2402 with opposite KD targets) does overfit cleanly on the current multi-query binding architecture.
+  - it does **not** overfit with `binding_n_queries=1`, so the multi-query binding path is carrying real signal.
+  - `use_pmhc_interaction_block=True` is not the key determinant on this toy; query multiplicity matters more.
+- Binding-attention diagnosis:
+  - at initialization, binding attention mass is mostly on MHC (`~0.93`) but spread nearly uniformly over all `184` groove tokens (`effective residues ~183`), so the model begins with almost no pocket focus.
+  - a strong explicit MHC-attention sparsity prior can force attention to sharpen, but in toy fits it also collapsed allele separation if applied too aggressively.
+- Training-control bugs found:
+  - `canary` profile was using `cap_sampling='head'`; in the resulting probe slice, `HLA-A*24:02` had `0` binding samples and `0` elution samples, so the earlier A0201/A2402 comparison was not meaningful.
+  - profile presets could overwrite explicit CLI flags if the user-provided value matched the full-profile default.
+  - helper gene inference for auxiliary labels crashed on coarse shorthands like `HLA-DR*03`.
+- Fixes implemented:
+  - `infer_gene(...)` now degrades to heuristic gene extraction when `mhcgnomes` cannot parse a coarse shorthand, instead of crashing training.
+  - `canary` profile now defaults to `reservoir` sampling.
+  - explicit CLI options are now preserved when profile presets are applied.
+  - `scripts/sanity_check_modal.py` now uses `reservoir` sampling.
+  - `scripts/probe_training.py` no longer applies the overly strong MHC-attention sparsity prior.
+- Verification:
+  - `pytest -q tests/test_allele_resolver.py tests/test_train_iedb.py` -> `86 passed`
+  - `python -m py_compile scripts/train_iedb.py scripts/sanity_check_modal.py scripts/probe_training.py data/allele_resolver.py tests/test_train_iedb.py tests/test_allele_resolver.py`
+  - `python scripts/probe_training.py --batches 1 --batch-size 64` completed successfully after the fallback fix.
+- Short local reservoir diagnostic (30 train batches, 8 val batches, explicit merged/index inputs):
+  - without uncertainty weighting:
+    - `train_loss=1.4216`
+    - `val_loss=0.3761`
+    - probe:
+      - `A0201 KD≈762.7 nM`, `bind≈0.3719`
+      - `A2402 KD≈795.7 nM`, `bind≈0.3597`
+  - with uncertainty weighting:
+    - `train_loss=1.4197`
+    - `val_loss=0.3761`
+    - probe:
+      - `A0201 KD≈766.8 nM`, `bind≈0.3704`
+      - `A2402 KD≈800.1 nM`, `bind≈0.3582`
+- Interpretation:
+  - representative sampling was the main reason the earlier canary pointed the probe in the wrong direction.
+  - uncertainty weighting is not the primary bottleneck on this short run.
+  - the corrected setup now gives the right sign (`A0201 > A2402`) but the separation is still too small, so the model is improving but not yet where it needs to be.
 
 ---
 
@@ -2708,3 +2748,44 @@ Goal: finish the receptor-sequence removal on the canonical runtime path, keep p
 - Modal findings so far:
   - a true full-data 1-epoch run starts cleanly now, but preprocessing is dominated by full-data synthetic-negative expansion and resolved-only filtering (`1.71M` elution rows dropped, `217k` T-cell rows dropped, `1.07M` synthetic elution negatives added), which makes it a poor interactive diagnostic loop.
   - switched to the smaller dedicated Modal sanity diagnostic to get a faster answer on `SLLQHLIGL` allele separation.
+
+---
+
+# Rapid Probe Triage + Throughput Audit (2026-03-07)
+
+## Spec
+
+Goal: get `SLLQHLIGL` to separate correctly between `HLA-A*02:01` and `HLA-A*24:02` as quickly as possible, while also finding the largest training-throughput bugs and determining the safest numeric mode for GPU training.
+
+## Plan
+
+- [ ] Verify the raw biological inputs end-to-end for the probe pair:
+  - resolved allele representative chosen for `HLA-A*02:01` and `HLA-A*24:02`
+  - extracted groove halves and tokenization
+  - number/location of amino-acid differences reaching the model
+- [ ] Run micro-overfit checks that isolate architecture vs. optimizer/data issues:
+  - 2-allele probe-only overfit
+  - tiny real-binding subset overfit
+  - compare no-MHC / swapped-MHC / probe-paired logits and gradients
+- [ ] Inspect internal signal flow for the probe and for real batches:
+  - MHC encoder similarity for A0201 vs A2402
+  - `pmhc_vec`, binding latents, and gradient norms by module/head
+  - confirm MHC changes measurably perturb binding outputs early in training
+- [ ] Audit real training composition and supervision pressure:
+  - per-batch task counts and positive/negative balance
+  - per-task loss magnitudes and gradient contributions
+  - binding-label distribution by allele and class
+- [ ] Enumerate numeric-mode and performance hypotheses:
+  - bf16 vs fp32 safety on current code paths
+  - whether fp16 is plausible at all
+  - data-loader / preprocessing hotspots
+  - synthetic-negative materialization cost
+- [ ] Implement the highest-leverage fixes for:
+  - faster diagnosis/training iteration
+  - stronger early binding/MHC discrimination
+  - numeric stability when using AMP
+- [ ] Re-run short local and Modal diagnostics after each fix cluster until the probe is clearly moving in the right direction.
+
+## Review
+
+- In progress.
