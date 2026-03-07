@@ -41,10 +41,6 @@ def test_e2e_trainer_with_presto_dataset_and_dataloader(tmp_path):
         if batch.bind_target is not None:
             train_batch["bind_target"] = batch.bind_target
             train_batch["bind_qual"] = batch.bind_qual
-        if batch.tcr_a_tok is not None:
-            train_batch["tcr_a_tok"] = batch.tcr_a_tok
-        if batch.tcr_b_tok is not None:
-            train_batch["tcr_b_tok"] = batch.tcr_b_tok
         if batch.tcell_label is not None:
             train_batch["tcell_label"] = batch.tcell_label
         if batch.elution_label is not None:
@@ -109,8 +105,6 @@ def test_e2e_tiny_full_model_training_is_finite_and_improves():
         optional = [
             "flank_n_tok",
             "flank_c_tok",
-            "tcr_a_tok",
-            "tcr_b_tok",
             "tcell_context",
             "bind_target",
             "bind_qual",
@@ -147,8 +141,6 @@ def test_e2e_tiny_full_model_training_is_finite_and_improves():
                 mhc_a_tok=batch["mhc_a_tok"],
                 mhc_b_tok=batch["mhc_b_tok"],
                 mhc_class="I",
-                tcr_a_tok=batch.get("tcr_a_tok"),
-                tcr_b_tok=batch.get("tcr_b_tok"),
                 flank_n_tok=batch.get("flank_n_tok"),
                 flank_c_tok=batch.get("flank_c_tok"),
             )
@@ -197,8 +189,6 @@ def test_e2e_tiny_full_model_training_is_finite_and_improves():
                 mhc_a="MAVMAPRTLLLLLSGALALTQTWAG",
                 mhc_b="MSRSVALAVLALLSLSGLEA",
                 mhc_class="I",
-                tcr_a="CAVRDTNTNAGKSTF",
-                tcr_b="CASSLGQDTQYF",
                 bind_value=2.0 if positive else 5.8,
                 bind_qual=0,
                 t_half=4.0 if positive else 0.5,  # hours
@@ -238,8 +228,6 @@ def test_e2e_tiny_full_model_training_is_finite_and_improves():
             mhc_a_tok=batch["mhc_a_tok"],
             mhc_b_tok=batch["mhc_b_tok"],
             mhc_class="I",
-            tcr_a_tok=batch["tcr_a_tok"],
-            tcr_b_tok=batch["tcr_b_tok"],
             flank_n_tok=batch["flank_n_tok"],
             flank_c_tok=batch["flank_c_tok"],
         )

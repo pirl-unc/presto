@@ -18,20 +18,18 @@ from ..models.affinity import (
     binding_prob_from_kd_log10,
 )
 from ..data.allele_resolver import (
+    class_ii_default_dra_allele,
     infer_species,
+    infer_mhc_class_optional,
+    is_class_ii_dr_beta_allele,
+    normalize_allele_name,
     normalize_mhc_class,
     normalize_species_label,
-    class_i_beta2m_sequence,
-    HUMAN_B2M_SEQUENCE,
 )
 from ..data.tokenizer import Tokenizer
-from ..data.mhc_index import load_mhc_index
+from ..data.groove import prepare_mhc_input
+from ..data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
 from ..training.checkpointing import load_model_from_checkpoint
-from ..data.vocab import (
-    CHAIN_TYPES, CELL_TYPES, MHC_TYPES, SPECIES,
-    IDX_TO_CHAIN, IDX_TO_CELL, IDX_TO_MHC, IDX_TO_SPECIES,
-    is_cdr3_only, get_base_chain_type,
-)
 
 
 @dataclass
@@ -44,30 +42,18 @@ class PresentationResult:
     presentation_prob: float
     binding_latents: Dict[str, float]
     assays: Dict[str, float]
+    tcr_evidence_prob: Optional[float] = None
+    tcr_evidence_method_probs: Optional[Dict[str, float]] = None
 
 
 @dataclass
 class RecognitionResult:
-    """Result from TCR-pMHC recognition prediction."""
+    """Result from repertoire-level recognition/immunogenicity prediction."""
     peptide: str
     mhc_class: str
-    tcr_alpha: Optional[str]
-    tcr_beta: Optional[str]
     presentation_prob: float
-    match_prob: float
+    recognition_prob: float
     immunogenicity_prob: float
-
-
-@dataclass
-class ChainClassificationResult:
-    """Result from chain classification."""
-    sequence: str
-    species: str
-    species_prob: float
-    chain_type: str
-    chain_type_prob: float
-    phenotype: str
-    phenotype_prob: float
 
 
 @dataclass
@@ -111,8 +97,9 @@ class Predictor:
         print(f"Presentation probability: {result.presentation_prob:.3f}")
     """
 
-    _AA_SEQUENCE_CHARS: ClassVar[set[str]] = set("ACDEFGHIKLMNPQRSTVWYXBZUO")
+    _AA_SEQUENCE_CHARS: ClassVar[set[str]] = set("ACDEFGHIKLMNPQRSTVWYX")
     _ALLELE_INDEX_CACHE: ClassVar[Dict[str, Dict[str, str]]] = {}
+    _MAX_MHC_INPUT_LEN: ClassVar[int] = 120
 
     def __init__(
         self,
@@ -169,13 +156,6 @@ class Predictor:
         self.binding_midpoint_nM = resolved_midpoint
         self.binding_log10_scale = max(resolved_scale, 1e-6)
 
-        # Species-aware beta2m defaults for class I assembly.
-        self.beta2m_by_species = {
-            "human": HUMAN_B2M_SEQUENCE,
-            "mouse": class_i_beta2m_sequence("mouse") or HUMAN_B2M_SEQUENCE,
-            "macaque": class_i_beta2m_sequence("macaque") or HUMAN_B2M_SEQUENCE,
-        }
-
     @classmethod
     def _default_index_candidates(cls) -> List[Path]:
         """Default MHC index locations searched when autoloading."""
@@ -203,8 +183,14 @@ class Predictor:
             seq = str(sequence or "").strip().upper()
             if not key or not seq:
                 continue
-            normalized[key] = seq
-            normalized[key.upper()] = seq
+            variants = {key}
+            try:
+                variants.add(normalize_allele_name(key))
+            except Exception:
+                pass
+            for variant in variants:
+                normalized[variant] = seq
+                normalized[variant.upper()] = seq
         return normalized
 
     @classmethod
@@ -221,26 +207,7 @@ class Predictor:
             return dict(cls._ALLELE_INDEX_CACHE[cache_key])
 
         records = load_mhc_index(str(index_path))
-        resolved: Dict[str, str] = {}
-        for record in records.values():
-            seq = str(record.sequence or "").strip().upper()
-            if not seq:
-                continue
-            for token in {record.normalized, record.allele_raw}:
-                name = str(token or "").strip()
-                if not name:
-                    continue
-                resolved[name] = seq
-                resolved[name.upper()] = seq
-                if ":" in name:
-                    parts = name.split(":")
-                    for i in range(1, len(parts)):
-                        prefix = ":".join(parts[:i]).strip()
-                        if not prefix:
-                            continue
-                        resolved.setdefault(prefix, seq)
-                        resolved.setdefault(prefix.upper(), seq)
-
+        resolved = build_mhc_sequence_lookup(records)
         cls._ALLELE_INDEX_CACHE[cache_key] = dict(resolved)
         return resolved
 
@@ -314,13 +281,18 @@ class Predictor:
             return ""
 
         key = str(allele).strip()
-        if key in self.allele_sequences:
-            return self.allele_sequences[key]
+        lookup_keys = [key, key.upper()]
+        try:
+            normalized = normalize_allele_name(key)
+        except Exception:
+            normalized = ""
+        if normalized:
+            lookup_keys.extend([normalized, normalized.upper()])
+        for lookup_key in lookup_keys:
+            if lookup_key in self.allele_sequences:
+                return self.allele_sequences[lookup_key]
 
         key_upper = key.upper()
-        if key_upper in self.allele_sequences:
-            return self.allele_sequences[key_upper]
-
         if self._looks_like_amino_acid_sequence(key_upper):
             return key_upper
 
@@ -333,17 +305,16 @@ class Predictor:
         return ""
 
     def _infer_mhc_class(self, allele: str = None) -> str:
-        """Infer MHC class from allele name."""
+        """Infer MHC class from allele name via mhcgnomes."""
         normalized = normalize_mhc_class(allele)
         if normalized is not None:
             return normalized
         if not allele:
             return "I"
-        allele_upper = allele.upper()
-        # Class II indicators
-        if any(x in allele_upper for x in ["DR", "DQ", "DP", "D-", "CLASS-II", "CLASSII"]):
-            return "II"
-        return "I"
+        inferred = infer_mhc_class_optional(allele)
+        if inferred is None:
+            raise ValueError(f"mhcgnomes failed to infer MHC class for allele: {allele!r}")
+        return inferred
 
     def _resolve_species(self, allele: str = None, species: str = None) -> Optional[str]:
         """Resolve species from explicit value or allele prefix."""
@@ -354,32 +325,56 @@ class Predictor:
             return normalize_species_label(infer_species(allele))
         return None
 
-    def _resolve_class_i_beta2m(
-        self,
-        mhc_class: str,
-        mhc_b_sequence: Optional[str],
-        allele: Optional[str],
-        species: Optional[str],
-        require_species_for_class_i_b2m: bool = True,
-    ) -> str:
-        """Resolve class-I beta2m sequence with species-aware defaults."""
-        if mhc_b_sequence:
-            return mhc_b_sequence
-        if mhc_class != "I":
+    def _resolve_explicit_mhc_b_input(self, mhc_b_value: Optional[str]) -> str:
+        """Resolve an explicit class-II beta-chain input as sequence or allele."""
+        if not mhc_b_value:
             return ""
+        clean = str(mhc_b_value).strip()
+        if not clean:
+            return ""
+        upper = clean.upper()
+        if self._looks_like_amino_acid_sequence(upper):
+            return upper
+        return self._get_mhc_sequence(clean, None)
 
-        resolved_species = self._resolve_species(allele=allele, species=species)
-        beta2m = self.beta2m_by_species.get(resolved_species or "", None)
-        if beta2m is not None:
-            return beta2m
+    def _resolve_mhc_pair_sequences(
+        self,
+        *,
+        allele: Optional[str],
+        mhc_sequence: Optional[str],
+        mhc_b_sequence: Optional[str],
+        mhc_class: str,
+        species: Optional[str],
+        require_species_for_class_i_b2m: bool,
+    ) -> tuple[str, str]:
+        """Resolve groove-half model inputs `(mhc_a, mhc_b)` for prediction."""
+        explicit_mhc_b = self._resolve_explicit_mhc_b_input(mhc_b_sequence)
+        if mhc_class == "II" and allele and is_class_ii_dr_beta_allele(allele) and not explicit_mhc_b:
+            alpha_allele = class_ii_default_dra_allele(species=species, beta_allele=allele)
+            if alpha_allele is None:
+                raise ValueError(
+                    "No native default DRA mapping is available for DR beta allele "
+                    f"{allele!r}."
+                )
+            alpha_seq = self._get_mhc_sequence(alpha_allele, None)
+            beta_seq = self._get_mhc_sequence(allele, mhc_sequence)
+            prepared = prepare_mhc_input(
+                mhc_a=alpha_seq,
+                mhc_b=beta_seq,
+                mhc_class="II",
+                allow_fallback_truncation=True,
+            )
+            return prepared.groove_half_1, prepared.groove_half_2
 
-        if not require_species_for_class_i_b2m:
-            return self.beta2m_by_species["human"]
-
-        raise ValueError(
-            "Class I prediction requires beta2m context. Provide `mhc_b_sequence`, "
-            "or pass a resolvable `allele`, or set `species`."
+        mhc_a_seq = self._get_mhc_sequence(allele, mhc_sequence)
+        mhc_b_seq = explicit_mhc_b if mhc_class == "II" else ""
+        prepared = prepare_mhc_input(
+            mhc_a=mhc_a_seq,
+            mhc_b=mhc_b_seq,
+            mhc_class=mhc_class,
+            allow_fallback_truncation=True,
         )
+        return prepared.groove_half_1, prepared.groove_half_2
 
     def _tokenize(self, seq: str, max_len: int) -> torch.Tensor:
         """Tokenize a sequence."""
@@ -425,16 +420,16 @@ class Predictor:
             peptide: Peptide sequence
             allele: MHC allele name (e.g., "HLA-A*02:01")
             mhc_sequence: MHC alpha chain sequence (alternative to allele)
-            mhc_b_sequence: MHC beta chain sequence (beta2m for Class I)
+            mhc_b_sequence: Class-II beta-chain sequence or allele override
             mhc_class: Optional hard class override, "I"/"II"
-            species: Species label used to pick class-I beta2m when needed
+            species: Host species label
             mhc_species: Optional override for MHC species latent path
             immune_species: Optional override for host immune-system context
             species_of_origin: Optional override for peptide source organism latent
             flank_n: N-terminal processing flank
             flank_c: C-terminal processing flank
-            require_species_for_class_i_b2m: If True, raise when class-I beta2m
-                cannot be resolved from `mhc_b_sequence`, `allele`, or `species`.
+            require_species_for_class_i_b2m: Deprecated compatibility flag. Ignored in
+                groove-half mode because class-I beta2m is not part of the model input.
 
         Returns:
             PresentationResult with probabilities
@@ -443,19 +438,19 @@ class Predictor:
         class_for_chain_resolution = explicit_mhc_class or self._infer_mhc_class(allele)
         model_class_input = explicit_mhc_class
 
-        mhc_a_seq = self._get_mhc_sequence(allele, mhc_sequence)
-        mhc_b_seq = self._resolve_class_i_beta2m(
-            mhc_class=class_for_chain_resolution,
-            mhc_b_sequence=mhc_b_sequence,
+        mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
             allele=allele,
+            mhc_sequence=mhc_sequence,
+            mhc_b_sequence=mhc_b_sequence,
+            mhc_class=class_for_chain_resolution,
             species=species or immune_species or mhc_species,
             require_species_for_class_i_b2m=require_species_for_class_i_b2m,
         )
 
         # Tokenize
         pep_tok = self._tokenize(peptide, max_len=max(50, len(peptide), 1))
-        mhc_a_tok = self._tokenize(mhc_a_seq, max_len=400)
-        mhc_b_tok = self._tokenize(mhc_b_seq, max_len=400)
+        mhc_a_tok = self._tokenize(mhc_a_seq, max_len=self._MAX_MHC_INPUT_LEN)
+        mhc_b_tok = self._tokenize(mhc_b_seq, max_len=self._MAX_MHC_INPUT_LEN)
         flank_n_tok = self._tokenize(flank_n, max_len=30) if flank_n else None
         flank_c_tok = self._tokenize(flank_c, max_len=30) if flank_c else None
 
@@ -511,6 +506,16 @@ class Predictor:
             presentation_prob=pres_prob,
             binding_latents=latents,
             assays=assays,
+            tcr_evidence_prob=float(torch.sigmoid(outputs["tcr_evidence_logit"]).item())
+            if "tcr_evidence_logit" in outputs
+            else None,
+            tcr_evidence_method_probs={
+                "multimer_binding": float(outputs["tcr_evidence_method_probs"][0, 0].item()),
+                "target_cell_functional": float(outputs["tcr_evidence_method_probs"][0, 1].item()),
+                "functional_readout": float(outputs["tcr_evidence_method_probs"][0, 2].item()),
+            }
+            if isinstance(outputs.get("tcr_evidence_method_probs"), torch.Tensor)
+            else None,
         )
 
     @torch.no_grad()
@@ -560,11 +565,11 @@ class Predictor:
         reported_mhc_class = explicit_mhc_class
         fallback_mhc_class = reported_mhc_class or class_for_chain_resolution
 
-        mhc_a_seq = self._get_mhc_sequence(allele, mhc_sequence)
-        mhc_b_seq = self._resolve_class_i_beta2m(
-            mhc_class=class_for_chain_resolution,
-            mhc_b_sequence=mhc_b_sequence,
+        mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
             allele=allele,
+            mhc_sequence=mhc_sequence,
+            mhc_b_sequence=mhc_b_sequence,
+            mhc_class=class_for_chain_resolution,
             species=species or immune_species or mhc_species,
             require_species_for_class_i_b2m=require_species_for_class_i_b2m,
         )
@@ -599,8 +604,8 @@ class Predictor:
                 hits=[],
             )
 
-        mhc_a_tok_single = self._tokenize(mhc_a_seq, max_len=400)
-        mhc_b_tok_single = self._tokenize(mhc_b_seq, max_len=400)
+        mhc_a_tok_single = self._tokenize(mhc_a_seq, max_len=self._MAX_MHC_INPUT_LEN)
+        mhc_b_tok_single = self._tokenize(mhc_b_seq, max_len=self._MAX_MHC_INPUT_LEN)
 
         hits: List[TiledPresentationHit] = []
         max_pep_len = max(max_length, 1)
@@ -723,11 +728,12 @@ class Predictor:
             alleles: List of MHC allele names
             mhc_sequences: List of MHC sequences (alternative)
             mhc_class: "I" or "II"
-            species: Species label used for class-I beta2m defaults
+            species: Host species label
             mhc_species: Optional override for MHC species latent path
             immune_species: Optional override for host immune-system context
             species_of_origin: Optional override for peptide source organism latent
-            require_species_for_class_i_b2m: Enforce explicit class-I beta2m resolution
+            require_species_for_class_i_b2m: Deprecated compatibility flag. Ignored in
+                groove-half mode.
 
         Returns:
             Dict with bag probability and per-allele results
@@ -782,60 +788,65 @@ class Predictor:
         allele: str = None,
         mhc_sequence: str = None,
         mhc_b_sequence: str = None,
-        tcr_alpha: str = None,
-        tcr_beta: str = None,
         mhc_class: str = None,
         species: str = None,
+        mhc_species: str = None,
+        immune_species: str = None,
+        species_of_origin: str = None,
         require_species_for_class_i_b2m: bool = True,
     ) -> RecognitionResult:
-        """Predict TCR-pMHC recognition.
+        """Predict repertoire-level recognition and immunogenicity.
 
         Args:
             peptide: Peptide sequence
             allele: MHC allele name
             mhc_sequence: MHC sequence (alternative)
-            mhc_b_sequence: MHC beta chain sequence (beta2m for Class I)
-            tcr_alpha: TCR alpha chain sequence
-            tcr_beta: TCR beta chain sequence
+            mhc_b_sequence: Class-II beta-chain sequence or allele override
             mhc_class: "I" or "II"
-            species: Species label used to pick class-I beta2m when needed
-            require_species_for_class_i_b2m: If True, require class-I beta2m resolution
+            species: Host species label
+            mhc_species: Optional override for MHC species latent path
+            immune_species: Optional override for host immune-system context
+            species_of_origin: Optional override for peptide source organism latent
+            require_species_for_class_i_b2m: Deprecated compatibility flag. Ignored in
+                groove-half mode.
 
         Returns:
             RecognitionResult with probabilities
         """
-        raise NotImplementedError(
-            "TCR-conditioned recognition is a future feature and is disabled in "
-            "canonical Presto inference."
+        explicit_mhc_class = normalize_mhc_class(mhc_class)
+        class_for_chain_resolution = explicit_mhc_class or self._infer_mhc_class(allele)
+        model_class_input = explicit_mhc_class
+
+        mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
+            allele=allele,
+            mhc_sequence=mhc_sequence,
+            mhc_b_sequence=mhc_b_sequence,
+            mhc_class=class_for_chain_resolution,
+            species=species or immune_species or mhc_species,
+            require_species_for_class_i_b2m=require_species_for_class_i_b2m,
         )
 
-    @torch.no_grad()
-    def classify_chain(self, sequence: str) -> ChainClassificationResult:
-        """Classify a receptor chain sequence.
+        pep_tok = self._tokenize(peptide, max_len=max(50, len(peptide), 1))
+        mhc_a_tok = self._tokenize(mhc_a_seq, max_len=self._MAX_MHC_INPUT_LEN)
+        mhc_b_tok = self._tokenize(mhc_b_seq, max_len=self._MAX_MHC_INPUT_LEN)
 
-        Predicts species, chain type, and cell phenotype.
-
-        Args:
-            sequence: Chain sequence (full or CDR3)
-
-        Returns:
-            ChainClassificationResult
-        """
-        chain_tok = self._tokenize(sequence, max_len=200)
-        preds = self.model.predict_chain_attributes(chain_tok)
-
-        species_idx = preds["species"].item()
-        chain_idx = preds["chain_type"].item()
-        pheno_idx = preds["phenotype"].item()
-
-        return ChainClassificationResult(
-            sequence=sequence,
-            species=IDX_TO_SPECIES[species_idx],
-            species_prob=preds["species_probs"][0, species_idx].item(),
-            chain_type=IDX_TO_CHAIN[chain_idx],
-            chain_type_prob=preds["chain_probs"][0, chain_idx].item(),
-            phenotype=IDX_TO_CELL[pheno_idx],
-            phenotype_prob=preds["phenotype_probs"][0, pheno_idx].item(),
+        outputs = self.model(
+            pep_tok=pep_tok,
+            mhc_a_tok=mhc_a_tok,
+            mhc_b_tok=mhc_b_tok,
+            mhc_class=model_class_input,
+            species=species,
+            mhc_species=mhc_species,
+            immune_species=immune_species,
+            species_of_origin=species_of_origin,
+        )
+        reported_mhc_class = explicit_mhc_class or class_for_chain_resolution
+        return RecognitionResult(
+            peptide=peptide,
+            mhc_class=reported_mhc_class,
+            presentation_prob=float(torch.sigmoid(outputs["presentation_logit"]).item()),
+            recognition_prob=float(torch.sigmoid(outputs["recognition_repertoire_logit"]).item()),
+            immunogenicity_prob=float(torch.sigmoid(outputs["immunogenicity_logit"]).item()),
         )
 
     @torch.no_grad()
@@ -858,30 +869,31 @@ class Predictor:
             peptide: Peptide sequence
             allele: MHC allele name
             mhc_sequence: MHC sequence
-            mhc_b_sequence: MHC beta chain sequence (beta2m for Class I)
+            mhc_b_sequence: Class-II beta-chain sequence or allele override
             mhc_class: "I" or "II"
-            species: Species label used to pick class-I beta2m when needed
+            species: Host species label
             mhc_species: Optional override for MHC species latent path
             immune_species: Optional override for host immune-system context
             species_of_origin: Optional override for peptide source organism latent
-            require_species_for_class_i_b2m: If True, require class-I beta2m resolution
+            require_species_for_class_i_b2m: Deprecated compatibility flag. Ignored in
+                groove-half mode.
 
         Returns:
             Embedding tensor (1, d_model)
         """
         mhc_class = normalize_mhc_class(mhc_class) or self._infer_mhc_class(allele)
-        mhc_a_seq = self._get_mhc_sequence(allele, mhc_sequence)
-        mhc_b_seq = self._resolve_class_i_beta2m(
-            mhc_class=mhc_class,
-            mhc_b_sequence=mhc_b_sequence,
+        mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
             allele=allele,
+            mhc_sequence=mhc_sequence,
+            mhc_b_sequence=mhc_b_sequence,
+            mhc_class=mhc_class,
             species=species or immune_species or mhc_species,
             require_species_for_class_i_b2m=require_species_for_class_i_b2m,
         )
 
         pep_tok = self._tokenize(peptide, max_len=max(50, len(peptide), 1))
-        mhc_a_tok = self._tokenize(mhc_a_seq, max_len=400)
-        mhc_b_tok = self._tokenize(mhc_b_seq, max_len=400)
+        mhc_a_tok = self._tokenize(mhc_a_seq, max_len=self._MAX_MHC_INPUT_LEN)
+        mhc_b_tok = self._tokenize(mhc_b_seq, max_len=self._MAX_MHC_INPUT_LEN)
 
         outputs = self.model(
             pep_tok=pep_tok,
@@ -894,26 +906,3 @@ class Predictor:
             species_of_origin=species_of_origin,
         )
         return outputs["pmhc_vec"]
-
-    @torch.no_grad()
-    def embed_tcr(
-        self,
-        alpha: str = None,
-        beta: str = None,
-    ) -> torch.Tensor:
-        """Get TCR embedding.
-
-        Args:
-            alpha: TCR alpha chain sequence
-            beta: TCR beta chain sequence
-
-        Returns:
-            Embedding tensor (1, d_model)
-        """
-        if alpha is None and beta is None:
-            raise ValueError("Must provide at least one chain")
-
-        alpha_tok = self._tokenize(alpha or "", max_len=100) if alpha else None
-        beta_tok = self._tokenize(beta or "", max_len=100) if beta else None
-
-        return self.model.encode_tcr(alpha_tok, beta_tok)

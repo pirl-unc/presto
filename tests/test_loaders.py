@@ -6,10 +6,17 @@ from collections import Counter
 import pytest
 
 from presto.data.collate import PrestoCollator
+from presto.data.groove import prepare_mhc_input
 from presto.data.loaders import load_iedb_stability, load_iedb_tcell
 from presto.data.loaders import load_iedb_binding, load_iedb_elution, load_iedb_processing
 from presto.data.loaders import load_iedb_kinetics
-from presto.data.loaders import load_iedb_bcell, load_10x_vdj
+from presto.data.loaders import (
+    load_iedb_bcell,
+    load_10x_vdj,
+    load_vdjdb,
+    load_vdjdb_tcr_evidence,
+    load_mcpas_tcr_evidence,
+)
 from presto.data.loaders import (
     BindingRecord,
     ElutionRecord,
@@ -22,12 +29,30 @@ from presto.data.loaders import (
     VDJdbRecord,
     create_dataloader,
 )
-from presto.data.allele_resolver import HUMAN_B2M_SEQUENCE
-
-MHC_ALPHA_SEQ = "A" * 181
-MHC_ALT_SEQ = "C" * 181
+MHC_ALPHA_SEQ = (
+    "MAVMAPRTLVLLLSGALALTQTWAGSHSMRYFFTSVSRPGRGEPRFIAVGYVDDTQFVRFDSDAASQRMEPRAPWIEQEGPEYWDGETRKVKAHSQTHRVDLGTLRGYYNQSEAGSHTVQRMYGCDVGSDWRFLRGYHQYAYDGKDYIALKEDLRSWTAADMAAQTTKHKWEAAHVAEQL"
+    "RAYLDGTCVEWLRRYLENGKETLQRTDAPKTHMTHHAVSDHEATLRCWALSFYPAEITLTWQRDGEDQTQDTELVETRPAGDGTFQKWAAVVVPSGQEQRYTCHVQHEGLPKPLTLRWE"
+)
+MHC_ALT_SEQ = MHC_ALPHA_SEQ
+MHC_DR_ALPHA_SEQ = (
+    "MAISGVPVLGFFIIAVLMSAQESWAIKEEHVIIQAEFYLNPDQSGEFMFDFDGDEIFHVDMAKKETVWRLEEFGRFASFEAQGALANIAVDKANLEIMTKRSNYTPITNVPPEVTVLTNSPVELREPNVLICFIDKFTPPVVNVTWLRNGKPVTTGVSETVFLPREDHLFRKFHYLPFLP"
+    "STEDVYDCRVEHWGLDEPLLKHWEFDAPSPLPETTENVVCALGLTVGLVGIIIGTIFIIKGLRKSNAAERRGPL"
+)
+MHC_DR_BETA_SEQ = (
+    "MVCLKLPGGSCMTALTVTLMVLSSPLALAGDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRRVEPKVTVYPSKTQPLQHHNLLVCSVSGFYPGSIEVRWFRNGQEEKAGVVSTGLIQNG"
+    "DWTFQTLVMLETVPRSGEVYTCQVEHPSVTSPLTVEWRAQSESAQSKMLSGIGGFVLGLIFLGLGLFIYFRNQKGHSGLQPTGFLS"
+)
 MHC_SHORT_SEQ = "A" * 60
 MHC_WITH_X_SEQ = ("A" * 180) + "X"
+
+MHC_ALPHA_GROOVE = prepare_mhc_input(mhc_a=MHC_ALPHA_SEQ, mhc_class="I")
+MHC_ALT_GROOVE = prepare_mhc_input(mhc_a=MHC_ALT_SEQ, mhc_class="I")
+MHC_DR_GROOVE = prepare_mhc_input(
+    mhc_a=MHC_DR_ALPHA_SEQ,
+    mhc_b=MHC_DR_BETA_SEQ,
+    mhc_class="II",
+)
+MHC_WITH_X_GROOVE = prepare_mhc_input(mhc_a=MHC_WITH_X_SEQ, mhc_class="I")
 
 
 def test_load_iedb_stability_parses_multilevel_export(tmp_path):
@@ -377,7 +402,141 @@ def test_load_10x_vdj_parses_t_and_b_chains(tmp_path):
     assert igh.cdr3 == "CARDRSTGYYYY"
 
 
-def test_presto_dataset_defaults_class_i_to_b2m_sequence():
+def test_load_vdjdb_parses_evidence_metadata(tmp_path):
+    path = tmp_path / "vdjdb.txt"
+    rows = [
+        [
+            "complex.id",
+            "gene",
+            "cdr3",
+            "v.segm",
+            "j.segm",
+            "species",
+            "mhc.a",
+            "mhc.b",
+            "mhc.class",
+            "antigen.epitope",
+            "antigen.species",
+            "reference.id",
+            "vdjdb.score",
+            "method",
+        ],
+        [
+            "1",
+            "TRB",
+            "CASSIRSSYEQYF",
+            "TRBV7-9",
+            "TRBJ2-7",
+            "HomoSapiens",
+            "HLA-A*02:01",
+            "B2M",
+            "MHCI",
+            "GILGFVFTL",
+            "Influenza A virus",
+            "PMID:28629751",
+            "3",
+            '{"identification":"tetramer-sort ","singlecell":"yes","sequencing":"amplicon-seq","verification":"antigen-loaded-targets,antigen-expressing-targets"}',
+        ],
+    ]
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f, delimiter="\t")
+        writer.writerows(rows)
+
+    records = list(load_vdjdb(path))
+    assert len(records) == 1
+    rec = records[0]
+    assert rec.peptide == "GILGFVFTL"
+    assert rec.cdr3_beta == "CASSIRSSYEQYF"
+    assert rec.method_identification == "tetramer-sort"
+    assert rec.method_singlecell == "yes"
+    assert rec.method_sequencing == "amplicon-seq"
+    assert rec.method_verification == "antigen-loaded-targets,antigen-expressing-targets"
+    assert rec.score == 3
+    assert rec.reference_id == "PMID:28629751"
+
+
+def test_load_vdjdb_tcr_evidence_derives_method_bins(tmp_path):
+    path = tmp_path / "vdjdb.txt"
+    rows = [
+        [
+            "gene",
+            "cdr3",
+            "species",
+            "mhc.a",
+            "mhc.b",
+            "mhc.class",
+            "antigen.epitope",
+            "antigen.species",
+            "reference.id",
+            "vdjdb.score",
+            "method",
+        ],
+        [
+            "TRB",
+            "CASSIRSSYEQYF",
+            "HomoSapiens",
+            "HLA-A*02:01",
+            "B2M",
+            "MHCI",
+            "GILGFVFTL",
+            "Influenza A virus",
+            "PMID:28629751",
+            "2",
+            '{"identification":"tetramer-sort","verification":"antigen-loaded-targets","sequencing":"amplicon-seq"}',
+        ],
+    ]
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f, delimiter="\t")
+        writer.writerows(rows)
+
+    evidence = list(load_vdjdb_tcr_evidence(path))
+    assert len(evidence) == 1
+    rec = evidence[0]
+    assert rec.method_bins == ("multimer_binding", "target_cell_functional")
+    assert rec.method_sequencing == "amplicon-seq"
+    assert rec.score == 2
+
+
+def test_load_mcpas_tcr_evidence_preserves_method_and_ngs(tmp_path):
+    path = tmp_path / "mcpas.csv"
+    rows = [
+        [
+            "CDR3.alpha.aa",
+            "CDR3.beta.aa",
+            "Species",
+            "Pathology",
+            "Antigen.identification.method",
+            "NGS",
+            "Epitope.peptide",
+            "MHC",
+            "PubMed.ID",
+        ],
+        [
+            "CAVRDSNYQLIW",
+            "CASSIRSSYEQYF",
+            "Human",
+            "Influenza",
+            "tetramer",
+            "yes",
+            "GILGFVFTL",
+            "HLA-A*02:01",
+            "12345",
+        ],
+    ]
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerows(rows)
+
+    evidence = list(load_mcpas_tcr_evidence(path))
+    assert len(evidence) == 1
+    rec = evidence[0]
+    assert rec.peptide == "GILGFVFTL"
+    assert rec.method_identification == "tetramer"
+    assert rec.method_sequencing == "yes"
+    assert rec.reference_id == "12345"
+
+
+def test_presto_dataset_defaults_class_i_to_groove_halves():
     records = [
         BindingRecord(
             peptide="SIINFEKL",
@@ -394,7 +553,8 @@ def test_presto_dataset_defaults_class_i_to_b2m_sequence():
     )
 
     sample = dataset[0]
-    assert sample.mhc_b == HUMAN_B2M_SEQUENCE
+    assert sample.mhc_a == MHC_ALPHA_GROOVE.groove_half_1
+    assert sample.mhc_b == MHC_ALPHA_GROOVE.groove_half_2
 
 
 def test_presto_dataset_raises_on_unresolved_mhc_allele_in_strict_mode():
@@ -476,7 +636,7 @@ def test_presto_dataset_keeps_no_mhc_alpha_negative_empty_alpha_chain():
     assert sample.mhc_a == ""
 
 
-def test_presto_dataset_class_ii_without_beta_chain_stays_empty():
+def test_presto_dataset_class_ii_dr_beta_only_auto_pairs_default_dra():
     records = [
         BindingRecord(
             peptide="KPVSKMRMATPLLMQALPM",
@@ -489,11 +649,15 @@ def test_presto_dataset_class_ii_without_beta_chain_stays_empty():
     ]
     dataset = PrestoDataset(
         binding_records=records,
-        mhc_sequences={"HLA-DRB1*04:01": "D" * 181},
+        mhc_sequences={
+            "HLA-DRA*01:01": MHC_DR_ALPHA_SEQ,
+            "HLA-DRB1*04:01": MHC_DR_BETA_SEQ,
+        },
     )
 
     sample = dataset[0]
-    assert sample.mhc_b == ""
+    assert sample.mhc_a == MHC_DR_GROOVE.groove_half_1
+    assert sample.mhc_b == MHC_DR_GROOVE.groove_half_2
 
 
 def test_presto_dataset_elution_preserves_multi_allele_bag_instances():
@@ -517,9 +681,16 @@ def test_presto_dataset_elution_preserves_multi_allele_bag_instances():
 
     sample = dataset[0]
     assert sample.elution_label == 1.0
-    assert sample.mil_mhc_a_list == [MHC_ALPHA_SEQ, MHC_ALT_SEQ]
+    assert sample.mil_mhc_a_list == [
+        MHC_ALPHA_GROOVE.groove_half_1,
+        MHC_ALT_GROOVE.groove_half_1,
+    ]
     assert sample.mil_mhc_b_list is not None
     assert len(sample.mil_mhc_b_list) == 2
+    assert sample.mil_mhc_b_list == [
+        MHC_ALPHA_GROOVE.groove_half_2,
+        MHC_ALT_GROOVE.groove_half_2,
+    ]
     assert sample.mil_mhc_class_list == ["I", "I"]
     assert sample.mil_species_list == ["human", "human"]
 
@@ -544,15 +715,49 @@ def test_presto_dataset_tcell_builds_pathway_mil_for_mixed_class_ambiguous_assay
         tcell_records=records,
         mhc_sequences={
             "HLA-A*02:01": MHC_ALPHA_SEQ,
-            "HLA-DRB1*04:01": MHC_ALT_SEQ,
+            "HLA-DRA*01:01": MHC_DR_ALPHA_SEQ,
+            "HLA-DRB1*04:01": MHC_DR_BETA_SEQ,
         },
     )
 
     sample = dataset[0]
     assert sample.use_tcell_pathway_mil is True
     assert sample.tcell_mil_mhc_class_list == ["I", "II"]
-    assert sample.tcell_mil_mhc_a_list == [MHC_ALPHA_SEQ, MHC_ALT_SEQ]
+    assert sample.tcell_mil_mhc_a_list == [
+        MHC_ALPHA_GROOVE.groove_half_1,
+        MHC_DR_GROOVE.groove_half_1,
+    ]
+    assert sample.tcell_mil_mhc_b_list == [
+        MHC_ALPHA_GROOVE.groove_half_2,
+        MHC_DR_GROOVE.groove_half_2,
+    ]
     assert sample.tcell_mil_species_list == ["human", "human"]
+
+
+def test_presto_dataset_vdjdb_resolves_class_ii_beta_allele_partner():
+    records = [
+        VDJdbRecord(
+            cdr3_alpha="CAVRDTNTGKLIF",
+            cdr3_beta="CASSIRSSYEQYF",
+            peptide="AGFKGEQGPKGEPG",
+            mhc_a="HLA-DRA*01:01",
+            mhc_b="HLA-DRB1*01:01",
+            gene="unknown",
+            species="human",
+            antigen_species="human",
+        )
+    ]
+    dataset = PrestoDataset(
+        vdjdb_records=records,
+        mhc_sequences={
+            "HLA-DRA*01:01": MHC_DR_ALPHA_SEQ,
+            "HLA-DRB1*01:01": MHC_DR_BETA_SEQ,
+        },
+    )
+
+    sample = dataset[0]
+    assert sample.mhc_a == MHC_DR_GROOVE.groove_half_1
+    assert sample.mhc_b == MHC_DR_GROOVE.groove_half_2
 
 
 def test_presto_dataset_rejects_noncanonical_mhc_residues():
@@ -607,7 +812,8 @@ def test_presto_dataset_warns_on_ambiguous_x_in_mhc_sequence():
             binding_records=records,
             mhc_sequences={"HLA-A*02:01": MHC_WITH_X_SEQ},
         )
-    assert dataset[0].mhc_a == MHC_WITH_X_SEQ
+    assert dataset[0].mhc_a == MHC_WITH_X_GROOVE.groove_half_1
+    assert dataset[0].mhc_b == MHC_WITH_X_GROOVE.groove_half_2
 
 
 def test_presto_dataset_rejects_nucleotide_like_mhc_chain():
@@ -628,7 +834,7 @@ def test_presto_dataset_rejects_nucleotide_like_mhc_chain():
         )
 
 
-def test_presto_dataset_includes_10x_chain_supervision_samples():
+def test_presto_dataset_ignores_10x_chain_supervision_samples():
     sc10x_records = [
         Sc10xVDJRecord(
             barcode="cell1",
@@ -639,14 +845,36 @@ def test_presto_dataset_includes_10x_chain_supervision_samples():
             source="10x",
         )
     ]
-    dataset = PrestoDataset(sc10x_records=sc10x_records)
+    with pytest.warns(RuntimeWarning, match="Ignoring sc10x_records"):
+        dataset = PrestoDataset(sc10x_records=sc10x_records)
+    assert len(dataset) == 0
 
+
+def test_presto_dataset_converts_vdjdb_to_tcr_evidence_samples():
+    dataset = PrestoDataset(
+        vdjdb_records=[
+            VDJdbRecord(
+                peptide="SIINFEKL",
+                mhc_a="HLA-A*02:01",
+                mhc_class="I",
+                species="human",
+                cdr3_beta="CASSIRSSYEQYF",
+                method_identification="tetramer",
+                method_verification="IFNg release",
+                source="vdjdb",
+            )
+        ],
+        mhc_sequences={"HLA-A*02:01": "A" * 181},
+    )
+
+    assert len(dataset) == 1
     sample = dataset[0]
-    assert sample.tcr_b == "CASSLGQGELFF"
-    assert sample.tcr_a is None
-    assert sample.chain_type == "TRB_CDR3"
-    assert sample.phenotype == "ab_T"
-    assert sample.mhc_class == ""
+    assert sample.tcr_evidence_label == pytest.approx(1.0)
+    assert sample.tcr_evidence_method_bins == (
+        "multimer_binding",
+        "functional_readout",
+    )
+    assert sample.assay_group == "tcr_evidence"
 
 
 def test_create_dataloader_balanced_batches_mix_tasks():

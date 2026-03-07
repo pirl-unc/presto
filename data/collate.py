@@ -13,10 +13,6 @@ import torch
 from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
 from .vocab import (
-    CHAIN_SPECIES_TO_IDX,
-    CHAIN_TO_IDX,
-    CELL_TO_IDX,
-    FINE_TO_CHAIN_SPECIES,
     FOREIGN_CATEGORIES,
     ORGANISM_TO_IDX,
     TCELL_APC_TYPE_TO_IDX,
@@ -29,6 +25,11 @@ from .vocab import (
 )
 
 OPTIONAL_MISSING_SEQ_TOKENS = {"NA", "N/A", "NONE", "NULL", "-", "?"}
+TCR_EVIDENCE_METHOD_BINS = (
+    "multimer_binding",
+    "target_cell_functional",
+    "functional_readout",
+)
 
 
 @dataclass(frozen=True)
@@ -106,6 +107,12 @@ TARGET_SPECS: tuple[TargetSpec, ...] = (
         mask_field="processing_mask",
     ),
     TargetSpec(
+        task_name="tcr_evidence",
+        sample_field="tcr_evidence_label",
+        target_field="tcr_evidence_target",
+        mask_field="tcr_evidence_mask",
+    ),
+    TargetSpec(
         task_name="foreignness",
         sample_field="foreignness_label",
         target_field="foreignness_target",
@@ -124,13 +131,9 @@ class PrestoSample:
     flank_c: Optional[str] = None
 
     # MHC
-    mhc_a: str = ""  # Alpha chain sequence or allele name
-    mhc_b: str = ""  # Beta chain / beta2m
+    mhc_a: str = ""  # Groove half 1: alpha1 (class I/II)
+    mhc_b: str = ""  # Groove half 2: alpha2 (class I) or beta1 (class II)
     mhc_class: Optional[str] = None
-
-    # TCR (optional)
-    tcr_a: Optional[str] = None
-    tcr_b: Optional[str] = None
 
     # Labels (optional, for training)
     # Binding
@@ -176,15 +179,14 @@ class PrestoSample:
     # Processing
     processing_label: Optional[float] = None
     core_start: Optional[int] = None
+    tcr_evidence_label: Optional[float] = None
+    tcr_evidence_method_bins: tuple[str, ...] = ()
 
     # Peptide source organism (unified 12-class taxonomy)
     species_of_origin: Optional[str] = None
     foreignness_label: Optional[float] = None
 
-    # Chain classification
-    chain_type: Optional[str] = None
     species: Optional[str] = None
-    phenotype: Optional[str] = None
 
     # Metadata
     sample_source: Optional[str] = None
@@ -207,8 +209,6 @@ class PrestoBatch:
     # Optional sequences
     flank_n_tok: Optional[torch.Tensor] = None
     flank_c_tok: Optional[torch.Tensor] = None
-    tcr_a_tok: Optional[torch.Tensor] = None
-    tcr_b_tok: Optional[torch.Tensor] = None
 
     # Labels
     bind_target: Optional[torch.Tensor] = None
@@ -220,11 +220,8 @@ class PrestoBatch:
     tcell_label: Optional[torch.Tensor] = None
     elution_label: Optional[torch.Tensor] = None
     processing_label: Optional[torch.Tensor] = None
-
-    # Chain attribute labels (for chain-species-phenotype auxiliary supervision)
-    chain_species_label: Optional[torch.Tensor] = None
-    chain_type_label: Optional[torch.Tensor] = None
-    chain_phenotype_label: Optional[torch.Tensor] = None
+    tcr_evidence_target: Optional[torch.Tensor] = None
+    tcr_evidence_method_target: Optional[torch.Tensor] = None
 
     # Masks for which samples have which labels
     bind_mask: Optional[torch.Tensor] = None
@@ -235,9 +232,8 @@ class PrestoBatch:
     tcell_mask: Optional[torch.Tensor] = None
     elution_mask: Optional[torch.Tensor] = None
     processing_mask: Optional[torch.Tensor] = None
-    chain_species_mask: Optional[torch.Tensor] = None
-    chain_type_mask: Optional[torch.Tensor] = None
-    chain_phenotype_mask: Optional[torch.Tensor] = None
+    tcr_evidence_mask: Optional[torch.Tensor] = None
+    tcr_evidence_method_mask: Optional[torch.Tensor] = None
 
     # Optional T-cell assay context (categorical IDs + masks)
     tcell_context: Dict[str, torch.Tensor] = field(default_factory=dict)
@@ -293,8 +289,6 @@ class PrestoBatch:
             mhc_class=self.mhc_class,
             flank_n_tok=_move(self.flank_n_tok),
             flank_c_tok=_move(self.flank_c_tok),
-            tcr_a_tok=_move(self.tcr_a_tok),
-            tcr_b_tok=_move(self.tcr_b_tok),
             bind_target=_move(self.bind_target),
             bind_qual=_move(self.bind_qual),
             kon_target=_move(self.kon_target),
@@ -304,9 +298,8 @@ class PrestoBatch:
             tcell_label=_move(self.tcell_label),
             elution_label=_move(self.elution_label),
             processing_label=_move(self.processing_label),
-            chain_species_label=_move(self.chain_species_label),
-            chain_type_label=_move(self.chain_type_label),
-            chain_phenotype_label=_move(self.chain_phenotype_label),
+            tcr_evidence_target=_move(self.tcr_evidence_target),
+            tcr_evidence_method_target=_move(self.tcr_evidence_method_target),
             bind_mask=_move(self.bind_mask),
             kon_mask=_move(self.kon_mask),
             koff_mask=_move(self.koff_mask),
@@ -315,9 +308,8 @@ class PrestoBatch:
             tcell_mask=_move(self.tcell_mask),
             elution_mask=_move(self.elution_mask),
             processing_mask=_move(self.processing_mask),
-            chain_species_mask=_move(self.chain_species_mask),
-            chain_type_mask=_move(self.chain_type_mask),
-            chain_phenotype_mask=_move(self.chain_phenotype_mask),
+            tcr_evidence_mask=_move(self.tcr_evidence_mask),
+            tcr_evidence_method_mask=_move(self.tcr_evidence_method_mask),
             pep_lengths=_move(self.pep_lengths),
             processing_species=self.processing_species,
             primary_alleles=self.primary_alleles,
@@ -368,7 +360,7 @@ class PrestoCollator:
         self,
         tokenizer: Tokenizer = None,
         max_pep_len: int = 50,
-        max_mhc_len: int = 400,
+        max_mhc_len: int = 120,
         max_tcr_len: int = 200,
         max_flank_len: int = 25,
     ):
@@ -591,69 +583,47 @@ class PrestoCollator:
 
         return targets, masks, quals
 
-    @staticmethod
-    def _normalize_species(species: Optional[str]) -> Optional[str]:
-        """Normalize to 6-class chain species via unified fine-grained parser."""
-        if not species:
-            return None
-        fine = normalize_species(species)
-        if fine is None:
-            return None
-        return FINE_TO_CHAIN_SPECIES[fine]
-
-    def _collate_chain_attribute_labels(
-        self, samples: List[PrestoSample]
+    def _collate_tcr_evidence_targets(
+        self,
+        samples: List[PrestoSample],
     ) -> tuple[Dict[str, torch.Tensor], Dict[str, torch.Tensor]]:
-        labels: Dict[str, List[int]] = {
-            "chain_species_label": [],
-            "chain_type_label": [],
-            "chain_phenotype_label": [],
-        }
-        masks: Dict[str, List[float]] = {
-            "chain_species_mask": [],
-            "chain_type_mask": [],
-            "chain_phenotype_mask": [],
-        }
+        labels: List[float] = []
+        masks: List[float] = []
+        method_targets: List[List[float]] = []
+        method_masks: List[List[float]] = []
+        has_label = False
+        has_method = False
 
         for sample in samples:
-            has_chain_seq = bool(sample.tcr_a or sample.tcr_b)
-
-            # Species label
-            norm_species = self._normalize_species(sample.species) if has_chain_seq else None
-            if norm_species is not None and norm_species in CHAIN_SPECIES_TO_IDX:
-                labels["chain_species_label"].append(CHAIN_SPECIES_TO_IDX[norm_species])
-                masks["chain_species_mask"].append(1.0)
+            raw = sample.tcr_evidence_label
+            if raw is None:
+                labels.append(0.0)
+                masks.append(0.0)
             else:
-                labels["chain_species_label"].append(0)
-                masks["chain_species_mask"].append(0.0)
+                labels.append(float(raw))
+                masks.append(1.0)
+                has_label = True
 
-            # Chain type label
-            chain_type = (sample.chain_type or "").strip().upper() if has_chain_seq else ""
-            if chain_type in CHAIN_TO_IDX:
-                labels["chain_type_label"].append(CHAIN_TO_IDX[chain_type])
-                masks["chain_type_mask"].append(1.0)
+            bins = {str(token).strip() for token in (sample.tcr_evidence_method_bins or ()) if str(token).strip()}
+            if bins:
+                method_targets.append(
+                    [1.0 if name in bins else 0.0 for name in TCR_EVIDENCE_METHOD_BINS]
+                )
+                method_masks.append([1.0] * len(TCR_EVIDENCE_METHOD_BINS))
+                has_method = True
             else:
-                labels["chain_type_label"].append(0)
-                masks["chain_type_mask"].append(0.0)
+                method_targets.append([0.0] * len(TCR_EVIDENCE_METHOD_BINS))
+                method_masks.append([0.0] * len(TCR_EVIDENCE_METHOD_BINS))
 
-            # Phenotype label
-            phenotype = (sample.phenotype or "").strip()
-            if has_chain_seq and phenotype in CELL_TO_IDX:
-                labels["chain_phenotype_label"].append(CELL_TO_IDX[phenotype])
-                masks["chain_phenotype_mask"].append(1.0)
-            else:
-                labels["chain_phenotype_label"].append(0)
-                masks["chain_phenotype_mask"].append(0.0)
-
-        label_tensors = {
-            k: torch.tensor(v, dtype=torch.long)
-            for k, v in labels.items()
-        }
-        mask_tensors = {
-            k: torch.tensor(v, dtype=torch.float32)
-            for k, v in masks.items()
-        }
-        return label_tensors, mask_tensors
+        targets: Dict[str, torch.Tensor] = {}
+        target_masks: Dict[str, torch.Tensor] = {}
+        if has_label:
+            targets["tcr_evidence"] = torch.tensor(labels, dtype=torch.float32)
+            target_masks["tcr_evidence"] = torch.tensor(masks, dtype=torch.float32)
+        if has_method:
+            targets["tcr_evidence_method"] = torch.tensor(method_targets, dtype=torch.float32)
+            target_masks["tcr_evidence_method"] = torch.tensor(method_masks, dtype=torch.float32)
+        return targets, target_masks
 
     @staticmethod
     def _norm_text(value: Optional[str]) -> str:
@@ -1069,31 +1039,15 @@ class PrestoCollator:
                 pad=True,
             )
 
-        # Optional TCR
-        tcr_a_tok = None
-        tcr_b_tok = None
-        tcr_a_values = [self._sanitize_optional_sequence(s.tcr_a) for s in samples]
-        tcr_b_values = [self._sanitize_optional_sequence(s.tcr_b) for s in samples]
-        if any(tcr_a_values):
-            tcr_a_tok = self.tokenizer.batch_encode(
-                tcr_a_values,
-                max_len=self.max_tcr_len,
-                pad=True,
-            )
-        if any(tcr_b_values):
-            tcr_b_tok = self.tokenizer.batch_encode(
-                tcr_b_values,
-                max_len=self.max_tcr_len,
-                pad=True,
-            )
-
         targets, target_masks = self._collate_targets(samples)
         binding_targets, binding_masks, binding_quals = self._collate_binding_measurement_targets(
             samples
         )
         targets.update(binding_targets)
         target_masks.update(binding_masks)
-        chain_labels, chain_masks = self._collate_chain_attribute_labels(samples)
+        tcr_evidence_targets, tcr_evidence_masks = self._collate_tcr_evidence_targets(samples)
+        targets.update(tcr_evidence_targets)
+        target_masks.update(tcr_evidence_masks)
         tcell_context, tcell_context_targets, tcell_context_masks = self._collate_tcell_context(
             samples
         )
@@ -1165,6 +1119,10 @@ class PrestoCollator:
         elution_mask = target_masks.get("elution")
         processing_label = targets.get("processing")
         processing_mask = target_masks.get("processing")
+        tcr_evidence_target = targets.get("tcr_evidence")
+        tcr_evidence_mask = target_masks.get("tcr_evidence")
+        tcr_evidence_method_target = targets.get("tcr_evidence_method")
+        tcr_evidence_method_mask = target_masks.get("tcr_evidence_method")
 
         # Optional multi-allele MIL bag tensors for elution/presentation/MS.
         mil_peptides: List[str] = []
@@ -1324,8 +1282,6 @@ class PrestoCollator:
             mhc_class=mhc_class,
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
-            tcr_a_tok=tcr_a_tok,
-            tcr_b_tok=tcr_b_tok,
             bind_target=bind_target,
             bind_qual=bind_qual,
             kon_target=kon_target,
@@ -1335,9 +1291,8 @@ class PrestoCollator:
             tcell_label=tcell_label,
             elution_label=elution_label,
             processing_label=processing_label,
-            chain_species_label=chain_labels["chain_species_label"],
-            chain_type_label=chain_labels["chain_type_label"],
-            chain_phenotype_label=chain_labels["chain_phenotype_label"],
+            tcr_evidence_target=tcr_evidence_target,
+            tcr_evidence_method_target=tcr_evidence_method_target,
             bind_mask=bind_mask,
             kon_mask=kon_mask,
             koff_mask=koff_mask,
@@ -1346,9 +1301,8 @@ class PrestoCollator:
             tcell_mask=tcell_mask,
             elution_mask=elution_mask,
             processing_mask=processing_mask,
-            chain_species_mask=chain_masks["chain_species_mask"],
-            chain_type_mask=chain_masks["chain_type_mask"],
-            chain_phenotype_mask=chain_masks["chain_phenotype_mask"],
+            tcr_evidence_mask=tcr_evidence_mask,
+            tcr_evidence_method_mask=tcr_evidence_method_mask,
             pep_lengths=pep_lengths,
             processing_species=[s.species for s in samples],
             primary_alleles=[s.primary_allele or "" for s in samples],
@@ -1417,19 +1371,6 @@ def collate_dict_batch(batch: List[Dict[str, Any]], tokenizer: Tokenizer = None)
         )
 
     result["mhc_class"] = [b.get("mhc_class", "I") for b in batch]
-
-    # Optional TCR
-    tcr_a_values = [PrestoCollator._sanitize_optional_sequence(b.get("tcr_a", "")) for b in batch]
-    if any(tcr_a_values):
-        result["tcr_a_tok"] = tokenizer.batch_encode(
-            tcr_a_values, max_len=200, pad=True
-        )
-
-    tcr_b_values = [PrestoCollator._sanitize_optional_sequence(b.get("tcr_b", "")) for b in batch]
-    if any(tcr_b_values):
-        result["tcr_b_tok"] = tokenizer.batch_encode(
-            tcr_b_values, max_len=200, pad=True
-        )
 
     targets: Dict[str, torch.Tensor] = {}
     target_masks: Dict[str, torch.Tensor] = {}

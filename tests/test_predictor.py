@@ -6,11 +6,11 @@ import torch
 import tempfile
 import os
 
+from presto.data.groove import prepare_mhc_input
 from presto.inference.predictor import (
     Predictor,
     PresentationResult,
     RecognitionResult,
-    ChainClassificationResult,
     TiledPresentationResult,
 )
 from presto.models.presto import Presto
@@ -42,30 +42,11 @@ class TestRecognitionResult:
         result = RecognitionResult(
             peptide="SIINFEKL",
             mhc_class="I",
-            tcr_alpha="CAVRD",
-            tcr_beta="CASSIR",
             presentation_prob=0.8,
-            match_prob=0.5,
+            recognition_prob=0.5,
             immunogenicity_prob=0.4,
         )
         assert result.immunogenicity_prob == 0.4
-
-
-class TestChainClassificationResult:
-    """Tests for ChainClassificationResult dataclass."""
-
-    def test_result_fields(self):
-        """Result has all expected fields."""
-        result = ChainClassificationResult(
-            sequence="CAVRDSSYKLIF",
-            species="human",
-            species_prob=0.99,
-            chain_type="TRA",
-            chain_type_prob=0.95,
-            phenotype="CD8_T",
-            phenotype_prob=0.85,
-        )
-        assert result.chain_type == "TRA"
 
 
 class TestPredictor:
@@ -122,9 +103,10 @@ class TestPredictorMHCClassInference:
         assert predictor._infer_mhc_class("IIa") == "II"
 
     def test_infer_default(self, predictor):
-        """Default to Class I when unknown."""
+        """Default to Class I only when allele input is absent."""
         assert predictor._infer_mhc_class(None) == "I"
-        assert predictor._infer_mhc_class("unknown") == "I"
+        with pytest.raises(ValueError, match="mhcgnomes failed to infer MHC class"):
+            predictor._infer_mhc_class("unknown")
 
 
 class TestPredictPresentation:
@@ -134,6 +116,35 @@ class TestPredictPresentation:
     def predictor(self):
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         return Predictor(model, device="cpu")
+
+    def test_resolve_class_ii_dr_beta_only_uses_default_dra(self):
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        predictor = Predictor(
+            model,
+            device="cpu",
+            auto_load_index_csv=False,
+            allele_sequences={
+                "HLA-DRA*01:01": "D" * 181,
+                "HLA-DRB1*01:01": "E" * 181,
+            },
+        )
+        prepared = prepare_mhc_input(
+            mhc_a="D" * 181,
+            mhc_b="E" * 181,
+            mhc_class="II",
+        )
+
+        mhc_a_seq, mhc_b_seq = predictor._resolve_mhc_pair_sequences(
+            allele="HLA-DRB1*01:01",
+            mhc_sequence=None,
+            mhc_b_sequence=None,
+            mhc_class="II",
+            species="human",
+            require_species_for_class_i_b2m=True,
+        )
+
+        assert mhc_a_seq == prepared.groove_half_1
+        assert mhc_b_seq == prepared.groove_half_2
 
     def test_predict_presentation_basic(self, predictor):
         """Basic presentation prediction works."""
@@ -286,6 +297,13 @@ class TestPredictPresentation:
         mhc_a_tok = model.last_kwargs["mhc_a_tok"]
         assert torch.count_nonzero(mhc_a_tok).item() == 0
 
+    def test_predictor_sequence_validation_matches_vocab_without_bzuo(self, predictor):
+        assert predictor._looks_like_amino_acid_sequence("ACDEFGHIKLMNPQRSTVWYX")
+        assert not predictor._looks_like_amino_acid_sequence("ACDEB")
+        assert not predictor._looks_like_amino_acid_sequence("ACDEZ")
+        assert not predictor._looks_like_amino_acid_sequence("ACDEU")
+        assert not predictor._looks_like_amino_acid_sequence("ACDEO")
+
     def test_predict_presentation_accepts_class_alias(self, predictor):
         """Class aliases (e.g., Ia) are normalized."""
         result = predictor.predict_presentation(
@@ -296,14 +314,14 @@ class TestPredictPresentation:
         )
         assert result.mhc_class == "I"
 
-    def test_predict_presentation_requires_species_for_class_i_without_allele(self, predictor):
-        """Class I with direct chain only requires species or explicit beta chain."""
-        with pytest.raises(ValueError):
-            predictor.predict_presentation(
-                peptide="SIINFEKL",
-                mhc_sequence="MAVMAPRTLLLLLSGALALTQTWAG",
-                mhc_class="Ia",
-            )
+    def test_predict_presentation_allows_direct_class_i_without_species(self, predictor):
+        """Class I direct-chain prediction no longer requires species for B2M."""
+        result = predictor.predict_presentation(
+            peptide="SIINFEKL",
+            mhc_sequence="MAVMAPRTLLLLLSGALALTQTWAG",
+            mhc_class="Ia",
+        )
+        assert result.mhc_class == "I"
 
     def test_predict_presentation_class_ii(self, predictor):
         """Class II presentation prediction."""
@@ -542,68 +560,36 @@ class TestPredictPresentationMultiAllele:
 
 
 class TestPredictRecognition:
-    """Tests for TCR-pMHC recognition API (future feature)."""
+    """Tests for repertoire-level recognition API."""
 
     @pytest.fixture
     def predictor(self):
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         return Predictor(model, device="cpu")
 
-    def test_predict_recognition_paired(self, predictor):
-        """Recognition API is intentionally disabled for now."""
-        with pytest.raises(NotImplementedError):
-            predictor.predict_recognition(
-                peptide="SIINFEKL",
-                mhc_sequence="MAVMAPRTL",
-                species="human",
-                tcr_alpha="CAVRDSSYKLIF",
-                tcr_beta="CASSIRSSYEQYF",
-            )
+    def test_predict_recognition_basic(self, predictor):
+        result = predictor.predict_recognition(
+            peptide="SIINFEKL",
+            mhc_sequence="MAVMAPRTLLLLLSGALALTQTWAG",
+            mhc_class="I",
+            species="human",
+        )
 
-    def test_predict_recognition_beta_only(self, predictor):
-        with pytest.raises(NotImplementedError):
-            predictor.predict_recognition(
-                peptide="SIINFEKL",
-                mhc_sequence="MAVMAPRTL",
-                species="human",
-                tcr_beta="CASSIRSSYEQYF",
-            )
+        assert isinstance(result, RecognitionResult)
+        assert result.mhc_class == "I"
+        assert 0 <= result.presentation_prob <= 1
+        assert 0 <= result.recognition_prob <= 1
+        assert 0 <= result.immunogenicity_prob <= 1
 
-    def test_predict_recognition_alpha_only(self, predictor):
-        with pytest.raises(NotImplementedError):
-            predictor.predict_recognition(
-                peptide="SIINFEKL",
-                mhc_sequence="MAVMAPRTL",
-                species="human",
-                tcr_alpha="CAVRDSSYKLIF",
-            )
-
-    def test_predict_recognition_requires_tcr(self, predictor):
-        with pytest.raises(NotImplementedError):
-            predictor.predict_recognition(
-                peptide="SIINFEKL",
-                mhc_sequence="MAVMAPRTL",
-            )
-
-
-class TestClassifyChain:
-    """Tests for chain classification."""
-
-    @pytest.fixture
-    def predictor(self):
-        model = Presto(d_model=64, n_layers=2, n_heads=4)
-        return Predictor(model, device="cpu")
-
-    def test_classify_chain_basic(self, predictor):
-        """Basic chain classification."""
-        result = predictor.classify_chain("CAVRDSSYKLIF")
-
-        assert isinstance(result, ChainClassificationResult)
-        assert result.sequence == "CAVRDSSYKLIF"
-        assert result.species in ["human", "mouse", "macaque", "other"]
-        assert 0 <= result.species_prob <= 1
-        assert 0 <= result.chain_type_prob <= 1
-        assert 0 <= result.phenotype_prob <= 1
+    def test_predict_recognition_class_ii(self, predictor):
+        result = predictor.predict_recognition(
+            peptide="AGFKGEQGPKGEPG",
+            allele="HLA-DRB1*01:01",
+            mhc_class="II",
+            species="human",
+        )
+        assert result.mhc_class == "II"
+        assert 0 <= result.recognition_prob <= 1
 
 
 class TestEmbeddings:
@@ -623,25 +609,6 @@ class TestEmbeddings:
         )
 
         assert embedding.shape == (1, 64)  # d_model=64
-
-    def test_embed_tcr_paired(self, predictor):
-        """Extract TCR embedding (paired)."""
-        embedding = predictor.embed_tcr(
-            alpha="CAVRDSSYKLIF",
-            beta="CASSIRSSYEQYF",
-        )
-
-        assert embedding.shape == (1, 64)
-
-    def test_embed_tcr_single(self, predictor):
-        """Extract TCR embedding (single chain)."""
-        embedding = predictor.embed_tcr(beta="CASSIRSSYEQYF")
-        assert embedding.shape == (1, 64)
-
-    def test_embed_tcr_requires_chain(self, predictor):
-        """Must provide at least one TCR chain."""
-        with pytest.raises(ValueError):
-            predictor.embed_tcr()
 
 
 class TestPredictorFromCheckpoint:

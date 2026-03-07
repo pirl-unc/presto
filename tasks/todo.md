@@ -1,3 +1,376 @@
+# Integrated MHC Processing + Receptor Removal (2026-03-06)
+
+## Spec
+
+- Goal: implement the new groove-centric MHC representation and remove receptor sequences from canonical Presto without causing backwards progress across the recently refactored learning architecture.
+- Canonical planning inputs:
+  - `tasks/mhc_processing_plan.md`
+  - `tasks/receptor_removal_plan.md`
+  - `tasks/tcr_evidence_spec.md`
+- Design constraints from user clarifications:
+  - keep `recognition` as the canonical repertoire-level latent upstream of `immunogenicity`
+  - remove TCR/BCR sequences as model inputs and canonical training features
+  - keep a pMHC-only `tcr_evidence` output family derived from curated receptor databases
+  - do not couple `tcr_evidence` to inference-time assay/context embeddings
+  - stage interface changes so the same loader/collate/model surfaces are not churned twice
+
+## Integrated execution order
+
+- [x] Phase 0: baseline current pMHC-only training path with a short no-AMP run and record output keys, task composition, and minibatch behavior.
+- [x] Phase 1: implement the groove extractor and augmented MHC index additively without changing the runtime sample/batch contract yet.
+- [x] Phase 1 verification: add parser/index tests and prove groove extraction stats on representative reference alleles and failure modes.
+- [x] Phase 2: add pMHC-only TCR-evidence record parsing and metadata preservation in VDJdb/McPAS/cross-source code, still without changing the model API yet.
+- [x] Phase 2 verification: audit counts for `tcr_evidence` and selected method bins from live loaders, and prove canonical source summaries can expose those records without receptor sequences.
+- [ ] Phase 3: finish the unified sample/batch contract rewrite in `data/loaders.py` and `data/collate.py`:
+  - groove-half MHC inputs are already live
+  - add `tcr_evidence` targets/masks
+  - remove receptor sequences and chain auxiliary labels/tensors from canonical `PrestoSample` / `PrestoBatch`
+- [ ] Phase 3 verification: `PrestoSample` / `PrestoBatch` contain only pMHC inputs, assay context, and pMHC-level targets; no `tcr_*` or receptor-chain tensors remain.
+- [ ] Phase 4: finish the canonical `models/presto.py` surgery for the receptor-free forward path:
+  - groove-half segment semantics are already live
+  - remove TCR tower / matcher / chain-head branches entirely
+  - add pMHC-only `tcr_evidence` head(s)
+- [ ] Phase 4 verification: forward/backward finite on mixed real batches; output contract updated; no `enable_tcr`, `tcr_vec`, `match_logit`, `classify_chain`, or chain outputs remain in canonical `Presto`.
+- [ ] Phase 5: update training, predictor, CLI, evaluation, and task registries to consume the new batch/model contract and drop receptor-conditioned entrypoints.
+- [ ] Phase 5 verification: canonical training no longer loads or advertises VDJdb/10x receptor sequences, TCR retrieval, or chain classification, but does train/evaluate `tcr_evidence`.
+- [ ] Phase 6: run local sanity training on the refactored stack, then run a 1-epoch Modal diagnostic without AMP if needed to bypass the remaining bf16 blocker.
+- [ ] Phase 6 review: inspect loss curves, gradients, probe peptides including `SLLQHLIGL`, allele separation (`A*02:01` vs `A*24:02`), batch composition, and latent/output behavior before deciding on a full run.
+
+## Focused fix: groove dispatch + species semantics (2026-03-06)
+
+- [x] Fix `extract_groove()` so class-II dispatch does not silently default to alpha when `chain` is omitted.
+- [x] Add explicit class-II chain inference from sequence and return an explicit failure/ambiguity status when inference is not defensible.
+- [x] Add regression tests covering omitted-chain class-II alpha, omitted-chain class-II beta, and ambiguous/failed inference paths.
+- [x] Audit whether class-II allele-only default pairing is implemented anywhere in the user-facing resolution path and document the exact current gap.
+- [x] Separate fine-grained MHC species identity used by parsing/indexing from the coarse species buckets used by network classification.
+- [x] Make `mhcgnomes` the required allele parser everywhere relevant and remove remaining heuristic parser fallbacks for class/species normalization.
+- [x] Fix the local editable/namespace-package import case so `mhcgnomes` resolution works identically under `python` and `pytest`.
+- [x] Verify targeted groove/parser/index tests and summarize the exact behavior change for the user.
+
+## Focused audit: mhcgnomes failing cases (2026-03-06)
+
+- [ ] Enumerate every allele-bearing source in the workspace that should be parseable by `mhcgnomes`.
+- [ ] Run a full parse audit over normalized and raw allele strings, keeping source, field, count, and example rows.
+- [ ] Cluster failures by pattern so library fixes can be implemented at the parser rule level rather than as one-off aliases.
+- [ ] Distinguish true parser gaps from bad/non-allelic data tokens.
+- [ ] Summarize exact failure classes and the highest-value fixes for the `mhcgnomes` repo.
+
+## Focused fix: DR alpha defaults (2026-03-06)
+
+- [x] Audit DRB/DRA coverage in the local MHC index and merged data to determine which species actually need beta-only DR default pairing.
+- [x] Select native default DRA alleles from the local index for every species where both DRB and DRA are present locally.
+- [x] Expose a canonical species-to-default-DRA dictionary in the resolver layer.
+- [x] Update loader and predictor chain assembly so class-II DR beta-only inputs become `(DRA, DRB)` instead of `(DRB, empty)`.
+- [x] Make loader-side `mhc_b` resolution accept allele names, not only literal amino-acid sequences.
+- [x] Verify that the selected default DRA alleles exist in `data/mhc_index.csv` and that class-II DR beta-only samples assemble correctly.
+
+## Focused fix: protein-resolution allele normalization (2026-03-06)
+
+- [x] Make `mhcgnomes`-based protein-resolution normalization the shared contract for user-facing allele names.
+- [x] Refactor parsing so compact/raw user inputs can still be parsed without `normalize_allele_name()` recursing back into itself.
+- [x] Normalize default DR alpha mappings to compact protein-level names where sequence-unique, while preserving higher resolution for prefixes whose local index entries remain protein-ambiguous at two fields.
+- [x] Re-key the canonical DR alpha default map by MHC prefix (`HLA`, `SLA`, `Mamu`, etc.) and keep species-name aliases as a compatibility layer only.
+- [x] Add tests covering two-field normalization, suffix preservation, prefix-keyed DR defaults, and index-backed existence checks.
+- [x] Verify resolver/index/loader/predictor tests against the new contract and summarize the corpus-level collision findings.
+
+## Review
+
+- `normalize_allele_name()` is now the shared user-facing protein-resolution normalizer:
+  - `HLA-DRA*01:01:01:01 -> HLA-DRA*01:01`
+  - `HLA-DRA*01:01:01:01N -> HLA-DRA*01:01N`
+  - `H2-Kb -> H2-K*b`
+  - `A2 -> HLA-A*02`
+- Parsing no longer recurses through `normalize_allele_name()`. `parse_allele_name()` now tries a lightly coerced allele token first, then the raw token, which preserves compact input support without circular normalization.
+- Canonical DR defaults are now keyed by stable MHC prefixes instead of free-text species names.
+- Important corpus finding:
+  - blindly collapsing the local index to two-field names is wrong for this corpus
+  - audit over `data/mhc_index.csv` found `1,217` cases where two-field collapse merged distinct protein sequences
+  - so the index and internal resolver storage keep full distinguishing allele names, while user-facing/default aliases stay compact where that is biologically safe
+- Default DR alpha map outcome:
+  - most prefixes now use compact two-field names (`HLA-DRA*01:01`, `SLA-DRA*01:01`, `Mamu-DRA*01:01`, etc.)
+  - two prefixes retain higher resolution because two-field collapse is protein-ambiguous in the local index:
+    - `Chsa -> Chsa-DRA*01:01:01`
+    - `Mafa -> Mafa-DRA*01:01:01:01`
+- Loader and predictor custom allele-sequence maps now normalize lookup keys, so two-field caller inputs and higher-resolution stored alleles resolve against each other correctly.
+- Verification:
+  - `python -m py_compile data/allele_resolver.py data/mhc_index.py data/loaders.py inference/predictor.py tests/test_allele_resolver.py tests/test_loaders.py tests/test_predictor.py tests/test_mhc_index.py`
+  - `pytest -q tests/test_allele_resolver.py tests/test_loaders.py tests/test_predictor.py tests/test_mhc_index.py tests/test_tasks.py` -> `188 passed`
+
+## Focused fix: two-field alias representative selection (2026-03-06)
+
+- [x] Audit all two-field alias collisions into:
+  - nested fragment/full cases where the longest sequence safely dominates
+  - ambiguous cases where sequences differ beyond pure subsequence nesting
+- [x] Update MHC index alias selection so two-field aliases resolve to the longest representative only in the safe nested case.
+- [x] Make ambiguous two-field aliases explicit in the index resolution layer instead of silently picking one record.
+- [x] Keep full-resolution index records unchanged; only adjust alias collapse behavior.
+- [x] Verify that augmented groove fields for safe two-field aliases come from the chosen longest representative sequence.
+- [x] Produce an enumeration of the ambiguous non-subsequence collisions and diagnose whether they reflect null/questionable modifiers, mixed fragments, or true amino-acid differences.
+
+## Review
+
+- Two-field collision audit over `data/mhc_index.csv`:
+  - `1,217` total collided two-field groups
+  - `1,155` safe nested groups where every shorter sequence is contained in one unique longest sequence
+  - `62` ambiguous groups where two-field collapse should not silently choose a representative
+- Ambiguous-group breakdown:
+  - `52` `non_nested_seq_conflict`
+  - `10` `same_length_diff_content`
+- Suffix/modifier diagnosis:
+  - only `2` ambiguous groups involve any suffix at all, both `N`
+  - `60/62` ambiguous groups have no suffix modifiers
+  - so these are not mainly `N/Q/PS` annotation issues
+- Main causes in the local corpus:
+  - mixed completeness records that are not clean subsequences of one longest sequence
+  - a small non-human IPD-MHC subset with true same-length amino-acid disagreements inside one two-field family
+  - HLA ambiguous cases in this corpus are still mixed-completeness conflicts, not same-length full-protein disagreements
+- Runtime behavior now:
+  - safe two-field aliases resolve to the longest representative record
+  - ambiguous two-field aliases return an explicit unresolved/ambiguous result with candidate metadata
+  - full-resolution record keys are unchanged
+- Shared lookup behavior:
+  - predictor, CLI prediction, and probe-training index sequence lookups now use the same collision-aware alias logic as `resolve_alleles`
+- Artifacts:
+  - full ambiguous enumeration written to `artifacts/two_field_ambiguous_collisions.tsv`
+- Verification:
+  - `python -m py_compile data/mhc_index.py inference/predictor.py cli/predict.py scripts/probe_training.py tests/test_mhc_index.py`
+  - `pytest -q tests/test_mhc_index.py tests/test_predictor.py tests/test_allele_resolver.py tests/test_loaders.py` -> `145 passed`
+  - `pytest -q tests/test_tasks.py tests/test_data_cli.py tests/test_predict_cli.py` -> `70 passed`
+
+## Focused refactor: groove-native MHC runtime path (2026-03-06)
+
+- [x] Replace the current two-field alias policy with a runtime representative policy:
+  - nested fragments -> longest representative
+  - exact/consistent overlap assemblies with >=100aa overlap -> assembled representative
+  - multiple full records with identical extracted groove halves -> deterministic exemplar
+  - groove-disagreeing families -> keep two-field alias ambiguous
+- [x] Materialize representative metadata for alias resolution so `resolve_alleles()`, predictor lookup, and training all use the same sequence/groove decision.
+- [x] Ensure any assembled representative is re-parsed through groove extraction and only accepted when the resulting chain looks structurally valid for its class.
+- [x] Switch loader-side MHC preparation from full-chain `(mhc_a, mhc_b)` semantics to groove-half semantics while keeping the existing two-segment tensor interface stable.
+- [x] Replace class-I `(alpha, B2M)` runtime inputs with `(alpha1, alpha2)` groove halves and class-II `(alpha, beta)` full-chain inputs with `(alpha1, beta1)` groove halves.
+- [x] Update runtime fallback behavior for direct sequences and unknown alleles to use `prepare_mhc_input()` / live groove extraction rather than raw full-chain truncation.
+- [x] Reduce collator MHC max length to groove-scale lengths and keep MIL bag collation aligned with the new groove halves.
+- [x] Update `Presto` segment embeddings/position embeddings to explicit groove-half semantics and delete the learned groove-bias path that previously downweighted non-groove residues.
+- [x] Keep the public forward signature stable (`mhc_a_tok`, `mhc_b_tok`) for now, but make those tensors unambiguously mean `groove_half_1` and `groove_half_2`.
+- [x] Update inference and probe-training utilities to resolve and tokenize groove halves from the same runtime representative/index logic.
+- [x] Add tests for:
+  - overlap assembly rescue on ambiguous two-field families
+  - groove-equivalent same-two-field families
+  - ambiguous groove-disagreeing families remaining unresolved
+  - loader/predictor class-I and class-II groove-half assembly
+  - collate/model forward with groove-scale segment lengths
+- [x] Run targeted sanity checks:
+  - parser/index/predictor/loaders tests
+  - model/collate tests
+  - a short mini-batch training loop on real data with groove-half inputs
+
+## Staging rationale
+
+- Groove extraction and index augmentation are additive and can be validated in isolation. Doing them first reduces risk and avoids mixing biologic parsing failures with model-contract regressions.
+- TCR-evidence schema work is also additive. Parsing/preserving method metadata before the batch/model rewrite prevents a second pass through the data sources.
+- The largest API churn is in loader/collate/model contracts. MHC groove migration and receptor-input removal both hit those same interfaces, so they should land together in one coordinated patch, not as two sequential rewrites.
+- Predictor/CLI/training cleanup should come only after the data and model contracts are stable; otherwise the same public commands/tests will fail for moving reasons.
+- Training diagnostics belong at the end. Running them before the canonical contract is coherent would not answer the user's question about whether the new design works.
+
+## Review targets
+
+- Canonical model after this sequence should be:
+  - pMHC and assay-context inputs only
+  - groove-half MHC representation
+  - `recognition -> immunogenicity` latent path intact
+  - no receptor-sequence-conditioned branches
+  - optional pMHC-only `tcr_evidence` auxiliary outputs
+- Canonical training should use receptor databases only as pMHC evidence supervision, not as receptor-token sources.
+- Modal analysis should be interpreted only after the no-AMP/local sanity path is proven and the batch/model contract has stopped changing.
+
+## Review
+
+- Phase 0 baseline completed on a real pMHC-only slice built from raw IEDB head subsets plus index-resolved MHC sequences:
+  - loaded records: binding `128`, kinetics `30`, stability `32`, elution `64`, tcell `57`, processing `0`
+  - dataset size after resolved-only filtering: `311`
+  - MHC resolution on that slice: `28/33` alleles resolved from index, `0` invalid sequences dropped, unresolved filter dropped `2` kinetics rows and `7` tcell rows
+  - balanced batch composition on the first three batches was stable and mixed:
+    - binding_ic50 `6`
+    - binding_kinetics `2`
+    - binding_stability `2`
+    - elution_ms `3`
+    - tcell_response `3`
+- Five repeated CPU training steps on one collated balanced batch were finite and improved rapidly:
+  - loss trace: `23.81 -> 3.96 -> 3.29 -> 3.20 -> 2.49`
+- Current forward path still carries substantial non-canonical baggage:
+  - receptor/chain outputs remain in the canonical output dictionary (`mhc_*_type_logits`, `mhc_*_species_logits`, `tcell_context_logits`, compatibility scaffolding, etc.)
+  - pMHC-only training works, but the output contract is much broader than the desired post-refactor design
+- Interpretation:
+  - the current stack is trainable enough to support a before/after comparison
+  - the next work should focus on contract cleanup and MHC representation, not emergency numerical stabilization
+- Phase 1 groove extraction/index layer completed.
+- New additive surfaces:
+  - [data/groove.py](/Users/iskander/code/presto/data/groove.py)
+  - augmented index support in [data/mhc_index.py](/Users/iskander/code/presto/data/mhc_index.py)
+  - CLI wiring in [cli/data.py](/Users/iskander/code/presto/cli/data.py) and [cli/main.py](/Users/iskander/code/presto/cli/main.py)
+- Verification:
+  - `python -m py_compile data/groove.py data/mhc_index.py cli/data.py cli/main.py tests/test_groove.py tests/test_mhc_index.py tests/test_data_cli.py`
+  - `pytest -q tests/test_groove.py tests/test_mhc_index.py tests/test_data_cli.py` -> `49 passed`
+- Species-specific audit results from the live index:
+  - `Gallus gallus` class I: `27 ok`
+  - `Oncorhynchus mykiss`: class I `48 ok`; class II alpha `3 ok`; class II beta `20 ok`, `2 beta1_only_fallback`
+  - `Salmo salar`: class I `47 ok`, `1 alpha3_fallback`; class II alpha `18 ok`, `4 fragment_fallback`; class II beta `26 ok`, `16 fragment_fallback`
+- Important biological/index observation:
+  - `fragment_fallback` is not just a fish edge case. The local index contains many class-II beta groove-domain fragments directly, including large human `DRB1/DQB1/DPB1` slices at ~`79-89 aa`.
+  - Accepting those directly is consistent with the project’s groove-fragment policy and avoids misclassifying valid groove-only records as failures.
+- Bug caught during verification:
+  - a class-II fragment fallback path briefly leaked into the class-I parser on `no_cys_pairs`; fixed before landing the phase.
+- Additional non-model validation:
+  - added explicit live-index regression tests for `Gaga-BF2*002:01:01` (chicken class I) and `Onmy-DAB*16:01` (trout class-II beta `beta1_only_fallback`) in `tests/test_groove.py`.
+  - verified the species-specific counts with the class-II chain chosen from gene semantics rather than the generic `extract_groove()` default:
+    - `Gallus gallus`: `BF1 12 ok`, `BF2 15 ok`
+    - `Oncorhynchus mykiss`: `UBA 48 ok`, `DAA 3 ok`, `DAB 20 ok + 2 beta1_only_fallback`
+    - `Salmo salar`: `UBA 47 ok + 1 alpha3_fallback`, `DAA 18 ok + 4 fragment_fallback`, `DAB 26 ok + 16 fragment_fallback`
+  - one earlier ad hoc audit briefly under-counted fish class-II beta because `extract_groove()` defaults class-II dispatch to alpha when no chain is passed; the parser/index pipeline itself is unaffected because it already routes by gene.
+- Phase 2 TCR-evidence schema layer completed.
+- New additive surfaces:
+  - `TcrEvidenceRecord`, `load_vdjdb_tcr_evidence()`, `load_mcpas_tcr_evidence()` in [data/loaders.py](/Users/iskander/code/presto/data/loaders.py)
+  - preserved receptor-evidence metadata in [data/cross_source_dedup.py](/Users/iskander/code/presto/data/cross_source_dedup.py)
+- Verification:
+  - `python -m py_compile data/groove.py data/mhc_index.py data/loaders.py data/cross_source_dedup.py tests/test_groove.py tests/test_mhc_index.py tests/test_data_cli.py tests/test_loaders.py tests/test_cross_source_dedup.py`
+  - `pytest -q tests/test_groove.py tests/test_mhc_index.py tests/test_data_cli.py tests/test_loaders.py tests/test_cross_source_dedup.py` -> `94 passed`
+- Phase 2 notes:
+  - VDJdb method bins are now derived from both `method.identification` and `method.verification`, which is necessary to recover `target_cell_functional` labels from rows where the identification method is only multimer-based.
+  - per-assay cross-source CSVs now preserve the new receptor-evidence metadata columns instead of silently dropping them during serialization.
+- Groove-native runtime path completed across index resolution, loader/collate, model embeddings, predictor, and training utilities.
+- Alias-resolution behavior now distinguishes:
+  - `nested_longest_unique`
+  - `assembled_overlap`
+  - `groove_equivalent_exemplar`
+  - explicit unresolved ambiguous families
+- `resolve_alleles()` now reports the concrete representative full allele in `resolved`, while preserving alias-level metadata in `representative_allele` / `representative_policy`.
+- Runtime MHC contract is now:
+  - class I -> `(alpha1_groove, alpha2_groove)`
+  - class II -> `(alpha1_groove, beta1_groove)`
+  - public tensor names remain `mhc_a_tok` / `mhc_b_tok`
+- Collation and model input scale changed from full-chain MHC lengths to groove-scale lengths:
+  - collator default `max_mhc_len=120`
+  - `Presto` positional embeddings are now groove-half specific
+  - legacy groove-bias masking over non-groove residues was removed
+- Verification:
+  - `python -m py_compile data/mhc_index.py data/loaders.py inference/predictor.py data/collate.py models/presto.py scripts/train_synthetic.py scripts/train_iedb.py tests/test_loaders.py tests/test_predictor.py tests/test_presto.py`
+  - `pytest -q tests/test_mhc_index.py tests/test_loaders.py tests/test_predictor.py tests/test_presto.py tests/test_train_iedb.py tests/test_training_e2e.py` -> `194 passed`
+- Mini-batch runtime sanity on real class-I and class-II sequences:
+  - class I emitted groove halves of lengths `91` and `93`
+  - class II emitted groove halves of lengths `84` and `94`
+  - collated batch tensors were `(4, 120)` for both groove segments
+  - five CPU optimizer steps on a real class-I batch were finite and improved monotonically:
+    - `10.5980 -> 10.5574 -> 10.4994 -> 10.4153 -> 10.3170`
+- Focused fix review:
+  - `extract_groove()` no longer defaults missing class-II chain identity to alpha. It now uses allele/gene inference first, sequence-only inference second, and otherwise returns explicit `ambiguous_chain` / `chain_inference_failed` statuses.
+  - fine-grained species identity is now preserved separately through `infer_species_identity()` while coarse network buckets remain in `normalize_processing_species_label()`.
+  - `mhcgnomes` is now the required parser for allele normalization/class/species inference across resolver, index, dedup, and training-task helpers.
+  - the local editable namespace-package case is fixed by resolving `mhcgnomes.function_api.parse` when the top-level `mhcgnomes` import does not expose `parse`.
+  - targeted verification after the parser hardening: `pytest -q tests/test_allele_resolver.py tests/test_mhc_index.py tests/test_groove.py tests/test_loaders.py tests/test_cross_source_dedup.py tests/test_tasks.py tests/test_predictor.py` -> `208 passed`
+- DR alpha default review:
+  - native default DRA mapping is now explicit in `data/allele_resolver.py` as `DEFAULT_DR_ALPHA_BY_SPECIES`.
+  - scope is intentionally native-only: no cross-species DRA proxy sequences were invented for species missing local DRA entries.
+  - merged training data species that actually present DRB-only records are covered natively:
+    - `Homo sapiens -> HLA-DRA*01:01:01:01`
+    - `Bos sp. -> BoLA-DRA*001:01`
+    - `Macaca mulatta -> Mamu-DRA*01:01`
+    - `Macaca fascicularis -> Mafa-DRA*01:01:01:01`
+    - `Pan troglodytes -> Patr-DRA*01:01:01`
+    - `Sus sp. -> SLA-DRA*01:01:01`
+  - loader/predictor behavior is corrected for class-II DR beta-only inputs:
+    - before: `mhc_a=DRB`, `mhc_b=""`
+    - now: `mhc_a=DRA_default`, `mhc_b=DRB`
+  - loader `mhc_b` inputs now resolve allele names as sequences, which also fixes VDJdb-style explicit class-II partner alleles.
+  - verification:
+    - `pytest -q tests/test_allele_resolver.py tests/test_loaders.py tests/test_predictor.py` -> `122 passed`
+    - `pytest -q tests/test_mhc_index.py tests/test_tasks.py tests/test_allele_resolver.py tests/test_loaders.py tests/test_predictor.py` -> `184 passed`
+
+# Receptor Removal Planning (2026-03-06)
+
+## Spec
+
+- Goal: define a surgical plan to remove receptor sequences (TCR/BCR) from canonical Presto inputs, training data, and training/inference infrastructure while preserving the pMHC and immune-response model.
+- Refined boundary from user clarification:
+  - remove receptor sequences as inputs and training infra
+  - keep pMHC-only outputs capturing whether a cognate TCR has been observed in receptor databases such as VDJdb
+  - where metadata exists, optionally segment that output by assay/evidence method instead of collapsing everything to one scalar
+- Canonical references reviewed:
+  - `docs/design.md`
+  - `docs/tcr_spec.md`
+  - `data/loaders.py`
+  - `data/collate.py`
+  - `models/presto.py`
+  - `models/tcr.py`
+  - `scripts/train_iedb.py`
+  - `scripts/train_synthetic.py`
+  - `training/tasks.py`
+  - `training/trainer.py`
+  - `inference/predictor.py`
+  - `cli/main.py`
+  - `cli/evaluate.py`
+  - `data/cross_source_dedup.py`
+
+## Plan
+
+- [x] Audit the live receptor-specific surface area in dataset ingestion, collate/batch schema, model forward path, predictor/CLI APIs, and legacy training tasks.
+- [x] Decide the canonical boundary: keep pMHC + immune-response supervision, remove receptor-sequence-conditioned inputs and objectives.
+- [x] Refine that boundary so receptor databases become pMHC-only evidence outputs rather than sequence-conditioned tasks.
+- [x] Write the detailed execution plan in `tasks/receptor_removal_plan.md`.
+- [x] Audit local VDJdb and McPAS source schemas to determine which TCR-evidence metadata fields actually survive in raw files and current loaders.
+- [x] Quantify counts per candidate evidence bin and reject any taxonomy bins that are too sparse or unsupported by the data.
+- [x] Write an exact `tcr_evidence` / `tcr_evidence_method` spec with field mappings, normalization rules, target semantics, and recommended loss family.
+- [ ] Phase 0: baseline the current pMHC-only path with a no-AMP mini-run so receptor removal can be measured against a stable canonical reference.
+- [ ] Phase 1: replace receptor-sequence source ingestion with pMHC-only `tcr_evidence` / `tcr_evidence_method` supervision while keeping raw archival parsers optional.
+- [ ] Phase 2: remove receptor fields from `PrestoSample` / `PrestoBatch` and delete receptor-chain auxiliary collation.
+- [ ] Phase 3: remove the TCR tower and receptor classifier/matcher outputs from `models/presto.py`, `models/tcr.py`, predictor APIs, and CLI commands.
+- [ ] Phase 4: remove legacy TCR/BCR training-task infrastructure (`tcr_pmhc`, receptor-chain typing, TCR pairing, retrieval evaluation) and replace it with pMHC-only TCR-evidence outputs, while preserving pMHC-only MIL contrastive regularization.
+- [ ] Phase 5: update docs/tests to reflect that canonical Presto is a pMHC and immune-response model, not a receptor-conditioned model.
+- [ ] Verification: prove canonical training no longer ingests `vdjdb`, `10x`, `tcr_pmhc`, or receptor tokens; then run a short pMHC training sanity check and compare against the Phase 0 baseline.
+
+## Review
+
+- Architectural conclusion:
+  - receptor sequences do not fit cleanly into the current canonical Presto factorization.
+  - the core model is now a pMHC plus immune-response model: peptide processing, MHC binding, presentation, and assay-context-dependent T-cell response.
+  - receptor-specific matching is a different problem class: instance-level recognition conditioned on a particular clonotype, not a latent upstream cause of processing/presentation.
+- Refined output policy:
+  - removing receptor sequences does not require dropping receptor-derived supervision.
+  - VDJdb/McPAS-like data can be converted into a pMHC-only output family such as `tcr_evidence_prob` plus optional method-segmented logits.
+  - this keeps the fact that a pMHC has attested cognate-TCR evidence, without forcing canonical Presto to ingest clonotype sequences.
+- Exact spec completed in `tasks/tcr_evidence_spec.md`.
+  - required outputs:
+    - `tcr_evidence_logit/prob`
+    - `tcr_evidence_method_logits/probs`
+  - selected VDJdb assay-family bins:
+    - `multimer_binding`: `1,217` exact unique pMHC
+    - `target_cell_functional`: `409`
+    - `functional_readout`: `291`
+  - rejected bins:
+    - `culture_stimulation`: `74`
+    - `display_selection`: `1` exact unique pMHC despite `59,376` raw rows
+    - `other` / `unknown`
+  - overall receptor-evidence support:
+    - VDJdb: `226,494` rows, `1,962` coarse unique pMHC
+    - McPAS: `20,227` rows, `427` coarse unique pMHC
+    - coarse union across sources: `2,329` unique pMHC with `60` source overlap
+  - method panel must be multi-label:
+    - `1,529` exact pMHC with one selected family
+    - `188` with two
+    - `4` with three
+  - McPAS supports the overall `tcr_evidence` label but not trustworthy method segmentation from local metadata.
+- Current-code audit:
+  - docs already say TCR is future-only (`docs/tcr_spec.md`), but canonical code still carries receptor scaffolding.
+  - `models/presto.py` still exposes `enable_tcr`, `tcr_a_tok`, `tcr_b_tok`, `encode_tcr()`, `predict_chain_attributes()`, `TCRpMHCMatcher`, and chain/cell auxiliary heads.
+  - `data/loaders.py` and `data/collate.py` still inject receptor sequences and receptor-chain labels into canonical batches via `vdjdb_records`, `sc10x_records`, `tcr_a`, `tcr_b`, and `chain_*` labels.
+  - `scripts/train_iedb.py` still loads VDJdb and 10x inputs into the canonical unified trainer even though the design docs say TCR-conditioned training is not canonical.
+  - `training/tasks.py`, `training/trainer.py`, `models/tcr.py`, `cli/evaluate.py`, and `inference/predictor.py` still carry legacy receptor matching / chain-classification infrastructure.
+  - `VDJdbRecord` and the cross-source VDJdb parser currently discard most assay/method metadata, so method-segmented TCR-evidence outputs require a small schema expansion first.
+- Important boundary for implementation:
+  - keep pMHC-only contrastive MIL regularization from the learning refactor; it is not the TCR tower and should not be removed.
+  - keep T-cell response labels and T-cell assay context features; they remain valid population-level supervision even after receptor sequences are removed.
+  - add a new pMHC-only receptor-evidence output family instead of deleting receptor databases outright.
+  - B-cell receptor sequence handling is already mostly non-canonical. The live receptor baggage on the training path is primarily TCR plus the generic `chain_aux` route that also covers IGH/IGK/IGL.
+
 # Learning Refactor Execution (2026-03-06)
 
 ## Spec
@@ -2289,3 +2662,49 @@ Goal: switch `presto data merge` so per-assay CSV materialization is opt-in (`--
   - added tests in `tests/test_cross_source_dedup.py` for the stricter token contract and mixed-token lookup behavior.
 - Verification:
   - `pytest -q tests/test_cross_source_dedup.py tests/test_data_cli.py tests/test_train_cli.py` -> `49 passed`.
+
+---
+
+# Receptor-Free Canonical Path + Training Sanity (2026-03-06)
+
+## Spec
+
+Goal: finish the receptor-sequence removal on the canonical runtime path, keep pMHC-only `tcr_evidence` supervision, verify the resulting stack still trains, and surface the next real bottlenecks before a longer Modal run.
+
+## Plan
+
+- [x] Remove receptor tensors from canonical `PrestoSample` / `PrestoBatch`, predictor APIs, trainer entrypoints, and default task registry.
+- [x] Keep pMHC-only `tcr_evidence` targets and method-panel supervision wired through loader, collator, model outputs, and loss computation.
+- [x] Remove 10x receptor supervision from canonical train/CLI paths and convert merged `tcr` rows to `tcr_evidence`.
+- [x] Rewrite stale tests around the receptor-free contract and verify the focused suite.
+- [x] Run a real local `train_iedb` no-AMP canary and fix the first runtime regressions it exposes.
+- [ ] Finish the remote Modal diagnostic and inspect probe separation / epoch trajectory before deciding on a longer run.
+
+## Review
+
+- Canonical runtime is now receptor-free:
+  - `data/collate.py`, `data/loaders.py`, `models/presto.py`, `training/trainer.py`, `inference/predictor.py`, `cli/main.py`, `cli/predict.py`, `cli/evaluate.py`, `scripts/train_synthetic.py`, `scripts/train_iedb.py`
+  - `tcr_a_tok` / `tcr_b_tok`, chain aux labels, TCR matcher outputs, and `predict_chain` / `embed_tcr` entrypoints are gone from the active path.
+- `tcr_evidence` remains as pMHC-only supervision:
+  - VDJdb rows now feed `tcr_evidence_label` + 3-bin method panel targets.
+  - merged `record_type="tcr"` now classifies as `tcr_evidence` rather than `tcr_pmhc`.
+- Canonical training/CLI no longer advertises or loads 10x receptor-sequence supervision.
+- Focused verification passed:
+  - `pytest -q tests/test_loaders.py tests/test_tasks.py tests/test_trainer.py tests/test_train_iedb.py tests/test_train_cli.py tests/test_cross_source_dedup.py tests/test_collate.py tests/test_predictor.py tests/test_presto.py tests/test_training_e2e.py`
+  - result: `271 passed`
+- Two real runtime bugs were found and fixed by an actual local training run:
+  - merged TSV loading was using strict `infer_mhc_class(...)` on coarse aliases like `HLA-DR1`; now it uses the optional path.
+  - DR beta-only rows correctly defaulted to `DRA` at dataset assembly, but the index preload did not include that synthetic/default alpha chain; `_collect_unique_alleles(...)` now adds default `DRA` alleles for DRB inputs.
+- Local no-AMP canary on the canonical `train_iedb` path completed successfully:
+  - config: `profile=canary`, `batch_size=32`, `mhc_augmentation=0`, modest caps on each modality
+  - dataset after filtering/augmentation: `652` samples, `17` train batches, `5` val batches
+  - epoch result: `train_loss=1.7780`, `val_loss=1.3381`
+  - probe after 1 epoch:
+    - `SLLQHLIGL + HLA-A*02:01`: `KD≈3496 nM`, `bind≈0.0822`
+    - `SLLQHLIGL + HLA-A*24:02`: `KD≈3306 nM`, `bind≈0.0876`
+  - interpretation:
+    - training is numerically healthy and the refactored stack is genuinely learning
+    - allele discrimination for this probe is still not correct after a tiny local canary
+- Modal findings so far:
+  - a true full-data 1-epoch run starts cleanly now, but preprocessing is dominated by full-data synthetic-negative expansion and resolved-only filtering (`1.71M` elution rows dropped, `217k` T-cell rows dropped, `1.07M` synthetic elution negatives added), which makes it a poor interactive diagnostic loop.
+  - switched to the smaller dedicated Modal sanity diagnostic to get a faster answer on `SLLQHLIGL` allele separation.

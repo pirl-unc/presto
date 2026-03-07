@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from ..data import AlleleResolver
-from ..data.mhc_index import load_mhc_index
+from ..data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
 from ..inference.predictor import Predictor
 
 
@@ -25,15 +25,7 @@ def _load_allele_sequences(
 
     if index_csv:
         records = load_mhc_index(index_csv)
-        for record in records.values():
-            for token in {record.normalized, record.allele_raw}:
-                if not token:
-                    continue
-                sequences[token] = record.sequence
-                if ":" in token:
-                    parts = token.split(":")
-                    for i in range(1, len(parts)):
-                        sequences.setdefault(":".join(parts[:i]), record.sequence)
+        sequences.update(build_mhc_sequence_lookup(records))
 
     if not sequences:
         return {}
@@ -94,12 +86,21 @@ def cmd_predict_presentation(args: Any) -> int:
 
 
 def cmd_predict_recognition(args: Any) -> int:
-    """Predict TCR-pMHC recognition and immunogenicity."""
+    """Predict repertoire-level recognition and immunogenicity."""
     predictor = _build_predictor(args)
-    raise NotImplementedError(
-        "predict recognition is reserved for a future TCR pathway and is "
-        "currently disabled in canonical Presto."
+    result = predictor.predict_recognition(
+        peptide=args.peptide,
+        allele=args.allele,
+        mhc_sequence=args.mhc_sequence,
+        mhc_b_sequence=args.mhc_b_sequence,
+        mhc_class=args.mhc_class,
+        species=args.species,
+        mhc_species=getattr(args, "mhc_species", None),
+        immune_species=getattr(args, "immune_species", None),
+        species_of_origin=getattr(args, "species_of_origin", None),
     )
+    _emit_output(asdict(result), args)
+    return 0
 
 
 def _read_single_sequence(path: Path) -> str:
@@ -151,13 +152,5 @@ def cmd_predict_tile(args: Any) -> int:
         top_k=args.top_k,
         sort_by=args.sort_by,
     )
-    _emit_output(asdict(result), args)
-    return 0
-
-
-def cmd_predict_chain(args: Any) -> int:
-    """Predict chain attributes from sequence."""
-    predictor = _build_predictor(args)
-    result = predictor.classify_chain(args.sequence)
     _emit_output(asdict(result), args)
     return 0

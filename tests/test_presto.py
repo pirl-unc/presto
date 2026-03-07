@@ -120,8 +120,8 @@ class TestPrestoModel:
         ):
             assert key in outputs["latent_vecs"]
 
-    def test_model_forward_with_tcr(self):
-        """Forward pass with pMHC and TCR inputs (TCR path currently disabled)."""
+    def test_model_forward_receptor_free(self):
+        """Forward pass stays receptor-free under canonical contract."""
         from presto.models.presto import Presto
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
@@ -129,28 +129,20 @@ class TestPrestoModel:
         pep_tok = torch.randint(4, 24, (2, 10))
         mhc_a_tok = torch.randint(4, 24, (2, 50))
         mhc_b_tok = torch.randint(4, 24, (2, 20))
-        tcr_a_tok = torch.randint(4, 24, (2, 30))
-        tcr_b_tok = torch.randint(4, 24, (2, 30))
 
         outputs = model(
             pep_tok=pep_tok,
             mhc_a_tok=mhc_a_tok,
             mhc_b_tok=mhc_b_tok,
             mhc_class="I",
-            tcr_a_tok=tcr_a_tok,
-            tcr_b_tok=tcr_b_tok,
         )
 
-        # TCR path is currently disabled in canonical forward.
-        assert "tcr_vec" not in outputs
-        assert "match_logit" not in outputs
         assert "immunogenicity_logit" in outputs
         assert "immunogenicity_cd8_logit" in outputs
         assert "immunogenicity_cd4_logit" in outputs
         assert "tcell_context_logits" in outputs
-        assert "chain_species_logits" not in outputs
-        assert "chain_type_logits" not in outputs
-        assert "chain_phenotype_logits" not in outputs
+        assert "tcr_evidence_logit" in outputs
+        assert "tcr_evidence_method_logits" in outputs
 
     def test_model_forward_class_ii(self):
         """Forward pass for MHC Class II."""
@@ -268,16 +260,12 @@ class TestPrestoGradients:
         pep_tok = torch.randint(4, 24, (2, 10))
         mhc_a_tok = torch.randint(4, 24, (2, 50))
         mhc_b_tok = torch.randint(4, 24, (2, 20))
-        tcr_a_tok = torch.randint(4, 24, (2, 30))
-        tcr_b_tok = torch.randint(4, 24, (2, 30))
 
         outputs = model(
             pep_tok=pep_tok,
             mhc_a_tok=mhc_a_tok,
             mhc_b_tok=mhc_b_tok,
             mhc_class="I",
-            tcr_a_tok=tcr_a_tok,
-            tcr_b_tok=tcr_b_tok,
         )
 
         # Backprop through immunogenicity
@@ -790,7 +778,7 @@ class TestDesignAlignment:
         assert out["binding_mhc_attention_effective_residues"].shape[0] == pep_tok.shape[0]
         assert torch.all(out["binding_mhc_attention_effective_residues"] >= 0)
 
-    def test_groove_vec_changes_with_class_masking(self):
+    def test_groove_vec_is_invariant_to_class_override(self):
         from presto.models.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
@@ -814,7 +802,7 @@ class TestDesignAlignment:
             )
 
         assert out_class1["groove_vec"].shape == (2, 64)
-        assert not torch.allclose(
+        assert torch.allclose(
             out_class1["groove_vec"],
             out_class2["groove_vec"],
             atol=1e-6,
@@ -885,7 +873,7 @@ class TestDesignAlignment:
     def test_recognition_only_uses_peptide_and_foreignness(self):
         from presto.models.presto import Presto
 
-        model = Presto(d_model=64, n_layers=2, n_heads=4, enable_tcr=True)
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
 
         pep_tok = torch.randint(4, 24, (2, 12))
@@ -897,11 +885,6 @@ class TestDesignAlignment:
         flank_c_tok_1 = torch.randint(4, 24, (2, 6))
         flank_n_tok_2 = torch.zeros((2, 6), dtype=torch.long)
         flank_c_tok_2 = torch.zeros((2, 6), dtype=torch.long)
-        tcr_a_tok_1 = torch.randint(4, 24, (2, 16))
-        tcr_b_tok_1 = torch.randint(4, 24, (2, 16))
-        tcr_a_tok_2 = torch.randint(4, 24, (2, 16))
-        tcr_b_tok_2 = torch.randint(4, 24, (2, 16))
-
         with torch.no_grad():
             out_ref = model(
                 pep_tok=pep_tok,
@@ -909,8 +892,6 @@ class TestDesignAlignment:
                 mhc_b_tok=mhc_b_tok_1,
                 flank_n_tok=flank_n_tok_1,
                 flank_c_tok=flank_c_tok_1,
-                tcr_a_tok=tcr_a_tok_1,
-                tcr_b_tok=tcr_b_tok_1,
             )
             out_changed_context = model(
                 pep_tok=pep_tok,
@@ -918,8 +899,6 @@ class TestDesignAlignment:
                 mhc_b_tok=mhc_b_tok_2,
                 flank_n_tok=flank_n_tok_2,
                 flank_c_tok=flank_c_tok_2,
-                tcr_a_tok=tcr_a_tok_2,
-                tcr_b_tok=tcr_b_tok_2,
             )
 
         assert torch.allclose(

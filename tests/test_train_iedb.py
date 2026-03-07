@@ -10,6 +10,7 @@ import presto.scripts.train_iedb as train_iedb_module
 from presto.data import PrestoDataset
 from presto.data.collate import PrestoBatch
 from presto.data.cross_source_dedup import UnifiedRecord
+from presto.data.mhc_index import AUGMENTED_INDEX_FIELDS
 from presto.data.loaders import (
     BindingRecord,
     ElutionRecord,
@@ -19,6 +20,7 @@ from presto.data.loaders import (
 )
 from presto.scripts.train_iedb import (
     _audit_mhc_sequence_coverage,
+    _collect_unique_alleles,
     _effective_mhc_augmentation_sample_limit,
     _filter_records_to_resolved_mhc,
     _generate_mhc_only_samples,
@@ -54,8 +56,6 @@ class _PeptideOnlyFlowModel(torch.nn.Module):
         mhc_b_tok,
         mhc_class=None,
         species=None,
-        tcr_a_tok=None,
-        tcr_b_tok=None,
         flank_n_tok=None,
         flank_c_tok=None,
         tcell_context=None,
@@ -80,8 +80,6 @@ class _InteractionFlowModel(torch.nn.Module):
         mhc_b_tok,
         mhc_class=None,
         species=None,
-        tcr_a_tok=None,
-        tcr_b_tok=None,
         flank_n_tok=None,
         flank_c_tok=None,
         tcell_context=None,
@@ -142,11 +140,33 @@ def test_resolve_run_args_canary_profile_applies_fast_caps():
     assert resolved.max_elution == 512
     assert resolved.max_tcell == 512
     assert resolved.max_vdjdb == 256
-    assert resolved.max_10x == 256
     assert resolved.supervised_loss_aggregation == "sample_weighted"
     assert resolved.track_pmhc_flow is True
     assert resolved.pmhc_flow_batches == 2
     assert resolved.pmhc_flow_max_samples == 512
+
+
+def test_collect_unique_alleles_includes_default_dra_for_drb_inputs():
+    alleles = _collect_unique_alleles(
+        binding_records=[],
+        kinetics_records=[],
+        stability_records=[],
+        processing_records=[],
+        elution_records=[],
+        tcell_records=[
+            TCellRecord(
+                peptide="AGFKGEQGPKGEPG",
+                mhc_allele="HLA-DRB1*01:01",
+                response=1.0,
+                mhc_class="II",
+                species="human",
+                source="iedb",
+            )
+        ],
+        vdjdb_records=[],
+    )
+    assert "HLA-DRB1*01:01" in alleles
+    assert "HLA-DRA*01:01" in alleles
 
 
 def test_resolve_run_args_full_profile_filters_unresolved_mhc_by_default():
@@ -265,27 +285,78 @@ def test_audit_loaded_mhc_sequence_quality_accepts_groove_length_fragments():
 
 def test_generate_mhc_only_samples_filters_short_and_nucleotide_like_sequences(tmp_path):
     index_csv = tmp_path / "mhc_index.csv"
-    index_csv.write_text(
-        (
-            "allele_raw,normalized,gene,mhc_class,species,source,seq_len,sequence\n"
-            "HLA-A*02:01,HLA-A*02:01,A,I,human,imgt,181,"
-            + ("A" * 181)
-            + "\n"
-            "Mamu-A1*001:01,Mamu-A1*001:01,A1,I,Macaca mulatta,ipd_mhc,1098,"
-            + ("ACG" * 366)
-            + "\n"
-            "HLA-DRB1*01:01,HLA-DRB1*01:01,DRB1,II,human,imgt,69,"
-            + ("A" * 69)
-            + "\n"
-        ),
-        encoding="utf-8",
-    )
+    groove_half_1 = "A" * 90
+    groove_half_2 = "C" * 90
+    with index_csv.open("w", newline="", encoding="utf-8") as f:
+        writer = train_iedb_module.csv.DictWriter(f, fieldnames=AUGMENTED_INDEX_FIELDS)
+        writer.writeheader()
+        writer.writerow(
+            {
+                "allele_raw": "HLA-A*02:01",
+                "normalized": "HLA-A*02:01",
+                "gene": "A",
+                "mhc_class": "I",
+                "species": "human",
+                "source": "imgt",
+                "seq_len": "181",
+                "sequence": "A" * 181,
+                "mature_start": "",
+                "groove_half_1": groove_half_1,
+                "groove_half_2": groove_half_2,
+                "groove_status": "ok",
+                "is_null": "False",
+                "is_questionable": "False",
+                "is_pseudogene": "False",
+                "is_functional": "True",
+            }
+        )
+        writer.writerow(
+            {
+                "allele_raw": "Mamu-A1*001:01",
+                "normalized": "Mamu-A1*001:01",
+                "gene": "A1",
+                "mhc_class": "I",
+                "species": "Macaca mulatta",
+                "source": "ipd_mhc",
+                "seq_len": "1098",
+                "sequence": "ACG" * 366,
+                "mature_start": "",
+                "groove_half_1": "",
+                "groove_half_2": "",
+                "groove_status": "",
+                "is_null": "False",
+                "is_questionable": "False",
+                "is_pseudogene": "False",
+                "is_functional": "True",
+            }
+        )
+        writer.writerow(
+            {
+                "allele_raw": "HLA-DRB1*01:01",
+                "normalized": "HLA-DRB1*01:01",
+                "gene": "DRB1",
+                "mhc_class": "II",
+                "species": "human",
+                "source": "imgt",
+                "seq_len": "69",
+                "sequence": "A" * 69,
+                "mature_start": "",
+                "groove_half_1": "",
+                "groove_half_2": "",
+                "groove_status": "",
+                "is_null": "False",
+                "is_questionable": "False",
+                "is_pseudogene": "False",
+                "is_functional": "True",
+            }
+        )
 
     samples = _generate_mhc_only_samples(str(index_csv), max_samples=10, seed=13)
 
     assert len(samples) == 1
     assert samples[0].primary_allele == "HLA-A*02:01"
-    assert samples[0].mhc_a == "A" * 181
+    assert samples[0].mhc_a == groove_half_1
+    assert samples[0].mhc_b == groove_half_2
     assert samples[0].sample_source == "mhc_augmentation"
 
 
@@ -429,15 +500,6 @@ def test_find_iedb_export_file_required_keywords_missing_raises(tmp_path):
         assert "required keywords" in str(exc).lower()
     else:
         raise AssertionError("Expected missing required keyword selection to fail")
-
-
-def test_find_iedb_export_file_matches_any_keyword_for_10x_inputs(tmp_path):
-    root = tmp_path / "10x"
-    sc10x = root / "10x_pbmc_10k_tcr.csv"
-    _write_text(sc10x, "barcode,chain\nA,TRA\n")
-
-    selected = find_iedb_export_file(root, keywords=("contig", "10x", "vdj", "tcr"))
-    assert selected == sc10x
 
 
 def test_merge_records_with_limit_caps_total_across_groups():
@@ -859,7 +921,7 @@ def test_load_records_from_merged_tsv_maps_assays_and_tcell_context(tmp_path):
         processing,
         elution,
         tcell,
-        tcr,
+        tcr_evidence,
         stats,
     ) = load_records_from_merged_tsv(
         merged,
@@ -878,7 +940,8 @@ def test_load_records_from_merged_tsv_maps_assays_and_tcell_context(tmp_path):
     assert len(processing) == 0
     assert len(elution) == 1
     assert len(tcell) == 1
-    assert len(tcr) == 1
+    assert len(tcr_evidence) == 1
+    assert tcr_evidence[0].evidence_label == pytest.approx(1.0)
     assert tcell[0].assay_method == "ELISPOT"
     assert tcell[0].assay_type == "IFNg release"
     assert tcell[0].apc_name == "PBMC"
@@ -909,7 +972,7 @@ def test_load_records_from_merged_tsv_drops_invalid_peptides_and_sanitizes_optio
         processing,
         elution,
         tcell,
-        tcr,
+        tcr_evidence,
         stats,
     ) = load_records_from_merged_tsv(
         merged,
@@ -928,8 +991,7 @@ def test_load_records_from_merged_tsv_drops_invalid_peptides_and_sanitizes_optio
     assert len(processing) == 0
     assert len(elution) == 0
     assert len(tcell) == 0
-    assert len(tcr) == 1
-    assert tcr[0].cdr3_alpha is None
+    assert len(tcr_evidence) == 1
     assert stats["rows_dropped_invalid_peptide"] == 1
     assert stats["rows_sanitized_optional_sequences"] >= 1
 

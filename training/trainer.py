@@ -71,7 +71,7 @@ class Trainer:
             batch: Dict with:
                 - pep_tok, mhc_a_tok, mhc_b_tok, mhc_class (required)
                 - bind_target, bind_qual (optional, for binding task)
-                - tcr_a_tok, tcr_b_tok, tcell_label (optional, for T-cell task)
+                - tcell_label (optional, for T-cell task)
                 - elution_label (optional, for elution task)
 
         Returns:
@@ -86,16 +86,9 @@ class Trainer:
         mhc_b_tok = batch["mhc_b_tok"].to(self.device)
         mhc_class = batch["mhc_class"]
 
-        # Optional TCR
-        tcr_a_tok = batch.get("tcr_a_tok")
-        tcr_b_tok = batch.get("tcr_b_tok")
         flank_n_tok = batch.get("flank_n_tok")
         flank_c_tok = batch.get("flank_c_tok")
         tcell_context = batch.get("tcell_context")
-        if tcr_a_tok is not None:
-            tcr_a_tok = tcr_a_tok.to(self.device)
-        if tcr_b_tok is not None:
-            tcr_b_tok = tcr_b_tok.to(self.device)
         if flank_n_tok is not None:
             flank_n_tok = flank_n_tok.to(self.device)
         if flank_c_tok is not None:
@@ -112,8 +105,6 @@ class Trainer:
             mhc_a_tok=mhc_a_tok,
             mhc_b_tok=mhc_b_tok,
             mhc_class=mhc_class,
-            tcr_a_tok=tcr_a_tok,
-            tcr_b_tok=tcr_b_tok,
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
             tcell_context=tcell_context,
@@ -280,15 +271,9 @@ class Trainer:
         mhc_b_tok = batch["mhc_b_tok"].to(self.device)
         mhc_class = batch["mhc_class"]
 
-        tcr_a_tok = batch.get("tcr_a_tok")
-        tcr_b_tok = batch.get("tcr_b_tok")
         flank_n_tok = batch.get("flank_n_tok")
         flank_c_tok = batch.get("flank_c_tok")
         tcell_context = batch.get("tcell_context")
-        if tcr_a_tok is not None:
-            tcr_a_tok = tcr_a_tok.to(self.device)
-        if tcr_b_tok is not None:
-            tcr_b_tok = tcr_b_tok.to(self.device)
         if flank_n_tok is not None:
             flank_n_tok = flank_n_tok.to(self.device)
         if flank_c_tok is not None:
@@ -305,8 +290,6 @@ class Trainer:
                 mhc_a_tok=mhc_a_tok,
                 mhc_b_tok=mhc_b_tok,
                 mhc_class=mhc_class,
-                tcr_a_tok=tcr_a_tok,
-                tcr_b_tok=tcr_b_tok,
                 flank_n_tok=flank_n_tok,
                 flank_c_tok=flank_c_tok,
                 tcell_context=tcell_context,

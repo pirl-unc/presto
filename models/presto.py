@@ -1,7 +1,7 @@
 """Presto: Full unified model for pMHC presentation, recognition, and immunogenicity.
 
 Canonical forward path:
-- Single token stream encoder over peptide/flanks/MHCa/MHCb.
+- Single token stream encoder over peptide/flanks/groove-half-1/groove-half-2.
 - Segmented latent-query attention DAG produces biologic latent vectors.
 - Assay and task outputs are readouts of those shared latent vectors.
 """
@@ -21,13 +21,6 @@ from .pmhc import (
     PROCESSING_SPECIES_BUCKETS,
     _class_probs_from_input,
     _species_probs_from_input,
-)
-from .tcr import (
-    TCREncoder,
-    TCRpMHCMatcher,
-    ChainClassifier,
-    ChainAttributeClassifier,
-    CellTypeClassifier,
 )
 from .heads import AssayHeads, TCellAssayHead, ElutionHead
 from .affinity import (
@@ -161,8 +154,11 @@ class Presto(nn.Module):
     SEG_NFLANK = 0
     SEG_PEPTIDE = 1
     SEG_CFLANK = 2
-    SEG_MHC_A = 3
-    SEG_MHC_B = 4
+    SEG_GROOVE_1 = 3
+    SEG_GROOVE_2 = 4
+    # Backward-compatible aliases for the public 2-segment MHC interface.
+    SEG_MHC_A = SEG_GROOVE_1
+    SEG_MHC_B = SEG_GROOVE_2
 
     LATENT_ORDER = [
         "processing",
@@ -202,7 +198,6 @@ class Presto(nn.Module):
         d_model: int = 256,
         n_layers: int = 4,
         n_heads: int = 8,
-        enable_tcr: bool = False,
         n_categories: Optional[int] = None,
         max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
         binding_midpoint_nM: float = DEFAULT_BINDING_MIDPOINT_NM,
@@ -219,7 +214,6 @@ class Presto(nn.Module):
         """Initialize Presto."""
         super().__init__()
         self.d_model = d_model
-        self.enable_tcr = bool(enable_tcr)
         self.n_categories = None  # deprecated; kept for backward compat
         self.max_affinity_nM = float(max_affinity_nM)
         self.max_log10_nM = max_log10_nM(self.max_affinity_nM)
@@ -228,8 +222,6 @@ class Presto(nn.Module):
         self.binding_log10_scale = max(float(binding_log10_scale), 1e-6)
         self.missing_token_idx = int(AA_TO_IDX["<MISSING>"])
         self.x_token_idx = int(AA_TO_IDX["X"])
-        aux_layers = max(1, n_layers // 2)
-
         # Binding latent architecture config
         self.binding_n_latent_layers = binding_n_latent_layers
         self.binding_n_queries = binding_n_queries
@@ -272,9 +264,9 @@ class Presto(nn.Module):
         # Flanks: distance-from-cleavage
         self.nflank_dist_pos = nn.Embedding(25, d_model)
         self.cflank_dist_pos = nn.Embedding(25, d_model)
-        # MHC: per-chain sequential
-        self.mhc_a_pos = nn.Embedding(400, d_model)
-        self.mhc_b_pos = nn.Embedding(400, d_model)
+        # Groove halves: per-segment sequential
+        self.groove_1_pos = nn.Embedding(120, d_model)
+        self.groove_2_pos = nn.Embedding(120, d_model)
         # Binding-core positions within the candidate window.
         self.core_position_embed = nn.Embedding(self.core_window_size, d_model)
         self.pfr_length_embed = nn.Embedding(self.max_pfr_length + 1, self.pfr_length_dim)
@@ -458,21 +450,6 @@ class Presto(nn.Module):
         )
         self.groove_query = nn.Parameter(torch.randn(1, d_model) * 0.02)
 
-        # Variant D: groove attention prior
-        if use_groove_prior:
-            # Sigmoid decay: ~1.0 before cutoff, smooth falloff, ~0.0 past it.
-            # Accounts for signal peptide (~24aa) shifting groove start.
-            def _groove_decay(length: int, cutoff: int, width: float) -> torch.Tensor:
-                pos = torch.arange(length, dtype=torch.float)
-                return torch.sigmoid((cutoff - pos) / width)
-
-            # MHC-A (alpha chain): SP~24 + α1+α2~182 = ~206, cutoff=210, width=15
-            # Positions 0-180: ~1.0, 180-240: smooth decay, 240+: ~0.0
-            self.groove_bias_a = nn.Parameter(_groove_decay(400, cutoff=210, width=15.0))
-            # MHC-B (beta chain): SP~26 + β1~94 = ~120, cutoff=120, width=10
-            # Positions 0-100: ~1.0, 100-140: smooth decay, 140+: ~0.0
-            self.groove_bias_b = nn.Parameter(_groove_decay(400, cutoff=120, width=10.0))
-
         # Immunogenicity MLPs (design S7.4 Level 3: MLP, not cross-attention)
         self.immunogenicity_cd8_mlp = nn.Sequential(
             nn.Linear(d_model * 3, d_model),
@@ -531,15 +508,12 @@ class Presto(nn.Module):
 
         # Elution head (S9.3: pres_logit + ms_detect_logit, no pmhc_vec).
         self.elution_head = ElutionHead()
-
-        # TCR encoding/matching.
-        self.tcr_encoder = TCREncoder(d_model=d_model, n_layers=n_layers, n_heads=n_heads)
-        self.matcher = TCRpMHCMatcher(d_model=d_model)
-
-        # Chain classifiers.
-        self.chain_classifier = ChainClassifier(d_model=d_model, n_layers=aux_layers, n_heads=n_heads)
-        self.chain_attribute_classifier = ChainAttributeClassifier(d_model=d_model, n_layers=aux_layers, n_heads=n_heads)
-        self.cell_classifier = CellTypeClassifier(d_model=d_model)
+        self.tcr_evidence_head = nn.Sequential(
+            nn.Linear(d_model, d_model // 2),
+            nn.GELU(),
+            nn.Linear(d_model // 2, 1),
+        )
+        self.tcr_evidence_method_head = nn.Linear(d_model, 3)
 
         # Assay outputs.
         self.assay_heads = AssayHeads(
@@ -606,6 +580,16 @@ class Presto(nn.Module):
         """Renamed APC/cell-type context projection module."""
         return self.context_token_proj
 
+    @property
+    def mhc_a_pos(self) -> nn.Embedding:
+        """Backward-compatible alias for groove-half-1 positional embeddings."""
+        return self.groove_1_pos
+
+    @property
+    def mhc_b_pos(self) -> nn.Embedding:
+        """Backward-compatible alias for groove-half-2 positional embeddings."""
+        return self.groove_2_pos
+
     def _load_from_state_dict(
         self,
         state_dict: Dict[str, torch.Tensor],
@@ -620,6 +604,20 @@ class Presto(nn.Module):
         legacy_key = f"{prefix}mhc_class_cond_embed.weight"
         if legacy_key in state_dict:
             state_dict.pop(legacy_key)
+        old_pos_to_new = {
+            f"{prefix}mhc_a_pos.weight": f"{prefix}groove_1_pos.weight",
+            f"{prefix}mhc_b_pos.weight": f"{prefix}groove_2_pos.weight",
+        }
+        for old_key, new_key in old_pos_to_new.items():
+            if old_key in state_dict and new_key not in state_dict:
+                old_weight = state_dict.pop(old_key)
+                new_weight = getattr(self, new_key[len(prefix) : -len('.weight')]).weight
+                if old_weight.shape == new_weight.shape:
+                    state_dict[new_key] = old_weight
+                else:
+                    state_dict[new_key] = old_weight[: new_weight.shape[0], :]
+            elif old_key in state_dict:
+                state_dict.pop(old_key)
         # Drop old CategoryHead keys from pre-foreignness checkpoints
         # Drop old DAG-violating head keys (elution context_head, MSDetectionHead,
         # RepertoireHead, old TCellAssayHead keys)
@@ -628,6 +626,11 @@ class Presto(nn.Module):
             f"{prefix}elution_head.context_head.",
             f"{prefix}ms_detection.",
             f"{prefix}repertoire.",
+            f"{prefix}tcr_encoder.",
+            f"{prefix}matcher.",
+            f"{prefix}chain_classifier.",
+            f"{prefix}chain_attribute_classifier.",
+            f"{prefix}cell_classifier.",
             f"{prefix}tcell_assay_head.base_with_tcr.",
             f"{prefix}tcell_assay_head.base_without_tcr.",
             f"{prefix}tcell_assay_head.context_bias.",
@@ -639,6 +642,8 @@ class Presto(nn.Module):
             f"{prefix}tcell_assay_head.stim_context_classifier.",
         ]
         drop_exact = [
+            f"{prefix}groove_bias_a",
+            f"{prefix}groove_bias_b",
             f"{prefix}elution_head.w_context",
             f"{prefix}elution_head.w_processing",
             f"{prefix}tcell_assay_head.w_bio",
@@ -717,8 +722,6 @@ class Presto(nn.Module):
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
         species_id: Optional[torch.Tensor] = None,
-        has_tcr: bool = False,
-        has_tcr_paired: bool = False,
     ) -> Dict[str, Any]:
         """Build and encode single token stream."""
         device = pep_tok.device
@@ -786,18 +789,18 @@ class Presto(nn.Module):
             cfl_idx.clamp(max=self.cflank_dist_pos.num_embeddings - 1)
         )
 
-        # MHC alpha: sequential
+        # Groove half 1: sequential
         mhc_a_sl = offsets["mhc_a"]
         mhc_a_idx = torch.arange(mhc_a_sl.stop - mhc_a_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
-        mhc_a_pos_embed = self.mhc_a_pos(
-            mhc_a_idx.clamp(max=self.mhc_a_pos.num_embeddings - 1)
+        mhc_a_pos_embed = self.groove_1_pos(
+            mhc_a_idx.clamp(max=self.groove_1_pos.num_embeddings - 1)
         )
 
-        # MHC beta: sequential
+        # Groove half 2: sequential
         mhc_b_sl = offsets["mhc_b"]
         mhc_b_idx = torch.arange(mhc_b_sl.stop - mhc_b_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
-        mhc_b_pos_embed = self.mhc_b_pos(
-            mhc_b_idx.clamp(max=self.mhc_b_pos.num_embeddings - 1)
+        mhc_b_pos_embed = self.groove_2_pos(
+            mhc_b_idx.clamp(max=self.groove_2_pos.num_embeddings - 1)
         )
         pos_embed = torch.cat(
             [
@@ -835,20 +838,11 @@ class Presto(nn.Module):
             if mhc_b_tok is not None
             else torch.zeros(batch_size, dtype=torch.bool, device=device)
         )
-        has_tcr_vec = torch.full((batch_size,), bool(has_tcr), dtype=torch.bool, device=device)
-        has_tcr_paired_vec = torch.full(
-            (batch_size,),
-            bool(has_tcr_paired),
-            dtype=torch.bool,
-            device=device,
-        )
         completeness_id = (
             (has_nflank.long() << 0)
             | (has_cflank.long() << 1)
             | (has_mhc_a.long() << 2)
             | (has_mhc_b.long() << 3)
-            | (has_tcr_vec.long() << 4)
-            | (has_tcr_paired_vec.long() << 5)
         )
 
         species_cond = self.species_cond_embed(species_id)
@@ -1121,33 +1115,10 @@ class Presto(nn.Module):
             mhc_pad = mhc_pad.clone()
             mhc_pad[mhc_all_masked, 0] = False
 
-        # Fixed structural penalty for pep→MHC attention: positions past 250
-        # in either sub-chain are alpha3/TM/cytoplasmic and never contact peptide.
-        _HARD_CUTOFF = 250
-        mhc_a_len = mhc_a_sl.stop - mhc_a_sl.start
-        mhc_b_len = mhc_b_sl.stop - mhc_b_sl.start
-        mhc_total = mhc_a_len + mhc_b_len
-        pmhc_hard_bias: Optional[torch.Tensor] = None
-        if mhc_a_len > _HARD_CUTOFF or mhc_b_len > _HARD_CUTOFF:
-            pmhc_hard_bias = torch.zeros(mhc_total, device=h.device)
-            if mhc_a_len > _HARD_CUTOFF:
-                pmhc_hard_bias[_HARD_CUTOFF:mhc_a_len] = -10.0
-            if mhc_b_len > _HARD_CUTOFF:
-                pmhc_hard_bias[mhc_a_len + _HARD_CUTOFF:mhc_total] = -10.0
-            # Shape for MHA attn_mask: (query_len, kv_len)
-            # Broadcast across query positions (peptide length)
-            pmhc_hard_bias = pmhc_hard_bias.unsqueeze(0)
-
         for layer in self.pmhc_interaction:
-            # Peptide cross-attends to MHC (with structural position penalty)
-            # Convert key_padding_mask to float when using attn_mask
-            mhc_kpm = mhc_pad
-            if pmhc_hard_bias is not None:
-                mhc_kpm = mhc_pad.float().masked_fill(mhc_pad, float("-inf"))
             pep_out, _ = layer["pep_to_mhc_attn"](
                 layer["pep_norm1"](pep_h), mhc_h, mhc_h,
-                key_padding_mask=mhc_kpm,
-                attn_mask=pmhc_hard_bias,
+                key_padding_mask=mhc_pad,
                 need_weights=False,
             )
             pep_h = pep_h + pep_out
@@ -1192,9 +1163,13 @@ class Presto(nn.Module):
     ) -> torch.Tensor:
         """Summarize the allele-specific peptide-binding groove.
 
-        Class I uses the alpha1/alpha2 region of chain A only.
-        Class II uses the alpha1 region of chain A and beta1 region of chain B.
-        When class is uncertain, mix the two summaries by `class_probs`.
+        The runtime MHC input is already reduced to two structurally aligned
+        groove halves:
+        - `mhc_a`: alpha1 (class I/II)
+        - `mhc_b`: alpha2 (class I) or beta1 (class II)
+
+        So groove summarization is class-agnostic and no longer needs the old
+        full-chain masking heuristics.
         """
         mhc_a_slice = offsets["mhc_a"]
         mhc_b_slice = offsets["mhc_b"]
@@ -1203,45 +1178,19 @@ class Presto(nn.Module):
         mhc_a_mask = seg_masks["mhc_a"][:, mhc_a_slice]
         mhc_b_mask = seg_masks["mhc_b"][:, mhc_b_slice]
         mhc_h = torch.cat([mhc_a_h, mhc_b_h], dim=1)
+        groove_mask = torch.cat([mhc_a_mask, mhc_b_mask], dim=1)
 
         batch_size = h.shape[0]
-        a_pos = torch.arange(mhc_a_h.shape[1], device=h.device).view(1, -1)
-        b_pos = torch.arange(mhc_b_h.shape[1], device=h.device).view(1, -1)
-
-        class1_mask = torch.cat(
-            [
-                mhc_a_mask & (a_pos < 180),
-                torch.zeros_like(mhc_b_mask),
-            ],
-            dim=1,
-        )
-        class2_mask = torch.cat(
-            [
-                mhc_a_mask & (a_pos < 90),
-                mhc_b_mask & (b_pos < 90),
-            ],
-            dim=1,
-        )
-
         query = self.groove_query.unsqueeze(0).expand(batch_size, -1, -1)
-
-        def _attend(valid_mask: torch.Tensor) -> torch.Tensor:
-            valid_mask = self._ensure_nonempty_kv_mask(valid_mask)
-            groove_out, _ = self.groove_attn(
-                query,
-                mhc_h,
-                mhc_h,
-                key_padding_mask=~valid_mask,
-                need_weights=False,
-            )
-            return groove_out.squeeze(1)
-
-        groove_class1 = _attend(class1_mask)
-        groove_class2 = _attend(class2_mask)
-        return (
-            class_probs[:, :1] * groove_class1
-            + class_probs[:, 1:2] * groove_class2
+        groove_mask = self._ensure_nonempty_kv_mask(groove_mask)
+        groove_out, _ = self.groove_attn(
+            query,
+            mhc_h,
+            mhc_h,
+            key_padding_mask=~groove_mask,
+            need_weights=False,
         )
+        return groove_out.squeeze(1)
 
     def _binding_latent_query(
         self,
@@ -1359,33 +1308,12 @@ class Presto(nn.Module):
         kv = torch.cat(kv_parts, dim=1)
         kv_valid = torch.cat(kv_valid_parts, dim=1)
 
-        attn_mask = None
-        if self.use_groove_prior:
-            kv_len = kv.shape[1]
-            attn_bias = torch.zeros(kv_len, device=h.device)
-            mhc_offset = self.core_window_size
-            mhc_a_len = mhc_a_h.shape[1]
-            mhc_b_len = mhc_b_h.shape[1]
-            attn_bias[mhc_offset : mhc_offset + mhc_a_len] = self.groove_bias_a[:mhc_a_len]
-            attn_bias[
-                mhc_offset + mhc_a_len : mhc_offset + mhc_a_len + mhc_b_len
-            ] = self.groove_bias_b[:mhc_b_len]
-            hard_cutoff = 250
-            if mhc_a_len > hard_cutoff:
-                attn_bias[mhc_offset + hard_cutoff : mhc_offset + mhc_a_len] += -10.0
-            if mhc_b_len > hard_cutoff:
-                start = mhc_offset + mhc_a_len + hard_cutoff
-                stop = mhc_offset + mhc_a_len + mhc_b_len
-                attn_bias[start:stop] += -10.0
-            n_q = 1 if self.latent_queries[name].ndim == 1 else self.latent_queries[name].shape[0]
-            attn_mask = attn_bias.unsqueeze(0).expand(n_q, -1)
-
         candidate_interaction_flat, candidate_tokens_flat, attn_layers = self._run_binding_query(
             name=name,
             kv=kv,
             kv_valid=kv_valid,
             collect_attn=collect_attn,
-            attn_mask=attn_mask,
+            attn_mask=None,
         )
 
         candidate_vec = self.core_window_vec_norm(
@@ -1580,8 +1508,6 @@ class Presto(nn.Module):
         mhc_species: Optional[Any] = None,
         immune_species: Optional[Any] = None,
         species_of_origin: Optional[Any] = None,
-        tcr_a_tok: Optional[torch.Tensor] = None,
-        tcr_b_tok: Optional[torch.Tensor] = None,
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
         tcell_context: Optional[Dict[str, torch.Tensor]] = None,
@@ -1607,10 +1533,6 @@ class Presto(nn.Module):
             device=pep_tok.device,
         )
 
-        has_tcr_input = tcr_a_tok is not None or tcr_b_tok is not None
-        has_tcr = self.enable_tcr and has_tcr_input
-        has_tcr_paired = self.enable_tcr and tcr_a_tok is not None and tcr_b_tok is not None
-
         stream = self._build_single_stream(
             pep_tok=pep_tok,
             mhc_a_tok=mhc_a_tok,
@@ -1618,8 +1540,6 @@ class Presto(nn.Module):
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
             species_id=species_id,
-            has_tcr=has_tcr,
-            has_tcr_paired=has_tcr_paired,
         )
         h = stream["states"]
         valid_mask = stream["valid_mask"]
@@ -1655,11 +1575,13 @@ class Presto(nn.Module):
         outputs["mhc_a_species_logits"] = mhc_a_species_logits
         outputs["mhc_b_species_logits"] = mhc_b_species_logits
 
-        # Compositional class probabilities (design S5.1)
-        # Fine type indices: MHC_I=0, MHC_IIa=1, MHC_IIb=2, B2M=3, unknown=4
-        # Class I = MHC_I × B2M
-        # Class II = MHC_IIa × MHC_IIb
-        class1_prob_raw = mhc_a_type_probs[:, 0] * mhc_b_type_probs[:, 3]
+        # Compositional class probabilities from groove-half identities.
+        # Fine type indices remain:
+        # MHC_I=0, MHC_IIa=1, MHC_IIb=2, B2M=3, unknown=4
+        # But the runtime inputs are now:
+        # - class I:  (alpha1, alpha2)  -> (MHC_I, MHC_I)
+        # - class II: (alpha1, beta1)   -> (MHC_IIa, MHC_IIb)
+        class1_prob_raw = mhc_a_type_probs[:, 0] * mhc_b_type_probs[:, 0]
         class2_prob_raw = mhc_a_type_probs[:, 1] * mhc_b_type_probs[:, 2]
         class_sum = (class1_prob_raw + class2_prob_raw).clamp(min=1e-8)
         inferred_class_probs = torch.stack([
@@ -1728,30 +1650,7 @@ class Presto(nn.Module):
         outputs["species_probs"] = species_probs
 
         # ------------------------------------------------------------------
-        # 3) Optional TCR encoding (future feature; disabled by default)
-        # ------------------------------------------------------------------
-        tcr_vec = None
-        if self.enable_tcr and has_tcr_input:
-            tcr_vec = self.tcr_encoder(tcr_a_tok, tcr_b_tok)
-            outputs["tcr_vec"] = tcr_vec
-            outputs["cell_type_logits"] = self.cell_classifier(tcr_vec)
-
-            chain_tok_for_attr = None
-            if tcr_b_tok is not None and tcr_a_tok is not None:
-                has_beta = (tcr_b_tok != 0).any(dim=1, keepdim=True)
-                chain_tok_for_attr = torch.where(has_beta, tcr_b_tok, tcr_a_tok)
-            elif tcr_b_tok is not None:
-                chain_tok_for_attr = tcr_b_tok
-            else:
-                chain_tok_for_attr = tcr_a_tok
-
-            chain_attr_logits = self.chain_attribute_classifier(chain_tok_for_attr)
-            outputs["chain_species_logits"] = chain_attr_logits["species_logits"]
-            outputs["chain_type_logits"] = chain_attr_logits["chain_logits"]
-            outputs["chain_phenotype_logits"] = chain_attr_logits["phenotype_logits"]
-
-        # ------------------------------------------------------------------
-        # 4) Latent query DAG with segmented attention
+        # 3) Latent query DAG with segmented attention
         # ------------------------------------------------------------------
         context_mhc_a_species = species_probs if species_override_active else mhc_a_species_probs
         context_mhc_b_species = species_probs if species_override_active else mhc_b_species_probs
@@ -1773,8 +1672,6 @@ class Presto(nn.Module):
         # Which latents receive APC context token.
         _gets_apc_context = {"processing", "pmhc_interaction"}
         _gets_groove = {"pmhc_interaction"}
-        # Which latents receive tcr_vec (design S7.5)
-        _gets_tcr: set[str] = set()
 
         # Variant C: pMHC interaction block (enriched representations for pMHC interaction only)
         if self.use_pmhc_interaction_block:
@@ -1796,8 +1693,6 @@ class Presto(nn.Module):
                 extra_tokens.append(apc_cell_type_context)
             if name in _gets_groove:
                 extra_tokens.append(groove_vec.unsqueeze(1))
-            if name in _gets_tcr and tcr_vec is not None:
-                extra_tokens.append(tcr_vec.unsqueeze(1))
 
             is_binding = name in self.BINDING_LATENT_NAMES
             collect = bool(
@@ -2063,17 +1958,6 @@ class Presto(nn.Module):
         outputs["recognition_mixed_logit"] = recognition_repertoire_logit
         outputs["recognition_mixed_prob"] = outputs["recognition_repertoire_prob"]
 
-        # Optional TCR-specific matching
-        recognition_evidence = recognition_repertoire_logit
-        if tcr_vec is not None:
-            match_logit = self.matcher(tcr_vec, pmhc_vec)
-            outputs["match_logit"] = match_logit
-            outputs["match_prob"] = torch.sigmoid(match_logit)
-            recognition_evidence = match_logit
-
-        if recognition_evidence.ndim == 1:
-            recognition_evidence = recognition_evidence.unsqueeze(-1)
-
         # Immunogenicity readout from MLP-computed latent vecs (design S9.5)
         immunogenicity_cd8_logit = self.immunogenicity_cd8_latent_head(immunogenicity_vec)
         immunogenicity_cd4_logit = self.immunogenicity_cd4_latent_head(immunogenicity_vec)
@@ -2133,6 +2017,16 @@ class Presto(nn.Module):
         outputs["tcell_context_logits"] = tcell_panel_logits
         outputs["tcell_panel_logits"] = tcell_panel_logits
 
+        # ------------------------------------------------------------------
+        # 12) pMHC-only receptor-evidence outputs
+        # ------------------------------------------------------------------
+        tcr_evidence_logit = self.tcr_evidence_head(pmhc_vec)
+        tcr_evidence_method_logits = self.tcr_evidence_method_head(pmhc_vec)
+        outputs["tcr_evidence_logit"] = tcr_evidence_logit
+        outputs["tcr_evidence_prob"] = torch.sigmoid(tcr_evidence_logit)
+        outputs["tcr_evidence_method_logits"] = tcr_evidence_method_logits
+        outputs["tcr_evidence_method_probs"] = torch.sigmoid(tcr_evidence_method_logits)
+
         return outputs
 
     def encode_pmhc(
@@ -2154,23 +2048,3 @@ class Presto(nn.Module):
             mhc_class=mhc_class,
         )
         return outputs["pmhc_vec"]
-
-    def encode_tcr(
-        self,
-        tcr_a_tok: torch.Tensor,
-        tcr_b_tok: Optional[torch.Tensor] = None,
-    ) -> torch.Tensor:
-        """Encode TCR into a fixed vector representation."""
-        return self.tcr_encoder(tcr_a_tok, tcr_b_tok)
-
-    def classify_chain(self, chain_tok: torch.Tensor) -> torch.Tensor:
-        """Classify chain type from sequence."""
-        return self.chain_classifier(chain_tok)
-
-    def classify_chain_attributes(self, chain_tok: torch.Tensor) -> Dict[str, torch.Tensor]:
-        """Classify chain attributes (species, chain type, phenotype)."""
-        return self.chain_attribute_classifier(chain_tok)
-
-    def predict_chain_attributes(self, chain_tok: torch.Tensor) -> Dict[str, torch.Tensor]:
-        """Predict chain attributes with probabilities."""
-        return self.chain_attribute_classifier.predict(chain_tok)

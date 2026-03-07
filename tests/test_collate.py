@@ -21,7 +21,7 @@ class TestPrestoSample:
         assert sample.peptide == "SIINFEKL"
         assert sample.mhc_a == ""
         assert sample.mhc_class is None
-        assert sample.tcr_a is None
+        assert sample.tcr_evidence_label is None
 
     def test_full_sample(self):
         """Create sample with all fields."""
@@ -32,8 +32,6 @@ class TestPrestoSample:
             mhc_a="MAVMAPRTL",
             mhc_b="BETA2M",
             mhc_class="I",
-            tcr_a="CAVRD",
-            tcr_b="CASSIR",
             bind_value=4.5,
             bind_qual=0,
             kon=1e5,
@@ -42,9 +40,8 @@ class TestPrestoSample:
             tm=55.0,
             tcell_label=1.0,
             elution_label=1.0,
-            chain_type="TRA",
             species="human",
-            phenotype="CD8_T",
+            tcr_evidence_label=1.0,
             sample_id="sample_001",
         )
         assert sample.bind_value == 4.5
@@ -96,11 +93,11 @@ class TestPrestoBatch:
             mhc_a_tok=torch.zeros(2, 100, dtype=torch.long),
             mhc_b_tok=torch.zeros(2, 50, dtype=torch.long),
             mhc_class=["I", "I"],
-            tcr_a_tok=None,  # None optional
+            tcr_evidence_target=None,
         )
 
         moved = batch.to("cpu")
-        assert moved.tcr_a_tok is None
+        assert moved.tcr_evidence_target is None
 
 
 class TestPrestoCollator:
@@ -161,33 +158,31 @@ class TestPrestoCollator:
         assert batch.flank_n_tok is None
         assert batch.flank_c_tok is None
 
-    def test_collator_with_tcr(self, collator):
-        """Collate samples with TCR sequences."""
+    def test_collator_with_tcr_evidence(self, collator):
+        """Collate samples with pMHC-only receptor-evidence targets."""
         samples = [
             PrestoSample(
                 peptide="SIINFEKL",
                 mhc_a="MAVMAPRTL",
-                tcr_a="CAVRDSSYKLIF",
-                tcr_b="CASSIRSSYEQYF",
+                tcr_evidence_label=1.0,
+                tcr_evidence_method_bins=("multimer_binding", "functional_readout"),
             ),
             PrestoSample(
                 peptide="GILGFVFTL",
                 mhc_a="MAVMAPRTL",
-                tcr_a="CAVMDSSYKLIF",
-                tcr_b="CASSLGSSYEQYF",
             ),
         ]
         batch = collator(samples)
 
-        assert batch.tcr_a_tok is not None
-        assert batch.tcr_b_tok is not None
-        assert batch.tcr_a_tok.shape[0] == 2
-
-    def test_collator_tcr_none_when_absent(self, collator, simple_samples):
-        """TCR tokens are None when no samples have TCR."""
-        batch = collator(simple_samples)
-        assert batch.tcr_a_tok is None
-        assert batch.tcr_b_tok is None
+        assert batch.tcr_evidence_target is not None
+        assert batch.tcr_evidence_mask is not None
+        assert batch.tcr_evidence_target.tolist() == [1.0, 0.0]
+        assert batch.tcr_evidence_mask.tolist() == [1.0, 0.0]
+        assert batch.tcr_evidence_method_target is not None
+        assert batch.tcr_evidence_method_mask is not None
+        assert batch.tcr_evidence_method_target.shape == (2, 3)
+        assert batch.tcr_evidence_method_mask[0].tolist() == [1.0, 1.0, 1.0]
+        assert batch.tcr_evidence_method_mask[1].tolist() == [0.0, 0.0, 0.0]
 
     def test_collator_sanitizes_missing_optional_sequence_tokens(self, collator):
         samples = [
@@ -196,14 +191,12 @@ class TestPrestoCollator:
                 mhc_a="MAVMAPRTL",
                 mhc_b="NONE",
                 flank_n="NULL",
-                tcr_a="N/A",
             ),
             PrestoSample(
                 peptide="GILGFVFTL",
                 mhc_a="MAVMAPRTL",
                 mhc_b="MKM",
                 flank_n="AAA",
-                tcr_a="CAVRD",
             ),
         ]
         batch = collator(samples)
@@ -214,9 +207,6 @@ class TestPrestoCollator:
         assert batch.flank_n_tok is not None
         assert int(batch.flank_n_tok[0].sum().item()) == 0
         assert int(batch.flank_n_tok[1].sum().item()) > 0
-        assert batch.tcr_a_tok is not None
-        assert int(batch.tcr_a_tok[0].sum().item()) == 0
-        assert int(batch.tcr_a_tok[1].sum().item()) > 0
 
     def test_collator_with_binding_labels(self, collator):
         """Collate samples with binding labels."""
@@ -504,7 +494,6 @@ class TestPrestoCollator:
         collator = PrestoCollator(
             max_pep_len=15,
             max_mhc_len=200,
-            max_tcr_len=100,
         )
         samples = [
             PrestoSample(
@@ -550,21 +539,20 @@ class TestCollateDictBatch:
 
         assert result["mhc_class"] == ["I"]
 
-    def test_collate_dict_with_tcr(self):
-        """Collate dict batch with TCR sequences."""
+    def test_collate_dict_with_tcr_evidence(self):
+        """Collate dict batch with pMHC-only receptor evidence."""
         batch = [
-            {"peptide": "AAA", "tcr_a": "CAVRD", "tcr_b": "CASSIR"},
-            {"peptide": "GGG", "tcr_a": "CAVMD", "tcr_b": "CASSLG"},
+            {"peptide": "AAA", "tcr_evidence_label": 1.0},
+            {"peptide": "GGG", "tcr_evidence_label": 0.0},
         ]
         result = collate_dict_batch(batch)
 
-        assert "tcr_a_tok" in result
-        assert "tcr_b_tok" in result
+        assert "pep_tok" in result
 
     def test_collate_dict_sanitizes_missing_optional_sequence_tokens(self):
         batch = [
-            {"peptide": "AAA", "mhc_a": "NONE", "mhc_b": "N/A", "tcr_a": "NULL"},
-            {"peptide": "GGG", "mhc_a": "MAVMAPRTL", "mhc_b": "MKM", "tcr_a": "CAVRD"},
+            {"peptide": "AAA", "mhc_a": "NONE", "mhc_b": "N/A"},
+            {"peptide": "GGG", "mhc_a": "MAVMAPRTL", "mhc_b": "MKM"},
         ]
         result = collate_dict_batch(batch)
 
@@ -572,9 +560,6 @@ class TestCollateDictBatch:
         assert int(result["mhc_a_tok"][1].sum().item()) > 0
         assert int(result["mhc_b_tok"][0].sum().item()) == 0
         assert int(result["mhc_b_tok"][1].sum().item()) > 0
-        assert "tcr_a_tok" in result
-        assert int(result["tcr_a_tok"][0].sum().item()) == 0
-        assert int(result["tcr_a_tok"][1].sum().item()) > 0
 
     def test_collate_dict_with_binding(self):
         """Collate dict batch with binding labels."""

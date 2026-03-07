@@ -10,28 +10,29 @@ in multiple databases from the same original publication.
 
 import csv
 import io
+import json
 import re
-from collections import defaultdict
+import time
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from functools import lru_cache
 from pathlib import Path
-from typing import Dict, List, Optional, Iterator, Tuple, Any
+from typing import Dict, List, Optional, Iterator, Tuple, Any, Iterable
 import zipfile
 from tqdm.auto import tqdm
 
-from .allele_resolver import infer_species
+from .allele_resolver import infer_mhc_class_optional, infer_species, parse_allele_name
 from .vocab import normalize_organism
 
-try:
-    import mhcgnomes
 
-    _HAS_MHCGNOMES = True
-except ImportError:
-    _HAS_MHCGNOMES = False
+_CELL_CONTEXT_WS_RE = re.compile(r"\s+")
+_ALLELE_SPLIT_RE = re.compile(r"[,;/]")
+_MURINE_ALLELE_SHORTHAND_RE = re.compile(r"^H2-[A-Z0-9]+$", re.IGNORECASE)
+_STAR_ALLELE_RE = re.compile(r"^[A-Z0-9-]+\*[A-Z0-9:]+$", re.IGNORECASE)
 
 
-@dataclass
+@dataclass(slots=True)
 class UnifiedRecord:
     """Unified record format for cross-source deduplication.
 
@@ -92,11 +93,19 @@ class UnifiedRecord:
     cdr3_beta: Optional[str] = None
     trav: Optional[str] = None
     trbv: Optional[str] = None
+    evidence_method_identification: Optional[str] = None
+    evidence_method_verification: Optional[str] = None
+    evidence_singlecell: Optional[str] = None
+    evidence_sequencing: Optional[str] = None
+    evidence_score: Optional[int] = None
 
     # Metadata
     species: Optional[str] = None
     antigen_species: Optional[str] = None
-    raw_data: Dict[str, str] = field(default_factory=dict)
+    cell_hla_allele_set: Optional[str] = None
+    cell_hla_n_alleles: Optional[int] = None
+    raw_data: Optional[Dict[str, str]] = None
+    _assay_bucket_cache: Optional[str] = field(default=None, repr=False, compare=False)
 
     def dedup_key(self) -> str:
         """Generate key for deduplication.
@@ -203,13 +212,39 @@ def _normalize_reference_text(raw_text: Optional[str]) -> Optional[str]:
     return text or None
 
 
+def _extract_reference_text(
+    row: List[str],
+    reference_text_cols: List[int],
+    *,
+    keep: bool,
+) -> Optional[str]:
+    """Collect and normalize reference text only when it is needed."""
+    if not keep or not reference_text_cols:
+        return None
+
+    parts: List[str] = []
+    seen: set[str] = set()
+    for idx in reference_text_cols:
+        if idx >= len(row):
+            continue
+        value = row[idx].strip()
+        if not value or value in seen:
+            continue
+        seen.add(value)
+        parts.append(value)
+
+    if not parts:
+        return None
+    return _normalize_reference_text(" | ".join(parts))
+
+
 @lru_cache(maxsize=50000)
 def normalize_allele(raw_allele: str) -> str:
     """Normalize MHC allele to standard format using mhcgnomes.
 
-    Uses mhcgnomes library for robust parsing of MHC allele names across
-    species and naming conventions. Falls back to simple normalization
-    if mhcgnomes is not available.
+    Uses mhcgnomes as the canonical parser across species and naming
+    conventions. If mhcgnomes cannot parse a token, preserve the raw allele
+    string instead of applying a handwritten normalization heuristic.
 
     Examples:
     - "HLA-A*02:01" -> "HLA-A*02:01"
@@ -225,70 +260,16 @@ def normalize_allele(raw_allele: str) -> str:
     if not allele:
         return ""
 
-    if _HAS_MHCGNOMES:
-        try:
-            result = mhcgnomes.parse(allele)
-            return result.to_string() if result else allele
-        except Exception:
-            # mhcgnomes couldn't parse - return as-is
-            return allele
-
-    # Fallback: simple normalization without mhcgnomes
-    return _normalize_allele_simple(allele)
-
-
-def _normalize_allele_simple(allele: str) -> str:
-    """Simple allele normalization without mhcgnomes."""
-    # Already in good format (has HLA-, *, and colon)
-    if allele.startswith("HLA-") and "*" in allele and ":" in allele:
+    try:
+        result = parse_allele_name(allele)
+    except Exception:
         return allele
-
-    # Add HLA prefix if missing
-    if not allele.startswith("HLA"):
-        if allele.startswith(("A*", "B*", "C*", "DR", "DQ", "DP")):
-            allele = "HLA-" + allele
-
-    # Normalize A2 -> A*02 format
-    match = re.match(r"HLA-([A-Z]+)(\d+)$", allele)
-    if match:
-        gene, num = match.groups()
-        allele = f"HLA-{gene}*{num.zfill(2)}"
-
-    # Normalize 0201 -> 02:01 format
-    match = re.match(r"(HLA-[A-Z]+\*)(\d{4})$", allele)
-    if match:
-        prefix, digits = match.groups()
-        allele = f"{prefix}{digits[:2]}:{digits[2:]}"
-
-    return allele
+    return result.to_string() if result else allele
 
 
 def _infer_mhc_class_from_allele(allele: str, default: str = "I") -> str:
-    """Infer MHC class from allele text using common naming patterns."""
-    text = (allele or "").strip().upper()
-    if not text:
-        return default
-    if any(token in text for token in ("DR", "DQ", "DP", "H2-I", "H2-E", "RT1-B", "RT1-D")):
-        return "II"
-    if any(
-        text.startswith(prefix)
-        for prefix in (
-            "HLA-A",
-            "HLA-B",
-            "HLA-C",
-            "HLA-E",
-            "HLA-F",
-            "HLA-G",
-            "H2-K",
-            "H2-D",
-            "MAMU-A",
-            "MAMU-B",
-            "MAMU-E",
-            "MAMU-I",
-        )
-    ):
-        return "I"
-    return default
+    """Infer MHC class from allele text using mhcgnomes."""
+    return infer_mhc_class_optional(allele) or default
 
 
 def _normalize_mhc_class(raw_class: str, allele: str) -> str:
@@ -370,6 +351,13 @@ def _parse_iedb_binding_stream(f, source: str) -> Iterator[UnifiedRecord]:
                 col_indices["mhc_class"] = i
             continue
 
+        if "antigen presenting cell" in cat:
+            if h in {"name", "cell type", "cell line", "cell"} and "apc_name" not in col_indices:
+                col_indices["apc_name"] = i
+            elif "tissue" in h and "apc_tissue" not in col_indices:
+                col_indices["apc_tissue"] = i
+            continue
+
         if "assay" in cat:
             if h == "method":
                 col_indices["assay_method"] = i
@@ -405,15 +393,19 @@ def _parse_iedb_binding_stream(f, source: str) -> Iterator[UnifiedRecord]:
                 else ""
             )
             qualitative = row[col_indices["qualitative"]].strip() if "qualitative" in col_indices else ""
+            apc_name_raw = row[col_indices["apc_name"]].strip() if "apc_name" in col_indices else ""
+            apc_tissue_raw = row[col_indices["apc_tissue"]].strip() if "apc_tissue" in col_indices else ""
+            apc_context = apc_name_raw or apc_tissue_raw
 
             pmid_raw = row[col_indices["pmid"]].strip() if "pmid" in col_indices else ""
             doi_raw = row[col_indices["doi"]].strip() if "doi" in col_indices else ""
-            reference_parts = [
-                row[idx].strip()
-                for idx in reference_text_cols
-                if idx < len(row) and row[idx].strip()
-            ]
-            reference_raw = " | ".join(dict.fromkeys(reference_parts))
+            normalized_pmid = normalize_pmid(pmid_raw)
+            normalized_doi = normalize_doi(doi_raw)
+            reference_text = _extract_reference_text(
+                row,
+                reference_text_cols,
+                keep=not (normalized_pmid or normalized_doi),
+            )
 
             value = None
             if "value" in col_indices:
@@ -447,9 +439,9 @@ def _parse_iedb_binding_stream(f, source: str) -> Iterator[UnifiedRecord]:
                 peptide=peptide,
                 mhc_allele=normalize_allele(allele),
                 mhc_class=_normalize_mhc_class(mhc_class, allele),
-                pmid=normalize_pmid(pmid_raw),
-                doi=normalize_doi(doi_raw),
-                reference_text=_normalize_reference_text(reference_raw),
+                pmid=normalized_pmid,
+                doi=normalized_doi,
+                reference_text=reference_text,
                 source=source,
                 record_type="binding",
                 value=value,
@@ -458,12 +450,9 @@ def _parse_iedb_binding_stream(f, source: str) -> Iterator[UnifiedRecord]:
                 response=qualitative or None,
                 assay_type=response_measured or None,
                 assay_method=method or None,
+                apc_name=apc_context or None,
                 species=normalize_organism(species_raw),
                 antigen_species=normalize_organism(antigen_species_raw) if antigen_species_raw else None,
-                raw_data={
-                    "reference_raw": reference_raw,
-                    "doi_raw": doi_raw,
-                },
             )
         except (IndexError, KeyError):
             continue
@@ -557,12 +546,13 @@ def _parse_iedb_bcell_stream(f, source: str) -> Iterator[UnifiedRecord]:
 
             pmid_raw = row[col_indices["pmid"]].strip() if "pmid" in col_indices else ""
             doi_raw = row[col_indices["doi"]].strip() if "doi" in col_indices else ""
-            reference_parts = [
-                row[idx].strip()
-                for idx in reference_text_cols
-                if idx < len(row) and row[idx].strip()
-            ]
-            reference_raw = " | ".join(dict.fromkeys(reference_parts))
+            normalized_pmid = normalize_pmid(pmid_raw)
+            normalized_doi = normalize_doi(doi_raw)
+            reference_text = _extract_reference_text(
+                row,
+                reference_text_cols,
+                keep=not (normalized_pmid or normalized_doi),
+            )
 
             response = row[col_indices["response"]].strip() if "response" in col_indices else ""
             # Normalize to positive/negative
@@ -592,9 +582,9 @@ def _parse_iedb_bcell_stream(f, source: str) -> Iterator[UnifiedRecord]:
                 peptide=peptide,
                 mhc_allele="",  # B-cell entries generally do not carry MHC alleles
                 mhc_class="",
-                pmid=normalize_pmid(pmid_raw),
-                doi=normalize_doi(doi_raw),
-                reference_text=_normalize_reference_text(reference_raw),
+                pmid=normalized_pmid,
+                doi=normalized_doi,
+                reference_text=reference_text,
                 source=source,
                 record_type="bcell",
                 response=response_label,
@@ -714,12 +704,13 @@ def _parse_iedb_tcell_stream(f, source: str) -> Iterator[UnifiedRecord]:
             mhc_class_raw = row[col_indices["mhc_class"]].strip() if "mhc_class" in col_indices else ""
             pmid_raw = row[col_indices["pmid"]].strip() if "pmid" in col_indices else ""
             doi_raw = row[col_indices["doi"]].strip() if "doi" in col_indices else ""
-            reference_parts = [
-                row[idx].strip()
-                for idx in reference_text_cols
-                if idx < len(row) and row[idx].strip()
-            ]
-            reference_raw = " | ".join(dict.fromkeys(reference_parts))
+            normalized_pmid = normalize_pmid(pmid_raw)
+            normalized_doi = normalize_doi(doi_raw)
+            reference_text = _extract_reference_text(
+                row,
+                reference_text_cols,
+                keep=not (normalized_pmid or normalized_doi),
+            )
 
             response = row[col_indices["response"]].strip() if "response" in col_indices else ""
             assay_type = row[col_indices["assay_type"]].strip() if "assay_type" in col_indices else ""
@@ -767,9 +758,9 @@ def _parse_iedb_tcell_stream(f, source: str) -> Iterator[UnifiedRecord]:
                 peptide=peptide,
                 mhc_allele=normalize_allele(allele),
                 mhc_class=_normalize_mhc_class(mhc_class_raw, allele),
-                pmid=normalize_pmid(pmid_raw),
-                doi=normalize_doi(doi_raw),
-                reference_text=_normalize_reference_text(reference_raw),
+                pmid=normalized_pmid,
+                doi=normalized_doi,
+                reference_text=reference_text,
                 source=source,
                 record_type="tcell",
                 response=response,
@@ -783,10 +774,6 @@ def _parse_iedb_tcell_stream(f, source: str) -> Iterator[UnifiedRecord]:
                 in_vitro_stimulator_cell=in_vitro_stimulator or None,
                 species=normalize_organism(species_raw),
                 antigen_species=normalize_organism(antigen_species_raw) if antigen_species_raw else None,
-                raw_data={
-                    "reference_raw": reference_raw,
-                    "doi_raw": doi_raw,
-                },
             )
         except (IndexError, KeyError):
             continue
@@ -852,11 +839,17 @@ def _parse_vdjdb_content(content: str) -> Iterator[UnifiedRecord]:
             ref_id = row[header_map.get("reference.id", 0)]
             species = row[header_map.get("species", 0)]
             v_gene = row[header_map.get("v.segm", 0)]
+            method_raw = row[header_map["method"]] if "method" in header_map else ""
+            score_raw = row[header_map["vdjdb.score"]] if "vdjdb.score" in header_map else ""
             antigen_species_raw = (
                 row[header_map["antigen.species"]]
                 if "antigen.species" in header_map and header_map["antigen.species"] < len(row)
                 else ""
             ).strip()
+            try:
+                method_meta = json.loads(method_raw) if method_raw else {}
+            except (TypeError, ValueError, json.JSONDecodeError):
+                method_meta = {}
             normalized_pmid = normalize_pmid(ref_id)
             normalized_doi = normalize_doi(ref_id)
 
@@ -875,6 +868,11 @@ def _parse_vdjdb_content(content: str) -> Iterator[UnifiedRecord]:
                 cdr3_beta=cdr3 if gene == "TRB" else None,
                 trav=v_gene if gene == "TRA" else None,
                 trbv=v_gene if gene == "TRB" else None,
+                evidence_method_identification=str(method_meta.get("identification") or "").strip() or None,
+                evidence_method_verification=str(method_meta.get("verification") or "").strip() or None,
+                evidence_singlecell=str(method_meta.get("singlecell") or "").strip() or None,
+                evidence_sequencing=str(method_meta.get("sequencing") or "").strip() or None,
+                evidence_score=int(score_raw) if str(score_raw).strip().isdigit() else None,
                 species=normalize_organism(species_raw),
                 antigen_species=normalize_organism(antigen_species_raw) if antigen_species_raw else None,
             )
@@ -911,6 +909,8 @@ def parse_mcpas(file_path: Path) -> Iterator[UnifiedRecord]:
                     cdr3_beta=row.get("CDR3.beta.aa", ""),
                     trav=row.get("TRAV", ""),
                     trbv=row.get("TRBV", ""),
+                    evidence_method_identification=row.get("Antigen.identification.method", "") or None,
+                    evidence_sequencing=row.get("NGS", "") or None,
                     species=normalize_organism(mcpas_species),
                     antigen_species=normalize_organism(mcpas_pathology),
                 )
@@ -948,6 +948,7 @@ class CrossSourceDeduplicator:
                            Default: ['iedb', 'vdjdb', 'mcpas', 'cedar']
         """
         self.prefer_sources = prefer_sources or ["iedb", "vdjdb", "mcpas", "cedar"]
+        self._source_order = {source: idx for idx, source in enumerate(self.prefer_sources)}
         self.reference_similarity_threshold = float(reference_similarity_threshold)
         self.stats = {
             "total_input": 0,
@@ -960,6 +961,10 @@ class CrossSourceDeduplicator:
             "fuzzy_reference_duplicates": 0,
             "unique_pmids": 0,
             "records_without_pmid": 0,
+            "dedup_groups": 0,
+            "dedup_groups_multi_record": 0,
+            "dedup_largest_group": 0,
+            "dedup_sample_buckets": 0,
         }
 
     def deduplicate(
@@ -983,11 +988,31 @@ class CrossSourceDeduplicator:
 
         # Group by dedup key
         groups: Dict[str, List[UnifiedRecord]] = defaultdict(list)
-        for rec in records:
+        record_iter: Iterable[UnifiedRecord] = records
+        if show_progress:
+            record_iter = tqdm(
+                records,
+                total=len(records),
+                desc="Grouping records",
+                unit="rec",
+                leave=False,
+                mininterval=1.0,
+                miniters=5000,
+            )
+        for rec in record_iter:
             groups[rec.dedup_key()].append(rec)
 
+        self.stats["dedup_groups"] = len(groups)
+        if groups:
+            group_sizes = [len(group_records) for group_records in groups.values()]
+            self.stats["dedup_largest_group"] = max(group_sizes)
+            self.stats["dedup_groups_multi_record"] = sum(1 for size in group_sizes if size > 1)
+        else:
+            self.stats["dedup_largest_group"] = 0
+            self.stats["dedup_groups_multi_record"] = 0
+
         # Deduplicate each group
-        deduped = []
+        deduped: List[UnifiedRecord] = []
         group_items = groups.items()
         if show_progress:
             group_items = tqdm(
@@ -996,41 +1021,31 @@ class CrossSourceDeduplicator:
                 desc="Deduplicating groups",
                 unit="group",
                 leave=False,
+                mininterval=1.0,
             )
 
-        for key, group_records in group_items:
+        sample_bucket_count = 0
+        for _, group_records in group_items:
             if len(group_records) == 1:
                 deduped.append(group_records[0])
                 continue
 
-            selected_group: List[UnifiedRecord] = []
+            sample_buckets: Dict[Tuple[str, ...], List[UnifiedRecord]] = defaultdict(list)
             for rec in group_records:
-                if not rec.pmid:
-                    self.stats["records_without_pmid"] += 1
+                sample_buckets[self._sample_signature(rec)].append(rec)
 
-                matched_idx: Optional[int] = None
-                for idx, existing in enumerate(selected_group):
-                    if self._records_equivalent(rec, existing):
-                        matched_idx = idx
-                        break
-
-                if matched_idx is None:
-                    selected_group.append(rec)
+            sample_bucket_count += len(sample_buckets)
+            for bucket_records in sample_buckets.values():
+                if len(bucket_records) == 1:
+                    rec = bucket_records[0]
+                    if not rec.pmid:
+                        self.stats["records_without_pmid"] += 1
+                    deduped.append(rec)
                     continue
 
-                existing = selected_group[matched_idx]
-                if rec.source == existing.source:
-                    self.stats["same_source_duplicates"] += 1
-                else:
-                    self.stats["cross_source_duplicates"] += 1
-                if (
-                    not (rec.pmid and existing.pmid and rec.pmid == existing.pmid)
-                    and self._references_match(rec, existing)
-                ):
-                    self.stats["fuzzy_reference_duplicates"] += 1
-                selected_group[matched_idx] = self._select_best([existing, rec])
+                deduped.extend(self._deduplicate_sample_bucket(bucket_records))
 
-            deduped.extend(selected_group)
+        self.stats["dedup_sample_buckets"] = sample_bucket_count
 
         self.stats["total_output"] = len(deduped)
         self.stats["unique_pmids"] = len(set(r.pmid for r in deduped if r.pmid))
@@ -1052,11 +1067,23 @@ class CrossSourceDeduplicator:
             if rec.value is not None:
                 # Keep distinct quantitative measurements from collapsing together.
                 value_bucket = f"{float(rec.value):.6g}"
+            # For elution-like ligand rows (value absent), preserve experiment context
+            # so different APC/cell settings do not collapse into one sample.
+            elution_context = ""
+            if rec.value is None:
+                elution_context = "|".join(
+                    (
+                        (rec.assay_type or "").strip().lower(),
+                        (rec.assay_method or "").strip().lower(),
+                        (rec.apc_name or "").strip().lower(),
+                    )
+                )
             return (
                 rec.record_type,
                 (rec.value_type or "").strip().lower(),
                 str(rec.qualifier),
                 value_bucket,
+                elution_context,
             )
         if rec.record_type == "tcell":
             return (
@@ -1116,6 +1143,94 @@ class CrossSourceDeduplicator:
             (rec.species or "").strip().lower(),
         )
 
+    def _deduplicate_sample_bucket(self, records: List[UnifiedRecord]) -> List[UnifiedRecord]:
+        """Fast-path dedup for records that already share dedup+sample identity."""
+        selected: List[UnifiedRecord] = []
+        pmid_to_indices: Dict[str, List[int]] = defaultdict(list)
+        doi_to_indices: Dict[str, List[int]] = defaultdict(list)
+        text_ref_indices: List[int] = []
+        payload_no_ref_index: Dict[Tuple[str, Tuple[str, ...]], int] = {}
+
+        for rec in records:
+            if not rec.pmid:
+                self.stats["records_without_pmid"] += 1
+
+            has_ref = bool(rec.pmid or rec.doi or rec.reference_text)
+            candidate_indices: List[int] = []
+
+            if rec.pmid:
+                candidate_indices.extend(pmid_to_indices.get(rec.pmid, []))
+            if rec.doi:
+                candidate_indices.extend(doi_to_indices.get(rec.doi, []))
+
+            if not candidate_indices:
+                if has_ref:
+                    candidate_indices.extend(text_ref_indices)
+                else:
+                    payload_key = (rec.source, self._record_payload_signature(rec))
+                    payload_idx = payload_no_ref_index.get(payload_key)
+                    if payload_idx is not None:
+                        candidate_indices.append(payload_idx)
+
+            matched_idx: Optional[int] = None
+            seen_indices = set()
+            for idx in candidate_indices:
+                if idx in seen_indices or idx >= len(selected):
+                    continue
+                seen_indices.add(idx)
+                existing = selected[idx]
+                if self._records_equivalent_same_sample(rec, existing):
+                    matched_idx = idx
+                    break
+
+            # Fallback: preserve fuzzy matching behavior when index hints miss.
+            if matched_idx is None and has_ref:
+                for idx, existing in enumerate(selected):
+                    if idx in seen_indices:
+                        continue
+                    if self._references_match(rec, existing):
+                        matched_idx = idx
+                        break
+
+            if matched_idx is None:
+                selected.append(rec)
+                new_idx = len(selected) - 1
+                if rec.pmid:
+                    pmid_to_indices[rec.pmid].append(new_idx)
+                if rec.doi:
+                    doi_to_indices[rec.doi].append(new_idx)
+                if rec.reference_text:
+                    text_ref_indices.append(new_idx)
+                if not has_ref:
+                    payload_no_ref_index[(rec.source, self._record_payload_signature(rec))] = new_idx
+                continue
+
+            existing = selected[matched_idx]
+            if rec.source == existing.source:
+                self.stats["same_source_duplicates"] += 1
+            else:
+                self.stats["cross_source_duplicates"] += 1
+            if (
+                not (rec.pmid and existing.pmid and rec.pmid == existing.pmid)
+                and self._references_match(rec, existing)
+            ):
+                self.stats["fuzzy_reference_duplicates"] += 1
+
+            best = self._select_best([existing, rec])
+            selected[matched_idx] = best
+
+            # Refresh lookup maps for the retained row.
+            if best.pmid:
+                pmid_to_indices[best.pmid].append(matched_idx)
+            if best.doi:
+                doi_to_indices[best.doi].append(matched_idx)
+            if best.reference_text:
+                text_ref_indices.append(matched_idx)
+            if not (best.pmid or best.doi or best.reference_text):
+                payload_no_ref_index[(best.source, self._record_payload_signature(best))] = matched_idx
+
+        return selected
+
     def _references_match(self, left: UnifiedRecord, right: UnifiedRecord) -> bool:
         """Reference-level match using PMID/DOI first, then fuzzy free text."""
         if left.pmid and right.pmid:
@@ -1144,16 +1259,11 @@ class CrossSourceDeduplicator:
         overlap = len(tokens_left & tokens_right) / float(len(tokens_left | tokens_right))
         return overlap >= 0.85
 
-    def _records_equivalent(self, left: UnifiedRecord, right: UnifiedRecord) -> bool:
-        """Whether two records should collapse to one canonical row."""
-        if left.dedup_key() != right.dedup_key():
-            return False
-        if self._sample_signature(left) != self._sample_signature(right):
-            return False
+    def _records_equivalent_same_sample(self, left: UnifiedRecord, right: UnifiedRecord) -> bool:
+        """Equivalent check for records already grouped by dedup/sample identity."""
         if self._references_match(left, right):
             return True
-        # If neither has reference information, only collapse exact same-source duplicates.
-        # This prevents aggressive dedup on sparse rows (common in export files).
+
         left_has_ref = bool(left.pmid or left.doi or left.reference_text)
         right_has_ref = bool(right.pmid or right.doi or right.reference_text)
         if not left_has_ref and not right_has_ref:
@@ -1163,12 +1273,16 @@ class CrossSourceDeduplicator:
             )
         return False
 
+    def _records_equivalent(self, left: UnifiedRecord, right: UnifiedRecord) -> bool:
+        """Whether two records should collapse to one canonical row."""
+        if left.dedup_key() != right.dedup_key():
+            return False
+        if self._sample_signature(left) != self._sample_signature(right):
+            return False
+        return self._records_equivalent_same_sample(left, right)
+
     def _select_best(self, records: List[UnifiedRecord]) -> UnifiedRecord:
         """Select best record from duplicates."""
-        # Sort by source preference
-        source_order = {s: i for i, s in enumerate(self.prefer_sources)}
-        records.sort(key=lambda r: source_order.get(r.source, 999))
-
         # Prefer records with more data
         def completeness(r: UnifiedRecord) -> int:
             score = 0
@@ -1184,8 +1298,13 @@ class CrossSourceDeduplicator:
                 score += 1
             return score
 
-        records.sort(key=completeness, reverse=True)
-        return records[0]
+        return max(
+            records,
+            key=lambda r: (
+                completeness(r),
+                -self._source_order.get(r.source, 999),
+            ),
+        )
 
     def get_stats(self) -> Dict[str, Any]:
         """Get deduplication statistics."""
@@ -1263,8 +1382,11 @@ def load_all_sources(
                 desc=f"    {path.name}",
                 unit="rec",
                 leave=False,
+                mininterval=1.0,
+                miniters=5000,
             )
 
+        pbar_pending = 0
         for rec in iterator:
             records.append(rec)
             assay_type = classify_assay_type(rec)
@@ -1282,9 +1404,14 @@ def load_all_sources(
             load_stats["by_source_assay"][source][assay_type] += 1
 
             if pbar is not None:
-                pbar.update(1)
+                pbar_pending += 1
+                if pbar_pending >= 5000:
+                    pbar.update(pbar_pending)
+                    pbar_pending = 0
 
         if pbar is not None:
+            if pbar_pending:
+                pbar.update(pbar_pending)
             pbar.close()
 
         file_entry = {
@@ -1439,6 +1566,8 @@ def record_to_row(rec: UnifiedRecord) -> Dict[str, Any]:
         "assay_type": rec.assay_type or "",
         "assay_method": rec.assay_method or "",
         "apc_name": rec.apc_name or "",
+        "cell_hla_allele_set": rec.cell_hla_allele_set or "",
+        "cell_hla_n_alleles": rec.cell_hla_n_alleles if rec.cell_hla_n_alleles is not None else "",
         "effector_culture_condition": rec.effector_culture_condition or "",
         "apc_culture_condition": rec.apc_culture_condition or "",
         "in_vitro_process_type": rec.in_vitro_process_type or "",
@@ -1448,6 +1577,11 @@ def record_to_row(rec: UnifiedRecord) -> Dict[str, Any]:
         "cdr3_beta": rec.cdr3_beta or "",
         "trav": rec.trav or "",
         "trbv": rec.trbv or "",
+        "evidence_method_identification": rec.evidence_method_identification or "",
+        "evidence_method_verification": rec.evidence_method_verification or "",
+        "evidence_singlecell": rec.evidence_singlecell or "",
+        "evidence_sequencing": rec.evidence_sequencing or "",
+        "evidence_score": rec.evidence_score if rec.evidence_score is not None else "",
         "species": rec.species,
         "antigen_species": rec.antigen_species or "",
     }
@@ -1455,12 +1589,15 @@ def record_to_row(rec: UnifiedRecord) -> Dict[str, Any]:
 
 def classify_assay_type(rec: UnifiedRecord) -> str:
     """Map a unified record into a simplified assay bucket."""
+    if rec._assay_bucket_cache:
+        return rec._assay_bucket_cache
+
+    assay = "unknown"
     if rec.record_type == "elution":
-        return "elution_ms"
-    if rec.record_type == "processing":
-        return "processing"
-    if rec.record_type == "binding":
-        value_type = (rec.value_type or "").strip().lower()
+        assay = "elution_ms"
+    elif rec.record_type == "processing":
+        assay = "processing"
+    elif rec.record_type == "binding":
         method_text = " ".join(
             token
             for token in (
@@ -1470,31 +1607,519 @@ def classify_assay_type(rec: UnifiedRecord) -> str:
             if token
         )
         if any(token in method_text for token in ("processing", "cleavage", "tap transport", "tap assay", "erap")):
-            return "processing"
-        if any(token in method_text for token in ("kon", "on rate", "association rate", "ka")):
-            return "binding_kon"
-        if any(token in method_text for token in ("koff", "off rate", "dissociation rate")):
-            return "binding_koff"
-        if any(token in method_text for token in ("t_half", "half life", "half-life", "t1/2")):
-            return "binding_t_half"
-        if any(token in method_text for token in ("tm", "melt", "dissociation temperature")):
-            return "binding_tm"
-        if rec.value is None:
+            assay = "processing"
+        elif any(token in method_text for token in ("kon", "on rate", "association rate", "ka")):
+            assay = "binding_kon"
+        elif any(token in method_text for token in ("koff", "off rate", "dissociation rate")):
+            assay = "binding_koff"
+        elif any(token in method_text for token in ("t_half", "half life", "half-life", "t1/2")):
+            assay = "binding_t_half"
+        elif any(token in method_text for token in ("tm", "melt", "dissociation temperature")):
+            assay = "binding_tm"
+        elif rec.value is None:
             if any(token in method_text for token in ("dia", "data-independent")):
-                return "elution_ms_dia"
-            if any(token in method_text for token in ("dda", "data-dependent")):
-                return "elution_ms_dda"
-            if any(token in method_text for token in ("targeted", "prm", "srm", "srm/ms", "mrm")):
-                return "elution_ms_targeted"
-            return "elution_ms"
-        return "binding_affinity"
-    if rec.record_type == "tcell":
-        return "tcell_response"
-    if rec.record_type == "tcr":
-        return "tcr_pmhc"
-    if rec.record_type == "bcell":
-        return "bcell_response"
-    return rec.record_type or "unknown"
+                assay = "elution_ms_dia"
+            elif any(token in method_text for token in ("dda", "data-dependent")):
+                assay = "elution_ms_dda"
+            elif any(token in method_text for token in ("targeted", "prm", "srm", "srm/ms", "mrm")):
+                assay = "elution_ms_targeted"
+            else:
+                assay = "elution_ms"
+        else:
+            assay = "binding_affinity"
+    elif rec.record_type == "tcell":
+        assay = "tcell_response"
+    elif rec.record_type == "tcr":
+        assay = "tcr_evidence"
+    elif rec.record_type == "bcell":
+        assay = "bcell_response"
+    else:
+        assay = rec.record_type or "unknown"
+
+    rec._assay_bucket_cache = assay
+    return assay
+
+
+def _normalize_cell_context(text: Optional[str]) -> str:
+    """Normalize free-text cell context for lookup joins."""
+    if text is None:
+        return ""
+    return _normalize_cell_context_cached(str(text))
+
+
+@lru_cache(maxsize=200000)
+def _normalize_cell_context_cached(text: str) -> str:
+    return _CELL_CONTEXT_WS_RE.sub(" ", text.strip().lower())
+
+
+def _split_allele_tokens(raw_allele: Optional[str]) -> List[str]:
+    """Split potentially multi-allele strings and normalize each token."""
+    if raw_allele is None:
+        return []
+    text = str(raw_allele).strip()
+    if not text:
+        return []
+    return list(_split_allele_tokens_cached(text))
+
+
+@lru_cache(maxsize=200000)
+def _split_allele_tokens_cached(text: str) -> Tuple[str, ...]:
+    tokens = [tok.strip() for tok in _ALLELE_SPLIT_RE.split(text) if tok.strip()]
+    normalized: List[str] = []
+    for token in tokens:
+        allele = normalize_allele(token)
+        normalized.append(allele or token)
+    return tuple(normalized)
+
+
+def _is_informative_allele_token(allele: str) -> bool:
+    """Strict heuristic for allele-like identifiers (not class/generic labels)."""
+    token = (allele or "").strip()
+    if not token:
+        return False
+    token_u = _CELL_CONTEXT_WS_RE.sub(" ", token).upper()
+
+    if token_u in {"HLA", "MHC", "UNKNOWN", "N/A", "NA", "OTHER"}:
+        return False
+    if any(
+        banned in token_u
+        for banned in ("CLASS", "MHC", "MOLECULE", "MUTANT", "SEROTYPE", "HAPLOTYPE")
+    ):
+        return False
+    if " " in token_u:
+        return False
+
+    # Canonical star-style alleles (e.g. HLA-A*02:01, DPB1*04:01, DLA-88*501:01).
+    if _STAR_ALLELE_RE.match(token_u):
+        return True
+
+    # Accept murine shorthand loci (e.g. H2-Db, H2-Kb, H2-IAg7).
+    if _MURINE_ALLELE_SHORTHAND_RE.match(token_u):
+        return True
+
+    return False
+
+
+def _is_elution_assay(assay: str) -> bool:
+    return str(assay).startswith("elution_ms")
+
+
+def _join_allele_set(tokens: Iterable[str]) -> str:
+    uniq = sorted({tok for tok in tokens if tok})
+    return ";".join(uniq)
+
+
+def _cell_lookup_key(rec: UnifiedRecord) -> Optional[Tuple[str, str]]:
+    pmid = (rec.pmid or "").strip()
+    if not pmid:
+        return None
+    cell_norm = _normalize_cell_context(rec.apc_name)
+    if not cell_norm:
+        return None
+    return pmid, cell_norm
+
+
+def _resolve_record_cell_hla_set(
+    rec: UnifiedRecord,
+    lookup: Dict[Tuple[str, str], str],
+) -> Tuple[Optional[str], str]:
+    """Resolve a record's allele-set from direct row alleles or strict PMID+cell lookup."""
+    direct_tokens = _informative_allele_tokens(rec.mhc_allele)
+    if direct_tokens:
+        return _join_allele_set(direct_tokens), "direct"
+
+    key = _cell_lookup_key(rec)
+    if key is not None:
+        allele_set = lookup.get(key)
+        if allele_set:
+            return allele_set, "lookup"
+        return None, "lookup_miss"
+    return None, "missing_lookup_key"
+
+
+def _count_records_by_assay(records: List[UnifiedRecord]) -> Dict[str, int]:
+    counts: Dict[str, int] = defaultdict(int)
+    for rec in records:
+        counts[classify_assay_type(rec)] += 1
+    return dict(sorted(counts.items(), key=lambda item: (-item[1], item[0])))
+
+
+@lru_cache(maxsize=200000)
+def _informative_allele_tokens(raw_allele: Optional[str]) -> Tuple[str, ...]:
+    if raw_allele is None:
+        return tuple()
+    allele_text = str(raw_allele).strip()
+    if not allele_text:
+        return tuple()
+    tokens = [
+        token
+        for token in _split_allele_tokens_cached(allele_text)
+        if _is_informative_allele_token(token)
+    ]
+    if not tokens:
+        return tuple()
+    # Keep deterministic output while preserving first-seen order.
+    return tuple(dict.fromkeys(tokens))
+
+
+def _build_elution_cell_hla_lookup(
+    records: List[UnifiedRecord],
+    show_progress: bool = False,
+) -> Tuple[Dict[Tuple[str, str], str], Dict[str, Any]]:
+    """Build strict (pmid, normalized-cell-context) -> allele-set map from elution rows."""
+    allele_sets: Dict[Tuple[str, str], set[str]] = defaultdict(set)
+    stats: Counter[str] = Counter()
+    record_iter: Iterable[UnifiedRecord] = records
+    if show_progress:
+        record_iter = tqdm(
+            records,
+            total=len(records),
+            desc="Cell-HLA lookup",
+            unit="rec",
+            leave=False,
+            mininterval=1.0,
+            miniters=5000,
+        )
+
+    for rec in record_iter:
+        assay = classify_assay_type(rec)
+        if not _is_elution_assay(assay):
+            continue
+        stats["elution_rows_total"] += 1
+
+        # IEDB ligand rows are predominantly positives; skip explicit negatives only.
+        response = normalize_binary_response(rec.response)
+        if response == "negative":
+            stats["elution_rows_negative"] += 1
+            continue
+
+        lookup_key = _cell_lookup_key(rec)
+        if lookup_key is None:
+            if not rec.pmid:
+                stats["elution_rows_missing_pmid"] += 1
+            if not _normalize_cell_context(rec.apc_name):
+                stats["elution_rows_missing_cell_context"] += 1
+            continue
+        stats["elution_rows_with_cell_context"] += 1
+        stats["elution_rows_with_pmid"] += 1
+
+        allele_tokens = _informative_allele_tokens(rec.mhc_allele)
+        if not allele_tokens:
+            stats["elution_rows_missing_informative_allele"] += 1
+            continue
+        stats["elution_rows_with_informative_allele"] += 1
+
+        for token in allele_tokens:
+            allele_sets[lookup_key].add(token)
+
+    lookup = {
+        key: _join_allele_set(tokens)
+        for key, tokens in allele_sets.items()
+        if tokens
+    }
+    stats["pmid_cell_context_pairs_with_allele_set"] = len(lookup)
+    return lookup, dict(stats)
+
+
+def _annotate_cell_hla_sets(
+    records: List[UnifiedRecord],
+    lookup: Dict[Tuple[str, str], str],
+    show_progress: bool = False,
+) -> Dict[str, Any]:
+    """Annotate cellular-assay records with inferred presenting-cell allele sets."""
+    stats: Counter[str] = Counter()
+    cellular_assays = {"tcell_response", "bcell_response"}
+
+    record_iter: Iterable[UnifiedRecord] = records
+    if show_progress:
+        record_iter = tqdm(
+            records,
+            total=len(records),
+            desc="Cell-HLA annotate",
+            unit="rec",
+            leave=False,
+            mininterval=1.0,
+            miniters=5000,
+        )
+
+    for rec in record_iter:
+        assay = classify_assay_type(rec)
+        is_cellular = _is_elution_assay(assay) or assay in cellular_assays
+        if not is_cellular:
+            continue
+        stats["cellular_records_total"] += 1
+
+        lookup_key = _cell_lookup_key(rec)
+        if lookup_key is None:
+            if not rec.pmid:
+                stats["cellular_records_missing_pmid"] += 1
+            if not _normalize_cell_context(rec.apc_name):
+                stats["cellular_records_missing_cell_context"] += 1
+        else:
+            stats["cellular_records_with_lookup_key"] += 1
+
+        allele_set, source = _resolve_record_cell_hla_set(rec, lookup)
+        if not allele_set:
+            stats["cellular_records_without_allele_set"] += 1
+            continue
+        rec.cell_hla_allele_set = allele_set
+        rec.cell_hla_n_alleles = len([tok for tok in allele_set.split(";") if tok])
+        stats["cellular_records_with_allele_set"] += 1
+        if source == "direct":
+            stats["cellular_records_with_direct_allele_set"] += 1
+        elif source == "lookup":
+            stats["cellular_records_with_lookup_allele_set"] += 1
+        if _is_elution_assay(assay):
+            stats["elution_records_with_allele_set"] += 1
+
+    return dict(stats)
+
+
+def _filter_elution_without_cell_hla(
+    records: List[UnifiedRecord],
+    show_progress: bool = False,
+) -> Tuple[List[UnifiedRecord], Dict[str, Any]]:
+    """Drop elution rows that cannot be tied to a resolvable cell allele set."""
+    kept: List[UnifiedRecord] = []
+    stats: Counter[str] = Counter()
+    record_iter: Iterable[UnifiedRecord] = records
+    if show_progress:
+        record_iter = tqdm(
+            records,
+            total=len(records),
+            desc="Elution HLA filter",
+            unit="rec",
+            leave=False,
+            mininterval=1.0,
+            miniters=5000,
+        )
+
+    for rec in record_iter:
+        assay = classify_assay_type(rec)
+        if not _is_elution_assay(assay):
+            kept.append(rec)
+            continue
+        stats["elution_rows_total"] += 1
+        if rec.cell_hla_allele_set:
+            stats["elution_rows_kept_with_allele_set"] += 1
+            kept.append(rec)
+        else:
+            stats["elution_rows_dropped_missing_allele_set"] += 1
+    if stats["elution_rows_total"] > 0:
+        stats["elution_rows_with_allele_set_fraction"] = float(
+            stats["elution_rows_kept_with_allele_set"] / float(stats["elution_rows_total"])
+        )
+    else:
+        stats["elution_rows_with_allele_set_fraction"] = 0.0
+    stats["output_total_after_elution_filter"] = len(kept)
+    return kept, dict(stats)
+
+
+def _annotate_and_filter_cell_hla(
+    records: List[UnifiedRecord],
+    lookup: Dict[Tuple[str, str], str],
+    show_progress: bool = False,
+) -> Tuple[List[UnifiedRecord], Dict[str, Any], Dict[str, Any]]:
+    """Single-pass cellular annotation + elution filtering for faster merge runs."""
+    kept: List[UnifiedRecord] = []
+    annotate_stats: Counter[str] = Counter()
+    filter_stats: Counter[str] = Counter()
+    cellular_assays = {"tcell_response", "bcell_response"}
+
+    record_iter: Iterable[UnifiedRecord] = records
+    if show_progress:
+        record_iter = tqdm(
+            records,
+            total=len(records),
+            desc="Cell-HLA annotate+filter",
+            unit="rec",
+            leave=False,
+            mininterval=1.0,
+            miniters=5000,
+        )
+
+    for rec in record_iter:
+        assay = classify_assay_type(rec)
+        is_elution = _is_elution_assay(assay)
+        is_cellular = is_elution or assay in cellular_assays
+
+        if is_cellular:
+            annotate_stats["cellular_records_total"] += 1
+            lookup_key = _cell_lookup_key(rec)
+            if lookup_key is None:
+                if not rec.pmid:
+                    annotate_stats["cellular_records_missing_pmid"] += 1
+                if not _normalize_cell_context(rec.apc_name):
+                    annotate_stats["cellular_records_missing_cell_context"] += 1
+            else:
+                annotate_stats["cellular_records_with_lookup_key"] += 1
+
+            allele_set, source = _resolve_record_cell_hla_set(rec, lookup)
+            if not allele_set:
+                annotate_stats["cellular_records_without_allele_set"] += 1
+            else:
+                rec.cell_hla_allele_set = allele_set
+                rec.cell_hla_n_alleles = len([tok for tok in allele_set.split(";") if tok])
+                annotate_stats["cellular_records_with_allele_set"] += 1
+                if source == "direct":
+                    annotate_stats["cellular_records_with_direct_allele_set"] += 1
+                elif source == "lookup":
+                    annotate_stats["cellular_records_with_lookup_allele_set"] += 1
+                if is_elution:
+                    annotate_stats["elution_records_with_allele_set"] += 1
+
+            if is_elution:
+                filter_stats["elution_rows_total"] += 1
+                if rec.cell_hla_allele_set:
+                    filter_stats["elution_rows_kept_with_allele_set"] += 1
+                    kept.append(rec)
+                else:
+                    filter_stats["elution_rows_dropped_missing_allele_set"] += 1
+            else:
+                filter_stats["cellular_rows_total_non_elution"] += 1
+                if rec.cell_hla_allele_set:
+                    filter_stats["cellular_rows_kept_with_allele_set"] += 1
+                    kept.append(rec)
+                else:
+                    filter_stats["cellular_rows_dropped_missing_allele_set"] += 1
+            continue
+
+        # Non-cellular assays are kept unchanged.
+        kept.append(rec)
+        continue
+
+    if filter_stats["elution_rows_total"] > 0:
+        filter_stats["elution_rows_with_allele_set_fraction"] = float(
+            filter_stats["elution_rows_kept_with_allele_set"] / float(filter_stats["elution_rows_total"])
+        )
+    else:
+        filter_stats["elution_rows_with_allele_set_fraction"] = 0.0
+
+    if filter_stats["cellular_rows_total_non_elution"] > 0:
+        filter_stats["cellular_rows_with_allele_set_fraction"] = float(
+            filter_stats["cellular_rows_kept_with_allele_set"]
+            / float(filter_stats["cellular_rows_total_non_elution"])
+        )
+    else:
+        filter_stats["cellular_rows_with_allele_set_fraction"] = 0.0
+
+    filter_stats["output_total_after_elution_filter"] = len(kept)
+
+    return kept, dict(annotate_stats), dict(filter_stats)
+
+
+def _write_merge_funnel_artifacts(
+    output_path: Path,
+    stage_counts: List[Tuple[str, Dict[str, int]]],
+) -> Dict[str, str]:
+    """Write per-assay funnel counts and, when possible, a PNG visualization."""
+    out_dir = output_path.parent
+    stem = output_path.stem
+    tsv_path = out_dir / f"{stem}_funnel.tsv"
+    png_path = out_dir / f"{stem}_funnel.png"
+
+    assay_names = sorted(
+        {
+            assay
+            for _, counts in stage_counts
+            for assay in counts.keys()
+        }
+    )
+
+    # Also include aggregate "all" rows to show total funnel behavior.
+    with open(tsv_path, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=[
+                "stage",
+                "assay",
+                "count",
+                "fraction_of_previous_stage",
+                "fraction_of_loaded_stage",
+            ],
+            delimiter="\t",
+        )
+        writer.writeheader()
+
+        loaded_lookup = dict(stage_counts[0][1]) if stage_counts else {}
+        prev_lookup: Optional[Dict[str, int]] = None
+        for stage, counts in stage_counts:
+            all_count = int(sum(counts.values()))
+            all_prev = int(sum(prev_lookup.values())) if prev_lookup is not None else all_count
+            all_loaded = int(sum(loaded_lookup.values())) if loaded_lookup else all_count
+            writer.writerow(
+                {
+                    "stage": stage,
+                    "assay": "all",
+                    "count": all_count,
+                    "fraction_of_previous_stage": (
+                        (all_count / float(all_prev)) if all_prev > 0 else 0.0
+                    ),
+                    "fraction_of_loaded_stage": (
+                        (all_count / float(all_loaded)) if all_loaded > 0 else 0.0
+                    ),
+                }
+            )
+
+            for assay in assay_names:
+                count = int(counts.get(assay, 0))
+                prev_count = int(prev_lookup.get(assay, 0)) if prev_lookup is not None else count
+                loaded_count = int(loaded_lookup.get(assay, 0))
+                writer.writerow(
+                    {
+                        "stage": stage,
+                        "assay": assay,
+                        "count": count,
+                        "fraction_of_previous_stage": (
+                            (count / float(prev_count)) if prev_count > 0 else 0.0
+                        ),
+                        "fraction_of_loaded_stage": (
+                            (count / float(loaded_count)) if loaded_count > 0 else 0.0
+                        ),
+                    }
+                )
+            prev_lookup = dict(counts)
+
+    files = {"tsv": str(tsv_path)}
+    try:
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except Exception:
+        return files
+
+    stages = [name for name, _ in stage_counts]
+    totals = [int(sum(counts.values())) for _, counts in stage_counts]
+    loaded_counts = stage_counts[0][1] if stage_counts else {}
+    top_assays = [
+        assay
+        for assay, _ in sorted(
+            loaded_counts.items(),
+            key=lambda item: (-int(item[1]), item[0]),
+        )[:8]
+    ]
+
+    fig, (ax_top, ax_bottom) = plt.subplots(2, 1, figsize=(11, 8), constrained_layout=True)
+
+    ax_top.plot(stages, totals, marker="o", linewidth=2.2, color="#1f77b4")
+    ax_top.set_title("Unified Merge Funnel (All Assays)")
+    ax_top.set_ylabel("Records")
+    ax_top.grid(alpha=0.25)
+
+    for assay in top_assays:
+        series = [int(counts.get(assay, 0)) for _, counts in stage_counts]
+        ax_bottom.plot(stages, series, marker="o", linewidth=1.6, label=assay)
+    ax_bottom.set_title("Top Assays Through Merge Funnel")
+    ax_bottom.set_ylabel("Records")
+    ax_bottom.grid(alpha=0.25)
+    if top_assays:
+        ax_bottom.legend(fontsize=8, ncol=2)
+
+    fig.savefig(png_path, dpi=160)
+    plt.close(fig)
+    files["png"] = str(png_path)
+    return files
 
 
 def _write_tsv(records: List[UnifiedRecord], output_path: Path) -> None:
@@ -1514,6 +2139,8 @@ def _write_tsv(records: List[UnifiedRecord], output_path: Path) -> None:
         "assay_type",
         "assay_method",
         "apc_name",
+        "cell_hla_allele_set",
+        "cell_hla_n_alleles",
         "effector_culture_condition",
         "apc_culture_condition",
         "in_vitro_process_type",
@@ -1528,10 +2155,41 @@ def _write_tsv(records: List[UnifiedRecord], output_path: Path) -> None:
     ]
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter="\t")
-        writer.writeheader()
+        writer = csv.writer(f, delimiter="\t")
+        writer.writerow(fieldnames)
         for rec in records:
-            writer.writerow(record_to_row(rec))
+            writer.writerow(
+                [
+                    rec.peptide,
+                    rec.mhc_allele,
+                    rec.mhc_class,
+                    rec.pmid or "",
+                    rec.doi or "",
+                    rec.reference_text or "",
+                    rec.source,
+                    rec.record_type,
+                    rec.value if rec.value is not None else "",
+                    rec.value_type or "",
+                    rec.qualifier,
+                    rec.response or "",
+                    rec.assay_type or "",
+                    rec.assay_method or "",
+                    rec.apc_name or "",
+                    rec.cell_hla_allele_set or "",
+                    rec.cell_hla_n_alleles if rec.cell_hla_n_alleles is not None else "",
+                    rec.effector_culture_condition or "",
+                    rec.apc_culture_condition or "",
+                    rec.in_vitro_process_type or "",
+                    rec.in_vitro_responder_cell or "",
+                    rec.in_vitro_stimulator_cell or "",
+                    rec.cdr3_alpha or "",
+                    rec.cdr3_beta or "",
+                    rec.trav or "",
+                    rec.trbv or "",
+                    rec.species or "",
+                    rec.antigen_species or "",
+                ]
+            )
 
 
 def write_assay_csvs(
@@ -1562,6 +2220,8 @@ def write_assay_csvs(
         "assay_type",
         "assay_method",
         "apc_name",
+        "cell_hla_allele_set",
+        "cell_hla_n_alleles",
         "effector_culture_condition",
         "apc_culture_condition",
         "in_vitro_process_type",
@@ -1571,6 +2231,11 @@ def write_assay_csvs(
         "cdr3_beta",
         "trav",
         "trbv",
+        "evidence_method_identification",
+        "evidence_method_verification",
+        "evidence_singlecell",
+        "evidence_sequencing",
+        "evidence_score",
     ]
     file_map: Dict[str, str] = {}
     for assay_type, assay_records in sorted(grouped.items()):
@@ -1604,16 +2269,35 @@ def deduplicate_all(
     Returns:
         Tuple of (deduplicated records, statistics)
     """
+    run_start = time.perf_counter()
+    timing_sec: Dict[str, float] = {}
+
+    def _elapsed(start: float) -> float:
+        return float(time.perf_counter() - start)
+
+    def _fmt_rate(count: int, elapsed_sec: float) -> str:
+        if elapsed_sec <= 0.0:
+            return "n/a"
+        return f"{count / elapsed_sec:,.1f}/s"
+
     if verbose:
         print("Loading records from all sources...")
 
+    load_start = time.perf_counter()
     records, load_stats = load_all_sources(
         data_dir, record_types=record_types, sources=sources, verbose=verbose
     )
-    stats: Dict[str, Any] = {"load": load_stats}
+    timing_sec["load"] = _elapsed(load_start)
+    stats: Dict[str, Any] = {
+        "load": load_stats,
+        "timing_sec": timing_sec,
+    }
 
     if verbose:
-        print(f"  Loaded {len(records)} total records")
+        print(
+            f"  Loaded {len(records)} total records in {timing_sec['load']:.2f}s "
+            f"({_fmt_rate(len(records), timing_sec['load'])})"
+        )
         if load_stats["by_source"]:
             print("  Source totals:")
             for source, count in load_stats["by_source"].items():
@@ -1632,19 +2316,90 @@ def deduplicate_all(
     if verbose:
         print("Deduplicating...")
 
+    dedup_start = time.perf_counter()
     deduper = CrossSourceDeduplicator()
-    deduped = deduper.deduplicate(records, show_progress=verbose)
+    deduped_pre_filter = deduper.deduplicate(records, show_progress=verbose)
+    timing_sec["dedup"] = _elapsed(dedup_start)
     stats.update(deduper.get_stats())
+
+    deduped_by_assay = _count_records_by_assay(deduped_pre_filter)
+    stats["deduped_by_assay"] = deduped_by_assay
+
+    if verbose:
+        print(
+            f"  Dedup stage: {len(records)} -> {len(deduped_pre_filter)} in "
+            f"{timing_sec['dedup']:.2f}s ({_fmt_rate(len(records), timing_sec['dedup'])})"
+        )
+        print(
+            "  Dedup groups: "
+            f"{stats.get('dedup_groups', 0)} total, "
+            f"{stats.get('dedup_groups_multi_record', 0)} multi-record, "
+            f"largest={stats.get('dedup_largest_group', 0)}, "
+            f"sample-buckets={stats.get('dedup_sample_buckets', 0)}"
+        )
+
+    if verbose:
+        print("Building elution cell-HLA lookup...")
+    cell_hla_lookup_start = time.perf_counter()
+    cell_hla_lookup, cell_hla_lookup_stats = _build_elution_cell_hla_lookup(
+        records,
+        show_progress=verbose,
+    )
+    timing_sec["cell_hla_lookup"] = _elapsed(cell_hla_lookup_start)
+    stats["cell_hla_lookup"] = {
+        **cell_hla_lookup_stats,
+        "pmid_cell_context_pairs_with_allele_set": len(cell_hla_lookup),
+        "cell_contexts_with_allele_set": len(cell_hla_lookup),  # backward-compatible key
+    }
+    if verbose:
+        print(
+            f"  Cell-HLA lookup built for {len(cell_hla_lookup)} PMID+cell pairs in "
+            f"{timing_sec['cell_hla_lookup']:.2f}s"
+        )
+
+    if verbose:
+        print("Annotating cellular rows and filtering elution rows...")
+    annotate_filter_start = time.perf_counter()
+    deduped, cell_hla_annot_stats, elution_filter_stats = _annotate_and_filter_cell_hla(
+        deduped_pre_filter,
+        cell_hla_lookup,
+        show_progress=verbose,
+    )
+    timing_sec["cell_hla_annotate_filter"] = _elapsed(annotate_filter_start)
+    stats["cell_hla_annotation"] = cell_hla_annot_stats
+    stats["elution_cell_hla_filter"] = elution_filter_stats
+
+    # Final output reflects the post-annotation elution filter.
+    stats["total_output_pre_elution_cell_hla_filter"] = int(
+        stats.get("total_output", len(deduped_pre_filter))
+    )
+    stats["total_output"] = len(deduped)
+    stats["final_output_by_assay"] = _count_records_by_assay(deduped)
+
+    if verbose:
+        print(
+            f"  Cell-HLA annotate/filter completed in {timing_sec['cell_hla_annotate_filter']:.2f}s "
+            f"({_fmt_rate(len(deduped_pre_filter), timing_sec['cell_hla_annotate_filter'])})"
+        )
+
+    stage_counts: List[Tuple[str, Dict[str, int]]] = [
+        ("loaded", dict(load_stats.get("by_assay", {}))),
+        ("deduped", deduped_by_assay),
+        ("final", dict(stats["final_output_by_assay"])),
+    ]
+    stats["funnel_stage_counts"] = stage_counts
 
     if verbose:
         print(f"  Input: {stats['total_input']}")
-        print(f"  Output: {stats['total_output']}")
+        print(f"  Output after dedup: {stats['total_output_pre_elution_cell_hla_filter']}")
+        print(f"  Output after elution cell-HLA filter: {stats['total_output']}")
         print(f"  Cross-source duplicates removed: {stats['cross_source_duplicates']}")
         print(f"  Same-source duplicates removed: {stats['same_source_duplicates']}")
         print(f"  Unique PMIDs: {stats['unique_pmids']}")
         input_by_source = stats.get("input_by_source", {})
         output_by_source = stats.get("by_source", {})
         output_by_assay = stats.get("output_by_assay", {})
+        final_output_by_assay = stats.get("final_output_by_assay", {})
 
         if input_by_source:
             print("  Input records by source:")
@@ -1665,35 +2420,82 @@ def deduplicate_all(
                 print(f"    {source}: kept {kept}/{input_count} ({pct:.2f}%){warning}")
 
         if output_by_assay:
-            print("  Output records by assay:")
+            print("  Output records by assay (post-dedup):")
             for assay, count in output_by_assay.items():
+                print(f"    {assay}: {count}")
+        if final_output_by_assay:
+            print("  Output records by assay (final):")
+            for assay, count in final_output_by_assay.items():
                 print(f"    {assay}: {count}")
 
         input_by_assay = load_stats.get("by_assay", {})
-        if input_by_assay and output_by_assay:
+        if input_by_assay and final_output_by_assay:
             print("  Assay retention:")
             for assay, input_count in input_by_assay.items():
-                kept = int(output_by_assay.get(assay, 0))
+                kept = int(final_output_by_assay.get(assay, 0))
                 retention = (kept / float(input_count)) if input_count else 0.0
                 pct = retention * 100.0
                 warning = " [WARN: >90% dropped]" if input_count >= 100 and pct < 10.0 else ""
                 print(f"    {assay}: kept {kept}/{input_count} ({pct:.2f}%){warning}")
 
+        ms_total = int(elution_filter_stats.get("elution_rows_total", 0))
+        ms_with = int(elution_filter_stats.get("elution_rows_kept_with_allele_set", 0))
+        ms_frac = float(elution_filter_stats.get("elution_rows_with_allele_set_fraction", 0.0))
+        print(
+            "  Elution cell-HLA coverage: "
+            f"{ms_with}/{ms_total} ({ms_frac * 100.0:.2f}%) rows retained"
+        )
+
     # Save full merged table if requested.
     if output_path:
         if verbose:
             print(f"Saving to {output_path}...")
+        write_tsv_start = time.perf_counter()
         _write_tsv(deduped, output_path)
+        timing_sec["write_tsv"] = _elapsed(write_tsv_start)
 
         if verbose:
-            print(f"  Saved {len(deduped)} records")
+            print(f"  Saved {len(deduped)} records in {timing_sec['write_tsv']:.2f}s")
 
     if assay_output_dir is not None:
         if verbose:
             print(f"Writing assay CSVs to {assay_output_dir}...")
+        write_assays_start = time.perf_counter()
         file_map = write_assay_csvs(deduped, assay_output_dir)
+        timing_sec["write_assay_csvs"] = _elapsed(write_assays_start)
         stats["assay_csv_files"] = file_map
         if verbose:
-            print(f"  Wrote {len(file_map)} assay CSV files")
+            print(
+                f"  Wrote {len(file_map)} assay CSV files in "
+                f"{timing_sec['write_assay_csvs']:.2f}s"
+            )
+
+    funnel_anchor = output_path if output_path is not None else (data_dir / "merged_deduped.tsv")
+    funnel_start = time.perf_counter()
+    funnel_files = _write_merge_funnel_artifacts(
+        output_path=funnel_anchor,
+        stage_counts=stage_counts,
+    )
+    timing_sec["write_funnel"] = _elapsed(funnel_start)
+    stats["funnel_files"] = funnel_files
+    if verbose:
+        funnel_text = ", ".join(f"{k}={v}" for k, v in funnel_files.items())
+        print(f"Funnel artifacts: {funnel_text}")
+
+    timing_sec["total"] = _elapsed(run_start)
+    if verbose:
+        print("Stage timings (s):")
+        for key in (
+            "load",
+            "dedup",
+            "cell_hla_lookup",
+            "cell_hla_annotate_filter",
+            "write_tsv",
+            "write_assay_csvs",
+            "write_funnel",
+            "total",
+        ):
+            if key in timing_sec:
+                print(f"  {key}: {timing_sec[key]:.2f}")
 
     return deduped, stats

@@ -29,6 +29,7 @@ from .data import (
     cmd_data_dedup,
     cmd_data_merge,
     cmd_data_mhc_index_build,
+    cmd_data_mhc_index_augment,
     cmd_data_mhc_index_refresh,
     cmd_data_mhc_index_mouse_overlay,
     cmd_data_mhc_index_report,
@@ -43,7 +44,6 @@ from .predict import (
     cmd_predict_presentation,
     cmd_predict_tile,
     cmd_predict_recognition,
-    cmd_predict_chain,
 )
 from .evaluate import cmd_evaluate_synthetic
 from .weights import cmd_weights_download, cmd_weights_list
@@ -324,9 +324,9 @@ def create_parser() -> argparse.ArgumentParser:
         ),
     )
     merge_parser.add_argument(
-        "--no-assay-csv",
+        "--per-assay-csv",
         action="store_true",
-        help="Disable per-assay CSV exports and only write the merged table",
+        help="Write one simplified CSV per assay bucket (default: disabled)",
     )
     merge_parser.add_argument(
         "--types", "-t",
@@ -475,6 +475,29 @@ def create_parser() -> argparse.ArgumentParser:
         help="Suppress progress output",
     )
     mhc_build.set_defaults(func=cmd_data_mhc_index_build)
+
+    mhc_augment = mhc_index_subparsers.add_parser(
+        "augment",
+        help="Augment an existing MHC index with groove-centric columns",
+    )
+    mhc_augment.add_argument(
+        "--index-csv",
+        type=str,
+        required=True,
+        help="Path to the built MHC index CSV",
+    )
+    mhc_augment.add_argument(
+        "--out-csv",
+        type=str,
+        required=True,
+        help="Output CSV path for the augmented index",
+    )
+    mhc_augment.add_argument(
+        "--quiet", "-q",
+        action="store_true",
+        help="Suppress progress output",
+    )
+    mhc_augment.set_defaults(func=cmd_data_mhc_index_augment)
 
     mhc_report = mhc_index_subparsers.add_parser(
         "report",
@@ -786,7 +809,7 @@ def create_parser() -> argparse.ArgumentParser:
     train_iedb = train_subparsers.add_parser(
         "unified",
         aliases=["iedb"],
-        help="Train unified model on mixed-source data (IEDB/CEDAR + VDJdb + 10x)",
+        help="Train unified model on mixed-source data (IEDB/CEDAR + VDJdb TCR-evidence)",
     )
     train_iedb.add_argument("--config", type=str, default=None, help="Optional JSON/YAML config file")
     train_iedb.add_argument(
@@ -823,13 +846,11 @@ def create_parser() -> argparse.ArgumentParser:
     train_iedb.add_argument("--tcell-file", type=str, default=None, help="Override path to IEDB T-cell export")
     train_iedb.add_argument("--cedar-binding-file", type=str, default=None, help="Optional path to CEDAR MHC ligand export")
     train_iedb.add_argument("--cedar-tcell-file", type=str, default=None, help="Optional path to CEDAR T-cell export")
-    train_iedb.add_argument("--vdjdb-file", type=str, default=None, help="Override path to VDJdb export")
     train_iedb.add_argument(
-        "--10x-file",
-        dest="sc10x_file",
+        "--vdjdb-file",
         type=str,
         default=None,
-        help="Override path to 10x VDJ contig CSV/TSV",
+        help="Override path to VDJdb export used for pMHC-only TCR-evidence supervision",
     )
     train_iedb.add_argument("--index-csv", type=str, default=None, help="Optional built MHC index CSV")
     train_iedb.add_argument(
@@ -874,7 +895,12 @@ def create_parser() -> argparse.ArgumentParser:
     train_iedb.add_argument("--max-processing", type=int, default=0, help="Max processing records to load (<=0 means no limit)")
     train_iedb.add_argument("--max-elution", type=int, default=0, help="Max elution records to load (<=0 means no limit)")
     train_iedb.add_argument("--max-tcell", type=int, default=0, help="Max T-cell records to load (<=0 means no limit)")
-    train_iedb.add_argument("--max-vdjdb", type=int, default=0, help="Max VDJdb records to load (<=0 means no limit)")
+    train_iedb.add_argument(
+        "--max-vdjdb",
+        type=int,
+        default=0,
+        help="Max VDJdb-derived pMHC TCR-evidence records to load (<=0 means no limit)",
+    )
     train_iedb.add_argument(
         "--cap-sampling",
         dest="cap_sampling",
@@ -885,13 +911,6 @@ def create_parser() -> argparse.ArgumentParser:
             "Sampling strategy when modality caps are set "
             "(head=first-N rows, reservoir=representative one-pass sample)"
         ),
-    )
-    train_iedb.add_argument(
-        "--max-10x",
-        dest="max_10x",
-        type=int,
-        default=0,
-        help="Max 10x VDJ records to load (<=0 means no limit)",
     )
     train_iedb.add_argument(
         "--synthetic-pmhc-negative-ratio",
@@ -1342,7 +1361,7 @@ def create_parser() -> argparse.ArgumentParser:
 
     predict_recognition = predict_subparsers.add_parser(
         "recognition",
-        help="Predict TCR-pMHC recognition/immunogenicity",
+        help="Predict repertoire-level recognition/immunogenicity",
     )
     predict_recognition.add_argument("--checkpoint", type=str, required=True, help="Model checkpoint")
     predict_recognition.add_argument("--peptide", type=str, required=True, help="Peptide sequence")
@@ -1354,8 +1373,6 @@ def create_parser() -> argparse.ArgumentParser:
     predict_recognition.add_argument("--mhc-species", type=str, default=None, help="Override MHC species latent/probability path")
     predict_recognition.add_argument("--immune-species", type=str, default=None, help="Override immune-system species conditioning")
     predict_recognition.add_argument("--species-of-origin", type=str, default=None, help="Override peptide species-of-origin latent")
-    predict_recognition.add_argument("--tcr-alpha", type=str, required=False, help="TCR alpha sequence")
-    predict_recognition.add_argument("--tcr-beta", type=str, required=False, help="TCR beta sequence")
     predict_recognition.add_argument("--index-csv", type=str, default=None, help="Optional built MHC index CSV for allele sequence lookup")
     predict_recognition.add_argument("--imgt-fasta", type=str, default=None, help="IMGT/HLA FASTA")
     predict_recognition.add_argument("--ipd-mhc-dir", type=str, default=None, help="IPD-MHC directory")
@@ -1366,20 +1383,6 @@ def create_parser() -> argparse.ArgumentParser:
     predict_recognition.add_argument("--json", action="store_true", help="Output JSON")
     predict_recognition.add_argument("--output", type=str, default=None, help="Output path")
     predict_recognition.set_defaults(func=cmd_predict_recognition)
-
-    predict_chain = predict_subparsers.add_parser(
-        "chain",
-        help="Classify chain attributes from sequence",
-    )
-    predict_chain.add_argument("--checkpoint", type=str, required=True, help="Model checkpoint")
-    predict_chain.add_argument("--sequence", type=str, required=True, help="Chain sequence")
-    predict_chain.add_argument("--d-model", dest="d_model", type=int, default=None, help="Model dimension")
-    predict_chain.add_argument("--n-layers", dest="n_layers", type=int, default=None, help="Transformer layers")
-    predict_chain.add_argument("--n-heads", dest="n_heads", type=int, default=None, help="Attention heads")
-    predict_chain.add_argument("--device", type=str, default=None, help="Device")
-    predict_chain.add_argument("--json", action="store_true", help="Output JSON")
-    predict_chain.add_argument("--output", type=str, default=None, help="Output path")
-    predict_chain.set_defaults(func=cmd_predict_chain)
 
     # ==========================================================================
     # evaluate subcommand

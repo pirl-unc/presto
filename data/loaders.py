@@ -19,6 +19,7 @@ import csv
 import gzip
 import zipfile
 import io
+import json
 import warnings
 from collections import defaultdict
 from pathlib import Path
@@ -31,13 +32,17 @@ import torch
 from torch.utils.data import Dataset, DataLoader, Sampler
 
 from .collate import PrestoSample, PrestoCollator
+from .groove import prepare_mhc_input
 from .vocab import normalize_organism, FOREIGN_CATEGORIES
 from .allele_resolver import (
     AlleleResolver,
     HUMAN_B2M_SEQUENCE,
+    class_ii_default_dra_allele,
     class_i_beta2m_sequence,
     infer_mhc_class_optional,
     infer_species as infer_species_from_allele,
+    is_class_ii_dr_beta_allele,
+    normalize_allele_name,
     normalize_mhc_class,
     normalize_species_label,
 )
@@ -49,7 +54,13 @@ from .allele_resolver import (
 
 MHC_ALLOWED_AA = set("ACDEFGHIKLMNPQRSTVWYX")
 MIN_MHC_CHAIN_LENGTH = 70  # allow groove-bearing fragments, reject trivial truncations
+MIN_MHC_INPUT_SEGMENT_LENGTH = 40  # groove halves, not full chains
 NUCLEOTIDE_LIKE_SEQUENCE_CHARS = set("ACGTUNWSMKRYBDHV")
+TCR_EVIDENCE_METHOD_BINS = (
+    "multimer_binding",
+    "target_cell_functional",
+    "functional_readout",
+)
 
 
 def _looks_like_nucleotide_sequence(sequence: str) -> bool:
@@ -58,6 +69,31 @@ def _looks_like_nucleotide_sequence(sequence: str) -> bool:
     chars = set(seq)
     nucleotide_chars = chars & set("ACGTU")
     return bool(seq) and chars <= NUCLEOTIDE_LIKE_SEQUENCE_CHARS and len(nucleotide_chars) >= 3
+
+
+def _looks_like_amino_acid_sequence(sequence: str) -> bool:
+    seq = str(sequence or "").strip().upper()
+    return bool(seq) and set(seq) <= MHC_ALLOWED_AA
+
+
+def _normalize_mhc_sequence_lookup(
+    mhc_sequences: Optional[Dict[str, str]],
+) -> Dict[str, str]:
+    normalized: Dict[str, str] = {}
+    for allele, sequence in (mhc_sequences or {}).items():
+        key = str(allele or "").strip()
+        seq = str(sequence or "").strip().upper()
+        if not key or not seq:
+            continue
+        variants = {key}
+        try:
+            variants.add(normalize_allele_name(key))
+        except Exception:
+            pass
+        for variant in variants:
+            normalized[variant] = seq
+            normalized[variant.upper()] = seq
+    return normalized
 
 @dataclass
 class BindingRecord:
@@ -218,7 +254,34 @@ class VDJdbRecord:
     mhc_class: Optional[str] = None
     species: Optional[str] = None
     antigen_species: Optional[str] = None  # Pathogen species
+    method_identification: Optional[str] = None
+    method_verification: Optional[str] = None
+    method_singlecell: Optional[str] = None
+    method_sequencing: Optional[str] = None
+    score: Optional[int] = None
+    reference_id: Optional[str] = None
     source: str = "vdjdb"
+
+
+@dataclass
+class TcrEvidenceRecord:
+    """pMHC-only receptor-evidence record derived from receptor databases."""
+
+    peptide: str
+    mhc_a: str
+    mhc_b: Optional[str] = None
+    mhc_class: Optional[str] = None
+    species: Optional[str] = None
+    antigen_species: Optional[str] = None
+    source: str = "vdjdb"
+    evidence_label: float = 1.0
+    method_identification: Optional[str] = None
+    method_verification: Optional[str] = None
+    method_singlecell: Optional[str] = None
+    method_sequencing: Optional[str] = None
+    method_bins: Tuple[str, ...] = ()
+    score: Optional[int] = None
+    reference_id: Optional[str] = None
 
 
 # Backward compatibility alias
@@ -301,6 +364,95 @@ def _parse_bool(value: str) -> bool:
     return normalized in {"1", "true", "t", "yes", "y"}
 
 
+def _parse_optional_json_dict(raw: str) -> Dict[str, Any]:
+    text = str(raw or "").strip()
+    if not text:
+        return {}
+    try:
+        value = json.loads(text)
+    except (TypeError, ValueError, json.JSONDecodeError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def _parse_optional_int(value: str) -> Optional[int]:
+    token = str(value or "").strip()
+    if not token:
+        return None
+    try:
+        return int(token)
+    except (TypeError, ValueError):
+        return None
+
+
+def _normalize_tcr_evidence_method_bins(
+    method_identification: Optional[str],
+    method_verification: Optional[str] = None,
+) -> Tuple[str, ...]:
+    text = " ".join(
+        token.strip().lower()
+        for token in (
+            str(method_identification or ""),
+            str(method_verification or ""),
+        )
+        if token and token.strip()
+    )
+    if not text:
+        return ()
+
+    bins: List[str] = []
+    if any(token in text for token in ("tetramer", "dextramer", "multimer", "pentamer")):
+        bins.append("multimer_binding")
+    if any(
+        token in text
+        for token in (
+            "antigen-loaded-targets",
+            "antigen-expressing-targets",
+            "antigen coated targets",
+            "antigen-coated-targets",
+        )
+    ):
+        bins.append("target_cell_functional")
+    if any(
+        token in text
+        for token in (
+            "cd137 expression",
+            "ifng",
+            "capture assay",
+            "elispot",
+            "ics",
+            "intracellular cytokine",
+            "cytokine",
+        )
+    ):
+        bins.append("functional_readout")
+    return tuple(bins)
+
+
+def vdjdb_record_to_tcr_evidence(record: VDJdbRecord) -> TcrEvidenceRecord:
+    """Convert one VDJdb record into pMHC-only receptor-evidence supervision."""
+    return TcrEvidenceRecord(
+        peptide=record.peptide,
+        mhc_a=record.mhc_a,
+        mhc_b=record.mhc_b,
+        mhc_class=record.mhc_class,
+        species=record.species,
+        antigen_species=record.antigen_species,
+        source=record.source,
+        evidence_label=1.0,
+        method_identification=record.method_identification,
+        method_verification=record.method_verification,
+        method_singlecell=record.method_singlecell,
+        method_sequencing=record.method_sequencing,
+        method_bins=_normalize_tcr_evidence_method_bins(
+            record.method_identification,
+            record.method_verification,
+        ),
+        score=record.score,
+        reference_id=record.reference_id,
+    )
+
+
 def _infer_bcr_light_chain_type(isotype: str) -> Optional[str]:
     """Map light-chain isotype text to IGK/IGL."""
     value = (isotype or "").strip().lower()
@@ -346,18 +498,10 @@ def _is_binding_affinity_measurement(measurement: str, unit: str) -> bool:
 
 
 def _infer_mhc_class(allele: Optional[str]) -> Optional[str]:
-    """Infer MHC class from allele name, preferring mhcgnomes."""
+    """Infer MHC class from allele name via mhcgnomes."""
     if not allele:
         return None
-    inferred = infer_mhc_class_optional(allele)
-    if inferred is not None:
-        return inferred
-    allele_upper = allele.upper()
-    class2_genes = ['DRA', 'DRB', 'DQA', 'DQB', 'DPA', 'DPB', 'DR', 'DQ', 'DP']
-    for gene in class2_genes:
-        if gene in allele_upper:
-            return "II"
-    return "I"
+    return infer_mhc_class_optional(allele)
 
 
 def _resolve_mhc_class(value: Optional[str], allele: Optional[str] = None) -> Optional[str]:
@@ -1194,6 +1338,9 @@ def load_vdjdb(path: Union[str, Path]) -> Iterator[VDJdbRecord]:
     class_idx = _sniff_column(header, ['mhc.class', 'mhc_class', 'class'])
     species_idx = _sniff_column(header, ['species', 'organism'])
     antigen_species_idx = _sniff_column(header, ['antigen.species', 'pathogen'])
+    method_idx = _sniff_column(header, ['method'])
+    score_idx = _sniff_column(header, ['vdjdb.score'])
+    reference_idx = _sniff_column(header, ['reference.id', 'reference'])
 
     for row in reader:
         peptide = _get_column(row, pep_idx)
@@ -1204,6 +1351,7 @@ def load_vdjdb(path: Union[str, Path]) -> Iterator[VDJdbRecord]:
         gene = _get_column(row, gene_idx, 'TRB')
         mhc_a = _get_column(row, mhca_idx)
         mhc_class = _resolve_mhc_class(_get_column(row, class_idx) or None, mhc_a)
+        method_meta = _parse_optional_json_dict(_get_column(row, method_idx))
 
         # Assign CDR3 to alpha or beta based on gene
         cdr3_alpha = cdr3 if gene.upper() in ('TRA', 'TRAD') else None
@@ -1223,7 +1371,61 @@ def load_vdjdb(path: Union[str, Path]) -> Iterator[VDJdbRecord]:
             mhc_class=mhc_class,
             species=_get_column(row, species_idx) or infer_species_from_allele(mhc_a) or None,
             antigen_species=_get_column(row, antigen_species_idx) or None,
+            method_identification=str(method_meta.get("identification") or "").strip() or None,
+            method_verification=str(method_meta.get("verification") or "").strip() or None,
+            method_singlecell=str(method_meta.get("singlecell") or "").strip() or None,
+            method_sequencing=str(method_meta.get("sequencing") or "").strip() or None,
+            score=_parse_optional_int(_get_column(row, score_idx)),
+            reference_id=_get_column(row, reference_idx) or None,
             source='vdjdb',
+        )
+
+
+def load_vdjdb_tcr_evidence(path: Union[str, Path]) -> Iterator[TcrEvidenceRecord]:
+    """Load VDJdb as pMHC-only receptor-evidence records."""
+    for record in load_vdjdb(path):
+        yield vdjdb_record_to_tcr_evidence(record)
+
+
+def load_mcpas_tcr_evidence(path: Union[str, Path]) -> Iterator[TcrEvidenceRecord]:
+    """Load McPAS-TCR as pMHC-only receptor-evidence records."""
+    lines = list(_open_file(path))
+    if not lines:
+        return
+
+    delimiter = _detect_delimiter(lines[0])
+    reader = csv.reader(lines, delimiter=delimiter)
+    header = next(reader)
+
+    pep_idx = _sniff_column(header, ['Epitope.peptide', 'peptide', 'epitope'])
+    mhc_idx = _sniff_column(header, ['MHC', 'mhc'])
+    species_idx = _sniff_column(header, ['Species', 'species'])
+    pathology_idx = _sniff_column(header, ['Pathology', 'pathology'])
+    ngs_idx = _sniff_column(header, ['NGS', 'ngs'])
+    method_idx = _sniff_column(header, ['Antigen.identification.method'])
+    ref_idx = _sniff_column(header, ['PubMed.ID', 'Reference'])
+
+    for row in reader:
+        peptide = _get_column(row, pep_idx)
+        mhc = _get_column(row, mhc_idx)
+        if not peptide or not mhc:
+            continue
+        yield TcrEvidenceRecord(
+            peptide=peptide,
+            mhc_a=mhc,
+            mhc_b=None,
+            mhc_class=_resolve_mhc_class(None, mhc),
+            species=_get_column(row, species_idx) or infer_species_from_allele(mhc) or None,
+            antigen_species=_get_column(row, pathology_idx) or None,
+            source="mcpas",
+            evidence_label=1.0,
+            method_identification=_get_column(row, method_idx) or None,
+            method_verification=None,
+            method_singlecell=None,
+            method_sequencing=_get_column(row, ngs_idx) or None,
+            method_bins=(),
+            score=None,
+            reference_id=_get_column(row, ref_idx) or None,
         )
 
 
@@ -1308,8 +1510,18 @@ def load_uniprot_proteins(path: Union[str, Path]) -> List[UniProtProtein]:
 # =============================================================================
 
 # Type alias for all record types
-AnyRecord = Union[BindingRecord, KineticsRecord, StabilityRecord, ProcessingRecord,
-                  ElutionRecord, TCellRecord, BCellRecord, Sc10xVDJRecord, VDJdbRecord]
+AnyRecord = Union[
+    BindingRecord,
+    KineticsRecord,
+    StabilityRecord,
+    ProcessingRecord,
+    ElutionRecord,
+    TCellRecord,
+    BCellRecord,
+    TcrEvidenceRecord,
+    Sc10xVDJRecord,
+    VDJdbRecord,
+]
 
 
 class PrestoDataset(Dataset):
@@ -1326,6 +1538,7 @@ class PrestoDataset(Dataset):
         processing_records: List[ProcessingRecord] = None,
         elution_records: List[ElutionRecord] = None,
         tcell_records: List[TCellRecord] = None,
+        tcr_evidence_records: List[TcrEvidenceRecord] = None,
         vdjdb_records: List[VDJdbRecord] = None,
         sc10x_records: List[Sc10xVDJRecord] = None,
         mhc_sequences: Dict[str, str] = None,
@@ -1337,7 +1550,14 @@ class PrestoDataset(Dataset):
         # Handle backward compatibility: tcr_records -> tcell_records
         if tcr_records is not None and tcell_records is None:
             tcell_records = tcr_records
-        self.mhc_sequences = mhc_sequences or {}
+        if tcr_evidence_records is None and vdjdb_records:
+            tcr_evidence_records = [vdjdb_record_to_tcr_evidence(rec) for rec in vdjdb_records]
+        if sc10x_records:
+            warnings.warn(
+                "Ignoring sc10x_records: receptor-sequence supervision is disabled in canonical Presto.",
+                RuntimeWarning,
+            )
+        self.mhc_sequences = _normalize_mhc_sequence_lookup(mhc_sequences)
         self.allele_resolver = allele_resolver
         self.strict_mhc_resolution = bool(strict_mhc_resolution)
         self._mhc_x_sequence_count = 0
@@ -1346,28 +1566,6 @@ class PrestoDataset(Dataset):
 
         # Create unified sample list
         self.samples = []
-
-        def _preferred_chain_type(
-            tcr_a_cdr3: Optional[str],
-            tcr_b_cdr3: Optional[str],
-            tcr_a_full: Optional[str],
-            tcr_b_full: Optional[str],
-            default_gene: Optional[str] = None,
-        ) -> Optional[str]:
-            if tcr_b_cdr3:
-                return "TRB_CDR3"
-            if tcr_a_cdr3:
-                return "TRA_CDR3"
-            if tcr_b_full:
-                return "TRB"
-            if tcr_a_full:
-                return "TRA"
-            gene = (default_gene or "").upper()
-            if gene in {"TRA", "TRAD"}:
-                return "TRA_CDR3"
-            if gene in {"TRB", "TRBD"}:
-                return "TRB_CDR3"
-            return None
 
         def _source_label(source: Optional[str]) -> str:
             src = (source or "").strip()
@@ -1414,19 +1612,25 @@ class PrestoDataset(Dataset):
             src = _source_label(rec.source)
             is_no_mhc_alpha = src == "synthetic_negative_no_mhc_alpha"
             is_no_mhc_beta = src in {"synthetic_negative_no_mhc_beta", "synthetic_negative_no_b2m"}
-            mhc_seq = "" if is_no_mhc_alpha else self._get_mhc_sequence(rec.mhc_allele, rec.mhc_sequence)
-            mhc_b_seq = self._resolve_mhc_b_sequence(
+            mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
                 mhc_class=mhc_class,
                 species=rec.species,
                 allele=rec.mhc_allele,
+                direct_seq=rec.mhc_sequence,
                 allow_default_class_i_beta=not is_no_mhc_beta,
             )
+            if is_no_mhc_alpha:
+                mhc_a_seq = ""
+                if mhc_class == "I":
+                    mhc_b_seq = ""
+            if is_no_mhc_beta:
+                mhc_b_seq = ""
             is_synth = src.startswith("synthetic_negative")
             bind_label = "negative" if is_synth or float(rec.value) >= 50000.0 else "positive"
             so, fl = _organism_fields(rec.antigen_species)
             self.samples.append(PrestoSample(
                 peptide=rec.peptide,
-                mhc_a=mhc_seq,
+                mhc_a=mhc_a_seq,
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
                 bind_value=rec.value,
@@ -1446,16 +1650,16 @@ class PrestoDataset(Dataset):
         # Add kinetics samples
         for rec in (kinetics_records or []):
             mhc_class = self._resolve_mhc_class_value(rec.mhc_class, rec.mhc_allele)
-            mhc_seq = self._get_mhc_sequence(rec.mhc_allele, rec.mhc_sequence)
-            mhc_b_seq = self._resolve_mhc_b_sequence(
+            mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
                 mhc_class=mhc_class,
                 species=rec.species,
                 allele=rec.mhc_allele,
+                direct_seq=rec.mhc_sequence,
             )
             so, fl = _organism_fields(rec.antigen_species)
             self.samples.append(PrestoSample(
                 peptide=rec.peptide,
-                mhc_a=mhc_seq,
+                mhc_a=mhc_a_seq,
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
                 kon=rec.kon,
@@ -1474,16 +1678,16 @@ class PrestoDataset(Dataset):
         # Add stability samples
         for rec in (stability_records or []):
             mhc_class = self._resolve_mhc_class_value(rec.mhc_class, rec.mhc_allele)
-            mhc_seq = self._get_mhc_sequence(rec.mhc_allele, rec.mhc_sequence)
-            mhc_b_seq = self._resolve_mhc_b_sequence(
+            mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
                 mhc_class=mhc_class,
                 species=rec.species,
                 allele=rec.mhc_allele,
+                direct_seq=rec.mhc_sequence,
             )
             so, fl = _organism_fields(rec.antigen_species)
             self.samples.append(PrestoSample(
                 peptide=rec.peptide,
-                mhc_a=mhc_seq,
+                mhc_a=mhc_a_seq,
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
                 t_half=rec.t_half,
@@ -1502,8 +1706,7 @@ class PrestoDataset(Dataset):
         # Add processing samples
         for rec in (processing_records or []):
             mhc_class = self._resolve_mhc_class_value(rec.mhc_class, rec.mhc_allele)
-            mhc_seq = self._get_mhc_sequence(rec.mhc_allele, None) if rec.mhc_allele else ""
-            mhc_b_seq = self._resolve_mhc_b_sequence(
+            mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
                 mhc_class=mhc_class,
                 species=rec.species,
                 allele=rec.mhc_allele,
@@ -1513,7 +1716,7 @@ class PrestoDataset(Dataset):
                 peptide=rec.peptide,
                 flank_n=rec.flank_n,
                 flank_c=rec.flank_c,
-                mhc_a=mhc_seq,
+                mhc_a=mhc_a_seq,
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
                 processing_label=rec.label,
@@ -1538,24 +1741,23 @@ class PrestoDataset(Dataset):
             alleles = rec.alleles if rec.alleles else [None]
             for allele in alleles:
                 mhc_class_i = self._resolve_mhc_class_value(rec.mhc_class, allele)
-                mhc_seq_i = self._get_mhc_sequence(allele, None) if allele else ""
-                mhc_b_seq_i = self._resolve_mhc_b_sequence(
+                mhc_a_seq_i, mhc_b_seq_i = self._resolve_mhc_pair_sequences(
                     mhc_class=mhc_class_i,
                     species=rec.species,
                     allele=allele,
                 )
-                mil_mhc_a_list.append(mhc_seq_i)
+                mil_mhc_a_list.append(mhc_a_seq_i)
                 mil_mhc_b_list.append(mhc_b_seq_i)
                 mil_mhc_class_list.append(mhc_class_i)
                 mil_species_list.append(rec.species)
 
-            mhc_seq = mil_mhc_a_list[0] if mil_mhc_a_list else ""
+            mhc_a_seq = mil_mhc_a_list[0] if mil_mhc_a_list else ""
             mhc_b_seq = mil_mhc_b_list[0] if mil_mhc_b_list else ""
             mhc_class = mil_mhc_class_list[0] if mil_mhc_class_list else "I"
             so, fl = _organism_fields(rec.antigen_species)
             self.samples.append(PrestoSample(
                 peptide=rec.peptide,
-                mhc_a=mhc_seq,
+                mhc_a=mhc_a_seq,
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
                 elution_label=1.0 if rec.detected else 0.0,
@@ -1578,11 +1780,11 @@ class PrestoDataset(Dataset):
         for rec in (tcell_records or []):
             explicit_mhc_class = normalize_mhc_class(rec.mhc_class, default=None)
             mhc_class = self._resolve_mhc_class_optional_value(rec.mhc_class, rec.mhc_allele)
-            mhc_seq = self._get_mhc_sequence(rec.mhc_allele, rec.mhc_sequence)
-            mhc_b_seq = self._resolve_mhc_b_sequence(
+            mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
                 mhc_class=mhc_class,
                 species=rec.species,
                 allele=rec.mhc_allele,
+                direct_seq=rec.mhc_sequence,
             )
             tcell_mil_mhc_a_list: Optional[List[str]] = None
             tcell_mil_mhc_b_list: Optional[List[str]] = None
@@ -1601,14 +1803,13 @@ class PrestoDataset(Dataset):
                     pathway_class = self._resolve_mhc_class_optional_value(None, allele)
                     if pathway_class not in {"I", "II"}:
                         continue
-                    mhc_seq_i = self._get_mhc_sequence(allele, None)
-                    mhc_b_seq_i = self._resolve_mhc_b_sequence(
+                    mhc_a_seq_i, mhc_b_seq_i = self._resolve_mhc_pair_sequences(
                         mhc_class=pathway_class,
                         species=rec.species,
                         allele=allele,
                     )
                     pathway_instances.append(
-                        (mhc_seq_i, mhc_b_seq_i, pathway_class, rec.species or "")
+                        (mhc_a_seq_i, mhc_b_seq_i, pathway_class, rec.species or "")
                     )
                     class_set.add(pathway_class)
                 if class_set == {"I", "II"} and pathway_instances:
@@ -1618,21 +1819,12 @@ class PrestoDataset(Dataset):
                     tcell_mil_mhc_class_list = [item[2] for item in pathway_instances]
                     tcell_mil_species_list = [item[3] for item in pathway_instances]
                     use_tcell_pathway_mil = True
-            chain_type = _preferred_chain_type(
-                rec.tcr_a_cdr3,
-                rec.tcr_b_cdr3,
-                rec.tcr_a_full,
-                rec.tcr_b_full,
-            )
-            phenotype = "ab_T" if chain_type is not None else None
             so, fl = _organism_fields(rec.antigen_species)
             self.samples.append(PrestoSample(
                 peptide=rec.peptide,
-                mhc_a=mhc_seq,
+                mhc_a=mhc_a_seq,
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
-                tcr_a=rec.tcr_a_cdr3 or rec.tcr_a_full,
-                tcr_b=rec.tcr_b_cdr3 or rec.tcr_b_full,
                 tcell_label=rec.response,
                 tcell_assay_method=rec.assay_method,
                 tcell_assay_readout=rec.assay_type,
@@ -1647,8 +1839,6 @@ class PrestoDataset(Dataset):
                 tcell_mil_mhc_b_list=tcell_mil_mhc_b_list,
                 tcell_mil_mhc_class_list=tcell_mil_mhc_class_list,
                 tcell_mil_species_list=tcell_mil_species_list,
-                chain_type=chain_type,
-                phenotype=phenotype,
                 species=rec.species,
                 species_of_origin=so,
                 foreignness_label=fl,
@@ -1660,75 +1850,32 @@ class PrestoDataset(Dataset):
                 sample_id=f"tcell_{len(self.samples)}",
             ))
 
-        # Add VDJdb samples
-        for rec in (vdjdb_records or []):
+        # Add pMHC-only receptor-evidence samples.
+        for rec in (tcr_evidence_records or []):
             mhc_class = self._resolve_mhc_class_value(rec.mhc_class, rec.mhc_a)
-            mhc_seq = self._get_mhc_sequence(rec.mhc_a, None)
-            mhc_b_seq = self._resolve_mhc_b_sequence(
+            mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
                 mhc_class=mhc_class,
                 species=rec.species,
                 allele=rec.mhc_a,
                 mhc_b=rec.mhc_b,
             )
-            chain_type = _preferred_chain_type(
-                rec.cdr3_alpha,
-                rec.cdr3_beta,
-                None,
-                None,
-                default_gene=rec.gene,
-            )
-            phenotype = "ab_T" if chain_type is not None else None
             so, fl = _organism_fields(rec.antigen_species)
             self.samples.append(PrestoSample(
                 peptide=rec.peptide,
-                mhc_a=mhc_seq,
+                mhc_a=mhc_a_seq,
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
-                tcr_a=rec.cdr3_alpha,
-                tcr_b=rec.cdr3_beta,
-                tcell_label=1.0,  # VDJdb entries are positive by definition
-                chain_type=chain_type,
-                phenotype=phenotype,
+                tcr_evidence_label=rec.evidence_label,
+                tcr_evidence_method_bins=tuple(rec.method_bins or ()),
                 species=rec.species,
                 species_of_origin=so,
                 foreignness_label=fl,
                 sample_source=_source_label(rec.source),
-                assay_group="tcr_pmhc",
+                assay_group="tcr_evidence",
                 label_bucket="positive",
                 primary_allele=rec.mhc_a,
                 synthetic_kind=_synthetic_kind(rec.source),
-                sample_id=f"vdjdb_{len(self.samples)}",
-            ))
-
-        # Add 10x VDJ chain-classification samples (chain/species/phenotype supervision).
-        for rec in (sc10x_records or []):
-            chain_type = (rec.chain_type or "").strip().upper()
-            if not chain_type:
-                continue
-            seq = (rec.cdr3 or "").strip().upper()
-            if not seq:
-                continue
-            phenotype = rec.phenotype or _infer_receptor_phenotype(chain_type)
-            chain_type_label = f"{chain_type}_CDR3" if not chain_type.endswith("_CDR3") else chain_type
-
-            # Use minimally valid placeholders for pMHC inputs; these samples
-            # primarily supervise chain heads.
-            self.samples.append(PrestoSample(
-                peptide="A",
-                mhc_a="",
-                mhc_b="",
-                mhc_class="",
-                tcr_a=seq if chain_type in {"TRA", "TRG", "IGK", "IGL"} else None,
-                tcr_b=seq if chain_type in {"TRB", "TRD", "IGH"} else None,
-                chain_type=chain_type_label,
-                phenotype=phenotype,
-                species=rec.species,
-                sample_source=_source_label(rec.source),
-                assay_group="chain_aux",
-                label_bucket=None,
-                primary_allele=None,
-                synthetic_kind=_synthetic_kind(rec.source),
-                sample_id=f"10x_{len(self.samples)}",
+                sample_id=f"tcrev_{len(self.samples)}",
             ))
 
         if self._mhc_x_sequence_count > 0:
@@ -1753,6 +1900,9 @@ class PrestoDataset(Dataset):
             inferred = _infer_mhc_class(allele)
             if inferred is not None:
                 return inferred
+            raise ValueError(
+                f"mhcgnomes failed to infer MHC class for allele: {allele!r}"
+            )
         return "I"
 
     @staticmethod
@@ -1765,12 +1915,7 @@ class PrestoDataset(Dataset):
         if resolved is not None:
             return resolved
         if allele:
-            inferred = infer_mhc_class_optional(allele)
-            if inferred is not None:
-                return inferred
-            allele_upper = allele.upper()
-            if any(gene in allele_upper for gene in ("DRA", "DRB", "DQA", "DQB", "DPA", "DPB", "DR", "DQ", "DP")):
-                return "II"
+            return infer_mhc_class_optional(allele)
         return None
 
     @staticmethod
@@ -1819,6 +1964,14 @@ class PrestoDataset(Dataset):
             resolved_species = normalize_species_label(infer_species_from_allele(allele))
         return class_i_beta2m_sequence(resolved_species) or HUMAN_B2M_SEQUENCE
 
+    @staticmethod
+    def _default_class_ii_dr_alpha_allele(
+        species: Optional[str],
+        allele: Optional[str],
+    ) -> Optional[str]:
+        """Return the native default DRA allele for a DR beta chain."""
+        return class_ii_default_dra_allele(species=species, beta_allele=allele)
+
     def _resolve_mhc_b_sequence(
         self,
         mhc_class: Optional[str],
@@ -1847,6 +2000,15 @@ class PrestoDataset(Dataset):
                         allele=allele,
                         allow_short_class_i_beta=True,
                     )
+                if not _looks_like_amino_acid_sequence(mhc_b_clean):
+                    seq = self._get_mhc_sequence(mhc_b_clean, None)
+                    return self._validate_mhc_chain_sequence(
+                        sequence=seq,
+                        chain_label="mhc_b",
+                        mhc_class=cls,
+                        allele=mhc_b_clean,
+                        allow_short_class_i_beta=(cls == "I"),
+                    )
                 return self._validate_mhc_chain_sequence(
                     sequence=mhc_b_clean,
                     chain_label="mhc_b",
@@ -1866,6 +2028,84 @@ class PrestoDataset(Dataset):
             )
         return ""
 
+    def _resolve_mhc_pair_sequences(
+        self,
+        *,
+        mhc_class: Optional[str],
+        species: Optional[str],
+        allele: Optional[str],
+        direct_seq: Optional[str] = None,
+        mhc_b: Optional[str] = None,
+        allow_default_class_i_beta: bool = True,
+    ) -> Tuple[str, str]:
+        """Resolve groove-half model inputs `(mhc_a, mhc_b)` for one sample.
+
+        Runtime contract:
+        - Class I: `(alpha1_groove, alpha2_groove)` from one heavy chain
+        - Class II: `(alpha1_groove, beta1_groove)` from paired alpha/beta chains
+        """
+        cls = self._resolve_mhc_class_value(mhc_class, allele)
+        mhc_b_clean = str(mhc_b or "").strip()
+        if cls == "II" and allele and is_class_ii_dr_beta_allele(allele) and not mhc_b_clean:
+            alpha_allele = self._default_class_ii_dr_alpha_allele(species, allele)
+            if alpha_allele is None:
+                if self.strict_mhc_resolution:
+                    raise ValueError(
+                        "No native default DRA mapping is available for DR beta allele "
+                        f"{allele!r} (species={species!r})."
+                    )
+                alpha_seq = ""
+            else:
+                alpha_seq = self._get_mhc_sequence(alpha_allele, None)
+            beta_seq = self._get_mhc_sequence(allele, direct_seq)
+            prepared = prepare_mhc_input(
+                mhc_a=alpha_seq,
+                mhc_b=beta_seq,
+                mhc_class="II",
+                allow_fallback_truncation=True,
+            )
+            return (
+                self._validate_mhc_input_segment(
+                    sequence=prepared.groove_half_1,
+                    segment_label="mhc_a",
+                    allele=alpha_allele or allele,
+                ),
+                self._validate_mhc_input_segment(
+                    sequence=prepared.groove_half_2,
+                    segment_label="mhc_b",
+                    allele=allele,
+                ),
+            )
+
+        mhc_a_seq = self._get_mhc_sequence(allele, direct_seq) if (allele or direct_seq) else ""
+        mhc_b_seq = ""
+        if cls == "II":
+            mhc_b_seq = self._resolve_mhc_b_sequence(
+                mhc_class=cls,
+                species=species,
+                allele=allele,
+                mhc_b=mhc_b,
+                allow_default_class_i_beta=False,
+            )
+        prepared = prepare_mhc_input(
+            mhc_a=mhc_a_seq,
+            mhc_b=mhc_b_seq,
+            mhc_class=cls,
+            allow_fallback_truncation=True,
+        )
+        return (
+            self._validate_mhc_input_segment(
+                sequence=prepared.groove_half_1,
+                segment_label="mhc_a",
+                allele=allele,
+            ),
+            self._validate_mhc_input_segment(
+                sequence=prepared.groove_half_2,
+                segment_label="mhc_b",
+                allele=mhc_b or allele,
+            ),
+        )
+
     def _get_mhc_sequence(self, allele: str, direct_seq: Optional[str]) -> str:
         """Resolve MHC sequence from allele name or direct sequence."""
         if direct_seq:
@@ -1876,14 +2116,24 @@ class PrestoDataset(Dataset):
                 allele=allele,
                 allow_short_class_i_beta=False,
             )
-        if allele and allele in self.mhc_sequences:
-            return self._validate_mhc_chain_sequence(
-                sequence=self.mhc_sequences[allele],
-                chain_label="mhc_a",
-                mhc_class=None,
-                allele=allele,
-                allow_short_class_i_beta=False,
-            )
+        if allele:
+            lookup_keys = [str(allele).strip()]
+            try:
+                normalized = normalize_allele_name(allele)
+            except Exception:
+                normalized = ""
+            if normalized:
+                lookup_keys.extend([normalized, normalized.upper()])
+            lookup_keys.append(str(allele).strip().upper())
+            for key in lookup_keys:
+                if key and key in self.mhc_sequences:
+                    return self._validate_mhc_chain_sequence(
+                        sequence=self.mhc_sequences[key],
+                        chain_label="mhc_a",
+                        mhc_class=None,
+                        allele=allele,
+                        allow_short_class_i_beta=False,
+                    )
         if allele and self.allele_resolver:
             seq = self.allele_resolver.get_sequence(allele)
             if seq:
@@ -1955,6 +2205,42 @@ class PrestoDataset(Dataset):
                 # Non-strict mode: accept the short sequence with a warning
                 # (logged once per allele via _mhc_x_allele_examples)
                 return seq
+
+        return seq
+
+    def _validate_mhc_input_segment(
+        self,
+        *,
+        sequence: Optional[str],
+        segment_label: str,
+        allele: Optional[str],
+    ) -> str:
+        """Validate a groove-half input segment before tokenization."""
+        seq = str(sequence or "").strip().upper()
+        if not seq:
+            return ""
+
+        bad = sorted({ch for ch in seq if ch not in MHC_ALLOWED_AA})
+        if bad:
+            allele_text = str(allele or "").strip() or "<unknown>"
+            raise ValueError(
+                "Non-canonical residue(s) in MHC input segment "
+                f"(allele={allele_text}, segment={segment_label}): {''.join(bad)}"
+            )
+
+        if len(seq) >= MIN_MHC_CHAIN_LENGTH and _looks_like_nucleotide_sequence(seq):
+            allele_text = str(allele or "").strip() or "<unknown>"
+            raise ValueError(
+                "Likely nucleotide sequence loaded for MHC input segment: "
+                f"allele={allele_text}, segment={segment_label}, len={len(seq)}"
+            )
+
+        if len(seq) < MIN_MHC_INPUT_SEGMENT_LENGTH and self.strict_mhc_resolution:
+            allele_text = str(allele or "").strip() or "<unknown>"
+            raise ValueError(
+                "MHC input segment shorter than minimum accepted groove length: "
+                f"allele={allele_text}, segment={segment_label}, len={len(seq)}"
+            )
 
         return seq
 
@@ -2097,8 +2383,8 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             return "elution_ms"
         if sample.tcell_label is not None:
             return "tcell_response"
-        if sample.chain_type is not None or sample.phenotype is not None:
-            return "chain_aux"
+        if sample.tcr_evidence_label is not None:
+            return "tcr_evidence"
         return "other"
 
     @staticmethod

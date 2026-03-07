@@ -26,8 +26,6 @@ def tiny_dataset():
             "value": 5.0 + i * 0.5,  # log10(nM)
             "qual": 0,  # exact
             # T-cell task
-            "tcr_a": "CAVRDSNYQLIW" if i % 2 == 0 else None,
-            "tcr_b": "CASSIRSSYEQYF" if i % 2 == 0 else None,
             "tcell_label": float(i % 2),
         }
         samples.append(sample)
@@ -117,40 +115,6 @@ class TestTrainerSmoke:
         # Loss should generally decrease (or at least not explode)
         assert all(torch.isfinite(torch.tensor(l)) for l in losses)
         assert losses[-1] < losses[0] * 10  # Not exploding
-
-    def test_trainer_with_tcr(self, tiny_dataset, tokenizer):
-        """Test training with TCR data."""
-        from presto.training.trainer import Trainer
-        from presto.models.presto import Presto
-
-        model = Presto(d_model=64, n_layers=2, n_heads=4)
-        trainer = Trainer(model, lr=1e-3)
-
-        # Filter to samples with TCR
-        tcr_samples = [s for s in tiny_dataset if s["tcr_a"] is not None]
-
-        batch = {
-            "pep_tok": tokenizer.batch_encode(
-                [s["peptide"] for s in tcr_samples], max_len=15, pad=True
-            ),
-            "mhc_a_tok": tokenizer.batch_encode(
-                [s["mhc_a"] for s in tcr_samples], max_len=50, pad=True
-            ),
-            "mhc_b_tok": tokenizer.batch_encode(
-                [s["mhc_b"] for s in tcr_samples], max_len=50, pad=True
-            ),
-            "mhc_class": [s["mhc_class"] for s in tcr_samples],
-            "tcr_a_tok": tokenizer.batch_encode(
-                [s["tcr_a"] for s in tcr_samples], max_len=30, pad=True
-            ),
-            "tcr_b_tok": tokenizer.batch_encode(
-                [s["tcr_b"] for s in tcr_samples], max_len=30, pad=True
-            ),
-            "tcell_label": torch.tensor([s["tcell_label"] for s in tcr_samples]),
-        }
-
-        loss = trainer.train_step(batch)
-        assert torch.isfinite(loss)
 
     def test_trainer_step_with_pcgrad(self, tiny_dataset, tokenizer):
         """PCGrad path should run on multi-task batches without error."""

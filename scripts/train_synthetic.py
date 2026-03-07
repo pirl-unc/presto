@@ -416,34 +416,24 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         base_weight=0.1,
     ),
     TaskLossSpec(
-        name="chain_species",
-        target_key="chain_species",
-        mask_key="chain_species",
-        pred_paths=(("chain_species_logits",),),
-        loss_type="ce",
-        target_attr="chain_species_label",
-        mask_attr="chain_species_mask",
-        base_weight=0.1,
+        name="tcr_evidence",
+        target_key="tcr_evidence",
+        mask_key="tcr_evidence",
+        pred_paths=(("tcr_evidence_logit",),),
+        loss_type="bce",
+        target_attr="tcr_evidence_target",
+        mask_attr="tcr_evidence_mask",
+        base_weight=0.05,
     ),
     TaskLossSpec(
-        name="chain_type",
-        target_key="chain_type",
-        mask_key="chain_type",
-        pred_paths=(("chain_type_logits",),),
-        loss_type="ce",
-        target_attr="chain_type_label",
-        mask_attr="chain_type_mask",
-        base_weight=0.1,
-    ),
-    TaskLossSpec(
-        name="chain_phenotype",
-        target_key="chain_phenotype",
-        mask_key="chain_phenotype",
-        pred_paths=(("chain_phenotype_logits",),),
-        loss_type="ce",
-        target_attr="chain_phenotype_label",
-        mask_attr="chain_phenotype_mask",
-        base_weight=0.1,
+        name="tcr_evidence_method",
+        target_key="tcr_evidence_method",
+        mask_key="tcr_evidence_method",
+        pred_paths=(("tcr_evidence_method_logits",),),
+        loss_type="bce",
+        target_attr="tcr_evidence_method_target",
+        mask_attr="tcr_evidence_method_mask",
+        base_weight=0.02,
     ),
     TaskLossSpec(
         name="species_of_origin",
@@ -713,8 +703,8 @@ def _infer_fine_chain_types_for_batch(batch) -> Optional[list]:
             a_ft = infer_fine_chain_type(gene, "I")
             a_labels.append(MHC_CHAIN_FINE_TO_IDX.get(a_ft, MHC_CHAIN_FINE_TO_IDX["unknown"]))
             a_masks.append(1.0 if a_ft != "unknown" else 0.0)
-            # Beta chain for class I is B2M
-            b_labels.append(MHC_CHAIN_FINE_TO_IDX["B2M"])
+            # In groove-half mode, the second MHC segment for class I is alpha2.
+            b_labels.append(MHC_CHAIN_FINE_TO_IDX["MHC_I"])
             b_masks.append(1.0)
         else:
             a_labels.append(MHC_CHAIN_FINE_TO_IDX["unknown"])
@@ -1170,8 +1160,6 @@ def _run_mil_forward(
         mhc_b_tok=channel["mhc_b_tok"].to(device),
         mhc_class=channel["mhc_class"],
         species=channel["species"],
-        tcr_a_tok=None,
-        tcr_b_tok=None,
         flank_n_tok=(
             channel["flank_n_tok"].to(device)
             if isinstance(channel.get("flank_n_tok"), torch.Tensor)
@@ -1630,8 +1618,6 @@ def compute_loss(
             mhc_b_tok=batch.mhc_b_tok,
             mhc_class=batch.mhc_class,
             species=batch.processing_species,
-            tcr_a_tok=batch.tcr_a_tok,
-            tcr_b_tok=batch.tcr_b_tok,
             flank_n_tok=batch.flank_n_tok,
             flank_c_tok=batch.flank_c_tok,
             tcell_context=batch.tcell_context if batch.tcell_context else None,

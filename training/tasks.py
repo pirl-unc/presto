@@ -34,41 +34,44 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-try:
-    import mhcgnomes
-    HAS_MHCGNOMES = True
-except ImportError:
-    HAS_MHCGNOMES = False
+from presto.data.allele_resolver import (
+    infer_gene,
+    infer_mhc_class_optional,
+    infer_species_identity,
+    normalize_mhc_class,
+    parse_allele_name,
+)
 
 
 # =============================================================================
-# MHC/Species Parsing (using mhcgnomes when available)
+# MHC/Species Parsing (using mhcgnomes as the canonical parser)
 # =============================================================================
 
 def parse_mhc_allele(allele: str) -> Dict[str, Any]:
-    """Parse MHC allele using mhcgnomes, with fallback.
+    """Parse an MHC allele using mhcgnomes.
 
     Returns:
         Dict with keys: gene, species, mhc_class, chain_type_id
     """
-    if HAS_MHCGNOMES and allele:
-        try:
-            result = mhcgnomes.parse(allele)
-            gene = getattr(result.gene, 'name', None) if result.gene else None
-            species = getattr(result.species, 'name', None) if result.species else None
-            mhc_class = getattr(result, 'mhc_class', None)
-            return {
-                'gene': gene,
-                'species': species,
-                'mhc_class': mhc_class,
-                'chain_type_id': _gene_to_chain_type_id(gene, allele),
-                'species_id': _species_to_id(species, allele),
-            }
-        except Exception:
-            pass
-
-    # Fallback: simple prefix matching
-    return _fallback_parse_allele(allele)
+    result = parse_allele_name(allele) if allele else None
+    gene = getattr(result.gene, "name", None) if getattr(result, "gene", None) else None
+    species = (
+        getattr(result.species, "name", None) if getattr(result, "species", None) else None
+    )
+    mhc_class = normalize_mhc_class(getattr(result, "mhc_class", None), default=None)
+    if gene is None and allele:
+        gene = infer_gene(allele)
+    if species is None and allele:
+        species = infer_species_identity(allele)
+    if mhc_class is None and allele:
+        mhc_class = infer_mhc_class_optional(allele)
+    return {
+        "gene": gene,
+        "species": species,
+        "mhc_class": mhc_class,
+        "chain_type_id": _gene_to_chain_type_id(gene, allele),
+        "species_id": _species_to_id(species, allele),
+    }
 
 
 def _gene_to_chain_type_id(gene: Optional[str], allele: str) -> int:
@@ -88,16 +91,6 @@ def _gene_to_chain_type_id(gene: Optional[str], allele: str) -> int:
     if gene and gene in gene_map:
         return gene_map[gene]
 
-    # Try prefix matching on allele for edge cases
-    for prefix, idx in [
-        ('HLA-A', 0), ('HLA-B', 1), ('HLA-C', 2),
-        ('HLA-DRB', 9), ('HLA-DQA', 7), ('HLA-DQB', 10),
-        ('HLA-DPA', 8), ('HLA-DPB', 11), ('HLA-DRA', 6),
-        ('H-2-K', 0), ('H-2-D', 1), ('H-2-L', 2),
-    ]:
-        if allele.startswith(prefix):
-            return idx
-
     return 0  # Default to HLA-A
 
 
@@ -114,50 +107,7 @@ def _species_to_id(species: Optional[str], allele: str) -> int:
         elif 'rat' in species_lower:
             return 3
 
-    # Fallback: prefix matching
-    if 'HLA' in allele:
-        return 0  # Human
-    elif 'H-2' in allele:
-        return 1  # Mouse
-    elif 'Mamu' in allele:
-        return 2  # Macaque
-
     return 0  # Default to human
-
-
-def _fallback_parse_allele(allele: str) -> Dict[str, Any]:
-    """Fallback parser when mhcgnomes unavailable."""
-    chain_id = 0
-    species_id = 0
-
-    # Chain type from prefix
-    for prefix, idx in [
-        ('HLA-A', 0), ('HLA-B', 1), ('HLA-C', 2),
-        ('HLA-E', 3), ('HLA-F', 4), ('HLA-G', 5),
-        ('HLA-DRA', 6), ('HLA-DQA', 7), ('HLA-DPA', 8),
-        ('HLA-DRB', 9), ('HLA-DQB', 10), ('HLA-DPB', 11),
-        ('H-2-K', 0), ('H-2-D', 1), ('H-2-L', 2),
-        ('H-2-IA', 6), ('H-2-IE', 9),
-    ]:
-        if allele.startswith(prefix) or prefix in allele:
-            chain_id = idx
-            break
-
-    # Species from prefix
-    if 'HLA' in allele:
-        species_id = 0
-    elif 'H-2' in allele:
-        species_id = 1
-    elif 'Mamu' in allele:
-        species_id = 2
-
-    return {
-        'gene': None,
-        'species': None,
-        'mhc_class': None,
-        'chain_type_id': chain_id,
-        'species_id': species_id,
-    }
 
 
 # Canonical label maps used by task helpers and tests.
@@ -1054,6 +1004,33 @@ class TCRpMHCMatchingTask(Task):
             return {"auroc": auroc}
 
 
+class TcrEvidenceTask(Task):
+    """Predict pMHC-only curated cognate-TCR evidence."""
+    name = "tcr_evidence"
+    spec = TaskSpec(
+        required_fields={"pep_seq", "mhc_allele"},
+        label_field="tcr_evidence_label",
+    )
+
+    def compute_loss(self, outputs, batch, mask=None):
+        logits = outputs["tcr_evidence_logit"].squeeze(-1)
+        targets = batch["tcr_evidence_label"].float()
+        loss = F.binary_cross_entropy_with_logits(logits, targets, reduction="none")
+        if mask is not None:
+            return (loss * mask).sum() / (mask.sum() + 1e-8)
+        return loss.mean()
+
+    def compute_metrics(self, outputs, batch):
+        probs = torch.sigmoid(outputs["tcr_evidence_logit"].squeeze(-1)).detach().cpu().numpy()
+        targets = batch["tcr_evidence_label"].detach().cpu().numpy()
+        try:
+            from sklearn.metrics import roc_auc_score
+            auroc = roc_auc_score(targets, probs)
+        except Exception:
+            auroc = 0.5
+        return {"auroc": auroc}
+
+
 class ImmunogenicityTask(Task):
     """Predict if pMHC elicits T-cell response (without specific TCR)."""
     name = "immunogenicity"
@@ -1163,12 +1140,10 @@ def _register_default_tasks():
     """Register all default tasks."""
     # Stage 1: Chain Classification
     register_task(MHCChainTypeTask())
-    register_task(ReceptorChainTypeTask())
     register_task(SpeciesTask())
 
     # Stage 2: Pairing
     register_task(MHCPairingTask())
-    register_task(TCRPairingTask())
 
     # Stage 3: Binding
     register_task(BindingTask())
@@ -1177,7 +1152,7 @@ def _register_default_tasks():
     register_task(StabilityTask())
 
     # Stage 4: Matching
-    register_task(TCRpMHCMatchingTask())
+    register_task(TcrEvidenceTask())
     register_task(ImmunogenicityTask())
     register_task(TcellAssayTask())
 

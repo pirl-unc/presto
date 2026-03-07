@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 """Train Presto on unified multi-source immunology datasets.
 
-Primary supervision comes from IEDB/CEDAR exports, with optional VDJdb and
-10x VDJ chain data. Synthetic negatives and consistency regularizers are
-integrated into one unified mixed-source loop with time-varying
-weights.
+Primary supervision comes from IEDB/CEDAR exports, with optional pMHC-only
+TCR-evidence records derived from VDJdb. Synthetic negatives and consistency
+regularizers are integrated into one unified mixed-source loop with
+time-varying weights.
 """
 
 from __future__ import annotations
@@ -35,25 +35,25 @@ from presto.data import (
     PrestoDataset,
     PrestoSample,
     TCellRecord,
-    Sc10xVDJRecord,
-    VDJdbRecord,
+    TcrEvidenceRecord,
     Tokenizer,
-    HUMAN_B2M_SEQUENCE,
-    class_i_beta2m_sequence,
     create_dataloader,
     infer_mhc_class,
     infer_species,
     normalize_mhc_class,
     normalize_processing_species_label,
-    normalize_species_label,
     load_iedb_binding,
     load_iedb_kinetics,
     load_iedb_stability,
     load_iedb_processing,
     load_iedb_elution,
     load_iedb_tcell,
-    load_10x_vdj,
-    load_vdjdb,
+    load_vdjdb_tcr_evidence,
+)
+from presto.data.allele_resolver import (
+    class_ii_default_dra_allele,
+    infer_mhc_class_optional,
+    is_class_ii_dr_beta_allele,
 )
 from presto.data.cross_source_dedup import (
     UnifiedRecord,
@@ -68,6 +68,7 @@ from presto.data.loaders import (
     _looks_like_nucleotide_sequence as _looks_like_nucleotide_mhc_sequence,
     load_uniprot_proteins,
 )
+from presto.data.groove import prepare_mhc_input
 from presto.data.mhc_index import classify_unresolved_allele, load_mhc_index, resolve_alleles
 from presto.data.vocab import FOREIGN_CATEGORIES, normalize_organism
 from presto.models.presto import Presto
@@ -142,7 +143,6 @@ IEDB_DEFAULTS = {
     "cedar_binding_file": None,
     "cedar_tcell_file": None,
     "vdjdb_file": None,
-    "sc10x_file": None,
     "index_csv": None,
     "strict_mhc_resolution": True,
     "max_binding": 0,
@@ -152,7 +152,6 @@ IEDB_DEFAULTS = {
     "max_elution": 0,
     "max_tcell": 0,
     "max_vdjdb": 0,
-    "max_10x": 0,
     "cap_sampling": "reservoir",
     "synthetic_pmhc_negative_ratio": 1.0,
     "synthetic_class_i_no_mhc_beta_negative_ratio": 0.25,
@@ -219,7 +218,6 @@ CANARY_PROFILE_OVERRIDES = {
     "max_elution": 512,
     "max_tcell": 512,
     "max_vdjdb": 256,
-    "max_10x": 256,
     # Canary prioritizes speed over representativeness.
     "cap_sampling": "head",
     "track_probe_motif_scan": False,
@@ -448,7 +446,7 @@ def _resolve_probe_specs(
     mhc_sequences: Mapping[str, str],
     index_csv: Optional[str],
     device: str,
-    max_mhc_len: int = 400,
+    max_mhc_len: int = 120,
 ) -> List[Dict[str, Any]]:
     """Prepare fixed probe tensors for per-epoch affinity tracking."""
     peptide = str(probe_peptide or "").strip().upper()
@@ -480,16 +478,20 @@ def _resolve_probe_specs(
     specs: List[Dict[str, Any]] = []
 
     for allele in alleles:
-        mhc_a_seq = resolved_mhc.get(allele, "")
-        if not mhc_a_seq:
+        full_seq = resolved_mhc.get(allele, "")
+        if not full_seq:
             continue
 
         cls = normalize_mhc_class(infer_mhc_class(allele), default="I")
-        species = normalize_species_label(infer_species(allele))
-        if cls == "I":
-            mhc_b_seq = class_i_beta2m_sequence(species) or HUMAN_B2M_SEQUENCE
-        else:
-            mhc_b_seq = ""
+        prepared = prepare_mhc_input(
+            mhc_a=full_seq,
+            mhc_class=cls,
+            allow_fallback_truncation=True,
+        )
+        mhc_a_seq = prepared.groove_half_1
+        mhc_b_seq = prepared.groove_half_2
+        if not mhc_a_seq and not mhc_b_seq:
+            continue
 
         mhc_a_tok = tokenizer.batch_encode([mhc_a_seq], max_len=max_mhc_len, pad=True).to(device)
         mhc_b_tok = tokenizer.batch_encode([mhc_b_seq], max_len=max_mhc_len, pad=True).to(device)
@@ -907,8 +909,6 @@ def _forward_pmhc_variant(
         mhc_b_tok=mhc_b_tok,
         mhc_class=_batch_index_list(getattr(batch, "mhc_class", None), mhc_index),
         species=_batch_index_list(getattr(batch, "processing_species", None), mhc_index),
-        tcr_a_tok=_batch_index_tensor(getattr(batch, "tcr_a_tok", None), peptide_index),
-        tcr_b_tok=_batch_index_tensor(getattr(batch, "tcr_b_tok", None), peptide_index),
         flank_n_tok=_batch_index_tensor(getattr(batch, "flank_n_tok", None), peptide_index),
         flank_c_tok=_batch_index_tensor(getattr(batch, "flank_c_tok", None), peptide_index),
         tcell_context=None,
@@ -1243,6 +1243,8 @@ def _evaluate_output_and_latent_statistics(
         "immunogenicity_prob",
         "tcell_logit",
         "tcell_prob",
+        "tcr_evidence_logit",
+        "tcr_evidence_prob",
     )
     assay_scalar_keys = (
         "KD_nM",
@@ -1257,9 +1259,7 @@ def _evaluate_output_and_latent_statistics(
         "pmhc_vec",
         "mhc_class_logits",
         "mhc_species_logits",
-        "chain_species_logits",
-        "chain_type_logits",
-        "chain_phenotype_logits",
+        "tcr_evidence_method_logits",
     )
 
     try:
@@ -1285,8 +1285,6 @@ def _evaluate_output_and_latent_statistics(
                 mhc_b_tok=batch.mhc_b_tok,
                 mhc_class=batch.mhc_class,
                 species=batch.processing_species,
-                tcr_a_tok=batch.tcr_a_tok,
-                tcr_b_tok=batch.tcr_b_tok,
                 flank_n_tok=batch.flank_n_tok,
                 flank_c_tok=batch.flank_c_tok,
                 tcell_context=batch.tcell_context if batch.tcell_context else None,
@@ -2264,17 +2262,9 @@ def load_iedb_tcell_records(
 def load_vdjdb_records(
     vdjdb_file: Path,
     max_vdjdb: Optional[int],
-) -> List[VDJdbRecord]:
-    """Load VDJdb records for TCR-supervised training."""
-    return _take_records(load_vdjdb(vdjdb_file), _normalize_limit(max_vdjdb))
-
-
-def load_10x_records(
-    sc10x_file: Path,
-    max_10x: Optional[int],
-) -> List[Sc10xVDJRecord]:
-    """Load 10x VDJ contig records for chain-label supervision."""
-    return _take_records(load_10x_vdj(sc10x_file), _normalize_limit(max_10x))
+) -> List[TcrEvidenceRecord]:
+    """Load pMHC-only TCR-evidence supervision from VDJdb."""
+    return _take_records(load_vdjdb_tcr_evidence(vdjdb_file), _normalize_limit(max_vdjdb))
 
 
 def _generate_mhc_only_samples(
@@ -2290,8 +2280,8 @@ def _generate_mhc_only_samples(
     base encoder's MHC representations for discriminative allele encoding.
     """
     records = load_mhc_index(index_csv)
-    # Filter to records with valid sequences (no X, ?, or other non-canonical chars)
-    valid = []
+    # Filter to records with valid groove-half inputs.
+    valid: List[Tuple[Any, str, str]] = []
     rejected: list[tuple[str, str, str]] = []  # (allele, reason, bad_chars)
     for rec in records.values():
         seq = str(rec.sequence or "").strip().upper()
@@ -2318,7 +2308,59 @@ def _generate_mhc_only_samples(
                 "",
             ))
             continue
-        valid.append(rec)
+
+        mhc_class = normalize_mhc_class(rec.mhc_class, default="I")
+        gene = (rec.gene or "").upper()
+        if rec.groove_half_1 or rec.groove_half_2:
+            mhc_a_seq = str(rec.groove_half_1 or "").strip().upper()
+            mhc_b_seq = str(rec.groove_half_2 or "").strip().upper()
+        elif mhc_class == "I":
+            try:
+                prepared = prepare_mhc_input(
+                    mhc_a=seq,
+                    mhc_class="I",
+                    allow_fallback_truncation=False,
+                )
+            except ValueError as exc:
+                rejected.append((
+                    rec.normalized or rec.allele_raw,
+                    f"groove_parse_failed:{exc}",
+                    "",
+                ))
+                continue
+            mhc_a_seq = prepared.groove_half_1
+            mhc_b_seq = prepared.groove_half_2
+        elif any(tag in gene for tag in ("DRB", "DQB", "DPB", "AB", "EB")):
+            mhc_a_seq = ""
+            mhc_b_seq = seq
+        else:
+            mhc_a_seq = seq
+            mhc_b_seq = ""
+
+        if not mhc_a_seq and not mhc_b_seq:
+            rejected.append((rec.normalized or rec.allele_raw, "no_groove_inputs", ""))
+            continue
+
+        bad_segments = sorted(
+            {
+                ch
+                for ch in (mhc_a_seq + mhc_b_seq)
+                if ch not in MHC_ALLOWED_AA
+            }
+        )
+        if bad_segments:
+            rejected.append((
+                rec.normalized or rec.allele_raw,
+                "non_canonical_groove_chars",
+                "".join(bad_segments),
+            ))
+            continue
+
+        if "X" in mhc_a_seq or "X" in mhc_b_seq:
+            rejected.append((rec.normalized or rec.allele_raw, "contains_X", "X"))
+            continue
+
+        valid.append((rec, mhc_a_seq, mhc_b_seq))
 
     if rejected:
         print(
@@ -2337,31 +2379,9 @@ def _generate_mhc_only_samples(
         valid = rng.sample(valid, max_samples)
 
     samples: List[PrestoSample] = []
-    for rec in valid:
+    for rec, mhc_a_seq, mhc_b_seq in valid:
         mhc_class = normalize_mhc_class(rec.mhc_class, default="I")
         species = rec.species or infer_species(rec.normalized) or None
-
-        # Assign chain correctly based on MHC class and gene
-        gene = (rec.gene or "").upper()
-        is_class_ii_beta = any(
-            tag in gene for tag in ("DRB", "DQB", "DPB", "AB", "EB")
-        )
-        is_class_ii_alpha = any(
-            tag in gene for tag in ("DRA", "DQA", "DPA", "AA", "EA")
-        )
-
-        if is_class_ii_beta:
-            # Class II beta chain → mhc_b slot
-            mhc_a_seq = ""
-            mhc_b_seq = rec.sequence
-        elif mhc_class == "II" and is_class_ii_alpha:
-            # Class II alpha chain → mhc_a slot
-            mhc_a_seq = rec.sequence
-            mhc_b_seq = ""
-        else:
-            # Class I alpha or unknown → mhc_a slot, pair with species B2M
-            mhc_a_seq = rec.sequence
-            mhc_b_seq = class_i_beta2m_sequence(species)
 
         samples.append(PrestoSample(
             peptide="AAAAAAAAA",  # polyalanine placeholder
@@ -2485,28 +2505,42 @@ def _collect_unique_alleles(
     vdjdb_records: Sequence,
 ) -> List[str]:
     alleles: List[str] = []
+
+    def _append_allele(token: Optional[str]) -> None:
+        text = str(token or "").strip()
+        if text:
+            alleles.append(text)
+
+    def _append_default_dr_alpha(beta_allele: Optional[str], species: Optional[str]) -> None:
+        token = str(beta_allele or "").strip()
+        if not token or not is_class_ii_dr_beta_allele(token):
+            return
+        default_dra = class_ii_default_dra_allele(species=species, beta_allele=token)
+        if default_dra:
+            alleles.append(default_dra.strip())
+
     for rec in binding_records:
-        if getattr(rec, "mhc_allele", None):
-            alleles.append(rec.mhc_allele.strip())
+        _append_allele(getattr(rec, "mhc_allele", None))
+        _append_default_dr_alpha(getattr(rec, "mhc_allele", None), getattr(rec, "species", None))
     for rec in kinetics_records:
-        if getattr(rec, "mhc_allele", None):
-            alleles.append(rec.mhc_allele.strip())
+        _append_allele(getattr(rec, "mhc_allele", None))
+        _append_default_dr_alpha(getattr(rec, "mhc_allele", None), getattr(rec, "species", None))
     for rec in stability_records:
-        if getattr(rec, "mhc_allele", None):
-            alleles.append(rec.mhc_allele.strip())
+        _append_allele(getattr(rec, "mhc_allele", None))
+        _append_default_dr_alpha(getattr(rec, "mhc_allele", None), getattr(rec, "species", None))
     for rec in processing_records:
-        if getattr(rec, "mhc_allele", None):
-            alleles.append(rec.mhc_allele.strip())
+        _append_allele(getattr(rec, "mhc_allele", None))
+        _append_default_dr_alpha(getattr(rec, "mhc_allele", None), getattr(rec, "species", None))
     for rec in tcell_records:
-        if getattr(rec, "mhc_allele", None):
-            alleles.append(rec.mhc_allele.strip())
+        _append_allele(getattr(rec, "mhc_allele", None))
+        _append_default_dr_alpha(getattr(rec, "mhc_allele", None), getattr(rec, "species", None))
     for rec in elution_records:
         for allele in getattr(rec, "alleles", []) or []:
-            if allele:
-                alleles.append(allele.strip())
+            _append_allele(allele)
+            _append_default_dr_alpha(allele, getattr(rec, "species", None))
     for rec in vdjdb_records:
-        if getattr(rec, "mhc_a", None):
-            alleles.append(rec.mhc_a.strip())
+        _append_allele(getattr(rec, "mhc_a", None))
+        _append_default_dr_alpha(getattr(rec, "mhc_a", None), getattr(rec, "species", None))
     return sorted({a for a in alleles if a})
 
 
@@ -2620,7 +2654,7 @@ def _audit_unresolved_mhc_resolution(
     processing_records: Sequence[ProcessingRecord],
     elution_records: Sequence[ElutionRecord],
     tcell_records: Sequence[TCellRecord],
-    vdjdb_records: Sequence[VDJdbRecord],
+    vdjdb_records: Sequence[TcrEvidenceRecord],
     mhc_sequences: Mapping[str, str],
 ) -> Dict[str, Any]:
     """Summarize unresolved MHC alleles before dataset construction."""
@@ -2807,7 +2841,7 @@ def _audit_mhc_sequence_coverage(
     processing_records: Sequence[ProcessingRecord],
     elution_records: Sequence[ElutionRecord],
     tcell_records: Sequence[TCellRecord],
-    vdjdb_records: Sequence[VDJdbRecord],
+    vdjdb_records: Sequence[TcrEvidenceRecord],
     mhc_sequences: Mapping[str, str],
 ) -> Dict[str, Any]:
     """Summarize resolved-vs-missing MHC coverage across training rows."""
@@ -2964,7 +2998,7 @@ def _filter_records_to_resolved_mhc(
     processing_records: Sequence[ProcessingRecord],
     elution_records: Sequence[ElutionRecord],
     tcell_records: Sequence[TCellRecord],
-    vdjdb_records: Sequence[VDJdbRecord],
+    vdjdb_records: Sequence[TcrEvidenceRecord],
     mhc_sequences: Mapping[str, str],
 ) -> Tuple[
     List[BindingRecord],
@@ -2973,7 +3007,7 @@ def _filter_records_to_resolved_mhc(
     List[ProcessingRecord],
     List[ElutionRecord],
     List[TCellRecord],
-    List[VDJdbRecord],
+    List[TcrEvidenceRecord],
     Dict[str, int],
 ]:
     """Drop unresolved-MHC rows; for elution keep only resolved alleles per row."""
@@ -3054,7 +3088,7 @@ def _filter_records_to_resolved_mhc(
         else:
             stats["tcell_dropped"] += 1
 
-    vdjdb_filtered: List[VDJdbRecord] = []
+    vdjdb_filtered: List[TcrEvidenceRecord] = []
     for rec in vdjdb_records:
         if _keep(rec.mhc_a, None, rec.source):
             vdjdb_filtered.append(rec)
@@ -3324,7 +3358,7 @@ def load_records_from_merged_tsv(
     List[ProcessingRecord],
     List[ElutionRecord],
     List[TCellRecord],
-    List[VDJdbRecord],
+    List[TcrEvidenceRecord],
     Dict[str, Any],
 ]:
     """Load canonical training records directly from merged TSV output."""
@@ -3337,7 +3371,7 @@ def load_records_from_merged_tsv(
     processing_records: List[ProcessingRecord] = []
     elution_records: List[ElutionRecord] = []
     tcell_records: List[TCellRecord] = []
-    vdjdb_records: List[VDJdbRecord] = []
+    vdjdb_records: List[TcrEvidenceRecord] = []
     by_assay: Dict[str, int] = {}
     by_source: Dict[str, int] = {}
     rows_dropped_invalid_peptide = 0
@@ -3394,7 +3428,10 @@ def load_records_from_merged_tsv(
                 continue
 
             mhc_allele = (row.get("mhc_allele") or "").strip()
-            mhc_class = normalize_mhc_class(row.get("mhc_class"), default=infer_mhc_class(mhc_allele))
+            mhc_class = normalize_mhc_class(
+                row.get("mhc_class"),
+                default=infer_mhc_class_optional(mhc_allele),
+            )
             source = (row.get("source") or "").strip() or "unknown"
             species = (row.get("species") or "").strip() or infer_species(mhc_allele) or None
             antigen_species_col = (row.get("antigen_species") or "").strip() or None
@@ -3622,24 +3659,20 @@ def load_records_from_merged_tsv(
                 )
                 continue
 
-            if assay_type == "tcr_pmhc":
+            if assay_type in {"tcr_pmhc", "tcr_evidence"}:
                 if not mhc_allele:
                     continue
-                gene = "TRB" if cdr3_beta else "TRA"
                 vdjdb_seen = _append_with_cap_sampling(
                     vdjdb_records,
-                    VDJdbRecord(
+                    TcrEvidenceRecord(
                         peptide=peptide,
                         mhc_a=mhc_allele,
                         mhc_class=mhc_class,
                         species=species,
                         antigen_species=antigen_species_col,
                         source=source,
-                        gene=gene,
-                        cdr3_alpha=cdr3_alpha or None,
-                        cdr3_beta=cdr3_beta or None,
-                        v_alpha=trav or None,
-                        v_beta=trbv or None,
+                        evidence_label=1.0,
+                        method_bins=(),
                     ),
                     vdjdb_limit,
                     sampling=sampling_mode,
@@ -3687,7 +3720,7 @@ def load_records_from_merged_tsv(
             "processing": len(processing_records),
             "elution": len(elution_records),
             "tcell": len(tcell_records),
-            "tcr": len(vdjdb_records),
+            "tcr_evidence": len(vdjdb_records),
         },
     }
     return (
@@ -3731,8 +3764,7 @@ def run(args: argparse.Namespace) -> None:
     processing_records: List[ProcessingRecord] = []
     elution_records: List[ElutionRecord] = []
     tcell_records: List[TCellRecord] = []
-    vdjdb_records: List[VDJdbRecord] = []
-    sc10x_records: List[Sc10xVDJRecord] = []
+    vdjdb_records: List[TcrEvidenceRecord] = []
 
     if merged_tsv.exists():
         print(f"Merged input: {merged_tsv}")
@@ -3776,22 +3808,6 @@ def run(args: argparse.Namespace) -> None:
                 f"sanitized_optional_seq_fields={sanitized_optional}"
             )
 
-        if args.sc10x_file:
-            sc10x_file = Path(args.sc10x_file)
-        else:
-            try:
-                sc10x_file = find_iedb_export_file(
-                    data_dir / "10x",
-                    keywords=("contig", "10x", "vdj", "tcr"),
-                )
-            except FileNotFoundError:
-                sc10x_file = None
-        print(f"10x VDJ export: {sc10x_file or '(not found)'}")
-        if sc10x_file is not None:
-            sc10x_records = load_10x_records(
-                sc10x_file=sc10x_file,
-                max_10x=args.max_10x,
-            )
     else:
         if getattr(args, "require_merged_input", True):
             raise FileNotFoundError(
@@ -3844,16 +3860,6 @@ def run(args: argparse.Namespace) -> None:
                 vdjdb_file = find_iedb_export_file(data_dir / "vdjdb", keywords=("vdjdb",))
             except FileNotFoundError:
                 vdjdb_file = None
-        if args.sc10x_file:
-            sc10x_file = Path(args.sc10x_file)
-        else:
-            try:
-                sc10x_file = find_iedb_export_file(
-                    data_dir / "10x",
-                    keywords=("contig", "10x", "vdj", "tcr"),
-                )
-            except FileNotFoundError:
-                sc10x_file = None
         print(f"Binding/elution export: {binding_file}")
         if cedar_binding_file is not None:
             print(f"CEDAR binding/elution export: {cedar_binding_file}")
@@ -3861,7 +3867,6 @@ def run(args: argparse.Namespace) -> None:
         if cedar_tcell_file is not None:
             print(f"CEDAR T-cell export: {cedar_tcell_file}")
         print(f"VDJdb export: {vdjdb_file or '(not found)'}")
-        print(f"10x VDJ export: {sc10x_file or '(not found)'}")
 
         print("Loading unified multi-source records...")
         primary_binding_records, primary_elution_records = load_iedb_binding_and_elution_records(
@@ -3945,11 +3950,6 @@ def run(args: argparse.Namespace) -> None:
                 vdjdb_file=vdjdb_file,
                 max_vdjdb=args.max_vdjdb,
             )
-        if sc10x_file is not None:
-            sc10x_records = load_10x_records(
-                sc10x_file=sc10x_file,
-                max_10x=args.max_10x,
-            )
     if getattr(args, "profile", "full") == "canary":
         kinetics_records, stability_records, processing_records, canary_stats = (
             bootstrap_missing_modalities_for_canary(
@@ -3973,8 +3973,7 @@ def run(args: argparse.Namespace) -> None:
     print(f"  Processing: {len(processing_records)}")
     print(f"  Elution: {len(elution_records)}")
     print(f"  T-cell: {len(tcell_records)}")
-    print(f"  VDJdb: {len(vdjdb_records)}")
-    print(f"  10x VDJ: {len(sc10x_records)}")
+    print(f"  TCR evidence (VDJdb): {len(vdjdb_records)}")
     if (
         not binding_records
         and not kinetics_records
@@ -3983,7 +3982,6 @@ def run(args: argparse.Namespace) -> None:
         and not elution_records
         and not tcell_records
         and not vdjdb_records
-        and not sc10x_records
     ):
         raise RuntimeError("No usable unified training records were loaded.")
 
@@ -4282,8 +4280,7 @@ def run(args: argparse.Namespace) -> None:
         processing_records=processing_records,
         elution_records=elution_records,
         tcell_records=tcell_records,
-        vdjdb_records=vdjdb_records,
-        sc10x_records=sc10x_records,
+        tcr_evidence_records=vdjdb_records,
         mhc_sequences=mhc_sequences,
         strict_mhc_resolution=strict_mhc_resolution,
     )
@@ -4800,13 +4797,11 @@ def main(argv=None):
     parser.add_argument("--tcell-file", type=str, default=None, help="Override path to IEDB T-cell export")
     parser.add_argument("--cedar-binding-file", type=str, default=None, help="Optional path to CEDAR MHC ligand export")
     parser.add_argument("--cedar-tcell-file", type=str, default=None, help="Optional path to CEDAR T-cell export")
-    parser.add_argument("--vdjdb-file", type=str, default=None, help="Override path to VDJdb export")
     parser.add_argument(
-        "--10x-file",
-        dest="sc10x_file",
+        "--vdjdb-file",
         type=str,
         default=None,
-        help="Override path to 10x VDJ contig CSV/TSV",
+        help="Override path to VDJdb export used for pMHC-only TCR-evidence supervision",
     )
     parser.add_argument("--index-csv", type=str, default=None, help="Optional built MHC index CSV for allele->sequence resolution")
     parser.add_argument(
@@ -4844,7 +4839,12 @@ def main(argv=None):
     parser.add_argument("--max-processing", type=int, default=0, help="Max processing records to load (<=0 means no limit)")
     parser.add_argument("--max-elution", type=int, default=0, help="Max elution records to load (<=0 means no limit)")
     parser.add_argument("--max-tcell", type=int, default=0, help="Max T-cell records to load (<=0 means no limit)")
-    parser.add_argument("--max-vdjdb", type=int, default=0, help="Max VDJdb records to load (<=0 means no limit)")
+    parser.add_argument(
+        "--max-vdjdb",
+        type=int,
+        default=0,
+        help="Max VDJdb-derived pMHC TCR-evidence records to load (<=0 means no limit)",
+    )
     parser.add_argument(
         "--cap-sampling",
         dest="cap_sampling",
@@ -4855,13 +4855,6 @@ def main(argv=None):
             "Sampling strategy when modality caps are set "
             "(head=first-N rows, reservoir=representative one-pass sample)"
         ),
-    )
-    parser.add_argument(
-        "--max-10x",
-        dest="max_10x",
-        type=int,
-        default=0,
-        help="Max 10x VDJ records to load (<=0 means no limit)",
     )
     parser.add_argument(
         "--synthetic-pmhc-negative-ratio",

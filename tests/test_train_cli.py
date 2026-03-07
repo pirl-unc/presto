@@ -34,7 +34,6 @@ def test_parser_train_iedb_default_record_caps_unlimited():
     assert args.max_processing == 0
     assert args.max_elution == 0
     assert args.max_tcell == 0
-    assert args.max_10x == 0
     assert args.num_workers == 4
     assert args.pin_memory is True
     assert args.profile_performance is True
@@ -49,24 +48,6 @@ def test_parser_train_iedb_default_record_caps_unlimited():
     assert args.synthetic_pmhc_negative_ratio > 0.0
     assert args.synthetic_class_i_no_mhc_beta_negative_ratio > 0.0
     assert args.synthetic_processing_negative_ratio > 0.0
-
-
-def test_parser_train_unified_accepts_10x_flags():
-    parser = create_parser()
-    args = parser.parse_args(
-        [
-            "train",
-            "unified",
-            "--10x-file",
-            "/tmp/10x.csv",
-            "--max-10x",
-            "123",
-        ]
-    )
-    assert args.func is train_cli.cmd_train_unified
-    assert args.sc10x_file == "/tmp/10x.csv"
-    assert args.max_10x == 123
-
 
 def test_parser_wires_train_synthetic_run_dir():
     parser = create_parser()
