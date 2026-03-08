@@ -187,6 +187,47 @@ class TestPrestoModel:
         assert outputs["mhc_species_logits"].shape[0] == 2
         assert "presentation_logit" in outputs
 
+    def test_forward_affinity_only_matches_full_forward(self):
+        from presto.models.presto import Presto
+
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        model.eval()
+
+        pep_tok = torch.randint(4, 24, (2, 10))
+        mhc_a_tok = torch.randint(4, 24, (2, 50))
+        mhc_b_tok = torch.randint(4, 24, (2, 20))
+
+        with torch.no_grad():
+            full = model(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class="I",
+            )
+            affinity = model.forward_affinity_only(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class="I",
+            )
+
+        for key in (
+            "binding_logit",
+            "binding_affinity_probe_kd",
+            "binding_mixed_kd_log10",
+            "binding_class1_logit",
+            "binding_class2_logit",
+            "pmhc_vec",
+            "groove_vec",
+        ):
+            assert key in affinity
+            assert torch.allclose(affinity[key], full[key], atol=1e-6)
+        assert torch.allclose(
+            affinity["assays"]["KD_nM"],
+            full["assays"]["KD_nM"],
+            atol=1e-6,
+        )
+
     def test_model_forward_under_cpu_bf16_autocast(self):
         """Autocast forward should not hit mixed-dtype indexed writes."""
         from presto.models.presto import Presto
@@ -367,6 +408,7 @@ class TestPrestoOutputConsistency:
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
         model.kd_assay_bias = _ZeroBias()
+        model.binding_probe_mix_logit.data.fill_(-12.0)
 
         def _derive_kd_override(_self, binding_latents):
             batch_size = binding_latents["log_koff"].shape[0]
@@ -386,8 +428,10 @@ class TestPrestoOutputConsistency:
             out = model(pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I")
 
         kd = out["assays"]["KD_nM"]
-        # Hard pre-clamping to max would collapse to exactly 5-softplus(0) ~ 4.3069.
-        assert torch.all(kd > 4.8)
+        # Hard pre-clamping to the 50k ceiling would collapse to exactly
+        # log10(50000)-softplus(0) ~ 4.0058. Soft bounding should stay
+        # noticeably above that.
+        assert torch.all(kd > 4.55)
         assert torch.all(kd < model.max_log10_nM + 1e-6)
 
     def test_presentation_logits_are_readouts_of_shared_presentation_vector(self):

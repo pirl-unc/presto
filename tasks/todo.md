@@ -1,3 +1,218 @@
+# MHCflurry-Style Modular Refactor (2026-03-07)
+
+## Spec
+
+- Goal: refactor `Presto` into a shared pMHC trunk plus explicit MHCflurry-like submodules that can be trained and sanity-checked on task-appropriate subsets while still supporting end-to-end gradients in the full model.
+- Required modules:
+  - `AffinityPredictor`
+  - `Class1ProcessingPredictor`
+  - `Class2ProcessingPredictor`
+  - `Class1PresentationPredictor`
+  - `Class2PresentationPredictor`
+- Architectural constraints:
+  - keep a shared peptide + groove-half MHC trunk
+  - keep current biologic latent flow: `recognition -> immunogenicity` stays canonical
+  - submodules must consume explicit trunk tensors, not reach back into raw tokens
+  - full `Presto.forward()` must still produce the current output contract
+  - add standalone forward paths for at least affinity-only and presentation-only use
+  - standalone affinity training must use quantitative affinity rows only
+  - treat `SLLQHLIGL` as a generalization probe unless direct quantitative supervision is present
+
+## Execution order
+
+- [x] Phase 0: specify tensor contracts for the modular trunk
+  - define the shared trunk state the submodules consume:
+    - `processing_vec`
+    - `interaction_vec`
+    - `binding_affinity_vec`
+    - `binding_stability_vec`
+    - `presentation_vec`
+    - `recognition_vec`
+    - `immunogenicity_vec`
+    - `pmhc_vec`
+    - `class_probs`
+    - `groove_vec`
+  - decide which outputs belong to each submodule vs. the trunk
+- [x] Phase 1: implement submodule classes
+  - add explicit module classes for affinity, class-I processing, class-II processing, class-I presentation, class-II presentation
+  - move the current output logic into those classes without changing numerical behavior
+- [x] Phase 1 verification
+  - `Presto.forward()` still returns the current binding / processing / presentation outputs
+  - broad model tests still pass
+- [x] Phase 2: expose standalone submodule execution paths
+  - add a shared trunk method that returns a typed/dict feature bundle
+  - add `forward_affinity_only(...)`
+  - add `forward_presentation_only(...)`
+  - keep those paths weight-sharing with the full model
+- [x] Phase 2 verification
+  - affinity-only forward returns the same affinity outputs as full forward on the same input
+  - presentation-only forward returns the same presentation outputs as full forward on the same input
+- [x] Phase 3: refactor focused diagnostics to use the standalone affinity path
+  - update `scripts/focused_binding_probe.py` to train affinity-only on binding rows
+  - optimize only the affinity-relevant parameters plus shared trunk
+  - log probe-support metadata so fit-supported vs generalization-only peptides stay explicit
+- [x] Phase 3 verification
+  - focused affinity-only diagnostic runs end to end
+  - `SLLQHLIGL` is reported as a generalization probe
+  - at least one quantitatively supervised A0201/A2402 peptide family is reported alongside it
+- [ ] Phase 4: sanity check affinity behavior
+  - run a short affinity-only sanity check on the focused A0201/A2402 subset
+  - inspect whether the supervised peptide probes separate cleanly and whether `SLLQHLIGL` generalizes in the correct direction
+
+## Review
+
+- Rationale:
+  - the current model already has the right ingredients, but the task boundaries are implicit and hard to test
+  - modular heads make it possible to separate “architecture failure” from “wrong supervision mixture”
+  - the key debugging requirement is a true affinity-only path, because `SLLQHLIGL` has no direct quantitative binding supervision for `A*02:01` vs `A*24:02`
+- Progress:
+  - added explicit `AffinityPredictor`, `ClassProcessingPredictor`, and `ClassPresentationPredictor` modules in `models/presto_modules.py`
+  - kept `Presto.forward()` numerically aligned by routing processing, affinity, and presentation outputs through those modules
+  - added compatibility aliases plus checkpoint key remapping so old attribute names and saved checkpoints still load
+  - added `forward_affinity_only(...)` and `forward_presentation_only(...)`
+  - updated `scripts/focused_binding_probe.py` to use an affinity-only censor-aware loss instead of the full multitask trainer
+- Verification:
+  - `pytest -q tests/test_presto.py tests/test_checkpointing.py tests/test_train_synthetic.py tests/test_train_iedb.py` -> `115 passed`
+  - local smoke:
+    - `python -m presto.scripts.focused_binding_probe --data-dir data --out-dir artifacts/focused_binding_probe_smoke --alleles 'HLA-A*02:01,HLA-A*24:02' --measurement-profile direct_affinity_only --epochs 1 --batch-size 128 --max-records 512 --synthetic-negatives --negative-ratio 0.5`
+    - completed end to end
+    - `SLLQHLIGL` probe stayed correct-sign but nearly tied:
+      - `A*02:01 ≈ 189.17 nM`
+      - `A*24:02 ≈ 189.20 nM`
+  - Modal focused runs launched:
+    - `ap-lEYlh8Sf0MOr0lEMZmacmH` direct-affinity, no synthetic negatives
+    - `ap-aPSBVsmXZX1yN1RTXjbfh4` numeric affinity profile with synthetic negatives
+
+# Binding Training Dynamics Recovery (2026-03-07)
+
+## Spec
+
+- Goal: make the post-refactor pMHC stack learn binding and presentation quickly enough to show clear allele discrimination on short diagnostics, then validate on a 1-epoch Modal run before any longer training.
+- Primary probe: `SLLQHLIGL` should separate in the correct direction for `HLA-A*02:01` vs `HLA-A*24:02`, with the gap widening rather than collapsing during early training.
+- Constraints:
+  - keep the groove-native MHC representation and receptor-free canonical path
+  - run training and focused diagnostics on Modal rather than on the local laptop unless the task is a sub-minute CPU check
+  - prefer fixes that improve the real end-to-end objective before adding new pretraining subsystems
+  - do not trust head-capped corpus slices for probe diagnostics; use reservoir sampling or explicitly constructed probe-supporting subsets
+  - do not claim training dynamics from Modal until the bf16 indexed-write bug is fixed or AMP is disabled
+  - preserve allele, MHC class, and host-species diversity within each batch even when using a curriculum or task-biased batch construction
+  - distinguish fitting probes from generalization probes: verify whether the probe peptide has direct quantitative binding supervision before using it to judge the binding head
+
+## Current evidence
+
+- Corrected local reservoir diagnostics show the model is not dead:
+  - 30-batch run: `A0201 KD≈762.7 nM`, `A2402 KD≈795.7 nM`
+  - 100-batch run: `A0201 KD≈689.7 nM`, `A2402 KD≈755.3 nM`
+  - the sign is correct and the gap widens with more updates, but separation remains weak
+- Earlier wrong-sign probe results were invalid because `head` capping removed `A*24:02` binding/elution support entirely from the diagnostic slice.
+- The detached Modal reservoir diagnostic (`ap-6tjbpNx2OTXldvGAfOvcXZ`) did not complete an epoch:
+  - it died at batch `0` on CUDA bf16 with an indexed-write dtype mismatch
+  - there is no usable remote loss curve or probe trajectory yet
+- Current code-level bottlenecks worth acting on:
+  - `interaction_vec -> BindingModule -> {log_koff, log_kon_intrinsic, log_kon_chaperone}` is a narrow kinetic bottleneck
+  - the direct `binding_affinity_probe_kd` bypass exists but has `base_weight=0.3`
+  - `sample_weighted` supervised aggregation amplifies large-support tasks even with balanced batching
+  - `BindingModule` still uses hard clamps while assay heads already use smooth bounds
+  - there is no within-batch allele-discrimination/ranking loss for binding
+- Current code-level hypotheses that are not primary blockers:
+  - input MHC resolution/tokenization for `A*02:01` vs `A*24:02` is working
+  - the multi-query interaction architecture can overfit a two-sample allele-discrimination toy
+  - blindly reducing `tcr_evidence` and MHC augmentation did not improve the short local diagnostic
+  - a strong MHC-attention sparsity prior made the small discrimination toy worse, not better
+
+## Execution order
+
+- [ ] Phase A: instrumentation and numeric unblock
+  - add explicit diagnostics for per-batch supervised support by task, effective supervised task weights after aggregation, and binding clamp saturation rates
+  - add a small same-peptide/different-allele pair counter so we know whether the batch actually supports allele-ranking losses
+  - audit activation functions and saturation points in the binding/presentation path, especially `tanh` and hard clamp usage
+  - fix the remaining CUDA bf16 indexed-write path or run the next Modal diagnostic with AMP disabled to get a real trajectory immediately
+- [ ] Phase A verification
+  - one local diagnostic run emits batch-composition metrics and clamp-saturation metrics
+  - one Modal 1-epoch diagnostic completes far enough to produce epoch/probe outputs
+- [ ] Phase B: low-risk binding optimization fixes
+  - raise `binding_affinity_probe` weight from `0.3` to `1.0`
+  - switch diagnostic/binding-focused training from `sample_weighted` to `task_mean`
+  - replace hard clamps in `BindingModule` with the existing smooth bound functions used by assay heads
+  - add a direct logging path for agreement/divergence between `binding_affinity_probe_kd` and kinetic-derived KD
+- [ ] Phase B verification
+  - short local reservoir runs improve the `A0201` vs `A2402` gap faster than the current baseline
+  - no exploding or NaN kinetics under CPU fp32 and CUDA bf16/fp32
+- [ ] Phase C: explicit allele-discrimination objective
+  - add a same-peptide/different-allele ranking loss for binding within a batch
+  - restrict it to pairs with usable binding supervision so unlabeled comparisons do not dominate
+  - log pair counts and loss contribution separately from the main binding losses
+- [ ] Phase C.1: pair-aware binding batch construction
+  - extend the balanced sampler so each binding-heavy batch reserves a small subquota for quantitative peptide families with multi-allele support
+  - prefer drawing rankable partner examples from already-seeded peptide families before falling back to generic binding draws
+  - keep allele, MHC class, and species diversity scoring active for those family draws instead of turning them into a monoculture
+- [ ] Phase C verification
+  - the ranking loss is active on real batches
+  - the probe gap widens earlier than the Phase B-only baseline
+- [ ] Phase D: curriculum and batch-composition tuning
+  - bias early training more strongly toward binding, kinetics, stability, and elution while keeping auxiliary tasks present but not dominant
+  - maintain within-batch diversity across allele, MHC class, and species as a hard sampler goal, not just a corpus-level weighting preference
+  - if needed, add a short warmup schedule for existing MHC-only auxiliary heads (species/class/chain/domain) rather than a separate pretrain-and-merge pipeline
+  - if needed, add a peptide-origin warmup only after binding-focused fixes are measured
+- [ ] Phase D verification
+  - early-epoch probe separation and binding validation improve without harming presentation/elution trends
+- [ ] Phase E: full 1-epoch Modal diagnosis and critique
+  - run one full-epoch Modal diagnostic on the best Phase D config
+  - analyze trajectory, gradients, latent statistics, task balance, probe outputs, and MHC-specific separation
+  - decide whether the model is strong enough for a long run or whether another training-dynamics revision is needed
+- [ ] Phase F: Modal-only focused binding diagnostics
+  - add a dedicated Modal entrypoint for allele-panel binding-only diagnostics using `load_binding_records_for_alleles_from_merged_tsv(...)`
+  - support strict quantitative-only A0201/A2402 runs with configurable synthetic-negative enablement
+  - emit compact per-epoch probe summaries plus artifact files in the checkpoints volume
+  - keep `SLLQHLIGL` in the report, but also track at least one peptide family with direct quantitative A0201/A2402 supervision
+- [ ] Phase F verification
+  - one strict A0201/A2402 binding-only run completes on Modal
+  - one synthetic-augmented variant completes on Modal
+  - result summary explicitly separates `fit-supported` probes from `generalization-only` probes
+
+## Review
+
+- External diagnosis synthesis:
+  - correct and worth acting on:
+    - binding bottleneck through three scalar kinetics latents
+    - loss dilution from `sample_weighted`
+    - missing allele-discrimination objective
+    - hard clamps in `BindingModule`
+    - raw corpus imbalance against binding
+  - real but not first-order for the `SLLQHLIGL` probe:
+    - unresolved-MHC filtering
+    - groove fallback degradation
+  - not supported as primary explanations by the current evidence:
+    - tokenization/resolution bug for the probe alleles
+    - architecture being incapable of allele discrimination
+    - auxiliary-task removal as the first fix
+- Pretraining assessment:
+  - full standalone pretraining on MHC species/class or peptide species-of-origin is not the first move
+  - the model already reads enough MHC signal to get the sign right once sampling is corrected
+  - if end-to-end binding still learns too slowly after Phases A-C, a short warmup curriculum using existing auxiliary heads is a cleaner next step than building separate subnetworks and merging weights
+- Activation-path assessment:
+  - re-audit on 2026-03-07 shows no remaining `tanh` on the active canonical model path
+  - current bounded nonlinearities on the pMHC path are:
+    - smooth lower/upper/range bounds in binding/assay heads
+    - `softsign` on the assay-bias residual in `models/presto.py`
+    - probability/denominator safety clamps around softmax-like normalizations and `logit`
+  - the main remaining gradient-flow risk is now missing pair structure in batches, not a hidden `tanh`
+  - latest diagnostic update:
+    - pair-aware binding batching is now active on real canary batches
+    - trusted canary with probe-family bootstrap reached:
+      - `batch_support_binding ≈ 49`
+      - `out_binding_same_peptide_rankable_pairs ≈ 12.6`
+      - `out_binding_contrastive_pred_gap_mean ≈ 0.23`
+      - `out_binding_contrastive_required_gap_mean ≈ 1.57`
+      - `out_binding_probe_core_kd_l1_mean ≈ 1.30`
+    - despite that, `SLLQHLIGL` still goes the wrong way for `A*02:01` vs `A*24:02`
+    - 3-epoch trusted canary showed stable optimization but continued wrong-sign probe drift
+    - strongest remaining hypothesis: the model is still too MHC-prior-dominant and needs stronger peptide-specific discrimination pressure, not more generic allele-pair supervision
+- Probe semantics update:
+  - the focused A0201/A2402 binding subset already recovered the correct `SLLQHLIGL` sign once the task was concentrated
+  - however, `SLLQHLIGL` may not have direct quantitative binding supervision in the merged corpus
+  - if confirmed, it must be treated as a generalization probe for peptide-anchor learning, not as a memorization target
+
 # Integrated MHC Processing + Receptor Removal (2026-03-06)
 
 ## Spec
@@ -2789,3 +3004,65 @@ Goal: get `SLLQHLIGL` to separate correctly between `HLA-A*02:01` and `HLA-A*24:
 ## Review
 
 - In progress.
+# Binding Specificity Recovery: Peptide Negatives + 50k Ceiling + A0201/A2402 Subset (2026-03-07)
+
+## Spec
+
+- Goal: strengthen peptide-specific binding learning quickly enough that short diagnostics stop collapsing into broad MHC priors, while keeping allele/class/species diversity intact in every batch.
+- Primary questions:
+  - does adding same-allele / different-peptide pressure improve `SLLQHLIGL` separation for `HLA-A*02:01` vs `HLA-A*24:02`?
+  - does shifting the weak-binding ceiling from `100k nM` to `50k nM` make synthetic and censored weak binders better aligned with common baselines like MHCflurry?
+  - can a larger binding-only A0201/A2402 subset show the architecture learning the right direction when trained on enough directly relevant data?
+- Constraints:
+  - keep the recently added diversity-aware batch sampler guarantees across allele, class, and species
+  - prefer minimally coupled changes that can be verified independently
+  - do not trust tiny or head-capped slices for this diagnostic
+
+## Execution order
+
+- [x] Phase 1: weak-binding target calibration + protected peptide scrambles
+  - change the shared maximum affinity ceiling from `100k nM` to `50k nM`
+  - make synthetic binding negatives default to fixed `50k nM` targets instead of sampling over a wide weak range
+  - make peptide-scramble negatives force changes at peptide positions 1, 2, and the last residue
+  - update any tests and target normalization assumptions that depend on the old ceiling
+- [x] Phase 1 verification
+  - affinity conversion tests and synthetic-negative tests pass
+  - local diagnostics remain finite and numerically stable
+- [x] Phase 2: focused A0201/A2402 binding diagnostic subset
+  - add a helper that builds a larger binding-only subset centered on `HLA-A*02:01` and `HLA-A*24:02`
+  - include quantitative binding rows for those alleles plus the existing synthetic negatives path
+  - run a focused training sanity check and track the `SLLQHLIGL` probe trajectory
+- [x] Phase 2 verification
+  - subset summary reports sample counts, peptides, allele support, and same-peptide overlap
+  - short training run completes and is analyzed against the probe
+- [ ] Phase 3: decide whether scale-first is sufficient before adding another peptide-specific ranking loss
+  - if the focused larger subset still fails to learn the probe direction, add a same-allele / different-peptide objective
+  - otherwise prefer scale and cleanup over another new loss term
+
+## Review
+
+- Implemented:
+  - shared affinity ceiling reduced to `50k nM`
+  - synthetic binding negatives now default to fixed `50k nM`
+  - protected peptide scramble for synthetic negatives now forces anchor changes at `P1`, `P2`, and `PΩ`
+  - added `load_binding_records_for_alleles_from_merged_tsv(...)` for focused binding diagnostics
+  - removed dead canonical-model modules from `Presto` and added checkpoint-time dropping of their legacy keys
+- Verification:
+  - `pytest -q tests/test_loaders.py tests/test_affinity.py tests/test_checkpointing.py tests/test_train_iedb.py tests/test_presto.py tests/test_train_synthetic.py tests/test_train_cli.py tests/test_data_cli.py`
+  - result: `192 passed`
+- Focused A0201/A2402 IEDB-only binding run:
+  - real quantitative rows: `19,597`
+  - selected panel rows before source filter helper: `21,568`
+  - unique peptides:
+    - `A*02:01`: `11,657`
+    - `A*24:02`: `2,615`
+  - shared peptides: `734`
+  - with synthetic binding negatives the dataset reached `48,528` samples
+  - 3-epoch CPU run on the focused subset produced the correct `SLLQHLIGL` sign:
+    - epoch 1: `A0201 ≈ 192.98 nM`, `A2402 ≈ 194.38 nM`
+    - epoch 2: `A0201 ≈ 280.17 nM`, `A2402 ≈ 280.31 nM`
+    - epoch 3: `A0201 ≈ 260.19 nM`, `A2402 ≈ 260.62 nM`
+  - interpretation:
+    - the larger relevant dataset is enough to recover the correct direction
+    - the gap is still tiny, so scale helps but peptide-specific discrimination is still weak
+    - this argues for `scale-first` before adding another new binding objective

@@ -64,7 +64,13 @@
 
 ## 2026-03-07
 
+- When the user says training should run on Modal, do not keep iterating on laptop-bound diagnostics out of convenience. Move focused probes and subset ablations onto Modal as first-class entrypoints.
+- Before interpreting a probe peptide as a fitting failure, verify whether it has direct quantitative supervision in the merged corpus. A peptide with only elution or T-cell evidence is a generalization probe, not a supervised binding target.
 - Do not trust probe diagnostics from head-capped training slices on the merged corpus. The TSV ordering can wipe out allele-specific supervision for exactly the allele you are trying to compare. Use reservoir sampling for any probe/representation sanity run unless the user explicitly wants first-N behavior.
+- Even reservoir row sampling can destroy the multi-allele peptide-family structure needed for allele-discrimination diagnostics. When a short binding canary is supposed to test same-peptide allele ranking, audit the sampled slice for actual shared-peptide families and bootstrap them explicitly if needed.
 - Profile presets must never silently override explicit CLI flags. If presets are applied after parsing, track which destinations the user actually set and preserve them.
 - Keep `mhcgnomes` strict on canonical class/species inference, but helper paths used only for auxiliary labels (for example coarse gene extraction) must degrade gracefully on coarse shorthands instead of crashing the whole training job.
 - When a regularizer is supposed to improve mechanistic focus (for example MHC-attention sparsity), test it on the smallest discriminative toy before trusting it in training. A prior that looks biologically plausible can still destroy the exact signal you need the model to learn.
+- When the user asks for diversity-preserving batching, enforce it explicitly at batch construction time across the requested biological axes (at least allele, MHC class, and species). Inverse-frequency weighting alone is not a sufficient guarantee.
+- If a gradient-flow audit is requested, trace every saturating nonlinearity on the active prediction path (`tanh`, hard `clamp`, bounded calibrations) before changing losses. Do not assume a mostly-GELU network is free of saturation bottlenecks.
+- When a tiny canary disagrees with known biology but a task-focused larger subset recovers the correct sign, prefer `scale-first` and task-focused data before adding another new loss term. Use the smallest new objective set that the larger relevant subset still cannot solve.

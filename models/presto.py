@@ -16,19 +16,22 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from .pmhc import (
-    BindingModule,
-    PresentationBottleneck,
     PROCESSING_SPECIES_BUCKETS,
     _class_probs_from_input,
     _species_probs_from_input,
 )
-from .heads import AssayHeads, TCellAssayHead, ElutionHead
+from .presto_modules import (
+    AffinityPredictor,
+    ClassPresentationPredictor,
+    ClassProcessingPredictor,
+    PrestoTrunkState,
+)
+from .heads import TCellAssayHead, ElutionHead
 from .affinity import (
     DEFAULT_MAX_AFFINITY_NM,
     DEFAULT_BINDING_MIDPOINT_NM,
     DEFAULT_BINDING_LOG10_SCALE,
     max_log10_nM,
-    binding_logit_from_kd_log10,
 )
 from ..data.allele_resolver import (
     normalize_processing_species_label,
@@ -450,18 +453,6 @@ class Presto(nn.Module):
         )
         self.groove_query = nn.Parameter(torch.randn(1, d_model) * 0.02)
 
-        # Immunogenicity MLPs (design S7.4 Level 3: MLP, not cross-attention)
-        self.immunogenicity_cd8_mlp = nn.Sequential(
-            nn.Linear(d_model * 3, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
-        )
-        self.immunogenicity_cd4_mlp = nn.Sequential(
-            nn.Linear(d_model * 3, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
-        )
-
         # Context vector MLP (design S5.4): class_probs + a_species + b_species + compat
         self.context_token_proj = nn.Sequential(
             nn.Linear(2 + n_species * 2 + 1, d_model),
@@ -472,18 +463,17 @@ class Presto(nn.Module):
         # ------------------------------------------------------------------
         # Readout heads from latent vectors
         # ------------------------------------------------------------------
-        self.processing_class1_head = nn.Linear(d_model, 1)
-        self.processing_class2_head = nn.Linear(d_model, 1)
-
-        self.binding_affinity_probe = nn.Sequential(
-            nn.Linear(d_model, d_model // 2),
-            nn.GELU(),
-            nn.Linear(d_model // 2, 1),
+        self.class1_processing_predictor = ClassProcessingPredictor(d_model)
+        self.class2_processing_predictor = ClassProcessingPredictor(d_model)
+        self.affinity_predictor = AffinityPredictor(
+            interaction_dim=self.pmhc_interaction_vec_dim,
+            d_model=d_model,
+            max_log10_nM=self.max_log10_nM,
+            binding_midpoint_nM=self.binding_midpoint_nM,
+            binding_log10_scale=self.binding_log10_scale,
         )
-        self.binding = BindingModule(d_model=self.pmhc_interaction_vec_dim)
-
-        self.presentation_class1_latent_head = nn.Linear(d_model, 1)
-        self.presentation_class2_latent_head = nn.Linear(d_model, 1)
+        self.class1_presentation_predictor = ClassPresentationPredictor(d_model)
+        self.class2_presentation_predictor = ClassPresentationPredictor(d_model)
         # Keep latent residual positive and non-trivial from step 1.
         # softplus(-1.5) ~= 0.20
         self.w_presentation_class1_latent = nn.Parameter(torch.tensor(-1.5))
@@ -494,14 +484,10 @@ class Presto(nn.Module):
         self.immunogenicity_cd8_latent_head = nn.Linear(d_model, 1)
         self.immunogenicity_cd4_latent_head = nn.Linear(d_model, 1)
 
-        # Presentation bottleneck (kept as canonical additive-logit path).
-        self.presentation = PresentationBottleneck()
         self.w_class1_presentation_stability = nn.Parameter(torch.tensor(0.3))
         self.w_class2_presentation_stability = nn.Parameter(torch.tensor(0.3))
         self.w_class1_presentation_class = nn.Parameter(torch.tensor(0.2))
         self.w_class2_presentation_class = nn.Parameter(torch.tensor(0.2))
-        self.w_binding_class1_calibration = nn.Parameter(torch.tensor(0.2))
-        self.w_binding_class2_calibration = nn.Parameter(torch.tensor(0.2))
 
         # MS detectability readout from latent (design S7.4)
         self.ms_detectability_head = nn.Linear(d_model, 1)
@@ -515,17 +501,6 @@ class Presto(nn.Module):
         )
         self.tcr_evidence_method_head = nn.Linear(d_model, 3)
 
-        # Assay outputs.
-        self.assay_heads = AssayHeads(
-            d_model=d_model,
-            max_log10_nM=self.max_log10_nM,
-        )
-        self.kd_assay_bias = nn.Sequential(
-            nn.Linear(d_model, d_model // 2),
-            nn.GELU(),
-            nn.Linear(d_model // 2, 1),
-        )
-        self.kd_assay_bias_scale = nn.Parameter(torch.tensor(0.5))
         self.tcell_assay_head = TCellAssayHead(
             d_model=d_model,
             n_assay_methods=len(TCELL_ASSAY_METHODS),
@@ -590,6 +565,74 @@ class Presto(nn.Module):
         """Backward-compatible alias for groove-half-2 positional embeddings."""
         return self.groove_2_pos
 
+    @property
+    def processing_class1_head(self) -> nn.Linear:
+        return self.class1_processing_predictor.head
+
+    @property
+    def processing_class2_head(self) -> nn.Linear:
+        return self.class2_processing_predictor.head
+
+    @property
+    def presentation_class1_latent_head(self) -> nn.Linear:
+        return self.class1_presentation_predictor.head
+
+    @property
+    def presentation_class2_latent_head(self) -> nn.Linear:
+        return self.class2_presentation_predictor.head
+
+    @property
+    def binding_affinity_probe(self) -> nn.Module:
+        return self.affinity_predictor.binding_affinity_probe
+
+    @property
+    def binding(self) -> nn.Module:
+        return self.affinity_predictor.binding
+
+    @property
+    def assay_heads(self) -> nn.Module:
+        return self.affinity_predictor.assay_heads
+
+    @property
+    def kd_assay_bias(self) -> nn.Module:
+        return self.affinity_predictor.kd_assay_bias
+
+    @kd_assay_bias.setter
+    def kd_assay_bias(self, module: nn.Module) -> None:
+        self.affinity_predictor.kd_assay_bias = module
+
+    @property
+    def kd_assay_bias_scale(self) -> nn.Parameter:
+        return self.affinity_predictor.kd_assay_bias_scale
+
+    @kd_assay_bias_scale.setter
+    def kd_assay_bias_scale(self, param: nn.Parameter) -> None:
+        self.affinity_predictor.kd_assay_bias_scale = param
+
+    @property
+    def binding_probe_mix_logit(self) -> nn.Parameter:
+        return self.affinity_predictor.binding_probe_mix_logit
+
+    @binding_probe_mix_logit.setter
+    def binding_probe_mix_logit(self, param: nn.Parameter) -> None:
+        self.affinity_predictor.binding_probe_mix_logit = param
+
+    @property
+    def w_binding_class1_calibration(self) -> nn.Parameter:
+        return self.affinity_predictor.w_binding_class1_calibration
+
+    @w_binding_class1_calibration.setter
+    def w_binding_class1_calibration(self, param: nn.Parameter) -> None:
+        self.affinity_predictor.w_binding_class1_calibration = param
+
+    @property
+    def w_binding_class2_calibration(self) -> nn.Parameter:
+        return self.affinity_predictor.w_binding_class2_calibration
+
+    @w_binding_class2_calibration.setter
+    def w_binding_class2_calibration(self, param: nn.Parameter) -> None:
+        self.affinity_predictor.w_binding_class2_calibration = param
+
     def _load_from_state_dict(
         self,
         state_dict: Dict[str, torch.Tensor],
@@ -604,6 +647,35 @@ class Presto(nn.Module):
         legacy_key = f"{prefix}mhc_class_cond_embed.weight"
         if legacy_key in state_dict:
             state_dict.pop(legacy_key)
+        head_key_map = {
+            f"{prefix}processing_class1_head.": f"{prefix}class1_processing_predictor.head.",
+            f"{prefix}processing_class2_head.": f"{prefix}class2_processing_predictor.head.",
+            f"{prefix}presentation_class1_latent_head.": f"{prefix}class1_presentation_predictor.head.",
+            f"{prefix}presentation_class2_latent_head.": f"{prefix}class2_presentation_predictor.head.",
+            f"{prefix}binding_affinity_probe.": f"{prefix}affinity_predictor.binding_affinity_probe.",
+            f"{prefix}binding.": f"{prefix}affinity_predictor.binding.",
+            f"{prefix}assay_heads.": f"{prefix}affinity_predictor.assay_heads.",
+            f"{prefix}kd_assay_bias.": f"{prefix}affinity_predictor.kd_assay_bias.",
+        }
+        exact_key_map = {
+            f"{prefix}kd_assay_bias_scale": f"{prefix}affinity_predictor.kd_assay_bias_scale",
+            f"{prefix}binding_probe_mix_logit": f"{prefix}affinity_predictor.binding_probe_mix_logit",
+            f"{prefix}w_binding_class1_calibration": f"{prefix}affinity_predictor.w_binding_class1_calibration",
+            f"{prefix}w_binding_class2_calibration": f"{prefix}affinity_predictor.w_binding_class2_calibration",
+        }
+        for old_prefix, new_prefix in head_key_map.items():
+            for key in list(state_dict.keys()):
+                if not key.startswith(old_prefix):
+                    continue
+                new_key = new_prefix + key[len(old_prefix) :]
+                if new_key not in state_dict:
+                    state_dict[new_key] = state_dict[key]
+                state_dict.pop(key)
+        for old_key, new_key in exact_key_map.items():
+            if old_key in state_dict:
+                if new_key not in state_dict:
+                    state_dict[new_key] = state_dict[old_key]
+                state_dict.pop(old_key)
         old_pos_to_new = {
             f"{prefix}mhc_a_pos.weight": f"{prefix}groove_1_pos.weight",
             f"{prefix}mhc_b_pos.weight": f"{prefix}groove_2_pos.weight",
@@ -1498,6 +1570,80 @@ class Presto(nn.Module):
             "binding_mhc_attention_token_count": mhc_token_count,
         }
 
+    def _trunk_state_from_outputs(self, outputs: Mapping[str, Any]) -> PrestoTrunkState:
+        latent_vecs = outputs["latent_vecs"]
+        return PrestoTrunkState(
+            processing_vec=latent_vecs["processing"],
+            interaction_vec=latent_vecs["pmhc_interaction"],
+            binding_affinity_vec=latent_vecs["binding_affinity"],
+            binding_stability_vec=latent_vecs["binding_stability"],
+            presentation_vec=latent_vecs["presentation"],
+            recognition_vec=latent_vecs["recognition"],
+            immunogenicity_vec=latent_vecs["immunogenicity"],
+            pmhc_vec=outputs["pmhc_vec"],
+            pep_vec=outputs["pep_vec"],
+            mhc_a_vec=outputs["mhc_a_vec"],
+            mhc_b_vec=outputs["mhc_b_vec"],
+            groove_vec=outputs["groove_vec"],
+            class_probs=outputs["mhc_class_probs"],
+        )
+
+    def predict_processing_from_trunk(
+        self,
+        trunk_state: PrestoTrunkState,
+    ) -> Dict[str, torch.Tensor]:
+        class1 = self.class1_processing_predictor(trunk_state.processing_vec)
+        class2 = self.class2_processing_predictor(trunk_state.processing_vec)
+        mixed_logit = (
+            trunk_state.class_probs[:, :1] * class1["logit"]
+            + trunk_state.class_probs[:, 1:2] * class2["logit"]
+        )
+        return {
+            "processing_class1_logit": class1["logit"],
+            "processing_class2_logit": class2["logit"],
+            "processing_logit": mixed_logit,
+            "processing_mixed_logit": mixed_logit,
+            "processing_class1_prob": class1["prob"],
+            "processing_class2_prob": class2["prob"],
+            "processing_prob": torch.sigmoid(mixed_logit),
+            "processing_mixed_prob": torch.sigmoid(mixed_logit),
+        }
+
+    def predict_affinity_from_trunk(
+        self,
+        trunk_state: PrestoTrunkState,
+        *,
+        mhc_class: Optional[Any] = None,
+    ) -> Dict[str, torch.Tensor]:
+        return self.affinity_predictor(
+            interaction_vec=trunk_state.interaction_vec,
+            binding_affinity_vec=trunk_state.binding_affinity_vec,
+            binding_stability_vec=trunk_state.binding_stability_vec,
+            class_probs=trunk_state.class_probs,
+            mhc_class=mhc_class,
+        )
+
+    def predict_presentation_from_trunk(
+        self,
+        trunk_state: PrestoTrunkState,
+    ) -> Dict[str, torch.Tensor]:
+        class1 = self.class1_presentation_predictor(trunk_state.presentation_vec)
+        class2 = self.class2_presentation_predictor(trunk_state.presentation_vec)
+        mixed_logit = (
+            trunk_state.class_probs[:, :1] * class1["logit"]
+            + trunk_state.class_probs[:, 1:2] * class2["logit"]
+        )
+        return {
+            "presentation_class1_logit": class1["logit"],
+            "presentation_class2_logit": class2["logit"],
+            "presentation_logit": mixed_logit,
+            "presentation_mixed_logit": mixed_logit,
+            "presentation_class1_prob": class1["prob"],
+            "presentation_class2_prob": class2["prob"],
+            "presentation_prob": torch.sigmoid(mixed_logit),
+            "presentation_mixed_prob": torch.sigmoid(mixed_logit),
+        }
+
     def forward(
         self,
         pep_tok: torch.Tensor,
@@ -1817,112 +1963,27 @@ class Presto(nn.Module):
         ], dim=-1))
         outputs["pmhc_vec"] = pmhc_vec
         outputs["pmhc_interaction_vec"] = interaction_vec
+        trunk_state = self._trunk_state_from_outputs(outputs)
 
         # ------------------------------------------------------------------
         # 6) Processing logits (from proc latents)
         # ------------------------------------------------------------------
-        proc_class1_logit = self.processing_class1_head(processing_vec)
-        proc_class2_logit = self.processing_class2_head(processing_vec)
-        proc_logit = class_probs[:, :1] * proc_class1_logit + class_probs[:, 1:2] * proc_class2_logit
-
-        outputs["processing_class1_logit"] = proc_class1_logit
-        outputs["processing_class2_logit"] = proc_class2_logit
-        outputs["processing_logit"] = proc_logit
-        outputs["processing_mixed_logit"] = proc_logit
-        outputs["processing_class1_prob"] = torch.sigmoid(proc_class1_logit)
-        outputs["processing_class2_prob"] = torch.sigmoid(proc_class2_logit)
-        outputs["processing_prob"] = torch.sigmoid(proc_logit)
-        outputs["processing_mixed_prob"] = outputs["processing_prob"]
+        outputs.update(self.predict_processing_from_trunk(trunk_state))
 
         # ------------------------------------------------------------------
         # 7) Binding latents and calibrated binding logit
         # ------------------------------------------------------------------
-        # Auxiliary probe: shortcut gradient path from binding_affinity latent → KD
-        probe_kd = self.binding_affinity_probe(binding_affinity_vec)
-        outputs["binding_affinity_probe_kd"] = torch.clamp(probe_kd, min=-3.0, max=8.0)
-
-        binding_latents = self.binding(
-            interaction_vec,
-            mhc_class=mhc_class,
-            class_probs=class_probs,
-        )
-        outputs["binding_latents"] = binding_latents
-        stability_score = -binding_latents["log_koff"]
-
-        log_kd_per_sample = self.binding.derive_kd(binding_latents).squeeze(-1)
-        binding_logit_from_core = binding_logit_from_kd_log10(
-            log_kd_per_sample,
-            midpoint_nM=self.binding_midpoint_nM,
-            log10_scale=self.binding_log10_scale,
-        )
-        binding_logit_from_core = torch.clamp(binding_logit_from_core, min=-20.0, max=20.0)
-        outputs["binding_logit_from_core"] = binding_logit_from_core
-
-        # Canonical assay-calibrated KD path.
-        kd_from_binding = (
-            self.binding_midpoint_log10_nM
-            - self.binding_log10_scale * binding_logit_from_core
-        ).unsqueeze(-1)
-        kd_bias = torch.tanh(self.kd_assay_bias(binding_affinity_vec)) * F.softplus(self.kd_assay_bias_scale)
-
-        assays = self.assay_heads(binding_affinity_vec, binding_stability_vec, binding_latents=binding_latents)
-        # Keep only a lower clamp here. Upper capping is handled by
-        # `derive_affinity_observables` via a smooth bound; hard max-clamping
-        # here would collapse all very weak binders to one constant value.
-        kd_log10 = torch.clamp(
-            kd_from_binding + kd_bias,
-            min=-3.0,
-        )
-        affinity_obs = self.assay_heads.derive_affinity_observables(binding_affinity_vec, kd_log10)
-        assays["KD_nM"] = affinity_obs["KD_nM"]
-        assays["IC50_nM"] = affinity_obs["IC50_nM"]
-        assays["EC50_nM"] = affinity_obs["EC50_nM"]
-        outputs["assays"] = assays
-
-        binding_base_logit = binding_logit_from_kd_log10(
-            assays["KD_nM"].squeeze(-1),
-            midpoint_nM=self.binding_midpoint_nM,
-            log10_scale=self.binding_log10_scale,
-        )
-        binding_base_logit = torch.clamp(binding_base_logit, min=-20.0, max=20.0)
-        class_margin = class_probs[:, :1] - class_probs[:, 1:2]
-        binding_class1_logit = (
-            binding_base_logit.unsqueeze(-1)
-            + F.softplus(self.w_binding_class1_calibration) * class_margin
-        )
-        binding_class2_logit = (
-            binding_base_logit.unsqueeze(-1)
-            - F.softplus(self.w_binding_class2_calibration) * class_margin
-        )
-        binding_logit = (
-            class_probs[:, :1] * binding_class1_logit
-            + class_probs[:, 1:2] * binding_class2_logit
-        ).squeeze(-1)
-        outputs["binding_base_logit"] = binding_base_logit
-        outputs["binding_class1_logit"] = binding_class1_logit
-        outputs["binding_class2_logit"] = binding_class2_logit
-        outputs["binding_logit"] = binding_logit
-        outputs["binding_mixed_logit"] = binding_logit.unsqueeze(-1)
-        outputs["binding_class1_prob"] = torch.sigmoid(binding_class1_logit)
-        outputs["binding_class2_prob"] = torch.sigmoid(binding_class2_logit)
-        outputs["binding_prob"] = torch.sigmoid(binding_logit)
-        outputs["binding_mixed_prob"] = outputs["binding_prob"].unsqueeze(-1)
+        outputs.update(self.predict_affinity_from_trunk(trunk_state, mhc_class=mhc_class))
+        binding_class1_logit = outputs["binding_class1_logit"]
+        binding_class2_logit = outputs["binding_class2_logit"]
 
         # ------------------------------------------------------------------
         # 8) Presentation logits from the shared presentation vector
         # ------------------------------------------------------------------
-        class1_pres_logit = self.presentation_class1_latent_head(presentation_vec)
-        class2_pres_logit = self.presentation_class2_latent_head(presentation_vec)
-        pres_logit = class_probs[:, :1] * class1_pres_logit + class_probs[:, 1:2] * class2_pres_logit
-
-        outputs["presentation_class1_logit"] = class1_pres_logit
-        outputs["presentation_class2_logit"] = class2_pres_logit
-        outputs["presentation_logit"] = pres_logit
-        outputs["presentation_mixed_logit"] = pres_logit
-        outputs["presentation_class1_prob"] = torch.sigmoid(class1_pres_logit)
-        outputs["presentation_class2_prob"] = torch.sigmoid(class2_pres_logit)
-        outputs["presentation_prob"] = torch.sigmoid(pres_logit)
-        outputs["presentation_mixed_prob"] = outputs["presentation_prob"]
+        outputs.update(self.predict_presentation_from_trunk(trunk_state))
+        class1_pres_logit = outputs["presentation_class1_logit"]
+        class2_pres_logit = outputs["presentation_class2_logit"]
+        pres_logit = outputs["presentation_logit"]
 
         # ------------------------------------------------------------------
         # 9) Presentation-linked observables
@@ -2028,6 +2089,146 @@ class Presto(nn.Module):
         outputs["tcr_evidence_method_probs"] = torch.sigmoid(tcr_evidence_method_logits)
 
         return outputs
+
+    def forward_affinity_only(
+        self,
+        pep_tok: torch.Tensor,
+        mhc_a_tok: torch.Tensor,
+        mhc_b_tok: torch.Tensor,
+        mhc_class: Optional[Any] = None,
+        species: Optional[Any] = None,
+        mhc_species: Optional[Any] = None,
+        immune_species: Optional[Any] = None,
+        species_of_origin: Optional[Any] = None,
+        flank_n_tok: Optional[torch.Tensor] = None,
+        flank_c_tok: Optional[torch.Tensor] = None,
+        peptide_species: Optional[Any] = None,
+    ) -> Dict[str, Any]:
+        outputs = self.forward(
+            pep_tok=pep_tok,
+            mhc_a_tok=mhc_a_tok,
+            mhc_b_tok=mhc_b_tok,
+            mhc_class=mhc_class,
+            species=species,
+            mhc_species=mhc_species,
+            immune_species=immune_species,
+            species_of_origin=species_of_origin,
+            flank_n_tok=flank_n_tok,
+            flank_c_tok=flank_c_tok,
+            peptide_species=peptide_species,
+        )
+        affinity_keys = {
+            "pep_vec",
+            "mhc_a_vec",
+            "mhc_b_vec",
+            "groove_vec",
+            "pmhc_vec",
+            "pmhc_interaction_vec",
+            "mhc_class_probs",
+            "mhc_is_class1_prob",
+            "mhc_is_class2_prob",
+            "species_probs",
+            "assays",
+            "binding_latents",
+            "binding_affinity_probe_kd_raw",
+            "binding_affinity_probe_kd",
+            "binding_logit_from_core",
+            "binding_kd_bias_raw",
+            "binding_kd_bias",
+            "binding_kd_bias_cap",
+            "binding_probe_mix_weight",
+            "binding_core_kd_log10",
+            "binding_mixed_kd_log10",
+            "binding_base_logit",
+            "binding_class1_logit",
+            "binding_class2_logit",
+            "binding_logit",
+            "binding_mixed_logit",
+            "binding_class1_prob",
+            "binding_class2_prob",
+            "binding_prob",
+            "binding_mixed_prob",
+            "latent_vecs",
+            "core_window_mask",
+            "core_window_start",
+            "core_window_length",
+            "core_window_prior_logit",
+            "core_window_score_logit",
+            "core_window_logit",
+            "core_window_posterior_prob",
+            "core_start_logit",
+            "core_start_prob",
+            "core_start_probs",
+            "core_membership_prob",
+            "core_relative_position_index",
+            "core_length",
+            "npfr_length",
+            "cpfr_length",
+            "core_length_norm",
+            "npfr_length_norm",
+            "cpfr_length_norm",
+            "binding_mhc_attention_effective_residues",
+            "binding_mhc_attention_mass",
+            "binding_mhc_attention_valid_mask",
+            "binding_mhc_attention_token_count",
+        }
+        return {key: value for key, value in outputs.items() if key in affinity_keys}
+
+    def forward_presentation_only(
+        self,
+        pep_tok: torch.Tensor,
+        mhc_a_tok: torch.Tensor,
+        mhc_b_tok: torch.Tensor,
+        mhc_class: Optional[Any] = None,
+        species: Optional[Any] = None,
+        mhc_species: Optional[Any] = None,
+        immune_species: Optional[Any] = None,
+        species_of_origin: Optional[Any] = None,
+        flank_n_tok: Optional[torch.Tensor] = None,
+        flank_c_tok: Optional[torch.Tensor] = None,
+        peptide_species: Optional[Any] = None,
+    ) -> Dict[str, Any]:
+        outputs = self.forward(
+            pep_tok=pep_tok,
+            mhc_a_tok=mhc_a_tok,
+            mhc_b_tok=mhc_b_tok,
+            mhc_class=mhc_class,
+            species=species,
+            mhc_species=mhc_species,
+            immune_species=immune_species,
+            species_of_origin=species_of_origin,
+            flank_n_tok=flank_n_tok,
+            flank_c_tok=flank_c_tok,
+            peptide_species=peptide_species,
+        )
+        presentation_keys = {
+            "pep_vec",
+            "mhc_a_vec",
+            "mhc_b_vec",
+            "groove_vec",
+            "pmhc_vec",
+            "pmhc_interaction_vec",
+            "mhc_class_probs",
+            "mhc_is_class1_prob",
+            "mhc_is_class2_prob",
+            "species_probs",
+            "processing_logit",
+            "processing_class1_logit",
+            "processing_class2_logit",
+            "processing_prob",
+            "presentation_logit",
+            "presentation_class1_logit",
+            "presentation_class2_logit",
+            "presentation_prob",
+            "presentation_mixed_logit",
+            "ms_detectability_logit",
+            "elution_logit",
+            "elution_prob",
+            "ms_logit",
+            "ms_prob",
+            "latent_vecs",
+        }
+        return {key: value for key, value in outputs.items() if key in presentation_keys}
 
     def encode_pmhc(
         self,

@@ -75,7 +75,7 @@ def _build_image() -> modal.Image:
         )
     return image.run_commands(
         "python -m pip install --upgrade pip",
-        "python -m pip install /opt/presto",
+        "python -m pip install /opt/presto matplotlib",
     )
 
 
@@ -813,25 +813,166 @@ def sweep_20m_runs(
     }
 
 
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def probe_training_run(
+    batches: int = 500,
+    batch_size: int = 128,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run probe_training.py on Modal with GPU and return artifacts."""
+    resolved_run_id = run_id or datetime.now(UTC).strftime("probe_%Y%m%dT%H%M%SZ")
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    # Ensure data is available
+    merged_tsv = Path(data_dir) / "merged_deduped.tsv"
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not merged_tsv.exists() or not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+        merge_cmd = [
+            "python", "-m", "presto", "data", "merge",
+            "--datadir", data_dir, "--quiet",
+        ]
+        _run_command(merge_cmd, env)
+
+    cmd = [
+        "python", "-m", "presto.scripts.probe_training",
+        "--data-dir", data_dir,
+        "--out-dir", str(out_dir),
+        "--batches", str(batches),
+        "--batch-size", str(batch_size),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "out_dir": str(out_dir),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def focused_binding_run(
+    epochs: int = 3,
+    batch_size: int = 512,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run focused allele-panel binding diagnostic on Modal."""
+    resolved_run_id = run_id or datetime.now(UTC).strftime("focused_binding_%Y%m%dT%H%M%SZ")
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    merged_tsv = Path(data_dir) / "merged_deduped.tsv"
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not merged_tsv.exists() or not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+        merge_cmd = [
+            "python", "-m", "presto", "data", "merge",
+            "--datadir", data_dir, "--quiet",
+        ]
+        _run_command(merge_cmd, env)
+
+    cmd = [
+        "python",
+        "-m",
+        "presto.scripts.focused_binding_probe",
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "out_dir": str(out_dir),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+
 @app.local_entrypoint()
 def main(
     mode: str = "unified",
     epochs: int = 200,
+    batches: int = 500,
+    batch_size: int = 128,
     run_id: str = "",
     checkpoint_name: str = "presto.pt",
     data_dir: str = "/data",
     extra_args: str = "",
     output_manifest: str = "modal_train_result.json",
 ):
-    """Launch one Modal training run and save returned metadata locally."""
-    parsed_extra_args = [arg for arg in extra_args.split(" ") if arg]
-    result = train_long_run.remote(
-        mode=mode,
-        epochs=epochs,
-        run_id=run_id or None,
-        checkpoint_name=checkpoint_name,
-        data_dir=data_dir,
-        extra_args=" ".join(parsed_extra_args),
-    )
+    """Launch one Modal training run and save returned metadata locally.
+
+    Use --mode probe to run the SLLQHLIGL probe training script.
+    """
+    if mode == "probe":
+        result = probe_training_run.remote(
+            batches=batches,
+            batch_size=batch_size,
+            data_dir=data_dir,
+            run_id=run_id or None,
+            extra_args=extra_args,
+        )
+    elif mode == "focused_binding":
+        result = focused_binding_run.remote(
+            epochs=epochs,
+            batch_size=batch_size,
+            data_dir=data_dir,
+            run_id=run_id or None,
+            extra_args=extra_args,
+        )
+    else:
+        parsed_extra_args = [arg for arg in extra_args.split(" ") if arg]
+        result = train_long_run.remote(
+            mode=mode,
+            epochs=epochs,
+            run_id=run_id or None,
+            checkpoint_name=checkpoint_name,
+            data_dir=data_dir,
+            extra_args=" ".join(parsed_extra_args),
+        )
     Path(output_manifest).write_text(json.dumps(result, indent=2), encoding="utf-8")
     print(json.dumps(result, indent=2))
