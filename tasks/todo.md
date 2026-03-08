@@ -82,6 +82,26 @@
   - Modal focused runs launched:
     - `ap-lEYlh8Sf0MOr0lEMZmacmH` direct-affinity, no synthetic negatives
     - `ap-aPSBVsmXZX1yN1RTXjbfh4` numeric affinity profile with synthetic negatives
+  - Modal affinity sanity findings:
+    - direct-only focused run (`direct_affinity_only`, no synthetic negatives, `10005` rows, 10 epochs on Modal GPU):
+      - `SLLQHLIGL` finished correct-sign but with a negligible gap:
+        - epoch 10: `A*02:01 ≈ 168.94 nM`
+        - epoch 10: `A*24:02 ≈ 169.51 nM`
+      - this run did not learn strong peptide-specific allele discrimination reliably:
+        - `FLRYLLFGI` is strongly A0201-favored in the real rows (`~2.49 nM` vs `~8249 nM`) but the model ended nearly tied / slightly wrong-sign
+        - `NFLIKFLLI` is A2402-favored in the real rows (`~62.4 nM` vs `~307011.9 nM`) but the model ended wrong-sign
+    - numeric+synth focused run (`numeric_no_qualitative`, synthetic negatives on, `38728` rows):
+      - early trajectory is materially better on the key probe:
+        - epoch 1: `SLLQHLIGL` `A0201 ≈ 5233 nM`, `A2402 ≈ 7052 nM`
+        - epoch 2: `SLLQHLIGL` `A0201 ≈ 39.94 nM`, `A2402 ≈ 41.90 nM`
+        - epoch 3: `SLLQHLIGL` `A0201 ≈ 20.74 nM`, `A2402 ≈ 25.06 nM`
+      - `FLRYLLFGI` also stays correct-sign by epoch 3
+      - caveat: synthetic negatives can distort under-supported probe families, so this is not a free lunch
+- Current judgment:
+  - the modular affinity refactor is successful as a debugging tool and training contract
+  - the standalone affinity path is numerically healthy
+  - direct quantitative-only A0201/A2402 training is still too weak to learn robust allele-specific anchor preferences
+  - adding synthetic weak negatives helps `SLLQHLIGL` generalization quickly, but needs tighter control to avoid over-imposing incorrect pair structure on sparsely supported peptides
 
 # Binding Training Dynamics Recovery (2026-03-07)
 
