@@ -52,7 +52,6 @@ from .tasks import (
     SPECIES_MAP,
     # Pairing
     MHCPairingTask,
-    TCRPairingTask,
     MHC_VALID_PAIRINGS,
     # Binding and presentation support
     BindingTask,
@@ -60,7 +59,6 @@ from .tasks import (
     ProcessingTask,
     StabilityTask,
     # Recognition and immunogenicity
-    TCRpMHCMatchingTask,
     ImmunogenicityTask,
     TcellAssayTask,
     # Task balancing

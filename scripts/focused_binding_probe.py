@@ -12,14 +12,21 @@ import argparse
 import csv
 import json
 import math
+import hashlib
+import pickle
 import random
+import shutil
+import subprocess
+import threading
+import time
 from collections import Counter, defaultdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from statistics import median
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 import torch
-from torch.utils.data import DataLoader, Sampler
+from torch.utils.data import DataLoader, Dataset, Sampler
 
 from presto.data import BindingRecord, PrestoCollator, PrestoDataset, create_dataloader
 from presto.data.allele_resolver import infer_mhc_class_optional, normalize_mhc_class
@@ -75,10 +82,96 @@ NON_QUANTITATIVE_MEASUREMENT_TYPES = {
 }
 NORMALIZED_MEASUREMENT_FILTERS = {"", "ic50", "kd", "ec50"}
 QUALIFIER_FILTERS = {"all", "exact"}
-AFFINITY_LOSS_MODES = {"full", "probe_only", "ic50_only"}
+AFFINITY_LOSS_MODES = {"full", "probe_only", "ic50_only", "assay_heads_only"}
 GROOVE_POS_MODES = {"sequential", "triple"}
 CORE_REFINEMENT_MODES = {"shared", "class_specific"}
 DEFAULT_GROOVE_AUDIT_CAP_PER_SOURCE = 128
+FOCUSED_DATASET_CACHE_VERSION = 1
+
+
+class _GpuTelemetrySampler:
+    """Lightweight GPU utilization sampler using nvidia-smi when available."""
+
+    def __init__(self, *, enabled: bool, interval_s: float = 1.0) -> None:
+        self.enabled = bool(enabled) and shutil.which("nvidia-smi") is not None
+        self.interval_s = max(float(interval_s), 0.25)
+        self._samples: List[Tuple[float, float, float]] = []
+        self._lock = threading.Lock()
+        self._stop = threading.Event()
+        self._thread: Optional[threading.Thread] = None
+
+    def start(self) -> None:
+        if not self.enabled or self._thread is not None:
+            return
+        self._thread = threading.Thread(target=self._run, name="gpu-telemetry", daemon=True)
+        self._thread.start()
+
+    def stop(self) -> None:
+        self._stop.set()
+        if self._thread is not None:
+            self._thread.join(timeout=max(1.0, self.interval_s * 2.0))
+            self._thread = None
+
+    def _run(self) -> None:
+        while not self._stop.is_set():
+            timestamp = time.perf_counter()
+            gpu_util, mem_util = self._sample_once()
+            if gpu_util is not None and mem_util is not None:
+                with self._lock:
+                    self._samples.append((timestamp, gpu_util, mem_util))
+            self._stop.wait(self.interval_s)
+
+    @staticmethod
+    def _sample_once() -> Tuple[Optional[float], Optional[float]]:
+        try:
+            proc = subprocess.run(
+                [
+                    "nvidia-smi",
+                    "--query-gpu=utilization.gpu,utilization.memory",
+                    "--format=csv,noheader,nounits",
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+                timeout=2.0,
+            )
+        except (FileNotFoundError, subprocess.SubprocessError, OSError):
+            return None, None
+        lines = [line.strip() for line in proc.stdout.splitlines() if line.strip()]
+        if not lines:
+            return None, None
+        try:
+            gpu_str, mem_str = [token.strip() for token in lines[0].split(",", 1)]
+            return float(gpu_str), float(mem_str)
+        except (TypeError, ValueError):
+            return None, None
+
+    def summarize_window(self, start_s: float, end_s: float) -> Dict[str, float]:
+        if not self.enabled:
+            return {}
+        with self._lock:
+            window = [
+                (gpu_util, mem_util)
+                for timestamp, gpu_util, mem_util in self._samples
+                if start_s <= timestamp <= end_s
+            ]
+        if not window:
+            return {
+                "gpu_util_mean_pct": 0.0,
+                "gpu_util_peak_pct": 0.0,
+                "gpu_mem_util_mean_pct": 0.0,
+                "gpu_mem_util_peak_pct": 0.0,
+                "gpu_sample_count": 0.0,
+            }
+        gpu_vals = [row[0] for row in window]
+        mem_vals = [row[1] for row in window]
+        return {
+            "gpu_util_mean_pct": float(sum(gpu_vals) / len(gpu_vals)),
+            "gpu_util_peak_pct": float(max(gpu_vals)),
+            "gpu_mem_util_mean_pct": float(sum(mem_vals) / len(mem_vals)),
+            "gpu_mem_util_peak_pct": float(max(mem_vals)),
+            "gpu_sample_count": float(len(window)),
+        }
 
 
 class StrictAlleleBalancedBatchSampler(Sampler[List[int]]):
@@ -91,7 +184,7 @@ class StrictAlleleBalancedBatchSampler(Sampler[List[int]]):
 
     def __init__(
         self,
-        dataset: PrestoDataset,
+        dataset: Dataset,
         alleles: Sequence[str],
         batch_size: int,
         *,
@@ -269,6 +362,78 @@ class StrictAlleleBalancedBatchSampler(Sampler[List[int]]):
             if len(batch) == self.batch_size or not self.drop_last:
                 yield batch
         self._epoch += 1
+
+
+class CombinedSampleDataset(Dataset):
+    """Concatenate fixed real samples with per-epoch synthetic samples."""
+
+    def __init__(self, *datasets: PrestoDataset) -> None:
+        self.datasets = [dataset for dataset in datasets if dataset is not None]
+        self.samples: List[Any] = []
+        self._ranges: List[Tuple[int, int, Dataset]] = []
+        cursor = 0
+        for dataset in self.datasets:
+            size = len(dataset)
+            if size <= 0:
+                continue
+            self.samples.extend(getattr(dataset, "samples", []))
+            self._ranges.append((cursor, cursor + size, dataset))
+            cursor += size
+
+    def __len__(self) -> int:
+        return sum(end - start for start, end, _ in self._ranges)
+
+    def __getitem__(self, idx: int) -> Any:
+        for start, end, dataset in self._ranges:
+            if start <= idx < end:
+                return dataset[idx - start]
+        raise IndexError(idx)
+
+
+@dataclass
+class EpochTrainState:
+    train_records: List[Any]
+    synthetic_records: List[Any]
+    train_dataset: Dataset
+    train_loader: DataLoader
+    synthetic_stats: Dict[str, Any]
+    record_groove_audit: Dict[str, Any]
+    dataset_groove_audit: Dict[str, Any]
+
+
+@dataclass(frozen=True)
+class DatasetContract:
+    source: str
+    probe_alleles: Tuple[str, ...]
+    training_alleles: Tuple[str, ...]
+    train_all_alleles: bool
+    train_mhc_class_filter: str
+    max_records: int
+    sampling_seed: int
+    measurement_profile: str
+    measurement_type_filter: str
+    qualifier_filter: str
+    shared_peptides_only: bool
+    max_per_allele: int
+    split_seed: int
+    explicit_probe_peptides: Tuple[str, ...]
+
+
+@dataclass
+class PreparedBindingState:
+    real_records: List[BindingRecord]
+    real_train_records: List[BindingRecord]
+    real_val_records: List[BindingRecord]
+    subset_stats: Dict[str, Any]
+    shared_peptide_stats: Dict[str, Any]
+    probe_allele_counts_after_filter: Dict[str, int]
+    balance_stats: Dict[str, Any]
+    split_stats: Dict[str, Any]
+    mhc_sequences: Dict[str, str]
+    mhc_stats: Dict[str, Any]
+    probe_support: Dict[str, Any]
+    cache_hit: bool = False
+    cache_key: str = ""
 
 
 def _normalize_binding_measurement(text: Optional[str]) -> str:
@@ -558,6 +723,116 @@ def _split_csv(text: str) -> List[str]:
     return [token.strip() for token in str(text or "").split(",") if token.strip()]
 
 
+def _file_signature(path: Path) -> Dict[str, Any]:
+    stat = path.stat()
+    return {
+        "path": str(path),
+        "size": int(stat.st_size),
+        "mtime_ns": int(stat.st_mtime_ns),
+    }
+
+
+def _default_cache_dir(data_dir: Path) -> Path:
+    return data_dir / ".cache" / "focused_binding"
+
+
+def _contract_cache_key(
+    *,
+    contract: DatasetContract,
+    merged_tsv: Path,
+    index_csv: Path,
+) -> str:
+    payload = {
+        "version": FOCUSED_DATASET_CACHE_VERSION,
+        "contract": asdict(contract),
+        "merged_tsv": _file_signature(merged_tsv),
+        "index_csv": _file_signature(index_csv),
+    }
+    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()[:16]
+
+
+def _cache_paths(cache_dir: Path, cache_key: str) -> Tuple[Path, Path]:
+    return cache_dir / f"{cache_key}.pkl", cache_dir / f"{cache_key}.meta.json"
+
+
+def _load_prepared_binding_state_from_cache(
+    *,
+    cache_dir: Path,
+    cache_key: str,
+) -> Optional[PreparedBindingState]:
+    payload_path, meta_path = _cache_paths(cache_dir, cache_key)
+    if not payload_path.exists() or not meta_path.exists():
+        return None
+    try:
+        with payload_path.open("rb") as handle:
+            payload = pickle.load(handle)
+    except (pickle.PickleError, EOFError, OSError, ValueError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    try:
+        state = PreparedBindingState(
+            real_records=list(payload["real_records"]),
+            real_train_records=list(payload["real_train_records"]),
+            real_val_records=list(payload["real_val_records"]),
+            subset_stats=dict(payload["subset_stats"]),
+            shared_peptide_stats=dict(payload["shared_peptide_stats"]),
+            probe_allele_counts_after_filter=dict(payload["probe_allele_counts_after_filter"]),
+            balance_stats=dict(payload["balance_stats"]),
+            split_stats=dict(payload["split_stats"]),
+            mhc_sequences=dict(payload["mhc_sequences"]),
+            mhc_stats=dict(payload["mhc_stats"]),
+            probe_support=dict(payload["probe_support"]),
+            cache_hit=True,
+            cache_key=str(cache_key),
+        )
+    except KeyError:
+        return None
+    return state
+
+
+def _write_prepared_binding_state_to_cache(
+    *,
+    cache_dir: Path,
+    cache_key: str,
+    contract: DatasetContract,
+    merged_tsv: Path,
+    index_csv: Path,
+    state: PreparedBindingState,
+) -> None:
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    payload_path, meta_path = _cache_paths(cache_dir, cache_key)
+    payload = {
+        "real_records": list(state.real_records),
+        "real_train_records": list(state.real_train_records),
+        "real_val_records": list(state.real_val_records),
+        "subset_stats": dict(state.subset_stats),
+        "shared_peptide_stats": dict(state.shared_peptide_stats),
+        "probe_allele_counts_after_filter": dict(state.probe_allele_counts_after_filter),
+        "balance_stats": dict(state.balance_stats),
+        "split_stats": dict(state.split_stats),
+        "mhc_sequences": dict(state.mhc_sequences),
+        "mhc_stats": dict(state.mhc_stats),
+        "probe_support": dict(state.probe_support),
+    }
+    with payload_path.open("wb") as handle:
+        pickle.dump(payload, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    meta = {
+        "version": FOCUSED_DATASET_CACHE_VERSION,
+        "cache_key": cache_key,
+        "contract": asdict(contract),
+        "merged_tsv": _file_signature(merged_tsv),
+        "index_csv": _file_signature(index_csv),
+        "rows": {
+            "real": len(state.real_records),
+            "train": len(state.real_train_records),
+            "val": len(state.real_val_records),
+        },
+    }
+    meta_path.write_text(json.dumps(meta, indent=2, sort_keys=True), encoding="utf-8")
+
+
 def _parse_synthetic_modes(text: str) -> Optional[Tuple[str, ...]]:
     tokens = [token.strip() for token in _split_csv(text) if token.strip()]
     if not tokens:
@@ -779,6 +1054,135 @@ def _load_binding_records_from_merged_tsv(
     }
 
 
+def _prepare_real_binding_state(
+    *,
+    merged_tsv: Path,
+    index_csv: Path,
+    source_filter: str,
+    probe_alleles: Sequence[str],
+    training_alleles: Sequence[str],
+    train_all_alleles: bool,
+    train_class_filter: Optional[str],
+    max_records: int,
+    measurement_profile: str,
+    measurement_type_filter: str,
+    qualifier_filter: str,
+    shared_peptides_only: bool,
+    max_per_allele: int,
+    seed: int,
+    explicit_probe_peptides: Sequence[str],
+    cache_dir: Optional[Path],
+    use_cache: bool,
+) -> PreparedBindingState:
+    contract = DatasetContract(
+        source=str(source_filter or "").strip().lower(),
+        probe_alleles=tuple(str(a).strip() for a in probe_alleles if str(a).strip()),
+        training_alleles=tuple(str(a).strip() for a in training_alleles if str(a).strip()),
+        train_all_alleles=bool(train_all_alleles),
+        train_mhc_class_filter=str(train_class_filter or "all"),
+        max_records=int(max_records),
+        sampling_seed=int(seed) + 17,
+        measurement_profile=str(measurement_profile),
+        measurement_type_filter=str(measurement_type_filter or ""),
+        qualifier_filter=str(qualifier_filter),
+        shared_peptides_only=bool(shared_peptides_only),
+        max_per_allele=int(max_per_allele),
+        split_seed=int(seed),
+        explicit_probe_peptides=tuple(
+            str(p).strip().upper() for p in explicit_probe_peptides if str(p).strip()
+        ),
+    )
+    cache_key = _contract_cache_key(contract=contract, merged_tsv=merged_tsv, index_csv=index_csv)
+    if use_cache and cache_dir is not None:
+        cached = _load_prepared_binding_state_from_cache(cache_dir=cache_dir, cache_key=cache_key)
+        if cached is not None:
+            return cached
+
+    records, subset_stats = _load_binding_records_from_merged_tsv(
+        merged_tsv,
+        alleles=training_alleles,
+        mhc_class_filter=train_class_filter,
+        max_records=(None if int(max_records) <= 0 else int(max_records)),
+        sampling_seed=int(seed) + 17,
+    )
+    if source_filter:
+        records = [rec for rec in records if str(rec.source or "").strip().lower() == source_filter]
+    records = [rec for rec in records if _keep_measurement_type(rec.measurement_type, measurement_profile)]
+    if measurement_type_filter:
+        records = [
+            rec for rec in records
+            if _normalize_binding_measurement(rec.measurement_type) == str(measurement_type_filter)
+        ]
+    records = [
+        rec for rec in records
+        if _keep_binding_qualifier(getattr(rec, "qualifier", 0), str(qualifier_filter))
+    ]
+
+    real_records = list(records)
+    shared_peptide_stats: Dict[str, Any] = {}
+    if shared_peptides_only:
+        real_records, shared_peptide_stats = _filter_shared_peptides_only(real_records, probe_alleles)
+    probe_allele_counts_after_filter = _require_target_allele_coverage(real_records, probe_alleles)
+    balance_stats: Dict[str, Any] = {}
+    if max_per_allele >= 0:
+        real_records, balance_stats = _balance_alleles(
+            real_records,
+            list(probe_alleles),
+            int(max_per_allele),
+            rng_seed=int(seed),
+        )
+        probe_allele_counts_after_filter = _require_target_allele_coverage(real_records, probe_alleles)
+    train_records, val_records, split_stats = _split_records_by_peptide(
+        real_records,
+        val_fraction=0.2,
+        seed=int(seed),
+        alleles=(probe_alleles if not train_all_alleles else None),
+    )
+    if not train_records or not val_records:
+        raise RuntimeError("Focused binding split must produce both train and val records")
+
+    mhc_sequences, mhc_stats = resolve_mhc_sequences_from_index(
+        index_csv=str(index_csv),
+        alleles=sorted(
+            {
+                str(rec.mhc_allele or "").strip()
+                for rec in (train_records + val_records)
+                if str(rec.mhc_allele or "").strip()
+            }
+        ),
+    )
+    probe_support = {
+        peptide: _audit_probe_support(merged_tsv, peptide, alleles_of_interest=probe_alleles)
+        for peptide in explicit_probe_peptides
+    }
+
+    state = PreparedBindingState(
+        real_records=list(real_records),
+        real_train_records=list(train_records),
+        real_val_records=list(val_records),
+        subset_stats=subset_stats,
+        shared_peptide_stats=shared_peptide_stats,
+        probe_allele_counts_after_filter=probe_allele_counts_after_filter,
+        balance_stats=balance_stats,
+        split_stats=split_stats,
+        mhc_sequences=mhc_sequences,
+        mhc_stats=mhc_stats,
+        probe_support=probe_support,
+        cache_hit=False,
+        cache_key=cache_key,
+    )
+    if use_cache and cache_dir is not None:
+        _write_prepared_binding_state_to_cache(
+            cache_dir=cache_dir,
+            cache_key=cache_key,
+            contract=contract,
+            merged_tsv=merged_tsv,
+            index_csv=index_csv,
+            state=state,
+        )
+    return state
+
+
 def _summarize_binding_records(records: Sequence[Any]) -> Dict[str, Any]:
     by_allele_total: Counter[str] = Counter()
     by_allele_le_500: Counter[str] = Counter()
@@ -831,16 +1235,15 @@ def _require_target_allele_coverage(
     return counts
 
 
-def _augment_train_records_only(
+def _generate_synthetic_train_records(
     *,
     train_records: Sequence[Any],
-    val_records: Sequence[Any],
     mhc_sequences: Mapping[str, str],
     negative_ratio: float,
     seed: int,
     class_i_anchor_strategy: str,
     modes: Optional[Sequence[str]] = None,
-) -> Tuple[List[Any], List[Any], Dict[str, Any]]:
+) -> Tuple[List[Any], Dict[str, Any]]:
     train_augmented, train_stats = augment_binding_records_with_synthetic_negatives(
         binding_records=train_records,
         mhc_sequences=dict(mhc_sequences),
@@ -852,10 +1255,32 @@ def _augment_train_records_only(
         class_i_anchor_strategy=str(class_i_anchor_strategy),
         modes=modes,
     )
-    return train_augmented, list(val_records), {
+    synthetic_records = list(train_augmented[len(train_records) :])
+    return synthetic_records, {
         "train": train_stats,
         "val": {"added": 0, "reason": "validation_real_only"},
     }
+
+
+def _augment_train_records_only(
+    *,
+    train_records: Sequence[Any],
+    val_records: Sequence[Any],
+    mhc_sequences: Mapping[str, str],
+    negative_ratio: float,
+    seed: int,
+    class_i_anchor_strategy: str,
+    modes: Optional[Sequence[str]] = None,
+) -> Tuple[List[Any], List[Any], Dict[str, Any]]:
+    synthetic_records, stats = _generate_synthetic_train_records(
+        train_records=train_records,
+        mhc_sequences=mhc_sequences,
+        negative_ratio=negative_ratio,
+        seed=seed,
+        class_i_anchor_strategy=class_i_anchor_strategy,
+        modes=modes,
+    )
+    return list(train_records) + list(synthetic_records), list(val_records), stats
 
 
 def _record_source_bucket(record: Any) -> str:
@@ -1005,7 +1430,7 @@ def _audit_dataset_groove_inputs(
 def _build_epoch_train_state(
     *,
     real_train_records: Sequence[Any],
-    val_records: Sequence[Any],
+    real_train_dataset: PrestoDataset,
     mhc_sequences: Mapping[str, str],
     synthetic_negatives: bool,
     negative_ratio: float,
@@ -1018,11 +1443,14 @@ def _build_epoch_train_state(
     alleles: Sequence[str],
     force_global_balance: bool,
     batch_synthetic_fraction: float,
-) -> Tuple[List[Any], PrestoDataset, DataLoader, Dict[str, Any], Dict[str, Any], Dict[str, Any]]:
+    num_workers: int,
+    pin_memory: bool,
+    persistent_workers: bool,
+    prefetch_factor: int,
+) -> EpochTrainState:
     if synthetic_negatives:
-        train_records, _, synthetic_stats = _augment_train_records_only(
+        synthetic_records, synthetic_stats = _generate_synthetic_train_records(
             train_records=real_train_records,
-            val_records=val_records,
             mhc_sequences=mhc_sequences,
             negative_ratio=negative_ratio,
             seed=synthetic_seed,
@@ -1030,16 +1458,22 @@ def _build_epoch_train_state(
             modes=synthetic_modes,
         )
     else:
-        train_records = list(real_train_records)
+        synthetic_records = []
         synthetic_stats = {
             "train": {"added": 0, "added_general": 0},
             "val": {"added": 0, "reason": "validation_real_only"},
         }
-    train_dataset = PrestoDataset(
-        binding_records=train_records,
-        mhc_sequences=dict(mhc_sequences),
-        strict_mhc_resolution=False,
-    )
+    if synthetic_records:
+        synthetic_dataset = PrestoDataset(
+            binding_records=synthetic_records,
+            mhc_sequences=dict(mhc_sequences),
+            strict_mhc_resolution=False,
+            dataset_index_offset=len(real_train_dataset),
+        )
+        train_dataset: Dataset = CombinedSampleDataset(real_train_dataset, synthetic_dataset)
+    else:
+        train_dataset = real_train_dataset
+    train_records = list(real_train_records) + list(synthetic_records)
     collator = PrestoCollator()
     train_loader = _create_focused_train_loader(
         train_dataset,
@@ -1050,14 +1484,19 @@ def _build_epoch_train_state(
         alleles=alleles,
         force_global_balance=force_global_balance,
         synthetic_fraction=batch_synthetic_fraction,
+        num_workers=num_workers,
+        pin_memory=pin_memory,
+        persistent_workers=persistent_workers,
+        prefetch_factor=prefetch_factor,
     )
     record_groove_audit = _audit_record_groove_preparation(
         train_records,
         mhc_sequences=mhc_sequences,
     )
     dataset_groove_audit = _audit_dataset_groove_inputs(train_dataset)
-    return (
+    return EpochTrainState(
         train_records,
+        list(synthetic_records),
         train_dataset,
         train_loader,
         synthetic_stats,
@@ -1067,7 +1506,7 @@ def _build_epoch_train_state(
 
 
 def _create_focused_train_loader(
-    dataset: PrestoDataset,
+    dataset: Dataset,
     *,
     batch_size: int,
     collator: PrestoCollator,
@@ -1076,6 +1515,10 @@ def _create_focused_train_loader(
     alleles: Sequence[str],
     force_global_balance: bool = False,
     synthetic_fraction: float = 0.0,
+    num_workers: int = 0,
+    pin_memory: bool = False,
+    persistent_workers: bool = True,
+    prefetch_factor: int = 2,
 ) -> DataLoader:
     normalized_alleles = [str(a).strip() for a in alleles if str(a).strip()]
     if balanced and not force_global_balance and len(normalized_alleles) >= 2:
@@ -1086,12 +1529,18 @@ def _create_focused_train_loader(
             synthetic_fraction=float(synthetic_fraction),
             seed=seed,
         )
+        loader_kwargs: Dict[str, Any] = {
+            "num_workers": max(int(num_workers), 0),
+            "pin_memory": bool(pin_memory),
+        }
+        if int(num_workers) > 0:
+            loader_kwargs["persistent_workers"] = bool(persistent_workers)
+            loader_kwargs["prefetch_factor"] = max(1, int(prefetch_factor))
         return DataLoader(
             dataset,
             batch_sampler=batch_sampler,
             collate_fn=collator,
-            num_workers=0,
-            pin_memory=False,
+            **loader_kwargs,
         )
     return create_dataloader(
         dataset,
@@ -1100,6 +1549,10 @@ def _create_focused_train_loader(
         collator=collator,
         balanced=balanced,
         seed=seed,
+        num_workers=int(num_workers),
+        pin_memory=bool(pin_memory),
+        persistent_workers=bool(persistent_workers),
+        prefetch_factor=int(prefetch_factor),
     )
 
 
@@ -1217,6 +1670,27 @@ def _resolve_allele_sequences(index_csv: Path) -> Dict[str, str]:
     return build_mhc_sequence_lookup(records)
 
 
+def _prepare_probe_allele_sequences(
+    *,
+    probe_alleles: Sequence[str],
+    prepared_mhc_sequences: Mapping[str, str],
+    index_csv: Path,
+) -> Dict[str, str]:
+    allele_sequences = dict(prepared_mhc_sequences)
+    missing = [
+        allele for allele in probe_alleles
+        if str(allele or "").strip() and str(allele) not in allele_sequences
+    ]
+    if not missing:
+        return allele_sequences
+    fallback_sequences = _resolve_allele_sequences(index_csv)
+    for allele in missing:
+        seq = fallback_sequences.get(str(allele))
+        if seq:
+            allele_sequences[str(allele)] = seq
+    return allele_sequences
+
+
 def _find_allele_sequence(allele_sequences: Mapping[str, str], allele: str) -> Optional[str]:
     for key in [allele, allele.replace("HLA-", "")]:
         if key in allele_sequences:
@@ -1329,152 +1803,116 @@ def _as_float_vector(tensor: torch.Tensor) -> torch.Tensor:
     return tensor.to(dtype=torch.float32).reshape(-1)
 
 
+def _collect_rankable_binding_pairs(
+    *,
+    pair_index_tensor: Optional[torch.Tensor],
+    bind_mask: Optional[torch.Tensor],
+    bind_target_log10: Optional[torch.Tensor],
+    bind_qual: Optional[torch.Tensor],
+    target_gap_min: float,
+    pair_prefix: str,
+) -> Tuple[Optional[torch.Tensor], Optional[torch.Tensor], Optional[torch.Tensor], Dict[str, float]]:
+    metrics: Dict[str, float] = {
+        f"{pair_prefix}_pairs": 0.0,
+        f"{pair_prefix}_labeled_pairs": 0.0,
+        f"{pair_prefix}_exact_pairs": 0.0,
+        f"{pair_prefix}_rankable_pairs": 0.0,
+    }
+    if not (
+        isinstance(pair_index_tensor, torch.Tensor)
+        and isinstance(bind_mask, torch.Tensor)
+        and isinstance(bind_target_log10, torch.Tensor)
+        and isinstance(bind_qual, torch.Tensor)
+        and pair_index_tensor.ndim == 2
+        and pair_index_tensor.shape[-1] == 2
+        and pair_index_tensor.numel() > 0
+    ):
+        return None, None, None, metrics
+
+    pair_index_tensor = pair_index_tensor.long()
+    metrics[f"{pair_prefix}_pairs"] = float(pair_index_tensor.shape[0])
+
+    idx_i = pair_index_tensor[:, 0]
+    idx_j = pair_index_tensor[:, 1]
+
+    bind_mask_vec = _as_float_vector(bind_mask) > 0
+    qual_vec = _as_float_vector(bind_qual).to(dtype=torch.long)
+    value_vec = _as_float_vector(bind_target_log10)
+
+    labeled_mask = bind_mask_vec[idx_i] & bind_mask_vec[idx_j]
+    metrics[f"{pair_prefix}_labeled_pairs"] = float(labeled_mask.sum().item())
+    if not torch.any(labeled_mask):
+        return None, None, None, metrics
+
+    idx_i = idx_i[labeled_mask]
+    idx_j = idx_j[labeled_mask]
+    qual_i = qual_vec[idx_i]
+    qual_j = qual_vec[idx_j]
+    exact_mask = (qual_i == 0) & (qual_j == 0)
+    metrics[f"{pair_prefix}_exact_pairs"] = float(exact_mask.sum().item())
+
+    value_i = value_vec[idx_i]
+    value_j = value_vec[idx_j]
+    min_log10 = value_vec.new_full(value_i.shape, -3.0)
+    max_log10 = value_vec.new_full(value_i.shape, max_log10_nM(DEFAULT_MAX_AFFINITY_NM))
+
+    lower_i = torch.where(qual_i < 0, min_log10, value_i)
+    upper_i = torch.where(qual_i > 0, max_log10, value_i)
+    lower_j = torch.where(qual_j < 0, min_log10, value_j)
+    upper_j = torch.where(qual_j > 0, max_log10, value_j)
+
+    i_stronger = upper_i + float(target_gap_min) <= lower_j
+    j_stronger = upper_j + float(target_gap_min) <= lower_i
+    rankable_mask = i_stronger | j_stronger
+    metrics[f"{pair_prefix}_rankable_pairs"] = float(rankable_mask.sum().item())
+    if not torch.any(rankable_mask):
+        return None, None, None, metrics
+
+    idx_i = idx_i[rankable_mask]
+    idx_j = idx_j[rankable_mask]
+    i_stronger = i_stronger[rankable_mask]
+    lower_i = lower_i[rankable_mask]
+    upper_i = upper_i[rankable_mask]
+    lower_j = lower_j[rankable_mask]
+    upper_j = upper_j[rankable_mask]
+
+    stronger_idx = torch.where(i_stronger, idx_i, idx_j)
+    weaker_idx = torch.where(i_stronger, idx_j, idx_i)
+    gaps = torch.maximum(lower_j - upper_i, lower_i - upper_j)
+    metrics[f"{pair_prefix}_target_gap_mean"] = float(gaps.mean().item())
+    return gaps, stronger_idx, weaker_idx, metrics
+
+
 def _collect_binding_contrastive_pairs(
     batch: Any,
     *,
     target_gap_min: float,
     max_pairs: int,
 ) -> Tuple[List[Tuple[float, int, int]], Dict[str, float]]:
-    metrics: Dict[str, float] = {
-        "out_binding_same_peptide_diff_allele_pairs": 0.0,
-        "out_binding_same_peptide_labeled_pairs": 0.0,
-        "out_binding_same_peptide_exact_pairs": 0.0,
-        "out_binding_same_peptide_rankable_pairs": 0.0,
-    }
-    pep_tok = getattr(batch, "pep_tok", None)
-    bind_mask = getattr(batch, "bind_mask", None)
-    bind_target = getattr(batch, "bind_target", None)
-    bind_qual = getattr(batch, "bind_qual", None)
-    primary_alleles = list(getattr(batch, "primary_alleles", []))
-    if not (
-        isinstance(pep_tok, torch.Tensor)
-        and isinstance(bind_mask, torch.Tensor)
-        and isinstance(bind_target, torch.Tensor)
-        and isinstance(bind_qual, torch.Tensor)
-        and len(primary_alleles) == int(pep_tok.shape[0])
-    ):
+    gaps, stronger_idx, weaker_idx, metrics = _collect_rankable_binding_pairs(
+        pair_index_tensor=getattr(batch, "same_peptide_diff_allele_pairs", None),
+        bind_mask=getattr(batch, "bind_mask", None),
+        bind_target_log10=getattr(batch, "bind_target_log10", None),
+        bind_qual=getattr(batch, "bind_qual", None),
+        target_gap_min=target_gap_min,
+        pair_prefix="out_binding_same_peptide",
+    )
+    if gaps is None or stronger_idx is None or weaker_idx is None or gaps.numel() == 0:
+        metrics["out_binding_same_peptide_pairs_used"] = 0.0
         return [], metrics
-
-    pep_rows = pep_tok.detach().cpu().tolist()
-    peptide_groups: Dict[Tuple[int, ...], List[int]] = defaultdict(list)
-    for idx, row in enumerate(pep_rows):
-        peptide_groups[tuple(int(v) for v in row)].append(idx)
-
-    bind_mask_vec = (_as_float_vector(bind_mask).detach().cpu() > 0).tolist()
-    bind_target_log10 = normalize_binding_target_log10(
-        _as_float_vector(bind_target).detach().cpu(),
-        assume_log10=False,
-    ).tolist()
-    bind_qual_vec = _as_float_vector(bind_qual).detach().cpu().tolist()
-    min_log10 = -3.0
-    max_log10 = max_log10_nM(DEFAULT_MAX_AFFINITY_NM)
-
-    candidates: List[Tuple[float, int, int]] = []
-    target_gaps: List[float] = []
-    for indices in peptide_groups.values():
-        if len(indices) < 2:
-            continue
-        for pos, idx_i in enumerate(indices):
-            allele_i = str(primary_alleles[idx_i]).strip()
-            if not allele_i:
-                continue
-            for idx_j in indices[pos + 1 :]:
-                allele_j = str(primary_alleles[idx_j]).strip()
-                if not allele_j or allele_i == allele_j:
-                    continue
-                metrics["out_binding_same_peptide_diff_allele_pairs"] += 1.0
-                if not (bind_mask_vec[idx_i] and bind_mask_vec[idx_j]):
-                    continue
-                metrics["out_binding_same_peptide_labeled_pairs"] += 1.0
-                qual_i = int(round(bind_qual_vec[idx_i]))
-                qual_j = int(round(bind_qual_vec[idx_j]))
-                if qual_i == 0 and qual_j == 0:
-                    metrics["out_binding_same_peptide_exact_pairs"] += 1.0
-
-                value_i = float(bind_target_log10[idx_i])
-                value_j = float(bind_target_log10[idx_j])
-                lower_i = min_log10 if qual_i < 0 else value_i
-                upper_i = max_log10 if qual_i > 0 else value_i
-                lower_j = min_log10 if qual_j < 0 else value_j
-                upper_j = max_log10 if qual_j > 0 else value_j
-
-                stronger: Optional[int] = None
-                weaker: Optional[int] = None
-                if upper_i + float(target_gap_min) <= lower_j:
-                    stronger, weaker = idx_i, idx_j
-                elif upper_j + float(target_gap_min) <= lower_i:
-                    stronger, weaker = idx_j, idx_i
-                if stronger is None or weaker is None:
-                    continue
-
-                gap = max(lower_j - upper_i, lower_i - upper_j)
-                metrics["out_binding_same_peptide_rankable_pairs"] += 1.0
-                candidates.append((gap, stronger, weaker))
-                target_gaps.append(gap)
-
-    candidates.sort(key=lambda item: item[0], reverse=True)
-    if target_gaps:
-        metrics["out_binding_same_peptide_target_gap_mean"] = float(
-            sum(target_gaps) / len(target_gaps)
+    if max_pairs > 0 and gaps.numel() > max_pairs:
+        topk = torch.topk(gaps, k=max_pairs, largest=True).indices
+        gaps = gaps[topk]
+        stronger_idx = stronger_idx[topk]
+        weaker_idx = weaker_idx[topk]
+    metrics["out_binding_same_peptide_pairs_used"] = float(gaps.numel())
+    return list(
+        zip(
+            gaps.detach().cpu().tolist(),
+            stronger_idx.detach().cpu().tolist(),
+            weaker_idx.detach().cpu().tolist(),
         )
-    if max_pairs > 0:
-        candidates = candidates[:max_pairs]
-    metrics["out_binding_same_peptide_pairs_used"] = float(len(candidates))
-    return candidates, metrics
-
-
-def _compute_binding_contrastive_loss(
-    outputs: Dict[str, object],
-    batch: Any,
-    regularization: Mapping[str, float],
-) -> Tuple[Optional[torch.Tensor], Dict[str, float]]:
-    pair_candidates, metrics = _collect_binding_contrastive_pairs(
-        batch,
-        target_gap_min=float(regularization.get("binding_contrastive_target_gap_min", 0.3)),
-        max_pairs=int(regularization.get("binding_contrastive_max_pairs", 64)),
-    )
-    kd_tensor: Optional[torch.Tensor]
-    if bool(regularization.get("binding_rank_use_probe", False)):
-        probe_tensor = outputs.get("binding_affinity_probe_kd")
-        kd_tensor = probe_tensor if isinstance(probe_tensor, torch.Tensor) else None
-    else:
-        assays = outputs.get("assays")
-        if not isinstance(assays, dict):
-            return None, metrics
-        kd_tensor = assays.get("KD_nM") if isinstance(assays.get("KD_nM"), torch.Tensor) else None
-    if not isinstance(kd_tensor, torch.Tensor) or not pair_candidates:
-        return None, metrics
-
-    kd_vec = _as_float_vector(kd_tensor)
-    margin = float(regularization.get("binding_contrastive_margin", 0.2))
-    target_gap_cap = float(regularization.get("binding_contrastive_target_gap_cap", 2.0))
-    if target_gap_cap <= 0.0:
-        target_gap_cap = margin
-    weight = float(regularization.get("binding_contrastive_weight", 0.0))
-    pair_losses: List[torch.Tensor] = []
-    pred_gaps: List[float] = []
-    target_gaps: List[float] = []
-    required_gaps: List[float] = []
-    for gap, stronger_idx, weaker_idx in pair_candidates:
-        pred_gap = kd_vec[weaker_idx] - kd_vec[stronger_idx]
-        required_gap = max(margin, min(float(gap), target_gap_cap))
-        pair_losses.append(torch.relu(kd_vec.new_tensor(required_gap) - pred_gap))
-        pred_gaps.append(float(pred_gap.detach().item()))
-        target_gaps.append(float(gap))
-        required_gaps.append(float(required_gap))
-
-    metrics["out_binding_contrastive_pred_gap_mean"] = float(
-        sum(pred_gaps) / max(len(pred_gaps), 1)
-    )
-    metrics["out_binding_contrastive_target_gap_mean"] = float(
-        sum(target_gaps) / max(len(target_gaps), 1)
-    )
-    metrics["out_binding_contrastive_required_gap_mean"] = float(
-        sum(required_gaps) / max(len(required_gaps), 1)
-    )
-    if weight <= 0.0:
-        return None, metrics
-    return weight * torch.stack(pair_losses).mean(), metrics
+    ), metrics
 
 
 def _collect_binding_peptide_ranking_pairs(
@@ -1483,101 +1921,44 @@ def _collect_binding_peptide_ranking_pairs(
     target_gap_min: float,
     max_pairs: int,
 ) -> Tuple[List[Tuple[float, int, int]], Dict[str, float]]:
-    metrics: Dict[str, float] = {
-        "out_binding_same_allele_diff_peptide_pairs": 0.0,
-        "out_binding_same_allele_labeled_pairs": 0.0,
-        "out_binding_same_allele_exact_pairs": 0.0,
-        "out_binding_same_allele_rankable_pairs": 0.0,
-    }
-    pep_tok = getattr(batch, "pep_tok", None)
-    bind_mask = getattr(batch, "bind_mask", None)
-    bind_target = getattr(batch, "bind_target", None)
-    bind_qual = getattr(batch, "bind_qual", None)
-    primary_alleles = list(getattr(batch, "primary_alleles", []))
-    if not (
-        isinstance(pep_tok, torch.Tensor)
-        and isinstance(bind_mask, torch.Tensor)
-        and isinstance(bind_target, torch.Tensor)
-        and isinstance(bind_qual, torch.Tensor)
-        and len(primary_alleles) == int(pep_tok.shape[0])
-    ):
+    gaps, stronger_idx, weaker_idx, metrics = _collect_rankable_binding_pairs(
+        pair_index_tensor=getattr(batch, "same_allele_diff_peptide_pairs", None),
+        bind_mask=getattr(batch, "bind_mask", None),
+        bind_target_log10=getattr(batch, "bind_target_log10", None),
+        bind_qual=getattr(batch, "bind_qual", None),
+        target_gap_min=target_gap_min,
+        pair_prefix="out_binding_same_allele",
+    )
+    if gaps is None or stronger_idx is None or weaker_idx is None or gaps.numel() == 0:
+        metrics["out_binding_same_allele_pairs_used"] = 0.0
         return [], metrics
-
-    pep_rows = [tuple(int(v) for v in row) for row in pep_tok.detach().cpu().tolist()]
-    bind_mask_vec = (_as_float_vector(bind_mask).detach().cpu() > 0).tolist()
-    bind_target_log10 = normalize_binding_target_log10(
-        _as_float_vector(bind_target).detach().cpu(),
-        assume_log10=False,
-    ).tolist()
-    bind_qual_vec = _as_float_vector(bind_qual).detach().cpu().tolist()
-    min_log10 = -3.0
-    max_log10 = max_log10_nM(DEFAULT_MAX_AFFINITY_NM)
-
-    allele_groups: Dict[str, List[int]] = defaultdict(list)
-    for idx, allele in enumerate(primary_alleles):
-        allele_key = str(allele or "").strip()
-        if allele_key:
-            allele_groups[allele_key].append(idx)
-
-    candidates: List[Tuple[float, int, int]] = []
-    target_gaps: List[float] = []
-    for indices in allele_groups.values():
-        if len(indices) < 2:
-            continue
-        for pos, idx_i in enumerate(indices):
-            for idx_j in indices[pos + 1 :]:
-                if pep_rows[idx_i] == pep_rows[idx_j]:
-                    continue
-                metrics["out_binding_same_allele_diff_peptide_pairs"] += 1.0
-                if not (bind_mask_vec[idx_i] and bind_mask_vec[idx_j]):
-                    continue
-                metrics["out_binding_same_allele_labeled_pairs"] += 1.0
-                qual_i = int(round(bind_qual_vec[idx_i]))
-                qual_j = int(round(bind_qual_vec[idx_j]))
-                if qual_i == 0 and qual_j == 0:
-                    metrics["out_binding_same_allele_exact_pairs"] += 1.0
-
-                value_i = float(bind_target_log10[idx_i])
-                value_j = float(bind_target_log10[idx_j])
-                lower_i = min_log10 if qual_i < 0 else value_i
-                upper_i = max_log10 if qual_i > 0 else value_i
-                lower_j = min_log10 if qual_j < 0 else value_j
-                upper_j = max_log10 if qual_j > 0 else value_j
-
-                stronger: Optional[int] = None
-                weaker: Optional[int] = None
-                if upper_i + float(target_gap_min) <= lower_j:
-                    stronger, weaker = idx_i, idx_j
-                elif upper_j + float(target_gap_min) <= lower_i:
-                    stronger, weaker = idx_j, idx_i
-                if stronger is None or weaker is None:
-                    continue
-
-                gap = max(lower_j - upper_i, lower_i - upper_j)
-                metrics["out_binding_same_allele_rankable_pairs"] += 1.0
-                candidates.append((gap, stronger, weaker))
-                target_gaps.append(gap)
-
-    candidates.sort(key=lambda item: item[0], reverse=True)
-    if target_gaps:
-        metrics["out_binding_same_allele_target_gap_mean"] = float(
-            sum(target_gaps) / len(target_gaps)
+    if max_pairs > 0 and gaps.numel() > max_pairs:
+        topk = torch.topk(gaps, k=max_pairs, largest=True).indices
+        gaps = gaps[topk]
+        stronger_idx = stronger_idx[topk]
+        weaker_idx = weaker_idx[topk]
+    metrics["out_binding_same_allele_pairs_used"] = float(gaps.numel())
+    return list(
+        zip(
+            gaps.detach().cpu().tolist(),
+            stronger_idx.detach().cpu().tolist(),
+            weaker_idx.detach().cpu().tolist(),
         )
-    if max_pairs > 0:
-        candidates = candidates[:max_pairs]
-    metrics["out_binding_same_allele_pairs_used"] = float(len(candidates))
-    return candidates, metrics
+    ), metrics
 
 
-def _compute_binding_peptide_ranking_loss(
+def _compute_binding_contrastive_loss(
     outputs: Dict[str, object],
     batch: Any,
     regularization: Mapping[str, float],
 ) -> Tuple[Optional[torch.Tensor], Dict[str, float]]:
-    pair_candidates, metrics = _collect_binding_peptide_ranking_pairs(
-        batch,
-        target_gap_min=float(regularization.get("binding_peptide_contrastive_target_gap_min", 0.5)),
-        max_pairs=int(regularization.get("binding_peptide_contrastive_max_pairs", 128)),
+    gaps, stronger_idx, weaker_idx, metrics = _collect_rankable_binding_pairs(
+        pair_index_tensor=getattr(batch, "same_peptide_diff_allele_pairs", None),
+        bind_mask=getattr(batch, "bind_mask", None),
+        bind_target_log10=getattr(batch, "bind_target_log10", None),
+        bind_qual=getattr(batch, "bind_qual", None),
+        target_gap_min=float(regularization.get("binding_contrastive_target_gap_min", 0.3)),
+        pair_prefix="out_binding_same_peptide",
     )
     kd_tensor: Optional[torch.Tensor]
     if bool(regularization.get("binding_rank_use_probe", False)):
@@ -1588,7 +1969,67 @@ def _compute_binding_peptide_ranking_loss(
         if not isinstance(assays, dict):
             return None, metrics
         kd_tensor = assays.get("KD_nM") if isinstance(assays.get("KD_nM"), torch.Tensor) else None
-    if not isinstance(kd_tensor, torch.Tensor) or not pair_candidates:
+    if (
+        not isinstance(kd_tensor, torch.Tensor)
+        or gaps is None
+        or stronger_idx is None
+        or weaker_idx is None
+        or gaps.numel() == 0
+    ):
+        return None, metrics
+
+    kd_vec = _as_float_vector(kd_tensor)
+    margin = float(regularization.get("binding_contrastive_margin", 0.2))
+    target_gap_cap = float(regularization.get("binding_contrastive_target_gap_cap", 2.0))
+    if target_gap_cap <= 0.0:
+        target_gap_cap = margin
+    weight = float(regularization.get("binding_contrastive_weight", 0.0))
+    pred_gaps = kd_vec[weaker_idx] - kd_vec[stronger_idx]
+    required_gaps = torch.clamp(gaps, min=margin, max=target_gap_cap)
+    max_pairs = int(regularization.get("binding_contrastive_max_pairs", 64))
+    if max_pairs > 0 and pred_gaps.numel() > max_pairs:
+        topk = torch.topk(gaps, k=max_pairs, largest=True).indices
+        pred_gaps = pred_gaps[topk]
+        gaps = gaps[topk]
+        required_gaps = required_gaps[topk]
+    metrics["out_binding_same_peptide_pairs_used"] = float(pred_gaps.numel())
+    metrics["out_binding_contrastive_pred_gap_mean"] = float(pred_gaps.mean().item())
+    metrics["out_binding_contrastive_target_gap_mean"] = float(gaps.mean().item())
+    metrics["out_binding_contrastive_required_gap_mean"] = float(required_gaps.mean().item())
+    if weight <= 0.0:
+        return None, metrics
+    return weight * torch.relu(required_gaps - pred_gaps).mean(), metrics
+
+
+def _compute_binding_peptide_ranking_loss(
+    outputs: Dict[str, object],
+    batch: Any,
+    regularization: Mapping[str, float],
+) -> Tuple[Optional[torch.Tensor], Dict[str, float]]:
+    gaps, stronger_idx, weaker_idx, metrics = _collect_rankable_binding_pairs(
+        pair_index_tensor=getattr(batch, "same_allele_diff_peptide_pairs", None),
+        bind_mask=getattr(batch, "bind_mask", None),
+        bind_target_log10=getattr(batch, "bind_target_log10", None),
+        bind_qual=getattr(batch, "bind_qual", None),
+        target_gap_min=float(regularization.get("binding_peptide_contrastive_target_gap_min", 0.5)),
+        pair_prefix="out_binding_same_allele",
+    )
+    kd_tensor: Optional[torch.Tensor]
+    if bool(regularization.get("binding_rank_use_probe", False)):
+        probe_tensor = outputs.get("binding_affinity_probe_kd")
+        kd_tensor = probe_tensor if isinstance(probe_tensor, torch.Tensor) else None
+    else:
+        assays = outputs.get("assays")
+        if not isinstance(assays, dict):
+            return None, metrics
+        kd_tensor = assays.get("KD_nM") if isinstance(assays.get("KD_nM"), torch.Tensor) else None
+    if (
+        not isinstance(kd_tensor, torch.Tensor)
+        or gaps is None
+        or stronger_idx is None
+        or weaker_idx is None
+        or gaps.numel() == 0
+    ):
         return None, metrics
 
     kd_vec = _as_float_vector(kd_tensor)
@@ -1597,27 +2038,20 @@ def _compute_binding_peptide_ranking_loss(
     if target_gap_cap <= 0.0:
         target_gap_cap = margin
     weight = float(regularization.get("binding_peptide_contrastive_weight", 0.0))
-    pair_losses: List[torch.Tensor] = []
-    pred_gaps: List[float] = []
-    target_gaps: List[float] = []
-    required_gaps: List[float] = []
-    for gap, stronger_idx, weaker_idx in pair_candidates:
-        pred_gap = kd_vec[weaker_idx] - kd_vec[stronger_idx]
-        required_gap = max(margin, min(float(gap), target_gap_cap))
-        pair_losses.append(torch.relu(kd_vec.new_tensor(required_gap) - pred_gap))
-        pred_gaps.append(float(pred_gap.detach().item()))
-        target_gaps.append(float(gap))
-        required_gaps.append(float(required_gap))
-
-    metrics["out_binding_same_allele_pred_gap_mean"] = float(
-        sum(pred_gaps) / max(len(pred_gaps), 1)
-    )
-    metrics["out_binding_same_allele_required_gap_mean"] = float(
-        sum(required_gaps) / max(len(required_gaps), 1)
-    )
+    pred_gaps = kd_vec[weaker_idx] - kd_vec[stronger_idx]
+    required_gaps = torch.clamp(gaps, min=margin, max=target_gap_cap)
+    max_pairs = int(regularization.get("binding_peptide_contrastive_max_pairs", 128))
+    if max_pairs > 0 and pred_gaps.numel() > max_pairs:
+        topk = torch.topk(gaps, k=max_pairs, largest=True).indices
+        pred_gaps = pred_gaps[topk]
+        gaps = gaps[topk]
+        required_gaps = required_gaps[topk]
+    metrics["out_binding_same_allele_pairs_used"] = float(pred_gaps.numel())
+    metrics["out_binding_same_allele_pred_gap_mean"] = float(pred_gaps.mean().item())
+    metrics["out_binding_same_allele_required_gap_mean"] = float(required_gaps.mean().item())
     if weight <= 0.0:
         return None, metrics
-    return weight * torch.stack(pair_losses).mean(), metrics
+    return weight * torch.relu(required_gaps - pred_gaps).mean(), metrics
 
 
 def _mask_from_batch_mapping(
@@ -1715,6 +2149,28 @@ def _affinity_only_loss(
             _mask_from_batch_mapping(target_masks, "binding_ic50", device=batch.pep_tok.device),
             _mask_from_batch_mapping(target_quals, "binding_ic50", device=batch.pep_tok.device),
         )
+    elif loss_mode == "assay_heads_only":
+        _apply_censor_loss(
+            "binding_kd",
+            outputs.get("assays", {}).get("KD_nM"),
+            targets.get("binding_kd"),
+            _mask_from_batch_mapping(target_masks, "binding_kd", device=batch.pep_tok.device),
+            _mask_from_batch_mapping(target_quals, "binding_kd", device=batch.pep_tok.device),
+        )
+        _apply_censor_loss(
+            "binding_ic50",
+            outputs.get("assays", {}).get("IC50_nM"),
+            targets.get("binding_ic50"),
+            _mask_from_batch_mapping(target_masks, "binding_ic50", device=batch.pep_tok.device),
+            _mask_from_batch_mapping(target_quals, "binding_ic50", device=batch.pep_tok.device),
+        )
+        _apply_censor_loss(
+            "binding_ec50",
+            outputs.get("assays", {}).get("EC50_nM"),
+            targets.get("binding_ec50"),
+            _mask_from_batch_mapping(target_masks, "binding_ec50", device=batch.pep_tok.device),
+            _mask_from_batch_mapping(target_quals, "binding_ec50", device=batch.pep_tok.device),
+        )
     elif loss_mode == "full":
         _apply_censor_loss(
             "binding",
@@ -1754,9 +2210,7 @@ def _affinity_only_loss(
     else:
         raise ValueError(f"Unsupported affinity loss mode: {loss_mode!r}")
 
-    if not losses:
-        raise RuntimeError("Affinity-only batch produced no supervised losses")
-    total = torch.stack(losses).mean()
+    total = torch.stack(losses).mean() if losses else None
     contrastive_loss, contrastive_metrics = _compute_binding_contrastive_loss(
         outputs=outputs,
         batch=batch,
@@ -1764,7 +2218,7 @@ def _affinity_only_loss(
     )
     metrics.update(contrastive_metrics)
     if contrastive_loss is not None:
-        total = total + contrastive_loss
+        total = contrastive_loss if total is None else (total + contrastive_loss)
     peptide_ranking_loss, peptide_ranking_metrics = _compute_binding_peptide_ranking_loss(
         outputs=outputs,
         batch=batch,
@@ -1772,7 +2226,9 @@ def _affinity_only_loss(
     )
     metrics.update(peptide_ranking_metrics)
     if peptide_ranking_loss is not None:
-        total = total + peptide_ranking_loss
+        total = peptide_ranking_loss if total is None else (total + peptide_ranking_loss)
+    if total is None:
+        raise RuntimeError("Affinity-only batch produced no supervised losses")
     metrics["loss_tasks"] = float(len(losses))
     return total, metrics
 
@@ -1862,6 +2318,7 @@ def _write_summary_artifacts(
     out_dir: Path,
     summary: Mapping[str, Any],
     probe_rows: Sequence[Mapping[str, Any]],
+    write_probe_plot: bool = True,
 ) -> None:
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     _write_probe_csv(out_dir / "probe_affinity_over_epochs.csv", probe_rows)
@@ -1869,7 +2326,8 @@ def _write_summary_artifacts(
         json.dumps(list(probe_rows), indent=2),
         encoding="utf-8",
     )
-    _write_probe_plot(out_dir / "probe_affinity_over_epochs.png", probe_rows)
+    if write_probe_plot:
+        _write_probe_plot(out_dir / "probe_affinity_over_epochs.png", probe_rows)
 
 
 def _load_checkpoint_payload(checkpoint_path: str) -> Dict[str, Any]:
@@ -1910,9 +2368,19 @@ def _filter_compatible_state_dict(
 
 
 def main() -> None:
+    wall_start = time.perf_counter()
     parser = argparse.ArgumentParser(description="Focused allele-panel binding diagnostic")
     parser.add_argument("--data-dir", type=str, default="data")
     parser.add_argument("--out-dir", type=str, default="artifacts/focused_binding_probe")
+    parser.add_argument(
+        "--cache-dir",
+        type=str,
+        default="",
+        help="Optional prepared-dataset cache directory. Default: <data-dir>/.cache/focused_binding",
+    )
+    parser.add_argument("--dataset-cache", dest="dataset_cache", action="store_true")
+    parser.add_argument("--no-dataset-cache", dest="dataset_cache", action="store_false")
+    parser.set_defaults(dataset_cache=True)
     parser.add_argument(
         "--alleles",
         type=str,
@@ -1928,6 +2396,25 @@ def main() -> None:
     )
     parser.add_argument("--epochs", type=int, default=DEFAULT_EPOCHS)
     parser.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
+    parser.add_argument("--num-workers", type=int, default=0)
+    parser.add_argument("--pin-memory", dest="pin_memory", action="store_true")
+    parser.add_argument("--no-pin-memory", dest="pin_memory", action="store_false")
+    parser.set_defaults(pin_memory=True)
+    parser.add_argument("--persistent-workers", dest="persistent_workers", action="store_true")
+    parser.add_argument("--no-persistent-workers", dest="persistent_workers", action="store_false")
+    parser.set_defaults(persistent_workers=False)
+    parser.add_argument("--prefetch-factor", type=int, default=2)
+    parser.add_argument(
+        "--matmul-precision",
+        type=str,
+        choices=("default", "highest", "high", "medium"),
+        default="high",
+        help="Optional torch float32 matmul precision override.",
+    )
+    parser.add_argument("--allow-tf32", dest="allow_tf32", action="store_true")
+    parser.add_argument("--no-allow-tf32", dest="allow_tf32", action="store_false")
+    parser.set_defaults(allow_tf32=True)
+    parser.add_argument("--torch-compile", action="store_true")
     parser.add_argument("--d-model", type=int, default=DEFAULT_D_MODEL)
     parser.add_argument("--n-layers", type=int, default=DEFAULT_N_LAYERS)
     parser.add_argument("--n-heads", type=int, default=DEFAULT_N_HEADS)
@@ -2053,7 +2540,12 @@ def main() -> None:
         type=str,
         choices=sorted(AFFINITY_LOSS_MODES),
         default="full",
-        help="Focused affinity loss contract. 'probe_only' uses only the direct affinity head. 'ic50_only' supervises only assays.IC50_nM.",
+        help=(
+            "Focused affinity loss contract. "
+            "'probe_only' uses only the direct affinity head. "
+            "'ic50_only' supervises only assays.IC50_nM. "
+            "'assay_heads_only' supervises only KD/IC50/EC50 heads with censor-aware losses."
+        ),
     )
     parser.add_argument(
         "--affinity-assay-mode",
@@ -2122,6 +2614,12 @@ def main() -> None:
         default=128,
         help="Maximum same-allele/different-peptide pairs per batch used for ranking.",
     )
+    parser.add_argument(
+        "--probe-plot-frequency",
+        choices=("epoch", "final", "off"),
+        default="final",
+        help="How often to rewrite the probe trajectory PNG during training.",
+    )
     args = parser.parse_args()
 
     torch.manual_seed(int(args.seed))
@@ -2132,6 +2630,11 @@ def main() -> None:
         negative_ratio=float(args.negative_ratio),
         explicit_fraction=float(args.batch_synthetic_fraction),
     )
+    if str(args.matmul_precision) != "default":
+        torch.set_float32_matmul_precision(str(args.matmul_precision))
+    if torch.cuda.is_available():
+        torch.backends.cuda.matmul.allow_tf32 = bool(args.allow_tf32)
+        torch.backends.cudnn.allow_tf32 = bool(args.allow_tf32)
 
     data_dir = Path(args.data_dir)
     out_dir = Path(args.out_dir)
@@ -2153,76 +2656,65 @@ def main() -> None:
         raise ValueError("--max-per-allele is only valid for explicit allele-panel training")
 
     training_alleles = [] if bool(args.train_all_alleles) else list(probe_alleles)
-    records, subset_stats = _load_binding_records_from_merged_tsv(
-        merged_tsv,
-        alleles=training_alleles,
-        mhc_class_filter=train_class_filter,
-        max_records=(None if int(args.max_records) <= 0 else int(args.max_records)),
-        sampling_seed=int(args.seed) + 17,
-    )
-
     source_filter = str(args.source or "").strip().lower()
-    if source_filter:
-        records = [rec for rec in records if str(rec.source or "").strip().lower() == source_filter]
-    records = [
-        rec for rec in records if _keep_measurement_type(rec.measurement_type, args.measurement_profile)
-    ]
-    if args.measurement_type_filter:
-        records = [
-            rec for rec in records
-            if _normalize_binding_measurement(rec.measurement_type) == str(args.measurement_type_filter)
-        ]
-    records = [
-        rec for rec in records
-        if _keep_binding_qualifier(getattr(rec, "qualifier", 0), str(args.qualifier_filter))
-    ]
+    explicit_probe_peptides = [str(args.probe_peptide).strip().upper()]
+    for peptide in _split_csv(str(args.extra_probe_peptides)):
+        peptide_key = str(peptide).strip().upper()
+        if peptide_key and peptide_key not in explicit_probe_peptides:
+            explicit_probe_peptides.append(peptide_key)
 
-    real_records = list(records)
-    shared_peptide_stats: Dict[str, Any] = {}
-    if args.shared_peptides_only:
-        real_records, shared_peptide_stats = _filter_shared_peptides_only(real_records, probe_alleles)
-    probe_allele_counts_after_filter = _require_target_allele_coverage(real_records, probe_alleles)
-    balance_stats: Dict[str, Any] = {}
-    if args.max_per_allele >= 0:
-        real_records, balance_stats = _balance_alleles(
-            real_records,
-            probe_alleles,
-            args.max_per_allele,
-            rng_seed=int(args.seed),
-        )
-        probe_allele_counts_after_filter = _require_target_allele_coverage(real_records, probe_alleles)
-    train_records, val_records, split_stats = _split_records_by_peptide(
-        real_records,
-        val_fraction=0.2,
+    cache_dir = Path(args.cache_dir).expanduser() if str(args.cache_dir).strip() else _default_cache_dir(data_dir)
+    setup_stage_timings: Dict[str, float] = {}
+    setup_stage_start = time.perf_counter()
+    prepared_state = _prepare_real_binding_state(
+        merged_tsv=merged_tsv,
+        index_csv=index_csv,
+        source_filter=source_filter,
+        probe_alleles=probe_alleles,
+        training_alleles=training_alleles,
+        train_all_alleles=bool(args.train_all_alleles),
+        train_class_filter=train_class_filter,
+        max_records=int(args.max_records),
+        measurement_profile=str(args.measurement_profile),
+        measurement_type_filter=str(args.measurement_type_filter),
+        qualifier_filter=str(args.qualifier_filter),
+        shared_peptides_only=bool(args.shared_peptides_only),
+        max_per_allele=int(args.max_per_allele),
         seed=int(args.seed),
-        alleles=(probe_alleles if not args.train_all_alleles else None),
+        explicit_probe_peptides=explicit_probe_peptides,
+        cache_dir=cache_dir,
+        use_cache=bool(args.dataset_cache),
     )
-    if not train_records or not val_records:
-        raise RuntimeError("Focused binding split must produce both train and val records")
+    setup_stage_timings["prepare_real_binding_state_s"] = time.perf_counter() - setup_stage_start
 
-    mhc_sequences, mhc_stats = resolve_mhc_sequences_from_index(
-        index_csv=str(index_csv),
-        alleles=sorted(
-            {
-                str(rec.mhc_allele or "").strip()
-                for rec in (train_records + val_records)
-                if str(rec.mhc_allele or "").strip()
-            }
-        ),
-    )
-
-    real_train_records = list(train_records)
-    real_val_records = list(val_records)
+    real_records = list(prepared_state.real_records)
+    subset_stats = prepared_state.subset_stats
+    shared_peptide_stats = prepared_state.shared_peptide_stats
+    probe_allele_counts_after_filter = prepared_state.probe_allele_counts_after_filter
+    balance_stats = prepared_state.balance_stats
+    split_stats = prepared_state.split_stats
+    mhc_sequences = prepared_state.mhc_sequences
+    mhc_stats = prepared_state.mhc_stats
+    real_train_records = list(prepared_state.real_train_records)
+    real_val_records = list(prepared_state.real_val_records)
     if not real_train_records or not real_val_records:
         raise RuntimeError("No binding records remain after split/augmentation")
 
+    dataset_stage_start = time.perf_counter()
+    real_train_dataset = PrestoDataset(
+        binding_records=real_train_records,
+        mhc_sequences=mhc_sequences,
+        strict_mhc_resolution=False,
+    )
     val_dataset = PrestoDataset(
         binding_records=real_val_records,
         mhc_sequences=mhc_sequences,
         strict_mhc_resolution=False,
     )
+    setup_stage_timings["dataset_build_s"] = time.perf_counter() - dataset_stage_start
 
     collator = PrestoCollator()
+    loader_stage_start = time.perf_counter()
     val_loader = create_dataloader(
         val_dataset,
         batch_size=int(args.batch_size),
@@ -2230,10 +2722,18 @@ def main() -> None:
         collator=collator,
         balanced=False,
         seed=int(args.seed),
+        num_workers=int(args.num_workers),
+        pin_memory=bool(args.pin_memory),
+        persistent_workers=bool(args.persistent_workers),
+        prefetch_factor=int(args.prefetch_factor),
     )
+    setup_stage_timings["val_loader_build_s"] = time.perf_counter() - loader_stage_start
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    gpu_sampler = _GpuTelemetrySampler(enabled=(device == "cuda"))
+    gpu_sampler.start()
     binding_core_lengths = _parse_int_csv(str(args.binding_core_lengths), default=(9,))
+    model_stage_start = time.perf_counter()
     model = Presto(
         d_model=int(args.d_model),
         n_layers=int(args.n_layers),
@@ -2257,11 +2757,15 @@ def main() -> None:
         model.load_state_dict(compatible_state_dict, strict=False)
     else:
         warm_start_filter_stats = {"skipped_missing": [], "skipped_shape": []}
+    if bool(args.torch_compile):
+        model = torch.compile(model, mode="reduce-overhead")
+    setup_stage_timings["model_init_and_warm_start_s"] = time.perf_counter() - model_stage_start
     optimizer = torch.optim.AdamW(
         model.parameters(),
         lr=float(args.lr),
         weight_decay=float(args.weight_decay),
     )
+    param_count = int(sum(p.numel() for p in model.parameters()))
     regularization_cfg = {
         "binding_contrastive_weight": float(args.binding_contrastive_weight),
         "binding_contrastive_margin": float(args.binding_contrastive_margin),
@@ -2280,22 +2784,29 @@ def main() -> None:
         "binding_rank_use_probe": bool(str(args.affinity_loss_mode) == "probe_only"),
     }
 
+    probe_stage_start = time.perf_counter()
     tokenizer = Tokenizer()
-    allele_sequences = _resolve_allele_sequences(index_csv)
+    allele_sequences = _prepare_probe_allele_sequences(
+        probe_alleles=probe_alleles,
+        prepared_mhc_sequences=mhc_sequences,
+        index_csv=index_csv,
+    )
     fit_probe_peptides = _select_fit_supported_probe_peptides(real_records, probe_alleles)
-    probe_peptides = [str(args.probe_peptide).strip().upper()]
-    for peptide in _split_csv(str(args.extra_probe_peptides)):
-        peptide_key = str(peptide).strip().upper()
-        if peptide_key and peptide_key not in probe_peptides:
-            probe_peptides.append(peptide_key)
+    probe_peptides = list(explicit_probe_peptides)
     for peptide in fit_probe_peptides:
         if peptide not in probe_peptides:
             probe_peptides.append(peptide)
 
-    probe_support = {
-        peptide: _audit_probe_support(merged_tsv, peptide, alleles_of_interest=probe_alleles)
-        for peptide in probe_peptides
-    }
+    probe_support = dict(prepared_state.probe_support)
+    for peptide in probe_peptides:
+        if peptide in probe_support:
+            continue
+        probe_support[peptide] = _audit_probe_support(
+            merged_tsv,
+            peptide,
+            alleles_of_interest=probe_alleles,
+        )
+    setup_stage_timings["probe_setup_s"] = time.perf_counter() - probe_stage_start
     batch_contract = _planned_strict_batch_contract(
         alleles=probe_alleles,
         batch_size=int(args.batch_size),
@@ -2326,11 +2837,30 @@ def main() -> None:
                 "synthetic_modes": list(synthetic_modes or ALL_SYNTHETIC_MODES),
                 "batch_synthetic_fraction": float(batch_synthetic_fraction),
                 "planned_batch_contract": batch_contract,
+                "runtime_config": {
+                    "num_workers": int(args.num_workers),
+                    "pin_memory": bool(args.pin_memory),
+                    "persistent_workers": bool(args.persistent_workers),
+                    "prefetch_factor": int(args.prefetch_factor),
+                    "matmul_precision": str(args.matmul_precision),
+                    "allow_tf32": bool(args.allow_tf32),
+                    "torch_compile": bool(args.torch_compile),
+                    "probe_plot_frequency": str(args.probe_plot_frequency),
+                },
                 "groove_pos_mode": str(args.groove_pos_mode),
                 "binding_core_lengths": list(binding_core_lengths),
                 "binding_core_refinement": str(args.binding_core_refinement),
                 "probe_allele_counts_after_filter": probe_allele_counts_after_filter,
                 "probe_peptides": probe_peptides,
+                "dataset_cache": {
+                    "enabled": bool(args.dataset_cache),
+                    "cache_dir": str(cache_dir),
+                    "cache_hit": bool(prepared_state.cache_hit),
+                    "cache_key": str(prepared_state.cache_key),
+                },
+                "setup_stage_timings": setup_stage_timings,
+                "param_count": param_count,
+                "setup_wall_s": time.perf_counter() - wall_start,
             },
             sort_keys=True,
         ),
@@ -2340,203 +2870,282 @@ def main() -> None:
     epoch_summaries: List[Dict[str, Any]] = []
     probe_rows: List[Dict[str, Any]] = []
     model.train()
-    for epoch in range(1, int(args.epochs) + 1):
-        epoch_synthetic_seed = _epoch_synthetic_seed(
-            int(args.seed),
-            epoch,
-            refresh_each_epoch=bool(args.synthetic_refresh_each_epoch),
-        )
-        (
-            train_records,
-            train_dataset,
-            train_loader,
-            epoch_synthetic_stats,
-            record_groove_audit,
-            dataset_groove_audit,
-        ) = _build_epoch_train_state(
-            real_train_records=real_train_records,
-            val_records=real_val_records,
-            mhc_sequences=mhc_sequences,
-            synthetic_negatives=bool(args.synthetic_negatives),
-            negative_ratio=float(args.negative_ratio),
-            synthetic_seed=epoch_synthetic_seed,
-            class_i_anchor_strategy=str(args.class_i_anchor_strategy),
-            synthetic_modes=synthetic_modes,
-            batch_size=int(args.batch_size),
-            balanced=bool(args.balanced_batches),
-            seed=int(args.seed) + epoch,
-            alleles=probe_alleles,
-            force_global_balance=bool(args.train_all_alleles),
-            batch_synthetic_fraction=float(batch_synthetic_fraction),
-        )
-        train_loss_sum = 0.0
-        train_batches = 0
-        grad_metrics_sum: Counter[str] = Counter()
-        batch_metrics: Dict[str, float] = {}
-        for batch in train_loader:
-            total_loss, batch_metrics = _affinity_only_loss(
+    setup_wall_s = time.perf_counter() - wall_start
+    try:
+        for epoch in range(1, int(args.epochs) + 1):
+            epoch_wall_start = time.perf_counter()
+            if device == "cuda":
+                torch.cuda.reset_peak_memory_stats()
+            epoch_synthetic_seed = _epoch_synthetic_seed(
+                int(args.seed),
+                epoch,
+                refresh_each_epoch=bool(args.synthetic_refresh_each_epoch),
+            )
+            (
+                epoch_train_state
+            ) = _build_epoch_train_state(
+                real_train_records=real_train_records,
+                real_train_dataset=real_train_dataset,
+                mhc_sequences=mhc_sequences,
+                synthetic_negatives=bool(args.synthetic_negatives),
+                negative_ratio=float(args.negative_ratio),
+                synthetic_seed=epoch_synthetic_seed,
+                class_i_anchor_strategy=str(args.class_i_anchor_strategy),
+                synthetic_modes=synthetic_modes,
+                batch_size=int(args.batch_size),
+                balanced=bool(args.balanced_batches),
+                seed=int(args.seed) + epoch,
+                alleles=probe_alleles,
+                force_global_balance=bool(args.train_all_alleles),
+                batch_synthetic_fraction=float(batch_synthetic_fraction),
+                num_workers=int(args.num_workers),
+                pin_memory=bool(args.pin_memory),
+                persistent_workers=bool(args.persistent_workers),
+                prefetch_factor=int(args.prefetch_factor),
+            )
+            train_records = epoch_train_state.train_records
+            train_dataset = epoch_train_state.train_dataset
+            train_loader = epoch_train_state.train_loader
+            epoch_synthetic_stats = epoch_train_state.synthetic_stats
+            record_groove_audit = epoch_train_state.record_groove_audit
+            dataset_groove_audit = epoch_train_state.dataset_groove_audit
+            train_loss_sum = 0.0
+            train_batches = 0
+            grad_metrics_sum: Counter[str] = Counter()
+            batch_metrics: Dict[str, float] = {}
+            train_data_wait_s = 0.0
+            train_forward_loss_s = 0.0
+            train_backward_s = 0.0
+            train_optimizer_s = 0.0
+            last_batch_done = time.perf_counter()
+            for batch in train_loader:
+                batch_start = time.perf_counter()
+                train_data_wait_s += batch_start - last_batch_done
+                forward_start = time.perf_counter()
+                total_loss, batch_metrics = _affinity_only_loss(
+                    model,
+                    batch,
+                    device,
+                    regularization=regularization_cfg,
+                    loss_mode=str(args.affinity_loss_mode),
+                )
+                train_forward_loss_s += time.perf_counter() - forward_start
+                optimizer.zero_grad(set_to_none=True)
+                backward_start = time.perf_counter()
+                total_loss.backward()
+                train_backward_s += time.perf_counter() - backward_start
+                grad_metrics_sum["grad_norm_affinity_probe"] += _grad_norm_for_prefixes(
+                    model,
+                    ["affinity_predictor.binding_affinity_probe."],
+                )
+                grad_metrics_sum["grad_norm_binding_core"] += _grad_norm_for_prefixes(
+                    model,
+                    ["affinity_predictor.binding."],
+                )
+                grad_metrics_sum["grad_norm_trunk_other"] += _grad_norm_for_prefixes(
+                    model,
+                    [
+                        "aa_embedding.",
+                        "segment_embedding.",
+                        "stream_encoder.",
+                        "latent_layers.pmhc_interaction.",
+                        "pmhc_interaction_token_proj.",
+                        "pmhc_interaction_vec_norm.",
+                        "binding_affinity_readout_proj.",
+                        "core_window_fuse.",
+                        "core_window_score.",
+                        "core_window_prior.",
+                        "core_window_vec_norm.",
+                    ],
+                )
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+                optimizer_start = time.perf_counter()
+                optimizer.step()
+                train_optimizer_s += time.perf_counter() - optimizer_start
+                train_loss_sum += float(total_loss.detach().item())
+                train_batches += 1
+                last_batch_done = time.perf_counter()
+
+            train_loss = train_loss_sum / max(train_batches, 1)
+            val_start = time.perf_counter()
+            val_loss = _mean_affinity_loss(
                 model,
-                batch,
+                val_loader,
                 device,
                 regularization=regularization_cfg,
                 loss_mode=str(args.affinity_loss_mode),
             )
-            optimizer.zero_grad(set_to_none=True)
-            total_loss.backward()
-            grad_metrics_sum["grad_norm_affinity_probe"] += _grad_norm_for_prefixes(
+            val_wall_s = time.perf_counter() - val_start
+            probe_start = time.perf_counter()
+            probe_eval = _evaluate_probe_panel(
                 model,
-                ["affinity_predictor.binding_affinity_probe."],
+                tokenizer,
+                allele_sequences,
+                probe_peptides,
+                probe_alleles,
+                device,
             )
-            grad_metrics_sum["grad_norm_binding_core"] += _grad_norm_for_prefixes(
-                model,
-                ["affinity_predictor.binding."],
-            )
-            grad_metrics_sum["grad_norm_trunk_other"] += _grad_norm_for_prefixes(
-                model,
-                [
-                    "aa_embedding.",
-                    "segment_embedding.",
-                    "stream_encoder.",
-                    "latent_layers.pmhc_interaction.",
-                    "pmhc_interaction_token_proj.",
-                    "pmhc_interaction_vec_norm.",
-                    "binding_affinity_readout_proj.",
-                    "core_window_fuse.",
-                    "core_window_score.",
-                    "core_window_prior.",
-                    "core_window_vec_norm.",
-                ],
-            )
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-            optimizer.step()
-            train_loss_sum += float(total_loss.detach().item())
-            train_batches += 1
-
-        train_loss = train_loss_sum / max(train_batches, 1)
-        val_loss = _mean_affinity_loss(
-            model,
-            val_loader,
-            device,
-            regularization=regularization_cfg,
-            loss_mode=str(args.affinity_loss_mode),
-        )
-        probe_eval = _evaluate_probe_panel(
-            model,
-            tokenizer,
-            allele_sequences,
-            probe_peptides,
-            probe_alleles,
-            device,
-        )
-        for row in probe_eval:
-            probe_rows.append({"epoch": epoch, **row})
-        epoch_summary = {
-            "epoch": epoch,
-            "train_loss": train_loss,
-            "val_loss": val_loss,
-            "grad_norm_affinity_probe": grad_metrics_sum["grad_norm_affinity_probe"] / max(train_batches, 1),
-            "grad_norm_binding_core": grad_metrics_sum["grad_norm_binding_core"] / max(train_batches, 1),
-            "grad_norm_trunk_other": grad_metrics_sum["grad_norm_trunk_other"] / max(train_batches, 1),
-            "synthetic_seed": int(epoch_synthetic_seed),
-            "synthetic_stats": epoch_synthetic_stats,
-            "train_record_summary": _summarize_binding_records(train_records),
-            "record_groove_audit": record_groove_audit,
-            "dataset_groove_audit": dataset_groove_audit,
-        }
-        epoch_summaries.append(epoch_summary)
-        summary = {
-            "config": {
-                "design_id": str(args.design_id),
-                "probe_alleles": probe_alleles,
-                "train_all_alleles": bool(args.train_all_alleles),
-                "train_mhc_class_filter": train_class_filter,
-                "probe_peptides": probe_peptides,
-                "groove_pos_mode": str(args.groove_pos_mode),
-                "binding_core_lengths": list(binding_core_lengths),
-                "binding_core_refinement": str(args.binding_core_refinement),
-                "measurement_profile": args.measurement_profile,
-                "measurement_type_filter": str(args.measurement_type_filter),
-                "qualifier_filter": str(args.qualifier_filter),
-                "shared_peptides_only": bool(args.shared_peptides_only),
-                "affinity_loss_mode": str(args.affinity_loss_mode),
-                "affinity_assay_mode": str(args.affinity_assay_mode),
-                "init_checkpoint": str(args.init_checkpoint or ""),
-                "synthetic_negatives": bool(args.synthetic_negatives),
-                "negative_ratio": float(args.negative_ratio),
-                "batch_synthetic_fraction": float(batch_synthetic_fraction),
-                "synthetic_refresh_each_epoch": bool(args.synthetic_refresh_each_epoch),
-                "synthetic_modes": list(synthetic_modes or ALL_SYNTHETIC_MODES),
-                "planned_batch_contract": batch_contract,
-                "class_i_anchor_strategy": str(args.class_i_anchor_strategy),
-                "binding_contrastive_weight": float(args.binding_contrastive_weight),
-                "binding_contrastive_margin": float(args.binding_contrastive_margin),
-                "binding_contrastive_target_gap_min": float(args.binding_contrastive_target_gap_min),
-                "binding_contrastive_target_gap_cap": float(args.binding_contrastive_target_gap_cap),
-                "binding_contrastive_max_pairs": int(args.binding_contrastive_max_pairs),
-                "binding_peptide_contrastive_weight": float(args.binding_peptide_contrastive_weight),
-                "binding_peptide_contrastive_margin": float(args.binding_peptide_contrastive_margin),
-                "binding_peptide_contrastive_target_gap_min": float(
-                    args.binding_peptide_contrastive_target_gap_min
+            probe_eval_wall_s = time.perf_counter() - probe_start
+            for row in probe_eval:
+                probe_rows.append({"epoch": epoch, **row})
+            epoch_wall_end = time.perf_counter()
+            gpu_metrics: Dict[str, float] = gpu_sampler.summarize_window(epoch_wall_start, epoch_wall_end)
+            if device == "cuda":
+                peak_allocated = float(torch.cuda.max_memory_allocated())
+                peak_reserved = float(torch.cuda.max_memory_reserved())
+                gpu_metrics.update(
+                    {
+                        "gpu_peak_allocated_bytes": peak_allocated,
+                        "gpu_peak_reserved_bytes": peak_reserved,
+                        "gpu_peak_allocated_gib": peak_allocated / float(1024**3),
+                        "gpu_peak_reserved_gib": peak_reserved / float(1024**3),
+                    }
+                )
+            epoch_summary = {
+                "epoch": epoch,
+                "train_loss": train_loss,
+                "val_loss": val_loss,
+                "epoch_wall_s": epoch_wall_end - epoch_wall_start,
+                "train_data_wait_s": train_data_wait_s,
+                "train_forward_loss_s": train_forward_loss_s,
+                "train_backward_s": train_backward_s,
+                "train_optimizer_s": train_optimizer_s,
+                "gpu_busy_wall_s": (
+                    train_forward_loss_s + train_backward_s + train_optimizer_s + val_wall_s + probe_eval_wall_s
                 ),
-                "binding_peptide_contrastive_target_gap_cap": float(
-                    args.binding_peptide_contrastive_target_gap_cap
-                ),
-                "binding_peptide_contrastive_max_pairs": int(
-                    args.binding_peptide_contrastive_max_pairs
-                ),
-                "epochs": int(args.epochs),
-                "batch_size": int(args.batch_size),
-                "seed": int(args.seed),
-            },
-            "subset_stats": subset_stats,
-            "balance_stats": balance_stats,
-            "shared_peptide_stats": shared_peptide_stats,
-            "split_stats": split_stats,
-            "mhc_resolve_stats": mhc_stats,
-            "probe_allele_counts_after_filter": probe_allele_counts_after_filter,
-            "real_record_summary": _summarize_binding_records(real_records),
-            "real_train_record_summary": _summarize_binding_records(real_train_records),
-            "train_record_summary": _summarize_binding_records(train_records),
-            "val_record_summary": _summarize_binding_records(real_val_records),
-            "record_summary": _summarize_binding_records(train_records + real_val_records),
-            "synthetic_stats": epoch_synthetic_stats,
-            "record_groove_audit": record_groove_audit,
-            "dataset_groove_audit": dataset_groove_audit,
-            "dataset_size": len(train_dataset) + len(val_dataset),
-            "train_size": len(train_dataset),
-            "val_size": len(val_dataset),
-            "probe_support": probe_support,
-            "warm_start": {
-                "used": bool(str(args.init_checkpoint or "").strip()),
-                "checkpoint": str(args.init_checkpoint or ""),
-                "filter_stats": warm_start_filter_stats,
-                "checkpoint_epoch": (
-                    int(warm_start_payload.get("epoch"))
-                    if isinstance(warm_start_payload, dict)
-                    and warm_start_payload.get("epoch") is not None
-                    else None
-                ),
-            },
-            "epochs": epoch_summaries,
-        }
-        _write_summary_artifacts(
-            out_dir=out_dir,
-            summary=summary,
-            probe_rows=probe_rows,
-        )
-        print(
-            json.dumps(
-                {
-                    "event": "focused_binding_epoch",
+                "val_wall_s": val_wall_s,
+                "probe_eval_wall_s": probe_eval_wall_s,
+                "grad_norm_affinity_probe": grad_metrics_sum["grad_norm_affinity_probe"] / max(train_batches, 1),
+                "grad_norm_binding_core": grad_metrics_sum["grad_norm_binding_core"] / max(train_batches, 1),
+                "grad_norm_trunk_other": grad_metrics_sum["grad_norm_trunk_other"] / max(train_batches, 1),
+                "synthetic_seed": int(epoch_synthetic_seed),
+                "synthetic_stats": epoch_synthetic_stats,
+                "train_record_summary": _summarize_binding_records(train_records),
+                "record_groove_audit": record_groove_audit,
+                "dataset_groove_audit": dataset_groove_audit,
+                "observed_train_examples": int(train_batches * int(args.batch_size)),
+                "summary_write_wall_s": 0.0,
+                **gpu_metrics,
+            }
+            epoch_summaries.append(epoch_summary)
+            summary = {
+                "config": {
                     "design_id": str(args.design_id),
-                    **epoch_summary,
-                    "train_batch_metrics": batch_metrics,
-                    "probe_rows": probe_eval,
+                    "probe_alleles": probe_alleles,
+                    "train_all_alleles": bool(args.train_all_alleles),
+                    "train_mhc_class_filter": train_class_filter,
+                    "probe_peptides": probe_peptides,
+                    "groove_pos_mode": str(args.groove_pos_mode),
+                    "binding_core_lengths": list(binding_core_lengths),
+                    "binding_core_refinement": str(args.binding_core_refinement),
+                    "measurement_profile": args.measurement_profile,
+                    "measurement_type_filter": str(args.measurement_type_filter),
+                    "qualifier_filter": str(args.qualifier_filter),
+                    "shared_peptides_only": bool(args.shared_peptides_only),
+                    "affinity_loss_mode": str(args.affinity_loss_mode),
+                    "affinity_assay_mode": str(args.affinity_assay_mode),
+                    "init_checkpoint": str(args.init_checkpoint or ""),
+                    "synthetic_negatives": bool(args.synthetic_negatives),
+                    "negative_ratio": float(args.negative_ratio),
+                    "batch_synthetic_fraction": float(batch_synthetic_fraction),
+                    "synthetic_refresh_each_epoch": bool(args.synthetic_refresh_each_epoch),
+                    "synthetic_modes": list(synthetic_modes or ALL_SYNTHETIC_MODES),
+                    "planned_batch_contract": batch_contract,
+                    "class_i_anchor_strategy": str(args.class_i_anchor_strategy),
+                    "binding_contrastive_weight": float(args.binding_contrastive_weight),
+                    "binding_contrastive_margin": float(args.binding_contrastive_margin),
+                    "binding_contrastive_target_gap_min": float(args.binding_contrastive_target_gap_min),
+                    "binding_contrastive_target_gap_cap": float(args.binding_contrastive_target_gap_cap),
+                    "binding_contrastive_max_pairs": int(args.binding_contrastive_max_pairs),
+                    "binding_peptide_contrastive_weight": float(args.binding_peptide_contrastive_weight),
+                    "binding_peptide_contrastive_margin": float(args.binding_peptide_contrastive_margin),
+                    "binding_peptide_contrastive_target_gap_min": float(
+                        args.binding_peptide_contrastive_target_gap_min
+                    ),
+                    "binding_peptide_contrastive_target_gap_cap": float(
+                        args.binding_peptide_contrastive_target_gap_cap
+                    ),
+                    "binding_peptide_contrastive_max_pairs": int(
+                        args.binding_peptide_contrastive_max_pairs
+                    ),
+                    "epochs": int(args.epochs),
+                    "batch_size": int(args.batch_size),
+                    "seed": int(args.seed),
+                    "runtime_config": {
+                        "num_workers": int(args.num_workers),
+                        "pin_memory": bool(args.pin_memory),
+                        "persistent_workers": bool(args.persistent_workers),
+                        "prefetch_factor": int(args.prefetch_factor),
+                        "matmul_precision": str(args.matmul_precision),
+                        "allow_tf32": bool(args.allow_tf32),
+                        "torch_compile": bool(args.torch_compile),
+                        "probe_plot_frequency": str(args.probe_plot_frequency),
+                    },
                 },
-                sort_keys=True,
-            ),
-            flush=True,
-        )
+                "subset_stats": subset_stats,
+                "balance_stats": balance_stats,
+                "shared_peptide_stats": shared_peptide_stats,
+                "split_stats": split_stats,
+                "mhc_resolve_stats": mhc_stats,
+                "probe_allele_counts_after_filter": probe_allele_counts_after_filter,
+                "real_record_summary": _summarize_binding_records(real_records),
+                "real_train_record_summary": _summarize_binding_records(real_train_records),
+                "train_record_summary": _summarize_binding_records(train_records),
+                "val_record_summary": _summarize_binding_records(real_val_records),
+                "record_summary": _summarize_binding_records(train_records + real_val_records),
+                "synthetic_stats": epoch_synthetic_stats,
+                "record_groove_audit": record_groove_audit,
+                "dataset_groove_audit": dataset_groove_audit,
+                "dataset_size": len(train_dataset) + len(val_dataset),
+                "train_size": len(train_dataset),
+                "val_size": len(val_dataset),
+                "param_count": param_count,
+                "setup_wall_s": setup_wall_s,
+                "setup_stage_timings": setup_stage_timings,
+                "probe_support": probe_support,
+                "warm_start": {
+                    "used": bool(str(args.init_checkpoint or "").strip()),
+                    "checkpoint": str(args.init_checkpoint or ""),
+                    "filter_stats": warm_start_filter_stats,
+                    "checkpoint_epoch": (
+                        int(warm_start_payload.get("epoch"))
+                        if isinstance(warm_start_payload, dict)
+                        and warm_start_payload.get("epoch") is not None
+                        else None
+                    ),
+                },
+                "epochs": epoch_summaries,
+            }
+            write_start = time.perf_counter()
+            _write_summary_artifacts(
+                out_dir=out_dir,
+                summary=summary,
+                probe_rows=probe_rows,
+                write_probe_plot=(
+                    str(args.probe_plot_frequency) == "epoch"
+                    or (
+                        str(args.probe_plot_frequency) == "final"
+                        and epoch == int(args.epochs)
+                    )
+                ),
+            )
+            epoch_summary["summary_write_wall_s"] = time.perf_counter() - write_start
+            (out_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+            print(
+                json.dumps(
+                    {
+                        "event": "focused_binding_epoch",
+                        "design_id": str(args.design_id),
+                        **epoch_summary,
+                        "train_batch_metrics": batch_metrics,
+                        "probe_rows": probe_eval,
+                    },
+                    sort_keys=True,
+                ),
+                flush=True,
+            )
+    finally:
+        gpu_sampler.stop()
 
 
 if __name__ == "__main__":

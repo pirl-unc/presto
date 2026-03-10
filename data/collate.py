@@ -200,6 +200,10 @@ class PrestoSample:
     label_bucket: Optional[str] = None
     primary_allele: Optional[str] = None
     synthetic_kind: Optional[str] = None
+    dataset_index: int = -1
+    peptide_id: int = -1
+    allele_id: int = -1
+    bind_target_log10: Optional[float] = None
     sample_id: str = ""
 
 
@@ -271,6 +275,12 @@ class PrestoBatch:
 
     # Lengths for masking
     pep_lengths: Optional[torch.Tensor] = None
+    dataset_index: Optional[torch.Tensor] = None
+    peptide_id: Optional[torch.Tensor] = None
+    allele_id: Optional[torch.Tensor] = None
+    bind_target_log10: Optional[torch.Tensor] = None
+    same_peptide_diff_allele_pairs: Optional[torch.Tensor] = None
+    same_allele_diff_peptide_pairs: Optional[torch.Tensor] = None
 
     # Metadata
     processing_species: List[Optional[str]] = field(default_factory=list)
@@ -318,6 +328,12 @@ class PrestoBatch:
             tcr_evidence_mask=_move(self.tcr_evidence_mask),
             tcr_evidence_method_mask=_move(self.tcr_evidence_method_mask),
             pep_lengths=_move(self.pep_lengths),
+            dataset_index=_move(self.dataset_index),
+            peptide_id=_move(self.peptide_id),
+            allele_id=_move(self.allele_id),
+            bind_target_log10=_move(self.bind_target_log10),
+            same_peptide_diff_allele_pairs=_move(self.same_peptide_diff_allele_pairs),
+            same_allele_diff_peptide_pairs=_move(self.same_allele_diff_peptide_pairs),
             processing_species=self.processing_species,
             primary_alleles=self.primary_alleles,
             sample_ids=self.sample_ids,
@@ -412,6 +428,82 @@ class PrestoCollator:
             targets[spec.task_name] = tensor
             masks[spec.task_name] = torch.tensor(mask, dtype=torch.float32)
         return targets, masks
+
+    @staticmethod
+    def _collate_fixed_metadata(
+        samples: List[PrestoSample],
+    ) -> Dict[str, torch.Tensor]:
+        dataset_index = torch.tensor(
+            [int(getattr(sample, "dataset_index", -1)) for sample in samples],
+            dtype=torch.long,
+        )
+        peptide_id = torch.tensor(
+            [int(getattr(sample, "peptide_id", -1)) for sample in samples],
+            dtype=torch.long,
+        )
+        allele_id = torch.tensor(
+            [int(getattr(sample, "allele_id", -1)) for sample in samples],
+            dtype=torch.long,
+        )
+        bind_target_log10 = torch.tensor(
+            [
+                float(getattr(sample, "bind_target_log10", 0.0) or 0.0)
+                for sample in samples
+            ],
+            dtype=torch.float32,
+        )
+        return {
+            "dataset_index": dataset_index,
+            "peptide_id": peptide_id,
+            "allele_id": allele_id,
+            "bind_target_log10": bind_target_log10,
+        }
+
+    @staticmethod
+    def _collate_binding_pair_indices(
+        samples: List[PrestoSample],
+    ) -> Dict[str, torch.Tensor]:
+        by_peptide: Dict[int, List[int]] = {}
+        by_allele: Dict[int, List[int]] = {}
+        for idx, sample in enumerate(samples):
+            peptide_id = int(getattr(sample, "peptide_id", -1))
+            allele_id = int(getattr(sample, "allele_id", -1))
+            if peptide_id >= 0:
+                by_peptide.setdefault(peptide_id, []).append(idx)
+            if allele_id >= 0:
+                by_allele.setdefault(allele_id, []).append(idx)
+
+        same_peptide_diff_allele_pairs: List[tuple[int, int]] = []
+        for indices in by_peptide.values():
+            if len(indices) < 2:
+                continue
+            for pos, idx_i in enumerate(indices):
+                allele_i = int(getattr(samples[idx_i], "allele_id", -1))
+                for idx_j in indices[pos + 1 :]:
+                    allele_j = int(getattr(samples[idx_j], "allele_id", -1))
+                    if allele_i >= 0 and allele_j >= 0 and allele_i != allele_j:
+                        same_peptide_diff_allele_pairs.append((idx_i, idx_j))
+
+        same_allele_diff_peptide_pairs: List[tuple[int, int]] = []
+        for indices in by_allele.values():
+            if len(indices) < 2:
+                continue
+            for pos, idx_i in enumerate(indices):
+                peptide_i = int(getattr(samples[idx_i], "peptide_id", -1))
+                for idx_j in indices[pos + 1 :]:
+                    peptide_j = int(getattr(samples[idx_j], "peptide_id", -1))
+                    if peptide_i >= 0 and peptide_j >= 0 and peptide_i != peptide_j:
+                        same_allele_diff_peptide_pairs.append((idx_i, idx_j))
+
+        def _tensor(pairs: List[tuple[int, int]]) -> torch.Tensor:
+            if not pairs:
+                return torch.zeros((0, 2), dtype=torch.long)
+            return torch.tensor(pairs, dtype=torch.long)
+
+        return {
+            "same_peptide_diff_allele_pairs": _tensor(same_peptide_diff_allele_pairs),
+            "same_allele_diff_peptide_pairs": _tensor(same_allele_diff_peptide_pairs),
+        }
 
     @staticmethod
     def _expand_with_fallback(
@@ -1115,6 +1207,8 @@ class PrestoCollator:
             )
 
         targets, target_masks = self._collate_targets(samples)
+        fixed_metadata = self._collate_fixed_metadata(samples)
+        binding_pair_indices = self._collate_binding_pair_indices(samples)
         binding_targets, binding_masks, binding_quals = self._collate_binding_measurement_targets(
             samples
         )
@@ -1380,6 +1474,12 @@ class PrestoCollator:
             tcr_evidence_mask=tcr_evidence_mask,
             tcr_evidence_method_mask=tcr_evidence_method_mask,
             pep_lengths=pep_lengths,
+            dataset_index=fixed_metadata["dataset_index"],
+            peptide_id=fixed_metadata["peptide_id"],
+            allele_id=fixed_metadata["allele_id"],
+            bind_target_log10=fixed_metadata["bind_target_log10"],
+            same_peptide_diff_allele_pairs=binding_pair_indices["same_peptide_diff_allele_pairs"],
+            same_allele_diff_peptide_pairs=binding_pair_indices["same_allele_diff_peptide_pairs"],
             processing_species=[s.species for s in samples],
             primary_alleles=[s.primary_allele or "" for s in samples],
             sample_ids=[s.sample_id for s in samples],

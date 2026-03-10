@@ -93,3 +93,16 @@
 - Treat groove-parser fallback rate as a gating metric for synthetic MHC corruption modes. If a mode regularly produces `no_cys_pairs`, `no_alpha2_pair`, or variable-length groove halves, it is not a safe default training negative.
 - When an experiment family reveals that the current benchmark base has regressed relative to an earlier stronger contract, stop stacking new ablations on the weaker base. Restore the strongest known baseline first, prove parity, and only then layer new factors on top.
 - When reproducing a historical baseline, match the dataset-selection flags exactly. Do not combine `--train-all-alleles` with an explicit probe allele panel and then call it parity; verify row counts against the original run before launching follow-on ablations.
+# Lessons
+
+- When iteration speed is part of the goal, prioritize data/setup/runtime bottlenecks before widening architecture sweeps. For the focused affinity runner, `num_workers=0`, `pin_memory=false`, repeated row filtering, and collate-time tokenization are more likely wall-clock bottlenecks than small model-parameter deltas.
+- When benchmarking runtime variants, keep the semantic training contract fixed and measure setup time, per-epoch wall-clock, and data-wait/compute breakdown explicitly. Otherwise a “faster” run can just be silently changing the task or the amount of work done.
+- On the ~44k mixed-assay multi-allele contract, do not assume dataloader tuning is the main lever. The 16-variant runtime sweep showed `train_forward_loss_s` and `train_backward_s` dominate wall-clock, while `train_data_wait_s` stayed much smaller. Optimize model-side compute and Python work in the training step before chasing more worker processes.
+- When detached Modal runs fail to publish checkpoint artifacts, fall back to structured app logs if the training loop already emits JSON summaries. Treat `modal app logs` as a first-class collector path, not only the checkpoint volume.
+# Runtime benchmark harness lesson (2026-03-10)
+- When adding benchmark-only CLI/runtime knobs, smoke-test the full entrypoint that uses them before launching a sweep. Unit tests on helper functions were not enough; the runtime sweep failed because `_build_epoch_train_state(...)` did not accept the new loader args even though lower-level loader tests passed.
+- Do not treat a static no-augmentation training loop as the canonical runtime benchmark if the intended production path always includes dynamic augmentation or pair mining. A static-path runtime sweep is only a lower-bound diagnostic and must be labeled as such.
+
+- When a runtime benchmark is meant to inform the eventual production trainer, do not optimize or benchmark a static no-augmentation fast path as canonical. Preserve the intended dynamic regime (pair mining / synthetic refresh), and push performance work into fixed dataset metadata, index-based pairing, and asynchronous epoch-state generation instead.
+
+- When the user wants one canonical model improved by experiments, do not keep recommending specialized fast-path models or separate affinity-only execution as the architectural direction. Optimize the shared training/dataflow path instead, and treat specialized paths only as temporary diagnostics if explicitly requested.

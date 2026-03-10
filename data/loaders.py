@@ -64,6 +64,12 @@ TCR_EVIDENCE_METHOD_BINS = (
 )
 
 
+def _binding_value_to_log10(value: Optional[float]) -> Optional[float]:
+    if value is None:
+        return None
+    return math.log10(max(float(value), 1e-12))
+
+
 def _looks_like_nucleotide_sequence(sequence: str) -> bool:
     """Detect DNA/RNA-like full-length chains that would silently pass AA validation."""
     seq = "".join(ch for ch in str(sequence or "").strip().upper() if ch.isalpha())
@@ -1548,6 +1554,7 @@ class PrestoDataset(Dataset):
         mhc_sequences: Dict[str, str] = None,
         allele_resolver: AlleleResolver = None,
         strict_mhc_resolution: bool = True,
+        dataset_index_offset: int = 0,
         # Backward compatibility
         tcr_records: List[TCellRecord] = None,
     ):
@@ -1564,9 +1571,14 @@ class PrestoDataset(Dataset):
         self.mhc_sequences = _normalize_mhc_sequence_lookup(mhc_sequences)
         self.allele_resolver = allele_resolver
         self.strict_mhc_resolution = bool(strict_mhc_resolution)
+        self.dataset_index_offset = int(dataset_index_offset)
         self._mhc_x_sequence_count = 0
         self._mhc_x_residue_total = 0
         self._mhc_x_allele_examples: List[str] = []
+        self._resolved_mhc_pair_cache: Dict[
+            Tuple[Optional[str], Optional[str], Optional[str], str, str, bool],
+            Tuple[str, str],
+        ] = {}
 
         # Create unified sample list
         self.samples = []
@@ -1895,6 +1907,36 @@ class PrestoDataset(Dataset):
                 RuntimeWarning,
             )
 
+        self._assign_fixed_metadata()
+
+    def _assign_fixed_metadata(self) -> None:
+        peptide_to_id: Dict[str, int] = {}
+        allele_to_id: Dict[str, int] = {}
+
+        def _allele_key(sample: PrestoSample) -> str:
+            primary = str(sample.primary_allele or "").strip()
+            if primary:
+                return primary
+            return "|".join(
+                [
+                    str(sample.mhc_class or "").strip(),
+                    str(sample.mhc_a or "").strip(),
+                    str(sample.mhc_b or "").strip(),
+                ]
+            )
+
+        for local_idx, sample in enumerate(self.samples):
+            peptide_key = str(sample.peptide or "").strip().upper()
+            allele_key = _allele_key(sample)
+            if peptide_key not in peptide_to_id:
+                peptide_to_id[peptide_key] = len(peptide_to_id)
+            if allele_key not in allele_to_id:
+                allele_to_id[allele_key] = len(allele_to_id)
+            sample.dataset_index = self.dataset_index_offset + local_idx
+            sample.peptide_id = peptide_to_id[peptide_key]
+            sample.allele_id = allele_to_id[allele_key]
+            sample.bind_target_log10 = _binding_value_to_log10(sample.bind_value)
+
     @staticmethod
     def _resolve_mhc_class_value(
         mhc_class: Optional[str],
@@ -2053,7 +2095,19 @@ class PrestoDataset(Dataset):
         - Class II: `(alpha1_groove, beta1_groove)` from paired alpha/beta chains
         """
         cls = self._resolve_mhc_class_value(mhc_class, allele)
+        direct_seq_clean = str(direct_seq or "").strip().upper()
         mhc_b_clean = str(mhc_b or "").strip()
+        cache_key = (
+            cls,
+            str(species or "").strip() or None,
+            str(allele or "").strip() or None,
+            direct_seq_clean,
+            mhc_b_clean,
+            bool(allow_default_class_i_beta),
+        )
+        cached = self._resolved_mhc_pair_cache.get(cache_key)
+        if cached is not None:
+            return cached
         if cls == "II" and allele and is_class_ii_dr_beta_allele(allele) and not mhc_b_clean:
             alpha_allele = self._default_class_ii_dr_alpha_allele(species, allele)
             if alpha_allele is None:
@@ -2072,7 +2126,7 @@ class PrestoDataset(Dataset):
                 mhc_class="II",
                 allow_fallback_truncation=True,
             )
-            return (
+            resolved = (
                 self._validate_mhc_input_segment(
                     sequence=prepared.groove_half_1,
                     segment_label="mhc_a",
@@ -2084,8 +2138,10 @@ class PrestoDataset(Dataset):
                     allele=allele,
                 ),
             )
+            self._resolved_mhc_pair_cache[cache_key] = resolved
+            return resolved
 
-        mhc_a_seq = self._get_mhc_sequence(allele, direct_seq) if (allele or direct_seq) else ""
+        mhc_a_seq = self._get_mhc_sequence(allele, direct_seq_clean) if (allele or direct_seq_clean) else ""
         mhc_b_seq = ""
         if cls == "II":
             mhc_b_seq = self._resolve_mhc_b_sequence(
@@ -2101,7 +2157,7 @@ class PrestoDataset(Dataset):
             mhc_class=cls,
             allow_fallback_truncation=True,
         )
-        return (
+        resolved = (
             self._validate_mhc_input_segment(
                 sequence=prepared.groove_half_1,
                 segment_label="mhc_a",
@@ -2113,6 +2169,8 @@ class PrestoDataset(Dataset):
                 allele=mhc_b or allele,
             ),
         )
+        self._resolved_mhc_pair_cache[cache_key] = resolved
+        return resolved
 
     def _get_mhc_sequence(self, allele: str, direct_seq: Optional[str]) -> str:
         """Resolve MHC sequence from allele name or direct sequence."""

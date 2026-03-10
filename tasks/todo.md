@@ -1,3 +1,466 @@
+# Runtime Sweep Plan (2026-03-09)
+
+## Spec
+
+- Goal: benchmark 12 runtime-only variants of the current `legacy_m1` class-I affinity baseline on a fixed 10-epoch contract, improving wall-clock without changing training semantics or losing probe accuracy.
+- Fixed semantic baseline:
+  - explicit 7-allele class-I panel:
+    - `HLA-A*02:01`
+    - `HLA-A*24:02`
+    - `HLA-A*03:01`
+    - `HLA-A*11:01`
+    - `HLA-A*01:01`
+    - `HLA-B*07:02`
+    - `HLA-B*44:02`
+  - `measurement_profile=direct_affinity_only`
+  - `measurement_type_filter=ic50`
+  - `qualifier_filter=exact`
+  - warm start from the MHC class/species checkpoint
+  - `affinity_assay_mode=legacy`
+  - `groove_pos_mode=triple`
+  - `binding_core_lengths=8,9,10,11`
+  - `binding_core_refinement=shared`
+  - no synthetics
+  - no peptide ranking
+  - no allele ranking
+- Runtime constraints:
+  - keep model/data semantics fixed
+  - compare only runtime-oriented knobs:
+    - dataloader workers
+    - pin-memory
+    - persistent workers
+    - prefetch factor
+    - TF32 / matmul precision
+    - `torch.compile`
+  - run all variants for the same fixed epoch count (`10`)
+  - record enough timing breakdown to explain wins/losses
+
+## Variant Set
+
+- `V00`: baseline `num_workers=0`, `pin_memory=false`
+- `V01`: `num_workers=2`, `pin_memory=true`, `persistent_workers=true`, `prefetch_factor=2`
+- `V02`: `num_workers=4`, `pin_memory=true`, `persistent_workers=true`, `prefetch_factor=2`
+- `V03`: `num_workers=8`, `pin_memory=true`, `persistent_workers=true`, `prefetch_factor=2`
+- `V04`: `num_workers=4`, `pin_memory=true`, `persistent_workers=true`, `prefetch_factor=4`
+- `V05`: `num_workers=8`, `pin_memory=true`, `persistent_workers=true`, `prefetch_factor=4`
+- `V06`: `V02 + allow_tf32=true + matmul_precision=high`
+- `V07`: `V03 + allow_tf32=true + matmul_precision=high`
+- `V08`: `V04 + allow_tf32=true + matmul_precision=high`
+- `V09`: `V05 + allow_tf32=true + matmul_precision=high`
+- `V10`: `V02 + allow_tf32=true + matmul_precision=high + persistent_workers=false`
+- `V11`: `V03 + allow_tf32=true + matmul_precision=high + persistent_workers=false`
+
+## Execution order
+
+- [x] Phase 1: expose runtime-only knobs in the focused runner
+  - add CLI flags for:
+    - `num_workers`
+    - `pin_memory`
+    - `persistent_workers`
+    - `prefetch_factor`
+    - `allow_tf32`
+    - `matmul_precision`
+    - `torch_compile`
+  - plumb those flags through train and validation loaders
+  - compile the model only after warm-start loading, if enabled
+- [x] Phase 2: add timing instrumentation
+  - record:
+    - setup wall-clock
+    - per-epoch wall-clock
+    - per-epoch data wait
+    - per-epoch forward/loss time
+    - per-epoch backward time
+    - per-epoch optimizer time
+    - per-epoch validation time
+    - per-epoch probe evaluation time
+    - per-epoch artifact write time
+  - surface those in structured logs and `summary.json`
+- [x] Phase 3: add a benchmark launcher
+  - create a local script that launches all 12 variants on Modal against the fixed `legacy_m1` contract
+  - write a manifest with variant id, run id, app id, and exact args
+- [x] Phase 4: verify locally before launch
+  - targeted tests for parser/runtime knob wiring
+  - one local focused smoke on the baseline and one runtime-tuned variant
+- [x] Phase 5: launch all 12 Modal runs
+  - use fixed `10` epochs
+  - write results into a single benchmark ledger / table
+- [ ] Phase 6: summarize winners
+  - rank by:
+    - total wall-clock
+    - epoch wall-clock
+    - probe correctness / margins
+    - validation loss
+  - recommend the fastest variant that preserves `legacy_m1` biology
+- [ ] Phase 7: inspect obvious forward/loss bottlenecks in code
+  - review the focused affinity training loop and `_affinity_only_loss(...)`
+  - check whether focused affinity still computes unnecessary full-model outputs or repeated expensive diagnostics inside the measured forward/loss region
+  - inspect pair-mining / contrastive bookkeeping for Python-heavy per-batch work even when weights are zero
+  - inspect core-window / register code for batch loops or repeated tensor materialization
+  - document the most likely structural bottlenecks before running another benchmark
+
+## Review
+
+- Known bottlenecks already observed:
+  - focused runner hardcodes `num_workers=0`, `pin_memory=false`
+  - collator tokenization is still on the data path
+  - older GPU perf logs show `~38%` data wait
+  - repeated Modal app startup exists, but this sweep keeps app shape fixed and focuses first on within-run training/runtime savings
+- Current semantic base to preserve:
+  - `legacy_m1`
+  - best checkpoint on matched 7-allele exact-`IC50` benchmark:
+    - `SLLQHLIGL`: `37.3` vs `29588.2 nM`
+    - `FLRYLLFGI`: `32.8` vs `24346.2 nM`
+    - `NFLIKFLLI`: `5749.3` vs `6.10 nM`
+- Implementation/verification:
+  - `scripts/focused_binding_probe.py` now exposes:
+    - `--num-workers`
+    - `--pin-memory`
+    - `--persistent-workers`
+    - `--prefetch-factor`
+    - `--allow-tf32`
+    - `--matmul-precision`
+    - `--torch-compile`
+  - per-epoch summaries now record:
+    - `epoch_wall_s`
+    - `train_data_wait_s`
+    - `train_forward_loss_s`
+    - `train_backward_s`
+    - `train_optimizer_s`
+    - `val_wall_s`
+    - `probe_eval_wall_s`
+    - `summary_write_wall_s`
+  - benchmark launcher added:
+    - `scripts/benchmark_runtime_variants.py`
+  - verification:
+    - `python -m py_compile scripts/focused_binding_probe.py scripts/benchmark_runtime_variants.py`
+    - `pytest -q tests/test_focused_probe.py tests/test_presto.py tests/test_train_iedb.py`
+    - result: `130 passed`
+- Launch status:
+  - 12 fixed-epoch (`10`) runtime variants launched on Modal under:
+    - [runtime_m1_bench/variants.md](/Users/iskander/code/presto/modal_runs/runtime_m1_bench/variants.md)
+    - [runtime_m1_bench/manifest.json](/Users/iskander/code/presto/modal_runs/runtime_m1_bench/manifest.json)
+- Failure / relaunch status:
+  - first launch failed before epoch 1:
+    - `V00`-`V09`: `_build_epoch_train_state(...)` signature mismatch for the new loader args
+    - `V10`-`V11`: `torch.compile` / Inductor failure on Modal
+  - fix applied on `2026-03-10`:
+    - `_build_epoch_train_state(...)` now accepts and forwards runtime loader args
+    - compile variants replaced with non-compile `persistent_workers=false` variants
+    - re-verified:
+      - `python -m py_compile scripts/focused_binding_probe.py scripts/benchmark_runtime_variants.py`
+      - `pytest -q tests/test_focused_probe.py tests/test_presto.py tests/test_train_iedb.py`
+      - result: `130 passed in 3.35s`
+- Scope correction from user feedback:
+  - this runtime sweep is only a lower-bound benchmark for a static contract
+  - it is **not** the canonical production runtime benchmark because it disables dynamic augmentation / pair mining
+  - the production-relevant runtime benchmark must include the augmentation regime we expect to keep:
+    - at minimum, per-epoch pair mining for ranking / contrastive objectives
+    - optionally per-epoch synthetic refresh if that remains in the chosen training contract
+  - follow-up benchmark plan:
+    - rerun runtime profiling on the strongest accuracy-oriented contract we actually plan to keep
+    - include per-epoch dynamic train-state rebuild costs in the measured workload instead of optimizing them away
+
+# Multi-Allele Runtime/Training Sweep (2026-03-10)
+
+## Spec
+
+- Goal: run a fixed-epoch (`3`) 16-variant Modal benchmark on the canonical shared model path using the ~44k multi-allele class-I binding dataset, with pairwise pMHC ranking active in every run and censor-aware assay losses on `KD/IC50/EC50`.
+- Fixed semantic contract for all 16 variants:
+  - explicit 7-allele class-I panel:
+    - `HLA-A*02:01`
+    - `HLA-A*24:02`
+    - `HLA-A*03:01`
+    - `HLA-A*11:01`
+    - `HLA-A*01:01`
+    - `HLA-B*07:02`
+    - `HLA-B*44:02`
+  - `measurement_profile=all_binding_rows`
+  - `measurement_type_filter=""`
+  - `qualifier_filter=all`
+  - dataset size after filtering expected to be `44,417` rows
+  - warm start from the MHC class/species checkpoint
+  - `affinity_assay_mode=legacy`
+  - `groove_pos_mode=triple`
+  - `binding_core_lengths=8,9,10,11`
+  - `binding_core_refinement=shared`
+  - no synthetic negatives in this sweep
+    - keep dynamic per-epoch pair mining active
+  - pairwise ranking always on:
+    - `binding_contrastive_weight > 0`
+    - `binding_peptide_contrastive_weight > 0`
+  - assay losses supervised headwise with censor-aware loss:
+    - `KD_nM` only from `binding_kd`
+    - `IC50_nM` only from `binding_ic50`
+    - `EC50_nM` only from `binding_ec50`
+    - no generic all-binding loss on `KD_nM`
+  - qualitative / structure rows may remain in the dataset but should only influence pairwise ranking if no assay-head target exists
+- Required outputs per run:
+  - startup/setup wall-clock
+  - per-epoch wall-clock
+  - train data wait / forward-loss / backward / optimizer timings
+  - validation wall-clock
+  - probe-eval wall-clock
+  - GPU peak memory
+  - GPU utilization / occupancy proxy sampled during training
+  - loss metrics
+  - probe affinities including at least:
+    - `SLLQHLIGL`
+    - `FLRYLLFGI`
+    - `NFLIKFLLI`
+- Deliverables:
+  - one manifest of the 16 variants
+  - one result table with runtime + accuracy
+  - one recommendation for fastest variant that still trains effectively
+
+## Variant Set
+
+- `R00`: baseline `num_workers=0`, `pin_memory=false`, TF32 off
+- `R01`: `num_workers=0`, `pin_memory=true`, TF32 off
+- `R02`: `num_workers=0`, `pin_memory=false`, `allow_tf32=true`, `matmul_precision=high`
+- `R03`: `num_workers=0`, `pin_memory=true`, `allow_tf32=true`, `matmul_precision=high`
+- `R04`: `num_workers=2`, `pin_memory=true`, `persistent_workers=false`, `prefetch_factor=2`, TF32 off
+- `R05`: `num_workers=4`, `pin_memory=true`, `persistent_workers=false`, `prefetch_factor=2`, TF32 off
+- `R06`: `num_workers=8`, `pin_memory=true`, `persistent_workers=false`, `prefetch_factor=2`, TF32 off
+- `R07`: `num_workers=2`, `pin_memory=true`, `persistent_workers=true`, `prefetch_factor=2`, TF32 off
+- `R08`: `num_workers=4`, `pin_memory=true`, `persistent_workers=true`, `prefetch_factor=2`, TF32 off
+- `R09`: `num_workers=8`, `pin_memory=true`, `persistent_workers=true`, `prefetch_factor=2`, TF32 off
+- `R10`: `num_workers=2`, `pin_memory=true`, `persistent_workers=false`, `prefetch_factor=2`, `allow_tf32=true`, `matmul_precision=high`
+- `R11`: `num_workers=4`, `pin_memory=true`, `persistent_workers=false`, `prefetch_factor=2`, `allow_tf32=true`, `matmul_precision=high`
+- `R12`: `num_workers=8`, `pin_memory=true`, `persistent_workers=false`, `prefetch_factor=2`, `allow_tf32=true`, `matmul_precision=high`
+- `R13`: `num_workers=2`, `pin_memory=true`, `persistent_workers=true`, `prefetch_factor=2`, `allow_tf32=true`, `matmul_precision=high`
+- `R14`: `num_workers=4`, `pin_memory=true`, `persistent_workers=true`, `prefetch_factor=2`, `allow_tf32=true`, `matmul_precision=high`
+- `R15`: `num_workers=8`, `pin_memory=true`, `persistent_workers=true`, `prefetch_factor=2`, `allow_tf32=true`, `matmul_precision=high`
+
+## Execution order
+
+- [ ] Phase 1: add an assay-head-only censored affinity loss mode
+  - keep the shared model path unchanged
+  - add a focused-run loss mode that supervises:
+    - `binding_kd`
+    - `binding_ic50`
+    - `binding_ec50`
+  - keep pairwise ranking active independently of assay-head supervision
+  - ensure qualitative rows are not forced onto numeric heads if they lack assay-head targets
+- [ ] Phase 2: add GPU telemetry
+  - per-epoch peak allocated / reserved memory
+  - sampled GPU utilization / memory-utilization proxy
+  - clear labeling that utilization is a proxy, not Nsight SM occupancy
+- [ ] Phase 3: add a 16-variant launcher on the fixed ~44k contract
+  - write manifest rows with exact args
+  - launch all 16 variants on Modal in parallel
+- [ ] Phase 4: collect results
+  - pull/parse `summary.json` for all completed runs
+  - write a single table with:
+    - setup wall-clock
+    - epoch wall-clock
+    - forward/backward/data-wait split
+    - GPU telemetry
+    - validation loss
+    - probe affinities / ratios
+- [ ] Phase 5: rank and recommend
+  - choose the fastest variant that preserves effective training behavior
+  - explain which knobs actually matter and which do not
+
+## Review
+
+- Local contract check:
+  - 7-allele panel with `measurement_profile=all_binding_rows` and `qualifier_filter=all` yields `44,417` rows
+  - measurement mix:
+    - `KD (~IC50)`: `16,275`
+    - `IC50`: `11,211`
+    - `KD (~EC50)`: `10,641`
+    - `qualitative binding`: `2,932`
+    - `KD`: `2,562`
+    - `3D structure`: `436`
+    - `EC50`: `360`
+  - qualifier mix:
+    - exact (`0`): `33,474`
+    - right-censored (`1`): `10,943`
+- The existing focused runner already exposes:
+  - runtime knobs (`num_workers`, `pin_memory`, `persistent_workers`, `prefetch_factor`, `allow_tf32`, `matmul_precision`, `torch_compile`)
+  - timing fields (`setup_wall_s`, `epoch_wall_s`, `train_data_wait_s`, `train_forward_loss_s`, `train_backward_s`, `train_optimizer_s`, `val_wall_s`, `probe_eval_wall_s`)
+- The current gap before launch:
+  - add GPU telemetry
+  - add the headwise mixed-assay loss mode
+  - create the 16-variant launcher and result collector
+- Implementation / verification:
+  - added `assay_heads_only` loss mode in `scripts/focused_binding_probe.py`
+  - added GPU telemetry sampling via `nvidia-smi` in `scripts/focused_binding_probe.py`
+  - added 16-variant launcher / collector:
+    - [benchmark_runtime_multiallele.py](/Users/iskander/code/presto/scripts/benchmark_runtime_multiallele.py)
+  - verification:
+    - `python -m py_compile scripts/focused_binding_probe.py scripts/benchmark_runtime_multiallele.py`
+    - `pytest -q tests/test_focused_probe.py tests/test_tasks.py tests/test_training_e2e.py tests/test_presto.py`
+    - result: `112 passed`
+- Modal sweep result source:
+  - the checkpoint-volume collector did not find `summary.json` artifacts for these detached runs
+  - fallback collector parsed structured `focused_binding_setup` / `focused_binding_epoch` JSON directly from `modal app logs`
+  - summarized outputs:
+    - [runtime table](/Users/iskander/code/presto/modal_runs/runtime_multiallele_44k/options_vs_perf_from_logs.md)
+    - [runtime summary json](/Users/iskander/code/presto/modal_runs/runtime_multiallele_44k/collected_from_app_logs.json)
+- 16-run runtime sweep result:
+  - all `16/16` variants produced usable setup + epoch metrics in app logs
+  - slowest cost centers were not data wait:
+    - `train_forward_loss_s_mean`: roughly `35s` to `113s`
+    - `train_backward_s_mean`: roughly `12s` to `30s`
+    - `train_data_wait_s_mean`: roughly `2s` to `7s`
+  - fastest raw epoch wall-clock:
+    - `R02` = `82.3s/epoch`
+    - config:
+      - `num_workers=0`
+      - `pin_memory=false`
+      - `allow_tf32=true`
+      - `matmul_precision=high`
+    - downside:
+      - weakest biology of the fast variants
+      - `SLLQHLIGL` only `31.1 / 195.7 nM`
+  - best speed / effectiveness tradeoff:
+    - `R03` = `108.2s/epoch`
+    - config:
+      - `num_workers=0`
+      - `pin_memory=true`
+      - `allow_tf32=true`
+      - `matmul_precision=high`
+    - results:
+      - `best_val_loss = 2.5061`
+      - `SLLQHLIGL = 57.9 / 2283.2 nM`
+      - `FLRYLLFGI = 25.2 / 1100.3 nM`
+      - `NFLIKFLLI = 2107.2 / 3655.9 nM`
+  - best validation loss:
+    - `R11` = `131.1s/epoch`
+    - config:
+      - `num_workers=4`
+      - `pin_memory=true`
+      - `persistent_workers=false`
+      - `prefetch_factor=2`
+      - `allow_tf32=true`
+      - `matmul_precision=high`
+    - `best_val_loss = 2.3625`
+    - but probe behavior is mixed and slower than `R03`
+- Runtime conclusion:
+  - on the ~44k mixed-assay contract with pairwise ranking active, the main wall-clock cost is model compute, not dataloader wait
+  - `allow_tf32=true` + `matmul_precision=high` is the clearest wall-clock win
+  - higher `num_workers` / `persistent_workers` do not pay off on the current code path
+  - the next runtime wins should come from reducing forward/loss work, not from adding more loader workers
+  - promote `R03` as the focused-runner runtime baseline:
+    - `num_workers=0`
+    - `pin_memory=true`
+    - `persistent_workers=false`
+    - `allow_tf32=true`
+    - `matmul_precision=high`
+  - hardware follow-up to test once software/runtime path is stabilized:
+    - compare `A100` vs `H100!` on the exact same 44k contract
+    - use `H100!` rather than `H100` for apples-to-apples benchmarking because Modal may auto-upgrade plain `H100` requests to `H200`
+
+## Startup / Loading Diagnosis (2026-03-10)
+
+### Spec
+
+- Goal: explain the slow pre-epoch setup/startup path before changing architecture again.
+- Scope:
+  - focused runner / current `legacy_m1` benchmarking path
+  - one-run startup cost before epoch 1
+  - loading/setup only, not forward/backward kernel profiling
+
+### Findings
+
+- The startup path makes multiple whole-file passes over `data/merged_deduped.tsv`:
+  - `_load_binding_records_from_merged_tsv(...)` scans the full TSV once to build binding rows.
+  - `_audit_probe_support(...)` scans the full TSV again once per probe peptide.
+  - This is avoidable repeated I/O and CSV parsing before training even begins.
+- `PrestoDataset(...)` eagerly materializes every sample into a `PrestoSample`.
+  - For each record it resolves MHC class/allele handling and calls `prepare_mhc_input(...)`.
+  - That means groove extraction/validation is repeated per sample, not per unique allele or unique pMHC.
+  - On multi-allele binding runs this is expensive and redundant because the same allele appears thousands of times.
+- The focused runner constructs both:
+  - `real_train_dataset`
+  - `val_dataset`
+  - and then immediately builds a fresh epoch train state in `_build_epoch_train_state(...)`
+  - so there is significant object construction before epoch 1.
+- `_build_epoch_train_state(...)` also performs groove audits:
+  - `_audit_record_groove_preparation(...)`
+  - `_audit_dataset_groove_inputs(...)`
+  - These are useful for correctness, but they add more pre-epoch CPU work.
+- The startup path also resolves probe-support summaries up front:
+  - this is helpful diagnostically, but it is not required for actual training.
+- Runtime sweeps already showed that loader wait is modest relative to model compute.
+  - So startup slowness is more likely dominated by Python-side preprocessing and repeated scans than by GPU starvation.
+
+### Likely highest-value startup fixes
+
+- Cache filtered/split row subsets by dataset-contract hash.
+- Cache probe-support summaries instead of rescanning the merged TSV per probe.
+- Cache groove-prepared MHC segments per unique allele / sequence, not per record.
+- Separate optional diagnostics (probe audits / groove audits) from the critical training path so they can be skipped or deferred.
+- Detailed implementation plan:
+  - [runtime_speedup_plan.md](/Users/iskander/code/presto/tasks/runtime_speedup_plan.md)
+
+# Architecture / Curriculum Experiments (2026-03-10)
+
+## Spec
+
+- Goal: test architectural and pretraining changes that could improve binding quality and convergence without fragmenting the model into separate specialized architectures.
+- Constraints:
+  - preserve one canonical Presto model
+  - all experiments must be benchmarked against the current `legacy_m1` class-I base
+  - new curricula must be explicitly specifiable / reproducible in config
+
+## Candidate experiments
+
+- [ ] `d_model` sweep on the current `legacy_m1` base
+  - compare at least:
+    - `128`
+    - `192`
+    - `256` (current)
+  - hold:
+    - 7-allele exact-`IC50` contract
+    - warm start
+    - no allele ranking
+  - measure:
+    - probe panel
+    - val loss
+    - wall-clock
+    - params
+- [ ] `pmhc_interaction` field-of-view audit
+  - explicitly log how much attention mass each interaction layer/query places on:
+    - peptide tokens
+    - groove half 1
+    - groove half 2
+  - use the probe panel and a few fit-supported peptide families
+  - confirm whether groove information is actually being used where expected
+- [ ] MS detectability simplification
+  - current `ms_detectability` latent is peptide-only, but still derived from token-level latent attention
+  - test a stricter head that uses only a mean-pooled peptide representation
+  - compare against current design on elution/presentation-linked settings later
+- [ ] Peptide physicochemical pretraining head
+  - add simple peptide-only auxiliaries for warm start / curriculum:
+    - GRAVY
+    - net charge / basic-acidic balance
+    - aromatic fraction
+    - aliphatic fraction
+    - simple helix / sheet propensity scores from a fixed rubric
+  - keep these cheap and deterministic from sequence
+- [ ] Configurable pretraining curriculum
+  - support an explicit stage schedule such as:
+    - epoch 0:
+      - MHC groove sequences -> class / species
+      - peptides -> physicochemical properties
+    - epoch 1+:
+      - continue MHC class / species
+      - switch peptides -> species of origin
+  - curriculum should be declarative in config / CLI, not hard-coded
+
+## Review
+
+- Current relevant architectural facts from code:
+  - `d_model` default is `256` in [presto.py](/Users/iskander/code/presto/models/presto.py)
+  - `pmhc_interaction` attention is bidirectional peptide<->MHC and the MHC view is the concatenation of groove half 1 and groove half 2
+  - candidate core binding queries also attend over:
+    - core tokens
+    - concatenated groove halves
+    - latent dependency tokens
+  - `ms_detectability` is peptide-only in the latent DAG, but currently not constrained to a simple mean-pooled peptide vector
+
 # MHCflurry-Style Modular Refactor (2026-03-07)
 
 ## Spec
@@ -4288,3 +4751,226 @@ Goal: get `SLLQHLIGL` to separate correctly between `HLA-A*02:01` and `HLA-A*24:
     - stop the misconfigured all-class-I runs
     - relaunch exact 7-allele `E006`-parity baseline on `affinity_assay_mode=legacy`
     - only then launch ablations on top of that exact baseline
+  - parallel experiments to run while corrected parity completes:
+    - exact same 7-allele contract on `affinity_assay_mode=score_context`
+    - exact same 7-allele contract on `legacy + peptide ranking`
+    - exact same 7-allele contract on `M1` (`groove_pos_mode=triple`, `binding_core_lengths=8,9,10,11`, shared refinement) with `legacy`
+    - exact same 7-allele contract on `M1 + peptide ranking` with `legacy`
+  - rationale:
+    - `score_context` run measures whether the restored regression diagnosis is correct on a truly matched dataset
+    - `legacy + peptide ranking` tests whether ranking helps once the base is correct
+    - `M1` tests whether the stronger class-I design still helps under the exact `E006` data contract
+  - completed matched-run result:
+    - `legacy_m1` is the current best class-I affinity design on the exact 7-allele `E006` contract
+    - probe best-checkpoint values:
+      - `SLLQHLIGL`: `37.3` vs `29588.2 nM`
+      - `FLRYLLFGI`: `32.8` vs `24346.2 nM`
+      - `NFLIKFLLI`: `5749.3` vs `6.10 nM`
+    - `score_context` remains materially weaker on the same data slice
+    - peptide ranking is mixed and should not be the default on top of `legacy_m1`
+  - next sequence approved:
+    - promote `legacy_m1` as the class-I benchmark base
+    - safe synthetic ablations on top of `legacy_m1`:
+      - `none`
+      - `peptide_random`
+      - `no_mhc_alpha`
+      - `no_mhc_beta`
+    - then add censored quantitative rows with `qualifier_filter=all`
+    - only after that test MHC-II entry against `legacy_m1`
+- [ ] Inspect current TCR-evidence path and confirm whether it consumes receptor input or only pMHC features
+- [ ] Audit obvious dead-code / wasted-compute paths in Presto forward DAG and focused binding trainer
+- [ ] Review current pair-mining implementation and identify concrete ways to speed it up without changing future semantics
+
+## Review
+- Claude cleanup review:
+  - `models/presto.py` / `models/presto_modules.py` simplification is coherent.
+  - It removes redundant downstream vectors and dead parameters, but it does not materially change the startup path in `scripts/focused_binding_probe.py`.
+  - The runtime speedup plan still applies almost unchanged for startup/setup work.
+- Validation after cleanup:
+  - `pytest -q tests/test_presto.py tests/test_checkpointing.py tests/test_predictor.py`
+  - result: `99 passed`
+- Focused runner correction:
+  - fixed a real bug where epoch summaries and artifact writes had drifted outside the epoch loop in `scripts/focused_binding_probe.py`.
+  - verification:
+    - `python -m py_compile scripts/focused_binding_probe.py`
+    - `pytest -q tests/test_focused_probe.py tests/test_presto.py tests/test_checkpointing.py tests/test_predictor.py`
+    - result: `127 passed`
+- Phase 1 startup-cache execution:
+  - implemented contract-hash caching in `scripts/focused_binding_probe.py` using:
+    - `DatasetContract`
+    - `PreparedBindingState`
+    - `_prepare_real_binding_state(...)`
+  - cache stores:
+    - filtered real binding rows
+    - train/val split
+    - MHC sequence resolution map
+    - probe-support summaries for explicit probe peptides
+  - local miss/hit smoke on the same contract:
+    - run 1 setup: `35.43s`, `cache_hit=false`
+    - run 2 setup: `5.53s`, `cache_hit=true`
+  - so the prepared-state cache is real and cuts setup by about `6.4x` locally on the same focused contract
+- New bottleneck surfaced by the smoke:
+  - summary artifact writing still imports Matplotlib on the critical path
+  - first local run spent about `4.15s` in `summary_write_wall_s`
+  - even the cache-hit run still spent about `3.39s`
+  - logs show temporary Matplotlib/font-cache initialization, so plotting/import overhead is now one of the next obvious startup/runtime targets
+- Follow-up runtime fix:
+  - `scripts/focused_binding_probe.py` now supports `--probe-plot-frequency {epoch,final,off}`
+  - default is now `final`
+  - local cached 2-epoch smoke with `probe_plot_frequency=final`:
+    - epoch 1 `summary_write_wall_s`: `0.0017s`
+    - epoch 2 `summary_write_wall_s`: `3.86s`
+  - so the Matplotlib/font-cache hit moved off the per-epoch hot path and only lands on the final epoch artifact write
+- Setup-stage timing instrumentation:
+  - focused setup logs now include:
+    - `prepare_real_binding_state_s`
+    - `dataset_build_s`
+    - `val_loader_build_s`
+    - `model_init_and_warm_start_s`
+    - `probe_setup_s`
+  - cached 1-epoch smoke with plotting off:
+    - `prepare_real_binding_state_s`: `0.0033s`
+    - `dataset_build_s`: `0.5881s`
+    - `val_loader_build_s`: `0.0001s`
+    - `model_init_and_warm_start_s`: `0.0298s`
+    - `probe_setup_s`: `4.3340s`
+    - total `setup_wall_s`: `5.8957s`
+  - current startup bottleneck on a cache hit is now clearly `probe_setup_s`, not row filtering/splitting
+- Probe-setup fix:
+  - probe evaluation now reuses `prepared_state.mhc_sequences` and only falls back to loading the full MHC index if a requested probe allele is missing
+  - cached 1-epoch smoke with plotting off after this change:
+    - `prepare_real_binding_state_s`: `0.0013s`
+    - `dataset_build_s`: `0.4658s`
+    - `val_loader_build_s`: `0.0001s`
+    - `model_init_and_warm_start_s`: `0.0294s`
+    - `probe_setup_s`: `0.0006s`
+    - total `setup_wall_s`: `1.2663s`
+  - so the cache-hit setup path improved again from `5.90s` to `1.27s`
+  - remaining startup cost on the cached path is now mostly `PrestoDataset` construction
+  - larger 7-allele exact-`IC50` cold-start smoke on the same code path:
+    - `cache_hit=false`
+    - `prepare_real_binding_state_s`: `29.7984s`
+    - `probe_setup_s`: `23.0579s`
+    - `total setup_wall_s`: `53.8008s`
+  - implication:
+    - repeated-run startup is now cheap on a cache hit
+    - cold starts on the real multi-allele contracts are still dominated by contract preparation and probe setup
+- `PrestoDataset` MHC-pair memoization:
+  - added an internal `_resolved_mhc_pair_cache` in `data/loaders.py` keyed by `(mhc_class, species, allele, direct_seq, mhc_b, allow_default_class_i_beta)`
+  - goal: avoid repeated `prepare_mhc_input(...)` / groove-half preparation for repeated alleles within one dataset build
+  - verification:
+    - `pytest -q tests/test_focused_probe.py tests/test_presto.py tests/test_checkpointing.py tests/test_predictor.py tests/test_loaders.py`
+    - result: `163 passed`
+  - measured impact on the tiny cached focused smoke was neutral (`dataset_build_s ~0.47s -> ~0.51s`), so this needs a larger repeated-allele benchmark before calling it a real win
+
+- [x] Inspect current TCR-evidence path and confirm whether it consumes receptor input or only pMHC features
+- [x] Audit obvious dead-code / wasted-compute paths in Presto forward DAG and focused binding trainer
+- [x] Review current pair-mining implementation and identify concrete ways to speed it up without changing future semantics
+
+## Review
+- TCR evidence is currently a pMHC-only auxiliary output from `pmhc_vec`; no receptor tokens are consumed in the active model path.
+- Biggest runtime wastes identified from code inspection: `forward_affinity_only()` still executes full `forward()`, unconditional Python-heavy pair mining runs even when weights are zero, and strict allele balancing inflates an 8k-row train split into ~39k sampled examples per epoch.
+- There is still legacy receptor-related code outside the active affinity path (`training/tasks.py` TCR pairing/pMHC tasks, predictor compatibility APIs), plus full forward computes T-cell and TCR-evidence heads even for affinity-only benchmarks.
+- Pair mining can keep current semantics but should move to precomputed batch metadata / index tensors and avoid per-batch GPU->CPU `.tolist()` conversions and nested Python loops.
+
+
+# Runtime/Dataflow Refactor (2026-03-10)
+
+## Spec
+
+- Goal: remove stale receptor-sequence training task code and prepare the focused affinity trainer for a fixed-dataset, index-driven augmentation/ranking pipeline.
+- Constraints:
+  - keep the active pMHC-only `tcr_evidence` head and data path
+  - remove only unreachable receptor-sequence task code (`tcr_pairing`, `tcr_pmhc`) and their private helpers/exports
+  - do not change current training semantics for active affinity benchmarks in the same patch unless verified
+- Follow-on runtime design to preserve semantics:
+  - keep the real base dataset fixed for a run
+  - represent ranking/contrastive pairs as index tensors over that fixed dataset
+  - generate epoch-specific synthetic samples as an append-only synthetic index space beyond the fixed dataset size
+  - move pair selection / synthetic scheduling off the hot forward path and into epoch-state preparation
+
+## Execution order
+- [x] Phase 1: remove stale receptor-sequence training tasks
+  - delete `TCRPairingTask` and `TCRpMHCMatchingTask`
+  - delete private helpers used only by those tasks
+  - remove stale exports from `training/__init__.py`
+  - keep `TcrEvidenceTask` intact
+- [x] Phase 1 verification
+  - `pytest -q tests/test_tasks.py tests/test_training_e2e.py`
+  - targeted import smoke for `training`
+- [ ] Phase 2: write the fixed-dataset/index-pair refactor plan into `tasks/todo.md`
+  - specify dataset IDs / peptide IDs / allele IDs carried in batch metadata
+  - specify epoch-state object for synthetic append space + pair-index tensors
+  - specify async producer boundary for next-epoch state generation
+
+- Phase 1 verification: `pytest -q tests/test_tasks.py tests/test_training_e2e.py` -> `33 passed`
+
+
+# Indexed Pair Mining Refactor (2026-03-10)
+
+## Spec
+
+- Goal: keep the shared canonical model path, but refactor focused training dataflow so ranking/contrastive and synthetic augmentation operate on fixed dataset metadata and epoch-state indices instead of per-batch token tuple mining.
+- Requirements:
+  - add fixed metadata fields to samples/batches/dataset for:
+    - `dataset_index`
+    - `peptide_id`
+    - `allele_id`
+    - `bind_target_log10`
+    - `bind_qual`
+  - preserve current training semantics for active losses
+  - generate epoch-specific synthetic append rows and pair/ranking indices from the fixed dataset
+  - pair/ranking loss code should no longer call `pep_tok.detach().cpu().tolist()` or rebuild peptide groups from token tuples
+  - this work must stay on the canonical shared model, not a separate affinity-only architecture fork
+
+## Execution order
+- [x] Phase 1: inspect focused dataset / sample / batch construction path
+  - identify where to assign stable dataset indices and peptide/allele IDs
+  - identify how current synthetic refresh hooks into epoch loop
+- [x] Phase 2: extend sample/batch metadata
+  - add fields to `PrestoSample` / `PrestoBatch` / collator outputs
+  - ensure dataset construction populates stable `dataset_index`, `peptide_id`, `allele_id`, `bind_target_log10`, `bind_qual`
+- [x] Phase 3: add epoch-state object
+  - represent current epoch training population as fixed real rows + append-only synthetic rows
+  - store pair/ranking candidate indices against that epoch population
+- [x] Phase 4: rewrite pair mining/loss input path
+  - replace token-tuple grouping with index-based tensors/metadata
+  - preserve current loss semantics and metrics
+- [x] Phase 5: verification
+  - targeted tests for metadata fields, pair-index generation, and synthetic append indexing
+  - focused training smoke / existing tests
+
+## Review
+- pending
+
+- Indexed pair-mining refactor landed on the canonical shared model path: fixed sample metadata (`dataset_index`, `peptide_id`, `allele_id`, `bind_target_log10`) now flows through `PrestoBatch`, pair candidates are collated as index tensors, and focused ranking losses no longer rebuild peptide groups from `pep_tok.detach().cpu().tolist()`.
+- Epoch train state now preserves a fixed real dataset and appends per-epoch synthetic rows with dataset-index offsets via `CombinedSampleDataset`; synthetic IDs begin after the real dataset size.
+- Stale receptor-sequence task code (`TCRPairingTask`, `TCRpMHCMatchingTask`) was removed; pMHC-only `tcr_evidence` remains.
+- Verification: `pytest -q tests/test_focused_probe.py tests/test_tasks.py tests/test_training_e2e.py tests/test_presto.py` -> `111 passed`
+
+
+# Multi-Allele Runtime/Training Sweep (2026-03-10)
+
+## Spec
+
+- Goal: benchmark 16 runtime/performance variants on the ~44k multi-allele binding dataset on Modal, using the canonical shared model path.
+- Fixed semantic contract:
+  - multi-allele class-I binding dataset around the known ~44k-row contract
+  - ranking terms enabled in every run
+  - censor-aware quantitative losses on KD/IC50/EC50 assay heads
+  - 3 epochs per run
+  - collect startup time, per-epoch wall-clock, GPU timing breakdown, and accuracy/probe metrics
+- Deliverables:
+  - manifest of all runs
+  - one results table with runtime + accuracy metrics
+  - recommendation for fastest effective configuration
+
+## Execution order
+- [ ] Phase 1: confirm exact dataset contract and runner support for the 44k binding benchmark
+- [ ] Phase 2: define 16 runtime variants and launcher
+- [ ] Phase 3: launch all Modal runs in parallel
+- [ ] Phase 4: collect summaries / logs / timing metrics
+- [ ] Phase 5: rank variants by wall-clock and training effectiveness
+
+## Review
+- pending
