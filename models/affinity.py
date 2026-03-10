@@ -17,7 +17,7 @@ Number = Union[float, int]
 
 # Global affinity range for Presto (nM).
 DEFAULT_MIN_AFFINITY_NM: float = 1e-3
-DEFAULT_MAX_AFFINITY_NM: float = 100000.0
+DEFAULT_MAX_AFFINITY_NM: float = 50000.0
 
 # Logistic calibration used for binding logits/probabilities.
 DEFAULT_BINDING_MIDPOINT_NM: float = 500.0
@@ -114,4 +114,3 @@ def normalize_binding_target_log10(
         min_affinity_nM=min_affinity_nM,
         max_affinity_nM=max_affinity_nM,
     )
-

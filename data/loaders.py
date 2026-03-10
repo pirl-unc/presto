@@ -20,6 +20,7 @@ import gzip
 import zipfile
 import io
 import json
+import math
 import warnings
 from collections import defaultdict
 from pathlib import Path
@@ -105,6 +106,9 @@ class BindingRecord:
     measurement_type: str = "IC50"  # IC50, KD, EC50
     unit: str = "nM"
     assay_type: Optional[str] = None
+    assay_method: Optional[str] = None
+    effector_culture_condition: Optional[str] = None
+    apc_culture_condition: Optional[str] = None
     mhc_sequence: Optional[str] = None
     mhc_class: Optional[str] = None
     species: Optional[str] = None
@@ -1636,6 +1640,10 @@ class PrestoDataset(Dataset):
                 bind_value=rec.value,
                 bind_qual=rec.qualifier,
                 bind_measurement_type=rec.measurement_type,
+                binding_assay_type=rec.assay_type or rec.measurement_type,
+                binding_assay_method=rec.assay_method,
+                binding_effector_culture=rec.effector_culture_condition,
+                binding_apc_culture=rec.apc_culture_condition,
                 species=rec.species,
                 species_of_origin=so,
                 foreignness_label=fl,
@@ -2301,7 +2309,16 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
 
     Guarantees per-batch task mixing and encourages balance across source,
     label polarity, MHC allele identity, and synthetic-negative types.
+    For binding, it also tries to co-batch quantitative same-peptide
+    multi-allele families so allele-ranking losses actually activate.
     """
+
+    _BINDING_MIN_LOG10_NM = -3.0
+    _BINDING_MAX_LOG10_NM = math.log10(50000.0)
+    _BINDING_RANKABLE_GAP_LOG10 = 0.3
+    _BINDING_FAMILY_MIN_EXAMPLES = 2
+    _BINDING_FAMILY_MAX_EXAMPLES = 16
+    _BINDING_FAMILY_MAX_PER_PEPTIDE = 3
 
     def __init__(
         self,
@@ -2325,12 +2342,17 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             lambda: defaultdict(list)
         )
         self._index_weight: Dict[int, float] = {}
-        self._metadata_by_index: Dict[int, tuple[str, str, str, str, str]] = {}
+        self._metadata_by_index: Dict[int, tuple[str, str, str, str, str, str, str]] = {}
+        self._binding_peptide_by_index: Dict[int, str] = {}
+        self._binding_rankable_partner_indices: Dict[int, Tuple[int, ...]] = {}
+        self._binding_rankable_seed_indices: List[int] = []
 
         task_counts: Dict[str, int] = defaultdict(int)
         source_counts: Dict[str, int] = defaultdict(int)
         label_counts: Dict[str, int] = defaultdict(int)
         allele_counts: Dict[str, int] = defaultdict(int)
+        mhc_class_counts: Dict[str, int] = defaultdict(int)
+        species_counts: Dict[str, int] = defaultdict(int)
         synthetic_counts: Dict[str, int] = defaultdict(int)
         for idx in self._all_indices:
             sample = dataset[idx]
@@ -2338,9 +2360,19 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             source = self._sample_source(sample)
             label = self._sample_label_bucket(sample)
             allele = self._sample_primary_allele(sample)
+            mhc_class = self._sample_mhc_class(sample)
+            species = self._sample_species_bucket(sample)
             synthetic = self._sample_synthetic_kind(sample)
 
-            self._metadata_by_index[idx] = (task, source, label, allele, synthetic)
+            self._metadata_by_index[idx] = (
+                task,
+                source,
+                label,
+                allele,
+                mhc_class,
+                species,
+                synthetic,
+            )
             self._task_to_indices[task].append(idx)
             self._task_label_to_indices[task][label].append(idx)
 
@@ -2348,18 +2380,23 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             source_counts[source] += 1
             label_counts[label] += 1
             allele_counts[allele] += 1
+            mhc_class_counts[mhc_class] += 1
+            species_counts[species] += 1
             synthetic_counts[synthetic] += 1
 
-        for idx, (task, source, label, allele, synthetic) in self._metadata_by_index.items():
+        for idx, (task, source, label, allele, mhc_class, species, synthetic) in self._metadata_by_index.items():
             # Product of inverse frequencies to upweight underrepresented strata.
             weight = 1.0
             weight *= 1.0 / float(task_counts[task] + 1)
             weight *= 1.0 / float(source_counts[source] + 1)
             weight *= 1.0 / float(label_counts[label] + 1)
             weight *= 1.0 / float(allele_counts[allele] + 1)
+            weight *= 1.0 / float(mhc_class_counts[mhc_class] + 1)
+            weight *= 1.0 / float(species_counts[species] + 1)
             weight *= 1.0 / float(synthetic_counts[synthetic] + 1)
             self._index_weight[idx] = weight
 
+        self._build_binding_family_index()
         self._tasks = sorted(self._task_to_indices.keys())
         if not self._tasks:
             raise ValueError("Cannot build balanced sampler: dataset is empty")
@@ -2414,9 +2451,118 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         return "unknown_allele"
 
     @staticmethod
+    def _sample_mhc_class(sample: PrestoSample) -> str:
+        normalized = normalize_mhc_class(sample.mhc_class, default=None)
+        if normalized is not None:
+            return normalized
+        allele = (sample.primary_allele or "").strip()
+        if allele:
+            inferred = infer_mhc_class_optional(allele)
+            if inferred is not None:
+                return inferred
+        return "unknown_class"
+
+    @staticmethod
+    def _sample_species_bucket(sample: PrestoSample) -> str:
+        normalized = normalize_species_label(sample.species)
+        if normalized is not None:
+            return normalized
+        allele = (sample.primary_allele or "").strip()
+        if allele:
+            inferred = normalize_species_label(infer_species_from_allele(allele))
+            if inferred is not None:
+                return inferred
+        raw = str(sample.species or "").strip()
+        return raw if raw else "unknown_species"
+
+    @staticmethod
     def _sample_synthetic_kind(sample: PrestoSample) -> str:
         kind = (sample.synthetic_kind or "").strip()
         return kind if kind else "none"
+
+    @staticmethod
+    def _is_binding_measurement_task(task: str) -> bool:
+        return task.startswith("binding_") and task not in {
+            "binding_kinetics",
+            "binding_stability",
+        }
+
+    @classmethod
+    def _binding_interval_log10(
+        cls,
+        sample: PrestoSample,
+    ) -> Optional[Tuple[float, float]]:
+        if sample.bind_value is None:
+            return None
+        try:
+            value_log10 = math.log10(max(float(sample.bind_value), 1e-3))
+        except (TypeError, ValueError):
+            return None
+        qualifier = int(getattr(sample, "bind_qual", 0) or 0)
+        if qualifier < 0:
+            return cls._BINDING_MIN_LOG10_NM, value_log10
+        if qualifier > 0:
+            return value_log10, cls._BINDING_MAX_LOG10_NM
+        return value_log10, value_log10
+
+    @classmethod
+    def _binding_pair_gap_log10(
+        cls,
+        sample_a: PrestoSample,
+        sample_b: PrestoSample,
+    ) -> float:
+        interval_a = cls._binding_interval_log10(sample_a)
+        interval_b = cls._binding_interval_log10(sample_b)
+        if interval_a is None or interval_b is None:
+            return 0.0
+        lower_a, upper_a = interval_a
+        lower_b, upper_b = interval_b
+        if upper_a + cls._BINDING_RANKABLE_GAP_LOG10 <= lower_b:
+            return lower_b - upper_a
+        if upper_b + cls._BINDING_RANKABLE_GAP_LOG10 <= lower_a:
+            return lower_a - upper_b
+        return 0.0
+
+    def _build_binding_family_index(self) -> None:
+        peptide_groups: Dict[str, List[int]] = defaultdict(list)
+        for idx in self._all_indices:
+            sample = self.dataset[idx]
+            if sample.bind_value is None:
+                continue
+            peptide = str(getattr(sample, "peptide", "") or "").strip().upper()
+            allele = str(getattr(sample, "primary_allele", "") or "").strip()
+            if not peptide or not allele:
+                continue
+            peptide_groups[peptide].append(idx)
+
+        partner_sets: Dict[int, set[int]] = defaultdict(set)
+        for peptide, indices in peptide_groups.items():
+            if len(indices) < 2:
+                continue
+            for pos, idx_i in enumerate(indices):
+                sample_i = self.dataset[idx_i]
+                allele_i = str(getattr(sample_i, "primary_allele", "") or "").strip()
+                if not allele_i:
+                    continue
+                for idx_j in indices[pos + 1 :]:
+                    sample_j = self.dataset[idx_j]
+                    allele_j = str(getattr(sample_j, "primary_allele", "") or "").strip()
+                    if not allele_j or allele_i == allele_j:
+                        continue
+                    gap = self._binding_pair_gap_log10(sample_i, sample_j)
+                    if gap < self._BINDING_RANKABLE_GAP_LOG10:
+                        continue
+                    self._binding_peptide_by_index[idx_i] = peptide
+                    self._binding_peptide_by_index[idx_j] = peptide
+                    partner_sets[idx_i].add(idx_j)
+                    partner_sets[idx_j].add(idx_i)
+
+        self._binding_rankable_partner_indices = {
+            idx: tuple(sorted(partners))
+            for idx, partners in partner_sets.items()
+            if partners
+        }
+        self._binding_rankable_seed_indices = sorted(self._binding_rankable_partner_indices.keys())
 
     def __len__(self) -> int:
         n = len(self._all_indices)
@@ -2447,20 +2593,43 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         batch_source_counts: Dict[str, int],
         batch_label_counts: Dict[str, int],
         batch_allele_counts: Dict[str, int],
+        batch_mhc_class_counts: Dict[str, int],
+        batch_species_counts: Dict[str, int],
         batch_synthetic_counts: Dict[str, int],
     ) -> int:
         """Sample one index while actively balancing batch-level strata."""
         if len(candidates) == 1:
             return candidates[0]
 
+        novelty_scored: List[Tuple[int, int]] = []
+        max_novelty = -1
+        for idx in candidates:
+            _, _, _, allele, mhc_class, species, _ = self._metadata_by_index[idx]
+            novelty = 0
+            if batch_allele_counts.get(allele, 0) == 0:
+                novelty += 1
+            if batch_mhc_class_counts.get(mhc_class, 0) == 0:
+                novelty += 1
+            if batch_species_counts.get(species, 0) == 0:
+                novelty += 1
+            novelty_scored.append((idx, novelty))
+            if novelty > max_novelty:
+                max_novelty = novelty
+        if max_novelty > 0:
+            candidates = [idx for idx, novelty in novelty_scored if novelty == max_novelty]
+            if len(candidates) == 1:
+                return candidates[0]
+
         total = 0.0
         weighted: List[Tuple[int, float]] = []
         for idx in candidates:
-            _, source, label, allele, synthetic = self._metadata_by_index[idx]
+            _, source, label, allele, mhc_class, species, synthetic = self._metadata_by_index[idx]
             weight = self._index_weight.get(idx, 1.0)
             weight *= 1.0 / float(batch_source_counts.get(source, 0) + 1)
             weight *= 1.0 / float(batch_label_counts.get(label, 0) + 1)
             weight *= 1.0 / float(batch_allele_counts.get(allele, 0) + 1)
+            weight *= 1.0 / float(batch_mhc_class_counts.get(mhc_class, 0) + 1)
+            weight *= 1.0 / float(batch_species_counts.get(species, 0) + 1)
             weight *= 1.0 / float(batch_synthetic_counts.get(synthetic, 0) + 1)
             weight = max(weight, 1e-12)
             weighted.append((idx, weight))
@@ -2486,6 +2655,8 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         batch_source_counts: Dict[str, int],
         batch_label_counts: Dict[str, int],
         batch_allele_counts: Dict[str, int],
+        batch_mhc_class_counts: Dict[str, int],
+        batch_species_counts: Dict[str, int],
         batch_synthetic_counts: Dict[str, int],
     ) -> int:
         label_pools = self._task_label_to_indices[task]
@@ -2514,8 +2685,121 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             batch_source_counts,
             batch_label_counts,
             batch_allele_counts,
+            batch_mhc_class_counts,
+            batch_species_counts,
             batch_synthetic_counts,
         )
+
+    def _binding_family_quota(self, task_quota: int) -> int:
+        if task_quota < self._BINDING_FAMILY_MIN_EXAMPLES:
+            return 0
+        return min(
+            task_quota,
+            max(self._BINDING_FAMILY_MIN_EXAMPLES, task_quota // 2),
+            self._BINDING_FAMILY_MAX_EXAMPLES,
+        )
+
+    def _draw_binding_family_sample(
+        self,
+        task: str,
+        rng: random.Random,
+        in_batch: set[int],
+        batch_binding_indices: List[int],
+        batch_binding_peptide_counts: Dict[str, int],
+        batch_source_counts: Dict[str, int],
+        batch_label_counts: Dict[str, int],
+        batch_allele_counts: Dict[str, int],
+        batch_mhc_class_counts: Dict[str, int],
+        batch_species_counts: Dict[str, int],
+        batch_synthetic_counts: Dict[str, int],
+    ) -> Optional[int]:
+        partner_candidates: List[int] = []
+        for idx in batch_binding_indices:
+            peptide = self._binding_peptide_by_index.get(idx, "")
+            if not peptide:
+                continue
+            if batch_binding_peptide_counts.get(peptide, 0) >= self._BINDING_FAMILY_MAX_PER_PEPTIDE:
+                continue
+            for partner_idx in self._binding_rankable_partner_indices.get(idx, ()):
+                if partner_idx in in_batch:
+                    continue
+                if self._metadata_by_index[partner_idx][0] != task:
+                    continue
+                partner_candidates.append(partner_idx)
+
+        if partner_candidates:
+            deduped = list(dict.fromkeys(partner_candidates))
+            choice_pool = self._choose_candidate_pool(
+                candidates=deduped,
+                in_batch=in_batch,
+                rng=rng,
+            )
+            return self._batch_balanced_choice(
+                choice_pool,
+                rng,
+                batch_source_counts,
+                batch_label_counts,
+                batch_allele_counts,
+                batch_mhc_class_counts,
+                batch_species_counts,
+                batch_synthetic_counts,
+            )
+
+        seed_candidates = [
+            idx
+            for idx in self._binding_rankable_seed_indices
+            if idx not in in_batch
+            and self._metadata_by_index[idx][0] == task
+            and batch_binding_peptide_counts.get(self._binding_peptide_by_index.get(idx, ""), 0)
+            < self._BINDING_FAMILY_MAX_PER_PEPTIDE
+        ]
+        if not seed_candidates:
+            return None
+
+        choice_pool = self._choose_candidate_pool(
+            candidates=seed_candidates,
+            in_batch=in_batch,
+            rng=rng,
+        )
+        return self._batch_balanced_choice(
+            choice_pool,
+            rng,
+            batch_source_counts,
+            batch_label_counts,
+            batch_allele_counts,
+            batch_mhc_class_counts,
+            batch_species_counts,
+            batch_synthetic_counts,
+        )
+
+    def _record_batch_index(
+        self,
+        idx: int,
+        batch: List[int],
+        in_batch: set[int],
+        batch_source_counts: Dict[str, int],
+        batch_label_counts: Dict[str, int],
+        batch_allele_counts: Dict[str, int],
+        batch_mhc_class_counts: Dict[str, int],
+        batch_species_counts: Dict[str, int],
+        batch_synthetic_counts: Dict[str, int],
+        batch_binding_indices: Optional[List[int]] = None,
+        batch_binding_peptide_counts: Optional[Dict[str, int]] = None,
+    ) -> None:
+        batch.append(idx)
+        in_batch.add(idx)
+        task, source, label, allele, mhc_class, species, synthetic = self._metadata_by_index[idx]
+        batch_source_counts[source] += 1
+        batch_label_counts[label] += 1
+        batch_allele_counts[allele] += 1
+        batch_mhc_class_counts[mhc_class] += 1
+        batch_species_counts[species] += 1
+        batch_synthetic_counts[synthetic] += 1
+        if getattr(self.dataset[idx], "bind_value", None) is not None and batch_binding_indices is not None:
+            batch_binding_indices.append(idx)
+            peptide = self._binding_peptide_by_index.get(idx, "")
+            if peptide and batch_binding_peptide_counts is not None:
+                batch_binding_peptide_counts[peptide] += 1
 
     def _choose_candidate_pool(
         self,
@@ -2623,12 +2907,49 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             batch_source_counts: Dict[str, int] = defaultdict(int)
             batch_label_counts: Dict[str, int] = defaultdict(int)
             batch_allele_counts: Dict[str, int] = defaultdict(int)
+            batch_mhc_class_counts: Dict[str, int] = defaultdict(int)
+            batch_species_counts: Dict[str, int] = defaultdict(int)
             batch_synthetic_counts: Dict[str, int] = defaultdict(int)
+            batch_binding_indices: List[int] = []
+            batch_binding_peptide_counts: Dict[str, int] = defaultdict(int)
 
             quotas = self._task_quotas(tasks, rng)
 
             for task, task_quota in quotas.items():
-                for _ in range(task_quota):
+                family_draws = 0
+                if self._is_binding_measurement_task(task) and self._binding_rankable_seed_indices:
+                    family_budget = self._binding_family_quota(task_quota)
+                    for _ in range(family_budget):
+                        idx = self._draw_binding_family_sample(
+                            task,
+                            rng,
+                            in_batch,
+                            batch_binding_indices,
+                            batch_binding_peptide_counts,
+                            batch_source_counts,
+                            batch_label_counts,
+                            batch_allele_counts,
+                            batch_mhc_class_counts,
+                            batch_species_counts,
+                            batch_synthetic_counts,
+                        )
+                        if idx is None:
+                            break
+                        self._record_batch_index(
+                            idx,
+                            batch,
+                            in_batch,
+                            batch_source_counts,
+                            batch_label_counts,
+                            batch_allele_counts,
+                            batch_mhc_class_counts,
+                            batch_species_counts,
+                            batch_synthetic_counts,
+                            batch_binding_indices=batch_binding_indices,
+                            batch_binding_peptide_counts=batch_binding_peptide_counts,
+                        )
+                        family_draws += 1
+                for _ in range(max(0, task_quota - family_draws)):
                     idx = self._draw_from_task(
                         task,
                         rng,
@@ -2637,15 +2958,23 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
                         batch_source_counts,
                         batch_label_counts,
                         batch_allele_counts,
+                        batch_mhc_class_counts,
+                        batch_species_counts,
                         batch_synthetic_counts,
                     )
-                    batch.append(idx)
-                    in_batch.add(idx)
-                    _, source, label, allele, synthetic = self._metadata_by_index[idx]
-                    batch_source_counts[source] += 1
-                    batch_label_counts[label] += 1
-                    batch_allele_counts[allele] += 1
-                    batch_synthetic_counts[synthetic] += 1
+                    self._record_batch_index(
+                        idx,
+                        batch,
+                        in_batch,
+                        batch_source_counts,
+                        batch_label_counts,
+                        batch_allele_counts,
+                        batch_mhc_class_counts,
+                        batch_species_counts,
+                        batch_synthetic_counts,
+                        batch_binding_indices=batch_binding_indices,
+                        batch_binding_peptide_counts=batch_binding_peptide_counts,
+                    )
 
             rng.shuffle(batch)
             if self.drop_last and len(batch) < self.batch_size:
@@ -2661,15 +2990,23 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
                         batch_source_counts,
                         batch_label_counts,
                         batch_allele_counts,
+                        batch_mhc_class_counts,
+                        batch_species_counts,
                         batch_synthetic_counts,
                     )
-                    batch.append(idx)
-                    in_batch.add(idx)
-                    _, source, label, allele, synthetic = self._metadata_by_index[idx]
-                    batch_source_counts[source] += 1
-                    batch_label_counts[label] += 1
-                    batch_allele_counts[allele] += 1
-                    batch_synthetic_counts[synthetic] += 1
+                    self._record_batch_index(
+                        idx,
+                        batch,
+                        in_batch,
+                        batch_source_counts,
+                        batch_label_counts,
+                        batch_allele_counts,
+                        batch_mhc_class_counts,
+                        batch_species_counts,
+                        batch_synthetic_counts,
+                        batch_binding_indices=batch_binding_indices,
+                        batch_binding_peptide_counts=batch_binding_peptide_counts,
+                    )
             yield batch
 
 

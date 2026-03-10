@@ -103,6 +103,379 @@
   - direct quantitative-only A0201/A2402 training is still too weak to learn robust allele-specific anchor preferences
   - adding synthetic weak negatives helps `SLLQHLIGL` generalization quickly, but needs tighter control to avoid over-imposing incorrect pair structure on sparsely supported peptides
 
+# Focused Binding Experiment Corrections (2026-03-08)
+
+## Spec
+
+- Goal: make the focused `HLA-A*02:01` vs `HLA-A*24:02` binding experiment measure peptide-specific binding learning cleanly before touching the full architecture again.
+- Problems to fix:
+  - current `--max-per-allele` balancing is raw-row downsampling and can discard the paired peptide families that actually teach allele discrimination
+  - current focused train/val split is row-random after augmentation, which leaks peptide families across splits
+  - current class-I anchor-opposite synthetic negatives are wired into the global augmentation helper instead of being an explicit focused-experiment choice
+- Constraints:
+  - preserve shared peptide families across the target alleles when balancing
+  - split real records by peptide before synthetic augmentation
+  - keep anchor-aware synthetic negatives opt-in for the focused experiment, not silently global
+
+## Execution order
+
+- [x] Phase 1: fix focused allele balancing
+  - replace raw row capping with peptide-family-aware balancing
+  - preserve at least one representative row per shared peptide family for each target allele
+  - fill remaining capacity with stratified sampling over assay/affinity bins
+  - emit richer `balance_stats` including shared-peptide retention
+- [x] Phase 2: fix focused train/val split
+  - split real records by peptide before synthetic augmentation
+  - keep validation real-only so synthetic negatives do not contaminate the diagnostic split
+  - log split stats in the summary artifact
+- [x] Phase 3: scope anchor-aware negatives correctly
+  - make class-I anchor-aware scrambling an explicit augmentation strategy parameter
+  - default the global training helper to no anchor-opposite forcing
+  - expose the strategy only in the focused probe script for now
+- [x] Phase 4: verify locally
+  - add/adjust unit tests for peptide-family-aware balancing, peptide-group split, and explicit anchor strategy
+  - run targeted pytest for focused probe + binding augmentation + train scripts
+- [ ] Phase 5: rerun focused Modal diagnostics
+  - run balanced direct-only A0201/A2402 affinity-only training
+  - run balanced numeric+synth affinity-only training with explicit anchor-aware negatives
+  - evaluate at least:
+    - `SLLQHLIGL` as generalization probe
+    - `FLRYLLFGI` as A0201-supported probe
+    - `NFLIKFLLI` as A2402-supported probe
+
+## Review
+
+- Intended decision rule:
+  - if balanced direct-only still fails on the fit-supported probes, the next fix should be in the binding objective or representation
+  - if balanced direct-only improves materially, then the previous experiment was mostly data-contract noise rather than model failure
+- Implemented corrections:
+  - `scripts/focused_binding_probe.py` now does peptide-family-aware allele balancing instead of raw row capping.
+  - real records are split by peptide before any augmentation.
+  - synthetic negatives are train-only; validation stays real-only by design.
+  - the focused script now fails fast if either target allele disappears after source/measurement filtering.
+  - focused summaries now include split and balance diagnostics plus post-filter allele counts.
+- Verification:
+  - `pytest -q tests/test_focused_probe.py tests/test_train_iedb.py` -> `61 passed`
+  - local smoke:
+    - `python -m presto.scripts.focused_binding_probe --data-dir data --out-dir artifacts/focused_binding_probe_smoke3 --alleles 'HLA-A*02:01,HLA-A*24:02' --measurement-profile direct_affinity_only --epochs 1 --batch-size 128 --max-records 512 --max-per-allele 0 --synthetic-negatives --class-i-anchor-strategy property_opposite --negative-ratio 0.5`
+    - setup emitted balanced real rows after filtering: `22` A0201 / `22` A2402
+    - split emitted real-only validation: `train_rows=54`, `val_rows=8`, summary `synthetic_stats.val = {"added": 0, "reason": "validation_real_only"}`
+
+# Focused Affinity Objective Parity (2026-03-08)
+
+## Spec
+
+- Goal: make the focused affinity-only diagnostic use the same allele-discrimination pressure as the main binding trainer, so A0201/A2402 subset runs are not underconstrained by construction.
+- Evidence:
+  - balanced direct-only Modal run (`a0201-a2402-direct-balanced-20260308a`) still ends wrong-sign on fit-supported probes (`FLRYLLFGI`, `NFLIKFLLI`) and on the generalization probe (`SLLQHLIGL`)
+  - the focused script currently trains only absolute censor-aware affinity losses and omits the same-peptide/different-allele ranking loss already present in the main trainer
+- Constraints:
+  - keep the focused path lightweight and affinity-only
+  - do not add new speculative objectives before restoring parity with the existing main binding contract
+
+## Execution order
+
+- [ ] Phase 1: add binding contrastive parity to the focused affinity loss
+  - reuse the same-peptide/different-allele ranking logic and defaults as the main training path
+  - surface the ranking hyperparameters in `scripts/focused_binding_probe.py`
+- [ ] Phase 2: verify locally
+  - add/update targeted tests for the focused loss config path
+  - run focused smoke after the loss change
+- [ ] Phase 3: rerun focused Modal diagnostics
+  - balanced direct-only with contrastive ranking enabled
+  - balanced numeric+synth with contrastive ranking enabled
+  - compare against `a0201-a2402-direct-balanced-20260308a` and `a0201-a2402-numeric-synth-balanced-20260308a`
+
+## Review
+
+- Current verdict before this fix:
+  - the balanced data contract is better, but the focused trainer is still weaker than the main binding path
+  - direct-only training is therefore not yet a fair architectural test
+- Verification:
+  - `pytest -q tests/test_focused_probe.py tests/test_train_iedb.py` -> `62 passed`
+  - corrected focused Modal runs:
+    - direct-only + allele-ranking parity: `a0201-a2402-direct-balanced-contrastive-20260308b`
+    - numeric+synth + allele-ranking parity: `a0201-a2402-numeric-synth-balanced-contrastive-20260308b`
+- Result:
+  - restoring same-peptide / different-allele ranking into the focused trainer did not help
+  - on the direct-only run it made the wrong-sign gaps materially worse:
+    - `FLRYLLFGI`: `A24 - A02 ≈ -312 nM`
+    - `NFLIKFLLI`: `A24 - A02 ≈ -309 nM`
+    - `SLLQHLIGL`: `A24 - A02 ≈ -224 nM`
+  - interpretation: cross-allele ranking alone amplifies the corpus-level allele prior instead of peptide specificity
+
+# Focused Peptide-Specific Ranking (2026-03-08)
+
+## Spec
+
+- Goal: force the focused affinity predictor to learn peptide specificity within each allele, instead of converging on a mostly global A24-over-A02 prior.
+- Evidence:
+  - balanced direct-only + same-peptide allele contrastive still ends wrong-sign on all tracked probes
+  - adding only same-peptide/different-allele ranking makes the wrong-sign gap larger, which means the loss is amplifying the shared-peptide corpus prior instead of anchor-specific peptide effects
+- Constraints:
+  - implement this in the focused affinity path first, not the full trainer
+  - keep the existing same-peptide/different-allele loss, but complement it with a within-allele / different-peptide ranking loss
+  - if this works on the focused A0201/A2402 runs, then port the objective to the full architecture
+
+## Execution order
+
+# Minimal Affinity Baseline + Direct Affinity Input Repair (2026-03-08)
+
+## Spec
+
+- Goal: determine whether the A0201/A2402 exact-IC50 slice is learnable with a minimal model and, if so, repair the main Presto affinity path to expose the same information.
+- Evidence collected:
+  - exact paired IC50 signal is sparse but real (`366` paired peptides, `151` with `>=1.0` log10 gap)
+  - motif frequencies match expected anchor preferences for both alleles
+  - direct Presto affinity runs still predict near ties
+  - a tiny peptide+allele baseline learns the expected direction on real IC50 data, while an allele-only baseline does not
+- Likely misspecification:
+  - the direct affinity probe is fed from `binding_affinity_readout_proj(interaction_vec)` only
+  - this omits the explicit peptide and raw groove/MHC summaries that the simple baseline relies on
+
+## Execution order
+
+- [ ] Phase 1: record the minimal baseline result
+  - capture the allele-only vs peptide+allele baseline finding in the review log
+  - state clearly that the data are learnable and the current affinity path is under-specified
+- [ ] Phase 2: repair the direct affinity input path
+  - build `binding_affinity_vec` from `interaction_vec + pep_vec + mhc_a_vec + mhc_b_vec + groove_vec`
+  - keep output names/contracts stable
+  - keep binding stability on the old interaction-only path unless evidence says otherwise
+- [ ] Phase 3: verify numerics
+  - run focused unit tests
+  - run a local forward/backward smoke on the IC50-focused subset
+- [ ] Phase 4: rerun minimal focused diagnostics
+  - rerun A0201/A2402 IC50-only `probe_only` runs on Modal
+  - compare against the near-tie prior runs
+- [ ] Phase 5: switch the focused experiment to the real IC50 contract
+  - add strict per-batch allele balancing for the two-allele focused trainer
+  - use all exact A0201/A2402 IC50 rows, not row-capped subsets
+  - add an `IC50_nM`-only focused loss mode so the real assay output is the primary target
+  - rerun the focused Modal experiment on the full exact IC50 slice
+
+## Review
+
+- Minimal baseline result:
+  - `allele_only` cannot learn peptide-specific ordering and predicts the same value for every peptide per allele
+  - `pep_plus_allele` does learn the expected directions on real IC50 data:
+    - unclipped:
+      - `SLLQHLIGL`: `A0201 ~177.7 nM`, `A2402 ~2767.7 nM`
+      - `FLRYLLFGI`: `A0201 ~43.3 nM`, `A2402 ~644.4 nM`
+      - `NFLIKFLLI`: `A0201 ~2312.5 nM`, `A2402 ~284.3 nM`
+  - conclusion: the dataset and target scaling are not fundamentally broken
+  - implication: the current Presto direct affinity path is hiding or smoothing away useful peptide+allele information
+- Implementation:
+  - patched `models/presto.py` so the direct affinity probe now consumes
+    `interaction_vec + pep_vec + mhc_a_vec + mhc_b_vec + groove_vec`
+    instead of `interaction_vec` alone
+  - added `--qualifier-filter` to `scripts/focused_binding_probe.py` so the
+    focused Presto run can match the exact-only baseline contract
+- Verification:
+  - `pytest -q tests/test_focused_probe.py tests/test_presto.py tests/test_train_iedb.py` -> `114 passed`
+  - target-path audit:
+    - raw exact `IC50` values arrive in `bind_target` unchanged
+    - qualifiers arrive in `bind_qual` unchanged
+    - normalization is correct log10(nM) with the current 50k ceiling
+  - local exact-only focused run after the affinity-input repair:
+    - rows after filter/balance: `141` A0201, `141` A2402
+    - epoch 5 `probe_kd_nM`:
+      - `SLLQHLIGL`: `A0201 ~2789.3`, `A2402 ~2827.7`
+      - `TNFLIKFLL`: `A0201 ~2760.3`, `A2402 ~2798.0`
+    - this is still a small gap, but it is a real move away from the previous near-tie/wrong-sign behavior
+  - Modal runs launched:
+    - `a0201-a2402-ic50-exact-probe-only-20260308g`
+    - `a0201-a2402-ic50-exact-probe-peptide-rank-20260308g`
+
+# Focused IC50 Improvement Plan (2026-03-08)
+
+## Spec
+
+- Goal: move the focused binding model from "correct sign, weak separation" toward realistic quantitative allele discrimination, then scale outward without losing interpretability.
+- Current state:
+  - best focused run trains on all exact A0201/A2402 `IC50` rows with strict per-batch allele balance and no synthetics
+  - it now gets the right directions for `SLLQHLIGL`, `FLRYLLFGI`, and `NFLIKFLLI`
+  - however, the quantitative gap is still too small for some probes, especially the A2402-weak generalization case
+- Key architectural fact:
+  - the model consumes groove segments, not learned allele-ID embeddings
+  - `primary_allele` is currently used for sampling / diagnostics, not as a learned embedding input
+
+## Hypotheses to test in order
+
+- [ ] H1: the model is now optimization-limited, not data-contract-limited
+  - evidence needed: stable focused `IC50_nM` training over multiple seeds with the new exact-only, all-rows, strict-balance contract
+- [ ] H2: two-allele training is too narrow to force general groove/anchor learning
+  - evidence needed: a small multi-allele class-I panel improves held-out peptide discrimination
+- [ ] H3: synthetic negatives and cross-allele ranking help only after the exact-assay baseline is already strong
+  - evidence needed: one-at-a-time ablations improve quantitative fit without collapsing fit-supported probes
+- [ ] H4: remaining under-separation is due to an overly smooth affinity trunk/readout, not parsing or labels
+  - evidence needed: the exact-assay baseline plateaus despite clean data and balanced batching
+
+## Execution order
+
+- [ ] Phase 1: lock the clean baseline
+  - patch focused probe artifacts to log `IC50_nM` directly, not only `KD_nM`
+  - rerun the exact all-rows A0201/A2402 `IC50_nM` experiment once more for confirmation
+  - evaluate:
+    - `SLLQHLIGL`
+    - `FLRYLLFGI`
+    - `NFLIKFLLI`
+  - success criterion:
+    - correct direction on all three under the real `IC50_nM` output
+
+- [ ] Phase 2: seed stability and calibration
+  - rerun the same focused exact-IC50 experiment with 3 seeds
+  - report median and spread for probe predictions and validation loss
+  - inspect whether the 50k clip is hiding useful gradient on weak binders
+  - ablate:
+    - `max_affinity_nM = 50k`
+    - `max_affinity_nM = 500k`
+    - unclipped exact values in the focused path
+
+- [ ] Phase 3: expand to a small multi-allele panel
+  - keep exact `IC50` only, no synthetics, no ranking losses initially
+  - candidate panel: abundant, motif-distinct class-I alleles with usable exact IC50 support
+  - require strict per-batch balancing across alleles
+  - primary purpose:
+    - test whether groove-based learning generalizes beyond the two-allele pair
+    - reduce the chance the model is just learning a narrow A02-vs-A24 separator
+
+- [ ] Phase 4: add one extra pressure at a time
+  - only after Phase 3 baseline is stable
+  - ablation order:
+    1. same-allele / different-peptide ranking
+    2. carefully scoped synthetic negatives
+    3. same-peptide / different-allele ranking, only if the prior two help
+  - never combine new pressures before testing them individually
+
+- [ ] Phase 5: synthetic negatives, but only conservative ones
+  - keep validation real-only
+  - introduce only after exact-assay baseline is clearly working
+  - start with:
+    - anchor-broken decoys from strong exact binders
+  - avoid broad random-scramble synthetics until exact-fit behavior is strong
+
+- [ ] Phase 6: architecture escalation only if the cleaner training path still plateaus
+  - make the affinity head consume more explicit peptide-to-groove interaction structure
+  - possible options:
+    - pocket-aware peptide/groove readout
+    - explicit anchor-position interaction features
+    - less smooth pooling inside the affinity trunk
+
+- [ ] Phase 7: scale back toward unified Presto
+  - once focused affinity is stable:
+    - add more alleles
+    - add stability
+    - add processing
+    - add presentation
+    - add immunogenicity last
+  - introduce one component at a time and verify it does not damage affinity
+
+## Review
+
+- Current recommendation:
+  - yes, add more alleles, but only after the exact-assay A0201/A2402 baseline is stable
+  - yes, test synthetic negatives and contrastive terms one at a time
+  - no, do not jump back to full unified training yet
+- detailed staged plan:
+  - see [tasks/focused_affinity_improvement_plan.md](/Users/iskander/code/presto/tasks/focused_affinity_improvement_plan.md)
+- Why more alleles help:
+  - with only two alleles, the model can still solve the task with a narrow separator
+  - a small motif-diverse panel is a better test of whether groove-segment learning is actually working
+- Why one-at-a-time additions matter:
+  - same-peptide cross-allele ranking was previously harmful
+  - synthetic negatives previously improved some probes but distorted others
+  - the only way to attribute improvement cleanly is single-factor ablation
+
+- [ ] Phase 1: add within-allele peptide ranking to the focused affinity loss
+  - collect same-allele / different-peptide pairs with sufficient target gap
+  - cap pair counts and log support metrics separately from the allele-ranking loss
+- [ ] Phase 2: verify locally
+  - add focused tests for the new pair collector
+  - run a short focused smoke
+- [ ] Phase 3: rerun focused Modal diagnostics
+  - direct-only + allele ranking + peptide ranking
+  - numeric+synth + allele ranking + peptide ranking
+  - compare against the previous `20260308a` and `20260308b` runs
+
+## Review
+
+- Current verdict before this fix:
+  - balanced direct-only without ranking was weak and wrong-sign
+  - balanced direct-only with same-peptide allele ranking became more wrong-sign
+  - that pattern strongly suggests missing peptide-specific pressure, not a dead encoder
+- Verification:
+  - `pytest -q tests/test_focused_probe.py tests/test_train_iedb.py` -> `63 passed`
+  - local focused smoke (`artifacts/focused_binding_probe_smoke5`) showed the new loss is active on realistic batches:
+    - `out_binding_same_allele_rankable_pairs = 9558`
+    - `out_binding_same_allele_pairs_used = 128`
+    - same-peptide cross-allele pairs remained sparse (`5` used)
+- Modal result:
+  - direct-only + allele-ranking + peptide-ranking: `a0201-a2402-direct-balanced-peptide-rank-20260308c`
+  - numeric+synth + allele-ranking + peptide-ranking: `a0201-a2402-numeric-synth-balanced-peptide-rank-20260308c`
+  - within-allele peptide ranking helped relative to allele-ranking alone, but not enough:
+    - `FLRYLLFGI`: wrong-sign gap improved from `-312 nM` to `-46 nM`
+    - `NFLIKFLLI`: wrong-sign gap improved from `-309 nM` to `-52 nM`
+    - `SLLQHLIGL`: still wrong-sign at `-59 nM`
+  - interpretation: peptide-specific pressure is the right direction, but the same-peptide allele-ranking loss is still fighting it
+
+# Minimal Binding Affinity Debug (2026-03-08)
+
+## Spec
+
+- Goal: make the smallest real binding-affinity-only A0201/A2402 experiment work before scaling back up.
+- Principle:
+  - minimize assumptions
+  - keep only real binding-affinity data first
+  - keep the dataset balanced between alleles
+  - trace gradients and losses explicitly
+  - add complexity back stepwise only after the simpler stage works
+- Questions to answer:
+  - is the failure caused by mixed assay supervision (`KD` / `IC50` / `EC50`)?
+  - is the failure caused by using the full kinetic output path instead of the direct affinity head?
+  - is the failure caused by the pairwise objectives overpowering the regression objective?
+  - what is the smallest dataset slice on which the affinity predictor actually learns peptide-specific allele preferences?
+
+## Execution order
+
+- [ ] Phase 1: inspect the real A0201/A2402 binding corpus in the exact focused path
+  - quantify counts by assay type, qualifier, shared-peptide family size, and replicate support
+  - identify same-assay paired subsets (`IC50`-only, `KD`-only, `EC50`-only, pooled direct)
+  - identify high-support fit peptides instead of relying only on sparse probes
+- [ ] Phase 2: simplify the focused trainer
+  - add explicit modes for:
+    - direct affinity probe head only
+    - full binding path only
+    - combined
+  - allow assay-type filtering in the focused script
+  - log per-loss magnitudes and gradient norms for trunk vs affinity head
+- [ ] Phase 3: run minimal ablations on Modal
+  - balanced `IC50`-only, real data, direct affinity head only
+  - balanced pooled direct (`KD/IC50/EC50`), real data, direct affinity head only
+  - balanced pooled direct, real data, direct affinity head only + peptide ranking
+  - only if needed: full binding path on the same slices
+- [ ] Phase 4: decide the winning minimal contract
+  - if the direct affinity head works on a minimal real slice, port that contract upward
+  - if it does not, inspect gradient flow / representation path before adding more data or tasks
+- [ ] Phase 5: scale back up stepwise
+  - add more alleles
+  - then stability
+  - then processing/presentation
+  - stop and diagnose at the first regression
+
+## Review
+
+- Current working hypothesis:
+  - the model is not learning `A*24:02` preferences cleanly because the current focused objective still mixes too much:
+    - mixed assay semantics
+    - full kinetic path plus direct affinity path
+    - ranking objectives that can reinforce allele priors
+  - the next clean test is a real-data-only, balanced, direct-affinity-head-only experiment on the smallest same-assay slice with enough paired peptides
+- Next loop:
+  - audit exact paired `IC50` gap distribution on the shared-peptide slice
+  - inspect whether trained A0201 vs A2402 representations are nearly identical at the binding-head input
+  - run a tiny overfit experiment on the strongest paired peptides to determine whether the direct affinity path can learn peptide-specific allele separation at all
+
 # Binding Training Dynamics Recovery (2026-03-07)
 
 ## Spec
@@ -3086,3 +3459,832 @@ Goal: get `SLLQHLIGL` to separate correctly between `HLA-A*02:01` and `HLA-A*24:
     - the larger relevant dataset is enough to recover the correct direction
     - the gap is still tiny, so scale helps but peptide-specific discrimination is still weak
     - this argues for `scale-first` before adding another new binding objective
+
+# MHC Warm-Start + Exact-IC50 Focused Binding (2026-03-08)
+
+## Spec
+
+- Goal: execute the new staged plan end to end:
+  - one epoch of MHC-only warm-start pretraining on indexed groove sequences
+  - warm-start the focused `HLA-A*02:01` vs `HLA-A*24:02` exact-IC50 affinity run from that checkpoint
+  - measure whether the warm start improves real `IC50_nM` learning and probe separation without adding synthetic assumptions yet
+- Constraints:
+  - use all exact `IC50` rows for `HLA-A*02:01` and `HLA-A*24:02`
+  - keep strict per-batch allele balance in the focused run
+  - use `IC50_nM` as the primary supervised target
+  - log `IC50_nM` directly in probe artifacts so training target and diagnostics match
+  - keep this step synthetic-free and ranking-free unless a verification failure requires a correction
+
+## Execution order
+
+- [ ] Phase 1: verify and harden the new warm-start code path
+  - confirm `forward_mhc_only(...)` works on the shared encoder path
+  - confirm `scripts/pretrain_mhc_encoder.py` builds valid group-balanced datasets and saves a compatible checkpoint
+  - confirm `scripts/focused_binding_probe.py` can warm-start from a checkpoint and logs `IC50_nM` in probe artifacts
+- [ ] Phase 2: add/adjust targeted tests
+  - add a `forward_mhc_only(...)` smoke test
+  - add focused probe regression coverage for exact-only filtering / warm-start load path / IC50 artifact logging where practical
+- [ ] Phase 3: local verification
+  - run `py_compile` on the touched scripts/model files
+  - run targeted `pytest`
+  - run a small local MHC pretrain smoke
+  - run a small local warm-started focused exact-IC50 smoke
+- [ ] Phase 4: Modal execution
+  - run one-epoch full MHC pretrain on Modal
+  - run the full exact-IC50 focused A0201/A2402 experiment with that checkpoint as initialization
+- [ ] Phase 5: analysis
+  - compare against the prior non-warm-start exact-IC50 baseline
+  - inspect whether `SLLQHLIGL`, `FLRYLLFGI`, and `NFLIKFLLI` move in the right direction
+  - decide whether the next step is multi-allele expansion or more binding-specific objective changes
+
+## Review
+
+- Verification completed:
+  - `python -m py_compile models/presto.py scripts/focused_binding_probe.py scripts/pretrain_mhc_encoder.py scripts/train_modal.py tests/test_presto.py tests/test_focused_probe.py tests/test_pretrain_mhc_encoder.py`
+  - `pytest -q tests/test_pretrain_mhc_encoder.py tests/test_presto.py tests/test_focused_probe.py tests/test_train_iedb.py` -> `118 passed`
+  - local MHC pretrain smoke ran clean and emitted a compatible checkpoint
+  - local warm-started focused exact-IC50 smoke ran clean and emitted `ic50_nM` probe artifacts
+- Modal MHC warm-start run:
+  - run id: `mhc-pretrain-20260308b`
+  - one epoch on the full indexed groove corpus
+  - final metrics:
+    - `train_loss=0.1094`
+    - `val_loss=0.0716`
+    - `train_class_acc=0.9987`
+    - `val_class_acc=1.0000`
+    - `train_species_acc=0.9273`
+    - `val_species_acc=0.9706`
+- Modal focused exact-IC50 warm-start run:
+  - run id: `a0201-a2402-ic50-exact-allrows-ic50only-warmstart-20260308i`
+  - contract:
+    - all exact `IC50` rows for `HLA-A*02:01` and `HLA-A*24:02`
+    - no synthetic negatives
+    - no ranking losses
+    - strict per-batch allele balance
+    - trained on `IC50_nM`
+    - initialized from `/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt`
+  - result vs prior non-warm-start baseline `a0201-a2402-ic50-exact-allrows-ic50only-20260308h`:
+    - best val loss improved `0.9378 -> 0.9097`
+    - final val loss improved `1.0156 -> 0.9420`
+    - final train loss improved `0.5703 -> 0.5271`
+  - final epoch 12 `IC50_nM` probes:
+    - `SLLQHLIGL`: `A*02:01 ≈ 17.0 nM`, `A*24:02 ≈ 2333.9 nM`
+    - `FLRYLLFGI`: `A*02:01 ≈ 53.3 nM`, `A*24:02 ≈ 588.3 nM`
+    - `NFLIKFLLI`: `A*02:01 ≈ 3820.0 nM`, `A*24:02 ≈ 21.4 nM`
+  - interpretation:
+    - the MHC warm start materially improved the focused affinity run
+    - the focused binding predictor now learns the expected direction for the key A0201-vs-A2402 probes on the real `IC50` output
+    - `SLLQHLIGL` remains too optimistic for `A*24:02` versus the desired `>10,000 nM`, but it is now in the correct qualitative regime and far better separated than before
+- Bug found and fixed during execution:
+  - the MHC warm-start builder was admitting groove halves with invalid `?` tokens and crashing tokenization on Modal
+  - fixed by validating extracted groove segments against the same allowed-AA contract before sample construction
+
+# Warm-Start Trajectory + Multi-Allele + Incremental Mix-In (2026-03-08)
+
+## Spec
+
+- Goal: extend the successful warm-started exact-IC50 A0201/A2402 run in a controlled sequence:
+  - first, make the per-epoch `SLLQHLIGL` `IC50_nM` trajectory explicit and plot it
+  - second, test whether the improvement survives expansion to a small motif-diverse class-I panel
+  - third, add one extra element from the older fuller training design at a time and measure whether it helps or hurts
+- Constraints:
+  - keep the clean warm-start exact-IC50 A0201/A2402 run as the reference baseline
+  - do not add more than one extra training element per ablation
+  - judge comparisons on the real `IC50_nM` output, not only KD/probe internals
+  - keep reporting at least `SLLQHLIGL`, `FLRYLLFGI`, and `NFLIKFLLI`
+
+## Execution order
+
+- [ ] Phase 1: trajectory extraction and visualization
+  - extract per-epoch `IC50_nM` for `SLLQHLIGL` on `HLA-A*02:01` and `HLA-A*24:02`
+  - generate a compact plot and save it with the experiment artifacts
+- [ ] Phase 2: multi-allele exact-IC50 panel
+  - run a warm-started exact-IC50 experiment on a small class-I panel with solid data support
+  - compare validation loss and tracked probe behavior against the A0201/A2402 baseline
+- [ ] Phase 3: one-at-a-time old-design mix-ins
+  - start from the clean warm-start exact-IC50 baseline
+  - add one extra element per run, likely in this order:
+    - same-allele peptide ranking
+    - same-peptide allele ranking
+    - synthetic negatives
+    - broader direct-affinity assay mix beyond exact IC50 if still needed
+  - compare each run directly against the clean baseline and the multi-allele baseline
+
+## Review
+
+- Phase 1 completed:
+  - extracted per-epoch `IC50_nM` probe values for `SLLQHLIGL` from `a0201-a2402-ic50-exact-allrows-ic50only-warmstart-20260308i`
+  - generated plot: `modal_runs/a0201-a2402-ic50-exact-allrows-ic50only-warmstart-20260308i/sllqhligl_ic50_over_epochs.png`
+- Phase 2 completed:
+  - warm-started multi-allele exact-IC50 panel run `class1-panel-ic50-exact-warmstart-20260308a`
+  - adding motif-diverse class-I alleles improved biologic separation on tracked probes, especially `SLLQHLIGL` and `FLRYLLFGI`, though aggregate validation loss was worse than the 2-allele baseline
+- Phase 3 completed for three one-factor mix-ins:
+  - peptide-ranking only: improved tracked-probe biologic separation but worsened aggregate validation loss
+  - allele-ranking only: harmful; degraded `NFLIKFLLI` and gave the worst validation loss
+  - synthetic-negatives only: strongest overall one-factor addition so far, improving both tracked-probe separation and best validation loss
+- Current best ingredients on exact `IC50_nM` binding are:
+  - MHC warm start
+  - strict per-batch allele balance
+  - no allele-ranking term
+  - synthetic negatives as the first extra mix-in to keep
+- Recommended next run sequence:
+  - combine multi-allele panel + warm start + synthetic negatives, still with allele-ranking off
+  - if that holds, compare with adding peptide-ranking on top as the next single additional factor
+
+# Class-I Quantitative Affinity Expansion (2026-03-08)
+
+## Spec
+
+- Goal: extend the successful warm-started A0201/A2402 exact-IC50 binding setup into a binding-only class-I quantitative affinity trainer over the full merged class-I corpus.
+- Required data contract:
+  - include all class-I quantitative affinity rows from `merged_deduped.tsv`
+  - keep distinct supervised outputs for `KD_nM`, `IC50_nM`, and `EC50_nM`
+  - drop same-peptide allele-ranking entirely
+  - allow censored quantitative rows through the censor-aware loss
+  - preserve allele diversity at batch time instead of row-capping the dataset
+- Required model contract:
+  - affinity outputs must be conditionable on binding assay metadata, not just pMHC features
+  - carry binding assay metadata through `BindingRecord -> PrestoSample -> PrestoBatch -> forward_affinity_only`
+  - use assay/context embeddings on the affinity path so residual assay heads can adapt by assay type / method / conditions
+- Current corpus sizing:
+  - class-I quantitative binding rows in merged TSV: `150,743`
+  - source: all `IEDB`
+  - qualifiers: `103,644 exact`, `47,099 greater-than`
+  - measurement mix:
+    - `KD (~IC50)`: `64,696`
+    - `KD (~EC50)`: `38,072`
+    - `IC50`: `27,616`
+    - `KD`: `18,962`
+    - `EC50`: `1,397`
+- Success criteria:
+  - training runs cleanly on Modal with no row cap
+  - tracked probe biology stays correct on `SLLQHLIGL`, `FLRYLLFGI`, `NFLIKFLLI`
+  - aggregate validation on the broader class-I quantitative task is stable
+  - if it fails, produce a concrete recovery plan tied to observed diagnostics
+
+## Execution order
+
+- [ ] Phase 1: add binding assay-context plumbing
+  - extend `BindingRecord` to retain assay metadata needed for affinity context
+  - extend `PrestoSample` / `PrestoBatch` and collate binding assay context tensors
+  - keep the context contract parallel to the full model style: assay type / method / culture-like conditions
+- [ ] Phase 2: add affinity assay-context embeddings
+  - add a small affinity-context encoder in the affinity path
+  - use it in KD bias and IC50/EC50 residual heads without changing the public output names
+  - keep the path optional so old checkpoints can still load or remap cleanly
+- [ ] Phase 3: generalize the focused binding trainer to class-I quantitative panels
+  - load all class-I quantitative rows from the merged TSV
+  - support batch-balanced training across many alleles without dropping most of the dataset
+  - keep `binding_contrastive_weight=0`
+  - keep distinct `KD/IC50/EC50` supervision active
+- [ ] Phase 4: local verification
+  - add targeted tests for new binding context collation and affinity-context forward path
+  - run focused/unit tests covering the new binding-only class-I mode
+- [ ] Phase 5: Modal experiment
+  - run MHC warm start if needed
+  - run the class-I quantitative affinity trainer on Modal with no row cap and no allele-ranking
+  - save summaries and probe plots
+- [ ] Phase 6: analysis / recovery
+  - compare against the two-allele baseline and the multi-allele exact-IC50 panel
+  - if broad class-I quantitative training hurts probe behavior, write a recovery plan before further architectural changes
+- [ ] Phase 7: class-II compatibility check
+  - once the class-I quantitative path is stable, add class-II quantitative affinity rows with the same assay-context contract
+  - evaluate whether joint class-I/class-II affinity training degrades the class-I probe panel
+  - if class-II hurts class-I, decide between:
+    - class-specific affinity heads over a shared groove trunk
+    - staged pretraining / finetuning by class
+    - separate batch balancing / curriculum by MHC class
+
+## Review
+
+- Phase 1 completed:
+  - binding assay metadata now flows through `BindingRecord -> PrestoSample -> PrestoBatch -> Presto.forward_affinity_only`
+- Phase 2 completed:
+  - affinity path now consumes assay-context embeddings for assay-specific calibration
+- Phase 3 completed locally:
+  - focused trainer now supports `--train-all-alleles` with class filtering and global balanced batching
+- Phase 4 completed:
+  - targeted suites passed: `161 passed`
+- Phase 5 in progress:
+  - launched broad Modal run `class1-quant-affinity-warmstart-20260308b`
+  - contract:
+    - all class-I quantitative binding rows
+    - warm-start init from `mhc-pretrain-20260308b`
+    - assay-context affinity path enabled
+    - `affinity_loss_mode=full`
+    - no synthetic negatives
+    - no allele-ranking
+  - current artifact snapshot:
+    - dataset size `150,395`
+    - train size `150,380`
+    - val size `15`
+    - epoch 1 probe `IC50_nM`:
+      - `SLLQHLIGL`: `A*02:01 992.96`, `A*24:02 859.54`
+      - `NFLIKFLLI`: `A*02:01 2213.02`, `A*24:02 1993.73`
+  - note:
+    - this run is invalid for model judgement because `train_all_alleles` hit a peptide-split bug and collapsed validation to `15` rows
+    - bug fixed by treating an empty allele panel as “use all observed alleles” inside `_split_records_by_peptide(...)`
+    - local verification after the fix:
+      - targeted tests: `18 passed`
+      - broad smoke split on a `1971`-row sample: `1577 train / 394 val`, instead of `1970 / 1`
+    - relaunched corrected Modal run: `class1-quant-affinity-warmstart-20260308c`
+- Phase 7 early technical check completed:
+  - class-II quantitative corpus size: `91,408`
+  - local all-alleles class-II smoke with `max_records=2048` completed cleanly
+  - post-fix split stats: `1604 train / 404 val`
+  - one class-II affinity epoch ran end-to-end with no resolution, collation, or forward-path failure
+  - remaining question is behavioral: whether joint class-I + class-II affinity training degrades the class-I probe panel
+
+# Class-II Core/PFR Design Options (2026-03-08)
+
+## Current state
+
+- The active binding latent already uses a single uniform core enumerator for both classes:
+  - fixed `core_window_size = 9`
+  - contiguous window start enumeration
+  - N- and C-terminal PFR summaries
+  - class-conditioned prior features
+- This is biologically closer to class II than class I:
+  - class II: contiguous 9-mer core plus terminal PFRs is a good first-order model
+  - class I: 8-11mer binders often occupy the full groove, and longer binders are better described by bulges / register changes than by terminal PFRs
+
+## Options
+
+- [ ] Option 1: keep separate class-specific binding modules
+  - class I:
+    - full-peptide / 8-11mer binding module
+    - no explicit PFR model
+  - class II:
+    - contiguous 9-mer core + PFR enumerator
+  - combination:
+    - shared encoder trunk
+    - class-specific affinity heads mixed by explicit `mhc_class` or inferred `class_probs`
+  - pros:
+    - lowest risk to class-I performance
+    - easiest to debug
+  - cons:
+    - not a uniform mechanism
+    - duplicates logic
+
+- [ ] Option 2: uniform contiguous window enumerator with class-conditioned priors
+  - enumerate `(start, core_len)` for both classes
+  - class I:
+    - allow `core_len in {8,9,10,11}`
+    - strong prior toward covering the full peptide for 8-11mers
+    - strong penalty on long terminal PFRs / partial cores
+  - class II:
+    - strong prior toward `core_len = 9`
+    - variable terminal PFRs allowed
+  - combination:
+    - one shared candidate lattice and one shared posterior
+    - separate class-I / class-II calibration heads downstream
+  - pros:
+    - simplest uniform extension from the current code
+    - matches the user's desire to do core enumeration for class I too
+  - cons:
+    - still mis-specifies class-I bulged ligands as terminal-overhang cases
+
+- [ ] Option 3: uniform groove-contact register model
+  - represent binding as assignment of peptide positions to a fixed set of groove-contact slots
+  - allow monotonic alignments with:
+    - terminal flanks as PFRs
+    - optional skipped peptide positions / insertions for bulges
+  - class I:
+    - priors favor near-full occupancy of groove slots with very short flanks
+    - insertions/bulges allowed in central positions
+  - class II:
+    - priors favor contiguous 9-mer register with longer terminal flanks
+  - combination:
+    - one shared register lattice
+    - class-specific priors and readout calibration
+  - pros:
+    - best biological unification
+    - handles both class-II PFRs and class-I bulges in one formalism
+  - cons:
+    - biggest implementation jump
+    - harder optimization
+
+- [ ] Option 4: soft slot-attention / monotonic alignment
+  - learn 9 groove slots that attend to peptide positions
+  - add regularization for:
+    - monotonic order
+    - compactness
+    - class-I full-occupancy vs class-II flank tolerance
+  - combination:
+    - one shared differentiable alignment mechanism
+    - class-specific priors / penalties only
+  - pros:
+    - flexible and uniform
+    - avoids discrete search
+  - cons:
+    - harder to interpret
+    - easier for the model to learn degenerate soft alignments
+
+- [ ] Option 5: hybrid proposal-refinement model
+  - coarse uniform enumerator proposes registers/windows
+  - class-specific refinement heads rescore candidates
+  - combination:
+    - shared proposal lattice
+    - separate class-I / class-II refinement and calibration
+  - pros:
+    - pragmatic compromise
+    - easier migration path from the current model
+  - cons:
+    - still partially duplicates class-specific logic
+
+## Recommended direction
+
+- Recommend `Option 5` as the near-term path:
+  - keep a single shared candidate-generation mechanism
+  - extend it from fixed `9`-mer windows to a richer class-aware register lattice
+  - use separate class-I and class-II refinement/calibration heads
+- If we need the fastest low-risk integration first, use `Option 2` temporarily:
+  - variable `core_len`
+  - strong class-I penalties on partial cores / long terminal PFRs
+  - then upgrade to a true register model if class-I long-peptide behavior remains wrong
+
+## Acceptance criteria for adding class II
+
+- The class-I probe panel must not materially regress after joint training:
+  - `SLLQHLIGL`
+  - `FLRYLLFGI`
+  - `NFLIKFLLI`
+- Class-II diagnostics should include:
+  - DR-focused exact-IC50 probes with known distinct registers
+  - posterior over core start / register, not just scalar affinity
+- If joint class-I + class-II training harms class-I:
+  - do not force one scalar affinity head
+  - split calibration/refinement by class while keeping the groove trunk shared
+
+## Benchmark handoff
+
+- Detailed benchmark/spec file:
+  - `tasks/class2_register_design_benchmark.md`
+- Active benchmark matrix is now:
+  - `M0 = G0 + R0 + C1`
+  - `M1 = G1 + R1 + C1`
+  - `M2 = G1 + R2 + C2`
+  - `M3 = G3 + R3 + C2`
+  - `M4 = G3 + R4 + C2`
+  - `M5 = G2 + G4 + R4 + C2`
+- Evaluation is staged:
+  - Stage A: class-I preservation on the small motif-diverse class-I panel
+  - Stage B: joint class-I + class-II quantitative affinity on Stage-A survivors only
+
+## Immediate execution plan
+
+- [ ] Phase 8: implement executable Stage-A variants
+  - `M0 = G0 + R0 + C1`
+  - `M1 = G1 + R1 + C1`
+  - `M2 = G1 + R2 + C2`
+  - defer `M3+` until the explicit slot/register mechanism exists
+- [ ] Phase 9: add a benchmark harness
+  - one script to launch and summarize Stage-A runs
+  - one Modal sweep entrypoint
+  - one local summarizer that updates the current best model as artifacts arrive
+- [ ] Phase 10: run Stage-A Modal sweep
+  - class-I exact-IC50 panel first
+  - warm-start on
+  - peptide-ranking on
+  - allele-ranking off
+  - no synthetic negatives initially
+- [ ] Phase 11: summarize Stage-A results and pick survivors
+  - rank by class-I preservation metrics and probe behavior
+  - only then expand to Stage B with class-II quantitative affinity
+
+## Stage-A sweep contract
+
+- executable designs:
+  - `M0 = groove_pos_mode=sequential, core_lengths=9, core_refinement=shared`
+  - `M1 = groove_pos_mode=triple, core_lengths=8,9,10,11, core_refinement=shared`
+  - `M2 = groove_pos_mode=triple, core_lengths=8,9,10,11, core_refinement=class_specific`
+- seeds:
+  - `41`
+  - `42`
+  - `43`
+- class-I exact-IC50 panel:
+  - `HLA-A*02:01`
+  - `HLA-A*24:02`
+  - `HLA-A*03:01`
+  - `HLA-A*11:01`
+  - `HLA-A*01:01`
+  - `HLA-B*07:02`
+  - `HLA-B*44:02`
+- warm start:
+  - `/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt`
+- probes:
+  - `SLLQHLIGL`
+  - `FLRYLLFGI`
+  - `NFLIKFLLI`
+- fixed recipe:
+  - `measurement_profile=direct_affinity_only`
+  - `measurement_type_filter=ic50`
+  - `qualifier_filter=exact`
+  - `affinity_loss_mode=full`
+  - `binding_peptide_contrastive_weight=0.5`
+  - `binding_contrastive_weight=0.0`
+  - `synthetic_negatives=false`
+  - `batch_size=128`
+  - `epochs=12`
+
+## Stage-A review criteria
+
+- best checkpoint is the epoch with minimum validation loss
+- primary ranking metric:
+  - probe ordering count with `>=1.5x` separation
+- secondary:
+  - average log-ratio margin across the three probes
+- tertiary:
+  - best validation loss
+
+## Stage-A review
+
+- `M1` and `M2` both completed all `3` seeds on Modal and both achieved `3/3`
+  correct probe orderings with `>=1.5x` separation at their best checkpoints.
+- Current completed ranking:
+  - `M1`:
+    - mean best val loss `1.2977`
+    - mean probe log10 margin `1.799`
+    - best run `register-stagea-20260308b-m1-seed42`
+  - `M2`:
+    - mean best val loss `1.2591`
+    - mean probe log10 margin `1.684`
+    - best run `register-stagea-20260308b-m2-seed43`
+- Interpretation:
+  - `M1` is the current winner for class-I preservation because it produces
+    stronger biologic probe separation while staying close on validation loss.
+  - `M2` remains a viable alternate because its validation loss is slightly
+    better on average.
+- `M0` baseline is still incomplete:
+  - a direct debug run (`register-m0-debug-20260308`) produced valid 1-epoch
+    artifacts and reached `2/3` correct probe orderings
+  - the detached 12-epoch baseline launches did not publish checkpoint
+    artifacts, so the baseline row is still provisional
+- Published summary table:
+  - `modal_runs/register_design_stage_a/options_vs_perf.md`
+- Durable experiment ledger:
+  - `tasks/experiment_log.md`
+- Follow-up affinity experiment plan:
+  - `tasks/affinity_followup_plan.md`
+
+## Stage-B immediate contract
+
+- entrants:
+  - `M1`
+  - `M2`
+- objective:
+  - test whether adding class-II quantitative affinity breaks class-I probe
+    behavior
+- recipe:
+  - `train_all_alleles=true`
+  - `train_mhc_class_filter=all`
+  - `measurement_profile=direct_affinity_only`
+  - `measurement_type_filter=ic50`
+  - `qualifier_filter=exact`
+  - same warm start, peptide ranking, and no synthetic negatives
+- evaluation:
+  - keep the class-I probe panel fixed:
+    - `SLLQHLIGL`
+    - `FLRYLLFGI`
+    - `NFLIKFLLI`
+  - compare against the Stage-A best checkpoints for class-I regression
+  - if class-I probe ordering degrades materially, class-II joint training is
+    not safe under that design
+
+## Combined affinity ablation
+
+- [ ] Phase 12: run the combined focused-affinity experiment the user asked for
+  - 1 epoch MHC class/species warm start
+  - synthetic negatives on
+  - peptide ranking on
+  - allele ranking off
+  - quantitative affinity only for the main experiment
+- [ ] Phase 13: make the run contract explicit in the review
+  - specify whether this is the 2-allele or broader class-I panel
+  - log the exact synthetic modes used
+  - log whether the anchor-aware strategy is `none` or `property_opposite`
+  - log the exact measurement profile / type filter / qualifier filter
+- [ ] Phase 14: audit qualitative binding labels
+  - count the qualitative label vocabulary in the merged corpus
+  - determine whether labels are only binary or include ordinal levels like
+    `Strong Positive > Positive > Weak Positive > Negative`
+  - decide whether the current label space is suitable for pairwise ranking
+- [ ] Phase 15: summarize whether qualitative binding should enter the focused
+  affinity trainer
+  - if the label vocabulary is mostly ordinal and consistent, propose a clean
+    pairwise/ordinal contract
+  - if the label space is noisy or mostly binary/free text, keep it out of the
+    focused quantitative runs
+
+## Combined affinity ablation review contract
+
+- main experiment:
+  - broader class-I panel if possible, otherwise explicit 2-allele fallback
+  - warm start on
+  - peptide ranking on
+  - allele ranking off
+  - synthetic negatives on
+  - quantitative affinity supervision only
+- report:
+  - exact dataset slice
+  - synthetic negative modes and counts
+  - whether anchor-aware synthetic negatives were enabled
+  - best checkpoint probe values for:
+    - `SLLQHLIGL`
+    - `FLRYLLFGI`
+    - `NFLIKFLLI`
+  - comparison against:
+    - `E004` warm start + synth
+    - `E006` broader class-I panel
+    - `M1` Stage-A winner
+
+## Combined affinity ablation review
+
+- active run:
+  - `class1-panel-ic50-exact-warmstart-synth-peprank-20260309a`
+- launch contract:
+  - 1 epoch MHC class/species warm start via
+    `/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt`
+  - explicit class-I panel:
+    - `HLA-A*02:01`
+    - `HLA-A*24:02`
+    - `HLA-A*03:01`
+    - `HLA-A*11:01`
+    - `HLA-A*01:01`
+    - `HLA-B*07:02`
+    - `HLA-B*44:02`
+  - `measurement_profile=direct_affinity_only`
+  - `measurement_type_filter=ic50`
+  - `qualifier_filter=exact`
+  - `affinity_loss_mode=full`
+  - `synthetic_negatives=true`
+  - `negative_ratio=1.0`
+  - `class_i_anchor_strategy=property_opposite`
+  - `binding_peptide_contrastive_weight=0.5`
+  - `binding_contrastive_weight=0.0`
+
+## Immediate model cleanup
+
+- [ ] Phase 16: thread scalar affinity/stability scores into assay outputs
+  - expose `binding_affinity_score` and `binding_stability_score` as explicit outputs
+  - feed `binding_affinity_score` into the quantitative affinity assay path
+  - feed `binding_stability_score` into the stability assay path
+  - keep compatibility aliases for existing probe outputs
+- [ ] Phase 17: verify direct-only score wiring
+  - update focused/full forward tests for the new score outputs
+  - confirm `forward_affinity_only()` and full `forward()` agree on the score tensors
+
+## Score-to-assay review
+
+- wiring verification:
+  - `pytest -q tests/test_presto.py tests/test_checkpointing.py tests/test_focused_probe.py`
+  - result: `73 passed`
+- first implementation was too aggressive:
+  - adding affinity score redundantly into multiple assay residual/bias paths regressed the old synthetic benchmark contract
+- narrowed implementation:
+  - keeps affinity score on the canonical mixed-KD route
+  - keeps stability-score conditioning on stability assays
+  - removes the extra duplicate score injection into KD-bias / assay-residual paths
+- benchmark result:
+  - `E012` (`E004`-like warm start + synth): failed, `IC50` outputs collapsed toward the weak tail
+  - `E013` (`E006`-like warm start + broader class-I panel): passed, all three class-I probes remained correct-sign
+- current launch point:
+  - use the broader real-data class-I panel as the next ablation base
+  - do not trust the current synthetic-negative recipe as a default path until it is redesigned
+# Epoch-Refreshed Synthetic Negatives For Focused Affinity (2026-03-09)
+
+## Spec
+
+- Goal: fix the focused affinity synthetic-negative contract so synthetic rows do not become a static, over-reused calibration artifact.
+- Root cause confirmed from artifact-backed runs:
+  - `E004` and `E012` used the same real split and the same synthetic counts.
+  - The failure was not a data split change; it was the interaction between:
+    - one fixed synthetic pool generated before training
+    - exact per-batch allele balancing
+    - heavy reuse of the minority-allele synthetic rows across every epoch
+- Required contract changes:
+  - regenerate synthetic negatives at every epoch from the fixed real-train split
+  - make the real:synthetic ratio explicit at batch construction time, not only via dataset-level `negative_ratio`
+  - support synthetic-mode isolation (`peptide_scramble` only, `mhc_scramble` only, etc.) for ablations
+  - audit groove preparation separately for real rows and each synthetic mode
+- Constraints:
+  - validation stays real-only
+  - same peptide-family real train/val split as the current focused pipeline
+  - preserve strict per-batch allele balance
+  - do not silently change the broad trainer yet; fix and benchmark the focused path first
+
+## Execution order
+
+- [x] Phase 1: implement epoch-refreshed synthetic generation
+  - add focused-run controls for:
+    - `synthetic_refresh_each_epoch`
+    - synthetic mode selection / subsets
+    - explicit batch synthetic fraction
+  - rebuild the train dataset and loader at each epoch from:
+    - fixed real-train rows
+    - freshly generated synthetic negatives using an epoch-dependent seed
+- [x] Phase 2: implement explicit real:synth batch balancing
+  - replace the focused allele-only sampler with a sampler that balances by:
+    - target allele
+    - real vs synthetic
+  - keep exact target-allele slot balance per batch
+  - make synthetic fraction deterministic per batch when synthetic rows are enabled
+- [x] Phase 3: add synthetic-mode isolation support
+  - allow running the focused trainer with:
+    - all current synthetic modes
+    - any single mode in isolation
+    - selected subsets of modes
+  - log the exact mode set and per-epoch synthetic counts into `summary.json`
+- [x] Phase 4: add groove audits for real and synthetic rows
+  - audit record-level `prepare_mhc_input(...)` status / fallback usage by source bucket
+  - audit dataset-level resulting groove-half lengths / missing-chain behavior by source bucket
+  - explicitly report whether any synthetic mode produces pathological MHC inputs
+- [x] Phase 5: verification
+  - targeted pytest for focused sampler / epoch refresh / synthetic mode parsing / groove audit helpers
+  - local smoke proving:
+    - epoch 1 and epoch 2 synthetic rows differ
+    - train batches hit the configured real:synth ratio
+    - validation remains real-only
+    - groove audits pass on both real and synthetic rows
+- [ ] Phase 6: Modal ablations
+  - rerun the focused warm-start exact-`IC50` two-allele experiment with:
+    - no synthetics
+    - refreshed all-mode synthetics at low ratio
+    - refreshed single-mode ablations
+  - compare at minimum:
+    - `SLLQHLIGL`
+    - `FLRYLLFGI`
+    - `NFLIKFLLI`
+  - identify which synthetic modes preserve or destroy known-good probe behavior
+
+## Review
+
+- Confirmed from existing artifacts:
+  - `E004` and `E012` both used:
+    - `6234` real train rows
+    - `6234` synthetic train rows
+    - `1559` real validation rows
+    - the same six synthetic modes, `1039` rows each
+  - train batches were only allele-balanced, not real:synth balanced
+  - expected batch composition was roughly `50%` synthetic, but not guaranteed
+  - per epoch, the minority allele pool was reused about `8.46x`
+  - synthetic rows were generated once before training and then reused for all epochs
+- Early groove audit on the existing generator:
+  - `peptide_*`, `no_mhc_*`, and sampled `mhc_random` rows produced valid groove inputs in the focused audit
+  - `mhc_scramble` showed meaningful fallback usage and needs explicit isolation benchmarking
+- Decision:
+  - fix the focused synthetic contract first
+  - then benchmark synthetic modes one by one before reintroducing them into broader affinity training
+- Implementation completed:
+  - `scripts/focused_binding_probe.py` now supports:
+    - epoch-refreshed synthetic generation
+    - explicit `batch_synthetic_fraction`
+    - isolated synthetic mode subsets
+    - per-epoch groove audits for real and synthetic sources
+  - `StrictAlleleBalancedBatchSampler` now balances:
+    - allele
+    - real vs synthetic slots
+  - validation stays real-only
+  - `pytest -q tests/test_focused_probe.py tests/test_train_iedb.py` -> `76 passed`
+- Local smoke verified:
+  - epoch 1 and epoch 2 synthetic seeds differ
+  - real rows stay groove-clean
+  - `peptide_scramble` stays groove-clean
+  - `mhc_scramble` shows fallback-heavy pathological groove generation
+- Modal synthetic-mode ablations completed so far:
+  - `none`:
+    - run: `synth-ablate-none-20260309a`
+    - best epoch `9`, val loss `0.6882`
+    - `SLLQHLIGL`: `110.0` vs `2382.4 nM`
+    - `FLRYLLFGI`: `104.8` vs `1342.7 nM`
+    - `NFLIKFLLI`: `8.2` vs `69.2 nM`
+  - `all`:
+    - run: `synth-ablate-all-20260309a`
+    - best epoch `9`, val loss `0.6768`
+    - `SLLQHLIGL`: `20867.7` vs `43182.3 nM`
+    - `FLRYLLFGI`: `21534.9` vs `23838.5 nM`
+    - `NFLIKFLLI`: `4857.2` vs `33225.5 nM`
+    - interpretation: better val loss, much worse biologic calibration
+  - `peptide_scramble` only:
+    - run: `synth-ablate-peptide_scramble-20260309a`
+    - best epoch `9`, val loss `0.6599`
+    - `SLLQHLIGL`: `26647.3` vs `27514.0 nM`
+    - `FLRYLLFGI`: wrong-sign (`20751.0` vs `16238.1 nM`)
+    - `NFLIKFLLI`: `8975.4` vs `41394.1 nM`
+    - interpretation: lower val loss, destroys A0201-specific ranking
+  - `peptide_random` only:
+    - run: `synth-ablate-peptide_random-20260309b`
+    - best epoch `8`, val loss `0.6961`
+    - `SLLQHLIGL`: `32915.2` vs `46817.0 nM`
+    - `FLRYLLFGI`: `37859.7` vs `40158.8 nM`
+    - `NFLIKFLLI`: wrong-sign (`40345.3` vs `44217.2 nM`)
+    - interpretation: preserves groove structure but still collapses useful probe ranking
+  - `mhc_scramble` only:
+    - run: `synth-ablate-mhc_scramble-20260309b`
+    - best epoch `5`, val loss `0.7136`
+    - `SLLQHLIGL`: `619.1` vs `1103.7 nM`
+    - `FLRYLLFGI`: `208.8` vs `272.4 nM`
+    - `NFLIKFLLI`: wrong-sign (`269.1` vs `209.5 nM`)
+    - groove audit:
+      - sampled synthetic rows used fallback `54/128`
+      - statuses: `no_cys_pairs`, `alpha3_fallback`, `no_alpha2_pair`
+      - noncanonical groove lengths were common
+    - interpretation: structurally invalid enough that it should not be a default negative mode
+- Current best conclusion:
+  - refreshed synthetics plus explicit real:synth balancing fixed the experimental contract
+  - but on the current score-fed `IC50` path, the no-synthetic baseline is still the best biologic behavior
+  - `peptide_scramble` and `peptide_random` are not automatically safe
+  - `mhc_scramble` is actively suspect because it degrades groove construction on synthetic rows
+
+
+# Re-Baselining Synthetic Ablations On The Strongest Affinity Path (2026-03-09)
+
+## Spec
+
+- Goal: stop evaluating synthetic and auxiliary changes on the already-regressed score-fed assay path, and instead re-run them on the strongest known class-I baseline contract.
+- Problem confirmed from experiment log:
+  - old broader class-I baseline `E006` gave much stronger biologic separation than the current score-fed analog `E013`
+  - current synthetic ablations (`synth-ablate-*`) therefore answer only which modes harm the weaker path, not which modes improve the strongest path
+- Required work:
+  - identify the exact architectural difference between old `E006` and current `E013`
+  - make that stronger path selectable again without reverting unrelated code
+  - verify local parity against `E006`-like behavior as closely as possible
+  - then rerun synthetic / auxiliary experiments on top of that strongest baseline
+- Constraints:
+  - do not silently change the default model path until the benchmark table is complete
+  - keep probe panel fixed: `SLLQHLIGL`, `FLRYLLFGI`, `NFLIKFLLI`
+  - keep warm start and broader class-I panel in the baseline
+
+## Execution order
+
+- [ ] Phase 1: identify and isolate the regression source
+  - diff the current score-fed assay path against the older stronger affinity path
+  - decide whether the right fix is:
+    - a config switch restoring the old path
+    - or a code change making the old path canonical again
+- [ ] Phase 2: restore a selectable strongest baseline
+  - implement the minimal change needed so the old stronger affinity path can be benchmarked in the current tree
+  - keep outputs/checkpoints compatible where practical
+- [ ] Phase 3: verify baseline parity
+  - local smoke on the broader class-I exact `IC50` panel
+  - Modal rerun of an `E006`-like baseline
+  - record whether `SLLQHLIGL` returns to the old stronger regime
+- [ ] Phase 4: rerun experiments on top of the strongest baseline
+  - no synthetics
+  - peptide ranking only
+  - single-mode synthetic ablations, starting with the structurally safest modes
+  - explicitly exclude `mhc_scramble` unless a later design justifies it
+- [ ] Phase 5: update tables and conclusions
+  - separate:
+    - results on the weaker score-fed path
+    - results on the restored strongest baseline
+  - recommend next default training contract based on the stronger-path table
+
+## Review
+
+- Trigger for this re-baselining:
+  - current synthetic-ablation table is valid but not decision-grade for the main model because it is built on a regressed base (`E013`-like behavior)
+  - next comparisons must be run on the strongest known broader class-I baseline instead
+- Progress:
+  - regression source isolated:
+    - stronger older path = legacy assay wiring
+    - weaker newer path = `score_context` assay wiring
+  - implementation:
+    - `models/presto_modules.py` now supports `affinity_assay_mode = legacy|score_context`
+    - `models/presto.py` and `scripts/focused_binding_probe.py` pass the mode through explicitly
+    - focused benchmark CLI defaults to `legacy` so benchmark work now starts from the stronger path
+  - verification:
+    - `python -m py_compile models/presto.py models/presto_modules.py scripts/focused_binding_probe.py tests/test_presto.py`
+    - `pytest -q tests/test_presto.py tests/test_focused_probe.py tests/test_train_iedb.py`
+    - result: `128 passed`
+  - launched parity rerun on the restored strong base:
+    - Modal app: `ap-liwR5X7Dztff4gasmao1KB`
+    - run id: `class1-panel-ic50-exact-warmstart-legacy-20260309b`
+    - contract:
+      - broader class-I panel
+      - exact `IC50`
+      - warm-start checkpoint `mhc-pretrain-20260308b`
+      - no synthetics
+      - no peptide ranking
+      - no allele ranking
+      - `affinity_assay_mode=legacy`
+  - next ablation order after parity is confirmed:
+    - `none`
+    - peptide ranking only
+    - `peptide_random` only
+    - `no_mhc_alpha` only
+    - `no_mhc_beta` only
+    - keep `mhc_scramble` excluded unless later evidence justifies it
+  - launched on the restored strong base:
+    - `class1-panel-ic50-exact-warmstart-legacy-peprank-20260309b`
+    - `class1-panel-ic50-exact-warmstart-legacy-synth-peptide-random-20260309b`
+    - `class1-panel-ic50-exact-warmstart-legacy-synth-no-mhc-alpha-20260309b`
+    - `class1-panel-ic50-exact-warmstart-legacy-synth-no-mhc-beta-20260309b`
+  - correction:
+    - these launches were not true `E006` parity runs because they incorrectly included `--train-all-alleles --train-mhc-class-filter I`
+    - live setup showed `rows=24515`, proving the run had broadened beyond the original 7-allele panel
+    - exact `E006` contract should have only the explicit 7 probe/train alleles and about `10193` exact `IC50` rows after filtering
+  - immediate fix:
+    - stop the misconfigured all-class-I runs
+    - relaunch exact 7-allele `E006`-parity baseline on `affinity_assay_mode=legacy`
+    - only then launch ablations on top of that exact baseline

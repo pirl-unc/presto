@@ -58,8 +58,6 @@ def test_load_model_from_checkpoint_drops_legacy_dead_module_keys(tmp_path):
 
     model = Presto(d_model=64, n_layers=1, n_heads=4)
     state = model.state_dict()
-    state["immunogenicity_cd8_mlp.0.weight"] = torch.zeros((64, 192))
-    state["immunogenicity_cd8_mlp.0.bias"] = torch.zeros(64)
     state["presentation.w_proc"] = torch.tensor(0.8)
     payload = {
         "checkpoint_format": "presto.v2",

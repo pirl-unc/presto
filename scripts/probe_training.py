@@ -246,7 +246,7 @@ def main():
         binding_records=binding_records,
         mhc_sequences=mhc_sequences,
         negative_ratio=synth_ratio,
-        weak_value_min_nM=DEFAULT_MAX_AFFINITY_NM * 0.5,
+        weak_value_min_nM=DEFAULT_MAX_AFFINITY_NM,
         weak_value_max_nM=DEFAULT_MAX_AFFINITY_NM,
         seed=SEED,
         class_i_no_mhc_beta_ratio=0.0,

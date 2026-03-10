@@ -4,5 +4,4 @@ from .predictor import (
     Predictor,
     PresentationResult,
     RecognitionResult,
-    ChainClassificationResult,
 )

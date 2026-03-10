@@ -1,6 +1,8 @@
 """Tests for IEDB training utilities."""
 
 import argparse
+import csv
+import random
 from pathlib import Path
 
 import pytest
@@ -19,12 +21,19 @@ from presto.data.loaders import (
     TCellRecord,
 )
 from presto.scripts.train_iedb import (
+    _PROP_CHARGED_NEG,
+    _PROP_CHARGED_POS,
+    _PROP_HYDROPHOBIC,
+    _PROP_POLAR,
     _audit_mhc_sequence_coverage,
     _collect_unique_alleles,
     _effective_mhc_augmentation_sample_limit,
     _filter_records_to_resolved_mhc,
+    _force_opposite_anchors,
     _generate_mhc_only_samples,
+    _opposite_residues,
     _resolve_run_args,
+    _scramble_peptide_with_anchor_changes,
     _write_mhc_sequence_coverage_report,
     audit_loaded_mhc_sequence_quality,
     _evaluate_pmhc_information_flow,
@@ -35,7 +44,9 @@ from presto.scripts.train_iedb import (
     augment_elution_records_with_synthetic_negatives,
     augment_processing_records_with_synthetic_negatives,
     find_iedb_export_file,
+    load_binding_records_for_alleles_from_merged_tsv,
     load_iedb_binding_and_elution_records,
+    load_probe_allele_binding_bootstrap_from_merged_tsv,
     load_records_from_merged_tsv,
     load_iedb_tcell_records,
     resolve_mhc_sequences_from_index,
@@ -141,10 +152,317 @@ def test_resolve_run_args_canary_profile_applies_fast_caps():
     assert resolved.max_tcell == 512
     assert resolved.max_vdjdb == 256
     assert resolved.cap_sampling == "reservoir"
-    assert resolved.supervised_loss_aggregation == "sample_weighted"
+    assert resolved.supervised_loss_aggregation == "task_mean"
+    assert resolved.binding_contrastive_weight == pytest.approx(1.0)
+    assert resolved.binding_contrastive_target_gap_cap == pytest.approx(2.0)
+    assert resolved.probe_family_bootstrap_records == 256
+    assert resolved.probe_family_bootstrap_peptides == 128
     assert resolved.track_pmhc_flow is True
     assert resolved.pmhc_flow_batches == 2
     assert resolved.pmhc_flow_max_samples == 512
+
+
+def test_load_probe_allele_binding_bootstrap_from_merged_tsv_selects_multi_allele_probe_families(
+    tmp_path: Path,
+):
+    merged_tsv = tmp_path / "merged.tsv"
+    fieldnames = [
+        "peptide",
+        "mhc_allele",
+        "mhc_class",
+        "source",
+        "record_type",
+        "value",
+        "value_type",
+        "qualifier",
+        "response",
+        "assay_type",
+        "assay_method",
+        "apc_name",
+        "effector_culture_condition",
+        "apc_culture_condition",
+        "in_vitro_process_type",
+        "in_vitro_responder_cell",
+        "in_vitro_stimulator_cell",
+        "cdr3_alpha",
+        "cdr3_beta",
+        "trav",
+        "trbv",
+        "species",
+        "antigen_species",
+    ]
+    rows = [
+        {
+            "peptide": "SIINFEKL",
+            "mhc_allele": "HLA-A*02:01",
+            "mhc_class": "I",
+            "source": "iedb",
+            "record_type": "binding",
+            "value": "50",
+            "value_type": "half maximal inhibitory concentration (IC50)",
+            "qualifier": "0",
+            "species": "human",
+        },
+        {
+            "peptide": "SIINFEKL",
+            "mhc_allele": "HLA-A*24:02",
+            "mhc_class": "I",
+            "source": "iedb",
+            "record_type": "binding",
+            "value": "5000",
+            "value_type": "half maximal inhibitory concentration (IC50)",
+            "qualifier": "0",
+            "species": "human",
+        },
+        {
+            "peptide": "GILGFVFTL",
+            "mhc_allele": "HLA-A*02:01",
+            "mhc_class": "I",
+            "source": "iedb",
+            "record_type": "binding",
+            "value": "80",
+            "value_type": "dissociation constant kd (~ic50)",
+            "qualifier": "0",
+            "species": "human",
+        },
+        {
+            "peptide": "GILGFVFTL",
+            "mhc_allele": "HLA-A*24:02",
+            "mhc_class": "I",
+            "source": "iedb",
+            "record_type": "binding",
+            "value": "8000",
+            "value_type": "dissociation constant kd (~ic50)",
+            "qualifier": "0",
+            "species": "human",
+        },
+        {
+            "peptide": "NLVPMVATV",
+            "mhc_allele": "HLA-A*02:01",
+            "mhc_class": "I",
+            "source": "iedb",
+            "record_type": "binding",
+            "value": "100",
+            "value_type": "half maximal inhibitory concentration (IC50)",
+            "qualifier": "0",
+            "species": "human",
+        },
+    ]
+    with merged_tsv.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, delimiter="\t")
+        writer.writeheader()
+        for row in rows:
+            full = {key: "" for key in fieldnames}
+            full.update(row)
+            writer.writerow(full)
+
+    records, stats = load_probe_allele_binding_bootstrap_from_merged_tsv(
+        merged_tsv,
+        probe_alleles=["HLA-A*02:01", "HLA-A*24:02"],
+        max_records=4,
+        max_peptides=2,
+        max_rows_per_peptide=2,
+        sampling_seed=7,
+    )
+
+    assert stats["eligible_peptides"] == 2
+    assert stats["selected_peptides"] == 2
+    assert stats["records_added"] == 4
+    assert {record.peptide for record in records} == {"SIINFEKL", "GILGFVFTL"}
+    assert {record.mhc_allele for record in records} == {"HLA-A*02:01", "HLA-A*24:02"}
+
+
+def test_load_binding_records_for_alleles_from_merged_tsv_filters_quantitative_subset(
+    tmp_path: Path,
+):
+    merged_tsv = tmp_path / "merged.tsv"
+    fieldnames = [
+        "peptide",
+        "mhc_allele",
+        "mhc_class",
+        "source",
+        "record_type",
+        "value",
+        "value_type",
+        "qualifier",
+        "response",
+        "assay_type",
+        "assay_method",
+        "apc_name",
+        "effector_culture_condition",
+        "apc_culture_condition",
+        "in_vitro_process_type",
+        "in_vitro_responder_cell",
+        "in_vitro_stimulator_cell",
+        "cdr3_alpha",
+        "cdr3_beta",
+        "trav",
+        "trbv",
+        "species",
+        "antigen_species",
+    ]
+    rows = [
+        {
+            "peptide": "SLLQHLIGL",
+            "mhc_allele": "HLA-A*02:01",
+            "mhc_class": "I",
+            "source": "iedb",
+            "record_type": "binding",
+            "value": "45",
+            "value_type": "half maximal inhibitory concentration (IC50)",
+            "qualifier": "0",
+            "species": "human",
+        },
+        {
+            "peptide": "SLLQHLIGL",
+            "mhc_allele": "HLA-A*24:02",
+            "mhc_class": "I",
+            "source": "iedb",
+            "record_type": "binding",
+            "value": "5000",
+            "value_type": "half maximal inhibitory concentration (IC50)",
+            "qualifier": "0",
+            "species": "human",
+        },
+        {
+            "peptide": "GLCTLVAML",
+            "mhc_allele": "HLA-A*02:01",
+            "mhc_class": "I",
+            "source": "iedb",
+            "record_type": "binding",
+            "value": "90",
+            "value_type": "half maximal inhibitory concentration (IC50)",
+            "qualifier": "0",
+            "species": "human",
+        },
+        {
+            "peptide": "GLCTLVAML",
+            "mhc_allele": "HLA-A*02:01",
+            "mhc_class": "I",
+            "source": "iedb",
+            "record_type": "binding",
+            "value": "2",
+            "value_type": "half life",
+            "qualifier": "0",
+            "species": "human",
+        },
+        {
+            "peptide": "NLVPMVATV",
+            "mhc_allele": "HLA-B*07:02",
+            "mhc_class": "I",
+            "source": "iedb",
+            "record_type": "binding",
+            "value": "75",
+            "value_type": "half maximal inhibitory concentration (IC50)",
+            "qualifier": "0",
+            "species": "human",
+        },
+    ]
+    with merged_tsv.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, delimiter="\t")
+        writer.writeheader()
+        for row in rows:
+            full = {key: "" for key in fieldnames}
+            full.update(row)
+            writer.writerow(full)
+
+    records, stats = load_binding_records_for_alleles_from_merged_tsv(
+        merged_tsv,
+        alleles=["HLA-A*02:01", "HLA-A*24:02"],
+    )
+
+    assert len(records) == 3
+    assert {record.mhc_allele for record in records} == {"HLA-A*02:01", "HLA-A*24:02"}
+    assert stats["rows_by_allele"] == {"HLA-A*02:01": 2, "HLA-A*24:02": 1}
+    assert stats["unique_peptides_by_allele"] == {"HLA-A*02:01": 2, "HLA-A*24:02": 1}
+    assert stats["shared_peptides"] == 1
+    assert stats["shared_rows"] == 2
+
+
+def test_scramble_peptide_with_anchor_changes_changes_p1_p2_and_last():
+    peptide = "SLLQHLIGL"
+    scrambled = _scramble_peptide_with_anchor_changes(random.Random(7), peptide)
+
+    assert len(scrambled) == len(peptide)
+    assert scrambled != peptide
+    assert scrambled[0] != peptide[0]
+    assert scrambled[1] != peptide[1]
+    assert scrambled[-1] != peptide[-1]
+
+
+def test_scramble_peptide_with_anchor_opposite_forces_charged_anchors():
+    """With anchor_opposite=True, P2 and PΩ must be biophysically opposite."""
+    peptide = "SLLQHLIGL"  # L at P2 (hydrophobic), L at PΩ (hydrophobic)
+    charged = _PROP_CHARGED_POS | _PROP_CHARGED_NEG
+
+    for seed in range(20):
+        scrambled = _scramble_peptide_with_anchor_changes(
+            random.Random(seed), peptide, anchor_opposite=True,
+        )
+        assert len(scrambled) == len(peptide)
+        assert scrambled != peptide
+        assert scrambled[1] in charged, f"P2={scrambled[1]} not in charged (seed={seed})"
+        assert scrambled[-1] in charged, f"PΩ={scrambled[-1]} not in charged (seed={seed})"
+
+
+def test_scramble_peptide_anchor_opposite_false_does_not_force_charged():
+    """Without anchor_opposite, P2/PΩ can be any non-original residue."""
+    peptide = "SLLQHLIGL"
+    charged = _PROP_CHARGED_POS | _PROP_CHARGED_NEG
+    any_non_charged = False
+    for seed in range(50):
+        scrambled = _scramble_peptide_with_anchor_changes(
+            random.Random(seed), peptide, anchor_opposite=False,
+        )
+        if scrambled[1] not in charged or scrambled[-1] not in charged:
+            any_non_charged = True
+            break
+    assert any_non_charged, "Expected at least one non-charged P2/PΩ without anchor_opposite"
+
+
+def test_opposite_residues_all_standard_aas():
+    """Every standard AA maps to a non-empty opposite pool disjoint from its group."""
+    all_aas = set("ACDEFGHIKLMNPQRSTVWY")
+    for aa in all_aas:
+        opp = _opposite_residues(aa)
+        assert len(opp) > 0, f"Empty opposite pool for {aa}"
+        # Determine which group aa belongs to
+        if aa in _PROP_HYDROPHOBIC:
+            assert opp.isdisjoint(_PROP_HYDROPHOBIC), f"{aa} opposite overlaps hydrophobic"
+        elif aa in _PROP_POLAR:
+            assert opp.isdisjoint(_PROP_POLAR), f"{aa} opposite overlaps polar"
+        elif aa in _PROP_CHARGED_POS:
+            assert opp.isdisjoint(_PROP_CHARGED_POS), f"{aa} opposite overlaps charged+"
+        elif aa in _PROP_CHARGED_NEG:
+            assert opp.isdisjoint(_PROP_CHARGED_NEG), f"{aa} opposite overlaps charged-"
+
+
+def test_opposite_residues_specific_mappings():
+    """Verify specific property group mappings."""
+    charged_all = _PROP_CHARGED_POS | _PROP_CHARGED_NEG
+    # Hydrophobic -> all charged
+    for aa in "AILMFWVP":
+        assert _opposite_residues(aa) == charged_all
+    # Polar -> all charged
+    for aa in "STNQCYG":
+        assert _opposite_residues(aa) == charged_all
+    # Charged+ -> charged-
+    for aa in "RKH":
+        assert _opposite_residues(aa) == _PROP_CHARGED_NEG
+    # Charged- -> charged+
+    for aa in "DE":
+        assert _opposite_residues(aa) == _PROP_CHARGED_POS
+
+
+def test_force_opposite_anchors_mutates_p2_and_pomega():
+    """_force_opposite_anchors sets P2 and PΩ to opposite-property residues."""
+    rng = random.Random(42)
+    original = "SLLQHLIGL"
+    chars = list("AAAAAAAAA")
+    _force_opposite_anchors(rng, chars, original)
+    charged = _PROP_CHARGED_POS | _PROP_CHARGED_NEG
+    assert chars[1] in charged  # L at P2 is hydrophobic -> charged
+    assert chars[-1] in charged  # L at PΩ is hydrophobic -> charged
 
 
 def test_resolve_run_args_profile_does_not_override_explicit_cli_destinations():
@@ -1098,7 +1416,7 @@ def test_augment_binding_records_with_synthetic_negatives_range_and_modes():
         mhc_sequences=mhc_sequences,
         negative_ratio=1.5,
         weak_value_min_nM=50000.0,
-        weak_value_max_nM=100000.0,
+        weak_value_max_nM=50000.0,
         seed=13,
     )
 
@@ -1118,7 +1436,7 @@ def test_augment_binding_records_with_synthetic_negatives_range_and_modes():
     synthetic = [rec for rec in augmented if rec.source.startswith("synthetic_negative_")]
     assert len(synthetic) == 3
     for rec in synthetic:
-        assert 50000.0 <= rec.value <= 100000.0
+        assert rec.value == pytest.approx(50000.0)
         assert rec.measurement_type == "IC50"
         assert rec.assay_type == rec.source
         assert rec.unit == "nM"
@@ -1152,7 +1470,7 @@ def test_augment_binding_records_adds_class_i_no_mhc_beta_negatives():
         mhc_sequences=mhc_sequences,
         negative_ratio=0.0,
         weak_value_min_nM=50000.0,
-        weak_value_max_nM=100000.0,
+        weak_value_max_nM=50000.0,
         seed=5,
         class_i_no_mhc_beta_ratio=1.0,
     )
@@ -1188,7 +1506,7 @@ def test_synthetic_binding_negatives_stay_in_parent_binding_task_group():
         mhc_sequences=mhc_sequences,
         negative_ratio=1.0,
         weak_value_min_nM=50000.0,
-        weak_value_max_nM=100000.0,
+        weak_value_max_nM=50000.0,
         seed=11,
     )
     dataset = PrestoDataset(
@@ -1203,6 +1521,133 @@ def test_synthetic_binding_negatives_stay_in_parent_binding_task_group():
     assert synthetic_samples
     assert all(sample.assay_group == "binding_ic50" for sample in synthetic_samples)
     assert all((sample.synthetic_kind or "").startswith("synthetic_negative_") for sample in synthetic_samples)
+
+
+def test_augment_binding_peptide_scramble_forces_anchor_changes():
+    base = [
+        BindingRecord(
+            peptide="SLLQHLIGL",
+            mhc_allele="HLA-A*02:01",
+            value=45.0,
+            measurement_type="IC50",
+            mhc_class="I",
+            source="iedb",
+        ),
+    ]
+
+    augmented, stats = augment_binding_records_with_synthetic_negatives(
+        binding_records=base,
+        mhc_sequences={"HLA-A*02:01": "A" * 181},
+        negative_ratio=1.0,
+        weak_value_min_nM=50000.0,
+        weak_value_max_nM=50000.0,
+        seed=3,
+        class_i_anchor_strategy="property_opposite",
+    )
+
+    assert stats["peptide_scramble"] == 1
+    synthetic = [rec for rec in augmented if rec.source == "synthetic_negative_peptide_scramble"]
+    assert len(synthetic) == 1
+    scrambled = synthetic[0].peptide
+    assert len(scrambled) == len(base[0].peptide)
+    assert scrambled[0] != base[0].peptide[0]
+    assert scrambled[1] != base[0].peptide[1]
+    assert scrambled[-1] != base[0].peptide[-1]
+    # Strong class I binder (45 nM) -> anchor-opposite should apply
+    charged = _PROP_CHARGED_POS | _PROP_CHARGED_NEG
+    assert scrambled[1] in charged, f"P2={scrambled[1]} should be charged for strong binder"
+    assert scrambled[-1] in charged, f"PΩ={scrambled[-1]} should be charged for strong binder"
+
+
+def test_augment_binding_default_anchor_strategy_skips_anchor_opposite():
+    """Default augmentation should not silently force anchor-opposite negatives."""
+    base = [
+        BindingRecord(
+            peptide="SLLQHLIGL",
+            mhc_allele="HLA-A*02:01",
+            value=45.0,
+            measurement_type="IC50",
+            mhc_class="I",
+            source="iedb",
+        ),
+    ]
+
+    charged = _PROP_CHARGED_POS | _PROP_CHARGED_NEG
+    any_non_charged = False
+    for seed in range(50):
+        augmented, _ = augment_binding_records_with_synthetic_negatives(
+            binding_records=base,
+            mhc_sequences={"HLA-A*02:01": "A" * 181},
+            negative_ratio=1.0,
+            weak_value_min_nM=50000.0,
+            weak_value_max_nM=50000.0,
+            seed=seed,
+        )
+        scramble_recs = [rec for rec in augmented if rec.source == "synthetic_negative_peptide_scramble"]
+        if scramble_recs:
+            s = scramble_recs[0].peptide
+            if s[1] not in charged or s[-1] not in charged:
+                any_non_charged = True
+                break
+    assert any_non_charged, "default anchor strategy should not force charged anchors"
+
+
+def test_augment_binding_weak_binder_skips_anchor_opposite():
+    """Weak binders (>500 nM) should NOT get anchor-opposite treatment."""
+    base = [
+        BindingRecord(
+            peptide="SLLQHLIGL",
+            mhc_allele="HLA-A*02:01",
+            value=5000.0,  # weak binder
+            measurement_type="IC50",
+            mhc_class="I",
+            source="iedb",
+        ),
+    ]
+
+    charged = _PROP_CHARGED_POS | _PROP_CHARGED_NEG
+    any_non_charged = False
+    for seed in range(50):
+        augmented, stats = augment_binding_records_with_synthetic_negatives(
+            binding_records=base,
+            mhc_sequences={"HLA-A*02:01": "A" * 181},
+            negative_ratio=1.0,
+            weak_value_min_nM=50000.0,
+            weak_value_max_nM=50000.0,
+            seed=seed,
+            class_i_anchor_strategy="property_opposite",
+        )
+        scramble_recs = [rec for rec in augmented if rec.source == "synthetic_negative_peptide_scramble"]
+        if scramble_recs:
+            s = scramble_recs[0].peptide
+            if s[1] not in charged or s[-1] not in charged:
+                any_non_charged = True
+                break
+    assert any_non_charged, "Weak binder scrambles should not force charged anchors"
+
+
+def test_augment_binding_invalid_anchor_strategy_raises():
+    base = [
+        BindingRecord(
+            peptide="SLLQHLIGL",
+            mhc_allele="HLA-A*02:01",
+            value=45.0,
+            measurement_type="IC50",
+            mhc_class="I",
+            source="iedb",
+        ),
+    ]
+
+    with pytest.raises(ValueError):
+        augment_binding_records_with_synthetic_negatives(
+            binding_records=base,
+            mhc_sequences={"HLA-A*02:01": "A" * 181},
+            negative_ratio=1.0,
+            weak_value_min_nM=50000.0,
+            weak_value_max_nM=50000.0,
+            seed=3,
+            class_i_anchor_strategy="bad",
+        )
 
 
 def test_effective_mhc_augmentation_sample_limit_caps_fixed_request():

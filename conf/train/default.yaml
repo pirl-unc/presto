@@ -40,7 +40,7 @@ train:
     # Downstream elution/tcell synthetic rates are derived from pmhc ratio (0.5x each).
     synthetic_processing_negative_ratio: 0.5
     synthetic_negative_min_nM: 50000.0
-    synthetic_negative_max_nM: 100000.0
+    synthetic_negative_max_nM: 50000.0
 
     # UniProt negative samples (species_of_origin + foreignness supervision)
     uniprot_negative_ratio: 0.1

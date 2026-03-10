@@ -37,7 +37,7 @@ def test_parser_train_iedb_default_record_caps_unlimited():
     assert args.num_workers == 4
     assert args.pin_memory is True
     assert args.profile_performance is True
-    assert args.supervised_loss_aggregation == "sample_weighted"
+    assert args.supervised_loss_aggregation == "task_mean"
     assert args.perf_log_interval_batches == 100
     assert args.track_pmhc_flow is True
     assert args.pmhc_flow_batches == 2

@@ -932,6 +932,128 @@ def focused_binding_run(
     }
 
 
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def groove_baseline_run(
+    epochs: int = 20,
+    batch_size: int = 256,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run groove baseline binding diagnostic on Modal."""
+    resolved_run_id = run_id or datetime.now(UTC).strftime("groove_baseline_%Y%m%dT%H%M%SZ")
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    merged_tsv = Path(data_dir) / "merged_deduped.tsv"
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not merged_tsv.exists() or not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+        merge_cmd = [
+            "python", "-m", "presto", "data", "merge",
+            "--datadir", data_dir, "--quiet",
+        ]
+        _run_command(merge_cmd, env)
+
+    cmd = [
+        "python",
+        "-m",
+        "presto.scripts.groove_baseline_probe",
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "out_dir": str(out_dir),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def mhc_pretrain_run(
+    epochs: int = 1,
+    batch_size: int = 192,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    checkpoint_name: str = "mhc_pretrain.pt",
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run MHC-only warm-start pretraining on Modal."""
+    resolved_run_id = run_id or datetime.now(UTC).strftime("mhc_pretrain_%Y%m%dT%H%M%SZ")
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+
+    cmd = [
+        "python",
+        "-m",
+        "presto.scripts.pretrain_mhc_encoder",
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+        "--checkpoint-name",
+        str(checkpoint_name),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "out_dir": str(out_dir),
+        "checkpoint_path": str(out_dir / str(checkpoint_name)),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+
 @app.local_entrypoint()
 def main(
     mode: str = "unified",
@@ -956,8 +1078,25 @@ def main(
             run_id=run_id or None,
             extra_args=extra_args,
         )
+    elif mode == "mhc_pretrain":
+        result = mhc_pretrain_run.remote(
+            epochs=epochs,
+            batch_size=batch_size,
+            data_dir=data_dir,
+            run_id=run_id or None,
+            checkpoint_name=checkpoint_name,
+            extra_args=extra_args,
+        )
     elif mode == "focused_binding":
         result = focused_binding_run.remote(
+            epochs=epochs,
+            batch_size=batch_size,
+            data_dir=data_dir,
+            run_id=run_id or None,
+            extra_args=extra_args,
+        )
+    elif mode == "groove_baseline":
+        result = groove_baseline_run.remote(
             epochs=epochs,
             batch_size=batch_size,
             data_dir=data_dir,

@@ -8,11 +8,14 @@ Task-specific heads that sit on top of the shared encoder:
 - Elution/MS: detection probability
 """
 
+import math
 from typing import Dict, Optional
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+from .affinity import DEFAULT_MAX_AFFINITY_NM
 
 
 # --------------------------------------------------------------------------
@@ -43,6 +46,17 @@ def smooth_upper_bound(value: torch.Tensor, max_value: float) -> torch.Tensor:
     """Apply a smooth upper bound that preserves gradient near the cap."""
     max_tensor = value.new_tensor(max_value)
     return max_tensor - F.softplus(max_tensor - value)
+
+
+def smooth_lower_bound(value: torch.Tensor, min_value: float) -> torch.Tensor:
+    """Apply a smooth lower bound that preserves gradient near the floor."""
+    min_tensor = value.new_tensor(min_value)
+    return min_tensor + F.softplus(value - min_tensor)
+
+
+def smooth_range_bound(value: torch.Tensor, min_value: float, max_value: float) -> torch.Tensor:
+    """Apply smooth lower/upper bounds sequentially."""
+    return smooth_upper_bound(smooth_lower_bound(value, min_value), max_value)
 
 
 def noisy_or_logit(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
@@ -138,12 +152,12 @@ class KoffHead(nn.Module):
 class HalfLifeHead(nn.Module):
     """Predicts t1/2 in log10(minutes)."""
 
-    def __init__(self, d_model: int = 256):
+    def __init__(self, input_dim: int = 256):
         super().__init__()
         self.head = nn.Sequential(
-            nn.Linear(d_model, d_model // 2),
+            nn.Linear(input_dim, max(1, input_dim // 2)),
             nn.GELU(),
-            nn.Linear(d_model // 2, 1),
+            nn.Linear(max(1, input_dim // 2), 1),
         )
 
     def forward(self, z: torch.Tensor) -> torch.Tensor:
@@ -153,12 +167,12 @@ class HalfLifeHead(nn.Module):
 class TmHead(nn.Module):
     """Predicts Tm (melting temperature) in normalized Celsius."""
 
-    def __init__(self, d_model: int = 256):
+    def __init__(self, input_dim: int = 256):
         super().__init__()
         self.head = nn.Sequential(
-            nn.Linear(d_model, d_model // 2),
+            nn.Linear(input_dim, max(1, input_dim // 2)),
             nn.GELU(),
-            nn.Linear(d_model // 2, 1),
+            nn.Linear(max(1, input_dim // 2), 1),
         )
 
     def forward(self, z: torch.Tensor) -> torch.Tensor:
@@ -181,29 +195,48 @@ class AssayHeads(nn.Module):
     allowing assay-specific corrections for experimental conditions.
     """
 
-    def __init__(self, d_model: int = 256, max_log10_nM: float = 5.0):
+    def __init__(
+        self,
+        d_model: int = 256,
+        max_log10_nM: float = math.log10(DEFAULT_MAX_AFFINITY_NM),
+        assay_context_dim: int = 0,
+    ):
         super().__init__()
         self.max_log10_nM = float(max_log10_nM)
+        self.assay_context_dim = max(int(assay_context_dim), 0)
+        self.stability_score_dim = 1
+        residual_input_dim = d_model + self.assay_context_dim
+        stability_input_dim = d_model + self.stability_score_dim
         # Residual heads for assays that need correction beyond physics
         # IC50/EC50 depend on assay conditions (peptide concentration, etc.)
         self.ic50_residual = nn.Sequential(
-            nn.Linear(d_model, d_model // 2),
+            nn.Linear(residual_input_dim, d_model // 2),
             nn.GELU(),
             nn.Linear(d_model // 2, 1),
         )
         self.ec50_residual = nn.Sequential(
-            nn.Linear(d_model, d_model // 2),
+            nn.Linear(residual_input_dim, d_model // 2),
             nn.GELU(),
             nn.Linear(d_model // 2, 1),
         )
+        self.t_half_residual = nn.Sequential(
+            nn.Linear(stability_input_dim, d_model // 2),
+            nn.GELU(),
+            nn.Linear(d_model // 2, 1),
+        )
+        self.t_half_residual_scale = nn.Parameter(torch.tensor(-2.0))
         # Tm has complex relationship - predict directly
-        self.tm = TmHead(d_model)
+        self.tm = TmHead(stability_input_dim)
 
     def forward(
         self,
         binding_affinity_vec: torch.Tensor,
         binding_stability_vec: torch.Tensor,
         binding_latents: Optional[Dict[str, torch.Tensor]] = None,
+        *,
+        binding_affinity_score: Optional[torch.Tensor] = None,
+        binding_stability_score: Optional[torch.Tensor] = None,
+        assay_context_vec: Optional[torch.Tensor] = None,
     ) -> Dict[str, torch.Tensor]:
         """Predict all assay values.
 
@@ -217,15 +250,19 @@ class AssayHeads(nn.Module):
             Dict with predictions for each assay type (all in log10 scale except Tm)
         """
         results = {}
+        stability_input = self._stability_input(
+            binding_stability_vec,
+            binding_stability_score=binding_stability_score,
+        )
 
         if binding_latents is not None:
             # Derive kinetic values from latents (physics-based)
-            log_koff = torch.clamp(binding_latents["log_koff"], min=-8.0, max=8.0)
-            log_kon_intrinsic = torch.clamp(
-                binding_latents["log_kon_intrinsic"], min=-8.0, max=8.0
+            log_koff = smooth_range_bound(binding_latents["log_koff"], -8.0, 8.0)
+            log_kon_intrinsic = smooth_range_bound(
+                binding_latents["log_kon_intrinsic"], -8.0, 8.0
             )
-            log_kon_chaperone = torch.clamp(
-                binding_latents["log_kon_chaperone"], min=-8.0, max=8.0
+            log_kon_chaperone = smooth_range_bound(
+                binding_latents["log_kon_chaperone"], -8.0, 8.0
             )
 
             # kon_total = kon_intrinsic + kon_chaperone
@@ -236,39 +273,53 @@ class AssayHeads(nn.Module):
 
             # KD = koff / kon (in M), convert to nM (+9).
             # Keep a smooth upper cap so weak-affinity regions still backpropagate.
-            log_kd_nM = torch.clamp(log_koff - log_kon_total + 9, min=-3.0)
-            affinity_obs = self.derive_affinity_observables(binding_affinity_vec, log_kd_nM)
+            log_kd_nM = smooth_lower_bound(log_koff - log_kon_total + 9, -3.0)
+            affinity_obs = self.derive_affinity_observables(
+                binding_affinity_vec,
+                log_kd_nM,
+                assay_context_vec=assay_context_vec,
+                binding_affinity_score=binding_affinity_score,
+            )
 
             # t_half = ln(2) / koff, convert to minutes
             # log10(t_half_min) = log10(ln(2)/60) - log_koff = -1.937 - log_koff
-            log_t_half = torch.clamp(-1.937 - log_koff, min=-8.0, max=8.0)
+            log_t_half = smooth_range_bound(-1.937 - log_koff, -8.0, 8.0)
+            t_half_bias = self._bounded_residual(
+                self.t_half_residual(stability_input),
+                self.t_half_residual_scale,
+            )
 
             results["koff"] = log_koff
             results["kon"] = log_kon_total
             results["KD_nM"] = affinity_obs["KD_nM"]
-            results["t_half"] = log_t_half
+            results["t_half"] = smooth_range_bound(log_t_half + t_half_bias, -8.0, 8.0)
             results["IC50_nM"] = affinity_obs["IC50_nM"]
             results["EC50_nM"] = affinity_obs["EC50_nM"]
         else:
             # Fallback: predict everything directly (less constrained)
+            affinity_input = self._affinity_input(
+                binding_affinity_vec,
+                assay_context_vec=assay_context_vec,
+                binding_affinity_score=binding_affinity_score,
+            )
             results["KD_nM"] = smooth_upper_bound(
-                torch.clamp(self._direct_predict(binding_affinity_vec, "kd"), min=-3.0),
+                smooth_lower_bound(self._direct_predict(affinity_input, "kd"), -3.0),
                 self.max_log10_nM,
             )
             results["IC50_nM"] = smooth_upper_bound(
-                torch.clamp(self._direct_predict(binding_affinity_vec, "ic50"), min=-3.0),
+                smooth_lower_bound(self._direct_predict(affinity_input, "ic50"), -3.0),
                 self.max_log10_nM,
             )
             results["EC50_nM"] = smooth_upper_bound(
-                torch.clamp(self._direct_predict(binding_affinity_vec, "ec50"), min=-3.0),
+                smooth_lower_bound(self._direct_predict(affinity_input, "ec50"), -3.0),
                 self.max_log10_nM,
             )
-            results["kon"] = self._direct_predict(binding_affinity_vec, "kon")
-            results["koff"] = self._direct_predict(binding_affinity_vec, "koff")
-            results["t_half"] = self._direct_predict(binding_stability_vec, "t_half")
+            results["kon"] = self._direct_predict(affinity_input, "kon")
+            results["koff"] = self._direct_predict(affinity_input, "koff")
+            results["t_half"] = self._direct_predict(stability_input, "t_half")
 
         # Tm always predicted directly (complex protein stability)
-        results["Tm"] = self.tm(binding_stability_vec)
+        results["Tm"] = self.tm(stability_input)
 
         return results
 
@@ -276,18 +327,25 @@ class AssayHeads(nn.Module):
         self,
         binding_affinity_vec: torch.Tensor,
         kd_log10_nM: torch.Tensor,
+        assay_context_vec: Optional[torch.Tensor] = None,
+        binding_affinity_score: Optional[torch.Tensor] = None,
     ) -> Dict[str, torch.Tensor]:
         """Derive KD/IC50/EC50 from a shared KD latent with assay-specific bias."""
         kd_base = smooth_upper_bound(
-            torch.clamp(kd_log10_nM, min=-3.0),
+            smooth_lower_bound(kd_log10_nM, -3.0),
             self.max_log10_nM,
         )
+        residual_input = self._affinity_input(
+            binding_affinity_vec,
+            assay_context_vec=assay_context_vec,
+            binding_affinity_score=binding_affinity_score,
+        )
         ic50 = smooth_upper_bound(
-            torch.clamp(kd_base + self.ic50_residual(binding_affinity_vec), min=-3.0),
+            smooth_lower_bound(kd_base + self.ic50_residual(residual_input), -3.0),
             self.max_log10_nM,
         )
         ec50 = smooth_upper_bound(
-            torch.clamp(kd_base + self.ec50_residual(binding_affinity_vec), min=-3.0),
+            smooth_lower_bound(kd_base + self.ec50_residual(residual_input), -3.0),
             self.max_log10_nM,
         )
         return {
@@ -295,6 +353,46 @@ class AssayHeads(nn.Module):
             "IC50_nM": ic50,
             "EC50_nM": ec50,
         }
+
+    def _affinity_input(
+        self,
+        binding_affinity_vec: torch.Tensor,
+        *,
+        assay_context_vec: Optional[torch.Tensor] = None,
+        binding_affinity_score: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
+        residual_input = binding_affinity_vec
+        if self.assay_context_dim > 0:
+            if assay_context_vec is None:
+                assay_context_vec = binding_affinity_vec.new_zeros(
+                    binding_affinity_vec.shape[0],
+                    self.assay_context_dim,
+                )
+            residual_input = torch.cat([residual_input, assay_context_vec], dim=-1)
+        return residual_input
+
+    def _stability_input(
+        self,
+        binding_stability_vec: torch.Tensor,
+        *,
+        binding_stability_score: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
+        if binding_stability_score is None:
+            binding_stability_score = binding_stability_vec.new_zeros(
+                binding_stability_vec.shape[0],
+                self.stability_score_dim,
+            )
+        else:
+            binding_stability_score = binding_stability_score.reshape(
+                binding_stability_vec.shape[0],
+                self.stability_score_dim,
+            )
+        return torch.cat([binding_stability_vec, binding_stability_score], dim=-1)
+
+    @staticmethod
+    def _bounded_residual(raw: torch.Tensor, scale_param: torch.Tensor) -> torch.Tensor:
+        cap = F.softplus(scale_param)
+        return F.softsign(raw) * cap
 
     def _direct_predict(self, z: torch.Tensor, assay: str) -> torch.Tensor:
         """Direct prediction fallback when latents not available."""

@@ -53,7 +53,7 @@ multiple-instance learning (MIL).
   has a defined fallback strategy. The model produces calibrated
   predictions regardless of which inputs are available.
 - **Multi-allele MIL is a first-class operation**, not a post-hoc
-  wrapper. Allele competition and attribution are learned within the model.
+  wrapper. Noisy-OR aggregation across alleles is built into the model.
 - **Compositional T-cell assay modeling.** T-cell outputs are generated
   for all attested assay configurations in parallel, with shared
   compositional context embeddings that capture method/readout/culture
@@ -97,8 +97,8 @@ into neural network inputs (token sequences and conditioning embeddings).
 | Input | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
 | `peptide` | AA string | **Yes** | -- | Presented peptide sequence (8-15 residues) |
-| `nflank` | AA string | No | Empty (sentinel token) | Source protein residues upstream of peptide N-terminus. Up to 20 residues. |
-| `cflank` | AA string | No | Empty (sentinel token) | Source protein residues downstream of peptide C-terminus. Up to 20 residues. |
+| `nflank` | AA string | No | Empty (sentinel token) | Source protein residues upstream of peptide N-terminus. Up to 25 residues. |
+| `cflank` | AA string | No | Empty (sentinel token) | Source protein residues downstream of peptide C-terminus. Up to 25 residues. |
 | `mhc_a` | AA string or resolvable allele name | No | Sentinel token | MHC alpha chain amino acid sequence. If an allele label is provided (e.g., "HLA-A*02:01"), it must resolve to sequence before tokenization. Unresolved labels are treated as errors in canonical training. |
 | `mhc_b` | AA string or resolvable allele name | No | Canonical beta2m for species (class I) or sentinel (class II) | MHC beta chain amino acid sequence. Class I defaults to species beta2m; class II expects DRB/DQB/DPB-like sequence when available. |
 | `mhc_class` | Enum: {I, II} | No | inferred from MHC chains | Optional hard override for class-specific downstream heads. |
@@ -155,7 +155,7 @@ predictions.
 ## 2.4 Input Constraints
 
 - **Peptide length**: 8-15 residues.
-- **Flank length**: 0-20 residues each side. Longer flanks truncated to 20 residues adjacent to cleavage site.
+- **Flank length**: 0-25 residues each side. Longer flanks truncated to 25 residues adjacent to cleavage site.
 - **MHC sequences**: Full-length amino acid sequences. Allele names are resolved to full sequences via the allele resolver (`data/allele_resolver.py`). Maximum chain length ~400 residues.
 - **No allele-token fallback**: Raw allele strings are not valid sequence inputs. If an allele cannot be resolved to amino-acid sequence, canonical training fails fast.
 - **TCR**: Reserved for a future pathway. Canonical production training/inference currently ignores TCR inputs. See `tcr_spec.md`.
@@ -229,28 +229,23 @@ Canonical output families:
 ## 3.1 Token Sequence Layout
 
 ```
-[NFLANK] nf_1 nf_2 ... nf_n [CLEAVE_N]
+nf_1 nf_2 ... nf_n
 p_1 p_2 ... p_L
-[CLEAVE_C] cf_1 cf_2 ... cf_m [CFLANK]
-[MHC_A] a_1 a_2 ... a_j
-[MHC_B] b_1 b_2 ... b_k
+cf_1 cf_2 ... cf_m
+a_1 a_2 ... a_j
+b_1 b_2 ... b_k
 ```
 
-Special tokens:
-- `[NFLANK]`: N-flank segment start marker
-- `[CLEAVE_N]`: N-terminal cleavage boundary (between N-flank and peptide)
-- `[CLEAVE_C]`: C-terminal cleavage boundary (between peptide and C-flank)
-- `[CFLANK]`: C-flank segment end marker
-- `[MHC_A]`: MHC alpha chain segment start marker
-- `[MHC_B]`: MHC beta chain segment start marker
-- `[PAD]`: Padding (masked from attention)
-- `<MISSING>`: dedicated missing-value token for absent optional sequence segments/chains
+Runtime stream layout uses residue tokens only; segment boundaries are encoded
+via segment IDs (S3.2.2), not explicit boundary marker tokens.
 
-Each segment is delimited by its own special tokens. There are no `[CLS]`
-or `[SEP]` tokens — with segment-blocked attention (S4.2), tokens only
-attend within their own segment, so global pooling tokens like `[CLS]`
-would have no useful information to aggregate. Segment boundaries are
-already defined by the segment ID assignments (S3.2.2).
+Special tokens:
+- `[PAD]`: padding (masked from attention)
+- `<MISSING>`: dedicated missing-value token for absent optional sequence segments/chains
+- `<BOS>`, `<EOS>`, `<UNK>`: compatibility/special-purpose tokens retained in vocabulary
+
+There are no runtime `[CLS]` or `[SEP]` tokens. With segment-blocked attention
+(S4.2), segment IDs already define the boundaries and routing constraints.
 
 TCR tokens are NOT in this sequence — they are encoded separately (see `tcr_spec.md`).
 
@@ -266,7 +261,7 @@ token_repr[i] = aa_embed[i] + segment_embed[i] + position_embed[i] + global_cond
 
 - Shared lookup table across all chains.
 - Dimension: `d_model`.
-- Vocabulary: 20 standard amino acids + X (unknown) + U (selenocysteine) + all special tokens, including a dedicated `<MISSING>` token.
+- Vocabulary: `[<PAD>, <UNK>, <BOS>, <EOS>, 20 standard AAs, X, <MISSING>]` = 26 tokens. Non-standard residues B, Z, O, U are excluded from the vocabulary.
 - Canonical tokenization is strict: unfamiliar sequence characters raise an error instead of silently mapping to `<UNK>`.
 - `X` is allowed as explicit ambiguous amino acid and uses a fixed zero embedding vector.
 - `<UNK>` remains only as a compatibility token for non-canonical/legacy parsing paths.
@@ -278,11 +273,11 @@ Learned embedding per segment type, dimension `d_model`.
 
 | Segment ID | Value | Tokens covered |
 |------------|-------|---------------|
-| `SEG_NFLANK` | 0 | `[NFLANK]`, N-flank residues, `[CLEAVE_N]` |
+| `SEG_NFLANK` | 0 | N-flank residues |
 | `SEG_PEPTIDE` | 1 | Peptide residues p_1 ... p_L |
-| `SEG_CFLANK` | 2 | `[CLEAVE_C]`, C-flank residues, `[CFLANK]` |
-| `SEG_MHC_A` | 3 | `[MHC_A]`, MHC alpha chain residues |
-| `SEG_MHC_B` | 4 | `[MHC_B]`, MHC beta chain residues |
+| `SEG_CFLANK` | 2 | C-flank residues |
+| `SEG_MHC_A` | 3 | MHC alpha chain residues |
+| `SEG_MHC_B` | 4 | MHC beta chain residues |
 
 ### 3.2.3 Positional Encoding (`position_embed`) -- Segment-Specific
 
@@ -374,7 +369,7 @@ Total table size: 2^6 = 64 entries. Each is a learned `d_model` vector.
 
 Standard pre-norm transformer encoder.
 
-- **Layers**: `N_base` = 6 (recommended; 4-8 range)
+- **Layers**: `N_base` = 4 (recommended; 4-8 range)
 - **Attention heads**: `N_heads` = 8
 - **FFN hidden dimension**: `4 * d_model`
 - **Activation**: GELU
@@ -459,24 +454,28 @@ latents.
 Each MHC chain is independently classified:
 
 ```python
+# 5 chain fine types: MHC_I (index 0), MHC_IIa (index 1), MHC_IIb (index 2),
+#                     B2M (index 3), unknown (index 4)
+# MHC_Ia and MHC_Ib are merged into a single MHC_I type.
+
 # Per-chain type probabilities (alpha chain)
-mhc_a_type_logits = Linear_a_type(mhc_a_vec)  # (n_chain_types,)
+mhc_a_type_logits = Linear_a_type(mhc_a_vec)  # (5,)
 mhc_a_type_probs = softmax(mhc_a_type_logits)
-# Categories: {class_I_alpha, class_II_alpha, unknown}
+# Categories: {MHC_I, MHC_IIa, MHC_IIb, B2M, unknown}
 
 # Per-chain type probabilities (beta chain)
-mhc_b_type_logits = Linear_b_type(mhc_b_vec)  # (n_chain_types,)
+mhc_b_type_logits = Linear_b_type(mhc_b_vec)  # (5,)
 mhc_b_type_probs = softmax(mhc_b_type_logits)
-# Categories: {class_I_beta, class_II_beta, unknown}
+# Categories: {MHC_I, MHC_IIa, MHC_IIb, B2M, unknown}
 ```
 
 **Compositional class probabilities** derived from per-chain types:
 
 ```python
-# P(class I) = P(a is class_I_alpha) * P(b is class_I_beta)
-# P(class II) = P(a is class_II_alpha) * P(b is class_II_beta)
-class1_prob = mhc_a_type_probs[CLASS_I_ALPHA] * mhc_b_type_probs[CLASS_I_BETA]
-class2_prob = mhc_a_type_probs[CLASS_II_ALPHA] * mhc_b_type_probs[CLASS_II_BETA]
+# P(class I) = P(a is MHC_I) * P(b is B2M)
+# P(class II) = P(a is MHC_IIa) * P(b is MHC_IIb)
+class1_prob = mhc_a_type_probs[0] * mhc_b_type_probs[3]   # MHC_I x B2M
+class2_prob = mhc_a_type_probs[1] * mhc_b_type_probs[2]   # MHC_IIa x MHC_IIb
 class_probs = normalize([class1_prob, class2_prob])  # (2,)
 ```
 
@@ -569,15 +568,15 @@ start_logits = Linear_start(
 )                                                       # (L_pep, 1) -> (L_pep,)
 
 # Mask invalid positions
-min_core_width = 7
+min_core_width = 8
 start_logits[L_pep - min_core_width + 1 :] = -inf
 
 core_start_probs = softmax(start_logits)
 
 # Differentiable core width
 core_width_logit = Linear_width(mhc_pool)               # scalar
-core_width = 7.0 + 5.0 * sigmoid(core_width_logit)      # in [7.0, 12.0]
-# Initialize bias so sigmoid ~ 0.4 -> core_width ~ 9.0
+core_width = 8.0 + 2.0 * sigmoid(core_width_logit)      # in [8.0, 10.0]
+# Initialize bias so sigmoid ~ 0.5 -> core_width ~ 9.0
 
 # Expected start
 positions = arange(len(core_start_probs)).float()
@@ -635,10 +634,12 @@ for each peptide residue i:
     core_pos_floor = floor(rel_to_core_start).int()
     core_pos_frac = rel_to_core_start - core_pos_floor
     core_pos_embed = (
-        (1 - core_pos_frac) * learned_core_pos[clamp(core_pos_floor, 0, 14)] +
-        core_pos_frac * learned_core_pos[clamp(core_pos_floor + 1, 0, 14)]
+        (1 - core_pos_frac) * learned_core_pos[clamp(core_pos_floor + 32, 0, 64)] +
+        core_pos_frac * learned_core_pos[clamp(core_pos_floor + 33, 0, 64)]
     )
-    # Table size 15: accommodates cores up to 12 residues
+    # Table size 65: offsets [-32, 32]. Negative = N-terminal of core start
+    # (PFR region), positive = within/beyond core. Large range accommodates
+    # long peptides where the core can be far from either terminus.
 
     # PFR distance encoding
     if rel_to_core_start < 0:
@@ -678,21 +679,22 @@ latents are explicitly kept peptide+foreignness only.
 
 ## 7.1 Latent Definitions
 
-11 latent query tokens, each a learned embedding of dimension `d_model`.
+12 latent query tokens, each a learned embedding of dimension `d_model`.
 
 | # | Name | Biological Meaning |
 |---|------|--------------------|
 | 1 | `processing_class1` | Proteasomal cleavage + TAP transport + ERAP trimming |
 | 2 | `processing_class2` | Endosomal/lysosomal cathepsin processing |
 | 3 | `binding_affinity` | pMHC binding affinity (KD, IC50) -- class-symmetric |
-| 4 | `binding_stability` | pMHC complex half-life (koff, t1/2) -- class-symmetric |
-| 5 | `presentation_class1` | Surface presentation on MHC-I |
-| 6 | `presentation_class2` | Surface presentation on MHC-II |
-| 7 | `recognition_cd8` | Intrinsic recognizability by CD8+ TCR repertoire |
-| 8 | `recognition_cd4` | Intrinsic recognizability by CD4+ TCR repertoire |
-| 9 | `immunogenicity_cd8` | Net CD8+ T-cell response likelihood |
-| 10 | `immunogenicity_cd4` | Net CD4+ T-cell response likelihood |
-| 11 | `ms_detectability` | Peptide-intrinsic MS detectability ("flyability") |
+| 4 | `species_of_origin` | Source organism of the peptide (self vs pathogen taxonomy) |
+| 5 | `binding_stability` | pMHC complex half-life (koff, t1/2) -- class-symmetric |
+| 6 | `presentation_class1` | Surface presentation on MHC-I |
+| 7 | `presentation_class2` | Surface presentation on MHC-II |
+| 8 | `recognition_cd8` | Intrinsic recognizability by CD8+ TCR repertoire |
+| 9 | `recognition_cd4` | Intrinsic recognizability by CD4+ TCR repertoire |
+| 10 | `immunogenicity_cd8` | Net CD8+ T-cell response likelihood |
+| 11 | `immunogenicity_cd4` | Net CD4+ T-cell response likelihood |
+| 12 | `ms_detectability` | Peptide-intrinsic MS detectability ("flyability") |
 
 ### Design Rationale
 
@@ -728,11 +730,11 @@ latents are explicitly kept peptide+foreignness only.
                     |   Flanks      |   MHC          |   only         |
                     +-------+-------+--------+-------+--------+-------+
                             |                |                |
-                    +-------+-------+ +------+------+  +------+------+
-    Level 0         | processing_   | | processing_ |  | ms_          |
-   (parallel,       |   class1      | |   class2    |  | detectability|
-    no deps)        | pep+flanks    | | pep+flanks  |  | pep only     |
-                    +-------+-------+ +------+------+  +-------------+
+                    +-------+-------+ +------+------+  +------+------+ +------+--------+
+    Level 0         | processing_   | | processing_ |  | ms_          | | species_of_  |
+   (parallel,       |   class1      | |   class2    |  | detectability| |   origin     |
+    no deps)        | pep+flanks    | | pep+flanks  |  | pep only     | | pep only     |
+                    +-------+-------+ +------+------+  +-------------+ +------+--------+
                             |                |
                             |       +--------+--------+
     Level 1                 |       |                  |
@@ -817,7 +819,6 @@ def compute_latent(query_token, key_value_tokens, n_layers=2):
 | Peptide | p_1 ... p_L | Triple-frame (N-term, C-term, fractional) |
 | N-flank | nf_1 ... nf_n | Distance-from-cleavage (N) |
 | C-flank | cf_1 ... cf_m | Distance-from-cleavage (C) |
-| Delimiters | `[CLEAVE_N]`, `[CLEAVE_C]` | Fixed learned |
 | Context | context_vec (from S5.4) | -- |
 
 **Does NOT attend to:** MHC alpha, MHC beta, any latent tokens.
@@ -845,6 +846,25 @@ on local sequence context. DM editing is MHC-dependent but modeled in
 the presentation latent. processing_class2 uses the same input tokens as
 processing_class1 but has its **own query vector and attention parameters**,
 learning different cleavage patterns (endosomal cathepsins vs proteasome).
+
+---
+
+#### `species_of_origin` -- Source Organism
+
+**Cross-attends to:**
+
+| Source | Tokens | Positional Encoding |
+|--------|--------|---------------------|
+| Peptide | p_1 ... p_L | Triple-frame |
+
+**Does NOT attend to:** MHC, flanks, any latent tokens.
+
+**Biological rationale:** The source organism of the peptide (self, viral,
+bacterial, etc.) is inferred from peptide sequence composition. This latent
+drives the `foreignness` signal: `foreignness_vec = foreignness_proj(species_of_origin_vec)`,
+a learned linear projection that maps the species-of-origin representation
+into a foreignness vector consumed by recognition latents. Can be overridden
+via the `species_of_origin` API input.
 
 ---
 
@@ -1021,10 +1041,18 @@ from recognition to TCR tokens (see `tcr_spec.md`):
 |--------|--------|----------|
 | TCR token representations | (n_tcr, d_model) | CDR-annotated (see `tcr_spec.md`) |
 
+**Token access:** Recognition sees **peptide tokens only**. Foreignness
+enters as an upstream latent dependency (a `d_model` vector derived from
+`species_of_origin` via `foreignness_proj`), not as tokens in
+cross-attention. This means the cross-attention key-value set contains
+peptide token hidden states plus the single foreignness vector.
+
 **Biological rationale:** Recognition = "how likely is SOME TCR in a
 typical repertoire to recognize this peptide?" This depends on:
 - **Foreignness**: Peptides similar to self-peptidome have low recognition
-  (thymic tolerance deletes reactive T cells).
+  (thymic tolerance deletes reactive T cells). Foreignness is derived from
+  `species_of_origin` via `foreignness_proj`, providing a controlled
+  self/nonself channel.
 - **Physicochemical properties**: Unusual residues at solvent-exposed
   positions (for class I: P4, P5, P6, P7, P8 in a 9mer) increase
   recognition probability.
@@ -1128,12 +1156,13 @@ Same structure as immunogenicity_cd8, using recognition_cd4_vec.
 |--------|--------|---------|--------|-------|-------|---------------------|--------------|
 | processing_class1 | YES | YES | YES | -- | -- | -- | context_vec |
 | processing_class2 | YES | YES | YES | -- | -- | -- | context_vec |
+| species_of_origin | -- | YES | -- | -- | -- | -- | -- |
 | binding_affinity | -- | YES | -- | YES | YES | -- | context_vec, core_rel_pos |
 | binding_stability | -- | YES | -- | YES | YES | -- | context_vec, core_rel_pos |
 | presentation_class1 | -- | -- | -- | -- | -- | processing_class1, binding_affinity, binding_stability | context_vec |
 | presentation_class2 | -- | -- | -- | -- | -- | processing_class2, binding_affinity, binding_stability | context_vec, core_context_vec |
-| recognition_cd8 | -- | YES | -- | -- | -- | foreignness | -- |
-| recognition_cd4 | -- | YES | -- | -- | -- | foreignness | -- |
+| recognition_cd8 | -- | YES | -- | -- | -- | foreignness (from species_of_origin via foreignness_proj) | -- |
+| recognition_cd4 | -- | YES | -- | -- | -- | foreignness (from species_of_origin via foreignness_proj) | -- |
 | immunogenicity_cd8 | -- | -- | -- | -- | -- | binding_affinity, binding_stability, recognition_cd8 | (MLP, no cross-attn) |
 | immunogenicity_cd4 | -- | -- | -- | -- | -- | binding_affinity, binding_stability, recognition_cd4 | (MLP, no cross-attn) |
 | ms_detectability | -- | YES | -- | -- | -- | -- | -- |
@@ -1184,13 +1213,16 @@ def per_allele_forward(peptide, flanks, allele, species, tcr=None):
     # Core identification
     core_info = core_pointer(pep_flank_H, mhc_a_vec, mhc_b_vec)
 
-    # Level 0: Processing (shared across alleles) + MS detectability
+    # Level 0: Processing (shared across alleles) + MS detectability + species_of_origin
     processing_class1_vec = compute_latent(
         processing_class1_query, kv=[pep_flank_H[pep+flank], context_vec])
     processing_class2_vec = compute_latent(
         processing_class2_query, kv=[pep_flank_H[pep+flank], context_vec])
     ms_detectability_vec = compute_latent(
         ms_detectability_query, kv=[pep_flank_H[pep_only]])
+    species_of_origin_vec = compute_latent(
+        species_of_origin_query, kv=[pep_flank_H[pep_only]])
+    foreignness_vec = foreignness_proj(species_of_origin_vec)  # Linear: d_model -> d_model
 
     # Level 1: Binding
     pep_mhc_kv = concat(pep_H_with_core_rel_pos, mhc_H, context_vec)
@@ -1230,57 +1262,50 @@ def per_allele_forward(peptide, flanks, allele, species, tcr=None):
 
 ## 8.3 MIL Aggregation
 
-### 8.3.1 Allele Competition Transformer
+### 8.3.1 Stable Noisy-OR Aggregation
+
+Per-allele presentation probabilities are aggregated via Noisy-OR, a
+standard MIL aggregation for this domain (Dietterich et al.). Noisy-OR
+avoids extra parameters and naturally models the "at least one allele
+presents" semantics:
 
 ```python
-def allele_competition(allele_pres_vectors):
-    """1-2 layer transformer over the allele dimension."""
-    x = allele_pres_vectors  # (n_alleles, d_model)
-    for layer in competition_transformer_layers:
-        residual = x
-        x = layer_norm(x)
-        x = self_attention(x)     # alleles attend to each other
-        x = residual + x
-        residual = x
-        x = layer_norm(x)
-        x = ffn(x)
-        x = residual + x
-    return x
+def stable_noisy_or(logits):
+    """Compute 1 - prod(1 - p_i) in log space for numerical stability.
+
+    logits: (n_alleles,) -- per-allele presentation logits
+    Returns: scalar aggregated logit
+    """
+    # log(1 - sigmoid(x)) = -softplus(x)
+    log_1_minus_p = -softplus(logits)            # (n_alleles,)
+    log_all_miss = log_1_minus_p.sum(dim=0)       # scalar
+    # patient_prob = 1 - exp(log_all_miss)
+    # Convert back to logit: log(p / (1-p))
+    patient_logit = -log_all_miss - softplus(-log_all_miss)
+    return patient_logit
 ```
 
-**Rationale:** Alleles compete for peptides. High-affinity binding by one
-allele sequesters copies, reducing presentation by others. Tiny cost:
-operates over at most 16 tokens with 1-2 layers.
+**Rationale:** Noisy-OR is the natural MIL aggregation when instances
+(alleles) contribute independently to a positive outcome (presentation).
+It avoids the extra parameters of an allele competition transformer
+while providing a well-calibrated probabilistic interpretation. The
+`stable_noisy_or()` implementation in `pmhc.py` computes the entire
+operation in log space for numerical stability.
 
-### 8.3.2 Attention-Based MIL Pooling
-
-```python
-def mil_pool(allele_vectors, competition=True):
-    if competition:
-        allele_vectors = allele_competition(allele_vectors)
-
-    # Ilse et al. (ICML 2018) attention pooling
-    attn_hidden = tanh(Linear1(allele_vectors))
-    attn_logits = Linear2(attn_hidden)
-    attn_weights = softmax(attn_logits, dim=0)
-    patient_vector = (attn_weights * allele_vectors).sum(dim=0)
-    return patient_vector, attn_weights.squeeze(-1)
-```
-
-### 8.3.3 Aggregation at Two Levels
+### 8.3.2 Aggregation at Two Levels
 
 ```python
-# Presentation-level MIL (with allele competition)
-patient_presentation_class1_vec, pres_c1_weights = mil_pool(
-    class1_presentation_stack, competition=True)
-patient_presentation_class2_vec, pres_c2_weights = mil_pool(
-    class2_presentation_stack, competition=True)
+# Presentation-level MIL (Noisy-OR)
+patient_presentation_class1_logit = stable_noisy_or(
+    class1_presentation_logits)    # (n_class1_alleles,) -> scalar
+patient_presentation_class2_logit = stable_noisy_or(
+    class2_presentation_logits)    # (n_class2_alleles,) -> scalar
 
-# Immunogenicity-level MIL (after per-allele recognition)
-patient_immunogenicity_cd8_vec, imm_cd8_weights = mil_pool(
-    class1_immunogenicity_stack, competition=False)
-patient_immunogenicity_cd4_vec, imm_cd4_weights = mil_pool(
-    class2_immunogenicity_stack, competition=False)
+# Immunogenicity-level MIL (Noisy-OR)
+patient_immunogenicity_cd8_logit = stable_noisy_or(
+    class1_immunogenicity_logits)
+patient_immunogenicity_cd4_logit = stable_noisy_or(
+    class2_immunogenicity_logits)
 ```
 
 **Why aggregate immunogenicity per-allele:** Presentation is allele-specific,
@@ -1374,8 +1399,8 @@ immunogenicity_logit = (class_probs[0] * immunogenicity_cd8_logit
 
 | Head | Input | Output | Training target |
 |------|-------|--------|----------------|
-| mhc_a_chain_type | mhc_a_vec | softmax over {class_I_alpha, class_II_alpha, unknown} | Chain type labels |
-| mhc_b_chain_type | mhc_b_vec | softmax over {class_I_beta, class_II_beta, unknown} | Chain type labels |
+| mhc_a_chain_type | mhc_a_vec | softmax over {MHC_I, MHC_IIa, MHC_IIb, B2M, unknown} | Chain type labels |
+| mhc_b_chain_type | mhc_b_vec | softmax over {MHC_I, MHC_IIa, MHC_IIb, B2M, unknown} | Chain type labels |
 | mhc_a_species | mhc_a_vec | softmax over {human, murine, nhp, other} | Species labels |
 | mhc_b_species | mhc_b_vec | softmax over same | Species labels |
 | source_species | processing_class1_vec or processing_class2_vec | softmax over {human, murine, nhp, other} | Source protein species |
@@ -1693,15 +1718,15 @@ TCR masking is deferred until the TCR pathway is re-enabled.
 | Parameter | Value | Notes |
 |-----------|-------|-------|
 | `d_model` | 256 | Start here; scale to 512 if capacity-limited |
-| `d_ctx` | 64 | Context embedding dimension for T-cell system |
-| `N_base` | 6 | Base encoder layers (4-8 range) |
+| `d_ctx` | `max(8, d_model // 8)` = 32 at canonical d_model=256 | Context embedding dimension for T-cell system |
+| `N_base` | 4 | Base encoder layers (4-8 range) |
 | `N_latent` | 2 | Cross-attention layers per latent |
 | `N_tcr` | 3 | TCR encoder layers |
-| `N_competition` | 1 | Allele competition transformer layers |
+| `N_competition` | -- | Removed (Noisy-OR replaces allele competition transformer) |
 | `N_heads` | 8 | Attention heads everywhere |
 | `d_ffn` | 4 * d_model = 1024 | Standard transformer ratio |
 | Max peptide length | 50 | Covers class II (longest IEDB binder ~44mer) |
-| Max flank length | 20 | Each side |
+| Max flank length | 25 | Each side |
 | Max MHC chain length | 400 | Full-length sequence per chain |
 | Max TCR chain length | 150 | Full V-region |
 | Max alleles per patient | 16 | 6 class I + 10 class II |
@@ -1711,16 +1736,15 @@ TCR masking is deferred until the TCR pathway is re-enabled.
 | Component | Parameters | Notes |
 |-----------|-----------|-------|
 | Embedding tables | ~1.0M | All tables (incl. full-length MHC positional) |
-| Base encoder (6 layers) | ~4.8M | Segment-blocked transformer |
+| Base encoder (4 layers) | ~3.2M | Segment-blocked transformer |
 | Core pointer head | ~0.3M | Linear layers + MLP |
-| Latent DAG (11 latents x 2 layers) | ~5.8M | Cross-attention + FFN (9 CA + 2 MLP) |
+| Latent DAG (12 latents x 2 layers) | ~6.3M | Cross-attention + FFN (10 CA + 2 MLP) |
 | TCR encoder (3 layers) | ~2.4M | Separate transformer |
 | MHC inference module | ~0.2M | Per-chain heads + context MLP |
-| Allele competition (1 layer) | ~0.4M | Tiny transformer |
-| MIL attention heads | ~0.1M | 2 separate MIL pools |
+| MIL Noisy-OR aggregation | ~0.0M | No learned parameters |
 | Output heads (12+ latents) | ~1.2M | Shared + assay-conditioned |
 | T-cell context system | ~0.3M | Embedding tables + gates |
-| **Total** | **~17M** | |
+| **Total** | **~15M** | |
 
 At d_model = 512: approximately 55M parameters.
 

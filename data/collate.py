@@ -13,6 +13,8 @@ import torch
 from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
 from .vocab import (
+    BINDING_ASSAY_METHOD_TO_IDX,
+    BINDING_ASSAY_TYPE_TO_IDX,
     FOREIGN_CATEGORIES,
     ORGANISM_TO_IDX,
     TCELL_APC_TYPE_TO_IDX,
@@ -140,6 +142,10 @@ class PrestoSample:
     bind_value: Optional[float] = None  # nM
     bind_qual: int = 0  # -1=<, 0==, 1=>
     bind_measurement_type: Optional[str] = None  # KD / IC50 / EC50 / unknown
+    binding_assay_type: Optional[str] = None
+    binding_assay_method: Optional[str] = None
+    binding_effector_culture: Optional[str] = None
+    binding_apc_culture: Optional[str] = None
 
     # Kinetics
     kon: Optional[float] = None
@@ -236,6 +242,7 @@ class PrestoBatch:
     tcr_evidence_method_mask: Optional[torch.Tensor] = None
 
     # Optional T-cell assay context (categorical IDs + masks)
+    binding_context: Dict[str, torch.Tensor] = field(default_factory=dict)
     tcell_context: Dict[str, torch.Tensor] = field(default_factory=dict)
     tcell_context_masks: Dict[str, torch.Tensor] = field(default_factory=dict)
     tcell_mil_context: Dict[str, torch.Tensor] = field(default_factory=dict)
@@ -320,6 +327,9 @@ class PrestoBatch:
             },
             target_quals={
                 name: _move(tensor) for name, tensor in self.target_quals.items()
+            },
+            binding_context={
+                name: _move(tensor) for name, tensor in self.binding_context.items()
             },
             tcell_context={
                 name: _move(tensor) for name, tensor in self.tcell_context.items()
@@ -582,6 +592,71 @@ class PrestoCollator:
             quals[task_name] = torch.tensor(qual_values, dtype=torch.long).unsqueeze(-1)
 
         return targets, masks, quals
+
+    def _categorize_binding_assay_type(self, assay_type: Optional[str]) -> str:
+        token = self._norm_text(assay_type)
+        if not token:
+            return "unknown"
+        if "kd (~ic50)" in token:
+            return "KD_PROXY_IC50"
+        if "kd (~ec50)" in token:
+            return "KD_PROXY_EC50"
+        if "ic50" in token or "inhibitory concentration" in token:
+            return "IC50"
+        if "ec50" in token or "effective concentration" in token:
+            return "EC50"
+        if "kd" in token or "dissociation constant" in token:
+            return "KD"
+        return "OTHER"
+
+    def _categorize_binding_assay_method(self, assay_method: Optional[str]) -> str:
+        token = self._norm_text(assay_method)
+        if not token:
+            return "unknown"
+        mapping = {
+            "purified mhc/competitive/radioactivity": "PURIFIED_COMPETITIVE_RADIOACTIVITY",
+            "purified mhc/direct/fluorescence": "PURIFIED_DIRECT_FLUORESCENCE",
+            "purified mhc/competitive/fluorescence": "PURIFIED_COMPETITIVE_FLUORESCENCE",
+            "cellular mhc/competitive/fluorescence": "CELLULAR_COMPETITIVE_FLUORESCENCE",
+            "cellular mhc/direct/fluorescence": "CELLULAR_DIRECT_FLUORESCENCE",
+            "cellular mhc/competitive/radioactivity": "CELLULAR_COMPETITIVE_RADIOACTIVITY",
+            "cellular mhc/t cell inhibition": "CELLULAR_TCELL_INHIBITION",
+            "lysate mhc/direct/radioactivity": "LYSATE_DIRECT_RADIOACTIVITY",
+            "purified mhc/direct/radioactivity": "PURIFIED_DIRECT_RADIOACTIVITY",
+        }
+        return mapping.get(token, "OTHER")
+
+    def _collate_binding_context(
+        self,
+        samples: List[PrestoSample],
+    ) -> Dict[str, torch.Tensor]:
+        assay_type_idx: List[int] = []
+        assay_method_idx: List[int] = []
+
+        for sample in samples:
+            assay_type_label = self._categorize_binding_assay_type(
+                sample.binding_assay_type or sample.bind_measurement_type
+            )
+            assay_method_label = self._categorize_binding_assay_method(
+                sample.binding_assay_method
+            )
+            assay_type_idx.append(
+                BINDING_ASSAY_TYPE_TO_IDX.get(
+                    assay_type_label,
+                    BINDING_ASSAY_TYPE_TO_IDX["OTHER"],
+                )
+            )
+            assay_method_idx.append(
+                BINDING_ASSAY_METHOD_TO_IDX.get(
+                    assay_method_label,
+                    BINDING_ASSAY_METHOD_TO_IDX["OTHER"],
+                )
+            )
+
+        return {
+            "assay_type_idx": torch.tensor(assay_type_idx, dtype=torch.long),
+            "assay_method_idx": torch.tensor(assay_method_idx, dtype=torch.long),
+        }
 
     def _collate_tcr_evidence_targets(
         self,
@@ -1043,6 +1118,7 @@ class PrestoCollator:
         binding_targets, binding_masks, binding_quals = self._collate_binding_measurement_targets(
             samples
         )
+        binding_context = self._collate_binding_context(samples)
         targets.update(binding_targets)
         target_masks.update(binding_masks)
         tcr_evidence_targets, tcr_evidence_masks = self._collate_tcr_evidence_targets(samples)
@@ -1310,6 +1386,7 @@ class PrestoCollator:
             targets=targets,
             target_masks=target_masks,
             target_quals=target_quals,
+            binding_context=binding_context,
             tcell_context=tcell_context,
             tcell_context_masks=tcell_context_masks,
             tcell_mil_context=tcell_mil_context,

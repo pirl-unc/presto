@@ -15,6 +15,7 @@ import argparse
 import os
 import tempfile
 import time
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple
@@ -29,6 +30,7 @@ from tqdm.auto import tqdm
 from presto.models.presto import Presto
 from presto.models.affinity import (
     DEFAULT_MAX_AFFINITY_NM,
+    max_log10_nM,
     normalize_binding_target_log10,
 )
 from presto.data import (
@@ -58,6 +60,7 @@ from presto.data.allele_resolver import (
     infer_gene,
     normalize_mhc_class,
     normalize_processing_species_label,
+    normalize_species_label,
 )
 from presto.data.mhc_index import infer_fine_chain_type
 from presto.data.vocab import (
@@ -83,7 +86,7 @@ SYNTHETIC_DEFAULTS = {
     "run_dir": None,
     "weight_decay": 0.01,
     "use_uncertainty_weighting": True,
-    "supervised_loss_aggregation": "sample_weighted",
+    "supervised_loss_aggregation": "task_mean",
     "use_pcgrad": False,
     "seed": 42,
     "consistency_cascade_weight": 0.0,
@@ -105,6 +108,11 @@ SYNTHETIC_DEFAULTS = {
     "mil_contrastive_weight": 0.0,
     "mil_contrastive_margin": 0.5,
     "mil_contrastive_max_pairs": 32,
+    "binding_contrastive_weight": 0.0,
+    "binding_contrastive_margin": 0.2,
+    "binding_contrastive_target_gap_min": 0.3,
+    "binding_contrastive_target_gap_cap": 2.0,
+    "binding_contrastive_max_pairs": 64,
     "mil_bag_sparsity_weight": 0.0,
     "mil_bag_sparsity_target_sum": 1.5,
 }
@@ -165,13 +173,13 @@ class TaskLossSpec:
 LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
     TaskLossSpec(
         name="binding",
-        target_key="binding_unknown",
-        mask_key="binding_unknown",
+        target_key="binding",
+        mask_key="binding",
         pred_paths=(("assays", "KD_nM"),),
         loss_type="censor",
         target_attr="bind_target",
         mask_attr="bind_mask",
-        qual_key="binding_unknown",
+        qual_key="binding",
         qual_attr="bind_qual",
         target_transform=lambda t: normalize_binding_target_log10(
             t,
@@ -352,20 +360,20 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
     ),
     TaskLossSpec(
         name="binding_affinity_probe",
-        target_key="binding_unknown",
-        mask_key="binding_unknown",
+        target_key="binding",
+        mask_key="binding",
         pred_paths=(("binding_affinity_probe_kd",),),
         loss_type="censor",
         target_attr="bind_target",
         mask_attr="bind_mask",
-        qual_key="binding_unknown",
+        qual_key="binding",
         qual_attr="bind_qual",
         target_transform=lambda t: normalize_binding_target_log10(
             t,
             max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
             assume_log10=False,
         ),
-        base_weight=0.3,
+        base_weight=1.0,
     ),
     TaskLossSpec(
         name="processing",
@@ -461,7 +469,7 @@ LOSS_TASK_NAME_TO_SPEC: Dict[str, TaskLossSpec] = {
 
 
 def _normalize_supervised_loss_aggregation(mode: Optional[str]) -> str:
-    token = str(mode or "sample_weighted").strip().lower().replace("-", "_")
+    token = str(mode or "task_mean").strip().lower().replace("-", "_")
     if token in {"task", "task_mean", "equal_task"}:
         return "task_mean"
     if token in {"sample", "sample_weighted", "sample_count"}:
@@ -534,6 +542,21 @@ def _regularization_config_from_args(args: argparse.Namespace) -> Dict[str, floa
         "mil_contrastive_max_pairs": float(
             getattr(args, "mil_contrastive_max_pairs", 32)
         ),
+        "binding_contrastive_weight": float(
+            getattr(args, "binding_contrastive_weight", 0.0)
+        ),
+        "binding_contrastive_margin": float(
+            getattr(args, "binding_contrastive_margin", 0.2)
+        ),
+        "binding_contrastive_target_gap_min": float(
+            getattr(args, "binding_contrastive_target_gap_min", 0.3)
+        ),
+        "binding_contrastive_target_gap_cap": float(
+            getattr(args, "binding_contrastive_target_gap_cap", 2.0)
+        ),
+        "binding_contrastive_max_pairs": float(
+            getattr(args, "binding_contrastive_max_pairs", 64)
+        ),
         "mil_bag_sparsity_weight": float(
             getattr(args, "mil_bag_sparsity_weight", 0.0)
         ),
@@ -567,6 +590,11 @@ def _resolve_regularization_config(
         "mil_contrastive_weight": 0.0,
         "mil_contrastive_margin": 0.5,
         "mil_contrastive_max_pairs": 32.0,
+        "binding_contrastive_weight": 0.0,
+        "binding_contrastive_margin": 0.2,
+        "binding_contrastive_target_gap_min": 0.3,
+        "binding_contrastive_target_gap_cap": 2.0,
+        "binding_contrastive_max_pairs": 64.0,
         "mil_bag_sparsity_weight": 0.0,
         "mil_bag_sparsity_target_sum": 1.5,
     }
@@ -643,6 +671,263 @@ def _as_float_vector(tensor: torch.Tensor) -> torch.Tensor:
     if vec.ndim > 1 and vec.shape[-1] == 1:
         vec = vec.squeeze(-1)
     return vec
+
+
+def _max_bucket_fraction(values: Sequence[str]) -> float:
+    if not values:
+        return 0.0
+    counts = Counter(values)
+    return float(max(counts.values()) / max(len(values), 1))
+
+
+def _normalized_batch_species(value: Optional[str]) -> str:
+    normalized = normalize_species_label(value)
+    if normalized is not None:
+        return normalized
+    raw = str(value or "").strip()
+    return raw if raw else "unknown_species"
+
+
+def _batch_diversity_metrics(batch) -> Dict[str, float]:
+    metrics: Dict[str, float] = {}
+    alleles = [str(a).strip() for a in getattr(batch, "primary_alleles", []) if str(a).strip()]
+    classes = [
+        normalize_mhc_class(cls, default=None) or "unknown_class"
+        for cls in getattr(batch, "mhc_class", [])
+    ]
+    species = [
+        _normalized_batch_species(sp)
+        for sp in getattr(batch, "processing_species", [])
+    ]
+
+    if alleles:
+        metrics["batch_unique_alleles"] = float(len(set(alleles)))
+        metrics["batch_max_allele_fraction"] = _max_bucket_fraction(alleles)
+    if classes:
+        metrics["batch_unique_mhc_classes"] = float(len(set(classes)))
+        metrics["batch_max_mhc_class_fraction"] = _max_bucket_fraction(classes)
+    if species:
+        metrics["batch_unique_species"] = float(len(set(species)))
+        metrics["batch_max_species_fraction"] = _max_bucket_fraction(species)
+
+    bind_mask = getattr(batch, "bind_mask", None)
+    if (
+        isinstance(bind_mask, torch.Tensor)
+        and bind_mask.numel() == len(classes)
+        and len(alleles) == len(classes)
+        and len(species) == len(classes)
+    ):
+        bind_mask_bool = _as_float_vector(bind_mask) > 0
+        bind_idx = bind_mask_bool.nonzero(as_tuple=False).view(-1).tolist()
+        if bind_idx:
+            bind_alleles = [alleles[i] for i in bind_idx if alleles[i]]
+            bind_classes = [classes[i] for i in bind_idx]
+            bind_species = [species[i] for i in bind_idx]
+            metrics["batch_binding_samples"] = float(len(bind_idx))
+            if bind_alleles:
+                metrics["batch_binding_unique_alleles"] = float(len(set(bind_alleles)))
+                metrics["batch_binding_max_allele_fraction"] = _max_bucket_fraction(bind_alleles)
+            if bind_classes:
+                metrics["batch_binding_unique_mhc_classes"] = float(len(set(bind_classes)))
+            if bind_species:
+                metrics["batch_binding_unique_species"] = float(len(set(bind_species)))
+    return metrics
+
+
+def _binding_path_diagnostic_metrics(outputs: Dict[str, object]) -> Dict[str, float]:
+    metrics: Dict[str, float] = {}
+    latents = outputs.get("binding_latents")
+    if isinstance(latents, dict):
+        for name in ("log_koff", "log_kon_intrinsic", "log_kon_chaperone"):
+            tensor = latents.get(name)
+            if not isinstance(tensor, torch.Tensor) or tensor.numel() == 0:
+                continue
+            vec = _as_float_vector(tensor.detach())
+            metrics[f"out_binding_{name}_near_lower_rate"] = float(
+                (vec <= -7.5).float().mean().item()
+            )
+            metrics[f"out_binding_{name}_near_upper_rate"] = float(
+                (vec >= 7.5).float().mean().item()
+            )
+
+    probe_kd = outputs.get("binding_affinity_probe_kd")
+    assays = outputs.get("assays")
+    if isinstance(probe_kd, torch.Tensor) and isinstance(assays, dict):
+        kd_tensor = assays.get("KD_nM")
+        if isinstance(kd_tensor, torch.Tensor):
+            probe_vec = _as_float_vector(probe_kd.detach())
+            kd_vec = _as_float_vector(kd_tensor.detach())
+            diff = probe_vec - kd_vec
+            metrics["out_binding_probe_core_kd_l1_mean"] = float(diff.abs().mean().item())
+            metrics["out_binding_probe_core_kd_signed_mean"] = float(diff.mean().item())
+
+    kd_bias = outputs.get("binding_kd_bias")
+    if isinstance(kd_bias, torch.Tensor) and kd_bias.numel() > 0:
+        bias_vec = _as_float_vector(kd_bias.detach())
+        metrics["out_binding_kd_bias_abs_mean"] = float(bias_vec.abs().mean().item())
+        kd_bias_cap = outputs.get("binding_kd_bias_cap")
+        if isinstance(kd_bias_cap, torch.Tensor) and kd_bias_cap.numel() > 0:
+            cap = max(float(kd_bias_cap.detach().float().view(-1)[0].item()), 1e-6)
+            metrics["out_binding_kd_bias_near_cap_rate"] = float(
+                (bias_vec.abs() >= 0.9 * cap).float().mean().item()
+            )
+    kd_bias_raw = outputs.get("binding_kd_bias_raw")
+    if isinstance(kd_bias_raw, torch.Tensor) and kd_bias_raw.numel() > 0:
+        raw_vec = _as_float_vector(kd_bias_raw.detach())
+        metrics["out_binding_kd_bias_raw_abs_mean"] = float(raw_vec.abs().mean().item())
+
+    core_logit = outputs.get("binding_logit_from_core")
+    if isinstance(core_logit, torch.Tensor) and core_logit.numel() > 0:
+        core_vec = _as_float_vector(core_logit.detach())
+        metrics["out_binding_logit_from_core_near_cap_rate"] = float(
+            (core_vec.abs() >= 19.0).float().mean().item()
+        )
+    return metrics
+
+
+def _collect_binding_contrastive_pairs(
+    batch,
+    *,
+    target_gap_min: float,
+    max_pairs: int,
+) -> Tuple[List[Tuple[float, int, int]], Dict[str, float]]:
+    metrics: Dict[str, float] = {
+        "out_binding_same_peptide_diff_allele_pairs": 0.0,
+        "out_binding_same_peptide_labeled_pairs": 0.0,
+        "out_binding_same_peptide_exact_pairs": 0.0,
+        "out_binding_same_peptide_rankable_pairs": 0.0,
+    }
+    pep_tok = getattr(batch, "pep_tok", None)
+    bind_mask = getattr(batch, "bind_mask", None)
+    bind_target = getattr(batch, "bind_target", None)
+    bind_qual = getattr(batch, "bind_qual", None)
+    primary_alleles = list(getattr(batch, "primary_alleles", []))
+    if not (
+        isinstance(pep_tok, torch.Tensor)
+        and isinstance(bind_mask, torch.Tensor)
+        and isinstance(bind_target, torch.Tensor)
+        and isinstance(bind_qual, torch.Tensor)
+        and len(primary_alleles) == int(pep_tok.shape[0])
+    ):
+        return [], metrics
+
+    pep_rows = pep_tok.detach().cpu().tolist()
+    peptide_groups: Dict[Tuple[int, ...], List[int]] = defaultdict(list)
+    for idx, row in enumerate(pep_rows):
+        peptide_groups[tuple(int(v) for v in row)].append(idx)
+
+    bind_mask_vec = (_as_float_vector(bind_mask).detach().cpu() > 0).tolist()
+    bind_target_log10 = normalize_binding_target_log10(
+        _as_float_vector(bind_target).detach().cpu(),
+        assume_log10=False,
+    ).tolist()
+    bind_qual_vec = _as_float_vector(bind_qual).detach().cpu().tolist()
+    min_log10 = -3.0
+    max_log10 = max_log10_nM(DEFAULT_MAX_AFFINITY_NM)
+
+    candidates: List[Tuple[float, int, int]] = []
+    target_gaps: List[float] = []
+    for indices in peptide_groups.values():
+        if len(indices) < 2:
+            continue
+        for pos, idx_i in enumerate(indices):
+            allele_i = str(primary_alleles[idx_i]).strip()
+            if not allele_i:
+                continue
+            for idx_j in indices[pos + 1 :]:
+                allele_j = str(primary_alleles[idx_j]).strip()
+                if not allele_j or allele_i == allele_j:
+                    continue
+                metrics["out_binding_same_peptide_diff_allele_pairs"] += 1.0
+                if not (bind_mask_vec[idx_i] and bind_mask_vec[idx_j]):
+                    continue
+                metrics["out_binding_same_peptide_labeled_pairs"] += 1.0
+                qual_i = int(round(bind_qual_vec[idx_i]))
+                qual_j = int(round(bind_qual_vec[idx_j]))
+                if qual_i == 0 and qual_j == 0:
+                    metrics["out_binding_same_peptide_exact_pairs"] += 1.0
+
+                value_i = float(bind_target_log10[idx_i])
+                value_j = float(bind_target_log10[idx_j])
+                lower_i = min_log10 if qual_i < 0 else value_i
+                upper_i = max_log10 if qual_i > 0 else value_i
+                lower_j = min_log10 if qual_j < 0 else value_j
+                upper_j = max_log10 if qual_j > 0 else value_j
+
+                stronger: Optional[int] = None
+                weaker: Optional[int] = None
+                if upper_i + float(target_gap_min) <= lower_j:
+                    stronger, weaker = idx_i, idx_j
+                elif upper_j + float(target_gap_min) <= lower_i:
+                    stronger, weaker = idx_j, idx_i
+                if stronger is None or weaker is None:
+                    continue
+
+                gap = max(lower_j - upper_i, lower_i - upper_j)
+                metrics["out_binding_same_peptide_rankable_pairs"] += 1.0
+                candidates.append((gap, stronger, weaker))
+                target_gaps.append(gap)
+
+    candidates.sort(key=lambda item: item[0], reverse=True)
+    if target_gaps:
+        metrics["out_binding_same_peptide_target_gap_mean"] = float(
+            sum(target_gaps) / len(target_gaps)
+        )
+    if max_pairs > 0:
+        candidates = candidates[:max_pairs]
+    metrics["out_binding_same_peptide_pairs_used"] = float(len(candidates))
+    return candidates, metrics
+
+
+def _compute_binding_contrastive_loss(
+    outputs: Dict[str, object],
+    batch,
+    regularization: Mapping[str, float],
+) -> Tuple[Optional[torch.Tensor], Dict[str, float]]:
+    pair_candidates, metrics = _collect_binding_contrastive_pairs(
+        batch,
+        target_gap_min=float(regularization.get("binding_contrastive_target_gap_min", 0.3)),
+        max_pairs=int(regularization.get("binding_contrastive_max_pairs", 64)),
+    )
+    assays = outputs.get("assays")
+    if not isinstance(assays, dict):
+        return None, metrics
+    kd_tensor = assays.get("KD_nM")
+    if not isinstance(kd_tensor, torch.Tensor):
+        return None, metrics
+    if not pair_candidates:
+        return None, metrics
+
+    kd_vec = _as_float_vector(kd_tensor)
+    margin = float(regularization.get("binding_contrastive_margin", 0.2))
+    target_gap_cap = float(regularization.get("binding_contrastive_target_gap_cap", 2.0))
+    if target_gap_cap <= 0.0:
+        target_gap_cap = margin
+    weight = float(regularization.get("binding_contrastive_weight", 0.0))
+    pair_losses: List[torch.Tensor] = []
+    pred_gaps: List[float] = []
+    target_gaps: List[float] = []
+    required_gaps: List[float] = []
+    for gap, stronger_idx, weaker_idx in pair_candidates:
+        pred_gap = kd_vec[weaker_idx] - kd_vec[stronger_idx]
+        required_gap = max(margin, min(float(gap), target_gap_cap))
+        pair_losses.append(torch.relu(kd_vec.new_tensor(required_gap) - pred_gap))
+        pred_gaps.append(float(pred_gap.detach().item()))
+        target_gaps.append(float(gap))
+        required_gaps.append(float(required_gap))
+
+    metrics["out_binding_contrastive_pred_gap_mean"] = float(
+        sum(pred_gaps) / max(len(pred_gaps), 1)
+    )
+    metrics["out_binding_contrastive_target_gap_mean"] = float(
+        sum(target_gaps) / max(len(target_gaps), 1)
+    )
+    metrics["out_binding_contrastive_required_gap_mean"] = float(
+        sum(required_gaps) / max(len(required_gaps), 1)
+    )
+    if weight <= 0.0:
+        return None, metrics
+    return weight * torch.stack(pair_losses).mean(), metrics
 
 
 def _resolve_output_tensor(
@@ -1582,7 +1867,7 @@ def compute_loss(
     device,
     uncertainty_weighting=None,
     regularization: Optional[Mapping[str, float]] = None,
-    supervised_loss_aggregation: str = "sample_weighted",
+    supervised_loss_aggregation: str = "task_mean",
     profile_performance: bool = False,
     non_blocking_transfer: bool = False,
     use_amp: bool = False,
@@ -1626,6 +1911,8 @@ def compute_loss(
         if profile_performance:
             perf_metrics["perf_forward_main_sec"] = float(time.perf_counter() - forward_start)
         output_metrics = _summarize_outputs(outputs)
+        output_metrics.update(_batch_diversity_metrics(batch))
+        output_metrics.update(_binding_path_diagnostic_metrics(outputs))
         has_mil_elution = (
             getattr(batch, "mil_bag_label", None) is not None
             and getattr(batch, "mil_instance_to_bag", None) is not None
@@ -1685,6 +1972,7 @@ def compute_loss(
             masked_loss = (loss_vector * mask_float).sum() / (mask_float.sum() + 1e-8)
             supervised_losses[spec.name] = masked_loss
             supervised_loss_support[spec.name] = support
+            output_metrics[f"batch_support_{spec.name}"] = support
         if profile_performance:
             perf_metrics["perf_supervised_loss_sec"] = float(
                 time.perf_counter() - supervised_start
@@ -1761,6 +2049,14 @@ def compute_loss(
             batch=batch,
             regularization=regularization_cfg,
         )
+        binding_contrastive_loss, binding_contrastive_metrics = _compute_binding_contrastive_loss(
+            outputs=outputs,
+            batch=batch,
+            regularization=regularization_cfg,
+        )
+        output_metrics.update(binding_contrastive_metrics)
+        if binding_contrastive_loss is not None:
+            regularization_losses["binding_contrastive"] = binding_contrastive_loss
         regularization_losses.update(mil_regularization)
         regularization_losses.update(tcell_mil_regularization)
         if profile_performance:
@@ -1778,6 +2074,7 @@ def compute_loss(
         if supervised_losses:
             weighted_terms = []
             total_weight = 0.0
+            supervised_task_weights: Dict[str, float] = {}
             for task_name, task_loss in supervised_losses.items():
                 spec = LOSS_TASK_NAME_TO_SPEC.get(task_name)
                 base_weight = max(float(spec.base_weight), 0.0) if spec is not None else 1.0
@@ -1791,6 +2088,7 @@ def compute_loss(
                         * max(float(supervised_loss_support.get(task_name, 1.0)), 1e-6)
                     )
                 total_weight += task_weight
+                supervised_task_weights[task_name] = task_weight
 
                 if uncertainty_weighting is not None:
                     task_idx = LOSS_TASK_NAME_TO_INDEX.get(task_name)
@@ -1805,6 +2103,10 @@ def compute_loss(
 
             if weighted_terms:
                 supervised_total = sum(weighted_terms) / max(total_weight, 1e-8)
+                for task_name, task_weight in supervised_task_weights.items():
+                    output_metrics[f"batch_supervised_weight_{task_name}"] = float(
+                        task_weight / max(total_weight, 1e-8)
+                    )
             else:
                 supervised_total = torch.tensor(0.0, device=device)
         else:
@@ -1854,7 +2156,7 @@ def train_epoch(
     regularization: Optional[Mapping[str, float]] = None,
     show_progress: bool = True,
     profile_performance: bool = False,
-    supervised_loss_aggregation: str = "sample_weighted",
+    supervised_loss_aggregation: str = "task_mean",
     non_blocking_transfer: bool = False,
     perf_log_interval_batches: int = 0,
     use_amp: bool = False,
@@ -2052,7 +2354,7 @@ def evaluate(
     device,
     regularization: Optional[Mapping[str, float]] = None,
     show_progress: bool = True,
-    supervised_loss_aggregation: str = "sample_weighted",
+    supervised_loss_aggregation: str = "task_mean",
     use_amp: bool = False,
     max_mil_instances: int = 0,
     max_batches: int = 0,
@@ -2313,7 +2615,7 @@ def main(argv=None):
         "--supervised-loss-aggregation",
         type=str,
         choices=["task_mean", "sample_weighted"],
-        default="sample_weighted",
+        default="task_mean",
         help=(
             "How to combine supervised task losses: "
             "task_mean (equal per task) or sample_weighted "
@@ -2422,6 +2724,30 @@ def main(argv=None):
         type=int,
         default=32,
         help="Maximum positive MIL bags per batch used for genotype-substitution contrastive loss",
+    )
+    parser.add_argument(
+        "--binding-contrastive-weight",
+        type=float,
+        default=0.0,
+        help="Weight for same-peptide/different-allele binding ranking loss",
+    )
+    parser.add_argument(
+        "--binding-contrastive-margin",
+        type=float,
+        default=0.2,
+        help="Required predicted log10(KD) margin for stronger-vs-weaker allele pairs",
+    )
+    parser.add_argument(
+        "--binding-contrastive-target-gap-min",
+        type=float,
+        default=0.3,
+        help="Minimum observed log10(KD) gap required before a binding pair is used for ranking",
+    )
+    parser.add_argument(
+        "--binding-contrastive-max-pairs",
+        type=int,
+        default=64,
+        help="Maximum same-peptide/different-allele binding pairs per batch used for ranking",
     )
     parser.add_argument(
         "--mil-bag-sparsity-weight",

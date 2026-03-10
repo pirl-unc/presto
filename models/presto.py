@@ -213,6 +213,10 @@ class Presto(nn.Module):
         use_pmhc_interaction_block: bool = False,    # C: pMHC interaction block
         pmhc_interaction_layers: int = 2,            # C: num layers
         use_groove_prior: bool = True,               # D: groove attention bias
+        groove_pos_mode: str = "sequential",
+        core_window_lengths: Optional[Sequence[int]] = None,
+        core_refinement_mode: str = "shared",
+        affinity_assay_mode: str = "score_context",
     ):
         """Initialize Presto."""
         super().__init__()
@@ -236,10 +240,29 @@ class Presto(nn.Module):
         self.pmhc_interaction_vec_dim = (
             max(1, self.binding_n_queries) * self.pmhc_interaction_token_dim
         )
-        self.core_window_size = 9
+        normalized_core_lengths = sorted(
+            {
+                max(1, int(length))
+                for length in (core_window_lengths if core_window_lengths is not None else (9,))
+            }
+        )
+        self.core_window_lengths = tuple(normalized_core_lengths or [9])
+        self.core_window_size = max(self.core_window_lengths)
         self.max_pfr_length = 50
         self.pfr_length_dim = 32
         self.use_groove_prior = use_groove_prior
+        groove_pos_mode = str(groove_pos_mode).strip().lower()
+        if groove_pos_mode not in {"sequential", "triple"}:
+            raise ValueError(f"Unsupported groove_pos_mode: {groove_pos_mode!r}")
+        self.groove_pos_mode = groove_pos_mode
+        core_refinement_mode = str(core_refinement_mode).strip().lower()
+        if core_refinement_mode not in {"shared", "class_specific"}:
+            raise ValueError(f"Unsupported core_refinement_mode: {core_refinement_mode!r}")
+        self.core_refinement_mode = core_refinement_mode
+        affinity_assay_mode = str(affinity_assay_mode).strip().lower()
+        if affinity_assay_mode not in {"legacy", "score_context"}:
+            raise ValueError(f"Unsupported affinity_assay_mode: {affinity_assay_mode!r}")
+        self.affinity_assay_mode = affinity_assay_mode
         self._has_binding_enhancements = (
             binding_n_latent_layers != self.N_LATENT_LAYERS
             or binding_n_queries > 1
@@ -270,6 +293,11 @@ class Presto(nn.Module):
         # Groove halves: per-segment sequential
         self.groove_1_pos = nn.Embedding(120, d_model)
         self.groove_2_pos = nn.Embedding(120, d_model)
+        self.groove_1_end_pos = nn.Embedding(120, d_model)
+        self.groove_2_end_pos = nn.Embedding(120, d_model)
+        self.groove_frac_mlp = nn.Sequential(
+            nn.Linear(1, d_model), nn.GELU(), nn.Linear(d_model, d_model)
+        )
         # Binding-core positions within the candidate window.
         self.core_position_embed = nn.Embedding(self.core_window_size, d_model)
         self.pfr_length_embed = nn.Embedding(self.max_pfr_length + 1, self.pfr_length_dim)
@@ -294,11 +322,6 @@ class Presto(nn.Module):
         )
         self.stream_norm = nn.LayerNorm(d_model)
 
-        # pmhc_vec from interaction, presentation, peptide, and direct MHC summaries.
-        self.pmhc_vec_proj = nn.Linear(
-            self.pmhc_interaction_vec_dim + 4 * d_model,
-            d_model,
-        )
         self.pmhc_interaction_token_proj = nn.Linear(d_model, self.pmhc_interaction_token_dim)
         self.pmhc_interaction_vec_norm = nn.LayerNorm(self.pmhc_interaction_vec_dim)
         self.binding_affinity_readout_proj = nn.Sequential(
@@ -311,18 +334,35 @@ class Presto(nn.Module):
             nn.GELU(),
             nn.Linear(d_model, d_model),
         )
-        self.presentation_mlp = nn.Sequential(
-            nn.Linear(2 * d_model + self.pmhc_interaction_vec_dim, d_model),
+        # Class-specific processing projections
+        self.processing_class1_proj = nn.Linear(d_model, d_model)
+        self.processing_class2_proj = nn.Linear(d_model, d_model)
+        # Class-specific presentation MLPs
+        self.presentation_class1_mlp = nn.Sequential(
+            nn.Linear(d_model + self.pmhc_interaction_vec_dim, d_model),
             nn.GELU(),
             nn.Linear(d_model, d_model),
         )
-        self.presentation_vec_norm = nn.LayerNorm(d_model)
-        self.immunogenicity_mlp = nn.Sequential(
+        self.presentation_class2_mlp = nn.Sequential(
+            nn.Linear(d_model + self.pmhc_interaction_vec_dim, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
+        )
+        self.presentation_class1_vec_norm = nn.LayerNorm(d_model)
+        self.presentation_class2_vec_norm = nn.LayerNorm(d_model)
+        # Lineage-specific immunogenicity MLPs
+        self.immunogenicity_cd8_mlp = nn.Sequential(
             nn.Linear(self.pmhc_interaction_vec_dim + d_model, d_model),
             nn.GELU(),
             nn.Linear(d_model, d_model),
         )
-        self.immunogenicity_vec_norm = nn.LayerNorm(d_model)
+        self.immunogenicity_cd4_mlp = nn.Sequential(
+            nn.Linear(self.pmhc_interaction_vec_dim + d_model, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
+        )
+        self.immunogenicity_cd8_vec_norm = nn.LayerNorm(d_model)
+        self.immunogenicity_cd4_vec_norm = nn.LayerNorm(d_model)
         self.core_window_fuse = nn.Sequential(
             nn.Linear(
                 self.pmhc_interaction_vec_dim + 2 * d_model + 2 * self.pfr_length_dim,
@@ -333,6 +373,16 @@ class Presto(nn.Module):
         )
         self.core_window_vec_norm = nn.LayerNorm(self.pmhc_interaction_vec_dim)
         self.core_window_score = nn.Sequential(
+            nn.Linear(self.pmhc_interaction_vec_dim, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, 1),
+        )
+        self.core_window_score_class1 = nn.Sequential(
+            nn.Linear(self.pmhc_interaction_vec_dim, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, 1),
+        )
+        self.core_window_score_class2 = nn.Sequential(
             nn.Linear(self.pmhc_interaction_vec_dim, d_model),
             nn.GELU(),
             nn.Linear(d_model, 1),
@@ -466,28 +516,18 @@ class Presto(nn.Module):
         self.class1_processing_predictor = ClassProcessingPredictor(d_model)
         self.class2_processing_predictor = ClassProcessingPredictor(d_model)
         self.affinity_predictor = AffinityPredictor(
-            interaction_dim=self.pmhc_interaction_vec_dim,
             d_model=d_model,
             max_log10_nM=self.max_log10_nM,
             binding_midpoint_nM=self.binding_midpoint_nM,
             binding_log10_scale=self.binding_log10_scale,
+            affinity_assay_mode=self.affinity_assay_mode,
         )
         self.class1_presentation_predictor = ClassPresentationPredictor(d_model)
         self.class2_presentation_predictor = ClassPresentationPredictor(d_model)
-        # Keep latent residual positive and non-trivial from step 1.
-        # softplus(-1.5) ~= 0.20
-        self.w_presentation_class1_latent = nn.Parameter(torch.tensor(-1.5))
-        self.w_presentation_class2_latent = nn.Parameter(torch.tensor(-1.5))
-
         self.recognition_cd8_head = nn.Linear(d_model, 1)
         self.recognition_cd4_head = nn.Linear(d_model, 1)
         self.immunogenicity_cd8_latent_head = nn.Linear(d_model, 1)
         self.immunogenicity_cd4_latent_head = nn.Linear(d_model, 1)
-
-        self.w_class1_presentation_stability = nn.Parameter(torch.tensor(0.3))
-        self.w_class2_presentation_stability = nn.Parameter(torch.tensor(0.3))
-        self.w_class1_presentation_class = nn.Parameter(torch.tensor(0.2))
-        self.w_class2_presentation_class = nn.Parameter(torch.tensor(0.2))
 
         # MS detectability readout from latent (design S7.4)
         self.ms_detectability_head = nn.Linear(d_model, 1)
@@ -495,11 +535,11 @@ class Presto(nn.Module):
         # Elution head (S9.3: pres_logit + ms_detect_logit, no pmhc_vec).
         self.elution_head = ElutionHead()
         self.tcr_evidence_head = nn.Sequential(
-            nn.Linear(d_model, d_model // 2),
+            nn.Linear(self.pmhc_interaction_vec_dim, d_model // 2),
             nn.GELU(),
             nn.Linear(d_model // 2, 1),
         )
-        self.tcr_evidence_method_head = nn.Linear(d_model, 3)
+        self.tcr_evidence_method_head = nn.Linear(self.pmhc_interaction_vec_dim, 3)
 
         self.tcell_assay_head = TCellAssayHead(
             d_model=d_model,
@@ -712,6 +752,12 @@ class Presto(nn.Module):
             f"{prefix}tcell_assay_head.apc_type_classifier.",
             f"{prefix}tcell_assay_head.culture_context_classifier.",
             f"{prefix}tcell_assay_head.stim_context_classifier.",
+            # Removed in information-flow simplification
+            f"{prefix}pmhc_vec_proj.",
+            f"{prefix}presentation_mlp.",
+            f"{prefix}presentation_vec_norm.",
+            f"{prefix}immunogenicity_mlp.",
+            f"{prefix}immunogenicity_vec_norm.",
         ]
         drop_exact = [
             f"{prefix}groove_bias_a",
@@ -723,12 +769,41 @@ class Presto(nn.Module):
             f"{prefix}tcell_assay_head.w_ctx",
             f"{prefix}tcell_assay_head.w_lineage",
             f"{prefix}tcell_assay_head.bias",
+            # Dead scalar parameters removed in information-flow simplification
+            f"{prefix}w_presentation_class1_latent",
+            f"{prefix}w_presentation_class2_latent",
+            f"{prefix}w_class1_presentation_stability",
+            f"{prefix}w_class2_presentation_stability",
+            f"{prefix}w_class1_presentation_class",
+            f"{prefix}w_class2_presentation_class",
         ]
         for key in list(state_dict.keys()):
             if any(key.startswith(dp) for dp in drop_prefixes):
                 state_dict.pop(key)
             elif key in drop_exact:
                 state_dict.pop(key)
+        # Drop keys with shape mismatches from information-flow simplification:
+        # binding_affinity_readout_proj (1536→512 input), binding heads (512→256),
+        # tcr_evidence heads (256→512 input)
+        for key in list(state_dict.keys()):
+            if not key.startswith(prefix):
+                continue
+            local_key = key[len(prefix):]
+            parts = local_key.split(".")
+            try:
+                mod = self
+                for part in parts[:-1]:
+                    if part.isdigit():
+                        mod = mod[int(part)]
+                    else:
+                        mod = getattr(mod, part)
+                param_name = parts[-1]
+                if hasattr(mod, param_name):
+                    own = getattr(mod, param_name)
+                    if isinstance(own, torch.Tensor) and own.shape != state_dict[key].shape:
+                        state_dict.pop(key)
+            except (AttributeError, IndexError, KeyError, TypeError):
+                pass
         super()._load_from_state_dict(
             state_dict=state_dict,
             prefix=prefix,
@@ -861,19 +936,43 @@ class Presto(nn.Module):
             cfl_idx.clamp(max=self.cflank_dist_pos.num_embeddings - 1)
         )
 
-        # Groove half 1: sequential
+        # Groove half 1: sequential or start/end/fractional within-half encoding
         mhc_a_sl = offsets["mhc_a"]
         mhc_a_idx = torch.arange(mhc_a_sl.stop - mhc_a_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
-        mhc_a_pos_embed = self.groove_1_pos(
-            mhc_a_idx.clamp(max=self.groove_1_pos.num_embeddings - 1)
-        )
+        if self.groove_pos_mode == "triple":
+            mhc_a_len_per = (tokens[:, mhc_a_sl] != 0).sum(dim=1).clamp(min=1)
+            mhc_a_start_idx = mhc_a_idx.clamp(max=self.groove_1_pos.num_embeddings - 1)
+            mhc_a_end_dist = (mhc_a_len_per.unsqueeze(1) - 1 - mhc_a_idx).clamp(min=0)
+            mhc_a_end_idx = mhc_a_end_dist.clamp(max=self.groove_1_end_pos.num_embeddings - 1)
+            mhc_a_frac = mhc_a_idx.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            mhc_a_pos_embed = (
+                self.groove_1_pos(mhc_a_start_idx)
+                + self.groove_1_end_pos(mhc_a_end_idx)
+                + self.groove_frac_mlp(mhc_a_frac.unsqueeze(-1))
+            )
+        else:
+            mhc_a_pos_embed = self.groove_1_pos(
+                mhc_a_idx.clamp(max=self.groove_1_pos.num_embeddings - 1)
+            )
 
-        # Groove half 2: sequential
+        # Groove half 2: sequential or start/end/fractional within-half encoding
         mhc_b_sl = offsets["mhc_b"]
         mhc_b_idx = torch.arange(mhc_b_sl.stop - mhc_b_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
-        mhc_b_pos_embed = self.groove_2_pos(
-            mhc_b_idx.clamp(max=self.groove_2_pos.num_embeddings - 1)
-        )
+        if self.groove_pos_mode == "triple":
+            mhc_b_len_per = (tokens[:, mhc_b_sl] != 0).sum(dim=1).clamp(min=1)
+            mhc_b_start_idx = mhc_b_idx.clamp(max=self.groove_2_pos.num_embeddings - 1)
+            mhc_b_end_dist = (mhc_b_len_per.unsqueeze(1) - 1 - mhc_b_idx).clamp(min=0)
+            mhc_b_end_idx = mhc_b_end_dist.clamp(max=self.groove_2_end_pos.num_embeddings - 1)
+            mhc_b_frac = mhc_b_idx.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            mhc_b_pos_embed = (
+                self.groove_2_pos(mhc_b_start_idx)
+                + self.groove_2_end_pos(mhc_b_end_idx)
+                + self.groove_frac_mlp(mhc_b_frac.unsqueeze(-1))
+            )
+        else:
+            mhc_b_pos_embed = self.groove_2_pos(
+                mhc_b_idx.clamp(max=self.groove_2_pos.num_embeddings - 1)
+            )
         pos_embed = torch.cat(
             [
                 nfl_pos_embed,
@@ -944,11 +1043,13 @@ class Presto(nn.Module):
             key_padding_mask = key_padding_mask.clone()
             key_padding_mask[all_masked, 0] = False
 
-        h = self.stream_encoder(
-            x,
-            mask=seg_block_mask,
-            src_key_padding_mask=key_padding_mask,
-        )
+        # Manual layer loop to capture early-layer states for aux heads.
+        h = x
+        early_states = None
+        for i, layer in enumerate(self.stream_encoder.layers):
+            h = layer(h, src_mask=seg_block_mask, src_key_padding_mask=key_padding_mask)
+            if i == 0:
+                early_states = h
         h = self.stream_norm(h)
 
         segment_masks = {
@@ -962,6 +1063,7 @@ class Presto(nn.Module):
         return {
             "tokens": tokens,
             "states": h,
+            "early_states": early_states,
             "valid_mask": valid_mask,
             "segment_ids": seg_ids,
             "segment_masks": segment_masks,
@@ -1283,25 +1385,51 @@ class Presto(nn.Module):
         pep_valid = seg_masks["peptide"][:, pep_slice]
         pep_len = pep_valid.sum(dim=1).clamp(min=1)
 
-        core_len = torch.minimum(
-            pep_len,
-            pep_len.new_full((batch_size,), self.core_window_size),
-        )
-        num_candidates = (pep_len - core_len + 1).clamp(min=1)
-        max_candidates = int(num_candidates.max().item())
+        configured_core_lengths = {int(length) for length in self.core_window_lengths}
+        min_configured = min(configured_core_lengths)
+        fallback_lengths = {
+            max(1, int(observed_len))
+            for observed_len in pep_len.detach().cpu().tolist()
+            if int(observed_len) < min_configured
+        }
+        candidate_lengths = sorted(configured_core_lengths | fallback_lengths)
 
-        starts = torch.arange(max_candidates, device=h.device).view(1, -1).expand(
-            batch_size,
-            -1,
+        pep_max_len = int(pep_len.max().item())
+        starts_list: List[int] = []
+        lens_list: List[int] = []
+        for core_len_i in candidate_lengths:
+            if pep_max_len < core_len_i:
+                continue
+            for start_i in range(pep_max_len - core_len_i + 1):
+                starts_list.append(start_i)
+                lens_list.append(core_len_i)
+        if not starts_list:
+            starts_list = [0]
+            lens_list = [max(1, pep_max_len)]
+
+        starts_1d = torch.tensor(starts_list, device=h.device, dtype=torch.long)
+        core_lens_1d = torch.tensor(lens_list, device=h.device, dtype=torch.long)
+        max_candidates = int(starts_1d.shape[0])
+
+        starts = starts_1d.view(1, max_candidates).expand(batch_size, -1)
+        core_lens = core_lens_1d.view(1, max_candidates).expand(batch_size, -1)
+        ends = starts + core_lens
+        pep_len_expanded = pep_len.unsqueeze(1).expand_as(starts)
+        configured_length_mask = torch.zeros_like(core_lens, dtype=torch.bool)
+        for configured_len in configured_core_lengths:
+            configured_length_mask |= core_lens == int(configured_len)
+        short_peptide_fallback = (
+            (pep_len_expanded < int(min_configured))
+            & (core_lens == pep_len_expanded.clamp(min=1))
         )
-        candidate_mask = starts < num_candidates.unsqueeze(1)
-        ends = starts + core_len.unsqueeze(1)
+        length_allowed = configured_length_mask | short_peptide_fallback
+        candidate_mask = length_allowed & (starts < pep_len_expanded) & (ends <= pep_len_expanded)
 
         core_offsets = torch.arange(self.core_window_size, device=h.device).view(1, 1, -1)
         core_positions = starts.unsqueeze(-1) + core_offsets
         core_token_mask = (
             candidate_mask.unsqueeze(-1)
-            & (core_offsets < core_len.view(batch_size, 1, 1))
+            & (core_offsets < core_lens.unsqueeze(-1))
             & (core_positions < pep_len.view(batch_size, 1, 1))
         )
         core_tokens = self._gather_sequence_positions(pep_h, core_positions)
@@ -1326,7 +1454,7 @@ class Presto(nn.Module):
         npfr_sum = self._gather_prefix_states(pep_prefix, starts)
         cpfr_sum = pep_total - self._gather_prefix_states(pep_prefix, ends)
         npfr_len = starts
-        cpfr_len = (pep_len.unsqueeze(1) - ends).clamp(min=0)
+        cpfr_len = (pep_len_expanded - ends).clamp(min=0)
         npfr_repr = npfr_sum / npfr_len.float().unsqueeze(-1).clamp(min=1.0)
         cpfr_repr = cpfr_sum / cpfr_len.float().unsqueeze(-1).clamp(min=1.0)
         npfr_repr = npfr_repr * candidate_mask.unsqueeze(-1).float()
@@ -1404,10 +1532,9 @@ class Presto(nn.Module):
         ).reshape(batch_size, max_candidates, -1)
 
         pep_len_f = pep_len.float().unsqueeze(1).clamp(min=1.0)
-        core_len_expanded = core_len.unsqueeze(1).expand(-1, max_candidates)
         prior_features = torch.cat(
             [
-                core_len_expanded.float().unsqueeze(-1) / pep_len_f.unsqueeze(-1),
+                core_lens.float().unsqueeze(-1) / pep_len_f.unsqueeze(-1),
                 npfr_len.float().unsqueeze(-1) / pep_len_f.unsqueeze(-1),
                 cpfr_len.float().unsqueeze(-1) / pep_len_f.unsqueeze(-1),
                 class_probs.unsqueeze(1).expand(-1, max_candidates, -1),
@@ -1415,7 +1542,14 @@ class Presto(nn.Module):
             dim=-1,
         )
         core_window_prior_logit = self.core_window_prior(prior_features).squeeze(-1)
-        core_window_score_logit = self.core_window_score(candidate_vec).squeeze(-1)
+        if self.core_refinement_mode == "class_specific":
+            class1_score = self.core_window_score_class1(candidate_vec).squeeze(-1)
+            class2_score = self.core_window_score_class2(candidate_vec).squeeze(-1)
+            class1_weight = class_probs[:, :1].expand(-1, max_candidates)
+            class2_weight = class_probs[:, 1:2].expand(-1, max_candidates)
+            core_window_score_logit = class1_weight * class1_score + class2_weight * class2_score
+        else:
+            core_window_score_logit = self.core_window_score(candidate_vec).squeeze(-1)
         core_window_logit = core_window_score_logit + core_window_prior_logit
         core_window_prior_logit = core_window_prior_logit.masked_fill(~candidate_mask, -1e4)
         core_window_score_logit = core_window_score_logit.masked_fill(~candidate_mask, -1e4)
@@ -1495,7 +1629,7 @@ class Presto(nn.Module):
             keepdim=True,
         )
         expected_core_len = torch.sum(
-            core_window_posterior * core_len.unsqueeze(1).float(),
+            core_window_posterior * core_lens.float(),
             dim=1,
             keepdim=True,
         )
@@ -1504,11 +1638,12 @@ class Presto(nn.Module):
             dim=1,
             keepdim=True,
         )
+        map_len = core_lens.gather(1, map_idx).squeeze(1)
 
         diagnostics: Dict[str, torch.Tensor] = {
             "core_window_mask": candidate_mask,
             "core_window_start": starts,
-            "core_window_length": core_len.unsqueeze(1).expand_as(starts),
+            "core_window_length": core_lens,
             "core_window_prior_logit": core_window_prior_logit,
             "core_window_score_logit": core_window_score_logit,
             "core_window_logit": core_window_logit,
@@ -1518,9 +1653,9 @@ class Presto(nn.Module):
             "core_start_probs": core_start_prob,
             "core_membership_prob": core_membership,
             "core_relative_position_index": core_relative_position_index,
-            "core_length": core_len.unsqueeze(1).expand_as(pos),
+            "core_length": map_len.unsqueeze(1).expand_as(pos),
             "npfr_length": pos,
-            "cpfr_length": (pep_len.view(-1, 1) - pos - core_len.view(-1, 1)).clamp(min=0),
+            "cpfr_length": (pep_len.view(-1, 1) - pos - map_len.view(-1, 1)).clamp(min=0),
             "core_length_norm": expected_core_len / pep_len.float().unsqueeze(-1),
             "npfr_length_norm": expected_start / pep_len.float().unsqueeze(-1),
             "cpfr_length_norm": expected_cpfr / pep_len.float().unsqueeze(-1),
@@ -1577,14 +1712,13 @@ class Presto(nn.Module):
             interaction_vec=latent_vecs["pmhc_interaction"],
             binding_affinity_vec=latent_vecs["binding_affinity"],
             binding_stability_vec=latent_vecs["binding_stability"],
-            presentation_vec=latent_vecs["presentation"],
             recognition_vec=latent_vecs["recognition"],
-            immunogenicity_vec=latent_vecs["immunogenicity"],
-            pmhc_vec=outputs["pmhc_vec"],
-            pep_vec=outputs["pep_vec"],
-            mhc_a_vec=outputs["mhc_a_vec"],
-            mhc_b_vec=outputs["mhc_b_vec"],
-            groove_vec=outputs["groove_vec"],
+            processing_class1_vec=latent_vecs["processing_class1"],
+            processing_class2_vec=latent_vecs["processing_class2"],
+            presentation_class1_vec=latent_vecs["presentation_class1"],
+            presentation_class2_vec=latent_vecs["presentation_class2"],
+            immunogenicity_cd8_vec=latent_vecs["immunogenicity_cd8"],
+            immunogenicity_cd4_vec=latent_vecs["immunogenicity_cd4"],
             class_probs=outputs["mhc_class_probs"],
         )
 
@@ -1592,8 +1726,8 @@ class Presto(nn.Module):
         self,
         trunk_state: PrestoTrunkState,
     ) -> Dict[str, torch.Tensor]:
-        class1 = self.class1_processing_predictor(trunk_state.processing_vec)
-        class2 = self.class2_processing_predictor(trunk_state.processing_vec)
+        class1 = self.class1_processing_predictor(trunk_state.processing_class1_vec)
+        class2 = self.class2_processing_predictor(trunk_state.processing_class2_vec)
         mixed_logit = (
             trunk_state.class_probs[:, :1] * class1["logit"]
             + trunk_state.class_probs[:, 1:2] * class2["logit"]
@@ -1614,21 +1748,22 @@ class Presto(nn.Module):
         trunk_state: PrestoTrunkState,
         *,
         mhc_class: Optional[Any] = None,
+        binding_context: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, torch.Tensor]:
         return self.affinity_predictor(
-            interaction_vec=trunk_state.interaction_vec,
             binding_affinity_vec=trunk_state.binding_affinity_vec,
             binding_stability_vec=trunk_state.binding_stability_vec,
             class_probs=trunk_state.class_probs,
             mhc_class=mhc_class,
+            binding_context=binding_context,
         )
 
     def predict_presentation_from_trunk(
         self,
         trunk_state: PrestoTrunkState,
     ) -> Dict[str, torch.Tensor]:
-        class1 = self.class1_presentation_predictor(trunk_state.presentation_vec)
-        class2 = self.class2_presentation_predictor(trunk_state.presentation_vec)
+        class1 = self.class1_presentation_predictor(trunk_state.presentation_class1_vec)
+        class2 = self.class2_presentation_predictor(trunk_state.presentation_class2_vec)
         mixed_logit = (
             trunk_state.class_probs[:, :1] * class1["logit"]
             + trunk_state.class_probs[:, 1:2] * class2["logit"]
@@ -1644,6 +1779,61 @@ class Presto(nn.Module):
             "presentation_mixed_prob": torch.sigmoid(mixed_logit),
         }
 
+    def forward_mhc_only(
+        self,
+        mhc_a_tok: torch.Tensor,
+        mhc_b_tok: torch.Tensor,
+    ) -> Dict[str, Any]:
+        """Run only the shared stream + MHC auxiliary heads.
+
+        Used for MHC-only warm-start pretraining. This intentionally avoids the
+        pMHC latent DAG and downstream task heads.
+        """
+        if mhc_a_tok.ndim != 2 or mhc_b_tok.ndim != 2:
+            raise ValueError(
+                f"forward_mhc_only expects 2D token tensors; got "
+                f"{tuple(mhc_a_tok.shape)} and {tuple(mhc_b_tok.shape)}"
+            )
+        device = mhc_a_tok.device
+        batch_size = int(mhc_a_tok.shape[0])
+        if int(mhc_b_tok.shape[0]) != batch_size:
+            raise ValueError(
+                f"mhc_a/mhc_b batch mismatch: {batch_size} vs {int(mhc_b_tok.shape[0])}"
+            )
+
+        dummy_pep = torch.full(
+            (batch_size, 1),
+            self.missing_token_idx,
+            dtype=torch.long,
+            device=device,
+        )
+        stream = self._build_single_stream(
+            pep_tok=dummy_pep,
+            mhc_a_tok=mhc_a_tok,
+            mhc_b_tok=mhc_b_tok,
+            flank_n_tok=None,
+            flank_c_tok=None,
+            species_id=torch.zeros(batch_size, dtype=torch.long, device=device),
+        )
+        early = stream["early_states"]
+        seg_masks = stream["segment_masks"]
+
+        mhc_a_vec = self._masked_mean(early, seg_masks["mhc_a"])
+        mhc_b_vec = self._masked_mean(early, seg_masks["mhc_b"])
+        mhc_a_type_logits = self.mhc_a_type_head(mhc_a_vec)
+        mhc_b_type_logits = self.mhc_b_type_head(mhc_b_vec)
+        mhc_a_species_logits = self.mhc_a_species_head(mhc_a_vec)
+        mhc_b_species_logits = self.mhc_b_species_head(mhc_b_vec)
+
+        return {
+            "mhc_a_vec": mhc_a_vec,
+            "mhc_b_vec": mhc_b_vec,
+            "mhc_a_type_logits": mhc_a_type_logits,
+            "mhc_b_type_logits": mhc_b_type_logits,
+            "mhc_a_species_logits": mhc_a_species_logits,
+            "mhc_b_species_logits": mhc_b_species_logits,
+        }
+
     def forward(
         self,
         pep_tok: torch.Tensor,
@@ -1656,6 +1846,7 @@ class Presto(nn.Module):
         species_of_origin: Optional[Any] = None,
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
+        binding_context: Optional[Dict[str, torch.Tensor]] = None,
         tcell_context: Optional[Dict[str, torch.Tensor]] = None,
         return_binding_attention: bool = False,
         peptide_species: Optional[Any] = None,  # deprecated alias for species_of_origin
@@ -1688,13 +1879,15 @@ class Presto(nn.Module):
             species_id=species_id,
         )
         h = stream["states"]
+        early = stream["early_states"]
         valid_mask = stream["valid_mask"]
         seg_masks = stream["segment_masks"]
         offsets = stream["offsets"]
 
-        pep_vec = self._masked_mean(h, seg_masks["peptide"])
-        mhc_a_vec = self._masked_mean(h, seg_masks["mhc_a"])
-        mhc_b_vec = self._masked_mean(h, seg_masks["mhc_b"])
+        # Aux vectors pooled from early-layer states (type, species, chain compat heads only)
+        pep_vec = self._masked_mean(early, seg_masks["peptide"])
+        mhc_a_vec = self._masked_mean(early, seg_masks["mhc_a"])
+        mhc_b_vec = self._masked_mean(early, seg_masks["mhc_b"])
 
         outputs["pep_vec"] = pep_vec
         outputs["mhc_a_vec"] = mhc_a_vec
@@ -1903,36 +2096,53 @@ class Presto(nn.Module):
         latent_vals["pmhc_interaction"] = interaction_vec
         recognition_vec = latent_vals["recognition"]
 
+        # Simplified binding path: interaction_vec → proj → binding_affinity_vec
         binding_affinity_vec = self.binding_affinity_readout_proj(interaction_vec)
         binding_stability_vec = self.binding_stability_readout_proj(interaction_vec)
-        presentation_vec = self.presentation_vec_norm(
-            self.presentation_mlp(
-                torch.cat([processing_vec, interaction_vec, groove_vec], dim=-1)
+
+        # Class-specific processing projections
+        processing_class1_vec = self.processing_class1_proj(processing_vec)
+        processing_class2_vec = self.processing_class2_proj(processing_vec)
+
+        # Class-specific presentation MLPs
+        presentation_class1_vec = self.presentation_class1_vec_norm(
+            self.presentation_class1_mlp(
+                torch.cat([processing_class1_vec, interaction_vec], dim=-1)
             )
         )
-        immunogenicity_vec = self.immunogenicity_vec_norm(
-            self.immunogenicity_mlp(torch.cat([interaction_vec, recognition_vec], dim=-1))
+        presentation_class2_vec = self.presentation_class2_vec_norm(
+            self.presentation_class2_mlp(
+                torch.cat([processing_class2_vec, interaction_vec], dim=-1)
+            )
         )
 
-        latent_vals["presentation"] = presentation_vec
-        latent_vals["immunogenicity"] = immunogenicity_vec
+        # Lineage-specific immunogenicity MLPs
+        immunogenicity_cd8_vec = self.immunogenicity_cd8_vec_norm(
+            self.immunogenicity_cd8_mlp(
+                torch.cat([interaction_vec, recognition_vec], dim=-1)
+            )
+        )
+        immunogenicity_cd4_vec = self.immunogenicity_cd4_vec_norm(
+            self.immunogenicity_cd4_mlp(
+                torch.cat([interaction_vec, recognition_vec], dim=-1)
+            )
+        )
 
-        # Compatibility aliases for downstream training/inference code while the
-        # canonical latent DAG moves to unified concept vectors.
         latent_vals["binding_affinity"] = binding_affinity_vec
         latent_vals["binding_stability"] = binding_stability_vec
-        latent_vals["processing_class1"] = processing_vec
-        latent_vals["processing_class2"] = processing_vec
-        latent_vals["presentation_class1"] = presentation_vec
-        latent_vals["presentation_class2"] = presentation_vec
+        latent_vals["processing_class1"] = processing_class1_vec
+        latent_vals["processing_class2"] = processing_class2_vec
+        latent_vals["presentation_class1"] = presentation_class1_vec
+        latent_vals["presentation_class2"] = presentation_class2_vec
         latent_vals["recognition_cd8"] = recognition_vec
         latent_vals["recognition_cd4"] = recognition_vec
-        latent_vals["immunogenicity_cd8"] = immunogenicity_vec
-        latent_vals["immunogenicity_cd4"] = immunogenicity_vec
+        latent_vals["immunogenicity_cd8"] = immunogenicity_cd8_vec
+        latent_vals["immunogenicity_cd4"] = immunogenicity_cd4_vec
+        # Compat aliases for training code
         latent_vals["processing_mixed"] = processing_vec
-        latent_vals["presentation_mixed"] = presentation_vec
         latent_vals["recognition_mixed"] = recognition_vec
-        latent_vals["immunogenicity_mixed"] = immunogenicity_vec
+        latent_vals["immunogenicity_mixed"] = immunogenicity_cd8_vec
+        latent_vals["presentation_mixed"] = presentation_class1_vec
 
         outputs["latent_vecs"] = latent_vals
         if return_binding_attention and binding_attention:
@@ -1953,15 +2163,8 @@ class Presto(nn.Module):
         outputs["foreignness_logit"] = foreignness_logit
         outputs["foreignness_prob"] = torch.sigmoid(foreignness_logit)
 
-        # pmhc_vec from latent vectors (design S9.7)
-        pmhc_vec = self.pmhc_vec_proj(torch.cat([
-            interaction_vec,
-            presentation_vec,
-            pep_vec,
-            mhc_a_vec,
-            mhc_b_vec,
-        ], dim=-1))
-        outputs["pmhc_vec"] = pmhc_vec
+        # pmhc_vec = interaction_vec (backward compat alias)
+        outputs["pmhc_vec"] = interaction_vec
         outputs["pmhc_interaction_vec"] = interaction_vec
         trunk_state = self._trunk_state_from_outputs(outputs)
 
@@ -1973,7 +2176,13 @@ class Presto(nn.Module):
         # ------------------------------------------------------------------
         # 7) Binding latents and calibrated binding logit
         # ------------------------------------------------------------------
-        outputs.update(self.predict_affinity_from_trunk(trunk_state, mhc_class=mhc_class))
+        outputs.update(
+            self.predict_affinity_from_trunk(
+                trunk_state,
+                mhc_class=mhc_class,
+                binding_context=binding_context,
+            )
+        )
         binding_class1_logit = outputs["binding_class1_logit"]
         binding_class2_logit = outputs["binding_class2_logit"]
 
@@ -2019,9 +2228,11 @@ class Presto(nn.Module):
         outputs["recognition_mixed_logit"] = recognition_repertoire_logit
         outputs["recognition_mixed_prob"] = outputs["recognition_repertoire_prob"]
 
-        # Immunogenicity readout from MLP-computed latent vecs (design S9.5)
-        immunogenicity_cd8_logit = self.immunogenicity_cd8_latent_head(immunogenicity_vec)
-        immunogenicity_cd4_logit = self.immunogenicity_cd4_latent_head(immunogenicity_vec)
+        # Immunogenicity readout from lineage-specific latent vecs (design S9.5)
+        immunogenicity_cd8_vec = trunk_state.immunogenicity_cd8_vec
+        immunogenicity_cd4_vec = trunk_state.immunogenicity_cd4_vec
+        immunogenicity_cd8_logit = self.immunogenicity_cd8_latent_head(immunogenicity_cd8_vec)
+        immunogenicity_cd4_logit = self.immunogenicity_cd4_latent_head(immunogenicity_cd4_vec)
         outputs["immunogenicity_cd8_logit"] = immunogenicity_cd8_logit
         outputs["immunogenicity_cd4_logit"] = immunogenicity_cd4_logit
         outputs["immunogenicity_cd8_prob"] = torch.sigmoid(immunogenicity_cd8_logit)
@@ -2042,8 +2253,8 @@ class Presto(nn.Module):
         # ------------------------------------------------------------------
         context = tcell_context or {}
         tcell_logit = self.tcell_assay_head(
-            immunogenicity_cd8_vec=immunogenicity_vec,
-            immunogenicity_cd4_vec=immunogenicity_vec,
+            immunogenicity_cd8_vec=immunogenicity_cd8_vec,
+            immunogenicity_cd4_vec=immunogenicity_cd4_vec,
             presentation_class1_logit=class1_pres_logit,
             presentation_class2_logit=class2_pres_logit,
             binding_class1_logit=binding_class1_logit,
@@ -2058,8 +2269,8 @@ class Presto(nn.Module):
             culture_duration_hours=context.get("culture_duration_hours"),
         )
         tcell_panel_logits = self.tcell_assay_head.predict_panel(
-            immunogenicity_cd8_vec=immunogenicity_vec,
-            immunogenicity_cd4_vec=immunogenicity_vec,
+            immunogenicity_cd8_vec=immunogenicity_cd8_vec,
+            immunogenicity_cd4_vec=immunogenicity_cd4_vec,
             presentation_class1_logit=class1_pres_logit,
             presentation_class2_logit=class2_pres_logit,
             binding_class1_logit=binding_class1_logit,
@@ -2081,8 +2292,8 @@ class Presto(nn.Module):
         # ------------------------------------------------------------------
         # 12) pMHC-only receptor-evidence outputs
         # ------------------------------------------------------------------
-        tcr_evidence_logit = self.tcr_evidence_head(pmhc_vec)
-        tcr_evidence_method_logits = self.tcr_evidence_method_head(pmhc_vec)
+        tcr_evidence_logit = self.tcr_evidence_head(interaction_vec)
+        tcr_evidence_method_logits = self.tcr_evidence_method_head(interaction_vec)
         outputs["tcr_evidence_logit"] = tcr_evidence_logit
         outputs["tcr_evidence_prob"] = torch.sigmoid(tcr_evidence_logit)
         outputs["tcr_evidence_method_logits"] = tcr_evidence_method_logits
@@ -2102,6 +2313,7 @@ class Presto(nn.Module):
         species_of_origin: Optional[Any] = None,
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
+        binding_context: Optional[Dict[str, torch.Tensor]] = None,
         peptide_species: Optional[Any] = None,
     ) -> Dict[str, Any]:
         outputs = self.forward(
@@ -2115,6 +2327,7 @@ class Presto(nn.Module):
             species_of_origin=species_of_origin,
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
+            binding_context=binding_context,
             peptide_species=peptide_species,
         )
         affinity_keys = {
@@ -2132,6 +2345,11 @@ class Presto(nn.Module):
             "binding_latents",
             "binding_affinity_probe_kd_raw",
             "binding_affinity_probe_kd",
+            "binding_affinity_score_raw",
+            "binding_affinity_score",
+            "binding_stability_score_raw",
+            "binding_stability_score",
+            "binding_assay_context_vec",
             "binding_logit_from_core",
             "binding_kd_bias_raw",
             "binding_kd_bias",
@@ -2239,8 +2457,7 @@ class Presto(nn.Module):
     ) -> torch.Tensor:
         """Encode pMHC into a fixed vector representation.
 
-        Runs the full forward pass and returns pmhc_vec derived from latent
-        vectors (design S9.7).
+        Returns interaction_vec (pmhc_interaction_vec_dim) from the latent DAG.
         """
         outputs = self.forward(
             pep_tok=pep_tok,

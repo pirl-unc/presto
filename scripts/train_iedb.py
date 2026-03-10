@@ -157,7 +157,7 @@ IEDB_DEFAULTS = {
     "synthetic_pmhc_negative_ratio": 1.0,
     "synthetic_class_i_no_mhc_beta_negative_ratio": 0.25,
     "synthetic_processing_negative_ratio": 0.5,
-    "synthetic_negative_min_nM": DEFAULT_MAX_AFFINITY_NM * 0.5,
+    "synthetic_negative_min_nM": DEFAULT_MAX_AFFINITY_NM,
     "synthetic_negative_max_nM": DEFAULT_MAX_AFFINITY_NM,
     "consistency_cascade_weight": 0.2,
     "consistency_assay_affinity_weight": 0.1,
@@ -169,12 +169,17 @@ IEDB_DEFAULTS = {
     "consistency_parent_low_threshold": 0.1,
     "consistency_presentation_high_threshold": 0.9,
     "consistency_affinity_fold_tolerance": 2.0,
-    "mhc_attention_sparsity_weight": 0.1,
+    "mhc_attention_sparsity_weight": 0.0,
     "mhc_attention_sparsity_min_residues": 25.0,
     "mhc_attention_sparsity_max_residues": 45.0,
     "mil_contrastive_weight": 0.1,
     "mil_contrastive_margin": 0.5,
     "mil_contrastive_max_pairs": 32,
+    "binding_contrastive_weight": 1.0,
+    "binding_contrastive_margin": 0.2,
+    "binding_contrastive_target_gap_min": 0.3,
+    "binding_contrastive_target_gap_cap": 2.0,
+    "binding_contrastive_max_pairs": 64,
     "mil_bag_sparsity_weight": 0.02,
     "mil_bag_sparsity_target_sum": 1.5,
     "tcell_in_vitro_margin": 0.1,
@@ -184,7 +189,7 @@ IEDB_DEFAULTS = {
     "run_dir": None,
     "weight_decay": 0.01,
     "use_uncertainty_weighting": True,
-    "supervised_loss_aggregation": "sample_weighted",
+    "supervised_loss_aggregation": "task_mean",
     "use_pcgrad": False,
     "profile_performance": True,
     "perf_log_interval_batches": 100,
@@ -195,6 +200,9 @@ IEDB_DEFAULTS = {
     "track_probe_motif_scan": True,
     "motif_scan_positions": "1,2,3,4,5,6,7,8,9",
     "motif_scan_amino_acids": "ACDEFGHIKLMNPQRSTVWY",
+    "probe_family_bootstrap_records": 0,
+    "probe_family_bootstrap_peptides": 0,
+    "probe_family_bootstrap_per_peptide": 4,
     "track_pmhc_flow": True,
     "pmhc_flow_batches": 2,
     "pmhc_flow_max_samples": 512,
@@ -221,6 +229,9 @@ CANARY_PROFILE_OVERRIDES = {
     "max_vdjdb": 256,
     # Canary should stay small, but still preserve allele/task diversity.
     "cap_sampling": "reservoir",
+    "probe_family_bootstrap_records": 256,
+    "probe_family_bootstrap_peptides": 128,
+    "probe_family_bootstrap_per_peptide": 4,
     "track_probe_motif_scan": False,
 }
 
@@ -281,7 +292,7 @@ def _call_train_epoch_compat(
     uncertainty_weighting,
     pcgrad,
     regularization_config: Optional[Dict[str, float]] = None,
-    supervised_loss_aggregation: str = "sample_weighted",
+    supervised_loss_aggregation: str = "task_mean",
     profile_performance: bool = False,
     non_blocking_transfer: bool = False,
     perf_log_interval_batches: int = 0,
@@ -302,7 +313,7 @@ def _call_train_epoch_compat(
         kwargs["regularization"] = regularization_config
     if "supervised_loss_aggregation" in params:
         kwargs["supervised_loss_aggregation"] = str(
-            supervised_loss_aggregation or "sample_weighted"
+            supervised_loss_aggregation or "task_mean"
         )
     if "profile_performance" in params:
         kwargs["profile_performance"] = bool(profile_performance)
@@ -328,7 +339,7 @@ def _call_evaluate_compat(
     val_loader,
     device: str,
     regularization_config: Optional[Dict[str, float]] = None,
-    supervised_loss_aggregation: str = "sample_weighted",
+    supervised_loss_aggregation: str = "task_mean",
     use_amp: bool = False,
     max_mil_instances: int = 0,
     max_val_batches: int = 0,
@@ -340,7 +351,7 @@ def _call_evaluate_compat(
         kwargs["regularization"] = regularization_config
     if "supervised_loss_aggregation" in params:
         kwargs["supervised_loss_aggregation"] = str(
-            supervised_loss_aggregation or "sample_weighted"
+            supervised_loss_aggregation or "task_mean"
         )
     if "use_amp" in params:
         kwargs["use_amp"] = bool(use_amp)
@@ -1549,6 +1560,17 @@ def _random_peptide(rng: random.Random, length: int) -> str:
     return "".join(rng.choice(AMINO_ACIDS) for _ in range(max(1, int(length))))
 
 
+def _random_amino_acid_except(
+    rng: random.Random,
+    *excluded: str,
+) -> str:
+    blocked = {str(token or "").strip().upper() for token in excluded if str(token or "").strip()}
+    choices = [aa for aa in AMINO_ACIDS if aa not in blocked]
+    if not choices:
+        choices = list(AMINO_ACIDS)
+    return rng.choice(choices)
+
+
 def _scramble_sequence(rng: random.Random, sequence: str) -> str:
     """Return a shuffled permutation of the provided sequence."""
     seq = (sequence or "").strip().upper()
@@ -1561,6 +1583,105 @@ def _scramble_sequence(rng: random.Random, sequence: str) -> str:
         # Avoid no-op permutations when possible.
         return _random_peptide(rng, len(seq))
     return scrambled
+
+
+# AA biophysical property groups (for anchor-opposite scrambling)
+_PROP_HYDROPHOBIC = frozenset("AILMFWVP")
+_PROP_POLAR = frozenset("STNQCYG")
+_PROP_CHARGED_POS = frozenset("RKH")
+_PROP_CHARGED_NEG = frozenset("DE")
+
+
+def _opposite_residues(aa: str) -> frozenset:
+    """Return residues with opposite biophysical properties to *aa*.
+
+    hydrophobic -> charged (D,E,K,R,H)
+    polar       -> charged (D,E,K,R,H)
+    charged+    -> charged- (D,E)
+    charged-    -> charged+ (K,R,H)
+    """
+    if aa in _PROP_HYDROPHOBIC:
+        return _PROP_CHARGED_POS | _PROP_CHARGED_NEG
+    if aa in _PROP_POLAR:
+        return _PROP_CHARGED_POS | _PROP_CHARGED_NEG
+    if aa in _PROP_CHARGED_POS:
+        return _PROP_CHARGED_NEG
+    if aa in _PROP_CHARGED_NEG:
+        return _PROP_CHARGED_POS
+    return _PROP_CHARGED_POS | _PROP_CHARGED_NEG  # fallback
+
+
+def _force_opposite_anchors(
+    rng: random.Random,
+    peptide_chars: list,
+    original_seq: str,
+) -> None:
+    """Mutate P2 and PΩ in-place to have opposite biophysical properties."""
+    if len(peptide_chars) < 2:
+        return
+    # P2 (index 1)
+    p2_orig = original_seq[1]
+    p2_pool = sorted(_opposite_residues(p2_orig) - {p2_orig})
+    if p2_pool:
+        peptide_chars[1] = rng.choice(p2_pool)
+    # PΩ (last)
+    pomega_orig = original_seq[-1]
+    pomega_pool = sorted(_opposite_residues(pomega_orig) - {pomega_orig})
+    if pomega_pool:
+        peptide_chars[-1] = rng.choice(pomega_pool)
+
+
+def _scramble_peptide_with_anchor_changes(
+    rng: random.Random,
+    peptide: str,
+    *,
+    anchor_opposite: bool = False,
+) -> str:
+    """Scramble a peptide while forcing anchor-position changes at P1/P2/PΩ.
+
+    When *anchor_opposite* is True, P2 and PΩ are additionally forced to
+    residues with opposite biophysical properties to the originals, avoiding
+    false-negative synthetics that retain valid anchor residues.
+    """
+    seq = (peptide or "").strip().upper()
+    if not seq:
+        return seq
+    if len(seq) == 1:
+        return _random_amino_acid_except(rng, seq)
+
+    scrambled = list(_scramble_sequence(rng, seq))
+    protected_positions = sorted({0, min(1, len(seq) - 1), len(seq) - 1})
+    for pos in protected_positions:
+        if scrambled[pos] != seq[pos]:
+            continue
+        swap_idx = None
+        for candidate in range(len(scrambled)):
+            if candidate == pos:
+                continue
+            if scrambled[candidate] == seq[pos]:
+                continue
+            if scrambled[pos] == seq[candidate]:
+                continue
+            swap_idx = candidate
+            break
+        if swap_idx is not None:
+            scrambled[pos], scrambled[swap_idx] = scrambled[swap_idx], scrambled[pos]
+            continue
+        scrambled[pos] = _random_amino_acid_except(rng, seq[pos])
+
+    # Force property-opposite anchors at P2/PΩ after position swaps
+    if anchor_opposite and len(scrambled) >= 2:
+        _force_opposite_anchors(rng, scrambled, seq)
+
+    result = "".join(scrambled)
+    if result == seq:
+        forced = list(seq)
+        for pos in protected_positions:
+            forced[pos] = _random_amino_acid_except(rng, seq[pos])
+        if anchor_opposite:
+            _force_opposite_anchors(rng, forced, seq)
+        result = "".join(forced)
+    return result
 
 
 def _random_mhc_sequence_like(
@@ -1680,6 +1801,16 @@ def bootstrap_missing_modalities_for_canary(
     return kinetics, stability, processing, stats
 
 
+ALL_SYNTHETIC_MODES = (
+    "peptide_scramble",
+    "peptide_random",
+    "mhc_scramble",
+    "mhc_random",
+    "no_mhc_alpha",
+    "no_mhc_beta",
+)
+
+
 def augment_binding_records_with_synthetic_negatives(
     binding_records: Sequence[BindingRecord],
     mhc_sequences: Dict[str, str],
@@ -1688,6 +1819,8 @@ def augment_binding_records_with_synthetic_negatives(
     weak_value_max_nM: float,
     seed: int,
     class_i_no_mhc_beta_ratio: float = 0.0,
+    class_i_anchor_strategy: str = "none",
+    modes: Optional[Sequence[str]] = None,
 ) -> Tuple[List[BindingRecord], Dict[str, int]]:
     """Add synthetic weak-affinity binding negatives.
 
@@ -1696,15 +1829,17 @@ def augment_binding_records_with_synthetic_negatives(
     - `mhc_*`: MHC perturbation with peptide retained.
     - `random` means generated de novo AA sequence.
     - `scramble` means a shuffled permutation of an existing sequence.
+
+    If *modes* is provided, only cycle through those modes (must be a
+    subset of ``ALL_SYNTHETIC_MODES``).
     """
-    mode_cycle = (
-        "peptide_scramble",
-        "peptide_random",
-        "mhc_scramble",
-        "mhc_random",
-        "no_mhc_alpha",
-        "no_mhc_beta",
-    )
+    if modes is not None:
+        unknown = set(modes) - set(ALL_SYNTHETIC_MODES)
+        if unknown:
+            raise ValueError(f"Unknown synthetic modes: {unknown}")
+        mode_cycle = tuple(modes)
+    else:
+        mode_cycle = ALL_SYNTHETIC_MODES
 
     def _empty_stats() -> Dict[str, int]:
         return {
@@ -1717,6 +1852,10 @@ def augment_binding_records_with_synthetic_negatives(
     records = list(binding_records)
     if not records or (negative_ratio <= 0 and class_i_no_mhc_beta_ratio <= 0):
         return records, _empty_stats()
+    if class_i_anchor_strategy not in {"none", "property_opposite"}:
+        raise ValueError(
+            "class_i_anchor_strategy must be one of {'none', 'property_opposite'}"
+        )
 
     rng = random.Random(seed)
     neg_min = min(float(weak_value_min_nM), float(weak_value_max_nM))
@@ -1756,14 +1895,30 @@ def augment_binding_records_with_synthetic_negatives(
         direct_mhc_sequence: Optional[str] = None
         source_label = f"synthetic_negative_{mode}"
 
+        _is_strong_class_i = (
+            mhc_class == "I"
+            and source.value is not None
+            and float(source.value) <= 500.0
+            and int(source.qualifier) <= 0
+        )
+        use_anchor_opposite = (
+            class_i_anchor_strategy == "property_opposite" and _is_strong_class_i
+        )
+
         if mode == "peptide_scramble":
-            peptide = _scramble_sequence(rng, peptide) or _random_peptide(
+            peptide = _scramble_peptide_with_anchor_changes(
+                rng, peptide, anchor_opposite=use_anchor_opposite,
+            ) or _random_peptide(
                 rng, _class_default_peptide_length(mhc_class, rng)
             )
             allele = source.mhc_allele
         elif mode == "peptide_random":
+            orig_peptide = peptide
             pep_len = len(peptide) if peptide else _class_default_peptide_length(mhc_class, rng)
-            peptide = _random_peptide(rng, pep_len)
+            new_pep = list(_random_peptide(rng, pep_len))
+            if use_anchor_opposite and len(new_pep) >= 2 and len(orig_peptide) >= 2:
+                _force_opposite_anchors(rng, new_pep, orig_peptide)
+            peptide = "".join(new_pep)
             allele = source.mhc_allele
         elif mode == "mhc_scramble":
             peptide = source.peptide or _random_peptide(rng, _class_default_peptide_length(mhc_class, rng))
@@ -2501,8 +2656,8 @@ def generate_uniprot_samples(
         allele_key = rng.choice(allele_keys)
         mhc_seq = mhc_sequences[allele_key]
 
-        # Random weak binding value (50000-100000 nM)
-        bind_value = rng.uniform(50000, 100000)
+        # Synthetic background negatives should sit at the weak-binding ceiling.
+        bind_value = float(DEFAULT_MAX_AFFINITY_NM)
 
         is_foreign = protein.category in FOREIGN_CATEGORIES
 
@@ -3767,6 +3922,311 @@ def load_records_from_merged_tsv(
     )
 
 
+def load_binding_records_for_alleles_from_merged_tsv(
+    merged_tsv: Path,
+    *,
+    alleles: Sequence[str],
+    max_records: Optional[int] = None,
+    cap_sampling: str = "reservoir",
+    sampling_seed: int = 42,
+) -> Tuple[List[BindingRecord], Dict[str, Any]]:
+    """Load quantitative binding records for a target allele panel."""
+    if not merged_tsv.exists():
+        raise FileNotFoundError(f"Merged TSV not found: {merged_tsv}")
+
+    target_alleles = {
+        str(allele or "").strip()
+        for allele in alleles
+        if str(allele or "").strip()
+    }
+    if not target_alleles:
+        return [], {
+            "rows_scanned": 0,
+            "rows_selected": 0,
+            "rows_by_allele": {},
+            "unique_peptides_by_allele": {},
+            "shared_peptides": 0,
+            "shared_rows": 0,
+            "cap_sampling": str(cap_sampling or "reservoir"),
+        }
+
+    limit = _normalize_limit(max_records)
+    sampling_mode = str(cap_sampling or "reservoir").strip().lower()
+    if sampling_mode not in {"head", "reservoir"}:
+        raise ValueError(
+            f"Unsupported cap sampling mode: {cap_sampling!r}. "
+            "Expected one of: head, reservoir."
+        )
+
+    rng = random.Random(int(sampling_seed))
+    records: List[BindingRecord] = []
+    rows_scanned = 0
+    seen = 0
+    with merged_tsv.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        for row in reader:
+            allele = (row.get("mhc_allele") or "").strip()
+            if allele not in target_alleles:
+                continue
+            peptide = _normalize_required_aa_sequence(row.get("peptide"))
+            if not peptide:
+                continue
+            value = _parse_float_or_none(row.get("value"))
+            if value is None:
+                continue
+            mhc_class = normalize_mhc_class(
+                row.get("mhc_class"),
+                default=infer_mhc_class_optional(allele),
+            )
+            source = (row.get("source") or "").strip() or "unknown"
+            species = (row.get("species") or "").strip() or infer_species(allele) or None
+            antigen_species_col = (row.get("antigen_species") or "").strip() or None
+            qualifier = _parse_int_or_default(row.get("qualifier"), default=0)
+            value_type = (row.get("value_type") or "").strip()
+            rows_scanned += 1
+            unified = UnifiedRecord(
+                peptide=peptide,
+                mhc_allele=allele,
+                mhc_class=mhc_class,
+                source=source,
+                record_type=(row.get("record_type") or "").strip(),
+                value=value,
+                value_type=value_type,
+                qualifier=qualifier,
+                response=(row.get("response") or "").strip(),
+                assay_type=(row.get("assay_type") or "").strip() or None,
+                assay_method=(row.get("assay_method") or "").strip() or None,
+                apc_name=(row.get("apc_name") or "").strip() or None,
+                effector_culture_condition=(row.get("effector_culture_condition") or "").strip() or None,
+                apc_culture_condition=(row.get("apc_culture_condition") or "").strip() or None,
+                in_vitro_process_type=(row.get("in_vitro_process_type") or "").strip() or None,
+                in_vitro_responder_cell=(row.get("in_vitro_responder_cell") or "").strip() or None,
+                in_vitro_stimulator_cell=(row.get("in_vitro_stimulator_cell") or "").strip() or None,
+                cdr3_alpha=None,
+                cdr3_beta=None,
+                trav=None,
+                trbv=None,
+                species=species,
+                antigen_species=antigen_species_col,
+            )
+            if classify_assay_type(unified) != "binding_affinity":
+                continue
+            seen = _append_with_cap_sampling(
+                records,
+                BindingRecord(
+                    peptide=peptide,
+                    mhc_allele=allele,
+                    value=value,
+                    qualifier=qualifier,
+                    measurement_type=value_type or "IC50",
+                    mhc_class=mhc_class,
+                    species=species,
+                    antigen_species=antigen_species_col,
+                    source=source,
+                ),
+                limit,
+                sampling=sampling_mode,
+                rng=rng,
+                seen=seen,
+            )
+
+    rows_by_allele: Counter[str] = Counter()
+    peptides_by_allele: Dict[str, set[str]] = defaultdict(set)
+    peptide_to_alleles: Dict[str, set[str]] = defaultdict(set)
+    for rec in records:
+        rows_by_allele[rec.mhc_allele] += 1
+        peptides_by_allele[rec.mhc_allele].add(rec.peptide)
+        peptide_to_alleles[rec.peptide].add(rec.mhc_allele)
+    shared_peptides = {
+        peptide
+        for peptide, allele_set in peptide_to_alleles.items()
+        if len(allele_set) >= 2
+    }
+    shared_rows = sum(
+        1 for rec in records if rec.peptide in shared_peptides
+    )
+    return records, {
+        "rows_scanned": rows_scanned,
+        "rows_selected": len(records),
+        "rows_by_allele": dict(sorted(rows_by_allele.items())),
+        "unique_peptides_by_allele": {
+            allele: len(peptides_by_allele.get(allele, set()))
+            for allele in sorted(target_alleles)
+        },
+        "shared_peptides": len(shared_peptides),
+        "shared_rows": shared_rows,
+        "cap_sampling": sampling_mode,
+    }
+
+
+def load_probe_allele_binding_bootstrap_from_merged_tsv(
+    merged_tsv: Path,
+    *,
+    probe_alleles: Sequence[str],
+    max_records: int,
+    max_peptides: int,
+    max_rows_per_peptide: int = 4,
+    sampling_seed: int = 42,
+) -> Tuple[List[BindingRecord], Dict[str, int]]:
+    """Collect a small binding-family bootstrap spanning configured probe alleles.
+
+    This is intended for fast diagnostic slices where row-level reservoir
+    sampling over the full binding corpus tends to destroy same-peptide,
+    multi-allele structure entirely.
+    """
+    probe_set = {str(allele or "").strip() for allele in probe_alleles if str(allele or "").strip()}
+    if len(probe_set) < 2 or max_records <= 0 or max_peptides <= 0:
+        return [], {
+            "eligible_peptides": 0,
+            "selected_peptides": 0,
+            "records_added": 0,
+        }
+    if not merged_tsv.exists():
+        raise FileNotFoundError(f"Merged TSV not found: {merged_tsv}")
+
+    eligible_alleles_by_peptide: Dict[str, set[str]] = defaultdict(set)
+    with merged_tsv.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        for row in reader:
+            peptide = _normalize_required_aa_sequence(row.get("peptide"))
+            if not peptide:
+                continue
+            allele = (row.get("mhc_allele") or "").strip()
+            if allele not in probe_set:
+                continue
+            value = _parse_float_or_none(row.get("value"))
+            if value is None:
+                continue
+            mhc_class = normalize_mhc_class(
+                row.get("mhc_class"),
+                default=infer_mhc_class_optional(allele),
+            )
+            source = (row.get("source") or "").strip() or "unknown"
+            unified = UnifiedRecord(
+                peptide=peptide,
+                mhc_allele=allele,
+                mhc_class=mhc_class,
+                source=source,
+                record_type=(row.get("record_type") or "").strip(),
+                value=value,
+                value_type=(row.get("value_type") or "").strip(),
+                qualifier=_parse_int_or_default(row.get("qualifier"), default=0),
+                response=(row.get("response") or "").strip(),
+                assay_type=(row.get("assay_type") or "").strip() or None,
+                assay_method=(row.get("assay_method") or "").strip() or None,
+                apc_name=(row.get("apc_name") or "").strip() or None,
+                effector_culture_condition=(row.get("effector_culture_condition") or "").strip() or None,
+                apc_culture_condition=(row.get("apc_culture_condition") or "").strip() or None,
+                in_vitro_process_type=(row.get("in_vitro_process_type") or "").strip() or None,
+                in_vitro_responder_cell=(row.get("in_vitro_responder_cell") or "").strip() or None,
+                in_vitro_stimulator_cell=(row.get("in_vitro_stimulator_cell") or "").strip() or None,
+                cdr3_alpha=None,
+                cdr3_beta=None,
+                trav=None,
+                trbv=None,
+                species=(row.get("species") or "").strip() or infer_species(allele) or None,
+                antigen_species=(row.get("antigen_species") or "").strip() or None,
+            )
+            if classify_assay_type(unified) != "binding_affinity":
+                continue
+            eligible_alleles_by_peptide[peptide].add(allele)
+
+    eligible_peptides = [
+        peptide
+        for peptide, alleles in eligible_alleles_by_peptide.items()
+        if len(alleles) >= 2
+    ]
+    rng = random.Random(int(sampling_seed) + 211)
+    rng.shuffle(eligible_peptides)
+    selected_peptides = set(eligible_peptides[: max(0, int(max_peptides))])
+    if not selected_peptides:
+        return [], {
+            "eligible_peptides": len(eligible_peptides),
+            "selected_peptides": 0,
+            "records_added": 0,
+        }
+
+    records: List[BindingRecord] = []
+    seen_pairs: set[Tuple[str, str]] = set()
+    rows_per_peptide: Dict[str, int] = defaultdict(int)
+    with merged_tsv.open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle, delimiter="\t")
+        for row in reader:
+            if len(records) >= max_records:
+                break
+            peptide = _normalize_required_aa_sequence(row.get("peptide"))
+            if not peptide or peptide not in selected_peptides:
+                continue
+            allele = (row.get("mhc_allele") or "").strip()
+            if allele not in probe_set:
+                continue
+            if rows_per_peptide[peptide] >= max_rows_per_peptide:
+                continue
+            pair_key = (peptide, allele)
+            if pair_key in seen_pairs:
+                continue
+            value = _parse_float_or_none(row.get("value"))
+            if value is None:
+                continue
+            mhc_class = normalize_mhc_class(
+                row.get("mhc_class"),
+                default=infer_mhc_class_optional(allele),
+            )
+            source = (row.get("source") or "").strip() or "unknown"
+            species = (row.get("species") or "").strip() or infer_species(allele) or None
+            antigen_species_col = (row.get("antigen_species") or "").strip() or None
+            qualifier = _parse_int_or_default(row.get("qualifier"), default=0)
+            value_type = (row.get("value_type") or "").strip()
+            unified = UnifiedRecord(
+                peptide=peptide,
+                mhc_allele=allele,
+                mhc_class=mhc_class,
+                source=source,
+                record_type=(row.get("record_type") or "").strip(),
+                value=value,
+                value_type=value_type,
+                qualifier=qualifier,
+                response=(row.get("response") or "").strip(),
+                assay_type=(row.get("assay_type") or "").strip() or None,
+                assay_method=(row.get("assay_method") or "").strip() or None,
+                apc_name=(row.get("apc_name") or "").strip() or None,
+                effector_culture_condition=(row.get("effector_culture_condition") or "").strip() or None,
+                apc_culture_condition=(row.get("apc_culture_condition") or "").strip() or None,
+                in_vitro_process_type=(row.get("in_vitro_process_type") or "").strip() or None,
+                in_vitro_responder_cell=(row.get("in_vitro_responder_cell") or "").strip() or None,
+                in_vitro_stimulator_cell=(row.get("in_vitro_stimulator_cell") or "").strip() or None,
+                cdr3_alpha=None,
+                cdr3_beta=None,
+                trav=None,
+                trbv=None,
+                species=species,
+                antigen_species=antigen_species_col,
+            )
+            if classify_assay_type(unified) != "binding_affinity":
+                continue
+            records.append(
+                BindingRecord(
+                    peptide=peptide,
+                    mhc_allele=allele,
+                    value=value,
+                    qualifier=qualifier,
+                    measurement_type=value_type or "IC50",
+                    mhc_class=mhc_class,
+                    species=species,
+                    antigen_species=antigen_species_col,
+                    source=source,
+                )
+            )
+            seen_pairs.add(pair_key)
+            rows_per_peptide[peptide] += 1
+
+    return records, {
+        "eligible_peptides": len(eligible_peptides),
+        "selected_peptides": len(selected_peptides),
+        "records_added": len(records),
+    }
+
+
 def run(args: argparse.Namespace) -> None:
     """Run unified multi-source training with parsed arguments."""
     args = _resolve_run_args(args)
@@ -3838,6 +4298,50 @@ def run(args: argparse.Namespace) -> None:
                 "  Sequence cleanup: "
                 f"dropped_invalid_peptide={dropped_invalid}, "
                 f"sanitized_optional_seq_fields={sanitized_optional}"
+            )
+
+        probe_family_bootstrap_records = int(
+            getattr(args, "probe_family_bootstrap_records", 0) or 0
+        )
+        probe_family_bootstrap_peptides = int(
+            getattr(args, "probe_family_bootstrap_peptides", 0) or 0
+        )
+        probe_family_bootstrap_per_peptide = int(
+            getattr(args, "probe_family_bootstrap_per_peptide", 4) or 4
+        )
+        probe_alleles = _split_allele_list(str(getattr(args, "probe_alleles", "")))
+        if (
+            probe_family_bootstrap_records > 0
+            and probe_family_bootstrap_peptides > 0
+            and len(probe_alleles) >= 2
+        ):
+            bootstrap_binding_records, bootstrap_stats = (
+                load_probe_allele_binding_bootstrap_from_merged_tsv(
+                    merged_tsv=merged_tsv,
+                    probe_alleles=probe_alleles,
+                    max_records=probe_family_bootstrap_records,
+                    max_peptides=probe_family_bootstrap_peptides,
+                    max_rows_per_peptide=probe_family_bootstrap_per_peptide,
+                    sampling_seed=args.seed + 29,
+                )
+            )
+            existing_binding_pairs = {
+                (rec.peptide, rec.mhc_allele)
+                for rec in binding_records
+            }
+            added = 0
+            for rec in bootstrap_binding_records:
+                key = (rec.peptide, rec.mhc_allele)
+                if key in existing_binding_pairs:
+                    continue
+                binding_records.append(rec)
+                existing_binding_pairs.add(key)
+                added += 1
+            print(
+                "  Probe-family binding bootstrap: "
+                f"eligible_peptides={bootstrap_stats['eligible_peptides']}, "
+                f"selected_peptides={bootstrap_stats['selected_peptides']}, "
+                f"added_records={added}"
             )
 
     else:
@@ -4539,7 +5043,7 @@ def run(args: argparse.Namespace) -> None:
                 pcgrad=pcgrad,
                 regularization_config=epoch_regularization_cfg,
                 supervised_loss_aggregation=str(
-                    getattr(args, "supervised_loss_aggregation", "sample_weighted")
+                    getattr(args, "supervised_loss_aggregation", "task_mean")
                 ),
                 profile_performance=bool(getattr(args, "profile_performance", True)),
                 non_blocking_transfer=use_non_blocking_transfer,
@@ -4554,7 +5058,7 @@ def run(args: argparse.Namespace) -> None:
                 device,
                 regularization_config=epoch_regularization_cfg,
                 supervised_loss_aggregation=str(
-                    getattr(args, "supervised_loss_aggregation", "sample_weighted")
+                    getattr(args, "supervised_loss_aggregation", "task_mean")
                 ),
                 use_amp=use_amp,
                 max_mil_instances=max_mil_instances,
@@ -4916,7 +5420,7 @@ def main(argv=None):
     parser.add_argument(
         "--synthetic-negative-min-nM",
         type=float,
-        default=DEFAULT_MAX_AFFINITY_NM * 0.5,
+        default=DEFAULT_MAX_AFFINITY_NM,
         help="Minimum synthetic weak-affinity value (nM)",
     )
     parser.add_argument(
@@ -5052,7 +5556,7 @@ def main(argv=None):
         "--supervised-loss-aggregation",
         type=str,
         choices=["task_mean", "sample_weighted"],
-        default="sample_weighted",
+        default="task_mean",
         help=(
             "How to combine supervised task losses: "
             "task_mean (equal per task) or sample_weighted "
@@ -5179,6 +5683,36 @@ def main(argv=None):
         help="Maximum positive MIL bags per batch used for genotype-substitution contrastive loss",
     )
     parser.add_argument(
+        "--binding-contrastive-weight",
+        type=float,
+        default=1.0,
+        help="Weight for same-peptide/different-allele binding ranking loss",
+    )
+    parser.add_argument(
+        "--binding-contrastive-margin",
+        type=float,
+        default=0.2,
+        help="Required predicted log10(KD) margin for stronger-vs-weaker allele pairs",
+    )
+    parser.add_argument(
+        "--binding-contrastive-target-gap-min",
+        type=float,
+        default=0.3,
+        help="Minimum observed log10(KD) gap required before a binding pair is used for ranking",
+    )
+    parser.add_argument(
+        "--binding-contrastive-target-gap-cap",
+        type=float,
+        default=2.0,
+        help="Maximum target log10(KD) gap enforced by the binding ranking loss",
+    )
+    parser.add_argument(
+        "--binding-contrastive-max-pairs",
+        type=int,
+        default=64,
+        help="Maximum same-peptide/different-allele binding pairs per batch used for ranking",
+    )
+    parser.add_argument(
         "--mil-bag-sparsity-weight",
         type=float,
         default=0.02,
@@ -5229,6 +5763,24 @@ def main(argv=None):
         type=str,
         default="HLA-A*02:01,HLA-A*24:02",
         help="Comma-separated alleles for probe tracking",
+    )
+    parser.add_argument(
+        "--probe-family-bootstrap-records",
+        type=int,
+        default=0,
+        help="Extra binding rows to add from probe-allele multi-allele families in merged TSV",
+    )
+    parser.add_argument(
+        "--probe-family-bootstrap-peptides",
+        type=int,
+        default=0,
+        help="Maximum probe-allele peptide families to add for fast diagnostic slices",
+    )
+    parser.add_argument(
+        "--probe-family-bootstrap-per-peptide",
+        type=int,
+        default=4,
+        help="Maximum probe-allele bootstrap binding rows retained per peptide family",
     )
     parser.add_argument(
         "--probe-plot-file",

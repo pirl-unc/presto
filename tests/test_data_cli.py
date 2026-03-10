@@ -30,6 +30,22 @@ def test_parser_wires_mhc_index_build_command():
     assert args.func is data_cli.cmd_data_mhc_index_build
 
 
+def test_parser_wires_mhc_index_augment_command():
+    parser = create_parser()
+    args = parser.parse_args(
+        [
+            "data",
+            "mhc-index",
+            "augment",
+            "--index-csv",
+            "mhc_index.csv",
+            "--out-csv",
+            "mhc_index_augmented.csv",
+        ]
+    )
+    assert args.func is data_cli.cmd_data_mhc_index_augment
+
+
 def test_parser_wires_mhc_index_report_command():
     parser = create_parser()
     args = parser.parse_args(
@@ -86,7 +102,7 @@ def test_parser_wires_mhc_index_mouse_overlay_command():
     assert args.func is data_cli.cmd_data_mhc_index_mouse_overlay
 
 
-def test_parser_data_merge_supports_assay_csv_flags():
+def test_parser_data_merge_supports_per_assay_csv_flag():
     parser = create_parser()
     args = parser.parse_args(
         [
@@ -96,12 +112,12 @@ def test_parser_data_merge_supports_assay_csv_flags():
             "./data",
             "--assay-outdir",
             "./data/merged_assays",
-            "--no-assay-csv",
+            "--per-assay-csv",
         ]
     )
     assert args.func is data_cli.cmd_data_merge
     assert args.assay_outdir == "./data/merged_assays"
-    assert args.no_assay_csv is True
+    assert args.per_assay_csv is True
 
 
 def test_cmd_data_merge_passes_assay_outdir(tmp_path, monkeypatch):
@@ -118,7 +134,7 @@ def test_cmd_data_merge_passes_assay_outdir(tmp_path, monkeypatch):
         datadir=str(datadir),
         output=None,
         assay_outdir=str(tmp_path / "assays"),
-        no_assay_csv=False,
+        per_assay_csv=True,
         types=None,
         json=False,
         quiet=True,
@@ -129,6 +145,31 @@ def test_cmd_data_merge_passes_assay_outdir(tmp_path, monkeypatch):
     assert captured["data_dir"] == datadir
     assert captured["assay_output_dir"] == tmp_path / "assays"
     assert captured["output_path"] == datadir / "merged_deduped.tsv"
+
+
+def test_cmd_data_merge_default_disables_assay_csv(tmp_path, monkeypatch):
+    datadir = tmp_path / "data"
+    datadir.mkdir()
+    captured = {}
+
+    def fake_deduplicate_all(**kwargs):
+        captured.update(kwargs)
+        return [], {"total_input": 0, "total_output": 0}
+
+    monkeypatch.setattr(data_cli, "deduplicate_all", fake_deduplicate_all)
+    args = SimpleNamespace(
+        datadir=str(datadir),
+        output=None,
+        assay_outdir=str(tmp_path / "assays"),
+        per_assay_csv=False,
+        types=None,
+        json=False,
+        quiet=True,
+    )
+    code = data_cli.cmd_data_merge(args)
+
+    assert code == 0
+    assert captured["assay_output_dir"] is None
 
 
 def test_cmd_data_mhc_index_build_handles_errors(monkeypatch, capsys):
@@ -149,6 +190,24 @@ def test_cmd_data_mhc_index_build_handles_errors(monkeypatch, capsys):
     assert code == 1
     err = capsys.readouterr().err
     assert "Error building MHC index: boom" in err
+
+
+def test_cmd_data_mhc_index_augment_handles_errors(monkeypatch, capsys):
+    args = SimpleNamespace(
+        index_csv="mhc_index.csv",
+        out_csv="mhc_index_augmented.csv",
+        quiet=False,
+    )
+
+    def fake_augment(**kwargs):
+        raise MHCIndexError("boom")
+
+    monkeypatch.setattr(data_cli, "augment_mhc_index", fake_augment)
+    code = data_cli.cmd_data_mhc_index_augment(args)
+
+    assert code == 1
+    err = capsys.readouterr().err
+    assert "Error augmenting MHC index: boom" in err
 
 
 def test_cmd_data_mhc_index_resolve_requires_input(capsys):

@@ -15,12 +15,12 @@ python -m presto data mhc-index refresh --datadir ./data --download-missing
 
 `data merge` defaults:
 - writes `./data/merged_deduped.tsv`,
-- writes per-assay simplified CSVs under `./data/merged_assays/`.
+- does not write per-assay CSVs unless requested.
 - prints per-file/per-source/per-assay load counts and dedup retention stats (with `tqdm` progress bars).
 
 Useful flags:
-- `--assay-outdir <dir>`: choose per-assay CSV output directory,
-- `--no-assay-csv`: disable per-assay CSV exports,
+- `--per-assay-csv`: enable per-assay CSV exports,
+- `--assay-outdir <dir>`: choose per-assay CSV output directory (used with `--per-assay-csv`),
 - `--types binding tcell tcr`: restrict merged record types,
 - `--quiet`: suppress verbose merge progress/stats,
 - `--json`: emit machine-readable merge statistics.

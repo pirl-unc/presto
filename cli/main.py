@@ -705,7 +705,7 @@ def create_parser() -> argparse.ArgumentParser:
         "--supervised-loss-aggregation",
         type=str,
         choices=["task_mean", "sample_weighted"],
-        default="sample_weighted",
+        default="task_mean",
         help=(
             "How to combine supervised task losses: "
             "task_mean (equal per task) or sample_weighted "
@@ -943,7 +943,7 @@ def create_parser() -> argparse.ArgumentParser:
     train_iedb.add_argument(
         "--synthetic-negative-max-nM",
         type=float,
-        default=100000.0,
+        default=50000.0,
         help="Maximum synthetic weak-affinity value (nM)",
     )
     train_iedb.add_argument("--val-frac", type=float, default=0.2, help="Validation fraction")
@@ -1034,7 +1034,7 @@ def create_parser() -> argparse.ArgumentParser:
         "--supervised-loss-aggregation",
         type=str,
         choices=["task_mean", "sample_weighted"],
-        default="sample_weighted",
+        default="task_mean",
         help=(
             "How to combine supervised task losses: "
             "task_mean (equal per task) or sample_weighted "

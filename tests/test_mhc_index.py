@@ -274,11 +274,291 @@ def test_resolve_alleles_falls_back_when_mhcgnomes_query_parse_fails(tmp_path, m
     assert resolved[0]["normalized"] == "Mamu-A*01:01:01"
 
 
-def test_resolve_header_allele_has_non_mhcgnomes_fallback(monkeypatch):
+def test_resolve_alleles_prefers_longest_nested_two_field_representative(tmp_path, monkeypatch):
+    index_csv = tmp_path / "mhc_index_augmented.csv"
+    with open(index_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=mhc_index.AUGMENTED_INDEX_FIELDS)
+        writer.writeheader()
+        writer.writerow(
+            {
+                "allele_raw": "BoLA-DRB3*050:01",
+                "normalized": "BoLA-DRB3*050:01",
+                "gene": "DRB3",
+                "mhc_class": "II",
+                "species": "Bos sp.",
+                "source": "ipd_mhc",
+                "seq_len": "77",
+                "sequence": "A" * 77,
+                "mature_start": "",
+                "groove_half_1": "",
+                "groove_half_2": "SHORT",
+                "groove_status": "fragment_fallback",
+                "is_null": "False",
+                "is_questionable": "False",
+                "is_pseudogene": "False",
+                "is_functional": "True",
+            }
+        )
+        writer.writerow(
+            {
+                "allele_raw": "BoLA-DRB3*050:01:01",
+                "normalized": "BoLA-DRB3*050:01:01",
+                "gene": "DRB3",
+                "mhc_class": "II",
+                "species": "Bos sp.",
+                "source": "ipd_mhc",
+                "seq_len": "89",
+                "sequence": "X" + ("A" * 77) + "YYYYYYYYYYY",
+                "mature_start": "",
+                "groove_half_1": "",
+                "groove_half_2": "LONGER",
+                "groove_status": "fragment_fallback",
+                "is_null": "False",
+                "is_questionable": "False",
+                "is_pseudogene": "False",
+                "is_functional": "True",
+            }
+        )
+
+    monkeypatch.setattr(mhc_index, "_require_mhcgnomes", lambda: object())
     monkeypatch.setattr(
         mhc_index,
         "_normalize_with_mhcgnomes",
-        lambda token: (_ for _ in ()).throw(ValueError("no parse")),
+        lambda allele: ("BoLA-DRB3*050:01", None, None, None),
+    )
+
+    resolved = mhc_index.resolve_alleles(
+        index_csv=str(index_csv),
+        alleles=["BoLA-DRB3*050:01"],
+        include_sequence=False,
+    )
+    assert resolved[0]["found"] is True
+    assert resolved[0]["resolved"] == "BoLA-DRB3*050:01:01"
+    assert resolved[0]["seq_len"] == 89
+    assert resolved[0]["groove_half_2"] == "LONGER"
+
+
+def test_resolve_alleles_marks_ambiguous_two_field_alias_explicitly(tmp_path, monkeypatch):
+    index_csv = tmp_path / "mhc_index.csv"
+    with open(index_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=mhc_index.INDEX_FIELDS)
+        writer.writeheader()
+        writer.writerow(
+            {
+                "allele_raw": "Mamu-A2*05:04:01:01",
+                "normalized": "Mamu-A2*05:04:01:01",
+                "gene": "A2",
+                "mhc_class": "I",
+                "species": "Macaca mulatta",
+                "source": "ipd_mhc",
+                "seq_len": "365",
+                "sequence": "A" * 365,
+            }
+        )
+        writer.writerow(
+            {
+                "allele_raw": "Mamu-A2*05:04:04:01",
+                "normalized": "Mamu-A2*05:04:04:01",
+                "gene": "A2",
+                "mhc_class": "I",
+                "species": "Macaca mulatta",
+                "source": "ipd_mhc",
+                "seq_len": "365",
+                "sequence": ("A" * 360) + "CCCCC",
+            }
+        )
+
+    monkeypatch.setattr(mhc_index, "_require_mhcgnomes", lambda: object())
+    monkeypatch.setattr(
+        mhc_index,
+        "_normalize_with_mhcgnomes",
+        lambda allele: ("Mamu-A2*05:04", None, None, None),
+    )
+
+    resolved = mhc_index.resolve_alleles(
+        index_csv=str(index_csv),
+        alleles=["Mamu-A2*05:04"],
+        include_sequence=False,
+    )
+    assert resolved[0]["found"] is False
+    assert resolved[0]["ambiguous"] is True
+    assert resolved[0]["ambiguity_reason"] == "same_length_diff_content"
+    assert resolved[0]["candidate_count"] == 2
+
+
+def test_build_mhc_sequence_lookup_uses_longest_safe_alias_and_skips_ambiguous(tmp_path):
+    index_csv = tmp_path / "mhc_index.csv"
+    with open(index_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=mhc_index.INDEX_FIELDS)
+        writer.writeheader()
+        writer.writerow(
+            {
+                "allele_raw": "BoLA-DRB3*050:01",
+                "normalized": "BoLA-DRB3*050:01",
+                "gene": "DRB3",
+                "mhc_class": "II",
+                "species": "Bos sp.",
+                "source": "ipd_mhc",
+                "seq_len": "77",
+                "sequence": "A" * 77,
+            }
+        )
+        writer.writerow(
+            {
+                "allele_raw": "BoLA-DRB3*050:01:01",
+                "normalized": "BoLA-DRB3*050:01:01",
+                "gene": "DRB3",
+                "mhc_class": "II",
+                "species": "Bos sp.",
+                "source": "ipd_mhc",
+                "seq_len": "89",
+                "sequence": "X" + ("A" * 77) + "YYYYYYYYYYY",
+            }
+        )
+        writer.writerow(
+            {
+                "allele_raw": "Mamu-A2*05:04:01:01",
+                "normalized": "Mamu-A2*05:04:01:01",
+                "gene": "A2",
+                "mhc_class": "I",
+                "species": "Macaca mulatta",
+                "source": "ipd_mhc",
+                "seq_len": "365",
+                "sequence": "A" * 365,
+            }
+        )
+        writer.writerow(
+            {
+                "allele_raw": "Mamu-A2*05:04:04:01",
+                "normalized": "Mamu-A2*05:04:04:01",
+                "gene": "A2",
+                "mhc_class": "I",
+                "species": "Macaca mulatta",
+                "source": "ipd_mhc",
+                "seq_len": "365",
+                "sequence": ("A" * 360) + "CCCCC",
+            }
+        )
+
+    records = mhc_index.load_mhc_index(str(index_csv))
+    lookup = mhc_index.build_mhc_sequence_lookup(records)
+    assert lookup["BoLA-DRB3*050:01"] == "X" + ("A" * 77) + "YYYYYYYYYYY"
+    assert "Mamu-A2*05:04" not in lookup
+
+
+def test_augment_mhc_index_adds_groove_columns(tmp_path):
+    index_csv = tmp_path / "mhc_index.csv"
+    out_csv = tmp_path / "mhc_index_augmented.csv"
+    with open(index_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=mhc_index.INDEX_FIELDS)
+        writer.writeheader()
+        writer.writerow(
+            {
+                "allele_raw": "HLA-A*02:01:01:01",
+                "normalized": "HLA-A*02:01:01:01",
+                "gene": "A",
+                "mhc_class": "I",
+                "species": "Homo sapiens",
+                "source": "imgt",
+                "seq_len": "299",
+                "sequence": (
+                    "MAVMAPRTLVLLLSGALALTQTWAGSHSMRYFFTSVSRPGRGEPRFIAVGYVDDTQFVRFDSDAASQRMEPRAPWIEQEGPEYWDGETRKVKAHSQTHRVDLGTLRGYYNQSEAGSHTVQRMYGCDVGSDWRFLRGYHQYAYDGKDYIALKEDLRSWTAADMAAQTTKHKWEAAHVAEQL"
+                    "RAYLDGTCVEWLRRYLENGKETLQRTDAPKTHMTHHAVSDHEATLRCWALSFYPAEITLTWQRDGEDQTQDTELVETRPAGDGTFQKWAAVVVPSGQEQRYTCHVQHEGLPKPLTLRWE"
+                ),
+            }
+        )
+        writer.writerow(
+            {
+                "allele_raw": "HLA-DRB1*01:01:01:01",
+                "normalized": "HLA-DRB1*01:01:01:01",
+                "gene": "DRB1",
+                "mhc_class": "II",
+                "species": "Homo sapiens",
+                "source": "imgt",
+                "seq_len": "89",
+                "sequence": "LEQAKSECHFFNGTERVRFLDRHFYNQEEYARFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYG",
+            }
+        )
+        writer.writerow(
+            {
+                "allele_raw": "HLA-A*01:01N",
+                "normalized": "HLA-A*01:01N",
+                "gene": "A",
+                "mhc_class": "I",
+                "species": "Homo sapiens",
+                "source": "imgt",
+                "seq_len": "71",
+                "sequence": "A" * 71,
+            }
+        )
+
+    stats = mhc_index.augment_mhc_index(str(index_csv), str(out_csv))
+    rows = list(csv.DictReader(open(out_csv, "r", encoding="utf-8")))
+
+    assert stats["total_records"] == 3
+    assert rows[0]["groove_status"] == "ok"
+    assert rows[0]["groove_half_1"]
+    assert rows[0]["groove_half_2"]
+    assert rows[0]["is_functional"] == "True"
+    assert rows[1]["groove_status"] == "fragment_fallback"
+    assert rows[1]["groove_half_1"] == ""
+    assert rows[1]["groove_half_2"]
+    assert rows[1]["is_functional"] == "True"
+    assert rows[2]["is_null"] == "True"
+    assert rows[2]["is_functional"] == "False"
+
+
+def test_resolve_alleles_returns_augmented_groove_columns(tmp_path, monkeypatch):
+    index_csv = tmp_path / "mhc_index_augmented.csv"
+    with open(index_csv, "w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=mhc_index.AUGMENTED_INDEX_FIELDS)
+        writer.writeheader()
+        writer.writerow(
+            {
+                "allele_raw": "HLA-A*02:01:01:01",
+                "normalized": "HLA-A*02:01:01:01",
+                "gene": "A",
+                "mhc_class": "I",
+                "species": "human",
+                "source": "imgt",
+                "seq_len": "299",
+                "sequence": LONG_SEQ_A,
+                "mature_start": "23",
+                "groove_half_1": "AAAA",
+                "groove_half_2": "CCCC",
+                "groove_status": "ok",
+                "is_null": "False",
+                "is_questionable": "False",
+                "is_pseudogene": "False",
+                "is_functional": "True",
+            }
+        )
+
+    monkeypatch.setattr(mhc_index, "_require_mhcgnomes", lambda: object())
+    monkeypatch.setattr(
+        mhc_index,
+        "_normalize_with_mhcgnomes",
+        lambda allele: ("HLA-A*02:01", None, None, None),
+    )
+
+    resolved = mhc_index.resolve_alleles(
+        index_csv=str(index_csv),
+        alleles=["HLA-A*02:01"],
+        include_sequence=False,
+    )
+    assert resolved[0]["found"] is True
+    assert resolved[0]["mature_start"] == 23
+    assert resolved[0]["groove_half_1"] == "AAAA"
+    assert resolved[0]["groove_half_2"] == "CCCC"
+    assert resolved[0]["groove_status"] == "ok"
+    assert resolved[0]["is_functional"] is True
+
+
+def test_resolve_header_allele_uses_mhcgnomes_result(monkeypatch):
+    monkeypatch.setattr(
+        mhc_index,
+        "_normalize_with_mhcgnomes",
+        lambda token: ("H2-K*d", "K", "I", "Mus musculus"),
     )
     normalized, gene, mhc_class, species, token = mhc_index._resolve_header_allele(
         "IPD-MHC:TEST H-2Kd 365 bp"
@@ -287,7 +567,7 @@ def test_resolve_header_allele_has_non_mhcgnomes_fallback(monkeypatch):
     assert normalized == "H2-K*d"
     assert gene == "K"
     assert mhc_class == "I"
-    assert species == "murine"
+    assert species == "Mus musculus"
 
 
 def test_validate_mhc_index_rejects_nucleotide_like_sequences(tmp_path, monkeypatch):

@@ -71,11 +71,11 @@ class TestChainAttributeClassifier:
 
     def test_chain_attribute_classifier_output_shape(self):
         from presto.models.tcr import ChainAttributeClassifier
-        from presto.data.vocab import CHAIN_TYPES, CELL_TYPES, SPECIES
+        from presto.data.vocab import CHAIN_TYPES, CELL_TYPES, CHAIN_SPECIES_CATEGORIES
         clf = ChainAttributeClassifier(d_model=64)
         chain_tok = torch.randint(4, 24, (3, 30))
         outputs = clf(chain_tok)
-        assert outputs["species_logits"].shape == (3, len(SPECIES))
+        assert outputs["species_logits"].shape == (3, len(CHAIN_SPECIES_CATEGORIES))
         assert outputs["chain_logits"].shape == (3, len(CHAIN_TYPES))
         assert outputs["phenotype_logits"].shape == (3, len(CELL_TYPES))
 
@@ -207,8 +207,8 @@ class TestRepertoireHead:
     def test_repertoire_head_with_species(self):
         """Can condition on species (human vs mouse repertoire)."""
         from presto.models.tcr import RepertoireHead
-        from presto.data.vocab import SPECIES
-        head = RepertoireHead(d_model=64, n_species=len(SPECIES))
+        from presto.data.vocab import CHAIN_SPECIES_CATEGORIES
+        head = RepertoireHead(d_model=64, n_species=len(CHAIN_SPECIES_CATEGORIES))
         pmhc_vec = torch.randn(2, 64)
         species_idx = torch.tensor([0, 1])  # human, mouse
         logit = head(pmhc_vec, species_idx=species_idx)

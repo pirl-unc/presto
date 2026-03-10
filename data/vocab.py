@@ -5,7 +5,7 @@ organism categories, and biological compatibility matrices.
 """
 
 import re
-from typing import Optional, Set
+from typing import Dict, Optional, Set, Tuple
 
 # Amino acid vocabulary with special tokens
 AA_VOCAB = [
@@ -16,10 +16,6 @@ AA_VOCAB = [
     "A", "C", "D", "E", "F", "G", "H", "I", "K", "L",
     "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y",
     "X",  # unknown/any amino acid
-    "B",  # Asn or Asp
-    "Z",  # Gln or Glu
-    "U",  # Selenocysteine
-    "O",  # Pyrrolysine
     "<MISSING>",  # dedicated missing-value token
 ]
 
@@ -122,12 +118,11 @@ MHC_II_LOCI = {
     "mouse": ["A", "E"],  # H2-Aa/H2-Ab, H2-Ea/H2-Eb
 }
 
-# Fine-grained MHC chain types for per-chain auxiliary heads (6 classes).
+# Fine-grained MHC chain types for per-chain auxiliary heads (5 classes).
 # These map the detailed chain types above to a compact label set that
 # the model predicts to learn MHC structural distinctions.
 MHC_CHAIN_FINE_TYPES = [
-    "MHC_Ia",       # Classical Class I alpha (HLA-A, -B, -C, H2-K, H2-D, H2-L)
-    "MHC_Ib",       # Non-classical Class I alpha (HLA-E, -F, -G, Qa, Tla)
+    "MHC_I",        # Class I alpha (classical + non-classical: HLA-A,-B,-C,-E,-F,-G, H2-K,-D,-L, Qa, Tla)
     "MHC_IIa",      # Class II alpha (DRA, DQA, DPA, H2-Aa, H2-Ea)
     "MHC_IIb",      # Class II beta (DRB, DQB, DPB, H2-Ab, H2-Eb)
     "B2M",          # Beta-2-microglobulin
@@ -137,11 +132,6 @@ MHC_CHAIN_FINE_TO_IDX = {ct: i for i, ct in enumerate(MHC_CHAIN_FINE_TYPES)}
 IDX_TO_MHC_CHAIN_FINE = {i: ct for i, ct in enumerate(MHC_CHAIN_FINE_TYPES)}
 N_MHC_CHAIN_FINE_TYPES = len(MHC_CHAIN_FINE_TYPES)
 
-# Species (legacy 4-class, kept for backward compat with chain attribute classifier)
-SPECIES = ["human", "mouse", "macaque", "other"]
-SPECIES_TO_IDX = {sp: i for i, sp in enumerate(SPECIES)}
-IDX_TO_SPECIES = {i: sp for i, sp in enumerate(SPECIES)}
-
 # =============================================================================
 # UNIFIED ORGANISM TAXONOMY (12-class)
 # =============================================================================
@@ -149,9 +139,9 @@ IDX_TO_SPECIES = {i: sp for i, sp in enumerate(SPECIES)}
 # UniProt taxonomy, IEDB organism names, VDJdb antigen_species.
 ORGANISM_CATEGORIES = [
     # Animal (MHC sources + host organisms) — first 6
-    "human", "nhp", "murine", "other_mammal", "bird", "fish",
+    "human", "nhp", "murine", "other_mammal", "bird", "other_vertebrate",
     # Other animals
-    "other_vertebrate", "invertebrate",
+    "invertebrate",
     # Foreign (pathogens)
     "fungi", "bacteria", "viruses", "archaea",
 ]
@@ -159,22 +149,142 @@ ORGANISM_TO_IDX = {cat: i for i, cat in enumerate(ORGANISM_CATEGORIES)}
 IDX_TO_ORGANISM = {i: cat for i, cat in enumerate(ORGANISM_CATEGORIES)}
 N_ORGANISM_CATEGORIES = len(ORGANISM_CATEGORIES)
 
-# MHC species uses the first 6 (animal subset)
-MHC_SPECIES_CATEGORIES = ORGANISM_CATEGORIES[:6]  # human..fish
-N_MHC_SPECIES = len(MHC_SPECIES_CATEGORIES)
+# =============================================================================
+# CHAIN SPECIES (6-class vertebrate subset)
+# =============================================================================
+# Used for BOTH MHC chain species heads AND TCR/BCR chain attribute classifier.
+CHAIN_SPECIES_CATEGORIES = ORGANISM_CATEGORIES[:6]  # human, nhp, murine, other_mammal, bird, other_vertebrate
+CHAIN_SPECIES_TO_IDX = {sp: i for i, sp in enumerate(CHAIN_SPECIES_CATEGORIES)}
+IDX_TO_CHAIN_SPECIES = {i: sp for i, sp in enumerate(CHAIN_SPECIES_CATEGORIES)}
+N_CHAIN_SPECIES = len(CHAIN_SPECIES_CATEGORIES)
+
+# Backward-compat aliases (used by models, training scripts)
+MHC_SPECIES_CATEGORIES = CHAIN_SPECIES_CATEGORIES
+N_MHC_SPECIES = N_CHAIN_SPECIES
 
 # Foreignness: pathogens vs animals
 FOREIGN_CATEGORIES = frozenset({"bacteria", "viruses", "fungi", "archaea"})
 
 
-def normalize_organism(raw: Optional[str]) -> Optional[str]:
-    """Unified normalizer: map any organism name to one of 12 categories.
+# =============================================================================
+# UNIFIED FINE-GRAINED SPECIES TAXONOMY (29-class)
+# =============================================================================
+# Single canonical parser; all coarser views are roll-ups.
 
-    Used for BOTH peptide source organism AND MHC source species.
-    Handles IEDB organism names, UniProt OS fields, VDJdb antigen_species,
-    and MHC allele prefix inference.
+FINE_SPECIES = [
+    # Primates
+    "human", "macaque", "chimpanzee", "gorilla", "orangutan", "baboon", "other_nhp",
+    # Rodents
+    "mouse", "rat",
+    # Mammals
+    "cattle", "pig", "horse", "sheep", "goat", "dog", "cat", "rabbit", "other_mammal",
+    # Birds
+    "chicken", "other_bird",
+    # Fish
+    "salmon", "zebrafish", "other_fish",
+    # Non-animal
+    "other_vertebrate", "invertebrate", "viruses", "bacteria", "fungi", "archaea",
+]
+FINE_SPECIES_TO_IDX = {sp: i for i, sp in enumerate(FINE_SPECIES)}
+N_FINE_SPECIES = len(FINE_SPECIES)
 
-    Returns None if unrecognizable (will result in mask=0, no supervision).
+# Keyword patterns checked in order; first match wins.
+# Each entry: (keywords_tuple, fine_species_label)
+_SPECIES_PATTERNS: list[Tuple[Tuple[str, ...], str]] = [
+    # --- Human ---
+    (("homo sapiens", "human"), "human"),
+
+    # --- NHP: specific species first ---
+    (("chimpanzee", "pan troglodytes", "pan paniscus", "patr-"), "chimpanzee"),
+    (("gorilla", "gogo-"), "gorilla"),
+    (("orangutan", "pongo", "popy-"), "orangutan"),
+    (("baboon", "papio", "paan-"), "baboon"),
+    (("macaque", "macaca", "rhesus", "mamu-"), "macaque"),
+    # Catch-all NHP
+    (("nhp", "aotus", "night monkey", "aona-", "cercopithecus",
+      "saguinus", "callithrix", "saimiri", "ateles", "pithecia",
+      "leontopithecus", "hylobates", "chlorocebus", "cercocebus",
+      "primate"), "other_nhp"),
+
+    # --- Rodents ---
+    (("mus musculus", "mouse", "c57bl", "balb/c"), "mouse"),
+    (("rattus", "rat "), "rat"),
+    # Catch-all murine token (maps to mouse if nothing more specific)
+    (("murine", "h2-", "h-2"), "mouse"),
+
+    # --- Other mammals (specific first) ---
+    (("bos taurus", "bos ", "bovine", "cow", "cattle", "bola-", "bos grunniens"), "cattle"),
+    (("sus scrofa", "sus ", "porcine", "pig", "swine", "sla-"), "pig"),
+    (("equus", "equine", "horse", "ela-"), "horse"),
+    (("ovis aries", "ovine", "sheep", "ola-"), "sheep"),
+    (("capra", "caprine", "goat"), "goat"),
+    (("canis", "canine", "dog", "dla-"), "dog"),
+    (("felis", "feline", "cat "), "cat"),
+    (("rabbit", "oryctolagus"), "rabbit"),
+    (("mammal",), "other_mammal"),
+
+    # --- Birds ---
+    (("gallus", "chicken", "gaga-"), "chicken"),
+    (("duck", "turkey", "quail", "bird", "avian", "aves"), "other_bird"),
+
+    # --- Pathogens (BEFORE fish, so "salmonella" → bacteria, not fish) ---
+
+    # --- Viruses ---
+    (("virus", "viral", "influenza", "sars", "cov",
+      "hiv", "hcv", "hbv", "ebv", "cmv", "hsv", "vzv",
+      "htlv", "dengue", "zika", "ebola", "measles",
+      "hepatitis", "retrovirus", "coronavirus",
+      "adenovirus", "papillomavirus", "herpes",
+      "vaccinia", "poxvirus", "flavivirus",
+      "paramyxovirus", "orthomyxovirus",
+      "phage", "bacteriophage"), "viruses"),
+
+    # --- Bacteria ---
+    (("mycobacterium", "tuberculosis", "escherichia", "e. coli",
+      "staphylococcus", "streptococcus", "salmonella",
+      "clostridium", "listeria", "helicobacter",
+      "chlamydia", "borrelia", "treponema",
+      "pseudomonas", "bacillus", "legionella",
+      "neisseria", "rickettsia", "bartonella",
+      "bacterium", "bacteria", "bacterial"), "bacteria"),
+
+    # --- Fungi ---
+    (("candida", "aspergillus", "cryptococcus",
+      "coccidioides", "histoplasma", "blastomyces",
+      "saccharomyces", "yeast", "fungus", "fungi", "fungal",
+      "pneumocystis", "trichophyton"), "fungi"),
+
+    # --- Archaea ---
+    (("archaea", "archaeal", "methanobacterium",
+      "halobacterium", "sulfolobus", "thermococcus"), "archaea"),
+
+    # --- Fish (AFTER bacteria, so "salmonella" doesn't match "salmon") ---
+    (("salmo salar", "salmo ", "salmon", "trout", "oncorhynchus"), "salmon"),
+    (("danio", "zebrafish"), "zebrafish"),
+    (("fish", "pisces"), "other_fish"),
+
+    # --- Other vertebrate ---
+    (("reptile", "reptilia", "amphibian", "amphibia",
+      "frog", "xenopus", "turtle", "lizard", "snake",
+      "alligator", "crocodile", "salamander"), "other_vertebrate"),
+
+    # --- Invertebrate ---
+    (("drosophila", "insect", "arthropod", "arachnid",
+      "mosquito", "tick", "worm", "nematode", "mollusk",
+      "caenorhabditis", "c. elegans", "invertebrate",
+      "schistosoma", "plasmodium", "toxoplasma",
+      "leishmania", "trypanosoma", "parasite"), "invertebrate"),
+]
+
+
+def normalize_species(raw: Optional[str]) -> Optional[str]:
+    """Unified fine-grained species normalizer (29 categories).
+
+    This is the single canonical parser; all coarser views
+    (organism, MHC species, legacy species, B2M key) are derived
+    via roll-up dicts.
+
+    Returns None if unrecognizable.
     """
     if raw is None:
         return None
@@ -182,130 +292,100 @@ def normalize_organism(raw: Optional[str]) -> Optional[str]:
     if not s:
         return None
 
-    # Direct match first
-    if s in ORGANISM_TO_IDX:
+    # Direct hit on fine labels
+    if s in FINE_SPECIES_TO_IDX:
         return s
 
-    # --- Human ---
-    if "homo sapiens" in s or "human" in s:
-        return "human"
-
-    # --- Murine (mouse/rat) ---
-    _murine = (
-        "mus musculus", "mouse", "murine", "rattus", "rat",
-        "c57bl", "balb/c", "h2-", "h-2",
-    )
-    if any(tok in s for tok in _murine):
-        return "murine"
-
-    # --- NHP (non-human primates) ---
-    _nhp = (
-        "macaca", "macaque", "nhp", "chimpanzee", "pan troglodytes",
-        "gorilla", "orangutan", "pongo", "baboon", "papio",
-        "aotus", "night monkey", "cercopithecus", "rhesus",
-        "mamu-", "paan-", "aona-",
-    )
-    if any(tok in s for tok in _nhp):
-        return "nhp"
-
-    # --- Other mammals ---
-    _other_mammal = (
-        "bos taurus", "bovine", "cow", "cattle",
-        "sus scrofa", "porcine", "pig", "swine",
-        "equus", "equine", "horse",
-        "ovis aries", "ovine", "sheep",
-        "capra", "caprine", "goat",
-        "canis", "canine", "dog",
-        "felis", "feline", "cat",
-        "rabbit", "oryctolagus",
-        "bola-", "sla-", "dla-", "ela-", "ola-",
-        "mammal",
-    )
-    if any(tok in s for tok in _other_mammal):
-        return "other_mammal"
-
-    # --- Bird ---
-    _bird = (
-        "gallus", "chicken", "bird", "avian", "aves",
-        "duck", "turkey", "quail", "gaga-",
-    )
-    if any(tok in s for tok in _bird):
-        return "bird"
-
-    # --- Fish ---
-    _fish = (
-        "salmo", "salmon", "trout", "oncorhynchus",
-        "danio", "zebrafish", "fish", "pisces",
-    )
-    if any(tok in s for tok in _fish):
-        return "fish"
-
-    # --- Viruses ---
-    _virus = (
-        "virus", "viral", "influenza", "sars", "cov",
-        "hiv", "hcv", "hbv", "ebv", "cmv", "hsv", "vzv",
-        "htlv", "dengue", "zika", "ebola", "measles",
-        "hepatitis", "retrovirus", "coronavirus",
-        "adenovirus", "papillomavirus", "herpes",
-        "vaccinia", "poxvirus", "flavivirus",
-        "paramyxovirus", "orthomyxovirus",
-        "phage", "bacteriophage",
-    )
-    if any(tok in s for tok in _virus):
-        return "viruses"
-
-    # --- Bacteria ---
-    _bacteria = (
-        "mycobacterium", "tuberculosis", "escherichia", "e. coli",
-        "staphylococcus", "streptococcus", "salmonella",
-        "clostridium", "listeria", "helicobacter",
-        "chlamydia", "borrelia", "treponema",
-        "pseudomonas", "bacillus", "legionella",
-        "neisseria", "rickettsia", "bartonella",
-        "bacterium", "bacteria", "bacterial",
-    )
-    if any(tok in s for tok in _bacteria):
-        return "bacteria"
-
-    # --- Fungi ---
-    _fungi = (
-        "candida", "aspergillus", "cryptococcus",
-        "coccidioides", "histoplasma", "blastomyces",
-        "saccharomyces", "yeast", "fungus", "fungi", "fungal",
-        "pneumocystis", "trichophyton",
-    )
-    if any(tok in s for tok in _fungi):
-        return "fungi"
-
-    # --- Archaea ---
-    _archaea = (
-        "archaea", "archaeal", "methanobacterium",
-        "halobacterium", "sulfolobus", "thermococcus",
-    )
-    if any(tok in s for tok in _archaea):
-        return "archaea"
-
-    # --- Other vertebrate ---
-    _other_vert = (
-        "reptile", "reptilia", "amphibian", "amphibia",
-        "frog", "xenopus", "turtle", "lizard", "snake",
-        "alligator", "crocodile", "salamander",
-    )
-    if any(tok in s for tok in _other_vert):
-        return "other_vertebrate"
-
-    # --- Invertebrate ---
-    _invertebrate = (
-        "drosophila", "insect", "arthropod", "arachnid",
-        "mosquito", "tick", "worm", "nematode", "mollusk",
-        "caenorhabditis", "c. elegans", "invertebrate",
-        "schistosoma", "plasmodium", "toxoplasma",
-        "leishmania", "trypanosoma", "parasite",
-    )
-    if any(tok in s for tok in _invertebrate):
-        return "invertebrate"
+    # Pattern scan — first match wins
+    for keywords, label in _SPECIES_PATTERNS:
+        if any(kw in s for kw in keywords):
+            return label
 
     return None
+
+
+# ---- Roll-up mappings (fine → coarser views) ----
+
+FINE_TO_ORGANISM: Dict[str, str] = {
+    "human": "human",
+    "macaque": "nhp", "chimpanzee": "nhp", "gorilla": "nhp",
+    "orangutan": "nhp", "baboon": "nhp", "other_nhp": "nhp",
+    "mouse": "murine", "rat": "murine",
+    "cattle": "other_mammal", "pig": "other_mammal", "horse": "other_mammal",
+    "sheep": "other_mammal", "goat": "other_mammal", "dog": "other_mammal",
+    "cat": "other_mammal", "rabbit": "other_mammal", "other_mammal": "other_mammal",
+    "chicken": "bird", "other_bird": "bird",
+    "salmon": "other_vertebrate", "zebrafish": "other_vertebrate", "other_fish": "other_vertebrate",
+    "other_vertebrate": "other_vertebrate",
+    "invertebrate": "invertebrate",
+    "viruses": "viruses", "bacteria": "bacteria",
+    "fungi": "fungi", "archaea": "archaea",
+}
+
+FINE_TO_CHAIN_SPECIES: Dict[str, Optional[str]] = {
+    "human": "human",
+    "macaque": "nhp", "chimpanzee": "nhp", "gorilla": "nhp",
+    "orangutan": "nhp", "baboon": "nhp", "other_nhp": "nhp",
+    "mouse": "murine", "rat": "murine",
+    "cattle": "other_mammal", "pig": "other_mammal", "horse": "other_mammal",
+    "sheep": "other_mammal", "goat": "other_mammal", "dog": "other_mammal",
+    "cat": "other_mammal", "rabbit": "other_mammal", "other_mammal": "other_mammal",
+    "chicken": "bird", "other_bird": "bird",
+    "salmon": "other_vertebrate", "zebrafish": "other_vertebrate", "other_fish": "other_vertebrate",
+    "other_vertebrate": "other_vertebrate",
+}
+# Non-animal categories → None (not valid chain species)
+for _fs in FINE_SPECIES:
+    if _fs not in FINE_TO_CHAIN_SPECIES:
+        FINE_TO_CHAIN_SPECIES[_fs] = None
+
+# Backward-compat alias
+FINE_TO_MHC_SPECIES = FINE_TO_CHAIN_SPECIES
+
+FINE_TO_B2M_KEY: Dict[str, Optional[str]] = {
+    "human": "human",
+    # NHP → human B2M (highly conserved across primates)
+    "macaque": "human", "chimpanzee": "human", "gorilla": "human",
+    "orangutan": "human", "baboon": "human", "other_nhp": "human",
+    "mouse": "mouse", "rat": "rat",
+    "cattle": "cattle", "pig": "pig", "horse": "horse",
+    "sheep": "sheep", "goat": "cattle",  # closest available
+    "dog": "dog", "cat": "cat",
+    "rabbit": "cattle",  # closest available
+    "other_mammal": "cattle",
+    "chicken": "chicken", "other_bird": "chicken",
+    "salmon": "salmon", "zebrafish": "salmon", "other_fish": "salmon",
+    "other_vertebrate": "salmon",  # salmon B2M as closest available non-mammal/non-bird
+}
+# Non-animal categories → None
+for _fs in FINE_SPECIES:
+    if _fs not in FINE_TO_B2M_KEY:
+        FINE_TO_B2M_KEY[_fs] = None
+
+FINE_TO_IS_FOREIGN: Dict[str, bool] = {
+    fs: (fs in {"viruses", "bacteria", "fungi", "archaea"})
+    for fs in FINE_SPECIES
+}
+
+
+def normalize_organism(raw: Optional[str]) -> Optional[str]:
+    """Unified normalizer: map any organism name to one of 12 categories.
+
+    Delegates to `normalize_species()` (29-class fine-grained) and rolls up
+    via `FINE_TO_ORGANISM`.
+
+    Returns None if unrecognizable (will result in mask=0, no supervision).
+    """
+    if raw is None:
+        return None
+    # Fast path: direct match on 12-class labels
+    s = str(raw).strip().lower()
+    if s in ORGANISM_TO_IDX:
+        return s
+    fine = normalize_species(raw)
+    if fine is None:
+        return None
+    return FINE_TO_ORGANISM[fine]
 
 # T-cell assay context vocabularies (IEDB/CEDAR assay metadata).
 TCELL_ASSAY_METHODS = [
@@ -410,6 +490,43 @@ TCELL_PEPTIDE_FORMAT_TO_IDX = {
 }
 IDX_TO_TCELL_PEPTIDE_FORMAT = {
     i: name for i, name in enumerate(TCELL_PEPTIDE_FORMATS)
+}
+
+# Binding assay context vocabularies (quantitative affinity metadata).
+BINDING_ASSAY_TYPES = [
+    "unknown",
+    "KD",
+    "KD_PROXY_IC50",
+    "KD_PROXY_EC50",
+    "IC50",
+    "EC50",
+    "OTHER",
+]
+BINDING_ASSAY_TYPE_TO_IDX = {
+    name: i for i, name in enumerate(BINDING_ASSAY_TYPES)
+}
+IDX_TO_BINDING_ASSAY_TYPE = {
+    i: name for i, name in enumerate(BINDING_ASSAY_TYPES)
+}
+
+BINDING_ASSAY_METHODS = [
+    "unknown",
+    "PURIFIED_COMPETITIVE_RADIOACTIVITY",
+    "PURIFIED_DIRECT_FLUORESCENCE",
+    "PURIFIED_COMPETITIVE_FLUORESCENCE",
+    "CELLULAR_COMPETITIVE_FLUORESCENCE",
+    "CELLULAR_DIRECT_FLUORESCENCE",
+    "CELLULAR_COMPETITIVE_RADIOACTIVITY",
+    "CELLULAR_TCELL_INHIBITION",
+    "LYSATE_DIRECT_RADIOACTIVITY",
+    "PURIFIED_DIRECT_RADIOACTIVITY",
+    "OTHER",
+]
+BINDING_ASSAY_METHOD_TO_IDX = {
+    name: i for i, name in enumerate(BINDING_ASSAY_METHODS)
+}
+IDX_TO_BINDING_ASSAY_METHOD = {
+    i: name for i, name in enumerate(BINDING_ASSAY_METHODS)
 }
 
 # Biological validity: which chain types can appear in which cell types

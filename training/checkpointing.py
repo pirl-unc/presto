@@ -234,6 +234,7 @@ def load_model_from_checkpoint(
 
     # Migrate 3-class chain type heads to 6-class fine types if needed
     state_dict = _migrate_chain_type_heads(state_dict)
+    state_dict = _drop_legacy_dead_keys(state_dict)
 
     model = Presto(
         d_model=int(resolved["d_model"]),
@@ -251,12 +252,16 @@ def load_model_from_checkpoint(
 def _migrate_chain_type_heads(
     state_dict: Dict[str, torch.Tensor],
 ) -> Dict[str, torch.Tensor]:
-    """Expand 3-class MHC chain type heads to 6-class fine types.
+    """Migrate MHC chain type heads to current 5-class fine types.
 
-    Old mapping (3 classes):
+    Current mapping (5 classes):
+      MHC_I=0, MHC_IIa=1, MHC_IIb=2, B2M=3, unknown=4
+
+    Old 3-class mapping:
       a: class_I_alpha=0, class_II_alpha=1, unknown=2
       b: class_I_beta=0,  class_II_beta=1,  unknown=2
-    New mapping (6 classes):
+
+    Old 6-class mapping:
       MHC_Ia=0, MHC_Ib=1, MHC_IIa=2, MHC_IIb=3, B2M=4, unknown=5
     """
     for prefix in ("mhc_a_type_head", "mhc_b_type_head"):
@@ -265,78 +270,132 @@ def _migrate_chain_type_heads(
         if w_key not in state_dict:
             continue
         w = state_dict[w_key]
+
         if w.shape[0] == 3:
-            # Need to expand from 3 to 6
+            # Migrate 3 → 5
             d_in = w.shape[1]
-            new_w = torch.zeros(6, d_in, dtype=w.dtype, device=w.device)
-            new_b = torch.zeros(6, dtype=w.dtype, device=w.device)
+            new_w = torch.zeros(5, d_in, dtype=w.dtype, device=w.device)
+            new_b = torch.zeros(5, dtype=w.dtype, device=w.device)
             old_b = state_dict.get(b_key)
 
             if prefix == "mhc_a_type_head":
-                # Old: class_I_alpha=0 → New: MHC_Ia=0 (copy weights)
-                # Old: class_II_alpha=1 → New: MHC_IIa=2
-                # Old: unknown=2 → New: unknown=5
-                new_w[0] = w[0]  # MHC_Ia ← class_I_alpha
-                new_w[2] = w[1]  # MHC_IIa ← class_II_alpha
-                new_w[5] = w[2]  # unknown ← unknown
+                # Old: class_I_alpha=0 → New: MHC_I=0
+                # Old: class_II_alpha=1 → New: MHC_IIa=1
+                # Old: unknown=2 → New: unknown=4
+                new_w[0] = w[0]
+                new_w[1] = w[1]
+                new_w[4] = w[2]
                 if old_b is not None:
                     new_b[0] = old_b[0]
-                    new_b[2] = old_b[1]
-                    new_b[5] = old_b[2]
+                    new_b[1] = old_b[1]
+                    new_b[4] = old_b[2]
             else:
-                # Old: class_I_beta=0 → New: B2M=4
-                # Old: class_II_beta=1 → New: MHC_IIb=3
-                # Old: unknown=2 → New: unknown=5
-                new_w[4] = w[0]  # B2M ← class_I_beta
-                new_w[3] = w[1]  # MHC_IIb ← class_II_beta
-                new_w[5] = w[2]  # unknown ← unknown
+                # Old: class_I_beta=0 → New: B2M=3
+                # Old: class_II_beta=1 → New: MHC_IIb=2
+                # Old: unknown=2 → New: unknown=4
+                new_w[3] = w[0]
+                new_w[2] = w[1]
+                new_w[4] = w[2]
                 if old_b is not None:
-                    new_b[4] = old_b[0]
-                    new_b[3] = old_b[1]
-                    new_b[5] = old_b[2]
+                    new_b[3] = old_b[0]
+                    new_b[2] = old_b[1]
+                    new_b[4] = old_b[2]
 
             state_dict[w_key] = new_w
             state_dict[b_key] = new_b
 
-    # Expand chain_compat_head input dimension if needed (3+3 → 6+6 type probs)
+        elif w.shape[0] == 6:
+            # Migrate 6 → 5 (merge MHC_Ia + MHC_Ib → MHC_I)
+            d_in = w.shape[1]
+            new_w = torch.zeros(5, d_in, dtype=w.dtype, device=w.device)
+            new_b = torch.zeros(5, dtype=w.dtype, device=w.device)
+            old_b = state_dict.get(b_key)
+
+            # Old: MHC_Ia=0, MHC_Ib=1, MHC_IIa=2, MHC_IIb=3, B2M=4, unknown=5
+            # New: MHC_I=0, MHC_IIa=1, MHC_IIb=2, B2M=3, unknown=4
+            # Average Ia and Ib weights for MHC_I
+            new_w[0] = (w[0] + w[1]) / 2.0  # MHC_I ← avg(MHC_Ia, MHC_Ib)
+            new_w[1] = w[2]                   # MHC_IIa
+            new_w[2] = w[3]                   # MHC_IIb
+            new_w[3] = w[4]                   # B2M
+            new_w[4] = w[5]                   # unknown
+            if old_b is not None:
+                new_b[0] = (old_b[0] + old_b[1]) / 2.0
+                new_b[1] = old_b[2]
+                new_b[2] = old_b[3]
+                new_b[3] = old_b[4]
+                new_b[4] = old_b[5]
+
+            state_dict[w_key] = new_w
+            state_dict[b_key] = new_b
+
+    # Migrate chain_compat_head input dimension if needed
     compat_key = "chain_compat_head.0.weight"
     if compat_key in state_dict:
         cw = state_dict[compat_key]
-        # Old input: d_model*2 + 3 + 3 + n_species*2
-        # New input: d_model*2 + 6 + 6 + n_species*2
-        # Difference = 6 extra columns
-        # Check if migration is needed by comparing with expected old size
-        # We detect by looking for the 3→6 expansion (6 extra input dims)
         a_w_key = "mhc_a_type_head.weight"
-        if a_w_key in state_dict and state_dict[a_w_key].shape[0] == 6:
-            # Already migrated type heads to 6; check if compat needs expanding
-            d_in = cw.shape[1]
-            # The new head expects 6 extra dims; if not present, expand
-            # We infer d_model from a type head: d_model = type_head.weight.shape[1]
+        if a_w_key in state_dict:
             d_model = state_dict[a_w_key].shape[1]
             n_species_w = state_dict.get("mhc_a_species_head.weight")
             n_species = n_species_w.shape[0] if n_species_w is not None else 4
-            expected_new = d_model * 2 + 6 + 6 + n_species * 2
-            expected_old = d_model * 2 + 3 + 3 + n_species * 2
-            if d_in == expected_old:
-                # Expand: insert 3 zero columns for each type prob block
-                new_cw = torch.zeros(cw.shape[0], expected_new, dtype=cw.dtype, device=cw.device)
-                # d_model*2 block stays same
+            expected_new = d_model * 2 + 5 + 5 + n_species * 2
+            d_in = cw.shape[1]
+
+            # From old 3+3 format
+            expected_old_3 = d_model * 2 + 3 + 3 + n_species * 2
+            # From old 6+6 format
+            expected_old_6 = d_model * 2 + 6 + 6 + n_species * 2
+
+            if d_in == expected_old_3:
                 dm2 = d_model * 2
+                new_cw = torch.zeros(cw.shape[0], expected_new, dtype=cw.dtype, device=cw.device)
                 new_cw[:, :dm2] = cw[:, :dm2]
-                # Old 3 type-a probs → new 6 type-a probs (map old→new indices)
                 # Old a: [I_alpha=0, II_alpha=1, unknown=2]
-                # New a: [Ia=0, Ib=1, IIa=2, IIb=3, B2M=4, unk=5]
-                new_cw[:, dm2 + 0] = cw[:, dm2 + 0]  # Ia ← I_alpha
-                new_cw[:, dm2 + 2] = cw[:, dm2 + 1]  # IIa ← II_alpha
-                new_cw[:, dm2 + 5] = cw[:, dm2 + 2]  # unk ← unknown
+                # New a: [MHC_I=0, MHC_IIa=1, MHC_IIb=2, B2M=3, unk=4]
+                new_cw[:, dm2 + 0] = cw[:, dm2 + 0]  # MHC_I ← I_alpha
+                new_cw[:, dm2 + 1] = cw[:, dm2 + 1]  # MHC_IIa ← II_alpha
+                new_cw[:, dm2 + 4] = cw[:, dm2 + 2]  # unk ← unknown
                 # Old b: [I_beta=0, II_beta=1, unknown=2]
-                # New b: [Ia=0, Ib=1, IIa=2, IIb=3, B2M=4, unk=5]
-                new_cw[:, dm2 + 6 + 4] = cw[:, dm2 + 3 + 0]  # B2M ← I_beta
-                new_cw[:, dm2 + 6 + 3] = cw[:, dm2 + 3 + 1]  # IIb ← II_beta
-                new_cw[:, dm2 + 6 + 5] = cw[:, dm2 + 3 + 2]  # unk ← unknown
-                # Species probs stay same
-                new_cw[:, dm2 + 12:] = cw[:, dm2 + 6:]
+                new_cw[:, dm2 + 5 + 3] = cw[:, dm2 + 3 + 0]  # B2M ← I_beta
+                new_cw[:, dm2 + 5 + 2] = cw[:, dm2 + 3 + 1]  # MHC_IIb ← II_beta
+                new_cw[:, dm2 + 5 + 4] = cw[:, dm2 + 3 + 2]  # unk ← unknown
+                # Species probs
+                new_cw[:, dm2 + 10:] = cw[:, dm2 + 6:]
+                state_dict[compat_key] = new_cw
+
+            elif d_in == expected_old_6:
+                dm2 = d_model * 2
+                new_cw = torch.zeros(cw.shape[0], expected_new, dtype=cw.dtype, device=cw.device)
+                new_cw[:, :dm2] = cw[:, :dm2]
+                # Old a 6-class: [Ia=0, Ib=1, IIa=2, IIb=3, B2M=4, unk=5]
+                # New a 5-class: [MHC_I=0, MHC_IIa=1, MHC_IIb=2, B2M=3, unk=4]
+                new_cw[:, dm2 + 0] = (cw[:, dm2 + 0] + cw[:, dm2 + 1]) / 2.0
+                new_cw[:, dm2 + 1] = cw[:, dm2 + 2]
+                new_cw[:, dm2 + 2] = cw[:, dm2 + 3]
+                new_cw[:, dm2 + 3] = cw[:, dm2 + 4]
+                new_cw[:, dm2 + 4] = cw[:, dm2 + 5]
+                # Old b 6-class
+                new_cw[:, dm2 + 5 + 0] = (cw[:, dm2 + 6 + 0] + cw[:, dm2 + 6 + 1]) / 2.0
+                new_cw[:, dm2 + 5 + 1] = cw[:, dm2 + 6 + 2]
+                new_cw[:, dm2 + 5 + 2] = cw[:, dm2 + 6 + 3]
+                new_cw[:, dm2 + 5 + 3] = cw[:, dm2 + 6 + 4]
+                new_cw[:, dm2 + 5 + 4] = cw[:, dm2 + 6 + 5]
+                # Species probs
+                new_cw[:, dm2 + 10:] = cw[:, dm2 + 12:]
                 state_dict[compat_key] = new_cw
 
     return state_dict
+
+
+def _drop_legacy_dead_keys(
+    state_dict: Dict[str, torch.Tensor],
+) -> Dict[str, torch.Tensor]:
+    """Drop parameters from modules that were removed from canonical Presto."""
+    dead_prefixes = (
+        "presentation.",
+    )
+    return {
+        key: value
+        for key, value in state_dict.items()
+        if not any(key.startswith(prefix) for prefix in dead_prefixes)
+    }

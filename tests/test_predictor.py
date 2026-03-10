@@ -608,7 +608,8 @@ class TestEmbeddings:
             species="human",
         )
 
-        assert embedding.shape == (1, 64)  # d_model=64
+        # pmhc_vec = interaction_vec: pmhc_interaction_vec_dim = n_queries * token_dim
+        assert embedding.shape == (1, predictor.model.pmhc_interaction_vec_dim)
 
 
 class TestPredictorFromCheckpoint:

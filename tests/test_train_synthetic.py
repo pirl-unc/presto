@@ -132,6 +132,91 @@ def test_compute_loss_applies_tcell_upstream_prior():
     assert float(losses["consistency_tcell_upstream"].item()) > 0.0
 
 
+def test_compute_loss_adds_binding_contrastive_loss_and_batch_diagnostics():
+    samples = [
+        PrestoSample(
+            peptide="SLLQHLIGL",
+            mhc_a="MAVMAPRTLLLLLSGALALTQTWAG",
+            mhc_b="MSRSVALAVLALLSLSGLEA",
+            mhc_class="I",
+            bind_value=50.0,
+            bind_qual=0,
+            species="human",
+            primary_allele="HLA-A*02:01",
+        ),
+        PrestoSample(
+            peptide="SLLQHLIGL",
+            mhc_a="DAVMAPRTLLLLLSGALALTQTWAG",
+            mhc_b="MSRSVALAVLALLSLSGLEA",
+            mhc_class="I",
+            bind_value=5000.0,
+            bind_qual=0,
+            species="human",
+            primary_allele="HLA-A*24:02",
+        ),
+        PrestoSample(
+            peptide="GILGFVFTL",
+            mhc_a="CAVMAPRTLLLLLSGALALTQTWAG",
+            mhc_b="MSRSVALAVLALLSLSGLEA",
+            mhc_class="I",
+            bind_value=200.0,
+            bind_qual=0,
+            species="mouse",
+            primary_allele="H2-Kb",
+        ),
+    ]
+    batch = PrestoCollator(max_pep_len=16, max_mhc_len=64)(samples)
+    model = _DummyOutputsModel(
+        {
+            "binding_affinity_probe_kd": torch.tensor([[2.5], [2.6], [2.4]], dtype=torch.float32),
+            "binding_logit": torch.tensor([0.0, 0.0, 0.0], dtype=torch.float32),
+            "presentation_logit": torch.zeros((3, 1), dtype=torch.float32),
+            "processing_logit": torch.zeros((3, 1), dtype=torch.float32),
+            "elution_logit": torch.zeros((3, 1), dtype=torch.float32),
+            "ms_logit": torch.zeros((3, 1), dtype=torch.float32),
+            "binding_latents": {
+                "log_koff": torch.tensor([[7.9], [0.0], [-7.9]], dtype=torch.float32),
+                "log_kon_intrinsic": torch.tensor([[0.0], [7.8], [-7.8]], dtype=torch.float32),
+                "log_kon_chaperone": torch.tensor([[0.0], [-7.8], [7.8]], dtype=torch.float32),
+            },
+            "binding_logit_from_core": torch.tensor([19.5, -19.5, 0.0], dtype=torch.float32),
+            "binding_kd_bias": torch.tensor([[0.15], [0.18], [0.02]], dtype=torch.float32),
+            "binding_kd_bias_raw": torch.tensor([[0.4], [0.7], [0.1]], dtype=torch.float32),
+            "binding_kd_bias_cap": torch.tensor([0.2], dtype=torch.float32),
+            "assays": {
+                # Purposely wrong order for the first two samples to trigger ranking loss.
+                "KD_nM": torch.tensor([[4.0], [1.0], [2.0]], dtype=torch.float32),
+                "IC50_nM": torch.tensor([[4.0], [1.0], [2.0]], dtype=torch.float32),
+                "EC50_nM": torch.tensor([[4.0], [1.0], [2.0]], dtype=torch.float32),
+            },
+        }
+    )
+
+    total, losses, metrics = compute_loss(
+        model=model,
+        batch=batch,
+        device="cpu",
+        regularization={
+            "binding_contrastive_weight": 1.0,
+            "binding_contrastive_margin": 0.3,
+            "binding_contrastive_target_gap_min": 0.5,
+            "binding_contrastive_target_gap_cap": 1.5,
+            "binding_contrastive_max_pairs": 8,
+        },
+    )
+
+    assert torch.isfinite(total)
+    assert "binding_contrastive" in losses
+    assert float(losses["binding_contrastive"].item()) > 0.0
+    assert metrics["out_binding_same_peptide_diff_allele_pairs"] >= 1.0
+    assert metrics["out_binding_same_peptide_rankable_pairs"] >= 1.0
+    assert metrics["batch_unique_alleles"] == 3.0
+    assert metrics["batch_unique_species"] == 2.0
+    assert metrics["out_binding_contrastive_required_gap_mean"] == pytest.approx(1.5)
+    assert "out_binding_log_koff_near_upper_rate" in metrics
+    assert "out_binding_probe_core_kd_l1_mean" in metrics
+
+
 def test_compute_loss_applies_tcell_context_prior():
     samples = [
         PrestoSample(

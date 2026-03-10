@@ -9,7 +9,6 @@ from .vocab import (
     FULL_TO_CDR3,
     CELL_TYPES,
     MHC_TYPES,
-    SPECIES,
     TCELL_ASSAY_METHODS,
     TCELL_ASSAY_METHOD_TO_IDX,
     IDX_TO_TCELL_ASSAY_METHOD,
@@ -34,6 +33,21 @@ from .vocab import (
     MHC_SPECIES_CATEGORIES,
     FOREIGN_CATEGORIES,
     normalize_organism,
+    # Chain species (6-class vertebrate subset)
+    CHAIN_SPECIES_CATEGORIES,
+    CHAIN_SPECIES_TO_IDX,
+    IDX_TO_CHAIN_SPECIES,
+    N_CHAIN_SPECIES,
+    # Fine-grained species normalization
+    FINE_SPECIES,
+    FINE_SPECIES_TO_IDX,
+    N_FINE_SPECIES,
+    normalize_species,
+    FINE_TO_ORGANISM,
+    FINE_TO_CHAIN_SPECIES,
+    FINE_TO_MHC_SPECIES,
+    FINE_TO_B2M_KEY,
+    FINE_TO_IS_FOREIGN,
     VALID_CHAIN_CELL,
     CELL_MHC_COMPATIBILITY,
     is_valid_chain_cell,
@@ -58,13 +72,28 @@ from .allele_resolver import (
     infer_mhc_class,
     infer_gene,
     infer_species,
+    class_ii_default_dra_allele,
+    is_class_ii_dr_beta_allele,
     infer_processing_species_from_allele,
     class_i_beta2m_sequence,
+    DEFAULT_DR_ALPHA_BY_PREFIX,
+    DEFAULT_DR_ALPHA_BY_SPECIES,
     HUMAN_B2M_SEQUENCE,
     MOUSE_B2M_SEQUENCE,
     MACAQUE_B2M_SEQUENCE,
     PROCESSING_SPECIES_BUCKETS,
     PROCESSING_SPECIES_TO_IDX,
+)
+from .groove import (
+    GrooveResult,
+    PreparedMHCInput,
+    find_cys_pairs,
+    classify_cys_pair,
+    parse_class_i,
+    parse_class_ii_alpha,
+    parse_class_ii_beta,
+    extract_groove,
+    prepare_mhc_input,
 )
 from .loaders import (
     # Record types
@@ -77,6 +106,7 @@ from .loaders import (
     BCellRecord,
     Sc10xVDJRecord,
     VDJdbRecord,
+    TcrEvidenceRecord,
     TCRpMHCRecord,  # Backward compat alias for VDJdbRecord
     UniProtProtein,
     # IEDB loaders
@@ -90,6 +120,9 @@ from .loaders import (
     load_10x_vdj,
     # VDJdb loader
     load_vdjdb,
+    load_vdjdb_tcr_evidence,
+    load_mcpas_tcr_evidence,
+    vdjdb_record_to_tcr_evidence,
     # Simple loaders (backward compat)
     load_binding_csv,
     load_elution_csv,

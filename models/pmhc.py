@@ -18,6 +18,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from .encoders import SequenceEncoder
+from .heads import smooth_range_bound
 from ..data.vocab import AA_TO_IDX, AA_VOCAB
 from ..data.allele_resolver import (
     normalize_mhc_class,
@@ -421,12 +422,12 @@ class BindingModule(nn.Module):
         Returns:
             Dict with log_koff, log_kon_intrinsic, log_kon_chaperone (all log10 scale)
         """
-        log_koff = torch.clamp(self.head_log_koff(pmhc_vec), min=-8.0, max=8.0)
-        log_kon_intrinsic = torch.clamp(
-            self.head_log_kon_intrinsic(pmhc_vec), min=-8.0, max=8.0
+        log_koff = smooth_range_bound(self.head_log_koff(pmhc_vec), -8.0, 8.0)
+        log_kon_intrinsic = smooth_range_bound(
+            self.head_log_kon_intrinsic(pmhc_vec), -8.0, 8.0
         )
-        log_kon_chaperone = torch.clamp(
-            self.head_log_kon_chaperone(pmhc_vec), min=-8.0, max=8.0
+        log_kon_chaperone = smooth_range_bound(
+            self.head_log_kon_chaperone(pmhc_vec), -8.0, 8.0
         )
 
         return {
@@ -442,15 +443,19 @@ class BindingModule(nn.Module):
         log10(KD_nM) = log10(koff) - log10(kon_total) + 9
         (the +9 converts from M to nM)
         """
-        log_koff = torch.clamp(latents["log_koff"], min=-8.0, max=8.0)
+        log_koff = smooth_range_bound(latents["log_koff"], -8.0, 8.0)
         # Combine kon_intrinsic and kon_chaperone (sum in linear space)
-        kon_intrinsic = torch.pow(10, torch.clamp(latents["log_kon_intrinsic"], min=-8.0, max=8.0))
-        kon_chaperone = torch.pow(10, torch.clamp(latents["log_kon_chaperone"], min=-8.0, max=8.0))
+        kon_intrinsic = torch.pow(
+            10, smooth_range_bound(latents["log_kon_intrinsic"], -8.0, 8.0)
+        )
+        kon_chaperone = torch.pow(
+            10, smooth_range_bound(latents["log_kon_chaperone"], -8.0, 8.0)
+        )
         kon_total = kon_intrinsic + kon_chaperone
         log_kon_total = torch.log10(kon_total.clamp(min=1e-10, max=1e10))
 
         # KD in M, convert to nM (*1e9 = +9 in log space)
-        log_kd_nM = torch.clamp(log_koff - log_kon_total + 9, min=-3.0, max=8.0)
+        log_kd_nM = smooth_range_bound(log_koff - log_kon_total + 9, -3.0, 8.0)
         return log_kd_nM
 
     def derive_half_life(self, latents: Dict[str, torch.Tensor]) -> torch.Tensor:
@@ -460,10 +465,10 @@ class BindingModule(nn.Module):
         log10(t1/2_min) = log10(ln(2)) - log10(koff) - log10(60)
         (the -log10(60) converts from seconds to minutes)
         """
-        log_koff = torch.clamp(latents["log_koff"], min=-8.0, max=8.0)
+        log_koff = smooth_range_bound(latents["log_koff"], -8.0, 8.0)
         # ln(2) ≈ 0.693, log10(ln(2)) ≈ -0.159
         # log10(60) ≈ 1.778
-        log_t_half_min = torch.clamp(-0.159 - log_koff - 1.778, min=-8.0, max=8.0)
+        log_t_half_min = smooth_range_bound(-0.159 - log_koff - 1.778, -8.0, 8.0)
         return log_t_half_min
 
 
@@ -911,5 +916,3 @@ class PresentationBottleneck(nn.Module):
         if core_window_prior_logit is not None:
             combined = combined + w_r * core_window_prior_logit
         return combined
-
-

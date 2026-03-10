@@ -15,10 +15,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from ..data.vocab import (
+    CHAIN_SPECIES_CATEGORIES,
     CHAIN_TYPES,
     CELL_TYPES,
     MHC_TYPES,
-    SPECIES,
     CELL_MHC_COMPATIBILITY,
     CELL_TO_IDX,
     MHC_TO_IDX,
@@ -177,7 +177,7 @@ class ChainAttributeClassifier(nn.Module):
     """Per-chain classifier for species × chain type × cell phenotype.
 
     Given a single chain sequence, predicts:
-    - Species: human, mouse, macaque, other
+    - Species: human, nhp, murine, other_mammal, bird, fish
     - Chain type: TRA, TRB, TRG, TRD, IGH, IGK, IGL
     - Cell phenotype: CD4_T, CD8_T, ab_T, gd_T, B_cell
 
@@ -190,7 +190,7 @@ class ChainAttributeClassifier(nn.Module):
         self.encoder = SequenceEncoder(
             d_model=d_model, n_layers=n_layers, n_heads=n_heads
         )
-        self.species_head = nn.Linear(d_model, len(SPECIES))
+        self.species_head = nn.Linear(d_model, len(CHAIN_SPECIES_CATEGORIES))
         self.chain_head = nn.Linear(d_model, len(CHAIN_TYPES))
         self.phenotype_head = nn.Linear(d_model, len(CELL_TYPES))
 
@@ -329,7 +329,7 @@ class RepertoireHead(nn.Module):
 
     def __init__(self, d_model: int = 256, n_species: int = None):
         super().__init__()
-        n_species = n_species or len(SPECIES)
+        n_species = n_species or len(CHAIN_SPECIES_CATEGORIES)
         self.species_embed = nn.Embedding(n_species, d_model // 4)
         self.head = nn.Sequential(
             nn.Linear(d_model + d_model // 4, d_model // 2),

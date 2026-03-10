@@ -986,3 +986,133 @@ def test_create_dataloader_balanced_batches_use_proportional_task_quotas():
     task_counts = Counter(dataset[idx].assay_group for idx in batch_indices)
     assert task_counts["tcell_response"] == 1
     assert task_counts["binding_ic50"] == 19
+
+
+def test_create_dataloader_balanced_batches_preserve_allele_class_and_species_diversity():
+    binding_records = [
+        BindingRecord(
+            peptide=f"SIINFEK{i}",
+            mhc_allele="HLA-A*02:01",
+            value=50.0 + float(i),
+            measurement_type="IC50",
+            mhc_class="I",
+            species="Homo sapiens",
+            source="iedb",
+        )
+        for i in range(2)
+    ] + [
+        BindingRecord(
+            peptide=f"DRPEPTIDE{i}",
+            mhc_allele="HLA-DRB1*01:01",
+            value=500.0 + float(i),
+            measurement_type="IC50",
+            mhc_class="II",
+            species="Homo sapiens",
+            source="iedb",
+        )
+        for i in range(2)
+    ] + [
+        BindingRecord(
+            peptide=f"MAMUPEPT{i}",
+            mhc_allele="Mamu-A*01:01",
+            value=150.0 + float(i),
+            measurement_type="IC50",
+            mhc_class="I",
+            species="Macaca mulatta",
+            source="iedb",
+        )
+        for i in range(2)
+    ]
+    dataset = PrestoDataset(
+        binding_records=binding_records,
+        mhc_sequences={
+            "HLA-A*02:01": MHC_ALPHA_SEQ,
+            "HLA-DRA*01:01": MHC_DR_ALPHA_SEQ,
+            "HLA-DRB1*01:01": MHC_DR_BETA_SEQ,
+            "Mamu-A*01:01": MHC_ALPHA_SEQ,
+        },
+    )
+    loader = create_dataloader(
+        dataset,
+        batch_size=3,
+        shuffle=True,
+        balanced=True,
+        seed=17,
+    )
+
+    batch_indices = next(iter(loader.batch_sampler))
+    batch_samples = [dataset[idx] for idx in batch_indices]
+    assert len({sample.primary_allele for sample in batch_samples}) == 3
+    assert len({sample.mhc_class for sample in batch_samples}) == 2
+    assert len({sample.species for sample in batch_samples}) == 2
+
+
+def test_create_dataloader_balanced_batches_include_rankable_binding_family_pairs():
+    binding_records = [
+        BindingRecord(
+            peptide="PAIRPEP1",
+            mhc_allele="HLA-A*02:01",
+            value=50.0,
+            measurement_type="IC50",
+            mhc_class="I",
+            species="Homo sapiens",
+            source="iedb",
+        ),
+        BindingRecord(
+            peptide="PAIRPEP1",
+            mhc_allele="HLA-A*24:02",
+            value=5000.0,
+            measurement_type="IC50",
+            mhc_class="I",
+            species="Homo sapiens",
+            source="iedb",
+        ),
+        BindingRecord(
+            peptide="DRPAIR1",
+            mhc_allele="HLA-DRB1*01:01",
+            value=700.0,
+            measurement_type="IC50",
+            mhc_class="II",
+            species="Homo sapiens",
+            source="iedb",
+        ),
+        BindingRecord(
+            peptide="MAMUPAIR",
+            mhc_allele="Mamu-A*01:01",
+            value=150.0,
+            measurement_type="IC50",
+            mhc_class="I",
+            species="Macaca mulatta",
+            source="iedb",
+        ),
+    ]
+    dataset = PrestoDataset(
+        binding_records=binding_records,
+        mhc_sequences={
+            "HLA-A*02:01": MHC_ALPHA_SEQ,
+            "HLA-A*24:02": MHC_ALT_SEQ,
+            "HLA-DRA*01:01": MHC_DR_ALPHA_SEQ,
+            "HLA-DRB1*01:01": MHC_DR_BETA_SEQ,
+            "Mamu-A*01:01": MHC_ALPHA_SEQ,
+        },
+    )
+    loader = create_dataloader(
+        dataset,
+        batch_size=4,
+        shuffle=True,
+        balanced=True,
+        seed=23,
+    )
+
+    batch_indices = next(iter(loader.batch_sampler))
+    batch_samples = [dataset[idx] for idx in batch_indices]
+    pair_samples = [sample for sample in batch_samples if sample.peptide == "PAIRPEP1"]
+
+    assert len(pair_samples) == 2
+    assert {sample.primary_allele for sample in pair_samples} == {
+        "HLA-A*02:01",
+        "HLA-A*24:02",
+    }
+    assert len({sample.primary_allele for sample in batch_samples}) == 4
+    assert len({sample.mhc_class for sample in batch_samples}) == 2
+    assert len({sample.species for sample in batch_samples}) == 2

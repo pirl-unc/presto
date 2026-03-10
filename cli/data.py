@@ -26,6 +26,7 @@ from ..data.downloaders import (
 from ..data.cross_source_dedup import deduplicate_all
 from ..data.mhc_index import (
     MHCIndexError,
+    augment_mhc_index,
     build_mhc_index,
     resolve_alleles,
     summarize_mhc_index,
@@ -516,7 +517,7 @@ def cmd_data_merge(args: Any) -> int:
     else:
         output_path = datadir / "merged_deduped.tsv"
     assay_outdir = None
-    if not args.no_assay_csv:
+    if args.per_assay_csv:
         assay_outdir = (
             Path(args.assay_outdir)
             if args.assay_outdir
@@ -655,6 +656,32 @@ def cmd_data_mhc_index_build(args: Any) -> int:
         print(f"  out_csv:       {args.out_csv}")
         if args.out_fasta:
             print(f"  out_fasta:     {args.out_fasta}")
+    return 0
+
+
+def cmd_data_mhc_index_augment(args: Any) -> int:
+    """Handle 'presto data mhc-index augment' command."""
+    try:
+        stats = augment_mhc_index(
+            index_csv=args.index_csv,
+            output_csv=args.out_csv,
+        )
+    except MHCIndexError as exc:
+        print(f"Error augmenting MHC index: {exc}", file=sys.stderr)
+        return 1
+
+    if not args.quiet:
+        print("MHC index augmented:")
+        print(f"  index_csv:        {args.index_csv}")
+        print(f"  out_csv:          {args.out_csv}")
+        print(f"  total_records:    {stats['total_records']}")
+        print(f"  functional_true:  {stats['functional_true']}")
+        print(f"  functional_false: {stats['functional_false']}")
+        groove_counts = stats.get("by_groove_status", {})
+        if isinstance(groove_counts, dict) and groove_counts:
+            print("  groove_status:")
+            for key, value in groove_counts.items():
+                print(f"    {key}: {value}")
     return 0
 
 
