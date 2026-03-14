@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""DAG sanity check: ~500 mini-batch training run on Modal A100.
+"""DAG sanity check: ~500 mini-batch training run on Modal.
 
 Verifies the model learns pMHC binding motifs after architectural changes.
 Uses SLLQHLIGL with HLA-A*02:01 (known binder) vs HLA-A*24:02 (non-binder)
@@ -33,7 +33,7 @@ from typing import Any, Dict, List, Optional, Set
 
 import modal
 
-DEFAULT_GPU = os.environ.get("PRESTO_MODAL_GPU", "A100")
+DEFAULT_GPU = os.environ.get("PRESTO_MODAL_GPU", "H100!")
 DEFAULT_TIMEOUT_SECONDS = int(os.environ.get("PRESTO_MODAL_TIMEOUT_SECONDS", 3600))
 
 LOCAL_IMAGE_IGNORE = [

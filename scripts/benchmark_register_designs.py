@@ -14,6 +14,8 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
+from experiment_registry import default_agent_label, initialize_experiment_dir
+
 
 DEFAULT_ALLELES = (
     "HLA-A*02:01",
@@ -483,7 +485,8 @@ def _iter_target_runs(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Launch and poll Stage-A register design benchmarks")
-    parser.add_argument("--output-dir", type=str, default="modal_runs/register_design_stage_a")
+    parser.add_argument("--agent-label", type=str, default=default_agent_label())
+    parser.add_argument("--output-dir", type=str, default="")
     parser.add_argument("--prefix", type=str, default="register-stagea-20260308")
     parser.add_argument("--seeds", type=str, default="41,42,43")
     parser.add_argument("--epochs", type=int, default=12)
@@ -497,7 +500,28 @@ def main() -> None:
     parser.add_argument("--max-polls", type=int, default=1)
     args = parser.parse_args()
 
-    output_dir = Path(args.output_dir)
+    output_dir = initialize_experiment_dir(
+        out_dir=str(args.output_dir),
+        slug="register-stage-a",
+        title="Register Design Stage A",
+        source_script="scripts/benchmark_register_designs.py",
+        agent_label=str(args.agent_label),
+        metadata={
+            "dataset_contract": {
+                "panel": DEFAULT_ALLELES,
+                "measurement_profile": "direct_affinity_only",
+                "measurement_type_filter": "ic50",
+                "qualifier_filter": "exact",
+                "warm_start": str(args.warm_start),
+            },
+            "training": {
+                "epochs": int(args.epochs),
+                "batch_size": int(args.batch_size),
+                "seeds": [int(seed) for seed in _parse_csv(str(args.seeds))],
+            },
+            "tested": [design.design_id for design in DESIGNS],
+        },
+    )
     manifest_path = output_dir / "manifest.json"
     manifest = _load_manifest(manifest_path)
     known_by_run = {str(item["run_id"]): dict(item) for item in manifest.get("runs", [])}
