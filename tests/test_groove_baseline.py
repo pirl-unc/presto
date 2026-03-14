@@ -157,9 +157,20 @@ class TestGrooveBaselineLoss:
 
 
 class TestGrooveTransformerModel:
-    def test_forward_shape(self):
+    @pytest.mark.parametrize("peptide_pos_mode", ["triple", "start_only", "mlp_start_end_frac"])
+    @pytest.mark.parametrize("groove_pos_mode", ["triple", "end_only", "concat_start_end"])
+    def test_forward_shape(self, peptide_pos_mode: str, groove_pos_mode: str):
         """Output is (B, 1)."""
-        model = GrooveTransformerModel(vocab_size=26, embed_dim=32, n_heads=4, n_layers=1, ff_dim=64, hidden_dim=64)
+        model = GrooveTransformerModel(
+            vocab_size=26,
+            embed_dim=32,
+            n_heads=4,
+            n_layers=1,
+            ff_dim=64,
+            hidden_dim=64,
+            peptide_pos_mode=peptide_pos_mode,
+            groove_pos_mode=groove_pos_mode,
+        )
         batch = _make_batch(batch_size=4)
         out = model(batch.pep_tok, batch.mhc_a_tok, batch.mhc_b_tok)
         assert out.shape == (4, 1)

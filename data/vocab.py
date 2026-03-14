@@ -529,6 +529,36 @@ IDX_TO_BINDING_ASSAY_METHOD = {
     i: name for i, name in enumerate(BINDING_ASSAY_METHODS)
 }
 
+BINDING_ASSAY_PREP = [
+    "unknown",
+    "PURIFIED",
+    "CELLULAR",
+    "LYSATE",
+    "BINDING_ASSAY",
+    "OTHER",
+]
+BINDING_ASSAY_PREP_TO_IDX = {name: i for i, name in enumerate(BINDING_ASSAY_PREP)}
+IDX_TO_BINDING_ASSAY_PREP = {i: name for i, name in enumerate(BINDING_ASSAY_PREP)}
+
+BINDING_ASSAY_GEOMETRY = [
+    "unknown",
+    "COMPETITIVE",
+    "DIRECT",
+    "T_CELL_INHIBITION",
+    "OTHER",
+]
+BINDING_ASSAY_GEOMETRY_TO_IDX = {name: i for i, name in enumerate(BINDING_ASSAY_GEOMETRY)}
+IDX_TO_BINDING_ASSAY_GEOMETRY = {i: name for i, name in enumerate(BINDING_ASSAY_GEOMETRY)}
+
+BINDING_ASSAY_READOUT = [
+    "unknown",
+    "RADIOACTIVITY",
+    "FLUORESCENCE",
+    "OTHER",
+]
+BINDING_ASSAY_READOUT_TO_IDX = {name: i for i, name in enumerate(BINDING_ASSAY_READOUT)}
+IDX_TO_BINDING_ASSAY_READOUT = {i: name for i, name in enumerate(BINDING_ASSAY_READOUT)}
+
 # Biological validity: which chain types can appear in which cell types
 VALID_CHAIN_CELL: dict[str, Set[str]] = {
     # Full-length chains

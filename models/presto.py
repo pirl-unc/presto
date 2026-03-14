@@ -28,6 +28,7 @@ from .presto_modules import (
 )
 from .heads import TCellAssayHead, ElutionHead
 from .affinity import (
+    AFFINITY_TARGET_ENCODINGS,
     DEFAULT_MAX_AFFINITY_NM,
     DEFAULT_BINDING_MIDPOINT_NM,
     DEFAULT_BINDING_LOG10_SCALE,
@@ -203,6 +204,7 @@ class Presto(nn.Module):
         n_heads: int = 8,
         n_categories: Optional[int] = None,
         max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
+        affinity_target_encoding: str = "log10",
         binding_midpoint_nM: float = DEFAULT_BINDING_MIDPOINT_NM,
         binding_log10_scale: float = DEFAULT_BINDING_LOG10_SCALE,
         # --- Binding latent architecture flags ---
@@ -213,16 +215,27 @@ class Presto(nn.Module):
         use_pmhc_interaction_block: bool = False,    # C: pMHC interaction block
         pmhc_interaction_layers: int = 2,            # C: num layers
         use_groove_prior: bool = True,               # D: groove attention bias
+        peptide_pos_mode: str = "triple",
         groove_pos_mode: str = "sequential",
         core_window_lengths: Optional[Sequence[int]] = None,
         core_refinement_mode: str = "shared",
         affinity_assay_mode: str = "score_context",
+        affinity_assay_residual_mode: str = "legacy",
+        kd_grouping_mode: str = "merged_kd",
+        binding_kinetic_input_mode: str = "affinity_vec",
+        binding_direct_segment_mode: str = "off",
     ):
         """Initialize Presto."""
         super().__init__()
         self.d_model = d_model
         self.n_categories = None  # deprecated; kept for backward compat
         self.max_affinity_nM = float(max_affinity_nM)
+        affinity_target_encoding = str(affinity_target_encoding).strip().lower()
+        if affinity_target_encoding not in AFFINITY_TARGET_ENCODINGS:
+            raise ValueError(
+                f"Unsupported affinity_target_encoding: {affinity_target_encoding!r}"
+            )
+        self.affinity_target_encoding = affinity_target_encoding
         self.max_log10_nM = max_log10_nM(self.max_affinity_nM)
         self.binding_midpoint_nM = float(binding_midpoint_nM)
         self.binding_midpoint_log10_nM = math.log10(max(self.binding_midpoint_nM, 1e-12))
@@ -251,8 +264,37 @@ class Presto(nn.Module):
         self.max_pfr_length = 50
         self.pfr_length_dim = 32
         self.use_groove_prior = use_groove_prior
+        peptide_pos_mode = str(peptide_pos_mode).strip().lower()
+        if peptide_pos_mode not in {
+            "triple",
+            "triple_baseline",
+            "abs_only",
+            "triple_plus_abs",
+            "start_only",
+            "end_only",
+            "start_plus_end",
+            "concat_start_end",
+            "concat_start_end_frac",
+            "mlp_start_end",
+            "mlp_start_end_frac",
+        }:
+            raise ValueError(f"Unsupported peptide_pos_mode: {peptide_pos_mode!r}")
+        self.peptide_pos_mode = peptide_pos_mode
         groove_pos_mode = str(groove_pos_mode).strip().lower()
-        if groove_pos_mode not in {"sequential", "triple"}:
+        if groove_pos_mode not in {
+            "sequential",
+            "triple",
+            "triple_baseline",
+            "abs_only",
+            "triple_plus_abs",
+            "start_only",
+            "end_only",
+            "start_plus_end",
+            "concat_start_end",
+            "concat_start_end_frac",
+            "mlp_start_end",
+            "mlp_start_end_frac",
+        }:
             raise ValueError(f"Unsupported groove_pos_mode: {groove_pos_mode!r}")
         self.groove_pos_mode = groove_pos_mode
         core_refinement_mode = str(core_refinement_mode).strip().lower()
@@ -263,6 +305,41 @@ class Presto(nn.Module):
         if affinity_assay_mode not in {"legacy", "score_context"}:
             raise ValueError(f"Unsupported affinity_assay_mode: {affinity_assay_mode!r}")
         self.affinity_assay_mode = affinity_assay_mode
+        affinity_assay_residual_mode = str(affinity_assay_residual_mode).strip().lower()
+        if affinity_assay_residual_mode not in {
+            "legacy",
+            "pooled_single_output",
+            "shared_base_segment_residual",
+            "shared_base_factorized_context_residual",
+            "shared_base_factorized_context_plus_segment_residual",
+        }:
+            raise ValueError(
+                f"Unsupported affinity_assay_residual_mode: {affinity_assay_residual_mode!r}"
+            )
+        self.affinity_assay_residual_mode = affinity_assay_residual_mode
+        kd_grouping_mode = str(kd_grouping_mode).strip().lower()
+        if kd_grouping_mode not in {"merged_kd", "split_kd_proxy"}:
+            raise ValueError(f"Unsupported kd_grouping_mode: {kd_grouping_mode!r}")
+        self.kd_grouping_mode = kd_grouping_mode
+        binding_kinetic_input_mode = str(binding_kinetic_input_mode).strip().lower()
+        if binding_kinetic_input_mode not in {"affinity_vec", "interaction_vec", "fused"}:
+            raise ValueError(
+                "Unsupported binding_kinetic_input_mode: "
+                f"{binding_kinetic_input_mode!r}"
+            )
+        self.binding_kinetic_input_mode = binding_kinetic_input_mode
+        binding_direct_segment_mode = str(binding_direct_segment_mode).strip().lower()
+        if binding_direct_segment_mode not in {
+            "off",
+            "affinity_residual",
+            "affinity_stability_residual",
+            "gated_affinity",
+        }:
+            raise ValueError(
+                "Unsupported binding_direct_segment_mode: "
+                f"{binding_direct_segment_mode!r}"
+            )
+        self.binding_direct_segment_mode = binding_direct_segment_mode
         self._has_binding_enhancements = (
             binding_n_latent_layers != self.N_LATENT_LAYERS
             or binding_n_queries > 1
@@ -284,8 +361,21 @@ class Presto(nn.Module):
         # Peptide: triple-frame encoding
         self.pep_nterm_pos = nn.Embedding(50, d_model)
         self.pep_cterm_pos = nn.Embedding(50, d_model)
+        self.pep_abs_pos = nn.Embedding(50, d_model)
         self.pep_frac_mlp = nn.Sequential(
             nn.Linear(1, d_model), nn.GELU(), nn.Linear(d_model, d_model)
+        )
+        self.pep_pos_concat_proj = nn.Linear(2 * d_model, d_model)
+        self.pep_pos_concat_frac_proj = nn.Linear(2 * d_model + 2, d_model)
+        self.pep_pos_concat_mlp = nn.Sequential(
+            nn.Linear(2 * d_model, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
+        )
+        self.pep_pos_concat_frac_mlp = nn.Sequential(
+            nn.Linear(2 * d_model + 2, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
         )
         # Flanks: distance-from-cleavage
         self.nflank_dist_pos = nn.Embedding(25, d_model)
@@ -293,10 +383,24 @@ class Presto(nn.Module):
         # Groove halves: per-segment sequential
         self.groove_1_pos = nn.Embedding(120, d_model)
         self.groove_2_pos = nn.Embedding(120, d_model)
+        self.groove_1_abs_pos = nn.Embedding(120, d_model)
+        self.groove_2_abs_pos = nn.Embedding(120, d_model)
         self.groove_1_end_pos = nn.Embedding(120, d_model)
         self.groove_2_end_pos = nn.Embedding(120, d_model)
         self.groove_frac_mlp = nn.Sequential(
             nn.Linear(1, d_model), nn.GELU(), nn.Linear(d_model, d_model)
+        )
+        self.groove_pos_concat_proj = nn.Linear(2 * d_model, d_model)
+        self.groove_pos_concat_frac_proj = nn.Linear(2 * d_model + 2, d_model)
+        self.groove_pos_concat_mlp = nn.Sequential(
+            nn.Linear(2 * d_model, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
+        )
+        self.groove_pos_concat_frac_mlp = nn.Sequential(
+            nn.Linear(2 * d_model + 2, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
         )
         # Binding-core positions within the candidate window.
         self.core_position_embed = nn.Embedding(self.core_window_size, d_model)
@@ -333,6 +437,21 @@ class Presto(nn.Module):
             nn.Linear(self.pmhc_interaction_vec_dim, d_model),
             nn.GELU(),
             nn.Linear(d_model, d_model),
+        )
+        self.binding_direct_segment_affinity_proj = nn.Sequential(
+            nn.Linear(3 * d_model, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
+        )
+        self.binding_direct_segment_stability_proj = nn.Sequential(
+            nn.Linear(3 * d_model, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, d_model),
+        )
+        self.binding_direct_segment_gate = nn.Sequential(
+            nn.Linear(2 * d_model, d_model // 2),
+            nn.GELU(),
+            nn.Linear(d_model // 2, 1),
         )
         # Class-specific processing projections
         self.processing_class1_proj = nn.Linear(d_model, d_model)
@@ -517,10 +636,16 @@ class Presto(nn.Module):
         self.class2_processing_predictor = ClassProcessingPredictor(d_model)
         self.affinity_predictor = AffinityPredictor(
             d_model=d_model,
+            interaction_dim=self.pmhc_interaction_vec_dim,
             max_log10_nM=self.max_log10_nM,
             binding_midpoint_nM=self.binding_midpoint_nM,
             binding_log10_scale=self.binding_log10_scale,
             affinity_assay_mode=self.affinity_assay_mode,
+            binding_kinetic_input_mode=self.binding_kinetic_input_mode,
+            affinity_assay_residual_mode=self.affinity_assay_residual_mode,
+            kd_grouping_mode=self.kd_grouping_mode,
+            affinity_target_encoding=self.affinity_target_encoding,
+            max_affinity_nM=self.max_affinity_nM,
         )
         self.class1_presentation_predictor = ClassPresentationPredictor(d_model)
         self.class2_presentation_predictor = ClassPresentationPredictor(d_model)
@@ -906,18 +1031,29 @@ class Presto(nn.Module):
         seq_len = tokens.shape[1]
         tok_ids = tokens.clamp(min=0, max=len(AA_VOCAB) - 1)
 
-        # Peptide: triple-frame (N-term distance, C-term distance, fractional)
+        # Peptide position encoding.
         pep_sl = offsets["peptide"]
         pep_len_per = (tokens[:, pep_sl] != 0).sum(dim=1).clamp(min=1)  # (B,)
         pep_idx = torch.arange(pep_sl.stop - pep_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
         nterm_idx = pep_idx.clamp(max=self.pep_nterm_pos.num_embeddings - 1)
         cterm_dist = (pep_len_per.unsqueeze(1) - 1 - pep_idx).clamp(min=0)
         cterm_idx = cterm_dist.clamp(max=self.pep_cterm_pos.num_embeddings - 1)
-        frac_pos = pep_idx.float() / (pep_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-        pep_pos_embed = (
-            self.pep_nterm_pos(nterm_idx)
-            + self.pep_cterm_pos(cterm_idx)
-            + self.pep_frac_mlp(frac_pos.unsqueeze(-1))
+        nterm_frac = pep_idx.float() / (pep_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+        cterm_frac = cterm_dist.float() / (pep_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+        pep_pos_embed = self._compose_position_signal(
+            mode=self.peptide_pos_mode,
+            start_embed=self.pep_nterm_pos(nterm_idx),
+            end_embed=self.pep_cterm_pos(cterm_idx),
+            start_frac=nterm_frac,
+            end_frac=cterm_frac,
+            frac_mlp=self.pep_frac_mlp,
+            abs_embed=self.pep_abs_pos(
+                pep_idx.clamp(max=self.pep_abs_pos.num_embeddings - 1)
+            ),
+            concat_proj=self.pep_pos_concat_proj,
+            concat_frac_proj=self.pep_pos_concat_frac_proj,
+            concat_mlp=self.pep_pos_concat_mlp,
+            concat_frac_mlp=self.pep_pos_concat_frac_mlp,
         )
 
         # N-flank: distance-from-cleavage (reversed: last position = closest to cleavage)
@@ -936,42 +1072,64 @@ class Presto(nn.Module):
             cfl_idx.clamp(max=self.cflank_dist_pos.num_embeddings - 1)
         )
 
-        # Groove half 1: sequential or start/end/fractional within-half encoding
+        # Groove half 1 position encoding.
         mhc_a_sl = offsets["mhc_a"]
         mhc_a_idx = torch.arange(mhc_a_sl.stop - mhc_a_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
-        if self.groove_pos_mode == "triple":
+        if self.groove_pos_mode == "sequential":
+            mhc_a_pos_embed = self.groove_1_pos(
+                mhc_a_idx.clamp(max=self.groove_1_pos.num_embeddings - 1)
+            )
+        else:
             mhc_a_len_per = (tokens[:, mhc_a_sl] != 0).sum(dim=1).clamp(min=1)
             mhc_a_start_idx = mhc_a_idx.clamp(max=self.groove_1_pos.num_embeddings - 1)
             mhc_a_end_dist = (mhc_a_len_per.unsqueeze(1) - 1 - mhc_a_idx).clamp(min=0)
             mhc_a_end_idx = mhc_a_end_dist.clamp(max=self.groove_1_end_pos.num_embeddings - 1)
-            mhc_a_frac = mhc_a_idx.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-            mhc_a_pos_embed = (
-                self.groove_1_pos(mhc_a_start_idx)
-                + self.groove_1_end_pos(mhc_a_end_idx)
-                + self.groove_frac_mlp(mhc_a_frac.unsqueeze(-1))
-            )
-        else:
-            mhc_a_pos_embed = self.groove_1_pos(
-                mhc_a_idx.clamp(max=self.groove_1_pos.num_embeddings - 1)
+            mhc_a_start_frac = mhc_a_idx.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            mhc_a_end_frac = mhc_a_end_dist.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            mhc_a_pos_embed = self._compose_position_signal(
+                mode=self.groove_pos_mode,
+                start_embed=self.groove_1_pos(mhc_a_start_idx),
+                end_embed=self.groove_1_end_pos(mhc_a_end_idx),
+                start_frac=mhc_a_start_frac,
+                end_frac=mhc_a_end_frac,
+                frac_mlp=self.groove_frac_mlp,
+                abs_embed=self.groove_1_abs_pos(
+                    mhc_a_idx.clamp(max=self.groove_1_abs_pos.num_embeddings - 1)
+                ),
+                concat_proj=self.groove_pos_concat_proj,
+                concat_frac_proj=self.groove_pos_concat_frac_proj,
+                concat_mlp=self.groove_pos_concat_mlp,
+                concat_frac_mlp=self.groove_pos_concat_frac_mlp,
             )
 
-        # Groove half 2: sequential or start/end/fractional within-half encoding
+        # Groove half 2 position encoding.
         mhc_b_sl = offsets["mhc_b"]
         mhc_b_idx = torch.arange(mhc_b_sl.stop - mhc_b_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
-        if self.groove_pos_mode == "triple":
+        if self.groove_pos_mode == "sequential":
+            mhc_b_pos_embed = self.groove_2_pos(
+                mhc_b_idx.clamp(max=self.groove_2_pos.num_embeddings - 1)
+            )
+        else:
             mhc_b_len_per = (tokens[:, mhc_b_sl] != 0).sum(dim=1).clamp(min=1)
             mhc_b_start_idx = mhc_b_idx.clamp(max=self.groove_2_pos.num_embeddings - 1)
             mhc_b_end_dist = (mhc_b_len_per.unsqueeze(1) - 1 - mhc_b_idx).clamp(min=0)
             mhc_b_end_idx = mhc_b_end_dist.clamp(max=self.groove_2_end_pos.num_embeddings - 1)
-            mhc_b_frac = mhc_b_idx.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-            mhc_b_pos_embed = (
-                self.groove_2_pos(mhc_b_start_idx)
-                + self.groove_2_end_pos(mhc_b_end_idx)
-                + self.groove_frac_mlp(mhc_b_frac.unsqueeze(-1))
-            )
-        else:
-            mhc_b_pos_embed = self.groove_2_pos(
-                mhc_b_idx.clamp(max=self.groove_2_pos.num_embeddings - 1)
+            mhc_b_start_frac = mhc_b_idx.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            mhc_b_end_frac = mhc_b_end_dist.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            mhc_b_pos_embed = self._compose_position_signal(
+                mode=self.groove_pos_mode,
+                start_embed=self.groove_2_pos(mhc_b_start_idx),
+                end_embed=self.groove_2_end_pos(mhc_b_end_idx),
+                start_frac=mhc_b_start_frac,
+                end_frac=mhc_b_end_frac,
+                frac_mlp=self.groove_frac_mlp,
+                abs_embed=self.groove_2_abs_pos(
+                    mhc_b_idx.clamp(max=self.groove_2_abs_pos.num_embeddings - 1)
+                ),
+                concat_proj=self.groove_pos_concat_proj,
+                concat_frac_proj=self.groove_pos_concat_frac_proj,
+                concat_mlp=self.groove_pos_concat_mlp,
+                concat_frac_mlp=self.groove_pos_concat_frac_mlp,
             )
         pos_embed = torch.cat(
             [
@@ -1134,6 +1292,52 @@ class Presto(nn.Module):
         batch_idx = batch_idx.expand_as(positions)
         clipped = positions.clamp(min=0, max=seq.shape[1] - 1)
         return seq[batch_idx, clipped]
+
+    def _compose_position_signal(
+        self,
+        *,
+        mode: str,
+        start_embed: torch.Tensor,
+        end_embed: torch.Tensor,
+        start_frac: torch.Tensor,
+        end_frac: torch.Tensor,
+        frac_mlp: nn.Module,
+        abs_embed: Optional[torch.Tensor],
+        concat_proj: nn.Module,
+        concat_frac_proj: nn.Module,
+        concat_mlp: nn.Module,
+        concat_frac_mlp: nn.Module,
+    ) -> torch.Tensor:
+        if mode in {"triple", "triple_baseline"}:
+            return start_embed + end_embed + frac_mlp(start_frac.unsqueeze(-1))
+        if mode == "abs_only":
+            if abs_embed is None:
+                raise ValueError("abs_only requires abs_embed")
+            return abs_embed
+        if mode == "triple_plus_abs":
+            if abs_embed is None:
+                raise ValueError("triple_plus_abs requires abs_embed")
+            return start_embed + end_embed + frac_mlp(start_frac.unsqueeze(-1)) + abs_embed
+        if mode == "start_only":
+            return start_embed
+        if mode == "end_only":
+            return end_embed
+        if mode == "start_plus_end":
+            return start_embed + end_embed
+        if mode == "concat_start_end":
+            return concat_proj(torch.cat([start_embed, end_embed], dim=-1))
+
+        frac_features = torch.cat(
+            [start_frac.unsqueeze(-1), end_frac.unsqueeze(-1)],
+            dim=-1,
+        )
+        if mode == "concat_start_end_frac":
+            return concat_frac_proj(torch.cat([start_embed, end_embed, frac_features], dim=-1))
+        if mode == "mlp_start_end":
+            return concat_mlp(torch.cat([start_embed, end_embed], dim=-1))
+        if mode == "mlp_start_end_frac":
+            return concat_frac_mlp(torch.cat([start_embed, end_embed, frac_features], dim=-1))
+        raise ValueError(f"Unsupported positional composition mode: {mode!r}")
 
     @staticmethod
     def _repeat_candidates(x: torch.Tensor, n_candidates: int) -> torch.Tensor:
@@ -1710,6 +1914,9 @@ class Presto(nn.Module):
         return PrestoTrunkState(
             processing_vec=latent_vecs["processing"],
             interaction_vec=latent_vecs["pmhc_interaction"],
+            pep_vec=outputs["pep_vec"],
+            mhc_a_vec=outputs["mhc_a_vec"],
+            mhc_b_vec=outputs["mhc_b_vec"],
             binding_affinity_vec=latent_vecs["binding_affinity"],
             binding_stability_vec=latent_vecs["binding_stability"],
             recognition_vec=latent_vecs["recognition"],
@@ -1751,8 +1958,12 @@ class Presto(nn.Module):
         binding_context: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, torch.Tensor]:
         return self.affinity_predictor(
+            interaction_vec=trunk_state.interaction_vec,
             binding_affinity_vec=trunk_state.binding_affinity_vec,
             binding_stability_vec=trunk_state.binding_stability_vec,
+            pep_vec=trunk_state.pep_vec,
+            mhc_a_vec=trunk_state.mhc_a_vec,
+            mhc_b_vec=trunk_state.mhc_b_vec,
             class_probs=trunk_state.class_probs,
             mhc_class=mhc_class,
             binding_context=binding_context,
@@ -2099,6 +2310,25 @@ class Presto(nn.Module):
         # Simplified binding path: interaction_vec → proj → binding_affinity_vec
         binding_affinity_vec = self.binding_affinity_readout_proj(interaction_vec)
         binding_stability_vec = self.binding_stability_readout_proj(interaction_vec)
+        direct_segment_input = torch.cat([pep_vec, mhc_a_vec, mhc_b_vec], dim=-1)
+        direct_affinity_vec = self.binding_direct_segment_affinity_proj(direct_segment_input)
+        direct_stability_vec = self.binding_direct_segment_stability_proj(direct_segment_input)
+        if self.binding_direct_segment_mode == "affinity_residual":
+            binding_affinity_vec = binding_affinity_vec + direct_affinity_vec
+        elif self.binding_direct_segment_mode == "affinity_stability_residual":
+            binding_affinity_vec = binding_affinity_vec + direct_affinity_vec
+            binding_stability_vec = binding_stability_vec + direct_stability_vec
+        elif self.binding_direct_segment_mode == "gated_affinity":
+            gate = torch.sigmoid(
+                self.binding_direct_segment_gate(
+                    torch.cat([binding_affinity_vec, direct_affinity_vec], dim=-1)
+                )
+            )
+            binding_affinity_vec = (1.0 - gate) * binding_affinity_vec + gate * direct_affinity_vec
+            outputs["binding_direct_segment_gate_mean"] = gate.mean()
+        outputs["binding_direct_segment_mode"] = self.binding_direct_segment_mode
+        outputs["binding_direct_affinity_vec"] = direct_affinity_vec
+        outputs["binding_direct_stability_vec"] = direct_stability_vec
 
         # Class-specific processing projections
         processing_class1_vec = self.processing_class1_proj(processing_vec)

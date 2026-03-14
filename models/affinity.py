@@ -22,6 +22,7 @@ DEFAULT_MAX_AFFINITY_NM: float = 50000.0
 # Logistic calibration used for binding logits/probabilities.
 DEFAULT_BINDING_MIDPOINT_NM: float = 500.0
 DEFAULT_BINDING_LOG10_SCALE: float = 0.35
+AFFINITY_TARGET_ENCODINGS = {"log10", "mhcflurry"}
 
 
 def max_log10_nM(max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM) -> float:
@@ -114,3 +115,140 @@ def normalize_binding_target_log10(
         min_affinity_nM=min_affinity_nM,
         max_affinity_nM=max_affinity_nM,
     )
+
+
+def affinity_log10_to_target(
+    value: torch.Tensor,
+    *,
+    encoding: str = "log10",
+    max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
+) -> torch.Tensor:
+    """Map log10(nM) affinities into a training target space.
+
+    `log10` keeps the canonical Presto regression space.
+    `mhcflurry` maps affinities into [0, 1] with stronger binders closer to 1,
+    following the common bounded target used by MHCflurry/NetMHCpan-style models.
+    """
+    encoding = str(encoding).strip().lower()
+    log10_value = value.float()
+    if encoding == "log10":
+        return log10_value
+    if encoding == "mhcflurry":
+        max_log10 = max_log10_nM(max_affinity_nM)
+        floor_log10 = 0.0  # 1 nM floor in the bounded target convention
+        bounded = log10_value.clamp(min=floor_log10, max=max_log10)
+        denom = max(max_log10 - floor_log10, 1e-6)
+        return ((max_log10 - bounded) / denom).clamp(0.0, 1.0)
+    raise ValueError(f"Unsupported affinity target encoding: {encoding!r}")
+
+
+def affinity_target_to_log10(
+    value: torch.Tensor,
+    *,
+    encoding: str = "log10",
+    max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
+) -> torch.Tensor:
+    """Invert `affinity_log10_to_target` back into log10(nM)."""
+    encoding = str(encoding).strip().lower()
+    target_value = value.float()
+    if encoding == "log10":
+        return target_value
+    if encoding == "mhcflurry":
+        max_log10 = max_log10_nM(max_affinity_nM)
+        floor_log10 = 0.0
+        denom = max(max_log10 - floor_log10, 1e-6)
+        bounded = target_value.clamp(0.0, 1.0)
+        return max_log10 - bounded * denom
+    raise ValueError(f"Unsupported affinity target encoding: {encoding!r}")
+
+
+def affinity_target_to_logit(
+    value: torch.Tensor,
+    *,
+    encoding: str = "log10",
+    eps: float = 1e-5,
+) -> torch.Tensor:
+    """Map a target-space value into an additive residual space.
+
+    For canonical `log10`, the target itself is already an additive space.
+    For bounded `mhcflurry`, use the logit of the bounded target so residuals
+    are added before the final clamp/probability step.
+    """
+    encoding = str(encoding).strip().lower()
+    target_value = value.float()
+    if encoding == "log10":
+        return target_value
+    if encoding == "mhcflurry":
+        bounded = target_value.clamp(float(eps), 1.0 - float(eps))
+        return torch.logit(bounded)
+    raise ValueError(f"Unsupported affinity target encoding: {encoding!r}")
+
+
+def affinity_logit_to_target(
+    value: torch.Tensor,
+    *,
+    encoding: str = "log10",
+) -> torch.Tensor:
+    """Invert `affinity_target_to_logit` back into target space."""
+    encoding = str(encoding).strip().lower()
+    logit_value = value.float()
+    if encoding == "log10":
+        return logit_value
+    if encoding == "mhcflurry":
+        return torch.sigmoid(logit_value)
+    raise ValueError(f"Unsupported affinity target encoding: {encoding!r}")
+
+
+def affinity_log10_to_target_logit(
+    value: torch.Tensor,
+    *,
+    encoding: str = "log10",
+    max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
+    eps: float = 1e-5,
+) -> torch.Tensor:
+    """Convert canonical log10 affinities into the residual-additive target space."""
+    return affinity_target_to_logit(
+        affinity_log10_to_target(
+            value,
+            encoding=encoding,
+            max_affinity_nM=max_affinity_nM,
+        ),
+        encoding=encoding,
+        eps=eps,
+    )
+
+
+def affinity_target_logit_to_log10(
+    value: torch.Tensor,
+    *,
+    encoding: str = "log10",
+    max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
+) -> torch.Tensor:
+    """Convert residual-additive target-space values back into canonical log10(nM)."""
+    return affinity_target_to_log10(
+        affinity_logit_to_target(
+            value,
+            encoding=encoding,
+        ),
+        encoding=encoding,
+        max_affinity_nM=max_affinity_nM,
+    )
+
+
+def qualifier_for_target_encoding(
+    qual: torch.Tensor,
+    *,
+    encoding: str = "log10",
+) -> torch.Tensor:
+    """Adjust censor qualifier semantics for the chosen target encoding.
+
+    In canonical log10(nM), larger values mean weaker binding, so qualifiers keep
+    their natural meaning. In bounded MHCflurry-style targets, larger values mean
+    stronger binding, so the censor direction must be flipped.
+    """
+    encoding = str(encoding).strip().lower()
+    if encoding == "log10":
+        return qual
+    if encoding == "mhcflurry":
+        return -qual
+    raise ValueError(f"Unsupported affinity target encoding: {encoding!r}")
