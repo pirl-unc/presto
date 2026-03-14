@@ -492,7 +492,7 @@ def test_content_conditioned_loss_backward():
     pep = torch.randint(1, 20, (4, 15))
     mhc_a = torch.randint(1, 20, (4, 40))
     mhc_b = torch.randint(1, 20, (4, 40))
-    h = model.encoder(pep, mhc_a, mhc_b)
+    h = model.encode_input(pep, mhc_a, mhc_b)
     assay_emb = model._compute_assay_emb(
         h,
         torch.zeros(4, dtype=torch.long),

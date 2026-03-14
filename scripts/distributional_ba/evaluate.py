@@ -55,7 +55,7 @@ def evaluate_probe_panel(
                 }
 
                 # Distributional extras
-                h_probe = model.encoder(pep_tok, mhc_a_tok, mhc_b_tok)
+                h_probe = model.encode_input(pep_tok, mhc_a_tok, mhc_b_tok)
                 assay_emb_probe = model._compute_assay_emb(
                     h_probe,
                     torch.zeros(1, dtype=torch.long, device=device),
@@ -115,7 +115,7 @@ def evaluate_held_out(
             qual = (bind_qual.long().reshape(-1).to(device) if bind_qual is not None
                     else torch.zeros_like(mask, dtype=torch.long))
 
-            h = model.encoder(pep_tok, mhc_a_tok, mhc_b_tok)
+            h = model.encode_input(pep_tok, mhc_a_tok, mhc_b_tok)
             binding_ctx = getattr(batch, "binding_context", {})
             assay_emb = model._compute_assay_emb(
                 h,

@@ -94,7 +94,7 @@ def predict_all_combos(
         pep = pep_tok.to(device)
         mhc_a = mhc_a_tok.to(device)
         mhc_b = mhc_b_tok.to(device)
-        h = model.encoder(pep, mhc_a, mhc_b)
+        h = model.encode_input(pep, mhc_a, mhc_b)
 
         for combo in combos:
             atensors = _assay_tensors(combo, device)

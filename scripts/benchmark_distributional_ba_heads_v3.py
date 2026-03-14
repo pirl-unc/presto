@@ -156,7 +156,7 @@ def main() -> None:
                 "lr": "1e-3",
                 "weight_decay": 0.01,
                 "seed": 42,
-                "encoder": "AblationEncoder(n_layers=2, n_heads=4)",
+                "encoder": "GrooveTransformerModel(n_layers=2, n_heads=4)",
                 "head": "MHCflurry additive",
             },
             "sweep_axes": {

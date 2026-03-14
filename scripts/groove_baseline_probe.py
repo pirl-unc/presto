@@ -281,6 +281,23 @@ class GrooveTransformerModel(nn.Module):
         non_pad = (~pad_mask).float().unsqueeze(-1)
         return (x * non_pad).sum(1) / non_pad.sum(1).clamp(min=1)
 
+    @property
+    def out_dim(self) -> int:
+        """Dimension of the encode() output: 3 * embed_dim."""
+        return 3 * self.embed_dim
+
+    def encode(
+        self,
+        pep_tok: torch.Tensor,
+        mhc_a_tok: torch.Tensor,
+        mhc_b_tok: torch.Tensor,
+    ) -> torch.Tensor:
+        """Return (B, 3*embed_dim) intermediate representation before the MLP head."""
+        pep_vec = self._encode_segment(pep_tok, pos_mode=self.peptide_pos_mode)
+        gh1_vec = self._encode_segment(mhc_a_tok, pos_mode=self.groove_pos_mode)
+        gh2_vec = self._encode_segment(mhc_b_tok, pos_mode=self.groove_pos_mode)
+        return torch.cat([pep_vec, gh1_vec, gh2_vec], dim=-1)
+
     def forward(
         self,
         pep_tok: torch.Tensor,
@@ -288,10 +305,8 @@ class GrooveTransformerModel(nn.Module):
         mhc_b_tok: torch.Tensor,
         **kwargs: Any,
     ) -> torch.Tensor:
-        pep_vec = self._encode_segment(pep_tok, pos_mode=self.peptide_pos_mode)
-        gh1_vec = self._encode_segment(mhc_a_tok, pos_mode=self.groove_pos_mode)
-        gh2_vec = self._encode_segment(mhc_b_tok, pos_mode=self.groove_pos_mode)
-        raw = self.mlp(torch.cat([pep_vec, gh1_vec, gh2_vec], dim=-1))
+        shared_vec = self.encode(pep_tok, mhc_a_tok, mhc_b_tok)
+        raw = self.mlp(shared_vec)
         return smooth_range_bound(raw, -3.0, max_log10_nM())
 
     def classify_allele(

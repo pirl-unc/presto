@@ -121,7 +121,7 @@ def _train_step(
     """Single training step. Returns (loss_value, metrics_dict)."""
     batch = batch.to(device)
 
-    h = model.encoder(batch.pep_tok, batch.mhc_a_tok, batch.mhc_b_tok)
+    h = model.encode_input(batch.pep_tok, batch.mhc_a_tok, batch.mhc_b_tok)
 
     binding_ctx = getattr(batch, "binding_context", {})
     assay_emb = model._compute_assay_emb(
@@ -188,6 +188,8 @@ def main() -> None:
                         choices=["v1", "v2", "v3", "v4", "v5", "v6"], help="Condition matrix version")
     parser.add_argument("--content-conditioned", action="store_true",
                         help="Condition assay context on binding logit + molecular repr")
+    parser.add_argument("--init-checkpoint", type=str, default="",
+                        help="Path to pretrained encoder checkpoint (encoder.pt) for warm-start")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -282,6 +284,36 @@ def main() -> None:
         n_heads=int(args.n_heads), n_layers=int(args.n_layers),
         content_conditioned=bool(args.content_conditioned),
     ).to(device)
+
+    # Warm-start from pretrained encoder checkpoint
+    init_checkpoint = str(args.init_checkpoint).strip()
+    warm_start_stats: Dict[str, Any] = {}
+    if init_checkpoint:
+        ckpt_path = Path(init_checkpoint)
+        if not ckpt_path.exists():
+            raise FileNotFoundError(f"Init checkpoint not found: {ckpt_path}")
+        ckpt_state = torch.load(ckpt_path, map_location=device, weights_only=True)
+        # If wrapped in a checkpoint dict, extract the state dict
+        if isinstance(ckpt_state, dict) and "model_state_dict" in ckpt_state:
+            ckpt_state = ckpt_state["model_state_dict"]
+        encoder_state = model.encoder.state_dict()
+        loaded_keys = []
+        skipped_keys = []
+        for key, val in ckpt_state.items():
+            if key in encoder_state and encoder_state[key].shape == val.shape:
+                loaded_keys.append(key)
+            else:
+                skipped_keys.append(key)
+        filtered = {k: ckpt_state[k] for k in loaded_keys}
+        model.encoder.load_state_dict(filtered, strict=False)
+        warm_start_stats = {
+            "checkpoint": init_checkpoint,
+            "loaded_keys": len(loaded_keys),
+            "skipped_keys": len(skipped_keys),
+            "skipped_names": skipped_keys[:10],
+        }
+        print(json.dumps({"event": "warm_start", **warm_start_stats}, sort_keys=True), flush=True)
+
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
     optimizer = torch.optim.AdamW(
@@ -341,6 +373,8 @@ def main() -> None:
         "val_rows": len(val_records),
         "test_rows": len(test_records),
         "content_conditioned": bool(args.content_conditioned),
+        "init_checkpoint": init_checkpoint or None,
+        "warm_start": warm_start_stats or None,
         "device": device,
     }
     print(json.dumps({"event": "setup", **config_dict}, sort_keys=True), flush=True)

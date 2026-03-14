@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 
 import torch.nn as nn
 
-from presto.scripts.assay_ablation_probe import AblationEncoder
+from presto.scripts.groove_baseline_probe import GrooveTransformerModel
 
 from .assay_context import AssayContextEncoder
 from .heads import HEAD_REGISTRY, AffinityHead
@@ -117,7 +117,7 @@ class DistributionalModel(nn.Module):
 
     def __init__(
         self,
-        encoder: AblationEncoder,
+        encoder: nn.Module,
         assay_ctx: AssayContextEncoder,
         head: AffinityHead,
         spec: ConditionSpec,
@@ -127,6 +127,12 @@ class DistributionalModel(nn.Module):
         self.assay_ctx = assay_ctx
         self.head = head
         self.spec = spec
+
+    def encode_input(self, pep_tok, mhc_a_tok, mhc_b_tok):
+        """Get (B, 3*embed_dim) representation from encoder."""
+        if hasattr(self.encoder, 'encode'):
+            return self.encoder.encode(pep_tok, mhc_a_tok, mhc_b_tok)
+        return self.encoder(pep_tok, mhc_a_tok, mhc_b_tok)
 
     def _compute_assay_emb(
         self,
@@ -154,7 +160,7 @@ class DistributionalModel(nn.Module):
         assay_geometry_idx=None, assay_readout_idx=None,
     ):
         import torch
-        h = self.encoder(pep_tok, mhc_a_tok, mhc_b_tok)
+        h = self.encode_input(pep_tok, mhc_a_tok, mhc_b_tok)
         B = h.shape[0]
         device = h.device
         # Default to "unknown" (index 0) if not provided
@@ -189,8 +195,9 @@ def build_model(
             so the assay bias depends on input content.
     """
     actual_embed_dim = embed_dim if embed_dim is not None else spec.embed_dim
-    encoder = AblationEncoder(
-        embed_dim=actual_embed_dim, n_heads=n_heads, n_layers=n_layers, ff_dim=actual_embed_dim,
+    encoder = GrooveTransformerModel(
+        embed_dim=actual_embed_dim, n_heads=n_heads, n_layers=n_layers,
+        ff_dim=actual_embed_dim, hidden_dim=actual_embed_dim,
     )
     repr_dim = encoder.out_dim if content_conditioned else 0
     assay_ctx = AssayContextEncoder(ctx_dim=ctx_dim, repr_dim=repr_dim)

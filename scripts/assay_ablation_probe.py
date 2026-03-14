@@ -63,6 +63,7 @@ from presto.scripts.focused_binding_probe import (
     QUALIFIER_FILTERS,
 )
 from presto.scripts.groove_baseline_probe import (
+    GrooveTransformerModel,
     _find_allele_sequence,
     _verify_groove_representations,
 )
@@ -80,61 +81,12 @@ CONTEXT_VARIANTS = {"a5", "a8"}
 
 
 # ---------------------------------------------------------------------------
-# Encoder
+# Encoder — uses GrooveTransformerModel.encode() for (B, 3*embed_dim) vector
 # ---------------------------------------------------------------------------
 
-
-class AblationEncoder(nn.Module):
-    """Shared transformer encoder returning concatenated pep+groove vector.
-
-    Same architecture as GrooveTransformerModel but returns the intermediate
-    shared_vec (B, 3*embed_dim) instead of a final scalar.
-    """
-
-    def __init__(
-        self,
-        vocab_size: int = 26,
-        embed_dim: int = 128,
-        n_heads: int = 4,
-        n_layers: int = 2,
-        ff_dim: int = 128,
-        max_seq_len: int = 200,
-    ):
-        super().__init__()
-        self.embed_dim = embed_dim
-        self.out_dim = 3 * embed_dim
-        self.aa_embedding = nn.Embedding(vocab_size, embed_dim)
-        self.pos_embedding = nn.Embedding(max_seq_len, embed_dim)
-        encoder_layer = nn.TransformerEncoderLayer(
-            d_model=embed_dim,
-            nhead=n_heads,
-            dim_feedforward=ff_dim,
-            batch_first=True,
-            activation="gelu",
-            dropout=0.1,
-        )
-        self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=n_layers)
-
-    def _encode_segment(self, tok: torch.Tensor) -> torch.Tensor:
-        B, L = tok.shape
-        positions = torch.arange(L, device=tok.device).unsqueeze(0).expand(B, L)
-        x = self.aa_embedding(tok) + self.pos_embedding(positions)
-        pad_mask = tok == 0
-        x = self.encoder(x, src_key_padding_mask=pad_mask)
-        non_pad = (~pad_mask).float().unsqueeze(-1)
-        return (x * non_pad).sum(1) / non_pad.sum(1).clamp(min=1)
-
-    def forward(
-        self,
-        pep_tok: torch.Tensor,
-        mhc_a_tok: torch.Tensor,
-        mhc_b_tok: torch.Tensor,
-    ) -> torch.Tensor:
-        """Returns (B, 3*embed_dim) shared representation."""
-        pep_vec = self._encode_segment(pep_tok)
-        gh1_vec = self._encode_segment(mhc_a_tok)
-        gh2_vec = self._encode_segment(mhc_b_tok)
-        return torch.cat([pep_vec, gh1_vec, gh2_vec], dim=-1)
+# AblationEncoder is removed. Use GrooveTransformerModel.encode() instead.
+# Backward-compat alias for any remaining references:
+AblationEncoder = GrooveTransformerModel
 
 
 # ---------------------------------------------------------------------------
@@ -420,7 +372,7 @@ HEAD_CLASSES: Dict[str, type] = {
 class AblationModel(nn.Module):
     """Encoder + head wrapper for ablation experiments."""
 
-    def __init__(self, encoder: AblationEncoder, head: nn.Module, variant: str):
+    def __init__(self, encoder: nn.Module, head: nn.Module, variant: str):
         super().__init__()
         self.encoder = encoder
         self.head = head
@@ -433,7 +385,7 @@ class AblationModel(nn.Module):
         mhc_b_tok: torch.Tensor,
         **kwargs: Any,
     ) -> Dict[str, torch.Tensor]:
-        shared_vec = self.encoder(pep_tok, mhc_a_tok, mhc_b_tok)
+        shared_vec = self.encoder.encode(pep_tok, mhc_a_tok, mhc_b_tok)
         return self.head(shared_vec, **kwargs)
 
     def predict_ic50(
@@ -443,7 +395,7 @@ class AblationModel(nn.Module):
         mhc_b_tok: torch.Tensor,
     ) -> torch.Tensor:
         """Predict IC50 for probe evaluation (pMHC inputs only)."""
-        shared_vec = self.encoder(pep_tok, mhc_a_tok, mhc_b_tok)
+        shared_vec = self.encoder.encode(pep_tok, mhc_a_tok, mhc_b_tok)
         return self.head(shared_vec)["ic50"]
 
 
@@ -457,8 +409,9 @@ def build_ablation_model(
     """Build an ablation model for the given variant."""
     if variant not in HEAD_CLASSES:
         raise ValueError(f"Unknown variant: {variant!r}. Choose from {VARIANT_NAMES}")
-    encoder = AblationEncoder(
-        embed_dim=embed_dim, n_heads=n_heads, n_layers=n_layers, ff_dim=hidden_dim,
+    encoder = GrooveTransformerModel(
+        embed_dim=embed_dim, n_heads=n_heads, n_layers=n_layers,
+        ff_dim=hidden_dim, hidden_dim=hidden_dim,
     )
     head = HEAD_CLASSES[variant](in_dim=encoder.out_dim, hidden_dim=hidden_dim)
     return AblationModel(encoder, head, variant)

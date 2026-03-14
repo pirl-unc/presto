@@ -161,7 +161,7 @@ def main() -> None:
                 "lr": "1e-3",
                 "weight_decay": 0.01,
                 "seed": 42,
-                "encoder": "AblationEncoder(embed=128, layers=2, heads=4)",
+                "encoder": "GrooveTransformerModel(embed=128, layers=2, heads=4)",
             },
             "tested": [
                 {
