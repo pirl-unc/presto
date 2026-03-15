@@ -10,6 +10,7 @@ Heads for all IEDB measurement types:
 
 import pytest
 import torch
+import torch.nn as nn
 
 
 # --------------------------------------------------------------------------
@@ -72,14 +73,14 @@ class TestStabilityHeads:
 
     def test_half_life_head(self):
         from presto.models.heads import HalfLifeHead
-        head = HalfLifeHead(d_model=64)
+        head = HalfLifeHead(input_dim=64)
         z = torch.randn(2, 64)
         pred = head(z)
         assert pred.shape == (2, 1)
 
     def test_tm_head(self):
         from presto.models.heads import TmHead
-        head = TmHead(d_model=64)
+        head = TmHead(input_dim=64)
         z = torch.randn(2, 64)
         pred = head(z)
         assert pred.shape == (2, 1)
@@ -165,6 +166,45 @@ class TestAssayHeads:
         outputs = heads(ba_vec, bs_vec, binding_latents=latents)
         for value in outputs.values():
             assert torch.isfinite(value).all()
+
+    def test_mhcflurry_residuals_are_added_in_logit_space(self):
+        from presto.models.affinity import (
+            affinity_log10_to_target_logit,
+            affinity_target_logit_to_log10,
+        )
+        from presto.models.heads import AssayHeads, smooth_lower_bound, smooth_upper_bound
+
+        heads = AssayHeads(
+            d_model=8,
+            affinity_target_encoding="mhcflurry",
+            max_affinity_nM=50000.0,
+            affinity_assay_residual_mode="shared_base_segment_residual",
+            segment_summary_dim=8,
+        )
+        heads.ic50_residual = nn.Identity()
+
+        kd_base = torch.tensor([[torch.log10(torch.tensor(500.0)).item()]], dtype=torch.float32)
+        kd_base_target_logit = affinity_log10_to_target_logit(
+            kd_base,
+            encoding="mhcflurry",
+            max_affinity_nM=50000.0,
+        )
+        residual = torch.tensor([[1.0]], dtype=torch.float32)
+
+        observed = heads._affinity_residual_output(
+            kd_base=kd_base,
+            kd_base_target_logit=kd_base_target_logit,
+            residual=residual,
+        )
+        expected = affinity_target_logit_to_log10(
+            kd_base_target_logit + residual,
+            encoding="mhcflurry",
+            max_affinity_nM=50000.0,
+        )
+        expected = smooth_lower_bound(expected, -3.0)
+        expected = smooth_upper_bound(expected, heads.max_log10_nM)
+
+        assert torch.allclose(observed, expected, atol=1e-6)
 
 
 # --------------------------------------------------------------------------

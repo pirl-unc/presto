@@ -11,6 +11,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, List
 
+from experiment_registry import default_agent_label, initialize_experiment_dir
+
 
 BASE_ALLELES = (
     "HLA-A*02:01",
@@ -132,12 +134,31 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Launch runtime-only legacy_m1 Modal benchmark variants")
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--batch-size", type=int, default=140)
-    parser.add_argument("--output-dir", type=str, default="modal_runs/runtime_m1_bench")
+    parser.add_argument("--agent-label", type=str, default=default_agent_label())
+    parser.add_argument("--output-dir", type=str, default="")
     parser.add_argument("--stamp", type=str, default="")
     args = parser.parse_args()
 
-    output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir = initialize_experiment_dir(
+        out_dir=str(args.output_dir),
+        slug="runtime-m1-bench",
+        title="Runtime M1 Benchmark",
+        source_script="scripts/benchmark_runtime_variants.py",
+        agent_label=str(args.agent_label),
+        metadata={
+            "dataset_contract": {
+                "panel": list(BASE_ALLELES),
+                "measurement_profile": "direct_affinity_only",
+                "measurement_type_filter": "ic50",
+                "qualifier_filter": "exact",
+            },
+            "training": {
+                "epochs": int(args.epochs),
+                "batch_size": int(args.batch_size),
+            },
+            "tested": [variant.variant_id for variant in VARIANTS],
+        },
+    )
     stamp = str(args.stamp or datetime.now().strftime("%Y%m%d%H%M%S"))
 
     rows: List[Dict[str, str]] = []

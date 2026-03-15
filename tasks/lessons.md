@@ -106,3 +106,27 @@
 - When a runtime benchmark is meant to inform the eventual production trainer, do not optimize or benchmark a static no-augmentation fast path as canonical. Preserve the intended dynamic regime (pair mining / synthetic refresh), and push performance work into fixed dataset metadata, index-based pairing, and asynchronous epoch-state generation instead.
 
 - When the user wants one canonical model improved by experiments, do not keep recommending specialized fast-path models or separate affinity-only execution as the architectural direction. Optimize the shared training/dataflow path instead, and treat specialized paths only as temporary diagnostics if explicitly requested.
+- When the user explicitly asks to continue with a broader, more varied data contract (inequalities, multiple numeric assay families), do not steer the next experiment batch back to a narrower exact-only comparator unless that narrower run is strictly needed to debug a blocker. Keep the sweep aligned with the requested contract.
+
+- When parallel experiment sweeps are happening, keep one canonical `experiments/` registry with per-experiment directories and a unified log. Do not let results live only in `tasks/experiment_log.md` or scattered `modal_runs/` tables.
+- Do not maintain two canonical experiment registries in parallel unless there is a proven automation need. If a human-readable markdown log already carries the decision record, prefer generating machine-readable summaries later over hand-maintaining a second JSONL index that can drift.
+- A finished experiment is not complete when the runs stop; it is complete only after metrics are extracted, the experiment directory contains the summary tables/plots/artifact links, and `experiments/experiment_log.md` has a contextualized writeup with dataset, training, assay mapping, conditions, and conclusions.
+- For experiment reproducibility, freeze the exact launch invocation and relevant environment overrides inside the experiment directory itself (`reproduce/launch.sh`, metadata JSON, launcher snapshot). Do not rely on mutable launcher defaults or chat context to explain how a run was started.
+
+## 2026-03-12 - Experiments need recomputable held-out metrics
+- If an experiment only saves aggregate losses and probe metrics, it is impossible to answer later questions like exact-IC50 rank correlation or <=500 nM accuracy.
+- Future experiments must save enough per-example validation/test predictions and labels to recompute downstream metrics without rerunning the training job.
+- Experiment docs must state the held-out split policy clearly and include both validation and test metrics, or explicitly justify why a test split was not used.
+- Treat the per-example prediction dump plus the held-out metric table as required closure artifacts for predictive evaluation sweeps, not optional nice-to-haves.
+
+- 2026-03-13: In output-head/target-encoding experiments, do not freeze the target encoding to the previously winning model-specific setting. Keep backbone/data/schedule fixed and vary the encoding itself so the comparison is interpretable.
+- 2026-03-13: Modal CLI bool parameters use flag-style syntax: include `--flag` for True, omit it for False. Do NOT pass `--flag true` or `--flag false` — Modal treats the value as an unexpected positional argument.
+- 2026-03-13: When the user says to stop depending on a shared experiment runner and make a benchmark self-contained, do not keep patching the shared path. Freeze a local package/launcher and have Modal execute that exact package.
+- 2026-03-13: If a Modal image excludes `experiments/**` or other local paths from the base repo upload, a self-contained experiment package will not exist in-container even if the wrapper path is correct. Explicitly add the experiment-local code directory to the image when the runtime depends on it.
+
+## 2026-03-14 - Experiment closure must pull ALL raw artifacts
+
+- When closing out a Modal experiment, pull ALL raw output files (summary.json, probes.jsonl, metrics.jsonl, step_log.jsonl) into the experiment directory — not just summary.json. The experiment directory must be self-contained: all summaries, tables, and plots must be reproducible from local data alone, without re-fetching from the Modal volume.
+- Do not consider an experiment "analyzed" if you only extracted aggregate metrics (Spearman/AUROC) from summary.json. Per-allele probe predictions, per-epoch training curves, correlation metrics, and binary classification metrics (<=500nM) must all be extracted and included.
+- For multi-head experiments, extract metrics from ALL output heads, not just the primary prediction path.
+- If an experiment run finishes, do the closure work immediately before reporting status upstream. "Runs are done" is not a meaningful completion state on its own; completion requires local artifact harvest, summary tables, README updates, and `experiments/experiment_log.md` updates in the same work cycle.

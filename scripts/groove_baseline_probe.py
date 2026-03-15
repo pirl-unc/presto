@@ -66,6 +66,21 @@ from presto.scripts.train_iedb import ALL_SYNTHETIC_MODES, resolve_mhc_sequences
 from presto.training.losses import censor_aware_loss
 
 
+POSITION_MODES = {
+    "triple",
+    "triple_baseline",
+    "abs_only",
+    "triple_plus_abs",
+    "start_only",
+    "end_only",
+    "start_plus_end",
+    "concat_start_end",
+    "concat_start_end_frac",
+    "mlp_start_end",
+    "mlp_start_end_frac",
+}
+
+
 # ---------------------------------------------------------------------------
 # Model
 # ---------------------------------------------------------------------------
@@ -154,11 +169,40 @@ class GrooveTransformerModel(nn.Module):
         max_seq_len: int = 200,
         hidden_dim: int = 128,
         n_allele_classes: int = 0,
+        peptide_pos_mode: str = "triple",
+        groove_pos_mode: str = "triple",
     ):
         super().__init__()
         self.embed_dim = embed_dim
+        peptide_pos_mode = str(peptide_pos_mode).strip().lower()
+        groove_pos_mode = str(groove_pos_mode).strip().lower()
+        if peptide_pos_mode not in POSITION_MODES:
+            raise ValueError(f"Unsupported peptide_pos_mode: {peptide_pos_mode!r}")
+        if groove_pos_mode not in POSITION_MODES:
+            raise ValueError(f"Unsupported groove_pos_mode: {groove_pos_mode!r}")
+        self.peptide_pos_mode = peptide_pos_mode
+        self.groove_pos_mode = groove_pos_mode
         self.aa_embedding = nn.Embedding(vocab_size, embed_dim)
         self.pos_embedding = nn.Embedding(max_seq_len, embed_dim)
+        self.end_pos_embedding = nn.Embedding(max_seq_len, embed_dim)
+        self.abs_pos_embedding = nn.Embedding(max_seq_len, embed_dim)
+        self.frac_mlp = nn.Sequential(
+            nn.Linear(1, embed_dim),
+            nn.GELU(),
+            nn.Linear(embed_dim, embed_dim),
+        )
+        self.concat_proj = nn.Linear(2 * embed_dim, embed_dim)
+        self.concat_frac_proj = nn.Linear(2 * embed_dim + 2, embed_dim)
+        self.concat_mlp = nn.Sequential(
+            nn.Linear(2 * embed_dim, embed_dim),
+            nn.GELU(),
+            nn.Linear(embed_dim, embed_dim),
+        )
+        self.concat_frac_mlp = nn.Sequential(
+            nn.Linear(2 * embed_dim + 2, embed_dim),
+            nn.GELU(),
+            nn.Linear(embed_dim, embed_dim),
+        )
         encoder_layer = nn.TransformerEncoderLayer(
             d_model=embed_dim,
             nhead=n_heads,
@@ -178,16 +222,81 @@ class GrooveTransformerModel(nn.Module):
         if n_allele_classes > 0:
             self.classify_head = nn.Linear(2 * embed_dim, n_allele_classes)
 
-    def _encode_segment(self, tok: torch.Tensor) -> torch.Tensor:
+    def _compose_positional_signal(
+        self,
+        *,
+        mode: str,
+        start_embed: torch.Tensor,
+        end_embed: torch.Tensor,
+        start_frac: torch.Tensor,
+        end_frac: torch.Tensor,
+        abs_embed: torch.Tensor,
+    ) -> torch.Tensor:
+        if mode in {"triple", "triple_baseline"}:
+            return start_embed + end_embed + self.frac_mlp(start_frac.unsqueeze(-1))
+        if mode == "abs_only":
+            return abs_embed
+        if mode == "triple_plus_abs":
+            return start_embed + end_embed + self.frac_mlp(start_frac.unsqueeze(-1)) + abs_embed
+        if mode == "start_only":
+            return start_embed
+        if mode == "end_only":
+            return end_embed
+        if mode == "start_plus_end":
+            return start_embed + end_embed
+        if mode == "concat_start_end":
+            return self.concat_proj(torch.cat([start_embed, end_embed], dim=-1))
+        frac_features = torch.cat(
+            [start_frac.unsqueeze(-1), end_frac.unsqueeze(-1)],
+            dim=-1,
+        )
+        if mode == "concat_start_end_frac":
+            return self.concat_frac_proj(torch.cat([start_embed, end_embed, frac_features], dim=-1))
+        if mode == "mlp_start_end":
+            return self.concat_mlp(torch.cat([start_embed, end_embed], dim=-1))
+        if mode == "mlp_start_end_frac":
+            return self.concat_frac_mlp(torch.cat([start_embed, end_embed, frac_features], dim=-1))
+        raise ValueError(f"Unsupported position mode: {mode!r}")
+
+    def _encode_segment(self, tok: torch.Tensor, *, pos_mode: str) -> torch.Tensor:
         """Embed, add positional encoding, run through transformer, mean-pool."""
         B, L = tok.shape
         positions = torch.arange(L, device=tok.device).unsqueeze(0).expand(B, L)
-        x = self.aa_embedding(tok) + self.pos_embedding(positions)
+        end_dist = (tok.ne(0).sum(dim=1, keepdim=True) - 1 - positions).clamp(min=0)
+        denom = (tok.ne(0).sum(dim=1, keepdim=True) - 1).clamp(min=1).float()
+        start_frac = positions.float() / denom
+        end_frac = end_dist.float() / denom
+        pos_embed = self._compose_positional_signal(
+            mode=pos_mode,
+            start_embed=self.pos_embedding(positions),
+            end_embed=self.end_pos_embedding(end_dist.clamp(max=self.end_pos_embedding.num_embeddings - 1)),
+            start_frac=start_frac,
+            end_frac=end_frac,
+            abs_embed=self.abs_pos_embedding(positions),
+        )
+        x = self.aa_embedding(tok) + pos_embed
         pad_mask = tok == 0  # PAD token = 0
         x = self.encoder(x, src_key_padding_mask=pad_mask)
         # Mean-pool over non-padding positions
         non_pad = (~pad_mask).float().unsqueeze(-1)
         return (x * non_pad).sum(1) / non_pad.sum(1).clamp(min=1)
+
+    @property
+    def out_dim(self) -> int:
+        """Dimension of the encode() output: 3 * embed_dim."""
+        return 3 * self.embed_dim
+
+    def encode(
+        self,
+        pep_tok: torch.Tensor,
+        mhc_a_tok: torch.Tensor,
+        mhc_b_tok: torch.Tensor,
+    ) -> torch.Tensor:
+        """Return (B, 3*embed_dim) intermediate representation before the MLP head."""
+        pep_vec = self._encode_segment(pep_tok, pos_mode=self.peptide_pos_mode)
+        gh1_vec = self._encode_segment(mhc_a_tok, pos_mode=self.groove_pos_mode)
+        gh2_vec = self._encode_segment(mhc_b_tok, pos_mode=self.groove_pos_mode)
+        return torch.cat([pep_vec, gh1_vec, gh2_vec], dim=-1)
 
     def forward(
         self,
@@ -196,10 +305,8 @@ class GrooveTransformerModel(nn.Module):
         mhc_b_tok: torch.Tensor,
         **kwargs: Any,
     ) -> torch.Tensor:
-        pep_vec = self._encode_segment(pep_tok)
-        gh1_vec = self._encode_segment(mhc_a_tok)
-        gh2_vec = self._encode_segment(mhc_b_tok)
-        raw = self.mlp(torch.cat([pep_vec, gh1_vec, gh2_vec], dim=-1))
+        shared_vec = self.encode(pep_tok, mhc_a_tok, mhc_b_tok)
+        raw = self.mlp(shared_vec)
         return smooth_range_bound(raw, -3.0, max_log10_nM())
 
     def classify_allele(
@@ -208,8 +315,8 @@ class GrooveTransformerModel(nn.Module):
         """Classify allele from groove tokens alone. Returns (B, n_classes) logits."""
         if self.classify_head is None:
             raise RuntimeError("No classification head — set n_allele_classes > 0")
-        gh1_vec = self._encode_segment(mhc_a_tok)
-        gh2_vec = self._encode_segment(mhc_b_tok)
+        gh1_vec = self._encode_segment(mhc_a_tok, pos_mode=self.groove_pos_mode)
+        gh2_vec = self._encode_segment(mhc_b_tok, pos_mode=self.groove_pos_mode)
         return self.classify_head(torch.cat([gh1_vec, gh2_vec], dim=-1))
 
 
@@ -230,6 +337,8 @@ def _build_model(variant: str, embed_dim: int, hidden_dim: int, **kwargs: Any) -
             ff_dim=kwargs.get("ff_dim", hidden_dim),
             hidden_dim=hidden_dim,
             n_allele_classes=n_allele_classes,
+            peptide_pos_mode=kwargs.get("peptide_pos_mode", "triple"),
+            groove_pos_mode=kwargs.get("groove_pos_mode", "triple"),
         )
     raise ValueError(f"Unknown model variant: {variant!r}")
 
@@ -572,6 +681,18 @@ def main() -> None:
         help="Probe/evaluation allele panel.",
     )
     parser.add_argument("--probe-peptide", type=str, default=DEFAULT_PROBE_PEPTIDE)
+    parser.add_argument(
+        "--design-id",
+        type=str,
+        default="",
+        help="Optional design identifier for benchmark manifests and structured logs.",
+    )
+    parser.add_argument(
+        "--extra-probe-peptides",
+        type=str,
+        default="",
+        help="Comma-separated additional probe peptides to evaluate each epoch.",
+    )
     parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--batch-size", type=int, default=256)
     parser.add_argument("--embed-dim", type=int, default=64)
@@ -583,6 +704,20 @@ def main() -> None:
     )
     parser.add_argument("--n-heads", type=int, default=4, help="Transformer attention heads.")
     parser.add_argument("--n-layers", type=int, default=2, help="Transformer encoder layers.")
+    parser.add_argument(
+        "--peptide-pos-mode",
+        type=str,
+        choices=sorted(POSITION_MODES),
+        default="triple",
+        help="Peptide positional composition mode for transformer variants.",
+    )
+    parser.add_argument(
+        "--groove-pos-mode",
+        type=str,
+        choices=sorted(POSITION_MODES),
+        default="triple",
+        help="Groove positional composition mode for transformer variants.",
+    )
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--seed", type=int, default=42)
@@ -655,9 +790,18 @@ def main() -> None:
     parser.add_argument("--binding-peptide-contrastive-target-gap-min", type=float, default=0.5)
     parser.add_argument("--binding-peptide-contrastive-target-gap-cap", type=float, default=2.0)
     parser.add_argument("--binding-peptide-contrastive-max-pairs", type=int, default=128)
+    parser.add_argument(
+        "--probe-plot-frequency",
+        type=str,
+        choices=("epoch", "final", "off"),
+        default="epoch",
+        help="When to render the probe affinity plot.",
+    )
     args = parser.parse_args()
 
     torch.manual_seed(int(args.seed))
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(int(args.seed))
     random.seed(int(args.seed))
 
     data_dir = Path(args.data_dir)
@@ -827,6 +971,8 @@ def main() -> None:
         n_layers=int(args.n_layers),
         ff_dim=int(args.hidden_dim),
         n_allele_classes=len(probe_alleles) if needs_classify else 0,
+        peptide_pos_mode=str(args.peptide_pos_mode),
+        groove_pos_mode=str(args.groove_pos_mode),
     ).to(device)
 
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -853,6 +999,10 @@ def main() -> None:
     allele_sequences = _resolve_allele_sequences(index_csv)
     fit_probe_peptides = _select_fit_supported_probe_peptides(real_records, probe_alleles)
     probe_peptides = [str(args.probe_peptide).strip().upper()]
+    for peptide in _split_csv(str(args.extra_probe_peptides or "")):
+        peptide_norm = peptide.strip().upper()
+        if peptide_norm and peptide_norm not in probe_peptides:
+            probe_peptides.append(peptide_norm)
     for peptide in fit_probe_peptides:
         if peptide not in probe_peptides:
             probe_peptides.append(peptide)
@@ -871,10 +1021,13 @@ def main() -> None:
     print(
         json.dumps({
             "event": "groove_baseline_setup",
+            "design_id": str(args.design_id),
             "model_variant": model_variant,
             "n_params": n_params,
             "embed_dim": int(args.embed_dim),
             "hidden_dim": int(args.hidden_dim),
+            "peptide_pos_mode": str(args.peptide_pos_mode),
+            "groove_pos_mode": str(args.groove_pos_mode),
             "probe_alleles": probe_alleles,
             "train_all_alleles": bool(args.train_all_alleles),
             "rows": len(real_records),
@@ -998,10 +1151,13 @@ def main() -> None:
 
             summary = {
                 "config": {
+                    "design_id": str(args.design_id),
                     "model_variant": model_variant,
                     "n_params": n_params,
                     "embed_dim": int(args.embed_dim),
                     "hidden_dim": int(args.hidden_dim),
+                    "peptide_pos_mode": str(args.peptide_pos_mode),
+                    "groove_pos_mode": str(args.groove_pos_mode),
                     "probe_alleles": probe_alleles,
                     "probe_peptides": probe_peptides,
                     "total_epochs": total_epochs,
@@ -1014,6 +1170,7 @@ def main() -> None:
                     "class_i_anchor_strategy": str(args.class_i_anchor_strategy),
                     "qualifier_filter": str(args.qualifier_filter),
                     "curriculum": curriculum_desc,
+                    "probe_plot_frequency": str(args.probe_plot_frequency),
                 },
                 "subset_stats": subset_stats,
                 "balance_stats": balance_stats,
@@ -1033,6 +1190,13 @@ def main() -> None:
                 out_dir=out_dir,
                 summary=summary,
                 probe_rows=probe_rows,
+                write_probe_plot=(
+                    str(args.probe_plot_frequency) == "epoch"
+                    or (
+                        str(args.probe_plot_frequency) == "final"
+                        and global_epoch == total_epochs
+                    )
+                ),
             )
             print(
                 json.dumps({

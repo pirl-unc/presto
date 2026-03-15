@@ -532,6 +532,54 @@ def test_collate_binding_context_maps_known_assay_fields():
 
     assert batch.binding_context["assay_type_idx"].tolist() == [4, 2]
     assert batch.binding_context["assay_method_idx"].tolist() == [1, 2]
+    assert batch.binding_context["assay_prep_idx"].tolist() == [1, 1]
+    assert batch.binding_context["assay_geometry_idx"].tolist() == [1, 2]
+    assert batch.binding_context["assay_readout_idx"].tolist() == [1, 2]
+
+
+def test_collate_binding_targets_split_kd_proxy_families():
+    collator = PrestoCollator()
+    batch = collator(
+        [
+            PrestoSample(
+                peptide="SLLQHLIGL",
+                mhc_a="A" * 91,
+                mhc_b="C" * 93,
+                mhc_class="I",
+                bind_value=123.0,
+                bind_qual=0,
+                bind_measurement_type="dissociation constant KD",
+                binding_assay_type="dissociation constant KD",
+            ),
+            PrestoSample(
+                peptide="FLRYLLFGI",
+                mhc_a="A" * 91,
+                mhc_b="C" * 93,
+                mhc_class="I",
+                bind_value=456.0,
+                bind_qual=1,
+                bind_measurement_type="dissociation constant KD (~IC50)",
+                binding_assay_type="dissociation constant KD (~IC50)",
+            ),
+            PrestoSample(
+                peptide="NFLIKFLLI",
+                mhc_a="A" * 91,
+                mhc_b="C" * 93,
+                mhc_class="I",
+                bind_value=789.0,
+                bind_qual=1,
+                bind_measurement_type="dissociation constant KD (~EC50)",
+                binding_assay_type="dissociation constant KD (~EC50)",
+            ),
+        ]
+    )
+
+    assert "binding_kd_direct" in batch.targets
+    assert "binding_kd_proxy_ic50" in batch.targets
+    assert "binding_kd_proxy_ec50" in batch.targets
+    assert batch.target_masks["binding_kd_direct"].tolist() == [1.0, 0.0, 0.0]
+    assert batch.target_masks["binding_kd_proxy_ic50"].tolist() == [0.0, 1.0, 0.0]
+    assert batch.target_masks["binding_kd_proxy_ec50"].tolist() == [0.0, 0.0, 1.0]
 
 
 def test_load_binding_records_from_merged_tsv_retains_binding_metadata(tmp_path):

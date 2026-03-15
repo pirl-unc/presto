@@ -14,6 +14,9 @@ from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
 from .vocab import (
     BINDING_ASSAY_METHOD_TO_IDX,
+    BINDING_ASSAY_PREP_TO_IDX,
+    BINDING_ASSAY_GEOMETRY_TO_IDX,
+    BINDING_ASSAY_READOUT_TO_IDX,
     BINDING_ASSAY_TYPE_TO_IDX,
     FOREIGN_CATEGORIES,
     ORGANISM_TO_IDX,
@@ -647,14 +650,17 @@ class PrestoCollator:
         masks: Dict[str, torch.Tensor] = {}
         quals: Dict[str, torch.Tensor] = {}
 
-        task_to_measurement = {
-            "binding_kd": "kd",
-            "binding_ic50": "ic50",
-            "binding_ec50": "ec50",
-            "binding_unknown": "unknown",
+        task_matchers = {
+            "binding_kd": lambda measurement_name, assay_family: measurement_name == "kd",
+            "binding_kd_direct": lambda measurement_name, assay_family: assay_family == "KD",
+            "binding_kd_proxy_ic50": lambda measurement_name, assay_family: assay_family == "KD_PROXY_IC50",
+            "binding_kd_proxy_ec50": lambda measurement_name, assay_family: assay_family == "KD_PROXY_EC50",
+            "binding_ic50": lambda measurement_name, assay_family: assay_family == "IC50",
+            "binding_ec50": lambda measurement_name, assay_family: assay_family == "EC50",
+            "binding_unknown": lambda measurement_name, assay_family: measurement_name == "unknown",
         }
 
-        for task_name, measurement_name in task_to_measurement.items():
+        for task_name, matcher in task_matchers.items():
             values: List[float] = []
             mask_values: List[float] = []
             qual_values: List[int] = []
@@ -662,10 +668,13 @@ class PrestoCollator:
 
             for sample in samples:
                 raw = sample.bind_value
-                normalized = self._normalize_binding_measurement(
+                measurement_name = self._normalize_binding_measurement(
                     sample.bind_measurement_type
                 )
-                if raw is None or normalized != measurement_name:
+                assay_family = self._categorize_binding_assay_type(
+                    sample.binding_assay_type or sample.bind_measurement_type
+                )
+                if raw is None or not matcher(measurement_name, assay_family):
                     values.append(0.0)
                     mask_values.append(0.0)
                     qual_values.append(0)
@@ -718,12 +727,48 @@ class PrestoCollator:
         }
         return mapping.get(token, "OTHER")
 
+    def _factorize_binding_assay_method(
+        self,
+        assay_method: Optional[str],
+    ) -> tuple[str, str, str]:
+        token = self._norm_text(assay_method)
+        if not token:
+            return ("unknown", "unknown", "unknown")
+        prep = "OTHER"
+        geometry = "OTHER"
+        readout = "OTHER"
+        if "purified" in token:
+            prep = "PURIFIED"
+        elif "cellular" in token:
+            prep = "CELLULAR"
+        elif "lysate" in token:
+            prep = "LYSATE"
+        elif "binding assay" in token:
+            prep = "BINDING_ASSAY"
+
+        if "competitive" in token:
+            geometry = "COMPETITIVE"
+        elif "direct" in token:
+            geometry = "DIRECT"
+        elif "t cell inhibition" in token:
+            geometry = "T_CELL_INHIBITION"
+
+        if "radioactivity" in token:
+            readout = "RADIOACTIVITY"
+        elif "fluorescence" in token:
+            readout = "FLUORESCENCE"
+
+        return (prep, geometry, readout)
+
     def _collate_binding_context(
         self,
         samples: List[PrestoSample],
     ) -> Dict[str, torch.Tensor]:
         assay_type_idx: List[int] = []
         assay_method_idx: List[int] = []
+        assay_prep_idx: List[int] = []
+        assay_geometry_idx: List[int] = []
+        assay_readout_idx: List[int] = []
 
         for sample in samples:
             assay_type_label = self._categorize_binding_assay_type(
@@ -731,6 +776,9 @@ class PrestoCollator:
             )
             assay_method_label = self._categorize_binding_assay_method(
                 sample.binding_assay_method
+            )
+            assay_prep_label, assay_geometry_label, assay_readout_label = (
+                self._factorize_binding_assay_method(sample.binding_assay_method)
             )
             assay_type_idx.append(
                 BINDING_ASSAY_TYPE_TO_IDX.get(
@@ -744,10 +792,31 @@ class PrestoCollator:
                     BINDING_ASSAY_METHOD_TO_IDX["OTHER"],
                 )
             )
+            assay_prep_idx.append(
+                BINDING_ASSAY_PREP_TO_IDX.get(
+                    assay_prep_label,
+                    BINDING_ASSAY_PREP_TO_IDX["OTHER"],
+                )
+            )
+            assay_geometry_idx.append(
+                BINDING_ASSAY_GEOMETRY_TO_IDX.get(
+                    assay_geometry_label,
+                    BINDING_ASSAY_GEOMETRY_TO_IDX["OTHER"],
+                )
+            )
+            assay_readout_idx.append(
+                BINDING_ASSAY_READOUT_TO_IDX.get(
+                    assay_readout_label,
+                    BINDING_ASSAY_READOUT_TO_IDX["OTHER"],
+                )
+            )
 
         return {
             "assay_type_idx": torch.tensor(assay_type_idx, dtype=torch.long),
             "assay_method_idx": torch.tensor(assay_method_idx, dtype=torch.long),
+            "assay_prep_idx": torch.tensor(assay_prep_idx, dtype=torch.long),
+            "assay_geometry_idx": torch.tensor(assay_geometry_idx, dtype=torch.long),
+            "assay_readout_idx": torch.tensor(assay_readout_idx, dtype=torch.long),
         }
 
     def _collate_tcr_evidence_targets(

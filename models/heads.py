@@ -15,7 +15,11 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from .affinity import DEFAULT_MAX_AFFINITY_NM
+from .affinity import (
+    DEFAULT_MAX_AFFINITY_NM,
+    affinity_log10_to_target_logit,
+    affinity_target_logit_to_log10,
+)
 
 
 # --------------------------------------------------------------------------
@@ -199,26 +203,79 @@ class AssayHeads(nn.Module):
         self,
         d_model: int = 256,
         max_log10_nM: float = math.log10(DEFAULT_MAX_AFFINITY_NM),
+        max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
+        affinity_target_encoding: str = "log10",
         assay_context_dim: int = 0,
+        affinity_assay_residual_mode: str = "legacy",
+        segment_summary_dim: int = 0,
+        factorized_context_dim: int = 0,
+        kd_grouping_mode: str = "merged_kd",
     ):
         super().__init__()
         self.max_log10_nM = float(max_log10_nM)
+        self.max_affinity_nM = float(max_affinity_nM)
+        self.affinity_target_encoding = str(affinity_target_encoding).strip().lower()
         self.assay_context_dim = max(int(assay_context_dim), 0)
+        affinity_assay_residual_mode = str(affinity_assay_residual_mode).strip().lower()
+        if affinity_assay_residual_mode not in {
+            "legacy",
+            "pooled_single_output",
+            "shared_base_segment_residual",
+            "shared_base_factorized_context_residual",
+            "shared_base_factorized_context_plus_segment_residual",
+        }:
+            raise ValueError(
+                f"Unsupported affinity_assay_residual_mode: {affinity_assay_residual_mode!r}"
+            )
+        self.affinity_assay_residual_mode = affinity_assay_residual_mode
+        self.segment_summary_dim = max(int(segment_summary_dim), 0)
+        self.factorized_context_dim = max(int(factorized_context_dim), 0)
+        kd_grouping_mode = str(kd_grouping_mode).strip().lower()
+        if kd_grouping_mode not in {"merged_kd", "split_kd_proxy"}:
+            raise ValueError(f"Unsupported kd_grouping_mode: {kd_grouping_mode!r}")
+        self.kd_grouping_mode = kd_grouping_mode
         self.stability_score_dim = 1
-        residual_input_dim = d_model + self.assay_context_dim
+        if self.affinity_assay_residual_mode == "pooled_single_output":
+            residual_input_dim = 0
+        elif self.affinity_assay_residual_mode == "shared_base_segment_residual":
+            residual_input_dim = self.segment_summary_dim + self.assay_context_dim + 1
+        elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
+            residual_input_dim = self.factorized_context_dim + 1
+        elif self.affinity_assay_residual_mode == "shared_base_factorized_context_plus_segment_residual":
+            residual_input_dim = self.segment_summary_dim + self.factorized_context_dim + 1
+        else:
+            residual_input_dim = d_model + self.assay_context_dim
         stability_input_dim = d_model + self.stability_score_dim
-        # Residual heads for assays that need correction beyond physics
-        # IC50/EC50 depend on assay conditions (peptide concentration, etc.)
-        self.ic50_residual = nn.Sequential(
-            nn.Linear(residual_input_dim, d_model // 2),
-            nn.GELU(),
-            nn.Linear(d_model // 2, 1),
-        )
-        self.ec50_residual = nn.Sequential(
-            nn.Linear(residual_input_dim, d_model // 2),
-            nn.GELU(),
-            nn.Linear(d_model // 2, 1),
-        )
+        if residual_input_dim > 0:
+            self.ic50_residual = nn.Sequential(
+                nn.Linear(residual_input_dim, d_model // 2),
+                nn.GELU(),
+                nn.Linear(d_model // 2, 1),
+            )
+            self.ec50_residual = nn.Sequential(
+                nn.Linear(residual_input_dim, d_model // 2),
+                nn.GELU(),
+                nn.Linear(d_model // 2, 1),
+            )
+            if self.kd_grouping_mode == "split_kd_proxy":
+                self.kd_proxy_ic50_residual = nn.Sequential(
+                    nn.Linear(residual_input_dim, d_model // 2),
+                    nn.GELU(),
+                    nn.Linear(d_model // 2, 1),
+                )
+                self.kd_proxy_ec50_residual = nn.Sequential(
+                    nn.Linear(residual_input_dim, d_model // 2),
+                    nn.GELU(),
+                    nn.Linear(d_model // 2, 1),
+                )
+            else:
+                self.kd_proxy_ic50_residual = None
+                self.kd_proxy_ec50_residual = None
+        else:
+            self.ic50_residual = None
+            self.ec50_residual = None
+            self.kd_proxy_ic50_residual = None
+            self.kd_proxy_ec50_residual = None
         self.t_half_residual = nn.Sequential(
             nn.Linear(stability_input_dim, d_model // 2),
             nn.GELU(),
@@ -237,6 +294,8 @@ class AssayHeads(nn.Module):
         binding_affinity_score: Optional[torch.Tensor] = None,
         binding_stability_score: Optional[torch.Tensor] = None,
         assay_context_vec: Optional[torch.Tensor] = None,
+        factorized_assay_context_vec: Optional[torch.Tensor] = None,
+        segment_summary_vec: Optional[torch.Tensor] = None,
     ) -> Dict[str, torch.Tensor]:
         """Predict all assay values.
 
@@ -279,6 +338,8 @@ class AssayHeads(nn.Module):
                 log_kd_nM,
                 assay_context_vec=assay_context_vec,
                 binding_affinity_score=binding_affinity_score,
+                factorized_assay_context_vec=factorized_assay_context_vec,
+                segment_summary_vec=segment_summary_vec,
             )
 
             # t_half = ln(2) / koff, convert to minutes
@@ -291,16 +352,16 @@ class AssayHeads(nn.Module):
 
             results["koff"] = log_koff
             results["kon"] = log_kon_total
-            results["KD_nM"] = affinity_obs["KD_nM"]
+            results.update(affinity_obs)
             results["t_half"] = smooth_range_bound(log_t_half + t_half_bias, -8.0, 8.0)
-            results["IC50_nM"] = affinity_obs["IC50_nM"]
-            results["EC50_nM"] = affinity_obs["EC50_nM"]
         else:
             # Fallback: predict everything directly (less constrained)
             affinity_input = self._affinity_input(
                 binding_affinity_vec,
                 assay_context_vec=assay_context_vec,
                 binding_affinity_score=binding_affinity_score,
+                factorized_assay_context_vec=factorized_assay_context_vec,
+                segment_summary_vec=segment_summary_vec,
             )
             results["KD_nM"] = smooth_upper_bound(
                 smooth_lower_bound(self._direct_predict(affinity_input, "kd"), -3.0),
@@ -314,6 +375,18 @@ class AssayHeads(nn.Module):
                 smooth_lower_bound(self._direct_predict(affinity_input, "ec50"), -3.0),
                 self.max_log10_nM,
             )
+            if self.kd_grouping_mode == "split_kd_proxy":
+                results["KD_proxy_ic50_nM"] = smooth_upper_bound(
+                    smooth_lower_bound(self._direct_predict(affinity_input, "kd_proxy_ic50"), -3.0),
+                    self.max_log10_nM,
+                )
+                results["KD_proxy_ec50_nM"] = smooth_upper_bound(
+                    smooth_lower_bound(self._direct_predict(affinity_input, "kd_proxy_ec50"), -3.0),
+                    self.max_log10_nM,
+                )
+            else:
+                results["KD_proxy_ic50_nM"] = results["KD_nM"]
+                results["KD_proxy_ec50_nM"] = results["KD_nM"]
             results["kon"] = self._direct_predict(affinity_input, "kon")
             results["koff"] = self._direct_predict(affinity_input, "koff")
             results["t_half"] = self._direct_predict(stability_input, "t_half")
@@ -329,30 +402,91 @@ class AssayHeads(nn.Module):
         kd_log10_nM: torch.Tensor,
         assay_context_vec: Optional[torch.Tensor] = None,
         binding_affinity_score: Optional[torch.Tensor] = None,
+        factorized_assay_context_vec: Optional[torch.Tensor] = None,
+        segment_summary_vec: Optional[torch.Tensor] = None,
     ) -> Dict[str, torch.Tensor]:
         """Derive KD/IC50/EC50 from a shared KD latent with assay-specific bias."""
         kd_base = smooth_upper_bound(
             smooth_lower_bound(kd_log10_nM, -3.0),
             self.max_log10_nM,
         )
+        kd_base_target_logit = affinity_log10_to_target_logit(
+            kd_base,
+            encoding=self.affinity_target_encoding,
+            max_affinity_nM=self.max_affinity_nM,
+        )
+        if self.affinity_assay_residual_mode == "pooled_single_output":
+            if self.kd_grouping_mode == "split_kd_proxy":
+                return {
+                    "KD_nM": kd_base,
+                    "KD_proxy_ic50_nM": kd_base,
+                    "KD_proxy_ec50_nM": kd_base,
+                    "IC50_nM": kd_base,
+                    "EC50_nM": kd_base,
+                }
+            return {
+                "KD_nM": kd_base,
+                "KD_proxy_ic50_nM": kd_base,
+                "KD_proxy_ec50_nM": kd_base,
+                "IC50_nM": kd_base,
+                "EC50_nM": kd_base,
+            }
         residual_input = self._affinity_input(
             binding_affinity_vec,
             assay_context_vec=assay_context_vec,
             binding_affinity_score=binding_affinity_score,
+            factorized_assay_context_vec=factorized_assay_context_vec,
+            segment_summary_vec=segment_summary_vec,
         )
-        ic50 = smooth_upper_bound(
-            smooth_lower_bound(kd_base + self.ic50_residual(residual_input), -3.0),
+        ic50 = self._affinity_residual_output(
+            kd_base=kd_base,
+            kd_base_target_logit=kd_base_target_logit,
+            residual=self.ic50_residual(residual_input),
+        )
+        ec50 = self._affinity_residual_output(
+            kd_base=kd_base,
+            kd_base_target_logit=kd_base_target_logit,
+            residual=self.ec50_residual(residual_input),
+        )
+        outputs = {"KD_nM": kd_base, "IC50_nM": ic50, "EC50_nM": ec50}
+        if self.kd_grouping_mode == "split_kd_proxy":
+            outputs["KD_proxy_ic50_nM"] = self._affinity_residual_output(
+                kd_base=kd_base,
+                kd_base_target_logit=kd_base_target_logit,
+                residual=self.kd_proxy_ic50_residual(residual_input),
+            )
+            outputs["KD_proxy_ec50_nM"] = self._affinity_residual_output(
+                kd_base=kd_base,
+                kd_base_target_logit=kd_base_target_logit,
+                residual=self.kd_proxy_ec50_residual(residual_input),
+            )
+        else:
+            outputs["KD_proxy_ic50_nM"] = kd_base
+            outputs["KD_proxy_ec50_nM"] = kd_base
+        return outputs
+
+    def _affinity_residual_output(
+        self,
+        *,
+        kd_base: torch.Tensor,
+        kd_base_target_logit: torch.Tensor,
+        residual: torch.Tensor,
+    ) -> torch.Tensor:
+        if self.affinity_target_encoding == "log10":
+            return smooth_upper_bound(
+                smooth_lower_bound(kd_base + residual, -3.0),
+                self.max_log10_nM,
+            )
+        adjusted_target_logit = kd_base_target_logit + residual
+        adjusted_log10 = affinity_target_logit_to_log10(
+            adjusted_target_logit,
+            encoding=self.affinity_target_encoding,
+            max_affinity_nM=self.max_affinity_nM,
+        )
+        return smooth_upper_bound(
+            smooth_lower_bound(adjusted_log10, -3.0),
             self.max_log10_nM,
         )
-        ec50 = smooth_upper_bound(
-            smooth_lower_bound(kd_base + self.ec50_residual(residual_input), -3.0),
-            self.max_log10_nM,
-        )
-        return {
-            "KD_nM": kd_base,
-            "IC50_nM": ic50,
-            "EC50_nM": ec50,
-        }
 
     def _affinity_input(
         self,
@@ -360,7 +494,78 @@ class AssayHeads(nn.Module):
         *,
         assay_context_vec: Optional[torch.Tensor] = None,
         binding_affinity_score: Optional[torch.Tensor] = None,
+        factorized_assay_context_vec: Optional[torch.Tensor] = None,
+        segment_summary_vec: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
+        if self.affinity_assay_residual_mode == "shared_base_segment_residual":
+            if segment_summary_vec is None:
+                segment_summary_vec = binding_affinity_vec.new_zeros(
+                    binding_affinity_vec.shape[0],
+                    self.segment_summary_dim,
+                )
+            parts = [segment_summary_vec]
+            if self.assay_context_dim > 0:
+                if assay_context_vec is None:
+                    assay_context_vec = binding_affinity_vec.new_zeros(
+                        binding_affinity_vec.shape[0],
+                        self.assay_context_dim,
+                    )
+                parts.append(assay_context_vec)
+            if binding_affinity_score is None:
+                binding_affinity_score = binding_affinity_vec.new_zeros(
+                    binding_affinity_vec.shape[0],
+                    1,
+                )
+            else:
+                binding_affinity_score = binding_affinity_score.reshape(
+                    binding_affinity_vec.shape[0],
+                    1,
+                )
+            parts.append(binding_affinity_score)
+            return torch.cat(parts, dim=-1)
+        if self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
+            if factorized_assay_context_vec is None:
+                factorized_assay_context_vec = binding_affinity_vec.new_zeros(
+                    binding_affinity_vec.shape[0],
+                    self.factorized_context_dim,
+                )
+            if binding_affinity_score is None:
+                binding_affinity_score = binding_affinity_vec.new_zeros(
+                    binding_affinity_vec.shape[0],
+                    1,
+                )
+            else:
+                binding_affinity_score = binding_affinity_score.reshape(
+                    binding_affinity_vec.shape[0],
+                    1,
+                )
+            return torch.cat([factorized_assay_context_vec, binding_affinity_score], dim=-1)
+        if self.affinity_assay_residual_mode == "shared_base_factorized_context_plus_segment_residual":
+            if segment_summary_vec is None:
+                segment_summary_vec = binding_affinity_vec.new_zeros(
+                    binding_affinity_vec.shape[0],
+                    self.segment_summary_dim,
+                )
+            if factorized_assay_context_vec is None:
+                factorized_assay_context_vec = binding_affinity_vec.new_zeros(
+                    binding_affinity_vec.shape[0],
+                    self.factorized_context_dim,
+                )
+            if binding_affinity_score is None:
+                binding_affinity_score = binding_affinity_vec.new_zeros(
+                    binding_affinity_vec.shape[0],
+                    1,
+                )
+            else:
+                binding_affinity_score = binding_affinity_score.reshape(
+                    binding_affinity_vec.shape[0],
+                    1,
+                )
+            return torch.cat(
+                [segment_summary_vec, factorized_assay_context_vec, binding_affinity_score],
+                dim=-1,
+            )
+
         residual_input = binding_affinity_vec
         if self.assay_context_dim > 0:
             if assay_context_vec is None:

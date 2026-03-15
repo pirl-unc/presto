@@ -29,7 +29,7 @@ import modal
 DEFAULT_REPO_URL = os.environ.get("PRESTO_MODAL_REPO_URL", "https://github.com/escalante-bio/presto.git")
 DEFAULT_REPO_REF = os.environ.get("PRESTO_MODAL_REPO_REF", "main")
 DEFAULT_SOURCE_MODE = os.environ.get("PRESTO_MODAL_SOURCE", "local").lower()
-DEFAULT_GPU = os.environ.get("PRESTO_MODAL_GPU", "A100")
+DEFAULT_GPU = os.environ.get("PRESTO_MODAL_GPU", "H100!")
 DEFAULT_TIMEOUT_SECONDS = int(os.environ.get("PRESTO_MODAL_TIMEOUT_SECONDS", 24 * 60 * 60))
 LOCAL_IMAGE_IGNORE = [
     ".git",
@@ -41,6 +41,7 @@ LOCAL_IMAGE_IGNORE = [
     # Keep local modal source uploads lightweight.
     "artifacts/**",
     "modal_runs/**",
+    "experiments/**",
     "site/**",
     "build/**",
     "data/merged_deduped.tsv",
@@ -56,6 +57,16 @@ LOCAL_IMAGE_IGNORE = [
     "data/mcpas/**",
     "data/stcrdab/**",
     "data/vdjdb/**",
+]
+EXPERIMENT_CODE_UPLOADS = [
+    (
+        "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/code",
+        "/opt/presto/experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/code",
+    ),
+    (
+        "experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep/code",
+        "/opt/presto/experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep/code",
+    ),
 ]
 
 
@@ -73,6 +84,12 @@ def _build_image() -> modal.Image:
             copy=True,
             ignore=LOCAL_IMAGE_IGNORE,
         )
+        for local_path, remote_path in EXPERIMENT_CODE_UPLOADS:
+            image = image.add_local_dir(
+                local_path,
+                remote_path=remote_path,
+                copy=True,
+            )
     return image.run_commands(
         "python -m pip install --upgrade pip",
         "python -m pip install /opt/presto matplotlib",
@@ -1002,6 +1019,627 @@ def groove_baseline_run(
         "/data": data_volume,
     },
 )
+def assay_ablation_run(
+    epochs: int = 20,
+    batch_size: int = 256,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run assay head ablation experiment on Modal."""
+    resolved_run_id = run_id or datetime.now(UTC).strftime("assay_ablation_%Y%m%dT%H%M%SZ")
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    merged_tsv = Path(data_dir) / "merged_deduped.tsv"
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not merged_tsv.exists() or not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+        merge_cmd = [
+            "python", "-m", "presto", "data", "merge",
+            "--datadir", data_dir, "--quiet",
+        ]
+        _run_command(merge_cmd, env)
+
+    cmd = [
+        "python",
+        "-m",
+        "presto.scripts.assay_ablation_probe",
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "out_dir": str(out_dir),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def distributional_ba_run(
+    cond_id: int = 1,
+    epochs: int = 20,
+    batch_size: int = 256,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run distributional BA head experiment for one condition on Modal."""
+    resolved_run_id = run_id or datetime.now(UTC).strftime(
+        f"distributional_ba_c{cond_id:02d}_%Y%m%dT%H%M%SZ"
+    )
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    merged_tsv = Path(data_dir) / "merged_deduped.tsv"
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not merged_tsv.exists() or not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+        merge_cmd = [
+            "python", "-m", "presto", "data", "merge",
+            "--datadir", data_dir, "--quiet",
+        ]
+        _run_command(merge_cmd, env)
+
+    cmd = [
+        "python",
+        "-m",
+        "presto.scripts.distributional_ba.train",
+        "--cond-id",
+        str(cond_id),
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "cond_id": cond_id,
+        "out_dir": str(out_dir),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def distributional_ba_v2_run(
+    cond_id: int = 1,
+    epochs: int = 20,
+    batch_size: int = 256,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run distributional BA v2 experiment (bin sweep + uncertainty heads) on Modal."""
+    resolved_run_id = run_id or datetime.now(UTC).strftime(
+        f"distributional_ba_v2_c{cond_id:02d}_%Y%m%dT%H%M%SZ"
+    )
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    merged_tsv = Path(data_dir) / "merged_deduped.tsv"
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not merged_tsv.exists() or not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+        merge_cmd = [
+            "python", "-m", "presto", "data", "merge",
+            "--datadir", data_dir, "--quiet",
+        ]
+        _run_command(merge_cmd, env)
+
+    cmd = [
+        "python",
+        "-m",
+        "presto.scripts.distributional_ba.train",
+        "--cond-id",
+        str(cond_id),
+        "--config-version",
+        "v2",
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "cond_id": cond_id,
+        "out_dir": str(out_dir),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def distributional_ba_v3_run(
+    cond_id: int = 1,
+    epochs: int = 20,
+    batch_size: int = 256,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run MHCflurry MAX × embed_dim sweep (v3) on Modal."""
+    resolved_run_id = run_id or datetime.now(UTC).strftime(
+        f"distributional_ba_v3_c{cond_id:02d}_%Y%m%dT%H%M%SZ"
+    )
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    merged_tsv = Path(data_dir) / "merged_deduped.tsv"
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not merged_tsv.exists() or not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+        merge_cmd = [
+            "python", "-m", "presto", "data", "merge",
+            "--datadir", data_dir, "--quiet",
+        ]
+        _run_command(merge_cmd, env)
+
+    cmd = [
+        "python",
+        "-m",
+        "presto.scripts.distributional_ba.train",
+        "--cond-id",
+        str(cond_id),
+        "--config-version",
+        "v3",
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "cond_id": cond_id,
+        "out_dir": str(out_dir),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def distributional_ba_v4_run(
+    cond_id: int = 1,
+    epochs: int = 50,
+    batch_size: int = 256,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run fine-grained embed_dim sweep (v4) on Modal."""
+    resolved_run_id = run_id or datetime.now(UTC).strftime(
+        f"distributional_ba_v4_c{cond_id:02d}_%Y%m%dT%H%M%SZ"
+    )
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    merged_tsv = Path(data_dir) / "merged_deduped.tsv"
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not merged_tsv.exists() or not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+        merge_cmd = [
+            "python", "-m", "presto", "data", "merge",
+            "--datadir", data_dir, "--quiet",
+        ]
+        _run_command(merge_cmd, env)
+
+    cmd = [
+        "python",
+        "-m",
+        "presto.scripts.distributional_ba.train",
+        "--cond-id",
+        str(cond_id),
+        "--config-version",
+        "v4",
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "cond_id": cond_id,
+        "out_dir": str(out_dir),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def distributional_ba_v5_run(
+    cond_id: int = 1,
+    epochs: int = 50,
+    batch_size: int = 256,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run content-conditioned assay context sweep (v5) on Modal."""
+    resolved_run_id = run_id or datetime.now(UTC).strftime(
+        f"distributional_ba_v5_c{cond_id:02d}_%Y%m%dT%H%M%SZ"
+    )
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    merged_tsv = Path(data_dir) / "merged_deduped.tsv"
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not merged_tsv.exists() or not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+        merge_cmd = [
+            "python", "-m", "presto", "data", "merge",
+            "--datadir", data_dir, "--quiet",
+        ]
+        _run_command(merge_cmd, env)
+
+    cmd = [
+        "python",
+        "-m",
+        "presto.scripts.distributional_ba.train",
+        "--cond-id",
+        str(cond_id),
+        "--config-version",
+        "v5",
+        "--content-conditioned",
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "cond_id": cond_id,
+        "out_dir": str(out_dir),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def distributional_ba_v6_run(
+    cond_id: int = 1,
+    content_conditioned: bool = False,
+    epochs: int = 50,
+    batch_size: int = 256,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run 32-condition factorial sweep (v6) on Modal.
+
+    16 condition specs × 2 content_conditioned settings = 32 runs.
+    Axes: embed_dim {32,64,128,256} × head {mhcflurry,hlgauss} × max_nM {50k,100k} × content_conditioned {yes,no}.
+    """
+    cc_tag = "cc1" if content_conditioned else "cc0"
+    resolved_run_id = run_id or datetime.now(UTC).strftime(
+        f"distributional_ba_v6_c{cond_id:02d}_{cc_tag}_%Y%m%dT%H%M%SZ"
+    )
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    merged_tsv = Path(data_dir) / "merged_deduped.tsv"
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not merged_tsv.exists() or not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+        merge_cmd = [
+            "python", "-m", "presto", "data", "merge",
+            "--datadir", data_dir, "--quiet",
+        ]
+        _run_command(merge_cmd, env)
+
+    cmd = [
+        "python",
+        "-m",
+        "presto.scripts.distributional_ba.train",
+        "--cond-id",
+        str(cond_id),
+        "--config-version",
+        "v6",
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+    ]
+    if content_conditioned:
+        cmd.append("--content-conditioned")
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "cond_id": cond_id,
+        "content_conditioned": content_conditioned,
+        "out_dir": str(out_dir),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+def _experiment_local_distributional_run(
+    *,
+    experiment_dir_name: str,
+    run_id_prefix: str,
+    cond_id: int,
+    epochs: int,
+    batch_size: int,
+    data_dir: str,
+    run_id: Optional[str],
+    extra_args: str,
+) -> Dict[str, str]:
+    resolved_run_id = run_id or datetime.now(UTC).strftime(
+        f"{run_id_prefix}_c{cond_id:02d}_%Y%m%dT%H%M%SZ"
+    )
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    experiment_code_dir = repo_root / "experiments" / experiment_dir_name / "code"
+    if not experiment_code_dir.exists():
+        raise FileNotFoundError(f"Experiment code directory missing: {experiment_code_dir}")
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    pythonpath_parts = [str(experiment_code_dir), parent]
+    if existing_pythonpath:
+        pythonpath_parts.append(existing_pythonpath)
+    env["PYTHONPATH"] = ":".join(pythonpath_parts)
+
+    merged_tsv = Path(data_dir) / "merged_deduped.tsv"
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not merged_tsv.exists() or not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+        merge_cmd = [
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
+        ]
+        _run_command(merge_cmd, env)
+
+    cmd = [
+        "python",
+        "-m",
+        "distributional_ba.train",
+        "--cond-id",
+        str(cond_id),
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "cond_id": cond_id,
+        "out_dir": str(out_dir),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def distributional_ba_clean_run(
+    cond_id: int = 1,
+    epochs: int = 10,
+    batch_size: int = 256,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run the self-contained clean distributional BA experiment on Modal."""
+    return _experiment_local_distributional_run(
+        experiment_dir_name="2026-03-13_1445_codex_clean-distributional-ba-heads",
+        run_id_prefix="distributional_ba_clean",
+        cond_id=cond_id,
+        epochs=epochs,
+        batch_size=batch_size,
+        data_dir=data_dir,
+        run_id=run_id,
+        extra_args=extra_args,
+    )
+
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def distributional_ba_regwarm_run(
+    cond_id: int = 1,
+    epochs: int = 20,
+    batch_size: int = 256,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Run the self-contained regression warm-start BA experiment on Modal."""
+    return _experiment_local_distributional_run(
+        experiment_dir_name="2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep",
+        run_id_prefix="distributional_ba_regwarm",
+        cond_id=cond_id,
+        epochs=epochs,
+        batch_size=batch_size,
+        data_dir=data_dir,
+        run_id=run_id,
+        extra_args=extra_args,
+    )
+
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
 def mhc_pretrain_run(
     epochs: int = 1,
     batch_size: int = 192,
@@ -1097,6 +1735,14 @@ def main(
         )
     elif mode == "groove_baseline":
         result = groove_baseline_run.remote(
+            epochs=epochs,
+            batch_size=batch_size,
+            data_dir=data_dir,
+            run_id=run_id or None,
+            extra_args=extra_args,
+        )
+    elif mode == "assay_ablation":
+        result = assay_ablation_run.remote(
             epochs=epochs,
             batch_size=batch_size,
             data_dir=data_dir,

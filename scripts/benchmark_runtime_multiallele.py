@@ -12,6 +12,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
+from experiment_registry import default_agent_label, initialize_experiment_dir
+
 
 BASE_ALLELES = (
     "HLA-A*02:01",
@@ -296,8 +298,28 @@ def _write_summary(output_dir: Path, rows: Sequence[Mapping[str, Any]]) -> None:
 
 
 def launch(args: argparse.Namespace) -> None:
-    output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir = initialize_experiment_dir(
+        out_dir=str(args.output_dir),
+        slug="runtime-multiallele-44k",
+        title="Runtime Multi-Allele 44k Benchmark",
+        source_script="scripts/benchmark_runtime_multiallele.py",
+        agent_label=str(args.agent_label),
+        metadata={
+            "dataset_contract": {
+                "panel": list(BASE_ALLELES),
+                "measurement_profile": "all_binding_rows",
+                "qualifier_filter": "all",
+                "loss": "censored KD/IC50/EC50",
+                "ranking": "on",
+            },
+            "training": {
+                "epochs": int(args.epochs),
+                "batch_size": int(args.batch_size),
+                "variants": [variant.variant_id for variant in VARIANTS],
+            },
+            "tested": [variant.variant_id for variant in VARIANTS],
+        },
+    )
     stamp = str(args.stamp or datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S"))
     rows: List[Dict[str, Any]] = []
     for variant in VARIANTS:
@@ -364,7 +386,8 @@ def main() -> None:
     launch_parser = subparsers.add_parser("launch")
     launch_parser.add_argument("--epochs", type=int, default=3)
     launch_parser.add_argument("--batch-size", type=int, default=140)
-    launch_parser.add_argument("--output-dir", type=str, default="modal_runs/runtime_multiallele_44k")
+    launch_parser.add_argument("--agent-label", type=str, default=default_agent_label())
+    launch_parser.add_argument("--output-dir", type=str, default="")
     launch_parser.add_argument("--stamp", type=str, default="")
     launch_parser.set_defaults(func=launch)
 

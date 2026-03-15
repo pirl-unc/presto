@@ -26,6 +26,7 @@ from statistics import median
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 import torch
+from torch.optim.lr_scheduler import CosineAnnealingLR, LinearLR, OneCycleLR, SequentialLR
 from torch.utils.data import DataLoader, Dataset, Sampler
 
 from presto.data import BindingRecord, PrestoCollator, PrestoDataset, create_dataloader
@@ -35,11 +36,14 @@ from presto.data.groove import prepare_mhc_input
 from presto.data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
 from presto.data.tokenizer import Tokenizer
 from presto.models.affinity import (
+    AFFINITY_TARGET_ENCODINGS,
     DEFAULT_MAX_AFFINITY_NM,
+    affinity_log10_to_target,
     affinity_nm_to_log10,
     binding_prob_from_kd_log10,
     max_log10_nM,
     normalize_binding_target_log10,
+    qualifier_for_target_encoding,
 )
 from presto.models.presto import Presto
 from presto.scripts.train_iedb import (
@@ -83,10 +87,104 @@ NON_QUANTITATIVE_MEASUREMENT_TYPES = {
 NORMALIZED_MEASUREMENT_FILTERS = {"", "ic50", "kd", "ec50"}
 QUALIFIER_FILTERS = {"all", "exact"}
 AFFINITY_LOSS_MODES = {"full", "probe_only", "ic50_only", "assay_heads_only"}
-GROOVE_POS_MODES = {"sequential", "triple"}
+LR_SCHEDULE_MODES = {"constant", "warmup_cosine", "onecycle"}
+PEPTIDE_POS_MODES = {
+    "triple",
+    "triple_baseline",
+    "abs_only",
+    "triple_plus_abs",
+    "start_only",
+    "end_only",
+    "start_plus_end",
+    "concat_start_end",
+    "concat_start_end_frac",
+    "mlp_start_end",
+    "mlp_start_end_frac",
+}
+GROOVE_POS_MODES = {
+    "sequential",
+    "triple",
+    "triple_baseline",
+    "abs_only",
+    "triple_plus_abs",
+    "start_only",
+    "end_only",
+    "start_plus_end",
+    "concat_start_end",
+    "concat_start_end_frac",
+    "mlp_start_end",
+    "mlp_start_end_frac",
+}
 CORE_REFINEMENT_MODES = {"shared", "class_specific"}
+AFFINITY_ASSAY_RESIDUAL_MODES = {
+    "legacy",
+    "pooled_single_output",
+    "shared_base_segment_residual",
+    "shared_base_factorized_context_residual",
+    "shared_base_factorized_context_plus_segment_residual",
+}
 DEFAULT_GROOVE_AUDIT_CAP_PER_SOURCE = 128
 FOCUSED_DATASET_CACHE_VERSION = 1
+
+
+def _build_lr_scheduler(
+    optimizer: torch.optim.Optimizer,
+    *,
+    schedule: str,
+    base_lr: float,
+    steps_per_epoch: int,
+    epochs: int,
+    warmup_fraction: float,
+    min_lr_scale: float,
+    onecycle_pct_start: float,
+):
+    schedule = str(schedule).strip().lower()
+    if schedule == "constant":
+        return None
+    total_steps = max(1, int(steps_per_epoch) * int(epochs))
+    if schedule == "warmup_cosine":
+        if total_steps <= 1:
+            return None
+        warmup_steps = int(round(total_steps * float(warmup_fraction)))
+        warmup_steps = max(1, min(total_steps - 1, warmup_steps))
+        start_factor = min(1.0, max(1e-4, 1e-6 / max(float(base_lr), 1e-12)))
+        warmup = LinearLR(
+            optimizer,
+            start_factor=start_factor,
+            end_factor=1.0,
+            total_iters=warmup_steps,
+        )
+        cosine = CosineAnnealingLR(
+            optimizer,
+            T_max=max(1, total_steps - warmup_steps),
+            eta_min=float(base_lr) * float(min_lr_scale),
+        )
+        return SequentialLR(
+            optimizer,
+            schedulers=[warmup, cosine],
+            milestones=[warmup_steps],
+        )
+    if schedule == "onecycle":
+        return OneCycleLR(
+            optimizer,
+            max_lr=float(base_lr),
+            total_steps=total_steps,
+            pct_start=float(onecycle_pct_start),
+            anneal_strategy="cos",
+            div_factor=25.0,
+            final_div_factor=1_000.0,
+        )
+    raise ValueError(f"Unsupported lr schedule: {schedule!r}")
+
+
+def _gradients_are_finite(model: torch.nn.Module) -> bool:
+    for param in model.parameters():
+        grad = getattr(param, "grad", None)
+        if grad is None:
+            continue
+        if not torch.isfinite(grad).all():
+            return False
+    return True
 
 
 class _GpuTelemetrySampler:
@@ -1811,6 +1909,7 @@ def _collect_rankable_binding_pairs(
     bind_qual: Optional[torch.Tensor],
     target_gap_min: float,
     pair_prefix: str,
+    max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
 ) -> Tuple[Optional[torch.Tensor], Optional[torch.Tensor], Optional[torch.Tensor], Dict[str, float]]:
     metrics: Dict[str, float] = {
         f"{pair_prefix}_pairs": 0.0,
@@ -1854,7 +1953,7 @@ def _collect_rankable_binding_pairs(
     value_i = value_vec[idx_i]
     value_j = value_vec[idx_j]
     min_log10 = value_vec.new_full(value_i.shape, -3.0)
-    max_log10 = value_vec.new_full(value_i.shape, max_log10_nM(DEFAULT_MAX_AFFINITY_NM))
+    max_log10 = value_vec.new_full(value_i.shape, max_log10_nM(max_affinity_nM))
 
     lower_i = torch.where(qual_i < 0, min_log10, value_i)
     upper_i = torch.where(qual_i > 0, max_log10, value_i)
@@ -1888,6 +1987,7 @@ def _collect_binding_contrastive_pairs(
     *,
     target_gap_min: float,
     max_pairs: int,
+    max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
 ) -> Tuple[List[Tuple[float, int, int]], Dict[str, float]]:
     gaps, stronger_idx, weaker_idx, metrics = _collect_rankable_binding_pairs(
         pair_index_tensor=getattr(batch, "same_peptide_diff_allele_pairs", None),
@@ -1896,6 +1996,7 @@ def _collect_binding_contrastive_pairs(
         bind_qual=getattr(batch, "bind_qual", None),
         target_gap_min=target_gap_min,
         pair_prefix="out_binding_same_peptide",
+        max_affinity_nM=max_affinity_nM,
     )
     if gaps is None or stronger_idx is None or weaker_idx is None or gaps.numel() == 0:
         metrics["out_binding_same_peptide_pairs_used"] = 0.0
@@ -1920,6 +2021,7 @@ def _collect_binding_peptide_ranking_pairs(
     *,
     target_gap_min: float,
     max_pairs: int,
+    max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
 ) -> Tuple[List[Tuple[float, int, int]], Dict[str, float]]:
     gaps, stronger_idx, weaker_idx, metrics = _collect_rankable_binding_pairs(
         pair_index_tensor=getattr(batch, "same_allele_diff_peptide_pairs", None),
@@ -1928,6 +2030,7 @@ def _collect_binding_peptide_ranking_pairs(
         bind_qual=getattr(batch, "bind_qual", None),
         target_gap_min=target_gap_min,
         pair_prefix="out_binding_same_allele",
+        max_affinity_nM=max_affinity_nM,
     )
     if gaps is None or stronger_idx is None or weaker_idx is None or gaps.numel() == 0:
         metrics["out_binding_same_allele_pairs_used"] = 0.0
@@ -1959,6 +2062,7 @@ def _compute_binding_contrastive_loss(
         bind_qual=getattr(batch, "bind_qual", None),
         target_gap_min=float(regularization.get("binding_contrastive_target_gap_min", 0.3)),
         pair_prefix="out_binding_same_peptide",
+        max_affinity_nM=float(regularization.get("max_affinity_nM", DEFAULT_MAX_AFFINITY_NM)),
     )
     kd_tensor: Optional[torch.Tensor]
     if bool(regularization.get("binding_rank_use_probe", False)):
@@ -2013,6 +2117,7 @@ def _compute_binding_peptide_ranking_loss(
         bind_qual=getattr(batch, "bind_qual", None),
         target_gap_min=float(regularization.get("binding_peptide_contrastive_target_gap_min", 0.5)),
         pair_prefix="out_binding_same_allele",
+        max_affinity_nM=float(regularization.get("max_affinity_nM", DEFAULT_MAX_AFFINITY_NM)),
     )
     kd_tensor: Optional[torch.Tensor]
     if bool(regularization.get("binding_rank_use_probe", False)):
@@ -2085,6 +2190,9 @@ def _affinity_only_loss(
     device: str,
     regularization: Optional[Mapping[str, float]] = None,
     loss_mode: str = "full",
+    affinity_target_encoding: str = "log10",
+    max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
+    kd_grouping_mode: str = "merged_kd",
 ) -> tuple[torch.Tensor, Dict[str, float]]:
     batch = batch.to(device)
     outputs = model.forward_affinity_only(
@@ -2113,14 +2221,27 @@ def _affinity_only_loss(
     ) -> None:
         if pred is None or target is None or mask is None or qual is None:
             return
-        pred_vec = _as_float_vector(pred)
-        target_vec = normalize_binding_target_log10(
+        pred_log10 = _as_float_vector(pred)
+        target_log10 = normalize_binding_target_log10(
             _as_float_vector(target),
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
+            max_affinity_nM=max_affinity_nM,
             assume_log10=False,
         )
+        pred_vec = affinity_log10_to_target(
+            pred_log10,
+            encoding=affinity_target_encoding,
+            max_affinity_nM=max_affinity_nM,
+        )
+        target_vec = affinity_log10_to_target(
+            target_log10,
+            encoding=affinity_target_encoding,
+            max_affinity_nM=max_affinity_nM,
+        )
         mask_vec = _as_float_vector(mask).to(device=pred_vec.device)
-        qual_vec = _as_float_vector(qual).to(device=pred_vec.device, dtype=torch.long)
+        qual_vec = qualifier_for_target_encoding(
+            _as_float_vector(qual).to(device=pred_vec.device, dtype=torch.long),
+            encoding=affinity_target_encoding,
+        )
         support = float(mask_vec.sum().item())
         if support <= 0.0:
             return
@@ -2150,13 +2271,36 @@ def _affinity_only_loss(
             _mask_from_batch_mapping(target_quals, "binding_ic50", device=batch.pep_tok.device),
         )
     elif loss_mode == "assay_heads_only":
-        _apply_censor_loss(
-            "binding_kd",
-            outputs.get("assays", {}).get("KD_nM"),
-            targets.get("binding_kd"),
-            _mask_from_batch_mapping(target_masks, "binding_kd", device=batch.pep_tok.device),
-            _mask_from_batch_mapping(target_quals, "binding_kd", device=batch.pep_tok.device),
-        )
+        if str(kd_grouping_mode) == "split_kd_proxy":
+            _apply_censor_loss(
+                "binding_kd_direct",
+                outputs.get("assays", {}).get("KD_nM"),
+                targets.get("binding_kd_direct"),
+                _mask_from_batch_mapping(target_masks, "binding_kd_direct", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(target_quals, "binding_kd_direct", device=batch.pep_tok.device),
+            )
+            _apply_censor_loss(
+                "binding_kd_proxy_ic50",
+                outputs.get("assays", {}).get("KD_proxy_ic50_nM"),
+                targets.get("binding_kd_proxy_ic50"),
+                _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
+            )
+            _apply_censor_loss(
+                "binding_kd_proxy_ec50",
+                outputs.get("assays", {}).get("KD_proxy_ec50_nM"),
+                targets.get("binding_kd_proxy_ec50"),
+                _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
+            )
+        else:
+            _apply_censor_loss(
+                "binding_kd",
+                outputs.get("assays", {}).get("KD_nM"),
+                targets.get("binding_kd"),
+                _mask_from_batch_mapping(target_masks, "binding_kd", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(target_quals, "binding_kd", device=batch.pep_tok.device),
+            )
         _apply_censor_loss(
             "binding_ic50",
             outputs.get("assays", {}).get("IC50_nM"),
@@ -2186,13 +2330,36 @@ def _affinity_only_loss(
             getattr(batch, "bind_mask", None),
             getattr(batch, "bind_qual", None),
         )
-        _apply_censor_loss(
-            "binding_kd",
-            outputs.get("assays", {}).get("KD_nM"),
-            targets.get("binding_kd"),
-            _mask_from_batch_mapping(target_masks, "binding_kd", device=batch.pep_tok.device),
-            _mask_from_batch_mapping(target_quals, "binding_kd", device=batch.pep_tok.device),
-        )
+        if str(kd_grouping_mode) == "split_kd_proxy":
+            _apply_censor_loss(
+                "binding_kd_direct",
+                outputs.get("assays", {}).get("KD_nM"),
+                targets.get("binding_kd_direct"),
+                _mask_from_batch_mapping(target_masks, "binding_kd_direct", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(target_quals, "binding_kd_direct", device=batch.pep_tok.device),
+            )
+            _apply_censor_loss(
+                "binding_kd_proxy_ic50",
+                outputs.get("assays", {}).get("KD_proxy_ic50_nM"),
+                targets.get("binding_kd_proxy_ic50"),
+                _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
+            )
+            _apply_censor_loss(
+                "binding_kd_proxy_ec50",
+                outputs.get("assays", {}).get("KD_proxy_ec50_nM"),
+                targets.get("binding_kd_proxy_ec50"),
+                _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
+            )
+        else:
+            _apply_censor_loss(
+                "binding_kd",
+                outputs.get("assays", {}).get("KD_nM"),
+                targets.get("binding_kd"),
+                _mask_from_batch_mapping(target_masks, "binding_kd", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(target_quals, "binding_kd", device=batch.pep_tok.device),
+            )
         _apply_censor_loss(
             "binding_ic50",
             outputs.get("assays", {}).get("IC50_nM"),
@@ -2239,23 +2406,41 @@ def _mean_affinity_loss(
     device: str,
     regularization: Optional[Mapping[str, float]] = None,
     loss_mode: str = "full",
+    affinity_target_encoding: str = "log10",
+    max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
+    kd_grouping_mode: str = "merged_kd",
 ) -> float:
     model.eval()
     total = 0.0
     batches = 0
+    skipped = 0
     with torch.no_grad():
         for batch in loader:
-            loss, _ = _affinity_only_loss(
-                model,
-                batch,
-                device,
-                regularization=regularization,
-                loss_mode=loss_mode,
-            )
+            try:
+                loss, _ = _affinity_only_loss(
+                    model,
+                    batch,
+                    device,
+                    regularization=regularization,
+                    loss_mode=loss_mode,
+                    affinity_target_encoding=affinity_target_encoding,
+                    max_affinity_nM=max_affinity_nM,
+                    kd_grouping_mode=kd_grouping_mode,
+                )
+            except RuntimeError as exc:
+                if "no supervised losses" not in str(exc).lower():
+                    raise
+                skipped += 1
+                continue
             total += float(loss.detach().item())
             batches += 1
     model.train()
-    return total / max(batches, 1)
+    if batches == 0:
+        raise RuntimeError(
+            f"Validation loader produced no supervised batches for loss_mode={loss_mode!r}, "
+            f"kd_grouping_mode={kd_grouping_mode!r}; skipped={skipped}"
+        )
+    return total / batches
 
 
 def _write_probe_csv(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
@@ -2425,11 +2610,31 @@ def main() -> None:
         help="Optional benchmark design label recorded in summary artifacts.",
     )
     parser.add_argument(
+        "--peptide-pos-mode",
+        type=str,
+        choices=sorted(PEPTIDE_POS_MODES),
+        default="triple",
+        help="Peptide positional encoding mode.",
+    )
+    parser.add_argument(
         "--groove-pos-mode",
         type=str,
         choices=sorted(GROOVE_POS_MODES),
         default="sequential",
         help="Groove positional encoding mode.",
+    )
+    parser.add_argument(
+        "--affinity-target-encoding",
+        type=str,
+        choices=sorted(AFFINITY_TARGET_ENCODINGS),
+        default="log10",
+        help="Training-space encoding for quantitative affinity losses.",
+    )
+    parser.add_argument(
+        "--max-affinity-nm",
+        type=float,
+        default=DEFAULT_MAX_AFFINITY_NM,
+        help="Upper affinity cap used for normalization and bounded outputs.",
     )
     parser.add_argument(
         "--binding-core-lengths",
@@ -2445,6 +2650,10 @@ def main() -> None:
         help="Core-window refinement head mode.",
     )
     parser.add_argument("--lr", type=float, default=DEFAULT_LR)
+    parser.add_argument("--lr-schedule", type=str, choices=sorted(LR_SCHEDULE_MODES), default="constant")
+    parser.add_argument("--warmup-fraction", type=float, default=0.1)
+    parser.add_argument("--min-lr-scale", type=float, default=0.1)
+    parser.add_argument("--onecycle-pct-start", type=float, default=0.1)
     parser.add_argument("--weight-decay", type=float, default=DEFAULT_WEIGHT_DECAY)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
     parser.add_argument("--source", type=str, default="iedb")
@@ -2555,6 +2764,40 @@ def main() -> None:
         help="Assay-path mode for affinity outputs. 'legacy' restores the stronger pre-score/context assay route.",
     )
     parser.add_argument(
+        "--affinity-assay-residual-mode",
+        type=str,
+        choices=sorted(AFFINITY_ASSAY_RESIDUAL_MODES),
+        default="legacy",
+        help="Residual/bias mode for KD/IC50/EC50 assay heads.",
+    )
+    parser.add_argument(
+        "--kd-grouping-mode",
+        type=str,
+        choices=("merged_kd", "split_kd_proxy"),
+        default="merged_kd",
+        help="Whether direct KD and proxy-KD assay families share one KD output or use split proxy outputs.",
+    )
+    parser.add_argument(
+        "--binding-kinetic-input-mode",
+        type=str,
+        choices=("affinity_vec", "interaction_vec", "fused"),
+        default="affinity_vec",
+        help=(
+            "Input route for the BindingModule kinetic branch. "
+            "'interaction_vec' restores the older 512-d kinetic input, "
+            "'affinity_vec' keeps the cleaned path, and 'fused' combines both."
+        ),
+    )
+    parser.add_argument(
+        "--binding-direct-segment-mode",
+        type=str,
+        choices=("off", "affinity_residual", "affinity_stability_residual", "gated_affinity"),
+        default="off",
+        help=(
+            "Direct pooled {peptide, groove1, groove2} branch into the canonical affinity path."
+        ),
+    )
+    parser.add_argument(
         "--binding-contrastive-weight",
         type=float,
         default=1.0,
@@ -2623,6 +2866,8 @@ def main() -> None:
     args = parser.parse_args()
 
     torch.manual_seed(int(args.seed))
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(int(args.seed))
     random.seed(int(args.seed))
     synthetic_modes = _parse_synthetic_modes(str(args.synthetic_modes))
     batch_synthetic_fraction = _resolve_batch_synthetic_fraction(
@@ -2738,11 +2983,17 @@ def main() -> None:
         d_model=int(args.d_model),
         n_layers=int(args.n_layers),
         n_heads=int(args.n_heads),
+        max_affinity_nM=float(args.max_affinity_nm),
         use_pmhc_interaction_block=True,
+        peptide_pos_mode=str(args.peptide_pos_mode),
         groove_pos_mode=str(args.groove_pos_mode),
         core_window_lengths=binding_core_lengths,
         core_refinement_mode=str(args.binding_core_refinement),
         affinity_assay_mode=str(args.affinity_assay_mode),
+        affinity_assay_residual_mode=str(args.affinity_assay_residual_mode),
+        kd_grouping_mode=str(args.kd_grouping_mode),
+        binding_kinetic_input_mode=str(args.binding_kinetic_input_mode),
+        binding_direct_segment_mode=str(args.binding_direct_segment_mode),
     ).to(device)
     warm_start_payload: Optional[Dict[str, Any]] = None
     if str(args.init_checkpoint or "").strip():
@@ -2765,6 +3016,7 @@ def main() -> None:
         lr=float(args.lr),
         weight_decay=float(args.weight_decay),
     )
+    scheduler = None
     param_count = int(sum(p.numel() for p in model.parameters()))
     regularization_cfg = {
         "binding_contrastive_weight": float(args.binding_contrastive_weight),
@@ -2831,6 +3083,12 @@ def main() -> None:
                 "shared_peptides_only": bool(args.shared_peptides_only),
                 "affinity_loss_mode": str(args.affinity_loss_mode),
                 "affinity_assay_mode": str(args.affinity_assay_mode),
+                "affinity_assay_residual_mode": str(args.affinity_assay_residual_mode),
+                "kd_grouping_mode": str(args.kd_grouping_mode),
+                "affinity_target_encoding": str(args.affinity_target_encoding),
+                "max_affinity_nM": float(args.max_affinity_nm),
+                "binding_kinetic_input_mode": str(args.binding_kinetic_input_mode),
+                "binding_direct_segment_mode": str(args.binding_direct_segment_mode),
                 "init_checkpoint": str(args.init_checkpoint or ""),
                 "synthetic_negatives": bool(args.synthetic_negatives),
                 "synthetic_refresh_each_epoch": bool(args.synthetic_refresh_each_epoch),
@@ -2847,6 +3105,7 @@ def main() -> None:
                     "torch_compile": bool(args.torch_compile),
                     "probe_plot_frequency": str(args.probe_plot_frequency),
                 },
+                "peptide_pos_mode": str(args.peptide_pos_mode),
                 "groove_pos_mode": str(args.groove_pos_mode),
                 "binding_core_lengths": list(binding_core_lengths),
                 "binding_core_refinement": str(args.binding_core_refinement),
@@ -2871,6 +3130,9 @@ def main() -> None:
     probe_rows: List[Dict[str, Any]] = []
     model.train()
     setup_wall_s = time.perf_counter() - wall_start
+    diverged = False
+    divergence_epoch: Optional[int] = None
+    divergence_reason = ""
     try:
         for epoch in range(1, int(args.epochs) + 1):
             epoch_wall_start = time.perf_counter()
@@ -2906,6 +3168,17 @@ def main() -> None:
             train_records = epoch_train_state.train_records
             train_dataset = epoch_train_state.train_dataset
             train_loader = epoch_train_state.train_loader
+            if scheduler is None:
+                scheduler = _build_lr_scheduler(
+                    optimizer,
+                    schedule=str(args.lr_schedule),
+                    base_lr=float(args.lr),
+                    steps_per_epoch=max(1, len(train_loader)),
+                    epochs=int(args.epochs),
+                    warmup_fraction=float(args.warmup_fraction),
+                    min_lr_scale=float(args.min_lr_scale),
+                    onecycle_pct_start=float(args.onecycle_pct_start),
+                )
             epoch_synthetic_stats = epoch_train_state.synthetic_stats
             record_groove_audit = epoch_train_state.record_groove_audit
             dataset_groove_audit = epoch_train_state.dataset_groove_audit
@@ -2917,23 +3190,44 @@ def main() -> None:
             train_forward_loss_s = 0.0
             train_backward_s = 0.0
             train_optimizer_s = 0.0
+            skipped_train_batches = 0
             last_batch_done = time.perf_counter()
             for batch in train_loader:
                 batch_start = time.perf_counter()
                 train_data_wait_s += batch_start - last_batch_done
                 forward_start = time.perf_counter()
-                total_loss, batch_metrics = _affinity_only_loss(
-                    model,
-                    batch,
-                    device,
-                    regularization=regularization_cfg,
-                    loss_mode=str(args.affinity_loss_mode),
-                )
+                try:
+                    total_loss, batch_metrics = _affinity_only_loss(
+                        model,
+                        batch,
+                        device,
+                        regularization=regularization_cfg,
+                        loss_mode=str(args.affinity_loss_mode),
+                        affinity_target_encoding=str(args.affinity_target_encoding),
+                        max_affinity_nM=float(args.max_affinity_nm),
+                        kd_grouping_mode=str(args.kd_grouping_mode),
+                    )
+                except RuntimeError as exc:
+                    if "no supervised losses" not in str(exc).lower():
+                        raise
+                    skipped_train_batches += 1
+                    last_batch_done = time.perf_counter()
+                    continue
+                if not torch.isfinite(total_loss):
+                    diverged = True
+                    divergence_epoch = epoch
+                    divergence_reason = "non_finite_train_loss"
+                    break
                 train_forward_loss_s += time.perf_counter() - forward_start
                 optimizer.zero_grad(set_to_none=True)
                 backward_start = time.perf_counter()
                 total_loss.backward()
                 train_backward_s += time.perf_counter() - backward_start
+                if not _gradients_are_finite(model):
+                    diverged = True
+                    divergence_epoch = epoch
+                    divergence_reason = "non_finite_gradients"
+                    break
                 grad_metrics_sum["grad_norm_affinity_probe"] += _grad_norm_for_prefixes(
                     model,
                     ["affinity_predictor.binding_affinity_probe."],
@@ -2961,10 +3255,52 @@ def main() -> None:
                 torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
                 optimizer_start = time.perf_counter()
                 optimizer.step()
+                if scheduler is not None:
+                    scheduler.step()
                 train_optimizer_s += time.perf_counter() - optimizer_start
                 train_loss_sum += float(total_loss.detach().item())
                 train_batches += 1
                 last_batch_done = time.perf_counter()
+            if diverged:
+                epoch_wall_end = time.perf_counter()
+                gpu_metrics: Dict[str, float] = gpu_sampler.summarize_window(epoch_wall_start, epoch_wall_end)
+                if device == "cuda":
+                    peak_allocated = float(torch.cuda.max_memory_allocated())
+                    peak_reserved = float(torch.cuda.max_memory_reserved())
+                    gpu_metrics.update(
+                        {
+                            "gpu_peak_allocated_bytes": peak_allocated,
+                            "gpu_peak_reserved_bytes": peak_reserved,
+                            "gpu_peak_allocated_gib": peak_allocated / float(1024**3),
+                            "gpu_peak_reserved_gib": peak_reserved / float(1024**3),
+                        }
+                    )
+                epoch_summary = {
+                    "epoch": epoch,
+                    "train_loss": float("nan"),
+                    "val_loss": float("nan"),
+                    "epoch_wall_s": epoch_wall_end - epoch_wall_start,
+                    "train_data_wait_s": train_data_wait_s,
+                    "train_forward_loss_s": train_forward_loss_s,
+                    "train_backward_s": train_backward_s,
+                    "train_optimizer_s": train_optimizer_s,
+                    "val_wall_s": 0.0,
+                    "probe_eval_wall_s": 0.0,
+                    "current_lr": float(optimizer.param_groups[0]["lr"]),
+                    "diverged": True,
+                    "divergence_reason": divergence_reason,
+                    "synthetic_seed": int(epoch_synthetic_seed),
+                    "synthetic_stats": epoch_synthetic_stats,
+                    "train_record_summary": _summarize_binding_records(train_records),
+                    "record_groove_audit": record_groove_audit,
+                    "dataset_groove_audit": dataset_groove_audit,
+                    "observed_train_examples": int(train_batches * int(args.batch_size)),
+                    "skipped_train_batches": int(skipped_train_batches),
+                    "summary_write_wall_s": 0.0,
+                    **gpu_metrics,
+                }
+                epoch_summaries.append(epoch_summary)
+                break
 
             train_loss = train_loss_sum / max(train_batches, 1)
             val_start = time.perf_counter()
@@ -2974,7 +3310,14 @@ def main() -> None:
                 device,
                 regularization=regularization_cfg,
                 loss_mode=str(args.affinity_loss_mode),
+                affinity_target_encoding=str(args.affinity_target_encoding),
+                max_affinity_nM=float(args.max_affinity_nm),
+                kd_grouping_mode=str(args.kd_grouping_mode),
             )
+            if not math.isfinite(val_loss):
+                diverged = True
+                divergence_epoch = epoch
+                divergence_reason = "non_finite_val_loss"
             val_wall_s = time.perf_counter() - val_start
             probe_start = time.perf_counter()
             probe_eval = _evaluate_probe_panel(
@@ -3015,19 +3358,25 @@ def main() -> None:
                 ),
                 "val_wall_s": val_wall_s,
                 "probe_eval_wall_s": probe_eval_wall_s,
+                "current_lr": float(optimizer.param_groups[0]["lr"]),
                 "grad_norm_affinity_probe": grad_metrics_sum["grad_norm_affinity_probe"] / max(train_batches, 1),
                 "grad_norm_binding_core": grad_metrics_sum["grad_norm_binding_core"] / max(train_batches, 1),
                 "grad_norm_trunk_other": grad_metrics_sum["grad_norm_trunk_other"] / max(train_batches, 1),
+                "diverged": bool(diverged),
+                "divergence_reason": divergence_reason if diverged else "",
                 "synthetic_seed": int(epoch_synthetic_seed),
                 "synthetic_stats": epoch_synthetic_stats,
                 "train_record_summary": _summarize_binding_records(train_records),
                 "record_groove_audit": record_groove_audit,
                 "dataset_groove_audit": dataset_groove_audit,
                 "observed_train_examples": int(train_batches * int(args.batch_size)),
+                "skipped_train_batches": int(skipped_train_batches),
                 "summary_write_wall_s": 0.0,
                 **gpu_metrics,
             }
             epoch_summaries.append(epoch_summary)
+            if diverged:
+                break
             summary = {
                 "config": {
                     "design_id": str(args.design_id),
@@ -3035,6 +3384,7 @@ def main() -> None:
                     "train_all_alleles": bool(args.train_all_alleles),
                     "train_mhc_class_filter": train_class_filter,
                     "probe_peptides": probe_peptides,
+                    "peptide_pos_mode": str(args.peptide_pos_mode),
                     "groove_pos_mode": str(args.groove_pos_mode),
                     "binding_core_lengths": list(binding_core_lengths),
                     "binding_core_refinement": str(args.binding_core_refinement),
@@ -3044,6 +3394,12 @@ def main() -> None:
                     "shared_peptides_only": bool(args.shared_peptides_only),
                     "affinity_loss_mode": str(args.affinity_loss_mode),
                     "affinity_assay_mode": str(args.affinity_assay_mode),
+                    "affinity_assay_residual_mode": str(args.affinity_assay_residual_mode),
+                    "kd_grouping_mode": str(args.kd_grouping_mode),
+                    "affinity_target_encoding": str(args.affinity_target_encoding),
+                    "max_affinity_nM": float(args.max_affinity_nm),
+                    "binding_kinetic_input_mode": str(args.binding_kinetic_input_mode),
+                    "binding_direct_segment_mode": str(args.binding_direct_segment_mode),
                     "init_checkpoint": str(args.init_checkpoint or ""),
                     "synthetic_negatives": bool(args.synthetic_negatives),
                     "negative_ratio": float(args.negative_ratio),
@@ -3070,6 +3426,10 @@ def main() -> None:
                     ),
                     "epochs": int(args.epochs),
                     "batch_size": int(args.batch_size),
+                    "lr_schedule": str(args.lr_schedule),
+                    "warmup_fraction": float(args.warmup_fraction),
+                    "min_lr_scale": float(args.min_lr_scale),
+                    "onecycle_pct_start": float(args.onecycle_pct_start),
                     "seed": int(args.seed),
                     "runtime_config": {
                         "num_workers": int(args.num_workers),
@@ -3102,6 +3462,9 @@ def main() -> None:
                 "param_count": param_count,
                 "setup_wall_s": setup_wall_s,
                 "setup_stage_timings": setup_stage_timings,
+                "diverged": bool(diverged),
+                "divergence_epoch": divergence_epoch,
+                "divergence_reason": divergence_reason,
                 "probe_support": probe_support,
                 "warm_start": {
                     "used": bool(str(args.init_checkpoint or "").strip()),
@@ -3144,6 +3507,8 @@ def main() -> None:
                 ),
                 flush=True,
             )
+            if diverged:
+                break
     finally:
         gpu_sampler.stop()
 

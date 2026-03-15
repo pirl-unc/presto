@@ -189,6 +189,75 @@ class TestPrestoModel:
         assert outputs["mhc_species_logits"].shape[0] == 2
         assert "presentation_logit" in outputs
 
+    def test_model_forward_supports_mhcflurry_affinity_target_encoding(self):
+        from presto.models.presto import Presto
+
+        model = Presto(
+            d_model=64,
+            n_layers=2,
+            n_heads=4,
+            affinity_target_encoding="mhcflurry",
+            max_affinity_nM=100000.0,
+        )
+        model.eval()
+
+        pep_tok = torch.randint(4, 24, (2, 10))
+        mhc_a_tok = torch.randint(4, 24, (2, 50))
+        mhc_b_tok = torch.randint(4, 24, (2, 20))
+        binding_context = {
+            "assay_type_idx": torch.tensor([4, 1], dtype=torch.long),
+            "assay_method_idx": torch.tensor([3, 2], dtype=torch.long),
+        }
+
+        outputs = model(
+            pep_tok=pep_tok,
+            mhc_a_tok=mhc_a_tok,
+            mhc_b_tok=mhc_b_tok,
+            mhc_class="I",
+            binding_context=binding_context,
+        )
+
+        assert outputs["assays"]["IC50_nM"].shape == (2, 1)
+        assert torch.isfinite(outputs["assays"]["IC50_nM"]).all()
+
+    @pytest.mark.parametrize(
+        "peptide_pos_mode",
+        ["abs_only", "triple_plus_abs", "start_only", "mlp_start_end_frac"],
+    )
+    @pytest.mark.parametrize(
+        "groove_pos_mode",
+        ["abs_only", "triple_plus_abs", "start_plus_end", "concat_start_end_frac"],
+    )
+    def test_model_forward_with_extended_position_modes(
+        self,
+        peptide_pos_mode: str,
+        groove_pos_mode: str,
+    ):
+        from presto.models.presto import Presto
+
+        model = Presto(
+            d_model=64,
+            n_layers=2,
+            n_heads=4,
+            peptide_pos_mode=peptide_pos_mode,
+            groove_pos_mode=groove_pos_mode,
+        )
+        model.eval()
+
+        pep_tok = torch.randint(4, 24, (2, 10))
+        mhc_a_tok = torch.randint(4, 24, (2, 50))
+        mhc_b_tok = torch.randint(4, 24, (2, 20))
+
+        outputs = model(
+            pep_tok=pep_tok,
+            mhc_a_tok=mhc_a_tok,
+            mhc_b_tok=mhc_b_tok,
+            mhc_class="I",
+        )
+
+        assert outputs["pmhc_vec"].shape[0] == 2
+        assert outputs["assays"]["IC50_nM"].shape[0] == 2
+
     def test_forward_affinity_only_matches_full_forward(self):
         from presto.models.presto import Presto
 
@@ -262,6 +331,76 @@ class TestPrestoModel:
             )
 
         assert torch.count_nonzero(out["binding_assay_context_vec"]) == 0
+
+    def test_triple_plus_abs_positions_and_segment_residual_forward(self):
+        from presto.models.presto import Presto
+
+        model = Presto(
+            d_model=64,
+            n_layers=2,
+            n_heads=4,
+            peptide_pos_mode="triple_plus_abs",
+            groove_pos_mode="triple_plus_abs",
+            affinity_assay_mode="legacy",
+            affinity_assay_residual_mode="shared_base_segment_residual",
+            core_window_lengths=(8, 9, 10, 11),
+            core_refinement_mode="shared",
+        )
+        model.eval()
+
+        pep_tok = torch.randint(4, 24, (2, 11))
+        mhc_a_tok = torch.randint(4, 24, (2, 91))
+        mhc_b_tok = torch.randint(4, 24, (2, 93))
+
+        with torch.no_grad():
+            out = model(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class=["I", "I"],
+            )
+
+        assert out["binding_segment_summary_vec"].shape == (2, 64)
+        assert out["binding_affinity_score"].shape == (2, 1)
+        assert out["assays"]["IC50_nM"].shape == (2, 1)
+
+    def test_factorized_assay_context_and_split_kd_forward(self):
+        from presto.models.presto import Presto
+
+        model = Presto(
+            d_model=64,
+            n_layers=2,
+            n_heads=4,
+            affinity_assay_mode="legacy",
+            affinity_assay_residual_mode="shared_base_factorized_context_plus_segment_residual",
+            kd_grouping_mode="split_kd_proxy",
+        )
+        model.eval()
+
+        pep_tok = torch.randint(4, 24, (2, 10))
+        mhc_a_tok = torch.randint(4, 24, (2, 91))
+        mhc_b_tok = torch.randint(4, 24, (2, 93))
+        binding_context = {
+            "assay_type_idx": torch.tensor([2, 4], dtype=torch.long),
+            "assay_method_idx": torch.tensor([1, 2], dtype=torch.long),
+            "assay_prep_idx": torch.tensor([1, 1], dtype=torch.long),
+            "assay_geometry_idx": torch.tensor([1, 2], dtype=torch.long),
+            "assay_readout_idx": torch.tensor([1, 2], dtype=torch.long),
+        }
+
+        with torch.no_grad():
+            out = model(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class="I",
+                binding_context=binding_context,
+            )
+
+        assert out["binding_factorized_assay_context_vec"].shape == (2, 64)
+        assert out["assays"]["KD_nM"].shape == (2, 1)
+        assert out["assays"]["KD_proxy_ic50_nM"].shape == (2, 1)
+        assert out["assays"]["KD_proxy_ec50_nM"].shape == (2, 1)
 
     def test_forward_mhc_only_returns_aux_logits(self):
         from presto.models.presto import Presto
@@ -761,6 +900,49 @@ class TestDesignAlignment:
             out = model(pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I")
 
         assert torch.allclose(out["pmhc_vec"], out["latent_vecs"]["pmhc_interaction"], atol=1e-5)
+
+    def test_binding_kinetic_input_modes_forward(self):
+        from presto.models.presto import Presto
+
+        pep_tok = torch.randint(4, 24, (2, 10))
+        mhc_a_tok = torch.randint(4, 24, (2, 50))
+        mhc_b_tok = torch.randint(4, 24, (2, 20))
+
+        for mode in ("affinity_vec", "interaction_vec", "fused"):
+            model = Presto(
+                d_model=64,
+                n_layers=2,
+                n_heads=4,
+                binding_kinetic_input_mode=mode,
+            )
+            model.eval()
+            with torch.no_grad():
+                out = model(pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I")
+            assert out["binding_logit"].shape == (2,)
+            assert out["binding_latents"]["log_koff"].shape == (2, 1)
+            assert out["binding_kinetic_input_mode"] == mode
+
+    def test_binding_direct_segment_modes_forward(self):
+        from presto.models.presto import Presto
+
+        pep_tok = torch.randint(4, 24, (2, 10))
+        mhc_a_tok = torch.randint(4, 24, (2, 50))
+        mhc_b_tok = torch.randint(4, 24, (2, 20))
+
+        for mode in ("off", "affinity_residual", "affinity_stability_residual", "gated_affinity"):
+            model = Presto(
+                d_model=64,
+                n_layers=2,
+                n_heads=4,
+                binding_direct_segment_mode=mode,
+            )
+            model.eval()
+            with torch.no_grad():
+                out = model(pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I")
+            assert out["binding_logit"].shape == (2,)
+            assert out["binding_direct_segment_mode"] == mode
+            assert out["binding_direct_affinity_vec"].shape == (2, 64)
+            assert out["binding_direct_stability_vec"].shape == (2, 64)
 
     def test_apc_cell_type_context_alias_exists(self):
         from presto.models.presto import Presto
