@@ -2277,6 +2277,7 @@ def _affinity_only_loss(
         species=batch.processing_species,
         flank_n_tok=batch.flank_n_tok,
         flank_c_tok=batch.flank_c_tok,
+        binding_context=getattr(batch, "binding_context", None),
     )
 
     targets = getattr(batch, "targets", {}) or {}
@@ -2633,6 +2634,7 @@ def _evaluate_holdout_predictions(
                 species=batch.processing_species,
                 flank_n_tok=batch.flank_n_tok,
                 flank_c_tok=batch.flank_c_tok,
+                binding_context=getattr(batch, "binding_context", None),
             )
             pred_log10, pred_outputs = _select_affinity_predictions(
                 outputs=outputs,
@@ -2695,6 +2697,41 @@ def _evaluate_holdout_predictions(
                 threshold_nM=threshold_nM,
             )
         )
+
+    # Per-family metrics grouped by measurement_type
+    family_groups: Dict[str, List[int]] = {}
+    for idx, row in enumerate(rows):
+        mt = row.get("measurement_type", "")
+        if mt and row.get("mask", 0) > 0:
+            family_groups.setdefault(mt, []).append(idx)
+
+    family_spearman_pairs: List[Tuple[float, int]] = []
+    for family_name, indices in sorted(family_groups.items()):
+        if len(indices) < 10:
+            continue
+        f_pred = torch.tensor([rows[i]["pred_nM"] for i in indices])
+        f_true = torch.tensor([rows[i]["target_nM"] for i in indices])
+        f_mask = torch.ones(len(indices))
+        fm = point_metrics(
+            pred_nM=f_pred,
+            true_nM=f_true,
+            mask=f_mask,
+            threshold_nM=threshold_nM,
+        )
+        safe_name = family_name.lower().replace(" ", "_")
+        for k, v in fm.items():
+            metrics[f"{safe_name}_{k}"] = v
+        if "spearman" in fm:
+            family_spearman_pairs.append((fm["spearman"], len(indices)))
+
+    # Coverage-weighted aggregate Spearman
+    if family_spearman_pairs:
+        total_n = sum(n for _, n in family_spearman_pairs)
+        if total_n > 0:
+            metrics["coverage_weighted_spearman"] = sum(
+                s * n for s, n in family_spearman_pairs
+            ) / total_n
+
     return metrics, rows
 
 
@@ -3876,6 +3913,40 @@ def main() -> None:
                 max_affinity_nM=float(args.max_affinity_nm),
                 kd_grouping_mode=str(args.kd_grouping_mode),
             )
+
+    # Probe head agreement: rank correlation of KD vs IC50 across alleles per peptide
+    probe_head_rank_corrs: List[float] = []
+    if probe_rows:
+        from collections import defaultdict
+        peptide_allele_preds: Dict[str, Dict[str, Dict[str, Optional[float]]]] = defaultdict(
+            lambda: defaultdict(dict)
+        )
+        for row in probe_rows:
+            pep = row.get("peptide", "")
+            allele = row.get("allele", "")
+            if pep and allele:
+                peptide_allele_preds[pep][allele]["kd"] = row.get("kd_log10")
+                peptide_allele_preds[pep][allele]["ic50"] = row.get("ic50_log10")
+        for pep, allele_map in peptide_allele_preds.items():
+            kd_vals = []
+            ic50_vals = []
+            for allele, preds in allele_map.items():
+                kd_v = preds.get("kd")
+                ic50_v = preds.get("ic50")
+                if kd_v is not None and ic50_v is not None:
+                    kd_vals.append(kd_v)
+                    ic50_vals.append(ic50_v)
+            if len(kd_vals) >= 3:
+                from presto.scripts.distributional_ba.metrics import _spearman
+                rho = float(_spearman(
+                    torch.tensor(kd_vals, dtype=torch.float32),
+                    torch.tensor(ic50_vals, dtype=torch.float32),
+                ))
+                probe_head_rank_corrs.append(rho)
+    probe_head_agreement: Optional[float] = None
+    if probe_head_rank_corrs:
+        probe_head_agreement = sum(probe_head_rank_corrs) / len(probe_head_rank_corrs)
+        val_metrics["probe_head_rank_corr"] = probe_head_agreement
 
     _write_rows_csv(out_dir / "val_predictions.csv", val_prediction_rows)
     _write_rows_csv(out_dir / "test_predictions.csv", test_prediction_rows)

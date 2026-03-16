@@ -18,6 +18,12 @@ import torch.nn.functional as F
 from .affinity import binding_logit_from_kd_log10
 from .heads import AssayHeads, smooth_lower_bound, smooth_range_bound
 from .pmhc import BindingModule
+from ..data.vocab import (
+    BINDING_ASSAY_TYPES,
+    BINDING_ASSAY_PREP,
+    BINDING_ASSAY_GEOMETRY,
+    BINDING_ASSAY_READOUT,
+)
 
 
 @dataclass
@@ -145,11 +151,24 @@ class AffinityPredictor(nn.Module):
             d_model if self.binding_kinetic_input_mode == "affinity_vec" else self.interaction_dim
         )
         self.binding = BindingModule(d_model=binding_input_dim)
-        self.segment_summary_proj = nn.Sequential(
+        self.sequence_summary_proj = nn.Sequential(
             nn.Linear(d_model * 3, d_model),
             nn.GELU(),
             nn.Linear(d_model, d_model),
         )
+        # Factorized assay context embeddings
+        _fac_embed_dim = max(d_model // 4, 8)
+        self._fac_embed_dim = _fac_embed_dim
+        self.assay_type_embed = nn.Embedding(len(BINDING_ASSAY_TYPES), _fac_embed_dim)
+        self.assay_prep_embed = nn.Embedding(len(BINDING_ASSAY_PREP), _fac_embed_dim)
+        self.assay_geometry_embed = nn.Embedding(len(BINDING_ASSAY_GEOMETRY), _fac_embed_dim)
+        self.assay_readout_embed = nn.Embedding(len(BINDING_ASSAY_READOUT), _fac_embed_dim)
+        factorized_context_dim = _fac_embed_dim * 4
+        self.factorized_proj = nn.Linear(factorized_context_dim, factorized_context_dim)
+
+        # class_probs is [B, 2], species_probs is [B, N_MHC_SPECIES=6]
+        self._class_probs_dim = 2
+        self._species_probs_dim = 6
         self.assay_heads = AssayHeads(
             d_model=d_model,
             max_log10_nM=self.max_log10_nM,
@@ -157,7 +176,7 @@ class AffinityPredictor(nn.Module):
             affinity_target_encoding=self.affinity_target_encoding,
             assay_context_dim=0,
             affinity_assay_residual_mode=self.affinity_assay_residual_mode,
-            segment_summary_dim=(
+            sequence_summary_dim=(
                 d_model
                 if self.affinity_assay_residual_mode in {
                     "shared_base_segment_residual",
@@ -165,10 +184,10 @@ class AffinityPredictor(nn.Module):
                 }
                 else 0
             ),
-            factorized_context_dim=(
-                0
-            ),
+            factorized_context_dim=factorized_context_dim,
             kd_grouping_mode=self.kd_grouping_mode,
+            class_probs_dim=self._class_probs_dim,
+            species_probs_dim=self._species_probs_dim,
         )
         if self.affinity_assay_residual_mode == "legacy":
             kd_bias_input_dim = d_model
@@ -197,15 +216,32 @@ class AffinityPredictor(nn.Module):
         binding_affinity_vec: torch.Tensor,
         binding_stability_vec: torch.Tensor,
         class_probs: torch.Tensor,
+        species_probs: Optional[torch.Tensor] = None,
         pep_vec: Optional[torch.Tensor] = None,
         mhc_a_vec: Optional[torch.Tensor] = None,
         mhc_b_vec: Optional[torch.Tensor] = None,
         mhc_class: Optional[object] = None,
+        binding_context: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, torch.Tensor]:
         outputs: Dict[str, torch.Tensor] = {}
         assay_context_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
         outputs["binding_assay_context_vec"] = assay_context_vec
-        factorized_assay_context_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
+
+        # Build factorized assay context from per-sample metadata when available
+        if binding_context is not None and "assay_type_idx" in binding_context:
+            fac_parts = [
+                self.assay_type_embed(binding_context["assay_type_idx"]),
+                self.assay_prep_embed(binding_context["assay_prep_idx"]),
+                self.assay_geometry_embed(binding_context["assay_geometry_idx"]),
+                self.assay_readout_embed(binding_context["assay_readout_idx"]),
+            ]
+            factorized_assay_context_vec = self.factorized_proj(
+                torch.cat(fac_parts, dim=-1)
+            )
+        else:
+            factorized_assay_context_vec = binding_affinity_vec.new_zeros(
+                binding_affinity_vec.shape[0], self._fac_embed_dim * 4,
+            )
         outputs["binding_factorized_assay_context_vec"] = factorized_assay_context_vec
 
         probe_kd = self.binding_affinity_probe(binding_affinity_vec)
@@ -222,12 +258,12 @@ class AffinityPredictor(nn.Module):
             and mhc_a_vec is not None
             and mhc_b_vec is not None
         ):
-            segment_summary_vec = self.segment_summary_proj(
+            sequence_summary_vec = self.sequence_summary_proj(
                 torch.cat([pep_vec, mhc_a_vec, mhc_b_vec], dim=-1)
             )
         else:
-            segment_summary_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
-        outputs["binding_segment_summary_vec"] = segment_summary_vec
+            sequence_summary_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
+        outputs["binding_sequence_summary_vec"] = sequence_summary_vec
 
         if self.binding_kinetic_input_mode == "affinity_vec":
             binding_input = binding_affinity_vec
@@ -260,14 +296,14 @@ class AffinityPredictor(nn.Module):
             - self.binding_log10_scale * binding_logit_from_core
         ).unsqueeze(-1)
         if self.affinity_assay_residual_mode == "shared_base_segment_residual":
-            kd_bias_parts = [segment_summary_vec]
+            kd_bias_parts = [sequence_summary_vec]
             kd_bias_parts.append(outputs["binding_affinity_score"])
             kd_bias_input = torch.cat(kd_bias_parts, dim=-1)
         elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
             kd_bias_input = outputs["binding_affinity_score"]
         elif self.affinity_assay_residual_mode == "shared_base_factorized_context_plus_segment_residual":
             kd_bias_input = torch.cat(
-                [segment_summary_vec, outputs["binding_affinity_score"]],
+                [sequence_summary_vec, outputs["binding_affinity_score"]],
                 dim=-1,
             )
         elif self.affinity_assay_residual_mode == "pooled_single_output":
@@ -307,9 +343,9 @@ class AffinityPredictor(nn.Module):
             ),
             binding_stability_score=None,
             assay_context_vec=None,
-            factorized_assay_context_vec=None,
-            segment_summary_vec=(
-                segment_summary_vec
+            factorized_assay_context_vec=factorized_assay_context_vec,
+            sequence_summary_vec=(
+                sequence_summary_vec
                 if self.affinity_assay_residual_mode
                 in {
                     "shared_base_segment_residual",
@@ -317,6 +353,8 @@ class AffinityPredictor(nn.Module):
                 }
                 else None
             ),
+            class_probs=class_probs,
+            species_probs=species_probs,
         )
         core_kd_log10 = smooth_lower_bound(kd_from_binding + kd_bias, -3.0)
         outputs["binding_core_kd_log10"] = core_kd_log10
@@ -340,9 +378,9 @@ class AffinityPredictor(nn.Module):
                 )
                 else None
             ),
-            factorized_assay_context_vec=None,
-            segment_summary_vec=(
-                segment_summary_vec
+            factorized_assay_context_vec=factorized_assay_context_vec,
+            sequence_summary_vec=(
+                sequence_summary_vec
                 if self.affinity_assay_residual_mode
                 in {
                     "shared_base_segment_residual",
@@ -350,6 +388,8 @@ class AffinityPredictor(nn.Module):
                 }
                 else None
             ),
+            class_probs=class_probs,
+            species_probs=species_probs,
         )
         assays.update(affinity_obs)
         outputs["assays"] = assays

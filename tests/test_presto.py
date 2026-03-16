@@ -215,7 +215,8 @@ class TestPrestoModel:
         assert outputs["assays"]["IC50_nM"].shape == (2, 1)
         assert torch.isfinite(outputs["assays"]["IC50_nM"]).all()
 
-    def test_model_rejects_binding_context_input(self):
+    def test_model_accepts_binding_context_input(self):
+        """Verify factorized assay context embeddings are wired through forward()."""
         from presto.models.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
@@ -232,14 +233,18 @@ class TestPrestoModel:
             "assay_readout_idx": torch.tensor([1, 2], dtype=torch.long),
         }
 
-        with pytest.raises(TypeError):
-            model(
+        with torch.no_grad():
+            outputs = model(
                 pep_tok=pep_tok,
                 mhc_a_tok=mhc_a_tok,
                 mhc_b_tok=mhc_b_tok,
                 mhc_class="I",
                 binding_context=binding_context,
             )
+        # factorized context vec should be non-zero when binding_context is provided
+        fac_vec = outputs.get("binding_factorized_assay_context_vec")
+        assert fac_vec is not None
+        assert fac_vec.abs().mean() > 0, "Factorized assay context should be non-zero"
 
     @pytest.mark.parametrize(
         "peptide_pos_mode",
@@ -355,7 +360,7 @@ class TestPrestoModel:
                 mhc_class=["I", "I"],
             )
 
-        assert out["binding_segment_summary_vec"].shape == (2, 64)
+        assert out["binding_sequence_summary_vec"].shape == (2, 64)
         assert out["binding_affinity_score"].shape == (2, 1)
         assert out["assays"]["IC50_nM"].shape == (2, 1)
 

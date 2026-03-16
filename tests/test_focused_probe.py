@@ -29,6 +29,7 @@ from presto.scripts.focused_binding_probe import (
     _require_target_allele_coverage,
     _resolve_batch_synthetic_fraction,
     _split_records_by_peptide,
+    _split_records_three_way,
     _summarize_binding_records,
     _load_prepared_binding_state_from_cache,
     _write_prepared_binding_state_to_cache,
@@ -166,6 +167,41 @@ def test_split_records_by_peptide_uses_all_alleles_when_no_panel_supplied():
     assert stats["val_peptides"] >= 4
     assert stats["shared_peptides_total"] == 1
     assert stats["shared_peptides_train"] + stats["shared_peptides_val"] == 1
+
+
+def test_split_records_three_way_keeps_peptides_isolated_across_all_splits():
+    records = [
+        _rec("A*02:01", "PEP1"),
+        _rec("A*24:02", "PEP1"),
+        _rec("A*02:01", "PEP2"),
+        _rec("A*24:02", "PEP2"),
+        _rec("A*02:01", "PEP3"),
+        _rec("A*24:02", "PEP3"),
+        _rec("A*02:01", "PEP4"),
+        _rec("A*24:02", "PEP4"),
+    ]
+
+    train, val, test, stats = _split_records_three_way(
+        records,
+        train_fraction=0.5,
+        val_fraction=0.25,
+        test_fraction=0.25,
+        seed=17,
+        alleles=["A*02:01", "A*24:02"],
+    )
+
+    train_peptides = {rec.peptide for rec in train}
+    val_peptides = {rec.peptide for rec in val}
+    test_peptides = {rec.peptide for rec in test}
+    assert train_peptides
+    assert val_peptides
+    assert test_peptides
+    assert train_peptides.isdisjoint(val_peptides)
+    assert train_peptides.isdisjoint(test_peptides)
+    assert val_peptides.isdisjoint(test_peptides)
+    assert train_peptides | val_peptides | test_peptides == {"PEP1", "PEP2", "PEP3", "PEP4"}
+    assert stats["train_rows"] + stats["val_rows"] + stats["test_rows"] == len(records)
+    assert stats["split_mode"] == "three_way"
 
 
 def test_require_target_allele_coverage_raises_on_missing_target():
@@ -875,6 +911,8 @@ def test_prepared_binding_state_cache_roundtrip(tmp_path):
         shared_peptides_only=False,
         max_per_allele=-1,
         split_seed=42,
+        val_fraction=0.1,
+        test_fraction=0.1,
         explicit_probe_peptides=("SLLQHLIGL",),
     )
     cache_key = _contract_cache_key(contract=contract, merged_tsv=merged_tsv, index_csv=index_csv)
@@ -882,11 +920,12 @@ def test_prepared_binding_state_cache_roundtrip(tmp_path):
         real_records=[BindingRecord(peptide="PEP", mhc_allele="HLA-A*02:01", value=10.0)],
         real_train_records=[BindingRecord(peptide="PEP", mhc_allele="HLA-A*02:01", value=10.0)],
         real_val_records=[BindingRecord(peptide="PEQ", mhc_allele="HLA-A*24:02", value=20.0)],
+        real_test_records=[BindingRecord(peptide="PER", mhc_allele="HLA-A*24:02", value=30.0)],
         subset_stats={"rows_selected": 2},
         shared_peptide_stats={"shared_peptides": 0},
         probe_allele_counts_after_filter={"HLA-A*02:01": 1, "HLA-A*24:02": 1},
         balance_stats={"skipped": True},
-        split_stats={"train_rows": 1, "val_rows": 1},
+        split_stats={"train_rows": 1, "val_rows": 1, "test_rows": 1},
         mhc_sequences={"HLA-A*02:01": "AAAA"},
         mhc_stats={"resolved": 1},
         probe_support={"SLLQHLIGL": {"total_rows": 0}},
@@ -907,4 +946,5 @@ def test_prepared_binding_state_cache_roundtrip(tmp_path):
     assert loaded.cache_hit is True
     assert loaded.cache_key == cache_key
     assert len(loaded.real_records) == 1
+    assert len(loaded.real_test_records) == 1
     assert loaded.probe_support["SLLQHLIGL"]["total_rows"] == 0

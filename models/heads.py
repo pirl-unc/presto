@@ -9,7 +9,7 @@ Task-specific heads that sit on top of the shared encoder:
 """
 
 import math
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 import torch
 import torch.nn as nn
@@ -210,9 +210,11 @@ class AssayHeads(nn.Module):
         affinity_target_encoding: str = "log10",
         assay_context_dim: int = 0,
         affinity_assay_residual_mode: str = "legacy",
-        segment_summary_dim: int = 0,
+        sequence_summary_dim: int = 0,
         factorized_context_dim: int = 0,
         kd_grouping_mode: str = "merged_kd",
+        class_probs_dim: int = 0,
+        species_probs_dim: int = 0,
     ):
         super().__init__()
         self.max_log10_nM = float(max_log10_nM)
@@ -231,8 +233,11 @@ class AssayHeads(nn.Module):
                 f"Unsupported affinity_assay_residual_mode: {affinity_assay_residual_mode!r}"
             )
         self.affinity_assay_residual_mode = affinity_assay_residual_mode
-        self.segment_summary_dim = max(int(segment_summary_dim), 0)
+        self.sequence_summary_dim = max(int(sequence_summary_dim), 0)
         self.factorized_context_dim = max(int(factorized_context_dim), 0)
+        self.class_probs_dim = max(int(class_probs_dim), 0)
+        self.species_probs_dim = max(int(species_probs_dim), 0)
+        self._conditioning_probs_dim = self.class_probs_dim + self.species_probs_dim
         kd_grouping_mode = str(kd_grouping_mode).strip().lower()
         if kd_grouping_mode not in {"merged_kd", "split_kd_proxy"}:
             raise ValueError(f"Unsupported kd_grouping_mode: {kd_grouping_mode!r}")
@@ -241,11 +246,11 @@ class AssayHeads(nn.Module):
         if self.affinity_assay_residual_mode == "pooled_single_output":
             residual_input_dim = 0
         elif self.affinity_assay_residual_mode == "shared_base_segment_residual":
-            residual_input_dim = self.segment_summary_dim + self.assay_context_dim + 1
+            residual_input_dim = self.sequence_summary_dim + self.assay_context_dim + self._conditioning_probs_dim + 1
         elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
-            residual_input_dim = self.factorized_context_dim + 1
+            residual_input_dim = self.factorized_context_dim + self._conditioning_probs_dim + 1
         elif self.affinity_assay_residual_mode == "shared_base_factorized_context_plus_segment_residual":
-            residual_input_dim = self.segment_summary_dim + self.factorized_context_dim + 1
+            residual_input_dim = self.sequence_summary_dim + self.factorized_context_dim + self._conditioning_probs_dim + 1
         else:
             residual_input_dim = d_model + self.assay_context_dim
         stability_input_dim = d_model + self.stability_score_dim
@@ -298,7 +303,9 @@ class AssayHeads(nn.Module):
         binding_stability_score: Optional[torch.Tensor] = None,
         assay_context_vec: Optional[torch.Tensor] = None,
         factorized_assay_context_vec: Optional[torch.Tensor] = None,
-        segment_summary_vec: Optional[torch.Tensor] = None,
+        sequence_summary_vec: Optional[torch.Tensor] = None,
+        class_probs: Optional[torch.Tensor] = None,
+        species_probs: Optional[torch.Tensor] = None,
     ) -> Dict[str, torch.Tensor]:
         """Predict all assay values.
 
@@ -342,7 +349,9 @@ class AssayHeads(nn.Module):
                 assay_context_vec=assay_context_vec,
                 binding_affinity_score=binding_affinity_score,
                 factorized_assay_context_vec=factorized_assay_context_vec,
-                segment_summary_vec=segment_summary_vec,
+                sequence_summary_vec=sequence_summary_vec,
+                class_probs=class_probs,
+                species_probs=species_probs,
             )
 
             # t_half = ln(2) / koff, convert to minutes
@@ -364,7 +373,9 @@ class AssayHeads(nn.Module):
                 assay_context_vec=assay_context_vec,
                 binding_affinity_score=binding_affinity_score,
                 factorized_assay_context_vec=factorized_assay_context_vec,
-                segment_summary_vec=segment_summary_vec,
+                sequence_summary_vec=sequence_summary_vec,
+                class_probs=class_probs,
+                species_probs=species_probs,
             )
             results["KD_nM"] = smooth_upper_bound(
                 smooth_lower_bound(self._direct_predict(affinity_input, "kd"), -3.0),
@@ -406,7 +417,9 @@ class AssayHeads(nn.Module):
         assay_context_vec: Optional[torch.Tensor] = None,
         binding_affinity_score: Optional[torch.Tensor] = None,
         factorized_assay_context_vec: Optional[torch.Tensor] = None,
-        segment_summary_vec: Optional[torch.Tensor] = None,
+        sequence_summary_vec: Optional[torch.Tensor] = None,
+        class_probs: Optional[torch.Tensor] = None,
+        species_probs: Optional[torch.Tensor] = None,
     ) -> Dict[str, torch.Tensor]:
         """Derive KD/IC50/EC50 from a shared KD latent with assay-specific bias."""
         kd_base = smooth_upper_bound(
@@ -439,7 +452,9 @@ class AssayHeads(nn.Module):
             assay_context_vec=assay_context_vec,
             binding_affinity_score=binding_affinity_score,
             factorized_assay_context_vec=factorized_assay_context_vec,
-            segment_summary_vec=segment_summary_vec,
+            sequence_summary_vec=sequence_summary_vec,
+            class_probs=class_probs,
+            species_probs=species_probs,
         )
         ic50 = self._affinity_residual_output(
             kd_base=kd_base,
@@ -491,6 +506,27 @@ class AssayHeads(nn.Module):
             self.max_log10_nM,
         )
 
+    def _conditioning_probs_parts(
+        self,
+        batch_size: int,
+        device: torch.device,
+        class_probs: Optional[torch.Tensor],
+        species_probs: Optional[torch.Tensor],
+    ) -> List[torch.Tensor]:
+        """Build list of conditioning probability tensors for residual input."""
+        parts: List[torch.Tensor] = []
+        if self.class_probs_dim > 0:
+            if class_probs is not None:
+                parts.append(class_probs.to(device=device, dtype=torch.float32))
+            else:
+                parts.append(torch.zeros(batch_size, self.class_probs_dim, device=device))
+        if self.species_probs_dim > 0:
+            if species_probs is not None:
+                parts.append(species_probs.to(device=device, dtype=torch.float32))
+            else:
+                parts.append(torch.zeros(batch_size, self.species_probs_dim, device=device))
+        return parts
+
     def _affinity_input(
         self,
         binding_affinity_vec: torch.Tensor,
@@ -498,82 +534,74 @@ class AssayHeads(nn.Module):
         assay_context_vec: Optional[torch.Tensor] = None,
         binding_affinity_score: Optional[torch.Tensor] = None,
         factorized_assay_context_vec: Optional[torch.Tensor] = None,
-        segment_summary_vec: Optional[torch.Tensor] = None,
+        sequence_summary_vec: Optional[torch.Tensor] = None,
+        class_probs: Optional[torch.Tensor] = None,
+        species_probs: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
+        batch_size = binding_affinity_vec.shape[0]
+        device = binding_affinity_vec.device
+        cond_parts = self._conditioning_probs_parts(batch_size, device, class_probs, species_probs)
+
         if self.affinity_assay_residual_mode == "shared_base_segment_residual":
-            if segment_summary_vec is None:
-                segment_summary_vec = binding_affinity_vec.new_zeros(
-                    binding_affinity_vec.shape[0],
-                    self.segment_summary_dim,
+            if sequence_summary_vec is None:
+                sequence_summary_vec = binding_affinity_vec.new_zeros(
+                    batch_size,
+                    self.sequence_summary_dim,
                 )
-            parts = [segment_summary_vec]
+            parts = [sequence_summary_vec]
             if self.assay_context_dim > 0:
                 if assay_context_vec is None:
                     assay_context_vec = binding_affinity_vec.new_zeros(
-                        binding_affinity_vec.shape[0],
+                        batch_size,
                         self.assay_context_dim,
                     )
                 parts.append(assay_context_vec)
+            parts.extend(cond_parts)
             if binding_affinity_score is None:
-                binding_affinity_score = binding_affinity_vec.new_zeros(
-                    binding_affinity_vec.shape[0],
-                    1,
-                )
+                binding_affinity_score = binding_affinity_vec.new_zeros(batch_size, 1)
             else:
-                binding_affinity_score = binding_affinity_score.reshape(
-                    binding_affinity_vec.shape[0],
-                    1,
-                )
+                binding_affinity_score = binding_affinity_score.reshape(batch_size, 1)
             parts.append(binding_affinity_score)
             return torch.cat(parts, dim=-1)
         if self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
             if factorized_assay_context_vec is None:
                 factorized_assay_context_vec = binding_affinity_vec.new_zeros(
-                    binding_affinity_vec.shape[0],
+                    batch_size,
                     self.factorized_context_dim,
                 )
+            parts = [factorized_assay_context_vec]
+            parts.extend(cond_parts)
             if binding_affinity_score is None:
-                binding_affinity_score = binding_affinity_vec.new_zeros(
-                    binding_affinity_vec.shape[0],
-                    1,
-                )
+                binding_affinity_score = binding_affinity_vec.new_zeros(batch_size, 1)
             else:
-                binding_affinity_score = binding_affinity_score.reshape(
-                    binding_affinity_vec.shape[0],
-                    1,
-                )
-            return torch.cat([factorized_assay_context_vec, binding_affinity_score], dim=-1)
+                binding_affinity_score = binding_affinity_score.reshape(batch_size, 1)
+            parts.append(binding_affinity_score)
+            return torch.cat(parts, dim=-1)
         if self.affinity_assay_residual_mode == "shared_base_factorized_context_plus_segment_residual":
-            if segment_summary_vec is None:
-                segment_summary_vec = binding_affinity_vec.new_zeros(
-                    binding_affinity_vec.shape[0],
-                    self.segment_summary_dim,
+            if sequence_summary_vec is None:
+                sequence_summary_vec = binding_affinity_vec.new_zeros(
+                    batch_size,
+                    self.sequence_summary_dim,
                 )
             if factorized_assay_context_vec is None:
                 factorized_assay_context_vec = binding_affinity_vec.new_zeros(
-                    binding_affinity_vec.shape[0],
+                    batch_size,
                     self.factorized_context_dim,
                 )
+            parts = [sequence_summary_vec, factorized_assay_context_vec]
+            parts.extend(cond_parts)
             if binding_affinity_score is None:
-                binding_affinity_score = binding_affinity_vec.new_zeros(
-                    binding_affinity_vec.shape[0],
-                    1,
-                )
+                binding_affinity_score = binding_affinity_vec.new_zeros(batch_size, 1)
             else:
-                binding_affinity_score = binding_affinity_score.reshape(
-                    binding_affinity_vec.shape[0],
-                    1,
-                )
-            return torch.cat(
-                [segment_summary_vec, factorized_assay_context_vec, binding_affinity_score],
-                dim=-1,
-            )
+                binding_affinity_score = binding_affinity_score.reshape(batch_size, 1)
+            parts.append(binding_affinity_score)
+            return torch.cat(parts, dim=-1)
 
         residual_input = binding_affinity_vec
         if self.assay_context_dim > 0:
             if assay_context_vec is None:
                 assay_context_vec = binding_affinity_vec.new_zeros(
-                    binding_affinity_vec.shape[0],
+                    batch_size,
                     self.assay_context_dim,
                 )
             residual_input = torch.cat([residual_input, assay_context_vec], dim=-1)

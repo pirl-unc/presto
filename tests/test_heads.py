@@ -179,7 +179,7 @@ class TestAssayHeads:
             affinity_target_encoding="mhcflurry",
             max_affinity_nM=50000.0,
             affinity_assay_residual_mode="shared_base_segment_residual",
-            segment_summary_dim=8,
+            sequence_summary_dim=8,
         )
         heads.ic50_residual = nn.Identity()
 

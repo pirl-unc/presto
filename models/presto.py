@@ -1950,6 +1950,8 @@ class Presto(nn.Module):
         trunk_state: PrestoTrunkState,
         *,
         mhc_class: Optional[Any] = None,
+        binding_context: Optional[Dict[str, torch.Tensor]] = None,
+        species_probs: Optional[torch.Tensor] = None,
     ) -> Dict[str, torch.Tensor]:
         return self.affinity_predictor(
             interaction_vec=trunk_state.interaction_vec,
@@ -1959,7 +1961,9 @@ class Presto(nn.Module):
             mhc_a_vec=trunk_state.mhc_a_vec,
             mhc_b_vec=trunk_state.mhc_b_vec,
             class_probs=trunk_state.class_probs,
+            species_probs=species_probs,
             mhc_class=mhc_class,
+            binding_context=binding_context,
         )
 
     def predict_presentation_from_trunk(
@@ -2053,6 +2057,7 @@ class Presto(nn.Module):
         tcell_context: Optional[Dict[str, torch.Tensor]] = None,
         return_binding_attention: bool = False,
         peptide_species: Optional[Any] = None,  # deprecated alias for species_of_origin
+        binding_context: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, Any]:
         """Forward pass through full model under the canonical outputs-only assay contract."""
         outputs: Dict[str, Any] = {}
@@ -2402,6 +2407,8 @@ class Presto(nn.Module):
             self.predict_affinity_from_trunk(
                 trunk_state,
                 mhc_class=mhc_class,
+                binding_context=binding_context,
+                species_probs=outputs.get("species_probs"),
             )
         )
         binding_class1_logit = outputs["binding_class1_logit"]
@@ -2535,6 +2542,7 @@ class Presto(nn.Module):
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
         peptide_species: Optional[Any] = None,
+        binding_context: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, Any]:
         """Affinity-only forward under the canonical sequence-only input contract."""
         outputs = self.forward(
@@ -2549,6 +2557,7 @@ class Presto(nn.Module):
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
             peptide_species=peptide_species,
+            binding_context=binding_context,
         )
         affinity_keys = {
             "pep_vec",
