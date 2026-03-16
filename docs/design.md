@@ -93,6 +93,7 @@ type/species inference (S5).
 
 These are the inputs to the Presto code interface. The code translates them
 into neural network inputs (token sequences and conditioning embeddings).
+The canonical assay invariant is defined in `assay_modeling_contract.md`.
 
 | Input | Type | Required | Default | Description |
 |-------|------|----------|---------|-------------|
@@ -108,6 +109,8 @@ into neural network inputs (token sequences and conditioning embeddings).
 | `species` | Backward-compat alias | No | -- | If provided, applies to both `mhc_species` and `immune_species` unless those are explicitly set. |
 | `tcr_alpha` | AA string | No | None | TCR alpha chain (reserved for future TCR pathway). |
 | `tcr_beta` | AA string | No | None | TCR beta chain (reserved for future TCR pathway). |
+
+There is intentionally no assay-selector input in this table. Assay identity belongs on the output/supervision side only.
 
 ## 2.2 How API Inputs Map to Neural Network Inputs
 
@@ -135,6 +138,8 @@ The API inputs are translated into two categories of neural network input:
    `pI/pII`, then used only in class-specific downstream mixing/gating.
    User `mhc_class` input is an optional hard override for that mixing path,
    not a token-level conditioning embedding.
+
+   Assay metadata is not part of this conditioning path.
 
 ## 2.3 Multi-Allele Mode
 
@@ -923,6 +928,8 @@ class II, core residues dominate (P1, P4, P6, P9 anchors) but PFRs
 contribute modestly at P-1 and P+1. The core-relative positional encoding
 provides this inductive bias differentiably.
 
+**Canonical invariant:** assay type/method/prep/readout are not allowed as predictive inputs. Binding and affinity-like assays are predicted from the shared pMHC latents via output heads.
+
 **Class-symmetric design:** One set of cross-attention parameters serves
 both class I and class II. The context_vec carries class probability
 information, and the class-conditioned readout heads (S9) handle
@@ -1431,6 +1438,8 @@ integrated cross-segment information through their cross-attention layers.
 # 10. T-Cell Assay Output System
 
 ## 10.1 Design Philosophy
+
+Legacy note: the context-conditioned T-cell assay system below reflects an older design direction. The canonical repo-wide direction is outputs-only assay heads without assay-selector inputs across affinity, T-cell assays, and other assay families.
 
 T-cell assays measure the same underlying biology through different
 experimental lenses. Rather than modeling each assay type as an independent

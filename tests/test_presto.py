@@ -204,21 +204,42 @@ class TestPrestoModel:
         pep_tok = torch.randint(4, 24, (2, 10))
         mhc_a_tok = torch.randint(4, 24, (2, 50))
         mhc_b_tok = torch.randint(4, 24, (2, 20))
-        binding_context = {
-            "assay_type_idx": torch.tensor([4, 1], dtype=torch.long),
-            "assay_method_idx": torch.tensor([3, 2], dtype=torch.long),
-        }
 
         outputs = model(
             pep_tok=pep_tok,
             mhc_a_tok=mhc_a_tok,
             mhc_b_tok=mhc_b_tok,
             mhc_class="I",
-            binding_context=binding_context,
         )
 
         assert outputs["assays"]["IC50_nM"].shape == (2, 1)
         assert torch.isfinite(outputs["assays"]["IC50_nM"]).all()
+
+    def test_model_rejects_binding_context_input(self):
+        from presto.models.presto import Presto
+
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        model.eval()
+
+        pep_tok = torch.randint(4, 24, (2, 10))
+        mhc_a_tok = torch.randint(4, 24, (2, 50))
+        mhc_b_tok = torch.randint(4, 24, (2, 20))
+        binding_context = {
+            "assay_type_idx": torch.tensor([0, 1], dtype=torch.long),
+            "assay_method_idx": torch.tensor([1, 2], dtype=torch.long),
+            "assay_prep_idx": torch.tensor([1, 2], dtype=torch.long),
+            "assay_geometry_idx": torch.tensor([1, 2], dtype=torch.long),
+            "assay_readout_idx": torch.tensor([1, 2], dtype=torch.long),
+        }
+
+        with pytest.raises(TypeError):
+            model(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class="I",
+                binding_context=binding_context,
+            )
 
     @pytest.mark.parametrize(
         "peptide_pos_mode",
@@ -267,10 +288,6 @@ class TestPrestoModel:
         pep_tok = torch.randint(4, 24, (2, 10))
         mhc_a_tok = torch.randint(4, 24, (2, 50))
         mhc_b_tok = torch.randint(4, 24, (2, 20))
-        binding_context = {
-            "assay_type_idx": torch.tensor([4, 1], dtype=torch.long),
-            "assay_method_idx": torch.tensor([3, 2], dtype=torch.long),
-        }
 
         with torch.no_grad():
             full = model(
@@ -278,14 +295,12 @@ class TestPrestoModel:
                 mhc_a_tok=mhc_a_tok,
                 mhc_b_tok=mhc_b_tok,
                 mhc_class="I",
-                binding_context=binding_context,
             )
             affinity = model.forward_affinity_only(
                 pep_tok=pep_tok,
                 mhc_a_tok=mhc_a_tok,
                 mhc_b_tok=mhc_b_tok,
                 mhc_class="I",
-                binding_context=binding_context,
             )
 
         for key in (
@@ -307,30 +322,11 @@ class TestPrestoModel:
             atol=1e-6,
         )
 
-    def test_legacy_affinity_assay_mode_zeros_assay_context(self):
+    def test_model_rejects_noncanonical_affinity_assay_mode(self):
         from presto.models.presto import Presto
 
-        model = Presto(d_model=64, n_layers=2, n_heads=4, affinity_assay_mode="legacy")
-        model.eval()
-
-        pep_tok = torch.randint(4, 24, (2, 10))
-        mhc_a_tok = torch.randint(4, 24, (2, 50))
-        mhc_b_tok = torch.randint(4, 24, (2, 20))
-        binding_context = {
-            "assay_type_idx": torch.tensor([4, 1], dtype=torch.long),
-            "assay_method_idx": torch.tensor([3, 2], dtype=torch.long),
-        }
-
-        with torch.no_grad():
-            out = model(
-                pep_tok=pep_tok,
-                mhc_a_tok=mhc_a_tok,
-                mhc_b_tok=mhc_b_tok,
-                mhc_class="I",
-                binding_context=binding_context,
-            )
-
-        assert torch.count_nonzero(out["binding_assay_context_vec"]) == 0
+        with pytest.raises(TypeError):
+            Presto(d_model=64, n_layers=2, n_heads=4, affinity_assay_mode="legacy")
 
     def test_triple_plus_abs_positions_and_segment_residual_forward(self):
         from presto.models.presto import Presto
@@ -341,7 +337,6 @@ class TestPrestoModel:
             n_heads=4,
             peptide_pos_mode="triple_plus_abs",
             groove_pos_mode="triple_plus_abs",
-            affinity_assay_mode="legacy",
             affinity_assay_residual_mode="shared_base_segment_residual",
             core_window_lengths=(8, 9, 10, 11),
             core_refinement_mode="shared",
@@ -364,14 +359,13 @@ class TestPrestoModel:
         assert out["binding_affinity_score"].shape == (2, 1)
         assert out["assays"]["IC50_nM"].shape == (2, 1)
 
-    def test_factorized_assay_context_and_split_kd_forward(self):
+    def test_split_kd_forward_without_assay_selector_inputs(self):
         from presto.models.presto import Presto
 
         model = Presto(
             d_model=64,
             n_layers=2,
             n_heads=4,
-            affinity_assay_mode="legacy",
             affinity_assay_residual_mode="shared_base_factorized_context_plus_segment_residual",
             kd_grouping_mode="split_kd_proxy",
         )
@@ -380,13 +374,6 @@ class TestPrestoModel:
         pep_tok = torch.randint(4, 24, (2, 10))
         mhc_a_tok = torch.randint(4, 24, (2, 91))
         mhc_b_tok = torch.randint(4, 24, (2, 93))
-        binding_context = {
-            "assay_type_idx": torch.tensor([2, 4], dtype=torch.long),
-            "assay_method_idx": torch.tensor([1, 2], dtype=torch.long),
-            "assay_prep_idx": torch.tensor([1, 1], dtype=torch.long),
-            "assay_geometry_idx": torch.tensor([1, 2], dtype=torch.long),
-            "assay_readout_idx": torch.tensor([1, 2], dtype=torch.long),
-        }
 
         with torch.no_grad():
             out = model(
@@ -394,10 +381,9 @@ class TestPrestoModel:
                 mhc_a_tok=mhc_a_tok,
                 mhc_b_tok=mhc_b_tok,
                 mhc_class="I",
-                binding_context=binding_context,
             )
 
-        assert out["binding_factorized_assay_context_vec"].shape == (2, 64)
+        assert torch.count_nonzero(out["binding_factorized_assay_context_vec"]) == 0
         assert out["assays"]["KD_nM"].shape == (2, 1)
         assert out["assays"]["KD_proxy_ic50_nM"].shape == (2, 1)
         assert out["assays"]["KD_proxy_ec50_nM"].shape == (2, 1)

@@ -5,6 +5,10 @@
 GrooveTransformerModel encoder. Determines which Presto binding head
 components (kinetics, residual corrections, assay context, blend) add value.
 
+Historical note: this is an experiment harness, not the canonical main Presto
+contract. Do not treat it as permission to add assay-selector inputs back into
+the main sequence-only affinity path.
+
 Variants:
   a1  Single IC50 output (reference)
   a2  Measurement-type-routed multi-head

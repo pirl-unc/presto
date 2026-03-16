@@ -1,7 +1,8 @@
 """Modular pMHC predictor blocks used by Presto.
 
-These modules mirror the high-level MHCflurry decomposition while still
-operating on shared trunk features from the unified Presto model.
+The canonical assay contract is sequence-only on the input side:
+`nflank`, `peptide`, `cflank`, `mhc_a`, and `mhc_b` drive the shared trunk,
+while assay identity remains output-side supervision only.
 """
 
 from __future__ import annotations
@@ -14,13 +15,6 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from ..data.vocab import (
-    BINDING_ASSAY_GEOMETRY,
-    BINDING_ASSAY_METHODS,
-    BINDING_ASSAY_PREP,
-    BINDING_ASSAY_READOUT,
-    BINDING_ASSAY_TYPES,
-)
 from .affinity import binding_logit_from_kd_log10
 from .heads import AssayHeads, smooth_lower_bound, smooth_range_bound
 from .pmhc import BindingModule
@@ -78,7 +72,7 @@ class ClassPresentationPredictor(nn.Module):
 
 
 class AffinityPredictor(nn.Module):
-    """Shared affinity predictor operating on interaction-driven trunk features."""
+    """Shared affinity predictor with sequence-only inputs and assay-specific outputs."""
 
     def __init__(
         self,
@@ -88,7 +82,6 @@ class AffinityPredictor(nn.Module):
         max_log10_nM: float,
         binding_midpoint_nM: float,
         binding_log10_scale: float,
-        affinity_assay_mode: str = "score_context",
         binding_kinetic_input_mode: str = "affinity_vec",
         affinity_assay_residual_mode: str = "legacy",
         kd_grouping_mode: str = "merged_kd",
@@ -102,10 +95,6 @@ class AffinityPredictor(nn.Module):
         self.binding_midpoint_log10_nM = math.log10(max(self.binding_midpoint_nM, 1e-12))
         self.binding_log10_scale = max(float(binding_log10_scale), 1e-6)
         self.max_log10_nM = float(max_log10_nM)
-        affinity_assay_mode = str(affinity_assay_mode).strip().lower()
-        if affinity_assay_mode not in {"legacy", "score_context"}:
-            raise ValueError(f"Unsupported affinity_assay_mode: {affinity_assay_mode!r}")
-        self.affinity_assay_mode = affinity_assay_mode
         binding_kinetic_input_mode = str(binding_kinetic_input_mode).strip().lower()
         if binding_kinetic_input_mode not in {"affinity_vec", "interaction_vec", "fused"}:
             raise ValueError(
@@ -156,22 +145,6 @@ class AffinityPredictor(nn.Module):
             d_model if self.binding_kinetic_input_mode == "affinity_vec" else self.interaction_dim
         )
         self.binding = BindingModule(d_model=binding_input_dim)
-        self.assay_type_embed = nn.Embedding(len(BINDING_ASSAY_TYPES), self.context_dim)
-        self.assay_method_embed = nn.Embedding(len(BINDING_ASSAY_METHODS), self.context_dim)
-        self.assay_context_proj = nn.Sequential(
-            nn.Linear(self.context_dim * 2, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
-        )
-        self.assay_factor_type_embed = nn.Embedding(len(BINDING_ASSAY_TYPES), self.context_dim)
-        self.assay_prep_embed = nn.Embedding(len(BINDING_ASSAY_PREP), self.context_dim)
-        self.assay_geometry_embed = nn.Embedding(len(BINDING_ASSAY_GEOMETRY), self.context_dim)
-        self.assay_readout_embed = nn.Embedding(len(BINDING_ASSAY_READOUT), self.context_dim)
-        self.factorized_assay_context_proj = nn.Sequential(
-            nn.Linear(self.context_dim * 4, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
-        )
         self.segment_summary_proj = nn.Sequential(
             nn.Linear(d_model * 3, d_model),
             nn.GELU(),
@@ -182,7 +155,7 @@ class AffinityPredictor(nn.Module):
             max_log10_nM=self.max_log10_nM,
             max_affinity_nM=self.max_affinity_nM,
             affinity_target_encoding=self.affinity_target_encoding,
-            assay_context_dim=(d_model if self.affinity_assay_mode == "score_context" else 0),
+            assay_context_dim=0,
             affinity_assay_residual_mode=self.affinity_assay_residual_mode,
             segment_summary_dim=(
                 d_model
@@ -193,23 +166,18 @@ class AffinityPredictor(nn.Module):
                 else 0
             ),
             factorized_context_dim=(
-                d_model
-                if self.affinity_assay_residual_mode in {
-                    "shared_base_factorized_context_residual",
-                    "shared_base_factorized_context_plus_segment_residual",
-                }
-                else 0
+                0
             ),
             kd_grouping_mode=self.kd_grouping_mode,
         )
         if self.affinity_assay_residual_mode == "legacy":
-            kd_bias_input_dim = d_model + (d_model if self.affinity_assay_mode == "score_context" else 0)
+            kd_bias_input_dim = d_model
         elif self.affinity_assay_residual_mode == "shared_base_segment_residual":
-            kd_bias_input_dim = d_model + (d_model if self.affinity_assay_mode == "score_context" else 0) + 1
-        elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
             kd_bias_input_dim = d_model + 1
+        elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
+            kd_bias_input_dim = 1
         elif self.affinity_assay_residual_mode == "shared_base_factorized_context_plus_segment_residual":
-            kd_bias_input_dim = d_model + d_model + 1
+            kd_bias_input_dim = d_model + 1
         else:
             kd_bias_input_dim = 0
         self.kd_assay_bias = nn.Sequential(
@@ -233,22 +201,11 @@ class AffinityPredictor(nn.Module):
         mhc_a_vec: Optional[torch.Tensor] = None,
         mhc_b_vec: Optional[torch.Tensor] = None,
         mhc_class: Optional[object] = None,
-        binding_context: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, torch.Tensor]:
         outputs: Dict[str, torch.Tensor] = {}
-
-        if self.affinity_assay_mode == "score_context":
-            assay_context_vec = self._encode_binding_context(
-                binding_affinity_vec=binding_affinity_vec,
-                binding_context=binding_context,
-            )
-        else:
-            assay_context_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
+        assay_context_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
         outputs["binding_assay_context_vec"] = assay_context_vec
-        factorized_assay_context_vec = self._encode_factorized_binding_context(
-            binding_affinity_vec=binding_affinity_vec,
-            binding_context=binding_context,
-        )
+        factorized_assay_context_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
         outputs["binding_factorized_assay_context_vec"] = factorized_assay_context_vec
 
         probe_kd = self.binding_affinity_probe(binding_affinity_vec)
@@ -304,28 +261,19 @@ class AffinityPredictor(nn.Module):
         ).unsqueeze(-1)
         if self.affinity_assay_residual_mode == "shared_base_segment_residual":
             kd_bias_parts = [segment_summary_vec]
-            if self.affinity_assay_mode == "score_context":
-                kd_bias_parts.append(assay_context_vec)
             kd_bias_parts.append(outputs["binding_affinity_score"])
             kd_bias_input = torch.cat(kd_bias_parts, dim=-1)
         elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
-            kd_bias_input = torch.cat(
-                [factorized_assay_context_vec, outputs["binding_affinity_score"]],
-                dim=-1,
-            )
+            kd_bias_input = outputs["binding_affinity_score"]
         elif self.affinity_assay_residual_mode == "shared_base_factorized_context_plus_segment_residual":
             kd_bias_input = torch.cat(
-                [segment_summary_vec, factorized_assay_context_vec, outputs["binding_affinity_score"]],
+                [segment_summary_vec, outputs["binding_affinity_score"]],
                 dim=-1,
             )
         elif self.affinity_assay_residual_mode == "pooled_single_output":
             kd_bias_input = None
         else:
-            kd_bias_input = (
-                torch.cat([binding_affinity_vec, assay_context_vec], dim=-1)
-                if self.affinity_assay_mode == "score_context"
-                else binding_affinity_vec
-            )
+            kd_bias_input = binding_affinity_vec
         if self.kd_assay_bias is not None and kd_bias_input is not None:
             kd_bias_raw = self.kd_assay_bias(kd_bias_input)
             kd_bias_cap = F.softplus(self.kd_assay_bias_scale)
@@ -348,8 +296,7 @@ class AffinityPredictor(nn.Module):
             binding_affinity_score=(
                 outputs["binding_affinity_score"]
                 if (
-                    self.affinity_assay_mode == "score_context"
-                    or self.affinity_assay_residual_mode == "shared_base_segment_residual"
+                    self.affinity_assay_residual_mode == "shared_base_segment_residual"
                     or self.affinity_assay_residual_mode
                     in {
                         "shared_base_factorized_context_residual",
@@ -358,25 +305,9 @@ class AffinityPredictor(nn.Module):
                 )
                 else None
             ),
-            binding_stability_score=(
-                outputs["binding_stability_score"]
-                if self.affinity_assay_mode == "score_context"
-                else None
-            ),
-            assay_context_vec=(
-                assay_context_vec
-                if self.affinity_assay_mode == "score_context"
-                else None
-            ),
-            factorized_assay_context_vec=(
-                factorized_assay_context_vec
-                if self.affinity_assay_residual_mode
-                in {
-                    "shared_base_factorized_context_residual",
-                    "shared_base_factorized_context_plus_segment_residual",
-                }
-                else None
-            ),
+            binding_stability_score=None,
+            assay_context_vec=None,
+            factorized_assay_context_vec=None,
             segment_summary_vec=(
                 segment_summary_vec
                 if self.affinity_assay_residual_mode
@@ -396,16 +327,11 @@ class AffinityPredictor(nn.Module):
         affinity_obs = self.assay_heads.derive_affinity_observables(
             binding_affinity_vec,
             kd_log10,
-            assay_context_vec=(
-                assay_context_vec
-                if self.affinity_assay_mode == "score_context"
-                else None
-            ),
+            assay_context_vec=None,
             binding_affinity_score=(
                 outputs["binding_affinity_score"]
                 if (
-                    self.affinity_assay_mode == "score_context"
-                    or self.affinity_assay_residual_mode == "shared_base_segment_residual"
+                    self.affinity_assay_residual_mode == "shared_base_segment_residual"
                     or self.affinity_assay_residual_mode
                     in {
                         "shared_base_factorized_context_residual",
@@ -414,15 +340,7 @@ class AffinityPredictor(nn.Module):
                 )
                 else None
             ),
-            factorized_assay_context_vec=(
-                factorized_assay_context_vec
-                if self.affinity_assay_residual_mode
-                in {
-                    "shared_base_factorized_context_residual",
-                    "shared_base_factorized_context_plus_segment_residual",
-                }
-                else None
-            ),
+            factorized_assay_context_vec=None,
             segment_summary_vec=(
                 segment_summary_vec
                 if self.affinity_assay_residual_mode
@@ -466,59 +384,3 @@ class AffinityPredictor(nn.Module):
         outputs["binding_prob"] = torch.sigmoid(binding_logit)
         outputs["binding_mixed_prob"] = outputs["binding_prob"].unsqueeze(-1)
         return outputs
-
-    def _encode_binding_context(
-        self,
-        *,
-        binding_affinity_vec: torch.Tensor,
-        binding_context: Optional[Dict[str, torch.Tensor]],
-    ) -> torch.Tensor:
-        batch_size = int(binding_affinity_vec.shape[0])
-        device = binding_affinity_vec.device
-        if isinstance(binding_context, dict):
-            assay_type_idx = binding_context.get("assay_type_idx")
-            assay_method_idx = binding_context.get("assay_method_idx")
-        else:
-            assay_type_idx = None
-            assay_method_idx = None
-
-        if not isinstance(assay_type_idx, torch.Tensor):
-            assay_type_idx = torch.zeros(batch_size, dtype=torch.long, device=device)
-        else:
-            assay_type_idx = assay_type_idx.to(device=device, dtype=torch.long).reshape(batch_size)
-        if not isinstance(assay_method_idx, torch.Tensor):
-            assay_method_idx = torch.zeros(batch_size, dtype=torch.long, device=device)
-        else:
-            assay_method_idx = assay_method_idx.to(device=device, dtype=torch.long).reshape(batch_size)
-
-        assay_type_vec = self.assay_type_embed(assay_type_idx)
-        assay_method_vec = self.assay_method_embed(assay_method_idx)
-        return self.assay_context_proj(torch.cat([assay_type_vec, assay_method_vec], dim=-1))
-
-    def _encode_factorized_binding_context(
-        self,
-        *,
-        binding_affinity_vec: torch.Tensor,
-        binding_context: Optional[Dict[str, torch.Tensor]],
-    ) -> torch.Tensor:
-        batch_size = int(binding_affinity_vec.shape[0])
-        device = binding_affinity_vec.device
-
-        def _index_from_context(name: str) -> torch.Tensor:
-            raw = binding_context.get(name) if isinstance(binding_context, dict) else None
-            if not isinstance(raw, torch.Tensor):
-                return torch.zeros(batch_size, dtype=torch.long, device=device)
-            return raw.to(device=device, dtype=torch.long).reshape(batch_size)
-
-        assay_type_idx = _index_from_context("assay_type_idx")
-        assay_prep_idx = _index_from_context("assay_prep_idx")
-        assay_geometry_idx = _index_from_context("assay_geometry_idx")
-        assay_readout_idx = _index_from_context("assay_readout_idx")
-
-        parts = [
-            self.assay_factor_type_embed(assay_type_idx),
-            self.assay_prep_embed(assay_prep_idx),
-            self.assay_geometry_embed(assay_geometry_idx),
-            self.assay_readout_embed(assay_readout_idx),
-        ]
-        return self.factorized_assay_context_proj(torch.cat(parts, dim=-1))

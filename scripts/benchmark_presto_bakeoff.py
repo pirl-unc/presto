@@ -72,7 +72,6 @@ def _presto_base(*, loss_mode: str) -> Tuple[str, ...]:
         "--peptide-pos-mode", "concat_start_end_frac",
         "--groove-pos-mode", "concat_start_end_frac",
         "--affinity-loss-mode", loss_mode,
-        "--affinity-assay-mode", "legacy",
         "--affinity-assay-residual-mode", "shared_base_segment_residual",
         "--binding-core-lengths", "8,9,10,11",
         "--binding-direct-segment-mode", "off",

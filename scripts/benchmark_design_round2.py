@@ -47,7 +47,6 @@ PRESTO_FACTORIAL: Tuple[DesignSpec, ...] = tuple(
             "--groove-pos-mode", groove_pos,
             "--binding-core-lengths", "8,9,10,11",
             "--binding-core-refinement", "shared",
-            "--affinity-assay-mode", "legacy",
             "--affinity-assay-residual-mode", residual_mode,
             "--binding-kinetic-input-mode", "affinity_vec",
             "--binding-direct-segment-mode", "off",

@@ -130,3 +130,14 @@
 - Do not consider an experiment "analyzed" if you only extracted aggregate metrics (Spearman/AUROC) from summary.json. Per-allele probe predictions, per-epoch training curves, correlation metrics, and binary classification metrics (<=500nM) must all be extracted and included.
 - For multi-head experiments, extract metrics from ALL output heads, not just the primary prediction path.
 - If an experiment run finishes, do the closure work immediately before reporting status upstream. "Runs are done" is not a meaningful completion state on its own; completion requires local artifact harvest, summary tables, README updates, and `experiments/experiment_log.md` updates in the same work cycle.
+
+## 2026-03-16 - Keep stable-model docs separate from experiment writeups
+
+- Do not turn per-experiment `README.md` files into an ever-growing scoreboard for the current best model family. Keep each experiment README focused on that experiment's contract, result, and artifact pointers.
+- When the user wants a durable "model to beat" record across datasets/metrics, create or update a separate summary document under `experiments/` rather than stuffing that comparison into every new experiment README.
+
+## 2026-03-16 - Architectural input invariants must be enforced, not merely described
+
+- When the user declares that a feature family is forbidden as model input, do not leave it as one option among many mode flags. Remove it from defaults, reject it in public entrypoints, and state the invariant consistently in code, docs, and tests.
+- For Presto affinity modeling specifically, assay identity belongs on the output/supervision side only. Assay labels may choose which head is supervised, but assay selector/context tensors must not be available as predictive inputs in the main path.
+- When the user broadens an architectural rule from one task family to all assay families, update the canonical contract immediately instead of leaving a narrower document name or scope in place. The repo should describe one assay-input policy, not separate local exceptions by default.

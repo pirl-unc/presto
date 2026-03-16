@@ -62,7 +62,6 @@ def _make_designs() -> Tuple[DesignSpec, ...]:
                     "--groove-pos-mode", groove_mode,
                     "--binding-core-lengths", "8,9,10,11",
                     "--binding-core-refinement", "shared",
-                    "--affinity-assay-mode", "legacy",
                     "--affinity-assay-residual-mode", "shared_base_segment_residual",
                     "--binding-kinetic-input-mode", "affinity_vec",
                     "--binding-direct-segment-mode", "off",

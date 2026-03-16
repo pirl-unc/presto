@@ -32,7 +32,6 @@ BASE_EXTRA_ARGS = [
     "--groove-pos-mode", "triple",
     "--binding-core-lengths", "8,9,10,11",
     "--binding-core-refinement", "shared",
-    "--affinity-assay-mode", "legacy",
     "--binding-contrastive-weight", "0",
     "--binding-peptide-contrastive-weight", "0",
     "--init-checkpoint", "/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt",

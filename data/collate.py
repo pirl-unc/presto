@@ -248,8 +248,12 @@ class PrestoBatch:
     tcr_evidence_mask: Optional[torch.Tensor] = None
     tcr_evidence_method_mask: Optional[torch.Tensor] = None
 
-    # Optional T-cell assay context (categorical IDs + masks)
+    # Binding assay metadata is supervision-only bookkeeping. It is not a
+    # canonical model input for the main Presto assay path.
     binding_context: Dict[str, torch.Tensor] = field(default_factory=dict)
+    # Legacy T-cell assay metadata. Keep for supervision bookkeeping while the
+    # context-conditioned T-cell path is being refactored toward the same
+    # outputs-only assay contract.
     tcell_context: Dict[str, torch.Tensor] = field(default_factory=dict)
     tcell_context_masks: Dict[str, torch.Tensor] = field(default_factory=dict)
     tcell_mil_context: Dict[str, torch.Tensor] = field(default_factory=dict)
@@ -764,6 +768,11 @@ class PrestoCollator:
         self,
         samples: List[PrestoSample],
     ) -> Dict[str, torch.Tensor]:
+        """Build output-supervision metadata for binding assay labels.
+
+        This metadata is used to route losses/metrics by assay family. The main
+        Presto assay path must not consume it as predictive input.
+        """
         assay_type_idx: List[int] = []
         assay_method_idx: List[int] = []
         assay_prep_idx: List[int] = []
@@ -1281,6 +1290,7 @@ class PrestoCollator:
         binding_targets, binding_masks, binding_quals = self._collate_binding_measurement_targets(
             samples
         )
+        # Binding assay metadata is kept for supervision/analysis only.
         binding_context = self._collate_binding_context(samples)
         targets.update(binding_targets)
         target_masks.update(binding_masks)

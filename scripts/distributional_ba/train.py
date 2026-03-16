@@ -3,6 +3,9 @@
 
 Usage:
     python -m presto.scripts.distributional_ba.train --cond-id 1 [options]
+
+This is an experiment harness for distributional BA head research, not the
+canonical main Presto affinity contract.
 """
 
 from __future__ import annotations
@@ -33,6 +36,7 @@ from presto.scripts.focused_binding_probe import (
     _select_fit_supported_probe_peptides,
     _split_csv,
     _split_records_by_peptide,
+    MEASUREMENT_PROFILES,
     MEASUREMENT_PROFILE_NUMERIC,
     QUALIFIER_FILTERS,
 )
@@ -40,6 +44,7 @@ from presto.scripts.groove_baseline_probe import _verify_groove_representations
 from presto.scripts.train_iedb import resolve_mhc_sequences_from_index
 
 from .config import CONDITIONS_BY_ID, ConditionSpec, DistributionalModel, build_model
+from .encoders import ENCODER_BACKBONES
 from .evaluate import evaluate_held_out, evaluate_probe_panel
 
 # Lazy import for v2 conditions — avoids import cost when using v1
@@ -183,9 +188,13 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--qualifier-filter", type=str, default="all",
                         choices=sorted(QUALIFIER_FILTERS))
+    parser.add_argument("--measurement-profile", type=str, default=MEASUREMENT_PROFILE_NUMERIC,
+                        choices=sorted(MEASUREMENT_PROFILES))
     parser.add_argument("--train-all-alleles", action="store_true")
     parser.add_argument("--config-version", type=str, default="v1",
                         choices=["v1", "v2", "v3", "v4", "v5", "v6"], help="Condition matrix version")
+    parser.add_argument("--encoder-backbone", type=str, default="historical_ablation",
+                        choices=list(ENCODER_BACKBONES))
     parser.add_argument("--content-conditioned", action="store_true",
                         help="Condition assay context on binding logit + molecular repr")
     parser.add_argument("--init-checkpoint", type=str, default="",
@@ -228,7 +237,7 @@ def main() -> None:
     )
     records = [
         r for r in records
-        if _keep_measurement_type(r.measurement_type, MEASUREMENT_PROFILE_NUMERIC)
+        if _keep_measurement_type(r.measurement_type, str(args.measurement_profile))
     ]
     records = [
         r for r in records
@@ -283,6 +292,7 @@ def main() -> None:
         spec, embed_dim=actual_embed_dim,
         n_heads=int(args.n_heads), n_layers=int(args.n_layers),
         content_conditioned=bool(args.content_conditioned),
+        encoder_backbone=str(args.encoder_backbone),
     ).to(device)
 
     # Warm-start from pretrained encoder checkpoint
@@ -368,6 +378,8 @@ def main() -> None:
         "epochs": int(args.epochs),
         "batch_size": int(args.batch_size),
         "seed": int(args.seed),
+        "measurement_profile": str(args.measurement_profile),
+        "encoder_backbone": str(args.encoder_backbone),
         "probe_alleles": probe_alleles,
         "train_rows": len(train_records),
         "val_rows": len(val_records),

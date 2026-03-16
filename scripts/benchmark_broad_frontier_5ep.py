@@ -45,7 +45,6 @@ def _presto_common(*, d_model: int, peptide_pos: str, groove_pos: str, residual:
         "--groove-pos-mode", groove_pos,
         "--binding-core-lengths", "8,9,10,11",
         "--binding-core-refinement", "shared",
-        "--affinity-assay-mode", "legacy",
         "--binding-kinetic-input-mode", kinetic_input,
         "--affinity-target-encoding", "log10",
         "--max-affinity-nm", "50000",

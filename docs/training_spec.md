@@ -4,6 +4,7 @@ This is the canonical Presto training specification.
 
 Model architecture is in `design.md`. TCR pathway details are in `tcr_spec.md`
 and are currently future-facing (not active in canonical training).
+The outputs-only assay invariant is in `assay_modeling_contract.md`.
 
 **Normative choice**: Use one unified mixed-source training loop with
 time-varying task/regularizer weights. Do not use hard stage boundaries.
@@ -16,6 +17,7 @@ Do not keep parallel staged-training codepaths in the repository.
 Train one model over all active canonical supervision signals so that:
 - upstream biology (processing/binding/presentation) is shared,
 - downstream assay heads are condition-specific readouts,
+- assay labels stay on the supervision side rather than becoming predictive inputs,
 - synthetic negatives and biologic priors are integrated directly into the same loop.
 
 ---

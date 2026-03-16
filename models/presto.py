@@ -4,6 +4,7 @@ Canonical forward path:
 - Single token stream encoder over peptide/flanks/groove-half-1/groove-half-2.
 - Segmented latent-query attention DAG produces biologic latent vectors.
 - Assay and task outputs are readouts of those shared latent vectors.
+- Canonical assay prediction never consumes assay-selector metadata as model input.
 """
 
 from __future__ import annotations
@@ -219,7 +220,6 @@ class Presto(nn.Module):
         groove_pos_mode: str = "sequential",
         core_window_lengths: Optional[Sequence[int]] = None,
         core_refinement_mode: str = "shared",
-        affinity_assay_mode: str = "score_context",
         affinity_assay_residual_mode: str = "legacy",
         kd_grouping_mode: str = "merged_kd",
         binding_kinetic_input_mode: str = "affinity_vec",
@@ -301,10 +301,6 @@ class Presto(nn.Module):
         if core_refinement_mode not in {"shared", "class_specific"}:
             raise ValueError(f"Unsupported core_refinement_mode: {core_refinement_mode!r}")
         self.core_refinement_mode = core_refinement_mode
-        affinity_assay_mode = str(affinity_assay_mode).strip().lower()
-        if affinity_assay_mode not in {"legacy", "score_context"}:
-            raise ValueError(f"Unsupported affinity_assay_mode: {affinity_assay_mode!r}")
-        self.affinity_assay_mode = affinity_assay_mode
         affinity_assay_residual_mode = str(affinity_assay_residual_mode).strip().lower()
         if affinity_assay_residual_mode not in {
             "legacy",
@@ -640,7 +636,6 @@ class Presto(nn.Module):
             max_log10_nM=self.max_log10_nM,
             binding_midpoint_nM=self.binding_midpoint_nM,
             binding_log10_scale=self.binding_log10_scale,
-            affinity_assay_mode=self.affinity_assay_mode,
             binding_kinetic_input_mode=self.binding_kinetic_input_mode,
             affinity_assay_residual_mode=self.affinity_assay_residual_mode,
             kd_grouping_mode=self.kd_grouping_mode,
@@ -1955,7 +1950,6 @@ class Presto(nn.Module):
         trunk_state: PrestoTrunkState,
         *,
         mhc_class: Optional[Any] = None,
-        binding_context: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, torch.Tensor]:
         return self.affinity_predictor(
             interaction_vec=trunk_state.interaction_vec,
@@ -1966,7 +1960,6 @@ class Presto(nn.Module):
             mhc_b_vec=trunk_state.mhc_b_vec,
             class_probs=trunk_state.class_probs,
             mhc_class=mhc_class,
-            binding_context=binding_context,
         )
 
     def predict_presentation_from_trunk(
@@ -2057,12 +2050,11 @@ class Presto(nn.Module):
         species_of_origin: Optional[Any] = None,
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
-        binding_context: Optional[Dict[str, torch.Tensor]] = None,
         tcell_context: Optional[Dict[str, torch.Tensor]] = None,
         return_binding_attention: bool = False,
         peptide_species: Optional[Any] = None,  # deprecated alias for species_of_origin
     ) -> Dict[str, Any]:
-        """Forward pass through full model."""
+        """Forward pass through full model under the canonical outputs-only assay contract."""
         outputs: Dict[str, Any] = {}
 
         immune_species_input = immune_species if immune_species is not None else species
@@ -2410,7 +2402,6 @@ class Presto(nn.Module):
             self.predict_affinity_from_trunk(
                 trunk_state,
                 mhc_class=mhc_class,
-                binding_context=binding_context,
             )
         )
         binding_class1_logit = outputs["binding_class1_logit"]
@@ -2543,9 +2534,9 @@ class Presto(nn.Module):
         species_of_origin: Optional[Any] = None,
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
-        binding_context: Optional[Dict[str, torch.Tensor]] = None,
         peptide_species: Optional[Any] = None,
     ) -> Dict[str, Any]:
+        """Affinity-only forward under the canonical sequence-only input contract."""
         outputs = self.forward(
             pep_tok=pep_tok,
             mhc_a_tok=mhc_a_tok,
@@ -2557,7 +2548,6 @@ class Presto(nn.Module):
             species_of_origin=species_of_origin,
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
-            binding_context=binding_context,
             peptide_species=peptide_species,
         )
         affinity_keys = {

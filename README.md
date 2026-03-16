@@ -14,10 +14,14 @@ python -m presto predict presentation --checkpoint presto.pt --peptide SIINFEKL 
 ## Canonical Docs
 
 - High-level goals, data, inputs/outputs: `docs/design.md`
-- Internal model architecture spec: `docs/model_spec.md`
+- Canonical assay modeling contract: `docs/assay_modeling_contract.md`
 - Training and batch construction spec: `docs/training_spec.md`
 - CLI usage: `docs/cli.md`
 - Implementation status audit: `TODO.md`
+
+## Canonical Assay Rule
+
+Canonical Presto is sequence-only on the input side for assay prediction. Assay identity may choose supervision targets or output heads, but must never be fed back in as a predictive input feature for affinity, T-cell assays, mass spec, or related outputs.
 
 ## Mouse MHC Overlay (IMGT + UniProt, Provenance Tracked)
 

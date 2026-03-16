@@ -197,6 +197,9 @@ class AssayHeads(nn.Module):
 
     This ensures the latents have proper physical interpretation while
     allowing assay-specific corrections for experimental conditions.
+
+    Canonical Presto uses these as output-side heads only. Per-example assay
+    identity is not an allowed predictive input feature.
     """
 
     def __init__(
@@ -660,6 +663,10 @@ class TCellAssayHead(nn.Module):
     Receives immunogenicity latent *vectors* and upstream logits — never pmhc_vec.
     Uses gated signal projection with context-dependent bias, and noisy-OR
     ambiguity mixing for class-ambiguous assays.
+
+    Legacy note: this remains more context-conditioned than the current
+    outputs-only assay contract. Do not treat it as permission to add new
+    assay-selector inputs elsewhere in Presto.
     """
 
     def __init__(

@@ -1,4 +1,8 @@
-"""Evaluation routines: probe panel and held-out set evaluation."""
+"""Evaluation routines for the distributional BA experiment harness.
+
+This code supports a separate experimental stack and should not be treated as
+the canonical main Presto affinity interface.
+"""
 
 from __future__ import annotations
 
