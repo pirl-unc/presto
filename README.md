@@ -17,7 +17,23 @@ python -m presto predict presentation --checkpoint presto.pt --peptide SIINFEKL 
 - Canonical assay modeling contract: `docs/assay_modeling_contract.md`
 - Training and batch construction spec: `docs/training_spec.md`
 - CLI usage: `docs/cli.md`
+- Repo inventory and retention guide: `docs/repo_inventory.md`
 - Implementation status audit: `TODO.md`
+
+## Repo At A Glance
+
+What is intentionally committed:
+- source code, tests, and canonical docs
+- compact reusable reference data under `data/`
+- experiment history under `experiments/`
+
+What is intentionally local-only and ignored:
+- `artifacts/`
+- `modal_runs/`
+- large regenerable derived datasets such as `data/merged_deduped.tsv`
+- transient launch logs and caches
+
+If you need to decide whether something belongs in git, start with `docs/repo_inventory.md`.
 
 ## Canonical Assay Rule
 

@@ -69,6 +69,30 @@
   - no unstaged work is left behind accidentally
   - the final stack is easy to review and continue from on another machine
 
+## Follow-up: Repo Inventory and Retention Guide (2026-03-20)
+
+- Goal: make the current repository contents legible so future cleanup decisions are based on an explicit inventory instead of guesswork.
+- Required changes:
+  - add a repo inventory / retention document under `docs/`
+  - explain clearly what is committed vs local-only ignored
+  - summarize the same split briefly in the root `README.md`
+  - add an experiment-specific note in `experiments/README.md` about what experiment artifacts are preserved vs intentionally left local
+- Success criterion:
+  - a new contributor can answer “what is in this repo right now?” from the docs
+  - the keep / regenerate / ignore boundaries are explicit
+
+## Review Notes (2026-03-20)
+
+- Added `docs/repo_inventory.md` as the repo-wide retention and inventory guide.
+- Updated `README.md` with a short “Repo At A Glance” section that states:
+  - what is intentionally committed
+  - what is intentionally local-only and ignored
+  - where to find the full retention guide
+- Linked the new guide from `docs/index.md`.
+- Updated `experiments/README.md` with:
+  - a link back to the repo-wide inventory guide
+  - an experiment-specific retention policy covering what stays in git vs what remains local-only
+
 # Global Manual-Dropout Default (2026-03-20)
 
 ## Spec

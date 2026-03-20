@@ -15,6 +15,7 @@ Start here:
 - [EXPERIMENT_WORKFLOW.md](./EXPERIMENT_WORKFLOW.md) for the experiment lifecycle
 - [AGENT_COORDINATION.md](./AGENT_COORDINATION.md) for Codex/Claude planning, handoff, and canonical-record rules
 - [model_to_beat.md](./model_to_beat.md) for the current stable baselines by dataset/metric
+- [../docs/repo_inventory.md](../docs/repo_inventory.md) for the repo-wide keep / ignore / regenerate split
 
 ## Directory Layout
 
@@ -80,6 +81,24 @@ Keep only reusable multi-experiment machinery in `scripts/`, such as:
 - shared training/evaluation backends
 
 If a launcher or analyzer exists only to support one experiment family, move it into that experiment directory rather than leaving it in `scripts/`.
+
+## Experiment Retention Policy
+
+What we keep in git under `experiments/`:
+- experiment READMEs
+- reproduce bundles
+- experiment-local launchers and analysis code
+- summary tables and material plots
+- durable per-run summaries and prediction dumps that support later metric recomputation
+
+What we intentionally leave local-only or ignored:
+- `launch_logs/`
+- raw Modal pull directories outside the experiment contract
+- `__pycache__/`
+- scratch analysis dumps that are not part of the final writeup
+
+The experiment directory is the durable scientific record.
+Raw operational debris is not.
 
 ## What Goes Where
 

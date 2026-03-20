@@ -9,6 +9,7 @@ Unified immunoinformatics for pMHC presentation and T-cell recognition.
 - Training specification: `training_spec.md`
 - TCR encoder specification: `tcr_spec.md`
 - CLI usage: `cli.md`
+- Repo inventory and retention guide: `repo_inventory.md`
 - Mouse overlay provenance notes: `notes/mouse_mhc_overlay_sources.md`
 - Implementation-status audit: `../TODO.md`
 
