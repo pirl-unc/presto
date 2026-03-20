@@ -158,6 +158,25 @@ venv.bak/
 /presto.pt
 /presto/*.pt
 
+# Repo-local generated experiment and artifact roots
+.DS_Store
+artifacts/
+modal_runs/
+modal_train_result*.json
+
+# Large or regenerable derived datasets
+data/merged_deduped.tsv
+data/merged_deduped.pre_*.tsv
+data/merged_deduped_funnel.pre_*.png
+data/merged_deduped_funnel.pre_*.tsv
+data/iedb/*.csv
+data/iedb/mhc_ligand_full_single_file.zip
+data/iedb/cedar_mhc_ligand_full_single_file.zip
+data/vdjdb/vdjdb.txt
+data/vdjdb/vdjdb.scored.txt
+data/vdjdb/vdjdb_full*.txt
+data/vdjdb/vdjdb_summary_embed.html
+
 # Archives
 /presto_old_code_starts-archive-*.tar.gz
 

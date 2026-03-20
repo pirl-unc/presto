@@ -1,3 +1,74 @@
+# Repo Hygiene and History Tracking (2026-03-20)
+
+## Spec
+
+- Goal: reduce repo noise by tracking durable source, small useful data artifacts, and experiment history, while excluding disposable generated outputs.
+- Motivation:
+  - the worktree still contains a large amount of useful untracked source and experiment history mixed with regenerable raw outputs
+  - the user wants Python source, sub-100MB data artifacts, and experiment history checked in
+  - the user does not want disposable outputs like ad hoc raw artifacts and Modal pull directories polluting status
+- Required changes:
+  - classify remaining untracked content into:
+    - durable source/code
+    - small useful data artifacts
+    - experiment history to preserve
+    - disposable/generated outputs to ignore or remove
+  - update ignore rules so obvious disposable paths stop reappearing
+  - remove trivial junk files and disposable untracked roots where safe
+  - stage the durable slice for a future commit
+- Success criterion:
+  - `git status` no longer shows raw `artifacts/`, `modal_runs/`, `.DS_Store`, or one-off modal result dumps
+  - durable Python files, selected data artifacts, and experiment directories are staged or otherwise ready for a clean commit
+  - the remaining dirty state is explainable as intentional tracked code changes rather than raw output noise
+
+## Execution
+
+- [x] Update ignore rules for disposable generated outputs
+- [x] Remove trivial disposable junk and backup files
+- [x] Stage durable Python/source files
+- [x] Stage useful small data artifacts under 100MB
+- [x] Stage experiment history and coordination docs
+- [x] Review the resulting worktree and summarize what remains
+
+## Review Notes (2026-03-20)
+
+- Added ignore rules for disposable or regenerable roots and outputs:
+  - `artifacts/`
+  - `modal_runs/`
+  - `modal_train_result*.json`
+  - `.DS_Store`
+  - large or backup derived dataset files under `data/`
+- Removed obvious disposable files:
+  - `experiments/.DS_Store`
+  - `data/merged_deduped.pre_20260317_bagrefresh.tsv`
+  - `data/merged_deduped_funnel.pre_20260317_bagrefresh.*`
+  - root-level `modal_train_result*.json`
+- Staged the durable slice:
+  - modified and untracked Python source
+  - updated tests
+  - small useful data artifacts under `data/`
+  - top-level experiment history under `experiments/`
+  - experiment coordination docs and per-agent plans
+- Left raw bulky roots on disk but ignored for safety:
+  - `artifacts/` is about `1.31 GB`
+  - `modal_runs/` is about `0.50 GB`
+- Resulting state:
+  - no unstaged code/data/history noise remains
+  - the worktree is effectively reduced to one large staged commit candidate plus intentionally ignored local bulk
+
+## Follow-up: Split Commit Stack (2026-03-20)
+
+- Goal: break the large staged durability/history snapshot into a few coherent commits instead of one oversized mixed commit.
+- Planned commit groups:
+  - commit 1: repo hygiene and ignore policy
+  - commit 2: MHC resolver / dataset-unification / `mhcseqs` plumbing + supporting tests/scripts
+  - commit 3: small durable data/reference artifacts needed for the new pipeline
+  - commit 4: experiment workflow docs, per-agent planning area, and experiment history backfill
+- Success criterion:
+  - each commit has a clear theme
+  - no unstaged work is left behind accidentally
+  - the final stack is easy to review and continue from on another machine
+
 # Global Manual-Dropout Default (2026-03-20)
 
 ## Spec
