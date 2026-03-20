@@ -34,6 +34,7 @@ What is intentionally local-only and ignored:
 - transient launch logs and caches
 
 If you need to decide whether something belongs in git, start with `docs/repo_inventory.md`.
+If you need to decide what is safe to delete locally right now, jump to the `Operational Checklist` section in `docs/repo_inventory.md`.
 
 ## Canonical Assay Rule
 

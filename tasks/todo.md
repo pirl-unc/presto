@@ -92,6 +92,11 @@
 - Updated `experiments/README.md` with:
   - a link back to the repo-wide inventory guide
   - an experiment-specific retention policy covering what stays in git vs what remains local-only
+- Added an operational checklist to `docs/repo_inventory.md` covering:
+  - safe to delete locally now
+  - keep locally until regenerated elsewhere
+  - keep committed / not disposable
+  - the most useful inspection commands
 
 # Global Manual-Dropout Default (2026-03-20)
 

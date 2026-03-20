@@ -171,3 +171,65 @@ As of the current cleanup pass:
 - ignored local bulk still exists on disk for safety
 
 So the repo is now understandable enough to continue work on another machine, and future cleanup can be done against this document instead of rediscovering the boundaries from `git status`.
+
+## Operational Checklist
+
+Use this section when you are deciding what can be deleted locally versus what should stay around until you have recreated it elsewhere.
+
+### Safe To Delete Locally Now
+
+Delete these if you need disk space and do not need the raw local scratch state:
+- `__pycache__/`, `.pytest_cache/`, `.ruff_cache/`, `build/`, local virtualenvs
+- `experiments/*/launch_logs/`
+- root `modal_train_result*.json`
+- `artifacts/` when the corresponding experiment summaries and plots are already committed under `experiments/`
+- `modal_runs/` when the corresponding experiment has already been harvested into `experiments/` and no further raw recovery is needed
+- large extracted raw tables that are ignored and reproducible, such as:
+  - `data/iedb/*.csv`
+  - `data/vdjdb/vdjdb.txt`
+  - `data/vdjdb/vdjdb.scored.txt`
+  - `data/vdjdb/vdjdb_full*.txt`
+
+### Keep Locally Until Regenerated Elsewhere
+
+Keep these on disk until you have confirmed another machine or workflow can recreate them:
+- `data/merged_deduped.tsv`
+- any large merged/intermediate dataset that is currently the active default input for training
+- `modal_runs/` for experiments that are still open, partially collected, or likely to need raw-log debugging
+- `artifacts/` for analyses that have not yet been promoted into a committed experiment directory
+- any compact upstream bundle you rely on if you are unsure the download path or provenance manifest is complete
+
+### Keep Committed; Do Not Treat As Disposable
+
+Do not delete these from git history as part of normal local cleanup:
+- source code under `data/*.py`, `models/`, `scripts/`, `inference/`
+- tests
+- `docs/`
+- `experiments/` history and coordination docs
+- compact reference data already committed under `data/`
+
+### Quick Decision Rule
+
+If a file answers “what did we run?” or “how does the code work?”, it probably belongs in git.
+
+If a file answers only “what raw temporary byproducts happened on this machine?”, it is probably safe to keep local-only or delete after closure.
+
+### Useful Commands
+
+Check clean tracked state:
+
+```bash
+git status --short
+```
+
+Check ignored local bulk that is still present on disk:
+
+```bash
+git status --ignored --short
+```
+
+Check disk usage before deleting local-only bulk:
+
+```bash
+du -sh artifacts modal_runs data/merged_deduped.tsv
+```
