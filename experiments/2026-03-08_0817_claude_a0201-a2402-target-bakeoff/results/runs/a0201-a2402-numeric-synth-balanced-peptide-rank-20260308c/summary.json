@@ -1,0 +1,58 @@
+{
+  "config": {
+    "alleles": [
+      "HLA-A*02:01",
+      "HLA-A*24:02"
+    ],
+    "batch_size": 512,
+    "binding_contrastive_margin": 0.2,
+    "binding_contrastive_max_pairs": 128,
+    "binding_contrastive_target_gap_cap": 2.0,
+    "binding_contrastive_target_gap_min": 0.3,
+    "binding_contrastive_weight": 1.0,
+    "binding_peptide_contrastive_margin": 0.2,
+    "binding_peptide_contrastive_max_pairs": 128,
+    "binding_peptide_contrastive_target_gap_cap": 2.0,
+    "binding_peptide_contrastive_target_gap_min": 0.5,
+    "binding_peptide_contrastive_weight": 0.5,
+    "class_i_anchor_strategy": "property_opposite",
+    "epochs": 8,
+    "label": "a0201-a2402-numeric-synth-balanced-peptide-rank-20260308c",
+    "measurement_profile": "numeric_no_qualitative",
+    "negative_ratio": 1.0,
+    "probe_peptides": [
+      "SLLQHLIGL",
+      "YLISIFLHL",
+      "NFLIKFLLI"
+    ],
+    "seed": 42,
+    "synthetic_negatives": true
+  },
+  "epoch_summaries": [
+    {
+      "epoch": 1,
+      "train_loss": 6.544547866372501,
+      "val_loss": 4.6338198979695635
+    },
+    {
+      "epoch": 2,
+      "train_loss": 4.498049104914946,
+      "val_loss": 4.097914059956868
+    },
+    {
+      "epoch": 3,
+      "train_loss": 4.102848529815674,
+      "val_loss": 6.2157057126363116
+    },
+    {
+      "epoch": 4,
+      "train_loss": 4.449806578019086,
+      "val_loss": 3.7290773391723633
+    },
+    {
+      "epoch": 5,
+      "train_loss": 4.311217322069056,
+      "val_loss": 4.307730754216512
+    }
+  ]
+}

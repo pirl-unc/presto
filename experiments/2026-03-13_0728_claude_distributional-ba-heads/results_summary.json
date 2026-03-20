@@ -1,0 +1,214 @@
+[
+  {
+    "cond_id": 1,
+    "event": "done",
+    "final_train_loss": 0.017405457830764064,
+    "final_val_loss": 0.027100628570598716,
+    "label": "c01_mhcflurry_affine_max50k",
+    "out_dir": "/checkpoints/dist-ba-v1-c01",
+    "test_auroc": 0.9378111362457275,
+    "test_loss": 0.02774073462933302,
+    "test_spearman": 0.801271915435791
+  },
+  {
+    "cond_id": 2,
+    "label": "c02_mhcflurry_affine_max100k",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 3,
+    "label": "c03_log_mse_affine_max50k",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 4,
+    "label": "c04_log_mse_affine_max100k",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 5,
+    "label": "c05_twohot_d1_affine_max50k_K128",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 6,
+    "event": "done",
+    "final_train_loss": 4.89417054117188,
+    "final_val_loss": 4.928394445601632,
+    "label": "c06_twohot_d1_affine_max100k_K128",
+    "out_dir": "/checkpoints/dist-ba-v1-c06",
+    "test_auroc": 0.5797914266586304,
+    "test_loss": 4.866337711457163,
+    "test_spearman": 0.19858334958553314
+  },
+  {
+    "cond_id": 7,
+    "label": "c07_hlgauss_d1_affine_max50k_K128_s0.75",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 8,
+    "label": "c08_hlgauss_d1_affine_max100k_K128_s0.75",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 9,
+    "label": "c09_twohot_d1_affine_max50k_K64",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 10,
+    "label": "c10_twohot_d1_affine_max100k_K64",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 11,
+    "label": "c11_hlgauss_d1_affine_max50k_K64_s0.75",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 12,
+    "event": "done",
+    "final_train_loss": 4.890867758166882,
+    "final_val_loss": 4.928393969641013,
+    "label": "c12_hlgauss_d1_affine_max100k_K64_s0.75",
+    "out_dir": "/checkpoints/dist-ba-v1-c12",
+    "test_auroc": 0.44276848435401917,
+    "test_loss": 4.866337088868022,
+    "test_spearman": -0.09827183932065964
+  },
+  {
+    "cond_id": 13,
+    "label": "c13_twohot_d2_logit_max50k_K128",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 14,
+    "event": "done",
+    "final_train_loss": 2.844649593959483,
+    "final_val_loss": 3.8385087602278767,
+    "label": "c14_twohot_d2_logit_max100k_K128",
+    "out_dir": "/checkpoints/dist-ba-v1-c14",
+    "test_auroc": 0.9284650683403015,
+    "test_loss": 3.8416754826903343,
+    "test_spearman": 0.7868452668190002
+  },
+  {
+    "cond_id": 15,
+    "label": "c15_twohot_d2_logit_max50k_K64",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 16,
+    "label": "c16_twohot_d2_logit_max100k_K64",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 17,
+    "label": "c17_hlgauss_d2_logit_max50k_K128_s0.75",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 18,
+    "label": "c18_hlgauss_d2_logit_max100k_K128_s0.75",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 19,
+    "label": "c19_hlgauss_d2_logit_max50k_K64_s0.75",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 20,
+    "label": "c20_hlgauss_d2_logit_max100k_K64_s0.75",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 21,
+    "label": "c21_hlgauss_d1_affine_max50k_K128_s0.5",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 22,
+    "label": "c22_hlgauss_d1_affine_max100k_K128_s0.5",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 23,
+    "label": "c23_hlgauss_d1_affine_max50k_K128_s1.5",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 24,
+    "label": "c24_hlgauss_d1_affine_max100k_K128_s1.5",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 25,
+    "label": "c25_hlgauss_d2_logit_max50k_K128_s0.5",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 26,
+    "label": "c26_hlgauss_d2_logit_max100k_K128_s0.5",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 27,
+    "label": "c27_hlgauss_d2_logit_max50k_K128_s1.5",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 28,
+    "label": "c28_hlgauss_d2_logit_max100k_K128_s1.5",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 29,
+    "label": "c29_mhcflurry_additive_max50k",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 30,
+    "label": "c30_mhcflurry_additive_max100k",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 31,
+    "label": "c31_log_mse_additive_max50k",
+    "last_line": "",
+    "status": "no_done_event"
+  },
+  {
+    "cond_id": 32,
+    "label": "c32_log_mse_additive_max100k",
+    "last_line": "",
+    "status": "no_done_event"
+  }
+]

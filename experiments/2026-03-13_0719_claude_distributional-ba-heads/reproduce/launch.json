@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "benchmark_distributional_ba_heads.py",
+    "--epochs",
+    "20",
+    "--batch-size",
+    "256",
+    "--agent-label",
+    "claude",
+    "--prefix",
+    "dist-ba-v1"
+  ],
+  "created_at": "2026-03-13T07:20:00.138914",
+  "cwd": "/Users/iskander/code/presto",
+  "environment": {
+    "PRESTO_EXPERIMENT_AGENT": "claude",
+    "PRESTO_MODAL_GPU": "H100!"
+  },
+  "git": {
+    "branch": "main",
+    "commit": "e01eea1e91eb3b07ac5a8d75e65956ef688cccfb",
+    "dirty": true
+  },
+  "python_executable": "/Users/iskander/code/shared-virtual-env/bin/python3",
+  "source_script": "scripts/benchmark_distributional_ba_heads.py"
+}

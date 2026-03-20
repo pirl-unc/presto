@@ -1,0 +1,133 @@
+{
+  "config": {
+    "affinity_loss_mode": "ic50_only",
+    "alleles": [
+      "HLA-A*02:01",
+      "HLA-A*24:02"
+    ],
+    "batch_size": 128,
+    "binding_contrastive_margin": 0.2,
+    "binding_contrastive_max_pairs": 64,
+    "binding_contrastive_target_gap_cap": 2.0,
+    "binding_contrastive_target_gap_min": 0.3,
+    "binding_contrastive_weight": 0.0,
+    "binding_peptide_contrastive_margin": 0.2,
+    "binding_peptide_contrastive_max_pairs": 128,
+    "binding_peptide_contrastive_target_gap_cap": 2.0,
+    "binding_peptide_contrastive_target_gap_min": 0.5,
+    "binding_peptide_contrastive_weight": 0.0,
+    "class_i_anchor_strategy": "none",
+    "epochs": 12,
+    "label": "a0201-a2402-ic50-exact-allrows-ic50only-20260308h",
+    "measurement_profile": "direct_affinity_only",
+    "measurement_type_filter": "ic50",
+    "negative_ratio": 1.0,
+    "probe_peptides": [
+      "SLLQHLIGL",
+      "FLRYLLFGI",
+      "NFLIKFLLI"
+    ],
+    "qualifier_filter": "exact",
+    "seed": 42,
+    "shared_peptides_only": false,
+    "synthetic_negatives": false
+  },
+  "epoch_summaries": [
+    {
+      "epoch": 1,
+      "grad_norm_affinity_probe": 0.8912441570655705,
+      "grad_norm_binding_core": 0.19746181385570327,
+      "grad_norm_trunk_other": 3.64282814005833,
+      "train_loss": 1.7163230614228682,
+      "val_loss": 1.38636092039255
+    },
+    {
+      "epoch": 2,
+      "grad_norm_affinity_probe": 0.7902267589799284,
+      "grad_norm_binding_core": 0.03170274964673531,
+      "grad_norm_trunk_other": 8.731370272796104,
+      "train_loss": 1.1469224135984073,
+      "val_loss": 1.0946093522585356
+    },
+    {
+      "epoch": 3,
+      "grad_norm_affinity_probe": 0.6344432790931569,
+      "grad_norm_binding_core": 0.03342562083483755,
+      "grad_norm_trunk_other": 8.135598420468078,
+      "train_loss": 0.9748629934408448,
+      "val_loss": 1.0326965955587535
+    },
+    {
+      "epoch": 4,
+      "grad_norm_affinity_probe": 0.6556879606905324,
+      "grad_norm_binding_core": 0.0364247392291514,
+      "grad_norm_trunk_other": 7.620091123105765,
+      "train_loss": 0.914757446131923,
+      "val_loss": 1.0265681376824012
+    },
+    {
+      "epoch": 5,
+      "grad_norm_affinity_probe": 0.880139738683622,
+      "grad_norm_binding_core": 0.036770665950620125,
+      "grad_norm_trunk_other": 8.53402048138668,
+      "train_loss": 0.9763780866156925,
+      "val_loss": 1.2696215235269988
+    },
+    {
+      "epoch": 6,
+      "grad_norm_affinity_probe": 0.700377535382104,
+      "grad_norm_binding_core": 0.04812613373191749,
+      "grad_norm_trunk_other": 7.166228327963712,
+      "train_loss": 0.8666599514809522,
+      "val_loss": 1.1568121222349315
+    },
+    {
+      "epoch": 7,
+      "grad_norm_affinity_probe": 0.6262905207320306,
+      "grad_norm_binding_core": 0.03960541577973419,
+      "grad_norm_trunk_other": 6.558759012281016,
+      "train_loss": 0.8109971366145394,
+      "val_loss": 0.9814439232532794
+    },
+    {
+      "epoch": 8,
+      "grad_norm_affinity_probe": 0.5528806611116902,
+      "grad_norm_binding_core": 0.03231423669050178,
+      "grad_norm_trunk_other": 5.544493246538865,
+      "train_loss": 0.754128476435488,
+      "val_loss": 1.1174517594850981
+    },
+    {
+      "epoch": 9,
+      "grad_norm_affinity_probe": 0.45662020363867717,
+      "grad_norm_binding_core": 0.0256599670586539,
+      "grad_norm_trunk_other": 4.7370104253002125,
+      "train_loss": 0.6913675760680978,
+      "val_loss": 0.9378056755432715
+    },
+    {
+      "epoch": 10,
+      "grad_norm_affinity_probe": 0.4448939019705764,
+      "grad_norm_binding_core": 0.02332466608259596,
+      "grad_norm_trunk_other": 4.973581653351861,
+      "train_loss": 0.6622635864398696,
+      "val_loss": 1.2298521170249352
+    },
+    {
+      "epoch": 11,
+      "grad_norm_affinity_probe": 0.3399824521384158,
+      "grad_norm_binding_core": 0.03594750641863863,
+      "grad_norm_trunk_other": 3.7461344802008796,
+      "train_loss": 0.6047325171530247,
+      "val_loss": 1.142763050702902
+    },
+    {
+      "epoch": 12,
+      "grad_norm_affinity_probe": 0.3359739507055203,
+      "grad_norm_binding_core": 0.03676610303404061,
+      "grad_norm_trunk_other": 3.857102693532268,
+      "train_loss": 0.5703295435417782,
+      "val_loss": 1.015638108436878
+    }
+  ]
+}

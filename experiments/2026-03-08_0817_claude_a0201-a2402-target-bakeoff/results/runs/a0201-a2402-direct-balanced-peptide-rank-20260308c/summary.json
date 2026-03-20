@@ -1,0 +1,93 @@
+{
+  "config": {
+    "alleles": [
+      "HLA-A*02:01",
+      "HLA-A*24:02"
+    ],
+    "batch_size": 512,
+    "binding_contrastive_margin": 0.2,
+    "binding_contrastive_max_pairs": 128,
+    "binding_contrastive_target_gap_cap": 2.0,
+    "binding_contrastive_target_gap_min": 0.3,
+    "binding_contrastive_weight": 1.0,
+    "binding_peptide_contrastive_margin": 0.2,
+    "binding_peptide_contrastive_max_pairs": 128,
+    "binding_peptide_contrastive_target_gap_cap": 2.0,
+    "binding_peptide_contrastive_target_gap_min": 0.5,
+    "binding_peptide_contrastive_weight": 0.5,
+    "class_i_anchor_strategy": "none",
+    "epochs": 12,
+    "label": "a0201-a2402-direct-balanced-peptide-rank-20260308c",
+    "measurement_profile": "direct_affinity_only",
+    "negative_ratio": 1.0,
+    "probe_peptides": [
+      "SLLQHLIGL",
+      "FLRYLLFGI",
+      "NFLIKFLLI"
+    ],
+    "seed": 42,
+    "synthetic_negatives": false
+  },
+  "epoch_summaries": [
+    {
+      "epoch": 1,
+      "train_loss": 8.13019597530365,
+      "val_loss": 6.5027899742126465
+    },
+    {
+      "epoch": 2,
+      "train_loss": 6.561178684234619,
+      "val_loss": 5.368359088897705
+    },
+    {
+      "epoch": 3,
+      "train_loss": 5.41011643409729,
+      "val_loss": 4.994827747344971
+    },
+    {
+      "epoch": 4,
+      "train_loss": 4.993184924125671,
+      "val_loss": 4.978397369384766
+    },
+    {
+      "epoch": 5,
+      "train_loss": 4.795562028884888,
+      "val_loss": 5.034134864807129
+    },
+    {
+      "epoch": 6,
+      "train_loss": 4.766756534576416,
+      "val_loss": 5.099015712738037
+    },
+    {
+      "epoch": 7,
+      "train_loss": 4.5803539752960205,
+      "val_loss": 4.7736711502075195
+    },
+    {
+      "epoch": 8,
+      "train_loss": 4.453097581863403,
+      "val_loss": 4.561161518096924
+    },
+    {
+      "epoch": 9,
+      "train_loss": 4.46576464176178,
+      "val_loss": 4.446743488311768
+    },
+    {
+      "epoch": 10,
+      "train_loss": 4.24513578414917,
+      "val_loss": 3.1833510398864746
+    },
+    {
+      "epoch": 11,
+      "train_loss": 7.463614881038666,
+      "val_loss": 3.160902500152588
+    },
+    {
+      "epoch": 12,
+      "train_loss": 4.026535511016846,
+      "val_loss": 3.8014748096466064
+    }
+  ]
+}

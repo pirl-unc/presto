@@ -1,0 +1,456 @@
+{
+  "config": {
+    "variant": "a7",
+    "n_params": 376323,
+    "embed_dim": 128,
+    "hidden_dim": 128,
+    "probe_alleles": [
+      "HLA-A*02:01",
+      "HLA-A*24:02",
+      "HLA-A*03:01",
+      "HLA-A*11:01",
+      "HLA-A*01:01",
+      "HLA-B*07:02",
+      "HLA-B*44:02"
+    ],
+    "probe_peptides": [
+      "SLLQHLIGL",
+      "FLRYLLFGI",
+      "NFLIKFLLI",
+      "IMLEGETKL"
+    ],
+    "epochs": 20,
+    "batch_size": 256,
+    "seed": 42,
+    "consistency_weight": 0.1
+  },
+  "subset_stats": {
+    "rows_scanned": 44417,
+    "rows_selected": 44417,
+    "allele_filter_count": 7,
+    "mhc_class_filter": null,
+    "rows_by_allele_top": {
+      "HLA-A*02:01": 18195,
+      "HLA-A*03:01": 6805,
+      "HLA-A*11:01": 6193,
+      "HLA-A*01:01": 4014,
+      "HLA-B*07:02": 4005,
+      "HLA-A*24:02": 3373,
+      "HLA-B*44:02": 1832
+    },
+    "n_alleles": 7,
+    "unique_peptides_by_allele_top": {
+      "HLA-A*02:01": 11657,
+      "HLA-A*03:01": 6209,
+      "HLA-A*11:01": 5435,
+      "HLA-A*01:01": 3702,
+      "HLA-B*07:02": 3519,
+      "HLA-A*24:02": 2615,
+      "HLA-B*44:02": 1814
+    },
+    "measurement_type_counts": {
+      "dissociation constant KD (~EC50)": 10641,
+      "qualitative binding": 2932,
+      "3D structure": 436,
+      "half maximal inhibitory concentration (IC50)": 11211,
+      "dissociation constant KD (~IC50)": 16275,
+      "dissociation constant KD": 2562,
+      "half maximal effective concentration (EC50)": 360
+    },
+    "assay_method_counts_top": {
+      "purified MHC/competitive/radioactivity": 22000,
+      "purified MHC/direct/fluorescence": 13498,
+      "purified MHC/competitive/fluorescence": 6213,
+      "cellular MHC/competitive/fluorescence": 1830,
+      "x-ray crystallography": 436,
+      "cellular MHC/direct/fluorescence": 405,
+      "cellular MHC/competitive/radioactivity": 24,
+      "binding assay": 5,
+      "lysate MHC/direct/fluorescence": 3,
+      "cellular MHC": 3
+    },
+    "cap_sampling": "none"
+  },
+  "balance_stats": {},
+  "split_stats": {
+    "train_rows": 32855,
+    "val_rows": 8194,
+    "train_peptides": 16631,
+    "val_peptides": 4158,
+    "shared_peptides_total": 7040,
+    "shared_peptides_train": 5632,
+    "shared_peptides_val": 1408
+  },
+  "mhc_resolve_stats": {
+    "total": 7,
+    "resolved": 7,
+    "missing": 0
+  },
+  "probe_allele_counts": {
+    "HLA-A*02:01": 16769,
+    "HLA-A*24:02": 2595,
+    "HLA-A*03:01": 6441,
+    "HLA-A*11:01": 5762,
+    "HLA-A*01:01": 3878,
+    "HLA-B*07:02": 3781,
+    "HLA-B*44:02": 1823
+  },
+  "real_record_summary": {
+    "rows": 41049,
+    "rows_by_allele": {
+      "HLA-A*03:01": 6441,
+      "HLA-A*11:01": 5762,
+      "HLA-A*02:01": 16769,
+      "HLA-B*07:02": 3781,
+      "HLA-A*01:01": 3878,
+      "HLA-A*24:02": 2595,
+      "HLA-B*44:02": 1823
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*03:01": 0.33395435491383324,
+      "HLA-A*11:01": 0.41409232905241233,
+      "HLA-A*02:01": 0.4242948297453635,
+      "HLA-B*07:02": 0.32531076434805606,
+      "HLA-A*01:01": 0.20500257864878804,
+      "HLA-A*24:02": 0.26897880539499036,
+      "HLA-B*44:02": 0.2303894679100384
+    },
+    "measurement_type_counts": {
+      "dissociation constant KD (~EC50)": 10641,
+      "half maximal inhibitory concentration (IC50)": 11211,
+      "dissociation constant KD (~IC50)": 16275,
+      "dissociation constant KD": 2562,
+      "half maximal effective concentration (EC50)": 360
+    },
+    "qualifier_counts": {
+      "0": 30112,
+      "1": 10937
+    }
+  },
+  "train_record_summary": {
+    "rows": 32855,
+    "rows_by_allele": {
+      "HLA-A*03:01": 5149,
+      "HLA-A*11:01": 4601,
+      "HLA-A*01:01": 3109,
+      "HLA-A*02:01": 13441,
+      "HLA-B*07:02": 3019,
+      "HLA-A*24:02": 2069,
+      "HLA-B*44:02": 1467
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*03:01": 0.3336570207807341,
+      "HLA-A*11:01": 0.41643121060638993,
+      "HLA-A*01:01": 0.20360244451592152,
+      "HLA-A*02:01": 0.4264563648538055,
+      "HLA-B*07:02": 0.3222921497184498,
+      "HLA-A*24:02": 0.26872885451909134,
+      "HLA-B*44:02": 0.22972051806407634
+    },
+    "measurement_type_counts": {
+      "dissociation constant KD (~EC50)": 8542,
+      "dissociation constant KD (~IC50)": 12989,
+      "half maximal inhibitory concentration (IC50)": 8923,
+      "dissociation constant KD": 2097,
+      "half maximal effective concentration (EC50)": 304
+    },
+    "qualifier_counts": {
+      "0": 24028,
+      "1": 8827
+    }
+  },
+  "val_record_summary": {
+    "rows": 8194,
+    "rows_by_allele": {
+      "HLA-A*03:01": 1292,
+      "HLA-A*11:01": 1161,
+      "HLA-B*07:02": 762,
+      "HLA-A*02:01": 3328,
+      "HLA-A*01:01": 769,
+      "HLA-A*24:02": 526,
+      "HLA-B*44:02": 356
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*03:01": 0.3351393188854489,
+      "HLA-A*11:01": 0.40482342807924204,
+      "HLA-B*07:02": 0.33727034120734906,
+      "HLA-A*02:01": 0.41556490384615385,
+      "HLA-A*01:01": 0.2106631989596879,
+      "HLA-A*24:02": 0.26996197718631176,
+      "HLA-B*44:02": 0.23314606741573032
+    },
+    "measurement_type_counts": {
+      "dissociation constant KD (~EC50)": 2099,
+      "dissociation constant KD (~IC50)": 3286,
+      "half maximal inhibitory concentration (IC50)": 2288,
+      "dissociation constant KD": 465,
+      "half maximal effective concentration (EC50)": 56
+    },
+    "qualifier_counts": {
+      "0": 6084,
+      "1": 2110
+    }
+  },
+  "synthetic_stats": {
+    "train": {},
+    "val": {
+      "added": 0
+    }
+  },
+  "groove_verification": {
+    "allele_grooves": {
+      "HLA-A*02:01": {
+        "gh1_len": 91,
+        "gh2_len": 93,
+        "gh1_first10": "AGSHSMRYFF",
+        "gh2_first10": "GSHTVQRMYG"
+      },
+      "HLA-A*24:02": {
+        "gh1_len": 91,
+        "gh2_len": 93,
+        "gh1_first10": "AGSHSMRYFS",
+        "gh2_first10": "GSHTLQMMFG"
+      },
+      "HLA-A*03:01": {
+        "gh1_len": 91,
+        "gh2_len": 93,
+        "gh1_first10": "AGSHSMRYFF",
+        "gh2_first10": "GSHTIQIMYG"
+      },
+      "HLA-A*11:01": {
+        "gh1_len": 91,
+        "gh2_len": 93,
+        "gh1_first10": "AGSHSMRYFY",
+        "gh2_first10": "GSHTIQIMYG"
+      },
+      "HLA-A*01:01": {
+        "gh1_len": 91,
+        "gh2_len": 93,
+        "gh1_first10": "AGSHSMRYFF",
+        "gh2_first10": "GSHTIQIMYG"
+      },
+      "HLA-B*07:02": {
+        "gh1_len": 91,
+        "gh2_len": 93,
+        "gh1_first10": "AGSHSMRYFY",
+        "gh2_first10": "GSHTLQSMYG"
+      },
+      "HLA-B*44:02": {
+        "gh1_len": 91,
+        "gh2_len": 93,
+        "gh1_first10": "AGSHSMRYFY",
+        "gh2_first10": "GSHIIQRMYG"
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "n_unique_grooves": 7,
+    "n_probe_alleles": 7,
+    "records_checked": 200,
+    "records_correct": 200
+  },
+  "train_real_records": 32855,
+  "val_size": 8194,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 1.348992950149945,
+      "val_loss": 1.2520881009598572,
+      "support_binding_ic50": 157.3598901098901,
+      "support_binding_kd": 14.521978021978022,
+      "support_binding_ec50": 84.11813186813187,
+      "support_total": 256.0,
+      "consistency_penalty": 0.09792694415011863
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.7026704734007081,
+      "val_loss": 0.8893882417769143,
+      "support_binding_ic50": 157.48901098901098,
+      "support_binding_kd": 14.42032967032967,
+      "support_binding_ec50": 84.09065934065934,
+      "support_total": 256.0,
+      "consistency_penalty": 0.09057132281096918
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.5527274073152751,
+      "val_loss": 0.8451598144390366,
+      "support_binding_ic50": 157.46428571428572,
+      "support_binding_kd": 14.43956043956044,
+      "support_binding_ec50": 84.09615384615384,
+      "support_total": 256.0,
+      "consistency_penalty": 0.0595254103069777
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.48105060096297947,
+      "val_loss": 0.8660779125762709,
+      "support_binding_ic50": 157.45054945054946,
+      "support_binding_kd": 14.497252747252746,
+      "support_binding_ec50": 84.0521978021978,
+      "support_total": 256.0,
+      "consistency_penalty": 0.048833958113791195
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.4339830856565591,
+      "val_loss": 0.8768441767403574,
+      "support_binding_ic50": 157.48626373626374,
+      "support_binding_kd": 14.445054945054945,
+      "support_binding_ec50": 84.06868131868131,
+      "support_total": 256.0,
+      "consistency_penalty": 0.04591980866658
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.3988167590328625,
+      "val_loss": 0.8387883097836466,
+      "support_binding_ic50": 157.4945054945055,
+      "support_binding_kd": 14.532967032967033,
+      "support_binding_ec50": 83.97252747252747,
+      "support_total": 256.0,
+      "consistency_penalty": 0.041910634811066994
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.37193679293760884,
+      "val_loss": 0.8989046527580782,
+      "support_binding_ic50": 157.43956043956044,
+      "support_binding_kd": 14.43131868131868,
+      "support_binding_ec50": 84.12912087912088,
+      "support_total": 256.0,
+      "consistency_penalty": 0.03841415460600139
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.3516439945733809,
+      "val_loss": 0.8049446196492874,
+      "support_binding_ic50": 157.39835164835165,
+      "support_binding_kd": 14.491758241758241,
+      "support_binding_ec50": 84.10989010989012,
+      "support_total": 256.0,
+      "consistency_penalty": 0.037164681194513875
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.3332649258139369,
+      "val_loss": 0.8565078948934873,
+      "support_binding_ic50": 157.41758241758242,
+      "support_binding_kd": 14.373626373626374,
+      "support_binding_ec50": 84.20879120879121,
+      "support_total": 256.0,
+      "consistency_penalty": 0.03718607635544306
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.31829450627440936,
+      "val_loss": 0.848182394423268,
+      "support_binding_ic50": 157.5467032967033,
+      "support_binding_kd": 14.461538461538462,
+      "support_binding_ec50": 83.99175824175825,
+      "support_total": 256.0,
+      "consistency_penalty": 0.036652275829340566
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.30437291196578153,
+      "val_loss": 0.8547021698093775,
+      "support_binding_ic50": 157.37087912087912,
+      "support_binding_kd": 14.48076923076923,
+      "support_binding_ec50": 84.14835164835165,
+      "support_total": 256.0,
+      "consistency_penalty": 0.0348351697007624
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.2907440941166747,
+      "val_loss": 0.8354613826130376,
+      "support_binding_ic50": 157.44505494505495,
+      "support_binding_kd": 14.5,
+      "support_binding_ec50": 84.05494505494505,
+      "support_total": 256.0,
+      "consistency_penalty": 0.032162133090013825
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.28181414932503807,
+      "val_loss": 0.8103877342108524,
+      "support_binding_ic50": 157.41483516483515,
+      "support_binding_kd": 14.516483516483516,
+      "support_binding_ec50": 84.06868131868131,
+      "support_total": 256.0,
+      "consistency_penalty": 0.034474097862635014
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.27212050585792613,
+      "val_loss": 0.8406369808045301,
+      "support_binding_ic50": 157.47252747252747,
+      "support_binding_kd": 14.508241758241759,
+      "support_binding_ec50": 84.01923076923077,
+      "support_total": 256.0,
+      "consistency_penalty": 0.03273570620976798
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.2594351174494067,
+      "val_loss": 0.801245594453631,
+      "support_binding_ic50": 157.5412087912088,
+      "support_binding_kd": 14.425824175824175,
+      "support_binding_ec50": 84.03296703296704,
+      "support_total": 256.0,
+      "consistency_penalty": 0.032581915779571445
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.2569058343849994,
+      "val_loss": 0.8249028684063391,
+      "support_binding_ic50": 157.3653846153846,
+      "support_binding_kd": 14.513736263736265,
+      "support_binding_ec50": 84.12087912087912,
+      "support_total": 256.0,
+      "consistency_penalty": 0.0317134573022006
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.24931914997952326,
+      "val_loss": 0.8258558509476257,
+      "support_binding_ic50": 157.48076923076923,
+      "support_binding_kd": 14.464285714285714,
+      "support_binding_ec50": 84.05494505494505,
+      "support_total": 256.0,
+      "consistency_penalty": 0.034390101938477746
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.24479023285292006,
+      "val_loss": 0.8006651968215451,
+      "support_binding_ic50": 157.4478021978022,
+      "support_binding_kd": 14.472527472527473,
+      "support_binding_ec50": 84.07967032967034,
+      "support_total": 256.0,
+      "consistency_penalty": 0.030971042312947766
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.2385644961435061,
+      "val_loss": 0.8547586839307438,
+      "support_binding_ic50": 157.5686813186813,
+      "support_binding_kd": 14.43956043956044,
+      "support_binding_ec50": 83.99175824175825,
+      "support_total": 256.0,
+      "consistency_penalty": 0.033247646706813315
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.22862806064741953,
+      "val_loss": 0.829269649404468,
+      "support_binding_ic50": 157.40384615384616,
+      "support_binding_kd": 14.571428571428571,
+      "support_binding_ec50": 84.02472527472527,
+      "support_total": 256.0,
+      "consistency_penalty": 0.03188510249870328
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "top_sane": [
+    {
+      "label": "c01_mhcflurry_affine_max50k",
+      "final_val_loss": 0.027100628570598716,
+      "test_auroc": 0.9378111362457275,
+      "test_spearman": 0.801271915435791
+    },
+    {
+      "label": "c29_mhcflurry_additive_max50k",
+      "final_val_loss": 0.02700815618257312,
+      "test_auroc": 0.9371752142906189,
+      "test_spearman": 0.8107680082321167
+    },
+    {
+      "label": "c02_mhcflurry_affine_max100k",
+      "final_val_loss": 0.02528161508962512,
+      "test_auroc": 0.9370579719543457,
+      "test_spearman": 0.8017616868019104
+    },
+    {
+      "label": "c30_mhcflurry_additive_max100k",
+      "final_val_loss": 0.024102918694124502,
+      "test_auroc": 0.9368231296539307,
+      "test_spearman": 0.8120853304862976
+    },
+    {
+      "label": "c32_log_mse_additive_max100k",
+      "final_val_loss": 3.1897675500196567,
+      "test_auroc": 0.9344420433044434,
+      "test_spearman": 0.8054232001304626
+    },
+    {
+      "label": "c31_log_mse_additive_max50k",
+      "final_val_loss": 3.229328821687137,
+      "test_auroc": 0.9327244758605957,
+      "test_spearman": 0.799846887588501
+    },
+    {
+      "label": "c13_twohot_d2_logit_max50k_K128",
+      "final_val_loss": 4.131253088221831,
+      "test_auroc": 0.9307489395141602,
+      "test_spearman": 0.7857843637466431
+    },
+    {
+      "label": "c16_twohot_d2_logit_max100k_K64",
+      "final_val_loss": 3.2536407849367928,
+      "test_auroc": 0.9307106733322144,
+      "test_spearman": 0.7825165390968323
+    },
+    {
+      "label": "c17_hlgauss_d2_logit_max50k_K128_s0.75",
+      "final_val_loss": 4.031496584415436,
+      "test_auroc": 0.9303524494171143,
+      "test_spearman": 0.7890052795410156
+    },
+    {
+      "label": "c20_hlgauss_d2_logit_max100k_K64_s0.75",
+      "final_val_loss": 3.141223167671877,
+      "test_auroc": 0.930253803730011,
+      "test_spearman": 0.7982285618782043
+    },
+    {
+      "label": "c03_log_mse_affine_max50k",
+      "final_val_loss": 3.1120715001050163,
+      "test_auroc": 0.9301850199699402,
+      "test_spearman": 0.7774490714073181
+    },
+    {
+      "label": "c19_hlgauss_d2_logit_max50k_K64_s0.75",
+      "final_val_loss": 3.510566297699423,
+      "test_auroc": 0.9291478395462036,
+      "test_spearman": 0.7913350462913513
+    }
+  ],
+  "collapsed": [
+    {
+      "label": "c05_twohot_d1_affine_max50k_K128",
+      "final_val_loss": 3.587890171943667e-06,
+      "test_auroc": 0.44332900643348694,
+      "test_spearman": -0.09741000831127167
+    },
+    {
+      "label": "c06_twohot_d1_affine_max100k_K128",
+      "final_val_loss": 4.928394445601632,
+      "test_auroc": 0.5797914266586304,
+      "test_spearman": 0.19858334958553314
+    },
+    {
+      "label": "c07_hlgauss_d1_affine_max50k_K128_s0.75",
+      "final_val_loss": 4.928393969641013,
+      "test_auroc": 0.44266098737716675,
+      "test_spearman": -0.09849294275045395
+    },
+    {
+      "label": "c08_hlgauss_d1_affine_max100k_K128_s0.75",
+      "final_val_loss": 4.928393969641013,
+      "test_auroc": 0.44266098737716675,
+      "test_spearman": -0.09849294275045395
+    },
+    {
+      "label": "c09_twohot_d1_affine_max50k_K64",
+      "final_val_loss": 4.928394187022658,
+      "test_auroc": 0.44266098737716675,
+      "test_spearman": -0.09849294275045395
+    },
+    {
+      "label": "c10_twohot_d1_affine_max100k_K64",
+      "final_val_loss": 4.928394337787347,
+      "test_auroc": 0.45956122875213623,
+      "test_spearman": -0.07017207145690918
+    },
+    {
+      "label": "c11_hlgauss_d1_affine_max50k_K64_s0.75",
+      "final_val_loss": 4.928393969641013,
+      "test_auroc": 0.44266098737716675,
+      "test_spearman": -0.09849294275045395
+    },
+    {
+      "label": "c12_hlgauss_d1_affine_max100k_K64_s0.75",
+      "final_val_loss": 4.928393969641013,
+      "test_auroc": 0.44276848435401917,
+      "test_spearman": -0.09827183932065964
+    },
+    {
+      "label": "c21_hlgauss_d1_affine_max50k_K128_s0.5",
+      "final_val_loss": 4.928393969641013,
+      "test_auroc": 0.44266098737716675,
+      "test_spearman": -0.09849294275045395
+    },
+    {
+      "label": "c22_hlgauss_d1_affine_max100k_K128_s0.5",
+      "final_val_loss": 4.928393969641013,
+      "test_auroc": 0.44266098737716675,
+      "test_spearman": -0.09849294275045395
+    },
+    {
+      "label": "c23_hlgauss_d1_affine_max50k_K128_s1.5",
+      "final_val_loss": 4.928393969641013,
+      "test_auroc": 0.44266098737716675,
+      "test_spearman": -0.09849294275045395
+    },
+    {
+      "label": "c24_hlgauss_d1_affine_max100k_K128_s1.5",
+      "final_val_loss": 4.928393969641013,
+      "test_auroc": 0.44266098737716675,
+      "test_spearman": -0.09849294275045395
+    }
+  ]
+}

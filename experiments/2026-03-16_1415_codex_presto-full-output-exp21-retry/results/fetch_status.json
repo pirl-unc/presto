@@ -1,0 +1,36 @@
+{
+  "experiment_dir": "/Users/iskander/code/presto/experiments/2026-03-16_1415_codex_presto-full-output-exp21-retry",
+  "fetched_runs": 2,
+  "generated_at_utc": "2026-03-16T18:32:02.682455+00:00",
+  "rows": [
+    {
+      "fetched": true,
+      "local_ready": true,
+      "remote_artifact_count": 5,
+      "remote_ready": true,
+      "required_files": [
+        "summary.json",
+        "probe_affinity_over_epochs.json",
+        "probe_affinity_over_epochs.csv",
+        "val_predictions.csv",
+        "test_predictions.csv"
+      ],
+      "run_id": "presto-exp21-full-20260316a-pf03_log10_100k_full-e050-s43"
+    },
+    {
+      "fetched": true,
+      "local_ready": true,
+      "remote_artifact_count": 5,
+      "remote_ready": true,
+      "required_files": [
+        "summary.json",
+        "probe_affinity_over_epochs.json",
+        "probe_affinity_over_epochs.csv",
+        "val_predictions.csv",
+        "test_predictions.csv"
+      ],
+      "run_id": "presto-exp21-full-20260316a-pf07_mhcflurry_100k_full-e050-s43"
+    }
+  ],
+  "total_runs": 2
+}

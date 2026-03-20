@@ -1,0 +1,132 @@
+{
+  "model_epoch_summary": [
+    {
+      "epochs": 50,
+      "mean_test_auprc": 0.9138062000274658,
+      "mean_test_auroc": 0.9416497498750687,
+      "mean_test_rmse_log10": 0.8398339003324509,
+      "mean_test_spearman": 0.8475492298603058,
+      "model_name": "groove c02",
+      "runs": 4,
+      "std_test_spearman": 0.004555330487357652
+    },
+    {
+      "epochs": 50,
+      "mean_test_auprc": 0.9164694547653198,
+      "mean_test_auroc": 0.942571148276329,
+      "mean_test_rmse_log10": 0.8412603139877319,
+      "mean_test_spearman": 0.8441475033760071,
+      "model_name": "groove c01",
+      "runs": 4,
+      "std_test_spearman": 0.002561659794885992
+    },
+    {
+      "epochs": 50,
+      "mean_test_auprc": 0.9048992395401001,
+      "mean_test_auroc": 0.9365562796592712,
+      "mean_test_rmse_log10": 0.8562981933355331,
+      "mean_test_spearman": 0.8403841704130173,
+      "model_name": "historical c02",
+      "runs": 4,
+      "std_test_spearman": 0.00409135737190813
+    },
+    {
+      "epochs": 100,
+      "mean_test_auprc": 0.9061406552791595,
+      "mean_test_auroc": 0.9366693794727325,
+      "mean_test_rmse_log10": 0.8679947257041931,
+      "mean_test_spearman": 0.8391747176647186,
+      "model_name": "groove c02",
+      "runs": 4,
+      "std_test_spearman": 0.0022170956828566853
+    },
+    {
+      "epochs": 100,
+      "mean_test_auprc": 0.9104169458150864,
+      "mean_test_auroc": 0.9395702332258224,
+      "mean_test_rmse_log10": 0.860988050699234,
+      "mean_test_spearman": 0.8385871052742004,
+      "model_name": "groove c01",
+      "runs": 4,
+      "std_test_spearman": 0.0025469185079307704
+    },
+    {
+      "epochs": 100,
+      "mean_test_auprc": 0.8971921652555466,
+      "mean_test_auroc": 0.9321244060993193,
+      "mean_test_rmse_log10": 0.881375327706337,
+      "mean_test_spearman": 0.8326965421438217,
+      "model_name": "historical c02",
+      "runs": 4,
+      "std_test_spearman": 0.0042253963199514275
+    },
+    {
+      "epochs": 200,
+      "mean_test_auprc": 0.8997694849967957,
+      "mean_test_auroc": 0.9332418590784073,
+      "mean_test_rmse_log10": 0.8888506442308426,
+      "mean_test_spearman": 0.8311127573251724,
+      "model_name": "groove c02",
+      "runs": 4,
+      "std_test_spearman": 0.00310491734571687
+    },
+    {
+      "epochs": 200,
+      "mean_test_auprc": 0.8992358297109604,
+      "mean_test_auroc": 0.9346070289611816,
+      "mean_test_rmse_log10": 0.8806856125593185,
+      "mean_test_spearman": 0.8301967084407806,
+      "model_name": "groove c01",
+      "runs": 4,
+      "std_test_spearman": 0.0027542632880500897
+    },
+    {
+      "epochs": 200,
+      "mean_test_auprc": 0.8942620754241943,
+      "mean_test_auroc": 0.9317287802696228,
+      "mean_test_rmse_log10": 0.8944057673215866,
+      "mean_test_spearman": 0.8294244706630707,
+      "model_name": "historical c02",
+      "runs": 4,
+      "std_test_spearman": 0.004678071123130318
+    }
+  ],
+  "model_summary": [
+    {
+      "max_test_spearman": 0.8541390299797058,
+      "mean_test_auprc": 0.9065721134344736,
+      "mean_test_auroc": 0.9371869961420695,
+      "mean_test_rmse_log10": 0.8655597567558289,
+      "mean_test_spearman": 0.8392789016167322,
+      "model_name": "groove c02",
+      "runs": 12
+    },
+    {
+      "max_test_spearman": 0.8463010191917419,
+      "mean_test_auprc": 0.9087074100971222,
+      "mean_test_auroc": 0.9389161368211111,
+      "mean_test_rmse_log10": 0.8609779924154282,
+      "mean_test_spearman": 0.8376437723636627,
+      "model_name": "groove c01",
+      "runs": 12
+    },
+    {
+      "max_test_spearman": 0.8441166877746582,
+      "mean_test_auprc": 0.8987844934066137,
+      "mean_test_auroc": 0.9334698220094045,
+      "mean_test_rmse_log10": 0.8773597627878189,
+      "mean_test_spearman": 0.8341683944066366,
+      "model_name": "historical c02",
+      "runs": 12
+    }
+  ],
+  "winner_by_mean_test_spearman": {
+    "max_test_spearman": 0.8541390299797058,
+    "mean_test_auprc": 0.9065721134344736,
+    "mean_test_auroc": 0.9371869961420695,
+    "mean_test_rmse_log10": 0.8655597567558289,
+    "mean_test_spearman": 0.8392789016167322,
+    "model_name": "groove c02",
+    "runs": 12
+  }
+}

@@ -1,0 +1,5881 @@
+{
+  "config": {
+    "design_id": "presto_pf07_tiewt_kd0_cross0p004",
+    "probe_alleles": [
+      "HLA-A*02:01",
+      "HLA-A*24:02"
+    ],
+    "train_all_alleles": false,
+    "train_mhc_class_filter": null,
+    "probe_peptides": [
+      "SLLQHLIGL",
+      "FLRYLLFGI",
+      "NFLIKFLLI",
+      "IMLEGETKL"
+    ],
+    "input_fields": [
+      "peptide",
+      "nflank",
+      "cflank",
+      "mhc_a",
+      "mhc_b"
+    ],
+    "peptide_pos_mode": "concat_start_end_frac",
+    "groove_pos_mode": "concat_start_end_frac",
+    "binding_core_lengths": [
+      8,
+      9,
+      10,
+      11
+    ],
+    "binding_core_refinement": "shared",
+    "measurement_profile": "numeric_no_qualitative",
+    "measurement_type_filter": "",
+    "qualifier_filter": "all",
+    "shared_peptides_only": false,
+    "split_fractions": {
+      "train": 0.8,
+      "val": 0.1,
+      "test": 0.1
+    },
+    "affinity_loss_mode": "full",
+    "affinity_input_contract": "sequence_only",
+    "affinity_assay_selector_inputs_forbidden": true,
+    "affinity_assay_residual_mode": "shared_base_factorized_context_plus_segment_residual",
+    "kd_grouping_mode": "split_kd_proxy",
+    "affinity_target_encoding": "mhcflurry",
+    "max_affinity_nM": 100000.0,
+    "binding_kinetic_input_mode": "affinity_vec",
+    "binding_direct_segment_mode": "off",
+    "init_checkpoint": "",
+    "synthetic_negatives": false,
+    "negative_ratio": 1.0,
+    "batch_synthetic_fraction": 0.0,
+    "synthetic_refresh_each_epoch": true,
+    "synthetic_modes": [
+      "peptide_scramble",
+      "peptide_random",
+      "mhc_scramble",
+      "mhc_random",
+      "no_mhc_alpha",
+      "no_mhc_beta"
+    ],
+    "planned_batch_contract": {
+      "batch_size": 256,
+      "synthetic_fraction": 0.0,
+      "per_allele_slots": {
+        "HLA-A*02:01": 128,
+        "HLA-A*24:02": 128
+      },
+      "per_allele_real_slots": {
+        "HLA-A*02:01": 128,
+        "HLA-A*24:02": 128
+      },
+      "per_allele_synthetic_slots": {
+        "HLA-A*02:01": 0,
+        "HLA-A*24:02": 0
+      }
+    },
+    "class_i_anchor_strategy": "none",
+    "binding_contrastive_weight": 0.0,
+    "binding_contrastive_margin": 0.2,
+    "binding_contrastive_target_gap_min": 0.3,
+    "binding_contrastive_target_gap_cap": 2.0,
+    "binding_contrastive_max_pairs": 64,
+    "binding_peptide_contrastive_weight": 0.0,
+    "binding_peptide_contrastive_margin": 0.2,
+    "binding_peptide_contrastive_target_gap_min": 0.5,
+    "binding_peptide_contrastive_target_gap_cap": 2.0,
+    "binding_peptide_contrastive_max_pairs": 128,
+    "binding_kd_family_consistency_weight": 0.0,
+    "binding_proxy_cross_consistency_weight": 0.004,
+    "binding_output_consistency_beta": 0.25,
+    "epochs": 50,
+    "batch_size": 256,
+    "lr": 0.001,
+    "weight_decay": 0.01,
+    "lr_schedule": "constant",
+    "warmup_fraction": 0.1,
+    "min_lr_scale": 0.1,
+    "onecycle_pct_start": 0.1,
+    "seed": 43,
+    "train_seed": 43,
+    "split_seed": 42,
+    "runtime_config": {
+      "num_workers": 0,
+      "pin_memory": true,
+      "persistent_workers": false,
+      "prefetch_factor": 2,
+      "matmul_precision": "high",
+      "allow_tf32": true,
+      "torch_compile": false,
+      "probe_plot_frequency": "off"
+    }
+  },
+  "subset_stats": {
+    "rows_scanned": 21568,
+    "rows_selected": 21568,
+    "allele_filter_count": 2,
+    "mhc_class_filter": null,
+    "rows_by_allele_top": {
+      "HLA-A*02:01": 18195,
+      "HLA-A*24:02": 3373
+    },
+    "n_alleles": 2,
+    "unique_peptides_by_allele_top": {
+      "HLA-A*02:01": 11657,
+      "HLA-A*24:02": 2615
+    },
+    "measurement_type_counts": {
+      "qualitative binding": 1852,
+      "3D structure": 352,
+      "half maximal inhibitory concentration (IC50)": 8482,
+      "dissociation constant KD (~IC50)": 7008,
+      "dissociation constant KD (~EC50)": 2351,
+      "dissociation constant KD": 1225,
+      "half maximal effective concentration (EC50)": 298
+    },
+    "assay_method_counts_top": {
+      "purified MHC/competitive/radioactivity": 11668,
+      "purified MHC/direct/fluorescence": 4092,
+      "purified MHC/competitive/fluorescence": 3372,
+      "cellular MHC/competitive/fluorescence": 1671,
+      "cellular MHC/direct/fluorescence": 379,
+      "x-ray crystallography": 352,
+      "cellular MHC/competitive/radioactivity": 23,
+      "binding assay": 5,
+      "lysate MHC/direct/fluorescence": 3,
+      "cellular MHC": 3
+    },
+    "cap_sampling": "none"
+  },
+  "balance_stats": {},
+  "shared_peptide_stats": {},
+  "split_stats": {
+    "train_rows": 15530,
+    "val_rows": 1919,
+    "test_rows": 1915,
+    "train_peptides": 10552,
+    "val_peptides": 1320,
+    "test_peptides": 1319,
+    "shared_peptides_total": 686,
+    "shared_peptides_train": 548,
+    "shared_peptides_val": 69,
+    "shared_peptides_test": 69,
+    "split_mode": "three_way",
+    "split_test": {
+      "train_rows": 17449,
+      "val_rows": 1915,
+      "train_peptides": 11872,
+      "val_peptides": 1319,
+      "shared_peptides_total": 686,
+      "shared_peptides_train": 617,
+      "shared_peptides_val": 69
+    },
+    "split_val": {
+      "train_rows": 15530,
+      "val_rows": 1919,
+      "train_peptides": 10552,
+      "val_peptides": 1320,
+      "shared_peptides_total": 617,
+      "shared_peptides_train": 548,
+      "shared_peptides_val": 69
+    }
+  },
+  "mhc_resolve_stats": {
+    "total": 2,
+    "resolved": 2,
+    "missing": 0
+  },
+  "probe_allele_counts_after_filter": {
+    "HLA-A*02:01": 16769,
+    "HLA-A*24:02": 2595
+  },
+  "real_record_summary": {
+    "rows": 19364,
+    "rows_by_allele": {
+      "HLA-A*02:01": 16769,
+      "HLA-A*24:02": 2595
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.4242948297453635,
+      "HLA-A*24:02": 0.26897880539499036
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 8482,
+      "dissociation constant KD (~IC50)": 7008,
+      "dissociation constant KD (~EC50)": 2351,
+      "dissociation constant KD": 1225,
+      "half maximal effective concentration (EC50)": 298
+    },
+    "qualifier_counts": {
+      "0": 16024,
+      "1": 3340
+    }
+  },
+  "real_train_record_summary": {
+    "rows": 15530,
+    "rows_by_allele": {
+      "HLA-A*02:01": 13454,
+      "HLA-A*24:02": 2076
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.4258213170804222,
+      "HLA-A*24:02": 0.27408477842003853
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 6818,
+      "dissociation constant KD (~IC50)": 5636,
+      "dissociation constant KD (~EC50)": 1866,
+      "dissociation constant KD": 970,
+      "half maximal effective concentration (EC50)": 240
+    },
+    "qualifier_counts": {
+      "0": 12892,
+      "1": 2638
+    }
+  },
+  "train_record_summary": {
+    "rows": 15530,
+    "rows_by_allele": {
+      "HLA-A*02:01": 13454,
+      "HLA-A*24:02": 2076
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.4258213170804222,
+      "HLA-A*24:02": 0.27408477842003853
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 6818,
+      "dissociation constant KD (~IC50)": 5636,
+      "dissociation constant KD (~EC50)": 1866,
+      "dissociation constant KD": 970,
+      "half maximal effective concentration (EC50)": 240
+    },
+    "qualifier_counts": {
+      "0": 12892,
+      "1": 2638
+    }
+  },
+  "val_record_summary": {
+    "rows": 1919,
+    "rows_by_allele": {
+      "HLA-A*02:01": 1659,
+      "HLA-A*24:02": 260
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.41229656419529837,
+      "HLA-A*24:02": 0.28076923076923077
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 816,
+      "dissociation constant KD (~EC50)": 249,
+      "dissociation constant KD (~IC50)": 690,
+      "dissociation constant KD": 131,
+      "half maximal effective concentration (EC50)": 33
+    },
+    "qualifier_counts": {
+      "0": 1552,
+      "1": 367
+    }
+  },
+  "test_record_summary": {
+    "rows": 1915,
+    "rows_by_allele": {
+      "HLA-A*02:01": 1656,
+      "HLA-A*24:02": 259
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.42391304347826086,
+      "HLA-A*24:02": 0.21621621621621623
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 848,
+      "dissociation constant KD (~IC50)": 682,
+      "dissociation constant KD (~EC50)": 236,
+      "half maximal effective concentration (EC50)": 25,
+      "dissociation constant KD": 124
+    },
+    "qualifier_counts": {
+      "0": 1580,
+      "1": 335
+    }
+  },
+  "record_summary": {
+    "rows": 19364,
+    "rows_by_allele": {
+      "HLA-A*02:01": 16769,
+      "HLA-A*24:02": 2595
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.4242948297453635,
+      "HLA-A*24:02": 0.26897880539499036
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 8482,
+      "dissociation constant KD (~IC50)": 7008,
+      "dissociation constant KD (~EC50)": 2351,
+      "dissociation constant KD": 1225,
+      "half maximal effective concentration (EC50)": 298
+    },
+    "qualifier_counts": {
+      "0": 16024,
+      "1": 3340
+    }
+  },
+  "synthetic_stats": {
+    "train": {
+      "added": 0,
+      "added_general": 0
+    },
+    "val": {
+      "added": 0,
+      "reason": "validation_real_only"
+    }
+  },
+  "record_groove_audit": {
+    "rows_by_source": {
+      "iedb": 15530
+    },
+    "sources": {
+      "iedb": {
+        "rows": 15530,
+        "sampled": 128,
+        "missing_sequence": 0,
+        "expected_missing_chain": 0,
+        "used_fallback": 0,
+        "status_counts": {
+          "ok|": 128
+        },
+        "length_pair_counts": {
+          "91:93": 128
+        }
+      }
+    },
+    "max_per_source": 128
+  },
+  "dataset_groove_audit": {
+    "rows_by_source": {
+      "iedb": 15530
+    },
+    "sources": {
+      "iedb": {
+        "rows": 15530,
+        "sampled": 128,
+        "empty_mhc_a": 0,
+        "empty_mhc_b": 0,
+        "class_counts": {
+          "I": 128
+        },
+        "length_pair_counts": {
+          "91:93": 128
+        }
+      }
+    },
+    "max_per_source": 128
+  },
+  "dataset_size": 19364,
+  "train_size": 15530,
+  "val_size": 1919,
+  "test_size": 1915,
+  "val_metrics": {
+    "loss": 0.04358314140699804,
+    "spearman": 0.7929524183273315,
+    "pearson": 0.8008543252944946,
+    "rmse_log10": 0.9738319516181946,
+    "accuracy": 0.8368942141532898,
+    "balanced_accuracy": 0.8416825234889984,
+    "precision": 0.7588978409767151,
+    "recall": 0.8651832342147827,
+    "f1": 0.8085626986539834,
+    "auroc": 0.9153566360473633,
+    "auprc": 0.8733620047569275,
+    "n_samples": 1919,
+    "dissociation_constant_kd_spearman": 0.630251407623291,
+    "dissociation_constant_kd_pearson": 0.7650966048240662,
+    "dissociation_constant_kd_rmse_log10": 1.1753817796707153,
+    "dissociation_constant_kd_accuracy": 0.8244274854660034,
+    "dissociation_constant_kd_balanced_accuracy": 0.8146945834159851,
+    "dissociation_constant_kd_precision": 0.8039215803146362,
+    "dissociation_constant_kd_recall": 0.7592592835426331,
+    "dissociation_constant_kd_f1": 0.7809523993122334,
+    "dissociation_constant_kd_auroc": 0.8771043419837952,
+    "dissociation_constant_kd_auprc": 0.8795763254165649,
+    "dissociation_constant_kd_n_samples": 131,
+    "dissociation_constant_kd_(~ec50)_spearman": 0.5737388134002686,
+    "dissociation_constant_kd_(~ec50)_pearson": 0.9070706963539124,
+    "dissociation_constant_kd_(~ec50)_rmse_log10": 0.6141010522842407,
+    "dissociation_constant_kd_(~ec50)_accuracy": 0.9558233022689819,
+    "dissociation_constant_kd_(~ec50)_balanced_accuracy": 0.9498310685157776,
+    "dissociation_constant_kd_(~ec50)_precision": 0.89552241563797,
+    "dissociation_constant_kd_(~ec50)_recall": 0.9375,
+    "dissociation_constant_kd_(~ec50)_f1": 0.9160305487790741,
+    "dissociation_constant_kd_(~ec50)_auroc": 0.9857263565063477,
+    "dissociation_constant_kd_(~ec50)_auprc": 0.9427403807640076,
+    "dissociation_constant_kd_(~ec50)_n_samples": 249,
+    "dissociation_constant_kd_(~ic50)_spearman": 0.7923220992088318,
+    "dissociation_constant_kd_(~ic50)_pearson": 0.7964854836463928,
+    "dissociation_constant_kd_(~ic50)_rmse_log10": 0.9732517004013062,
+    "dissociation_constant_kd_(~ic50)_accuracy": 0.8173912763595581,
+    "dissociation_constant_kd_(~ic50)_balanced_accuracy": 0.8215118646621704,
+    "dissociation_constant_kd_(~ic50)_precision": 0.7581120729446411,
+    "dissociation_constant_kd_(~ic50)_recall": 0.8538206219673157,
+    "dissociation_constant_kd_(~ic50)_f1": 0.8031249985631432,
+    "dissociation_constant_kd_(~ic50)_auroc": 0.9063959717750549,
+    "dissociation_constant_kd_(~ic50)_auprc": 0.8818018436431885,
+    "dissociation_constant_kd_(~ic50)_n_samples": 690,
+    "half_maximal_effective_concentration_(ec50)_spearman": 0.2977941036224365,
+    "half_maximal_effective_concentration_(ec50)_pearson": 0.2438390552997589,
+    "half_maximal_effective_concentration_(ec50)_rmse_log10": 1.3763121366500854,
+    "half_maximal_effective_concentration_(ec50)_accuracy": 0.5757575631141663,
+    "half_maximal_effective_concentration_(ec50)_balanced_accuracy": 0.5857143104076385,
+    "half_maximal_effective_concentration_(ec50)_precision": 0.20000000298023224,
+    "half_maximal_effective_concentration_(ec50)_recall": 0.6000000238418579,
+    "half_maximal_effective_concentration_(ec50)_f1": 0.30000000633299345,
+    "half_maximal_effective_concentration_(ec50)_auroc": 0.6285715103149414,
+    "half_maximal_effective_concentration_(ec50)_auprc": 0.22623930871486664,
+    "half_maximal_effective_concentration_(ec50)_n_samples": 33,
+    "half_maximal_inhibitory_concentration_(ic50)_spearman": 0.7991259098052979,
+    "half_maximal_inhibitory_concentration_(ic50)_pearson": 0.7922723889350891,
+    "half_maximal_inhibitory_concentration_(ic50)_rmse_log10": 1.007878303527832,
+    "half_maximal_inhibitory_concentration_(ic50)_accuracy": 0.8296568393707275,
+    "half_maximal_inhibitory_concentration_(ic50)_balanced_accuracy": 0.837184876203537,
+    "half_maximal_inhibitory_concentration_(ic50)_precision": 0.7518796920776367,
+    "half_maximal_inhibitory_concentration_(ic50)_recall": 0.8823529481887817,
+    "half_maximal_inhibitory_concentration_(ic50)_f1": 0.8119079825499294,
+    "half_maximal_inhibitory_concentration_(ic50)_auroc": 0.9052211046218872,
+    "half_maximal_inhibitory_concentration_(ic50)_auprc": 0.8558788895606995,
+    "half_maximal_inhibitory_concentration_(ic50)_n_samples": 816,
+    "coverage_weighted_spearman": 0.7472850939083249
+  },
+  "test_metrics": {
+    "loss": 0.04876824212260544,
+    "spearman": 0.8044130802154541,
+    "pearson": 0.7958609461784363,
+    "rmse_log10": 0.9843326807022095,
+    "accuracy": 0.84751957654953,
+    "balanced_accuracy": 0.8555831611156464,
+    "precision": 0.7625979781150818,
+    "recall": 0.894875168800354,
+    "f1": 0.8234582812548698,
+    "auroc": 0.9209502935409546,
+    "auprc": 0.8625805377960205,
+    "n_samples": 1915,
+    "dissociation_constant_kd_spearman": 0.7296302318572998,
+    "dissociation_constant_kd_pearson": 0.7637777924537659,
+    "dissociation_constant_kd_rmse_log10": 1.1296322345733643,
+    "dissociation_constant_kd_accuracy": 0.8145161271095276,
+    "dissociation_constant_kd_balanced_accuracy": 0.8042176961898804,
+    "dissociation_constant_kd_precision": 0.7708333134651184,
+    "dissociation_constant_kd_recall": 0.7551020383834839,
+    "dissociation_constant_kd_f1": 0.7628865869661765,
+    "dissociation_constant_kd_auroc": 0.9077550768852234,
+    "dissociation_constant_kd_auprc": 0.8575933575630188,
+    "dissociation_constant_kd_n_samples": 124,
+    "dissociation_constant_kd_(~ec50)_spearman": 0.6792342066764832,
+    "dissociation_constant_kd_(~ec50)_pearson": 0.8850120902061462,
+    "dissociation_constant_kd_(~ec50)_rmse_log10": 0.6785184144973755,
+    "dissociation_constant_kd_(~ec50)_accuracy": 0.9322034120559692,
+    "dissociation_constant_kd_(~ec50)_balanced_accuracy": 0.9228772521018982,
+    "dissociation_constant_kd_(~ec50)_precision": 0.8484848737716675,
+    "dissociation_constant_kd_(~ec50)_recall": 0.9032257795333862,
+    "dissociation_constant_kd_(~ec50)_f1": 0.8750000008149065,
+    "dissociation_constant_kd_(~ec50)_auroc": 0.9709863066673279,
+    "dissociation_constant_kd_(~ec50)_auprc": 0.8908883333206177,
+    "dissociation_constant_kd_(~ec50)_n_samples": 236,
+    "dissociation_constant_kd_(~ic50)_spearman": 0.8140267729759216,
+    "dissociation_constant_kd_(~ic50)_pearson": 0.798278272151947,
+    "dissociation_constant_kd_(~ic50)_rmse_log10": 0.9750428199768066,
+    "dissociation_constant_kd_(~ic50)_accuracy": 0.8313782811164856,
+    "dissociation_constant_kd_(~ic50)_balanced_accuracy": 0.8380391299724579,
+    "dissociation_constant_kd_(~ic50)_precision": 0.7623188495635986,
+    "dissociation_constant_kd_(~ic50)_recall": 0.8885135054588318,
+    "dissociation_constant_kd_(~ic50)_f1": 0.8205928254827471,
+    "dissociation_constant_kd_(~ic50)_auroc": 0.9129761457443237,
+    "dissociation_constant_kd_(~ic50)_auprc": 0.867397665977478,
+    "dissociation_constant_kd_(~ic50)_n_samples": 682,
+    "half_maximal_effective_concentration_(ec50)_spearman": 0.017692307010293007,
+    "half_maximal_effective_concentration_(ec50)_pearson": 0.06090313568711281,
+    "half_maximal_effective_concentration_(ec50)_rmse_log10": 1.849355936050415,
+    "half_maximal_effective_concentration_(ec50)_accuracy": 0.5199999809265137,
+    "half_maximal_effective_concentration_(ec50)_balanced_accuracy": 0.511904776096344,
+    "half_maximal_effective_concentration_(ec50)_precision": 0.1666666716337204,
+    "half_maximal_effective_concentration_(ec50)_recall": 0.5,
+    "half_maximal_effective_concentration_(ec50)_f1": 0.2500000055879354,
+    "half_maximal_effective_concentration_(ec50)_auroc": 0.476190447807312,
+    "half_maximal_effective_concentration_(ec50)_auprc": 0.18027597665786743,
+    "half_maximal_effective_concentration_(ec50)_n_samples": 25,
+    "half_maximal_inhibitory_concentration_(ic50)_spearman": 0.7999999523162842,
+    "half_maximal_inhibitory_concentration_(ic50)_pearson": 0.7927649021148682,
+    "half_maximal_inhibitory_concentration_(ic50)_rmse_log10": 1.0039393901824951,
+    "half_maximal_inhibitory_concentration_(ic50)_accuracy": 0.8514150977134705,
+    "half_maximal_inhibitory_concentration_(ic50)_balanced_accuracy": 0.8620309829711914,
+    "half_maximal_inhibitory_concentration_(ic50)_precision": 0.7654028534889221,
+    "half_maximal_inhibitory_concentration_(ic50)_recall": 0.9228571653366089,
+    "half_maximal_inhibitory_concentration_(ic50)_f1": 0.8367875799164266,
+    "half_maximal_inhibitory_concentration_(ic50)_auroc": 0.9199769496917725,
+    "half_maximal_inhibitory_concentration_(ic50)_auprc": 0.8713673949241638,
+    "half_maximal_inhibitory_concentration_(ic50)_n_samples": 848,
+    "coverage_weighted_spearman": 0.7753430537519582
+  },
+  "param_count": 411934,
+  "setup_wall_s": 3.9434834199999997,
+  "setup_stage_timings": {
+    "prepare_real_binding_state_s": 0.19155679499999945,
+    "dataset_build_s": 1.134779364,
+    "val_loader_build_s": 0.00029221200000062453,
+    "model_init_and_warm_start_s": 0.39889133799999943,
+    "probe_setup_s": 0.1665783360000006
+  },
+  "diverged": false,
+  "divergence_epoch": null,
+  "divergence_reason": "",
+  "probe_support": {
+    "SLLQHLIGL": {
+      "peptide": "SLLQHLIGL",
+      "total_rows": 39,
+      "by_record_type": {
+        "binding": 31,
+        "tcell": 6,
+        "bcell": 2
+      },
+      "by_assay_bucket": {
+        "elution_ms": 31,
+        "tcell_response": 6,
+        "bcell_response": 2
+      },
+      "by_allele": {
+        "HLA-A*02:01": 20,
+        "HLA-E*01:03": 1,
+        "HLA-B*08:01": 1,
+        "human class I": 8,
+        "human class II": 1,
+        "HLA-DRB5*01:01": 1,
+        "HLA-DRB1*15:01": 1,
+        "HLA-A2": 1,
+        "HLA-A*32:01": 1,
+        "HLA-C*05:01": 1,
+        "HLA-C*14:02": 1,
+        "(none)": 2
+      },
+      "quantitative_binding_rows_for_target_alleles": 0
+    },
+    "FLRYLLFGI": {
+      "peptide": "FLRYLLFGI",
+      "total_rows": 13,
+      "by_record_type": {
+        "binding": 11,
+        "tcell": 2
+      },
+      "by_assay_bucket": {
+        "binding_affinity": 8,
+        "binding_t_half": 3,
+        "tcell_response": 2
+      },
+      "by_allele": {
+        "HLA-A*02:01": 4,
+        "HLA-A*24:02": 3,
+        "HLA-B*07:02": 3,
+        "HLA-B*08:01": 3
+      },
+      "quantitative_binding_rows_for_target_alleles": 4
+    },
+    "NFLIKFLLI": {
+      "peptide": "NFLIKFLLI",
+      "total_rows": 9,
+      "by_record_type": {
+        "binding": 9
+      },
+      "by_assay_bucket": {
+        "binding_affinity": 6,
+        "binding_t_half": 3
+      },
+      "by_allele": {
+        "HLA-A*02:01": 3,
+        "HLA-A*24:02": 3,
+        "HLA-B*08:01": 3
+      },
+      "quantitative_binding_rows_for_target_alleles": 4
+    },
+    "IMLEGETKL": {
+      "peptide": "IMLEGETKL",
+      "total_rows": 12,
+      "by_record_type": {
+        "binding": 11,
+        "tcell": 1
+      },
+      "by_assay_bucket": {
+        "binding_affinity": 8,
+        "binding_t_half": 3,
+        "tcell_response": 1
+      },
+      "by_allele": {
+        "HLA-A*02:01": 6,
+        "HLA-A*24:02": 3,
+        "HLA-B*15:01": 3
+      },
+      "quantitative_binding_rows_for_target_alleles": 6
+    }
+  },
+  "warm_start": {
+    "used": false,
+    "checkpoint": "",
+    "filter_stats": {
+      "skipped_missing": [],
+      "skipped_shape": []
+    },
+    "checkpoint_epoch": null
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.08928920613285506,
+      "val_loss": 0.07339791534468532,
+      "epoch_wall_s": 17.250220254,
+      "train_data_wait_s": 1.6525481490000065,
+      "train_forward_loss_s": 7.598927957000026,
+      "train_backward_s": 2.821452359999993,
+      "train_optimizer_s": 0.3502022089999972,
+      "gpu_busy_wall_s": 11.53514241400002,
+      "val_wall_s": 0.5443964240000021,
+      "probe_eval_wall_s": 0.2201634640000023,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.08400246952956729,
+      "grad_norm_binding_core": 0.030788509649909906,
+      "grad_norm_trunk_other": 0.13598706722670068,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 1052,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.005278450000002266,
+      "gpu_util_mean_pct": 43.5625,
+      "gpu_util_peak_pct": 62.0,
+      "gpu_mem_util_mean_pct": 8.5,
+      "gpu_mem_util_peak_pct": 15.0,
+      "gpu_sample_count": 16.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.053546720061380906,
+      "val_loss": 0.04969353415071964,
+      "epoch_wall_s": 15.373526615,
+      "train_data_wait_s": 1.8825066869999851,
+      "train_forward_loss_s": 6.195737870000002,
+      "train_backward_s": 2.2169752869999684,
+      "train_optimizer_s": 0.25924720600001194,
+      "gpu_busy_wall_s": 9.40080229799998,
+      "val_wall_s": 0.5076204089999976,
+      "probe_eval_wall_s": 0.22122152600000078,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.08897721185748857,
+      "grad_norm_binding_core": 0.04023435414232323,
+      "grad_norm_trunk_other": 0.21469418198912796,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 2061,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.005537232000001779,
+      "gpu_util_mean_pct": 43.57142857142857,
+      "gpu_util_peak_pct": 73.0,
+      "gpu_mem_util_mean_pct": 8.285714285714286,
+      "gpu_mem_util_peak_pct": 16.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.04632152964905748,
+      "val_loss": 0.045743036549538374,
+      "epoch_wall_s": 15.332451118000002,
+      "train_data_wait_s": 1.8858608589999832,
+      "train_forward_loss_s": 6.141186882999996,
+      "train_backward_s": 2.2109715059999715,
+      "train_optimizer_s": 0.2693919389999806,
+      "gpu_busy_wall_s": 9.377914178999944,
+      "val_wall_s": 0.5255741419999964,
+      "probe_eval_wall_s": 0.23078970899999973,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.06987225070522121,
+      "grad_norm_binding_core": 0.03207747437595392,
+      "grad_norm_trunk_other": 0.18790813606114373,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 3070,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.005982885000001659,
+      "gpu_util_mean_pct": 45.07142857142857,
+      "gpu_util_peak_pct": 70.0,
+      "gpu_mem_util_mean_pct": 8.785714285714286,
+      "gpu_mem_util_peak_pct": 16.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.042481205777599,
+      "val_loss": 0.049472030717879534,
+      "epoch_wall_s": 15.384915283000005,
+      "train_data_wait_s": 1.76895598499992,
+      "train_forward_loss_s": 6.3013732449999225,
+      "train_backward_s": 2.251751065000086,
+      "train_optimizer_s": 0.26877852000006897,
+      "gpu_busy_wall_s": 9.547918327000083,
+      "val_wall_s": 0.5066857409999983,
+      "probe_eval_wall_s": 0.2193297560000076,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.0520999204845731,
+      "grad_norm_binding_core": 0.02392814909843042,
+      "grad_norm_trunk_other": 0.14828181835370327,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 4079,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.006638140999996267,
+      "gpu_util_mean_pct": 42.733333333333334,
+      "gpu_util_peak_pct": 68.0,
+      "gpu_mem_util_mean_pct": 7.733333333333333,
+      "gpu_mem_util_peak_pct": 15.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.03969931142088377,
+      "val_loss": 0.04097457625903189,
+      "epoch_wall_s": 15.466428054000005,
+      "train_data_wait_s": 1.897575078999978,
+      "train_forward_loss_s": 6.217363020000036,
+      "train_backward_s": 2.2221046150000205,
+      "train_optimizer_s": 0.2596337309999939,
+      "gpu_busy_wall_s": 9.438708653000049,
+      "val_wall_s": 0.5144774270000028,
+      "probe_eval_wall_s": 0.22512985999999557,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.057543478811834026,
+      "grad_norm_binding_core": 0.026770786359901794,
+      "grad_norm_trunk_other": 0.1595116163201015,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 5088,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.007002492000012239,
+      "gpu_util_mean_pct": 44.0,
+      "gpu_util_peak_pct": 70.0,
+      "gpu_mem_util_mean_pct": 8.285714285714286,
+      "gpu_mem_util_peak_pct": 16.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.03416852450947154,
+      "val_loss": 0.037680793553590775,
+      "epoch_wall_s": 15.454870326000005,
+      "train_data_wait_s": 1.905752531000033,
+      "train_forward_loss_s": 6.2122442080000155,
+      "train_backward_s": 2.2142939589999457,
+      "train_optimizer_s": 0.26404342099995404,
+      "gpu_busy_wall_s": 9.38522006399991,
+      "val_wall_s": 0.48606020299999386,
+      "probe_eval_wall_s": 0.20857827300000054,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.040093369467286505,
+      "grad_norm_binding_core": 0.01802886914558499,
+      "grad_norm_trunk_other": 0.12738104550354715,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 6097,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.006577389000000267,
+      "gpu_util_mean_pct": 47.42857142857143,
+      "gpu_util_peak_pct": 65.0,
+      "gpu_mem_util_mean_pct": 9.142857142857142,
+      "gpu_mem_util_peak_pct": 14.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.031772919860229176,
+      "val_loss": 0.03712042351253331,
+      "epoch_wall_s": 15.391294318999996,
+      "train_data_wait_s": 1.8965711739999023,
+      "train_forward_loss_s": 6.190387403999921,
+      "train_backward_s": 2.2146158369999256,
+      "train_optimizer_s": 0.26165170899983536,
+      "gpu_busy_wall_s": 9.431216411999685,
+      "val_wall_s": 0.535614025000001,
+      "probe_eval_wall_s": 0.2289474370000022,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.04771860404747838,
+      "grad_norm_binding_core": 0.021535254034295424,
+      "grad_norm_trunk_other": 0.14328678753392254,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 7106,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.007654517000005967,
+      "gpu_util_mean_pct": 37.333333333333336,
+      "gpu_util_peak_pct": 56.0,
+      "gpu_mem_util_mean_pct": 6.666666666666667,
+      "gpu_mem_util_peak_pct": 10.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.02994845962187029,
+      "val_loss": 0.03557453746907413,
+      "epoch_wall_s": 15.445911189000014,
+      "train_data_wait_s": 1.9087486699998948,
+      "train_forward_loss_s": 6.21737954199989,
+      "train_backward_s": 2.211697403999949,
+      "train_optimizer_s": 0.26503058500020416,
+      "gpu_busy_wall_s": 9.435097854000048,
+      "val_wall_s": 0.5146431960000086,
+      "probe_eval_wall_s": 0.22634712699999682,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.035020109913247964,
+      "grad_norm_binding_core": 0.015997648076843354,
+      "grad_norm_trunk_other": 0.11140349810816352,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 8115,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.0088864669999964,
+      "gpu_util_mean_pct": 45.266666666666666,
+      "gpu_util_peak_pct": 58.0,
+      "gpu_mem_util_mean_pct": 9.066666666666666,
+      "gpu_mem_util_peak_pct": 16.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.029179446241062768,
+      "val_loss": 0.03708445141091943,
+      "epoch_wall_s": 15.209597790000004,
+      "train_data_wait_s": 1.7420345940000175,
+      "train_forward_loss_s": 6.185482360000094,
+      "train_backward_s": 2.2022157740002513,
+      "train_optimizer_s": 0.26559129800006076,
+      "gpu_busy_wall_s": 9.384996293000427,
+      "val_wall_s": 0.5105615150000062,
+      "probe_eval_wall_s": 0.22114534600001434,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.036153907588540556,
+      "grad_norm_binding_core": 0.016541444590226294,
+      "grad_norm_trunk_other": 0.11785164548497043,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 9124,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.008575187999980471,
+      "gpu_util_mean_pct": 46.0,
+      "gpu_util_peak_pct": 90.0,
+      "gpu_mem_util_mean_pct": 9.142857142857142,
+      "gpu_mem_util_peak_pct": 25.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.02820785840938114,
+      "val_loss": 0.03663375950418413,
+      "epoch_wall_s": 15.297174412000004,
+      "train_data_wait_s": 1.8718510129999402,
+      "train_forward_loss_s": 6.163964238999938,
+      "train_backward_s": 2.1996387070001333,
+      "train_optimizer_s": 0.2586423099999706,
+      "gpu_busy_wall_s": 9.344224540000027,
+      "val_wall_s": 0.5032141239999817,
+      "probe_eval_wall_s": 0.2187651600000038,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.0405144530109678,
+      "grad_norm_binding_core": 0.019083340578591797,
+      "grad_norm_trunk_other": 0.12418971444224366,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 10133,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.009847458999985292,
+      "gpu_util_mean_pct": 42.2,
+      "gpu_util_peak_pct": 57.0,
+      "gpu_mem_util_mean_pct": 8.266666666666667,
+      "gpu_mem_util_peak_pct": 13.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.028611527509846777,
+      "val_loss": 0.041561605874449015,
+      "epoch_wall_s": 15.568788412000004,
+      "train_data_wait_s": 1.9456243569999003,
+      "train_forward_loss_s": 6.261769799000234,
+      "train_backward_s": 2.2166047000000333,
+      "train_optimizer_s": 0.26422748100000604,
+      "gpu_busy_wall_s": 9.476889599000287,
+      "val_wall_s": 0.5075963890000139,
+      "probe_eval_wall_s": 0.22669123000000013,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.03898964972101409,
+      "grad_norm_binding_core": 0.01934642733394325,
+      "grad_norm_trunk_other": 0.13469063712409654,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 11142,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.009810305000002018,
+      "gpu_util_mean_pct": 43.733333333333334,
+      "gpu_util_peak_pct": 73.0,
+      "gpu_mem_util_mean_pct": 8.333333333333334,
+      "gpu_mem_util_peak_pct": 16.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.02730230349203888,
+      "val_loss": 0.03536835312843323,
+      "epoch_wall_s": 15.320204773,
+      "train_data_wait_s": 1.7428501220000783,
+      "train_forward_loss_s": 6.172134206000038,
+      "train_backward_s": 2.201875072000121,
+      "train_optimizer_s": 0.2605193649999933,
+      "gpu_busy_wall_s": 9.515424664000136,
+      "val_wall_s": 0.6630865989999961,
+      "probe_eval_wall_s": 0.21780942199998776,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.04092756736668679,
+      "grad_norm_binding_core": 0.019723091366177874,
+      "grad_norm_trunk_other": 0.12325191386575458,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 12151,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.011727293999996391,
+      "gpu_util_mean_pct": 41.142857142857146,
+      "gpu_util_peak_pct": 62.0,
+      "gpu_mem_util_mean_pct": 7.142857142857143,
+      "gpu_mem_util_peak_pct": 13.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.026775626641399455,
+      "val_loss": 0.037120341090485454,
+      "epoch_wall_s": 15.290457238000016,
+      "train_data_wait_s": 1.7765407010000445,
+      "train_forward_loss_s": 6.20972422700018,
+      "train_backward_s": 2.2233672929997397,
+      "train_optimizer_s": 0.26504935200000546,
+      "gpu_busy_wall_s": 9.436716460999918,
+      "val_wall_s": 0.5120197399999995,
+      "probe_eval_wall_s": 0.22655584899999326,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.039734358666323015,
+      "grad_norm_binding_core": 0.01885011066967572,
+      "grad_norm_trunk_other": 0.1137166760807475,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 13160,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.010856660000001739,
+      "gpu_util_mean_pct": 41.53333333333333,
+      "gpu_util_peak_pct": 69.0,
+      "gpu_mem_util_mean_pct": 8.2,
+      "gpu_mem_util_peak_pct": 16.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.025495531459180813,
+      "val_loss": 0.03504589665681124,
+      "epoch_wall_s": 15.280192983999996,
+      "train_data_wait_s": 1.86364512099982,
+      "train_forward_loss_s": 6.1845783750002,
+      "train_backward_s": 2.202513871999969,
+      "train_optimizer_s": 0.25914032400012843,
+      "gpu_busy_wall_s": 9.355659330000293,
+      "val_wall_s": 0.5026719079999964,
+      "probe_eval_wall_s": 0.20675485099999946,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.03229775805153194,
+      "grad_norm_binding_core": 0.015833795332955487,
+      "grad_norm_trunk_other": 0.10732432969862138,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 14169,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.011521978999979865,
+      "gpu_util_mean_pct": 37.57142857142857,
+      "gpu_util_peak_pct": 45.0,
+      "gpu_mem_util_mean_pct": 6.714285714285714,
+      "gpu_mem_util_peak_pct": 9.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.02514130701223072,
+      "val_loss": 0.0346329933963716,
+      "epoch_wall_s": 15.242554388000002,
+      "train_data_wait_s": 1.889648365999932,
+      "train_forward_loss_s": 6.134829118000084,
+      "train_backward_s": 2.2061651309999206,
+      "train_optimizer_s": 0.25978960499992354,
+      "gpu_busy_wall_s": 9.349185101999922,
+      "val_wall_s": 0.530957949999987,
+      "probe_eval_wall_s": 0.21744329800000628,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.036420375699889505,
+      "grad_norm_binding_core": 0.017657286296395572,
+      "grad_norm_trunk_other": 0.11045613639706724,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 15178,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.012139055000005783,
+      "gpu_util_mean_pct": 45.733333333333334,
+      "gpu_util_peak_pct": 65.0,
+      "gpu_mem_util_mean_pct": 8.666666666666666,
+      "gpu_mem_util_peak_pct": 14.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.024248339534508733,
+      "val_loss": 0.0343032309319824,
+      "epoch_wall_s": 15.372926653999968,
+      "train_data_wait_s": 1.9199937889998182,
+      "train_forward_loss_s": 6.20857664199994,
+      "train_backward_s": 2.2269597539998642,
+      "train_optimizer_s": 0.2650807419998671,
+      "gpu_busy_wall_s": 9.433713527999686,
+      "val_wall_s": 0.5092816700000071,
+      "probe_eval_wall_s": 0.22381472000000713,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.03198078756488015,
+      "grad_norm_binding_core": 0.015654444345224883,
+      "grad_norm_trunk_other": 0.10198335197915936,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 16187,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.012768658000027244,
+      "gpu_util_mean_pct": 43.142857142857146,
+      "gpu_util_peak_pct": 54.0,
+      "gpu_mem_util_mean_pct": 7.857142857142857,
+      "gpu_mem_util_peak_pct": 12.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.024507326495675545,
+      "val_loss": 0.03593738633207977,
+      "epoch_wall_s": 15.205306417000031,
+      "train_data_wait_s": 1.7492631099996743,
+      "train_forward_loss_s": 6.199639322000223,
+      "train_backward_s": 2.216906131999963,
+      "train_optimizer_s": 0.26301411200000757,
+      "gpu_busy_wall_s": 9.41133411200019,
+      "val_wall_s": 0.5135895209999717,
+      "probe_eval_wall_s": 0.21818502500002523,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.04457200566339687,
+      "grad_norm_binding_core": 0.021477681903035787,
+      "grad_norm_trunk_other": 0.12494304019679889,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 17196,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.013385635000020102,
+      "gpu_util_mean_pct": 41.785714285714285,
+      "gpu_util_peak_pct": 66.0,
+      "gpu_mem_util_mean_pct": 7.857142857142857,
+      "gpu_mem_util_peak_pct": 14.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.023527548279402392,
+      "val_loss": 0.035478315548971295,
+      "epoch_wall_s": 15.412201288999995,
+      "train_data_wait_s": 1.901915719999863,
+      "train_forward_loss_s": 6.203541775999952,
+      "train_backward_s": 2.219943611000133,
+      "train_optimizer_s": 0.26023398099937367,
+      "gpu_busy_wall_s": 9.407439365999437,
+      "val_wall_s": 0.5013217999999711,
+      "probe_eval_wall_s": 0.2223981980000076,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.03321910471566558,
+      "grad_norm_binding_core": 0.015748663267287164,
+      "grad_norm_trunk_other": 0.1034261135001272,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 18205,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.013767174999998133,
+      "gpu_util_mean_pct": 40.8,
+      "gpu_util_peak_pct": 48.0,
+      "gpu_mem_util_mean_pct": 7.4,
+      "gpu_mem_util_peak_pct": 10.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.02316846278548803,
+      "val_loss": 0.034888624446466565,
+      "epoch_wall_s": 15.404342124999971,
+      "train_data_wait_s": 1.8939442459999327,
+      "train_forward_loss_s": 6.195346236000262,
+      "train_backward_s": 2.1884334350001495,
+      "train_optimizer_s": 0.2593302109999627,
+      "gpu_busy_wall_s": 9.395635685000343,
+      "val_wall_s": 0.525840589999973,
+      "probe_eval_wall_s": 0.2266852129999961,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.0320421428692471,
+      "grad_norm_binding_core": 0.01553422362747818,
+      "grad_norm_trunk_other": 0.10401370563873977,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 19214,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.01361047000000326,
+      "gpu_util_mean_pct": 37.357142857142854,
+      "gpu_util_peak_pct": 53.0,
+      "gpu_mem_util_mean_pct": 6.571428571428571,
+      "gpu_mem_util_peak_pct": 11.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.02270890846145603,
+      "val_loss": 0.03605456347577274,
+      "epoch_wall_s": 15.269828341999983,
+      "train_data_wait_s": 1.894721263000406,
+      "train_forward_loss_s": 6.166761802999531,
+      "train_backward_s": 2.2071771070001773,
+      "train_optimizer_s": 0.2578343289995928,
+      "gpu_busy_wall_s": 9.352303148999283,
+      "val_wall_s": 0.5123617520000039,
+      "probe_eval_wall_s": 0.20816815799997812,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.031045753345334878,
+      "grad_norm_binding_core": 0.015401213191200561,
+      "grad_norm_trunk_other": 0.10142587505732666,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 20223,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.016093590000025415,
+      "gpu_util_mean_pct": 36.86666666666667,
+      "gpu_util_peak_pct": 51.0,
+      "gpu_mem_util_mean_pct": 7.133333333333334,
+      "gpu_mem_util_peak_pct": 12.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 21,
+      "train_loss": 0.021921511247472943,
+      "val_loss": 0.03761682054027915,
+      "epoch_wall_s": 15.129264087000024,
+      "train_data_wait_s": 1.7115921110000727,
+      "train_forward_loss_s": 6.13068093999982,
+      "train_backward_s": 2.1930183650000004,
+      "train_optimizer_s": 0.25489946399989094,
+      "gpu_busy_wall_s": 9.315711041999691,
+      "val_wall_s": 0.5208350830000086,
+      "probe_eval_wall_s": 0.21627718999997114,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.029932399591994008,
+      "grad_norm_binding_core": 0.015177744694694696,
+      "grad_norm_trunk_other": 0.09937606271818383,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 21232,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.016731694000043262,
+      "gpu_util_mean_pct": 45.142857142857146,
+      "gpu_util_peak_pct": 76.0,
+      "gpu_mem_util_mean_pct": 8.928571428571429,
+      "gpu_mem_util_peak_pct": 16.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 22,
+      "train_loss": 0.021805334230006305,
+      "val_loss": 0.03554004756733775,
+      "epoch_wall_s": 15.537660165000034,
+      "train_data_wait_s": 1.9420021470003235,
+      "train_forward_loss_s": 6.266750933999958,
+      "train_backward_s": 2.2467514479999977,
+      "train_optimizer_s": 0.2702949509995278,
+      "gpu_busy_wall_s": 9.527307441999483,
+      "val_wall_s": 0.5204793199999926,
+      "probe_eval_wall_s": 0.22303078900000628,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.030007814152287263,
+      "grad_norm_binding_core": 0.014845283500992243,
+      "grad_norm_trunk_other": 0.09813008783845387,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 22241,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.016008259999978236,
+      "gpu_util_mean_pct": 42.06666666666667,
+      "gpu_util_peak_pct": 75.0,
+      "gpu_mem_util_mean_pct": 8.533333333333333,
+      "gpu_mem_util_peak_pct": 18.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 23,
+      "train_loss": 0.021487095981906606,
+      "val_loss": 0.03313234029337764,
+      "epoch_wall_s": 15.350857037000026,
+      "train_data_wait_s": 1.9146206209998695,
+      "train_forward_loss_s": 6.2086784140002464,
+      "train_backward_s": 2.229152526000007,
+      "train_optimizer_s": 0.2628475019997154,
+      "gpu_busy_wall_s": 9.420306085999925,
+      "val_wall_s": 0.5026282599999945,
+      "probe_eval_wall_s": 0.216999383999962,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.03340029377954837,
+      "grad_norm_binding_core": 0.015613665951553174,
+      "grad_norm_trunk_other": 0.10044370069862657,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 23250,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.017405541000016456,
+      "gpu_util_mean_pct": 37.733333333333334,
+      "gpu_util_peak_pct": 63.0,
+      "gpu_mem_util_mean_pct": 7.0,
+      "gpu_mem_util_peak_pct": 13.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 24,
+      "train_loss": 0.02118997106258318,
+      "val_loss": 0.03318508481606841,
+      "epoch_wall_s": 15.540166408999994,
+      "train_data_wait_s": 1.9134347479999292,
+      "train_forward_loss_s": 6.2740316960004066,
+      "train_backward_s": 2.2313715860001935,
+      "train_optimizer_s": 0.272608328999695,
+      "gpu_busy_wall_s": 9.514471314000332,
+      "val_wall_s": 0.513666512000043,
+      "probe_eval_wall_s": 0.22279319099999384,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.03457403748938214,
+      "grad_norm_binding_core": 0.016743991992248634,
+      "grad_norm_trunk_other": 0.10336193236350491,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 24259,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.017161931000032382,
+      "gpu_util_mean_pct": 46.2,
+      "gpu_util_peak_pct": 85.0,
+      "gpu_mem_util_mean_pct": 8.933333333333334,
+      "gpu_mem_util_peak_pct": 16.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 25,
+      "train_loss": 0.021394919639207283,
+      "val_loss": 0.03379423404112458,
+      "epoch_wall_s": 15.337540638999997,
+      "train_data_wait_s": 1.7660743239998737,
+      "train_forward_loss_s": 6.247815799000364,
+      "train_backward_s": 2.2316389809999464,
+      "train_optimizer_s": 0.26564952300014966,
+      "gpu_busy_wall_s": 9.470481263000465,
+      "val_wall_s": 0.5032190270000001,
+      "probe_eval_wall_s": 0.22215793300000541,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.028276490117201493,
+      "grad_norm_binding_core": 0.014145786235513682,
+      "grad_norm_trunk_other": 0.10056921949164933,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 25268,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.01834476800001994,
+      "gpu_util_mean_pct": 44.4,
+      "gpu_util_peak_pct": 70.0,
+      "gpu_mem_util_mean_pct": 8.866666666666667,
+      "gpu_mem_util_peak_pct": 16.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 26,
+      "train_loss": 0.02117464570152872,
+      "val_loss": 0.035787952365353703,
+      "epoch_wall_s": 15.370777259999954,
+      "train_data_wait_s": 1.9320104369997466,
+      "train_forward_loss_s": 6.21567293499993,
+      "train_backward_s": 2.232352685000194,
+      "train_optimizer_s": 0.26220964699990645,
+      "gpu_busy_wall_s": 9.418963529000052,
+      "val_wall_s": 0.4941094110000108,
+      "probe_eval_wall_s": 0.21461885100001155,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.02807322792819993,
+      "grad_norm_binding_core": 0.014199642852819303,
+      "grad_norm_trunk_other": 0.09504605991291729,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 26277,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.017111257999999907,
+      "gpu_util_mean_pct": 49.857142857142854,
+      "gpu_util_peak_pct": 73.0,
+      "gpu_mem_util_mean_pct": 9.642857142857142,
+      "gpu_mem_util_peak_pct": 17.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 27,
+      "train_loss": 0.020010423416025797,
+      "val_loss": 0.033942402340471745,
+      "epoch_wall_s": 15.558065676000012,
+      "train_data_wait_s": 1.9431062110000994,
+      "train_forward_loss_s": 6.263455490999775,
+      "train_backward_s": 2.2431051430004345,
+      "train_optimizer_s": 0.2660487609999791,
+      "gpu_busy_wall_s": 9.509246465000217,
+      "val_wall_s": 0.5167518549999954,
+      "probe_eval_wall_s": 0.21988521500003344,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.029917141774264595,
+      "grad_norm_binding_core": 0.014122670312996743,
+      "grad_norm_trunk_other": 0.09235633046156996,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 27286,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.01892360900001222,
+      "gpu_util_mean_pct": 45.2,
+      "gpu_util_peak_pct": 74.0,
+      "gpu_mem_util_mean_pct": 8.933333333333334,
+      "gpu_mem_util_peak_pct": 18.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 28,
+      "train_loss": 0.019850315736993304,
+      "val_loss": 0.03581709507852793,
+      "epoch_wall_s": 15.592902260000017,
+      "train_data_wait_s": 1.9310397510001849,
+      "train_forward_loss_s": 6.273053559000175,
+      "train_backward_s": 2.2425061920000076,
+      "train_optimizer_s": 0.2687292829995158,
+      "gpu_busy_wall_s": 9.527075303999709,
+      "val_wall_s": 0.5219529309999871,
+      "probe_eval_wall_s": 0.22083333900002344,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.03243263308127372,
+      "grad_norm_binding_core": 0.01628566421491422,
+      "grad_norm_trunk_other": 0.09989407116204174,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 28295,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.01896870199999512,
+      "gpu_util_mean_pct": 44.6,
+      "gpu_util_peak_pct": 88.0,
+      "gpu_mem_util_mean_pct": 8.733333333333333,
+      "gpu_mem_util_peak_pct": 22.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 29,
+      "train_loss": 0.019513969713786862,
+      "val_loss": 0.03677780693396926,
+      "epoch_wall_s": 15.742305498999997,
+      "train_data_wait_s": 1.987182308000115,
+      "train_forward_loss_s": 6.373566529000016,
+      "train_backward_s": 2.2707054760002734,
+      "train_optimizer_s": 0.27730169599993815,
+      "gpu_busy_wall_s": 9.666145831000222,
+      "val_wall_s": 0.5235765819999756,
+      "probe_eval_wall_s": 0.22099554800001897,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.031038626604830543,
+      "grad_norm_binding_core": 0.01572626732149561,
+      "grad_norm_trunk_other": 0.09874647963156008,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 29304,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.018848214000001917,
+      "gpu_util_mean_pct": 43.53333333333333,
+      "gpu_util_peak_pct": 74.0,
+      "gpu_mem_util_mean_pct": 8.733333333333333,
+      "gpu_mem_util_peak_pct": 18.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 30,
+      "train_loss": 0.019633518189262105,
+      "val_loss": 0.03505911771208048,
+      "epoch_wall_s": 15.318653287000018,
+      "train_data_wait_s": 1.7524144649998448,
+      "train_forward_loss_s": 6.2505182129997365,
+      "train_backward_s": 2.2210469559996113,
+      "train_optimizer_s": 0.26695171700026776,
+      "gpu_busy_wall_s": 9.456173449999653,
+      "val_wall_s": 0.502340519000029,
+      "probe_eval_wall_s": 0.21531604500000867,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.038541563001706046,
+      "grad_norm_binding_core": 0.01745569333109185,
+      "grad_norm_trunk_other": 0.10517803501587475,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 30313,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.020420943999965857,
+      "gpu_util_mean_pct": 46.53333333333333,
+      "gpu_util_peak_pct": 97.0,
+      "gpu_mem_util_mean_pct": 9.133333333333333,
+      "gpu_mem_util_peak_pct": 26.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 31,
+      "train_loss": 0.019279594120200513,
+      "val_loss": 0.034251434030011296,
+      "epoch_wall_s": 15.804389233999984,
+      "train_data_wait_s": 2.0011635630002047,
+      "train_forward_loss_s": 6.332955772000105,
+      "train_backward_s": 2.2766186109996625,
+      "train_optimizer_s": 0.2782478670004025,
+      "gpu_busy_wall_s": 9.635896075000119,
+      "val_wall_s": 0.5222456969999598,
+      "probe_eval_wall_s": 0.2258281279999892,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.02963505452864344,
+      "grad_norm_binding_core": 0.0149176489506136,
+      "grad_norm_trunk_other": 0.0967234032500441,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 31322,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.021727859000009175,
+      "gpu_util_mean_pct": 35.8,
+      "gpu_util_peak_pct": 73.0,
+      "gpu_mem_util_mean_pct": 6.6,
+      "gpu_mem_util_peak_pct": 17.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 32,
+      "train_loss": 0.018951161088035354,
+      "val_loss": 0.03558160527609289,
+      "epoch_wall_s": 15.611066391000008,
+      "train_data_wait_s": 1.9332961320001232,
+      "train_forward_loss_s": 6.307941910000352,
+      "train_backward_s": 2.247431987999846,
+      "train_optimizer_s": 0.27156610599973874,
+      "gpu_busy_wall_s": 9.55513521599994,
+      "val_wall_s": 0.5146809880000092,
+      "probe_eval_wall_s": 0.21351422399999365,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.027987252992519248,
+      "grad_norm_binding_core": 0.01468680055725703,
+      "grad_norm_trunk_other": 0.09741551271290289,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 32331,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.02377550500000325,
+      "gpu_util_mean_pct": 50.57142857142857,
+      "gpu_util_peak_pct": 89.0,
+      "gpu_mem_util_mean_pct": 10.285714285714286,
+      "gpu_mem_util_peak_pct": 24.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 33,
+      "train_loss": 0.018634412912124733,
+      "val_loss": 0.03278220328502357,
+      "epoch_wall_s": 15.692545971000015,
+      "train_data_wait_s": 1.7934696749998125,
+      "train_forward_loss_s": 6.312380256000097,
+      "train_backward_s": 2.2610116190002714,
+      "train_optimizer_s": 0.2709892249998802,
+      "gpu_busy_wall_s": 9.799275415000295,
+      "val_wall_s": 0.7283353999999918,
+      "probe_eval_wall_s": 0.2265589150000551,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.023350278577060127,
+      "grad_norm_binding_core": 0.01212166482858488,
+      "grad_norm_trunk_other": 0.08458450974495207,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 33340,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.021347800999933497,
+      "gpu_util_mean_pct": 48.214285714285715,
+      "gpu_util_peak_pct": 72.0,
+      "gpu_mem_util_mean_pct": 9.428571428571429,
+      "gpu_mem_util_peak_pct": 16.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 34,
+      "train_loss": 0.01843742973540189,
+      "val_loss": 0.033292173175141215,
+      "epoch_wall_s": 15.56186512499994,
+      "train_data_wait_s": 1.8083885099998724,
+      "train_forward_loss_s": 6.366650329000436,
+      "train_backward_s": 2.263361763000262,
+      "train_optimizer_s": 0.278708363000419,
+      "gpu_busy_wall_s": 9.641043852001076,
+      "val_wall_s": 0.5182709839999688,
+      "probe_eval_wall_s": 0.21405241299999034,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.03127133211752506,
+      "grad_norm_binding_core": 0.015049219941582988,
+      "grad_norm_trunk_other": 0.09281876663903738,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 34349,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.02265180999995664,
+      "gpu_util_mean_pct": 41.2,
+      "gpu_util_peak_pct": 58.0,
+      "gpu_mem_util_mean_pct": 7.6,
+      "gpu_mem_util_peak_pct": 11.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 35,
+      "train_loss": 0.01780776337738026,
+      "val_loss": 0.036294494988396764,
+      "epoch_wall_s": 15.724717579999947,
+      "train_data_wait_s": 2.011639050999861,
+      "train_forward_loss_s": 6.34164110599977,
+      "train_backward_s": 2.2581827839997004,
+      "train_optimizer_s": 0.2744137820003516,
+      "gpu_busy_wall_s": 9.639914832999807,
+      "val_wall_s": 0.5430032849999407,
+      "probe_eval_wall_s": 0.2226738760000444,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.02477198091938069,
+      "grad_norm_binding_core": 0.0126874099801651,
+      "grad_norm_trunk_other": 0.09008916607584548,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 35358,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.022809973999983413,
+      "gpu_util_mean_pct": 46.6,
+      "gpu_util_peak_pct": 100.0,
+      "gpu_mem_util_mean_pct": 9.2,
+      "gpu_mem_util_peak_pct": 27.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 36,
+      "train_loss": 0.017023382181266568,
+      "val_loss": 0.036644316744059324,
+      "epoch_wall_s": 15.856671566000045,
+      "train_data_wait_s": 2.0252753879992724,
+      "train_forward_loss_s": 6.429667706999339,
+      "train_backward_s": 2.294513234999954,
+      "train_optimizer_s": 0.28411223800003427,
+      "gpu_busy_wall_s": 9.752002298999287,
+      "val_wall_s": 0.5220018359999585,
+      "probe_eval_wall_s": 0.22170728300000064,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.02591719892467266,
+      "grad_norm_binding_core": 0.01278777042365428,
+      "grad_norm_trunk_other": 0.08154042446168981,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 36367,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.02211264300001403,
+      "gpu_util_mean_pct": 44.4,
+      "gpu_util_peak_pct": 72.0,
+      "gpu_mem_util_mean_pct": 8.8,
+      "gpu_mem_util_peak_pct": 17.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 37,
+      "train_loss": 0.016477022197027253,
+      "val_loss": 0.03392991842702031,
+      "epoch_wall_s": 16.036252494999985,
+      "train_data_wait_s": 2.033914507000304,
+      "train_forward_loss_s": 6.509550742000101,
+      "train_backward_s": 2.3020121649998373,
+      "train_optimizer_s": 0.28540154100016935,
+      "gpu_busy_wall_s": 9.846740603000171,
+      "val_wall_s": 0.5109918230000403,
+      "probe_eval_wall_s": 0.23878433200002291,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.02033802957328864,
+      "grad_norm_binding_core": 0.010671163880534882,
+      "grad_norm_trunk_other": 0.07496866754634283,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 37376,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.022701512000026014,
+      "gpu_util_mean_pct": 43.4,
+      "gpu_util_peak_pct": 85.0,
+      "gpu_mem_util_mean_pct": 8.8,
+      "gpu_mem_util_peak_pct": 24.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 38,
+      "train_loss": 0.017474108472255605,
+      "val_loss": 0.033453990472480655,
+      "epoch_wall_s": 15.674937266000029,
+      "train_data_wait_s": 1.8319386230002692,
+      "train_forward_loss_s": 6.38436493300037,
+      "train_backward_s": 2.2918242830004374,
+      "train_optimizer_s": 0.284422209999434,
+      "gpu_busy_wall_s": 9.720070063000207,
+      "val_wall_s": 0.5310655170000018,
+      "probe_eval_wall_s": 0.22839311999996426,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.02853100712033612,
+      "grad_norm_binding_core": 0.01411495745370616,
+      "grad_norm_trunk_other": 0.09347154577366559,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 38385,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.02451520299996446,
+      "gpu_util_mean_pct": 41.93333333333333,
+      "gpu_util_peak_pct": 63.0,
+      "gpu_mem_util_mean_pct": 8.333333333333334,
+      "gpu_mem_util_peak_pct": 15.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 39,
+      "train_loss": 0.017535369193075964,
+      "val_loss": 0.036652717273682356,
+      "epoch_wall_s": 15.964803077000056,
+      "train_data_wait_s": 2.018982681000466,
+      "train_forward_loss_s": 6.4427973410003005,
+      "train_backward_s": 2.300542217999123,
+      "train_optimizer_s": 0.2854117260001203,
+      "gpu_busy_wall_s": 9.776033634999521,
+      "val_wall_s": 0.5257028830000081,
+      "probe_eval_wall_s": 0.22157946699996955,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.025742577974004685,
+      "grad_norm_binding_core": 0.012995492319056392,
+      "grad_norm_trunk_other": 0.09467635427961406,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 39394,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.024834929000007833,
+      "gpu_util_mean_pct": 43.8,
+      "gpu_util_peak_pct": 76.0,
+      "gpu_mem_util_mean_pct": 9.333333333333334,
+      "gpu_mem_util_peak_pct": 18.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 40,
+      "train_loss": 0.01682927930411303,
+      "val_loss": 0.032119317911565304,
+      "epoch_wall_s": 15.733056585999975,
+      "train_data_wait_s": 2.0334151160000147,
+      "train_forward_loss_s": 6.297215626000252,
+      "train_backward_s": 2.244780222999907,
+      "train_optimizer_s": 0.2723504530003993,
+      "gpu_busy_wall_s": 9.54654786900062,
+      "val_wall_s": 0.5090849740000749,
+      "probe_eval_wall_s": 0.2231165929999861,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.0323775398194302,
+      "grad_norm_binding_core": 0.015944127283016148,
+      "grad_norm_trunk_other": 0.08917336806933611,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 40403,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.02488495399995827,
+      "gpu_util_mean_pct": 40.46666666666667,
+      "gpu_util_peak_pct": 57.0,
+      "gpu_mem_util_mean_pct": 7.8,
+      "gpu_mem_util_peak_pct": 15.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 41,
+      "train_loss": 0.016399824737026444,
+      "val_loss": 0.03227162500843406,
+      "epoch_wall_s": 15.644351548999907,
+      "train_data_wait_s": 1.9500736200001256,
+      "train_forward_loss_s": 6.315695414999254,
+      "train_backward_s": 2.2471468340002048,
+      "train_optimizer_s": 0.2719821279997632,
+      "gpu_busy_wall_s": 9.556216480999183,
+      "val_wall_s": 0.5066159439999183,
+      "probe_eval_wall_s": 0.21477616000004218,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.02563057206564825,
+      "grad_norm_binding_core": 0.01293564264908056,
+      "grad_norm_trunk_other": 0.0850366823745311,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 41412,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.024852033999991363,
+      "gpu_util_mean_pct": 46.266666666666666,
+      "gpu_util_peak_pct": 76.0,
+      "gpu_mem_util_mean_pct": 9.533333333333333,
+      "gpu_mem_util_peak_pct": 18.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 42,
+      "train_loss": 0.01668388690834619,
+      "val_loss": 0.03531017084605992,
+      "epoch_wall_s": 15.341438351999955,
+      "train_data_wait_s": 1.7798091799995746,
+      "train_forward_loss_s": 6.260536370999944,
+      "train_backward_s": 2.241800672000977,
+      "train_optimizer_s": 0.26974069900097675,
+      "gpu_busy_wall_s": 9.502154672001893,
+      "val_wall_s": 0.5157709549999936,
+      "probe_eval_wall_s": 0.21430597500000204,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.02647711245022119,
+      "grad_norm_binding_core": 0.013887072760258252,
+      "grad_norm_trunk_other": 0.08715864280751512,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 42421,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.025011164999909852,
+      "gpu_util_mean_pct": 43.285714285714285,
+      "gpu_util_peak_pct": 57.0,
+      "gpu_mem_util_mean_pct": 8.714285714285714,
+      "gpu_mem_util_peak_pct": 14.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 43,
+      "train_loss": 0.016397385901929636,
+      "val_loss": 0.03243068675510585,
+      "epoch_wall_s": 15.562707234999948,
+      "train_data_wait_s": 1.9471274910004013,
+      "train_forward_loss_s": 6.279693038000005,
+      "train_backward_s": 2.2423399569997855,
+      "train_optimizer_s": 0.26888961600002403,
+      "gpu_busy_wall_s": 9.524350017999723,
+      "val_wall_s": 0.5136143239999456,
+      "probe_eval_wall_s": 0.21981308299996272,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.027810405752092607,
+      "grad_norm_binding_core": 0.01392123327178033,
+      "grad_norm_trunk_other": 0.09124742330915583,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 43430,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.026115096000012272,
+      "gpu_util_mean_pct": 38.8,
+      "gpu_util_peak_pct": 65.0,
+      "gpu_mem_util_mean_pct": 7.133333333333334,
+      "gpu_mem_util_peak_pct": 16.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 44,
+      "train_loss": 0.016104828970471642,
+      "val_loss": 0.033954682759940624,
+      "epoch_wall_s": 15.53758597600006,
+      "train_data_wait_s": 1.898903151999889,
+      "train_forward_loss_s": 6.268508009000016,
+      "train_backward_s": 2.254736216999845,
+      "train_optimizer_s": 0.26937907300020925,
+      "gpu_busy_wall_s": 9.551339176999932,
+      "val_wall_s": 0.5303177489998916,
+      "probe_eval_wall_s": 0.22839812899997014,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.026510332062229216,
+      "grad_norm_binding_core": 0.012596608116980287,
+      "grad_norm_trunk_other": 0.08667484288939911,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 44439,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.02898517499988884,
+      "gpu_util_mean_pct": 43.733333333333334,
+      "gpu_util_peak_pct": 61.0,
+      "gpu_mem_util_mean_pct": 8.466666666666667,
+      "gpu_mem_util_peak_pct": 14.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 45,
+      "train_loss": 0.01537564837918529,
+      "val_loss": 0.033827451756224036,
+      "epoch_wall_s": 15.692273462000003,
+      "train_data_wait_s": 1.9626153030002342,
+      "train_forward_loss_s": 6.363767941999981,
+      "train_backward_s": 2.271281094999381,
+      "train_optimizer_s": 0.27958953999973346,
+      "gpu_busy_wall_s": 9.680310181999062,
+      "val_wall_s": 0.5394123569999465,
+      "probe_eval_wall_s": 0.2262592480000194,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.022348437397192524,
+      "grad_norm_binding_core": 0.012024853244485113,
+      "grad_norm_trunk_other": 0.07619106989697534,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 45448,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.026722011000060775,
+      "gpu_util_mean_pct": 43.333333333333336,
+      "gpu_util_peak_pct": 61.0,
+      "gpu_mem_util_mean_pct": 9.0,
+      "gpu_mem_util_peak_pct": 17.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293952.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.85808277130127,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 46,
+      "train_loss": 0.01619711324115688,
+      "val_loss": 0.034446224104613066,
+      "epoch_wall_s": 15.463067697000042,
+      "train_data_wait_s": 1.7916151490002221,
+      "train_forward_loss_s": 6.345033626000031,
+      "train_backward_s": 2.260267854999711,
+      "train_optimizer_s": 0.2734204140001566,
+      "gpu_busy_wall_s": 9.588227194999718,
+      "val_wall_s": 0.4966623109999091,
+      "probe_eval_wall_s": 0.21284298899990972,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.024647304410357507,
+      "grad_norm_binding_core": 0.012430299123692097,
+      "grad_norm_trunk_other": 0.09240636306511603,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 46457,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.0262699249999514,
+      "gpu_util_mean_pct": 42.86666666666667,
+      "gpu_util_peak_pct": 65.0,
+      "gpu_mem_util_mean_pct": 8.066666666666666,
+      "gpu_mem_util_peak_pct": 14.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 47,
+      "train_loss": 0.01542839510717763,
+      "val_loss": 0.03439107700251043,
+      "epoch_wall_s": 15.572947844000055,
+      "train_data_wait_s": 1.9240478939997274,
+      "train_forward_loss_s": 6.2817909989994405,
+      "train_backward_s": 2.261086457000829,
+      "train_optimizer_s": 0.2725776140002836,
+      "gpu_busy_wall_s": 9.57071462300064,
+      "val_wall_s": 0.5291992700000492,
+      "probe_eval_wall_s": 0.226060283000038,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.021113154232950376,
+      "grad_norm_binding_core": 0.011179028464098465,
+      "grad_norm_trunk_other": 0.0816776991427583,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 47466,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.027370287000053395,
+      "gpu_util_mean_pct": 49.333333333333336,
+      "gpu_util_peak_pct": 75.0,
+      "gpu_mem_util_mean_pct": 9.6,
+      "gpu_mem_util_peak_pct": 17.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 48,
+      "train_loss": 0.015225275393294276,
+      "val_loss": 0.033540383214131,
+      "epoch_wall_s": 15.400587731999963,
+      "train_data_wait_s": 1.9023757350001915,
+      "train_forward_loss_s": 6.216932059000101,
+      "train_backward_s": 2.2280262829989397,
+      "train_optimizer_s": 0.2662375000006705,
+      "gpu_busy_wall_s": 9.426556478999714,
+      "val_wall_s": 0.4982006749999073,
+      "probe_eval_wall_s": 0.21715996200009613,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.02411739086704042,
+      "grad_norm_binding_core": 0.011745249268863922,
+      "grad_norm_trunk_other": 0.08146913737923307,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 48475,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.030473745000108465,
+      "gpu_util_mean_pct": 46.57142857142857,
+      "gpu_util_peak_pct": 52.0,
+      "gpu_mem_util_mean_pct": 9.428571428571429,
+      "gpu_mem_util_peak_pct": 14.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 49,
+      "train_loss": 0.015101509660763561,
+      "val_loss": 0.03491045837290585,
+      "epoch_wall_s": 15.41103453200003,
+      "train_data_wait_s": 1.9122116519995416,
+      "train_forward_loss_s": 6.221238538999501,
+      "train_backward_s": 2.227506792999975,
+      "train_optimizer_s": 0.268944677000718,
+      "gpu_busy_wall_s": 9.442497986000149,
+      "val_wall_s": 0.5096380809999346,
+      "probe_eval_wall_s": 0.21516989600002034,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.020284945311724686,
+      "grad_norm_binding_core": 0.01062615336215746,
+      "grad_norm_trunk_other": 0.08226904480084496,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 49484,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.027993720000040412,
+      "gpu_util_mean_pct": 39.142857142857146,
+      "gpu_util_peak_pct": 67.0,
+      "gpu_mem_util_mean_pct": 7.5,
+      "gpu_mem_util_peak_pct": 15.0,
+      "gpu_sample_count": 14.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    },
+    {
+      "epoch": 50,
+      "train_loss": 0.014682078013583174,
+      "val_loss": 0.04358314140699804,
+      "epoch_wall_s": 15.488938877999999,
+      "train_data_wait_s": 1.790533285999686,
+      "train_forward_loss_s": 6.261315433001528,
+      "train_backward_s": 2.245507620000353,
+      "train_optimizer_s": 0.27110505199982526,
+      "gpu_busy_wall_s": 9.64472276900176,
+      "val_wall_s": 0.6455034670000259,
+      "probe_eval_wall_s": 0.22129119700002775,
+      "current_lr": 0.001,
+      "grad_norm_affinity_probe": 0.02875862200210052,
+      "grad_norm_binding_core": 0.013331084609214216,
+      "grad_norm_trunk_other": 0.07974620068608874,
+      "diverged": false,
+      "divergence_reason": "",
+      "synthetic_seed": 50493,
+      "synthetic_stats": {
+        "train": {
+          "added": 0,
+          "added_general": 0
+        },
+        "val": {
+          "added": 0,
+          "reason": "validation_real_only"
+        }
+      },
+      "train_record_summary": {
+        "rows": 15530,
+        "rows_by_allele": {
+          "HLA-A*02:01": 13454,
+          "HLA-A*24:02": 2076
+        },
+        "fraction_le_500_by_allele": {
+          "HLA-A*02:01": 0.4258213170804222,
+          "HLA-A*24:02": 0.27408477842003853
+        },
+        "measurement_type_counts": {
+          "half maximal inhibitory concentration (IC50)": 6818,
+          "dissociation constant KD (~IC50)": 5636,
+          "dissociation constant KD (~EC50)": 1866,
+          "dissociation constant KD": 970,
+          "half maximal effective concentration (EC50)": 240
+        },
+        "qualifier_counts": {
+          "0": 12892,
+          "1": 2638
+        }
+      },
+      "record_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "missing_sequence": 0,
+            "expected_missing_chain": 0,
+            "used_fallback": 0,
+            "status_counts": {
+              "ok|": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "dataset_groove_audit": {
+        "rows_by_source": {
+          "iedb": 15530
+        },
+        "sources": {
+          "iedb": {
+            "rows": 15530,
+            "sampled": 128,
+            "empty_mhc_a": 0,
+            "empty_mhc_b": 0,
+            "class_counts": {
+              "I": 128
+            },
+            "length_pair_counts": {
+              "91:93": 128
+            }
+          }
+        },
+        "max_per_source": 128
+      },
+      "observed_train_examples": 27136,
+      "skipped_train_batches": 0,
+      "summary_write_wall_s": 0.02939633000005415,
+      "gpu_util_mean_pct": 41.8,
+      "gpu_util_peak_pct": 67.0,
+      "gpu_mem_util_mean_pct": 8.066666666666666,
+      "gpu_mem_util_peak_pct": 15.0,
+      "gpu_sample_count": 15.0,
+      "gpu_peak_allocated_bytes": 9511293440.0,
+      "gpu_peak_reserved_bytes": 25253904384.0,
+      "gpu_peak_allocated_gib": 8.858082294464111,
+      "gpu_peak_reserved_gib": 23.51953125
+    }
+  ]
+}

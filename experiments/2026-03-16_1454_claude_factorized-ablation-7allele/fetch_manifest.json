@@ -1,0 +1,42 @@
+[
+  {
+    "run_id": "fac-ablation-c1-20260316a",
+    "design_id": "C1",
+    "description": "d128 A07(fac+seg) full pretrain=yes enc=mhcflurry"
+  },
+  {
+    "run_id": "fac-ablation-c2-20260316a",
+    "design_id": "C2",
+    "description": "d128 A03(seg only) full pretrain=yes enc=mhcflurry"
+  },
+  {
+    "run_id": "fac-ablation-c3-20260316a",
+    "design_id": "C3",
+    "description": "d128 A07(fac+seg) full pretrain=no enc=mhcflurry"
+  },
+  {
+    "run_id": "fac-ablation-c4-20260316a",
+    "design_id": "C4",
+    "description": "d128 A07(fac+seg) assay_heads_only pretrain=yes enc=mhcflurry"
+  },
+  {
+    "run_id": "fac-ablation-c5-20260316a",
+    "design_id": "C5",
+    "description": "d128 A07(fac+seg) full pretrain=yes enc=log10"
+  },
+  {
+    "run_id": "fac-ablation-c6-20260316a",
+    "design_id": "C6",
+    "description": "d32 A07(fac+seg) full pretrain=no enc=mhcflurry"
+  },
+  {
+    "run_id": "fac-ablation-c7-20260316a",
+    "design_id": "C7",
+    "description": "d32 A03(seg only) full pretrain=no enc=mhcflurry"
+  },
+  {
+    "run_id": "fac-ablation-c8-20260316a",
+    "design_id": "C8",
+    "description": "d128 pooled_single full pretrain=yes enc=mhcflurry [NEG CTRL]"
+  }
+]

@@ -1,0 +1,356 @@
+{
+  "config": {
+    "variant": "a2",
+    "n_params": 376323,
+    "embed_dim": 128,
+    "hidden_dim": 128,
+    "probe_alleles": [
+      "HLA-A*02:01",
+      "HLA-A*24:02"
+    ],
+    "probe_peptides": [
+      "SLLQHLIGL",
+      "FLRYLLFGI",
+      "NFLIKFLLI",
+      "IMLEGETKL"
+    ],
+    "epochs": 20,
+    "batch_size": 256,
+    "seed": 42,
+    "consistency_weight": 0.1
+  },
+  "subset_stats": {
+    "rows_scanned": 21568,
+    "rows_selected": 21568,
+    "allele_filter_count": 2,
+    "mhc_class_filter": null,
+    "rows_by_allele_top": {
+      "HLA-A*02:01": 18195,
+      "HLA-A*24:02": 3373
+    },
+    "n_alleles": 2,
+    "unique_peptides_by_allele_top": {
+      "HLA-A*02:01": 11657,
+      "HLA-A*24:02": 2615
+    },
+    "measurement_type_counts": {
+      "qualitative binding": 1852,
+      "3D structure": 352,
+      "half maximal inhibitory concentration (IC50)": 8482,
+      "dissociation constant KD (~IC50)": 7008,
+      "dissociation constant KD (~EC50)": 2351,
+      "dissociation constant KD": 1225,
+      "half maximal effective concentration (EC50)": 298
+    },
+    "assay_method_counts_top": {
+      "purified MHC/competitive/radioactivity": 11668,
+      "purified MHC/direct/fluorescence": 4092,
+      "purified MHC/competitive/fluorescence": 3372,
+      "cellular MHC/competitive/fluorescence": 1671,
+      "cellular MHC/direct/fluorescence": 379,
+      "x-ray crystallography": 352,
+      "cellular MHC/competitive/radioactivity": 23,
+      "binding assay": 5,
+      "lysate MHC/direct/fluorescence": 3,
+      "cellular MHC": 3
+    },
+    "cap_sampling": "none"
+  },
+  "balance_stats": {},
+  "split_stats": {
+    "train_rows": 15515,
+    "val_rows": 3849,
+    "train_peptides": 10553,
+    "val_peptides": 2638,
+    "shared_peptides_total": 686,
+    "shared_peptides_train": 549,
+    "shared_peptides_val": 137
+  },
+  "mhc_resolve_stats": {
+    "total": 2,
+    "resolved": 2,
+    "missing": 0
+  },
+  "probe_allele_counts": {
+    "HLA-A*02:01": 16769,
+    "HLA-A*24:02": 2595
+  },
+  "real_record_summary": {
+    "rows": 19364,
+    "rows_by_allele": {
+      "HLA-A*02:01": 16769,
+      "HLA-A*24:02": 2595
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.4242948297453635,
+      "HLA-A*24:02": 0.26897880539499036
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 8482,
+      "dissociation constant KD (~IC50)": 7008,
+      "dissociation constant KD (~EC50)": 2351,
+      "dissociation constant KD": 1225,
+      "half maximal effective concentration (EC50)": 298
+    },
+    "qualifier_counts": {
+      "0": 16024,
+      "1": 3340
+    }
+  },
+  "train_record_summary": {
+    "rows": 15515,
+    "rows_by_allele": {
+      "HLA-A*02:01": 13439,
+      "HLA-A*24:02": 2076
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.42465957288488726,
+      "HLA-A*24:02": 0.27071290944123316
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 6790,
+      "dissociation constant KD (~IC50)": 5626,
+      "dissociation constant KD (~EC50)": 1886,
+      "dissociation constant KD": 979,
+      "half maximal effective concentration (EC50)": 234
+    },
+    "qualifier_counts": {
+      "0": 12852,
+      "1": 2663
+    }
+  },
+  "val_record_summary": {
+    "rows": 3849,
+    "rows_by_allele": {
+      "HLA-A*02:01": 3330,
+      "HLA-A*24:02": 519
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.4228228228228228,
+      "HLA-A*24:02": 0.26204238921001927
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 1692,
+      "dissociation constant KD (~IC50)": 1382,
+      "dissociation constant KD": 246,
+      "half maximal effective concentration (EC50)": 64,
+      "dissociation constant KD (~EC50)": 465
+    },
+    "qualifier_counts": {
+      "0": 3172,
+      "1": 677
+    }
+  },
+  "synthetic_stats": {
+    "train": {},
+    "val": {
+      "added": 0
+    }
+  },
+  "groove_verification": {
+    "allele_grooves": {
+      "HLA-A*02:01": {
+        "gh1_len": 91,
+        "gh2_len": 93,
+        "gh1_first10": "AGSHSMRYFF",
+        "gh2_first10": "GSHTVQRMYG"
+      },
+      "HLA-A*24:02": {
+        "gh1_len": 91,
+        "gh2_len": 93,
+        "gh1_first10": "AGSHSMRYFS",
+        "gh2_first10": "GSHTLQMMFG"
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "n_unique_grooves": 2,
+    "n_probe_alleles": 2,
+    "records_checked": 200,
+    "records_correct": 200
+  },
+  "train_real_records": 15515,
+  "val_size": 3849,
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 1.7351948959486825,
+      "val_loss": 1.3107902705669403,
+      "support_binding_ic50": 209.38095238095238,
+      "support_binding_kd": 12.857142857142858,
+      "support_binding_ec50": 33.76190476190476,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.902769947052002,
+      "val_loss": 1.1404146514832973,
+      "support_binding_ic50": 209.41904761904763,
+      "support_binding_kd": 12.904761904761905,
+      "support_binding_ec50": 33.67619047619048,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.7297050356864929,
+      "val_loss": 1.2592250369489193,
+      "support_binding_ic50": 209.59047619047618,
+      "support_binding_kd": 12.80952380952381,
+      "support_binding_ec50": 33.6,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.6073321447485969,
+      "val_loss": 1.0094727613031864,
+      "support_binding_ic50": 209.34285714285716,
+      "support_binding_kd": 12.857142857142858,
+      "support_binding_ec50": 33.8,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.5205908982526688,
+      "val_loss": 1.0774658881127834,
+      "support_binding_ic50": 209.42857142857142,
+      "support_binding_kd": 12.885714285714286,
+      "support_binding_ec50": 33.68571428571428,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.4699751067729223,
+      "val_loss": 0.9694561772048473,
+      "support_binding_ic50": 209.55238095238096,
+      "support_binding_kd": 12.895238095238096,
+      "support_binding_ec50": 33.55238095238095,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.4368540088335673,
+      "val_loss": 1.0078415349125862,
+      "support_binding_ic50": 209.4857142857143,
+      "support_binding_kd": 12.904761904761905,
+      "support_binding_ec50": 33.60952380952381,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.4064623781612941,
+      "val_loss": 1.020278898999095,
+      "support_binding_ic50": 209.33333333333334,
+      "support_binding_kd": 12.933333333333334,
+      "support_binding_ec50": 33.733333333333334,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.3848839297181084,
+      "val_loss": 0.9906366504728794,
+      "support_binding_ic50": 209.4857142857143,
+      "support_binding_kd": 12.885714285714286,
+      "support_binding_ec50": 33.628571428571426,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.35970681309700014,
+      "val_loss": 1.0276219751685858,
+      "support_binding_ic50": 209.57142857142858,
+      "support_binding_kd": 12.80952380952381,
+      "support_binding_ec50": 33.61904761904762,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.3428078699679602,
+      "val_loss": 1.063581459224224,
+      "support_binding_ic50": 209.38095238095238,
+      "support_binding_kd": 12.933333333333334,
+      "support_binding_ec50": 33.68571428571428,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.32530944773129056,
+      "val_loss": 0.9895167127251625,
+      "support_binding_ic50": 209.42857142857142,
+      "support_binding_kd": 12.914285714285715,
+      "support_binding_ec50": 33.65714285714286,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.3115207795585905,
+      "val_loss": 1.036551721394062,
+      "support_binding_ic50": 209.43809523809523,
+      "support_binding_kd": 12.761904761904763,
+      "support_binding_ec50": 33.8,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.2951898560637519,
+      "val_loss": 1.0379233248531818,
+      "support_binding_ic50": 209.3904761904762,
+      "support_binding_kd": 12.876190476190477,
+      "support_binding_ec50": 33.733333333333334,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.29107680122057594,
+      "val_loss": 1.0193547643721104,
+      "support_binding_ic50": 209.2952380952381,
+      "support_binding_kd": 12.885714285714286,
+      "support_binding_ec50": 33.819047619047616,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.2723478559936796,
+      "val_loss": 1.1079863142222166,
+      "support_binding_ic50": 209.63809523809525,
+      "support_binding_kd": 12.857142857142858,
+      "support_binding_ec50": 33.50476190476191,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.26167062308107103,
+      "val_loss": 1.0641590915620327,
+      "support_binding_ic50": 209.52380952380952,
+      "support_binding_kd": 12.80952380952381,
+      "support_binding_ec50": 33.666666666666664,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.2568407864797683,
+      "val_loss": 1.022543340921402,
+      "support_binding_ic50": 209.54285714285714,
+      "support_binding_kd": 12.780952380952382,
+      "support_binding_ec50": 33.67619047619048,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 19,
+      "train_loss": 0.2531880533411389,
+      "val_loss": 1.0533805638551712,
+      "support_binding_ic50": 209.47619047619048,
+      "support_binding_kd": 12.885714285714286,
+      "support_binding_ec50": 33.63809523809524,
+      "support_total": 256.0
+    },
+    {
+      "epoch": 20,
+      "train_loss": 0.23994497245266325,
+      "val_loss": 1.1034505981951952,
+      "support_binding_ic50": 209.35238095238094,
+      "support_binding_kd": 12.866666666666667,
+      "support_binding_ec50": 33.78095238095238,
+      "support_total": 256.0
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "config": {
+    "alleles": [
+      "HLA-A*02:01",
+      "HLA-A*24:02"
+    ],
+    "batch_size": 512,
+    "class_i_anchor_strategy": "none",
+    "epochs": 10,
+    "label": "a0201-a2402-direct-balanced-20260308a",
+    "measurement_profile": "direct_affinity_only",
+    "negative_ratio": 1.0,
+    "probe_peptides": [
+      "SLLQHLIGL",
+      "FLRYLLFGI",
+      "NFLIKFLLI"
+    ],
+    "seed": 42,
+    "synthetic_negatives": false
+  },
+  "epoch_summaries": [
+    {
+      "epoch": 1,
+      "train_loss": 5.84459912776947,
+      "val_loss": 4.559877872467041
+    },
+    {
+      "epoch": 2,
+      "train_loss": 4.407168924808502,
+      "val_loss": 3.425205945968628
+    },
+    {
+      "epoch": 3,
+      "train_loss": 3.2004830837249756,
+      "val_loss": 3.0557072162628174
+    },
+    {
+      "epoch": 4,
+      "train_loss": 2.831737995147705,
+      "val_loss": 3.3277809619903564
+    },
+    {
+      "epoch": 5,
+      "train_loss": 2.626608729362488,
+      "val_loss": 3.019015073776245
+    },
+    {
+      "epoch": 6,
+      "train_loss": 2.54927796125412,
+      "val_loss": 2.839138984680176
+    },
+    {
+      "epoch": 7,
+      "train_loss": 2.271608352661133,
+      "val_loss": 2.6121444702148438
+    },
+    {
+      "epoch": 8,
+      "train_loss": 2.125768721103668,
+      "val_loss": 3.417832136154175
+    },
+    {
+      "epoch": 9,
+      "train_loss": 2.89206862449646,
+      "val_loss": 2.620593309402466
+    },
+    {
+      "epoch": 10,
+      "train_loss": 2.4626770615577698,
+      "val_loss": 2.2049694061279297
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "config": {
+    "batch_size": 192,
+    "d_model": 128,
+    "epochs": 1,
+    "label": "mhc-pretrain-20260308b",
+    "max_samples": null,
+    "n_heads": 4,
+    "n_layers": 2,
+    "seed": 42
+  },
+  "epoch_summaries": [
+    {
+      "epoch": 1,
+      "train_class_acc": 0.99873291890681,
+      "train_loss": 0.10943482082489858,
+      "train_species_acc": 0.9272597727190995,
+      "train_type_acc": 0.997873736828856,
+      "val_class_acc": 1.0,
+      "val_loss": 0.07161711533714471,
+      "val_species_acc": 0.9705720874052927,
+      "val_type_acc": 1.0
+    }
+  ]
+}

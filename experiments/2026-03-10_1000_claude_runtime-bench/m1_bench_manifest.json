@@ -1,0 +1,134 @@
+[
+  {
+    "variant_id": "V00",
+    "description": "baseline workers=0 pin=0",
+    "run_id": "runtime-m1-v00-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V00 --no-persistent-workers",
+    "launch_pid": "17928",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v00-20260310a.launch.log",
+    "status": "launching"
+  },
+  {
+    "variant_id": "V01",
+    "description": "nw=2 pin persist p2",
+    "run_id": "runtime-m1-v01-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V01 --num-workers 2 --pin-memory --persistent-workers --prefetch-factor 2",
+    "launch_pid": "17929",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v01-20260310a.launch.log",
+    "status": "launching"
+  },
+  {
+    "variant_id": "V02",
+    "description": "nw=4 pin persist p2",
+    "run_id": "runtime-m1-v02-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V02 --num-workers 4 --pin-memory --persistent-workers --prefetch-factor 2",
+    "launch_pid": "17930",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v02-20260310a.launch.log",
+    "status": "launching"
+  },
+  {
+    "variant_id": "V03",
+    "description": "nw=8 pin persist p2",
+    "run_id": "runtime-m1-v03-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V03 --num-workers 8 --pin-memory --persistent-workers --prefetch-factor 2",
+    "launch_pid": "17933",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v03-20260310a.launch.log",
+    "status": "launching"
+  },
+  {
+    "variant_id": "V04",
+    "description": "nw=4 pin persist p4",
+    "run_id": "runtime-m1-v04-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V04 --num-workers 4 --pin-memory --persistent-workers --prefetch-factor 4",
+    "launch_pid": "17934",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v04-20260310a.launch.log",
+    "status": "launching"
+  },
+  {
+    "variant_id": "V05",
+    "description": "nw=8 pin persist p4",
+    "run_id": "runtime-m1-v05-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V05 --num-workers 8 --pin-memory --persistent-workers --prefetch-factor 4",
+    "launch_pid": "17935",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v05-20260310a.launch.log",
+    "status": "launching"
+  },
+  {
+    "variant_id": "V06",
+    "description": "nw=4 pin persist p2 tf32 high",
+    "run_id": "runtime-m1-v06-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V06 --num-workers 4 --pin-memory --persistent-workers --prefetch-factor 2 --allow-tf32 --matmul-precision high",
+    "launch_pid": "17936",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v06-20260310a.launch.log",
+    "status": "launching"
+  },
+  {
+    "variant_id": "V07",
+    "description": "nw=8 pin persist p2 tf32 high",
+    "run_id": "runtime-m1-v07-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V07 --num-workers 8 --pin-memory --persistent-workers --prefetch-factor 2 --allow-tf32 --matmul-precision high",
+    "launch_pid": "17937",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v07-20260310a.launch.log",
+    "status": "launching"
+  },
+  {
+    "variant_id": "V08",
+    "description": "nw=4 pin persist p4 tf32 high",
+    "run_id": "runtime-m1-v08-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V08 --num-workers 4 --pin-memory --persistent-workers --prefetch-factor 4 --allow-tf32 --matmul-precision high",
+    "launch_pid": "17938",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v08-20260310a.launch.log",
+    "status": "launching"
+  },
+  {
+    "variant_id": "V09",
+    "description": "nw=8 pin persist p4 tf32 high",
+    "run_id": "runtime-m1-v09-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V09 --num-workers 8 --pin-memory --persistent-workers --prefetch-factor 4 --allow-tf32 --matmul-precision high",
+    "launch_pid": "17939",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v09-20260310a.launch.log",
+    "status": "launching"
+  },
+  {
+    "variant_id": "V10",
+    "description": "nw=4 pin no-persist p2 tf32 high",
+    "run_id": "runtime-m1-v10-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V10 --num-workers 4 --pin-memory --no-persistent-workers --prefetch-factor 2 --allow-tf32 --matmul-precision high",
+    "launch_pid": "17940",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v10-20260310a.launch.log",
+    "status": "launching"
+  },
+  {
+    "variant_id": "V11",
+    "description": "nw=8 pin no-persist p2 tf32 high",
+    "run_id": "runtime-m1-v11-20260310a",
+    "app_id": "",
+    "url": "",
+    "extra_args": "--source iedb --alleles HLA-A*02:01,HLA-A*24:02,HLA-A*03:01,HLA-A*11:01,HLA-A*01:01,HLA-B*07:02,HLA-B*44:02 --measurement-profile direct_affinity_only --measurement-type-filter ic50 --qualifier-filter exact --groove-pos-mode triple --binding-core-lengths 8,9,10,11 --binding-core-refinement shared --affinity-assay-mode legacy --binding-contrastive-weight 0 --binding-peptide-contrastive-weight 0 --init-checkpoint /checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt --design-id V11 --num-workers 8 --pin-memory --no-persistent-workers --prefetch-factor 2 --allow-tf32 --matmul-precision high",
+    "launch_pid": "17941",
+    "launch_log": "modal_runs/runtime_m1_bench_rerun/runtime-m1-v11-20260310a.launch.log",
+    "status": "launching"
+  }
+]

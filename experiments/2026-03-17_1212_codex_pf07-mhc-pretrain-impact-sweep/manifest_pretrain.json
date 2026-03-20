@@ -1,0 +1,88 @@
+[
+  {
+    "batch_size": 192,
+    "checkpoint_name": "mhc_pretrain.pt",
+    "checkpoint_path": "/checkpoints/mhc-pretrain-d32-20260317a-e01/mhc_pretrain.pt",
+    "command": [
+      "modal",
+      "run",
+      "--detach",
+      "scripts/train_modal.py",
+      "--mode",
+      "mhc_pretrain",
+      "--epochs",
+      "1",
+      "--batch-size",
+      "192",
+      "--run-id",
+      "mhc-pretrain-d32-20260317a-e01",
+      "--checkpoint-name",
+      "mhc_pretrain.pt",
+      "--extra-args",
+      "--d-model 32 --n-layers 2 --n-heads 4 --seed 42"
+    ],
+    "description": "Fresh d32 MHC class/species pretrain for 1 epoch",
+    "launch_log": "/Users/iskander/code/presto/experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/launch_logs/pretrain/mhc-pretrain-d32-20260317a-e01.log",
+    "launch_status": "remote_ready",
+    "launcher_pid": 88523,
+    "phase": "pretrain",
+    "pretrain_epochs": 1,
+    "pretrain_key": "pretrain_1ep",
+    "remote_artifacts": [
+      "mhc-pretrain-d32-20260317a-e01/summary.json",
+      "mhc-pretrain-d32-20260317a-e01/mhc_pretrain.pt"
+    ],
+    "remote_ready_at_utc": "2026-03-17T16:20:01.096594+00:00",
+    "requested_gpu": "H100!",
+    "required_files": [
+      "summary.json",
+      "mhc_pretrain.pt"
+    ],
+    "run_id": "mhc-pretrain-d32-20260317a-e01",
+    "seed": 42,
+    "submitted_at_utc": "2026-03-17T16:16:21.385165+00:00"
+  },
+  {
+    "batch_size": 192,
+    "checkpoint_name": "mhc_pretrain.pt",
+    "checkpoint_path": "/checkpoints/mhc-pretrain-d32-20260317a-e02/mhc_pretrain.pt",
+    "command": [
+      "modal",
+      "run",
+      "--detach",
+      "scripts/train_modal.py",
+      "--mode",
+      "mhc_pretrain",
+      "--epochs",
+      "2",
+      "--batch-size",
+      "192",
+      "--run-id",
+      "mhc-pretrain-d32-20260317a-e02",
+      "--checkpoint-name",
+      "mhc_pretrain.pt",
+      "--extra-args",
+      "--d-model 32 --n-layers 2 --n-heads 4 --seed 42"
+    ],
+    "description": "Fresh d32 MHC class/species pretrain for 2 epochs",
+    "launch_log": "/Users/iskander/code/presto/experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/launch_logs/pretrain/mhc-pretrain-d32-20260317a-e02.log",
+    "launch_status": "remote_ready",
+    "launcher_pid": 88526,
+    "phase": "pretrain",
+    "pretrain_epochs": 2,
+    "pretrain_key": "pretrain_2ep",
+    "remote_artifacts": [
+      "mhc-pretrain-d32-20260317a-e02/summary.json",
+      "mhc-pretrain-d32-20260317a-e02/mhc_pretrain.pt"
+    ],
+    "remote_ready_at_utc": "2026-03-17T16:20:02.022097+00:00",
+    "requested_gpu": "H100!",
+    "required_files": [
+      "summary.json",
+      "mhc_pretrain.pt"
+    ],
+    "run_id": "mhc-pretrain-d32-20260317a-e02",
+    "seed": 42,
+    "submitted_at_utc": "2026-03-17T16:16:22.163930+00:00"
+  }
+]

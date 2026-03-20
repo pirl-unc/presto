@@ -1,0 +1,78 @@
+{
+  "experiment_dir": "/Users/iskander/code/presto/experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension",
+  "fetched_runs": 5,
+  "generated_at_utc": "2026-03-16T19:05:27.221476+00:00",
+  "rows": [
+    {
+      "fetched": true,
+      "local_ready": true,
+      "remote_artifact_count": 5,
+      "remote_ready": true,
+      "required_files": [
+        "summary.json",
+        "probe_affinity_over_epochs.json",
+        "probe_affinity_over_epochs.csv",
+        "val_predictions.csv",
+        "test_predictions.csv"
+      ],
+      "run_id": "presto-pf07-opt-20260316a-pf07_ctrl_lr1e3_constant-e050-s43"
+    },
+    {
+      "fetched": true,
+      "local_ready": true,
+      "remote_artifact_count": 5,
+      "remote_ready": true,
+      "required_files": [
+        "summary.json",
+        "probe_affinity_over_epochs.json",
+        "probe_affinity_over_epochs.csv",
+        "val_predictions.csv",
+        "test_predictions.csv"
+      ],
+      "run_id": "presto-pf07-opt-20260316a-pf07_lr2p8e4_warmup_cosine-e050-s43"
+    },
+    {
+      "fetched": true,
+      "local_ready": true,
+      "remote_artifact_count": 5,
+      "remote_ready": true,
+      "required_files": [
+        "summary.json",
+        "probe_affinity_over_epochs.json",
+        "probe_affinity_over_epochs.csv",
+        "val_predictions.csv",
+        "test_predictions.csv"
+      ],
+      "run_id": "presto-pf07-opt-20260316a-pf07_lr2p8e4_onecycle-e050-s43"
+    },
+    {
+      "fetched": true,
+      "local_ready": true,
+      "remote_artifact_count": 5,
+      "remote_ready": true,
+      "required_files": [
+        "summary.json",
+        "probe_affinity_over_epochs.json",
+        "probe_affinity_over_epochs.csv",
+        "val_predictions.csv",
+        "test_predictions.csv"
+      ],
+      "run_id": "presto-pf07-opt-20260316a-pf07_lr1e4_warmup_cosine-e050-s43"
+    },
+    {
+      "fetched": true,
+      "local_ready": true,
+      "remote_artifact_count": 5,
+      "remote_ready": true,
+      "required_files": [
+        "summary.json",
+        "probe_affinity_over_epochs.json",
+        "probe_affinity_over_epochs.csv",
+        "val_predictions.csv",
+        "test_predictions.csv"
+      ],
+      "run_id": "presto-pf07-opt-20260316a-pf07_lr1e4_constant-e050-s43"
+    }
+  ],
+  "total_runs": 5
+}

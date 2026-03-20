@@ -1,0 +1,40 @@
+[
+  {
+    "batch_size": 256,
+    "command": [
+      "modal",
+      "run",
+      "--detach",
+      "scripts/train_modal.py::distributional_ba_v6_run",
+      "--cond-id",
+      "2",
+      "--encoder-backbone",
+      "groove",
+      "--epochs",
+      "50",
+      "--batch-size",
+      "256",
+      "--run-id",
+      "dist-ba-v6-rerun-groove_c02-c02-cc0-e050-s43",
+      "--extra-args",
+      "--measurement-profile numeric_no_qualitative --alleles HLA-A*02:01,HLA-A*24:02 --seed 43"
+    ],
+    "cond_id": 2,
+    "content_conditioned": false,
+    "encoder_backbone": "groove",
+    "epochs": 50,
+    "launch_log": "/Users/iskander/code/presto/experiments/2026-03-16_1333_codex_exp21-winner-rerun/launch_logs/dist-ba-v6-rerun-groove_c02-c02-cc0-e050-s43.log",
+    "launch_status": "spawned_background",
+    "launcher_pid": 61441,
+    "remote_artifacts": [],
+    "required_files": [
+      "summary.json",
+      "probes.jsonl",
+      "metrics.jsonl",
+      "step_log.jsonl"
+    ],
+    "run_id": "dist-ba-v6-rerun-groove_c02-c02-cc0-e050-s43",
+    "seed": 43,
+    "submitted_at_utc": "2026-03-16T17:46:33.823103+00:00"
+  }
+]

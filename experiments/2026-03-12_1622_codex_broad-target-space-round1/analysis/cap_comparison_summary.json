@@ -1,0 +1,9 @@
+{
+  "question": "Is 100k always better than 50k regardless of encoding?",
+  "answer": "No",
+  "notes": [
+    "Per-example validation predictions were not persisted, so exact-IC50 rank correlation and <=500 nM accuracy cannot be recomputed from this experiment.",
+    "100k helps A03 on broad biologic behavior, especially for log10.",
+    "A07 is mixed: 50k log10 had better validation loss and SLL/NFL ratios than 100k log10, while 100k mhcflurry beat 50k mhcflurry."
+  ]
+}

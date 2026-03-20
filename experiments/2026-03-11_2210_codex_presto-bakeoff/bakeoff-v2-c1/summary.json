@@ -1,0 +1,360 @@
+{
+  "config": {
+    "design_id": "",
+    "model_variant": "mlp",
+    "n_params": 52737,
+    "embed_dim": 128,
+    "hidden_dim": 128,
+    "peptide_pos_mode": "triple",
+    "groove_pos_mode": "triple",
+    "probe_alleles": [
+      "HLA-A*02:01",
+      "HLA-A*24:02"
+    ],
+    "probe_peptides": [
+      "SLLQHLIGL",
+      "FLRYLLFGI",
+      "NFLIKFLLI",
+      "IMLEGETKL"
+    ],
+    "total_epochs": 20,
+    "batch_size": 256,
+    "seed": 42,
+    "synthetic_negatives": false,
+    "negative_ratio": 1.0,
+    "synthetic_modes": [
+      "peptide_scramble",
+      "peptide_random",
+      "mhc_scramble",
+      "mhc_random",
+      "no_mhc_alpha",
+      "no_mhc_beta"
+    ],
+    "per_epoch_regeneration": false,
+    "class_i_anchor_strategy": "none",
+    "qualifier_filter": "all",
+    "curriculum": [
+      {
+        "epochs": 20,
+        "modes": "regress"
+      }
+    ],
+    "probe_plot_frequency": "off"
+  },
+  "subset_stats": {
+    "rows_scanned": 21568,
+    "rows_selected": 21568,
+    "allele_filter_count": 2,
+    "mhc_class_filter": null,
+    "rows_by_allele_top": {
+      "HLA-A*02:01": 18195,
+      "HLA-A*24:02": 3373
+    },
+    "n_alleles": 2,
+    "unique_peptides_by_allele_top": {
+      "HLA-A*02:01": 11657,
+      "HLA-A*24:02": 2615
+    },
+    "measurement_type_counts": {
+      "qualitative binding": 1852,
+      "3D structure": 352,
+      "half maximal inhibitory concentration (IC50)": 8482,
+      "dissociation constant KD (~IC50)": 7008,
+      "dissociation constant KD (~EC50)": 2351,
+      "dissociation constant KD": 1225,
+      "half maximal effective concentration (EC50)": 298
+    },
+    "assay_method_counts_top": {
+      "purified MHC/competitive/radioactivity": 11668,
+      "purified MHC/direct/fluorescence": 4092,
+      "purified MHC/competitive/fluorescence": 3372,
+      "cellular MHC/competitive/fluorescence": 1671,
+      "cellular MHC/direct/fluorescence": 379,
+      "x-ray crystallography": 352,
+      "cellular MHC/competitive/radioactivity": 23,
+      "binding assay": 5,
+      "lysate MHC/direct/fluorescence": 3,
+      "cellular MHC": 3
+    },
+    "cap_sampling": "none"
+  },
+  "balance_stats": {},
+  "split_stats": {
+    "train_rows": 15515,
+    "val_rows": 3849,
+    "train_peptides": 10553,
+    "val_peptides": 2638,
+    "shared_peptides_total": 686,
+    "shared_peptides_train": 549,
+    "shared_peptides_val": 137
+  },
+  "mhc_resolve_stats": {
+    "total": 2,
+    "resolved": 2,
+    "missing": 0
+  },
+  "probe_allele_counts_after_filter": {
+    "HLA-A*02:01": 16769,
+    "HLA-A*24:02": 2595
+  },
+  "real_record_summary": {
+    "rows": 19364,
+    "rows_by_allele": {
+      "HLA-A*02:01": 16769,
+      "HLA-A*24:02": 2595
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.4242948297453635,
+      "HLA-A*24:02": 0.26897880539499036
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 8482,
+      "dissociation constant KD (~IC50)": 7008,
+      "dissociation constant KD (~EC50)": 2351,
+      "dissociation constant KD": 1225,
+      "half maximal effective concentration (EC50)": 298
+    },
+    "qualifier_counts": {
+      "0": 16024,
+      "1": 3340
+    }
+  },
+  "train_record_summary": {
+    "rows": 15515,
+    "rows_by_allele": {
+      "HLA-A*02:01": 13439,
+      "HLA-A*24:02": 2076
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.42465957288488726,
+      "HLA-A*24:02": 0.27071290944123316
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 6790,
+      "dissociation constant KD (~IC50)": 5626,
+      "dissociation constant KD (~EC50)": 1886,
+      "dissociation constant KD": 979,
+      "half maximal effective concentration (EC50)": 234
+    },
+    "qualifier_counts": {
+      "0": 12852,
+      "1": 2663
+    }
+  },
+  "val_record_summary": {
+    "rows": 3849,
+    "rows_by_allele": {
+      "HLA-A*02:01": 3330,
+      "HLA-A*24:02": 519
+    },
+    "fraction_le_500_by_allele": {
+      "HLA-A*02:01": 0.4228228228228228,
+      "HLA-A*24:02": 0.26204238921001927
+    },
+    "measurement_type_counts": {
+      "half maximal inhibitory concentration (IC50)": 1692,
+      "dissociation constant KD (~IC50)": 1382,
+      "dissociation constant KD": 246,
+      "half maximal effective concentration (EC50)": 64,
+      "dissociation constant KD (~EC50)": 465
+    },
+    "qualifier_counts": {
+      "0": 3172,
+      "1": 677
+    }
+  },
+  "synthetic_stats": {
+    "train": {
+      "added": 0
+    },
+    "val": {
+      "added": 0
+    }
+  },
+  "groove_verification": {
+    "allele_grooves": {
+      "HLA-A*02:01": {
+        "gh1_len": 91,
+        "gh2_len": 93,
+        "gh1_first10": "AGSHSMRYFF",
+        "gh2_first10": "GSHTVQRMYG"
+      },
+      "HLA-A*24:02": {
+        "gh1_len": 91,
+        "gh2_len": 93,
+        "gh1_first10": "AGSHSMRYFS",
+        "gh2_first10": "GSHTLQMMFG"
+      }
+    },
+    "errors": [],
+    "warnings": [],
+    "n_unique_grooves": 2,
+    "n_probe_alleles": 2,
+    "records_checked": 200,
+    "records_correct": 200
+  },
+  "train_real_records": 15515,
+  "val_size": 3849,
+  "epochs": [
+    {
+      "epoch": 1,
+      "phase": 0,
+      "phase_epoch": 1,
+      "phase_modes": "regress",
+      "train_loss": 2.4537124020712717,
+      "val_loss": 2.152915008366108
+    },
+    {
+      "epoch": 2,
+      "phase": 0,
+      "phase_epoch": 2,
+      "phase_modes": "regress",
+      "train_loss": 1.8875989085152036,
+      "val_loss": 1.937556080520153
+    },
+    {
+      "epoch": 3,
+      "phase": 0,
+      "phase_epoch": 3,
+      "phase_modes": "regress",
+      "train_loss": 1.7381160770143782,
+      "val_loss": 1.899848859757185
+    },
+    {
+      "epoch": 4,
+      "phase": 0,
+      "phase_epoch": 4,
+      "phase_modes": "regress",
+      "train_loss": 1.7212180716650827,
+      "val_loss": 1.9222873076796532
+    },
+    {
+      "epoch": 5,
+      "phase": 0,
+      "phase_epoch": 5,
+      "phase_modes": "regress",
+      "train_loss": 1.7112906342460996,
+      "val_loss": 1.88113147392869
+    },
+    {
+      "epoch": 6,
+      "phase": 0,
+      "phase_epoch": 6,
+      "phase_modes": "regress",
+      "train_loss": 1.6992567709514073,
+      "val_loss": 1.9223992452025414
+    },
+    {
+      "epoch": 7,
+      "phase": 0,
+      "phase_epoch": 7,
+      "phase_modes": "regress",
+      "train_loss": 1.6815566528411139,
+      "val_loss": 1.9389520287513733
+    },
+    {
+      "epoch": 8,
+      "phase": 0,
+      "phase_epoch": 8,
+      "phase_modes": "regress",
+      "train_loss": 1.6909478414626349,
+      "val_loss": 1.8753157928586006
+    },
+    {
+      "epoch": 9,
+      "phase": 0,
+      "phase_epoch": 9,
+      "phase_modes": "regress",
+      "train_loss": 1.6792007525761923,
+      "val_loss": 1.8643906377255917
+    },
+    {
+      "epoch": 10,
+      "phase": 0,
+      "phase_epoch": 10,
+      "phase_modes": "regress",
+      "train_loss": 1.6730979136058262,
+      "val_loss": 1.9761011749505997
+    },
+    {
+      "epoch": 11,
+      "phase": 0,
+      "phase_epoch": 11,
+      "phase_modes": "regress",
+      "train_loss": 1.6866577330089751,
+      "val_loss": 1.8624429292976856
+    },
+    {
+      "epoch": 12,
+      "phase": 0,
+      "phase_epoch": 12,
+      "phase_modes": "regress",
+      "train_loss": 1.6718772683824812,
+      "val_loss": 1.9301083460450172
+    },
+    {
+      "epoch": 13,
+      "phase": 0,
+      "phase_epoch": 13,
+      "phase_modes": "regress",
+      "train_loss": 1.6629570892878942,
+      "val_loss": 1.8448167070746422
+    },
+    {
+      "epoch": 14,
+      "phase": 0,
+      "phase_epoch": 14,
+      "phase_modes": "regress",
+      "train_loss": 1.6684450921558198,
+      "val_loss": 1.8879029303789139
+    },
+    {
+      "epoch": 15,
+      "phase": 0,
+      "phase_epoch": 15,
+      "phase_modes": "regress",
+      "train_loss": 1.6483540693918863,
+      "val_loss": 1.834225870668888
+    },
+    {
+      "epoch": 16,
+      "phase": 0,
+      "phase_epoch": 16,
+      "phase_modes": "regress",
+      "train_loss": 1.6466328666323706,
+      "val_loss": 1.9349289499223232
+    },
+    {
+      "epoch": 17,
+      "phase": 0,
+      "phase_epoch": 17,
+      "phase_modes": "regress",
+      "train_loss": 1.6656964449655443,
+      "val_loss": 1.8042691946029663
+    },
+    {
+      "epoch": 18,
+      "phase": 0,
+      "phase_epoch": 18,
+      "phase_modes": "regress",
+      "train_loss": 1.6293583824521018,
+      "val_loss": 1.9725207313895226
+    },
+    {
+      "epoch": 19,
+      "phase": 0,
+      "phase_epoch": 19,
+      "phase_modes": "regress",
+      "train_loss": 1.624988391285851,
+      "val_loss": 1.8681083358824253
+    },
+    {
+      "epoch": 20,
+      "phase": 0,
+      "phase_epoch": 20,
+      "phase_modes": "regress",
+      "train_loss": 1.61565294946943,
+      "val_loss": 1.8197983391582966
+    }
+  ]
+}

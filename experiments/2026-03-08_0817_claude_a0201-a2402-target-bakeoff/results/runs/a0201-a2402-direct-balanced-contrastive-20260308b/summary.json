@@ -1,0 +1,88 @@
+{
+  "config": {
+    "alleles": [
+      "HLA-A*02:01",
+      "HLA-A*24:02"
+    ],
+    "batch_size": 512,
+    "binding_contrastive_margin": 0.2,
+    "binding_contrastive_max_pairs": 128,
+    "binding_contrastive_target_gap_cap": 2.0,
+    "binding_contrastive_target_gap_min": 0.3,
+    "binding_contrastive_weight": 1.0,
+    "class_i_anchor_strategy": "none",
+    "epochs": 12,
+    "label": "a0201-a2402-direct-balanced-contrastive-20260308b",
+    "measurement_profile": "direct_affinity_only",
+    "negative_ratio": 1.0,
+    "probe_peptides": [
+      "SLLQHLIGL",
+      "FLRYLLFGI",
+      "NFLIKFLLI"
+    ],
+    "seed": 42,
+    "synthetic_negatives": false
+  },
+  "epoch_summaries": [
+    {
+      "epoch": 1,
+      "train_loss": 7.127610921859741,
+      "val_loss": 5.499563217163086
+    },
+    {
+      "epoch": 2,
+      "train_loss": 5.557756304740906,
+      "val_loss": 4.36553955078125
+    },
+    {
+      "epoch": 3,
+      "train_loss": 4.408500134944916,
+      "val_loss": 3.9947376251220703
+    },
+    {
+      "epoch": 4,
+      "train_loss": 4.086970090866089,
+      "val_loss": 3.974435806274414
+    },
+    {
+      "epoch": 5,
+      "train_loss": 3.802542805671692,
+      "val_loss": 4.007806777954102
+    },
+    {
+      "epoch": 6,
+      "train_loss": 3.7622021436691284,
+      "val_loss": 3.9468116760253906
+    },
+    {
+      "epoch": 7,
+      "train_loss": 3.514794647693634,
+      "val_loss": 3.812551259994507
+    },
+    {
+      "epoch": 8,
+      "train_loss": 3.461273193359375,
+      "val_loss": 3.5567970275878906
+    },
+    {
+      "epoch": 9,
+      "train_loss": 3.5427443981170654,
+      "val_loss": 3.581181049346924
+    },
+    {
+      "epoch": 10,
+      "train_loss": 3.5897178649902344,
+      "val_loss": 3.6253178119659424
+    },
+    {
+      "epoch": 11,
+      "train_loss": 3.3680842518806458,
+      "val_loss": 3.4137802124023438
+    },
+    {
+      "epoch": 12,
+      "train_loss": 3.2046167850494385,
+      "val_loss": 4.297402858734131
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "experiment": "v5 content-conditioned assay context",
+  "date": "2026-03-13",
+  "agent": "claude",
+  "gpu": "H100!",
+  "modal_entry": "distributional_ba_v5_run",
+  "config_version": "v5",
+  "content_conditioned": true,
+  "epochs": 50,
+  "batch_size": 256,
+  "baseline": "v4 (same conditions, content-independent assay bias)",
+  "conditions": [
+    {"cond_id": 1, "embed_dim": 32, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 50000},
+    {"cond_id": 2, "embed_dim": 64, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 50000},
+    {"cond_id": 3, "embed_dim": 96, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 50000},
+    {"cond_id": 4, "embed_dim": 128, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 50000},
+    {"cond_id": 5, "embed_dim": 192, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 50000},
+    {"cond_id": 6, "embed_dim": 256, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 50000}
+  ]
+}

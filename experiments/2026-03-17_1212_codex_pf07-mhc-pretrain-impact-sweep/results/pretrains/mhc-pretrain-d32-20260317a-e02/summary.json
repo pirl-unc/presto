@@ -1,0 +1,100 @@
+{
+  "config": {
+    "epochs": 2,
+    "batch_size": 192,
+    "d_model": 32,
+    "n_layers": 2,
+    "n_heads": 4,
+    "seed": 42,
+    "max_samples": null
+  },
+  "dataset_stats": {
+    "rows_seen": 56035,
+    "kept": 54419,
+    "skip_missing_groove": 656,
+    "skip_chain_type": 698,
+    "skip_species": 261,
+    "skip_invalid_groove_chars": 1,
+    "by_group": {
+      "class1:other_mammal": 1353,
+      "class1:nhp": 2799,
+      "class0:nhp": 5870,
+      "class0:other_mammal": 812,
+      "class0:bird": 27,
+      "class1:murine": 32,
+      "class0:murine": 85,
+      "class0:human": 29758,
+      "class1:human": 13499,
+      "class1:other_vertebrate": 89,
+      "class0:other_vertebrate": 95
+    },
+    "by_chain_type": {
+      "MHC_IIb": 14379,
+      "MHC_IIa": 3393,
+      "MHC_I": 36647
+    },
+    "by_species": {
+      "other_mammal": 2165,
+      "nhp": 8669,
+      "bird": 27,
+      "murine": 117,
+      "human": 43257,
+      "other_vertebrate": 184
+    },
+    "rows_final": 54419
+  },
+  "split_stats": {
+    "train_rows": 48977,
+    "val_rows": 5442,
+    "train_groups": {
+      "class1:other_mammal": 1218,
+      "class1:nhp": 2519,
+      "class0:nhp": 5283,
+      "class0:other_mammal": 731,
+      "class0:bird": 24,
+      "class1:murine": 29,
+      "class0:murine": 77,
+      "class0:human": 26782,
+      "class1:human": 12149,
+      "class1:other_vertebrate": 80,
+      "class0:other_vertebrate": 85
+    },
+    "val_groups": {
+      "class1:other_mammal": 135,
+      "class1:nhp": 280,
+      "class0:nhp": 587,
+      "class0:other_mammal": 81,
+      "class0:bird": 3,
+      "class1:murine": 3,
+      "class0:murine": 8,
+      "class0:human": 2976,
+      "class1:human": 1350,
+      "class1:other_vertebrate": 9,
+      "class0:other_vertebrate": 10
+    }
+  },
+  "epochs": [
+    {
+      "epoch": 1,
+      "train_loss": 0.33765982957656987,
+      "val_loss": 0.17323840846275462,
+      "train_type_acc": 0.9904430539072895,
+      "val_type_acc": 1.0,
+      "train_species_acc": 0.7503820980328694,
+      "val_species_acc": 0.9105084001317668,
+      "train_class_acc": 0.992936547939068,
+      "val_class_acc": 1.0
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.06676330108956624,
+      "val_loss": 0.09427663748120439,
+      "train_type_acc": 1.0,
+      "val_type_acc": 1.0,
+      "train_species_acc": 0.9515859315999569,
+      "val_species_acc": 0.9614582189524542,
+      "train_class_acc": 1.0,
+      "val_class_acc": 1.0
+    }
+  ]
+}

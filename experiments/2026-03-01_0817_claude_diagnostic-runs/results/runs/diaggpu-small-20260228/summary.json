@@ -1,0 +1,128 @@
+{
+  "config": {
+    "balanced_batches": true,
+    "batch_size": 256,
+    "binding_file": null,
+    "cedar_binding_file": null,
+    "cedar_tcell_file": null,
+    "checkpoint": "/checkpoints/diaggpu-small-20260228/presto_diag_small.pt",
+    "command": "train",
+    "config": null,
+    "consistency_affinity_fold_tolerance": 2.0,
+    "consistency_assay_affinity_weight": 0.1,
+    "consistency_assay_presentation_weight": 0.1,
+    "consistency_cascade_weight": 0.2,
+    "consistency_no_b2m_weight": 0.5,
+    "consistency_parent_low_threshold": 0.1,
+    "consistency_presentation_high_threshold": 0.9,
+    "consistency_prob_margin": 0.02,
+    "consistency_tcell_context_weight": 0.05,
+    "consistency_tcell_upstream_weight": 0.2,
+    "d_model": 128,
+    "data_dir": "/data",
+    "device": null,
+    "epochs": 10,
+    "filter_unresolved_mhc": true,
+    "func": "<function cmd_train_unified at 0x2a9847af2700>",
+    "index_csv": "/data/mhc_index.csv",
+    "label": "diaggpu-small-20260228",
+    "lr": 0.0001,
+    "max_10x": 1000,
+    "max_binding": 4000,
+    "max_elution": 4000,
+    "max_kinetics": 1000,
+    "max_processing": 0,
+    "max_stability": 1000,
+    "max_tcell": 3000,
+    "max_vdjdb": 1000,
+    "merged_tsv": "/data/merged_deduped.tsv",
+    "n_heads": 4,
+    "n_layers": 2,
+    "num_workers": 4,
+    "output_latent_stats_batches": 8,
+    "output_latent_stats_max_samples": 2048,
+    "perf_log_interval_batches": 100,
+    "pin_memory": true,
+    "pmhc_flow_batches": 8,
+    "pmhc_flow_max_samples": 2048,
+    "probe_alleles": "HLA-A*02:01,HLA-A*24:02",
+    "probe_peptide": "SLLQHLIGL",
+    "probe_plot_file": "probe_affinity_over_epochs.png",
+    "profile": "diagnostic",
+    "profile_performance": true,
+    "require_merged_input": true,
+    "run_dir": "/checkpoints/diaggpu-small-20260228",
+    "sc10x_file": null,
+    "seed": 42,
+    "strict_mhc_resolution": true,
+    "synthetic_class_i_no_mhc_beta_negative_ratio": 0.25,
+    "synthetic_negative_max_nM": 100000.0,
+    "synthetic_negative_min_nM": 50000.0,
+    "synthetic_pmhc_negative_ratio": 1.0,
+    "synthetic_processing_negative_ratio": 0.5,
+    "tcell_ex_vivo_margin": 0.0,
+    "tcell_file": null,
+    "tcell_in_vitro_margin": 0.1,
+    "track_output_latent_stats": true,
+    "track_pmhc_flow": true,
+    "track_probe_affinity": true,
+    "train_command": "unified",
+    "use_pcgrad": false,
+    "use_uncertainty_weighting": true,
+    "val_frac": 0.2,
+    "vdjdb_file": null,
+    "weight_decay": 0.01
+  },
+  "epoch_summaries": [
+    {
+      "epoch": 1,
+      "train_loss": 39.88499549127394,
+      "val_loss": 1.2988579533994198
+    },
+    {
+      "epoch": 2,
+      "train_loss": 27.13954757875012,
+      "val_loss": 1.2268483452498913
+    },
+    {
+      "epoch": 3,
+      "train_loss": 23.73056447121405,
+      "val_loss": 1.4198685884475708
+    },
+    {
+      "epoch": 4,
+      "train_loss": 23.898011192198723,
+      "val_loss": 1.3852423429489136
+    },
+    {
+      "epoch": 5,
+      "train_loss": 20.73379611968994,
+      "val_loss": 1.3392891883850098
+    },
+    {
+      "epoch": 6,
+      "train_loss": 21.616766406643777,
+      "val_loss": 1.263650257140398
+    },
+    {
+      "epoch": 7,
+      "train_loss": 20.187629099815123,
+      "val_loss": 1.2813366129994392
+    },
+    {
+      "epoch": 8,
+      "train_loss": 16.844135868933893,
+      "val_loss": 1.184374749660492
+    },
+    {
+      "epoch": 9,
+      "train_loss": 21.05043460476783,
+      "val_loss": 1.1854479759931564
+    },
+    {
+      "epoch": 10,
+      "train_loss": 17.01755903613183,
+      "val_loss": 1.2325420752167702
+    }
+  ]
+}

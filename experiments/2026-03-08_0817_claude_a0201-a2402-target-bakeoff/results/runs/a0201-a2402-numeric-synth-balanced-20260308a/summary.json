@@ -1,0 +1,33 @@
+{
+  "config": {
+    "alleles": [
+      "HLA-A*02:01",
+      "HLA-A*24:02"
+    ],
+    "batch_size": 512,
+    "class_i_anchor_strategy": "property_opposite",
+    "epochs": 6,
+    "label": "a0201-a2402-numeric-synth-balanced-20260308a",
+    "measurement_profile": "numeric_no_qualitative",
+    "negative_ratio": 1.0,
+    "probe_peptides": [
+      "SLLQHLIGL",
+      "YLISIFLHL",
+      "NFLIKFLLI"
+    ],
+    "seed": 42,
+    "synthetic_negatives": true
+  },
+  "epoch_summaries": [
+    {
+      "epoch": 1,
+      "train_loss": 4.0837388669743255,
+      "val_loss": 3.102720340092977
+    },
+    {
+      "epoch": 2,
+      "train_loss": 2.061263035325443,
+      "val_loss": 2.6030069986979165
+    }
+  ]
+}

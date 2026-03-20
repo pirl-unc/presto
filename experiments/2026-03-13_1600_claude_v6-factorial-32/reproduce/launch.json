@@ -1,0 +1,36 @@
+{
+  "experiment": "v6 content-conditioned factorial sweep",
+  "date": "2026-03-13",
+  "agent": "claude",
+  "gpu": "H100!",
+  "modal_entry": "distributional_ba_v6_run",
+  "config_version": "v6",
+  "epochs": 50,
+  "batch_size": 256,
+  "total_runs": 32,
+  "factorial_axes": {
+    "content_conditioned": [false, true],
+    "embed_dim": [32, 64, 128, 256],
+    "head_type": ["mhcflurry", "hlgauss"],
+    "max_nM": [50000, 100000]
+  },
+  "conditions": [
+    {"cond_id": 1, "embed_dim": 32, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 50000},
+    {"cond_id": 2, "embed_dim": 32, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 100000},
+    {"cond_id": 3, "embed_dim": 32, "head": "hlgauss", "assay_mode": "d2_logit", "max_nM": 50000},
+    {"cond_id": 4, "embed_dim": 32, "head": "hlgauss", "assay_mode": "d2_logit", "max_nM": 100000},
+    {"cond_id": 5, "embed_dim": 64, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 50000},
+    {"cond_id": 6, "embed_dim": 64, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 100000},
+    {"cond_id": 7, "embed_dim": 64, "head": "hlgauss", "assay_mode": "d2_logit", "max_nM": 50000},
+    {"cond_id": 8, "embed_dim": 64, "head": "hlgauss", "assay_mode": "d2_logit", "max_nM": 100000},
+    {"cond_id": 9, "embed_dim": 128, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 50000},
+    {"cond_id": 10, "embed_dim": 128, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 100000},
+    {"cond_id": 11, "embed_dim": 128, "head": "hlgauss", "assay_mode": "d2_logit", "max_nM": 50000},
+    {"cond_id": 12, "embed_dim": 128, "head": "hlgauss", "assay_mode": "d2_logit", "max_nM": 100000},
+    {"cond_id": 13, "embed_dim": 256, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 50000},
+    {"cond_id": 14, "embed_dim": 256, "head": "mhcflurry", "assay_mode": "additive", "max_nM": 100000},
+    {"cond_id": 15, "embed_dim": 256, "head": "hlgauss", "assay_mode": "d2_logit", "max_nM": 50000},
+    {"cond_id": 16, "embed_dim": 256, "head": "hlgauss", "assay_mode": "d2_logit", "max_nM": 100000}
+  ],
+  "notes": "Each of the 16 conditions is run with content_conditioned=false (cc0) and content_conditioned=true (cc1)"
+}

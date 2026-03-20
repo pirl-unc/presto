@@ -1,0 +1,28 @@
+# Round-3 Launches
+
+- `Q00` -> `directness-r3-q00-20260311a` (ap-atdIc3HON6KhbZInjff6n5)
+  - pep=triple, groove=triple, residual=shared_base_segment_residual
+- `Q01` -> `directness-r3-q01-20260311a` (ap-iZ8uy4IEjoBnHAIXpMra3W)
+  - pep=triple, groove=abs_only, residual=shared_base_segment_residual
+- `Q02` -> `directness-r3-q02-20260311a` (ap-naoDDlOptXKZoMt9XlJMjb)
+  - pep=triple, groove=triple_plus_abs, residual=shared_base_segment_residual
+- `Q03` -> `directness-r3-q03-20260311a` (ap-Qbua6YEuBTRPJqC2Rku6kI)
+  - pep=abs_only, groove=triple, residual=shared_base_segment_residual
+- `Q04` -> `directness-r3-q04-20260311a` (ap-0cXeNGCyxxDNiO0mXUtQzS)
+  - pep=abs_only, groove=abs_only, residual=shared_base_segment_residual
+- `Q05` -> `directness-r3-q05-20260311a` (ap-o0XnOmDQN8ZKpidyAXlUOx)
+  - pep=abs_only, groove=triple_plus_abs, residual=shared_base_segment_residual
+- `Q06` -> `directness-r3-q06-20260311a` (ap-O746PLfdJYDbqDGKJgYapk)
+  - pep=triple_plus_abs, groove=triple, residual=shared_base_segment_residual
+- `Q07` -> `directness-r3-q07-20260311a` (ap-yodm30iDokpdnq5lx4Lq15)
+  - pep=triple_plus_abs, groove=abs_only, residual=shared_base_segment_residual
+- `Q08` -> `directness-r3-q08-20260311a` (ap-LPSHnyMlWw6AY9OQTcyJTy)
+  - pep=triple_plus_abs, groove=triple_plus_abs, residual=shared_base_segment_residual
+- `E00` -> `directness-r3-e00-20260311a` (ap-O5rI7DiK70Uj4otyAJ9sEp)
+  - P03 positional config, log10 target, 50k cap
+- `E01` -> `directness-r3-e01-20260311a` (ap-HKd9qQ47xpGz00wU167IbF)
+  - P03 positional config, log10 target, 100k cap
+- `E02` -> `directness-r3-e02-20260311a` (ap-beiFpjFDGM8URdZ1jTaJkU)
+  - P03 positional config, mhcflurry target, 50k cap
+- `E03` -> `directness-r3-e03-20260311a` (ap-vYILY793cr91SlralGeDo6)
+  - P03 positional config, mhcflurry target, 100k cap

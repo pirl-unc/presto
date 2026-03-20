@@ -1,0 +1,48 @@
+{
+  "config": {
+    "affinity_loss_mode": "full",
+    "batch_size": 384,
+    "binding_contrastive_margin": 0.2,
+    "binding_contrastive_max_pairs": 64,
+    "binding_contrastive_target_gap_cap": 2.0,
+    "binding_contrastive_target_gap_min": 0.3,
+    "binding_contrastive_weight": 0.0,
+    "binding_peptide_contrastive_margin": 0.2,
+    "binding_peptide_contrastive_max_pairs": 128,
+    "binding_peptide_contrastive_target_gap_cap": 2.0,
+    "binding_peptide_contrastive_target_gap_min": 0.5,
+    "binding_peptide_contrastive_weight": 0.0,
+    "class_i_anchor_strategy": "none",
+    "epochs": 12,
+    "init_checkpoint": "/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt",
+    "label": "class1-quant-affinity-warmstart-20260308b",
+    "measurement_profile": "numeric_no_qualitative",
+    "measurement_type_filter": "",
+    "negative_ratio": 1.0,
+    "probe_alleles": [
+      "HLA-A*02:01",
+      "HLA-A*24:02"
+    ],
+    "probe_peptides": [
+      "SLLQHLIGL",
+      "IMLEGETKL",
+      "NFLIKFLLI"
+    ],
+    "qualifier_filter": "all",
+    "seed": 42,
+    "shared_peptides_only": false,
+    "synthetic_negatives": false,
+    "train_all_alleles": true,
+    "train_mhc_class_filter": "I"
+  },
+  "epoch_summaries": [
+    {
+      "epoch": 1,
+      "grad_norm_affinity_probe": 1.9095179183267676,
+      "grad_norm_binding_core": 1.0289035804324183,
+      "grad_norm_trunk_other": 5.139031950025935,
+      "train_loss": 1.5699296377751293,
+      "val_loss": 0.9056403040885925
+    }
+  ]
+}
