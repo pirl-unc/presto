@@ -1,4 +1,1758 @@
+# Global Manual-Dropout Default (2026-03-20)
+
+## Spec
+
+- Goal: remove backend-specific dropout behavior from the focused PF07 path by making seeded `manual_dropout` the default on all devices, not just on `mps`.
+- Motivation:
+  - the user does not want subtle behavior differences between CPU, CUDA, and MPS to come from different dropout implementations
+  - the current state still has a split:
+    - CPU/CUDA default to native `nn.Dropout`
+    - MPS `auto` uses `manual_dropout`
+  - that split is exactly the kind of silent hardware-dependent contract drift the user wants to avoid
+- Required changes:
+  - redefine the default runtime mode so `auto` applies `manual_dropout` on all devices
+  - keep explicit `off` for native backend dropout if someone wants to benchmark it intentionally
+  - keep explicit `zero_dropout` as a fallback/debug mode
+  - update docs/tests/local-resume guidance to treat manual dropout as the default cross-hardware contract
+- Success criterion:
+  - default-path focused runs on CPU and MPS report `mps_safe_mode_applied = manual_dropout`
+  - tests cover the new default semantics
+  - a small registered confirmation run closes under the new default path
+
+## Execution
+
+- [x] Update lessons with the new user correction about avoiding backend-divergent dropout defaults
+- [x] Change the focused runtime so `auto` means seeded `manual_dropout` on all devices
+- [x] Update tests and docs to reflect the new default contract
+- [x] Run a small confirmation under the default path and close the result
+
+## Review Notes (2026-03-20)
+
+- The focused runtime now uses seeded manual dropout by default on all devices:
+  - `--mps-safe-mode auto` now maps to `manual_dropout` on CPU, CUDA, and MPS
+  - `off` is now the explicit native-dropout opt-out
+  - `zero_dropout` remains only as explicit MPS fallback/debug mode
+- Updated tests in `tests/test_focused_probe.py` to lock the new semantics:
+  - `auto` uses manual dropout on both CPU and MPS
+  - `off` is the no-op native-dropout path
+- Registered and closed `experiments/2026-03-20_0920_codex_cpu-vs-mps-allclass1-auto-default-confirmation`.
+- The default-path confirmation matched the explicit-manual behavior:
+  - launch used `--mps-safe-mode auto`
+  - runtime summaries showed `mps_safe_mode_applied = manual_dropout` on both backends
+  - metrics were effectively the same as the prior explicit-manual run
+- Practical contract:
+  - `auto` is now the right default for local CPU/MPS/CUDA focused runs
+  - use `off` only if you intentionally want native backend dropout for comparison
+
+# Realistic All-Class-I CPU vs MPS Validation (2026-03-19)
+
+## Spec
+
+- Goal: validate the post-fix manual-dropout contract on a more realistic all-class-I PF07 run, not just the tiny 200-row smoke comparisons.
+- Motivation:
+  - the dropout implementation itself is now hardware-independent when `manual_dropout` is forced on both backends
+  - the remaining question is whether local Apple Silicon `mps` is usable on a materially larger honest PF07 class-I training slice
+  - the active all-class-I local rerun launcher currently lacks the small-run controls needed for an efficient CPU-vs-MPS validation
+- Required changes:
+  - extend the active all-class-I local launcher with:
+    - condition filtering
+    - optional `max_records` passthrough
+  - keep the same honest input/output contract:
+    - inputs only `nflank`, `peptide`, `cflank`, `mhc_a`, `mhc_b`
+    - supervised outputs `IC50`, `KD`, `KD(~IC50)`, `KD(~EC50)`, `EC50`
+  - compare matched CPU vs MPS on:
+    - one current-best PF07 downstream condition
+    - all-class-I numeric binding data
+    - forced `manual_dropout` on both backends
+- Success criterion:
+  - both local runs complete with full artifacts
+  - dropout implementation is identical across hardware
+  - experiment README and canonical log state clearly whether observed drift is now acceptably small for local MPS training use
+
+## Execution
+
+- [x] Write the detailed all-class-I CPU-vs-MPS validation plan under `experiments/agents/codex/plans/`
+- [x] Add condition-filter and optional `max_records` controls to the active all-class-I local launcher
+- [x] Register and run a matched all-class-I CPU-vs-MPS validation experiment with forced manual dropout
+- [x] Close the experiment README and update `experiments/experiment_log.md` with the conclusion
+
+## Review Notes (2026-03-19)
+
+- Added `--condition-keys` and `--max-records` to the active all-class-I local rerun launcher so reduced validation runs do not require relaunching the full 9-condition family.
+- Registered and closed `experiments/2026-03-19_1505_codex_cpu-vs-mps-allclass1-manualdropout-validation`.
+- Fixed hardware-parity contract for the validation family:
+  - same model
+  - same data slice
+  - same seed/split seed
+  - same seeded `manual_dropout` implementation on both CPU and MPS
+- Reduced all-class-I validation result on `max_records=5000`, `epochs=3`:
+  - `cpu`: Spearman `0.20249`, AUROC `0.59125`, AUPRC `0.43531`, RMSE log10 `1.38687`
+  - `mps`: Spearman `0.30026`, AUROC `0.65745`, AUPRC `0.48325`, RMSE log10 `1.36865`
+- Interpretation:
+  - exact backend parity still is not guaranteed
+  - but after controlling dropout implementation, Apple Silicon `mps` is now credible for local focused PF07 training
+- Practical follow-up:
+  - the checked-in local resume helper for the unfinished all-class-I rerun now defaults to `PRESTO_LOCAL_MPS_SAFE_MODE=manual_dropout` so local CPU and MPS use the same dropout implementation unless explicitly overridden
+
+# MPS Training Stabilization (2026-03-19)
+
+## Follow-up Spec: Hardware-Consistent Dropout
+
+- Goal: replace the temporary MPS `zero_dropout` safeguard with real dropout that behaves consistently across CPU and MPS.
+- New evidence from targeted debugging:
+  - zeroing only `nn.Dropout` modules makes the first MPS train batch finite
+  - zeroing only `nn.MultiheadAttention.dropout` does not fix the NaNs
+  - replacing `nn.Dropout` modules with a manual Bernoulli-mask implementation keeps MPS finite with gradients still finite
+- Implication:
+  - the bad op is ordinary `nn.Dropout` on this path, not attention-weight dropout
+  - we can preserve the intended dropout rate if we swap `nn.Dropout` for a backend-neutral manual implementation instead of turning dropout off
+- Requirements:
+  - keep attention dropout unchanged
+  - preserve dropout probability `p`
+  - keep CPU/CUDA usable
+  - keep a `zero_dropout` fallback in case the manual path regresses later
+- Success criterion:
+  - matched local CPU-vs-MPS validation with manual dropout completes on both backends
+  - MPS no longer needs `zero_dropout` in `auto`
+  - docs and experiment logs describe the new contract honestly
+
+## Follow-up Execution
+
+- [x] Write the detailed hardware-consistent-dropout plan under `experiments/agents/codex/plans/`
+- [x] Implement a backend-neutral manual dropout module and runtime replacement helper
+- [x] Update the MPS runtime mode so `auto` prefers manual dropout over zero dropout
+- [x] Add targeted tests for the new manual-dropout mode
+- [x] Run registered CPU-vs-MPS validation families with manual dropout on both backends
+
+## Follow-up Review Notes (2026-03-19)
+
+- Implemented `ManualDropout` in `scripts/focused_binding_probe.py`:
+  - explicit Bernoulli mask
+  - preserved dropout probability `p`
+  - `manual_dropout` can be forced on any device
+  - `auto` now maps to `manual_dropout` on `mps`
+- The root-cause split was confirmed directly:
+  - zeroing only `nn.Dropout` fixes the first-batch MPS NaN
+  - zeroing only `nn.MultiheadAttention.dropout` does not
+  - so attention dropout stays untouched in the manual path
+- Added tests covering:
+  - `auto` on `mps` now applies `manual_dropout`
+  - `manual_dropout` can be forced on CPU
+  - seeded manual dropout is reproducible
+- Registered validation families:
+  - `experiments/2026-03-19_1338_codex_cpu-vs-mps-manual-dropout-parity`
+    - both backends completed with nonzero manual dropout
+    - still showed noticeable CPU/MPS drift because masks were using device-local RNG
+  - `experiments/2026-03-19_1412_codex_cpu-vs-mps-seeded-manual-dropout-parity`
+    - both backends completed with the same seeded CPU-generated manual dropout masks
+    - AUROC/AUPRC were very close, but Spearman still drifted
+- Practical conclusion:
+  - the dropout implementation can now be made genuinely hardware-independent
+  - the remaining CPU/MPS metric gap is not caused by a dropout-contract mismatch
+  - exact backend parity would require further investigation beyond dropout
+
+## Spec
+
+- Goal: make Apple Silicon `mps` usable for local focused PF07 training instead of diverging immediately with `non_finite_train_loss`.
+- Motivation:
+  - the registered CPU-vs-MPS smoke experiment showed that the matched `cpu` run completes while the matched `mps` run diverges at epoch `1`
+  - local continuation on another machine is much more useful if Apple Silicon can run training directly instead of falling back to `cpu`
+- Debugging requirements:
+  - reproduce the tiny smoke failure deterministically
+  - isolate whether the first non-finite value appears in:
+    - model forward outputs
+    - loss construction
+    - gradients
+    - optimizer step / parameter update
+  - compare the same initial batch on `cpu` vs `mps`
+- Implementation constraints:
+  - do not weaken the core modeling contract
+  - prefer explicit MPS-safe runtime behavior over hidden silent fallbacks
+  - preserve `cpu` and `cuda` behavior
+- Candidate stabilization levers to test:
+  - MPS-specific matmul / precision controls
+  - MPS-safe optimizer behavior if AdamW update math is the source of non-finites
+  - selective CPU fallback for numerically unstable loss construction only if needed
+  - MPS-specific guards around known unstable ops or parameter updates
+- Success criterion:
+  - a registered matched smoke rerun on `mps` completes under the same tiny PF07 contract
+  - held-out metrics are finite and reasonably close to `cpu` on that same tiny run
+  - docs and launcher guidance are updated so local Apple Silicon use is honest about remaining limitations
+
+## Execution
+
+- [x] Write the detailed MPS stabilization plan under `experiments/agents/codex/plans/`
+- [x] Reproduce and localize the first non-finite on the matched smoke contract
+- [x] Implement the smallest MPS-safe runtime fix that preserves CPU/CUDA behavior
+- [x] Add targeted regression coverage for the new MPS behavior where feasible
+- [x] Re-run registered CPU-vs-MPS validation and document the usable MPS contract
+
+## Review Notes (2026-03-19)
+
+- The first bad values on Apple Silicon `mps` appeared in the train-mode shared transformer path, not during the AdamW step. The same initial batch remained finite in `eval()` mode.
+- The first working fix was an explicit MPS-only safeguard in `scripts/focused_binding_probe.py`:
+  - new runtime knob: `--mps-safe-mode {auto,off,manual_dropout,zero_dropout}`
+  - historical `auto` behavior on `mps`: zero dropout to stop the NaNs
+  - current `auto` behavior on `mps`: replace `nn.Dropout` with manual Bernoulli dropout while leaving attention dropout unchanged
+  - CPU/CUDA behavior is unchanged unless `manual_dropout` is explicitly requested
+- Added regression coverage in `tests/test_focused_probe.py` for both MPS auto behavior and explicit manual-dropout forcing.
+- Post-fix validation experiments:
+  - `experiments/2026-03-19_1201_codex_cpu-vs-mps-focused-pf07-smoke-mpssafe`
+    - matched `1`-epoch CPU vs MPS smoke both completed
+    - MPS test metric deltas vs CPU:
+      - Spearman `-0.0033`
+      - AUROC `-0.0079`
+      - AUPRC `-0.0084`
+  - `experiments/2026-03-19_1236_codex_cpu-vs-mps-focused-pf07-minitrain-mpssafe`
+    - matched `3`-epoch CPU vs MPS mini-train both completed
+    - MPS test metric deltas vs CPU:
+      - Spearman `+0.0130`
+      - AUROC `-0.0040`
+      - AUPRC `-0.0012`
+- The new MPS-safe runs no longer emitted `non_finite_train_loss`, and no backend fallback warnings were present in the launch logs.
+- Practical contract:
+  - Apple Silicon `mps` is now usable for local focused PF07 training if `--mps-safe-mode auto` is left on
+  - `auto` now uses manual Bernoulli dropout on `mps`, not zero dropout
+  - if you want the same dropout implementation on CPU and MPS, force `--mps-safe-mode manual_dropout` on both
+  - local-resume helpers should keep `cpu` as the conservative default for larger unfinished sweeps until a broader long-run validation is done
+
+# CPU vs MPS Focused PF07 Smoke Compare (2026-03-19)
+
+## Spec
+
+- Goal: run a matched tiny local smoke comparison between CPU and Apple Silicon MPS on the same focused PF07 training path to determine whether MPS is stable enough to use for local continuation work.
+- Motivation:
+  - the local resume path now exists, but MPS only had mixed evidence:
+    - command path worked
+    - one tiny MPS smoke reached real summary writing
+    - that same tiny MPS smoke diverged with `non_finite_train_loss`
+  - before recommending MPS for actual experiment continuation, we need a registered apples-to-apples comparison against CPU on the same tiny contract
+- Fixed smoke contract:
+  - main `Presto` focused affinity path
+  - `dag_prep_readout_leaf`
+  - same sequence-only input contract
+  - local warm start from the checked-in `1`-epoch MHC pretrain checkpoint
+  - same seed and split seed for both runs
+  - tiny local subset only:
+    - `max_records=200`
+    - `epochs=1`
+    - `batch_size=8`
+  - compare:
+    - `device=cpu`
+    - `device=mps`
+- Success criterion:
+  - both runs complete under a registered experiment directory
+  - compare divergence behavior, summary artifacts, and any available held-out metrics
+  - answer clearly whether MPS is usable as-is, CPU-only for now, or needs further numeric stabilization work
+
+## Execution
+
+- [x] Write the detailed CPU-vs-MPS smoke plan under `experiments/agents/codex/plans/`
+- [x] Create the registered local smoke-comparison experiment family
+- [x] Run matched CPU and MPS smoke runs and collect local artifacts
+- [x] Compare summaries and document the conclusion in the experiment README
+
+## Review Notes (2026-03-19)
+
+- Registered experiment family: `experiments/2026-03-19_1007_codex_cpu-vs-mps-focused-pf07-smoke`
+- Fixed smoke contract:
+  - main focused PF07 path
+  - `dag_prep_readout_leaf`
+  - strict sequence-only inputs
+  - checked-in `1`-epoch MHC pretrain warm start
+  - `max_records=200`, `epochs=1`, `batch_size=8`
+  - matched `cpu` vs `mps`
+- Outcome:
+  - `cpu` completed and produced full summaries
+  - `mps` diverged at epoch `1` with `non_finite_train_loss`
+  - so Apple Silicon `mps` is not yet safe for real local continuation of this training path
+- Follow-up:
+  - keep local resume helpers defaulting to `cpu`
+  - treat `mps` as experimental until the numeric instability is understood
+
+# PF07 Local Resume + Apple Silicon Support (2026-03-19)
+
+## Spec
+
+- Goal: make the active PF07 all-class-I cleanup-validation rerun portable enough to continue on another machine without Modal, and add a first-class local Apple Silicon launch path for the same experiment contract.
+- Motivation:
+  - Modal credits are exhausted, so the active rerun cannot be completed remotely right now
+  - the current experiment dir already has the canonical launcher/manifest/repro bundle, but it still assumes a Modal backend and a remote warm-start checkpoint path
+  - the focused affinity trainer auto-selects only `cuda` vs `cpu`, which is not enough for local Apple Silicon (`mps`)
+- Required deliverables:
+  - explicit runtime device selection in the focused affinity trainer: `auto`, `cpu`, `cuda`, `mps`
+  - safe non-CUDA runtime defaults for local execution where relevant
+  - a local backend in the active experiment launcher that writes runs directly into `results/runs/<run_id>`
+  - explicit use of the local 1-epoch MHC pretrain checkpoint already stored in the repo for local resume
+  - experiment README / reproducibility notes explaining how another machine can resume the family locally
+- Non-goals:
+  - do not redesign the experiment contract
+  - do not change the compared PF07 variants, seeds, probes, or epoch budgets
+  - do not claim the rerun is closed; this pass is for portability and local execution readiness
+- Success criterion:
+  - another machine can run the same experiment family locally from the checked-in experiment dir without Modal
+  - Apple Silicon can be targeted intentionally via `--device mps`
+  - the launcher can still preserve the same experiment-local artifact layout and aggregation flow
+
+## Execution
+
+- [x] Write the detailed portability plan under `experiments/agents/codex/plans/`
+- [x] Add explicit runtime device selection to `scripts/focused_binding_probe.py`
+- [x] Add a local backend to the active experiment launcher with repo-local warm-start checkpoint resolution
+- [x] Add experiment README / reproducibility instructions for local resume and Apple Silicon usage
+- [x] Run targeted tests and dry-run the new local launcher path
+
+## Review Notes (2026-03-19)
+
+- `scripts/focused_binding_probe.py` now accepts `--device {auto,cpu,cuda,mps}` and records both requested/effective device in the run summary.
+- Non-CUDA runs now automatically disable pinned-memory dataloader behavior while preserving the same training/eval artifact contract.
+- `experiments/2026-03-18_1828_codex_pf07-all-classI-cleanup-validation-rerun/code/launch.py` now supports:
+  - `--backend modal`
+  - `--backend local`
+  - `--device auto|cpu|cuda|mps`
+  - repo-local warm-start checkpoint resolution for non-Modal resume
+- Existing experiment directories are reused in place instead of being reinitialized, so local continuation does not clobber the experiment README or repro bundle.
+- Added portable resume docs and helper script:
+  - `experiments/2026-03-18_1828_codex_pf07-all-classI-cleanup-validation-rerun/reproduce/local_resume.sh`
+- Verification:
+  - `python -m py_compile scripts/focused_binding_probe.py experiments/2026-03-18_1828_codex_pf07-all-classI-cleanup-validation-rerun/code/launch.py tests/test_focused_probe.py`
+  - `pytest tests/test_focused_probe.py -q`
+  - local and modal launcher dry-runs both succeeded
+- Local runtime check:
+  - this machine reports `mps=True`
+  - the pre-fix tiny MPS smoke diverged with `non_finite_train_loss`
+  - the post-fix MPS-safe matched `1`-epoch and `3`-epoch validations both completed with metrics close to CPU
+  - the checked-in local resume helper still defaults to `cpu` conservatively, but `mps` is now a real opt-in training path via `PRESTO_LOCAL_DEVICE=mps`
+
+# PF07 All-Class-I Cleanup Validation Rerun (2026-03-18)
+
+## Spec
+
+- Goal: rerun the latest all-class-I PF07 sweep on the cleaned `mhcseqs`-owned exact-MHC input path and verify that results are the same or better under the unchanged modeling/data contract.
+- Motivation:
+  - the previous family [2026-03-17_1404_codex_pf07-all-classI-1ep-pretrain-epoch-sweep](/Users/iskander/code/presto/experiments/2026-03-17_1404_codex_pf07-all-classI-1ep-pretrain-epoch-sweep/README.md) was the most recent experiment affected by the MHC input cleanup
+  - that family never fully closed; only the three `10`-epoch runs were fetched locally
+  - a clean rerun on the post-cleanup code is the simplest apples-to-apples validation
+- Fixed contract:
+  - identical dataset contract to the 2026-03-17_1404 sweep
+  - identical 1-epoch MHC pretrain warm start
+  - identical 9-condition matrix:
+    - `pf07_control_constant`
+    - `pf07_dag_method_leaf_constant`
+    - `pf07_dag_prep_readout_leaf_constant`
+    - each at `10 / 25 / 50` epochs
+  - identical seeds, probes, batch size, and `H100!` Modal request
+- Success criterion:
+  - complete and collect the full rerun family
+  - compare against the prior partial family where overlapping conditions exist
+  - confirm no post-cleanup regression on the exact-input path; if metrics move, explain why and update the canonical writeup
+
+## Execution
+
+- [ ] Write the detailed rerun plan under `experiments/agents/codex/plans/`
+- [ ] Create the new timestamped experiment family with canonical `code/launch.py`
+- [ ] Launch the full 9-condition rerun on `H100!`
+- [ ] Fetch all run artifacts locally and aggregate results
+- [ ] Compare rerun metrics to the prior 2026-03-17_1404 family
+- [ ] Close the new experiment README and update `experiments/experiment_log.md`
+
+# Remaining MHCSeqs Cleanup (2026-03-18)
+
+## Spec
+
+- Goal: finish the `mhcseqs` ownership cleanup in the shared current codepaths by removing the remaining script-level duplication for exact class-I groove resolution.
+- Scope for this pass:
+  - move shared exact class-I probe/eval lookup into `data/mhc_sequence_resolver.py`
+  - stop shared scripts from importing private MHC lookup helpers from other scripts
+  - thread `mhc_exact_inputs` into the main shared dataset-construction call sites that already materialize allele lookup tables
+- Explicit boundary after this pass:
+  - `mhcseqs` owns exact-allele sequence + `groove1` / `groove2`
+  - Presto shared scripts consume those exports through one shared helper
+  - local `prepare_mhc_input()` remains only as fallback for sequence-only / unresolved / synthetic cases
+- Non-goals:
+  - do not rewrite frozen experiment-local copies under `experiments/**`
+  - do not redesign the class-II runtime contract
+  - do not change model inputs, loss contracts, or experiment semantics
+- Required code changes:
+  - add a shared class-I groove-resolution helper to `data/mhc_sequence_resolver.py`
+  - refactor shared probe/eval scripts to use that helper instead of ad hoc exact-allele parsing
+  - update shared training scripts to pass `mhc_exact_inputs` into `PrestoDataset` where exact inputs are already available
+  - invalidate any affected focused-dataset cache schema cleanly if needed
+- Verification requirements:
+  - targeted resolver tests for the new shared helper
+  - targeted shared-script tests still passing
+  - no remaining shared script imports of private MHC lookup helpers from other scripts
+
+## Execution
+
+- [x] Add shared exact class-I sequence/groove helper(s) in `data/mhc_sequence_resolver.py`
+- [x] Refactor shared probe/eval scripts to use the data-layer helper instead of local duplicate logic
+- [x] Pass `mhc_exact_inputs` into shared `PrestoDataset` construction sites where lookup tables are already resolved
+- [x] Update focused-binding cache schema if the prepared-state payload changes
+- [x] Run targeted verification and summarize what remains intentionally historical
+
+## Review Notes (2026-03-18)
+
+- Added shared data-layer helpers in `data/mhc_sequence_resolver.py`:
+  - `find_matching_allele_sequence(...)`
+  - `resolve_class_i_groove_halves(...)`
+- Exact class-I probe/eval code now uses one shared `mhcseqs`-first path instead of duplicating:
+  - `scripts/focused_binding_probe.py`
+  - `scripts/groove_baseline_probe.py`
+  - `scripts/assay_ablation_probe.py`
+  - `scripts/distributional_ba/evaluate.py`
+  - `scripts/probe_training.py`
+- `inference/predictor.py` now also uses the shared class-I runtime helper for the exact-allele class-I branch; class-II DR default-pair logic remains explicit there.
+- Shared training runners now pass pre-resolved `mhc_exact_inputs` into `PrestoDataset` where exact lookup tables are already available:
+  - `scripts/focused_binding_probe.py`
+  - `scripts/groove_baseline_probe.py`
+  - `scripts/assay_ablation_probe.py`
+  - `scripts/distributional_ba/train.py`
+  - `scripts/probe_training.py`
+  - `scripts/train_iedb.py`
+- Focused-binding cache payloads now include `mhc_exact_inputs`, and the cache schema version was bumped to `3`.
+- Shared script drift reduced:
+  - `scripts/distributional_ba/evaluate.py` no longer imports a private `_find_allele_sequence` helper from another script
+  - no remaining shared-script `_find_allele_sequence` references remain under `scripts/`
+- Intentionally not changed in this pass:
+  - frozen experiment-local code under `experiments/**`
+  - the low-level local groove parser in `data/groove.py`, which remains the fallback path for raw-sequence / synthetic / unresolved runtime cases
+  - the class-II runtime fallback logic beyond consuming exact `mhcseqs` grooves when already available
+- Verification:
+  - `python -m py_compile data/mhc_sequence_resolver.py scripts/focused_binding_probe.py scripts/groove_baseline_probe.py scripts/assay_ablation_probe.py scripts/distributional_ba/evaluate.py scripts/distributional_ba/train.py scripts/probe_training.py scripts/train_iedb.py inference/predictor.py tests/test_mhc_sequence_resolver.py`
+  - `pytest tests/test_mhc_sequence_resolver.py -q`
+  - `pytest tests/test_groove_baseline.py -q`
+  - `pytest tests/test_assay_ablation.py -q`
+  - `pytest tests/test_focused_probe.py -q`
+  - `pytest tests/test_predictor.py -q`
+  - `pytest tests/test_distributional_ba.py -q`
+  - `pytest tests/test_train_iedb.py -q`
+
+# MHCSeqs Groove Ownership Cleanup (2026-03-18)
+
+## Spec
+
+- Goal: remove duplicated exact-allele groove parsing from Presto and make `mhcseqs` the canonical source of truth for exact MHC sequence + groove inputs.
+- Canonical ownership after this refactor:
+  - `mhcgnomes` / upstream resolver layer:
+    - parse and normalize allele names / ambiguity
+  - `mhcseqs`:
+    - canonical exact-allele sequence inventory
+    - canonical exact-allele `groove1` / `groove2` exports
+  - Presto:
+    - consume exact allele groove halves from `mhcseqs`
+    - keep only runtime-policy handling for cases `mhcseqs` does not own directly:
+      - explicit raw sequence rows
+      - explicit paired class-II chains
+      - synthetic missing-chain rows
+      - default DRA pairing for DR beta-only class-II rows
+      - unresolved / non-catalog fallback behavior
+- Required code changes:
+  - extend the MHC resolver boundary so exact allele lookup can return groove-aware records, not just full sequences
+  - update `PrestoDataset` exact-allele path to use precomputed `groove1` / `groove2` from `mhcseqs`
+  - keep local `prepare_mhc_input()` only for:
+    - direct sequence inputs
+    - explicit chain-pair assembly / fallback
+    - non-catalog runtime cases
+  - avoid changing the canonical model input contract:
+    - inputs remain `nflank`, `peptide`, `cflank`, `mhc_a`, `mhc_b`
+- Verification requirements:
+  - tests proving exact allele rows prefer `mhcseqs` groove exports over local reparsing
+  - tests proving fallback to old index / local parsing still works when groove exports are unavailable
+  - tests for representative class-I and class-II exact-allele cases
+- Non-goals for this pass:
+  - no MIL training change
+  - no experiment contract change
+  - no broad predictor / inference API redesign beyond consuming the cleaned resolver boundary
+
+## Execution
+
+- [x] Add a groove-aware exact-allele record type / resolver API in `data/mhc_sequence_resolver.py`
+- [x] Preserve the existing sequence-only compatibility API for callers that still need full sequences
+- [x] Refactor `PrestoDataset` exact-allele loading to use `mhcseqs` `groove1` / `groove2` directly
+- [x] Keep direct-sequence / explicit chain-pair / synthetic fallback paths on local `prepare_mhc_input()`
+- [x] Update targeted resolver / loader tests
+- [x] Run targeted verification and summarize the new ownership boundary
+
+## Review Notes (2026-03-18)
+
+- Added `ExactMHCInput` plus groove-aware resolver helpers in `data/mhc_sequence_resolver.py`:
+  - `resolve_exact_mhc_inputs(...)`
+  - `lookup_exact_mhc_input(...)`
+  - existing `resolve_exact_mhc_sequences(...)` now remains as a compatibility wrapper over the richer exact-input path
+- `mhcseqs` is now the preferred source of:
+  - full exact-allele sequence
+  - `groove1`
+  - `groove2`
+  - groove/status metadata
+- `PrestoDataset` now consumes precomputed exact-allele groove halves when available:
+  - class I exact allele rows use `mhcseqs` `groove1/groove2` directly
+  - class II DR beta-only rows use default DRA pairing with `mhcseqs` alpha/beta groove halves when available
+  - direct raw sequences, explicit paired chains, synthetic missing-chain rows, and unresolved/fallback cases still use local `prepare_mhc_input()`
+- Prediction and probe code now follow the same exact-allele ownership boundary:
+  - `inference/predictor.py`
+  - `scripts/focused_binding_probe.py`
+  - `scripts/distributional_ba/evaluate.py`
+  - `scripts/probe_training.py`
+- Added targeted tests proving:
+  - exact `mhcseqs` groove records are preferred over reparsing
+  - class-I exact allele rows can succeed from `mhcseqs` grooves even when the fallback full-sequence path would fail
+  - class-II DR default alpha/beta pairing can also consume exact `mhcseqs` groove halves directly
+- Graceful fallback behavior is preserved:
+  - if `mhcseqs` is unavailable, incomplete, or does not expose the built CSV helpers in the current environment, the loader/predictor falls back to the previous local behavior instead of failing globally
+- Verification:
+  - `python -m py_compile data/mhc_sequence_resolver.py data/loaders.py scripts/focused_binding_probe.py inference/predictor.py scripts/distributional_ba/evaluate.py scripts/probe_training.py scripts/train_iedb.py tests/test_mhc_sequence_resolver.py tests/test_loaders.py`
+  - `pytest tests/test_mhc_sequence_resolver.py -q`
+  - `pytest tests/test_loaders.py -q`
+  - `pytest tests/test_focused_probe.py -q`
+  - `pytest tests/test_predictor.py -q`
+
+# PF07 Output-Tying Weight Sweep (2026-03-16)
+
+## Spec
+
+- Goal: run a focused weight sweep for weak output-side consistency regularization on the PF07 main Presto binding path.
+- Fixed base contract:
+  - use the PF07 control training setting as the base condition
+  - keep the corrected sequence-only affinity path
+  - keep the same 2-allele broad numeric contract and four-probe panel
+  - do not mix optimizer changes into this sweep
+- Regularizers to add:
+  - KD family tie:
+    - weakly tie `KD_nM`, `KD_proxy_ic50_nM`, and `KD_proxy_ec50_nM`
+  - cross-family proxy tie:
+    - more weakly tie `IC50_nM <-> KD_proxy_ic50_nM`
+    - more weakly tie `EC50_nM <-> KD_proxy_ec50_nM`
+- Implementation constraints:
+  - output-side only
+  - log10-space smooth-L1 / Huber-style penalties
+  - weights default to `0`
+  - agreement weights must stay materially below the supervised assay loss scale
+- Proposed initial grid:
+  - KD family weight: `0.0`, `0.0025`, `0.01`, `0.04`
+  - cross-family proxy weight: `0.0`, `0.001`, `0.004`
+  - total runs: `12`
+- Required outcome:
+  - new experiment family with all `12` runs
+  - held-out metric comparison vs the no-regularization PF07 control
+  - probe-head comparison to see whether supported peptides become more stable without collapsing biologically meaningful differences
+
+## Execution
+
+- [x] Add KD-family and cross-family proxy consistency losses to the focused affinity loss path
+- [x] Add CLI/config plumbing and summary logging for the two new weights
+- [x] Add targeted tests proving the new losses are no-op at zero weight and active at positive weight
+- [x] Write the detailed experiment plan under `experiments/agents/codex/plans/`
+- [x] Create a dedicated experiment-local launcher for the 12-run weight grid
+- [x] Dry-run the launcher and run targeted tests
+- [x] Launch the sweep on `H100!`
+- [x] Collect artifacts and compare against the PF07 control
+
+## Review Notes (2026-03-16)
+
+- Added output-side consistency regularizers to `scripts/focused_binding_probe.py`:
+  - KD-family tie among `KD_nM`, `KD_proxy_ic50_nM`, and `KD_proxy_ec50_nM`
+  - weaker proxy-cross tie for `IC50_nM <-> KD_proxy_ic50_nM` and `EC50_nM <-> KD_proxy_ec50_nM`
+- Both regularizers operate in `log10(nM)` space with smooth-L1 penalties and are off by default.
+- Added CLI/config plumbing and summary metrics for:
+  - `binding_kd_family_consistency_weight`
+  - `binding_proxy_cross_consistency_weight`
+  - `binding_output_consistency_beta`
+- Added regression coverage proving the losses are no-op at zero weight and active at positive weight.
+- Wrote the detailed sweep plan in `experiments/agents/codex/plans/2026-03-16_pf07-output-tying-weight-sweep.md`.
+- Created and launched the 12-run experiment family under `experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep`.
+- Fixed contract for the sweep:
+  - main `Presto` path
+  - PF07 control architecture/training setting
+  - sequence-only inputs
+  - same 2-allele broad numeric affinity contract as the recent PF07 runs
+  - `50` epochs, `seed=43`, `split_seed=42`, requested GPU `H100!`
+- Weight grid:
+  - KD-family: `0.0`, `0.0025`, `0.01`, `0.04`
+  - proxy-cross: `0.0`, `0.001`, `0.004`
+  - total runs: `12`
+- Verification before launch:
+  - `python -m py_compile experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/code/launch.py`
+  - `pytest tests/test_focused_probe.py -q`
+  - `pytest tests/test_presto.py -q`
+  - `python experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/code/launch.py --dry-run`
+- Closure notes:
+  - the first detached-launch pass hit a Modal image-build race for `11 / 12` runs; these failed before training started and were relaunched without changing the experimental contract
+  - all `12 / 12` runs are now collected under `experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/`
+  - the no-regularization control won:
+    - `kd=0.0`, `cross=0.0`
+    - test Spearman `0.8196399`, AUROC `0.9288369`, AUPRC `0.8851608`, RMSE log10 `0.9208454`
+  - the best regularized condition was `kd=0.01`, `cross=0.001`, but it did not beat the control:
+    - test Spearman `0.8192348`, AUROC `0.9287891`, AUPRC `0.8849943`, RMSE log10 `0.9318614`
+  - stronger tying clearly hurt, especially `cross=0.004` and the `kd=0.04` settings
+  - conclusion: weak output-tying did not improve this corrected sequence-only PF07 contract
+
+# Outputs-Only Assay Invariant (2026-03-16)
+
+## Spec
+
+- Goal: make it explicit and enforceable that canonical Presto never consumes assay-selector metadata as model input for any assay family.
+- Canonical input contract for assay modeling:
+  - required sequence inputs: `nflank`, `peptide`, `cflank`, `mhc_a`, `mhc_b`
+  - optional override inputs: MHC class/species priors derived from the MHC sequences, only if surfaced as constrained metadata overrides rather than assay-selector features
+  - forbidden inputs: assay type, assay method, assay prep, assay geometry, assay readout, or any other assay-selection/context tensor used to condition affinity predictions
+- Canonical output contract:
+  - Presto should predict all assay outputs in parallel from shared latent representations
+  - assay-specific heads are allowed and expected
+  - assay identity may select the supervised output target during loss computation or parameterize output-side head structure, but must never be provided as a predictive input feature
+- Required repo-wide changes:
+  - default and validate the main Presto codepath to sequence-only assay inputs
+  - remove or reject assay-selector input modes from public entrypoints
+  - update README/docs/docstrings/help text to state the invariant in one place and reference it elsewhere
+  - add tests that fail if assay-selector inputs start affecting canonical predictions again
+  - leave historical experiment records intact, but label older assay-conditioned paths as historical and non-canonical
+  - mark the current T-cell assay-context path as legacy relative to the outputs-only assay policy, with a future refactor note rather than silently treating it as canonical
+  - state explicitly that the same rule applies to affinity, T-cell assays, elution/MS, and future assay families
+- Design note to capture:
+  - if MHC species/class overrides remain useful, prefer treating them as optional priors or auxiliary supervision on MHC-derived latents instead of arbitrary user-provided categorical side inputs
+  - if assay structure is needed, represent it on the output side via learned task/assay descriptors and latent dependencies, not per-example assay-selector inputs
+
+## Execution
+
+- [x] Write the canonical invariant into root docs and architecture docs
+- [x] Enforce sequence-only affinity input validation in the main Presto model/API
+- [x] Restrict public training/benchmark entrypoints so non-seq assay input modes are not exposed as active options
+- [x] Update docstrings/help text/TODO notes to describe assay labels as outputs-only supervision
+- [x] Add regression tests proving assay selector inputs cannot influence affinity predictions
+- [x] Run targeted tests and summarize the permanent policy
+- [x] Generalize the written contract from affinity-only wording to all assay families
+- [x] Mark remaining T-cell/context-conditioned implementations as policy violations pending refactor
+
+## Review Notes (2026-03-16)
+
+- Added `docs/assay_modeling_contract.md` as the normative statement of the sequence-only assay policy and linked it from the top-level docs.
+- Broadened that contract from affinity-only wording to a repo-wide assay policy covering affinity, T-cell assays, and elution/MS-style outputs.
+- Removed the public `affinity_assay_mode` knob from the main `Presto` constructor and from the focused affinity runner CLI.
+- Main Presto affinity prediction now accepts only the sequence-side inputs and optional MHC class/species overrides already derived from the MHC sequences.
+- Binding assay metadata remains in `PrestoBatch` only as supervision bookkeeping for loss/metric routing; it is explicitly documented as non-input metadata.
+- Updated the active benchmark launchers so they no longer advertise `--affinity-assay-mode`.
+- Marked the separate distributional / assay-ablation harnesses and the context-conditioned T-cell head as non-canonical or legacy relative to this rule.
+- Remaining code follow-up:
+  - `TCellAssayHead` and `tcell_context` still need a real architectural refactor to comply with the same outputs-only assay rule.
+  - If elution/MS platform metadata is ever introduced, it must be modeled as output-side structure rather than per-example selector input.
+- Verification:
+  - `python -m py_compile models/presto.py models/presto_modules.py models/heads.py scripts/focused_binding_probe.py data/collate.py`
+  - `pytest tests/test_presto.py -q`
+  - `pytest tests/test_focused_probe.py -q`
+
+# PF07 Assay-Structured DAG Sweep (2026-03-16)
+
+## Spec
+
+- Goal: test whether an output-side assay-structured DAG can improve the honest seq-only PF07 affinity path on the same 2-allele broad-numeric contract.
+- Fixed base contract:
+  - keep canonical sequence-only inputs: `nflank`, `peptide`, `cflank`, `mhc_a`, `mhc_b`
+  - keep the same dataset slice used by the honest PF07 baseline:
+    - `data/merged_deduped.tsv`
+    - alleles `HLA-A*02:01`, `HLA-A*24:02`
+    - `measurement_profile=numeric_no_qualitative`
+    - `qualifier_filter=all`
+    - split seed `42`, train seed `43`
+  - keep the same optimizer/training contract initially:
+    - `50` epochs
+    - batch size `256`
+    - `AdamW`, `lr=1e-3`, weight decay `0.01`
+    - requested GPU `H100!`
+- Architectural question:
+  - current PF07 is a shared `KD` base plus flat residual heads for `IC50`, `EC50`, `KD_proxy_ic50`, and `KD_proxy_ec50`
+  - test whether a more explicit output-side DAG works better:
+    - family anchors between `KD` and the assay leaves
+    - optionally method/condition-structured leaves selected on the output side only
+- Variant grid:
+  - baseline PF07 control:
+    - `shared_base_factorized_context_plus_segment_residual`
+  - DAG variant A:
+    - family-anchor DAG
+    - `KD -> IC50_family -> {IC50, KD_proxy_ic50}`
+    - `KD -> EC50_family -> {EC50, KD_proxy_ec50}`
+  - DAG variant B:
+    - family-anchor DAG with output-side method leaves
+    - `IC50` and `EC50` get method-specific leaves chosen for eval/supervision by assay labels only
+  - DAG variant C:
+    - factorized output-side prep/readout DAG
+    - family anchors plus prep/readout-specific leaf deltas, still without assay-selector inputs
+- Constraints:
+  - do not feed assay metadata into the trunk or predictive input path
+  - if assay labels are used, use them only to choose which output leaf is supervised/evaluated
+  - preserve the ability to emit all affinity outputs in parallel
+- Required outcome:
+  - new experiment family with baseline plus the DAG variants
+  - held-out val/test metrics on the same contract
+  - explicit comparison against the honest PF07 untied control
+  - if the DAG variants lose, document why and do not promote them
+
+## Execution
+
+- [x] Write the detailed DAG experiment plan under `experiments/agents/codex/plans/`
+- [x] Implement the new output-side DAG head variants in the main Presto affinity path
+- [x] Add matched output routing for method/condition-specific leaves in the focused affinity runner
+- [x] Add targeted tests for DAG output construction and matched-eval routing
+- [x] Create an experiment-local launcher for the baseline + DAG variant sweep
+- [x] Dry-run the launcher and run targeted tests
+- [x] Launch the sweep on `H100!`
+- [x] Collect artifacts, summarize results, and update experiment docs/logs
+
+## Review
+
+- Outcome:
+  - all `4 / 4` DAG-sweep runs finished and were collected under `experiments/2026-03-16_2355_codex_pf07-assay-structured-dag-sweep/results/runs/`
+  - both leaf-structured variants beat the flat honest PF07 control
+  - the winning condition was `dag_prep_readout_leaf`
+- Final held-out test metrics:
+  - control: Spearman `0.8130993`, AUROC `0.9242548`, AUPRC `0.8781925`, RMSE log10 `0.9376745`
+  - `dag_family`: Spearman `0.8207888`, AUROC `0.9263466`, AUPRC `0.8738952`, RMSE log10 `0.9088196`
+  - `dag_method_leaf`: Spearman `0.8359941`, AUROC `0.9357420`, AUPRC `0.8852642`, RMSE log10 `0.8722534`
+  - `dag_prep_readout_leaf`: Spearman `0.8381589`, AUROC `0.9358775`, AUPRC `0.8780973`, RMSE log10 `0.8703900`
+- Interpretation:
+  - output-side assay structure helps under the strict no-assay-input contract
+  - the gain is mostly from structured leaves, not from the coarse family-anchor DAG alone
+  - `dag_method_leaf` had the best final validation loss and AUPRC, but `dag_prep_readout_leaf` won on the primary ranking/regression metrics
+- Baseline impact:
+  - the new winner improves on the previous honest PF07 baseline from the output-tying sweep by `+0.01852` test Spearman and `-0.05046` RMSE log10
+  - promoted `dag_prep_readout_leaf` in `experiments/model_to_beat.md`
+
+# PF07 DAG Epoch-Curve Rerun (2026-03-17)
+
+## Spec
+
+- Goal: rerun the leading honest PF07 DAG conditions with richer per-epoch metric logging and locally reproducible plots.
+- Required new artifacts:
+  - per-epoch validation metric tables for at least:
+    - Spearman
+    - AUROC
+    - AUPRC
+    - RMSE log10
+    - loss
+  - per-epoch probe-affinity tables and plots for all affinity outputs:
+    - `KD_nM`
+    - `IC50_nM`
+    - `EC50_nM`
+    - `KD_proxy_ic50_nM`
+    - `KD_proxy_ec50_nM`
+    - `binding_affinity_probe_kd`
+  - experiment-level combined epoch-curve plots comparing conditions
+  - local CSV/JSON data sufficient to recreate every plot without refetching Modal artifacts
+- Fixed data/input contract:
+  - `data/merged_deduped.tsv`
+  - alleles `HLA-A*02:01`, `HLA-A*24:02`
+  - `measurement_profile=numeric_no_qualitative`
+  - `qualifier_filter=all`
+  - peptide-group split seed `42`
+  - train seed `43`
+  - inputs only: `nflank`, `peptide`, `cflank`, `mhc_a`, `mhc_b`
+  - assay-selector inputs remain forbidden
+- Base training contract:
+  - main `Presto` path
+  - `50` epochs
+  - batch size `256`
+  - `AdamW`
+  - weight decay `0.01`
+  - requested GPU `H100!`
+- Rerun grid:
+  - `pf07_control_constant`
+  - `pf07_dag_family_constant`
+  - `pf07_dag_method_leaf_constant`
+  - `pf07_dag_prep_readout_leaf_constant`
+  - `pf07_dag_method_leaf_warmup_cosine`
+  - `pf07_dag_prep_readout_leaf_warmup_cosine`
+- Reason for the two extra conditions:
+  - rerun the four directly comparable conditions from the winning DAG sweep
+  - add only schedule variants for the two leaf models, since those are the only conditions with a realistic chance of changing the curve shape materially
+- Closure requirements:
+  - experiment README explains the rerun grid and why it was chosen
+  - `results/` contains combined epoch metric CSV/JSON plus plots
+  - per-run raw artifacts stay under `results/runs/`
+  - canonical log updated after collection
+
+## Execution
+
+- [x] Write the detailed Codex plan file for the rerun family
+- [x] Add optional per-epoch validation metric evaluation to `focused_binding_probe.py`
+- [x] Write local per-run epoch metric CSV/JSON and multi-head probe trajectory plots
+- [x] Add experiment-level aggregation/plotting for metric curves across conditions
+- [x] Add regression tests for the new epoch-metric and plot artifacts
+- [x] Create the experiment-local launcher and reproducibility bundle
+- [x] Launch the rerun grid on `H100!`
+- [x] Collect artifacts, regenerate plots locally, and close the experiment docs/logs
+
+## Review
+
+- The rerun closed cleanly with `6 / 6` runs collected under `experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/`.
+- The best condition remained `pf07_dag_prep_readout_leaf_constant` with test Spearman `0.8379`, AUROC `0.9367`, AUPRC `0.8907`, and RMSE log10 `0.8778`.
+- New local combined artifacts now include per-epoch validation metric curves and aggregated all-head probe tables:
+  - `results/epoch_metrics_by_condition.csv`
+  - `results/probe_affinity_by_condition_long.csv`
+  - `results/final_probe_predictions.csv`
+- The scientific conclusion did not change: the prep/readout-leaf DAG remains the best honest no-assay-input PF07 variant on the 2-allele broad-numeric affinity contract.
+
+# EXP-21 Seed + Epoch Confirmation Sweep (2026-03-15)
+
+## Spec
+
+- Goal: confirm whether the new EXP-20 groove winner is actually robust enough to replace the historical EXP-16 winner as the canonical shared-code baseline, while also checking whether a longer schedule changes the ranking.
+- Fixed contract:
+  - source: `data/merged_deduped.tsv`
+  - alleles: `HLA-A*02:01`, `HLA-A*24:02`
+  - measurement profile: `numeric_no_qualitative`
+  - assay families: `IC50`, direct `KD`, `KD (~IC50)`, `KD (~EC50)`, `EC50`
+  - qualifier filter: `all`
+  - split: `peptide_group_80_10_10_seed42`
+  - batch size: `256`
+  - optimizer: `AdamW`
+  - lr: `1e-3`
+  - weight decay: `0.01`
+  - warm start: none
+  - Modal GPU: `H100!`
+- Conditions to compare:
+  - `groove`, `cond_id=1`, `cc0` (`c01_mhcflurry_additive_max50k_d32`) — current best single run
+  - `groove`, `cond_id=2`, `cc0` (`c02_mhcflurry_additive_max100k_d32`) — nearest groove alternative
+  - `historical_ablation`, `cond_id=2`, `cc0` (`c02_mhcflurry_additive_max100k_d32`) — exact EXP-16 positive control
+- New sweep axes:
+  - seed: `42`, `43`, `44`, `45`
+  - epochs: `50`, `100`, `200`
+  - no reuse of prior runs; every point must be rerun under a fresh run id
+- Required outcome:
+  - a new experiment family with `36` fresh runs
+  - locally collected raw artifacts, summary tables, and plots
+  - a decision about whether the groove `c01` winner holds up across seeds / schedules strongly enough to remain the canonical baseline
+
+## Execution
+
+- [x] Write the detailed experiment plan under `experiments/agents/codex/plans/`
+- [x] Add a dedicated launcher for the 36-run seed/epoch confirmation sweep
+- [x] Create the new experiment directory and reproducibility bundle
+- [x] Launch all 36 fresh Modal runs on `H100!`
+- [x] Harvest all raw outputs locally and regenerate summaries/plots
+- [x] Update the experiment README and `experiments/experiment_log.md`
+- [x] Report the confirmed baseline and any schedule/seed caveats
+
+## Review Notes (2026-03-15)
+
+- The initial detached-launch bookkeeping path was invalid:
+  - it treated early Modal app ids as a safe success signal
+  - most of those runs never actually reached the checkpoint volume
+- Fixed the launcher in `scripts/benchmark_distributional_ba_v6_seed_epoch_confirmation.py` to use background `modal run --detach` processes that remain alive locally while the remote jobs fully establish.
+- Added `scripts/fetch_experiment_modal_runs.py` so manifest-backed experiments can be harvested into `results/runs/` directly from Modal.
+- Closed the full `36 / 36` sweep under `experiments/2026-03-15_1226_codex_exp21-seed-epoch-confirmation`.
+- Final decision:
+  - promote `groove c02` at `50` epochs as the new seed-robust shared-code baseline on this 2-allele broad-numeric contract
+  - mean test Spearman at `50` epochs: `0.847549`
+  - best single run: `dist-ba-v6-confirm-groove_c02-c02-cc0-e050-s43`, test Spearman `0.854139`
+- Seed/schedule conclusion:
+  - `50 > 100 > 200` on mean test Spearman across the full sweep
+  - the EXP-20 `groove c01` winner remains strong but no longer wins the expanded robustness check
+  - the historical-ablation positive control still reproduces correctly and stays useful as a regression anchor
+
+# EXP-16 Main-Path Baseline Rebuild (2026-03-15)
+
+## Spec
+
+- Goal: rebuild EXP-16 as a trustworthy shared-code baseline by restoring the historical winning implementation as an explicit main-path option, fixing the documented/executable contract drift, and rerunning the v6 factorial with both the historical implementation and a modern shared-path candidate.
+- Problems to fix first:
+  - EXP-16 markdown summaries currently describe a 7-allele exact-IC50 warm-start contract, but the raw winning artifact shows a 2-allele no-warm-start shared-path run.
+  - the shared main path drifted on commit `62e3e53`, replacing the historical `AblationEncoder` backbone with `GrooveTransformerModel.encode()`.
+  - the shared path is runnable today, but it is no longer the same model family as the historical winner.
+- Required outcome:
+  - shared code supports both:
+    - historical EXP-16 backbone (`AblationEncoder`) as a first-class backend
+    - current groove-backed shared path as a second backend
+  - the historical backend is frozen by tests and a smoke run
+  - a new experiment family reruns the full v6 matrix with an implementation axis:
+    - historical ablation backend as positive control
+    - groove backend as candidate baseline
+  - the experiment directory and canonical log must report the actual executable contract and the new best condition
+
+## Execution
+
+- [x] Write the detailed experiment plan under `experiments/agents/codex/plans/`
+- [x] Restore the historical EXP-16 ablation encoder as an explicit shared-code backend
+- [x] Add shared-code tests that freeze the historical positive-control contract
+- [x] Add a launcher / Modal path for v6 implementation comparison runs
+- [x] Run local smoke checks for both historical-ablation and groove backends
+- [x] Launch the comparison sweep on Modal and collect artifacts locally
+- [x] Update experiment README(s) and `experiments/experiment_log.md` with the corrected EXP-16 contract and new baseline result
+
+## Review Notes (2026-03-15)
+
+- Restored the historical EXP-16 backbone as `encoder_backbone=historical_ablation` in the shared path while keeping the current shared implementation as `encoder_backbone=groove`.
+- Added shared regression coverage that freezes the historical positive-control contract:
+  - `v6 cond_id=2 historical_ablation` builds with `n_params=27186`
+  - `v6 cond_id=2 groove` still builds and runs a forward pass
+- Verified the historical positive control exactly reproduces the original raw EXP-16 winner artifact:
+  - config parity: same `cond_id`, alleles, split sizes, epochs, lr, and `n_params`
+  - metric parity: identical held-out test Spearman `0.8435156345`, AUROC `0.9412032366`, RMSE_log10 `0.8303825259`, and related metrics
+- Completed the full 64-condition backbone comparison sweep in `experiments/2026-03-15_1011_codex_exp16-mainpath-baseline-rebuild`.
+- One run (`dist-ba-v6-mainpath-groove-c08-cc0`) failed once due Modal GPU unavailability (`CUDA-capable device(s) is/are busy or unavailable`) and was relaunched successfully; final local artifact count is `64 / 64`.
+- New best shared-code baseline:
+  - `dist-ba-v6-mainpath-groove-c01-cc0`
+  - `groove` backend, `cond_id=1`, `mhcflurry`, `d=32`, `max_nM=50k`, no content conditioning
+  - test Spearman `0.8463010192`, AUROC `0.9491695762`, AUPRC `0.9174090624`
+- Family-level result is effectively a tie:
+  - groove mean test Spearman `0.822106`
+  - historical ablation mean test Spearman `0.821951`
+
+# EXP-16 Shared-Path Repro Check (2026-03-15)
+
+## Spec
+
+- Goal: verify whether the EXP-16 winner can still be executed through the shared main Presto codepath rather than relying on the historical experiment-local context, and determine whether that path still works today.
+- Questions to answer:
+  - does the shared trainer still expose the EXP-16 condition matrix and winner configuration?
+  - does the shared Modal wrapper still route EXP-16 through the shared trainer?
+  - can the EXP-16 winning condition complete a real shared-code smoke/dry run without crashing?
+- Verification standard:
+  - identify the exact shared config and entrypoint used for EXP-16
+  - compare the EXP-16 winner contract against the current shared code
+  - run the current shared code on the EXP-16 winning condition using the lightest meaningful real execution path
+  - report any drift between “can launch” and “matches the exact historical training contract”
+
+## Execution
+
+- [x] Confirm the EXP-16 winner config exists in the shared `scripts/distributional_ba` code
+- [x] Confirm the shared Modal entrypoint still invokes the shared trainer for v6
+- [x] Run a local shared-code smoke or dry-run for the EXP-16 winning condition
+- [x] Summarize whether the shared path still works and any contract drift vs the original EXP-16 run
+
+## Review Notes (2026-03-15)
+
+- The shared code still exposes the EXP-16 winning architecture directly:
+  - `scripts/distributional_ba/config_v6.py` cond `2` is `c02_mhcflurry_additive_max100k_d32`
+  - the shared Modal wrapper `scripts/train_modal.py::distributional_ba_v6_run` still calls `python -m presto.scripts.distributional_ba.train --config-version v6 --cond-id <id>`
+- A real local shared-code dry-run succeeded for the winner path:
+  - command: `python -m presto.scripts.distributional_ba.train --config-version v6 --cond-id 2 --data-dir data --out-dir /tmp/exp16_shared_v6_c02_dryrun_exact --epochs 50 --batch-size 256 --lr 1e-3 --weight-decay 0.01 --seed 42 --dry-run`
+  - result: dry-run completed with `event="dry_run"` and no crash
+- The raw EXP-16 winner artifact shows the executable contract was not the same as the current README/log description:
+  - winning run summary: `experiments/2026-03-13_1600_claude_v6-factorial-32/data/distributional_ba_v6_c02_cc0_20260313T202238Z/summary.json`
+  - actual config in that artifact:
+    - `probe_alleles = ["HLA-A*02:01", "HLA-A*24:02"]`
+    - `train_rows = 15530`, `val_rows = 1919`, `test_rows = 1915`
+    - `init_checkpoint = null`
+    - `lr = 1e-3`
+    - `n_params = 27186`
+    - `content_conditioned = false`
+- Current shared code still runs that path, but it is not architecture-frozen relative to the historical artifact:
+  - current dry-run reports `n_params = 54803`
+  - so the shared path is operational, but not guaranteed to be parameter-identical to the March 13, 2026 winner
+- So the answer is:
+  - yes, the best EXP-16 condition can still be run through the main shared Presto codepath
+  - yes, that shared path still works today
+  - but the actual executable winner contract was a 2-allele, no-warm-start shared-path run, not the 7-allele warm-start exact-IC50 contract currently described in the markdown summaries
+  - and the current shared implementation has drifted enough that it should be treated as “same path, still runnable” rather than “exactly the same model binary”
+
+# Experiment Closure Sweep + Best-Architecture Decision (2026-03-14)
+
+## Spec
+
+- Goal: close all recent experiment families that still appear uncollected or insufficiently summarized, then identify the current best architecture from the now-complete local record.
+- Priority experiment families:
+  - `experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep`
+  - `experiments/2026-03-13_1500_claude_content-conditioned-assay`
+  - `experiments/2026-03-13_1131_claude_distributional-ba-heads-v2`
+  - any other recent stub/launch-only family that actually has finished Modal artifacts still available for collection
+- Closure standard:
+  - pull all available raw outputs from Modal into the experiment directory
+  - preserve `summary.json`, `metrics.jsonl`, `probes.jsonl`, `step_log.jsonl`, and held-out prediction dumps when they exist
+  - generate local summary tables / plots from local artifacts
+  - update experiment `README.md`
+  - update `experiments/experiment_log.md`
+- Best-architecture decision should be based on the strongest completed apples-to-apples held-out benchmark available after closure, with any caveats about backbone family or data contract stated explicitly.
+
+## Execution
+
+- [x] Inspect recent launch-only experiment families for run ids, app ids, and expected artifact prefixes
+- [x] Query Modal artifacts / logs to determine which families actually have collectable outputs
+- [x] Pull missing raw artifacts into each qualifying experiment directory
+- [x] Generate or backfill summary tables / plots from local artifacts
+- [x] Update each completed experiment README and `experiments/experiment_log.md`
+- [x] Summarize the current best architecture with evidence and caveats
+
+## Review Notes (2026-03-14)
+
+- Closed and locally harvested the remaining collectable experiment families:
+  - `experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep`
+  - `experiments/2026-03-13_1500_claude_content-conditioned-assay`
+  - `experiments/2026-03-13_1131_claude_distributional-ba-heads-v2`
+  - `experiments/2026-03-14_1800_claude_v6-winner-extended-training`
+- Pulled raw Modal outputs into each experiment's `results/runs/` tree and regenerated local `condition_summary.csv/json`, plots, probe dumps, and `summary_bundle.json` artifacts.
+- Added `scripts/aggregate_summary_runs.py` to backfill summary tables/plots for experiment families that had raw run outputs but no local closure artifacts.
+- Updated the corresponding experiment `README.md` files plus `experiments/experiment_log.md` so the canonical registry now records the recovered results.
+- Current best exact-IC50 architecture is still the EXP-16 winner:
+  - `AblationEncoder d=32` + `mhcflurry` additive + `max_nM=100k` + no content-conditioning
+  - held-out test Spearman `0.8435`
+- Current best broad numeric/censored fixed-backbone architecture is now the EXP-19 winner:
+  - `FixedBackbone(embed=128,layers=2,heads=4,ff=128)` + `mhcflurry` additive + `max_nM=200k` + cold start + `20` epochs
+  - held-out test Spearman `0.6865`
+
+# Agent Coordination Spec (2026-03-16)
+
+## Spec
+
+- Goal: write a shared operating policy for Codex and Claude that keeps one canonical experiment history while making planning, handoff, and future stable-baseline tracking easier.
+- Decisions to encode:
+  - keep one canonical completed-experiment log
+  - keep per-agent idea/todo/plan areas separate
+  - add a separate stable-model summary document instead of turning experiment READMEs into a rolling leaderboard
+  - define lightweight handoff and conflict-avoidance rules for multi-agent work
+- Required output:
+  - one shared markdown policy under `experiments/`
+  - references from existing experiment workflow docs so later agents see it
+
+## Execution
+
+- [x] Add the shared agent-coordination policy document under `experiments/`
+- [x] Link that policy from `experiments/README.md` and `experiments/EXPERIMENT_WORKFLOW.md`
+- [x] Verify the new policy is internally consistent with the existing experiment registry rules
+
+## Review Notes (2026-03-16)
+
+- Added [experiments/AGENT_COORDINATION.md](./experiments/AGENT_COORDINATION.md) as the shared operating spec for Codex/Claude collaboration.
+- The policy keeps one canonical completed-experiment history in `experiments/experiment_log.md` while isolating agent-specific brainstorming and planning under `experiments/agents/<agent>/`.
+- It also formalizes the separation between experiment READMEs and a future `experiments/model_to_beat.md` stable-baseline summary so per-experiment docs do not turn into a rolling leaderboard.
+
+# Agent Coordination Follow-Up (2026-03-16)
+
+## Spec
+
+- Goal: incorporate the remaining practical improvements to the shared Codex/Claude coordination policy so both agents can use it immediately without ad hoc conventions.
+- Scope:
+  - create `experiments/model_to_beat.md` as a stable-baseline skeleton
+  - document how to handle concurrent edits to `experiments/experiment_log.md`
+  - make the commit-hash requirement explicit in the cross-agent reproducibility contract
+  - note that retrospective artifact collection belongs to closure work, not a new experimental contract
+- Required outcome:
+  - shared docs point to a real stable-baseline file rather than a hypothetical one
+  - the coordination spec covers the main operational edge cases Claude identified
+
+## Execution
+
+- [x] Add `experiments/model_to_beat.md` with a documented template and usage rules
+- [x] Update `experiments/AGENT_COORDINATION.md` with `experiment_log.md` merge-conflict guidance
+- [x] Make the git-commit requirement explicit in the cross-agent reproducibility section
+- [x] Clarify that retrospective artifact harvesting/summary backfill is closure work when it does not change the experimental contract
+
+## Review Notes (2026-03-16)
+
+- Added [experiments/model_to_beat.md](./experiments/model_to_beat.md) as the stable-baseline skeleton so future updates do not invent format ad hoc.
+- Tightened [experiments/AGENT_COORDINATION.md](./experiments/AGENT_COORDINATION.md) with explicit guidance for concurrent `experiment_log.md` edits, commit-hash expectations in `reproduce/launch.json`, and closure-work treatment for retrospective artifact collection.
+- Linked the new stable-baseline file from [experiments/README.md](./experiments/README.md) and [experiments/EXPERIMENT_WORKFLOW.md](./experiments/EXPERIMENT_WORKFLOW.md).
+
+# Presto Main-Path Affinity Replication (2026-03-16)
+
+## Spec
+
+- Goal: reproduce the current best broad-numeric binding result on top of the main Presto model codebase, while enforcing the user's input contract:
+  - allowed inputs: `peptide`, `nflank`, `cflank`, `mhc_a`, `mhc_b`
+  - forbidden model inputs for this path: assay identity / assay method / assay readout / assay prep / assay geometry
+- Baseline target to replicate:
+  - winner to beat: EXP-21 `groove c02`, 50 epochs
+  - key contract: `d=32`, `n_layers=2`, `n_heads=4`, `mhcflurry` target encoding, `max_nM=100k`, `batch_size=256`, `lr=1e-3`, `weight_decay=0.01`
+  - dataset/eval contract: 2-allele broad numeric binding contract (`HLA-A*02:01`, `HLA-A*24:02`; `numeric_no_qualitative`; assay families `IC50`, direct `KD`, `KD (~IC50)`, `KD (~EC50)`, `EC50`)
+- Implementation constraints:
+  - use the main `Presto` model and its normal 5-segment input path
+  - do not create a parallel experiment-only encoder model
+  - make assay-conditioning an explicit configurable option in Presto; this experiment must run with assay inputs disabled rather than silently defaulting them to constant ids
+  - preserve the normal output surface: Presto binding/assay outputs should remain outputs, not promoted to inputs
+- Preferred execution path:
+  - add an assay-free affinity mode to `Presto` / `AffinityPredictor`
+  - add a dedicated main-path affinity trainer that uses `PrestoDataset` / `PrestoCollator` and `Presto.forward_affinity_only`
+  - train/evaluate on the same binding contract as EXP-21
+- Required outcome:
+  - local smoke tests proving the new assay-free path works
+  - at least one real rerun of the main-path Presto configuration on the EXP-21 contract
+  - experiment directory with reproducibility bundle, local artifacts, summary tables, README, and log entry
+  - clear comparison vs the current best benchmark result
+
+## Execution
+
+- [x] Write the detailed experiment/implementation plan under `experiments/agents/codex/plans/`
+- [x] Inspect current Presto affinity losses and determine the minimal code changes needed for an explicit no-assay-input mode
+- [x] Implement the main-path affinity replication trainer on top of `Presto`
+- [x] Add regression tests for the new assay-free Presto affinity mode
+- [x] Run local smoke validation for data loading, model forward, and one training/eval pass
+- [x] Launch or run the real replication experiment and collect artifacts locally
+- [x] Update the experiment directory and `experiments/experiment_log.md`; do not update `experiments/model_to_beat.md` because the baseline did not change
+
+## Review Notes
+
+- Added explicit `affinity_assay_mode="none"` support in the main Presto affinity path so binding assay metadata can be supervised without being consumed as model input.
+- Extended `scripts/focused_binding_probe.py` into a proper main-path replication runner:
+  - explicit `train/val/test` peptide-group split support
+  - held-out `val_metrics` and `test_metrics`
+  - `val_predictions.csv` and `test_predictions.csv`
+  - strict ability to disable `binding_context` end-to-end
+- Added regression coverage for:
+  - the new assay-free Presto mode
+  - three-way split behavior
+  - prepared-state cache roundtrip with test split artifacts
+- Fixed `scripts/fetch_experiment_modal_runs.py` so collectors can require final artifacts such as `val_predictions.csv` and `test_predictions.csv` instead of treating the first incremental `summary.json` as completion.
+- Local verification passed:
+  - `pytest tests/test_focused_probe.py -q`
+  - `pytest tests/test_presto.py -q`
+  - local seq-only smoke run produced `summary.json`, `val_predictions.csv`, and `test_predictions.csv`
+- Real Modal run completed under `experiments/2026-03-16_1010_codex_presto-mainpath-affinity-seqonly-replication`
+- Final result:
+  - main-path seq-only replication failed to reproduce the benchmark baseline
+  - final test Spearman `0.0210`, AUROC `0.5188`, AUPRC `0.4324`, RMSE log10 `1.5459`
+  - predictions collapsed into a narrow `~1094-1733 nM` band, so the current model to beat remains EXP-21 `groove c02`
+
+# Experiment Reproducibility Bundle (2026-03-12)
+
+## Spec
+
+- Goal: make every experiment family self-reproducible even when launcher defaults change later.
+- Required for every new experiment directory:
+  - `reproduce/launch.sh`
+  - `reproduce/launch.json`
+  - snapshot copy of the launcher source script
+  - explicit environment overrides used at launch (for example `PRESTO_MODAL_GPU`)
+- The bundle must be created automatically by the experiment registry helpers, not manually per launcher.
+- Guidelines in `AGENTS.md`, `experiments/README.md`, and `experiments/EXPERIMENT_WORKFLOW.md` must describe:
+  - the required reproducibility files
+  - that a finished experiment is not fully documented without them
+  - that future agents should preserve them when extending prior experiments
+
+## Execution
+
+- [x] Add reproducibility-bundle generation to `scripts/experiment_registry.py`
+- [x] Update experiment docs/guidelines with the required reproducibility steps
+- [x] Backfill the active LR/schedule experiment with a reproduce bundle
+- [x] Verify the helper writes the expected files without breaking launcher behavior
+
+# MHCflurry / LogMSE Cold vs Warm Start (2026-03-14)
+
+## Spec
+
+- Goal: run a compact canonical follow-up on the clean self-contained BA benchmark to test whether warm-starting the fixed backbone from `mhc-pretrain-20260308b` materially improves the two viable regression heads.
+- Fixed contract:
+  - source: `data/merged_deduped.tsv`
+  - 7 class-I alleles:
+    - `HLA-A*02:01`
+    - `HLA-A*24:02`
+    - `HLA-A*03:01`
+    - `HLA-A*11:01`
+    - `HLA-A*01:01`
+    - `HLA-B*07:02`
+    - `HLA-B*44:02`
+  - assay families:
+    - `IC50`
+    - direct `KD`
+    - `KD (~IC50)`
+    - `KD (~EC50)`
+    - `EC50`
+  - qualifiers: `all`
+  - deterministic peptide-group train/val/test split
+  - fixed self-contained `FixedBackbone(embed=128,layers=2,heads=4,ff=128)`
+  - batch size `256`
+  - epochs `20`
+  - Modal GPU `H100!`
+  - optimizer `AdamW(weight_decay=0.01)`
+  - lr `1e-4`
+  - schedule `warmup_cosine`
+- Conditions:
+  - `mhcflurry_additive_max200k` cold-start
+  - `mhcflurry_additive_max200k` warm-start from `mhc-pretrain-20260308b`
+  - `log_mse_additive_max200k` cold-start
+  - `log_mse_additive_max200k` warm-start from `mhc-pretrain-20260308b`
+- Warm-start contract:
+  - load only shape-compatible encoder weights from `/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt`
+  - expected to include AA embedding + compatible attention/norm blocks
+  - incompatible feed-forward / head weights remain randomly initialized
+- Required outputs:
+  - same artifact set as the clean 12-condition benchmark
+  - explicit warm-start load stats in `summary.json`
+
+## Execution
+
+- [x] Write the detailed experiment plan under `experiments/agents/codex/plans/`
+- [x] Create a new self-contained experiment directory for the 4-condition warm-start follow-up
+- [x] Add partial warm-start loading and logging to the experiment-local trainer
+- [x] Freeze the 4-condition matrix and new self-contained Modal launcher
+- [x] Add the new experiment-local code path to the Modal image / wrapper
+- [x] Run one local smoke condition using the warm-start checkpoint
+- [x] Run one Modal smoke condition
+- [x] Launch the 4-run Modal sweep on `H100!`
+- [x] Harvest metrics, plots, tables, and conclusions into the experiment directory and `experiments/`
+- [x] Update `experiments/experiment_log.md`
+
+## Review Notes (2026-03-14)
+
+- New experiment family:
+  - `experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep`
+- Warm-start behavior implemented as a partial encoder load from `/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt`
+  - verified compatible load count: `19`
+  - loaded subset includes `aa_embedding.weight` plus compatible attention/norm weights
+  - FF layers remain random due shape mismatch vs pretrain checkpoint
+- Local warm-start smoke succeeded:
+  - command used `cond_id=2`, `epochs=1`, `max_records=512`, `batch_size=64`, `init_checkpoint=/tmp/mhc_pretrain_20260308b.pt`
+  - artifacts written under `/tmp/dist_ba_regwarm_smoke`
+- Modal warm-start smoke succeeded:
+  - app `ap-JGyIJKhgGP2CLrLMibTXtP`
+  - run id `dist-ba-regwarm-sync-c02`
+  - outputs present on `presto-checkpoints/dist-ba-regwarm-sync-c02`
+- Detached full sweep launched:
+  - `dist-ba-regwarm-20ep-c01` app `ap-9oChdh9XLRnM3qxCpSEb8i`
+  - `dist-ba-regwarm-20ep-c02` app `ap-m7xVb5nKKwBQghvj6i7JFk`
+  - `dist-ba-regwarm-20ep-c03` app `ap-o5oaFZ2WFeytaueGRngX2L`
+  - `dist-ba-regwarm-20ep-c04` app `ap-NbTp8a0h09xZkIJy8vfK2c`
+- Verified detached warm-start run `c02` entered training and logged `setup`, `warm_start`, and early epochs on GPU.
+
+# Distributional vs Regression BA Heads (2026-03-12)
+
+## Spec
+
+- Goal: run a fixed-contract 32-condition comparison of regression and distributional output heads for censored broad binding-affinity prediction.
+- Fixed contract:
+  - source: `data/merged_deduped.tsv`
+  - 7 class-I alleles:
+    - `HLA-A*02:01`
+    - `HLA-A*24:02`
+    - `HLA-A*03:01`
+    - `HLA-A*11:01`
+    - `HLA-A*01:01`
+    - `HLA-B*07:02`
+    - `HLA-B*44:02`
+  - assay families:
+    - `IC50`
+    - direct `KD`
+    - `KD (~IC50)`
+    - `KD (~EC50)`
+    - `EC50`
+  - qualifiers: `all`
+  - deterministic peptide-group split with train/val/test
+  - batch size `256`
+  - epochs `10`
+  - Modal GPU `H100!`
+  - fixed optimizer / LR / schedule taken from the current best broad-contract setup
+- Invariant:
+  - encoder/backbone is fixed across all 32 runs
+  - only output-head / target-space configuration changes
+- Required outputs:
+  - `metrics.jsonl`
+  - `probes.jsonl`
+  - `step_log.jsonl`
+  - per-example val/test prediction dumps
+  - `summary.csv`
+  - required plots from the user spec
+
+## Execution
+
+- [x] Write the detailed experiment plan under `experiments/agents/codex/plans/`
+- [x] Freeze the experiment contract so only the output head varies:
+  - self-contained fixed 3-segment groove-transformer backbone
+  - broad 7-allele numeric class-I contract from `data/merged_deduped.tsv`
+  - assay families:
+    - `IC50`
+    - direct `KD`
+    - `KD (~IC50)`
+    - `KD (~EC50)`
+    - `EC50`
+  - qualifiers `all`
+  - deterministic peptide-group split `0.8 / 0.1 / 0.1` with seed `42`
+  - batch size `256`
+  - epochs `10`
+  - GPU `H100!`
+  - optimizer `AdamW(weight_decay=0.01)`
+  - LR/schedule fixed across all conditions: `1e-4`, `warmup_cosine`
+- [x] Convert `experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/code/` into the only runtime path for this benchmark:
+  - local backbone implementation
+  - local 12-condition matrix
+  - local train/eval/metrics code
+  - local launcher
+- [x] Add a thin Modal wrapper in `scripts/train_modal.py` that runs the experiment-local package by prepending the experiment `code/` directory to `PYTHONPATH`
+- [x] Save deterministic split manifests plus per-example validation/test predictions from the local runner
+- [x] Compute held-out val/test metrics inside the local runner:
+  - loss
+  - Spearman / Pearson
+  - RMSE in `log10(nM)` or target space
+  - `<=500 nM` accuracy, balanced accuracy, precision, recall, F1, AUROC, AUPRC
+  - distributional calibration metrics where applicable
+- [x] Run one local smoke condition through the self-contained experiment package
+- [x] Refresh the experiment README/reproduce bundle to the actual self-contained contract
+- [x] Launch one Modal smoke condition from the self-contained launcher
+- [x] Launch the full 12-run Modal sweep with the frozen self-contained launcher
+- [x] Harvest metrics, plots, tables, and conclusions into the experiment directory and `experiments/`
+- [x] Update `experiments/experiment_log.md`
+
+## Review Notes (2026-03-13)
+
+- First detached 12-run launch failed immediately in Modal because the image excluded `experiments/**`, so the self-contained experiment package was missing from `/opt/presto/.../code`.
+- Fixed by explicitly adding `experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/code` into the Modal image in `scripts/train_modal.py`.
+- Verified the fix with a real non-detached Modal smoke run:
+  - app `ap-TnGf4TzMudHtEWHNiTcJLA`
+  - run id `dist-ba-clean-fix-sync-c01`
+  - outputs present on `presto-checkpoints/dist-ba-clean-fix-sync-c01`
+- Relaunched the detached full 12-run sweep under the new prefix:
+  - `dist-ba-clean-fix-c01` .. `dist-ba-clean-fix-c12`
+- I stopped once the corrected runs had finished on Modal instead of closing the experiment. That was the wrong stopping point; closure requires pulling the artifacts locally and finishing the experiment writeup in the same pass.
+- Closure is now complete:
+  - pulled all 12 corrected run directories from `presto-checkpoints` into `experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/`
+  - flattened the downloaded run layout so each run lives at `results/runs/<run_id>/`
+  - added `analysis/aggregate_results.py` to regenerate the summary tables and plots from local artifacts
+  - generated `condition_summary.csv/json`, `family_summary.csv`, `cap_summary.csv`, `per_allele_metrics.csv`, `final_probe_predictions.csv`, `epoch_summary.csv`, plots, and `summary_bundle.json`
+  - verified held-out metrics by recomputing them from `val_predictions.csv` and `test_predictions.csv`; max absolute discrepancy vs saved summaries was `3.4388e-04`
+  - updated the experiment README and `experiments/experiment_log.md` with the completed 12-condition results and decision
+
+## Implementation Notes (2026-03-13)
+
+- Do not use `scripts/distributional_ba/` as the runtime path for this rerun.
+- Use `experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/code/` as the source of truth for backbone, condition matrix, train/eval code, and launcher behavior.
+- Modal should invoke the experiment-local package directly by adjusting `PYTHONPATH`, not by routing through the shared distributional benchmark package.
+- Fixed benchmark for the clean rerun:
+  - broad 7-allele numeric class-I contract
+  - peptide-group `80/10/10` split
+  - `batch_size=256`
+  - `epochs=10`
+  - `gpu=H100!`
+  - `AdamW(weight_decay=0.01)`
+  - `lr=1e-4`
+  - `schedule=warmup_cosine`
+  - no synthetics
+  - no ranking
+- Clean condition matrix:
+  - `mhcflurry_{50k,200k}`
+  - `log_mse_{50k,200k}`
+  - `twohot_d2_logit_{50k,200k}_K{64,128}`
+  - `hlgauss_d2_logit_{50k,200k}_K{64,128}`
+- Required outputs per run:
+  - `step_log.jsonl`
+  - `metrics.jsonl`
+  - `probes.jsonl`
+  - `val_predictions.csv`
+  - `test_predictions.csv`
+  - `summary.json`
+
+# Broad Target-Space Rerun With Held-Out Metrics (2026-03-12)
+
+## Spec
+
+- Goal: rerun the broad target-space comparison with a fixed train/val/test split and full held-out metrics, replacing the earlier aggregate-only sweep.
+- Fixed contract:
+  - 7 class-I alleles:
+    - `HLA-A*02:01`
+    - `HLA-A*24:02`
+    - `HLA-A*03:01`
+    - `HLA-A*11:01`
+    - `HLA-A*01:01`
+    - `HLA-B*07:02`
+    - `HLA-B*44:02`
+  - measurement profile: `numeric_no_qualitative`
+  - included assay families:
+    - `IC50`
+    - direct `KD`
+    - `KD (~IC50)`
+    - `KD (~EC50)`
+    - `EC50`
+  - qualifiers: `all`
+  - warm start from `mhc-pretrain-20260308b`
+  - no synthetics
+  - no ranking
+  - batch size `256`
+  - GPU `H100!`
+  - epochs `5`
+- Train/val/test split:
+  - peptide-group split
+  - deterministic seed
+  - default fractions: `0.8 / 0.1 / 0.1`
+- Conditions:
+  - `A03`
+  - `A07`
+  - target spaces:
+    - `log10_50k`
+    - `log10_10k`
+    - `mhcflurry_50k`
+    - `mhcflurry_10k`
+- Required outputs:
+  - per-example validation predictions
+  - per-example test predictions
+  - broad censor-aware val/test loss
+  - exact-IC50 metrics on val/test:
+    - `n`
+    - Spearman
+    - Pearson
+    - RMSE in `log10(nM)`
+    - `<=500 nM` accuracy
+    - balanced accuracy
+    - precision
+    - recall
+    - F1
+    - AUROC
+    - AUPRC
+  - probe metrics and trajectories
+
+## Execution
+
+- [x] Update experiment docs/guidelines to require val/test prediction dumps and held-out metrics
+- [ ] Implement deterministic train/val/test peptide split in `scripts/focused_binding_probe.py`
+- [ ] Implement per-example val/test prediction dumps and held-out exact-IC50 metrics
+- [ ] Add tests for split behavior and metrics extraction
+- [ ] Create canonical experiment dir and reproducibility bundle
+- [ ] Launch the 8-run `A03/A07 x {log10,mhcflurry} x {50k,10k}` sweep on `H100!`
+- [ ] Collect tables, plots, and update `experiments/experiment_log.md`
+
+# Broad Target-Space Bakeoff (2026-03-12)
+
+## Spec
+
+- Goal: compare the two leading canonical broad-contract Presto hypotheses (`A03`, `A07`) across four target spaces on a fixed broad numeric class-I contract.
+- Fixed contract:
+  - 7 class-I alleles:
+    - `HLA-A*02:01`
+    - `HLA-A*24:02`
+    - `HLA-A*03:01`
+    - `HLA-A*11:01`
+    - `HLA-A*01:01`
+    - `HLA-B*07:02`
+    - `HLA-B*44:02`
+  - measurement profile: `numeric_no_qualitative`
+  - included assay families:
+    - `IC50`
+    - direct `KD`
+    - `KD (~IC50)`
+    - `KD (~EC50)`
+    - `EC50`
+  - qualifiers: `all`
+  - warm start from `mhc-pretrain-20260308b`
+  - no synthetics
+  - no ranking
+  - batch size `256`
+  - GPU `H100!`
+  - epochs `5`
+- Target-space conditions:
+  - `log10_50k`
+  - `log10_100k`
+  - `mhcflurry_50k`
+  - `mhcflurry_100k`
+- Structural conditions:
+  - `A03`
+  - `A07`
+- Important modeling requirement:
+  - for `mhcflurry`, assay residuals must be applied in encoded target/logit space, not added to a clamped `[0,1]` output
+
+## Execution
+
+- [x] Write/update the detailed experiment spec under `experiments/agents/codex/plans/`
+- [x] Implement target-space-aware residualization in assay heads
+- [x] Verify locally with targeted tests and one smoke run
+- [x] Launch the 8-run `A03/A07 x 4 target-space` sweep on `H100!`
+- [x] Collect metrics, plots, and conclusions into `experiments/`
+- [x] Update `experiments/experiment_log.md`
+
+# Broad LR / Schedule Bakeoff (2026-03-12)
+
+## Spec
+
+- Goal: compare a small set of initial learning rates and scheduler shapes for the two leading broad-contract canonical Presto hypotheses on a fixed 20-epoch budget.
+- Leading architecture hypotheses:
+  - `A03` with the strongest broad target-space variant:
+    - `shared_base_segment_residual`
+    - `split_kd_proxy`
+    - `affinity_target_encoding=log10`
+    - `max_affinity_nM=100000`
+  - `A07` with the strongest broad target-space variant:
+    - `shared_base_factorized_context_plus_segment_residual`
+    - `split_kd_proxy`
+    - `affinity_target_encoding=mhcflurry`
+    - `max_affinity_nM=100000`
+- Fixed contract:
+  - 7 class-I alleles
+  - broad numeric binding contract:
+    - `IC50`
+    - direct `KD`
+    - `KD (~IC50)`
+    - `KD (~EC50)`
+    - `EC50`
+  - qualifiers `all`
+  - warm start from `mhc-pretrain-20260308b`
+  - no synthetics
+  - no ranking
+  - fixed batch size `256`
+  - fixed epochs `20`
+  - GPU `H100!`
+- LR candidates:
+  - `1e-4`
+  - `2.8e-4`
+  - `8e-4`
+- Schedule candidates:
+  - `constant`
+  - `warmup_cosine`
+  - `onecycle`
+- Deliverables:
+  - per-epoch metrics for all runs
+  - divergence/instability flags
+  - per-run plots and comparison plots
+  - canonical experiment family under `experiments/`
+
+## Execution
+
+- [x] Write the detailed experiment spec in `experiments/agents/codex/plans/`
+- [x] Add scheduler support and divergence capture to `scripts/focused_binding_probe.py`
+- [x] Verify locally with targeted tests and one smoke run
+- [x] Launch the `2 x 3 x 3 = 18` run H100 bakeoff
+- [x] Harvest metrics, plots, and conclusions into `experiments/`
+- [x] Update `experiments/experiment_log.md`
+
+# Hardware Generalization Bakeoff (2026-03-12)
+
+## Spec
+
+- Goal: test whether the observed `H100!` optimization advantage over `A100` generalizes to the actual broad-contract winners once memory pressure is equalized with batch size `128`.
+- Winning configs from the completed LR/schedule sweep:
+  - `A03_log10_100k`
+    - LR `1e-4`
+    - schedule `warmup_cosine`
+  - `A07_mhcflurry_100k`
+    - LR `2.8e-4`
+    - schedule `warmup_cosine`
+- Fixed contract:
+  - 7 class-I alleles
+  - broad numeric binding contract:
+    - `IC50`
+    - direct `KD`
+    - `KD (~IC50)`
+    - `KD (~EC50)`
+    - `EC50`
+  - qualifiers `all`
+  - warm start from `mhc-pretrain-20260308b`
+  - no synthetics
+  - no ranking
+  - batch size `128`
+  - epochs `20`
+- Hardware matrix:
+  - `A100`
+  - `H100!`
+  - `H200`
+- Deliverables:
+  - run success / failure
+  - setup time
+  - per-epoch wallclock
+  - GPU memory / utilization
+  - terminal and best val loss
+  - full probe metrics
+  - experiment dir with reproducibility bundle and canonical log entry
+
+## Execution
+
+- [ ] Write/update the detailed experiment spec in `experiments/agents/codex/plans/`
+- [ ] Add a dedicated launcher script for the 6-run hardware-generalization matrix
+- [ ] Verify launcher syntax locally
+- [ ] Launch the 6 runs on Modal
+- [ ] Harvest metrics and write `options_vs_perf.*`
+- [ ] Update `experiments/experiment_log.md`
+
+# H100 Batch-Size Bakeoff (2026-03-12)
+
+## Spec
+
+- Goal: summarize the completed H100 batch-size sweep on the broad 7-allele numeric class-I contract and tighten experiment-registry completion rules so finished evals always produce extracted metrics, local copies/links to artifacts, and a canonical writeup.
+- Sweep contract:
+  - designs: `A03`, `A05`, `A06`, `A07`
+  - batch sizes: `64`, `128`, `192`, `256`
+  - GPU: `H100!`
+  - epochs: `5`
+  - broad numeric binding contract with qualifiers `all`
+- Deliverables:
+  - parsed metrics tables/json/csv in the experiment directory
+  - summary README with within-sweep winner and contextual comparison
+  - canonical `experiments/experiment_log.md` entry update
+  - stricter completion rules in `AGENTS.md` / `experiments/README.md` / `experiments/EXPERIMENT_WORKFLOW.md`
+
+## Execution
+
+- [x] Confirm all 16 Modal runs finished
+- [x] Parse final-epoch metrics from launch logs
+- [x] Write `options_vs_perf.*` and analysis plots in the experiment directory
+- [x] Update experiment family `README.md`
+- [x] Update `experiments/experiment_log.md`
+- [x] Tighten experiment completion instructions in AGENTS/experiments docs
+
+# Broad Frontier Bakeoff (2026-03-12)
+
+## Spec
+
+- Goal: rerun the current broad-contract frontier candidates for 5 epochs on Modal under one explicit experiment family so the broad IEDB frontier is interpretable beyond 3-epoch snapshots.
+- Fixed contract:
+  - 7 class-I alleles: HLA-A*02:01, HLA-A*24:02, HLA-A*03:01, HLA-A*11:01, HLA-A*01:01, HLA-B*07:02, HLA-B*44:02
+  - measurement profile: `numeric_no_qualitative`
+  - included assay families: `IC50`, direct `KD`, `KD (~IC50)`, `KD (~EC50)`, `EC50`
+  - qualifiers: `all` with censor-aware loss
+  - no synthetics
+  - no ranking / contrastive
+  - 5 epochs
+- Conditions to include: every broad-contract 3-epoch condition previously ranked from the experiment log:
+  - Directness round-2 canonical/groove conditions that were recorded in the log ranking (`DP00`, `DP01`, `DP05`, `DG1`)
+  - Positional composition `P00..P07` and `G00..G07`
+  - Assay-head `A00..A07`
+- Preserve family-specific architecture defaults where required:
+  - canonical Presto conditions use warm start
+  - groove-transformer controls keep the groove baseline path and batch size
+- Deliverables:
+  - experiment dir under `experiments/`
+  - manifest and variants table
+  - later: `options_vs_perf.*` and canonical log entry
+
+## Execution
+
+- [x] Add spec to tasks/todo.md
+- [x] Add detailed plan to experiments/agents/codex/plans/
+- [x] Implement unified launcher for 28 frontier conditions
+- [x] Verify launcher syntax locally
+- [x] Launch detached Modal sweep and record app ids incrementally
+- [x] Inspect canonical `2026-03-12_1034_codex_broad-frontier-5ep-round1` app states and classify completion vs. failure
+- [x] Harvest per-app logs/metrics for all 28 conditions from the safe manifest
+- [x] Write `options_vs_perf.*` and plots into the experiment directory
+- [x] Update `experiments/experiment_log.md` with the 5-epoch frontier conclusions
+
 # Runtime Sweep Plan (2026-03-09)
+
+# Positional Composition Bakeoff (2026-03-11)
+
+## Spec
+
+- Goal: test explicit position-composition hypotheses rather than additive duplicate start-index tables.
+- Compare on the same broad 7-allele class-I contract:
+  - canonical Presto (`P03`-style)
+  - groove-transformer control (`G1`-style)
+- Position-composition conditions:
+  - `start_only`
+  - `end_only`
+  - `start_plus_end`
+  - `concat_start_end`
+  - `concat_start_end_frac`
+  - `mlp_start_end`
+  - `mlp_start_end_frac`
+  - `triple_baseline`
+- Keep fixed:
+  - assay families
+  - qualifier policy
+  - warm start
+  - no synthetics
+  - no ranking
+  - same outputs and censor-aware loss mapping
+
+## Execution order
+
+- [x] Phase 1: implement the composition modes with fixed output width
+- [x] Phase 2: add bakeoff launcher for canonical Presto and groove-transformer controls
+- [x] Phase 3: launch broad-contract Modal sweep
+- [x] Phase 4: write comparison table and takeaway in `experiments/`
+
+# Assay Head / Target-Space / KD-Family Bakeoff (2026-03-11)
+
+## Spec
+
+- Goal: determine the best broad-contract binding-output structure for as much numeric IEDB binding data as possible.
+- Fixed contract:
+  - source: `data/merged_deduped.tsv`
+  - 7-allele class-I panel
+  - `numeric_no_qualitative`
+  - `qualifier_filter=all`
+  - warm start from `mhc-pretrain-20260308b`
+- Assay families in scope:
+  - `IC50`
+  - direct `KD`
+  - `KD (~IC50)`
+  - `KD (~EC50)`
+  - `EC50`
+- Explicit questions:
+  - pooled numeric output vs shared base + residual
+  - flat assay context vs factorized context:
+    - family
+    - prep
+    - geometry
+    - readout
+  - merged KD family vs split direct/proxy-KD families
+  - `log10` vs `mhcflurry` target spaces
+  - `50k` vs `100k` cap
+
+## Execution order
+
+- [ ] Phase 1: implement factorized assay-context representation and split-KD options
+  - add factorized binding context fields:
+    - assay family
+    - prep
+    - geometry
+    - readout
+  - add canonical head-structure modes:
+    - `pooled_single_output`
+    - `shared_base_segment_residual`
+    - `shared_base_factorized_context_residual`
+    - `shared_base_factorized_context_plus_segment_residual`
+  - add KD grouping modes:
+    - `merged_kd`
+    - `split_kd_proxy`
+- [ ] Phase 2: run clean structure-only bakeoff
+  - fixed canonical Presto base:
+    - `P04` positional configuration
+    - broad 7-allele numeric contract
+    - warm start
+    - no synthetics
+    - no ranking
+    - `log10_50k`
+  - 8 conditions:
+    - 4 head structures x 2 KD grouping choices
+  - write into `experiments/YYYY-MM-DD_HHMM_codex_assay-head-round1/`
+- [ ] Phase 3: carry best structure(s) into target-space sweep
+  - `log10_100k`
+  - `mhcflurry_50k`
+  - `mhcflurry_100k`
+- [ ] Phase 4: add back training-contract extras only on the winning structure
+  - peptide ranking
+  - then safe synthetic mode(s), one at a time
+- [ ] Phase 5: write experiment summary in `experiments/` with explicit assay-family -> output mapping and per-family results
+
+# Network Regression Check (2026-03-10)
+
+## Spec
+
+- Goal: determine whether the current cleaned network regressed relative to the recorded strong `legacy_m1` class-I affinity baseline.
+- Comparison target:
+  - old benchmark row in `modal_runs/strong_base_ablate/options_vs_perf.md`
+  - `legacy_m1`
+  - run id: `class1-panel-ic50-exact-legacy-m1-e006match-20260309c`
+  - best checkpoint:
+    - `SLLQHLIGL`: `37.3 / 29588.2`
+    - `FLRYLLFGI`: `32.8 / 24346.2`
+    - `NFLIKFLLI`: `5749.3 / 6.10`
+- Matched contract for the rerun:
+  - 7-allele class-I panel:
+    - `HLA-A*02:01`
+    - `HLA-A*24:02`
+    - `HLA-A*03:01`
+    - `HLA-A*11:01`
+    - `HLA-A*01:01`
+    - `HLA-B*07:02`
+    - `HLA-B*44:02`
+  - `measurement_profile=direct_affinity_only`
+  - `measurement_type_filter=ic50`
+  - `qualifier_filter=exact`
+  - warm start from `mhc-pretrain-20260308b`
+  - `affinity_assay_mode=legacy`
+  - `groove_pos_mode=triple`
+  - `binding_core_lengths=8,9,10,11`
+  - `binding_core_refinement=shared`
+  - no synthetics
+  - no peptide ranking
+  - no allele ranking
+
+## Execution order
+
+- [ ] Phase 1: local smoke on the exact old benchmark contract
+  - verify the cleaned network still trains and logs the same contract without runtime errors
+- [ ] Phase 2: launch matched Modal rerun on the current code
+  - 12 epochs
+  - collect best checkpoint / probe values
+- [ ] Phase 3: compare against the recorded old baseline
+  - judge whether the cleaned network preserved, improved, or regressed key probe behavior
+  - update `modal_runs/strong_base_ablate/options_vs_perf.md` and `tasks/experiment_log.md`
+
+## Review
+
+- pending
 
 ## Spec
 
@@ -1885,6 +3639,29 @@ Design choices:
   - refreshing index against overlay-only directory yields `mouse_h2: 27`.
 
 ## Status: COMPLETE
+
+### 2026-03-12 follow-up
+
+- [x] Close out `2026-03-12_1352_codex_h100-batchsize-bakeoff`
+  - extracted metrics into the experiment directory
+  - wrote summary tables/plots
+  - updated `experiments/experiment_log.md`
+  - tightened experiment-closure requirements in docs
+
+## Review
+
+- Added explicit post-run closure requirements to:
+  - `AGENTS.md`
+  - `experiments/README.md`
+  - `experiments/EXPERIMENT_WORKFLOW.md`
+- Closed out `experiments/2026-03-12_1352_codex_h100-batchsize-bakeoff` as a fully documented completed experiment, not just a launched run.
+- Preserved:
+  - dataset/curation contract
+  - training/pretraining details
+  - synthetic-data contract
+  - loss/output mapping
+  - explicit condition table
+  - contextual takeaway relative to the broader `A03/A07` frontier
 
 ### Implementation Summary
 
@@ -4943,6 +6720,157 @@ Goal: get `SLLQHLIGL` to separate correctly between `HLA-A*02:01` and `HLA-A*24:
 ## Review
 - pending
 
+
+# Binding Regression Ablation (2026-03-10)
+
+## Spec
+
+- Goal: diagnose whether the cleaned architecture regressed class-I affinity because the kinetic branch now consumes `binding_affinity_vec` (256-d) instead of the older `interaction_vec` (512-d), while keeping one canonical model.
+- Fixed benchmark contract:
+  - 7-allele class-I panel
+  - exact `IC50`
+  - warm start from the MHC pretrain checkpoint
+  - `affinity_assay_mode=legacy`
+  - `groove_pos_mode=triple`
+  - `binding_core_lengths=8,9,10,11`
+  - no synthetics
+  - no peptide ranking
+  - no allele ranking
+- Target old reference:
+  - old `legacy_m1` best checkpoint from `class1-panel-ic50-exact-legacy-m1-e006match-20260309c`
+  - epoch-3 and epoch-10 probe values are the comparison anchors
+- Scope:
+  - only change the affinity/kinetic input plumbing
+  - do not fork a specialized model
+  - do not change dataset, sampler, or training contract
+
+## Variants
+
+- `A0 current_cleaned`
+  - current cleaned model
+  - `binding_kinetic_input_mode=affinity_vec`
+- `A1 old_kinetic_input`
+  - restore old kinetic branch input
+  - `binding_kinetic_input_mode=interaction_vec`
+- `A2 fused_kinetic_input`
+  - diagnostic compromise
+  - fuse `interaction_vec` and `binding_affinity_vec` through a small projection, then feed BindingModule
+- `A3 old_kinetic_input_plus_current_rest`
+  - same as `A1`; keep as the expected recovery candidate for extension to 12 epochs if it wins
+
+## Success criteria
+
+- Primary:
+  - match or beat old epoch-3 probe behavior on:
+    - `SLLQHLIGL`
+    - `FLRYLLFGI`
+    - `NFLIKFLLI`
+- Secondary:
+  - if a 3-epoch winner is clear, extend it to 12 epochs and compare to old epoch-10 / epoch-12 checkpoints
+- Rejection:
+  - any variant that worsens `FLRYLLFGI` and `SLLQHLIGL` together vs `A0`
+  - any variant that destabilizes `NFLIKFLLI` further than the current cleaned baseline
+
+## Execution order
+- [ ] Phase 1: implement toggles
+  - restore `interaction_dim` awareness in `AffinityPredictor`
+  - add `binding_kinetic_input_mode={affinity_vec,interaction_vec,fused}`
+  - pass `interaction_vec` through `predict_affinity_from_trunk`
+- [ ] Phase 2: verify locally
+  - shape/forward tests for all modes
+  - focused local smoke for the matched contract
+- [ ] Phase 3: launch Modal 3-epoch ablations
+  - `A0`, `A1`, `A2`
+- [ ] Phase 4: compare against old epoch-3 references
+  - if `A1` or `A2` wins, extend that mode to 12 epochs
+
+## Review
+- pending
+
+
+# Directness Bake-Off (2026-03-10)
+
+## Spec
+
+- Goal: test whether stronger direct segment-to-affinity information flow recovers or exceeds the old class-I behavior, using the groove transformer as an explicit control and preserving one canonical Presto model.
+- User-provided external control:
+  - groove-transformer control on the 7-allele panel reportedly reached very high `SLLQHLIGL` separation on a broader numeric contract
+  - this must be benchmarked on the same contracts we use for Presto, otherwise it is only suggestive
+- Contracts to test:
+  - `C0 exact_ic50_peptide_split`
+    - 7-allele panel
+    - exact `IC50`
+    - peptide-family split
+    - warm start for Presto variants
+  - `C1 broad_numeric_random_split`
+    - 7-allele panel
+    - `numeric_no_qualitative` binding rows
+    - qualifier-aware / censored quantitative supervision
+    - random split to match the groove baseline claim
+
+## Hypotheses
+
+- `H1`: the cleaned Presto affinity path is too indirect; direct pooled segment summaries will help.
+- `H2`: the current shared-stream model can be rescued by a small direct segment residual branch without reverting the rest of the refactor.
+- `H3`: the strong groove-transformer result is largely due to contract/directness, not just “transformers beat Presto”.
+- `H4`: lower model width may help optimization / signal preservation on this focused task.
+
+## Design matrix
+
+- Controls
+  - `G0`: GrooveBaselineModel (mean-pool MLP)
+  - `G1`: GrooveTransformerModel (`embed=128`, `n_layers=2`, `nhead=4`) — direct control
+- Canonical Presto variants
+  - `P0`: current cleaned `legacy_m1`
+  - `P1`: `P0` + direct pooled segment residual into `binding_affinity_vec`
+  - `P2`: `P0` + direct pooled segment residual into both `binding_affinity_vec` and `binding_stability_vec`
+  - `P3`: `P0` + segment-residual gate (learned mixing between interaction and direct segment branch)
+  - `P4`: `P1` with `d_model=128`
+  - `P5`: `P0` with `d_model=128`
+- Optional second batch if first 8 are stable
+  - `P6`: `P3` with `d_model=128`
+  - `P7`: `P0` on broad contract with dynamic ranking/synthetic knobs matching current canonical training defaults
+
+## Initial run budget
+
+- Stage 1: 8 runs in parallel
+  - `G0`, `G1`, `P0`, `P1`, `P2`, `P3`, `P4`, `P5`
+- Epoch budget
+  - `3` epochs first for matched early comparison
+- Metrics
+  - per-epoch:
+    - train/val loss
+    - `SLLQHLIGL`, `FLRYLLFGI`, `NFLIKFLLI`
+  - derived:
+    - allele ratio on probes
+    - best epoch by val loss
+    - best epoch by probe composite score
+
+## Acceptance criteria
+
+- On `C0`, beat current cleaned `P0` by epoch 3 on:
+  - `SLLQHLIGL`
+  - `FLRYLLFGI`
+  - without worsening `NFLIKFLLI`
+- If any design clearly wins on `C0`, extend it to `12` epochs
+- Only then compare `C1` broad-contract behavior
+
+## Important comparability notes
+
+- `C0` peptide split vs `C1` random split must never be conflated in summaries.
+- The groove-transformer control is allowed to be non-canonical; it is a control, not the production architecture.
+- Canonical Presto experiments must stay on the shared model path.
+
+## Execution order
+- [ ] Phase 1: implement direct segment residual variants in canonical Presto
+- [ ] Phase 2: add matched benchmark harness entries for `G0/G1/P0..P5`
+- [ ] Phase 3: local smoke on `C0`
+- [ ] Phase 4: launch 8-run Modal bake-off on `C0`
+- [ ] Phase 5: compare early results and extend winners
+
+## Review
+- pending
+
 - Indexed pair-mining refactor landed on the canonical shared model path: fixed sample metadata (`dataset_index`, `peptide_id`, `allele_id`, `bind_target_log10`) now flows through `PrestoBatch`, pair candidates are collated as index tensors, and focused ranking losses no longer rebuild peptide groups from `pep_tok.detach().cpu().tolist()`.
 - Epoch train state now preserves a fixed real dataset and appends per-epoch synthetic rows with dataset-index offsets via `CombinedSampleDataset`; synthetic IDs begin after the real dataset size.
 - Stale receptor-sequence task code (`TCRPairingTask`, `TCRpMHCMatchingTask`) was removed; pMHC-only `tcr_evidence` remains.
@@ -4974,3 +6902,1329 @@ Goal: get `SLLQHLIGL` to separate correctly between `HLA-A*02:01` and `HLA-A*24:
 
 ## Review
 - pending
+
+# Directness Bake-Off Round 2 (2026-03-10)
+
+## Spec
+
+- Goal: test whether the next accuracy gains come from better positional encoding and assay-head coupling on top of the strongest current canonical variant from round 1, while keeping one shared Presto model and using the broader quantitative binding contract where assay representation actually matters.
+- Round-1 winner to branch from:
+  - `P5`
+  - `d_model=128`
+  - `groove_pos_mode=triple`
+  - `binding_core_lengths=8,9,10,11`
+  - `binding_core_refinement=shared`
+  - `affinity_assay_mode=legacy`
+  - `binding_kinetic_input_mode=affinity_vec`
+  - `binding_direct_segment_mode=off`
+- Fixed contract for round 2:
+  - 7-allele class-I panel
+  - probe peptides: `SLLQHLIGL`, `FLRYLLFGI`, `NFLIKFLLI`
+  - warm start from `mhc-pretrain-20260308b`
+  - broad quantitative contract:
+    - `measurement_profile=numeric_no_qualitative`
+    - `measurement_type_filter=""`
+    - `qualifier_filter=all`
+  - no synthetic negatives in the first factorial
+  - no ranking losses in the first factorial
+  - 3 epochs
+- Hypotheses to test:
+  1. current peptide position encoding may be leaving signal on the table
+  2. current groove position encoding may be leaving signal on the table
+  3. assay heads may benefit from a shared base affinity logit plus assay-specific residuals driven by pooled peptide/MHC summaries
+- Small-factorial design to keep interactions interpretable for canonical Presto:
+  - peptide pos mode: `triple` vs `triple_plus_abs`
+  - groove pos mode: `triple` vs `triple_plus_abs`
+  - assay residual mode: `legacy` vs `shared_base_segment_residual`
+- That yields an 8-run matrix on the same canonical model.
+- Controls on the same broad contract:
+  - `G0`: groove MLP, pure regression
+  - `G1`: groove transformer, pure regression
+  - `G0R`: groove MLP + ranking
+  - `G1R`: groove transformer + ranking
+- Total batch size for the sweep: 12 runs.
+
+## Execution order
+
+- [ ] Phase 1: record round-1 directness bake-off results in a compact local table
+- [ ] Phase 2: add model toggles
+  - `peptide_pos_mode={triple,triple_plus_abs}`
+  - extend `groove_pos_mode={sequential,triple,triple_plus_abs}`
+  - `affinity_assay_residual_mode={legacy,shared_base_segment_residual}`
+- [ ] Phase 3: verify locally
+  - unit tests for parser/config plumbing
+  - one local smoke on the new `triple_plus_abs` and assay-residual mode
+- [x] Phase 4: launch the 8-run factorial plus 4 groove controls on Modal
+- [ ] Phase 5: compare against:
+  - old `legacy_m1` epoch-3 reference
+  - round-1 `P5`
+  - groove-transformer controls on the same broad contract
+- [ ] Phase 6: choose the next 8-run batch
+  - likely augmentation / ranking interactions on the winning round-2 design
+
+## Review
+
+- Round-1 directional read:
+  - `G0` is not competitive
+  - `G1` is a useful control but its reported wins elsewhere were on a broader data contract, so it should now be compared on that broader contract rather than the exact-IC50 peptide-split contract
+  - `P5` (`d_model=128`, no direct segment residual) is the strongest finished canonical variant so far
+  - the direct segment residual is not obviously helping once `d_model` is reduced
+- Round-2 launch:
+  - launcher:
+    - `scripts/benchmark_design_round2.py`
+  - manifest:
+    - `modal_runs/directness_bakeoff_round2/manifest.json`
+  - variants:
+    - `modal_runs/directness_bakeoff_round2/variants.md`
+
+## Follow-up (2026-03-11)
+
+- [ ] Phase 4a: fix groove-control launch contract and rerun `G0/G1/G0R/G1R`
+  - current failure is CLI-only (`--design-id` unsupported by `groove_baseline_probe.py`)
+  - rerun them on the same broad contract as `P00..P07`
+- [ ] Phase 4b: materialize `P00..P07` broad-contract results into a proper table
+  - write `modal_runs/directness_bakeoff_round2c/options_vs_perf.md`
+  - include:
+    - design definition
+    - setup time
+    - epoch count
+    - train/val loss
+    - probe values and ratios
+    - quick read / recommendation
+- [ ] Phase 5: run the next broad-contract positional sweep
+  - add `abs_only` positional modes for peptide and groove
+  - compare:
+    - `triple`
+    - `abs_only`
+    - `triple_plus_abs`
+  - start with a minimal factorial on the same broad quantitative contract
+- [ ] Phase 6: run assay-output parameterization sweep
+  - keep the canonical shared model fixed
+  - compare target/output encodings for `KD/IC50/EC50`:
+    - current `log10(nM)` with `50k` cap
+    - `log10(nM)` with `100k` cap
+    - bounded MHCflurry-like transform with `50k`
+    - bounded MHCflurry-like transform with `100k`
+  - keep censor-aware loss active on inequality rows
+- [ ] Phase 7: update the broad-contract benchmark docs
+  - explicitly record which assay families are used in `numeric_no_qualitative`
+  - record qualifier mix and target transform semantics
+
+## Follow-up Review
+
+- `P00..P07` on the broad quantitative contract completed under `directness-r2c`.
+- Current leading broad-contract Presto variants:
+  - `P01` best validation loss
+  - `P03` best overall compromise
+  - `P05` strong `FLRYLLFGI`
+- The first `directness-r2` launcher was invalid because it killed `modal run --detach` too early.
+- `directness-r2c` is the trustworthy round-2 sweep.
+
+
+# Experiments Registry (2026-03-11)
+
+## Spec
+
+- Goal: create a canonical `experiments/` registry so Codex/Claude runs do not interfere and can learn from each other.
+- Requirements:
+  - one unified experiment log under `experiments/`
+  - each entry records:
+    - agent/model responsible
+    - exact dataset/curation contract
+    - training/pretraining parameters
+    - tested conditions
+    - runtime + evaluation metrics
+    - takeaway
+    - artifact paths
+  - each experiment gets its own dated subdirectory with plots/data/links
+  - backfill key completed runs that already have trustworthy artifacts
+
+## Execution order
+
+- [x] Phase 1: inspect round-3 run status and collect current manifests/results
+- [x] Phase 2: create `experiments/` directory structure and canonical log format
+- [x] Phase 3: backfill key completed experiment families from `modal_runs/` into `experiments/`
+- [x] Phase 4: ensure current/future sweeps write summaries into `experiments/` paths
+- [x] Phase 5: summarize round-3 status and registry status for the user
+
+## Review
+
+- Canonical registry created under:
+  - [experiments/](/Users/iskander/code/presto/experiments/README.md)
+- Unified logs created:
+  - [experiment_log.md](/Users/iskander/code/presto/experiments/experiment_log.md)
+- Backfilled experiment directories:
+  - [strong-base-ablate](/Users/iskander/code/presto/experiments/2026-03-09_1200_codex_strong-base-ablate)
+  - [runtime-multiallele-44k](/Users/iskander/code/presto/experiments/2026-03-10_1200_codex_runtime-multiallele-44k)
+  - [directness-round2](/Users/iskander/code/presto/experiments/2026-03-11_0900_codex_directness-round2)
+  - [directness-round3](/Users/iskander/code/presto/experiments/2026-03-11_1300_codex_directness-round3)
+- Round-3 results parsed into:
+  - [options_vs_perf.md](/Users/iskander/code/presto/modal_runs/directness_bakeoff_round3/options_vs_perf.md)
+  - [options_vs_perf.json](/Users/iskander/code/presto/modal_runs/directness_bakeoff_round3/options_vs_perf.json)
+- Registry protocol added to:
+  - [AGENTS.md](/Users/iskander/code/presto/AGENTS.md)
+
+## Launcher Integration (2026-03-11)
+
+### Spec
+
+- Goal: make future benchmark/sweep launchers write into `experiments/...` by default instead of only `modal_runs/...`.
+- Constraints:
+  - preserve explicit `--out-dir` override
+  - work for Codex, Claude, or any other agent via an explicit/ENV `agent_label`
+  - create a usable per-experiment directory even before results are parsed
+  - update the canonical markdown registry automatically
+
+### Execution order
+
+- [ ] Phase 1: add shared experiment-registry helper for launcher scripts
+- [ ] Phase 2: patch active benchmark launchers to default to `experiments/...`
+- [ ] Phase 3: write launcher-side stub README + markdown registry stub automatically
+- [ ] Phase 4: verify the patched launchers still write manifests/variants correctly
+
+## Broad-Contract Sweep Expansion (2026-03-11)
+
+### Spec
+
+- Goal: continue on the broad quantitative class-I contract after the `P00..P07` round-2 sweep by (1) restoring the groove-only controls, (2) making the round-2 results easy to compare, and (3) expanding the design space in ways the user explicitly asked for:
+  - absolute-only positional encodings for peptide and groove halves
+  - multiple affinity target/output parameterizations for `KD/IC50/EC50`
+- Fixed contract for the next sweeps:
+  - 7-allele panel:
+    - `HLA-A*02:01`
+    - `HLA-A*24:02`
+    - `HLA-A*03:01`
+    - `HLA-A*11:01`
+    - `HLA-A*01:01`
+    - `HLA-B*07:02`
+    - `HLA-B*44:02`
+  - `measurement_profile=numeric_no_qualitative`
+  - `qualifier_filter=all`
+  - warm start from `mhc-pretrain-20260308b`
+  - no synthetics
+  - no ranking losses for the canonical Presto round-2 position/output sweep unless explicitly specified in a control
+- New experimental factors:
+  - positional modes:
+    - peptide: `triple`, `abs_only`, `triple_plus_abs`
+    - groove: `sequential`, `triple`, `abs_only`, `triple_plus_abs`
+  - affinity target/output encoding:
+    - current `log10(nM)` with `50k` cap
+    - `log10(nM)` with `100k` cap
+    - bounded MHCflurry-like target with `50k` cap
+    - bounded MHCflurry-like target with `100k` cap
+- Deliverables:
+  - fixed groove-control reruns on the same broad contract
+  - `modal_runs/directness_bakeoff_round2c/options_vs_perf.md`
+  - next sweep manifest and leaderboard on the broad contract
+
+### Execution order
+
+- [x] Phase 1: fix `groove_baseline_probe.py` CLI contract and rerun `G0/G1/G0R/G1R`
+- [x] Phase 2: write `modal_runs/directness_bakeoff_round2c/options_vs_perf.md` with P/G results and assay/qualifier contract summary
+- [x] Phase 3: add `abs_only` positional modes to canonical Presto and launch a broad-contract positional sweep
+- [x] Phase 4: add affinity target/output encoding variants and launch a broad-contract encoding sweep
+- [ ] Phase 5: summarize which position/output choices preserve or improve probe behavior under the broad contract
+
+### Review
+
+- `G0/G1/G0R/G1R` reran cleanly under `directness-r2g`.
+  - `G1` (groove transformer, pure regression) is the strongest groove-only control:
+    - `SLLQHLIGL`: `10.7 / 18265.6 nM`
+    - `FLRYLLFGI`: `11.3 / 13867.8 nM`
+    - `NFLIKFLLI`: `904.1 / 4004.3 nM`
+  - `G1R` is weaker than `G1` on the broad contract and still misses `NFLIKFLLI` sign by epoch 3.
+  - `G0/G0R` are not competitive.
+- `modal_runs/directness_bakeoff_round2c/options_vs_perf.md` now includes both canonical Presto variants and groove controls on the exact same broad contract.
+- Round-3 broad-contract sweep launched under `directness-r3`:
+  - positional sweep `Q00..Q08` includes `abs_only` peptide/groove modes
+  - encoding sweep `E00..E03` compares:
+    - `log10` + `50k`
+    - `log10` + `100k`
+    - `mhcflurry` + `50k`
+    - `mhcflurry` + `100k`
+
+## Experiment Registry Simplification (2026-03-11)
+
+### Spec
+
+- Goal: make the markdown experiment log the single canonical registry and align launcher/helper instructions with Claude's richer human-readable format.
+- Requirements:
+  - remove `experiments/experiment_log.jsonl` as a maintained source of truth
+  - update `AGENTS.md` so future agents use the markdown registry format by default
+  - expand `experiments/README.md` with a concrete experiment entry template and technical guidance for describing dataset curation, training params, runtime, metrics, and takeaways
+  - update launcher helper code so experiment initialization writes markdown/README only, not JSONL
+  - clean references in task docs to avoid telling future agents to maintain both formats
+
+### Execution order
+
+- [x] Phase 1: remove JSONL references from policy/docs and replace with markdown-only registry instructions
+- [x] Phase 2: update `experiments/README.md` with a richer markdown template and technical experiment-writing guide
+- [x] Phase 3: simplify `scripts/experiment_registry.py` to stop maintaining JSONL
+- [x] Phase 4: remove the obsolete `experiments/experiment_log.jsonl` file and stale task references
+- [ ] Phase 5: verify the registry helper and summarize agreement/disagreement with Claude's markdown rewrite
+
+## Experiments Directory Operating Model (2026-03-11)
+
+### Spec
+
+- Goal: define everything that belongs under `experiments/` so multiple agents can work in parallel without interfering, while sharing ideas, TODOs, plans, and completed results.
+- Requirements:
+  - completed experiment families stay in timestamped experiment directories
+  - there is one canonical markdown experiment log
+  - each agent has a place for rough ideas / brainstorms
+  - each agent has a coarse-grained experiment TODO list
+  - detailed plans can be promoted from those TODOs into explicit planning docs
+  - structure must make handoff between Codex and Claude straightforward
+  - instructions must live both in `AGENTS.md` and inside `experiments/`
+
+### Execution order
+
+- [x] Phase 1: define the directory layout and rules in `experiments/README.md`
+- [x] Phase 2: add agent-specific idea/TODO/plan placeholders under `experiments/agents/`
+- [x] Phase 3: update `AGENTS.md` so future agents follow the same structure
+- [x] Phase 4: remove the obsolete JSONL references/file as part of the same cleanup
+- [ ] Phase 5: summarize the operating model clearly for Claude/user handoff
+
+### Review
+
+- `experiments/experiment_log.md` is now the single canonical experiment registry.
+- Removed the parallel `experiments/experiment_log.jsonl` file and stopped launcher/helper code from maintaining it.
+- Added detailed operating-model docs:
+  - `experiments/README.md`
+  - `experiments/EXPERIMENT_WORKFLOW.md`
+- Added per-agent working areas:
+  - `experiments/agents/codex/{ideas.md,todo.md,plans/}`
+  - `experiments/agents/claude/{ideas.md,todo.md,plans/}`
+- Updated `AGENTS.md` to require the markdown experiment format and the per-agent idea/todo/plan structure.
+- Patched active launcher scripts to default into timestamped `experiments/...` directories via `scripts/experiment_registry.py`:
+  - `benchmark_design_round2.py`
+  - `benchmark_design_round3.py`
+  - `benchmark_assay_ablation.py`
+  - `benchmark_runtime_multiallele.py`
+  - `benchmark_runtime_variants.py`
+  - `benchmark_register_designs.py`
+  - `benchmark_directness_designs.py`
+- Verification:
+  - `python -m py_compile scripts/experiment_registry.py scripts/benchmark_design_round2.py scripts/benchmark_design_round3.py scripts/benchmark_assay_ablation.py scripts/benchmark_runtime_multiallele.py scripts/benchmark_runtime_variants.py scripts/benchmark_register_designs.py scripts/benchmark_directness_designs.py`
+
+## Experiments Workflow Rename + Template Tightening (2026-03-11)
+
+### Spec
+
+- Goal: rename `experiments/OPERATING_MODEL.md` to a clearer name (`experiments/EXPERIMENT_WORKFLOW.md`) and tighten the experiment-log/template requirements so normalization preserves the scientific/training details the user cares about.
+- Requirements:
+  - choose a clearer filename for the experiments workflow guide
+  - update all references in `AGENTS.md` and `experiments/README.md`
+  - explicitly tell future agents/Claude what the workflow guide is for
+  - expand the experiment template requirements to preserve:
+    - dataset and curation details
+    - training and pretraining details
+    - synthetic-data contract
+    - loss terms
+    - assay-label -> output mapping
+    - comparison tables with condition descriptions
+    - conclusions / takeaways
+
+### Execution order
+
+- [ ] Phase 1: rename the workflow guide and update references
+- [ ] Phase 2: tighten `experiments/README.md` requirements/template
+- [ ] Phase 3: update `AGENTS.md` so Claude/future agents are explicitly pointed at the guide
+- [ ] Phase 4: summarize the new name and the normalization requirements
+
+## Positional Composition Bakeoff Queue Launch (2026-03-11)
+
+### Spec
+
+- Goal: launch the full 16-condition positional-composition bakeoff as independently queued detached Modal apps instead of one monolithic launcher process that blocks on the first submission.
+- Requirements:
+  - keep one shared experiment family under `experiments/`
+  - preserve a single `manifest.json` and `variants.md`
+  - submit each design independently so Modal can queue them
+  - keep the broad 7-allele numeric/censored contract fixed
+  - include both canonical Presto (`P00..P07`) and groove-transformer (`G00..G07`) controls
+
+### Execution order
+
+- [ ] Phase 1: add per-design selection/append support to `benchmark_positional_composition.py`
+- [ ] Phase 2: create the shared experiment family directory
+- [ ] Phase 3: launch all 16 designs as independent detached submissions into that family
+- [ ] Phase 4: verify app IDs are recorded in the family manifest and report the live queue/running set
+## 2026-03-12 Assay-head round1 summary
+- [x] Parse manifest/logs into structured metrics
+- [x] Write options_vs_perf.md/json/csv under experiment dir
+- [x] Generate plots for key metrics/probes
+- [x] Update experiment family README with conclusions
+- [x] Update experiments/experiment_log.md canonical entry
+
+## 2026-03-12 DP00/DP01 OOM debug
+- [ ] Confirm default GPU and actual VRAM from logs
+- [ ] Compare DP00/DP01 vs surviving nearby variant(s)
+- [ ] Summarize likely root cause and next experiments
+
+## 2026-03-12 Modal hardware comparison
+- [ ] Define matched hardware matrix (A100, H100!, H200) on one heavy and one stable broad-contract design
+- [ ] Add experiment plan under experiments/agents/codex/plans
+- [ ] Launch hardware comparison on Modal with fixed batch size and collect metrics
+- [ ] Write experiment family README/options table and update experiment_log.md
+
+## 2026-03-12 Hardware Generalization Closure
+- [x] Parse all six raw app logs into per-epoch and terminal structured metrics
+- [x] Generate per-condition and combined plots under the experiment analysis dir
+- [x] Write options_vs_perf.md/json and finish the experiment README
+- [x] Update experiments/experiment_log.md with the completed summary and takeaway
+
+# User asks to compare 50k vs 100k across encodings and summarize target-space performance
+- [ ] Inspect broad target-space experiment artifacts and determine available prediction/eval outputs
+- [ ] Compute or regenerate per-condition metrics: probe peptides, exact-IC50 rank correlation, <=500nM classification metrics
+- [ ] Create summary plots/tables comparing 50k vs 100k across log10 and mhcflurry encodings
+- [ ] Write results into the target-space experiment dir and update experiment_log.md if new metrics are added
+
+## 2026-03-12 Experiment Metrics Policy Update
+- [ ] Add explicit future-experiment metric policy to experiment guidance
+- [ ] Require val and test metrics in experiment registry entries
+- [ ] Require per-example prediction dumps sufficient to recompute exact-IC50 rank and threshold metrics
+- [ ] Document exceptions for legacy-comparison experiments that intentionally omit a test split
+
+## 2026-03-12 Broad Target-Space Rerun With Held-Out Metrics
+- [ ] Define fixed train/val/test split policy for the broad 7-allele numeric contract
+- [ ] Save per-example val/test predictions and labels for exact-IC50 metric recomputation
+- [ ] Compute held-out metrics: loss, exact-IC50 rank correlation, <=500 nM classification metrics, probe metrics
+- [ ] Rerun A03/A07 x {log10, mhcflurry} x {50k, 10k} on Modal with H100!
+- [ ] Write full results into a new experiment directory and canonical log
+
+# Distributional vs Regression BA Heads Implementation (2026-03-12, codex)
+
+## Execution plan
+- [ ] Freeze the comparison contract: use a self-contained GrooveTransformer backbone with the best broad-contract positional family (`mlp(concat(start,end,nterm_frac,cterm_frac))`), factorized assay metadata available to the heads, broad 7-allele numeric class-I contract, deterministic peptide-group split seed `42`, batch size `256`, `H100!`, AdamW, LR `1e-4`, `warmup_cosine`, 10 epochs, and the standard probe panel (`SLLQHLIGL`, `FLRYLLFGI`, `NFLIKFLLI`)
+- [ ] Reuse/extend existing broad-contract data preparation to produce deterministic peptide-group train/val/test splits
+- [ ] Implement shared assay-factor embeddings and the four assay integration modes in a dedicated `scripts/distributional_ba/assay_integration.py`
+- [ ] Implement head families: MHCflurry regression, log-MSE regression, Two-Hot, HL-Gauss
+- [ ] Implement censor-aware uncensored/censored losses for all heads, including D1-adjusted-edge censoring and D2 fixed-edge censoring
+- [ ] Implement per-example val/test prediction dumps and the requested metric bundle
+- [ ] Implement plotting/analysis script for the 32-run bakeoff
+- [ ] Add targeted tests for target transforms, censored losses, distributional targets, and assay integration behavior
+- [ ] Run local smoke on 1 regression + 1 distributional condition
+- [ ] Launch the full 32-run Modal sweep on `H100!` with a frozen reproduce bundle
+- [ ] Harvest metrics, plots, and canonical experiment-log entry
+
+## 2026-03-13 Distributional BA Head Experiment
+- [x] Audit current distributional benchmark code and define a fixed broad-contract backbone/training spec where only output-head/encoding/integration varies
+- [x] Update tasks/lessons.md for the target-encoding-variable correction
+- [x] Write a clean fixed-contract benchmark plan in `experiments/agents/codex/plans/2026-03-13_clean-distributional-ba-heads.md`
+- [ ] Freeze the exact contract in code and launcher metadata:
+  - broad 7-allele numeric class-I contract from `data/merged_deduped.tsv`
+  - assay families: `IC50`, direct `KD`, `KD (~IC50)`, `KD (~EC50)`, `EC50`
+  - qualifiers: `all`
+  - deterministic peptide-group split seed `42`, `80/10/10`
+  - batch size `256`
+  - epochs `10`
+  - GPU `H100!`
+  - optimizer `AdamW(weight_decay=0.01)`
+  - fixed LR/schedule for all 12 runs: `lr=1e-4`, `warmup_cosine`
+  - standard probes: `SLLQHLIGL`, `FLRYLLFGI`, `NFLIKFLLI`
+- [ ] Replace the mutable `AblationEncoder` dependency with a self-contained fixed groove-transformer backbone under `scripts/distributional_ba/`
+  - use the best broad-contract positional family from prior sweeps: `mlp(concat(start,end,nterm_frac,cterm_frac))`
+  - keep the backbone identical across all 12 conditions
+- [ ] Narrow the condition matrix to the clean 12-condition head-only rerun:
+  - `mhcflurry_{50k,200k}`
+  - `log_mse_{50k,200k}`
+  - `twohot_d2_logit_{50k,200k}_K{64,128}`
+  - `hlgauss_d2_logit_{50k,200k}_K{64,128}`
+- [ ] Keep only the output layer varying across the 12 conditions:
+  - regression: `mhcflurry`, `log_mse`
+  - distributional: `twohot_d2_logit`, `hlgauss_d2_logit`
+  - caps/targets exactly as specified by the 12-condition matrix
+- [ ] Remove `D1-affine` from the clean rerun and document why:
+  - the prior 32-condition sweep showed repeated collapse / mis-specification signs
+  - only `D2-logit` should be treated as a viable distributional family in the clean benchmark
+- [ ] Save full held-out artifacts per run:
+  - `metrics.jsonl`
+  - `step_log.jsonl`
+  - `probes.jsonl`
+  - per-example `val_predictions.*`
+  - per-example `test_predictions.*`
+  - `summary.csv` or equivalent family-level table
+- [ ] Compute the full held-out metric bundle on both val and test where applicable:
+  - loss
+  - Spearman / Pearson
+  - RMSE in target space and `log10(nM)` where appropriate
+  - `<=500 nM` accuracy, balanced accuracy, precision, recall, F1, AUROC, AUPRC
+  - distributional calibration: PIT KS, 90% coverage, entropy-error Spearman
+- [ ] Log probe distributions for distributional methods:
+  - full bin probabilities
+  - entropy
+  - 5th / 95th percentile IC50
+  - one row per epoch per probe
+- [ ] Verify with targeted tests and at least one local dry run / smoke run
+- [ ] Launch the full 12-run Modal sweep and register it under experiments/ with a frozen reproducibility bundle
+- [ ] Harvest metrics, plots, tables, and the canonical experiment-log entry
+---
+## 2026-03-13 Clean Distributional BA Heads
+- [x] Review current distributional BA scripts and identify minimal self-contained backbone/data-path changes
+- [x] Update tasks/todo.md with fixed-contract benchmark plan and success criteria
+- [ ] Create a self-contained experiment-local implementation under `experiments/.../code/` with frozen copies of the backbone, heads, losses, metrics, and launcher
+- [ ] Implement fixed self-contained backbone for distributional BA heads (no AblationEncoder dependency)
+- [ ] Implement fixed 12-condition config (mhcflurry/log_mse/twohot_d2/hlgauss_d2 x caps/bins)
+- [ ] Add deterministic peptide-group train/val/test split and per-example val/test prediction dumps
+- [ ] Route supervision through assay-family-specific broad-contract buckets with censor-aware losses
+- [ ] Add/adjust tests for config, backbone, split logic, and prediction dump outputs
+- [ ] Run local smoke for one regression and one D2-logit distributional condition
+- [ ] Launch clean 12-condition Modal benchmark with reproducible experiment dir bundle
+- [ ] Harvest metrics, plots, and experiment-log writeup
+
+# Clean Distributional BA Heads (2026-03-13)
+
+## Spec
+
+- Goal: implement and launch a clean 12-condition distributional-vs-regression benchmark on the broad 7-allele numeric class-I binding contract.
+- Fixed contract:
+  - source: `data/merged_deduped.tsv`
+  - alleles:
+    - `HLA-A*02:01`
+    - `HLA-A*24:02`
+    - `HLA-A*03:01`
+    - `HLA-A*11:01`
+    - `HLA-A*01:01`
+    - `HLA-B*07:02`
+    - `HLA-B*44:02`
+  - assay families:
+    - `IC50`
+    - direct `KD`
+    - `KD (~IC50)`
+    - `KD (~EC50)`
+    - `EC50`
+  - qualifiers: `all`
+  - deterministic peptide-group split: train/val/test = `0.8/0.1/0.1`, seed `42`
+  - batch size `256`
+  - epochs `10`
+  - GPU `H100!`
+  - optimizer `AdamW(weight_decay=0.01)`
+  - LR / schedule fixed across all conditions: `1e-4`, `warmup_cosine`
+  - no synthetics
+  - no ranking
+- Fixed backbone:
+  - self-contained 3-segment groove transformer under `scripts/distributional_ba/`
+  - positional mode fixed to `mlp(concat(start,end,nterm_frac,cterm_frac))`
+- Conditions (12):
+  - regression:
+    - `mhcflurry_50k`
+    - `mhcflurry_200k`
+    - `log_mse_50k`
+    - `log_mse_200k`
+  - distributional:
+    - `twohot_d2_logit_50k_K64`
+    - `twohot_d2_logit_50k_K128`
+    - `twohot_d2_logit_200k_K64`
+    - `twohot_d2_logit_200k_K128`
+    - `hlgauss_d2_logit_50k_K64`
+    - `hlgauss_d2_logit_50k_K128`
+    - `hlgauss_d2_logit_200k_K64`
+    - `hlgauss_d2_logit_200k_K128`
+- Required outputs per run:
+  - `step_log.jsonl`
+  - `metrics.jsonl`
+  - `probes.jsonl`
+  - `val_predictions.csv`
+  - `test_predictions.csv`
+  - `summary.json`
+- Required family outputs:
+  - `options_vs_perf.md`
+  - `options_vs_perf.json`
+  - plots for val/test loss, held-out metrics, probe trajectories, calibration where applicable
+
+## Execution
+
+- [ ] Add a new self-contained backbone module under `experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/code/` (do not mutate old v1/v2 backbone contract)
+- [ ] Add a new clean experiment-local config with only the 12 requested conditions
+- [ ] Add deterministic peptide-group train/val/test split manifests to the clean runner
+- [ ] Save per-example validation and test predictions for all runs
+- [ ] Compute held-out val/test metrics required by experiment guidelines
+- [ ] Add or update targeted tests for the clean config / prediction dump path
+- [ ] Create a reproducibility bundle in the experiment dir
+- [ ] Launch the 12-run clean sweep on Modal (`H100!`) from the experiment-local scripts
+- [ ] Harvest results, plots, and update `experiments/experiment_log.md`
+
+## In Progress
+- [ ] Create a new self-contained clean distributional BA experiment family under experiments/ with frozen code and reproduce bundle
+- [ ] Replace old AblationEncoder dependency with a fixed self-contained backbone and fixed broad-contract config
+- [ ] Add deterministic train/val/test split, held-out metrics, per-example val/test prediction dumps, and probe logging
+- [ ] Verify locally, launch all Modal conditions on H100!, and then collect/write up results
+
+## Clean Distributional BA Heads (2026-03-13)
+- [in_progress] Create a fresh canonical experiment dir under experiments/ with a self-contained code bundle and reproduce launcher
+- [ ] Freeze exact broad numeric class-I contract (7 alleles, numeric assays incl. inequalities, deterministic peptide-group train/val/test split)
+- [ ] Implement a fixed self-contained three-segment transformer backbone in experiment code (no AblationEncoder dependency)
+- [ ] Implement the 12-condition output-head sweep: mhcflurry/log_mse/twohot_d2/hlgauss_d2 x caps {50k,200k} x bins {64,128} for distributional
+- [ ] Save per-step, per-epoch, per-probe, per-example val/test predictions and full held-out metrics
+- [ ] Verify locally with a short smoke run and targeted tests
+- [ ] Launch the Modal sweep on H100! with the experiment-local launcher
+- [ ] Harvest metrics, make plots/tables, update experiments/experiment_log.md and experiment README
+
+# Clean Distributional BA Heads (2026-03-13 execution)
+
+- [ ] Replace experiment-local `distributional_ba/config.py` with the fixed 12-condition benchmark matrix (`mhcflurry`, `log_mse`, `twohot_d2_logit`, `hlgauss_d2_logit`; caps `50k/200k`; bins `64/128`)
+- [ ] Add an experiment-local frozen backbone module so the benchmark no longer imports mutable repo benchmark encoders
+- [ ] Update experiment-local trainer to fixed contract (`epochs=10`, `batch_size=256`, `lr=1e-4`, `warmup_cosine`, `H100!`) and deterministic peptide-group `train/val/test`
+- [ ] Save per-example `val_predictions.csv` and `test_predictions.csv` plus split manifests and full held-out metrics
+- [ ] Add a self-contained launch script in the experiment dir and smoke one condition locally
+- [ ] Launch the 12-run Modal sweep and then harvest tables/plots into the experiment dir and canonical experiment log
+
+## 2026-03-13 Clean Distributional Benchmark
+- [ ] Replace mutable distributional benchmark config with fixed 12-condition self-contained setup under experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/code/distributional_ba
+- [ ] Add fixed local backbone, deterministic train/val/test split, per-example val/test prediction dumps, and warmup-cosine schedule
+- [ ] Smoke-test one condition locally
+- [ ] Launch 12-condition Modal sweep on H100! with reproducibility bundle and manifest
+- [ ] Update experiment README and canonical experiment log with launch details
+
+- [ ] Implement clean self-contained distributional BA benchmark in experiments/2026-03-13_1445_codex_clean-distributional-ba-heads (fixed backbone, fixed contract, 12 conditions)
+- [ ] Add deterministic train/val/test outputs with per-example val/test prediction dumps and held-out metrics
+- [ ] Smoke test one condition locally and launch the 12-condition H100! sweep
+- [ ] Harvest results into experiment dir and experiments/experiment_log.md
+# Experiment Log Summary + Modal Collection Audit (2026-03-14)
+
+## Spec
+
+- Goal: summarize the current canonical experiment log and identify any experiment families whose Modal outputs appear not to have been fully collected into their experiment directories.
+- Sources of truth:
+  - `experiments/experiment_log.md`
+  - timestamped directories under `experiments/`
+  - local harvested artifacts under each experiment directory
+  - any run/artifact references recorded in READMEs or reproduction bundles
+- Audit criteria:
+  - whether the canonical log has an entry for the experiment family
+  - whether the experiment directory contains local result artifacts rather than only remote Modal references
+  - whether required closure artifacts appear present for completed eval runs
+  - whether there is evidence that runs finished on Modal but were not pulled locally
+- Deliverables:
+  - concise summary of the experiment log
+  - explicit list of experiment families that look fully collected
+  - explicit list of experiment families that look incomplete or likely uncollected from Modal
+  - note any uncertainty where the local filesystem does not prove collection state
+
+## Execution
+
+- [x] Inspect `experiments/experiment_log.md` and enumerate logged experiment families
+- [x] Cross-check each logged family against its local experiment directory contents
+- [x] Identify missing local artifacts or signs of uncollected Modal outputs
+- [x] Summarize findings for the user with concrete file references
+
+## Review
+
+- The canonical log currently mixes three states:
+  - older summary-only experiment families
+  - completed newer families with locally harvested raw artifacts
+  - launch-only or stub families that never received local result harvest
+- High-confidence fully harvested raw Modal families:
+  - `experiments/2026-03-13_1445_codex_clean-distributional-ba-heads`
+  - `experiments/2026-03-13_1600_claude_v6-factorial-32`
+- High-confidence not yet collected from Modal or still launch-only:
+  - `experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep`
+  - `experiments/2026-03-13_1500_claude_content-conditioned-assay`
+  - `experiments/2026-03-13_1131_claude_distributional-ba-heads-v2`
+  - `experiments/2026-03-13_1305_codex_clean-distributional-ba-heads-round1`
+  - `experiments/2026-03-13_1343_codex_clean-distributional-ba-heads-round2`
+- Additional directories are historical stubs or failed launches with no meaningful artifacts to collect, for example:
+  - `experiments/2026-03-13_0717_codex_distributional-ba-heads`
+  - `experiments/2026-03-13_0719_claude_distributional-ba-heads`
+  - `experiments/2026-03-13_1013_codex_distributional-ba-heads-v2`
+  - `experiments/2026-03-13_1218_codex_mhcflurry-max-dim-sweep`
+  - `experiments/2026-03-14_1800_claude_v6-winner-extended-training`
+
+# Experiment-Local Launcher Cleanup (2026-03-16)
+
+## Spec
+
+- Goal: reduce drift in `scripts/` by moving clearly one-off experiment launchers and analyzers into their owning experiment directories.
+- Keep shared infrastructure in `scripts/`:
+  - experiment registry helpers
+  - Modal collection/aggregation utilities used across multiple experiments
+  - reusable training/evaluation backends
+- Move only scripts that are tightly bound to one experiment contract:
+  - fixed condition matrices for one experiment family
+  - one-off posthoc analysis for one experiment family
+  - no other callers outside the owning experiment dir and its README/reproduce bundle
+- Preserve reproducibility by updating the owning experiment README and `reproduce/` metadata to point at the experiment-local copies.
+
+## Execution
+
+- [x] Audit current untracked top-level experiment scripts and classify shared vs experiment-local
+- [x] Move the obvious one-off scripts into the corresponding experiment directories
+- [x] Update experiment READMEs and reproducibility bundle metadata to reference the moved scripts
+- [x] Verify the moved scripts still import and execute in place
+
+## Review
+
+- Moved one-off launchers out of `scripts/` into experiment-local canonical paths:
+  - `experiments/2026-03-15_1011_codex_exp16-mainpath-baseline-rebuild/code/launch.py`
+  - `experiments/2026-03-15_1226_codex_exp21-seed-epoch-confirmation/code/launch.py`
+  - `experiments/2026-03-16_1010_codex_presto-mainpath-affinity-seqonly-replication/code/launch.py`
+- Moved the one-off EXP-21 analyzer to:
+  - `experiments/2026-03-15_1226_codex_exp21-seed-epoch-confirmation/analysis/aggregate_results.py`
+- Updated each experiment README and `reproduce/launch.*` bundle so reruns use the experiment-local launcher instead of a drifting top-level wrapper.
+- Kept shared registry and collection tooling in `scripts/`.
+- Added an explicit launcher-placement rule to `experiments/EXPERIMENT_WORKFLOW.md`.
+
+# Experiment Launcher Naming Cleanup (2026-03-16)
+
+## Spec
+
+- Goal: standardize experiment-local launcher naming on `code/launch.py`.
+- Scope:
+  - rename all existing `experiments/*/code/launch_modal.py` files to `code/launch.py`
+  - update README, reproduce bundle metadata, and canonical log references
+  - keep shared multi-experiment tooling in `scripts/`
+
+## Execution
+
+- [x] Audit all experiment-local `launch_modal.py` files
+- [x] Rename them to `code/launch.py`
+- [x] Update experiment docs and reproduce bundle references
+- [x] Verify renamed launchers still parse and dry-run correctly
+
+## Review
+
+- Standardized all current experiment-local launchers on `code/launch.py`:
+  - `2026-03-13_1445_codex_clean-distributional-ba-heads`
+  - `2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep`
+  - `2026-03-15_1011_codex_exp16-mainpath-baseline-rebuild`
+  - `2026-03-15_1226_codex_exp21-seed-epoch-confirmation`
+  - `2026-03-16_1010_codex_presto-mainpath-affinity-seqonly-replication`
+- Updated the matching README and `reproduce/launch.*` references so the experiment-local canonical path is `code/launch.py`.
+- Verified with `py_compile`, `--dry-run` on the four dry-runnable launchers, and `--help` on the seq-only launcher.
+
+# EXP-21 Winner Rerun + Cross-Agent Structure Doc (2026-03-16)
+
+## Spec
+
+- Goal 1: rerun the current stable baseline through the experiment-local `code/launch.py` pattern in a fresh top-level experiment directory.
+- Winner contract to rerun:
+  - source baseline: `experiments/2026-03-15_1226_codex_exp21-seed-epoch-confirmation`
+  - model: `groove`
+  - `cond_id=2`
+  - no content conditioning
+  - `50` epochs
+  - batch size `256`
+  - broad numeric `2`-allele contract
+  - use one exact rerun seed matching the strongest prior run (`43`) unless local evidence requires a different replay target
+- Goal 2: make the canonical experiment/data layout explicit for both Codex and Claude.
+- Documentation targets:
+  - `experiments/README.md`
+  - `experiments/EXPERIMENT_WORKFLOW.md`
+  - `experiments/AGENT_COORDINATION.md`
+- The documentation update should explain:
+  - what belongs in top-level `experiments/`
+  - what belongs in each experiment dir
+  - what remains in shared repo `data/`
+  - what generated outputs belong under `results/`
+  - when a launcher/analyzer stays in `scripts/` vs moves into `code/` or `analysis/`
+  - what Claude should read and mirror
+
+## Execution
+
+- [x] Create a fresh experiment directory for the EXP-21 winner rerun with canonical `code/launch.py`
+- [x] Launch the rerun on Modal and fetch local artifacts into `results/runs/`
+- [x] Aggregate summaries/plots and update the new experiment README plus canonical log/model-to-beat docs if warranted
+- [x] Document the canonical experiment/data structure in the experiments markdown for both agents
+- [x] Summarize for the user what Claude should read and follow
+
+## Review
+
+- Created `experiments/2026-03-16_1333_codex_exp21-winner-rerun` as a single-run replay of the EXP-21 `groove c02`, `50`-epoch winner using the canonical `code/launch.py` layout.
+- The rerun matched the original best-seed metrics exactly:
+  - test Spearman `0.85413903`
+  - test AUROC `0.94411862`
+  - test AUPRC `0.91761374`
+  - test RMSE log10 `0.81867343`
+- Updated `experiments/README.md`, `experiments/EXPERIMENT_WORKFLOW.md`, and `experiments/AGENT_COORDINATION.md` to make the shared experiment/data layout explicit for both Codex and Claude.
+- Updated `experiments/model_to_beat.md` to record the active baseline and note that the canonical-layout rerun validated the workflow without changing the promoted baseline.
+
+# Presto Full-Output EXP-21-Contract Retry (2026-03-16)
+
+## Spec
+
+- Goal: rerun a careful "full Presto" comparison on the exact EXP-21 data contract, using Presto's richer multi-output affinity head configuration rather than the earlier collapsed `pooled_single_output` retry.
+- Problems to fix first:
+  - the earlier `presto-mainpath-affinity-seqonly` run used `pooled_single_output + assay_heads_only`, which is narrower than the stronger multi-output head families already present in canonical Presto
+  - the focused binding runner currently conflates split seed and training seed, while EXP-21 fixed the peptide-group split at `42` and varied only the training seed
+  - the earlier retry also used a different positional/core-window contract than the stronger historical Presto A03/A07 families
+- Fixed comparison contract:
+  - source: `data/merged_deduped.tsv`
+  - alleles: `HLA-A*02:01`, `HLA-A*24:02`
+  - measurement profile: `numeric_no_qualitative`
+  - qualifier filter: `all`
+  - split policy: `peptide_group_80_10_10_seed42`
+  - training seed: `43`
+  - epochs: `50`
+  - batch size: `256`
+  - optimizer: `AdamW`
+  - lr: `1e-3`
+  - weight decay: `0.01`
+  - synthetic negatives: off
+  - ranking losses: off
+  - requested Modal GPU: `H100!`
+- Conditions to compare:
+  - `PF03_log10_100k_full`
+    - `shared_base_segment_residual`
+    - `split_kd_proxy`
+    - `affinity_loss_mode=full`
+    - `affinity_target_encoding=log10`
+    - `max_nM=100k`
+  - `PF07_mhcflurry_100k_full`
+    - `shared_base_factorized_context_plus_segment_residual`
+    - `split_kd_proxy`
+    - `affinity_loss_mode=full`
+    - `affinity_target_encoding=mhcflurry`
+    - `max_nM=100k`
+- Shared Presto architecture settings:
+  - inputs remain sequence-only: `nflank`, `peptide`, `cflank`, `mhc_a`, `mhc_b`
+  - `d_model=32`, `n_layers=2`, `n_heads=4`
+  - `peptide_pos_mode=concat_start_end_frac`
+  - `groove_pos_mode=concat_start_end_frac`
+  - `binding_core_lengths=8,9,10,11`
+  - `binding_core_refinement=shared`
+  - `binding_kinetic_input_mode=affinity_vec`
+  - `binding_direct_segment_mode=off`
+  - no warm start on the first retry
+- Required outcome:
+  - focused runner supports separate `split_seed` and `train_seed`
+  - a new experiment family with fresh Modal runs and locally gathered artifacts
+  - a clean answer to whether careful full-Presto multi-output heads can approach the EXP-21 broad-numeric baseline on the same dataset contract
+
+## Execution
+
+- [x] Add a detailed Codex plan file for the retry experiment
+- [x] Patch `scripts/focused_binding_probe.py` to separate split seed from training seed without breaking existing callers
+- [x] Create a new experiment-local launcher under a fresh experiment directory
+- [x] Launch the selected full-Presto conditions on Modal and harvest all raw outputs locally
+- [x] Aggregate summaries, compare against EXP-21, and document the outcome in the experiment README plus `experiments/experiment_log.md`
+
+## Review
+
+- Created `experiments/2026-03-16_1415_codex_presto-full-output-exp21-retry` to retry full-output Presto on the exact EXP-21 contract with sequence-only inputs and full assay-family supervision.
+- Fixed a real contract bug first: `scripts/focused_binding_probe.py` now separates `split_seed` from `train_seed`, so this retry uses the exact EXP-21 peptide-group split (`42`) while keeping training seed `43`.
+- Both fresh Modal runs completed and were harvested locally under `results/runs/`.
+- Best result was `PF07_mhcflurry_100k_full`:
+  - test Spearman `0.84410185`
+  - test AUROC `0.93680900`
+  - test AUPRC `0.89547038`
+  - test RMSE log10 `0.86136419`
+- `PF03_log10_100k_full` was clearly weaker:
+  - test Spearman `0.82043570`
+  - test AUROC `0.92695010`
+  - test AUPRC `0.88114345`
+  - test RMSE log10 `0.92678767`
+- Compared with the EXP-21 winner `dist-ba-v6-confirm-groove_c02-c02-cc0-e050-s43`, the best full-Presto retry still trails on the primary regression/ranking metrics:
+  - Spearman `-0.0100`
+  - AUROC `-0.0073`
+  - AUPRC `-0.0221`
+  - RMSE log10 `+0.0427`
+- Important interpretation:
+  - full-output Presto is now working on this benchmark
+  - the earlier seq-only collapse was mostly a poor output/head contract
+  - `PF07` is the only branch worth extending, but EXP-21 `groove c02` remains the current baseline to beat
+- Also corrected the experiment-local fetch contract so the manifest now matches the files the focused binding runner actually emits (`summary.json`, probe-over-epochs JSON/CSV, val/test prediction CSVs).
+
+# PF07 Main-Path Optimization Extension (2026-03-16)
+
+## Spec
+
+- Goal: extend the best current full-Presto condition `PF07_mhcflurry_100k_full` on the same exact main Presto codepath and EXP-21 data contract.
+- Verification question first:
+  - confirm this is already main-path Presto, not a separate benchmark model
+  - expected path: `scripts/train_modal.py::focused_binding_run` -> `presto.scripts.focused_binding_probe` -> `Presto.forward_affinity_only()` -> `Presto.forward()`
+- Fixed contracts to keep unchanged:
+  - source: `data/merged_deduped.tsv`
+  - alleles: `HLA-A*02:01`, `HLA-A*24:02`
+  - measurement profile: `numeric_no_qualitative`
+  - qualifier filter: `all`
+  - split seed: `42`
+  - train seed: `43`
+  - epochs: `50`
+  - batch size: `256`
+  - inputs only: `nflank`, `peptide`, `cflank`, `mhc_a`, `mhc_b`
+  - affinity contract: `full`, `mhcflurry`, `max_nM=100k`, `shared_base_factorized_context_plus_segment_residual`, `split_kd_proxy`
+  - architecture: `d_model=32`, `n_layers=2`, `n_heads=4`, `concat_start_end_frac`, shared binding-core refinement
+- Extension axis:
+  - vary only optimizer schedule / LR around historically strong `A07` settings
+  - include the current `1e-3 + constant` PF07 as a positive control
+- Candidate conditions:
+  - `1e-3 + constant` (current PF07 positive control)
+  - `2.8e-4 + warmup_cosine`
+  - `2.8e-4 + onecycle`
+  - `1e-4 + warmup_cosine`
+  - `1e-4 + constant`
+- Required outcome:
+  - a fresh experiment family on the exact same codepath
+  - direct answer whether schedule/LR alone can close the remaining PF07 -> EXP-21 gap
+
+## Execution
+
+- [x] Add a detailed Codex plan file for the PF07 optimization extension
+- [x] Create a fresh experiment-local launcher for the PF07 schedule/LR sweep
+- [x] Launch the PF07 extension runs on Modal from the same main Presto codepath
+- [ ] Collect the raw artifacts locally and aggregate held-out metrics
+- [ ] Update the experiment README and canonical log with the result
+# PF07 All-Head Probe Re-Evaluation + SLLQHLIGL Diagnosis (2026-03-16)
+
+## Spec
+
+- Goal: extend the PF07 probe artifacts so every affinity-family output head is captured for every tracked probe peptide / allele pair, then use that richer dump to explain suspicious cases such as `SLLQHLIGL / HLA-A*24:02` under the IC50 head.
+- Fixed scope:
+  - do not change the trained PF07 contract
+  - do not relaunch a new training sweep just to inspect probe outputs
+  - reuse the completed PF07 optimizer-sweep checkpoints under `experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension`
+- Required diagnostics:
+  - extend probe export to include all affinity heads:
+    - `KD_nM`
+    - `IC50_nM`
+    - `EC50_nM`
+    - `KD_proxy_ic50_nM`
+    - `KD_proxy_ec50_nM`
+    - existing direct `binding_affinity_probe_kd`
+  - regenerate probe artifacts for the completed PF07 runs from saved checkpoints
+  - inspect the real data support for `SLLQHLIGL / HLA-A*24:02`, including measurement family and assay-method / condition metadata
+  - determine whether head disagreement suggests a reasonable light regularization opportunity across related outputs, without overriding real assay-family differences
+- Required outcome:
+  - local per-run all-head probe dump artifacts
+  - a concise explanation of what the heads are doing on the tracked probe panel
+  - an evidence-based recommendation on whether cross-head regularization is worth testing next
+
+## Execution
+
+- [x] Add all affinity-family heads to the saved probe export path
+- [x] Decide on rerun strategy after checking whether completed PF07 checkpoints were actually available
+- [x] Launch a fresh PF07 rerun under the corrected sequence-only affinity path
+- [x] Inspect support rows and assay-method metadata for `SLLQHLIGL / HLA-A*24:02`
+- [ ] Summarize head behavior on the probe panel and recommend whether to test output regularization
+
+## Review Notes (in progress, 2026-03-16)
+
+- Fixed a real contract bug before rerunning:
+  - `focused_binding_probe.py` had still been passing `binding_context` into `Presto.forward_affinity_only()`
+  - `Presto.forward_affinity_only()` now ignores `binding_context`, so the affinity-only path is actually sequence-only in execution
+- Extended probe export so the saved probe artifact now includes:
+  - `KD_nM`
+  - `IC50_nM`
+  - `EC50_nM`
+  - `KD_proxy_ic50_nM`
+  - `KD_proxy_ec50_nM`
+  - direct `binding_affinity_probe_kd`
+- Added regression coverage:
+  - `tests/test_presto.py` now checks that `forward_affinity_only()` is invariant to `binding_context`
+  - `tests/test_focused_probe.py` now checks that probe rows export all affinity heads
+- Verified:
+  - `pytest tests/test_presto.py -q`
+  - `pytest tests/test_focused_probe.py -q`
+  - `python -m py_compile models/presto.py scripts/focused_binding_probe.py tests/test_presto.py tests/test_focused_probe.py`
+- Launched fresh reruns in:
+  - `experiments/2026-03-16_1549_codex_pf07-sequence-only-all-head-probe-rerun`
+- Immediate data diagnosis:
+  - `SLLQHLIGL` has no numeric affinity supervision in `data/merged_deduped.tsv` for either `HLA-A*02:01` or `HLA-A*24:02`
+  - the old `SLLQHLIGL / HLA-A*24:02` `IC50 ~= 1389 nM` probe value was therefore not attached to any explicit purified/cellular/radio/fluorescence binding row
+  - the old PF07 run was also querying the probe panel without assay context against a model that had still been trained with assay-context tensors, so that value should not be over-interpreted
+
+# Future Experiment: Affinity Output Consistency Regularization (2026-03-16)
+
+## Spec
+
+- Goal: test whether weak output-side consistency regularization improves stability across related affinity outputs without violating the no-assay-selector-input rule and without swamping real assay-family supervision.
+- Non-negotiable modeling rule:
+  - no assay type / assay method / assay prep / assay readout tensors may enter as predictive inputs
+  - any assay-structure refinement must remain output-side only, fed by shared sequence-derived latents
+- Proposed consistency families:
+  - IC50 context family:
+    - if or when IC50 is expanded into output-side assay-context variants, `IC50` from cellular / purified / lysate and radioactivity / fluorescence contexts should stay similar
+    - regularize each context-specific IC50 output toward a shared IC50 family anchor, or use a low-weight variance penalty around the family mean
+  - proxy / non-proxy KD family:
+    - lightly tie `KD_nM`, `KD_proxy_ic50_nM`, and `KD_proxy_ec50_nM`
+    - also consider a weaker tie between `IC50_nM <-> KD_proxy_ic50_nM` and `EC50_nM <-> KD_proxy_ec50_nM`
+- Weighting rule:
+  - all agreement losses must be much smaller than the supervised assay losses
+  - start with very small weights in log10 space and tune upward only if they improve supported-head stability without collapsing genuine family differences
+- Preferred formulation:
+  - use a shared family anchor plus small residuals, not a full all-to-all pairwise penalty
+  - prefer Huber / smooth-L1 style agreement in `log10(nM)` space
+  - keep the regularizer off by default and expose it explicitly as an experiment knob
+- Gating:
+  - do not launch until the corrected PF07 sequence-only all-head rerun is closed and the head disagreement pattern is measured on supported probe peptides and held-out rows
+
+## Execution
+
+- [ ] Finalize the corrected PF07 all-head rerun and quantify supported head disagreement
+- [ ] Design output-side IC50 context variants or shared-anchor wiring without adding assay-selector inputs
+- [ ] Add weak consistency losses for:
+  - [ ] IC50 context variants
+  - [ ] direct KD vs proxy-KD heads
+  - [ ] optional weaker IC50<->KD_proxy_ic50 and EC50<->KD_proxy_ec50 ties
+- [ ] Run a small sweep over agreement-loss weights relative to the supervised loss
+- [ ] Accept only if held-out metrics improve and supported assay-family behavior stays biologically plausible
+# Honest EXP-21 Repeat (2026-03-16)
+
+## Spec
+
+- Goal: rerun the old EXP-21 benchmark family under an honest sequence-only contract to test whether the apparent groove advantage survives once assay-selector inputs are removed.
+- Fixed contract:
+  - source: `data/merged_deduped.tsv`
+  - alleles: `HLA-A*02:01`, `HLA-A*24:02`
+  - measurement profile: `numeric_no_qualitative`
+  - assay families: `IC50`, direct `KD`, `KD (~IC50)`, `KD (~EC50)`, `EC50`
+  - qualifier filter: `all`
+  - split: `peptide_group_80_10_10_seed42`
+  - batch size: `256`
+  - optimizer: `AdamW`
+  - lr: `1e-3`
+  - weight decay: `0.01`
+  - epochs: `50`
+  - requested Modal GPU: `H100!`
+- Required model/input contract:
+  - use the EXP-21 distributional/groove benchmark path
+  - disable assay-selector inputs completely
+  - preserve the benchmark head family otherwise so the comparison isolates the assay-input leak
+- Conditions to compare:
+  - `groove c02`, seed `43`
+  - `groove c01`, seed `43`
+  - `historical c02`, seed `43`
+- Required outcome:
+  - new experiment directory with reproducibility bundle, raw fetched artifacts, and summary tables
+  - explicit comparison to the old cheating EXP-21 result and the current honest PF07 Presto result
+  - clear statement of whether the old groove winner survives under the honest input contract
+
+## Execution
+
+- [x] Add an explicit no-assay-input mode to the distributional BA path
+- [x] Add targeted tests proving that the no-assay-input mode zeroes assay embeddings end-to-end
+- [x] Write the detailed experiment plan under `experiments/agents/codex/plans/`
+- [x] Create the experiment-local launcher for the honest-repeat sweep
+- [x] Run local verification and dry-run the launcher
+- [x] Launch the comparison runs on `H100!`
+- [x] Collect artifacts, update the experiment README, and update `experiments/experiment_log.md`
+- [x] Summarize whether the honest groove/historical runs still beat the current honest PF07 baseline
+
+## Review Notes (2026-03-16)
+
+- Added `assay_input_mode` to the legacy distributional BA benchmark path with a new `none` mode that forces the assay embedding to zero end-to-end.
+- Added distributional BA tests proving:
+  - `assay_input_mode="none"` yields an all-zero assay embedding
+  - `content_conditioned=True` is rejected when assay inputs are disabled
+- Verification before launch:
+  - `python -m pytest tests/test_distributional_ba.py -q`
+  - `python -m py_compile scripts/distributional_ba/config.py scripts/distributional_ba/train.py tests/test_distributional_ba.py`
+  - launcher dry-run
+  - local real dry-run:
+    - `python -m presto.scripts.distributional_ba.train ... --assay-input-mode none --dry-run`
+- Closed experiment:
+  - `experiments/2026-03-16_2142_codex_exp21-honest-no-assay-repeat`
+- Final ranking:
+  - `groove c02`: test Spearman `0.7995139`
+  - `groove c01`: test Spearman `0.7936514`
+  - `historical c02`: test Spearman `0.7932025`
+- Main conclusion:
+  - the old EXP-21 `groove c02` result was materially benefiting from assay-selector inputs
+  - the honest repeat drops by `0.0546` test Spearman relative to the old `0.8541` result
+  - the honest legacy groove benchmark is also worse than the current honest PF07 untied control at `0.8196`
+- Documentation follow-through:
+  - updated the new experiment README and canonical log entry
+  - marked the old EXP-21 benchmark as assay-conditioned historical context rather than the active honest baseline
+  - updated `experiments/model_to_beat.md` so the active strict seq-only baseline is PF07 instead of EXP-21 `groove c02`
+
+# Epoch Plot Readability Follow-Up (2026-03-17)
+
+## Spec
+
+- Goal: make the PF07 epoch-curve plots easier to compare by removing per-epoch point markers from the line charts.
+- Scope:
+  - experiment-level aggregated epoch plots for the active PF07 DAG rerun
+  - per-run validation/probe epoch plots emitted by `focused_binding_probe.py`
+- Constraints:
+  - do not change the metric values or the artifact filenames
+  - regenerate the current experiment plots in place after the style change
+
+## Execution
+
+- [x] Remove per-epoch markers from the shared epoch-plotting helpers
+- [x] Remove per-epoch markers from the active experiment-local aggregate plotter
+- [x] Regenerate the current PF07 DAG rerun PNGs
+- [x] Verify the updated image artifacts exist
+
+## Review
+
+- Updated both the shared per-run plot writer and the experiment-local aggregate plotter to render clean line charts without dots at every epoch.
+- Regenerated the current experiment PNGs in `experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/` and each run directory under `results/runs/`.
+
+# PF07 MHC Pretrain Impact Sweep (2026-03-17)
+
+## Spec
+
+- Goal: measure whether short MHC class/species pretraining improves the current honest PF07 affinity models, using fresh `d32` checkpoints that actually match the downstream architecture.
+- Core constraint:
+  - do not reuse the older `d128` warm-start checkpoint for this study
+  - compare `0`, `1`, and `2` epochs of MHC-only pretraining at the same downstream model width/depth
+- Fixed downstream contract:
+  - main `Presto` path
+  - sequence-only inputs: `nflank`, `peptide`, `cflank`, `mhc_a`, `mhc_b`
+  - dataset: `data/merged_deduped.tsv`
+  - alleles: `HLA-A*02:01`, `HLA-A*24:02`
+  - `measurement_profile=numeric_no_qualitative`
+  - `qualifier_filter=all`
+  - split policy: peptide-group `80/10/10`
+  - split seed `42`
+  - train seed `43`
+  - `d_model=32`, `n_layers=2`, `n_heads=4`
+  - `mhcflurry`
+  - `split_kd_proxy`
+  - `50` epochs
+  - batch size `256`
+  - `AdamW`, `lr=1e-3`, `weight_decay=0.01`
+  - requested GPU `H100!`
+- Downstream variants to include:
+  - `pf07_control_constant`
+  - `pf07_dag_method_leaf_constant`
+  - `pf07_dag_prep_readout_leaf_constant`
+- Pretraining variants:
+  - `pretrain_0ep`: no warm start
+  - `pretrain_1ep`: fresh `d32` MHC pretrain for 1 epoch
+  - `pretrain_2ep`: fresh `d32` MHC pretrain for 2 epochs
+- Total intended downstream grid:
+  - `3` model variants x `3` pretrain durations = `9` runs
+- Experiment structure:
+  - one experiment family directory under `experiments/`
+  - `results/pretrains/` stores fetched MHC-pretrain artifacts
+  - `results/runs/` stores fetched downstream PF07 runs
+  - launcher supports staged execution so pretrains can finish before dependent finetunes launch
+- Required outcome:
+  - explicit comparison of pretraining effect by downstream architecture
+  - clear statement of whether `1` or `2` epochs help, hurt, or are neutral
+  - local artifacts sufficient to inspect both the pretrain summaries and the downstream eval metrics
+
+## Execution
+
+- [x] Write the detailed Codex plan for the staged pretrain-impact sweep
+- [x] Create a staged experiment-local launcher that can launch fresh `d32` MHC pretrains and then the dependent PF07 runs
+- [x] Record pretrain and downstream manifests separately inside the experiment directory
+- [x] Dry-run the launcher and verify the generated commands/manifests
+- [x] Launch the `1`-epoch and `2`-epoch MHC pretrains on `H100!`
+- [x] Fetch the pretrain artifacts locally and capture checkpoint paths
+- [x] Launch the `9` downstream PF07 runs using `0/1/2`-epoch pretrain settings
+- [x] Fetch downstream artifacts, aggregate summaries, and close the experiment README/log
+
+## Review
+
+- Created the staged experiment family under `experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep`.
+- Added `code/launch.py` with `pretrain` / `finetune` / `all` phases so fresh `d32` MHC pretrains can be generated before the dependent PF07 runs launch.
+- Chosen downstream grid:
+  - `pf07_control_constant`
+  - `pf07_dag_method_leaf_constant`
+  - `pf07_dag_prep_readout_leaf_constant`
+  - each crossed with `pretrain_0ep`, `pretrain_1ep`, `pretrain_2ep`
+- Ran launcher dry-run successfully, then launched `all --wait-for-pretrains`.
+- Both fresh `d32` pretrains completed and were fetched locally:
+  - `results/pretrains/mhc-pretrain-d32-20260317a-e01/`
+  - `results/pretrains/mhc-pretrain-d32-20260317a-e02/`
+- Their remote checkpoints are:
+  - `/checkpoints/mhc-pretrain-d32-20260317a-e01/mhc_pretrain.pt`
+  - `/checkpoints/mhc-pretrain-d32-20260317a-e02/mhc_pretrain.pt`
+- All `9` downstream PF07 runs completed and were fetched under `results/runs/`.
+- Best within-sweep result was `pf07_dag_prep_readout_leaf_constant` with `1` epoch of pretraining at test Spearman `0.8377`.
+- That did not beat the current honest baseline (`0.8382`), so there is no `model_to_beat` change.
+- Pretraining itself worked on the MHC-only task, but transfer was mostly negative:
+  - mean test Spearman by pretrain duration was `0ep=0.8296`, `1ep=0.8202`, `2ep=0.8241`
+  - the flat PF07 control and `dag_method_leaf` both got worse with pretraining
+  - only `dag_prep_readout_leaf` saw a tiny Spearman bump at `1` epoch, with worse RMSE
+
+# PF07 All-Class-I 1ep-Pretrain Epoch Sweep (2026-03-17)
+
+## Spec
+
+- Goal: take the current honest PF07 winner structure, keep the `1`-epoch `d32` MHC class/species pretrain warm start fixed, widen training/eval to all available MHC-I numeric pMHC binding data, and measure how performance evolves across a small epoch-budget sweep up to `50` epochs.
+- Launch intent for the rebuilt-canonical rerun:
+  - use the rebuilt canonical `data/merged_deduped.tsv`
+  - use the `mhcseqs`-first exact sequence resolver path on Modal, not index-only fallback
+  - rerun the recent honest PF07 comparison family, not just a single condition
+- Fixed model contract:
+  - main `Presto` path
+  - sequence-only inputs: `nflank`, `peptide`, `cflank`, `mhc_a`, `mhc_b`
+  - assay-selector inputs forbidden
+  - `affinity_loss_mode=full`
+  - `affinity_target_encoding=mhcflurry`
+  - `kd_grouping_mode=split_kd_proxy`
+  - `d_model=32`, `n_layers=2`, `n_heads=4`
+  - `AdamW`, `lr=1e-3`, `weight_decay=0.01`, constant schedule
+  - no synthetic negatives
+  - fixed warm start: `/checkpoints/mhc-pretrain-d32-20260317a-e01/mhc_pretrain.pt`
+- Fixed data contract:
+  - source: `data/merged_deduped.tsv`
+  - train on all class-I alleles: `train_all_alleles=true`, `train_mhc_class_filter=I`
+  - keep the same sentry probe panel:
+    - probe alleles: `HLA-A*02:01`, `HLA-A*24:02`
+    - probe peptides: `SLLQHLIGL`, `FLRYLLFGI`, `NFLIKFLLI`, `IMLEGETKL`
+  - measurement profile: `numeric_no_qualitative`
+  - qualifier filter: `all`
+  - peptide-group `80/10/10` split seed `42`
+  - train seed `43`
+- Variation grid:
+  - residual / architecture variants:
+    - `pf07_control_constant`
+    - `pf07_dag_method_leaf_constant`
+    - `pf07_dag_prep_readout_leaf_constant`
+  - epoch budgets:
+    - `10`
+    - `25`
+    - `50`
+  - fixed warm start:
+    - `/checkpoints/mhc-pretrain-d32-20260317a-e01/mhc_pretrain.pt`
+  - no optimizer changes beyond the larger all-class-I data contract
+- Required artifacts:
+  - final validation/test metrics and prediction dumps
+  - per-epoch validation curves
+  - per-epoch probe affinity traces for all output heads
+  - local aggregate plots/tables sufficient to recreate the experiment writeup without refetching Modal artifacts
+- Required outcome:
+  - identify whether the same model benefits from the larger all-class-I training set
+  - show whether later epochs still help on this broader contract
+  - preserve direct comparison across `10/25/50` with identical model/pretrain settings
+  - preserve direct comparison across the three leading honest PF07 residual variants on the rebuilt dataset
+
+## Execution
+
+- [x] Write the detailed Codex plan for the all-class-I PF07 epoch sweep
+- [x] Confirm the all-class-I class filter / train-all-alleles contract locally
+- [x] Confirm the Modal path will use the rebuilt canonical dataset and `mhcseqs`-first sequence resolution
+- [x] Create the new experiment directory and experiment-local launcher / analyzer
+- [x] Dry-run the launcher and verify the manifests / commands
+- [x] Refresh the Modal `presto-data` volume with the rebuilt canonical merged TSV
+- [x] Launch the epoch-budget sweep on `H100!`
+- [ ] Fetch the run artifacts locally
+- [ ] Aggregate summaries and epoch/probe plots
+- [ ] Close the experiment README / canonical log with the results
+# Dataset Unification Refresh: mhcgnomes + mhcseqs + Bagged Restrictions (2026-03-17)
+
+## Spec
+
+- Goal: modernize dataset unification so Presto stops silently flattening structured MHC restrictions and prefers `mhcseqs` for sequence inventory.
+- Main contract changes:
+  - keep exact single-allele rows working as they do today
+  - preserve serotype / haplotype / pair restrictions as explicit allele bags instead of coercing them into one guessed allele
+  - prefer `mhcseqs` for exact allele -> sequence lookup, with the legacy local MHC index as a fallback path rather than the primary source of truth
+- Required merge-schema additions:
+  - add explicit merged-TSV fields for the normalized bag and its provenance
+  - provenance must distinguish at least:
+    - `exact`
+    - `serotype_expanded`
+    - `haplotype_expanded`
+    - `pair_expanded`
+    - `unresolved`
+  - do not overwrite `mhc_allele` with a guessed exact allele for ambiguous cases
+- Required loader changes:
+  - preserve the bag columns when reading `merged_deduped.tsv`
+  - keep exact rows scalar-compatible
+  - carry bag labels forward on modalities that can use them now or soon (`elution`, `tcell`, and future MIL-ready affinity paths)
+  - do not silently convert ambiguous bag rows into fake exact rows
+- Required sequence-resolution changes:
+  - add a thin `mhcseqs` adapter boundary
+  - resolve exact candidate alleles through `mhcseqs` first
+  - use `data/mhc_index.py` only as fallback / compatibility when needed
+  - report provider-specific resolution counts
+- Constraints:
+  - no behavior regression for exact scalar rows
+  - no silent loss of ambiguity provenance
+  - no fake MIL by duplicating bag rows into multiple exact rows
+  - keep the initial patch focused on unification + loader/resolution plumbing, not full downstream MIL training
+
+## Execution
+
+- [x] Add a reusable MHC restriction expansion helper backed by `mhcgnomes`
+- [x] Widen `UnifiedRecord` and merged TSV serialization with allele-bag + provenance fields
+- [x] Populate the new fields in the cross-source parsers without breaking exact rows
+- [x] Teach merged-TSV loaders to parse the new fields and preserve bag labels
+- [x] Add an `mhcseqs`-first exact sequence resolver with legacy-index fallback
+- [x] Update sequence-collection code to include candidate alleles from bagged rows
+- [x] Add targeted tests for exact / serotype / haplotype behavior and resolver fallback
+- [x] Run focused verification and summarize what still remains before a full dataset rebuild
+
+## Review Notes (2026-03-17)
+
+- Added `expand_mhc_restriction()` in `data/allele_resolver.py`.
+  - exact alleles stay singleton bags with provenance `exact`
+  - serotypes / haplotypes / pairs now preserve their coarse normalized token and expose exact candidate alleles separately
+- Widened `UnifiedRecord` and merged TSV output with:
+  - `mhc_allele_set`
+  - `mhc_allele_provenance`
+  - `mhc_allele_bag_size`
+- Cross-source parsers now populate the new fields directly instead of flattening everything to a guessed scalar allele.
+- `write_assay_csvs()` and merged TSV output now carry the same bag/provenance fields, so local artifacts retain the ambiguity contract.
+- Added `data/mhc_sequence_resolver.py` as the new sequence-resolution boundary.
+  - exact allele sequence lookup is now `mhcseqs`-first
+  - the legacy `mhc_index` path remains as compatibility fallback
+  - resolver stats now report `resolved_mhcseqs` vs `resolved_index`
+- `scripts/train_iedb.py` now:
+  - preserves bagged restrictions when reading `merged_deduped.tsv`
+  - carries bag labels on `BindingRecord`, `KineticsRecord`, `StabilityRecord`, and `TCellRecord`
+  - uses bag candidates when collecting exact alleles for sequence lookup
+- Verification:
+  - `python -m py_compile data/allele_resolver.py data/cross_source_dedup.py data/loaders.py data/mhc_sequence_resolver.py scripts/train_iedb.py`
+  - `pytest tests/test_allele_resolver.py -q`
+  - `pytest tests/test_cross_source_dedup.py -q`
+  - `pytest tests/test_train_iedb.py -q`
+  - `pytest tests/test_mhc_sequence_resolver.py -q`
+- Important remaining gap:
+  - this patch preserves bagged serotype/haplotype restrictions end-to-end in unification and loader plumbing, but it does not yet add full downstream MIL training/evaluation for affinity or T-cell bags
+  - the next concrete step is a dataset rebuild + audit comparing old vs new retained rows and bag-size distributions, then a dedicated MIL-ready training path for ambiguous restrictions
+# Canonical Merged Dataset Rebuild (2026-03-17)
+
+## Spec
+
+- Goal: rebuild the canonical `data/merged_deduped.tsv` using the new MHC restriction expansion + `mhcseqs`-first unification path, then treat that rebuilt file as the default future training input.
+- Required outcome:
+  - regenerate `data/merged_deduped.tsv` end-to-end through `data.cross_source_dedup.deduplicate_all`
+  - preserve the new fields:
+    - `mhc_allele_set`
+    - `mhc_allele_provenance`
+    - `mhc_allele_bag_size`
+  - verify the rebuilt file still loads through `scripts/train_iedb.py`
+  - produce a compact audit summary for overall rows plus species x MHC-resolution counts
+- Constraints:
+  - do not break existing exact-allele training behavior
+  - use the canonical in-repo merged TSV path, not a sidecar experimental file
+  - keep the rebuild reproducible from local source data already in `data/`
+
+## Execution
+
+- [x] Rebuild `data/merged_deduped.tsv` with the current unification code
+- [x] Run a compact audit on the rebuilt file, including MHC-I affinity subset counts
+- [x] Verify merged-TSV loading against the rebuilt file
+- [x] Record results and confirm this file is the default for future training runs
+
+## Review
+
+- Rebuilt the canonical merged dataset through `data.cross_source_dedup.deduplicate_all` and promoted it into place at `data/merged_deduped.tsv`.
+- Preserved the old canonical files as dated backups:
+  - `data/merged_deduped.pre_20260317_bagrefresh.tsv`
+  - `data/merged_deduped_funnel.pre_20260317_bagrefresh.tsv`
+  - `data/merged_deduped_funnel.pre_20260317_bagrefresh.png`
+- New canonical size:
+  - `3,423,737` data rows (`3,423,738` including header)
+  - old canonical size: `3,317,673` data rows
+  - net increase: `106,064` rows
+- Rebuild funnel summary:
+  - input records: `12,459,631`
+  - output after dedup: `5,765,062`
+  - output after elution cell-HLA filter / final TSV: `3,423,737`
+- Full rebuilt species x MHC-resolution counts:
+  - `human`: exact `2,054,227`, serotype-expanded `59,758`, pair-expanded `240,233`, unresolved `543,847`
+  - `mouse`: exact `232,356`, serotype-expanded `8,769`, haplotype-expanded `46,035`, pair-expanded `39,052`, unresolved `12,139`
+  - `other`: exact `27,564`, serotype-expanded `101`, haplotype-expanded `1,401`, pair-expanded `27`, unresolved `39`
+  - `unknown`: exact `156,543`, serotype-expanded `43`, haplotype-expanded `5`, pair-expanded `34`, unresolved `1,564`
+- Compact MHC-I affinity audit on the rebuilt canonical data:
+  - total rows: `214,754`
+  - label mix: qualitative `60,084`, quantitative inequality `154,670`
+  - source mix: `IEDB` only
+  - resolution mix:
+    - `human`: exact `169,314`, serotype-expanded `3,785`, unresolved `27`
+    - `mouse`: exact `12,267`, haplotype-expanded `20`, unresolved `84`
+    - `other`: exact `23,498`, serotype-expanded `40`, haplotype-expanded `41`
+    - `unknown`: exact `5,678`
+- Verification:
+  - rebuilt TSV contains `mhc_allele_set`, `mhc_allele_provenance`, and `mhc_allele_bag_size`
+  - `scripts.train_iedb.load_records_from_merged_tsv(...)` successfully loaded sampled records from the rebuilt TSV before promotion
+  - the canonical path now points at the rebuilt artifact and should be treated as the default training input for future runs

@@ -444,9 +444,37 @@
   - This is not proof of exact backend equivalence, but it is strong enough to treat `mps` as usable for local focused training under the manual-dropout contract.
 
 ### 2026-03-20_0920_codex_cpu-vs-mps-allclass1-auto-default-confirmation
-- **Agent**: codex
+- **Agent/model**: `codex`
 - **Dir**: [2026-03-20_0920_codex_cpu-vs-mps-allclass1-auto-default-confirmation](experiments/2026-03-20_0920_codex_cpu-vs-mps-allclass1-auto-default-confirmation)
 - **Source script**: `experiments/2026-03-20_0920_codex_cpu-vs-mps-allclass1-auto-default-confirmation/code/launch.py`
+- **Dataset / curation contract**:
+  - canonical rebuilt `data/merged_deduped.tsv`
+  - `source=iedb`
+  - `train_mhc_class_filter=I`
+  - `train_all_alleles=True`
+  - `measurement_profile=numeric_no_qualitative`
+  - `qualifier_filter=all`
+  - reduced confirmation cap: `max_records=5000`
+  - honest inputs only: `nflank`, `peptide`, `cflank`, `mhc_a`, `mhc_b`
+  - supervised outputs: `IC50`, `KD`, `KD(~IC50)`, `KD(~EC50)`, `EC50`
+- **Training / pretraining contract**:
+  - downstream design: `presto_pf07_dag_prep_readout_leaf_constant`
+  - `d_model=32`, `n_layers=2`, `n_heads=4`
+  - `epochs=3`, `batch_size=256`, `lr=1e-3`, `weight_decay=0.01`
+  - warm start: `experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/pretrains/mhc-pretrain-d32-20260317a-e01/mhc_pretrain.pt`
+  - launched with default `--mps-safe-mode auto`
+- **Tested conditions**:
+  - `cpu`: test Spearman `0.20254`, AUROC `0.59127`, AUPRC `0.43533`, RMSE log10 `1.38687`, loss `0.06661`
+  - `mps`: test Spearman `0.30026`, AUROC `0.65745`, AUPRC `0.48325`, RMSE log10 `1.36865`, loss `0.06579`
+- **Runtime note**:
+  - although the launch used `--mps-safe-mode auto`, the runtime summaries show:
+    - `mps_safe_mode_requested = auto`
+    - `mps_safe_mode_applied = manual_dropout`
+  - `mps_safe_dropout_modules_replaced = 20` on both backends
+  - no fallback warnings, NaNs, or `non_finite_train_loss` events appeared in the logs
+- **Takeaway**:
+  - The default path now truly uses manual dropout on CPU and MPS alike.
+  - This confirmation reproduced the same result pattern as the explicit-manual run from `2026-03-19_1505...`, so manual dropout is now the actual shared default rather than a special override.
 - **Status**: launched
 - **Dataset**: `{"assay_families_supervised": ["IC50", "KD", "KD(~IC50)", "KD(~EC50)", "EC50"], "assay_selector_inputs_forbidden": true, "input_fields": ["nflank", "peptide", "cflank", "mhc_a", "mhc_b"], "max_records": 5000, "measurement_profile": "numeric_no_qualitative", "probe_alleles": ["HLA-A*02:01", "HLA-A*24:02"], "probe_peptides": ["SLLQHLIGL", "FLRYLLFGI", "NFLIKFLLI", "IMLEGETKL"], "qualifier_filter": "all", "sequence_resolution": "mhcseqs_first_with_index_fallback", "source": "data/merged_deduped.tsv", "source_filter": "iedb", "source_refresh": "canonical rebuild 2026-03-17", "split_policy": "peptide_group_80_10_10", "split_seed": 42, "train_all_alleles": true, "train_mhc_class_filter": "I", "train_seed": 43, "validation_purpose": "cpu_vs_mps_all_class_i_auto_default_confirmation"}`
 - **Training**: `{"downstream": {"affinity_assay_residual_mode": "dag_prep_readout_leaf", "affinity_target_encoding": "mhcflurry", "batch_size": 256, "d_model": 32, "design_id": "presto_pf07_dag_prep_readout_leaf_constant", "devices": ["cpu", "mps"], "epochs": 3, "kd_grouping_mode": "split_kd_proxy", "mps_safe_mode": "auto", "n_heads": 4, "n_layers": 2}, "pretraining": {"mode": "mhc_pretrain", "warm_start_checkpoint_local": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/pretrains/mhc-pretrain-d32-20260317a-e01/mhc_pretrain.pt"}}`

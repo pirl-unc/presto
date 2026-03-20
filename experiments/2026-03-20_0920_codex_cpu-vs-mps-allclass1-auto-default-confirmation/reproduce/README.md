@@ -1,0 +1,8 @@
+# Reproducibility Bundle
+
+- Source script: `experiments/2026-03-20_0920_codex_cpu-vs-mps-allclass1-auto-default-confirmation/code/launch.py`
+- Launch command: `launch.sh`
+- Launch metadata: `launch.json`
+- Launcher snapshot: `source/` (if the source script existed at bundle creation time)
+
+These files freeze the launch invocation and environment for this experiment family so later agents can rerun or extend it without relying on current launcher defaults.

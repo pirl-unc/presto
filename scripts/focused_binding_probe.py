@@ -20,12 +20,14 @@ import subprocess
 import threading
 import time
 from collections import Counter, defaultdict
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from statistics import median
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 import torch
+import torch.nn as nn
+import torch.nn.functional as F
 from torch.optim.lr_scheduler import CosineAnnealingLR, LinearLR, OneCycleLR, SequentialLR
 from torch.utils.data import DataLoader, Dataset, Sampler
 
@@ -34,7 +36,13 @@ from presto.data.allele_resolver import infer_mhc_class_optional, normalize_mhc_
 from presto.data.cross_source_dedup import UnifiedRecord, classify_assay_type
 from presto.data.groove import prepare_mhc_input
 from presto.data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
+from presto.data.mhc_sequence_resolver import ExactMHCInput, resolve_class_i_groove_halves
 from presto.data.tokenizer import Tokenizer
+from presto.data.vocab import (
+    BINDING_ASSAY_METHODS,
+    BINDING_ASSAY_PREP,
+    BINDING_ASSAY_READOUT,
+)
 from presto.models.affinity import (
     AFFINITY_TARGET_ENCODINGS,
     DEFAULT_MAX_AFFINITY_NM,
@@ -51,6 +59,7 @@ from presto.scripts.train_iedb import (
     _normalize_required_aa_sequence,
     ALL_SYNTHETIC_MODES,
     augment_binding_records_with_synthetic_negatives,
+    resolve_mhc_inputs_from_index,
     resolve_mhc_sequences_from_index,
 )
 from presto.training.losses import censor_aware_loss
@@ -66,6 +75,22 @@ DEFAULT_N_HEADS = 4
 DEFAULT_LR = 2.8e-4
 DEFAULT_WEIGHT_DECAY = 0.01
 DEFAULT_SEED = 42
+
+EPOCH_METRIC_PLOT_SPECS = (
+    ("val_spearman", "Validation Spearman"),
+    ("val_auroc", "Validation AUROC"),
+    ("val_auprc", "Validation AUPRC"),
+    ("val_rmse_log10", "Validation RMSE log10"),
+    ("val_loss", "Validation Loss"),
+)
+PROBE_OUTPUT_PLOT_SPECS = (
+    ("kd_nM", "KD"),
+    ("ic50_nM", "IC50"),
+    ("ec50_nM", "EC50"),
+    ("kd_proxy_ic50_nM", "KD (~IC50)"),
+    ("kd_proxy_ec50_nM", "KD (~EC50)"),
+    ("probe_kd_nM", "Probe KD"),
+)
 
 MEASUREMENT_PROFILE_ALL = "all_binding_rows"
 MEASUREMENT_PROFILE_NUMERIC = "numeric_no_qualitative"
@@ -123,9 +148,161 @@ AFFINITY_ASSAY_RESIDUAL_MODES = {
     "shared_base_segment_residual",
     "shared_base_factorized_context_residual",
     "shared_base_factorized_context_plus_segment_residual",
+    "dag_family",
+    "dag_method_leaf",
+    "dag_prep_readout_leaf",
 }
 DEFAULT_GROOVE_AUDIT_CAP_PER_SOURCE = 128
-FOCUSED_DATASET_CACHE_VERSION = 2
+FOCUSED_DATASET_CACHE_VERSION = 3
+
+
+class ManualDropout(nn.Module):
+    """Backend-neutral dropout using an explicit Bernoulli mask."""
+
+    def __init__(self, p: float = 0.5, inplace: bool = False, seed: Optional[int] = None):
+        super().__init__()
+        self.p = float(p)
+        self.inplace = bool(inplace)
+        self.seed = None if seed is None else int(seed)
+        self._cpu_generator: Optional[torch.Generator] = None
+
+    def _generator(self) -> torch.Generator:
+        if self._cpu_generator is None:
+            generator = torch.Generator(device="cpu")
+            if self.seed is None:
+                generator.manual_seed(int(torch.initial_seed()))
+            else:
+                generator.manual_seed(int(self.seed))
+            self._cpu_generator = generator
+        return self._cpu_generator
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        if (not self.training) or self.p <= 0.0:
+            return x
+        keep_prob = 1.0 - float(self.p)
+        if keep_prob <= 0.0:
+            return x.zero_() if self.inplace else torch.zeros_like(x)
+        mask = (
+            torch.rand(
+                x.shape,
+                dtype=torch.float32,
+                device="cpu",
+                generator=self._generator(),
+            )
+            < keep_prob
+        ).to(device=x.device, dtype=x.dtype)
+        if self.inplace:
+            return x.mul_(mask / keep_prob)
+        return x * (mask / keep_prob)
+
+
+def _mps_is_available() -> bool:
+    mps_backend = getattr(torch.backends, "mps", None)
+    if mps_backend is None:
+        return False
+    try:
+        return bool(mps_backend.is_available())
+    except Exception:
+        return False
+
+
+def _resolve_runtime_device(requested: str | None) -> str:
+    normalized = str(requested or "auto").strip().lower()
+    if normalized in {"", "auto"}:
+        if torch.cuda.is_available():
+            return "cuda"
+        if _mps_is_available():
+            return "mps"
+        return "cpu"
+    if normalized == "cuda":
+        if not torch.cuda.is_available():
+            raise ValueError("Requested device 'cuda' but CUDA is not available")
+        return "cuda"
+    if normalized == "mps":
+        if not _mps_is_available():
+            raise ValueError("Requested device 'mps' but Apple Metal (MPS) is not available")
+        return "mps"
+    if normalized == "cpu":
+        return "cpu"
+    raise ValueError(f"Unsupported device selection: {requested!r}")
+
+
+def _effective_pin_memory(*, requested: bool, device: str) -> bool:
+    return bool(requested) and str(device) == "cuda"
+
+
+def _apply_mps_safe_mode(
+    model: torch.nn.Module,
+    *,
+    device: str,
+    requested_mode: str,
+    seed: Optional[int] = None,
+) -> Dict[str, Any]:
+    """Apply explicit runtime dropout policy.
+
+    The default contract is seeded manual dropout on all backends so the
+    dropout implementation itself does not vary by hardware. Native backend
+    dropout is available only via explicit opt-out (`off`), and an explicit
+    zero-dropout fallback remains available if needed for MPS debugging.
+    """
+    normalized = str(requested_mode or "auto").strip().lower()
+    if normalized not in {"auto", "off", "manual_dropout", "zero_dropout"}:
+        raise ValueError(f"Unsupported mps_safe_mode: {requested_mode!r}")
+
+    applied_mode = "off"
+    dropout_modules_zeroed = 0
+    dropout_modules_replaced = 0
+    mha_modules_zeroed = 0
+    apply_manual_dropout = normalized in {"auto", "manual_dropout"}
+    apply_zero_dropout = normalized == "zero_dropout" and str(device) == "mps"
+    manual_seed_base = None if seed is None else (int(seed) * 1000003)
+
+    def _replace_dropout_modules(module: nn.Module) -> None:
+        nonlocal dropout_modules_replaced, dropout_modules_zeroed, mha_modules_zeroed
+        for name, child in list(module.named_children()):
+            if isinstance(child, ManualDropout):
+                continue
+            if isinstance(child, nn.Dropout):
+                if apply_manual_dropout:
+                    module_seed = None if manual_seed_base is None else (manual_seed_base + dropout_modules_replaced)
+                    setattr(
+                        module,
+                        name,
+                        ManualDropout(
+                            p=float(child.p),
+                            inplace=bool(child.inplace),
+                            seed=module_seed,
+                        ),
+                    )
+                    dropout_modules_replaced += 1
+                    continue
+                if apply_zero_dropout:
+                    if float(child.p) != 0.0:
+                        dropout_modules_zeroed += 1
+                    child.p = 0.0
+                    continue
+            _replace_dropout_modules(child)
+
+    if apply_manual_dropout:
+        applied_mode = "manual_dropout"
+        _replace_dropout_modules(model)
+    elif apply_zero_dropout:
+        applied_mode = "zero_dropout"
+        _replace_dropout_modules(model)
+        for module in model.modules():
+            if isinstance(module, nn.MultiheadAttention):
+                if float(getattr(module, "dropout", 0.0)) != 0.0:
+                    mha_modules_zeroed += 1
+                module.dropout = 0.0
+
+    return {
+        "requested": normalized,
+        "applied": applied_mode,
+        "dropout_modules_zeroed": int(dropout_modules_zeroed),
+        "dropout_modules_replaced": int(dropout_modules_replaced),
+        "multihead_attention_modules_zeroed": int(mha_modules_zeroed),
+        "transformer_encoder_layers_zeroed": 0,
+    }
 
 
 def _build_lr_scheduler(
@@ -534,6 +711,7 @@ class PreparedBindingState:
     mhc_sequences: Dict[str, str]
     mhc_stats: Dict[str, Any]
     probe_support: Dict[str, Any]
+    mhc_exact_inputs: Dict[str, ExactMHCInput] = field(default_factory=dict)
     cache_hit: bool = False
     cache_key: str = ""
 
@@ -945,6 +1123,7 @@ def _load_prepared_binding_state_from_cache(
             balance_stats=dict(payload["balance_stats"]),
             split_stats=dict(payload["split_stats"]),
             mhc_sequences=dict(payload["mhc_sequences"]),
+            mhc_exact_inputs=dict(payload.get("mhc_exact_inputs", {})),
             mhc_stats=dict(payload["mhc_stats"]),
             probe_support=dict(payload["probe_support"]),
             cache_hit=True,
@@ -977,6 +1156,7 @@ def _write_prepared_binding_state_to_cache(
         "balance_stats": dict(state.balance_stats),
         "split_stats": dict(state.split_stats),
         "mhc_sequences": dict(state.mhc_sequences),
+        "mhc_exact_inputs": dict(state.mhc_exact_inputs),
         "mhc_stats": dict(state.mhc_stats),
         "probe_support": dict(state.probe_support),
     }
@@ -1312,15 +1492,20 @@ def _prepare_real_binding_state(
     if not train_records or not val_records:
         raise RuntimeError("Focused binding split must produce both train and val records")
 
+    resolved_alleles = sorted(
+        {
+            str(rec.mhc_allele or "").strip()
+            for rec in (train_records + val_records + test_records)
+            if str(rec.mhc_allele or "").strip()
+        }
+    )
     mhc_sequences, mhc_stats = resolve_mhc_sequences_from_index(
         index_csv=str(index_csv),
-        alleles=sorted(
-            {
-                str(rec.mhc_allele or "").strip()
-                for rec in (train_records + val_records + test_records)
-                if str(rec.mhc_allele or "").strip()
-            }
-        ),
+        alleles=resolved_alleles,
+    )
+    mhc_exact_inputs, _ = resolve_mhc_inputs_from_index(
+        index_csv=str(index_csv),
+        alleles=resolved_alleles,
     )
     probe_support = {
         peptide: _audit_probe_support(merged_tsv, peptide, alleles_of_interest=probe_alleles)
@@ -1338,6 +1523,7 @@ def _prepare_real_binding_state(
         balance_stats=balance_stats,
         split_stats=split_stats,
         mhc_sequences=mhc_sequences,
+        mhc_exact_inputs=mhc_exact_inputs,
         mhc_stats=mhc_stats,
         probe_support=probe_support,
         cache_hit=False,
@@ -1604,6 +1790,7 @@ def _build_epoch_train_state(
     real_train_records: Sequence[Any],
     real_train_dataset: PrestoDataset,
     mhc_sequences: Mapping[str, str],
+    mhc_exact_inputs: Mapping[str, ExactMHCInput],
     synthetic_negatives: bool,
     negative_ratio: float,
     synthetic_seed: int,
@@ -1639,6 +1826,7 @@ def _build_epoch_train_state(
         synthetic_dataset = PrestoDataset(
             binding_records=synthetic_records,
             mhc_sequences=dict(mhc_sequences),
+            mhc_exact_inputs=dict(mhc_exact_inputs),
             strict_mhc_resolution=False,
             dataset_index_offset=len(real_train_dataset),
         )
@@ -1863,14 +2051,15 @@ def _prepare_probe_allele_sequences(
     return allele_sequences
 
 
-def _find_allele_sequence(allele_sequences: Mapping[str, str], allele: str) -> Optional[str]:
-    for key in [allele, allele.replace("HLA-", "")]:
-        if key in allele_sequences:
-            return allele_sequences[key]
-    for key, value in allele_sequences.items():
-        if allele in key or key in allele:
-            return value
-    return None
+def _resolve_probe_groove_halves(
+    *,
+    allele_sequences: Mapping[str, str],
+    allele: str,
+) -> Optional[Tuple[str, str]]:
+    return resolve_class_i_groove_halves(
+        allele=str(allele),
+        allele_sequences=allele_sequences,
+    )
 
 
 def _evaluate_probe_panel(
@@ -1885,6 +2074,13 @@ def _evaluate_probe_panel(
     rows: List[Dict[str, Any]] = []
     midpoint = float(getattr(model, "binding_midpoint_nM", 500.0))
     scale = float(getattr(model, "binding_log10_scale", 0.35))
+    assay_probe_fields = (
+        ("KD_nM", "kd"),
+        ("IC50_nM", "ic50"),
+        ("EC50_nM", "ec50"),
+        ("KD_proxy_ic50_nM", "kd_proxy_ic50"),
+        ("KD_proxy_ec50_nM", "kd_proxy_ec50"),
+    )
     with torch.no_grad():
         for peptide in peptides:
             pep = str(peptide or "").strip().upper()
@@ -1892,15 +2088,18 @@ def _evaluate_probe_panel(
                 continue
             pep_tok = torch.tensor(tokenizer.encode(pep, max_len=50)).unsqueeze(0).to(device)
             for allele in alleles:
-                mhc_seq = _find_allele_sequence(allele_sequences, allele)
-                if not mhc_seq:
+                grooves = _resolve_probe_groove_halves(
+                    allele_sequences=allele_sequences,
+                    allele=str(allele),
+                )
+                if grooves is None:
                     continue
-                prepared = prepare_mhc_input(mhc_a=mhc_seq, mhc_class="I")
+                groove1, groove2 = grooves
                 mhc_a_tok = torch.tensor(
-                    tokenizer.encode(prepared.groove_half_1, max_len=120)
+                    tokenizer.encode(groove1, max_len=120)
                 ).unsqueeze(0).to(device)
                 mhc_b_tok = torch.tensor(
-                    tokenizer.encode(prepared.groove_half_2, max_len=120)
+                    tokenizer.encode(groove2, max_len=120)
                 ).unsqueeze(0).to(device)
                 outputs = model.forward_affinity_only(
                     pep_tok=pep_tok,
@@ -1910,14 +2109,25 @@ def _evaluate_probe_panel(
                     species="human",
                 )
                 assays = outputs.get("assays", {})
-                kd_tensor = assays.get("KD_nM") if isinstance(assays, dict) else None
-                ic50_tensor = assays.get("IC50_nM") if isinstance(assays, dict) else None
-                kd_log10 = float(kd_tensor[0].item()) if isinstance(kd_tensor, torch.Tensor) else None
-                ic50_log10 = (
-                    float(ic50_tensor[0].item())
-                    if isinstance(ic50_tensor, torch.Tensor)
-                    else None
-                )
+                row: Dict[str, Any] = {
+                    "peptide": pep,
+                    "allele": str(allele),
+                }
+                for assay_key, field_prefix in assay_probe_fields:
+                    assay_tensor = assays.get(assay_key) if isinstance(assays, dict) else None
+                    assay_log10 = (
+                        float(assay_tensor[0].item())
+                        if isinstance(assay_tensor, torch.Tensor)
+                        else None
+                    )
+                    row[f"{field_prefix}_log10"] = assay_log10
+                    row[f"{field_prefix}_nM"] = (
+                        float(10.0 ** assay_log10)
+                        if assay_log10 is not None
+                        else None
+                    )
+                kd_log10 = row["kd_log10"]
+                ic50_log10 = row["ic50_log10"]
                 probe_kd_tensor = outputs.get("binding_affinity_probe_kd")
                 probe_kd_log10 = (
                     float(probe_kd_tensor[0].item())
@@ -1926,18 +2136,8 @@ def _evaluate_probe_panel(
                 )
                 presentation_logit = outputs.get("presentation_logit")
                 processing_logit = outputs.get("processing_logit")
-                rows.append(
+                row.update(
                     {
-                        "peptide": pep,
-                        "allele": str(allele),
-                        "kd_log10": kd_log10,
-                        "kd_nM": (float(10.0 ** kd_log10) if kd_log10 is not None else None),
-                        "ic50_log10": ic50_log10,
-                        "ic50_nM": (
-                            float(10.0 ** ic50_log10)
-                            if ic50_log10 is not None
-                            else None
-                        ),
                         "probe_kd_log10": probe_kd_log10,
                         "probe_kd_nM": (
                             float(10.0 ** probe_kd_log10)
@@ -1967,6 +2167,7 @@ def _evaluate_probe_panel(
                         ),
                     }
                 )
+                rows.append(row)
     model.train()
     return rows
 
@@ -2233,6 +2434,99 @@ def _compute_binding_peptide_ranking_loss(
     return weight * torch.relu(required_gaps - pred_gaps).mean(), metrics
 
 
+def _compute_affinity_output_consistency_loss(
+    outputs: Dict[str, object],
+    batch: Any,
+    regularization: Mapping[str, float],
+) -> Tuple[Optional[torch.Tensor], Dict[str, float]]:
+    metrics: Dict[str, float] = {}
+    assays = outputs.get("assays")
+    if not isinstance(assays, dict):
+        return None, metrics
+
+    beta = float(regularization.get("binding_output_consistency_beta", 0.25))
+    kd_family_weight = float(regularization.get("binding_kd_family_consistency_weight", 0.0))
+    proxy_cross_weight = float(regularization.get("binding_proxy_cross_consistency_weight", 0.0))
+
+    bind_mask = getattr(batch, "bind_mask", None)
+    if isinstance(bind_mask, torch.Tensor):
+        sample_mask = _as_float_vector(bind_mask).to(dtype=torch.bool)
+    else:
+        kd_tensor = assays.get("KD_nM")
+        if not isinstance(kd_tensor, torch.Tensor):
+            return None, metrics
+        sample_mask = torch.ones_like(_as_float_vector(kd_tensor), dtype=torch.bool)
+
+    support = int(sample_mask.sum().item())
+    metrics["reg_binding_output_consistency_support"] = float(support)
+    if support <= 0:
+        return None, metrics
+
+    def _masked_vec(name: str) -> Optional[torch.Tensor]:
+        tensor = assays.get(name)
+        if not isinstance(tensor, torch.Tensor):
+            return None
+        vec = _as_float_vector(tensor)
+        if vec.shape[0] != sample_mask.shape[0]:
+            return None
+        return vec[sample_mask]
+
+    total_loss: Optional[torch.Tensor] = None
+
+    kd = _masked_vec("KD_nM")
+    kd_proxy_ic50 = _masked_vec("KD_proxy_ic50_nM")
+    kd_proxy_ec50 = _masked_vec("KD_proxy_ec50_nM")
+    ic50 = _masked_vec("IC50_nM")
+    ec50 = _masked_vec("EC50_nM")
+
+    if kd is not None and kd_proxy_ic50 is not None and kd_proxy_ec50 is not None:
+        kd_stack = torch.stack([kd, kd_proxy_ic50, kd_proxy_ec50], dim=-1)
+        kd_anchor = kd_stack.mean(dim=-1, keepdim=True)
+        kd_raw = F.smooth_l1_loss(
+            kd_stack,
+            kd_anchor.expand_as(kd_stack),
+            beta=beta,
+            reduction="mean",
+        )
+        metrics["reg_binding_kd_family_consistency_raw"] = float(kd_raw.detach().item())
+        metrics["reg_binding_kd_family_consistency_weight"] = kd_family_weight
+        metrics["reg_binding_kd_proxy_ic50_gap_mean"] = float((kd - kd_proxy_ic50).abs().mean().item())
+        metrics["reg_binding_kd_proxy_ec50_gap_mean"] = float((kd - kd_proxy_ec50).abs().mean().item())
+        metrics["reg_binding_proxy_ic50_proxy_ec50_gap_mean"] = float(
+            (kd_proxy_ic50 - kd_proxy_ec50).abs().mean().item()
+        )
+        if kd_family_weight > 0.0:
+            kd_weighted = kd_raw * kd_family_weight
+            metrics["reg_binding_kd_family_consistency_term"] = float(kd_weighted.detach().item())
+            total_loss = kd_weighted if total_loss is None else (total_loss + kd_weighted)
+
+    proxy_cross_terms: List[torch.Tensor] = []
+    if ic50 is not None and kd_proxy_ic50 is not None:
+        ic50_proxy_raw = F.smooth_l1_loss(ic50, kd_proxy_ic50, beta=beta, reduction="mean")
+        proxy_cross_terms.append(ic50_proxy_raw)
+        metrics["reg_binding_ic50_proxy_ic50_gap_mean"] = float((ic50 - kd_proxy_ic50).abs().mean().item())
+    if ec50 is not None and kd_proxy_ec50 is not None:
+        ec50_proxy_raw = F.smooth_l1_loss(ec50, kd_proxy_ec50, beta=beta, reduction="mean")
+        proxy_cross_terms.append(ec50_proxy_raw)
+        metrics["reg_binding_ec50_proxy_ec50_gap_mean"] = float((ec50 - kd_proxy_ec50).abs().mean().item())
+    if proxy_cross_terms:
+        proxy_cross_raw = torch.stack(proxy_cross_terms).mean()
+        metrics["reg_binding_proxy_cross_consistency_raw"] = float(proxy_cross_raw.detach().item())
+        metrics["reg_binding_proxy_cross_consistency_weight"] = proxy_cross_weight
+        if proxy_cross_weight > 0.0:
+            proxy_cross_weighted = proxy_cross_raw * proxy_cross_weight
+            metrics["reg_binding_proxy_cross_consistency_term"] = float(
+                proxy_cross_weighted.detach().item()
+            )
+            total_loss = (
+                proxy_cross_weighted
+                if total_loss is None
+                else (total_loss + proxy_cross_weighted)
+            )
+
+    return total_loss, metrics
+
+
 def _mask_from_batch_mapping(
     mapping: Optional[Mapping[str, torch.Tensor]],
     key: str,
@@ -2258,6 +2552,100 @@ def _grad_norm_for_prefixes(model: torch.nn.Module, prefixes: Sequence[str]) -> 
     return (total ** 0.5) if matched else 0.0
 
 
+def _method_output_key(base_name: str, method_name: str) -> str:
+    return f"{base_name}__method__{method_name}"
+
+
+def _prep_readout_output_key(base_name: str, prep_name: str, readout_name: str) -> str:
+    return f"{base_name}__prep__{prep_name}__readout__{readout_name}"
+
+
+def _select_structured_assay_output(
+    assays: Mapping[str, Any],
+    *,
+    base_name: str,
+    binding_context: Optional[Mapping[str, torch.Tensor]],
+    dag_mode: str,
+) -> Tuple[Optional[torch.Tensor], Optional[List[str]]]:
+    base = assays.get(base_name)
+    if not isinstance(base, torch.Tensor):
+        return None, None
+    mode = str(dag_mode or "").strip().lower()
+    selected = base.clone()
+    selected_names = [base_name] * int(selected.shape[0])
+    if not isinstance(binding_context, Mapping):
+        return selected, selected_names
+
+    if mode == "dag_method_leaf":
+        method_idx = binding_context.get("assay_method_idx")
+        if not isinstance(method_idx, torch.Tensor):
+            return selected, selected_names
+        method_idx = method_idx.to(device=selected.device, dtype=torch.long).view(-1)
+        for method_value, method_name in enumerate(BINDING_ASSAY_METHODS):
+            key = _method_output_key(base_name, method_name)
+            tensor = assays.get(key)
+            if not isinstance(tensor, torch.Tensor):
+                continue
+            mask = method_idx == method_value
+            if bool(mask.any().item()):
+                selected[mask] = tensor[mask]
+                for idx in torch.nonzero(mask, as_tuple=False).reshape(-1).tolist():
+                    selected_names[int(idx)] = key
+        return selected, selected_names
+
+    if mode == "dag_prep_readout_leaf":
+        prep_idx = binding_context.get("assay_prep_idx")
+        readout_idx = binding_context.get("assay_readout_idx")
+        if not isinstance(prep_idx, torch.Tensor) or not isinstance(readout_idx, torch.Tensor):
+            return selected, selected_names
+        prep_idx = prep_idx.to(device=selected.device, dtype=torch.long).view(-1)
+        readout_idx = readout_idx.to(device=selected.device, dtype=torch.long).view(-1)
+        for prep_value, prep_name in enumerate(BINDING_ASSAY_PREP):
+            prep_mask = prep_idx == prep_value
+            if not bool(prep_mask.any().item()):
+                continue
+            for readout_value, readout_name in enumerate(BINDING_ASSAY_READOUT):
+                mask = prep_mask & (readout_idx == readout_value)
+                if not bool(mask.any().item()):
+                    continue
+                key = _prep_readout_output_key(base_name, prep_name, readout_name)
+                tensor = assays.get(key)
+                if not isinstance(tensor, torch.Tensor):
+                    continue
+                selected[mask] = tensor[mask]
+                for idx in torch.nonzero(mask, as_tuple=False).reshape(-1).tolist():
+                    selected_names[int(idx)] = key
+        return selected, selected_names
+
+    return selected, selected_names
+
+
+def _prediction_tensor_for_target(
+    *,
+    assays: Mapping[str, Any],
+    batch: Any,
+    target_name: str,
+    dag_mode: str,
+) -> Tuple[Optional[torch.Tensor], Optional[List[str]]]:
+    base_name_by_target = {
+        "binding_kd": "KD_nM",
+        "binding_kd_direct": "KD_nM",
+        "binding_kd_proxy_ic50": "KD_proxy_ic50_nM",
+        "binding_kd_proxy_ec50": "KD_proxy_ec50_nM",
+        "binding_ic50": "IC50_nM",
+        "binding_ec50": "EC50_nM",
+    }
+    base_name = base_name_by_target.get(target_name)
+    if base_name is None:
+        return None, None
+    return _select_structured_assay_output(
+        assays,
+        base_name=base_name,
+        binding_context=getattr(batch, "binding_context", None),
+        dag_mode=dag_mode,
+    )
+
+
 def _affinity_only_loss(
     model: Presto,
     batch: Any,
@@ -2277,8 +2665,9 @@ def _affinity_only_loss(
         species=batch.processing_species,
         flank_n_tok=batch.flank_n_tok,
         flank_c_tok=batch.flank_c_tok,
-        binding_context=getattr(batch, "binding_context", None),
     )
+    assays = outputs.get("assays", {})
+    dag_mode = str(getattr(model, "affinity_assay_residual_mode", "") or "").strip().lower()
 
     targets = getattr(batch, "targets", {}) or {}
     target_masks = getattr(batch, "target_masks", {}) or {}
@@ -2337,54 +2726,96 @@ def _affinity_only_loss(
             getattr(batch, "bind_qual", None),
         )
     elif loss_mode == "ic50_only":
+        ic50_pred, _ = _prediction_tensor_for_target(
+            assays=assays,
+            batch=batch,
+            target_name="binding_ic50",
+            dag_mode=dag_mode,
+        )
         _apply_censor_loss(
             "binding_ic50",
-            outputs.get("assays", {}).get("IC50_nM"),
+            ic50_pred,
             targets.get("binding_ic50"),
             _mask_from_batch_mapping(target_masks, "binding_ic50", device=batch.pep_tok.device),
             _mask_from_batch_mapping(target_quals, "binding_ic50", device=batch.pep_tok.device),
         )
     elif loss_mode == "assay_heads_only":
         if str(kd_grouping_mode) == "split_kd_proxy":
+            kd_direct_pred, _ = _prediction_tensor_for_target(
+                assays=assays,
+                batch=batch,
+                target_name="binding_kd_direct",
+                dag_mode=dag_mode,
+            )
             _apply_censor_loss(
                 "binding_kd_direct",
-                outputs.get("assays", {}).get("KD_nM"),
+                kd_direct_pred,
                 targets.get("binding_kd_direct"),
                 _mask_from_batch_mapping(target_masks, "binding_kd_direct", device=batch.pep_tok.device),
                 _mask_from_batch_mapping(target_quals, "binding_kd_direct", device=batch.pep_tok.device),
             )
+            kd_proxy_ic50_pred, _ = _prediction_tensor_for_target(
+                assays=assays,
+                batch=batch,
+                target_name="binding_kd_proxy_ic50",
+                dag_mode=dag_mode,
+            )
             _apply_censor_loss(
                 "binding_kd_proxy_ic50",
-                outputs.get("assays", {}).get("KD_proxy_ic50_nM"),
+                kd_proxy_ic50_pred,
                 targets.get("binding_kd_proxy_ic50"),
                 _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
                 _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
             )
+            kd_proxy_ec50_pred, _ = _prediction_tensor_for_target(
+                assays=assays,
+                batch=batch,
+                target_name="binding_kd_proxy_ec50",
+                dag_mode=dag_mode,
+            )
             _apply_censor_loss(
                 "binding_kd_proxy_ec50",
-                outputs.get("assays", {}).get("KD_proxy_ec50_nM"),
+                kd_proxy_ec50_pred,
                 targets.get("binding_kd_proxy_ec50"),
                 _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
                 _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
             )
         else:
+            kd_pred, _ = _prediction_tensor_for_target(
+                assays=assays,
+                batch=batch,
+                target_name="binding_kd",
+                dag_mode=dag_mode,
+            )
             _apply_censor_loss(
                 "binding_kd",
-                outputs.get("assays", {}).get("KD_nM"),
+                kd_pred,
                 targets.get("binding_kd"),
                 _mask_from_batch_mapping(target_masks, "binding_kd", device=batch.pep_tok.device),
                 _mask_from_batch_mapping(target_quals, "binding_kd", device=batch.pep_tok.device),
             )
+        ic50_pred, _ = _prediction_tensor_for_target(
+            assays=assays,
+            batch=batch,
+            target_name="binding_ic50",
+            dag_mode=dag_mode,
+        )
         _apply_censor_loss(
             "binding_ic50",
-            outputs.get("assays", {}).get("IC50_nM"),
+            ic50_pred,
             targets.get("binding_ic50"),
             _mask_from_batch_mapping(target_masks, "binding_ic50", device=batch.pep_tok.device),
             _mask_from_batch_mapping(target_quals, "binding_ic50", device=batch.pep_tok.device),
         )
+        ec50_pred, _ = _prediction_tensor_for_target(
+            assays=assays,
+            batch=batch,
+            target_name="binding_ec50",
+            dag_mode=dag_mode,
+        )
         _apply_censor_loss(
             "binding_ec50",
-            outputs.get("assays", {}).get("EC50_nM"),
+            ec50_pred,
             targets.get("binding_ec50"),
             _mask_from_batch_mapping(target_masks, "binding_ec50", device=batch.pep_tok.device),
             _mask_from_batch_mapping(target_quals, "binding_ec50", device=batch.pep_tok.device),
@@ -2405,45 +2836,81 @@ def _affinity_only_loss(
             getattr(batch, "bind_qual", None),
         )
         if str(kd_grouping_mode) == "split_kd_proxy":
+            kd_direct_pred, _ = _prediction_tensor_for_target(
+                assays=assays,
+                batch=batch,
+                target_name="binding_kd_direct",
+                dag_mode=dag_mode,
+            )
             _apply_censor_loss(
                 "binding_kd_direct",
-                outputs.get("assays", {}).get("KD_nM"),
+                kd_direct_pred,
                 targets.get("binding_kd_direct"),
                 _mask_from_batch_mapping(target_masks, "binding_kd_direct", device=batch.pep_tok.device),
                 _mask_from_batch_mapping(target_quals, "binding_kd_direct", device=batch.pep_tok.device),
             )
+            kd_proxy_ic50_pred, _ = _prediction_tensor_for_target(
+                assays=assays,
+                batch=batch,
+                target_name="binding_kd_proxy_ic50",
+                dag_mode=dag_mode,
+            )
             _apply_censor_loss(
                 "binding_kd_proxy_ic50",
-                outputs.get("assays", {}).get("KD_proxy_ic50_nM"),
+                kd_proxy_ic50_pred,
                 targets.get("binding_kd_proxy_ic50"),
                 _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
                 _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
             )
+            kd_proxy_ec50_pred, _ = _prediction_tensor_for_target(
+                assays=assays,
+                batch=batch,
+                target_name="binding_kd_proxy_ec50",
+                dag_mode=dag_mode,
+            )
             _apply_censor_loss(
                 "binding_kd_proxy_ec50",
-                outputs.get("assays", {}).get("KD_proxy_ec50_nM"),
+                kd_proxy_ec50_pred,
                 targets.get("binding_kd_proxy_ec50"),
                 _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
                 _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
             )
         else:
+            kd_pred, _ = _prediction_tensor_for_target(
+                assays=assays,
+                batch=batch,
+                target_name="binding_kd",
+                dag_mode=dag_mode,
+            )
             _apply_censor_loss(
                 "binding_kd",
-                outputs.get("assays", {}).get("KD_nM"),
+                kd_pred,
                 targets.get("binding_kd"),
                 _mask_from_batch_mapping(target_masks, "binding_kd", device=batch.pep_tok.device),
                 _mask_from_batch_mapping(target_quals, "binding_kd", device=batch.pep_tok.device),
             )
+        ic50_pred, _ = _prediction_tensor_for_target(
+            assays=assays,
+            batch=batch,
+            target_name="binding_ic50",
+            dag_mode=dag_mode,
+        )
         _apply_censor_loss(
             "binding_ic50",
-            outputs.get("assays", {}).get("IC50_nM"),
+            ic50_pred,
             targets.get("binding_ic50"),
             _mask_from_batch_mapping(target_masks, "binding_ic50", device=batch.pep_tok.device),
             _mask_from_batch_mapping(target_quals, "binding_ic50", device=batch.pep_tok.device),
         )
+        ec50_pred, _ = _prediction_tensor_for_target(
+            assays=assays,
+            batch=batch,
+            target_name="binding_ec50",
+            dag_mode=dag_mode,
+        )
         _apply_censor_loss(
             "binding_ec50",
-            outputs.get("assays", {}).get("EC50_nM"),
+            ec50_pred,
             targets.get("binding_ec50"),
             _mask_from_batch_mapping(target_masks, "binding_ec50", device=batch.pep_tok.device),
             _mask_from_batch_mapping(target_quals, "binding_ec50", device=batch.pep_tok.device),
@@ -2468,6 +2935,14 @@ def _affinity_only_loss(
     metrics.update(peptide_ranking_metrics)
     if peptide_ranking_loss is not None:
         total = peptide_ranking_loss if total is None else (total + peptide_ranking_loss)
+    consistency_loss, consistency_metrics = _compute_affinity_output_consistency_loss(
+        outputs=outputs,
+        batch=batch,
+        regularization=regularization or {},
+    )
+    metrics.update(consistency_metrics)
+    if consistency_loss is not None:
+        total = consistency_loss if total is None else (total + consistency_loss)
     if total is None:
         raise RuntimeError("Affinity-only batch produced no supervised losses")
     metrics["loss_tasks"] = float(len(losses))
@@ -2540,20 +3015,57 @@ def _select_affinity_predictions(
     outputs: Mapping[str, Any],
     batch: Any,
     kd_grouping_mode: str,
+    dag_mode: str = "",
 ) -> Tuple[torch.Tensor, List[str]]:
     assays = outputs.get("assays")
     if not isinstance(assays, dict):
         raise RuntimeError("Affinity outputs missing assays dict")
 
-    kd = _as_float_vector(assays["KD_nM"])
-    ic50 = _as_float_vector(assays["IC50_nM"])
-    ec50 = _as_float_vector(assays["EC50_nM"])
-    kd_proxy_ic50 = _as_float_vector(assays.get("KD_proxy_ic50_nM", assays["KD_nM"]))
-    kd_proxy_ec50 = _as_float_vector(assays.get("KD_proxy_ec50_nM", assays["KD_nM"]))
+    kd_tensor, kd_names = _prediction_tensor_for_target(
+        assays=assays,
+        batch=batch,
+        target_name="binding_kd",
+        dag_mode=dag_mode,
+    )
+    ic50_tensor, ic50_names = _prediction_tensor_for_target(
+        assays=assays,
+        batch=batch,
+        target_name="binding_ic50",
+        dag_mode=dag_mode,
+    )
+    ec50_tensor, ec50_names = _prediction_tensor_for_target(
+        assays=assays,
+        batch=batch,
+        target_name="binding_ec50",
+        dag_mode=dag_mode,
+    )
+    kd_proxy_ic50_tensor, kd_proxy_ic50_names = _prediction_tensor_for_target(
+        assays=assays,
+        batch=batch,
+        target_name="binding_kd_proxy_ic50",
+        dag_mode=dag_mode,
+    )
+    kd_proxy_ec50_tensor, kd_proxy_ec50_names = _prediction_tensor_for_target(
+        assays=assays,
+        batch=batch,
+        target_name="binding_kd_proxy_ec50",
+        dag_mode=dag_mode,
+    )
+    if kd_tensor is None or kd_names is None:
+        raise RuntimeError("Affinity outputs missing KD_nM")
+    kd = _as_float_vector(kd_tensor)
+    ic50 = _as_float_vector(ic50_tensor if ic50_tensor is not None else assays["IC50_nM"])
+    ec50 = _as_float_vector(ec50_tensor if ec50_tensor is not None else assays["EC50_nM"])
+    kd_proxy_ic50 = _as_float_vector(
+        kd_proxy_ic50_tensor if kd_proxy_ic50_tensor is not None else assays.get("KD_proxy_ic50_nM", assays["KD_nM"])
+    )
+    kd_proxy_ec50 = _as_float_vector(
+        kd_proxy_ec50_tensor if kd_proxy_ec50_tensor is not None else assays.get("KD_proxy_ec50_nM", assays["KD_nM"])
+    )
 
     target_masks = getattr(batch, "target_masks", {}) or {}
     pred_log10 = kd.clone()
-    pred_outputs = ["KD_nM"] * int(kd.shape[0])
+    pred_outputs = list(kd_names)
 
     def _mask(name: str) -> Optional[torch.Tensor]:
         tensor = target_masks.get(name)
@@ -2564,26 +3076,30 @@ def _select_affinity_predictions(
     ic50_mask = _mask("binding_ic50")
     if ic50_mask is not None:
         pred_log10[ic50_mask] = ic50[ic50_mask]
+        names = ic50_names or ["IC50_nM"] * int(kd.shape[0])
         for idx in torch.nonzero(ic50_mask, as_tuple=False).reshape(-1).tolist():
-            pred_outputs[int(idx)] = "IC50_nM"
+            pred_outputs[int(idx)] = names[int(idx)]
 
     ec50_mask = _mask("binding_ec50")
     if ec50_mask is not None:
         pred_log10[ec50_mask] = ec50[ec50_mask]
+        names = ec50_names or ["EC50_nM"] * int(kd.shape[0])
         for idx in torch.nonzero(ec50_mask, as_tuple=False).reshape(-1).tolist():
-            pred_outputs[int(idx)] = "EC50_nM"
+            pred_outputs[int(idx)] = names[int(idx)]
 
     if str(kd_grouping_mode) == "split_kd_proxy":
         proxy_ic50_mask = _mask("binding_kd_proxy_ic50")
         if proxy_ic50_mask is not None:
             pred_log10[proxy_ic50_mask] = kd_proxy_ic50[proxy_ic50_mask]
+            names = kd_proxy_ic50_names or ["KD_proxy_ic50_nM"] * int(kd.shape[0])
             for idx in torch.nonzero(proxy_ic50_mask, as_tuple=False).reshape(-1).tolist():
-                pred_outputs[int(idx)] = "KD_proxy_ic50_nM"
+                pred_outputs[int(idx)] = names[int(idx)]
         proxy_ec50_mask = _mask("binding_kd_proxy_ec50")
         if proxy_ec50_mask is not None:
             pred_log10[proxy_ec50_mask] = kd_proxy_ec50[proxy_ec50_mask]
+            names = kd_proxy_ec50_names or ["KD_proxy_ec50_nM"] * int(kd.shape[0])
             for idx in torch.nonzero(proxy_ec50_mask, as_tuple=False).reshape(-1).tolist():
-                pred_outputs[int(idx)] = "KD_proxy_ec50_nM"
+                pred_outputs[int(idx)] = names[int(idx)]
 
     return pred_log10, pred_outputs
 
@@ -2600,17 +3116,22 @@ def _evaluate_holdout_predictions(
     max_affinity_nM: float,
     kd_grouping_mode: str,
     threshold_nM: float = 500.0,
+    precomputed_loss: Optional[float] = None,
 ) -> Tuple[Dict[str, float], List[Dict[str, Any]]]:
     metrics = {
-        "loss": _mean_affinity_loss(
-            model,
-            loader,
-            device,
-            regularization=regularization,
-            loss_mode=loss_mode,
-            affinity_target_encoding=affinity_target_encoding,
-            max_affinity_nM=max_affinity_nM,
-            kd_grouping_mode=kd_grouping_mode,
+        "loss": (
+            float(precomputed_loss)
+            if precomputed_loss is not None
+            else _mean_affinity_loss(
+                model,
+                loader,
+                device,
+                regularization=regularization,
+                loss_mode=loss_mode,
+                affinity_target_encoding=affinity_target_encoding,
+                max_affinity_nM=max_affinity_nM,
+                kd_grouping_mode=kd_grouping_mode,
+            )
         )
     }
     sample_metadata = _sample_metadata_lookup(dataset)
@@ -2623,6 +3144,7 @@ def _evaluate_holdout_predictions(
     rows: List[Dict[str, Any]] = []
 
     model.eval()
+    dag_mode = str(getattr(model, "affinity_assay_residual_mode", "") or "").strip().lower()
     with torch.no_grad():
         for batch in loader:
             batch = batch.to(device)
@@ -2634,12 +3156,12 @@ def _evaluate_holdout_predictions(
                 species=batch.processing_species,
                 flank_n_tok=batch.flank_n_tok,
                 flank_c_tok=batch.flank_c_tok,
-                binding_context=getattr(batch, "binding_context", None),
             )
             pred_log10, pred_outputs = _select_affinity_predictions(
                 outputs=outputs,
                 batch=batch,
                 kd_grouping_mode=kd_grouping_mode,
+                dag_mode=dag_mode,
             )
             pred_nm = torch.pow(10.0, pred_log10)
             true_nm = _as_float_vector(batch.bind_target)
@@ -2754,6 +3276,68 @@ def _write_probe_csv(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
     _write_rows_csv(path, rows)
 
 
+def _epoch_metric_rows(epoch_summaries: Sequence[Mapping[str, Any]]) -> List[Dict[str, Any]]:
+    rows: List[Dict[str, Any]] = []
+    for summary in epoch_summaries:
+        row: Dict[str, Any] = {}
+        for key, value in summary.items():
+            if isinstance(value, (bool, int, float, str)) or value is None:
+                row[key] = value
+        if row:
+            rows.append(row)
+    return rows
+
+
+def _write_epoch_metrics_plot(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
+    if not rows:
+        return
+    try:
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except Exception:
+        return
+
+    plot_specs = [
+        (key, label)
+        for key, label in EPOCH_METRIC_PLOT_SPECS
+        if any(row.get(key) not in (None, "") for row in rows)
+    ]
+    if not plot_specs:
+        return
+
+    ncols = 2
+    nrows = math.ceil(len(plot_specs) / ncols)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(12, 3.5 * nrows))
+    axes_list = list(axes.flat if hasattr(axes, "flat") else [axes])
+
+    for ax, (key, label) in zip(axes_list, plot_specs):
+        vals = [
+            (int(row["epoch"]), float(row[key]))
+            for row in rows
+            if row.get("epoch") not in (None, "") and row.get(key) not in (None, "")
+        ]
+        if not vals:
+            ax.set_visible(False)
+            continue
+        vals = sorted(vals, key=lambda item: item[0])
+        ax.plot([v[0] for v in vals], [v[1] for v in vals], linewidth=2.0)
+        ax.set_title(label)
+        ax.set_xlabel("Epoch")
+        ax.grid(True, alpha=0.3)
+        if key in {"val_spearman", "val_auroc", "val_auprc"}:
+            ax.set_ylim(0.0, 1.0)
+
+    for ax in axes_list[len(plot_specs):]:
+        ax.set_visible(False)
+
+    fig.suptitle("Validation Metrics Over Epochs")
+    fig.tight_layout()
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+
+
 def _write_probe_plot(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
     if not rows:
         return
@@ -2780,7 +3364,7 @@ def _write_probe_plot(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
         ax.plot(
             [v[0] for v in vals],
             [v[1] for v in vals],
-            marker="o",
+            linewidth=1.8,
             label=f"{peptide} | {allele}",
         )
     ax.set_xlabel("Epoch")
@@ -2794,14 +3378,67 @@ def _write_probe_plot(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
     plt.close(fig)
 
 
+def _write_probe_all_outputs_plot(path: Path, rows: Sequence[Mapping[str, Any]]) -> None:
+    if not rows:
+        return
+    try:
+        import matplotlib
+
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except Exception:
+        return
+
+    fig, axes = plt.subplots(3, 2, figsize=(14, 12))
+    axes_list = list(axes.flat)
+
+    for ax, (value_key, label) in zip(axes_list, PROBE_OUTPUT_PLOT_SPECS):
+        grouped: Dict[Tuple[str, str], List[Tuple[int, float]]] = defaultdict(list)
+        for row in rows:
+            y_value = row.get(value_key)
+            if y_value in (None, ""):
+                continue
+            grouped[(str(row["peptide"]), str(row["allele"]))].append(
+                (int(row["epoch"]), float(y_value))
+            )
+        for (peptide, allele), vals in sorted(grouped.items()):
+            vals = sorted(vals, key=lambda item: item[0])
+            ax.plot(
+                [v[0] for v in vals],
+                [v[1] for v in vals],
+                linewidth=1.6,
+                label=f"{peptide} | {allele}",
+            )
+        ax.set_xlabel("Epoch")
+        ax.set_ylabel("Predicted Affinity (nM)")
+        ax.set_title(label)
+        ax.set_yscale("log")
+        ax.grid(True, alpha=0.3)
+        ax.legend(fontsize=7)
+
+    fig.suptitle("Probe Trajectories Across All Affinity Outputs")
+    fig.tight_layout()
+    fig.savefig(path, dpi=150)
+    plt.close(fig)
+
+
 def _write_summary_artifacts(
     *,
     out_dir: Path,
     summary: Mapping[str, Any],
     probe_rows: Sequence[Mapping[str, Any]],
+    epoch_summaries: Sequence[Mapping[str, Any]] = (),
     write_probe_plot: bool = True,
 ) -> None:
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    epoch_metric_rows = _epoch_metric_rows(epoch_summaries)
+    if epoch_metric_rows:
+        _write_rows_csv(out_dir / "epoch_metrics.csv", epoch_metric_rows)
+        (out_dir / "epoch_metrics.json").write_text(
+            json.dumps(epoch_metric_rows, indent=2),
+            encoding="utf-8",
+        )
+        _write_epoch_metrics_plot(out_dir / "val_metrics_over_epochs.png", epoch_metric_rows)
     _write_probe_csv(out_dir / "probe_affinity_over_epochs.csv", probe_rows)
     (out_dir / "probe_affinity_over_epochs.json").write_text(
         json.dumps(list(probe_rows), indent=2),
@@ -2809,6 +3446,10 @@ def _write_summary_artifacts(
     )
     if write_probe_plot:
         _write_probe_plot(out_dir / "probe_affinity_over_epochs.png", probe_rows)
+        _write_probe_all_outputs_plot(
+            out_dir / "probe_affinity_all_outputs_over_epochs.png",
+            probe_rows,
+        )
 
 
 def _load_checkpoint_payload(checkpoint_path: str) -> Dict[str, Any]:
@@ -2877,6 +3518,26 @@ def main() -> None:
     )
     parser.add_argument("--epochs", type=int, default=DEFAULT_EPOCHS)
     parser.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
+    parser.add_argument(
+        "--device",
+        type=str,
+        choices=("auto", "cpu", "cuda", "mps"),
+        default="auto",
+        help="Runtime device override. 'auto' prefers CUDA, then Apple Silicon MPS, then CPU.",
+    )
+    parser.add_argument(
+        "--mps-safe-mode",
+        type=str,
+        choices=("auto", "off", "manual_dropout", "zero_dropout"),
+        default="auto",
+        help=(
+            "Runtime dropout mode. 'auto' uses seeded manual dropout on all "
+            "devices; 'off' leaves native backend dropout behavior unchanged; "
+            "'zero_dropout' is the explicit MPS-only fallback that zeros "
+            "dropout entirely. 'manual_dropout' is the explicit same-as-auto "
+            "manual path for clarity in parity experiments."
+        ),
+    )
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--pin-memory", dest="pin_memory", action="store_true")
     parser.add_argument("--no-pin-memory", dest="pin_memory", action="store_false")
@@ -2952,6 +3613,15 @@ def main() -> None:
     parser.add_argument("--onecycle-pct-start", type=float, default=0.1)
     parser.add_argument("--weight-decay", type=float, default=DEFAULT_WEIGHT_DECAY)
     parser.add_argument("--seed", type=int, default=DEFAULT_SEED)
+    parser.add_argument(
+        "--split-seed",
+        type=int,
+        default=None,
+        help=(
+            "Optional dataset split seed. Defaults to --seed for backward compatibility, "
+            "but can be pinned separately when the train seed should vary on a fixed split."
+        ),
+    )
     parser.add_argument("--source", type=str, default="iedb")
     parser.add_argument("--max-records", type=int, default=0)
     parser.add_argument("--val-fraction", type=float, default=0.1)
@@ -3149,17 +3819,53 @@ def main() -> None:
         help="Maximum same-allele/different-peptide pairs per batch used for ranking.",
     )
     parser.add_argument(
+        "--binding-kd-family-consistency-weight",
+        type=float,
+        default=0.0,
+        help="Weak output-side tie weight for KD_nM, KD_proxy_ic50_nM, and KD_proxy_ec50_nM.",
+    )
+    parser.add_argument(
+        "--binding-proxy-cross-consistency-weight",
+        type=float,
+        default=0.0,
+        help="Weaker output-side tie weight for IC50<->KD_proxy_ic50 and EC50<->KD_proxy_ec50.",
+    )
+    parser.add_argument(
+        "--binding-output-consistency-beta",
+        type=float,
+        default=0.25,
+        help="Smooth-L1 / Huber beta in log10(nM) space for output-side consistency terms.",
+    )
+    parser.add_argument(
         "--probe-plot-frequency",
         choices=("epoch", "final", "off"),
         default="final",
         help="How often to rewrite the probe trajectory PNG during training.",
     )
+    parser.add_argument(
+        "--epoch-val-metrics-frequency",
+        type=int,
+        default=0,
+        help=(
+            "How often to compute validation AUROC/AUPRC/Spearman and related held-out metrics. "
+            "0 disables per-epoch validation metric evaluation."
+        ),
+    )
     args = parser.parse_args()
 
-    torch.manual_seed(int(args.seed))
-    if torch.cuda.is_available():
-        torch.cuda.manual_seed_all(int(args.seed))
-    random.seed(int(args.seed))
+    train_seed = int(args.seed)
+    split_seed = train_seed if args.split_seed is None else int(args.split_seed)
+
+    device = _resolve_runtime_device(str(args.device))
+    effective_pin_memory = _effective_pin_memory(
+        requested=bool(args.pin_memory),
+        device=device,
+    )
+
+    torch.manual_seed(train_seed)
+    if device == "cuda":
+        torch.cuda.manual_seed_all(train_seed)
+    random.seed(train_seed)
     synthetic_modes = _parse_synthetic_modes(str(args.synthetic_modes))
     batch_synthetic_fraction = _resolve_batch_synthetic_fraction(
         synthetic_negatives=bool(args.synthetic_negatives),
@@ -3174,7 +3880,7 @@ def main() -> None:
         )
     if str(args.matmul_precision) != "default":
         torch.set_float32_matmul_precision(str(args.matmul_precision))
-    if torch.cuda.is_available():
+    if device == "cuda":
         torch.backends.cuda.matmul.allow_tf32 = bool(args.allow_tf32)
         torch.backends.cudnn.allow_tf32 = bool(args.allow_tf32)
 
@@ -3223,7 +3929,7 @@ def main() -> None:
         qualifier_filter=str(args.qualifier_filter),
         shared_peptides_only=bool(args.shared_peptides_only),
         max_per_allele=int(args.max_per_allele),
-        seed=int(args.seed),
+        seed=split_seed,
         val_fraction=float(args.val_fraction),
         test_fraction=float(args.test_fraction),
         explicit_probe_peptides=explicit_probe_peptides,
@@ -3239,6 +3945,7 @@ def main() -> None:
     balance_stats = prepared_state.balance_stats
     split_stats = prepared_state.split_stats
     mhc_sequences = prepared_state.mhc_sequences
+    mhc_exact_inputs = prepared_state.mhc_exact_inputs
     mhc_stats = prepared_state.mhc_stats
     real_train_records = list(prepared_state.real_train_records)
     real_val_records = list(prepared_state.real_val_records)
@@ -3250,17 +3957,20 @@ def main() -> None:
     real_train_dataset = PrestoDataset(
         binding_records=real_train_records,
         mhc_sequences=mhc_sequences,
+        mhc_exact_inputs=mhc_exact_inputs,
         strict_mhc_resolution=False,
     )
     val_dataset = PrestoDataset(
         binding_records=real_val_records,
         mhc_sequences=mhc_sequences,
+        mhc_exact_inputs=mhc_exact_inputs,
         strict_mhc_resolution=False,
     )
     test_dataset = (
         PrestoDataset(
             binding_records=real_test_records,
             mhc_sequences=mhc_sequences,
+            mhc_exact_inputs=mhc_exact_inputs,
             strict_mhc_resolution=False,
         )
         if real_test_records
@@ -3276,9 +3986,9 @@ def main() -> None:
         shuffle=False,
         collator=collator,
         balanced=False,
-        seed=int(args.seed),
+        seed=train_seed,
         num_workers=int(args.num_workers),
-        pin_memory=bool(args.pin_memory),
+        pin_memory=effective_pin_memory,
         persistent_workers=bool(args.persistent_workers),
         prefetch_factor=int(args.prefetch_factor),
     )
@@ -3289,9 +3999,9 @@ def main() -> None:
             shuffle=False,
             collator=collator,
             balanced=False,
-            seed=int(args.seed),
+            seed=train_seed,
             num_workers=int(args.num_workers),
-            pin_memory=bool(args.pin_memory),
+            pin_memory=effective_pin_memory,
             persistent_workers=bool(args.persistent_workers),
             prefetch_factor=int(args.prefetch_factor),
         )
@@ -3300,7 +4010,6 @@ def main() -> None:
     )
     setup_stage_timings["val_loader_build_s"] = time.perf_counter() - loader_stage_start
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
     gpu_sampler = _GpuTelemetrySampler(enabled=(device == "cuda"))
     gpu_sampler.start()
     binding_core_lengths = _parse_int_csv(str(args.binding_core_lengths), default=(9,))
@@ -3333,6 +4042,12 @@ def main() -> None:
         model.load_state_dict(compatible_state_dict, strict=False)
     else:
         warm_start_filter_stats = {"skipped_missing": [], "skipped_shape": []}
+    mps_safe_runtime = _apply_mps_safe_mode(
+        model,
+        device=device,
+        requested_mode=str(args.mps_safe_mode),
+        seed=int(args.seed),
+    )
     if bool(args.torch_compile):
         model = torch.compile(model, mode="reduce-overhead")
     setup_stage_timings["model_init_and_warm_start_s"] = time.perf_counter() - model_stage_start
@@ -3359,6 +4074,9 @@ def main() -> None:
         ),
         "binding_peptide_contrastive_max_pairs": int(args.binding_peptide_contrastive_max_pairs),
         "binding_rank_use_probe": bool(str(args.affinity_loss_mode) == "probe_only"),
+        "binding_kd_family_consistency_weight": float(args.binding_kd_family_consistency_weight),
+        "binding_proxy_cross_consistency_weight": float(args.binding_proxy_cross_consistency_weight),
+        "binding_output_consistency_beta": float(args.binding_output_consistency_beta),
     }
 
     probe_stage_start = time.perf_counter()
@@ -3421,6 +4139,9 @@ def main() -> None:
                 "max_affinity_nM": float(args.max_affinity_nm),
                 "binding_kinetic_input_mode": str(args.binding_kinetic_input_mode),
                 "binding_direct_segment_mode": str(args.binding_direct_segment_mode),
+                "binding_kd_family_consistency_weight": float(args.binding_kd_family_consistency_weight),
+                "binding_proxy_cross_consistency_weight": float(args.binding_proxy_cross_consistency_weight),
+                "binding_output_consistency_beta": float(args.binding_output_consistency_beta),
                 "init_checkpoint": str(args.init_checkpoint or ""),
                 "synthetic_negatives": bool(args.synthetic_negatives),
                 "synthetic_refresh_each_epoch": bool(args.synthetic_refresh_each_epoch),
@@ -3428,19 +4149,36 @@ def main() -> None:
                 "batch_synthetic_fraction": float(batch_synthetic_fraction),
                 "planned_batch_contract": batch_contract,
                 "runtime_config": {
+                    "requested_device": str(args.device),
+                    "device": device,
+                    "mps_safe_mode_requested": str(args.mps_safe_mode),
+                    "mps_safe_mode_applied": str(mps_safe_runtime["applied"]),
+                    "mps_safe_dropout_modules_zeroed": int(mps_safe_runtime["dropout_modules_zeroed"]),
+                    "mps_safe_dropout_modules_replaced": int(
+                        mps_safe_runtime["dropout_modules_replaced"]
+                    ),
+                    "mps_safe_multihead_attention_modules_zeroed": int(
+                        mps_safe_runtime["multihead_attention_modules_zeroed"]
+                    ),
+                    "mps_safe_transformer_encoder_layers_zeroed": int(
+                        mps_safe_runtime["transformer_encoder_layers_zeroed"]
+                    ),
                     "num_workers": int(args.num_workers),
-                    "pin_memory": bool(args.pin_memory),
+                    "pin_memory": effective_pin_memory,
                     "persistent_workers": bool(args.persistent_workers),
                     "prefetch_factor": int(args.prefetch_factor),
                     "matmul_precision": str(args.matmul_precision),
-                    "allow_tf32": bool(args.allow_tf32),
+                    "allow_tf32": bool(args.allow_tf32) if device == "cuda" else False,
                     "torch_compile": bool(args.torch_compile),
                     "probe_plot_frequency": str(args.probe_plot_frequency),
+                    "epoch_val_metrics_frequency": int(args.epoch_val_metrics_frequency),
                 },
                 "peptide_pos_mode": str(args.peptide_pos_mode),
                 "groove_pos_mode": str(args.groove_pos_mode),
                 "binding_core_lengths": list(binding_core_lengths),
                 "binding_core_refinement": str(args.binding_core_refinement),
+                "train_seed": train_seed,
+                "split_seed": split_seed,
                 "probe_allele_counts_after_filter": probe_allele_counts_after_filter,
                 "probe_peptides": probe_peptides,
                 "dataset_cache": {
@@ -3520,6 +4258,9 @@ def main() -> None:
                     args.binding_peptide_contrastive_target_gap_cap
                 ),
                 "binding_peptide_contrastive_max_pairs": int(args.binding_peptide_contrastive_max_pairs),
+                "binding_kd_family_consistency_weight": float(args.binding_kd_family_consistency_weight),
+                "binding_proxy_cross_consistency_weight": float(args.binding_proxy_cross_consistency_weight),
+                "binding_output_consistency_beta": float(args.binding_output_consistency_beta),
                 "epochs": int(args.epochs),
                 "batch_size": int(args.batch_size),
                 "lr": float(args.lr),
@@ -3528,16 +4269,33 @@ def main() -> None:
                 "warmup_fraction": float(args.warmup_fraction),
                 "min_lr_scale": float(args.min_lr_scale),
                 "onecycle_pct_start": float(args.onecycle_pct_start),
-                "seed": int(args.seed),
+                "seed": train_seed,
+                "train_seed": train_seed,
+                "split_seed": split_seed,
                 "runtime_config": {
+                    "requested_device": str(args.device),
+                    "device": device,
+                    "mps_safe_mode_requested": str(args.mps_safe_mode),
+                    "mps_safe_mode_applied": str(mps_safe_runtime["applied"]),
+                    "mps_safe_dropout_modules_zeroed": int(mps_safe_runtime["dropout_modules_zeroed"]),
+                    "mps_safe_dropout_modules_replaced": int(
+                        mps_safe_runtime["dropout_modules_replaced"]
+                    ),
+                    "mps_safe_multihead_attention_modules_zeroed": int(
+                        mps_safe_runtime["multihead_attention_modules_zeroed"]
+                    ),
+                    "mps_safe_transformer_encoder_layers_zeroed": int(
+                        mps_safe_runtime["transformer_encoder_layers_zeroed"]
+                    ),
                     "num_workers": int(args.num_workers),
-                    "pin_memory": bool(args.pin_memory),
+                    "pin_memory": effective_pin_memory,
                     "persistent_workers": bool(args.persistent_workers),
                     "prefetch_factor": int(args.prefetch_factor),
                     "matmul_precision": str(args.matmul_precision),
-                    "allow_tf32": bool(args.allow_tf32),
+                    "allow_tf32": bool(args.allow_tf32) if device == "cuda" else False,
                     "torch_compile": bool(args.torch_compile),
                     "probe_plot_frequency": str(args.probe_plot_frequency),
+                    "epoch_val_metrics_frequency": int(args.epoch_val_metrics_frequency),
                 },
             },
             "subset_stats": subset_stats,
@@ -3602,7 +4360,7 @@ def main() -> None:
             if device == "cuda":
                 torch.cuda.reset_peak_memory_stats()
             epoch_synthetic_seed = _epoch_synthetic_seed(
-                int(args.seed),
+                train_seed,
                 epoch,
                 refresh_each_epoch=bool(args.synthetic_refresh_each_epoch),
             )
@@ -3612,6 +4370,7 @@ def main() -> None:
                 real_train_records=real_train_records,
                 real_train_dataset=real_train_dataset,
                 mhc_sequences=mhc_sequences,
+                mhc_exact_inputs=mhc_exact_inputs,
                 synthetic_negatives=bool(args.synthetic_negatives),
                 negative_ratio=float(args.negative_ratio),
                 synthetic_seed=epoch_synthetic_seed,
@@ -3619,12 +4378,12 @@ def main() -> None:
                 synthetic_modes=synthetic_modes,
                 batch_size=int(args.batch_size),
                 balanced=bool(args.balanced_batches),
-                seed=int(args.seed) + epoch,
+                seed=train_seed + epoch,
                 alleles=probe_alleles,
                 force_global_balance=bool(args.train_all_alleles),
                 batch_synthetic_fraction=float(batch_synthetic_fraction),
                 num_workers=int(args.num_workers),
-                pin_memory=bool(args.pin_memory),
+                pin_memory=effective_pin_memory,
                 persistent_workers=bool(args.persistent_workers),
                 prefetch_factor=int(args.prefetch_factor),
             )
@@ -3799,6 +4558,22 @@ def main() -> None:
             probe_eval_wall_s = time.perf_counter() - probe_start
             for row in probe_eval:
                 probe_rows.append({"epoch": epoch, **row})
+            epoch_val_metrics: Dict[str, Any] = {}
+            if int(args.epoch_val_metrics_frequency) > 0 and (
+                epoch % int(args.epoch_val_metrics_frequency) == 0
+            ):
+                epoch_val_metrics, _ = _evaluate_holdout_predictions(
+                    model=model,
+                    loader=val_loader,
+                    dataset=val_dataset,
+                    device=device,
+                    regularization=regularization_cfg,
+                    loss_mode=str(args.affinity_loss_mode),
+                    affinity_target_encoding=str(args.affinity_target_encoding),
+                    max_affinity_nM=float(args.max_affinity_nm),
+                    kd_grouping_mode=str(args.kd_grouping_mode),
+                    precomputed_loss=val_loss,
+                )
             epoch_wall_end = time.perf_counter()
             gpu_metrics: Dict[str, float] = gpu_sampler.summarize_window(epoch_wall_start, epoch_wall_end)
             if device == "cuda":
@@ -3842,6 +4617,11 @@ def main() -> None:
                 "summary_write_wall_s": 0.0,
                 **gpu_metrics,
             }
+            for key, value in epoch_val_metrics.items():
+                if key == "loss":
+                    continue
+                if isinstance(value, (int, float)):
+                    epoch_summary[f"val_{key}"] = float(value)
             epoch_summaries.append(epoch_summary)
             if diverged:
                 break
@@ -3857,6 +4637,7 @@ def main() -> None:
                 out_dir=out_dir,
                 summary=summary,
                 probe_rows=probe_rows,
+                epoch_summaries=epoch_summaries,
                 write_probe_plot=(
                     str(args.probe_plot_frequency) == "epoch"
                     or (
@@ -3963,6 +4744,7 @@ def main() -> None:
         out_dir=out_dir,
         summary=summary,
         probe_rows=probe_rows,
+        epoch_summaries=epoch_summaries,
         write_probe_plot=(str(args.probe_plot_frequency) != "off"),
     )
 

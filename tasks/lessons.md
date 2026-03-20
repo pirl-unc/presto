@@ -135,9 +135,14 @@
 
 - Do not turn per-experiment `README.md` files into an ever-growing scoreboard for the current best model family. Keep each experiment README focused on that experiment's contract, result, and artifact pointers.
 - When the user wants a durable "model to beat" record across datasets/metrics, create or update a separate summary document under `experiments/` rather than stuffing that comparison into every new experiment README.
+- When experiment-local launchers are canonicalized, use the shortest stable convention (`code/launch.py`) rather than verbose tool-specific names like `launch_modal.py`. Keep shared machinery unique in `scripts/`, and keep per-experiment entrypoints local and consistently named.
 
 ## 2026-03-16 - Architectural input invariants must be enforced, not merely described
 
 - When the user declares that a feature family is forbidden as model input, do not leave it as one option among many mode flags. Remove it from defaults, reject it in public entrypoints, and state the invariant consistently in code, docs, and tests.
 - For Presto affinity modeling specifically, assay identity belongs on the output/supervision side only. Assay labels may choose which head is supervised, but assay selector/context tensors must not be available as predictive inputs in the main path.
 - When the user broadens an architectural rule from one task family to all assay families, update the canonical contract immediately instead of leaving a narrower document name or scope in place. The repo should describe one assay-input policy, not separate local exceptions by default.
+- When claiming that a path is "sequence-only," verify the actual training and evaluation call sites end-to-end. Config flags and docstrings are not enough if the runner still passes `binding_context` into the model.
+- When comparing "best honest" models across benchmark families, audit both the input contract and the output contract before promoting a result. A path can avoid the forbidden input leak and still be non-comparable because it collapses multiple assay families into one assay-conditioned output.
+- Do not over-interpret probe peptides as supervised affinity anchors without checking the merged dataset first. A probe can exist in the corpus only as presentation / structural metadata and still look like a meaningful affinity sanity check if you skip the support audit.
+- When the user says hardware-dependent implementation differences are not acceptable, do not keep a split default with one backend on a workaround and others on native behavior. Promote the shared implementation to the default and require explicit opt-out for backend-specific benchmarking.

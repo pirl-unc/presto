@@ -8,31 +8,41 @@ from torch.utils.data import Dataset
 
 from presto.data import BindingRecord, PrestoDataset
 from presto.data.collate import PrestoCollator, PrestoSample
+from presto.data.tokenizer import Tokenizer
 from presto.models.presto import Presto
 from presto.scripts.focused_binding_probe import (
     CombinedSampleDataset,
     DatasetContract,
+    ManualDropout,
     PreparedBindingState,
     StrictAlleleBalancedBatchSampler,
     _affinity_only_loss,
+    _apply_mps_safe_mode,
     _augment_train_records_only,
     _balance_alleles,
     _contract_cache_key,
     _collect_binding_contrastive_pairs,
     _collect_binding_peptide_ranking_pairs,
     _create_focused_train_loader,
+    _evaluate_probe_panel,
     _filter_compatible_state_dict,
     _filter_shared_peptides_only,
     _keep_binding_qualifier,
     _load_binding_records_from_merged_tsv,
     _parse_synthetic_modes,
+    _prediction_tensor_for_target,
     _require_target_allele_coverage,
+    _resolve_runtime_device,
     _resolve_batch_synthetic_fraction,
+    _select_affinity_predictions,
     _split_records_by_peptide,
     _split_records_three_way,
     _summarize_binding_records,
+    _epoch_metric_rows,
     _load_prepared_binding_state_from_cache,
     _write_prepared_binding_state_to_cache,
+    _write_epoch_metrics_plot,
+    _write_probe_all_outputs_plot,
 )
 
 
@@ -109,6 +119,137 @@ def test_balance_alleles_preserves_non_target():
     assert stats["counts_after"]["A*02:01"] == 5
     non_target = [r for r in balanced if r.mhc_allele == "B*07:02"]
     assert len(non_target) == 3
+
+
+def test_resolve_runtime_device_auto_prefers_mps_when_cuda_unavailable(monkeypatch):
+    monkeypatch.setattr("presto.scripts.focused_binding_probe.torch.cuda.is_available", lambda: False)
+    monkeypatch.setattr("presto.scripts.focused_binding_probe._mps_is_available", lambda: True)
+
+    assert _resolve_runtime_device("auto") == "mps"
+
+
+def test_resolve_runtime_device_explicit_mps_requires_availability(monkeypatch):
+    monkeypatch.setattr("presto.scripts.focused_binding_probe._mps_is_available", lambda: False)
+
+    with pytest.raises(ValueError, match="Requested device 'mps'"):
+        _resolve_runtime_device("mps")
+
+
+def test_apply_mps_safe_mode_auto_uses_manual_dropout_on_mps():
+    model = Presto(
+        d_model=32,
+        n_layers=2,
+        n_heads=4,
+        use_pmhc_interaction_block=True,
+    )
+    dropout_modules = [mod for mod in model.modules() if isinstance(mod, torch.nn.Dropout)]
+    attn_modules = [mod for mod in model.modules() if isinstance(mod, torch.nn.MultiheadAttention)]
+    assert dropout_modules
+    assert attn_modules
+
+    summary = _apply_mps_safe_mode(model, device="mps", requested_mode="auto")
+
+    manual_modules = [mod for mod in model.modules() if isinstance(mod, ManualDropout)]
+    assert summary["applied"] == "manual_dropout"
+    assert summary["dropout_modules_replaced"] > 0
+    assert summary["dropout_modules_zeroed"] == 0
+    assert summary["multihead_attention_modules_zeroed"] == 0
+    assert len(manual_modules) == len(dropout_modules)
+    assert all(float(mod.p) > 0.0 for mod in manual_modules)
+    assert all(float(mod.dropout) > 0.0 for mod in attn_modules)
+
+
+def test_apply_mps_safe_mode_auto_uses_manual_dropout_on_cpu():
+    model = Presto(
+        d_model=32,
+        n_layers=2,
+        n_heads=4,
+        use_pmhc_interaction_block=True,
+    )
+    dropout_modules = [mod for mod in model.modules() if isinstance(mod, torch.nn.Dropout)]
+    attn_modules = [mod for mod in model.modules() if isinstance(mod, torch.nn.MultiheadAttention)]
+    assert dropout_modules
+    assert attn_modules
+
+    summary = _apply_mps_safe_mode(model, device="cpu", requested_mode="auto")
+
+    manual_modules = [mod for mod in model.modules() if isinstance(mod, ManualDropout)]
+    assert summary["applied"] == "manual_dropout"
+    assert summary["dropout_modules_replaced"] == len(dropout_modules)
+    assert summary["dropout_modules_zeroed"] == 0
+    assert summary["multihead_attention_modules_zeroed"] == 0
+    assert len(manual_modules) == len(dropout_modules)
+    assert all(float(mod.dropout) > 0.0 for mod in attn_modules)
+
+
+def test_apply_mps_safe_mode_off_is_noop():
+    model = Presto(
+        d_model=32,
+        n_layers=2,
+        n_heads=4,
+        use_pmhc_interaction_block=True,
+    )
+    dropout_modules = [mod for mod in model.modules() if isinstance(mod, torch.nn.Dropout)]
+    attn_modules = [mod for mod in model.modules() if isinstance(mod, torch.nn.MultiheadAttention)]
+    baseline_dropout = [float(mod.p) for mod in dropout_modules]
+    baseline_attn_dropout = [float(mod.dropout) for mod in attn_modules]
+
+    summary = _apply_mps_safe_mode(model, device="cpu", requested_mode="off")
+
+    assert summary["applied"] == "off"
+    assert [float(mod.p) for mod in dropout_modules] == baseline_dropout
+    assert [float(mod.dropout) for mod in attn_modules] == baseline_attn_dropout
+
+
+def test_apply_mps_safe_mode_manual_dropout_can_be_forced_off_mps():
+    model = Presto(
+        d_model=32,
+        n_layers=2,
+        n_heads=4,
+        use_pmhc_interaction_block=True,
+    )
+    dropout_modules = [mod for mod in model.modules() if isinstance(mod, torch.nn.Dropout)]
+    assert dropout_modules
+
+    summary = _apply_mps_safe_mode(model, device="cpu", requested_mode="manual_dropout")
+
+    manual_modules = [mod for mod in model.modules() if isinstance(mod, ManualDropout)]
+    assert summary["applied"] == "manual_dropout"
+    assert summary["dropout_modules_replaced"] == len(dropout_modules)
+    assert len(manual_modules) == len(dropout_modules)
+
+
+def test_manual_dropout_is_seeded_and_backend_neutral():
+    x = torch.ones(4, 4, dtype=torch.float32)
+
+    first = ManualDropout(p=0.25, seed=123)
+    second = ManualDropout(p=0.25, seed=123)
+    first.train()
+    second.train()
+
+    y1 = first(x)
+    y2 = second(x)
+
+    assert torch.allclose(y1, y2)
+    assert not torch.allclose(y1, x)
+
+
+def test_apply_mps_safe_mode_zero_dropout_keeps_attention_fallback():
+    model = Presto(
+        d_model=32,
+        n_layers=2,
+        n_heads=4,
+        use_pmhc_interaction_block=True,
+    )
+    attn_modules = [mod for mod in model.modules() if isinstance(mod, torch.nn.MultiheadAttention)]
+    assert attn_modules
+
+    summary = _apply_mps_safe_mode(model, device="mps", requested_mode="zero_dropout")
+
+    assert summary["applied"] == "zero_dropout"
+    assert summary["dropout_modules_zeroed"] > 0
+    assert summary["multihead_attention_modules_zeroed"] > 0
+    assert all(float(mod.dropout) == 0.0 for mod in attn_modules)
 
 
 def test_split_records_by_peptide_keeps_families_together():
@@ -430,6 +571,54 @@ def test_collator_emits_fixed_metadata_and_pair_indices():
     assert batch.same_allele_diff_peptide_pairs.tolist() == [[0, 2]]
 
 
+def test_evaluate_probe_panel_exports_all_affinity_heads(monkeypatch):
+    def _fake_prepare_mhc_input(*, mhc_a, mhc_class):
+        del mhc_a, mhc_class
+        return SimpleNamespace(groove_half_1="A" * 91, groove_half_2="C" * 93)
+
+    monkeypatch.setattr(
+        "presto.scripts.focused_binding_probe.prepare_mhc_input",
+        _fake_prepare_mhc_input,
+    )
+
+    model = Presto(
+        d_model=32,
+        n_layers=1,
+        n_heads=2,
+        affinity_assay_residual_mode="shared_base_factorized_context_plus_segment_residual",
+        kd_grouping_mode="split_kd_proxy",
+    )
+    model.eval()
+
+    rows = _evaluate_probe_panel(
+        model=model,
+        tokenizer=Tokenizer(),
+        allele_sequences={"HLA-A*02:01": "M" * 184},
+        peptides=["SLLQHLIGL"],
+        alleles=["HLA-A*02:01"],
+        device="cpu",
+    )
+
+    assert len(rows) == 1
+    row = rows[0]
+    for key in (
+        "kd_log10",
+        "kd_nM",
+        "ic50_log10",
+        "ic50_nM",
+        "ec50_log10",
+        "ec50_nM",
+        "kd_proxy_ic50_log10",
+        "kd_proxy_ic50_nM",
+        "kd_proxy_ec50_log10",
+        "kd_proxy_ec50_nM",
+        "probe_kd_log10",
+        "probe_kd_nM",
+    ):
+        assert key in row
+        assert row[key] is None or row[key] >= 0.0 or key.endswith("_log10")
+
+
 def test_combined_dataset_preserves_real_and_synthetic_dataset_index_offsets():
     mhc_sequences = {
         "HLA-A*02:01": "A" * 120,
@@ -516,6 +705,197 @@ def test_affinity_only_loss_assay_heads_only_uses_headwise_targets():
     assert metrics["support_binding_ic50"] == 1.0
     assert metrics["support_binding_ec50"] == 1.0
     assert "support_binding" not in metrics
+
+
+def test_affinity_only_loss_output_consistency_regularizers_are_noop_at_zero_and_active_when_enabled():
+    torch.manual_seed(0)
+    collator = PrestoCollator()
+    batch = collator(
+        [
+            PrestoSample(
+                peptide="SLLQHLIGL",
+                mhc_a="A" * 91,
+                mhc_b="C" * 93,
+                mhc_class="I",
+                bind_value=10.0,
+                bind_measurement_type="dissociation constant KD",
+                bind_qual=0,
+                primary_allele="HLA-A*02:01",
+            ),
+            PrestoSample(
+                peptide="FLRYLLFGI",
+                mhc_a="A" * 91,
+                mhc_b="C" * 93,
+                mhc_class="I",
+                bind_value=50.0,
+                bind_measurement_type="half maximal inhibitory concentration (IC50)",
+                bind_qual=0,
+                primary_allele="HLA-A*24:02",
+            ),
+            PrestoSample(
+                peptide="NFLIKFLLI",
+                mhc_a="A" * 91,
+                mhc_b="C" * 93,
+                mhc_class="I",
+                bind_value=100.0,
+                bind_measurement_type="half maximal effective concentration (EC50)",
+                bind_qual=0,
+                primary_allele="HLA-A*03:01",
+            ),
+        ]
+    )
+    model = Presto(
+        d_model=32,
+        n_layers=1,
+        n_heads=2,
+        affinity_assay_residual_mode="shared_base_factorized_context_plus_segment_residual",
+        kd_grouping_mode="split_kd_proxy",
+    )
+
+    base_loss, base_metrics = _affinity_only_loss(
+        model,
+        batch,
+        device="cpu",
+        regularization={
+            "binding_contrastive_weight": 0.0,
+            "binding_peptide_contrastive_weight": 0.0,
+            "binding_kd_family_consistency_weight": 0.0,
+            "binding_proxy_cross_consistency_weight": 0.0,
+            "binding_output_consistency_beta": 0.25,
+        },
+        loss_mode="full",
+        kd_grouping_mode="split_kd_proxy",
+    )
+    tied_loss, tied_metrics = _affinity_only_loss(
+        model,
+        batch,
+        device="cpu",
+        regularization={
+            "binding_contrastive_weight": 0.0,
+            "binding_peptide_contrastive_weight": 0.0,
+            "binding_kd_family_consistency_weight": 0.1,
+            "binding_proxy_cross_consistency_weight": 0.03,
+            "binding_output_consistency_beta": 0.25,
+        },
+        loss_mode="full",
+        kd_grouping_mode="split_kd_proxy",
+    )
+
+    assert torch.isfinite(base_loss)
+    assert torch.isfinite(tied_loss)
+    assert tied_loss.item() > base_loss.item()
+    assert base_metrics["reg_binding_kd_family_consistency_weight"] == 0.0
+    assert base_metrics["reg_binding_proxy_cross_consistency_weight"] == 0.0
+    assert tied_metrics["reg_binding_kd_family_consistency_weight"] == 0.1
+    assert tied_metrics["reg_binding_proxy_cross_consistency_weight"] == 0.03
+    assert tied_metrics["reg_binding_kd_family_consistency_raw"] > 0.0
+    assert tied_metrics["reg_binding_proxy_cross_consistency_raw"] > 0.0
+    assert tied_metrics["reg_binding_kd_family_consistency_term"] > 0.0
+    assert tied_metrics["reg_binding_proxy_cross_consistency_term"] > 0.0
+
+
+def test_prediction_tensor_for_target_uses_method_leaf_when_available():
+    collator = PrestoCollator()
+    batch = collator(
+        [
+            PrestoSample(
+                peptide="SLLQHLIGL",
+                mhc_a="A" * 91,
+                mhc_b="C" * 93,
+                mhc_class="I",
+                bind_value=50.0,
+                bind_measurement_type="half maximal inhibitory concentration (IC50)",
+                binding_assay_method="purified MHC/competitive/radioactivity",
+            ),
+            PrestoSample(
+                peptide="FLRYLLFGI",
+                mhc_a="A" * 91,
+                mhc_b="C" * 93,
+                mhc_class="I",
+                bind_value=60.0,
+                bind_measurement_type="half maximal inhibitory concentration (IC50)",
+                binding_assay_method="purified MHC/competitive/fluorescence",
+            ),
+        ]
+    )
+    assays = {
+        "IC50_nM": torch.tensor([[3.0], [3.0]], dtype=torch.float32),
+        "IC50_nM__method__PURIFIED_COMPETITIVE_RADIOACTIVITY": torch.tensor(
+            [[1.0], [1.0]], dtype=torch.float32
+        ),
+        "IC50_nM__method__PURIFIED_COMPETITIVE_FLUORESCENCE": torch.tensor(
+            [[2.0], [2.0]], dtype=torch.float32
+        ),
+    }
+
+    pred, names = _prediction_tensor_for_target(
+        assays=assays,
+        batch=batch,
+        target_name="binding_ic50",
+        dag_mode="dag_method_leaf",
+    )
+
+    assert pred is not None
+    assert names is not None
+    assert torch.allclose(pred, torch.tensor([[1.0], [2.0]], dtype=torch.float32))
+    assert names == [
+        "IC50_nM__method__PURIFIED_COMPETITIVE_RADIOACTIVITY",
+        "IC50_nM__method__PURIFIED_COMPETITIVE_FLUORESCENCE",
+    ]
+
+
+def test_select_affinity_predictions_uses_prep_readout_leaf_for_eval_rows():
+    collator = PrestoCollator()
+    batch = collator(
+        [
+            PrestoSample(
+                peptide="SLLQHLIGL",
+                mhc_a="A" * 91,
+                mhc_b="C" * 93,
+                mhc_class="I",
+                bind_value=50.0,
+                bind_measurement_type="half maximal inhibitory concentration (IC50)",
+                binding_assay_method="purified MHC/competitive/radioactivity",
+            ),
+            PrestoSample(
+                peptide="FLRYLLFGI",
+                mhc_a="A" * 91,
+                mhc_b="C" * 93,
+                mhc_class="I",
+                bind_value=60.0,
+                bind_measurement_type="half maximal effective concentration (EC50)",
+                binding_assay_method="cellular/direct/fluorescence",
+            ),
+        ]
+    )
+    outputs = {
+        "assays": {
+            "KD_nM": torch.tensor([[4.0], [4.0]], dtype=torch.float32),
+            "IC50_nM": torch.tensor([[3.0], [3.0]], dtype=torch.float32),
+            "EC50_nM": torch.tensor([[5.0], [5.0]], dtype=torch.float32),
+            "KD_proxy_ic50_nM": torch.tensor([[4.0], [4.0]], dtype=torch.float32),
+            "KD_proxy_ec50_nM": torch.tensor([[4.0], [4.0]], dtype=torch.float32),
+            "IC50_nM__prep__PURIFIED__readout__RADIOACTIVITY": torch.tensor(
+                [[1.5], [1.5]], dtype=torch.float32
+            ),
+            "EC50_nM__prep__CELLULAR__readout__FLUORESCENCE": torch.tensor(
+                [[2.5], [2.5]], dtype=torch.float32
+            ),
+        }
+    }
+
+    pred_log10, pred_outputs = _select_affinity_predictions(
+        outputs=outputs,
+        batch=batch,
+        kd_grouping_mode="split_kd_proxy",
+        dag_mode="dag_prep_readout_leaf",
+    )
+
+    assert torch.allclose(pred_log10, torch.tensor([1.5, 2.5], dtype=torch.float32))
+    assert pred_outputs == [
+        "IC50_nM__prep__PURIFIED__readout__RADIOACTIVITY",
+        "EC50_nM__prep__CELLULAR__readout__FLUORESCENCE",
+    ]
 
 
 def test_filter_shared_peptides_only_keeps_only_cross_allele_families():
@@ -948,3 +1328,84 @@ def test_prepared_binding_state_cache_roundtrip(tmp_path):
     assert len(loaded.real_records) == 1
     assert len(loaded.real_test_records) == 1
     assert loaded.probe_support["SLLQHLIGL"]["total_rows"] == 0
+
+
+def test_epoch_metric_rows_keep_scalar_fields_only():
+    rows = _epoch_metric_rows(
+        [
+            {
+                "epoch": 1,
+                "train_loss": 0.1,
+                "val_loss": 0.2,
+                "val_spearman": 0.3,
+                "nested": {"skip": True},
+                "list_value": [1, 2, 3],
+                "note": "ok",
+            }
+        ]
+    )
+
+    assert rows == [
+        {
+            "epoch": 1,
+            "train_loss": 0.1,
+            "val_loss": 0.2,
+            "val_spearman": 0.3,
+            "note": "ok",
+        }
+    ]
+
+
+def test_write_epoch_metrics_plot_creates_png(tmp_path):
+    rows = [
+        {
+            "epoch": 1,
+            "val_loss": 0.4,
+            "val_spearman": 0.5,
+            "val_auroc": 0.6,
+            "val_auprc": 0.55,
+            "val_rmse_log10": 0.9,
+        },
+        {
+            "epoch": 2,
+            "val_loss": 0.3,
+            "val_spearman": 0.7,
+            "val_auroc": 0.8,
+            "val_auprc": 0.75,
+            "val_rmse_log10": 0.7,
+        },
+    ]
+    path = tmp_path / "val_metrics_over_epochs.png"
+
+    _write_epoch_metrics_plot(path, rows)
+
+    assert path.exists()
+    assert path.stat().st_size > 0
+
+
+def test_write_probe_all_outputs_plot_creates_png(tmp_path):
+    rows = []
+    for epoch in (1, 2):
+        for peptide, allele, scale in (
+            ("SLLQHLIGL", "HLA-A*02:01", 1.0),
+            ("SLLQHLIGL", "HLA-A*24:02", 10.0),
+        ):
+            rows.append(
+                {
+                    "epoch": epoch,
+                    "peptide": peptide,
+                    "allele": allele,
+                    "kd_nM": 20.0 * scale / epoch,
+                    "ic50_nM": 30.0 * scale / epoch,
+                    "ec50_nM": 40.0 * scale / epoch,
+                    "kd_proxy_ic50_nM": 50.0 * scale / epoch,
+                    "kd_proxy_ec50_nM": 60.0 * scale / epoch,
+                    "probe_kd_nM": 70.0 * scale / epoch,
+                }
+            )
+    path = tmp_path / "probe_affinity_all_outputs_over_epochs.png"
+
+    _write_probe_all_outputs_plot(path, rows)
+
+    assert path.exists()
+    assert path.stat().st_size > 0
