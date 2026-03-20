@@ -7,6 +7,7 @@ import pytest
 
 from presto.data.collate import PrestoCollator
 from presto.data.groove import prepare_mhc_input
+from presto.data.mhc_sequence_resolver import ExactMHCInput
 from presto.data.loaders import load_iedb_stability, load_iedb_tcell
 from presto.data.loaders import load_iedb_binding, load_iedb_elution, load_iedb_processing
 from presto.data.loaders import load_iedb_kinetics
@@ -262,6 +263,81 @@ def test_load_iedb_binding_preserves_measurement_type_for_split_targets(tmp_path
     assert batch.target_masks["binding_kd"].tolist() == [1.0, 0.0, 0.0]
     assert batch.target_masks["binding_ic50"].tolist() == [0.0, 1.0, 0.0]
     assert batch.target_masks["binding_ec50"].tolist() == [0.0, 0.0, 1.0]
+
+
+def test_presto_dataset_prefers_exact_mhc_input_grooves_for_class_i():
+    record = BindingRecord(
+        peptide="SIINFEKL",
+        mhc_allele="HLA-A*02:01",
+        value=50.0,
+        qualifier=0,
+        measurement_type="half maximal inhibitory concentration (IC50)",
+        mhc_class="I",
+        species="human",
+    )
+    dataset = PrestoDataset(
+        binding_records=[record],
+        mhc_sequences={"HLA-A*02:01": MHC_SHORT_SEQ},
+        mhc_exact_inputs={
+            "HLA-A*02:01": ExactMHCInput(
+                allele="HLA-A*02:01",
+                sequence=MHC_ALPHA_SEQ,
+                groove1=MHC_ALPHA_GROOVE.groove_half_1,
+                groove2=MHC_ALPHA_GROOVE.groove_half_2,
+                mhc_class="I",
+                source="mhcseqs",
+            )
+        },
+        strict_mhc_resolution=True,
+    )
+
+    sample = dataset[0]
+    assert sample.mhc_a == MHC_ALPHA_GROOVE.groove_half_1
+    assert sample.mhc_b == MHC_ALPHA_GROOVE.groove_half_2
+
+
+def test_presto_dataset_prefers_exact_mhc_input_grooves_for_class_ii_default_dr_pair():
+    record = BindingRecord(
+        peptide="PKYVKQNTLKLAT",
+        mhc_allele="HLA-DRB1*01:01",
+        value=75.0,
+        qualifier=0,
+        measurement_type="dissociation constant kd",
+        mhc_class="II",
+        species="human",
+    )
+    dataset = PrestoDataset(
+        binding_records=[record],
+        mhc_sequences={
+            "HLA-DRA*01:01": MHC_SHORT_SEQ,
+            "HLA-DRB1*01:01": MHC_SHORT_SEQ,
+        },
+        mhc_exact_inputs={
+            "HLA-DRA*01:01": ExactMHCInput(
+                allele="HLA-DRA*01:01",
+                sequence=MHC_DR_ALPHA_SEQ,
+                groove1=MHC_DR_GROOVE.groove_half_1,
+                groove2="",
+                mhc_class="II",
+                chain="alpha",
+                source="mhcseqs",
+            ),
+            "HLA-DRB1*01:01": ExactMHCInput(
+                allele="HLA-DRB1*01:01",
+                sequence=MHC_DR_BETA_SEQ,
+                groove1="",
+                groove2=MHC_DR_GROOVE.groove_half_2,
+                mhc_class="II",
+                chain="beta",
+                source="mhcseqs",
+            ),
+        },
+        strict_mhc_resolution=True,
+    )
+
+    sample = dataset[0]
+    assert sample.mhc_a == MHC_DR_GROOVE.groove_half_1
+    assert sample.mhc_b == MHC_DR_GROOVE.groove_half_2
 
 
 def test_record_defaults_leave_mhc_class_unknown():

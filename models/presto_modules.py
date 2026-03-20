@@ -115,6 +115,9 @@ class AffinityPredictor(nn.Module):
             "shared_base_segment_residual",
             "shared_base_factorized_context_residual",
             "shared_base_factorized_context_plus_segment_residual",
+            "dag_family",
+            "dag_method_leaf",
+            "dag_prep_readout_leaf",
         }:
             raise ValueError(
                 "Unsupported affinity_assay_residual_mode: "
@@ -181,6 +184,9 @@ class AffinityPredictor(nn.Module):
                 if self.affinity_assay_residual_mode in {
                     "shared_base_segment_residual",
                     "shared_base_factorized_context_plus_segment_residual",
+                    "dag_family",
+                    "dag_method_leaf",
+                    "dag_prep_readout_leaf",
                 }
                 else 0
             ),
@@ -195,7 +201,12 @@ class AffinityPredictor(nn.Module):
             kd_bias_input_dim = d_model + 1
         elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
             kd_bias_input_dim = 1
-        elif self.affinity_assay_residual_mode == "shared_base_factorized_context_plus_segment_residual":
+        elif self.affinity_assay_residual_mode in {
+            "shared_base_factorized_context_plus_segment_residual",
+            "dag_family",
+            "dag_method_leaf",
+            "dag_prep_readout_leaf",
+        }:
             kd_bias_input_dim = d_model + 1
         else:
             kd_bias_input_dim = 0
@@ -301,7 +312,12 @@ class AffinityPredictor(nn.Module):
             kd_bias_input = torch.cat(kd_bias_parts, dim=-1)
         elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
             kd_bias_input = outputs["binding_affinity_score"]
-        elif self.affinity_assay_residual_mode == "shared_base_factorized_context_plus_segment_residual":
+        elif self.affinity_assay_residual_mode in {
+            "shared_base_factorized_context_plus_segment_residual",
+            "dag_family",
+            "dag_method_leaf",
+            "dag_prep_readout_leaf",
+        }:
             kd_bias_input = torch.cat(
                 [sequence_summary_vec, outputs["binding_affinity_score"]],
                 dim=-1,
@@ -337,6 +353,9 @@ class AffinityPredictor(nn.Module):
                     in {
                         "shared_base_factorized_context_residual",
                         "shared_base_factorized_context_plus_segment_residual",
+                        "dag_family",
+                        "dag_method_leaf",
+                        "dag_prep_readout_leaf",
                     }
                 )
                 else None
@@ -350,6 +369,9 @@ class AffinityPredictor(nn.Module):
                 in {
                     "shared_base_segment_residual",
                     "shared_base_factorized_context_plus_segment_residual",
+                    "dag_family",
+                    "dag_method_leaf",
+                    "dag_prep_readout_leaf",
                 }
                 else None
             ),
@@ -374,6 +396,9 @@ class AffinityPredictor(nn.Module):
                     in {
                         "shared_base_factorized_context_residual",
                         "shared_base_factorized_context_plus_segment_residual",
+                        "dag_family",
+                        "dag_method_leaf",
+                        "dag_prep_readout_leaf",
                     }
                 )
                 else None
@@ -385,6 +410,9 @@ class AffinityPredictor(nn.Module):
                 in {
                     "shared_base_segment_residual",
                     "shared_base_factorized_context_plus_segment_residual",
+                    "dag_family",
+                    "dag_method_leaf",
+                    "dag_prep_readout_leaf",
                 }
                 else None
             ),

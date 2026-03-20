@@ -25,8 +25,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from presto.models.presto import Presto
 from presto.data import PrestoDataset, PrestoCollator, create_dataloader
 from presto.data.tokenizer import Tokenizer
-from presto.data.groove import prepare_mhc_input
 from presto.data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
+from presto.data.mhc_sequence_resolver import resolve_class_i_groove_halves
 from presto.training.losses import UncertaintyWeighting
 from presto.scripts.train_synthetic import compute_loss, LOSS_TASK_NAMES
 from presto.scripts.train_iedb import (
@@ -36,6 +36,7 @@ from presto.scripts.train_iedb import (
     augment_processing_records_with_synthetic_negatives,
     cascade_binding_negatives_to_downstream,
     bootstrap_missing_modalities_for_canary,
+    resolve_mhc_inputs_from_index,
     resolve_mhc_sequences_from_index,
     SYNTHETIC_ELUTION_NEGATIVE_SCALE,
     SYNTHETIC_CASCADE_ELUTION_NEGATIVE_SCALE,
@@ -81,26 +82,19 @@ def probe_peptide(model, tokenizer, allele_sequences, device):
     model.eval()
     results = {}
     for allele in ALLELES:
-        mhc_a_seq = None
-        for key in [allele, allele.replace("HLA-", "")]:
-            if key in allele_sequences:
-                mhc_a_seq = allele_sequences[key]
-                break
-        if mhc_a_seq is None:
-            for k, v in allele_sequences.items():
-                if allele in k or k in allele:
-                    mhc_a_seq = v
-                    break
-        if mhc_a_seq is None:
+        grooves = resolve_class_i_groove_halves(
+            allele=str(allele),
+            allele_sequences=allele_sequences,
+        )
+        if grooves is None:
             raise ValueError(f"Cannot resolve allele: {allele}")
-
-        prepared = prepare_mhc_input(mhc_a=mhc_a_seq, mhc_class="I")
+        groove1, groove2 = grooves
         pep_tok = torch.tensor(tokenizer.encode(PEPTIDE, max_len=50)).unsqueeze(0).to(device)
         mhc_a_tok = torch.tensor(
-            tokenizer.encode(prepared.groove_half_1, max_len=120)
+            tokenizer.encode(groove1, max_len=120)
         ).unsqueeze(0).to(device)
         mhc_b_tok = torch.tensor(
-            tokenizer.encode(prepared.groove_half_2, max_len=120)
+            tokenizer.encode(groove2, max_len=120)
         ).unsqueeze(0).to(device)
 
         with torch.no_grad():
@@ -225,6 +219,10 @@ def main():
         index_csv=index_csv,
         alleles=unique_alleles,
     )
+    mhc_exact_inputs, _ = resolve_mhc_inputs_from_index(
+        index_csv=index_csv,
+        alleles=unique_alleles,
+    )
     print(f"  Resolved {mhc_stats['resolved']}/{mhc_stats['total']} MHC alleles")
 
     # Bootstrap sparse modalities
@@ -280,6 +278,7 @@ def main():
         tcell_records=tcell_records,
         tcr_evidence_records=vdjdb_records,
         mhc_sequences=mhc_sequences,
+        mhc_exact_inputs=mhc_exact_inputs,
         strict_mhc_resolution=False,
     )
     train_size = int(0.8 * len(dataset))

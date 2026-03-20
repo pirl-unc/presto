@@ -11,9 +11,8 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence
 import torch
 from torch.utils.data import DataLoader
 
-from presto.data.groove import prepare_mhc_input
+from presto.data.mhc_sequence_resolver import resolve_class_i_groove_halves
 from presto.data.tokenizer import Tokenizer
-from presto.scripts.groove_baseline_probe import _find_allele_sequence
 
 from .config import DistributionalModel
 from .metrics import calibration_metrics, point_metrics
@@ -37,15 +36,18 @@ def evaluate_probe_panel(
                 continue
             pep_tok = torch.tensor(tokenizer.encode(pep, max_len=50)).unsqueeze(0).to(device)
             for allele in alleles:
-                mhc_seq = _find_allele_sequence(allele_sequences, allele)
-                if not mhc_seq:
+                grooves = resolve_class_i_groove_halves(
+                    allele=str(allele),
+                    allele_sequences=allele_sequences,
+                )
+                if grooves is None:
                     continue
-                prepared = prepare_mhc_input(mhc_a=mhc_seq, mhc_class="I")
+                groove1, groove2 = grooves
                 mhc_a_tok = torch.tensor(
-                    tokenizer.encode(prepared.groove_half_1, max_len=120)
+                    tokenizer.encode(groove1, max_len=120)
                 ).unsqueeze(0).to(device)
                 mhc_b_tok = torch.tensor(
-                    tokenizer.encode(prepared.groove_half_2, max_len=120)
+                    tokenizer.encode(groove2, max_len=120)
                 ).unsqueeze(0).to(device)
 
                 out = model(pep_tok, mhc_a_tok, mhc_b_tok)

@@ -855,19 +855,17 @@ def test_resolve_mhc_sequences_from_index_maps_input_alleles(tmp_path, monkeypat
         encoding="utf-8",
     )
     monkeypatch.setattr(
-        "presto.scripts.train_iedb.resolve_alleles",
-        lambda index_csv, alleles, include_sequence: [
+        "presto.scripts.train_iedb.resolve_exact_mhc_sequences",
+        lambda alleles, index_csv, prefer_mhcseqs: (
+            {"HLA-A*02:01": "AAAA"},
             {
-                "input": "HLA-A*02:01",
-                "found": True,
-                "sequence": "AAAA",
+                "total": 2,
+                "resolved": 1,
+                "resolved_mhcseqs": 1,
+                "resolved_index": 0,
+                "missing": 1,
             },
-            {
-                "input": "HLA-B*07:02",
-                "found": False,
-                "sequence": "",
-            },
-        ],
+        ),
     )
 
     mapping, stats = resolve_mhc_sequences_from_index(
@@ -1278,6 +1276,53 @@ def test_load_records_from_merged_tsv_maps_assays_and_tcell_context(tmp_path):
     assert "binding_affinity" in stats["rows_by_assay"]
     assert "elution_ms" in stats["rows_by_assay"]
     assert "tcell_response" in stats["rows_by_assay"]
+
+
+def test_load_records_from_merged_tsv_preserves_bagged_mhc_restrictions(tmp_path):
+    merged = tmp_path / "merged_deduped.tsv"
+    merged.write_text(
+        (
+            "peptide\tmhc_allele\tmhc_allele_set\tmhc_allele_provenance\tmhc_allele_bag_size\tmhc_class\tpmid\tdoi\treference_text\tsource\trecord_type\t"
+            "value\tvalue_type\tqualifier\tresponse\tassay_type\tassay_method\tapc_name\t"
+            "effector_culture_condition\tapc_culture_condition\tin_vitro_process_type\t"
+            "in_vitro_responder_cell\tin_vitro_stimulator_cell\tcdr3_alpha\tcdr3_beta\ttrav\ttrbv\tspecies\n"
+            "SIINFEKL\tHLA-A2\tHLA-A*02:01;HLA-A*02:02\tserotype_expanded\t2\tI\t\t\t\tiedb\tbinding\t42\tIC50\t0\t\t\t\t\t\t\t\t\t\t\t\t\t\thuman\n"
+            "GILGFVFTL\tHLA-A2\tHLA-A*02:01;HLA-A*02:02\tserotype_expanded\t2\tI\t\t\t\tiedb\tbinding\t\tligand presentation\t0\tpositive\t\t\t\t\t\t\t\t\t\t\t\t\thuman\n"
+            "NLVPMVATV\tH2-b class I\tH2-D*b;H2-K*b\thaplotype_expanded\t2\tI\t\t\t\tiedb\ttcell\t\t\t0\tpositive\tIFNg release\tELISPOT\tPBMC\t"
+            "Direct ex vivo\tNA\tNA\tNA\tNA\t\t\t\t\thuman\n"
+        ),
+        encoding="utf-8",
+    )
+
+    (
+        binding,
+        kinetics,
+        stability,
+        processing,
+        elution,
+        tcell,
+        tcr_evidence,
+        stats,
+    ) = load_records_from_merged_tsv(
+        merged,
+        max_binding=0,
+        max_kinetics=0,
+        max_stability=0,
+        max_processing=0,
+        max_elution=0,
+        max_tcell=0,
+        max_vdjdb=0,
+    )
+
+    assert len(binding) == 1
+    assert binding[0].mhc_allele == "HLA-A2"
+    assert binding[0].alleles == ["HLA-A*02:01", "HLA-A*02:02"]
+    assert len(elution) == 1
+    assert elution[0].alleles == ["HLA-A*02:01", "HLA-A*02:02"]
+    assert len(tcell) == 1
+    assert tcell[0].mhc_allele == "H2-b class I"
+    assert tcell[0].alleles == ["H2-D*b", "H2-K*b"]
+    assert len(tcr_evidence) == 0
 
 
 def test_load_records_from_merged_tsv_drops_invalid_peptides_and_sanitizes_optional_sequences(tmp_path):

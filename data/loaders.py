@@ -24,7 +24,7 @@ import math
 import warnings
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Optional, Iterator, Union, Any, Tuple
+from typing import Dict, List, Optional, Iterator, Union, Any, Tuple, Mapping
 from dataclasses import dataclass, field
 import random
 import re
@@ -47,6 +47,7 @@ from .allele_resolver import (
     normalize_mhc_class,
     normalize_species_label,
 )
+from .mhc_sequence_resolver import ExactMHCInput, lookup_exact_mhc_input
 
 
 # =============================================================================
@@ -102,6 +103,51 @@ def _normalize_mhc_sequence_lookup(
             normalized[variant.upper()] = seq
     return normalized
 
+
+def _coerce_exact_mhc_input(
+    allele: str,
+    value: Union[ExactMHCInput, Mapping[str, Any]],
+) -> ExactMHCInput:
+    if isinstance(value, ExactMHCInput):
+        return value
+    return ExactMHCInput(
+        allele=str(getattr(value, "allele", None) or value.get("allele") or allele).strip(),
+        sequence=str(getattr(value, "sequence", None) or value.get("sequence") or "").strip().upper(),
+        groove1=str(getattr(value, "groove1", None) or value.get("groove1") or "").strip().upper(),
+        groove2=str(getattr(value, "groove2", None) or value.get("groove2") or "").strip().upper(),
+        mhc_class=str(getattr(value, "mhc_class", None) or value.get("mhc_class") or "").strip().upper(),
+        chain=str(getattr(value, "chain", None) or value.get("chain") or "").strip().lower(),
+        groove_status=str(
+            getattr(value, "groove_status", None) or value.get("groove_status") or ""
+        ).strip(),
+        source=str(getattr(value, "source", None) or value.get("source") or "mhcseqs").strip(),
+    )
+
+
+def _normalize_exact_mhc_input_lookup(
+    mhc_exact_inputs: Optional[Mapping[str, Union[ExactMHCInput, Mapping[str, Any]]]],
+) -> Dict[str, ExactMHCInput]:
+    normalized: Dict[str, ExactMHCInput] = {}
+    for allele, value in (mhc_exact_inputs or {}).items():
+        key = str(allele or "").strip()
+        if not key or value is None:
+            continue
+        record = _coerce_exact_mhc_input(key, value)
+        variants = {key, str(record.allele or "").strip()}
+        for variant in list(variants):
+            if not variant:
+                continue
+            try:
+                variants.add(normalize_allele_name(variant))
+            except Exception:
+                pass
+        for variant in variants:
+            if not variant:
+                continue
+            normalized[variant] = record
+            normalized[variant.upper()] = record
+    return normalized
+
 @dataclass
 class BindingRecord:
     """Binding affinity measurement (IC50, KD, EC50)."""
@@ -120,6 +166,7 @@ class BindingRecord:
     species: Optional[str] = None
     antigen_species: Optional[str] = None  # Source organism of the epitope
     source: str = "iedb"
+    alleles: Optional[List[str]] = None
 
 
 @dataclass
@@ -137,6 +184,7 @@ class KineticsRecord:
     species: Optional[str] = None
     antigen_species: Optional[str] = None
     source: str = "iedb"
+    alleles: Optional[List[str]] = None
 
 
 @dataclass
@@ -154,6 +202,7 @@ class StabilityRecord:
     species: Optional[str] = None
     antigen_species: Optional[str] = None
     source: str = "iedb"
+    alleles: Optional[List[str]] = None
 
 
 @dataclass
@@ -1552,6 +1601,7 @@ class PrestoDataset(Dataset):
         vdjdb_records: List[VDJdbRecord] = None,
         sc10x_records: List[Sc10xVDJRecord] = None,
         mhc_sequences: Dict[str, str] = None,
+        mhc_exact_inputs: Mapping[str, Union[ExactMHCInput, Mapping[str, Any]]] = None,
         allele_resolver: AlleleResolver = None,
         strict_mhc_resolution: bool = True,
         dataset_index_offset: int = 0,
@@ -1569,6 +1619,7 @@ class PrestoDataset(Dataset):
                 RuntimeWarning,
             )
         self.mhc_sequences = _normalize_mhc_sequence_lookup(mhc_sequences)
+        self.mhc_exact_inputs = _normalize_exact_mhc_input_lookup(mhc_exact_inputs)
         self.allele_resolver = allele_resolver
         self.strict_mhc_resolution = bool(strict_mhc_resolution)
         self.dataset_index_offset = int(dataset_index_offset)
@@ -2108,6 +2159,50 @@ class PrestoDataset(Dataset):
         cached = self._resolved_mhc_pair_cache.get(cache_key)
         if cached is not None:
             return cached
+        if not direct_seq_clean and not mhc_b_clean:
+            if cls == "II" and allele and is_class_ii_dr_beta_allele(allele):
+                alpha_allele = self._default_class_ii_dr_alpha_allele(species, allele)
+                alpha_exact = self._lookup_exact_mhc_input(alpha_allele) if alpha_allele else None
+                beta_exact = self._lookup_exact_mhc_input(allele)
+                if (
+                    alpha_exact is not None
+                    and beta_exact is not None
+                    and str(alpha_exact.groove1 or "").strip()
+                    and str(beta_exact.groove2 or "").strip()
+                ):
+                    resolved = (
+                        self._validate_mhc_input_segment(
+                            sequence=alpha_exact.groove1,
+                            segment_label="mhc_a",
+                            allele=alpha_allele or allele,
+                        ),
+                        self._validate_mhc_input_segment(
+                            sequence=beta_exact.groove2,
+                            segment_label="mhc_b",
+                            allele=allele,
+                        ),
+                    )
+                    self._resolved_mhc_pair_cache[cache_key] = resolved
+                    return resolved
+            elif allele:
+                exact = self._lookup_exact_mhc_input(allele)
+                if exact is not None and (
+                    str(exact.groove1 or "").strip() or str(exact.groove2 or "").strip()
+                ):
+                    resolved = (
+                        self._validate_mhc_input_segment(
+                            sequence=exact.groove1,
+                            segment_label="mhc_a",
+                            allele=allele,
+                        ),
+                        self._validate_mhc_input_segment(
+                            sequence=exact.groove2,
+                            segment_label="mhc_b",
+                            allele=allele,
+                        ),
+                    )
+                    self._resolved_mhc_pair_cache[cache_key] = resolved
+                    return resolved
         if cls == "II" and allele and is_class_ii_dr_beta_allele(allele) and not mhc_b_clean:
             alpha_allele = self._default_class_ii_dr_alpha_allele(species, allele)
             if alpha_allele is None:
@@ -2171,6 +2266,23 @@ class PrestoDataset(Dataset):
         )
         self._resolved_mhc_pair_cache[cache_key] = resolved
         return resolved
+
+    def _lookup_exact_mhc_input(self, allele: Optional[str]) -> Optional[ExactMHCInput]:
+        query = str(allele or "").strip()
+        if not query:
+            return None
+        lookup_keys = [query, query.upper()]
+        try:
+            normalized = normalize_allele_name(query)
+        except Exception:
+            normalized = ""
+        if normalized:
+            lookup_keys.extend([normalized, normalized.upper()])
+        for key in lookup_keys:
+            record = self.mhc_exact_inputs.get(key)
+            if record is not None:
+                return record
+        return lookup_exact_mhc_input(query)
 
     def _get_mhc_sequence(self, allele: str, direct_seq: Optional[str]) -> str:
         """Resolve MHC sequence from allele name or direct sequence."""

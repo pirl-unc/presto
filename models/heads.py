@@ -20,6 +20,18 @@ from .affinity import (
     affinity_log10_to_target_logit,
     affinity_target_logit_to_log10,
 )
+from ..data.vocab import (
+    BINDING_ASSAY_METHODS,
+    BINDING_ASSAY_PREP,
+    BINDING_ASSAY_READOUT,
+)
+
+
+AFFINITY_DAG_FAMILY_MODES = {
+    "dag_family",
+    "dag_method_leaf",
+    "dag_prep_readout_leaf",
+}
 
 
 # --------------------------------------------------------------------------
@@ -228,6 +240,9 @@ class AssayHeads(nn.Module):
             "shared_base_segment_residual",
             "shared_base_factorized_context_residual",
             "shared_base_factorized_context_plus_segment_residual",
+            "dag_family",
+            "dag_method_leaf",
+            "dag_prep_readout_leaf",
         }:
             raise ValueError(
                 f"Unsupported affinity_assay_residual_mode: {affinity_assay_residual_mode!r}"
@@ -238,6 +253,7 @@ class AssayHeads(nn.Module):
         self.class_probs_dim = max(int(class_probs_dim), 0)
         self.species_probs_dim = max(int(species_probs_dim), 0)
         self._conditioning_probs_dim = self.class_probs_dim + self.species_probs_dim
+        self._uses_dag_family = self.affinity_assay_residual_mode in AFFINITY_DAG_FAMILY_MODES
         kd_grouping_mode = str(kd_grouping_mode).strip().lower()
         if kd_grouping_mode not in {"merged_kd", "split_kd_proxy"}:
             raise ValueError(f"Unsupported kd_grouping_mode: {kd_grouping_mode!r}")
@@ -249,37 +265,176 @@ class AssayHeads(nn.Module):
             residual_input_dim = self.sequence_summary_dim + self.assay_context_dim + self._conditioning_probs_dim + 1
         elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
             residual_input_dim = self.factorized_context_dim + self._conditioning_probs_dim + 1
-        elif self.affinity_assay_residual_mode == "shared_base_factorized_context_plus_segment_residual":
+        elif self.affinity_assay_residual_mode in {
+            "shared_base_factorized_context_plus_segment_residual",
+            "dag_family",
+            "dag_method_leaf",
+            "dag_prep_readout_leaf",
+        }:
             residual_input_dim = self.sequence_summary_dim + self.factorized_context_dim + self._conditioning_probs_dim + 1
         else:
             residual_input_dim = d_model + self.assay_context_dim
         stability_input_dim = d_model + self.stability_score_dim
         if residual_input_dim > 0:
-            self.ic50_residual = nn.Sequential(
-                nn.Linear(residual_input_dim, d_model // 2),
-                nn.GELU(),
-                nn.Linear(d_model // 2, 1),
-            )
-            self.ec50_residual = nn.Sequential(
-                nn.Linear(residual_input_dim, d_model // 2),
-                nn.GELU(),
-                nn.Linear(d_model // 2, 1),
-            )
-            if self.kd_grouping_mode == "split_kd_proxy":
-                self.kd_proxy_ic50_residual = nn.Sequential(
+            if self._uses_dag_family:
+                self.ic50_family_residual = nn.Sequential(
                     nn.Linear(residual_input_dim, d_model // 2),
                     nn.GELU(),
                     nn.Linear(d_model // 2, 1),
                 )
-                self.kd_proxy_ec50_residual = nn.Sequential(
+                self.ec50_family_residual = nn.Sequential(
                     nn.Linear(residual_input_dim, d_model // 2),
                     nn.GELU(),
                     nn.Linear(d_model // 2, 1),
                 )
-            else:
+                self.ic50_leaf_residual = nn.Sequential(
+                    nn.Linear(residual_input_dim, d_model // 2),
+                    nn.GELU(),
+                    nn.Linear(d_model // 2, 1),
+                )
+                self.ec50_leaf_residual = nn.Sequential(
+                    nn.Linear(residual_input_dim, d_model // 2),
+                    nn.GELU(),
+                    nn.Linear(d_model // 2, 1),
+                )
+                if self.kd_grouping_mode == "split_kd_proxy":
+                    self.kd_proxy_ic50_leaf_residual = nn.Sequential(
+                        nn.Linear(residual_input_dim, d_model // 2),
+                        nn.GELU(),
+                        nn.Linear(d_model // 2, 1),
+                    )
+                    self.kd_proxy_ec50_leaf_residual = nn.Sequential(
+                        nn.Linear(residual_input_dim, d_model // 2),
+                        nn.GELU(),
+                        nn.Linear(d_model // 2, 1),
+                    )
+                else:
+                    self.kd_proxy_ic50_leaf_residual = None
+                    self.kd_proxy_ec50_leaf_residual = None
+                if self.affinity_assay_residual_mode == "dag_method_leaf":
+                    self.ic50_method_leaf_residuals = nn.ModuleDict(
+                        {
+                            name: nn.Sequential(
+                                nn.Linear(residual_input_dim, d_model // 2),
+                                nn.GELU(),
+                                nn.Linear(d_model // 2, 1),
+                            )
+                            for name in BINDING_ASSAY_METHODS
+                        }
+                    )
+                    self.ec50_method_leaf_residuals = nn.ModuleDict(
+                        {
+                            name: nn.Sequential(
+                                nn.Linear(residual_input_dim, d_model // 2),
+                                nn.GELU(),
+                                nn.Linear(d_model // 2, 1),
+                            )
+                            for name in BINDING_ASSAY_METHODS
+                        }
+                    )
+                else:
+                    self.ic50_method_leaf_residuals = None
+                    self.ec50_method_leaf_residuals = None
+                if self.affinity_assay_residual_mode == "dag_prep_readout_leaf":
+                    self.ic50_prep_leaf_residuals = nn.ModuleDict(
+                        {
+                            name: nn.Sequential(
+                                nn.Linear(residual_input_dim, d_model // 2),
+                                nn.GELU(),
+                                nn.Linear(d_model // 2, 1),
+                            )
+                            for name in BINDING_ASSAY_PREP
+                        }
+                    )
+                    self.ic50_readout_leaf_residuals = nn.ModuleDict(
+                        {
+                            name: nn.Sequential(
+                                nn.Linear(residual_input_dim, d_model // 2),
+                                nn.GELU(),
+                                nn.Linear(d_model // 2, 1),
+                            )
+                            for name in BINDING_ASSAY_READOUT
+                        }
+                    )
+                    self.ec50_prep_leaf_residuals = nn.ModuleDict(
+                        {
+                            name: nn.Sequential(
+                                nn.Linear(residual_input_dim, d_model // 2),
+                                nn.GELU(),
+                                nn.Linear(d_model // 2, 1),
+                            )
+                            for name in BINDING_ASSAY_PREP
+                        }
+                    )
+                    self.ec50_readout_leaf_residuals = nn.ModuleDict(
+                        {
+                            name: nn.Sequential(
+                                nn.Linear(residual_input_dim, d_model // 2),
+                                nn.GELU(),
+                                nn.Linear(d_model // 2, 1),
+                            )
+                            for name in BINDING_ASSAY_READOUT
+                        }
+                    )
+                else:
+                    self.ic50_prep_leaf_residuals = None
+                    self.ic50_readout_leaf_residuals = None
+                    self.ec50_prep_leaf_residuals = None
+                    self.ec50_readout_leaf_residuals = None
+                self.ic50_residual = None
+                self.ec50_residual = None
                 self.kd_proxy_ic50_residual = None
                 self.kd_proxy_ec50_residual = None
+            else:
+                self.ic50_family_residual = None
+                self.ec50_family_residual = None
+                self.ic50_leaf_residual = None
+                self.ec50_leaf_residual = None
+                self.kd_proxy_ic50_leaf_residual = None
+                self.kd_proxy_ec50_leaf_residual = None
+                self.ic50_method_leaf_residuals = None
+                self.ec50_method_leaf_residuals = None
+                self.ic50_prep_leaf_residuals = None
+                self.ic50_readout_leaf_residuals = None
+                self.ec50_prep_leaf_residuals = None
+                self.ec50_readout_leaf_residuals = None
+                self.ic50_residual = nn.Sequential(
+                    nn.Linear(residual_input_dim, d_model // 2),
+                    nn.GELU(),
+                    nn.Linear(d_model // 2, 1),
+                )
+                self.ec50_residual = nn.Sequential(
+                    nn.Linear(residual_input_dim, d_model // 2),
+                    nn.GELU(),
+                    nn.Linear(d_model // 2, 1),
+                )
+                if self.kd_grouping_mode == "split_kd_proxy":
+                    self.kd_proxy_ic50_residual = nn.Sequential(
+                        nn.Linear(residual_input_dim, d_model // 2),
+                        nn.GELU(),
+                        nn.Linear(d_model // 2, 1),
+                    )
+                    self.kd_proxy_ec50_residual = nn.Sequential(
+                        nn.Linear(residual_input_dim, d_model // 2),
+                        nn.GELU(),
+                        nn.Linear(d_model // 2, 1),
+                    )
+                else:
+                    self.kd_proxy_ic50_residual = None
+                    self.kd_proxy_ec50_residual = None
         else:
+            self.ic50_family_residual = None
+            self.ec50_family_residual = None
+            self.ic50_leaf_residual = None
+            self.ec50_leaf_residual = None
+            self.kd_proxy_ic50_leaf_residual = None
+            self.kd_proxy_ec50_leaf_residual = None
+            self.ic50_method_leaf_residuals = None
+            self.ec50_method_leaf_residuals = None
+            self.ic50_prep_leaf_residuals = None
+            self.ic50_readout_leaf_residuals = None
+            self.ec50_prep_leaf_residuals = None
+            self.ec50_readout_leaf_residuals = None
             self.ic50_residual = None
             self.ec50_residual = None
             self.kd_proxy_ic50_residual = None
@@ -426,11 +581,6 @@ class AssayHeads(nn.Module):
             smooth_lower_bound(kd_log10_nM, -3.0),
             self.max_log10_nM,
         )
-        kd_base_target_logit = affinity_log10_to_target_logit(
-            kd_base,
-            encoding=self.affinity_target_encoding,
-            max_affinity_nM=self.max_affinity_nM,
-        )
         if self.affinity_assay_residual_mode == "pooled_single_output":
             if self.kd_grouping_mode == "split_kd_proxy":
                 return {
@@ -456,26 +606,32 @@ class AssayHeads(nn.Module):
             class_probs=class_probs,
             species_probs=species_probs,
         )
+        if self._uses_dag_family:
+            return self._dag_affinity_observables(
+                kd_base=kd_base,
+                residual_input=residual_input,
+            )
+        kd_base_target_logit = self._target_logit(kd_base)
         ic50 = self._affinity_residual_output(
-            kd_base=kd_base,
-            kd_base_target_logit=kd_base_target_logit,
+            base_log10=kd_base,
+            base_target_logit=kd_base_target_logit,
             residual=self.ic50_residual(residual_input),
         )
         ec50 = self._affinity_residual_output(
-            kd_base=kd_base,
-            kd_base_target_logit=kd_base_target_logit,
+            base_log10=kd_base,
+            base_target_logit=kd_base_target_logit,
             residual=self.ec50_residual(residual_input),
         )
         outputs = {"KD_nM": kd_base, "IC50_nM": ic50, "EC50_nM": ec50}
         if self.kd_grouping_mode == "split_kd_proxy":
             outputs["KD_proxy_ic50_nM"] = self._affinity_residual_output(
-                kd_base=kd_base,
-                kd_base_target_logit=kd_base_target_logit,
+                base_log10=kd_base,
+                base_target_logit=kd_base_target_logit,
                 residual=self.kd_proxy_ic50_residual(residual_input),
             )
             outputs["KD_proxy_ec50_nM"] = self._affinity_residual_output(
-                kd_base=kd_base,
-                kd_base_target_logit=kd_base_target_logit,
+                base_log10=kd_base,
+                base_target_logit=kd_base_target_logit,
                 residual=self.kd_proxy_ec50_residual(residual_input),
             )
         else:
@@ -483,19 +639,150 @@ class AssayHeads(nn.Module):
             outputs["KD_proxy_ec50_nM"] = kd_base
         return outputs
 
-    def _affinity_residual_output(
+    def _dag_affinity_observables(
         self,
         *,
         kd_base: torch.Tensor,
-        kd_base_target_logit: torch.Tensor,
+        residual_input: torch.Tensor,
+    ) -> Dict[str, torch.Tensor]:
+        ic50_family = self._affinity_residual_output(
+            base_log10=kd_base,
+            residual=self.ic50_family_residual(residual_input),
+        )
+        ec50_family = self._affinity_residual_output(
+            base_log10=kd_base,
+            residual=self.ec50_family_residual(residual_input),
+        )
+        outputs: Dict[str, torch.Tensor] = {
+            "KD_nM": kd_base,
+            "IC50_family_anchor_nM": ic50_family,
+            "EC50_family_anchor_nM": ec50_family,
+            "IC50_nM": self._affinity_residual_output(
+                base_log10=ic50_family,
+                residual=self.ic50_leaf_residual(residual_input),
+            ),
+            "EC50_nM": self._affinity_residual_output(
+                base_log10=ec50_family,
+                residual=self.ec50_leaf_residual(residual_input),
+            ),
+        }
+        if self.kd_grouping_mode == "split_kd_proxy":
+            outputs["KD_proxy_ic50_nM"] = self._affinity_residual_output(
+                base_log10=ic50_family,
+                residual=self.kd_proxy_ic50_leaf_residual(residual_input),
+            )
+            outputs["KD_proxy_ec50_nM"] = self._affinity_residual_output(
+                base_log10=ec50_family,
+                residual=self.kd_proxy_ec50_leaf_residual(residual_input),
+            )
+        else:
+            outputs["KD_proxy_ic50_nM"] = kd_base
+            outputs["KD_proxy_ec50_nM"] = kd_base
+
+        if self.affinity_assay_residual_mode == "dag_method_leaf":
+            outputs.update(
+                self._method_leaf_outputs(
+                    base_name="IC50_nM",
+                    family_anchor=ic50_family,
+                    residual_input=residual_input,
+                    head_bank=self.ic50_method_leaf_residuals,
+                )
+            )
+            outputs.update(
+                self._method_leaf_outputs(
+                    base_name="EC50_nM",
+                    family_anchor=ec50_family,
+                    residual_input=residual_input,
+                    head_bank=self.ec50_method_leaf_residuals,
+                )
+            )
+        elif self.affinity_assay_residual_mode == "dag_prep_readout_leaf":
+            outputs.update(
+                self._prep_readout_leaf_outputs(
+                    base_name="IC50_nM",
+                    family_anchor=ic50_family,
+                    residual_input=residual_input,
+                    prep_bank=self.ic50_prep_leaf_residuals,
+                    readout_bank=self.ic50_readout_leaf_residuals,
+                )
+            )
+            outputs.update(
+                self._prep_readout_leaf_outputs(
+                    base_name="EC50_nM",
+                    family_anchor=ec50_family,
+                    residual_input=residual_input,
+                    prep_bank=self.ec50_prep_leaf_residuals,
+                    readout_bank=self.ec50_readout_leaf_residuals,
+                )
+            )
+        return outputs
+
+    def _method_leaf_outputs(
+        self,
+        *,
+        base_name: str,
+        family_anchor: torch.Tensor,
+        residual_input: torch.Tensor,
+        head_bank: nn.ModuleDict,
+    ) -> Dict[str, torch.Tensor]:
+        outputs: Dict[str, torch.Tensor] = {}
+        for method_name, head in head_bank.items():
+            outputs[self.method_output_key(base_name, method_name)] = self._affinity_residual_output(
+                base_log10=family_anchor,
+                residual=head(residual_input),
+            )
+        return outputs
+
+    def _prep_readout_leaf_outputs(
+        self,
+        *,
+        base_name: str,
+        family_anchor: torch.Tensor,
+        residual_input: torch.Tensor,
+        prep_bank: nn.ModuleDict,
+        readout_bank: nn.ModuleDict,
+    ) -> Dict[str, torch.Tensor]:
+        outputs: Dict[str, torch.Tensor] = {}
+        prep_residuals = {
+            prep_name: head(residual_input)
+            for prep_name, head in prep_bank.items()
+        }
+        readout_residuals = {
+            readout_name: head(residual_input)
+            for readout_name, head in readout_bank.items()
+        }
+        for prep_name, prep_residual in prep_residuals.items():
+            for readout_name, readout_residual in readout_residuals.items():
+                outputs[
+                    self.prep_readout_output_key(base_name, prep_name, readout_name)
+                ] = self._affinity_residual_output(
+                    base_log10=family_anchor,
+                    residual=prep_residual + readout_residual,
+                )
+        return outputs
+
+    def _target_logit(self, base_log10: torch.Tensor) -> torch.Tensor:
+        return affinity_log10_to_target_logit(
+            base_log10,
+            encoding=self.affinity_target_encoding,
+            max_affinity_nM=self.max_affinity_nM,
+        )
+
+    def _affinity_residual_output(
+        self,
+        *,
+        base_log10: torch.Tensor,
         residual: torch.Tensor,
+        base_target_logit: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
         if self.affinity_target_encoding == "log10":
             return smooth_upper_bound(
-                smooth_lower_bound(kd_base + residual, -3.0),
+                smooth_lower_bound(base_log10 + residual, -3.0),
                 self.max_log10_nM,
             )
-        adjusted_target_logit = kd_base_target_logit + residual
+        if base_target_logit is None:
+            base_target_logit = self._target_logit(base_log10)
+        adjusted_target_logit = base_target_logit + residual
         adjusted_log10 = affinity_target_logit_to_log10(
             adjusted_target_logit,
             encoding=self.affinity_target_encoding,
@@ -505,6 +792,14 @@ class AssayHeads(nn.Module):
             smooth_lower_bound(adjusted_log10, -3.0),
             self.max_log10_nM,
         )
+
+    @staticmethod
+    def method_output_key(base_name: str, method_name: str) -> str:
+        return f"{base_name}__method__{method_name}"
+
+    @staticmethod
+    def prep_readout_output_key(base_name: str, prep_name: str, readout_name: str) -> str:
+        return f"{base_name}__prep__{prep_name}__readout__{readout_name}"
 
     def _conditioning_probs_parts(
         self,
@@ -577,7 +872,12 @@ class AssayHeads(nn.Module):
                 binding_affinity_score = binding_affinity_score.reshape(batch_size, 1)
             parts.append(binding_affinity_score)
             return torch.cat(parts, dim=-1)
-        if self.affinity_assay_residual_mode == "shared_base_factorized_context_plus_segment_residual":
+        if self.affinity_assay_residual_mode in {
+            "shared_base_factorized_context_plus_segment_residual",
+            "dag_family",
+            "dag_method_leaf",
+            "dag_prep_readout_leaf",
+        }:
             if sequence_summary_vec is None:
                 sequence_summary_vec = binding_affinity_vec.new_zeros(
                     batch_size,

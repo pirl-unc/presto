@@ -12,6 +12,7 @@ from presto.scripts.distributional_ba.config import (
     ConditionSpec,
     build_model,
 )
+from presto.scripts.distributional_ba.config_v6 import CONDITIONS_V6_BY_ID
 from presto.scripts.distributional_ba.heads import (
     HEAD_REGISTRY,
     GaussianHead,
@@ -485,6 +486,30 @@ def test_content_conditioned_build_model_smoke():
     assert out["pred_ic50_nM"].shape == (2,)
 
 
+def test_no_assay_input_mode_zeroes_assay_embedding():
+    spec = ConditionSpec(cond_id=99, head_type="mhcflurry", assay_mode="additive", max_nM=50_000)
+    model = build_model(spec, assay_input_mode="none")
+    pep = torch.randint(1, 20, (2, 15))
+    mhc_a = torch.randint(1, 20, (2, 40))
+    mhc_b = torch.randint(1, 20, (2, 40))
+    h = model.encode_input(pep, mhc_a, mhc_b)
+    assay_emb = model._compute_assay_emb(
+        h,
+        torch.tensor([0, 4], dtype=torch.long),
+        torch.tensor([0, 2], dtype=torch.long),
+        torch.tensor([0, 3], dtype=torch.long),
+        torch.tensor([0, 1], dtype=torch.long),
+    )
+    assert assay_emb.shape == (2, model.assay_ctx.ctx_dim)
+    assert torch.allclose(assay_emb, torch.zeros_like(assay_emb))
+
+
+def test_no_assay_input_mode_rejects_content_conditioning():
+    spec = ConditionSpec(cond_id=99, head_type="mhcflurry", assay_mode="additive", max_nM=50_000)
+    with pytest.raises(ValueError, match="incompatible"):
+        build_model(spec, content_conditioned=True, assay_input_mode="none")
+
+
 def test_content_conditioned_loss_backward():
     """Gradient flows through content-conditioned model."""
     spec = ConditionSpec(cond_id=99, head_type="mhcflurry", assay_mode="additive", max_nM=50_000)
@@ -531,6 +556,34 @@ def test_content_conditioned_different_inputs_different_bias():
     # but this confirms the pipeline works end-to-end)
     assert out1["pred_ic50_nM"].shape == (1,)
     assert out2["pred_ic50_nM"].shape == (1,)
+
+
+def test_v6_historical_positive_control_contract():
+    """Freeze the raw EXP-16 winner build contract in shared code."""
+    spec = CONDITIONS_V6_BY_ID[2]
+    model = build_model(spec, encoder_backbone="historical_ablation")
+    assert type(model.encoder).__name__ == "HistoricalAblationEncoder"
+    n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    assert n_params == 27186
+    pep = torch.randint(1, 20, (2, 15))
+    mhc_a = torch.randint(1, 20, (2, 40))
+    mhc_b = torch.randint(1, 20, (2, 40))
+    out = model(pep, mhc_a, mhc_b)
+    assert out["pred_ic50_nM"].shape == (2,)
+
+
+def test_v6_groove_backend_smoke():
+    """Modern groove backend remains runnable on the v6 winner cell."""
+    spec = CONDITIONS_V6_BY_ID[2]
+    model = build_model(spec, encoder_backbone="groove")
+    assert type(model.encoder).__name__ == "GrooveTransformerModel"
+    n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    assert n_params > 27186
+    pep = torch.randint(1, 20, (2, 15))
+    mhc_a = torch.randint(1, 20, (2, 40))
+    mhc_b = torch.randint(1, 20, (2, 40))
+    out = model(pep, mhc_a, mhc_b)
+    assert out["pred_ic50_nM"].shape == (2,)
 
 
 @pytest.mark.parametrize("head_type", ["mhcflurry", "log_mse", "twohot", "hlgauss", "gaussian", "quantile"])

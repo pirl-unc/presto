@@ -24,8 +24,8 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from presto.data import BindingRecord, PrestoCollator, PrestoDataset, create_dataloader
-from presto.data.groove import prepare_mhc_input
 from presto.data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
+from presto.data.mhc_sequence_resolver import resolve_class_i_groove_halves
 from presto.data.tokenizer import Tokenizer
 from presto.models.affinity import (
     DEFAULT_MAX_AFFINITY_NM,
@@ -62,7 +62,11 @@ from presto.scripts.focused_binding_probe import (
     NORMALIZED_MEASUREMENT_FILTERS,
     QUALIFIER_FILTERS,
 )
-from presto.scripts.train_iedb import ALL_SYNTHETIC_MODES, resolve_mhc_sequences_from_index
+from presto.scripts.train_iedb import (
+    ALL_SYNTHETIC_MODES,
+    resolve_mhc_inputs_from_index,
+    resolve_mhc_sequences_from_index,
+)
 from presto.training.losses import censor_aware_loss
 
 
@@ -476,15 +480,18 @@ def _evaluate_probe_panel_baseline(
                 continue
             pep_tok = torch.tensor(tokenizer.encode(pep, max_len=50)).unsqueeze(0).to(device)
             for allele in alleles:
-                mhc_seq = _find_allele_sequence(allele_sequences, allele)
-                if not mhc_seq:
+                grooves = resolve_class_i_groove_halves(
+                    allele=str(allele),
+                    allele_sequences=allele_sequences,
+                )
+                if grooves is None:
                     continue
-                prepared = prepare_mhc_input(mhc_a=mhc_seq, mhc_class="I")
+                groove1, groove2 = grooves
                 mhc_a_tok = torch.tensor(
-                    tokenizer.encode(prepared.groove_half_1, max_len=120)
+                    tokenizer.encode(groove1, max_len=120)
                 ).unsqueeze(0).to(device)
                 mhc_b_tok = torch.tensor(
-                    tokenizer.encode(prepared.groove_half_2, max_len=120)
+                    tokenizer.encode(groove2, max_len=120)
                 ).unsqueeze(0).to(device)
                 pred_log10 = model(pep_tok, mhc_a_tok, mhc_b_tok)
                 log10_val = float(pred_log10[0, 0].item())
@@ -497,19 +504,6 @@ def _evaluate_probe_panel_baseline(
                 })
     model.train()
     return rows
-
-
-def _find_allele_sequence(allele_sequences: Mapping[str, str], allele: str) -> Optional[str]:
-    """Find an allele sequence with fuzzy matching."""
-    for key in [allele, allele.replace("HLA-", "")]:
-        if key in allele_sequences:
-            return allele_sequences[key]
-    for key, value in allele_sequences.items():
-        if allele in key or key in allele:
-            return value
-    return None
-
-
 # ---------------------------------------------------------------------------
 # Curriculum learning
 # ---------------------------------------------------------------------------
@@ -607,14 +601,15 @@ def _verify_groove_representations(
     # Check each probe allele resolves to distinct groove sequences
     groove_by_allele: Dict[str, Tuple[str, str]] = {}
     for allele in probe_alleles:
-        seq = mhc_sequences.get(allele, "")
-        if not seq:
-            results["errors"].append(f"No MHC sequence for allele {allele}")
-            continue
         try:
-            prepared = prepare_mhc_input(mhc_a=seq, mhc_class="I")
-            gh1 = prepared.groove_half_1
-            gh2 = prepared.groove_half_2
+            grooves = resolve_class_i_groove_halves(
+                allele=str(allele),
+                allele_sequences=mhc_sequences,
+            )
+            if grooves is None:
+                results["errors"].append(f"No groove inputs for allele {allele}")
+                continue
+            gh1, gh2 = grooves
             if not gh1 and not gh2:
                 results["errors"].append(f"Empty groove for {allele}")
                 continue
@@ -647,13 +642,13 @@ def _verify_groove_representations(
         allele = str(getattr(rec, "mhc_allele", "") or "").strip()
         if allele not in groove_by_allele:
             continue
-        seq = mhc_sequences.get(allele, "")
-        if not seq:
-            continue
         try:
-            prepared = prepare_mhc_input(mhc_a=seq, mhc_class="I")
             expected = groove_by_allele[allele]
-            if (prepared.groove_half_1, prepared.groove_half_2) == expected:
+            grooves = resolve_class_i_groove_halves(
+                allele=allele,
+                allele_sequences=mhc_sequences,
+            )
+            if grooves == expected:
                 n_correct += 1
             else:
                 results["warnings"].append(
@@ -864,13 +859,18 @@ def main() -> None:
     if not train_records or not val_records:
         raise RuntimeError("Focused binding split must produce both train and val records")
 
+    resolved_alleles = sorted({
+        str(rec.mhc_allele or "").strip()
+        for rec in (train_records + val_records)
+        if str(rec.mhc_allele or "").strip()
+    })
     mhc_sequences, mhc_stats = resolve_mhc_sequences_from_index(
         index_csv=str(index_csv),
-        alleles=sorted({
-            str(rec.mhc_allele or "").strip()
-            for rec in (train_records + val_records)
-            if str(rec.mhc_allele or "").strip()
-        }),
+        alleles=resolved_alleles,
+    )
+    mhc_exact_inputs, _ = resolve_mhc_inputs_from_index(
+        index_csv=str(index_csv),
+        alleles=resolved_alleles,
     )
 
     # Parse synthetic mode filter
@@ -890,6 +890,7 @@ def main() -> None:
     val_dataset = PrestoDataset(
         binding_records=val_records,
         mhc_sequences=mhc_sequences,
+        mhc_exact_inputs=mhc_exact_inputs,
         strict_mhc_resolution=False,
     )
     collator = PrestoCollator()
@@ -919,6 +920,7 @@ def main() -> None:
         ds = PrestoDataset(
             binding_records=epoch_train,
             mhc_sequences=mhc_sequences,
+            mhc_exact_inputs=mhc_exact_inputs,
             strict_mhc_resolution=False,
         )
         loader = _create_focused_train_loader(
@@ -1073,6 +1075,7 @@ def main() -> None:
                 real_ds = PrestoDataset(
                     binding_records=train_records,
                     mhc_sequences=mhc_sequences,
+                    mhc_exact_inputs=mhc_exact_inputs,
                     strict_mhc_resolution=False,
                 )
                 train_loader = _create_focused_train_loader(

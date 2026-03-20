@@ -11,6 +11,7 @@ from presto.data.allele_resolver import (
     DEFAULT_DR_ALPHA_BY_PREFIX,
     DEFAULT_DR_ALPHA_BY_SPECIES,
     class_ii_default_dra_allele,
+    expand_mhc_restriction,
     is_class_ii_dr_beta_allele,
     require_mhcgnomes,
     normalize_allele_name,
@@ -80,6 +81,27 @@ class TestNormalizeAlleleName:
         """Expression/annotation suffixes survive two-field normalization."""
         assert normalize_allele_name("HLA-DRA*01:01:01:01N") == "HLA-DRA*01:01N"
         assert normalize_allele_name("HLA-A*02:01:01:02L") == "HLA-A*02:01L"
+
+    def test_expand_mhc_restriction_exact(self):
+        expanded = expand_mhc_restriction("HLA-A*02:01")
+        assert expanded.provenance == "exact"
+        assert expanded.normalized_token == "HLA-A*02:01"
+        assert expanded.exact_alleles == ("HLA-A*02:01",)
+        assert expanded.mhc_class == "I"
+
+    def test_expand_mhc_restriction_serotype(self):
+        expanded = expand_mhc_restriction("HLA-A2")
+        assert expanded.provenance == "serotype_expanded"
+        assert expanded.normalized_token == "HLA-A2"
+        assert "HLA-A*02:01" in expanded.exact_alleles
+        assert expanded.bag_size >= 1
+
+    def test_expand_mhc_restriction_haplotype(self):
+        expanded = expand_mhc_restriction("H2-b class I")
+        assert expanded.provenance == "haplotype_expanded"
+        assert expanded.normalized_token == "H2-b class I"
+        assert expanded.bag_size >= 1
+        assert expanded.mhc_class == "I"
 
 
 class TestInferMHCClass:

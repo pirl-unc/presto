@@ -41,7 +41,7 @@ from presto.scripts.focused_binding_probe import (
     QUALIFIER_FILTERS,
 )
 from presto.scripts.groove_baseline_probe import _verify_groove_representations
-from presto.scripts.train_iedb import resolve_mhc_sequences_from_index
+from presto.scripts.train_iedb import resolve_mhc_inputs_from_index, resolve_mhc_sequences_from_index
 
 from .config import CONDITIONS_BY_ID, ConditionSpec, DistributionalModel, build_model
 from .encoders import ENCODER_BACKBONES
@@ -197,6 +197,13 @@ def main() -> None:
                         choices=list(ENCODER_BACKBONES))
     parser.add_argument("--content-conditioned", action="store_true",
                         help="Condition assay context on binding logit + molecular repr")
+    parser.add_argument(
+        "--assay-input-mode",
+        type=str,
+        default="factorized",
+        choices=["factorized", "none"],
+        help="Whether assay-selector metadata feeds the benchmark head path. 'none' forces zero assay embeddings.",
+    )
     parser.add_argument("--init-checkpoint", type=str, default="",
                         help="Path to pretrained encoder checkpoint (encoder.pt) for warm-start")
     parser.add_argument("--dry-run", action="store_true")
@@ -251,25 +258,39 @@ def main() -> None:
     if not train_records or not val_records:
         raise RuntimeError("Split must produce train and val records")
 
+    resolved_alleles = sorted({
+        str(r.mhc_allele or "").strip()
+        for r in (train_records + val_records + test_records)
+        if str(r.mhc_allele or "").strip()
+    })
     mhc_sequences, mhc_stats = resolve_mhc_sequences_from_index(
         index_csv=str(index_csv),
-        alleles=sorted({
-            str(r.mhc_allele or "").strip()
-            for r in (train_records + val_records + test_records)
-            if str(r.mhc_allele or "").strip()
-        }),
+        alleles=resolved_alleles,
+    )
+    mhc_exact_inputs, _ = resolve_mhc_inputs_from_index(
+        index_csv=str(index_csv),
+        alleles=resolved_alleles,
     )
 
     # --- Build datasets ---
     collator = PrestoCollator()
     train_ds = PrestoDataset(
-        binding_records=train_records, mhc_sequences=mhc_sequences, strict_mhc_resolution=False,
+        binding_records=train_records,
+        mhc_sequences=mhc_sequences,
+        mhc_exact_inputs=mhc_exact_inputs,
+        strict_mhc_resolution=False,
     )
     val_ds = PrestoDataset(
-        binding_records=val_records, mhc_sequences=mhc_sequences, strict_mhc_resolution=False,
+        binding_records=val_records,
+        mhc_sequences=mhc_sequences,
+        mhc_exact_inputs=mhc_exact_inputs,
+        strict_mhc_resolution=False,
     )
     test_ds = PrestoDataset(
-        binding_records=test_records, mhc_sequences=mhc_sequences, strict_mhc_resolution=False,
+        binding_records=test_records,
+        mhc_sequences=mhc_sequences,
+        mhc_exact_inputs=mhc_exact_inputs,
+        strict_mhc_resolution=False,
     )
 
     train_loader = create_dataloader(
@@ -293,6 +314,7 @@ def main() -> None:
         n_heads=int(args.n_heads), n_layers=int(args.n_layers),
         content_conditioned=bool(args.content_conditioned),
         encoder_backbone=str(args.encoder_backbone),
+        assay_input_mode=str(args.assay_input_mode),
     ).to(device)
 
     # Warm-start from pretrained encoder checkpoint
@@ -385,6 +407,7 @@ def main() -> None:
         "val_rows": len(val_records),
         "test_rows": len(test_records),
         "content_conditioned": bool(args.content_conditioned),
+        "assay_input_mode": str(args.assay_input_mode),
         "init_checkpoint": init_checkpoint or None,
         "warm_start": warm_start_stats or None,
         "device": device,

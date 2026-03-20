@@ -29,6 +29,7 @@ from ..data.allele_resolver import (
 from ..data.tokenizer import Tokenizer
 from ..data.groove import prepare_mhc_input
 from ..data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
+from ..data.mhc_sequence_resolver import lookup_exact_mhc_input, resolve_class_i_groove_halves
 from ..training.checkpointing import load_model_from_checkpoint
 
 
@@ -349,6 +350,33 @@ class Predictor:
     ) -> tuple[str, str]:
         """Resolve groove-half model inputs `(mhc_a, mhc_b)` for prediction."""
         explicit_mhc_b = self._resolve_explicit_mhc_b_input(mhc_b_sequence)
+        if not mhc_sequence and not explicit_mhc_b and allele:
+            if mhc_class == "II" and is_class_ii_dr_beta_allele(allele):
+                alpha_allele = class_ii_default_dra_allele(species=species, beta_allele=allele)
+                if alpha_allele is None:
+                    raise ValueError(
+                        "No native default DRA mapping is available for DR beta allele "
+                        f"{allele!r}."
+                    )
+                alpha_exact = lookup_exact_mhc_input(alpha_allele)
+                beta_exact = lookup_exact_mhc_input(allele)
+                if (
+                    alpha_exact is not None
+                    and beta_exact is not None
+                    and str(alpha_exact.groove1 or "").strip()
+                    and str(beta_exact.groove2 or "").strip()
+                ):
+                    return (
+                        str(alpha_exact.groove1).strip().upper(),
+                        str(beta_exact.groove2).strip().upper(),
+                    )
+            else:
+                resolved = resolve_class_i_groove_halves(
+                    allele=allele,
+                    allele_sequences=self.allele_sequences,
+                )
+                if resolved is not None:
+                    return resolved
         if mhc_class == "II" and allele and is_class_ii_dr_beta_allele(allele) and not explicit_mhc_b:
             alpha_allele = class_ii_default_dra_allele(species=species, beta_allele=allele)
             if alpha_allele is None:

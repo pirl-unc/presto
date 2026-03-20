@@ -192,8 +192,8 @@ class TestAssayHeads:
         residual = torch.tensor([[1.0]], dtype=torch.float32)
 
         observed = heads._affinity_residual_output(
-            kd_base=kd_base,
-            kd_base_target_logit=kd_base_target_logit,
+            base_log10=kd_base,
+            base_target_logit=kd_base_target_logit,
             residual=residual,
         )
         expected = affinity_target_logit_to_log10(
@@ -205,6 +205,72 @@ class TestAssayHeads:
         expected = smooth_upper_bound(expected, heads.max_log10_nM)
 
         assert torch.allclose(observed, expected, atol=1e-6)
+
+    def test_dag_method_leaf_emits_structured_outputs(self):
+        from presto.models.heads import AssayHeads
+
+        heads = AssayHeads(
+            d_model=16,
+            affinity_assay_residual_mode="dag_method_leaf",
+            sequence_summary_dim=16,
+            factorized_context_dim=0,
+            kd_grouping_mode="split_kd_proxy",
+        )
+        ba_vec = torch.randn(2, 16)
+        bs_vec = torch.randn(2, 16)
+        latents = {
+            "log_koff": torch.randn(2, 1),
+            "log_kon_intrinsic": torch.randn(2, 1),
+            "log_kon_chaperone": torch.randn(2, 1),
+        }
+
+        outputs = heads(
+            ba_vec,
+            bs_vec,
+            binding_latents=latents,
+            sequence_summary_vec=torch.randn(2, 16),
+            class_probs=torch.tensor([[0.9, 0.1], [0.8, 0.2]], dtype=torch.float32),
+            species_probs=torch.zeros(2, 6),
+            binding_affinity_score=torch.zeros(2, 1),
+        )
+
+        assert "IC50_family_anchor_nM" in outputs
+        assert "EC50_family_anchor_nM" in outputs
+        assert "IC50_nM__method__PURIFIED_COMPETITIVE_RADIOACTIVITY" in outputs
+        assert "EC50_nM__method__PURIFIED_DIRECT_FLUORESCENCE" in outputs
+        assert outputs["IC50_nM__method__PURIFIED_COMPETITIVE_RADIOACTIVITY"].shape == (2, 1)
+
+    def test_dag_prep_readout_leaf_emits_structured_outputs(self):
+        from presto.models.heads import AssayHeads
+
+        heads = AssayHeads(
+            d_model=16,
+            affinity_assay_residual_mode="dag_prep_readout_leaf",
+            sequence_summary_dim=16,
+            factorized_context_dim=0,
+            kd_grouping_mode="split_kd_proxy",
+        )
+        ba_vec = torch.randn(2, 16)
+        bs_vec = torch.randn(2, 16)
+        latents = {
+            "log_koff": torch.randn(2, 1),
+            "log_kon_intrinsic": torch.randn(2, 1),
+            "log_kon_chaperone": torch.randn(2, 1),
+        }
+
+        outputs = heads(
+            ba_vec,
+            bs_vec,
+            binding_latents=latents,
+            sequence_summary_vec=torch.randn(2, 16),
+            class_probs=torch.tensor([[0.9, 0.1], [0.8, 0.2]], dtype=torch.float32),
+            species_probs=torch.zeros(2, 6),
+            binding_affinity_score=torch.zeros(2, 1),
+        )
+
+        assert "IC50_nM__prep__PURIFIED__readout__RADIOACTIVITY" in outputs
+        assert "EC50_nM__prep__CELLULAR__readout__FLUORESCENCE" in outputs
+        assert outputs["IC50_nM__prep__PURIFIED__readout__RADIOACTIVITY"].shape == (2, 1)
 
 
 # --------------------------------------------------------------------------

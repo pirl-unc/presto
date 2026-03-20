@@ -26,6 +26,10 @@ from typing import Any, Dict, List, Optional, Sequence, Set, Tuple
 import modal
 
 
+THIS_DIR = Path(__file__).resolve().parent
+REPO_ROOT = THIS_DIR.parent
+LOCAL_MHCSEQS_DIR = REPO_ROOT.parent / "mhcseqs"
+
 DEFAULT_REPO_URL = os.environ.get("PRESTO_MODAL_REPO_URL", "https://github.com/escalante-bio/presto.git")
 DEFAULT_REPO_REF = os.environ.get("PRESTO_MODAL_REPO_REF", "main")
 DEFAULT_SOURCE_MODE = os.environ.get("PRESTO_MODAL_SOURCE", "local").lower()
@@ -76,6 +80,7 @@ def _build_image() -> modal.Image:
         image = image.apt_install("git").run_commands(
             f"git clone --depth 1 --branch {DEFAULT_REPO_REF} {DEFAULT_REPO_URL} /opt/presto",
         )
+        mhcseqs_install_cmd = "python -m pip install mhcseqs"
     else:
         # Default to local source packaging to avoid Git auth issues in builders.
         image = image.add_local_dir(
@@ -90,8 +95,18 @@ def _build_image() -> modal.Image:
                 remote_path=remote_path,
                 copy=True,
             )
+        if LOCAL_MHCSEQS_DIR.exists():
+            image = image.add_local_dir(
+                str(LOCAL_MHCSEQS_DIR),
+                remote_path="/opt/mhcseqs",
+                copy=True,
+            )
+            mhcseqs_install_cmd = "python -m pip install /opt/mhcseqs"
+        else:
+            mhcseqs_install_cmd = "python -m pip install mhcseqs"
     return image.run_commands(
         "python -m pip install --upgrade pip",
+        mhcseqs_install_cmd,
         "python -m pip install /opt/presto matplotlib",
     )
 
@@ -1433,6 +1448,7 @@ def distributional_ba_v5_run(
 def distributional_ba_v6_run(
     cond_id: int = 1,
     content_conditioned: bool = False,
+    encoder_backbone: str = "historical_ablation",
     epochs: int = 50,
     batch_size: int = 256,
     data_dir: str = "/data",
@@ -1476,6 +1492,8 @@ def distributional_ba_v6_run(
         str(cond_id),
         "--config-version",
         "v6",
+        "--encoder-backbone",
+        str(encoder_backbone),
         "--data-dir",
         data_dir,
         "--out-dir",
@@ -1496,9 +1514,70 @@ def distributional_ba_v6_run(
         "run_id": resolved_run_id,
         "cond_id": cond_id,
         "content_conditioned": content_conditioned,
+        "encoder_backbone": encoder_backbone,
         "out_dir": str(out_dir),
         "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
     }
+
+@app.function(
+    gpu=DEFAULT_GPU,
+    timeout=DEFAULT_TIMEOUT_SECONDS,
+    volumes={
+        "/checkpoints": checkpoints_volume,
+        "/data": data_volume,
+    },
+)
+def mhc_pretrain_groove_run(
+    epochs: int = 5,
+    batch_size: int = 192,
+    embed_dim: int = 32,
+    n_heads: int = 4,
+    n_layers: int = 2,
+    data_dir: str = "/data",
+    run_id: Optional[str] = None,
+    extra_args: str = "",
+) -> Dict[str, str]:
+    """Pretrain GrooveTransformerModel encoder on MHC species + class."""
+    resolved_run_id = run_id or datetime.now(UTC).strftime(
+        f"mhc_pretrain_groove_d{embed_dim}_%Y%m%dT%H%M%SZ"
+    )
+    out_dir = Path("/checkpoints") / resolved_run_id
+
+    env = dict(os.environ)
+    env.setdefault("PYTHONUNBUFFERED", "1")
+    repo_root = _detect_repo_root()
+    env["PRESTO_REPO_ROOT"] = str(repo_root)
+    parent = str(repo_root.parent)
+    existing_pythonpath = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = f"{parent}:{existing_pythonpath}" if existing_pythonpath else parent
+
+    # Ensure MHC index exists
+    index_csv = Path(data_dir) / "mhc_index.csv"
+    if not index_csv.exists():
+        _prepare_iedb_data(data_dir, env)
+
+    cmd = [
+        "python", "-m", "presto.scripts.distributional_ba.pretrain_mhc",
+        "--data-dir", data_dir,
+        "--out-dir", str(out_dir),
+        "--epochs", str(epochs),
+        "--batch-size", str(batch_size),
+        "--embed-dim", str(embed_dim),
+        "--n-heads", str(n_heads),
+        "--n-layers", str(n_layers),
+    ]
+    if extra_args:
+        cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
+    _run_command(cmd, env)
+    checkpoints_volume.commit()
+
+    return {
+        "run_id": resolved_run_id,
+        "out_dir": str(out_dir),
+        "encoder_path": str(out_dir / "encoder.pt"),
+        "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
+    }
+
 
 def _experiment_local_distributional_run(
     *,

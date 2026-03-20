@@ -59,6 +59,7 @@ from presto.data.allele_resolver import (
 from presto.data.cross_source_dedup import (
     UnifiedRecord,
     classify_assay_type,
+    parse_allele_set_field,
     parse_iedb_binding,
     parse_iedb_tcell,
 )
@@ -70,7 +71,12 @@ from presto.data.loaders import (
     load_uniprot_proteins,
 )
 from presto.data.groove import prepare_mhc_input
-from presto.data.mhc_index import classify_unresolved_allele, load_mhc_index, resolve_alleles
+from presto.data.mhc_index import classify_unresolved_allele, load_mhc_index
+from presto.data.mhc_sequence_resolver import (
+    ExactMHCInput,
+    resolve_exact_mhc_inputs,
+    resolve_exact_mhc_sequences,
+)
 from presto.data.vocab import FOREIGN_CATEGORIES, normalize_organism
 from presto.models.presto import Presto
 from presto.models.affinity import (
@@ -2356,6 +2362,7 @@ def load_iedb_binding_and_elution_records(
     binding_records = []
     elution_records = []
     for rec in parse_iedb_binding(binding_file):
+        allele_bag = parse_allele_set_field(rec.mhc_allele_set)
         if rec.value is not None and (
             binding_limit is None or len(binding_records) < binding_limit
         ):
@@ -2369,15 +2376,16 @@ def load_iedb_binding_and_elution_records(
                     mhc_class=rec.mhc_class or infer_mhc_class(rec.mhc_allele),
                     species=rec.species or infer_species(rec.mhc_allele),
                     source="iedb",
+                    alleles=allele_bag or None,
                 )
             )
-        elif rec.mhc_allele and (
+        elif (allele_bag or rec.mhc_allele) and (
             elution_limit is None or len(elution_records) < elution_limit
         ):
             elution_records.append(
                 ElutionRecord(
                     peptide=rec.peptide,
-                    alleles=[rec.mhc_allele],
+                    alleles=allele_bag or [rec.mhc_allele],
                     detected=True,
                     mhc_class=rec.mhc_class or infer_mhc_class(rec.mhc_allele),
                     species=rec.species or infer_species(rec.mhc_allele),
@@ -2706,21 +2714,28 @@ def _collect_unique_alleles(
         if default_dra:
             alleles.append(default_dra.strip())
 
+    def _append_record_alleles(record: Any) -> None:
+        species = getattr(record, "species", None)
+        bag = list(getattr(record, "alleles", None) or [])
+        if bag:
+            for allele in bag:
+                _append_allele(allele)
+                _append_default_dr_alpha(allele, species)
+            return
+        token = getattr(record, "mhc_allele", None)
+        _append_allele(token)
+        _append_default_dr_alpha(token, species)
+
     for rec in binding_records:
-        _append_allele(getattr(rec, "mhc_allele", None))
-        _append_default_dr_alpha(getattr(rec, "mhc_allele", None), getattr(rec, "species", None))
+        _append_record_alleles(rec)
     for rec in kinetics_records:
-        _append_allele(getattr(rec, "mhc_allele", None))
-        _append_default_dr_alpha(getattr(rec, "mhc_allele", None), getattr(rec, "species", None))
+        _append_record_alleles(rec)
     for rec in stability_records:
-        _append_allele(getattr(rec, "mhc_allele", None))
-        _append_default_dr_alpha(getattr(rec, "mhc_allele", None), getattr(rec, "species", None))
+        _append_record_alleles(rec)
     for rec in processing_records:
-        _append_allele(getattr(rec, "mhc_allele", None))
-        _append_default_dr_alpha(getattr(rec, "mhc_allele", None), getattr(rec, "species", None))
+        _append_record_alleles(rec)
     for rec in tcell_records:
-        _append_allele(getattr(rec, "mhc_allele", None))
-        _append_default_dr_alpha(getattr(rec, "mhc_allele", None), getattr(rec, "species", None))
+        _append_record_alleles(rec)
     for rec in elution_records:
         for allele in getattr(rec, "alleles", []) or []:
             _append_allele(allele)
@@ -2735,27 +2750,24 @@ def resolve_mhc_sequences_from_index(
     index_csv: str,
     alleles: Sequence[str],
 ) -> Tuple[Dict[str, str], Dict[str, int]]:
-    """Resolve allele names to sequences using a built MHC index."""
-    unique_alleles = sorted({a.strip() for a in alleles if a and a.strip()})
-    if not unique_alleles:
-        return {}, {"total": 0, "resolved": 0, "missing": 0}
-
-    results = resolve_alleles(
+    """Resolve allele names to sequences with mhcseqs-first lookup."""
+    return resolve_exact_mhc_sequences(
+        alleles=alleles,
         index_csv=index_csv,
-        alleles=unique_alleles,
-        include_sequence=True,
+        prefer_mhcseqs=True,
     )
-    mapping: Dict[str, str] = {}
-    resolved = 0
-    for row in results:
-        if row.get("found") and row.get("sequence"):
-            mapping[str(row["input"])] = str(row["sequence"])
-            resolved += 1
-    return mapping, {
-        "total": len(unique_alleles),
-        "resolved": resolved,
-        "missing": len(unique_alleles) - resolved,
-    }
+
+
+def resolve_mhc_inputs_from_index(
+    index_csv: str,
+    alleles: Sequence[str],
+) -> Tuple[Dict[str, ExactMHCInput], Dict[str, int]]:
+    """Resolve allele names to groove-aware exact MHC inputs with mhcseqs-first lookup."""
+    return resolve_exact_mhc_inputs(
+        alleles=alleles,
+        index_csv=index_csv,
+        prefer_mhcseqs=True,
+    )
 
 
 def audit_loaded_mhc_sequence_quality(
@@ -3615,6 +3627,7 @@ def load_records_from_merged_tsv(
                 continue
 
             mhc_allele = (row.get("mhc_allele") or "").strip()
+            mhc_allele_set = parse_allele_set_field(row.get("mhc_allele_set"))
             mhc_class = normalize_mhc_class(
                 row.get("mhc_class"),
                 default=infer_mhc_class_optional(mhc_allele),
@@ -3685,6 +3698,7 @@ def load_records_from_merged_tsv(
                         species=species,
                         antigen_species=antigen_species_col,
                         source=source,
+                        alleles=mhc_allele_set or None,
                     ),
                     binding_limit,
                     sampling=sampling_mode,
@@ -3709,6 +3723,7 @@ def load_records_from_merged_tsv(
                         species=species,
                         antigen_species=antigen_species_col,
                         source=source,
+                        alleles=mhc_allele_set or None,
                     ),
                     kinetics_limit,
                     sampling=sampling_mode,
@@ -3733,6 +3748,7 @@ def load_records_from_merged_tsv(
                         species=species,
                         antigen_species=antigen_species_col,
                         source=source,
+                        alleles=mhc_allele_set or None,
                     ),
                     kinetics_limit,
                     sampling=sampling_mode,
@@ -3757,6 +3773,7 @@ def load_records_from_merged_tsv(
                         species=species,
                         antigen_species=antigen_species_col,
                         source=source,
+                        alleles=mhc_allele_set or None,
                     ),
                     stability_limit,
                     sampling=sampling_mode,
@@ -3781,6 +3798,7 @@ def load_records_from_merged_tsv(
                         species=species,
                         antigen_species=antigen_species_col,
                         source=source,
+                        alleles=mhc_allele_set or None,
                     ),
                     stability_limit,
                     sampling=sampling_mode,
@@ -3793,7 +3811,9 @@ def load_records_from_merged_tsv(
                 detected = _parse_binary_response(response)
                 if detected is None:
                     detected = 0.0 if source.startswith("synthetic_negative") else 1.0
-                alleles = _split_allele_list(mhc_allele)
+                alleles = list(mhc_allele_set)
+                if not alleles:
+                    alleles = _split_allele_list(mhc_allele)
                 if not alleles and mhc_allele:
                     alleles = [mhc_allele]
                 if not alleles:
@@ -3826,6 +3846,7 @@ def load_records_from_merged_tsv(
                         peptide=peptide,
                         mhc_allele=mhc_allele,
                         response=response_value,
+                        alleles=mhc_allele_set or None,
                         assay_type=assay_type_col or value_type or None,
                         assay_method=assay_method_col or None,
                         apc_name=apc_name_col or None,
@@ -4525,6 +4546,7 @@ def run(args: argparse.Namespace) -> None:
     filter_unresolved_mhc = bool(getattr(args, "filter_unresolved_mhc", True))
 
     mhc_sequences: Dict[str, str] = {}
+    mhc_exact_inputs: Dict[str, ExactMHCInput] = {}
     if args.index_csv:
         unique_alleles = _collect_unique_alleles(
             binding_records,
@@ -4536,9 +4558,12 @@ def run(args: argparse.Namespace) -> None:
             vdjdb_records,
         )
         mhc_sequences, stats = resolve_mhc_sequences_from_index(args.index_csv, unique_alleles)
+        mhc_exact_inputs, _ = resolve_mhc_inputs_from_index(args.index_csv, unique_alleles)
         print(
-            "Resolved MHC sequences from index: "
-            f"{stats['resolved']}/{stats['total']} alleles"
+            "Resolved MHC sequences: "
+            f"{stats['resolved']}/{stats['total']} alleles "
+            f"(mhcseqs={stats.get('resolved_mhcseqs', 0)}, "
+            f"index_fallback={stats.get('resolved_index', 0)})"
         )
         mhc_quality = audit_loaded_mhc_sequence_quality(mhc_sequences)
         print(
@@ -4818,6 +4843,7 @@ def run(args: argparse.Namespace) -> None:
         tcell_records=tcell_records,
         tcr_evidence_records=vdjdb_records,
         mhc_sequences=mhc_sequences,
+        mhc_exact_inputs=mhc_exact_inputs,
         strict_mhc_resolution=strict_mhc_resolution,
     )
     mhc_augmentation_samples = int(getattr(args, "mhc_augmentation_samples", 0))

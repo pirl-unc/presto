@@ -22,7 +22,12 @@ from typing import Dict, List, Optional, Iterator, Tuple, Any, Iterable
 import zipfile
 from tqdm.auto import tqdm
 
-from .allele_resolver import infer_mhc_class_optional, infer_species, parse_allele_name
+from .allele_resolver import (
+    expand_mhc_restriction,
+    infer_mhc_class_optional,
+    infer_species,
+    parse_allele_name,
+)
 from .vocab import normalize_organism
 
 
@@ -65,6 +70,9 @@ class UnifiedRecord:
 
     peptide: str
     mhc_allele: str
+    mhc_allele_set: Optional[str] = None
+    mhc_allele_provenance: Optional[str] = None
+    mhc_allele_bag_size: Optional[int] = None
     mhc_class: str = "I"
     pmid: Optional[str] = None
     doi: Optional[str] = None
@@ -267,6 +275,34 @@ def normalize_allele(raw_allele: str) -> str:
     return result.to_string() if result else allele
 
 
+def parse_allele_set_field(raw_alleles: Optional[str]) -> List[str]:
+    """Parse a serialized allele-set field into normalized exact alleles."""
+    if raw_alleles is None:
+        return []
+    text = str(raw_alleles).strip()
+    if not text:
+        return []
+    return [token for token in text.split(";") if token]
+
+
+def _restriction_record_fields(
+    raw_allele: str,
+    raw_mhc_class: Optional[str] = None,
+) -> Dict[str, Any]:
+    expansion = expand_mhc_restriction(raw_allele)
+    allele_set = _join_allele_set(expansion.exact_alleles) if expansion.exact_alleles else None
+    return {
+        "mhc_allele": expansion.normalized_token,
+        "mhc_allele_set": allele_set,
+        "mhc_allele_provenance": expansion.provenance,
+        "mhc_allele_bag_size": expansion.bag_size if expansion.exact_alleles else None,
+        "mhc_class": _normalize_mhc_class(
+            raw_mhc_class or "",
+            expansion.normalized_token or raw_allele,
+        ),
+    }
+
+
 def _infer_mhc_class_from_allele(allele: str, default: str = "I") -> str:
     """Infer MHC class from allele text using mhcgnomes."""
     return infer_mhc_class_optional(allele) or default
@@ -437,8 +473,7 @@ def _parse_iedb_binding_stream(f, source: str) -> Iterator[UnifiedRecord]:
 
             yield UnifiedRecord(
                 peptide=peptide,
-                mhc_allele=normalize_allele(allele),
-                mhc_class=_normalize_mhc_class(mhc_class, allele),
+                **_restriction_record_fields(allele, mhc_class),
                 pmid=normalized_pmid,
                 doi=normalized_doi,
                 reference_text=reference_text,
@@ -756,8 +791,7 @@ def _parse_iedb_tcell_stream(f, source: str) -> Iterator[UnifiedRecord]:
 
             yield UnifiedRecord(
                 peptide=peptide,
-                mhc_allele=normalize_allele(allele),
-                mhc_class=_normalize_mhc_class(mhc_class_raw, allele),
+                **_restriction_record_fields(allele, mhc_class_raw),
                 pmid=normalized_pmid,
                 doi=normalized_doi,
                 reference_text=reference_text,
@@ -857,8 +891,7 @@ def _parse_vdjdb_content(content: str) -> Iterator[UnifiedRecord]:
 
             yield UnifiedRecord(
                 peptide=epitope,
-                mhc_allele=normalize_allele(mhc_a),
-                mhc_class=_normalize_mhc_class(mhc_class, mhc_a),
+                **_restriction_record_fields(mhc_a, mhc_class),
                 pmid=normalized_pmid,
                 doi=normalized_doi,
                 reference_text=_normalize_reference_text(ref_id),
@@ -897,7 +930,7 @@ def parse_mcpas(file_path: Path) -> Iterator[UnifiedRecord]:
 
                 yield UnifiedRecord(
                     peptide=epitope,
-                    mhc_allele=normalize_allele(row.get("MHC", "")),
+                    **_restriction_record_fields(row.get("MHC", ""), None),
                     pmid=normalize_pmid(row.get("PubMed.ID", "")),
                     doi=normalize_doi(row.get("DOI", "")),
                     reference_text=_normalize_reference_text(
@@ -1553,6 +1586,9 @@ def record_to_row(rec: UnifiedRecord) -> Dict[str, Any]:
     return {
         "peptide": rec.peptide,
         "mhc_allele": rec.mhc_allele,
+        "mhc_allele_set": rec.mhc_allele_set or "",
+        "mhc_allele_provenance": rec.mhc_allele_provenance or "",
+        "mhc_allele_bag_size": rec.mhc_allele_bag_size if rec.mhc_allele_bag_size is not None else "",
         "mhc_class": rec.mhc_class,
         "pmid": rec.pmid or "",
         "doi": rec.doi or "",
@@ -1724,7 +1760,9 @@ def _resolve_record_cell_hla_set(
     lookup: Dict[Tuple[str, str], str],
 ) -> Tuple[Optional[str], str]:
     """Resolve a record's allele-set from direct row alleles or strict PMID+cell lookup."""
-    direct_tokens = _informative_allele_tokens(rec.mhc_allele)
+    direct_tokens = tuple(parse_allele_set_field(rec.mhc_allele_set))
+    if not direct_tokens:
+        direct_tokens = _informative_allele_tokens(rec.mhc_allele)
     if direct_tokens:
         return _join_allele_set(direct_tokens), "direct"
 
@@ -2126,6 +2164,9 @@ def _write_tsv(records: List[UnifiedRecord], output_path: Path) -> None:
     fieldnames = [
         "peptide",
         "mhc_allele",
+        "mhc_allele_set",
+        "mhc_allele_provenance",
+        "mhc_allele_bag_size",
         "mhc_class",
         "pmid",
         "doi",
@@ -2162,6 +2203,9 @@ def _write_tsv(records: List[UnifiedRecord], output_path: Path) -> None:
                 [
                     rec.peptide,
                     rec.mhc_allele,
+                    rec.mhc_allele_set or "",
+                    rec.mhc_allele_provenance or "",
+                    rec.mhc_allele_bag_size if rec.mhc_allele_bag_size is not None else "",
                     rec.mhc_class,
                     rec.pmid or "",
                     rec.doi or "",
@@ -2205,6 +2249,9 @@ def write_assay_csvs(
     fieldnames = [
         "peptide",
         "mhc_allele",
+        "mhc_allele_set",
+        "mhc_allele_provenance",
+        "mhc_allele_bag_size",
         "mhc_class",
         "species",
         "antigen_species",

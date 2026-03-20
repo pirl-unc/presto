@@ -101,7 +101,10 @@ def test_write_assay_csvs_emits_one_file_per_assay_type(tmp_path: Path):
         assert Path(path).exists()
 
     binding_text = Path(file_map["binding_affinity"]).read_text(encoding="utf-8")
-    assert "peptide,mhc_allele,mhc_class,species,antigen_species,source,pmid,doi,reference_text" in binding_text
+    assert (
+        "peptide,mhc_allele,mhc_allele_set,mhc_allele_provenance,"
+        "mhc_allele_bag_size,mhc_class,species,antigen_species,source,pmid,doi,reference_text"
+    ) in binding_text
     assert "SIINFEKL" in binding_text
 
 
@@ -141,6 +144,28 @@ def test_parse_iedb_binding_populates_apc_name_from_cell_or_tissue(tmp_path: Pat
     recs = list(parse_iedb_binding(path))
     assert len(recs) == 1
     assert recs[0].apc_name == "PBMC"
+
+
+def test_parse_iedb_binding_preserves_serotype_bag_fields(tmp_path: Path):
+    path = tmp_path / "iedb_ligand_serotype.csv"
+    path.write_text(
+        "\n".join(
+            [
+                "Reference,Epitope,MHC Restriction,Assay,Assay,Assay",
+                "PMID,Name,Name,Response measured,Method,Qualitative measurement",
+                "12345,SIINFEKL,HLA-A2,ligand presentation,mass spectrometry,Positive",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    recs = list(parse_iedb_binding(path))
+    assert len(recs) == 1
+    rec = recs[0]
+    assert rec.mhc_allele == "HLA-A2"
+    assert rec.mhc_allele_provenance == "serotype_expanded"
+    assert rec.mhc_allele_bag_size is not None and rec.mhc_allele_bag_size >= 1
+    assert rec.mhc_allele_set is not None
+    assert "HLA-A*02:01" in rec.mhc_allele_set.split(";")
 
 
 def test_cell_hla_lookup_annotation_and_elution_filter():

@@ -35,7 +35,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
 from presto.data import PrestoCollator, PrestoDataset, create_dataloader
-from presto.data.groove import prepare_mhc_input
+from presto.data.mhc_sequence_resolver import resolve_class_i_groove_halves
 from presto.data.tokenizer import Tokenizer
 from presto.data.vocab import BINDING_ASSAY_TYPES, BINDING_ASSAY_METHODS
 from presto.models.affinity import (
@@ -68,10 +68,13 @@ from presto.scripts.focused_binding_probe import (
 )
 from presto.scripts.groove_baseline_probe import (
     GrooveTransformerModel,
-    _find_allele_sequence,
     _verify_groove_representations,
 )
-from presto.scripts.train_iedb import ALL_SYNTHETIC_MODES, resolve_mhc_sequences_from_index
+from presto.scripts.train_iedb import (
+    ALL_SYNTHETIC_MODES,
+    resolve_mhc_inputs_from_index,
+    resolve_mhc_sequences_from_index,
+)
 from presto.training.losses import censor_aware_loss
 
 
@@ -605,15 +608,18 @@ def _evaluate_probe_panel(
                 continue
             pep_tok = torch.tensor(tokenizer.encode(pep, max_len=50)).unsqueeze(0).to(device)
             for allele in alleles:
-                mhc_seq = _find_allele_sequence(allele_sequences, allele)
-                if not mhc_seq:
+                grooves = resolve_class_i_groove_halves(
+                    allele=str(allele),
+                    allele_sequences=allele_sequences,
+                )
+                if grooves is None:
                     continue
-                prepared = prepare_mhc_input(mhc_a=mhc_seq, mhc_class="I")
+                groove1, groove2 = grooves
                 mhc_a_tok = torch.tensor(
-                    tokenizer.encode(prepared.groove_half_1, max_len=120)
+                    tokenizer.encode(groove1, max_len=120)
                 ).unsqueeze(0).to(device)
                 mhc_b_tok = torch.tensor(
-                    tokenizer.encode(prepared.groove_half_2, max_len=120)
+                    tokenizer.encode(groove2, max_len=120)
                 ).unsqueeze(0).to(device)
                 pred = model.predict_ic50(pep_tok, mhc_a_tok, mhc_b_tok)
                 log10_val = float(pred[0, 0].item())
@@ -769,13 +775,18 @@ def main() -> None:
     if not train_records or not val_records:
         raise RuntimeError("Split must produce both train and val records")
 
+    resolved_alleles = sorted({
+        str(r.mhc_allele or "").strip()
+        for r in (train_records + val_records)
+        if str(r.mhc_allele or "").strip()
+    })
     mhc_sequences, mhc_stats = resolve_mhc_sequences_from_index(
         index_csv=str(index_csv),
-        alleles=sorted({
-            str(r.mhc_allele or "").strip()
-            for r in (train_records + val_records)
-            if str(r.mhc_allele or "").strip()
-        }),
+        alleles=resolved_alleles,
+    )
+    mhc_exact_inputs, _ = resolve_mhc_inputs_from_index(
+        index_csv=str(index_csv),
+        alleles=resolved_alleles,
     )
 
     synthetic_modes: Optional[Sequence[str]] = None
@@ -787,6 +798,7 @@ def main() -> None:
     val_dataset = PrestoDataset(
         binding_records=val_records,
         mhc_sequences=mhc_sequences,
+        mhc_exact_inputs=mhc_exact_inputs,
         strict_mhc_resolution=False,
     )
     collator = PrestoCollator()
@@ -810,6 +822,7 @@ def main() -> None:
         ds = PrestoDataset(
             binding_records=epoch_train,
             mhc_sequences=mhc_sequences,
+            mhc_exact_inputs=mhc_exact_inputs,
             strict_mhc_resolution=False,
         )
         loader = _create_focused_train_loader(

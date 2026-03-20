@@ -246,6 +246,84 @@ class TestPrestoModel:
         assert fac_vec is not None
         assert fac_vec.abs().mean() > 0, "Factorized assay context should be non-zero"
 
+    def test_forward_affinity_only_ignores_binding_context(self):
+        from presto.models.presto import Presto
+
+        model = Presto(
+            d_model=64,
+            n_layers=2,
+            n_heads=4,
+            affinity_assay_residual_mode="shared_base_factorized_context_plus_segment_residual",
+            kd_grouping_mode="split_kd_proxy",
+        )
+        model.eval()
+
+        pep_tok = torch.randint(4, 24, (2, 10))
+        mhc_a_tok = torch.randint(4, 24, (2, 50))
+        mhc_b_tok = torch.randint(4, 24, (2, 20))
+        binding_context = {
+            "assay_type_idx": torch.tensor([0, 1], dtype=torch.long),
+            "assay_method_idx": torch.tensor([1, 2], dtype=torch.long),
+            "assay_prep_idx": torch.tensor([1, 2], dtype=torch.long),
+            "assay_geometry_idx": torch.tensor([1, 2], dtype=torch.long),
+            "assay_readout_idx": torch.tensor([1, 2], dtype=torch.long),
+        }
+
+        with torch.no_grad():
+            baseline = model.forward_affinity_only(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class="I",
+            )
+            with_context = model.forward_affinity_only(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class="I",
+                binding_context=binding_context,
+            )
+
+        for key in (
+            "KD_nM",
+            "IC50_nM",
+            "EC50_nM",
+            "KD_proxy_ic50_nM",
+            "KD_proxy_ec50_nM",
+        ):
+            assert torch.allclose(
+                baseline["assays"][key],
+                with_context["assays"][key],
+                atol=1e-6,
+            )
+
+    def test_forward_affinity_only_supports_dag_method_leaf_mode(self):
+        from presto.models.presto import Presto
+
+        model = Presto(
+            d_model=64,
+            n_layers=2,
+            n_heads=4,
+            affinity_assay_residual_mode="dag_method_leaf",
+            kd_grouping_mode="split_kd_proxy",
+        )
+        model.eval()
+
+        pep_tok = torch.randint(4, 24, (2, 10))
+        mhc_a_tok = torch.randint(4, 24, (2, 50))
+        mhc_b_tok = torch.randint(4, 24, (2, 20))
+
+        with torch.no_grad():
+            outputs = model.forward_affinity_only(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class="I",
+            )
+
+        assert "IC50_family_anchor_nM" in outputs["assays"]
+        assert "IC50_nM__method__PURIFIED_COMPETITIVE_RADIOACTIVITY" in outputs["assays"]
+
     @pytest.mark.parametrize(
         "peptide_pos_mode",
         ["abs_only", "triple_plus_abs", "start_only", "mlp_start_end_frac"],

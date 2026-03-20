@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional
+from dataclasses import dataclass
+from typing import Dict, List
 
+import torch
 import torch.nn as nn
 
-from presto.scripts.groove_baseline_probe import GrooveTransformerModel
-
 from .assay_context import AssayContextEncoder
+from .encoders import ENCODER_BACKBONES, build_encoder
 from .heads import HEAD_REGISTRY, AffinityHead
 
 
@@ -121,12 +121,19 @@ class DistributionalModel(nn.Module):
         assay_ctx: AssayContextEncoder,
         head: AffinityHead,
         spec: ConditionSpec,
+        assay_input_mode: str = "factorized",
     ):
         super().__init__()
         self.encoder = encoder
         self.assay_ctx = assay_ctx
         self.head = head
         self.spec = spec
+        assay_input_mode = str(assay_input_mode).strip().lower()
+        if assay_input_mode not in {"factorized", "none"}:
+            raise ValueError(
+                f"Unsupported assay_input_mode {assay_input_mode!r}. Expected 'factorized' or 'none'."
+            )
+        self.assay_input_mode = assay_input_mode
 
     def encode_input(self, pep_tok, mhc_a_tok, mhc_b_tok):
         """Get (B, 3*embed_dim) representation from encoder."""
@@ -143,6 +150,13 @@ class DistributionalModel(nn.Module):
         assay_readout_idx: torch.Tensor,
     ) -> torch.Tensor:
         """Compute assay embedding, optionally conditioned on molecular context."""
+        if self.assay_input_mode == "none":
+            return torch.zeros(
+                h.shape[0],
+                self.assay_ctx.ctx_dim,
+                device=h.device,
+                dtype=h.dtype,
+            )
         kwargs = {}
         if self.assay_ctx.repr_dim > 0:
             binding_signal = self.head.compute_binding_signal(h)
@@ -186,6 +200,8 @@ def build_model(
     n_layers: int = 2,
     ctx_dim: int = 32,
     content_conditioned: bool = False,
+    encoder_backbone: str = "historical_ablation",
+    assay_input_mode: str = "factorized",
 ) -> DistributionalModel:
     """Build encoder + assay context + head for one condition.
 
@@ -194,10 +210,23 @@ def build_model(
             binding logit and mean-pooled molecular representation (detached)
             so the assay bias depends on input content.
     """
+    assay_input_mode = str(assay_input_mode).strip().lower()
+    if assay_input_mode not in {"factorized", "none"}:
+        raise ValueError(
+            f"Unsupported assay_input_mode {assay_input_mode!r}. Expected 'factorized' or 'none'."
+        )
+    if assay_input_mode == "none" and content_conditioned:
+        raise ValueError("content_conditioned=True is incompatible with assay_input_mode='none'")
     actual_embed_dim = embed_dim if embed_dim is not None else spec.embed_dim
-    encoder = GrooveTransformerModel(
-        embed_dim=actual_embed_dim, n_heads=n_heads, n_layers=n_layers,
-        ff_dim=actual_embed_dim, hidden_dim=actual_embed_dim,
+    if encoder_backbone not in ENCODER_BACKBONES:
+        raise ValueError(
+            f"Unknown encoder_backbone {encoder_backbone!r}. Expected one of {ENCODER_BACKBONES}.",
+        )
+    encoder = build_encoder(
+        encoder_backbone=encoder_backbone,
+        embed_dim=actual_embed_dim,
+        n_heads=n_heads,
+        n_layers=n_layers,
     )
     repr_dim = encoder.out_dim if content_conditioned else 0
     assay_ctx = AssayContextEncoder(ctx_dim=ctx_dim, repr_dim=repr_dim)
@@ -211,4 +240,10 @@ def build_model(
         kwargs["sigma_mult"] = spec.sigma_mult
 
     head = head_cls(**kwargs)
-    return DistributionalModel(encoder, assay_ctx, head, spec)
+    return DistributionalModel(
+        encoder,
+        assay_ctx,
+        head,
+        spec,
+        assay_input_mode=assay_input_mode,
+    )

@@ -308,6 +308,9 @@ class Presto(nn.Module):
             "shared_base_segment_residual",
             "shared_base_factorized_context_residual",
             "shared_base_factorized_context_plus_segment_residual",
+            "dag_family",
+            "dag_method_leaf",
+            "dag_prep_readout_leaf",
         }:
             raise ValueError(
                 f"Unsupported affinity_assay_residual_mode: {affinity_assay_residual_mode!r}"
@@ -2545,6 +2548,7 @@ class Presto(nn.Module):
         binding_context: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, Any]:
         """Affinity-only forward under the canonical sequence-only input contract."""
+        del binding_context
         outputs = self.forward(
             pep_tok=pep_tok,
             mhc_a_tok=mhc_a_tok,
@@ -2557,7 +2561,7 @@ class Presto(nn.Module):
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
             peptide_species=peptide_species,
-            binding_context=binding_context,
+            binding_context=None,
         )
         affinity_keys = {
             "pep_vec",

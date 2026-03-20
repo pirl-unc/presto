@@ -9,7 +9,7 @@ import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from .vocab import (
     CHAIN_SPECIES_CATEGORIES,
@@ -383,6 +383,122 @@ class AlleleRecord:
     gene: str
     mhc_class: str
     species: str = "human"
+
+
+@dataclass(frozen=True)
+class MHCRestrictionExpansion:
+    """Canonical parsed representation of a scalar or bagged MHC restriction."""
+
+    raw: str
+    normalized_token: str
+    exact_alleles: Tuple[str, ...]
+    provenance: str
+    parsed_type: str = ""
+    mhc_class: Optional[str] = None
+    species_identity: Optional[str] = None
+
+    @property
+    def bag_size(self) -> int:
+        return len(self.exact_alleles)
+
+    @property
+    def is_exact(self) -> bool:
+        return self.provenance == "exact"
+
+
+def _canonicalize_exact_alleles(alleles: Sequence[Any]) -> Tuple[str, ...]:
+    values: List[str] = []
+    for allele in alleles:
+        try:
+            values.append(_canonicalize_parsed_allele(allele, allele_fields=2))
+        except Exception:
+            continue
+    if not values:
+        return tuple()
+    return tuple(sorted(set(values)))
+
+
+def expand_mhc_restriction(allele: Optional[str]) -> MHCRestrictionExpansion:
+    """Expand an MHC restriction token into exact candidate alleles when possible.
+
+    Exact alleles remain singleton bags. Serotypes, haplotypes, and pair-like
+    restrictions retain their normalized coarse token but also expose the exact
+    candidate allele set for downstream MIL-capable paths.
+    """
+    raw = str(allele or "").strip()
+    if not raw:
+        return MHCRestrictionExpansion(
+            raw="",
+            normalized_token="",
+            exact_alleles=tuple(),
+            provenance="unresolved",
+        )
+
+    try:
+        parsed = _require_mhcgnomes().parse(raw)
+    except Exception:
+        parsed = None
+    if parsed is None:
+        try:
+            parsed = parse_allele_name(raw)
+        except Exception:
+            parsed = None
+    if parsed is None:
+        return MHCRestrictionExpansion(
+            raw=raw,
+            normalized_token=raw,
+            exact_alleles=tuple(),
+            provenance="unresolved",
+        )
+
+    parsed_type = type(parsed).__name__
+    to_string = getattr(parsed, "to_string", None)
+    normalized_token = str(to_string()) if callable(to_string) else str(parsed)
+    species_name = getattr(getattr(parsed, "species", None), "name", None)
+    mhc_class = normalize_mhc_class(getattr(parsed, "mhc_class", None), default=None)
+
+    if parsed_type == "Allele":
+        exact_alleles = _canonicalize_exact_alleles((parsed,))
+        return MHCRestrictionExpansion(
+            raw=raw,
+            normalized_token=normalized_token,
+            exact_alleles=exact_alleles,
+            provenance="exact",
+            parsed_type=parsed_type,
+            mhc_class=mhc_class or infer_mhc_class_optional(normalized_token),
+            species_identity=str(species_name).strip() or None,
+        )
+
+    exact_alleles = _canonicalize_exact_alleles(tuple(getattr(parsed, "alleles", ()) or ()))
+    if parsed_type == "Serotype":
+        provenance = "serotype_expanded"
+    elif parsed_type == "Haplotype":
+        provenance = "haplotype_expanded"
+    elif parsed_type == "Pair":
+        provenance = "pair_expanded"
+    elif exact_alleles:
+        provenance = f"{parsed_type.lower()}_expanded"
+    else:
+        provenance = "unresolved"
+
+    if mhc_class is None and exact_alleles:
+        inferred_classes = {
+            infer_mhc_class_optional(token)
+            for token in exact_alleles
+            if infer_mhc_class_optional(token)
+        }
+        if len(inferred_classes) == 1:
+            mhc_class = next(iter(inferred_classes))
+
+    return MHCRestrictionExpansion(
+        raw=raw,
+        normalized_token=normalized_token,
+        exact_alleles=exact_alleles,
+        provenance=provenance,
+        parsed_type=parsed_type,
+        mhc_class=mhc_class,
+        species_identity=str(species_name).strip() or None,
+    )
 
 
 def normalize_allele_name(name: str) -> str:
