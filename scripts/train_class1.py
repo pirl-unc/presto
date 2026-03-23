@@ -1,10 +1,26 @@
 #!/usr/bin/env python
 """Train full MHC Class I binding model using the L2 recipe.
 
+Trains a pMHC binding affinity predictor on all ~105 HLA class I alleles
+(~250K+ rows from IEDB). Evaluates on a 7-allele probe panel.
+
+The "L2" recipe was selected from a 13-condition x 3-seed bakeoff
+(experiments/2026-03-17_1042_claude_7allele-bakeoff/) as the best
+combination of regression accuracy, allele discrimination, and stability:
+  - test Spearman 0.806, F1 0.820, AUROC 0.934
+  - SLLQHLIGL probe: correctly predicts 3.8 nM for HLA-A*02:01,
+    rejects all other alleles (2502x discrimination ratio)
+  - 3/3 seeds converged (no NaN)
+
+Recipe: dag_prep_readout_leaf + assay_heads_only + lr=3e-4 warmup_cosine
+        + d128 + MHC pretrained
+
 Unified launcher for Modal (GPU), MPS (Apple Silicon), or CPU.
 
-L2 = dag_prep_readout_leaf + assay_heads_only + lr=3e-4 warmup_cosine
-     + d128 + pretrained (7-allele bakeoff winner)
+Prerequisites:
+    pip install -e .
+    python -m presto data merge --datadir data
+    # Optional: modal volume get presto-checkpoints mhc-pretrain-20260308b/ modal_runs/pulls/
 
 Usage:
     # Local MPS (Apple Silicon)
