@@ -174,6 +174,9 @@ class Presto(nn.Module):
     ]
 
     # Per design S7.5: segment access table
+    # Processing sees peptide + flanks.  Peptide length and terminal
+    # residues are additionally injected as explicit extra tokens so
+    # TAP/ERAP features are available even when flanks are short.
     LATENT_SEGMENTS = {
         "processing": ["nflank", "peptide", "cflank"],
         "ms_detectability": ["peptide"],
@@ -505,6 +508,27 @@ class Presto(nn.Module):
             nn.GELU(),
             nn.Linear(d_model, 1),
         )
+        # Class II PFR binding modulation — adjusts core window scores based
+        # on the peptide flanking regions that protrude from the open class II
+        # groove.  Gated by class_probs so the adjustment is zero for class I.
+        # Input: [npfr_repr, cpfr_repr, npfr_len_embed, cpfr_len_embed, core_score]
+        pfr_input_dim = 2 * d_model + 2 * self.pfr_length_dim + 1
+        self.class2_pfr_score = nn.Sequential(
+            nn.Linear(pfr_input_dim, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, 1),
+        )
+        # Initialize final layer to zero so PFR adjustment defaults to zero
+        nn.init.zeros_(self.class2_pfr_score[-1].weight)
+        nn.init.zeros_(self.class2_pfr_score[-1].bias)
+
+        # Processing: peptide terminal residue projection and length embedding.
+        # The processing latent no longer sees the full peptide token sequence,
+        # but it needs peptide boundary info for TAP transport (C-terminal
+        # residue), ERAP trimming (N-terminal residue), and length dependence.
+        self.processing_pep_terminal_proj = nn.Linear(2 * d_model, d_model)
+        self.processing_pep_length_embed = nn.Embedding(51, d_model)  # max peptide length 50
+
         self.core_window_prior = nn.Sequential(
             nn.Linear(5, d_model // 2),
             nn.GELU(),
@@ -1718,19 +1742,13 @@ class Presto(nn.Module):
             attn_mask=None,
         )
 
-        candidate_vec = self.core_window_vec_norm(
-            self.core_window_fuse(
-                torch.cat(
-                    [
-                        candidate_interaction_flat,
-                        npfr_repr.reshape(batch_size * max_candidates, -1),
-                        npfr_len_embed.reshape(batch_size * max_candidates, -1),
-                        cpfr_repr.reshape(batch_size * max_candidates, -1),
-                        cpfr_len_embed.reshape(batch_size * max_candidates, -1),
-                    ],
-                    dim=-1,
-                )
-            )
+        # --- Core scoring uses core-only interaction (no PFR context) ---
+        # This ensures the core selector picks windows based purely on
+        # core-groove pocket chemistry, not PFR composition.  PFR context
+        # is fused into candidate_vec AFTER scoring so the downstream
+        # binding module still sees flanking information.
+        core_only_vec = self.core_window_vec_norm(
+            candidate_interaction_flat
         ).reshape(batch_size, max_candidates, -1)
 
         pep_len_f = pep_len.float().unsqueeze(1).clamp(min=1.0)
@@ -1745,13 +1763,50 @@ class Presto(nn.Module):
         )
         core_window_prior_logit = self.core_window_prior(prior_features).squeeze(-1)
         if self.core_refinement_mode == "class_specific":
-            class1_score = self.core_window_score_class1(candidate_vec).squeeze(-1)
-            class2_score = self.core_window_score_class2(candidate_vec).squeeze(-1)
+            class1_score = self.core_window_score_class1(core_only_vec).squeeze(-1)
+            class2_score = self.core_window_score_class2(core_only_vec).squeeze(-1)
             class1_weight = class_probs[:, :1].expand(-1, max_candidates)
             class2_weight = class_probs[:, 1:2].expand(-1, max_candidates)
             core_window_score_logit = class1_weight * class1_score + class2_weight * class2_score
         else:
-            core_window_score_logit = self.core_window_score(candidate_vec).squeeze(-1)
+            core_window_score_logit = self.core_window_score(core_only_vec).squeeze(-1)
+
+        # --- Class II PFR binding adjustment ---
+        # PFRs protrude from the open class II groove and modulate binding
+        # kinetics / DM editing.  No class I analog (sealed groove).
+        # Gated by class II probability so the adjustment is zero for class I.
+        class2_weight = class_probs[:, 1:2].expand(-1, max_candidates)
+        if class2_weight.sum() > 0:
+            pfr_score_input = torch.cat(
+                [
+                    npfr_repr.reshape(batch_size * max_candidates, -1),
+                    cpfr_repr.reshape(batch_size * max_candidates, -1),
+                    npfr_len_embed.reshape(batch_size * max_candidates, -1),
+                    cpfr_len_embed.reshape(batch_size * max_candidates, -1),
+                    core_window_score_logit.reshape(batch_size * max_candidates, 1),
+                ],
+                dim=-1,
+            )
+            pfr_adjustment = self.class2_pfr_score(pfr_score_input).reshape(
+                batch_size, max_candidates
+            )
+            core_window_score_logit = core_window_score_logit + class2_weight * pfr_adjustment
+
+        # --- Fuse PFR context into candidate_vec for marginalized output ---
+        candidate_vec = self.core_window_vec_norm(
+            self.core_window_fuse(
+                torch.cat(
+                    [
+                        candidate_interaction_flat,
+                        npfr_repr.reshape(batch_size * max_candidates, -1),
+                        npfr_len_embed.reshape(batch_size * max_candidates, -1),
+                        cpfr_repr.reshape(batch_size * max_candidates, -1),
+                        cpfr_len_embed.reshape(batch_size * max_candidates, -1),
+                    ],
+                    dim=-1,
+                )
+            )
+        ).reshape(batch_size, max_candidates, -1)
         core_window_logit = core_window_score_logit + core_window_prior_logit
         core_window_prior_logit = core_window_prior_logit.masked_fill(~candidate_mask, -1e4)
         core_window_score_logit = core_window_score_logit.masked_fill(~candidate_mask, -1e4)
@@ -1787,7 +1842,9 @@ class Presto(nn.Module):
         batch_idx = torch.arange(batch_size, device=h.device).unsqueeze(1).expand_as(starts)
         valid_batch_idx = batch_idx[candidate_mask]
         valid_starts = starts[candidate_mask]
-        core_start_logit[valid_batch_idx, valid_starts] = core_window_logit[candidate_mask]
+        core_start_logit[valid_batch_idx, valid_starts] = core_window_logit[candidate_mask].to(
+            dtype=core_start_logit.dtype
+        )
         core_start_prob[valid_batch_idx, valid_starts] = core_window_posterior[candidate_mask]
         core_start_logit = core_start_logit.masked_fill(~pep_valid, -1e4)
 
@@ -1989,6 +2046,245 @@ class Presto(nn.Module):
             "presentation_prob": torch.sigmoid(mixed_logit),
             "presentation_mixed_prob": torch.sigmoid(mixed_logit),
         }
+
+    # ------------------------------------------------------------------ #
+    #  Core supervision loss (Phase 4 — gold-standard binding core labels)
+    # ------------------------------------------------------------------ #
+
+    @staticmethod
+    def core_supervision_loss(
+        outputs: Dict[str, torch.Tensor],
+        core_start: torch.Tensor,
+        core_length: torch.Tensor,
+        mask: Optional[torch.Tensor] = None,
+        label_smoothing: float = 0.1,
+    ) -> torch.Tensor:
+        """Auxiliary cross-entropy on the core posterior for labeled peptides.
+
+        Args:
+            outputs: Forward pass outputs containing core_window_start,
+                core_window_length, core_window_logit, core_window_mask.
+            core_start: (batch,) known binding core start position per sample.
+            core_length: (batch,) known binding core length per sample.
+            mask: (batch,) bool mask — True for samples with known cores.
+            label_smoothing: Smoothing factor (default 0.1).
+
+        Returns:
+            Scalar loss averaged over labeled samples, or zero if no labels.
+        """
+        logits = outputs["core_window_logit"]          # (batch, n_candidates)
+        starts = outputs["core_window_start"]          # (batch, n_candidates)
+        lengths = outputs["core_window_length"]        # (batch, n_candidates)
+        valid = outputs["core_window_mask"]            # (batch, n_candidates)
+
+        if mask is None:
+            mask = torch.ones(logits.shape[0], dtype=torch.bool, device=logits.device)
+        if mask.sum() == 0:
+            return logits.new_zeros(())
+
+        # Find the candidate index matching the known core
+        target_match = (
+            (starts == core_start.unsqueeze(1))
+            & (lengths == core_length.unsqueeze(1))
+            & valid
+        )  # (batch, n_candidates)
+
+        # For samples where the known core matches exactly one candidate
+        has_match = target_match.any(dim=1) & mask  # (batch,)
+        if has_match.sum() == 0:
+            return logits.new_zeros(())
+
+        # Target index: argmax of the match (first matching candidate)
+        target_idx = target_match[has_match].float().argmax(dim=1)  # (n_labeled,)
+        labeled_logits = logits[has_match]  # (n_labeled, n_candidates)
+        labeled_valid = valid[has_match]    # (n_labeled, n_candidates)
+
+        # Mask invalid candidates with -inf before cross-entropy
+        labeled_logits = labeled_logits.masked_fill(~labeled_valid, -1e4)
+        return F.cross_entropy(
+            labeled_logits,
+            target_idx,
+            label_smoothing=label_smoothing,
+        )
+
+    # ------------------------------------------------------------------ #
+    #  Training stage parameter groups
+    # ------------------------------------------------------------------ #
+
+    # Stage identifiers for the curriculum.  Each stage trains a larger
+    # subgraph while optionally freezing earlier components.
+    STAGE_BINDING_CLASS1 = "binding_class1"
+    STAGE_BINDING_CLASS2 = "binding_class2"
+    STAGE_PROCESSING_CLASS1 = "processing_class1"
+    STAGE_PROCESSING_CLASS2 = "processing_class2"
+    STAGE_PRESENTATION_MIL = "presentation_mil"
+    STAGE_IMMUNOGENICITY = "immunogenicity"
+
+    def curriculum_param_groups(
+        self,
+        stage: str,
+        lr: float = 3e-4,
+        trunk_lr_mult: float = 0.1,
+        frozen_lr: float = 0.0,
+    ) -> List[Dict[str, Any]]:
+        """Return optimizer param groups for a curriculum training stage.
+
+        Each stage trains a progressively larger subgraph:
+
+        - binding_class1:    Trunk encoder + binding core scorer + groove +
+                             BindingModule + assay heads.  Everything else frozen.
+        - binding_class2:    Above + class II PFR module + class II core scorer.
+                             Trunk at reduced LR.
+        - processing_class1: Above + processing latent + class I processing head.
+        - processing_class2: Above + class II processing head.
+        - presentation_mil:  Above + presentation bottleneck + presentation heads.
+        - immunogenicity:    Above + recognition latent + immunogenicity heads.
+
+        Args:
+            stage: One of the STAGE_* constants.
+            lr: Learning rate for actively-trained parameters.
+            trunk_lr_mult: LR multiplier for trunk encoder (default 0.1x).
+            frozen_lr: LR for frozen parameters (default 0, truly frozen).
+
+        Returns:
+            List of param group dicts suitable for torch.optim.
+        """
+        # Classify every parameter into a component
+        component_map = self._parameter_component_map()
+
+        # Define which components are active (trained) at each stage
+        active_components = {
+            self.STAGE_BINDING_CLASS1: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads",
+            },
+            self.STAGE_BINDING_CLASS2: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads", "pfr_class2",
+            },
+            self.STAGE_PROCESSING_CLASS1: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads", "pfr_class2",
+                "processing", "processing_class1",
+            },
+            self.STAGE_PROCESSING_CLASS2: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads", "pfr_class2",
+                "processing", "processing_class1", "processing_class2",
+            },
+            self.STAGE_PRESENTATION_MIL: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads", "pfr_class2",
+                "processing", "processing_class1", "processing_class2",
+                "presentation",
+            },
+            self.STAGE_IMMUNOGENICITY: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads", "pfr_class2",
+                "processing", "processing_class1", "processing_class2",
+                "presentation", "recognition", "immunogenicity",
+            },
+        }
+
+        if stage not in active_components:
+            raise ValueError(
+                f"Unknown training stage {stage!r}. "
+                f"Valid: {sorted(active_components)}"
+            )
+
+        active = active_components[stage]
+        # Trunk uses reduced LR; other active components use full LR
+        slow_components = {"trunk"}
+
+        groups: Dict[str, List[torch.nn.Parameter]] = {
+            "active": [],
+            "slow": [],
+            "frozen": [],
+        }
+        for name, param in self.named_parameters():
+            component = component_map.get(name, "other")
+            if component in active:
+                if component in slow_components:
+                    groups["slow"].append(param)
+                else:
+                    groups["active"].append(param)
+            else:
+                groups["frozen"].append(param)
+
+        result = []
+        if groups["active"]:
+            result.append({"params": groups["active"], "lr": lr})
+        if groups["slow"]:
+            result.append({"params": groups["slow"], "lr": lr * trunk_lr_mult})
+        if groups["frozen"]:
+            for p in groups["frozen"]:
+                p.requires_grad_(False)
+            result.append({"params": groups["frozen"], "lr": frozen_lr})
+        return result
+
+    def _parameter_component_map(self) -> Dict[str, str]:
+        """Map each named parameter to its curriculum component."""
+        mapping: Dict[str, str] = {}
+        for name, _ in self.named_parameters():
+            mapping[name] = self._classify_parameter(name)
+        return mapping
+
+    @staticmethod
+    def _classify_parameter(name: str) -> str:
+        """Classify a parameter name into a curriculum component."""
+        # Trunk encoder
+        if any(k in name for k in ["aa_embedding", "segment_embedding", "encoder",
+                                    "pep_nterm_pos", "pep_cterm_pos", "mhc_pos",
+                                    "groove_pos", "species_cond_embed",
+                                    "chain_completeness_embed"]):
+            return "trunk"
+        # Groove cross-attention
+        if "groove" in name and "pos" not in name:
+            return "groove"
+        # Binding query / latent layers for pmhc_interaction
+        if "pmhc_interaction" in name or "binding_query" in name:
+            return "binding_query"
+        # Core window scoring and enumeration
+        if any(k in name for k in ["core_window", "core_position",
+                                    "pfr_length_embed"]):
+            return "binding_core"
+        # Class II PFR module
+        if "class2_pfr" in name:
+            return "pfr_class2"
+        # BindingModule (kinetics)
+        if "binding_module" in name or "affinity_predictor" in name:
+            return "binding_module"
+        # Assay heads
+        if "assay_head" in name:
+            return "assay_heads"
+        # Processing: class-specific projections checked BEFORE general processing
+        if "processing_class1" in name or "class1_processing" in name:
+            return "processing_class1"
+        if "processing_class2" in name or "class2_processing" in name:
+            return "processing_class2"
+        # Processing latent and peptide terminal/length modules
+        if "processing" in name or "processing_pep" in name:
+            return "processing"
+        # Presentation
+        if "presentation" in name:
+            return "presentation"
+        # Recognition / immunogenicity
+        if "recognition" in name or "foreignness" in name:
+            return "recognition"
+        if "immunogenicity" in name or "tcr_evidence" in name:
+            return "immunogenicity"
+        # Latent queries and layers (not binding)
+        if "latent_queries" in name or "latent_layers" in name:
+            # Check which latent
+            for latent_name in ["processing", "ms_detectability",
+                                "species_of_origin", "recognition"]:
+                if latent_name in name:
+                    if latent_name == "processing":
+                        return "processing"
+                    if latent_name == "recognition":
+                        return "recognition"
+                    return "other"
+        return "other"
 
     def forward_mhc_only(
         self,
@@ -2223,6 +2519,25 @@ class Presto(nn.Module):
         _gets_apc_context = {"processing", "pmhc_interaction"}
         _gets_groove = {"pmhc_interaction"}
 
+        # Processing extra tokens: peptide terminal residues + length.
+        # These give the processing latent TAP/ERAP/cleavage boundary
+        # information without exposing the full peptide interior.
+        pep_slice = offsets["peptide"]
+        pep_h_proc = h[:, pep_slice, :]
+        pep_valid_proc = seg_masks["peptide"][:, pep_slice]
+        pep_len_proc = pep_valid_proc.sum(dim=1).clamp(min=1)
+        # First and last valid peptide tokens
+        pep_first = pep_h_proc[:, 0, :]  # (batch, d_model)
+        last_idx = (pep_len_proc - 1).clamp(min=0).long()
+        pep_last = pep_h_proc[torch.arange(h.shape[0], device=h.device), last_idx]
+        pep_terminal_token = self.processing_pep_terminal_proj(
+            torch.cat([pep_first, pep_last], dim=-1)
+        ).unsqueeze(1)  # (batch, 1, d_model)
+        pep_length_token = self.processing_pep_length_embed(
+            pep_len_proc.clamp(max=50).long()
+        ).unsqueeze(1)  # (batch, 1, d_model)
+        _processing_extra = [pep_terminal_token, pep_length_token]
+
         # Variant C: pMHC interaction block (enriched representations for pMHC interaction only)
         if self.use_pmhc_interaction_block:
             h_binding = self._run_pmhc_interaction(h, seg_masks, offsets)
@@ -2239,6 +2554,8 @@ class Presto(nn.Module):
                 allowed = allowed | seg_masks[seg_name]
 
             extra_tokens: List[torch.Tensor] = []
+            if name == "processing":
+                extra_tokens.extend(_processing_extra)
             if name in _gets_apc_context:
                 extra_tokens.append(apc_cell_type_context)
             if name in _gets_groove:
