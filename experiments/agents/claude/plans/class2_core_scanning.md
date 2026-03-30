@@ -1,337 +1,416 @@
 # Class II Core Scanning via Class I Transfer
 
-Detailed design plan for reusing the class I binding core mechanism as a scanning module for class II peptides.
+Detailed design plan for a modular binding architecture that separates core-groove binding, class II PFR modulation, and processing into distinct pathways.
 
-## The key insight
+## Architecture overview
 
-Presto's binding core mechanism is already a scanner. For every peptide, it:
-
-1. **Enumerates** all valid (start_position, core_length) candidates (presto.py:1590-1628)
-2. **Extracts** core tokens + N/C peptide flanking regions for each candidate
-3. **Scores** each candidate via learned MLP + structural prior (presto.py:1681-1783)
-4. **Marginalizes** over candidates using softmax posterior: `interaction_vec = Σ posterior[i] × candidate_vec[i]`
-
-This is fully differentiable. No hard core labels needed — the model learns core selection end-to-end from binding affinity supervision.
-
-For class I peptides (8-11mers), this is a near-trivial scan: an 9-mer peptide has exactly one 9-mer core candidate (the whole peptide). A 10-mer has two 9-mer candidates. The posterior concentrates quickly because there are few options.
-
-For class II peptides (13-25mers), the same mechanism becomes a real scanner: a 15-mer has seven 9-mer candidates, each with different peptide flanking regions. The posterior must learn to select the correct core — the one whose residues actually contact the groove.
-
-**No new architecture needed.** The plan is to train this existing mechanism correctly through curriculum staging.
-
-## What already exists
-
-| Component | Location | Status |
-|-----------|----------|--------|
-| Core enumeration | presto.py:1590-1628 | Working, handles any peptide length |
-| Core token extraction | presto.py:1629-1680 | Working, extracts core + N/C flanking |
-| Core scoring MLP (shared) | presto.py:1754 | Working, `core_window_score` |
-| Core scoring MLP (class-specific) | presto.py:498-507 | Exists, untrained for class II |
-| Structural prior | presto.py:1737-1745 | Working, inputs: core_len_frac, flank_fracs, class_probs |
-| Soft marginalization | presto.py:1760-1783 | Working, softmax + weighted sum |
-| Class conditioning | presto_modules.py:431-443 | Working, class-dependent binding calibration |
-| Groove vector (cross-attention) | presto.py:1533-1569 | Working, allele-specific |
-| BindingModule (kinetics) | pmhc.py:385-437 | Working, class-agnostic |
-| Two-chain input (α+β) | data/loaders.py, groove.py | Working for both class I and II |
-
-## What class II adds
-
-### Longer peptides with variable binding core position
-
-Class I: 8-11 residues. The peptide is almost entirely the binding core. Anchors at P2 and PΩ are fixed relative to the peptide termini. The closed groove constrains the core.
-
-Class II: 13-25 residues. A 9-mer binding core sits somewhere in the middle, flanked by peptide extensions (peptide flanking regions, PFRs) that protrude from both ends of the open groove. The core position varies by peptide — it depends on which 9-mer window has the right anchor residues for that allele's groove pockets.
-
-Example: For HLA-DRB1*01:01 with peptide PKYVKQNTLKLAT (13-mer):
-- Candidate cores: PKYVKQNTL, KYVKQNTLK, YVKQNTLKL, VKQNTLKLA, KQNTLKLAT
-- True core: YVKQNTLKL (positions 2-10, anchors at P1=Y, P4=K, P6=T, P9=L)
-- The model must learn: P1 prefers large hydrophobic/aromatic, P9 prefers aliphatic
-
-### Different groove geometry
-
-Class I groove: closed at both ends by conserved tyrosine residues. Constrains peptide to 8-11mers.
-
-Class II groove: open at both ends. The α1 and β1 domains form a groove that's wider and doesn't cap the peptide. This means:
-- Groove contacts are spread across 9 core residues, not concentrated at termini
-- The N-flank and C-flank of the peptide extend beyond the groove and are solvent-exposed
-- PFR residues do NOT contact the groove directly but may influence binding through steric/electrostatic effects
-
-### Two polymorphic chains
-
-Class I: Only the alpha chain is polymorphic. Beta-2-microglobulin (β2m) is invariant.
-
-Class II: Both alpha and beta chains are polymorphic (except DRA, which is nearly monomorphic for humans). The groove is formed by α1 (from alpha chain) + β1 (from beta chain). Both contribute to peptide-allele specificity.
-
-The model already handles this: groove_half_1 comes from the alpha chain, groove_half_2 from the beta chain, regardless of class.
-
-## Training plan
-
-### Phase 1: Class I core training (stages 2a-2c of curriculum)
-
-The core scanner is first trained on class I data where the answer is constrained:
-
-- 8-mer: 4 candidates (8,9,10,11-length cores, but only 8-mer fits → 1 candidate per length that fits)
-- 9-mer: ~6 candidates across core lengths 8-11
-- 10-mer: ~10 candidates
-- 11-mer: ~14 candidates
-
-For most class I peptides, the posterior should concentrate on the full-length core (the peptide IS the core). The scanner learns basic residue-groove compatibility: which amino acids are preferred at which pocket positions.
-
-**What the core scorer learns from class I**:
-- Anchor residue preferences per allele (P2 and PΩ for class I)
-- Core length preferences (most class I alleles prefer 9-mers)
-- That the scoring function should reward hydrophobic residues at certain core positions
-- Basic groove-residue compatibility patterns
-
-**What it does NOT learn from class I alone**:
-- How to handle long PFRs (class I PFRs are 0-3 residues)
-- P1 pocket preferences (class II's primary anchor, less important in class I)
-- The different anchor spacing of class II (P1, P4, P6, P9 vs class I's P2, PΩ)
-- That class II alleles have much more variable core-length preferences
-
-### Phase 2: Class II core transfer (stage 4a of curriculum)
-
-When class II data is introduced, the core scanner faces a harder problem:
-
-- 13-mer: ~21 candidates (many windows, most wrong)
-- 15-mer: ~29 candidates
-- 20-mer: ~46 candidates
-
-The class I-trained scorer provides a starting point: it already knows that binding cores should have hydrophobic residues at certain positions. But the class II groove has different pocket preferences, so the scorer must adapt.
-
-**Transfer mechanism** (three options, not mutually exclusive):
-
-#### Option A: Shared scorer with class conditioning (simplest)
-
-Use the existing `core_window_score` shared MLP. It already receives class probabilities as input via the structural prior (presto.py:1737-1745). The class I training teaches it general residue-groove compatibility; when class II data arrives, the class probability input tells the scorer to adjust its preferences.
-
-Advantages:
-- No new parameters
-- Maximum transfer from class I
-- Works immediately when class II data is introduced
-
-Disadvantages:
-- The shared MLP has limited capacity to represent both class I and class II pocket preferences
-- Class II anchor positions differ from class I (P1,P4,P6,P9 vs P2,PΩ) — a single scorer may struggle to represent both
-
-#### Option B: Class-specific scorers (already exists)
-
-Use `core_window_score_class1` and `core_window_score_class2` (presto.py:498-507). Initialize class2 scorer from class1 weights. The class-weighted combination `class1_weight × class1_score + class2_weight × class2_score` lets the class II scorer diverge from class I while retaining the class I scorer's knowledge.
-
-Advantages:
-- Dedicated capacity for class II preferences
-- Class I scorer is protected from class II gradient interference
-- Initialization from class I weights provides warm start
-
-Disadvantages:
-- More parameters
-- The class II scorer starts with class I weights that may be misleading (wrong anchor positions)
-- Needs enough class II data to train the class II-specific parameters
-
-#### Option C: Shared trunk + class-specific heads (recommended)
-
-Hybrid approach. The core candidate vector (extracted tokens + groove context) is computed identically for both classes. The scoring function has:
-1. A shared feature extractor (first linear layer) — captures general residue-groove compatibility
-2. Class-specific scoring heads (second linear layer) — captures class-specific anchor preferences
-
-This is architecturally similar to the DAG assay heads: shared base + class-specific residual.
+Three distinct pathways, each with a clear biological role:
 
 ```
-candidate_vec → shared_linear → ReLU → class1_head → score_I
-                                      → class2_head → score_II
-final_score = class_prob_I × score_I + class_prob_II × score_II
+Source protein:  ...N_FLANK [N_PFR — CORE_9MER — C_PFR] C_FLANK...
+                            |_________________________|
+                            the peptide on the cell surface
+
+Class I:   PFRs are 0-2 residues (groove is sealed)
+Class II:  PFRs are 3-10 residues (groove is open-ended)
+Both:      N_FLANK/C_FLANK are source protein context (processing)
 ```
 
-Initialize both heads from the current shared scorer weights. The shared layer retains general residue-groove knowledge; the class-specific heads learn pocket-specific preferences.
+### Pathway 1: Core binding (class-agnostic)
 
-### Phase 3: Core refinement with gold-standard labels (stage 4b)
-
-Some class II peptide-allele pairs have experimentally determined binding cores (from crystal structures, competition assays, or truncation studies). These provide direct supervision for core selection.
-
-**Core supervision loss**: For peptides with known cores, add a cross-entropy loss on the core posterior:
+A small model that scores 9-mer core × groove compatibility. No PFRs, no flanking context — pure pocket chemistry. The same pockets, the same physics, both classes.
 
 ```
-L_core = -log(posterior[true_core_index])
+Input:  core_9mer tokens (9 AA) + groove_half_1 tokens + groove_half_2 tokens
+Output: core_binding_score (scalar, log10 Kd scale)
 ```
 
-This is similar to the "attention supervision" technique used in machine translation (Liu et al., 2016) where alignment labels from external tools supervise the attention distribution.
+This is the model that gets trained on class I data first (stages 2-3 of the curriculum). Class I peptides are 8-11mers where the peptide IS essentially the core, so class I training naturally teaches pure core-groove compatibility without PFR confounds.
 
-**Important**: This loss applies only to the subset of peptides with known cores. It's an auxiliary loss, not the primary objective. The primary objective remains binding affinity regression — the core selection is a means to an end.
+When class II arrives (stage 4), this same model is called once per candidate 9-mer window in the longer peptide. A 15-mer has 7 candidate windows; a 25-mer has 17. The core binding model scores each one independently.
 
-**Data sources for gold-standard cores**:
-- PDB crystal structures: ~500 unique class II peptide-allele pairs with resolved binding cores
-- IEDB binding core annotations: derived from competition assays, available for ~2000 pairs
-- NetMHCIIpan training data: includes binding core annotations from the IEDB reference dataset
+### Pathway 2: Class II PFR binding modulation (class II only)
 
-### Phase 4: Ongoing core refinement (stages 5-6)
+The residues extending beyond the open class II groove. These are part of the presented peptide — they protrude from both ends of the groove and are solvent-exposed. They are NOT processing context (that's the flanks).
 
-As multi-allelic MS and T-cell data arrive (stages 5-6), the core scanner continues to refine. Presentation and immunogenicity signals provide indirect core supervision: if the model selects the wrong core, its binding prediction will be wrong, the presentation prediction will be wrong, and the loss will be high. This is the end-to-end training signal.
+PFRs modulate class II binding through three mechanisms:
+- **On-rate**: Longer PFRs increase the capture radius via "flapping" dynamics, making the peptide more likely to encounter the groove
+- **DM editing**: HLA-DM binds near the P1 pocket and tests peptide stability. N-PFR length and composition affect DM sensitivity — short N-PFRs make the peptide more DM-resistant (harder to edit out)
+- **Weak groove-exit contacts**: The C-PFR can form weak interactions with the beta chain floor near the groove exit
 
-The soft marginalization ensures gradients flow back through the core selection even without explicit core labels.
+No class I analog — the sealed class I groove doesn't allow protrusion.
 
-## Evaluation metrics for core scanning
-
-### Per-candidate posterior entropy
-
-For each peptide, compute the entropy of the core posterior distribution:
 ```
-H = -Σ posterior[i] × log(posterior[i])
+Input:  n_pfr tokens + c_pfr tokens + core_binding_score + groove_summary
+Output: pfr_binding_adjustment (scalar, additive to core score)
 ```
 
-Low entropy means the model is confident about one core. High entropy means it's uncertain (spreading probability across many windows).
+The class II binding score for a candidate window is:
 
-Expected behavior:
-- Class I: very low entropy (1-3 plausible cores for short peptides)
-- Class II with clear anchors: low entropy (model commits to one core)
-- Class II with degenerate anchors: higher entropy (ambiguous core position)
+```
+class2_binding_score = core_binding_score + pfr_binding_adjustment
+```
 
-Track entropy over training to confirm that core selection sharpens as training progresses.
+### Pathway 3: Processing (both classes, class-specific logic)
 
-### Core accuracy on gold-standard peptides
+The flanking context from the source protein — the residues upstream (N-flank) and downstream (C-flank) of the peptide. These determine whether the peptide is generated by the cell's proteolytic machinery.
 
-For peptides with known binding cores:
-- **Exact match**: predicted core (argmax of posterior) matches true core exactly
-- **±1 match**: predicted core start is within 1 position of true core start
-- **Anchor match**: predicted P1 and P9 residues match true P1 and P9
+Both classes need processing, but the biology is different:
+- **Class I**: Proteasome cleaves the C-terminus, aminopeptidases trim the N-terminus, TAP transports the peptide into the ER. Processing depends on proteasomal cleavage motifs in the C-flank and TAP binding preferences.
+- **Class II**: Cathepsins in the endosome/lysosome degrade the source protein. Cleavage is less sequence-specific and more determined by protein accessibility and cathepsin preferences. Invariant chain (Ii/CLIP) occupies the groove until DM-mediated exchange.
 
-Target: >70% exact match, >90% ±1 match on class II peptides with known cores.
+```
+Input:  n_flank tokens + c_flank tokens + class_probs + peptide_length
+Output: processing_score (scalar, logit scale)
+```
 
-### Binding affinity conditioned on core selection
+Internally class-conditional: routes through class I-specific or class II-specific layers based on class_probs. Both share an encoder for flanking sequences but have separate scoring heads.
 
-Compare binding predictions when using:
-1. The model's learned core selection (soft marginalization)
-2. The known true core (forced selection)
-3. A random core window
+Processing is COMPLETELY independent of core selection — it doesn't care which 9-mer window was chosen. It cares about where the peptide was cut out of the source protein.
 
-If the model's learned selection produces binding predictions as accurate as the forced true core, the scanner is working. If a random core is almost as good, the scanner is not contributing.
+### Full forward pass
 
-### Per-allele core length distribution
+```
+# === BINDING ===
 
-For each class II allele, histogram the predicted core lengths across all peptides. Compare to known preferences:
-- HLA-DR alleles: predominantly 9-mer cores
-- HLA-DQ alleles: some prefer 9-mers, some tolerate 10-mers
-- HLA-DP alleles: 9-mer cores
+# Step 1: Core binding (class-agnostic, trained on class I first)
+for each candidate 9-mer window in peptide:
+    core_score[i] = core_binding_model(core_9mer[i], groove_1, groove_2)
 
-If the model predicts the right length distribution per allele, it has learned allele-specific groove geometry.
+# Step 2: PFR modulation (class II only)
+if class_II:
+    for each candidate window:
+        pfr_adj[i] = class2_pfr_module(n_pfr[i], c_pfr[i], core_score[i], groove_summary)
+        binding_score[i] = core_score[i] + pfr_adj[i]
+else:
+    binding_score = core_score  # class I: no PFR binding adjustment
 
-## Architectural considerations
+# Step 3: Core selection
+posterior = softmax(binding_scores / temperature)
+selected_binding = Σ posterior[i] × binding_score[i]
 
-### Core window enumeration for long peptides
+# === PROCESSING (independent of core selection) ===
 
-A 25-mer peptide with core_lengths=(8,9,10,11) generates:
-- Length 8: 18 candidates
-- Length 9: 17 candidates
-- Length 10: 16 candidates
-- Length 11: 15 candidates
-- Total: 66 candidates
+# Step 4: Processing score from source protein flanking context
+processing_score = processing_module(n_flank, c_flank, class_probs)
 
-This is 3x more than a typical class I peptide. The softmax over 66 candidates requires:
-- 66 forward passes through the scoring MLP (can be batched)
-- 66 interaction vectors from the cross-attention mechanism
+# === DOWNSTREAM ===
 
-**Memory concern**: Each candidate's cross-attention context includes core tokens + groove tokens + dependency latents. For 66 candidates at d_model=128, this is manageable (~33K floats per sample).
+# Step 5: Presentation = f(binding, processing)
+presentation_logit = presentation_bottleneck(selected_binding, processing_score)
 
-**Compute concern**: The dominant cost is the cross-attention in `_binding_latent_query()`. With 66 candidates, this is 66 attention operations per sample. At batch_size=256, that's ~17K attention operations per batch. This is ~3-6x more compute than class I batches.
+# Step 6: Immunogenicity = f(presentation, peptide features)
+immunogenicity = recognition_head(presentation_logit, peptide_features)
+```
 
-**Mitigation options**:
-1. **Pre-filter candidates**: Before full scoring, use a cheap filter (e.g., check if P1 is hydrophobic for DR alleles) to prune obviously wrong candidates. Reduces 66 → ~20 candidates.
-2. **Shared KV cache**: The MHC groove tokens and dependency latents are the same across all candidates for a given sample. Cache them and only recompute the peptide-core portion of the KV.
-3. **Smaller batch size for class II**: If memory is tight, use a smaller effective batch size for class II samples. Mixed batches (class I + class II) can use different per-sample candidate counts.
+## Relationship to existing Presto code
 
-### Gradient flow through core selection
+### What stays the same
 
-The soft marginalization `interaction_vec = Σ posterior[i] × candidate_vec[i]` is fully differentiable. Gradients flow through:
-- The marginalized interaction_vec (directly)
-- The posterior weights (via softmax → scoring MLP → core candidate features)
+| Component | Current code | Change needed |
+|-----------|-------------|---------------|
+| Token embeddings | vocab.py | None |
+| Stream encoder | presto.py transformer layers | None |
+| Core enumeration | presto.py:1590-1628 | None (already handles any length) |
+| Groove vector cross-attention | presto.py:1533-1569 | None |
+| Soft marginalization | presto.py:1760-1783 | None |
+| Class conditioning | presto_modules.py:431-443 | None |
+| BindingModule kinetics | pmhc.py:385-437 | None |
+| DAG assay heads | heads.py | None |
 
-This means the binding affinity loss automatically teaches core selection: if the model picks the wrong core, the interaction_vec will be wrong, the binding prediction will be wrong, and the loss gradient will push the posterior toward the correct core.
+### What changes
 
-**Potential issue**: Posterior collapse. If one candidate dominates early in training (posterior ≈ 1.0 for one candidate, ≈ 0.0 for others), gradients to the non-selected candidates vanish. This could prevent the model from exploring alternative core positions.
+| Component | Current behavior | New behavior |
+|-----------|-----------------|-------------|
+| Core scoring cross-attention | Cross-attends core tokens + PFR tokens + groove tokens together | Split: core-only cross-attention (no PFRs) for binding score |
+| PFR handling | PFRs fused into core candidate vector before scoring | Separate PFR module, class II only, additive adjustment |
+| Core window scorer | Single MLP scoring fused (core + PFR) vector | Core scorer scores core-only vector; PFR scorer is separate |
+| Processing latent | Cross-attends to peptide + flanks + dependencies | Cross-attends to flanks only (peptide features come through binding/presentation pathway) |
 
-**Mitigation**:
-- **Temperature annealing**: Start with a high softmax temperature (τ=2.0, uniform-ish posterior), anneal to τ=1.0 over training. This encourages exploration early on. Similar to the temperature schedule in Gumbel-softmax training (Jang et al., 2017).
-- **Entropy regularization**: Add a small bonus for posterior entropy: `L_entropy = -λ × H(posterior)`. Prevents premature collapse. λ should be small (0.01-0.1) to not prevent convergence.
-- **Label smoothing on core supervision**: When using gold-standard core labels (stage 4b), use label-smoothed cross-entropy rather than hard cross-entropy. Distribute 10% of probability mass across non-target cores.
+### Specific code changes needed
 
-### PFR (peptide flanking region) handling
+**1. Split `_binding_latent_query()` (presto.py:1590-1783)**
 
-The current implementation extracts N-terminal and C-terminal peptide flanking regions for each core candidate. For class II, these PFRs are the residues extending beyond the groove:
+Currently this method:
+- Extracts core tokens + PFR tokens for each candidate
+- Fuses them into a single candidate_vec
+- Cross-attends everything with groove
+- Scores the fused vector
 
-- 15-mer with core at position 3-11: N-PFR = residues 0-2, C-PFR = residues 12-14
-- 15-mer with core at position 0-8: N-PFR = empty, C-PFR = residues 9-14
+Refactor into:
 
-The PFR representation is fused with the core interaction vector before scoring. This means the model can learn that certain PFR compositions favor or disfavor presentation (e.g., long PFRs may sterically hinder loading).
+```python
+def _core_binding_score(self, core_tokens, groove_tokens, groove_vec):
+    """Class-agnostic core-groove compatibility. No PFRs."""
+    # Cross-attend core tokens with groove
+    core_vec = self.core_cross_attention(
+        query=self.binding_query,
+        key_value=cat(core_tokens, groove_tokens, groove_vec),
+    )
+    return self.core_scorer(core_vec)  # scalar
 
-**Important for class II**: PFRs are NOT in contact with the groove — they extend beyond the open ends. But they DO influence:
-- Binding kinetics (long PFRs increase on-rate via "flapping" dynamics)
-- DM-mediated editing (CLIP peptide displacement depends on PFR length/composition)
-- Processing (flanking residues determine protease cleavage sites)
+def _class2_pfr_adjustment(self, n_pfr, c_pfr, core_score, groove_summary):
+    """Class II PFR binding modulation."""
+    pfr_repr = self.pfr_encoder(cat(n_pfr, c_pfr))
+    return self.pfr_scorer(cat(pfr_repr, core_score, groove_summary))  # scalar
 
-The current PFR fusion (concatenation + projection) is adequate. No class II-specific changes needed.
+def _select_binding_core(self, peptide_h, groove_h, groove_vec, class_probs):
+    """Enumerate, score, and marginalize over candidate cores."""
+    candidates = self._enumerate_cores(peptide_h)
 
-## Implementation timeline
+    scores = []
+    for start, length in candidates:
+        core_tokens = peptide_h[:, start:start+length]
+        core_score = self._core_binding_score(core_tokens, groove_h, groove_vec)
 
-### Already done (no code changes needed):
-- Core enumeration for any peptide length ✓
-- Soft marginalization over candidates ✓
-- Class-specific scoring MLPs ✓
-- Two-chain (α+β) groove input for class II ✓
-- Class-conditional binding calibration ✓
+        if class_probs[:, 1] > 0.5:  # class II
+            n_pfr = peptide_h[:, :start]
+            c_pfr = peptide_h[:, start+length:]
+            pfr_adj = self._class2_pfr_adjustment(n_pfr, c_pfr, core_score, groove_vec)
+            score = core_score + pfr_adj
+        else:
+            score = core_score
 
-### Needed for stage 4a (class II introduction):
-1. **Data pipeline**: Add class II affinity data to training. Requires:
-   - Remove `--train-mhc-class-filter I` from training command
-   - Verify class II groove parsing works for all alleles in mhcseqs
-   - Confirm class II peptide length distribution (12-20mers) is correctly handled by collation/padding
+        scores.append(score)
 
-2. **Core scorer initialization**: Copy class1 scorer weights to class2 scorer at the start of stage 4a:
-   ```python
-   model.core_window_score_class2.load_state_dict(
-       model.core_window_score_class1.state_dict()
-   )
-   ```
+    posterior = softmax(stack(scores) / self.temperature)
+    return (posterior * stack(candidate_vecs)).sum(dim=0)
+```
 
-3. **Temperature schedule**: Add softmax temperature parameter to core scoring:
-   ```python
-   posterior = F.softmax(logits / temperature, dim=-1)
-   ```
-   Start at τ=2.0, anneal to τ=1.0 over first 5 epochs of stage 4a.
+**2. Separate processing from binding (presto.py latent DAG)**
 
-4. **Entropy monitoring**: Log per-sample core posterior entropy as a training metric. No code change to the model, just add to the training loop's metric collection.
+Currently the `processing` latent cross-attends to peptide + flanks. Refactor so it cross-attends to flanks only, with class-conditional internal layers:
 
-### Needed for stage 4b (core refinement):
-1. **Gold-standard core labels**: Load experimentally determined binding cores from IEDB or PDB. Match to training peptides by sequence + allele.
+```python
+def _processing_latent(self, n_flank_h, c_flank_h, class_probs):
+    """Processing score from source protein context. Independent of core selection."""
+    flank_tokens = cat(n_flank_h, c_flank_h)
+    proc_vec = self.processing_cross_attention(
+        query=self.processing_query,
+        key_value=flank_tokens,
+    )
+    # Class-conditional scoring
+    class1_score = self.processing_class1_head(proc_vec)
+    class2_score = self.processing_class2_head(proc_vec)
+    return class_probs[:, 0] * class1_score + class_probs[:, 1] * class2_score
+```
 
-2. **Core supervision loss**: Add auxiliary cross-entropy loss on the core posterior for labeled peptides:
-   ```python
-   if core_label is not None:
-       core_loss = F.cross_entropy(logits, core_label, label_smoothing=0.1)
-       losses.append(core_weight * core_loss)
-   ```
+## Curriculum alignment
 
-3. **Evaluation**: Add core accuracy metrics (exact match, ±1 match) to validation.
+| Stage | Core binding model | Class II PFR module | Processing module |
+|-------|-------------------|--------------------|--------------------|
+| 1 (pretrain) | — | — | — |
+| 2a-c (class I affinity) | **Trains** on class I 9-mers | — (no class II data) | Weak signal from flanks |
+| 3a-b (class I MS) | Continues training | — | **Trains** on elution data (proteasome/TAP) |
+| 4a (class II intro) | **Transfers** to class II core scoring; frozen or slow LR | **Initializes** and trains | Adds class II processing head (cathepsins) |
+| 4b (core refinement) | Gold-standard core supervision | Continues training | Continues |
+| 5a-b (MIL) | Continues | Continues | **Main training signal** for processing |
+| 6a-b (T-cell) | Frozen | Frozen | Continues |
 
-### Nice-to-have (not required for initial class II support):
-- Pre-filtering of candidate cores by anchor residue heuristics
-- KV cache sharing across candidates
-- Adaptive temperature per allele (some alleles have sharper core preferences)
-- Visualization of core posterior as a heatmap over peptide position × core length
+### Why this ordering works
+
+**Stage 2**: The core binding model sees class I 9-mers with minimal PFRs. It can ONLY learn core-groove compatibility — there's nothing else in the input. This is the cleanest possible training signal for pocket preferences.
+
+**Stage 3**: Processing module gets real MS elution signal. It learns that certain flanking residue patterns correlate with successful processing. The core binding model continues to improve on affinity data. These two pathways train independently — no interference.
+
+**Stage 4**: The core binding model is applied to class II peptides for the first time. For each candidate window, it predicts core-groove compatibility using the pocket preferences learned from class I. The PFR module starts from scratch (or initialized from a generic encoder) and learns how PFRs modulate the binding score. The core model should be frozen or at very low LR to prevent class II gradients from overwriting class I pocket preferences.
+
+**Stage 5**: MIL data provides the strongest processing signal. The bag-level loss doesn't directly supervise core selection — it supervises the final presentation output, and gradients flow back through the presentation → binding → core selection chain. The PFR module continues to refine.
+
+## Core binding model: design details
+
+### Architecture
+
+The core binding model should be small and fast (it's called N times per peptide):
+
+```
+core_tokens (9, d_model=128)
+    ↓
+cross-attention with groove_tokens (184, d_model=128) + groove_vec (1, d_model=128)
+    ↓
+binding_query (8 queries, d_model=128) → mean pool → (d_model,)
+    ↓
+MLP: Linear(128, 64) → GELU → Linear(64, 1)
+    ↓
+core_binding_score (scalar)
+```
+
+Parameters: ~50K (cross-attention) + ~9K (MLP) ≈ 59K for the core scorer alone.
+
+### Why 9-mer fixed core length
+
+Both class I and class II use 9-mer binding cores:
+- Class I: 9-mer is the dominant peptide length, and longer peptides (10-11mers) accommodate the extra residue by bulging in the middle rather than extending the core
+- Class II: The groove has 9 pockets (P1-P9), each accommodating one residue. Peptides shorter or longer than 9 still use 9 groove pockets.
+
+For simplicity, fix the core to 9-mers. Class I 8-mers use a "contracted" core (8 residues mapped to 9 pockets with one vacant). Class I 10-11mers have 1-2 residues bulging out (these are effectively very short PFRs even for class I, but they don't leave the groove — they push up between pockets).
+
+This is a simplification. NetMHCIIpan uses 9-mer cores exclusively and it works well. If needed, extend to 8-10mer cores later with core_lengths=(8,9,10).
+
+### Caching for efficiency
+
+For class II scanning, the groove representation is the same for all candidate windows (same allele). Cache it:
+
+```python
+# Compute once per sample
+groove_context = self.groove_cross_attention(groove_tokens)  # cached
+
+# Score each candidate core (only core tokens change)
+for window in candidates:
+    score = self._core_binding_score(window.core_tokens, groove_context)  # reuse cache
+```
+
+This avoids recomputing the groove representation 17 times for a 25-mer.
+
+## Class II PFR module: design details
+
+### Architecture
+
+```
+n_pfr_tokens (0-10, d_model=128) → mean pool → (d_model,) or zero if empty
+c_pfr_tokens (0-10, d_model=128) → mean pool → (d_model,) or zero if empty
+core_binding_score (1,)
+groove_summary (d_model,) from groove_vec
+
+cat(n_pfr_pool, c_pfr_pool, core_score, groove_summary) → (2*d_model + 1 + d_model,)
+    ↓
+MLP: Linear(3*128+1, 128) → GELU → Linear(128, 1)
+    ↓
+pfr_binding_adjustment (scalar)
+```
+
+Parameters: ~50K.
+
+### PFR-specific features to consider
+
+Beyond raw token representations, the PFR module could benefit from:
+- **PFR length features**: N-PFR length and C-PFR length as explicit scalars (DM editing is length-dependent)
+- **Charge/hydrophobicity summary**: Aggregate properties of PFR residues (affects flapping dynamics)
+- **P1 residue identity**: The residue at P1 (first core position) is the primary class II anchor. Its identity together with N-PFR length determines DM sensitivity.
+
+These can be added as auxiliary features concatenated to the MLP input without changing the architecture.
+
+### When PFRs are empty
+
+Class I peptides have 0-2 residue PFRs. When the PFR is empty (0 residues), the mean-pooled representation is a zero vector, and the pfr_binding_adjustment should be zero. Initialize the MLP bias to zero so the default adjustment is zero — the model must learn to deviate from "no PFR effect" rather than learning to predict "no effect" from scratch.
+
+For class I, the PFR module is never called (gated by class_probs), so empty PFRs are never an issue.
+
+## Processing module: design details
+
+### Shared flanking encoder, class-specific heads
+
+```
+n_flank_tokens (0-15, d_model=128) → transformer layer → mean pool → (d_model,)
+c_flank_tokens (0-15, d_model=128) → transformer layer → mean pool → (d_model,)
+
+flank_vec = cat(n_flank_pool, c_flank_pool, peptide_length_feature)
+    ↓
+Shared: Linear(2*128+1, 128) → GELU
+    ↓
+Branch:
+    class1_head: Linear(128, 1)  → processing_score_I    (proteasome/TAP)
+    class2_head: Linear(128, 1)  → processing_score_II   (cathepsin/endosomal)
+
+processing_score = class_probs[:, 0] * score_I + class_probs[:, 1] * score_II
+```
+
+### What each head learns
+
+**Class I processing head** (stages 3-5):
+- C-terminal cleavage motifs (proteasome prefers hydrophobic/basic residues at P1')
+- N-terminal trimming (ERAP1/2 aminopeptidase preferences)
+- TAP transport (prefers peptides with hydrophobic C-terminus, 8-12mers)
+- Length dependence (8-11mers are transportable; shorter are trimmed, longer are excluded)
+
+**Class II processing head** (stages 4-5):
+- Cathepsin cleavage sites (less sequence-specific, more accessibility-dependent)
+- Invariant chain (Ii) context (CLIP occupancy and exchange kinetics)
+- Endosomal pH effects (some cathepsins are pH-dependent)
+- DM-mediated editing (separate from PFR effects — this is about whether the peptide reaches the DM editing compartment)
+
+### Processing is independent of core selection
+
+A critical design point: the processing module takes flanks from the SOURCE PROTEIN, not PFRs from the presented peptide. Processing determines whether the peptide is generated in the first place — it happens BEFORE the peptide binds MHC. The core selection determines which 9-mer window is the binding core within the already-generated peptide.
+
+Timeline:
+1. Source protein is degraded (processing) → peptide fragment is generated
+2. Peptide fragment encounters MHC groove → core binds, PFRs protrude (binding)
+3. DM tests stability → PFRs modulate DM sensitivity (class II PFR effects)
+4. Stable pMHC reaches cell surface (presentation)
+
+Processing (step 1) doesn't know or care about core position (step 2). The model should reflect this by keeping the pathways separate.
+
+## Evaluation metrics
+
+### Core binding model evaluation
+
+| Metric | Description | Target |
+|--------|-------------|--------|
+| Class I Spearman | Correlation with measured IC50/Kd for class I | >0.77 (match current F1) |
+| Core accuracy (class II) | Argmax core matches known binding core | >70% exact, >90% ±1 |
+| Core entropy | Posterior entropy averaged across peptides | Low for class I, moderate for class II |
+| Pocket preference recovery | Per-allele P2/P9 anchor preferences match known motifs | Qualitative check |
+
+### PFR module evaluation
+
+| Metric | Description | Target |
+|--------|-------------|--------|
+| Class II Spearman lift | Class II Spearman WITH PFR module minus WITHOUT | >0 (PFRs help) |
+| DM sensitivity correlation | PFR adjustment correlates with experimental DM sensitivity | Positive correlation |
+| PFR ablation | Set PFRs to zero → binding score changes? | Should change for class II, not class I |
+
+### Processing module evaluation
+
+| Metric | Description | Target |
+|--------|-------------|--------|
+| MS AUPRC | Presentation prediction on held-out mono-allelic MS | >0.7 |
+| Flank ablation | Scramble flanks → processing score changes? | Should degrade |
+| Class-specific motifs | Class I C-flank motifs match known proteasomal preferences | Qualitative check |
 
 ## Risk assessment
 
 | Risk | Likelihood | Impact | Mitigation |
 |------|-----------|--------|------------|
-| Class II gradients damage class I binding | Medium | High | Freeze class I scorer, only train class II scorer. Monitor class I metrics with decision gate. |
-| Posterior collapse (one core dominates) | Medium | Medium | Temperature annealing + entropy regularization |
-| Insufficient class II data for scorer | Low | Medium | Class I transfer provides strong initialization. Even small class II datasets (~10K measurements) should be enough to adapt the scorer. |
-| Memory issues with long peptides (>20-mer) | Low | Low | Max peptide length is 25 in our data. 66 candidates at d=128 is ~33K floats — small relative to batch. |
-| Class II groove parsing failures | Low | Medium | mhcseqs provides precomputed grooves for most class II alleles. Fallback groove parsing has been validated. |
-| Core length mismatch (class II vs I) | Medium | Low | Both classes use binding_core_lengths=(8,9,10,11). Class II overwhelmingly prefers 9-mers, which is already the dominant class I core length. |
+| Core binding model loses capacity by removing PFRs | Low | Medium | Class I data has minimal PFRs anyway; removing them shouldn't change class I performance |
+| PFR module overfits on small class II dataset | Medium | Medium | Simple MLP architecture; regularization; PFR adjustment clamped to [-1, 1] log10 units |
+| Processing module interferes with binding through shared encoder | Medium | High | Consider separate encoder for flanks vs peptide/groove; or freeze trunk during processing training |
+| Class-conditional routing is non-differentiable | Low | Low | Use soft class_probs weighting, not hard if/else; works for mixed/uncertain class |
+| 9-mer fixed core is too rigid | Low | Low | Start with 9-mer; extend to (8,9,10) if class II Spearman is poor |
+
+## Implementation timeline
+
+### Phase 1: Refactor core scoring (before stage 4)
+
+1. Split `_binding_latent_query()` into `_core_binding_score()` + `_select_binding_core()`
+2. Remove PFR tokens from core cross-attention
+3. Verify class I metrics are unchanged (the refactor should be behavior-preserving for class I since PFRs are minimal)
+4. Add groove context caching
+
+### Phase 2: Add PFR module (stage 4a)
+
+1. Implement `Class2PFRModule` as a new `nn.Module`
+2. Wire it into `_select_binding_core()`, gated by class_probs
+3. Initialize with zero bias (default: no PFR effect)
+4. Train on class II affinity + MS data
+
+### Phase 3: Refactor processing (stage 3a)
+
+1. Modify processing latent to cross-attend flanks only (no peptide tokens)
+2. Add class-specific processing heads
+3. Verify class I processing metrics are unchanged
+
+### Phase 4: Gold-standard core supervision (stage 4b)
+
+1. Load IEDB/PDB binding core annotations
+2. Add auxiliary cross-entropy on core posterior for labeled peptides
+3. Monitor core accuracy during training
 
 ## References
 
-- Reynisson, B. et al. (2020). NetMHCpan-4.1 / NetMHCIIpan-4.0. Covers class II binding core prediction approach.
-- Jensen, K. K. et al. (2018). Improved Methods for Predicting Peptide Binding Affinity to MHC Class II Molecules. Describes the core enumeration and best-core selection approach used in NetMHCIIpan.
-- Jang, E. et al. (2017). Categorical Reparameterization with Gumbel-Softmax. Temperature-controlled discrete variable sampling.
-- Liu, L. et al. (2016). Agreement on Target-Bidirectional Neural Machine Translation. Attention supervision concept.
-- Stern, L. J. et al. (1994). Crystal Structure of the Human Class II MHC Protein HLA-DR1. Defines the class II groove structure and peptide binding geometry.
+- Jensen, K. K. et al. (2018). Improved methods for predicting peptide binding affinity to MHC class II molecules. Immunology. — Core scanning approach in NetMHCIIpan.
+- Stern, L. J. et al. (1994). Crystal structure of the human class II MHC protein HLA-DR1. — Defines class II groove geometry, 9-pocket binding, PFR protrusion.
+- Pos, W. et al. (2012). Crystal structure of the HLA-DM–HLA-DR1 complex defines mechanisms for rapid peptide selection. — DM editing mechanism, PFR sensitivity.
+- Trolle, T. et al. (2016). The length distribution of class I-restricted T cell epitopes is determined by both peptide supply and MHC allele-specific binding preference. — Class I processing/length preferences.
+- Roche, P. A. & Furuta, K. (2015). The ins and outs of MHC class II-mediated antigen processing and presentation. — Class II antigen processing pathway.
+- O'Donnell, T. J. et al. (2020). MHCflurry 2.0. — Separation of binding and processing components.
