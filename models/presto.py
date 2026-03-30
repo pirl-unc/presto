@@ -505,6 +505,20 @@ class Presto(nn.Module):
             nn.GELU(),
             nn.Linear(d_model, 1),
         )
+        # Class II PFR binding modulation — adjusts core window scores based
+        # on the peptide flanking regions that protrude from the open class II
+        # groove.  Gated by class_probs so the adjustment is zero for class I.
+        # Input: [npfr_repr, cpfr_repr, npfr_len_embed, cpfr_len_embed, core_score]
+        pfr_input_dim = 2 * d_model + 2 * self.pfr_length_dim + 1
+        self.class2_pfr_score = nn.Sequential(
+            nn.Linear(pfr_input_dim, d_model),
+            nn.GELU(),
+            nn.Linear(d_model, 1),
+        )
+        # Initialize final layer to zero so PFR adjustment defaults to zero
+        nn.init.zeros_(self.class2_pfr_score[-1].weight)
+        nn.init.zeros_(self.class2_pfr_score[-1].bias)
+
         self.core_window_prior = nn.Sequential(
             nn.Linear(5, d_model // 2),
             nn.GELU(),
@@ -1747,6 +1761,27 @@ class Presto(nn.Module):
         else:
             core_window_score_logit = self.core_window_score(core_only_vec).squeeze(-1)
 
+        # --- Class II PFR binding adjustment ---
+        # PFRs protrude from the open class II groove and modulate binding
+        # kinetics / DM editing.  No class I analog (sealed groove).
+        # Gated by class II probability so the adjustment is zero for class I.
+        class2_weight = class_probs[:, 1:2].expand(-1, max_candidates)
+        if class2_weight.sum() > 0:
+            pfr_score_input = torch.cat(
+                [
+                    npfr_repr.reshape(batch_size * max_candidates, -1),
+                    cpfr_repr.reshape(batch_size * max_candidates, -1),
+                    npfr_len_embed.reshape(batch_size * max_candidates, -1),
+                    cpfr_len_embed.reshape(batch_size * max_candidates, -1),
+                    core_window_score_logit.reshape(batch_size * max_candidates, 1),
+                ],
+                dim=-1,
+            )
+            pfr_adjustment = self.class2_pfr_score(pfr_score_input).reshape(
+                batch_size, max_candidates
+            )
+            core_window_score_logit = core_window_score_logit + class2_weight * pfr_adjustment
+
         # --- Fuse PFR context into candidate_vec for marginalized output ---
         candidate_vec = self.core_window_vec_norm(
             self.core_window_fuse(
@@ -1797,7 +1832,9 @@ class Presto(nn.Module):
         batch_idx = torch.arange(batch_size, device=h.device).unsqueeze(1).expand_as(starts)
         valid_batch_idx = batch_idx[candidate_mask]
         valid_starts = starts[candidate_mask]
-        core_start_logit[valid_batch_idx, valid_starts] = core_window_logit[candidate_mask]
+        core_start_logit[valid_batch_idx, valid_starts] = core_window_logit[candidate_mask].to(
+            dtype=core_start_logit.dtype
+        )
         core_start_prob[valid_batch_idx, valid_starts] = core_window_posterior[candidate_mask]
         core_start_logit = core_start_logit.masked_fill(~pep_valid, -1e4)
 
