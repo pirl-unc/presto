@@ -1718,19 +1718,13 @@ class Presto(nn.Module):
             attn_mask=None,
         )
 
-        candidate_vec = self.core_window_vec_norm(
-            self.core_window_fuse(
-                torch.cat(
-                    [
-                        candidate_interaction_flat,
-                        npfr_repr.reshape(batch_size * max_candidates, -1),
-                        npfr_len_embed.reshape(batch_size * max_candidates, -1),
-                        cpfr_repr.reshape(batch_size * max_candidates, -1),
-                        cpfr_len_embed.reshape(batch_size * max_candidates, -1),
-                    ],
-                    dim=-1,
-                )
-            )
+        # --- Core scoring uses core-only interaction (no PFR context) ---
+        # This ensures the core selector picks windows based purely on
+        # core-groove pocket chemistry, not PFR composition.  PFR context
+        # is fused into candidate_vec AFTER scoring so the downstream
+        # binding module still sees flanking information.
+        core_only_vec = self.core_window_vec_norm(
+            candidate_interaction_flat
         ).reshape(batch_size, max_candidates, -1)
 
         pep_len_f = pep_len.float().unsqueeze(1).clamp(min=1.0)
@@ -1745,13 +1739,29 @@ class Presto(nn.Module):
         )
         core_window_prior_logit = self.core_window_prior(prior_features).squeeze(-1)
         if self.core_refinement_mode == "class_specific":
-            class1_score = self.core_window_score_class1(candidate_vec).squeeze(-1)
-            class2_score = self.core_window_score_class2(candidate_vec).squeeze(-1)
+            class1_score = self.core_window_score_class1(core_only_vec).squeeze(-1)
+            class2_score = self.core_window_score_class2(core_only_vec).squeeze(-1)
             class1_weight = class_probs[:, :1].expand(-1, max_candidates)
             class2_weight = class_probs[:, 1:2].expand(-1, max_candidates)
             core_window_score_logit = class1_weight * class1_score + class2_weight * class2_score
         else:
-            core_window_score_logit = self.core_window_score(candidate_vec).squeeze(-1)
+            core_window_score_logit = self.core_window_score(core_only_vec).squeeze(-1)
+
+        # --- Fuse PFR context into candidate_vec for marginalized output ---
+        candidate_vec = self.core_window_vec_norm(
+            self.core_window_fuse(
+                torch.cat(
+                    [
+                        candidate_interaction_flat,
+                        npfr_repr.reshape(batch_size * max_candidates, -1),
+                        npfr_len_embed.reshape(batch_size * max_candidates, -1),
+                        cpfr_repr.reshape(batch_size * max_candidates, -1),
+                        cpfr_len_embed.reshape(batch_size * max_candidates, -1),
+                    ],
+                    dim=-1,
+                )
+            )
+        ).reshape(batch_size, max_candidates, -1)
         core_window_logit = core_window_score_logit + core_window_prior_logit
         core_window_prior_logit = core_window_prior_logit.masked_fill(~candidate_mask, -1e4)
         core_window_score_logit = core_window_score_logit.masked_fill(~candidate_mask, -1e4)
