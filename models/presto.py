@@ -174,12 +174,11 @@ class Presto(nn.Module):
     ]
 
     # Per design S7.5: segment access table
-    # Processing sees flanks only (not the full peptide sequence).
-    # Peptide terminal residues are injected as extra tokens for
-    # TAP/ERAP/cleavage-site information without exposing the full
-    # peptide interior.
+    # Processing sees peptide + flanks.  Peptide length and terminal
+    # residues are additionally injected as explicit extra tokens so
+    # TAP/ERAP features are available even when flanks are short.
     LATENT_SEGMENTS = {
-        "processing": ["nflank", "cflank"],
+        "processing": ["nflank", "peptide", "cflank"],
         "ms_detectability": ["peptide"],
         "species_of_origin": ["peptide"],  # peptide-only cross-attention
         "pmhc_interaction": ["peptide", "mhc_a", "mhc_b"],
@@ -2047,6 +2046,245 @@ class Presto(nn.Module):
             "presentation_prob": torch.sigmoid(mixed_logit),
             "presentation_mixed_prob": torch.sigmoid(mixed_logit),
         }
+
+    # ------------------------------------------------------------------ #
+    #  Core supervision loss (Phase 4 — gold-standard binding core labels)
+    # ------------------------------------------------------------------ #
+
+    @staticmethod
+    def core_supervision_loss(
+        outputs: Dict[str, torch.Tensor],
+        core_start: torch.Tensor,
+        core_length: torch.Tensor,
+        mask: Optional[torch.Tensor] = None,
+        label_smoothing: float = 0.1,
+    ) -> torch.Tensor:
+        """Auxiliary cross-entropy on the core posterior for labeled peptides.
+
+        Args:
+            outputs: Forward pass outputs containing core_window_start,
+                core_window_length, core_window_logit, core_window_mask.
+            core_start: (batch,) known binding core start position per sample.
+            core_length: (batch,) known binding core length per sample.
+            mask: (batch,) bool mask — True for samples with known cores.
+            label_smoothing: Smoothing factor (default 0.1).
+
+        Returns:
+            Scalar loss averaged over labeled samples, or zero if no labels.
+        """
+        logits = outputs["core_window_logit"]          # (batch, n_candidates)
+        starts = outputs["core_window_start"]          # (batch, n_candidates)
+        lengths = outputs["core_window_length"]        # (batch, n_candidates)
+        valid = outputs["core_window_mask"]            # (batch, n_candidates)
+
+        if mask is None:
+            mask = torch.ones(logits.shape[0], dtype=torch.bool, device=logits.device)
+        if mask.sum() == 0:
+            return logits.new_zeros(())
+
+        # Find the candidate index matching the known core
+        target_match = (
+            (starts == core_start.unsqueeze(1))
+            & (lengths == core_length.unsqueeze(1))
+            & valid
+        )  # (batch, n_candidates)
+
+        # For samples where the known core matches exactly one candidate
+        has_match = target_match.any(dim=1) & mask  # (batch,)
+        if has_match.sum() == 0:
+            return logits.new_zeros(())
+
+        # Target index: argmax of the match (first matching candidate)
+        target_idx = target_match[has_match].float().argmax(dim=1)  # (n_labeled,)
+        labeled_logits = logits[has_match]  # (n_labeled, n_candidates)
+        labeled_valid = valid[has_match]    # (n_labeled, n_candidates)
+
+        # Mask invalid candidates with -inf before cross-entropy
+        labeled_logits = labeled_logits.masked_fill(~labeled_valid, -1e4)
+        return F.cross_entropy(
+            labeled_logits,
+            target_idx,
+            label_smoothing=label_smoothing,
+        )
+
+    # ------------------------------------------------------------------ #
+    #  Training stage parameter groups
+    # ------------------------------------------------------------------ #
+
+    # Stage identifiers for the curriculum.  Each stage trains a larger
+    # subgraph while optionally freezing earlier components.
+    STAGE_BINDING_CLASS1 = "binding_class1"
+    STAGE_BINDING_CLASS2 = "binding_class2"
+    STAGE_PROCESSING_CLASS1 = "processing_class1"
+    STAGE_PROCESSING_CLASS2 = "processing_class2"
+    STAGE_PRESENTATION_MIL = "presentation_mil"
+    STAGE_IMMUNOGENICITY = "immunogenicity"
+
+    def curriculum_param_groups(
+        self,
+        stage: str,
+        lr: float = 3e-4,
+        trunk_lr_mult: float = 0.1,
+        frozen_lr: float = 0.0,
+    ) -> List[Dict[str, Any]]:
+        """Return optimizer param groups for a curriculum training stage.
+
+        Each stage trains a progressively larger subgraph:
+
+        - binding_class1:    Trunk encoder + binding core scorer + groove +
+                             BindingModule + assay heads.  Everything else frozen.
+        - binding_class2:    Above + class II PFR module + class II core scorer.
+                             Trunk at reduced LR.
+        - processing_class1: Above + processing latent + class I processing head.
+        - processing_class2: Above + class II processing head.
+        - presentation_mil:  Above + presentation bottleneck + presentation heads.
+        - immunogenicity:    Above + recognition latent + immunogenicity heads.
+
+        Args:
+            stage: One of the STAGE_* constants.
+            lr: Learning rate for actively-trained parameters.
+            trunk_lr_mult: LR multiplier for trunk encoder (default 0.1x).
+            frozen_lr: LR for frozen parameters (default 0, truly frozen).
+
+        Returns:
+            List of param group dicts suitable for torch.optim.
+        """
+        # Classify every parameter into a component
+        component_map = self._parameter_component_map()
+
+        # Define which components are active (trained) at each stage
+        active_components = {
+            self.STAGE_BINDING_CLASS1: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads",
+            },
+            self.STAGE_BINDING_CLASS2: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads", "pfr_class2",
+            },
+            self.STAGE_PROCESSING_CLASS1: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads", "pfr_class2",
+                "processing", "processing_class1",
+            },
+            self.STAGE_PROCESSING_CLASS2: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads", "pfr_class2",
+                "processing", "processing_class1", "processing_class2",
+            },
+            self.STAGE_PRESENTATION_MIL: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads", "pfr_class2",
+                "processing", "processing_class1", "processing_class2",
+                "presentation",
+            },
+            self.STAGE_IMMUNOGENICITY: {
+                "trunk", "groove", "binding_query", "binding_core",
+                "binding_module", "assay_heads", "pfr_class2",
+                "processing", "processing_class1", "processing_class2",
+                "presentation", "recognition", "immunogenicity",
+            },
+        }
+
+        if stage not in active_components:
+            raise ValueError(
+                f"Unknown training stage {stage!r}. "
+                f"Valid: {sorted(active_components)}"
+            )
+
+        active = active_components[stage]
+        # Trunk uses reduced LR; other active components use full LR
+        slow_components = {"trunk"}
+
+        groups: Dict[str, List[torch.nn.Parameter]] = {
+            "active": [],
+            "slow": [],
+            "frozen": [],
+        }
+        for name, param in self.named_parameters():
+            component = component_map.get(name, "other")
+            if component in active:
+                if component in slow_components:
+                    groups["slow"].append(param)
+                else:
+                    groups["active"].append(param)
+            else:
+                groups["frozen"].append(param)
+
+        result = []
+        if groups["active"]:
+            result.append({"params": groups["active"], "lr": lr})
+        if groups["slow"]:
+            result.append({"params": groups["slow"], "lr": lr * trunk_lr_mult})
+        if groups["frozen"]:
+            for p in groups["frozen"]:
+                p.requires_grad_(False)
+            result.append({"params": groups["frozen"], "lr": frozen_lr})
+        return result
+
+    def _parameter_component_map(self) -> Dict[str, str]:
+        """Map each named parameter to its curriculum component."""
+        mapping: Dict[str, str] = {}
+        for name, _ in self.named_parameters():
+            mapping[name] = self._classify_parameter(name)
+        return mapping
+
+    @staticmethod
+    def _classify_parameter(name: str) -> str:
+        """Classify a parameter name into a curriculum component."""
+        # Trunk encoder
+        if any(k in name for k in ["aa_embedding", "segment_embedding", "encoder",
+                                    "pep_nterm_pos", "pep_cterm_pos", "mhc_pos",
+                                    "groove_pos", "species_cond_embed",
+                                    "chain_completeness_embed"]):
+            return "trunk"
+        # Groove cross-attention
+        if "groove" in name and "pos" not in name:
+            return "groove"
+        # Binding query / latent layers for pmhc_interaction
+        if "pmhc_interaction" in name or "binding_query" in name:
+            return "binding_query"
+        # Core window scoring and enumeration
+        if any(k in name for k in ["core_window", "core_position",
+                                    "pfr_length_embed"]):
+            return "binding_core"
+        # Class II PFR module
+        if "class2_pfr" in name:
+            return "pfr_class2"
+        # BindingModule (kinetics)
+        if "binding_module" in name or "affinity_predictor" in name:
+            return "binding_module"
+        # Assay heads
+        if "assay_head" in name:
+            return "assay_heads"
+        # Processing: class-specific projections checked BEFORE general processing
+        if "processing_class1" in name or "class1_processing" in name:
+            return "processing_class1"
+        if "processing_class2" in name or "class2_processing" in name:
+            return "processing_class2"
+        # Processing latent and peptide terminal/length modules
+        if "processing" in name or "processing_pep" in name:
+            return "processing"
+        # Presentation
+        if "presentation" in name:
+            return "presentation"
+        # Recognition / immunogenicity
+        if "recognition" in name or "foreignness" in name:
+            return "recognition"
+        if "immunogenicity" in name or "tcr_evidence" in name:
+            return "immunogenicity"
+        # Latent queries and layers (not binding)
+        if "latent_queries" in name or "latent_layers" in name:
+            # Check which latent
+            for latent_name in ["processing", "ms_detectability",
+                                "species_of_origin", "recognition"]:
+                if latent_name in name:
+                    if latent_name == "processing":
+                        return "processing"
+                    if latent_name == "recognition":
+                        return "recognition"
+                    return "other"
+        return "other"
 
     def forward_mhc_only(
         self,
