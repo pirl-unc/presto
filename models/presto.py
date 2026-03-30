@@ -174,8 +174,12 @@ class Presto(nn.Module):
     ]
 
     # Per design S7.5: segment access table
+    # Processing sees flanks only (not the full peptide sequence).
+    # Peptide terminal residues are injected as extra tokens for
+    # TAP/ERAP/cleavage-site information without exposing the full
+    # peptide interior.
     LATENT_SEGMENTS = {
-        "processing": ["nflank", "peptide", "cflank"],
+        "processing": ["nflank", "cflank"],
         "ms_detectability": ["peptide"],
         "species_of_origin": ["peptide"],  # peptide-only cross-attention
         "pmhc_interaction": ["peptide", "mhc_a", "mhc_b"],
@@ -518,6 +522,13 @@ class Presto(nn.Module):
         # Initialize final layer to zero so PFR adjustment defaults to zero
         nn.init.zeros_(self.class2_pfr_score[-1].weight)
         nn.init.zeros_(self.class2_pfr_score[-1].bias)
+
+        # Processing: peptide terminal residue projection and length embedding.
+        # The processing latent no longer sees the full peptide token sequence,
+        # but it needs peptide boundary info for TAP transport (C-terminal
+        # residue), ERAP trimming (N-terminal residue), and length dependence.
+        self.processing_pep_terminal_proj = nn.Linear(2 * d_model, d_model)
+        self.processing_pep_length_embed = nn.Embedding(51, d_model)  # max peptide length 50
 
         self.core_window_prior = nn.Sequential(
             nn.Linear(5, d_model // 2),
@@ -2270,6 +2281,25 @@ class Presto(nn.Module):
         _gets_apc_context = {"processing", "pmhc_interaction"}
         _gets_groove = {"pmhc_interaction"}
 
+        # Processing extra tokens: peptide terminal residues + length.
+        # These give the processing latent TAP/ERAP/cleavage boundary
+        # information without exposing the full peptide interior.
+        pep_slice = offsets["peptide"]
+        pep_h_proc = h[:, pep_slice, :]
+        pep_valid_proc = seg_masks["peptide"][:, pep_slice]
+        pep_len_proc = pep_valid_proc.sum(dim=1).clamp(min=1)
+        # First and last valid peptide tokens
+        pep_first = pep_h_proc[:, 0, :]  # (batch, d_model)
+        last_idx = (pep_len_proc - 1).clamp(min=0).long()
+        pep_last = pep_h_proc[torch.arange(h.shape[0], device=h.device), last_idx]
+        pep_terminal_token = self.processing_pep_terminal_proj(
+            torch.cat([pep_first, pep_last], dim=-1)
+        ).unsqueeze(1)  # (batch, 1, d_model)
+        pep_length_token = self.processing_pep_length_embed(
+            pep_len_proc.clamp(max=50).long()
+        ).unsqueeze(1)  # (batch, 1, d_model)
+        _processing_extra = [pep_terminal_token, pep_length_token]
+
         # Variant C: pMHC interaction block (enriched representations for pMHC interaction only)
         if self.use_pmhc_interaction_block:
             h_binding = self._run_pmhc_interaction(h, seg_masks, offsets)
@@ -2286,6 +2316,8 @@ class Presto(nn.Module):
                 allowed = allowed | seg_masks[seg_name]
 
             extra_tokens: List[torch.Tensor] = []
+            if name == "processing":
+                extra_tokens.extend(_processing_extra)
             if name in _gets_apc_context:
                 extra_tokens.append(apc_cell_type_context)
             if name in _gets_groove:
