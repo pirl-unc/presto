@@ -41,3 +41,13 @@ package-dir = { "presto" = "." }
 
 [tool.setuptools.dynamic]
 version = {attr = "presto.__version__"}
+
+[tool.ruff.lint]
+select = ["E", "F"]
+ignore = ["F821", "E501", "F841", "E731", "E741", "E722", "E721"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"test*/*" = ["F401"]
+"scripts/**" = ["F821", "F401"]
+"experiments/**" = ["F821", "F401"]
