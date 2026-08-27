@@ -47,7 +47,7 @@ logit P(observed) = excision(peptide, protein, machinery)   # was it produced?
 
 `excision` and `detect` are both functions of peptide sequence, so an MHC-only corpus
 cannot separate them. The non-MHC shotgun branch (§3.9) is what breaks the confound.
-See [`../tasks/protease_detectability_spec.md`](../tasks/protease_detectability_spec.md).
+See `tasks/protease_detectability_spec.md` in the repository.
 
 `excision` is scored by `ExcisionHead` (`models/heads.py`) as
 `s_N + s_C + s_internal + s_len` — the two termini, a missed-cleavage penalty applied

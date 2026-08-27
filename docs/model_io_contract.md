@@ -230,7 +230,7 @@ Testable statements, not aspirations. Those marked ✓ have tests today.
 
 ## 8. Known gaps
 
-Recorded rather than glossed. Each is tracked in `tasks/todo.md`.
+Recorded rather than glossed. Each is tracked in `tasks/todo.md` (repository, outside the docs tree).
 
 1. **Validation is not peptide-disjoint.** `random_split` over rows: 41.7% of validation
    peptides also occur in training, 82.7% for excision rows. Every held-out number the
