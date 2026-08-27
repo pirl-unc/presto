@@ -1940,6 +1940,7 @@ def compute_loss(
             flank_c_tok=batch.flank_c_tok,
             tcell_context=batch.tcell_context if batch.tcell_context else None,
             machinery=getattr(batch, "machinery_idx", None),
+            provenance=getattr(batch, "provenance", None) or None,
             return_binding_attention=return_binding_attention,
         )
         if profile_performance:

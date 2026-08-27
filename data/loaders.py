@@ -237,6 +237,10 @@ class ElutionRecord:
     detected: bool = True           # Was peptide detected?
     flank_n: str = ""               # N-terminal flanking sequence in the source protein
     flank_c: str = ""               # C-terminal flanking sequence in the source protein
+    # Cellular state at the time the peptide was produced. Conditions the
+    # in-vivo termini; see docs/model_io_contract.md Tier 3.
+    inducer: Optional[str] = None
+    apm_perturbation: Optional[str] = None
     cell_type: Optional[str] = None
     tissue: Optional[str] = None
     mhc_class: Optional[str] = None
@@ -1836,6 +1840,8 @@ class PrestoDataset(Dataset):
                 mhc_b="",
                 mhc_class=None,
                 machinery=rec.machinery,
+                peptide_source="protein",
+                enzymatic_digest=rec.machinery,
                 ms_detectability_label=rec.detectability_label,
                 excision_label=rec.excision_label,
                 source_protein=rec.protein_id or None,
@@ -1880,6 +1886,9 @@ class PrestoDataset(Dataset):
                 mhc_a=mhc_a_seq,
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
+                peptide_source="mhc",
+                processing_inducer=getattr(rec, "inducer", None),
+                apm_perturbation=getattr(rec, "apm_perturbation", None),
                 elution_label=1.0 if rec.detected else 0.0,
                 mil_mhc_a_list=mil_mhc_a_list,
                 mil_mhc_b_list=mil_mhc_b_list,

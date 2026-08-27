@@ -1388,6 +1388,9 @@ class ExcisionHead(nn.Module):
         mixture_components: Optional[List[int]] = None,
         max_peptide_len: int = 50,
         pin_profiles: bool = True,
+        n_inducer: int = 1,
+        n_apm: int = 1,
+        protein_source_index: int = 2,
     ):
         super().__init__()
         self.n_machinery = int(n_machinery)
@@ -1471,6 +1474,23 @@ class ExcisionHead(nn.Module):
 
         # Context corrections read the processing latent and emit one scalar
         # per machinery; the sample's machinery selects the column.
+        # ---- in-vivo branch (peptide_source = mhc) ----
+        # Termini set by the cell, conditioned on its state rather than by a
+        # protease. Separate tables per terminus because they are different
+        # processes: the C-terminus is the proteasomal cut, the N-terminus is
+        # ERAP trimming. Keeping them apart is what lets an ERAP1-KO contrast
+        # move the N-terminal preference without touching the C-terminal one.
+        self.n_inducer = int(n_inducer)
+        self.n_apm = int(n_apm)
+        self.protein_source_index = int(protein_source_index)
+        self.invivo_profile_c = nn.Parameter(torch.zeros(self.n_apm, self.n_aa))
+        self.invivo_profile_n = nn.Parameter(torch.zeros(self.n_apm, self.n_aa))
+        # Cytokine state shifts catalytic specificity (immunoproteasome
+        # subunits favour different P1 residues), so the inducer contributes an
+        # additive residual rather than its own table.
+        self.inducer_profile_c = nn.Parameter(torch.zeros(self.n_inducer, self.n_aa))
+        self.invivo_bias = nn.Parameter(torch.zeros(self.n_apm))
+
         self.context_c = nn.Linear(d_model, self.n_machinery)
         self.context_n = nn.Linear(d_model, self.n_machinery)
         self.length_score = nn.Embedding(self.max_peptide_len + 1, self.n_machinery)
@@ -1520,6 +1540,9 @@ class ExcisionHead(nn.Module):
         p1_prime_n_idx: torch.Tensor,
         peptide_len: torch.Tensor,
         peptide_tokens: Optional[torch.Tensor] = None,
+        peptide_source_idx: Optional[torch.Tensor] = None,
+        processing_inducer_idx: Optional[torch.Tensor] = None,
+        apm_perturbation_idx: Optional[torch.Tensor] = None,
     ) -> Dict[str, torch.Tensor]:
         machinery_idx = machinery_idx.long()
         rows = torch.arange(machinery_idx.shape[0], device=machinery_idx.device)
@@ -1547,7 +1570,51 @@ class ExcisionHead(nn.Module):
         s_len = self.length_score(length)[rows, machinery_idx]
         s_internal = self._internal_site_score(peptide_tokens, machinery_idx)
 
-        logit = s_n + s_c + s_len + s_internal + self.bias[machinery_idx]
+        # ------------------------------------------------------------------
+        # Source fork. For a digested protein the enzyme set both termini and
+        # the donor cell's state is irrelevant -- the protein was extracted
+        # intact and denatured before the enzyme touched it. For an MHC ligand
+        # the cell set them, under whatever APM conditions it was in.
+        #
+        # A soft gate rather than a hard branch, so a protocol where both apply
+        # stays expressible instead of being structurally impossible.
+        # ------------------------------------------------------------------
+        if peptide_source_idx is None:
+            is_protein = torch.ones_like(s_c)
+        else:
+            is_protein = (
+                peptide_source_idx.long() == self.protein_source_index
+            ).to(s_c.dtype)
+
+        apm = (
+            apm_perturbation_idx.long()
+            if apm_perturbation_idx is not None
+            else torch.zeros_like(machinery_idx)
+        )
+        inducer = (
+            processing_inducer_idx.long()
+            if processing_inducer_idx is not None
+            else torch.zeros_like(machinery_idx)
+        )
+        invivo_c = (
+            self.invivo_profile_c[apm, p1_c_idx.long()]
+            + self.inducer_profile_c[inducer, p1_c_idx.long()]
+            + context_c
+        )
+        invivo_n = self.invivo_profile_n[apm, p1_n_idx.long()] + context_n
+
+        s_c = is_protein * s_c + (1.0 - is_protein) * invivo_c
+        s_n = is_protein * s_n + (1.0 - is_protein) * invivo_n
+        # Missed cleavages are a digest concept; the proteasome is processive.
+        s_internal = is_protein * s_internal
+        # Length: for a digest it follows from cleavage-site spacing, but for
+        # class I the 8-11mer distribution is the MHC groove and TAP, not the
+        # protease. Attributing that to processing would credit the protease
+        # for MHC selection, so the in-vivo branch contributes no length term.
+        s_len = is_protein * s_len
+
+        bias = is_protein * self.bias[machinery_idx] + (1.0 - is_protein) * self.invivo_bias[apm]
+        logit = s_n + s_c + s_len + s_internal + bias
         return {
             "excision_logit": logit,
             "excision_s_n": s_n,

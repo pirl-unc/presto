@@ -20,7 +20,11 @@ from .vocab import (
     BINDING_ASSAY_TYPE_TO_IDX,
     FOREIGN_CATEGORIES,
     ORGANISM_TO_IDX,
+    apm_perturbation_index,
+    enzymatic_digest_index,
     excision_machinery_index,
+    peptide_source_index,
+    processing_inducer_index,
     TCELL_APC_TYPE_TO_IDX,
     TCELL_ASSAY_METHOD_TO_IDX,
     TCELL_ASSAY_READOUT_TO_IDX,
@@ -173,6 +177,16 @@ class PrestoSample:
     # machinery: which protease or in-vivo pathway cut this peptide out of its
     # source protein. Output-side only -- it indexes the excision readout and
     # never reaches the trunk. See docs/assay_learning_scheme.md.
+    # Tier 2 (provenance): selects which branch computes the termini. Routing
+    # only -- never a feature into a predictor. See docs/model_io_contract.md.
+    peptide_source: Optional[str] = None       # {mhc, protein}
+    enzymatic_digest: Optional[str] = None     # non-none only when source=protein
+    # Tier 3 (cellular state): conditions the in-vivo termini. Meaningful only
+    # when peptide_source == "mhc".
+    processing_inducer: Optional[str] = None   # default basal, not zero
+    apm_perturbation: Optional[str] = None     # grouped by mechanism
+    # Retained as a derived convenience for the pinned in-vitro rules; prefer
+    # the tiered fields above.
     machinery: Optional[str] = None
     ms_detectability_label: Optional[float] = None
     excision_label: Optional[float] = None
@@ -292,6 +306,9 @@ class PrestoBatch:
     # Excision machinery index per row; consumed by the output-side
     # excision head, never by the trunk.
     machinery_idx: Optional[torch.Tensor] = None
+    # Tier 2/3 factors: peptide_source_idx, enzymatic_digest_idx,
+    # processing_inducer_idx, apm_perturbation_idx.
+    provenance: Dict[str, torch.Tensor] = field(default_factory=dict)
     # Legacy T-cell assay metadata. Keep for supervision bookkeeping while the
     # context-conditioned T-cell path is being refactored toward the same
     # outputs-only assay contract.
@@ -393,6 +410,9 @@ class PrestoBatch:
                 name: _move(tensor) for name, tensor in self.target_quals.items()
             },
             machinery_idx=_move(self.machinery_idx),
+            provenance={
+                name: _move(tensor) for name, tensor in self.provenance.items()
+            },
             binding_context={
                 name: _move(tensor) for name, tensor in self.binding_context.items()
             },
@@ -816,6 +836,36 @@ class PrestoCollator:
             readout = "FLUORESCENCE"
 
         return (prep, geometry, readout)
+
+    def _collate_provenance(
+        self, samples: List[PrestoSample]
+    ) -> Dict[str, torch.Tensor]:
+        """Per-row provenance and cellular state.
+
+        Kept separate from `machinery` because sample prep and cellular state
+        are orthogonal factors, not alternatives on one axis. A single axis is
+        perfectly anti-correlated with the corpus, which is why the in-vivo
+        half of the head never received gradient.
+        """
+        source_idx: List[int] = []
+        digest_idx: List[int] = []
+        inducer_idx: List[int] = []
+        apm_idx: List[int] = []
+        for sample in samples:
+            source = sample.peptide_source
+            if not source:
+                # Infer from the presence of a digest or of MHC sequence.
+                source = "protein" if sample.enzymatic_digest else "mhc"
+            source_idx.append(peptide_source_index(source))
+            digest_idx.append(enzymatic_digest_index(sample.enzymatic_digest))
+            inducer_idx.append(processing_inducer_index(sample.processing_inducer))
+            apm_idx.append(apm_perturbation_index(sample.apm_perturbation))
+        return {
+            "peptide_source_idx": torch.tensor(source_idx, dtype=torch.long),
+            "enzymatic_digest_idx": torch.tensor(digest_idx, dtype=torch.long),
+            "processing_inducer_idx": torch.tensor(inducer_idx, dtype=torch.long),
+            "apm_perturbation_idx": torch.tensor(apm_idx, dtype=torch.long),
+        }
 
     def _collate_machinery(self, samples: List[PrestoSample]) -> torch.Tensor:
         """Per-row excision machinery index.
@@ -1377,6 +1427,7 @@ class PrestoCollator:
         # Binding assay metadata is kept for supervision/analysis only.
         binding_context = self._collate_binding_context(samples)
         machinery_idx = self._collate_machinery(samples)
+        provenance = self._collate_provenance(samples)
         targets.update(binding_targets)
         target_masks.update(binding_masks)
         tcr_evidence_targets, tcr_evidence_masks = self._collate_tcr_evidence_targets(samples)
@@ -1658,6 +1709,7 @@ class PrestoCollator:
             target_quals=target_quals,
             binding_context=binding_context,
             machinery_idx=machinery_idx,
+            provenance=provenance,
             tcell_context=tcell_context,
             tcell_context_masks=tcell_context_masks,
             tcell_mil_context=tcell_mil_context,
