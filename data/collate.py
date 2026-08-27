@@ -21,6 +21,7 @@ from .vocab import (
     FOREIGN_CATEGORIES,
     ORGANISM_TO_IDX,
     apm_perturbation_index,
+    default_machinery_for_class,
     enzymatic_digest_index,
     excision_machinery_index,
     peptide_source_index,
@@ -309,6 +310,9 @@ class PrestoBatch:
     # Tier 2/3 factors: peptide_source_idx, enzymatic_digest_idx,
     # processing_inducer_idx, apm_perturbation_idx.
     provenance: Dict[str, torch.Tensor] = field(default_factory=dict)
+    # Per-MIL-instance provenance. Needed because the elution loss runs through
+    # the bag path whenever MIL is active, and that forward is separate.
+    mil_provenance: Dict[str, torch.Tensor] = field(default_factory=dict)
     # Legacy T-cell assay metadata. Keep for supervision bookkeeping while the
     # context-conditioned T-cell path is being refactored toward the same
     # outputs-only assay contract.
@@ -412,6 +416,9 @@ class PrestoBatch:
             machinery_idx=_move(self.machinery_idx),
             provenance={
                 name: _move(tensor) for name, tensor in self.provenance.items()
+            },
+            mil_provenance={
+                name: _move(tensor) for name, tensor in self.mil_provenance.items()
             },
             binding_context={
                 name: _move(tensor) for name, tensor in self.binding_context.items()
@@ -638,6 +645,8 @@ class PrestoCollator:
         instance_to_bag: List[int],
         bag_labels: List[float],
         bag_sample_ids: List[str],
+        apm_perturbations: Optional[List[Optional[str]]] = None,
+        inducers: Optional[List[Optional[str]]] = None,
     ) -> Dict[str, Any]:
         outputs: Dict[str, Any] = {
             "pep_tok": None,
@@ -671,6 +680,30 @@ class PrestoCollator:
         )
         outputs["mhc_class"] = mhc_classes
         outputs["species"] = species
+        # Per-instance cellular state. Without this the MIL forward falls back
+        # to the default condition for every instance, and since the elution
+        # loss runs through the bag path whenever MIL is active, the whole
+        # Tier 3 signal collapses to one embedding row.
+        n_instances = len(peptides)
+        outputs["provenance"] = {
+            "apm_perturbation_idx": torch.tensor(
+                [
+                    apm_perturbation_index((apm_perturbations or [None] * n_instances)[i])
+                    for i in range(n_instances)
+                ],
+                dtype=torch.long,
+            ),
+            "processing_inducer_idx": torch.tensor(
+                [
+                    processing_inducer_index((inducers or [None] * n_instances)[i])
+                    for i in range(n_instances)
+                ],
+                dtype=torch.long,
+            ),
+            "peptide_source_idx": torch.tensor(
+                [peptide_source_index("mhc")] * n_instances, dtype=torch.long
+            ),
+        }
         if any(v for v in flank_ns):
             outputs["flank_n_tok"] = self.tokenizer.batch_encode(
                 flank_ns,
@@ -883,9 +916,9 @@ class PrestoCollator:
             if sample.machinery:
                 indices.append(excision_machinery_index(sample.machinery))
                 continue
-            mhc_class = (sample.mhc_class or "").strip().upper()
-            default = "cathepsin" if mhc_class == "II" else "proteasome"
-            indices.append(excision_machinery_index(default))
+            indices.append(
+                excision_machinery_index(default_machinery_for_class(sample.mhc_class))
+            )
         return torch.tensor(indices, dtype=torch.long)
 
     def _collate_binding_context(
@@ -1527,6 +1560,8 @@ class PrestoCollator:
         mil_species: List[str] = []
         mil_flank_ns: List[str] = []
         mil_flank_cs: List[str] = []
+        mil_apm: List[Optional[str]] = []
+        mil_inducers: List[Optional[str]] = []
         mil_instance_to_bag: List[int] = []
         mil_bag_labels: List[float] = []
         mil_bag_sample_ids: List[str] = []
@@ -1592,6 +1627,8 @@ class PrestoCollator:
                     mil_species.append(species_list[i])
                     mil_flank_ns.append(self._sanitize_optional_sequence(sample.flank_n))
                     mil_flank_cs.append(self._sanitize_optional_sequence(sample.flank_c))
+                    mil_apm.append(sample.apm_perturbation)
+                    mil_inducers.append(sample.processing_inducer)
                     mil_instance_to_bag.append(bag_index)
 
         for sample in samples:
@@ -1642,6 +1679,8 @@ class PrestoCollator:
                 tcell_mil_source_samples.append(sample)
 
         mil_tensors = self._materialize_mil_tensors(
+            apm_perturbations=mil_apm,
+            inducers=mil_inducers,
             peptides=mil_peptides,
             mhc_as=mil_mhc_as,
             mhc_bs=mil_mhc_bs,
@@ -1727,6 +1766,7 @@ class PrestoCollator:
             mil_instance_to_bag=mil_tensors["instance_to_bag"],
             mil_bag_label=mil_tensors["bag_label"],
             mil_bag_sample_ids=mil_tensors["bag_sample_ids"],
+            mil_provenance=mil_tensors.get("provenance", {}),
             tcell_mil_pep_tok=tcell_mil_tensors["pep_tok"],
             tcell_mil_mhc_a_tok=tcell_mil_tensors["mhc_a_tok"],
             tcell_mil_mhc_b_tok=tcell_mil_tensors["mhc_b_tok"],

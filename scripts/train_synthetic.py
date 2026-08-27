@@ -1277,6 +1277,7 @@ def _get_mil_channel(
         "instance_to_bag": getattr(batch, f"{prefix}_instance_to_bag", None),
         "bag_label": getattr(batch, f"{prefix}_bag_label", None),
         "bag_sample_ids": getattr(batch, f"{prefix}_bag_sample_ids", []),
+        "provenance": getattr(batch, f"{prefix}_provenance", None),
     }
     required = (
         channel["pep_tok"],
@@ -1471,6 +1472,7 @@ def _run_mil_forward(
     channel: Dict[str, Any],
     device: str,
     tcell_context: Optional[Dict[str, torch.Tensor]] = None,
+    provenance: Optional[Dict[str, torch.Tensor]] = None,
 ) -> Dict[str, Any]:
     return model(
         pep_tok=channel["pep_tok"].to(device),
@@ -1489,6 +1491,11 @@ def _run_mil_forward(
             else None
         ),
         tcell_context=tcell_context,
+        provenance=(
+            {name: value.to(device) for name, value in provenance.items()}
+            if provenance
+            else None
+        ),
     )
 
 
@@ -1536,6 +1543,7 @@ def _compute_mil_channel_losses(
         channel=channel,
         device=device,
         tcell_context=tcell_context,
+        provenance=channel.get("provenance"),
     )
     instance_to_bag = channel["instance_to_bag"].to(device=device, dtype=torch.long)
     n_bags = int(bag_label.shape[0])

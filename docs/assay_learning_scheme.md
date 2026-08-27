@@ -50,7 +50,7 @@ cannot separate them. The non-MHC shotgun branch (§3.9) is what breaks the conf
 See `tasks/protease_detectability_spec.md` in the repository.
 
 `excision` is scored by `ExcisionHead` (`models/heads.py`) as
-`s_N + s_C + s_internal + s_len` — the two termini, a missed-cleavage penalty applied
+`n_terminus_score + c_terminus_score + missed_cleavage_score + length_score_value` — the two termini, a missed-cleavage penalty applied
 only to machinery with a hard rule, and a length term — where the machinery
 **indexes the readout** and never conditions
 the trunk. In-vitro protease profiles are pinned to their exact P1 rules by default, which makes
@@ -194,7 +194,7 @@ it can never be confused with immunopeptidomics.
 | Label | Graded: `n_fractions_in_run` ladder (12/14/39/46/50/70) and `n_replicates_detected` (1/2/3), both 100% populated |
 | Negatives | Excision negatives are real (mismatched-enzyme relabeling); detectability negatives need the in-silico digest (hitlist#361) |
 | Record | `BulkMSRecord` (`data/bulk_ms.py`) |
-| Heads | `ms_detectability_logit`, `excision_logit` (+ `excision_s_n` / `excision_s_c` / `excision_s_len`) |
+| Heads | `ms_detectability_logit`, `excision_logit` (+ `excision_n_terminus_score` / `excision_c_terminus_score` / `excision_length_score`) |
 | Losses | `ms_detectability` (`bce`, soft targets, weight 0.5), `excision` (`bce`, weight 1.0) |
 
 Four proteases with machine-readable cleavage rules, all on one cell line, one

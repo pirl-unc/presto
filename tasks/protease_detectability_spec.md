@@ -70,16 +70,16 @@ Do **not** one-hot the enzyme. Represent every machinery `M` in one space — a 
 residue-preference vector, a P1' block, and a length/processivity term:
 
 ```
-excision(peptide, protein, M) = s_N(N-junction ctx, M)      # N-terminal junction
-                                + s_C(C-junction ctx, M)      # C-terminal junction
-                                + s_internal(peptide, M)      # missed-cleavage penalty
-                                + s_len(len, M)
+excision(peptide, protein, M) = n_terminus_score(N-junction ctx, M)      # N-terminal junction
+                                + c_terminus_score(C-junction ctx, M)      # C-terminal junction
+                                + missed_cleavage_score(peptide, M)      # missed-cleavage penalty
+                                + length_score_value(len, M)
 ```
 
-**Which steps the score covers.** `s_C` is endoproteolytic cleavage in both branches.
-`s_N` is cleavage for an in-vitro protease but ERAP *trimming* in vivo — both are
+**Which steps the score covers.** `c_terminus_score` is endoproteolytic cleavage in both branches.
+`n_terminus_score` is cleavage for an in-vitro protease but ERAP *trimming* in vivo — both are
 peptide-bond hydrolysis, so they share a head, but they are not the same process.
-`s_internal` is the missed-cleavage constraint: a peptide can match an enzyme's rule at
+`missed_cleavage_score` is the missed-cleavage constraint: a peptide can match an enzyme's rule at
 both ends and still be an implausible product if it carries internal sites the enzyme
 would also have cut (59.4% of observed tryptic peptides carry zero internal K/R, 29.7%
 one, 8.6% two). It applies only to machinery with a hard rule — the proteasome is
@@ -89,11 +89,11 @@ residues would be wrong biology.
 **Explicitly out of scope**, and belonging to downstream latents instead: TAP transport,
 MHC binding, surface display.
 
-**A known conflation.** `s_len` means different things per branch. For an in-vitro
+**A known conflation.** `length_score_value` means different things per branch. For an in-vitro
 digest, length is a property of cleavage-site spacing. For class I, the 8-11mer
 distribution is set mostly by the MHC groove and TAP, not by the proteasome — so the
 in-vivo length term risks attributing MHC selection to the protease. Consider dropping
-`s_len` for in-vivo machinery once the length preference is carried by the presentation
+`length_score_value` for in-vivo machinery once the length preference is carried by the presentation
 path.
 
 In-vitro enzymes are pinned (or strongly regularized) to their known profiles from
@@ -118,7 +118,7 @@ C-termini, so this is chemistry transfer, not just a control. Two properties fol
   readout. What is learnable either way: the proteasome mixture weights, the
   per-machinery context corrections, and the whole N-terminal table.
 - **Both termini get supervised.** For an in-vitro protease both termini follow one
-  rule, so the four-enzyme panel supervises `s_C`. For class I the C-term is
+  rule, so the four-enzyme panel supervises `c_terminus_score`. For class I the C-term is
   proteasome-determined but the N-term is ERAP-trimmed — a different process,
   supervised by the ERAP1/ERAP2 KO panels (section 5). Today neither terminus is
   identifiable.
@@ -156,8 +156,8 @@ descriptors may parameterize output heads") and the same shape as the existing
 factorized assay embeddings in `AssayHeads` (`models/heads.py:824-899`):
 
 ```
-s_C(peptide, protein, M) = head_M(processing_vec)      # M indexes the readout
-s_N(peptide, protein, M) = head_M(processing_vec)
+c_terminus_score(peptide, protein, M) = head_M(processing_vec)      # M indexes the readout
+n_terminus_score(peptide, protein, M) = head_M(processing_vec)
 ```
 
 The trunk stays strictly sequence-only and learns a machinery-agnostic
@@ -274,7 +274,7 @@ Everything required is built and populated today. Ordered by dependency:
 2. **`M` conditioning** on the excision/processing latent only, enforced in the
    dependency mask, with a test asserting `M` is unreachable from
    binding/presentation/recognition.
-3. **`s_N` / `s_C` two-site factorization** of the processing output, replacing the
+3. **`n_terminus_score` / `c_terminus_score` two-site factorization** of the processing output, replacing the
    single scalar logit; enzyme profiles pinned, proteasome learned as a mixture.
 4. **Detectability loss** on `ms_detectability_logit`, ordinal over the depth ladder,
    with an IP-vs-shotgun branch offset (shared physics, different sample prep — do
@@ -304,7 +304,7 @@ Everything required is built and populated today. Ordered by dependency:
 
 The KO panels are the only *interventional* data in the corpus and the natural test
 of whether the processing latent is mechanistic: an ERAP1-KO peptidome should shift
-N-terminal preferences in a predictable direction. This supervises `s_N`, the half
+N-terminal preferences in a predictable direction. This supervises `n_terminus_score`, the half
 the protease panel cannot reach. Available once R3 lands: 242 APM-flagged samples,
 125 with a per-sample perturbation, 29 studies / 1.34M observations / 638K peptides.
 

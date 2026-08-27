@@ -154,7 +154,7 @@ channel, three orders of magnitude less than binding does.
 
 | family | key outputs |
 |---|---|
-| **processing / excision** | `processing_class{1,2}_logit`, `processing_logit`, `excision_logit`, `excision_s_n`, `excision_s_c`, `excision_s_internal`, `excision_s_len` |
+| **processing / excision** | `processing_class{1,2}_logit`, `processing_logit`, `excision_logit`, `excision_n_terminus_score`, `excision_c_terminus_score`, `excision_missed_cleavage_score`, `excision_length_score` |
 | **binding** | `assays.{KD_nM, IC50_nM, EC50_nM, kon, koff, t_half, Tm}`, `binding_affinity_score`, `binding_affinity_probe_kd` |
 | **core / PFR** | `core_start_logit`, `core_length`, `core_membership_prob`, `npfr_length`, `cpfr_length` |
 | **presentation** | `presentation_class{1,2}_logit`, `presentation_logit` |
@@ -241,29 +241,21 @@ Recorded rather than glossed. Each is tracked in `tasks/todo.md` (repository, ou
 3. ~~Tiers 2–4 are one flat `machinery` axis.~~ Split into `peptide_source`,
    `enzymatic_digest`, `processing_inducer` and `apm_perturbation`, with the source
    acting as a soft gate rather than a feature.
-4. ~~`s_len` conflates two mechanisms.~~ Length and missed-cleavage terms are gated to
+4. ~~`length_score_value` conflates two mechanisms.~~ Length and missed-cleavage terms are gated to
    the protein branch; the in-vivo branch contributes neither, so the protease is no
    longer credited for MHC groove selection.
+2. ~~The in-vivo processing path receives no gradient.~~ Conditions now reach the
+   processing *latent*, not just the excision readout. That matters because excision
+   labels exist only on shotgun rows, whereas elution labels exist on MHC rows and vary
+   with APM state — so a KO-vs-WT contrast supervises the conditioning through a loss
+   that already exists. Verified end to end with elution labels only and no excision
+   label present. Closing it also required carrying per-instance state through the MIL
+   bag forward, which the elution loss uses whenever MIL is active; without that every
+   instance collapsed to the default condition.
 6. ~~Detectability is validated out of domain.~~ `dual_corpus_transfer_set` builds the
    24,125-peptide in-domain evaluation set. Measuring it is an experiment, not code.
 
 **Open**
-
-2. **The in-vivo processing path still receives no gradient.** The factorization made
-   the conditioning *expressible* and Tier 3 state now flows from hitlist (187
-   `n_term_trimming` rows, 187 `peptide_supply`, 88 IFN-γ in a representative slice),
-   but excision labels come only from `data/bulk_ms.py`, whose rows are all
-   `peptide_source="protein"`. Every supervised row therefore has `is_protein == 1`,
-   and `(1 - is_protein)` zeroes the in-vivo terms: ~482 parameters train to nothing.
-   Verified through the real pipeline and pinned by
-   `test_real_pipeline_still_starves_the_in_vivo_path`.
-
-   Closing it needs excision labels on MHC rows. An observed ligand is evidence the
-   in-vivo machinery produced it, so elution positives are natural excision positives —
-   but the negatives are the same unsolved problem as detectability negatives. The
-   alternative is routing Tier 3 conditions into the *processing latent* rather than
-   only the excision readout, so ERAP-KO-vs-WT elution contrasts supervise them through
-   the existing elution loss. That is a contract decision, not a patch.
 
 5. **`processing` and `excision` remain parallel scores of one question.** Merging them
    changes the semantics of an existing supervised task, so it wants the Stage 4 arm-C

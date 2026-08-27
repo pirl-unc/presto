@@ -33,6 +33,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader, Sampler
 
 from .bulk_ms import BulkMSRecord
+from .vocab import default_machinery_for_class
 from .collate import PrestoSample, PrestoCollator
 from .groove import prepare_mhc_input
 from .vocab import normalize_organism, FOREIGN_CATEGORIES
@@ -2679,8 +2680,7 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         machinery = (sample.machinery or "").strip().lower()
         if machinery:
             return machinery
-        mhc_class = (sample.mhc_class or "").strip().upper()
-        return "cathepsin" if mhc_class == "II" else "proteasome"
+        return default_machinery_for_class(sample.mhc_class)
 
     @staticmethod
     def _sample_branch(sample: PrestoSample) -> str:

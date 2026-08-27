@@ -9,7 +9,7 @@ Canonical forward path:
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Mapping, Optional, Sequence
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 import math
 import torch
@@ -786,6 +786,24 @@ class Presto(nn.Module):
         # MS detectability readout from latent (design S7.4)
         self.ms_detectability_head = nn.Linear(d_model, 1)
 
+        # Cellular-state token for the processing latents. Tier 3 of
+        # docs/model_io_contract.md permits conditions on the processing path,
+        # and routing them here rather than only into the excision readout is
+        # what gives them gradient: excision labels exist only on shotgun rows,
+        # whereas elution labels exist on MHC rows and vary with APM state, so
+        # a KO-vs-WT contrast supervises these through the existing loss.
+        #
+        # Unlike peptide_source, these are NOT a corpus indicator -- they vary
+        # within the MHC corpus -- and they are genuinely causal on
+        # presentation (a B2M-null cell presents nothing), so reaching
+        # presentation through the processing vector is correct biology rather
+        # than a shortcut.
+        self.processing_condition_embed = nn.Embedding(
+            len(APM_PERTURBATIONS) * len(PROCESSING_INDUCERS), d_model
+        )
+        nn.init.zeros_(self.processing_condition_embed.weight)
+        self._n_inducer_states = len(PROCESSING_INDUCERS)
+
         # Machinery-conditioned excision readout. Output-side only: the
         # machinery indexes this head and never reaches the trunk.
         self.excision_head = ExcisionHead(
@@ -1186,6 +1204,14 @@ class Presto(nn.Module):
         Explicit values win. Otherwise fall back to the in-vivo pathway implied
         by MHC class: class I is degraded by the proteasome, class II by
         endo/lysosomal cathepsins.
+
+        Note this keys off *predicted* class probabilities, while
+        `data.vocab.default_machinery_for_class` keys off the declared class.
+        The two agree whenever the class head is right. In training and
+        evaluation the collator always populates `machinery_idx`, so this
+        fallback only runs for a direct `forward()` call that omits it -- for
+        example at inference from raw sequence, where no declared class exists
+        and the prediction is the only thing available.
         """
         if machinery is not None:
             if isinstance(machinery, torch.Tensor):
@@ -2457,61 +2483,78 @@ class Presto(nn.Module):
             mapping[name] = self._classify_parameter(name)
         return mapping
 
-    @staticmethod
-    def _classify_parameter(name: str) -> str:
-        """Classify a parameter name into a curriculum component."""
-        # Trunk encoder
-        if any(k in name for k in ["aa_embedding", "segment_embedding", "encoder",
-                                    "pep_nterm_pos", "pep_cterm_pos", "mhc_pos",
-                                    "groove_pos", "species_cond_embed",
-                                    "chain_completeness_embed"]):
-            return "trunk"
-        # Groove cross-attention
-        if "groove" in name and "pos" not in name:
-            return "groove"
-        # Binding query / latent layers for pmhc_interaction
-        if "pmhc_interaction" in name or "binding_query" in name:
-            return "binding_query"
-        # Core window scoring and enumeration
-        if any(k in name for k in ["core_window", "core_position",
-                                    "pfr_length_embed"]):
-            return "binding_core"
-        # Class II PFR module
-        if "class2_pfr" in name:
-            return "pfr_class2"
-        # BindingModule (kinetics)
-        if "binding_module" in name or "affinity_predictor" in name:
-            return "binding_module"
-        # Assay heads
-        if "assay_head" in name:
-            return "assay_heads"
-        # Processing: class-specific projections checked BEFORE general processing
-        if "processing_class1" in name or "class1_processing" in name:
-            return "processing_class1"
-        if "processing_class2" in name or "class2_processing" in name:
-            return "processing_class2"
-        # Processing latent and peptide terminal/length modules
-        if "processing" in name or "processing_pep" in name:
-            return "processing"
-        # Presentation
-        if "presentation" in name:
-            return "presentation"
-        # Recognition / immunogenicity
-        if "recognition" in name or "foreignness" in name:
-            return "recognition"
-        if "immunogenicity" in name or "tcr_evidence" in name:
-            return "immunogenicity"
-        # Latent queries and layers (not binding)
-        if "latent_queries" in name or "latent_layers" in name:
-            # Check which latent
-            for latent_name in ["processing", "ms_detectability",
-                                "species_of_origin", "recognition"]:
-                if latent_name in name:
-                    if latent_name == "processing":
-                        return "processing"
-                    if latent_name == "recognition":
-                        return "recognition"
-                    return "other"
+    # Curriculum component rules, in priority order. First match wins.
+    #
+    # This was a 55-line if/elif chain of substring tests whose ordering
+    # constraints lived in comments ("checked BEFORE general processing"). As a
+    # table the ordering is data, adding a component is one row, and the whole
+    # mapping can be read at once -- which matters because a name that matches
+    # nothing silently becomes "other" and is frozen at every curriculum stage.
+    #
+    # `excludes` exists for the one genuinely conditional rule: groove
+    # cross-attention parameters are "groove", but the groove *positional*
+    # encodings belong to the trunk.
+    PARAMETER_COMPONENT_RULES: Tuple[Tuple[str, Tuple[str, ...], Tuple[str, ...]], ...] = (
+        # Trunk. Positional encodings and the stream norm belong here; several
+        # families (pep_abs_pos, pep_frac_mlp, pep_pos_concat_*, *_dist_pos,
+        # groove_*_pos) previously matched nothing and were frozen at every
+        # stage without anyone noticing.
+        ("trunk", (
+            "aa_embedding", "segment_embedding", "encoder", "stream_norm",
+            "pep_nterm_pos", "pep_cterm_pos", "pep_abs_pos", "pep_frac_mlp",
+            "pep_pos_concat", "mhc_pos", "groove_pos", "groove_1_pos",
+            "groove_2_pos", "groove_1_abs_pos", "groove_2_abs_pos",
+            "groove_1_end_pos", "groove_2_end_pos",
+            "nflank_dist_pos", "cflank_dist_pos",
+            "species_cond_embed", "chain_completeness_embed",
+            "species_override_embed", "context_token_proj",
+        ), ()),
+        ("groove", ("groove",), ("pos",)),
+        # Binding latents. The expanded topology renames pmhc_interaction to
+        # binding_affinity/binding_stability; before these entries existed those
+        # parameters matched nothing, so every curriculum stage froze the
+        # binding latents it was supposed to be training.
+        ("binding_query", (
+            "pmhc_interaction", "binding_query",
+            "latent_queries.binding_affinity", "latent_layers.binding_affinity",
+            "latent_queries.binding_stability", "latent_layers.binding_stability",
+        ), ()),
+        ("binding_core", ("core_window", "core_position", "pfr_length_embed"), ()),
+        ("pfr_class2", ("class2_pfr",), ()),
+        ("binding_module", (
+            "binding_module", "affinity_predictor",
+            "binding_affinity_readout_proj", "binding_stability_readout_proj",
+            "binding_direct_segment",
+        ), ()),
+        ("assay_heads", ("assay_head",), ()),
+        ("processing_class1", ("processing_class1", "class1_processing"), ()),
+        ("processing_class2", ("processing_class2", "class2_processing"), ()),
+        # The excision head is the processing readout, so it trains with
+        # processing rather than being frozen at every stage.
+        ("processing", ("processing", "excision_head"), ()),
+        ("presentation", ("presentation", "elution_head"), ()),
+        ("recognition", ("recognition", "foreignness", "species_of_origin"), ()),
+        ("immunogenicity", ("immunogenicity", "tcr_evidence"), ()),
+        ("ms_detectability", ("ms_detectability",), ()),
+        # MHC identity auxiliaries: inferred from sequence, trained throughout.
+        ("mhc_identity", (
+            "mhc_a_species_head", "mhc_b_species_head",
+            "mhc_a_type_head", "mhc_b_type_head", "chain_compat_head",
+        ), ()),
+    )
+
+    @classmethod
+    def _classify_parameter(cls, name: str) -> str:
+        """Map a parameter name to its curriculum component.
+
+        Returns ``"other"`` when nothing matches, which means the parameter is
+        frozen at every stage -- so an unmatched name is a bug, not a default.
+        """
+        for component, tokens, excludes in cls.PARAMETER_COMPONENT_RULES:
+            if any(token in name for token in tokens) and not any(
+                token in name for token in excludes
+            ):
+                return component
         return "other"
 
     def forward_mhc_only(
@@ -2764,6 +2807,22 @@ class Presto(nn.Module):
             _gets_groove = {"pmhc_interaction"}
             _gets_processing_extra = {"processing"}
 
+        # Cellular-state token. Zero-initialized, so an unperturbed sample in a
+        # basal state contributes nothing until the data asks it to.
+        _provenance = provenance or {}
+        _apm_idx = _provenance.get("apm_perturbation_idx")
+        _inducer_idx = _provenance.get("processing_inducer_idx")
+        if _apm_idx is None:
+            _apm_idx = torch.zeros(batch_size, dtype=torch.long, device=pep_tok.device)
+        if _inducer_idx is None:
+            _inducer_idx = torch.zeros(batch_size, dtype=torch.long, device=pep_tok.device)
+        _condition_state = (
+            _apm_idx.long() * self._n_inducer_states + _inducer_idx.long()
+        )
+        processing_condition_token = self.processing_condition_embed(
+            _condition_state
+        ).unsqueeze(1)
+
         # Processing extra tokens: peptide terminal residues + length.
         # These give the processing latent TAP/ERAP/cleavage boundary
         # information without exposing the full peptide interior.
@@ -2801,6 +2860,8 @@ class Presto(nn.Module):
             extra_tokens: List[torch.Tensor] = []
             if name in _gets_processing_extra:
                 extra_tokens.extend(_processing_extra)
+                # Tier 3 conditions reach the processing path and nowhere else.
+                extra_tokens.append(processing_condition_token)
             if name in _gets_apc_context:
                 extra_tokens.append(apc_cell_type_context)
             if name in _gets_groove:

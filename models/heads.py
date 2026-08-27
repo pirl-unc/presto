@@ -1341,10 +1341,10 @@ class ElutionHead(nn.Module):
 class ExcisionHead(nn.Module):
     """Machinery-conditioned peptide excision score.
 
-    ``excision = s_N + s_C + s_len``
+    ``excision = n_terminus_score + c_terminus_score + length_score``
 
-    ``s_C`` scores the C-terminal junction: the peptide's last residue is P1
-    and the first C-flank residue is P1'. ``s_N`` scores the N-terminal
+    ``c_terminus_score`` scores the C-terminal junction: the peptide's last residue is P1
+    and the first C-flank residue is P1'. ``n_terminus_score`` scores the N-terminal
     junction: the last N-flank residue is P1 and the peptide's first residue is
     P1'.
 
@@ -1493,17 +1493,17 @@ class ExcisionHead(nn.Module):
 
         self.context_c = nn.Linear(d_model, self.n_machinery)
         self.context_n = nn.Linear(d_model, self.n_machinery)
-        self.length_score = nn.Embedding(self.max_peptide_len + 1, self.n_machinery)
+        self.length_preference = nn.Embedding(self.max_peptide_len + 1, self.n_machinery)
         # Zero, so the length term starts neutral and contributes nothing until
         # the data asks it to. Presto._init_weights re-initializes every
         # nn.Embedding it can find, so this must be declared via
         # preserve_init_parameters or it is silently randomized.
-        nn.init.zeros_(self.length_score.weight)
+        nn.init.zeros_(self.length_preference.weight)
         self.bias = nn.Parameter(torch.zeros(self.n_machinery))
 
     def preserve_init_parameters(self):
         """Parameters whose initialization must survive a parent's blanket init."""
-        return [self.length_score.weight]
+        return [self.length_preference.weight]
 
     def effective_profile_c(self) -> torch.Tensor:
         """C-terminal P1 preferences, with pinned rules and the mixture applied."""
@@ -1558,7 +1558,7 @@ class ExcisionHead(nn.Module):
         context_c = self.context_c(processing_vec)[rows, machinery_idx]
         context_n = self.context_n(processing_vec)[rows, machinery_idx]
 
-        s_c = self._junction_score(
+        c_terminus_score = self._junction_score(
             self.effective_profile_c(),
             self.profile_scale_c,
             p1_c_idx.long(),
@@ -1566,7 +1566,7 @@ class ExcisionHead(nn.Module):
             machinery_idx,
             context_c,
         )
-        s_n = self._junction_score(
+        n_terminus_score = self._junction_score(
             self.p1_profile_n,
             self.profile_scale_n,
             p1_n_idx.long(),
@@ -1575,8 +1575,8 @@ class ExcisionHead(nn.Module):
             context_n,
         )
         length = peptide_len.clamp(0, self.max_peptide_len).long()
-        s_len = self.length_score(length)[rows, machinery_idx]
-        s_internal = self._internal_site_score(peptide_tokens, machinery_idx)
+        length_score = self.length_preference(length)[rows, machinery_idx]
+        missed_cleavage_score = self._missed_cleavage_score(peptide_tokens, machinery_idx)
 
         # ------------------------------------------------------------------
         # Source fork. For a digested protein the enzyme set both termini and
@@ -1588,11 +1588,11 @@ class ExcisionHead(nn.Module):
         # stays expressible instead of being structurally impossible.
         # ------------------------------------------------------------------
         if peptide_source_idx is None:
-            is_protein = torch.ones_like(s_c)
+            is_protein = torch.ones_like(c_terminus_score)
         else:
             is_protein = (
                 peptide_source_idx.long() == self.protein_source_index
-            ).to(s_c.dtype)
+            ).to(c_terminus_score.dtype)
 
         apm = (
             apm_perturbation_idx.long()
@@ -1611,27 +1611,27 @@ class ExcisionHead(nn.Module):
         )
         invivo_n = self.invivo_profile_n[apm, p1_n_idx.long()] + context_n
 
-        s_c = is_protein * s_c + (1.0 - is_protein) * invivo_c
-        s_n = is_protein * s_n + (1.0 - is_protein) * invivo_n
+        c_terminus_score = is_protein * c_terminus_score + (1.0 - is_protein) * invivo_c
+        n_terminus_score = is_protein * n_terminus_score + (1.0 - is_protein) * invivo_n
         # Missed cleavages are a digest concept; the proteasome is processive.
-        s_internal = is_protein * s_internal
+        missed_cleavage_score = is_protein * missed_cleavage_score
         # Length: for a digest it follows from cleavage-site spacing, but for
         # class I the 8-11mer distribution is the MHC groove and TAP, not the
         # protease. Attributing that to processing would credit the protease
         # for MHC selection, so the in-vivo branch contributes no length term.
-        s_len = is_protein * s_len
+        length_score = is_protein * length_score
 
         bias = is_protein * self.bias[machinery_idx] + (1.0 - is_protein) * self.invivo_bias[apm]
-        logit = s_n + s_c + s_len + s_internal + bias
+        logit = n_terminus_score + c_terminus_score + length_score + missed_cleavage_score + bias
         return {
             "excision_logit": logit,
-            "excision_s_n": s_n,
-            "excision_s_c": s_c,
-            "excision_s_len": s_len,
-            "excision_s_internal": s_internal,
+            "excision_n_terminus_score": n_terminus_score,
+            "excision_c_terminus_score": c_terminus_score,
+            "excision_length_score": length_score,
+            "excision_missed_cleavage_score": missed_cleavage_score,
         }
 
-    def _internal_site_score(
+    def _missed_cleavage_score(
         self, peptide_tokens: Optional[torch.Tensor], machinery_idx: torch.Tensor
     ) -> torch.Tensor:
         """Penalty for cleavage sites the machinery skipped inside the peptide."""
@@ -1641,7 +1641,7 @@ class ExcisionHead(nn.Module):
         valid = tokens != 0
         lengths = valid.long().sum(dim=1)
         positions = torch.arange(tokens.shape[1], device=tokens.device).unsqueeze(0)
-        # Exclude the C-terminal residue: that junction is scored by s_C, and
+        # Exclude the C-terminal residue: that junction is scored by c_terminus_score, and
         # counting it here would penalize every correct product.
         interior = valid & (positions < (lengths - 1).clamp(min=0).unsqueeze(1))
         is_site = self.p1_site_mask[machinery_idx.unsqueeze(1), tokens]

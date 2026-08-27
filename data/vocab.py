@@ -672,6 +672,18 @@ PINNED_EXCISION_MACHINERY = tuple(sorted(EXCISION_P1_RULES))
 PROTEASOME_MIXTURE_COMPONENTS = ("trypsin", "chymotrypsin", "gluc")
 
 
+def default_machinery_for_class(mhc_class: Optional[str]) -> str:
+    """In-vivo machinery implied by MHC class.
+
+    Single source of truth. This rule previously existed in three places --
+    the collator, the model and the batch sampler -- and the model's copy had
+    drifted to keying off *predicted* class probabilities rather than the
+    declared class, so a caller that omitted `machinery` silently got a
+    different default from the one training used.
+    """
+    return "cathepsin" if str(mhc_class or "").strip().upper() == "II" else "proteasome"
+
+
 def excision_machinery_index(name: Optional[str]) -> int:
     """Resolve a machinery name to its vocabulary index."""
     token = str(name or "").strip().lower()
