@@ -493,6 +493,10 @@ IDX_TO_TCELL_PEPTIDE_FORMAT = {
 }
 
 # Binding assay context vocabularies (quantitative affinity metadata).
+# Appended entries keep existing indices stable, so an old checkpoint's
+# embedding rows still mean what they meant; only the table grows. Without the
+# stability/kinetics entries those rows type as "OTHER" and are indistinguishable
+# from an unrecognized binding assay.
 BINDING_ASSAY_TYPES = [
     "unknown",
     "KD",
@@ -501,6 +505,10 @@ BINDING_ASSAY_TYPES = [
     "IC50",
     "EC50",
     "OTHER",
+    "T_HALF",
+    "TM",
+    "KOFF",
+    "KON",
 ]
 BINDING_ASSAY_TYPE_TO_IDX = {
     name: i for i, name in enumerate(BINDING_ASSAY_TYPES)
@@ -612,3 +620,59 @@ def is_cdr3_only(chain_type: str) -> bool:
 def get_base_chain_type(chain_type: str) -> str:
     """Get the base chain type (strips _CDR3 suffix if present)."""
     return CDR3_TO_FULL.get(chain_type, chain_type)
+
+
+# ---------------------------------------------------------------------------
+# Peptide excision machinery
+# ---------------------------------------------------------------------------
+# The machinery that cut a peptide out of its source protein. In-vivo entries
+# are the biological pathways; the rest are in-vitro proteases whose cleavage
+# rules are known exactly and are used to pin the corresponding readout.
+#
+# Rules mirror hitlist/data/bulk_proteomics/sources.yaml so the two stay in
+# step. See docs/assay_learning_scheme.md and
+# tasks/protease_detectability_spec.md.
+EXCISION_MACHINERY = [
+    "unknown",
+    "proteasome",     # class I in vivo: a mixture over beta1/beta2/beta5
+    "cathepsin",      # class II in vivo: endo/lysosomal
+    "trypsin",        # C-term K/R, not before P
+    "chymotrypsin",   # C-term F/W/Y/L/M, not before P  (MaxQuant Chymotrypsin+)
+    "lysc",           # C-term K, P allowed
+    "gluc",           # C-term E/D in bicarbonate buffer, not before P
+]
+EXCISION_MACHINERY_TO_IDX = {name: i for i, name in enumerate(EXCISION_MACHINERY)}
+IDX_TO_EXCISION_MACHINERY = {i: name for i, name in enumerate(EXCISION_MACHINERY)}
+
+# P1 residues each in-vitro protease cleaves after. Absent keys are learned
+# rather than pinned: the proteasome is modeled as a convex mixture over the
+# in-vitro profiles (its beta1/beta2/beta5 sites have exactly these
+# specificities), and cathepsin is left free.
+EXCISION_P1_RULES: Dict[str, str] = {
+    "trypsin": "KR",
+    "chymotrypsin": "FWYLM",
+    "lysc": "K",
+    "gluc": "ED",
+}
+
+# P1' residues that block cleavage for a given machinery ("not before P").
+# LysC is the exception: its MaxQuant spec allows K-P.
+EXCISION_P1_PRIME_BLOCKED: Dict[str, str] = {
+    "trypsin": "P",
+    "chymotrypsin": "P",
+    "gluc": "P",
+    "lysc": "",
+}
+
+# Machinery whose profile is pinned to a known rule rather than learned.
+PINNED_EXCISION_MACHINERY = tuple(sorted(EXCISION_P1_RULES))
+
+# The proteasome's three catalytic specificities map onto in-vitro analogs, so
+# its profile is initialized as a blend of them rather than from scratch.
+PROTEASOME_MIXTURE_COMPONENTS = ("trypsin", "chymotrypsin", "gluc")
+
+
+def excision_machinery_index(name: Optional[str]) -> int:
+    """Resolve a machinery name to its vocabulary index."""
+    token = str(name or "").strip().lower()
+    return EXCISION_MACHINERY_TO_IDX.get(token, EXCISION_MACHINERY_TO_IDX["unknown"])
