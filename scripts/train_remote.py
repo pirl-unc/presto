@@ -27,6 +27,11 @@ that cache survives between runs, so only the first run pays the build cost.
 Set `PRESTO_HITLIST_BUILD=1` to build on the worker when the cache is cold;
 expect it to take a while the first time.
 
+Hardware defaults to **one cheap GPU**, chosen by resource floors rather than a
+pinned model name. Presto training is single-GPU; the Stage 4 factorial is 15
+independent runs, so a multi-GPU box would idle most of what it bills for. Set
+``RUNPLZ_GPU`` to pin a specific part when a run genuinely needs one.
+
 Everything is configured by environment variable so the same file serves every
 experiment arm without edits — freeze the env in the experiment's
 `reproduce/launch.sh`, per AGENTS.md.
@@ -52,11 +57,17 @@ APP_NAME = os.environ.get("RUNPLZ_APP_NAME", "presto-train")
 BASE_IMAGE = os.environ.get(
     "RUNPLZ_IMAGE", "pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime"
 )
-GPU_TYPE = os.environ.get("RUNPLZ_GPU", "A100")
-MIN_GPU_MEMORY = int(os.environ.get("RUNPLZ_MIN_GPU_MEMORY", "24"))
-MIN_CPU = int(os.environ.get("RUNPLZ_MIN_CPU", "8"))
-MIN_MEMORY = int(os.environ.get("RUNPLZ_MIN_MEMORY", "48"))
-MIN_DISK = int(os.environ.get("RUNPLZ_MIN_DISK", "200"))
+# Default to one cheap GPU, not a multi-GPU box. Presto training is a single-GPU
+# job: the Stage 4 factorial is 15 independent runs (5 arms x 3 seeds), so a
+# 4xA100 instance would idle three GPUs per run and bill for them. Expressed as
+# a memory floor rather than a model name so the selector picks the cheapest
+# match rather than a fixed (expensive) part.
+GPU_TYPE = os.environ.get("RUNPLZ_GPU", "")  # empty -> selector chooses by the floors below
+MIN_GPUS = int(os.environ.get("RUNPLZ_MIN_GPUS", "1"))
+MIN_GPU_MEMORY = int(os.environ.get("RUNPLZ_MIN_GPU_MEMORY", "16"))
+MIN_CPU = int(os.environ.get("RUNPLZ_MIN_CPU", "4"))
+MIN_MEMORY = int(os.environ.get("RUNPLZ_MIN_MEMORY", "32"))
+MIN_DISK = int(os.environ.get("RUNPLZ_MIN_DISK", "100"))
 TIMEOUT_SECONDS = int(os.environ.get("RUNPLZ_TIMEOUT_SECONDS", str(12 * 60 * 60)))
 
 TRUE_VALUES = {"1", "true", "yes", "on"}
@@ -174,15 +185,22 @@ def training_argv() -> list[str]:
     return argv
 
 
-@app.function(
+_FUNCTION_KWARGS = dict(
     image=image,
-    gpu=GPU_TYPE,
+    min_gpus=MIN_GPUS,
     min_gpu_memory=MIN_GPU_MEMORY,
     min_cpu=MIN_CPU,
     min_memory=MIN_MEMORY,
     min_disk=MIN_DISK,
     timeout=TIMEOUT_SECONDS,
 )
+if GPU_TYPE:
+    # Only pin a model when explicitly asked; otherwise the selector picks the
+    # cheapest part meeting the floors.
+    _FUNCTION_KWARGS["gpu"] = GPU_TYPE
+
+
+@app.function(**_FUNCTION_KWARGS)
 def train() -> None:
     import json
     from pathlib import Path
