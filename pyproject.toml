@@ -15,6 +15,10 @@ dependencies = [
   "mhcgnomes",
   "mhcseqs",
   "tqdm>=4.66.0",
+  # Used by the probe/plot paths in scripts/ and data/cross_source_dedup.py.
+  # Previously undeclared, which is why the plot tests failed in a clean
+  # environment while passing locally.
+  "matplotlib>=3.7",
 ]
 
 [project.optional-dependencies]

@@ -30,6 +30,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Set
 import random
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -535,16 +536,34 @@ class MHCPairingTask(Task):
         preds = (probs > 0.5).long()
         acc = (preds == targets).float().mean().item()
 
-        try:
-            from sklearn.metrics import roc_auc_score
-            auroc = roc_auc_score(
-                targets.detach().cpu().numpy(),
-                probs.detach().cpu().numpy()
-            )
-        except Exception:
-            auroc = 0.5
+        auroc = _auroc_or_none(
+            targets.detach().cpu().numpy(), probs.detach().cpu().numpy()
+        )
 
         return {"accuracy": acc, "auroc": auroc}
+
+
+
+def _auroc_or_none(targets, probs):
+    """AUROC, or None when it is undefined for this batch.
+
+    Previously this called scikit-learn inside a bare ``except Exception`` that
+    fell back to ``0.5``. scikit-learn is not a declared dependency, so in a
+    clean environment the import failed and every metric silently reported the
+    value of a random classifier -- a plausible number that is indistinguishable
+    from a real result. Returning ``None`` for an undefined metric (single-class
+    batch) is honest; degrading to 0.5 is not.
+    """
+    from ..training.holdout_eval import auroc as _auroc
+
+    return _auroc(np.asarray(targets, dtype=float), np.asarray(probs, dtype=float))
+
+
+def _auprc_or_none(targets, probs):
+    """Average precision, or None when undefined. See :func:`_auroc_or_none`."""
+    from ..training.holdout_eval import auprc as _auprc
+
+    return _auprc(np.asarray(targets, dtype=float), np.asarray(probs, dtype=float))
 
 
 # =============================================================================
@@ -642,12 +661,8 @@ class ElutionTask(Task):
         probs = torch.sigmoid(logits).detach().cpu().numpy()
         targets = batch["elution_label"].detach().cpu().numpy()
 
-        try:
-            from sklearn.metrics import roc_auc_score, average_precision_score
-            auroc = roc_auc_score(targets, probs)
-            auprc = average_precision_score(targets, probs)
-        except Exception:
-            auroc, auprc = 0.5, 0.5
+        auroc = _auroc_or_none(targets, probs)
+        auprc = _auprc_or_none(targets, probs)
 
         return {"auroc": auroc, "auprc": auprc}
 
@@ -723,11 +738,7 @@ class TcrEvidenceTask(Task):
     def compute_metrics(self, outputs, batch):
         probs = torch.sigmoid(outputs["tcr_evidence_logit"].squeeze(-1)).detach().cpu().numpy()
         targets = batch["tcr_evidence_label"].detach().cpu().numpy()
-        try:
-            from sklearn.metrics import roc_auc_score
-            auroc = roc_auc_score(targets, probs)
-        except Exception:
-            auroc = 0.5
+        auroc = _auroc_or_none(targets, probs)
         return {"auroc": auroc}
 
 
@@ -764,12 +775,8 @@ class ImmunogenicityTask(Task):
         probs = torch.sigmoid(logits).detach().cpu().numpy()
         targets = batch["immunogenicity_label"].detach().cpu().numpy()
 
-        try:
-            from sklearn.metrics import roc_auc_score, average_precision_score
-            auroc = roc_auc_score(targets, probs)
-            auprc = average_precision_score(targets, probs)
-        except Exception:
-            auroc, auprc = 0.5, 0.5
+        auroc = _auroc_or_none(targets, probs)
+        auprc = _auprc_or_none(targets, probs)
 
         return {"auroc": auroc, "auprc": auprc}
 
@@ -794,11 +801,7 @@ class TcellAssayTask(Task):
         probs = torch.sigmoid(outputs["tcell_logit"].squeeze(-1)).detach().cpu().numpy()
         targets = batch["tcell_label"].detach().cpu().numpy()
 
-        try:
-            from sklearn.metrics import roc_auc_score
-            auroc = roc_auc_score(targets, probs)
-        except Exception:
-            auroc = 0.5
+        auroc = _auroc_or_none(targets, probs)
 
         return {"auroc": auroc}
 
