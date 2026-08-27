@@ -1,3 +1,21 @@
+# Gap Closure: provenance/state factorization (2026-08-27)
+
+Addresses the gaps recorded in `docs/model_io_contract.md` S8.
+
+| gap | state |
+|---|---|
+| 1 - validation not peptide-disjoint | closed: `peptide_grouped_split_indices`, disjointness asserted after the split |
+| 2 - in-vivo path gets no gradient | closed: Tier 3 conditions vary within the MHC corpus |
+| 3 - flat `machinery` axis | closed: split into source / digest / inducer / apm_perturbation |
+| 4 - `s_len` conflates two mechanisms | closed: length and missed-cleavage gated to the protein branch |
+| 5 - `processing` and `excision` parallel | **open**: merging changes an existing task's semantics; wants Stage 4 arm C first |
+| 6 - detectability validated out of domain | set builder landed (`dual_corpus_transfer_set`); measuring it is an experiment |
+| 7 - T-cell context conditioning legacy | **open**: removal materially changes T-cell predictions; needs its own before/after |
+
+Gaps 5 and 7 are deliberately not bundled here. Both change the behavior of an
+existing supervised path, and folding either into a refactor whose whole point is to
+make measurement trustworthy would make the refactor unmeasurable.
+
 # Protease-Conditioned Excision + MS Detectability Reorg (2026-08-26)
 
 Design spec: `tasks/protease_detectability_spec.md`. This section is the execution plan.
