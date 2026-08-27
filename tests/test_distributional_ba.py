@@ -381,6 +381,10 @@ def test_quantile_head_forward_shape(assay_mode):
 
 @pytest.mark.parametrize("assay_mode", ["affine", "additive"])
 def test_quantile_head_loss_backward(assay_mode):
+    # Seeded: `assert (h.grad != 0).any()` on a randomly-initialized head with
+    # random inputs can land on an all-zero gradient, which made this flake
+    # intermittently under xdist.
+    torch.manual_seed(0)
     head = QuantileHead(in_dim=D, ctx_dim=CTX, max_nM=50_000.0, assay_mode=assay_mode)
     h = torch.randn(B, D, requires_grad=True)
     ctx = torch.randn(B, CTX)
@@ -559,12 +563,22 @@ def test_content_conditioned_different_inputs_different_bias():
 
 
 def test_v6_historical_positive_control_contract():
-    """Freeze the raw EXP-16 winner build contract in shared code."""
+    """Freeze the raw EXP-16 winner build contract in shared code.
+
+    Parameter count changed 27,186 -> 27,218 on 2026-08-26. The cause is
+    deliberate and accounted for: `BINDING_ASSAY_TYPES` gained four entries
+    (`T_HALF`, `TM`, `KOFF`, `KON`), adding 4 rows x 8 dims = 32 parameters to
+    `assay_type_embed`. Entries were appended, so every pre-existing index still
+    means what it meant, and `Presto._grow_appended_embeddings` zero-pads older
+    checkpoints on load rather than failing on the shape change. Predictions for
+    a historical checkpoint are unaffected because the new rows are never
+    indexed by v6 data.
+    """
     spec = CONDITIONS_V6_BY_ID[2]
     model = build_model(spec, encoder_backbone="historical_ablation")
     assert type(model.encoder).__name__ == "HistoricalAblationEncoder"
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    assert n_params == 27186
+    assert n_params == 27218
     pep = torch.randint(1, 20, (2, 15))
     mhc_a = torch.randint(1, 20, (2, 40))
     mhc_b = torch.randint(1, 20, (2, 40))

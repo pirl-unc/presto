@@ -84,7 +84,13 @@ class TestTrainerSmoke:
         assert torch.isfinite(loss)
 
     def test_trainer_multiple_steps(self, tiny_dataset, tokenizer):
-        """Test that multiple training steps work and loss decreases."""
+        """Test that multiple training steps work and loss decreases.
+
+        Seeded: the model init was unseeded and `lr=1e-2` is deliberately high,
+        so an unlucky draw can grow the loss past the `10x` bound in five steps.
+        That made this flake intermittently under xdist.
+        """
+        torch.manual_seed(0)
         from presto.training.trainer import Trainer
         from presto.models.presto import Presto
 
