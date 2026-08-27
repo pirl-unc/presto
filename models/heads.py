@@ -1336,3 +1336,239 @@ class ElutionHead(nn.Module):
             + F.softplus(self.w_ms_detectability) * ms_detectability_logit
             + self.bias
         )
+
+
+class ExcisionHead(nn.Module):
+    """Machinery-conditioned peptide excision score.
+
+    ``excision = s_N + s_C + s_len``
+
+    ``s_C`` scores the C-terminal junction: the peptide's last residue is P1
+    and the first C-flank residue is P1'. ``s_N`` scores the N-terminal
+    junction: the last N-flank residue is P1 and the peptide's first residue is
+    P1'.
+
+    The machinery **indexes the readout**; it never conditions the trunk. That
+    keeps the sequence-only input contract intact
+    (``docs/assay_modeling_contract.md``) and, just as importantly, keeps a
+    corpus indicator away from the presentation pathway — every MHC row is
+    ``proteasome`` and every shotgun row is an in-vitro protease, so a
+    machinery signal inside the shared processing vector would be a free
+    shortcut for "shotgun rows are never presented".
+
+    ``pin_profiles=True`` (the default) fixes the in-vitro P1 preferences to
+    their known rules, so those rows are constraints rather than parameters.
+    Be precise about what that buys and what it does not: a test asserting that
+    ``trypsin`` prefers K/R under this setting is checking the constraint, not
+    a finding. What remains learnable, and therefore falsifiable, is
+
+    - the proteasome's mixture weights over the in-vitro profiles — biologically
+      the right prior, since its beta1/beta2/beta5 catalytic sites have
+      caspase-like, trypsin-like and chymotrypsin-like specificity respectively;
+    - the per-machinery context corrections read off the processing latent; and
+    - the N-terminal table, which is free for every machinery because ERAP
+      trimming is not the same process as the proteasome cut.
+
+    Set ``pin_profiles=False`` to make the in-vitro rows learnable. That is the
+    genuine known-answer calibration: train on one protease arm and check
+    whether the head recovers that enzyme's rule from data. It is the honest
+    version of the positive control and worth running before trusting the
+    in-vivo readout.
+    """
+
+    def __init__(
+        self,
+        d_model: int,
+        n_machinery: int,
+        n_aa: int,
+        pinned_profiles: Optional[Dict[int, str]] = None,
+        aa_to_idx: Optional[Dict[str, int]] = None,
+        p1_prime_blocked: Optional[Dict[int, str]] = None,
+        mixture_target: Optional[int] = None,
+        mixture_components: Optional[List[int]] = None,
+        max_peptide_len: int = 50,
+        pin_profiles: bool = True,
+    ):
+        super().__init__()
+        self.n_machinery = int(n_machinery)
+        self.n_aa = int(n_aa)
+        self.max_peptide_len = int(max_peptide_len)
+
+        aa_to_idx = aa_to_idx or {}
+        pinned_profiles = pinned_profiles or {}
+        p1_prime_blocked = p1_prime_blocked or {}
+
+        # Learned C-terminal and N-terminal P1 preference tables.
+        self.p1_profile_c = nn.Parameter(torch.zeros(self.n_machinery, self.n_aa))
+        # The N-terminal junction is a different process for the in-vivo
+        # pathway (ERAP trimming, not the proteasome cut), so it gets its own
+        # free table rather than sharing the pinned one.
+        self.p1_profile_n = nn.Parameter(torch.zeros(self.n_machinery, self.n_aa))
+
+        self.pin_profiles = bool(pin_profiles)
+        pinned_mask = torch.zeros(self.n_machinery, dtype=torch.bool)
+        pinned_profile = torch.zeros(self.n_machinery, self.n_aa)
+        for machinery_idx, residues in pinned_profiles.items():
+            row = -torch.ones(self.n_aa)
+            for residue in residues:
+                if residue in aa_to_idx:
+                    row[aa_to_idx[residue]] = 1.0
+            pinned_profile[machinery_idx] = row
+            if self.pin_profiles:
+                pinned_mask[machinery_idx] = True
+            else:
+                # Not pinned: seed the learnable table with the known rule but
+                # let training move it, so recovery of the rule is a result.
+                with torch.no_grad():
+                    self.p1_profile_c[machinery_idx] = row
+        self.register_buffer("pinned_mask", pinned_mask)
+        self.register_buffer("pinned_profile", pinned_profile)
+
+        # Internal cleavage sites. A peptide can have both termini match an
+        # enzyme's rule and still be an implausible product if it carries many
+        # *internal* sites the enzyme would also have cut -- the missed-cleavage
+        # constraint. In the observed corpus 59.4% of tryptic peptides carry
+        # zero internal K/R, 29.7% one, 8.6% two; the tail is negligible.
+        #
+        # Applied only to machinery with a hard rule. The proteasome is
+        # processive and does not cut at every available site, so an internal
+        # hydrophobic residue says nothing about whether it produced the
+        # peptide -- penalizing that would be wrong biology.
+        site_mask = torch.zeros(self.n_machinery, self.n_aa)
+        for machinery_idx, residues in pinned_profiles.items():
+            for residue in residues:
+                if residue in aa_to_idx:
+                    site_mask[machinery_idx, aa_to_idx[residue]] = 1.0
+        self.register_buffer("p1_site_mask", site_mask)
+        self.missed_cleavage_penalty = nn.Parameter(torch.zeros(self.n_machinery))
+
+        blocked = torch.zeros(self.n_machinery, self.n_aa)
+        for machinery_idx, residues in p1_prime_blocked.items():
+            for residue in residues:
+                if residue in aa_to_idx:
+                    blocked[machinery_idx, aa_to_idx[residue]] = 1.0
+        self.register_buffer("p1_prime_blocked", blocked)
+        self.p1_prime_penalty = nn.Parameter(torch.ones(self.n_machinery))
+
+        self.mixture_target = mixture_target
+        if mixture_target is not None and mixture_components:
+            self.register_buffer(
+                "mixture_component_idx", torch.tensor(mixture_components, dtype=torch.long)
+            )
+            self.mixture_logits = nn.Parameter(torch.zeros(len(mixture_components)))
+            target_onehot = torch.zeros(self.n_machinery)
+            target_onehot[mixture_target] = 1.0
+            self.register_buffer("mixture_target_onehot", target_onehot)
+        else:
+            self.register_buffer("mixture_component_idx", torch.zeros(0, dtype=torch.long))
+            self.mixture_logits = nn.Parameter(torch.zeros(0))
+            self.register_buffer("mixture_target_onehot", torch.zeros(self.n_machinery))
+
+        # Positive per-machinery scale so a pinned +/-1 profile can set its own
+        # magnitude without the rule itself drifting.
+        self.profile_scale_c = nn.Parameter(torch.zeros(self.n_machinery))
+        self.profile_scale_n = nn.Parameter(torch.zeros(self.n_machinery))
+
+        # Context corrections read the processing latent and emit one scalar
+        # per machinery; the sample's machinery selects the column.
+        self.context_c = nn.Linear(d_model, self.n_machinery)
+        self.context_n = nn.Linear(d_model, self.n_machinery)
+        self.length_score = nn.Embedding(self.max_peptide_len + 1, self.n_machinery)
+        nn.init.zeros_(self.length_score.weight)
+        self.bias = nn.Parameter(torch.zeros(self.n_machinery))
+
+    def effective_profile_c(self) -> torch.Tensor:
+        """C-terminal P1 preferences, with pinned rules and the mixture applied."""
+        profile = torch.where(
+            self.pinned_mask.unsqueeze(-1), self.pinned_profile, self.p1_profile_c
+        )
+        if self.mixture_target is not None and self.mixture_component_idx.numel() > 0:
+            weights = torch.softmax(self.mixture_logits, dim=0)
+            mixed = (weights.unsqueeze(-1) * profile[self.mixture_component_idx]).sum(0)
+            onehot = self.mixture_target_onehot.unsqueeze(-1)
+            profile = profile * (1.0 - onehot) + onehot * mixed.unsqueeze(0)
+        return profile
+
+    def mixture_weights(self) -> torch.Tensor:
+        """Convex weights the in-vivo machinery places on each in-vitro analog."""
+        if self.mixture_component_idx.numel() == 0:
+            return torch.zeros(0, device=self.p1_profile_c.device)
+        return torch.softmax(self.mixture_logits, dim=0)
+
+    def _junction_score(
+        self,
+        profile: torch.Tensor,
+        scale: torch.Tensor,
+        p1_idx: torch.Tensor,
+        p1_prime_idx: torch.Tensor,
+        machinery_idx: torch.Tensor,
+        context: torch.Tensor,
+    ) -> torch.Tensor:
+        preference = profile[machinery_idx, p1_idx]
+        preference = preference * F.softplus(scale[machinery_idx])
+        blocked = self.p1_prime_blocked[machinery_idx, p1_prime_idx]
+        preference = preference - blocked * F.softplus(self.p1_prime_penalty[machinery_idx])
+        return preference + context
+
+    def forward(
+        self,
+        processing_vec: torch.Tensor,
+        machinery_idx: torch.Tensor,
+        p1_c_idx: torch.Tensor,
+        p1_prime_c_idx: torch.Tensor,
+        p1_n_idx: torch.Tensor,
+        p1_prime_n_idx: torch.Tensor,
+        peptide_len: torch.Tensor,
+        peptide_tokens: Optional[torch.Tensor] = None,
+    ) -> Dict[str, torch.Tensor]:
+        machinery_idx = machinery_idx.long()
+        rows = torch.arange(machinery_idx.shape[0], device=machinery_idx.device)
+
+        context_c = self.context_c(processing_vec)[rows, machinery_idx]
+        context_n = self.context_n(processing_vec)[rows, machinery_idx]
+
+        s_c = self._junction_score(
+            self.effective_profile_c(),
+            self.profile_scale_c,
+            p1_c_idx.long(),
+            p1_prime_c_idx.long(),
+            machinery_idx,
+            context_c,
+        )
+        s_n = self._junction_score(
+            self.p1_profile_n,
+            self.profile_scale_n,
+            p1_n_idx.long(),
+            p1_prime_n_idx.long(),
+            machinery_idx,
+            context_n,
+        )
+        length = peptide_len.clamp(0, self.max_peptide_len).long()
+        s_len = self.length_score(length)[rows, machinery_idx]
+        s_internal = self._internal_site_score(peptide_tokens, machinery_idx)
+
+        logit = s_n + s_c + s_len + s_internal + self.bias[machinery_idx]
+        return {
+            "excision_logit": logit,
+            "excision_s_n": s_n,
+            "excision_s_c": s_c,
+            "excision_s_len": s_len,
+            "excision_s_internal": s_internal,
+        }
+
+    def _internal_site_score(
+        self, peptide_tokens: Optional[torch.Tensor], machinery_idx: torch.Tensor
+    ) -> torch.Tensor:
+        """Penalty for cleavage sites the machinery skipped inside the peptide."""
+        if peptide_tokens is None:
+            return torch.zeros_like(machinery_idx, dtype=self.p1_site_mask.dtype)
+        tokens = peptide_tokens.long()
+        valid = tokens != 0
+        lengths = valid.long().sum(dim=1)
+        positions = torch.arange(tokens.shape[1], device=tokens.device).unsqueeze(0)
+        # Exclude the C-terminal residue: that junction is scored by s_C, and
+        # counting it here would penalize every correct product.
+        interior = valid & (positions < (lengths - 1).clamp(min=0).unsqueeze(1))
+        is_site = self.p1_site_mask[machinery_idx.unsqueeze(1), tokens]
+        n_missed = (is_site * interior.to(is_site.dtype)).sum(dim=1)
+        return -F.softplus(self.missed_cleavage_penalty[machinery_idx]) * n_missed
