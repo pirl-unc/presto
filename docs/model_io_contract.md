@@ -237,9 +237,7 @@ Recorded rather than glossed. Each is tracked in `tasks/todo.md` (repository, ou
 1. ~~Validation is not peptide-disjoint.~~ `peptide_grouped_split_indices` groups by
    peptide alone; the trainer asserts disjointness after splitting. `--split-mode
    random_rows` reproduces the old behavior and says so loudly.
-2. ~~The in-vivo processing path receives no gradient.~~ Tier 3 conditions vary within
-   the MHC corpus (187 `n_term_trimming` rows, 187 `peptide_supply`, 88 IFN-γ in a
-   representative slice), so the in-vivo tables are supervised by real contrasts.
+
 3. ~~Tiers 2–4 are one flat `machinery` axis.~~ Split into `peptide_source`,
    `enzymatic_digest`, `processing_inducer` and `apm_perturbation`, with the source
    acting as a soft gate rather than a feature.
@@ -250,6 +248,22 @@ Recorded rather than glossed. Each is tracked in `tasks/todo.md` (repository, ou
    24,125-peptide in-domain evaluation set. Measuring it is an experiment, not code.
 
 **Open**
+
+2. **The in-vivo processing path still receives no gradient.** The factorization made
+   the conditioning *expressible* and Tier 3 state now flows from hitlist (187
+   `n_term_trimming` rows, 187 `peptide_supply`, 88 IFN-γ in a representative slice),
+   but excision labels come only from `data/bulk_ms.py`, whose rows are all
+   `peptide_source="protein"`. Every supervised row therefore has `is_protein == 1`,
+   and `(1 - is_protein)` zeroes the in-vivo terms: ~482 parameters train to nothing.
+   Verified through the real pipeline and pinned by
+   `test_real_pipeline_still_starves_the_in_vivo_path`.
+
+   Closing it needs excision labels on MHC rows. An observed ligand is evidence the
+   in-vivo machinery produced it, so elution positives are natural excision positives —
+   but the negatives are the same unsolved problem as detectability negatives. The
+   alternative is routing Tier 3 conditions into the *processing latent* rather than
+   only the excision readout, so ERAP-KO-vs-WT elution contrasts supervise them through
+   the existing elution loss. That is a contract decision, not a patch.
 
 5. **`processing` and `excision` remain parallel scores of one question.** Merging them
    changes the semantics of an existing supervised task, so it wants the Stage 4 arm-C

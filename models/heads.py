@@ -1494,8 +1494,16 @@ class ExcisionHead(nn.Module):
         self.context_c = nn.Linear(d_model, self.n_machinery)
         self.context_n = nn.Linear(d_model, self.n_machinery)
         self.length_score = nn.Embedding(self.max_peptide_len + 1, self.n_machinery)
+        # Zero, so the length term starts neutral and contributes nothing until
+        # the data asks it to. Presto._init_weights re-initializes every
+        # nn.Embedding it can find, so this must be declared via
+        # preserve_init_parameters or it is silently randomized.
         nn.init.zeros_(self.length_score.weight)
         self.bias = nn.Parameter(torch.zeros(self.n_machinery))
+
+    def preserve_init_parameters(self):
+        """Parameters whose initialization must survive a parent's blanket init."""
+        return [self.length_score.weight]
 
     def effective_profile_c(self) -> torch.Tensor:
         """C-terminal P1 preferences, with pinned rules and the mixture applied."""

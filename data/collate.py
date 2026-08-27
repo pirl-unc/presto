@@ -779,9 +779,13 @@ class PrestoCollator:
             return "T_HALF"
         if "dissociation temperature" in token or token == "tm":
             return "TM"
-        if "off rate" in token or "koff" in token:
+        # Check dissociation first: "dissociation rate" *contains* "on rate",
+        # so a plain substring test types an off-rate measurement as an on-rate
+        # one. Word boundaries alone are not enough here either -- "on rate" is
+        # a genuine substring of "dissociati-on rate".
+        if "dissociation rate" in token or "off rate" in token or "koff" in token:
             return "KOFF"
-        if "on rate" in token or "kon" in token:
+        if "association rate" in token or "on rate" in token or "kon" in token:
             return "KON"
         if "kd" in token or "dissociation constant" in token:
             return "KD"
@@ -1810,6 +1814,17 @@ def collate_dict_batch(batch: List[Dict[str, Any]], tokenizer: Tokenizer = None)
         )
         result["bind_qual"] = bind_qual
         target_quals["binding"] = bind_qual
+
+    # t_half/tm use loss_type="censor", and _compute_task_loss_vector returns
+    # None when a censor task has no qualifier tensor -- the loss would vanish
+    # silently rather than falling back to MSE. Absent qualifiers mean "exact",
+    # which is code 0, so build them for any censored task present.
+    for task_name, field_name in (("t_half", "t_half_qual"), ("tm", "tm_qual")):
+        if task_name in targets:
+            target_quals[task_name] = torch.tensor(
+                [[int(row.get(field_name, 0) or 0)] for row in batch],
+                dtype=torch.long,
+            )
 
     result["targets"] = targets
     result["target_masks"] = target_masks

@@ -845,8 +845,19 @@ class Presto(nn.Module):
             nn.init.normal_(param.data, std=query_std)
         nn.init.normal_(self.groove_query.data, std=query_std)
 
+        # Blanket re-init of every nn.Embedding, which runs *after* submodules
+        # have constructed themselves. Any module that deliberately chose its
+        # own initialization would be silently overwritten here, so submodules
+        # opt out by listing the parameters they own.
+        deliberately_initialized = {
+            id(parameter)
+            for module in self.modules()
+            for parameter in getattr(module, "preserve_init_parameters", lambda: [])()
+        }
         for module in self.modules():
             if isinstance(module, nn.Embedding):
+                if id(module.weight) in deliberately_initialized:
+                    continue
                 nn.init.normal_(module.weight, std=query_std)
                 if module.padding_idx is not None:
                     with torch.no_grad():
