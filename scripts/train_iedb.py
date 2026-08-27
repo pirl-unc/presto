@@ -24,7 +24,7 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 import torch
 import torch.nn as nn
-from torch.utils.data import random_split
+from torch.utils.data import Subset, random_split
 
 from presto.data import (
     BindingRecord,
@@ -71,6 +71,7 @@ from presto.data.loaders import (
     load_uniprot_proteins,
 )
 from presto.data.groove import prepare_mhc_input
+from presto.data.loaders import peptide_grouped_split_indices
 from presto.data.mhc_index import classify_unresolved_allele, load_mhc_index
 from presto.data.mhc_sequence_resolver import (
     ExactMHCInput,
@@ -145,6 +146,7 @@ IEDB_DEFAULTS = {
     "data_dir": "./data",
     "data_source": "merged_tsv",
     "latent_topology": "collapsed",
+    "split_mode": "peptide_group",
     "train_mhc_class_filter": None,
     "hitlist_allele": None,
     "bulk_ms": False,
@@ -5037,15 +5039,40 @@ def run(args: argparse.Namespace) -> None:
     if len(dataset) < 2:
         raise RuntimeError("Need at least 2 samples for train/val split.")
 
-    val_size = max(1, int(len(dataset) * float(args.val_frac)))
-    val_size = min(val_size, len(dataset) - 1)
-    train_size = len(dataset) - val_size
-    split_gen = torch.Generator().manual_seed(args.seed)
-    train_dataset, val_dataset = random_split(
-        dataset,
-        [train_size, val_size],
-        generator=split_gen,
-    )
+    split_mode = str(getattr(args, "split_mode", "peptide_group"))
+    if split_mode == "peptide_group":
+        train_indices, val_indices = peptide_grouped_split_indices(
+            dataset, float(args.val_frac), args.seed
+        )
+        train_dataset = Subset(dataset, train_indices)
+        val_dataset = Subset(dataset, val_indices)
+        train_peptides = {str(dataset[i].peptide).strip().upper() for i in train_indices}
+        val_peptides = {str(dataset[i].peptide).strip().upper() for i in val_indices}
+        overlap = train_peptides & val_peptides
+        print(
+            f"Split: peptide-grouped  train={len(train_indices)} rows / "
+            f"{len(train_peptides)} peptides, val={len(val_indices)} rows / "
+            f"{len(val_peptides)} peptides"
+        )
+        if overlap:
+            raise RuntimeError(
+                f"peptide-grouped split leaked {len(overlap)} peptides into both "
+                "sides; this should be impossible and indicates a grouping bug"
+            )
+    else:
+        # Row-level split. Retained only to reproduce pre-2026-08 runs: rows are
+        # not independent, so validation peptides recur in training (measured
+        # 41.7% overall, 82.7% on excision rows) and every metric is optimistic.
+        print("Split: random rows (WARNING: not peptide-disjoint; metrics will be optimistic)")
+        val_size = max(1, int(len(dataset) * float(args.val_frac)))
+        val_size = min(val_size, len(dataset) - 1)
+        train_size = len(dataset) - val_size
+        split_gen = torch.Generator().manual_seed(args.seed)
+        train_dataset, val_dataset = random_split(
+            dataset,
+            [train_size, val_size],
+            generator=split_gen,
+        )
 
     collator = PrestoCollator()
     use_pin_memory = bool(getattr(args, "pin_memory", True)) and str(device).startswith("cuda")
