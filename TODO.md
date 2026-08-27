@@ -10,7 +10,7 @@ Legend:
 - `Partial`: present but not fully wired in canonical unified path.
 - `Planned`: not implemented in canonical path.
 
-Audit date: 2026-02-23
+Audit date: 2026-08-26
 
 ## 1) Data Sources Matrix
 
@@ -33,6 +33,8 @@ Audit date: 2026-02-23
 | STCRDab | Yes | File downloaded; no canonical assay parser | No | Partial | structural resource; adapter pending |
 | IMGT/LIGM-DB | No | No | No | Planned | not integrated |
 | IMGT/3Dstructure-DB | No | No | No | Planned | not integrated |
+| hitlist curated MS + binding indexes | Yes | Yes | Yes (`--data-source hitlist`) | Implemented | supplies `n_flank`/`c_flank`, which the merged TSV has never had |
+| Bulk non-MHC shotgun proteomics (Bekker-Jensen, CCLE) | Yes | Yes | Yes (`--bulk-ms`) | Implemented | four protease arms; identifies MS detectability |
 
 ## 2) Losses / Priors Matrix
 
@@ -41,7 +43,7 @@ Audit date: 2026-02-23
 | Balanced mini-batch sampler across assay/source/label/allele/synthetic-kind | Implemented | default in unified training (`--balanced-batches`) |
 | Binding censor-aware regression | Implemented | KD supervision path |
 | KD/IC50/EC50 assay losses | Implemented | shared KD calibration path |
-| Kinetics/stability losses (`kon`, `koff`, `t_half`, `Tm`) | Implemented | active when labels present |
+| Kinetics/stability losses (`kon`, `koff`, `t_half`, `Tm`) | Implemented | active when labels present; `t_half`/`Tm` are censor-aware |
 | Processing BCE | Implemented | sparse-label aware |
 | Elution BCE | Implemented | canonical instance path |
 | MS BCE | Implemented | presentation-linked |
@@ -65,7 +67,10 @@ Audit date: 2026-02-23
 | Requirement | Status | Notes |
 |---|---|---|
 | Single stream `Nflank|peptide|Cflank|MHC_a|MHC_b` | Implemented | canonical forward in `models/presto.py` |
-| Segmented latent-query DAG (`processing_class1/processing_class2/binding_affinity/binding_stability/presentation_class1/presentation_class2/recognition_cd8/recognition_cd4/immunogenicity_cd8/immunogenicity_cd4`) | Implemented | explicit segment and dependency masks |
+| Segmented latent-query DAG (`processing_class1/processing_class2/binding_affinity/binding_stability/presentation_class1/presentation_class2/recognition_cd8/recognition_cd4/immunogenicity_cd8/immunogenicity_cd4`) | Implemented | Two topologies. `--latent-topology expanded` gives each design-doc latent its own query and segment scope (`Presto.EXPANDED_LATENT_*`); the historical default `collapsed` folds them into five cross-attention latents plus projections and MLPs, exposing the same twelve names downstream. Segment access is asserted behaviorally in `tests/test_latent_topology.py`. |
+| Machinery-conditioned excision head (`s_N`/`s_C`/`s_len`) | Implemented | `ExcisionHead`; in-vitro protease P1 rules pinned, proteasome a learned convex mixture over them |
+| MS detectability supervision | Implemented | `ms_detectability` loss from the non-MHC shotgun corpus; previously the latent had no loss at all |
+| Held-out per-task metrics in the canonical trainer | Implemented | `training/holdout_eval.py`; metric family derived from `TaskLossSpec.loss_type`, so a new task is scored without extra wiring. `presto train unified` now writes `summary.json` and `val_predictions.csv`. |
 | Full-sequence MHC encoding | Implemented | canonical |
 | Core/PFR decomposition outputs (`core_start_*`, `core_length`, `npfr_length`, `cpfr_length`) | Implemented | exported from canonical path |
 | `*_vec` outputs (`pmhc_vec`, `tcr_vec`, `mhc_a_vec`, `mhc_b_vec`, `latent_vecs`) | Implemented | canonical naming convention |
@@ -82,9 +87,15 @@ Audit date: 2026-02-23
 
 ## 4) Priority Backlog
 
-1. Add first-class multi-TCR bag training/inference wiring.
-2. Promote optional sources (McPAS, PIRD, STCRDab, IMGT refs) to canonical only after schema/dedup audit.
-3. Expand canonical bag-level supervision beyond elution/presentation/MS where reliable multi-instance labels exist.
+1. Run the Stage 4 factorial (arms A-E) to decide whether detectability/excision
+   supervision earns its place; see `tasks/todo.md`.
+2. Per-method output structure for `t_half` (six non-comparable methods currently pooled)
+   and censor-aware stability loss.
+3. Append `T_HALF`/`TM`/`KOFF`/`KON` to `BINDING_ASSAY_TYPES` with the checkpoint pass.
+4. In-silico digest negatives for detectability (hitlist#361).
+5. Add first-class multi-TCR bag training/inference wiring.
+6. Promote optional sources (McPAS, PIRD, STCRDab, IMGT refs) to canonical only after schema/dedup audit.
+7. Expand canonical bag-level supervision beyond elution/presentation/MS where reliable multi-instance labels exist.
 
 ## 5) Canonical Doc Set
 
