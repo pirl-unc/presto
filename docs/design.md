@@ -686,6 +686,16 @@ latents are explicitly kept peptide+foreignness only.
 
 12 latent query tokens, each a learned embedding of dimension `d_model`.
 
+> **Implementation note (2026-08-26).** Two topologies implement this section.
+> `--latent-topology expanded` gives each latent below its own query and the exact
+> segment scope from S7.5 (`Presto.EXPANDED_LATENT_ORDER` / `_SEGMENTS` / `_DEPS`);
+> immunogenicity remains an MLP over its dependencies, as specified. The historical
+> default, `collapsed`, folds these into five cross-attention latents
+> (`processing`, `ms_detectability`, `species_of_origin`, `pmhc_interaction`,
+> `recognition`) plus projections and MLPs, and exposes the same twelve names
+> downstream. Both are asserted behaviorally in `tests/test_latent_topology.py`.
+> Every experiment in `experiments/` before this date used the collapsed topology.
+
 | # | Name | Biological Meaning |
 |---|------|--------------------|
 | 1 | `processing_class1` | Proteasomal cleavage + TAP transport + ERAP trimming |

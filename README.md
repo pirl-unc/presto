@@ -15,6 +15,8 @@ python -m presto predict presentation --checkpoint presto.pt --peptide SIINFEKL 
 
 - High-level goals, data, inputs/outputs: `docs/design.md`
 - Canonical assay modeling contract: `docs/assay_modeling_contract.md`
+- Complete model input/output contract: `docs/model_io_contract.md`
+- Assay source inventory and supervision map: `docs/assay_learning_scheme.md`
 - Training and batch construction spec: `docs/training_spec.md`
 - CLI usage: `docs/cli.md`
 - Repo inventory and retention guide: `docs/repo_inventory.md`

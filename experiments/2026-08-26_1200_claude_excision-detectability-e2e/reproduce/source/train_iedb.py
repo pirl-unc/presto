@@ -4257,39 +4257,12 @@ def load_probe_allele_binding_bootstrap_from_merged_tsv(
     }
 
 
-
-def _assert_mhcseqs_importable() -> None:
-    """Fail loudly if `mhcseqs` resolved to an empty namespace package.
-
-    `~/code/mhcseqs/` has no `__init__.py`, so putting `~/code` on `sys.path`
-    (as cwd or PYTHONPATH) makes Python treat it as a namespace package that
-    shadows the installed one. Nothing raises: `mhcseqs.__file__` is None,
-    every allele fails to resolve, and the trainer drops 100% of MHC rows while
-    reporting `resolved=0/N` — which reads as a data problem, not an import
-    problem. Cheap to detect, expensive to discover after a training run.
-    """
-    try:
-        import mhcseqs
-    except ImportError:
-        return  # genuinely not installed; resolution falls back to the CSV index
-    if getattr(mhcseqs, "__file__", None) is None:
-        raise SystemExit(
-            "mhcseqs resolved to an empty namespace package, so no MHC allele "
-            "will resolve and every MHC row would be dropped.\n"
-            "Cause: a directory named 'mhcseqs' on sys.path shadowing the "
-            "installed package (typically ~/code as cwd or on PYTHONPATH).\n"
-            "Fix: run from a neutral directory with no PYTHONPATH; both presto "
-            "and mhcseqs are installed as editable packages."
-        )
-
-
 def run(args: argparse.Namespace) -> None:
     """Run unified multi-source training with parsed arguments."""
     args = _resolve_run_args(args)
     torch.manual_seed(args.seed)
     random.seed(args.seed)
 
-    _assert_mhcseqs_importable()
     device = args.device or ("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
     profile = str(getattr(args, "profile", "full") or "full").lower()
@@ -4444,42 +4417,6 @@ def run(args: argparse.Namespace) -> None:
                 f"added_records={added}"
             )
 
-    elif str(getattr(args, "data_source", "merged_tsv")) == "hitlist":
-        # hitlist supplies binding / stability / kinetics / elution on its own,
-        # so a hitlist-sourced run does not need the merged TSV at all. This
-        # matters for remote execution: the merged TSV is a gitignored 1 GB
-        # file that would otherwise have to be shipped to every worker just to
-        # satisfy a precondition the run never uses. T-cell / TCR / processing
-        # are simply absent in this mode.
-        from presto.data.hitlist_source import load_records_from_hitlist
-
-        (
-            binding_records,
-            kinetics_records,
-            stability_records,
-            processing_records,
-            elution_records,
-            tcell_records,
-            vdjdb_records,
-            hitlist_stats,
-        ) = load_records_from_hitlist(
-            max_binding=args.max_binding,
-            max_kinetics=args.max_kinetics,
-            max_stability=args.max_stability,
-            max_elution=args.max_elution,
-            mhc_class=getattr(args, "train_mhc_class_filter", None) or None,
-            mhc_allele=getattr(args, "hitlist_allele", None) or None,
-            include_flanks=bool(getattr(args, "hitlist_flanks", True)),
-            sampling_seed=args.seed + 17,
-        )
-        print("Hitlist input: curated indexes (no merged TSV)")
-        for assay, count in hitlist_stats["counts"].items():
-            print(f"    {assay}: {count}")
-        for family, coverage in hitlist_stats["flank_coverage"].items():
-            print(f"    flank coverage [{family}]: {coverage:.1%}")
-        print(
-            "    note: T-cell / TCR / processing are absent in hitlist-only mode"
-        )
     else:
         if getattr(args, "require_merged_input", True):
             raise FileNotFoundError(
@@ -5456,67 +5393,6 @@ def run(args: argparse.Namespace) -> None:
                 print(f"Probe motif scan saved to {motif_csv}")
         if run_logger is not None:
             run_logger.close()
-
-    # Held-out per-task metrics and prediction dumps. The unified trainer used
-    # to emit scalar losses only, which is why an elution-AUPRC question could
-    # not be answered here and every experiment ran focused_binding_probe.py
-    # instead. Metric family comes from each task's declared loss_type, so a
-    # task added to LOSS_TASK_SPECS is scored with no extra wiring.
-    if run_dir is not None:
-        try:
-            from presto.training.holdout_eval import (
-                collect_holdout_predictions,
-                write_holdout_artifacts,
-            )
-            from presto.scripts.train_synthetic import (
-                LOSS_TASK_SPECS,
-                _get_batch_mask,
-                _get_batch_target,
-                _resolve_output_tensor,
-            )
-
-            def _forward(model_ref, batch_ref):
-                return model_ref(
-                    pep_tok=batch_ref.pep_tok,
-                    mhc_a_tok=batch_ref.mhc_a_tok,
-                    mhc_b_tok=batch_ref.mhc_b_tok,
-                    mhc_class=batch_ref.mhc_class,
-                    species=batch_ref.processing_species,
-                    flank_n_tok=batch_ref.flank_n_tok,
-                    flank_c_tok=batch_ref.flank_c_tok,
-                    tcell_context=batch_ref.tcell_context if batch_ref.tcell_context else None,
-                    machinery=getattr(batch_ref, "machinery_idx", None),
-                )
-
-            accumulators = collect_holdout_predictions(
-                model=model,
-                loader=val_loader,
-                device=device,
-                specs=LOSS_TASK_SPECS,
-                forward_fn=_forward,
-                resolve_pred_fn=_resolve_output_tensor,
-                get_target_fn=_get_batch_target,
-                get_mask_fn=_get_batch_mask,
-            )
-            payload = write_holdout_artifacts(
-                run_dir,
-                accumulators,
-                split="val",
-                extra_summary={"best_val_loss": float(best_val_loss)},
-            )
-            scored = payload.get("tasks", {})
-            print(f"Held-out metrics written for {len(scored)} tasks -> {run_dir}")
-            for task_name, metrics in sorted(scored.items()):
-                headline = (
-                    f"auprc={metrics['auprc']:.4f}"
-                    if "auprc" in metrics
-                    else f"spearman={metrics['spearman']:.4f}"
-                    if "spearman" in metrics
-                    else f"n={metrics.get('n', 0):.0f}"
-                )
-                print(f"    {task_name}: {headline} (n={metrics.get('n', 0):.0f})")
-        except Exception as exc:  # pragma: no cover - diagnostics must not fail a run
-            print(f"Held-out metric pass skipped: {type(exc).__name__}: {exc}")
 
     print(f"\nTraining complete. Best val_loss: {best_val_loss:.4f}")
 

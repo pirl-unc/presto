@@ -1,0 +1,33 @@
+{
+  "experiment": "2026-08-26_1200_claude_liberation-detectability-e2e",
+  "agent": "claude",
+  "purpose": "End-to-end validation that every branch trains together in the canonical unified path",
+  "kind": "validation",
+  "backend": "local-cpu",
+  "gpu": null,
+  "env_overrides": {},
+  "cli": "presto train unified",
+  "args": {
+    "data_source": "hitlist",
+    "hitlist_mhc_class": "I",
+    "hitlist_allele": "HLA-A*02:01",
+    "latent_topology": "expanded",
+    "bulk_ms": true,
+    "bulk_cell_line": "HeLa",
+    "max_bulk_ms": 1500,
+    "max_binding": 1200,
+    "max_elution": 1200,
+    "max_tcell": 300,
+    "max_vdjdb": 200,
+    "max_processing": 200,
+    "max_kinetics": 50,
+    "max_stability": 200,
+    "cap_sampling": "head",
+    "epochs": 1,
+    "batch_size": 32,
+    "d_model": 32,
+    "n_layers": 2,
+    "n_heads": 4
+  },
+  "known_environment_pitfall": "Do not place ~/code on sys.path; it shadows mhcseqs and silently disables MHC resolution."
+}

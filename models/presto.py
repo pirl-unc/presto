@@ -27,7 +27,7 @@ from .presto_modules import (
     ClassProcessingPredictor,
     PrestoTrunkState,
 )
-from .heads import TCellAssayHead, ElutionHead
+from .heads import TCellAssayHead, ElutionHead, ExcisionHead
 from .affinity import (
     AFFINITY_TARGET_ENCODINGS,
     DEFAULT_MAX_AFFINITY_NM,
@@ -41,6 +41,12 @@ from ..data.allele_resolver import (
 from ..data.vocab import (
     AA_VOCAB,
     AA_TO_IDX,
+    EXCISION_MACHINERY,
+    EXCISION_MACHINERY_TO_IDX,
+    EXCISION_P1_PRIME_BLOCKED,
+    EXCISION_P1_RULES,
+    PROTEASOME_MIXTURE_COMPONENTS,
+    excision_machinery_index,
     N_ORGANISM_CATEGORIES,
     N_MHC_SPECIES,
     ORGANISM_TO_IDX,
@@ -201,6 +207,74 @@ class Presto(nn.Module):
     # Binding latent names that use enhanced query path when available
     BINDING_LATENT_NAMES = {"pmhc_interaction"}
 
+    # ------------------------------------------------------------------
+    # Expanded topology (design.md S7.1/S7.2/S7.5).
+    #
+    # The collapsed tables above fold twelve specified latents into five
+    # cross-attention latents plus projections and MLPs. The expanded tables
+    # give each specified latent its own query, which is what the design doc
+    # describes and what the segment-access table below reproduces exactly.
+    # Selected with ``latent_topology="expanded"``. Immunogenicity stays an
+    # MLP over its dependencies (S7.5: "MLP, no cross-attn").
+    # ------------------------------------------------------------------
+    EXPANDED_LATENT_ORDER = [
+        # Level 0 - parallel, no dependencies
+        "processing_class1",
+        "processing_class2",
+        "species_of_origin",
+        "ms_detectability",
+        # Level 1 - parallel, no dependencies
+        "binding_affinity",
+        "binding_stability",
+        # Level 2 - pure bottlenecks, no token access
+        "presentation_class1",
+        "presentation_class2",
+        # Level 2.5 - peptide + foreignness
+        "recognition_cd8",
+        "recognition_cd4",
+    ]
+
+    EXPANDED_LATENT_SEGMENTS = {
+        "processing_class1": ["nflank", "peptide", "cflank"],
+        "processing_class2": ["nflank", "peptide", "cflank"],
+        "species_of_origin": ["peptide"],
+        "ms_detectability": ["peptide"],
+        "binding_affinity": ["peptide", "mhc_a", "mhc_b"],
+        "binding_stability": ["peptide", "mhc_a", "mhc_b"],
+        # Presentation sees no tokens at all: everything must flow through the
+        # processing/binding bottlenecks, which is what prevents the model
+        # short-cutting around the causal biology.
+        "presentation_class1": [],
+        "presentation_class2": [],
+        "recognition_cd8": ["peptide"],
+        "recognition_cd4": ["peptide"],
+    }
+
+    EXPANDED_LATENT_DEPS = {
+        "processing_class1": [],
+        "processing_class2": [],
+        "species_of_origin": [],
+        "ms_detectability": [],
+        "binding_affinity": [],
+        "binding_stability": [],
+        "presentation_class1": [
+            "processing_class1",
+            "binding_affinity",
+            "binding_stability",
+        ],
+        "presentation_class2": [
+            "processing_class2",
+            "binding_affinity",
+            "binding_stability",
+        ],
+        "recognition_cd8": ["foreignness"],
+        "recognition_cd4": ["foreignness"],
+    }
+
+    EXPANDED_BINDING_LATENT_NAMES = {"binding_affinity", "binding_stability"}
+
+    LATENT_TOPOLOGIES = ("collapsed", "expanded")
+
     def __init__(
         self,
         d_model: int = 256,
@@ -227,6 +301,7 @@ class Presto(nn.Module):
         kd_grouping_mode: str = "merged_kd",
         binding_kinetic_input_mode: str = "affinity_vec",
         binding_direct_segment_mode: str = "off",
+        latent_topology: str = "collapsed",
     ):
         """Initialize Presto."""
         super().__init__()
@@ -244,6 +319,26 @@ class Presto(nn.Module):
         self.binding_midpoint_log10_nM = math.log10(max(self.binding_midpoint_nM, 1e-12))
         self.binding_log10_scale = max(float(binding_log10_scale), 1e-6)
         self.missing_token_idx = int(AA_TO_IDX["<MISSING>"])
+
+        # ------------------------------------------------------------------
+        # Latent topology selection
+        # ------------------------------------------------------------------
+        topology = str(latent_topology).strip().lower()
+        if topology not in self.LATENT_TOPOLOGIES:
+            raise ValueError(
+                f"Unsupported latent_topology: {latent_topology!r}. "
+                f"Expected one of {self.LATENT_TOPOLOGIES}."
+            )
+        self.latent_topology = topology
+        if topology == "expanded":
+            # Instance tables shadow the collapsed class constants, so every
+            # consumer of self.LATENT_* picks up the expanded DAG unchanged.
+            self.LATENT_ORDER = list(self.EXPANDED_LATENT_ORDER)
+            self.LATENT_SEGMENTS = dict(self.EXPANDED_LATENT_SEGMENTS)
+            self.LATENT_DEPS = dict(self.EXPANDED_LATENT_DEPS)
+            self.CROSS_ATTN_LATENTS = list(self.EXPANDED_LATENT_ORDER)
+            self.BINDING_LATENT_NAMES = set(self.EXPANDED_BINDING_LATENT_NAMES)
+
         self.x_token_idx = int(AA_TO_IDX["X"])
         # Binding latent architecture config
         self.binding_n_latent_layers = binding_n_latent_layers
@@ -471,14 +566,23 @@ class Presto(nn.Module):
         )
         self.presentation_class1_vec_norm = nn.LayerNorm(d_model)
         self.presentation_class2_vec_norm = nn.LayerNorm(d_model)
-        # Lineage-specific immunogenicity MLPs
+        # Lineage-specific immunogenicity MLPs.
+        # S7.5 makes immunogenicity depend on {binding_affinity,
+        # binding_stability, recognition_*}. The collapsed topology has only one
+        # binding latent, so it passes that vector once; the expanded topology
+        # passes affinity and stability separately.
+        _immunogenicity_in_dim = (
+            2 * self.pmhc_interaction_vec_dim + d_model
+            if self.latent_topology == "expanded"
+            else self.pmhc_interaction_vec_dim + d_model
+        )
         self.immunogenicity_cd8_mlp = nn.Sequential(
-            nn.Linear(self.pmhc_interaction_vec_dim + d_model, d_model),
+            nn.Linear(_immunogenicity_in_dim, d_model),
             nn.GELU(),
             nn.Linear(d_model, d_model),
         )
         self.immunogenicity_cd4_mlp = nn.Sequential(
-            nn.Linear(self.pmhc_interaction_vec_dim + d_model, d_model),
+            nn.Linear(_immunogenicity_in_dim, d_model),
             nn.GELU(),
             nn.Linear(d_model, d_model),
         )
@@ -679,6 +783,28 @@ class Presto(nn.Module):
         # MS detectability readout from latent (design S7.4)
         self.ms_detectability_head = nn.Linear(d_model, 1)
 
+        # Machinery-conditioned excision readout. Output-side only: the
+        # machinery indexes this head and never reaches the trunk.
+        self.excision_head = ExcisionHead(
+            d_model=d_model,
+            n_machinery=len(EXCISION_MACHINERY),
+            n_aa=len(AA_VOCAB),
+            pinned_profiles={
+                EXCISION_MACHINERY_TO_IDX[name]: residues
+                for name, residues in EXCISION_P1_RULES.items()
+            },
+            aa_to_idx=AA_TO_IDX,
+            p1_prime_blocked={
+                EXCISION_MACHINERY_TO_IDX[name]: residues
+                for name, residues in EXCISION_P1_PRIME_BLOCKED.items()
+            },
+            mixture_target=EXCISION_MACHINERY_TO_IDX["proteasome"],
+            mixture_components=[
+                EXCISION_MACHINERY_TO_IDX[name]
+                for name in PROTEASOME_MIXTURE_COMPONENTS
+            ],
+        )
+
         # Elution head (S9.3: pres_logit + ms_detect_logit, no pmhc_vec).
         self.elution_head = ElutionHead()
         self.tcr_evidence_head = nn.Sequential(
@@ -820,6 +946,36 @@ class Presto(nn.Module):
     def w_binding_class2_calibration(self, param: nn.Parameter) -> None:
         self.affinity_predictor.w_binding_class2_calibration = param
 
+    def _grow_appended_embeddings(
+        self, state_dict: Dict[str, torch.Tensor], prefix: str
+    ) -> None:
+        """Extend checkpoint embeddings whose vocabulary has since grown.
+
+        Vocabularies here are append-only, so row *i* means the same thing
+        before and after a new entry lands; only the table gets longer. This
+        lets an older checkpoint load with its learned rows intact instead of
+        failing on a shape mismatch or silently dropping the whole tensor.
+
+        Appended rows keep the module's fresh initialization rather than being
+        zeroed: an all-zero embedding row is a degenerate starting point, and
+        the module's own init is the right prior for an entry that has simply
+        never been trained.
+        """
+        for name, module in self.named_modules():
+            if not isinstance(module, nn.Embedding):
+                continue
+            key = f"{prefix}{name}.weight" if name else f"{prefix}weight"
+            saved = state_dict.get(key)
+            if saved is None or saved.ndim != 2:
+                continue
+            current_rows, current_dim = module.weight.shape
+            saved_rows, saved_dim = saved.shape
+            if saved_dim != current_dim or saved_rows >= current_rows:
+                continue
+            padded = module.weight.detach().clone()
+            padded[:saved_rows] = saved.to(padded.dtype)
+            state_dict[key] = padded
+
     def _load_from_state_dict(
         self,
         state_dict: Dict[str, torch.Tensor],
@@ -831,6 +987,7 @@ class Presto(nn.Module):
         error_msgs: List[str],
     ) -> None:
         """Drop deprecated weights for backward compatibility."""
+        self._grow_appended_embeddings(state_dict, prefix)
         legacy_key = f"{prefix}mhc_class_cond_embed.weight"
         if legacy_key in state_dict:
             state_dict.pop(legacy_key)
@@ -981,6 +1138,60 @@ class Presto(nn.Module):
 
     def _segment_tensor(self, length: int, seg_id: int, device: torch.device) -> torch.Tensor:
         return torch.full((length,), seg_id, device=device, dtype=torch.long)
+
+    @staticmethod
+    def _first_valid_token(tokens: Optional[torch.Tensor], batch_size: int,
+                           device, fallback: int) -> torch.Tensor:
+        """First non-pad token of each row (segments are right-padded)."""
+        if tokens is None or tokens.numel() == 0:
+            return torch.full((batch_size,), fallback, dtype=torch.long, device=device)
+        valid = tokens != 0
+        present = valid.any(dim=1)
+        first = torch.argmax(valid.long(), dim=1, keepdim=True)
+        picked = tokens.gather(1, first).squeeze(1)
+        return torch.where(present, picked, torch.full_like(picked, fallback)).long()
+
+    @staticmethod
+    def _last_valid_token(tokens: Optional[torch.Tensor], batch_size: int,
+                          device, fallback: int) -> torch.Tensor:
+        """Last non-pad token of each row (segments are right-padded)."""
+        if tokens is None or tokens.numel() == 0:
+            return torch.full((batch_size,), fallback, dtype=torch.long, device=device)
+        valid = tokens != 0
+        present = valid.any(dim=1)
+        lengths = valid.long().sum(dim=1).clamp(min=1)
+        picked = tokens.gather(1, (lengths - 1).unsqueeze(1)).squeeze(1)
+        return torch.where(present, picked, torch.full_like(picked, fallback)).long()
+
+    def _resolve_machinery_idx(self, machinery, class_probs, batch_size, device):
+        """Resolve the excision machinery index for each row.
+
+        Explicit values win. Otherwise fall back to the in-vivo pathway implied
+        by MHC class: class I is degraded by the proteasome, class II by
+        endo/lysosomal cathepsins.
+        """
+        if machinery is not None:
+            if isinstance(machinery, torch.Tensor):
+                return machinery.to(device=device).long().reshape(-1)
+            if isinstance(machinery, str):
+                names = [machinery] * batch_size
+            else:
+                names = list(machinery)
+            return torch.tensor(
+                [excision_machinery_index(name) for name in names],
+                dtype=torch.long,
+                device=device,
+            )
+        proteasome = EXCISION_MACHINERY_TO_IDX["proteasome"]
+        cathepsin = EXCISION_MACHINERY_TO_IDX["cathepsin"]
+        if class_probs is None:
+            return torch.full((batch_size,), proteasome, dtype=torch.long, device=device)
+        is_class2 = class_probs[:, 1] > 0.5
+        return torch.where(
+            is_class2,
+            torch.full((batch_size,), cathepsin, dtype=torch.long, device=device),
+            torch.full((batch_size,), proteasome, dtype=torch.long, device=device),
+        )
 
     def _ensure_optional_segment(
         self,
@@ -2357,6 +2568,7 @@ class Presto(nn.Module):
         return_binding_attention: bool = False,
         peptide_species: Optional[Any] = None,  # deprecated alias for species_of_origin
         binding_context: Optional[Dict[str, torch.Tensor]] = None,
+        machinery: Optional[Any] = None,
     ) -> Dict[str, Any]:
         """Forward pass through full model under the canonical outputs-only assay contract."""
         outputs: Dict[str, Any] = {}
@@ -2516,8 +2728,23 @@ class Presto(nn.Module):
         outputs["groove_vec"] = groove_vec
 
         # Which latents receive APC context token.
-        _gets_apc_context = {"processing", "pmhc_interaction"}
-        _gets_groove = {"pmhc_interaction"}
+        if self.latent_topology == "expanded":
+            # S7.5 "Extra tokens" column: context_vec reaches processing,
+            # binding and presentation; the groove summary reaches binding only.
+            _gets_apc_context = {
+                "processing_class1",
+                "processing_class2",
+                "binding_affinity",
+                "binding_stability",
+                "presentation_class1",
+                "presentation_class2",
+            }
+            _gets_groove = {"binding_affinity", "binding_stability"}
+            _gets_processing_extra = {"processing_class1", "processing_class2"}
+        else:
+            _gets_apc_context = {"processing", "pmhc_interaction"}
+            _gets_groove = {"pmhc_interaction"}
+            _gets_processing_extra = {"processing"}
 
         # Processing extra tokens: peptide terminal residues + length.
         # These give the processing latent TAP/ERAP/cleavage boundary
@@ -2554,7 +2781,7 @@ class Presto(nn.Module):
                 allowed = allowed | seg_masks[seg_name]
 
             extra_tokens: List[torch.Tensor] = []
-            if name == "processing":
+            if name in _gets_processing_extra:
                 extra_tokens.extend(_processing_extra)
             if name in _gets_apc_context:
                 extra_tokens.append(apc_cell_type_context)
@@ -2619,14 +2846,41 @@ class Presto(nn.Module):
                 )
                 latent_store["foreignness"] = latent_vals["foreignness"]
 
-        processing_vec = latent_vals["processing"]
-        interaction_vec = self.pmhc_interaction_vec_norm(latent_vals["pmhc_interaction"])
-        latent_vals["pmhc_interaction"] = interaction_vec
-        recognition_vec = latent_vals["recognition"]
+        if self.latent_topology == "expanded":
+            # Each specified latent has its own query, so read them directly
+            # rather than projecting out of a shared one.
+            interaction_vec = self.pmhc_interaction_vec_norm(
+                latent_vals["binding_affinity"]
+            )
+            stability_interaction_vec = self.pmhc_interaction_vec_norm(
+                latent_vals["binding_stability"]
+            )
+            recognition_cd8_raw = latent_vals["recognition_cd8"]
+            recognition_cd4_raw = latent_vals["recognition_cd4"]
+            processing_vec = latent_vals["processing_class1"]
+            recognition_vec = recognition_cd8_raw
+            # Collapsed-topology aliases, kept so trunk-state reconstruction and
+            # probe code that reads the old latent names keeps working.
+            latent_vals["pmhc_interaction"] = interaction_vec
+            latent_vals["processing"] = processing_vec
+            latent_vals["recognition"] = recognition_vec
+        else:
+            processing_vec = latent_vals["processing"]
+            interaction_vec = self.pmhc_interaction_vec_norm(
+                latent_vals["pmhc_interaction"]
+            )
+            latent_vals["pmhc_interaction"] = interaction_vec
+            recognition_vec = latent_vals["recognition"]
+            stability_interaction_vec = interaction_vec
+            recognition_cd8_raw = recognition_vec
+            recognition_cd4_raw = recognition_vec
 
-        # Simplified binding path: interaction_vec → proj → binding_affinity_vec
+        # Binding readouts. Collapsed shares one interaction vector across both;
+        # expanded gives stability its own latent.
         binding_affinity_vec = self.binding_affinity_readout_proj(interaction_vec)
-        binding_stability_vec = self.binding_stability_readout_proj(interaction_vec)
+        binding_stability_vec = self.binding_stability_readout_proj(
+            stability_interaction_vec
+        )
         direct_segment_input = torch.cat([pep_vec, mhc_a_vec, mhc_b_vec], dim=-1)
         direct_affinity_vec = self.binding_direct_segment_affinity_proj(direct_segment_input)
         direct_stability_vec = self.binding_direct_segment_stability_proj(direct_segment_input)
@@ -2647,32 +2901,53 @@ class Presto(nn.Module):
         outputs["binding_direct_affinity_vec"] = direct_affinity_vec
         outputs["binding_direct_stability_vec"] = direct_stability_vec
 
-        # Class-specific processing projections
-        processing_class1_vec = self.processing_class1_proj(processing_vec)
-        processing_class2_vec = self.processing_class2_proj(processing_vec)
+        if self.latent_topology == "expanded":
+            processing_class1_vec = latent_vals["processing_class1"]
+            processing_class2_vec = latent_vals["processing_class2"]
+            # Presentation is a pure bottleneck: its latent already cross-attends
+            # to {processing_classX, binding_affinity, binding_stability} and to
+            # no tokens at all, so there is no MLP to apply here.
+            presentation_class1_vec = self.presentation_class1_vec_norm(
+                latent_vals["presentation_class1"]
+            )
+            presentation_class2_vec = self.presentation_class2_vec_norm(
+                latent_vals["presentation_class2"]
+            )
+            immunogenicity_inputs_cd8 = [
+                interaction_vec,
+                stability_interaction_vec,
+                recognition_cd8_raw,
+            ]
+            immunogenicity_inputs_cd4 = [
+                interaction_vec,
+                stability_interaction_vec,
+                recognition_cd4_raw,
+            ]
+        else:
+            # Class-specific processing projections
+            processing_class1_vec = self.processing_class1_proj(processing_vec)
+            processing_class2_vec = self.processing_class2_proj(processing_vec)
 
-        # Class-specific presentation MLPs
-        presentation_class1_vec = self.presentation_class1_vec_norm(
-            self.presentation_class1_mlp(
-                torch.cat([processing_class1_vec, interaction_vec], dim=-1)
+            # Class-specific presentation MLPs
+            presentation_class1_vec = self.presentation_class1_vec_norm(
+                self.presentation_class1_mlp(
+                    torch.cat([processing_class1_vec, interaction_vec], dim=-1)
+                )
             )
-        )
-        presentation_class2_vec = self.presentation_class2_vec_norm(
-            self.presentation_class2_mlp(
-                torch.cat([processing_class2_vec, interaction_vec], dim=-1)
+            presentation_class2_vec = self.presentation_class2_vec_norm(
+                self.presentation_class2_mlp(
+                    torch.cat([processing_class2_vec, interaction_vec], dim=-1)
+                )
             )
-        )
+            immunogenicity_inputs_cd8 = [interaction_vec, recognition_cd8_raw]
+            immunogenicity_inputs_cd4 = [interaction_vec, recognition_cd4_raw]
 
         # Lineage-specific immunogenicity MLPs
         immunogenicity_cd8_vec = self.immunogenicity_cd8_vec_norm(
-            self.immunogenicity_cd8_mlp(
-                torch.cat([interaction_vec, recognition_vec], dim=-1)
-            )
+            self.immunogenicity_cd8_mlp(torch.cat(immunogenicity_inputs_cd8, dim=-1))
         )
         immunogenicity_cd4_vec = self.immunogenicity_cd4_vec_norm(
-            self.immunogenicity_cd4_mlp(
-                torch.cat([interaction_vec, recognition_vec], dim=-1)
-            )
+            self.immunogenicity_cd4_mlp(torch.cat(immunogenicity_inputs_cd4, dim=-1))
         )
 
         latent_vals["binding_affinity"] = binding_affinity_vec
@@ -2681,8 +2956,8 @@ class Presto(nn.Module):
         latent_vals["processing_class2"] = processing_class2_vec
         latent_vals["presentation_class1"] = presentation_class1_vec
         latent_vals["presentation_class2"] = presentation_class2_vec
-        latent_vals["recognition_cd8"] = recognition_vec
-        latent_vals["recognition_cd4"] = recognition_vec
+        latent_vals["recognition_cd8"] = recognition_cd8_raw
+        latent_vals["recognition_cd4"] = recognition_cd4_raw
         latent_vals["immunogenicity_cd8"] = immunogenicity_cd8_vec
         latent_vals["immunogenicity_cd4"] = immunogenicity_cd4_vec
         # Compat aliases for training code
@@ -2690,6 +2965,49 @@ class Presto(nn.Module):
         latent_vals["recognition_mixed"] = recognition_vec
         latent_vals["immunogenicity_mixed"] = immunogenicity_cd8_vec
         latent_vals["presentation_mixed"] = presentation_class1_vec
+
+        # ------------------------------------------------------------------
+        # Excision: was this peptide cut out of its source protein by this
+        # machinery? Scores both junctions from the residues that flank them.
+        # ------------------------------------------------------------------
+        machinery_idx = self._resolve_machinery_idx(
+            machinery, class_probs, batch_size, pep_tok.device
+        )
+        cathepsin_idx = EXCISION_MACHINERY_TO_IDX["cathepsin"]
+        junction_vec = torch.where(
+            (machinery_idx == cathepsin_idx).unsqueeze(-1),
+            processing_class2_vec,
+            processing_class1_vec,
+        )
+        fallback_token = self.missing_token_idx
+        peptide_lengths = (pep_tok != 0).long().sum(dim=1)
+        excision_outputs = self.excision_head(
+            processing_vec=junction_vec,
+            machinery_idx=machinery_idx,
+            # C-terminal junction: peptide's last residue is P1, the first
+            # C-flank residue is P1'.
+            p1_c_idx=self._last_valid_token(
+                pep_tok, batch_size, pep_tok.device, fallback_token
+            ),
+            p1_prime_c_idx=self._first_valid_token(
+                flank_c_tok, batch_size, pep_tok.device, fallback_token
+            ),
+            # N-terminal junction: the last N-flank residue is P1, the
+            # peptide's first residue is P1'.
+            p1_n_idx=self._last_valid_token(
+                flank_n_tok, batch_size, pep_tok.device, fallback_token
+            ),
+            p1_prime_n_idx=self._first_valid_token(
+                pep_tok, batch_size, pep_tok.device, fallback_token
+            ),
+            peptide_len=peptide_lengths,
+            peptide_tokens=pep_tok,
+        )
+        outputs.update(excision_outputs)
+        outputs["excision_prob"] = torch.sigmoid(
+            excision_outputs["excision_logit"]
+        )
+        outputs["excision_machinery_idx"] = machinery_idx
 
         outputs["latent_vecs"] = latent_vals
         if return_binding_attention and binding_attention:

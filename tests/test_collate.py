@@ -609,3 +609,79 @@ class TestCollateDictBatch:
         result = collate_dict_batch(batch, tokenizer=tokenizer)
 
         assert "pep_tok" in result
+
+
+class TestStabilityAssayDescriptors:
+    """Stability rows must carry a distinguishable assay descriptor.
+
+    Half-life is measured by several mutually non-comparable methods
+    (radioactivity vs fluorescence dissociation, purified vs cellular vs lysate
+    MHC). Before these rows fed the shared prep/geometry/readout factorization
+    they all collapsed to ``unknown``, so the model could not tell one method's
+    scale from another's. See docs/assay_learning_scheme.md.
+    """
+
+    MHC_A = "GSHSMRYFYT" * 4
+    MHC_B = "IQRTPKIQVY" * 4
+
+    HALF_LIFE_METHODS = [
+        "purified MHC/direct/radioactivity",
+        "purified MHC/direct/fluorescence",
+        "cellular MHC/direct/fluorescence",
+        "binding assay",
+        "lysate MHC/direct/radioactivity",
+    ]
+
+    def _stability_sample(self, method):
+        return PrestoSample(
+            peptide="SIINFEKLA",
+            mhc_a=self.MHC_A,
+            mhc_b=self.MHC_B,
+            mhc_class="I",
+            t_half=4.0,
+            stability_assay_type="half life",
+            stability_assay_method=method,
+        )
+
+    def test_half_life_methods_get_distinct_descriptors(self):
+        samples = [self._stability_sample(m) for m in self.HALF_LIFE_METHODS]
+        context = PrestoCollator()(samples).binding_context
+        triples = {
+            (
+                int(context["assay_prep_idx"][i]),
+                int(context["assay_geometry_idx"][i]),
+                int(context["assay_readout_idx"][i]),
+            )
+            for i in range(len(samples))
+        }
+        assert len(triples) == len(self.HALF_LIFE_METHODS)
+
+    def test_stability_descriptor_is_not_unknown(self):
+        samples = [self._stability_sample("purified MHC/direct/radioactivity")]
+        context = PrestoCollator()(samples).binding_context
+        for key in ("assay_prep_idx", "assay_geometry_idx", "assay_readout_idx"):
+            assert int(context[key][0]) != 0, f"{key} fell back to 'unknown'"
+
+    def test_binding_method_takes_precedence_over_stability(self):
+        """A binding row keeps its own descriptor; the fallback must not shadow it."""
+        sample = PrestoSample(
+            peptide="SIINFEKLA",
+            mhc_a=self.MHC_A,
+            mhc_b=self.MHC_B,
+            mhc_class="I",
+            bind_value=17.0,
+            bind_measurement_type="dissociation constant KD (~IC50)",
+            binding_assay_method="purified MHC/competitive/radioactivity",
+            stability_assay_method="cellular MHC/direct/fluorescence",
+        )
+        context = PrestoCollator()([sample]).binding_context
+        from presto.data.vocab import (
+            IDX_TO_BINDING_ASSAY_GEOMETRY,
+            IDX_TO_BINDING_ASSAY_PREP,
+        )
+
+        assert IDX_TO_BINDING_ASSAY_PREP[int(context["assay_prep_idx"][0])] == "PURIFIED"
+        assert (
+            IDX_TO_BINDING_ASSAY_GEOMETRY[int(context["assay_geometry_idx"][0])]
+            == "COMPETITIVE"
+        )

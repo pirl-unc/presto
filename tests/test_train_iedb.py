@@ -1925,6 +1925,14 @@ def test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved(tmp_path, mo
         "presto.scripts.train_iedb.load_records_from_merged_tsv",
         _fake_load_records_from_merged_tsv,
     )
+    # `run()` asserts at startup that `mhcseqs` did not resolve to an empty
+    # namespace package, which it does under pytest because the repo's parent
+    # (`~/code`, holding a `mhcseqs/` directory) is on sys.path. This test fakes
+    # the whole data layer and is exercising the strict-resolution failure path,
+    # not the environment precondition, so opt out of the check.
+    monkeypatch.setattr(
+        "presto.scripts.train_iedb._assert_mhcseqs_importable", lambda: None
+    )
 
     args = argparse.Namespace(
         data_dir=str(tmp_path),

@@ -32,6 +32,7 @@ import re
 import torch
 from torch.utils.data import Dataset, DataLoader, Sampler
 
+from .bulk_ms import BulkMSRecord
 from .collate import PrestoSample, PrestoCollator
 from .groove import prepare_mhc_input
 from .vocab import normalize_organism, FOREIGN_CATEGORIES
@@ -157,6 +158,8 @@ class BindingRecord:
     qualifier: int = 0              # -1='<', 0='=', 1='>'
     measurement_type: str = "IC50"  # IC50, KD, EC50
     unit: str = "nM"
+    flank_n: str = ""               # N-terminal flanking sequence in the source protein
+    flank_c: str = ""               # C-terminal flanking sequence in the source protein
     assay_type: Optional[str] = None
     assay_method: Optional[str] = None
     effector_culture_condition: Optional[str] = None
@@ -179,6 +182,7 @@ class KineticsRecord:
     kon_qualifier: int = 0
     koff_qualifier: int = 0
     assay_type: Optional[str] = None
+    assay_method: Optional[str] = None  # e.g. purified MHC/direct/radioactivity
     mhc_sequence: Optional[str] = None
     mhc_class: Optional[str] = None
     species: Optional[str] = None
@@ -197,6 +201,11 @@ class StabilityRecord:
     t_half_qualifier: int = 0
     tm_qualifier: int = 0
     assay_type: Optional[str] = None
+    # Half-life is measured by several mutually non-comparable methods
+    # (radioactivity vs fluorescence dissociation, purified vs cellular MHC).
+    # Preserved here so the output side can model the offset the way binding
+    # already does for IC50 vs KD; see tasks/protease_detectability_spec.md.
+    assay_method: Optional[str] = None
     mhc_sequence: Optional[str] = None
     mhc_class: Optional[str] = None
     species: Optional[str] = None
@@ -226,6 +235,8 @@ class ElutionRecord:
     peptide: str
     alleles: List[str]              # Can be multiple (deconvolution needed)
     detected: bool = True           # Was peptide detected?
+    flank_n: str = ""               # N-terminal flanking sequence in the source protein
+    flank_c: str = ""               # C-terminal flanking sequence in the source protein
     cell_type: Optional[str] = None
     tissue: Optional[str] = None
     mhc_class: Optional[str] = None
@@ -1592,6 +1603,7 @@ class PrestoDataset(Dataset):
     def __init__(
         self,
         binding_records: List[BindingRecord] = None,
+        bulk_ms_records: List[BulkMSRecord] = None,
         kinetics_records: List[KineticsRecord] = None,
         stability_records: List[StabilityRecord] = None,
         processing_records: List[ProcessingRecord] = None,
@@ -1697,6 +1709,8 @@ class PrestoDataset(Dataset):
             so, fl = _organism_fields(rec.antigen_species)
             self.samples.append(PrestoSample(
                 peptide=rec.peptide,
+                flank_n=rec.flank_n or None,
+                flank_c=rec.flank_c or None,
                 mhc_a=mhc_a_seq,
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
@@ -1735,6 +1749,8 @@ class PrestoDataset(Dataset):
                 mhc_class=mhc_class,
                 kon=rec.kon,
                 koff=rec.koff,
+                kinetics_assay_type=rec.assay_type,
+                kinetics_assay_method=rec.assay_method,
                 species=rec.species,
                 species_of_origin=so,
                 foreignness_label=fl,
@@ -1763,6 +1779,10 @@ class PrestoDataset(Dataset):
                 mhc_class=mhc_class,
                 t_half=rec.t_half,
                 tm=rec.tm,
+                t_half_qual=rec.t_half_qualifier,
+                tm_qual=rec.tm_qualifier,
+                stability_assay_type=rec.assay_type,
+                stability_assay_method=rec.assay_method,
                 species=rec.species,
                 species_of_origin=so,
                 foreignness_label=fl,
@@ -1802,6 +1822,33 @@ class PrestoDataset(Dataset):
                 sample_id=f"proc_{len(self.samples)}",
             ))
 
+        # Add non-MHC shotgun samples (MS detectability + excision).
+        # These rows have no MHC at all: mhc_a/mhc_b stay empty and the model
+        # substitutes a <MISSING> token per segment. They exist to identify the
+        # detectability term, which immunopeptidomics alone cannot separate
+        # from excision. See data/bulk_ms.py.
+        for rec in (bulk_ms_records or []):
+            self.samples.append(PrestoSample(
+                peptide=rec.peptide,
+                flank_n=rec.flank_n or None,
+                flank_c=rec.flank_c or None,
+                mhc_a="",
+                mhc_b="",
+                mhc_class=None,
+                machinery=rec.machinery,
+                ms_detectability_label=rec.detectability_label,
+                excision_label=rec.excision_label,
+                source_protein=rec.protein_id or None,
+                sample_source=_source_label(rec.source),
+                assay_group="bulk_ms",
+                label_bucket=(
+                    "positive" if (rec.excision_label or 0.0) >= 0.5 else "negative"
+                ),
+                primary_allele=None,
+                synthetic_kind=None,
+                sample_id=f"bulk_{len(self.samples)}",
+            ))
+
         # Add elution samples
         for rec in (elution_records or []):
             mil_mhc_a_list: List[str] = []
@@ -1828,6 +1875,8 @@ class PrestoDataset(Dataset):
             so, fl = _organism_fields(rec.antigen_species)
             self.samples.append(PrestoSample(
                 peptide=rec.peptide,
+                flank_n=rec.flank_n or None,
+                flank_c=rec.flank_c or None,
                 mhc_a=mhc_a_seq,
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
@@ -2516,6 +2565,9 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         self._binding_peptide_by_index: Dict[int, str] = {}
         self._binding_rankable_partner_indices: Dict[int, Tuple[int, ...]] = {}
         self._binding_rankable_seed_indices: List[int] = []
+        self._machinery_by_index: Dict[int, str] = {}
+        self._branch_by_index: Dict[int, str] = {}
+        self._contrast_groups: List[Tuple[int, ...]] = []
 
         task_counts: Dict[str, int] = defaultdict(int)
         source_counts: Dict[str, int] = defaultdict(int)
@@ -2524,6 +2576,8 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         mhc_class_counts: Dict[str, int] = defaultdict(int)
         species_counts: Dict[str, int] = defaultdict(int)
         synthetic_counts: Dict[str, int] = defaultdict(int)
+        machinery_counts: Dict[str, int] = defaultdict(int)
+        branch_counts: Dict[str, int] = defaultdict(int)
         for idx in self._all_indices:
             sample = dataset[idx]
             task = self._sample_task_group(sample)
@@ -2533,6 +2587,10 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             mhc_class = self._sample_mhc_class(sample)
             species = self._sample_species_bucket(sample)
             synthetic = self._sample_synthetic_kind(sample)
+            machinery = self._sample_machinery(sample)
+            branch = self._sample_branch(sample)
+            self._machinery_by_index[idx] = machinery
+            self._branch_by_index[idx] = branch
 
             self._metadata_by_index[idx] = (
                 task,
@@ -2553,6 +2611,8 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             mhc_class_counts[mhc_class] += 1
             species_counts[species] += 1
             synthetic_counts[synthetic] += 1
+            machinery_counts[machinery] += 1
+            branch_counts[branch] += 1
 
         for idx, (task, source, label, allele, mhc_class, species, synthetic) in self._metadata_by_index.items():
             # Product of inverse frequencies to upweight underrepresented strata.
@@ -2564,9 +2624,12 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             weight *= 1.0 / float(mhc_class_counts[mhc_class] + 1)
             weight *= 1.0 / float(species_counts[species] + 1)
             weight *= 1.0 / float(synthetic_counts[synthetic] + 1)
+            weight *= 1.0 / float(machinery_counts[self._machinery_by_index[idx]] + 1)
+            weight *= 1.0 / float(branch_counts[self._branch_by_index[idx]] + 1)
             self._index_weight[idx] = weight
 
         self._build_binding_family_index()
+        self._build_contrast_index()
         self._tasks = sorted(self._task_to_indices.keys())
         if not self._tasks:
             raise ValueError("Cannot build balanced sampler: dataset is empty")
@@ -2584,6 +2647,8 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             return "binding_kinetics"
         if sample.t_half is not None or sample.tm is not None:
             return "binding_stability"
+        if sample.ms_detectability_label is not None or sample.excision_label is not None:
+            return "bulk_ms"
         if sample.processing_label is not None:
             return "processing"
         if sample.elution_label is not None:
@@ -2593,6 +2658,31 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         if sample.tcr_evidence_label is not None:
             return "tcr_evidence"
         return "other"
+
+    @staticmethod
+    def _sample_machinery(sample: PrestoSample) -> str:
+        """Which machinery liberated the peptide.
+
+        A stratum in its own right: without it the four in-vitro protease arms
+        get pooled and the enzyme with the most rows (trypsin, by 20x) swamps
+        the ones that carry the non-K/R C-terminal chemistry.
+        """
+        machinery = (sample.machinery or "").strip().lower()
+        if machinery:
+            return machinery
+        mhc_class = (sample.mhc_class or "").strip().upper()
+        return "cathepsin" if mhc_class == "II" else "proteasome"
+
+    @staticmethod
+    def _sample_branch(sample: PrestoSample) -> str:
+        """MHC branch vs non-MHC shotgun branch."""
+        if sample.ms_detectability_label is not None or sample.excision_label is not None:
+            return "shotgun"
+        return "mhc"
+
+    @staticmethod
+    def _sample_source_protein(sample: PrestoSample) -> str:
+        return (sample.source_protein or "").strip() or "unknown_protein"
 
     @staticmethod
     def _sample_source(sample: PrestoSample) -> str:
@@ -2693,6 +2783,70 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             return lower_a - upper_b
         return 0.0
 
+    # Contrast groups. The identification argument behind the shotgun branch is
+    # a statement about *comparisons*, so the sampler has to make those
+    # comparisons occur inside a batch rather than hope they do:
+    #
+    #   protease      same peptide, different machinery  -> isolates excision
+    #   detectability same protein + machinery, observed vs not -> isolates
+    #                 detectability with abundance held fixed
+    #
+    # This generalizes the same-peptide/different-allele co-batching that
+    # binding already relies on for its ranking losses.
+    CONTRAST_MAX_GROUP = 8
+    BINDING_FAMILY_MAX_GROUP = 64
+
+    def _build_contrast_index(self) -> None:
+        by_peptide: Dict[str, List[int]] = defaultdict(list)
+        by_protein: Dict[Tuple[str, str], List[int]] = defaultdict(list)
+        for idx in self._all_indices:
+            if self._branch_by_index.get(idx) != "shotgun":
+                continue
+            sample = self.dataset[idx]
+            peptide = str(getattr(sample, "peptide", "") or "").strip().upper()
+            if peptide:
+                by_peptide[peptide].append(idx)
+            protein = self._sample_source_protein(sample)
+            if protein != "unknown_protein":
+                by_protein[(protein, self._machinery_by_index.get(idx, "unknown"))].append(idx)
+
+        groups: List[Tuple[int, ...]] = []
+
+        # protease contrast: the group must actually vary the machinery
+        for indices in by_peptide.values():
+            if len(indices) < 2:
+                continue
+            machineries = {self._machinery_by_index.get(i) for i in indices}
+            if len(machineries) < 2:
+                continue
+            groups.append(tuple(indices[: self.CONTRAST_MAX_GROUP]))
+
+        # detectability contrast: same protein and enzyme, differing outcome
+        for indices in by_protein.values():
+            if len(indices) < 2:
+                continue
+            labels = {self._label_bucket_by_index(i) for i in indices}
+            if len(labels) < 2:
+                continue
+            groups.append(tuple(indices[: self.CONTRAST_MAX_GROUP]))
+
+        self._contrast_groups = groups
+
+    def _label_bucket_by_index(self, idx: int) -> str:
+        metadata = self._metadata_by_index.get(idx)
+        return metadata[2] if metadata else "unknown"
+
+    def _contrast_quota(self) -> int:
+        """How many contrast groups to seed a batch with.
+
+        A quarter of the batch, which leaves the ordinary weighted sampling in
+        charge of the rest. Zero when there are no groups, so the MHC-only
+        configuration behaves exactly as before.
+        """
+        if not self._contrast_groups:
+            return 0
+        return max(1, self.batch_size // 8)
+
     def _build_binding_family_index(self) -> None:
         peptide_groups: Dict[str, List[int]] = defaultdict(list)
         for idx in self._all_indices:
@@ -2709,6 +2863,13 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         for peptide, indices in peptide_groups.items():
             if len(indices) < 2:
                 continue
+            # Pairing is quadratic in the group size, and a well-studied peptide
+            # can be measured against hundreds of alleles. Cap the group: the
+            # ranking loss needs a few rankable partners per row, not every
+            # pair. Without this the index dominates sampler construction on a
+            # full-scale corpus.
+            if len(indices) > self.BINDING_FAMILY_MAX_GROUP:
+                indices = indices[: self.BINDING_FAMILY_MAX_GROUP]
             for pos, idx_i in enumerate(indices):
                 sample_i = self.dataset[idx_i]
                 allele_i = str(getattr(sample_i, "primary_allele", "") or "").strip()
@@ -3084,6 +3245,33 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             batch_binding_peptide_counts: Dict[str, int] = defaultdict(int)
 
             quotas = self._task_quotas(tasks, rng)
+
+            # Seed with complete contrast groups first, so the comparisons the
+            # shotgun branch depends on are guaranteed to co-occur in the batch
+            # rather than being left to chance.
+            for _ in range(self._contrast_quota()):
+                if len(batch) >= self.batch_size:
+                    break
+                group = self._contrast_groups[rng.randrange(len(self._contrast_groups))]
+                fresh = [i for i in group if i not in in_batch]
+                if len(fresh) < 2:
+                    continue
+                for idx in fresh[: max(2, self.batch_size - len(batch))]:
+                    if len(batch) >= self.batch_size:
+                        break
+                    self._record_batch_index(
+                        idx,
+                        batch,
+                        in_batch,
+                        batch_source_counts,
+                        batch_label_counts,
+                        batch_allele_counts,
+                        batch_mhc_class_counts,
+                        batch_species_counts,
+                        batch_synthetic_counts,
+                        batch_binding_indices=batch_binding_indices,
+                        batch_binding_peptide_counts=batch_binding_peptide_counts,
+                    )
 
             for task, task_quota in quotas.items():
                 family_draws = 0

@@ -341,20 +341,29 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         mask_attr="koff_mask",
     ),
     TaskLossSpec(
+        # Censor-aware, not plain MSE. 51 half-life rows carry an inequality and
+        # the qualifier was collected then ignored, so a ">2h" measurement was
+        # trained as if it were exactly 2h. The t_half target transform is
+        # monotone increasing (unlike the inverting affinity encoding), so the
+        # censor codes carry through unchanged.
         name="t_half",
         target_key="t_half",
         mask_key="t_half",
         pred_paths=(("assays", "t_half"),),
-        loss_type="mse",
+        loss_type="censor",
         target_attr="t_half_target",
         mask_attr="t_half_mask",
+        qual_key="t_half",
+        qual_attr="t_half_qual",
     ),
     TaskLossSpec(
         name="tm",
         target_key="tm",
         mask_key="tm",
         pred_paths=(("assays", "Tm"),),
-        loss_type="mse",
+        loss_type="censor",
+        qual_key="tm",
+        qual_attr="tm_qual",
         target_attr="tm_target",
         mask_attr="tm_mask",
     ),
@@ -373,6 +382,30 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
             max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
             assume_log10=False,
         ),
+        base_weight=1.0,
+    ),
+    TaskLossSpec(
+        # Supervises the detectability latent directly. Without it the latent
+        # is a free bottleneck that silently absorbs whatever the presentation
+        # pathway cannot explain; the shotgun corpus is what makes it
+        # identifiable. Targets are graded over the fractionation-depth ladder,
+        # so BCE is used with soft targets.
+        name="ms_detectability",
+        target_key="ms_detectability",
+        mask_key="ms_detectability",
+        pred_paths=(("ms_detectability_logit",),),
+        loss_type="bce",
+        base_weight=0.5,
+    ),
+    TaskLossSpec(
+        # Machinery-conditioned excision. Positives are peptides an arm
+        # actually observed; negatives relabel a peptide with an enzyme whose
+        # cleavage rule its termini violate.
+        name="excision",
+        target_key="excision",
+        mask_key="excision",
+        pred_paths=(("excision_logit",),),
+        loss_type="bce",
         base_weight=1.0,
     ),
     TaskLossSpec(
@@ -1906,6 +1939,7 @@ def compute_loss(
             flank_n_tok=batch.flank_n_tok,
             flank_c_tok=batch.flank_c_tok,
             tcell_context=batch.tcell_context if batch.tcell_context else None,
+            machinery=getattr(batch, "machinery_idx", None),
             return_binding_attention=return_binding_attention,
         )
         if profile_performance:

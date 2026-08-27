@@ -20,6 +20,7 @@ from .vocab import (
     BINDING_ASSAY_TYPE_TO_IDX,
     FOREIGN_CATEGORIES,
     ORGANISM_TO_IDX,
+    excision_machinery_index,
     TCELL_APC_TYPE_TO_IDX,
     TCELL_ASSAY_METHOD_TO_IDX,
     TCELL_ASSAY_READOUT_TO_IDX,
@@ -106,6 +107,18 @@ TARGET_SPECS: tuple[TargetSpec, ...] = (
         mask_field="elution_mask",
     ),
     TargetSpec(
+        task_name="ms_detectability",
+        sample_field="ms_detectability_label",
+        target_field="ms_detectability_label",
+        mask_field="ms_detectability_mask",
+    ),
+    TargetSpec(
+        task_name="excision",
+        sample_field="excision_label",
+        target_field="excision_label",
+        mask_field="excision_mask",
+    ),
+    TargetSpec(
         task_name="processing",
         sample_field="processing_label",
         target_field="processing_label",
@@ -153,10 +166,35 @@ class PrestoSample:
     # Kinetics
     kon: Optional[float] = None
     koff: Optional[float] = None
+    kinetics_assay_type: Optional[str] = None
+    kinetics_assay_method: Optional[str] = None
+
+    # Excision / MS detectability (non-MHC shotgun corpus)
+    # machinery: which protease or in-vivo pathway cut this peptide out of its
+    # source protein. Output-side only -- it indexes the excision readout and
+    # never reaches the trunk. See docs/assay_learning_scheme.md.
+    machinery: Optional[str] = None
+    ms_detectability_label: Optional[float] = None
+    excision_label: Optional[float] = None
+    # Source protein the peptide was cut out of. Used to co-batch peptides from
+    # the same protein, which is what holds abundance fixed when comparing
+    # observed against not-observed candidates.
+    source_protein: Optional[str] = None
 
     # Stability
     t_half: Optional[float] = None
     tm: Optional[float] = None
+    # Half-life spans several mutually non-comparable methods (radioactivity vs
+    # fluorescence dissociation, purified vs cellular vs lysate MHC). Kept so the
+    # output side can model the method offset the way binding already does for
+    # IC50 vs KD. See docs/assay_learning_scheme.md.
+    stability_assay_type: Optional[str] = None
+    stability_assay_method: Optional[str] = None
+    # Censor codes (-1 '<', 0 '=', 1 '>'). Collected but historically discarded:
+    # the t_half loss was plain MSE, so a ">2h" measurement was trained as if it
+    # were exactly 2h. 51 half-life rows in the corpus carry an inequality.
+    t_half_qual: int = 0
+    tm_qual: int = 0
 
     # T-cell
     tcell_label: Optional[float] = None
@@ -251,6 +289,9 @@ class PrestoBatch:
     # Binding assay metadata is supervision-only bookkeeping. It is not a
     # canonical model input for the main Presto assay path.
     binding_context: Dict[str, torch.Tensor] = field(default_factory=dict)
+    # Excision machinery index per row; consumed by the output-side
+    # excision head, never by the trunk.
+    machinery_idx: Optional[torch.Tensor] = None
     # Legacy T-cell assay metadata. Keep for supervision bookkeeping while the
     # context-conditioned T-cell path is being refactored toward the same
     # outputs-only assay contract.
@@ -351,6 +392,7 @@ class PrestoBatch:
             target_quals={
                 name: _move(tensor) for name, tensor in self.target_quals.items()
             },
+            machinery_idx=_move(self.machinery_idx),
             binding_context={
                 name: _move(tensor) for name, tensor in self.binding_context.items()
             },
@@ -710,6 +752,17 @@ class PrestoCollator:
             return "IC50"
         if "ec50" in token or "effective concentration" in token:
             return "EC50"
+        # Stability / kinetics are checked before the bare "kd" test: hitlist's
+        # "50% dissociation temperature" contains "dissociation" and would
+        # otherwise be miscategorized as a KD affinity measurement.
+        if "half life" in token or "t_half" in token or "t1/2" in token:
+            return "T_HALF"
+        if "dissociation temperature" in token or token == "tm":
+            return "TM"
+        if "off rate" in token or "koff" in token:
+            return "KOFF"
+        if "on rate" in token or "kon" in token:
+            return "KON"
         if "kd" in token or "dissociation constant" in token:
             return "KD"
         return "OTHER"
@@ -764,14 +817,39 @@ class PrestoCollator:
 
         return (prep, geometry, readout)
 
+    def _collate_machinery(self, samples: List[PrestoSample]) -> torch.Tensor:
+        """Per-row excision machinery index.
+
+        Rows that do not declare one fall back to the in-vivo pathway implied
+        by MHC class: class I is degraded by the proteasome, class II by
+        endo/lysosomal cathepsins.
+        """
+        indices: List[int] = []
+        for sample in samples:
+            if sample.machinery:
+                indices.append(excision_machinery_index(sample.machinery))
+                continue
+            mhc_class = (sample.mhc_class or "").strip().upper()
+            default = "cathepsin" if mhc_class == "II" else "proteasome"
+            indices.append(excision_machinery_index(default))
+        return torch.tensor(indices, dtype=torch.long)
+
     def _collate_binding_context(
         self,
         samples: List[PrestoSample],
     ) -> Dict[str, torch.Tensor]:
-        """Build output-supervision metadata for binding assay labels.
+        """Build output-supervision metadata for quantitative assay labels.
 
         This metadata is used to route losses/metrics by assay family. The main
         Presto assay path must not consume it as predictive input.
+
+        The prep/geometry/readout factorization is shared across quantitative
+        assay families: ``purified MHC/direct/fluorescence`` means the same
+        thing whether it produced an IC50 or a dissociation half-life. Stability
+        and kinetics rows therefore fall back to their own recorded method so
+        they carry real descriptors instead of ``unknown``. Those rows are
+        masked out of the affinity losses, so this only enriches the
+        output-side descriptor; it does not route them into an affinity head.
         """
         assay_type_idx: List[int] = []
         assay_method_idx: List[int] = []
@@ -781,13 +859,19 @@ class PrestoCollator:
 
         for sample in samples:
             assay_type_label = self._categorize_binding_assay_type(
-                sample.binding_assay_type or sample.bind_measurement_type
+                sample.binding_assay_type
+                or sample.bind_measurement_type
+                or sample.stability_assay_type
+                or sample.kinetics_assay_type
             )
-            assay_method_label = self._categorize_binding_assay_method(
+            resolved_method = (
                 sample.binding_assay_method
+                or sample.stability_assay_method
+                or sample.kinetics_assay_method
             )
+            assay_method_label = self._categorize_binding_assay_method(resolved_method)
             assay_prep_label, assay_geometry_label, assay_readout_label = (
-                self._factorize_binding_assay_method(sample.binding_assay_method)
+                self._factorize_binding_assay_method(resolved_method)
             )
             assay_type_idx.append(
                 BINDING_ASSAY_TYPE_TO_IDX.get(
@@ -1292,6 +1376,7 @@ class PrestoCollator:
         )
         # Binding assay metadata is kept for supervision/analysis only.
         binding_context = self._collate_binding_context(samples)
+        machinery_idx = self._collate_machinery(samples)
         targets.update(binding_targets)
         target_masks.update(binding_masks)
         tcr_evidence_targets, tcr_evidence_masks = self._collate_tcr_evidence_targets(samples)
@@ -1349,6 +1434,12 @@ class PrestoCollator:
                 dtype=torch.long,
             ).unsqueeze(-1)
         target_quals.update(binding_quals)
+        for task_name, attribute in (("t_half", "t_half_qual"), ("tm", "tm_qual")):
+            if task_name in targets:
+                target_quals[task_name] = torch.tensor(
+                    [getattr(sample, attribute, 0) for sample in samples],
+                    dtype=torch.long,
+                ).unsqueeze(-1)
 
         # Backward-compatible aliases while migrating callers to dict-based access.
         bind_target = targets.get("binding")
@@ -1566,6 +1657,7 @@ class PrestoCollator:
             target_masks=target_masks,
             target_quals=target_quals,
             binding_context=binding_context,
+            machinery_idx=machinery_idx,
             tcell_context=tcell_context,
             tcell_context_masks=tcell_context_masks,
             tcell_mil_context=tcell_mil_context,

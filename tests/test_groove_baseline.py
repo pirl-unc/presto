@@ -89,16 +89,28 @@ class TestGrooveBaselineForward:
 
 class TestGrooveBaselineDifferentGrooves:
     def test_different_grooves_differ(self):
-        """Same peptide with different groove sequences should produce different outputs."""
+        """Same peptide with different groove sequences should produce different outputs.
+
+        Seeded deliberately. Both the model init and the token draws were
+        previously unseeded, and the assertion compares two forward passes at
+        ``atol=1e-6`` — with a pooled 91-position groove an unlucky random init
+        can put the delta under that tolerance, which made this flake
+        intermittently under xdist.
+        """
+        torch.manual_seed(0)
+        generator = torch.Generator().manual_seed(0)
         model = GrooveBaselineModel(vocab_size=26, embed_dim=32, hidden_dim=64)
         model.eval()
 
-        pep_tok = torch.randint(4, 24, (1, 9))
-        mhc_a_tok_1 = torch.randint(4, 24, (1, 91))
-        mhc_b_tok_1 = torch.randint(4, 24, (1, 93))
+        def tokens(length):
+            return torch.randint(4, 24, (1, length), generator=generator)
+
+        pep_tok = tokens(9)
+        mhc_a_tok_1 = tokens(91)
+        mhc_b_tok_1 = tokens(93)
         # Create different groove tokens
-        mhc_a_tok_2 = torch.randint(4, 24, (1, 91))
-        mhc_b_tok_2 = torch.randint(4, 24, (1, 93))
+        mhc_a_tok_2 = tokens(91)
+        mhc_b_tok_2 = tokens(93)
         # Ensure they're actually different
         mhc_a_tok_2[0, 0] = (mhc_a_tok_1[0, 0] + 1) % 24 + 4
 

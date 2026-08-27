@@ -1,5 +1,58 @@
 # Lessons
 
+## 2026-08-26
+
+- State an ablation as a factorial, not "with vs without". Adding a corpus usually adds
+  data, a loss, and a new supervision channel at once; a single contrast cannot
+  attribute the result to any of them. Name the arms and say what each isolates, and
+  include a shuffled-label arm so "extra gradient signal" is ruled out separately from
+  the mechanism.
+- Pair every outcome metric with a mechanism check. "Does elution AUPRC improve" and
+  "did the detectability latent actually become identifiable" are different questions,
+  and the second one is measurable directly.
+- New supervision belongs in the canonical trainer, not a fourth script. If the
+  canonical path cannot yet measure the thing being added, that measurement gap is part
+  of the work — surface it in the plan rather than quietly adding another trainer.
+- When an identification argument rests on comparisons (same protein, different enzyme;
+  same enzyme, observed vs not), the batch sampler has to guarantee those comparisons
+  co-occur. Random sampling confounds them with whatever varies across groups.
+- Check what a library already provides before writing the spec for it. Two upstream
+  asks in this session were already implemented; one was filed as an issue before
+  checking and had to be publicly corrected. Read the actual output columns first.
+- A held-out prediction dump must apply the same target transform the loss applies.
+  Dumping raw targets (nM) against transformed predictions compares two different
+  spaces, which makes RMSE, MAE and Pearson meaningless and the CSV impossible to read.
+  Worth fixing on its own merits — but note the follow-on lesson below.
+- When the same failure shape appears a third time, stop patching instances and fix the
+  class. Four tests here flaked for one reason — numeric assertions over unseeded
+  randomness — and under xdist each run blamed a different test, which read as an
+  infrastructure problem. One autouse `torch.manual_seed` fixture in `conftest.py`
+  removed all of them. Note what it does not do: seeding makes a weak assertion
+  reproducible, not correct.
+- Check whether a proposed explanation is even capable of producing the symptom before
+  acting on it. I hypothesised that the mismatched target space explained an observed
+  negative binding Spearman and fixed it expecting the sign to flip. Spearman is
+  invariant to monotone transforms, so it could never have been the cause; the value
+  moved -0.0606 -> -0.0765 and stayed negative. The correct reading was the boring one
+  all along: one epoch of a 32-dim model over 136 measurements.
+- `float("nan")` does not raise, so `try: float(x) except` is not a null check. Test
+  `value != value` explicitly, or NaN targets enter training and poison a loss silently.
+- Verify a claimed input is actually populated end to end before trusting any result
+  that depends on it. Presto declared `nflank`/`cflank` inputs for months while the
+  canonical data path supplied neither, and every recorded baseline listed them.
+- Never launch Presto with `~/code` on `sys.path` (either as cwd or via `PYTHONPATH`).
+  That directory contains a `mhcseqs/` repo folder with no `__init__.py`, which Python
+  treats as an empty namespace package and which shadows the real installed `mhcseqs`.
+  The failure is silent and looks like a data problem: `mhcseqs.__file__` becomes `None`,
+  every allele fails to resolve, and the trainer reports
+  `MHC sequence coverage: resolved=0/11622` then drops 100% of MHC rows in
+  resolved-only mode. Both packages are installed editable, so run from any neutral
+  directory with no `PYTHONPATH` and both import correctly.
+- When a test fails, first ask whether the test or the code is wrong. Two failures here
+  were incorrect assertions about the design (a sanctioned context channel, and a
+  context term that legitimately shifts) — asserting the wrong invariant would have
+  masked the real contract.
+
 ## 2026-02-24
 
 - When the user resolves design conflicts with explicit canonical decisions, convert those decisions into one single canonical spec before making code edits.

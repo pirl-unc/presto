@@ -6,6 +6,8 @@ Unified immunoinformatics for pMHC presentation and T-cell recognition.
 
 - Architecture specification: `design.md`
 - Canonical assay modeling contract: `assay_modeling_contract.md`
+- Complete model input/output contract: `model_io_contract.md`
+- Assay source inventory and supervision map: `assay_learning_scheme.md`
 - Training specification: `training_spec.md`
 - TCR encoder specification: `tcr_spec.md`
 - CLI usage: `cli.md`

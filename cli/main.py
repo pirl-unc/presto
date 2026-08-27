@@ -824,6 +824,82 @@ def create_parser() -> argparse.ArgumentParser:
     )
     train_iedb.add_argument("--data-dir", dest="data_dir", type=str, default="./data", help="Data directory with downloaded datasets")
     train_iedb.add_argument(
+        "--hitlist-mhc-class",
+        dest="train_mhc_class_filter",
+        type=str,
+        default=None,
+        choices=["I", "II"],
+        help="Restrict the hitlist source to one MHC class (bounds load cost)",
+    )
+    train_iedb.add_argument(
+        "--hitlist-allele",
+        dest="hitlist_allele",
+        type=str,
+        default=None,
+        help="Restrict the hitlist source to one allele (bounds load cost)",
+    )
+    train_iedb.add_argument(
+        "--bulk-ms",
+        dest="bulk_ms",
+        action="store_true",
+        default=False,
+        help=(
+            "Include the non-MHC shotgun proteomics corpus. This is what makes "
+            "ms_detectability identifiable: within one protease arm excision is ~1 "
+            "by construction, so observed-vs-not is attributable to detectability alone."
+        ),
+    )
+    train_iedb.add_argument(
+        "--bulk-cell-line", dest="bulk_cell_line", type=str, default=None,
+        help="Restrict the bulk corpus to one cell line (e.g. HeLa)",
+    )
+    train_iedb.add_argument(
+        "--max-bulk-ms", dest="max_bulk_ms", type=int, default=0,
+        help=(
+            "Cap on observed bulk shotgun peptides (0 = no cap). Excision "
+            "negatives are generated on top of this, so the record count can be "
+            "up to twice the cap."
+        ),
+    )
+    train_iedb.add_argument(
+        "--bulk-excision-negative-ratio",
+        dest="bulk_excision_negative_ratio", type=float, default=1.0,
+        help="Per observed peptide, probability of emitting a mismatched-enzyme "
+             "excision negative",
+    )
+    train_iedb.add_argument(
+        "--latent-topology",
+        dest="latent_topology",
+        type=str,
+        choices=["collapsed", "expanded"],
+        default="collapsed",
+        help=(
+            "Latent DAG topology. 'expanded' gives each latent in design.md S7.1 its "
+            "own query and segment scope; 'collapsed' folds them into five shared "
+            "latents plus projections (the historical default)."
+        ),
+    )
+    train_iedb.add_argument(
+        "--data-source",
+        dest="data_source",
+        type=str,
+        choices=["merged_tsv", "hitlist"],
+        default="merged_tsv",
+        help=(
+            "Where binding/stability/kinetics/elution records come from. "
+            "'hitlist' uses the curated upstream indexes, which supply source-protein "
+            "flanks (the merged TSV has none); processing/T-cell/TCR records still come "
+            "from the merged TSV in either mode because hitlist does not carry them."
+        ),
+    )
+    train_iedb.add_argument(
+        "--no-hitlist-flanks",
+        dest="hitlist_flanks",
+        action="store_false",
+        default=True,
+        help="Skip the hitlist source-protein join (parity control for Experiment 0a)",
+    )
+    train_iedb.add_argument(
         "--merged-tsv",
         type=str,
         default=None,

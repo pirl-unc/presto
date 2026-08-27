@@ -1,3 +1,336 @@
+# Protease-Conditioned Excision + MS Detectability Reorg (2026-08-26)
+
+Design spec: `tasks/protease_detectability_spec.md`. This section is the execution plan.
+
+## Decisions taken
+
+- Data layer: **migrate to hitlist-backed loading** (user, 2026-08-26).
+- Scope: **restructure the DAG** back to the `docs/design.md` latent set, in addition to
+  the additive excision/detectability work (user, 2026-08-26).
+- `M` (machinery) and acquisition metadata are **output-side only** — no contract
+  amendment needed. See spec S2.3.
+
+## Findings that motivate the ordering
+
+- **Flanks have never been used.** `data/merged_deduped.tsv` has 31 columns and no
+  flank columns; the merged-TSV reader builds `ProcessingRecord(...)` without
+  `flank_n`/`flank_c` (`scripts/train_iedb.py:3898-3908`); `PrestoCollator` only
+  tokenizes flanks `if any(flank_n_values)` (`data/collate.py:1274`), so
+  `flank_n_tok = flank_c_tok = None` and the model substitutes one `<MISSING>` token
+  (`models/presto.py:985-1009`). Every result in `experiments/` — including the L2
+  baseline in `model_to_beat.md`, whose recorded inputs list `nflank`/`cflank` — was
+  trained on empty flank segments. Junction context is the substrate for excision,
+  so the data migration must come first.
+- **Docs describe 10-12 latents; the code has 5** (`processing`, `ms_detectability`,
+  `species_of_origin`, `pmhc_interaction`, `recognition`, `models/presto.py:166-196`),
+  with class splits as linear projections. `docs/design.md` S7.1 and `TODO.md` are stale.
+- **Baseline comparability is already broken** by the data migration, which makes this
+  the right moment to absorb the DAG restructure — the alternative is breaking
+  comparability twice.
+- **Three trainers exist.** `scripts/train_iedb.py` is canonical and multi-task but
+  emits only `metrics.csv`/`metrics.jsonl` (`training/run_logger.py`). Every Mar-2026
+  experiment actually ran `scripts/focused_binding_probe.py`, which is the only path
+  with AUROC/AUPRC and `val_predictions.csv`/`test_predictions.csv` — and it is
+  hardcoded to binding. Phase-1's question is an *elution* metric, so neither path can
+  answer it today.
+- `curriculum_param_groups` (`models/presto.py:2123-2214`) and
+  `core_supervision_loss` (`:2055-2107`) have **no callers**. `docs/training_spec.md:10-11`
+  forbids hard stage boundaries. Do not build on them.
+
+## Stage 0 — hitlist-backed data layer
+
+- [ ] Add `hitlist` to `pyproject.toml` dependencies
+- [ ] `data/hitlist_source.py`: MHC corpus from `generate_training_table(map_source_proteins=True)`
+      (ships `n_flank`/`c_flank` at 100% across 2.77M mappings) → `PrestoSample` lists
+- [ ] Thread `flank_n`/`flank_c` through every `PrestoDataset` modality loop
+      (`data/loaders.py:1677-1948`), not just the processing loop
+- [ ] Keep `--merged-tsv` path behind a flag for one release so existing experiment
+      bundles still reproduce (`experiments/EXPERIMENT_WORKFLOW.md` requires it)
+- [ ] **Experiment 0a**: L2 recipe, hitlist source, flanks OFF vs merged-TSV — parity check
+- [ ] **Experiment 0b**: L2 recipe, hitlist source, flanks ON vs OFF — first honest
+      measurement of what junction context buys. Publishable on its own.
+
+### Stability assay structure (found while building the adapter, 2026-08-26)
+
+`half life` is not one assay. Corpus-wide it is 10,013 rows across six methods —
+purified MHC/direct/radioactivity 6,629, purified MHC/direct/fluorescence 3,188,
+cellular MHC/direct/fluorescence 155, `binding assay` 32, cellular/direct/radioactivity 5,
+lysate MHC/direct/radioactivity 4. A radioactive dissociation half-life and a
+fluorescence-polarization half-life differ by a method offset, exactly like IC50 vs KD.
+
+- [x] `StabilityRecord` / `KineticsRecord` now carry `assay_method`; the mix is recorded
+      in run stats (`_method_counts`) instead of being discarded at ingest
+- [ ] Give `t_half` output-side per-method structure, mirroring what
+      `_categorize_binding_assay_type` (`data/collate.py:657-700`) already does for
+      binding. Today `t_half` is a single MSE task that pools all six methods.
+- [x] `t_half` and `tm` are censor-aware. `PrestoSample` now carries `t_half_qual` /
+      `tm_qual`, the collator emits them into `target_quals`, and both specs use
+      `loss_type="censor"`. The transforms are monotone increasing (unlike the
+      inverting affinity encoding), so the censor codes carry through unchanged.
+- [ ] **Coverage regression to resolve before any hard swap**: hitlist has Tm 178 vs the
+      merged funnel's 1,250, and half-life 10,013 vs 11,375. Union the two sources rather
+      than replacing — hitlist also has no tcell / tcr_evidence / processing.
+- [x] `PrestoSample` carries `stability_assay_*` / `kinetics_assay_*`; the shared
+      prep/geometry/readout factorization (`_factorize_binding_assay_method`) now applies
+      to stability and kinetics rows instead of typing them `unknown`
+- [x] `T_HALF` / `TM` / `KOFF` / `KON` appended to `BINDING_ASSAY_TYPES`. Stability and
+      kinetics rows no longer type as `OTHER`, indistinguishable from an unrecognized
+      binding assay. `_categorize_binding_assay_type` checks them *before* the bare
+      `"kd"` test, because "50% dissociation temperature" contains "dissociation" and
+      would otherwise read as a KD. Checkpoint compatibility handled by
+      `Presto._grow_appended_embeddings`, which extends any embedding whose vocabulary
+      grew, preserving learned rows and leaving appended rows at their fresh init.
+      The frozen v6 parameter-count contract moved 27,186 -> 27,218 (4 rows x 8 dims);
+      updated with the rationale in the test docstring rather than silently.
+- [x] Full assay inventory written up: `docs/assay_learning_scheme.md`
+
+### Fixed during Stage 3 (2026-08-26)
+
+- [x] **`train unified` silently dropped every MHC row by default.** MHC sequence
+      resolution was gated on `if args.index_csv:`, which defaults to `None`
+      (`IEDB_DEFAULTS`), but the resolver is mhcseqs-first with the CSV index only as a
+      *fallback* and resolves fine with `index_csv=None`. With the guard in place a
+      default invocation resolved 0 alleles, then `filter_unresolved_mhc` (also default
+      true) dropped 100% of binding/elution/tcell/stability rows. The coverage report
+      printed `resolved=0/N`, which reads as a data problem rather than a skipped code
+      path. Guard removed; resolution now always runs.
+
+### Import footgun (found 2026-08-26)
+
+Launching Presto with `~/code` on `sys.path` silently disables all MHC sequence
+resolution: `~/code/mhcseqs/` has no `__init__.py`, so Python treats it as an empty
+namespace package that shadows the installed `mhcseqs`. The trainer then reports
+`resolved=0/N` and drops every MHC row, which reads as a data problem. Worth a guard —
+`presto train` could assert `mhcseqs.__file__ is not None` at startup and fail loudly.
+
+- [x] `_assert_mhcseqs_importable()` runs at the top of `run()` and exits with the cause
+      and the fix. Verified it passes in a healthy environment and fires on a simulated
+      shadowed import.
+- [ ] **The test suite itself runs shadowed.** Adding the guard immediately failed
+      `test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved`, because pytest
+      puts the repo's parent (`~/code`, which holds a `mhcseqs/` directory) on
+      `sys.path`. That test now opts out, but the implication is broader: any test that
+      believes it is exercising real allele resolution is silently getting an empty
+      namespace package. Worth auditing which tests those are, and whether
+      `pytest.ini`/`conftest.py` should prepend the installed package path instead.
+
+### Flaky tests under xdist — now a pattern, not a one-off
+
+Two different tests have failed intermittently under `./test.sh` (pytest-xdist) on
+2026-08-26, each passing in isolation and on a clean re-run:
+
+- `tests/test_groove_baseline.py::TestGrooveBaselineDifferentGrooves::test_different_grooves_differ`
+- `tests/test_distributional_ba.py::test_quantile_head_loss_backward[affine]`
+- `tests/test_trainer.py::TestTrainerSmoke::test_trainer_multiple_steps`
+
+Neither is touched by this change set. Two independent tests flaking the same way points
+at shared state across xdist workers — most likely global torch RNG seeding, since both
+assert on numerically-derived differences. This gates experiment promotion, so it is
+worth chasing rather than re-running until green.
+
+- [x] Root-caused and fixed: both tests were unseeded. The groove test compares two
+      forward passes of a randomly-initialized model at `atol=1e-6` while changing one
+      token out of 91 pooled positions, so an unlucky init puts the delta under
+      tolerance. The quantile test asserts `(h.grad != 0).any()` on random inputs
+      through a random head. Both now seed `torch.manual_seed(0)` (and the groove test
+      draws tokens from a seeded generator). The trainer smoke test is the same story:
+      unseeded init with a deliberately high `lr=1e-2`, asserting the loss does not grow
+      10x in five steps. Three instances of one pattern — unseeded randomness behind a
+      numeric assertion. Worth a repo-wide sweep for the rest.
+- [x] Fixed as a class rather than instance-by-instance: `tests/conftest.py` seeds
+      torch before every test via an autouse fixture. A fourth instance
+      (`test_loss_backward[hlgauss-d1_affine]`) surfaced while patching the third,
+      which is what prompted the systematic fix. Suite verified green over four
+      consecutive full runs.
+- [ ] The underlying assertions are still weak — several only hold for a given draw.
+      Seeding makes them reproducible, not correct. Worth revisiting the ones that
+      compare a random model against itself at `atol=1e-6`.
+
+## Stage 1 — DAG restructure (isolated, own regression)
+
+- [ ] Split `LATENT_ORDER` / `LATENT_SEGMENTS` / `LATENT_DEPS` (`models/presto.py:166-196`)
+      to the `docs/design.md` S7.1 latent set
+- [ ] Update `_classify_parameter` (`:2222-2288`) — substring routing will misfile new names
+- [ ] Checkpoint compat shim in `_load_from_state_dict` (`:823-966`)
+- [ ] Update `docs/design.md`, `TODO.md`, `model_to_beat.md` to match the code
+- [ ] **Experiment 1**: regression vs Stage 0b, same data, 3 seeds. Gate: no loss.
+
+## Stage 2 — Excision heads (machinery-parameterized readout)
+
+- [ ] `s_N` / `s_C` two-site factorization replacing the single processing scalar
+      (`ClassProcessingPredictor`, `models/presto_modules.py:50-62`)
+- [ ] Machinery indexes the readout, pinned to `sources.yaml` profiles; proteasome =
+      learned convex mixture. Trunk stays sequence-only.
+- [ ] Test: `M` is unreachable from binding/presentation/recognition outputs
+- [ ] **Positive controls (run before believing anything else)**: `M=trypsin` recovers
+      K/R; `M=chymotrypsin` recovers F/W/Y/L/M
+
+## Stage 3 — One trainer: detectability + excision inside `train unified`
+
+The new supervision must land in the canonical unified path, not in a fourth
+trainer. That forces the trainer consolidation, so it belongs here rather than after.
+
+### 3a. Consolidate the trainers
+
+- [x] `training/holdout_eval.py` — generic per-task held-out metrics, no sklearn
+      dependency (exact AUROC/AUPRC/Spearman/Pearson + binary and regression blocks),
+      with `TaskPredictionAccumulator` for masked per-example collection. 19 tests.
+- [x] Per-task metric family derived from `TaskLossSpec.loss_type`, so a task added to
+      the registry gets held-out metrics with no second table to maintain
+- [x] Wired into `scripts/train_iedb.py`: a held-out pass after training builds one
+      accumulator per `LOSS_TASK_SPECS` entry and writes `summary.json` and
+      `val_predictions.csv` into the run dir, plus a `holdout` split in `metrics.csv`.
+      Callables are injected so `holdout_eval` stays free of a training-script import.
+      Wrapped so a diagnostics failure cannot fail a training run.
+- [ ] Extend to a separate test split (currently val only) and per-epoch curves
+- [ ] `scripts/train_iedb.py` emits `summary.json`, `epoch_metrics.csv`,
+      `val_predictions.csv`, `test_predictions.csv` alongside the existing
+      `RunLogger` output, matching the experiment-dir contract in `AGENTS.md`
+- [ ] `scripts/focused_binding_probe.py` becomes a thin wrapper over the unified path
+      (or is deprecated with its recipe preserved) — it must keep reproducing the L2
+      baseline bit-for-bit until Stage 5 says otherwise
+- [ ] Decide the fate of `training/trainer.py` (no callers) and
+      `curriculum_param_groups` / `core_supervision_loss` (no callers)
+
+### 3b. Corpus + supervision
+
+- [ ] Prototype hitlist **R1** (`build_detectability_training_set`) locally; upstream after
+- [ ] Bulk corpus → `PrestoSample` with empty `mhc_a`/`mhc_b` (existing `<MISSING>` path,
+      `data/collate.py:531-538`); junction context from `start_position`/`end_position`
+- [ ] `TargetSpec` (`data/collate.py:56-127`) + `TaskLossSpec`
+      (`scripts/train_synthetic.py:173-461`) for detectability (ordinal over the
+      fraction-depth ladder) and for machinery-conditioned excision
+- [ ] Add fields to `PrestoBatch` **and** to `PrestoBatch.to()` (`:300-386`) — silently
+      dropped on device transfer otherwise
+- [ ] Per-protein abundance offset term (shared by both branches)
+- [ ] Output-side platform readouts on `ms_detectability_vec` (`docs/design.md:897-903`,
+      specified and never implemented)
+- [ ] `IEDB_DEFAULTS` (`scripts/train_iedb.py:134-221`) entry for every new arg, or
+      `_resolve_run_args` won't backfill it
+
+## Stage 3c — Sampler rewrite
+
+The current `BalancedMiniBatchSampler` (`data/loaders.py:2477+`) cannot serve this DAG:
+it materializes `dataset[idx]` for all indices at construction (`:2524`),
+`_build_binding_family_index` is O(n²) per peptide (`:2695`), its 7 strata are
+hardcoded, and it has no notion of the contrasts the identification argument depends on.
+
+- [ ] **Columnar metadata table.** Build strata from the record lists / a numpy
+      column table, never by instantiating `PrestoSample`. Corpus is heading for ~6M
+      rows (2.8M elution + 2.05M bulk observed + ~0.7M in-silico negatives + the rest).
+- [ ] **Declarative strata.** Replace the 7 hardcoded keys with a `StratumSpec` list.
+      Existing: task, source, label, allele, mhc_class, species, synthetic.
+      New: `machinery` (proteasome / trypsin / chymotrypsin / LysC / GluC),
+      `branch` (mhc | shotgun), `acquisition_arm` (instrument x fractionation depth x
+      enrichment), `condition_category` (APM / KO axis, Stage 6), `source_protein`.
+- [ ] **Declarative contrast groups**, generalizing the existing same-peptide/
+      different-allele binding pairing (`_build_binding_family_index`) into
+      `ContrastSpec(name, group_by, vary, min_members, batch_quota)`. Each batch is
+      filled to a quota with complete groups, then topped up by weighted sampling:
+
+      | contrast | group_by | vary | what it identifies |
+      |---|---|---|---|
+      | `detectability` | source protein, enzyme, depth arm | observed vs in-silico-negative | `detect`, with excision ~1 and abundance fixed |
+      | `protease` | source protein | enzyme | `s_N`/`s_C` cleavage chemistry |
+      | `depth` | peptide | fraction-depth arm | the graded detectability ladder |
+      | `binding_family` | peptide | allele | existing affinity ranking losses |
+      | `apm_arm` (Stage 6) | line, allele | KO vs WT | `s_N` / ERAP trimming |
+
+      Note `apm_arm` cannot come from allele stratification — a KO arm shares its
+      genotype with its WT control by construction, so it needs explicit pairing.
+- [ ] O(n²) fix: groupby on `peptide_id` with sorted-interval comparison instead of the
+      pairwise scan
+- [ ] Register `bulk_ms` in `_sample_task_group` (`:2576-2595`) or it lands in `"other"`
+- [ ] Benchmark construction time + peak RSS at full corpus scale; assert in tests
+
+Honest scope note: for plain BCE the contrasts are variance reduction rather than a
+mathematical requirement. They become load-bearing once the per-protein abundance
+offset exists (it is only identifiable per step if both arms are in the batch) and for
+any ranking/ordinal term. Do not oversell them as strictly necessary.
+
+### Open design question surfaced by the implementation
+
+`processing_logit` (`ClassProcessingPredictor`) and `excision_logit`
+(`ExcisionHead`) now coexist as parallel scores of the same biology: both ask whether
+this peptide was cut out of its source protein. Excision is the factorized,
+machinery-conditioned version (`s_N + s_C + s_len`); processing is the legacy single
+scalar supervised by IEDB processing rows.
+
+They should probably become one head, with `processing_logit` defined as
+`excision_logit` evaluated at the in-vivo machinery. That is a change to the
+processing task's semantics, so it wants evidence rather than a unilateral edit — Stage
+4 arm C measures whether excision supervision helps at all, which is the right gate
+for it.
+
+- [ ] Decide whether `processing_logit` becomes a machinery-conditioned view of
+      `excision_logit`, after Stage 4 arm C
+
+### Naming and scope, resolved 2026-08-26
+
+- [x] `liberation` renamed to **`excision`** throughout (210 occurrences, 20 files).
+      Chosen for being disjoint from adjacent biology: "cleavage" already names a
+      *per-site* score in this field (NetChop), and "processing" is taken inside Presto.
+      Excision says the thing — the peptide is cut out of a larger protein — and covers
+      both the in-vitro proteases and the in-vivo pathways.
+- [x] **Missed-cleavage term added** (`s_internal`). Matching both termini is not
+      sufficient: 59.4% of observed tryptic peptides carry zero internal K/R, 29.7% one,
+      8.6% two, so internal sites are a strong constraint the two junction scores could
+      not see. Applied only to machinery with a hard rule; the proteasome is processive
+      and is exempt.
+- [ ] **`s_len` conflates two different things.** For an in-vitro digest, length follows
+      from cleavage-site spacing. For class I, the 8-11mer distribution is set mostly by
+      the MHC groove and TAP — so the in-vivo length term attributes MHC selection to the
+      protease, and the model can exploit that. Consider dropping `s_len` for in-vivo
+      machinery once presentation carries the length preference.
+
+## Stage 4 — The decision gate
+
+"With vs without" is not a well-posed comparison: adding the bulk corpus adds data, a
+loss, and junction-context supervision at once. The gate is a factorial, all arms on
+identical MHC splits, 3 seeds, primary metric held-out **elution AUPRC on the MHC
+branch**:
+
+| arm | bulk corpus | supervises `detect` | supervises `s_N`/`s_C` | isolates |
+|---|---|---|---|---|
+| A (control) | no | no | no | Stage 0b baseline; `detect` stays a free bottleneck |
+| B | yes | yes | no | does an *identified* detectability term help elution? |
+| C | yes | no | yes | does cleavage-chemistry transfer help? |
+| D | yes | yes | yes | full model |
+| E (negative control) | yes | yes, **labels shuffled** | no | if E ≈ B the gain is extra gradient signal, not detectability |
+
+- [ ] **Transfer check — the detectability term is validated out of domain.**
+      `ms_detectability` is trained *and* scored only on shotgun rows, but it is *used*
+      on MHC rows inside the elution sum. Nothing currently measures whether it means
+      anything for an MHC ligand. **24,125 peptides appear in both corpora** (9-mers
+      4,559, 10-mers 3,016, 11-mers 2,628, 8-mers 1,627), which is a real in-domain
+      test set: does the detectability logit predict shotgun detection for peptides
+      that are also MHC ligands? Run this alongside the mechanism check.
+- [ ] **Watch `w_ms_detectability` in the elution head.** `presentation` and `elution`
+      share one target (`target_key="elution"` for both specs,
+      `scripts/train_synthetic.py:231,240`), so the sum and one of its components are
+      trained on the same label. The optimizer can satisfy both by driving
+      `softplus(w_ms_detectability) * detect` toward zero — detectability would stay
+      identifiable as a latent while contributing nothing to elution. In the 1-epoch
+      validation runs both weights sat at init (1.3085 / 1.3095, init 1.313), which is
+      uninformative rather than reassuring. Log both weights per epoch in arms B and D.
+- [ ] **Mechanism check, separate from the outcome check**: correlation between
+      `ms_detectability_logit` and held-out shotgun detection, on peptides unseen in
+      training. Expected ~0 in arm A (the latent is absorbing presentation residual),
+      high in B/D. This is what "identifiable" means operationally.
+- [ ] **Experiment 4**: arms A-E, 3 seeds. Promote to `model_to_beat.md` only if D or B
+      beats A on elution AUPRC *and* E does not.
+
+## Stage 5 — Closure (AGENTS.md)
+
+- [ ] Experiment dirs + `reproduce/` bundles for every experiment above
+- [ ] Update `experiments/experiment_log.md` and `experiments/model_to_beat.md`
+- [ ] Note in `model_to_beat.md` that pre-2026-08 baselines trained without flanks
+
+## Deferred — knockout axis
+
+Blocked on hitlist R3 (per-observation sample anchor + APM columns; not yet filed).
+Supervises `s_N` via the ERAP1/ERAP2 KO panels. See spec S5.
+
 # Repo Hygiene and History Tracking (2026-03-20)
 
 ## Spec
@@ -8328,3 +8661,338 @@ Goal: get `SLLQHLIGL` to separate correctly between `HLA-A*02:01` and `HLA-A*24:
   - rebuilt TSV contains `mhc_allele_set`, `mhc_allele_provenance`, and `mhc_allele_bag_size`
   - `scripts.train_iedb.load_records_from_merged_tsv(...)` successfully loaded sampled records from the rebuilt TSV before promotion
   - the canonical path now points at the rebuilt artifact and should be treated as the default training input for future runs
+# Hitlist Training Data Migration Assessment (2026-04-23)
+
+## Spec
+
+- Goal: determine whether `hitlist` can replace or augment Presto's current canonical training data source, identify any missing contract pieces, open actionable `hitlist` issues for those gaps, and, only if the contract is sufficient, wire Presto to train from `hitlist` data.
+- Motivation:
+  - the user has been curating substantial data in `hitlist` and wants to know whether that curation can become the primary training source
+  - Presto currently trains against a canonical merged TSV with specific fields, supervision families, and MHC-resolution expectations
+  - switching data sources without an explicit contract audit would risk silent regressions in sequence resolution, label semantics, or supported assay families
+- Required investigation:
+  - document Presto's effective training-data contract from loader code and docs, not just high-level README language
+  - inspect `hitlist`'s current schema, exports, and curation focus to see which parts of that contract are already covered
+  - identify any missing information needed for canonical Presto training, especially:
+    - peptide/context/MHC sequence inputs
+    - assay-family and label semantics
+    - quantitative vs qualitative target handling
+    - restriction ambiguity / bag semantics
+    - train/validation/test split or grouping affordances
+    - provenance fields needed for audits and deduplication
+  - if gaps exist, propose them as concrete GitHub issues on `hitlist`
+  - if the contract is sufficient or can be made sufficient with a contained adapter, implement the minimal Presto changes needed to start consuming `hitlist` data
+- Constraints:
+  - do not silently weaken the current sequence-only model-input contract
+  - do not discard MHC quality or provenance requirements just to make a migration easy
+  - prefer a minimal adapter layer over invasive trainer rewrites if `hitlist` is structurally close
+  - if `hitlist` is not yet sufficient, stop after the audit + issue proposals rather than forcing a partial migration
+- Success criterion:
+  - explicit answer on whether Presto can switch today, and why
+  - concrete missing-field / missing-contract list if it cannot
+  - actionable `hitlist` issues opened or drafted for the missing pieces
+  - if feasible, verified Presto support for `hitlist` as a training-data source
+
+## Execution
+
+- [x] Audit Presto's canonical training-data contract and entrypoints
+- [x] Audit `hitlist` schema, exports, and curation scope relevant to Presto
+- [x] Compare contracts and decide switch readiness
+- [x] Open or draft actionable `hitlist` issues for any missing pieces
+- [ ] If feasible, implement Presto support for `hitlist`-sourced training data
+- [x] Verify the resulting path and document the outcome here
+
+## Review Notes (2026-04-23)
+
+- Decision:
+  - `hitlist` is not yet a drop-in replacement for canonical Presto training.
+  - It is already strong enough to serve as a curated source for MS/elution-focused pMHC work, but not for Presto's current full unified training contract.
+- Presto-side contract confirmed from `docs/training_spec.md`, `docs/assay_modeling_contract.md`, `scripts/train_iedb.py`, and `data/merged_deduped.tsv` header:
+  - canonical training expects one merged typed table spanning at least binding affinity / kinetics / stability, elution/MS, T-cell response, and optional TCR evidence
+  - canonical rows preserve `value`, `value_type`, and `qualifier` for censor-aware numeric supervision
+  - canonical rows also preserve expanded MHC bag fields:
+    - `mhc_allele_set`
+    - `mhc_allele_provenance`
+    - `mhc_allele_bag_size`
+  - strict MHC sequence resolution is a default invariant
+- `hitlist`-side audit confirmed from local repo code plus the built `~/.hitlist/*.parquet` schemas:
+  - strong coverage for MS/elution observations and a separate binding index
+  - useful sample-level MHC curation on the observations export via:
+    - `sample_mhc`
+    - `sample_match_type`
+    - `matched_sample_count`
+  - flanking context exists, but only in the separate `peptide_mappings.parquet` sidecar
+  - missing blocker for Presto:
+    - `binding.parquet` does not currently preserve quantitative measurement fields or qualifiers
+    - there is no first-class exact-allele bag/provenance export for coarse binding restrictions
+    - there is no unified pMHC training export combining evidence rows, MHC bags, and optional flanking context
+    - `hitlist` does not currently cover Presto's T-cell or TCR training families
+- Concrete evidence from the current `binding.parquet` snapshot:
+  - schema lacks any numeric `value` / `value_type` / `qualifier`-style fields
+  - allele-resolution counts are:
+    - `four_digit=871,388`
+    - `two_digit=15,986`
+    - `serological=6,608`
+    - `unresolved=1,714`
+    - `class_only=89`
+  - so there are many non-exact binding rows that need bag expansion or explicit provenance before strict-resolution consumers can use them safely
+- Result:
+  - did not rewrite Presto to consume `hitlist` directly because the blocker is upstream data-contract incompleteness, not missing adapter code
+  - opened the following `hitlist` issues:
+    - [#135](https://github.com/pirl-unc/hitlist/issues/135) `Preserve quantitative binding measurements and qualifiers in binding.parquet`
+    - [#136](https://github.com/pirl-unc/hitlist/issues/136) `Add a first-class pMHC training export with optional flanking-context rows`
+    - [#137](https://github.com/pirl-unc/hitlist/issues/137) `Add exact-allele bag expansion and provenance for coarse MHC restrictions`
+# Hitlist Sample-Aware Flank Selection Scope Audit (2026-04-23)
+
+## Spec
+
+- Goal: scope an expression-aware mapping-selection pipeline for `hitlist` MS samples and audit how many samples could plausibly be paired with some form of RNA expression signal.
+- Motivation:
+  - the user wants per-sample peptide sets with all candidate flanking mappings preserved initially
+  - downstream training should prefer the most plausible source gene / source transcript / flanking context using RNA evidence when available
+  - when exact sample RNA is unavailable, the fallback should use a biologically similar surrogate expression profile such as matched cancer type, matched cell line, or matched normal tissue
+  - the user explicitly wants the expression-source landscape grounded in `pirlygenes`, not just generic GTEx / Xena hand-waving
+- Questions to answer:
+  - what should the decision pipeline be for choosing among multiple peptide-to-protein mappings?
+  - what evidence tiers should be used for source ranking: exact sample RNA, matched cell-line RNA/protein, matched tumor cohort expression, matched normal-tissue expression, transcript-level evidence, fallback heuristics?
+  - where should this logic live conceptually: canonical `hitlist` truth-preserving exports vs a derived ranking/export layer for Presto?
+  - how many `hitlist` MS samples appear plausibly matchable to some expression source using current sample metadata and current `pirlygenes` source coverage?
+- Constraints:
+  - preserve canonical `hitlist` evidence and mapping truth; do not assume one best source in the base export
+  - distinguish exact sample-level matches from surrogate cohort/tissue matches
+  - be explicit about ambiguity that remains after gene- or transcript-level ranking
+- Deliverables:
+  - a scoped ranking policy with explicit precedence and unresolved-ambiguity behavior
+  - an audit of `hitlist` sample metadata fields relevant to expression matching
+  - an audit of currently available expression sources in `pirlygenes`
+  - a quantitative estimate of how many `hitlist` MS samples could plausibly receive:
+    - exact or near-exact sample/cell-line expression
+    - tumor-surrogate expression
+    - normal-tissue-surrogate expression
+    - no plausible expression match
+  - concrete recommendations for future `hitlist` / Presto export interfaces
+
+## Execution
+
+- [x] Inspect `hitlist` sample/evidence metadata and define the sample-anchoring constraints for an expression-aware export
+- [x] Inspect `pirlygenes` expression sources and matching keys relevant to `hitlist` samples
+- [x] Design a ranked mapping-selection policy from peptide mappings to gene/transcript/flank candidates
+- [x] Audit `hitlist` sample matchability against available expression sources and summarize counts by evidence tier
+- [x] Write review notes with recommended API/export shape and remaining blockers
+
+## Review Notes (2026-04-23)
+
+- `hitlist` currently has `621` curated `ms_samples` rows across `145` PMIDs.
+- Species mix from `generate_ms_samples_table()`:
+  - `579` `Homo sapiens`
+  - `42` non-human rows across macaque, mouse, chicken, dog, pig, cattle, Tasmanian devil, carp, chimpanzee
+- A sample-aware export can only be as strong as the sample anchor:
+  - joining the MS evidence back onto curated `(pmid, sample_label)` gives context for `353 / 621` samples
+  - of those, `317` are direct `allele_match`
+  - `32` are `single_sample_fallback`
+  - `4` are mixed allele/fallback cases
+  - `268 / 621` curated sample rows have no joined MS context beyond the `ms_samples` metadata itself
+- Current `pirlygenes` expression substrate is useful but not sufficient by itself:
+  - bundled normal-tissue reference: HPA/GTEx-style `nTPM_*` tissue medians via `pan_cancer_expression()`
+  - bundled tumor reference: TCGA bulk medians plus shipped tumor-only `tcga_*` medians
+  - bundled subtype/curated cohorts: PAM50 BRCA, BeatAML, TARGET, selected pediatric/sarcoma/SCLC/NET cohorts via `subtype_deconvolved_expression()`
+  - bundled registry: `125` cancer-type rows with `primary_tissue`, `expression_source`, `parent_code`, and notes
+  - missing today for this use case: a first-class human cell-line RNA atlas and immune-cell reference atlas keyed for direct `hitlist` sample matching
+- Heuristic sample matchability audit against current metadata:
+  - `434 / 621` samples look matchable to current `pirlygenes` tumor/normal/tissue references now
+  - an additional `111 / 621` are mainly line-like human systems that would benefit from a dedicated line-expression backend (e.g. DepMap/CCLE-style)
+  - another `10 / 621` are primarily immune/APC systems that need an immune-cell reference family rather than TCGA/GTEx surrogates
+  - `20 / 621` human rows remain too ambiguous for reliable expression matching without more curation
+  - `46 / 621` are non-human or effectively cross-species model rows and should be treated as out-of-scope for a first human RNA-ranking path
+  - net: about `555 / 621` rows appear to have some plausible RNA-backed path under a practical human-focused integration, but only `434` are covered by current `pirlygenes` references alone
+- Examples of samples that likely need a dedicated line backend rather than current `pirlygenes` tumor/normal medians:
+  - EBV-LCL / C1R / 721.221 mono-allelic systems
+  - `THP-1`, `HEK293`, `HAP1`, `Raji-spike`
+  - Sarkizova-style sample IDs like `MEL1`, `OV1`, `GBM7`, `ccRCC Pat9` where the sample label is informative but not yet normalized to a stable external expression key
+- Examples of samples that need an immune reference family:
+  - `PBMC`, donor leukapheresis, activated `CD4/CD8/B` cells
+  - immature / mature dendritic cells
+  - BAL / monocyte / APC stimulation systems
+
+### Recommended Ranking Policy
+
+- Keep `hitlist` canonical exports truth-preserving:
+  - one compact evidence-row export
+  - one full mapping-row export
+  - do not collapse mappings in the canonical index
+- Add a derived selector layer for Presto, not a destructive rewrite of `hitlist` truth:
+  1. Resolve sample anchor confidence:
+     - `allele_match`
+     - `single_sample_fallback`
+     - weaker / unresolved cases
+  2. Resolve expression backend by precedence:
+     - exact sample RNA if explicitly curated
+     - exact or parent-matched line RNA
+     - subtype-aware tumor surrogate from `pirlygenes`
+     - cancer-type tumor surrogate from `pirlygenes`
+     - normal-tissue surrogate from `pirlygenes`
+     - immune-cell reference family
+     - no expression evidence
+  3. Score every mapping candidate, never just the peptide:
+     - gene-level expression
+     - source-proteome compatibility (host vs viral/bacterial override proteome)
+     - sample/tissue/cancer compatibility
+     - transcript compatibility when available
+  4. Select output mode:
+     - `all`: keep every candidate mapping
+     - `ranked`: keep all candidates plus scores/ranks
+     - `best`: choose one candidate only when the evidence tier justifies it
+- Important caveat:
+  - RNA can often rank genes or transcripts
+  - RNA alone cannot reliably choose among repeated peptide occurrences within the same protein when the same peptide sequence appears multiple times
+  - repeated same-protein hits should remain tied or only be broken by an explicit low-confidence heuristic flag
+
+### Missing Data / Contract Gaps
+
+- `hitlist` peptide mappings are currently peptide → `protein_id/gene_id/gene_name/position/n_flank/c_flank/proteome/proteome_source` only.
+- There is no transcript-aware mapping surface today:
+  - no `transcript_id`
+  - no exon/CDS interval compatibility
+  - no isoform-to-position provenance
+- `pirlygenes` can aggregate transcript quant to genes, and carries transcript→gene helper tables, but that is downstream expression handling only; it does not solve peptide→transcript compatibility on the `hitlist` side.
+- To make transcript-level disambiguation real, the mapping index needs a richer export such as:
+  - `transcript_id`
+  - `ensembl_gene_id`
+  - `protein_id`
+  - peptide genomic / CDS interval or transcript-position compatibility
+  - a flag for repeated same-protein occurrences where transcript evidence still cannot break the tie
+
+### Recommended Interface Shape
+
+- In `hitlist`, keep:
+  - canonical `ms` / `binding` evidence indexes
+  - canonical full `peptide_mappings` index
+- Add a derived export surface instead of mutating the canonical row semantics:
+  - `sample_training` or `training --sample-aware`
+  - `mapping_mode=all|ranked|best`
+  - `expression_backend=auto|sample|line|tumor_surrogate|normal_surrogate|immune_reference`
+  - explicit columns like `expression_source`, `expression_match_tier`, `mapping_score`, `mapping_rank`, `selected_mapping`, `selection_reason`
+- For Presto, consume:
+  - `mapping_mode=all` during audit/debug
+  - `mapping_mode=ranked` for most experiments
+  - `mapping_mode=best` only after the ranking path is validated against known multi-source peptides
+
+# Hitlist RNA / Transcript Mapping Follow-up (2026-04-23)
+
+## Spec
+
+- Goal: identify the concrete human line-like `hitlist` sample set that needs a dedicated expression backend, verify whether `hitlist` already attempts any RNA/expression curation, and turn the transcript-aware mapping gap into actionable upstream issue(s).
+- Questions to answer:
+  - which exact sample labels / line systems make up the previously-audited `111 / 621` human line-like rows?
+  - how many are obvious known cell lines vs engineered derivative systems vs underspecified sample IDs?
+  - does `hitlist` currently curate any RNA-seq or expression data beyond auxiliary references such as HPA?
+  - what exact schema / API / CLI additions would make transcript-aware source selection possible without corrupting the canonical mapping truth?
+- Deliverables:
+  - concrete list / summary of the line-like human sample rows
+  - repo audit of any existing RNA/expression curation in `hitlist`
+  - concrete proposal for transcript-aware mapping/export additions
+  - one or more upstream `hitlist` issues capturing the needed work
+
+## Execution
+
+- [x] Extract and summarize the exact line-like human `hitlist` sample rows from the prior audit
+- [x] Inspect `hitlist` for existing RNA/expression curation or placeholder support
+- [x] Draft a concrete transcript-aware mapping proposal with schema and export/API implications
+- [x] File the upstream `hitlist` issue(s) with the findings and proposal
+
+## Review Notes (2026-04-23)
+
+- The previously-audited `111 / 621` human line-like rows break down into a fairly small set of recurring systems:
+  - `49` `C1R`-derived rows
+  - `21` EBV-LCL / donor-LCL rows
+  - `12` `HAP1` KO-panel rows
+  - `7` `721.221`-derived rows
+  - `4` `HeLa`-derived rows
+  - `3` `HEK293`-derived rows
+  - `2` `SaOS-2` rows
+  - singletons / small groups including `THP-1`, `A375`, `K562 DPB1 transfectants`, and several grouped / underspecified labels
+- Representative line systems recovered from `sample_label` / `study_label`:
+  - `C1R-HLA-B*27:*`, `C1R-HLA-C*..`, `C1R HLA-E*01:01 transfectant`
+  - `721.221-HLA-A*11:01`, `721.221-B*51:01 ERAP1/ERAP2 KO`
+  - `JY`, `HHC`, `GR`, `CD165`, `CM467`, `GD149`, `MD155`, `PD42`, `RA957`
+  - `HAP1 wildtype`, `HAP1 B2M/TAP1/TAP2/TAPBP/IRF2/PDIA3/ERAP1/GANAB/SPPL3/CANX/CALR KO`
+  - `HeLa.ABC-KO-HLA-B*51:01`, `HeLa-CIITA`
+  - `HEK293`, `HEK293T-ACE2-TMPRSS2`
+  - `THP-1`, `A375 + ERAP1 inhibitor`, `SaOS-2 + TP53 mutant`, `K562 DPB1 transfectants`
+- `hitlist` does **not** currently appear to curate per-sample RNA-seq for these lines.
+- What it does have today:
+  - `monoallelic_lines.yaml` for host-line / HLA-null curation
+  - HPA normal-tissue expression downloads (`hpa_rna`, `hpa_bulk`, `hpa_protein`) used as auxiliary references, not as sample-level RNA curation
+  - `bulk_proteomics` with CCLE + Bekker-Jensen shotgun-MS abundance / detectability, again separate from `ms_samples`
+- Important mapping-contract detail found during follow-up:
+  - `ProteomeIndex.from_ensembl(...)` currently picks one longest protein-coding transcript per gene and indexes only that sequence
+  - for Ensembl-backed proteomes, `protein_id` is currently populated from `best_t.id`, so the field is implicitly transcript-like there while FASTA-backed mappings use ordinary protein header IDs
+  - this means transcript diversity is already collapsed away before `peptide_mappings.parquet` is written
+- Opened upstream issues:
+  - [#140](https://github.com/pirl-unc/hitlist/issues/140) `Add line-expression anchors for line-like human ms_samples`
+  - [#141](https://github.com/pirl-unc/hitlist/issues/141) `Make peptide_mappings transcript-aware and stop collapsing Ensembl to one longest transcript per gene`
+
+# Session Review — Excision + Detectability Build (2026-08-26)
+
+## Delivered
+
+| Stage | State |
+|---|---|
+| 0 — hitlist data layer | Code complete. `data/hitlist_source.py`, flanks threaded through binding/elution sample loops, `--data-source {merged_tsv,hitlist}`, 14 tests. Experiments 0a/0b need scale runs. |
+| 1 — DAG restructure | Complete. `--latent-topology expanded` implements design.md S7.1/S7.2/S7.5 exactly; 17 tests assert segment access behaviorally. Docs reconciled. Regression run needs scale. |
+| 2 — excision head | Complete. `ExcisionHead` (`s_N + s_C + s_len`), machinery vocabulary with exact in-vitro rules, proteasome as learned mixture over beta1/beta2/beta5 analogs, 14 tests. |
+| 3a — trainer consolidation | Complete for val. `training/holdout_eval.py` + wiring in `scripts/train_iedb.py`; the unified trainer now emits `summary.json` and `val_predictions.csv`. Test-split curves and retiring `focused_binding_probe.py` remain. |
+| 3b — corpus + supervision | Complete. `data/bulk_ms.py`, `ms_detectability` + `excision` target specs and loss specs, `--bulk-ms`. |
+| 3c — sampler | Complete. `machinery` / `branch` / `source_protein` strata, declarative contrast groups with per-batch quota, quadratic binding-family pairing capped, 5 tests. |
+| 4 — factorial | Not run. Needs GPU scale; this is a launch-and-measure activity, not a code gap. |
+| 5 — closure | Docs, TODO matrices, `model_to_beat.md` caveat, lessons, experiment directory. |
+
+Suite: 928 -> 1000 tests, green across repeated runs.
+
+## Defects found and fixed along the way
+
+1. `train unified` silently dropped every MHC row (resolution gated on a `None` default).
+2. `float("nan")` passing a null check in the hitlist adapter — 18 NaN affinity targets
+   per single-allele slice would have entered training.
+3. Two unseeded tests flaking under xdist; both root-caused and seeded.
+
+## Backlog closed after the first pass (2026-08-26)
+
+| item | state |
+|---|---|
+| `liberation` -> `excision` rename | done, 210 occurrences / 20 files |
+| missed-cleavage term (`s_internal`) | done, in-vitro machinery only |
+| censor-aware `t_half` / `tm` | done, qualifiers now reach the batch |
+| `T_HALF`/`TM`/`KOFF`/`KON` assay types | done, with checkpoint growth shim |
+| held-out metrics in the unified trainer | done, `summary.json` + `val_predictions.csv` + `val_metrics.csv` |
+| flaky tests | fixed as a class via `tests/conftest.py` seeding |
+
+## Remote execution (2026-08-27)
+
+- [x] `scripts/train_remote.py` — runplz launcher, modeled on mhcflurry's
+      `launch_pan_allele_training_remote.py`. Env-driven so one file serves every
+      experiment arm; `runplz brev|modal|local` are interchangeable, so the historical
+      Modal path stays available without a second launcher.
+- [x] **hitlist-only mode no longer requires the merged TSV.** The hitlist branch was
+      nested inside `if merged_tsv.exists():`, so a remote run would have had to ship a
+      gitignored 1 GB file to satisfy a precondition it never uses. Verified: a run
+      against an empty data dir resolved 69/69 alleles and trained on 1,377 samples.
+      T-cell / TCR / processing are absent in this mode, which is fine for Stage 4
+      (its metric is elution AUPRC).
+- [ ] Untested against Brev. The org's 4xA100 box was busy with the mhcflurry release
+      retrain, so the launcher has only been validated by loading it and inspecting the
+      generated argv.
+- [ ] Decide how hitlist indexes reach a cold worker. `~/.hitlist` persists on a named
+      Brev box, so only the first run pays; `PRESTO_HITLIST_BUILD=1` builds on the
+      worker. Shipping the ~250 MB parquets as an artifact is the alternative.
+- [ ] A 4xA100 is the wrong shape for Stage 4 — it is 15 single-GPU runs
+      (5 arms x 3 seeds). One A100 or an L4 fits; a 4-GPU box would idle three.
+
+## Still open
+
+- Run Stages 0a/0b/1/4 at scale (Stage 4 is now unblocked).
+- Add a held-out test split and per-epoch metric curves; retire or wrap
+  `focused_binding_probe.py`.
+- `t_half` per-method output structure (censoring is done; the six-method offset is not).
+- In-silico digest negatives (hitlist#361); sample-anchor coverage (hitlist#362).
+- Decide whether `processing_logit` becomes a view of `excision_logit`.

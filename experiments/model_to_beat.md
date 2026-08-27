@@ -71,6 +71,19 @@ Copy this section for each stable contract.
 - Question 2
 ```
 
+## Important Caveat On All Pre-2026-08 Baselines
+
+Every baseline recorded below was trained through the merged-TSV path, which has **no
+flank columns**. `ProcessingRecord` was built without `flank_n`/`flank_c`, and
+`PrestoCollator` only tokenizes flanks when at least one sample carries them, so the
+`nflank` and `cflank` segments reached the model as a single `<MISSING>` token. The
+"Inputs" lines below list `nflank` and `cflank` because the segments exist, not because
+they carried sequence.
+
+Baselines are therefore not comparable to anything trained through
+`--data-source hitlist`, which supplies real flanks at ~98% coverage. Re-baseline before
+promoting any post-migration result. See `tasks/todo.md` Stage 0.
+
 ## Active Baselines
 
 ## 7-Allele Numeric Class I Binding, Strict Seq-Only
