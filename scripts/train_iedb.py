@@ -143,6 +143,15 @@ IEDB_DEFAULTS = {
     "n_layers": 2,
     "n_heads": 4,
     "data_dir": "./data",
+    "data_source": "merged_tsv",
+    "latent_topology": "collapsed",
+    "train_mhc_class_filter": None,
+    "hitlist_allele": None,
+    "bulk_ms": False,
+    "bulk_cell_line": None,
+    "max_bulk_ms": 0,
+    "bulk_excision_negative_ratio": 1.0,
+    "hitlist_flanks": True,
     "merged_tsv": None,
     "require_merged_input": True,
     "binding_file": None,
@@ -4248,12 +4257,39 @@ def load_probe_allele_binding_bootstrap_from_merged_tsv(
     }
 
 
+
+def _assert_mhcseqs_importable() -> None:
+    """Fail loudly if `mhcseqs` resolved to an empty namespace package.
+
+    `~/code/mhcseqs/` has no `__init__.py`, so putting `~/code` on `sys.path`
+    (as cwd or PYTHONPATH) makes Python treat it as a namespace package that
+    shadows the installed one. Nothing raises: `mhcseqs.__file__` is None,
+    every allele fails to resolve, and the trainer drops 100% of MHC rows while
+    reporting `resolved=0/N` — which reads as a data problem, not an import
+    problem. Cheap to detect, expensive to discover after a training run.
+    """
+    try:
+        import mhcseqs
+    except ImportError:
+        return  # genuinely not installed; resolution falls back to the CSV index
+    if getattr(mhcseqs, "__file__", None) is None:
+        raise SystemExit(
+            "mhcseqs resolved to an empty namespace package, so no MHC allele "
+            "will resolve and every MHC row would be dropped.\n"
+            "Cause: a directory named 'mhcseqs' on sys.path shadowing the "
+            "installed package (typically ~/code as cwd or on PYTHONPATH).\n"
+            "Fix: run from a neutral directory with no PYTHONPATH; both presto "
+            "and mhcseqs are installed as editable packages."
+        )
+
+
 def run(args: argparse.Namespace) -> None:
     """Run unified multi-source training with parsed arguments."""
     args = _resolve_run_args(args)
     torch.manual_seed(args.seed)
     random.seed(args.seed)
 
+    _assert_mhcseqs_importable()
     device = args.device or ("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
     profile = str(getattr(args, "profile", "full") or "full").lower()
@@ -4321,6 +4357,49 @@ def run(args: argparse.Namespace) -> None:
                 f"sanitized_optional_seq_fields={sanitized_optional}"
             )
 
+        if str(getattr(args, "data_source", "merged_tsv")) == "hitlist":
+            # Override the quantitative-assay and elution modalities with the
+            # hitlist curated indexes. The reason is flanks: the merged TSV has
+            # no flank columns, so those segments reach the model as a single
+            # <MISSING> token. Processing / T-cell / TCR records stay on the
+            # merged path because hitlist's training table does not carry them.
+            from presto.data.hitlist_source import load_records_from_hitlist
+
+            (
+                binding_records,
+                kinetics_records,
+                stability_records,
+                _hitlist_processing,
+                elution_records,
+                _hitlist_tcell,
+                _hitlist_tcr,
+                hitlist_stats,
+            ) = load_records_from_hitlist(
+                max_binding=args.max_binding,
+                max_kinetics=args.max_kinetics,
+                max_stability=args.max_stability,
+                max_elution=args.max_elution,
+                mhc_class=getattr(args, "train_mhc_class_filter", None) or None,
+                mhc_allele=getattr(args, "hitlist_allele", None) or None,
+                include_flanks=bool(getattr(args, "hitlist_flanks", True)),
+                sampling_seed=args.seed + 17,
+            )
+            print("Hitlist input: curated indexes")
+            for assay, count in hitlist_stats["counts"].items():
+                print(f"    {assay}: {count}")
+            for family, coverage in hitlist_stats["flank_coverage"].items():
+                print(f"    flank coverage [{family}]: {coverage:.1%}")
+            print(
+                "    skipped: "
+                f"no_numeric_value={hitlist_stats['skipped_no_numeric_value']}, "
+                f"unroutable={hitlist_stats['skipped_unroutable_response']}, "
+                f"unexpected_unit={hitlist_stats['skipped_unexpected_unit']}"
+            )
+            if hitlist_stats["stability_assay_methods"]:
+                print("    stability assay methods:")
+                for method, count in hitlist_stats["stability_assay_methods"].items():
+                    print(f"      {method}: {count}")
+
         probe_family_bootstrap_records = int(
             getattr(args, "probe_family_bootstrap_records", 0) or 0
         )
@@ -4365,6 +4444,42 @@ def run(args: argparse.Namespace) -> None:
                 f"added_records={added}"
             )
 
+    elif str(getattr(args, "data_source", "merged_tsv")) == "hitlist":
+        # hitlist supplies binding / stability / kinetics / elution on its own,
+        # so a hitlist-sourced run does not need the merged TSV at all. This
+        # matters for remote execution: the merged TSV is a gitignored 1 GB
+        # file that would otherwise have to be shipped to every worker just to
+        # satisfy a precondition the run never uses. T-cell / TCR / processing
+        # are simply absent in this mode.
+        from presto.data.hitlist_source import load_records_from_hitlist
+
+        (
+            binding_records,
+            kinetics_records,
+            stability_records,
+            processing_records,
+            elution_records,
+            tcell_records,
+            vdjdb_records,
+            hitlist_stats,
+        ) = load_records_from_hitlist(
+            max_binding=args.max_binding,
+            max_kinetics=args.max_kinetics,
+            max_stability=args.max_stability,
+            max_elution=args.max_elution,
+            mhc_class=getattr(args, "train_mhc_class_filter", None) or None,
+            mhc_allele=getattr(args, "hitlist_allele", None) or None,
+            include_flanks=bool(getattr(args, "hitlist_flanks", True)),
+            sampling_seed=args.seed + 17,
+        )
+        print("Hitlist input: curated indexes (no merged TSV)")
+        for assay, count in hitlist_stats["counts"].items():
+            print(f"    {assay}: {count}")
+        for family, coverage in hitlist_stats["flank_coverage"].items():
+            print(f"    flank coverage [{family}]: {coverage:.1%}")
+        print(
+            "    note: T-cell / TCR / processing are absent in hitlist-only mode"
+        )
     else:
         if getattr(args, "require_merged_input", True):
             raise FileNotFoundError(
@@ -4547,65 +4662,69 @@ def run(args: argparse.Namespace) -> None:
 
     mhc_sequences: Dict[str, str] = {}
     mhc_exact_inputs: Dict[str, ExactMHCInput] = {}
-    if args.index_csv:
-        unique_alleles = _collect_unique_alleles(
-            binding_records,
-            kinetics_records,
-            stability_records,
-            processing_records,
-            elution_records,
-            tcell_records,
-            vdjdb_records,
-        )
-        mhc_sequences, stats = resolve_mhc_sequences_from_index(args.index_csv, unique_alleles)
-        mhc_exact_inputs, _ = resolve_mhc_inputs_from_index(args.index_csv, unique_alleles)
-        print(
-            "Resolved MHC sequences: "
-            f"{stats['resolved']}/{stats['total']} alleles "
-            f"(mhcseqs={stats.get('resolved_mhcseqs', 0)}, "
-            f"index_fallback={stats.get('resolved_index', 0)})"
-        )
-        mhc_quality = audit_loaded_mhc_sequence_quality(mhc_sequences)
-        print(
-            "Loaded MHC sequence quality: "
-            f"total={mhc_quality['total_sequences']}, "
-            f"with_X={mhc_quality['x_sequence_count']} "
-            f"(residues={mhc_quality['x_residue_total']})"
-        )
-        # Build the COMPLETE set of invalid alleles by scanning all sequences,
-        # not just the capped examples list from the quality audit.
-        invalid_alleles: Dict[str, str] = {}
-        for allele, raw_seq in list(mhc_sequences.items()):
-            seq = str(raw_seq or "").strip().upper()
-            if not seq:
-                continue
-            bad = sorted({ch for ch in seq if ch not in MHC_SEQUENCE_ALLOWED_AA})
-            if bad:
-                invalid_alleles[str(allele)] = f"noncanonical={''.join(bad)}"
-            elif len(seq) >= MIN_MHC_SEQUENCE_LEN and _looks_like_nucleotide_mhc_sequence(seq):
-                invalid_alleles[str(allele)] = f"nucleotide_like_len={len(seq)}"
-            elif len(seq) < MIN_MHC_SEQUENCE_LEN:
-                invalid_alleles[str(allele)] = f"short_len={len(seq)}"
+    # MHC sequence resolution is mhcseqs-first with the CSV index as a
+    # fallback, so it has to run even when no --index-csv is supplied.
+    # Gating it on index_csv meant a default invocation resolved nothing and
+    # then dropped every MHC row in resolved-only mode: a silent, total loss
+    # of the MHC branch that reads as a data problem in the coverage report.
+    unique_alleles = _collect_unique_alleles(
+        binding_records,
+        kinetics_records,
+        stability_records,
+        processing_records,
+        elution_records,
+        tcell_records,
+        vdjdb_records,
+    )
+    mhc_sequences, stats = resolve_mhc_sequences_from_index(args.index_csv, unique_alleles)
+    mhc_exact_inputs, _ = resolve_mhc_inputs_from_index(args.index_csv, unique_alleles)
+    print(
+        "Resolved MHC sequences: "
+        f"{stats['resolved']}/{stats['total']} alleles "
+        f"(mhcseqs={stats.get('resolved_mhcseqs', 0)}, "
+        f"index_fallback={stats.get('resolved_index', 0)})"
+    )
+    mhc_quality = audit_loaded_mhc_sequence_quality(mhc_sequences)
+    print(
+        "Loaded MHC sequence quality: "
+        f"total={mhc_quality['total_sequences']}, "
+        f"with_X={mhc_quality['x_sequence_count']} "
+        f"(residues={mhc_quality['x_residue_total']})"
+    )
+    # Build the COMPLETE set of invalid alleles by scanning all sequences,
+    # not just the capped examples list from the quality audit.
+    invalid_alleles: Dict[str, str] = {}
+    for allele, raw_seq in list(mhc_sequences.items()):
+        seq = str(raw_seq or "").strip().upper()
+        if not seq:
+            continue
+        bad = sorted({ch for ch in seq if ch not in MHC_SEQUENCE_ALLOWED_AA})
+        if bad:
+            invalid_alleles[str(allele)] = f"noncanonical={''.join(bad)}"
+        elif len(seq) >= MIN_MHC_SEQUENCE_LEN and _looks_like_nucleotide_mhc_sequence(seq):
+            invalid_alleles[str(allele)] = f"nucleotide_like_len={len(seq)}"
+        elif len(seq) < MIN_MHC_SEQUENCE_LEN:
+            invalid_alleles[str(allele)] = f"short_len={len(seq)}"
 
-        if invalid_alleles:
-            example_text = ", ".join(
-                f"{allele}:{reason}"
-                for allele, reason in list(invalid_alleles.items())[:8]
+    if invalid_alleles:
+        example_text = ", ".join(
+            f"{allele}:{reason}"
+            for allele, reason in list(invalid_alleles.items())[:8]
+        )
+        if filter_unresolved_mhc:
+            for allele in invalid_alleles:
+                mhc_sequences.pop(allele, None)
+            print(
+                "Dropped invalid MHC sequences from index prior to training: "
+                f"count={len(invalid_alleles)}, examples={example_text}"
             )
-            if filter_unresolved_mhc:
-                for allele in invalid_alleles:
-                    mhc_sequences.pop(allele, None)
-                print(
-                    "Dropped invalid MHC sequences from index prior to training: "
-                    f"count={len(invalid_alleles)}, examples={example_text}"
-                )
-            else:
-                raise ValueError(
-                    "Invalid loaded MHC sequences found (non-canonical residues "
-                    "and/or shorter than the minimum accepted groove-bearing "
-                    f"fragment ({MIN_MHC_SEQUENCE_LEN} aa)). "
-                    f"examples={example_text}"
-                )
+        else:
+            raise ValueError(
+                "Invalid loaded MHC sequences found (non-canonical residues "
+                "and/or shorter than the minimum accepted groove-bearing "
+                f"fragment ({MIN_MHC_SEQUENCE_LEN} aa)). "
+                f"examples={example_text}"
+            )
 
     coverage_audit = _audit_mhc_sequence_coverage(
         binding_records=binding_records,
@@ -4834,7 +4953,26 @@ def run(args: argparse.Namespace) -> None:
             f"tcell={cascade_stats['tcell_added']}"
         )
 
+    bulk_ms_records = []
+    if bool(getattr(args, "bulk_ms", False)):
+        from presto.data.bulk_ms import load_bulk_ms_records
+
+        bulk_ms_records, bulk_stats = load_bulk_ms_records(
+            cell_line=getattr(args, "bulk_cell_line", None) or None,
+            max_records=int(getattr(args, "max_bulk_ms", 0)) or None,
+            excision_negative_ratio=float(
+                getattr(args, "bulk_excision_negative_ratio", 1.0)
+            ),
+            seed=args.seed + 23,
+        )
+        print(f"Bulk (non-MHC) MS corpus: {bulk_stats['n_records']} records")
+        print(f"    observed: {bulk_stats['n_observed']}")
+        print(f"    excision negatives: {bulk_stats['n_excision_negatives']}")
+        for machinery, count in bulk_stats["machinery_counts"].items():
+            print(f"    {machinery}: {count}")
+
     dataset = PrestoDataset(
+        bulk_ms_records=bulk_ms_records,
         binding_records=binding_records,
         kinetics_records=kinetics_records,
         stability_records=stability_records,
@@ -4948,7 +5086,9 @@ def run(args: argparse.Namespace) -> None:
         d_model=args.d_model,
         n_layers=args.n_layers,
         n_heads=args.n_heads,
+        latent_topology=str(getattr(args, "latent_topology", "collapsed")),
     ).to(device)
+    print(f"Latent topology: {model.latent_topology}")
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"Model parameters: {n_params:,}")
 
@@ -5316,6 +5456,67 @@ def run(args: argparse.Namespace) -> None:
                 print(f"Probe motif scan saved to {motif_csv}")
         if run_logger is not None:
             run_logger.close()
+
+    # Held-out per-task metrics and prediction dumps. The unified trainer used
+    # to emit scalar losses only, which is why an elution-AUPRC question could
+    # not be answered here and every experiment ran focused_binding_probe.py
+    # instead. Metric family comes from each task's declared loss_type, so a
+    # task added to LOSS_TASK_SPECS is scored with no extra wiring.
+    if run_dir is not None:
+        try:
+            from presto.training.holdout_eval import (
+                collect_holdout_predictions,
+                write_holdout_artifacts,
+            )
+            from presto.scripts.train_synthetic import (
+                LOSS_TASK_SPECS,
+                _get_batch_mask,
+                _get_batch_target,
+                _resolve_output_tensor,
+            )
+
+            def _forward(model_ref, batch_ref):
+                return model_ref(
+                    pep_tok=batch_ref.pep_tok,
+                    mhc_a_tok=batch_ref.mhc_a_tok,
+                    mhc_b_tok=batch_ref.mhc_b_tok,
+                    mhc_class=batch_ref.mhc_class,
+                    species=batch_ref.processing_species,
+                    flank_n_tok=batch_ref.flank_n_tok,
+                    flank_c_tok=batch_ref.flank_c_tok,
+                    tcell_context=batch_ref.tcell_context if batch_ref.tcell_context else None,
+                    machinery=getattr(batch_ref, "machinery_idx", None),
+                )
+
+            accumulators = collect_holdout_predictions(
+                model=model,
+                loader=val_loader,
+                device=device,
+                specs=LOSS_TASK_SPECS,
+                forward_fn=_forward,
+                resolve_pred_fn=_resolve_output_tensor,
+                get_target_fn=_get_batch_target,
+                get_mask_fn=_get_batch_mask,
+            )
+            payload = write_holdout_artifacts(
+                run_dir,
+                accumulators,
+                split="val",
+                extra_summary={"best_val_loss": float(best_val_loss)},
+            )
+            scored = payload.get("tasks", {})
+            print(f"Held-out metrics written for {len(scored)} tasks -> {run_dir}")
+            for task_name, metrics in sorted(scored.items()):
+                headline = (
+                    f"auprc={metrics['auprc']:.4f}"
+                    if "auprc" in metrics
+                    else f"spearman={metrics['spearman']:.4f}"
+                    if "spearman" in metrics
+                    else f"n={metrics.get('n', 0):.0f}"
+                )
+                print(f"    {task_name}: {headline} (n={metrics.get('n', 0):.0f})")
+        except Exception as exc:  # pragma: no cover - diagnostics must not fail a run
+            print(f"Held-out metric pass skipped: {type(exc).__name__}: {exc}")
 
     print(f"\nTraining complete. Best val_loss: {best_val_loss:.4f}")
 
