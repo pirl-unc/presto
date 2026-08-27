@@ -1,3 +1,36 @@
+# Gap Closure: provenance/state factorization (2026-08-27)
+
+Addresses the gaps recorded in `docs/model_io_contract.md` S8.
+
+| gap | state |
+|---|---|
+| 1 - validation not peptide-disjoint | closed: `peptide_grouped_split_indices`, disjointness asserted after the split |
+| 2 - in-vivo path gets no gradient | **still open** — factorization made it expressible, but every excision-supervised row is protein-sourced so the in-vivo terms are multiplied by zero. Found in review; see contract S8. |
+| 3 - flat `machinery` axis | closed: split into source / digest / inducer / apm_perturbation |
+| 4 - `s_len` conflates two mechanisms | closed: length and missed-cleavage gated to the protein branch |
+| 5 - `processing` and `excision` parallel | **open**: merging changes an existing task's semantics; wants Stage 4 arm C first |
+| 6 - detectability validated out of domain | set builder landed (`dual_corpus_transfer_set`); measuring it is an experiment |
+| 7 - T-cell context conditioning legacy | **open**: removal materially changes T-cell predictions; needs its own before/after |
+
+Review of this branch (`/code-review 5 high`) found 15 issues, four of them
+verified empirically. The most important overturned a claim in this table: gap 2 is
+**not** closed. A test I wrote asserted the in-vivo path receives gradient, but it
+hand-built an `mhc`-source row carrying an excision target, which the data pipeline
+never produces. It proved the wiring can carry gradient, not that data does.
+
+Fixed from that review:
+- `"on rate"` matched the substring inside `"dissociati*on rate*"`, typing off-rate
+  measurements as KON
+- `Presto._init_weights` re-randomized every `nn.Embedding`, silently destroying the
+  excision head's deliberate zero-init of the length table (and one test passed
+  *because* of the clobber)
+- `collate_dict_batch` never built `t_half`/`tm` qualifiers, so switching those to
+  censored losses made them vanish silently rather than fall back to MSE
+
+Gaps 5 and 7 are deliberately not bundled here. Both change the behavior of an
+existing supervised path, and folding either into a refactor whose whole point is to
+make measurement trustworthy would make the refactor unmeasurable.
+
 # Protease-Conditioned Excision + MS Detectability Reorg (2026-08-26)
 
 Design spec: `tasks/protease_detectability_spec.md`. This section is the execution plan.

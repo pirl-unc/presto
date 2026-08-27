@@ -237,6 +237,10 @@ class ElutionRecord:
     detected: bool = True           # Was peptide detected?
     flank_n: str = ""               # N-terminal flanking sequence in the source protein
     flank_c: str = ""               # C-terminal flanking sequence in the source protein
+    # Cellular state at the time the peptide was produced. Conditions the
+    # in-vivo termini; see docs/model_io_contract.md Tier 3.
+    inducer: Optional[str] = None
+    apm_perturbation: Optional[str] = None
     cell_type: Optional[str] = None
     tissue: Optional[str] = None
     mhc_class: Optional[str] = None
@@ -1836,6 +1840,8 @@ class PrestoDataset(Dataset):
                 mhc_b="",
                 mhc_class=None,
                 machinery=rec.machinery,
+                peptide_source="protein",
+                enzymatic_digest=rec.machinery,
                 ms_detectability_label=rec.detectability_label,
                 excision_label=rec.excision_label,
                 source_protein=rec.protein_id or None,
@@ -1880,6 +1886,9 @@ class PrestoDataset(Dataset):
                 mhc_a=mhc_a_seq,
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
+                peptide_source="mhc",
+                processing_inducer=getattr(rec, "inducer", None),
+                apm_perturbation=getattr(rec, "apm_perturbation", None),
                 elution_label=1.0 if rec.detected else 0.0,
                 mil_mhc_a_list=mil_mhc_a_list,
                 mil_mhc_b_list=mil_mhc_b_list,
@@ -3801,3 +3810,61 @@ def write_mhc_fasta(sequences: Dict[str, str], path: str) -> None:
 
 # Backward compatibility alias
 generate_synthetic_tcr_data = generate_synthetic_tcell_data
+
+
+def peptide_grouped_split_indices(
+    dataset,
+    val_fraction: float,
+    seed: int,
+) -> Tuple[List[int], List[int]]:
+    """Split dataset indices so no peptide appears on both sides.
+
+    The unified trainer previously used ``torch.utils.data.random_split``, a
+    seeded split over *rows*. Rows are not independent: the same peptide recurs
+    across alleles, samples and corpora, and excision negatives are by
+    construction the same peptide relabeled with a mismatched enzyme. Measured
+    on a representative corpus that leaked 41.7% of validation peptides into
+    training, and 82.7% of excision validation rows.
+
+    Grouping by peptide alone -- not peptide-and-source -- is deliberate. A
+    peptide observed in both the MHC and shotgun corpora must land wholly on
+    one side, or the model has seen it regardless of which branch it came from.
+
+    Falls back to a row split when the dataset has fewer than two distinct
+    peptides, which only happens in tiny fixtures.
+    """
+    peptide_groups: Dict[str, List[int]] = defaultdict(list)
+    for index in range(len(dataset)):
+        peptide = str(getattr(dataset[index], "peptide", "") or "").strip().upper()
+        peptide_groups[peptide].append(index)
+
+    total_rows = len(dataset)
+    target_val_rows = max(1, int(total_rows * float(val_fraction)))
+
+    if len(peptide_groups) < 2:
+        rng = random.Random(seed)
+        indices = list(range(total_rows))
+        rng.shuffle(indices)
+        return indices[target_val_rows:], indices[:target_val_rows]
+
+    peptides = sorted(peptide_groups)
+    random.Random(seed + 53).shuffle(peptides)
+
+    val_indices: List[int] = []
+    val_peptides: set = set()
+    for peptide in peptides:
+        if len(val_indices) >= target_val_rows:
+            break
+        # Never take the last peptide: training must keep at least one group.
+        if len(val_peptides) >= len(peptides) - 1:
+            break
+        val_peptides.add(peptide)
+        val_indices.extend(peptide_groups[peptide])
+
+    train_indices = [
+        index
+        for peptide, group in peptide_groups.items()
+        if peptide not in val_peptides
+        for index in group
+    ]
+    return sorted(train_indices), sorted(val_indices)

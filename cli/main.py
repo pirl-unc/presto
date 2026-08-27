@@ -868,6 +868,18 @@ def create_parser() -> argparse.ArgumentParser:
              "excision negative",
     )
     train_iedb.add_argument(
+        "--split-mode",
+        dest="split_mode",
+        type=str,
+        choices=["peptide_group", "random_rows"],
+        default="peptide_group",
+        help=(
+            "Train/val split. 'peptide_group' keeps every peptide wholly on one "
+            "side; 'random_rows' is the pre-2026-08 behavior and is not "
+            "peptide-disjoint, so its metrics are optimistic."
+        ),
+    )
+    train_iedb.add_argument(
         "--latent-topology",
         dest="latent_topology",
         type=str,

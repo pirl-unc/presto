@@ -5,7 +5,7 @@ organism categories, and biological compatibility matrices.
 """
 
 import re
-from typing import Dict, Optional, Set, Tuple
+from typing import Any, Dict, Optional, Set, Tuple
 
 # Amino acid vocabulary with special tokens
 AA_VOCAB = [
@@ -676,3 +676,130 @@ def excision_machinery_index(name: Optional[str]) -> int:
     """Resolve a machinery name to its vocabulary index."""
     token = str(name or "").strip().lower()
     return EXCISION_MACHINERY_TO_IDX.get(token, EXCISION_MACHINERY_TO_IDX["unknown"])
+
+
+# ---------------------------------------------------------------------------
+# Peptide provenance and cellular state
+# ---------------------------------------------------------------------------
+# These replace the single flat `machinery` axis, which conflated two things
+# that are not alternatives: what was done to the sample in the tube, and what
+# state the cell was in. Because MHC ligands are never digested and shotgun
+# proteins are extracted whole, one axis is perfectly anti-correlated with the
+# corpus -- a pure corpus indicator with no within-corpus variation, which is
+# why the in-vivo half never received gradient.
+#
+# See docs/model_io_contract.md for the permission rules attached to each.
+
+# Tier 2: what was captured. Selects which branch computes the termini; must
+# never be fed to a predictor as a feature.
+PEPTIDE_SOURCES = ["unknown", "mhc", "protein"]
+PEPTIDE_SOURCE_TO_IDX = {name: i for i, name in enumerate(PEPTIDE_SOURCES)}
+
+# Tier 2: post-capture step. Non-`none` only when peptide_source == "protein".
+ENZYMATIC_DIGESTS = ["none", "trypsin", "chymotrypsin", "lysc", "gluc"]
+ENZYMATIC_DIGEST_TO_IDX = {name: i for i, name in enumerate(ENZYMATIC_DIGESTS)}
+
+# Tier 3: cytokine state. Default is `basal`, not "none": unperturbed cells
+# carry basal interferon tone rather than zero.
+PROCESSING_INDUCERS = ["basal", "ifn_gamma", "ifn_ab", "tnf_alpha", "tlr"]
+PROCESSING_INDUCER_TO_IDX = {name: i for i, name in enumerate(PROCESSING_INDUCERS)}
+
+# Tier 3: antigen-processing-machinery perturbation, grouped by mechanism.
+# Per-gene flags are too thin to learn individually (ERAP1 25 samples, TAP1 16,
+# B2M 12, ~12 each for the rest), and a single boolean would make biologically
+# opposite interventions identical -- B2M-null abolishes class I outright,
+# while ERAP1-KO shifts only the N-terminus.
+APM_PERTURBATIONS = [
+    "none",
+    "peptide_supply",     # TAP1/2, PSMB5/8/9/10 -- what reaches the ER
+    "n_term_trimming",    # ERAP1/2 -- shifts the N-terminus specifically
+    "loading_complex",    # TAPBP, CALR, CANX, PDIA3 -- stability, not cleavage
+    "mhc_null",           # B2M -- abolishes class I presentation
+    "class_ii_loading",   # HLA-DM/DO, CD74, CIITA -- editing and register
+    "other",
+]
+APM_PERTURBATION_TO_IDX = {name: i for i, name in enumerate(APM_PERTURBATIONS)}
+
+# hitlist APM gene flag -> mechanism group.
+APM_GENE_TO_GROUP: Dict[str, str] = {
+    "tap1": "peptide_supply", "tap2": "peptide_supply",
+    "tap_inhibitor": "peptide_supply", "tap_deficient_line": "peptide_supply",
+    "psmb5": "peptide_supply", "psmb8": "peptide_supply",
+    "psmb9": "peptide_supply", "psmb10": "peptide_supply",
+    "proteasome_inhibitor": "peptide_supply",
+    "erap1": "n_term_trimming", "erap2": "n_term_trimming",
+    "erap_inhibitor": "n_term_trimming",
+    "tapbp": "loading_complex", "calr": "loading_complex",
+    "canx": "loading_complex", "pdia3": "loading_complex",
+    "ganab": "loading_complex", "sppl3": "loading_complex",
+    "b2m": "mhc_null",
+    "hla_dm": "class_ii_loading", "hla_do": "class_ii_loading",
+    "cd74": "class_ii_loading", "ciita": "class_ii_loading",
+    "rfx": "class_ii_loading", "bls": "class_ii_loading",
+    "cathepsin": "class_ii_loading", "cathepsin_inhibitor": "class_ii_loading",
+    "irf2": "other", "nlrc5": "other",
+}
+
+# hitlist condition_category -> inducer. Cytokine treatment is an induction
+# state, not an APM lesion, so it lives on its own axis.
+CONDITION_TO_INDUCER: Dict[str, str] = {
+    "IFN_gamma_treatment": "ifn_gamma",
+    "IFN_alpha_treatment": "ifn_ab",
+    "IFN_beta_treatment": "ifn_ab",
+    "TNF_alpha_treatment": "tnf_alpha",
+    "TLR_stimulation": "tlr",
+}
+
+
+def peptide_source_index(name: Optional[str]) -> int:
+    return PEPTIDE_SOURCE_TO_IDX.get(
+        str(name or "").strip().lower(), PEPTIDE_SOURCE_TO_IDX["unknown"]
+    )
+
+
+def enzymatic_digest_index(name: Optional[str]) -> int:
+    return ENZYMATIC_DIGEST_TO_IDX.get(
+        str(name or "").strip().lower(), ENZYMATIC_DIGEST_TO_IDX["none"]
+    )
+
+
+def processing_inducer_index(name: Optional[str]) -> int:
+    return PROCESSING_INDUCER_TO_IDX.get(
+        str(name or "").strip().lower(), PROCESSING_INDUCER_TO_IDX["basal"]
+    )
+
+
+def apm_perturbation_index(name: Optional[str]) -> int:
+    return APM_PERTURBATION_TO_IDX.get(
+        str(name or "").strip().lower(), APM_PERTURBATION_TO_IDX["none"]
+    )
+
+
+def apm_group_for_genes(genes: Optional[Any]) -> str:
+    """Mechanism group for a set of perturbed APM genes.
+
+    Ordered by severity when several are perturbed together: a B2M-null line
+    has no class I presentation at all, so that dominates whatever else was
+    knocked out; peptide supply dominates trimming, and so on.
+    """
+    if not genes:
+        return "none"
+    if isinstance(genes, str):
+        tokens = [g.strip().lower() for g in genes.replace(",", ";").split(";") if g.strip()]
+    else:
+        tokens = [str(g).strip().lower() for g in genes if str(g).strip()]
+    groups = {APM_GENE_TO_GROUP.get(token) for token in tokens}
+    groups.discard(None)
+    if not groups:
+        return "none"
+    for candidate in (
+        "mhc_null", "peptide_supply", "n_term_trimming",
+        "loading_complex", "class_ii_loading", "other",
+    ):
+        if candidate in groups:
+            return candidate
+    return "other"
+
+
+def inducer_for_condition(condition: Optional[str]) -> str:
+    return CONDITION_TO_INDUCER.get(str(condition or "").strip(), "basal")

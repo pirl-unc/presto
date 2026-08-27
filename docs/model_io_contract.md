@@ -43,7 +43,7 @@ The only content the trunk encoder ever sees.
 **Rule:** the trunk is a function of these and nothing else. Every other tier acts on
 routing, output heads, or observation-model offsets.
 
-### Tier 2 — Provenance selectors *(planned)*
+### Tier 2 — Provenance selectors *(implemented)*
 
 Protocol facts that decide **which sub-model applies**, never features fed to a
 predictor that must generalize.
@@ -67,7 +67,7 @@ concatenated into any predictor. `peptide_source` separates the two corpora perf
 so as a feature it is a free shortcut ("protein-sourced ⇒ never presented"); as a gate
 it is just the truth about which process cut the peptide.
 
-### Tier 3 — Cellular state *(planned)*
+### Tier 3 — Cellular state *(implemented)*
 
 Causal on **where the peptide was cut**. Meaningful only when `peptide_source = mhc`;
 for a digested protein the donor cell's machinery is irrelevant, because the protein was
@@ -232,19 +232,42 @@ Testable statements, not aspirations. Those marked ✓ have tests today.
 
 Recorded rather than glossed. Each is tracked in `tasks/todo.md` (repository, outside the docs tree).
 
-1. **Validation is not peptide-disjoint.** `random_split` over rows: 41.7% of validation
-   peptides also occur in training, 82.7% for excision rows. Every held-out number the
-   unified path reports is optimistic and not comparable to `model_to_beat.md`.
-2. **The in-vivo processing path receives no gradient.** No row with
-   `machinery = proteasome` carries an excision label, so the β1/β2/β5 mixture sits at
-   its uniform init. Tier 3 is the fix.
-3. **Tiers 2–4 are one flat `machinery` axis today**, which conflates sample prep with
-   cellular state and is a perfect corpus indicator.
-4. **`s_len` conflates two mechanisms** — cleavage-site spacing in vitro, MHC groove and
-   TAP in vivo. Under the Tier-2 fork it splits cleanly and moves to presentation.
-5. **`processing` and `excision` are parallel scores of one question.** They merge, with
-   `processing` as the surviving name.
-6. **Detectability is validated out of domain** — trained and scored on shotgun rows,
-   used on MHC rows. 24,125 peptides occur in both corpora and would test the transfer.
+**Closed**
+
+1. ~~Validation is not peptide-disjoint.~~ `peptide_grouped_split_indices` groups by
+   peptide alone; the trainer asserts disjointness after splitting. `--split-mode
+   random_rows` reproduces the old behavior and says so loudly.
+
+3. ~~Tiers 2–4 are one flat `machinery` axis.~~ Split into `peptide_source`,
+   `enzymatic_digest`, `processing_inducer` and `apm_perturbation`, with the source
+   acting as a soft gate rather than a feature.
+4. ~~`s_len` conflates two mechanisms.~~ Length and missed-cleavage terms are gated to
+   the protein branch; the in-vivo branch contributes neither, so the protease is no
+   longer credited for MHC groove selection.
+6. ~~Detectability is validated out of domain.~~ `dual_corpus_transfer_set` builds the
+   24,125-peptide in-domain evaluation set. Measuring it is an experiment, not code.
+
+**Open**
+
+2. **The in-vivo processing path still receives no gradient.** The factorization made
+   the conditioning *expressible* and Tier 3 state now flows from hitlist (187
+   `n_term_trimming` rows, 187 `peptide_supply`, 88 IFN-γ in a representative slice),
+   but excision labels come only from `data/bulk_ms.py`, whose rows are all
+   `peptide_source="protein"`. Every supervised row therefore has `is_protein == 1`,
+   and `(1 - is_protein)` zeroes the in-vivo terms: ~482 parameters train to nothing.
+   Verified through the real pipeline and pinned by
+   `test_real_pipeline_still_starves_the_in_vivo_path`.
+
+   Closing it needs excision labels on MHC rows. An observed ligand is evidence the
+   in-vivo machinery produced it, so elution positives are natural excision positives —
+   but the negatives are the same unsolved problem as detectability negatives. The
+   alternative is routing Tier 3 conditions into the *processing latent* rather than
+   only the excision readout, so ERAP-KO-vs-WT elution contrasts supervise them through
+   the existing elution loss. That is a contract decision, not a patch.
+
+5. **`processing` and `excision` remain parallel scores of one question.** Merging them
+   changes the semantics of an existing supervised task, so it wants the Stage 4 arm-C
+   result first rather than a unilateral edit.
 7. **T-cell context conditioning is legacy** and more input-conditioned than the
-   contract allows.
+   contract allows. Removing it materially changes T-cell predictions, so it needs its
+   own before/after rather than being folded into an unrelated refactor.

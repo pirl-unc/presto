@@ -26,6 +26,7 @@ from __future__ import annotations
 import random
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
+from .vocab import apm_group_for_genes, inducer_for_condition
 from .loaders import (
     BindingRecord,
     ElutionRecord,
@@ -64,6 +65,13 @@ _BINDING_COLUMNS = _SHARED_COLUMNS + [
 _MS_COLUMNS = _SHARED_COLUMNS + [
     "cell_line_name",
     "source_tissue",
+    "cell_type",
+    # Tier 3 cellular state. `condition_category` is the per-sample truth;
+    # `apm_genes_perturbed` names the genes. The study-level roll-up
+    # (`study_apm_perturbed`) is deliberately not used: it is ORed across a
+    # study, so a WT control inside a KO study inherits the flag.
+    "condition_category",
+    "apm_genes_perturbed",
 ]
 
 # ``response_measured`` is the same controlled vocabulary the merged TSV carries
@@ -344,6 +352,10 @@ def load_records_from_hitlist(
                 detected=True,
                 flank_n=_clean(row.get("n_flank")),
                 flank_c=_clean(row.get("c_flank")),
+                inducer=inducer_for_condition(_clean(row.get("condition_category"))),
+                apm_perturbation=apm_group_for_genes(
+                    _clean(row.get("apm_genes_perturbed"))
+                ),
                 cell_type=_clean(row.get("cell_line_name")) or None,
                 tissue=_clean(row.get("source_tissue")) or None,
                 mhc_class=_clean(row.get("mhc_class")) or None,
