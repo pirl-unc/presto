@@ -1305,6 +1305,16 @@ def _slice_mil_channel(
         value = channel.get(key)
         if isinstance(value, list):
             sliced[key] = [value[i] for i in keep_list]
+    # Provenance is per-instance too. `sliced = dict(channel)` shallow-copies
+    # it, so without this the capped forward gets full-length condition
+    # tensors against truncated inputs and dies in torch.cat -- which any run
+    # with max_mil_instances set and a bag larger than the cap would hit.
+    provenance = channel.get("provenance")
+    if isinstance(provenance, dict):
+        sliced["provenance"] = {
+            name: (tensor[keep] if isinstance(tensor, torch.Tensor) else tensor)
+            for name, tensor in provenance.items()
+        }
     return sliced
 
 
@@ -1463,6 +1473,18 @@ def _build_contrastive_mil_channel(
         contrastive["flank_c_tok"] = channel["flank_c_tok"][anchor_index_t]
     else:
         contrastive["flank_c_tok"] = None
+    # Cellular state follows the anchor, like pep_tok and the flanks: the
+    # condition belongs to the sample the peptide came from, and only the MHC
+    # is swapped in to make the synthetic negative. Omitting it would run every
+    # contrastive instance at the default condition while real bags run at
+    # their true one, letting processing_condition_embed learn
+    # "default state => negative" instead of any real biology.
+    provenance = channel.get("provenance")
+    if isinstance(provenance, dict):
+        contrastive["provenance"] = {
+            name: (tensor[anchor_index_t] if isinstance(tensor, torch.Tensor) else tensor)
+            for name, tensor in provenance.items()
+        }
     return contrastive
 
 
@@ -1607,6 +1629,7 @@ def _compute_mil_channel_losses(
                 channel=contrastive_channel,
                 device=device,
                 tcell_context=None,
+                provenance=contrastive_channel.get("provenance"),
             )
             contrastive_logits = contrastive_outputs.get("presentation_logit")
             if isinstance(contrastive_logits, torch.Tensor):

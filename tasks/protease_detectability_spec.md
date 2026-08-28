@@ -73,7 +73,7 @@ residue-preference vector, a P1' block, and a length/processivity term:
 excision(peptide, protein, M) = n_terminus_score(N-junction ctx, M)      # N-terminal junction
                                 + c_terminus_score(C-junction ctx, M)      # C-terminal junction
                                 + missed_cleavage_score(peptide, M)      # missed-cleavage penalty
-                                + length_score_value(len, M)
+                                + length_score(len, M)
 ```
 
 **Which steps the score covers.** `c_terminus_score` is endoproteolytic cleavage in both branches.
@@ -89,11 +89,11 @@ residues would be wrong biology.
 **Explicitly out of scope**, and belonging to downstream latents instead: TAP transport,
 MHC binding, surface display.
 
-**A known conflation.** `length_score_value` means different things per branch. For an in-vitro
+**A known conflation.** `length_score` means different things per branch. For an in-vitro
 digest, length is a property of cleavage-site spacing. For class I, the 8-11mer
 distribution is set mostly by the MHC groove and TAP, not by the proteasome — so the
 in-vivo length term risks attributing MHC selection to the protease. Consider dropping
-`length_score_value` for in-vivo machinery once the length preference is carried by the presentation
+`length_score` for in-vivo machinery once the length preference is carried by the presentation
 path.
 
 In-vitro enzymes are pinned (or strongly regularized) to their known profiles from

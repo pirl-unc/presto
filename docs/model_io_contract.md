@@ -241,17 +241,37 @@ Recorded rather than glossed. Each is tracked in `tasks/todo.md` (repository, ou
 3. ~~Tiers 2–4 are one flat `machinery` axis.~~ Split into `peptide_source`,
    `enzymatic_digest`, `processing_inducer` and `apm_perturbation`, with the source
    acting as a soft gate rather than a feature.
-4. ~~`length_score_value` conflates two mechanisms.~~ Length and missed-cleavage terms are gated to
+4. ~~`length_preference` conflates two mechanisms.~~ Length and missed-cleavage terms are gated to
    the protein branch; the in-vivo branch contributes neither, so the protease is no
    longer credited for MHC groove selection.
-2. ~~The in-vivo processing path receives no gradient.~~ Conditions now reach the
-   processing *latent*, not just the excision readout. That matters because excision
-   labels exist only on shotgun rows, whereas elution labels exist on MHC rows and vary
-   with APM state — so a KO-vs-WT contrast supervises the conditioning through a loss
-   that already exists. Verified end to end with elution labels only and no excision
-   label present. Closing it also required carrying per-instance state through the MIL
-   bag forward, which the elution loss uses whenever MIL is active; without that every
-   instance collapsed to the default condition.
+2. ~~The in-vivo processing path receives no gradient.~~ Closed in two parts, after an
+   earlier attempt claimed closure while the named parameters were still dead.
+
+   **2a — cellular state reaches presentation.** Conditions reach the processing
+   *latent*, not just the excision readout. Excision labels exist only on shotgun rows,
+   whereas elution labels exist on MHC rows and vary with APM state, so a KO-vs-WT
+   contrast supervises the conditioning through a loss that already exists. This also
+   required carrying per-instance state through the MIL bag forward, which the elution
+   loss uses whenever MIL is active; without it every instance collapsed to the default
+   condition.
+
+   **2b — the in-vivo excision readout itself.** 2a did *not* close this, and a first
+   pass wrongly recorded it as closed: `invivo_profile_c/n`, `inducer_profile_c` and
+   `invivo_bias` (501 parameters) still took exactly zero gradient, because the in-vivo
+   branch fed only `excision_logit` and no MHC-source row ever carries an excision
+   label. The fix adds the missing DAG edge: for MHC-source rows the in-vivo excision
+   logit enters class I **presentation**, which is the documented processing →
+   presentation edge and is the biology — an eluted peptide's termini are themselves
+   evidence of in-vivo cleavage. The edge weight is softplus-gated so better cleavage
+   can only raise presentation odds, and is initialized to `softplus(-2) ≈ 0.13` rather
+   than 0, since a zero weight would starve everything upstream of it.
+
+   Verified through the real pipeline — records → dataset → collator → `compute_loss`
+   — with elution labels only and no excision label present; all 501 parameters receive
+   gradient. Pinned by `tests/test_invivo_excision_gradient.py`, which forbids
+   hand-built batches: the discredited earlier test passed by fabricating an
+   `mhc`-source row carrying an excision target, a combination the pipeline never
+   produces.
 6. ~~Detectability is validated out of domain.~~ `dual_corpus_transfer_set` builds the
    24,125-peptide in-domain evaluation set. Measuring it is an experiment, not code.
 

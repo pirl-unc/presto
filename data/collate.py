@@ -341,6 +341,10 @@ class PrestoBatch:
     tcell_mil_instance_to_bag: Optional[torch.Tensor] = None
     tcell_mil_bag_label: Optional[torch.Tensor] = None
     tcell_mil_bag_sample_ids: List[str] = field(default_factory=list)
+    # Per-instance provenance for the T-cell bag path. The collator already
+    # computes this; without the field it was built and discarded, so the
+    # T-cell MIL forward silently used the default cellular state.
+    tcell_mil_provenance: Dict[str, torch.Tensor] = field(default_factory=dict)
 
     # Lengths for masking
     pep_lengths: Optional[torch.Tensor] = None
@@ -428,6 +432,9 @@ class PrestoBatch:
             },
             tcell_context_masks={
                 name: _move(tensor) for name, tensor in self.tcell_context_masks.items()
+            },
+            tcell_mil_provenance={
+                name: _move(tensor) for name, tensor in self.tcell_mil_provenance.items()
             },
             tcell_mil_context={
                 name: _move(tensor) for name, tensor in self.tcell_mil_context.items()
@@ -709,6 +716,8 @@ class PrestoCollator:
                 flank_ns,
                 max_len=self.max_flank_len,
                 pad=True,
+                # Same reason as the row path: keep the junction-adjacent end.
+                truncate="left",
             )
         if any(v for v in flank_cs):
             outputs["flank_c_tok"] = self.tokenizer.batch_encode(
@@ -1447,6 +1456,10 @@ class PrestoCollator:
                 flank_n_values,
                 max_len=self.max_flank_len,
                 pad=True,
+                # Keep the residues nearest the peptide: the N-flank's last
+                # residue is P1 of the N-terminal junction, which is what the
+                # excision head reads.
+                truncate="left",
             )
         if any(flank_c_values):
             flank_c_tok = self.tokenizer.batch_encode(
@@ -1777,6 +1790,7 @@ class PrestoCollator:
             tcell_mil_instance_to_bag=tcell_mil_tensors["instance_to_bag"],
             tcell_mil_bag_label=tcell_mil_tensors["bag_label"],
             tcell_mil_bag_sample_ids=tcell_mil_tensors["bag_sample_ids"],
+            tcell_mil_provenance=tcell_mil_tensors.get("provenance", {}),
         )
 
 

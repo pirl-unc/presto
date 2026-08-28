@@ -50,7 +50,7 @@ cannot separate them. The non-MHC shotgun branch (§3.9) is what breaks the conf
 See `tasks/protease_detectability_spec.md` in the repository.
 
 `excision` is scored by `ExcisionHead` (`models/heads.py`) as
-`n_terminus_score + c_terminus_score + missed_cleavage_score + length_score_value` — the two termini, a missed-cleavage penalty applied
+`n_terminus_score + c_terminus_score + missed_cleavage_score + length_score` — the two termini, a missed-cleavage penalty applied
 only to machinery with a hard rule, and a length term — where the machinery
 **indexes the readout** and never conditions
 the trunk. In-vitro protease profiles are pinned to their exact P1 rules by default, which makes

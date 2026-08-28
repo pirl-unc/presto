@@ -160,6 +160,35 @@ def _select_best_mapping(frame):
     return ordered.drop_duplicates(subset=["evidence_row_id"], keep="first")
 
 
+# The 20 canonical residues. Anything else -- `X` for an unknown residue, or an
+# IEDB annotation such as `SXPSGGXGV + INDIST(X2, X7)` / `ILAETVAXV + OTH(X8)` --
+# describes chemistry this model has no representation for. Roughly 0.007% of
+# rows, but they used to reach the tokenizer and abort training mid-epoch, so
+# they are dropped explicitly at ingest and counted.
+def _iter_row_dicts(frame, chunk_size: int = 50_000):
+    """Yield row dicts without materializing the whole frame at once.
+
+    `frame.to_dict("records")` builds one dict per row for the entire table
+    before the loop starts -- on the full corpus that is ~750k dicts held
+    simultaneously, which undoes the column pruning done upstream to keep the
+    load within memory. Chunking caps the peak at `chunk_size` dicts while
+    keeping the `.get()` access the callers are written against.
+    """
+    n_rows = len(frame)
+    for start in range(0, n_rows, chunk_size):
+        chunk = frame.iloc[start : start + chunk_size]
+        for row in chunk.to_dict("records"):
+            yield row
+
+
+CANONICAL_RESIDUES = frozenset("ACDEFGHIKLMNPQRSTVWY")
+
+
+def is_canonical_peptide(peptide: str) -> bool:
+    """True when every residue is one of the 20 the tokenizer accepts."""
+    return bool(peptide) and not (set(peptide) - CANONICAL_RESIDUES)
+
+
 def load_records_from_hitlist(
     *,
     max_binding: Optional[int] = None,
@@ -239,8 +268,9 @@ def load_records_from_hitlist(
     skipped_no_value = 0
     skipped_unroutable = 0
     skipped_bad_unit = 0
+    skipped_noncanonical_peptide = 0
 
-    for row in binding_frame.to_dict("records"):
+    for row in _iter_row_dicts(binding_frame):
         response = _clean(row.get("response_measured"))
         raw_value = row.get("quantitative_value")
         try:
@@ -263,12 +293,17 @@ def load_records_from_hitlist(
                 skipped_bad_unit += 1
                 continue
 
+        peptide = _clean(row.get("peptide"))
+        if not is_canonical_peptide(peptide):
+            skipped_noncanonical_peptide += 1
+            continue
+
         allele = _clean(row.get("mhc_restriction"))
         allele_set = _split_allele_set(row.get("mhc_allele_set"))
         qualifier = _qualifier_from_inequality(row.get("measurement_inequality"))
         assay_method = _clean(row.get("assay_method")) or None
         common = dict(
-            peptide=_clean(row.get("peptide")),
+            peptide=peptide,
             mhc_allele=allele,
             mhc_class=_clean(row.get("mhc_class")) or None,
             species=_clean(row.get("host")) or None,
@@ -335,7 +370,7 @@ def load_records_from_hitlist(
         else:
             skipped_unroutable += 1
 
-    for row in ms_frame.to_dict("records"):
+    for row in _iter_row_dicts(ms_frame):
         alleles = _split_allele_set(row.get("mhc_allele_set"))
         if not alleles:
             single = _clean(row.get("mhc_restriction"))
@@ -345,9 +380,13 @@ def load_records_from_hitlist(
             # Matches the merged-TSV loader, which drops elution rows with no
             # resolvable allele.
             continue
+        peptide = _clean(row.get("peptide"))
+        if not is_canonical_peptide(peptide):
+            skipped_noncanonical_peptide += 1
+            continue
         elution_records.append(
             ElutionRecord(
-                peptide=_clean(row.get("peptide")),
+                peptide=peptide,
                 alleles=alleles,
                 detected=True,
                 flank_n=_clean(row.get("n_flank")),
@@ -390,6 +429,7 @@ def load_records_from_hitlist(
         "skipped_no_numeric_value": skipped_no_value,
         "skipped_unroutable_response": skipped_unroutable,
         "skipped_unexpected_unit": skipped_bad_unit,
+        "skipped_noncanonical_peptide": skipped_noncanonical_peptide,
         "stability_assay_methods": _method_counts(stability_records),
         "kinetics_assay_methods": _method_counts(kinetics_records),
         "flank_coverage": {

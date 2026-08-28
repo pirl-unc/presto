@@ -228,3 +228,88 @@ class TestRouting:
         _, _, _, processing, _, tcell, tcr, stats = load_records_from_hitlist()
         assert processing == [] and tcell == [] and tcr == []
         assert stats["counts"]["processing"] == 0
+
+
+class TestPeptideValidation:
+    """Non-canonical peptides must be dropped at ingest, not at tokenization.
+
+    IEDB ships modification and ambiguity annotations -- `NXVPMVATV`,
+    `SXPSGGXGV + INDIST(X2, X7)`, `ILAETVAXV + OTH(X8)`. They describe
+    chemistry the model has no representation for, and they used to reach the
+    tokenizer and abort a training run mid-epoch with `Invalid amino-acid
+    token ' '`. About 0.007% of rows, which is exactly why it survived every
+    short smoke test.
+    """
+
+    @pytest.mark.parametrize(
+        "peptide",
+        [
+            "GXVPFXVS + INDIST(X2, X6)",
+            "ILAETVAXV + OTH(X8)",
+            "NXVPMVATV",
+            "SIINFEKL*",
+            "",
+        ],
+    )
+    def test_noncanonical_binding_peptide_is_skipped(self, monkeypatch, peptide):
+        _install_stub_hitlist(monkeypatch, [_binding_row(peptide=peptide)], [])
+        binding, _, _, _, _, _, _, stats = load_records_from_hitlist()
+        assert binding == []
+        assert stats["skipped_noncanonical_peptide"] == 1
+
+    def test_noncanonical_elution_peptide_is_skipped(self, monkeypatch):
+        _install_stub_hitlist(monkeypatch, [], [_ms_row(peptide="NXVPMVATV")])
+        _, _, _, _, elution, _, _, stats = load_records_from_hitlist()
+        assert elution == []
+        assert stats["skipped_noncanonical_peptide"] == 1
+
+    def test_canonical_peptides_still_pass(self, monkeypatch):
+        _install_stub_hitlist(monkeypatch, [_binding_row()], [_ms_row()])
+        binding, _, _, _, elution, _, _, stats = load_records_from_hitlist()
+        assert len(binding) == 1 and len(elution) == 1
+        assert stats["skipped_noncanonical_peptide"] == 0
+
+    def test_every_ingested_peptide_is_tokenizable(self, monkeypatch):
+        """The invariant the crash violated, stated directly."""
+        from presto.data.hitlist_source import is_canonical_peptide
+
+        _install_stub_hitlist(
+            monkeypatch,
+            [_binding_row(peptide="SIINFEKLA"), _binding_row(peptide="NXVPMVATV")],
+            [_ms_row(peptide="ILAETVAXV + OTH(X8)"), _ms_row(peptide="LLDGTATLRF")],
+        )
+        binding, _, _, _, elution, _, _, _ = load_records_from_hitlist()
+        for record in [*binding, *elution]:
+            assert is_canonical_peptide(record.peptide)
+
+
+class TestChunkedRowIteration:
+    """Rows must stream, not materialize all at once.
+
+    `to_dict("records")` on the full corpus builds ~750k dicts before the loop
+    body runs even once, undoing the column pruning done upstream to fit the
+    load in memory.
+    """
+
+    def test_yields_every_row_across_chunk_boundaries(self):
+        from presto.data.hitlist_source import _iter_row_dicts
+
+        frame = pd.DataFrame({"peptide": [f"P{i}" for i in range(25)], "n": range(25)})
+        rows = list(_iter_row_dicts(frame, chunk_size=7))
+        assert len(rows) == 25
+        assert [r["n"] for r in rows] == list(range(25))
+
+    def test_handles_an_empty_frame(self):
+        from presto.data.hitlist_source import _iter_row_dicts
+
+        assert list(_iter_row_dicts(pd.DataFrame({"a": []}), chunk_size=4)) == []
+
+    def test_is_lazy(self):
+        """Consuming one row must not require building all of them."""
+        import itertools
+
+        from presto.data.hitlist_source import _iter_row_dicts
+
+        frame = pd.DataFrame({"n": range(1000)})
+        first_two = list(itertools.islice(_iter_row_dicts(frame, chunk_size=2), 2))
+        assert [r["n"] for r in first_two] == [0, 1]

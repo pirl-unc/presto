@@ -5,7 +5,7 @@ Addresses the gaps recorded in `docs/model_io_contract.md` S8.
 | gap | state |
 |---|---|
 | 1 - validation not peptide-disjoint | closed: `peptide_grouped_split_indices`, disjointness asserted after the split |
-| 2 - in-vivo path gets no gradient | **still open** — factorization made it expressible, but every excision-supervised row is protein-sourced so the in-vivo terms are multiplied by zero. Found in review; see contract S8. |
+| 2 - in-vivo path gets no gradient | closed: 2a routes cellular state to the processing latent; 2b adds the in-vivo excision → class I presentation edge, so all 501 in-vivo excision parameters take gradient from elution labels. Verified through the real pipeline; see contract S8 and `tests/test_invivo_excision_gradient.py` |
 | 3 - flat `machinery` axis | closed: split into source / digest / inducer / apm_perturbation |
 | 4 - `s_len` conflates two mechanisms | closed: length and missed-cleavage gated to the protein branch |
 | 5 - `processing` and `excision` parallel | **open**: merging changes an existing task's semantics; wants Stage 4 arm C first |
@@ -13,10 +13,18 @@ Addresses the gaps recorded in `docs/model_io_contract.md` S8.
 | 7 - T-cell context conditioning legacy | **open**: removal materially changes T-cell predictions; needs its own before/after |
 
 Review of this branch (`/code-review 5 high`) found 15 issues, four of them
-verified empirically. The most important overturned a claim in this table: gap 2 is
+verified empirically. The most important overturned a claim in this table: gap 2 was
 **not** closed. A test I wrote asserted the in-vivo path receives gradient, but it
 hand-built an `mhc`-source row carrying an excision target, which the data pipeline
 never produces. It proved the wiring can carry gradient, not that data does.
+
+A second review caught the same error repeated: the follow-up fix routed conditions to
+the processing *latent*, which does not touch the excision readout, and recorded gap 2
+as closed while the 501 named parameters were still at exactly zero gradient. Gap 2 is
+now closed for real via the in-vivo excision → presentation edge, verified end to end
+through records → dataset → collator → `compute_loss`. The lesson is in
+`tasks/lessons.md`: a gradient claim is only worth what the *pipeline-produced* batch
+proves, and moving which parameter you mean is not closing the gap.
 
 Fixed from that review:
 - `"on rate"` matched the substring inside `"dissociati*on rate*"`, typing off-rate

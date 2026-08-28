@@ -47,6 +47,7 @@ class Tokenizer:
         max_len: int = None,
         add_bos: bool = False,
         add_eos: bool = False,
+        truncate: str = "right",
     ) -> List[int]:
         """Encode a sequence to token IDs.
 
@@ -63,7 +64,7 @@ class Tokenizer:
         seq = str(seq).upper()
 
         # Check encode cache first.
-        cache_key = (seq, max_len, add_bos, add_eos)
+        cache_key = (seq, max_len, add_bos, add_eos, truncate)
         cached = self._encode_cache.get(cache_key)
         if cached is not None:
             return list(cached)
@@ -97,7 +98,15 @@ class Tokenizer:
             max_seq_len = max_len - n_special
             if max_seq_len < 0:
                 max_seq_len = 0
-            ids = ids[:max_seq_len]
+            # Which end to keep matters for flanks. An N-flank's informative
+            # residue is its *last* one -- P1 of the N-terminal junction, which
+            # is what the excision head reads -- so a right-truncated N-flank
+            # loses exactly the residue it was included for. C-flanks are the
+            # mirror case and keep the default left side.
+            if truncate == "left":
+                ids = ids[-max_seq_len:] if max_seq_len else []
+            else:
+                ids = ids[:max_seq_len]
 
         # Add special tokens
         if add_bos:
@@ -137,6 +146,7 @@ class Tokenizer:
         add_bos: bool = False,
         add_eos: bool = False,
         return_lengths: bool = False,
+        truncate: str = "right",
     ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """Batch encode multiple sequences.
 
@@ -162,7 +172,10 @@ class Tokenizer:
         lengths = []
 
         for seq in seqs:
-            ids = self.encode(seq, max_len=max_len, add_bos=add_bos, add_eos=add_eos)
+            ids = self.encode(
+                seq, max_len=max_len, add_bos=add_bos, add_eos=add_eos,
+                truncate=truncate,
+            )
             lengths.append(len(ids))
 
             if pad and len(ids) < max_len:

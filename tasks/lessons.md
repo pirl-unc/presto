@@ -199,3 +199,28 @@
 - When comparing "best honest" models across benchmark families, audit both the input contract and the output contract before promoting a result. A path can avoid the forbidden input leak and still be non-comparable because it collapses multiple assay families into one assay-conditioned output.
 - Do not over-interpret probe peptides as supervised affinity anchors without checking the merged dataset first. A probe can exist in the corpus only as presentation / structural metadata and still look like a meaningful affinity sanity check if you skip the support audit.
 - When the user says hardware-dependent implementation differences are not acceptable, do not keep a split default with one backend on a workaround and others on native behavior. Promote the shared implementation to the default and require explicit opt-out for backend-specific benchmarking.
+
+## Gradient claims must be proven on pipeline-produced batches (2026-08-27)
+
+Twice on the same gap I reported a dead parameter path as fixed when it was not.
+
+1. First attempt: a test hand-built an `mhc`-source row carrying an excision target —
+   a combination the data pipeline never produces. It proved the wiring *can* carry
+   gradient, not that any real batch does.
+2. Second attempt: I routed the condition token to the processing *latent*, which does
+   not touch the excision readout, then recorded the gap closed. The 501 parameters the
+   gap actually named were still at exactly zero gradient. I had also deleted the test
+   that pinned them, so nothing would have caught it.
+
+**Rules for myself:**
+- To claim a parameter is trained, run the real path — records → dataset → collator →
+  `compute_loss` → `.backward()` — and print `p.grad.abs().sum()` for the parameters
+  *named in the gap*, by name. Never a prefix scan, which hides a renamed or removed
+  parameter as a pass.
+- Never delete a test that pins a known defect in order to close the defect. If the
+  defect is fixed the test should be inverted, not removed; its deletion is exactly
+  what makes a regression invisible.
+- Fixing a *different* parameter than the one the gap names is not closing the gap.
+  If the scope legitimately changed, split it (2a/2b) and say which half is still open.
+- A zero-initialized weight on a new edge starves everything upstream of it. If the
+  point of the edge is to deliver gradient, its weight must be nonzero at init.

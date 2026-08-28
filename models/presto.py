@@ -308,6 +308,8 @@ class Presto(nn.Module):
     ):
         """Initialize Presto."""
         super().__init__()
+        # ids of parameters whose deliberate init must survive _init_weights
+        self._preserved_init_params: set[int] = set()
         self.d_model = d_model
         self.n_categories = None  # deprecated; kept for backward compat
         self.max_affinity_nM = float(max_affinity_nM)
@@ -798,10 +800,18 @@ class Presto(nn.Module):
         # presentation (a B2M-null cell presents nothing), so reaching
         # presentation through the processing vector is correct biology rather
         # than a shortcut.
-        self.processing_condition_embed = nn.Embedding(
+        # Weight on the in-vivo excision -> presentation edge (gap 2). Softplus
+        # keeps it non-negative: better in-vivo cleavage can only raise the
+        # presentation odds, never lower them, which is the biology and stops
+        # the term inverting into a free-floating bias. Initialized to
+        # softplus(-2) ~ 0.13 rather than 0 -- at exactly 0 the upstream
+        # in-vivo excision parameters would receive no gradient, which is the
+        # bug this edge exists to fix.
+        self.w_invivo_excision_presentation = nn.Parameter(torch.tensor(-2.0))
+
+        self.processing_condition_embed = self._zero_init_embedding(
             len(APM_PERTURBATIONS) * len(PROCESSING_INDUCERS), d_model
         )
-        nn.init.zeros_(self.processing_condition_embed.weight)
         self._n_inducer_states = len(PROCESSING_INDUCERS)
 
         # Machinery-conditioned excision readout. Output-side only: the
@@ -855,6 +865,20 @@ class Presto(nn.Module):
         self.species_override_embed = nn.Embedding(N_ORGANISM_CATEGORIES, d_model)
         self._init_weights()
 
+    def _zero_init_embedding(self, num_embeddings: int, dim: int) -> nn.Embedding:
+        """A zero-initialized embedding that survives the blanket re-init.
+
+        Creating and registering in one step is the point: `_init_weights`
+        re-initializes every `nn.Embedding` it can reach, so an embedding that
+        merely calls `nn.init.zeros_` is silently randomized. Making the
+        registration inseparable from the construction means a future
+        zero-init embedding cannot forget to opt out.
+        """
+        embedding = nn.Embedding(num_embeddings, dim)
+        nn.init.zeros_(embedding.weight)
+        self._preserved_init_params.add(id(embedding.weight))
+        return embedding
+
     def _init_weights(self) -> None:
         """Initialize transformer-style components to a stable working scale."""
         query_std = 1.0 / math.sqrt(self.d_model)
@@ -867,11 +891,12 @@ class Presto(nn.Module):
         # have constructed themselves. Any module that deliberately chose its
         # own initialization would be silently overwritten here, so submodules
         # opt out by listing the parameters they own.
-        deliberately_initialized = {
+        deliberately_initialized = set(self._preserved_init_params)
+        deliberately_initialized.update(
             id(parameter)
             for module in self.modules()
             for parameter in getattr(module, "preserve_init_parameters", lambda: [])()
-        }
+        )
         for module in self.modules():
             if isinstance(module, nn.Embedding):
                 if id(module.weight) in deliberately_initialized:
@@ -1036,6 +1061,20 @@ class Presto(nn.Module):
             f"{prefix}assay_heads.": f"{prefix}affinity_predictor.assay_heads.",
             f"{prefix}kd_assay_bias.": f"{prefix}affinity_predictor.kd_assay_bias.",
         }
+        # `length_score` -> `length_preference` (this PR series). Same shape and
+        # meaning, so carry the weights over rather than dropping them: without
+        # this every pre-rename checkpoint fails strict load on a missing key.
+        excision_renames = {
+            f"{prefix}excision_head.length_score.weight":
+                f"{prefix}excision_head.length_preference.weight",
+            f"{prefix}liberation_head.length_score.weight":
+                f"{prefix}excision_head.length_preference.weight",
+        }
+        for old_key, new_key in excision_renames.items():
+            if old_key in state_dict:
+                if new_key not in state_dict:
+                    state_dict[new_key] = state_dict[old_key]
+                state_dict.pop(old_key)
         exact_key_map = {
             f"{prefix}kd_assay_bias_scale": f"{prefix}affinity_predictor.kd_assay_bias_scale",
             f"{prefix}binding_probe_mix_logit": f"{prefix}affinity_predictor.binding_probe_mix_logit",
@@ -2410,33 +2449,34 @@ class Presto(nn.Module):
         active_components = {
             self.STAGE_BINDING_CLASS1: {
                 "trunk", "groove", "binding_query", "binding_core",
-                "binding_module", "assay_heads",
+                "binding_module", "assay_heads", "mhc_identity",
             },
             self.STAGE_BINDING_CLASS2: {
                 "trunk", "groove", "binding_query", "binding_core",
                 "binding_module", "assay_heads", "pfr_class2",
+                "mhc_identity",
             },
             self.STAGE_PROCESSING_CLASS1: {
                 "trunk", "groove", "binding_query", "binding_core",
-                "binding_module", "assay_heads", "pfr_class2",
+                "binding_module", "assay_heads", "pfr_class2", "mhc_identity",
                 "processing", "processing_class1",
             },
             self.STAGE_PROCESSING_CLASS2: {
                 "trunk", "groove", "binding_query", "binding_core",
-                "binding_module", "assay_heads", "pfr_class2",
+                "binding_module", "assay_heads", "pfr_class2", "mhc_identity",
                 "processing", "processing_class1", "processing_class2",
             },
             self.STAGE_PRESENTATION_MIL: {
                 "trunk", "groove", "binding_query", "binding_core",
-                "binding_module", "assay_heads", "pfr_class2",
+                "binding_module", "assay_heads", "pfr_class2", "mhc_identity",
                 "processing", "processing_class1", "processing_class2",
-                "presentation",
+                "presentation", "ms_detectability",
             },
             self.STAGE_IMMUNOGENICITY: {
                 "trunk", "groove", "binding_query", "binding_core",
-                "binding_module", "assay_heads", "pfr_class2",
+                "binding_module", "assay_heads", "pfr_class2", "mhc_identity",
                 "processing", "processing_class1", "processing_class2",
-                "presentation", "recognition", "immunogenicity",
+                "presentation", "ms_detectability", "recognition", "immunogenicity",
             },
         }
 
@@ -2447,6 +2487,24 @@ class Presto(nn.Module):
             )
 
         active = active_components[stage]
+
+        # Every component a parameter can be classified into must be trainable
+        # at some stage; otherwise it is dead weight that no run ever updates
+        # and nothing reports it. Checked here rather than in a test alone so a
+        # newly added component cannot quietly fall through to "other".
+        reachable = set().union(*active_components.values())
+        unreachable = {
+            component
+            for component in component_map.values()
+            if component not in reachable
+        }
+        if unreachable:
+            raise ValueError(
+                "these curriculum components are trained by no stage, so their "
+                f"parameters would never receive an update: {sorted(unreachable)}. "
+                "Add them to a stage in active_components, or fix their "
+                "classification in PARAMETER_COMPONENT_RULES."
+            )
         # Trunk uses reduced LR; other active components use full LR
         slow_components = {"trunk"}
 
@@ -2458,6 +2516,10 @@ class Presto(nn.Module):
         for name, param in self.named_parameters():
             component = component_map.get(name, "other")
             if component in active:
+                # Explicitly re-enable: stages are meant to be called in
+                # sequence on one model, and an earlier stage froze these.
+                # Without this the model stays pinned at stage 1 forever.
+                param.requires_grad_(True)
                 if component in slow_components:
                     groups["slow"].append(param)
                 else:
@@ -3138,6 +3200,60 @@ class Presto(nn.Module):
         # 8) Presentation logits from the shared presentation vector
         # ------------------------------------------------------------------
         outputs.update(self.predict_presentation_from_trunk(trunk_state))
+        # In-vivo excision -> class I presentation (gap 2).
+        #
+        # The excision head already computes an in-vivo branch for MHC-source
+        # rows, but nothing consumed it: excision *labels* exist only on
+        # shotgun (protein-source) rows, so the in-vivo profiles sat at their
+        # init receiving exactly zero gradient. An eluted peptide's termini are
+        # themselves evidence of in-vivo cleavage, and processing is upstream
+        # of presentation in the documented DAG, so routing the in-vivo logit
+        # into class I presentation supervises those parameters from elution
+        # labels -- which vary with APM state, giving the KO-vs-WT contrast
+        # something to act on.
+        #
+        # Class I only: proteasome/ERAP excision is the class I pathway, while
+        # class II peptides are cut endosomally by cathepsins. Gated to
+        # MHC-source rows so shotgun rows keep their own excision loss as the
+        # only thing training the in-vitro branch.
+        excision_logit = outputs["excision_logit"]
+        peptide_source_idx = (provenance or {}).get("peptide_source_idx")
+        if peptide_source_idx is None:
+            is_mhc_source = torch.zeros_like(excision_logit)
+        else:
+            is_mhc_source = (
+                peptide_source_idx.long() != self.excision_head.protein_source_index
+            ).to(excision_logit.dtype)
+        invivo_presentation_term = (
+            F.softplus(self.w_invivo_excision_presentation)
+            * is_mhc_source
+            * excision_logit
+        )
+        class1_pres_logit_base = outputs["presentation_class1_logit"]
+        if class1_pres_logit_base.ndim > invivo_presentation_term.ndim:
+            invivo_presentation_term = invivo_presentation_term.reshape(
+                invivo_presentation_term.shape[0],
+                *([1] * (class1_pres_logit_base.ndim - 1)),
+            )
+        outputs["presentation_class1_logit"] = (
+            class1_pres_logit_base + invivo_presentation_term
+        )
+        outputs["presentation_invivo_excision_term"] = invivo_presentation_term
+        # Re-mix: the class-weighted presentation logit is what the elution
+        # loss consumes, so without recomputing it the edge above would be
+        # dead weight -- present in the class I readout and absent from every
+        # trained objective.
+        outputs["presentation_class1_prob"] = torch.sigmoid(
+            outputs["presentation_class1_logit"]
+        )
+        remixed_logit = (
+            class_probs[:, :1] * outputs["presentation_class1_logit"]
+            + class_probs[:, 1:2] * outputs["presentation_class2_logit"]
+        )
+        outputs["presentation_logit"] = remixed_logit
+        outputs["presentation_mixed_logit"] = remixed_logit
+        outputs["presentation_prob"] = torch.sigmoid(remixed_logit)
+        outputs["presentation_mixed_prob"] = outputs["presentation_prob"]
         class1_pres_logit = outputs["presentation_class1_logit"]
         class2_pres_logit = outputs["presentation_class2_logit"]
         pres_logit = outputs["presentation_logit"]

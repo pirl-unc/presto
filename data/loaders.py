@@ -2846,15 +2846,25 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         return metadata[2] if metadata else "unknown"
 
     def _contrast_quota(self) -> int:
-        """How many contrast groups to seed a batch with.
+        """How many *rows* of a batch to reserve for contrast groups.
 
-        A quarter of the batch, which leaves the ordinary weighted sampling in
-        charge of the rest. Zero when there are no groups, so the MHC-only
+        A row budget rather than a group count. Counting groups understated
+        the real cost, because a group contributes at least two rows and
+        nothing bounded how many: one large group could take the entire
+        remaining batch and crowd out the weighted sampling that is supposed
+        to own the rest.
+
+        An eighth of the batch, leaving ordinary weighted sampling in charge
+        of the remainder. Zero when there are no groups, so the MHC-only
         configuration behaves exactly as before.
         """
         if not self._contrast_groups:
             return 0
-        return max(1, self.batch_size // 8)
+        return max(2, self.batch_size // 8)
+
+    #: Rows any single contrast group may contribute. Two is the minimum for a
+    #: contrast to exist at all; more than a handful and one group dominates.
+    MAX_ROWS_PER_CONTRAST_GROUP = 4
 
     def _build_binding_family_index(self) -> None:
         peptide_groups: Dict[str, List[int]] = defaultdict(list)
@@ -3258,14 +3268,27 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             # Seed with complete contrast groups first, so the comparisons the
             # shotgun branch depends on are guaranteed to co-occur in the batch
             # rather than being left to chance.
-            for _ in range(self._contrast_quota()):
+            contrast_budget = self._contrast_quota()
+            contrast_rows_used = 0
+            # Bounded attempts: a batch can run out of usable groups long
+            # before the budget is met, and retrying forever would hang.
+            for _ in range(4 * max(1, contrast_budget)):
+                if contrast_rows_used >= contrast_budget:
+                    break
                 if len(batch) >= self.batch_size:
                     break
                 group = self._contrast_groups[rng.randrange(len(self._contrast_groups))]
                 fresh = [i for i in group if i not in in_batch]
                 if len(fresh) < 2:
                     continue
-                for idx in fresh[: max(2, self.batch_size - len(batch))]:
+                take = min(
+                    len(fresh),
+                    self.MAX_ROWS_PER_CONTRAST_GROUP,
+                    max(2, contrast_budget - contrast_rows_used),
+                    max(2, self.batch_size - len(batch)),
+                )
+                contrast_rows_used += take
+                for idx in fresh[:take]:
                     if len(batch) >= self.batch_size:
                         break
                     self._record_batch_index(
