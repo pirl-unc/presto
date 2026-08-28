@@ -224,3 +224,34 @@ Twice on the same gap I reported a dead parameter path as fixed when it was not.
   If the scope legitimately changed, split it (2a/2b) and say which half is still open.
 - A zero-initialized weight on a new edge starves everything upstream of it. If the
   point of the edge is to deliver gradient, its weight must be nonzero at init.
+
+## "Verified end to end" must mean an epoch, not a smoke test (2026-08-28)
+
+Two data bugs on the same branch aborted training mid-epoch, and both were invisible
+to every short run I had called "verified end to end":
+
+1. IEDB annotation strings (`'YXGEVXVSV + INDIST(X2, X6)'`) reached the tokenizer at
+   ~batch 17. Rate: 53 in 745,925 rows (0.007%).
+2. Selenocysteine `U` in an N-*flank* (`'AILEVCGUKL'`) killed a run at ~1 hour. A real
+   residue in human selenoproteins, arriving through a path with no validation.
+
+A defect at 0.007% needs ~14,000 rows before it is even likely to appear once. A
+50-batch smoke test at batch size 128 sees 6,400. So the short run was not weak
+evidence of correctness -- it was *no* evidence about this class of bug at all, while
+reading like confirmation.
+
+**Rules for myself:**
+- Do not say "verified end to end" for a run that did not complete an epoch including
+  the held-out pass. Say what actually ran: "trained 50 batches without crashing".
+- For any ingest-validation claim, check the invariant against the **whole corpus**
+  directly (iterate every record, try the real tokenizer, count failures). That took
+  90 seconds and was strictly better evidence than hours of training.
+- When fixing a data-validation bug, enumerate *every* ingest path first and fix them
+  together against one shared policy. I patched hitlist peptides, then discovered
+  flanks, then bulk-MS — three rounds for one class of bug.
+- Prefer the tokenizer/vocab as the single source of admissibility. My hand-written
+  "20 canonical residues" was simultaneously too strict (rejected `X`, which is in the
+  vocab, discarding ~51 usable rows) and too narrow (peptides only).
+- Optional context and required targets need different failure policies: blank the
+  flank, drop the row for the peptide. Applying one policy to both either crashes or
+  throws away good data.
