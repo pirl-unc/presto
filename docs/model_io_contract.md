@@ -77,7 +77,7 @@ extracted intact and denatured before any enzyme touched it.
 |---|---|---|
 | `host_species` | ~50 values | `host` (100% populated) |
 | `mhc_species` | 21 values | `mhc_species` (100%) — differs from `host_species` for transfectants |
-| `inducer` | `{basal, ifn_gamma, ifn_ab, tnf_alpha, tlr}` | `condition_category`; **default `basal`, not zero** — unperturbed cells carry basal interferon tone |
+| `stimulus` | `{none, ifn_gamma, ifn_type1, tnf_alpha, tlr}` | `condition_category`; **`none` is a catch-all** covering both "no treatment recorded" and "condition not recorded" (~98.6% of class I rows). It asserts no biological state — the earlier name `basal` overclaimed a measured resting tone. `ifn_type1` merges IFN-α/β (shared IFNAR1/2 receptor and ISGF3 program); IFN-γ is type II and stays separate. `ifn_type1` and `tnf_alpha` currently match **zero** corpus rows, so those embedding rows are untrained — pinned in `tests/test_stimulus_vocabulary.py` |
 | `apm_perturbation` | see below | `apm_*` / `condition_category` |
 
 `apm_perturbation` is grouped by **mechanism**, not by gene. Per-gene flags exist
@@ -239,7 +239,7 @@ Recorded rather than glossed. Each is tracked in `tasks/todo.md` (repository, ou
    random_rows` reproduces the old behavior and says so loudly.
 
 3. ~~Tiers 2–4 are one flat `machinery` axis.~~ Split into `peptide_source`,
-   `enzymatic_digest`, `processing_inducer` and `apm_perturbation`, with the source
+   `enzymatic_digest`, `processing_stimulus` and `apm_perturbation`, with the source
    acting as a soft gate rather than a feature.
 4. ~~`length_preference` conflates two mechanisms.~~ Length and missed-cleavage terms are gated to
    the protein branch; the in-vivo branch contributes neither, so the protease is no
@@ -256,7 +256,7 @@ Recorded rather than glossed. Each is tracked in `tasks/todo.md` (repository, ou
    condition.
 
    **2b — the in-vivo excision readout itself.** 2a did *not* close this, and a first
-   pass wrongly recorded it as closed: `invivo_profile_c/n`, `inducer_profile_c` and
+   pass wrongly recorded it as closed: `invivo_profile_c/n`, `stimulus_profile_c` and
    `invivo_bias` (501 parameters) still took exactly zero gradient, because the in-vivo
    branch fed only `excision_logit` and no MHC-source row ever carries an excision
    label. The fix adds the missing DAG edge: for MHC-source rows the in-vivo excision

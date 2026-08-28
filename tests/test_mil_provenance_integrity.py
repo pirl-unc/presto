@@ -33,7 +33,7 @@ def _multi_allele_batch(n_records=2):
             peptide=f"SIINFEKL{'ACDEFGHIK'[i]}",
             alleles=["HLA-A*02:01", "HLA-B*07:02"],
             detected=True,
-            inducer="basal",
+            stimulus="none",
             apm_perturbation="none",
         )
         for i in range(n_records)

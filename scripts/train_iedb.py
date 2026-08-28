@@ -5562,8 +5562,6 @@ def run(args: argparse.Namespace) -> None:
             print(f"Held-out metric pass FAILED: {type(exc).__name__}: {exc}")
             traceback.print_exc()
             try:
-                import json
-
                 (Path(run_dir) / "holdout_error.json").write_text(
                     json.dumps(
                         {

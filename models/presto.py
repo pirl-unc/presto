@@ -47,7 +47,7 @@ from ..data.vocab import (
     EXCISION_P1_RULES,
     APM_PERTURBATIONS,
     PEPTIDE_SOURCE_TO_IDX,
-    PROCESSING_INDUCERS,
+    PROCESSING_STIMULI,
     PROTEASOME_MIXTURE_COMPONENTS,
     excision_machinery_index,
     N_ORGANISM_CATEGORIES,
@@ -810,9 +810,9 @@ class Presto(nn.Module):
         self.w_invivo_excision_presentation = nn.Parameter(torch.tensor(-2.0))
 
         self.processing_condition_embed = self._zero_init_embedding(
-            len(APM_PERTURBATIONS) * len(PROCESSING_INDUCERS), d_model
+            len(APM_PERTURBATIONS) * len(PROCESSING_STIMULI), d_model
         )
-        self._n_inducer_states = len(PROCESSING_INDUCERS)
+        self._n_inducer_states = len(PROCESSING_STIMULI)
 
         # Machinery-conditioned excision readout. Output-side only: the
         # machinery indexes this head and never reaches the trunk.
@@ -834,7 +834,7 @@ class Presto(nn.Module):
                 EXCISION_MACHINERY_TO_IDX[name]
                 for name in PROTEASOME_MIXTURE_COMPONENTS
             ],
-            n_inducer=len(PROCESSING_INDUCERS),
+            n_stimulus=len(PROCESSING_STIMULI),
             n_apm=len(APM_PERTURBATIONS),
             protein_source_index=PEPTIDE_SOURCE_TO_IDX["protein"],
         )
@@ -2873,7 +2873,7 @@ class Presto(nn.Module):
         # basal state contributes nothing until the data asks it to.
         _provenance = provenance or {}
         _apm_idx = _provenance.get("apm_perturbation_idx")
-        _inducer_idx = _provenance.get("processing_inducer_idx")
+        _inducer_idx = _provenance.get("processing_stimulus_idx")
         if _apm_idx is None:
             _apm_idx = torch.zeros(batch_size, dtype=torch.long, device=pep_tok.device)
         if _inducer_idx is None:
@@ -3144,7 +3144,7 @@ class Presto(nn.Module):
             peptide_len=peptide_lengths,
             peptide_tokens=pep_tok,
             peptide_source_idx=(provenance or {}).get("peptide_source_idx"),
-            processing_inducer_idx=(provenance or {}).get("processing_inducer_idx"),
+            processing_stimulus_idx=(provenance or {}).get("processing_stimulus_idx"),
             apm_perturbation_idx=(provenance or {}).get("apm_perturbation_idx"),
         )
         outputs.update(excision_outputs)

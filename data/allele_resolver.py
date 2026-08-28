@@ -411,7 +411,9 @@ def _canonicalize_exact_alleles(alleles: Sequence[Any]) -> Tuple[str, ...]:
     for allele in alleles:
         try:
             values.append(_canonicalize_parsed_allele(allele, allele_fields=2))
-        except Exception:
+        except ValueError:
+            # Drops this allele. Narrowed for the same reason as above: a
+            # setup failure should not read as "no alleles resolved".
             continue
     if not values:
         return tuple()

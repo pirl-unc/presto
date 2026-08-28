@@ -744,10 +744,36 @@ PEPTIDE_SOURCE_TO_IDX = {name: i for i, name in enumerate(PEPTIDE_SOURCES)}
 ENZYMATIC_DIGESTS = ["none", "trypsin", "chymotrypsin", "lysc", "gluc"]
 ENZYMATIC_DIGEST_TO_IDX = {name: i for i, name in enumerate(ENZYMATIC_DIGESTS)}
 
-# Tier 3: cytokine state. Default is `basal`, not "none": unperturbed cells
-# carry basal interferon tone rather than zero.
-PROCESSING_INDUCERS = ["basal", "ifn_gamma", "ifn_ab", "tnf_alpha", "tlr"]
-PROCESSING_INDUCER_TO_IDX = {name: i for i, name in enumerate(PROCESSING_INDUCERS)}
+# Tier 3: what was applied to the cells. "Stimulus" rather than "cytokine
+# state" because TLR agonists are PAMPs, not cytokines.
+#
+# `none` is a deliberate catch-all and it DOES conflate two things: cells with
+# no recorded treatment, and cells whose condition simply was not recorded.
+# That conflation is accepted rather than hidden. The earlier name for this
+# slot was `basal`, which asserted a specific biological state -- resting cells
+# do carry tonic interferon tone -- but we usually have no evidence for that
+# claim, only the absence of a recorded treatment. `none` says the weaker,
+# true thing. ~98.6% of class I elution rows land here, so treat it as "not
+# known to be stimulated", never as a measured resting state.
+#
+# `ifn_type1` covers IFN-alpha and IFN-beta together: both bind IFNAR1/2 and
+# drive the same ISGF3 program, including the immunoproteasome swap that
+# matters here. IFN-gamma is type II through a different receptor (IFNGR1/2),
+# so it stays separate. Spelled out rather than `ifn_ab`, which reads as
+# "antibody" in an immunology codebase.
+#
+# NB: `ifn_type1` and `tnf_alpha` currently match ZERO rows in the corpus --
+# only `none`, `ifn_gamma` and `tlr` occur. Their embedding rows therefore
+# receive no gradient. They are kept as declared headroom for data that does
+# distinguish them; see tests/test_stimulus_vocabulary.py, which pins that
+# fact so it stays a known gap rather than a silent one.
+PROCESSING_STIMULI = ["none", "ifn_gamma", "ifn_type1", "tnf_alpha", "tlr"]
+
+#: Superseded spellings, kept so older callers and saved records do not shift
+#: to a different embedding row. Index order above is unchanged, so no
+#: checkpoint migration is required.
+LEGACY_STIMULUS_ALIASES = {"basal": "none", "ifn_ab": "ifn_type1"}
+PROCESSING_STIMULUS_TO_IDX = {name: i for i, name in enumerate(PROCESSING_STIMULI)}
 
 # Tier 3: antigen-processing-machinery perturbation, grouped by mechanism.
 # Per-gene flags are too thin to learn individually (ERAP1 25 samples, TAP1 16,
@@ -785,12 +811,12 @@ APM_GENE_TO_GROUP: Dict[str, str] = {
     "irf2": "other", "nlrc5": "other",
 }
 
-# hitlist condition_category -> inducer. Cytokine treatment is an induction
+# hitlist condition_category -> stimulus. Cytokine treatment is an induction
 # state, not an APM lesion, so it lives on its own axis.
-CONDITION_TO_INDUCER: Dict[str, str] = {
+CONDITION_TO_STIMULUS: Dict[str, str] = {
     "IFN_gamma_treatment": "ifn_gamma",
-    "IFN_alpha_treatment": "ifn_ab",
-    "IFN_beta_treatment": "ifn_ab",
+    "IFN_alpha_treatment": "ifn_type1",
+    "IFN_beta_treatment": "ifn_type1",
     "TNF_alpha_treatment": "tnf_alpha",
     "TLR_stimulation": "tlr",
 }
@@ -808,9 +834,17 @@ def enzymatic_digest_index(name: Optional[str]) -> int:
     )
 
 
-def processing_inducer_index(name: Optional[str]) -> int:
-    return PROCESSING_INDUCER_TO_IDX.get(
-        str(name or "").strip().lower(), PROCESSING_INDUCER_TO_IDX["basal"]
+def processing_stimulus_index(name: Optional[str]) -> int:
+    """Index for a stimulus token, resolving superseded spellings.
+
+    Legacy names are translated rather than silently defaulted: without this,
+    a saved record carrying `ifn_ab` would land on the `none` row and be
+    scored as an unstimulated sample.
+    """
+    token = str(name or "").strip().lower()
+    token = LEGACY_STIMULUS_ALIASES.get(token, token)
+    return PROCESSING_STIMULUS_TO_IDX.get(
+        token, PROCESSING_STIMULUS_TO_IDX["none"]
     )
 
 
@@ -846,5 +880,25 @@ def apm_group_for_genes(genes: Optional[Any]) -> str:
     return "other"
 
 
-def inducer_for_condition(condition: Optional[str]) -> str:
-    return CONDITION_TO_INDUCER.get(str(condition or "").strip(), "basal")
+def stimulus_for_condition(condition: Optional[str]) -> str:
+    """Map a hitlist ``condition_category`` to a stimulus token.
+
+    Unmapped and missing conditions both fall back to ``none``. That is the
+    accepted conflation described on PROCESSING_STIMULI -- but an unmapped
+    *non-empty* category is different from a missing one: it means hitlist grew
+    a condition this table does not know about, and silently folding it into
+    ``none`` would hide a real treatment. Callers that care can detect this
+    with :func:`is_unmapped_condition`.
+    """
+    return CONDITION_TO_STIMULUS.get(str(condition or "").strip(), "none")
+
+
+def is_unmapped_condition(condition: Optional[str]) -> bool:
+    """True when a condition was recorded but this table has no entry for it.
+
+    Distinguishes "nobody wrote anything down" from "hitlist added a treatment
+    category we have not mapped yet". The second is a maintenance signal: it
+    means real stimulated samples are being scored as unstimulated.
+    """
+    text = str(condition or "").strip()
+    return bool(text) and text not in CONDITION_TO_STIMULUS

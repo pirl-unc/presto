@@ -29,7 +29,8 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 from .vocab import (
     apm_group_for_genes,
     drop_unencodable_sequence,
-    inducer_for_condition,
+    is_unmapped_condition,
+    stimulus_for_condition,
     is_encodable_sequence,
 )
 from .loaders import (
@@ -280,6 +281,7 @@ def load_records_from_hitlist(
     skipped_unroutable = 0
     skipped_bad_unit = 0
     skipped_noncanonical_peptide = 0
+    unmapped_conditions: Dict[str, int] = {}
 
     for row in _iter_row_dicts(binding_frame):
         response = _clean(row.get("response_measured"))
@@ -395,6 +397,16 @@ def load_records_from_hitlist(
         if not is_canonical_peptide(peptide):
             skipped_noncanonical_peptide += 1
             continue
+        # An unmapped-but-recorded condition means hitlist grew a treatment
+        # category CONDITION_TO_STIMULUS does not know. It still falls back to
+        # `none`, but counting it keeps that from being invisible: silently
+        # scoring genuinely stimulated samples as unstimulated is the failure
+        # mode worth catching.
+        condition_category = _clean(row.get("condition_category"))
+        if is_unmapped_condition(condition_category):
+            unmapped_conditions[condition_category] = (
+                unmapped_conditions.get(condition_category, 0) + 1
+            )
         elution_records.append(
             ElutionRecord(
                 peptide=peptide,
@@ -402,7 +414,7 @@ def load_records_from_hitlist(
                 detected=True,
                 flank_n=drop_unencodable_sequence(row.get("n_flank")),
                 flank_c=drop_unencodable_sequence(row.get("c_flank")),
-                inducer=inducer_for_condition(_clean(row.get("condition_category"))),
+                stimulus=stimulus_for_condition(condition_category),
                 apm_perturbation=apm_group_for_genes(
                     _clean(row.get("apm_genes_perturbed"))
                 ),
@@ -441,6 +453,7 @@ def load_records_from_hitlist(
         "skipped_unroutable_response": skipped_unroutable,
         "skipped_unexpected_unit": skipped_bad_unit,
         "skipped_noncanonical_peptide": skipped_noncanonical_peptide,
+        "unmapped_condition_categories": dict(unmapped_conditions),
         "stability_assay_methods": _method_counts(stability_records),
         "kinetics_assay_methods": _method_counts(kinetics_records),
         "flank_coverage": {

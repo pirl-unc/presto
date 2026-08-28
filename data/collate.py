@@ -25,7 +25,7 @@ from .vocab import (
     enzymatic_digest_index,
     excision_machinery_index,
     peptide_source_index,
-    processing_inducer_index,
+    processing_stimulus_index,
     TCELL_APC_TYPE_TO_IDX,
     TCELL_ASSAY_METHOD_TO_IDX,
     TCELL_ASSAY_READOUT_TO_IDX,
@@ -308,7 +308,7 @@ class PrestoBatch:
     # excision head, never by the trunk.
     machinery_idx: Optional[torch.Tensor] = None
     # Tier 2/3 factors: peptide_source_idx, enzymatic_digest_idx,
-    # processing_inducer_idx, apm_perturbation_idx.
+    # processing_stimulus_idx, apm_perturbation_idx.
     provenance: Dict[str, torch.Tensor] = field(default_factory=dict)
     # Per-MIL-instance provenance. Needed because the elution loss runs through
     # the bag path whenever MIL is active, and that forward is separate.
@@ -700,9 +700,9 @@ class PrestoCollator:
                 ],
                 dtype=torch.long,
             ),
-            "processing_inducer_idx": torch.tensor(
+            "processing_stimulus_idx": torch.tensor(
                 [
-                    processing_inducer_index((inducers or [None] * n_instances)[i])
+                    processing_stimulus_index((inducers or [None] * n_instances)[i])
                     for i in range(n_instances)
                 ],
                 dtype=torch.long,
@@ -904,12 +904,12 @@ class PrestoCollator:
                 source = "protein" if sample.enzymatic_digest else "mhc"
             source_idx.append(peptide_source_index(source))
             digest_idx.append(enzymatic_digest_index(sample.enzymatic_digest))
-            inducer_idx.append(processing_inducer_index(sample.processing_inducer))
+            inducer_idx.append(processing_stimulus_index(sample.processing_inducer))
             apm_idx.append(apm_perturbation_index(sample.apm_perturbation))
         return {
             "peptide_source_idx": torch.tensor(source_idx, dtype=torch.long),
             "enzymatic_digest_idx": torch.tensor(digest_idx, dtype=torch.long),
-            "processing_inducer_idx": torch.tensor(inducer_idx, dtype=torch.long),
+            "processing_stimulus_idx": torch.tensor(inducer_idx, dtype=torch.long),
             "apm_perturbation_idx": torch.tensor(apm_idx, dtype=torch.long),
         }
 

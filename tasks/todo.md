@@ -6,7 +6,7 @@ Addresses the gaps recorded in `docs/model_io_contract.md` S8.
 |---|---|
 | 1 - validation not peptide-disjoint | closed: `peptide_grouped_split_indices`, disjointness asserted after the split |
 | 2 - in-vivo path gets no gradient | closed: 2a routes cellular state to the processing latent; 2b adds the in-vivo excision → class I presentation edge, so all 501 in-vivo excision parameters take gradient from elution labels. Verified through the real pipeline; see contract S8 and `tests/test_invivo_excision_gradient.py` |
-| 3 - flat `machinery` axis | closed: split into source / digest / inducer / apm_perturbation |
+| 3 - flat `machinery` axis | closed: split into source / digest / stimulus / apm_perturbation |
 | 4 - `s_len` conflates two mechanisms | closed: length and missed-cleavage gated to the protein branch |
 | 5 - `processing` and `excision` parallel | **open**: merging changes an existing task's semantics; wants Stage 4 arm C first |
 | 6 - detectability validated out of domain | set builder landed (`dual_corpus_transfer_set`); measuring it is an experiment |

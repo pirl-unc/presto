@@ -29,7 +29,7 @@ CLASS1_SEQ = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
 INVIVO_PARAMETERS = (
     "invivo_profile_c",
     "invivo_profile_n",
-    "inducer_profile_c",
+    "stimulus_profile_c",
     "invivo_bias",
 )
 
@@ -41,14 +41,14 @@ def _elution_batch():
             peptide="LLDGTATLRF",
             alleles=["HLA-A*02:01"],
             detected=True,
-            inducer="ifn_gamma",
+            stimulus="ifn_gamma",
             apm_perturbation="tap_ko",
         ),
         ElutionRecord(
             peptide="SIINFEKLAA",
             alleles=["HLA-A*02:01"],
             detected=False,
-            inducer="basal",
+            stimulus="none",
             apm_perturbation="none",
         ),
     ]

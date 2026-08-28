@@ -14,9 +14,9 @@ from presto.data.vocab import (
     AA_TO_IDX,
     APM_PERTURBATION_TO_IDX,
     PEPTIDE_SOURCE_TO_IDX,
-    PROCESSING_INDUCER_TO_IDX,
+    PROCESSING_STIMULUS_TO_IDX,
     apm_group_for_genes,
-    inducer_for_condition,
+    stimulus_for_condition,
 )
 from presto.models.presto import Presto
 
@@ -25,16 +25,16 @@ def _encode(seq):
     return torch.tensor([[AA_TO_IDX[c] for c in seq]], dtype=torch.long)
 
 
-def _provenance(source, apm="none", inducer="basal"):
+def _provenance(source, apm="none", stimulus="none"):
     return {
         "peptide_source_idx": torch.tensor([PEPTIDE_SOURCE_TO_IDX[source]]),
         "apm_perturbation_idx": torch.tensor([APM_PERTURBATION_TO_IDX[apm]]),
-        "processing_inducer_idx": torch.tensor([PROCESSING_INDUCER_TO_IDX[inducer]]),
+        "processing_stimulus_idx": torch.tensor([PROCESSING_STIMULUS_TO_IDX[stimulus]]),
     }
 
 
 def _run(model, peptide="SIINKEKAK", source="protein", apm="none",
-         inducer="basal", machinery="trypsin"):
+         stimulus="none", machinery="trypsin"):
     return model(
         pep_tok=_encode(peptide),
         mhc_a_tok=torch.randint(4, 24, (1, 40), generator=torch.Generator().manual_seed(0)),
@@ -43,7 +43,7 @@ def _run(model, peptide="SIINKEKAK", source="protein", apm="none",
         flank_c_tok=_encode("AAAAA"),
         mhc_class="I",
         machinery=[machinery],
-        provenance=_provenance(source, apm, inducer),
+        provenance=_provenance(source, apm, stimulus),
     )
 
 
@@ -109,15 +109,15 @@ class TestInVivoGradient:
         """Structural check only -- see the class docstring."""
         net = Presto(d_model=32, n_layers=2, n_heads=4)
         out = _run(net, source="mhc", apm="n_term_trimming",
-                   inducer="ifn_gamma", machinery="proteasome")
+                   stimulus="ifn_gamma", machinery="proteasome")
         F.binary_cross_entropy_with_logits(out["excision_logit"], torch.ones(1)).backward()
 
         head = net.excision_head
         erap = APM_PERTURBATION_TO_IDX["n_term_trimming"]
         assert head.invivo_profile_n.grad[erap].abs().sum().item() > 0
         assert head.invivo_profile_c.grad[erap].abs().sum().item() > 0
-        assert head.inducer_profile_c.grad[
-            PROCESSING_INDUCER_TO_IDX["ifn_gamma"]
+        assert head.stimulus_profile_c.grad[
+            PROCESSING_STIMULUS_TO_IDX["ifn_gamma"]
         ].abs().sum().item() > 0
 
     def test_real_pipeline_supervises_cellular_state_via_elution(self):
@@ -136,17 +136,17 @@ class TestInVivoGradient:
         """
         from presto.data.collate import PrestoCollator
         from presto.data.loaders import ElutionRecord, PrestoDataset
-        from presto.data.vocab import PROCESSING_INDUCERS
+        from presto.data.vocab import PROCESSING_STIMULI
         from presto.scripts.train_synthetic import compute_loss
 
         mhc_seq = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
         dataset = PrestoDataset(
             elution_records=[
                 ElutionRecord(peptide="LLDGTATLRF", alleles=["HLA-A*02:01"],
-                              detected=True, inducer="ifn_gamma",
+                              detected=True, stimulus="ifn_gamma",
                               apm_perturbation="n_term_trimming"),
                 ElutionRecord(peptide="SIINFEKLAA", alleles=["HLA-A*02:01"],
-                              detected=True, inducer="basal",
+                              detected=True, stimulus="none",
                               apm_perturbation="none"),
             ],
             mhc_sequences={"HLA-A*02:01": mhc_seq},
@@ -160,14 +160,14 @@ class TestInVivoGradient:
         loss.backward()
 
         grad = net.processing_condition_embed.weight.grad
-        n_inducers = len(PROCESSING_INDUCERS)
+        n_inducers = len(PROCESSING_STIMULI)
         perturbed = (
             APM_PERTURBATION_TO_IDX["n_term_trimming"] * n_inducers
-            + PROCESSING_INDUCER_TO_IDX["ifn_gamma"]
+            + PROCESSING_STIMULUS_TO_IDX["ifn_gamma"]
         )
         unperturbed = (
             APM_PERTURBATION_TO_IDX["none"] * n_inducers
-            + PROCESSING_INDUCER_TO_IDX["basal"]
+            + PROCESSING_STIMULUS_TO_IDX["none"]
         )
         absent = APM_PERTURBATION_TO_IDX["mhc_null"] * n_inducers
 
@@ -189,10 +189,10 @@ class TestInVivoGradient:
         dataset = PrestoDataset(
             elution_records=[
                 ElutionRecord(peptide="LLDGTATLRF", alleles=["HLA-A*02:01"],
-                              detected=True, inducer="ifn_gamma",
+                              detected=True, stimulus="ifn_gamma",
                               apm_perturbation="n_term_trimming"),
                 ElutionRecord(peptide="SIINFEKLAA", alleles=["HLA-A*02:01"],
-                              detected=True, inducer="basal",
+                              detected=True, stimulus="none",
                               apm_perturbation="none"),
             ],
             mhc_sequences={"HLA-A*02:01": mhc_seq},
@@ -232,15 +232,15 @@ class TestConditionMapping:
 
     @pytest.mark.parametrize("condition,expected", [
         ("IFN_gamma_treatment", "ifn_gamma"),
-        ("IFN_alpha_treatment", "ifn_ab"),
+        ("IFN_alpha_treatment", "ifn_type1"),
         ("TNF_alpha_treatment", "tnf_alpha"),
-        ("unperturbed", "basal"),
-        ("", "basal"),
+        ("unperturbed", "none"),
+        ("", "none"),
     ])
     def test_conditions_map_to_inducers(self, condition, expected):
-        assert inducer_for_condition(condition) == expected
+        assert stimulus_for_condition(condition) == expected
 
     def test_unperturbed_defaults_to_basal_not_zero(self):
         """Unperturbed cells carry basal interferon tone, not none."""
-        assert inducer_for_condition(None) == "basal"
-        assert PROCESSING_INDUCER_TO_IDX["basal"] == 0
+        assert stimulus_for_condition(None) == "none"
+        assert PROCESSING_STIMULUS_TO_IDX["none"] == 0
