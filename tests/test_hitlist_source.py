@@ -231,14 +231,17 @@ class TestRouting:
 
 
 class TestPeptideValidation:
-    """Non-canonical peptides must be dropped at ingest, not at tokenization.
+    """Peptides must be tokenizable at ingest, not discovered at collation.
 
-    IEDB ships modification and ambiguity annotations -- `NXVPMVATV`,
-    `SXPSGGXGV + INDIST(X2, X7)`, `ILAETVAXV + OTH(X8)`. They describe
-    chemistry the model has no representation for, and they used to reach the
-    tokenizer and abort a training run mid-epoch with `Invalid amino-acid
-    token ' '`. About 0.007% of rows, which is exactly why it survived every
-    short smoke test.
+    IEDB ships annotation strings -- `SXPSGGXGV + INDIST(X2, X7)`,
+    `ILAETVAXV + OTH(X8)` -- and genuine-but-unmodelled residues such as
+    selenocysteine `U`. These used to reach the tokenizer and abort a training
+    run mid-epoch with `Invalid amino-acid token`. Rare enough (~0.007%) that
+    every short smoke test missed them.
+
+    Admissibility is the tokenizer vocab, not "the 20 canonical residues": `X`
+    is a representable unknown-residue placeholder with its own embedding, so
+    rejecting it would discard usable rows.
     """
 
     @pytest.mark.parametrize(
@@ -246,41 +249,86 @@ class TestPeptideValidation:
         [
             "GXVPFXVS + INDIST(X2, X6)",
             "ILAETVAXV + OTH(X8)",
-            "NXVPMVATV",
+            "AILEVCGUKL",  # selenocysteine
             "SIINFEKL*",
             "",
         ],
     )
-    def test_noncanonical_binding_peptide_is_skipped(self, monkeypatch, peptide):
+    def test_unencodable_binding_peptide_is_skipped(self, monkeypatch, peptide):
         _install_stub_hitlist(monkeypatch, [_binding_row(peptide=peptide)], [])
         binding, _, _, _, _, _, _, stats = load_records_from_hitlist()
         assert binding == []
         assert stats["skipped_noncanonical_peptide"] == 1
 
-    def test_noncanonical_elution_peptide_is_skipped(self, monkeypatch):
-        _install_stub_hitlist(monkeypatch, [], [_ms_row(peptide="NXVPMVATV")])
+    def test_unencodable_elution_peptide_is_skipped(self, monkeypatch):
+        _install_stub_hitlist(monkeypatch, [], [_ms_row(peptide="AILEVCGUKL")])
         _, _, _, _, elution, _, _, stats = load_records_from_hitlist()
         assert elution == []
         assert stats["skipped_noncanonical_peptide"] == 1
 
-    def test_canonical_peptides_still_pass(self, monkeypatch):
-        _install_stub_hitlist(monkeypatch, [_binding_row()], [_ms_row()])
-        binding, _, _, _, elution, _, _, stats = load_records_from_hitlist()
-        assert len(binding) == 1 and len(elution) == 1
+    @pytest.mark.parametrize("peptide", ["SIINFEKLA", "NXVPMVATV"])
+    def test_encodable_peptides_are_kept(self, monkeypatch, peptide):
+        """`X` is in the tokenizer vocab, so an X-bearing peptide is usable."""
+        _install_stub_hitlist(monkeypatch, [_binding_row(peptide=peptide)], [])
+        binding, _, _, _, _, _, _, stats = load_records_from_hitlist()
+        assert len(binding) == 1
         assert stats["skipped_noncanonical_peptide"] == 0
 
     def test_every_ingested_peptide_is_tokenizable(self, monkeypatch):
         """The invariant the crash violated, stated directly."""
-        from presto.data.hitlist_source import is_canonical_peptide
+        from presto.data.tokenizer import Tokenizer
 
         _install_stub_hitlist(
             monkeypatch,
-            [_binding_row(peptide="SIINFEKLA"), _binding_row(peptide="NXVPMVATV")],
+            [_binding_row(peptide="SIINFEKLA"), _binding_row(peptide="AILEVCGUKL")],
             [_ms_row(peptide="ILAETVAXV + OTH(X8)"), _ms_row(peptide="LLDGTATLRF")],
         )
         binding, _, _, _, elution, _, _, _ = load_records_from_hitlist()
+        tokenizer = Tokenizer()
         for record in [*binding, *elution]:
-            assert is_canonical_peptide(record.peptide)
+            tokenizer.encode(record.peptide)  # must not raise
+
+
+class TestFlankSanitization:
+    """Flanks are context: blank them, do not drop the row.
+
+    A flank is a slice of a real protein, so it legitimately contains residues
+    the model has no embedding for -- selenocysteine turns up in human
+    selenoproteins. Dropping the row would throw away a perfectly good peptide
+    and label over optional context, and many rows carry no flank anyway. This
+    matches what the merged-TSV loader already does.
+    """
+
+    def test_unencodable_flank_is_blanked_not_fatal(self, monkeypatch):
+        _install_stub_hitlist(
+            monkeypatch, [], [_ms_row(n_flank="AILEVCGUKL", c_flank="CCCCCCCCCC")]
+        )
+        _, _, _, _, elution, _, _, _ = load_records_from_hitlist()
+        assert len(elution) == 1, "row was dropped over an optional flank"
+        assert elution[0].flank_n == ""
+        assert elution[0].flank_c == "CCCCCCCCCC"
+
+    def test_binding_flank_is_sanitized_too(self, monkeypatch):
+        _install_stub_hitlist(monkeypatch, [_binding_row(n_flank="AAAUAAAAAA")], [])
+        binding, _, _, _, _, _, _, _ = load_records_from_hitlist()
+        assert len(binding) == 1
+        assert binding[0].flank_n == ""
+
+    def test_every_ingested_flank_is_tokenizable(self, monkeypatch):
+        """The exact crash: an N-flank reached batch_encode and raised."""
+        from presto.data.tokenizer import Tokenizer
+
+        _install_stub_hitlist(
+            monkeypatch,
+            [_binding_row(n_flank="AILEVCGUKL")],
+            [_ms_row(n_flank="AAAUAAAAAA", c_flank="GGGGGGGGGG")],
+        )
+        binding, _, _, _, elution, _, _, _ = load_records_from_hitlist()
+        tokenizer = Tokenizer()
+        for record in [*binding, *elution]:
+            for flank in (record.flank_n, record.flank_c):
+                if flank:
+                    tokenizer.encode(flank)  # must not raise
 
 
 class TestChunkedRowIteration:

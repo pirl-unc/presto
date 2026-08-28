@@ -19,6 +19,39 @@ AA_VOCAB = [
     "<MISSING>",  # dedicated missing-value token
 ]
 
+#: Residues the tokenizer can actually encode, derived from AA_VOCAB so there
+#: is exactly one source of truth. `X` is included: it is a real placeholder for
+#: an unknown residue and has its own embedding.
+#:
+#: Anything outside this set cannot be represented at all. That includes both
+#: annotation junk ("YXGEVXVSV + INDIST(X2, X6)") and genuine but unmodelled
+#: residues -- selenocysteine `U` appears in real human selenoproteins and
+#: reached the tokenizer through hitlist flanks, aborting training mid-epoch.
+ENCODABLE_RESIDUES = frozenset(
+    token for token in AA_VOCAB if len(token) == 1
+)
+
+
+def is_encodable_sequence(sequence: str) -> bool:
+    """True when every residue can be tokenized. Empty is not encodable."""
+    return bool(sequence) and not (set(sequence) - ENCODABLE_RESIDUES)
+
+
+def drop_unencodable_sequence(sequence: str) -> str:
+    """Blank an optional sequence that cannot be tokenized.
+
+    Optional context (flanks, auxiliary sequences) degrades to "absent" rather
+    than taking the whole row down with it: a flank with one unrepresentable
+    residue still came from a row whose peptide and label are perfectly good,
+    and many rows legitimately carry no flank at all. This mirrors what the
+    merged-TSV loader already does via `_normalize_optional_aa_sequence`.
+    """
+    text = str(sequence or "").strip().upper()
+    if not text or (set(text) - ENCODABLE_RESIDUES):
+        return ""
+    return text
+
+
 AA_TO_IDX = {aa: i for i, aa in enumerate(AA_VOCAB)}
 IDX_TO_AA = {i: aa for i, aa in enumerate(AA_VOCAB)}
 

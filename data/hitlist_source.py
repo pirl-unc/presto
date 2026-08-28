@@ -26,7 +26,12 @@ from __future__ import annotations
 import random
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
-from .vocab import apm_group_for_genes, inducer_for_condition
+from .vocab import (
+    apm_group_for_genes,
+    drop_unencodable_sequence,
+    inducer_for_condition,
+    is_encodable_sequence,
+)
 from .loaders import (
     BindingRecord,
     ElutionRecord,
@@ -181,12 +186,18 @@ def _iter_row_dicts(frame, chunk_size: int = 50_000):
             yield row
 
 
-CANONICAL_RESIDUES = frozenset("ACDEFGHIKLMNPQRSTVWY")
-
-
+# Peptide and flank admissibility both defer to the tokenizer vocab via
+# `presto.data.vocab`, so there is one source of truth rather than a second,
+# subtly different residue set here. An earlier version of this guard used the
+# 20 canonical residues and so rejected `X`, which the tokenizer represents
+# perfectly well -- needlessly dropping ~51 usable elution rows.
 def is_canonical_peptide(peptide: str) -> bool:
-    """True when every residue is one of the 20 the tokenizer accepts."""
-    return bool(peptide) and not (set(peptide) - CANONICAL_RESIDUES)
+    """True when the peptide can be tokenized.
+
+    Peptides are targets, so an unrepresentable residue drops the row: unlike
+    a flank, the epitope cannot degrade to "absent".
+    """
+    return is_encodable_sequence(peptide)
 
 
 def load_records_from_hitlist(
@@ -320,8 +331,8 @@ def load_records_from_hitlist(
                     measurement_type=response,
                     assay_type=response,
                     assay_method=assay_method,
-                    flank_n=_clean(row.get("n_flank")),
-                    flank_c=_clean(row.get("c_flank")),
+                    flank_n=drop_unencodable_sequence(row.get("n_flank")),
+                    flank_c=drop_unencodable_sequence(row.get("c_flank")),
                     **common,
                 )
             )
@@ -389,8 +400,8 @@ def load_records_from_hitlist(
                 peptide=peptide,
                 alleles=alleles,
                 detected=True,
-                flank_n=_clean(row.get("n_flank")),
-                flank_c=_clean(row.get("c_flank")),
+                flank_n=drop_unencodable_sequence(row.get("n_flank")),
+                flank_c=drop_unencodable_sequence(row.get("c_flank")),
                 inducer=inducer_for_condition(_clean(row.get("condition_category"))),
                 apm_perturbation=apm_group_for_genes(
                     _clean(row.get("apm_genes_perturbed"))

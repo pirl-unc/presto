@@ -58,6 +58,7 @@ from .vocab import (
     EXCISION_MACHINERY_TO_IDX,
     EXCISION_P1_PRIME_BLOCKED,
     EXCISION_P1_RULES,
+    is_encodable_sequence,
 )
 
 # hitlist's canonical enzyme strings -> Presto machinery names.
@@ -171,10 +172,16 @@ def records_from_bulk_frame(
     records: List[BulkMSRecord] = []
     machinery_counts: Dict[str, int] = {}
     n_excision_negatives = 0
+    n_unencodable_peptides = 0
 
     for row in rows:
-        peptide = str(row.get("peptide") or "").strip()
-        if not peptide:
+        peptide = str(row.get("peptide") or "").strip().upper()
+        # Same policy as the hitlist adapter: a peptide the tokenizer cannot
+        # represent is dropped here rather than raising deep inside collation
+        # partway through an epoch. Shotgun peptides come from whole-proteome
+        # digests, so genuine-but-unmodelled residues (selenocysteine) do occur.
+        if not is_encodable_sequence(peptide):
+            n_unencodable_peptides += 1
             continue
         machinery = machinery_for_enzyme(row.get("digestion_enzyme"))
         if machinery == "unknown":
