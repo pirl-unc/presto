@@ -185,8 +185,32 @@ def training_argv() -> list[str]:
     return argv
 
 
+#: Config forwarded to the worker.
+#:
+#: `training_argv()` runs remotely, so it reads the *worker's* environment, not
+#: the driver's. Without forwarding, every PRESTO_* setting silently reverts to
+#: its default on the box and the run is not the one that was launched.
+#:
+#: CUDA_VISIBLE_DEVICES is pinned to a single GPU. The org's Brev instances are
+#: 4xA100, but presto training is single-GPU work: taking one device leaves the
+#: other three free rather than idling them under this job.
+def worker_env() -> dict:
+    forwarded = {
+        name: value
+        for name, value in os.environ.items()
+        if name.startswith("PRESTO_")
+    }
+    forwarded.setdefault("CUDA_VISIBLE_DEVICES", os.environ.get("PRESTO_CUDA_DEVICE", "0"))
+    # Deliberately NOT forwarding RUNPLZ_OUT: runplz sets it on the worker to
+    # the run directory it later collects from. Overriding it to /out sends
+    # every artifact somewhere runplz does not rsync back, so the run looks
+    # successful and returns nothing.
+    return forwarded
+
+
 _FUNCTION_KWARGS = dict(
     image=image,
+    env=worker_env(),
     min_gpus=MIN_GPUS,
     min_gpu_memory=MIN_GPU_MEMORY,
     min_cpu=MIN_CPU,
