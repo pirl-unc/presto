@@ -2494,6 +2494,62 @@ class PrestoDataset(Dataset):
         return self.samples[idx]
 
 
+def _use_file_system_sharing() -> None:
+    """Switch multiprocessing tensor sharing off file descriptors.
+
+    A `PrestoBatch` carries ~50 tensor fields, so every batch handed from a
+    worker to the parent passes that many file descriptors, multiplied by
+    worker count and prefetch depth. Under torch's default `file_descriptor`
+    strategy that exhausts the process limit and surfaces as
+
+        RuntimeError: received 0 items of ancdata
+        Error: Pin memory thread exited unexpectedly
+
+    which names neither file descriptors nor the real cause. Observed on a
+    48-core box with 16 workers, dying on the first batch.
+
+    `file_system` shares through /dev/shm instead, so the count of live
+    descriptors stops scaling with the number of tensors per batch. The
+    tradeoff is that leaked shared-memory segments outlive a hard-killed
+    process; that is much preferable to a run that cannot start.
+
+    Callers that have already chosen a strategy are left alone.
+    """
+    try:
+        import torch.multiprocessing as mp
+
+        if mp.get_sharing_strategy() == "file_descriptor":
+            if "file_system" in mp.get_all_sharing_strategies():
+                mp.set_sharing_strategy("file_system")
+    except (ImportError, RuntimeError):  # pragma: no cover - platform dependent
+        # Not fatal: the default strategy still works for small batches and
+        # low worker counts.
+        pass
+    _raise_open_file_limit()
+
+
+def _raise_open_file_limit() -> None:
+    """Raise the soft open-file limit toward its hard ceiling.
+
+    The other half of the same failure. Even under `file_system` sharing a
+    large worker count plus prefetch keeps many descriptors live, and the
+    default soft limit is often 1024 while the hard limit is orders of
+    magnitude higher. Raising the soft limit is permitted without privileges
+    and cannot exceed what the administrator already allowed.
+    """
+    try:
+        import resource
+
+        soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+        if hard != resource.RLIM_INFINITY and soft >= hard:
+            return
+        target = hard if hard != resource.RLIM_INFINITY else 65536
+        if soft < target:
+            resource.setrlimit(resource.RLIMIT_NOFILE, (target, hard))
+    except (ImportError, ValueError, OSError):  # pragma: no cover - platform dependent
+        pass
+
+
 def create_dataloader(
     dataset: Dataset,
     batch_size: int = 32,
@@ -2510,6 +2566,8 @@ def create_dataloader(
     """Create a DataLoader for Presto training."""
     collator = collator or PrestoCollator()
     num_workers = max(int(num_workers), 0)
+    if num_workers > 0:
+        _use_file_system_sharing()
     loader_kwargs: Dict[str, Any] = {
         "num_workers": num_workers,
         "collate_fn": collator,
