@@ -27,6 +27,18 @@ that cache survives between runs, so only the first run pays the build cost.
 Set `PRESTO_HITLIST_BUILD=1` to build on the worker when the cache is cold;
 expect it to take a while the first time.
 
+Corpus size
+-----------
+``PRESTO_MAX_*`` caps are per-modality and ``0`` means unlimited. Capping
+elution and binding does not bound the epoch, because ``--bulk-ms`` pulls the
+shotgun corpus and ``PRESTO_MAX_BULK_MS`` defaults to 0. Set every cap you care
+about, and check the printed ``Train batches:`` line before walking away.
+
+Throughput
+----------
+``--num-workers`` defaults to 0 in the trainer, which starves the GPU: a
+1.01 s/batch run sat at 33% GPU with load 1.68 on a 48-core box. Set it.
+
 Batch size
 ----------
 Peak memory is not linear in ``PRESTO_BATCH_SIZE``. Core-window scoring expands
@@ -173,6 +185,11 @@ def training_argv() -> list[str]:
         if cell_line:
             argv += ["--bulk-cell-line", cell_line]
         argv += [
+            # NB: 0 means *unlimited*, not "none" -- `int(max_bulk_ms) or None`
+            # downstream. The shotgun corpus is by far the largest modality, so
+            # leaving this at 0 while capping elution and binding still yields
+            # a multi-million-row epoch: one run took 3.19M samples and 28h for
+            # two epochs before this was noticed. Set it deliberately.
             "--max-bulk-ms",
             os.environ.get("PRESTO_MAX_BULK_MS", "0"),
             "--bulk-excision-negative-ratio",
