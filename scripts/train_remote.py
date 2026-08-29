@@ -13,6 +13,18 @@ Invoke through the runplz CLI, never directly:
 Backends are interchangeable; `runplz modal` keeps the historical Modal path
 available without a second launcher to maintain.
 
+Modality coverage
+-----------------
+hitlist supplies binding and MS evidence only -- ``include_evidence`` accepts
+``ms``, ``binding`` or ``both``, and there is no T-cell or receptor table. A
+hitlist-only run therefore trains binding, stability, kinetics, elution and the
+shotgun corpus, while the immunogenicity, recognition and TCR heads receive
+**zero gradient** for its entire duration.
+
+Set ``PRESTO_MERGED_TSV`` to a merged TSV on the worker to supply those. The
+trainer keeps hitlist for binding and elution regardless, because the TSV has
+no flank columns.
+
 Data
 ----
 This launcher runs **hitlist-sourced** training, which needs no merged TSV. That
@@ -171,6 +183,15 @@ def training_argv() -> list[str]:
         "--latent-topology",
         os.environ.get("PRESTO_LATENT_TOPOLOGY", "expanded"),
     ]
+
+    # Optional merged TSV. hitlist carries only binding and MS evidence, so
+    # without this the T-cell, TCR and IEDB-processing modalities contribute
+    # nothing and their heads receive no gradient for the whole run. The
+    # trainer keeps hitlist for binding/elution (it has flanks; the TSV does
+    # not) and takes the remaining modalities from here.
+    merged_tsv = os.environ.get("PRESTO_MERGED_TSV", "").strip()
+    if merged_tsv:
+        argv += ["--merged-tsv", merged_tsv]
 
     mhc_class = os.environ.get("PRESTO_HITLIST_MHC_CLASS")
     if mhc_class:

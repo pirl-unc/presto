@@ -240,10 +240,19 @@ def _every_modality_batch():
     return PrestoCollator()([dataset[i] for i in range(len(dataset))])
 
 
-@pytest.fixture(scope="module")
-def gradient_report():
+#: Both topologies, because they allocate different modules. Checking only
+#: `expanded` would leave the default (`collapsed`) unverified -- and the
+#: collapsed path owns the processing projections and presentation MLPs that
+#: the expanded path does not build at all.
+TOPOLOGIES = ("collapsed", "expanded")
+
+
+@pytest.fixture(scope="module", params=TOPOLOGIES)
+def gradient_report(request):
     torch.manual_seed(0)
-    model = Presto(d_model=32, n_layers=2, n_heads=4, latent_topology="expanded")
+    model = Presto(
+        d_model=32, n_layers=2, n_heads=4, latent_topology=request.param
+    )
     loss, _, _ = compute_loss(model, _every_modality_batch(), "cpu")
     loss.backward()
     dead = {
