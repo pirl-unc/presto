@@ -29,9 +29,18 @@ from presto.data.vocab import (  # noqa: E402
     stimulus_for_condition,
 )
 
-#: Tokens with real support in the corpus, measured over all elution rows.
-#: `ifn_type1` and `tnf_alpha` are deliberately absent.
-STIMULI_WITH_DATA = ("none", "ifn_gamma", "tlr")
+#: Tokens with real support, measured over all 4,260,527 elution rows:
+#:
+#:   none             4,095,917   ifn_gamma   71,040
+#:   cell_activation     37,929   tlr         34,247
+#:   ifn_type1           21,394   tnf_alpha        0
+#:
+#: `ifn_type1` had zero support until infection categories were mapped on the
+#: evidence that viral infection induces endogenous type I interferon.
+STIMULI_WITH_DATA = ("none", "ifn_gamma", "ifn_type1", "tlr", "cell_activation")
+
+#: Declared but unsupported. Kept as headroom; pinned so it stays visible.
+STIMULI_WITHOUT_DATA = ("tnf_alpha",)
 
 
 class TestVocabularyShape:
@@ -100,7 +109,7 @@ class TestKnownDeadRows:
     -- that failure is the notification that the headroom became real.
     """
 
-    @pytest.mark.parametrize("token", ["ifn_type1", "tnf_alpha"])
+    @pytest.mark.parametrize("token", STIMULI_WITHOUT_DATA)
     def test_row_is_declared_but_unsupported(self, token):
         assert token in PROCESSING_STIMULI
         assert token not in STIMULI_WITH_DATA
@@ -111,5 +120,43 @@ class TestKnownDeadRows:
 
     def test_every_token_is_accounted_for(self):
         """No third category: a token either has data or is declared dead."""
-        dead = {"ifn_type1", "tnf_alpha"}
-        assert set(PROCESSING_STIMULI) == set(STIMULI_WITH_DATA) | dead
+        assert set(PROCESSING_STIMULI) == (
+            set(STIMULI_WITH_DATA) | set(STIMULI_WITHOUT_DATA)
+        )
+
+
+class TestInfectionMapping:
+    """Infection categories carry a stimulus; they must not read as resting.
+
+    Viral infection is sensed by RIG-I/MDA5 and cGAS-STING and drives
+    autocrine type I interferon -- the immunoproteasome swap, TAP1/2 and MHC-I
+    upregulation that this axis exists to represent. Leaving it in `none`
+    scored ~21k genuinely stimulated samples as unstimulated and left the
+    `ifn_type1` embedding row with no data at all.
+    """
+
+    def test_viral_infection_is_type_1_interferon(self):
+        assert stimulus_for_condition("infection_viral") == "ifn_type1"
+
+    def test_bacterial_and_parasitic_infection_is_tlr(self):
+        assert stimulus_for_condition("infection_bacterial_or_parasite") == "tlr"
+
+    def test_inactivated_virus_control_stays_unstimulated(self):
+        """The paired comparator for infection_viral; pairing gives contrast."""
+        assert stimulus_for_condition("virus_inactivated_control") == "none"
+
+    def test_gene_delivery_is_not_an_infection(self):
+        """Vector-derived, but not an immunological infection."""
+        for category in ("transduction", "transfection", "CIITA_transduction"):
+            assert stimulus_for_condition(category) == "none"
+
+    def test_apm_categories_are_reviewed_not_unmapped(self):
+        """They ride the apm_perturbation axis; listing them keeps the
+        unmapped-category signal meaningful rather than noisy."""
+        for category in (
+            "ERAP1_perturbation",
+            "HLA-DM_perturbation",
+            "TAP_perturbation",
+            "MHC-I_loss_B2M",
+        ):
+            assert not is_unmapped_condition(category)

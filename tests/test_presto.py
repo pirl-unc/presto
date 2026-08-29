@@ -1010,8 +1010,16 @@ class TestDesignAlignment:
                 out = model(pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I")
             assert out["binding_logit"].shape == (2,)
             assert out["binding_direct_segment_mode"] == mode
-            assert out["binding_direct_affinity_vec"].shape == (2, 64)
-            assert out["binding_direct_stability_vec"].shape == (2, 64)
+            if mode == "off":
+                # The projections are not allocated when the mode is off, so
+                # there is no vector to publish. Emitting one previously meant
+                # ~16k parameters were built and run on every forward purely
+                # to populate a diagnostic nothing consumed.
+                assert "binding_direct_affinity_vec" not in out
+                assert "binding_direct_stability_vec" not in out
+            else:
+                assert out["binding_direct_affinity_vec"].shape == (2, 64)
+                assert out["binding_direct_stability_vec"].shape == (2, 64)
 
     def test_apc_cell_type_context_alias_exists(self):
         from presto.models.presto import Presto

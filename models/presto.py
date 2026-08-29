@@ -463,21 +463,43 @@ class Presto(nn.Module):
         # Peptide: triple-frame encoding
         self.pep_nterm_pos = nn.Embedding(50, d_model)
         self.pep_cterm_pos = nn.Embedding(50, d_model)
-        self.pep_abs_pos = nn.Embedding(50, d_model)
-        self.pep_frac_mlp = nn.Sequential(
-            nn.Linear(1, d_model), nn.GELU(), nn.Linear(d_model, d_model)
+        # Allocated only if the active mode consumes them. Allocating all of
+        # them made ~38k trunk parameters (at d_model=32) that were saved in
+        # every checkpoint, evaluated on every forward, and never trained.
+        pep_parts = self.POSITION_MODE_COMPONENTS[self.peptide_pos_mode]
+        self.pep_abs_pos = (
+            nn.Embedding(50, d_model) if "abs" in pep_parts else None
         )
-        self.pep_pos_concat_proj = nn.Linear(2 * d_model, d_model)
-        self.pep_pos_concat_frac_proj = nn.Linear(2 * d_model + 2, d_model)
-        self.pep_pos_concat_mlp = nn.Sequential(
-            nn.Linear(2 * d_model, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
+        self.pep_frac_mlp = (
+            nn.Sequential(nn.Linear(1, d_model), nn.GELU(), nn.Linear(d_model, d_model))
+            if "frac_mlp" in pep_parts
+            else None
         )
-        self.pep_pos_concat_frac_mlp = nn.Sequential(
-            nn.Linear(2 * d_model + 2, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
+        self.pep_pos_concat_proj = (
+            nn.Linear(2 * d_model, d_model) if "concat_proj" in pep_parts else None
+        )
+        self.pep_pos_concat_frac_proj = (
+            nn.Linear(2 * d_model + 2, d_model)
+            if "concat_frac_proj" in pep_parts
+            else None
+        )
+        self.pep_pos_concat_mlp = (
+            nn.Sequential(
+                nn.Linear(2 * d_model, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            if "concat_mlp" in pep_parts
+            else None
+        )
+        self.pep_pos_concat_frac_mlp = (
+            nn.Sequential(
+                nn.Linear(2 * d_model + 2, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            if "concat_frac_mlp" in pep_parts
+            else None
         )
         # Flanks: distance-from-cleavage
         self.nflank_dist_pos = nn.Embedding(25, d_model)
@@ -485,24 +507,53 @@ class Presto(nn.Module):
         # Groove halves: per-segment sequential
         self.groove_1_pos = nn.Embedding(120, d_model)
         self.groove_2_pos = nn.Embedding(120, d_model)
-        self.groove_1_abs_pos = nn.Embedding(120, d_model)
-        self.groove_2_abs_pos = nn.Embedding(120, d_model)
-        self.groove_1_end_pos = nn.Embedding(120, d_model)
-        self.groove_2_end_pos = nn.Embedding(120, d_model)
-        self.groove_frac_mlp = nn.Sequential(
-            nn.Linear(1, d_model), nn.GELU(), nn.Linear(d_model, d_model)
+        # Same gating as the peptide family. `sequential` -- the default --
+        # uses only groove_{1,2}_pos, so every other component below was pure
+        # dead weight under the shipped configuration.
+        groove_parts = self.POSITION_MODE_COMPONENTS[self.groove_pos_mode]
+        _groove_needs_ends = "end" in groove_parts
+        self.groove_1_abs_pos = (
+            nn.Embedding(120, d_model) if "abs" in groove_parts else None
         )
-        self.groove_pos_concat_proj = nn.Linear(2 * d_model, d_model)
-        self.groove_pos_concat_frac_proj = nn.Linear(2 * d_model + 2, d_model)
-        self.groove_pos_concat_mlp = nn.Sequential(
-            nn.Linear(2 * d_model, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
+        self.groove_2_abs_pos = (
+            nn.Embedding(120, d_model) if "abs" in groove_parts else None
         )
-        self.groove_pos_concat_frac_mlp = nn.Sequential(
-            nn.Linear(2 * d_model + 2, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
+        self.groove_1_end_pos = (
+            nn.Embedding(120, d_model) if _groove_needs_ends else None
+        )
+        self.groove_2_end_pos = (
+            nn.Embedding(120, d_model) if _groove_needs_ends else None
+        )
+        self.groove_frac_mlp = (
+            nn.Sequential(nn.Linear(1, d_model), nn.GELU(), nn.Linear(d_model, d_model))
+            if "frac_mlp" in groove_parts
+            else None
+        )
+        self.groove_pos_concat_proj = (
+            nn.Linear(2 * d_model, d_model) if "concat_proj" in groove_parts else None
+        )
+        self.groove_pos_concat_frac_proj = (
+            nn.Linear(2 * d_model + 2, d_model)
+            if "concat_frac_proj" in groove_parts
+            else None
+        )
+        self.groove_pos_concat_mlp = (
+            nn.Sequential(
+                nn.Linear(2 * d_model, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            if "concat_mlp" in groove_parts
+            else None
+        )
+        self.groove_pos_concat_frac_mlp = (
+            nn.Sequential(
+                nn.Linear(2 * d_model + 2, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            if "concat_frac_mlp" in groove_parts
+            else None
         )
         # Binding-core positions within the candidate window.
         self.core_position_embed = nn.Embedding(self.core_window_size, d_model)
@@ -540,34 +591,67 @@ class Presto(nn.Module):
             nn.GELU(),
             nn.Linear(d_model, d_model),
         )
-        self.binding_direct_segment_affinity_proj = nn.Sequential(
-            nn.Linear(3 * d_model, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
+        # Direct-segment residual paths, selected by binding_direct_segment_mode
+        # (default "off"). The gate is used only by the gated_* modes.
+        _direct = self.binding_direct_segment_mode != "off"
+        _direct_gated = "gated" in self.binding_direct_segment_mode
+        self.binding_direct_segment_affinity_proj = (
+            nn.Sequential(
+                nn.Linear(3 * d_model, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            if _direct
+            else None
         )
-        self.binding_direct_segment_stability_proj = nn.Sequential(
-            nn.Linear(3 * d_model, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
+        self.binding_direct_segment_stability_proj = (
+            nn.Sequential(
+                nn.Linear(3 * d_model, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            if _direct
+            else None
         )
-        self.binding_direct_segment_gate = nn.Sequential(
-            nn.Linear(2 * d_model, d_model // 2),
-            nn.GELU(),
-            nn.Linear(d_model // 2, 1),
+        self.binding_direct_segment_gate = (
+            nn.Sequential(
+                nn.Linear(2 * d_model, d_model // 2),
+                nn.GELU(),
+                nn.Linear(d_model // 2, 1),
+            )
+            if _direct_gated
+            else None
         )
-        # Class-specific processing projections
-        self.processing_class1_proj = nn.Linear(d_model, d_model)
-        self.processing_class2_proj = nn.Linear(d_model, d_model)
-        # Class-specific presentation MLPs
-        self.presentation_class1_mlp = nn.Sequential(
-            nn.Linear(d_model + self.pmhc_interaction_vec_dim, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
+        # Class-specific processing projections and presentation MLPs.
+        #
+        # Reached only by the collapsed topology: the expanded topology derives
+        # these vectors from dedicated latents instead. Allocating them under
+        # `expanded` -- which is what the remote launcher runs -- shipped ~22k
+        # untrained parameters in every checkpoint.
+        _collapsed = self.latent_topology != "expanded"
+        self.processing_class1_proj = (
+            nn.Linear(d_model, d_model) if _collapsed else None
         )
-        self.presentation_class2_mlp = nn.Sequential(
-            nn.Linear(d_model + self.pmhc_interaction_vec_dim, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
+        self.processing_class2_proj = (
+            nn.Linear(d_model, d_model) if _collapsed else None
+        )
+        self.presentation_class1_mlp = (
+            nn.Sequential(
+                nn.Linear(d_model + self.pmhc_interaction_vec_dim, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            if _collapsed
+            else None
+        )
+        self.presentation_class2_mlp = (
+            nn.Sequential(
+                nn.Linear(d_model + self.pmhc_interaction_vec_dim, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            if _collapsed
+            else None
         )
         self.presentation_class1_vec_norm = nn.LayerNorm(d_model)
         self.presentation_class2_vec_norm = nn.LayerNorm(d_model)
@@ -607,15 +691,26 @@ class Presto(nn.Module):
             nn.GELU(),
             nn.Linear(d_model, 1),
         )
-        self.core_window_score_class1 = nn.Sequential(
-            nn.Linear(self.pmhc_interaction_vec_dim, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, 1),
+        # Per-class core-window scorers, used only by
+        # core_refinement_mode="class_specific" (default is "shared").
+        _class_specific_core = self.core_refinement_mode == "class_specific"
+        self.core_window_score_class1 = (
+            nn.Sequential(
+                nn.Linear(self.pmhc_interaction_vec_dim, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, 1),
+            )
+            if _class_specific_core
+            else None
         )
-        self.core_window_score_class2 = nn.Sequential(
-            nn.Linear(self.pmhc_interaction_vec_dim, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, 1),
+        self.core_window_score_class2 = (
+            nn.Sequential(
+                nn.Linear(self.pmhc_interaction_vec_dim, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, 1),
+            )
+            if _class_specific_core
+            else None
         )
         # Class II PFR binding modulation — adjusts core window scores based
         # on the peptide flanking regions that protrude from the open class II
@@ -812,7 +907,7 @@ class Presto(nn.Module):
         self.processing_condition_embed = self._zero_init_embedding(
             len(APM_PERTURBATIONS) * len(PROCESSING_STIMULI), d_model
         )
-        self._n_inducer_states = len(PROCESSING_STIMULI)
+        self._n_stimulus_states = len(PROCESSING_STIMULI)
 
         # Machinery-conditioned excision readout. Output-side only: the
         # machinery indexes this head and never reaches the trunk.
@@ -1047,6 +1142,53 @@ class Presto(nn.Module):
         error_msgs: List[str],
     ) -> None:
         """Drop deprecated weights for backward compatibility."""
+        # Growing PROCESSING_STIMULI reshuffles `processing_condition_embed`,
+        # because its row index is `apm * n_stimulus + stimulus`. Appending a
+        # token keeps stimulus indices stable but moves every *combined* index,
+        # so the table must be remapped pair-by-pair rather than padded.
+        condition_key = f"{prefix}processing_condition_embed.weight"
+        saved_condition = state_dict.get(condition_key)
+        if saved_condition is not None:
+            new_rows = self.processing_condition_embed.weight.shape[0]
+            old_rows = int(saved_condition.shape[0])
+            new_n_stimulus = int(self._n_stimulus_states)
+            n_apm = new_rows // new_n_stimulus if new_n_stimulus else 0
+            if old_rows != new_rows and n_apm:
+                old_n_stimulus = old_rows // n_apm if n_apm else 0
+                if old_n_stimulus:
+                    grown = torch.zeros(
+                        new_rows,
+                        saved_condition.shape[1],
+                        dtype=saved_condition.dtype,
+                    )
+                    shared = min(old_n_stimulus, new_n_stimulus)
+                    for apm in range(n_apm):
+                        for stim in range(shared):
+                            grown[apm * new_n_stimulus + stim] = saved_condition[
+                                apm * old_n_stimulus + stim
+                            ]
+                    state_dict[condition_key] = grown
+
+        # `stimulus_profile_c` is (n_stimulus, n_aa); a new stimulus appends a
+        # zero row, which is the neutral contribution this profile starts at.
+        for profile_key in (
+            f"{prefix}excision_head.stimulus_profile_c",
+            f"{prefix}excision_head.inducer_profile_c",
+        ):
+            saved_profile = state_dict.get(profile_key)
+            if saved_profile is None:
+                continue
+            target = self.excision_head.stimulus_profile_c
+            if saved_profile.shape[0] < target.shape[0]:
+                grown = torch.zeros(
+                    *target.shape, dtype=saved_profile.dtype
+                )
+                grown[: saved_profile.shape[0]] = saved_profile
+                state_dict[profile_key] = grown
+
+        # Runs after the condition remap above: the generic grower pads
+        # row-wise, which is wrong for a table whose index is a product of two
+        # vocabularies and would silently turn the remap into a no-op.
         self._grow_appended_embeddings(state_dict, prefix)
         legacy_key = f"{prefix}mhc_class_cond_embed.weight"
         if legacy_key in state_dict:
@@ -1366,8 +1508,12 @@ class Presto(nn.Module):
             start_frac=nterm_frac,
             end_frac=cterm_frac,
             frac_mlp=self.pep_frac_mlp,
-            abs_embed=self.pep_abs_pos(
-                pep_idx.clamp(max=self.pep_abs_pos.num_embeddings - 1)
+            abs_embed=(
+                self.pep_abs_pos(
+                    pep_idx.clamp(max=self.pep_abs_pos.num_embeddings - 1)
+                )
+                if self.pep_abs_pos is not None
+                else None
             ),
             concat_proj=self.pep_pos_concat_proj,
             concat_frac_proj=self.pep_pos_concat_frac_proj,
@@ -1402,18 +1548,34 @@ class Presto(nn.Module):
             mhc_a_len_per = (tokens[:, mhc_a_sl] != 0).sum(dim=1).clamp(min=1)
             mhc_a_start_idx = mhc_a_idx.clamp(max=self.groove_1_pos.num_embeddings - 1)
             mhc_a_end_dist = (mhc_a_len_per.unsqueeze(1) - 1 - mhc_a_idx).clamp(min=0)
-            mhc_a_end_idx = mhc_a_end_dist.clamp(max=self.groove_1_end_pos.num_embeddings - 1)
+            mhc_a_end_idx = mhc_a_end_dist.clamp(
+                max=(
+                    self.groove_1_end_pos.num_embeddings - 1
+                    if self.groove_1_end_pos is not None
+                    else 0
+                )
+            )
             mhc_a_start_frac = mhc_a_idx.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
             mhc_a_end_frac = mhc_a_end_dist.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
             mhc_a_pos_embed = self._compose_position_signal(
                 mode=self.groove_pos_mode,
                 start_embed=self.groove_1_pos(mhc_a_start_idx),
-                end_embed=self.groove_1_end_pos(mhc_a_end_idx),
+                end_embed=(
+                    self.groove_1_end_pos(mhc_a_end_idx)
+                    if self.groove_1_end_pos is not None
+                    else torch.zeros_like(self.groove_1_pos(mhc_a_start_idx))
+                ),
                 start_frac=mhc_a_start_frac,
                 end_frac=mhc_a_end_frac,
                 frac_mlp=self.groove_frac_mlp,
-                abs_embed=self.groove_1_abs_pos(
-                    mhc_a_idx.clamp(max=self.groove_1_abs_pos.num_embeddings - 1)
+                abs_embed=(
+                    self.groove_1_abs_pos(
+                        mhc_a_idx.clamp(
+                            max=self.groove_1_abs_pos.num_embeddings - 1
+                        )
+                    )
+                    if self.groove_1_abs_pos is not None
+                    else None
                 ),
                 concat_proj=self.groove_pos_concat_proj,
                 concat_frac_proj=self.groove_pos_concat_frac_proj,
@@ -1432,18 +1594,34 @@ class Presto(nn.Module):
             mhc_b_len_per = (tokens[:, mhc_b_sl] != 0).sum(dim=1).clamp(min=1)
             mhc_b_start_idx = mhc_b_idx.clamp(max=self.groove_2_pos.num_embeddings - 1)
             mhc_b_end_dist = (mhc_b_len_per.unsqueeze(1) - 1 - mhc_b_idx).clamp(min=0)
-            mhc_b_end_idx = mhc_b_end_dist.clamp(max=self.groove_2_end_pos.num_embeddings - 1)
+            mhc_b_end_idx = mhc_b_end_dist.clamp(
+                max=(
+                    self.groove_2_end_pos.num_embeddings - 1
+                    if self.groove_2_end_pos is not None
+                    else 0
+                )
+            )
             mhc_b_start_frac = mhc_b_idx.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
             mhc_b_end_frac = mhc_b_end_dist.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
             mhc_b_pos_embed = self._compose_position_signal(
                 mode=self.groove_pos_mode,
                 start_embed=self.groove_2_pos(mhc_b_start_idx),
-                end_embed=self.groove_2_end_pos(mhc_b_end_idx),
+                end_embed=(
+                    self.groove_2_end_pos(mhc_b_end_idx)
+                    if self.groove_2_end_pos is not None
+                    else torch.zeros_like(self.groove_2_pos(mhc_b_start_idx))
+                ),
                 start_frac=mhc_b_start_frac,
                 end_frac=mhc_b_end_frac,
                 frac_mlp=self.groove_frac_mlp,
-                abs_embed=self.groove_2_abs_pos(
-                    mhc_b_idx.clamp(max=self.groove_2_abs_pos.num_embeddings - 1)
+                abs_embed=(
+                    self.groove_2_abs_pos(
+                        mhc_b_idx.clamp(
+                            max=self.groove_2_abs_pos.num_embeddings - 1
+                        )
+                    )
+                    if self.groove_2_abs_pos is not None
+                    else None
                 ),
                 concat_proj=self.groove_pos_concat_proj,
                 concat_frac_proj=self.groove_pos_concat_frac_proj,
@@ -1612,6 +1790,42 @@ class Presto(nn.Module):
         clipped = positions.clamp(min=0, max=seq.shape[1] - 1)
         return seq[batch_idx, clipped]
 
+    #: Which positional components each composition mode actually consumes.
+    #:
+    #: Single source of truth for two things that must agree: what
+    #: `_compose_position_signal` reads, and what the constructor allocates.
+    #: Previously every component was allocated for every mode and every one
+    #: was *evaluated* on every forward, with the composer discarding the
+    #: unused results -- so the inactive branches burned compute, shipped in
+    #: every checkpoint, and received no gradient. Roughly 38k parameters in
+    #: the trunk alone at d_model=32.
+    POSITION_MODE_COMPONENTS: Dict[str, frozenset] = {
+        "triple":                 frozenset({"start", "end", "frac_mlp"}),
+        "triple_baseline":        frozenset({"start", "end", "frac_mlp"}),
+        "abs_only":               frozenset({"abs"}),
+        "triple_plus_abs":        frozenset({"start", "end", "frac_mlp", "abs"}),
+        "start_only":             frozenset({"start"}),
+        "end_only":               frozenset({"end"}),
+        "start_plus_end":         frozenset({"start", "end"}),
+        "concat_start_end":       frozenset({"start", "end", "concat_proj"}),
+        "concat_start_end_frac":  frozenset({"start", "end", "concat_frac_proj"}),
+        "mlp_start_end":          frozenset({"start", "end", "concat_mlp"}),
+        "mlp_start_end_frac":     frozenset({"start", "end", "concat_frac_mlp"}),
+        # Groove-only mode; uses its own sequential table, no shared parts.
+        "sequential":             frozenset({"sequential"}),
+    }
+
+    @staticmethod
+    def _require_component(component, mode: str, name: str):
+        """Fetch a positional component the mode declares it needs."""
+        if component is None:
+            raise RuntimeError(
+                f"positional mode {mode!r} needs component {name!r}, which was "
+                "not allocated. POSITION_MODE_COMPONENTS and the constructor "
+                "disagree."
+            )
+        return component
+
     def _compose_position_signal(
         self,
         *,
@@ -1620,15 +1834,24 @@ class Presto(nn.Module):
         end_embed: torch.Tensor,
         start_frac: torch.Tensor,
         end_frac: torch.Tensor,
-        frac_mlp: nn.Module,
+        frac_mlp: Optional[nn.Module],
         abs_embed: Optional[torch.Tensor],
-        concat_proj: nn.Module,
-        concat_frac_proj: nn.Module,
-        concat_mlp: nn.Module,
-        concat_frac_mlp: nn.Module,
+        concat_proj: Optional[nn.Module],
+        concat_frac_proj: Optional[nn.Module],
+        concat_mlp: Optional[nn.Module],
+        concat_frac_mlp: Optional[nn.Module],
     ) -> torch.Tensor:
+        """Combine positional components according to `mode`.
+
+        Components not named by POSITION_MODE_COMPONENTS[mode] are not
+        allocated, so they arrive as None. Reaching one is a table/constructor
+        disagreement, and `_require_component` turns that into a clear error
+        rather than an AttributeError deep in the trunk.
+        """
         if mode in {"triple", "triple_baseline"}:
-            return start_embed + end_embed + frac_mlp(start_frac.unsqueeze(-1))
+            return start_embed + end_embed + self._require_component(
+                frac_mlp, mode, "frac_mlp"
+            )(start_frac.unsqueeze(-1))
         if mode == "abs_only":
             if abs_embed is None:
                 raise ValueError("abs_only requires abs_embed")
@@ -1636,7 +1859,14 @@ class Presto(nn.Module):
         if mode == "triple_plus_abs":
             if abs_embed is None:
                 raise ValueError("triple_plus_abs requires abs_embed")
-            return start_embed + end_embed + frac_mlp(start_frac.unsqueeze(-1)) + abs_embed
+            return (
+                start_embed
+                + end_embed
+                + self._require_component(frac_mlp, mode, "frac_mlp")(
+                    start_frac.unsqueeze(-1)
+                )
+                + abs_embed
+            )
         if mode == "start_only":
             return start_embed
         if mode == "end_only":
@@ -1644,18 +1874,26 @@ class Presto(nn.Module):
         if mode == "start_plus_end":
             return start_embed + end_embed
         if mode == "concat_start_end":
-            return concat_proj(torch.cat([start_embed, end_embed], dim=-1))
+            return self._require_component(concat_proj, mode, "concat_proj")(
+                torch.cat([start_embed, end_embed], dim=-1)
+            )
 
         frac_features = torch.cat(
             [start_frac.unsqueeze(-1), end_frac.unsqueeze(-1)],
             dim=-1,
         )
         if mode == "concat_start_end_frac":
-            return concat_frac_proj(torch.cat([start_embed, end_embed, frac_features], dim=-1))
+            return self._require_component(concat_frac_proj, mode, "concat_frac_proj")(
+                torch.cat([start_embed, end_embed, frac_features], dim=-1)
+            )
         if mode == "mlp_start_end":
-            return concat_mlp(torch.cat([start_embed, end_embed], dim=-1))
+            return self._require_component(concat_mlp, mode, "concat_mlp")(
+                torch.cat([start_embed, end_embed], dim=-1)
+            )
         if mode == "mlp_start_end_frac":
-            return concat_frac_mlp(torch.cat([start_embed, end_embed, frac_features], dim=-1))
+            return self._require_component(concat_frac_mlp, mode, "concat_frac_mlp")(
+                torch.cat([start_embed, end_embed, frac_features], dim=-1)
+            )
         raise ValueError(f"Unsupported positional composition mode: {mode!r}")
 
     @staticmethod
@@ -2883,7 +3121,7 @@ class Presto(nn.Module):
         if _inducer_idx is None:
             _inducer_idx = torch.zeros(batch_size, dtype=torch.long, device=pep_tok.device)
         _condition_state = (
-            _apm_idx.long() * self._n_inducer_states + _inducer_idx.long()
+            _apm_idx.long() * self._n_stimulus_states + _inducer_idx.long()
         )
         processing_condition_token = self.processing_condition_embed(
             _condition_state
@@ -3026,9 +3264,16 @@ class Presto(nn.Module):
         binding_stability_vec = self.binding_stability_readout_proj(
             stability_interaction_vec
         )
-        direct_segment_input = torch.cat([pep_vec, mhc_a_vec, mhc_b_vec], dim=-1)
-        direct_affinity_vec = self.binding_direct_segment_affinity_proj(direct_segment_input)
-        direct_stability_vec = self.binding_direct_segment_stability_proj(direct_segment_input)
+        # Only computed when a direct-segment mode is active; the projections
+        # are not allocated when the mode is "off".
+        if self.binding_direct_segment_mode != "off":
+            direct_segment_input = torch.cat([pep_vec, mhc_a_vec, mhc_b_vec], dim=-1)
+            direct_affinity_vec = self.binding_direct_segment_affinity_proj(
+                direct_segment_input
+            )
+            direct_stability_vec = self.binding_direct_segment_stability_proj(
+                direct_segment_input
+            )
         if self.binding_direct_segment_mode == "affinity_residual":
             binding_affinity_vec = binding_affinity_vec + direct_affinity_vec
         elif self.binding_direct_segment_mode == "affinity_stability_residual":
@@ -3043,8 +3288,9 @@ class Presto(nn.Module):
             binding_affinity_vec = (1.0 - gate) * binding_affinity_vec + gate * direct_affinity_vec
             outputs["binding_direct_segment_gate_mean"] = gate.mean()
         outputs["binding_direct_segment_mode"] = self.binding_direct_segment_mode
-        outputs["binding_direct_affinity_vec"] = direct_affinity_vec
-        outputs["binding_direct_stability_vec"] = direct_stability_vec
+        if self.binding_direct_segment_mode != "off":
+            outputs["binding_direct_affinity_vec"] = direct_affinity_vec
+            outputs["binding_direct_stability_vec"] = direct_stability_vec
 
         if self.latent_topology == "expanded":
             processing_class1_vec = latent_vals["processing_class1"]

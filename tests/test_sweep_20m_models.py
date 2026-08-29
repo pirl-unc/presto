@@ -11,9 +11,14 @@ def test_generate_candidates_prefers_near_target_and_respects_band():
         target_params=20_000_000,
         min_params=18_000_000,
         max_params=22_000_000,
-        d_models=[192, 224, 256],
+        # Widened after unreachable positional branches stopped being
+        # allocated: the model is genuinely smaller for a given (d_model,
+        # n_layers), so the old 192-256 x 2-5 grid no longer reaches 20M at
+        # all. Widening the search is the fix; loosening the band would just
+        # hide that the grid cannot hit the target.
+        d_models=[256, 320, 384],
         layer_min=2,
-        layer_max=5,
+        layer_max=8,
         heads=[4, 8, 16],
         max_candidates=6,
     )

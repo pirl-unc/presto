@@ -481,11 +481,16 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
     parser.add_argument(
         "--d-models",
         type=str,
-        default="160,192,224,256,288,320",
-        help="Comma-separated d_model candidates",
+        default="192,224,256,288,320,384",
+        help=(
+            "Comma-separated d_model candidates. Widened, with --layer-max, "
+            "after unreachable positional branches stopped being allocated: "
+            "the model is smaller for a given (d_model, n_layers), so the "
+            "previous grid could not reach the 20M target at all."
+        ),
     )
     parser.add_argument("--layer-min", type=int, default=2, help="Minimum n_layers to consider")
-    parser.add_argument("--layer-max", type=int, default=6, help="Maximum n_layers to consider")
+    parser.add_argument("--layer-max", type=int, default=8, help="Maximum n_layers to consider")
     parser.add_argument(
         "--heads",
         type=str,

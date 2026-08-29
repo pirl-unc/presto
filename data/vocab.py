@@ -767,7 +767,19 @@ ENZYMATIC_DIGEST_TO_IDX = {name: i for i, name in enumerate(ENZYMATIC_DIGESTS)}
 # receive no gradient. They are kept as declared headroom for data that does
 # distinguish them; see tests/test_stimulus_vocabulary.py, which pins that
 # fact so it stays a known gap rather than a silent one.
-PROCESSING_STIMULI = ["none", "ifn_gamma", "ifn_type1", "tnf_alpha", "tlr"]
+PROCESSING_STIMULI = [
+    "none",
+    "ifn_gamma",
+    "ifn_type1",
+    "tnf_alpha",
+    "tlr",
+    # Lymphocyte activation (PMA/ionomycin, CD3/CD28, restimulation). Kept
+    # distinct from the interferon and TLR axes because it acts through
+    # PKC/NF-kB/NFAT rather than a PRR or interferon receptor. Folding it into
+    # either would assert a signalling route the experiments do not support.
+    # Appended last so existing stimulus indices are unchanged.
+    "cell_activation",
+]
 
 #: Superseded spellings, kept so older callers and saved records do not shift
 #: to a different embedding row. Index order above is unchanged, so no
@@ -813,12 +825,79 @@ APM_GENE_TO_GROUP: Dict[str, str] = {
 
 # hitlist condition_category -> stimulus. Cytokine treatment is an induction
 # state, not an APM lesion, so it lives on its own axis.
+#: hitlist ``condition_category`` -> stimulus token.
+#:
+#: Every category hitlist emits is listed, including those that map to `none`.
+#: That is deliberate: an *absent* key means "hitlist grew a category we have
+#: not reviewed", which `is_unmapped_condition` reports. If categories that
+#: legitimately mean "no stimulus" were left out, that signal would be buried
+#: in noise and a genuinely new treatment would go unnoticed.
 CONDITION_TO_STIMULUS: Dict[str, str] = {
+    # --- direct cytokine treatment -------------------------------------
     "IFN_gamma_treatment": "ifn_gamma",
     "IFN_alpha_treatment": "ifn_type1",
     "IFN_beta_treatment": "ifn_type1",
     "TNF_alpha_treatment": "tnf_alpha",
     "TLR_stimulation": "tlr",
+    # --- infection: endogenous induction, same processing consequence ---
+    #
+    # Viral infection is sensed by RIG-I/MDA5 (RNA) and cGAS-STING (DNA),
+    # driving autocrine/paracrine type I interferon and the ISG program --
+    # immunoproteasome subunits PSMB8/9/10, TAP1/2 and MHC-I upregulation.
+    # That is the same processing remodelling recombinant IFN-beta produces,
+    # which is what this axis encodes, so `ifn_type1` is the right bucket.
+    #
+    # It is induced rather than administered, and many of these viruses encode
+    # interferon antagonists (influenza NS1, HIV Vpu, HCMV, EBV), so the
+    # magnitude varies. The direction does not. hitlist's own categorization
+    # supports reading this as the stimulated arm: it buckets UV/heat-
+    # inactivated virus separately as `virus_inactivated_control`, which is the
+    # paired comparator and maps to `none` below.
+    "infection_viral": "ifn_type1",
+    # Listeria, Salmonella, Chlamydia, Pseudomonas, Mycobacterium, Borrelia,
+    # Theileria, Toxoplasma, Leishmania, Plasmodium -- the organisms hitlist
+    # matches here. All engage TLRs (LPS/TLR4 for the gram-negatives,
+    # lipoproteins/TLR2 for Borrelia and Mtb, flagellin/TLR5). Several
+    # intracellular ones also induce type I IFN via cytosolic sensing, but TLR
+    # engagement is what the set shares.
+    "infection_bacterial_or_parasite": "tlr",
+    # PMA/ionomycin, CD3/CD28, in vitro activation, restimulation.
+    "cell_activation": "cell_activation",
+    # --- categories that genuinely mean "no stimulus applied" ----------
+    "unperturbed": "none",
+    # The control arm of an infection study. UV/heat-inactivated virions still
+    # carry some PAMPs, so this is not perfectly inert, but it is the
+    # experimenters' intended comparator for `infection_viral` above -- and
+    # pairing the two is what gives this axis a real contrast.
+    "virus_inactivated_control": "none",
+    # Vector-based gene delivery and plasmid transfection. Immunologically not
+    # an infection, and the manipulation is the experimental variable rather
+    # than a processing stimulus.
+    "transduction": "none",
+    "transfection": "none",
+    "CIITA_transduction": "none",
+    "transplant": "none",
+    "biomaterial_contact": "none",
+    "drug_exposure": "none",
+    "metabolic_stress": "none",
+    "labeling_control": "none",
+    "other_perturbation": "none",
+    # --- APM gene perturbations -----------------------------------------
+    # These name a knockout, not a stimulus. They are carried on the separate
+    # `apm_perturbation` axis (sourced from `apm_genes_perturbed`), verified
+    # populated -- e.g. ERAP1_perturbation rows arrive as `n_term_trimming`.
+    # Listed here only so they do not register as unreviewed categories.
+    "MHC-I_loss_B2M": "none",
+    "TAP_perturbation": "none",
+    "tapasin_perturbation": "none",
+    "ERAP1_perturbation": "none",
+    "HLA-DM_perturbation": "none",  # arrives as apm=class_ii_loading
+    "ERAP2_perturbation": "none",
+    "ERAP_inhibitor": "none",
+    "PLC_chaperone_perturbation": "none",
+    "immunoproteasome_perturbation": "none",
+    "proteasome_inhibitor": "none",
+    "cytokine_treatment_generic": "none",
 }
 
 
