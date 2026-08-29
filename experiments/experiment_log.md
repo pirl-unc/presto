@@ -1,3 +1,24 @@
+### 2026-08-29_1953_claude_brev-e2e-class1
+- **Agent**: claude (Opus 5)
+- **Dir**: [2026-08-29_1953_claude_brev-e2e-class1](2026-08-29_1953_claude_brev-e2e-class1)
+- **Source script**: `experiments/2026-08-29_1953_claude_brev-e2e-class1/reproduce/source/train_remote.py`
+- **Commit**: `42c8698` (branch `feat/gap2-and-cleanups`)
+- **Question**: Does presto train end to end on remote hardware and emit the artifacts the experiment contract requires? Plumbing validation, not a model.
+- **Dataset**: hitlist 1.45.0 built parquets (`/root/.hitlist`, no rebuild). Class I only. binding 40,000 / elution 60,000 / stability 9,901 / kinetics 47 / bulk-MS 40,000. **processing, tcell, tcr_evidence = 0** — hitlist exposes only `ms` and `binding` evidence, so the immunogenicity, recognition and TCR heads received zero gradient for the whole run.
+- **Curation**: MHC coverage 95.25% (212,992/223,621) via mhcseqs 2.5.12. Split **peptide-grouped**: 230,940 train rows / 106,547 peptides vs 57,735 val rows / 26,733 peptides. Synthetic negatives: binding 49,941, elution 24,830; cascaded elution 17,199, tcell 17,235.
+- **Training**: 2 epochs, `batch_size=128`, `d_model=128`, `n_layers=2`, `n_heads=4`, `lr=3e-4`, `seed=42`, `latent_topology=expanded`, `max_mil_instances=16`, bf16 autocast, 5,612,279 params. `train_loss=1.5580`, **`val_loss=0.6319`**.
+- **GPU**: requested `min_gpus=1` (no pinned model); observed `NVIDIA A100-SXM4-40GB`, ~27.3 GB peak, `CUDA_VISIBLE_DEVICES=0` on a shared idle 4xA100 Brev box. Not Modal, so the `H100!` default does not apply.
+- **Result — read the caveats, three of five binary metrics are traps**:
+  - `binding` Spearman **0.796** (n=17,885), `binding_kd` **0.842** (n=2,321), `binding_ic50` 0.475 (n=1,445). This is the real result, on a peptide-disjoint split. It also settles an earlier toy-run reading of −0.656 at n=77 as noise.
+  - `elution` / `presentation` AUPRC **1.0000** and `excision` **0.9998** are **artifacts**. Positive and negative predictions do not overlap at all; ~half the elution validation set is synthetic negatives (scrambled peptides, randomized MHC, stripped chains), separable on surface features without presentation biology.
+  - `ms_detectability` AUPRC **0.9071** against a base rate of **0.9042** — lift **+0.003**, positive and negative prediction means 0.663 vs 0.671. The detectability arm learned nothing.
+  - `foreignness` AUPRC 0.6798 vs base rate 0.4135 — genuinely informative.
+  - `t_half` 0.166 (n=1,999); `tm` 0.140 (n=26); `koff`/`kon` n=7 each, meaningless.
+  - No test split used: a plumbing run does not justify burning it.
+- **Takeaway**: the remote path works and the artifact contract is met, but the science is not established. Synthetic negatives are too easy for any binary metric that mixes them with real ones; `ms_detectability` needs the `dual_corpus_transfer_set` evaluation (24,125 peptides, still never measured); and a full-modality run with the merged TSV is required before anything about immunogenicity, T-cell response or TCR evidence can be said.
+- **Artifacts**: `summary.json`, `val_predictions.csv` (127,101 rows), `val_metrics.csv`, `metrics.csv`, `config.json`, `launch_argv.json`, `mhc_sequence_coverage.csv`, `probe_affinity_over_epochs.png`. Checkpoint `model.pt` (67 MB) in `brev_runs/presto-e2e-06/` (gitignored).
+- **Cost of getting here**: six attempts, six distinct defects — missing hitlist data; **training on 0/88,797 resolved MHC with no error**; CUDA OOM (effective batch is `batch_size x core-window candidates`); 28 h/epoch because `PRESTO_MAX_BULK_MS=0` means unlimited; dataloader FD exhaustion (`received 0 items of ancdata`, ~50 tensors per batch); then success. Only the OOM announced itself honestly.
+
 
 
 ### 2026-03-15_1226_codex_exp21-seed-epoch-confirmation

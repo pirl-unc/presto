@@ -10,11 +10,19 @@ Last reorganized: 2026-08-29.
 
 ## In flight
 
-- [ ] **Brev end-to-end run.** One GPU of `rc14-gcp-provision-full-training-3`
-      (shared 4xA100, mhcflurry work confirmed finished — heartbeat 46h stale,
-      all four GPUs idle). hitlist artifacts (244 MB of built parquets) are
-      staged at `/root/.hitlist`; the 16 GB proteome index cache is build-time
-      only and was not shipped. Launcher: `scripts/train_remote.py`.
+- [x] **Brev end-to-end run.** Done — `experiments/2026-08-29_1953_claude_brev-e2e-class1`.
+      Binding Spearman 0.796 (n=17,885) on a peptide-disjoint split.
+- [ ] **Full-modality brev run.** The completed run trained no immunogenicity,
+      recognition or TCR heads: hitlist has no T-cell evidence. The merged TSV
+      is staged at `/root/presto_data/merged_deduped.tsv` and
+      `reproduce/launch_full_modality.sh` is ready.
+- [ ] **Synthetic negatives are too easy.** elution/presentation AUPRC 1.0000
+      and excision 0.9998 with *zero* pos/neg overlap: the metric measures
+      "real peptide + real MHC", not presentation. Either score on real
+      negatives only, or make the synthetic ones hard.
+- [ ] **`ms_detectability` learned nothing.** AUPRC 0.9071 against a 0.9042
+      base rate — lift +0.003. The arm the excision/detectability design exists
+      for. Needs `dual_corpus_transfer_set` (24,125 peptides).
 - [ ] **Category C decision** — four groups are computed every forward,
       published in `outputs`, and read by no loss. See
       `gradient_coverage_plan.md`. Needs a human call: wiring them changes what

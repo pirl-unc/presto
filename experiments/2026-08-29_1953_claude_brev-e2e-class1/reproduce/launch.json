@@ -1,0 +1,30 @@
+{
+  "experiment": "2026-08-29_1953_claude_brev-e2e-class1",
+  "agent": "claude (Opus 5)",
+  "purpose": "First end-to-end presto training run on Brev: validate the remote path produces a checkpoint and a held-out metric pass, not to produce a model worth using.",
+  "backend": "runplz brev",
+  "instance": "rc14-gcp-provision-full-training-3",
+  "machine": "a2-highgpu-4g (4x A100-SXM4-40GB), shared org box",
+  "gpus_requested": 1,
+  "gpu_pinning": "CUDA_VISIBLE_DEVICES=0",
+  "gpu_observed": "NVIDIA A100-SXM4-40GB (42.4 GB reported, 39.49 GiB usable)",
+  "note_on_hardware": "AGENTS.md prefers PRESTO_MODAL_GPU=H100! for Modal. This is Brev, not Modal, and the org has only 4xA100 boxes. One A100 of an already-running instance was used rather than provisioning new hardware.",
+  "env": {
+    "PRESTO_EPOCHS": "2",
+    "PRESTO_BATCH_SIZE": "128",
+    "PRESTO_D_MODEL": "128",
+    "PRESTO_N_LAYERS": "2",
+    "PRESTO_N_HEADS": "4",
+    "PRESTO_HITLIST_MHC_CLASS": "I",
+    "PRESTO_MAX_ELUTION": "60000",
+    "PRESTO_MAX_BINDING": "40000",
+    "PRESTO_MAX_BULK_MS": "40000",
+    "PRESTO_HITLIST_BUILD": "0",
+    "PRESTO_LATENT_TOPOLOGY": "expanded",
+    "PRESTO_EXTRA_ARGS": "--max-mil-instances 16 --max-tcell 4000 --max-vdjdb 1000 --max-processing 1000 --num-workers 8",
+    "RUNPLZ_MIN_GPUS": "1",
+    "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True (set by the launcher)"
+  },
+  "data_source": "hitlist 1.45.0, built parquets staged at /root/.hitlist",
+  "mhc_sequences": "mhcseqs 2.5.12, mhc-full-seqs.csv (56,276 sequences)"
+}
