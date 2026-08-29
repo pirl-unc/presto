@@ -14,6 +14,7 @@ import csv
 import inspect
 import json
 import math
+import os
 import random
 import re
 import sys
@@ -3463,6 +3464,10 @@ def _print_mhc_sequence_coverage_summary(coverage: Mapping[str, Any]) -> None:
         )
         print(f"  {state} species buckets: {text}")
 
+class MHCResolutionError(RuntimeError):
+    """No allele resolved to a sequence, so the model is not a pMHC model."""
+
+
 def _split_allele_list(raw_value: Optional[str]) -> List[str]:
     if raw_value is None:
         return []
@@ -4881,6 +4886,34 @@ def run(args: argparse.Namespace) -> None:
             )
         print(
             "WARNING: unresolved MHC alleles found in training data and strict mode is disabled."
+        )
+
+    # Strict mode has already raised above if it was going to, with a report
+    # naming the offending alleles. This catches what strict mode does not:
+    # resolving *nothing at all* with strict disabled -- which the hitlist path
+    # does by default.
+    #
+    # Zero resolution is not a degraded pMHC model, it is a different model.
+    # Every pair collapses to peptide-only, the groove attends to padding, and
+    # a normal-looking loss curve means nothing. On a remote box whose mhcseqs
+    # catalog had never been built this produced 0/88,797 resolved, no error
+    # anywhere, and three epochs of wasted GPU.
+    allow_zero_mhc = str(os.environ.get("PRESTO_ALLOW_ZERO_MHC", "")).strip().lower() in {
+        "1", "true", "yes", "on",
+    }
+    _coverage_overall = (
+        coverage_audit.get("overall", {}) if isinstance(coverage_audit, Mapping) else {}
+    )
+    _rows_considered = int(_coverage_overall.get("rows_considered", 0) or 0)
+    _rows_resolved = int(_coverage_overall.get("resolved_rows", 0) or 0)
+    if _rows_resolved == 0 and _rows_considered > 0 and not allow_zero_mhc:
+        raise MHCResolutionError(
+            f"no MHC sequences resolved for any of {_rows_considered} rows. "
+            "Training would silently reduce to a peptide-only model. Usual "
+            "causes: the mhcseqs catalog was never built on this machine (run "
+            "`mhcseqs build`, or copy ~/.cache/mhcseqs/mhc-full-seqs.csv), or "
+            "--index-csv points nowhere. Set PRESTO_ALLOW_ZERO_MHC=1 only if a "
+            "peptide-only run is genuinely what you want."
         )
 
     synthetic_pmhc_ratio = max(float(args.synthetic_pmhc_negative_ratio), 0.0)
