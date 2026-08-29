@@ -28,18 +28,24 @@ Reproduce: `scratchpad/audit.py`.
       rows; stimulated rows 71,040 -> 164,610.
 - [x] 2. Curation: every hitlist condition category reviewed, so the
       unmapped-category signal means "genuinely new" and nothing else.
-- [ ] 3. Classify each dead parameter into A/B/C/D **with evidence**, not by
-      reading names. A parameter is only "config-dead" once the config that
-      would reach it is identified.
-- [ ] 4. Category A: stop allocating unreachable branches under the default
-      config, or make the selecting flag explicit.
-- [ ] 5. Category B: add the record types that reach them; pin with tests.
-- [ ] 6. Category C: decide supervise-or-remove per head. Do not leave a head
-      that is reported but untrained.
-- [ ] 7. Category D: pin as deliberate.
-- [ ] 8. A standing test asserting the dead-parameter set equals the documented
-      D set — so this cannot regress silently the way gap 2 did.
-- [ ] 9. Tasks/organization: confirm every LOSS_TASK_SPEC has data and a head.
+- [x] 3. Classified with evidence (each verified by driving the real batch).
+- [x] 4. Category A closed: `POSITION_MODE_COMPONENTS` drives both what the
+      composer reads and what the constructor allocates; collapsed-topology,
+      class-specific-core and direct-segment modules are allocated only when
+      their mode selects them. **19.7% -> 3.1% dead.**
+- [x] 5. Category B: each confirmed reachable by supplying the right record
+      (a class II T-cell record revived `immunogenicity_cd4_latent_head`; a
+      class II processing record revived `class2_processing_predictor`).
+      Remaining B entries are listed with the data they need.
+- [ ] 6. Category C — **needs a decision, see below.** Not made unilaterally:
+      wiring these changes what the model computes.
+- [x] 7. Category D pinned as deliberate.
+- [x] 8. `tests/test_gradient_coverage.py` asserts the dead set equals a
+      categorized allowlist. A new untrained parameter fails; fixing one
+      requires deleting its entry, so the fix shows in the diff.
+- [x] 9. All 31 LOSS_TASK_SPECS have a head; `foreignness` and
+      `species_of_origin` do have losses (an earlier reading that they did not
+      was wrong -- the audit batch simply lacked their targets).
 - [ ] 10. Brev end-to-end run on a single cheap GPU, held-out pass completing,
       artifacts written per the experiment contract.
 
@@ -49,3 +55,24 @@ Reproduce: `scratchpad/audit.py`.
   `compute_loss` -> `backward()` and reading `p.grad`. Never infer from code.
 - Adding a field/tensor is not the same as populating it. Verify it arrives.
 - Never delete a test that pins a known gap in order to close the gap.
+
+
+## Open decision: category C, computed but never consumed
+
+Four groups are computed every forward, published in `outputs`, and read by no
+loss. They are not merely untrained -- they are **intended features that were
+never connected**:
+
+| what | params | intent |
+|---|---|---|
+| `assay_{type,prep,geometry,readout}_embed` + `factorized_proj` | ~1.2k | absorb assay bias so affinity is comparable across assays |
+| `sequence_summary_proj` | ~4.1k | direct pep/MHC summary into the binding path |
+| `binding_stability_score_head` | ~0.6k | a stability readout, wired to no stability loss |
+| `recognition_cd{8,4}_head` | 66 | publish CD8/CD4 recognition probabilities |
+
+The last is the most user-visible: `recognition_cd8_prob` is emitted as a
+probability from an untrained projection.
+
+Wiring any of them changes what the model computes and how it is calibrated,
+so it is a modelling decision, not a cleanup. Options per group: connect to an
+existing loss, add supervision, or stop publishing the output.
