@@ -130,6 +130,23 @@ _DEFAULT_DR_ALPHA_PREFIX_BY_FINE_SPECIES: Dict[str, str] = {
 }
 
 
+def _mhcgnomes_parse_errors() -> tuple:
+    """Exception types mhcgnomes uses for an unparseable name.
+
+    Resolved lazily and defensively: the class moved between versions, and a
+    missing attribute here must not itself become an import-time failure.
+    """
+    try:
+        from mhcgnomes.errors import ParseError  # type: ignore
+
+        return (ParseError,)
+    except Exception:  # pragma: no cover - depends on mhcgnomes internals
+        return ()
+
+
+_MHCGNOMES_PARSE_ERRORS = _mhcgnomes_parse_errors()
+
+
 def _require_mhcgnomes() -> Any:
     try:
         mhcgnomes = importlib.import_module("mhcgnomes")
@@ -512,8 +529,23 @@ def normalize_allele_name(name: str) -> str:
         "A0201" -> "HLA-A*02:01"
         "HLA-A2" -> "HLA-A*02"
         "HLA-A*02:01:01:02L" -> "HLA-A*02:01L"
+
+    Raises:
+        ValueError: the name cannot be parsed. This is the *data* failure mode
+            and callers are expected to skip such names.
+        RuntimeError: mhcgnomes itself is unavailable or unusable. This is a
+            *setup* failure and must not be mistaken for bad data -- swallowing
+            it would silently degrade every allele in the corpus.
+
+    mhcgnomes signals an unparseable name with its own ``ParseError``, which
+    does NOT subclass ValueError. It is translated here so that the two failure
+    modes are distinguishable by type at every call site, rather than each one
+    having to import mhcgnomes to catch the right thing.
     """
-    parsed = parse_allele_name(name)
+    try:
+        parsed = parse_allele_name(name)
+    except _MHCGNOMES_PARSE_ERRORS as exc:
+        raise ValueError(f"mhcgnomes failed to parse allele: {name!r}") from exc
     if parsed is None:
         raise ValueError(f"mhcgnomes failed to parse allele: {name!r}")
     return _canonicalize_parsed_allele(parsed, allele_fields=2)

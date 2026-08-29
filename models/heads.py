@@ -1391,6 +1391,7 @@ class ExcisionHead(nn.Module):
         n_stimulus: int = 1,
         n_apm: int = 1,
         protein_source_index: int = 2,
+        mhc_source_index: int = 1,
     ):
         super().__init__()
         self.n_machinery = int(n_machinery)
@@ -1483,6 +1484,11 @@ class ExcisionHead(nn.Module):
         self.n_stimulus = int(n_stimulus)
         self.n_apm = int(n_apm)
         self.protein_source_index = int(protein_source_index)
+        # Indices into PEPTIDE_SOURCES ['unknown', 'mhc', 'protein'].
+        # Both are named so callers can test positively for a source
+        # rather than negating the other -- `!= protein` silently
+        # includes `unknown`.
+        self.mhc_source_index = int(mhc_source_index)
         self.invivo_profile_c = nn.Parameter(torch.zeros(self.n_apm, self.n_aa))
         self.invivo_profile_n = nn.Parameter(torch.zeros(self.n_apm, self.n_aa))
         # Cytokine state shifts catalytic specificity (immunoproteasome

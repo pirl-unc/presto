@@ -103,3 +103,82 @@ class TestTCellChannel:
         moved = batch.to("cpu")
         assert isinstance(moved.tcell_mil_provenance, dict)
         assert isinstance(moved.mil_provenance, dict)
+
+
+class TestTCellProvenanceIsCollected:
+    """The field existing is not the same as the field being populated.
+
+    An earlier version of this file asserted only that the dataclass field
+    existed. It did -- and it was empty, because the collator never gathered
+    the per-instance values to put in it, so the T-cell MIL forward still ran
+    every instance at the default cellular state.
+
+    The collection is now wired. Note carefully what that does and does not
+    buy: `TCellRecord` currently carries no cellular-state fields at all, so
+    the values remain defaults today. That is a *data* gap, not a wiring gap.
+    Distinguishing the two is the whole point -- claiming the fix populates
+    real state would repeat the error it corrects.
+    """
+
+    def test_collator_gathers_tcell_cellular_state(self):
+        """Pins the wiring, which is what was actually broken."""
+        import inspect
+
+        from presto.data.collate import PrestoCollator
+
+        source = inspect.getsource(PrestoCollator.__call__)
+        tcell_call = source[source.index("tcell_mil_tensors = ") :][:400]
+        assert "apm_perturbations=" in tcell_call, (
+            "the T-cell MIL channel is materialized without cellular state, "
+            "so every instance silently gets the default"
+        )
+        assert "inducers=" in tcell_call
+
+    def test_tcell_records_carry_no_cellular_state_yet(self):
+        """Documents the data gap so it is not mistaken for the wiring bug.
+
+        If TCellRecord gains these fields, this test fails and the one above
+        should be strengthened to assert real values flow through.
+        """
+        import dataclasses
+
+        from presto.data.loaders import TCellRecord
+
+        fields = {f.name for f in dataclasses.fields(TCellRecord)}
+        assert "apm_perturbation" not in fields
+        assert "processing_inducer" not in fields
+
+
+class TestMILMachineryIsDeclaredNotPredicted:
+    """The MIL forward must pass declared machinery.
+
+    Without it the model thresholds *predicted* class probabilities to pick
+    proteasome vs cathepsin. That was harmless while `excision_logit` had no
+    consumer on MHC rows; now it feeds presentation and therefore the elution
+    loss, so the objective would depend on a hard argmax over a prediction
+    when the declared class is right there on the batch.
+    """
+
+    def test_channel_carries_per_instance_machinery(self):
+        batch = _multi_allele_batch()
+        channel = _get_mil_channel(batch, "mil")
+        machinery = channel.get("machinery_idx")
+        assert machinery is not None, "MIL channel has no machinery_idx"
+        assert machinery.shape[0] == channel["pep_tok"].shape[0]
+
+    def test_machinery_is_sliced_with_the_instance_cap(self):
+        batch = _multi_allele_batch()
+        channel = _get_mil_channel(batch, "mil")
+        sliced = _slice_mil_channel(channel, torch.tensor([0, 1]))
+        assert sliced["machinery_idx"].shape[0] == 2
+
+    def test_forward_receives_machinery(self):
+        import inspect
+
+        from presto.scripts import train_synthetic
+
+        source = inspect.getsource(train_synthetic._run_mil_forward)
+        assert "machinery=" in source, (
+            "the MIL forward omits machinery, so the model falls back to "
+            "thresholding predicted class probabilities"
+        )

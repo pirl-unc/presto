@@ -166,11 +166,6 @@ def _select_best_mapping(frame):
     return ordered.drop_duplicates(subset=["evidence_row_id"], keep="first")
 
 
-# The 20 canonical residues. Anything else -- `X` for an unknown residue, or an
-# IEDB annotation such as `SXPSGGXGV + INDIST(X2, X7)` / `ILAETVAXV + OTH(X8)` --
-# describes chemistry this model has no representation for. Roughly 0.007% of
-# rows, but they used to reach the tokenizer and abort training mid-epoch, so
-# they are dropped explicitly at ingest and counted.
 def _iter_row_dicts(frame, chunk_size: int = 50_000):
     """Yield row dicts without materializing the whole frame at once.
 
@@ -192,13 +187,20 @@ def _iter_row_dicts(frame, chunk_size: int = 50_000):
 # subtly different residue set here. An earlier version of this guard used the
 # 20 canonical residues and so rejected `X`, which the tokenizer represents
 # perfectly well -- needlessly dropping ~51 usable elution rows.
-def is_canonical_peptide(peptide: str) -> bool:
-    """True when the peptide can be tokenized.
+def normalize_ingested_peptide(peptide: Optional[str]) -> str:
+    """Upper-case a peptide and return "" if it cannot be tokenized.
+
+    Upper-casing first is the point: the tokenizer upper-cases internally, so a
+    lowercase peptide encodes perfectly well, but testing the raw string
+    against an upper-case residue set rejected it and dropped the whole row.
+    The flank path already normalized case; peptides did not, so the two
+    disagreed about identical input.
 
     Peptides are targets, so an unrepresentable residue drops the row: unlike
     a flank, the epitope cannot degrade to "absent".
     """
-    return is_encodable_sequence(peptide)
+    text = str(peptide or "").strip().upper()
+    return text if is_encodable_sequence(text) else ""
 
 
 def load_records_from_hitlist(
@@ -306,8 +308,8 @@ def load_records_from_hitlist(
                 skipped_bad_unit += 1
                 continue
 
-        peptide = _clean(row.get("peptide"))
-        if not is_canonical_peptide(peptide):
+        peptide = normalize_ingested_peptide(row.get("peptide"))
+        if not peptide:
             skipped_noncanonical_peptide += 1
             continue
 
@@ -393,8 +395,8 @@ def load_records_from_hitlist(
             # Matches the merged-TSV loader, which drops elution rows with no
             # resolvable allele.
             continue
-        peptide = _clean(row.get("peptide"))
-        if not is_canonical_peptide(peptide):
+        peptide = normalize_ingested_peptide(row.get("peptide"))
+        if not peptide:
             skipped_noncanonical_peptide += 1
             continue
         # An unmapped-but-recorded condition means hitlist grew a treatment

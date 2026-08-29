@@ -16,9 +16,51 @@ import pytest
 torch = pytest.importorskip("torch")
 
 
+class TestRealUnparseableAllelesAreTolerated:
+    """Drive the REAL function with REAL bad input.
+
+    The first version of this test monkeypatched `normalize_allele_name` to
+    raise a fabricated ValueError, so it passed while the actual path crashed:
+    mhcgnomes signals an unparseable name with its own `ParseError`, which does
+    NOT subclass ValueError, so narrowing `except Exception` to `except
+    ValueError` turned tolerated bad data into a hard failure. A fabricated
+    exception proves only that the handler catches what the test throws.
+    """
+
+    @pytest.mark.parametrize(
+        "bad_allele",
+        ["NOT-AN-ALLELE-ZZZ", "HLA-A*99:99:99zz", "???", "1234"],
+    )
+    def test_normalize_reports_bad_data_as_value_error(self, bad_allele):
+        """The data failure mode must be ValueError, whatever mhcgnomes uses."""
+        from presto.data.allele_resolver import normalize_allele_name
+
+        with pytest.raises(ValueError):
+            normalize_allele_name(bad_allele)
+
+    def test_sequence_lookup_skips_an_unparseable_key(self):
+        from presto.data.loaders import _normalize_mhc_sequence_lookup
+
+        result = _normalize_mhc_sequence_lookup(
+            {"NOT-AN-ALLELE-ZZZ": "AAAA", "HLA-A*02:01": "CCCC"}
+        )
+        assert "HLA-A*02:01" in result
+
+    def test_index_token_falls_back_to_the_raw_spelling(self):
+        from presto.data.mhc_index import _normalize_allele_token
+
+        assert _normalize_allele_token("HLA-A*99:99:99zz") == "HLA-A*99:99:99zz"
+
+    def test_good_alleles_still_normalize(self):
+        from presto.data.allele_resolver import normalize_allele_name
+
+        assert normalize_allele_name("A*02:01") == "HLA-A*02:01"
+
+
 class TestSetupFailuresPropagate:
+    """A missing dependency must surface, not degrade every allele silently."""
+
     def test_mhcgnomes_runtime_error_is_not_swallowed(self, monkeypatch):
-        """A missing dependency must surface, not degrade every allele."""
         import presto.data.mhc_index as mhc_index
 
         def _explode(_name):
@@ -28,16 +70,16 @@ class TestSetupFailuresPropagate:
         with pytest.raises(RuntimeError, match="mhcgnomes"):
             mhc_index._normalize_allele_token("HLA-A*02:01")
 
-    def test_unparseable_allele_is_still_tolerated(self, monkeypatch):
-        """The narrowing must not turn bad data into a crash."""
-        import presto.data.mhc_index as mhc_index
+    def test_parse_error_is_translated_not_leaked(self):
+        """Callers must not need to import mhcgnomes to catch bad data."""
+        from presto.data.allele_resolver import _MHCGNOMES_PARSE_ERRORS
 
-        def _reject(name):
-            raise ValueError(f"mhcgnomes failed to parse allele: {name!r}")
-
-        monkeypatch.setattr(mhc_index, "normalize_allele_name", _reject)
-        # Returns something rather than raising; the raw spelling survives.
-        assert mhc_index._normalize_allele_token("HLA-A*02:01")
+        assert _MHCGNOMES_PARSE_ERRORS, "ParseError type could not be resolved"
+        for exc_type in _MHCGNOMES_PARSE_ERRORS:
+            assert not issubclass(exc_type, ValueError), (
+                "if this ever subclasses ValueError the translation is "
+                "redundant, but the call sites still rely on it"
+            )
 
 
 class TestNoSilentBlanketCatches:

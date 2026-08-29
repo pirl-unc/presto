@@ -152,6 +152,14 @@ def _mismatched_machinery(
     return rng.choice(candidates)
 
 
+def _iter_frame_rows(frame, chunk_size: int = 50_000):
+    """Yield row dicts in chunks rather than materializing the whole frame."""
+    n_rows = len(frame)
+    for start in range(0, n_rows, chunk_size):
+        for row in frame.iloc[start : start + chunk_size].to_dict("records"):
+            yield row
+
+
 def records_from_bulk_frame(
     frame,
     *,
@@ -165,9 +173,21 @@ def records_from_bulk_frame(
     ``uniprot_acc``, ``n_fractions_in_run``, ``n_replicates_detected``.
     """
     rng = random.Random(seed)
-    rows = frame.to_dict("records") if hasattr(frame, "to_dict") else list(frame)
-    if max_records is not None and 0 < max_records < len(rows):
-        rows = rng.sample(rows, max_records)
+    # Stream by default. `to_dict("records")` materializes one dict per row for
+    # the whole bulk-proteomics table up front, which is the memory profile
+    # `hitlist_source._iter_row_dicts` exists to avoid. Only the capped path
+    # needs a concrete sequence, because rng.sample must index it.
+    if hasattr(frame, "to_dict"):
+        if max_records is not None and max_records > 0:
+            rows = frame.to_dict("records")
+            if max_records < len(rows):
+                rows = rng.sample(rows, max_records)
+        else:
+            rows = _iter_frame_rows(frame)
+    else:
+        rows = list(frame)
+        if max_records is not None and 0 < max_records < len(rows):
+            rows = rng.sample(rows, max_records)
 
     records: List[BulkMSRecord] = []
     machinery_counts: Dict[str, int] = {}
@@ -229,6 +249,10 @@ def records_from_bulk_frame(
         "n_observed": sum(1 for r in records if r.observed),
         "n_excision_negatives": n_excision_negatives,
         "machinery_counts": dict(sorted(machinery_counts.items(), key=lambda kv: -kv[1])),
+        # Dropped rows must be visible: a corpus where selenocysteine-bearing
+        # peptides silently vanish would otherwise report identical stats to
+        # one where they never existed.
+        "n_unencodable_peptides": n_unencodable_peptides,
     }
     return records, stats
 

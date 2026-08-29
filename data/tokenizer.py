@@ -103,6 +103,13 @@ class Tokenizer:
             # is what the excision head reads -- so a right-truncated N-flank
             # loses exactly the residue it was included for. C-flanks are the
             # mirror case and keep the default left side.
+            if truncate not in ("left", "right"):
+                # Silently right-truncating on a typo would lose the N-flank
+                # P1 residue this parameter exists to preserve, and the flank
+                # tests would still pass.
+                raise ValueError(
+                    f"truncate must be 'left' or 'right'; got {truncate!r}"
+                )
             if truncate == "left":
                 ids = ids[-max_seq_len:] if max_seq_len else []
             else:

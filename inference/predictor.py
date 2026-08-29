@@ -650,7 +650,13 @@ class Predictor:
             flank_n_tok = None
             flank_c_tok = None
             if any(flank_n_list):
-                flank_n_tok = self.tokenizer.batch_encode(flank_n_list, max_len=30, pad=True).to(self.device)
+                # Must match the collator: the N-flank's *last* residue is P1
+                # of the N-terminal junction, which is what the excision head
+                # reads. Right-truncating here while training left-truncates
+                # would silently score a different residue at serving time.
+                flank_n_tok = self.tokenizer.batch_encode(
+                    flank_n_list, max_len=30, pad=True, truncate="left"
+                ).to(self.device)
             if any(flank_c_list):
                 flank_c_tok = self.tokenizer.batch_encode(flank_c_list, max_len=30, pad=True).to(self.device)
 

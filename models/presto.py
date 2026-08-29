@@ -1065,6 +1065,10 @@ class Presto(nn.Module):
         # meaning, so carry the weights over rather than dropping them: without
         # this every pre-rename checkpoint fails strict load on a missing key.
         excision_renames = {
+            f"{prefix}excision_head.inducer_profile_c":
+                f"{prefix}excision_head.stimulus_profile_c",
+            f"{prefix}liberation_head.inducer_profile_c":
+                f"{prefix}excision_head.stimulus_profile_c",
             f"{prefix}excision_head.length_score.weight":
                 f"{prefix}excision_head.length_preference.weight",
             f"{prefix}liberation_head.length_score.weight":
@@ -3212,17 +3216,25 @@ class Presto(nn.Module):
         # labels -- which vary with APM state, giving the KO-vs-WT contrast
         # something to act on.
         #
-        # Class I only: proteasome/ERAP excision is the class I pathway, while
-        # class II peptides are cut endosomally by cathepsins. Gated to
-        # MHC-source rows so shotgun rows keep their own excision loss as the
-        # only thing training the in-vitro branch.
+        # Applied to the class I branch because proteasome/ERAP excision is the
+        # class I pathway; class II peptides are cut endosomally by cathepsins.
+        # Note this is a soft assignment, not a hard gate: the term enters
+        # `presentation_class1_logit`, which the class mixture then weights by
+        # `class_probs[:, :1]`. A class II row therefore contributes this term
+        # in proportion to the class head's error rather than exactly zero.
+        # Gated to MHC-source rows so shotgun rows keep their own excision loss
+        # as the only thing training the in-vitro branch.
         excision_logit = outputs["excision_logit"]
         peptide_source_idx = (provenance or {}).get("peptide_source_idx")
         if peptide_source_idx is None:
             is_mhc_source = torch.zeros_like(excision_logit)
         else:
+            # Positive test for `mhc`, not "anything that is not protein".
+            # PEPTIDE_SOURCES is ['unknown', 'mhc', 'protein'], so the negated
+            # form also fired on `unknown` -- asserting in-vivo proteasomal
+            # origin for rows whose provenance was simply not recorded.
             is_mhc_source = (
-                peptide_source_idx.long() != self.excision_head.protein_source_index
+                peptide_source_idx.long() == self.excision_head.mhc_source_index
             ).to(excision_logit.dtype)
         invivo_presentation_term = (
             F.softplus(self.w_invivo_excision_presentation)

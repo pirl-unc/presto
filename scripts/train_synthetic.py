@@ -1278,6 +1278,7 @@ def _get_mil_channel(
         "bag_label": getattr(batch, f"{prefix}_bag_label", None),
         "bag_sample_ids": getattr(batch, f"{prefix}_bag_sample_ids", []),
         "provenance": getattr(batch, f"{prefix}_provenance", None),
+        "machinery_idx": getattr(batch, f"{prefix}_machinery_idx", None),
     }
     required = (
         channel["pep_tok"],
@@ -1297,7 +1298,8 @@ def _slice_mil_channel(
 ) -> Dict[str, Any]:
     keep_list = keep.tolist()
     sliced = dict(channel)
-    for key in ("pep_tok", "mhc_a_tok", "mhc_b_tok", "flank_n_tok", "flank_c_tok", "instance_to_bag"):
+    for key in ("pep_tok", "mhc_a_tok", "mhc_b_tok", "flank_n_tok", "flank_c_tok",
+                "instance_to_bag", "machinery_idx"):
         value = channel.get(key)
         if isinstance(value, torch.Tensor):
             sliced[key] = value[keep]
@@ -1496,6 +1498,10 @@ def _run_mil_forward(
     tcell_context: Optional[Dict[str, torch.Tensor]] = None,
     provenance: Optional[Dict[str, torch.Tensor]] = None,
 ) -> Dict[str, Any]:
+    # Declared per-instance machinery. Omitting it makes the model fall back to
+    # a threshold on *predicted* class, which now feeds the elution loss via
+    # the excision -> presentation edge.
+    channel_machinery = channel.get("machinery_idx")
     return model(
         pep_tok=channel["pep_tok"].to(device),
         mhc_a_tok=channel["mhc_a_tok"].to(device),
@@ -1513,6 +1519,11 @@ def _run_mil_forward(
             else None
         ),
         tcell_context=tcell_context,
+        machinery=(
+            channel_machinery.to(device)
+            if isinstance(channel_machinery, torch.Tensor)
+            else None
+        ),
         provenance=(
             {name: value.to(device) for name, value in provenance.items()}
             if provenance

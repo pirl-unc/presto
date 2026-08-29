@@ -237,10 +237,17 @@ class TestConditionMapping:
         ("unperturbed", "none"),
         ("", "none"),
     ])
-    def test_conditions_map_to_inducers(self, condition, expected):
+    def test_conditions_map_to_stimuli(self, condition, expected):
         assert stimulus_for_condition(condition) == expected
 
-    def test_unperturbed_defaults_to_basal_not_zero(self):
-        """Unperturbed cells carry basal interferon tone, not none."""
+    def test_unrecorded_condition_defaults_to_none(self):
+        """`none` is a catch-all, not a claim about interferon tone.
+
+        This assertion previously read "unperturbed cells carry basal
+        interferon tone" -- the overclaim the basal -> none rename exists to
+        retire. Resting cells do carry tonic signaling, but the corpus rarely
+        records whether a sample was resting at all, so the token asserts only
+        the absence of a recorded treatment.
+        """
         assert stimulus_for_condition(None) == "none"
         assert PROCESSING_STIMULUS_TO_IDX["none"] == 0
