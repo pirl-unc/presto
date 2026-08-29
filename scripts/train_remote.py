@@ -27,6 +27,16 @@ that cache survives between runs, so only the first run pays the build cost.
 Set `PRESTO_HITLIST_BUILD=1` to build on the worker when the cache is cold;
 expect it to take a while the first time.
 
+Batch size
+----------
+Peak memory is not linear in ``PRESTO_BATCH_SIZE``. Core-window scoring expands
+the batch by the number of candidate registers (``peptide_len - core_window +
+1``) and repeats the full MHC hidden states for each, so the effective batch is
+``batch_size * candidates``. On a 40 GB A100, ``PRESTO_BATCH_SIZE=256`` with
+class I data OOMs at ~36 GB; 64 is comfortable. Scale it down before scaling
+``--max-mil-instances`` down -- the MIL cap is a global per-batch instance cap
+and is rarely what is filling the card.
+
 Hardware defaults to **one cheap GPU**, chosen by resource floors rather than a
 pinned model name. Presto training is single-GPU; the Stage 4 factorial is 15
 independent runs, so a multi-GPU box would idle most of what it bills for. Set
@@ -201,6 +211,14 @@ def worker_env() -> dict:
         if name.startswith("PRESTO_")
     }
     forwarded.setdefault("CUDA_VISIBLE_DEVICES", os.environ.get("PRESTO_CUDA_DEVICE", "0"))
+    # MIL bags make peak memory scale with batch_size * max_mil_instances, not
+    # batch_size, so allocation is bursty and fragments badly. Expandable
+    # segments let the allocator grow a block instead of failing next to
+    # several GB of reserved-but-unallocated memory.
+    forwarded.setdefault(
+        "PYTORCH_CUDA_ALLOC_CONF",
+        os.environ.get("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True"),
+    )
     # Deliberately NOT forwarding RUNPLZ_OUT: runplz sets it on the worker to
     # the run directory it later collects from. Overriding it to /out sends
     # every artifact somewhere runplz does not rsync back, so the run looks
