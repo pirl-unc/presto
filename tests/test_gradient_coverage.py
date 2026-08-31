@@ -452,3 +452,46 @@ class TestGradientCoverage:
             f"({100 * fraction:.1f}%), above the "
             f"{100 * DEAD_FRACTION_CEILING:.1f}% ceiling."
         )
+
+
+class TestTheAllowlistIsWellFormed:
+    """The allowlist is only useful if its categories mean something.
+
+    Seven groups, each naming a different reason a parameter is untrained and
+    therefore a different fix. A name in two groups means at least one of the
+    stated reasons is wrong.
+    """
+
+    CATEGORIES = {
+        "MODE_GATED_UNREACHABLE": MODE_GATED_UNREACHABLE,
+        "COMPUTED_BUT_UNCONSUMED": COMPUTED_BUT_UNCONSUMED,
+        "NEEDS_ABSENT_DATA": NEEDS_ABSENT_DATA,
+        "IN_VIVO_EXCISION_UNSUPERVISED": IN_VIVO_EXCISION_UNSUPERVISED,
+        "EXCISION_UNREACHABLE": EXCISION_UNREACHABLE,
+        "UNSUPERVISED_OUTPUT_HEADS": UNSUPERVISED_OUTPUT_HEADS,
+        "SOFTMAX_INVARIANT_BIASES": SOFTMAX_INVARIANT_BIASES,
+    }
+
+    def test_no_parameter_is_in_two_categories(self):
+        seen: dict = {}
+        clashes = []
+        for label, names in self.CATEGORIES.items():
+            for name in names:
+                if name in seen:
+                    clashes.append(f"{name}: {seen[name]} and {label}")
+                seen[name] = label
+        assert clashes == [], f"a parameter cannot have two reasons: {clashes}"
+
+    def test_the_union_is_what_allowed_dead_contains(self):
+        """Guards against a category being defined and never wired in."""
+        union: set = set()
+        for names in self.CATEGORIES.values():
+            union |= names
+        assert union == ALLOWED_DEAD
+
+    def test_no_category_is_empty(self):
+        """An empty category is finished work; delete it and lower the ceiling."""
+        empty = sorted(label for label, names in self.CATEGORIES.items() if not names)
+        assert empty == [], (
+            f"these categories are empty and should be removed: {empty}"
+        )
