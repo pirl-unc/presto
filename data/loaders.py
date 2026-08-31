@@ -35,7 +35,11 @@ from torch.utils.data import Dataset, DataLoader, Sampler
 from .bulk_ms import BulkMSRecord
 from .collate import PrestoSample, PrestoCollator
 from .groove import prepare_mhc_input
-from .vocab import normalize_organism, FOREIGN_CATEGORIES
+from .vocab import (
+    default_machinery_for_class,
+    normalize_organism,
+    FOREIGN_CATEGORIES,
+)
 from .allele_resolver import (
     AlleleResolver,
     HUMAN_B2M_SEQUENCE,
@@ -97,7 +101,11 @@ def _normalize_mhc_sequence_lookup(
         variants = {key}
         try:
             variants.add(normalize_allele_name(key))
-        except Exception:
+        except ValueError:
+            # ValueError only: an unparseable allele name is expected data and
+            # is skippable, but `except Exception` also swallowed the
+            # RuntimeError raised when mhcgnomes is unavailable -- which would
+            # silently degrade every allele in the index rather than failing.
             pass
         for variant in variants:
             normalized[variant] = seq
@@ -140,7 +148,9 @@ def _normalize_exact_mhc_input_lookup(
                 continue
             try:
                 variants.add(normalize_allele_name(variant))
-            except Exception:
+            except ValueError:
+                # Unparseable allele name; the raw spelling is still used. A
+                # missing-mhcgnomes RuntimeError must NOT be caught here.
                 pass
         for variant in variants:
             if not variant:
@@ -239,7 +249,7 @@ class ElutionRecord:
     flank_c: str = ""               # C-terminal flanking sequence in the source protein
     # Cellular state at the time the peptide was produced. Conditions the
     # in-vivo termini; see docs/model_io_contract.md Tier 3.
-    inducer: Optional[str] = None
+    stimulus: Optional[str] = None
     apm_perturbation: Optional[str] = None
     cell_type: Optional[str] = None
     tissue: Optional[str] = None
@@ -1887,7 +1897,7 @@ class PrestoDataset(Dataset):
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
                 peptide_source="mhc",
-                processing_inducer=getattr(rec, "inducer", None),
+                processing_stimulus=getattr(rec, "stimulus", None),
                 apm_perturbation=getattr(rec, "apm_perturbation", None),
                 elution_label=1.0 if rec.detected else 0.0,
                 mil_mhc_a_list=mil_mhc_a_list,
@@ -2679,8 +2689,7 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         machinery = (sample.machinery or "").strip().lower()
         if machinery:
             return machinery
-        mhc_class = (sample.mhc_class or "").strip().upper()
-        return "cathepsin" if mhc_class == "II" else "proteasome"
+        return default_machinery_for_class(sample.mhc_class)
 
     @staticmethod
     def _sample_branch(sample: PrestoSample) -> str:

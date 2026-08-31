@@ -163,6 +163,14 @@ def metrics_for_loss_type(
     return regression_metrics(y_true, y_pred)
 
 
+def _logistic(value: float) -> float:
+    """Numerically stable sigmoid for a single scalar."""
+    if value >= 0.0:
+        return 1.0 / (1.0 + math.exp(-value))
+    exp_value = math.exp(value)
+    return exp_value / (1.0 + exp_value)
+
+
 class TaskPredictionAccumulator:
     """Collects masked per-example predictions for one task across batches."""
 
@@ -172,6 +180,7 @@ class TaskPredictionAccumulator:
         self._true: List[float] = []
         self._pred: List[float] = []
         self._sample_ids: List[str] = []
+        self._sources: List[str] = []
 
     def add(
         self,
@@ -179,6 +188,7 @@ class TaskPredictionAccumulator:
         y_pred: Sequence[float],
         mask: Sequence[float],
         sample_ids: Optional[Sequence[str]] = None,
+        sources: Optional[Sequence[str]] = None,
     ) -> None:
         for position, keep in enumerate(mask):
             if float(keep) <= 0.0:
@@ -189,23 +199,92 @@ class TaskPredictionAccumulator:
                 self._sample_ids.append(str(sample_ids[position]))
             else:
                 self._sample_ids.append("")
+            if sources is not None and position < len(sources):
+                self._sources.append(str(sources[position]))
+            else:
+                self._sources.append("")
 
     def __len__(self) -> int:
         return len(self._true)
 
     def metrics(self) -> Dict[str, float]:
-        return metrics_for_loss_type(
-            self.loss_type, np.asarray(self._true), np.asarray(self._pred)
+        """Overall metrics, plus a breakdown by what the negatives actually are.
+
+        A binary metric computed over real positives and *synthetic* negatives
+        measures whether a peptide looks real, not whether it is presented.
+        Mixing them produced AUPRC 1.0000 on 18,324 elution rows with zero
+        overlap between the two score distributions -- a number that reads as a
+        solved task and is a sanity check.
+
+        So three views are reported when synthetic negatives are present:
+
+        ``<task>``            everything, as before
+        ``real_only``         real positives vs real negatives -- the honest
+                              number, and empty when the corpus supplies no
+                              real negatives, which is itself worth seeing
+        ``decoy_<kind>``      real positives vs one decoy family, explicitly
+                              labelled as decoy detection rather than biology
+        """
+        true_all = np.asarray(self._true)
+        pred_all = np.asarray(self._pred)
+        summary = metrics_for_loss_type(self.loss_type, true_all, pred_all)
+        if self.loss_type != "bce" or not self._sources:
+            return summary
+
+        sources = np.asarray(self._sources, dtype=object)
+        is_synthetic = np.asarray(
+            [str(src).startswith("synthetic_negative") for src in sources]
         )
+        if not is_synthetic.any():
+            return summary
+
+        positives = true_all >= 0.5
+        real_mask = ~is_synthetic
+        if real_mask.sum() > 0 and len(np.unique(true_all[real_mask])) > 1:
+            for name, value in metrics_for_loss_type(
+                self.loss_type, true_all[real_mask], pred_all[real_mask]
+            ).items():
+                summary[f"real_only_{name}"] = value
+        else:
+            # Stated explicitly: "no real negatives" is a property of the
+            # corpus that a reader must see, not an absence to skim past.
+            summary["real_only_n_negatives"] = float(
+                int((real_mask & ~positives).sum())
+            )
+
+        for kind in sorted({str(src) for src in sources[is_synthetic]}):
+            selector = positives | (sources == kind)
+            if len(np.unique(true_all[selector])) < 2:
+                continue
+            label = kind.replace("synthetic_negative_", "")
+            for name, value in metrics_for_loss_type(
+                self.loss_type, true_all[selector], pred_all[selector]
+            ).items():
+                summary[f"decoy_{label}_{name}"] = value
+        return summary
 
     def rows(self) -> List[Dict[str, Any]]:
-        """Per-example rows, for the prediction dumps the experiment contract wants."""
+        """Per-example rows, for the prediction dumps the experiment contract wants.
+
+        `y_pred` is the model's raw output, which for a `bce` task is a
+        **logit**, not a probability -- it ranges over the reals. The metrics
+        apply the logistic transform themselves before thresholding, so AUPRC
+        and friends are computed correctly, but a reader of this CSV has no way
+        to know that from the column alone. `y_prob` carries the transformed
+        value for binary tasks so the dump is self-describing, and is empty for
+        regression tasks where no such transform applies.
+
+        Without it, a plausible-looking calibration or Brier computation over
+        this file would be silently wrong.
+        """
+        is_binary = self.loss_type == "bce"
         return [
             {
                 "task": self.task_name,
                 "sample_id": sample_id,
                 "y_true": true_value,
                 "y_pred": pred_value,
+                "y_prob": _logistic(pred_value) if is_binary else "",
             }
             for sample_id, true_value, pred_value in zip(
                 self._sample_ids, self._true, self._pred
@@ -291,7 +370,11 @@ def collect_holdout_predictions(
                     # element-wise; those tasks are scored by loss only.
                     continue
                 accumulators[spec.name].add(
-                    target_vec, pred_vec, mask_vec, sample_ids
+                    target_vec,
+                    pred_vec,
+                    mask_vec,
+                    sample_ids,
+                    getattr(moved, "sample_sources", None),
                 )
     return accumulators
 
@@ -338,7 +421,7 @@ def write_holdout_artifacts(
     predictions_path = out_path / f"{split}_predictions.csv"
     if rows:
         with predictions_path.open("w", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=["task", "sample_id", "y_true", "y_pred"])
+            writer = csv.DictWriter(handle, fieldnames=["task", "sample_id", "y_true", "y_pred", "y_prob"])
             writer.writeheader()
             writer.writerows(rows)
     return payload

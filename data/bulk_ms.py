@@ -58,6 +58,7 @@ from .vocab import (
     EXCISION_MACHINERY_TO_IDX,
     EXCISION_P1_PRIME_BLOCKED,
     EXCISION_P1_RULES,
+    is_encodable_sequence,
 )
 
 # hitlist's canonical enzyme strings -> Presto machinery names.
@@ -95,9 +96,25 @@ class BulkMSRecord:
     acquisition: Dict[str, Any] = field(default_factory=dict)
 
 
+#: Case-folded view of ENZYME_TO_MACHINERY, built once.
+_ENZYME_TO_MACHINERY_FOLDED = {
+    key.strip().lower(): value for key, value in ENZYME_TO_MACHINERY.items()
+}
+
+
 def machinery_for_enzyme(enzyme: str) -> str:
-    """Map a hitlist ``digestion_enzyme`` string to a machinery name."""
-    return ENZYME_TO_MACHINERY.get(str(enzyme or "").strip(), "unknown")
+    """Map a hitlist ``digestion_enzyme`` string to a machinery name.
+
+    Case-insensitive. The lookup used to be exact, and the corpus happens to
+    write "Trypsin/P (cleaves K/R except before P)" and "LysC" with exactly the
+    capitalization in the table -- so it worked, by luck. A lowercase export, a
+    hitlist schema change or a hand-written test row would have mapped every
+    enzyme to "unknown", and rows with unknown machinery are silently skipped,
+    so the entire shotgun corpus would vanish with no error.
+    """
+    return _ENZYME_TO_MACHINERY_FOLDED.get(
+        str(enzyme or "").strip().lower(), "unknown"
+    )
 
 
 def detectability_from_depth(
@@ -151,6 +168,14 @@ def _mismatched_machinery(
     return rng.choice(candidates)
 
 
+def _iter_frame_rows(frame, chunk_size: int = 50_000):
+    """Yield row dicts in chunks rather than materializing the whole frame."""
+    n_rows = len(frame)
+    for start in range(0, n_rows, chunk_size):
+        for row in frame.iloc[start : start + chunk_size].to_dict("records"):
+            yield row
+
+
 def records_from_bulk_frame(
     frame,
     *,
@@ -164,17 +189,35 @@ def records_from_bulk_frame(
     ``uniprot_acc``, ``n_fractions_in_run``, ``n_replicates_detected``.
     """
     rng = random.Random(seed)
-    rows = frame.to_dict("records") if hasattr(frame, "to_dict") else list(frame)
-    if max_records is not None and 0 < max_records < len(rows):
-        rows = rng.sample(rows, max_records)
+    # Stream by default. `to_dict("records")` materializes one dict per row for
+    # the whole bulk-proteomics table up front, which is the memory profile
+    # `hitlist_source._iter_row_dicts` exists to avoid. Only the capped path
+    # needs a concrete sequence, because rng.sample must index it.
+    if hasattr(frame, "to_dict"):
+        if max_records is not None and max_records > 0:
+            rows = frame.to_dict("records")
+            if max_records < len(rows):
+                rows = rng.sample(rows, max_records)
+        else:
+            rows = _iter_frame_rows(frame)
+    else:
+        rows = list(frame)
+        if max_records is not None and 0 < max_records < len(rows):
+            rows = rng.sample(rows, max_records)
 
     records: List[BulkMSRecord] = []
     machinery_counts: Dict[str, int] = {}
     n_excision_negatives = 0
+    n_unencodable_peptides = 0
 
     for row in rows:
-        peptide = str(row.get("peptide") or "").strip()
-        if not peptide:
+        peptide = str(row.get("peptide") or "").strip().upper()
+        # Same policy as the hitlist adapter: a peptide the tokenizer cannot
+        # represent is dropped here rather than raising deep inside collation
+        # partway through an epoch. Shotgun peptides come from whole-proteome
+        # digests, so genuine-but-unmodelled residues (selenocysteine) do occur.
+        if not is_encodable_sequence(peptide):
+            n_unencodable_peptides += 1
             continue
         machinery = machinery_for_enzyme(row.get("digestion_enzyme"))
         if machinery == "unknown":
@@ -222,6 +265,10 @@ def records_from_bulk_frame(
         "n_observed": sum(1 for r in records if r.observed),
         "n_excision_negatives": n_excision_negatives,
         "machinery_counts": dict(sorted(machinery_counts.items(), key=lambda kv: -kv[1])),
+        # Dropped rows must be visible: a corpus where selenocysteine-bearing
+        # peptides silently vanish would otherwise report identical stats to
+        # one where they never existed.
+        "n_unencodable_peptides": n_unencodable_peptides,
     }
     return records, stats
 

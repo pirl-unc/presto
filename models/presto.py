@@ -47,7 +47,7 @@ from ..data.vocab import (
     EXCISION_P1_RULES,
     APM_PERTURBATIONS,
     PEPTIDE_SOURCE_TO_IDX,
-    PROCESSING_INDUCERS,
+    PROCESSING_STIMULI,
     PROTEASOME_MIXTURE_COMPONENTS,
     excision_machinery_index,
     N_ORGANISM_CATEGORIES,
@@ -806,7 +806,7 @@ class Presto(nn.Module):
                 EXCISION_MACHINERY_TO_IDX[name]
                 for name in PROTEASOME_MIXTURE_COMPONENTS
             ],
-            n_inducer=len(PROCESSING_INDUCERS),
+            n_stimulus=len(PROCESSING_STIMULI),
             n_apm=len(APM_PERTURBATIONS),
             protein_source_index=PEPTIDE_SOURCE_TO_IDX["protein"],
         )
@@ -3021,7 +3021,7 @@ class Presto(nn.Module):
             peptide_len=peptide_lengths,
             peptide_tokens=pep_tok,
             peptide_source_idx=(provenance or {}).get("peptide_source_idx"),
-            processing_inducer_idx=(provenance or {}).get("processing_inducer_idx"),
+            processing_stimulus_idx=(provenance or {}).get("processing_stimulus_idx"),
             apm_perturbation_idx=(provenance or {}).get("apm_perturbation_idx"),
         )
         outputs.update(excision_outputs)

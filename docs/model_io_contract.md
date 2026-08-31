@@ -77,7 +77,7 @@ extracted intact and denatured before any enzyme touched it.
 |---|---|---|
 | `host_species` | ~50 values | `host` (100% populated) |
 | `mhc_species` | 21 values | `mhc_species` (100%) — differs from `host_species` for transfectants |
-| `inducer` | `{basal, ifn_gamma, ifn_ab, tnf_alpha, tlr}` | `condition_category`; **default `basal`, not zero** — unperturbed cells carry basal interferon tone |
+| `stimulus` | `{none, ifn_gamma, ifn_type1, tnf_alpha, tlr, cell_activation, cytokine_unspecified}` | `condition_category`; **default `none`** — read as "not known to be stimulated", which conflates an untreated sample with an unrecorded one. `cytokine_unspecified` is the separate case where a cytokine *was* applied but the deposit does not name it. |
 | `apm_perturbation` | see below | `apm_*` / `condition_category` |
 
 `apm_perturbation` is grouped by **mechanism**, not by gene. Per-gene flags exist
@@ -239,7 +239,7 @@ Recorded rather than glossed. Each is tracked in `tasks/todo.md` (repository, ou
    random_rows` reproduces the old behavior and says so loudly.
 
 3. ~~Tiers 2–4 are one flat `machinery` axis.~~ Split into `peptide_source`,
-   `enzymatic_digest`, `processing_inducer` and `apm_perturbation`, with the source
+   `enzymatic_digest`, `processing_stimulus` and `apm_perturbation`, with the source
    acting as a soft gate rather than a feature.
 4. ~~`s_len` conflates two mechanisms.~~ Length and missed-cleavage terms are gated to
    the protein branch; the in-vivo branch contributes neither, so the protease is no
