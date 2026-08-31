@@ -17,6 +17,7 @@ import pytest
 torch = pytest.importorskip("torch")
 
 from presto.data.tokenizer import Tokenizer  # noqa: E402
+from presto.models.presto import Presto  # noqa: E402
 
 
 @pytest.fixture
@@ -79,4 +80,77 @@ class TestCollatorKeepsTheJunction:
             "the N-flank's P1 residue was truncated away; the excision head "
             "reads this residue, so the junction is now scored from context "
             "that does not include it"
+        )
+
+
+class TestServingMatchesTraining:
+    """Flank handling at serving time must match the collator exactly.
+
+    Two literals had drifted apart. The collator keeps `DEFAULT_MAX_FLANK_LEN`
+    (25) residues and truncates the N-flank from the **left**, because the
+    N-flank's last residue is P1 of the N-terminal junction and is what the
+    excision head reads. The predictor hard-coded 30 and truncated from the
+    right, so serving kept five residues training never used and scored a
+    different residue at the junction than training ever saw.
+
+    Train/serve skew is silent by construction -- both sides run without error
+    and only the numbers disagree -- so it is pinned behaviorally here rather
+    than by reading the constants.
+    """
+
+    @staticmethod
+    def _model():
+        torch.manual_seed(0)
+        return Presto(d_model=32, n_layers=2, n_heads=4)
+
+    def test_predictor_uses_the_collator_flank_length(self):
+        from presto.data.collate import DEFAULT_MAX_FLANK_LEN
+        from presto.inference.predictor import Predictor
+
+        predictor = Predictor(self._model(), device="cpu")
+        assert predictor._flank_len == DEFAULT_MAX_FLANK_LEN
+
+    def test_n_flank_keeps_the_junction_residue_on_both_paths(self):
+        """The residue adjacent to the peptide must survive on both sides."""
+        from presto.data.collate import DEFAULT_MAX_FLANK_LEN
+        from presto.data.tokenizer import Tokenizer
+
+        tokenizer = Tokenizer()
+        # Longer than the cap, with a distinctive final residue: that residue
+        # is P1 of the N-terminal junction and must be kept by both paths.
+        flank = "A" * (DEFAULT_MAX_FLANK_LEN + 10) + "W"
+        encoded = tokenizer.batch_encode(
+            [flank], max_len=DEFAULT_MAX_FLANK_LEN, pad=True, truncate="left"
+        )
+        tryptophan = tokenizer.aa_to_idx["W"]
+        assert tryptophan in encoded[0].tolist(), (
+            "left truncation dropped the junction residue the excision head reads"
+        )
+
+        right = tokenizer.batch_encode(
+            [flank], max_len=DEFAULT_MAX_FLANK_LEN, pad=True, truncate="right"
+        )
+        assert tryptophan not in right[0].tolist(), (
+            "fixture is not discriminating: right truncation should lose it"
+        )
+
+    def test_predictor_left_truncates_the_n_flank(self):
+        """`_flank_len` alone is not enough -- direction is the other half.
+
+        Source-inspected because the encode happens deep inside a batched
+        tiling path; the point is that the predictor cannot quietly go back to
+        the default right truncation while still passing the length check.
+        """
+        import inspect
+
+        from presto.inference import predictor as predictor_module
+
+        source = inspect.getsource(predictor_module)
+        marker = "flank_n_tok = self.tokenizer.batch_encode("
+        assert marker in source, "predictor no longer encodes an N-flank here"
+        call = source[source.index(marker) : source.index(marker) + 400]
+        assert 'truncate="left"' in call, (
+            "the predictor right-truncates the N-flank while the collator "
+            "left-truncates it; serving would score a different junction "
+            "residue than training"
         )
