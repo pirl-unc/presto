@@ -12,6 +12,12 @@ import pytest
 pd = pytest.importorskip("pandas")
 
 from presto.data.hitlist_source import (  # noqa: E402
+    BINDING_COLUMNS,
+    MS_COLUMNS,
+    PROTEIN_MAPPING_COLUMNS,
+    SHARED_COLUMNS,
+    assert_columns_present,
+    training_columns,
     _clean,
     _method_counts,
     _qualifier_from_inequality,
@@ -74,6 +80,14 @@ def _install_stub_hitlist(monkeypatch, binding_rows, ms_rows):
         frame = pd.DataFrame(rows)
         if frame.empty:
             frame = pd.DataFrame(columns=columns or [])
+        # Real hitlist returns every column it has that was asked for; a
+        # fixture row only spells out the fields that test cares about. Fill
+        # the rest in as empty so the stub models "hitlist has this column and
+        # it happens to be blank" rather than "hitlist dropped it", which is
+        # what `assert_columns_present` is there to catch.
+        for column in columns or []:
+            if column not in frame.columns:
+                frame[column] = ""
         return frame
 
     module.generate_training_table = generate_training_table
@@ -228,3 +242,78 @@ class TestRouting:
         _, _, _, processing, _, tcell, tcr, stats = load_records_from_hitlist()
         assert processing == [] and tcell == [] and tcr == []
         assert stats["counts"]["processing"] == 0
+
+
+class TestColumnContract:
+    """The set of columns Presto asks hitlist for.
+
+    hitlist projects by intersection (`export._project_training_columns` keeps
+    `[c for c in requested if c in df.columns]`), so a column renamed or
+    withdrawn upstream comes back absent rather than raising. Nothing else in
+    the pipeline notices: the feature built from it becomes a constant and the
+    loss barely moves. These tests are the place that notices.
+    """
+
+    def test_evidence_families_extend_the_shared_set(self):
+        assert set(SHARED_COLUMNS) <= set(BINDING_COLUMNS)
+        assert set(SHARED_COLUMNS) <= set(MS_COLUMNS)
+
+    def test_constants_are_immutable(self):
+        # A public list would let a caller append to the contract in place and
+        # change what every later load requests.
+        for columns in (SHARED_COLUMNS, BINDING_COLUMNS, MS_COLUMNS):
+            assert isinstance(columns, tuple)
+        assert isinstance(PROTEIN_MAPPING_COLUMNS, frozenset)
+
+    def test_no_duplicate_columns(self):
+        for columns in (BINDING_COLUMNS, MS_COLUMNS):
+            assert len(columns) == len(set(columns))
+
+    def test_training_columns_returns_a_fresh_mutable_list(self):
+        first = training_columns("ms", include_flanks=True)
+        first.append("scratch")
+        assert "scratch" not in training_columns("ms", include_flanks=True)
+
+    def test_flanks_are_dropped_only_when_not_mapping_proteins(self):
+        with_flanks = training_columns("ms", include_flanks=True)
+        without = training_columns("ms", include_flanks=False)
+        assert PROTEIN_MAPPING_COLUMNS <= set(with_flanks)
+        assert not PROTEIN_MAPPING_COLUMNS & set(without)
+        assert set(with_flanks) - set(without) == PROTEIN_MAPPING_COLUMNS
+
+    def test_unknown_evidence_family_raises(self):
+        # Silently projecting the wrong columns for a whole run is worse than
+        # a KeyError at the call site.
+        with pytest.raises(KeyError):
+            training_columns("elution", include_flanks=True)
+
+    def test_apm_state_columns_are_per_sample_not_study_level(self):
+        """The study roll-up ORs across a deposit, so a WT control inside a
+        knockout study inherits the flag (pirl-unc/hitlist#353)."""
+        assert "apm_genes_perturbed" in MS_COLUMNS
+        assert "condition_category" in MS_COLUMNS
+        assert "study_apm_perturbed" not in MS_COLUMNS
+        assert "study_apm_genes" not in MS_COLUMNS
+
+    def test_assert_columns_present_accepts_a_complete_frame(self):
+        frame = pd.DataFrame(columns=training_columns("ms", include_flanks=True))
+        assert_columns_present(frame, "ms", include_flanks=True)
+
+    def test_assert_columns_present_names_a_renamed_column(self):
+        columns = training_columns("ms", include_flanks=True)
+        columns.remove("apm_genes_perturbed")
+        frame = pd.DataFrame(columns=columns)
+        with pytest.raises(RuntimeError, match="apm_genes_perturbed"):
+            assert_columns_present(frame, "ms", include_flanks=True)
+
+    def test_assert_columns_present_tolerates_extra_columns(self):
+        # hitlist always adds `evidence_kind`, and grows new columns between
+        # releases; only absence is a problem.
+        frame = pd.DataFrame(
+            columns=training_columns("binding", include_flanks=False) + ["evidence_kind"]
+        )
+        assert_columns_present(frame, "binding", include_flanks=False)
+
+    def test_flank_columns_absent_is_fine_when_not_requested(self):
+        frame = pd.DataFrame(columns=training_columns("ms", include_flanks=False))
+        assert_columns_present(frame, "ms", include_flanks=False)

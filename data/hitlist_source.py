@@ -19,12 +19,41 @@ Coverage note: hitlist's training table covers **MS/elution and in-vitro
 binding evidence only**. T-cell response, TCR evidence, and IEDB processing
 exports are not in it, so those modalities still come from the merged TSV. See
 ``load_records_from_hitlist`` for what this module does and does not return.
+
+The column contract
+-------------------
+
+What Presto asks hitlist for is public, because it is a cross-repository
+interface rather than a detail of this module:
+
+``SHARED_COLUMNS``
+    Peptide, MHC context, provenance, flanks. Needed by every evidence family.
+``BINDING_COLUMNS``, ``MS_COLUMNS``
+    ``SHARED_COLUMNS`` plus what is specific to in-vitro binding and to
+    elution, respectively. ``MS_COLUMNS`` is where sample provenance and
+    antigen-processing state enter the model, and it carries the version
+    constraint: the per-sample / study-level APM split needs hitlist >= 1.46.0.
+``PROTEIN_MAPPING_COLUMNS``
+    The subset that exists only under ``map_source_proteins=True``.
+``training_columns(evidence, include_flanks=...)``
+    The accessor. Use it rather than the constants directly, so the
+    flank-dropping rule lives in exactly one place.
+``assert_columns_present(frame, evidence, include_flanks=...)``
+    The guard, run on every load.
+
+Requiring these to be named from the outside is not ceremony. hitlist projects
+columns by intersection, so asking for a column it no longer has is not an
+error there and not an exception here -- the frame simply comes back narrower
+and whatever was built from that column quietly becomes a constant. A rename
+upstream is therefore invisible at the call site by default, which is why the
+set is public, asserted on load, and pinned in
+``tests/test_hitlist_source.py``.
 """
 
 from __future__ import annotations
 
 import random
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, FrozenSet, List, Optional, Sequence, Tuple, Union
 
 from .vocab import (
     apm_group_for_genes,
@@ -43,10 +72,26 @@ from .loaders import (
     TcrEvidenceRecord,
 )
 
-# Columns projected out of the training table. Kept explicit because the full
-# table is 95 columns wide and several million rows; projecting early is the
-# difference between a few hundred MB and an OOM.
-_SHARED_COLUMNS = [
+# ---------------------------------------------------------------------------
+# The hitlist column contract
+#
+# These names are the whole of what Presto asks hitlist for. They are public
+# because they are an interface between two repositories, not an implementation
+# detail of this module: an upstream rename or semantic change to any one of
+# them lands here as silently wrong training data, so the set has to be
+# nameable from the outside -- by tests, by a schema check, and by an issue
+# filed against either repo.
+#
+# The projection is kept explicit rather than taking the whole frame because
+# hitlist's training table is 95 columns wide and several million rows;
+# projecting at the source is the difference between a few hundred MB and an
+# OOM.
+# ---------------------------------------------------------------------------
+
+#: What every evidence family needs regardless of assay: the peptide, its MHC
+#: context, where the row came from, and the flanking sequence that is the
+#: reason this loader exists at all (see the module docstring).
+SHARED_COLUMNS: Tuple[str, ...] = (
     "peptide",
     "mhc_restriction",
     "mhc_allele_set",
@@ -58,43 +103,139 @@ _SHARED_COLUMNS = [
     "c_flank",
     "evidence_row_id",
     "is_canonical_transcript",
-]
+)
 
-_BINDING_COLUMNS = _SHARED_COLUMNS + [
+#: `SHARED_COLUMNS` plus the in-vitro measurement itself. `response_measured`
+#: carries IEDB's controlled vocabulary and decides which record type a row
+#: becomes; see `_AFFINITY_RESPONSES` and friends below.
+BINDING_COLUMNS: Tuple[str, ...] = SHARED_COLUMNS + (
     "response_measured",
     "quantitative_value",
     "measurement_units",
     "measurement_inequality",
     "assay_method",
-]
+)
 
-_MS_COLUMNS = _SHARED_COLUMNS + [
+#: `SHARED_COLUMNS` plus the biological sample an eluted peptide came out of.
+#:
+#: Sample provenance is requested as orthogonal axes rather than one flat
+#: class. A single label derived from `cell_line_name` cannot express the space
+#: that actually matters -- solid tissue, solid and haematological cancers,
+#: donor blood, PBMC, sorted immune cells, and cell lines from all of those
+#: origins. That space is a product of lineage x malignancy x immortalization x
+#: site, and collapsing it put a primary AML blast and an AML cell line in the
+#: same bucket, which is the distinction most likely to matter: lines drift and
+#: routinely lose immunoproteasome and TAP. The four `src_*` booleans are
+#: computed by hitlist at 100% coverage, versus 58.3% for `cell_line_name`.
+#:
+#: Tier 3 is cellular state. `condition_category` is the per-sample condition
+#: and `apm_genes_perturbed` names the perturbed antigen-processing genes.
+#: The study-level roll-up (`study_apm_perturbed` / `study_apm_genes`) is
+#: deliberately not requested: it is ORed across a deposit, so a WT control
+#: inside a knockout study inherits the flag and the arm contrast cancels.
+#:
+#: That split requires **hitlist >= 1.46.0** (pirl-unc/hitlist#353). Earlier
+#: releases had no study-level column at all, because `apm_genes_perturbed`
+#: *was* the ORed one -- see `presto#13`. Two further caveats are tracked
+#: rather than fixed here: `apm_genes_perturbed` is empty both for a genuine
+#: control and for a row whose arm could not be resolved (`presto#15`,
+#: `pirl-unc/hitlist#392`), and the category vocabulary drifts with hitlist
+#: releases (`presto#14`).
+MS_COLUMNS: Tuple[str, ...] = SHARED_COLUMNS + (
     "cell_line_name",
     "source_tissue",
     "cell_type",
-    # Sample provenance, as orthogonal axes rather than one flat class.
-    #
-    # A single label derived from `cell_line_name` cannot express the space
-    # that actually matters -- solid tissue, solid and haematological cancers,
-    # donor blood, PBMC, sorted immune cells, and cell lines from all of those
-    # origins. That space is a product of lineage x malignancy x
-    # immortalization x site, and collapsing it put a primary AML blast and an
-    # AML cell line in the same bucket, which is the distinction most likely to
-    # matter: lines drift and routinely lose immunoproteasome and TAP.
-    #
-    # These two are booleans hitlist already computes at 100% coverage, versus
-    # 58.3% for `cell_line_name`.
     "src_cell_line",
     "src_healthy_tissue",
     "src_cancer",
     "src_adjacent_to_tumor",
-    # Tier 3 cellular state. `condition_category` is the per-sample truth;
-    # `apm_genes_perturbed` names the genes. The study-level roll-up
-    # (`study_apm_perturbed`) is deliberately not used: it is ORed across a
-    # study, so a WT control inside a KO study inherits the flag.
     "condition_category",
     "apm_genes_perturbed",
-]
+)
+
+#: Columns hitlist populates only under `map_source_proteins=True`, by joining
+#: `peptide_mappings.parquet`.
+#:
+#: Subtracting them when flanks are skipped is hygiene, not necessity:
+#: `hitlist.export._project_training_columns` intersects the request with what
+#: the frame actually has, so an unavailable column is dropped in silence
+#: rather than raising. Keeping the request honest about what it expects is
+#: what lets `assert_columns_present` tell a deliberate omission apart from an
+#: upstream rename.
+PROTEIN_MAPPING_COLUMNS: FrozenSet[str] = frozenset(
+    {"n_flank", "c_flank", "is_canonical_transcript"}
+)
+
+#: The `include_evidence` value hitlist expects, mapped to what we ask it for.
+COLUMNS_BY_EVIDENCE: Dict[str, Tuple[str, ...]] = {
+    "binding": BINDING_COLUMNS,
+    "ms": MS_COLUMNS,
+}
+
+
+def training_columns(evidence: str, *, include_flanks: bool) -> List[str]:
+    """Columns to request from ``hitlist.generate_training_table``.
+
+    Parameters
+    ----------
+    evidence
+        A key of :data:`COLUMNS_BY_EVIDENCE` -- ``"binding"`` or ``"ms"``.
+        These are hitlist's own ``include_evidence`` values, so the caller
+        passes the same string to both arguments.
+    include_flanks
+        Whether the caller is running with ``map_source_proteins=True``. When
+        False, :data:`PROTEIN_MAPPING_COLUMNS` are dropped, because hitlist
+        only materializes them via the protein-mapping join.
+
+    Returns
+    -------
+    list of str
+        A fresh list, safe for the caller to mutate. The module constants are
+        tuples so that a caller cannot append to the contract by accident.
+
+    Raises
+    ------
+    KeyError
+        If ``evidence`` is not a known family. Deliberately not tolerant: a
+        typo here would silently project the wrong columns for a whole
+        training run.
+    """
+    columns = COLUMNS_BY_EVIDENCE[evidence]
+    if include_flanks:
+        return list(columns)
+    return [c for c in columns if c not in PROTEIN_MAPPING_COLUMNS]
+
+
+def assert_columns_present(frame, evidence: str, *, include_flanks: bool) -> None:
+    """Fail loudly if hitlist did not return every column we asked for.
+
+    hitlist projects with an intersection -- ``_project_training_columns``
+    keeps ``[c for c in requested if c in df.columns]`` -- so a column that has
+    been renamed, moved behind a flag, or dropped upstream does not raise. It
+    just is not there, and the feature built from it silently becomes a
+    constant. That is the failure mode this whole contract exists to catch, so
+    it is worth one set difference per load.
+
+    Raises
+    ------
+    RuntimeError
+        Naming the missing columns and the installed hitlist version, which is
+        almost always the thing that changed.
+    """
+    expected = set(training_columns(evidence, include_flanks=include_flanks))
+    missing = sorted(expected - set(frame.columns))
+    if not missing:
+        return
+    import hitlist
+
+    raise RuntimeError(
+        f"hitlist returned {len(frame.columns)} columns for evidence={evidence!r} "
+        f"but {len(missing)} requested column(s) are absent: {', '.join(missing)}. "
+        f"Installed hitlist is {getattr(hitlist, '__version__', 'unknown')}; these "
+        "columns are dropped silently by hitlist's projection, so this is most "
+        "likely an upstream rename. Reconcile MS_COLUMNS / BINDING_COLUMNS "
+        "against the current hitlist export before training on this frame."
+    )
 
 # ``response_measured`` is the same controlled vocabulary the merged TSV carries
 # in ``value_type``, so these strings flow through to
@@ -275,16 +416,16 @@ def load_records_from_hitlist(
 
     binding_frame = hitlist.generate_training_table(
         include_evidence="binding",
-        columns=_BINDING_COLUMNS if include_flanks else
-        [c for c in _BINDING_COLUMNS if c not in {"n_flank", "c_flank", "is_canonical_transcript"}],
+        columns=training_columns("binding", include_flanks=include_flanks),
         **shared_filters,
     )
     ms_frame = hitlist.generate_training_table(
         include_evidence="ms",
-        columns=_MS_COLUMNS if include_flanks else
-        [c for c in _MS_COLUMNS if c not in {"n_flank", "c_flank", "is_canonical_transcript"}],
+        columns=training_columns("ms", include_flanks=include_flanks),
         **shared_filters,
     )
+    assert_columns_present(binding_frame, "binding", include_flanks=include_flanks)
+    assert_columns_present(ms_frame, "ms", include_flanks=include_flanks)
 
     if include_flanks:
         binding_frame = _select_best_mapping(binding_frame)
@@ -517,3 +658,16 @@ def _cap_list(records: List[Any], cap: Optional[int], seed: int) -> List[Any]:
         return records
     rng = random.Random(seed)
     return rng.sample(records, cap)
+
+
+__all__ = [
+    "SHARED_COLUMNS",
+    "BINDING_COLUMNS",
+    "MS_COLUMNS",
+    "PROTEIN_MAPPING_COLUMNS",
+    "COLUMNS_BY_EVIDENCE",
+    "training_columns",
+    "assert_columns_present",
+    "normalize_ingested_peptide",
+    "load_records_from_hitlist",
+]
