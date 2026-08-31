@@ -1607,31 +1607,31 @@ class ExcisionHead(nn.Module):
                 peptide_source_idx.long() == self.protein_source_index
             ).to(c_terminus_score.dtype)
 
-        # Cellular state is an output axis, not an input.
-        #
-        # These profiles used to be indexed by the observed APM state and
-        # stimulus, which meant an in-vivo excision prediction required
-        # declaring the cell's condition first -- the pattern
-        # docs/assay_modeling_contract.md forbids, and "stimulation context" is
-        # named in it explicitly.
-        #
-        # They are now swept: one predicted excision logit per condition, with
-        # the baseline (index 0, the unperturbed/unstimulated entry) used for
-        # the scalar `excision_logit` that feeds presentation. The observed
-        # condition routes which panel column the loss reads.
-        #
-        # This keeps what gap 2 needed -- the in-vivo profiles still receive
-        # gradient -- while reversing how they get it: from being predicted
-        # across conditions rather than from the condition being fed in.
+        # Cellular state is a causal INPUT here, and the panels below are
+        # counterfactual outputs. See docs/assay_modeling_contract.md: a
+        # TAP-null cell genuinely presents a different repertoire, and the
+        # questioner knows which cell they are asking about, so conditioning on
+        # it uses information rather than leaking it. This is the same category
+        # as the MHC allele, not the same category as "was this ELISPOT".
         p1_c_long = p1_c_idx.long()
         p1_n_long = p1_n_idx.long()
         baseline_index = torch.zeros_like(machinery_idx)
+        apm = (
+            apm_perturbation_idx.long()
+            if apm_perturbation_idx is not None
+            else baseline_index
+        )
+        stimulus = (
+            processing_stimulus_idx.long()
+            if processing_stimulus_idx is not None
+            else baseline_index
+        )
         invivo_c = (
-            self.invivo_profile_c[baseline_index, p1_c_long]
-            + self.stimulus_profile_c[baseline_index, p1_c_long]
+            self.invivo_profile_c[apm, p1_c_long]
+            + self.stimulus_profile_c[stimulus, p1_c_long]
             + context_c
         )
-        invivo_n = self.invivo_profile_n[baseline_index, p1_n_long] + context_n
+        invivo_n = self.invivo_profile_n[apm, p1_n_long] + context_n
 
         c_terminus_score = is_protein * c_terminus_score + (1.0 - is_protein) * invivo_c
         n_terminus_score = is_protein * n_terminus_score + (1.0 - is_protein) * invivo_n
@@ -1645,13 +1645,18 @@ class ExcisionHead(nn.Module):
 
         bias = (
             is_protein * self.bias[machinery_idx]
-            + (1.0 - is_protein) * self.invivo_bias[baseline_index]
+            + (1.0 - is_protein) * self.invivo_bias[apm]
         )
         logit = n_terminus_score + c_terminus_score + length_score + missed_cleavage_score + bias
 
-        # Per-condition tracks. Each column is the excision logit this peptide
-        # would show under one cellular condition, holding the other axis at
-        # baseline -- the same per-axis marginal structure the assay panels use.
+        # Counterfactual tracks: the excision logit this peptide would show
+        # under each cellular condition, holding the other axis at baseline.
+        #
+        # These are not a substitute for conditioning -- the scalar
+        # `excision_logit` above uses the observed state, because that state is
+        # known and causal. The panel answers a different and genuinely useful
+        # question: "what would this look like in a TAP-null cell, or under
+        # IFN-gamma", which is what makes the machinery interpretable.
         not_protein = 1.0 - is_protein
         apm_panel = (
             logit.unsqueeze(1)

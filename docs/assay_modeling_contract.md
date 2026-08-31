@@ -5,28 +5,49 @@ The filename is historical; the scope is repo-wide.
 
 ## Canonical Invariant
 
-Presto must never consume assay-selector metadata as predictive input.
+Presto must never consume **measurement-apparatus** metadata as predictive
+input. It may consume **biological state**.
 
-The canonical sequence-side inputs are:
-- `nflank`
-- `peptide`
-- `cflank`
-- `mhc_a`
-- `mhc_b`
+The distinction is causal, not syntactic. Both are categorical per-example
+metadata; what separates them is whether the thing is part of the system being
+measured or part of the instrument measuring it.
 
-There is intentionally no per-example assay-selector input such as:
-- assay type
-- assay method
-- assay prep
-- assay geometry
-- assay readout
-- instrument/platform id
-- APC type
-- culture context
-- stimulation context
-- peptide format
+**Biological state — allowed as input.** Properties of the cells or the
+molecules, which causally determine what is presented and which you know when
+you pose the question:
+
+- `peptide`, `nflank`, `cflank`, `mhc_a`, `mhc_b`
+- host species
+- antigen-presenting cell type (tumour line vs dendritic cell vs other) --
+  this sets the expression level of every antigen-processing component, which
+  is the mechanism the model is trying to represent
+- antigen-processing machinery perturbations (TAP, ERAP, B2M, tapasin
+  knockouts and inhibitors)
+- cytokine and stimulation state (IFN-gamma, type I IFN, TLR)
+
+These are inputs for the same reason the MHC allele is: a TAP-null cell
+genuinely presents a different repertoire, and "what does this tumour present"
+is a question whose answer depends on the tumour. Asking the model to predict
+across them instead would discard information the questioner actually has.
+
+**Measurement apparatus — forbidden as input.** Properties of how the
+observation was made, which you do not know at prediction time and do not want
+reflected in the answer:
+
+- assay type, method, prep, geometry, readout
+- instrument or platform id
+- peptide format (pulsed peptide vs expressed construct)
 - assay duration bucket
-- assay id / assay selector / assay context tensor
+- culture context, insofar as it describes the assay rather than the cells
+- any assay id / assay selector / assay context tensor
+
+Feeding these means the model cannot answer "is this peptide presented"
+without first being told how you intend to look, and it lets assay-specific
+bias masquerade as biology.
+
+**The test to apply to a new field:** if two rows differ only in this field,
+are they two different biological situations, or the same situation observed
+two ways? The first is an input; the second is an output track.
 
 ## Output Contract
 
@@ -78,48 +99,50 @@ For clarity:
 
 ## Compliance status (2026-08-31)
 
-Presto is a many-output model in the sense a DNA sequence model is: the trunk
-reads peptide and MHC, and every assay configuration and cellular condition is
-an *output track*. Track identity selects which output the loss reads; it never
-selects what the model computes.
+Inputs and outputs are split on the causal test above, not on whether a field
+is categorical.
 
-**Verified as observable invariance**, not by reading the source --
-`tests/test_many_output_contract.py` asserts the prediction does not move when
-each forbidden input is supplied:
+**Biological state — inputs, verified to reach the prediction:**
 
-| forbidden input | status |
-|---|---|
-| `binding_context` (assay type, prep, geometry, readout) | argument ignored; input-side embeddings deleted |
-| `tcell_context` (7 keys) | arguments removed from `TCellAssayHead.forward` |
-| cellular state (APM perturbation, stimulation context) | swept, not indexed; no input embedding exists |
+| field | vocabulary | corpus coverage |
+|---|---|---|
+| peptide, flanks, MHC alpha/beta | sequence | — |
+| host species | — | — |
+| `apc_cell_class` | 10 classes by processing phenotype | 67.5% of elution rows |
+| `apm_perturbation` | 7 (TAP, ERAP, B2M, PLC, class II loading) | 5.69% of class I rows |
+| `processing_stimulus` | 6 (IFN-gamma, type I IFN, TNF, TLR, activation) | 3.86% |
 
-**Output tracks:**
+`apc_cell_class` groups cell lines by antigen-processing phenotype rather than
+tissue of origin, because that is the mechanism: professional APCs and
+lymphoblastoid lines carry constitutive immunoproteasome, high TAP and high
+MHC-I, while most solid-tumour lines carry little immunoproteasome unless
+induced and some have lost TAP or B2M outright. An unrecognized line maps to
+`unknown`, never to a guess.
+
+**Measurement apparatus — output tracks, verified inert as inputs:**
 
 | family | tracks |
 |---|---|
 | binding observables | `KD`, `IC50`, `EC50`, `Tm`, `t_half`, `koff`, `kon` |
-| binding assay descriptors | `binding_assay_panel_*` — 11 types, 6 preps, 5 geometries, 4 readouts |
-| T-cell conditions | `tcell_panel_logits` — method, readout, APC type, culture, stim, format |
-| cellular state | `excision_panel_apm` (7), `excision_panel_stimulus` (6) |
+| binding assay descriptors | `binding_assay_panel_*` -- 11 types, 6 preps, 5 geometries, 4 readouts |
+| T-cell assay conditions | `tcell_panel_logits` -- method, readout, APC type, culture, stim, format |
 | TCR | `tcr_evidence_method` |
-| MHC | `mhc_class`, `mhc_species`, `mhc_a_fine_type`, `mhc_b_fine_type` |
+| MHC identity | `mhc_class`, `mhc_species`, `mhc_a_fine_type`, `mhc_b_fine_type` |
 
-**What is still an input, and why.** `peptide_source_idx` and
-`enzymatic_digest_idx` select which branch computes the peptide termini --
-in-vivo proteasomal versus in-vitro protease. That is structural routing, not a
-condition to predict: a shotgun row and an MHC elution row are different
-experiments, not the same experiment under different settings. `species` (the
-host organism) is likewise a biological input. `mhc_species` and
-`species_of_origin` are *predicted* and are not fed.
+`binding_context` and `tcell_context` are inert: the former is ignored and its
+input-side embeddings are deleted, the latter's seven arguments are gone from
+`TCellAssayHead.forward`. `tests/test_many_output_contract.py` asserts both as
+observable invariance, and asserts the converse for biological state -- that
+changing the APC class or APM state *does* move the prediction, since
+asserting invariance there would be asserting the bug.
 
-**Not represented at all.** `ElutionRecord.cell_type` and `tissue` never reach
-`PrestoSample`, so the source cell line -- 172 distinct lines, and the design's
-intended proxy for expression profile -- is neither an input nor an output
-track. TCR sequences are likewise absent: `TcrEvidenceRecord` contributes only
-a binary "some receptor was found" label. Both are gaps, not deviations.
+**Counterfactual tracks.** `excision_panel_apm` and `excision_panel_stimulus`
+predict what a peptide would look like under each cellular condition. These
+coexist with conditioning rather than replacing it: the scalar prediction uses
+the observed state because it is known and causal, and the panel answers "what
+would this look like in a TAP-null cell", which is what makes the machinery
+interpretable.
 
-**Gap 2 under the new design.** The in-vivo excision profiles still receive
-gradient, which was gap 2's entire content, but by a different route: the head
-sweeps `invivo_profile_c/n`, `stimulus_profile_c` and `invivo_bias` across all
-conditions and the observed condition selects the supervised column. Pinned by
-`tests/test_provenance_fork.py::TestInVivoGradient`.
+**Still absent.** TCR sequences never reach the model; `TcrEvidenceRecord`
+contributes only a binary "some receptor was found". `ElutionRecord.tissue` is
+still dropped.

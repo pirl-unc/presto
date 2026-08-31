@@ -45,6 +45,7 @@ from ..data.vocab import (
     EXCISION_MACHINERY_TO_IDX,
     EXCISION_P1_PRIME_BLOCKED,
     EXCISION_P1_RULES,
+    APC_CELL_CLASSES,
     APM_PERTURBATIONS,
     PEPTIDE_SOURCE_TO_IDX,
     PROCESSING_STIMULI,
@@ -893,6 +894,22 @@ class Presto(nn.Module):
         # repertoire precursor frequency (S9.4); immunogenicity is the response
         # requiring it (S9.5). Same softplus reasoning.
         self.w_recognition_immunogenicity = nn.Parameter(torch.tensor(-2.0))
+
+        # Antigen-presenting cell class. Biological state, so an input.
+        #
+        # This axis exists because it parameterizes the expression of every
+        # antigen-processing component: professional APCs and lymphoblastoid
+        # lines carry constitutive immunoproteasome, high TAP and high MHC-I,
+        # while most solid-tumour lines carry little immunoproteasome unless
+        # induced and some have lost TAP or B2M. A peptide is genuinely
+        # presented differently by a dendritic cell and by a carcinoma line,
+        # and the questioner knows which they are asking about.
+        #
+        # Zero-initialized so it contributes nothing until the data asks: 32.5%
+        # of elution rows carry no cell annotation and land in `unknown`.
+        self.apc_cell_class_embed = self._zero_init_embedding(
+            len(APC_CELL_CLASSES), d_model
+        )
 
         # There is deliberately no cellular-condition embedding on the input
         # path. It used to live here, feeding a token into the processing
@@ -2828,7 +2845,10 @@ class Presto(nn.Module):
         ("processing_class2", ("processing_class2", "class2_processing"), ()),
         # The excision head is the processing readout, so it trains with
         # processing rather than being frozen at every stage.
-        ("processing", ("processing", "excision_head"), ()),
+        # `apc_cell_class_embed` is listed here explicitly: it feeds the
+        # processing latents, so it belongs to the processing component, but
+        # its name contains neither "processing" nor "excision_head".
+        ("processing", ("processing", "excision_head", "apc_cell_class_embed"), ()),
         ("presentation", ("presentation", "elution_head"), ()),
         ("recognition", ("recognition", "foreignness", "species_of_origin"), ()),
         ("immunogenicity", ("immunogenicity", "tcr_evidence"), ()),
@@ -3104,6 +3124,15 @@ class Presto(nn.Module):
             _gets_groove = {"pmhc_interaction"}
             _gets_processing_extra = {"processing"}
 
+        _apc_class_idx = (provenance or {}).get("apc_cell_class_idx")
+        if _apc_class_idx is None:
+            _apc_class_idx = torch.zeros(
+                batch_size, dtype=torch.long, device=pep_tok.device
+            )
+        apc_cell_class_token = self.apc_cell_class_embed(
+            _apc_class_idx.long()
+        ).unsqueeze(1)
+
         # Processing extra tokens: peptide terminal residues + length.
         # These give the processing latent TAP/ERAP/cleavage boundary
         # information without exposing the full peptide interior.
@@ -3141,6 +3170,7 @@ class Presto(nn.Module):
             extra_tokens: List[torch.Tensor] = []
             if name in _gets_processing_extra:
                 extra_tokens.extend(_processing_extra)
+                extra_tokens.append(apc_cell_class_token)
                 # The cellular-condition token used to be appended here, which
                 # made the processing latent depend on the observed APM state
                 # and stimulus. "stimulation context" is on the forbidden-input

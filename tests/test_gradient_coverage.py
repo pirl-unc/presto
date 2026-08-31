@@ -77,9 +77,6 @@ NEEDS_ABSENT_DATA = {
     "affinity_predictor.assay_heads.tm.head.2.bias",
     "class2_pfr_score.0.weight",
     "class2_pfr_score.0.bias",
-    # Only the bias of the second layer: `.2.weight` reaches gradient through
-    # the class mixture even without class II PFR rows, the bias does not.
-    "class2_pfr_score.2.bias",
     "species_override_embed.weight",
     "tcr_evidence_method_head.weight",
     "tcr_evidence_method_head.bias",

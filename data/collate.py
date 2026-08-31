@@ -13,6 +13,7 @@ import torch
 from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
 from .vocab import (
+    apc_cell_class_index,
     BINDING_ASSAY_METHOD_TO_IDX,
     BINDING_ASSAY_PREP_TO_IDX,
     BINDING_ASSAY_GEOMETRY_TO_IDX,
@@ -185,6 +186,11 @@ class PrestoSample:
     # Tier 3 (cellular state): conditions the in-vivo termini. Meaningful only
     # when peptide_source == "mhc".
     processing_inducer: Optional[str] = None   # default basal, not zero
+    #: Antigen-presenting cell class, from the source cell line. Biological
+    #: state and therefore an input: it sets the expression of every
+    #: antigen-processing component, so a peptide is presented differently by
+    #: a dendritic cell and by a carcinoma line.
+    apc_cell_class: Optional[str] = None
     apm_perturbation: Optional[str] = None     # grouped by mechanism
     # Retained as a derived convenience for the pinned in-vitro rules; prefer
     # the tiered fields above.
@@ -923,6 +929,7 @@ class PrestoCollator:
         digest_idx: List[int] = []
         inducer_idx: List[int] = []
         apm_idx: List[int] = []
+        apc_class_idx: List[int] = []
         for sample in samples:
             source = sample.peptide_source
             if not source:
@@ -935,8 +942,10 @@ class PrestoCollator:
             source_idx.append(peptide_source_index(source))
             digest_idx.append(enzymatic_digest_index(sample.enzymatic_digest))
             inducer_idx.append(processing_stimulus_index(sample.processing_inducer))
+            apc_class_idx.append(apc_cell_class_index(sample.apc_cell_class))
             apm_idx.append(apm_perturbation_index(sample.apm_perturbation))
         return {
+            "apc_cell_class_idx": torch.tensor(apc_class_idx, dtype=torch.long),
             "peptide_source_idx": torch.tensor(source_idx, dtype=torch.long),
             "enzymatic_digest_idx": torch.tensor(digest_idx, dtype=torch.long),
             "processing_stimulus_idx": torch.tensor(inducer_idx, dtype=torch.long),

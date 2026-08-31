@@ -232,3 +232,102 @@ class TestCellularStateIsAnOutputAxis:
     def test_no_cellular_state_embedding_on_the_input_path(self):
         model = Presto(d_model=32, n_layers=2, n_heads=4)
         assert not hasattr(model, "processing_condition_embed")
+
+
+class TestBiologicalStateIsAnInput:
+    """The other half of the contract: causal state may be, and is, an input.
+
+    The line is not "is it categorical metadata" -- assay method and APC type
+    are both that. It is whether the field describes the system being measured
+    or the instrument measuring it. A TAP-null cell genuinely presents a
+    different repertoire, and someone asking "will this tumour present this
+    peptide" knows which tumour they mean, so conditioning on it uses
+    information rather than leaking it.
+
+    An earlier pass removed these along with the assay descriptors, which
+    discarded real signal. See docs/assay_modeling_contract.md.
+    """
+
+    def _batch(self):
+        import sys
+
+        sys.path.insert(0, "tests")
+        from test_gradient_coverage import _every_modality_batch
+
+        return _every_modality_batch()
+
+    @pytest.mark.parametrize(
+        "provenance_key,alternate",
+        [
+            ("apm_perturbation_idx", 3),
+            ("processing_stimulus_idx", 2),
+            ("apc_cell_class_idx", 5),
+        ],
+    )
+    def test_state_reaches_the_prediction_once_trained(
+        self, provenance_key, alternate
+    ):
+        """Zero-init means no effect at init; the effect must appear with values.
+
+        Asserting invariance here would be asserting the bug: these axes exist
+        precisely so the model can tell a dendritic cell from a carcinoma line.
+        """
+        batch = self._batch()
+        torch.manual_seed(0)
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        model.eval()
+        with torch.no_grad():
+            model.apc_cell_class_embed.weight.normal_(0.0, 0.5)
+            model.excision_head.invivo_profile_c.normal_(0.0, 0.5)
+            model.excision_head.stimulus_profile_c.normal_(0.0, 0.5)
+        base_prov = dict(batch.provenance)
+        altered = dict(batch.provenance)
+        altered[provenance_key] = torch.full_like(base_prov[provenance_key], alternate)
+        kwargs = dict(
+            pep_tok=batch.pep_tok,
+            mhc_a_tok=batch.mhc_a_tok,
+            mhc_b_tok=batch.mhc_b_tok,
+            mhc_class=batch.mhc_class,
+        )
+        with torch.no_grad():
+            a = model(**kwargs, provenance=base_prov)
+            b = model(**kwargs, provenance=altered)
+        moved = any(
+            not torch.allclose(a[key], b[key])
+            for key in ("presentation_logit", "elution_logit", "excision_logit")
+        )
+        assert moved, (
+            f"{provenance_key} had no effect on any presentation-path output; "
+            "the biological state is being ignored"
+        )
+
+    def test_apc_cell_class_is_plumbed_from_the_cell_line(self):
+        """The record field existed for months without reaching the model."""
+        from presto.data.collate import PrestoCollator
+        from presto.data.loaders import ElutionRecord, PrestoDataset
+
+        seq = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
+        dataset = PrestoDataset(
+            elution_records=[
+                ElutionRecord(peptide="LLDGTATLRF", alleles=["HLA-A*02:01"],
+                              detected=True, cell_type="THP-1"),
+                ElutionRecord(peptide="SIINFEKLAA", alleles=["HLA-A*02:01"],
+                              detected=True, cell_type="Dendritic cell"),
+            ],
+            mhc_sequences={"HLA-A*02:01": seq},
+            strict_mhc_resolution=False,
+        )
+        assert dataset[0].apc_cell_class == "tumor_hematologic"
+        assert dataset[1].apc_cell_class == "professional_apc"
+
+        batch = PrestoCollator()([dataset[i] for i in range(2)])
+        classes = batch.provenance["apc_cell_class_idx"].tolist()
+        assert classes[0] != classes[1], "both cell lines collapsed to one class"
+
+    def test_unrecognized_lines_are_unknown_not_guessed(self):
+        """A wrong processing phenotype is worse than an absent one."""
+        from presto.data.vocab import apc_cell_class_for_line
+
+        assert apc_cell_class_for_line("SomeLineNobodyMapped") == "unknown"
+        assert apc_cell_class_for_line(None) == "unknown"
+        assert apc_cell_class_for_line("") == "unknown"

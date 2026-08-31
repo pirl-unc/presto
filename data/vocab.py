@@ -981,3 +981,119 @@ def is_unmapped_condition(condition: Optional[str]) -> bool:
     """
     text = str(condition or "").strip()
     return bool(text) and text not in CONDITION_TO_STIMULUS
+
+# ---------------------------------------------------------------------------
+# Antigen-presenting cell class (Tier 3, biological state -- an INPUT).
+# ---------------------------------------------------------------------------
+#
+# Grouped by antigen-processing phenotype rather than by tissue of origin,
+# because that is the mechanism this axis exists to represent. Professional
+# APCs and EBV-transformed lymphoblastoid lines express the immunoproteasome
+# (PSMB8/9/10) constitutively and carry high TAP and MHC-I; most solid-tumour
+# lines express little immunoproteasome unless induced, and some have lost
+# TAP or B2M outright. Two peptides from the same protein are presented
+# differently by a dendritic cell and by a breast-carcinoma line, and the
+# questioner knows which they are asking about -- so this is an input, in the
+# same category as the MHC allele. See docs/assay_modeling_contract.md.
+#
+# `unknown` is a real and common answer: roughly half of elution rows carry no
+# cell annotation at all, and inventing a class for them would be worse than
+# admitting it.
+APC_CELL_CLASSES = [
+    "unknown",
+    "professional_apc",      # dendritic cells, macrophages, monocytes
+    "lymphoblastoid",        # B-LCL and B-cell lines: JY, C1R, T2, DB, SU-DHL
+    "primary_lymphoid",      # PBMC, lymphocyte, mononuclear, splenocyte
+    "tumor_hematologic",     # THP-1, AML14, BV-173, NB-*
+    "tumor_epithelial",      # MDA-MB-231, HCT 116, HeLa, MCF-7, SUM159PT
+    "tumor_melanocytic",     # SK-MEL-*, LM-MEL-*, melanocyte
+    "tumor_other",           # SaOS-2, glial, HROG02 and other solid lines
+    "primary_nonlymphoid",   # fibroblast, epithelial cell, glial cell
+    "other",
+]
+APC_CELL_CLASS_TO_IDX = {name: i for i, name in enumerate(APC_CELL_CLASSES)}
+
+#: Regex rules over the free-text cell-line name, most specific first.
+#:
+#: Anchored on token boundaries rather than bare substrings. A naive
+#: `"mel" in name` test matched "SomeLineNobodyMapped" -- so**mel**inenobody --
+#: and would have silently filed unrelated lines as melanoma. Short tokens are
+#: the dangerous ones, so every rule here requires a boundary.
+#:
+#: Deliberately conservative: an unrecognized line becomes `unknown` rather
+#: than being guessed into a class, because a wrong processing phenotype is
+#: worse than an absent one -- the model would learn a real-looking effect
+#: from a mislabelled group.
+_APC_CLASS_PATTERNS: Tuple[Tuple[str, str], ...] = (
+    (r"\bdendritic\b", "professional_apc"),
+    (r"\bmacrophage\b", "professional_apc"),
+    (r"\bmonocyte\b", "professional_apc"),
+    (r"\bb[- ]?lcl\b", "lymphoblastoid"),
+    (r"\blymphoblast", "lymphoblastoid"),
+    (r"\bb[- ]cell\b", "lymphoblastoid"),
+    (r"\bsu-dhl", "lymphoblastoid"),
+    (r"\bdohh2\b", "lymphoblastoid"),
+    (r"\bpbmc\b", "primary_lymphoid"),
+    (r"\bmononuclear\b", "primary_lymphoid"),
+    (r"\bsplenocyte", "primary_lymphoid"),
+    (r"\blymphocyte", "primary_lymphoid"),
+    (r"\bthp-?1\b", "tumor_hematologic"),
+    (r"\baml\b|\baml\d", "tumor_hematologic"),
+    (r"\bbv-173\b", "tumor_hematologic"),
+    (r"melanoma|melanocyte|\bsk-mel|\blm-mel|-mel-", "tumor_melanocytic"),
+    (r"\bhela\b", "tumor_epithelial"),
+    (r"\bmda-mb", "tumor_epithelial"),
+    (r"\bmcf-?7", "tumor_epithelial"),
+    (r"\bhct\b|\bhct\s*\d", "tumor_epithelial"),
+    (r"\bsum159", "tumor_epithelial"),
+    (r"\bhcc\d", "tumor_epithelial"),
+    (r"\bcama\d?\b", "tumor_epithelial"),
+    (r"\buacc-?\d", "tumor_epithelial"),
+    (r"\bsaos", "tumor_other"),
+    (r"\bhrog", "tumor_other"),
+    (r"\bglial\b", "primary_nonlymphoid"),
+    (r"\bfibroblast", "primary_nonlymphoid"),
+    (r"\bepithelial cell\b", "primary_nonlymphoid"),
+)
+
+
+#: Exact names, checked before the substring rules. These are short and
+#: well-known enough that substring matching would be unsafe -- "t2" and "db"
+#: appear inside many unrelated identifiers.
+_APC_CLASS_EXACT: Dict[str, str] = {
+    "jy": "lymphoblastoid",        # EBV-transformed B-LCL, the ligandome workhorse
+    "c1r": "lymphoblastoid",       # HLA-low B-LCL used for single-allele transfectants
+    "t2": "lymphoblastoid",        # TAP-deficient T x B hybrid
+    "db": "lymphoblastoid",        # B-cell lymphoma line
+    "721.221": "lymphoblastoid",
+    "nb-sd": "tumor_hematologic",
+    "nb-ebc1": "tumor_hematologic",
+    "other": "other",
+    "cell-line mixture": "other",
+}
+
+
+def apc_cell_class_for_line(cell_line: Optional[str]) -> str:
+    """Map a free-text cell-line name to a processing-phenotype class.
+
+    Conservative by design: an unrecognized line becomes `unknown` rather than
+    being guessed. A wrong processing phenotype is worse than an absent one,
+    because the model would learn a real-looking effect from a mislabelled
+    group.
+    """
+    text = str(cell_line or "").strip().lower()
+    if not text:
+        return "unknown"
+    exact = _APC_CLASS_EXACT.get(text)
+    if exact is not None:
+        return exact
+    for pattern, label in _APC_CLASS_PATTERNS:
+        if re.search(pattern, text):
+            return label
+    return "unknown"
+
+
+def apc_cell_class_index(name: Optional[str]) -> int:
+    return APC_CELL_CLASS_TO_IDX.get(
+        str(name or "").strip().lower(), APC_CELL_CLASS_TO_IDX["unknown"]
+    )

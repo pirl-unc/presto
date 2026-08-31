@@ -33,7 +33,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader, Sampler
 
 from .bulk_ms import BulkMSRecord
-from .vocab import default_machinery_for_class
+from .vocab import apc_cell_class_for_line, default_machinery_for_class
 from .collate import PrestoSample, PrestoCollator
 from .groove import prepare_mhc_input
 from .vocab import normalize_organism, FOREIGN_CATEGORIES
@@ -1896,6 +1896,7 @@ class PrestoDataset(Dataset):
                 peptide_source="mhc",
                 processing_inducer=getattr(rec, "stimulus", None),
                 apm_perturbation=getattr(rec, "apm_perturbation", None),
+                apc_cell_class=apc_cell_class_for_line(getattr(rec, "cell_type", None)),
                 elution_label=1.0 if rec.detected else 0.0,
                 mil_mhc_a_list=mil_mhc_a_list,
                 mil_mhc_b_list=mil_mhc_b_list,
