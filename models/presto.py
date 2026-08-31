@@ -883,46 +883,24 @@ class Presto(nn.Module):
         # MS detectability readout from latent (design S7.4)
         self.ms_detectability_head = nn.Linear(d_model, 1)
 
-        # Cellular-state token for the processing latents. Tier 3 of
-        # docs/model_io_contract.md permits conditions on the processing path,
-        # and routing them here rather than only into the excision readout is
-        # what gives them gradient: excision labels exist only on shotgun rows,
-        # whereas elution labels exist on MHC rows and vary with APM state, so
-        # a KO-vs-WT contrast supervises these through the existing loss.
-        #
-        # Unlike peptide_source, these are NOT a corpus indicator -- they vary
-        # within the MHC corpus -- and they are genuinely causal on
-        # presentation (a B2M-null cell presents nothing), so reaching
-        # presentation through the processing vector is correct biology rather
-        # than a shortcut.
-        # Weight on the in-vivo excision -> presentation edge (gap 2). Softplus
-        # keeps it non-negative: better in-vivo cleavage can only raise the
-        # presentation odds, never lower them, which is the biology and stops
-        # the term inverting into a free-floating bias. Initialized to
-        # softplus(-2) ~ 0.13 rather than 0 -- at exactly 0 the upstream
-        # in-vivo excision parameters would receive no gradient, which is the
-        # bug this edge exists to fix.
+        # Weight on the in-vivo excision -> class I presentation edge (gap 2).
+        # Softplus: better cleavage can only raise presentation odds. Init to
+        # softplus(-2) ~ 0.13 rather than 0, since a zero weight would starve
+        # everything upstream of it.
         self.w_invivo_excision_presentation = nn.Parameter(torch.tensor(-2.0))
 
-        # Weight on the recognition -> immunogenicity edge.
-        #
-        # `recognition_cd{8,4}_head` produced logits that fed nothing and were
-        # published as probabilities from untrained weights. The DAG already
-        # says where they belong: recognition is repertoire precursor frequency
-        # (S9.4) and immunogenicity is the response that requires it (S9.5). An
-        # epitope with no TCR able to recognize it cannot be immunogenic, so
-        # recognition is upstream.
-        #
-        # Softplus for the same reason as the excision edge: more available
-        # recognition can only raise the odds of a response, never lower them.
-        # Initialized to softplus(-2) ~ 0.13 rather than 0, because a zero
-        # weight would leave the heads exactly as starved as before.
+        # Weight on the recognition -> immunogenicity edge. Recognition is
+        # repertoire precursor frequency (S9.4); immunogenicity is the response
+        # requiring it (S9.5). Same softplus reasoning.
         self.w_recognition_immunogenicity = nn.Parameter(torch.tensor(-2.0))
 
-        self.processing_condition_embed = self._zero_init_embedding(
-            len(APM_PERTURBATIONS) * len(PROCESSING_STIMULI), d_model
-        )
-        self._n_stimulus_states = len(PROCESSING_STIMULI)
+        # There is deliberately no cellular-condition embedding on the input
+        # path. It used to live here, feeding a token into the processing
+        # latent so that APM state and stimulus conditioned presentation. That
+        # is the pattern docs/assay_modeling_contract.md forbids, and it made a
+        # presentation prediction impossible without first declaring the cell's
+        # state. Those axes are now output tracks -- see
+        # ExcisionHead.forward's excision_panel_apm / excision_panel_stimulus.
 
         # Machinery-conditioned excision readout. Output-side only: the
         # machinery indexes this head and never reaches the trunk.
@@ -3126,22 +3104,6 @@ class Presto(nn.Module):
             _gets_groove = {"pmhc_interaction"}
             _gets_processing_extra = {"processing"}
 
-        # Cellular-state token. Zero-initialized, so an unperturbed sample in a
-        # basal state contributes nothing until the data asks it to.
-        _provenance = provenance or {}
-        _apm_idx = _provenance.get("apm_perturbation_idx")
-        _inducer_idx = _provenance.get("processing_stimulus_idx")
-        if _apm_idx is None:
-            _apm_idx = torch.zeros(batch_size, dtype=torch.long, device=pep_tok.device)
-        if _inducer_idx is None:
-            _inducer_idx = torch.zeros(batch_size, dtype=torch.long, device=pep_tok.device)
-        _condition_state = (
-            _apm_idx.long() * self._n_stimulus_states + _inducer_idx.long()
-        )
-        processing_condition_token = self.processing_condition_embed(
-            _condition_state
-        ).unsqueeze(1)
-
         # Processing extra tokens: peptide terminal residues + length.
         # These give the processing latent TAP/ERAP/cleavage boundary
         # information without exposing the full peptide interior.
@@ -3179,8 +3141,17 @@ class Presto(nn.Module):
             extra_tokens: List[torch.Tensor] = []
             if name in _gets_processing_extra:
                 extra_tokens.extend(_processing_extra)
-                # Tier 3 conditions reach the processing path and nowhere else.
-                extra_tokens.append(processing_condition_token)
+                # The cellular-condition token used to be appended here, which
+                # made the processing latent depend on the observed APM state
+                # and stimulus. "stimulation context" is on the forbidden-input
+                # list in docs/assay_modeling_contract.md, and conditioning
+                # here meant a presentation prediction required declaring the
+                # cell's state first.
+                #
+                # The excision head now sweeps those axes instead
+                # (excision_panel_apm / excision_panel_stimulus), so the same
+                # parameters are trained by prediction rather than by
+                # conditioning, and the trunk stays condition-free.
             if name in _gets_apc_context:
                 extra_tokens.append(apc_cell_type_context)
             if name in _gets_groove:
@@ -3615,13 +3586,6 @@ class Presto(nn.Module):
             binding_class1_logit=binding_class1_logit,
             binding_class2_logit=binding_class2_logit,
             class_probs=class_probs,
-            assay_method_idx=context.get("assay_method_idx"),
-            assay_readout_idx=context.get("assay_readout_idx"),
-            apc_type_idx=context.get("apc_type_idx"),
-            culture_context_idx=context.get("culture_context_idx"),
-            stim_context_idx=context.get("stim_context_idx"),
-            peptide_format_idx=context.get("peptide_format_idx"),
-            culture_duration_hours=context.get("culture_duration_hours"),
         )
         tcell_panel_logits = self.tcell_assay_head.predict_panel(
             immunogenicity_cd8_vec=immunogenicity_cd8_vec,

@@ -76,30 +76,34 @@ class TestBindingIsAssayInvariant:
 
 
 class TestTCellIsContextInvariant:
-    def test_head_remains_conditionable_and_that_is_the_open_half(
-        self, model, sequence_inputs
-    ):
-        """Gap 7 is closed on the training path, not in the head.
+    def test_head_is_structurally_context_invariant(self, model, sequence_inputs):
+        """Gap 7, closed in the head and not only in the callers.
 
-        Records the honest state rather than asserting a compliance that does
-        not hold. The binding side is structurally invariant -- the input path
-        was deleted -- but `TCellAssayHead` still accepts the seven forbidden
-        keys and still moves its prediction when given them. What changed is
-        that no caller in the training or evaluation path supplies them, so
-        every trained model is a context-free predictor.
+        This test previously asserted the opposite and said so: it recorded
+        that `TCellAssayHead` still accepted the seven forbidden keys and still
+        moved when given them, and instructed whoever removed them to convert
+        it to an equality assertion. The arguments are gone, so it is one.
 
-        Closing the other half means deleting those arguments from the head,
-        which changes its input dimensions and so needs a checkpoint
-        migration. If this test starts failing because the prediction no
-        longer moves, that work has been done and this should become an
-        equality assertion.
+        Supplying `tcell_context` is now inert -- the model cannot be
+        conditioned on assay setup even by a caller that tries.
         """
         with torch.no_grad():
             base = model(**sequence_inputs)
             with_ctx = model(**sequence_inputs, tcell_context=FORBIDDEN_TCELL_CONTEXT)
-        assert not torch.allclose(base["tcell_logit"], with_ctx["tcell_logit"]), (
-            "the T-cell head is now context-invariant -- gap 7 is fully "
-            "closed; convert this to an equality assertion"
+        assert torch.allclose(base["tcell_logit"], with_ctx["tcell_logit"]), (
+            "the T-cell prediction moved when an assay setup was supplied"
+        )
+
+    @pytest.mark.parametrize("key", sorted(FORBIDDEN_TCELL_CONTEXT))
+    def test_head_signature_rejects_each_forbidden_key(self, key):
+        """Not merely ignored -- absent, so it cannot be reintroduced quietly."""
+        import inspect
+
+        from presto.models.heads import TCellAssayHead
+
+        parameters = inspect.signature(TCellAssayHead.forward).parameters
+        assert key not in parameters, (
+            f"{key} is back on the T-cell head's forward signature"
         )
 
     def test_training_loop_does_not_supply_tcell_context(self):
@@ -136,3 +140,95 @@ class TestPanelsCoverEveryConfiguration:
         panel = out.get("tcell_panel_logits") or out.get("tcell_context_logits")
         assert panel, "the T-cell condition panel disappeared"
         assert "assay_method" in panel
+
+
+class TestCellularStateIsAnOutputAxis:
+    """APM state and stimulus are predicted across, not conditioned on.
+
+    `docs/assay_modeling_contract.md` names "stimulation context" as a
+    forbidden input. The gap-2 fix had routed it inward on purpose -- into the
+    processing latent -- because that was the only way found at the time to
+    give the in-vivo excision profiles gradient. Sweeping the profiles instead
+    keeps the gradient and drops the input.
+    """
+
+    def _provenance_pair(self, batch):
+        """Two provenances differing ONLY in cellular state.
+
+        Holding `peptide_source_idx` fixed matters: it selects which branch
+        computes the termini, which is structural routing rather than a
+        condition, and varying it legitimately changes the prediction. An
+        earlier version of this check compared against *no* provenance at all
+        and so measured the source fork, not the conditions.
+        """
+        base = dict(batch.provenance)
+        altered = dict(batch.provenance)
+        altered["apm_perturbation_idx"] = torch.full_like(
+            base["apm_perturbation_idx"], 3
+        )
+        altered["processing_stimulus_idx"] = torch.full_like(
+            base["processing_stimulus_idx"], 2
+        )
+        return base, altered
+
+    @pytest.mark.parametrize(
+        "output_key",
+        ["binding_logit", "presentation_logit", "elution_logit", "excision_logit"],
+    )
+    def test_prediction_does_not_move_with_cellular_state(self, output_key):
+        import sys
+
+        sys.path.insert(0, "tests")
+        from test_gradient_coverage import _every_modality_batch
+
+        batch = _every_modality_batch()
+        torch.manual_seed(0)
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        model.eval()
+        base_prov, altered_prov = self._provenance_pair(batch)
+        kwargs = dict(
+            pep_tok=batch.pep_tok,
+            mhc_a_tok=batch.mhc_a_tok,
+            mhc_b_tok=batch.mhc_b_tok,
+            mhc_class=batch.mhc_class,
+        )
+        with torch.no_grad():
+            base = model(**kwargs, provenance=base_prov)
+            altered = model(**kwargs, provenance=altered_prov)
+        assert torch.allclose(base[output_key], altered[output_key]), (
+            f"{output_key} moved when the cellular condition changed; the "
+            "model is conditioned on cell state rather than predicting across it"
+        )
+
+    def test_the_panel_distinguishes_conditions_once_trained(self):
+        """Invariance must not be achieved by the panel being degenerate.
+
+        At initialization the profiles are zero, so every column agrees. Give
+        one condition a profile and its column must move -- otherwise the
+        conditions are represented but unusable.
+        """
+        import sys
+
+        sys.path.insert(0, "tests")
+        from test_gradient_coverage import _every_modality_batch
+
+        batch = _every_modality_batch()
+        torch.manual_seed(0)
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        model.eval()
+        with torch.no_grad():
+            model.excision_head.invivo_profile_c[3].fill_(1.5)
+            model.excision_head.invivo_bias[3] = 0.7
+            out = model(
+                pep_tok=batch.pep_tok,
+                mhc_a_tok=batch.mhc_a_tok,
+                mhc_b_tok=batch.mhc_b_tok,
+                mhc_class=batch.mhc_class,
+                provenance=batch.provenance,
+            )
+        panel = out["excision_panel_apm"]
+        assert not torch.allclose(panel[:, 0], panel[:, 3])
+
+    def test_no_cellular_state_embedding_on_the_input_path(self):
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        assert not hasattr(model, "processing_condition_embed")

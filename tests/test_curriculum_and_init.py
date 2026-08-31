@@ -96,8 +96,15 @@ class TestStagesAreSequential:
 
 class TestDeliberateInitSurvives:
     def test_zero_init_embeddings_are_not_clobbered(self, model):
-        """Both the submodule opt-out and the parent-owned registry."""
-        assert float(model.processing_condition_embed.weight.abs().sum()) == 0.0
+        """The submodule opt-out still holds.
+
+        This also checked `processing_condition_embed`, which no longer
+        exists: it fed cellular state into the trunk, and that input path was
+        removed when the condition axes became output tracks.
+        """
+        assert not hasattr(model, "processing_condition_embed"), (
+            "the cellular-condition input embedding is back"
+        )
         assert float(model.excision_head.length_preference.weight.abs().sum()) == 0.0
 
     def test_helper_registers_what_it_creates(self, model):

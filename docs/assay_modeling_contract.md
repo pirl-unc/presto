@@ -79,44 +79,47 @@ For clarity:
 ## Compliance status (2026-08-31)
 
 Presto is a many-output model in the sense a DNA sequence model is: the trunk
-reads peptide and MHC, and every assay configuration and condition is an
-*output track*, never an input feature. Track identity selects which output the
-loss reads; it never selects what the model computes.
+reads peptide and MHC, and every assay configuration and cellular condition is
+an *output track*. Track identity selects which output the loss reads; it never
+selects what the model computes.
 
-**Compliant — predicted jointly, label routes supervision only:**
+**Verified as observable invariance**, not by reading the source --
+`tests/test_many_output_contract.py` asserts the prediction does not move when
+each forbidden input is supplied:
+
+| forbidden input | status |
+|---|---|
+| `binding_context` (assay type, prep, geometry, readout) | argument ignored; input-side embeddings deleted |
+| `tcell_context` (7 keys) | arguments removed from `TCellAssayHead.forward` |
+| cellular state (APM perturbation, stimulation context) | swept, not indexed; no input embedding exists |
+
+**Output tracks:**
 
 | family | tracks |
 |---|---|
 | binding observables | `KD`, `IC50`, `EC50`, `Tm`, `t_half`, `koff`, `kon` |
-| binding assay descriptors | `assay_type` (11), `assay_prep` (6), `assay_geometry` (5), `assay_readout` (4) via `binding_assay_panel_*` |
-| T-cell conditions | `apc_type`, `assay_method`, `assay_readout`, `culture_context`, `peptide_format`, `stim_context` via `tcell_panel_logits` |
+| binding assay descriptors | `binding_assay_panel_*` — 11 types, 6 preps, 5 geometries, 4 readouts |
+| T-cell conditions | `tcell_panel_logits` — method, readout, APC type, culture, stim, format |
+| cellular state | `excision_panel_apm` (7), `excision_panel_stimulus` (6) |
 | TCR | `tcr_evidence_method` |
 | MHC | `mhc_class`, `mhc_species`, `mhc_a_fine_type`, `mhc_b_fine_type` |
 
-**Removed input paths.** The binding assay context is gone structurally, not
-merely zeroed: `factorized_context_dim` is 0 and the four input-side
-embeddings no longer exist, so nothing can refill the slot. `binding_context`
-is still accepted as an argument and ignored;
-`tests/test_many_output_contract.py` asserts the prediction does not move when
-it is supplied.
+**What is still an input, and why.** `peptide_source_idx` and
+`enzymatic_digest_idx` select which branch computes the peptide termini --
+in-vivo proteasomal versus in-vitro protease. That is structural routing, not a
+condition to predict: a shotgun row and an MHC elution row are different
+experiments, not the same experiment under different settings. `species` (the
+host organism) is likewise a biological input. `mhc_species` and
+`species_of_origin` are *predicted* and are not fed.
 
-The T-cell context is no longer supplied by any training or evaluation path,
-so every trained model is a context-free predictor.
+**Not represented at all.** `ElutionRecord.cell_type` and `tissue` never reach
+`PrestoSample`, so the source cell line -- 172 distinct lines, and the design's
+intended proxy for expression profile -- is neither an input nor an output
+track. TCR sequences are likewise absent: `TcrEvidenceRecord` contributes only
+a binary "some receptor was found" label. Both are gaps, not deviations.
 
-**Known remaining deviation.** `TCellAssayHead` still *accepts* the seven
-forbidden keys and its prediction still moves when given them. Only the
-callers were changed. Closing this means deleting those arguments from the
-head, which alters its input dimensions and needs a checkpoint migration. The
-gap is pinned by
-`TestTCellIsContextInvariant::test_head_remains_conditionable_and_that_is_the_open_half`,
-which fails when the work is done.
-
-**Note on cellular state.** `provenance` still carries
-`processing_stimulus_idx` and `apm_perturbation_idx` into the processing
-latent. Under a strict reading of the forbidden list -- which names
-"stimulation context" -- these should also be output tracks: predict elution
-under each cellular condition rather than conditioning on the observed one.
-That change interacts with the gap-2 fix, which deliberately routed cellular
-state inward to give the in-vivo excision parameters gradient, so it needs its
-own design pass rather than a mechanical edit.
-
+**Gap 2 under the new design.** The in-vivo excision profiles still receive
+gradient, which was gap 2's entire content, but by a different route: the head
+sweeps `invivo_profile_c/n`, `stimulus_profile_c` and `invivo_bias` across all
+conditions and the observed condition selects the supervised column. Pinned by
+`tests/test_provenance_fork.py::TestInVivoGradient`.

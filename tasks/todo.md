@@ -23,17 +23,25 @@ Last reorganized: 2026-08-29.
 - [ ] **`ms_detectability` learned nothing.** AUPRC 0.9071 against a 0.9042
       base rate — lift +0.003. The arm the excision/detectability design exists
       for. Needs `dual_corpus_transfer_set` (24,125 peptides).
-- [ ] **Category C decision** — four groups are computed every forward,
-      published in `outputs`, and read by no loss. See
-      `gradient_coverage_plan.md`. Needs a human call: wiring them changes what
-      the model computes.
+- [x] **Category C** — closed. All four groups wired; the category is empty.
+- [x] **Many-output refactor** — assay and condition axes are output tracks,
+      not inputs. Invariance verified in `tests/test_many_output_contract.py`.
+- [ ] **Cell line / tissue are not represented at all.** `ElutionRecord`
+      carries them; they never reach `PrestoSample`. 172 distinct lines, and
+      the design's intended proxy for expression profile. Neither input nor
+      output track — a gap, not a deviation.
+- [ ] **Re-run the brev baseline.** The 2026-08-29 numbers predate the
+      recognition→immunogenicity edge, the assay panels, and the removal of
+      all condition inputs. Not comparable.
 
 ## Open — model contract (`docs/model_io_contract.md` S8)
 
 - [ ] **Gap 5** — merge `processing` and `excision`. Changes an existing task's
       semantics; wants Stage 4 arm C first.
-- [ ] **Gap 7** — retire legacy T-cell context conditioning. Materially changes
-      T-cell predictions; needs its own before/after.
+- [x] **Gap 7** — closed. The seven context arguments are gone from
+      `TCellAssayHead.forward`; predictions are context-free marginals and the
+      panel carries per-condition structure. The before/after measurement is
+      still owed — this changes T-cell predictions by construction.
 
 Gaps 1, 2, 3, 4, 6 are closed. Gap 2 took three attempts and two of those were
 wrongly reported as closed — see `lessons.md`.

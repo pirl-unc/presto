@@ -492,6 +492,15 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
     ),
 )
 
+#: The elution spec, looked up once. The condition panel is supervised against
+#: the elution label, so it needs the same target and mask resolution the
+#: ordinary elution loss uses rather than a second hand-rolled copy.
+_ELUTION_SPEC = next(
+    (spec for spec in LOSS_TASK_SPECS if getattr(spec, "name", "") == "elution"),
+    None,
+)
+
+
 LOSS_TASK_NAMES: Tuple[str, ...] = tuple(spec.name for spec in LOSS_TASK_SPECS)
 LOSS_TASK_NAME_TO_INDEX: Dict[str, int] = {
     name: idx for idx, name in enumerate(LOSS_TASK_NAMES)
@@ -2059,6 +2068,47 @@ def compute_loss(
             supervised_losses[spec.name] = masked_loss
             supervised_loss_support[spec.name] = support
             output_metrics[f"batch_support_{spec.name}"] = support
+        # Cellular-condition panel: tie the observed condition's column to the
+        # elution label.
+        #
+        # The condition is a supervision selector, not an input. The model
+        # predicts excision under every APM state and every stimulus from
+        # peptide and MHC alone; this picks the column that was actually
+        # observed. Without it the swept in-vivo profiles would be computed and
+        # read by nothing -- reopening gap 2 in a new disguise, which is why
+        # tests/test_gradient_coverage.py pins those four parameters by name.
+        condition_provenance = getattr(batch, "provenance", None) or {}
+        elution_target = _get_batch_target(batch, _ELUTION_SPEC) if _ELUTION_SPEC else None
+        elution_mask = _get_batch_mask(batch, _ELUTION_SPEC) if _ELUTION_SPEC else None
+        if elution_target is not None and elution_mask is not None and condition_provenance:
+            condition_terms = []
+            elution_flat = elution_target.reshape(-1).float().to(device)
+            elution_mask_flat = elution_mask.reshape(-1).float().to(device)
+            for panel_key, index_key in (
+                ("excision_panel_apm", "apm_perturbation_idx"),
+                ("excision_panel_stimulus", "processing_stimulus_idx"),
+            ):
+                panel = outputs.get(panel_key)
+                index = condition_provenance.get(index_key)
+                if panel is None or index is None:
+                    continue
+                index_long = index.reshape(-1).long().to(device)
+                if index_long.shape[0] != panel.shape[0]:
+                    continue
+                chosen = panel.gather(1, index_long.unsqueeze(1)).squeeze(1)
+                limit = min(chosen.shape[0], elution_flat.shape[0])
+                per_row = F.binary_cross_entropy_with_logits(
+                    chosen[:limit], elution_flat[:limit], reduction="none"
+                )
+                denominator = elution_mask_flat[:limit].sum() + 1e-8
+                condition_terms.append(
+                    (per_row * elution_mask_flat[:limit]).sum() / denominator
+                )
+            if condition_terms:
+                supervised_losses["excision_condition_panel"] = (
+                    torch.stack(condition_terms).mean()
+                )
+
         # Assay panel: tie the observed assay's column to the measurement.
         #
         # The assay label is used only to *select which output is supervised*,

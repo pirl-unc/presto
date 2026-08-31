@@ -77,6 +77,9 @@ NEEDS_ABSENT_DATA = {
     "affinity_predictor.assay_heads.tm.head.2.bias",
     "class2_pfr_score.0.weight",
     "class2_pfr_score.0.bias",
+    # Only the bias of the second layer: `.2.weight` reaches gradient through
+    # the class mixture even without class II PFR rows, the bias does not.
+    "class2_pfr_score.2.bias",
     "species_override_embed.weight",
     "tcr_evidence_method_head.weight",
     "tcr_evidence_method_head.bias",
@@ -259,6 +262,26 @@ def gradient_report(request):
     return model, dead
 
 
+
+@pytest.fixture(scope="module")
+def dead_in_any_topology():
+    """(known parameter names, parameters dead under at least one topology)."""
+    known: set = set()
+    dead_union: set = set()
+    for topology in TOPOLOGIES:
+        torch.manual_seed(0)
+        model = Presto(
+            d_model=32, n_layers=2, n_heads=4, latent_topology=topology
+        )
+        loss, _, _ = compute_loss(model, _every_modality_batch(), "cpu")
+        loss.backward()
+        for name, param in model.named_parameters():
+            known.add(name)
+            if param.grad is None or float(param.grad.abs().sum()) == 0.0:
+                dead_union.add(name)
+    return known, dead_union
+
+
 class TestGradientCoverage:
     def test_no_undocumented_dead_parameters(self, gradient_report):
         """The assertion that would have caught gap 2 the first time."""
@@ -270,13 +293,20 @@ class TestGradientCoverage:
             "add them to the right category in this file with a reason."
         )
 
-    def test_allowlist_has_no_stale_entries(self, gradient_report):
-        """A fixed exception must be removed, so the fix shows in the diff."""
-        model, dead = gradient_report
-        known = {name for name, _ in model.named_parameters()}
-        stale = sorted((ALLOWED_DEAD & known) - dead)
+    def test_allowlist_has_no_stale_entries(self, dead_in_any_topology):
+        """A fixed exception must be removed, so the fix shows in the diff.
+
+        Compared against the union across topologies, not the current one.
+        Some parameters are trained under `expanded` and not under
+        `collapsed` -- `class2_pfr_score.2.weight` is one -- so a per-topology
+        comparison would call the same entry both missing and stale depending
+        on which parametrization ran.
+        """
+        known, dead_union = dead_in_any_topology
+        stale = sorted((ALLOWED_DEAD & known) - dead_union)
         assert stale == [], (
-            f"these are now trained and should leave the allowlist: {stale}"
+            f"these are trained under every topology and should leave the "
+            f"allowlist: {stale}"
         )
 
     def test_allowlist_refers_to_real_parameters(self, gradient_report):

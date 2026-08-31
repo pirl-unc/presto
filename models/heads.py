@@ -1251,15 +1251,21 @@ class TCellAssayHead(nn.Module):
         binding_class1_logit: torch.Tensor,
         binding_class2_logit: torch.Tensor,
         class_probs: torch.Tensor,
-        assay_method_idx: Optional[torch.Tensor] = None,
-        assay_readout_idx: Optional[torch.Tensor] = None,
-        apc_type_idx: Optional[torch.Tensor] = None,
-        culture_context_idx: Optional[torch.Tensor] = None,
-        stim_context_idx: Optional[torch.Tensor] = None,
-        peptide_format_idx: Optional[torch.Tensor] = None,
-        culture_duration_hours: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
-        """Predict T-cell assay outcome from immunogenicity vecs + upstream logits.
+        """Predict the context-free T-cell assay outcome.
+
+        Takes no assay-context arguments, by design. All seven that used to be
+        here -- assay method, readout, APC type, culture context, stimulation
+        context, peptide format, culture duration -- are named in
+        docs/assay_modeling_contract.md as forbidden per-example inputs. While
+        they were accepted, a T-cell prediction could not be obtained without
+        first declaring an assay setup, and the head's output moved when one
+        was supplied.
+
+        What this returns is the marginal: the response with no context
+        declared. `predict_panel` supplies the per-condition structure as
+        output tracks, sweeping each axis from this same baseline, and the
+        observed context routes which track the loss reads.
 
         Args:
             immunogenicity_cd8_vec: CD8 immunogenicity latent (batch, d_model)
@@ -1269,7 +1275,6 @@ class TCellAssayHead(nn.Module):
             binding_class1_logit: Class-I binding logit (batch, 1)
             binding_class2_logit: Class-II binding logit (batch, 1)
             class_probs: MHC class probabilities (batch, 2) [p_I, p_II]
-            assay_method_idx..stim_context_idx: optional context indices
 
         Returns:
             T-cell assay logit (batch, 1)
@@ -1277,14 +1282,16 @@ class TCellAssayHead(nn.Module):
         batch_size = immunogenicity_cd8_vec.shape[0]
         device = immunogenicity_cd8_vec.device
 
+        # Every axis at its baseline entry. `_context_parts` is retained
+        # because `predict_panel` needs the same baseline to sweep from.
         parts = self._context_parts(
-            assay_method_idx=assay_method_idx,
-            assay_readout_idx=assay_readout_idx,
-            apc_type_idx=apc_type_idx,
-            culture_context_idx=culture_context_idx,
-            stim_context_idx=stim_context_idx,
-            peptide_format_idx=peptide_format_idx,
-            culture_duration_hours=culture_duration_hours,
+            assay_method_idx=None,
+            assay_readout_idx=None,
+            apc_type_idx=None,
+            culture_context_idx=None,
+            stim_context_idx=None,
+            peptide_format_idx=None,
+            culture_duration_hours=None,
             batch_size=batch_size,
             device=device,
         )
@@ -1600,22 +1607,31 @@ class ExcisionHead(nn.Module):
                 peptide_source_idx.long() == self.protein_source_index
             ).to(c_terminus_score.dtype)
 
-        apm = (
-            apm_perturbation_idx.long()
-            if apm_perturbation_idx is not None
-            else torch.zeros_like(machinery_idx)
-        )
-        stimulus = (
-            processing_stimulus_idx.long()
-            if processing_stimulus_idx is not None
-            else torch.zeros_like(machinery_idx)
-        )
+        # Cellular state is an output axis, not an input.
+        #
+        # These profiles used to be indexed by the observed APM state and
+        # stimulus, which meant an in-vivo excision prediction required
+        # declaring the cell's condition first -- the pattern
+        # docs/assay_modeling_contract.md forbids, and "stimulation context" is
+        # named in it explicitly.
+        #
+        # They are now swept: one predicted excision logit per condition, with
+        # the baseline (index 0, the unperturbed/unstimulated entry) used for
+        # the scalar `excision_logit` that feeds presentation. The observed
+        # condition routes which panel column the loss reads.
+        #
+        # This keeps what gap 2 needed -- the in-vivo profiles still receive
+        # gradient -- while reversing how they get it: from being predicted
+        # across conditions rather than from the condition being fed in.
+        p1_c_long = p1_c_idx.long()
+        p1_n_long = p1_n_idx.long()
+        baseline_index = torch.zeros_like(machinery_idx)
         invivo_c = (
-            self.invivo_profile_c[apm, p1_c_idx.long()]
-            + self.stimulus_profile_c[stimulus, p1_c_idx.long()]
+            self.invivo_profile_c[baseline_index, p1_c_long]
+            + self.stimulus_profile_c[baseline_index, p1_c_long]
             + context_c
         )
-        invivo_n = self.invivo_profile_n[apm, p1_n_idx.long()] + context_n
+        invivo_n = self.invivo_profile_n[baseline_index, p1_n_long] + context_n
 
         c_terminus_score = is_protein * c_terminus_score + (1.0 - is_protein) * invivo_c
         n_terminus_score = is_protein * n_terminus_score + (1.0 - is_protein) * invivo_n
@@ -1627,9 +1643,39 @@ class ExcisionHead(nn.Module):
         # for MHC selection, so the in-vivo branch contributes no length term.
         length_score = is_protein * length_score
 
-        bias = is_protein * self.bias[machinery_idx] + (1.0 - is_protein) * self.invivo_bias[apm]
+        bias = (
+            is_protein * self.bias[machinery_idx]
+            + (1.0 - is_protein) * self.invivo_bias[baseline_index]
+        )
         logit = n_terminus_score + c_terminus_score + length_score + missed_cleavage_score + bias
+
+        # Per-condition tracks. Each column is the excision logit this peptide
+        # would show under one cellular condition, holding the other axis at
+        # baseline -- the same per-axis marginal structure the assay panels use.
+        not_protein = 1.0 - is_protein
+        apm_panel = (
+            logit.unsqueeze(1)
+            + not_protein.unsqueeze(1)
+            * (
+                self.invivo_profile_c[:, p1_c_long].t()
+                - self.invivo_profile_c[baseline_index, p1_c_long].unsqueeze(1)
+                + self.invivo_profile_n[:, p1_n_long].t()
+                - self.invivo_profile_n[baseline_index, p1_n_long].unsqueeze(1)
+                + self.invivo_bias.unsqueeze(0)
+                - self.invivo_bias[baseline_index].unsqueeze(1)
+            )
+        )
+        stimulus_panel = (
+            logit.unsqueeze(1)
+            + not_protein.unsqueeze(1)
+            * (
+                self.stimulus_profile_c[:, p1_c_long].t()
+                - self.stimulus_profile_c[baseline_index, p1_c_long].unsqueeze(1)
+            )
+        )
         return {
+            "excision_panel_apm": apm_panel,
+            "excision_panel_stimulus": stimulus_panel,
             "excision_logit": logit,
             "excision_n_terminus_score": n_terminus_score,
             "excision_c_terminus_score": c_terminus_score,

@@ -296,41 +296,40 @@ class TestTCellHead:
         logit = head(pmhc_vec, tcr_vec=None)
         assert logit.shape == (2, 1)
 
-    def test_tcell_assay_head_uses_immunogenicity_and_context(self):
+    def test_tcell_assay_head_panel_covers_every_context(self):
+        """The head no longer takes context; it predicts across contexts.
+
+        This replaces a test that passed the five context indices directly and
+        asserted a logit came back. That call signature is gone: those keys are
+        forbidden per-example inputs under docs/assay_modeling_contract.md, and
+        while they were accepted the prediction could not be made without
+        declaring an assay setup.
+
+        The equivalent guarantee now is that `predict_panel` returns one
+        prediction per value of each axis, from the latents alone.
+        """
         from presto.models.heads import TCellAssayHead
 
         head = TCellAssayHead(d_model=64)
-        ig_cd8_vec = torch.randn(2, 64)
-        ig_cd4_vec = torch.randn(2, 64)
-        pres1 = torch.randn(2, 1)
-        pres2 = torch.randn(2, 1)
-        bind1 = torch.randn(2, 1)
-        bind2 = torch.randn(2, 1)
-        class_probs = torch.tensor([[0.8, 0.2], [0.1, 0.9]], dtype=torch.float32)
-        context = {
-            "assay_method_idx": torch.tensor([1, 0], dtype=torch.long),
-            "assay_readout_idx": torch.tensor([1, 0], dtype=torch.long),
-            "apc_type_idx": torch.tensor([1, 0], dtype=torch.long),
-            "culture_context_idx": torch.tensor([1, 0], dtype=torch.long),
-            "stim_context_idx": torch.tensor([1, 0], dtype=torch.long),
-        }
-
-        logit = head(
-            immunogenicity_cd8_vec=ig_cd8_vec,
-            immunogenicity_cd4_vec=ig_cd4_vec,
-            presentation_class1_logit=pres1,
-            presentation_class2_logit=pres2,
-            binding_class1_logit=bind1,
-            binding_class2_logit=bind2,
-            class_probs=class_probs,
-            assay_method_idx=context["assay_method_idx"],
-            assay_readout_idx=context["assay_readout_idx"],
-            apc_type_idx=context["apc_type_idx"],
-            culture_context_idx=context["culture_context_idx"],
-            stim_context_idx=context["stim_context_idx"],
+        panel = head.predict_panel(
+            immunogenicity_cd8_vec=torch.randn(2, 64),
+            immunogenicity_cd4_vec=torch.randn(2, 64),
+            presentation_class1_logit=torch.randn(2, 1),
+            presentation_class2_logit=torch.randn(2, 1),
+            binding_class1_logit=torch.randn(2, 1),
+            binding_class2_logit=torch.randn(2, 1),
+            class_probs=torch.tensor([[0.8, 0.2], [0.1, 0.9]], dtype=torch.float32),
         )
-
-        assert logit.shape == (2, 1)
+        for axis in (
+            "assay_method",
+            "assay_readout",
+            "apc_type",
+            "culture_context",
+            "stim_context",
+        ):
+            assert axis in panel, f"no output track for {axis}"
+            assert panel[axis].shape[0] == 2
+            assert panel[axis].shape[1] > 1, f"{axis} collapsed to one track"
 
     def test_tcell_assay_head_output_shape_no_context(self):
         from presto.models.heads import TCellAssayHead
