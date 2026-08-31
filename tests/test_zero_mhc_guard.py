@@ -21,7 +21,7 @@ def _raise_if_zero(coverage, allow_env=None):
     Mirrors the check in `train_iedb.run()` rather than importing it, because
     the check lives inline after the strict-resolution branch -- it has to,
     since running before it would preempt the strict path's unresolved-allele
-    report. `test_guard_matches_the_implementation` pins the two together.
+    report. `TestGuardMatchesTheImplementation` pins the two together.
     """
     import os
 
