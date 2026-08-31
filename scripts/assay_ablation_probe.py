@@ -50,6 +50,7 @@ from presto.scripts.focused_binding_probe import (
     _augment_train_records_only,
     _balance_alleles,
     _create_focused_train_loader,
+    _filter_shared_peptides_only,
     _keep_binding_qualifier,
     _keep_measurement_type,
     _load_binding_records_from_merged_tsv,

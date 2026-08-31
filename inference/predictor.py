@@ -17,6 +17,7 @@ from ..models.affinity import (
     DEFAULT_MAX_AFFINITY_NM,
     binding_prob_from_kd_log10,
 )
+from ..data.collate import DEFAULT_MAX_FLANK_LEN
 from ..data.allele_resolver import (
     class_ii_default_dra_allele,
     infer_species,
@@ -135,6 +136,10 @@ class Predictor:
         self.model = model.to(self.device)
         self.model.eval()
         self.tokenizer = tokenizer or Tokenizer()
+        # Must match PrestoCollator.max_flank_len. A second literal here
+        # meant serving kept 30 residues while training kept 25, so the
+        # last five clamped onto one positional row training never used.
+        self._flank_len = DEFAULT_MAX_FLANK_LEN
         self.strict_allele_resolution = bool(strict_allele_resolution)
         self.allele_sequences = self._resolve_allele_sequence_lookup(
             allele_sequences=allele_sequences,
@@ -650,9 +655,15 @@ class Predictor:
             flank_n_tok = None
             flank_c_tok = None
             if any(flank_n_list):
-                flank_n_tok = self.tokenizer.batch_encode(flank_n_list, max_len=30, pad=True).to(self.device)
+                # Must match the collator: the N-flank's *last* residue is P1
+                # of the N-terminal junction, which is what the excision head
+                # reads. Right-truncating here while training left-truncates
+                # would silently score a different residue at serving time.
+                flank_n_tok = self.tokenizer.batch_encode(
+                    flank_n_list, max_len=self._flank_len, pad=True, truncate="left"
+                ).to(self.device)
             if any(flank_c_list):
-                flank_c_tok = self.tokenizer.batch_encode(flank_c_list, max_len=30, pad=True).to(self.device)
+                flank_c_tok = self.tokenizer.batch_encode(flank_c_list, max_len=self._flank_len, pad=True).to(self.device)
 
             mhc_a_tok = mhc_a_tok_single.expand(pep_tok.shape[0], -1)
             mhc_b_tok = mhc_b_tok_single.expand(pep_tok.shape[0], -1)
