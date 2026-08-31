@@ -363,6 +363,23 @@ class TcrEvidenceRecord:
     method_bins: Tuple[str, ...] = ()
     score: Optional[int] = None
     reference_id: Optional[str] = None
+    def __post_init__(self) -> None:
+        # Derive the bins from the raw method strings when a caller did not
+        # supply them. They used to be computed in only one construction path,
+        # so a record built any other way -- including every test and any
+        # direct caller -- carried empty bins, and `tcr_evidence_method` was
+        # never supervised even though the method metadata was right there.
+        if not self.method_bins and (
+            self.method_identification or self.method_verification
+        ):
+            object.__setattr__(
+                self,
+                "method_bins",
+                _normalize_tcr_evidence_method_bins(
+                    self.method_identification, self.method_verification
+                ),
+            )
+
 
 
 # Backward compatibility alias

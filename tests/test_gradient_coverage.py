@@ -60,26 +60,17 @@ BY_DESIGN = {
     "excision_head.profile_scale_n",
 }
 
-#: (B) Reachable, but only with data this batch does not contain -- an EC50 or
-#: Tm measurement, a class II binding row carrying flanking regions, a species
-#: override, or TCR method metadata. Not defects; add the record and they
-#: train. Verified individually: a class II T-cell record moved
-#: `immunogenicity_cd4_latent_head` out of this set, and a class II processing
-#: record moved `class2_processing_predictor` out.
+#: (B) Reachable, but only with data this batch does not contain.
+#:
+#: This set has shrunk to two entries. EC50, Tm and TCR-method parameters left
+#: it once the fixture supplied those record types -- the corpus carries 147
+#: EC50 and 27 Tm rows for HLA-A*02:01 alone, so they were never untrainable,
+#: only unfed. What remains needs a class II binding row carrying flanking
+#: regions, and a species override.
 NEEDS_ABSENT_DATA = {
-    "affinity_predictor.assay_heads.ec50_residual.0.weight",
-    "affinity_predictor.assay_heads.ec50_residual.0.bias",
-    "affinity_predictor.assay_heads.ec50_residual.2.weight",
-    "affinity_predictor.assay_heads.ec50_residual.2.bias",
-    "affinity_predictor.assay_heads.tm.head.0.weight",
-    "affinity_predictor.assay_heads.tm.head.0.bias",
-    "affinity_predictor.assay_heads.tm.head.2.weight",
-    "affinity_predictor.assay_heads.tm.head.2.bias",
     "class2_pfr_score.0.weight",
     "class2_pfr_score.0.bias",
     "species_override_embed.weight",
-    "tcr_evidence_method_head.weight",
-    "tcr_evidence_method_head.bias",
 }
 
 #: (C) Computed, published, and consumed by nothing.
@@ -161,12 +152,33 @@ def _every_modality_batch():
                 species="Homo sapiens",
                 antigen_species="Homo sapiens",
             ),
+            # KD (1,132 corpus rows) and EC50 (147) are separate heads from
+            # IC50 and were unsupervised purely because the fixture had none.
+            BindingRecord(
+                peptide="FLPSDFFPSV",
+                mhc_allele="HLA-A*02:01",
+                value=12.0,
+                measurement_type="dissociation constant KD",
+                assay_method="purified MHC/direct/fluorescence",
+            ),
+            BindingRecord(
+                peptide="YLLEMLWRL",
+                mhc_allele="HLA-A*02:01",
+                value=250.0,
+                measurement_type="half maximal effective concentration (EC50)",
+                assay_method="cellular MHC/direct/fluorescence",
+            ),
         ],
         stability_records=[
-            StabilityRecord(peptide="RTLNAWVKVV", mhc_allele="HLA-A*02:01", t_half=4.0)
+            StabilityRecord(peptide="RTLNAWVKVV", mhc_allele="HLA-A*02:01", t_half=4.0),
+            # Tm exists in the corpus (27 rows for HLA-A*02:01 alone) and the
+            # fixture lacked it, so the `tm` head went unsupervised here while
+            # being perfectly trainable from real data.
+            StabilityRecord(peptide="FLPSDFFPSV", mhc_allele="HLA-A*02:01", tm=62.0),
         ],
         kinetics_records=[
-            KineticsRecord(peptide="YLLEMLWRL", mhc_allele="HLA-A*02:01", koff=0.01)
+            KineticsRecord(peptide="YLLEMLWRL", mhc_allele="HLA-A*02:01", koff=0.01),
+            KineticsRecord(peptide="GILGFVFTL", mhc_allele="HLA-A*02:01", kon=1e5),
         ],
         processing_records=[
             ProcessingRecord(
@@ -199,6 +211,9 @@ def _every_modality_batch():
                 antigen_species="Influenza A virus",
                 assay_method="ELISPOT",
                 assay_type="IFNg release",
+                apc_name="Dendritic cell",
+                effector_culture_condition="PBMC restimulated in vitro",
+                apc_culture_condition="peptide-pulsed",
             ),
             TCellRecord(
                 peptide="PKYVKQNTLKLATA",
@@ -219,6 +234,12 @@ def _every_modality_batch():
                 evidence_label=1.0,
                 species="Homo sapiens",
                 antigen_species="Human betaherpesvirus 5",
+                # Method metadata drives tcr_evidence_method, which was
+                # unsupervised only because the fixture omitted these.
+                method_identification="tetramer",
+                method_verification="sequencing",
+                method_singlecell="yes",
+                method_sequencing="10x",
             )
         ],
         bulk_ms_records=[
@@ -349,3 +370,80 @@ class TestCategoriesAreDisjoint:
             list(BY_DESIGN) + list(NEEDS_ABSENT_DATA) + list(COMPUTED_BUT_UNSUPERVISED)
         )
         assert [name for name, n in counts.items() if n > 1] == []
+
+
+# ---------------------------------------------------------------------------
+# Every declared task must actually be supervised.
+# ---------------------------------------------------------------------------
+
+#: The one task with no data source anywhere in the pipeline.
+#:
+#: `core_start` wants gold-standard binding-core positions. `PrestoSample`
+#: has the field, but no record type carries it and no loader populates it, so
+#: the spec is declared against data that does not exist. Verified 2026-08-31
+#: by scanning every dataclass in `data/loaders.py`.
+#:
+#: Kept as a spec rather than deleted because the head is a real design element
+#: and the labels are obtainable (structural alignments). If a loader ever
+#: supplies them, this entry goes and the test below tightens by one.
+TASKS_WITHOUT_A_DATA_SOURCE = {"core_start"}
+
+
+class TestEveryTaskIsSupervised:
+    """A declared loss with no supervision is a task nobody is training.
+
+    Six of these were found at once: `binding_kd`, `binding_ec50`, `tm` and
+    `kon` were unsupervised only because the fixture lacked those measurement
+    types, while the corpus carries 1,132 / 147 / 27 rows of the first three.
+    `tcell_apc_type` and `tcell_culture_context` needed APC and culture fields
+    on the T-cell record. `tcr_evidence_method` needed method bins that were
+    derived in one construction path and silently empty in every other.
+
+    None of that was visible from the loss aggregate, which happily sums
+    whatever it is given.
+    """
+
+    def test_every_spec_receives_supervision(self):
+        from presto.scripts.train_synthetic import LOSS_TASK_SPECS, compute_loss
+
+        torch.manual_seed(0)
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        _, parts, _ = compute_loss(model, _every_modality_batch(), "cpu")
+        declared = {getattr(spec, "name", "?") for spec in LOSS_TASK_SPECS}
+        unsupervised = sorted(declared - set(parts) - TASKS_WITHOUT_A_DATA_SOURCE)
+        assert unsupervised == [], (
+            f"these tasks are declared but never supervised: {unsupervised}. "
+            "Either supply a record that feeds them, or record why no data "
+            "source exists in TASKS_WITHOUT_A_DATA_SOURCE."
+        )
+
+    def test_the_exception_still_has_no_data_source(self):
+        """If a loader starts populating it, the exemption must go."""
+        import dataclasses
+
+        from presto.data import loaders
+
+        carriers = [
+            name
+            for name in dir(loaders)
+            if dataclasses.is_dataclass(getattr(loaders, name))
+            and name != "PrestoSample"
+            and any(
+                field.name == "core_start"
+                for field in dataclasses.fields(getattr(loaders, name))
+            )
+        ]
+        assert carriers == [], (
+            f"{carriers} now carry core_start; remove it from "
+            "TASKS_WITHOUT_A_DATA_SOURCE and supply it in the fixture"
+        )
+
+    def test_the_panel_losses_are_supervised_too(self):
+        """They sit outside LOSS_TASK_SPECS, so the check above misses them."""
+        from presto.scripts.train_synthetic import compute_loss
+
+        torch.manual_seed(0)
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        _, parts, _ = compute_loss(model, _every_modality_batch(), "cpu")
+        for name in ("binding_assay_panel", "excision_condition_panel"):
+            assert name in parts, f"{name} is computed but never supervised"
