@@ -26,6 +26,31 @@ from ..data.vocab import (
 )
 
 
+#: Residual modes that actually consume the factorized assay context. Under
+#: any other mode -- including the "legacy" default -- the embeddings and
+#: projection below feed nothing, so they are not allocated.
+#:
+#: Note this only became true after `binding_context` was wired into the
+#: training loop: before that the assay path could not train under *any* mode,
+#: because the metadata never reached the model at all.
+_FACTORIZED_CONTEXT_MODES = frozenset({
+    "shared_base_factorized_context_residual",
+    "shared_base_factorized_context_plus_segment_residual",
+    "dag_family",
+    "dag_method_leaf",
+    "dag_prep_readout_leaf",
+})
+
+#: Residual modes that consume the pep/MHC sequence summary.
+_SEQUENCE_SUMMARY_MODES = frozenset({
+    "shared_base_segment_residual",
+    "shared_base_factorized_context_plus_segment_residual",
+    "dag_family",
+    "dag_method_leaf",
+    "dag_prep_readout_leaf",
+})
+
+
 @dataclass
 class PrestoTrunkState:
     """Shared pMHC trunk features consumed by modular predictor heads."""
@@ -154,20 +179,67 @@ class AffinityPredictor(nn.Module):
             d_model if self.binding_kinetic_input_mode == "affinity_vec" else self.interaction_dim
         )
         self.binding = BindingModule(d_model=binding_input_dim)
-        self.sequence_summary_proj = nn.Sequential(
-            nn.Linear(d_model * 3, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
+        _uses_summary = self.affinity_assay_residual_mode in _SEQUENCE_SUMMARY_MODES
+        self.sequence_summary_proj = (
+            nn.Sequential(
+                nn.Linear(d_model * 3, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            if _uses_summary
+            else None
         )
-        # Factorized assay context embeddings
+        # Factorized assay context embeddings, allocated only when a mode reads
+        # them. See _FACTORIZED_CONTEXT_MODES.
         _fac_embed_dim = max(d_model // 4, 8)
         self._fac_embed_dim = _fac_embed_dim
-        self.assay_type_embed = nn.Embedding(len(BINDING_ASSAY_TYPES), _fac_embed_dim)
-        self.assay_prep_embed = nn.Embedding(len(BINDING_ASSAY_PREP), _fac_embed_dim)
-        self.assay_geometry_embed = nn.Embedding(len(BINDING_ASSAY_GEOMETRY), _fac_embed_dim)
-        self.assay_readout_embed = nn.Embedding(len(BINDING_ASSAY_READOUT), _fac_embed_dim)
-        factorized_context_dim = _fac_embed_dim * 4
-        self.factorized_proj = nn.Linear(factorized_context_dim, factorized_context_dim)
+        _uses_factorized = (
+            self.affinity_assay_residual_mode in _FACTORIZED_CONTEXT_MODES
+        )
+        # Output-side assay panel.
+        #
+        # docs/assay_modeling_contract.md forbids consuming assay-selector
+        # metadata as predictive input: "assay labels may not condition the
+        # predictive input path". Indexing an assay embedding by the observed
+        # value is precisely that -- at inference you would have to declare an
+        # assay before the model would return a number.
+        #
+        # The T-cell side already solved this (AssayHeads.predict_panel):
+        # sweep the axis embedding table to predict the observable under
+        # *every* value of the axis, and let the label choose only which output
+        # is supervised. This does the same for binding, turning the assay
+        # descriptors from input configuration into joint outputs.
+        self.assay_panel_axes = {
+            "assay_type": len(BINDING_ASSAY_TYPES),
+            "assay_prep": len(BINDING_ASSAY_PREP),
+            "assay_geometry": len(BINDING_ASSAY_GEOMETRY),
+            "assay_readout": len(BINDING_ASSAY_READOUT),
+        }
+        self.assay_panel_embed = nn.ModuleDict(
+            {
+                axis: nn.Embedding(size, _fac_embed_dim)
+                for axis, size in self.assay_panel_axes.items()
+            }
+        )
+        self.assay_panel_head = nn.Sequential(
+            nn.Linear(d_model + _fac_embed_dim, max(d_model // 2, 4)),
+            nn.GELU(),
+            nn.Linear(max(d_model // 2, 4), 1),
+        )
+
+        # The input-side assay-context path is gone.
+        #
+        # It indexed an assay embedding by the observed value and concatenated
+        # it into the per-assay residual head input, so the assay identity
+        # conditioned that example's own prediction -- the pattern
+        # docs/assay_modeling_contract.md forbids. The assay structure it was
+        # trying to capture now lives in predict_assay_panel, on the output
+        # side, where sweeping the table gives one prediction per assay
+        # configuration instead of one prediction for the declared assay.
+        #
+        # factorized_context_dim=0 removes the slot entirely rather than
+        # leaving a zero-filled one, so a future caller cannot refill it.
+        factorized_context_dim = 0
 
         # class_probs is [B, 2], species_probs is [B, N_MHC_SPECIES=6]
         self._class_probs_dim = 2
@@ -220,6 +292,35 @@ class AffinityPredictor(nn.Module):
         self.w_binding_class1_calibration = nn.Parameter(torch.tensor(0.2))
         self.w_binding_class2_calibration = nn.Parameter(torch.tensor(0.2))
 
+    def predict_assay_panel(
+        self, binding_affinity_vec: torch.Tensor
+    ) -> Dict[str, torch.Tensor]:
+        """Predicted KD offset under every value of every assay axis.
+
+        One tensor per axis, shaped ``[batch, n_values_for_that_axis]``.
+
+        The observed assay is deliberately not an argument. A caller asking
+        "what would this read as on a purified competitive radioactivity
+        assay" indexes the result; a training loop routes its loss to the
+        observed column. Neither conditions the input path, which is what
+        distinguishes this from an assay-context feature.
+        """
+        batch_size = binding_affinity_vec.shape[0]
+        panel: Dict[str, torch.Tensor] = {}
+        for axis, size in self.assay_panel_axes.items():
+            table = self.assay_panel_embed[axis].weight
+            expanded_vec = binding_affinity_vec.unsqueeze(1).expand(
+                batch_size, size, binding_affinity_vec.shape[-1]
+            )
+            expanded_axis = table.unsqueeze(0).expand(
+                batch_size, size, table.shape[-1]
+            )
+            joined = torch.cat([expanded_vec, expanded_axis], dim=-1)
+            panel[f"binding_assay_panel_{axis}"] = self.assay_panel_head(
+                joined
+            ).squeeze(-1)
+        return panel
+
     def forward(
         self,
         *,
@@ -238,22 +339,12 @@ class AffinityPredictor(nn.Module):
         assay_context_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
         outputs["binding_assay_context_vec"] = assay_context_vec
 
-        # Build factorized assay context from per-sample metadata when available
-        if binding_context is not None and "assay_type_idx" in binding_context:
-            fac_parts = [
-                self.assay_type_embed(binding_context["assay_type_idx"]),
-                self.assay_prep_embed(binding_context["assay_prep_idx"]),
-                self.assay_geometry_embed(binding_context["assay_geometry_idx"]),
-                self.assay_readout_embed(binding_context["assay_readout_idx"]),
-            ]
-            factorized_assay_context_vec = self.factorized_proj(
-                torch.cat(fac_parts, dim=-1)
-            )
-        else:
-            factorized_assay_context_vec = binding_affinity_vec.new_zeros(
-                binding_affinity_vec.shape[0], self._fac_embed_dim * 4,
-            )
-        outputs["binding_factorized_assay_context_vec"] = factorized_assay_context_vec
+        # `binding_context` is accepted for signature compatibility and
+        # deliberately ignored. Reading it would condition this example's
+        # prediction on its own assay label, which docs/assay_modeling_contract.md
+        # forbids; the assay structure lives in predict_assay_panel instead,
+        # where every configuration is predicted rather than one selected.
+        factorized_assay_context_vec = None
 
         probe_kd = self.binding_affinity_probe(binding_affinity_vec)
         stability_score_raw = self.binding_stability_score_head(binding_stability_vec)
@@ -265,7 +356,8 @@ class AffinityPredictor(nn.Module):
         outputs["binding_stability_score_raw"] = stability_score_raw
         outputs["binding_stability_score"] = stability_score
         if (
-            pep_vec is not None
+            self.sequence_summary_proj is not None
+            and pep_vec is not None
             and mhc_a_vec is not None
             and mhc_b_vec is not None
         ):
@@ -275,6 +367,9 @@ class AffinityPredictor(nn.Module):
         else:
             sequence_summary_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
         outputs["binding_sequence_summary_vec"] = sequence_summary_vec
+
+        # Joint assay panel. Swept, not indexed -- see predict_assay_panel.
+        outputs.update(self.predict_assay_panel(binding_affinity_vec))
 
         if self.binding_kinetic_input_mode == "affinity_vec":
             binding_input = binding_affinity_vec
@@ -360,7 +455,12 @@ class AffinityPredictor(nn.Module):
                 )
                 else None
             ),
-            binding_stability_score=None,
+            # The stability heads reserve an input slot for this
+            # (`stability_score_dim`) and fill it with zeros when it is None.
+            # Passing None therefore did two things at once: left a whole input
+            # channel permanently dead, and starved binding_stability_score_head
+            # of gradient. It is computed a few lines above; feed it.
+            binding_stability_score=stability_score,
             assay_context_vec=None,
             factorized_assay_context_vec=factorized_assay_context_vec,
             sequence_summary_vec=(

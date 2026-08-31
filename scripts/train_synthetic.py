@@ -492,6 +492,25 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
     ),
 )
 
+#: The elution spec, looked up once. The condition panel is supervised against
+#: the elution label, so it needs the same target and mask resolution the
+#: ordinary elution loss uses rather than a second hand-rolled copy.
+#: Base weights for losses assembled outside LOSS_TASK_SPECS.
+#:
+#: Both panels supervise a gathered column rather than a single output path,
+#: so they cannot be declared as ordinary specs. Naming their weight here
+#: keeps it a decision rather than a fall-through default.
+PANEL_TASK_BASE_WEIGHTS: Dict[str, float] = {
+    "excision_condition_panel": 1.0,
+    "binding_assay_panel": 1.0,
+}
+
+_ELUTION_SPEC = next(
+    (spec for spec in LOSS_TASK_SPECS if getattr(spec, "name", "") == "elution"),
+    None,
+)
+
+
 LOSS_TASK_NAMES: Tuple[str, ...] = tuple(spec.name for spec in LOSS_TASK_SPECS)
 LOSS_TASK_NAME_TO_INDEX: Dict[str, int] = {
     name: idx for idx, name in enumerate(LOSS_TASK_NAMES)
@@ -1277,6 +1296,8 @@ def _get_mil_channel(
         "instance_to_bag": getattr(batch, f"{prefix}_instance_to_bag", None),
         "bag_label": getattr(batch, f"{prefix}_bag_label", None),
         "bag_sample_ids": getattr(batch, f"{prefix}_bag_sample_ids", []),
+        "provenance": getattr(batch, f"{prefix}_provenance", None),
+        "machinery_idx": getattr(batch, f"{prefix}_machinery_idx", None),
     }
     required = (
         channel["pep_tok"],
@@ -1296,7 +1317,8 @@ def _slice_mil_channel(
 ) -> Dict[str, Any]:
     keep_list = keep.tolist()
     sliced = dict(channel)
-    for key in ("pep_tok", "mhc_a_tok", "mhc_b_tok", "flank_n_tok", "flank_c_tok", "instance_to_bag"):
+    for key in ("pep_tok", "mhc_a_tok", "mhc_b_tok", "flank_n_tok", "flank_c_tok",
+                "instance_to_bag", "machinery_idx"):
         value = channel.get(key)
         if isinstance(value, torch.Tensor):
             sliced[key] = value[keep]
@@ -1304,6 +1326,16 @@ def _slice_mil_channel(
         value = channel.get(key)
         if isinstance(value, list):
             sliced[key] = [value[i] for i in keep_list]
+    # Provenance is per-instance too. `sliced = dict(channel)` shallow-copies
+    # it, so without this the capped forward gets full-length condition
+    # tensors against truncated inputs and dies in torch.cat -- which any run
+    # with max_mil_instances set and a bag larger than the cap would hit.
+    provenance = channel.get("provenance")
+    if isinstance(provenance, dict):
+        sliced["provenance"] = {
+            name: (tensor[keep] if isinstance(tensor, torch.Tensor) else tensor)
+            for name, tensor in provenance.items()
+        }
     return sliced
 
 
@@ -1462,6 +1494,26 @@ def _build_contrastive_mil_channel(
         contrastive["flank_c_tok"] = channel["flank_c_tok"][anchor_index_t]
     else:
         contrastive["flank_c_tok"] = None
+    # Cellular state follows the anchor, like pep_tok and the flanks: the
+    # condition belongs to the sample the peptide came from, and only the MHC
+    # is swapped in to make the synthetic negative. Omitting it would run every
+    # contrastive instance at the default condition while real bags run at
+    # their true one, letting processing_condition_embed learn
+    # "default state => negative" instead of any real biology.
+    provenance = channel.get("provenance")
+    if isinstance(provenance, dict):
+        contrastive["provenance"] = {
+            name: (tensor[anchor_index_t] if isinstance(tensor, torch.Tensor) else tensor)
+            for name, tensor in provenance.items()
+        }
+    # Machinery follows the anchor too. `contrastive` is built fresh rather
+    # than copied from `channel`, so omitting this left the contrastive pass
+    # with machinery=None while the anchors it is compared against use the
+    # declared value -- the two logits in the contrastive loss would then be
+    # computed under different machinery-derivation rules.
+    machinery = channel.get("machinery_idx")
+    if isinstance(machinery, torch.Tensor):
+        contrastive["machinery_idx"] = machinery[anchor_index_t]
     return contrastive
 
 
@@ -1471,7 +1523,12 @@ def _run_mil_forward(
     channel: Dict[str, Any],
     device: str,
     tcell_context: Optional[Dict[str, torch.Tensor]] = None,
+    provenance: Optional[Dict[str, torch.Tensor]] = None,
 ) -> Dict[str, Any]:
+    # Declared per-instance machinery. Omitting it makes the model fall back to
+    # a threshold on *predicted* class, which now feeds the elution loss via
+    # the excision -> presentation edge.
+    channel_machinery = channel.get("machinery_idx")
     return model(
         pep_tok=channel["pep_tok"].to(device),
         mhc_a_tok=channel["mhc_a_tok"].to(device),
@@ -1488,7 +1545,21 @@ def _run_mil_forward(
             if isinstance(channel.get("flank_c_tok"), torch.Tensor)
             else None
         ),
-        tcell_context=tcell_context,
+        # tcell_context is deliberately not forwarded, matching the row path
+        # and both holdout forwards. Passing it here would make predict_panel
+        # sweep from the observed context on the bag path and from the
+        # all-unknown baseline everywhere else, so the same panel outputs
+        # would be two different functions averaged into one loss.
+        machinery=(
+            channel_machinery.to(device)
+            if isinstance(channel_machinery, torch.Tensor)
+            else None
+        ),
+        provenance=(
+            {name: value.to(device) for name, value in provenance.items()}
+            if provenance
+            else None
+        ),
     )
 
 
@@ -1536,6 +1607,7 @@ def _compute_mil_channel_losses(
         channel=channel,
         device=device,
         tcell_context=tcell_context,
+        provenance=channel.get("provenance"),
     )
     instance_to_bag = channel["instance_to_bag"].to(device=device, dtype=torch.long)
     n_bags = int(bag_label.shape[0])
@@ -1599,6 +1671,7 @@ def _compute_mil_channel_losses(
                 channel=contrastive_channel,
                 device=device,
                 tcell_context=None,
+                provenance=contrastive_channel.get("provenance"),
             )
             contrastive_logits = contrastive_outputs.get("presentation_logit")
             if isinstance(contrastive_logits, torch.Tensor):
@@ -1938,8 +2011,17 @@ def compute_loss(
             species=batch.processing_species,
             flank_n_tok=batch.flank_n_tok,
             flank_c_tok=batch.flank_c_tok,
-            tcell_context=batch.tcell_context if batch.tcell_context else None,
             machinery=getattr(batch, "machinery_idx", None),
+            # Deliberately NOT passing tcell_context. Its seven keys -- apc_type,
+            # assay_method, assay_readout, culture_context, culture_duration,
+            # peptide_format, stim_context -- are every one of them on the forbidden-input
+            # list in docs/assay_modeling_contract.md. Conditioning on them means a T-cell
+            # prediction cannot be obtained without first declaring an assay setup.
+            #
+            # The head defaults each axis to its "unknown" entry, so the prediction becomes
+            # the context-free marginal, and predict_panel sweeps each axis from that
+            # baseline to give one output per condition. The observed context still routes
+            # which panel column the loss reads, which the Output Contract allows.
             provenance=getattr(batch, "provenance", None) or None,
             return_binding_attention=return_binding_attention,
         )
@@ -2008,6 +2090,97 @@ def compute_loss(
             supervised_losses[spec.name] = masked_loss
             supervised_loss_support[spec.name] = support
             output_metrics[f"batch_support_{spec.name}"] = support
+        # Cellular-condition panel: tie the observed condition's column to the
+        # elution label.
+        #
+        # The condition is a supervision selector, not an input. The model
+        # predicts excision under every APM state and every stimulus from
+        # peptide and MHC alone; this picks the column that was actually
+        # observed. Without it the swept in-vivo profiles would be computed and
+        # read by nothing -- reopening gap 2 in a new disguise, which is why
+        # tests/test_gradient_coverage.py pins those four parameters by name.
+        condition_provenance = getattr(batch, "provenance", None) or {}
+        elution_target = _get_batch_target(batch, _ELUTION_SPEC) if _ELUTION_SPEC else None
+        elution_mask = _get_batch_mask(batch, _ELUTION_SPEC) if _ELUTION_SPEC else None
+        if elution_target is not None and elution_mask is not None and condition_provenance:
+            condition_terms = []
+            elution_flat = elution_target.reshape(-1).float().to(device)
+            elution_mask_flat = elution_mask.reshape(-1).float().to(device)
+            for panel_key, index_key in (
+                ("excision_panel_apm", "apm_perturbation_idx"),
+                ("excision_panel_stimulus", "processing_stimulus_idx"),
+            ):
+                panel = outputs.get(panel_key)
+                index = condition_provenance.get(index_key)
+                if panel is None or index is None:
+                    continue
+                index_long = index.reshape(-1).long().to(device)
+                if index_long.shape[0] != panel.shape[0]:
+                    continue
+                chosen = panel.gather(1, index_long.unsqueeze(1)).squeeze(1)
+                limit = min(chosen.shape[0], elution_flat.shape[0])
+                per_row = F.binary_cross_entropy_with_logits(
+                    chosen[:limit], elution_flat[:limit], reduction="none"
+                )
+                denominator = elution_mask_flat[:limit].sum() + 1e-8
+                condition_terms.append(
+                    (per_row * elution_mask_flat[:limit]).sum() / denominator
+                )
+            if condition_terms:
+                supervised_losses["excision_condition_panel"] = (
+                    torch.stack(condition_terms).mean()
+                )
+                # Record support like any other task. Without it the default
+                # support-weighted aggregation gives this loss weight 1.0
+                # against tasks carrying support in the thousands, so the
+                # panel would contribute ~1/N of the gradient and train
+                # essentially not at all.
+                supervised_loss_support["excision_condition_panel"] = float(
+                    elution_mask_flat.sum().item()
+                )
+
+        # Assay panel: tie the observed assay's column to the measurement.
+        #
+        # The assay label is used only to *select which output is supervised*,
+        # which docs/assay_modeling_contract.md explicitly allows ("assay
+        # labels may choose supervision targets"). The model still predicts
+        # every column from peptide and MHC alone, so nothing about the assay
+        # reaches the input path.
+        #
+        # Without this the panel would be computed and read by nothing -- the
+        # exact "published but untrained" failure the rest of this work
+        # removed, which is how tests/test_gradient_coverage.py caught it.
+        panel_context = getattr(batch, "binding_context", None) or {}
+        bind_target = getattr(batch, "bind_target", None)
+        bind_mask = getattr(batch, "bind_mask", None)
+        if bind_target is not None and bind_mask is not None and panel_context:
+            panel_terms = []
+            target_flat = bind_target.reshape(-1).float().to(device)
+            mask_flat = bind_mask.reshape(-1).float().to(device)
+            for axis in ("assay_type", "assay_prep", "assay_geometry", "assay_readout"):
+                panel = outputs.get(f"binding_assay_panel_{axis}")
+                index = panel_context.get(f"{axis}_idx")
+                if panel is None or index is None:
+                    continue
+                index_long = index.reshape(-1).long().to(device)
+                if index_long.shape[0] != panel.shape[0]:
+                    continue
+                chosen = panel.gather(1, index_long.unsqueeze(1)).squeeze(1)
+                per_row = F.smooth_l1_loss(
+                    chosen, target_flat[: chosen.shape[0]], reduction="none"
+                )
+                denominator = mask_flat[: chosen.shape[0]].sum() + 1e-8
+                panel_terms.append(
+                    (per_row * mask_flat[: chosen.shape[0]]).sum() / denominator
+                )
+            if panel_terms:
+                supervised_losses["binding_assay_panel"] = (
+                    torch.stack(panel_terms).mean()
+                )
+                supervised_loss_support["binding_assay_panel"] = float(
+                    mask_flat.sum().item()
+                )
+
         if profile_performance:
             perf_metrics["perf_supervised_loss_sec"] = float(
                 time.perf_counter() - supervised_start
@@ -2112,7 +2285,15 @@ def compute_loss(
             supervised_task_weights: Dict[str, float] = {}
             for task_name, task_loss in supervised_losses.items():
                 spec = LOSS_TASK_NAME_TO_SPEC.get(task_name)
-                base_weight = max(float(spec.base_weight), 0.0) if spec is not None else 1.0
+                # The panel losses are assembled outside LOSS_TASK_SPECS
+                # because they gather a column rather than reading a single
+                # output path. They still need a declared weight: falling
+                # through to 1.0 is a silent default, not a decision.
+                base_weight = (
+                    max(float(spec.base_weight), 0.0)
+                    if spec is not None
+                    else PANEL_TASK_BASE_WEIGHTS.get(task_name, 1.0)
+                )
                 if base_weight <= 0.0:
                     continue
                 if aggregation_mode == "task_mean":

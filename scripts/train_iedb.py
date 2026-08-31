@@ -14,6 +14,7 @@ import csv
 import inspect
 import json
 import math
+import os
 import random
 import re
 import sys
@@ -1347,7 +1348,6 @@ def _evaluate_output_and_latent_statistics(
                 species=batch.processing_species,
                 flank_n_tok=batch.flank_n_tok,
                 flank_c_tok=batch.flank_c_tok,
-                tcell_context=batch.tcell_context if batch.tcell_context else None,
             )
             take = min(batch_size, max_samples - samples_used)
             if take <= 0:
@@ -3531,6 +3531,10 @@ def _print_mhc_sequence_coverage_summary(coverage: Mapping[str, Any]) -> None:
         )
         print(f"  {state} species buckets: {text}")
 
+class MHCResolutionError(RuntimeError):
+    """No allele resolved to a sequence, so the model is not a pMHC model."""
+
+
 def _split_allele_list(raw_value: Optional[str]) -> List[str]:
     if raw_value is None:
         return []
@@ -4970,6 +4974,34 @@ def run(args: argparse.Namespace) -> None:
             "WARNING: unresolved MHC alleles found in training data and strict mode is disabled."
         )
 
+    # Strict mode has already raised above if it was going to, with a report
+    # naming the offending alleles. This catches what strict mode does not:
+    # resolving *nothing at all* with strict disabled -- which the hitlist path
+    # does by default.
+    #
+    # Zero resolution is not a degraded pMHC model, it is a different model.
+    # Every pair collapses to peptide-only, the groove attends to padding, and
+    # a normal-looking loss curve means nothing. On a remote box whose mhcseqs
+    # catalog had never been built this produced 0/88,797 resolved, no error
+    # anywhere, and three epochs of wasted GPU.
+    allow_zero_mhc = str(os.environ.get("PRESTO_ALLOW_ZERO_MHC", "")).strip().lower() in {
+        "1", "true", "yes", "on",
+    }
+    _coverage_overall = (
+        coverage_audit.get("overall", {}) if isinstance(coverage_audit, Mapping) else {}
+    )
+    _rows_considered = int(_coverage_overall.get("rows_considered", 0) or 0)
+    _rows_resolved = int(_coverage_overall.get("resolved_rows", 0) or 0)
+    if _rows_resolved == 0 and _rows_considered > 0 and not allow_zero_mhc:
+        raise MHCResolutionError(
+            f"no MHC sequences resolved for any of {_rows_considered} rows. "
+            "Training would silently reduce to a peptide-only model. Usual "
+            "causes: the mhcseqs catalog was never built on this machine (run "
+            "`mhcseqs build`, or copy ~/.cache/mhcseqs/mhc-full-seqs.csv), or "
+            "--index-csv points nowhere. Set PRESTO_ALLOW_ZERO_MHC=1 only if a "
+            "peptide-only run is genuinely what you want."
+        )
+
     synthetic_pmhc_ratio = max(float(args.synthetic_pmhc_negative_ratio), 0.0)
     synthetic_elution_ratio = synthetic_pmhc_ratio * SYNTHETIC_ELUTION_NEGATIVE_SCALE
     synthetic_cascade_elution_ratio = (
@@ -5590,6 +5622,12 @@ def run(args: argparse.Namespace) -> None:
             )
 
             def _forward(model_ref, batch_ref):
+                # Provenance must be passed here or the held-out pass scores a
+                # different function than training optimizes: without it every
+                # row is evaluated at the default cellular state, and the
+                # in-vivo excision -> presentation edge contributes exactly
+                # zero, so both halves of gap 2 vanish at evaluation time.
+                provenance = getattr(batch_ref, "provenance", None) or None
                 return model_ref(
                     pep_tok=batch_ref.pep_tok,
                     mhc_a_tok=batch_ref.mhc_a_tok,
@@ -5598,8 +5636,8 @@ def run(args: argparse.Namespace) -> None:
                     species=batch_ref.processing_species,
                     flank_n_tok=batch_ref.flank_n_tok,
                     flank_c_tok=batch_ref.flank_c_tok,
-                    tcell_context=batch_ref.tcell_context if batch_ref.tcell_context else None,
                     machinery=getattr(batch_ref, "machinery_idx", None),
+                    provenance=provenance,
                 )
 
             accumulators = collect_holdout_predictions(
@@ -5630,7 +5668,35 @@ def run(args: argparse.Namespace) -> None:
                 )
                 print(f"    {task_name}: {headline} (n={metrics.get('n', 0):.0f})")
         except Exception as exc:  # pragma: no cover - diagnostics must not fail a run
-            print(f"Held-out metric pass skipped: {type(exc).__name__}: {exc}")
+            # Keeping the run alive is right -- a metrics bug should not destroy
+            # a finished training run -- but the failure must be loud and it must
+            # leave a trace on disk. A silently skipped pass is indistinguishable
+            # from "no data to score", and the experiment contract requires
+            # held-out metrics: absent artifacts would otherwise read as a
+            # legitimate result. The same swallow-and-continue pattern is what
+            # kept an ImportError invisible in CI for months.
+            import traceback
+
+            print(f"Held-out metric pass FAILED: {type(exc).__name__}: {exc}")
+            traceback.print_exc()
+            try:
+                (Path(run_dir) / "holdout_error.json").write_text(
+                    json.dumps(
+                        {
+                            "error_type": type(exc).__name__,
+                            "error": str(exc),
+                            "traceback": traceback.format_exc(),
+                            "note": (
+                                "The held-out pass did not run. Metrics are "
+                                "MISSING, not empty -- do not read the absence "
+                                "of summary.json as a result."
+                            ),
+                        },
+                        indent=2,
+                    )
+                )
+            except Exception:  # pragma: no cover - never mask the original
+                pass
 
     print(f"\nTraining complete. Best val_loss: {best_val_loss:.4f}")
 

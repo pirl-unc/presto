@@ -1251,15 +1251,21 @@ class TCellAssayHead(nn.Module):
         binding_class1_logit: torch.Tensor,
         binding_class2_logit: torch.Tensor,
         class_probs: torch.Tensor,
-        assay_method_idx: Optional[torch.Tensor] = None,
-        assay_readout_idx: Optional[torch.Tensor] = None,
-        apc_type_idx: Optional[torch.Tensor] = None,
-        culture_context_idx: Optional[torch.Tensor] = None,
-        stim_context_idx: Optional[torch.Tensor] = None,
-        peptide_format_idx: Optional[torch.Tensor] = None,
-        culture_duration_hours: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
-        """Predict T-cell assay outcome from immunogenicity vecs + upstream logits.
+        """Predict the context-free T-cell assay outcome.
+
+        Takes no assay-context arguments, by design. All seven that used to be
+        here -- assay method, readout, APC type, culture context, stimulation
+        context, peptide format, culture duration -- are named in
+        docs/assay_modeling_contract.md as forbidden per-example inputs. While
+        they were accepted, a T-cell prediction could not be obtained without
+        first declaring an assay setup, and the head's output moved when one
+        was supplied.
+
+        What this returns is the marginal: the response with no context
+        declared. `predict_panel` supplies the per-condition structure as
+        output tracks, sweeping each axis from this same baseline, and the
+        observed context routes which track the loss reads.
 
         Args:
             immunogenicity_cd8_vec: CD8 immunogenicity latent (batch, d_model)
@@ -1269,7 +1275,6 @@ class TCellAssayHead(nn.Module):
             binding_class1_logit: Class-I binding logit (batch, 1)
             binding_class2_logit: Class-II binding logit (batch, 1)
             class_probs: MHC class probabilities (batch, 2) [p_I, p_II]
-            assay_method_idx..stim_context_idx: optional context indices
 
         Returns:
             T-cell assay logit (batch, 1)
@@ -1277,14 +1282,16 @@ class TCellAssayHead(nn.Module):
         batch_size = immunogenicity_cd8_vec.shape[0]
         device = immunogenicity_cd8_vec.device
 
+        # Every axis at its baseline entry. `_context_parts` is retained
+        # because `predict_panel` needs the same baseline to sweep from.
         parts = self._context_parts(
-            assay_method_idx=assay_method_idx,
-            assay_readout_idx=assay_readout_idx,
-            apc_type_idx=apc_type_idx,
-            culture_context_idx=culture_context_idx,
-            stim_context_idx=stim_context_idx,
-            peptide_format_idx=peptide_format_idx,
-            culture_duration_hours=culture_duration_hours,
+            assay_method_idx=None,
+            assay_readout_idx=None,
+            apc_type_idx=None,
+            culture_context_idx=None,
+            stim_context_idx=None,
+            peptide_format_idx=None,
+            culture_duration_hours=None,
             batch_size=batch_size,
             device=device,
         )
@@ -1341,10 +1348,10 @@ class ElutionHead(nn.Module):
 class ExcisionHead(nn.Module):
     """Machinery-conditioned peptide excision score.
 
-    ``excision = s_N + s_C + s_len``
+    ``excision = n_terminus_score + c_terminus_score + length_score``
 
-    ``s_C`` scores the C-terminal junction: the peptide's last residue is P1
-    and the first C-flank residue is P1'. ``s_N`` scores the N-terminal
+    ``c_terminus_score`` scores the C-terminal junction: the peptide's last residue is P1
+    and the first C-flank residue is P1'. ``n_terminus_score`` scores the N-terminal
     junction: the last N-flank residue is P1 and the peptide's first residue is
     P1'.
 
@@ -1391,6 +1398,7 @@ class ExcisionHead(nn.Module):
         n_stimulus: int = 1,
         n_apm: int = 1,
         protein_source_index: int = 2,
+        mhc_source_index: int = 1,
     ):
         super().__init__()
         self.n_machinery = int(n_machinery)
@@ -1483,6 +1491,11 @@ class ExcisionHead(nn.Module):
         self.n_stimulus = int(n_stimulus)
         self.n_apm = int(n_apm)
         self.protein_source_index = int(protein_source_index)
+        # Indices into PEPTIDE_SOURCES ['unknown', 'mhc', 'protein'].
+        # Both are named so callers can test positively for a source
+        # rather than negating the other -- `!= protein` silently
+        # includes `unknown`.
+        self.mhc_source_index = int(mhc_source_index)
         self.invivo_profile_c = nn.Parameter(torch.zeros(self.n_apm, self.n_aa))
         self.invivo_profile_n = nn.Parameter(torch.zeros(self.n_apm, self.n_aa))
         # Cytokine state shifts catalytic specificity (immunoproteasome
@@ -1493,17 +1506,17 @@ class ExcisionHead(nn.Module):
 
         self.context_c = nn.Linear(d_model, self.n_machinery)
         self.context_n = nn.Linear(d_model, self.n_machinery)
-        self.length_score = nn.Embedding(self.max_peptide_len + 1, self.n_machinery)
+        self.length_preference = nn.Embedding(self.max_peptide_len + 1, self.n_machinery)
         # Zero, so the length term starts neutral and contributes nothing until
         # the data asks it to. Presto._init_weights re-initializes every
         # nn.Embedding it can find, so this must be declared via
         # preserve_init_parameters or it is silently randomized.
-        nn.init.zeros_(self.length_score.weight)
+        nn.init.zeros_(self.length_preference.weight)
         self.bias = nn.Parameter(torch.zeros(self.n_machinery))
 
     def preserve_init_parameters(self):
         """Parameters whose initialization must survive a parent's blanket init."""
-        return [self.length_score.weight]
+        return [self.length_preference.weight]
 
     def effective_profile_c(self) -> torch.Tensor:
         """C-terminal P1 preferences, with pinned rules and the mixture applied."""
@@ -1558,7 +1571,7 @@ class ExcisionHead(nn.Module):
         context_c = self.context_c(processing_vec)[rows, machinery_idx]
         context_n = self.context_n(processing_vec)[rows, machinery_idx]
 
-        s_c = self._junction_score(
+        c_terminus_score = self._junction_score(
             self.effective_profile_c(),
             self.profile_scale_c,
             p1_c_idx.long(),
@@ -1566,7 +1579,7 @@ class ExcisionHead(nn.Module):
             machinery_idx,
             context_c,
         )
-        s_n = self._junction_score(
+        n_terminus_score = self._junction_score(
             self.p1_profile_n,
             self.profile_scale_n,
             p1_n_idx.long(),
@@ -1575,8 +1588,8 @@ class ExcisionHead(nn.Module):
             context_n,
         )
         length = peptide_len.clamp(0, self.max_peptide_len).long()
-        s_len = self.length_score(length)[rows, machinery_idx]
-        s_internal = self._internal_site_score(peptide_tokens, machinery_idx)
+        length_score = self.length_preference(length)[rows, machinery_idx]
+        missed_cleavage_score = self._missed_cleavage_score(peptide_tokens, machinery_idx)
 
         # ------------------------------------------------------------------
         # Source fork. For a digested protein the enzyme set both termini and
@@ -1588,50 +1601,112 @@ class ExcisionHead(nn.Module):
         # stays expressible instead of being structurally impossible.
         # ------------------------------------------------------------------
         if peptide_source_idx is None:
-            is_protein = torch.ones_like(s_c)
+            is_protein = torch.ones_like(c_terminus_score)
+            is_mhc = torch.zeros_like(c_terminus_score)
         else:
-            is_protein = (
-                peptide_source_idx.long() == self.protein_source_index
-            ).to(s_c.dtype)
+            source = peptide_source_idx.long()
+            is_protein = (source == self.protein_source_index).to(
+                c_terminus_score.dtype
+            )
+            # Positive test, not `1 - is_protein`. PEPTIDE_SOURCES is
+            # ['unknown', 'mhc', 'protein'], so the negated form routed
+            # `unknown` rows down the in-vivo branch -- asserting proteasomal
+            # origin for a row whose provenance is simply unrecorded. The
+            # collator's default was changed from `mhc` to `unknown` precisely
+            # to stop that, and this is where it leaked back in. Presto's
+            # presentation edge already tests positively; the two now agree.
+            is_mhc = (source == self.mhc_source_index).to(c_terminus_score.dtype)
 
+        # Cellular state is a causal INPUT here, and the panels below are
+        # counterfactual outputs. See docs/assay_modeling_contract.md: a
+        # TAP-null cell genuinely presents a different repertoire, and the
+        # questioner knows which cell they are asking about, so conditioning on
+        # it uses information rather than leaking it. This is the same category
+        # as the MHC allele, not the same category as "was this ELISPOT".
+        p1_c_long = p1_c_idx.long()
+        p1_n_long = p1_n_idx.long()
+        baseline_index = torch.zeros_like(machinery_idx)
         apm = (
             apm_perturbation_idx.long()
             if apm_perturbation_idx is not None
-            else torch.zeros_like(machinery_idx)
+            else baseline_index
         )
         stimulus = (
             processing_stimulus_idx.long()
             if processing_stimulus_idx is not None
-            else torch.zeros_like(machinery_idx)
+            else baseline_index
         )
         invivo_c = (
-            self.invivo_profile_c[apm, p1_c_idx.long()]
-            + self.stimulus_profile_c[stimulus, p1_c_idx.long()]
+            self.invivo_profile_c[apm, p1_c_long]
+            + self.stimulus_profile_c[stimulus, p1_c_long]
             + context_c
         )
-        invivo_n = self.invivo_profile_n[apm, p1_n_idx.long()] + context_n
+        invivo_n = self.invivo_profile_n[apm, p1_n_long] + context_n
 
-        s_c = is_protein * s_c + (1.0 - is_protein) * invivo_c
-        s_n = is_protein * s_n + (1.0 - is_protein) * invivo_n
+        c_terminus_score = is_protein * c_terminus_score + is_mhc * invivo_c
+        n_terminus_score = is_protein * n_terminus_score + is_mhc * invivo_n
         # Missed cleavages are a digest concept; the proteasome is processive.
-        s_internal = is_protein * s_internal
+        missed_cleavage_score = is_protein * missed_cleavage_score
         # Length: for a digest it follows from cleavage-site spacing, but for
         # class I the 8-11mer distribution is the MHC groove and TAP, not the
         # protease. Attributing that to processing would credit the protease
         # for MHC selection, so the in-vivo branch contributes no length term.
-        s_len = is_protein * s_len
+        length_score = is_protein * length_score
 
-        bias = is_protein * self.bias[machinery_idx] + (1.0 - is_protein) * self.invivo_bias[apm]
-        logit = s_n + s_c + s_len + s_internal + bias
+        bias = (
+            is_protein * self.bias[machinery_idx]
+            + is_mhc * self.invivo_bias[apm]
+        )
+        logit = n_terminus_score + c_terminus_score + length_score + missed_cleavage_score + bias
+
+        # Counterfactual tracks: the excision logit this peptide would show
+        # under each cellular condition, holding the other axis at baseline.
+        #
+        # These are not a substitute for conditioning -- the scalar
+        # `excision_logit` above uses the observed state, because that state is
+        # known and causal. The panel answers a different and genuinely useful
+        # question: "what would this look like in a TAP-null cell, or under
+        # IFN-gamma", which is what makes the machinery interpretable.
+        not_protein = is_mhc
+        # Swap the *observed* condition's contribution for each candidate's,
+        # not the baseline's. `logit` already contains the observed condition,
+        # so subtracting the baseline instead left the observed term in place
+        # and added the candidate on top: the column for the observed condition
+        # then double-counted it and disagreed with `excision_logit` on every
+        # row except the one that happened to be at index 0. The panel loss
+        # gathers exactly that column, so the perturbed rows this feature
+        # exists for were supervised on a quantity the model never reports.
+        apm_panel = (
+            logit.unsqueeze(1)
+            + not_protein.unsqueeze(1)
+            * (
+                self.invivo_profile_c[:, p1_c_long].t()
+                - self.invivo_profile_c[apm, p1_c_long].unsqueeze(1)
+                + self.invivo_profile_n[:, p1_n_long].t()
+                - self.invivo_profile_n[apm, p1_n_long].unsqueeze(1)
+                + self.invivo_bias.unsqueeze(0)
+                - self.invivo_bias[apm].unsqueeze(1)
+            )
+        )
+        stimulus_panel = (
+            logit.unsqueeze(1)
+            + not_protein.unsqueeze(1)
+            * (
+                self.stimulus_profile_c[:, p1_c_long].t()
+                - self.stimulus_profile_c[stimulus, p1_c_long].unsqueeze(1)
+            )
+        )
         return {
+            "excision_panel_apm": apm_panel,
+            "excision_panel_stimulus": stimulus_panel,
             "excision_logit": logit,
-            "excision_s_n": s_n,
-            "excision_s_c": s_c,
-            "excision_s_len": s_len,
-            "excision_s_internal": s_internal,
+            "excision_n_terminus_score": n_terminus_score,
+            "excision_c_terminus_score": c_terminus_score,
+            "excision_length_score": length_score,
+            "excision_missed_cleavage_score": missed_cleavage_score,
         }
 
-    def _internal_site_score(
+    def _missed_cleavage_score(
         self, peptide_tokens: Optional[torch.Tensor], machinery_idx: torch.Tensor
     ) -> torch.Tensor:
         """Penalty for cleavage sites the machinery skipped inside the peptide."""
@@ -1641,7 +1716,7 @@ class ExcisionHead(nn.Module):
         valid = tokens != 0
         lengths = valid.long().sum(dim=1)
         positions = torch.arange(tokens.shape[1], device=tokens.device).unsqueeze(0)
-        # Exclude the C-terminal residue: that junction is scored by s_C, and
+        # Exclude the C-terminal residue: that junction is scored by c_terminus_score, and
         # counting it here would penalize every correct product.
         interior = valid & (positions < (lengths - 1).clamp(min=0).unsqueeze(1))
         is_site = self.p1_site_mask[machinery_idx.unsqueeze(1), tokens]

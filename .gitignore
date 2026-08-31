@@ -162,6 +162,9 @@ venv.bak/
 .DS_Store
 artifacts/
 modal_runs/
+# Same reason as modal_runs: runplz writes run dirs here (checkpoints, metrics,
+# prediction dumps). Experiment records belong in experiments/, summarized.
+brev_runs/
 modal_train_result*.json
 
 # Large or regenerable derived datasets

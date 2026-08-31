@@ -72,6 +72,22 @@ _MS_COLUMNS = _SHARED_COLUMNS + [
     "cell_line_name",
     "source_tissue",
     "cell_type",
+    # Sample provenance, as orthogonal axes rather than one flat class.
+    #
+    # A single label derived from `cell_line_name` cannot express the space
+    # that actually matters -- solid tissue, solid and haematological cancers,
+    # donor blood, PBMC, sorted immune cells, and cell lines from all of those
+    # origins. That space is a product of lineage x malignancy x
+    # immortalization x site, and collapsing it put a primary AML blast and an
+    # AML cell line in the same bucket, which is the distinction most likely to
+    # matter: lines drift and routinely lose immunoproteasome and TAP.
+    #
+    # These two are booleans hitlist already computes at 100% coverage, versus
+    # 58.3% for `cell_line_name`.
+    "src_cell_line",
+    "src_healthy_tissue",
+    "src_cancer",
+    "src_adjacent_to_tumor",
     # Tier 3 cellular state. `condition_category` is the per-sample truth;
     # `apm_genes_perturbed` names the genes. The study-level roll-up
     # (`study_apm_perturbed`) is deliberately not used: it is ORed across a
@@ -420,7 +436,13 @@ def load_records_from_hitlist(
                 apm_perturbation=apm_group_for_genes(
                     _clean(row.get("apm_genes_perturbed"))
                 ),
-                cell_type=_clean(row.get("cell_line_name")) or None,
+                cell_type=_clean(row.get("cell_type"))
+                or _clean(row.get("cell_line_name"))
+                or None,
+                is_cell_line=row.get("src_cell_line"),
+                is_healthy_tissue=row.get("src_healthy_tissue"),
+                is_cancer=row.get("src_cancer"),
+                is_tumor_adjacent=row.get("src_adjacent_to_tumor"),
                 tissue=_clean(row.get("source_tissue")) or None,
                 mhc_class=_clean(row.get("mhc_class")) or None,
                 species=_clean(row.get("host")) or None,

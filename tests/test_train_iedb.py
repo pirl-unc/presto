@@ -1942,7 +1942,15 @@ def test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved(tmp_path, mo
         filter_unresolved_mhc=False,
         index_csv=None,
     )
-    with pytest.raises(RuntimeError, match="Unresolved MHC alleles are present"):
+    # Either fail-fast is correct here. This fixture resolves *nothing*,
+    # so the zero-coverage guard fires first with a more specific message
+    # (which cause to check, how to fix it); with partial resolution the
+    # strict check fires instead and names the offending alleles. The
+    # contract under test is that an unresolved allele stops the run.
+    with pytest.raises(
+        RuntimeError,
+        match="Unresolved MHC alleles are present|no MHC sequences resolved",
+    ):
         run(args)
 
     unresolved_alleles = run_dir / "unresolved_mhc_alleles.csv"
