@@ -1388,7 +1388,7 @@ class ExcisionHead(nn.Module):
         mixture_components: Optional[List[int]] = None,
         max_peptide_len: int = 50,
         pin_profiles: bool = True,
-        n_inducer: int = 1,
+        n_stimulus: int = 1,
         n_apm: int = 1,
         protein_source_index: int = 2,
     ):
@@ -1480,15 +1480,15 @@ class ExcisionHead(nn.Module):
         # processes: the C-terminus is the proteasomal cut, the N-terminus is
         # ERAP trimming. Keeping them apart is what lets an ERAP1-KO contrast
         # move the N-terminal preference without touching the C-terminal one.
-        self.n_inducer = int(n_inducer)
+        self.n_stimulus = int(n_stimulus)
         self.n_apm = int(n_apm)
         self.protein_source_index = int(protein_source_index)
         self.invivo_profile_c = nn.Parameter(torch.zeros(self.n_apm, self.n_aa))
         self.invivo_profile_n = nn.Parameter(torch.zeros(self.n_apm, self.n_aa))
         # Cytokine state shifts catalytic specificity (immunoproteasome
-        # subunits favour different P1 residues), so the inducer contributes an
+        # subunits favour different P1 residues), so the stimulus contributes an
         # additive residual rather than its own table.
-        self.inducer_profile_c = nn.Parameter(torch.zeros(self.n_inducer, self.n_aa))
+        self.stimulus_profile_c = nn.Parameter(torch.zeros(self.n_stimulus, self.n_aa))
         self.invivo_bias = nn.Parameter(torch.zeros(self.n_apm))
 
         self.context_c = nn.Linear(d_model, self.n_machinery)
@@ -1549,7 +1549,7 @@ class ExcisionHead(nn.Module):
         peptide_len: torch.Tensor,
         peptide_tokens: Optional[torch.Tensor] = None,
         peptide_source_idx: Optional[torch.Tensor] = None,
-        processing_inducer_idx: Optional[torch.Tensor] = None,
+        processing_stimulus_idx: Optional[torch.Tensor] = None,
         apm_perturbation_idx: Optional[torch.Tensor] = None,
     ) -> Dict[str, torch.Tensor]:
         machinery_idx = machinery_idx.long()
@@ -1599,14 +1599,14 @@ class ExcisionHead(nn.Module):
             if apm_perturbation_idx is not None
             else torch.zeros_like(machinery_idx)
         )
-        inducer = (
-            processing_inducer_idx.long()
-            if processing_inducer_idx is not None
+        stimulus = (
+            processing_stimulus_idx.long()
+            if processing_stimulus_idx is not None
             else torch.zeros_like(machinery_idx)
         )
         invivo_c = (
             self.invivo_profile_c[apm, p1_c_idx.long()]
-            + self.inducer_profile_c[inducer, p1_c_idx.long()]
+            + self.stimulus_profile_c[stimulus, p1_c_idx.long()]
             + context_c
         )
         invivo_n = self.invivo_profile_n[apm, p1_n_idx.long()] + context_n
