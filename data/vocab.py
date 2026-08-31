@@ -983,128 +983,152 @@ def is_unmapped_condition(condition: Optional[str]) -> bool:
     return bool(text) and text not in CONDITION_TO_STIMULUS
 
 # ---------------------------------------------------------------------------
-# Antigen-presenting cell class (Tier 3, biological state -- an INPUT).
+# Sample provenance, factorized (Tier 3 biological state -- all INPUTS).
 # ---------------------------------------------------------------------------
 #
-# Grouped by antigen-processing phenotype rather than by tissue of origin,
-# because that is the mechanism this axis exists to represent. Professional
-# APCs and EBV-transformed lymphoblastoid lines express the immunoproteasome
-# (PSMB8/9/10) constitutively and carry high TAP and MHC-I; most solid-tumour
-# lines express little immunoproteasome unless induced, and some have lost
-# TAP or B2M outright. Two peptides from the same protein are presented
-# differently by a dendritic cell and by a breast-carcinoma line, and the
-# questioner knows which they are asking about -- so this is an input, in the
-# same category as the MHC allele. See docs/assay_modeling_contract.md.
+# Replaces a single flat class derived from the free-text cell-line name. That
+# label was wrong in three ways: it came from the worst-covered field (58.3%,
+# versus 100% for the two booleans below), it conflated orthogonal axes, and it
+# could not express the space that actually occurs -- solid tissue, solid and
+# haematological cancers, donor blood, PBMC, sorted immune cells, and cell
+# lines derived from any of those. That space is a product, not an enum.
 #
-# `unknown` is a real and common answer: roughly half of elution rows carry no
-# cell annotation at all, and inventing a class for them would be worse than
-# admitting it.
-APC_CELL_CLASSES = [
-    "unknown",
-    "professional_apc",      # dendritic cells, macrophages, monocytes
-    "lymphoblastoid",        # EBV-transformed B-LCL lines: JY, C1R, T2, DB
-    "primary_lymphoid",      # PBMC, lymphocyte, mononuclear, splenocyte,
-                             # and primary B cells -- resting B cells do not
-                             # carry the constitutive immunoproteasome that
-                             # defines the lymphoblastoid class
-    "tumor_hematologic",     # THP-1, AML14, BV-173, NB-*
-    "tumor_epithelial",      # MDA-MB-231, HCT 116, HeLa, MCF-7, SUM159PT
-    "tumor_melanocytic",     # SK-MEL-*, LM-MEL-*, melanocyte
-    "tumor_other",           # SaOS-2, glial, HROG02 and other solid lines
-    "primary_nonlymphoid",   # fibroblast, epithelial cell, glial cell
-    "other",
-]
-APC_CELL_CLASS_TO_IDX = {name: i for i, name in enumerate(APC_CELL_CLASSES)}
+# The axes answer the two questions the model needs:
+#
+#   which source proteins are expressed?   tissue, malignancy
+#   which processing components are on?    lineage, cell-line status
+#
+# Cell-line status earns its own axis because immortalized lines drift and
+# routinely lose immunoproteasome subunits, TAP, or B2M. Measured: lines are
+# almost never healthy (6,574 rows of 2.59M), while primary material splits
+# 1.06M healthy / 0.79M diseased -- so the two booleans are independent, not
+# a re-encoding of each other.
 
-#: Regex rules over the free-text cell-line name, most specific first.
-#:
-#: Anchored on token boundaries rather than bare substrings. A naive
-#: `"mel" in name` test matched "SomeLineNobodyMapped" -- so**mel**inenobody --
-#: and would have silently filed unrelated lines as melanoma. Short tokens are
-#: the dangerous ones, so every rule here requires a boundary.
-#:
-#: Deliberately conservative: an unrecognized line becomes `unknown` rather
-#: than being guessed into a class, because a wrong processing phenotype is
-#: worse than an absent one -- the model would learn a real-looking effect
-#: from a mislabelled group.
-_APC_CLASS_PATTERNS: Tuple[Tuple[str, str], ...] = (
-    (r"\bdendritic\b", "professional_apc"),
-    (r"\bmacrophage\b", "professional_apc"),
-    (r"\bmonocyte\b", "professional_apc"),
-    (r"\bb[- ]?lcl\b", "lymphoblastoid"),
-    (r"\blymphoblast", "lymphoblastoid"),
-    # A primary B cell is not a B-LCL. Filing it as lymphoblastoid taught the
-    # model an immunoproteasome-high prior for a cell that does not have one.
-    (r"\bb[- ]cell\b", "primary_lymphoid"),
-    (r"\bsu-dhl", "lymphoblastoid"),
-    (r"\bdohh2\b", "lymphoblastoid"),
-    (r"\bpbmc\b", "primary_lymphoid"),
-    (r"\bmononuclear\b", "primary_lymphoid"),
-    (r"\bsplenocyte", "primary_lymphoid"),
-    (r"\blymphocyte", "primary_lymphoid"),
-    (r"\bthp-?1\b", "tumor_hematologic"),
-    (r"\baml\b|\baml\d", "tumor_hematologic"),
-    (r"\bbv-173\b", "tumor_hematologic"),
-    # Every alternative anchored. `-mel-` unanchored would match any
-    # hyphenated identifier containing those letters.
-    (
-        r"\bmelanoma\b|\bmelanocyte\b|\bsk-mel\b|\bsk-mel-|\blm-mel\b|\blm-mel-"
-        r"|\b[a-z]{1,4}-mel-\d",
-        "tumor_melanocytic",
-    ),
-    (r"\bhela\b", "tumor_epithelial"),
-    (r"\bmda-mb", "tumor_epithelial"),
-    (r"\bmcf-?7", "tumor_epithelial"),
-    (r"\bhct\b|\bhct\s*\d", "tumor_epithelial"),
-    (r"\bsum159", "tumor_epithelial"),
-    (r"\bhcc\d", "tumor_epithelial"),
-    (r"\bcama\d?\b", "tumor_epithelial"),
-    (r"\buacc-?\d", "tumor_epithelial"),
-    (r"\bsaos", "tumor_other"),
-    (r"\bhrog", "tumor_other"),
-    (r"\bglial\b", "primary_nonlymphoid"),
-    (r"\bfibroblast", "primary_nonlymphoid"),
-    (r"\bepithelial cell\b", "primary_nonlymphoid"),
+#: Lineage, grouped by antigen-processing phenotype. Professional APCs and
+#: B-lineage cells carry constitutive immunoproteasome and high MHC-I;
+#: non-haematopoietic cells generally do not unless induced.
+CELL_LINEAGES = [
+    "unknown",
+    "b_lineage",          # B-cell, plasma cell, lymphoblastoid
+    "t_lineage",          # T cell, CD4+, CD8+
+    "myeloid",            # monocyte, macrophage, myeloblast, dendritic
+    "mixed_leukocyte",    # PBMC, mononuclear, splenocyte, lymph node cells
+    "epithelial",
+    "melanocytic",
+    "fibroblast_stromal",  # fibroblast, endothelial, osteoblast, Schwann
+    "neural",             # neuroblast, neuron, glial, neuroendocrine
+    "hepatocyte",
+]
+CELL_LINEAGE_TO_IDX = {name: i for i, name in enumerate(CELL_LINEAGES)}
+
+_CELL_LINEAGE_PATTERNS: Tuple[Tuple[str, str], ...] = (
+    (r"\bplasma cell\b|\bb[- ]cell\b|\blymphoblast", "b_lineage"),
+    (r"\bt[- ]cell\b|\bcd[48]\+", "t_lineage"),
+    (r"\bdendritic\b|\bmacrophage\b|\bmonocyte\b|\bmyeloblast\b"
+     r"|\bmegakaryoblast\b|\bmast cell\b", "myeloid"),
+    (r"\bpbmc\b|\bmononuclear\b|\bsplenocyte\b|\blymph node cells\b"
+     r"|\blymphocyte\b|\bplatelet\b", "mixed_leukocyte"),
+    (r"\bepithelial\b", "epithelial"),
+    (r"\bmelanocyte\b|\bmelanoma\b", "melanocytic"),
+    (r"\bfibroblast\b|\bendothelial\b|\bosteoblast\b|\bschwann\b",
+     "fibroblast_stromal"),
+    (r"\bneuroblast\b|\bneuron\b|\bglial\b|\bneuroendocrine\b", "neural"),
+    (r"\bhepatocyte\b", "hepatocyte"),
 )
 
 
-#: Exact names, checked before the substring rules. These are short and
-#: well-known enough that substring matching would be unsafe -- "t2" and "db"
-#: appear inside many unrelated identifiers.
-_APC_CLASS_EXACT: Dict[str, str] = {
-    "jy": "lymphoblastoid",        # EBV-transformed B-LCL, the ligandome workhorse
-    "c1r": "lymphoblastoid",       # HLA-low B-LCL used for single-allele transfectants
-    "t2": "lymphoblastoid",        # TAP-deficient T x B hybrid
-    "db": "lymphoblastoid",        # B-cell lymphoma line
-    "721.221": "lymphoblastoid",
-    "nb-sd": "tumor_hematologic",
-    "nb-ebc1": "tumor_hematologic",
-    "other": "other",
-    "cell-line mixture": "other",
-}
-
-
-def apc_cell_class_for_line(cell_line: Optional[str]) -> str:
-    """Map a free-text cell-line name to a processing-phenotype class.
-
-    Conservative by design: an unrecognized line becomes `unknown` rather than
-    being guessed. A wrong processing phenotype is worse than an absent one,
-    because the model would learn a real-looking effect from a mislabelled
-    group.
-    """
-    text = str(cell_line or "").strip().lower()
+def cell_lineage_for(cell_type: Optional[str]) -> str:
+    """Map a free-text ``cell_type`` to a processing-relevant lineage."""
+    text = str(cell_type or "").strip().lower()
     if not text:
         return "unknown"
-    exact = _APC_CLASS_EXACT.get(text)
-    if exact is not None:
-        return exact
-    for pattern, label in _APC_CLASS_PATTERNS:
+    for pattern, label in _CELL_LINEAGE_PATTERNS:
         if re.search(pattern, text):
             return label
+    # `unknown`, not an `other` bucket. The adapter falls back to the cell-line
+    # name when no cell type is recorded, so an unparsed value here is usually
+    # a line name rather than a lineage we chose not to model -- and filing it
+    # under a real category would assert a processing phenotype we do not know.
     return "unknown"
 
 
-def apc_cell_class_index(name: Optional[str]) -> int:
-    return APC_CELL_CLASS_TO_IDX.get(
-        str(name or "").strip().lower(), APC_CELL_CLASS_TO_IDX["unknown"]
+def cell_lineage_index(name: Optional[str]) -> int:
+    return CELL_LINEAGE_TO_IDX.get(
+        str(name or "").strip().lower(), CELL_LINEAGE_TO_IDX["unknown"]
+    )
+
+
+#: Immortalization status. Ternary rather than boolean so "not recorded" is
+#: distinguishable from "primary" -- hitlist supplies this at 100% coverage,
+#: but a caller constructing a record by hand may not.
+SAMPLE_ORIGINS = ["unknown", "primary", "cell_line"]
+SAMPLE_ORIGIN_TO_IDX = {name: i for i, name in enumerate(SAMPLE_ORIGINS)}
+
+#: Disease state. Four levels, not a healthy/diseased boolean, because
+#: hitlist distinguishes tumour-adjacent tissue (219,740 rows) and that is a
+#: real third state: adjacent tissue sits in an inflamed, often
+#: interferon-exposed microenvironment without being malignant itself, so its
+#: processing machinery resembles neither healthy tissue nor tumour.
+#:
+#: Derived from src_cancer / src_adjacent_to_tumor / src_healthy_tissue, all
+#: of which hitlist supplies at 100% coverage.
+DISEASE_STATES = ["unknown", "healthy", "tumor_adjacent", "cancer", "diseased"]
+DISEASE_STATE_TO_IDX = {name: i for i, name in enumerate(DISEASE_STATES)}
+
+
+def sample_origin_for(is_cell_line: Optional[object]) -> str:
+    if is_cell_line is None or is_cell_line != is_cell_line:  # NaN
+        return "unknown"
+    text = str(is_cell_line).strip().lower()
+    if text in {"true", "1", "yes"}:
+        return "cell_line"
+    if text in {"false", "0", "no"}:
+        return "primary"
+    return "unknown"
+
+
+def _truthy(value: Optional[object]) -> Optional[bool]:
+    if value is None or value != value:  # NaN
+        return None
+    text = str(value).strip().lower()
+    if text in {"true", "1", "yes"}:
+        return True
+    if text in {"false", "0", "no"}:
+        return False
+    return None
+
+
+def disease_state_for(
+    is_healthy: Optional[object] = None,
+    is_cancer: Optional[object] = None,
+    is_tumor_adjacent: Optional[object] = None,
+) -> str:
+    """Collapse hitlist's three sample flags into one ordered state.
+
+    Checked most-specific first: cancer beats tumour-adjacent beats healthy,
+    because a sample can carry more than one flag and the strongest claim is
+    the informative one. `diseased` is the fallback for a sample flagged
+    not-healthy without a cancer flag -- an autoimmune or infected donor.
+    """
+    if _truthy(is_cancer):
+        return "cancer"
+    if _truthy(is_tumor_adjacent):
+        return "tumor_adjacent"
+    healthy = _truthy(is_healthy)
+    if healthy is True:
+        return "healthy"
+    if healthy is False:
+        return "diseased"
+    return "unknown"
+
+
+def sample_origin_index(name: Optional[str]) -> int:
+    return SAMPLE_ORIGIN_TO_IDX.get(
+        str(name or "").strip().lower(), SAMPLE_ORIGIN_TO_IDX["unknown"]
+    )
+
+
+def disease_state_index(name: Optional[str]) -> int:
+    return DISEASE_STATE_TO_IDX.get(
+        str(name or "").strip().lower(), DISEASE_STATE_TO_IDX["unknown"]
     )

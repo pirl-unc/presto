@@ -46,7 +46,9 @@ from ..data.vocab import (
     EXCISION_MACHINERY_TO_IDX,
     EXCISION_P1_PRIME_BLOCKED,
     EXCISION_P1_RULES,
-    APC_CELL_CLASSES,
+    CELL_LINEAGES,
+    DISEASE_STATES,
+    SAMPLE_ORIGINS,
     APM_PERTURBATIONS,
     PEPTIDE_SOURCE_TO_IDX,
     PROCESSING_STIMULI,
@@ -896,20 +898,29 @@ class Presto(nn.Module):
         # requiring it (S9.5). Same softplus reasoning.
         self.w_recognition_immunogenicity = nn.Parameter(torch.tensor(-2.0))
 
-        # Antigen-presenting cell class. Biological state, so an input.
+        # Sample provenance, as three orthogonal axes. Biological state, so
+        # inputs -- see the causal test in docs/assay_modeling_contract.md.
         #
-        # This axis exists because it parameterizes the expression of every
-        # antigen-processing component: professional APCs and lymphoblastoid
-        # lines carry constitutive immunoproteasome, high TAP and high MHC-I,
-        # while most solid-tumour lines carry little immunoproteasome unless
-        # induced and some have lost TAP or B2M. A peptide is genuinely
-        # presented differently by a dendritic cell and by a carcinoma line,
-        # and the questioner knows which they are asking about.
+        # Together they answer the two questions the processing path needs:
+        # which source proteins are expressed (lineage, disease state), and
+        # which antigen-processing components are on (lineage, and whether this
+        # is an immortalized line, since lines drift and routinely lose
+        # immunoproteasome subunits, TAP or B2M).
         #
-        # Zero-initialized so it contributes nothing until the data asks: 32.5%
-        # of elution rows carry no cell annotation and land in `unknown`.
-        self.apc_cell_class_embed = self._zero_init_embedding(
-            len(APC_CELL_CLASSES), d_model
+        # Three axes rather than one label because the space is a product, not
+        # an enum: a primary AML blast and an AML cell line share a lineage and
+        # a disease state but differ in origin, and that is the difference most
+        # likely to matter.
+        #
+        # Zero-initialized, so an unannotated sample contributes nothing.
+        self.cell_lineage_embed = self._zero_init_embedding(
+            len(CELL_LINEAGES), d_model
+        )
+        self.sample_origin_embed = self._zero_init_embedding(
+            len(SAMPLE_ORIGINS), d_model
+        )
+        self.disease_state_embed = self._zero_init_embedding(
+            len(DISEASE_STATES), d_model
         )
 
         # There is deliberately no cellular-condition embedding on the input
@@ -2892,7 +2903,10 @@ class Presto(nn.Module):
         # `apc_cell_class_embed` is listed here explicitly: it feeds the
         # processing latents, so it belongs to the processing component, but
         # its name contains neither "processing" nor "excision_head".
-        ("processing", ("processing", "excision_head", "apc_cell_class_embed"), ()),
+        ("processing", (
+            "processing", "excision_head",
+            "cell_lineage_embed", "sample_origin_embed", "disease_state_embed",
+        ), ()),
         ("presentation", ("presentation", "elution_head"), ()),
         ("recognition", ("recognition", "foreignness", "species_of_origin"), ()),
         ("immunogenicity", ("immunogenicity", "tcr_evidence"), ()),
@@ -3168,13 +3182,22 @@ class Presto(nn.Module):
             _gets_groove = {"pmhc_interaction"}
             _gets_processing_extra = {"processing"}
 
-        _apc_class_idx = (provenance or {}).get("apc_cell_class_idx")
-        if _apc_class_idx is None:
-            _apc_class_idx = torch.zeros(
-                batch_size, dtype=torch.long, device=pep_tok.device
-            )
-        apc_cell_class_token = self.apc_cell_class_embed(
-            _apc_class_idx.long()
+        # One token summing the three provenance axes: they describe the same
+        # sample, so the processing latents see a single combined statement of
+        # cellular context rather than three separate tokens competing for
+        # attention.
+        _prov = provenance or {}
+
+        def _axis(key: str, embed) -> torch.Tensor:
+            idx = _prov.get(key)
+            if idx is None:
+                idx = torch.zeros(batch_size, dtype=torch.long, device=pep_tok.device)
+            return embed(idx.long())
+
+        sample_context_token = (
+            _axis("cell_lineage_idx", self.cell_lineage_embed)
+            + _axis("sample_origin_idx", self.sample_origin_embed)
+            + _axis("disease_state_idx", self.disease_state_embed)
         ).unsqueeze(1)
 
         # Processing extra tokens: peptide terminal residues + length.
@@ -3214,7 +3237,7 @@ class Presto(nn.Module):
             extra_tokens: List[torch.Tensor] = []
             if name in _gets_processing_extra:
                 extra_tokens.extend(_processing_extra)
-                extra_tokens.append(apc_cell_class_token)
+                extra_tokens.append(sample_context_token)
                 # The cellular-condition token used to be appended here, which
                 # made the processing latent depend on the observed APM state
                 # and stimulus. "stimulation context" is on the forbidden-input

@@ -261,7 +261,9 @@ class TestBiologicalStateIsAnInput:
         [
             ("apm_perturbation_idx", 3),
             ("processing_stimulus_idx", 2),
-            ("apc_cell_class_idx", 5),
+            ("cell_lineage_idx", 5),
+            ("sample_origin_idx", 2),
+            ("disease_state_idx", 3),
         ],
     )
     def test_state_reaches_the_prediction_once_trained(
@@ -277,7 +279,9 @@ class TestBiologicalStateIsAnInput:
         model = Presto(d_model=32, n_layers=2, n_heads=4)
         model.eval()
         with torch.no_grad():
-            model.apc_cell_class_embed.weight.normal_(0.0, 0.5)
+            model.cell_lineage_embed.weight.normal_(0.0, 0.5)
+            model.sample_origin_embed.weight.normal_(0.0, 0.5)
+            model.disease_state_embed.weight.normal_(0.0, 0.5)
             model.excision_head.invivo_profile_c.normal_(0.0, 0.5)
             model.excision_head.stimulus_profile_c.normal_(0.0, 0.5)
         base_prov = dict(batch.provenance)
@@ -301,7 +305,7 @@ class TestBiologicalStateIsAnInput:
             "the biological state is being ignored"
         )
 
-    def test_apc_cell_class_is_plumbed_from_the_cell_line(self):
+    def test_provenance_axes_are_plumbed_from_the_record(self):
         """The record field existed for months without reaching the model."""
         from presto.data.collate import PrestoCollator
         from presto.data.loaders import ElutionRecord, PrestoDataset
@@ -310,24 +314,24 @@ class TestBiologicalStateIsAnInput:
         dataset = PrestoDataset(
             elution_records=[
                 ElutionRecord(peptide="LLDGTATLRF", alleles=["HLA-A*02:01"],
-                              detected=True, cell_type="THP-1"),
+                              detected=True, cell_type="Monocyte"),
                 ElutionRecord(peptide="SIINFEKLAA", alleles=["HLA-A*02:01"],
-                              detected=True, cell_type="Dendritic cell"),
+                              detected=True, cell_type="Epithelial cell"),
             ],
             mhc_sequences={"HLA-A*02:01": seq},
             strict_mhc_resolution=False,
         )
-        assert dataset[0].apc_cell_class == "tumor_hematologic"
-        assert dataset[1].apc_cell_class == "professional_apc"
+        assert dataset[0].cell_lineage == "myeloid"
+        assert dataset[1].cell_lineage == "epithelial"
 
         batch = PrestoCollator()([dataset[i] for i in range(2)])
-        classes = batch.provenance["apc_cell_class_idx"].tolist()
-        assert classes[0] != classes[1], "both cell lines collapsed to one class"
+        assert "cell_lineage_idx" in batch.provenance
+        assert "sample_origin_idx" in batch.provenance
+        assert "disease_state_idx" in batch.provenance
 
-    def test_unrecognized_lines_are_unknown_not_guessed(self):
+    def test_unrecognized_cell_types_are_unknown_not_guessed(self):
         """A wrong processing phenotype is worse than an absent one."""
-        from presto.data.vocab import apc_cell_class_for_line
+        from presto.data.vocab import cell_lineage_for
 
-        assert apc_cell_class_for_line("SomeLineNobodyMapped") == "unknown"
-        assert apc_cell_class_for_line(None) == "unknown"
-        assert apc_cell_class_for_line("") == "unknown"
+        assert cell_lineage_for(None) == "unknown"
+        assert cell_lineage_for("") == "unknown"

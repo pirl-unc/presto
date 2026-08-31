@@ -33,7 +33,12 @@ import torch
 from torch.utils.data import Dataset, DataLoader, Sampler
 
 from .bulk_ms import BulkMSRecord
-from .vocab import apc_cell_class_for_line, default_machinery_for_class
+from .vocab import (
+    cell_lineage_for,
+    default_machinery_for_class,
+    disease_state_for,
+    sample_origin_for,
+)
 from .collate import PrestoSample, PrestoCollator
 from .groove import prepare_mhc_input
 from .vocab import normalize_organism, FOREIGN_CATEGORIES
@@ -250,6 +255,13 @@ class ElutionRecord:
     apm_perturbation: Optional[str] = None
     cell_type: Optional[str] = None
     tissue: Optional[str] = None
+    #: Sample provenance flags, straight from hitlist (all 100% covered there).
+    #: Kept raw on the record and factorized into axes at sample construction,
+    #: so the record stays a faithful copy of the source row.
+    is_cell_line: Optional[bool] = None
+    is_healthy_tissue: Optional[bool] = None
+    is_cancer: Optional[bool] = None
+    is_tumor_adjacent: Optional[bool] = None
     mhc_class: Optional[str] = None
     species: Optional[str] = None
     antigen_species: Optional[str] = None
@@ -1913,7 +1925,13 @@ class PrestoDataset(Dataset):
                 peptide_source="mhc",
                 processing_inducer=getattr(rec, "stimulus", None),
                 apm_perturbation=getattr(rec, "apm_perturbation", None),
-                apc_cell_class=apc_cell_class_for_line(getattr(rec, "cell_type", None)),
+                cell_lineage=cell_lineage_for(getattr(rec, "cell_type", None)),
+                sample_origin=sample_origin_for(getattr(rec, "is_cell_line", None)),
+                disease_state=disease_state_for(
+                    is_healthy=getattr(rec, "is_healthy_tissue", None),
+                    is_cancer=getattr(rec, "is_cancer", None),
+                    is_tumor_adjacent=getattr(rec, "is_tumor_adjacent", None),
+                ),
                 elution_label=1.0 if rec.detected else 0.0,
                 mil_mhc_a_list=mil_mhc_a_list,
                 mil_mhc_b_list=mil_mhc_b_list,

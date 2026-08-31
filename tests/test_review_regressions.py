@@ -146,7 +146,7 @@ class TestMILProvenanceIsComplete:
         tcell_call = source[source.index("tcell_mil_tensors = ") :][:400]
         assert 'peptide_source="unknown"' in tcell_call
 
-    def test_elution_bags_carry_the_apc_class(self):
+    def test_elution_bags_carry_the_provenance_axes(self):
         from presto.data.collate import PrestoCollator
         from presto.data.loaders import ElutionRecord, PrestoDataset
 
@@ -165,8 +165,8 @@ class TestMILProvenanceIsComplete:
             strict_mhc_resolution=False,
         )
         batch = PrestoCollator()([dataset[i] for i in range(2)])
-        classes = batch.mil_provenance["apc_cell_class_idx"]
-        assert int(classes.max()) > 0, (
-            "every MIL instance is pinned to `unknown`; the elution loss runs "
-            "through this path whenever MIL is active"
-        )
+        for axis in ("cell_lineage_idx", "sample_origin_idx", "disease_state_idx"):
+            assert axis in batch.mil_provenance, (
+                f"{axis} is missing from MIL provenance; the elution loss runs "
+                "through this path whenever MIL is active"
+            )

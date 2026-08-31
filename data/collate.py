@@ -13,7 +13,9 @@ import torch
 from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
 from .vocab import (
-    apc_cell_class_index,
+    cell_lineage_index,
+    disease_state_index,
+    sample_origin_index,
     BINDING_ASSAY_METHOD_TO_IDX,
     BINDING_ASSAY_PREP_TO_IDX,
     BINDING_ASSAY_GEOMETRY_TO_IDX,
@@ -191,11 +193,18 @@ class PrestoSample:
     # Tier 3 (cellular state): conditions the in-vivo termini. Meaningful only
     # when peptide_source == "mhc".
     processing_inducer: Optional[str] = None   # default basal, not zero
-    #: Antigen-presenting cell class, from the source cell line. Biological
-    #: state and therefore an input: it sets the expression of every
-    #: antigen-processing component, so a peptide is presented differently by
-    #: a dendritic cell and by a carcinoma line.
-    apc_cell_class: Optional[str] = None
+    # Sample provenance, as orthogonal axes. All biological state, so all
+    # inputs: together they answer "which source proteins are expressed, and
+    # which antigen-processing components are on?".
+    #: Lineage -- b_lineage, myeloid, epithelial, ... Sets immunoproteasome and
+    #: MHC-I baseline.
+    cell_lineage: Optional[str] = None
+    #: primary vs cell_line. Immortalized lines drift and routinely lose
+    #: immunoproteasome subunits, TAP or B2M, so this is not redundant with
+    #: lineage or disease state.
+    sample_origin: Optional[str] = None
+    #: healthy / tumor_adjacent / cancer / diseased.
+    disease_state: Optional[str] = None
     apm_perturbation: Optional[str] = None     # grouped by mechanism
     # Retained as a derived convenience for the pinned in-vitro rules; prefer
     # the tiered fields above.
@@ -678,7 +687,9 @@ class PrestoCollator:
         bag_sample_ids: List[str],
         apm_perturbations: Optional[List[Optional[str]]] = None,
         inducers: Optional[List[Optional[str]]] = None,
-        apc_cell_classes: Optional[List[Optional[str]]] = None,
+        cell_lineages: Optional[List[Optional[str]]] = None,
+        sample_origins: Optional[List[Optional[str]]] = None,
+        disease_states: Optional[List[Optional[str]]] = None,
         peptide_source: str = "unknown",
     ) -> Dict[str, Any]:
         outputs: Dict[str, Any] = {
@@ -741,14 +752,28 @@ class PrestoCollator:
                 [peptide_source_index(peptide_source)] * n_instances,
                 dtype=torch.long,
             ),
-            # The APC class is per-instance biological state. Omitting it here
-            # pinned every bag instance to `unknown` -- and the elution loss
-            # runs through the bag path whenever MIL is active, so the axis
-            # would have received gradient only at index 0.
-            "apc_cell_class_idx": torch.tensor(
+            # Per-instance biological state. Omitting these pinned every bag
+            # instance to `unknown`, and the elution loss runs through the bag
+            # path whenever MIL is active, so the axes would have received
+            # gradient only at index 0.
+            "cell_lineage_idx": torch.tensor(
                 [
-                    apc_cell_class_index(value)
-                    for value in (apc_cell_classes or [None] * n_instances)
+                    cell_lineage_index(value)
+                    for value in (cell_lineages or [None] * n_instances)
+                ],
+                dtype=torch.long,
+            ),
+            "sample_origin_idx": torch.tensor(
+                [
+                    sample_origin_index(value)
+                    for value in (sample_origins or [None] * n_instances)
+                ],
+                dtype=torch.long,
+            ),
+            "disease_state_idx": torch.tensor(
+                [
+                    disease_state_index(value)
+                    for value in (disease_states or [None] * n_instances)
                 ],
                 dtype=torch.long,
             ),
@@ -952,7 +977,9 @@ class PrestoCollator:
         digest_idx: List[int] = []
         inducer_idx: List[int] = []
         apm_idx: List[int] = []
-        apc_class_idx: List[int] = []
+        lineage_idx: List[int] = []
+        origin_idx: List[int] = []
+        disease_idx: List[int] = []
         for sample in samples:
             source = sample.peptide_source
             if not source:
@@ -965,10 +992,14 @@ class PrestoCollator:
             source_idx.append(peptide_source_index(source))
             digest_idx.append(enzymatic_digest_index(sample.enzymatic_digest))
             inducer_idx.append(processing_stimulus_index(sample.processing_inducer))
-            apc_class_idx.append(apc_cell_class_index(sample.apc_cell_class))
+            lineage_idx.append(cell_lineage_index(sample.cell_lineage))
+            origin_idx.append(sample_origin_index(sample.sample_origin))
+            disease_idx.append(disease_state_index(sample.disease_state))
             apm_idx.append(apm_perturbation_index(sample.apm_perturbation))
         return {
-            "apc_cell_class_idx": torch.tensor(apc_class_idx, dtype=torch.long),
+            "cell_lineage_idx": torch.tensor(lineage_idx, dtype=torch.long),
+            "sample_origin_idx": torch.tensor(origin_idx, dtype=torch.long),
+            "disease_state_idx": torch.tensor(disease_idx, dtype=torch.long),
             "peptide_source_idx": torch.tensor(source_idx, dtype=torch.long),
             "enzymatic_digest_idx": torch.tensor(digest_idx, dtype=torch.long),
             "processing_stimulus_idx": torch.tensor(inducer_idx, dtype=torch.long),
@@ -1636,7 +1667,9 @@ class PrestoCollator:
         mil_flank_ns: List[str] = []
         mil_flank_cs: List[str] = []
         mil_apm: List[Optional[str]] = []
-        mil_apc_classes: List[Optional[str]] = []
+        mil_lineages: List[Optional[str]] = []
+        mil_origins: List[Optional[str]] = []
+        mil_diseases: List[Optional[str]] = []
         mil_inducers: List[Optional[str]] = []
         mil_instance_to_bag: List[int] = []
         mil_bag_labels: List[float] = []
@@ -1650,7 +1683,9 @@ class PrestoCollator:
         tcell_mil_flank_cs: List[str] = []
         tcell_mil_instance_to_bag: List[int] = []
         tcell_mil_apm: List[Optional[str]] = []
-        tcell_mil_apc_classes: List[Optional[str]] = []
+        tcell_mil_lineages: List[Optional[str]] = []
+        tcell_mil_origins: List[Optional[str]] = []
+        tcell_mil_diseases: List[Optional[str]] = []
         tcell_mil_stimuli: List[Optional[str]] = []
         tcell_mil_bag_labels: List[float] = []
         tcell_mil_bag_sample_ids: List[str] = []
@@ -1707,7 +1742,9 @@ class PrestoCollator:
                     mil_flank_ns.append(self._sanitize_optional_sequence(sample.flank_n))
                     mil_flank_cs.append(self._sanitize_optional_sequence(sample.flank_c))
                     mil_apm.append(sample.apm_perturbation)
-                    mil_apc_classes.append(sample.apc_cell_class)
+                    mil_lineages.append(sample.cell_lineage)
+                    mil_origins.append(sample.sample_origin)
+                    mil_diseases.append(sample.disease_state)
                     mil_inducers.append(sample.processing_inducer)
                     mil_instance_to_bag.append(bag_index)
 
@@ -1762,14 +1799,18 @@ class PrestoCollator:
                 # these left the T-cell MIL forward on default state for every
                 # instance -- the field existed and carried nothing.
                 tcell_mil_apm.append(sample.apm_perturbation)
-                tcell_mil_apc_classes.append(sample.apc_cell_class)
+                tcell_mil_lineages.append(sample.cell_lineage)
+                tcell_mil_origins.append(sample.sample_origin)
+                tcell_mil_diseases.append(sample.disease_state)
                 tcell_mil_stimuli.append(sample.processing_inducer)
 
         mil_tensors = self._materialize_mil_tensors(
             peptide_source="mhc",
             apm_perturbations=mil_apm,
             inducers=mil_inducers,
-            apc_cell_classes=mil_apc_classes,
+            cell_lineages=mil_lineages,
+            sample_origins=mil_origins,
+            disease_states=mil_diseases,
             peptides=mil_peptides,
             mhc_as=mil_mhc_as,
             mhc_bs=mil_mhc_bs,
@@ -1785,7 +1826,9 @@ class PrestoCollator:
             peptide_source="unknown",
             apm_perturbations=tcell_mil_apm,
             inducers=tcell_mil_stimuli,
-            apc_cell_classes=tcell_mil_apc_classes,
+            cell_lineages=tcell_mil_lineages,
+            sample_origins=tcell_mil_origins,
+            disease_states=tcell_mil_diseases,
             peptides=tcell_mil_peptides,
             mhc_as=tcell_mil_mhc_as,
             mhc_bs=tcell_mil_mhc_bs,

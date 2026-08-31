@@ -86,6 +86,21 @@ BY_DESIGN = {
 NEEDS_ABSENT_DATA = {
     "class2_pfr_score.0.weight",
     "class2_pfr_score.0.bias",
+    # Connected only through a numerically negligible route: gradient is
+    # 1e-10 to 1e-12, which the threshold above correctly calls starved.
+    "class2_pfr_score.2.bias",
+    # Structurally unidentifiable, and harmless.
+    #
+    # Both feed `core_window_logit`, which is softmaxed over candidate
+    # registers. A constant added to every candidate shifts all logits equally
+    # and cancels in the softmax, so a final-layer bias cannot affect the
+    # posterior at all. The corresponding *weights* train normally (1.7e-2 and
+    # 2.7e-3); the biases both sit at 1.353e-09 -- the same value, which is the
+    # signature of the invariance rather than a coincidence.
+    #
+    # Removing them would be tidier but changes nothing the model computes.
+    "core_window_score.2.bias",
+    "core_window_prior.2.bias",
     "species_override_embed.weight",
 }
 
@@ -273,6 +288,17 @@ def _every_modality_batch():
     return PrestoCollator()([dataset[i] for i in range(len(dataset))])
 
 
+
+#: Below this, a parameter is receiving nothing in any practical sense.
+#:
+#: An exact `== 0.0` test is knife-edge. `class2_pfr_score.2.bias` shows
+#: gradients of 1e-10 to 1e-12 depending only on the seed -- connected through
+#: some numerically negligible route -- so it flipped between "dead" and
+#: "trained" across runs and made the allowlist unstable. Ten orders of
+#: magnitude below a real gradient is starved, whether or not it is exactly
+#: zero.
+EFFECTIVELY_ZERO_GRADIENT = 1e-8
+
 #: Both topologies, because they allocate different modules. Checking only
 #: `expanded` would leave the default (`collapsed`) unverified -- and the
 #: collapsed path owns the processing projections and presentation MLPs that
@@ -291,7 +317,8 @@ def gradient_report(request):
     dead = {
         name
         for name, param in model.named_parameters()
-        if param.grad is None or float(param.grad.abs().sum()) == 0.0
+        if param.grad is None
+        or float(param.grad.abs().sum()) < EFFECTIVELY_ZERO_GRADIENT
     }
     return model, dead
 
@@ -311,7 +338,10 @@ def dead_in_any_topology():
         loss.backward()
         for name, param in model.named_parameters():
             known.add(name)
-            if param.grad is None or float(param.grad.abs().sum()) == 0.0:
+            if (
+                param.grad is None
+                or float(param.grad.abs().sum()) < EFFECTIVELY_ZERO_GRADIENT
+            ):
                 dead_union.add(name)
     return known, dead_union
 
