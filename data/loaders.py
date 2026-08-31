@@ -35,7 +35,11 @@ from torch.utils.data import Dataset, DataLoader, Sampler
 from .bulk_ms import BulkMSRecord
 from .collate import PrestoSample, PrestoCollator
 from .groove import prepare_mhc_input
-from .vocab import normalize_organism, FOREIGN_CATEGORIES
+from .vocab import (
+    default_machinery_for_class,
+    normalize_organism,
+    FOREIGN_CATEGORIES,
+)
 from .allele_resolver import (
     AlleleResolver,
     HUMAN_B2M_SEQUENCE,
@@ -1893,7 +1897,7 @@ class PrestoDataset(Dataset):
                 mhc_b=mhc_b_seq,
                 mhc_class=mhc_class,
                 peptide_source="mhc",
-                processing_inducer=getattr(rec, "stimulus", None),
+                processing_stimulus=getattr(rec, "stimulus", None),
                 apm_perturbation=getattr(rec, "apm_perturbation", None),
                 elution_label=1.0 if rec.detected else 0.0,
                 mil_mhc_a_list=mil_mhc_a_list,
@@ -2685,8 +2689,7 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         machinery = (sample.machinery or "").strip().lower()
         if machinery:
             return machinery
-        mhc_class = (sample.mhc_class or "").strip().upper()
-        return "cathepsin" if mhc_class == "II" else "proteasome"
+        return default_machinery_for_class(sample.mhc_class)
 
     @staticmethod
     def _sample_branch(sample: PrestoSample) -> str:

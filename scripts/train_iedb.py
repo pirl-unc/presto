@@ -4469,6 +4469,25 @@ def run(args: argparse.Namespace) -> None:
                 print("    stability assay methods:")
                 for method, count in hitlist_stats["stability_assay_methods"].items():
                     print(f"      {method}: {count}")
+            # A condition hitlist emits that CONDITION_TO_STIMULUS does not know
+            # is scored as "not known to be stimulated", which is wrong whenever
+            # the category names a real treatment. This count was already being
+            # computed and simply never read, which is how SPPL3_perturbation
+            # and IRF2_perturbation (20,220 rows) stayed unmapped. Loud on
+            # stderr, because a silent line here is what failed last time.
+            unmapped = hitlist_stats.get("unmapped_condition_categories") or {}
+            if unmapped:
+                total = sum(unmapped.values())
+                print(
+                    f"    WARNING: {len(unmapped)} unmapped condition_category "
+                    f"value(s) covering {total} rows fell back to stimulus "
+                    "'none'. Add them to CONDITION_TO_STIMULUS:",
+                    file=sys.stderr,
+                )
+                for category, count in sorted(
+                    unmapped.items(), key=lambda kv: -kv[1]
+                ):
+                    print(f"      {category}: {count}", file=sys.stderr)
 
         probe_family_bootstrap_records = int(
             getattr(args, "probe_family_bootstrap_records", 0) or 0

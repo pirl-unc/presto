@@ -21,6 +21,7 @@ from .vocab import (
     FOREIGN_CATEGORIES,
     ORGANISM_TO_IDX,
     apm_perturbation_index,
+    default_machinery_for_class,
     enzymatic_digest_index,
     excision_machinery_index,
     peptide_source_index,
@@ -183,7 +184,10 @@ class PrestoSample:
     enzymatic_digest: Optional[str] = None     # non-none only when source=protein
     # Tier 3 (cellular state): conditions the in-vivo termini. Meaningful only
     # when peptide_source == "mhc".
-    processing_inducer: Optional[str] = None   # default basal, not zero
+    #: What was applied to the cells, if anything. Defaults to `none`, which
+    #: means "not known to be stimulated" and deliberately conflates an
+    #: explicitly untreated sample with one whose condition was never recorded.
+    processing_stimulus: Optional[str] = None
     apm_perturbation: Optional[str] = None     # grouped by mechanism
     # Retained as a derived convenience for the pinned in-vitro rules; prefer
     # the tiered fields above.
@@ -864,7 +868,7 @@ class PrestoCollator:
         """
         source_idx: List[int] = []
         digest_idx: List[int] = []
-        inducer_idx: List[int] = []
+        stimulus_idx: List[int] = []
         apm_idx: List[int] = []
         for sample in samples:
             source = sample.peptide_source
@@ -873,12 +877,12 @@ class PrestoCollator:
                 source = "protein" if sample.enzymatic_digest else "mhc"
             source_idx.append(peptide_source_index(source))
             digest_idx.append(enzymatic_digest_index(sample.enzymatic_digest))
-            inducer_idx.append(processing_stimulus_index(sample.processing_inducer))
+            stimulus_idx.append(processing_stimulus_index(sample.processing_stimulus))
             apm_idx.append(apm_perturbation_index(sample.apm_perturbation))
         return {
             "peptide_source_idx": torch.tensor(source_idx, dtype=torch.long),
             "enzymatic_digest_idx": torch.tensor(digest_idx, dtype=torch.long),
-            "processing_stimulus_idx": torch.tensor(inducer_idx, dtype=torch.long),
+            "processing_stimulus_idx": torch.tensor(stimulus_idx, dtype=torch.long),
             "apm_perturbation_idx": torch.tensor(apm_idx, dtype=torch.long),
         }
 
@@ -894,9 +898,11 @@ class PrestoCollator:
             if sample.machinery:
                 indices.append(excision_machinery_index(sample.machinery))
                 continue
-            mhc_class = (sample.mhc_class or "").strip().upper()
-            default = "cathepsin" if mhc_class == "II" else "proteasome"
-            indices.append(excision_machinery_index(default))
+            indices.append(
+                excision_machinery_index(
+                    default_machinery_for_class(sample.mhc_class)
+                )
+            )
         return torch.tensor(indices, dtype=torch.long)
 
     def _collate_binding_context(
