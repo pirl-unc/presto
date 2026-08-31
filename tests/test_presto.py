@@ -215,49 +215,41 @@ class TestPrestoModel:
         assert outputs["assays"]["IC50_nM"].shape == (2, 1)
         assert torch.isfinite(outputs["assays"]["IC50_nM"]).all()
 
-    def test_model_accepts_binding_context_input(self):
-        """Verify factorized assay context embeddings are wired through forward().
+    def test_binding_context_input_is_ignored(self):
+        """Passing assay metadata must not change the prediction.
 
-        Built with a residual mode that actually reads the factorized context.
-        Under the `legacy` default nothing consumes it, so those embeddings are
-        no longer allocated -- and this test previously "passed" by asserting a
-        vector was non-zero while nothing downstream ever looked at it.
+        This test previously asserted the opposite -- that the factorized assay
+        context became non-zero when a context was supplied. That was the
+        behavior docs/assay_modeling_contract.md forbids: a prediction that
+        depends on the assay label attached to the example. The context
+        argument is retained for signature compatibility and ignored, and the
+        assay structure now lives in the output panel.
         """
+        import torch
+
         from presto.models.presto import Presto
 
-        model = Presto(
-            d_model=64,
-            n_layers=2,
-            n_heads=4,
-            affinity_assay_residual_mode=(
-                "shared_base_factorized_context_plus_segment_residual"
-            ),
-        )
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
 
         pep_tok = torch.randint(4, 24, (2, 10))
         mhc_a_tok = torch.randint(4, 24, (2, 50))
-        mhc_b_tok = torch.randint(4, 24, (2, 20))
-        binding_context = {
-            "assay_type_idx": torch.tensor([0, 1], dtype=torch.long),
-            "assay_method_idx": torch.tensor([1, 2], dtype=torch.long),
-            "assay_prep_idx": torch.tensor([1, 2], dtype=torch.long),
-            "assay_geometry_idx": torch.tensor([1, 2], dtype=torch.long),
-            "assay_readout_idx": torch.tensor([1, 2], dtype=torch.long),
+        mhc_b_tok = torch.randint(4, 24, (2, 50))
+        context = {
+            "assay_type_idx": torch.tensor([1, 2]),
+            "assay_prep_idx": torch.tensor([1, 2]),
+            "assay_geometry_idx": torch.tensor([1, 2]),
+            "assay_readout_idx": torch.tensor([1, 2]),
         }
-
         with torch.no_grad():
-            outputs = model(
-                pep_tok=pep_tok,
-                mhc_a_tok=mhc_a_tok,
-                mhc_b_tok=mhc_b_tok,
-                mhc_class="I",
-                binding_context=binding_context,
+            without = model(pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I")
+            with_ctx = model(
+                pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I",
+                binding_context=context,
             )
-        # factorized context vec should be non-zero when binding_context is provided
-        fac_vec = outputs.get("binding_factorized_assay_context_vec")
-        assert fac_vec is not None
-        assert fac_vec.abs().mean() > 0, "Factorized assay context should be non-zero"
+        assert torch.allclose(
+            without["binding_logit"], with_ctx["binding_logit"]
+        ), "the assay label changed the prediction; that is input conditioning"
 
     def test_forward_affinity_only_ignores_binding_context(self):
         from presto.models.presto import Presto
@@ -479,7 +471,12 @@ class TestPrestoModel:
                 mhc_class="I",
             )
 
-        assert torch.count_nonzero(out["binding_factorized_assay_context_vec"]) == 0
+        # Stronger than the old assertion that this vector was zero: the
+        # input-side assay context no longer exists at all, so there is nothing
+        # for a future caller to refill. Assay structure is now output-side, in
+        # binding_assay_panel_*.
+        assert "binding_factorized_assay_context_vec" not in out
+        assert "binding_assay_panel_assay_type" in out
         assert out["assays"]["KD_nM"].shape == (2, 1)
         assert out["assays"]["KD_proxy_ic50_nM"].shape == (2, 1)
         assert out["assays"]["KD_proxy_ec50_nM"].shape == (2, 1)

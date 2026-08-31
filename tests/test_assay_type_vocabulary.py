@@ -61,21 +61,19 @@ class TestCheckpointGrowth:
         `legacy` default consumes none of it, so those embeddings are no longer
         allocated and there would be no key to grow.
         """
-        mode = "shared_base_factorized_context_plus_segment_residual"
-        model = Presto(
-            d_model=32, n_layers=2, n_heads=4, affinity_assay_residual_mode=mode
-        )
+        # Targets the *output-side* panel embedding. The input-side assay
+        # embeddings this used to grow no longer exist -- they were the
+        # contract violation.
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
         state = model.state_dict()
 
-        key = next(k for k in state if k.endswith("assay_type_embed.weight"))
+        key = next(k for k in state if k.endswith("assay_panel_embed.assay_type.weight"))
         rows, dim = state[key].shape
         # Simulate a checkpoint saved before the four entries were appended.
         shrunk = torch.arange(float((rows - 4) * dim)).reshape(rows - 4, dim)
         state[key] = shrunk
 
-        fresh = Presto(
-            d_model=32, n_layers=2, n_heads=4, affinity_assay_residual_mode=mode
-        )
+        fresh = Presto(d_model=32, n_layers=2, n_heads=4)
         fresh.load_state_dict(state, strict=False)
 
         loaded = dict(fresh.named_parameters())[key]

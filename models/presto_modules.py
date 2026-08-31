@@ -196,27 +196,6 @@ class AffinityPredictor(nn.Module):
         _uses_factorized = (
             self.affinity_assay_residual_mode in _FACTORIZED_CONTEXT_MODES
         )
-        self._uses_factorized_context = _uses_factorized
-        self.assay_type_embed = (
-            nn.Embedding(len(BINDING_ASSAY_TYPES), _fac_embed_dim)
-            if _uses_factorized
-            else None
-        )
-        self.assay_prep_embed = (
-            nn.Embedding(len(BINDING_ASSAY_PREP), _fac_embed_dim)
-            if _uses_factorized
-            else None
-        )
-        self.assay_geometry_embed = (
-            nn.Embedding(len(BINDING_ASSAY_GEOMETRY), _fac_embed_dim)
-            if _uses_factorized
-            else None
-        )
-        self.assay_readout_embed = (
-            nn.Embedding(len(BINDING_ASSAY_READOUT), _fac_embed_dim)
-            if _uses_factorized
-            else None
-        )
         # Output-side assay panel.
         #
         # docs/assay_modeling_contract.md forbids consuming assay-selector
@@ -248,12 +227,19 @@ class AffinityPredictor(nn.Module):
             nn.Linear(max(d_model // 2, 4), 1),
         )
 
-        factorized_context_dim = _fac_embed_dim * 4
-        self.factorized_proj = (
-            nn.Linear(factorized_context_dim, factorized_context_dim)
-            if _uses_factorized
-            else None
-        )
+        # The input-side assay-context path is gone.
+        #
+        # It indexed an assay embedding by the observed value and concatenated
+        # it into the per-assay residual head input, so the assay identity
+        # conditioned that example's own prediction -- the pattern
+        # docs/assay_modeling_contract.md forbids. The assay structure it was
+        # trying to capture now lives in predict_assay_panel, on the output
+        # side, where sweeping the table gives one prediction per assay
+        # configuration instead of one prediction for the declared assay.
+        #
+        # factorized_context_dim=0 removes the slot entirely rather than
+        # leaving a zero-filled one, so a future caller cannot refill it.
+        factorized_context_dim = 0
 
         # class_probs is [B, 2], species_probs is [B, N_MHC_SPECIES=6]
         self._class_probs_dim = 2
@@ -353,26 +339,12 @@ class AffinityPredictor(nn.Module):
         assay_context_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
         outputs["binding_assay_context_vec"] = assay_context_vec
 
-        # Build factorized assay context from per-sample metadata when available
-        if (
-            self._uses_factorized_context
-            and binding_context is not None
-            and "assay_type_idx" in binding_context
-        ):
-            fac_parts = [
-                self.assay_type_embed(binding_context["assay_type_idx"]),
-                self.assay_prep_embed(binding_context["assay_prep_idx"]),
-                self.assay_geometry_embed(binding_context["assay_geometry_idx"]),
-                self.assay_readout_embed(binding_context["assay_readout_idx"]),
-            ]
-            factorized_assay_context_vec = self.factorized_proj(
-                torch.cat(fac_parts, dim=-1)
-            )
-        else:
-            factorized_assay_context_vec = binding_affinity_vec.new_zeros(
-                binding_affinity_vec.shape[0], self._fac_embed_dim * 4,
-            )
-        outputs["binding_factorized_assay_context_vec"] = factorized_assay_context_vec
+        # `binding_context` is accepted for signature compatibility and
+        # deliberately ignored. Reading it would condition this example's
+        # prediction on its own assay label, which docs/assay_modeling_contract.md
+        # forbids; the assay structure lives in predict_assay_panel instead,
+        # where every configuration is predicted rather than one selected.
+        factorized_assay_context_vec = None
 
         probe_kd = self.binding_affinity_probe(binding_affinity_vec)
         stability_score_raw = self.binding_stability_score_head(binding_stability_vec)

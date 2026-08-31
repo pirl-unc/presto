@@ -1980,8 +1980,17 @@ def compute_loss(
             species=batch.processing_species,
             flank_n_tok=batch.flank_n_tok,
             flank_c_tok=batch.flank_c_tok,
-            tcell_context=batch.tcell_context if batch.tcell_context else None,
             machinery=getattr(batch, "machinery_idx", None),
+            # Deliberately NOT passing tcell_context. Its seven keys -- apc_type,
+            # assay_method, assay_readout, culture_context, culture_duration,
+            # peptide_format, stim_context -- are every one of them on the forbidden-input
+            # list in docs/assay_modeling_contract.md. Conditioning on them means a T-cell
+            # prediction cannot be obtained without first declaring an assay setup.
+            #
+            # The head defaults each axis to its "unknown" entry, so the prediction becomes
+            # the context-free marginal, and predict_panel sweeps each axis from that
+            # baseline to give one output per condition. The observed context still routes
+            # which panel column the loss reads, which the Output Contract allows.
             provenance=getattr(batch, "provenance", None) or None,
             return_binding_attention=return_binding_attention,
         )

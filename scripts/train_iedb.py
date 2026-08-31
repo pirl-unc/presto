@@ -1348,7 +1348,6 @@ def _evaluate_output_and_latent_statistics(
                 species=batch.processing_species,
                 flank_n_tok=batch.flank_n_tok,
                 flank_c_tok=batch.flank_c_tok,
-                tcell_context=batch.tcell_context if batch.tcell_context else None,
             )
             take = min(batch_size, max_samples - samples_used)
             if take <= 0:
@@ -5614,7 +5613,6 @@ def run(args: argparse.Namespace) -> None:
                     species=batch_ref.processing_species,
                     flank_n_tok=batch_ref.flank_n_tok,
                     flank_c_tok=batch_ref.flank_c_tok,
-                    tcell_context=batch_ref.tcell_context if batch_ref.tcell_context else None,
                     machinery=getattr(batch_ref, "machinery_idx", None),
                     provenance=provenance,
                 )

@@ -78,40 +78,45 @@ For clarity:
 
 ## Compliance status (2026-08-31)
 
-Audited by tracing which descriptors reach the model as input versus which are
-predicted as outputs.
+Presto is a many-output model in the sense a DNA sequence model is: the trunk
+reads peptide and MHC, and every assay configuration and condition is an
+*output track*, never an input feature. Track identity selects which output the
+loss reads; it never selects what the model computes.
 
-**Compliant — descriptors predicted jointly, label routes supervision only:**
+**Compliant — predicted jointly, label routes supervision only:**
 
-| family | descriptors |
+| family | tracks |
 |---|---|
-| T-cell | `apc_type`, `assay_method`, `assay_readout`, `culture_context`, `peptide_format`, `stim_context` |
+| binding observables | `KD`, `IC50`, `EC50`, `Tm`, `t_half`, `koff`, `kon` |
+| binding assay descriptors | `assay_type` (11), `assay_prep` (6), `assay_geometry` (5), `assay_readout` (4) via `binding_assay_panel_*` |
+| T-cell conditions | `apc_type`, `assay_method`, `assay_readout`, `culture_context`, `peptide_format`, `stim_context` via `tcell_panel_logits` |
 | TCR | `tcr_evidence_method` |
 | MHC | `mhc_class`, `mhc_species`, `mhc_a_fine_type`, `mhc_b_fine_type` |
-| binding observables | `KD`, `IC50`, `EC50`, `Tm`, `t_half`, `koff`, `kon` |
-| binding descriptors | `assay_type`, `assay_prep`, `assay_geometry`, `assay_readout` (`binding_assay_panel_*`) |
 
-The last row is new. Those four previously existed **only** as an input-side
-context vector: `binding_context` was indexed by the observed assay and folded
-into the per-assay residual heads, so a prediction could not be obtained
-without first declaring an assay. That is the pattern this document forbids.
+**Removed input paths.** The binding assay context is gone structurally, not
+merely zeroed: `factorized_context_dim` is 0 and the four input-side
+embeddings no longer exist, so nothing can refill the slot. `binding_context`
+is still accepted as an argument and ignored;
+`tests/test_many_output_contract.py` asserts the prediction does not move when
+it is supplied.
 
-They are now an output panel, mirroring `AssayHeads.predict_panel` on the
-T-cell side: the axis embedding table is **swept**, not indexed, giving one
-predicted measurement per assay configuration from peptide and MHC alone. The
-observed label selects which column the loss reads, which the Output Contract
-above permits.
+The T-cell context is no longer supplied by any training or evaluation path,
+so every trained model is a context-free predictor.
 
-**Known remaining deviation.** The non-default
-`affinity_assay_residual_mode` values that consume
-`factorized_assay_context_vec` still condition on assay identity as an input:
+**Known remaining deviation.** `TCellAssayHead` still *accepts* the seven
+forbidden keys and its prediction still moves when given them. Only the
+callers were changed. Closing this means deleting those arguments from the
+head, which alters its input dimensions and needs a checkpoint migration. The
+gap is pinned by
+`TestTCellIsContextInvariant::test_head_remains_conditionable_and_that_is_the_open_half`,
+which fails when the work is done.
 
-- `shared_base_factorized_context_residual`
-- `shared_base_factorized_context_plus_segment_residual`
-- `dag_family`, `dag_method_leaf`, `dag_prep_readout_leaf`
+**Note on cellular state.** `provenance` still carries
+`processing_stimulus_idx` and `apm_perturbation_idx` into the processing
+latent. Under a strict reading of the forbidden list -- which names
+"stimulation context" -- these should also be output tracks: predict elution
+under each cellular condition rather than conditioning on the observed one.
+That change interacts with the gap-2 fix, which deliberately routed cellular
+state inward to give the in-vivo excision parameters gradient, so it needs its
+own design pass rather than a mechanical edit.
 
-Under the `legacy` default the factorized context is not allocated at all, so
-canonical Presto is compliant. Those modes are experimental variants and are
-non-compliant by this document; selecting one is opting out of the invariant.
-They should either be retired in favour of the panel or reworked to sweep
-rather than index.
