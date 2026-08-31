@@ -53,34 +53,43 @@ class TestCategorization:
         assert label == "T_HALF"
 
 
-class TestCheckpointGrowth:
-    def test_older_checkpoint_embeddings_are_extended_not_rejected(self):
-        """A grown vocabulary must not break loading a pre-growth checkpoint.
+class TestVocabularyGrowthNoLongerMigrates:
+    """Appending a vocabulary entry no longer rescues an older checkpoint.
 
-        Built with a residual mode that reads the factorized assay context: the
-        `legacy` default consumes none of it, so those embeddings are no longer
-        allocated and there would be no key to grow.
-        """
-        # Targets the *output-side* panel embedding. The input-side assay
-        # embeddings this used to grow no longer exist -- they were the
-        # contract violation.
+    `Presto._grow_appended_embeddings` used to zero-pad a saved embedding table
+    up to the current vocabulary size so a pre-growth checkpoint kept loading.
+    It went with the rest of the checkpoint-compat layer: a migration that
+    reshapes weights across a vocabulary change yields a model that loads
+    cleanly and indexes differently.
+
+    What still matters is the *ordering* rule that made growth safe in the
+    first place -- entries are appended, so no existing index changes meaning.
+    That is what this pins now.
+    """
+
+    def test_appending_does_not_disturb_existing_indices(self):
+        from presto.data.vocab import BINDING_ASSAY_TYPES
+
+        # The four entries appended on 2026-08-26. Every index before them must
+        # still mean what it meant.
+        appended = ["T_HALF", "TM", "KOFF", "KON"]
+        for name in appended:
+            assert name in BINDING_ASSAY_TYPES
+        tail = BINDING_ASSAY_TYPES[-4:]
+        assert sorted(tail) == sorted(appended), (
+            "the four newest assay types are no longer at the end; appending is "
+            "the rule that keeps existing indices meaningful"
+        )
+
+    def test_shrunken_table_is_rejected_rather_than_padded(self):
+        """A stale table is now a load error, not a silent zero-pad."""
         model = Presto(d_model=32, n_layers=2, n_heads=4)
         state = model.state_dict()
-
         key = next(k for k in state if k.endswith("assay_panel_embed.assay_type.weight"))
         rows, dim = state[key].shape
-        # Simulate a checkpoint saved before the four entries were appended.
-        shrunk = torch.arange(float((rows - 4) * dim)).reshape(rows - 4, dim)
-        state[key] = shrunk
+        state[key] = torch.zeros(rows - 4, dim)
 
         fresh = Presto(d_model=32, n_layers=2, n_heads=4)
-        fresh.load_state_dict(state, strict=False)
-
-        loaded = dict(fresh.named_parameters())[key]
-        assert loaded.shape == (rows, dim)
-        # Learned rows survive unchanged...
-        assert torch.allclose(loaded[: rows - 4].detach(), shrunk)
-        # ...and the appended rows keep their fresh init rather than being
-        # zeroed, which would be a degenerate start for an untrained entry.
-        assert torch.count_nonzero(loaded[rows - 4:].detach()) > 0
-        assert torch.isfinite(loaded.detach()).all()
+        with pytest.raises(RuntimeError) as excinfo:
+            fresh.load_state_dict(state, strict=False)
+        assert "size mismatch" in str(excinfo.value)

@@ -569,10 +569,13 @@ def test_v6_historical_positive_control_contract():
     deliberate and accounted for: `BINDING_ASSAY_TYPES` gained four entries
     (`T_HALF`, `TM`, `KOFF`, `KON`), adding 4 rows x 8 dims = 32 parameters to
     `assay_type_embed`. Entries were appended, so every pre-existing index still
-    means what it meant, and `Presto._grow_appended_embeddings` zero-pads older
-    checkpoints on load rather than failing on the shape change. Predictions for
-    a historical checkpoint are unaffected because the new rows are never
-    indexed by v6 data.
+    means what it meant, and predictions for a historical checkpoint are
+    unaffected because the new rows are never indexed by v6 data.
+
+    Older checkpoints no longer load across such a change: the zero-padding
+    migration was removed with the rest of the checkpoint-compat layer, so a
+    checkpoint now loads into the configuration that wrote it. This test pins
+    the parameter count, not cross-version loading.
     """
     spec = CONDITIONS_V6_BY_ID[2]
     model = build_model(spec, encoder_backbone="historical_ablation")

@@ -66,8 +66,37 @@ class TestTopologyConstruction:
         with pytest.raises(ValueError, match="Unsupported latent_topology"):
             Presto(d_model=32, n_layers=2, n_heads=4, latent_topology="nonsense")
 
-    def test_default_is_collapsed(self):
-        assert Presto(d_model=32, n_layers=2, n_heads=4).latent_topology == "collapsed"
+    def test_default_is_expanded(self):
+        """The default must be the topology the design describes.
+
+        `expanded` gives each specified latent its own query, which is
+        design.md S7.1/S7.2/S7.5; `collapsed` folds twelve into five. The
+        default here was `collapsed` while scripts/train_remote.py already
+        passed `expanded`, so the same command trained a different architecture
+        depending on whether it ran locally or on a box.
+        """
+        assert Presto(d_model=32, n_layers=2, n_heads=4).latent_topology == "expanded"
+
+    def test_every_entry_point_agrees_on_the_default(self):
+        """The three defaults that disagreed are pinned together here.
+
+        `train_remote` is read as text rather than imported: it raises
+        SystemExit at import when runplz is absent, which is correct for a
+        launcher and useless for a test.
+        """
+        import inspect
+        from pathlib import Path
+
+        from presto.scripts import train_iedb
+
+        signature = inspect.signature(Presto.__init__)
+        assert signature.parameters["latent_topology"].default == "expanded"
+        assert train_iedb.IEDB_DEFAULTS["latent_topology"] == "expanded"
+
+        launcher = (
+            Path(__file__).resolve().parents[1] / "scripts" / "train_remote.py"
+        ).read_text()
+        assert '"PRESTO_LATENT_TOPOLOGY", "expanded"' in launcher
 
     def test_expanded_has_one_query_per_cross_attention_latent(self):
         model = _model("expanded")
