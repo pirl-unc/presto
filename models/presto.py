@@ -904,6 +904,21 @@ class Presto(nn.Module):
         # bug this edge exists to fix.
         self.w_invivo_excision_presentation = nn.Parameter(torch.tensor(-2.0))
 
+        # Weight on the recognition -> immunogenicity edge.
+        #
+        # `recognition_cd{8,4}_head` produced logits that fed nothing and were
+        # published as probabilities from untrained weights. The DAG already
+        # says where they belong: recognition is repertoire precursor frequency
+        # (S9.4) and immunogenicity is the response that requires it (S9.5). An
+        # epitope with no TCR able to recognize it cannot be immunogenic, so
+        # recognition is upstream.
+        #
+        # Softplus for the same reason as the excision edge: more available
+        # recognition can only raise the odds of a response, never lower them.
+        # Initialized to softplus(-2) ~ 0.13 rather than 0, because a zero
+        # weight would leave the heads exactly as starved as before.
+        self.w_recognition_immunogenicity = nn.Parameter(torch.tensor(-2.0))
+
         self.processing_condition_embed = self._zero_init_embedding(
             len(APM_PERTURBATIONS) * len(PROCESSING_STIMULI), d_model
         )
@@ -3559,6 +3574,24 @@ class Presto(nn.Module):
         outputs["immunogenicity_cd4_logit"] = immunogenicity_cd4_logit
         outputs["immunogenicity_cd8_prob"] = torch.sigmoid(immunogenicity_cd8_logit)
         outputs["immunogenicity_cd4_prob"] = torch.sigmoid(immunogenicity_cd4_logit)
+
+        # Recognition enters per lineage, before the class mixture: CD8
+        # recognition informs CD8 immunogenicity and CD4 likewise, which is the
+        # pairing the lineage-specific latents already encode.
+        recognition_gain = F.softplus(self.w_recognition_immunogenicity)
+        immunogenicity_cd8_logit = (
+            immunogenicity_cd8_logit + recognition_gain * recognition_cd8_logit
+        )
+        immunogenicity_cd4_logit = (
+            immunogenicity_cd4_logit + recognition_gain * recognition_cd4_logit
+        )
+        outputs["immunogenicity_cd8_logit"] = immunogenicity_cd8_logit
+        outputs["immunogenicity_cd4_logit"] = immunogenicity_cd4_logit
+        outputs["immunogenicity_cd8_prob"] = torch.sigmoid(immunogenicity_cd8_logit)
+        outputs["immunogenicity_cd4_prob"] = torch.sigmoid(immunogenicity_cd4_logit)
+        outputs["immunogenicity_recognition_term"] = (
+            recognition_gain * recognition_repertoire_logit
+        )
 
         immunogenicity_mixture_logit = (
             class_probs[:, :1] * immunogenicity_cd8_logit

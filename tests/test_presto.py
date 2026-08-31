@@ -216,10 +216,23 @@ class TestPrestoModel:
         assert torch.isfinite(outputs["assays"]["IC50_nM"]).all()
 
     def test_model_accepts_binding_context_input(self):
-        """Verify factorized assay context embeddings are wired through forward()."""
+        """Verify factorized assay context embeddings are wired through forward().
+
+        Built with a residual mode that actually reads the factorized context.
+        Under the `legacy` default nothing consumes it, so those embeddings are
+        no longer allocated -- and this test previously "passed" by asserting a
+        vector was non-zero while nothing downstream ever looked at it.
+        """
         from presto.models.presto import Presto
 
-        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        model = Presto(
+            d_model=64,
+            n_layers=2,
+            n_heads=4,
+            affinity_assay_residual_mode=(
+                "shared_base_factorized_context_plus_segment_residual"
+            ),
+        )
         model.eval()
 
         pep_tok = torch.randint(4, 24, (2, 10))

@@ -26,6 +26,31 @@ from ..data.vocab import (
 )
 
 
+#: Residual modes that actually consume the factorized assay context. Under
+#: any other mode -- including the "legacy" default -- the embeddings and
+#: projection below feed nothing, so they are not allocated.
+#:
+#: Note this only became true after `binding_context` was wired into the
+#: training loop: before that the assay path could not train under *any* mode,
+#: because the metadata never reached the model at all.
+_FACTORIZED_CONTEXT_MODES = frozenset({
+    "shared_base_factorized_context_residual",
+    "shared_base_factorized_context_plus_segment_residual",
+    "dag_family",
+    "dag_method_leaf",
+    "dag_prep_readout_leaf",
+})
+
+#: Residual modes that consume the pep/MHC sequence summary.
+_SEQUENCE_SUMMARY_MODES = frozenset({
+    "shared_base_segment_residual",
+    "shared_base_factorized_context_plus_segment_residual",
+    "dag_family",
+    "dag_method_leaf",
+    "dag_prep_readout_leaf",
+})
+
+
 @dataclass
 class PrestoTrunkState:
     """Shared pMHC trunk features consumed by modular predictor heads."""
@@ -154,20 +179,50 @@ class AffinityPredictor(nn.Module):
             d_model if self.binding_kinetic_input_mode == "affinity_vec" else self.interaction_dim
         )
         self.binding = BindingModule(d_model=binding_input_dim)
-        self.sequence_summary_proj = nn.Sequential(
-            nn.Linear(d_model * 3, d_model),
-            nn.GELU(),
-            nn.Linear(d_model, d_model),
+        _uses_summary = self.affinity_assay_residual_mode in _SEQUENCE_SUMMARY_MODES
+        self.sequence_summary_proj = (
+            nn.Sequential(
+                nn.Linear(d_model * 3, d_model),
+                nn.GELU(),
+                nn.Linear(d_model, d_model),
+            )
+            if _uses_summary
+            else None
         )
-        # Factorized assay context embeddings
+        # Factorized assay context embeddings, allocated only when a mode reads
+        # them. See _FACTORIZED_CONTEXT_MODES.
         _fac_embed_dim = max(d_model // 4, 8)
         self._fac_embed_dim = _fac_embed_dim
-        self.assay_type_embed = nn.Embedding(len(BINDING_ASSAY_TYPES), _fac_embed_dim)
-        self.assay_prep_embed = nn.Embedding(len(BINDING_ASSAY_PREP), _fac_embed_dim)
-        self.assay_geometry_embed = nn.Embedding(len(BINDING_ASSAY_GEOMETRY), _fac_embed_dim)
-        self.assay_readout_embed = nn.Embedding(len(BINDING_ASSAY_READOUT), _fac_embed_dim)
+        _uses_factorized = (
+            self.affinity_assay_residual_mode in _FACTORIZED_CONTEXT_MODES
+        )
+        self._uses_factorized_context = _uses_factorized
+        self.assay_type_embed = (
+            nn.Embedding(len(BINDING_ASSAY_TYPES), _fac_embed_dim)
+            if _uses_factorized
+            else None
+        )
+        self.assay_prep_embed = (
+            nn.Embedding(len(BINDING_ASSAY_PREP), _fac_embed_dim)
+            if _uses_factorized
+            else None
+        )
+        self.assay_geometry_embed = (
+            nn.Embedding(len(BINDING_ASSAY_GEOMETRY), _fac_embed_dim)
+            if _uses_factorized
+            else None
+        )
+        self.assay_readout_embed = (
+            nn.Embedding(len(BINDING_ASSAY_READOUT), _fac_embed_dim)
+            if _uses_factorized
+            else None
+        )
         factorized_context_dim = _fac_embed_dim * 4
-        self.factorized_proj = nn.Linear(factorized_context_dim, factorized_context_dim)
+        self.factorized_proj = (
+            nn.Linear(factorized_context_dim, factorized_context_dim)
+            if _uses_factorized
+            else None
+        )
 
         # class_probs is [B, 2], species_probs is [B, N_MHC_SPECIES=6]
         self._class_probs_dim = 2
@@ -239,7 +294,11 @@ class AffinityPredictor(nn.Module):
         outputs["binding_assay_context_vec"] = assay_context_vec
 
         # Build factorized assay context from per-sample metadata when available
-        if binding_context is not None and "assay_type_idx" in binding_context:
+        if (
+            self._uses_factorized_context
+            and binding_context is not None
+            and "assay_type_idx" in binding_context
+        ):
             fac_parts = [
                 self.assay_type_embed(binding_context["assay_type_idx"]),
                 self.assay_prep_embed(binding_context["assay_prep_idx"]),
@@ -265,7 +324,8 @@ class AffinityPredictor(nn.Module):
         outputs["binding_stability_score_raw"] = stability_score_raw
         outputs["binding_stability_score"] = stability_score
         if (
-            pep_vec is not None
+            self.sequence_summary_proj is not None
+            and pep_vec is not None
             and mhc_a_vec is not None
             and mhc_b_vec is not None
         ):
@@ -360,7 +420,12 @@ class AffinityPredictor(nn.Module):
                 )
                 else None
             ),
-            binding_stability_score=None,
+            # The stability heads reserve an input slot for this
+            # (`stability_score_dim`) and fill it with zeros when it is None.
+            # Passing None therefore did two things at once: left a whole input
+            # channel permanently dead, and starved binding_stability_score_head
+            # of gradient. It is computed a few lines above; feed it.
+            binding_stability_score=stability_score,
             assay_context_vec=None,
             factorized_assay_context_vec=factorized_assay_context_vec,
             sequence_summary_vec=(

@@ -1983,6 +1983,13 @@ def compute_loss(
             tcell_context=batch.tcell_context if batch.tcell_context else None,
             machinery=getattr(batch, "machinery_idx", None),
             provenance=getattr(batch, "provenance", None) or None,
+            # Per-row assay metadata. The collator builds this and the model
+            # accepts it, but the training loop never passed it, so the whole
+            # assay-conditioning path -- five embeddings plus factorized_proj --
+            # received no gradient in any run. Its purpose is to absorb
+            # assay-to-assay bias so affinities are comparable across sources,
+            # which is precisely what cannot be learned if it is never fed.
+            binding_context=getattr(batch, "binding_context", None) or None,
             return_binding_attention=return_binding_attention,
         )
         if profile_performance:

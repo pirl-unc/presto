@@ -364,6 +364,11 @@ class PrestoBatch:
     processing_species: List[Optional[str]] = field(default_factory=list)
     primary_alleles: List[str] = field(default_factory=list)
     sample_ids: List[str] = field(default_factory=list)
+    #: Per-row provenance label, e.g. "iedb" or "synthetic_negative_mhc_scramble".
+    #: Carried so held-out metrics can be reported separately for real rows and
+    #: for each kind of synthetic decoy: mixing them yields AUPRC ~1.0 that
+    #: measures peptide realism rather than presentation.
+    sample_sources: List[str] = field(default_factory=list)
     targets: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_masks: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_quals: Dict[str, torch.Tensor] = field(default_factory=dict)
@@ -415,6 +420,7 @@ class PrestoBatch:
             processing_species=self.processing_species,
             primary_alleles=self.primary_alleles,
             sample_ids=self.sample_ids,
+            sample_sources=self.sample_sources,
             targets={name: _move(tensor) for name, tensor in self.targets.items()},
             target_masks={
                 name: _move(tensor) for name, tensor in self.target_masks.items()
@@ -1794,6 +1800,7 @@ class PrestoCollator:
             processing_species=[s.species for s in samples],
             primary_alleles=[s.primary_allele or "" for s in samples],
             sample_ids=[s.sample_id for s in samples],
+            sample_sources=[s.sample_source or "" for s in samples],
             targets=targets,
             target_masks=target_masks,
             target_quals=target_quals,

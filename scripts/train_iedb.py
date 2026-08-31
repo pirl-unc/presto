@@ -1819,7 +1819,26 @@ def bootstrap_missing_modalities_for_canary(
     return kinetics, stability, processing, stats
 
 
-ALL_SYNTHETIC_MODES = (
+#: Decoy families, ordered easy -> hard.
+#:
+#: The first six all corrupt one side of the pair: the peptide is scrambled or
+#: randomized, or the MHC is scrambled, randomized or removed. A model
+#: separates those from real pairs by asking "is this a plausible peptide
+#: paired with a plausible MHC", which it can answer from surface statistics
+#: without any binding biology. Measured on a real run, that yields elution
+#: AUPRC 1.0000 with *zero* overlap between the two score distributions.
+#:
+#: They are still worth keeping -- a model that cannot separate them is broken,
+#: so they are a sanity check -- but a metric computed over them is decoy
+#: detection and is now reported under a `decoy_*` prefix to say so.
+#:
+#: `allele_mismatch` is the hard, biological one: a real peptide that was
+#: genuinely eluted, from a real source protein, with the correct length
+#: distribution and correct terminal chemistry -- paired with a *different*
+#: allele. Nothing about the peptide is fake, so the only way to separate it is
+#: to have learned the allele's motif. This is the standard negative-sampling
+#: scheme in the field.
+EASY_SYNTHETIC_MODES = (
     "peptide_scramble",
     "peptide_random",
     "mhc_scramble",
@@ -1827,6 +1846,11 @@ ALL_SYNTHETIC_MODES = (
     "no_mhc_alpha",
     "no_mhc_beta",
 )
+
+#: Decoys built from real, unmodified peptides.
+HARD_SYNTHETIC_MODES = ("allele_mismatch",)
+
+ALL_SYNTHETIC_MODES = EASY_SYNTHETIC_MODES + HARD_SYNTHETIC_MODES
 
 
 def augment_binding_records_with_synthetic_negatives(
@@ -1870,6 +1894,19 @@ def augment_binding_records_with_synthetic_negatives(
     records = list(binding_records)
     if not records or (negative_ratio <= 0 and class_i_no_mhc_beta_ratio <= 0):
         return records, _empty_stats()
+
+    # Real peptides grouped by the allele they were observed with, for the
+    # allele_mismatch decoys. Built once from the source records rather than
+    # from an external corpus so the decoys share the length distribution,
+    # terminal chemistry and proteome origin of the positives -- which is the
+    # entire point: the only usable difference must be the allele's motif.
+    peptides_by_allele: Dict[str, List[str]] = defaultdict(list)
+    for record in records:
+        peptide_text = str(getattr(record, "peptide", "") or "").strip().upper()
+        allele_text = str(getattr(record, "mhc_allele", "") or "").strip()
+        if peptide_text and allele_text:
+            peptides_by_allele[allele_text].append(peptide_text)
+    mismatch_allele_pool = sorted(peptides_by_allele)
     if class_i_anchor_strategy not in {"none", "property_opposite"}:
         raise ValueError(
             "class_i_anchor_strategy must be one of {'none', 'property_opposite'}"
@@ -1948,6 +1985,33 @@ def augment_binding_records_with_synthetic_negatives(
             peptide = source.peptide or _random_peptide(rng, _class_default_peptide_length(mhc_class, rng))
             allele = source.mhc_allele
             direct_mhc_sequence = _random_mhc_sequence_like(rng, source_mhc_seq, mhc_class)
+        elif mode == "allele_mismatch":
+            # A real peptide eluted from a different allele, paired with this
+            # one. Nothing is corrupted, so surface statistics cannot separate
+            # it -- only the motif can.
+            #
+            # A minority of peptides are genuinely promiscuous and will be
+            # presented by both alleles, making them false negatives. That cost
+            # is accepted here as it is throughout the field; it is bounded and
+            # far smaller than the bias introduced by scrambling.
+            donor_alleles = [
+                candidate
+                for candidate in mismatch_allele_pool
+                if candidate != source.mhc_allele
+            ]
+            if not donor_alleles:
+                # Single-allele corpus: no mismatch is possible, so fall back
+                # rather than silently emitting a same-allele "negative", which
+                # would be a mislabelled positive.
+                peptide = _scramble_peptide_with_anchor_changes(
+                    rng, peptide, anchor_opposite=use_anchor_opposite,
+                ) or _random_peptide(rng, _class_default_peptide_length(mhc_class, rng))
+                source_label = "synthetic_negative_peptide_scramble"
+            else:
+                donor = donor_alleles[rng.randrange(len(donor_alleles))]
+                donor_peptides = peptides_by_allele[donor]
+                peptide = donor_peptides[rng.randrange(len(donor_peptides))]
+            allele = source.mhc_allele
         elif mode == "no_mhc_alpha":
             peptide = source.peptide or _random_peptide(rng, _class_default_peptide_length(mhc_class, rng))
             allele = source.mhc_allele

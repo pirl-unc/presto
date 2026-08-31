@@ -60,11 +60,12 @@ BY_DESIGN = {
     "excision_head.profile_scale_n",
 }
 
-#: (B) Reachable, but only with data this batch does not contain -- an EC50
-#: measurement, a Tm measurement, a class II binding row carrying flanking
-#: regions, a species override, or TCR method metadata. Not defects; add the
-#: record and they train. Verified individually: adding a class II T-cell
-#: record moved `immunogenicity_cd4_latent_head` out of this set.
+#: (B) Reachable, but only with data this batch does not contain -- an EC50 or
+#: Tm measurement, a class II binding row carrying flanking regions, a species
+#: override, or TCR method metadata. Not defects; add the record and they
+#: train. Verified individually: a class II T-cell record moved
+#: `immunogenicity_cd4_latent_head` out of this set, and a class II processing
+#: record moved `class2_processing_predictor` out.
 NEEDS_ABSENT_DATA = {
     "affinity_predictor.assay_heads.ec50_residual.0.weight",
     "affinity_predictor.assay_heads.ec50_residual.0.bias",
@@ -81,37 +82,32 @@ NEEDS_ABSENT_DATA = {
     "tcr_evidence_method_head.bias",
 }
 
-#: (C) Computed, published in `outputs`, and consumed by nothing.
+#: (C) Computed, published, and consumed by nothing.
 #:
-#: These are the real finding. They are not merely untrained -- they are
-#: *intended features that were never connected*. The factorized assay context
-#: exists to absorb assay bias and never reaches the binding prediction; the
-#: sequence summary likewise; `binding_stability_score` is a stability readout
-#: wired to no stability loss; the CD8/CD4 recognition heads publish
-#: probabilities from an untrained projection.
+#: **This category is now empty**, and keeping it here with that statement is
+#: deliberate: it held 18 tensors, and every one turned out to be a distinct
+#: kind of disconnection rather than a design choice.
 #:
-#: Wiring any of them changes what the model computes, so it is a modelling
-#: decision rather than a cleanup, and it is deliberately not made here.
-COMPUTED_BUT_UNSUPERVISED = {
-    "affinity_predictor.assay_type_embed.weight",
-    "affinity_predictor.assay_prep_embed.weight",
-    "affinity_predictor.assay_geometry_embed.weight",
-    "affinity_predictor.assay_readout_embed.weight",
-    "affinity_predictor.factorized_proj.weight",
-    "affinity_predictor.factorized_proj.bias",
-    "affinity_predictor.sequence_summary_proj.0.weight",
-    "affinity_predictor.sequence_summary_proj.0.bias",
-    "affinity_predictor.sequence_summary_proj.2.weight",
-    "affinity_predictor.sequence_summary_proj.2.bias",
-    "affinity_predictor.binding_stability_score_head.0.weight",
-    "affinity_predictor.binding_stability_score_head.0.bias",
-    "affinity_predictor.binding_stability_score_head.2.weight",
-    "affinity_predictor.binding_stability_score_head.2.bias",
-    "recognition_cd8_head.weight",
-    "recognition_cd8_head.bias",
-    "recognition_cd4_head.weight",
-    "recognition_cd4_head.bias",
-}
+#:   assay_{type,prep,geometry,readout}_embed + factorized_proj
+#:       Dead in *every* mode, because `binding_context` was never passed from
+#:       the training loop -- the collator built the metadata and the model
+#:       accepted it, with nothing in between. Now passed; under residual modes
+#:       that read the factorized context they train, and under `legacy`, which
+#:       cannot reach them, they are no longer allocated.
+#:   sequence_summary_proj
+#:       Mode-gated only. Allocated when a mode consumes it.
+#:   binding_stability_score_head
+#:       Passed to the stability heads as a literal `None`, so a reserved input
+#:       channel was permanently zeroed and the head starved. Now fed.
+#:   recognition_cd{8,4}_head
+#:       Published probabilities from untrained weights. Now upstream of
+#:       immunogenicity, which is what the DAG said all along: recognition is
+#:       repertoire precursor frequency (S9.4), immunogenicity is the response
+#:       requiring it (S9.5).
+#:
+#: If something lands here again, it means an output is being published that
+#: nothing trains -- which is worth a fix, not an entry.
+COMPUTED_BUT_UNSUPERVISED: set = set()
 
 ALLOWED_DEAD = BY_DESIGN | NEEDS_ABSENT_DATA | COMPUTED_BUT_UNSUPERVISED
 
