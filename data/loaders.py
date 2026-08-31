@@ -33,13 +33,15 @@ import torch
 from torch.utils.data import Dataset, DataLoader, Sampler
 
 from .bulk_ms import BulkMSRecord
+from .vocab import (
+    cell_lineage_for,
+    default_machinery_for_class,
+    disease_state_for,
+    sample_origin_for,
+)
 from .collate import PrestoSample, PrestoCollator
 from .groove import prepare_mhc_input
-from .vocab import (
-    default_machinery_for_class,
-    normalize_organism,
-    FOREIGN_CATEGORIES,
-)
+from .vocab import normalize_organism, FOREIGN_CATEGORIES
 from .allele_resolver import (
     AlleleResolver,
     HUMAN_B2M_SEQUENCE,
@@ -102,10 +104,10 @@ def _normalize_mhc_sequence_lookup(
         try:
             variants.add(normalize_allele_name(key))
         except ValueError:
-            # ValueError only: an unparseable allele name is expected data and
-            # is skippable, but `except Exception` also swallowed the
-            # RuntimeError raised when mhcgnomes is unavailable -- which would
-            # silently degrade every allele in the index rather than failing.
+            # ValueError only: an unparseable allele name is expected data and is
+        # skippable, but `except Exception` also swallowed the RuntimeError
+        # raised when mhcgnomes is unavailable -- which would silently
+        # degrade every allele in the index rather than failing loudly.
             pass
         for variant in variants:
             normalized[variant] = seq
@@ -253,6 +255,13 @@ class ElutionRecord:
     apm_perturbation: Optional[str] = None
     cell_type: Optional[str] = None
     tissue: Optional[str] = None
+    #: Sample provenance flags, straight from hitlist (all 100% covered there).
+    #: Kept raw on the record and factorized into axes at sample construction,
+    #: so the record stays a faithful copy of the source row.
+    is_cell_line: Optional[bool] = None
+    is_healthy_tissue: Optional[bool] = None
+    is_cancer: Optional[bool] = None
+    is_tumor_adjacent: Optional[bool] = None
     mhc_class: Optional[str] = None
     species: Optional[str] = None
     antigen_species: Optional[str] = None
@@ -366,6 +375,23 @@ class TcrEvidenceRecord:
     method_bins: Tuple[str, ...] = ()
     score: Optional[int] = None
     reference_id: Optional[str] = None
+    def __post_init__(self) -> None:
+        # Derive the bins from the raw method strings when a caller did not
+        # supply them. They used to be computed in only one construction path,
+        # so a record built any other way -- including every test and any
+        # direct caller -- carried empty bins, and `tcr_evidence_method` was
+        # never supervised even though the method metadata was right there.
+        if not self.method_bins and (
+            self.method_identification or self.method_verification
+        ):
+            object.__setattr__(
+                self,
+                "method_bins",
+                _normalize_tcr_evidence_method_bins(
+                    self.method_identification, self.method_verification
+                ),
+            )
+
 
 
 # Backward compatibility alias
@@ -1899,6 +1925,13 @@ class PrestoDataset(Dataset):
                 peptide_source="mhc",
                 processing_stimulus=getattr(rec, "stimulus", None),
                 apm_perturbation=getattr(rec, "apm_perturbation", None),
+                cell_lineage=cell_lineage_for(getattr(rec, "cell_type", None)),
+                sample_origin=sample_origin_for(getattr(rec, "is_cell_line", None)),
+                disease_state=disease_state_for(
+                    is_healthy=getattr(rec, "is_healthy_tissue", None),
+                    is_cancer=getattr(rec, "is_cancer", None),
+                    is_tumor_adjacent=getattr(rec, "is_tumor_adjacent", None),
+                ),
                 elution_label=1.0 if rec.detected else 0.0,
                 mil_mhc_a_list=mil_mhc_a_list,
                 mil_mhc_b_list=mil_mhc_b_list,
@@ -2497,6 +2530,62 @@ class PrestoDataset(Dataset):
         return self.samples[idx]
 
 
+def _use_file_system_sharing() -> None:
+    """Switch multiprocessing tensor sharing off file descriptors.
+
+    A `PrestoBatch` carries ~50 tensor fields, so every batch handed from a
+    worker to the parent passes that many file descriptors, multiplied by
+    worker count and prefetch depth. Under torch's default `file_descriptor`
+    strategy that exhausts the process limit and surfaces as
+
+        RuntimeError: received 0 items of ancdata
+        Error: Pin memory thread exited unexpectedly
+
+    which names neither file descriptors nor the real cause. Observed on a
+    48-core box with 16 workers, dying on the first batch.
+
+    `file_system` shares through /dev/shm instead, so the count of live
+    descriptors stops scaling with the number of tensors per batch. The
+    tradeoff is that leaked shared-memory segments outlive a hard-killed
+    process; that is much preferable to a run that cannot start.
+
+    Callers that have already chosen a strategy are left alone.
+    """
+    try:
+        import torch.multiprocessing as mp
+
+        if mp.get_sharing_strategy() == "file_descriptor":
+            if "file_system" in mp.get_all_sharing_strategies():
+                mp.set_sharing_strategy("file_system")
+    except (ImportError, RuntimeError):  # pragma: no cover - platform dependent
+        # Not fatal: the default strategy still works for small batches and
+        # low worker counts.
+        pass
+    _raise_open_file_limit()
+
+
+def _raise_open_file_limit() -> None:
+    """Raise the soft open-file limit toward its hard ceiling.
+
+    The other half of the same failure. Even under `file_system` sharing a
+    large worker count plus prefetch keeps many descriptors live, and the
+    default soft limit is often 1024 while the hard limit is orders of
+    magnitude higher. Raising the soft limit is permitted without privileges
+    and cannot exceed what the administrator already allowed.
+    """
+    try:
+        import resource
+
+        soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
+        if hard != resource.RLIM_INFINITY and soft >= hard:
+            return
+        target = hard if hard != resource.RLIM_INFINITY else 65536
+        if soft < target:
+            resource.setrlimit(resource.RLIMIT_NOFILE, (target, hard))
+    except (ImportError, ValueError, OSError):  # pragma: no cover - platform dependent
+        pass
+
+
 def create_dataloader(
     dataset: Dataset,
     batch_size: int = 32,
@@ -2513,6 +2602,8 @@ def create_dataloader(
     """Create a DataLoader for Presto training."""
     collator = collator or PrestoCollator()
     num_workers = max(int(num_workers), 0)
+    if num_workers > 0:
+        _use_file_system_sharing()
     loader_kwargs: Dict[str, Any] = {
         "num_workers": num_workers,
         "collate_fn": collator,
@@ -2855,15 +2946,25 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         return metadata[2] if metadata else "unknown"
 
     def _contrast_quota(self) -> int:
-        """How many contrast groups to seed a batch with.
+        """How many *rows* of a batch to reserve for contrast groups.
 
-        A quarter of the batch, which leaves the ordinary weighted sampling in
-        charge of the rest. Zero when there are no groups, so the MHC-only
+        A row budget rather than a group count. Counting groups understated
+        the real cost, because a group contributes at least two rows and
+        nothing bounded how many: one large group could take the entire
+        remaining batch and crowd out the weighted sampling that is supposed
+        to own the rest.
+
+        An eighth of the batch, leaving ordinary weighted sampling in charge
+        of the remainder. Zero when there are no groups, so the MHC-only
         configuration behaves exactly as before.
         """
         if not self._contrast_groups:
             return 0
-        return max(1, self.batch_size // 8)
+        return max(2, self.batch_size // 8)
+
+    #: Rows any single contrast group may contribute. Two is the minimum for a
+    #: contrast to exist at all; more than a handful and one group dominates.
+    MAX_ROWS_PER_CONTRAST_GROUP = 4
 
     def _build_binding_family_index(self) -> None:
         peptide_groups: Dict[str, List[int]] = defaultdict(list)
@@ -3267,14 +3368,27 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             # Seed with complete contrast groups first, so the comparisons the
             # shotgun branch depends on are guaranteed to co-occur in the batch
             # rather than being left to chance.
-            for _ in range(self._contrast_quota()):
+            contrast_budget = self._contrast_quota()
+            contrast_rows_used = 0
+            # Bounded attempts: a batch can run out of usable groups long
+            # before the budget is met, and retrying forever would hang.
+            for _ in range(4 * max(1, contrast_budget)):
+                if contrast_rows_used >= contrast_budget:
+                    break
                 if len(batch) >= self.batch_size:
                     break
                 group = self._contrast_groups[rng.randrange(len(self._contrast_groups))]
                 fresh = [i for i in group if i not in in_batch]
                 if len(fresh) < 2:
                     continue
-                for idx in fresh[: max(2, self.batch_size - len(batch))]:
+                take = min(
+                    len(fresh),
+                    self.MAX_ROWS_PER_CONTRAST_GROUP,
+                    max(2, contrast_budget - contrast_rows_used),
+                    max(2, self.batch_size - len(batch)),
+                )
+                contrast_rows_used += take
+                for idx in fresh[:take]:
                     if len(batch) >= self.batch_size:
                         break
                     self._record_batch_index(

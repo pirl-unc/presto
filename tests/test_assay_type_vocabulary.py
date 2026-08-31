@@ -55,11 +55,19 @@ class TestCategorization:
 
 class TestCheckpointGrowth:
     def test_older_checkpoint_embeddings_are_extended_not_rejected(self):
-        """A grown vocabulary must not break loading a pre-growth checkpoint."""
+        """A grown vocabulary must not break loading a pre-growth checkpoint.
+
+        Built with a residual mode that reads the factorized assay context: the
+        `legacy` default consumes none of it, so those embeddings are no longer
+        allocated and there would be no key to grow.
+        """
+        # Targets the *output-side* panel embedding. The input-side assay
+        # embeddings this used to grow no longer exist -- they were the
+        # contract violation.
         model = Presto(d_model=32, n_layers=2, n_heads=4)
         state = model.state_dict()
 
-        key = next(k for k in state if k.endswith("assay_type_embed.weight"))
+        key = next(k for k in state if k.endswith("assay_panel_embed.assay_type.weight"))
         rows, dim = state[key].shape
         # Simulate a checkpoint saved before the four entries were appended.
         shrunk = torch.arange(float((rows - 4) * dim)).reshape(rows - 4, dim)

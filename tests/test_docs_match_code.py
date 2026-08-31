@@ -45,14 +45,15 @@ KNOWN_NOT_OUTPUTS = {
 }
 
 #: Identifiers retired by a rename. Their reappearance in docs is drift.
-#:
-#: Both were found by this test on the commit that introduced it: `liberation`
-#: had been renamed to `excision` in code while the DAG equations in
-#: `model_io_contract.md` still used the old name, and `length_score_value`
-#: appeared in three documents describing a symbol that exists nowhere.
 RETIRED_NAMES = {
     "liberation": "renamed to `excision`",
     "length_score_value": "renamed to `length_preference`",
+    "processing_condition_embed": "deleted; cellular state is not a trunk token",
+    "ifn_ab": "renamed to `ifn_type1`",
+    "apc_cell_class": (
+        "replaced by the cell_lineage / sample_origin / disease_state axes; "
+        "it was built from a 58.3%-covered field and conflated orthogonal axes"
+    ),
 }
 
 
@@ -115,8 +116,11 @@ class TestRetiredNamesAreGone:
             text = path.read_text()
             for line_no, line in enumerate(text.splitlines(), start=1):
                 if name in line and "renamed" not in line and "earlier name" not in line:
-                    # A line explaining the rename is allowed to name it.
-                    if "no longer" in line or "used to" in line or "deleted" in line:
+                    # A line explaining the retirement is allowed to name it.
+                    if any(
+                        marker in line
+                        for marker in ("no longer", "used to", "deleted", "replace")
+                    ):
                         continue
                     offenders.append(f"{path.name}:{line_no}")
         assert offenders == [], (

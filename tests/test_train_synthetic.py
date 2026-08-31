@@ -343,14 +343,23 @@ def test_compute_loss_uses_mil_noisy_or_for_elution_family_tasks():
     assert "out_mil_ms_prob_mean" in metrics
 
 
-def test_compute_loss_uses_tcell_pathway_mil_with_context():
+def test_compute_loss_tcell_pathway_mil_is_context_free():
     class _TCellMilModel(nn.Module):
         def forward(self, **kwargs):
             n = kwargs["pep_tok"].shape[0]
             context = kwargs.get("tcell_context")
             if n == 2:
-                assert context is not None
-                assert context["assay_method_idx"].shape[0] == 2
+                # The T-cell MIL forward must NOT receive assay context.
+                #
+                # It used to, while the row path and both holdout forwards had
+                # already stopped -- so predict_panel swept from the observed
+                # context on the bag path and from the all-unknown baseline
+                # everywhere else. The same panel outputs were two different
+                # functions, averaged into one loss.
+                assert context is None, (
+                    "tcell_context reached the MIL forward; the bag path and "
+                    "the row path would sweep from different baselines"
+                )
                 return {
                     "tcell_logit": torch.tensor([[2.0], [-1.0]], dtype=torch.float32),
                     "immunogenicity_logit": torch.tensor([[1.5], [-0.5]], dtype=torch.float32),

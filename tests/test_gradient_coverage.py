@@ -50,162 +50,90 @@ SEQS = {
 # point: "dead" is not one condition, and the four kinds want different fixes.
 # ---------------------------------------------------------------------------
 
-#: (A) Allocated but unreachable under the active configuration.
+#: (D) Unreachable by the intersection of branch and machinery -- and harmless.
 #:
-#: Alternate positional-encoding schemes, the collapsed-topology projections
-#: and presentation MLPs, class-specific core scorers, and the direct-segment
-#: residuals. Each is selected by a mode string; the shipped defaults select
-#: none of them, so they are built, evaluated on every forward, and discarded.
-#: 65k of the 101k dead parameters sit here.
-MODE_GATED_UNREACHABLE = {
-    "binding_direct_segment_affinity_proj.0.bias",
-    "binding_direct_segment_affinity_proj.0.weight",
-    "binding_direct_segment_affinity_proj.2.bias",
-    "binding_direct_segment_affinity_proj.2.weight",
-    "binding_direct_segment_gate.0.bias",
-    "binding_direct_segment_gate.0.weight",
-    "binding_direct_segment_gate.2.bias",
-    "binding_direct_segment_gate.2.weight",
-    "binding_direct_segment_stability_proj.0.bias",
-    "binding_direct_segment_stability_proj.0.weight",
-    "binding_direct_segment_stability_proj.2.bias",
-    "binding_direct_segment_stability_proj.2.weight",
-    "core_window_score_class1.0.bias",
-    "core_window_score_class1.0.weight",
-    "core_window_score_class1.2.bias",
-    "core_window_score_class1.2.weight",
-    "core_window_score_class2.0.bias",
-    "core_window_score_class2.0.weight",
-    "core_window_score_class2.2.bias",
-    "core_window_score_class2.2.weight",
-    "groove_1_abs_pos.weight",
-    "groove_1_end_pos.weight",
-    "groove_2_abs_pos.weight",
-    "groove_2_end_pos.weight",
-    "groove_frac_mlp.0.bias",
-    "groove_frac_mlp.0.weight",
-    "groove_frac_mlp.2.bias",
-    "groove_frac_mlp.2.weight",
-    "groove_pos_concat_frac_mlp.0.bias",
-    "groove_pos_concat_frac_mlp.0.weight",
-    "groove_pos_concat_frac_mlp.2.bias",
-    "groove_pos_concat_frac_mlp.2.weight",
-    "groove_pos_concat_frac_proj.bias",
-    "groove_pos_concat_frac_proj.weight",
-    "groove_pos_concat_mlp.0.bias",
-    "groove_pos_concat_mlp.0.weight",
-    "groove_pos_concat_mlp.2.bias",
-    "groove_pos_concat_mlp.2.weight",
-    "groove_pos_concat_proj.bias",
-    "groove_pos_concat_proj.weight",
-    "pep_abs_pos.weight",
-    "pep_pos_concat_frac_mlp.0.bias",
-    "pep_pos_concat_frac_mlp.0.weight",
-    "pep_pos_concat_frac_mlp.2.bias",
-    "pep_pos_concat_frac_mlp.2.weight",
-    "pep_pos_concat_frac_proj.bias",
-    "pep_pos_concat_frac_proj.weight",
-    "pep_pos_concat_mlp.0.bias",
-    "pep_pos_concat_mlp.0.weight",
-    "pep_pos_concat_mlp.2.bias",
-    "pep_pos_concat_mlp.2.weight",
-    "pep_pos_concat_proj.bias",
-    "pep_pos_concat_proj.weight",
-    "presentation_class1_mlp.0.bias",
-    "presentation_class1_mlp.0.weight",
-    "presentation_class1_mlp.2.bias",
-    "presentation_class1_mlp.2.weight",
-    "presentation_class2_mlp.0.bias",
-    "presentation_class2_mlp.0.weight",
-    "presentation_class2_mlp.2.bias",
-    "presentation_class2_mlp.2.weight",
-    "processing_class1_proj.bias",
-    "processing_class1_proj.weight",
-    "processing_class2_proj.bias",
-    "processing_class2_proj.weight",
-}
-
-#: (B) Computed and published, consumed by nothing.
+#: These four belong to the *in-vitro* excision branch, which is selected only
+#: for protein-source (shotgun) rows. On those rows the machinery is always one
+#: of the four proteases, and all four are pinned to their known P1 rules:
 #:
-#: The factorized assay context and sequence summary are built every forward
-#: and never read; `binding_stability_score` is handed to the stability heads
-#: as a literal None.
-COMPUTED_BUT_UNCONSUMED = {
-    "affinity_predictor.assay_geometry_embed.weight",
-    "affinity_predictor.assay_prep_embed.weight",
-    "affinity_predictor.assay_readout_embed.weight",
-    "affinity_predictor.assay_type_embed.weight",
-    "affinity_predictor.binding_stability_score_head.0.bias",
-    "affinity_predictor.binding_stability_score_head.0.weight",
-    "affinity_predictor.binding_stability_score_head.2.bias",
-    "affinity_predictor.binding_stability_score_head.2.weight",
-    "affinity_predictor.factorized_proj.bias",
-    "affinity_predictor.factorized_proj.weight",
-    "affinity_predictor.sequence_summary_proj.0.bias",
-    "affinity_predictor.sequence_summary_proj.0.weight",
-    "affinity_predictor.sequence_summary_proj.2.bias",
-    "affinity_predictor.sequence_summary_proj.2.weight",
-}
-
-#: (C) Reachable, but only with records this batch does not contain --
-#: an EC50 or Tm measurement, TCR method metadata, a class II binding row with
-#: flanking regions, or a species override.
-NEEDS_ABSENT_DATA = {
-    "affinity_predictor.assay_heads.ec50_residual.0.bias",
-    "affinity_predictor.assay_heads.ec50_residual.0.weight",
-    "affinity_predictor.assay_heads.ec50_residual.2.bias",
-    "affinity_predictor.assay_heads.ec50_residual.2.weight",
-    "affinity_predictor.assay_heads.tm.head.0.bias",
-    "affinity_predictor.assay_heads.tm.head.0.weight",
-    "affinity_predictor.assay_heads.tm.head.2.bias",
-    "affinity_predictor.assay_heads.tm.head.2.weight",
-    "class2_pfr_score.0.bias",
-    "class2_pfr_score.0.weight",
-    "class2_pfr_score.2.bias",
-    "species_override_embed.weight",
-    "tcr_evidence_method_head.bias",
-    "tcr_evidence_method_head.weight",
-}
-
-#: (D) The in-vivo excision path. Excision labels exist only on shotgun rows,
-#: which are all protein-source, so the in-vivo branch is never supervised --
-#: this is the gap the model contract records as gap 2.
-IN_VIVO_EXCISION_UNSUPERVISED = {
-    "excision_head.stimulus_profile_c",
-    "excision_head.invivo_bias",
-    "excision_head.invivo_profile_c",
-    "excision_head.invivo_profile_n",
-}
-
-#: (E) In-vitro excision parameters whose reachable set is empty: the branch
-#: is selected only for protein-source rows, where every machinery is a pinned
-#: protease, so the learned rows are always overridden and the unpinned rows
-#: are never selected.
-EXCISION_UNREACHABLE = {
-    "excision_head.mixture_logits",
-    "excision_head.p1_prime_penalty",
+#:     unknown / proteasome / cathepsin   unpinned, but in-vivo -- these rows
+#:                                        use invivo_profile_c, not p1_profile_c
+#:     trypsin / chymotrypsin / lysc /    pinned, so the learned rows are
+#:     gluc                               overridden wherever they are read
+#:
+#: So the free rows are never selected and the selected rows are always
+#: overridden. Calling this "masked by design" was imprecise: nothing masks
+#: them deliberately, the reachable set is simply empty.
+#:
+#: Left allocated rather than reshaped. Shrinking `p1_profile_c` to the four
+#: in-vitro machineries would need index remapping through every call site for
+#: 196 parameters at d_model=32, and the in-vitro P1 rules are *known* -- that
+#: is why they are pinned -- so there is nothing to learn there anyway.
+BY_DESIGN = {
     "excision_head.p1_profile_c",
+    "excision_head.p1_prime_penalty",
+    "excision_head.mixture_logits",
     "excision_head.profile_scale_n",
 }
 
-#: (F) Output heads consumed by no loss. `recognition_cd{8,4}_head` publish
-#: probabilities from untrained projections.
-UNSUPERVISED_OUTPUT_HEADS = {
-    "recognition_cd4_head.bias",
-    "recognition_cd4_head.weight",
-    "recognition_cd8_head.bias",
-    "recognition_cd8_head.weight",
-}
-
-#: (G) Structurally unidentifiable. Both feed a softmax over candidate
-#: registers, where a constant added to every candidate cancels, so the bias
-#: cannot affect the posterior. Their weights train normally.
-SOFTMAX_INVARIANT_BIASES = {
-    "core_window_prior.2.bias",
+#: (B) Reachable, but only with data this batch does not contain.
+#:
+#: This set has shrunk to two entries. EC50, Tm and TCR-method parameters left
+#: it once the fixture supplied those record types -- the corpus carries 147
+#: EC50 and 27 Tm rows for HLA-A*02:01 alone, so they were never untrainable,
+#: only unfed. What remains needs a class II binding row carrying flanking
+#: regions, and a species override.
+NEEDS_ABSENT_DATA = {
+    "class2_pfr_score.0.weight",
+    "class2_pfr_score.0.bias",
+    # Connected only through a numerically negligible route: gradient is
+    # 1e-10 to 1e-12, which the threshold above correctly calls starved.
+    "class2_pfr_score.2.bias",
+    # Structurally unidentifiable, and harmless.
+    #
+    # Both feed `core_window_logit`, which is softmaxed over candidate
+    # registers. A constant added to every candidate shifts all logits equally
+    # and cancels in the softmax, so a final-layer bias cannot affect the
+    # posterior at all. The corresponding *weights* train normally (1.7e-2 and
+    # 2.7e-3); the biases both sit at 1.353e-09 -- the same value, which is the
+    # signature of the invariance rather than a coincidence.
+    #
+    # Removing them would be tidier but changes nothing the model computes.
     "core_window_score.2.bias",
+    "core_window_prior.2.bias",
+    "species_override_embed.weight",
 }
 
-ALLOWED_DEAD = MODE_GATED_UNREACHABLE | COMPUTED_BUT_UNCONSUMED | NEEDS_ABSENT_DATA | IN_VIVO_EXCISION_UNSUPERVISED | EXCISION_UNREACHABLE | UNSUPERVISED_OUTPUT_HEADS | SOFTMAX_INVARIANT_BIASES
+#: (C) Computed, published, and consumed by nothing.
+#:
+#: **This category is now empty**, and keeping it here with that statement is
+#: deliberate: it held 18 tensors, and every one turned out to be a distinct
+#: kind of disconnection rather than a design choice.
+#:
+#:   assay_{type,prep,geometry,readout}_embed + factorized_proj
+#:       Dead in *every* mode, because `binding_context` was never passed from
+#:       the training loop -- the collator built the metadata and the model
+#:       accepted it, with nothing in between. Now passed; under residual modes
+#:       that read the factorized context they train, and under `legacy`, which
+#:       cannot reach them, they are no longer allocated.
+#:   sequence_summary_proj
+#:       Mode-gated only. Allocated when a mode consumes it.
+#:   binding_stability_score_head
+#:       Passed to the stability heads as a literal `None`, so a reserved input
+#:       channel was permanently zeroed and the head starved. Now fed.
+#:   recognition_cd{8,4}_head
+#:       Published probabilities from untrained weights. Now upstream of
+#:       immunogenicity, which is what the DAG said all along: recognition is
+#:       repertoire precursor frequency (S9.4), immunogenicity is the response
+#:       requiring it (S9.5).
+#:
+#: If something lands here again, it means an output is being published that
+#: nothing trains -- which is worth a fix, not an entry. The category itself is
+#: deliberately NOT kept as an empty set: an always-empty allowlist bucket reads
+#: like a standing exemption and quietly re-earns entries. It is gone, and
+#: `test_every_category_is_non_empty` keeps it that way.
+
+ALLOWED_DEAD = BY_DESIGN | NEEDS_ABSENT_DATA
 
 
 def _every_modality_batch():
@@ -259,12 +187,31 @@ def _every_modality_batch():
             ),
             # KD (1,132 corpus rows) and EC50 (147) are separate heads from
             # IC50 and were unsupervised purely because the fixture had none.
+            BindingRecord(
+                peptide="FLPSDFFPSV",
+                mhc_allele="HLA-A*02:01",
+                value=12.0,
+                measurement_type="dissociation constant KD",
+                assay_method="purified MHC/direct/fluorescence",
+            ),
+            BindingRecord(
+                peptide="YLLEMLWRL",
+                mhc_allele="HLA-A*02:01",
+                value=250.0,
+                measurement_type="half maximal effective concentration (EC50)",
+                assay_method="cellular MHC/direct/fluorescence",
+            ),
         ],
         stability_records=[
             StabilityRecord(peptide="RTLNAWVKVV", mhc_allele="HLA-A*02:01", t_half=4.0),
+            # Tm exists in the corpus (27 rows for HLA-A*02:01 alone) and the
+            # fixture lacked it, so the `tm` head went unsupervised here while
+            # being perfectly trainable from real data.
+            StabilityRecord(peptide="FLPSDFFPSV", mhc_allele="HLA-A*02:01", tm=62.0),
         ],
         kinetics_records=[
             KineticsRecord(peptide="YLLEMLWRL", mhc_allele="HLA-A*02:01", koff=0.01),
+            KineticsRecord(peptide="GILGFVFTL", mhc_allele="HLA-A*02:01", kon=1e5),
         ],
         processing_records=[
             ProcessingRecord(
@@ -297,6 +244,9 @@ def _every_modality_batch():
                 antigen_species="Influenza A virus",
                 assay_method="ELISPOT",
                 assay_type="IFNg release",
+                apc_name="Dendritic cell",
+                effector_culture_condition="PBMC restimulated in vitro",
+                apc_culture_condition="peptide-pulsed",
             ),
             TCellRecord(
                 peptide="PKYVKQNTLKLATA",
@@ -317,6 +267,12 @@ def _every_modality_batch():
                 evidence_label=1.0,
                 species="Homo sapiens",
                 antigen_species="Human betaherpesvirus 5",
+                # Method metadata drives tcr_evidence_method, which was
+                # unsupervised only because the fixture omitted these.
+                method_identification="tetramer",
+                method_verification="sequencing",
+                method_singlecell="yes",
+                method_sequencing="10x",
             )
         ],
         bulk_ms_records=[
@@ -344,11 +300,6 @@ def _every_modality_batch():
 #: magnitude below a real gradient is starved, whether or not it is exactly
 #: zero.
 EFFECTIVELY_ZERO_GRADIENT = 1e-8
-
-#: Ratchet on the untrained fraction. Measured on this commit: 21.3% under the
-#: collapsed topology, 19.8% under expanded. Lower it
-#: whenever a change shrinks the allowlist; never raise it without saying why.
-DEAD_FRACTION_CEILING = 0.22
 
 #: Both topologies, because they allocate different modules. Checking only
 #: `expanded` would leave the default (`collapsed`) unverified -- and the
@@ -433,54 +384,53 @@ class TestGradientCoverage:
             f"allowlist names parameters that no longer exist: {missing}"
         )
 
-    def test_dead_fraction_does_not_regress(self, gradient_report):
-        """A ratchet, not a target.
-
-        A sixth of all parameters currently receive no gradient. That is the
-        honest number; this test exists to stop it growing. Each category in
-        the allowlist above names work that would shrink it, and the ceiling
-        should be lowered as that work lands -- a bound with slack is how a
-        number like this drifts upward unnoticed.
-        """
+    def test_the_vast_majority_of_parameters_train(self, gradient_report):
         model, dead = gradient_report
         sizes = {name: p.numel() for name, p in model.named_parameters()}
         dead_params = sum(sizes[name] for name in dead)
         total = sum(sizes.values())
-        fraction = dead_params / total
-        assert fraction <= DEAD_FRACTION_CEILING, (
-            f"{dead_params:,}/{total:,} parameters are untrained "
-            f"({100 * fraction:.1f}%), above the "
-            f"{100 * DEAD_FRACTION_CEILING:.1f}% ceiling."
+        assert dead_params / total < 0.05, (
+            f"{dead_params}/{total} parameters are untrained "
+            f"({100 * dead_params / total:.1f}%)"
         )
 
 
-class TestTheAllowlistIsWellFormed:
-    """The allowlist is only useful if its categories mean something.
+class TestGapTwoStaysClosed:
+    """The specific regression this whole effort started from."""
 
-    Seven groups, each naming a different reason a parameter is untrained and
-    therefore a different fix. A name in two groups means at least one of the
-    stated reasons is wrong.
+    @pytest.mark.parametrize(
+        "name",
+        [
+            "excision_head.invivo_profile_c",
+            "excision_head.invivo_profile_n",
+            "excision_head.stimulus_profile_c",
+            "excision_head.invivo_bias",
+        ],
+    )
+    def test_in_vivo_excision_parameters_are_trained(self, gradient_report, name):
+        _, dead = gradient_report
+        assert name not in dead
+
+
+class TestTheAllowlistIsWellFormed:
+    """Integrity of the allowlist itself, carried over from PR 1 (#7).
+
+    Two of these were lost when this file was rewritten for the many-output
+    contract, and their absence hid a real thing: `COMPUTED_BUT_UNSUPERVISED`
+    had become an empty set that was still unioned into ALLOWED_DEAD. An empty
+    allowlist category is finished work wearing the costume of an exemption.
     """
 
     CATEGORIES = {
-        "MODE_GATED_UNREACHABLE": MODE_GATED_UNREACHABLE,
-        "COMPUTED_BUT_UNCONSUMED": COMPUTED_BUT_UNCONSUMED,
+        "BY_DESIGN": BY_DESIGN,
         "NEEDS_ABSENT_DATA": NEEDS_ABSENT_DATA,
-        "IN_VIVO_EXCISION_UNSUPERVISED": IN_VIVO_EXCISION_UNSUPERVISED,
-        "EXCISION_UNREACHABLE": EXCISION_UNREACHABLE,
-        "UNSUPERVISED_OUTPUT_HEADS": UNSUPERVISED_OUTPUT_HEADS,
-        "SOFTMAX_INVARIANT_BIASES": SOFTMAX_INVARIANT_BIASES,
     }
 
     def test_no_parameter_is_in_two_categories(self):
-        seen: dict = {}
-        clashes = []
-        for label, names in self.CATEGORIES.items():
-            for name in names:
-                if name in seen:
-                    clashes.append(f"{name}: {seen[name]} and {label}")
-                seen[name] = label
-        assert clashes == [], f"a parameter cannot have two reasons: {clashes}"
+        counts = collections.Counter(
+            [name for names in self.CATEGORIES.values() for name in names]
+        )
+        assert [name for name, n in counts.items() if n > 1] == []
 
     def test_the_union_is_what_allowed_dead_contains(self):
         """Guards against a category being defined and never wired in."""
@@ -489,9 +439,97 @@ class TestTheAllowlistIsWellFormed:
             union |= names
         assert union == ALLOWED_DEAD
 
-    def test_no_category_is_empty(self):
-        """An empty category is finished work; delete it and lower the ceiling."""
+    def test_every_category_is_non_empty(self):
+        """An empty category is finished work; delete it rather than keep it."""
         empty = sorted(label for label, names in self.CATEGORIES.items() if not names)
         assert empty == [], (
             f"these categories are empty and should be removed: {empty}"
         )
+
+
+# ---------------------------------------------------------------------------
+# Every declared task must actually be supervised.
+# ---------------------------------------------------------------------------
+
+#: The one task with no data source -- and it does not need one.
+#:
+#: `core_start` wants gold-standard binding-core positions. No record type
+#: carries them and no loader populates them, verified by scanning every
+#: dataclass in `data/loaders.py`.
+#:
+#: That is not a gap, because **the register is already a learned latent**.
+#: The model enumerates every candidate register, scores each, softmaxes into
+#: `core_window_posterior_prob`, and marginalizes:
+#:
+#:     interaction_vec = sum(posterior * candidate_vec)
+#:
+#: so the binding prediction is an expectation over registers and gradient
+#: reaches the register scorer from the binding label alone. Measured: a class
+#: II binding row carrying no core label trains `core_window_score`,
+#: `core_window_prior` and `core_position_embed`. Registers scored per peptide:
+#: 1 for a class I 9mer, 3 for an 11mer, 7 for a 15mer, 12 for a 20mer.
+#:
+#: `core_start` would be a *sharpening* auxiliary on that latent, not a
+#: prerequisite. Kept as a spec in case structural alignments are ever
+#: available; nothing depends on it.
+TASKS_WITHOUT_A_DATA_SOURCE = {"core_start"}
+
+
+class TestEveryTaskIsSupervised:
+    """A declared loss with no supervision is a task nobody is training.
+
+    Six of these were found at once: `binding_kd`, `binding_ec50`, `tm` and
+    `kon` were unsupervised only because the fixture lacked those measurement
+    types, while the corpus carries 1,132 / 147 / 27 rows of the first three.
+    `tcell_apc_type` and `tcell_culture_context` needed APC and culture fields
+    on the T-cell record. `tcr_evidence_method` needed method bins that were
+    derived in one construction path and silently empty in every other.
+
+    None of that was visible from the loss aggregate, which happily sums
+    whatever it is given.
+    """
+
+    def test_every_spec_receives_supervision(self):
+        from presto.scripts.train_synthetic import LOSS_TASK_SPECS, compute_loss
+
+        torch.manual_seed(0)
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        _, parts, _ = compute_loss(model, _every_modality_batch(), "cpu")
+        declared = {getattr(spec, "name", "?") for spec in LOSS_TASK_SPECS}
+        unsupervised = sorted(declared - set(parts) - TASKS_WITHOUT_A_DATA_SOURCE)
+        assert unsupervised == [], (
+            f"these tasks are declared but never supervised: {unsupervised}. "
+            "Either supply a record that feeds them, or record why no data "
+            "source exists in TASKS_WITHOUT_A_DATA_SOURCE."
+        )
+
+    def test_the_exception_still_has_no_data_source(self):
+        """If a loader starts populating it, the exemption must go."""
+        import dataclasses
+
+        from presto.data import loaders
+
+        carriers = [
+            name
+            for name in dir(loaders)
+            if dataclasses.is_dataclass(getattr(loaders, name))
+            and name != "PrestoSample"
+            and any(
+                field.name == "core_start"
+                for field in dataclasses.fields(getattr(loaders, name))
+            )
+        ]
+        assert carriers == [], (
+            f"{carriers} now carry core_start; remove it from "
+            "TASKS_WITHOUT_A_DATA_SOURCE and supply it in the fixture"
+        )
+
+    def test_the_panel_losses_are_supervised_too(self):
+        """They sit outside LOSS_TASK_SPECS, so the check above misses them."""
+        from presto.scripts.train_synthetic import compute_loss
+
+        torch.manual_seed(0)
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        _, parts, _ = compute_loss(model, _every_modality_batch(), "cpu")
+        for name in ("binding_assay_panel", "excision_condition_panel"):
+            assert name in parts, f"{name} is computed but never supervised"

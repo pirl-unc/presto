@@ -70,99 +70,160 @@ class TestSourceFork:
         net = Presto(d_model=32, n_layers=2, n_heads=4)
         net.eval()
         with torch.no_grad():
-            net.excision_head.length_score.weight.fill_(1.0)
-            protein = _run(net, source="protein")["excision_s_len"].item()
-            mhc = _run(net, source="mhc", machinery="proteasome")["excision_s_len"].item()
+            net.excision_head.length_preference.weight.fill_(1.0)
+            protein = _run(net, source="protein")["excision_length_score"].item()
+            mhc = _run(net, source="mhc", machinery="proteasome")["excision_length_score"].item()
         assert protein == pytest.approx(1.0), "digest branch should read the table"
         assert mhc == pytest.approx(0.0), "in-vivo branch must contribute no length term"
 
     def test_missed_cleavage_term_is_digest_only(self, model):
         """The proteasome is processive; internal sites say nothing about it."""
         with torch.no_grad():
-            protein = _run(model, source="protein")["excision_s_internal"].item()
-            mhc = _run(model, source="mhc", machinery="proteasome")["excision_s_internal"].item()
+            protein = _run(model, source="protein")["excision_missed_cleavage_score"].item()
+            mhc = _run(model, source="mhc", machinery="proteasome")["excision_missed_cleavage_score"].item()
         assert mhc == pytest.approx(0.0)
         assert protein < 0.0
 
     def test_digest_rule_still_applies_on_the_protein_branch(self, model):
         with torch.no_grad():
-            k_term = _run(model, peptide="SIINFEAAK", source="protein")["excision_s_c"].item()
-            a_term = _run(model, peptide="SIINFEAAA", source="protein")["excision_s_c"].item()
+            k_term = _run(model, peptide="SIINFEAAK", source="protein")["excision_c_terminus_score"].item()
+            a_term = _run(model, peptide="SIINFEAAA", source="protein")["excision_c_terminus_score"].item()
         assert k_term > a_term
 
 
 class TestInVivoGradient:
-    """Scope warning, learned the hard way.
+    """Cellular state trains the in-vivo path, by sweeping rather than indexing.
 
-    These construct an `mhc`-source row carrying an excision target by hand.
-    **The data pipeline never produces that combination**: excision labels come
-    only from `data/bulk_ms.py`, whose rows are all `peptide_source="protein"`.
-    So these prove the wiring *can* carry gradient, not that any real data does
-    -- and an earlier version of this file was cited as evidence that the
-    in-vivo path was supervised, which it is not.
+    History matters here, because this class has been wrong twice.
 
-    `test_real_pipeline_still_starves_the_in_vivo_path` below pins the actual
-    state of affairs. Delete it only when in-vivo excision labels exist.
+    First it constructed an `mhc`-source row carrying an excision target by
+    hand -- a combination the pipeline never produces, since excision labels
+    come only from `data/bulk_ms.py` whose rows are all
+    `peptide_source="protein"` -- and was cited as evidence the in-vivo path
+    was supervised. It was not.
+
+    Then conditions were routed into the processing *latent*, which did
+    supervise them, but by feeding the observed APM state and stimulus into
+    the trunk. `docs/assay_modeling_contract.md` names "stimulation context"
+    as a forbidden input, so that bought supervision at the cost of a model
+    that could not predict presentation without being told the cell's state.
+
+    Now the excision head *sweeps* those axes: `excision_panel_apm` and
+    `excision_panel_stimulus` give one predicted logit per condition, and the
+    observed condition selects which column the elution loss reads. The
+    consequence for these tests is that gradient reaches the whole profile
+    table, not only the observed row -- asserting per-row gradient would now
+    be asserting the old design.
     """
 
-    def test_wiring_can_carry_gradient_to_the_in_vivo_path(self):
-        """Structural check only -- see the class docstring."""
+    def test_the_profiles_are_reachable_from_the_excision_logit(self):
+        """Structural check: the in-vivo branch is still wired to an output."""
         net = Presto(d_model=32, n_layers=2, n_heads=4)
         out = _run(net, source="mhc", apm="n_term_trimming",
                    stimulus="ifn_gamma", machinery="proteasome")
-        F.binary_cross_entropy_with_logits(out["excision_logit"], torch.ones(1)).backward()
+        F.binary_cross_entropy_with_logits(
+            out["excision_logit"], torch.ones(1)
+        ).backward()
 
         head = net.excision_head
-        erap = APM_PERTURBATION_TO_IDX["n_term_trimming"]
-        assert head.invivo_profile_n.grad[erap].abs().sum().item() > 0
-        assert head.invivo_profile_c.grad[erap].abs().sum().item() > 0
-        assert head.stimulus_profile_c.grad[
-            PROCESSING_STIMULUS_TO_IDX["ifn_gamma"]
-        ].abs().sum().item() > 0
+        for name in ("invivo_profile_n", "invivo_profile_c"):
+            grad = getattr(head, name).grad
+            assert grad is not None and grad.abs().sum().item() > 0, (
+                f"{name} is unreachable from the excision logit"
+            )
 
-    def test_real_pipeline_still_starves_the_in_vivo_path(self):
-        """The in-vivo tables receive exactly zero gradient from real data.
+    def test_panels_predict_every_condition(self):
+        """One output track per cellular condition, from sequence alone."""
+        from presto.data.vocab import APM_PERTURBATIONS, PROCESSING_STIMULI
 
-        Every excision-supervised row is protein-sourced, so `(1 - is_protein)`
-        zeroes the in-vivo terms on every row that carries a label. Closing
-        this needs excision labels on MHC rows, which needs a source of in-vivo
-        excision negatives -- the same unsolved problem as detectability
-        negatives. Until then ~482 parameters train to nothing.
+        net = Presto(d_model=32, n_layers=2, n_heads=4)
+        net.eval()
+        with torch.no_grad():
+            out = _run(net, source="mhc", apm="none", stimulus="none",
+                       machinery="proteasome")
+        assert out["excision_panel_apm"].shape[-1] == len(APM_PERTURBATIONS)
+        assert out["excision_panel_stimulus"].shape[-1] == len(PROCESSING_STIMULI)
+
+    def test_real_pipeline_supervises_cellular_state_via_elution(self):
+        """Gap 2, closed and pinned -- now through the panel.
+
+        MHC rows, elution labels only, **no excision label anywhere**. The
+        in-vivo profiles must still receive gradient: that was gap 2's whole
+        content, and it has to survive the move from conditioning to sweeping.
         """
-        from presto.data.bulk_ms import BulkMSRecord
         from presto.data.collate import PrestoCollator
         from presto.data.loaders import ElutionRecord, PrestoDataset
         from presto.scripts.train_synthetic import compute_loss
 
         mhc_seq = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
         dataset = PrestoDataset(
-            bulk_ms_records=[
-                BulkMSRecord(peptide="SIINFEKLK", machinery="trypsin",
-                             detectability_label=1.0, excision_label=1.0),
-            ],
             elution_records=[
                 ElutionRecord(peptide="LLDGTATLRF", alleles=["HLA-A*02:01"],
                               detected=True, stimulus="ifn_gamma",
                               apm_perturbation="n_term_trimming"),
+                ElutionRecord(peptide="SIINFEKLAA", alleles=["HLA-A*02:01"],
+                              detected=True, stimulus="none",
+                              apm_perturbation="none"),
             ],
             mhc_sequences={"HLA-A*02:01": mhc_seq},
             strict_mhc_resolution=False,
         )
         batch = PrestoCollator()([dataset[i] for i in range(len(dataset))])
+        assert "excision" not in batch.target_masks, (
+            "fixture must carry no excision label"
+        )
+
         net = Presto(d_model=32, n_layers=2, n_heads=4)
         loss, _, _ = compute_loss(net, batch, "cpu")
         loss.backward()
 
         head = net.excision_head
-        for name in ("invivo_profile_c", "invivo_profile_n",
-                     "stimulus_profile_c", "invivo_bias"):
+        for name in (
+            "invivo_profile_c",
+            "invivo_profile_n",
+            "stimulus_profile_c",
+            "invivo_bias",
+        ):
             grad = getattr(head, name).grad
-            total = 0.0 if grad is None else grad.abs().sum().item()
-            assert total == 0.0, (
-                f"{name} now receives gradient from the real pipeline -- if in-vivo "
-                "excision labels were added, delete this test and update "
-                "docs/model_io_contract.md, which records this as an open gap"
+            assert grad is not None and grad.abs().sum().item() > 0, (
+                f"{name} received no gradient from elution labels alone; "
+                "gap 2 has reopened"
             )
+
+    def test_the_trunk_no_longer_takes_cellular_state(self):
+        """The input path that the previous fix relied on is gone."""
+        net = Presto(d_model=32, n_layers=2, n_heads=4)
+        assert not hasattr(net, "processing_condition_embed"), (
+            "cellular state is being fed into the trunk again"
+        )
+
+    def test_mil_path_carries_per_instance_state(self):
+        """The elution loss runs through the bag path whenever MIL is active.
+
+        That forward is separate, and while it omitted provenance every
+        instance collapsed to the default condition -- so the whole Tier 3
+        signal landed on one embedding row regardless of the sample's state.
+        """
+        from presto.data.collate import PrestoCollator
+        from presto.data.loaders import ElutionRecord, PrestoDataset
+
+        mhc_seq = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
+        dataset = PrestoDataset(
+            elution_records=[
+                ElutionRecord(peptide="LLDGTATLRF", alleles=["HLA-A*02:01"],
+                              detected=True, stimulus="ifn_gamma",
+                              apm_perturbation="n_term_trimming"),
+                ElutionRecord(peptide="SIINFEKLAA", alleles=["HLA-A*02:01"],
+                              detected=True, stimulus="none",
+                              apm_perturbation="none"),
+            ],
+            mhc_sequences={"HLA-A*02:01": mhc_seq},
+            strict_mhc_resolution=False,
+        )
+        batch = PrestoCollator()([dataset[i] for i in range(len(dataset))])
+        assert batch.mil_bag_label is not None, "fixture should exercise the MIL path"
+        apm = batch.mil_provenance["apm_perturbation_idx"].tolist()
+        assert len(set(apm)) > 1, "MIL instances collapsed to one condition"
 
     def test_only_the_present_condition_receives_gradient(self):
         net = Presto(d_model=32, n_layers=2, n_heads=4)
@@ -204,11 +265,11 @@ class TestConditionMapping:
     def test_unrecorded_condition_defaults_to_none(self):
         """`none` is a catch-all, not a claim about interferon tone.
 
-        This previously asserted "unperturbed cells carry basal interferon
-        tone" -- the overclaim the basal -> none rename exists to retire.
-        Resting cells do carry tonic signalling, but the corpus rarely records
-        whether a sample was resting at all, so the token asserts only the
-        absence of a recorded treatment.
+        This assertion previously read "unperturbed cells carry basal
+        interferon tone" -- the overclaim the basal -> none rename exists to
+        retire. Resting cells do carry tonic signaling, but the corpus rarely
+        records whether a sample was resting at all, so the token asserts only
+        the absence of a recorded treatment.
         """
         assert stimulus_for_condition(None) == "none"
         assert PROCESSING_STIMULUS_TO_IDX["none"] == 0

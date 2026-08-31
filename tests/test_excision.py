@@ -56,7 +56,7 @@ class TestPinnedCleavageRules:
 
 
 class TestJunctionScoring:
-    """s_C must respond to the residue at the C-terminal junction."""
+    """c_terminus_score must respond to the residue at the C-terminal junction."""
 
     def _score(self, model, peptide, machinery, cflank="AAAAA"):
         def encode(seq):
@@ -75,31 +75,31 @@ class TestJunctionScoring:
         return out
 
     def test_trypsin_scores_k_terminus_above_a_terminus(self, model):
-        with_k = self._score(model, "SIINFEKLK", "trypsin")["excision_s_c"].item()
-        with_a = self._score(model, "SIINFEKLA", "trypsin")["excision_s_c"].item()
+        with_k = self._score(model, "SIINFEKLK", "trypsin")["excision_c_terminus_score"].item()
+        with_a = self._score(model, "SIINFEKLA", "trypsin")["excision_c_terminus_score"].item()
         assert with_k > with_a
 
     def test_gluc_scores_e_terminus_above_k_terminus(self, model):
-        with_e = self._score(model, "SIINFEKLE", "gluc")["excision_s_c"].item()
-        with_k = self._score(model, "SIINFEKLK", "gluc")["excision_s_c"].item()
+        with_e = self._score(model, "SIINFEKLE", "gluc")["excision_c_terminus_score"].item()
+        with_k = self._score(model, "SIINFEKLK", "gluc")["excision_c_terminus_score"].item()
         assert with_e > with_k
 
     def test_machinery_changes_the_ranking(self, model):
         """The same peptide is a good trypsin product and a poor GluC one."""
-        k_trypsin = self._score(model, "SIINFEKLK", "trypsin")["excision_s_c"].item()
-        k_gluc = self._score(model, "SIINFEKLK", "gluc")["excision_s_c"].item()
+        k_trypsin = self._score(model, "SIINFEKLK", "trypsin")["excision_c_terminus_score"].item()
+        k_gluc = self._score(model, "SIINFEKLK", "gluc")["excision_c_terminus_score"].item()
         assert k_trypsin > k_gluc
 
     def test_proline_at_p1_prime_penalizes_trypsin(self, model):
         """"not before P" — a proline immediately after the cut blocks it."""
         blocked = self._score(model, "SIINFEKLK", "trypsin", cflank="PAAAA")
         allowed = self._score(model, "SIINFEKLK", "trypsin", cflank="AAAAA")
-        assert blocked["excision_s_c"].item() < allowed["excision_s_c"].item()
+        assert blocked["excision_c_terminus_score"].item() < allowed["excision_c_terminus_score"].item()
 
     def test_lysc_allows_proline_after_lysine(self, model):
         """LysC's MaxQuant spec explicitly permits K-P, unlike trypsin.
 
-        Changing the C-flank also perturbs the processing latent, so ``s_c``
+        Changing the C-flank also perturbs the processing latent, so ``c_terminus_score``
         cannot be exactly equal — what must be absent is the *penalty*. Assert
         the declared rule, then that LysC's shift is a small fraction of the
         penalty trypsin takes on the same substitution.
@@ -111,7 +111,7 @@ class TestJunctionScoring:
         def shift(machinery):
             blocked = self._score(model, "SIINFEKLK", machinery, cflank="PAAAA")
             allowed = self._score(model, "SIINFEKLK", machinery, cflank="AAAAA")
-            return allowed["excision_s_c"].item() - blocked["excision_s_c"].item()
+            return allowed["excision_c_terminus_score"].item() - blocked["excision_c_terminus_score"].item()
 
         assert shift("lysc") < 0.1 * shift("trypsin")
 
@@ -133,9 +133,9 @@ class TestOutputContract:
         for key in (
             "excision_logit",
             "excision_prob",
-            "excision_s_n",
-            "excision_s_c",
-            "excision_s_len",
+            "excision_n_terminus_score",
+            "excision_c_terminus_score",
+            "excision_length_score",
         ):
             assert key in out, f"{topology} missing {key}"
             assert out[key].shape == (3,)
@@ -181,7 +181,7 @@ class TestInternalCleavageSites:
 
     def test_penalty_grows_with_internal_site_count(self, model):
         scores = [
-            self._score(model, peptide, "trypsin")["excision_s_internal"].item()
+            self._score(model, peptide, "trypsin")["excision_missed_cleavage_score"].item()
             for peptide in ("SIINFEAAK", "SIINFEKAK", "SIINKEKAK", "SKINKEKAK")
         ]
         assert scores == sorted(scores, reverse=True), scores
@@ -189,8 +189,8 @@ class TestInternalCleavageSites:
         assert scores[-1] < scores[0]
 
     def test_c_terminal_residue_is_not_counted_as_internal(self, model):
-        """That junction is s_C's job; counting it would penalize every product."""
-        score = self._score(model, "SIINFEAAK", "trypsin")["excision_s_internal"].item()
+        """That junction is c_terminus_score's job; counting it would penalize every product."""
+        score = self._score(model, "SIINFEAAK", "trypsin")["excision_missed_cleavage_score"].item()
         assert score == pytest.approx(0.0)
 
     def test_penalty_is_machinery_specific(self, model):
@@ -201,8 +201,8 @@ class TestInternalCleavageSites:
         """
         peptide = "SIINKAKAE"
         assert not set(peptide[:-1]) & set("ED"), "interior must hold no GluC site"
-        trypsin = self._score(model, peptide, "trypsin")["excision_s_internal"].item()
-        gluc = self._score(model, peptide, "gluc")["excision_s_internal"].item()
+        trypsin = self._score(model, peptide, "trypsin")["excision_missed_cleavage_score"].item()
+        gluc = self._score(model, peptide, "gluc")["excision_missed_cleavage_score"].item()
         assert trypsin < 0.0
         assert gluc == pytest.approx(0.0)
 
@@ -210,7 +210,7 @@ class TestInternalCleavageSites:
         """The proteasome does not cut at every available site, so an internal
         hydrophobic residue says nothing about whether it produced the peptide."""
         for peptide in ("SIINFEAAK", "SKINKEKAK"):
-            score = self._score(model, peptide, "proteasome")["excision_s_internal"].item()
+            score = self._score(model, peptide, "proteasome")["excision_missed_cleavage_score"].item()
             assert score == pytest.approx(0.0), peptide
 
     def test_internal_term_reaches_the_logit(self, model):

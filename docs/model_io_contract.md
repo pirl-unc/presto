@@ -77,7 +77,7 @@ extracted intact and denatured before any enzyme touched it.
 |---|---|---|
 | `host_species` | ~50 values | `host` (100% populated) |
 | `mhc_species` | 21 values | `mhc_species` (100%) — differs from `host_species` for transfectants |
-| `stimulus` | `{none, ifn_gamma, ifn_type1, tnf_alpha, tlr, cell_activation, cytokine_unspecified}` | `condition_category`; **default `none`** — read as "not known to be stimulated", which conflates an untreated sample with an unrecorded one. `cytokine_unspecified` is the separate case where a cytokine *was* applied but the deposit does not name it. |
+| `stimulus` | `{none, ifn_gamma, ifn_type1, tnf_alpha, tlr, cell_activation, cytokine_unspecified}` | `condition_category`; **`none` is a catch-all** covering both "no treatment recorded" and "condition not recorded" (~98.6% of class I rows). It asserts no biological state — the name it replaced overclaimed a measured resting tone. `ifn_type1` merges IFN-α/β (shared IFNAR1/2 receptor and ISGF3 program); IFN-γ is type II and stays separate. `ifn_type1` carries 21,481 rows once infection categories are mapped to it (viral infection drives endogenous type I IFN). `cell_activation` covers PMA/ionomycin and CD3/CD28. `cytokine_unspecified` is the 6,159 rows where a cytokine *was* applied but is unnamed — the one case where `none` would state something known to be false. `tnf_alpha` matches **zero** rows, so that row alone is untrained — all pinned in `tests/test_stimulus_vocabulary.py` |
 | `apm_perturbation` | see below | `apm_*` / `condition_category` |
 
 `apm_perturbation` is grouped by **mechanism**, not by gene. Per-gene flags exist
@@ -154,7 +154,7 @@ channel, three orders of magnitude less than binding does.
 
 | family | key outputs |
 |---|---|
-| **processing / excision** | `processing_class{1,2}_logit`, `processing_logit`, `excision_logit`, `excision_s_n`, `excision_s_c`, `excision_s_internal`, `excision_s_len` |
+| **processing / excision** | `processing_class{1,2}_logit`, `processing_logit`, `excision_logit`, `excision_n_terminus_score`, `excision_c_terminus_score`, `excision_missed_cleavage_score`, `excision_length_score` |
 | **binding** | `assays.{KD_nM, IC50_nM, EC50_nM, kon, koff, t_half, Tm}`, `binding_affinity_score`, `binding_affinity_probe_kd` |
 | **core / PFR** | `core_start_logit`, `core_length`, `core_membership_prob`, `npfr_length`, `cpfr_length` |
 | **presentation** | `presentation_class{1,2}_logit`, `presentation_logit` |
@@ -221,10 +221,15 @@ Testable statements, not aspirations. Those marked ✓ have tests today.
 2. ✓ Peptide-only latents are exactly invariant to MHC and flank substitution.
 3. ✓ Presentation has no token access and always has dependencies (else the empty-KV
    fallback would expose it to token 0).
-4. ✓ Assay descriptors reach output heads only; `binding_context` is first read after
-   the latent DAG.
+4. ✓ Assay descriptors are output tracks only. `binding_context` is now accepted and
+   *ignored* — the input-side embeddings were deleted, so it cannot be read at all,
+   and `tests/test_many_output_contract.py` asserts the prediction does not move when
+   it is supplied.
 5. *(planned)* `peptide_source` is unreachable from binding, presentation and recognition.
-6. *(planned)* Tier 3 conditions reach the processing path only.
+6. ✓ Tier 3 conditions reach the processing path only, as biological state --
+   `cell_lineage`, `sample_origin`, `disease_state`, `apm_perturbation` and
+   `processing_stimulus`. These are inputs
+   by design; see the causal test in `assay_modeling_contract.md`.
 7. *(planned)* Tier 4 expression enters as an observation offset only.
 8. ✓ A row missing a label contributes zero gradient to that task.
 
@@ -241,29 +246,41 @@ Recorded rather than glossed. Each is tracked in `tasks/todo.md` (repository, ou
 3. ~~Tiers 2–4 are one flat `machinery` axis.~~ Split into `peptide_source`,
    `enzymatic_digest`, `processing_stimulus` and `apm_perturbation`, with the source
    acting as a soft gate rather than a feature.
-4. ~~`s_len` conflates two mechanisms.~~ Length and missed-cleavage terms are gated to
+4. ~~`length_preference` conflates two mechanisms.~~ Length and missed-cleavage terms are gated to
    the protein branch; the in-vivo branch contributes neither, so the protease is no
    longer credited for MHC groove selection.
+2. ~~The in-vivo processing path receives no gradient.~~ Closed in two parts, after an
+   earlier attempt claimed closure while the named parameters were still dead.
+
+   **2a — cellular state reaches presentation.** Conditions reach the processing
+   *latent*, not just the excision readout. Excision labels exist only on shotgun rows,
+   whereas elution labels exist on MHC rows and vary with APM state, so a KO-vs-WT
+   contrast supervises the conditioning through a loss that already exists. This also
+   required carrying per-instance state through the MIL bag forward, which the elution
+   loss uses whenever MIL is active; without it every instance collapsed to the default
+   condition.
+
+   **2b — the in-vivo excision readout itself.** 2a did *not* close this, and a first
+   pass wrongly recorded it as closed: `invivo_profile_c/n`, `stimulus_profile_c` and
+   `invivo_bias` (501 parameters) still took exactly zero gradient, because the in-vivo
+   branch fed only `excision_logit` and no MHC-source row ever carries an excision
+   label. The fix adds the missing DAG edge: for MHC-source rows the in-vivo excision
+   logit enters class I **presentation**, which is the documented processing →
+   presentation edge and is the biology — an eluted peptide's termini are themselves
+   evidence of in-vivo cleavage. The edge weight is softplus-gated so better cleavage
+   can only raise presentation odds, and is initialized to `softplus(-2) ≈ 0.13` rather
+   than 0, since a zero weight would starve everything upstream of it.
+
+   Verified through the real pipeline — records → dataset → collator → `compute_loss`
+   — with elution labels only and no excision label present; all 501 parameters receive
+   gradient. Pinned by `tests/test_invivo_excision_gradient.py`, which forbids
+   hand-built batches: the discredited earlier test passed by fabricating an
+   `mhc`-source row carrying an excision target, a combination the pipeline never
+   produces.
 6. ~~Detectability is validated out of domain.~~ `dual_corpus_transfer_set` builds the
    24,125-peptide in-domain evaluation set. Measuring it is an experiment, not code.
 
 **Open**
-
-2. **The in-vivo processing path still receives no gradient.** The factorization made
-   the conditioning *expressible* and Tier 3 state now flows from hitlist (187
-   `n_term_trimming` rows, 187 `peptide_supply`, 88 IFN-γ in a representative slice),
-   but excision labels come only from `data/bulk_ms.py`, whose rows are all
-   `peptide_source="protein"`. Every supervised row therefore has `is_protein == 1`,
-   and `(1 - is_protein)` zeroes the in-vivo terms: ~482 parameters train to nothing.
-   Verified through the real pipeline and pinned by
-   `test_real_pipeline_still_starves_the_in_vivo_path`.
-
-   Closing it needs excision labels on MHC rows. An observed ligand is evidence the
-   in-vivo machinery produced it, so elution positives are natural excision positives —
-   but the negatives are the same unsolved problem as detectability negatives. The
-   alternative is routing Tier 3 conditions into the *processing latent* rather than
-   only the excision readout, so ERAP-KO-vs-WT elution contrasts supervise them through
-   the existing elution loss. That is a contract decision, not a patch.
 
 5. **`processing` and `excision` remain parallel scores of one question.** Merging them
    changes the semantics of an existing supervised task, so it wants the Stage 4 arm-C

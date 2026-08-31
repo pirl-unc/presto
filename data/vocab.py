@@ -1024,3 +1024,154 @@ def is_unmapped_condition(condition: Optional[str]) -> bool:
     """
     text = str(condition or "").strip()
     return bool(text) and text not in CONDITION_TO_STIMULUS
+
+# ---------------------------------------------------------------------------
+# Sample provenance, factorized (Tier 3 biological state -- all INPUTS).
+# ---------------------------------------------------------------------------
+#
+# Replaces a single flat class derived from the free-text cell-line name. That
+# label was wrong in three ways: it came from the worst-covered field (58.3%,
+# versus 100% for the two booleans below), it conflated orthogonal axes, and it
+# could not express the space that actually occurs -- solid tissue, solid and
+# haematological cancers, donor blood, PBMC, sorted immune cells, and cell
+# lines derived from any of those. That space is a product, not an enum.
+#
+# The axes answer the two questions the model needs:
+#
+#   which source proteins are expressed?   tissue, malignancy
+#   which processing components are on?    lineage, cell-line status
+#
+# Cell-line status earns its own axis because immortalized lines drift and
+# routinely lose immunoproteasome subunits, TAP, or B2M. Measured: lines are
+# almost never healthy (6,574 rows of 2.59M), while primary material splits
+# 1.06M healthy / 0.79M diseased -- so the two booleans are independent, not
+# a re-encoding of each other.
+
+#: Lineage, grouped by antigen-processing phenotype. Professional APCs and
+#: B-lineage cells carry constitutive immunoproteasome and high MHC-I;
+#: non-haematopoietic cells generally do not unless induced.
+CELL_LINEAGES = [
+    "unknown",
+    "b_lineage",          # B-cell, plasma cell, lymphoblastoid
+    "t_lineage",          # T cell, CD4+, CD8+
+    "myeloid",            # monocyte, macrophage, myeloblast, dendritic
+    "mixed_leukocyte",    # PBMC, mononuclear, splenocyte, lymph node cells
+    "epithelial",
+    "melanocytic",
+    "fibroblast_stromal",  # fibroblast, endothelial, osteoblast, Schwann
+    "neural",             # neuroblast, neuron, glial, neuroendocrine
+    "hepatocyte",
+]
+CELL_LINEAGE_TO_IDX = {name: i for i, name in enumerate(CELL_LINEAGES)}
+
+_CELL_LINEAGE_PATTERNS: Tuple[Tuple[str, str], ...] = (
+    (r"\bplasma cell\b|\bb[- ]cell\b|\blymphoblast", "b_lineage"),
+    (r"\bt[- ]cell\b|\bcd[48]\+", "t_lineage"),
+    (r"\bdendritic\b|\bmacrophage\b|\bmonocyte\b|\bmyeloblast\b"
+     r"|\bmegakaryoblast\b|\bmast cell\b", "myeloid"),
+    (r"\bpbmc\b|\bmononuclear\b|\bsplenocyte\b|\blymph node cells\b"
+     r"|\blymphocyte\b|\bplatelet\b", "mixed_leukocyte"),
+    (r"\bepithelial\b", "epithelial"),
+    (r"\bmelanocyte\b|\bmelanoma\b", "melanocytic"),
+    (r"\bfibroblast\b|\bendothelial\b|\bosteoblast\b|\bschwann\b",
+     "fibroblast_stromal"),
+    (r"\bneuroblast\b|\bneuron\b|\bglial\b|\bneuroendocrine\b", "neural"),
+    (r"\bhepatocyte\b", "hepatocyte"),
+)
+
+
+def cell_lineage_for(cell_type: Optional[str]) -> str:
+    """Map a free-text ``cell_type`` to a processing-relevant lineage."""
+    text = str(cell_type or "").strip().lower()
+    if not text:
+        return "unknown"
+    for pattern, label in _CELL_LINEAGE_PATTERNS:
+        if re.search(pattern, text):
+            return label
+    # `unknown`, not an `other` bucket. The adapter falls back to the cell-line
+    # name when no cell type is recorded, so an unparsed value here is usually
+    # a line name rather than a lineage we chose not to model -- and filing it
+    # under a real category would assert a processing phenotype we do not know.
+    return "unknown"
+
+
+def cell_lineage_index(name: Optional[str]) -> int:
+    return CELL_LINEAGE_TO_IDX.get(
+        str(name or "").strip().lower(), CELL_LINEAGE_TO_IDX["unknown"]
+    )
+
+
+#: Immortalization status. Ternary rather than boolean so "not recorded" is
+#: distinguishable from "primary" -- hitlist supplies this at 100% coverage,
+#: but a caller constructing a record by hand may not.
+SAMPLE_ORIGINS = ["unknown", "primary", "cell_line"]
+SAMPLE_ORIGIN_TO_IDX = {name: i for i, name in enumerate(SAMPLE_ORIGINS)}
+
+#: Disease state. Four levels, not a healthy/diseased boolean, because
+#: hitlist distinguishes tumour-adjacent tissue (219,740 rows) and that is a
+#: real third state: adjacent tissue sits in an inflamed, often
+#: interferon-exposed microenvironment without being malignant itself, so its
+#: processing machinery resembles neither healthy tissue nor tumour.
+#:
+#: Derived from src_cancer / src_adjacent_to_tumor / src_healthy_tissue, all
+#: of which hitlist supplies at 100% coverage.
+DISEASE_STATES = ["unknown", "healthy", "tumor_adjacent", "cancer", "diseased"]
+DISEASE_STATE_TO_IDX = {name: i for i, name in enumerate(DISEASE_STATES)}
+
+
+def sample_origin_for(is_cell_line: Optional[object]) -> str:
+    if is_cell_line is None or is_cell_line != is_cell_line:  # NaN
+        return "unknown"
+    text = str(is_cell_line).strip().lower()
+    if text in {"true", "1", "yes"}:
+        return "cell_line"
+    if text in {"false", "0", "no"}:
+        return "primary"
+    return "unknown"
+
+
+def _truthy(value: Optional[object]) -> Optional[bool]:
+    if value is None or value != value:  # NaN
+        return None
+    text = str(value).strip().lower()
+    if text in {"true", "1", "yes"}:
+        return True
+    if text in {"false", "0", "no"}:
+        return False
+    return None
+
+
+def disease_state_for(
+    is_healthy: Optional[object] = None,
+    is_cancer: Optional[object] = None,
+    is_tumor_adjacent: Optional[object] = None,
+) -> str:
+    """Collapse hitlist's three sample flags into one ordered state.
+
+    Checked most-specific first: cancer beats tumour-adjacent beats healthy,
+    because a sample can carry more than one flag and the strongest claim is
+    the informative one. `diseased` is the fallback for a sample flagged
+    not-healthy without a cancer flag -- an autoimmune or infected donor.
+    """
+    if _truthy(is_cancer):
+        return "cancer"
+    if _truthy(is_tumor_adjacent):
+        return "tumor_adjacent"
+    healthy = _truthy(is_healthy)
+    if healthy is True:
+        return "healthy"
+    if healthy is False:
+        return "diseased"
+    return "unknown"
+
+
+def sample_origin_index(name: Optional[str]) -> int:
+    return SAMPLE_ORIGIN_TO_IDX.get(
+        str(name or "").strip().lower(), SAMPLE_ORIGIN_TO_IDX["unknown"]
+    )
+
+
+def disease_state_index(name: Optional[str]) -> int:
+    return DISEASE_STATE_TO_IDX.get(
+        str(name or "").strip().lower(), DISEASE_STATE_TO_IDX["unknown"]
+    )
