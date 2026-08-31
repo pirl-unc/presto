@@ -146,7 +146,12 @@ IEDB_DEFAULTS = {
     "n_heads": 4,
     "data_dir": "./data",
     "data_source": "merged_tsv",
-    "latent_topology": "collapsed",
+    # `expanded` is the design (design.md S7.1/S7.2/S7.5): each specified
+    # latent gets its own query. `collapsed` folds twelve into five and was the
+    # old default here while scripts/train_remote.py already used `expanded` --
+    # so the same command trained a different architecture depending on whether
+    # it ran locally or on a box. Aligned on the design.
+    "latent_topology": "expanded",
     "split_mode": "peptide_group",
     "train_mhc_class_filter": None,
     "hitlist_allele": None,
@@ -5232,7 +5237,7 @@ def run(args: argparse.Namespace) -> None:
         d_model=args.d_model,
         n_layers=args.n_layers,
         n_heads=args.n_heads,
-        latent_topology=str(getattr(args, "latent_topology", "collapsed")),
+        latent_topology=str(getattr(args, "latent_topology", "expanded")),
     ).to(device)
     print(f"Latent topology: {model.latent_topology}")
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)

@@ -26,7 +26,6 @@ import pytest
 
 from presto.data.vocab import (  # noqa: E402
     CONDITION_TO_STIMULUS,
-    LEGACY_STIMULUS_ALIASES,
     PROCESSING_STIMULI,
     PROCESSING_STIMULUS_TO_IDX,
     is_unmapped_condition,
@@ -77,18 +76,26 @@ class TestVocabularyShape:
         assert CONDITION_TO_STIMULUS["IFN_gamma_treatment"] != "ifn_type1"
 
 
-class TestLegacySpellings:
-    @pytest.mark.parametrize("legacy,current", sorted(LEGACY_STIMULUS_ALIASES.items()))
-    def test_legacy_name_resolves_to_the_same_row(self, legacy, current):
-        """A saved record must not drift onto a different embedding row.
+class TestSupersededSpellings:
+    """The aliases are gone, and nothing should reintroduce them.
 
-        Without the alias, `ifn_ab` would fall through to `none` and a
-        stimulated sample would be scored as unstimulated.
-        """
-        assert processing_stimulus_index(legacy) == PROCESSING_STIMULUS_TO_IDX[current]
+    `basal` and `ifn_ab` were translated onto their current rows while the
+    legacy-compat layer existed. That layer is removed: nothing in the corpus
+    or the ingest path emits either spelling, since `stimulus_for_condition`
+    maps hitlist categories straight onto current tokens.
+    """
 
-    def test_indices_are_unchanged_by_the_rename(self):
-        """Positions are the checkpoint contract; only the spellings moved."""
+    @pytest.mark.parametrize("superseded", ["basal", "ifn_ab"])
+    def test_superseded_spelling_is_not_a_token(self, superseded):
+        assert superseded not in PROCESSING_STIMULI
+
+    @pytest.mark.parametrize("superseded", ["basal", "ifn_ab"])
+    def test_superseded_spelling_falls_back_like_any_unknown(self, superseded):
+        """No special-casing left: they land on `none`, same as any typo."""
+        assert processing_stimulus_index(superseded) == PROCESSING_STIMULUS_TO_IDX["none"]
+
+    def test_index_order_is_stable(self):
+        """Appending is the rule: existing positions must not shift."""
         assert PROCESSING_STIMULI.index("none") == 0
         assert PROCESSING_STIMULI.index("ifn_gamma") == 1
         assert PROCESSING_STIMULI.index("ifn_type1") == 2

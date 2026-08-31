@@ -801,10 +801,6 @@ PROCESSING_STIMULI = [
     "cytokine_unspecified",
 ]
 
-#: Superseded spellings, kept so older callers and saved records do not shift
-#: to a different embedding row. Index order above is unchanged, so no
-#: checkpoint migration is required.
-LEGACY_STIMULUS_ALIASES = {"basal": "none", "ifn_ab": "ifn_type1"}
 PROCESSING_STIMULUS_TO_IDX = {name: i for i, name in enumerate(PROCESSING_STIMULI)}
 
 # Tier 3: antigen-processing-machinery perturbation, grouped by mechanism.
@@ -957,14 +953,15 @@ def enzymatic_digest_index(name: Optional[str]) -> int:
 
 
 def processing_stimulus_index(name: Optional[str]) -> int:
-    """Index for a stimulus token, resolving superseded spellings.
+    """Index for a stimulus token.
 
-    Legacy names are translated rather than silently defaulted: without this,
-    a saved record carrying `ifn_ab` would land on the `none` row and be
-    scored as an unstimulated sample.
+    Superseded spellings (`basal`, `ifn_ab`) are no longer translated. They
+    were removed with the rest of the legacy-compat layer, and nothing in the
+    corpus or the ingest path emits them: `stimulus_for_condition` maps hitlist
+    categories straight onto current tokens. An unrecognized token lands on
+    `none` like any other, which for these two is also what the alias did.
     """
     token = str(name or "").strip().lower()
-    token = LEGACY_STIMULUS_ALIASES.get(token, token)
     return PROCESSING_STIMULUS_TO_IDX.get(
         token, PROCESSING_STIMULUS_TO_IDX["none"]
     )

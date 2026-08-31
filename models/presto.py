@@ -308,7 +308,7 @@ class Presto(nn.Module):
         kd_grouping_mode: str = "merged_kd",
         binding_kinetic_input_mode: str = "affinity_vec",
         binding_direct_segment_mode: str = "off",
-        latent_topology: str = "collapsed",
+        latent_topology: str = "expanded",
     ):
         """Initialize Presto."""
         super().__init__()
@@ -1124,36 +1124,6 @@ class Presto(nn.Module):
     def w_binding_class2_calibration(self, param: nn.Parameter) -> None:
         self.affinity_predictor.w_binding_class2_calibration = param
 
-    def _grow_appended_embeddings(
-        self, state_dict: Dict[str, torch.Tensor], prefix: str
-    ) -> None:
-        """Extend checkpoint embeddings whose vocabulary has since grown.
-
-        Vocabularies here are append-only, so row *i* means the same thing
-        before and after a new entry lands; only the table gets longer. This
-        lets an older checkpoint load with its learned rows intact instead of
-        failing on a shape mismatch or silently dropping the whole tensor.
-
-        Appended rows keep the module's fresh initialization rather than being
-        zeroed: an all-zero embedding row is a degenerate starting point, and
-        the module's own init is the right prior for an entry that has simply
-        never been trained.
-        """
-        for name, module in self.named_modules():
-            if not isinstance(module, nn.Embedding):
-                continue
-            key = f"{prefix}{name}.weight" if name else f"{prefix}weight"
-            saved = state_dict.get(key)
-            if saved is None or saved.ndim != 2:
-                continue
-            current_rows, current_dim = module.weight.shape
-            saved_rows, saved_dim = saved.shape
-            if saved_dim != current_dim or saved_rows >= current_rows:
-                continue
-            padded = module.weight.detach().clone()
-            padded[:saved_rows] = saved.to(padded.dtype)
-            state_dict[key] = padded
-
     def _load_from_state_dict(
         self,
         state_dict: Dict[str, torch.Tensor],
@@ -1164,222 +1134,30 @@ class Presto(nn.Module):
         unexpected_keys: List[str],
         error_msgs: List[str],
     ) -> None:
-        """Drop deprecated weights for backward compatibility."""
-        # `processing_condition_embed` no longer exists: cellular state reaches
-        # the processing latents through the provenance-axis embeddings and the
-        # excision head's condition axes instead. Drop the key so pre-PR
-        # checkpoints load. The remap that used to live here dereferenced the
-        # deleted module and could only ever raise AttributeError.
-        state_dict.pop(f"{prefix}processing_condition_embed.weight", None)
+        """Load, then re-zero the unknown-residue embedding.
 
-        # `stimulus_profile_c` is (n_stimulus, n_aa); a new stimulus appends a
-        # zero row, which is the neutral contribution this profile starts at.
-        for profile_key in (
-            f"{prefix}excision_head.stimulus_profile_c",
-            f"{prefix}excision_head.inducer_profile_c",
-        ):
-            saved_profile = state_dict.get(profile_key)
-            if saved_profile is None:
-                continue
-            target = self.excision_head.stimulus_profile_c
-            if saved_profile.shape[0] < target.shape[0]:
-                grown = torch.zeros(
-                    *target.shape, dtype=saved_profile.dtype
-                )
-                grown[: saved_profile.shape[0]] = saved_profile
-                state_dict[profile_key] = grown
+        This used to carry ~220 lines of checkpoint migration -- module
+        renames, deleted-key drops, embedding row growth, and a tolerance pass
+        for modules the active mode does not allocate. All of it existed to let
+        checkpoints written by older revisions load into newer code.
 
-        # Runs after the condition remap above: the generic grower pads
-        # row-wise, which is wrong for a table whose index is a product of two
-        # vocabularies and would silently turn the remap into a no-op.
-        self._grow_appended_embeddings(state_dict, prefix)
-        legacy_key = f"{prefix}mhc_class_cond_embed.weight"
-        if legacy_key in state_dict:
-            state_dict.pop(legacy_key)
-        head_key_map = {
-            f"{prefix}processing_class1_head.": f"{prefix}class1_processing_predictor.head.",
-            f"{prefix}processing_class2_head.": f"{prefix}class2_processing_predictor.head.",
-            f"{prefix}presentation_class1_latent_head.": f"{prefix}class1_presentation_predictor.head.",
-            f"{prefix}presentation_class2_latent_head.": f"{prefix}class2_presentation_predictor.head.",
-            f"{prefix}binding_affinity_probe.": f"{prefix}affinity_predictor.binding_affinity_probe.",
-            f"{prefix}binding.": f"{prefix}affinity_predictor.binding.",
-            f"{prefix}assay_heads.": f"{prefix}affinity_predictor.assay_heads.",
-            f"{prefix}kd_assay_bias.": f"{prefix}affinity_predictor.kd_assay_bias.",
-        }
-        # `length_score` -> `length_preference` (this PR series). Same shape and
-        # meaning, so carry the weights over rather than dropping them: without
-        # this every pre-rename checkpoint fails strict load on a missing key.
-        excision_renames = {
-            f"{prefix}excision_head.inducer_profile_c":
-                f"{prefix}excision_head.stimulus_profile_c",
-            f"{prefix}liberation_head.inducer_profile_c":
-                f"{prefix}excision_head.stimulus_profile_c",
-            f"{prefix}excision_head.length_score.weight":
-                f"{prefix}excision_head.length_preference.weight",
-            f"{prefix}liberation_head.length_score.weight":
-                f"{prefix}excision_head.length_preference.weight",
-        }
-        for old_key, new_key in excision_renames.items():
-            if old_key in state_dict:
-                if new_key not in state_dict:
-                    state_dict[new_key] = state_dict[old_key]
-                state_dict.pop(old_key)
-        exact_key_map = {
-            f"{prefix}kd_assay_bias_scale": f"{prefix}affinity_predictor.kd_assay_bias_scale",
-            f"{prefix}binding_probe_mix_logit": f"{prefix}affinity_predictor.binding_probe_mix_logit",
-            f"{prefix}w_binding_class1_calibration": f"{prefix}affinity_predictor.w_binding_class1_calibration",
-            f"{prefix}w_binding_class2_calibration": f"{prefix}affinity_predictor.w_binding_class2_calibration",
-        }
-        for old_prefix, new_prefix in head_key_map.items():
-            for key in list(state_dict.keys()):
-                if not key.startswith(old_prefix):
-                    continue
-                new_key = new_prefix + key[len(old_prefix) :]
-                if new_key not in state_dict:
-                    state_dict[new_key] = state_dict[key]
-                state_dict.pop(key)
-        for old_key, new_key in exact_key_map.items():
-            if old_key in state_dict:
-                if new_key not in state_dict:
-                    state_dict[new_key] = state_dict[old_key]
-                state_dict.pop(old_key)
-        old_pos_to_new = {
-            f"{prefix}mhc_a_pos.weight": f"{prefix}groove_1_pos.weight",
-            f"{prefix}mhc_b_pos.weight": f"{prefix}groove_2_pos.weight",
-        }
-        for old_key, new_key in old_pos_to_new.items():
-            if old_key in state_dict and new_key not in state_dict:
-                old_weight = state_dict.pop(old_key)
-                new_weight = getattr(self, new_key[len(prefix) : -len('.weight')]).weight
-                if old_weight.shape == new_weight.shape:
-                    state_dict[new_key] = old_weight
-                else:
-                    state_dict[new_key] = old_weight[: new_weight.shape[0], :]
-            elif old_key in state_dict:
-                state_dict.pop(old_key)
-        # Drop old CategoryHead keys from pre-foreignness checkpoints
-        # Drop old DAG-violating head keys (elution context_head, MSDetectionHead,
-        # RepertoireHead, old TCellAssayHead keys)
-        # Modules the active configuration does not allocate.
-        #
-        # Several families are now built only when their mode selects them --
-        # alternate positional encodings, the collapsed-topology projections,
-        # class-specific core scorers, direct-segment residuals, and the
-        # input-side assay context that was removed entirely. A checkpoint
-        # written before that gating carries their weights, and under the
-        # shipped defaults every one of them is an unexpected key, so
-        # `strict=True` fails on any pre-PR checkpoint.
-        #
-        # Dropping a key whose module does not exist is the correct behaviour:
-        # the weights are unreachable under this configuration, and refusing
-        # to load because of them would strand every existing checkpoint.
-        # Anything still present is loaded normally.
-        own_keys = set(self.state_dict().keys())
-        for key in list(state_dict.keys()):
-            if not key.startswith(prefix):
-                continue
-            local_name = key[len(prefix):]
-            if local_name in own_keys:
-                continue
-            if any(
-                local_name.startswith(family)
-                for family in (
-                    "pep_abs_pos", "pep_frac_mlp", "pep_pos_concat_",
-                    "groove_1_abs_pos", "groove_2_abs_pos",
-                    "groove_1_end_pos", "groove_2_end_pos",
-                    "groove_frac_mlp", "groove_pos_concat_",
-                    "processing_class1_proj", "processing_class2_proj",
-                    "presentation_class1_mlp", "presentation_class2_mlp",
-                    "core_window_score_class1", "core_window_score_class2",
-                    "binding_direct_segment_",
-                    "affinity_predictor.sequence_summary_proj",
-                    "affinity_predictor.assay_type_embed",
-                    "affinity_predictor.assay_prep_embed",
-                    "affinity_predictor.assay_geometry_embed",
-                    "affinity_predictor.assay_readout_embed",
-                    "affinity_predictor.factorized_proj",
-                )
-            ):
-                state_dict.pop(key)
+        That is no longer a goal: the architecture is still moving, and a
+        migration layer that silently reshapes weights across a semantic change
+        is worse than a load error, because it produces a model that loads
+        cleanly and means something different. A checkpoint now loads into the
+        configuration that wrote it, and `strict=True` says so when it does not.
 
-        drop_prefixes = [
-            f"{prefix}category_head.",
-            f"{prefix}elution_head.context_head.",
-            f"{prefix}ms_detection.",
-            f"{prefix}repertoire.",
-            f"{prefix}tcr_encoder.",
-            f"{prefix}matcher.",
-            f"{prefix}chain_classifier.",
-            f"{prefix}chain_attribute_classifier.",
-            f"{prefix}cell_classifier.",
-            f"{prefix}tcell_assay_head.base_with_tcr.",
-            f"{prefix}tcell_assay_head.base_without_tcr.",
-            f"{prefix}tcell_assay_head.context_bias.",
-            f"{prefix}tcell_assay_head.lineage_projection.",
-            f"{prefix}tcell_assay_head.assay_method_classifier.",
-            f"{prefix}tcell_assay_head.assay_readout_classifier.",
-            f"{prefix}tcell_assay_head.apc_type_classifier.",
-            f"{prefix}tcell_assay_head.culture_context_classifier.",
-            f"{prefix}tcell_assay_head.stim_context_classifier.",
-            # Removed in information-flow simplification
-            f"{prefix}pmhc_vec_proj.",
-            f"{prefix}presentation_mlp.",
-            f"{prefix}presentation_vec_norm.",
-            f"{prefix}immunogenicity_mlp.",
-            f"{prefix}immunogenicity_vec_norm.",
-        ]
-        drop_exact = [
-            f"{prefix}groove_bias_a",
-            f"{prefix}groove_bias_b",
-            f"{prefix}elution_head.w_context",
-            f"{prefix}elution_head.w_processing",
-            f"{prefix}tcell_assay_head.w_bio",
-            f"{prefix}tcell_assay_head.w_base",
-            f"{prefix}tcell_assay_head.w_ctx",
-            f"{prefix}tcell_assay_head.w_lineage",
-            f"{prefix}tcell_assay_head.bias",
-            # Dead scalar parameters removed in information-flow simplification
-            f"{prefix}w_presentation_class1_latent",
-            f"{prefix}w_presentation_class2_latent",
-            f"{prefix}w_class1_presentation_stability",
-            f"{prefix}w_class2_presentation_stability",
-            f"{prefix}w_class1_presentation_class",
-            f"{prefix}w_class2_presentation_class",
-        ]
-        for key in list(state_dict.keys()):
-            if any(key.startswith(dp) for dp in drop_prefixes):
-                state_dict.pop(key)
-            elif key in drop_exact:
-                state_dict.pop(key)
-        # Drop keys with shape mismatches from information-flow simplification:
-        # binding_affinity_readout_proj (1536→512 input), binding heads (512→256),
-        # tcr_evidence heads (256→512 input)
-        for key in list(state_dict.keys()):
-            if not key.startswith(prefix):
-                continue
-            local_key = key[len(prefix):]
-            parts = local_key.split(".")
-            try:
-                mod = self
-                for part in parts[:-1]:
-                    if part.isdigit():
-                        mod = mod[int(part)]
-                    else:
-                        mod = getattr(mod, part)
-                param_name = parts[-1]
-                if hasattr(mod, param_name):
-                    own = getattr(mod, param_name)
-                    if isinstance(own, torch.Tensor) and own.shape != state_dict[key].shape:
-                        state_dict.pop(key)
-            except (AttributeError, IndexError, KeyError, TypeError):
-                pass
+        What remains is not migration. `X` is the unknown-residue token and its
+        embedding is pinned at zero so an unknown residue contributes nothing;
+        a checkpoint carrying a drifted row would otherwise reintroduce it.
+        """
         super()._load_from_state_dict(
-            state_dict=state_dict,
-            prefix=prefix,
-            local_metadata=local_metadata,
-            strict=strict,
-            missing_keys=missing_keys,
-            unexpected_keys=unexpected_keys,
+            state_dict,
+            prefix,
+            local_metadata,
+            strict,
+            missing_keys,
+            unexpected_keys,
             error_msgs=error_msgs,
         )
         with torch.no_grad():

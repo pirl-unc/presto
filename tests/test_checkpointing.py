@@ -1,5 +1,6 @@
 """Tests for checkpoint serialization helpers."""
 
+import pytest
 import torch
 
 
@@ -75,7 +76,18 @@ def test_load_model_from_checkpoint_drops_legacy_dead_module_keys(tmp_path):
     assert "model_state_dict" in raw
 
 
-def test_load_model_from_checkpoint_remaps_legacy_head_keys(tmp_path):
+def test_renamed_head_keys_are_no_longer_remapped(tmp_path):
+    """The legacy key remap is gone, deliberately.
+
+    A checkpoint written before the head modules were renamed used to be
+    rewritten on load: `processing_class1_head.*` became
+    `class1_processing_predictor.head.*`, and so on for eight prefixes. That
+    layer was removed with the rest of the checkpoint-compat machinery, because
+    silently reshaping weights across a semantic change produces a model that
+    loads cleanly and means something different.
+
+    A stale key is now an error, which is the honest outcome.
+    """
     from presto.models.presto import Presto
     from presto.training.checkpointing import load_model_from_checkpoint
 
@@ -86,18 +98,6 @@ def test_load_model_from_checkpoint_remaps_legacy_head_keys(tmp_path):
     )
     state["processing_class1_head.bias"] = state.pop(
         "class1_processing_predictor.head.bias"
-    )
-    state["presentation_class2_latent_head.weight"] = state.pop(
-        "class2_presentation_predictor.head.weight"
-    )
-    state["presentation_class2_latent_head.bias"] = state.pop(
-        "class2_presentation_predictor.head.bias"
-    )
-    state["binding_probe_mix_logit"] = state.pop(
-        "affinity_predictor.binding_probe_mix_logit"
-    )
-    state["kd_assay_bias_scale"] = state.pop(
-        "affinity_predictor.kd_assay_bias_scale"
     )
 
     payload = {
@@ -110,17 +110,9 @@ def test_load_model_from_checkpoint_remaps_legacy_head_keys(tmp_path):
     path = tmp_path / "legacy_heads.pt"
     torch.save(payload, path)
 
-    loaded, _ = load_model_from_checkpoint(path, map_location="cpu")
-    assert isinstance(loaded, Presto)
-    assert torch.allclose(
-        loaded.class1_processing_predictor.head.weight,
-        model.class1_processing_predictor.head.weight,
-    )
-    assert torch.allclose(
-        loaded.class2_presentation_predictor.head.bias,
-        model.class2_presentation_predictor.head.bias,
-    )
-    assert torch.allclose(
-        loaded.affinity_predictor.binding_probe_mix_logit,
-        model.affinity_predictor.binding_probe_mix_logit,
-    )
+    with pytest.raises(RuntimeError) as excinfo:
+        load_model_from_checkpoint(path, map_location="cpu")
+    message = str(excinfo.value)
+    assert "processing_class1_head" in message or "class1_processing_predictor" in message
+
+

@@ -97,42 +97,51 @@ class TestPanelIdentity:
         assert not torch.allclose(panel[:, 0], panel[:, 3])
 
 
-class TestCheckpointsStillLoad:
-    """Gating modules to None must not strand existing checkpoints."""
+class TestUnallocatedModuleKeysAreRejected:
+    """Gated-off modules are now a strict-load error, deliberately.
 
-    REMOVED_KEYS = {
+    Several module families are built only when their mode selects them --
+    alternate positional encodings, the collapsed-topology projections,
+    class-specific core scorers, direct-segment residuals. A checkpoint written
+    under a different mode carries their weights, and a tolerance pass used to
+    drop those keys so `strict=True` would still succeed.
+
+    That tolerance is gone with the rest of the checkpoint-compat layer. It was
+    doing something subtly wrong: quietly accepting a checkpoint from a
+    *different architecture configuration* and reporting success. A checkpoint
+    now loads into the configuration that wrote it, and a mismatch says so.
+    """
+
+    UNALLOCATED_KEYS = {
         "pep_abs_pos.weight": (50, 32),
-        "pep_pos_concat_proj.weight": (32, 64),
-        "groove_1_abs_pos.weight": (120, 32),
-        "affinity_predictor.assay_type_embed.weight": (11, 8),
-        "affinity_predictor.factorized_proj.weight": (32, 32),
-        "affinity_predictor.sequence_summary_proj.0.weight": (32, 96),
         "core_window_score_class1.0.weight": (32, 256),
-        "binding_direct_segment_gate.0.weight": (16, 64),
         "processing_condition_embed.weight": (42, 32),
     }
 
     @pytest.mark.parametrize("topology", ["collapsed", "expanded"])
-    def test_strict_load_of_a_pre_gating_checkpoint(self, topology):
-        model = Presto(
-            d_model=32, n_layers=1, n_heads=2, latent_topology=topology
-        )
+    def test_strict_load_rejects_keys_this_config_does_not_allocate(self, topology):
+        model = Presto(d_model=32, n_layers=1, n_heads=2, latent_topology=topology)
         state = dict(model.state_dict())
-        for key, shape in self.REMOVED_KEYS.items():
+        for key, shape in self.UNALLOCATED_KEYS.items():
             state[key] = torch.zeros(*shape)
-        fresh = Presto(
-            d_model=32, n_layers=1, n_heads=2, latent_topology=topology
-        )
-        fresh.load_state_dict(state, strict=True)
+        fresh = Presto(d_model=32, n_layers=1, n_heads=2, latent_topology=topology)
+        with pytest.raises(RuntimeError) as excinfo:
+            fresh.load_state_dict(state, strict=True)
+        assert "Unexpected key" in str(excinfo.value)
 
-    def test_the_deleted_condition_embedding_does_not_crash_the_remap(self):
-        """The remap used to dereference a module that no longer exists."""
+    @pytest.mark.parametrize("topology", ["collapsed", "expanded"])
+    def test_a_matching_checkpoint_still_loads_strictly(self, topology):
+        """The point is to reject *mismatches*, not to break round-tripping."""
+        model = Presto(d_model=32, n_layers=1, n_heads=2, latent_topology=topology)
+        fresh = Presto(d_model=32, n_layers=1, n_heads=2, latent_topology=topology)
+        fresh.load_state_dict(dict(model.state_dict()), strict=True)
+
+    def test_non_strict_load_still_tolerates_a_stale_key(self):
+        """`strict=False` remains the escape hatch, and is now the only one."""
         model = Presto(d_model=32, n_layers=1, n_heads=2)
         state = dict(model.state_dict())
         state["processing_condition_embed.weight"] = torch.zeros(42, 32)
-        Presto(d_model=32, n_layers=1, n_heads=2).load_state_dict(
-            state, strict=False
-        )
+        Presto(d_model=32, n_layers=1, n_heads=2).load_state_dict(state, strict=False)
 
 
 class TestMILProvenanceIsComplete:

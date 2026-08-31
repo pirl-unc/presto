@@ -919,10 +919,16 @@ class TestDesignAlignment:
         assert "cflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
 
     def test_two_layer_cross_attention_per_latent(self):
-        """Design S7.3: N_latent = 2 cross-attention layers per latent."""
+        """Design S7.3: N_latent = 2 cross-attention layers per latent.
+
+        Reads the *instance* table, not the class constant. The class constants
+        describe the collapsed topology and the instance shadows them under the
+        expanded one, so iterating `Presto.CROSS_ATTN_LATENTS` here checked
+        names the model no longer has once expanded became the default.
+        """
         from presto.models.presto import Presto
         model = Presto(d_model=64, n_layers=2, n_heads=4)
-        for name in Presto.CROSS_ATTN_LATENTS:
+        for name in model.CROSS_ATTN_LATENTS:
             assert len(model.latent_layers[name]) == 2
 
     def test_per_chain_mhc_inference(self):
@@ -1229,9 +1235,19 @@ class TestDesignAlignment:
         )
 
     def test_presentation_latent_branch_has_step1_gradients(self):
+        """Collapsed-topology wiring: one `pmhc_interaction` latent feeding
+        both presentation MLPs.
+
+        Explicitly collapsed. The expanded topology derives presentation from
+        per-latent queries and has no `pmhc_interaction` entry at all, so this
+        only ever described the collapsed graph -- it passed by accident while
+        collapsed was the default.
+        """
         from presto.models.presto import Presto
 
-        model = Presto(d_model=64, n_layers=1, n_heads=4)
+        model = Presto(
+            d_model=64, n_layers=1, n_heads=4, latent_topology="collapsed"
+        )
         model.train()
 
         pep_tok = torch.randint(4, 24, (4, 12))
