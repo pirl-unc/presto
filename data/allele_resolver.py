@@ -5,6 +5,7 @@ Resolves MHC allele names to sequences using IMGT/HLA and IPD-MHC databases.
 
 import csv
 import importlib
+from functools import lru_cache
 import logging
 import re
 from dataclasses import dataclass
@@ -130,11 +131,19 @@ _DEFAULT_DR_ALPHA_PREFIX_BY_FINE_SPECIES: Dict[str, str] = {
 }
 
 
+@lru_cache(maxsize=1)
 def _mhcgnomes_parse_errors() -> tuple:
     """Exception types mhcgnomes uses for an unparseable name.
 
-    Resolved lazily and defensively: the class moved between versions, and a
-    missing attribute here must not itself become an import-time failure.
+    Resolved on first use, not at import. Binding this at module scope
+    imported mhcgnomes into every process that touched the package -- including
+    dataloader workers and tooling that only wanted the vocab -- which
+    contradicted the deferred-import design of `_require_mhcgnomes` right
+    beside it. It also froze the result: with mhcgnomes absent at import time
+    the tuple became empty, so `except ()` caught nothing and every ParseError
+    escaped through call sites that only catch ValueError.
+
+    Cached so the import cost is paid once rather than per parse.
     """
     try:
         from mhcgnomes.errors import ParseError  # type: ignore
@@ -142,9 +151,6 @@ def _mhcgnomes_parse_errors() -> tuple:
         return (ParseError,)
     except Exception:  # pragma: no cover - depends on mhcgnomes internals
         return ()
-
-
-_MHCGNOMES_PARSE_ERRORS = _mhcgnomes_parse_errors()
 
 
 def _require_mhcgnomes() -> Any:
@@ -544,7 +550,7 @@ def normalize_allele_name(name: str) -> str:
     """
     try:
         parsed = parse_allele_name(name)
-    except _MHCGNOMES_PARSE_ERRORS as exc:
+    except _mhcgnomes_parse_errors() as exc:
         raise ValueError(f"mhcgnomes failed to parse allele: {name!r}") from exc
     if parsed is None:
         raise ValueError(f"mhcgnomes failed to parse allele: {name!r}")

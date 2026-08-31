@@ -72,10 +72,14 @@ class TestSetupFailuresPropagate:
 
     def test_parse_error_is_translated_not_leaked(self):
         """Callers must not need to import mhcgnomes to catch bad data."""
-        from presto.data.allele_resolver import _MHCGNOMES_PARSE_ERRORS
+        from presto.data.allele_resolver import _mhcgnomes_parse_errors
 
-        assert _MHCGNOMES_PARSE_ERRORS, "ParseError type could not be resolved"
-        for exc_type in _MHCGNOMES_PARSE_ERRORS:
+        # Called, not read as a module constant: binding it at import time
+        # pulled mhcgnomes into every process that touched the package, and
+        # froze the result so a later install could never be picked up.
+        resolved = _mhcgnomes_parse_errors()
+        assert resolved, "ParseError type could not be resolved"
+        for exc_type in resolved:
             assert not issubclass(exc_type, ValueError), (
                 "if this ever subclasses ValueError the translation is "
                 "redundant, but the call sites still rely on it"

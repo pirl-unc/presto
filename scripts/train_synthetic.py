@@ -495,6 +495,16 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
 #: The elution spec, looked up once. The condition panel is supervised against
 #: the elution label, so it needs the same target and mask resolution the
 #: ordinary elution loss uses rather than a second hand-rolled copy.
+#: Base weights for losses assembled outside LOSS_TASK_SPECS.
+#:
+#: Both panels supervise a gathered column rather than a single output path,
+#: so they cannot be declared as ordinary specs. Naming their weight here
+#: keeps it a decision rather than a fall-through default.
+PANEL_TASK_BASE_WEIGHTS: Dict[str, float] = {
+    "excision_condition_panel": 1.0,
+    "binding_assay_panel": 1.0,
+}
+
 _ELUTION_SPEC = next(
     (spec for spec in LOSS_TASK_SPECS if getattr(spec, "name", "") == "elution"),
     None,
@@ -1496,6 +1506,14 @@ def _build_contrastive_mil_channel(
             name: (tensor[anchor_index_t] if isinstance(tensor, torch.Tensor) else tensor)
             for name, tensor in provenance.items()
         }
+    # Machinery follows the anchor too. `contrastive` is built fresh rather
+    # than copied from `channel`, so omitting this left the contrastive pass
+    # with machinery=None while the anchors it is compared against use the
+    # declared value -- the two logits in the contrastive loss would then be
+    # computed under different machinery-derivation rules.
+    machinery = channel.get("machinery_idx")
+    if isinstance(machinery, torch.Tensor):
+        contrastive["machinery_idx"] = machinery[anchor_index_t]
     return contrastive
 
 
@@ -1527,7 +1545,11 @@ def _run_mil_forward(
             if isinstance(channel.get("flank_c_tok"), torch.Tensor)
             else None
         ),
-        tcell_context=tcell_context,
+        # tcell_context is deliberately not forwarded, matching the row path
+        # and both holdout forwards. Passing it here would make predict_panel
+        # sweep from the observed context on the bag path and from the
+        # all-unknown baseline everywhere else, so the same panel outputs
+        # would be two different functions averaged into one loss.
         machinery=(
             channel_machinery.to(device)
             if isinstance(channel_machinery, torch.Tensor)
@@ -2108,6 +2130,14 @@ def compute_loss(
                 supervised_losses["excision_condition_panel"] = (
                     torch.stack(condition_terms).mean()
                 )
+                # Record support like any other task. Without it the default
+                # support-weighted aggregation gives this loss weight 1.0
+                # against tasks carrying support in the thousands, so the
+                # panel would contribute ~1/N of the gradient and train
+                # essentially not at all.
+                supervised_loss_support["excision_condition_panel"] = float(
+                    elution_mask_flat.sum().item()
+                )
 
         # Assay panel: tie the observed assay's column to the measurement.
         #
@@ -2146,6 +2176,9 @@ def compute_loss(
             if panel_terms:
                 supervised_losses["binding_assay_panel"] = (
                     torch.stack(panel_terms).mean()
+                )
+                supervised_loss_support["binding_assay_panel"] = float(
+                    mask_flat.sum().item()
                 )
 
         if profile_performance:
@@ -2252,7 +2285,15 @@ def compute_loss(
             supervised_task_weights: Dict[str, float] = {}
             for task_name, task_loss in supervised_losses.items():
                 spec = LOSS_TASK_NAME_TO_SPEC.get(task_name)
-                base_weight = max(float(spec.base_weight), 0.0) if spec is not None else 1.0
+                # The panel losses are assembled outside LOSS_TASK_SPECS
+                # because they gather a column rather than reading a single
+                # output path. They still need a declared weight: falling
+                # through to 1.0 is a silent default, not a decision.
+                base_weight = (
+                    max(float(spec.base_weight), 0.0)
+                    if spec is not None
+                    else PANEL_TASK_BASE_WEIGHTS.get(task_name, 1.0)
+                )
                 if base_weight <= 0.0:
                     continue
                 if aggregation_mode == "task_mean":

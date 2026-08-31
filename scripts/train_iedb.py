@@ -1993,10 +1993,14 @@ def augment_binding_records_with_synthetic_negatives(
             # presented by both alleles, making them false negatives. That cost
             # is accepted here as it is throughout the field; it is bounded and
             # far smaller than the bias introduced by scrambling.
+            # Class-matched donors only. Drawing from the global pool handed
+            # a class I row a 13-25mer class II peptide, so the "hard" negative
+            # was separable on length alone -- the exact surface shortcut this
+            # mode exists to remove. `class_alleles` is already computed above.
             donor_alleles = [
                 candidate
-                for candidate in mismatch_allele_pool
-                if candidate != source.mhc_allele
+                for candidate in class_alleles
+                if candidate != source.mhc_allele and peptides_by_allele.get(candidate)
             ]
             if not donor_alleles:
                 # Single-allele corpus: no mismatch is possible, so fall back

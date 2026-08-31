@@ -1002,8 +1002,11 @@ def is_unmapped_condition(condition: Optional[str]) -> bool:
 APC_CELL_CLASSES = [
     "unknown",
     "professional_apc",      # dendritic cells, macrophages, monocytes
-    "lymphoblastoid",        # B-LCL and B-cell lines: JY, C1R, T2, DB, SU-DHL
-    "primary_lymphoid",      # PBMC, lymphocyte, mononuclear, splenocyte
+    "lymphoblastoid",        # EBV-transformed B-LCL lines: JY, C1R, T2, DB
+    "primary_lymphoid",      # PBMC, lymphocyte, mononuclear, splenocyte,
+                             # and primary B cells -- resting B cells do not
+                             # carry the constitutive immunoproteasome that
+                             # defines the lymphoblastoid class
     "tumor_hematologic",     # THP-1, AML14, BV-173, NB-*
     "tumor_epithelial",      # MDA-MB-231, HCT 116, HeLa, MCF-7, SUM159PT
     "tumor_melanocytic",     # SK-MEL-*, LM-MEL-*, melanocyte
@@ -1030,7 +1033,9 @@ _APC_CLASS_PATTERNS: Tuple[Tuple[str, str], ...] = (
     (r"\bmonocyte\b", "professional_apc"),
     (r"\bb[- ]?lcl\b", "lymphoblastoid"),
     (r"\blymphoblast", "lymphoblastoid"),
-    (r"\bb[- ]cell\b", "lymphoblastoid"),
+    # A primary B cell is not a B-LCL. Filing it as lymphoblastoid taught the
+    # model an immunoproteasome-high prior for a cell that does not have one.
+    (r"\bb[- ]cell\b", "primary_lymphoid"),
     (r"\bsu-dhl", "lymphoblastoid"),
     (r"\bdohh2\b", "lymphoblastoid"),
     (r"\bpbmc\b", "primary_lymphoid"),
@@ -1040,7 +1045,13 @@ _APC_CLASS_PATTERNS: Tuple[Tuple[str, str], ...] = (
     (r"\bthp-?1\b", "tumor_hematologic"),
     (r"\baml\b|\baml\d", "tumor_hematologic"),
     (r"\bbv-173\b", "tumor_hematologic"),
-    (r"melanoma|melanocyte|\bsk-mel|\blm-mel|-mel-", "tumor_melanocytic"),
+    # Every alternative anchored. `-mel-` unanchored would match any
+    # hyphenated identifier containing those letters.
+    (
+        r"\bmelanoma\b|\bmelanocyte\b|\bsk-mel\b|\bsk-mel-|\blm-mel\b|\blm-mel-"
+        r"|\b[a-z]{1,4}-mel-\d",
+        "tumor_melanocytic",
+    ),
     (r"\bhela\b", "tumor_epithelial"),
     (r"\bmda-mb", "tumor_epithelial"),
     (r"\bmcf-?7", "tumor_epithelial"),

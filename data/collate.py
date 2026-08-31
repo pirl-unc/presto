@@ -146,6 +146,11 @@ TARGET_SPECS: tuple[TargetSpec, ...] = (
 )
 
 
+#: Flank tokens kept on each side. Shared with the inference path, which
+#: previously carried its own literal and disagreed (30 vs 25).
+DEFAULT_MAX_FLANK_LEN = 25
+
+
 @dataclass
 class PrestoSample:
     """A single training/inference sample."""
@@ -490,7 +495,7 @@ class PrestoCollator:
         max_pep_len: int = 50,
         max_mhc_len: int = 120,
         max_tcr_len: int = 200,
-        max_flank_len: int = 25,
+        max_flank_len: int = DEFAULT_MAX_FLANK_LEN,
     ):
         self.tokenizer = tokenizer or Tokenizer()
         self.max_pep_len = max_pep_len
@@ -673,6 +678,8 @@ class PrestoCollator:
         bag_sample_ids: List[str],
         apm_perturbations: Optional[List[Optional[str]]] = None,
         inducers: Optional[List[Optional[str]]] = None,
+        apc_cell_classes: Optional[List[Optional[str]]] = None,
+        peptide_source: str = "unknown",
     ) -> Dict[str, Any]:
         outputs: Dict[str, Any] = {
             "pep_tok": None,
@@ -724,10 +731,26 @@ class PrestoCollator:
                 [processing_stimulus_index(v) for v in stimulus_values],
                 dtype=torch.long,
             ),
-            # MIL bags are MHC pull-downs by construction, so `mhc` is a
-            # statement about the assay rather than an inferred default.
+            # Set by the caller. An elution bag is an MHC pull-down and says
+            # so; a T-cell bag is not, and stamping it `mhc` would assert
+            # in-vivo proteasomal origin for synthetic peptides -- turning on
+            # the excision -> presentation edge for rows that never went
+            # through a proteasome. The row path was fixed to default
+            # `unknown` for exactly this reason; the bag path must match.
             "peptide_source_idx": torch.tensor(
-                [peptide_source_index("mhc")] * n_instances, dtype=torch.long
+                [peptide_source_index(peptide_source)] * n_instances,
+                dtype=torch.long,
+            ),
+            # The APC class is per-instance biological state. Omitting it here
+            # pinned every bag instance to `unknown` -- and the elution loss
+            # runs through the bag path whenever MIL is active, so the axis
+            # would have received gradient only at index 0.
+            "apc_cell_class_idx": torch.tensor(
+                [
+                    apc_cell_class_index(value)
+                    for value in (apc_cell_classes or [None] * n_instances)
+                ],
+                dtype=torch.long,
             ),
         }
         # Per-instance machinery from the *declared* class. Without this the
@@ -1613,6 +1636,7 @@ class PrestoCollator:
         mil_flank_ns: List[str] = []
         mil_flank_cs: List[str] = []
         mil_apm: List[Optional[str]] = []
+        mil_apc_classes: List[Optional[str]] = []
         mil_inducers: List[Optional[str]] = []
         mil_instance_to_bag: List[int] = []
         mil_bag_labels: List[float] = []
@@ -1626,6 +1650,7 @@ class PrestoCollator:
         tcell_mil_flank_cs: List[str] = []
         tcell_mil_instance_to_bag: List[int] = []
         tcell_mil_apm: List[Optional[str]] = []
+        tcell_mil_apc_classes: List[Optional[str]] = []
         tcell_mil_stimuli: List[Optional[str]] = []
         tcell_mil_bag_labels: List[float] = []
         tcell_mil_bag_sample_ids: List[str] = []
@@ -1682,6 +1707,7 @@ class PrestoCollator:
                     mil_flank_ns.append(self._sanitize_optional_sequence(sample.flank_n))
                     mil_flank_cs.append(self._sanitize_optional_sequence(sample.flank_c))
                     mil_apm.append(sample.apm_perturbation)
+                    mil_apc_classes.append(sample.apc_cell_class)
                     mil_inducers.append(sample.processing_inducer)
                     mil_instance_to_bag.append(bag_index)
 
@@ -1736,11 +1762,14 @@ class PrestoCollator:
                 # these left the T-cell MIL forward on default state for every
                 # instance -- the field existed and carried nothing.
                 tcell_mil_apm.append(sample.apm_perturbation)
+                tcell_mil_apc_classes.append(sample.apc_cell_class)
                 tcell_mil_stimuli.append(sample.processing_inducer)
 
         mil_tensors = self._materialize_mil_tensors(
+            peptide_source="mhc",
             apm_perturbations=mil_apm,
             inducers=mil_inducers,
+            apc_cell_classes=mil_apc_classes,
             peptides=mil_peptides,
             mhc_as=mil_mhc_as,
             mhc_bs=mil_mhc_bs,
@@ -1753,8 +1782,10 @@ class PrestoCollator:
             bag_sample_ids=mil_bag_sample_ids,
         )
         tcell_mil_tensors = self._materialize_mil_tensors(
+            peptide_source="unknown",
             apm_perturbations=tcell_mil_apm,
             inducers=tcell_mil_stimuli,
+            apc_cell_classes=tcell_mil_apc_classes,
             peptides=tcell_mil_peptides,
             mhc_as=tcell_mil_mhc_as,
             mhc_bs=tcell_mil_mhc_bs,

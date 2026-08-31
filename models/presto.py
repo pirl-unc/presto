@@ -12,6 +12,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 import math
+import warnings
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -942,6 +943,7 @@ class Presto(nn.Module):
             n_stimulus=len(PROCESSING_STIMULI),
             n_apm=len(APM_PERTURBATIONS),
             protein_source_index=PEPTIDE_SOURCE_TO_IDX["protein"],
+            mhc_source_index=PEPTIDE_SOURCE_TO_IDX["mhc"],
         )
 
         # Elution head (S9.3: pres_logit + ms_detect_logit, no pmhc_vec).
@@ -1152,32 +1154,12 @@ class Presto(nn.Module):
         error_msgs: List[str],
     ) -> None:
         """Drop deprecated weights for backward compatibility."""
-        # Growing PROCESSING_STIMULI reshuffles `processing_condition_embed`,
-        # because its row index is `apm * n_stimulus + stimulus`. Appending a
-        # token keeps stimulus indices stable but moves every *combined* index,
-        # so the table must be remapped pair-by-pair rather than padded.
-        condition_key = f"{prefix}processing_condition_embed.weight"
-        saved_condition = state_dict.get(condition_key)
-        if saved_condition is not None:
-            new_rows = self.processing_condition_embed.weight.shape[0]
-            old_rows = int(saved_condition.shape[0])
-            new_n_stimulus = int(self._n_stimulus_states)
-            n_apm = new_rows // new_n_stimulus if new_n_stimulus else 0
-            if old_rows != new_rows and n_apm:
-                old_n_stimulus = old_rows // n_apm if n_apm else 0
-                if old_n_stimulus:
-                    grown = torch.zeros(
-                        new_rows,
-                        saved_condition.shape[1],
-                        dtype=saved_condition.dtype,
-                    )
-                    shared = min(old_n_stimulus, new_n_stimulus)
-                    for apm in range(n_apm):
-                        for stim in range(shared):
-                            grown[apm * new_n_stimulus + stim] = saved_condition[
-                                apm * old_n_stimulus + stim
-                            ]
-                    state_dict[condition_key] = grown
+        # `processing_condition_embed` no longer exists: cellular state reaches
+        # the processing latents through `apc_cell_class_embed` and the
+        # excision head's condition axes instead. Drop the key so pre-PR
+        # checkpoints load. The remap that used to live here dereferenced the
+        # deleted module and could only ever raise AttributeError.
+        state_dict.pop(f"{prefix}processing_condition_embed.weight", None)
 
         # `stimulus_profile_c` is (n_stimulus, n_aa); a new stimulus appends a
         # zero row, which is the neutral contribution this profile starts at.
@@ -1267,6 +1249,48 @@ class Presto(nn.Module):
         # Drop old CategoryHead keys from pre-foreignness checkpoints
         # Drop old DAG-violating head keys (elution context_head, MSDetectionHead,
         # RepertoireHead, old TCellAssayHead keys)
+        # Modules the active configuration does not allocate.
+        #
+        # Several families are now built only when their mode selects them --
+        # alternate positional encodings, the collapsed-topology projections,
+        # class-specific core scorers, direct-segment residuals, and the
+        # input-side assay context that was removed entirely. A checkpoint
+        # written before that gating carries their weights, and under the
+        # shipped defaults every one of them is an unexpected key, so
+        # `strict=True` fails on any pre-PR checkpoint.
+        #
+        # Dropping a key whose module does not exist is the correct behaviour:
+        # the weights are unreachable under this configuration, and refusing
+        # to load because of them would strand every existing checkpoint.
+        # Anything still present is loaded normally.
+        own_keys = set(self.state_dict().keys())
+        for key in list(state_dict.keys()):
+            if not key.startswith(prefix):
+                continue
+            local_name = key[len(prefix):]
+            if local_name in own_keys:
+                continue
+            if any(
+                local_name.startswith(family)
+                for family in (
+                    "pep_abs_pos", "pep_frac_mlp", "pep_pos_concat_",
+                    "groove_1_abs_pos", "groove_2_abs_pos",
+                    "groove_1_end_pos", "groove_2_end_pos",
+                    "groove_frac_mlp", "groove_pos_concat_",
+                    "processing_class1_proj", "processing_class2_proj",
+                    "presentation_class1_mlp", "presentation_class2_mlp",
+                    "core_window_score_class1", "core_window_score_class2",
+                    "binding_direct_segment_",
+                    "affinity_predictor.sequence_summary_proj",
+                    "affinity_predictor.assay_type_embed",
+                    "affinity_predictor.assay_prep_embed",
+                    "affinity_predictor.assay_geometry_embed",
+                    "affinity_predictor.assay_readout_embed",
+                    "affinity_predictor.factorized_proj",
+                )
+            ):
+                state_dict.pop(key)
+
         drop_prefixes = [
             f"{prefix}category_head.",
             f"{prefix}elution_head.context_head.",
@@ -2750,6 +2774,26 @@ class Presto(nn.Module):
             for component in component_map.values()
             if component not in reachable
         }
+        # "other" is the documented sink for a parameter no rule matches, and
+        # _classify_parameter's contract says such a parameter is frozen at
+        # every stage -- not that the run aborts. Raising here turned a naming
+        # miss into a crash at optimizer construction, with an error message
+        # ("add them to a stage") that is wrong advice for "other".
+        #
+        # A genuinely unreachable *named* component is still a bug worth
+        # failing on; an unmatched parameter is a gap worth reporting loudly
+        # and continuing past.
+        unmatched = {name for name, comp in component_map.items() if comp == "other"}
+        if unmatched:
+            warnings.warn(
+                "these parameters match no PARAMETER_COMPONENT_RULES row and "
+                "will be frozen at every curriculum stage: "
+                f"{sorted(unmatched)[:8]}"
+                + (f" (+{len(unmatched) - 8} more)" if len(unmatched) > 8 else ""),
+                RuntimeWarning,
+                stacklevel=2,
+            )
+        unreachable = unreachable - {"other"}
         if unreachable:
             raise ValueError(
                 "these curriculum components are trained by no stage, so their "
@@ -3590,8 +3634,13 @@ class Presto(nn.Module):
         outputs["immunogenicity_cd4_logit"] = immunogenicity_cd4_logit
         outputs["immunogenicity_cd8_prob"] = torch.sigmoid(immunogenicity_cd8_logit)
         outputs["immunogenicity_cd4_prob"] = torch.sigmoid(immunogenicity_cd4_logit)
+        # Reports the class-weighted mixture of the terms actually added
+        # above, not the repertoire logit. Those differ whenever class_probs
+        # are not degenerate, so subtracting this to recover the
+        # pre-recognition logit previously gave the wrong number.
         outputs["immunogenicity_recognition_term"] = (
-            recognition_gain * recognition_repertoire_logit
+            class_probs[:, :1] * (recognition_gain * recognition_cd8_logit)
+            + class_probs[:, 1:2] * (recognition_gain * recognition_cd4_logit)
         )
 
         immunogenicity_mixture_logit = (

@@ -1602,10 +1602,20 @@ class ExcisionHead(nn.Module):
         # ------------------------------------------------------------------
         if peptide_source_idx is None:
             is_protein = torch.ones_like(c_terminus_score)
+            is_mhc = torch.zeros_like(c_terminus_score)
         else:
-            is_protein = (
-                peptide_source_idx.long() == self.protein_source_index
-            ).to(c_terminus_score.dtype)
+            source = peptide_source_idx.long()
+            is_protein = (source == self.protein_source_index).to(
+                c_terminus_score.dtype
+            )
+            # Positive test, not `1 - is_protein`. PEPTIDE_SOURCES is
+            # ['unknown', 'mhc', 'protein'], so the negated form routed
+            # `unknown` rows down the in-vivo branch -- asserting proteasomal
+            # origin for a row whose provenance is simply unrecorded. The
+            # collator's default was changed from `mhc` to `unknown` precisely
+            # to stop that, and this is where it leaked back in. Presto's
+            # presentation edge already tests positively; the two now agree.
+            is_mhc = (source == self.mhc_source_index).to(c_terminus_score.dtype)
 
         # Cellular state is a causal INPUT here, and the panels below are
         # counterfactual outputs. See docs/assay_modeling_contract.md: a
@@ -1633,8 +1643,8 @@ class ExcisionHead(nn.Module):
         )
         invivo_n = self.invivo_profile_n[apm, p1_n_long] + context_n
 
-        c_terminus_score = is_protein * c_terminus_score + (1.0 - is_protein) * invivo_c
-        n_terminus_score = is_protein * n_terminus_score + (1.0 - is_protein) * invivo_n
+        c_terminus_score = is_protein * c_terminus_score + is_mhc * invivo_c
+        n_terminus_score = is_protein * n_terminus_score + is_mhc * invivo_n
         # Missed cleavages are a digest concept; the proteasome is processive.
         missed_cleavage_score = is_protein * missed_cleavage_score
         # Length: for a digest it follows from cleavage-site spacing, but for
@@ -1645,7 +1655,7 @@ class ExcisionHead(nn.Module):
 
         bias = (
             is_protein * self.bias[machinery_idx]
-            + (1.0 - is_protein) * self.invivo_bias[apm]
+            + is_mhc * self.invivo_bias[apm]
         )
         logit = n_terminus_score + c_terminus_score + length_score + missed_cleavage_score + bias
 
@@ -1657,17 +1667,25 @@ class ExcisionHead(nn.Module):
         # known and causal. The panel answers a different and genuinely useful
         # question: "what would this look like in a TAP-null cell, or under
         # IFN-gamma", which is what makes the machinery interpretable.
-        not_protein = 1.0 - is_protein
+        not_protein = is_mhc
+        # Swap the *observed* condition's contribution for each candidate's,
+        # not the baseline's. `logit` already contains the observed condition,
+        # so subtracting the baseline instead left the observed term in place
+        # and added the candidate on top: the column for the observed condition
+        # then double-counted it and disagreed with `excision_logit` on every
+        # row except the one that happened to be at index 0. The panel loss
+        # gathers exactly that column, so the perturbed rows this feature
+        # exists for were supervised on a quantity the model never reports.
         apm_panel = (
             logit.unsqueeze(1)
             + not_protein.unsqueeze(1)
             * (
                 self.invivo_profile_c[:, p1_c_long].t()
-                - self.invivo_profile_c[baseline_index, p1_c_long].unsqueeze(1)
+                - self.invivo_profile_c[apm, p1_c_long].unsqueeze(1)
                 + self.invivo_profile_n[:, p1_n_long].t()
-                - self.invivo_profile_n[baseline_index, p1_n_long].unsqueeze(1)
+                - self.invivo_profile_n[apm, p1_n_long].unsqueeze(1)
                 + self.invivo_bias.unsqueeze(0)
-                - self.invivo_bias[baseline_index].unsqueeze(1)
+                - self.invivo_bias[apm].unsqueeze(1)
             )
         )
         stimulus_panel = (
@@ -1675,7 +1693,7 @@ class ExcisionHead(nn.Module):
             + not_protein.unsqueeze(1)
             * (
                 self.stimulus_profile_c[:, p1_c_long].t()
-                - self.stimulus_profile_c[baseline_index, p1_c_long].unsqueeze(1)
+                - self.stimulus_profile_c[stimulus, p1_c_long].unsqueeze(1)
             )
         )
         return {
