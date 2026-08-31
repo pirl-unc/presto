@@ -107,3 +107,70 @@ class TestContractCompliance:
 
         source = inspect.getsource(train_synthetic.compute_loss)
         assert "binding_assay_panel" in source
+
+
+class TestExcisionPanelAgreesWithTheScalarReadout:
+    """The observed column of each excision panel must equal `excision_logit`.
+
+    This is the invariant a real bug violated. The panels were built by adding
+    each candidate condition's contribution to a logit that *already contained
+    the observed condition*, subtracting the baseline rather than the observed
+    term. The observed column therefore double-counted its own contribution and
+    disagreed with the scalar readout on every row whose condition was not at
+    index 0 -- and the panel loss gathers exactly that column, so the perturbed
+    rows the feature exists for were supervised on a quantity the model never
+    reported. Rows at index 0 looked fine, which is why it survived.
+
+    Parameterized off index 0 deliberately: a baseline-index row cannot
+    distinguish the two formulas.
+    """
+
+    @staticmethod
+    def _run(apm_idx, stimulus_idx):
+        torch.manual_seed(0)
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        # Random rather than zero-init: the profiles this invariant concerns
+        # start at zero, where both the correct and the buggy formula agree.
+        with torch.no_grad():
+            for profile in (
+                model.excision_head.invivo_profile_c,
+                model.excision_head.invivo_profile_n,
+                model.excision_head.stimulus_profile_c,
+            ):
+                profile.normal_(0.0, 0.5)
+            model.excision_head.invivo_bias.normal_(0.0, 0.5)
+        model.eval()
+        batch = apm_idx.shape[0]
+        with torch.no_grad():
+            return model(
+                pep_tok=torch.randint(4, 24, (batch, 10)),
+                mhc_a_tok=torch.randint(4, 24, (batch, 40)),
+                mhc_b_tok=torch.randint(4, 24, (batch, 40)),
+                mhc_class="I",
+                flank_n_tok=torch.randint(4, 24, (batch, 5)),
+                flank_c_tok=torch.randint(4, 24, (batch, 5)),
+                provenance={
+                    "peptide_source_idx": torch.full((batch,), 1, dtype=torch.long),
+                    "apm_perturbation_idx": apm_idx,
+                    "processing_stimulus_idx": stimulus_idx,
+                },
+            )
+
+    def test_observed_apm_column_matches(self):
+        apm = torch.tensor([1, 2, 3])
+        out = self._run(apm, torch.zeros(3, dtype=torch.long))
+        observed = out["excision_panel_apm"].gather(1, apm.unsqueeze(1)).squeeze(1)
+        assert torch.allclose(observed, out["excision_logit"].squeeze(-1), atol=1e-5), (
+            "the observed APM column disagrees with excision_logit; the panel is "
+            "double-counting the observed condition"
+        )
+
+    def test_observed_stimulus_column_matches(self):
+        stimulus = torch.tensor([1, 2, 3])
+        out = self._run(torch.zeros(3, dtype=torch.long), stimulus)
+        observed = (
+            out["excision_panel_stimulus"].gather(1, stimulus.unsqueeze(1)).squeeze(1)
+        )
+        assert torch.allclose(observed, out["excision_logit"].squeeze(-1), atol=1e-5), (
+            "the observed stimulus column disagrees with excision_logit"
+        )

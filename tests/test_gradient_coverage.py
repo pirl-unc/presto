@@ -128,10 +128,12 @@ NEEDS_ABSENT_DATA = {
 #:       requiring it (S9.5).
 #:
 #: If something lands here again, it means an output is being published that
-#: nothing trains -- which is worth a fix, not an entry.
-COMPUTED_BUT_UNSUPERVISED: set = set()
+#: nothing trains -- which is worth a fix, not an entry. The category itself is
+#: deliberately NOT kept as an empty set: an always-empty allowlist bucket reads
+#: like a standing exemption and quietly re-earns entries. It is gone, and
+#: `test_every_category_is_non_empty` keeps it that way.
 
-ALLOWED_DEAD = BY_DESIGN | NEEDS_ABSENT_DATA | COMPUTED_BUT_UNSUPERVISED
+ALLOWED_DEAD = BY_DESIGN | NEEDS_ABSENT_DATA
 
 
 def _every_modality_batch():
@@ -410,12 +412,39 @@ class TestGapTwoStaysClosed:
         assert name not in dead
 
 
-class TestCategoriesAreDisjoint:
+class TestTheAllowlistIsWellFormed:
+    """Integrity of the allowlist itself, carried over from PR 1 (#7).
+
+    Two of these were lost when this file was rewritten for the many-output
+    contract, and their absence hid a real thing: `COMPUTED_BUT_UNSUPERVISED`
+    had become an empty set that was still unioned into ALLOWED_DEAD. An empty
+    allowlist category is finished work wearing the costume of an exemption.
+    """
+
+    CATEGORIES = {
+        "BY_DESIGN": BY_DESIGN,
+        "NEEDS_ABSENT_DATA": NEEDS_ABSENT_DATA,
+    }
+
     def test_no_parameter_is_in_two_categories(self):
         counts = collections.Counter(
-            list(BY_DESIGN) + list(NEEDS_ABSENT_DATA) + list(COMPUTED_BUT_UNSUPERVISED)
+            [name for names in self.CATEGORIES.values() for name in names]
         )
         assert [name for name, n in counts.items() if n > 1] == []
+
+    def test_the_union_is_what_allowed_dead_contains(self):
+        """Guards against a category being defined and never wired in."""
+        union: set = set()
+        for names in self.CATEGORIES.values():
+            union |= names
+        assert union == ALLOWED_DEAD
+
+    def test_every_category_is_non_empty(self):
+        """An empty category is finished work; delete it rather than keep it."""
+        empty = sorted(label for label, names in self.CATEGORIES.items() if not names)
+        assert empty == [], (
+            f"these categories are empty and should be removed: {empty}"
+        )
 
 
 # ---------------------------------------------------------------------------
