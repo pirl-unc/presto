@@ -1,12 +1,22 @@
 # TCR Encoder Specification (Future Feature)
 
-> **Status: abandoned.** `models/tcr.py` is exported from `models/__init__.py`
-> and covered by `tests/test_tcr.py`, but nothing in the model instantiates it:
-> five of its six classes have zero references outside the file, and the sixth,
-> `RepertoireHead`, appears only in the list of checkpoint keys that are
-> actively *dropped* on load. TCR sequences never reach `Presto.forward` --
+> **Status: specification only. The implementation was removed on 2026-08-31.**
+>
+> `models/tcr.py` (364 lines) and `tests/test_tcr.py` (252 lines) existed and
+> were exported from `models/__init__.py`, but nothing instantiated them: all
+> eight exported symbols had zero references outside those two files, and
+> `RepertoireHead` appeared only in the list of checkpoint keys that are
+> actively *dropped* on load. TCR sequences never reached `Presto.forward` --
 > `TcrEvidenceRecord` contributes a binary "some receptor was found" label and
-> nothing more. See `tasks/receptor_removal_plan.md`. Verified 2026-08-31.
+> nothing more.
+>
+> `tasks/receptor_removal_plan.md` calls for exactly this: "no TCR-conditioned
+> forward path or pMHC:TCR matcher in the canonical model". Keeping an exported
+> but unwired subsystem invited someone to import it and get a model component
+> that is never trained and never runs.
+>
+> This document stays as the design record. Recover the implementation from
+> git history (`git log -- models/tcr.py`) if the pathway is revived.
 
 This document specifies the planned optional TCR pathway and its intended
 integration into Presto.

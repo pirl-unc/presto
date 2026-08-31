@@ -26,10 +26,21 @@ Last reorganized: 2026-08-29.
 - [x] **Category C** — closed. All four groups wired; the category is empty.
 - [x] **Many-output refactor** — assay and condition axes are output tracks,
       not inputs. Invariance verified in `tests/test_many_output_contract.py`.
-- [ ] **Cell line / tissue are not represented at all.** `ElutionRecord`
-      carries them; they never reach `PrestoSample`. 172 distinct lines, and
-      the design's intended proxy for expression profile. Neither input nor
-      output track — a gap, not a deviation.
+- [x] **Cell line** — plumbed as `apc_cell_class`, 10 classes by processing
+      phenotype, 67.5% of elution rows classified.
+- [ ] **Tissue is still dropped.** `ElutionRecord.tissue` reaches neither
+      `PrestoSample` nor the model, and it is annotated on **99.1%** of elution
+      rows — better coverage than cell line. Blood 318,925 / Lymphoid 77,144 /
+      Skin 68,383 / Lymph Node 47,148 / Lung 33,812 / Breast 30,179 / Colon
+      22,076. Causally an input by the contract's test: tissue sets the
+      expressed proteome, which determines which peptides exist to be
+      processed. Deliberately not added in this PR, which already bundles five
+      pieces of work; it wants its own change and a check for redundancy
+      against `apc_cell_class` (Blood/Lymphoid overlaps lymphoblastoid and
+      primary_lymphoid).
+- [x] **`models/tcr.py` removed** — 364 lines plus a 252-line test file,
+      exported but never instantiated. `docs/tcr_spec.md` keeps the design
+      record; recover from git history if the pathway is revived.
 - [ ] **Re-run the brev baseline.** The 2026-08-29 numbers predate the
       recognition→immunogenicity edge, the assay panels, and the removal of
       all condition inputs. Not comparable.

@@ -260,6 +260,22 @@ def main() -> None:
 
     alleles = [part.strip() for part in str(args.alleles).split(",") if part.strip()]
     probes = [part.strip() for part in str(args.probes).split(",") if part.strip()]
+    # Selected before the manifest is built: the manifest records `tested`,
+    # which reads `designs`. Computing it afterwards was a plain
+    # use-before-definition -- ruff F821, and a NameError on every run.
+    selected_design_ids = {
+        part.strip().upper()
+        for part in str(args.design_ids).split(",")
+        if part.strip()
+    }
+    designs = tuple(
+        design for design in DESIGNS
+        if not selected_design_ids or design.design_id.upper() in selected_design_ids
+    )
+    if not designs:
+        raise SystemExit("No design IDs selected")
+
+
     out_dir = initialize_experiment_dir(
         out_dir=str(args.out_dir),
         slug="directness-round3",
@@ -281,18 +297,6 @@ def main() -> None:
             "tested": [design.design_id for design in designs],
         },
     )
-    selected_design_ids = {
-        part.strip().upper()
-        for part in str(args.design_ids).split(",")
-        if part.strip()
-    }
-    designs = tuple(
-        design for design in DESIGNS
-        if not selected_design_ids or design.design_id.upper() in selected_design_ids
-    )
-    if not designs:
-        raise SystemExit("No design IDs selected")
-
     manifest: List[Dict[str, Any]] = []
     for design in designs:
         entry = _launch_design(
