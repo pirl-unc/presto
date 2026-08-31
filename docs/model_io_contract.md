@@ -183,15 +183,15 @@ identification argument in §6.
 Both corpora factorize identically:
 
 ```
-logit P(observed) = liberation(peptide, protein | source, digest, conditions)
+logit P(observed) = excision(peptide, protein | source, digest, conditions)
                   + [ MHC cascade ]          # peptide_source = mhc only
                   + detect(peptide | acquisition)
                   + abundance(protein | sample)
 ```
 
 ```
-source=protein:  liberation(digest) ──────────────────────────→ detect → observed
-source=mhc:      liberation(conditions) → TAP → bind → present → detect → observed
+source=protein:  excision(digest) ────────────────────────────→ detect → observed
+source=mhc:      excision(conditions)   → TAP → bind → present → detect → observed
                                                                    ↑
                                                     shared, and identifiable only
                                                     because the top branch has no
