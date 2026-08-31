@@ -171,7 +171,7 @@ NEEDS_ABSENT_DATA = {
 #: which are all protein-source, so the in-vivo branch is never supervised --
 #: this is the gap the model contract records as gap 2.
 IN_VIVO_EXCISION_UNSUPERVISED = {
-    "excision_head.inducer_profile_c",
+    "excision_head.stimulus_profile_c",
     "excision_head.invivo_bias",
     "excision_head.invivo_profile_c",
     "excision_head.invivo_profile_n",
@@ -216,7 +216,7 @@ def _every_modality_batch():
                 peptide="LLDGTATLRF",
                 alleles=["HLA-A*02:01", "HLA-B*07:02"],
                 detected=True,
-                inducer="ifn_gamma",
+                stimulus="ifn_gamma",
                 apm_perturbation="tap_ko",
                 flank_n="AAAAAAAAAA",
                 flank_c="CCCCCCCCCC",
