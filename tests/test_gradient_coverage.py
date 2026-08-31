@@ -73,35 +73,57 @@ BY_DESIGN = {
     "excision_head.p1_profile_c",
     "excision_head.p1_prime_penalty",
     "excision_head.mixture_logits",
-    "excision_head.profile_scale_n",
+    # `profile_scale_n` left this set once gradients were measured after warmup
+    # rather than at step 0. It trains.
 }
 
 #: (B) Reachable, but only with data this batch does not contain.
 #:
-#: This set has shrunk to two entries. EC50, Tm and TCR-method parameters left
-#: it once the fixture supplied those record types -- the corpus carries 147
-#: EC50 and 27 Tm rows for HLA-A*02:01 alone, so they were never untrainable,
-#: only unfed. What remains needs a class II binding row carrying flanking
-#: regions, and a species override.
-NEEDS_ABSENT_DATA = {
-    "class2_pfr_score.0.weight",
-    "class2_pfr_score.0.bias",
-    # Connected only through a numerically negligible route: gradient is
-    # 1e-10 to 1e-12, which the threshold above correctly calls starved.
-    "class2_pfr_score.2.bias",
-    # Structurally unidentifiable, and harmless.
-    #
-    # Both feed `core_window_logit`, which is softmaxed over candidate
-    # registers. A constant added to every candidate shifts all logits equally
-    # and cancels in the softmax, so a final-layer bias cannot affect the
-    # posterior at all. The corresponding *weights* train normally (1.7e-2 and
-    # 2.7e-3); the biases both sit at 1.353e-09 -- the same value, which is the
-    # signature of the invariance rather than a coincidence.
-    #
-    # Removing them would be tidier but changes nothing the model computes.
+#: One entry. EC50, Tm and TCR-method parameters left once the fixture supplied
+#: those record types -- the corpus carries 147 EC50 and 27 Tm rows for
+#: HLA-A*02:01 alone, so they were never untrainable, only unfed.
+#:
+#: `class2_pfr_score.0.*` also used to sit here, described as needing "a class
+#: II binding row carrying flanking regions". That data gap did not exist: the
+#: fixture already had such rows. Those 4,160 parameters were reading as dead
+#: only because gradients were measured at step 0 with the block's output layer
+#: zero-initialized. See WARMUP_STEPS.
+#: Category (B) is gone, not emptied -- an always-empty allowlist bucket reads
+#: like a standing exemption and quietly re-earns entries.
+#:
+#: `species_override_embed.weight` was its last member. It was a randomly
+#: initialized embedding that nothing trained, substituted for the trained
+#: `species_of_origin` latent whenever a caller used the documented
+#: `species_of_origin` input -- so a public inference feature answered from
+#: noise. The override is now built from `species_of_origin_head`, which
+#: trains, and the embedding no longer exists.
+
+#: (D) Structurally unidentifiable: no data will ever train these.
+#:
+#: Kept apart from (B) because the distinction is actionable. An entry in (B)
+#: says "find the data"; an entry here says "there is nothing to find".
+#: Filing these under (B) sent a reader looking for class II flank rows that
+#: would not have helped.
+#:
+#: Both feed `core_window_logit`, which is softmaxed over candidate registers.
+#: A constant added to every candidate shifts all logits equally and cancels in
+#: the softmax, so a final-layer bias cannot affect the posterior at all. The
+#: corresponding *weights* train normally; the biases sit at ~1e-10 under every
+#: topology and every warmup length.
+#:
+#: Removing them would be tidier and changes nothing the model computes.
+SOFTMAX_INVARIANT = {
     "core_window_score.2.bias",
     "core_window_prior.2.bias",
-    "species_override_embed.weight",
+}
+
+#: (E) Connected only through a numerically negligible route.
+#:
+#: Gradient is 1e-10 to 1e-12 -- ten orders of magnitude below a real one, and
+#: it does not recover with warmup. Distinct from (D): this one is not provably
+#: zero, just vanishing.
+NUMERICALLY_STARVED = {
+    "class2_pfr_score.2.bias",
 }
 
 #: (C) Computed, published, and consumed by nothing.
@@ -133,7 +155,7 @@ NEEDS_ABSENT_DATA = {
 #: like a standing exemption and quietly re-earns entries. It is gone, and
 #: `test_every_category_is_non_empty` keeps it that way.
 
-ALLOWED_DEAD = BY_DESIGN | NEEDS_ABSENT_DATA
+ALLOWED_DEAD = BY_DESIGN | SOFTMAX_INVARIANT | NUMERICALLY_STARVED
 
 
 def _every_modality_batch():
@@ -301,11 +323,52 @@ def _every_modality_batch():
 #: zero.
 EFFECTIVELY_ZERO_GRADIENT = 1e-8
 
-#: Both topologies, because they allocate different modules. Checking only
-#: `expanded` would leave the default (`collapsed`) unverified -- and the
-#: collapsed path owns the processing projections and presentation MLPs that
-#: the expanded path does not build at all.
+#: Both topologies, because they allocate different modules. `expanded` is the
+#: default and the one design.md specifies; `collapsed` is still constructible
+#: and owns the processing projections and presentation MLPs the expanded path
+#: does not build at all, so leaving it unchecked would hide anything dead in
+#: those.
 TOPOLOGIES = ("collapsed", "expanded")
+
+#: Optimizer steps taken before gradients are measured.
+#:
+#: Measuring a single backward pass at initialization systematically lies about
+#: any block whose *output* layer is zero-initialized. With the last layer at
+#: zero, the chain rule sends exactly zero gradient to every layer upstream of
+#: it inside that block -- not because the path is disconnected or the data is
+#: missing, but because it is step 0 and the block has not moved yet.
+#:
+#: `class2_pfr_score` is the case that exposed this. Its final Linear is
+#: deliberately zero-initialized (a neutral start for the class II PFR
+#: adjustment), so at step 0 the 4,160 parameters of its first layer read as
+#: stone dead. They were allowlisted as "needs a class II binding row carrying
+#: flanking regions" -- a data gap that did not exist. The fixture already had
+#: such rows. After three steps the same parameters carry gradients of 4.8e-05
+#: and 3.1e-07 and train perfectly well.
+#:
+#: Three steps is enough for a zero-init output layer to leave zero while
+#: staying fast; the seed is fixed so the result is deterministic.
+WARMUP_STEPS = 3
+
+
+def _dead_after_warmup(model):
+    """Parameters still starved once zero-init output layers have moved."""
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+    batch = _every_modality_batch()
+    for _ in range(WARMUP_STEPS):
+        optimizer.zero_grad()
+        loss, _, _ = compute_loss(model, batch, "cpu")
+        loss.backward()
+        optimizer.step()
+    optimizer.zero_grad()
+    loss, _, _ = compute_loss(model, batch, "cpu")
+    loss.backward()
+    return {
+        name
+        for name, param in model.named_parameters()
+        if param.grad is None
+        or float(param.grad.abs().sum()) < EFFECTIVELY_ZERO_GRADIENT
+    }
 
 
 @pytest.fixture(scope="module", params=TOPOLOGIES)
@@ -314,15 +377,7 @@ def gradient_report(request):
     model = Presto(
         d_model=32, n_layers=2, n_heads=4, latent_topology=request.param
     )
-    loss, _, _ = compute_loss(model, _every_modality_batch(), "cpu")
-    loss.backward()
-    dead = {
-        name
-        for name, param in model.named_parameters()
-        if param.grad is None
-        or float(param.grad.abs().sum()) < EFFECTIVELY_ZERO_GRADIENT
-    }
-    return model, dead
+    return model, _dead_after_warmup(model)
 
 
 
@@ -336,15 +391,9 @@ def dead_in_any_topology():
         model = Presto(
             d_model=32, n_layers=2, n_heads=4, latent_topology=topology
         )
-        loss, _, _ = compute_loss(model, _every_modality_batch(), "cpu")
-        loss.backward()
-        for name, param in model.named_parameters():
-            known.add(name)
-            if (
-                param.grad is None
-                or float(param.grad.abs().sum()) < EFFECTIVELY_ZERO_GRADIENT
-            ):
-                dead_union.add(name)
+        dead = _dead_after_warmup(model)
+        known.update(name for name, _ in model.named_parameters())
+        dead_union |= dead
     return known, dead_union
 
 
@@ -385,13 +434,21 @@ class TestGradientCoverage:
         )
 
     def test_the_vast_majority_of_parameters_train(self, gradient_report):
+        """Ceiling is 0.5%; the measured figure is 0.131%.
+
+        It was 5%, set when a step-0 measurement inflated the dead count to
+        1.12%. Measuring after warmup put the real figure an order of magnitude
+        lower, so the old ceiling had ~38x of slack and would not have caught a
+        regression that killed every remaining live parameter in the excision
+        head. Tightened to sit just above the true value.
+        """
         model, dead = gradient_report
         sizes = {name: p.numel() for name, p in model.named_parameters()}
         dead_params = sum(sizes[name] for name in dead)
         total = sum(sizes.values())
-        assert dead_params / total < 0.05, (
+        assert dead_params / total < 0.005, (
             f"{dead_params}/{total} parameters are untrained "
-            f"({100 * dead_params / total:.1f}%)"
+            f"({100 * dead_params / total:.3f}%)"
         )
 
 
@@ -423,7 +480,8 @@ class TestTheAllowlistIsWellFormed:
 
     CATEGORIES = {
         "BY_DESIGN": BY_DESIGN,
-        "NEEDS_ABSENT_DATA": NEEDS_ABSENT_DATA,
+        "SOFTMAX_INVARIANT": SOFTMAX_INVARIANT,
+        "NUMERICALLY_STARVED": NUMERICALLY_STARVED,
     }
 
     def test_no_parameter_is_in_two_categories(self):

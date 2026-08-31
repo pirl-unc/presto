@@ -251,7 +251,6 @@ class Predictor:
         d_model: Optional[int] = None,
         n_layers: Optional[int] = None,
         n_heads: Optional[int] = None,
-        n_categories: Optional[int] = None,
         device: str = None,
         **kwargs,
     ) -> "Predictor":
@@ -272,7 +271,6 @@ class Predictor:
             d_model=d_model,
             n_layers=n_layers,
             n_heads=n_heads,
-            n_categories=n_categories,
             strict=True,
         )
 

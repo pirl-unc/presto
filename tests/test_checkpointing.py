@@ -53,13 +53,22 @@ def test_load_model_from_checkpoint_uses_embedded_config(tmp_path):
     assert "model_state_dict" in payload
 
 
-def test_load_model_from_checkpoint_drops_legacy_dead_module_keys(tmp_path):
+def test_legacy_dead_module_keys_are_no_longer_dropped(tmp_path):
+    """The `presentation.` key-dropping pass is gone, deliberately.
+
+    `training/checkpointing.py` carried its own migration layer --
+    `_drop_legacy_dead_keys` and `_migrate_chain_type_heads` -- separate from
+    the one in `Presto._load_from_state_dict`. Removing only the latter left
+    checkpoint compat half-alive in a second file, so both are gone now and a
+    stale key is an error like any other.
+    """
     from presto.models.presto import Presto
     from presto.training.checkpointing import load_model_from_checkpoint
 
     model = Presto(d_model=64, n_layers=1, n_heads=4)
-    state = model.state_dict()
-    state["presentation.w_proc"] = torch.tensor(0.8)
+    state = dict(model.state_dict())
+    state["presentation.weight"] = torch.zeros(4, 4)
+
     payload = {
         "checkpoint_format": "presto.v2",
         "checkpoint_format_version": 2,
@@ -67,13 +76,12 @@ def test_load_model_from_checkpoint_drops_legacy_dead_module_keys(tmp_path):
         "model_config": {"d_model": 64, "n_layers": 1, "n_heads": 4},
         "model_state_dict": state,
     }
-    path = tmp_path / "legacy.pt"
+    path = tmp_path / "legacy_dead.pt"
     torch.save(payload, path)
 
-    loaded, raw = load_model_from_checkpoint(path, map_location="cpu")
-
-    assert isinstance(loaded, Presto)
-    assert "model_state_dict" in raw
+    with pytest.raises(RuntimeError) as excinfo:
+        load_model_from_checkpoint(path, map_location="cpu")
+    assert "presentation.weight" in str(excinfo.value)
 
 
 def test_renamed_head_keys_are_no_longer_remapped(tmp_path):

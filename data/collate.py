@@ -340,7 +340,6 @@ class PrestoBatch:
     # context-conditioned T-cell path is being refactored toward the same
     # outputs-only assay contract.
     tcell_context: Dict[str, torch.Tensor] = field(default_factory=dict)
-    tcell_context_masks: Dict[str, torch.Tensor] = field(default_factory=dict)
     tcell_mil_context: Dict[str, torch.Tensor] = field(default_factory=dict)
 
     # Optional multi-allele MIL bag tensors for elution/presentation/MS tasks.
@@ -463,9 +462,6 @@ class PrestoBatch:
             },
             tcell_context={
                 name: _move(tensor) for name, tensor in self.tcell_context.items()
-            },
-            tcell_context_masks={
-                name: _move(tensor) for name, tensor in self.tcell_context_masks.items()
             },
             tcell_mil_provenance={
                 name: _move(tensor) for name, tensor in self.tcell_mil_provenance.items()
@@ -1894,7 +1890,6 @@ class PrestoCollator:
             machinery_idx=machinery_idx,
             provenance=provenance,
             tcell_context=tcell_context,
-            tcell_context_masks=tcell_context_masks,
             tcell_mil_context=tcell_mil_context,
             mil_pep_tok=mil_tensors["pep_tok"],
             mil_mhc_a_tok=mil_tensors["mhc_a_tok"],

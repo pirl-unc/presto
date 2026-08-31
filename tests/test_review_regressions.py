@@ -179,3 +179,70 @@ class TestMILProvenanceIsComplete:
                 f"{axis} is missing from MIL provenance; the elution loss runs "
                 "through this path whenever MIL is active"
             )
+
+
+class TestSpeciesOverrideIsTrained:
+    """The species override must not answer from untrained weights.
+
+    `species_of_origin` is a documented input (design.md S7.1) and
+    `inference/predictor.py` exposes it in five places, so this is a live
+    public feature -- not a dormant knob.
+
+    It used to substitute `species_override_embed`, a randomly initialized
+    `nn.Embedding` that nothing ever trained: no training path passes
+    `species_of_origin_override`, so its 352 parameters kept their init
+    forever. Callers declaring a source organism got a confidently shifted
+    foreignness score computed from noise.
+
+    It now reuses `species_of_origin_head`, the trained classifier over the
+    same latent, whose weight row for organism k is the direction that most
+    evidences k.
+    """
+
+    def test_the_untrained_embedding_is_gone(self):
+        model = Presto(d_model=32, n_layers=1, n_heads=2)
+        assert not hasattr(model, "species_override_embed")
+        assert not any(
+            "species_override_embed" in name for name in model.state_dict()
+        )
+
+    def test_the_override_source_receives_gradient(self):
+        """The whole point: the weights behind the override actually train."""
+        import sys
+        from pathlib import Path
+
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from test_gradient_coverage import _dead_after_warmup
+
+        torch.manual_seed(0)
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        dead = _dead_after_warmup(model)
+        assert "species_of_origin_head.weight" not in dead
+
+    def test_the_override_still_changes_the_prediction(self):
+        """Trained, but not inert -- declaring an organism must still matter."""
+        torch.manual_seed(0)
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        model.eval()
+        inputs = dict(
+            pep_tok=torch.randint(4, 24, (2, 12)),
+            mhc_a_tok=torch.randint(4, 24, (2, 80)),
+            mhc_b_tok=torch.randint(4, 24, (2, 40)),
+        )
+        with torch.no_grad():
+            base = model(**inputs)
+            overridden = model(**inputs, species_of_origin=["viruses", "bacteria"])
+        assert not torch.allclose(
+            base["foreignness_prob"], overridden["foreignness_prob"]
+        )
+
+    def test_the_override_preserves_latent_scale(self):
+        """A classifier weight row and a cross-attention output share a space
+        but not a magnitude, and everything downstream is scale-sensitive."""
+        torch.manual_seed(0)
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        model.eval()
+        idx = torch.tensor([3, 5])
+        inferred = torch.randn(2, 32) * 7.0
+        out = model._species_override_latent(idx, inferred)
+        assert torch.allclose(out.norm(dim=-1), inferred.norm(dim=-1), atol=1e-4)

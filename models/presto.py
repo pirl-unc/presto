@@ -287,7 +287,6 @@ class Presto(nn.Module):
         d_model: int = 256,
         n_layers: int = 4,
         n_heads: int = 8,
-        n_categories: Optional[int] = None,
         max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
         affinity_target_encoding: str = "log10",
         binding_midpoint_nM: float = DEFAULT_BINDING_MIDPOINT_NM,
@@ -315,7 +314,6 @@ class Presto(nn.Module):
         # ids of parameters whose deliberate init must survive _init_weights
         self._preserved_init_params: set[int] = set()
         self.d_model = d_model
-        self.n_categories = None  # deprecated; kept for backward compat
         self.max_affinity_nM = float(max_affinity_nM)
         affinity_target_encoding = str(affinity_target_encoding).strip().lower()
         if affinity_target_encoding not in AFFINITY_TARGET_ENCODINGS:
@@ -980,8 +978,45 @@ class Presto(nn.Module):
         self.foreignness_proj = nn.Linear(d_model, d_model)
         self.species_of_origin_head = nn.Linear(d_model, N_ORGANISM_CATEGORIES)
         self.foreignness_head = nn.Linear(d_model, 1)
-        self.species_override_embed = nn.Embedding(N_ORGANISM_CATEGORIES, d_model)
+        # No separate embedding for the species override.
+        #
+        # There used to be one: `nn.Embedding(N_ORGANISM_CATEGORIES, d_model)`,
+        # randomly initialized and never trained, because nothing in training
+        # passes `species_of_origin_override` -- it is an inference-time knob.
+        # `species_of_origin` is a documented input (design.md S7.1) and the
+        # Predictor exposes it, so callers were substituting a random vector
+        # for a trained latent and getting a confidently shifted foreignness
+        # score out of noise (0.476 -> 0.532 on an untrained-override probe).
+        #
+        # The override now reuses `species_of_origin_head`, which *is* trained:
+        # its weight row for class k is the direction in latent space that most
+        # evidences class k, which is exactly what "the source organism is k"
+        # should mean. See `_species_override_latent`.
         self._init_weights()
+
+    def _species_override_latent(
+        self, species_idx: torch.Tensor, inferred: torch.Tensor
+    ) -> torch.Tensor:
+        """Latent standing for a declared source organism.
+
+        Built from `species_of_origin_head`, the trained classifier over the
+        same latent. Row k of its weight is the direction that most evidences
+        organism k, so it is the natural point in latent space to mean "this
+        peptide is from k" -- and unlike a dedicated embedding it is trained by
+        every row carrying a species label.
+
+        Rescaled to the norm of the latent it replaces. A classifier weight row
+        and a cross-attention output are both directions in the same space but
+        need not share a magnitude, and everything downstream
+        (`foreignness_proj`, then recognition) is scale-sensitive. Matching the
+        norm keeps the override a change of direction rather than of both.
+        """
+        direction = self.species_of_origin_head.weight.index_select(
+            0, species_idx.long()
+        )
+        direction = direction / direction.norm(dim=-1, keepdim=True).clamp(min=1e-6)
+        scale = inferred.norm(dim=-1, keepdim=True)
+        return direction.to(dtype=inferred.dtype) * scale
 
     def _zero_init_embedding(self, num_embeddings: int, dim: int) -> nn.Embedding:
         """A zero-initialized embedding that survives the blanket re-init.
@@ -2654,7 +2689,7 @@ class Presto(nn.Module):
             "groove_1_end_pos", "groove_2_end_pos",
             "nflank_dist_pos", "cflank_dist_pos",
             "species_cond_embed", "chain_completeness_embed",
-            "species_override_embed", "context_token_proj",
+            "context_token_proj",
         ), ()),
         ("groove", ("groove",), ("pos",)),
         # Binding latents. The expanded topology renames pmhc_interaction to
@@ -3083,7 +3118,9 @@ class Presto(nn.Module):
                         batch_size,
                         latent_vec.device,
                     )
-                    latent_vals["species_of_origin"] = self.species_override_embed(species_idx_t)
+                    latent_vals["species_of_origin"] = self._species_override_latent(
+                        species_idx_t, latent_vals["species_of_origin"]
+                    )
                     latent_store["species_of_origin"] = latent_vals["species_of_origin"]
                 latent_vals["foreignness"] = self.foreignness_proj(
                     F.gelu(latent_vals["species_of_origin"])
