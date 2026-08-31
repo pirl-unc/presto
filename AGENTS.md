@@ -69,6 +69,13 @@ When running any experiment, benchmark, sweep, ablation, training comparison, or
      - per-example validation/test prediction dumps for eval experiments, unless the README explicitly justifies why a test split was not used
      - links or paths to raw artifacts in `modal_runs/`, `artifacts/`, or elsewhere
    - Large raw outputs may remain outside `experiments/`, but the experiment directory must point to them explicitly
+   - **Default to a summary, not the raw dump.** Commit per-example predictions
+     only when a future experiment will actually re-read them -- comparing two
+     runs example by example, or auditing a specific claim. Otherwise distil
+     what the experiment concluded (per-task n, base rate, metric, lift,
+     score separation) into a small JSON and point at where the raw file
+     lives. One 6.7 MB dump added 127k lines to a pull request whose real
+     change was 5k, and nothing was ever going to re-read it.
    - Prefer also keeping `reproduce/source/` with a snapshot of the launcher script used for the experiment
 
 4. **Required metadata**

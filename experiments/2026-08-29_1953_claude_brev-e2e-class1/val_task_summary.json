@@ -1,0 +1,133 @@
+[
+  {
+    "task": "binding",
+    "n": 17885,
+    "spearman": 0.7959,
+    "pearson": 0.6809,
+    "rmse": 1.108
+  },
+  {
+    "task": "binding_affinity_probe",
+    "n": 17885,
+    "spearman": 0.7964,
+    "pearson": 0.6745,
+    "rmse": 0.9644
+  },
+  {
+    "task": "binding_ec50",
+    "n": 49,
+    "spearman": 0.0882,
+    "pearson": 0.1467,
+    "rmse": 1.4329
+  },
+  {
+    "task": "binding_ic50",
+    "n": 1445,
+    "spearman": 0.4747,
+    "pearson": 0.4666,
+    "rmse": 1.3799
+  },
+  {
+    "task": "binding_kd",
+    "n": 2321,
+    "spearman": 0.8417,
+    "pearson": 0.6236,
+    "rmse": 1.063
+  },
+  {
+    "task": "elution",
+    "n": 18324,
+    "auprc": 1.0,
+    "base_rate": 0.539,
+    "lift": 0.461,
+    "n_pos": 9876,
+    "n_neg": 8448,
+    "pos_mean": 2.494,
+    "neg_mean": -2.551,
+    "neg_above_min_pos": 0
+  },
+  {
+    "task": "excision",
+    "n": 16068,
+    "auprc": 0.9998,
+    "base_rate": 0.5,
+    "lift": 0.4998,
+    "n_pos": 8034,
+    "n_neg": 8034,
+    "pos_mean": 9.679,
+    "neg_mean": -8.33,
+    "neg_above_min_pos": 4827
+  },
+  {
+    "task": "foreignness",
+    "n": 17889,
+    "auprc": 0.6798,
+    "base_rate": 0.4135,
+    "lift": 0.2663,
+    "n_pos": 7397,
+    "n_neg": 10492,
+    "pos_mean": 0.606,
+    "neg_mean": -0.89,
+    "neg_above_min_pos": 10492
+  },
+  {
+    "task": "immunogenicity",
+    "n": 3419
+  },
+  {
+    "task": "koff",
+    "n": 7,
+    "spearman": 0.0714,
+    "pearson": 0.147,
+    "rmse": 0.8437
+  },
+  {
+    "task": "kon",
+    "n": 7,
+    "spearman": -0.1071,
+    "pearson": -0.1466,
+    "rmse": 1.8185
+  },
+  {
+    "task": "ms_detectability",
+    "n": 8034,
+    "auprc": 0.9071,
+    "base_rate": 0.9042,
+    "lift": 0.003,
+    "n_pos": 7264,
+    "n_neg": 770,
+    "pos_mean": 0.663,
+    "neg_mean": 0.671,
+    "neg_above_min_pos": 770
+  },
+  {
+    "task": "presentation",
+    "n": 18324,
+    "auprc": 1.0,
+    "base_rate": 0.539,
+    "lift": 0.461,
+    "n_pos": 9876,
+    "n_neg": 8448,
+    "pos_mean": 1.964,
+    "neg_mean": -2.69,
+    "neg_above_min_pos": 0
+  },
+  {
+    "task": "t_half",
+    "n": 1999,
+    "spearman": 0.166,
+    "pearson": 0.1197,
+    "rmse": 3.3847
+  },
+  {
+    "task": "tcell",
+    "n": 3419
+  },
+  {
+    "task": "tm",
+    "n": 26,
+    "spearman": 0.1399,
+    "pearson": 0.0978,
+    "rmse": 0.7932
+  }
+]

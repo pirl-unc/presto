@@ -68,8 +68,15 @@ bf16 autocast. 1,805 train / 452 val batches per epoch. ~48 min/epoch.
 
 ```
 Epoch 1/2: train_loss=1.5580, val_loss=0.6319, lr=1.76e-4
-Best val_loss: 0.6319
+Epoch 2/2: train_loss=0.9867, val_loss=0.6874, lr=3.0e-5
+Best val_loss: 0.6319  (epoch 1)
 ```
+
+**Validation loss rose in epoch 2 while training loss fell** -- 0.632 to 0.687
+against 1.558 to 0.987. Two epochs is too few to call it, but the reported best
+is epoch 1, so the second epoch made the model worse on held-out data and every
+metric below comes from the epoch-1 checkpoint. A longer run needs early
+stopping or a smaller LR, and should not assume more epochs help.
 
 ## What the metrics actually say
 
@@ -139,8 +146,9 @@ established by this run, and two of its headline numbers are traps:
 | file | what |
 |---|---|
 | `summary.json` | per-task held-out metrics |
-| `val_predictions.csv` | 127,101 per-example predictions (6.7 MB) |
-| `val_metrics.csv`, `metrics.csv` | per-epoch curves |
+| `val_task_summary.json` | per-task n, base rate, AUPRC, lift, and positive/negative score separation — the distilled form of the per-example dump, and what the AUPRC-vs-base-rate reading above is computed from |
+| `val_metrics.csv` | flat metric table |
+| `training_curve.json` | loss and LR per epoch |
 | `config.json`, `launch_argv.json` | resolved config and exact argv |
 | `mhc_sequence_coverage.csv` | resolution audit |
 | `probe_affinity_over_epochs.png` | probe tracking |
@@ -148,7 +156,20 @@ established by this run, and two of its headline numbers are traps:
 | `reproduce/launch_full_modality.sh` | variant adding the merged TSV |
 | `reproduce/source/train_remote.py` | launcher snapshot |
 
-Checkpoint `model.pt` (67 MB) stays in `brev_runs/presto-e2e-06/`, gitignored.
+**Raw artifacts, deliberately not committed** (gitignored, under
+`brev_runs/presto-e2e-06/`, and on the box at
+`/root/runplz-runs/20260829T195356Z-rc14-gcp-provision-train-dcb1b1bc/out`):
+
+| file | size | why it is not here |
+|---|---|---|
+| `val_predictions.csv` | 6.7 MB, 127,101 rows | Everything this experiment concluded from it is in `val_task_summary.json`. Committing it added 127k lines to a pull request whose actual change is ~5k. |
+| `metrics.csv` | 2,967 rows | Per-step logging; the per-epoch shape is in `training_curve.json`. |
+| `model.pt` | 67 MB | A plumbing run's checkpoint, superseded by five later architectural changes. |
+
+Regenerate any of them by re-running `reproduce/launch.sh`. Keep a raw dump
+only when a future experiment will actually re-read it -- per-example
+predictions earn their place when two runs are being compared example by
+example, which is not the case for a single plumbing validation.
 
 ## What it took to get here
 
