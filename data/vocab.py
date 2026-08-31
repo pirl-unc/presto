@@ -19,6 +19,39 @@ AA_VOCAB = [
     "<MISSING>",  # dedicated missing-value token
 ]
 
+#: Residues the tokenizer can actually encode, derived from AA_VOCAB so there
+#: is exactly one source of truth. `X` is included: it is a real placeholder for
+#: an unknown residue and has its own embedding.
+#:
+#: Anything outside this set cannot be represented at all. That includes both
+#: annotation junk ("YXGEVXVSV + INDIST(X2, X6)") and genuine but unmodelled
+#: residues -- selenocysteine `U` appears in real human selenoproteins and
+#: reached the tokenizer through hitlist flanks, aborting training mid-epoch.
+ENCODABLE_RESIDUES = frozenset(
+    token for token in AA_VOCAB if len(token) == 1
+)
+
+
+def is_encodable_sequence(sequence: str) -> bool:
+    """True when every residue can be tokenized. Empty is not encodable."""
+    return bool(sequence) and not (set(sequence) - ENCODABLE_RESIDUES)
+
+
+def drop_unencodable_sequence(sequence: str) -> str:
+    """Blank an optional sequence that cannot be tokenized.
+
+    Optional context (flanks, auxiliary sequences) degrades to "absent" rather
+    than taking the whole row down with it: a flank with one unrepresentable
+    residue still came from a row whose peptide and label are perfectly good,
+    and many rows legitimately carry no flank at all. This mirrors what the
+    merged-TSV loader already does via `_normalize_optional_aa_sequence`.
+    """
+    text = str(sequence or "").strip().upper()
+    if not text or (set(text) - ENCODABLE_RESIDUES):
+        return ""
+    return text
+
+
 AA_TO_IDX = {aa: i for i, aa in enumerate(AA_VOCAB)}
 IDX_TO_AA = {i: aa for i, aa in enumerate(AA_VOCAB)}
 
@@ -672,6 +705,18 @@ PINNED_EXCISION_MACHINERY = tuple(sorted(EXCISION_P1_RULES))
 PROTEASOME_MIXTURE_COMPONENTS = ("trypsin", "chymotrypsin", "gluc")
 
 
+def default_machinery_for_class(mhc_class: Optional[str]) -> str:
+    """In-vivo machinery implied by MHC class.
+
+    Single source of truth. This rule previously existed in three places --
+    the collator, the model and the batch sampler -- and the model's copy had
+    drifted to keying off *predicted* class probabilities rather than the
+    declared class, so a caller that omitted `machinery` silently got a
+    different default from the one training used.
+    """
+    return "cathepsin" if str(mhc_class or "").strip().upper() == "II" else "proteasome"
+
+
 def excision_machinery_index(name: Optional[str]) -> int:
     """Resolve a machinery name to its vocabulary index."""
     token = str(name or "").strip().lower()
@@ -699,10 +744,48 @@ PEPTIDE_SOURCE_TO_IDX = {name: i for i, name in enumerate(PEPTIDE_SOURCES)}
 ENZYMATIC_DIGESTS = ["none", "trypsin", "chymotrypsin", "lysc", "gluc"]
 ENZYMATIC_DIGEST_TO_IDX = {name: i for i, name in enumerate(ENZYMATIC_DIGESTS)}
 
-# Tier 3: cytokine state. Default is `basal`, not "none": unperturbed cells
-# carry basal interferon tone rather than zero.
-PROCESSING_INDUCERS = ["basal", "ifn_gamma", "ifn_ab", "tnf_alpha", "tlr"]
-PROCESSING_INDUCER_TO_IDX = {name: i for i, name in enumerate(PROCESSING_INDUCERS)}
+# Tier 3: what was applied to the cells. "Stimulus" rather than "cytokine
+# state" because TLR agonists are PAMPs, not cytokines.
+#
+# `none` is a deliberate catch-all and it DOES conflate two things: cells with
+# no recorded treatment, and cells whose condition simply was not recorded.
+# That conflation is accepted rather than hidden. The earlier name for this
+# slot was `basal`, which asserted a specific biological state -- resting cells
+# do carry tonic interferon tone -- but we usually have no evidence for that
+# claim, only the absence of a recorded treatment. `none` says the weaker,
+# true thing. ~98.6% of class I elution rows land here, so treat it as "not
+# known to be stimulated", never as a measured resting state.
+#
+# `ifn_type1` covers IFN-alpha and IFN-beta together: both bind IFNAR1/2 and
+# drive the same ISGF3 program, including the immunoproteasome swap that
+# matters here. IFN-gamma is type II through a different receptor (IFNGR1/2),
+# so it stays separate. Spelled out rather than `ifn_ab`, which reads as
+# "antibody" in an immunology codebase.
+#
+# NB: `ifn_type1` and `tnf_alpha` currently match ZERO rows in the corpus --
+# only `none`, `ifn_gamma` and `tlr` occur. Their embedding rows therefore
+# receive no gradient. They are kept as declared headroom for data that does
+# distinguish them; see tests/test_stimulus_vocabulary.py, which pins that
+# fact so it stays a known gap rather than a silent one.
+PROCESSING_STIMULI = [
+    "none",
+    "ifn_gamma",
+    "ifn_type1",
+    "tnf_alpha",
+    "tlr",
+    # Lymphocyte activation (PMA/ionomycin, CD3/CD28, restimulation). Kept
+    # distinct from the interferon and TLR axes because it acts through
+    # PKC/NF-kB/NFAT rather than a PRR or interferon receptor. Folding it into
+    # either would assert a signalling route the experiments do not support.
+    # Appended last so existing stimulus indices are unchanged.
+    "cell_activation",
+]
+
+#: Superseded spellings, kept so older callers and saved records do not shift
+#: to a different embedding row. Index order above is unchanged, so no
+#: checkpoint migration is required.
+LEGACY_STIMULUS_ALIASES = {"basal": "none", "ifn_ab": "ifn_type1"}
+PROCESSING_STIMULUS_TO_IDX = {name: i for i, name in enumerate(PROCESSING_STIMULI)}
 
 # Tier 3: antigen-processing-machinery perturbation, grouped by mechanism.
 # Per-gene flags are too thin to learn individually (ERAP1 25 samples, TAP1 16,
@@ -740,14 +823,81 @@ APM_GENE_TO_GROUP: Dict[str, str] = {
     "irf2": "other", "nlrc5": "other",
 }
 
-# hitlist condition_category -> inducer. Cytokine treatment is an induction
+# hitlist condition_category -> stimulus. Cytokine treatment is an induction
 # state, not an APM lesion, so it lives on its own axis.
-CONDITION_TO_INDUCER: Dict[str, str] = {
+#: hitlist ``condition_category`` -> stimulus token.
+#:
+#: Every category hitlist emits is listed, including those that map to `none`.
+#: That is deliberate: an *absent* key means "hitlist grew a category we have
+#: not reviewed", which `is_unmapped_condition` reports. If categories that
+#: legitimately mean "no stimulus" were left out, that signal would be buried
+#: in noise and a genuinely new treatment would go unnoticed.
+CONDITION_TO_STIMULUS: Dict[str, str] = {
+    # --- direct cytokine treatment -------------------------------------
     "IFN_gamma_treatment": "ifn_gamma",
-    "IFN_alpha_treatment": "ifn_ab",
-    "IFN_beta_treatment": "ifn_ab",
+    "IFN_alpha_treatment": "ifn_type1",
+    "IFN_beta_treatment": "ifn_type1",
     "TNF_alpha_treatment": "tnf_alpha",
     "TLR_stimulation": "tlr",
+    # --- infection: endogenous induction, same processing consequence ---
+    #
+    # Viral infection is sensed by RIG-I/MDA5 (RNA) and cGAS-STING (DNA),
+    # driving autocrine/paracrine type I interferon and the ISG program --
+    # immunoproteasome subunits PSMB8/9/10, TAP1/2 and MHC-I upregulation.
+    # That is the same processing remodelling recombinant IFN-beta produces,
+    # which is what this axis encodes, so `ifn_type1` is the right bucket.
+    #
+    # It is induced rather than administered, and many of these viruses encode
+    # interferon antagonists (influenza NS1, HIV Vpu, HCMV, EBV), so the
+    # magnitude varies. The direction does not. hitlist's own categorization
+    # supports reading this as the stimulated arm: it buckets UV/heat-
+    # inactivated virus separately as `virus_inactivated_control`, which is the
+    # paired comparator and maps to `none` below.
+    "infection_viral": "ifn_type1",
+    # Listeria, Salmonella, Chlamydia, Pseudomonas, Mycobacterium, Borrelia,
+    # Theileria, Toxoplasma, Leishmania, Plasmodium -- the organisms hitlist
+    # matches here. All engage TLRs (LPS/TLR4 for the gram-negatives,
+    # lipoproteins/TLR2 for Borrelia and Mtb, flagellin/TLR5). Several
+    # intracellular ones also induce type I IFN via cytosolic sensing, but TLR
+    # engagement is what the set shares.
+    "infection_bacterial_or_parasite": "tlr",
+    # PMA/ionomycin, CD3/CD28, in vitro activation, restimulation.
+    "cell_activation": "cell_activation",
+    # --- categories that genuinely mean "no stimulus applied" ----------
+    "unperturbed": "none",
+    # The control arm of an infection study. UV/heat-inactivated virions still
+    # carry some PAMPs, so this is not perfectly inert, but it is the
+    # experimenters' intended comparator for `infection_viral` above -- and
+    # pairing the two is what gives this axis a real contrast.
+    "virus_inactivated_control": "none",
+    # Vector-based gene delivery and plasmid transfection. Immunologically not
+    # an infection, and the manipulation is the experimental variable rather
+    # than a processing stimulus.
+    "transduction": "none",
+    "transfection": "none",
+    "CIITA_transduction": "none",
+    "transplant": "none",
+    "biomaterial_contact": "none",
+    "drug_exposure": "none",
+    "metabolic_stress": "none",
+    "labeling_control": "none",
+    "other_perturbation": "none",
+    # --- APM gene perturbations -----------------------------------------
+    # These name a knockout, not a stimulus. They are carried on the separate
+    # `apm_perturbation` axis (sourced from `apm_genes_perturbed`), verified
+    # populated -- e.g. ERAP1_perturbation rows arrive as `n_term_trimming`.
+    # Listed here only so they do not register as unreviewed categories.
+    "MHC-I_loss_B2M": "none",
+    "TAP_perturbation": "none",
+    "tapasin_perturbation": "none",
+    "ERAP1_perturbation": "none",
+    "HLA-DM_perturbation": "none",  # arrives as apm=class_ii_loading
+    "ERAP2_perturbation": "none",
+    "ERAP_inhibitor": "none",
+    "PLC_chaperone_perturbation": "none",
+    "immunoproteasome_perturbation": "none",
+    "proteasome_inhibitor": "none",
+    "cytokine_treatment_generic": "none",
 }
 
 
@@ -763,9 +913,17 @@ def enzymatic_digest_index(name: Optional[str]) -> int:
     )
 
 
-def processing_inducer_index(name: Optional[str]) -> int:
-    return PROCESSING_INDUCER_TO_IDX.get(
-        str(name or "").strip().lower(), PROCESSING_INDUCER_TO_IDX["basal"]
+def processing_stimulus_index(name: Optional[str]) -> int:
+    """Index for a stimulus token, resolving superseded spellings.
+
+    Legacy names are translated rather than silently defaulted: without this,
+    a saved record carrying `ifn_ab` would land on the `none` row and be
+    scored as an unstimulated sample.
+    """
+    token = str(name or "").strip().lower()
+    token = LEGACY_STIMULUS_ALIASES.get(token, token)
+    return PROCESSING_STIMULUS_TO_IDX.get(
+        token, PROCESSING_STIMULUS_TO_IDX["none"]
     )
 
 
@@ -801,5 +959,25 @@ def apm_group_for_genes(genes: Optional[Any]) -> str:
     return "other"
 
 
-def inducer_for_condition(condition: Optional[str]) -> str:
-    return CONDITION_TO_INDUCER.get(str(condition or "").strip(), "basal")
+def stimulus_for_condition(condition: Optional[str]) -> str:
+    """Map a hitlist ``condition_category`` to a stimulus token.
+
+    Unmapped and missing conditions both fall back to ``none``. That is the
+    accepted conflation described on PROCESSING_STIMULI -- but an unmapped
+    *non-empty* category is different from a missing one: it means hitlist grew
+    a condition this table does not know about, and silently folding it into
+    ``none`` would hide a real treatment. Callers that care can detect this
+    with :func:`is_unmapped_condition`.
+    """
+    return CONDITION_TO_STIMULUS.get(str(condition or "").strip(), "none")
+
+
+def is_unmapped_condition(condition: Optional[str]) -> bool:
+    """True when a condition was recorded but this table has no entry for it.
+
+    Distinguishes "nobody wrote anything down" from "hitlist added a treatment
+    category we have not mapped yet". The second is a maintenance signal: it
+    means real stimulated samples are being scored as unstimulated.
+    """
+    text = str(condition or "").strip()
+    return bool(text) and text not in CONDITION_TO_STIMULUS

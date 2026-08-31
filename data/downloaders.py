@@ -453,7 +453,9 @@ def _get_remote_size(url: str, timeout: int = 10) -> Optional[int]:
         content_length = response.headers.get('content-length')
         if content_length:
             return int(content_length)
-    except Exception:
+    except (urllib.error.URLError, OSError, ValueError):
+        # Best-effort content-length probe over the network; a failure here is
+        # not informative. Narrowed so a bug in this function still surfaces.
         pass
     return None
 

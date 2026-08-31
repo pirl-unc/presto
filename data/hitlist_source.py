@@ -26,7 +26,13 @@ from __future__ import annotations
 import random
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
-from .vocab import apm_group_for_genes, inducer_for_condition
+from .vocab import (
+    apm_group_for_genes,
+    drop_unencodable_sequence,
+    is_unmapped_condition,
+    stimulus_for_condition,
+    is_encodable_sequence,
+)
 from .loaders import (
     BindingRecord,
     ElutionRecord,
@@ -160,6 +166,43 @@ def _select_best_mapping(frame):
     return ordered.drop_duplicates(subset=["evidence_row_id"], keep="first")
 
 
+def _iter_row_dicts(frame, chunk_size: int = 50_000):
+    """Yield row dicts without materializing the whole frame at once.
+
+    `frame.to_dict("records")` builds one dict per row for the entire table
+    before the loop starts -- on the full corpus that is ~750k dicts held
+    simultaneously, which undoes the column pruning done upstream to keep the
+    load within memory. Chunking caps the peak at `chunk_size` dicts while
+    keeping the `.get()` access the callers are written against.
+    """
+    n_rows = len(frame)
+    for start in range(0, n_rows, chunk_size):
+        chunk = frame.iloc[start : start + chunk_size]
+        for row in chunk.to_dict("records"):
+            yield row
+
+
+# Peptide and flank admissibility both defer to the tokenizer vocab via
+# `presto.data.vocab`, so there is one source of truth rather than a second,
+# subtly different residue set here. An earlier version of this guard used the
+# 20 canonical residues and so rejected `X`, which the tokenizer represents
+# perfectly well -- needlessly dropping ~51 usable elution rows.
+def normalize_ingested_peptide(peptide: Optional[str]) -> str:
+    """Upper-case a peptide and return "" if it cannot be tokenized.
+
+    Upper-casing first is the point: the tokenizer upper-cases internally, so a
+    lowercase peptide encodes perfectly well, but testing the raw string
+    against an upper-case residue set rejected it and dropped the whole row.
+    The flank path already normalized case; peptides did not, so the two
+    disagreed about identical input.
+
+    Peptides are targets, so an unrepresentable residue drops the row: unlike
+    a flank, the epitope cannot degrade to "absent".
+    """
+    text = str(peptide or "").strip().upper()
+    return text if is_encodable_sequence(text) else ""
+
+
 def load_records_from_hitlist(
     *,
     max_binding: Optional[int] = None,
@@ -239,8 +282,10 @@ def load_records_from_hitlist(
     skipped_no_value = 0
     skipped_unroutable = 0
     skipped_bad_unit = 0
+    skipped_noncanonical_peptide = 0
+    unmapped_conditions: Dict[str, int] = {}
 
-    for row in binding_frame.to_dict("records"):
+    for row in _iter_row_dicts(binding_frame):
         response = _clean(row.get("response_measured"))
         raw_value = row.get("quantitative_value")
         try:
@@ -263,12 +308,17 @@ def load_records_from_hitlist(
                 skipped_bad_unit += 1
                 continue
 
+        peptide = normalize_ingested_peptide(row.get("peptide"))
+        if not peptide:
+            skipped_noncanonical_peptide += 1
+            continue
+
         allele = _clean(row.get("mhc_restriction"))
         allele_set = _split_allele_set(row.get("mhc_allele_set"))
         qualifier = _qualifier_from_inequality(row.get("measurement_inequality"))
         assay_method = _clean(row.get("assay_method")) or None
         common = dict(
-            peptide=_clean(row.get("peptide")),
+            peptide=peptide,
             mhc_allele=allele,
             mhc_class=_clean(row.get("mhc_class")) or None,
             species=_clean(row.get("host")) or None,
@@ -285,8 +335,8 @@ def load_records_from_hitlist(
                     measurement_type=response,
                     assay_type=response,
                     assay_method=assay_method,
-                    flank_n=_clean(row.get("n_flank")),
-                    flank_c=_clean(row.get("c_flank")),
+                    flank_n=drop_unencodable_sequence(row.get("n_flank")),
+                    flank_c=drop_unencodable_sequence(row.get("c_flank")),
                     **common,
                 )
             )
@@ -335,7 +385,7 @@ def load_records_from_hitlist(
         else:
             skipped_unroutable += 1
 
-    for row in ms_frame.to_dict("records"):
+    for row in _iter_row_dicts(ms_frame):
         alleles = _split_allele_set(row.get("mhc_allele_set"))
         if not alleles:
             single = _clean(row.get("mhc_restriction"))
@@ -345,14 +395,28 @@ def load_records_from_hitlist(
             # Matches the merged-TSV loader, which drops elution rows with no
             # resolvable allele.
             continue
+        peptide = normalize_ingested_peptide(row.get("peptide"))
+        if not peptide:
+            skipped_noncanonical_peptide += 1
+            continue
+        # An unmapped-but-recorded condition means hitlist grew a treatment
+        # category CONDITION_TO_STIMULUS does not know. It still falls back to
+        # `none`, but counting it keeps that from being invisible: silently
+        # scoring genuinely stimulated samples as unstimulated is the failure
+        # mode worth catching.
+        condition_category = _clean(row.get("condition_category"))
+        if is_unmapped_condition(condition_category):
+            unmapped_conditions[condition_category] = (
+                unmapped_conditions.get(condition_category, 0) + 1
+            )
         elution_records.append(
             ElutionRecord(
-                peptide=_clean(row.get("peptide")),
+                peptide=peptide,
                 alleles=alleles,
                 detected=True,
-                flank_n=_clean(row.get("n_flank")),
-                flank_c=_clean(row.get("c_flank")),
-                inducer=inducer_for_condition(_clean(row.get("condition_category"))),
+                flank_n=drop_unencodable_sequence(row.get("n_flank")),
+                flank_c=drop_unencodable_sequence(row.get("c_flank")),
+                stimulus=stimulus_for_condition(condition_category),
                 apm_perturbation=apm_group_for_genes(
                     _clean(row.get("apm_genes_perturbed"))
                 ),
@@ -390,6 +454,8 @@ def load_records_from_hitlist(
         "skipped_no_numeric_value": skipped_no_value,
         "skipped_unroutable_response": skipped_unroutable,
         "skipped_unexpected_unit": skipped_bad_unit,
+        "skipped_noncanonical_peptide": skipped_noncanonical_peptide,
+        "unmapped_condition_categories": dict(unmapped_conditions),
         "stability_assay_methods": _method_counts(stability_records),
         "kinetics_assay_methods": _method_counts(kinetics_records),
         "flank_coverage": {

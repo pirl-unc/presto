@@ -289,7 +289,10 @@ def _normalize_allele_token(token: str) -> str:
     ):
         try:
             value = normalize_allele_name(value)
-        except Exception:
+        except ValueError:
+            # Unparseable; keep the original spelling. A missing-mhcgnomes
+            # RuntimeError must propagate rather than silently disabling
+            # normalization for the entire index.
             pass
 
     upper = value.upper()
@@ -1010,7 +1013,10 @@ def _build_alias_resolution(
     for rec in records.values():
         try:
             group_key = normalize_allele_name(rec.normalized)
-        except Exception:
+        except ValueError:
+            # This record is dropped from the two-field grouping. Narrowed so
+            # a missing mhcgnomes drops *everything* loudly instead of
+            # quietly yielding an empty grouping that looks legitimate.
             continue
         two_field_groups.setdefault(group_key, []).append(rec)
 

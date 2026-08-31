@@ -14,9 +14,9 @@ from presto.data.vocab import (
     AA_TO_IDX,
     APM_PERTURBATION_TO_IDX,
     PEPTIDE_SOURCE_TO_IDX,
-    PROCESSING_INDUCER_TO_IDX,
+    PROCESSING_STIMULUS_TO_IDX,
     apm_group_for_genes,
-    inducer_for_condition,
+    stimulus_for_condition,
 )
 from presto.models.presto import Presto
 
@@ -25,16 +25,16 @@ def _encode(seq):
     return torch.tensor([[AA_TO_IDX[c] for c in seq]], dtype=torch.long)
 
 
-def _provenance(source, apm="none", inducer="basal"):
+def _provenance(source, apm="none", stimulus="none"):
     return {
         "peptide_source_idx": torch.tensor([PEPTIDE_SOURCE_TO_IDX[source]]),
         "apm_perturbation_idx": torch.tensor([APM_PERTURBATION_TO_IDX[apm]]),
-        "processing_inducer_idx": torch.tensor([PROCESSING_INDUCER_TO_IDX[inducer]]),
+        "processing_stimulus_idx": torch.tensor([PROCESSING_STIMULUS_TO_IDX[stimulus]]),
     }
 
 
 def _run(model, peptide="SIINKEKAK", source="protein", apm="none",
-         inducer="basal", machinery="trypsin"):
+         stimulus="none", machinery="trypsin"):
     return model(
         pep_tok=_encode(peptide),
         mhc_a_tok=torch.randint(4, 24, (1, 40), generator=torch.Generator().manual_seed(0)),
@@ -43,7 +43,7 @@ def _run(model, peptide="SIINKEKAK", source="protein", apm="none",
         flank_c_tok=_encode("AAAAA"),
         mhc_class="I",
         machinery=[machinery],
-        provenance=_provenance(source, apm, inducer),
+        provenance=_provenance(source, apm, stimulus),
     )
 
 
@@ -109,15 +109,15 @@ class TestInVivoGradient:
         """Structural check only -- see the class docstring."""
         net = Presto(d_model=32, n_layers=2, n_heads=4)
         out = _run(net, source="mhc", apm="n_term_trimming",
-                   inducer="ifn_gamma", machinery="proteasome")
+                   stimulus="ifn_gamma", machinery="proteasome")
         F.binary_cross_entropy_with_logits(out["excision_logit"], torch.ones(1)).backward()
 
         head = net.excision_head
         erap = APM_PERTURBATION_TO_IDX["n_term_trimming"]
         assert head.invivo_profile_n.grad[erap].abs().sum().item() > 0
         assert head.invivo_profile_c.grad[erap].abs().sum().item() > 0
-        assert head.inducer_profile_c.grad[
-            PROCESSING_INDUCER_TO_IDX["ifn_gamma"]
+        assert head.stimulus_profile_c.grad[
+            PROCESSING_STIMULUS_TO_IDX["ifn_gamma"]
         ].abs().sum().item() > 0
 
     def test_real_pipeline_still_starves_the_in_vivo_path(self):
@@ -142,7 +142,7 @@ class TestInVivoGradient:
             ],
             elution_records=[
                 ElutionRecord(peptide="LLDGTATLRF", alleles=["HLA-A*02:01"],
-                              detected=True, inducer="ifn_gamma",
+                              detected=True, stimulus="ifn_gamma",
                               apm_perturbation="n_term_trimming"),
             ],
             mhc_sequences={"HLA-A*02:01": mhc_seq},
@@ -155,7 +155,7 @@ class TestInVivoGradient:
 
         head = net.excision_head
         for name in ("invivo_profile_c", "invivo_profile_n",
-                     "inducer_profile_c", "invivo_bias"):
+                     "stimulus_profile_c", "invivo_bias"):
             grad = getattr(head, name).grad
             total = 0.0 if grad is None else grad.abs().sum().item()
             assert total == 0.0, (
@@ -193,15 +193,22 @@ class TestConditionMapping:
 
     @pytest.mark.parametrize("condition,expected", [
         ("IFN_gamma_treatment", "ifn_gamma"),
-        ("IFN_alpha_treatment", "ifn_ab"),
+        ("IFN_alpha_treatment", "ifn_type1"),
         ("TNF_alpha_treatment", "tnf_alpha"),
-        ("unperturbed", "basal"),
-        ("", "basal"),
+        ("unperturbed", "none"),
+        ("", "none"),
     ])
-    def test_conditions_map_to_inducers(self, condition, expected):
-        assert inducer_for_condition(condition) == expected
+    def test_conditions_map_to_stimuli(self, condition, expected):
+        assert stimulus_for_condition(condition) == expected
 
-    def test_unperturbed_defaults_to_basal_not_zero(self):
-        """Unperturbed cells carry basal interferon tone, not none."""
-        assert inducer_for_condition(None) == "basal"
-        assert PROCESSING_INDUCER_TO_IDX["basal"] == 0
+    def test_unrecorded_condition_defaults_to_none(self):
+        """`none` is a catch-all, not a claim about interferon tone.
+
+        This previously asserted "unperturbed cells carry basal interferon
+        tone" -- the overclaim the basal -> none rename exists to retire.
+        Resting cells do carry tonic signalling, but the corpus rarely records
+        whether a sample was resting at all, so the token asserts only the
+        absence of a recorded treatment.
+        """
+        assert stimulus_for_condition(None) == "none"
+        assert PROCESSING_STIMULUS_TO_IDX["none"] == 0

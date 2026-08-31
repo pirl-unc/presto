@@ -77,7 +77,7 @@ extracted intact and denatured before any enzyme touched it.
 |---|---|---|
 | `host_species` | ~50 values | `host` (100% populated) |
 | `mhc_species` | 21 values | `mhc_species` (100%) — differs from `host_species` for transfectants |
-| `inducer` | `{basal, ifn_gamma, ifn_ab, tnf_alpha, tlr}` | `condition_category`; **default `basal`, not zero** — unperturbed cells carry basal interferon tone |
+| `stimulus` | `{basal, ifn_gamma, ifn_ab, tnf_alpha, tlr}` | `condition_category`; **default `basal`, not zero** — unperturbed cells carry basal interferon tone |
 | `apm_perturbation` | see below | `apm_*` / `condition_category` |
 
 `apm_perturbation` is grouped by **mechanism**, not by gene. Per-gene flags exist
