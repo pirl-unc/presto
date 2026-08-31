@@ -9029,3 +9029,55 @@ Suite: 928 -> 1000 tests, green across repeated runs.
 - `t_half` per-method output structure (censoring is done; the six-method offset is not).
 - In-silico digest negatives (hitlist#361); sample-anchor coverage (hitlist#362).
 - Decide whether `processing_logit` becomes a view of `excision_logit`.
+
+---
+
+## Review: PR series splitting the unvalidated blob (2026-08-31)
+
+Five PRs off `main`, each reviewed and merged in order. Result: **1298 tests
+passing** (from 1178), **lint clean** (from 4 long-standing errors).
+
+| PR | What | Outcome |
+|---|---|---|
+| #7 | Gradient coverage measured and pinned | merged |
+| #8 | Ingest curation: honest conditions, valid sequences, harder decoys | merged |
+| #9 | Many-output contract (+ provenance axes, folded in) | merged |
+| #10 | Remote training: launcher, serving skew, guards | merged |
+| #11 | Legacy strip: dead TCR module, checkpoint migrations, aliases | merged |
+
+### Defects found in self-review, not by tests
+
+- **20,220 rows scored as unstimulated.** `SPPL3_perturbation` (14,906) and
+  `IRF2_perturbation` (5,314) were missing from `CONDITION_TO_STIMULUS`. The
+  detector existed and its count was already in the ingest stats -- nothing
+  read the key. A detector with no alarm.
+- **6,159 rows asserted something known false.** `cytokine_treatment_generic`
+  mapped to `none` ("not known to be stimulated") when a cytokine demonstrably
+  was applied. Given its own `cytokine_unspecified` token rather than guessed at.
+- **Train/serve skew.** The predictor kept 30 flank residues and right-truncated
+  the N-flank; the collator keeps 25 and left-truncates. Serving scored a
+  different junction residue than training. Silent by construction.
+- **Three-way topology default disagreement.** `Presto.__init__` and
+  `train_iedb` defaulted to `collapsed`, `train_remote` to `expanded` -- the
+  same command trained a different architecture depending on where it ran.
+- **Two "DesignAlignment" tests asserted the wrong topology's latent names**,
+  passing only because `collapsed` was the default.
+- **An empty allowlist category** (`COMPUTED_BUT_UNSUPERVISED`) still unioned
+  into `ALLOWED_DEAD`, hidden because the rewrite dropped the PR-1 test that
+  checks for exactly that.
+- **Docs specified a vocabulary the code had dropped.** No test compared them;
+  one does now.
+
+Every new pin was verified to **fail against the defect it guards** rather than
+pass vacuously -- a discipline adopted after writing three tests earlier in this
+work that validated an assumption instead of the real path.
+
+### Deliberately not done
+
+- **The collapsed topology still exists.** Deleting it is an architecture
+  change, not a cleanup, and it is the only comparison baseline for `expanded`.
+  Removing it immediately before the outstanding validation run would confound
+  the result with five PRs of other changes. ~20 sites; easy once validated.
+- **No validation training run.** The brev baseline predates the whole series,
+  so it no longer describes this code. Needs a single cheap GPU and an idle
+  check on the shared org box before provisioning.
