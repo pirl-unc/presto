@@ -96,9 +96,25 @@ class BulkMSRecord:
     acquisition: Dict[str, Any] = field(default_factory=dict)
 
 
+#: Case-folded view of ENZYME_TO_MACHINERY, built once.
+_ENZYME_TO_MACHINERY_FOLDED = {
+    key.strip().lower(): value for key, value in ENZYME_TO_MACHINERY.items()
+}
+
+
 def machinery_for_enzyme(enzyme: str) -> str:
-    """Map a hitlist ``digestion_enzyme`` string to a machinery name."""
-    return ENZYME_TO_MACHINERY.get(str(enzyme or "").strip(), "unknown")
+    """Map a hitlist ``digestion_enzyme`` string to a machinery name.
+
+    Case-insensitive. The lookup used to be exact, and the corpus happens to
+    write "Trypsin/P (cleaves K/R except before P)" and "LysC" with exactly the
+    capitalization in the table -- so it worked, by luck. A lowercase export, a
+    hitlist schema change or a hand-written test row would have mapped every
+    enzyme to "unknown", and rows with unknown machinery are silently skipped,
+    so the entire shotgun corpus would vanish with no error.
+    """
+    return _ENZYME_TO_MACHINERY_FOLDED.get(
+        str(enzyme or "").strip().lower(), "unknown"
+    )
 
 
 def detectability_from_depth(

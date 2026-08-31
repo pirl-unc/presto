@@ -161,10 +161,13 @@ hitlist migration, which supplies `n_flank`/`c_flank` at ~98%.
 | Heads | `tcell_logit`, `immunogenicity_logit`, plus six context CE heads |
 | Losses | `tcell`, `immunogenicity` (`bce`); `tcell_assay_method`, `tcell_assay_readout`, `tcell_apc_type`, `tcell_culture_context`, `tcell_stim_context`, `tcell_peptide_format` (`ce`) |
 
-`TCellAssayHead` consumes a `tcell_context` dict of six categorical embeddings and uses
-it for a bias, a multiplicative gate, and mixing gates. This is **more context-conditioned
-than the outputs-only contract allows** and is flagged as legacy in the head's own
-docstring, in the contract, and in `design.md`. Do not treat it as precedent.
+`TCellAssayHead` no longer takes assay context. It used to accept six categorical
+indices and use them for a bias, a multiplicative gate and mixing gates -- the
+legacy conditioning this document previously flagged as "more context-conditioned
+than the outputs-only contract allows". Those arguments are deleted from
+`forward`, so the head cannot be conditioned even by a caller that tries; the
+prediction is the context-free marginal and `predict_panel` supplies per-condition
+structure as output tracks. Gap 7, closed.
 
 ### 3.7 TCR evidence **[impl]**
 

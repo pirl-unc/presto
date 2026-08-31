@@ -73,7 +73,7 @@ Canonical vector keys:
 |-----|-------------------|--------------|------------|
 | `mhc_a_vec` | MHC alpha chain representation | Masked mean of alpha-chain token hidden states from base encoder | S4.3 |
 | `mhc_b_vec` | MHC beta chain representation | Masked mean of beta-chain token hidden states from base encoder | S4.3 |
-| `core_context_vec` | Soft-weighted summary of peptide hidden states over the predicted binding core | Attention-pooled using core-pointer probabilities over peptide tokens | S6.3 |
+| `core_context_vec` | **[not built]** Soft-weighted summary of peptide hidden states over the predicted binding core | Specified in S6.3; no implementation exists. Verified 2026-08-31: zero code references. | S6.3 |
 | `tcr_vec` | TCR representation (future) | Planned TCR encoder [TCR_CLS] output (currently not active) | `tcr_spec.md` |
 | `pmhc_vec` | Overall pMHC complex embedding for retrieval / similarity | Learned projection from presentation latent vectors | S9.7 |
 | `latent_vecs` | Dict mapping latent name to its computed vector | Each produced by the latent DAG cross-attention mechanism | S7.3 |
@@ -607,7 +607,12 @@ def compute_soft_membership(core_start_probs, core_width, L_pep):
 
 (In practice: vectorized, not loops.)
 
-## 6.3 Core Context Vector (`core_context_vec`)
+## 6.3 Core Context Vector (`core_context_vec`) **[specified, not built]**
+
+> This section describes a component that does not exist. There are no code
+> references to `core_context_vec` or `core_weights` anywhere in the package.
+> Kept as a design record; do not read the formula below as a description of
+> what the model computes.
 
 Soft-attention-weighted average of peptide hidden states, where weights
 come from the MHC-informed core-start predictor:

@@ -296,3 +296,61 @@ def test_collect_applies_the_same_target_transform_as_the_loss():
     metrics = accumulators["binding"].metrics()
     assert metrics["spearman"] == pytest.approx(1.0)
     assert metrics["rmse"] == pytest.approx(0.0, abs=1e-6)
+
+
+class TestProbabilityColumn:
+    """`y_pred` is a logit for binary tasks; `y_prob` says what it means.
+
+    The metrics were always right -- `binary_metrics` applies the logistic
+    transform before thresholding -- but the dump carried raw logits under a
+    column named `y_pred`, so a plausible-looking calibration or Brier
+    computation over that file would have been silently wrong. Ranges like
+    [-7.38, 3.95] in a column read as probabilities are the tell.
+    """
+
+    def _accumulator(self, loss_type, preds):
+        from presto.training.holdout_eval import TaskPredictionAccumulator
+
+        acc = TaskPredictionAccumulator("t", loss_type)
+        acc.add([1.0] * len(preds), preds, [1.0] * len(preds),
+                [f"s{i}" for i in range(len(preds))])
+        return acc
+
+    def test_binary_tasks_carry_a_probability(self):
+        rows = self._accumulator("bce", [-7.38, 0.0, 3.95]).rows()
+        probs = [r["y_prob"] for r in rows]
+        assert all(0.0 <= p <= 1.0 for p in probs)
+        assert probs[1] == pytest.approx(0.5)
+
+    def test_the_probability_is_the_logistic_of_the_logit(self):
+        import math
+
+        rows = self._accumulator("bce", [-2.0, 1.5]).rows()
+        for row in rows:
+            expected = 1.0 / (1.0 + math.exp(-row["y_pred"]))
+            assert row["y_prob"] == pytest.approx(expected)
+
+    def test_regression_tasks_leave_it_empty(self):
+        """No logistic transform applies, so inventing one would mislead."""
+        rows = self._accumulator("mse", [2.5, -1.0]).rows()
+        assert all(r["y_prob"] == "" for r in rows)
+
+    def test_extreme_logits_do_not_overflow(self):
+        rows = self._accumulator("bce", [-800.0, 800.0]).rows()
+        assert rows[0]["y_prob"] == pytest.approx(0.0)
+        assert rows[1]["y_prob"] == pytest.approx(1.0)
+
+    def test_the_column_is_written_to_the_csv(self):
+        import csv
+        import tempfile
+        from pathlib import Path
+
+        from presto.training.holdout_eval import write_holdout_artifacts
+
+        with tempfile.TemporaryDirectory() as tmp:
+            write_holdout_artifacts(
+                Path(tmp), {"t": self._accumulator("bce", [0.0, 1.0])}
+            )
+            with (Path(tmp) / "val_predictions.csv").open() as handle:
+                header = next(csv.reader(handle))
+        assert "y_prob" in header

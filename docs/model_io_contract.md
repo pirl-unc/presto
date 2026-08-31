@@ -77,7 +77,7 @@ extracted intact and denatured before any enzyme touched it.
 |---|---|---|
 | `host_species` | ~50 values | `host` (100% populated) |
 | `mhc_species` | 21 values | `mhc_species` (100%) — differs from `host_species` for transfectants |
-| `stimulus` | `{none, ifn_gamma, ifn_type1, tnf_alpha, tlr}` | `condition_category`; **`none` is a catch-all** covering both "no treatment recorded" and "condition not recorded" (~98.6% of class I rows). It asserts no biological state — the earlier name `basal` overclaimed a measured resting tone. `ifn_type1` merges IFN-α/β (shared IFNAR1/2 receptor and ISGF3 program); IFN-γ is type II and stays separate. `ifn_type1` and `tnf_alpha` currently match **zero** corpus rows, so those embedding rows are untrained — pinned in `tests/test_stimulus_vocabulary.py` |
+| `stimulus` | `{none, ifn_gamma, ifn_type1, tnf_alpha, tlr}` | `condition_category`; **`none` is a catch-all** covering both "no treatment recorded" and "condition not recorded" (~98.6% of class I rows). It asserts no biological state — the earlier name `basal` overclaimed a measured resting tone. `ifn_type1` merges IFN-α/β (shared IFNAR1/2 receptor and ISGF3 program); IFN-γ is type II and stays separate. `ifn_type1` carries 21,394 rows once infection categories are mapped to it (viral infection drives endogenous type I IFN); `tnf_alpha` still matches **zero**, so that row alone is untrained — pinned in `tests/test_stimulus_vocabulary.py` |
 | `apm_perturbation` | see below | `apm_*` / `condition_category` |
 
 `apm_perturbation` is grouped by **mechanism**, not by gene. Per-gene flags exist
@@ -183,15 +183,15 @@ identification argument in §6.
 Both corpora factorize identically:
 
 ```
-logit P(observed) = liberation(peptide, protein | source, digest, conditions)
+logit P(observed) = excision(peptide, protein | source, digest, conditions)
                   + [ MHC cascade ]          # peptide_source = mhc only
                   + detect(peptide | acquisition)
                   + abundance(protein | sample)
 ```
 
 ```
-source=protein:  liberation(digest) ──────────────────────────→ detect → observed
-source=mhc:      liberation(conditions) → TAP → bind → present → detect → observed
+source=protein:  excision(digest) ────────────────────────────→ detect → observed
+source=mhc:      excision(conditions)   → TAP → bind → present → detect → observed
                                                                    ↑
                                                     shared, and identifiable only
                                                     because the top branch has no
@@ -221,10 +221,14 @@ Testable statements, not aspirations. Those marked ✓ have tests today.
 2. ✓ Peptide-only latents are exactly invariant to MHC and flank substitution.
 3. ✓ Presentation has no token access and always has dependencies (else the empty-KV
    fallback would expose it to token 0).
-4. ✓ Assay descriptors reach output heads only; `binding_context` is first read after
-   the latent DAG.
+4. ✓ Assay descriptors are output tracks only. `binding_context` is now accepted and
+   *ignored* — the input-side embeddings were deleted, so it cannot be read at all,
+   and `tests/test_many_output_contract.py` asserts the prediction does not move when
+   it is supplied.
 5. *(planned)* `peptide_source` is unreachable from binding, presentation and recognition.
-6. *(planned)* Tier 3 conditions reach the processing path only.
+6. ✓ Tier 3 conditions reach the processing path only, as biological state --
+   `apc_cell_class`, `apm_perturbation` and `processing_stimulus`. These are inputs
+   by design; see the causal test in `assay_modeling_contract.md`.
 7. *(planned)* Tier 4 expression enters as an observation offset only.
 8. ✓ A row missing a label contributes zero gradient to that task.
 
