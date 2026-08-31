@@ -50,9 +50,25 @@ SEQS = {
 # point: "dead" is not one condition, and the four kinds want different fixes.
 # ---------------------------------------------------------------------------
 
-#: (D) Structurally masked by design. `p1_profile_c` is overridden by
-#: `pinned_mask` wherever a protease's P1 rule is pinned, and the proteasome
-#: mixture needs rows from more than one component to have anything to weigh.
+#: (D) Unreachable by the intersection of branch and machinery -- and harmless.
+#:
+#: These four belong to the *in-vitro* excision branch, which is selected only
+#: for protein-source (shotgun) rows. On those rows the machinery is always one
+#: of the four proteases, and all four are pinned to their known P1 rules:
+#:
+#:     unknown / proteasome / cathepsin   unpinned, but in-vivo -- these rows
+#:                                        use invivo_profile_c, not p1_profile_c
+#:     trypsin / chymotrypsin / lysc /    pinned, so the learned rows are
+#:     gluc                               overridden wherever they are read
+#:
+#: So the free rows are never selected and the selected rows are always
+#: overridden. Calling this "masked by design" was imprecise: nothing masks
+#: them deliberately, the reachable set is simply empty.
+#:
+#: Left allocated rather than reshaped. Shrinking `p1_profile_c` to the four
+#: in-vitro machineries would need index remapping through every call site for
+#: 196 parameters at d_model=32, and the in-vitro P1 rules are *known* -- that
+#: is why they are pinned -- so there is nothing to learn there anyway.
 BY_DESIGN = {
     "excision_head.p1_profile_c",
     "excision_head.p1_prime_penalty",
@@ -376,16 +392,27 @@ class TestCategoriesAreDisjoint:
 # Every declared task must actually be supervised.
 # ---------------------------------------------------------------------------
 
-#: The one task with no data source anywhere in the pipeline.
+#: The one task with no data source -- and it does not need one.
 #:
-#: `core_start` wants gold-standard binding-core positions. `PrestoSample`
-#: has the field, but no record type carries it and no loader populates it, so
-#: the spec is declared against data that does not exist. Verified 2026-08-31
-#: by scanning every dataclass in `data/loaders.py`.
+#: `core_start` wants gold-standard binding-core positions. No record type
+#: carries them and no loader populates them, verified by scanning every
+#: dataclass in `data/loaders.py`.
 #:
-#: Kept as a spec rather than deleted because the head is a real design element
-#: and the labels are obtainable (structural alignments). If a loader ever
-#: supplies them, this entry goes and the test below tightens by one.
+#: That is not a gap, because **the register is already a learned latent**.
+#: The model enumerates every candidate register, scores each, softmaxes into
+#: `core_window_posterior_prob`, and marginalizes:
+#:
+#:     interaction_vec = sum(posterior * candidate_vec)
+#:
+#: so the binding prediction is an expectation over registers and gradient
+#: reaches the register scorer from the binding label alone. Measured: a class
+#: II binding row carrying no core label trains `core_window_score`,
+#: `core_window_prior` and `core_position_embed`. Registers scored per peptide:
+#: 1 for a class I 9mer, 3 for an 11mer, 7 for a 15mer, 12 for a 20mer.
+#:
+#: `core_start` would be a *sharpening* auxiliary on that latent, not a
+#: prerequisite. Kept as a spec in case structural alignments are ever
+#: available; nothing depends on it.
 TASKS_WITHOUT_A_DATA_SOURCE = {"core_start"}
 
 

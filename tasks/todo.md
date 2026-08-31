@@ -70,6 +70,14 @@ wrongly reported as closed — see `lessons.md`.
       AGENTS.md wants them in the experiment dir; committing 24 MB to history
       is a call for a human.
 
+## Notes
+
+- **The binding core is a learned latent, not a missing label.** The model
+  slides every register, scores it, and marginalizes over the posterior, so
+  the core is learned from binding and elution data alone -- 3 registers for a
+  class I 11mer, 7 for a class II 15mer, 12 for a 20mer. The unsupervised
+  `core_start` task would only sharpen it.
+
 ## Open — data and modelling
 
 - [ ] `t_half` per-method output structure. Censoring is done; the six-method
