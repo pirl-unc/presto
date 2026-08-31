@@ -1983,13 +1983,6 @@ def compute_loss(
             tcell_context=batch.tcell_context if batch.tcell_context else None,
             machinery=getattr(batch, "machinery_idx", None),
             provenance=getattr(batch, "provenance", None) or None,
-            # Per-row assay metadata. The collator builds this and the model
-            # accepts it, but the training loop never passed it, so the whole
-            # assay-conditioning path -- five embeddings plus factorized_proj --
-            # received no gradient in any run. Its purpose is to absorb
-            # assay-to-assay bias so affinities are comparable across sources,
-            # which is precisely what cannot be learned if it is never fed.
-            binding_context=getattr(batch, "binding_context", None) or None,
             return_binding_attention=return_binding_attention,
         )
         if profile_performance:
@@ -2057,6 +2050,45 @@ def compute_loss(
             supervised_losses[spec.name] = masked_loss
             supervised_loss_support[spec.name] = support
             output_metrics[f"batch_support_{spec.name}"] = support
+        # Assay panel: tie the observed assay's column to the measurement.
+        #
+        # The assay label is used only to *select which output is supervised*,
+        # which docs/assay_modeling_contract.md explicitly allows ("assay
+        # labels may choose supervision targets"). The model still predicts
+        # every column from peptide and MHC alone, so nothing about the assay
+        # reaches the input path.
+        #
+        # Without this the panel would be computed and read by nothing -- the
+        # exact "published but untrained" failure the rest of this work
+        # removed, which is how tests/test_gradient_coverage.py caught it.
+        panel_context = getattr(batch, "binding_context", None) or {}
+        bind_target = getattr(batch, "bind_target", None)
+        bind_mask = getattr(batch, "bind_mask", None)
+        if bind_target is not None and bind_mask is not None and panel_context:
+            panel_terms = []
+            target_flat = bind_target.reshape(-1).float().to(device)
+            mask_flat = bind_mask.reshape(-1).float().to(device)
+            for axis in ("assay_type", "assay_prep", "assay_geometry", "assay_readout"):
+                panel = outputs.get(f"binding_assay_panel_{axis}")
+                index = panel_context.get(f"{axis}_idx")
+                if panel is None or index is None:
+                    continue
+                index_long = index.reshape(-1).long().to(device)
+                if index_long.shape[0] != panel.shape[0]:
+                    continue
+                chosen = panel.gather(1, index_long.unsqueeze(1)).squeeze(1)
+                per_row = F.smooth_l1_loss(
+                    chosen, target_flat[: chosen.shape[0]], reduction="none"
+                )
+                denominator = mask_flat[: chosen.shape[0]].sum() + 1e-8
+                panel_terms.append(
+                    (per_row * mask_flat[: chosen.shape[0]]).sum() / denominator
+                )
+            if panel_terms:
+                supervised_losses["binding_assay_panel"] = (
+                    torch.stack(panel_terms).mean()
+                )
+
         if profile_performance:
             perf_metrics["perf_supervised_loss_sec"] = float(
                 time.perf_counter() - supervised_start

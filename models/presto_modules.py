@@ -217,6 +217,37 @@ class AffinityPredictor(nn.Module):
             if _uses_factorized
             else None
         )
+        # Output-side assay panel.
+        #
+        # docs/assay_modeling_contract.md forbids consuming assay-selector
+        # metadata as predictive input: "assay labels may not condition the
+        # predictive input path". Indexing an assay embedding by the observed
+        # value is precisely that -- at inference you would have to declare an
+        # assay before the model would return a number.
+        #
+        # The T-cell side already solved this (AssayHeads.predict_panel):
+        # sweep the axis embedding table to predict the observable under
+        # *every* value of the axis, and let the label choose only which output
+        # is supervised. This does the same for binding, turning the assay
+        # descriptors from input configuration into joint outputs.
+        self.assay_panel_axes = {
+            "assay_type": len(BINDING_ASSAY_TYPES),
+            "assay_prep": len(BINDING_ASSAY_PREP),
+            "assay_geometry": len(BINDING_ASSAY_GEOMETRY),
+            "assay_readout": len(BINDING_ASSAY_READOUT),
+        }
+        self.assay_panel_embed = nn.ModuleDict(
+            {
+                axis: nn.Embedding(size, _fac_embed_dim)
+                for axis, size in self.assay_panel_axes.items()
+            }
+        )
+        self.assay_panel_head = nn.Sequential(
+            nn.Linear(d_model + _fac_embed_dim, max(d_model // 2, 4)),
+            nn.GELU(),
+            nn.Linear(max(d_model // 2, 4), 1),
+        )
+
         factorized_context_dim = _fac_embed_dim * 4
         self.factorized_proj = (
             nn.Linear(factorized_context_dim, factorized_context_dim)
@@ -274,6 +305,35 @@ class AffinityPredictor(nn.Module):
         self.binding_probe_mix_logit = nn.Parameter(torch.tensor(math.log(3.0)))
         self.w_binding_class1_calibration = nn.Parameter(torch.tensor(0.2))
         self.w_binding_class2_calibration = nn.Parameter(torch.tensor(0.2))
+
+    def predict_assay_panel(
+        self, binding_affinity_vec: torch.Tensor
+    ) -> Dict[str, torch.Tensor]:
+        """Predicted KD offset under every value of every assay axis.
+
+        One tensor per axis, shaped ``[batch, n_values_for_that_axis]``.
+
+        The observed assay is deliberately not an argument. A caller asking
+        "what would this read as on a purified competitive radioactivity
+        assay" indexes the result; a training loop routes its loss to the
+        observed column. Neither conditions the input path, which is what
+        distinguishes this from an assay-context feature.
+        """
+        batch_size = binding_affinity_vec.shape[0]
+        panel: Dict[str, torch.Tensor] = {}
+        for axis, size in self.assay_panel_axes.items():
+            table = self.assay_panel_embed[axis].weight
+            expanded_vec = binding_affinity_vec.unsqueeze(1).expand(
+                batch_size, size, binding_affinity_vec.shape[-1]
+            )
+            expanded_axis = table.unsqueeze(0).expand(
+                batch_size, size, table.shape[-1]
+            )
+            joined = torch.cat([expanded_vec, expanded_axis], dim=-1)
+            panel[f"binding_assay_panel_{axis}"] = self.assay_panel_head(
+                joined
+            ).squeeze(-1)
+        return panel
 
     def forward(
         self,
@@ -335,6 +395,9 @@ class AffinityPredictor(nn.Module):
         else:
             sequence_summary_vec = binding_affinity_vec.new_zeros(binding_affinity_vec.shape)
         outputs["binding_sequence_summary_vec"] = sequence_summary_vec
+
+        # Joint assay panel. Swept, not indexed -- see predict_assay_panel.
+        outputs.update(self.predict_assay_panel(binding_affinity_vec))
 
         if self.binding_kinetic_input_mode == "affinity_vec":
             binding_input = binding_affinity_vec

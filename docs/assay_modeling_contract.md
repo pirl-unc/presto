@@ -74,3 +74,44 @@ For clarity:
 - affinity is already enforced as sequence-only in the main path
 - T-cell assay conditioning is still a legacy implementation that violates this broader policy
 - elution/MS should follow the same outputs-only assay rule; if assay/platform structure is modeled later, it must remain output-side rather than input-conditioned
+
+
+## Compliance status (2026-08-31)
+
+Audited by tracing which descriptors reach the model as input versus which are
+predicted as outputs.
+
+**Compliant — descriptors predicted jointly, label routes supervision only:**
+
+| family | descriptors |
+|---|---|
+| T-cell | `apc_type`, `assay_method`, `assay_readout`, `culture_context`, `peptide_format`, `stim_context` |
+| TCR | `tcr_evidence_method` |
+| MHC | `mhc_class`, `mhc_species`, `mhc_a_fine_type`, `mhc_b_fine_type` |
+| binding observables | `KD`, `IC50`, `EC50`, `Tm`, `t_half`, `koff`, `kon` |
+| binding descriptors | `assay_type`, `assay_prep`, `assay_geometry`, `assay_readout` (`binding_assay_panel_*`) |
+
+The last row is new. Those four previously existed **only** as an input-side
+context vector: `binding_context` was indexed by the observed assay and folded
+into the per-assay residual heads, so a prediction could not be obtained
+without first declaring an assay. That is the pattern this document forbids.
+
+They are now an output panel, mirroring `AssayHeads.predict_panel` on the
+T-cell side: the axis embedding table is **swept**, not indexed, giving one
+predicted measurement per assay configuration from peptide and MHC alone. The
+observed label selects which column the loss reads, which the Output Contract
+above permits.
+
+**Known remaining deviation.** The non-default
+`affinity_assay_residual_mode` values that consume
+`factorized_assay_context_vec` still condition on assay identity as an input:
+
+- `shared_base_factorized_context_residual`
+- `shared_base_factorized_context_plus_segment_residual`
+- `dag_family`, `dag_method_leaf`, `dag_prep_readout_leaf`
+
+Under the `legacy` default the factorized context is not allocated at all, so
+canonical Presto is compliant. Those modes are experimental variants and are
+non-compliant by this document; selecting one is opting out of the invariant.
+They should either be retired in favour of the panel or reworked to sweep
+rather than index.
