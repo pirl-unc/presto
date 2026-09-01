@@ -174,6 +174,61 @@ COLUMNS_BY_EVIDENCE: Dict[str, Tuple[str, ...]] = {
 }
 
 
+#: Oldest hitlist whose column semantics match what this module assumes.
+#:
+#: Before 1.46.0 (pirl-unc/hitlist#353) there was no study-level APM column,
+#: because `apm_genes_perturbed` *was* the study-level roll-up: it ORed the
+#: parent study's knockout panel onto every sample, so a WT control inside a KO
+#: study carried the KO flag. This module reads `apm_genes_perturbed` as the
+#: *per-sample* truth, which is only correct from 1.46.0 on.
+#:
+#: The column set resolves on 1.41 as well, so an older install trains happily
+#: and reports nothing -- 816,023 observations (18.4%) carry the wrong
+#: perturbation label, 716,992 of them genuinely-unperturbed rows wearing their
+#: study's panel. That is why this is an assertion and not a comment.
+MINIMUM_HITLIST_VERSION = (1, 46, 0)
+
+
+def _parse_version(raw: Optional[str]) -> Optional[Tuple[int, ...]]:
+    """Leading numeric components of a version string, or None if unreadable."""
+    if not raw:
+        return None
+    parts: List[int] = []
+    for chunk in str(raw).split(".")[:3]:
+        digits = ""
+        for character in chunk:
+            if not character.isdigit():
+                break
+            digits += character
+        if not digits:
+            break
+        parts.append(int(digits))
+    return tuple(parts) or None
+
+
+def require_supported_hitlist(raw_version: Optional[str]) -> None:
+    """Fail loudly on a hitlist too old for the semantics this module assumes.
+
+    An unreadable or absent version is allowed through: editable installs and
+    source checkouts often have no usable `__version__`, and refusing to run
+    there would be worse than the risk. A version we *can* read and that is too
+    old is a hard error, because the failure it causes is silent.
+    """
+    parsed = _parse_version(raw_version)
+    if parsed is None:
+        return
+    if parsed < MINIMUM_HITLIST_VERSION:
+        wanted = ".".join(str(part) for part in MINIMUM_HITLIST_VERSION)
+        raise RuntimeError(
+            f"hitlist {raw_version} is too old for this loader; need >= {wanted}. "
+            "Before 1.46.0 `apm_genes_perturbed` was ORed across a study, so "
+            "genuinely unperturbed control rows carry their study's knockout "
+            "panel -- 18.4% of observations on the corpus this was measured "
+            "against. Training would succeed and the labels would be wrong. "
+            "Upgrade with `pip install -U 'hitlist>=" + wanted + "'`."
+        )
+
+
 def training_columns(evidence: str, *, include_flanks: bool) -> List[str]:
     """Columns to request from ``hitlist.generate_training_table``.
 
@@ -410,6 +465,8 @@ def load_records_from_hitlist(
             "hitlist is required for --data-source hitlist. Install it with "
             "`pip install hitlist`, or use --data-source merged_tsv."
         ) from exc
+
+    require_supported_hitlist(getattr(hitlist, "__version__", None))
 
     shared_filters = dict(
         mhc_class=mhc_class,
