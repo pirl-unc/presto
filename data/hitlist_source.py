@@ -57,7 +57,6 @@ import sys
 from typing import Any, Dict, FrozenSet, List, Optional, Sequence, Tuple, Union
 
 from .vocab import (
-    apm_group_for_genes,
     apm_group_for_row,
     drop_unencodable_sequence,
     is_unmapped_condition,

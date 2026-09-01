@@ -6,7 +6,7 @@ the canonical main Presto affinity interface.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Mapping, Optional, Sequence
+from typing import Any, Dict, List, Mapping, Sequence
 
 import torch
 from torch.utils.data import DataLoader

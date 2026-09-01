@@ -7,22 +7,38 @@ exclude = [
 ]
 
 [lint]
-# Deliberately narrow: syntax errors (E9), comparison/assertion mistakes (F63,
-# which includes F631 -- `assert (cond, "msg")`, a non-empty tuple and so
-# always true), obvious bugs (F7), undefined names (F82).
+# Widened from ["E9", "F63", "F7", "F82"] to the full E/F sets.
 #
-# The B/PT codes are the assertion-quality rules from presto#18: an assertion
-# that cannot fail occupies the space where a check should be and reports
-# success. The judgement half of #18 -- tests that verify the path the author
-# had in mind -- is not lintable and lives in tests/test_test_quality.py.
+# A `[tool.ruff]` block in pyproject.toml declared `select = ["E", "F"]` and
+# never ran, because ruff.toml takes precedence -- so "lint clean" meant far
+# less than it read as. This is that intent, applied to the config that
+# actually executes.
+#
+# Note what is NOT carried over: the dead block also listed `F821` under
+# `ignore`, while `F82` was already active here. Adopting it wholesale would
+# have *weakened* undefined-name checking. Undefined names stay on.
 select = [
-  "E9",
-  "F63",
-  "F7",
-  "F82",
-  "B011",   # assert False -- unreachable after python -O
+  "E",
+  "F",
+  "B011",   # assert False -- unreachable under python -O
   "B015",   # pointless comparison, almost always a dropped assert
   "B018",   # useless expression, ditto
   "PT015",  # assertion that is always false
   "PT017",  # asserting on an exception in `except` instead of pytest.raises
 ]
+
+# E501 only. `line-length = 100` above is the formatter's target, not a rule
+# the existing code follows -- 638 lines exceed it, almost all of them prose in
+# docstrings that would read worse rewrapped. Enforcing it would bury the rules
+# that find bugs under ones that find columns.
+ignore = ["E501"]
+
+[lint.per-file-ignores]
+# Re-exports are the entire point of a package __init__.
+"__init__.py" = ["F401"]
+# Test modules import fixtures and symbols for their side effects, and import
+# inside functions to keep collection cheap.
+"tests/*" = ["F401"]
+# Experiment snapshots are frozen copies of scripts as they ran. Editing them
+# to satisfy a linter would falsify the record.
+"experiments/**" = ["F401", "F811", "F841", "E741", "E722"]

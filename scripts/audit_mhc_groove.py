@@ -21,7 +21,6 @@ but should be at mature position ~100, the signal peptide is ~24 aa.
 """
 
 import csv
-import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from typing import Optional

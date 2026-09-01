@@ -12,13 +12,12 @@ import torch
 def tiny_dataset():
     """Create tiny synthetic dataset for smoke testing."""
     from presto.data.tokenizer import Tokenizer
-    tok = Tokenizer()
 
     # 8 samples with varying tasks
     samples = []
     for i in range(8):
         sample = {
-            "peptide": f"SIINFEKL"[: 8 - i % 3],  # Varying lengths
+            "peptide": "SIINFEKL"[: 8 - i % 3],  # Varying lengths
             "mhc_a": "MAVMAPRTLLLLLSGALALTQTWAG",  # Fake MHC
             "mhc_b": "IQRTPKIQVYSRHPAENGKSNFLNC",  # Fake beta2m
             "mhc_class": "I",
@@ -127,7 +126,7 @@ class TestTrainerSmoke:
         # ordinary early-step movement. That made the test fail whenever an
         # unrelated change shifted the RNG stream -- removing five thousand
         # never-trained parameters was enough to trip it, twice.
-        assert all(torch.isfinite(torch.tensor(l)) for l in losses)
+        assert all(torch.isfinite(torch.tensor(loss)) for loss in losses)
         assert max(losses) < 100.0, f"training diverged: {losses}"
 
     def test_trainer_step_with_pcgrad(self, tiny_dataset, tokenizer):

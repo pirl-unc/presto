@@ -30,6 +30,16 @@ from pathlib import Path
 import pytest
 
 TESTS_DIR = Path(__file__).resolve().parent
+REPO_ROOT = TESTS_DIR.parent
+
+#: Package directories scanned for un-failable assertions.
+#:
+#: The anchoring rule is test-specific -- production code has no reason to
+#: inspect its own source. An assertion that cannot fail is a defect anywhere,
+#: so that rule runs over the package too. `experiments/` is excluded: those
+#: are frozen snapshots of scripts as they ran, and editing them to satisfy a
+#: linter would falsify the record.
+PACKAGE_DIRS = ("data", "models", "training", "scripts", "inference", "cli")
 
 #: Evidence that a source-inspecting test looked at every occurrence rather
 #: than the first one.
@@ -50,6 +60,13 @@ ENUMERATION_MARKERS = (
 
 def _test_files() -> list[Path]:
     return sorted(p for p in TESTS_DIR.glob("test_*.py") if p.name != Path(__file__).name)
+
+
+def _package_files() -> list[Path]:
+    found: list[Path] = []
+    for name in PACKAGE_DIRS:
+        found.extend(sorted((REPO_ROOT / name).rglob("*.py")))
+    return found
 
 
 def _parse(path: Path) -> ast.Module:
@@ -137,15 +154,37 @@ class TestAssertionsCanFail:
     reading the diff back.
     """
 
-    def test_no_assertion_is_unconditionally_true(self):
+    @staticmethod
+    def _scan(paths) -> list[str]:
         offenders: list[str] = []
-        for path in _test_files():
-            for node in ast.walk(_parse(path)):
+        for path in paths:
+            try:
+                tree = _parse(path)
+            except SyntaxError:  # pragma: no cover - not our code to fix
+                continue
+            for node in ast.walk(tree):
                 if not isinstance(node, ast.Assert):
                     continue
                 reason = _always_true_reason(node.test)
                 if reason:
-                    offenders.append(f"{path.name}:{node.lineno} -- {reason}")
+                    rel = path.relative_to(REPO_ROOT)
+                    offenders.append(f"{rel}:{node.lineno} -- {reason}")
+        return offenders
+
+    def test_no_test_assertion_is_unconditionally_true(self):
+        offenders = self._scan(_test_files())
+        assert offenders == [], (
+            "these assertions can never fail:\n  " + "\n  ".join(offenders)
+        )
+
+    def test_no_package_assertion_is_unconditionally_true(self):
+        """Same rule, applied to shipped code.
+
+        An `assert (cond, "message")` in the package is a runtime check that
+        silently passes -- worse than in a test, because nothing else is
+        watching that path.
+        """
+        offenders = self._scan(_package_files())
         assert offenders == [], (
             "these assertions can never fail:\n  " + "\n  ".join(offenders)
         )

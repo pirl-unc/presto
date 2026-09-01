@@ -1401,7 +1401,6 @@ class Presto(nn.Module):
             offsets[seg_name] = slice(start, end)
             start = end
 
-        seq_len = tokens.shape[1]
         tok_ids = tokens.clamp(min=0, max=len(AA_VOCAB) - 1)
 
         # Peptide position encoding.

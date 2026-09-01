@@ -5,8 +5,7 @@ Point metrics (discrimination) and calibration metrics.
 
 from __future__ import annotations
 
-import math
-from typing import Any, Dict, List, Optional
+from typing import Dict
 
 import torch
 
@@ -51,7 +50,6 @@ def point_metrics(
     recall = float(tp / (tp + fn).clamp(min=1))
     f1 = float(2 * precision * recall / max(precision + recall, 1e-8))
 
-    n_pos = float(true_bind.sum())
     n_neg = float((1 - true_bind).sum())
     bal_acc = 0.5 * (recall + float(tn / max(n_neg, 1)))
 

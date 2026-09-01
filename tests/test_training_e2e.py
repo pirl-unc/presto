@@ -52,7 +52,7 @@ def test_e2e_trainer_with_presto_dataset_and_dataloader(tmp_path):
             break
 
     assert losses
-    assert all(torch.isfinite(torch.tensor(l)) for l in losses)
+    assert all(torch.isfinite(torch.tensor(loss)) for loss in losses)
 
     ckpt = tmp_path / "e2e_checkpoint.pt"
     trainer.save_checkpoint(ckpt)

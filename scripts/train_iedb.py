@@ -79,7 +79,7 @@ from presto.data.mhc_sequence_resolver import (
     resolve_exact_mhc_inputs,
     resolve_exact_mhc_sequences,
 )
-from presto.data.vocab import FOREIGN_CATEGORIES, normalize_organism
+from presto.data.vocab import FOREIGN_CATEGORIES
 from presto.models.presto import Presto
 from presto.models.affinity import (
     DEFAULT_MAX_AFFINITY_NM,
@@ -1910,7 +1910,6 @@ def augment_binding_records_with_synthetic_negatives(
         allele_text = str(getattr(record, "mhc_allele", "") or "").strip()
         if peptide_text and allele_text:
             peptides_by_allele[allele_text].append(peptide_text)
-    mismatch_allele_pool = sorted(peptides_by_allele)
     if class_i_anchor_strategy not in {"none", "property_opposite"}:
         raise ValueError(
             "class_i_anchor_strategy must be one of {'none', 'property_opposite'}"

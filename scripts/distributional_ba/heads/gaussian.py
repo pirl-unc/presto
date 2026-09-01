@@ -13,7 +13,6 @@ from typing import Dict, Optional, Tuple
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 from .base import AffinityHead
 from ..assay_context import AdditiveIntegration, AffineIntegration

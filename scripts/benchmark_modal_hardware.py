@@ -11,7 +11,7 @@ import subprocess
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Mapping, Sequence, Tuple
+from typing import Any, Dict, List, Mapping, Sequence
 
 from experiment_registry import default_agent_label, initialize_experiment_dir
 from benchmark_broad_frontier_5ep import DESIGNS as FRONTIER_DESIGNS, DEFAULT_ALLELES, DEFAULT_PROBES, DEFAULT_WARM_START

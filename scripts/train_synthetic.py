@@ -12,7 +12,6 @@ Usage:
 """
 
 import argparse
-import os
 import tempfile
 import time
 from collections import Counter, defaultdict
@@ -65,7 +64,6 @@ from presto.data.allele_resolver import (
 from presto.data.mhc_index import infer_fine_chain_type
 from presto.data.vocab import (
     MHC_CHAIN_FINE_TO_IDX,
-    N_MHC_CHAIN_FINE_TYPES,
     TCELL_CULTURE_CONTEXT_TO_IDX,
     TCELL_STIM_CONTEXT_TO_IDX,
 )

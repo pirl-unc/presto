@@ -199,7 +199,7 @@ def _launch_modal(args: argparse.Namespace, extra_args: List[str]) -> None:
     ]
 
     print(f"\n{'='*60}")
-    print(f"  Class I Training — Modal (H100)")
+    print("  Class I Training — Modal (H100)")
     print(f"  run_id={run_id}")
     print(f"  epochs={args.epochs}  seed={args.seed}  d_model={args.d_model}")
     print(f"  lr={args.lr}  schedule={args.lr_schedule}")

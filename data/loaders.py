@@ -25,11 +25,10 @@ import warnings
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Optional, Iterator, Union, Any, Tuple, Mapping
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 import random
 import re
 
-import torch
 from torch.utils.data import Dataset, DataLoader, Sampler
 
 from .bulk_ms import BulkMSRecord

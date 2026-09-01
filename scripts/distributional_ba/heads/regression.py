@@ -10,7 +10,7 @@ import torch.nn as nn
 
 from .base import AffinityHead
 from ..assay_context import AdditiveIntegration, AffineIntegration
-from ..losses import mhcflurry_censored_loss, log_censored_mse, _masked_mean
+from ..losses import mhcflurry_censored_loss, log_censored_mse
 
 
 class MHCflurryHead(AffinityHead):

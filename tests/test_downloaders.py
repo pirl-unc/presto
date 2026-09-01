@@ -364,7 +364,7 @@ class TestDeduplicateTcellFile:
                 writer.writerow(['SIINFEKL', 'HLA-A*02:01', 'positive', '12345'])
                 writer.writerow(['SIINFEKL', 'HLA-A*02:01', 'negative', '12345'])
 
-            stats = deduplicate_tcell_file(input_path, output_path, verbose=False)
+            deduplicate_tcell_file(input_path, output_path, verbose=False)
 
             assert output_path.exists()
 
