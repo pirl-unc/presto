@@ -253,6 +253,14 @@ class ElutionRecord:
     # in-vivo termini; see docs/model_io_contract.md Tier 3.
     stimulus: Optional[str] = None
     apm_perturbation: Optional[str] = None
+    #: Which biological sample this row came from, and how confidently its arm
+    #: was identified. `sample_label` is the right grouping key for a
+    #: leakage-safe split -- a peptide-disjoint split does not stop the same
+    #: sample landing on both sides. `sample_attribution` is the evidence tier
+    #: behind `apm_perturbation`: empty means no arm was resolved, which is why
+    #: such rows carry `apm_perturbation="unknown"` rather than "none".
+    sample_label: Optional[str] = None
+    sample_attribution: Optional[str] = None
     cell_type: Optional[str] = None
     tissue: Optional[str] = None
     #: Sample provenance flags, straight from hitlist (all 100% covered there).
