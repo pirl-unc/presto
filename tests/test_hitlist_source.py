@@ -195,9 +195,7 @@ class TestRouting:
         assert len(stability) == 1
         assert stability[0].t_half == pytest.approx(2.0)
         assert stability[0].assay_method == "purified MHC/direct/radioactivity"
-        assert stats["stability_assay_methods"] == {
-            "purified MHC/direct/radioactivity": 1
-        }
+        assert stats["stability_assay_methods"] == {"purified MHC/direct/radioactivity": 1}
 
     def test_tm_and_kinetics_routing(self, monkeypatch):
         _install_stub_hitlist(
@@ -231,9 +229,7 @@ class TestRouting:
         assert stats["flank_coverage"]["elution"] == 1.0
 
     def test_ms_row_without_alleles_is_dropped(self, monkeypatch):
-        _install_stub_hitlist(
-            monkeypatch, [], [_ms_row(mhc_allele_set="", mhc_restriction="")]
-        )
+        _install_stub_hitlist(monkeypatch, [], [_ms_row(mhc_allele_set="", mhc_restriction="")])
         _, _, _, _, elution, _, _, _ = load_records_from_hitlist()
         assert elution == []
 
@@ -317,3 +313,32 @@ class TestColumnContract:
     def test_flank_columns_absent_is_fine_when_not_requested(self):
         frame = pd.DataFrame(columns=training_columns("ms", include_flanks=False))
         assert_columns_present(frame, "ms", include_flanks=False)
+
+    def test_guard_reports_without_importing_hitlist(self, monkeypatch):
+        """The guard must not need hitlist importable to report a problem.
+
+        hitlist is an optional extra and this whole module tests against a
+        stub, so an `import hitlist` on the failure path replaces the real
+        diagnostic with a ModuleNotFoundError -- which is what happened in CI
+        the first time around.
+
+        Binding the name to None rather than deleting it is what makes this
+        reproduce on a machine that *does* have hitlist installed: a None entry
+        in `sys.modules` makes `import hitlist` raise, where a missing entry
+        would just re-import it and the test would pass locally while failing
+        in CI. Which is exactly the trap being closed.
+        """
+        monkeypatch.setitem(sys.modules, "hitlist", None)
+        columns = training_columns("ms", include_flanks=True)
+        columns.remove("condition_category")
+        frame = pd.DataFrame(columns=columns)
+        with pytest.raises(RuntimeError, match="condition_category"):
+            assert_columns_present(frame, "ms", include_flanks=True)
+
+    def test_guard_names_the_installed_hitlist_version(self, monkeypatch):
+        stub = types.ModuleType("hitlist")
+        stub.__version__ = "9.9.9"
+        monkeypatch.setitem(sys.modules, "hitlist", stub)
+        frame = pd.DataFrame(columns=["peptide"])
+        with pytest.raises(RuntimeError, match="9.9.9"):
+            assert_columns_present(frame, "ms", include_flanks=False)

@@ -53,6 +53,7 @@ set is public, asserted on load, and pinned in
 from __future__ import annotations
 
 import random
+import sys
 from typing import Any, Dict, FrozenSet, List, Optional, Sequence, Tuple, Union
 
 from .vocab import (
@@ -226,16 +227,23 @@ def assert_columns_present(frame, evidence: str, *, include_flanks: bool) -> Non
     missing = sorted(expected - set(frame.columns))
     if not missing:
         return
-    import hitlist
+    # Read the version off the already-imported module rather than importing
+    # it: hitlist is an optional extra, and anything holding a frame to check
+    # has necessarily imported it already. A bare `import hitlist` here would
+    # raise ModuleNotFoundError over the top of the real diagnostic wherever
+    # the frame came from somewhere else -- a fixture, a cache, a stub.
+    hitlist = sys.modules.get("hitlist")
+    version = getattr(hitlist, "__version__", "unknown") if hitlist else "not imported"
 
     raise RuntimeError(
         f"hitlist returned {len(frame.columns)} columns for evidence={evidence!r} "
         f"but {len(missing)} requested column(s) are absent: {', '.join(missing)}. "
-        f"Installed hitlist is {getattr(hitlist, '__version__', 'unknown')}; these "
+        f"Installed hitlist is {version}; these "
         "columns are dropped silently by hitlist's projection, so this is most "
         "likely an upstream rename. Reconcile MS_COLUMNS / BINDING_COLUMNS "
         "against the current hitlist export before training on this frame."
     )
+
 
 # ``response_measured`` is the same controlled vocabulary the merged TSV carries
 # in ``value_type``, so these strings flow through to
@@ -317,9 +325,7 @@ def _select_best_mapping(frame):
         return frame
     ordered = frame
     if "is_canonical_transcript" in frame.columns:
-        ordered = frame.sort_values(
-            "is_canonical_transcript", ascending=False, kind="stable"
-        )
+        ordered = frame.sort_values("is_canonical_transcript", ascending=False, kind="stable")
     return ordered.drop_duplicates(subset=["evidence_row_id"], keep="first")
 
 
@@ -574,12 +580,8 @@ def load_records_from_hitlist(
                 flank_n=drop_unencodable_sequence(row.get("n_flank")),
                 flank_c=drop_unencodable_sequence(row.get("c_flank")),
                 stimulus=stimulus_for_condition(condition_category),
-                apm_perturbation=apm_group_for_genes(
-                    _clean(row.get("apm_genes_perturbed"))
-                ),
-                cell_type=_clean(row.get("cell_type"))
-                or _clean(row.get("cell_line_name"))
-                or None,
+                apm_perturbation=apm_group_for_genes(_clean(row.get("apm_genes_perturbed"))),
+                cell_type=_clean(row.get("cell_type")) or _clean(row.get("cell_line_name")) or None,
                 is_cell_line=row.get("src_cell_line"),
                 is_healthy_tissue=row.get("src_healthy_tissue"),
                 is_cancer=row.get("src_cancer"),
@@ -600,7 +602,9 @@ def load_records_from_hitlist(
     def _flank_coverage(records: Sequence[Any]) -> float:
         if not records:
             return 0.0
-        with_flank = sum(1 for r in records if getattr(r, "flank_n", "") or getattr(r, "flank_c", ""))
+        with_flank = sum(
+            1 for r in records if getattr(r, "flank_n", "") or getattr(r, "flank_c", "")
+        )
         return with_flank / len(records)
 
     stats: Dict[str, Any] = {
