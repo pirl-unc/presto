@@ -182,59 +182,142 @@ class TestInfectionMapping:
 
 
 class TestEveryCorpusCategoryIsMapped:
-    """The corpus's own `condition_category` values, counted from hitlist.
+    """Every `condition_category` hitlist emits must be mapped.
 
-    `SPPL3_perturbation` (14,906 rows) and `IRF2_perturbation` (5,314) were
-    absent from CONDITION_TO_STIMULUS while carrying real volume. The predicate
-    that detects this already existed and the count was already in the ingest
-    stats -- nothing read the key, so both were scored as unstimulated in
-    silence. This pins the observed category set so the next addition fails
-    here instead.
+    `SPPL3_perturbation` and `IRF2_perturbation` were absent from
+    CONDITION_TO_STIMULUS while carrying 20,220 rows between them. The
+    predicate that detects this already existed and the count was already in
+    the ingest stats -- nothing read the key, so both scored as unstimulated in
+    silence.
+
+    The first version of this class could not catch the next one. It pinned a
+    dict of categories *with row counts* "as of hitlist 1.45.0" and iterated
+    that dict, so a category present in the corpus but absent from the dict was
+    never tested -- which is the only case that matters. `TAPBPR_perturbation`
+    duly appeared (hitlist split TAPBPR/TAPBPL out of `tapasin_perturbation`)
+    and went unmapped, exactly as before (presto#14).
+
+    Two changes follow from that:
+
+    - **No row counts.** They were stale within a few releases -- hitlist
+      1.46.0 stopped collapsing multi-arm studies onto one arm's metadata, so
+      three pinned categories went to literally zero while their rows moved to
+      the empty string. Counts describe a build; the set describes a contract.
+    - **The authoritative check queries the corpus**, not a hard-coded list, so
+      it is bidirectional by construction. It skips where hitlist is
+      unavailable (CI installs without the extra), so `REVIEWED` below is kept
+      as a static floor that runs everywhere.
     """
 
-    #: Every distinct `condition_category` in the MS evidence table, with row
-    #: counts, as of hitlist 1.45.0. Empty string (1,435,250 rows) omitted: it
-    #: is "not recorded", which is a missing condition rather than an unmapped
-    #: one, and is covered by TestNoneIsACatchAll.
-    OBSERVED = {
-        "unperturbed": 2362271,
-        "virus_inactivated_control": 82182,
-        "IFN_gamma_treatment": 71910,
-        "CIITA_transduction": 53465,
-        "PLC_chaperone_perturbation": 52269,
-        "HLA-DM_perturbation": 42405,
-        "ERAP1_perturbation": 41081,
-        "cell_activation": 37929,
-        "drug_exposure": 35344,
-        "transduction": 32574,
-        "TAP_perturbation": 31067,
-        "infection_bacterial_or_parasite": 24534,
-        "ERAP2_perturbation": 22266,
-        "infection_viral": 21481,
-        "transfection": 19344,
-        "SPPL3_perturbation": 14906,
-        "transplant": 14842,
-        "labeling_control": 11147,
-        "TLR_stimulation": 9900,
-        "tapasin_perturbation": 7662,
-        "cytokine_treatment_generic": 6159,
-        "IRF2_perturbation": 5314,
-        "other_perturbation": 3499,
-        "MHC-I_loss_B2M": 520,
-    }
+    #: Categories that have been reviewed and deliberately mapped. A static
+    #: floor: it cannot notice a *new* category, which is what
+    #: `test_no_corpus_category_is_unmapped` is for.
+    REVIEWED = frozenset(
+        {
+            "unperturbed",
+            "virus_inactivated_control",
+            "IFN_gamma_treatment",
+            "IFN_alpha_treatment",
+            "IFN_beta_treatment",
+            "TNF_alpha_treatment",
+            "TLR_stimulation",
+            "CIITA_transduction",
+            "PLC_chaperone_perturbation",
+            "HLA-DM_perturbation",
+            "ERAP1_perturbation",
+            "ERAP2_perturbation",
+            "ERAP_inhibitor",
+            "cell_activation",
+            "drug_exposure",
+            "transduction",
+            "transfection",
+            "TAP_perturbation",
+            "tapasin_perturbation",
+            "TAPBPR_perturbation",
+            "infection_bacterial_or_parasite",
+            "infection_viral",
+            "SPPL3_perturbation",
+            "IRF2_perturbation",
+            "transplant",
+            "labeling_control",
+            "cytokine_treatment_generic",
+            "other_perturbation",
+            "MHC-I_loss_B2M",
+            "immunoproteasome_perturbation",
+            "proteasome_inhibitor",
+            "metabolic_stress",
+            "biomaterial_contact",
+        }
+    )
 
-    @pytest.mark.parametrize("category", sorted(OBSERVED))
-    def test_observed_category_is_mapped(self, category):
+    @pytest.mark.parametrize("category", sorted(REVIEWED))
+    def test_reviewed_category_is_mapped(self, category):
         assert not is_unmapped_condition(category), (
-            f"{category!r} ({self.OBSERVED[category]} rows) is not in "
-            "CONDITION_TO_STIMULUS and is being scored as unstimulated"
+            f"{category!r} is not in CONDITION_TO_STIMULUS and would be scored "
+            "as unstimulated"
         )
+
+    def test_the_reviewed_set_matches_the_mapping_table(self):
+        """Neither may grow without the other; that drift is what let
+        TAPBPR_perturbation through."""
+        assert self.REVIEWED == frozenset(CONDITION_TO_STIMULUS)
+
+    def test_no_corpus_category_is_unmapped(self):
+        """The only check that can catch a category nobody has reviewed.
+
+        Queries hitlist directly rather than a pinned list, so it is
+        bidirectional by construction: anything the corpus emits and this repo
+        has not mapped fails here. Skipped where hitlist is absent or too old
+        -- CI installs without the extra -- which is why `REVIEWED` exists as a
+        floor that always runs.
+        """
+        hitlist = pytest.importorskip("hitlist")
+        try:
+            frame = hitlist.generate_training_table(
+                include_evidence="ms", columns=["condition_category"]
+            )
+        except Exception as exc:  # noqa: BLE001 - any build/IO failure is a skip
+            # An unbuilt index, a missing download, or a schema this release
+            # does not have. None of those are a mapping error, and failing on
+            # them would make the suite depend on local corpus state.
+            pytest.skip(f"cannot query hitlist condition categories: {exc}")
+        seen = {
+            str(value).strip()
+            for value in frame["condition_category"].dropna().unique()
+            if str(value).strip()
+        }
+        unmapped = sorted(c for c in seen if is_unmapped_condition(c))
+        assert unmapped == [], (
+            f"hitlist emits {len(unmapped)} condition_category value(s) this "
+            f"repo does not map: {unmapped}. They are being scored as "
+            "unstimulated. Add them to CONDITION_TO_STIMULUS and to REVIEWED."
+        )
+
+    def test_tapbpr_is_mapped_and_distinct_from_tapasin(self):
+        """TAPBP and TAPBPR are different genes with different mechanisms.
+
+        Tapasin/TAPBP works inside the peptide-loading complex, bridging TAP to
+        MHC-I. TAPBPR/TAPBPL is a PLC-independent editor acting on
+        peptide-receptive MHC-I away from TAP (Boyle et al. 2013; Hermann et
+        al. 2015). hitlist split them; collapsing them was wrong.
+
+        Both are standing lesions rather than applied treatments, so both read
+        `none` on this axis and ride `apm_perturbation` instead -- but they must
+        be mapped *explicitly*, not fall through.
+        """
+        assert not is_unmapped_condition("TAPBPR_perturbation")
+        assert stimulus_for_condition("TAPBPR_perturbation") == "none"
+        assert not is_unmapped_condition("tapasin_perturbation")
 
     def test_generic_cytokine_is_not_called_unstimulated(self):
         """The one case where `none` would state something known to be false.
 
         These cells were treated with a cytokine; the deposit just does not
         name which. `none` means "not known to be stimulated" -- here we know.
+
+        Kept even though the category currently matches zero rows: hitlist
+        1.46.0 moved unresolvable-arm rows to the empty string, and the mapping
+        must stay correct for the day such a deposit reappears.
         """
         assert (
             CONDITION_TO_STIMULUS["cytokine_treatment_generic"]
