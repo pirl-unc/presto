@@ -8,6 +8,10 @@ extend-exclude = [
   "presto_old_code_starts",
   ".pytest_cache",
   "__pycache__",
+  # setuptools output. Ruff's defaults cover `_build` and `dist` but not plain
+  # `build`, so this was reachable by any caller passing
+  # `--no-respect-gitignore`: 93 findings from copied sources.
+  "build",
   # Frozen snapshots of scripts as they ran. Editing them to satisfy a linter
   # would falsify the experiment record.
   #
