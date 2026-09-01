@@ -225,17 +225,17 @@ def cmd_data_info(args: Any) -> int:
     print(f"Remote Size: {_format_size(remote_size)}")
     print(f"URL: {info.url}")
     if info.requires_agreement:
-        print(f"Requires Agreement: Yes (use --agree-iedb-terms)")
+        print("Requires Agreement: Yes (use --agree-iedb-terms)")
     print()
 
     # Check if downloaded locally
     local_path = get_dataset_path(name, datadir)
     if local_path:
-        print(f"Local Status: Downloaded")
+        print("Local Status: Downloaded")
         print(f"Local Path: {local_path}")
         print(f"Local Size: {_format_size(local_path.stat().st_size)}")
     else:
-        print(f"Local Status: Not downloaded")
+        print("Local Status: Not downloaded")
         print(f"Use 'presto data download --dataset {name}' to download")
 
     return 0

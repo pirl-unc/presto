@@ -16,7 +16,6 @@ import sys
 from pathlib import Path
 
 import torch
-import torch.nn.functional as F
 from tqdm.auto import tqdm
 
 # Add project root to path
@@ -325,7 +324,7 @@ def main():
 
     probes = probe_peptide(model, tokenizer, allele_sequences, device)
     history.append({"batch_idx": 0, "losses": {}, "probes": probes})
-    print(f"[batch 0] Initial probe done")
+    print("[batch 0] Initial probe done")
 
     loader_iter = iter(loader)
     pbar = tqdm(total=TOTAL_BATCHES, desc="Training")
@@ -401,7 +400,7 @@ def make_plots(history, out_dir):
             axes[0].plot(steps, proc_probs, ":^", color=color, label=f"{allele} processing", markersize=4, alpha=0.6)
     axes[0].set_xlabel("Minibatch")
     axes[0].set_ylabel("Probability")
-    axes[0].set_title(f"SLLQHLIGL: Binding & Presentation (IEDB)")
+    axes[0].set_title("SLLQHLIGL: Binding & Presentation (IEDB)")
     axes[0].legend(fontsize=8)
     axes[0].set_ylim(-0.05, 1.05)
     axes[0].grid(True, alpha=0.3)
@@ -411,7 +410,7 @@ def make_plots(history, out_dir):
         axes[1].plot(steps, bind_logits, "-o", color=color, label=allele, markersize=4)
     axes[1].set_xlabel("Minibatch")
     axes[1].set_ylabel("Logit")
-    axes[1].set_title(f"SLLQHLIGL: Binding Logit (raw)")
+    axes[1].set_title("SLLQHLIGL: Binding Logit (raw)")
     axes[1].legend()
     axes[1].grid(True, alpha=0.3)
     fig.tight_layout()
@@ -497,8 +496,8 @@ def make_plots(history, out_dir):
         ("foreignness_prob", "Foreignness"),
     ]
     available_rec = [
-        (k, l) for k, l in rec_keys
-        if any(h["probes"].get(ALLELES[0], {}).get(k) is not None for h in probe_entries)
+        (key, label) for key, label in rec_keys
+        if any(h["probes"].get(ALLELES[0], {}).get(key) is not None for h in probe_entries)
     ]
     if available_rec:
         fig, ax = plt.subplots(figsize=(10, 5))

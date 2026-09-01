@@ -8,10 +8,9 @@ mixture-averaged into a single marginal distribution.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List
 
 import torch
-import torch.nn.functional as F
 
 from presto.data.vocab import (
     BINDING_ASSAY_TYPES,

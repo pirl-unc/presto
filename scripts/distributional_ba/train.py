@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import random
 import time
 from collections import defaultdict
@@ -20,12 +19,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import torch
-import torch.nn as nn
-from torch.utils.data import DataLoader
 
 from presto.data import PrestoCollator, PrestoDataset, create_dataloader
 from presto.data.tokenizer import Tokenizer
-from presto.models.affinity import DEFAULT_MAX_AFFINITY_NM, normalize_binding_target_log10
 from presto.scripts.focused_binding_probe import (
     DEFAULT_ALLELES,
     DEFAULT_PROBE_PEPTIDE,
@@ -40,10 +36,9 @@ from presto.scripts.focused_binding_probe import (
     MEASUREMENT_PROFILE_NUMERIC,
     QUALIFIER_FILTERS,
 )
-from presto.scripts.groove_baseline_probe import _verify_groove_representations
 from presto.scripts.train_iedb import resolve_mhc_inputs_from_index, resolve_mhc_sequences_from_index
 
-from .config import CONDITIONS_BY_ID, ConditionSpec, DistributionalModel, build_model
+from .config import CONDITIONS_BY_ID, DistributionalModel, build_model
 from .encoders import ENCODER_BACKBONES
 from .evaluate import evaluate_held_out, evaluate_probe_panel
 

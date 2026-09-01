@@ -9,11 +9,8 @@ representation.  Uses the same data pipeline as focused_binding_probe.py.
 from __future__ import annotations
 
 import argparse
-import csv
 import json
-import math
 import random
-from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
@@ -23,8 +20,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 
-from presto.data import BindingRecord, PrestoCollator, PrestoDataset, create_dataloader
-from presto.data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
+from presto.data import PrestoCollator, PrestoDataset, create_dataloader
 from presto.data.mhc_sequence_resolver import resolve_class_i_groove_halves
 from presto.data.tokenizer import Tokenizer
 from presto.models.affinity import (
@@ -36,7 +32,6 @@ from presto.models.heads import smooth_range_bound
 from presto.scripts.focused_binding_probe import (
     DEFAULT_ALLELES,
     DEFAULT_PROBE_PEPTIDE,
-    StrictAlleleBalancedBatchSampler,
     _augment_train_records_only,
     _balance_alleles,
     _collect_binding_contrastive_pairs,
@@ -53,10 +48,7 @@ from presto.scripts.focused_binding_probe import (
     _split_csv,
     _split_records_by_peptide,
     _summarize_binding_records,
-    _write_probe_csv,
-    _write_probe_plot,
     _write_summary_artifacts,
-    AFFINITY_LOSS_MODES,
     MEASUREMENT_PROFILES,
     MEASUREMENT_PROFILE_NUMERIC,
     NORMALIZED_MEASUREMENT_FILTERS,

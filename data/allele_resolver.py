@@ -13,13 +13,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from .vocab import (
-    CHAIN_SPECIES_CATEGORIES,
-    CHAIN_SPECIES_TO_IDX,
     FINE_TO_B2M_KEY,
     FINE_TO_CHAIN_SPECIES,
     MHC_SPECIES_CATEGORIES,
-    N_MHC_SPECIES,
-    normalize_organism,
     normalize_species,
 )
 

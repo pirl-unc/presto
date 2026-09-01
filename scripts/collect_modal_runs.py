@@ -13,14 +13,12 @@ from __future__ import annotations
 
 import json
 import sys
-import textwrap
 from datetime import datetime
 from pathlib import Path
 
 import matplotlib
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -29,8 +27,6 @@ import pandas as pd
 # ---------------------------------------------------------------------------
 sys.path.insert(0, str(Path(__file__).parent))
 from aggregate_summary_runs import (
-    TEST_METRICS,
-    jsonable,
     plot_metric_grid,
     plot_metric_ranking,
     plot_probe_heatmap,
@@ -404,10 +400,10 @@ def write_readme(exp_dir: Path, spec: dict, summary_df: pd.DataFrame) -> None:
 
     lines.append("## Artifacts")
     lines.append("")
-    lines.append(f"- Condition summary: `results/condition_summary.csv`")
-    lines.append(f"- Epoch summary: `results/epoch_summary.csv`")
-    lines.append(f"- Probe predictions: `results/final_probe_predictions.csv`")
-    lines.append(f"- Reproduce: `reproduce/launch.json`")
+    lines.append("- Condition summary: `results/condition_summary.csv`")
+    lines.append("- Epoch summary: `results/epoch_summary.csv`")
+    lines.append("- Probe predictions: `results/final_probe_predictions.csv`")
+    lines.append("- Reproduce: `reproduce/launch.json`")
     lines.append("")
 
     (exp_dir / "README.md").write_text("\n".join(lines))
@@ -719,7 +715,7 @@ def process_family(spec: dict) -> pd.DataFrame:
 
         write_launch_json(exp_dir, spec)
         write_readme(exp_dir, spec, pd.DataFrame())
-        print(f"  Logs-only family collected.")
+        print("  Logs-only family collected.")
         return pd.DataFrame()
 
     if fmt == "scorepath":
@@ -863,7 +859,7 @@ def generate_log_entry(spec: dict, summary_df: pd.DataFrame, exp_dirname: str) -
         best = summary_df.iloc[0]
         lines.append(f"- **Best condition**: `{best.get('label', 'N/A')}`")
 
-    lines.append(f"- **Artifact paths**:")
+    lines.append("- **Artifact paths**:")
     lines.append(f"  - experiment dir: `experiments/{exp_dirname}/`")
     lines.append(f"  - condition summary: `experiments/{exp_dirname}/results/condition_summary.csv`")
 

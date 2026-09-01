@@ -17,7 +17,6 @@ Usage:
 
 import argparse
 import sys
-from pathlib import Path
 from typing import List, Optional
 
 from .. import __version__

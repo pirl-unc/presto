@@ -12,7 +12,6 @@ import json
 import os
 import re
 import subprocess
-from pathlib import Path
 from typing import Any, Dict, List, Sequence
 
 from experiment_registry import default_agent_label, initialize_experiment_dir

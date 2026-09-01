@@ -1726,8 +1726,6 @@ class ExcisionHead(nn.Module):
         # questioner knows which cell they are asking about, so conditioning on
         # it uses information rather than leaking it. This is the same category
         # as the MHC allele, not the same category as "was this ELISPOT".
-        p1_c_long = p1_c_idx.long()
-        p1_n_long = p1_n_idx.long()
         baseline_index = torch.zeros_like(machinery_idx)
         apm = (
             apm_perturbation_idx.long()

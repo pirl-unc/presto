@@ -14,7 +14,7 @@ primary anchor cannot be identified.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Iterable, Mapping, Optional, Sequence
+from typing import Optional, Sequence
 
 from .allele_resolver import infer_gene, normalize_mhc_class
 

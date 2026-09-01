@@ -11,20 +11,17 @@ Usage:
 
 from __future__ import annotations
 
-import math
 import random
 import time
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
 
 from presto.models.presto import Presto
-from presto.models.affinity import normalize_binding_target_log10
-from presto.data.vocab import AA_VOCAB, AA_TO_IDX
+from presto.data.vocab import AA_TO_IDX
 
 # ---------------------------------------------------------------------------
 # Amino acid property groups for scoring peptide-MHC compatibility

@@ -11,7 +11,7 @@ This module contains reusable pMHC components used by the canonical
 end-to-end production architecture in `models/presto.py`.
 """
 
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import torch
 import torch.nn as nn

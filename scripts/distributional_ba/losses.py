@@ -203,7 +203,6 @@ def censored_gaussian_nll(
 
     # z = (mu - threshold) / sigma for direction=1
     # z = (threshold - mu) / sigma for direction=-1
-    z = direction.float() * (threshold_y - mu) / sigma_safe
     # P(correct side) = Phi(-z) = 1 - Phi(z)
     # Actually: for direction=1, P(Y >= t) = Phi((mu - t)/sigma)
     # z_for_phi = (mu - threshold) / sigma * direction ... let me be precise
@@ -255,7 +254,6 @@ def censored_pinball_loss(
     Returns:
         (B, Q) per-example per-quantile loss.
     """
-    Q = quantiles.shape[1]
     target_exp = target.unsqueeze(-1).expand_as(quantiles)  # (B, Q)
     tau_exp = tau.unsqueeze(0).expand_as(quantiles)          # (B, Q)
     dir_exp = direction.unsqueeze(-1).expand_as(quantiles)   # (B, Q)

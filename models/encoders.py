@@ -4,11 +4,10 @@ Simple transformer-based sequence encoder with pooling options.
 """
 
 import math
-from typing import Tuple, Optional
+from typing import Tuple
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 
 from ..data.vocab import AA_VOCAB
 

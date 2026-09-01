@@ -202,7 +202,7 @@ def _launch_design(
     print(f"{'='*60}")
 
     if dry_run:
-        print(f"  [DRY RUN]")
+        print("  [DRY RUN]")
         return {
             "run_id": run_id, "design_id": design.design_id,
             "description": design.description, "app_id": None,

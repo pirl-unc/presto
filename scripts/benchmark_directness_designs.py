@@ -8,8 +8,7 @@ import json
 import re
 import subprocess
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Sequence, Tuple
 
 from experiment_registry import default_agent_label, initialize_experiment_dir
 

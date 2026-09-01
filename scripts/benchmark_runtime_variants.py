@@ -6,7 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Dict, List

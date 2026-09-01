@@ -314,7 +314,7 @@ class TestWideningIsAStrictGeneralization:
     def test_only_p1_populated_matches_a_p1_only_computation(self):
         model = _model()
         head = model.excision_head
-        apm_index, stimulus_index = 2, 3
+        apm_index = 2
         torch.manual_seed(7)
         p1_values = torch.randn(head.n_aa)
         p1_prime_values = torch.randn(head.n_aa)

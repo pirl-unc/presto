@@ -13,7 +13,7 @@ import argparse
 import json
 import random
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 
 import torch
 import torch.nn as nn
@@ -26,7 +26,6 @@ from presto.scripts.groove_baseline_probe import GrooveTransformerModel
 from presto.scripts.pretrain_mhc_encoder import (
     GroupBalancedBatchSampler,
     MHCWarmStartDataset,
-    MHCWarmStartSample,
     _collate_samples,
     _derived_class_logits,
     _derived_species_logits,

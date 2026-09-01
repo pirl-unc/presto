@@ -21,7 +21,6 @@ from .vocab import (
     BINDING_ASSAY_GEOMETRY_TO_IDX,
     BINDING_ASSAY_READOUT_TO_IDX,
     BINDING_ASSAY_TYPE_TO_IDX,
-    FOREIGN_CATEGORIES,
     ORGANISM_TO_IDX,
     apm_perturbation_index,
     default_machinery_for_class,
@@ -35,7 +34,6 @@ from .vocab import (
     TCELL_CULTURE_CONTEXT_TO_IDX,
     TCELL_PEPTIDE_FORMAT_TO_IDX,
     TCELL_STIM_CONTEXT_TO_IDX,
-    normalize_species,
 )
 
 OPTIONAL_MISSING_SEQ_TOKENS = {"NA", "N/A", "NONE", "NULL", "-", "?"}
@@ -1515,7 +1513,6 @@ class PrestoCollator:
         Returns:
             PrestoBatch
         """
-        n = len(samples)
 
         # Tokenize sequences
         pep_tok, pep_lengths = self.tokenizer.batch_encode(
