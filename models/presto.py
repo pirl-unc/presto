@@ -952,6 +952,7 @@ class Presto(nn.Module):
             n_stimulus=len(PROCESSING_STIMULI),
             n_apm=len(APM_PERTURBATIONS),
             protein_source_index=PEPTIDE_SOURCE_TO_IDX["protein"],
+            missing_residue_index=self.missing_token_idx,
             mhc_source_index=PEPTIDE_SOURCE_TO_IDX["mhc"],
         )
 
@@ -1240,6 +1241,59 @@ class Presto(nn.Module):
         lengths = valid.long().sum(dim=1).clamp(min=1)
         picked = tokens.gather(1, (lengths - 1).unsqueeze(1)).squeeze(1)
         return torch.where(present, picked, torch.full_like(picked, fallback)).long()
+
+    @staticmethod
+    def _last_valid_window(tokens: Optional[torch.Tensor], batch_size: int,
+                           device, fallback: int, width: int) -> torch.Tensor:
+        """The last ``width`` non-pad tokens, in sequence order.
+
+        The P-side of a junction: for a C-flank junction the peptide's final
+        residues are P{width}..P1, with P1 last. Rows shorter than ``width``
+        are left-padded with ``fallback`` so P1 stays in the final column and
+        every position keeps its subsite meaning regardless of length.
+
+        Segments are right-padded, so the valid span is ``[0, length)``.
+        """
+        out = torch.full(
+            (batch_size, width), fallback, dtype=torch.long, device=device
+        )
+        if tokens is None or tokens.numel() == 0:
+            return out
+        valid = tokens != 0
+        lengths = valid.long().sum(dim=1)
+        # Column j holds the residue at offset (width - 1 - j) back from P1.
+        offsets = torch.arange(width - 1, -1, -1, device=tokens.device)
+        idx = lengths.unsqueeze(1) - 1 - offsets.unsqueeze(0)
+        in_range = idx >= 0
+        picked = tokens.gather(1, idx.clamp(min=0))
+        picked = torch.where(in_range, picked, torch.full_like(picked, fallback))
+        return picked.to(device=device, dtype=torch.long)
+
+    @staticmethod
+    def _first_valid_window(tokens: Optional[torch.Tensor], batch_size: int,
+                            device, fallback: int, width: int) -> torch.Tensor:
+        """The first ``width`` non-pad tokens, in sequence order.
+
+        The P'-side of a junction: P1'..P{width}', with P1' first. Rows shorter
+        than ``width`` are right-padded with ``fallback``, keeping P1' in
+        column 0.
+        """
+        out = torch.full(
+            (batch_size, width), fallback, dtype=torch.long, device=device
+        )
+        if tokens is None or tokens.numel() == 0:
+            return out
+        valid = tokens != 0
+        lengths = valid.long().sum(dim=1)
+        # argmax, not 0: `_first_valid_token` tolerates leading pads and this
+        # must agree with it.
+        start = torch.argmax(valid.long(), dim=1)
+        offsets = torch.arange(width, device=tokens.device)
+        idx = start.unsqueeze(1) + offsets.unsqueeze(0)
+        in_range = offsets.unsqueeze(0) < lengths.unsqueeze(1)
+        picked = tokens.gather(1, idx.clamp(max=tokens.shape[1] - 1))
+        picked = torch.where(in_range, picked, torch.full_like(picked, fallback))
+        return picked.to(device=device, dtype=torch.long)
 
     def _resolve_machinery_idx(self, machinery, class_probs, batch_size, device):
         """Resolve the excision machinery index for each row.
@@ -3269,6 +3323,7 @@ class Presto(nn.Module):
             processing_class1_vec,
         )
         fallback_token = self.missing_token_idx
+        window = self.excision_head.junction_window
         peptide_lengths = (pep_tok != 0).long().sum(dim=1)
         excision_outputs = self.excision_head(
             processing_vec=junction_vec,
@@ -3288,6 +3343,31 @@ class Presto(nn.Module):
             ),
             p1_prime_n_idx=self._first_valid_token(
                 pep_tok, batch_size, pep_tok.device, fallback_token
+            ),
+            # Subsite windows for the in-vivo branch. The peptide supplies one
+            # side of each junction and is always present; only the flank side
+            # can be missing, and those positions fall to <MISSING>.
+            window_c_idx=torch.cat(
+                [
+                    self._last_valid_window(
+                        pep_tok, batch_size, pep_tok.device, fallback_token, window
+                    ),
+                    self._first_valid_window(
+                        flank_c_tok, batch_size, pep_tok.device, fallback_token, window
+                    ),
+                ],
+                dim=1,
+            ),
+            window_n_idx=torch.cat(
+                [
+                    self._last_valid_window(
+                        flank_n_tok, batch_size, pep_tok.device, fallback_token, window
+                    ),
+                    self._first_valid_window(
+                        pep_tok, batch_size, pep_tok.device, fallback_token, window
+                    ),
+                ],
+                dim=1,
             ),
             peptide_len=peptide_lengths,
             peptide_tokens=pep_tok,

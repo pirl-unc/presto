@@ -134,23 +134,52 @@ class TestServingMatchesTraining:
             "fixture is not discriminating: right truncation should lose it"
         )
 
-    def test_predictor_left_truncates_the_n_flank(self):
-        """`_flank_len` alone is not enough -- direction is the other half.
+    def test_every_predictor_path_left_truncates_the_n_flank(self):
+        """**Both** encode sites, not just the one I happened to look at.
 
-        Source-inspected because the encode happens deep inside a batched
-        tiling path; the point is that the predictor cannot quietly go back to
-        the default right truncation while still passing the length check.
+        The earlier version of this test searched the module source for the
+        first `flank_n_tok = self.tokenizer.batch_encode(` and checked that one
+        call. That is the *tiled* path. The single-peptide `predict` path --
+        the primary entry point -- encodes through `self._tokenize` instead,
+        kept a hard-coded `max_len=30`, and never left-truncated. The test
+        passed while the main path still had the bug it was written to catch.
+
+        So: find every N-flank encode in the module and require all of them to
+        left-truncate and to size from `_flank_len`.
         """
         import inspect
+        import re
 
         from presto.inference import predictor as predictor_module
 
         source = inspect.getsource(predictor_module)
-        marker = "flank_n_tok = self.tokenizer.batch_encode("
-        assert marker in source, "predictor no longer encodes an N-flank here"
-        call = source[source.index(marker) : source.index(marker) + 400]
-        assert 'truncate="left"' in call, (
-            "the predictor right-truncates the N-flank while the collator "
-            "left-truncates it; serving would score a different junction "
-            "residue than training"
+        # Only assignments that actually encode -- `flank_n_tok=flank_n_tok`
+        # keyword arguments and `flank_n_tok = None` are not encode sites.
+        sites = []
+        for match in re.finditer(r"^\s*flank_n_tok\s*=", source, re.MULTILINE):
+            call = source[match.start() : match.start() + 300]
+            if "batch_encode" in call or "_tokenize" in call:
+                sites.append(match.start())
+        assert len(sites) >= 2, (
+            f"expected at least 2 N-flank encode sites, found {len(sites)}; "
+            "if a path was removed, update this test deliberately"
         )
+        for start in sites:
+            call = source[start : start + 300]
+            assert 'truncate="left"' in call, (
+                f"an N-flank encode site at offset {start} right-truncates "
+                "while the collator left-truncates; serving would score a "
+                "different junction residue than training"
+            )
+            assert "_flank_len" in call, (
+                f"an N-flank encode site at offset {start} hard-codes its "
+                "length instead of using the collator's DEFAULT_MAX_FLANK_LEN"
+            )
+
+    def test_tokenize_helper_can_left_truncate(self):
+        """The single-peptide path needs the option to exist at all."""
+        import inspect
+
+        from presto.inference.predictor import Predictor
+
+        assert "truncate" in inspect.signature(Predictor._tokenize).parameters
