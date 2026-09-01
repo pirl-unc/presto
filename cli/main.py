@@ -1005,14 +1005,14 @@ def create_parser() -> argparse.ArgumentParser:
         action="store_true",
         default=True,
         help="Require all non-ablation MHC alleles to resolve to amino-acid sequences (default: "
-            "true)",
+        "true)",
     )
     train_iedb.add_argument(
         "--allow-unresolved-mhc",
         dest="strict_mhc_resolution",
         action="store_false",
         help="Allow unresolved MHC alleles (debug only; unresolved MHC chains become empty "
-            "sequences)",
+        "sequences)",
     )
     train_iedb.add_argument(
         "--filter-unresolved-mhc",
@@ -1101,7 +1101,7 @@ def create_parser() -> argparse.ArgumentParser:
         type=float,
         default=0.25,
         help="Additional class-I negatives without MHC beta chain (beta2m) per real class-I "
-            "sample (0 disables)",
+        "sample (0 disables)",
     )
     train_iedb.add_argument(
         "--synthetic-processing-negative-ratio",

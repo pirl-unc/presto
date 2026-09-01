@@ -299,4 +299,3 @@ def test_e2e_tiny_full_model_training_is_finite_and_improves():
         "initializations; training is not reliably reducing the loss"
     )
     assert max(heads for _, heads in outcomes) >= 4
-

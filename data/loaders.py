@@ -1783,7 +1783,7 @@ class PrestoDataset(Dataset):
         if sc10x_records:
             warnings.warn(
                 "Ignoring sc10x_records: receptor-sequence supervision is disabled in canonical "
-                    "Presto.",
+                "Presto.",
                 RuntimeWarning,
             )
         self.mhc_sequences = _normalize_mhc_sequence_lookup(mhc_sequences)

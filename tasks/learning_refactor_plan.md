@@ -128,9 +128,13 @@ from torch.optim.lr_scheduler import LinearLR, CosineAnnealingLR, SequentialLR
 total_steps = num_epochs * len(dataloader)
 warmup_steps = int(0.05 * total_steps)  # 5% warmup
 
-warmup_scheduler = LinearLR(optimizer, start_factor=1e-6 / lr, end_factor=1.0, total_iters=warmup_steps)
+warmup_scheduler = LinearLR(
+    optimizer, start_factor=1e-6 / lr, end_factor=1.0, total_iters=warmup_steps
+)
 cosine_scheduler = CosineAnnealingLR(optimizer, T_max=total_steps - warmup_steps, eta_min=lr * 0.1)
-scheduler = SequentialLR(optimizer, schedulers=[warmup_scheduler, cosine_scheduler], milestones=[warmup_steps])
+scheduler = SequentialLR(
+    optimizer, schedulers=[warmup_scheduler, cosine_scheduler], milestones=[warmup_steps]
+)
 
 # In training loop, after optimizer.step():
 scheduler.step()
@@ -151,6 +155,8 @@ scheduler.step()
 3. Add a utility that infers class from allele name using `mhcgnomes`:
    ```python
    import mhcgnomes
+
+
    def infer_mhc_class(allele_name: str) -> Optional[str]:
        try:
            result = mhcgnomes.parse(allele_name)
@@ -180,23 +186,27 @@ Replace the 12-latent class-paired architecture with:
 
 ```python
 LATENT_SEGMENTS = {
-    "processing":        ["nflank", "peptide", "cflank"],
-    "ms_detectability":  ["peptide"],
+    "processing": ["nflank", "peptide", "cflank"],
+    "ms_detectability": ["peptide"],
     "species_of_origin": ["peptide"],
-    "pmhc_interaction":  ["peptide", "mhc_a", "mhc_b"],   # replaces binding_affinity + binding_stability
-    "presentation":      [],                                 # deps only: processing + pmhc_interaction
-    "recognition":       ["peptide"],                        # single, with class-specific readout heads
-    "immunogenicity":    [],                                 # MLP only
+    "pmhc_interaction": [
+        "peptide",
+        "mhc_a",
+        "mhc_b",
+    ],  # replaces binding_affinity + binding_stability
+    "presentation": [],  # deps only: processing + pmhc_interaction
+    "recognition": ["peptide"],  # single, with class-specific readout heads
+    "immunogenicity": [],  # MLP only
 }
 
 LATENT_DEPS = {
-    "processing":        [],
-    "ms_detectability":  [],
+    "processing": [],
+    "ms_detectability": [],
     "species_of_origin": [],
-    "pmhc_interaction":  [],                                 # no latent deps, just tokens + context
-    "presentation":      ["processing", "pmhc_interaction"],
-    "recognition":       ["foreignness"],
-    "immunogenicity":    ["pmhc_interaction", "recognition"],
+    "pmhc_interaction": [],  # no latent deps, just tokens + context
+    "presentation": ["processing", "pmhc_interaction"],
+    "recognition": ["foreignness"],
+    "immunogenicity": ["pmhc_interaction", "recognition"],
 }
 ```
 
@@ -478,23 +488,33 @@ The token already uses ground truth class/species when provided via `mhc_class` 
 
 **Current state:**
 ```python
-pmhc_vec = self.pmhc_vec_proj(torch.cat([
-    latent_vals["binding_affinity"],
-    latent_vals["presentation_class1"],
-    latent_vals["presentation_class2"],
-], dim=-1))
+pmhc_vec = self.pmhc_vec_proj(
+    torch.cat(
+        [
+            latent_vals["binding_affinity"],
+            latent_vals["presentation_class1"],
+            latent_vals["presentation_class2"],
+        ],
+        dim=-1,
+    )
+)
 ```
 - Excludes `mhc_a_vec`/`mhc_b_vec` (rich 256-dim allele representations)
 - `pep_vec` is computed (line 1220) but never used — dead code
 
 **New implementation:**
 ```python
-pmhc_vec = self.pmhc_vec_proj(torch.cat([
-    interaction_vec,         # 512-dim interaction latent (was binding_affinity)
-    presentation_vec,        # 256-dim (single presentation latent)
-    mhc_a_vec,              # 256-dim mean-pooled MHC alpha encoder states
-    mhc_b_vec,              # 256-dim mean-pooled MHC beta encoder states
-], dim=-1))
+pmhc_vec = self.pmhc_vec_proj(
+    torch.cat(
+        [
+            interaction_vec,  # 512-dim interaction latent (was binding_affinity)
+            presentation_vec,  # 256-dim (single presentation latent)
+            mhc_a_vec,  # 256-dim mean-pooled MHC alpha encoder states
+            mhc_b_vec,  # 256-dim mean-pooled MHC beta encoder states
+        ],
+        dim=-1,
+    )
+)
 # pmhc_vec_proj input: 512 + 256 + 256 + 256 = 1280 → 256
 ```
 
@@ -565,6 +585,7 @@ Items: **E1**, **E2** — depend on Phase 1 (new presentation architecture)
    ```python
    import mhcgnomes
 
+
    def is_sufficiently_different(original_alleles, candidate_alleles):
        """Check that candidate alleles are sufficiently different from originals."""
        for orig in original_alleles:
@@ -577,9 +598,12 @@ Items: **E1**, **E2** — depend on Phase 1 (new presentation architecture)
                # Same species: require different gene+group
                # e.g., A*02:01 vs A*24:02 is good (different group)
                #        A*02:01 vs A*02:05 is bad (same group)
-               if (hasattr(orig_parsed, 'gene') and hasattr(cand_parsed, 'gene')
+               if (
+                   hasattr(orig_parsed, 'gene')
+                   and hasattr(cand_parsed, 'gene')
                    and orig_parsed.gene == cand_parsed.gene
-                   and orig_parsed.allele_family == cand_parsed.allele_family):
+                   and orig_parsed.allele_family == cand_parsed.allele_family
+               ):
                    return False
        return True
    ```

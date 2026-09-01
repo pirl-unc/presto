@@ -93,9 +93,7 @@ class TestTopologyConstruction:
         assert signature.parameters["latent_topology"].default == "expanded"
         assert train_iedb.IEDB_DEFAULTS["latent_topology"] == "expanded"
 
-        launcher = (
-            Path(__file__).resolve().parents[1] / "scripts" / "train_remote.py"
-        ).read_text()
+        launcher = (Path(__file__).resolve().parents[1] / "scripts" / "train_remote.py").read_text()
         assert '"PRESTO_LATENT_TOPOLOGY", "expanded"' in launcher
 
     def test_expanded_has_one_query_per_cross_attention_latent(self):

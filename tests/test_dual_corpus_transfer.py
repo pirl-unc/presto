@@ -8,10 +8,7 @@ from presto.data.bulk_ms import BulkMSRecord, dual_corpus_transfer_set
 
 
 def _bulk(peptides):
-    return [
-        BulkMSRecord(peptide=p, machinery="trypsin", detectability_label=1.0)
-        for p in peptides
-    ]
+    return [BulkMSRecord(peptide=p, machinery="trypsin", detectability_label=1.0) for p in peptides]
 
 
 def test_selects_only_peptides_present_in_both_corpora():

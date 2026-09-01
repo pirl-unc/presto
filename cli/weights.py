@@ -100,9 +100,7 @@ def download_file(
     digest = hasher.hexdigest()
     if expected_sha256 and digest.lower() != expected_sha256.lower():
         tmp_path.unlink(missing_ok=True)
-        raise ValueError(
-            f"SHA256 mismatch for {url}: expected {expected_sha256}, got {digest}"
-        )
+        raise ValueError(f"SHA256 mismatch for {url}: expected {expected_sha256}, got {digest}")
 
     tmp_path.replace(output_path)
     return {"bytes": n_bytes, "sha256": digest, "path": str(output_path)}
@@ -199,8 +197,7 @@ def cmd_weights_download(args: Any) -> int:
                 print(f"Using existing weights: {output}")
                 return 0
             print(
-                "Existing file hash does not match expected SHA256. "
-                "Use --force to re-download.",
+                "Existing file hash does not match expected SHA256. Use --force to re-download.",
                 file=sys.stderr,
             )
             return 1

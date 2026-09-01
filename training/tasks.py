@@ -48,6 +48,7 @@ from presto.data.allele_resolver import (
 # MHC/Species Parsing (using mhcgnomes as the canonical parser)
 # =============================================================================
 
+
 def parse_mhc_allele(allele: str) -> Dict[str, Any]:
     """Parse an MHC allele using mhcgnomes.
 
@@ -56,9 +57,7 @@ def parse_mhc_allele(allele: str) -> Dict[str, Any]:
     """
     result = parse_allele_name(allele) if allele else None
     gene = getattr(result.gene, "name", None) if getattr(result, "gene", None) else None
-    species = (
-        getattr(result.species, "name", None) if getattr(result, "species", None) else None
-    )
+    species = getattr(result.species, "name", None) if getattr(result, "species", None) else None
     mhc_class = normalize_mhc_class(getattr(result, "mhc_class", None), default=None)
     if gene is None and allele:
         gene = infer_gene(allele)
@@ -79,14 +78,31 @@ def _gene_to_chain_type_id(gene: Optional[str], allele: str) -> int:
     """Map MHC gene name to chain type ID."""
     # Map gene names to IDs (0-11)
     gene_map = {
-        'A': 0, 'B': 1, 'C': 2, 'E': 3, 'F': 4, 'G': 5,  # Class I alpha
-        'DRA': 6, 'DQA1': 7, 'DPA1': 8,  # Class II alpha
-        'DRB': 9, 'DQB1': 10, 'DPB1': 11,  # Class II beta
+        'A': 0,
+        'B': 1,
+        'C': 2,
+        'E': 3,
+        'F': 4,
+        'G': 5,  # Class I alpha
+        'DRA': 6,
+        'DQA1': 7,
+        'DPA1': 8,  # Class II alpha
+        'DRB': 9,
+        'DQB1': 10,
+        'DPB1': 11,  # Class II beta
         # Normalize numbered variants
-        'DRB1': 9, 'DRB3': 9, 'DRB4': 9, 'DRB5': 9,
-        'DQA': 7, 'DQB': 10, 'DPA': 8, 'DPB': 11,
+        'DRB1': 9,
+        'DRB3': 9,
+        'DRB4': 9,
+        'DRB5': 9,
+        'DQA': 7,
+        'DQB': 10,
+        'DPA': 8,
+        'DPB': 11,
         # Mouse
-        'K': 0, 'D': 1, 'L': 2,  # Map to Class I slots
+        'K': 0,
+        'D': 1,
+        'L': 2,  # Map to Class I slots
     }
 
     if gene and gene in gene_map:
@@ -113,17 +129,35 @@ def _species_to_id(species: Optional[str], allele: str) -> int:
 
 # Canonical label maps used by task helpers and tests.
 MHC_CHAIN_TYPE_MAP = {
-    'HLA-A': 0, 'HLA-B': 1, 'HLA-C': 2, 'HLA-E': 3, 'HLA-F': 4, 'HLA-G': 5,
-    'HLA-DRA': 6, 'HLA-DQA': 7, 'HLA-DPA': 8,
-    'HLA-DRB': 9, 'HLA-DQB': 10, 'HLA-DPB': 11,
-    'H-2-K': 0, 'H-2-D': 1, 'H-2-L': 2,
-    'H-2-IA': 6, 'H-2-IE': 9,
+    'HLA-A': 0,
+    'HLA-B': 1,
+    'HLA-C': 2,
+    'HLA-E': 3,
+    'HLA-F': 4,
+    'HLA-G': 5,
+    'HLA-DRA': 6,
+    'HLA-DQA': 7,
+    'HLA-DPA': 8,
+    'HLA-DRB': 9,
+    'HLA-DQB': 10,
+    'HLA-DPB': 11,
+    'H-2-K': 0,
+    'H-2-D': 1,
+    'H-2-L': 2,
+    'H-2-IA': 6,
+    'H-2-IE': 9,
 }
 
 SPECIES_MAP = {
-    'human': 0, 'homo_sapiens': 0, 'HLA': 0,
-    'mouse': 1, 'mus_musculus': 1, 'H-2': 1,
-    'macaque': 2, 'mamu': 2, 'Mamu': 2,
+    'human': 0,
+    'homo_sapiens': 0,
+    'HLA': 0,
+    'mouse': 1,
+    'mus_musculus': 1,
+    'H-2': 1,
+    'macaque': 2,
+    'mamu': 2,
+    'Mamu': 2,
     'rat': 3,
 }
 
@@ -131,6 +165,7 @@ SPECIES_MAP = {
 # =============================================================================
 # Common Negative Generation Helper
 # =============================================================================
+
 
 def generate_shuffled_negatives(
     positives: List[Dict[str, Any]],
@@ -212,9 +247,11 @@ def generate_random_negatives(
 # Task Base Class
 # =============================================================================
 
+
 @dataclass
 class TaskSpec:
     """Specification for what a task needs from samples."""
+
     # Fields that MUST be present in sample
     required_fields: Set[str]
     # The field containing the label (if from data, not derived)
@@ -239,6 +276,7 @@ class Task(ABC):
     - generate_negatives: create negative samples
     - preprocess: transform sample before model
     """
+
     name: str
     spec: TaskSpec
 
@@ -322,10 +360,23 @@ class Task(ABC):
 
 # Receptor chain type labels
 RECEPTOR_CHAIN_TYPE_MAP = {
-    "TRAV": 0, "TRAJ": 1, "TRBV": 2, "TRBJ": 3, "TRBD": 4,
-    "TRGV": 5, "TRGJ": 6, "TRDV": 7, "TRDJ": 8, "TRDD": 9,
-    "IGHV": 10, "IGHJ": 11, "IGHD": 12,
-    "IGKV": 13, "IGKJ": 14, "IGLV": 15, "IGLJ": 16,
+    "TRAV": 0,
+    "TRAJ": 1,
+    "TRBV": 2,
+    "TRBJ": 3,
+    "TRBD": 4,
+    "TRGV": 5,
+    "TRGJ": 6,
+    "TRDV": 7,
+    "TRDJ": 8,
+    "TRDD": 9,
+    "IGHV": 10,
+    "IGHJ": 11,
+    "IGHD": 12,
+    "IGKV": 13,
+    "IGKJ": 14,
+    "IGLV": 15,
+    "IGLJ": 16,
 }
 
 
@@ -335,6 +386,7 @@ class MHCChainTypeTask(Task):
     Uses mhcgnomes for robust parsing when available, with fallback.
     Labels: HLA-A→0, HLA-B→1, ..., HLA-DPB→11
     """
+
     name = "mhc_chain_type"
     spec = TaskSpec(
         required_fields={"mhc_allele"},
@@ -370,6 +422,7 @@ class MHCChainTypeTask(Task):
 
 class ReceptorChainTypeTask(Task):
     """Classify receptor chain type (TRAV, TRBV, etc.)."""
+
     name = "receptor_chain_type"
     spec = TaskSpec(
         required_fields={"tcr_v_gene"},
@@ -402,6 +455,7 @@ class ReceptorChainTypeTask(Task):
 
 class SpeciesTask(Task):
     """Classify species from allele name using mhcgnomes."""
+
     name = "species"
     spec = TaskSpec(
         required_fields={"mhc_allele"},
@@ -437,8 +491,11 @@ class SpeciesTask(Task):
 # Valid MHC chain pairings (alpha, beta combinations)
 MHC_VALID_PAIRINGS = {
     # Class II: alpha + beta
-    ("HLA-DRA", "HLA-DRB"), ("HLA-DQA", "HLA-DQB"), ("HLA-DPA", "HLA-DPB"),
-    ("H-2-IA", "H-2-IA"), ("H-2-IE", "H-2-IE"),
+    ("HLA-DRA", "HLA-DRB"),
+    ("HLA-DQA", "HLA-DQB"),
+    ("HLA-DPA", "HLA-DPB"),
+    ("H-2-IA", "H-2-IA"),
+    ("H-2-IE", "H-2-IE"),
 }
 
 
@@ -448,6 +505,7 @@ class MHCPairingTask(Task):
     Positive examples: known pairings from haplotype data
     Negative examples: random mismatched chains (synthetic)
     """
+
     name = "mhc_pairing"
     spec = TaskSpec(
         required_fields={"mhc_a_seq", "mhc_b_seq"},
@@ -473,8 +531,7 @@ class MHCPairingTask(Task):
         # Fallback to prefix extraction if mhcgnomes didn't get gene
         def extract_gene_fallback(allele: str) -> str:
             gene = allele.split("*")[0] if "*" in allele else allele
-            for prefix in ["HLA-DRA", "HLA-DRB", "HLA-DQA", "HLA-DQB",
-                           "HLA-DPA", "HLA-DPB"]:
+            for prefix in ["HLA-DRA", "HLA-DRB", "HLA-DQA", "HLA-DQB", "HLA-DPA", "HLA-DPB"]:
                 if gene.startswith(prefix):
                     return prefix
             return gene
@@ -516,8 +573,10 @@ class MHCPairingTask(Task):
     def generate_negatives(self, positives, all_samples, n_per_positive=1):
         """Generate negative pairings by shuffling chains."""
         return generate_shuffled_negatives(
-            positives, all_samples,
-            field_a="mhc_a_seq", field_b="mhc_b_seq",
+            positives,
+            all_samples,
+            field_a="mhc_a_seq",
+            field_b="mhc_b_seq",
             label_field="pairing_label",
             n_per_positive=n_per_positive,
         )
@@ -536,12 +595,9 @@ class MHCPairingTask(Task):
         preds = (probs > 0.5).long()
         acc = (preds == targets).float().mean().item()
 
-        auroc = _auroc_or_none(
-            targets.detach().cpu().numpy(), probs.detach().cpu().numpy()
-        )
+        auroc = _auroc_or_none(targets.detach().cpu().numpy(), probs.detach().cpu().numpy())
 
         return {"accuracy": acc, "auroc": auroc}
-
 
 
 def _auroc_or_none(targets, probs):
@@ -570,11 +626,13 @@ def _auprc_or_none(targets, probs):
 # Stage 3: Binding Tasks
 # =============================================================================
 
+
 class BindingTask(Task):
     """Predict peptide-MHC binding affinity (KD, IC50).
 
     Uses censor-aware loss for inequality measurements (<500 nM, >10000 nM).
     """
+
     name = "binding"
     spec = TaskSpec(
         required_fields={"pep_seq", "mhc_allele", "bind_value"},
@@ -596,15 +654,15 @@ class BindingTask(Task):
             loss = torch.zeros_like(diff)
 
             # For "=" measurements: standard MSE
-            eq_mask = (qual == 0)
+            eq_mask = qual == 0
             loss[eq_mask] = diff[eq_mask] ** 2
 
             # For "<" measurements (qual=-1): only penalize if pred > target
-            lt_mask = (qual == -1)
+            lt_mask = qual == -1
             loss[lt_mask] = F.relu(diff[lt_mask]) ** 2
 
             # For ">" measurements (qual=1): only penalize if pred < target
-            gt_mask = (qual == 1)
+            gt_mask = qual == 1
             loss[gt_mask] = F.relu(-diff[gt_mask]) ** 2
 
         if mask is not None:
@@ -616,6 +674,7 @@ class BindingTask(Task):
         target = batch["bind_target"].squeeze(-1).detach().cpu().numpy()
 
         from scipy.stats import spearmanr
+
         try:
             rho, _ = spearmanr(pred, target)
         except Exception:
@@ -630,6 +689,7 @@ class ElutionTask(Task):
 
     Positive-only data: need to generate random peptide negatives.
     """
+
     name = "elution"
     spec = TaskSpec(
         required_fields={"pep_seq", "mhc_allele"},
@@ -641,7 +701,8 @@ class ElutionTask(Task):
     def generate_negatives(self, positives, all_samples, n_per_positive=5):
         """Generate negatives with random peptides not in positive set."""
         return generate_random_negatives(
-            positives, all_samples,
+            positives,
+            all_samples,
             swap_field="pep_seq",
             keep_fields=["mhc_allele"],
             label_field="elution_label",
@@ -669,6 +730,7 @@ class ElutionTask(Task):
 
 class ProcessingTask(Task):
     """Predict antigen processing (proteasome cleavage, TAP transport)."""
+
     name = "processing"
     spec = TaskSpec(
         required_fields={"pep_seq", "flank_n", "flank_c"},
@@ -692,6 +754,7 @@ class ProcessingTask(Task):
 
 class StabilityTask(Task):
     """Predict pMHC stability (t1/2, Tm)."""
+
     name = "stability"
     spec = TaskSpec(
         required_fields={"pep_seq", "mhc_allele", "stability_value"},
@@ -711,6 +774,7 @@ class StabilityTask(Task):
         target = batch["stability_target"].squeeze(-1).detach().cpu().numpy()
 
         from scipy.stats import spearmanr
+
         try:
             rho, _ = spearmanr(pred, target)
         except Exception:
@@ -721,6 +785,7 @@ class StabilityTask(Task):
 
 class TcrEvidenceTask(Task):
     """Predict pMHC-only curated cognate-TCR evidence."""
+
     name = "tcr_evidence"
     spec = TaskSpec(
         required_fields={"pep_seq", "mhc_allele"},
@@ -744,6 +809,7 @@ class TcrEvidenceTask(Task):
 
 class ImmunogenicityTask(Task):
     """Predict if pMHC elicits T-cell response (without specific TCR)."""
+
     name = "immunogenicity"
     spec = TaskSpec(
         required_fields={"pep_seq", "mhc_allele"},
@@ -755,7 +821,8 @@ class ImmunogenicityTask(Task):
     def generate_negatives(self, positives, all_samples, n_per_positive=1):
         """Generate negatives from binding data that didn't elicit response."""
         return generate_random_negatives(
-            positives, all_samples,
+            positives,
+            all_samples,
             swap_field="pep_seq",
             keep_fields=["mhc_allele"],
             label_field="immunogenicity_label",
@@ -783,6 +850,7 @@ class ImmunogenicityTask(Task):
 
 class TcellAssayTask(Task):
     """Predict T-cell assay outcome (IFNg, cytotoxicity, etc.)."""
+
     name = "tcell_assay"
     spec = TaskSpec(
         required_fields={"pep_seq", "mhc_allele", "tcell_label"},
@@ -868,6 +936,7 @@ _register_default_tasks()
 # Task Balancing (from multi-task learning literature)
 # =============================================================================
 
+
 class TaskBalancer(ABC):
     """Base class for task loss balancing strategies."""
 
@@ -891,16 +960,12 @@ class UncertaintyBalancer(TaskBalancer):
     """Learn weights from homoscedastic uncertainty (Kendall et al. 2018)."""
 
     def __init__(self, task_names: List[str], device="cpu"):
-        self.log_vars = nn.ParameterDict({
-            name: nn.Parameter(torch.zeros(1, device=device))
-            for name in task_names
-        })
+        self.log_vars = nn.ParameterDict(
+            {name: nn.Parameter(torch.zeros(1, device=device)) for name in task_names}
+        )
 
     def get_weights(self, task_losses):
-        return {
-            name: torch.exp(-self.log_vars[name]).item()
-            for name in task_losses
-        }
+        return {name: torch.exp(-self.log_vars[name]).item() for name in task_losses}
 
     def compute_total_loss(self, task_losses: Dict[str, torch.Tensor]) -> torch.Tensor:
         """Compute uncertainty-weighted total loss."""
@@ -923,6 +988,7 @@ class RandomBalancer(TaskBalancer):
 # =============================================================================
 # Task Progress Tracking
 # =============================================================================
+
 
 class TaskTracker:
     """Track training progress per task."""
@@ -960,8 +1026,5 @@ class TaskTracker:
         """Get summary statistics."""
         return {
             "steps": self.steps.copy(),
-            "avg_losses": {
-                name: self.get_avg_loss(name)
-                for name in self.task_names
-            },
+            "avg_losses": {name: self.get_avg_loss(name) for name in self.task_names},
         }

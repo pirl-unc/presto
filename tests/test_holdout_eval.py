@@ -69,9 +69,7 @@ class TestMetricFamilySelection:
         assert "auprc" in metrics and "balanced_accuracy" in metrics
 
     def test_mse_gets_regression_metrics(self):
-        metrics = metrics_for_loss_type(
-            "mse", np.array([1.0, 2.0, 3.0]), np.array([1.1, 2.1, 2.9])
-        )
+        metrics = metrics_for_loss_type("mse", np.array([1.0, 2.0, 3.0]), np.array([1.1, 2.1, 2.9]))
         assert "spearman" in metrics and "rmse" in metrics
         assert "auroc" not in metrics
 
@@ -221,7 +219,9 @@ class TestCollectionAndArtifacts:
         accumulator = TaskPredictionAccumulator("excision", "bce")
         accumulator.add([1.0, 0.0], [4.0, -4.0], [1.0, 1.0], ["s0", "s1"])
         payload = write_holdout_artifacts(
-            tmp_path, {"excision": accumulator}, split="val",
+            tmp_path,
+            {"excision": accumulator},
+            split="val",
             extra_summary={"best_val_loss": 0.25},
         )
         assert payload["best_val_loss"] == 0.25
@@ -312,8 +312,7 @@ class TestProbabilityColumn:
         from presto.training.holdout_eval import TaskPredictionAccumulator
 
         acc = TaskPredictionAccumulator("t", loss_type)
-        acc.add([1.0] * len(preds), preds, [1.0] * len(preds),
-                [f"s{i}" for i in range(len(preds))])
+        acc.add([1.0] * len(preds), preds, [1.0] * len(preds), [f"s{i}" for i in range(len(preds))])
         return acc
 
     def test_binary_tasks_carry_a_probability(self):
@@ -348,9 +347,7 @@ class TestProbabilityColumn:
         from presto.training.holdout_eval import write_holdout_artifacts
 
         with tempfile.TemporaryDirectory() as tmp:
-            write_holdout_artifacts(
-                Path(tmp), {"t": self._accumulator("bce", [0.0, 1.0])}
-            )
+            write_holdout_artifacts(Path(tmp), {"t": self._accumulator("bce", [0.0, 1.0])})
             with (Path(tmp) / "val_predictions.csv").open() as handle:
                 header = next(csv.reader(handle))
         assert "y_prob" in header

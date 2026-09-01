@@ -239,7 +239,7 @@ def main() -> None:
         default="factorized",
         choices=["factorized", "none"],
         help="Whether assay-selector metadata feeds the benchmark head path. 'none' forces zero "
-            "assay embeddings.",
+        "assay embeddings.",
     )
     parser.add_argument(
         "--init-checkpoint",

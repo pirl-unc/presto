@@ -89,7 +89,5 @@ class TestDeclaredDependencyAgrees:
         from pathlib import Path
 
         wanted = ".".join(str(part) for part in MINIMUM_HITLIST_VERSION)
-        launcher = (
-            Path(__file__).resolve().parents[1] / "scripts" / "train_remote.py"
-        ).read_text()
+        launcher = (Path(__file__).resolve().parents[1] / "scripts" / "train_remote.py").read_text()
         assert f'"hitlist>={wanted}"' in launcher

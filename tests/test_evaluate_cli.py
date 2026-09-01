@@ -45,4 +45,3 @@ def test_evaluate_synthetic_outputs_retrieval_metrics(tmp_path, capsys):
     assert "recall_at_1" in payload
     assert "recall_at_5" in payload
     assert "recall_at_10" in payload
-

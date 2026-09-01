@@ -45,9 +45,7 @@ _MHC_CLASS_II_ALIASES = {
 # Coarse network buckets. Keep these distinct from fine-grained species identity
 # returned by `infer_species_identity`.
 PROCESSING_SPECIES_BUCKETS = tuple(MHC_SPECIES_CATEGORIES)
-PROCESSING_SPECIES_TO_IDX = {
-    name: idx for idx, name in enumerate(PROCESSING_SPECIES_BUCKETS)
-}
+PROCESSING_SPECIES_TO_IDX = {name: idx for idx, name in enumerate(PROCESSING_SPECIES_BUCKETS)}
 
 # ---------------------------------------------------------------------------
 # B2M sequences — loaded from external CSV
@@ -167,9 +165,7 @@ def _require_mhcgnomes() -> Any:
         ) from exc
     parse_fn = getattr(function_api, "parse", None)
     if not callable(parse_fn):
-        raise RuntimeError(
-            "mhcgnomes is installed but does not expose a callable parse API."
-        )
+        raise RuntimeError("mhcgnomes is installed but does not expose a callable parse API.")
     setattr(mhcgnomes, "parse", parse_fn)
     return mhcgnomes
 
@@ -397,6 +393,7 @@ def class_i_beta2m_sequence(species: Optional[str]) -> Optional[str]:
 @dataclass
 class AlleleRecord:
     """A resolved MHC allele."""
+
     name: str
     sequence: str
     gene: str
@@ -671,6 +668,7 @@ def validate_mhc_species_coverage(mhc_index: Dict[str, str]) -> Dict[str, int]:
         Dict mapping species category → count of alleles in that category.
     """
     from collections import Counter
+
     counts: Counter = Counter()
     unmapped: list = []
     for allele_name in mhc_index:

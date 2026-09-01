@@ -61,9 +61,7 @@ class AffinityHead(nn.Module, ABC):
         binding estimate without giving the assay pathway gradient access
         to the encoder or head MLP (caller should detach the result).
         """
-        raise NotImplementedError(
-            f"{type(self).__name__} must implement compute_binding_signal"
-        )
+        raise NotImplementedError(f"{type(self).__name__} must implement compute_binding_signal")
 
     def predict_distribution(
         self,

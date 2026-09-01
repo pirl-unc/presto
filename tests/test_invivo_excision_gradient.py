@@ -100,9 +100,7 @@ class TestInVivoExcisionIsSupervised:
         model = Presto(d_model=32, n_layers=2, n_heads=4)
         with torch.no_grad():
             model.w_invivo_excision_presentation.fill_(-50.0)
-            assert float(torch.nn.functional.softplus(
-                model.w_invivo_excision_presentation
-            )) >= 0.0
+            assert float(torch.nn.functional.softplus(model.w_invivo_excision_presentation)) >= 0.0
 
 
 class TestEdgeDoesNotLeakAcrossCorpora:

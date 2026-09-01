@@ -62,11 +62,13 @@ class TestPeptideAdmissibility:
     def test_every_emitted_peptide_tokenizes(self):
         from presto.data.tokenizer import Tokenizer
 
-        frame = _frame([
-            _row(peptide="SIINFEKLA"),
-            _row(peptide="AILEVCGUKL"),
-            _row(peptide="LLDGTATLRF"),
-        ])
+        frame = _frame(
+            [
+                _row(peptide="SIINFEKLA"),
+                _row(peptide="AILEVCGUKL"),
+                _row(peptide="LLDGTATLRF"),
+            ]
+        )
         records, _ = records_from_bulk_frame(frame)
         tokenizer = Tokenizer()
         for record in records:
@@ -75,9 +77,7 @@ class TestPeptideAdmissibility:
 
 class TestEnzymeRouting:
     def test_unknown_enzyme_rows_are_skipped(self):
-        records, stats = records_from_bulk_frame(
-            _frame([_row(enzyme="some-unlisted-protease")])
-        )
+        records, stats = records_from_bulk_frame(_frame([_row(enzyme="some-unlisted-protease")]))
         assert records == []
 
     @pytest.mark.parametrize("enzyme", ["trypsin", "chymotrypsin", "lysc", "gluc"])

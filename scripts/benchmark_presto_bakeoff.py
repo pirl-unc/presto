@@ -28,8 +28,13 @@ from typing import Any, Dict, List, Sequence, Tuple
 from experiment_registry import default_agent_label, initialize_experiment_dir
 
 DEFAULT_ALLELES = (
-    "HLA-A*02:01", "HLA-A*24:02", "HLA-A*03:01", "HLA-A*11:01",
-    "HLA-A*01:01", "HLA-B*07:02", "HLA-B*44:02",
+    "HLA-A*02:01",
+    "HLA-A*24:02",
+    "HLA-A*03:01",
+    "HLA-A*11:01",
+    "HLA-A*01:01",
+    "HLA-B*07:02",
+    "HLA-B*44:02",
 )
 DEFAULT_PROBES = ("SLLQHLIGL", "FLRYLLFGI", "NFLIKFLLI")
 APP_ID_PATTERN = re.compile(r"\bap-[A-Za-z0-9]+\b")
@@ -45,13 +50,19 @@ class BakeoffSpec:
 
 def _common_data_args(*, alleles: Sequence[str], probes: Sequence[str]) -> List[str]:
     return [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--extra-probe-peptides", ",".join(probes[1:]),
-        "--measurement-profile", "numeric_no_qualitative",
-        "--qualifier-filter", "all",
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--extra-probe-peptides",
+        ",".join(probes[1:]),
+        "--measurement-profile",
+        "numeric_no_qualitative",
+        "--qualifier-filter",
+        "all",
         "--no-synthetic-negatives",
-        "--probe-plot-frequency", "off",
+        "--probe-plot-frequency",
+        "off",
     ]
 
 
@@ -65,17 +76,28 @@ def _groove_args() -> Tuple[str, ...]:
 def _presto_base(*, loss_mode: str) -> Tuple[str, ...]:
     """Build Presto extra_args tuple. Both v4 variants share everything except loss_mode."""
     return (
-        "--d-model", "128",
-        "--n-layers", "2",
-        "--n-heads", "4",
-        "--lr", "2.8e-4",
-        "--peptide-pos-mode", "concat_start_end_frac",
-        "--groove-pos-mode", "concat_start_end_frac",
-        "--affinity-loss-mode", loss_mode,
-        "--affinity-assay-residual-mode", "shared_base_segment_residual",
-        "--binding-core-lengths", "8,9,10,11",
-        "--binding-direct-segment-mode", "off",
-        "--init-checkpoint", WARM_CHECKPOINT,
+        "--d-model",
+        "128",
+        "--n-layers",
+        "2",
+        "--n-heads",
+        "4",
+        "--lr",
+        "2.8e-4",
+        "--peptide-pos-mode",
+        "concat_start_end_frac",
+        "--groove-pos-mode",
+        "concat_start_end_frac",
+        "--affinity-loss-mode",
+        loss_mode,
+        "--affinity-assay-residual-mode",
+        "shared_base_segment_residual",
+        "--binding-core-lengths",
+        "8,9,10,11",
+        "--binding-direct-segment-mode",
+        "off",
+        "--init-checkpoint",
+        WARM_CHECKPOINT,
     )
 
 
@@ -219,9 +241,7 @@ def main() -> None:
     probes = [part.strip() for part in str(args.probes).split(",") if part.strip()]
 
     selected_condition_ids = {
-        part.strip().upper()
-        for part in str(args.condition_ids).split(",")
-        if part.strip()
+        part.strip().upper() for part in str(args.condition_ids).split(",") if part.strip()
     }
     selected_conditions = tuple(
         spec

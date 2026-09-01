@@ -64,9 +64,7 @@ class TestEveryParameterIsReachable:
         real_map = model._parameter_component_map()
         poisoned = dict(real_map)
         poisoned[next(iter(poisoned))] = "component_that_no_stage_trains"
-        monkeypatch.setattr(
-            model, "_parameter_component_map", lambda: poisoned
-        )
+        monkeypatch.setattr(model, "_parameter_component_map", lambda: poisoned)
         with pytest.raises(ValueError, match="trained by no stage"):
             model.curriculum_param_groups(model.STAGE_IMMUNOGENICITY)
 
@@ -74,14 +72,10 @@ class TestEveryParameterIsReachable:
 class TestStagesAreSequential:
     def test_advancing_a_stage_unfreezes_what_it_adds(self, model):
         model.curriculum_param_groups(model.STAGE_BINDING_CLASS1)
-        frozen_early = sum(
-            1 for _, p in model.named_parameters() if not p.requires_grad
-        )
+        frozen_early = sum(1 for _, p in model.named_parameters() if not p.requires_grad)
         assert frozen_early > 0, "stage 1 should freeze something"
         model.curriculum_param_groups(model.STAGE_IMMUNOGENICITY)
-        frozen_late = sum(
-            1 for _, p in model.named_parameters() if not p.requires_grad
-        )
+        frozen_late = sum(1 for _, p in model.named_parameters() if not p.requires_grad)
         assert frozen_late == 0, (
             "advancing the curriculum left parameters frozen; stages are "
             "called in sequence on one model, so active groups must be "
@@ -130,8 +124,7 @@ class TestDeliberateInitSurvives:
         ordinary = [
             module
             for module in model.modules()
-            if isinstance(module, nn.Embedding)
-            and id(module.weight) not in preserved
+            if isinstance(module, nn.Embedding) and id(module.weight) not in preserved
         ]
         assert ordinary, "expected at least one blanket-initialized embedding"
         assert all(float(m.weight.abs().sum()) > 0.0 for m in ordinary)

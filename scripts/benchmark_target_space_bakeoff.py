@@ -69,7 +69,7 @@ DESIGNS = (
     DesignSpec(
         "A07",
         "shared_base_factorized_context_plus_segment_residual + split_kd_proxy on P04 "
-            "positional base",
+        "positional base",
         (
             "--d-model",
             "128",

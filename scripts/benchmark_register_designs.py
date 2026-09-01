@@ -446,7 +446,7 @@ def _write_leaderboard(output_dir: Path, runs: Sequence[Mapping[str, Any]]) -> D
             "## Design means",
             "",
             "| design | runs | >=1.5x correct | any correct | mean log10 margin | mean best val "
-                "loss | best run |",
+            "loss | best run |",
             "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
         ]
         for row in design_rows:
@@ -455,9 +455,7 @@ def _write_leaderboard(output_dir: Path, runs: Sequence[Mapping[str, Any]]) -> D
                     "| {design_id} | {runs_reported} | {avg_probe_correct_ge_1p5:.2f} | "
                     "{avg_probe_correct_any:.2f} | {avg_probe_mean_log10_margin:.3f} | "
                     "{avg_best_val_loss:.4f} | {best_run_id} |"
-                ).format(
-                    **row
-                )
+                ).format(**row)
             )
         lines.append("")
     if ranked_runs:
@@ -465,7 +463,7 @@ def _write_leaderboard(output_dir: Path, runs: Sequence[Mapping[str, Any]]) -> D
             "## Runs",
             "",
             "| run | design | seed | status | best epoch | >=1.5x correct | mean log10 margin | "
-                "best val loss |",
+            "best val loss |",
             "| --- | --- | ---: | --- | ---: | ---: | ---: | ---: |",
         ]
         for run in ranked_runs:

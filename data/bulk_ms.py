@@ -112,9 +112,7 @@ def machinery_for_enzyme(enzyme: str) -> str:
     enzyme to "unknown", and rows with unknown machinery are silently skipped,
     so the entire shotgun corpus would vanish with no error.
     """
-    return _ENZYME_TO_MACHINERY_FOLDED.get(
-        str(enzyme or "").strip().lower(), "unknown"
-    )
+    return _ENZYME_TO_MACHINERY_FOLDED.get(str(enzyme or "").strip().lower(), "unknown")
 
 
 def detectability_from_depth(
@@ -293,8 +291,7 @@ def load_bulk_ms_records(
         from hitlist.bulk_proteomics import load_bulk_peptides
     except ImportError as exc:  # pragma: no cover - exercised via install docs
         raise SystemExit(
-            "hitlist is required for the bulk MS corpus. Install it with "
-            "`pip install hitlist`."
+            "hitlist is required for the bulk MS corpus. Install it with `pip install hitlist`."
         ) from exc
 
     kwargs: Dict[str, Any] = {}

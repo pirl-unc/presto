@@ -15,7 +15,13 @@ class TestVocabulary:
     def test_appended_entries_did_not_move_existing_indices(self):
         """Append-only is what makes older checkpoints still meaningful."""
         assert BINDING_ASSAY_TYPES[:7] == [
-            "unknown", "KD", "KD_PROXY_IC50", "KD_PROXY_EC50", "IC50", "EC50", "OTHER",
+            "unknown",
+            "KD",
+            "KD_PROXY_IC50",
+            "KD_PROXY_EC50",
+            "IC50",
+            "EC50",
+            "OTHER",
         ]
 
     def test_stability_and_kinetics_types_exist(self):
@@ -24,28 +30,35 @@ class TestVocabulary:
 
 
 class TestCategorization:
-    @pytest.mark.parametrize("response,expected", [
-        ("half life", "T_HALF"),
-        ("50% dissociation temperature", "TM"),
-        ("off rate", "KOFF"),
-        ("on rate", "KON"),
-        ("dissociation constant KD", "KD"),
-        ("dissociation constant KD (~IC50)", "KD_PROXY_IC50"),
-        ("half maximal inhibitory concentration (IC50)", "IC50"),
-    ])
+    @pytest.mark.parametrize(
+        "response,expected",
+        [
+            ("half life", "T_HALF"),
+            ("50% dissociation temperature", "TM"),
+            ("off rate", "KOFF"),
+            ("on rate", "KON"),
+            ("dissociation constant KD", "KD"),
+            ("dissociation constant KD (~IC50)", "KD_PROXY_IC50"),
+            ("half maximal inhibitory concentration (IC50)", "IC50"),
+        ],
+    )
     def test_hitlist_response_strings_map_correctly(self, response, expected):
         assert PrestoCollator()._categorize_binding_assay_type(response) == expected
 
     def test_dissociation_temperature_is_not_read_as_a_kd(self):
         """It contains 'dissociation', so ordering in the categorizer matters."""
-        assert PrestoCollator()._categorize_binding_assay_type(
-            "50% dissociation temperature"
-        ) == "TM"
+        assert (
+            PrestoCollator()._categorize_binding_assay_type("50% dissociation temperature") == "TM"
+        )
 
     def test_stability_row_carries_its_own_type_through_collation(self):
         sample = PrestoSample(
-            peptide="SIINFEKLA", mhc_a=MHC_A, mhc_b=MHC_B, mhc_class="I",
-            t_half=4.0, stability_assay_type="half life",
+            peptide="SIINFEKLA",
+            mhc_a=MHC_A,
+            mhc_b=MHC_B,
+            mhc_class="I",
+            t_half=4.0,
+            stability_assay_type="half life",
             stability_assay_method="purified MHC/direct/radioactivity",
         )
         context = PrestoCollator()([sample]).binding_context

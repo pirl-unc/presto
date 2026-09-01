@@ -62,10 +62,14 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "C1",
         "d128 A07(fac+seg) full pretrain=yes enc=mhcflurry",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", A07,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "mhcflurry",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            A07,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "mhcflurry",
         ),
         uses_pretrain=True,
     ),
@@ -74,10 +78,14 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "C2",
         "d128 A03(seg only) full pretrain=yes enc=mhcflurry",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", A03,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "mhcflurry",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            A03,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "mhcflurry",
         ),
         uses_pretrain=True,
     ),
@@ -86,10 +94,14 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "C3",
         "d128 A07(fac+seg) full pretrain=no enc=mhcflurry",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", A07,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "mhcflurry",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            A07,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "mhcflurry",
         ),
         uses_pretrain=False,
     ),
@@ -98,10 +110,14 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "C4",
         "d128 A07(fac+seg) assay_heads_only pretrain=yes enc=mhcflurry",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", A07,
-            "--affinity-loss-mode", "assay_heads_only",
-            "--affinity-target-encoding", "mhcflurry",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            A07,
+            "--affinity-loss-mode",
+            "assay_heads_only",
+            "--affinity-target-encoding",
+            "mhcflurry",
         ),
         uses_pretrain=True,
     ),
@@ -110,10 +126,14 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "C5",
         "d128 A07(fac+seg) full pretrain=yes enc=log10",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", A07,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "log10",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            A07,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "log10",
         ),
         uses_pretrain=True,
     ),
@@ -122,12 +142,18 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "C6",
         "d32 A07(fac+seg) full pretrain=no enc=mhcflurry",
         (
-            "--d-model", "32",
-            "--n-layers", "2",
-            "--n-heads", "4",
-            "--affinity-assay-residual-mode", A07,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "mhcflurry",
+            "--d-model",
+            "32",
+            "--n-layers",
+            "2",
+            "--n-heads",
+            "4",
+            "--affinity-assay-residual-mode",
+            A07,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "mhcflurry",
         ),
         uses_pretrain=False,
     ),
@@ -136,12 +162,18 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "C7",
         "d32 A03(seg only) full pretrain=no enc=mhcflurry",
         (
-            "--d-model", "32",
-            "--n-layers", "2",
-            "--n-heads", "4",
-            "--affinity-assay-residual-mode", A03,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "mhcflurry",
+            "--d-model",
+            "32",
+            "--n-layers",
+            "2",
+            "--n-heads",
+            "4",
+            "--affinity-assay-residual-mode",
+            A03,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "mhcflurry",
         ),
         uses_pretrain=False,
     ),
@@ -150,10 +182,14 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "C8",
         "d128 pooled_single full pretrain=yes enc=mhcflurry [NEG CTRL]",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", POOLED,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "mhcflurry",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            POOLED,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "mhcflurry",
         ),
         uses_pretrain=True,
     ),
@@ -166,23 +202,39 @@ def _run_id(prefix: str, design_id: str) -> str:
 
 def _common_args(*, alleles: Sequence[str], probes: Sequence[str]) -> List[str]:
     args = [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--measurement-profile", "numeric_no_qualitative",
-        "--qualifier-filter", "all",
-        "--peptide-pos-mode", "concat_start_end_frac",
-        "--groove-pos-mode", "concat_start_end_frac",
-        "--binding-core-lengths", "8,9,10,11",
-        "--binding-core-refinement", "shared",
-        "--kd-grouping-mode", "split_kd_proxy",
-        "--max-affinity-nm", "100000",
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--measurement-profile",
+        "numeric_no_qualitative",
+        "--qualifier-filter",
+        "all",
+        "--peptide-pos-mode",
+        "concat_start_end_frac",
+        "--groove-pos-mode",
+        "concat_start_end_frac",
+        "--binding-core-lengths",
+        "8,9,10,11",
+        "--binding-core-refinement",
+        "shared",
+        "--kd-grouping-mode",
+        "split_kd_proxy",
+        "--max-affinity-nm",
+        "100000",
         "--no-synthetic-negatives",
-        "--binding-contrastive-weight", "0",
-        "--binding-peptide-contrastive-weight", "0",
-        "--probe-plot-frequency", "off",
-        "--lr", "1e-3",
-        "--lr-schedule", "constant",
-        "--weight-decay", "0.01",
+        "--binding-contrastive-weight",
+        "0",
+        "--binding-peptide-contrastive-weight",
+        "0",
+        "--probe-plot-frequency",
+        "off",
+        "--lr",
+        "1e-3",
+        "--lr-schedule",
+        "constant",
+        "--weight-decay",
+        "0.01",
     ]
     if len(probes) > 1:
         args.extend(["--extra-probe-peptides", ",".join(probes[1:])])
@@ -223,11 +275,11 @@ def _launch_design(
         " ".join(extra_args),
     ]
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"  {design.design_id}: {design.description}")
     print(f"  run_id: {run_id}")
     print(f"  pretrain: {design.uses_pretrain}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"  cmd: {' '.join(cmd)}")
 
     if dry_run:
@@ -385,36 +437,45 @@ def main() -> None:
     # Write variants summary
     lines = ["# Factorized Ablation — 8 Conditions", ""]
     for row in launches:
-        lines.extend([
-            f"## {row['design_id']}: {row['description']}",
+        lines.extend(
+            [
+                f"## {row['design_id']}: {row['description']}",
+                "",
+                f"- App: `{row.get('app_id')}`",
+                f"- Run: `{row['run_id']}`",
+                f"- Pretrain: {row.get('uses_pretrain')}",
+                f"- Launch log: `{row.get('launch_log')}`",
+                "",
+            ]
+        )
+    lines.extend(
+        [
+            "## Pairwise Comparisons",
             "",
-            f"- App: `{row.get('app_id')}`",
-            f"- Run: `{row['run_id']}`",
-            f"- Pretrain: {row.get('uses_pretrain')}",
-            f"- Launch log: `{row.get('launch_log')}`",
+            "| Question | Comparison | Expected |",
+            "|----------|------------|----------|",
+            "| Factorized helps? | C1 vs C2, C6 vs C7 | Modest improvement |",
+            "| Pretraining helps? | C1 vs C3 | Yes, ~0.01-0.03 Spearman |",
+            "| d=128 vs d=32? | C1 vs C6 | d=128 wins |",
+            "| full vs assay_heads_only? | C1 vs C4 | full slightly better |",
+            "| mhcflurry vs log10? | C1 vs C5 | mhcflurry slightly better |",
+            "| pooled collapses? | C8 vs all | Yes, Spearman ~0.02 |",
             "",
-        ])
-    lines.extend([
-        "## Pairwise Comparisons",
-        "",
-        "| Question | Comparison | Expected |",
-        "|----------|------------|----------|",
-        "| Factorized helps? | C1 vs C2, C6 vs C7 | Modest improvement |",
-        "| Pretraining helps? | C1 vs C3 | Yes, ~0.01-0.03 Spearman |",
-        "| d=128 vs d=32? | C1 vs C6 | d=128 wins |",
-        "| full vs assay_heads_only? | C1 vs C4 | full slightly better |",
-        "| mhcflurry vs log10? | C1 vs C5 | mhcflurry slightly better |",
-        "| pooled collapses? | C8 vs all | Yes, Spearman ~0.02 |",
-        "",
-    ])
+        ]
+    )
     (out_dir / "variants.md").write_text("\n".join(lines), encoding="utf-8")
 
-    print(json.dumps({
-        "event": "factorized_ablation_launched",
-        "out_dir": str(out_dir),
-        "n_designs": len(launches),
-        "dry_run": bool(args.dry_run),
-    }, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "event": "factorized_ablation_launched",
+                "out_dir": str(out_dir),
+                "n_designs": len(launches),
+                "dry_run": bool(args.dry_run),
+            },
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":

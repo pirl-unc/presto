@@ -69,9 +69,7 @@ class TestPanelIdentity:
                 mhc_class=batch.mhc_class,
                 provenance=provenance,
             )
-        gathered = out[panel_key].gather(
-            1, provenance[index_key].unsqueeze(1)
-        ).squeeze(1)
+        gathered = out[panel_key].gather(1, provenance[index_key].unsqueeze(1)).squeeze(1)
         assert torch.allclose(out["excision_logit"], gathered, atol=1e-4), (
             "the observed column disagrees with excision_logit; the panel is "
             "double-counting the observed condition and the loss supervises a "
@@ -205,9 +203,7 @@ class TestSpeciesOverrideIsTrained:
     def test_the_untrained_embedding_is_gone(self):
         model = Presto(d_model=32, n_layers=1, n_heads=2)
         assert not hasattr(model, "species_override_embed")
-        assert not any(
-            "species_override_embed" in name for name in model.state_dict()
-        )
+        assert not any("species_override_embed" in name for name in model.state_dict())
 
     def test_the_override_source_receives_gradient(self):
         """The whole point: the weights behind the override actually train."""
@@ -235,9 +231,7 @@ class TestSpeciesOverrideIsTrained:
         with torch.no_grad():
             base = model(**inputs)
             overridden = model(**inputs, species_of_origin=["viruses", "bacteria"])
-        assert not torch.allclose(
-            base["foreignness_prob"], overridden["foreignness_prob"]
-        )
+        assert not torch.allclose(base["foreignness_prob"], overridden["foreignness_prob"])
 
     def test_the_override_preserves_latent_scale(self):
         """A classifier weight row and a cross-attention output share a space

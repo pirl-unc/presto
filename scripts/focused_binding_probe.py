@@ -546,7 +546,7 @@ class StrictAlleleBalancedBatchSampler(Sampler[List[int]]):
             if missing_synth:
                 raise ValueError(
                     "Strict allele-balanced batching requires synthetic rows for every target "
-                        "allele "
+                    "allele "
                     "when synthetic_fraction > 0: " + ", ".join(missing_synth)
                 )
             self._num_batches = max(
@@ -3577,7 +3577,7 @@ def main() -> None:
         type=str,
         default="",
         help="Optional prepared-dataset cache directory. Default: "
-            "<data-dir>/.cache/focused_binding",
+        "<data-dir>/.cache/focused_binding",
     )
     parser.add_argument("--dataset-cache", dest="dataset_cache", action="store_true")
     parser.add_argument("--no-dataset-cache", dest="dataset_cache", action="store_false")
@@ -3587,7 +3587,7 @@ def main() -> None:
         type=str,
         default=",".join(DEFAULT_ALLELES),
         help="Probe/evaluation allele panel. Also used as the training panel unless "
-            "--train-all-alleles is set.",
+        "--train-all-alleles is set.",
     )
     parser.add_argument("--probe-peptide", type=str, default=DEFAULT_PROBE_PEPTIDE)
     parser.add_argument(
@@ -3719,7 +3719,7 @@ def main() -> None:
         "--train-all-alleles",
         action="store_true",
         help="Train on all alleles matching --train-mhc-class-filter instead of only the "
-            "probe/eval allele panel.",
+        "probe/eval allele panel.",
     )
     parser.add_argument(
         "--init-checkpoint",
@@ -3746,7 +3746,7 @@ def main() -> None:
         default="all",
         choices=sorted(QUALIFIER_FILTERS),
         help="Optional qualifier filter after assay filtering. 'exact' keeps only qualifier=0 "
-            "rows.",
+        "rows.",
     )
     parser.add_argument(
         "--shared-peptides-only",
@@ -3758,7 +3758,7 @@ def main() -> None:
         type=int,
         default=-1,
         help="Cap each allele to this many records. 0 = auto-balance to minority allele count. "
-            "-1 = no balancing.",
+        "-1 = no balancing.",
     )
     parser.add_argument(
         "--class-i-anchor-strategy",
@@ -3778,7 +3778,7 @@ def main() -> None:
         type=float,
         default=-1.0,
         help="Exact synthetic fraction per train batch. Negative values derive the fraction "
-            "from negative_ratio.",
+        "from negative_ratio.",
     )
     parser.add_argument(
         "--synthetic-modes",
@@ -3818,7 +3818,7 @@ def main() -> None:
         choices=sorted(AFFINITY_ASSAY_RESIDUAL_MODES),
         default="legacy",
         help="Residual/bias mode for KD/IC50/EC50 assay heads. This does not add assay-selector "
-            "inputs.",
+        "inputs.",
     )
     parser.add_argument(
         "--kd-grouping-mode",
@@ -3826,7 +3826,7 @@ def main() -> None:
         choices=("merged_kd", "split_kd_proxy"),
         default="merged_kd",
         help="Whether direct KD and proxy-KD assay families share one KD output or use split "
-            "proxy outputs.",
+        "proxy outputs.",
     )
     parser.add_argument(
         "--binding-kinetic-input-mode",
@@ -3887,7 +3887,7 @@ def main() -> None:
         type=float,
         default=0.2,
         help="Required predicted log10(KD) margin for stronger-vs-weaker peptide pairs within "
-            "an allele.",
+        "an allele.",
     )
     parser.add_argument(
         "--binding-peptide-contrastive-target-gap-min",

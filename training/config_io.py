@@ -20,9 +20,7 @@ def load_config_file(path: str) -> Dict[str, Any]:
         try:
             import yaml
         except ImportError as exc:
-            raise ImportError(
-                "YAML config requested but pyyaml is not installed."
-            ) from exc
+            raise ImportError("YAML config requested but pyyaml is not installed.") from exc
         payload = yaml.safe_load(text)
     else:
         raise ValueError(f"Unsupported config format: {cfg_path.suffix}")

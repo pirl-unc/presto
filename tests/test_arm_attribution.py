@@ -91,9 +91,7 @@ class TestAttributionTiers:
 class TestTheColumnsAreRequested:
     """A feature built from a column nobody asked for is a constant."""
 
-    @pytest.mark.parametrize(
-        "column", ["sample_attribution", "is_control_arm", "sample_label"]
-    )
+    @pytest.mark.parametrize("column", ["sample_attribution", "is_control_arm", "sample_label"])
     def test_arm_column_is_in_the_contract(self, column):
         from presto.data.hitlist_source import MS_COLUMNS
 

@@ -33,22 +33,26 @@ from ..data.vocab import (
 #: Note this only became true after `binding_context` was wired into the
 #: training loop: before that the assay path could not train under *any* mode,
 #: because the metadata never reached the model at all.
-_FACTORIZED_CONTEXT_MODES = frozenset({
-    "shared_base_factorized_context_residual",
-    "shared_base_factorized_context_plus_segment_residual",
-    "dag_family",
-    "dag_method_leaf",
-    "dag_prep_readout_leaf",
-})
+_FACTORIZED_CONTEXT_MODES = frozenset(
+    {
+        "shared_base_factorized_context_residual",
+        "shared_base_factorized_context_plus_segment_residual",
+        "dag_family",
+        "dag_method_leaf",
+        "dag_prep_readout_leaf",
+    }
+)
 
 #: Residual modes that consume the pep/MHC sequence summary.
-_SEQUENCE_SUMMARY_MODES = frozenset({
-    "shared_base_segment_residual",
-    "shared_base_factorized_context_plus_segment_residual",
-    "dag_family",
-    "dag_method_leaf",
-    "dag_prep_readout_leaf",
-})
+_SEQUENCE_SUMMARY_MODES = frozenset(
+    {
+        "shared_base_segment_residual",
+        "shared_base_factorized_context_plus_segment_residual",
+        "dag_family",
+        "dag_method_leaf",
+        "dag_prep_readout_leaf",
+    }
+)
 
 
 @dataclass
@@ -129,8 +133,7 @@ class AffinityPredictor(nn.Module):
         binding_kinetic_input_mode = str(binding_kinetic_input_mode).strip().lower()
         if binding_kinetic_input_mode not in {"affinity_vec", "interaction_vec", "fused"}:
             raise ValueError(
-                "Unsupported binding_kinetic_input_mode: "
-                f"{binding_kinetic_input_mode!r}"
+                f"Unsupported binding_kinetic_input_mode: {binding_kinetic_input_mode!r}"
             )
         self.binding_kinetic_input_mode = binding_kinetic_input_mode
         affinity_assay_residual_mode = str(affinity_assay_residual_mode).strip().lower()
@@ -145,8 +148,7 @@ class AffinityPredictor(nn.Module):
             "dag_prep_readout_leaf",
         }:
             raise ValueError(
-                "Unsupported affinity_assay_residual_mode: "
-                f"{affinity_assay_residual_mode!r}"
+                f"Unsupported affinity_assay_residual_mode: {affinity_assay_residual_mode!r}"
             )
         self.affinity_assay_residual_mode = affinity_assay_residual_mode
         kd_grouping_mode = str(kd_grouping_mode).strip().lower()
@@ -193,9 +195,7 @@ class AffinityPredictor(nn.Module):
         # them. See _FACTORIZED_CONTEXT_MODES.
         _fac_embed_dim = max(d_model // 4, 8)
         self._fac_embed_dim = _fac_embed_dim
-        _uses_factorized = (
-            self.affinity_assay_residual_mode in _FACTORIZED_CONTEXT_MODES
-        )
+        _uses_factorized = self.affinity_assay_residual_mode in _FACTORIZED_CONTEXT_MODES
         # Output-side assay panel.
         #
         # docs/assay_modeling_contract.md forbids consuming assay-selector
@@ -253,7 +253,8 @@ class AffinityPredictor(nn.Module):
             affinity_assay_residual_mode=self.affinity_assay_residual_mode,
             sequence_summary_dim=(
                 d_model
-                if self.affinity_assay_residual_mode in {
+                if self.affinity_assay_residual_mode
+                in {
                     "shared_base_segment_residual",
                     "shared_base_factorized_context_plus_segment_residual",
                     "dag_family",
@@ -282,19 +283,21 @@ class AffinityPredictor(nn.Module):
             kd_bias_input_dim = d_model + 1
         else:
             kd_bias_input_dim = 0
-        self.kd_assay_bias = nn.Sequential(
-            nn.Linear(kd_bias_input_dim, d_model // 2),
-            nn.GELU(),
-            nn.Linear(d_model // 2, 1),
-        ) if kd_bias_input_dim > 0 else None
+        self.kd_assay_bias = (
+            nn.Sequential(
+                nn.Linear(kd_bias_input_dim, d_model // 2),
+                nn.GELU(),
+                nn.Linear(d_model // 2, 1),
+            )
+            if kd_bias_input_dim > 0
+            else None
+        )
         self.kd_assay_bias_scale = nn.Parameter(torch.tensor(-1.5))
         self.binding_probe_mix_logit = nn.Parameter(torch.tensor(math.log(3.0)))
         self.w_binding_class1_calibration = nn.Parameter(torch.tensor(0.2))
         self.w_binding_class2_calibration = nn.Parameter(torch.tensor(0.2))
 
-    def predict_assay_panel(
-        self, binding_affinity_vec: torch.Tensor
-    ) -> Dict[str, torch.Tensor]:
+    def predict_assay_panel(self, binding_affinity_vec: torch.Tensor) -> Dict[str, torch.Tensor]:
         """Predicted KD offset under every value of every assay axis.
 
         One tensor per axis, shaped ``[batch, n_values_for_that_axis]``.
@@ -312,13 +315,9 @@ class AffinityPredictor(nn.Module):
             expanded_vec = binding_affinity_vec.unsqueeze(1).expand(
                 batch_size, size, binding_affinity_vec.shape[-1]
             )
-            expanded_axis = table.unsqueeze(0).expand(
-                batch_size, size, table.shape[-1]
-            )
+            expanded_axis = table.unsqueeze(0).expand(batch_size, size, table.shape[-1])
             joined = torch.cat([expanded_vec, expanded_axis], dim=-1)
-            panel[f"binding_assay_panel_{axis}"] = self.assay_panel_head(
-                joined
-            ).squeeze(-1)
+            panel[f"binding_assay_panel_{axis}"] = self.assay_panel_head(joined).squeeze(-1)
         return panel
 
     def forward(
@@ -398,8 +397,7 @@ class AffinityPredictor(nn.Module):
         outputs["binding_logit_from_core"] = binding_logit_from_core
 
         kd_from_binding = (
-            self.binding_midpoint_log10_nM
-            - self.binding_log10_scale * binding_logit_from_core
+            self.binding_midpoint_log10_nM - self.binding_log10_scale * binding_logit_from_core
         ).unsqueeze(-1)
         if self.affinity_assay_residual_mode == "shared_base_segment_residual":
             kd_bias_parts = [sequence_summary_vec]
@@ -538,8 +536,7 @@ class AffinityPredictor(nn.Module):
             - F.softplus(self.w_binding_class2_calibration) * class_margin
         )
         binding_logit = (
-            class_probs[:, :1] * binding_class1_logit
-            + class_probs[:, 1:2] * binding_class2_logit
+            class_probs[:, :1] * binding_class1_logit + class_probs[:, 1:2] * binding_class2_logit
         ).squeeze(-1)
 
         outputs["binding_base_logit"] = binding_base_logit

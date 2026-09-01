@@ -104,10 +104,13 @@ def mil_bag_loss(
         # Binary entropy of instance probs
         inst_probs_clamped = torch.clamp(inst_probs, eps, 1 - eps)
         if mask is not None:
-            entropy = -(
-                inst_probs_clamped * torch.log(inst_probs_clamped)
-                + (1 - inst_probs_clamped) * torch.log(1 - inst_probs_clamped)
-            ) * mask
+            entropy = (
+                -(
+                    inst_probs_clamped * torch.log(inst_probs_clamped)
+                    + (1 - inst_probs_clamped) * torch.log(1 - inst_probs_clamped)
+                )
+                * mask
+            )
             entropy = entropy.sum(dim=-1) / mask.sum(dim=-1).clamp(min=1)
         else:
             entropy = -(

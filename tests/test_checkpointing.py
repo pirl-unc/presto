@@ -101,12 +101,8 @@ def test_renamed_head_keys_are_no_longer_remapped(tmp_path):
 
     model = Presto(d_model=64, n_layers=1, n_heads=4)
     state = model.state_dict()
-    state["processing_class1_head.weight"] = state.pop(
-        "class1_processing_predictor.head.weight"
-    )
-    state["processing_class1_head.bias"] = state.pop(
-        "class1_processing_predictor.head.bias"
-    )
+    state["processing_class1_head.weight"] = state.pop("class1_processing_predictor.head.weight")
+    state["processing_class1_head.bias"] = state.pop("class1_processing_predictor.head.bias")
 
     payload = {
         "checkpoint_format": "presto.v2",
@@ -122,5 +118,3 @@ def test_renamed_head_keys_are_no_longer_remapped(tmp_path):
         load_model_from_checkpoint(path, map_location="cpu")
     message = str(excinfo.value)
     assert "processing_class1_head" in message or "class1_processing_predictor" in message
-
-

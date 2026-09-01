@@ -13,12 +13,14 @@ import torch
 # Censor-Aware Loss Tests
 # --------------------------------------------------------------------------
 
+
 class TestCensorAwareLoss:
     """Test censor-aware regression loss for binding data."""
 
     def test_exact_value_loss(self):
         """For exact values (qual='='), should be MSE-like."""
         from presto.training.losses import censor_aware_loss
+
         pred = torch.tensor([2.0, 3.0])
         target = torch.tensor([2.0, 3.0])
         qual = torch.tensor([0, 0])  # 0 = exact
@@ -28,6 +30,7 @@ class TestCensorAwareLoss:
     def test_less_than_loss(self):
         """For '<' qualifiers, pred should be penalized if > target."""
         from presto.training.losses import censor_aware_loss
+
         # Pred=5, target=3 with '<' -> pred should be <= 3, so loss
         pred = torch.tensor([5.0])
         target = torch.tensor([3.0])
@@ -43,6 +46,7 @@ class TestCensorAwareLoss:
     def test_greater_than_loss(self):
         """For '>' qualifiers, pred should be penalized if < target."""
         from presto.training.losses import censor_aware_loss
+
         # Pred=1, target=3 with '>' -> pred should be >= 3, so loss
         pred = torch.tensor([1.0])
         target = torch.tensor([3.0])
@@ -58,6 +62,7 @@ class TestCensorAwareLoss:
     def test_mixed_qualifiers(self):
         """Should handle mixed qualifiers in batch."""
         from presto.training.losses import censor_aware_loss
+
         pred = torch.tensor([2.0, 5.0, 1.0])
         target = torch.tensor([2.0, 3.0, 3.0])
         qual = torch.tensor([0, -1, 1])  # exact, less than, greater than
@@ -69,12 +74,14 @@ class TestCensorAwareLoss:
 # MIL Bag Loss Tests
 # --------------------------------------------------------------------------
 
+
 class TestMILBagLoss:
     """Test MIL loss for elution data."""
 
     def test_mil_loss_positive_bag(self):
         """Positive bag should encourage high instance probs."""
         from presto.training.losses import mil_bag_loss
+
         inst_probs = torch.tensor([[0.9, 0.8, 0.7]])  # 1 bag, 3 instances
         bag_labels = torch.tensor([1.0])
         loss, bag_prob = mil_bag_loss(inst_probs, bag_labels)
@@ -84,6 +91,7 @@ class TestMILBagLoss:
     def test_mil_loss_negative_bag(self):
         """Negative bag should encourage low instance probs."""
         from presto.training.losses import mil_bag_loss
+
         inst_probs = torch.tensor([[0.1, 0.05, 0.02]])
         bag_labels = torch.tensor([0.0])
         loss, bag_prob = mil_bag_loss(inst_probs, bag_labels)
@@ -92,6 +100,7 @@ class TestMILBagLoss:
     def test_mil_loss_with_mask(self):
         """Should handle variable-length bags via mask."""
         from presto.training.losses import mil_bag_loss
+
         inst_probs = torch.tensor([[0.9, 0.8, 0.0, 0.0]])  # Only 2 valid
         mask = torch.tensor([[1.0, 1.0, 0.0, 0.0]])
         bag_labels = torch.tensor([1.0])
@@ -101,6 +110,7 @@ class TestMILBagLoss:
     def test_mil_entropy_regularization(self):
         """Entropy regularization should prevent MIL collapse."""
         from presto.training.losses import mil_bag_loss
+
         # All instances the same -> low entropy
         inst_probs_low_entropy = torch.tensor([[0.5, 0.5, 0.5]])
         # Mixed instances -> higher entropy
@@ -119,16 +129,19 @@ class TestMILBagLoss:
 # Uncertainty Weighting Tests
 # --------------------------------------------------------------------------
 
+
 class TestUncertaintyWeighting:
     """Test learned uncertainty weighting for multi-task learning."""
 
     def test_uncertainty_weighting_init(self):
         from presto.training.losses import UncertaintyWeighting
+
         uw = UncertaintyWeighting(n_tasks=3)
         assert uw.log_vars.shape == (3,)
 
     def test_uncertainty_weighting_forward(self):
         from presto.training.losses import UncertaintyWeighting
+
         uw = UncertaintyWeighting(n_tasks=3)
         losses = [torch.tensor(1.0), torch.tensor(2.0), torch.tensor(0.5)]
         total = uw(losses)
@@ -137,6 +150,7 @@ class TestUncertaintyWeighting:
     def test_uncertainty_weighting_learns(self):
         """Weights should be learnable."""
         from presto.training.losses import UncertaintyWeighting
+
         uw = UncertaintyWeighting(n_tasks=2)
         losses = [torch.tensor(10.0, requires_grad=True), torch.tensor(0.1, requires_grad=True)]
         total = uw(losses)
@@ -149,11 +163,13 @@ class TestUncertaintyWeighting:
 # Combined Loss Tests
 # --------------------------------------------------------------------------
 
+
 class TestCombinedLoss:
     """Test combined multi-task loss."""
 
     def test_combined_loss_all_tasks(self):
         from presto.training.losses import CombinedLoss
+
         loss_fn = CombinedLoss(task_names=["bind", "kin", "stab", "proc", "el", "tcell"])
 
         losses = {
@@ -170,6 +186,7 @@ class TestCombinedLoss:
     def test_combined_loss_missing_tasks(self):
         """Should handle missing tasks gracefully."""
         from presto.training.losses import CombinedLoss
+
         loss_fn = CombinedLoss(task_names=["bind", "kin", "el"])
 
         # Only bind and el present
@@ -185,11 +202,13 @@ class TestCombinedLoss:
 # Binary Cross-Entropy Loss Tests
 # --------------------------------------------------------------------------
 
+
 class TestBCELoss:
     """Test BCE loss utilities."""
 
     def test_bce_with_logits(self):
         from presto.training.losses import safe_bce_with_logits
+
         logits = torch.tensor([2.0, -2.0, 0.0])
         targets = torch.tensor([1.0, 0.0, 0.5])
         loss = safe_bce_with_logits(logits, targets)
@@ -197,6 +216,7 @@ class TestBCELoss:
 
     def test_bce_label_smoothing(self):
         from presto.training.losses import safe_bce_with_logits
+
         logits = torch.tensor([5.0, -5.0])
         targets = torch.tensor([1.0, 0.0])
         loss_no_smooth = safe_bce_with_logits(logits, targets, label_smoothing=0.0)
@@ -209,12 +229,14 @@ class TestBCELoss:
 # Focal Loss Tests
 # --------------------------------------------------------------------------
 
+
 class TestFocalLoss:
     """Test focal loss for imbalanced classification."""
 
     def test_focal_loss_easy_examples(self):
         """Focal loss should down-weight easy examples."""
         from presto.training.losses import focal_loss
+
         # Easy positive: high logit, label=1
         logit_easy = torch.tensor([5.0])
         # Hard positive: low logit, label=1
@@ -230,6 +252,7 @@ class TestFocalLoss:
 # --------------------------------------------------------------------------
 # PCGrad Tests
 # --------------------------------------------------------------------------
+
 
 class TestPCGrad:
     """Test projected conflicting gradient updates."""

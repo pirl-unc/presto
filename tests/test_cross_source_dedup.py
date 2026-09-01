@@ -135,7 +135,7 @@ def test_parse_iedb_binding_populates_apc_name_from_cell_or_tissue(tmp_path: Pat
         "\n".join(
             [
                 "Reference,Epitope,MHC Restriction,Antigen Presenting Cell Source,Antigen "
-                    "Presenting Cell Source,Assay,Assay,Assay",
+                "Presenting Cell Source,Assay,Assay,Assay",
                 "PMID,Name,Name,Name,Tissue,Response measured,Method,Qualitative measurement",
                 "12345,SIINFEKL,HLA-A*02:01,,PBMC,ligand presentation,mass spectrometry,Positive",
             ]

@@ -25,8 +25,13 @@ from experiment_registry import default_agent_label, initialize_experiment_dir
 from presto.scripts.distributional_ba.config_v2 import CONDITIONS_V2, ConditionSpec
 
 DEFAULT_ALLELES = (
-    "HLA-A*02:01", "HLA-A*24:02", "HLA-A*03:01", "HLA-A*11:01",
-    "HLA-A*01:01", "HLA-B*07:02", "HLA-B*44:02",
+    "HLA-A*02:01",
+    "HLA-A*24:02",
+    "HLA-A*03:01",
+    "HLA-A*11:01",
+    "HLA-A*01:01",
+    "HLA-B*07:02",
+    "HLA-B*44:02",
 )
 DEFAULT_PROBES = ("SLLQHLIGL", "FLRYLLFGI", "NFLIKFLLI")
 APP_ID_PATTERN = re.compile(r"\bap-[A-Za-z0-9]+\b")
@@ -44,10 +49,14 @@ def _launch_condition(
 ) -> Dict[str, Any]:
     run_id = f"{prefix}-c{spec.cond_id:02d}"
     extra_args_parts = [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--extra-probe-peptides", ",".join(probes[1:]),
-        "--qualifier-filter", "all",
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--extra-probe-peptides",
+        ",".join(probes[1:]),
+        "--qualifier-filter",
+        "all",
     ]
 
     cmd = [
@@ -136,8 +145,7 @@ def main() -> None:
                 selected_ids.add(int(part))
 
     selected_conditions = [
-        spec for spec in CONDITIONS_V2
-        if not selected_ids or spec.cond_id in selected_ids
+        spec for spec in CONDITIONS_V2 if not selected_ids or spec.cond_id in selected_ids
     ]
     if selected_ids and not selected_conditions:
         raise ValueError(f"No conditions matched --cond-ids={args.cond_ids!r}")
@@ -182,8 +190,7 @@ def main() -> None:
         manifest = {
             "conditions": len(selected_conditions),
             "condition_list": [
-                {"cond_id": s.cond_id, "label": s.label}
-                for s in selected_conditions
+                {"cond_id": s.cond_id, "label": s.label} for s in selected_conditions
             ],
             "out_dir": str(out_dir),
         }
@@ -203,13 +210,19 @@ def main() -> None:
             out_dir=out_dir,
         )
         manifest.append(result)
-        print(json.dumps({
-            "event": "launched",
-            "cond_id": spec.cond_id,
-            "label": spec.label,
-            "app_id": result.get("app_id"),
-            "run_id": result["run_id"],
-        }, sort_keys=True), flush=True)
+        print(
+            json.dumps(
+                {
+                    "event": "launched",
+                    "cond_id": spec.cond_id,
+                    "label": spec.label,
+                    "app_id": result.get("app_id"),
+                    "run_id": result["run_id"],
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
 
     # Write manifest
     manifest_path = out_dir / "manifest.json"

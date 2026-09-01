@@ -29,7 +29,10 @@ def _raise_if_zero(coverage, allow_env=None):
     rows = int(overall.get("rows_considered", 0) or 0)
     resolved = int(overall.get("resolved_rows", 0) or 0)
     allow = str(os.environ.get("PRESTO_ALLOW_ZERO_MHC", "")).strip().lower() in {
-        "1", "true", "yes", "on",
+        "1",
+        "true",
+        "yes",
+        "on",
     }
     if resolved == 0 and rows > 0 and not allow:
         raise MHCResolutionError(
@@ -120,10 +123,6 @@ class TestGuardMatchesTheImplementation:
         from source_probe import unique_index
 
         source = inspect.getsource(train_iedb)
-        strict_at = unique_index(
-            source, "Unresolved MHC alleles are present", where="train_iedb"
-        )
-        guard_at = unique_index(
-            source, "no MHC sequences resolved for any of", where="train_iedb"
-        )
+        strict_at = unique_index(source, "Unresolved MHC alleles are present", where="train_iedb")
+        guard_at = unique_index(source, "no MHC sequences resolved for any of", where="train_iedb")
         assert strict_at < guard_at

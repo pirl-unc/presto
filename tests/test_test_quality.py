@@ -173,9 +173,7 @@ class TestAssertionsCanFail:
 
     def test_no_test_assertion_is_unconditionally_true(self):
         offenders = self._scan(_test_files())
-        assert offenders == [], (
-            "these assertions can never fail:\n  " + "\n  ".join(offenders)
-        )
+        assert offenders == [], "these assertions can never fail:\n  " + "\n  ".join(offenders)
 
     def test_no_package_assertion_is_unconditionally_true(self):
         """Same rule, applied to shipped code.
@@ -185,9 +183,7 @@ class TestAssertionsCanFail:
         watching that path.
         """
         offenders = self._scan(_package_files())
-        assert offenders == [], (
-            "these assertions can never fail:\n  " + "\n  ".join(offenders)
-        )
+        assert offenders == [], "these assertions can never fail:\n  " + "\n  ".join(offenders)
 
 
 class TestTheGuardsThemselvesWork:
@@ -252,7 +248,5 @@ class TestTheGuardsThemselvesWork:
 
     def test_anchor_detector_ignores_list_index_outside_source_inspection(self):
         """`PROCESSING_STIMULI.index("none")` is not source inspection."""
-        func = ast.parse(
-            "def test_thing():\n    assert VOCAB.index('none') == 0\n"
-        ).body[0]
+        func = ast.parse("def test_thing():\n    assert VOCAB.index('none') == 0\n").body[0]
         assert not _calls_getsource(func)

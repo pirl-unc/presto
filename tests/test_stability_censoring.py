@@ -11,8 +11,12 @@ MHC_B = "IQRTPKIQVY" * 4
 
 def _sample(t_half, qual):
     return PrestoSample(
-        peptide="SIINFEKLA", mhc_a=MHC_A, mhc_b=MHC_B, mhc_class="I",
-        t_half=t_half, t_half_qual=qual,
+        peptide="SIINFEKLA",
+        mhc_a=MHC_A,
+        mhc_b=MHC_B,
+        mhc_class="I",
+        t_half=t_half,
+        t_half_qual=qual,
         stability_assay_type="half life",
         stability_assay_method="purified MHC/direct/radioactivity",
     )

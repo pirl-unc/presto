@@ -56,9 +56,7 @@ def _augment(modes, ratio=1.0, records=None):
 
 class TestTaxonomy:
     def test_every_mode_is_classified(self):
-        assert set(ALL_SYNTHETIC_MODES) == set(EASY_SYNTHETIC_MODES) | set(
-            HARD_SYNTHETIC_MODES
-        )
+        assert set(ALL_SYNTHETIC_MODES) == set(EASY_SYNTHETIC_MODES) | set(HARD_SYNTHETIC_MODES)
 
     def test_the_families_are_disjoint(self):
         assert not set(EASY_SYNTHETIC_MODES) & set(HARD_SYNTHETIC_MODES)
@@ -72,10 +70,7 @@ class TestAlleleMismatchDecoys:
         """The whole point: nothing about the peptide is fake."""
         augmented, _ = _augment(["allele_mismatch"])
         every_real_peptide = {p for ps in REAL_PEPTIDES.values() for p in ps}
-        decoys = [
-            r for r in augmented
-            if str(getattr(r, "source", "")).endswith("allele_mismatch")
-        ]
+        decoys = [r for r in augmented if str(getattr(r, "source", "")).endswith("allele_mismatch")]
         assert decoys, "no allele_mismatch decoys were generated"
         for decoy in decoys:
             assert decoy.peptide in every_real_peptide, (

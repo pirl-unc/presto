@@ -78,16 +78,14 @@ class Tokenizer:
                     ids.append(self.unk_idx)
                     continue
                 raise ValueError(
-                    f"Invalid amino-acid token '{aa}' at position {idx} "
-                    f"in sequence '{seq}'."
+                    f"Invalid amino-acid token '{aa}' at position {idx} in sequence '{seq}'."
                 )
             if aa not in self._valid_sequence_tokens:
                 if self.unknown_policy == "unk":
                     ids.append(self.unk_idx)
                     continue
                 raise ValueError(
-                    f"Invalid sequence token '{aa}' at position {idx} "
-                    f"in sequence '{seq}'."
+                    f"Invalid sequence token '{aa}' at position {idx} in sequence '{seq}'."
                 )
             ids.append(token_id)
 
@@ -107,9 +105,7 @@ class Tokenizer:
                 # Silently right-truncating on a typo would lose the N-flank
                 # P1 residue this parameter exists to preserve, and the flank
                 # tests would still pass.
-                raise ValueError(
-                    f"truncate must be 'left' or 'right'; got {truncate!r}"
-                )
+                raise ValueError(f"truncate must be 'left' or 'right'; got {truncate!r}")
             if truncate == "left":
                 ids = ids[-max_seq_len:] if max_seq_len else []
             else:
@@ -180,7 +176,10 @@ class Tokenizer:
 
         for seq in seqs:
             ids = self.encode(
-                seq, max_len=max_len, add_bos=add_bos, add_eos=add_eos,
+                seq,
+                max_len=max_len,
+                add_bos=add_bos,
+                add_eos=add_eos,
                 truncate=truncate,
             )
             lengths.append(len(ids))

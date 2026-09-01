@@ -114,8 +114,8 @@ TCR-specific matching. The planned gate handles this transition.
 Canonical planned anchor is `pmhc_vec` (from `design.md` S9.7):
 
 ```python
-pmhc_embed = Linear_proj_pmhc(pmhc_vec)   # (d_model,)
-tcr_embed = Linear_proj_tcr(tcr_vec)      # (d_model,)
+pmhc_embed = Linear_proj_pmhc(pmhc_vec)  # (d_model,)
+tcr_embed = Linear_proj_tcr(tcr_vec)  # (d_model,)
 match_logit = cosine_similarity(pmhc_embed, tcr_embed) / temperature
 match_prob = sigmoid(match_logit)
 ```

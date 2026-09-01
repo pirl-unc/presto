@@ -169,9 +169,7 @@ class TestExcisionPanelAgreesWithTheScalarReadout:
     def test_observed_stimulus_column_matches(self):
         stimulus = torch.tensor([1, 2, 3])
         out = self._run(torch.zeros(3, dtype=torch.long), stimulus)
-        observed = (
-            out["excision_panel_stimulus"].gather(1, stimulus.unsqueeze(1)).squeeze(1)
-        )
+        observed = out["excision_panel_stimulus"].gather(1, stimulus.unsqueeze(1)).squeeze(1)
         assert torch.allclose(observed, out["excision_logit"].squeeze(-1), atol=1e-5), (
             "the observed stimulus column disagrees with excision_logit"
         )

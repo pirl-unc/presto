@@ -98,36 +98,55 @@ data_volume = modal.Volume.from_name("presto-data", create_if_missing=True)
 # 10 epochs * ~50 batches/epoch = ~500 batches.
 # With batch_size=64 and ~3200 training samples we get ~50 batches/epoch.
 SANITY_CHECK_ARGS = [
-    "--profile", "diagnostic",
-    "--epochs", "10",
-    "--batch_size", "64",
-    "--d_model", "128",
-    "--n_layers", "2",
-    "--n_heads", "4",
+    "--profile",
+    "diagnostic",
+    "--epochs",
+    "10",
+    "--batch_size",
+    "64",
+    "--d_model",
+    "128",
+    "--n_layers",
+    "2",
+    "--n_heads",
+    "4",
     # Data caps: ~3200 total samples → ~50 batches/epoch
-    "--max-binding", "1500",
-    "--max-elution", "1000",
-    "--max-tcell", "500",
-    "--max-processing", "200",
-    "--max-kinetics", "0",
-    "--max-stability", "0",
-    "--max-vdjdb", "0",
-    "--cap-sampling", "reservoir",
+    "--max-binding",
+    "1500",
+    "--max-elution",
+    "1000",
+    "--max-tcell",
+    "500",
+    "--max-processing",
+    "200",
+    "--max-kinetics",
+    "0",
+    "--max-stability",
+    "0",
+    "--max-vdjdb",
+    "0",
+    "--cap-sampling",
+    "reservoir",
     # Probe: SLLQHLIGL A0201 vs A2402
     "--track-probe-affinity",
-    "--probe-peptide", "SLLQHLIGL",
-    "--probe-alleles", "HLA-A*02:01,HLA-A*24:02",
+    "--probe-peptide",
+    "SLLQHLIGL",
+    "--probe-alleles",
+    "HLA-A*02:01,HLA-A*24:02",
     "--no-track-probe-motif-scan",
     # Skip expensive diagnostics for speed
     "--no-track-pmhc-flow",
     "--no-track-output-latent-stats",
     # Reproducibility
-    "--seed", "42",
+    "--seed",
+    "42",
     "--filter-unresolved-mhc",
     "--strict-mhc-resolution",
     "--balanced-batches",
-    "--lr", "1e-4",
-    "--weight_decay", "0.01",
+    "--lr",
+    "1e-4",
+    "--weight_decay",
+    "0.01",
 ]
 
 
@@ -302,19 +321,30 @@ def sanity_check(
 
     if not Path(default_index).exists() or not Path(default_merged).exists():
         from presto.scripts.train_modal import _prepare_iedb_data
+
         index_csv = _prepare_iedb_data(data_dir, env)
         resolved_args += ["--index-csv", index_csv]
 
         merged_tsv = str(Path(data_dir) / "merged_deduped.tsv")
         merge_cmd = [
-            "python", "-m", "presto", "data", "merge",
-            "--datadir", data_dir, "--quiet",
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
         ]
         subprocess.run(merge_cmd, cwd=str(repo_root), env=env, check=True)
         resolved_args += ["--merged-tsv", merged_tsv]
 
     cmd = [
-        "python", "-m", "presto", "train", "unified",
+        "python",
+        "-m",
+        "presto",
+        "train",
+        "unified",
     ] + resolved_args
 
     print(f"=== Sanity Check: {run_id} ===")

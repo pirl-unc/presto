@@ -103,9 +103,7 @@ class TestDocumentedOutputsExist:
     def test_exemptions_are_still_needed(self, output_keys):
         """An exemption that starts existing should lose its exemption."""
         stale = sorted(name for name in KNOWN_NOT_OUTPUTS if name in output_keys)
-        assert stale == [], (
-            f"these now exist and should leave KNOWN_NOT_OUTPUTS: {stale}"
-        )
+        assert stale == [], f"these now exist and should leave KNOWN_NOT_OUTPUTS: {stale}"
 
 
 class TestRetiredNamesAreGone:
@@ -118,11 +116,8 @@ class TestRetiredNamesAreGone:
                 if name in line and "renamed" not in line and "earlier name" not in line:
                     # A line explaining the retirement is allowed to name it.
                     if any(
-                        marker in line
-                        for marker in ("no longer", "used to", "deleted", "replace")
+                        marker in line for marker in ("no longer", "used to", "deleted", "replace")
                     ):
                         continue
                     offenders.append(f"{path.name}:{line_no}")
-        assert offenders == [], (
-            f"`{name}` ({reason}) still appears in {offenders}"
-        )
+        assert offenders == [], f"`{name}` ({reason}) still appears in {offenders}"

@@ -39,92 +39,136 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         design_id="G0",
         kind="groove",
         extra_args=(
-            "--model-variant", "mlp",
-            "--embed-dim", "64",
-            "--hidden-dim", "128",
+            "--model-variant",
+            "mlp",
+            "--embed-dim",
+            "64",
+            "--hidden-dim",
+            "128",
         ),
     ),
     DesignSpec(
         design_id="G1",
         kind="groove",
         extra_args=(
-            "--model-variant", "transformer",
-            "--embed-dim", "128",
-            "--hidden-dim", "256",
-            "--n-layers", "2",
-            "--n-heads", "4",
+            "--model-variant",
+            "transformer",
+            "--embed-dim",
+            "128",
+            "--hidden-dim",
+            "256",
+            "--n-layers",
+            "2",
+            "--n-heads",
+            "4",
         ),
     ),
     DesignSpec(
         design_id="P0",
         kind="presto",
         extra_args=(
-            "--d-model", "256",
-            "--groove-pos-mode", "triple",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "off",
+            "--d-model",
+            "256",
+            "--groove-pos-mode",
+            "triple",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "off",
         ),
     ),
     DesignSpec(
         design_id="P1",
         kind="presto",
         extra_args=(
-            "--d-model", "256",
-            "--groove-pos-mode", "triple",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "affinity_residual",
+            "--d-model",
+            "256",
+            "--groove-pos-mode",
+            "triple",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "affinity_residual",
         ),
     ),
     DesignSpec(
         design_id="P2",
         kind="presto",
         extra_args=(
-            "--d-model", "256",
-            "--groove-pos-mode", "triple",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "affinity_stability_residual",
+            "--d-model",
+            "256",
+            "--groove-pos-mode",
+            "triple",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "affinity_stability_residual",
         ),
     ),
     DesignSpec(
         design_id="P3",
         kind="presto",
         extra_args=(
-            "--d-model", "256",
-            "--groove-pos-mode", "triple",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "gated_affinity",
+            "--d-model",
+            "256",
+            "--groove-pos-mode",
+            "triple",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "gated_affinity",
         ),
     ),
     DesignSpec(
         design_id="P4",
         kind="presto",
         extra_args=(
-            "--d-model", "128",
-            "--groove-pos-mode", "triple",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "affinity_residual",
+            "--d-model",
+            "128",
+            "--groove-pos-mode",
+            "triple",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "affinity_residual",
         ),
     ),
     DesignSpec(
         design_id="P5",
         kind="presto",
         extra_args=(
-            "--d-model", "128",
-            "--groove-pos-mode", "triple",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "off",
+            "--d-model",
+            "128",
+            "--groove-pos-mode",
+            "triple",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "off",
         ),
     ),
 )
@@ -136,16 +180,25 @@ def _run_id(prefix: str, design_id: str) -> str:
 
 def _common_args(*, alleles: Sequence[str], probes: Sequence[str]) -> List[str]:
     return [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--extra-probe-peptides", ",".join(probes[1:]),
-        "--measurement-profile", "direct_affinity_only",
-        "--measurement-type-filter", "ic50",
-        "--qualifier-filter", "exact",
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--extra-probe-peptides",
+        ",".join(probes[1:]),
+        "--measurement-profile",
+        "direct_affinity_only",
+        "--measurement-type-filter",
+        "ic50",
+        "--qualifier-filter",
+        "exact",
         "--no-synthetic-negatives",
-        "--binding-contrastive-weight", "0",
-        "--binding-peptide-contrastive-weight", "0",
-        "--probe-plot-frequency", "off",
+        "--binding-contrastive-weight",
+        "0",
+        "--binding-peptide-contrastive-weight",
+        "0",
+        "--probe-plot-frequency",
+        "off",
     ]
 
 
@@ -158,10 +211,14 @@ def _build_extra_args(
 ) -> List[str]:
     args = _common_args(alleles=alleles, probes=probes)
     if design.kind == "presto":
-        args.extend([
-            "--affinity-loss-mode", "ic50_only",
-            "--init-checkpoint", warm_start,
-        ])
+        args.extend(
+            [
+                "--affinity-loss-mode",
+                "ic50_only",
+                "--init-checkpoint",
+                warm_start,
+            ]
+        )
     args.extend(design.extra_args)
     return args
 
@@ -189,11 +246,18 @@ def _launch_design(
         else "scripts/train_modal.py::focused_binding_run"
     )
     cmd = [
-        "modal", "run", "--detach", target,
-        "--epochs", str(epochs),
-        "--batch-size", str(batch_size),
-        "--run-id", run_id,
-        "--extra-args", " ".join(extra_args),
+        "modal",
+        "run",
+        "--detach",
+        target,
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+        "--run-id",
+        run_id,
+        "--extra-args",
+        " ".join(extra_args),
     ]
     result = subprocess.run(cmd, text=True, capture_output=True, check=True)
     output = "\n".join(part for part in (result.stdout, result.stderr) if part)
@@ -278,9 +342,7 @@ def main() -> None:
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True))
     lines = ["| design | kind | run_id | app_id |", "| --- | --- | --- | --- |"]
     for row in launched:
-        lines.append(
-            f"| {row['design_id']} | {row['kind']} | {row['run_id']} | {row['app_id']} |"
-        )
+        lines.append(f"| {row['design_id']} | {row['kind']} | {row['run_id']} | {row['app_id']} |")
     (out_dir / "manifest.md").write_text("\n".join(lines) + "\n")
     print(json.dumps(manifest, indent=2))
 
