@@ -7,4 +7,22 @@ exclude = [
 ]
 
 [lint]
-select = ["E9", "F63", "F7", "F82"]
+# Deliberately narrow: syntax errors (E9), comparison/assertion mistakes (F63,
+# which includes F631 -- `assert (cond, "msg")`, a non-empty tuple and so
+# always true), obvious bugs (F7), undefined names (F82).
+#
+# The B/PT codes are the assertion-quality rules from presto#18: an assertion
+# that cannot fail occupies the space where a check should be and reports
+# success. The judgement half of #18 -- tests that verify the path the author
+# had in mind -- is not lintable and lives in tests/test_test_quality.py.
+select = [
+  "E9",
+  "F63",
+  "F7",
+  "F82",
+  "B011",   # assert False -- unreachable after python -O
+  "B015",   # pointless comparison, almost always a dropped assert
+  "B018",   # useless expression, ditto
+  "PT015",  # assertion that is always false
+  "PT017",  # asserting on an exception in `except` instead of pytest.raises
+]

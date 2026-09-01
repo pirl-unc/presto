@@ -117,7 +117,13 @@ class TestGuardMatchesTheImplementation:
 
         from presto.scripts import train_iedb
 
+        from source_probe import unique_index
+
         source = inspect.getsource(train_iedb)
-        strict_at = source.index("Unresolved MHC alleles are present")
-        guard_at = source.index("no MHC sequences resolved for any of")
+        strict_at = unique_index(
+            source, "Unresolved MHC alleles are present", where="train_iedb"
+        )
+        guard_at = unique_index(
+            source, "no MHC sequences resolved for any of", where="train_iedb"
+        )
         assert strict_at < guard_at

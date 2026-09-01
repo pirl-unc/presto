@@ -820,16 +820,12 @@ def test_find_iedb_export_file_required_keywords_missing_raises(tmp_path):
     root = tmp_path / "iedb"
     _write_text(root / "mhc_ligand_full.csv", "h1,h2\n1,2\n")
 
-    try:
+    with pytest.raises(FileNotFoundError, match="(?i)required keywords"):
         find_iedb_export_file(
             root,
             keywords=("mhc", "ligand"),
             required_keywords=("cedar",),
         )
-    except FileNotFoundError as exc:
-        assert "required keywords" in str(exc).lower()
-    else:
-        raise AssertionError("Expected missing required keyword selection to fail")
 
 
 def test_merge_records_with_limit_caps_total_across_groups():

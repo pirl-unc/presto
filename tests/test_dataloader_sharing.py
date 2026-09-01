@@ -85,8 +85,29 @@ class TestAppliedWhereItMatters:
 
         from presto.data import loaders
 
+        from source_probe import unique_index
+
+        # Assert the call sits *inside* a worker guard, rather than merely
+        # after the first one. `if num_workers > 0:` occurs twice in this
+        # function -- the original ordering check compared against whichever
+        # came first and would have passed even if the sharing call had
+        # escaped its guard entirely.
         source = inspect.getsource(loaders.create_dataloader)
-        assert "_use_file_system_sharing()" in source
-        guard = source.index("if num_workers > 0:")
-        call = source.index("_use_file_system_sharing()")
-        assert guard < call
+        unique_index(
+            source, "_use_file_system_sharing()", where="create_dataloader"
+        )
+        lines = source.splitlines()
+        call_lines = [
+            i for i, line in enumerate(lines) if "_use_file_system_sharing()" in line
+        ]
+        assert len(call_lines) == 1, call_lines
+        index = call_lines[0]
+        preceding = lines[index - 1].strip()
+        assert preceding == "if num_workers > 0:", (
+            "the file-system sharing call is no longer directly inside a "
+            f"worker guard; the line above it is {preceding!r}. Single-process "
+            "loading would pay for a fix it does not need."
+        )
+        assert lines[index].startswith(" " * (len(lines[index - 1]) - len(preceding) + 4)), (
+            "the sharing call is not indented under the guard"
+        )

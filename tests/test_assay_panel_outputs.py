@@ -90,11 +90,12 @@ class TestContractCompliance:
 
         from presto.scripts import train_synthetic
 
+        # Whole function, not a window around the first forward call. The
+        # window version could only speak for one call site; `binding_context=`
+        # must not appear anywhere in the loss, which is both simpler and
+        # strictly stronger.
         source = inspect.getsource(train_synthetic.compute_loss)
-        forward_start = source.index("outputs = model(")
-        forward_end = source.index(")", source.index("provenance=", forward_start))
-        forward_call = source[forward_start:forward_end]
-        assert "binding_context=" not in forward_call, (
+        assert "binding_context=" not in source, (
             "assay-selector metadata is being fed to the model as input, which "
             "docs/assay_modeling_contract.md forbids"
         )

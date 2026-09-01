@@ -82,10 +82,15 @@ class TestHoldoutForwardPassesProvenance:
         """
         import presto.scripts.train_iedb as train_iedb
 
+        from source_probe import region_between
+
         source = inspect.getsource(train_iedb)
-        start = source.index("def _forward(model_ref, batch_ref):")
-        end = source.index("accumulators = collect_holdout_predictions", start)
-        forward_src = source[start:end]
+        forward_src = region_between(
+            source,
+            "def _forward(model_ref, batch_ref):",
+            "accumulators = collect_holdout_predictions",
+            where="train_iedb",
+        )
         assert "provenance=provenance" in forward_src, (
             "the held-out forward dropped provenance again; validation would "
             "score a different function than training optimizes"

@@ -152,7 +152,10 @@ class TestMILProvenanceIsComplete:
         from presto.data import collate
 
         source = inspect.getsource(collate.PrestoCollator.__call__)
-        tcell_call = source[source.index("tcell_mil_tensors = ") :][:400]
+        from source_probe import unique_index
+
+        start = unique_index(source, "tcell_mil_tensors = ", where="PrestoCollator.__call__")
+        tcell_call = source[start : start + 400]
         assert 'peptide_source="unknown"' in tcell_call
 
     def test_elution_bags_carry_the_provenance_axes(self):
