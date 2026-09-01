@@ -193,15 +193,11 @@ def _launch_run(
     except subprocess.TimeoutExpired as exc:
         timed_out = True
         output = "\n".join(
-            part
-            for part in (_coerce_text(exc.stdout), _coerce_text(exc.stderr))
-            if part
+            part for part in (_coerce_text(exc.stdout), _coerce_text(exc.stderr)) if part
         )
     except subprocess.CalledProcessError as exc:
         output = "\n".join(
-            part
-            for part in (_coerce_text(exc.stdout), _coerce_text(exc.stderr))
-            if part
+            part for part in (_coerce_text(exc.stdout), _coerce_text(exc.stderr)) if part
         )
         raise RuntimeError(f"Failed to launch run {run_id}:\n{output}") from exc
     match = APP_ID_PATTERN.search(output)
@@ -282,7 +278,9 @@ def _probe_value_at_epoch(
     return None
 
 
-def _probe_metrics(summary: Mapping[str, Any], probe_rows: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
+def _probe_metrics(
+    summary: Mapping[str, Any], probe_rows: Sequence[Mapping[str, Any]]
+) -> Dict[str, Any]:
     best_epoch = _best_epoch(summary)
     if best_epoch is None:
         return {}
@@ -291,7 +289,9 @@ def _probe_metrics(summary: Mapping[str, Any], probe_rows: Sequence[Mapping[str,
     margins: List[float] = []
     probes: Dict[str, Any] = {}
     for peptide, (stronger, weaker) in PROBE_EXPECTATIONS.items():
-        strong_v = _probe_value_at_epoch(probe_rows, epoch=best_epoch, peptide=peptide, allele=stronger)
+        strong_v = _probe_value_at_epoch(
+            probe_rows, epoch=best_epoch, peptide=peptide, allele=stronger
+        )
         weak_v = _probe_value_at_epoch(probe_rows, epoch=best_epoch, peptide=peptide, allele=weaker)
         if strong_v is None or weak_v is None or strong_v <= 0.0 or weak_v <= 0.0:
             continue
@@ -345,7 +345,9 @@ def _refresh_run(local_root: Path, run: Mapping[str, Any]) -> Dict[str, Any]:
     run_root = local_root / run_id
     summary_path = run_root / "summary.json"
     probe_csv_path = run_root / "probe_affinity_over_epochs.csv"
-    fetched_summary = _fetch_volume_file(run_id=run_id, remote_name="summary.json", local_path=summary_path)
+    fetched_summary = _fetch_volume_file(
+        run_id=run_id, remote_name="summary.json", local_path=summary_path
+    )
     fetched_probe = _fetch_volume_file(
         run_id=run_id,
         remote_name="probe_affinity_over_epochs.csv",
@@ -397,7 +399,8 @@ def _design_rollup(runs: Sequence[Mapping[str, Any]]) -> List[Dict[str, Any]]:
                 )
                 / count,
                 "avg_probe_mean_log10_margin": sum(
-                    float(run["metrics"].get("probe_mean_log10_margin", 0.0) or 0.0) for run in items
+                    float(run["metrics"].get("probe_mean_log10_margin", 0.0) or 0.0)
+                    for run in items
                 )
                 / count,
                 "avg_best_val_loss": sum(
@@ -421,9 +424,7 @@ def _design_rollup(runs: Sequence[Mapping[str, Any]]) -> List[Dict[str, Any]]:
 def _write_leaderboard(output_dir: Path, runs: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
     output_dir.mkdir(parents=True, exist_ok=True)
     design_rows = _design_rollup(runs)
-    ranked_runs = [
-        run for run in runs if isinstance(run.get("metrics"), Mapping)
-    ]
+    ranked_runs = [run for run in runs if isinstance(run.get("metrics"), Mapping)]
     ranked_runs.sort(key=lambda run: _score_tuple(run["metrics"]), reverse=True)
     payload = {
         "generated_at_unix": time.time(),
@@ -444,12 +445,17 @@ def _write_leaderboard(output_dir: Path, runs: Sequence[Mapping[str, Any]]) -> D
         lines += [
             "## Design means",
             "",
-            "| design | runs | >=1.5x correct | any correct | mean log10 margin | mean best val loss | best run |",
+            "| design | runs | >=1.5x correct | any correct | mean log10 margin | mean best val "
+                "loss | best run |",
             "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
         ]
         for row in design_rows:
             lines.append(
-                "| {design_id} | {runs_reported} | {avg_probe_correct_ge_1p5:.2f} | {avg_probe_correct_any:.2f} | {avg_probe_mean_log10_margin:.3f} | {avg_best_val_loss:.4f} | {best_run_id} |".format(
+                (
+                    "| {design_id} | {runs_reported} | {avg_probe_correct_ge_1p5:.2f} | "
+                    "{avg_probe_correct_any:.2f} | {avg_probe_mean_log10_margin:.3f} | "
+                    "{avg_best_val_loss:.4f} | {best_run_id} |"
+                ).format(
                     **row
                 )
             )
@@ -458,16 +464,23 @@ def _write_leaderboard(output_dir: Path, runs: Sequence[Mapping[str, Any]]) -> D
         lines += [
             "## Runs",
             "",
-            "| run | design | seed | status | best epoch | >=1.5x correct | mean log10 margin | best val loss |",
+            "| run | design | seed | status | best epoch | >=1.5x correct | mean log10 margin | "
+                "best val loss |",
             "| --- | --- | ---: | --- | ---: | ---: | ---: | ---: |",
         ]
         for run in ranked_runs:
             metrics = run["metrics"]
+            # Lifted out of the f-string: the inline conditionals ran past the
+            # line limit and were unreadable at any width.
+            margin = metrics.get("probe_mean_log10_margin")
+            margin = float("nan") if margin is None else margin
+            best_val = metrics.get("best_val_loss")
+            best_val = float("nan") if best_val is None else best_val
             lines.append(
                 f"| {run['run_id']} | {run['design_id']} | {run['seed']} | {run['status']} | "
                 f"{metrics.get('best_epoch', '')} | {metrics.get('probe_correct_ge_1p5', '')} | "
-                f"{(metrics.get('probe_mean_log10_margin') if metrics.get('probe_mean_log10_margin') is not None else float('nan')):.3f} | "
-                f"{(metrics.get('best_val_loss') if metrics.get('best_val_loss') is not None else float('nan')):.4f} |"
+                f"{margin:.3f} | "
+                f"{best_val:.4f} |"
             )
     (output_dir / "leaderboard.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     return payload
@@ -484,7 +497,9 @@ def _iter_target_runs(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Launch and poll Stage-A register design benchmarks")
+    parser = argparse.ArgumentParser(
+        description="Launch and poll Stage-A register design benchmarks"
+    )
     parser.add_argument("--agent-label", type=str, default=default_agent_label())
     parser.add_argument("--output-dir", type=str, default="")
     parser.add_argument("--prefix", type=str, default="register-stagea-20260308")

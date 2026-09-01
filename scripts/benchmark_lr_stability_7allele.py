@@ -59,12 +59,18 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "S1",
         "d128 A07 full pretrain mhcflurry lr=3e-4 warmup_cosine",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", A07,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "mhcflurry",
-            "--lr", "3e-4",
-            "--lr-schedule", "warmup_cosine",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            A07,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "mhcflurry",
+            "--lr",
+            "3e-4",
+            "--lr-schedule",
+            "warmup_cosine",
         ),
         uses_pretrain=True,
     ),
@@ -73,12 +79,18 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "S2",
         "d128 A07 full pretrain mhcflurry lr=3e-4 onecycle",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", A07,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "mhcflurry",
-            "--lr", "3e-4",
-            "--lr-schedule", "onecycle",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            A07,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "mhcflurry",
+            "--lr",
+            "3e-4",
+            "--lr-schedule",
+            "onecycle",
         ),
         uses_pretrain=True,
     ),
@@ -87,12 +99,18 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "S3",
         "d128 A07 full pretrain mhcflurry lr=1e-4 warmup_cosine",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", A07,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "mhcflurry",
-            "--lr", "1e-4",
-            "--lr-schedule", "warmup_cosine",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            A07,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "mhcflurry",
+            "--lr",
+            "1e-4",
+            "--lr-schedule",
+            "warmup_cosine",
         ),
         uses_pretrain=True,
     ),
@@ -101,12 +119,18 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "S4",
         "d128 A07 full pretrain mhcflurry lr=1e-3 warmup_cosine",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", A07,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "mhcflurry",
-            "--lr", "1e-3",
-            "--lr-schedule", "warmup_cosine",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            A07,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "mhcflurry",
+            "--lr",
+            "1e-3",
+            "--lr-schedule",
+            "warmup_cosine",
         ),
         uses_pretrain=True,
     ),
@@ -115,12 +139,18 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "S5",
         "d128 A07 heads_only pretrain mhcflurry lr=1e-3 constant [C4 ctrl]",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", A07,
-            "--affinity-loss-mode", "assay_heads_only",
-            "--affinity-target-encoding", "mhcflurry",
-            "--lr", "1e-3",
-            "--lr-schedule", "constant",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            A07,
+            "--affinity-loss-mode",
+            "assay_heads_only",
+            "--affinity-target-encoding",
+            "mhcflurry",
+            "--lr",
+            "1e-3",
+            "--lr-schedule",
+            "constant",
         ),
         uses_pretrain=True,
     ),
@@ -129,12 +159,18 @@ DESIGNS: Tuple[DesignSpec, ...] = (
         "S6",
         "d128 A03 full pretrain mhcflurry lr=3e-4 warmup_cosine",
         (
-            "--d-model", "128",
-            "--affinity-assay-residual-mode", A03,
-            "--affinity-loss-mode", "full",
-            "--affinity-target-encoding", "mhcflurry",
-            "--lr", "3e-4",
-            "--lr-schedule", "warmup_cosine",
+            "--d-model",
+            "128",
+            "--affinity-assay-residual-mode",
+            A03,
+            "--affinity-loss-mode",
+            "full",
+            "--affinity-target-encoding",
+            "mhcflurry",
+            "--lr",
+            "3e-4",
+            "--lr-schedule",
+            "warmup_cosine",
         ),
         uses_pretrain=True,
     ),
@@ -147,21 +183,35 @@ def _run_id(prefix: str, design_id: str) -> str:
 
 def _common_args(*, alleles: Sequence[str], probes: Sequence[str]) -> List[str]:
     args = [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--measurement-profile", "numeric_no_qualitative",
-        "--qualifier-filter", "all",
-        "--peptide-pos-mode", "concat_start_end_frac",
-        "--groove-pos-mode", "concat_start_end_frac",
-        "--binding-core-lengths", "8,9,10,11",
-        "--binding-core-refinement", "shared",
-        "--kd-grouping-mode", "split_kd_proxy",
-        "--max-affinity-nm", "100000",
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--measurement-profile",
+        "numeric_no_qualitative",
+        "--qualifier-filter",
+        "all",
+        "--peptide-pos-mode",
+        "concat_start_end_frac",
+        "--groove-pos-mode",
+        "concat_start_end_frac",
+        "--binding-core-lengths",
+        "8,9,10,11",
+        "--binding-core-refinement",
+        "shared",
+        "--kd-grouping-mode",
+        "split_kd_proxy",
+        "--max-affinity-nm",
+        "100000",
         "--no-synthetic-negatives",
-        "--binding-contrastive-weight", "0",
-        "--binding-peptide-contrastive-weight", "0",
-        "--probe-plot-frequency", "off",
-        "--weight-decay", "0.01",
+        "--binding-contrastive-weight",
+        "0",
+        "--binding-peptide-contrastive-weight",
+        "0",
+        "--probe-plot-frequency",
+        "off",
+        "--weight-decay",
+        "0.01",
     ]
     if len(probes) > 1:
         args.extend(["--extra-probe-peptides", ",".join(probes[1:])])
@@ -188,40 +238,55 @@ def _launch_design(
     extra_args.extend(["--design-id", design.design_id])
 
     cmd = [
-        "modal", "run", "--detach",
+        "modal",
+        "run",
+        "--detach",
         "scripts/train_modal.py::focused_binding_run",
-        "--epochs", str(epochs),
-        "--batch-size", str(batch_size),
-        "--run-id", run_id,
-        "--extra-args", " ".join(extra_args),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+        "--run-id",
+        run_id,
+        "--extra-args",
+        " ".join(extra_args),
     ]
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"  {design.design_id}: {design.description}")
     print(f"  run_id: {run_id}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     if dry_run:
         print("  [DRY RUN]")
         return {
-            "run_id": run_id, "design_id": design.design_id,
-            "description": design.description, "app_id": None,
-            "command": cmd, "extra_args": extra_args,
-            "returncode": None, "launch_output": "[DRY RUN]",
-            "launch_log": None, "uses_pretrain": design.uses_pretrain,
+            "run_id": run_id,
+            "design_id": design.design_id,
+            "description": design.description,
+            "app_id": None,
+            "command": cmd,
+            "extra_args": extra_args,
+            "returncode": None,
+            "launch_output": "[DRY RUN]",
+            "launch_log": None,
+            "uses_pretrain": design.uses_pretrain,
         }
 
     log_path = out_dir / "launch_logs" / f"{run_id}.log"
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    completed = subprocess.run(cmd, text=True, capture_output=True, env=os.environ.copy(), check=False)
+    completed = subprocess.run(
+        cmd, text=True, capture_output=True, env=os.environ.copy(), check=False
+    )
     output = (completed.stdout or "") + (completed.stderr or "")
     log_path.write_text(output, encoding="utf-8")
     match = APP_ID_PATTERN.search(output)
     result = {
-        "run_id": run_id, "design_id": design.design_id,
+        "run_id": run_id,
+        "design_id": design.design_id,
         "description": design.description,
         "app_id": match.group(0) if match else None,
-        "command": cmd, "extra_args": extra_args,
+        "command": cmd,
+        "extra_args": extra_args,
         "returncode": completed.returncode,
         "launch_output": output.strip(),
         "launch_log": str(log_path),
@@ -272,8 +337,12 @@ def main() -> None:
             "synthetic_negatives": False,
         },
         "tested": [
-            {"design_id": d.design_id, "description": d.description,
-             "extra_args": list(d.extra_args), "uses_pretrain": d.uses_pretrain}
+            {
+                "design_id": d.design_id,
+                "description": d.description,
+                "extra_args": list(d.extra_args),
+                "uses_pretrain": d.uses_pretrain,
+            }
             for d in DESIGNS
         ],
         "questions": {
@@ -304,37 +373,61 @@ def main() -> None:
 
     launches: List[Dict[str, Any]] = []
     for design in DESIGNS:
-        launches.append(_launch_design(
-            design=design, alleles=alleles, probes=probes,
-            warm_start=str(args.warm_start), epochs=int(args.epochs),
-            batch_size=int(args.batch_size), prefix=str(args.prefix),
-            out_dir=out_dir, dry_run=bool(args.dry_run),
-        ))
+        launches.append(
+            _launch_design(
+                design=design,
+                alleles=alleles,
+                probes=probes,
+                warm_start=str(args.warm_start),
+                epochs=int(args.epochs),
+                batch_size=int(args.batch_size),
+                prefix=str(args.prefix),
+                out_dir=out_dir,
+                dry_run=bool(args.dry_run),
+            )
+        )
         if not args.dry_run:
             time.sleep(0.2)
 
     manifest = {
-        "experiment_dir": str(out_dir), "alleles": alleles, "probes": probes,
-        "epochs": int(args.epochs), "batch_size": int(args.batch_size),
-        "warm_start": str(args.warm_start), "modal_gpu": "H100!",
+        "experiment_dir": str(out_dir),
+        "alleles": alleles,
+        "probes": probes,
+        "epochs": int(args.epochs),
+        "batch_size": int(args.batch_size),
+        "warm_start": str(args.warm_start),
+        "modal_gpu": "H100!",
         "designs": launches,
     }
-    (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8")
+    (out_dir / "manifest.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True), encoding="utf-8"
+    )
 
     lines = ["# LR/Schedule Stability Sweep — 6 Conditions", ""]
     for row in launches:
-        lines.extend([
-            f"## {row['design_id']}: {row['description']}", "",
-            f"- App: `{row.get('app_id')}`",
-            f"- Run: `{row['run_id']}`",
-            f"- Launch log: `{row.get('launch_log')}`", "",
-        ])
+        lines.extend(
+            [
+                f"## {row['design_id']}: {row['description']}",
+                "",
+                f"- App: `{row.get('app_id')}`",
+                f"- Run: `{row['run_id']}`",
+                f"- Launch log: `{row.get('launch_log')}`",
+                "",
+            ]
+        )
     (out_dir / "variants.md").write_text("\n".join(lines), encoding="utf-8")
 
-    print(json.dumps({
-        "event": "lr_stability_launched", "out_dir": str(out_dir),
-        "n_designs": len(launches), "dry_run": bool(args.dry_run),
-    }, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "event": "lr_stability_launched",
+                "out_dir": str(out_dir),
+                "n_designs": len(launches),
+                "dry_run": bool(args.dry_run),
+            },
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":

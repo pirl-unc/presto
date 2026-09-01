@@ -8,7 +8,6 @@ Heads for all IEDB measurement types:
 - Elution/MS: detection probability
 """
 
-import pytest
 import torch
 import torch.nn as nn
 

@@ -55,9 +55,7 @@ def create_parser() -> argparse.ArgumentParser:
         description="Presto - Peptide-Receptor Embedding for Shared T-cell Ontology",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument(
-        "--version", action="version", version=f"presto {__version__}"
-    )
+    parser.add_argument("--version", action="version", version=f"presto {__version__}")
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
@@ -79,34 +77,39 @@ def create_parser() -> argparse.ArgumentParser:
         help="Download datasets from online sources (IEDB, VDJdb, etc.)",
     )
     download_parser.add_argument(
-        "--outdir", "-o",
+        "--outdir",
+        "-o",
         type=str,
         default="./data",
         help="Output directory for downloaded data (default: ./data)",
     )
     download_parser.add_argument(
-        "--dataset", "-d",
+        "--dataset",
+        "-d",
         type=str,
         action="append",
         help="Specific dataset(s) to download. Can be repeated. "
-             "Use 'presto data list' to see available datasets.",
+        "Use 'presto data list' to see available datasets.",
     )
     download_parser.add_argument(
-        "--source", "-s",
+        "--source",
+        "-s",
         type=str,
         action="append",
         choices=["iedb", "vdjdb", "mcpas", "imgt", "ipd_mhc", "10x", "pird", "stcrdab"],
         help="Download all datasets from specific source(s)",
     )
     download_parser.add_argument(
-        "--category", "-c",
+        "--category",
+        "-c",
         type=str,
         action="append",
         choices=["binding", "tcell", "bcell", "tcr", "mhc_sequence", "elution", "vdj_genes"],
         help="Download all datasets of specific category",
     )
     download_parser.add_argument(
-        "--all", "-a",
+        "--all",
+        "-a",
         action="store_true",
         help="Download all available datasets",
     )
@@ -114,15 +117,17 @@ def create_parser() -> argparse.ArgumentParser:
         "--agree-iedb-terms",
         action="store_true",
         help="Agree to IEDB terms of use (required for IEDB downloads). "
-             "See: https://www.iedb.org/terms_of_use.php",
+        "See: https://www.iedb.org/terms_of_use.php",
     )
     download_parser.add_argument(
-        "--force", "-f",
+        "--force",
+        "-f",
         action="store_true",
         help="Re-download even if files exist",
     )
     download_parser.add_argument(
-        "--quiet", "-q",
+        "--quiet",
+        "-q",
         action="store_true",
         help="Suppress progress output",
     )
@@ -134,7 +139,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="List available or downloaded datasets",
     )
     list_parser.add_argument(
-        "--local", "-l",
+        "--local",
+        "-l",
         action="store_true",
         help="List locally downloaded datasets instead of available ones",
     )
@@ -145,14 +151,16 @@ def create_parser() -> argparse.ArgumentParser:
         help="Data directory to check for local datasets (default: ./data)",
     )
     list_parser.add_argument(
-        "--source", "-s",
+        "--source",
+        "-s",
         type=str,
         action="append",
         choices=["iedb", "vdjdb", "mcpas", "imgt", "ipd_mhc", "10x", "pird", "stcrdab"],
         help="Filter by source",
     )
     list_parser.add_argument(
-        "--category", "-c",
+        "--category",
+        "-c",
         type=str,
         action="append",
         choices=["binding", "tcell", "bcell", "tcr", "mhc_sequence", "elution", "vdj_genes"],
@@ -195,13 +203,15 @@ def create_parser() -> argparse.ArgumentParser:
         help="Data directory with downloaded datasets (default: ./data)",
     )
     process_parser.add_argument(
-        "--outdir", "-o",
+        "--outdir",
+        "-o",
         type=str,
         default="./data/processed",
         help="Output directory for processed data (default: ./data/processed)",
     )
     process_parser.add_argument(
-        "--dataset", "-d",
+        "--dataset",
+        "-d",
         type=str,
         action="append",
         help="Specific dataset(s) to process",
@@ -244,7 +254,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Split ratios for train/val/test (e.g., --split 0.8 0.1 0.1)",
     )
     process_parser.add_argument(
-        "--quiet", "-q",
+        "--quiet",
+        "-q",
         action="store_true",
         help="Suppress progress output",
     )
@@ -261,12 +272,14 @@ def create_parser() -> argparse.ArgumentParser:
         help="Input file (CSV or TSV)",
     )
     dedup_parser.add_argument(
-        "--output", "-o",
+        "--output",
+        "-o",
         type=str,
         help="Output file (default: input_deduped.tsv)",
     )
     dedup_parser.add_argument(
-        "--type", "-t",
+        "--type",
+        "-t",
         type=str,
         choices=["binding", "tcell"],
         default="binding",
@@ -292,7 +305,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Don't prefer recent publications",
     )
     dedup_parser.add_argument(
-        "--quiet", "-q",
+        "--quiet",
+        "-q",
         action="store_true",
         help="Suppress progress output",
     )
@@ -310,7 +324,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Data directory with downloaded datasets (default: ./data)",
     )
     merge_parser.add_argument(
-        "--output", "-o",
+        "--output",
+        "-o",
         type=str,
         help="Output file (default: datadir/merged_deduped.tsv)",
     )
@@ -328,7 +343,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Write one simplified CSV per assay bucket (default: disabled)",
     )
     merge_parser.add_argument(
-        "--types", "-t",
+        "--types",
+        "-t",
         type=str,
         nargs="+",
         choices=["binding", "tcell", "bcell", "tcr"],
@@ -340,7 +356,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Output statistics in JSON format",
     )
     merge_parser.add_argument(
-        "--quiet", "-q",
+        "--quiet",
+        "-q",
         action="store_true",
         help="Suppress progress output",
     )
@@ -393,7 +410,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Download IMGT/IPD-MHC datasets when missing",
     )
     mhc_refresh.add_argument(
-        "--quiet", "-q",
+        "--quiet",
+        "-q",
         action="store_true",
         help="Suppress progress output",
     )
@@ -469,7 +487,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Optional FASTA output path (index sequences)",
     )
     mhc_build.add_argument(
-        "--quiet", "-q",
+        "--quiet",
+        "-q",
         action="store_true",
         help="Suppress progress output",
     )
@@ -492,7 +511,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Output CSV path for the augmented index",
     )
     mhc_augment.add_argument(
-        "--quiet", "-q",
+        "--quiet",
+        "-q",
         action="store_true",
         help="Suppress progress output",
     )
@@ -515,7 +535,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Output format",
     )
     mhc_report.add_argument(
-        "--output", "-o",
+        "--output",
+        "-o",
         type=str,
         help="Output path (default: stdout)",
     )
@@ -538,7 +559,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Output format",
     )
     mhc_validate.add_argument(
-        "--output", "-o",
+        "--output",
+        "-o",
         type=str,
         help="Output path (default: stdout)",
     )
@@ -576,7 +598,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Output format",
     )
     mhc_resolve.add_argument(
-        "--output", "-o",
+        "--output",
+        "-o",
         type=str,
         help="Output path (default: stdout)",
     )
@@ -639,7 +662,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Registry JSON file path or URL",
     )
     weights_download.add_argument(
-        "--output", "-o",
+        "--output",
+        "-o",
         type=str,
         default=None,
         help="Output checkpoint path (default: ~/.cache/presto/weights/...)",
@@ -651,7 +675,8 @@ def create_parser() -> argparse.ArgumentParser:
         help="Directory for cached weights when --output is not provided",
     )
     weights_download.add_argument(
-        "--force", "-f",
+        "--force",
+        "-f",
         action="store_true",
         help="Force re-download even if output file exists",
     )
@@ -673,7 +698,9 @@ def create_parser() -> argparse.ArgumentParser:
         "synthetic",
         help="Train on synthetic data (quick end-to-end demo)",
     )
-    train_synth.add_argument("--config", type=str, default=None, help="Optional JSON/YAML config file")
+    train_synth.add_argument(
+        "--config", type=str, default=None, help="Optional JSON/YAML config file"
+    )
     train_synth.add_argument("--epochs", type=int, default=10, help="Number of epochs")
     train_synth.add_argument("--batch_size", type=int, default=16, help="Batch size")
     train_synth.add_argument("--lr", type=float, default=1e-4, help="Learning rate")
@@ -685,7 +712,9 @@ def create_parser() -> argparse.ArgumentParser:
     train_synth.add_argument("--n_tcr", type=int, default=100, help="TCR samples")
     train_synth.add_argument("--data_dir", type=str, default=None, help="Data directory")
     train_synth.add_argument("--checkpoint", type=str, default=None, help="Checkpoint path")
-    train_synth.add_argument("--run-dir", dest="run_dir", type=str, default=None, help="Run artifact directory")
+    train_synth.add_argument(
+        "--run-dir", dest="run_dir", type=str, default=None, help="Run artifact directory"
+    )
     train_synth.add_argument("--weight_decay", type=float, default=0.01, help="Weight decay")
     train_synth.add_argument(
         "--use-uncertainty-weighting",
@@ -711,7 +740,9 @@ def create_parser() -> argparse.ArgumentParser:
             "(weight by in-batch labeled sample count per task)"
         ),
     )
-    train_synth.add_argument("--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradients")
+    train_synth.add_argument(
+        "--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradients"
+    )
     train_synth.add_argument(
         "--consistency-cascade-weight",
         type=float,
@@ -810,7 +841,9 @@ def create_parser() -> argparse.ArgumentParser:
         aliases=["iedb"],
         help="Train unified model on mixed-source data (IEDB/CEDAR + VDJdb TCR-evidence)",
     )
-    train_iedb.add_argument("--config", type=str, default=None, help="Optional JSON/YAML config file")
+    train_iedb.add_argument(
+        "--config", type=str, default=None, help="Optional JSON/YAML config file"
+    )
     train_iedb.add_argument(
         "--profile",
         type=str,
@@ -821,7 +854,13 @@ def create_parser() -> argparse.ArgumentParser:
             "(canary: fast smoke run; diagnostic: richer coverage/flow/latent diagnostics)"
         ),
     )
-    train_iedb.add_argument("--data-dir", dest="data_dir", type=str, default="./data", help="Data directory with downloaded datasets")
+    train_iedb.add_argument(
+        "--data-dir",
+        dest="data_dir",
+        type=str,
+        default="./data",
+        help="Data directory with downloaded datasets",
+    )
     train_iedb.add_argument(
         "--hitlist-mhc-class",
         dest="train_mhc_class_filter",
@@ -849,11 +888,17 @@ def create_parser() -> argparse.ArgumentParser:
         ),
     )
     train_iedb.add_argument(
-        "--bulk-cell-line", dest="bulk_cell_line", type=str, default=None,
+        "--bulk-cell-line",
+        dest="bulk_cell_line",
+        type=str,
+        default=None,
         help="Restrict the bulk corpus to one cell line (e.g. HeLa)",
     )
     train_iedb.add_argument(
-        "--max-bulk-ms", dest="max_bulk_ms", type=int, default=0,
+        "--max-bulk-ms",
+        dest="max_bulk_ms",
+        type=int,
+        default=0,
         help=(
             "Cap on observed bulk shotgun peptides (0 = no cap). Excision "
             "negatives are generated on top of this, so the record count can be "
@@ -862,9 +907,10 @@ def create_parser() -> argparse.ArgumentParser:
     )
     train_iedb.add_argument(
         "--bulk-excision-negative-ratio",
-        dest="bulk_excision_negative_ratio", type=float, default=1.0,
-        help="Per observed peptide, probability of emitting a mismatched-enzyme "
-             "excision negative",
+        dest="bulk_excision_negative_ratio",
+        type=float,
+        default=1.0,
+        help="Per observed peptide, probability of emitting a mismatched-enzyme excision negative",
     )
     train_iedb.add_argument(
         "--split-mode",
@@ -929,29 +975,44 @@ def create_parser() -> argparse.ArgumentParser:
         action="store_false",
         help="Allow fallback to raw source exports when merged TSV is unavailable",
     )
-    train_iedb.add_argument("--binding-file", type=str, default=None, help="Override path to IEDB MHC ligand export")
-    train_iedb.add_argument("--tcell-file", type=str, default=None, help="Override path to IEDB T-cell export")
-    train_iedb.add_argument("--cedar-binding-file", type=str, default=None, help="Optional path to CEDAR MHC ligand export")
-    train_iedb.add_argument("--cedar-tcell-file", type=str, default=None, help="Optional path to CEDAR T-cell export")
+    train_iedb.add_argument(
+        "--binding-file", type=str, default=None, help="Override path to IEDB MHC ligand export"
+    )
+    train_iedb.add_argument(
+        "--tcell-file", type=str, default=None, help="Override path to IEDB T-cell export"
+    )
+    train_iedb.add_argument(
+        "--cedar-binding-file",
+        type=str,
+        default=None,
+        help="Optional path to CEDAR MHC ligand export",
+    )
+    train_iedb.add_argument(
+        "--cedar-tcell-file", type=str, default=None, help="Optional path to CEDAR T-cell export"
+    )
     train_iedb.add_argument(
         "--vdjdb-file",
         type=str,
         default=None,
         help="Override path to VDJdb export used for pMHC-only TCR-evidence supervision",
     )
-    train_iedb.add_argument("--index-csv", type=str, default=None, help="Optional built MHC index CSV")
+    train_iedb.add_argument(
+        "--index-csv", type=str, default=None, help="Optional built MHC index CSV"
+    )
     train_iedb.add_argument(
         "--strict-mhc-resolution",
         dest="strict_mhc_resolution",
         action="store_true",
         default=True,
-        help="Require all non-ablation MHC alleles to resolve to amino-acid sequences (default: true)",
+        help="Require all non-ablation MHC alleles to resolve to amino-acid sequences (default: "
+            "true)",
     )
     train_iedb.add_argument(
         "--allow-unresolved-mhc",
         dest="strict_mhc_resolution",
         action="store_false",
-        help="Allow unresolved MHC alleles (debug only; unresolved MHC chains become empty sequences)",
+        help="Allow unresolved MHC alleles (debug only; unresolved MHC chains become empty "
+            "sequences)",
     )
     train_iedb.add_argument(
         "--filter-unresolved-mhc",
@@ -959,8 +1020,7 @@ def create_parser() -> argparse.ArgumentParser:
         action="store_true",
         default=True,
         help=(
-            "Drop unresolved-MHC rows before dataset construction "
-            "(resolved-only training subset)"
+            "Drop unresolved-MHC rows before dataset construction (resolved-only training subset)"
         ),
     )
     train_iedb.add_argument(
@@ -976,12 +1036,39 @@ def create_parser() -> argparse.ArgumentParser:
         default=60000,
         help="Number of MHC-only augmentation samples from index (0 to disable)",
     )
-    train_iedb.add_argument("--max-binding", type=int, default=0, help="Max binding records to load (<=0 means no limit)")
-    train_iedb.add_argument("--max-kinetics", type=int, default=0, help="Max kinetics records to load (<=0 means no limit)")
-    train_iedb.add_argument("--max-stability", type=int, default=0, help="Max stability records to load (<=0 means no limit)")
-    train_iedb.add_argument("--max-processing", type=int, default=0, help="Max processing records to load (<=0 means no limit)")
-    train_iedb.add_argument("--max-elution", type=int, default=0, help="Max elution records to load (<=0 means no limit)")
-    train_iedb.add_argument("--max-tcell", type=int, default=0, help="Max T-cell records to load (<=0 means no limit)")
+    train_iedb.add_argument(
+        "--max-binding",
+        type=int,
+        default=0,
+        help="Max binding records to load (<=0 means no limit)",
+    )
+    train_iedb.add_argument(
+        "--max-kinetics",
+        type=int,
+        default=0,
+        help="Max kinetics records to load (<=0 means no limit)",
+    )
+    train_iedb.add_argument(
+        "--max-stability",
+        type=int,
+        default=0,
+        help="Max stability records to load (<=0 means no limit)",
+    )
+    train_iedb.add_argument(
+        "--max-processing",
+        type=int,
+        default=0,
+        help="Max processing records to load (<=0 means no limit)",
+    )
+    train_iedb.add_argument(
+        "--max-elution",
+        type=int,
+        default=0,
+        help="Max elution records to load (<=0 means no limit)",
+    )
+    train_iedb.add_argument(
+        "--max-tcell", type=int, default=0, help="Max T-cell records to load (<=0 means no limit)"
+    )
     train_iedb.add_argument(
         "--max-vdjdb",
         type=int,
@@ -1013,7 +1100,8 @@ def create_parser() -> argparse.ArgumentParser:
         dest="synthetic_class_i_no_mhc_beta_negative_ratio",
         type=float,
         default=0.25,
-        help="Additional class-I negatives without MHC beta chain (beta2m) per real class-I sample (0 disables)",
+        help="Additional class-I negatives without MHC beta chain (beta2m) per real class-I "
+            "sample (0 disables)",
     )
     train_iedb.add_argument(
         "--synthetic-processing-negative-ratio",
@@ -1071,38 +1159,59 @@ def create_parser() -> argparse.ArgumentParser:
     train_iedb.add_argument("--lr", type=float, default=2.8e-4, help="Learning rate")
     # Performance: AMP, compile, MIL cap
     train_iedb.add_argument(
-        "--amp", dest="use_amp", action="store_true", default=True,
+        "--amp",
+        dest="use_amp",
+        action="store_true",
+        default=True,
         help="Enable bf16 automatic mixed precision on CUDA (default: true)",
     )
     train_iedb.add_argument(
-        "--no-amp", dest="use_amp", action="store_false",
+        "--no-amp",
+        dest="use_amp",
+        action="store_false",
         help="Disable bf16 automatic mixed precision",
     )
     train_iedb.add_argument(
-        "--compile", dest="use_compile", action="store_true", default=False,
+        "--compile",
+        dest="use_compile",
+        action="store_true",
+        default=False,
         help="Enable torch.compile for kernel fusion (default: false)",
     )
     train_iedb.add_argument(
-        "--no-compile", dest="use_compile", action="store_false",
+        "--no-compile",
+        dest="use_compile",
+        action="store_false",
         help="Disable torch.compile",
     )
     train_iedb.add_argument(
-        "--max-mil-instances", dest="max_mil_instances", type=int, default=128,
+        "--max-mil-instances",
+        dest="max_mil_instances",
+        type=int,
+        default=128,
         help="Max MIL instances per batch (0=unlimited, default: 128)",
     )
     train_iedb.add_argument(
-        "--max-batches", dest="max_batches", type=int, default=0,
+        "--max-batches",
+        dest="max_batches",
+        type=int,
+        default=0,
         help="Max training batches per epoch (0=unlimited)",
     )
     train_iedb.add_argument(
-        "--max-val-batches", dest="max_val_batches", type=int, default=0,
+        "--max-val-batches",
+        dest="max_val_batches",
+        type=int,
+        default=0,
         help="Max validation batches per epoch (0=unlimited)",
     )
     train_iedb.add_argument("--d_model", type=int, default=128, help="Model dimension")
     train_iedb.add_argument("--n_layers", type=int, default=2, help="Number of layers")
     train_iedb.add_argument("--n_heads", type=int, default=4, help="Number of attention heads")
     train_iedb.add_argument("--checkpoint", type=str, default=None, help="Checkpoint output path")
-    train_iedb.add_argument("--run-dir", dest="run_dir", type=str, default=None, help="Run artifact directory")
+    train_iedb.add_argument(
+        "--run-dir", dest="run_dir", type=str, default=None, help="Run artifact directory"
+    )
     train_iedb.add_argument("--weight_decay", type=float, default=0.01, help="Weight decay")
     train_iedb.add_argument(
         "--use-uncertainty-weighting",
@@ -1150,7 +1259,9 @@ def create_parser() -> argparse.ArgumentParser:
             "(0 disables rolling perf logs)"
         ),
     )
-    train_iedb.add_argument("--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradients")
+    train_iedb.add_argument(
+        "--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradients"
+    )
     train_iedb.add_argument(
         "--consistency-cascade-weight",
         type=float,
@@ -1359,12 +1470,20 @@ def create_parser() -> argparse.ArgumentParser:
         default=512,
         help="Max validation samples per epoch for output/latent diagnostics",
     )
-    train_iedb.add_argument("--uniprot-negative-ratio", dest="uniprot_negative_ratio",
-                            type=float, default=0.1,
-                            help="Ratio of UniProt negative samples to add (default: 0.1)")
-    train_iedb.add_argument("--max-uniprot", dest="max_uniprot",
-                            type=int, default=0,
-                            help="Max UniProt negative samples (0 = unlimited)")
+    train_iedb.add_argument(
+        "--uniprot-negative-ratio",
+        dest="uniprot_negative_ratio",
+        type=float,
+        default=0.1,
+        help="Ratio of UniProt negative samples to add (default: 0.1)",
+    )
+    train_iedb.add_argument(
+        "--max-uniprot",
+        dest="max_uniprot",
+        type=int,
+        default=0,
+        help="Max UniProt negative samples (0 = unlimited)",
+    )
     train_iedb.add_argument("--seed", type=int, default=42, help="Random seed")
     train_iedb.add_argument("--device", type=str, default=None, help="Device")
     train_iedb.set_defaults(func=cmd_train_unified)
@@ -1385,24 +1504,59 @@ def create_parser() -> argparse.ArgumentParser:
         "presentation",
         help="Predict processing/binding/presentation probabilities",
     )
-    predict_presentation.add_argument("--checkpoint", type=str, required=True, help="Model checkpoint")
+    predict_presentation.add_argument(
+        "--checkpoint", type=str, required=True, help="Model checkpoint"
+    )
     predict_presentation.add_argument("--peptide", type=str, required=True, help="Peptide sequence")
     predict_presentation.add_argument("--allele", type=str, default=None, help="MHC allele name")
-    predict_presentation.add_argument("--mhc-sequence", type=str, default=None, help="MHC alpha sequence")
-    predict_presentation.add_argument("--mhc-b-sequence", type=str, default=None, help="MHC beta sequence")
-    predict_presentation.add_argument("--mhc-class", type=str, choices=["I", "II"], default=None, help="MHC class")
-    predict_presentation.add_argument("--species", type=str, default=None, help="Species label for class-I beta2m resolution")
-    predict_presentation.add_argument("--mhc-species", type=str, default=None, help="Override MHC species latent/probability path")
-    predict_presentation.add_argument("--immune-species", type=str, default=None, help="Override immune-system species conditioning")
-    predict_presentation.add_argument("--species-of-origin", type=str, default=None, help="Override peptide species-of-origin latent")
+    predict_presentation.add_argument(
+        "--mhc-sequence", type=str, default=None, help="MHC alpha sequence"
+    )
+    predict_presentation.add_argument(
+        "--mhc-b-sequence", type=str, default=None, help="MHC beta sequence"
+    )
+    predict_presentation.add_argument(
+        "--mhc-class", type=str, choices=["I", "II"], default=None, help="MHC class"
+    )
+    predict_presentation.add_argument(
+        "--species", type=str, default=None, help="Species label for class-I beta2m resolution"
+    )
+    predict_presentation.add_argument(
+        "--mhc-species", type=str, default=None, help="Override MHC species latent/probability path"
+    )
+    predict_presentation.add_argument(
+        "--immune-species",
+        type=str,
+        default=None,
+        help="Override immune-system species conditioning",
+    )
+    predict_presentation.add_argument(
+        "--species-of-origin",
+        type=str,
+        default=None,
+        help="Override peptide species-of-origin latent",
+    )
     predict_presentation.add_argument("--flank-n", type=str, default=None, help="N-terminal flank")
     predict_presentation.add_argument("--flank-c", type=str, default=None, help="C-terminal flank")
-    predict_presentation.add_argument("--index-csv", type=str, default=None, help="Optional built MHC index CSV for allele sequence lookup")
+    predict_presentation.add_argument(
+        "--index-csv",
+        type=str,
+        default=None,
+        help="Optional built MHC index CSV for allele sequence lookup",
+    )
     predict_presentation.add_argument("--imgt-fasta", type=str, default=None, help="IMGT/HLA FASTA")
-    predict_presentation.add_argument("--ipd-mhc-dir", type=str, default=None, help="IPD-MHC directory")
-    predict_presentation.add_argument("--d-model", dest="d_model", type=int, default=None, help="Model dimension")
-    predict_presentation.add_argument("--n-layers", dest="n_layers", type=int, default=None, help="Transformer layers")
-    predict_presentation.add_argument("--n-heads", dest="n_heads", type=int, default=None, help="Attention heads")
+    predict_presentation.add_argument(
+        "--ipd-mhc-dir", type=str, default=None, help="IPD-MHC directory"
+    )
+    predict_presentation.add_argument(
+        "--d-model", dest="d_model", type=int, default=None, help="Model dimension"
+    )
+    predict_presentation.add_argument(
+        "--n-layers", dest="n_layers", type=int, default=None, help="Transformer layers"
+    )
+    predict_presentation.add_argument(
+        "--n-heads", dest="n_heads", type=int, default=None, help="Attention heads"
+    )
     predict_presentation.add_argument("--device", type=str, default=None, help="Device")
     predict_presentation.add_argument("--json", action="store_true", help="Output JSON")
     predict_presentation.add_argument("--output", type=str, default=None, help="Output path")
@@ -1414,20 +1568,48 @@ def create_parser() -> argparse.ArgumentParser:
     )
     predict_tile.add_argument("--checkpoint", type=str, required=True, help="Model checkpoint")
     predict_tile.add_argument("--protein-sequence", type=str, default=None, help="Protein sequence")
-    predict_tile.add_argument("--protein-file", type=str, default=None, help="Path to FASTA/plain sequence file")
+    predict_tile.add_argument(
+        "--protein-file", type=str, default=None, help="Path to FASTA/plain sequence file"
+    )
     predict_tile.add_argument("--allele", type=str, default=None, help="MHC allele name")
     predict_tile.add_argument("--mhc-sequence", type=str, default=None, help="MHC alpha sequence")
     predict_tile.add_argument("--mhc-b-sequence", type=str, default=None, help="MHC beta sequence")
-    predict_tile.add_argument("--mhc-class", type=str, choices=["I", "II"], default=None, help="MHC class")
-    predict_tile.add_argument("--species", type=str, default=None, help="Species label for class-I beta2m resolution")
-    predict_tile.add_argument("--mhc-species", type=str, default=None, help="Override MHC species latent/probability path")
-    predict_tile.add_argument("--immune-species", type=str, default=None, help="Override immune-system species conditioning")
-    predict_tile.add_argument("--species-of-origin", type=str, default=None, help="Override peptide species-of-origin latent")
-    predict_tile.add_argument("--min-length", type=int, default=8, help="Minimum peptide length for tiling")
-    predict_tile.add_argument("--max-length", type=int, default=15, help="Maximum peptide length for tiling")
-    predict_tile.add_argument("--flank-size", type=int, default=15, help="Context flank size on each side")
-    predict_tile.add_argument("--batch-size", type=int, default=128, help="Batch size for tiled inference")
-    predict_tile.add_argument("--top-k", type=int, default=100, help="Keep top-k hits (<=0 keeps all)")
+    predict_tile.add_argument(
+        "--mhc-class", type=str, choices=["I", "II"], default=None, help="MHC class"
+    )
+    predict_tile.add_argument(
+        "--species", type=str, default=None, help="Species label for class-I beta2m resolution"
+    )
+    predict_tile.add_argument(
+        "--mhc-species", type=str, default=None, help="Override MHC species latent/probability path"
+    )
+    predict_tile.add_argument(
+        "--immune-species",
+        type=str,
+        default=None,
+        help="Override immune-system species conditioning",
+    )
+    predict_tile.add_argument(
+        "--species-of-origin",
+        type=str,
+        default=None,
+        help="Override peptide species-of-origin latent",
+    )
+    predict_tile.add_argument(
+        "--min-length", type=int, default=8, help="Minimum peptide length for tiling"
+    )
+    predict_tile.add_argument(
+        "--max-length", type=int, default=15, help="Maximum peptide length for tiling"
+    )
+    predict_tile.add_argument(
+        "--flank-size", type=int, default=15, help="Context flank size on each side"
+    )
+    predict_tile.add_argument(
+        "--batch-size", type=int, default=128, help="Batch size for tiled inference"
+    )
+    predict_tile.add_argument(
+        "--top-k", type=int, default=100, help="Keep top-k hits (<=0 keeps all)"
+    )
     predict_tile.add_argument(
         "--sort-by",
         type=str,
@@ -1435,12 +1617,23 @@ def create_parser() -> argparse.ArgumentParser:
         default="presentation",
         help="Sort metric for reported tiled hits",
     )
-    predict_tile.add_argument("--index-csv", type=str, default=None, help="Optional built MHC index CSV for allele sequence lookup")
+    predict_tile.add_argument(
+        "--index-csv",
+        type=str,
+        default=None,
+        help="Optional built MHC index CSV for allele sequence lookup",
+    )
     predict_tile.add_argument("--imgt-fasta", type=str, default=None, help="IMGT/HLA FASTA")
     predict_tile.add_argument("--ipd-mhc-dir", type=str, default=None, help="IPD-MHC directory")
-    predict_tile.add_argument("--d-model", dest="d_model", type=int, default=None, help="Model dimension")
-    predict_tile.add_argument("--n-layers", dest="n_layers", type=int, default=None, help="Transformer layers")
-    predict_tile.add_argument("--n-heads", dest="n_heads", type=int, default=None, help="Attention heads")
+    predict_tile.add_argument(
+        "--d-model", dest="d_model", type=int, default=None, help="Model dimension"
+    )
+    predict_tile.add_argument(
+        "--n-layers", dest="n_layers", type=int, default=None, help="Transformer layers"
+    )
+    predict_tile.add_argument(
+        "--n-heads", dest="n_heads", type=int, default=None, help="Attention heads"
+    )
     predict_tile.add_argument("--device", type=str, default=None, help="Device")
     predict_tile.add_argument("--json", action="store_true", help="Output JSON")
     predict_tile.add_argument("--output", type=str, default=None, help="Output path")
@@ -1450,22 +1643,57 @@ def create_parser() -> argparse.ArgumentParser:
         "recognition",
         help="Predict repertoire-level recognition/immunogenicity",
     )
-    predict_recognition.add_argument("--checkpoint", type=str, required=True, help="Model checkpoint")
+    predict_recognition.add_argument(
+        "--checkpoint", type=str, required=True, help="Model checkpoint"
+    )
     predict_recognition.add_argument("--peptide", type=str, required=True, help="Peptide sequence")
     predict_recognition.add_argument("--allele", type=str, default=None, help="MHC allele name")
-    predict_recognition.add_argument("--mhc-sequence", type=str, default=None, help="MHC alpha sequence")
-    predict_recognition.add_argument("--mhc-b-sequence", type=str, default=None, help="MHC beta sequence")
-    predict_recognition.add_argument("--mhc-class", type=str, choices=["I", "II"], default=None, help="MHC class")
-    predict_recognition.add_argument("--species", type=str, default=None, help="Species label for class-I beta2m resolution")
-    predict_recognition.add_argument("--mhc-species", type=str, default=None, help="Override MHC species latent/probability path")
-    predict_recognition.add_argument("--immune-species", type=str, default=None, help="Override immune-system species conditioning")
-    predict_recognition.add_argument("--species-of-origin", type=str, default=None, help="Override peptide species-of-origin latent")
-    predict_recognition.add_argument("--index-csv", type=str, default=None, help="Optional built MHC index CSV for allele sequence lookup")
+    predict_recognition.add_argument(
+        "--mhc-sequence", type=str, default=None, help="MHC alpha sequence"
+    )
+    predict_recognition.add_argument(
+        "--mhc-b-sequence", type=str, default=None, help="MHC beta sequence"
+    )
+    predict_recognition.add_argument(
+        "--mhc-class", type=str, choices=["I", "II"], default=None, help="MHC class"
+    )
+    predict_recognition.add_argument(
+        "--species", type=str, default=None, help="Species label for class-I beta2m resolution"
+    )
+    predict_recognition.add_argument(
+        "--mhc-species", type=str, default=None, help="Override MHC species latent/probability path"
+    )
+    predict_recognition.add_argument(
+        "--immune-species",
+        type=str,
+        default=None,
+        help="Override immune-system species conditioning",
+    )
+    predict_recognition.add_argument(
+        "--species-of-origin",
+        type=str,
+        default=None,
+        help="Override peptide species-of-origin latent",
+    )
+    predict_recognition.add_argument(
+        "--index-csv",
+        type=str,
+        default=None,
+        help="Optional built MHC index CSV for allele sequence lookup",
+    )
     predict_recognition.add_argument("--imgt-fasta", type=str, default=None, help="IMGT/HLA FASTA")
-    predict_recognition.add_argument("--ipd-mhc-dir", type=str, default=None, help="IPD-MHC directory")
-    predict_recognition.add_argument("--d-model", dest="d_model", type=int, default=None, help="Model dimension")
-    predict_recognition.add_argument("--n-layers", dest="n_layers", type=int, default=None, help="Transformer layers")
-    predict_recognition.add_argument("--n-heads", dest="n_heads", type=int, default=None, help="Attention heads")
+    predict_recognition.add_argument(
+        "--ipd-mhc-dir", type=str, default=None, help="IPD-MHC directory"
+    )
+    predict_recognition.add_argument(
+        "--d-model", dest="d_model", type=int, default=None, help="Model dimension"
+    )
+    predict_recognition.add_argument(
+        "--n-layers", dest="n_layers", type=int, default=None, help="Transformer layers"
+    )
+    predict_recognition.add_argument(
+        "--n-heads", dest="n_heads", type=int, default=None, help="Attention heads"
+    )
     predict_recognition.add_argument("--device", type=str, default=None, help="Device")
     predict_recognition.add_argument("--json", action="store_true", help="Output JSON")
     predict_recognition.add_argument("--output", type=str, default=None, help="Output path")
@@ -1489,9 +1717,15 @@ def create_parser() -> argparse.ArgumentParser:
     )
     eval_synth.add_argument("--checkpoint", type=str, required=True, help="Model checkpoint")
     eval_synth.add_argument("--batch_size", type=int, default=16, help="Batch size")
-    eval_synth.add_argument("--d-model", dest="d_model", type=int, default=None, help="Model dimension")
-    eval_synth.add_argument("--n-layers", dest="n_layers", type=int, default=None, help="Transformer layers")
-    eval_synth.add_argument("--n-heads", dest="n_heads", type=int, default=None, help="Attention heads")
+    eval_synth.add_argument(
+        "--d-model", dest="d_model", type=int, default=None, help="Model dimension"
+    )
+    eval_synth.add_argument(
+        "--n-layers", dest="n_layers", type=int, default=None, help="Transformer layers"
+    )
+    eval_synth.add_argument(
+        "--n-heads", dest="n_heads", type=int, default=None, help="Attention heads"
+    )
     eval_synth.add_argument("--n_binding", type=int, default=200, help="Binding samples")
     eval_synth.add_argument("--n_elution", type=int, default=100, help="Elution samples")
     eval_synth.add_argument("--n_tcr", type=int, default=100, help="TCR samples")

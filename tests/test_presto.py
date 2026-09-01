@@ -12,11 +12,13 @@ import types
 # Full Model Integration Tests
 # --------------------------------------------------------------------------
 
+
 class TestPrestoModel:
     """Test full Presto model."""
 
     def test_model_init(self):
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert model is not None
 
@@ -41,6 +43,7 @@ class TestPrestoModel:
     def test_model_forward_pmhc_only(self):
         """Forward pass with just pMHC (no TCR)."""
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
 
@@ -125,6 +128,7 @@ class TestPrestoModel:
     def test_model_forward_receptor_free(self):
         """Forward pass stays receptor-free under canonical contract."""
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
 
@@ -149,6 +153,7 @@ class TestPrestoModel:
     def test_model_forward_class_ii(self):
         """Forward pass for MHC Class II."""
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
 
@@ -244,12 +249,15 @@ class TestPrestoModel:
         with torch.no_grad():
             without = model(pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I")
             with_ctx = model(
-                pep_tok, mhc_a_tok, mhc_b_tok, mhc_class="I",
+                pep_tok,
+                mhc_a_tok,
+                mhc_b_tok,
+                mhc_class="I",
                 binding_context=context,
             )
-        assert torch.allclose(
-            without["binding_logit"], with_ctx["binding_logit"]
-        ), "the assay label changed the prediction; that is input conditioning"
+        assert torch.allclose(without["binding_logit"], with_ctx["binding_logit"]), (
+            "the assay label changed the prediction; that is input conditioning"
+        )
 
     def test_forward_affinity_only_ignores_binding_context(self):
         from presto.models.presto import Presto
@@ -567,6 +575,7 @@ class TestPrestoGradients:
 
     def test_full_model_is_differentiable(self):
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
 
         pep_tok = torch.randint(4, 24, (2, 10))
@@ -594,6 +603,7 @@ class TestPrestoWithProcessingFlanks:
 
     def test_with_flanks(self):
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
 
@@ -621,6 +631,7 @@ class TestPrestoOutputConsistency:
 
     def test_deterministic_eval(self):
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
 
@@ -658,8 +669,12 @@ class TestPrestoOutputConsistency:
         assert torch.allclose(out["binding_base_logit"], expected, atol=1e-5)
 
         class_margin = out["mhc_class_probs"][:, :1] - out["mhc_class_probs"][:, 1:2]
-        expected_class1 = expected.unsqueeze(-1) + F.softplus(model.w_binding_class1_calibration) * class_margin
-        expected_class2 = expected.unsqueeze(-1) - F.softplus(model.w_binding_class2_calibration) * class_margin
+        expected_class1 = (
+            expected.unsqueeze(-1) + F.softplus(model.w_binding_class1_calibration) * class_margin
+        )
+        expected_class2 = (
+            expected.unsqueeze(-1) - F.softplus(model.w_binding_class2_calibration) * class_margin
+        )
         expected_mixed = (
             out["mhc_class_probs"][:, :1] * expected_class1
             + out["mhc_class_probs"][:, 1:2] * expected_class2
@@ -777,6 +792,7 @@ class TestPrestoOutputConsistency:
     def test_binding_latent_does_not_see_flank_tokens(self):
         """Binding latent segments exclude flanks (design S7.5)."""
         from presto.models.presto import Presto
+
         assert "nflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
         assert "cflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
 
@@ -785,12 +801,14 @@ class TestPrestoOutputConsistency:
 # Multi-Allele Aggregation Tests
 # --------------------------------------------------------------------------
 
+
 class TestMultiAlleleForward:
     """Test forward pass with multiple alleles (MS/EL scenario)."""
 
     def test_multi_allele_aggregation(self):
         from presto.models.presto import Presto
         from presto.models.pmhc import stable_noisy_or
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
 
@@ -817,11 +835,13 @@ class TestMultiAlleleForward:
 # Model Configuration Tests
 # --------------------------------------------------------------------------
 
+
 class TestPrestoConfig:
     """Test model configuration options."""
 
     def test_different_model_sizes(self):
         from presto.models.presto import Presto
+
         small = Presto(d_model=64, n_layers=2, n_heads=2)
         large = Presto(d_model=256, n_layers=6, n_heads=8)
 
@@ -832,6 +852,7 @@ class TestPrestoConfig:
 
     def test_model_save_load(self, tmp_path):
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
 
         # Save
@@ -861,12 +882,14 @@ class TestPrestoConfig:
 # Design Alignment Tests
 # --------------------------------------------------------------------------
 
+
 class TestDesignAlignment:
     """Tests verifying code matches design.md specification."""
 
     def test_latent_order_has_refactored_core_latents(self):
         """Phase 1 refactor: cross-attention DAG is reduced to shared core concepts."""
         from presto.models.presto import Presto
+
         assert Presto.LATENT_ORDER == [
             "processing",
             "ms_detectability",
@@ -878,11 +901,13 @@ class TestDesignAlignment:
     def test_ms_detectability_in_latent_order(self):
         """Design S7.1: ms_detectability is the 11th latent."""
         from presto.models.presto import Presto
+
         assert "ms_detectability" in Presto.LATENT_ORDER
 
     def test_presentation_uses_mlp_not_cross_attention(self):
         """Presentation is derived from class-specific MLPs, not a latent query."""
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert "presentation" not in Presto.CROSS_ATTN_LATENTS
         assert hasattr(model, "presentation_class1_mlp")
@@ -891,11 +916,13 @@ class TestDesignAlignment:
     def test_recognition_latents_see_peptide_only(self):
         """Design S7.5: recognition latents see only peptide tokens."""
         from presto.models.presto import Presto
+
         assert Presto.LATENT_SEGMENTS["recognition"] == ["peptide"]
 
     def test_immunogenicity_uses_mlp_not_cross_attention(self):
         """Immunogenicity uses lineage-specific MLPs over interaction + recognition."""
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert "immunogenicity" not in Presto.CROSS_ATTN_LATENTS
         assert hasattr(model, "immunogenicity_cd8_mlp")
@@ -904,16 +931,19 @@ class TestDesignAlignment:
     def test_ms_detectability_is_peptide_only(self):
         """Design S7.5: ms_detectability sees only peptide."""
         from presto.models.presto import Presto
+
         assert Presto.LATENT_SEGMENTS["ms_detectability"] == ["peptide"]
 
     def test_recognition_depends_on_foreignness(self):
         """Recognition latents depend on peptide-attended foreignness signal."""
         from presto.models.presto import Presto
+
         assert Presto.LATENT_DEPS["recognition"] == ["foreignness"]
 
     def test_pmhc_interaction_is_the_only_mhc_aware_cross_attention_latent(self):
         """Phase 1 refactor: MHC sequence enters the DAG through pmhc_interaction."""
         from presto.models.presto import Presto
+
         assert Presto.LATENT_SEGMENTS["pmhc_interaction"] == ["peptide", "mhc_a", "mhc_b"]
         assert "nflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
         assert "cflank" not in Presto.LATENT_SEGMENTS["pmhc_interaction"]
@@ -927,6 +957,7 @@ class TestDesignAlignment:
         names the model no longer has once expanded became the default.
         """
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         for name in model.CROSS_ATTN_LATENTS:
             assert len(model.latent_layers[name]) == 2
@@ -934,6 +965,7 @@ class TestDesignAlignment:
     def test_per_chain_mhc_inference(self):
         """Design S5.1-S5.2: per-chain type and species classification."""
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
 
@@ -947,6 +979,7 @@ class TestDesignAlignment:
         assert "mhc_a_type_logits" in out
         assert "mhc_b_type_logits" in out
         from presto.data.vocab import N_MHC_CHAIN_FINE_TYPES
+
         assert out["mhc_a_type_logits"].shape == (2, N_MHC_CHAIN_FINE_TYPES)
         assert out["mhc_b_type_logits"].shape == (2, N_MHC_CHAIN_FINE_TYPES)
         assert "mhc_a_species_logits" in out
@@ -957,6 +990,7 @@ class TestDesignAlignment:
     def test_ms_detectability_output(self):
         """Design S7.4: ms_detectability produces a readout logit."""
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
 
@@ -974,6 +1008,7 @@ class TestDesignAlignment:
     def test_pmhc_vec_is_interaction_vec(self):
         """pmhc_vec is now a direct alias for interaction_vec (no projection)."""
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         model.eval()
 
@@ -1046,6 +1081,7 @@ class TestDesignAlignment:
     def test_segment_specific_positional_encoding(self):
         """Design S3.2.3: segment-specific positional encoding tables exist."""
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert hasattr(model, "pep_nterm_pos")
         assert hasattr(model, "pep_cterm_pos")
@@ -1059,6 +1095,7 @@ class TestDesignAlignment:
     def test_global_conditioning_embedding(self):
         """Design S3.2.4: global conditioning embedding tables exist."""
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         assert hasattr(model, "species_cond_embed")
         assert model.species_cond_embed.num_embeddings == 7
@@ -1161,7 +1198,7 @@ class TestDesignAlignment:
         model.eval()
 
         pep_tok = torch.randint(4, 24, (3, 15))
-        pep_tok[0, 8:] = 0   # 8-mer -> 1 candidate, width 8
+        pep_tok[0, 8:] = 0  # 8-mer -> 1 candidate, width 8
         pep_tok[1, 11:] = 0  # 11-mer -> 3 candidates, width 9
         mhc_a_tok = torch.randint(4, 24, (3, 64))
         mhc_b_tok = torch.randint(4, 24, (3, 32))
@@ -1202,7 +1239,7 @@ class TestDesignAlignment:
         model.eval()
 
         pep_tok = torch.randint(4, 24, (3, 15))
-        pep_tok[0, 8:] = 0   # 8-mer
+        pep_tok[0, 8:] = 0  # 8-mer
         pep_tok[1, 11:] = 0  # 11-mer
         mhc_a_tok = torch.randint(4, 24, (3, 91))
         mhc_b_tok = torch.randint(4, 24, (3, 93))
@@ -1245,9 +1282,7 @@ class TestDesignAlignment:
         """
         from presto.models.presto import Presto
 
-        model = Presto(
-            d_model=64, n_layers=1, n_heads=4, latent_topology="collapsed"
-        )
+        model = Presto(d_model=64, n_layers=1, n_heads=4, latent_topology="collapsed")
         model.train()
 
         pep_tok = torch.randint(4, 24, (4, 12))
@@ -1367,16 +1402,22 @@ class TestDesignAlignment:
 
         p1 = out["mhc_class_probs"][:, :1]
         p2 = out["mhc_class_probs"][:, 1:2]
-        expected_processing = p1 * out["processing_class1_logit"] + p2 * out["processing_class2_logit"]
+        expected_processing = (
+            p1 * out["processing_class1_logit"] + p2 * out["processing_class2_logit"]
+        )
         expected_binding = p1 * out["binding_class1_logit"] + p2 * out["binding_class2_logit"]
-        expected_presentation = p1 * out["presentation_class1_logit"] + p2 * out["presentation_class2_logit"]
+        expected_presentation = (
+            p1 * out["presentation_class1_logit"] + p2 * out["presentation_class2_logit"]
+        )
         expected_recognition = p1 * out["recognition_cd8_logit"] + p2 * out["recognition_cd4_logit"]
 
         assert torch.allclose(out["processing_mixed_logit"], expected_processing, atol=1e-6)
         assert torch.allclose(out["binding_mixed_logit"], expected_binding, atol=1e-6)
         assert torch.allclose(out["presentation_mixed_logit"], expected_presentation, atol=1e-6)
         assert torch.allclose(out["recognition_mixed_logit"], expected_recognition, atol=1e-6)
-        assert torch.allclose(out["immunogenicity_mixed_logit"], out["immunogenicity_mixture_logit"], atol=1e-6)
+        assert torch.allclose(
+            out["immunogenicity_mixed_logit"], out["immunogenicity_mixture_logit"], atol=1e-6
+        )
 
     def test_mhc_species_override_conditions_processing_path(self):
         from presto.models.presto import Presto

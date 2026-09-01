@@ -264,7 +264,11 @@ def _apply_mps_safe_mode(
                 continue
             if isinstance(child, nn.Dropout):
                 if apply_manual_dropout:
-                    module_seed = None if manual_seed_base is None else (manual_seed_base + dropout_modules_replaced)
+                    module_seed = (
+                        None
+                        if manual_seed_base is None
+                        else (manual_seed_base + dropout_modules_replaced)
+                    )
                     setattr(
                         module,
                         name,
@@ -481,7 +485,9 @@ class StrictAlleleBalancedBatchSampler(Sampler[List[int]]):
 
         self._index_by_allele: Dict[str, List[int]] = {allele: [] for allele in self.alleles}
         self._real_index_by_allele: Dict[str, List[int]] = {allele: [] for allele in self.alleles}
-        self._synthetic_index_by_allele: Dict[str, List[int]] = {allele: [] for allele in self.alleles}
+        self._synthetic_index_by_allele: Dict[str, List[int]] = {
+            allele: [] for allele in self.alleles
+        }
         for idx, sample in enumerate(getattr(dataset, "samples", [])):
             allele = str(getattr(sample, "primary_allele", "") or "").strip()
             if allele in self._index_by_allele:
@@ -504,8 +510,7 @@ class StrictAlleleBalancedBatchSampler(Sampler[List[int]]):
                 f"batch_size={self.batch_size} too small for {len(self.alleles)} target alleles"
             )
         self._slots_by_allele = {
-            allele: base + (1 if i < extra else 0)
-            for i, allele in enumerate(self.alleles)
+            allele: base + (1 if i < extra else 0) for i, allele in enumerate(self.alleles)
         }
         self._synthetic_slots_by_allele = {
             allele: min(
@@ -530,7 +535,8 @@ class StrictAlleleBalancedBatchSampler(Sampler[List[int]]):
             missing_synth = [
                 allele
                 for allele in self.alleles
-                if self._synthetic_slots_by_allele[allele] > 0 and not self._synthetic_index_by_allele[allele]
+                if self._synthetic_slots_by_allele[allele] > 0
+                and not self._synthetic_index_by_allele[allele]
             ]
             if missing_real:
                 raise ValueError(
@@ -539,9 +545,9 @@ class StrictAlleleBalancedBatchSampler(Sampler[List[int]]):
                 )
             if missing_synth:
                 raise ValueError(
-                    "Strict allele-balanced batching requires synthetic rows for every target allele "
-                    "when synthetic_fraction > 0: "
-                    + ", ".join(missing_synth)
+                    "Strict allele-balanced batching requires synthetic rows for every target "
+                        "allele "
+                    "when synthetic_fraction > 0: " + ", ".join(missing_synth)
                 )
             self._num_batches = max(
                 max(
@@ -573,7 +579,9 @@ class StrictAlleleBalancedBatchSampler(Sampler[List[int]]):
         rng = random.Random(self.seed + self._epoch)
         pools = {allele: list(indices) for allele, indices in self._index_by_allele.items()}
         cursors = {allele: 0 for allele in self.alleles}
-        real_pools = {allele: list(indices) for allele, indices in self._real_index_by_allele.items()}
+        real_pools = {
+            allele: list(indices) for allele, indices in self._real_index_by_allele.items()
+        }
         synth_pools = {
             allele: list(indices) for allele, indices in self._synthetic_index_by_allele.items()
         }
@@ -768,7 +776,8 @@ def _balance_alleles(
             if peptide:
                 peptide_to_alleles[peptide].add(allele)
     shared_peptides = {
-        peptide for peptide, peptide_alleles in peptide_to_alleles.items()
+        peptide
+        for peptide, peptide_alleles in peptide_to_alleles.items()
         if len(peptide_alleles) >= 2
     }
 
@@ -953,22 +962,32 @@ def _split_records_by_peptide(
         target.extend(group)
 
     train_shared = sum(
-        1 for peptide, allele_set in peptide_target_alleles.items()
+        1
+        for peptide, allele_set in peptide_target_alleles.items()
         if len(allele_set) >= 2 and peptide not in val_peptides
     )
     val_shared = sum(
-        1 for peptide, allele_set in peptide_target_alleles.items()
+        1
+        for peptide, allele_set in peptide_target_alleles.items()
         if len(allele_set) >= 2 and peptide in val_peptides
     )
-    return train_records, val_records, {
-        "train_rows": len(train_records),
-        "val_rows": len(val_records),
-        "train_peptides": len({str(getattr(r, 'peptide', '') or '').strip().upper() for r in train_records}),
-        "val_peptides": len({str(getattr(r, 'peptide', '') or '').strip().upper() for r in val_records}),
-        "shared_peptides_total": sum(1 for s in peptide_target_alleles.values() if len(s) >= 2),
-        "shared_peptides_train": train_shared,
-        "shared_peptides_val": val_shared,
-    }
+    return (
+        train_records,
+        val_records,
+        {
+            "train_rows": len(train_records),
+            "val_rows": len(val_records),
+            "train_peptides": len(
+                {str(getattr(r, 'peptide', '') or '').strip().upper() for r in train_records}
+            ),
+            "val_peptides": len(
+                {str(getattr(r, 'peptide', '') or '').strip().upper() for r in val_records}
+            ),
+            "shared_peptides_total": sum(1 for s in peptide_target_alleles.values() if len(s) >= 2),
+            "shared_peptides_train": train_shared,
+            "shared_peptides_val": val_shared,
+        },
+    )
 
 
 def _split_records_three_way(
@@ -989,17 +1008,23 @@ def _split_records_three_way(
     if float(test_fraction) <= 0.0:
         train_records, val_records, stats = _split_records_by_peptide(
             records,
-            val_fraction=float(val_fraction) / max(float(train_fraction) + float(val_fraction), 1e-8),
+            val_fraction=float(val_fraction)
+            / max(float(train_fraction) + float(val_fraction), 1e-8),
             seed=seed,
             alleles=alleles,
         )
-        return train_records, val_records, [], {
-            **stats,
-            "test_rows": 0,
-            "test_peptides": 0,
-            "shared_peptides_test": 0,
-            "split_mode": "two_way",
-        }
+        return (
+            train_records,
+            val_records,
+            [],
+            {
+                **stats,
+                "test_rows": 0,
+                "test_peptides": 0,
+                "shared_peptides_test": 0,
+                "split_mode": "two_way",
+            },
+        )
 
     remaining_records, test_records, split_test = _split_records_by_peptide(
         records,
@@ -1014,21 +1039,32 @@ def _split_records_three_way(
         seed=seed,
         alleles=alleles,
     )
-    return train_records, val_records, test_records, {
-        "train_rows": len(train_records),
-        "val_rows": len(val_records),
-        "test_rows": len(test_records),
-        "train_peptides": len({str(getattr(r, "peptide", "") or "").strip().upper() for r in train_records}),
-        "val_peptides": len({str(getattr(r, "peptide", "") or "").strip().upper() for r in val_records}),
-        "test_peptides": len({str(getattr(r, "peptide", "") or "").strip().upper() for r in test_records}),
-        "shared_peptides_total": split_test.get("shared_peptides_total", 0),
-        "shared_peptides_train": split_val.get("shared_peptides_train", 0),
-        "shared_peptides_val": split_val.get("shared_peptides_val", 0),
-        "shared_peptides_test": split_test.get("shared_peptides_val", 0),
-        "split_mode": "three_way",
-        "split_test": split_test,
-        "split_val": split_val,
-    }
+    return (
+        train_records,
+        val_records,
+        test_records,
+        {
+            "train_rows": len(train_records),
+            "val_rows": len(val_records),
+            "test_rows": len(test_records),
+            "train_peptides": len(
+                {str(getattr(r, "peptide", "") or "").strip().upper() for r in train_records}
+            ),
+            "val_peptides": len(
+                {str(getattr(r, "peptide", "") or "").strip().upper() for r in val_records}
+            ),
+            "test_peptides": len(
+                {str(getattr(r, "peptide", "") or "").strip().upper() for r in test_records}
+            ),
+            "shared_peptides_total": split_test.get("shared_peptides_total", 0),
+            "shared_peptides_train": split_val.get("shared_peptides_train", 0),
+            "shared_peptides_val": split_val.get("shared_peptides_val", 0),
+            "shared_peptides_test": split_test.get("shared_peptides_val", 0),
+            "split_mode": "three_way",
+            "split_test": split_test,
+            "split_val": split_val,
+        },
+    )
 
 
 def _filter_shared_peptides_only(
@@ -1049,7 +1085,8 @@ def _filter_shared_peptides_only(
         if target_set and target_set.issubset(seen)
     }
     filtered = [
-        rec for rec in records
+        rec
+        for rec in records
         if str(getattr(rec, "peptide", "") or "").strip().upper() in shared_peptides
     ]
     return filtered, {
@@ -1237,16 +1274,14 @@ def _planned_strict_batch_contract(
     base = int(batch_size) // len(normalized_alleles)
     extra = int(batch_size) % len(normalized_alleles)
     per_allele_slots = {
-        allele: base + (1 if idx < extra else 0)
-        for idx, allele in enumerate(normalized_alleles)
+        allele: base + (1 if idx < extra else 0) for idx, allele in enumerate(normalized_alleles)
     }
     synthetic_slots = {
         allele: min(slots, int(round(slots * float(synthetic_fraction))))
         for allele, slots in per_allele_slots.items()
     }
     real_slots = {
-        allele: per_allele_slots[allele] - synthetic_slots[allele]
-        for allele in normalized_alleles
+        allele: per_allele_slots[allele] - synthetic_slots[allele] for allele in normalized_alleles
     }
     return {
         "batch_size": int(batch_size),
@@ -1277,9 +1312,7 @@ def _load_binding_records_from_merged_tsv(
     sampling_seed: int = 42,
 ) -> Tuple[List[BindingRecord], Dict[str, Any]]:
     target_alleles = {
-        str(allele or "").strip()
-        for allele in (alleles or ())
-        if str(allele or "").strip()
+        str(allele or "").strip() for allele in (alleles or ()) if str(allele or "").strip()
     }
     class_filter = normalize_mhc_class(mhc_class_filter, default=None)
     limit = None if max_records is None or int(max_records) <= 0 else int(max_records)
@@ -1341,11 +1374,14 @@ def _load_binding_records_from_merged_tsv(
                 assay_type=str(row.get("assay_type") or "").strip() or None,
                 assay_method=str(row.get("assay_method") or "").strip() or None,
                 apc_name=str(row.get("apc_name") or "").strip() or None,
-                effector_culture_condition=str(row.get("effector_culture_condition") or "").strip() or None,
+                effector_culture_condition=str(row.get("effector_culture_condition") or "").strip()
+                or None,
                 apc_culture_condition=str(row.get("apc_culture_condition") or "").strip() or None,
                 in_vitro_process_type=str(row.get("in_vitro_process_type") or "").strip() or None,
-                in_vitro_responder_cell=str(row.get("in_vitro_responder_cell") or "").strip() or None,
-                in_vitro_stimulator_cell=str(row.get("in_vitro_stimulator_cell") or "").strip() or None,
+                in_vitro_responder_cell=str(row.get("in_vitro_responder_cell") or "").strip()
+                or None,
+                in_vitro_stimulator_cell=str(row.get("in_vitro_stimulator_cell") or "").strip()
+                or None,
                 cdr3_alpha=None,
                 cdr3_beta=None,
                 trav=None,
@@ -1364,7 +1400,8 @@ def _load_binding_records_from_merged_tsv(
                 measurement_type=value_type or "IC50",
                 assay_type=str(row.get("assay_type") or "").strip() or None,
                 assay_method=str(row.get("assay_method") or "").strip() or None,
-                effector_culture_condition=str(row.get("effector_culture_condition") or "").strip() or None,
+                effector_culture_condition=str(row.get("effector_culture_condition") or "").strip()
+                or None,
                 apc_culture_condition=str(row.get("apc_culture_condition") or "").strip() or None,
                 mhc_class=mhc_class,
                 species=str(row.get("species") or "").strip() or None,
@@ -1456,21 +1493,27 @@ def _prepare_real_binding_state(
     )
     if source_filter:
         records = [rec for rec in records if str(rec.source or "").strip().lower() == source_filter]
-    records = [rec for rec in records if _keep_measurement_type(rec.measurement_type, measurement_profile)]
+    records = [
+        rec for rec in records if _keep_measurement_type(rec.measurement_type, measurement_profile)
+    ]
     if measurement_type_filter:
         records = [
-            rec for rec in records
+            rec
+            for rec in records
             if _normalize_binding_measurement(rec.measurement_type) == str(measurement_type_filter)
         ]
     records = [
-        rec for rec in records
+        rec
+        for rec in records
         if _keep_binding_qualifier(getattr(rec, "qualifier", 0), str(qualifier_filter))
     ]
 
     real_records = list(records)
     shared_peptide_stats: Dict[str, Any] = {}
     if shared_peptides_only:
-        real_records, shared_peptide_stats = _filter_shared_peptides_only(real_records, probe_alleles)
+        real_records, shared_peptide_stats = _filter_shared_peptides_only(
+            real_records, probe_alleles
+        )
     probe_allele_counts_after_filter = _require_target_allele_coverage(real_records, probe_alleles)
     balance_stats: Dict[str, Any] = {}
     if max_per_allele >= 0:
@@ -1480,7 +1523,9 @@ def _prepare_real_binding_state(
             int(max_per_allele),
             rng_seed=int(seed),
         )
-        probe_allele_counts_after_filter = _require_target_allele_coverage(real_records, probe_alleles)
+        probe_allele_counts_after_filter = _require_target_allele_coverage(
+            real_records, probe_alleles
+        )
     train_records, val_records, test_records, split_stats = _split_records_three_way(
         real_records,
         train_fraction=1.0 - float(val_fraction) - float(test_fraction),
@@ -1578,17 +1623,14 @@ def _require_target_allele_coverage(
 ) -> Dict[str, int]:
     counts = {
         str(allele): sum(
-            1
-            for rec in records
-            if str(getattr(rec, "mhc_allele", "") or "").strip() == str(allele)
+            1 for rec in records if str(getattr(rec, "mhc_allele", "") or "").strip() == str(allele)
         )
         for allele in alleles
     }
     missing = [allele for allele, count in counts.items() if count <= 0]
     if missing:
         raise RuntimeError(
-            "Focused binding subset has no retained rows for target alleles: "
-            + ", ".join(missing)
+            "Focused binding subset has no retained rows for target alleles: " + ", ".join(missing)
         )
     return counts
 
@@ -1680,10 +1722,13 @@ def _audit_record_groove_preparation(
             continue
 
         allele = str(getattr(rec, "mhc_allele", "") or "").strip()
-        mhc_class = normalize_mhc_class(
-            getattr(rec, "mhc_class", None),
-            default=infer_mhc_class_optional(allele),
-        ) or "I"
+        mhc_class = (
+            normalize_mhc_class(
+                getattr(rec, "mhc_class", None),
+                default=infer_mhc_class_optional(allele),
+            )
+            or "I"
+        )
         direct_seq = str(getattr(rec, "mhc_sequence", "") or "").strip().upper()
         if not direct_seq and allele:
             direct_seq = str(mhc_sequences.get(allele, "") or "").strip().upper()
@@ -1714,12 +1759,10 @@ def _audit_record_groove_preparation(
             "expected_missing_chain": int(stats["expected_missing_chain"]),
             "used_fallback": int(stats["used_fallback"]),
             "status_counts": {
-                f"{a}|{b}": count
-                for (a, b), count in stats["status_counts"].most_common(8)
+                f"{a}|{b}": count for (a, b), count in stats["status_counts"].most_common(8)
             },
             "length_pair_counts": {
-                f"{a}:{b}": count
-                for (a, b), count in stats["length_pair_counts"].most_common(8)
+                f"{a}:{b}": count for (a, b), count in stats["length_pair_counts"].most_common(8)
             },
         }
     return {
@@ -1774,8 +1817,7 @@ def _audit_dataset_groove_inputs(
             "empty_mhc_b": int(stats["empty_mhc_b"]),
             "class_counts": dict(stats["class_counts"]),
             "length_pair_counts": {
-                f"{a}:{b}": count
-                for (a, b), count in stats["length_pair_counts"].most_common(8)
+                f"{a}:{b}": count for (a, b), count in stats["length_pair_counts"].most_common(8)
             },
         }
     return {
@@ -1991,11 +2033,14 @@ def _audit_probe_support(
                 assay_type=str(row.get("assay_type") or "").strip() or None,
                 assay_method=str(row.get("assay_method") or "").strip() or None,
                 apc_name=str(row.get("apc_name") or "").strip() or None,
-                effector_culture_condition=str(row.get("effector_culture_condition") or "").strip() or None,
+                effector_culture_condition=str(row.get("effector_culture_condition") or "").strip()
+                or None,
                 apc_culture_condition=str(row.get("apc_culture_condition") or "").strip() or None,
                 in_vitro_process_type=str(row.get("in_vitro_process_type") or "").strip() or None,
-                in_vitro_responder_cell=str(row.get("in_vitro_responder_cell") or "").strip() or None,
-                in_vitro_stimulator_cell=str(row.get("in_vitro_stimulator_cell") or "").strip() or None,
+                in_vitro_responder_cell=str(row.get("in_vitro_responder_cell") or "").strip()
+                or None,
+                in_vitro_stimulator_cell=str(row.get("in_vitro_stimulator_cell") or "").strip()
+                or None,
                 cdr3_alpha=None,
                 cdr3_beta=None,
                 trav=None,
@@ -2008,11 +2053,7 @@ def _audit_probe_support(
             by_record_type[rec.record_type] += 1
             by_assay_bucket[bucket] += 1
             by_allele[allele] += 1
-            if (
-                bucket == "binding_affinity"
-                and rec.value is not None
-                and allele in alleles_set
-            ):
+            if bucket == "binding_affinity" and rec.value is not None and allele in alleles_set:
                 quantitative_binding_rows += 1
 
     return {
@@ -2038,7 +2079,8 @@ def _prepare_probe_allele_sequences(
 ) -> Dict[str, str]:
     allele_sequences = dict(prepared_mhc_sequences)
     missing = [
-        allele for allele in probe_alleles
+        allele
+        for allele in probe_alleles
         if str(allele or "").strip() and str(allele) not in allele_sequences
     ]
     if not missing:
@@ -2095,12 +2137,12 @@ def _evaluate_probe_panel(
                 if grooves is None:
                     continue
                 groove1, groove2 = grooves
-                mhc_a_tok = torch.tensor(
-                    tokenizer.encode(groove1, max_len=120)
-                ).unsqueeze(0).to(device)
-                mhc_b_tok = torch.tensor(
-                    tokenizer.encode(groove2, max_len=120)
-                ).unsqueeze(0).to(device)
+                mhc_a_tok = (
+                    torch.tensor(tokenizer.encode(groove1, max_len=120)).unsqueeze(0).to(device)
+                )
+                mhc_b_tok = (
+                    torch.tensor(tokenizer.encode(groove2, max_len=120)).unsqueeze(0).to(device)
+                )
                 outputs = model.forward_affinity_only(
                     pep_tok=pep_tok,
                     mhc_a_tok=mhc_a_tok,
@@ -2122,9 +2164,7 @@ def _evaluate_probe_panel(
                     )
                     row[f"{field_prefix}_log10"] = assay_log10
                     row[f"{field_prefix}_nM"] = (
-                        float(10.0 ** assay_log10)
-                        if assay_log10 is not None
-                        else None
+                        float(10.0**assay_log10) if assay_log10 is not None else None
                     )
                 kd_log10 = row["kd_log10"]
                 ic50_log10 = row["ic50_log10"]
@@ -2140,9 +2180,7 @@ def _evaluate_probe_panel(
                     {
                         "probe_kd_log10": probe_kd_log10,
                         "probe_kd_nM": (
-                            float(10.0 ** probe_kd_log10)
-                            if probe_kd_log10 is not None
-                            else None
+                            float(10.0**probe_kd_log10) if probe_kd_log10 is not None else None
                         ),
                         "binding_prob": (
                             float(
@@ -2185,7 +2223,9 @@ def _collect_rankable_binding_pairs(
     target_gap_min: float,
     pair_prefix: str,
     max_affinity_nM: float = DEFAULT_MAX_AFFINITY_NM,
-) -> Tuple[Optional[torch.Tensor], Optional[torch.Tensor], Optional[torch.Tensor], Dict[str, float]]:
+) -> Tuple[
+    Optional[torch.Tensor], Optional[torch.Tensor], Optional[torch.Tensor], Dict[str, float]
+]:
     metrics: Dict[str, float] = {
         f"{pair_prefix}_pairs": 0.0,
         f"{pair_prefix}_labeled_pairs": 0.0,
@@ -2490,8 +2530,12 @@ def _compute_affinity_output_consistency_loss(
         )
         metrics["reg_binding_kd_family_consistency_raw"] = float(kd_raw.detach().item())
         metrics["reg_binding_kd_family_consistency_weight"] = kd_family_weight
-        metrics["reg_binding_kd_proxy_ic50_gap_mean"] = float((kd - kd_proxy_ic50).abs().mean().item())
-        metrics["reg_binding_kd_proxy_ec50_gap_mean"] = float((kd - kd_proxy_ec50).abs().mean().item())
+        metrics["reg_binding_kd_proxy_ic50_gap_mean"] = float(
+            (kd - kd_proxy_ic50).abs().mean().item()
+        )
+        metrics["reg_binding_kd_proxy_ec50_gap_mean"] = float(
+            (kd - kd_proxy_ec50).abs().mean().item()
+        )
         metrics["reg_binding_proxy_ic50_proxy_ec50_gap_mean"] = float(
             (kd_proxy_ic50 - kd_proxy_ec50).abs().mean().item()
         )
@@ -2504,11 +2548,15 @@ def _compute_affinity_output_consistency_loss(
     if ic50 is not None and kd_proxy_ic50 is not None:
         ic50_proxy_raw = F.smooth_l1_loss(ic50, kd_proxy_ic50, beta=beta, reduction="mean")
         proxy_cross_terms.append(ic50_proxy_raw)
-        metrics["reg_binding_ic50_proxy_ic50_gap_mean"] = float((ic50 - kd_proxy_ic50).abs().mean().item())
+        metrics["reg_binding_ic50_proxy_ic50_gap_mean"] = float(
+            (ic50 - kd_proxy_ic50).abs().mean().item()
+        )
     if ec50 is not None and kd_proxy_ec50 is not None:
         ec50_proxy_raw = F.smooth_l1_loss(ec50, kd_proxy_ec50, beta=beta, reduction="mean")
         proxy_cross_terms.append(ec50_proxy_raw)
-        metrics["reg_binding_ec50_proxy_ec50_gap_mean"] = float((ec50 - kd_proxy_ec50).abs().mean().item())
+        metrics["reg_binding_ec50_proxy_ec50_gap_mean"] = float(
+            (ec50 - kd_proxy_ec50).abs().mean().item()
+        )
     if proxy_cross_terms:
         proxy_cross_raw = torch.stack(proxy_cross_terms).mean()
         metrics["reg_binding_proxy_cross_consistency_raw"] = float(proxy_cross_raw.detach().item())
@@ -2519,9 +2567,7 @@ def _compute_affinity_output_consistency_loss(
                 proxy_cross_weighted.detach().item()
             )
             total_loss = (
-                proxy_cross_weighted
-                if total_loss is None
-                else (total_loss + proxy_cross_weighted)
+                proxy_cross_weighted if total_loss is None else (total_loss + proxy_cross_weighted)
             )
 
     return total_loss, metrics
@@ -2549,7 +2595,7 @@ def _grad_norm_for_prefixes(model: torch.nn.Module, prefixes: Sequence[str]) -> 
         matched = True
         grad = param.grad.detach().float()
         total += float(torch.sum(grad * grad).item())
-    return (total ** 0.5) if matched else 0.0
+    return (total**0.5) if matched else 0.0
 
 
 def _method_output_key(base_name: str, method_name: str) -> str:
@@ -2751,8 +2797,12 @@ def _affinity_only_loss(
                 "binding_kd_direct",
                 kd_direct_pred,
                 targets.get("binding_kd_direct"),
-                _mask_from_batch_mapping(target_masks, "binding_kd_direct", device=batch.pep_tok.device),
-                _mask_from_batch_mapping(target_quals, "binding_kd_direct", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(
+                    target_masks, "binding_kd_direct", device=batch.pep_tok.device
+                ),
+                _mask_from_batch_mapping(
+                    target_quals, "binding_kd_direct", device=batch.pep_tok.device
+                ),
             )
             kd_proxy_ic50_pred, _ = _prediction_tensor_for_target(
                 assays=assays,
@@ -2764,8 +2814,12 @@ def _affinity_only_loss(
                 "binding_kd_proxy_ic50",
                 kd_proxy_ic50_pred,
                 targets.get("binding_kd_proxy_ic50"),
-                _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
-                _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(
+                    target_masks, "binding_kd_proxy_ic50", device=batch.pep_tok.device
+                ),
+                _mask_from_batch_mapping(
+                    target_quals, "binding_kd_proxy_ic50", device=batch.pep_tok.device
+                ),
             )
             kd_proxy_ec50_pred, _ = _prediction_tensor_for_target(
                 assays=assays,
@@ -2777,8 +2831,12 @@ def _affinity_only_loss(
                 "binding_kd_proxy_ec50",
                 kd_proxy_ec50_pred,
                 targets.get("binding_kd_proxy_ec50"),
-                _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
-                _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(
+                    target_masks, "binding_kd_proxy_ec50", device=batch.pep_tok.device
+                ),
+                _mask_from_batch_mapping(
+                    target_quals, "binding_kd_proxy_ec50", device=batch.pep_tok.device
+                ),
             )
         else:
             kd_pred, _ = _prediction_tensor_for_target(
@@ -2846,8 +2904,12 @@ def _affinity_only_loss(
                 "binding_kd_direct",
                 kd_direct_pred,
                 targets.get("binding_kd_direct"),
-                _mask_from_batch_mapping(target_masks, "binding_kd_direct", device=batch.pep_tok.device),
-                _mask_from_batch_mapping(target_quals, "binding_kd_direct", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(
+                    target_masks, "binding_kd_direct", device=batch.pep_tok.device
+                ),
+                _mask_from_batch_mapping(
+                    target_quals, "binding_kd_direct", device=batch.pep_tok.device
+                ),
             )
             kd_proxy_ic50_pred, _ = _prediction_tensor_for_target(
                 assays=assays,
@@ -2859,8 +2921,12 @@ def _affinity_only_loss(
                 "binding_kd_proxy_ic50",
                 kd_proxy_ic50_pred,
                 targets.get("binding_kd_proxy_ic50"),
-                _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
-                _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ic50", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(
+                    target_masks, "binding_kd_proxy_ic50", device=batch.pep_tok.device
+                ),
+                _mask_from_batch_mapping(
+                    target_quals, "binding_kd_proxy_ic50", device=batch.pep_tok.device
+                ),
             )
             kd_proxy_ec50_pred, _ = _prediction_tensor_for_target(
                 assays=assays,
@@ -2872,8 +2938,12 @@ def _affinity_only_loss(
                 "binding_kd_proxy_ec50",
                 kd_proxy_ec50_pred,
                 targets.get("binding_kd_proxy_ec50"),
-                _mask_from_batch_mapping(target_masks, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
-                _mask_from_batch_mapping(target_quals, "binding_kd_proxy_ec50", device=batch.pep_tok.device),
+                _mask_from_batch_mapping(
+                    target_masks, "binding_kd_proxy_ec50", device=batch.pep_tok.device
+                ),
+                _mask_from_batch_mapping(
+                    target_quals, "binding_kd_proxy_ec50", device=batch.pep_tok.device
+                ),
             )
         else:
             kd_pred, _ = _prediction_tensor_for_target(
@@ -3057,10 +3127,14 @@ def _select_affinity_predictions(
     ic50 = _as_float_vector(ic50_tensor if ic50_tensor is not None else assays["IC50_nM"])
     ec50 = _as_float_vector(ec50_tensor if ec50_tensor is not None else assays["EC50_nM"])
     kd_proxy_ic50 = _as_float_vector(
-        kd_proxy_ic50_tensor if kd_proxy_ic50_tensor is not None else assays.get("KD_proxy_ic50_nM", assays["KD_nM"])
+        kd_proxy_ic50_tensor
+        if kd_proxy_ic50_tensor is not None
+        else assays.get("KD_proxy_ic50_nM", assays["KD_nM"])
     )
     kd_proxy_ec50 = _as_float_vector(
-        kd_proxy_ec50_tensor if kd_proxy_ec50_tensor is not None else assays.get("KD_proxy_ec50_nM", assays["KD_nM"])
+        kd_proxy_ec50_tensor
+        if kd_proxy_ec50_tensor is not None
+        else assays.get("KD_proxy_ec50_nM", assays["KD_nM"])
     )
 
     target_masks = getattr(batch, "target_masks", {}) or {}
@@ -3166,7 +3240,11 @@ def _evaluate_holdout_predictions(
             pred_nm = torch.pow(10.0, pred_log10)
             true_nm = _as_float_vector(batch.bind_target)
             mask = _as_float_vector(batch.bind_mask)
-            qual = _as_float_vector(batch.bind_qual) if getattr(batch, "bind_qual", None) is not None else torch.zeros_like(mask)
+            qual = (
+                _as_float_vector(batch.bind_qual)
+                if getattr(batch, "bind_qual", None) is not None
+                else torch.zeros_like(mask)
+            )
 
             pred_nm_all.append(pred_nm.detach().cpu())
             true_nm_all.append(true_nm.detach().cpu())
@@ -3250,9 +3328,9 @@ def _evaluate_holdout_predictions(
     if family_spearman_pairs:
         total_n = sum(n for _, n in family_spearman_pairs)
         if total_n > 0:
-            metrics["coverage_weighted_spearman"] = sum(
-                s * n for s, n in family_spearman_pairs
-            ) / total_n
+            metrics["coverage_weighted_spearman"] = (
+                sum(s * n for s, n in family_spearman_pairs) / total_n
+            )
 
     return metrics, rows
 
@@ -3329,7 +3407,7 @@ def _write_epoch_metrics_plot(path: Path, rows: Sequence[Mapping[str, Any]]) -> 
         if key in {"val_spearman", "val_auroc", "val_auprc"}:
             ax.set_ylim(0.0, 1.0)
 
-    for ax in axes_list[len(plot_specs):]:
+    for ax in axes_list[len(plot_specs) :]:
         ax.set_visible(False)
 
     fig.suptitle("Validation Metrics Over Epochs")
@@ -3498,7 +3576,8 @@ def main() -> None:
         "--cache-dir",
         type=str,
         default="",
-        help="Optional prepared-dataset cache directory. Default: <data-dir>/.cache/focused_binding",
+        help="Optional prepared-dataset cache directory. Default: "
+            "<data-dir>/.cache/focused_binding",
     )
     parser.add_argument("--dataset-cache", dest="dataset_cache", action="store_true")
     parser.add_argument("--no-dataset-cache", dest="dataset_cache", action="store_false")
@@ -3507,7 +3586,8 @@ def main() -> None:
         "--alleles",
         type=str,
         default=",".join(DEFAULT_ALLELES),
-        help="Probe/evaluation allele panel. Also used as the training panel unless --train-all-alleles is set.",
+        help="Probe/evaluation allele panel. Also used as the training panel unless "
+            "--train-all-alleles is set.",
     )
     parser.add_argument("--probe-peptide", type=str, default=DEFAULT_PROBE_PEPTIDE)
     parser.add_argument(
@@ -3607,7 +3687,9 @@ def main() -> None:
         help="Core-window refinement head mode.",
     )
     parser.add_argument("--lr", type=float, default=DEFAULT_LR)
-    parser.add_argument("--lr-schedule", type=str, choices=sorted(LR_SCHEDULE_MODES), default="constant")
+    parser.add_argument(
+        "--lr-schedule", type=str, choices=sorted(LR_SCHEDULE_MODES), default="constant"
+    )
     parser.add_argument("--warmup-fraction", type=float, default=0.1)
     parser.add_argument("--min-lr-scale", type=float, default=0.1)
     parser.add_argument("--onecycle-pct-start", type=float, default=0.1)
@@ -3636,7 +3718,8 @@ def main() -> None:
     parser.add_argument(
         "--train-all-alleles",
         action="store_true",
-        help="Train on all alleles matching --train-mhc-class-filter instead of only the probe/eval allele panel.",
+        help="Train on all alleles matching --train-mhc-class-filter instead of only the "
+            "probe/eval allele panel.",
     )
     parser.add_argument(
         "--init-checkpoint",
@@ -3662,7 +3745,8 @@ def main() -> None:
         type=str,
         default="all",
         choices=sorted(QUALIFIER_FILTERS),
-        help="Optional qualifier filter after assay filtering. 'exact' keeps only qualifier=0 rows.",
+        help="Optional qualifier filter after assay filtering. 'exact' keeps only qualifier=0 "
+            "rows.",
     )
     parser.add_argument(
         "--shared-peptides-only",
@@ -3673,7 +3757,8 @@ def main() -> None:
         "--max-per-allele",
         type=int,
         default=-1,
-        help="Cap each allele to this many records. 0 = auto-balance to minority allele count. -1 = no balancing.",
+        help="Cap each allele to this many records. 0 = auto-balance to minority allele count. "
+            "-1 = no balancing.",
     )
     parser.add_argument(
         "--class-i-anchor-strategy",
@@ -3683,14 +3768,17 @@ def main() -> None:
         help="Optional class-I anchor-aware strategy for focused synthetic negatives.",
     )
     parser.add_argument("--synthetic-negatives", dest="synthetic_negatives", action="store_true")
-    parser.add_argument("--no-synthetic-negatives", dest="synthetic_negatives", action="store_false")
+    parser.add_argument(
+        "--no-synthetic-negatives", dest="synthetic_negatives", action="store_false"
+    )
     parser.set_defaults(synthetic_negatives=False)
     parser.add_argument("--negative-ratio", type=float, default=1.0)
     parser.add_argument(
         "--batch-synthetic-fraction",
         type=float,
         default=-1.0,
-        help="Exact synthetic fraction per train batch. Negative values derive the fraction from negative_ratio.",
+        help="Exact synthetic fraction per train batch. Negative values derive the fraction "
+            "from negative_ratio.",
     )
     parser.add_argument(
         "--synthetic-modes",
@@ -3729,14 +3817,16 @@ def main() -> None:
         type=str,
         choices=sorted(AFFINITY_ASSAY_RESIDUAL_MODES),
         default="legacy",
-        help="Residual/bias mode for KD/IC50/EC50 assay heads. This does not add assay-selector inputs.",
+        help="Residual/bias mode for KD/IC50/EC50 assay heads. This does not add assay-selector "
+            "inputs.",
     )
     parser.add_argument(
         "--kd-grouping-mode",
         type=str,
         choices=("merged_kd", "split_kd_proxy"),
         default="merged_kd",
-        help="Whether direct KD and proxy-KD assay families share one KD output or use split proxy outputs.",
+        help="Whether direct KD and proxy-KD assay families share one KD output or use split "
+            "proxy outputs.",
     )
     parser.add_argument(
         "--binding-kinetic-input-mode",
@@ -3754,9 +3844,7 @@ def main() -> None:
         type=str,
         choices=("off", "affinity_residual", "affinity_stability_residual", "gated_affinity"),
         default="off",
-        help=(
-            "Direct pooled {peptide, groove1, groove2} branch into the canonical affinity path."
-        ),
+        help=("Direct pooled {peptide, groove1, groove2} branch into the canonical affinity path."),
     )
     parser.add_argument(
         "--binding-contrastive-weight",
@@ -3798,7 +3886,8 @@ def main() -> None:
         "--binding-peptide-contrastive-margin",
         type=float,
         default=0.2,
-        help="Required predicted log10(KD) margin for stronger-vs-weaker peptide pairs within an allele.",
+        help="Required predicted log10(KD) margin for stronger-vs-weaker peptide pairs within "
+            "an allele.",
     )
     parser.add_argument(
         "--binding-peptide-contrastive-target-gap-min",
@@ -3897,7 +3986,9 @@ def main() -> None:
     probe_alleles = _split_csv(args.alleles)
     if not probe_alleles:
         raise ValueError("At least one allele is required")
-    train_class_filter = None if str(args.train_mhc_class_filter) == "all" else str(args.train_mhc_class_filter)
+    train_class_filter = (
+        None if str(args.train_mhc_class_filter) == "all" else str(args.train_mhc_class_filter)
+    )
     if args.train_all_alleles and args.shared_peptides_only:
         raise ValueError("--shared-peptides-only is only valid for explicit allele-panel training")
     if args.train_all_alleles and int(args.max_per_allele) >= 0:
@@ -3912,7 +4003,11 @@ def main() -> None:
         if peptide_key and peptide_key not in explicit_probe_peptides:
             explicit_probe_peptides.append(peptide_key)
 
-    cache_dir = Path(args.cache_dir).expanduser() if str(args.cache_dir).strip() else _default_cache_dir(data_dir)
+    cache_dir = (
+        Path(args.cache_dir).expanduser()
+        if str(args.cache_dir).strip()
+        else _default_cache_dir(data_dir)
+    )
     setup_stage_timings: Dict[str, float] = {}
     setup_stage_start = time.perf_counter()
     prepared_state = _prepare_real_binding_state(
@@ -4075,7 +4170,9 @@ def main() -> None:
         "binding_peptide_contrastive_max_pairs": int(args.binding_peptide_contrastive_max_pairs),
         "binding_rank_use_probe": bool(str(args.affinity_loss_mode) == "probe_only"),
         "binding_kd_family_consistency_weight": float(args.binding_kd_family_consistency_weight),
-        "binding_proxy_cross_consistency_weight": float(args.binding_proxy_cross_consistency_weight),
+        "binding_proxy_cross_consistency_weight": float(
+            args.binding_proxy_cross_consistency_weight
+        ),
         "binding_output_consistency_beta": float(args.binding_output_consistency_beta),
     }
 
@@ -4139,8 +4236,12 @@ def main() -> None:
                 "max_affinity_nM": float(args.max_affinity_nm),
                 "binding_kinetic_input_mode": str(args.binding_kinetic_input_mode),
                 "binding_direct_segment_mode": str(args.binding_direct_segment_mode),
-                "binding_kd_family_consistency_weight": float(args.binding_kd_family_consistency_weight),
-                "binding_proxy_cross_consistency_weight": float(args.binding_proxy_cross_consistency_weight),
+                "binding_kd_family_consistency_weight": float(
+                    args.binding_kd_family_consistency_weight
+                ),
+                "binding_proxy_cross_consistency_weight": float(
+                    args.binding_proxy_cross_consistency_weight
+                ),
                 "binding_output_consistency_beta": float(args.binding_output_consistency_beta),
                 "init_checkpoint": str(args.init_checkpoint or ""),
                 "synthetic_negatives": bool(args.synthetic_negatives),
@@ -4153,7 +4254,9 @@ def main() -> None:
                     "device": device,
                     "mps_safe_mode_requested": str(args.mps_safe_mode),
                     "mps_safe_mode_applied": str(mps_safe_runtime["applied"]),
-                    "mps_safe_dropout_modules_zeroed": int(mps_safe_runtime["dropout_modules_zeroed"]),
+                    "mps_safe_dropout_modules_zeroed": int(
+                        mps_safe_runtime["dropout_modules_zeroed"]
+                    ),
                     "mps_safe_dropout_modules_replaced": int(
                         mps_safe_runtime["dropout_modules_replaced"]
                     ),
@@ -4246,20 +4349,34 @@ def main() -> None:
                 "class_i_anchor_strategy": str(args.class_i_anchor_strategy),
                 "binding_contrastive_weight": float(args.binding_contrastive_weight),
                 "binding_contrastive_margin": float(args.binding_contrastive_margin),
-                "binding_contrastive_target_gap_min": float(args.binding_contrastive_target_gap_min),
-                "binding_contrastive_target_gap_cap": float(args.binding_contrastive_target_gap_cap),
+                "binding_contrastive_target_gap_min": float(
+                    args.binding_contrastive_target_gap_min
+                ),
+                "binding_contrastive_target_gap_cap": float(
+                    args.binding_contrastive_target_gap_cap
+                ),
                 "binding_contrastive_max_pairs": int(args.binding_contrastive_max_pairs),
-                "binding_peptide_contrastive_weight": float(args.binding_peptide_contrastive_weight),
-                "binding_peptide_contrastive_margin": float(args.binding_peptide_contrastive_margin),
+                "binding_peptide_contrastive_weight": float(
+                    args.binding_peptide_contrastive_weight
+                ),
+                "binding_peptide_contrastive_margin": float(
+                    args.binding_peptide_contrastive_margin
+                ),
                 "binding_peptide_contrastive_target_gap_min": float(
                     args.binding_peptide_contrastive_target_gap_min
                 ),
                 "binding_peptide_contrastive_target_gap_cap": float(
                     args.binding_peptide_contrastive_target_gap_cap
                 ),
-                "binding_peptide_contrastive_max_pairs": int(args.binding_peptide_contrastive_max_pairs),
-                "binding_kd_family_consistency_weight": float(args.binding_kd_family_consistency_weight),
-                "binding_proxy_cross_consistency_weight": float(args.binding_proxy_cross_consistency_weight),
+                "binding_peptide_contrastive_max_pairs": int(
+                    args.binding_peptide_contrastive_max_pairs
+                ),
+                "binding_kd_family_consistency_weight": float(
+                    args.binding_kd_family_consistency_weight
+                ),
+                "binding_proxy_cross_consistency_weight": float(
+                    args.binding_proxy_cross_consistency_weight
+                ),
                 "binding_output_consistency_beta": float(args.binding_output_consistency_beta),
                 "epochs": int(args.epochs),
                 "batch_size": int(args.batch_size),
@@ -4277,7 +4394,9 @@ def main() -> None:
                     "device": device,
                     "mps_safe_mode_requested": str(args.mps_safe_mode),
                     "mps_safe_mode_applied": str(mps_safe_runtime["applied"]),
-                    "mps_safe_dropout_modules_zeroed": int(mps_safe_runtime["dropout_modules_zeroed"]),
+                    "mps_safe_dropout_modules_zeroed": int(
+                        mps_safe_runtime["dropout_modules_zeroed"]
+                    ),
                     "mps_safe_dropout_modules_replaced": int(
                         mps_safe_runtime["dropout_modules_replaced"]
                     ),
@@ -4315,7 +4434,9 @@ def main() -> None:
             "synthetic_stats": dict(synthetic_stats),
             "record_groove_audit": dict(record_groove_audit),
             "dataset_groove_audit": dict(dataset_groove_audit),
-            "dataset_size": len(train_dataset) + len(val_dataset) + (len(test_dataset) if test_dataset else 0),
+            "dataset_size": len(train_dataset)
+            + len(val_dataset)
+            + (len(test_dataset) if test_dataset else 0),
             "train_size": len(train_dataset),
             "val_size": len(val_dataset),
             "test_size": len(test_dataset) if test_dataset else 0,
@@ -4364,9 +4485,7 @@ def main() -> None:
                 epoch,
                 refresh_each_epoch=bool(args.synthetic_refresh_each_epoch),
             )
-            (
-                epoch_train_state
-            ) = _build_epoch_train_state(
+            (epoch_train_state) = _build_epoch_train_state(
                 real_train_records=real_train_records,
                 real_train_dataset=real_train_dataset,
                 mhc_sequences=mhc_sequences,
@@ -4490,7 +4609,9 @@ def main() -> None:
                 last_batch_done = time.perf_counter()
             if diverged:
                 epoch_wall_end = time.perf_counter()
-                gpu_metrics: Dict[str, float] = gpu_sampler.summarize_window(epoch_wall_start, epoch_wall_end)
+                gpu_metrics: Dict[str, float] = gpu_sampler.summarize_window(
+                    epoch_wall_start, epoch_wall_end
+                )
                 if device == "cuda":
                     peak_allocated = float(torch.cuda.max_memory_allocated())
                     peak_reserved = float(torch.cuda.max_memory_reserved())
@@ -4575,7 +4696,9 @@ def main() -> None:
                     precomputed_loss=val_loss,
                 )
             epoch_wall_end = time.perf_counter()
-            gpu_metrics: Dict[str, float] = gpu_sampler.summarize_window(epoch_wall_start, epoch_wall_end)
+            gpu_metrics: Dict[str, float] = gpu_sampler.summarize_window(
+                epoch_wall_start, epoch_wall_end
+            )
             if device == "cuda":
                 peak_allocated = float(torch.cuda.max_memory_allocated())
                 peak_reserved = float(torch.cuda.max_memory_reserved())
@@ -4597,14 +4720,21 @@ def main() -> None:
                 "train_backward_s": train_backward_s,
                 "train_optimizer_s": train_optimizer_s,
                 "gpu_busy_wall_s": (
-                    train_forward_loss_s + train_backward_s + train_optimizer_s + val_wall_s + probe_eval_wall_s
+                    train_forward_loss_s
+                    + train_backward_s
+                    + train_optimizer_s
+                    + val_wall_s
+                    + probe_eval_wall_s
                 ),
                 "val_wall_s": val_wall_s,
                 "probe_eval_wall_s": probe_eval_wall_s,
                 "current_lr": float(optimizer.param_groups[0]["lr"]),
-                "grad_norm_affinity_probe": grad_metrics_sum["grad_norm_affinity_probe"] / max(train_batches, 1),
-                "grad_norm_binding_core": grad_metrics_sum["grad_norm_binding_core"] / max(train_batches, 1),
-                "grad_norm_trunk_other": grad_metrics_sum["grad_norm_trunk_other"] / max(train_batches, 1),
+                "grad_norm_affinity_probe": grad_metrics_sum["grad_norm_affinity_probe"]
+                / max(train_batches, 1),
+                "grad_norm_binding_core": grad_metrics_sum["grad_norm_binding_core"]
+                / max(train_batches, 1),
+                "grad_norm_trunk_other": grad_metrics_sum["grad_norm_trunk_other"]
+                / max(train_batches, 1),
                 "diverged": bool(diverged),
                 "divergence_reason": divergence_reason if diverged else "",
                 "synthetic_seed": int(epoch_synthetic_seed),
@@ -4640,10 +4770,7 @@ def main() -> None:
                 epoch_summaries=epoch_summaries,
                 write_probe_plot=(
                     str(args.probe_plot_frequency) == "epoch"
-                    or (
-                        str(args.probe_plot_frequency) == "final"
-                        and epoch == int(args.epochs)
-                    )
+                    or (str(args.probe_plot_frequency) == "final" and epoch == int(args.epochs))
                 ),
             )
             epoch_summary["summary_write_wall_s"] = time.perf_counter() - write_start
@@ -4699,6 +4826,7 @@ def main() -> None:
     probe_head_rank_corrs: List[float] = []
     if probe_rows:
         from collections import defaultdict
+
         peptide_allele_preds: Dict[str, Dict[str, Dict[str, Optional[float]]]] = defaultdict(
             lambda: defaultdict(dict)
         )
@@ -4719,10 +4847,13 @@ def main() -> None:
                     ic50_vals.append(ic50_v)
             if len(kd_vals) >= 3:
                 from presto.scripts.distributional_ba.metrics import _spearman
-                rho = float(_spearman(
-                    torch.tensor(kd_vals, dtype=torch.float32),
-                    torch.tensor(ic50_vals, dtype=torch.float32),
-                ))
+
+                rho = float(
+                    _spearman(
+                        torch.tensor(kd_vals, dtype=torch.float32),
+                        torch.tensor(ic50_vals, dtype=torch.float32),
+                    )
+                )
                 probe_head_rank_corrs.append(rho)
     probe_head_agreement: Optional[float] = None
     if probe_head_rank_corrs:

@@ -57,16 +57,26 @@ def _make_designs() -> Tuple[DesignSpec, ...]:
                 family="presto",
                 description=f"Presto P03-style, peptide={pep_mode}, groove={groove_mode}",
                 extra_args=(
-                    "--d-model", "128",
-                    "--peptide-pos-mode", pep_mode,
-                    "--groove-pos-mode", groove_mode,
-                    "--binding-core-lengths", "8,9,10,11",
-                    "--binding-core-refinement", "shared",
-                    "--affinity-assay-residual-mode", "shared_base_segment_residual",
-                    "--binding-kinetic-input-mode", "affinity_vec",
-                    "--binding-direct-segment-mode", "off",
-                    "--affinity-target-encoding", "log10",
-                    "--max-affinity-nm", "50000",
+                    "--d-model",
+                    "128",
+                    "--peptide-pos-mode",
+                    pep_mode,
+                    "--groove-pos-mode",
+                    groove_mode,
+                    "--binding-core-lengths",
+                    "8,9,10,11",
+                    "--binding-core-refinement",
+                    "shared",
+                    "--affinity-assay-residual-mode",
+                    "shared_base_segment_residual",
+                    "--binding-kinetic-input-mode",
+                    "affinity_vec",
+                    "--binding-direct-segment-mode",
+                    "off",
+                    "--affinity-target-encoding",
+                    "log10",
+                    "--max-affinity-nm",
+                    "50000",
                 ),
             )
         )
@@ -74,15 +84,25 @@ def _make_designs() -> Tuple[DesignSpec, ...]:
             DesignSpec(
                 design_id=f"G{idx:02d}",
                 family="groove_transformer",
-                description=f"G1-style groove transformer, peptide={pep_mode}, groove={groove_mode}",
+                description=(
+                    f"G1-style groove transformer, peptide={pep_mode}, "
+                    f"groove={groove_mode}"
+                ),
                 extra_args=(
-                    "--model-variant", "transformer",
-                    "--embed-dim", "128",
-                    "--hidden-dim", "256",
-                    "--n-heads", "4",
-                    "--n-layers", "2",
-                    "--peptide-pos-mode", pep_mode,
-                    "--groove-pos-mode", groove_mode,
+                    "--model-variant",
+                    "transformer",
+                    "--embed-dim",
+                    "128",
+                    "--hidden-dim",
+                    "256",
+                    "--n-heads",
+                    "4",
+                    "--n-layers",
+                    "2",
+                    "--peptide-pos-mode",
+                    pep_mode,
+                    "--groove-pos-mode",
+                    groove_mode,
                 ),
             )
         )
@@ -98,15 +118,23 @@ def _run_id(prefix: str, design_id: str) -> str:
 
 def _common_args(*, alleles: Sequence[str], probes: Sequence[str]) -> List[str]:
     return [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--extra-probe-peptides", ",".join(probes[1:]),
-        "--measurement-profile", "numeric_no_qualitative",
-        "--qualifier-filter", "all",
-        "--probe-plot-frequency", "off",
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--extra-probe-peptides",
+        ",".join(probes[1:]),
+        "--measurement-profile",
+        "numeric_no_qualitative",
+        "--qualifier-filter",
+        "all",
+        "--probe-plot-frequency",
+        "off",
         "--no-synthetic-negatives",
-        "--binding-contrastive-weight", "0",
-        "--binding-peptide-contrastive-weight", "0",
+        "--binding-contrastive-weight",
+        "0",
+        "--binding-peptide-contrastive-weight",
+        "0",
     ]
 
 
@@ -238,7 +266,10 @@ def _write_variants(out_dir: Path, runs: Sequence[Mapping[str, Any]]) -> None:
     ]
     for run in runs:
         lines.append(
-            f"| `{run['design_id']}` | `{run['family']}` | `{run['app_id']}` | `{run['run_id']}` | {run['description']} |"
+            (
+                f"| `{run['design_id']}` | `{run['family']}` | `{run['app_id']}` | "
+                f"`{run['run_id']}` | {run['description']} |"
+            )
         )
     (out_dir / "variants.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -254,7 +285,9 @@ def _selected_designs(design_ids: Sequence[str]) -> Tuple[DesignSpec, ...]:
     return selected
 
 
-def _merge_runs(existing: Sequence[Mapping[str, Any]], new_runs: Sequence[Mapping[str, Any]]) -> List[Dict[str, Any]]:
+def _merge_runs(
+    existing: Sequence[Mapping[str, Any]], new_runs: Sequence[Mapping[str, Any]]
+) -> List[Dict[str, Any]]:
     merged: Dict[str, Dict[str, Any]] = {}
     for run in existing:
         merged[str(run["design_id"])] = dict(run)
@@ -284,7 +317,9 @@ def main() -> None:
 
     alleles = tuple(part.strip() for part in str(args.alleles).split(",") if part.strip())
     probes = tuple(part.strip() for part in str(args.probes).split(",") if part.strip())
-    selected = _selected_designs(tuple(part.strip() for part in str(args.design_ids).split(",") if part.strip()))
+    selected = _selected_designs(
+        tuple(part.strip() for part in str(args.design_ids).split(",") if part.strip())
+    )
 
     metadata = {
         "dataset_contract": {

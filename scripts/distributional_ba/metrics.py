@@ -133,12 +133,18 @@ def calibration_metrics(
     # lo_bin: first bin where cumulative prob >= 0.05 → use its left edge
     # hi_bin: first bin where cumulative prob >= 0.95 → use its right edge
     cdf_contiguous = cdf.contiguous()
-    lo_bin = torch.searchsorted(cdf_contiguous, torch.full((B,), 0.05, device=probs_m.device).unsqueeze(-1)).squeeze(-1)
-    hi_bin = torch.searchsorted(cdf_contiguous, torch.full((B,), 0.95, device=probs_m.device).unsqueeze(-1)).squeeze(-1)
+    lo_bin = torch.searchsorted(
+        cdf_contiguous, torch.full((B,), 0.05, device=probs_m.device).unsqueeze(-1)
+    ).squeeze(-1)
+    hi_bin = torch.searchsorted(
+        cdf_contiguous, torch.full((B,), 0.95, device=probs_m.device).unsqueeze(-1)
+    ).squeeze(-1)
     lo_bin = lo_bin.clamp(0, K - 1)
     hi_bin = hi_bin.clamp(0, K - 1)
-    lo_edge = edges_m.gather(1, lo_bin.unsqueeze(-1)).squeeze(-1)            # left edge of lo_bin
-    hi_edge = edges_m.gather(1, (hi_bin + 1).clamp(max=K).unsqueeze(-1)).squeeze(-1)  # right edge of hi_bin
+    lo_edge = edges_m.gather(1, lo_bin.unsqueeze(-1)).squeeze(-1)  # left edge of lo_bin
+    hi_edge = edges_m.gather(1, (hi_bin + 1).clamp(max=K).unsqueeze(-1)).squeeze(
+        -1
+    )  # right edge of hi_bin
     covered = ((true_m >= lo_edge) & (true_m <= hi_edge)).float()
     coverage_90 = float(covered.mean())
 
@@ -158,6 +164,7 @@ def calibration_metrics(
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _pearson(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
     x_c = x - x.mean()

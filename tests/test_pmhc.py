@@ -15,6 +15,7 @@ import torch
 # Test data fixtures
 # --------------------------------------------------------------------------
 
+
 @pytest.fixture
 def sample_peptides():
     """Sample peptide sequences for testing."""
@@ -30,6 +31,7 @@ def sample_long_peptides():
 @pytest.fixture
 def tokenizer():
     from presto.data.tokenizer import Tokenizer
+
     return Tokenizer()
 
 
@@ -37,12 +39,14 @@ def tokenizer():
 # Processing Module Tests (MHC-INDEPENDENT)
 # --------------------------------------------------------------------------
 
+
 class TestProcessingModule:
     """Processing happens BEFORE MHC binding - it's MHC-independent."""
 
     def test_processing_does_not_take_mhc_inputs(self):
         """Processing should NOT receive MHC sequence as input."""
         from presto.models.pmhc import ProcessingModule
+
         proc = ProcessingModule(d_model=64)
         # Only takes peptide and flanks, NOT MHC
         pep_tok = torch.randint(4, 24, (2, 10))
@@ -55,6 +59,7 @@ class TestProcessingModule:
     def test_processing_class_specific_heads(self):
         """Different heads for Class I vs Class II processing."""
         from presto.models.pmhc import ProcessingModule
+
         proc = ProcessingModule(d_model=64)
         pep_tok = torch.randint(4, 24, (2, 10))
         out_I = proc(pep_tok, None, None, mhc_class="I")
@@ -65,6 +70,7 @@ class TestProcessingModule:
     def test_processing_flanks_optional(self):
         """Flanks can be None (not always available)."""
         from presto.models.pmhc import ProcessingModule
+
         proc = ProcessingModule(d_model=64)
         pep_tok = torch.randint(4, 24, (2, 10))
         out = proc(pep_tok, None, None, mhc_class="I")
@@ -108,8 +114,12 @@ class TestProcessingModule:
             class_probs=class_probs,
         )
 
-        assert not torch.allclose(out_1["processing_class1_logit"], out_2["processing_class1_logit"])
-        assert not torch.allclose(out_1["processing_class2_logit"], out_2["processing_class2_logit"])
+        assert not torch.allclose(
+            out_1["processing_class1_logit"], out_2["processing_class1_logit"]
+        )
+        assert not torch.allclose(
+            out_1["processing_class2_logit"], out_2["processing_class2_logit"]
+        )
 
     def test_processing_soft_class_probs_mix_component_outputs(self):
         """Mixed processing logit is class-probability-weighted component sum."""
@@ -180,12 +190,14 @@ class TestProcessingModule:
 # Binding Module Tests
 # --------------------------------------------------------------------------
 
+
 class TestBindingModule:
     """Binding outputs three latent strengths."""
 
     def test_binding_outputs_three_latents(self):
         """Binding module outputs kinetic log-rate latents."""
         from presto.models.pmhc import BindingModule
+
         bind = BindingModule(d_model=64)
         pmhc_vec = torch.randn(2, 64)
         latents = bind(pmhc_vec, mhc_class="I")
@@ -197,6 +209,7 @@ class TestBindingModule:
     def test_binding_is_class_symmetric(self):
         """Binding latents should not depend on explicit class inputs."""
         from presto.models.pmhc import BindingModule
+
         bind = BindingModule(d_model=64)
         pmhc_vec = torch.randn(2, 64)
         lat_I = bind(pmhc_vec, mhc_class="I")
@@ -233,6 +246,7 @@ class TestStableBindingHead:
     def test_combines_latents(self):
         """Stable binding head combines stability, intrinsic, chaperone."""
         from presto.models.pmhc import StableBindingHead
+
         head = StableBindingHead()
         stability = torch.randn(2, 1)
         intrinsic = torch.randn(2, 1)
@@ -243,6 +257,7 @@ class TestStableBindingHead:
     def test_weights_are_positive(self):
         """Weights should be positive (softplus)."""
         from presto.models.pmhc import StableBindingHead
+
         head = StableBindingHead()
         # Check that weights are applied via softplus (always positive)
         assert hasattr(head, "w_stability")
@@ -252,11 +267,13 @@ class TestStableBindingHead:
 # pMHC Encoder Tests
 # --------------------------------------------------------------------------
 
+
 class TestPMHCEncoder:
     """Full pMHC encoder combining peptide and MHC."""
 
     def test_pmhc_encoder_class_I(self):
         from presto.models.pmhc import PMHCEncoder
+
         enc = PMHCEncoder(d_model=64)
         pep_tok = torch.randint(4, 24, (2, 10))
         mhc_a_tok = torch.randint(4, 24, (2, 50))  # alpha chain
@@ -266,6 +283,7 @@ class TestPMHCEncoder:
 
     def test_pmhc_encoder_class_II(self):
         from presto.models.pmhc import PMHCEncoder
+
         enc = PMHCEncoder(d_model=64)
         pep_tok = torch.randint(4, 24, (2, 15))
         mhc_a_tok = torch.randint(4, 24, (2, 50))  # alpha chain
@@ -342,11 +360,13 @@ class TestCoreWindowScorer:
 # Core-Window Enumeration Tests (MHC-II)
 # --------------------------------------------------------------------------
 
+
 class TestCoreWindowEnumeration:
     """For MHC-II, enumerate all possible 9-mer cores."""
 
     def test_enumerate_core_windows(self):
         from presto.models.pmhc import enumerate_core_windows
+
         peptide = "PKYVKQNTLKLAT"  # 13 AAs
         core_windows = enumerate_core_windows(peptide, core_lens=(9,))
         # 13 - 9 + 1 = 5 core windows
@@ -360,6 +380,7 @@ class TestCoreWindowEnumeration:
 
     def test_enumerate_core_windows_multiple_core_lens(self):
         from presto.models.pmhc import enumerate_core_windows
+
         peptide = "PKYVKQNTLKLAT"  # 13 AAs
         core_windows = enumerate_core_windows(peptide, core_lens=(8, 9, 10))
         # (13-8+1) + (13-9+1) + (13-10+1) = 6 + 5 + 4 = 15
@@ -367,6 +388,7 @@ class TestCoreWindowEnumeration:
 
     def test_core_window_includes_pfrs(self):
         from presto.models.pmhc import enumerate_core_windows
+
         peptide = "ABCDEFGHIJKLM"  # 13 AAs
         core_windows = enumerate_core_windows(peptide, core_lens=(9,))
         r = core_windows[2]  # core starts at position 2
@@ -380,11 +402,13 @@ class TestCoreWindowEnumeration:
 # Stable Noisy-OR Tests
 # --------------------------------------------------------------------------
 
+
 class TestStableNoisyOR:
     """Numerically stable Noisy-OR aggregation."""
 
     def test_stable_noisy_or_basic(self):
         from presto.models.pmhc import stable_noisy_or
+
         probs = torch.tensor([0.5, 0.3, 0.2])
         result = stable_noisy_or(probs)
         # 1 - (1-0.5)*(1-0.3)*(1-0.2) = 1 - 0.5*0.7*0.8 = 1 - 0.28 = 0.72
@@ -393,6 +417,7 @@ class TestStableNoisyOR:
 
     def test_stable_noisy_or_with_mask(self):
         from presto.models.pmhc import stable_noisy_or
+
         probs = torch.tensor([0.5, 0.3, 0.2, 0.9])
         mask = torch.tensor([1.0, 1.0, 1.0, 0.0])  # Ignore last
         result = stable_noisy_or(probs, mask=mask)
@@ -401,6 +426,7 @@ class TestStableNoisyOR:
 
     def test_stable_noisy_or_batch(self):
         from presto.models.pmhc import stable_noisy_or
+
         probs = torch.tensor([[0.5, 0.3], [0.2, 0.8]])
         result = stable_noisy_or(probs, dim=-1)
         assert result.shape == (2,)
@@ -408,6 +434,7 @@ class TestStableNoisyOR:
     def test_stable_noisy_or_numerical_stability(self):
         """Should not underflow with many small probabilities."""
         from presto.models.pmhc import stable_noisy_or
+
         # 100 instances with p=0.01 each
         probs = torch.full((100,), 0.01)
         result = stable_noisy_or(probs)
@@ -419,6 +446,7 @@ class TestStableNoisyOR:
     def test_stable_noisy_or_extreme_values(self):
         """Should handle p=0 and p~1 gracefully."""
         from presto.models.pmhc import stable_noisy_or
+
         probs = torch.tensor([0.0, 0.5, 0.999999])
         result = stable_noisy_or(probs)
         assert torch.isfinite(result)
@@ -429,11 +457,13 @@ class TestStableNoisyOR:
 # Presentation Bottleneck Tests
 # --------------------------------------------------------------------------
 
+
 class TestPresentationBottleneck:
     """Combines processing and binding into presentation probability."""
 
     def test_presentation_bottleneck(self):
         from presto.models.pmhc import PresentationBottleneck
+
         pres = PresentationBottleneck()
         proc_logit = torch.randn(2, 1)
         bind_logit = torch.randn(2, 1)
@@ -442,6 +472,7 @@ class TestPresentationBottleneck:
 
     def test_presentation_bottleneck_gradients(self):
         from presto.models.pmhc import PresentationBottleneck
+
         pres = PresentationBottleneck()
         proc_logit = torch.randn(2, 1, requires_grad=True)
         bind_logit = torch.randn(2, 1, requires_grad=True)
@@ -471,12 +502,14 @@ class TestPresentationBottleneck:
 # Multi-Allele Aggregation Tests
 # --------------------------------------------------------------------------
 
+
 class TestMultiAlleleAggregation:
     """Aggregate over multiple alleles for MS/EL data."""
 
     def test_aggregate_alleles_noisy_or(self):
         """Noisy-OR over alleles."""
         from presto.models.pmhc import stable_noisy_or
+
         # Simulate per-allele presentation probabilities
         per_allele_probs = torch.tensor([0.3, 0.4, 0.5, 0.2, 0.1, 0.6])  # 6 alleles
         bag_prob = stable_noisy_or(per_allele_probs)
@@ -486,6 +519,7 @@ class TestMultiAlleleAggregation:
     def test_posterior_attribution(self):
         """Can compute posterior attribution to each allele."""
         from presto.models.pmhc import posterior_attribution
+
         per_allele_probs = torch.tensor([0.3, 0.4, 0.2])
         attribution = posterior_attribution(per_allele_probs)
         # Should sum to ~1 (or close to bag prob)

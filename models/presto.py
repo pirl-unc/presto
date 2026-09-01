@@ -73,6 +73,7 @@ def _species_idx_tensor(
     device: torch.device,
 ) -> torch.Tensor:
     """Convert species-of-origin override to ORGANISM index tensor."""
+
     def _idx_from_label(label: Any) -> int:
         normalized = normalize_organism(str(label)) if label is not None else None
         if normalized is None:
@@ -109,10 +110,10 @@ def _species_idx_tensor(
                     "species_of_origin probs tensor batch mismatch: "
                     f"expected {batch_size}, got {sp.shape[0]}"
                 )
-            return sp.argmax(dim=-1).to(dtype=torch.long).clamp(min=0, max=N_ORGANISM_CATEGORIES - 1)
-        raise ValueError(
-            f"unsupported species_of_origin tensor rank {sp.ndim}; expected 1 or 2"
-        )
+            return (
+                sp.argmax(dim=-1).to(dtype=torch.long).clamp(min=0, max=N_ORGANISM_CATEGORIES - 1)
+            )
+        raise ValueError(f"unsupported species_of_origin tensor rank {sp.ndim}; expected 1 or 2")
 
     return torch.zeros(batch_size, dtype=torch.long, device=device)
 
@@ -157,9 +158,13 @@ def _processing_species_idx_tensor(
                 raise ValueError(
                     f"species probs tensor batch mismatch: expected {batch_size}, got {sp.shape[0]}"
                 )
-            return sp.argmax(dim=-1).to(dtype=torch.long).clamp(
-                min=0,
-                max=len(PROCESSING_SPECIES_BUCKETS) - 1,
+            return (
+                sp.argmax(dim=-1)
+                .to(dtype=torch.long)
+                .clamp(
+                    min=0,
+                    max=len(PROCESSING_SPECIES_BUCKETS) - 1,
+                )
             )
         raise ValueError(f"unsupported species tensor rank {sp.ndim}; expected 1 or 2")
 
@@ -292,13 +297,13 @@ class Presto(nn.Module):
         binding_midpoint_nM: float = DEFAULT_BINDING_MIDPOINT_NM,
         binding_log10_scale: float = DEFAULT_BINDING_LOG10_SCALE,
         # --- Binding latent architecture flags ---
-        binding_n_latent_layers: int = 2,           # A: depth per binding latent
-        binding_n_queries: int = 8,                  # B: multi-token queries
-        binding_use_decoder_layers: bool = False,    # B: self-attn among queries
-        binding_query_pool: str = "mean",            # B: pooling strategy
-        use_pmhc_interaction_block: bool = False,    # C: pMHC interaction block
-        pmhc_interaction_layers: int = 2,            # C: num layers
-        use_groove_prior: bool = True,               # D: groove attention bias
+        binding_n_latent_layers: int = 2,  # A: depth per binding latent
+        binding_n_queries: int = 8,  # B: multi-token queries
+        binding_use_decoder_layers: bool = False,  # B: self-attn among queries
+        binding_query_pool: str = "mean",  # B: pooling strategy
+        use_pmhc_interaction_block: bool = False,  # C: pMHC interaction block
+        pmhc_interaction_layers: int = 2,  # C: num layers
+        use_groove_prior: bool = True,  # D: groove attention bias
         peptide_pos_mode: str = "triple",
         groove_pos_mode: str = "sequential",
         core_window_lengths: Optional[Sequence[int]] = None,
@@ -317,9 +322,7 @@ class Presto(nn.Module):
         self.max_affinity_nM = float(max_affinity_nM)
         affinity_target_encoding = str(affinity_target_encoding).strip().lower()
         if affinity_target_encoding not in AFFINITY_TARGET_ENCODINGS:
-            raise ValueError(
-                f"Unsupported affinity_target_encoding: {affinity_target_encoding!r}"
-            )
+            raise ValueError(f"Unsupported affinity_target_encoding: {affinity_target_encoding!r}")
         self.affinity_target_encoding = affinity_target_encoding
         self.max_log10_nM = max_log10_nM(self.max_affinity_nM)
         self.binding_midpoint_nM = float(binding_midpoint_nM)
@@ -428,8 +431,7 @@ class Presto(nn.Module):
         binding_kinetic_input_mode = str(binding_kinetic_input_mode).strip().lower()
         if binding_kinetic_input_mode not in {"affinity_vec", "interaction_vec", "fused"}:
             raise ValueError(
-                "Unsupported binding_kinetic_input_mode: "
-                f"{binding_kinetic_input_mode!r}"
+                f"Unsupported binding_kinetic_input_mode: {binding_kinetic_input_mode!r}"
             )
         self.binding_kinetic_input_mode = binding_kinetic_input_mode
         binding_direct_segment_mode = str(binding_direct_segment_mode).strip().lower()
@@ -440,8 +442,7 @@ class Presto(nn.Module):
             "gated_affinity",
         }:
             raise ValueError(
-                "Unsupported binding_direct_segment_mode: "
-                f"{binding_direct_segment_mode!r}"
+                f"Unsupported binding_direct_segment_mode: {binding_direct_segment_mode!r}"
             )
         self.binding_direct_segment_mode = binding_direct_segment_mode
         self._has_binding_enhancements = (
@@ -469,9 +470,7 @@ class Presto(nn.Module):
         # them made ~38k trunk parameters (at d_model=32) that were saved in
         # every checkpoint, evaluated on every forward, and never trained.
         pep_parts = self.POSITION_MODE_COMPONENTS[self.peptide_pos_mode]
-        self.pep_abs_pos = (
-            nn.Embedding(50, d_model) if "abs" in pep_parts else None
-        )
+        self.pep_abs_pos = nn.Embedding(50, d_model) if "abs" in pep_parts else None
         self.pep_frac_mlp = (
             nn.Sequential(nn.Linear(1, d_model), nn.GELU(), nn.Linear(d_model, d_model))
             if "frac_mlp" in pep_parts
@@ -481,9 +480,7 @@ class Presto(nn.Module):
             nn.Linear(2 * d_model, d_model) if "concat_proj" in pep_parts else None
         )
         self.pep_pos_concat_frac_proj = (
-            nn.Linear(2 * d_model + 2, d_model)
-            if "concat_frac_proj" in pep_parts
-            else None
+            nn.Linear(2 * d_model + 2, d_model) if "concat_frac_proj" in pep_parts else None
         )
         self.pep_pos_concat_mlp = (
             nn.Sequential(
@@ -514,18 +511,10 @@ class Presto(nn.Module):
         # dead weight under the shipped configuration.
         groove_parts = self.POSITION_MODE_COMPONENTS[self.groove_pos_mode]
         _groove_needs_ends = "end" in groove_parts
-        self.groove_1_abs_pos = (
-            nn.Embedding(120, d_model) if "abs" in groove_parts else None
-        )
-        self.groove_2_abs_pos = (
-            nn.Embedding(120, d_model) if "abs" in groove_parts else None
-        )
-        self.groove_1_end_pos = (
-            nn.Embedding(120, d_model) if _groove_needs_ends else None
-        )
-        self.groove_2_end_pos = (
-            nn.Embedding(120, d_model) if _groove_needs_ends else None
-        )
+        self.groove_1_abs_pos = nn.Embedding(120, d_model) if "abs" in groove_parts else None
+        self.groove_2_abs_pos = nn.Embedding(120, d_model) if "abs" in groove_parts else None
+        self.groove_1_end_pos = nn.Embedding(120, d_model) if _groove_needs_ends else None
+        self.groove_2_end_pos = nn.Embedding(120, d_model) if _groove_needs_ends else None
         self.groove_frac_mlp = (
             nn.Sequential(nn.Linear(1, d_model), nn.GELU(), nn.Linear(d_model, d_model))
             if "frac_mlp" in groove_parts
@@ -535,9 +524,7 @@ class Presto(nn.Module):
             nn.Linear(2 * d_model, d_model) if "concat_proj" in groove_parts else None
         )
         self.groove_pos_concat_frac_proj = (
-            nn.Linear(2 * d_model + 2, d_model)
-            if "concat_frac_proj" in groove_parts
-            else None
+            nn.Linear(2 * d_model + 2, d_model) if "concat_frac_proj" in groove_parts else None
         )
         self.groove_pos_concat_mlp = (
             nn.Sequential(
@@ -562,7 +549,7 @@ class Presto(nn.Module):
         self.pfr_length_embed = nn.Embedding(self.max_pfr_length + 1, self.pfr_length_dim)
 
         # Global conditioning embedding (design S3.2.4)
-        self.species_cond_embed = nn.Embedding(7, d_model)    # 7 species categories
+        self.species_cond_embed = nn.Embedding(7, d_model)  # 7 species categories
         self.chain_completeness_embed = nn.Embedding(64, d_model)  # 6-bit bitfield
 
         encoder_layer = nn.TransformerEncoderLayer(
@@ -631,12 +618,8 @@ class Presto(nn.Module):
         # `expanded` -- which is what the remote launcher runs -- shipped ~22k
         # untrained parameters in every checkpoint.
         _collapsed = self.latent_topology != "expanded"
-        self.processing_class1_proj = (
-            nn.Linear(d_model, d_model) if _collapsed else None
-        )
-        self.processing_class2_proj = (
-            nn.Linear(d_model, d_model) if _collapsed else None
-        )
+        self.processing_class1_proj = nn.Linear(d_model, d_model) if _collapsed else None
+        self.processing_class2_proj = nn.Linear(d_model, d_model) if _collapsed else None
         self.presentation_class1_mlp = (
             nn.Sequential(
                 nn.Linear(d_model + self.pmhc_interaction_vec_dim, d_model),
@@ -748,6 +731,7 @@ class Presto(nn.Module):
         # Per-chain fine type (5 classes):
         # {MHC_I, MHC_IIa, MHC_IIb, B2M, unknown}
         from ..data.vocab import N_MHC_CHAIN_FINE_TYPES
+
         self.mhc_a_type_head = nn.Linear(d_model, N_MHC_CHAIN_FINE_TYPES)
         self.mhc_b_type_head = nn.Linear(d_model, N_MHC_CHAIN_FINE_TYPES)
         # Per-chain species
@@ -766,55 +750,75 @@ class Presto(nn.Module):
         # ------------------------------------------------------------------
         # Binding latents may use multi-token queries (Variant B)
         if binding_n_queries > 1:
-            self.latent_queries = nn.ParameterDict({
-                name: nn.Parameter(
-                    torch.randn(binding_n_queries, d_model) * 0.02
-                    if name in self.BINDING_LATENT_NAMES
-                    else torch.randn(d_model) * 0.02
-                )
-                for name in self.CROSS_ATTN_LATENTS
-            })
+            self.latent_queries = nn.ParameterDict(
+                {
+                    name: nn.Parameter(
+                        torch.randn(binding_n_queries, d_model) * 0.02
+                        if name in self.BINDING_LATENT_NAMES
+                        else torch.randn(d_model) * 0.02
+                    )
+                    for name in self.CROSS_ATTN_LATENTS
+                }
+            )
         else:
-            self.latent_queries = nn.ParameterDict({
-                name: nn.Parameter(torch.randn(d_model) * 0.02)
-                for name in self.CROSS_ATTN_LATENTS
-            })
+            self.latent_queries = nn.ParameterDict(
+                {
+                    name: nn.Parameter(torch.randn(d_model) * 0.02)
+                    for name in self.CROSS_ATTN_LATENTS
+                }
+            )
 
         def _n_layers_for(name: str) -> int:
             if name in self.BINDING_LATENT_NAMES:
                 return binding_n_latent_layers
             return self.N_LATENT_LAYERS
 
-        self.latent_layers = nn.ModuleDict({
-            name: nn.ModuleList([
-                nn.ModuleDict({
-                    "attn": nn.MultiheadAttention(d_model, n_heads, dropout=0.1, batch_first=True),
-                    "norm1": nn.LayerNorm(d_model),
-                    "ffn": nn.Sequential(
-                        nn.Linear(d_model, d_model * 4),
-                        nn.GELU(),
-                        nn.Linear(d_model * 4, d_model),
-                        nn.Dropout(0.1),
-                    ),
-                    "norm2": nn.LayerNorm(d_model),
-                })
-                for _ in range(_n_layers_for(name))
-            ])
-            for name in self.CROSS_ATTN_LATENTS
-        })
+        self.latent_layers = nn.ModuleDict(
+            {
+                name: nn.ModuleList(
+                    [
+                        nn.ModuleDict(
+                            {
+                                "attn": nn.MultiheadAttention(
+                                    d_model, n_heads, dropout=0.1, batch_first=True
+                                ),
+                                "norm1": nn.LayerNorm(d_model),
+                                "ffn": nn.Sequential(
+                                    nn.Linear(d_model, d_model * 4),
+                                    nn.GELU(),
+                                    nn.Linear(d_model * 4, d_model),
+                                    nn.Dropout(0.1),
+                                ),
+                                "norm2": nn.LayerNorm(d_model),
+                            }
+                        )
+                        for _ in range(_n_layers_for(name))
+                    ]
+                )
+                for name in self.CROSS_ATTN_LATENTS
+            }
+        )
 
         # Variant B: self-attention layers among multi-token binding queries
         if binding_n_queries > 1 and binding_use_decoder_layers:
-            self.binding_query_self_attn = nn.ModuleDict({
-                name: nn.ModuleList([
-                    nn.ModuleDict({
-                        "self_attn": nn.MultiheadAttention(d_model, n_heads, dropout=0.1, batch_first=True),
-                        "norm": nn.LayerNorm(d_model),
-                    })
-                    for _ in range(_n_layers_for(name))
-                ])
-                for name in self.BINDING_LATENT_NAMES
-            })
+            self.binding_query_self_attn = nn.ModuleDict(
+                {
+                    name: nn.ModuleList(
+                        [
+                            nn.ModuleDict(
+                                {
+                                    "self_attn": nn.MultiheadAttention(
+                                        d_model, n_heads, dropout=0.1, batch_first=True
+                                    ),
+                                    "norm": nn.LayerNorm(d_model),
+                                }
+                            )
+                            for _ in range(_n_layers_for(name))
+                        ]
+                    )
+                    for name in self.BINDING_LATENT_NAMES
+                }
+            )
         # Variant B: pooling projection for multi-token queries
         if binding_n_queries > 1:
             if binding_query_pool == "attention":
@@ -823,25 +827,37 @@ class Presto(nn.Module):
 
         # Variant C: pMHC interaction block
         if use_pmhc_interaction_block:
-            self.pmhc_interaction = nn.ModuleList([
-                nn.ModuleDict({
-                    "pep_to_mhc_attn": nn.MultiheadAttention(d_model, n_heads, dropout=0.1, batch_first=True),
-                    "pep_norm1": nn.LayerNorm(d_model),
-                    "pep_ffn": nn.Sequential(
-                        nn.Linear(d_model, d_model * 4), nn.GELU(),
-                        nn.Linear(d_model * 4, d_model), nn.Dropout(0.1),
-                    ),
-                    "pep_norm2": nn.LayerNorm(d_model),
-                    "mhc_to_pep_attn": nn.MultiheadAttention(d_model, n_heads, dropout=0.1, batch_first=True),
-                    "mhc_norm1": nn.LayerNorm(d_model),
-                    "mhc_ffn": nn.Sequential(
-                        nn.Linear(d_model, d_model * 4), nn.GELU(),
-                        nn.Linear(d_model * 4, d_model), nn.Dropout(0.1),
-                    ),
-                    "mhc_norm2": nn.LayerNorm(d_model),
-                })
-                for _ in range(pmhc_interaction_layers)
-            ])
+            self.pmhc_interaction = nn.ModuleList(
+                [
+                    nn.ModuleDict(
+                        {
+                            "pep_to_mhc_attn": nn.MultiheadAttention(
+                                d_model, n_heads, dropout=0.1, batch_first=True
+                            ),
+                            "pep_norm1": nn.LayerNorm(d_model),
+                            "pep_ffn": nn.Sequential(
+                                nn.Linear(d_model, d_model * 4),
+                                nn.GELU(),
+                                nn.Linear(d_model * 4, d_model),
+                                nn.Dropout(0.1),
+                            ),
+                            "pep_norm2": nn.LayerNorm(d_model),
+                            "mhc_to_pep_attn": nn.MultiheadAttention(
+                                d_model, n_heads, dropout=0.1, batch_first=True
+                            ),
+                            "mhc_norm1": nn.LayerNorm(d_model),
+                            "mhc_ffn": nn.Sequential(
+                                nn.Linear(d_model, d_model * 4),
+                                nn.GELU(),
+                                nn.Linear(d_model * 4, d_model),
+                                nn.Dropout(0.1),
+                            ),
+                            "mhc_norm2": nn.LayerNorm(d_model),
+                        }
+                    )
+                    for _ in range(pmhc_interaction_layers)
+                ]
+            )
 
         self.groove_attn = nn.MultiheadAttention(
             d_model,
@@ -911,15 +927,9 @@ class Presto(nn.Module):
         # likely to matter.
         #
         # Zero-initialized, so an unannotated sample contributes nothing.
-        self.cell_lineage_embed = self._zero_init_embedding(
-            len(CELL_LINEAGES), d_model
-        )
-        self.sample_origin_embed = self._zero_init_embedding(
-            len(SAMPLE_ORIGINS), d_model
-        )
-        self.disease_state_embed = self._zero_init_embedding(
-            len(DISEASE_STATES), d_model
-        )
+        self.cell_lineage_embed = self._zero_init_embedding(len(CELL_LINEAGES), d_model)
+        self.sample_origin_embed = self._zero_init_embedding(len(SAMPLE_ORIGINS), d_model)
+        self.disease_state_embed = self._zero_init_embedding(len(DISEASE_STATES), d_model)
 
         # There is deliberately no cellular-condition embedding on the input
         # path. It used to live here, feeding a token into the processing
@@ -946,8 +956,7 @@ class Presto(nn.Module):
             },
             mixture_target=EXCISION_MACHINERY_TO_IDX["proteasome"],
             mixture_components=[
-                EXCISION_MACHINERY_TO_IDX[name]
-                for name in PROTEASOME_MIXTURE_COMPONENTS
+                EXCISION_MACHINERY_TO_IDX[name] for name in PROTEASOME_MIXTURE_COMPONENTS
             ],
             n_stimulus=len(PROCESSING_STIMULI),
             n_apm=len(APM_PERTURBATIONS),
@@ -1012,9 +1021,7 @@ class Presto(nn.Module):
         (`foreignness_proj`, then recognition) is scale-sensitive. Matching the
         norm keeps the override a change of direction rather than of both.
         """
-        direction = self.species_of_origin_head.weight.index_select(
-            0, species_idx.long()
-        )
+        direction = self.species_of_origin_head.weight.index_select(0, species_idx.long())
         direction = direction / direction.norm(dim=-1, keepdim=True).clamp(min=1e-6)
         scale = inferred.norm(dim=-1, keepdim=True)
         return direction.to(dtype=inferred.dtype) * scale
@@ -1219,8 +1226,9 @@ class Presto(nn.Module):
         return torch.full((length,), seg_id, device=device, dtype=torch.long)
 
     @staticmethod
-    def _first_valid_token(tokens: Optional[torch.Tensor], batch_size: int,
-                           device, fallback: int) -> torch.Tensor:
+    def _first_valid_token(
+        tokens: Optional[torch.Tensor], batch_size: int, device, fallback: int
+    ) -> torch.Tensor:
         """First non-pad token of each row (segments are right-padded)."""
         if tokens is None or tokens.numel() == 0:
             return torch.full((batch_size,), fallback, dtype=torch.long, device=device)
@@ -1231,8 +1239,9 @@ class Presto(nn.Module):
         return torch.where(present, picked, torch.full_like(picked, fallback)).long()
 
     @staticmethod
-    def _last_valid_token(tokens: Optional[torch.Tensor], batch_size: int,
-                          device, fallback: int) -> torch.Tensor:
+    def _last_valid_token(
+        tokens: Optional[torch.Tensor], batch_size: int, device, fallback: int
+    ) -> torch.Tensor:
         """Last non-pad token of each row (segments are right-padded)."""
         if tokens is None or tokens.numel() == 0:
             return torch.full((batch_size,), fallback, dtype=torch.long, device=device)
@@ -1243,8 +1252,9 @@ class Presto(nn.Module):
         return torch.where(present, picked, torch.full_like(picked, fallback)).long()
 
     @staticmethod
-    def _last_valid_window(tokens: Optional[torch.Tensor], batch_size: int,
-                           device, fallback: int, width: int) -> torch.Tensor:
+    def _last_valid_window(
+        tokens: Optional[torch.Tensor], batch_size: int, device, fallback: int, width: int
+    ) -> torch.Tensor:
         """The last ``width`` non-pad tokens, in sequence order.
 
         The P-side of a junction: for a C-flank junction the peptide's final
@@ -1254,9 +1264,7 @@ class Presto(nn.Module):
 
         Segments are right-padded, so the valid span is ``[0, length)``.
         """
-        out = torch.full(
-            (batch_size, width), fallback, dtype=torch.long, device=device
-        )
+        out = torch.full((batch_size, width), fallback, dtype=torch.long, device=device)
         if tokens is None or tokens.numel() == 0:
             return out
         valid = tokens != 0
@@ -1270,17 +1278,16 @@ class Presto(nn.Module):
         return picked.to(device=device, dtype=torch.long)
 
     @staticmethod
-    def _first_valid_window(tokens: Optional[torch.Tensor], batch_size: int,
-                            device, fallback: int, width: int) -> torch.Tensor:
+    def _first_valid_window(
+        tokens: Optional[torch.Tensor], batch_size: int, device, fallback: int, width: int
+    ) -> torch.Tensor:
         """The first ``width`` non-pad tokens, in sequence order.
 
         The P'-side of a junction: P1'..P{width}', with P1' first. Rows shorter
         than ``width`` are right-padded with ``fallback``, keeping P1' in
         column 0.
         """
-        out = torch.full(
-            (batch_size, width), fallback, dtype=torch.long, device=device
-        )
+        out = torch.full((batch_size, width), fallback, dtype=torch.long, device=device)
         if tokens is None or tokens.numel() == 0:
             return out
         valid = tokens != 0
@@ -1406,7 +1413,11 @@ class Presto(nn.Module):
         # Peptide position encoding.
         pep_sl = offsets["peptide"]
         pep_len_per = (tokens[:, pep_sl] != 0).sum(dim=1).clamp(min=1)  # (B,)
-        pep_idx = torch.arange(pep_sl.stop - pep_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
+        pep_idx = (
+            torch.arange(pep_sl.stop - pep_sl.start, device=device)
+            .unsqueeze(0)
+            .expand(batch_size, -1)
+        )
         nterm_idx = pep_idx.clamp(max=self.pep_nterm_pos.num_embeddings - 1)
         cterm_dist = (pep_len_per.unsqueeze(1) - 1 - pep_idx).clamp(min=0)
         cterm_idx = cterm_dist.clamp(max=self.pep_cterm_pos.num_embeddings - 1)
@@ -1420,9 +1431,7 @@ class Presto(nn.Module):
             end_frac=cterm_frac,
             frac_mlp=self.pep_frac_mlp,
             abs_embed=(
-                self.pep_abs_pos(
-                    pep_idx.clamp(max=self.pep_abs_pos.num_embeddings - 1)
-                )
+                self.pep_abs_pos(pep_idx.clamp(max=self.pep_abs_pos.num_embeddings - 1))
                 if self.pep_abs_pos is not None
                 else None
             ),
@@ -1435,7 +1444,11 @@ class Presto(nn.Module):
         # N-flank: distance-from-cleavage (reversed: last position = closest to cleavage)
         nfl_sl = offsets["nflank"]
         nfl_len_per = (tokens[:, nfl_sl] != 0).sum(dim=1).clamp(min=1)
-        nfl_idx = torch.arange(nfl_sl.stop - nfl_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
+        nfl_idx = (
+            torch.arange(nfl_sl.stop - nfl_sl.start, device=device)
+            .unsqueeze(0)
+            .expand(batch_size, -1)
+        )
         nfl_dist = (nfl_len_per.unsqueeze(1) - 1 - nfl_idx).clamp(min=0)
         nfl_pos_embed = self.nflank_dist_pos(
             nfl_dist.clamp(max=self.nflank_dist_pos.num_embeddings - 1)
@@ -1443,14 +1456,22 @@ class Presto(nn.Module):
 
         # C-flank: distance-from-cleavage (first position = closest to cleavage)
         cfl_sl = offsets["cflank"]
-        cfl_idx = torch.arange(cfl_sl.stop - cfl_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
+        cfl_idx = (
+            torch.arange(cfl_sl.stop - cfl_sl.start, device=device)
+            .unsqueeze(0)
+            .expand(batch_size, -1)
+        )
         cfl_pos_embed = self.cflank_dist_pos(
             cfl_idx.clamp(max=self.cflank_dist_pos.num_embeddings - 1)
         )
 
         # Groove half 1 position encoding.
         mhc_a_sl = offsets["mhc_a"]
-        mhc_a_idx = torch.arange(mhc_a_sl.stop - mhc_a_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
+        mhc_a_idx = (
+            torch.arange(mhc_a_sl.stop - mhc_a_sl.start, device=device)
+            .unsqueeze(0)
+            .expand(batch_size, -1)
+        )
         if self.groove_pos_mode == "sequential":
             mhc_a_pos_embed = self.groove_1_pos(
                 mhc_a_idx.clamp(max=self.groove_1_pos.num_embeddings - 1)
@@ -1466,8 +1487,12 @@ class Presto(nn.Module):
                     else 0
                 )
             )
-            mhc_a_start_frac = mhc_a_idx.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-            mhc_a_end_frac = mhc_a_end_dist.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            mhc_a_start_frac = (
+                mhc_a_idx.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            )
+            mhc_a_end_frac = (
+                mhc_a_end_dist.float() / (mhc_a_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            )
             mhc_a_pos_embed = self._compose_position_signal(
                 mode=self.groove_pos_mode,
                 start_embed=self.groove_1_pos(mhc_a_start_idx),
@@ -1481,9 +1506,7 @@ class Presto(nn.Module):
                 frac_mlp=self.groove_frac_mlp,
                 abs_embed=(
                     self.groove_1_abs_pos(
-                        mhc_a_idx.clamp(
-                            max=self.groove_1_abs_pos.num_embeddings - 1
-                        )
+                        mhc_a_idx.clamp(max=self.groove_1_abs_pos.num_embeddings - 1)
                     )
                     if self.groove_1_abs_pos is not None
                     else None
@@ -1496,7 +1519,11 @@ class Presto(nn.Module):
 
         # Groove half 2 position encoding.
         mhc_b_sl = offsets["mhc_b"]
-        mhc_b_idx = torch.arange(mhc_b_sl.stop - mhc_b_sl.start, device=device).unsqueeze(0).expand(batch_size, -1)
+        mhc_b_idx = (
+            torch.arange(mhc_b_sl.stop - mhc_b_sl.start, device=device)
+            .unsqueeze(0)
+            .expand(batch_size, -1)
+        )
         if self.groove_pos_mode == "sequential":
             mhc_b_pos_embed = self.groove_2_pos(
                 mhc_b_idx.clamp(max=self.groove_2_pos.num_embeddings - 1)
@@ -1512,8 +1539,12 @@ class Presto(nn.Module):
                     else 0
                 )
             )
-            mhc_b_start_frac = mhc_b_idx.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
-            mhc_b_end_frac = mhc_b_end_dist.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            mhc_b_start_frac = (
+                mhc_b_idx.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            )
+            mhc_b_end_frac = (
+                mhc_b_end_dist.float() / (mhc_b_len_per.unsqueeze(1) - 1).clamp(min=1).float()
+            )
             mhc_b_pos_embed = self._compose_position_signal(
                 mode=self.groove_pos_mode,
                 start_embed=self.groove_2_pos(mhc_b_start_idx),
@@ -1527,9 +1558,7 @@ class Presto(nn.Module):
                 frac_mlp=self.groove_frac_mlp,
                 abs_embed=(
                     self.groove_2_abs_pos(
-                        mhc_b_idx.clamp(
-                            max=self.groove_2_abs_pos.num_embeddings - 1
-                        )
+                        mhc_b_idx.clamp(max=self.groove_2_abs_pos.num_embeddings - 1)
                     )
                     if self.groove_2_abs_pos is not None
                     else None
@@ -1620,7 +1649,8 @@ class Presto(nn.Module):
 
         segment_masks = {
             "nflank": (seg_ids == self.SEG_NFLANK).unsqueeze(0).expand(batch_size, -1) & valid_mask,
-            "peptide": (seg_ids == self.SEG_PEPTIDE).unsqueeze(0).expand(batch_size, -1) & valid_mask,
+            "peptide": (seg_ids == self.SEG_PEPTIDE).unsqueeze(0).expand(batch_size, -1)
+            & valid_mask,
             "cflank": (seg_ids == self.SEG_CFLANK).unsqueeze(0).expand(batch_size, -1) & valid_mask,
             "mhc_a": (seg_ids == self.SEG_MHC_A).unsqueeze(0).expand(batch_size, -1) & valid_mask,
             "mhc_b": (seg_ids == self.SEG_MHC_B).unsqueeze(0).expand(batch_size, -1) & valid_mask,
@@ -1711,19 +1741,19 @@ class Presto(nn.Module):
     #: every checkpoint, and received no gradient. Roughly 38k parameters in
     #: the trunk alone at d_model=32.
     POSITION_MODE_COMPONENTS: Dict[str, frozenset] = {
-        "triple":                 frozenset({"start", "end", "frac_mlp"}),
-        "triple_baseline":        frozenset({"start", "end", "frac_mlp"}),
-        "abs_only":               frozenset({"abs"}),
-        "triple_plus_abs":        frozenset({"start", "end", "frac_mlp", "abs"}),
-        "start_only":             frozenset({"start"}),
-        "end_only":               frozenset({"end"}),
-        "start_plus_end":         frozenset({"start", "end"}),
-        "concat_start_end":       frozenset({"start", "end", "concat_proj"}),
-        "concat_start_end_frac":  frozenset({"start", "end", "concat_frac_proj"}),
-        "mlp_start_end":          frozenset({"start", "end", "concat_mlp"}),
-        "mlp_start_end_frac":     frozenset({"start", "end", "concat_frac_mlp"}),
+        "triple": frozenset({"start", "end", "frac_mlp"}),
+        "triple_baseline": frozenset({"start", "end", "frac_mlp"}),
+        "abs_only": frozenset({"abs"}),
+        "triple_plus_abs": frozenset({"start", "end", "frac_mlp", "abs"}),
+        "start_only": frozenset({"start"}),
+        "end_only": frozenset({"end"}),
+        "start_plus_end": frozenset({"start", "end"}),
+        "concat_start_end": frozenset({"start", "end", "concat_proj"}),
+        "concat_start_end_frac": frozenset({"start", "end", "concat_frac_proj"}),
+        "mlp_start_end": frozenset({"start", "end", "concat_mlp"}),
+        "mlp_start_end_frac": frozenset({"start", "end", "concat_frac_mlp"}),
         # Groove-only mode; uses its own sequential table, no shared parts.
-        "sequential":             frozenset({"sequential"}),
+        "sequential": frozenset({"sequential"}),
     }
 
     @staticmethod
@@ -1760,9 +1790,11 @@ class Presto(nn.Module):
         rather than an AttributeError deep in the trunk.
         """
         if mode in {"triple", "triple_baseline"}:
-            return start_embed + end_embed + self._require_component(
-                frac_mlp, mode, "frac_mlp"
-            )(start_frac.unsqueeze(-1))
+            return (
+                start_embed
+                + end_embed
+                + self._require_component(frac_mlp, mode, "frac_mlp")(start_frac.unsqueeze(-1))
+            )
         if mode == "abs_only":
             if abs_embed is None:
                 raise ValueError("abs_only requires abs_embed")
@@ -1773,9 +1805,7 @@ class Presto(nn.Module):
             return (
                 start_embed
                 + end_embed
-                + self._require_component(frac_mlp, mode, "frac_mlp")(
-                    start_frac.unsqueeze(-1)
-                )
+                + self._require_component(frac_mlp, mode, "frac_mlp")(start_frac.unsqueeze(-1))
                 + abs_embed
             )
         if mode == "start_only":
@@ -1809,9 +1839,13 @@ class Presto(nn.Module):
 
     @staticmethod
     def _repeat_candidates(x: torch.Tensor, n_candidates: int) -> torch.Tensor:
-        return x.unsqueeze(1).expand(-1, n_candidates, *x.shape[1:]).reshape(
-            x.shape[0] * n_candidates,
-            *x.shape[1:],
+        return (
+            x.unsqueeze(1)
+            .expand(-1, n_candidates, *x.shape[1:])
+            .reshape(
+                x.shape[0] * n_candidates,
+                *x.shape[1:],
+            )
         )
 
     def _prepare_latent_kv(
@@ -1834,9 +1868,7 @@ class Presto(nn.Module):
             elif dep_tensor.ndim == 3:
                 dep_tokens.append(dep_tensor)
             else:
-                raise ValueError(
-                    f"latent dependency {dep} has unsupported rank {dep_tensor.ndim}"
-                )
+                raise ValueError(f"latent dependency {dep} has unsupported rank {dep_tensor.ndim}")
         if extra_tokens:
             dep_tokens.extend(extra_tokens)
 
@@ -1918,9 +1950,7 @@ class Presto(nn.Module):
             batch_size,
             -1,
         )
-        return interaction_vec, interaction_tokens, (
-            collected_attn if collect_attn else None
-        )
+        return interaction_vec, interaction_tokens, (collected_attn if collect_attn else None)
 
     def _run_pmhc_interaction(
         self,
@@ -1963,7 +1993,9 @@ class Presto(nn.Module):
 
         for layer in self.pmhc_interaction:
             pep_out, _ = layer["pep_to_mhc_attn"](
-                layer["pep_norm1"](pep_h), mhc_h, mhc_h,
+                layer["pep_norm1"](pep_h),
+                mhc_h,
+                mhc_h,
                 key_padding_mask=mhc_pad,
                 need_weights=False,
             )
@@ -1972,7 +2004,9 @@ class Presto(nn.Module):
 
             # MHC cross-attends to peptide
             mhc_out, _ = layer["mhc_to_pep_attn"](
-                layer["mhc_norm1"](mhc_h), pep_h, pep_h,
+                layer["mhc_norm1"](mhc_h),
+                pep_h,
+                pep_h,
                 key_padding_mask=pep_pad,
                 need_weights=False,
             )
@@ -1993,7 +2027,7 @@ class Presto(nn.Module):
         prev_end = 0
         for sl, replacement in replacements:
             if sl.start > prev_end:
-                parts.append(h[:, prev_end:sl.start, :])
+                parts.append(h[:, prev_end : sl.start, :])
             parts.append(replacement)
             prev_end = sl.stop
         if prev_end < h.shape[1]:
@@ -2090,9 +2124,8 @@ class Presto(nn.Module):
         configured_length_mask = torch.zeros_like(core_lens, dtype=torch.bool)
         for configured_len in configured_core_lengths:
             configured_length_mask |= core_lens == int(configured_len)
-        short_peptide_fallback = (
-            (pep_len_expanded < int(min_configured))
-            & (core_lens == pep_len_expanded.clamp(min=1))
+        short_peptide_fallback = (pep_len_expanded < int(min_configured)) & (
+            core_lens == pep_len_expanded.clamp(min=1)
         )
         length_allowed = configured_length_mask | short_peptide_fallback
         candidate_mask = length_allowed & (starts < pep_len_expanded) & (ends <= pep_len_expanded)
@@ -2148,7 +2181,9 @@ class Presto(nn.Module):
             dim=1,
         )
 
-        core_flat = core_tokens.reshape(batch_size * max_candidates, self.core_window_size, self.d_model)
+        core_flat = core_tokens.reshape(
+            batch_size * max_candidates, self.core_window_size, self.d_model
+        )
         core_mask_flat = core_token_mask.reshape(batch_size * max_candidates, self.core_window_size)
         mhc_flat = self._repeat_candidates(mhc_h, max_candidates)
         mhc_mask_flat = self._repeat_candidates(mhc_mask, max_candidates)
@@ -2161,9 +2196,7 @@ class Presto(nn.Module):
             if dep_tensor.ndim == 2:
                 dep_tensor = dep_tensor.unsqueeze(1)
             elif dep_tensor.ndim != 3:
-                raise ValueError(
-                    f"latent dependency {dep} has unsupported rank {dep_tensor.ndim}"
-                )
+                raise ValueError(f"latent dependency {dep} has unsupported rank {dep_tensor.ndim}")
             dep_token_list.append(dep_tensor)
         if extra_tokens:
             dep_token_list.extend(extra_tokens)
@@ -2193,9 +2226,9 @@ class Presto(nn.Module):
         # core-groove pocket chemistry, not PFR composition.  PFR context
         # is fused into candidate_vec AFTER scoring so the downstream
         # binding module still sees flanking information.
-        core_only_vec = self.core_window_vec_norm(
-            candidate_interaction_flat
-        ).reshape(batch_size, max_candidates, -1)
+        core_only_vec = self.core_window_vec_norm(candidate_interaction_flat).reshape(
+            batch_size, max_candidates, -1
+        )
 
         pep_len_f = pep_len.float().unsqueeze(1).clamp(min=1.0)
         prior_features = torch.cat(
@@ -2518,10 +2551,10 @@ class Presto(nn.Module):
         Returns:
             Scalar loss averaged over labeled samples, or zero if no labels.
         """
-        logits = outputs["core_window_logit"]          # (batch, n_candidates)
-        starts = outputs["core_window_start"]          # (batch, n_candidates)
-        lengths = outputs["core_window_length"]        # (batch, n_candidates)
-        valid = outputs["core_window_mask"]            # (batch, n_candidates)
+        logits = outputs["core_window_logit"]  # (batch, n_candidates)
+        starts = outputs["core_window_start"]  # (batch, n_candidates)
+        lengths = outputs["core_window_length"]  # (batch, n_candidates)
+        valid = outputs["core_window_mask"]  # (batch, n_candidates)
 
         if mask is None:
             mask = torch.ones(logits.shape[0], dtype=torch.bool, device=logits.device)
@@ -2530,9 +2563,7 @@ class Presto(nn.Module):
 
         # Find the candidate index matching the known core
         target_match = (
-            (starts == core_start.unsqueeze(1))
-            & (lengths == core_length.unsqueeze(1))
-            & valid
+            (starts == core_start.unsqueeze(1)) & (lengths == core_length.unsqueeze(1)) & valid
         )  # (batch, n_candidates)
 
         # For samples where the known core matches exactly one candidate
@@ -2543,7 +2574,7 @@ class Presto(nn.Module):
         # Target index: argmax of the match (first matching candidate)
         target_idx = target_match[has_match].float().argmax(dim=1)  # (n_labeled,)
         labeled_logits = logits[has_match]  # (n_labeled, n_candidates)
-        labeled_valid = valid[has_match]    # (n_labeled, n_candidates)
+        labeled_valid = valid[has_match]  # (n_labeled, n_candidates)
 
         # Mask invalid candidates with -inf before cross-entropy
         labeled_logits = labeled_logits.masked_fill(~labeled_valid, -1e4)
@@ -2601,42 +2632,86 @@ class Presto(nn.Module):
         # Define which components are active (trained) at each stage
         active_components = {
             self.STAGE_BINDING_CLASS1: {
-                "trunk", "groove", "binding_query", "binding_core",
-                "binding_module", "assay_heads", "mhc_identity",
+                "trunk",
+                "groove",
+                "binding_query",
+                "binding_core",
+                "binding_module",
+                "assay_heads",
+                "mhc_identity",
             },
             self.STAGE_BINDING_CLASS2: {
-                "trunk", "groove", "binding_query", "binding_core",
-                "binding_module", "assay_heads", "pfr_class2",
+                "trunk",
+                "groove",
+                "binding_query",
+                "binding_core",
+                "binding_module",
+                "assay_heads",
+                "pfr_class2",
                 "mhc_identity",
             },
             self.STAGE_PROCESSING_CLASS1: {
-                "trunk", "groove", "binding_query", "binding_core",
-                "binding_module", "assay_heads", "pfr_class2", "mhc_identity",
-                "processing", "processing_class1",
+                "trunk",
+                "groove",
+                "binding_query",
+                "binding_core",
+                "binding_module",
+                "assay_heads",
+                "pfr_class2",
+                "mhc_identity",
+                "processing",
+                "processing_class1",
             },
             self.STAGE_PROCESSING_CLASS2: {
-                "trunk", "groove", "binding_query", "binding_core",
-                "binding_module", "assay_heads", "pfr_class2", "mhc_identity",
-                "processing", "processing_class1", "processing_class2",
+                "trunk",
+                "groove",
+                "binding_query",
+                "binding_core",
+                "binding_module",
+                "assay_heads",
+                "pfr_class2",
+                "mhc_identity",
+                "processing",
+                "processing_class1",
+                "processing_class2",
             },
             self.STAGE_PRESENTATION_MIL: {
-                "trunk", "groove", "binding_query", "binding_core",
-                "binding_module", "assay_heads", "pfr_class2", "mhc_identity",
-                "processing", "processing_class1", "processing_class2",
-                "presentation", "ms_detectability",
+                "trunk",
+                "groove",
+                "binding_query",
+                "binding_core",
+                "binding_module",
+                "assay_heads",
+                "pfr_class2",
+                "mhc_identity",
+                "processing",
+                "processing_class1",
+                "processing_class2",
+                "presentation",
+                "ms_detectability",
             },
             self.STAGE_IMMUNOGENICITY: {
-                "trunk", "groove", "binding_query", "binding_core",
-                "binding_module", "assay_heads", "pfr_class2", "mhc_identity",
-                "processing", "processing_class1", "processing_class2",
-                "presentation", "ms_detectability", "recognition", "immunogenicity",
+                "trunk",
+                "groove",
+                "binding_query",
+                "binding_core",
+                "binding_module",
+                "assay_heads",
+                "pfr_class2",
+                "mhc_identity",
+                "processing",
+                "processing_class1",
+                "processing_class2",
+                "presentation",
+                "ms_detectability",
+                "recognition",
+                "immunogenicity",
             },
         }
 
         if stage not in active_components:
             raise ValueError(
-                f"Unknown training stage {stage!r}. "
-                f"Valid: {sorted(active_components)}"
+                f"Unknown training stage {stage!r}. Valid: {sorted(active_components)}"
             )
 
         active = active_components[stage]
@@ -2647,9 +2722,7 @@ class Presto(nn.Module):
         # newly added component cannot quietly fall through to "other".
         reachable = set().union(*active_components.values())
         unreachable = {
-            component
-            for component in component_map.values()
-            if component not in reachable
+            component for component in component_map.values() if component not in reachable
         }
         # "other" is the documented sink for a parameter no rule matches, and
         # _classify_parameter's contract says such a parameter is frozen at
@@ -2734,33 +2807,64 @@ class Presto(nn.Module):
         # families (pep_abs_pos, pep_frac_mlp, pep_pos_concat_*, *_dist_pos,
         # groove_*_pos) previously matched nothing and were frozen at every
         # stage without anyone noticing.
-        ("trunk", (
-            "aa_embedding", "segment_embedding", "encoder", "stream_norm",
-            "pep_nterm_pos", "pep_cterm_pos", "pep_abs_pos", "pep_frac_mlp",
-            "pep_pos_concat", "mhc_pos", "groove_pos", "groove_1_pos",
-            "groove_2_pos", "groove_1_abs_pos", "groove_2_abs_pos",
-            "groove_1_end_pos", "groove_2_end_pos",
-            "nflank_dist_pos", "cflank_dist_pos",
-            "species_cond_embed", "chain_completeness_embed",
-            "context_token_proj",
-        ), ()),
+        (
+            "trunk",
+            (
+                "aa_embedding",
+                "segment_embedding",
+                "encoder",
+                "stream_norm",
+                "pep_nterm_pos",
+                "pep_cterm_pos",
+                "pep_abs_pos",
+                "pep_frac_mlp",
+                "pep_pos_concat",
+                "mhc_pos",
+                "groove_pos",
+                "groove_1_pos",
+                "groove_2_pos",
+                "groove_1_abs_pos",
+                "groove_2_abs_pos",
+                "groove_1_end_pos",
+                "groove_2_end_pos",
+                "nflank_dist_pos",
+                "cflank_dist_pos",
+                "species_cond_embed",
+                "chain_completeness_embed",
+                "context_token_proj",
+            ),
+            (),
+        ),
         ("groove", ("groove",), ("pos",)),
         # Binding latents. The expanded topology renames pmhc_interaction to
         # binding_affinity/binding_stability; before these entries existed those
         # parameters matched nothing, so every curriculum stage froze the
         # binding latents it was supposed to be training.
-        ("binding_query", (
-            "pmhc_interaction", "binding_query",
-            "latent_queries.binding_affinity", "latent_layers.binding_affinity",
-            "latent_queries.binding_stability", "latent_layers.binding_stability",
-        ), ()),
+        (
+            "binding_query",
+            (
+                "pmhc_interaction",
+                "binding_query",
+                "latent_queries.binding_affinity",
+                "latent_layers.binding_affinity",
+                "latent_queries.binding_stability",
+                "latent_layers.binding_stability",
+            ),
+            (),
+        ),
         ("binding_core", ("core_window", "core_position", "pfr_length_embed"), ()),
         ("pfr_class2", ("class2_pfr",), ()),
-        ("binding_module", (
-            "binding_module", "affinity_predictor",
-            "binding_affinity_readout_proj", "binding_stability_readout_proj",
-            "binding_direct_segment",
-        ), ()),
+        (
+            "binding_module",
+            (
+                "binding_module",
+                "affinity_predictor",
+                "binding_affinity_readout_proj",
+                "binding_stability_readout_proj",
+                "binding_direct_segment",
+            ),
+            (),
+        ),
         ("assay_heads", ("assay_head",), ()),
         ("processing_class1", ("processing_class1", "class1_processing"), ()),
         ("processing_class2", ("processing_class2", "class2_processing"), ()),
@@ -2769,19 +2873,33 @@ class Presto(nn.Module):
         # The provenance-axis embeddings are listed explicitly: they feed the
         # processing latents, so they belong to the processing component, but
         # their names contain neither "processing" nor "excision_head".
-        ("processing", (
-            "processing", "excision_head",
-            "cell_lineage_embed", "sample_origin_embed", "disease_state_embed",
-        ), ()),
+        (
+            "processing",
+            (
+                "processing",
+                "excision_head",
+                "cell_lineage_embed",
+                "sample_origin_embed",
+                "disease_state_embed",
+            ),
+            (),
+        ),
         ("presentation", ("presentation", "elution_head"), ()),
         ("recognition", ("recognition", "foreignness", "species_of_origin"), ()),
         ("immunogenicity", ("immunogenicity", "tcr_evidence"), ()),
         ("ms_detectability", ("ms_detectability",), ()),
         # MHC identity auxiliaries: inferred from sequence, trained throughout.
-        ("mhc_identity", (
-            "mhc_a_species_head", "mhc_b_species_head",
-            "mhc_a_type_head", "mhc_b_type_head", "chain_compat_head",
-        ), ()),
+        (
+            "mhc_identity",
+            (
+                "mhc_a_species_head",
+                "mhc_b_species_head",
+                "mhc_a_type_head",
+                "mhc_b_type_head",
+                "chain_compat_head",
+            ),
+            (),
+        ),
     )
 
     @classmethod
@@ -2944,10 +3062,13 @@ class Presto(nn.Module):
         class1_prob_raw = mhc_a_type_probs[:, 0] * mhc_b_type_probs[:, 0]
         class2_prob_raw = mhc_a_type_probs[:, 1] * mhc_b_type_probs[:, 2]
         class_sum = (class1_prob_raw + class2_prob_raw).clamp(min=1e-8)
-        inferred_class_probs = torch.stack([
-            class1_prob_raw / class_sum,
-            class2_prob_raw / class_sum,
-        ], dim=-1)
+        inferred_class_probs = torch.stack(
+            [
+                class1_prob_raw / class_sum,
+                class2_prob_raw / class_sum,
+            ],
+            dim=-1,
+        )
         # Emit 2-column logits for backward compat (from compositional probs)
         mhc_class_logits = torch.log(inferred_class_probs.clamp(min=1e-8))
         outputs["mhc_class_logits"] = mhc_class_logits
@@ -2962,11 +3083,19 @@ class Presto(nn.Module):
         outputs["mhc_species_pred"] = torch.argmax(mhc_species_logits, dim=-1)
 
         # Chain compatibility (design S5.3)
-        chain_compat_logit = self.chain_compat_head(torch.cat([
-            mhc_a_vec, mhc_b_vec,
-            mhc_a_type_probs, mhc_b_type_probs,
-            mhc_a_species_probs, mhc_b_species_probs,
-        ], dim=-1))
+        chain_compat_logit = self.chain_compat_head(
+            torch.cat(
+                [
+                    mhc_a_vec,
+                    mhc_b_vec,
+                    mhc_a_type_probs,
+                    mhc_b_type_probs,
+                    mhc_a_species_probs,
+                    mhc_b_species_probs,
+                ],
+                dim=-1,
+            )
+        )
         chain_compat_prob = torch.sigmoid(chain_compat_logit)
         outputs["chain_compat_logit"] = chain_compat_logit
         outputs["chain_compat_prob"] = chain_compat_prob
@@ -3121,9 +3250,7 @@ class Presto(nn.Module):
                 extra_tokens.append(groove_vec.unsqueeze(1))
 
             is_binding = name in self.BINDING_LATENT_NAMES
-            collect = bool(
-                return_binding_attention and is_binding
-            )
+            collect = bool(return_binding_attention and is_binding)
             attn_layers = None
 
             if is_binding:
@@ -3140,11 +3267,7 @@ class Presto(nn.Module):
                 )
                 latent_store[name] = latent_tokens
                 outputs.update(
-                    {
-                        key: value
-                        for key, value in binding_diag.items()
-                        if key != "attn_layers"
-                    }
+                    {key: value for key, value in binding_diag.items() if key != "attn_layers"}
                 )
                 if binding_diag.get("attn_layers"):
                     binding_attention[name] = list(binding_diag["attn_layers"])
@@ -3183,9 +3306,7 @@ class Presto(nn.Module):
         if self.latent_topology == "expanded":
             # Each specified latent has its own query, so read them directly
             # rather than projecting out of a shared one.
-            interaction_vec = self.pmhc_interaction_vec_norm(
-                latent_vals["binding_affinity"]
-            )
+            interaction_vec = self.pmhc_interaction_vec_norm(latent_vals["binding_affinity"])
             stability_interaction_vec = self.pmhc_interaction_vec_norm(
                 latent_vals["binding_stability"]
             )
@@ -3200,9 +3321,7 @@ class Presto(nn.Module):
             latent_vals["recognition"] = recognition_vec
         else:
             processing_vec = latent_vals["processing"]
-            interaction_vec = self.pmhc_interaction_vec_norm(
-                latent_vals["pmhc_interaction"]
-            )
+            interaction_vec = self.pmhc_interaction_vec_norm(latent_vals["pmhc_interaction"])
             latent_vals["pmhc_interaction"] = interaction_vec
             recognition_vec = latent_vals["recognition"]
             stability_interaction_vec = interaction_vec
@@ -3212,19 +3331,13 @@ class Presto(nn.Module):
         # Binding readouts. Collapsed shares one interaction vector across both;
         # expanded gives stability its own latent.
         binding_affinity_vec = self.binding_affinity_readout_proj(interaction_vec)
-        binding_stability_vec = self.binding_stability_readout_proj(
-            stability_interaction_vec
-        )
+        binding_stability_vec = self.binding_stability_readout_proj(stability_interaction_vec)
         # Only computed when a direct-segment mode is active; the projections
         # are not allocated when the mode is "off".
         if self.binding_direct_segment_mode != "off":
             direct_segment_input = torch.cat([pep_vec, mhc_a_vec, mhc_b_vec], dim=-1)
-            direct_affinity_vec = self.binding_direct_segment_affinity_proj(
-                direct_segment_input
-            )
-            direct_stability_vec = self.binding_direct_segment_stability_proj(
-                direct_segment_input
-            )
+            direct_affinity_vec = self.binding_direct_segment_affinity_proj(direct_segment_input)
+            direct_stability_vec = self.binding_direct_segment_stability_proj(direct_segment_input)
         if self.binding_direct_segment_mode == "affinity_residual":
             binding_affinity_vec = binding_affinity_vec + direct_affinity_vec
         elif self.binding_direct_segment_mode == "affinity_stability_residual":
@@ -3329,9 +3442,7 @@ class Presto(nn.Module):
             machinery_idx=machinery_idx,
             # C-terminal junction: peptide's last residue is P1, the first
             # C-flank residue is P1'.
-            p1_c_idx=self._last_valid_token(
-                pep_tok, batch_size, pep_tok.device, fallback_token
-            ),
+            p1_c_idx=self._last_valid_token(pep_tok, batch_size, pep_tok.device, fallback_token),
             p1_prime_c_idx=self._first_valid_token(
                 flank_c_tok, batch_size, pep_tok.device, fallback_token
             ),
@@ -3375,9 +3486,7 @@ class Presto(nn.Module):
             apm_perturbation_idx=(provenance or {}).get("apm_perturbation_idx"),
         )
         outputs.update(excision_outputs)
-        outputs["excision_prob"] = torch.sigmoid(
-            excision_outputs["excision_logit"]
-        )
+        outputs["excision_prob"] = torch.sigmoid(excision_outputs["excision_logit"])
         outputs["excision_machinery_idx"] = machinery_idx
 
         outputs["latent_vecs"] = latent_vals
@@ -3456,13 +3565,11 @@ class Presto(nn.Module):
             # PEPTIDE_SOURCES is ['unknown', 'mhc', 'protein'], so the negated
             # form also fired on `unknown` -- asserting in-vivo proteasomal
             # origin for rows whose provenance was simply not recorded.
-            is_mhc_source = (
-                peptide_source_idx.long() == self.excision_head.mhc_source_index
-            ).to(excision_logit.dtype)
+            is_mhc_source = (peptide_source_idx.long() == self.excision_head.mhc_source_index).to(
+                excision_logit.dtype
+            )
         invivo_presentation_term = (
-            F.softplus(self.w_invivo_excision_presentation)
-            * is_mhc_source
-            * excision_logit
+            F.softplus(self.w_invivo_excision_presentation) * is_mhc_source * excision_logit
         )
         class1_pres_logit_base = outputs["presentation_class1_logit"]
         if class1_pres_logit_base.ndim > invivo_presentation_term.ndim:
@@ -3470,17 +3577,13 @@ class Presto(nn.Module):
                 invivo_presentation_term.shape[0],
                 *([1] * (class1_pres_logit_base.ndim - 1)),
             )
-        outputs["presentation_class1_logit"] = (
-            class1_pres_logit_base + invivo_presentation_term
-        )
+        outputs["presentation_class1_logit"] = class1_pres_logit_base + invivo_presentation_term
         outputs["presentation_invivo_excision_term"] = invivo_presentation_term
         # Re-mix: the class-weighted presentation logit is what the elution
         # loss consumes, so without recomputing it the edge above would be
         # dead weight -- present in the class I readout and absent from every
         # trained objective.
-        outputs["presentation_class1_prob"] = torch.sigmoid(
-            outputs["presentation_class1_logit"]
-        )
+        outputs["presentation_class1_prob"] = torch.sigmoid(outputs["presentation_class1_logit"])
         remixed_logit = (
             class_probs[:, :1] * outputs["presentation_class1_logit"]
             + class_probs[:, 1:2] * outputs["presentation_class2_logit"]
@@ -3519,8 +3622,7 @@ class Presto(nn.Module):
 
         # Repertoire logit: class-weighted mixture of cd8/cd4 recognition (S9.4)
         recognition_repertoire_logit = (
-            class_probs[:, :1] * recognition_cd8_logit
-            + class_probs[:, 1:2] * recognition_cd4_logit
+            class_probs[:, :1] * recognition_cd8_logit + class_probs[:, 1:2] * recognition_cd4_logit
         )
         outputs["recognition_repertoire_logit"] = recognition_repertoire_logit
         outputs["recognition_repertoire_prob"] = torch.sigmoid(recognition_repertoire_logit)
@@ -3555,10 +3657,9 @@ class Presto(nn.Module):
         # above, not the repertoire logit. Those differ whenever class_probs
         # are not degenerate, so subtracting this to recover the
         # pre-recognition logit previously gave the wrong number.
-        outputs["immunogenicity_recognition_term"] = (
-            class_probs[:, :1] * (recognition_gain * recognition_cd8_logit)
-            + class_probs[:, 1:2] * (recognition_gain * recognition_cd4_logit)
-        )
+        outputs["immunogenicity_recognition_term"] = class_probs[:, :1] * (
+            recognition_gain * recognition_cd8_logit
+        ) + class_probs[:, 1:2] * (recognition_gain * recognition_cd4_logit)
 
         immunogenicity_mixture_logit = (
             class_probs[:, :1] * immunogenicity_cd8_logit

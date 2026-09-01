@@ -510,12 +510,8 @@ _ELUTION_SPEC = next(
 
 
 LOSS_TASK_NAMES: Tuple[str, ...] = tuple(spec.name for spec in LOSS_TASK_SPECS)
-LOSS_TASK_NAME_TO_INDEX: Dict[str, int] = {
-    name: idx for idx, name in enumerate(LOSS_TASK_NAMES)
-}
-LOSS_TASK_NAME_TO_SPEC: Dict[str, TaskLossSpec] = {
-    spec.name: spec for spec in LOSS_TASK_SPECS
-}
+LOSS_TASK_NAME_TO_INDEX: Dict[str, int] = {name: idx for idx, name in enumerate(LOSS_TASK_NAMES)}
+LOSS_TASK_NAME_TO_SPEC: Dict[str, TaskLossSpec] = {spec.name: spec for spec in LOSS_TASK_SPECS}
 
 
 def _normalize_supervised_loss_aggregation(mode: Optional[str]) -> str:
@@ -559,9 +555,7 @@ def _regularization_config_from_args(args: argparse.Namespace) -> Dict[str, floa
         "consistency_tcell_upstream_weight": float(
             getattr(args, "consistency_tcell_upstream_weight", 0.0)
         ),
-        "binding_orthogonality_weight": float(
-            getattr(args, "binding_orthogonality_weight", 0.01)
-        ),
+        "binding_orthogonality_weight": float(getattr(args, "binding_orthogonality_weight", 0.01)),
         "consistency_prob_margin": float(getattr(args, "consistency_prob_margin", 0.02)),
         "consistency_parent_low_threshold": float(
             getattr(args, "consistency_parent_low_threshold", 0.1)
@@ -574,45 +568,27 @@ def _regularization_config_from_args(args: argparse.Namespace) -> Dict[str, floa
         ),
         "tcell_in_vitro_margin": float(getattr(args, "tcell_in_vitro_margin", 0.0)),
         "tcell_ex_vivo_margin": float(getattr(args, "tcell_ex_vivo_margin", 0.0)),
-        "mhc_attention_sparsity_weight": float(
-            getattr(args, "mhc_attention_sparsity_weight", 0.0)
-        ),
+        "mhc_attention_sparsity_weight": float(getattr(args, "mhc_attention_sparsity_weight", 0.0)),
         "mhc_attention_sparsity_min_residues": float(
             getattr(args, "mhc_attention_sparsity_min_residues", 30.0)
         ),
         "mhc_attention_sparsity_max_residues": float(
             getattr(args, "mhc_attention_sparsity_max_residues", 60.0)
         ),
-        "mil_contrastive_weight": float(
-            getattr(args, "mil_contrastive_weight", 0.0)
-        ),
-        "mil_contrastive_margin": float(
-            getattr(args, "mil_contrastive_margin", 0.5)
-        ),
-        "mil_contrastive_max_pairs": float(
-            getattr(args, "mil_contrastive_max_pairs", 32)
-        ),
-        "binding_contrastive_weight": float(
-            getattr(args, "binding_contrastive_weight", 0.0)
-        ),
-        "binding_contrastive_margin": float(
-            getattr(args, "binding_contrastive_margin", 0.2)
-        ),
+        "mil_contrastive_weight": float(getattr(args, "mil_contrastive_weight", 0.0)),
+        "mil_contrastive_margin": float(getattr(args, "mil_contrastive_margin", 0.5)),
+        "mil_contrastive_max_pairs": float(getattr(args, "mil_contrastive_max_pairs", 32)),
+        "binding_contrastive_weight": float(getattr(args, "binding_contrastive_weight", 0.0)),
+        "binding_contrastive_margin": float(getattr(args, "binding_contrastive_margin", 0.2)),
         "binding_contrastive_target_gap_min": float(
             getattr(args, "binding_contrastive_target_gap_min", 0.3)
         ),
         "binding_contrastive_target_gap_cap": float(
             getattr(args, "binding_contrastive_target_gap_cap", 2.0)
         ),
-        "binding_contrastive_max_pairs": float(
-            getattr(args, "binding_contrastive_max_pairs", 64)
-        ),
-        "mil_bag_sparsity_weight": float(
-            getattr(args, "mil_bag_sparsity_weight", 0.0)
-        ),
-        "mil_bag_sparsity_target_sum": float(
-            getattr(args, "mil_bag_sparsity_target_sum", 1.5)
-        ),
+        "binding_contrastive_max_pairs": float(getattr(args, "binding_contrastive_max_pairs", 64)),
+        "mil_bag_sparsity_weight": float(getattr(args, "mil_bag_sparsity_weight", 0.0)),
+        "mil_bag_sparsity_target_sum": float(getattr(args, "mil_bag_sparsity_target_sum", 1.5)),
     }
 
 
@@ -657,7 +633,9 @@ def _resolve_regularization_config(
     return merged
 
 
-def create_synthetic_data(data_dir: Path, n_binding: int = 200, n_elution: int = 100, n_tcr: int = 100):
+def create_synthetic_data(
+    data_dir: Path, n_binding: int = 200, n_elution: int = 100, n_tcr: int = 100
+):
     """Generate and save synthetic training data."""
     print("Generating synthetic data...")
 
@@ -745,10 +723,7 @@ def _batch_diversity_metrics(batch) -> Dict[str, float]:
         normalize_mhc_class(cls, default=None) or "unknown_class"
         for cls in getattr(batch, "mhc_class", [])
     ]
-    species = [
-        _normalized_batch_species(sp)
-        for sp in getattr(batch, "processing_species", [])
-    ]
+    species = [_normalized_batch_species(sp) for sp in getattr(batch, "processing_species", [])]
 
     if alleles:
         metrics["batch_unique_alleles"] = float(len(set(alleles)))
@@ -1201,9 +1176,7 @@ def _build_mil_prob_matrix(
     if inst_probs.ndim != 1:
         raise ValueError(f"Expected flat probabilities, got shape={tuple(inst_probs.shape)}")
     if instance_to_bag.ndim != 1:
-        raise ValueError(
-            f"Expected flat bag indices, got shape={tuple(instance_to_bag.shape)}"
-        )
+        raise ValueError(f"Expected flat bag indices, got shape={tuple(instance_to_bag.shape)}")
     if inst_probs.shape[0] != instance_to_bag.shape[0]:
         raise ValueError(
             "Instance probability length and bag-index length differ: "
@@ -1315,8 +1288,15 @@ def _slice_mil_channel(
 ) -> Dict[str, Any]:
     keep_list = keep.tolist()
     sliced = dict(channel)
-    for key in ("pep_tok", "mhc_a_tok", "mhc_b_tok", "flank_n_tok", "flank_c_tok",
-                "instance_to_bag", "machinery_idx"):
+    for key in (
+        "pep_tok",
+        "mhc_a_tok",
+        "mhc_b_tok",
+        "flank_n_tok",
+        "flank_c_tok",
+        "instance_to_bag",
+        "machinery_idx",
+    ):
         value = channel.get(key)
         if isinstance(value, torch.Tensor):
             sliced[key] = value[keep]
@@ -1387,10 +1367,13 @@ def _select_mil_contrastive_pairs(
         if not grouped[bag_idx]:
             bag_classes.append("")
             continue
-        class_name = normalize_mhc_class(
-            mhc_class[grouped[bag_idx][0]] if mhc_class else None,
-            default=None,
-        ) or ""
+        class_name = (
+            normalize_mhc_class(
+                mhc_class[grouped[bag_idx][0]] if mhc_class else None,
+                default=None,
+            )
+            or ""
+        )
         bag_classes.append(class_name)
 
     pairs: List[tuple[int, int, float]] = []
@@ -1549,14 +1532,10 @@ def _run_mil_forward(
         # all-unknown baseline everywhere else, so the same panel outputs
         # would be two different functions averaged into one loss.
         machinery=(
-            channel_machinery.to(device)
-            if isinstance(channel_machinery, torch.Tensor)
-            else None
+            channel_machinery.to(device) if isinstance(channel_machinery, torch.Tensor) else None
         ),
         provenance=(
-            {name: value.to(device) for name, value in provenance.items()}
-            if provenance
-            else None
+            {name: value.to(device) for name, value in provenance.items()} if provenance else None
         ),
     )
 
@@ -1642,19 +1621,13 @@ def _compute_mil_channel_losses(
             sparsity_loss = F.softplus(
                 bag_sum - torch.tensor(sparsity_target, device=bag_sum.device)
             ).mean()
-            mil_regularization[f"{task_name}_mil_sparsity"] = (
-                sparsity_weight * sparsity_loss
-            )
+            mil_regularization[f"{task_name}_mil_sparsity"] = sparsity_weight * sparsity_loss
             mil_metrics[f"out_{channel_prefix}_{task_name}_bag_sum_mean"] = float(
                 bag_sum.detach().mean().item()
             )
 
     contrastive_weight = float(regularization.get("mil_contrastive_weight", 0.0))
-    if (
-        enable_contrastive
-        and contrastive_weight > 0.0
-        and "presentation" in bag_probs_by_task
-    ):
+    if enable_contrastive and contrastive_weight > 0.0 and "presentation" in bag_probs_by_task:
         pairs = _select_mil_contrastive_pairs(
             mhc_a_tok=channel["mhc_a_tok"],
             mhc_class=channel["mhc_class"] or [],
@@ -1693,13 +1666,9 @@ def _compute_mil_channel_losses(
                 ]
                 eps = 1e-6
                 original_scores = torch.logit(original_bag_probs.clamp(eps, 1.0 - eps))
-                contrastive_scores = torch.logit(
-                    contrastive_bag_probs.clamp(eps, 1.0 - eps)
-                )
+                contrastive_scores = torch.logit(contrastive_bag_probs.clamp(eps, 1.0 - eps))
                 margin = float(regularization.get("mil_contrastive_margin", 0.5))
-                contrastive_loss = F.relu(
-                    contrastive_scores - original_scores + margin
-                ).mean()
+                contrastive_loss = F.relu(contrastive_scores - original_scores + margin).mean()
                 mil_regularization["presentation_mil_contrastive"] = (
                     contrastive_weight * contrastive_loss
                 )
@@ -1722,9 +1691,7 @@ def _compute_consistency_losses(
     losses: Dict[str, torch.Tensor] = {}
     cascade_w = float(regularization.get("consistency_cascade_weight", 0.0))
     affinity_w = float(regularization.get("consistency_assay_affinity_weight", 0.0))
-    assay_pres_w = float(
-        regularization.get("consistency_assay_presentation_weight", 0.0)
-    )
+    assay_pres_w = float(regularization.get("consistency_assay_presentation_weight", 0.0))
     no_b2m_w = float(regularization.get("consistency_no_b2m_weight", 0.0))
     tcell_ctx_w = float(regularization.get("consistency_tcell_context_weight", 0.0))
     tcell_upstream_w = float(regularization.get("consistency_tcell_upstream_weight", 0.0))
@@ -1734,9 +1701,7 @@ def _compute_consistency_losses(
     mhc_attn_sparse_max = float(regularization.get("mhc_attention_sparsity_max_residues", 60.0))
     prob_margin = float(regularization.get("consistency_prob_margin", 0.02))
     parent_low_thr = float(regularization.get("consistency_parent_low_threshold", 0.1))
-    pres_high_thr = float(
-        regularization.get("consistency_presentation_high_threshold", 0.9)
-    )
+    pres_high_thr = float(regularization.get("consistency_presentation_high_threshold", 0.9))
     affinity_fold_tol = max(
         float(regularization.get("consistency_affinity_fold_tolerance", 2.0)),
         1.0,
@@ -1767,16 +1732,18 @@ def _compute_consistency_losses(
         parent_min = torch.minimum(proc_prob, bind_prob)
         high_pres = torch.relu(pres_prob - pres_high_thr)
         low_parent = torch.relu(parent_low_thr - parent_min)
-        losses["consistency_cascade"] = cascade_w * (
-            (high_pres * low_parent).square().mean()
-        )
+        losses["consistency_cascade"] = cascade_w * ((high_pres * low_parent).square().mean())
 
     assays = outputs.get("assays", {})
     if affinity_w > 0 and isinstance(assays, dict):
         kd = assays.get("KD_nM")
         ic50 = assays.get("IC50_nM")
         ec50 = assays.get("EC50_nM")
-        if isinstance(kd, torch.Tensor) and isinstance(ic50, torch.Tensor) and isinstance(ec50, torch.Tensor):
+        if (
+            isinstance(kd, torch.Tensor)
+            and isinstance(ic50, torch.Tensor)
+            and isinstance(ec50, torch.Tensor)
+        ):
             kd_vec = _as_float_vector(kd)
             ic50_vec = _as_float_vector(ic50)
             ec50_vec = _as_float_vector(ec50)
@@ -1848,8 +1815,8 @@ def _compute_consistency_losses(
                 if reduced is not None:
                     loss_terms.append(reduced)
         if loss_terms:
-            losses["consistency_assay_presentation"] = (
-                assay_pres_w * (sum(loss_terms) / len(loss_terms))
+            losses["consistency_assay_presentation"] = assay_pres_w * (
+                sum(loss_terms) / len(loss_terms)
             )
 
     if (
@@ -1953,14 +1920,16 @@ def _compute_consistency_losses(
         if isinstance(effective, torch.Tensor):
             if not isinstance(valid_mask, torch.Tensor):
                 valid_mask = torch.ones_like(effective)
-            lower = torch.relu(torch.tensor(mhc_attn_sparse_min, device=effective.device) - effective)
-            upper = torch.relu(effective - torch.tensor(mhc_attn_sparse_max, device=effective.device))
+            lower = torch.relu(
+                torch.tensor(mhc_attn_sparse_min, device=effective.device) - effective
+            )
+            upper = torch.relu(
+                effective - torch.tensor(mhc_attn_sparse_max, device=effective.device)
+            )
             penalty = lower.square() + upper.square()
             reduced = _masked_mean(penalty, valid_mask)
             if reduced is not None:
-                losses["consistency_binding_mhc_attention_sparsity"] = (
-                    mhc_attn_sparse_w * reduced
-                )
+                losses["consistency_binding_mhc_attention_sparsity"] = mhc_attn_sparse_w * reduced
 
     return losses
 
@@ -1984,9 +1953,7 @@ def compute_loss(
     except TypeError:
         batch = batch.to(device)
     regularization_cfg = _resolve_regularization_config(regularization)
-    aggregation_mode = _normalize_supervised_loss_aggregation(
-        supervised_loss_aggregation
-    )
+    aggregation_mode = _normalize_supervised_loss_aggregation(supervised_loss_aggregation)
     perf_start = time.perf_counter() if profile_performance else 0.0
     perf_metrics: Dict[str, float] = {}
 
@@ -2121,13 +2088,9 @@ def compute_loss(
                     chosen[:limit], elution_flat[:limit], reduction="none"
                 )
                 denominator = elution_mask_flat[:limit].sum() + 1e-8
-                condition_terms.append(
-                    (per_row * elution_mask_flat[:limit]).sum() / denominator
-                )
+                condition_terms.append((per_row * elution_mask_flat[:limit]).sum() / denominator)
             if condition_terms:
-                supervised_losses["excision_condition_panel"] = (
-                    torch.stack(condition_terms).mean()
-                )
+                supervised_losses["excision_condition_panel"] = torch.stack(condition_terms).mean()
                 # Record support like any other task. Without it the default
                 # support-weighted aggregation gives this loss weight 1.0
                 # against tasks carrying support in the thousands, so the
@@ -2164,25 +2127,15 @@ def compute_loss(
                 if index_long.shape[0] != panel.shape[0]:
                     continue
                 chosen = panel.gather(1, index_long.unsqueeze(1)).squeeze(1)
-                per_row = F.smooth_l1_loss(
-                    chosen, target_flat[: chosen.shape[0]], reduction="none"
-                )
+                per_row = F.smooth_l1_loss(chosen, target_flat[: chosen.shape[0]], reduction="none")
                 denominator = mask_flat[: chosen.shape[0]].sum() + 1e-8
-                panel_terms.append(
-                    (per_row * mask_flat[: chosen.shape[0]]).sum() / denominator
-                )
+                panel_terms.append((per_row * mask_flat[: chosen.shape[0]]).sum() / denominator)
             if panel_terms:
-                supervised_losses["binding_assay_panel"] = (
-                    torch.stack(panel_terms).mean()
-                )
-                supervised_loss_support["binding_assay_panel"] = float(
-                    mask_flat.sum().item()
-                )
+                supervised_losses["binding_assay_panel"] = torch.stack(panel_terms).mean()
+                supervised_loss_support["binding_assay_panel"] = float(mask_flat.sum().item())
 
         if profile_performance:
-            perf_metrics["perf_supervised_loss_sec"] = float(
-                time.perf_counter() - supervised_start
-            )
+            perf_metrics["perf_supervised_loss_sec"] = float(time.perf_counter() - supervised_start)
 
         if has_mil_elution or has_tcell_mil:
             mil_start = time.perf_counter() if profile_performance else 0.0
@@ -2204,9 +2157,7 @@ def compute_loss(
                 supervised_losses.update(mil_losses)
                 mil_bag_label = getattr(batch, "mil_bag_label", None)
                 mil_support = (
-                    float(mil_bag_label.numel())
-                    if isinstance(mil_bag_label, torch.Tensor)
-                    else 1.0
+                    float(mil_bag_label.numel()) if isinstance(mil_bag_label, torch.Tensor) else 1.0
                 )
                 for name in mil_losses:
                     supervised_loss_support[name] = mil_support
@@ -2216,19 +2167,21 @@ def compute_loss(
 
             tcell_mil_regularization: Dict[str, torch.Tensor] = {}
             if has_tcell_mil:
-                tcell_mil_losses, tcell_mil_regularization, tcell_mil_metrics = _compute_mil_channel_losses(
-                    model=model,
-                    batch=batch,
-                    device=device,
-                    channel_prefix="tcell_mil",
-                    task_to_output={
-                        "tcell_mil": "tcell_logit",
-                        "immunogenicity_mil": "immunogenicity_logit",
-                    },
-                    regularization=regularization_cfg,
-                    max_mil_instances=max_mil_instances,
-                    tcell_context=batch.tcell_mil_context if batch.tcell_mil_context else None,
-                    enable_contrastive=False,
+                tcell_mil_losses, tcell_mil_regularization, tcell_mil_metrics = (
+                    _compute_mil_channel_losses(
+                        model=model,
+                        batch=batch,
+                        device=device,
+                        channel_prefix="tcell_mil",
+                        task_to_output={
+                            "tcell_mil": "tcell_logit",
+                            "immunogenicity_mil": "immunogenicity_logit",
+                        },
+                        regularization=regularization_cfg,
+                        max_mil_instances=max_mil_instances,
+                        tcell_context=batch.tcell_mil_context if batch.tcell_mil_context else None,
+                        enable_contrastive=False,
+                    )
                 )
                 supervised_losses.update(tcell_mil_losses)
                 tcell_mil_bag_label = getattr(batch, "tcell_mil_bag_label", None)
@@ -2297,9 +2250,8 @@ def compute_loss(
                 if aggregation_mode == "task_mean":
                     task_weight = base_weight
                 else:
-                    task_weight = (
-                        base_weight
-                        * max(float(supervised_loss_support.get(task_name, 1.0)), 1e-6)
+                    task_weight = base_weight * max(
+                        float(supervised_loss_support.get(task_name, 1.0)), 1e-6
                     )
                 total_weight += task_weight
                 supervised_task_weights[task_name] = task_weight
@@ -2435,7 +2387,9 @@ def train_epoch(
         stepped_optimizer = False
         if pcgrad is not None and len(loss_dict) > 1:
             step_start = time.perf_counter()
-            stepped_optimizer = pcgrad.step(list(loss_dict.values()), model.parameters()) is not None
+            stepped_optimizer = (
+                pcgrad.step(list(loss_dict.values()), model.parameters()) is not None
+            )
             backward_elapsed = time.perf_counter() - step_start
             optimizer_elapsed = 0.0
             perf_backward_sec += backward_elapsed
@@ -2537,8 +2491,7 @@ def train_epoch(
         for name in sorted(task_loss_totals)
     }
     output_means = {
-        name: output_totals[name] / max(output_counts[name], 1)
-        for name in sorted(output_totals)
+        name: output_totals[name] / max(output_counts[name], 1) for name in sorted(output_totals)
     }
     elapsed = max(time.perf_counter() - start_time, 1e-6)
     runtime_metrics = {
@@ -2605,7 +2558,9 @@ def evaluate(
                 total_samples += int(pep_tok.shape[0])
             total_loss += loss.item()
             for name, value in loss_dict.items():
-                task_loss_totals[name] = task_loss_totals.get(name, 0.0) + float(value.detach().item())
+                task_loss_totals[name] = task_loss_totals.get(name, 0.0) + float(
+                    value.detach().item()
+                )
                 task_loss_counts[name] = task_loss_counts.get(name, 0) + 1
             for name, value in output_dict.items():
                 output_totals[name] = output_totals.get(name, 0.0) + float(value)
@@ -2632,8 +2587,7 @@ def evaluate(
         for name in sorted(task_loss_totals)
     }
     output_means = {
-        name: output_totals[name] / max(output_counts[name], 1)
-        for name in sorted(output_totals)
+        name: output_totals[name] / max(output_counts[name], 1) for name in sorted(output_totals)
     }
     elapsed = max(time.perf_counter() - start_time, 1e-6)
     runtime_metrics = {
@@ -2689,8 +2643,12 @@ def run(args: argparse.Namespace) -> None:
 
     # Create data loaders
     collator = PrestoCollator()
-    train_loader = create_dataloader(train_dataset, batch_size=args.batch_size, shuffle=True, collator=collator)
-    val_loader = create_dataloader(val_dataset, batch_size=args.batch_size, shuffle=False, collator=collator)
+    train_loader = create_dataloader(
+        train_dataset, batch_size=args.batch_size, shuffle=True, collator=collator
+    )
+    val_loader = create_dataloader(
+        val_dataset, batch_size=args.batch_size, shuffle=False, collator=collator
+    )
 
     print(f"Train batches: {len(train_loader)}, Val batches: {len(val_loader)}")
 
@@ -2747,7 +2705,7 @@ def run(args: argparse.Namespace) -> None:
             current_lr = float(optimizer.param_groups[0]["lr"])
 
             print(
-                f"Epoch {epoch+1}/{args.epochs}: "
+                f"Epoch {epoch + 1}/{args.epochs}: "
                 f"train_loss={train_loss:.4f}, val_loss={val_loss:.4f}, lr={current_lr:.6g}"
             )
             if run_logger is not None:
@@ -2808,9 +2766,13 @@ def main(argv=None):
     parser.add_argument("--n_binding", type=int, default=200, help="Number of binding samples")
     parser.add_argument("--n_elution", type=int, default=100, help="Number of elution samples")
     parser.add_argument("--n_tcr", type=int, default=100, help="Number of TCR samples")
-    parser.add_argument("--data_dir", type=str, default=None, help="Data directory (temp if not specified)")
+    parser.add_argument(
+        "--data_dir", type=str, default=None, help="Data directory (temp if not specified)"
+    )
     parser.add_argument("--checkpoint", type=str, default=None, help="Save checkpoint path")
-    parser.add_argument("--run-dir", dest="run_dir", type=str, default=None, help="Run artifact directory")
+    parser.add_argument(
+        "--run-dir", dest="run_dir", type=str, default=None, help="Run artifact directory"
+    )
     parser.add_argument("--weight_decay", type=float, default=0.01, help="Weight decay")
     parser.add_argument(
         "--use-uncertainty-weighting",
@@ -2836,7 +2798,9 @@ def main(argv=None):
             "(weight by in-batch labeled sample count per task)"
         ),
     )
-    parser.add_argument("--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradient conflicts")
+    parser.add_argument(
+        "--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradient conflicts"
+    )
     parser.add_argument(
         "--consistency-cascade-weight",
         type=float,

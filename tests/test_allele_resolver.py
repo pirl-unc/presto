@@ -1,7 +1,6 @@
 """Tests for allele resolver module."""
 
 import types
-import pytest
 import tempfile
 import os
 
@@ -247,12 +246,16 @@ class TestDefaultDRAlphaMapping:
         assert class_ii_default_dra_allele(species="SLA") == "SLA-DRA*01:01"
 
     def test_default_dra_prefix_mapping_alleles_exist_in_index(self):
-        resolved = resolve_alleles("data/mhc_index.csv", DEFAULT_DR_ALPHA_BY_PREFIX.values(), include_sequence=False)
+        resolved = resolve_alleles(
+            "data/mhc_index.csv", DEFAULT_DR_ALPHA_BY_PREFIX.values(), include_sequence=False
+        )
         missing = [row["input"] for row in resolved if not row["found"]]
         assert missing == []
 
     def test_default_dra_mapping_alleles_exist_in_index(self):
-        resolved = resolve_alleles("data/mhc_index.csv", DEFAULT_DR_ALPHA_BY_SPECIES.values(), include_sequence=False)
+        resolved = resolve_alleles(
+            "data/mhc_index.csv", DEFAULT_DR_ALPHA_BY_SPECIES.values(), include_sequence=False
+        )
         missing = [row["input"] for row in resolved if not row["found"]]
         assert missing == []
 

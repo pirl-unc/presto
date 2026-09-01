@@ -81,6 +81,7 @@ POSITION_MODES = {
 # Model
 # ---------------------------------------------------------------------------
 
+
 class GrooveBaselineModel(nn.Module):
     """Simplest possible groove-sequence binding predictor.
 
@@ -131,7 +132,9 @@ class GrooveBaselineModel(nn.Module):
         return smooth_range_bound(raw, -3.0, max_log10_nM())
 
     def classify_allele(
-        self, mhc_a_tok: torch.Tensor, mhc_b_tok: torch.Tensor,
+        self,
+        mhc_a_tok: torch.Tensor,
+        mhc_b_tok: torch.Tensor,
     ) -> torch.Tensor:
         """Classify allele from groove tokens alone. Returns (B, n_classes) logits."""
         if self.classify_head is None:
@@ -265,7 +268,9 @@ class GrooveTransformerModel(nn.Module):
         pos_embed = self._compose_positional_signal(
             mode=pos_mode,
             start_embed=self.pos_embedding(positions),
-            end_embed=self.end_pos_embedding(end_dist.clamp(max=self.end_pos_embedding.num_embeddings - 1)),
+            end_embed=self.end_pos_embedding(
+                end_dist.clamp(max=self.end_pos_embedding.num_embeddings - 1)
+            ),
             start_frac=start_frac,
             end_frac=end_frac,
             abs_embed=self.abs_pos_embedding(positions),
@@ -306,7 +311,9 @@ class GrooveTransformerModel(nn.Module):
         return smooth_range_bound(raw, -3.0, max_log10_nM())
 
     def classify_allele(
-        self, mhc_a_tok: torch.Tensor, mhc_b_tok: torch.Tensor,
+        self,
+        mhc_a_tok: torch.Tensor,
+        mhc_b_tok: torch.Tensor,
     ) -> torch.Tensor:
         """Classify allele from groove tokens alone. Returns (B, n_classes) logits."""
         if self.classify_head is None:
@@ -321,7 +328,9 @@ def _build_model(variant: str, embed_dim: int, hidden_dim: int, **kwargs: Any) -
     n_allele_classes = int(kwargs.get("n_allele_classes", 0))
     if variant == "mlp":
         return GrooveBaselineModel(
-            vocab_size=26, embed_dim=embed_dim, hidden_dim=hidden_dim,
+            vocab_size=26,
+            embed_dim=embed_dim,
+            hidden_dim=hidden_dim,
             n_allele_classes=n_allele_classes,
         )
     if variant == "transformer":
@@ -342,6 +351,7 @@ def _build_model(variant: str, embed_dim: int, hidden_dim: int, **kwargs: Any) -
 # ---------------------------------------------------------------------------
 # Loss
 # ---------------------------------------------------------------------------
+
 
 def _as_float_vector(tensor: torch.Tensor) -> torch.Tensor:
     return tensor.to(dtype=torch.float32).reshape(-1)
@@ -420,7 +430,9 @@ def _groove_baseline_loss(
         metrics.update(p_metrics)
         if pair_candidates_p:
             margin_p = float(reg.get("binding_peptide_contrastive_margin", 0.2))
-            gap_cap_p = float(reg.get("binding_peptide_contrastive_target_gap_cap", 2.0)) or margin_p
+            gap_cap_p = (
+                float(reg.get("binding_peptide_contrastive_target_gap_cap", 2.0)) or margin_p
+            )
             pair_losses_p: List[torch.Tensor] = []
             for gap, si, wi in pair_candidates_p:
                 pred_gap = pred_vec[wi] - pred_vec[si]
@@ -454,6 +466,7 @@ def _mean_groove_baseline_loss(
 # Probe evaluation
 # ---------------------------------------------------------------------------
 
+
 def _evaluate_probe_panel_baseline(
     model: GrooveBaselineModel,
     tokenizer: Tokenizer,
@@ -479,23 +492,27 @@ def _evaluate_probe_panel_baseline(
                 if grooves is None:
                     continue
                 groove1, groove2 = grooves
-                mhc_a_tok = torch.tensor(
-                    tokenizer.encode(groove1, max_len=120)
-                ).unsqueeze(0).to(device)
-                mhc_b_tok = torch.tensor(
-                    tokenizer.encode(groove2, max_len=120)
-                ).unsqueeze(0).to(device)
+                mhc_a_tok = (
+                    torch.tensor(tokenizer.encode(groove1, max_len=120)).unsqueeze(0).to(device)
+                )
+                mhc_b_tok = (
+                    torch.tensor(tokenizer.encode(groove2, max_len=120)).unsqueeze(0).to(device)
+                )
                 pred_log10 = model(pep_tok, mhc_a_tok, mhc_b_tok)
                 log10_val = float(pred_log10[0, 0].item())
-                nM_val = float(10.0 ** log10_val)
-                rows.append({
-                    "peptide": pep,
-                    "allele": str(allele),
-                    "ic50_log10": log10_val,
-                    "ic50_nM": nM_val,
-                })
+                nM_val = float(10.0**log10_val)
+                rows.append(
+                    {
+                        "peptide": pep,
+                        "allele": str(allele),
+                        "ic50_log10": log10_val,
+                        "ic50_nM": nM_val,
+                    }
+                )
     model.train()
     return rows
+
+
 # ---------------------------------------------------------------------------
 # Curriculum learning
 # ---------------------------------------------------------------------------
@@ -504,12 +521,13 @@ def _evaluate_probe_panel_baseline(
 @dataclass
 class CurriculumPhase:
     """One phase in a curriculum training schedule."""
+
     epochs: int
-    classify: bool = False      # MHC allele classification objective
-    regress: bool = False       # IC50 regression objective
-    synth: bool = False         # Add synthetic negatives
-    contrastive: bool = False   # Same-peptide / different-allele ranking
-    peprank: bool = False       # Same-allele / different-peptide ranking
+    classify: bool = False  # MHC allele classification objective
+    regress: bool = False  # IC50 regression objective
+    synth: bool = False  # Add synthetic negatives
+    contrastive: bool = False  # Same-peptide / different-allele ranking
+    peprank: bool = False  # Same-allele / different-peptide ranking
 
 
 def _parse_curriculum(spec: str) -> List[CurriculumPhase]:
@@ -524,14 +542,16 @@ def _parse_curriculum(spec: str) -> List[CurriculumPhase]:
         epoch_str, modes_str = part.split(":", 1)
         n_epochs = int(epoch_str.strip())
         modes = {m.strip().lower() for m in modes_str.split("+")}
-        phases.append(CurriculumPhase(
-            epochs=n_epochs,
-            classify="classify" in modes,
-            regress="regress" in modes,
-            synth="synth" in modes,
-            contrastive="contrastive" in modes,
-            peprank="peprank" in modes,
-        ))
+        phases.append(
+            CurriculumPhase(
+                epochs=n_epochs,
+                classify="classify" in modes,
+                regress="regress" in modes,
+                synth="synth" in modes,
+                contrastive="contrastive" in modes,
+                peprank="peprank" in modes,
+            )
+        )
     return phases
 
 
@@ -619,9 +639,7 @@ def _verify_groove_representations(
     seen: Dict[Tuple[str, str], str] = {}
     for allele, groove_pair in groove_by_allele.items():
         if groove_pair in seen:
-            results["errors"].append(
-                f"Identical grooves for {allele} and {seen[groove_pair]}!"
-            )
+            results["errors"].append(f"Identical grooves for {allele} and {seen[groove_pair]}!")
         else:
             seen[groove_pair] = allele
     results["n_unique_grooves"] = len(seen)
@@ -643,9 +661,7 @@ def _verify_groove_representations(
             if grooves == expected:
                 n_correct += 1
             else:
-                results["warnings"].append(
-                    f"Groove mismatch for record with allele {allele}"
-                )
+                results["warnings"].append(f"Groove mismatch for record with allele {allele}")
         except Exception:
             pass
         n_checked += 1
@@ -659,12 +675,15 @@ def _verify_groove_representations(
 # CLI + main
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Groove baseline binding diagnostic")
     parser.add_argument("--data-dir", type=str, default="data")
     parser.add_argument("--out-dir", type=str, default="artifacts/groove_baseline_probe")
     parser.add_argument(
-        "--alleles", type=str, default=",".join(DEFAULT_ALLELES),
+        "--alleles",
+        type=str,
+        default=",".join(DEFAULT_ALLELES),
         help="Probe/evaluation allele panel.",
     )
     parser.add_argument("--probe-peptide", type=str, default=DEFAULT_PROBE_PEPTIDE)
@@ -685,7 +704,9 @@ def main() -> None:
     parser.add_argument("--embed-dim", type=int, default=64)
     parser.add_argument("--hidden-dim", type=int, default=128)
     parser.add_argument(
-        "--model-variant", type=str, default="mlp",
+        "--model-variant",
+        type=str,
+        default="mlp",
         choices=("mlp", "transformer"),
         help="Model architecture: 'mlp' (mean-pool) or 'transformer' (pos-enc + self-attn).",
     )
@@ -711,35 +732,48 @@ def main() -> None:
     parser.add_argument("--source", type=str, default="iedb")
     parser.add_argument("--max-records", type=int, default=0)
     parser.add_argument(
-        "--train-mhc-class-filter", type=str,
-        choices=("all", "I", "II"), default="all",
+        "--train-mhc-class-filter",
+        type=str,
+        choices=("all", "I", "II"),
+        default="all",
     )
     parser.add_argument("--train-all-alleles", action="store_true")
     parser.add_argument(
-        "--measurement-profile", type=str,
+        "--measurement-profile",
+        type=str,
         choices=sorted(MEASUREMENT_PROFILES),
         default=MEASUREMENT_PROFILE_NUMERIC,
     )
     parser.add_argument(
-        "--measurement-type-filter", type=str, default="",
+        "--measurement-type-filter",
+        type=str,
+        default="",
         choices=sorted(NORMALIZED_MEASUREMENT_FILTERS),
     )
     parser.add_argument(
-        "--qualifier-filter", type=str, default="all",
+        "--qualifier-filter",
+        type=str,
+        default="all",
         choices=sorted(QUALIFIER_FILTERS),
     )
     parser.add_argument("--shared-peptides-only", action="store_true")
     parser.add_argument("--max-per-allele", type=int, default=-1)
     parser.add_argument(
-        "--class-i-anchor-strategy", type=str,
-        choices=("none", "property_opposite"), default="none",
+        "--class-i-anchor-strategy",
+        type=str,
+        choices=("none", "property_opposite"),
+        default="none",
     )
     parser.add_argument("--synthetic-negatives", dest="synthetic_negatives", action="store_true")
-    parser.add_argument("--no-synthetic-negatives", dest="synthetic_negatives", action="store_false")
+    parser.add_argument(
+        "--no-synthetic-negatives", dest="synthetic_negatives", action="store_false"
+    )
     parser.set_defaults(synthetic_negatives=False)
     parser.add_argument("--negative-ratio", type=float, default=1.0)
     parser.add_argument(
-        "--synthetic-modes", type=str, default="",
+        "--synthetic-modes",
+        type=str,
+        default="",
         help=(
             "Comma-separated subset of synthetic negative modes to use. "
             f"Available: {','.join(ALL_SYNTHETIC_MODES)}. "
@@ -747,13 +781,16 @@ def main() -> None:
         ),
     )
     parser.add_argument("--balanced-batches", action="store_true", default=True)
-    # Curriculum learning: comma-separated phase spec, e.g. "5:classify,10:regress,5:regress+synth+contrastive"
+    # Curriculum learning: comma-separated phase spec, e.g.
+    # "5:classify,10:regress,5:regress+synth+contrastive"
     # Each phase: <n_epochs>:<mode>[+<mode>...]
     # Modes: classify (MHC allele classification), regress (IC50 regression),
     #        synth (add synthetic negatives), contrastive (allele ranking loss),
     #        peprank (peptide ranking loss)
     parser.add_argument(
-        "--curriculum", type=str, default="",
+        "--curriculum",
+        type=str,
+        default="",
         help=(
             "Curriculum learning phases. Comma-separated '<epochs>:<modes>' "
             "where modes are joined with '+'. Example: "
@@ -762,7 +799,9 @@ def main() -> None:
         ),
     )
     parser.add_argument(
-        "--binding-contrastive-weight", type=float, default=0.0,
+        "--binding-contrastive-weight",
+        type=float,
+        default=0.0,
         help="Weight for same-peptide/different-allele ranking loss.",
     )
     parser.add_argument("--binding-contrastive-margin", type=float, default=0.2)
@@ -770,7 +809,9 @@ def main() -> None:
     parser.add_argument("--binding-contrastive-target-gap-cap", type=float, default=2.0)
     parser.add_argument("--binding-contrastive-max-pairs", type=int, default=64)
     parser.add_argument(
-        "--binding-peptide-contrastive-weight", type=float, default=0.0,
+        "--binding-peptide-contrastive-weight",
+        type=float,
+        default=0.0,
         help="Weight for same-allele/different-peptide ranking loss.",
     )
     parser.add_argument("--binding-peptide-contrastive-margin", type=float, default=0.2)
@@ -804,7 +845,9 @@ def main() -> None:
     probe_alleles = _split_csv(args.alleles)
     if not probe_alleles:
         raise ValueError("At least one allele is required")
-    train_class_filter = None if str(args.train_mhc_class_filter) == "all" else str(args.train_mhc_class_filter)
+    train_class_filter = (
+        None if str(args.train_mhc_class_filter) == "all" else str(args.train_mhc_class_filter)
+    )
 
     training_alleles = [] if bool(args.train_all_alleles) else list(probe_alleles)
     records, subset_stats = _load_binding_records_from_merged_tsv(
@@ -819,29 +862,41 @@ def main() -> None:
     if source_filter:
         records = [rec for rec in records if str(rec.source or "").strip().lower() == source_filter]
     records = [
-        rec for rec in records if _keep_measurement_type(rec.measurement_type, args.measurement_profile)
+        rec
+        for rec in records
+        if _keep_measurement_type(rec.measurement_type, args.measurement_profile)
     ]
     if args.measurement_type_filter:
         records = [
-            rec for rec in records
-            if _normalize_binding_measurement(rec.measurement_type) == str(args.measurement_type_filter)
+            rec
+            for rec in records
+            if _normalize_binding_measurement(rec.measurement_type)
+            == str(args.measurement_type_filter)
         ]
     records = [
-        rec for rec in records
+        rec
+        for rec in records
         if _keep_binding_qualifier(getattr(rec, "qualifier", 0), str(args.qualifier_filter))
     ]
 
     real_records = list(records)
     shared_peptide_stats: Dict[str, Any] = {}
     if args.shared_peptides_only:
-        real_records, shared_peptide_stats = _filter_shared_peptides_only(real_records, probe_alleles)
+        real_records, shared_peptide_stats = _filter_shared_peptides_only(
+            real_records, probe_alleles
+        )
     probe_allele_counts_after_filter = _require_target_allele_coverage(real_records, probe_alleles)
     balance_stats: Dict[str, Any] = {}
     if args.max_per_allele >= 0:
         real_records, balance_stats = _balance_alleles(
-            real_records, probe_alleles, args.max_per_allele, rng_seed=int(args.seed),
+            real_records,
+            probe_alleles,
+            args.max_per_allele,
+            rng_seed=int(args.seed),
         )
-        probe_allele_counts_after_filter = _require_target_allele_coverage(real_records, probe_alleles)
+        probe_allele_counts_after_filter = _require_target_allele_coverage(
+            real_records, probe_alleles
+        )
     train_records, val_records, split_stats = _split_records_by_peptide(
         real_records,
         val_fraction=0.2,
@@ -851,11 +906,13 @@ def main() -> None:
     if not train_records or not val_records:
         raise RuntimeError("Focused binding split must produce both train and val records")
 
-    resolved_alleles = sorted({
-        str(rec.mhc_allele or "").strip()
-        for rec in (train_records + val_records)
-        if str(rec.mhc_allele or "").strip()
-    })
+    resolved_alleles = sorted(
+        {
+            str(rec.mhc_allele or "").strip()
+            for rec in (train_records + val_records)
+            if str(rec.mhc_allele or "").strip()
+        }
+    )
     mhc_sequences, mhc_stats = resolve_mhc_sequences_from_index(
         index_csv=str(index_csv),
         alleles=resolved_alleles,
@@ -871,7 +928,9 @@ def main() -> None:
         synthetic_modes = [m.strip() for m in str(args.synthetic_modes).split(",") if m.strip()]
         unknown = set(synthetic_modes) - set(ALL_SYNTHETIC_MODES)
         if unknown:
-            raise ValueError(f"Unknown synthetic modes: {unknown}. Available: {ALL_SYNTHETIC_MODES}")
+            raise ValueError(
+                f"Unknown synthetic modes: {unknown}. Available: {ALL_SYNTHETIC_MODES}"
+            )
 
     # Per-epoch synthetic regeneration: keep real records separate, regenerate
     # synthetics each epoch with a different seed.  This avoids the model
@@ -928,7 +987,9 @@ def main() -> None:
 
     # Verify groove representations on real data
     groove_verification = _verify_groove_representations(
-        train_records, mhc_sequences, probe_alleles,
+        train_records,
+        mhc_sequences,
+        probe_alleles,
     )
 
     # Build initial train loader for epoch 1
@@ -944,13 +1005,15 @@ def main() -> None:
         curriculum = _parse_curriculum(curriculum_spec)
     else:
         # Default: standard regression for --epochs epochs, honouring CLI flags
-        curriculum = [CurriculumPhase(
-            epochs=int(args.epochs),
-            regress=True,
-            synth=use_synthetics,
-            contrastive=float(args.binding_contrastive_weight) > 0,
-            peprank=float(args.binding_peptide_contrastive_weight) > 0,
-        )]
+        curriculum = [
+            CurriculumPhase(
+                epochs=int(args.epochs),
+                regress=True,
+                synth=use_synthetics,
+                contrastive=float(args.binding_contrastive_weight) > 0,
+                peprank=float(args.binding_peptide_contrastive_weight) > 0,
+            )
+        ]
     total_epochs = sum(p.epochs for p in curriculum)
     needs_classify = any(p.classify for p in curriculum)
 
@@ -984,8 +1047,12 @@ def main() -> None:
         "binding_contrastive_max_pairs": int(args.binding_contrastive_max_pairs),
         "binding_peptide_contrastive_weight": float(args.binding_peptide_contrastive_weight),
         "binding_peptide_contrastive_margin": float(args.binding_peptide_contrastive_margin),
-        "binding_peptide_contrastive_target_gap_min": float(args.binding_peptide_contrastive_target_gap_min),
-        "binding_peptide_contrastive_target_gap_cap": float(args.binding_peptide_contrastive_target_gap_cap),
+        "binding_peptide_contrastive_target_gap_min": float(
+            args.binding_peptide_contrastive_target_gap_min
+        ),
+        "binding_peptide_contrastive_target_gap_cap": float(
+            args.binding_peptide_contrastive_target_gap_cap
+        ),
         "binding_peptide_contrastive_max_pairs": int(args.binding_peptide_contrastive_max_pairs),
     }
 
@@ -1002,40 +1069,52 @@ def main() -> None:
             probe_peptides.append(peptide)
 
     curriculum_desc = [
-        {"epochs": p.epochs, "modes": "+".join(
-            m for m, on in [
-                ("classify", p.classify), ("regress", p.regress),
-                ("synth", p.synth), ("contrastive", p.contrastive),
-                ("peprank", p.peprank),
-            ] if on
-        )}
+        {
+            "epochs": p.epochs,
+            "modes": "+".join(
+                m
+                for m, on in [
+                    ("classify", p.classify),
+                    ("regress", p.regress),
+                    ("synth", p.synth),
+                    ("contrastive", p.contrastive),
+                    ("peprank", p.peprank),
+                ]
+                if on
+            ),
+        }
         for p in curriculum
     ]
 
     print(
-        json.dumps({
-            "event": "groove_baseline_setup",
-            "design_id": str(args.design_id),
-            "model_variant": model_variant,
-            "n_params": n_params,
-            "embed_dim": int(args.embed_dim),
-            "hidden_dim": int(args.hidden_dim),
-            "peptide_pos_mode": str(args.peptide_pos_mode),
-            "groove_pos_mode": str(args.groove_pos_mode),
-            "probe_alleles": probe_alleles,
-            "train_all_alleles": bool(args.train_all_alleles),
-            "rows": len(real_records),
-            "train_rows": len(train_records),
-            "val_rows": len(val_records),
-            "device": device,
-            "probe_peptides": probe_peptides,
-            "synthetic_negatives": use_synthetics,
-            "synthetic_modes": list(synthetic_modes) if synthetic_modes else list(ALL_SYNTHETIC_MODES),
-            "per_epoch_regeneration": use_synthetics,
-            "groove_verification": groove_verification,
-            "curriculum": curriculum_desc,
-            "qualifier_filter": str(args.qualifier_filter),
-        }, sort_keys=True),
+        json.dumps(
+            {
+                "event": "groove_baseline_setup",
+                "design_id": str(args.design_id),
+                "model_variant": model_variant,
+                "n_params": n_params,
+                "embed_dim": int(args.embed_dim),
+                "hidden_dim": int(args.hidden_dim),
+                "peptide_pos_mode": str(args.peptide_pos_mode),
+                "groove_pos_mode": str(args.groove_pos_mode),
+                "probe_alleles": probe_alleles,
+                "train_all_alleles": bool(args.train_all_alleles),
+                "rows": len(real_records),
+                "train_rows": len(train_records),
+                "val_rows": len(val_records),
+                "device": device,
+                "probe_peptides": probe_peptides,
+                "synthetic_negatives": use_synthetics,
+                "synthetic_modes": list(synthetic_modes)
+                if synthetic_modes
+                else list(ALL_SYNTHETIC_MODES),
+                "per_epoch_regeneration": use_synthetics,
+                "groove_verification": groove_verification,
+                "curriculum": curriculum_desc,
+                "qualifier_filter": str(args.qualifier_filter),
+            },
+            sort_keys=True,
+        ),
         flush=True,
     )
 
@@ -1050,7 +1129,9 @@ def main() -> None:
         if not phase.contrastive:
             phase_reg["binding_contrastive_weight"] = 0.0
         elif phase.contrastive and phase_reg["binding_contrastive_weight"] == 0.0:
-            phase_reg["binding_contrastive_weight"] = 1.0  # default weight when curriculum enables it
+            phase_reg["binding_contrastive_weight"] = (
+                1.0  # default weight when curriculum enables it
+            )
         if not phase.peprank:
             phase_reg["binding_peptide_contrastive_weight"] = 0.0
         elif phase.peprank and phase_reg["binding_peptide_contrastive_weight"] == 0.0:
@@ -1091,7 +1172,10 @@ def main() -> None:
                 # Phase: MHC classification
                 if phase.classify:
                     cls_loss, cls_acc = _allele_classification_loss(
-                        model, batch, allele_to_idx, device,
+                        model,
+                        batch,
+                        allele_to_idx,
+                        device,
                     )
                     losses.append(cls_loss)
                     classify_acc_sum += cls_acc
@@ -1099,7 +1183,10 @@ def main() -> None:
                 # Phase: IC50 regression (optionally with contrastive/peprank)
                 if phase.regress:
                     reg_loss, batch_metrics = _groove_baseline_loss(
-                        model, batch, device, regularization=phase_reg,
+                        model,
+                        batch,
+                        device,
+                        regularization=phase_reg,
                     )
                     losses.append(reg_loss)
 
@@ -1116,21 +1203,32 @@ def main() -> None:
 
             train_loss = train_loss_sum / max(train_batches, 1)
             val_loss = _mean_groove_baseline_loss(
-                model, val_loader, device, regularization=phase_reg,
+                model,
+                val_loader,
+                device,
+                regularization=phase_reg,
             )
             probe_eval = _evaluate_probe_panel_baseline(
-                model, tokenizer, allele_sequences,
-                probe_peptides, probe_alleles, device,
+                model,
+                tokenizer,
+                allele_sequences,
+                probe_peptides,
+                probe_alleles,
+                device,
             )
             for row in probe_eval:
                 probe_rows.append({"epoch": global_epoch, **row})
 
             phase_modes = "+".join(
-                m for m, on in [
-                    ("classify", phase.classify), ("regress", phase.regress),
-                    ("synth", phase.synth), ("contrastive", phase.contrastive),
+                m
+                for m, on in [
+                    ("classify", phase.classify),
+                    ("regress", phase.regress),
+                    ("synth", phase.synth),
+                    ("contrastive", phase.contrastive),
                     ("peprank", phase.peprank),
-                ] if on
+                ]
+                if on
             )
             epoch_summary: Dict[str, Any] = {
                 "epoch": global_epoch,
@@ -1160,7 +1258,9 @@ def main() -> None:
                     "seed": int(args.seed),
                     "synthetic_negatives": use_synthetics,
                     "negative_ratio": float(args.negative_ratio),
-                    "synthetic_modes": list(synthetic_modes) if synthetic_modes else list(ALL_SYNTHETIC_MODES),
+                    "synthetic_modes": list(synthetic_modes)
+                    if synthetic_modes
+                    else list(ALL_SYNTHETIC_MODES),
                     "per_epoch_regeneration": use_synthetics,
                     "class_i_anchor_strategy": str(args.class_i_anchor_strategy),
                     "qualifier_filter": str(args.qualifier_filter),
@@ -1187,18 +1287,18 @@ def main() -> None:
                 probe_rows=probe_rows,
                 write_probe_plot=(
                     str(args.probe_plot_frequency) == "epoch"
-                    or (
-                        str(args.probe_plot_frequency) == "final"
-                        and global_epoch == total_epochs
-                    )
+                    or (str(args.probe_plot_frequency) == "final" and global_epoch == total_epochs)
                 ),
             )
             print(
-                json.dumps({
-                    "event": "groove_baseline_epoch",
-                    **epoch_summary,
-                    "probe_rows": probe_eval,
-                }, sort_keys=True),
+                json.dumps(
+                    {
+                        "event": "groove_baseline_epoch",
+                        **epoch_summary,
+                        "probe_rows": probe_eval,
+                    },
+                    sort_keys=True,
+                ),
                 flush=True,
             )
 

@@ -100,41 +100,70 @@ def _find_checkpoint() -> Optional[Path]:
 def _build_extra_args(args: argparse.Namespace) -> List[str]:
     """Build the training args common to all backends."""
     extra = [
-        "--alleles", ",".join(PROBE_ALLELES),
+        "--alleles",
+        ",".join(PROBE_ALLELES),
         "--train-all-alleles",
-        "--train-mhc-class-filter", "I",
-        "--probe-peptide", PROBE_PEPTIDES[0],
-        "--extra-probe-peptides", ",".join(PROBE_PEPTIDES[1:]),
-        "--d-model", str(args.d_model),
-        "--n-layers", str(DEFAULTS["n_layers"]),
-        "--n-heads", str(DEFAULTS["n_heads"]),
-        "--affinity-assay-residual-mode", args.residual_mode,
-        "--affinity-loss-mode", args.loss_mode,
-        "--affinity-target-encoding", DEFAULTS["target_encoding"],
-        "--lr", str(args.lr),
-        "--lr-schedule", args.lr_schedule,
-        "--weight-decay", str(DEFAULTS["weight_decay"]),
-        "--seed", str(args.seed),
-        "--split-seed", str(args.split_seed),
-        "--measurement-profile", "numeric_no_qualitative",
-        "--qualifier-filter", "all",
-        "--peptide-pos-mode", "concat_start_end_frac",
-        "--groove-pos-mode", "concat_start_end_frac",
-        "--binding-core-lengths", "8,9,10,11",
-        "--binding-core-refinement", "shared",
-        "--kd-grouping-mode", "split_kd_proxy",
-        "--max-affinity-nm", "100000",
+        "--train-mhc-class-filter",
+        "I",
+        "--probe-peptide",
+        PROBE_PEPTIDES[0],
+        "--extra-probe-peptides",
+        ",".join(PROBE_PEPTIDES[1:]),
+        "--d-model",
+        str(args.d_model),
+        "--n-layers",
+        str(DEFAULTS["n_layers"]),
+        "--n-heads",
+        str(DEFAULTS["n_heads"]),
+        "--affinity-assay-residual-mode",
+        args.residual_mode,
+        "--affinity-loss-mode",
+        args.loss_mode,
+        "--affinity-target-encoding",
+        DEFAULTS["target_encoding"],
+        "--lr",
+        str(args.lr),
+        "--lr-schedule",
+        args.lr_schedule,
+        "--weight-decay",
+        str(DEFAULTS["weight_decay"]),
+        "--seed",
+        str(args.seed),
+        "--split-seed",
+        str(args.split_seed),
+        "--measurement-profile",
+        "numeric_no_qualitative",
+        "--qualifier-filter",
+        "all",
+        "--peptide-pos-mode",
+        "concat_start_end_frac",
+        "--groove-pos-mode",
+        "concat_start_end_frac",
+        "--binding-core-lengths",
+        "8,9,10,11",
+        "--binding-core-refinement",
+        "shared",
+        "--kd-grouping-mode",
+        "split_kd_proxy",
+        "--max-affinity-nm",
+        "100000",
         "--no-synthetic-negatives",
-        "--binding-contrastive-weight", "0",
-        "--binding-peptide-contrastive-weight", "0",
-        "--probe-plot-frequency", str(args.probe_plot_frequency),
-        "--design-id", args.design_id,
+        "--binding-contrastive-weight",
+        "0",
+        "--binding-peptide-contrastive-weight",
+        "0",
+        "--probe-plot-frequency",
+        str(args.probe_plot_frequency),
+        "--design-id",
+        args.design_id,
     ]
 
     # Checkpoint
     if not args.no_pretrain:
         if args.backend == "modal":
-            extra.extend(["--init-checkpoint", "/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt"])
+            extra.extend(
+                ["--init-checkpoint", "/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt"]
+            )
         else:
             ckpt = _find_checkpoint()
             if ckpt:
@@ -161,22 +190,28 @@ def _launch_local(args: argparse.Namespace, extra_args: List[str]) -> None:
     cmd = [
         sys.executable,
         str(REPO_ROOT / "scripts" / "focused_binding_probe.py"),
-        "--device", args.backend,
-        "--mps-safe-mode", "auto",
-        "--epochs", str(args.epochs),
-        "--batch-size", str(args.batch_size),
-        "--merged-tsv", str(merged_tsv),
-        "--index-csv", str(index_csv),
+        "--device",
+        args.backend,
+        "--mps-safe-mode",
+        "auto",
+        "--epochs",
+        str(args.epochs),
+        "--batch-size",
+        str(args.batch_size),
+        "--merged-tsv",
+        str(merged_tsv),
+        "--index-csv",
+        str(index_csv),
     ] + extra_args
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"  Class I Training — {args.backend.upper()}")
     print(f"  epochs={args.epochs}  seed={args.seed}  d_model={args.d_model}")
     print(f"  lr={args.lr}  schedule={args.lr_schedule}")
     print(f"  residual={args.residual_mode}")
     print(f"  loss={args.loss_mode}")
     print(f"  pretrain={'no' if args.no_pretrain else 'yes'}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     if args.dry_run:
         print("  [DRY RUN] " + " ".join(cmd))
@@ -190,15 +225,21 @@ def _launch_modal(args: argparse.Namespace, extra_args: List[str]) -> None:
     run_id = args.run_id or f"class1-L2-e{args.epochs}-s{args.seed}"
 
     cmd = [
-        "modal", "run", "--detach",
+        "modal",
+        "run",
+        "--detach",
         "scripts/train_modal.py::focused_binding_run",
-        "--epochs", str(args.epochs),
-        "--batch-size", str(args.batch_size),
-        "--run-id", run_id,
-        "--extra-args", " ".join(extra_args),
+        "--epochs",
+        str(args.epochs),
+        "--batch-size",
+        str(args.batch_size),
+        "--run-id",
+        run_id,
+        "--extra-args",
+        " ".join(extra_args),
     ]
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("  Class I Training — Modal (H100)")
     print(f"  run_id={run_id}")
     print(f"  epochs={args.epochs}  seed={args.seed}  d_model={args.d_model}")
@@ -206,7 +247,7 @@ def _launch_modal(args: argparse.Namespace, extra_args: List[str]) -> None:
     print(f"  residual={args.residual_mode}")
     print(f"  loss={args.loss_mode}")
     print(f"  pretrain={'no' if args.no_pretrain else 'yes'}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     if args.dry_run:
         print("  [DRY RUN] " + " ".join(cmd))
@@ -228,8 +269,12 @@ def main() -> None:
         description="Train full MHC Class I binding model (L2 recipe)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("--backend", choices=["mps", "cpu", "modal"], required=True,
-                        help="Training backend: mps (Apple Silicon), cpu, or modal (H100)")
+    parser.add_argument(
+        "--backend",
+        choices=["mps", "cpu", "modal"],
+        required=True,
+        help="Training backend: mps (Apple Silicon), cpu, or modal (H100)",
+    )
     parser.add_argument("--epochs", type=int, default=DEFAULTS["epochs"])
     parser.add_argument("--batch-size", type=int, default=DEFAULTS["batch_size"])
     parser.add_argument("--seed", type=int, default=DEFAULTS["seed"])
@@ -241,8 +286,9 @@ def main() -> None:
     parser.add_argument("--loss-mode", type=str, default=DEFAULTS["loss_mode"])
     parser.add_argument("--no-pretrain", action="store_true", help="Skip pretrain checkpoint")
     parser.add_argument("--run-id", type=str, default="", help="Run ID (modal only)")
-    parser.add_argument("--design-id", type=str, default="L2-class1",
-                        help="Design ID tag for the run")
+    parser.add_argument(
+        "--design-id", type=str, default="L2-class1", help="Design ID tag for the run"
+    )
     parser.add_argument("--probe-plot-frequency", type=str, default="off")
     parser.add_argument("--dry-run", action="store_true", help="Print command without launching")
     args = parser.parse_args()

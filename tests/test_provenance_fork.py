@@ -33,8 +33,9 @@ def _provenance(source, apm="none", stimulus="none"):
     }
 
 
-def _run(model, peptide="SIINKEKAK", source="protein", apm="none",
-         stimulus="none", machinery="trypsin"):
+def _run(
+    model, peptide="SIINKEKAK", source="protein", apm="none", stimulus="none", machinery="trypsin"
+):
     return model(
         pep_tok=_encode(peptide),
         mhc_a_tok=torch.randint(4, 24, (1, 40), generator=torch.Generator().manual_seed(0)),
@@ -80,14 +81,20 @@ class TestSourceFork:
         """The proteasome is processive; internal sites say nothing about it."""
         with torch.no_grad():
             protein = _run(model, source="protein")["excision_missed_cleavage_score"].item()
-            mhc = _run(model, source="mhc", machinery="proteasome")["excision_missed_cleavage_score"].item()
+            mhc = _run(model, source="mhc", machinery="proteasome")[
+                "excision_missed_cleavage_score"
+            ].item()
         assert mhc == pytest.approx(0.0)
         assert protein < 0.0
 
     def test_digest_rule_still_applies_on_the_protein_branch(self, model):
         with torch.no_grad():
-            k_term = _run(model, peptide="SIINFEAAK", source="protein")["excision_c_terminus_score"].item()
-            a_term = _run(model, peptide="SIINFEAAA", source="protein")["excision_c_terminus_score"].item()
+            k_term = _run(model, peptide="SIINFEAAK", source="protein")[
+                "excision_c_terminus_score"
+            ].item()
+            a_term = _run(model, peptide="SIINFEAAA", source="protein")[
+                "excision_c_terminus_score"
+            ].item()
         assert k_term > a_term
 
 
@@ -119,11 +126,10 @@ class TestInVivoGradient:
     def test_the_profiles_are_reachable_from_the_excision_logit(self):
         """Structural check: the in-vivo branch is still wired to an output."""
         net = Presto(d_model=32, n_layers=2, n_heads=4)
-        out = _run(net, source="mhc", apm="n_term_trimming",
-                   stimulus="ifn_gamma", machinery="proteasome")
-        F.binary_cross_entropy_with_logits(
-            out["excision_logit"], torch.ones(1)
-        ).backward()
+        out = _run(
+            net, source="mhc", apm="n_term_trimming", stimulus="ifn_gamma", machinery="proteasome"
+        )
+        F.binary_cross_entropy_with_logits(out["excision_logit"], torch.ones(1)).backward()
 
         head = net.excision_head
         for name in ("invivo_profile_n", "invivo_profile_c"):
@@ -139,8 +145,7 @@ class TestInVivoGradient:
         net = Presto(d_model=32, n_layers=2, n_heads=4)
         net.eval()
         with torch.no_grad():
-            out = _run(net, source="mhc", apm="none", stimulus="none",
-                       machinery="proteasome")
+            out = _run(net, source="mhc", apm="none", stimulus="none", machinery="proteasome")
         assert out["excision_panel_apm"].shape[-1] == len(APM_PERTURBATIONS)
         assert out["excision_panel_stimulus"].shape[-1] == len(PROCESSING_STIMULI)
 
@@ -158,20 +163,26 @@ class TestInVivoGradient:
         mhc_seq = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
         dataset = PrestoDataset(
             elution_records=[
-                ElutionRecord(peptide="LLDGTATLRF", alleles=["HLA-A*02:01"],
-                              detected=True, stimulus="ifn_gamma",
-                              apm_perturbation="n_term_trimming"),
-                ElutionRecord(peptide="SIINFEKLAA", alleles=["HLA-A*02:01"],
-                              detected=True, stimulus="none",
-                              apm_perturbation="none"),
+                ElutionRecord(
+                    peptide="LLDGTATLRF",
+                    alleles=["HLA-A*02:01"],
+                    detected=True,
+                    stimulus="ifn_gamma",
+                    apm_perturbation="n_term_trimming",
+                ),
+                ElutionRecord(
+                    peptide="SIINFEKLAA",
+                    alleles=["HLA-A*02:01"],
+                    detected=True,
+                    stimulus="none",
+                    apm_perturbation="none",
+                ),
             ],
             mhc_sequences={"HLA-A*02:01": mhc_seq},
             strict_mhc_resolution=False,
         )
         batch = PrestoCollator()([dataset[i] for i in range(len(dataset))])
-        assert "excision" not in batch.target_masks, (
-            "fixture must carry no excision label"
-        )
+        assert "excision" not in batch.target_masks, "fixture must carry no excision label"
 
         net = Presto(d_model=32, n_layers=2, n_heads=4)
         loss, _, _ = compute_loss(net, batch, "cpu")
@@ -186,8 +197,7 @@ class TestInVivoGradient:
         ):
             grad = getattr(head, name).grad
             assert grad is not None and grad.abs().sum().item() > 0, (
-                f"{name} received no gradient from elution labels alone; "
-                "gap 2 has reopened"
+                f"{name} received no gradient from elution labels alone; gap 2 has reopened"
             )
 
     def test_the_trunk_no_longer_takes_cellular_state(self):
@@ -210,12 +220,20 @@ class TestInVivoGradient:
         mhc_seq = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
         dataset = PrestoDataset(
             elution_records=[
-                ElutionRecord(peptide="LLDGTATLRF", alleles=["HLA-A*02:01"],
-                              detected=True, stimulus="ifn_gamma",
-                              apm_perturbation="n_term_trimming"),
-                ElutionRecord(peptide="SIINFEKLAA", alleles=["HLA-A*02:01"],
-                              detected=True, stimulus="none",
-                              apm_perturbation="none"),
+                ElutionRecord(
+                    peptide="LLDGTATLRF",
+                    alleles=["HLA-A*02:01"],
+                    detected=True,
+                    stimulus="ifn_gamma",
+                    apm_perturbation="n_term_trimming",
+                ),
+                ElutionRecord(
+                    peptide="SIINFEKLAA",
+                    alleles=["HLA-A*02:01"],
+                    detected=True,
+                    stimulus="none",
+                    apm_perturbation="none",
+                ),
             ],
             mhc_sequences={"HLA-A*02:01": mhc_seq},
             strict_mhc_resolution=False,
@@ -234,16 +252,19 @@ class TestInVivoGradient:
 
 
 class TestConditionMapping:
-    @pytest.mark.parametrize("genes,expected", [
-        ("erap1", "n_term_trimming"),
-        ("erap1;erap2", "n_term_trimming"),
-        ("tap1", "peptide_supply"),
-        ("b2m", "mhc_null"),
-        ("tapbp;calr", "loading_complex"),
-        ("hla_dm", "class_ii_loading"),
-        ("", "none"),
-        (None, "none"),
-    ])
+    @pytest.mark.parametrize(
+        "genes,expected",
+        [
+            ("erap1", "n_term_trimming"),
+            ("erap1;erap2", "n_term_trimming"),
+            ("tap1", "peptide_supply"),
+            ("b2m", "mhc_null"),
+            ("tapbp;calr", "loading_complex"),
+            ("hla_dm", "class_ii_loading"),
+            ("", "none"),
+            (None, "none"),
+        ],
+    )
     def test_genes_map_to_mechanism_groups(self, genes, expected):
         assert apm_group_for_genes(genes) == expected
 
@@ -252,13 +273,16 @@ class TestConditionMapping:
         assert apm_group_for_genes("erap1;b2m;tap1") == "mhc_null"
         assert apm_group_for_genes("erap1;tap1") == "peptide_supply"
 
-    @pytest.mark.parametrize("condition,expected", [
-        ("IFN_gamma_treatment", "ifn_gamma"),
-        ("IFN_alpha_treatment", "ifn_type1"),
-        ("TNF_alpha_treatment", "tnf_alpha"),
-        ("unperturbed", "none"),
-        ("", "none"),
-    ])
+    @pytest.mark.parametrize(
+        "condition,expected",
+        [
+            ("IFN_gamma_treatment", "ifn_gamma"),
+            ("IFN_alpha_treatment", "ifn_type1"),
+            ("TNF_alpha_treatment", "tnf_alpha"),
+            ("unperturbed", "none"),
+            ("", "none"),
+        ],
+    )
     def test_conditions_map_to_stimuli(self, condition, expected):
         assert stimulus_for_condition(condition) == expected
 

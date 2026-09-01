@@ -135,7 +135,11 @@ def plot_metric_ranking(summary_df: pd.DataFrame, out_path: Path) -> None:
 
 
 def plot_metric_grid(summary_df: pd.DataFrame, out_path: Path) -> None:
-    metrics = [metric for metric in ["test_spearman", "test_auroc", "test_f1", "test_rmse_log10"] if metric in summary_df]
+    metrics = [
+        metric
+        for metric in ["test_spearman", "test_auroc", "test_f1", "test_rmse_log10"]
+        if metric in summary_df
+    ]
     if not metrics:
         return
     plot_df = summary_df.sort_values(metrics[0], ascending=False)
@@ -181,7 +185,9 @@ def plot_probe_heatmap(probe_df: pd.DataFrame, out_path: Path) -> None:
     probe_df = probe_df.copy()
     probe_df["probe_id"] = probe_df["allele"] + " | " + probe_df["peptide"]
     pivot = (
-        probe_df.pivot_table(index="display_label", columns="probe_id", values="ic50_nM", aggfunc="first")
+        probe_df.pivot_table(
+            index="display_label", columns="probe_id", values="ic50_nM", aggfunc="first"
+        )
         .sort_index()
         .sort_index(axis=1)
     )
@@ -203,9 +209,15 @@ def plot_probe_heatmap(probe_df: pd.DataFrame, out_path: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Aggregate summary.json-based experiment runs.")
-    parser.add_argument("--experiment-dir", required=True, help="Experiment directory containing results/runs.")
-    parser.add_argument("--runs-subdir", default="results/runs", help="Run directory relative to experiment dir.")
-    parser.add_argument("--output-subdir", default="results", help="Output directory relative to experiment dir.")
+    parser.add_argument(
+        "--experiment-dir", required=True, help="Experiment directory containing results/runs."
+    )
+    parser.add_argument(
+        "--runs-subdir", default="results/runs", help="Run directory relative to experiment dir."
+    )
+    parser.add_argument(
+        "--output-subdir", default="results", help="Output directory relative to experiment dir."
+    )
     args = parser.parse_args()
 
     experiment_dir = Path(args.experiment_dir).resolve()
@@ -234,13 +246,19 @@ def main() -> None:
     summary_df.loc[duplicate_mask, "display_label"] = summary_df.loc[duplicate_mask].apply(
         lambda row: f"{row['label']} [{row['run_id']}]", axis=1
     )
-    summary_df = summary_df.sort_values(sort_metric, ascending=False if sort_metric != "label" else True)
+    summary_df = summary_df.sort_values(
+        sort_metric, ascending=False if sort_metric != "label" else True
+    )
     epoch_df = pd.concat(epoch_frames, ignore_index=True) if epoch_frames else pd.DataFrame()
     probe_df = pd.concat(probe_frames, ignore_index=True) if probe_frames else pd.DataFrame()
     if not epoch_df.empty:
-        epoch_df["display_label"] = epoch_df["run_id"].map(summary_df.set_index("run_id")["display_label"])
+        epoch_df["display_label"] = epoch_df["run_id"].map(
+            summary_df.set_index("run_id")["display_label"]
+        )
     if not probe_df.empty:
-        probe_df["display_label"] = probe_df["run_id"].map(summary_df.set_index("run_id")["display_label"])
+        probe_df["display_label"] = probe_df["run_id"].map(
+            summary_df.set_index("run_id")["display_label"]
+        )
 
     summary_df.to_csv(output_dir / "condition_summary.csv", index=False)
     epoch_df.to_csv(output_dir / "epoch_summary.csv", index=False)

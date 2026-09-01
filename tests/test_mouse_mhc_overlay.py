@@ -1,6 +1,5 @@
 """Tests for mouse MHC overlay builder."""
 
-from pathlib import Path
 
 from presto.data import mouse_mhc_overlay
 
@@ -52,7 +51,9 @@ def test_build_mouse_mhc_overlay_writes_catalog_and_fasta(tmp_path, monkeypatch)
                 "entryType": "UniProtKB reviewed (Swiss-Prot)",
                 "proteinDescription": {
                     "recommendedName": {
-                        "fullName": {"value": "H-2 class I histocompatibility antigen, K-B alpha chain"}
+                        "fullName": {
+                            "value": "H-2 class I histocompatibility antigen, K-B alpha chain"
+                        }
                     }
                 },
                 "genes": [{"geneName": {"value": "H2-K1"}}],
@@ -64,7 +65,9 @@ def test_build_mouse_mhc_overlay_writes_catalog_and_fasta(tmp_path, monkeypatch)
                 "entryType": "UniProtKB reviewed (Swiss-Prot)",
                 "proteinDescription": {
                     "recommendedName": {
-                        "fullName": {"value": "H-2 class I histocompatibility antigen, K-B alpha chain"}
+                        "fullName": {
+                            "value": "H-2 class I histocompatibility antigen, K-B alpha chain"
+                        }
                     }
                 },
                 "genes": [{"geneName": {"value": "H2-K1"}}],
@@ -95,4 +98,3 @@ def test_build_mouse_mhc_overlay_writes_catalog_and_fasta(tmp_path, monkeypatch)
 
     fasta_text = out_fasta.read_text(encoding="utf-8")
     assert ">H2-K*b source=uniprot_mouse_overlay accession=P01901X gene=H2-K1" in fasta_text
-

@@ -38,27 +38,57 @@ class DesignSpec:
     warm_start: bool = False
 
 
-def _presto_common(*, d_model: int, peptide_pos: str, groove_pos: str, residual: str, kinetic_input: str = "affinity_vec") -> Tuple[str, ...]:
+def _presto_common(
+    *,
+    d_model: int,
+    peptide_pos: str,
+    groove_pos: str,
+    residual: str,
+    kinetic_input: str = "affinity_vec",
+) -> Tuple[str, ...]:
     return (
-        "--d-model", str(d_model),
-        "--peptide-pos-mode", peptide_pos,
-        "--groove-pos-mode", groove_pos,
-        "--binding-core-lengths", "8,9,10,11",
-        "--binding-core-refinement", "shared",
-        "--binding-kinetic-input-mode", kinetic_input,
-        "--affinity-target-encoding", "log10",
-        "--max-affinity-nm", "50000",
-        "--affinity-assay-residual-mode", residual,
+        "--d-model",
+        str(d_model),
+        "--peptide-pos-mode",
+        peptide_pos,
+        "--groove-pos-mode",
+        groove_pos,
+        "--binding-core-lengths",
+        "8,9,10,11",
+        "--binding-core-refinement",
+        "shared",
+        "--binding-kinetic-input-mode",
+        kinetic_input,
+        "--affinity-target-encoding",
+        "log10",
+        "--max-affinity-nm",
+        "50000",
+        "--affinity-assay-residual-mode",
+        residual,
     )
 
 
-def _groove_common(*, model_variant: str = "transformer", embed_dim: int = 128, hidden_dim: int = 256, n_layers: int = 2, n_heads: int = 4, peptide_pos: str = "triple_baseline", groove_pos: str = "triple_baseline") -> Tuple[str, ...]:
+def _groove_common(
+    *,
+    model_variant: str = "transformer",
+    embed_dim: int = 128,
+    hidden_dim: int = 256,
+    n_layers: int = 2,
+    n_heads: int = 4,
+    peptide_pos: str = "triple_baseline",
+    groove_pos: str = "triple_baseline",
+) -> Tuple[str, ...]:
     args: List[str] = [
-        "--model-variant", model_variant,
-        "--embed-dim", str(embed_dim),
-        "--hidden-dim", str(hidden_dim),
-        "--peptide-pos-mode", peptide_pos,
-        "--groove-pos-mode", groove_pos,
+        "--model-variant",
+        model_variant,
+        "--embed-dim",
+        str(embed_dim),
+        "--hidden-dim",
+        str(hidden_dim),
+        "--peptide-pos-mode",
+        peptide_pos,
+        "--groove-pos-mode",
+        groove_pos,
     ]
     if model_variant == "transformer":
         args.extend(["--n-layers", str(n_layers), "--n-heads", str(n_heads)])
@@ -67,37 +97,339 @@ def _groove_common(*, model_variant: str = "transformer", embed_dim: int = 128, 
 
 DESIGNS: Tuple[DesignSpec, ...] = (
     # Directness round-2 entries recorded in the canonical log ranking.
-    DesignSpec("DP00", "presto", "Directness P00 legacy triple/triple", _presto_common(d_model=256, peptide_pos="triple", groove_pos="triple", residual="legacy"), 140, True),
-    DesignSpec("DP01", "presto", "Directness P01 shared_base_segment_residual triple/triple", _presto_common(d_model=256, peptide_pos="triple", groove_pos="triple", residual="shared_base_segment_residual"), 140, True),
-    DesignSpec("DP05", "presto", "Directness P05 shared_base_segment_residual triple_plus_abs/triple", _presto_common(d_model=256, peptide_pos="triple_plus_abs", groove_pos="triple", residual="shared_base_segment_residual"), 140, True),
-    DesignSpec("DG1", "groove", "Directness G1 groove transformer", _groove_common(model_variant="transformer", embed_dim=128, hidden_dim=256, n_layers=2, n_heads=4, peptide_pos="triple_baseline", groove_pos="triple_baseline"), 256, False),
+    DesignSpec(
+        "DP00",
+        "presto",
+        "Directness P00 legacy triple/triple",
+        _presto_common(d_model=256, peptide_pos="triple", groove_pos="triple", residual="legacy"),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "DP01",
+        "presto",
+        "Directness P01 shared_base_segment_residual triple/triple",
+        _presto_common(
+            d_model=256,
+            peptide_pos="triple",
+            groove_pos="triple",
+            residual="shared_base_segment_residual",
+        ),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "DP05",
+        "presto",
+        "Directness P05 shared_base_segment_residual triple_plus_abs/triple",
+        _presto_common(
+            d_model=256,
+            peptide_pos="triple_plus_abs",
+            groove_pos="triple",
+            residual="shared_base_segment_residual",
+        ),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "DG1",
+        "groove",
+        "Directness G1 groove transformer",
+        _groove_common(
+            model_variant="transformer",
+            embed_dim=128,
+            hidden_dim=256,
+            n_layers=2,
+            n_heads=4,
+            peptide_pos="triple_baseline",
+            groove_pos="triple_baseline",
+        ),
+        256,
+        False,
+    ),
     # Positional composition P00..P07
-    DesignSpec("PP00", "presto", "Positional P00 start_only", _presto_common(d_model=128, peptide_pos="start_only", groove_pos="start_only", residual="shared_base_segment_residual"), 140, True),
-    DesignSpec("PP01", "presto", "Positional P01 end_only", _presto_common(d_model=128, peptide_pos="end_only", groove_pos="end_only", residual="shared_base_segment_residual"), 140, True),
-    DesignSpec("PP02", "presto", "Positional P02 start_plus_end", _presto_common(d_model=128, peptide_pos="start_plus_end", groove_pos="start_plus_end", residual="shared_base_segment_residual"), 140, True),
-    DesignSpec("PP03", "presto", "Positional P03 concat(start,end)", _presto_common(d_model=128, peptide_pos="concat_start_end", groove_pos="concat_start_end", residual="shared_base_segment_residual"), 140, True),
-    DesignSpec("PP04", "presto", "Positional P04 concat(start,end,frac)", _presto_common(d_model=128, peptide_pos="concat_start_end_frac", groove_pos="concat_start_end_frac", residual="shared_base_segment_residual"), 140, True),
-    DesignSpec("PP05", "presto", "Positional P05 mlp(concat(start,end))", _presto_common(d_model=128, peptide_pos="mlp_start_end", groove_pos="mlp_start_end", residual="shared_base_segment_residual"), 140, True),
-    DesignSpec("PP06", "presto", "Positional P06 mlp(concat(start,end,frac))", _presto_common(d_model=128, peptide_pos="mlp_start_end_frac", groove_pos="mlp_start_end_frac", residual="shared_base_segment_residual"), 140, True),
-    DesignSpec("PP07", "presto", "Positional P07 triple_baseline", _presto_common(d_model=128, peptide_pos="triple_baseline", groove_pos="triple_baseline", residual="shared_base_segment_residual"), 140, True),
+    DesignSpec(
+        "PP00",
+        "presto",
+        "Positional P00 start_only",
+        _presto_common(
+            d_model=128,
+            peptide_pos="start_only",
+            groove_pos="start_only",
+            residual="shared_base_segment_residual",
+        ),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "PP01",
+        "presto",
+        "Positional P01 end_only",
+        _presto_common(
+            d_model=128,
+            peptide_pos="end_only",
+            groove_pos="end_only",
+            residual="shared_base_segment_residual",
+        ),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "PP02",
+        "presto",
+        "Positional P02 start_plus_end",
+        _presto_common(
+            d_model=128,
+            peptide_pos="start_plus_end",
+            groove_pos="start_plus_end",
+            residual="shared_base_segment_residual",
+        ),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "PP03",
+        "presto",
+        "Positional P03 concat(start,end)",
+        _presto_common(
+            d_model=128,
+            peptide_pos="concat_start_end",
+            groove_pos="concat_start_end",
+            residual="shared_base_segment_residual",
+        ),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "PP04",
+        "presto",
+        "Positional P04 concat(start,end,frac)",
+        _presto_common(
+            d_model=128,
+            peptide_pos="concat_start_end_frac",
+            groove_pos="concat_start_end_frac",
+            residual="shared_base_segment_residual",
+        ),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "PP05",
+        "presto",
+        "Positional P05 mlp(concat(start,end))",
+        _presto_common(
+            d_model=128,
+            peptide_pos="mlp_start_end",
+            groove_pos="mlp_start_end",
+            residual="shared_base_segment_residual",
+        ),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "PP06",
+        "presto",
+        "Positional P06 mlp(concat(start,end,frac))",
+        _presto_common(
+            d_model=128,
+            peptide_pos="mlp_start_end_frac",
+            groove_pos="mlp_start_end_frac",
+            residual="shared_base_segment_residual",
+        ),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "PP07",
+        "presto",
+        "Positional P07 triple_baseline",
+        _presto_common(
+            d_model=128,
+            peptide_pos="triple_baseline",
+            groove_pos="triple_baseline",
+            residual="shared_base_segment_residual",
+        ),
+        140,
+        True,
+    ),
     # Positional groove controls G00..G07
-    DesignSpec("PG00", "groove", "Positional G00 start_only", _groove_common(peptide_pos="start_only", groove_pos="start_only"), 256, False),
-    DesignSpec("PG01", "groove", "Positional G01 end_only", _groove_common(peptide_pos="end_only", groove_pos="end_only"), 256, False),
-    DesignSpec("PG02", "groove", "Positional G02 start_plus_end", _groove_common(peptide_pos="start_plus_end", groove_pos="start_plus_end"), 256, False),
-    DesignSpec("PG03", "groove", "Positional G03 concat(start,end)", _groove_common(peptide_pos="concat_start_end", groove_pos="concat_start_end"), 256, False),
-    DesignSpec("PG04", "groove", "Positional G04 concat(start,end,frac)", _groove_common(peptide_pos="concat_start_end_frac", groove_pos="concat_start_end_frac"), 256, False),
-    DesignSpec("PG05", "groove", "Positional G05 mlp(concat(start,end))", _groove_common(peptide_pos="mlp_start_end", groove_pos="mlp_start_end"), 256, False),
-    DesignSpec("PG06", "groove", "Positional G06 mlp(concat(start,end,frac))", _groove_common(peptide_pos="mlp_start_end_frac", groove_pos="mlp_start_end_frac"), 256, False),
-    DesignSpec("PG07", "groove", "Positional G07 triple_baseline", _groove_common(peptide_pos="triple_baseline", groove_pos="triple_baseline"), 256, False),
+    DesignSpec(
+        "PG00",
+        "groove",
+        "Positional G00 start_only",
+        _groove_common(peptide_pos="start_only", groove_pos="start_only"),
+        256,
+        False,
+    ),
+    DesignSpec(
+        "PG01",
+        "groove",
+        "Positional G01 end_only",
+        _groove_common(peptide_pos="end_only", groove_pos="end_only"),
+        256,
+        False,
+    ),
+    DesignSpec(
+        "PG02",
+        "groove",
+        "Positional G02 start_plus_end",
+        _groove_common(peptide_pos="start_plus_end", groove_pos="start_plus_end"),
+        256,
+        False,
+    ),
+    DesignSpec(
+        "PG03",
+        "groove",
+        "Positional G03 concat(start,end)",
+        _groove_common(peptide_pos="concat_start_end", groove_pos="concat_start_end"),
+        256,
+        False,
+    ),
+    DesignSpec(
+        "PG04",
+        "groove",
+        "Positional G04 concat(start,end,frac)",
+        _groove_common(peptide_pos="concat_start_end_frac", groove_pos="concat_start_end_frac"),
+        256,
+        False,
+    ),
+    DesignSpec(
+        "PG05",
+        "groove",
+        "Positional G05 mlp(concat(start,end))",
+        _groove_common(peptide_pos="mlp_start_end", groove_pos="mlp_start_end"),
+        256,
+        False,
+    ),
+    DesignSpec(
+        "PG06",
+        "groove",
+        "Positional G06 mlp(concat(start,end,frac))",
+        _groove_common(peptide_pos="mlp_start_end_frac", groove_pos="mlp_start_end_frac"),
+        256,
+        False,
+    ),
+    DesignSpec(
+        "PG07",
+        "groove",
+        "Positional G07 triple_baseline",
+        _groove_common(peptide_pos="triple_baseline", groove_pos="triple_baseline"),
+        256,
+        False,
+    ),
     # Assay-head A00..A07 on top of P04 positional base.
-    DesignSpec("A00", "presto", "Assay A00 pooled_single_output merged_kd", _presto_common(d_model=128, peptide_pos="concat_start_end_frac", groove_pos="concat_start_end_frac", residual="pooled_single_output") + ("--kd-grouping-mode", "merged_kd"), 140, True),
-    DesignSpec("A01", "presto", "Assay A01 pooled_single_output split_kd_proxy", _presto_common(d_model=128, peptide_pos="concat_start_end_frac", groove_pos="concat_start_end_frac", residual="pooled_single_output") + ("--kd-grouping-mode", "split_kd_proxy"), 140, True),
-    DesignSpec("A02", "presto", "Assay A02 shared_base_segment_residual merged_kd", _presto_common(d_model=128, peptide_pos="concat_start_end_frac", groove_pos="concat_start_end_frac", residual="shared_base_segment_residual") + ("--kd-grouping-mode", "merged_kd"), 140, True),
-    DesignSpec("A03", "presto", "Assay A03 shared_base_segment_residual split_kd_proxy", _presto_common(d_model=128, peptide_pos="concat_start_end_frac", groove_pos="concat_start_end_frac", residual="shared_base_segment_residual") + ("--kd-grouping-mode", "split_kd_proxy"), 140, True),
-    DesignSpec("A04", "presto", "Assay A04 factorized_context merged_kd", _presto_common(d_model=128, peptide_pos="concat_start_end_frac", groove_pos="concat_start_end_frac", residual="shared_base_factorized_context_residual") + ("--kd-grouping-mode", "merged_kd"), 140, True),
-    DesignSpec("A05", "presto", "Assay A05 factorized_context split_kd_proxy", _presto_common(d_model=128, peptide_pos="concat_start_end_frac", groove_pos="concat_start_end_frac", residual="shared_base_factorized_context_residual") + ("--kd-grouping-mode", "split_kd_proxy"), 140, True),
-    DesignSpec("A06", "presto", "Assay A06 factorized_context_plus_segment merged_kd", _presto_common(d_model=128, peptide_pos="concat_start_end_frac", groove_pos="concat_start_end_frac", residual="shared_base_factorized_context_plus_segment_residual") + ("--kd-grouping-mode", "merged_kd"), 140, True),
-    DesignSpec("A07", "presto", "Assay A07 factorized_context_plus_segment split_kd_proxy", _presto_common(d_model=128, peptide_pos="concat_start_end_frac", groove_pos="concat_start_end_frac", residual="shared_base_factorized_context_plus_segment_residual") + ("--kd-grouping-mode", "split_kd_proxy"), 140, True),
+    DesignSpec(
+        "A00",
+        "presto",
+        "Assay A00 pooled_single_output merged_kd",
+        _presto_common(
+            d_model=128,
+            peptide_pos="concat_start_end_frac",
+            groove_pos="concat_start_end_frac",
+            residual="pooled_single_output",
+        )
+        + ("--kd-grouping-mode", "merged_kd"),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "A01",
+        "presto",
+        "Assay A01 pooled_single_output split_kd_proxy",
+        _presto_common(
+            d_model=128,
+            peptide_pos="concat_start_end_frac",
+            groove_pos="concat_start_end_frac",
+            residual="pooled_single_output",
+        )
+        + ("--kd-grouping-mode", "split_kd_proxy"),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "A02",
+        "presto",
+        "Assay A02 shared_base_segment_residual merged_kd",
+        _presto_common(
+            d_model=128,
+            peptide_pos="concat_start_end_frac",
+            groove_pos="concat_start_end_frac",
+            residual="shared_base_segment_residual",
+        )
+        + ("--kd-grouping-mode", "merged_kd"),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "A03",
+        "presto",
+        "Assay A03 shared_base_segment_residual split_kd_proxy",
+        _presto_common(
+            d_model=128,
+            peptide_pos="concat_start_end_frac",
+            groove_pos="concat_start_end_frac",
+            residual="shared_base_segment_residual",
+        )
+        + ("--kd-grouping-mode", "split_kd_proxy"),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "A04",
+        "presto",
+        "Assay A04 factorized_context merged_kd",
+        _presto_common(
+            d_model=128,
+            peptide_pos="concat_start_end_frac",
+            groove_pos="concat_start_end_frac",
+            residual="shared_base_factorized_context_residual",
+        )
+        + ("--kd-grouping-mode", "merged_kd"),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "A05",
+        "presto",
+        "Assay A05 factorized_context split_kd_proxy",
+        _presto_common(
+            d_model=128,
+            peptide_pos="concat_start_end_frac",
+            groove_pos="concat_start_end_frac",
+            residual="shared_base_factorized_context_residual",
+        )
+        + ("--kd-grouping-mode", "split_kd_proxy"),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "A06",
+        "presto",
+        "Assay A06 factorized_context_plus_segment merged_kd",
+        _presto_common(
+            d_model=128,
+            peptide_pos="concat_start_end_frac",
+            groove_pos="concat_start_end_frac",
+            residual="shared_base_factorized_context_plus_segment_residual",
+        )
+        + ("--kd-grouping-mode", "merged_kd"),
+        140,
+        True,
+    ),
+    DesignSpec(
+        "A07",
+        "presto",
+        "Assay A07 factorized_context_plus_segment split_kd_proxy",
+        _presto_common(
+            d_model=128,
+            peptide_pos="concat_start_end_frac",
+            groove_pos="concat_start_end_frac",
+            residual="shared_base_factorized_context_plus_segment_residual",
+        )
+        + ("--kd-grouping-mode", "split_kd_proxy"),
+        140,
+        True,
+    ),
 )
 
 
@@ -107,19 +439,29 @@ def _run_id(prefix: str, design_id: str) -> str:
 
 def _common_args(*, alleles: Sequence[str], probes: Sequence[str]) -> List[str]:
     return [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--extra-probe-peptides", ",".join(probes[1:]),
-        "--measurement-profile", "numeric_no_qualitative",
-        "--qualifier-filter", "all",
-        "--probe-plot-frequency", "off",
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--extra-probe-peptides",
+        ",".join(probes[1:]),
+        "--measurement-profile",
+        "numeric_no_qualitative",
+        "--qualifier-filter",
+        "all",
+        "--probe-plot-frequency",
+        "off",
         "--no-synthetic-negatives",
-        "--binding-contrastive-weight", "0",
-        "--binding-peptide-contrastive-weight", "0",
+        "--binding-contrastive-weight",
+        "0",
+        "--binding-peptide-contrastive-weight",
+        "0",
     ]
 
 
-def _build_extra_args(design: DesignSpec, alleles: Sequence[str], probes: Sequence[str], warm_start: str) -> List[str]:
+def _build_extra_args(
+    design: DesignSpec, alleles: Sequence[str], probes: Sequence[str], warm_start: str
+) -> List[str]:
     args = _common_args(alleles=alleles, probes=probes)
     args.extend(["--design-id", design.design_id])
     if design.family == "presto":
@@ -151,7 +493,12 @@ def _write_variants(path: Path, runs: Sequence[Mapping[str, Any]]) -> None:
         "| --- | --- | --- | --- | --- |",
     ]
     for run in runs:
-        lines.append(f"| `{run['design_id']}` | `{run['family']}` | `{run.get('app_id','')}` | `{run['run_id']}` | {run['description']} |")
+        lines.append(
+            (
+                f"| `{run['design_id']}` | `{run['family']}` | `{run.get('app_id', '')}` | "
+                f"`{run['run_id']}` | {run['description']} |"
+            )
+        )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -166,16 +513,38 @@ def _selected(design_ids: Sequence[str]) -> Tuple[DesignSpec, ...]:
     return selected
 
 
-def _launch(design: DesignSpec, *, alleles: Sequence[str], probes: Sequence[str], warm_start: str, epochs: int, prefix: str, out_dir: Path, timeout_s: float, retries: int) -> Dict[str, Any]:
+def _launch(
+    design: DesignSpec,
+    *,
+    alleles: Sequence[str],
+    probes: Sequence[str],
+    warm_start: str,
+    epochs: int,
+    prefix: str,
+    out_dir: Path,
+    timeout_s: float,
+    retries: int,
+) -> Dict[str, Any]:
     run_id = _run_id(prefix, design.design_id)
     extra_args = _build_extra_args(design, alleles, probes, warm_start)
-    target = "scripts/train_modal.py::groove_baseline_run" if design.family == "groove" else "scripts/train_modal.py::focused_binding_run"
+    target = (
+        "scripts/train_modal.py::groove_baseline_run"
+        if design.family == "groove"
+        else "scripts/train_modal.py::focused_binding_run"
+    )
     cmd = [
-        "modal", "run", "--detach", target,
-        "--epochs", str(epochs),
-        "--batch-size", str(design.batch_size),
-        "--run-id", run_id,
-        "--extra-args", " ".join(extra_args),
+        "modal",
+        "run",
+        "--detach",
+        target,
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(design.batch_size),
+        "--run-id",
+        run_id,
+        "--extra-args",
+        " ".join(extra_args),
     ]
     log_path = out_dir / "launch_logs" / f"{run_id}.log"
     log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -195,7 +564,11 @@ def _launch(design: DesignSpec, *, alleles: Sequence[str], probes: Sequence[str]
             app_id = ""
             while True:
                 if time.time() - start > timeout_s:
-                    existing = log_path.read_text(encoding="utf-8", errors="replace") if log_path.exists() else ""
+                    existing = (
+                        log_path.read_text(encoding="utf-8", errors="replace")
+                        if log_path.exists()
+                        else ""
+                    )
                     raise subprocess.TimeoutExpired(cmd=cmd, timeout=timeout_s, output=existing)
                 if log_path.exists():
                     output = log_path.read_text(encoding="utf-8", errors="replace")
@@ -207,7 +580,11 @@ def _launch(design: DesignSpec, *, alleles: Sequence[str], probes: Sequence[str]
                 if proc.poll() is not None and not app_id:
                     break
                 time.sleep(0.5)
-            output = log_path.read_text(encoding="utf-8", errors="replace") if log_path.exists() else output
+            output = (
+                log_path.read_text(encoding="utf-8", errors="replace")
+                if log_path.exists()
+                else output
+            )
             if not app_id:
                 raise RuntimeError(f"No app id in detached output for {run_id}:\n{output}")
             return {
@@ -225,8 +602,13 @@ def _launch(design: DesignSpec, *, alleles: Sequence[str], probes: Sequence[str]
             msg = str(exc)
             if isinstance(exc, subprocess.TimeoutExpired):
                 partial = "\n".join(
-                    (part.decode("utf-8", errors="replace") if isinstance(part, bytes) else str(part))
-                    for part in (exc.stdout, exc.stderr) if part
+                    (
+                        part.decode("utf-8", errors="replace")
+                        if isinstance(part, bytes)
+                        else str(part)
+                    )
+                    for part in (exc.stdout, exc.stderr)
+                    if part
                 )
                 msg = partial or msg
             log_path.write_text(msg, encoding="utf-8")
@@ -273,7 +655,12 @@ def main() -> None:
                 "warm_start": args.warm_start,
             },
             "tested": [
-                {"design_id": d.design_id, "family": d.family, "description": d.description, "batch_size": d.batch_size}
+                {
+                    "design_id": d.design_id,
+                    "family": d.family,
+                    "description": d.description,
+                    "batch_size": d.batch_size,
+                }
                 for d in selected
             ],
         },
@@ -285,7 +672,17 @@ def main() -> None:
     for design in selected:
         if design.design_id in seen:
             continue
-        run = _launch(design, alleles=alleles, probes=probes, warm_start=args.warm_start, epochs=args.epochs, prefix=args.prefix, out_dir=out_dir, timeout_s=args.launch_timeout_s, retries=args.launch_retries)
+        run = _launch(
+            design,
+            alleles=alleles,
+            probes=probes,
+            warm_start=args.warm_start,
+            epochs=args.epochs,
+            prefix=args.prefix,
+            out_dir=out_dir,
+            timeout_s=args.launch_timeout_s,
+            retries=args.launch_retries,
+        )
         launched.append(run)
         _write_manifest(manifest_path, launched)
         _write_variants(variants_path, launched)

@@ -36,7 +36,10 @@ from presto.scripts.focused_binding_probe import (
     MEASUREMENT_PROFILE_NUMERIC,
     QUALIFIER_FILTERS,
 )
-from presto.scripts.train_iedb import resolve_mhc_inputs_from_index, resolve_mhc_sequences_from_index
+from presto.scripts.train_iedb import (
+    resolve_mhc_inputs_from_index,
+    resolve_mhc_sequences_from_index,
+)
 
 from .config import CONDITIONS_BY_ID, DistributionalModel, build_model
 from .encoders import ENCODER_BACKBONES
@@ -51,18 +54,23 @@ _CONDITIONS_BY_VERSION = {
 def _get_conditions_lookup(version: str):
     if version == "v2":
         from .config_v2 import CONDITIONS_V2_BY_ID
+
         return CONDITIONS_V2_BY_ID
     if version == "v3":
         from .config_v3 import CONDITIONS_V3_BY_ID
+
         return CONDITIONS_V3_BY_ID
     if version == "v4":
         from .config_v4 import CONDITIONS_V4_BY_ID
+
         return CONDITIONS_V4_BY_ID
     if version == "v5":
         from .config_v5 import CONDITIONS_V5_BY_ID
+
         return CONDITIONS_V5_BY_ID
     if version == "v6":
         from .config_v6 import CONDITIONS_V6_BY_ID
+
         return CONDITIONS_V6_BY_ID
     return CONDITIONS_BY_ID
 
@@ -70,6 +78,7 @@ def _get_conditions_lookup(version: str):
 # ---------------------------------------------------------------------------
 # 3-way split
 # ---------------------------------------------------------------------------
+
 
 def _split_records_three_way(
     records: list,
@@ -89,12 +98,18 @@ def _split_records_three_way(
 
     # First: split off test set
     remaining, test_records, split1_stats = _split_records_by_peptide(
-        records, val_fraction=test_frac, seed=seed + 100, alleles=alleles,
+        records,
+        val_fraction=test_frac,
+        seed=seed + 100,
+        alleles=alleles,
     )
     # Then: split remaining into train/val
     adjusted_val = val_frac / (train_frac + val_frac)
     train_records, val_records, split2_stats = _split_records_by_peptide(
-        remaining, val_fraction=adjusted_val, seed=seed, alleles=alleles,
+        remaining,
+        val_fraction=adjusted_val,
+        seed=seed,
+        alleles=alleles,
     )
 
     stats = {
@@ -110,6 +125,7 @@ def _split_records_three_way(
 # ---------------------------------------------------------------------------
 # Training step
 # ---------------------------------------------------------------------------
+
 
 def _train_step(
     model: DistributionalModel,
@@ -128,8 +144,12 @@ def _train_step(
         h,
         binding_ctx.get("assay_type_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)),
         binding_ctx.get("assay_prep_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)),
-        binding_ctx.get("assay_geometry_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)),
-        binding_ctx.get("assay_readout_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)),
+        binding_ctx.get(
+            "assay_geometry_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)
+        ),
+        binding_ctx.get(
+            "assay_readout_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)
+        ),
     )
 
     # Get raw IC50 nM targets
@@ -141,8 +161,11 @@ def _train_step(
 
     ic50_nM = bind_target.float().reshape(-1).to(device)
     mask = bind_mask.float().reshape(-1).to(device)
-    qual = (bind_qual.long().reshape(-1).to(device) if bind_qual is not None
-            else torch.zeros_like(mask, dtype=torch.long))
+    qual = (
+        bind_qual.long().reshape(-1).to(device)
+        if bind_qual is not None
+        else torch.zeros_like(mask, dtype=torch.long)
+    )
 
     loss, metrics = model.head.compute_loss(h, assay_emb, ic50_nM, qual, mask)
 
@@ -165,6 +188,7 @@ def _train_step(
 # Main
 # ---------------------------------------------------------------------------
 
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Distributional BA head training")
     parser.add_argument("--cond-id", type=int, required=True, help="Condition ID (1-32)")
@@ -181,26 +205,48 @@ def main() -> None:
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--weight-decay", type=float, default=0.01)
     parser.add_argument("--seed", type=int, default=42)
-    parser.add_argument("--qualifier-filter", type=str, default="all",
-                        choices=sorted(QUALIFIER_FILTERS))
-    parser.add_argument("--measurement-profile", type=str, default=MEASUREMENT_PROFILE_NUMERIC,
-                        choices=sorted(MEASUREMENT_PROFILES))
+    parser.add_argument(
+        "--qualifier-filter", type=str, default="all", choices=sorted(QUALIFIER_FILTERS)
+    )
+    parser.add_argument(
+        "--measurement-profile",
+        type=str,
+        default=MEASUREMENT_PROFILE_NUMERIC,
+        choices=sorted(MEASUREMENT_PROFILES),
+    )
     parser.add_argument("--train-all-alleles", action="store_true")
-    parser.add_argument("--config-version", type=str, default="v1",
-                        choices=["v1", "v2", "v3", "v4", "v5", "v6"], help="Condition matrix version")
-    parser.add_argument("--encoder-backbone", type=str, default="historical_ablation",
-                        choices=list(ENCODER_BACKBONES))
-    parser.add_argument("--content-conditioned", action="store_true",
-                        help="Condition assay context on binding logit + molecular repr")
+    parser.add_argument(
+        "--config-version",
+        type=str,
+        default="v1",
+        choices=["v1", "v2", "v3", "v4", "v5", "v6"],
+        help="Condition matrix version",
+    )
+    parser.add_argument(
+        "--encoder-backbone",
+        type=str,
+        default="historical_ablation",
+        choices=list(ENCODER_BACKBONES),
+    )
+    parser.add_argument(
+        "--content-conditioned",
+        action="store_true",
+        help="Condition assay context on binding logit + molecular repr",
+    )
     parser.add_argument(
         "--assay-input-mode",
         type=str,
         default="factorized",
         choices=["factorized", "none"],
-        help="Whether assay-selector metadata feeds the benchmark head path. 'none' forces zero assay embeddings.",
+        help="Whether assay-selector metadata feeds the benchmark head path. 'none' forces zero "
+            "assay embeddings.",
     )
-    parser.add_argument("--init-checkpoint", type=str, default="",
-                        help="Path to pretrained encoder checkpoint (encoder.pt) for warm-start")
+    parser.add_argument(
+        "--init-checkpoint",
+        type=str,
+        default="",
+        help="Path to pretrained encoder checkpoint (encoder.pt) for warm-start",
+    )
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
@@ -208,7 +254,9 @@ def main() -> None:
     cond_id = int(args.cond_id)
     if cond_id not in conditions_lookup:
         valid_ids = sorted(conditions_lookup.keys())
-        raise ValueError(f"Unknown condition ID {cond_id} for {args.config_version}. Valid: {valid_ids}")
+        raise ValueError(
+            f"Unknown condition ID {cond_id} for {args.config_version}. Valid: {valid_ids}"
+        )
     spec = conditions_lookup[cond_id]
 
     torch.manual_seed(int(args.seed))
@@ -216,7 +264,9 @@ def main() -> None:
         torch.cuda.manual_seed_all(int(args.seed))
     random.seed(int(args.seed))
 
-    out_dir = Path(args.out_dir) if args.out_dir else Path(f"artifacts/distributional_ba/{spec.label}")
+    out_dir = (
+        Path(args.out_dir) if args.out_dir else Path(f"artifacts/distributional_ba/{spec.label}")
+    )
     out_dir.mkdir(parents=True, exist_ok=True)
 
     data_dir = Path(args.data_dir)
@@ -238,26 +288,32 @@ def main() -> None:
         sampling_seed=int(args.seed) + 17,
     )
     records = [
-        r for r in records
+        r
+        for r in records
         if _keep_measurement_type(r.measurement_type, str(args.measurement_profile))
     ]
     records = [
-        r for r in records
+        r
+        for r in records
         if _keep_binding_qualifier(getattr(r, "qualifier", 0), str(args.qualifier_filter))
     ]
 
     # --- 3-way split ---
     train_records, val_records, test_records, split_stats = _split_records_three_way(
-        records, seed=int(args.seed), alleles=probe_alleles,
+        records,
+        seed=int(args.seed),
+        alleles=probe_alleles,
     )
     if not train_records or not val_records:
         raise RuntimeError("Split must produce train and val records")
 
-    resolved_alleles = sorted({
-        str(r.mhc_allele or "").strip()
-        for r in (train_records + val_records + test_records)
-        if str(r.mhc_allele or "").strip()
-    })
+    resolved_alleles = sorted(
+        {
+            str(r.mhc_allele or "").strip()
+            for r in (train_records + val_records + test_records)
+            if str(r.mhc_allele or "").strip()
+        }
+    )
     mhc_sequences, mhc_stats = resolve_mhc_sequences_from_index(
         index_csv=str(index_csv),
         alleles=resolved_alleles,
@@ -289,24 +345,38 @@ def main() -> None:
     )
 
     train_loader = create_dataloader(
-        train_ds, batch_size=int(args.batch_size), shuffle=True,
-        collator=collator, balanced=False, seed=int(args.seed),
+        train_ds,
+        batch_size=int(args.batch_size),
+        shuffle=True,
+        collator=collator,
+        balanced=False,
+        seed=int(args.seed),
     )
     val_loader = create_dataloader(
-        val_ds, batch_size=int(args.batch_size), shuffle=False,
-        collator=collator, balanced=False, seed=int(args.seed),
+        val_ds,
+        batch_size=int(args.batch_size),
+        shuffle=False,
+        collator=collator,
+        balanced=False,
+        seed=int(args.seed),
     )
     test_loader = create_dataloader(
-        test_ds, batch_size=int(args.batch_size), shuffle=False,
-        collator=collator, balanced=False, seed=int(args.seed),
+        test_ds,
+        batch_size=int(args.batch_size),
+        shuffle=False,
+        collator=collator,
+        balanced=False,
+        seed=int(args.seed),
     )
 
     # --- Build model ---
     device = "cuda" if torch.cuda.is_available() else "cpu"
     actual_embed_dim = getattr(spec, 'embed_dim', int(args.embed_dim))
     model = build_model(
-        spec, embed_dim=actual_embed_dim,
-        n_heads=int(args.n_heads), n_layers=int(args.n_layers),
+        spec,
+        embed_dim=actual_embed_dim,
+        n_heads=int(args.n_heads),
+        n_layers=int(args.n_layers),
         content_conditioned=bool(args.content_conditioned),
         encoder_backbone=str(args.encoder_backbone),
         assay_input_mode=str(args.assay_input_mode),
@@ -344,7 +414,9 @@ def main() -> None:
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
     optimizer = torch.optim.AdamW(
-        model.parameters(), lr=float(args.lr), weight_decay=float(args.weight_decay),
+        model.parameters(),
+        lr=float(args.lr),
+        weight_decay=float(args.weight_decay),
     )
 
     # --- Probe setup ---
@@ -365,17 +437,28 @@ def main() -> None:
         batch = next(iter(train_loader))
         loss_val, metrics = _train_step(model, batch, optimizer, device)
         probe_eval = evaluate_probe_panel(
-            model, tokenizer, allele_sequences, probe_peptides[:1], probe_alleles, device,
+            model,
+            tokenizer,
+            allele_sequences,
+            probe_peptides[:1],
+            probe_alleles,
+            device,
         )
-        print(json.dumps({
-            "event": "dry_run",
-            "cond_id": cond_id,
-            "label": spec.label,
-            "n_params": n_params,
-            "loss": loss_val,
-            "metrics": metrics,
-            "probe_sample": probe_eval[:2],
-        }, sort_keys=True), flush=True)
+        print(
+            json.dumps(
+                {
+                    "event": "dry_run",
+                    "cond_id": cond_id,
+                    "label": spec.label,
+                    "n_params": n_params,
+                    "loss": loss_val,
+                    "metrics": metrics,
+                    "probe_sample": probe_eval[:2],
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
         return
 
     # --- Setup summary ---
@@ -431,12 +514,14 @@ def main() -> None:
             for k, v in batch_metrics.items():
                 epoch_metrics[k] += v
 
-            step_log.append({
-                "step": global_step,
-                "epoch": epoch,
-                "train_loss": loss_val,
-                **{k: v for k, v in batch_metrics.items()},
-            })
+            step_log.append(
+                {
+                    "step": global_step,
+                    "epoch": epoch,
+                    "train_loss": loss_val,
+                    **{k: v for k, v in batch_metrics.items()},
+                }
+            )
 
         train_loss = train_loss_sum / max(train_batches, 1)
         for k in epoch_metrics:
@@ -448,7 +533,12 @@ def main() -> None:
 
         # --- Probe ---
         probe_eval = evaluate_probe_panel(
-            model, tokenizer, allele_sequences, probe_peptides, probe_alleles, device,
+            model,
+            tokenizer,
+            allele_sequences,
+            probe_peptides,
+            probe_alleles,
+            device,
         )
         for row in probe_eval:
             probe_rows.append({"epoch": epoch, **row})
@@ -484,17 +574,23 @@ def main() -> None:
     # Save model checkpoint
     torch.save(model.state_dict(), out_dir / "model.pt")
 
-    print(json.dumps({
-        "event": "done",
-        "cond_id": cond_id,
-        "label": spec.label,
-        "final_train_loss": epoch_summaries[-1]["train_loss"] if epoch_summaries else None,
-        "final_val_loss": val_result.get("loss"),
-        "test_loss": test_result.get("loss"),
-        "test_spearman": test_result.get("spearman"),
-        "test_auroc": test_result.get("auroc"),
-        "out_dir": str(out_dir),
-    }, sort_keys=True), flush=True)
+    print(
+        json.dumps(
+            {
+                "event": "done",
+                "cond_id": cond_id,
+                "label": spec.label,
+                "final_train_loss": epoch_summaries[-1]["train_loss"] if epoch_summaries else None,
+                "final_val_loss": val_result.get("loss"),
+                "test_loss": test_result.get("loss"),
+                "test_spearman": test_result.get("spearman"),
+                "test_auroc": test_result.get("auroc"),
+                "out_dir": str(out_dir),
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
 
 
 def _write_jsonl(path: Path, rows: List[Dict[str, Any]]) -> None:

@@ -44,17 +44,27 @@ def enumerate_observed_combos(
 
     combos = []
     for (t, p, g, rd), count in combo_counts.most_common():
-        combos.append({
-            "assay_type_idx": int(t),
-            "assay_prep_idx": int(p),
-            "assay_geometry_idx": int(g),
-            "assay_readout_idx": int(rd),
-            "assay_type": BINDING_ASSAY_TYPES[int(t)] if int(t) < len(BINDING_ASSAY_TYPES) else f"idx_{t}",
-            "assay_prep": BINDING_ASSAY_PREP[int(p)] if int(p) < len(BINDING_ASSAY_PREP) else f"idx_{p}",
-            "assay_geometry": BINDING_ASSAY_GEOMETRY[int(g)] if int(g) < len(BINDING_ASSAY_GEOMETRY) else f"idx_{g}",
-            "assay_readout": BINDING_ASSAY_READOUT[int(rd)] if int(rd) < len(BINDING_ASSAY_READOUT) else f"idx_{rd}",
-            "count": count,
-        })
+        combos.append(
+            {
+                "assay_type_idx": int(t),
+                "assay_prep_idx": int(p),
+                "assay_geometry_idx": int(g),
+                "assay_readout_idx": int(rd),
+                "assay_type": BINDING_ASSAY_TYPES[int(t)]
+                if int(t) < len(BINDING_ASSAY_TYPES)
+                else f"idx_{t}",
+                "assay_prep": BINDING_ASSAY_PREP[int(p)]
+                if int(p) < len(BINDING_ASSAY_PREP)
+                else f"idx_{p}",
+                "assay_geometry": BINDING_ASSAY_GEOMETRY[int(g)]
+                if int(g) < len(BINDING_ASSAY_GEOMETRY)
+                else f"idx_{g}",
+                "assay_readout": BINDING_ASSAY_READOUT[int(rd)]
+                if int(rd) < len(BINDING_ASSAY_READOUT)
+                else f"idx_{rd}",
+                "count": count,
+            }
+        )
     return combos
 
 
@@ -111,9 +121,16 @@ def predict_all_combos(
             row: Dict[str, Any] = {
                 "ic50_nM": ic50,
                 "ic50_log10": float(torch.log10(torch.tensor(max(ic50, 1e-3)))),
-                **{k: combo[k] for k in (
-                    "assay_type", "assay_prep", "assay_geometry", "assay_readout", "count",
-                )},
+                **{
+                    k: combo[k]
+                    for k in (
+                        "assay_type",
+                        "assay_prep",
+                        "assay_geometry",
+                        "assay_readout",
+                        "count",
+                    )
+                },
             }
             if "pred_bounded" in out:
                 row["pred_bounded"] = float(out["pred_bounded"][0].item())
@@ -122,7 +139,7 @@ def predict_all_combos(
             dist = model.head.predict_distribution(h, assay_emb)
             if dist is not None:
                 if "probs" in dist:
-                    row["probs"] = dist["probs"][0].cpu()           # (K,)
+                    row["probs"] = dist["probs"][0].cpu()  # (K,)
                 if "bin_edges" in dist:
                     edges = dist["bin_edges"]
                     row["bin_edges"] = (edges[0] if edges.dim() > 1 else edges).cpu()
@@ -136,7 +153,7 @@ def predict_all_combos(
                 if "sigma" in dist:
                     row["sigma"] = float(dist["sigma"][0].item())
                 if "quantiles" in dist:
-                    row["quantiles"] = dist["quantiles"][0].cpu()    # (5,)
+                    row["quantiles"] = dist["quantiles"][0].cpu()  # (5,)
                 if "iqr" in dist:
                     row["iqr"] = float(dist["iqr"][0].item())
 
@@ -183,7 +200,7 @@ def predict_marginal(
     # --- Point prediction: weighted geometric mean ---
     log10_vals = [c["ic50_log10"] for c in per_combo]
     marginal_log10 = sum(w * v for w, v in zip(weights, log10_vals))
-    marginal_nM = 10.0 ** marginal_log10
+    marginal_nM = 10.0**marginal_log10
     spread = max(log10_vals) - min(log10_vals) if n > 1 else 0.0
 
     result: Dict[str, Any] = {
@@ -221,7 +238,7 @@ def predict_marginal(
         # Mixture mean
         mix_mu = (w_t * mus).sum()
         # Mixture variance = E[sigma^2] + E[mu^2] - E[mu]^2
-        mix_var = (w_t * (sigmas ** 2 + mus ** 2)).sum() - mix_mu ** 2
+        mix_var = (w_t * (sigmas**2 + mus**2)).sum() - mix_mu**2
         result["marginal_mu"] = float(mix_mu)
         result["marginal_sigma"] = float(mix_var.clamp(min=1e-8).sqrt())
 

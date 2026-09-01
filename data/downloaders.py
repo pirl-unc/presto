@@ -34,9 +34,11 @@ import sys
 # Dataset Registry
 # =============================================================================
 
+
 @dataclass
 class DatasetInfo:
     """Information about a downloadable dataset."""
+
     name: str
     description: str
     url: str
@@ -127,7 +129,6 @@ DATASETS: Dict[str, DatasetInfo] = {
         requires_agreement=True,
         post_process="unzip",
     ),
-
     # =========================================================================
     # VDJdb - TCR-pMHC paired data
     # =========================================================================
@@ -142,7 +143,6 @@ DATASETS: Dict[str, DatasetInfo] = {
         post_process="unzip",
         version="2025-12-29",
     ),
-
     # =========================================================================
     # McPAS-TCR - Pathology-associated TCR sequences
     # =========================================================================
@@ -156,7 +156,6 @@ DATASETS: Dict[str, DatasetInfo] = {
         file_format="csv",
         post_process="gunzip",
     ),
-
     # =========================================================================
     # IMGT/HLA - Human HLA sequences
     # =========================================================================
@@ -260,7 +259,6 @@ DATASETS: Dict[str, DatasetInfo] = {
         file_format="tsv",
         species="human",
     ),
-
     # =========================================================================
     # IMGT/GENE-DB - V/D/J gene sequences
     # =========================================================================
@@ -286,7 +284,6 @@ DATASETS: Dict[str, DatasetInfo] = {
         species="human",
         post_process="filter_trbv",
     ),
-
     # =========================================================================
     # IPD-MHC - Non-human MHC sequences (via FTP)
     # =========================================================================
@@ -310,7 +307,6 @@ DATASETS: Dict[str, DatasetInfo] = {
         file_format="fasta",
         species="nhp",
     ),
-
     # =========================================================================
     # 10x Genomics - Public single-cell datasets
     # Note: Some URLs require authentication or change periodically
@@ -325,7 +321,6 @@ DATASETS: Dict[str, DatasetInfo] = {
         file_format="csv",
         species="human",
     ),
-
     # =========================================================================
     # PIRD - Pan Immune Repertoire Database
     # Note: Requires manual download from https://db.cngb.org/pird/
@@ -340,7 +335,6 @@ DATASETS: Dict[str, DatasetInfo] = {
         file_format="csv",
         species="human",
     ),
-
     # =========================================================================
     # STCRDab - Structural TCR Database
     # =========================================================================
@@ -383,9 +377,11 @@ IEDB_EXTRACT_ALIASES: Dict[str, Dict[str, str]] = {
 # Download State Management
 # =============================================================================
 
+
 @dataclass
 class DownloadState:
     """Tracks download state for a dataset."""
+
     dataset: str
     status: str  # pending, downloading, completed, failed
     url: str
@@ -401,6 +397,7 @@ class DownloadState:
 @dataclass
 class DownloadManifest:
     """Manifest tracking all downloads in a data directory."""
+
     version: str = "1.0"
     created_at: str = field(default_factory=lambda: datetime.now().isoformat())
     updated_at: str = field(default_factory=lambda: datetime.now().isoformat())
@@ -435,6 +432,7 @@ class DownloadManifest:
 # Download Functions
 # =============================================================================
 
+
 def _get_remote_size(url: str, timeout: int = 10) -> Optional[int]:
     """Get file size from remote URL via HEAD request.
 
@@ -445,9 +443,7 @@ def _get_remote_size(url: str, timeout: int = 10) -> Optional[int]:
     try:
         ssl_context = ssl.create_default_context()
         request = urllib.request.Request(
-            url,
-            method='HEAD',
-            headers={"User-Agent": "Presto-Downloader/1.0"}
+            url, method='HEAD', headers={"User-Agent": "Presto-Downloader/1.0"}
         )
         response = urllib.request.urlopen(request, timeout=timeout, context=ssl_context)
         content_length = response.headers.get('content-length')
@@ -512,7 +508,7 @@ def _download_with_progress(
             headers={
                 "User-Agent": "Presto-Downloader/1.0 (Python urllib)",
                 'Accept': '*/*',
-            }
+            },
         )
 
         try:
@@ -553,7 +549,7 @@ def _print_progress(downloaded: int, total: int, width: int = 50):
         bar = '=' * filled + '-' * (width - filled)
         mb_down = downloaded / (1024 * 1024)
         mb_total = total / (1024 * 1024)
-        print(f"\r  [{bar}] {pct*100:.1f}% ({mb_down:.1f}/{mb_total:.1f} MB)", end='', flush=True)
+        print(f"\r  [{bar}] {pct * 100:.1f}% ({mb_down:.1f}/{mb_total:.1f} MB)", end='', flush=True)
     else:
         mb_down = downloaded / (1024 * 1024)
         print(f"\r  Downloaded: {mb_down:.1f} MB", end='', flush=True)
@@ -647,8 +643,10 @@ def parse_uniprot_swissprot(fasta_gz_path: Path, dest_dir: Path) -> Path:
     _re_os = re.compile(r"\bOS=(.+?)\s*(?:OX=|GN=|PE=|SV=|$)")
     _re_ox = re.compile(r"\bOX=(\d+)")
 
-    with gzip.open(fasta_gz_path, "rt", encoding="utf-8") as fin, \
-         open(out_path, "w", newline="") as fout:
+    with (
+        gzip.open(fasta_gz_path, "rt", encoding="utf-8") as fin,
+        open(out_path, "w", newline="") as fout,
+    ):
         writer = csv.writer(fout, delimiter="\t")
         writer.writerow(["accession", "sequence", "category", "organism"])
 
@@ -684,8 +682,10 @@ def parse_uniprot_swissprot(fasta_gz_path: Path, dest_dir: Path) -> Path:
 
         _flush()  # last record
 
-    print(f"  uniprot_swissprot: Parsed {n_written} proteins "
-          f"({n_skipped} skipped, no category or too short)")
+    print(
+        f"  uniprot_swissprot: Parsed {n_written} proteins "
+        f"({n_skipped} skipped, no category or too short)"
+    )
     return out_path
 
 
@@ -733,7 +733,7 @@ def download_dataset(
             status="failed",
             url=info.url,
             error="IEDB/CEDAR data requires --agree-iedb-terms flag. "
-                  "See https://www.iedb.org/terms_of_use.php"
+            "See https://www.iedb.org/terms_of_use.php",
         )
 
     # Determine paths
@@ -745,7 +745,9 @@ def download_dataset(
     if dest_path.exists() and not force:
         if info.post_process == "unzip" and dataset_name in IEDB_EXTRACT_ALIASES:
             aliases = IEDB_EXTRACT_ALIASES[dataset_name]
-            needs_aliases = any(not (source_dir / alias_name).exists() for alias_name in aliases.values())
+            needs_aliases = any(
+                not (source_dir / alias_name).exists() for alias_name in aliases.values()
+            )
             if needs_aliases:
                 extracted = _unzip_file(dest_path, source_dir)
                 _materialize_iedb_extract_aliases(dataset_name, source_dir, extracted)
@@ -962,9 +964,11 @@ def get_dataset_path(dataset_name: str, data_dir: Path) -> Optional[Path]:
 # Reference-Based Deduplication
 # =============================================================================
 
+
 @dataclass
 class ReferenceInfo:
     """Information about a publication reference."""
+
     pubmed_id: Optional[str] = None
     doi: Optional[str] = None
     authors: Optional[str] = None
@@ -987,6 +991,7 @@ class ReferenceInfo:
 @dataclass
 class AssayRecord:
     """Generic assay record with reference information for deduplication."""
+
     peptide: str
     mhc_allele: str
     value: float
@@ -1202,6 +1207,7 @@ class AssayDeduplicator:
 
     def _select_best_reference(self, records: List[AssayRecord]) -> AssayRecord:
         """Select best record among different references."""
+
         def score(rec: AssayRecord) -> Tuple[int, int, int]:
             """Higher score = better."""
             # Year score (prefer recent)
@@ -1287,15 +1293,17 @@ def deduplicate_binding_file(
 
             ref = _extract_reference_from_row(row, {})
 
-            records.append(AssayRecord(
-                peptide=peptide,
-                mhc_allele=allele,
-                value=value,
-                value_type=get_col(row, ['measurement type', 'type']) or 'IC50',
-                qualifier=qualifier,
-                assay_type=get_col(row, ['assay type', 'assay']),
-                reference=ref,
-            ))
+            records.append(
+                AssayRecord(
+                    peptide=peptide,
+                    mhc_allele=allele,
+                    value=value,
+                    value_type=get_col(row, ['measurement type', 'type']) or 'IC50',
+                    qualifier=qualifier,
+                    assay_type=get_col(row, ['assay type', 'assay']),
+                    reference=ref,
+                )
+            )
 
     if verbose:
         print(f"Read {len(records)} records from {input_path}")
@@ -1314,19 +1322,38 @@ def deduplicate_binding_file(
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f, delimiter='\t')
-        writer.writerow([
-            'peptide', 'mhc_allele', 'value', 'value_type', 'qualifier',
-            'assay_type', 'mhc_class', 'species', 'pubmed_id', 'doi'
-        ])
+        writer.writerow(
+            [
+                'peptide',
+                'mhc_allele',
+                'value',
+                'value_type',
+                'qualifier',
+                'assay_type',
+                'mhc_class',
+                'species',
+                'pubmed_id',
+                'doi',
+            ]
+        )
         for rec in deduped:
             qual_str = {-1: '<', 0: '=', 1: '>'}.get(rec.qualifier, '=')
             pmid = rec.reference.pubmed_id if rec.reference else ''
             doi = rec.reference.doi if rec.reference else ''
-            writer.writerow([
-                rec.peptide, rec.mhc_allele, rec.value, rec.value_type,
-                qual_str, rec.assay_type or '', rec.mhc_class, rec.species,
-                pmid, doi
-            ])
+            writer.writerow(
+                [
+                    rec.peptide,
+                    rec.mhc_allele,
+                    rec.value,
+                    rec.value_type,
+                    qual_str,
+                    rec.assay_type or '',
+                    rec.mhc_class,
+                    rec.species,
+                    pmid,
+                    doi,
+                ]
+            )
 
     if verbose:
         print(f"Wrote deduplicated data to {output_path}")
@@ -1393,14 +1420,16 @@ def deduplicate_tcell_file(
 
             ref = _extract_reference_from_row(row, {})
 
-            records.append(AssayRecord(
-                peptide=peptide,
-                mhc_allele=allele,
-                value=response,
-                value_type='tcell_response',
-                assay_type=get_col(row, ['assay type', 'assay']),
-                reference=ref,
-            ))
+            records.append(
+                AssayRecord(
+                    peptide=peptide,
+                    mhc_allele=allele,
+                    value=response,
+                    value_type='tcell_response',
+                    assay_type=get_col(row, ['assay type', 'assay']),
+                    reference=ref,
+                )
+            )
 
     if verbose:
         print(f"Read {len(records)} T-cell records from {input_path}")
@@ -1423,18 +1452,33 @@ def deduplicate_tcell_file(
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f, delimiter='\t')
-        writer.writerow([
-            'peptide', 'mhc_allele', 'response', 'assay_type',
-            'mhc_class', 'species', 'pubmed_id', 'doi'
-        ])
+        writer.writerow(
+            [
+                'peptide',
+                'mhc_allele',
+                'response',
+                'assay_type',
+                'mhc_class',
+                'species',
+                'pubmed_id',
+                'doi',
+            ]
+        )
         for rec in deduped:
             pmid = rec.reference.pubmed_id if rec.reference else ''
             doi = rec.reference.doi if rec.reference else ''
-            writer.writerow([
-                rec.peptide, rec.mhc_allele, int(rec.value),
-                rec.assay_type or '', rec.mhc_class, rec.species,
-                pmid, doi
-            ])
+            writer.writerow(
+                [
+                    rec.peptide,
+                    rec.mhc_allele,
+                    int(rec.value),
+                    rec.assay_type or '',
+                    rec.mhc_class,
+                    rec.species,
+                    pmid,
+                    doi,
+                ]
+            )
 
     if verbose:
         print(f"Wrote deduplicated T-cell data to {output_path}")
@@ -1445,6 +1489,7 @@ def deduplicate_tcell_file(
 # =============================================================================
 # Utility Functions
 # =============================================================================
+
 
 def get_all_sources() -> List[str]:
     """Get list of all available data sources."""

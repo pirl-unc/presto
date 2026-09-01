@@ -24,17 +24,28 @@ BASE_ALLELES = (
     "HLA-B*44:02",
 )
 BASE_EXTRA_ARGS = [
-    "--source", "iedb",
-    "--alleles", ",".join(BASE_ALLELES),
-    "--measurement-profile", "direct_affinity_only",
-    "--measurement-type-filter", "ic50",
-    "--qualifier-filter", "exact",
-    "--groove-pos-mode", "triple",
-    "--binding-core-lengths", "8,9,10,11",
-    "--binding-core-refinement", "shared",
-    "--binding-contrastive-weight", "0",
-    "--binding-peptide-contrastive-weight", "0",
-    "--init-checkpoint", "/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt",
+    "--source",
+    "iedb",
+    "--alleles",
+    ",".join(BASE_ALLELES),
+    "--measurement-profile",
+    "direct_affinity_only",
+    "--measurement-type-filter",
+    "ic50",
+    "--qualifier-filter",
+    "exact",
+    "--groove-pos-mode",
+    "triple",
+    "--binding-core-lengths",
+    "8,9,10,11",
+    "--binding-core-refinement",
+    "shared",
+    "--binding-contrastive-weight",
+    "0",
+    "--binding-peptide-contrastive-weight",
+    "0",
+    "--init-checkpoint",
+    "/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt",
 ]
 
 
@@ -47,18 +58,124 @@ class Variant:
 
 VARIANTS = [
     Variant("V00", "baseline workers=0 pin=0", ["--no-persistent-workers"]),
-    Variant("V01", "nw=2 pin persist p2", ["--num-workers", "2", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2"]),
-    Variant("V02", "nw=4 pin persist p2", ["--num-workers", "4", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2"]),
-    Variant("V03", "nw=8 pin persist p2", ["--num-workers", "8", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2"]),
-    Variant("V04", "nw=4 pin persist p4", ["--num-workers", "4", "--pin-memory", "--persistent-workers", "--prefetch-factor", "4"]),
-    Variant("V05", "nw=8 pin persist p4", ["--num-workers", "8", "--pin-memory", "--persistent-workers", "--prefetch-factor", "4"]),
-    Variant("V06", "nw=4 pin persist p2 tf32 high", ["--num-workers", "4", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2", "--allow-tf32", "--matmul-precision", "high"]),
-    Variant("V07", "nw=8 pin persist p2 tf32 high", ["--num-workers", "8", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2", "--allow-tf32", "--matmul-precision", "high"]),
-    Variant("V08", "nw=4 pin persist p4 tf32 high", ["--num-workers", "4", "--pin-memory", "--persistent-workers", "--prefetch-factor", "4", "--allow-tf32", "--matmul-precision", "high"]),
-    Variant("V09", "nw=8 pin persist p4 tf32 high", ["--num-workers", "8", "--pin-memory", "--persistent-workers", "--prefetch-factor", "4", "--allow-tf32", "--matmul-precision", "high"]),
-    Variant("V10", "nw=4 pin no-persist p2 tf32 high", ["--num-workers", "4", "--pin-memory", "--no-persistent-workers", "--prefetch-factor", "2", "--allow-tf32", "--matmul-precision", "high"]),
-    Variant("V11", "nw=8 pin no-persist p2 tf32 high", ["--num-workers", "8", "--pin-memory", "--no-persistent-workers", "--prefetch-factor", "2", "--allow-tf32", "--matmul-precision", "high"]),
+    Variant(
+        "V01",
+        "nw=2 pin persist p2",
+        ["--num-workers", "2", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2"],
+    ),
+    Variant(
+        "V02",
+        "nw=4 pin persist p2",
+        ["--num-workers", "4", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2"],
+    ),
+    Variant(
+        "V03",
+        "nw=8 pin persist p2",
+        ["--num-workers", "8", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2"],
+    ),
+    Variant(
+        "V04",
+        "nw=4 pin persist p4",
+        ["--num-workers", "4", "--pin-memory", "--persistent-workers", "--prefetch-factor", "4"],
+    ),
+    Variant(
+        "V05",
+        "nw=8 pin persist p4",
+        ["--num-workers", "8", "--pin-memory", "--persistent-workers", "--prefetch-factor", "4"],
+    ),
+    Variant(
+        "V06",
+        "nw=4 pin persist p2 tf32 high",
+        [
+            "--num-workers",
+            "4",
+            "--pin-memory",
+            "--persistent-workers",
+            "--prefetch-factor",
+            "2",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ],
+    ),
+    Variant(
+        "V07",
+        "nw=8 pin persist p2 tf32 high",
+        [
+            "--num-workers",
+            "8",
+            "--pin-memory",
+            "--persistent-workers",
+            "--prefetch-factor",
+            "2",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ],
+    ),
+    Variant(
+        "V08",
+        "nw=4 pin persist p4 tf32 high",
+        [
+            "--num-workers",
+            "4",
+            "--pin-memory",
+            "--persistent-workers",
+            "--prefetch-factor",
+            "4",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ],
+    ),
+    Variant(
+        "V09",
+        "nw=8 pin persist p4 tf32 high",
+        [
+            "--num-workers",
+            "8",
+            "--pin-memory",
+            "--persistent-workers",
+            "--prefetch-factor",
+            "4",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ],
+    ),
+    Variant(
+        "V10",
+        "nw=4 pin no-persist p2 tf32 high",
+        [
+            "--num-workers",
+            "4",
+            "--pin-memory",
+            "--no-persistent-workers",
+            "--prefetch-factor",
+            "2",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ],
+    ),
+    Variant(
+        "V11",
+        "nw=8 pin no-persist p2 tf32 high",
+        [
+            "--num-workers",
+            "8",
+            "--pin-memory",
+            "--no-persistent-workers",
+            "--prefetch-factor",
+            "2",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ],
+    ),
 ]
+
+
 def _build_extra_args(variant: Variant) -> str:
     args = list(BASE_EXTRA_ARGS)
     args.extend(["--design-id", variant.variant_id])
@@ -76,7 +193,10 @@ def _write_manifest(output_dir: Path, rows: List[Dict[str, str]]) -> None:
     ]
     for row in rows:
         lines.append(
-            f"| `{row['variant_id']}` | {row['description']} | `{row['run_id']}` | `{row.get('app_id', '')}` | {row.get('url', '')} |"
+            (
+                f"| `{row['variant_id']}` | {row['description']} | `{row['run_id']}` | "
+                f"`{row.get('app_id', '')}` | {row.get('url', '')} |"
+            )
         )
     (output_dir / "variants.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -130,7 +250,9 @@ def _launch_variant(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Launch runtime-only legacy_m1 Modal benchmark variants")
+    parser = argparse.ArgumentParser(
+        description="Launch runtime-only legacy_m1 Modal benchmark variants"
+    )
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--batch-size", type=int, default=140)
     parser.add_argument("--agent-label", type=str, default=default_agent_label())

@@ -294,7 +294,9 @@ def _plot_results(
         plt.figure(figsize=(9, 6))
         plt.scatter(xs, ys, s=60)
         for row, x, y in zip(ranked_rows, xs, ys):
-            plt.annotate(str(row["tag"]), (x, y), fontsize=8, xytext=(5, 4), textcoords="offset points")
+            plt.annotate(
+                str(row["tag"]), (x, y), fontsize=8, xytext=(5, 4), textcoords="offset points"
+            )
         plt.xlabel("Trainable parameters")
         plt.ylabel(ranking_metric)
         plt.title("Parameter Count vs Loss-Drop Speed")
@@ -369,7 +371,9 @@ def _build_train_command(
     return cmd
 
 
-def run_candidate(args: argparse.Namespace, candidate: ModelCandidate, sweep_dir: Path) -> CandidateRun:
+def run_candidate(
+    args: argparse.Namespace, candidate: ModelCandidate, sweep_dir: Path
+) -> CandidateRun:
     run_dir = sweep_dir / candidate.tag
     run_dir.mkdir(parents=True, exist_ok=True)
     log_path = run_dir / "train.log"
@@ -474,10 +478,18 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
     parser = argparse.ArgumentParser(
         description="Sweep near-20M Presto model hyperparameters and rank loss-drop speed."
     )
-    parser.add_argument("--sweep-dir", type=str, default=None, help="Output directory for sweep artifacts")
-    parser.add_argument("--target-params", type=int, default=20_000_000, help="Target trainable parameter count")
-    parser.add_argument("--min-params", type=int, default=18_000_000, help="Minimum trainable parameter count")
-    parser.add_argument("--max-params", type=int, default=22_000_000, help="Maximum trainable parameter count")
+    parser.add_argument(
+        "--sweep-dir", type=str, default=None, help="Output directory for sweep artifacts"
+    )
+    parser.add_argument(
+        "--target-params", type=int, default=20_000_000, help="Target trainable parameter count"
+    )
+    parser.add_argument(
+        "--min-params", type=int, default=18_000_000, help="Minimum trainable parameter count"
+    )
+    parser.add_argument(
+        "--max-params", type=int, default=22_000_000, help="Maximum trainable parameter count"
+    )
     parser.add_argument(
         "--d-models",
         type=str,
@@ -497,15 +509,21 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
         default="4,8,10,12,16",
         help="Comma-separated n_heads candidates (filtered by d_model divisibility)",
     )
-    parser.add_argument("--max-candidates", type=int, default=6, help="Max candidate configs to run")
+    parser.add_argument(
+        "--max-candidates", type=int, default=6, help="Max candidate configs to run"
+    )
 
-    parser.add_argument("--data-dir", type=str, default="./data", help="Data directory for unified training")
+    parser.add_argument(
+        "--data-dir", type=str, default="./data", help="Data directory for unified training"
+    )
     parser.add_argument("--merged-tsv", type=str, default=None, help="Merged TSV path")
     parser.add_argument("--index-csv", type=str, default=None, help="MHC index CSV path")
     parser.add_argument("--epochs", type=int, default=3, help="Epochs per candidate")
     parser.add_argument("--batch-size", type=int, default=256, help="Batch size per candidate")
     parser.add_argument("--lr", type=float, default=1e-4, help="Learning rate per candidate")
-    parser.add_argument("--weight-decay", type=float, default=0.01, help="Weight decay per candidate")
+    parser.add_argument(
+        "--weight-decay", type=float, default=0.01, help="Weight decay per candidate"
+    )
     parser.add_argument(
         "--synthetic-negatives",
         dest="synthetic_negatives",
@@ -531,8 +549,18 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
         default=False,
         help="Enable per-epoch probe affinity logging during sweep runs",
     )
-    parser.add_argument("--probe-peptide", type=str, default="SLLQHLIGL", help="Probe peptide when probe tracking is enabled")
-    parser.add_argument("--probe-alleles", type=str, default="HLA-A*02:01,HLA-A*24:02", help="Probe allele CSV when probe tracking is enabled")
+    parser.add_argument(
+        "--probe-peptide",
+        type=str,
+        default="SLLQHLIGL",
+        help="Probe peptide when probe tracking is enabled",
+    )
+    parser.add_argument(
+        "--probe-alleles",
+        type=str,
+        default="HLA-A*02:01,HLA-A*24:02",
+        help="Probe allele CSV when probe tracking is enabled",
+    )
     parser.add_argument(
         "--ranking-metric",
         type=str,
@@ -546,7 +574,9 @@ def main(argv: Optional[Sequence[str]] = None) -> None:
         default="",
         help="Extra raw arguments appended to `presto train unified`",
     )
-    parser.add_argument("--dry-run", action="store_true", help="Print/run planning only; do not launch training")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Print/run planning only; do not launch training"
+    )
     parser.add_argument(
         "--keep-going",
         action="store_true",

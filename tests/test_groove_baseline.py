@@ -17,6 +17,7 @@ from presto.scripts.groove_baseline_probe import (
 # Helpers
 # ---------------------------------------------------------------------------
 
+
 def _make_batch(
     batch_size: int = 4,
     pep_len: int = 9,
@@ -35,7 +36,9 @@ def _make_batch(
     bind_target = torch.full((batch_size, 1), bind_value)
     bind_mask = torch.ones(batch_size, 1)
     bind_qual = torch.full((batch_size, 1), qualifier, dtype=torch.long)
-    primary_alleles = ["HLA-A*02:01"] * (batch_size // 2) + ["HLA-A*24:02"] * (batch_size - batch_size // 2)
+    primary_alleles = ["HLA-A*02:01"] * (batch_size // 2) + ["HLA-A*24:02"] * (
+        batch_size - batch_size // 2
+    )
 
     batch = SimpleNamespace(
         pep_tok=pep_tok,
@@ -77,7 +80,7 @@ class TestGrooveBaselineForward:
         batch = _make_batch(batch_size=16)
         out = model(batch.pep_tok, batch.mhc_a_tok, batch.mhc_b_tok)
         assert out.min().item() >= -4.0  # smooth bound allows slight undershoot
-        assert out.max().item() <= 6.0   # smooth bound allows slight overshoot
+        assert out.max().item() <= 6.0  # smooth bound allows slight overshoot
 
     def test_param_count(self):
         """Default config should produce ~26K params."""
@@ -189,7 +192,9 @@ class TestGrooveTransformerModel:
 
     def test_different_grooves_differ(self):
         """Positional encoding means different grooves produce different outputs."""
-        model = GrooveTransformerModel(vocab_size=26, embed_dim=32, n_heads=4, n_layers=1, ff_dim=64, hidden_dim=64)
+        model = GrooveTransformerModel(
+            vocab_size=26, embed_dim=32, n_heads=4, n_layers=1, ff_dim=64, hidden_dim=64
+        )
         model.eval()
         pep_tok = torch.randint(4, 24, (1, 9))
         mhc_a_tok_1 = torch.randint(4, 24, (1, 91))
@@ -205,14 +210,15 @@ class TestGrooveTransformerModel:
 
     def test_loss_backward(self):
         """Gradients flow through transformer model."""
-        model = GrooveTransformerModel(vocab_size=26, embed_dim=32, n_heads=4, n_layers=1, ff_dim=64, hidden_dim=64)
+        model = GrooveTransformerModel(
+            vocab_size=26, embed_dim=32, n_heads=4, n_layers=1, ff_dim=64, hidden_dim=64
+        )
         batch = _make_batch(batch_size=4, bind_value=100.0)
         loss, _ = _groove_baseline_loss(model, batch, "cpu")
         assert loss.requires_grad
         loss.backward()
         has_nonzero = any(
-            p.grad is not None and p.grad.abs().sum().item() > 0
-            for p in model.parameters()
+            p.grad is not None and p.grad.abs().sum().item() > 0 for p in model.parameters()
         )
         assert has_nonzero
 

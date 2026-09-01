@@ -130,13 +130,19 @@ class A2_MultiTypeHead(nn.Module):
     def __init__(self, in_dim: int, hidden_dim: int = 128):
         super().__init__()
         self.ic50_head = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim), nn.GELU(), nn.Linear(hidden_dim, 1),
+            nn.Linear(in_dim, hidden_dim),
+            nn.GELU(),
+            nn.Linear(hidden_dim, 1),
         )
         self.kd_head = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim), nn.GELU(), nn.Linear(hidden_dim, 1),
+            nn.Linear(in_dim, hidden_dim),
+            nn.GELU(),
+            nn.Linear(hidden_dim, 1),
         )
         self.ec50_head = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim), nn.GELU(), nn.Linear(hidden_dim, 1),
+            nn.Linear(in_dim, hidden_dim),
+            nn.GELU(),
+            nn.Linear(hidden_dim, 1),
         )
 
     def forward(self, shared_vec: torch.Tensor, **kwargs: Any) -> Dict[str, torch.Tensor]:
@@ -156,13 +162,19 @@ class A3_SharedBaseResidual(nn.Module):
     def __init__(self, in_dim: int, hidden_dim: int = 128):
         super().__init__()
         self.base_head = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim), nn.GELU(), nn.Linear(hidden_dim, 1),
+            nn.Linear(in_dim, hidden_dim),
+            nn.GELU(),
+            nn.Linear(hidden_dim, 1),
         )
         self.ic50_residual = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim // 2), nn.GELU(), nn.Linear(hidden_dim // 2, 1),
+            nn.Linear(in_dim, hidden_dim // 2),
+            nn.GELU(),
+            nn.Linear(hidden_dim // 2, 1),
         )
         self.ec50_residual = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim // 2), nn.GELU(), nn.Linear(hidden_dim // 2, 1),
+            nn.Linear(in_dim, hidden_dim // 2),
+            nn.GELU(),
+            nn.Linear(hidden_dim // 2, 1),
         )
         self.ic50_scale = nn.Parameter(torch.tensor(-2.0))
         self.ec50_scale = nn.Parameter(torch.tensor(-2.0))
@@ -171,11 +183,13 @@ class A3_SharedBaseResidual(nn.Module):
         kd_base = smooth_range_bound(self.base_head(shared_vec), -3.0, max_log10_nM())
         ic50 = smooth_range_bound(
             kd_base + _bounded_residual(self.ic50_residual(shared_vec), self.ic50_scale),
-            -3.0, max_log10_nM(),
+            -3.0,
+            max_log10_nM(),
         )
         ec50 = smooth_range_bound(
             kd_base + _bounded_residual(self.ec50_residual(shared_vec), self.ec50_scale),
-            -3.0, max_log10_nM(),
+            -3.0,
+            max_log10_nM(),
         )
         return {"ic50": ic50, "kd": kd_base, "ec50": ec50}
 
@@ -193,7 +207,9 @@ class A4_KineticDecomp(nn.Module):
         self.head_log_kon_int = nn.Linear(in_dim, 1)
         self.head_log_kon_chap = nn.Linear(in_dim, 1)
         self.ic50_residual = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim // 2), nn.GELU(), nn.Linear(hidden_dim // 2, 1),
+            nn.Linear(in_dim, hidden_dim // 2),
+            nn.GELU(),
+            nn.Linear(hidden_dim // 2, 1),
         )
         self.ic50_scale = nn.Parameter(torch.tensor(-2.0))
 
@@ -248,10 +264,15 @@ class A5_AssayContext(nn.Module):
             assay_type_idx = torch.zeros(B, dtype=torch.long, device=device)
         if assay_method_idx is None:
             assay_method_idx = torch.zeros(B, dtype=torch.long, device=device)
-        ctx = self.ctx_proj(torch.cat([
-            self.type_embed(assay_type_idx),
-            self.method_embed(assay_method_idx),
-        ], dim=-1))
+        ctx = self.ctx_proj(
+            torch.cat(
+                [
+                    self.type_embed(assay_type_idx),
+                    self.method_embed(assay_method_idx),
+                ],
+                dim=-1,
+            )
+        )
         raw = self.mlp(torch.cat([shared_vec, ctx], dim=-1))
         return {"ic50": smooth_range_bound(raw, -3.0, max_log10_nM())}
 
@@ -265,7 +286,9 @@ class A6_ProbeKineticBlend(nn.Module):
     def __init__(self, in_dim: int, hidden_dim: int = 128):
         super().__init__()
         self.probe_head = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim), nn.GELU(), nn.Linear(hidden_dim, 1),
+            nn.Linear(in_dim, hidden_dim),
+            nn.GELU(),
+            nn.Linear(hidden_dim, 1),
         )
         self.head_log_koff = nn.Linear(in_dim, 1)
         self.head_log_kon_int = nn.Linear(in_dim, 1)
@@ -297,30 +320,38 @@ class A7_MultiHeadConsistency(nn.Module):
     """
 
     def __init__(
-        self, in_dim: int, hidden_dim: int = 128,
+        self,
+        in_dim: int,
+        hidden_dim: int = 128,
         consistency_threshold: float = 0.3010,
     ):
         super().__init__()
         self.consistency_threshold = consistency_threshold
         self.ic50_head = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim), nn.GELU(), nn.Linear(hidden_dim, 1),
+            nn.Linear(in_dim, hidden_dim),
+            nn.GELU(),
+            nn.Linear(hidden_dim, 1),
         )
         self.kd_head = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim), nn.GELU(), nn.Linear(hidden_dim, 1),
+            nn.Linear(in_dim, hidden_dim),
+            nn.GELU(),
+            nn.Linear(hidden_dim, 1),
         )
         self.ec50_head = nn.Sequential(
-            nn.Linear(in_dim, hidden_dim), nn.GELU(), nn.Linear(hidden_dim, 1),
+            nn.Linear(in_dim, hidden_dim),
+            nn.GELU(),
+            nn.Linear(hidden_dim, 1),
         )
 
     def forward(self, shared_vec: torch.Tensor, **kwargs: Any) -> Dict[str, torch.Tensor]:
         ic50 = smooth_range_bound(self.ic50_head(shared_vec), -3.0, max_log10_nM())
         kd = smooth_range_bound(self.kd_head(shared_vec), -3.0, max_log10_nM())
         ec50 = smooth_range_bound(self.ec50_head(shared_vec), -3.0, max_log10_nM())
-        consistency_penalty = F.relu(
-            (kd - ic50).abs() - self.consistency_threshold
-        ).mean()
+        consistency_penalty = F.relu((kd - ic50).abs() - self.consistency_threshold).mean()
         return {
-            "ic50": ic50, "kd": kd, "ec50": ec50,
+            "ic50": ic50,
+            "kd": kd,
+            "ec50": ec50,
             "consistency_penalty": consistency_penalty,
         }
 
@@ -353,7 +384,10 @@ class A8_TypeIndicator(nn.Module):
         device = shared_vec.device
         if assay_type_idx is None:
             assay_type_idx = torch.full(
-                (B,), self.default_type_idx, dtype=torch.long, device=device,
+                (B,),
+                self.default_type_idx,
+                dtype=torch.long,
+                device=device,
             )
         type_oh = F.one_hot(assay_type_idx, num_classes=self.n_types).float()
         raw = self.mlp(torch.cat([shared_vec, type_oh], dim=-1))
@@ -418,8 +452,11 @@ def build_ablation_model(
     if variant not in HEAD_CLASSES:
         raise ValueError(f"Unknown variant: {variant!r}. Choose from {VARIANT_NAMES}")
     encoder = GrooveTransformerModel(
-        embed_dim=embed_dim, n_heads=n_heads, n_layers=n_layers,
-        ff_dim=hidden_dim, hidden_dim=hidden_dim,
+        embed_dim=embed_dim,
+        n_heads=n_heads,
+        n_layers=n_layers,
+        ff_dim=hidden_dim,
+        hidden_dim=hidden_dim,
     )
     head = HEAD_CLASSES[variant](in_dim=encoder.out_dim, hidden_dim=hidden_dim)
     return AblationModel(encoder, head, variant)
@@ -504,7 +541,9 @@ def _typed_loss(
                 continue
 
             target_norm = normalize_binding_target_log10(
-                target_raw, max_affinity_nM=DEFAULT_MAX_AFFINITY_NM, assume_log10=False,
+                target_raw,
+                max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
+                assume_log10=False,
             )
             loss_vec = censor_aware_loss(pred_vec, target_norm, qual, reduction="none")
             weighted = (loss_vec * mask).sum() / (mask.sum() + 1e-8)
@@ -616,20 +655,22 @@ def _evaluate_probe_panel(
                 if grooves is None:
                     continue
                 groove1, groove2 = grooves
-                mhc_a_tok = torch.tensor(
-                    tokenizer.encode(groove1, max_len=120)
-                ).unsqueeze(0).to(device)
-                mhc_b_tok = torch.tensor(
-                    tokenizer.encode(groove2, max_len=120)
-                ).unsqueeze(0).to(device)
+                mhc_a_tok = (
+                    torch.tensor(tokenizer.encode(groove1, max_len=120)).unsqueeze(0).to(device)
+                )
+                mhc_b_tok = (
+                    torch.tensor(tokenizer.encode(groove2, max_len=120)).unsqueeze(0).to(device)
+                )
                 pred = model.predict_ic50(pep_tok, mhc_a_tok, mhc_b_tok)
                 log10_val = float(pred[0, 0].item())
-                rows.append({
-                    "peptide": pep,
-                    "allele": str(allele),
-                    "ic50_log10": log10_val,
-                    "ic50_nM": float(10.0 ** log10_val),
-                })
+                rows.append(
+                    {
+                        "peptide": pep,
+                        "allele": str(allele),
+                        "ic50_log10": log10_val,
+                        "ic50_nM": float(10.0**log10_val),
+                    }
+                )
     model.train()
     return rows
 
@@ -642,13 +683,18 @@ def _evaluate_probe_panel(
 def main() -> None:
     parser = argparse.ArgumentParser(description="Assay head ablation experiments")
     parser.add_argument(
-        "--variant", type=str, required=True, choices=VARIANT_NAMES,
+        "--variant",
+        type=str,
+        required=True,
+        choices=VARIANT_NAMES,
         help="Which ablation variant to run (a1-a8).",
     )
     parser.add_argument("--data-dir", type=str, default="data")
     parser.add_argument("--out-dir", type=str, default="")
     parser.add_argument(
-        "--alleles", type=str, default=",".join(DEFAULT_ALLELES),
+        "--alleles",
+        type=str,
+        default=",".join(DEFAULT_ALLELES),
     )
     parser.add_argument("--probe-peptide", type=str, default=DEFAULT_PROBE_PEPTIDE)
     parser.add_argument("--extra-probe-peptides", type=str, default="")
@@ -664,42 +710,60 @@ def main() -> None:
     parser.add_argument("--source", type=str, default="iedb")
     parser.add_argument("--max-records", type=int, default=0)
     parser.add_argument(
-        "--train-mhc-class-filter", type=str,
-        choices=("all", "I", "II"), default="all",
+        "--train-mhc-class-filter",
+        type=str,
+        choices=("all", "I", "II"),
+        default="all",
     )
     parser.add_argument("--train-all-alleles", action="store_true")
     parser.add_argument(
-        "--measurement-profile", type=str,
+        "--measurement-profile",
+        type=str,
         choices=sorted(MEASUREMENT_PROFILES),
         default=MEASUREMENT_PROFILE_NUMERIC,
     )
     parser.add_argument(
-        "--measurement-type-filter", type=str, default="",
+        "--measurement-type-filter",
+        type=str,
+        default="",
         choices=sorted(NORMALIZED_MEASUREMENT_FILTERS),
     )
     parser.add_argument(
-        "--qualifier-filter", type=str, default="all",
+        "--qualifier-filter",
+        type=str,
+        default="all",
         choices=sorted(QUALIFIER_FILTERS),
     )
     parser.add_argument("--shared-peptides-only", action="store_true")
     parser.add_argument("--max-per-allele", type=int, default=-1)
     parser.add_argument("--synthetic-negatives", dest="synthetic_negatives", action="store_true")
-    parser.add_argument("--no-synthetic-negatives", dest="synthetic_negatives", action="store_false")
+    parser.add_argument(
+        "--no-synthetic-negatives", dest="synthetic_negatives", action="store_false"
+    )
     parser.set_defaults(synthetic_negatives=False)
     parser.add_argument("--negative-ratio", type=float, default=1.0)
     parser.add_argument(
-        "--synthetic-modes", type=str, default="",
+        "--synthetic-modes",
+        type=str,
+        default="",
         help=f"Comma-separated synthetic modes. Available: {','.join(ALL_SYNTHETIC_MODES)}",
     )
     parser.add_argument("--balanced-batches", action="store_true", default=True)
-    parser.add_argument("--consistency-weight", type=float, default=0.1,
-                        help="Weight for A7 consistency regularization.")
     parser.add_argument(
-        "--probe-plot-frequency", type=str,
-        choices=("epoch", "final", "off"), default="epoch",
+        "--consistency-weight",
+        type=float,
+        default=0.1,
+        help="Weight for A7 consistency regularization.",
     )
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Run one batch per variant and exit.")
+    parser.add_argument(
+        "--probe-plot-frequency",
+        type=str,
+        choices=("epoch", "final", "off"),
+        default="epoch",
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Run one batch per variant and exit."
+    )
     args = parser.parse_args()
 
     variant = str(args.variant)
@@ -724,8 +788,7 @@ def main() -> None:
     if not probe_alleles:
         raise ValueError("At least one allele is required")
     train_class_filter = (
-        None if str(args.train_mhc_class_filter) == "all"
-        else str(args.train_mhc_class_filter)
+        None if str(args.train_mhc_class_filter) == "all" else str(args.train_mhc_class_filter)
     )
 
     # ---- Load data (same pipeline as groove_baseline_probe) ----
@@ -742,16 +805,18 @@ def main() -> None:
     if source_filter:
         records = [r for r in records if str(r.source or "").strip().lower() == source_filter]
     records = [
-        r for r in records
-        if _keep_measurement_type(r.measurement_type, args.measurement_profile)
+        r for r in records if _keep_measurement_type(r.measurement_type, args.measurement_profile)
     ]
     if args.measurement_type_filter:
         records = [
-            r for r in records
-            if _normalize_binding_measurement(r.measurement_type) == str(args.measurement_type_filter)
+            r
+            for r in records
+            if _normalize_binding_measurement(r.measurement_type)
+            == str(args.measurement_type_filter)
         ]
     records = [
-        r for r in records
+        r
+        for r in records
         if _keep_binding_qualifier(getattr(r, "qualifier", 0), str(args.qualifier_filter))
     ]
 
@@ -759,28 +824,36 @@ def main() -> None:
     shared_peptide_stats: Dict[str, Any] = {}
     if args.shared_peptides_only:
         real_records, shared_peptide_stats = _filter_shared_peptides_only(
-            real_records, probe_alleles,
+            real_records,
+            probe_alleles,
         )
     probe_allele_counts = _require_target_allele_coverage(real_records, probe_alleles)
     balance_stats: Dict[str, Any] = {}
     if args.max_per_allele >= 0:
         real_records, balance_stats = _balance_alleles(
-            real_records, probe_alleles, args.max_per_allele, rng_seed=int(args.seed),
+            real_records,
+            probe_alleles,
+            args.max_per_allele,
+            rng_seed=int(args.seed),
         )
         probe_allele_counts = _require_target_allele_coverage(real_records, probe_alleles)
 
     train_records, val_records, split_stats = _split_records_by_peptide(
-        real_records, val_fraction=0.2, seed=int(args.seed),
+        real_records,
+        val_fraction=0.2,
+        seed=int(args.seed),
         alleles=(probe_alleles if not args.train_all_alleles else None),
     )
     if not train_records or not val_records:
         raise RuntimeError("Split must produce both train and val records")
 
-    resolved_alleles = sorted({
-        str(r.mhc_allele or "").strip()
-        for r in (train_records + val_records)
-        if str(r.mhc_allele or "").strip()
-    })
+    resolved_alleles = sorted(
+        {
+            str(r.mhc_allele or "").strip()
+            for r in (train_records + val_records)
+            if str(r.mhc_allele or "").strip()
+        }
+    )
     mhc_sequences, mhc_stats = resolve_mhc_sequences_from_index(
         index_csv=str(index_csv),
         alleles=resolved_alleles,
@@ -804,8 +877,12 @@ def main() -> None:
     )
     collator = PrestoCollator()
     val_loader = create_dataloader(
-        val_dataset, batch_size=int(args.batch_size), shuffle=False,
-        collator=collator, balanced=False, seed=int(args.seed),
+        val_dataset,
+        batch_size=int(args.batch_size),
+        shuffle=False,
+        collator=collator,
+        balanced=False,
+        seed=int(args.seed),
     )
 
     def _build_train_loader(epoch_seed: int) -> Tuple[DataLoader, Dict[str, Any]]:
@@ -827,8 +904,11 @@ def main() -> None:
             strict_mhc_resolution=False,
         )
         loader = _create_focused_train_loader(
-            ds, collator=collator, batch_size=int(args.batch_size),
-            balanced=bool(args.balanced_batches), seed=epoch_seed,
+            ds,
+            collator=collator,
+            batch_size=int(args.batch_size),
+            balanced=bool(args.balanced_batches),
+            seed=epoch_seed,
             alleles=probe_alleles,
             force_global_balance=bool(args.train_all_alleles),
         )
@@ -836,7 +916,9 @@ def main() -> None:
 
     # ---- Verify groove representations ----
     groove_verification = _verify_groove_representations(
-        train_records, mhc_sequences, probe_alleles,
+        train_records,
+        mhc_sequences,
+        probe_alleles,
     )
 
     # ---- Build model ----
@@ -851,7 +933,9 @@ def main() -> None:
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
 
     optimizer = torch.optim.AdamW(
-        model.parameters(), lr=float(args.lr), weight_decay=float(args.weight_decay),
+        model.parameters(),
+        lr=float(args.lr),
+        weight_decay=float(args.weight_decay),
     )
 
     # ---- Probe setup ----
@@ -872,38 +956,57 @@ def main() -> None:
         train_loader, _ = _build_train_loader(int(args.seed))
         batch = next(iter(train_loader))
         loss, metrics = _ablation_loss(
-            model, batch, device,
+            model,
+            batch,
+            device,
             consistency_weight=float(args.consistency_weight),
         )
         loss.backward()
         probe_eval = _evaluate_probe_panel(
-            model, tokenizer, allele_sequences, probe_peptides[:1], probe_alleles, device,
+            model,
+            tokenizer,
+            allele_sequences,
+            probe_peptides[:1],
+            probe_alleles,
+            device,
         )
-        print(json.dumps({
-            "event": "dry_run",
-            "variant": variant,
-            "n_params": n_params,
-            "loss": float(loss.item()),
-            "metrics": metrics,
-            "probe_sample": probe_eval[:2],
-        }, sort_keys=True), flush=True)
+        print(
+            json.dumps(
+                {
+                    "event": "dry_run",
+                    "variant": variant,
+                    "n_params": n_params,
+                    "loss": float(loss.item()),
+                    "metrics": metrics,
+                    "probe_sample": probe_eval[:2],
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
         return
 
     # ---- Setup logging ----
-    print(json.dumps({
-        "event": "assay_ablation_setup",
-        "variant": variant,
-        "n_params": n_params,
-        "embed_dim": int(args.embed_dim),
-        "hidden_dim": int(args.hidden_dim),
-        "probe_alleles": probe_alleles,
-        "train_rows": len(train_records),
-        "val_rows": len(val_records),
-        "device": device,
-        "probe_peptides": probe_peptides,
-        "consistency_weight": float(args.consistency_weight),
-        "groove_verification": groove_verification,
-    }, sort_keys=True), flush=True)
+    print(
+        json.dumps(
+            {
+                "event": "assay_ablation_setup",
+                "variant": variant,
+                "n_params": n_params,
+                "embed_dim": int(args.embed_dim),
+                "hidden_dim": int(args.hidden_dim),
+                "probe_alleles": probe_alleles,
+                "train_rows": len(train_records),
+                "val_rows": len(val_records),
+                "device": device,
+                "probe_peptides": probe_peptides,
+                "consistency_weight": float(args.consistency_weight),
+                "groove_verification": groove_verification,
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
 
     # ---- Training loop ----
     epoch_summaries: List[Dict[str, Any]] = []
@@ -918,7 +1021,9 @@ def main() -> None:
 
         for batch in train_loader:
             loss, batch_metrics = _ablation_loss(
-                model, batch, device,
+                model,
+                batch,
+                device,
                 consistency_weight=float(args.consistency_weight),
             )
             optimizer.zero_grad(set_to_none=True)
@@ -933,7 +1038,9 @@ def main() -> None:
 
         train_loss = train_loss_sum / max(train_batches, 1)
         val_loss = _mean_ablation_loss(
-            model, val_loader, device,
+            model,
+            val_loader,
+            device,
             consistency_weight=float(args.consistency_weight),
         )
 
@@ -943,8 +1050,12 @@ def main() -> None:
 
         # Probe evaluation
         probe_eval = _evaluate_probe_panel(
-            model, tokenizer, allele_sequences,
-            probe_peptides, probe_alleles, device,
+            model,
+            tokenizer,
+            allele_sequences,
+            probe_peptides,
+            probe_alleles,
+            device,
         )
         for row in probe_eval:
             probe_rows.append({"epoch": epoch, **row})
@@ -994,12 +1105,18 @@ def main() -> None:
                 or (str(args.probe_plot_frequency) == "final" and epoch == int(args.epochs))
             ),
         )
-        print(json.dumps({
-            "event": "assay_ablation_epoch",
-            "variant": variant,
-            **epoch_summary,
-            "probe_rows": probe_eval,
-        }, sort_keys=True), flush=True)
+        print(
+            json.dumps(
+                {
+                    "event": "assay_ablation_epoch",
+                    "variant": variant,
+                    **epoch_summary,
+                    "probe_rows": probe_eval,
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
 
 
 if __name__ == "__main__":

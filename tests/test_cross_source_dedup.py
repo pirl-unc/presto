@@ -134,7 +134,8 @@ def test_parse_iedb_binding_populates_apc_name_from_cell_or_tissue(tmp_path: Pat
     path.write_text(
         "\n".join(
             [
-                "Reference,Epitope,MHC Restriction,Antigen Presenting Cell Source,Antigen Presenting Cell Source,Assay,Assay,Assay",
+                "Reference,Epitope,MHC Restriction,Antigen Presenting Cell Source,Antigen "
+                    "Presenting Cell Source,Assay,Assay,Assay",
                 "PMID,Name,Name,Name,Tissue,Response measured,Method,Qualitative measurement",
                 "12345,SIINFEKL,HLA-A*02:01,,PBMC,ligand presentation,mass spectrometry,Positive",
             ]
@@ -277,7 +278,9 @@ def test_single_pass_cell_hla_annotation_filter_matches_two_pass():
 
     two_pass_records = deepcopy(records)
     two_pass_ann = dedup_mod._annotate_cell_hla_sets(two_pass_records, lookup)
-    two_pass_filtered, two_pass_filter = dedup_mod._filter_elution_without_cell_hla(two_pass_records)
+    two_pass_filtered, two_pass_filter = dedup_mod._filter_elution_without_cell_hla(
+        two_pass_records
+    )
 
     one_pass_records = deepcopy(records)
     one_pass_filtered, one_pass_ann, one_pass_filter = dedup_mod._annotate_and_filter_cell_hla(
@@ -287,7 +290,10 @@ def test_single_pass_cell_hla_annotation_filter_matches_two_pass():
 
     assert len(one_pass_filtered) == len(two_pass_filtered)
     assert [rec.peptide for rec in one_pass_filtered] == [rec.peptide for rec in two_pass_filtered]
-    assert one_pass_ann["cellular_records_with_allele_set"] == two_pass_ann["cellular_records_with_allele_set"]
+    assert (
+        one_pass_ann["cellular_records_with_allele_set"]
+        == two_pass_ann["cellular_records_with_allele_set"]
+    )
     assert one_pass_filter["elution_rows_total"] == two_pass_filter["elution_rows_total"]
     assert (
         one_pass_filter["elution_rows_kept_with_allele_set"]

@@ -1,6 +1,5 @@
 """Tests for sequence encoders - pins down encoder API."""
 
-import pytest
 import torch
 
 

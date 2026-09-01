@@ -98,9 +98,7 @@ def test_balance_alleles_auto_balance_preserves_shared_peptides():
     assert stats["shared_peptides_before"] == 2
     assert stats["shared_peptides_selected"] == 2
     shared_balanced = {
-        (rec.mhc_allele, rec.peptide)
-        for rec in balanced
-        if rec.peptide.startswith("SHARED")
+        (rec.mhc_allele, rec.peptide) for rec in balanced if rec.peptide.startswith("SHARED")
     }
     assert ("A*02:01", "SHARED1") in shared_balanced
     assert ("A*24:02", "SHARED1") in shared_balanced
@@ -122,7 +120,9 @@ def test_balance_alleles_preserves_non_target():
 
 
 def test_resolve_runtime_device_auto_prefers_mps_when_cuda_unavailable(monkeypatch):
-    monkeypatch.setattr("presto.scripts.focused_binding_probe.torch.cuda.is_available", lambda: False)
+    monkeypatch.setattr(
+        "presto.scripts.focused_binding_probe.torch.cuda.is_available", lambda: False
+    )
     monkeypatch.setattr("presto.scripts.focused_binding_probe._mps_is_available", lambda: True)
 
     assert _resolve_runtime_device("auto") == "mps"
@@ -448,8 +448,20 @@ def test_collect_binding_contrastive_pairs_finds_rankable_same_peptide_pairs():
 def test_create_focused_train_loader_passes_runtime_options_to_global_balance_path():
     dataset = _TinyDataset(
         [
-            PrestoSample(peptide="AAAAAAA", mhc_a="A" * 80, mhc_b="B" * 80, mhc_class="I", primary_allele="HLA-A*02:01"),
-            PrestoSample(peptide="BBBBBBB", mhc_a="A" * 80, mhc_b="B" * 80, mhc_class="I", primary_allele="HLA-A*24:02"),
+            PrestoSample(
+                peptide="AAAAAAA",
+                mhc_a="A" * 80,
+                mhc_b="B" * 80,
+                mhc_class="I",
+                primary_allele="HLA-A*02:01",
+            ),
+            PrestoSample(
+                peptide="BBBBBBB",
+                mhc_a="A" * 80,
+                mhc_b="B" * 80,
+                mhc_class="I",
+                primary_allele="HLA-A*24:02",
+            ),
         ]
     )
     loader = _create_focused_train_loader(
@@ -473,10 +485,34 @@ def test_create_focused_train_loader_passes_runtime_options_to_global_balance_pa
 def test_create_focused_train_loader_passes_runtime_options_to_strict_sampler_path():
     dataset = _TinyDataset(
         [
-            PrestoSample(peptide="AAAAAAA", mhc_a="A" * 80, mhc_b="B" * 80, mhc_class="I", primary_allele="HLA-A*02:01"),
-            PrestoSample(peptide="CCCCCCC", mhc_a="A" * 80, mhc_b="B" * 80, mhc_class="I", primary_allele="HLA-A*02:01"),
-            PrestoSample(peptide="BBBBBBB", mhc_a="A" * 80, mhc_b="B" * 80, mhc_class="I", primary_allele="HLA-A*24:02"),
-            PrestoSample(peptide="DDDDDDD", mhc_a="A" * 80, mhc_b="B" * 80, mhc_class="I", primary_allele="HLA-A*24:02"),
+            PrestoSample(
+                peptide="AAAAAAA",
+                mhc_a="A" * 80,
+                mhc_b="B" * 80,
+                mhc_class="I",
+                primary_allele="HLA-A*02:01",
+            ),
+            PrestoSample(
+                peptide="CCCCCCC",
+                mhc_a="A" * 80,
+                mhc_b="B" * 80,
+                mhc_class="I",
+                primary_allele="HLA-A*02:01",
+            ),
+            PrestoSample(
+                peptide="BBBBBBB",
+                mhc_a="A" * 80,
+                mhc_b="B" * 80,
+                mhc_class="I",
+                primary_allele="HLA-A*24:02",
+            ),
+            PrestoSample(
+                peptide="DDDDDDD",
+                mhc_a="A" * 80,
+                mhc_b="B" * 80,
+                mhc_class="I",
+                primary_allele="HLA-A*24:02",
+            ),
         ]
     )
     loader = _create_focused_train_loader(
@@ -707,7 +743,7 @@ def test_affinity_only_loss_assay_heads_only_uses_headwise_targets():
     assert "support_binding" not in metrics
 
 
-def test_affinity_only_loss_output_consistency_regularizers_are_noop_at_zero_and_active_when_enabled():
+def test_affinity_only_consistency_regularizers_noop_at_zero_active_when_enabled():
     torch.manual_seed(0)
     collator = PrestoCollator()
     batch = collator(
@@ -1182,9 +1218,7 @@ class _MiniDataset:
 
 
 def test_strict_allele_balanced_batch_sampler_balances_each_batch():
-    dataset = _MiniDataset(
-        ["A*02:01"] * 6 + ["A*24:02"] * 2
-    )
+    dataset = _MiniDataset(["A*02:01"] * 6 + ["A*24:02"] * 2)
     sampler = StrictAlleleBalancedBatchSampler(
         dataset,
         ["A*02:01", "A*24:02"],
@@ -1202,9 +1236,7 @@ def test_strict_allele_balanced_batch_sampler_balances_each_batch():
 
 
 def test_create_focused_train_loader_uses_strict_sampler_for_multi_allele_panel():
-    dataset = _MiniDataset(
-        ["A*02:01"] * 6 + ["A*24:02"] * 2
-    )
+    dataset = _MiniDataset(["A*02:01"] * 6 + ["A*24:02"] * 2)
     loader = _create_focused_train_loader(
         dataset,
         batch_size=4,
@@ -1274,7 +1306,9 @@ def test_resolve_batch_synthetic_fraction_derives_from_negative_ratio():
 
 def test_prepared_binding_state_cache_roundtrip(tmp_path):
     merged_tsv = tmp_path / "merged.tsv"
-    merged_tsv.write_text("mhc_allele\tpeptide\tvalue\tvalue_type\tqualifier\tsource\n", encoding="utf-8")
+    merged_tsv.write_text(
+        "mhc_allele\tpeptide\tvalue\tvalue_type\tqualifier\tsource\n", encoding="utf-8"
+    )
     index_csv = tmp_path / "mhc_index.csv"
     index_csv.write_text("allele,sequence\nHLA-A*02:01,AAAA\n", encoding="utf-8")
     contract = DatasetContract(

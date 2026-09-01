@@ -30,7 +30,9 @@ THIS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = THIS_DIR.parent
 LOCAL_MHCSEQS_DIR = REPO_ROOT.parent / "mhcseqs"
 
-DEFAULT_REPO_URL = os.environ.get("PRESTO_MODAL_REPO_URL", "https://github.com/escalante-bio/presto.git")
+DEFAULT_REPO_URL = os.environ.get(
+    "PRESTO_MODAL_REPO_URL", "https://github.com/escalante-bio/presto.git"
+)
 DEFAULT_REPO_REF = os.environ.get("PRESTO_MODAL_REPO_REF", "main")
 DEFAULT_SOURCE_MODE = os.environ.get("PRESTO_MODAL_SOURCE", "local").lower()
 DEFAULT_GPU = os.environ.get("PRESTO_MODAL_GPU", "H100!")
@@ -299,7 +301,7 @@ def _find_flag_value(args: List[str], flag: str) -> Optional[str]:
             return None
         prefix = f"{flag}="
         if token.startswith(prefix):
-            return token[len(prefix):]
+            return token[len(prefix) :]
     return None
 
 
@@ -458,9 +460,7 @@ def train_long_run(
 ) -> Dict[str, str]:
     """Run long Presto training on Modal and return checkpoint metadata."""
     if mode not in {"synthetic", "unified", "iedb"}:
-        raise ValueError(
-            "mode must be one of {'synthetic', 'unified', 'iedb'}"
-        )
+        raise ValueError("mode must be one of {'synthetic', 'unified', 'iedb'}")
     resolved_mode = "unified" if mode == "iedb" else mode
 
     resolved_run_id = run_id or datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
@@ -539,8 +539,7 @@ def train_long_run(
         "checkpoint": str(checkpoint_path),
         "run_dir": str(run_dir),
         "download_hint": (
-            "modal volume get presto-checkpoints "
-            f"{resolved_run_id}/{checkpoint_name} ./"
+            f"modal volume get presto-checkpoints {resolved_run_id}/{checkpoint_name} ./"
         ),
     }
 
@@ -621,7 +620,9 @@ def sweep_20m_runs(
     if not candidates:
         raise RuntimeError("No architecture candidates found in requested parameter band.")
 
-    sweep_id = (run_id_prefix or "sweep20m").strip() + "-" + datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    sweep_id = (
+        (run_id_prefix or "sweep20m").strip() + "-" + datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
+    )
     sweep_dir = Path("/checkpoints") / sweep_id
     sweep_dir.mkdir(parents=True, exist_ok=True)
 
@@ -878,17 +879,29 @@ def probe_training_run(
     if not merged_tsv.exists() or not index_csv.exists():
         _prepare_iedb_data(data_dir, env)
         merge_cmd = [
-            "python", "-m", "presto", "data", "merge",
-            "--datadir", data_dir, "--quiet",
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
         ]
         _run_command(merge_cmd, env)
 
     cmd = [
-        "python", "-m", "presto.scripts.probe_training",
-        "--data-dir", data_dir,
-        "--out-dir", str(out_dir),
-        "--batches", str(batches),
-        "--batch-size", str(batch_size),
+        "python",
+        "-m",
+        "presto.scripts.probe_training",
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--batches",
+        str(batches),
+        "--batch-size",
+        str(batch_size),
     ]
     if extra_args:
         cmd.extend([arg for arg in str(extra_args).split(" ") if arg])
@@ -934,8 +947,14 @@ def focused_binding_run(
     if not merged_tsv.exists() or not index_csv.exists():
         _prepare_iedb_data(data_dir, env)
         merge_cmd = [
-            "python", "-m", "presto", "data", "merge",
-            "--datadir", data_dir, "--quiet",
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
         ]
         _run_command(merge_cmd, env)
 
@@ -996,8 +1015,14 @@ def groove_baseline_run(
     if not merged_tsv.exists() or not index_csv.exists():
         _prepare_iedb_data(data_dir, env)
         merge_cmd = [
-            "python", "-m", "presto", "data", "merge",
-            "--datadir", data_dir, "--quiet",
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
         ]
         _run_command(merge_cmd, env)
 
@@ -1058,8 +1083,14 @@ def assay_ablation_run(
     if not merged_tsv.exists() or not index_csv.exists():
         _prepare_iedb_data(data_dir, env)
         merge_cmd = [
-            "python", "-m", "presto", "data", "merge",
-            "--datadir", data_dir, "--quiet",
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
         ]
         _run_command(merge_cmd, env)
 
@@ -1123,8 +1154,14 @@ def distributional_ba_run(
     if not merged_tsv.exists() or not index_csv.exists():
         _prepare_iedb_data(data_dir, env)
         merge_cmd = [
-            "python", "-m", "presto", "data", "merge",
-            "--datadir", data_dir, "--quiet",
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
         ]
         _run_command(merge_cmd, env)
 
@@ -1191,8 +1228,14 @@ def distributional_ba_v2_run(
     if not merged_tsv.exists() or not index_csv.exists():
         _prepare_iedb_data(data_dir, env)
         merge_cmd = [
-            "python", "-m", "presto", "data", "merge",
-            "--datadir", data_dir, "--quiet",
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
         ]
         _run_command(merge_cmd, env)
 
@@ -1261,8 +1304,14 @@ def distributional_ba_v3_run(
     if not merged_tsv.exists() or not index_csv.exists():
         _prepare_iedb_data(data_dir, env)
         merge_cmd = [
-            "python", "-m", "presto", "data", "merge",
-            "--datadir", data_dir, "--quiet",
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
         ]
         _run_command(merge_cmd, env)
 
@@ -1331,8 +1380,14 @@ def distributional_ba_v4_run(
     if not merged_tsv.exists() or not index_csv.exists():
         _prepare_iedb_data(data_dir, env)
         merge_cmd = [
-            "python", "-m", "presto", "data", "merge",
-            "--datadir", data_dir, "--quiet",
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
         ]
         _run_command(merge_cmd, env)
 
@@ -1401,8 +1456,14 @@ def distributional_ba_v5_run(
     if not merged_tsv.exists() or not index_csv.exists():
         _prepare_iedb_data(data_dir, env)
         merge_cmd = [
-            "python", "-m", "presto", "data", "merge",
-            "--datadir", data_dir, "--quiet",
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
         ]
         _run_command(merge_cmd, env)
 
@@ -1458,7 +1519,8 @@ def distributional_ba_v6_run(
     """Run 32-condition factorial sweep (v6) on Modal.
 
     16 condition specs × 2 content_conditioned settings = 32 runs.
-    Axes: embed_dim {32,64,128,256} × head {mhcflurry,hlgauss} × max_nM {50k,100k} × content_conditioned {yes,no}.
+    Axes: embed_dim {32,64,128,256} × head {mhcflurry,hlgauss}
+    × max_nM {50k,100k} × content_conditioned {yes,no}.
     """
     cc_tag = "cc1" if content_conditioned else "cc0"
     resolved_run_id = run_id or datetime.now(UTC).strftime(
@@ -1479,8 +1541,14 @@ def distributional_ba_v6_run(
     if not merged_tsv.exists() or not index_csv.exists():
         _prepare_iedb_data(data_dir, env)
         merge_cmd = [
-            "python", "-m", "presto", "data", "merge",
-            "--datadir", data_dir, "--quiet",
+            "python",
+            "-m",
+            "presto",
+            "data",
+            "merge",
+            "--datadir",
+            data_dir,
+            "--quiet",
         ]
         _run_command(merge_cmd, env)
 
@@ -1518,6 +1586,7 @@ def distributional_ba_v6_run(
         "out_dir": str(out_dir),
         "download_hint": f"modal volume get presto-checkpoints {resolved_run_id} ./",
     }
+
 
 @app.function(
     gpu=DEFAULT_GPU,
@@ -1557,14 +1626,23 @@ def mhc_pretrain_groove_run(
         _prepare_iedb_data(data_dir, env)
 
     cmd = [
-        "python", "-m", "presto.scripts.distributional_ba.pretrain_mhc",
-        "--data-dir", data_dir,
-        "--out-dir", str(out_dir),
-        "--epochs", str(epochs),
-        "--batch-size", str(batch_size),
-        "--embed-dim", str(embed_dim),
-        "--n-heads", str(n_heads),
-        "--n-layers", str(n_layers),
+        "python",
+        "-m",
+        "presto.scripts.distributional_ba.pretrain_mhc",
+        "--data-dir",
+        data_dir,
+        "--out-dir",
+        str(out_dir),
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(batch_size),
+        "--embed-dim",
+        str(embed_dim),
+        "--n-heads",
+        str(n_heads),
+        "--n-layers",
+        str(n_layers),
     ]
     if extra_args:
         cmd.extend([arg for arg in str(extra_args).split(" ") if arg])

@@ -6,6 +6,13 @@ exclude = [
   "__pycache__",
 ]
 
+[format]
+# Preserve existing quote style and magic trailing commas: the goal here is to
+# get lines under the limit, not to restyle a codebase that has never been
+# formatter-managed. Minimizes the diff to what the line-length rule needs.
+quote-style = "preserve"
+skip-magic-trailing-comma = false
+
 [lint]
 # Widened from ["E9", "F63", "F7", "F82"] to the full E/F sets.
 #
@@ -27,18 +34,7 @@ select = [
   "PT017",  # asserting on an exception in `except` instead of pytest.raises
 ]
 
-# E501 only. `line-length = 100` above is the formatter's target, not a rule
-# the existing code follows -- 638 lines exceed it, almost all of them prose in
-# docstrings that would read worse rewrapped. Enforcing it would bury the rules
-# that find bugs under ones that find columns.
-ignore = ["E501"]
-
 [lint.per-file-ignores]
-# Re-exports are the entire point of a package __init__.
+# Re-exports are the entire point of a package __init__; ruff has no way to
+# tell one from an unused import.
 "__init__.py" = ["F401"]
-# Test modules import fixtures and symbols for their side effects, and import
-# inside functions to keep collection cheap.
-"tests/*" = ["F401"]
-# Experiment snapshots are frozen copies of scripts as they ran. Editing them
-# to satisfy a linter would falsify the record.
-"experiments/**" = ["F401", "F811", "F841", "E741", "E722"]

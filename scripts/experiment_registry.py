@@ -37,7 +37,9 @@ def default_experiment_dir(
     timestamp: datetime | None = None,
 ) -> Path:
     stamp = (timestamp or datetime.now()).strftime("%Y-%m-%d_%H%M")
-    return EXPERIMENTS_ROOT / f"{stamp}_{_sanitize_component(agent_label)}_{_sanitize_component(slug)}"
+    return (
+        EXPERIMENTS_ROOT / f"{stamp}_{_sanitize_component(agent_label)}_{_sanitize_component(slug)}"
+    )
 
 
 def _to_repo_relative(path: Path) -> str:
@@ -123,20 +125,30 @@ def _write_stub_readme(
 
 def _capture_git_state() -> dict[str, str | bool | None]:
     """Capture current git commit, branch, and dirty status."""
+
     def _run(args: list[str]) -> str | None:
         try:
             return subprocess.check_output(
-                args, cwd=str(ROOT), stderr=subprocess.DEVNULL, text=True,
+                args,
+                cwd=str(ROOT),
+                stderr=subprocess.DEVNULL,
+                text=True,
             ).strip()
         except (subprocess.CalledProcessError, FileNotFoundError):
             return None
 
     commit = _run(["git", "rev-parse", "HEAD"])
     branch = _run(["git", "rev-parse", "--abbrev-ref", "HEAD"])
-    dirty_rc = subprocess.call(
-        ["git", "diff", "--stat", "--exit-code"],
-        cwd=str(ROOT), stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-    ) if commit is not None else None
+    dirty_rc = (
+        subprocess.call(
+            ["git", "diff", "--stat", "--exit-code"],
+            cwd=str(ROOT),
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        if commit is not None
+        else None
+    )
     dirty = dirty_rc != 0 if dirty_rc is not None else None
     return {"commit": commit, "branch": branch, "dirty": dirty}
 
@@ -184,11 +196,13 @@ def write_reproducibility_bundle(
 
     export_lines = [f"export {key}={_shell_quote(value)}" for key, value in launch_env.items()]
     cmd = " ".join([_shell_quote(sys.executable), *(_shell_quote(arg) for arg in launch_argv)])
+    dirty = git_state.get("dirty")
+    dirty_label = "unknown" if dirty is None else ("yes" if dirty else "no")
     git_comment_lines = [
         "# Git state at launch:",
         f"#   commit: {git_state.get('commit') or 'unknown'}",
         f"#   branch: {git_state.get('branch') or 'unknown'}",
-        f"#   dirty: {'yes' if git_state.get('dirty') else 'no' if git_state.get('dirty') is not None else 'unknown'}",
+        f"#   dirty: {dirty_label}",
     ]
     launch_script = "\n".join(
         [
@@ -219,7 +233,8 @@ def write_reproducibility_bundle(
         "- Launch metadata: `launch.json`",
         "- Launcher snapshot: `source/` (if the source script existed at bundle creation time)",
         "",
-        "These files freeze the launch invocation and environment for this experiment family so later agents can rerun or extend it without relying on current launcher defaults.",
+        "These files freeze the launch invocation and environment for this experiment family so "
+            "later agents can rerun or extend it without relying on current launcher defaults.",
         "",
     ]
     (reproduce_dir / "README.md").write_text("\n".join(readme_lines), encoding="utf-8")
@@ -235,7 +250,11 @@ def initialize_experiment_dir(
     agent_label: str,
     metadata: Mapping[str, Any],
 ) -> Path:
-    target = Path(out_dir) if str(out_dir).strip() else default_experiment_dir(slug=slug, agent_label=agent_label)
+    target = (
+        Path(out_dir)
+        if str(out_dir).strip()
+        else default_experiment_dir(slug=slug, agent_label=agent_label)
+    )
     target.mkdir(parents=True, exist_ok=True)
     _write_stub_readme(
         out_dir=target,

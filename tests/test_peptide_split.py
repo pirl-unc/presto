@@ -7,7 +7,6 @@ mismatched enzyme. A metric computed over that split cannot distinguish
 generalization from recall.
 """
 
-import pytest
 
 from presto.data.bulk_ms import BulkMSRecord
 from presto.data.loaders import PrestoDataset, peptide_grouped_split_indices
