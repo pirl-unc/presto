@@ -58,6 +58,7 @@ from typing import Any, Dict, FrozenSet, List, Optional, Sequence, Tuple, Union
 
 from .vocab import (
     apm_group_for_genes,
+    apm_group_for_row,
     drop_unencodable_sequence,
     is_unmapped_condition,
     stimulus_for_condition,
@@ -152,6 +153,18 @@ MS_COLUMNS: Tuple[str, ...] = SHARED_COLUMNS + (
     "src_adjacent_to_tumor",
     "condition_category",
     "apm_genes_perturbed",
+    # Arm identity. `apm_genes_perturbed` is only a *claim* where an arm was
+    # actually resolved: hitlist emits an empty gene list both for a genuine
+    # control and for a row it could not attribute (hitlist#392).
+    # `sample_attribution` is what separates them, and it doubles as an
+    # evidence tier -- `allele_exact` / `elution_conditions` are per-peptide,
+    # while `class_pool` / `pmid_ambiguous` resolve only to a pool or a
+    # deposit. `sample_label` is the biological sample, which is the right
+    # grouping key for a leakage-safe split: peptide-disjoint splits do not
+    # stop the same sample appearing on both sides. See presto#15.
+    "sample_attribution",
+    "is_control_arm",
+    "sample_label",
 )
 
 #: Columns hitlist populates only under `map_source_proteins=True`, by joining
@@ -176,6 +189,11 @@ COLUMNS_BY_EVIDENCE: Dict[str, Tuple[str, ...]] = {
 
 #: Oldest hitlist whose column semantics match what this module assumes.
 #:
+#: 1.53.0 for the arm-attribution columns (`sample_attribution`,
+#: `is_control_arm`, `sample_label`), which landed across
+#: pirl-unc/hitlist#354/#356/#367 between 1.46.0 and 1.53.0. Without them a row
+#: whose arm could not be resolved is indistinguishable from a control.
+#:
 #: Before 1.46.0 (pirl-unc/hitlist#353) there was no study-level APM column,
 #: because `apm_genes_perturbed` *was* the study-level roll-up: it ORed the
 #: parent study's knockout panel onto every sample, so a WT control inside a KO
@@ -186,7 +204,7 @@ COLUMNS_BY_EVIDENCE: Dict[str, Tuple[str, ...]] = {
 #: and reports nothing -- 816,023 observations (18.4%) carry the wrong
 #: perturbation label, 716,992 of them genuinely-unperturbed rows wearing their
 #: study's panel. That is why this is an assertion and not a comment.
-MINIMUM_HITLIST_VERSION = (1, 46, 0)
+MINIMUM_HITLIST_VERSION = (1, 53, 0)
 
 
 def _parse_version(raw: Optional[str]) -> Optional[Tuple[int, ...]]:
@@ -224,7 +242,10 @@ def require_supported_hitlist(raw_version: Optional[str]) -> None:
             "Before 1.46.0 `apm_genes_perturbed` was ORed across a study, so "
             "genuinely unperturbed control rows carry their study's knockout "
             "panel -- 18.4% of observations on the corpus this was measured "
-            "against. Training would succeed and the labels would be wrong. "
+            "against. Before 1.53.0 the arm-attribution columns do not exist, "
+            "so a row whose arm could not be resolved is indistinguishable "
+            "from a control. Training would succeed and the labels would be "
+            "wrong either way. "
             "Upgrade with `pip install -U 'hitlist>=" + wanted + "'`."
         )
 
@@ -637,7 +658,12 @@ def load_records_from_hitlist(
                 flank_n=drop_unencodable_sequence(row.get("n_flank")),
                 flank_c=drop_unencodable_sequence(row.get("c_flank")),
                 stimulus=stimulus_for_condition(condition_category),
-                apm_perturbation=apm_group_for_genes(_clean(row.get("apm_genes_perturbed"))),
+                apm_perturbation=apm_group_for_row(
+                    _clean(row.get("apm_genes_perturbed")),
+                    _clean(row.get("sample_attribution")),
+                ),
+                sample_label=_clean(row.get("sample_label")),
+                sample_attribution=_clean(row.get("sample_attribution")),
                 cell_type=_clean(row.get("cell_type")) or _clean(row.get("cell_line_name")) or None,
                 is_cell_line=row.get("src_cell_line"),
                 is_healthy_tissue=row.get("src_healthy_tissue"),

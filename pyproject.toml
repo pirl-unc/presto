@@ -25,7 +25,7 @@ dependencies = [
 hitlist = [
   # >=1.46.0: before that, `apm_genes_perturbed` was ORed across a study, so
   # unperturbed controls carried their study's knockout panel. See presto#13.
-  "hitlist>=1.46.0",
+  "hitlist>=1.53.0",
 ]
 dev = [
   "pytest>=7.0",

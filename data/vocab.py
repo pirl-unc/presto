@@ -816,6 +816,18 @@ APM_PERTURBATIONS = [
     "mhc_null",           # B2M -- abolishes class I presentation
     "class_ii_loading",   # HLA-DM/DO, CD74, CIITA -- editing and register
     "other",
+    # "the arm was not resolved", which is NOT the same claim as "none".
+    #
+    # hitlist emits `apm_perturbed=False` and an empty `apm_genes_perturbed`
+    # for two different situations: a genuine control, and a row whose arm
+    # could not be attributed (hitlist#392). Folding the second into `none`
+    # asserts the row is a control. Inside the 24 APM-perturbed studies that is
+    # 221,930 observations, and among the *attributed* rows in those same
+    # studies 32.5% are perturbed -- so a comparable share of that block sits
+    # on the wrong side of the very contrast the APM axis exists to learn.
+    #
+    # Appended last so every existing index keeps its meaning.
+    "unknown",
 ]
 APM_PERTURBATION_TO_IDX = {name: i for i, name in enumerate(APM_PERTURBATIONS)}
 
@@ -979,6 +991,50 @@ def apm_perturbation_index(name: Optional[str]) -> int:
     return APM_PERTURBATION_TO_IDX.get(
         str(name or "").strip().lower(), APM_PERTURBATION_TO_IDX["none"]
     )
+
+
+def apm_group_for_row(genes: Optional[Any], attribution: Optional[str]) -> str:
+    """Mechanism group, distinguishing "no perturbation" from "unknown arm".
+
+    `apm_group_for_genes` cannot make that distinction, because hitlist hands
+    an empty gene list to both a genuine control and a row whose arm could not
+    be resolved. `sample_attribution` is what separates them: empty means no
+    arm was attributed, so the row's perturbation state is unknown rather than
+    absent.
+
+    Passing an attribution of ``None`` keeps the old behaviour, for callers
+    working from a source that has no arm columns at all.
+    """
+    if attribution is None:
+        return apm_group_for_genes(genes)
+    if not str(attribution).strip():
+        return "unknown"
+    return apm_group_for_genes(genes)
+
+
+#: `sample_attribution` values ordered by how directly they identify the arm.
+#:
+#: The first two are per-peptide evidence; the last two are much weaker and
+#: apply to a pool or a whole deposit. Training all four at equal weight throws
+#: that distinction away, which is why the tier is carried rather than reduced
+#: to a boolean. Ordered strongest first.
+ATTRIBUTION_TIERS: Tuple[str, ...] = (
+    "allele_exact",
+    "elution_conditions",
+    "class_pool",
+    "pmid_ambiguous",
+)
+
+
+def attribution_is_per_peptide(attribution: Optional[str]) -> bool:
+    """True for evidence that identifies the arm for *this* peptide.
+
+    `allele_exact` and `elution_conditions` are per-peptide. `class_pool` and
+    `pmid_ambiguous` resolve only to a pool or a deposit, so a row carrying
+    them has an arm label that may not be its own.
+    """
+    token = str(attribution or "").strip().lower()
+    return token in ("allele_exact", "elution_conditions")
 
 
 def apm_group_for_genes(genes: Optional[Any]) -> str:

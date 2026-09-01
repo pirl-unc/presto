@@ -141,7 +141,7 @@ app = App(APP_NAME, brev_config=brev_config_from_env())
 image = (
     Image.from_registry(BASE_IMAGE)
     .apt_install("rsync", "git")
-    .pip_install("hitlist>=1.46.0", "pandas>=2.0", "pyarrow")
+    .pip_install("hitlist>=1.53.0", "pandas>=2.0", "pyarrow")
     .pip_install_local_dir(".", editable=True)
 )
 
