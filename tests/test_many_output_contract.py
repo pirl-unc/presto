@@ -111,10 +111,17 @@ class TestTCellIsContextInvariant:
 
         from presto.scripts import train_synthetic
 
+        from source_probe import region_between
+
+        # Windowed, not whole-function: `tcell_context=` legitimately appears
+        # further down in the MIL call, which passes it as None on purpose.
+        # `region_between` requires both markers to be unique, so a second
+        # forward call fails here instead of being silently skipped.
         source = inspect.getsource(train_synthetic.compute_loss)
-        start = source.index("outputs = model(")
-        end = source.index("provenance=", start)
-        assert "tcell_context=" not in source[start:end]
+        forward = region_between(
+            source, "outputs = model(", "provenance=", where="compute_loss"
+        )
+        assert "tcell_context=" not in forward
 
 
 class TestPanelsCoverEveryConfiguration:

@@ -51,12 +51,11 @@ package-dir = { "presto" = "." }
 [tool.setuptools.dynamic]
 version = {attr = "presto.__version__"}
 
-[tool.ruff.lint]
-select = ["E", "F"]
-ignore = ["F821", "E501", "F841", "E731", "E741", "E722", "E721"]
-
-[tool.ruff.lint.per-file-ignores]
-"__init__.py" = ["F401"]
-"test*/*" = ["F401"]
-"scripts/**" = ["F821", "F401"]
-"experiments/**" = ["F821", "F401"]
+# Ruff configuration lives in `ruff.toml`, not here.
+#
+# A `[tool.ruff]` block used to sit at this spot declaring `select = ["E", "F"]`
+# with its own per-file-ignores. `ruff.toml` takes precedence over
+# `pyproject.toml`, so none of it ever ran -- and editing it looked like it
+# worked, because `ruff check` kept reporting clean. Removed rather than
+# reconciled: two configs where one is silently dead is worse than a narrow
+# config that is honest about its scope.

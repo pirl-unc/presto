@@ -127,7 +127,10 @@ class TestTCellProvenanceIsCollected:
         from presto.data.collate import PrestoCollator
 
         source = inspect.getsource(PrestoCollator.__call__)
-        tcell_call = source[source.index("tcell_mil_tensors = ") :][:400]
+        from source_probe import unique_index
+
+        start = unique_index(source, "tcell_mil_tensors = ", where="PrestoCollator.__call__")
+        tcell_call = source[start : start + 400]
         assert "apm_perturbations=" in tcell_call, (
             "the T-cell MIL channel is materialized without cellular state, "
             "so every instance silently gets the default"
