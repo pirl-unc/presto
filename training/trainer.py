@@ -44,9 +44,7 @@ class Trainer:
         self.model = model.to(self.device)
         self.use_pcgrad = use_pcgrad
 
-        self.optimizer = torch.optim.AdamW(
-            model.parameters(), lr=lr, weight_decay=weight_decay
-        )
+        self.optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
         self.pcgrad = PCGrad(self.optimizer) if use_pcgrad else None
 
         self.loss_fn = CombinedLoss(
@@ -163,7 +161,9 @@ class Trainer:
 
         # T-cell loss
         tcell_label = _target("tcell", "tcell_label")
-        if tcell_label is not None and ("tcell_logit" in outputs or "recognition_repertoire_logit" in outputs):
+        if tcell_label is not None and (
+            "tcell_logit" in outputs or "recognition_repertoire_logit" in outputs
+        ):
             tcell_logit = (
                 outputs["tcell_logit"].squeeze(-1)
                 if "tcell_logit" in outputs
@@ -171,9 +171,7 @@ class Trainer:
             )
             tcell_mask = _mask("tcell", "tcell_mask")
             if tcell_mask is not None:
-                tcell_loss = safe_bce_with_logits(
-                    tcell_logit, tcell_label, reduction="none"
-                )
+                tcell_loss = safe_bce_with_logits(tcell_logit, tcell_label, reduction="none")
                 if tcell_mask.sum() > 0:
                     losses["tcell"] = (tcell_loss * tcell_mask).sum() / (tcell_mask.sum() + 1e-8)
             else:
@@ -185,11 +183,11 @@ class Trainer:
             elution_logit = outputs["elution_logit"].squeeze(-1)
             elution_mask = _mask("elution", "elution_mask")
             if elution_mask is not None:
-                elution_loss = safe_bce_with_logits(
-                    elution_logit, elution_label, reduction="none"
-                )
+                elution_loss = safe_bce_with_logits(elution_logit, elution_label, reduction="none")
                 if elution_mask.sum() > 0:
-                    losses["elution"] = (elution_loss * elution_mask).sum() / (elution_mask.sum() + 1e-8)
+                    losses["elution"] = (elution_loss * elution_mask).sum() / (
+                        elution_mask.sum() + 1e-8
+                    )
             else:
                 losses["elution"] = safe_bce_with_logits(elution_logit, elution_label)
 
@@ -203,13 +201,11 @@ class Trainer:
                     processing_logit, processing_label, reduction="none"
                 )
                 if processing_mask.sum() > 0:
-                    losses["processing"] = (
-                        processing_loss * processing_mask
-                    ).sum() / (processing_mask.sum() + 1e-8)
+                    losses["processing"] = (processing_loss * processing_mask).sum() / (
+                        processing_mask.sum() + 1e-8
+                    )
             else:
-                losses["processing"] = safe_bce_with_logits(
-                    processing_logit, processing_label
-                )
+                losses["processing"] = safe_bce_with_logits(processing_logit, processing_label)
 
         # Kinetics/stability losses from assay heads.
         if "assays" in outputs:

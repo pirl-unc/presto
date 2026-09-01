@@ -42,16 +42,26 @@ POSITIONAL_SWEEP: Tuple[DesignSpec, ...] = tuple(
         design_id=f"Q{idx:02d}",
         description=f"pep={pep_pos}, groove={groove_pos}, residual=shared_base_segment_residual",
         extra_args=(
-            "--d-model", "128",
-            "--peptide-pos-mode", pep_pos,
-            "--groove-pos-mode", groove_pos,
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--affinity-assay-residual-mode", "shared_base_segment_residual",
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "off",
-            "--affinity-target-encoding", "log10",
-            "--max-affinity-nm", "50000",
+            "--d-model",
+            "128",
+            "--peptide-pos-mode",
+            pep_pos,
+            "--groove-pos-mode",
+            groove_pos,
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--affinity-assay-residual-mode",
+            "shared_base_segment_residual",
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "off",
+            "--affinity-target-encoding",
+            "log10",
+            "--max-affinity-nm",
+            "50000",
         ),
     )
     for idx, (pep_pos, groove_pos) in enumerate(
@@ -74,64 +84,104 @@ ENCODING_SWEEP: Tuple[DesignSpec, ...] = (
         design_id="E00",
         description="P03 positional config, log10 target, 50k cap",
         extra_args=(
-            "--d-model", "128",
-            "--peptide-pos-mode", "triple",
-            "--groove-pos-mode", "triple_plus_abs",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--affinity-assay-residual-mode", "shared_base_segment_residual",
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "off",
-            "--affinity-target-encoding", "log10",
-            "--max-affinity-nm", "50000",
+            "--d-model",
+            "128",
+            "--peptide-pos-mode",
+            "triple",
+            "--groove-pos-mode",
+            "triple_plus_abs",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--affinity-assay-residual-mode",
+            "shared_base_segment_residual",
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "off",
+            "--affinity-target-encoding",
+            "log10",
+            "--max-affinity-nm",
+            "50000",
         ),
     ),
     DesignSpec(
         design_id="E01",
         description="P03 positional config, log10 target, 100k cap",
         extra_args=(
-            "--d-model", "128",
-            "--peptide-pos-mode", "triple",
-            "--groove-pos-mode", "triple_plus_abs",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--affinity-assay-residual-mode", "shared_base_segment_residual",
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "off",
-            "--affinity-target-encoding", "log10",
-            "--max-affinity-nm", "100000",
+            "--d-model",
+            "128",
+            "--peptide-pos-mode",
+            "triple",
+            "--groove-pos-mode",
+            "triple_plus_abs",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--affinity-assay-residual-mode",
+            "shared_base_segment_residual",
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "off",
+            "--affinity-target-encoding",
+            "log10",
+            "--max-affinity-nm",
+            "100000",
         ),
     ),
     DesignSpec(
         design_id="E02",
         description="P03 positional config, mhcflurry target, 50k cap",
         extra_args=(
-            "--d-model", "128",
-            "--peptide-pos-mode", "triple",
-            "--groove-pos-mode", "triple_plus_abs",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--affinity-assay-residual-mode", "shared_base_segment_residual",
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "off",
-            "--affinity-target-encoding", "mhcflurry",
-            "--max-affinity-nm", "50000",
+            "--d-model",
+            "128",
+            "--peptide-pos-mode",
+            "triple",
+            "--groove-pos-mode",
+            "triple_plus_abs",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--affinity-assay-residual-mode",
+            "shared_base_segment_residual",
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "off",
+            "--affinity-target-encoding",
+            "mhcflurry",
+            "--max-affinity-nm",
+            "50000",
         ),
     ),
     DesignSpec(
         design_id="E03",
         description="P03 positional config, mhcflurry target, 100k cap",
         extra_args=(
-            "--d-model", "128",
-            "--peptide-pos-mode", "triple",
-            "--groove-pos-mode", "triple_plus_abs",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--affinity-assay-residual-mode", "shared_base_segment_residual",
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "off",
-            "--affinity-target-encoding", "mhcflurry",
-            "--max-affinity-nm", "100000",
+            "--d-model",
+            "128",
+            "--peptide-pos-mode",
+            "triple",
+            "--groove-pos-mode",
+            "triple_plus_abs",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--affinity-assay-residual-mode",
+            "shared_base_segment_residual",
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "off",
+            "--affinity-target-encoding",
+            "mhcflurry",
+            "--max-affinity-nm",
+            "100000",
         ),
     ),
 )
@@ -145,17 +195,27 @@ def _run_id(prefix: str, design_id: str) -> str:
 
 def _common_args(*, alleles: Sequence[str], probes: Sequence[str], warm_start: str) -> List[str]:
     return [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--extra-probe-peptides", ",".join(probes[1:]),
-        "--measurement-profile", "numeric_no_qualitative",
-        "--qualifier-filter", "all",
-        "--affinity-loss-mode", "full",
-        "--init-checkpoint", warm_start,
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--extra-probe-peptides",
+        ",".join(probes[1:]),
+        "--measurement-profile",
+        "numeric_no_qualitative",
+        "--qualifier-filter",
+        "all",
+        "--affinity-loss-mode",
+        "full",
+        "--init-checkpoint",
+        warm_start,
         "--no-synthetic-negatives",
-        "--binding-contrastive-weight", "0",
-        "--binding-peptide-contrastive-weight", "0",
-        "--probe-plot-frequency", "off",
+        "--binding-contrastive-weight",
+        "0",
+        "--binding-peptide-contrastive-weight",
+        "0",
+        "--probe-plot-frequency",
+        "off",
     ]
 
 
@@ -241,7 +301,9 @@ def _launch_design(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Launch broad-contract round-3 Presto sweeps on Modal")
+    parser = argparse.ArgumentParser(
+        description="Launch broad-contract round-3 Presto sweeps on Modal"
+    )
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch-size", type=int, default=140)
     parser.add_argument("--warm-start", type=str, default=DEFAULT_WARM_START)
@@ -264,17 +326,15 @@ def main() -> None:
     # which reads `designs`. Computing it afterwards was a plain
     # use-before-definition -- ruff F821, and a NameError on every run.
     selected_design_ids = {
-        part.strip().upper()
-        for part in str(args.design_ids).split(",")
-        if part.strip()
+        part.strip().upper() for part in str(args.design_ids).split(",") if part.strip()
     }
     designs = tuple(
-        design for design in DESIGNS
+        design
+        for design in DESIGNS
         if not selected_design_ids or design.design_id.upper() in selected_design_ids
     )
     if not designs:
         raise SystemExit("No design IDs selected")
-
 
     out_dir = initialize_experiment_dir(
         out_dir=str(args.out_dir),
@@ -326,7 +386,9 @@ def main() -> None:
     (out_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     lines = ["# Round-3 Launches", ""]
     for entry in manifest:
-        lines.append(f"- `{entry['design_id']}` -> `{entry['run_id']}` ({entry['app_id'] or 'pending'})")
+        lines.append(
+            f"- `{entry['design_id']}` -> `{entry['run_id']}` ({entry['app_id'] or 'pending'})"
+        )
         lines.append(f"  - {entry['description']}")
     (out_dir / "variants.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 

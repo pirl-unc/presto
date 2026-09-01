@@ -91,10 +91,13 @@ class TestJunctionScoring:
         assert k_trypsin > k_gluc
 
     def test_proline_at_p1_prime_penalizes_trypsin(self, model):
-        """"not before P" — a proline immediately after the cut blocks it."""
+        """ "not before P" — a proline immediately after the cut blocks it."""
         blocked = self._score(model, "SIINFEKLK", "trypsin", cflank="PAAAA")
         allowed = self._score(model, "SIINFEKLK", "trypsin", cflank="AAAAA")
-        assert blocked["excision_c_terminus_score"].item() < allowed["excision_c_terminus_score"].item()
+        assert (
+            blocked["excision_c_terminus_score"].item()
+            < allowed["excision_c_terminus_score"].item()
+        )
 
     def test_lysc_allows_proline_after_lysine(self, model):
         """LysC's MaxQuant spec explicitly permits K-P, unlike trypsin.
@@ -111,7 +114,10 @@ class TestJunctionScoring:
         def shift(machinery):
             blocked = self._score(model, "SIINFEKLK", machinery, cflank="PAAAA")
             allowed = self._score(model, "SIINFEKLK", machinery, cflank="AAAAA")
-            return allowed["excision_c_terminus_score"].item() - blocked["excision_c_terminus_score"].item()
+            return (
+                allowed["excision_c_terminus_score"].item()
+                - blocked["excision_c_terminus_score"].item()
+            )
 
         assert shift("lysc") < 0.1 * shift("trypsin")
 
@@ -210,7 +216,9 @@ class TestInternalCleavageSites:
         """The proteasome does not cut at every available site, so an internal
         hydrophobic residue says nothing about whether it produced the peptide."""
         for peptide in ("SIINFEAAK", "SKINKEKAK"):
-            score = self._score(model, peptide, "proteasome")["excision_missed_cleavage_score"].item()
+            score = self._score(model, peptide, "proteasome")[
+                "excision_missed_cleavage_score"
+            ].item()
             assert score == pytest.approx(0.0), peptide
 
     def test_internal_term_reaches_the_logit(self, model):

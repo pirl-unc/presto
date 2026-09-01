@@ -154,6 +154,7 @@ DEFAULT_MAX_FLANK_LEN = 25
 @dataclass
 class PrestoSample:
     """A single training/inference sample."""
+
     # Peptide
     peptide: str
     flank_n: Optional[str] = None
@@ -186,8 +187,8 @@ class PrestoSample:
     # never reaches the trunk. See docs/assay_learning_scheme.md.
     # Tier 2 (provenance): selects which branch computes the termini. Routing
     # only -- never a feature into a predictor. See docs/model_io_contract.md.
-    peptide_source: Optional[str] = None       # {mhc, protein}
-    enzymatic_digest: Optional[str] = None     # non-none only when source=protein
+    peptide_source: Optional[str] = None  # {mhc, protein}
+    enzymatic_digest: Optional[str] = None  # non-none only when source=protein
     # Tier 3 (cellular state): conditions the in-vivo termini. Meaningful only
     # when peptide_source == "mhc".
     #: What was applied to the cells, if anything. Defaults to `none`, which
@@ -206,7 +207,7 @@ class PrestoSample:
     sample_origin: Optional[str] = None
     #: healthy / tumor_adjacent / cancer / diseased.
     disease_state: Optional[str] = None
-    apm_perturbation: Optional[str] = None     # grouped by mechanism
+    apm_perturbation: Optional[str] = None  # grouped by mechanism
     # Retained as a derived convenience for the pinned in-vitro rules; prefer
     # the tiered fields above.
     machinery: Optional[str] = None
@@ -287,6 +288,7 @@ class PrestoSample:
 @dataclass
 class PrestoBatch:
     """A collated batch of samples."""
+
     # Tokenized sequences
     pep_tok: torch.Tensor
     mhc_a_tok: torch.Tensor
@@ -395,12 +397,9 @@ class PrestoBatch:
 
     def to(self, device: str, non_blocking: bool = False) -> "PrestoBatch":
         """Move batch to device."""
+
         def _move(t):
-            return (
-                t.to(device, non_blocking=non_blocking)
-                if t is not None
-                else None
-            )
+            return t.to(device, non_blocking=non_blocking) if t is not None else None
 
         return PrestoBatch(
             pep_tok=_move(self.pep_tok),
@@ -442,25 +441,13 @@ class PrestoBatch:
             sample_ids=self.sample_ids,
             sample_sources=self.sample_sources,
             targets={name: _move(tensor) for name, tensor in self.targets.items()},
-            target_masks={
-                name: _move(tensor) for name, tensor in self.target_masks.items()
-            },
-            target_quals={
-                name: _move(tensor) for name, tensor in self.target_quals.items()
-            },
+            target_masks={name: _move(tensor) for name, tensor in self.target_masks.items()},
+            target_quals={name: _move(tensor) for name, tensor in self.target_quals.items()},
             machinery_idx=_move(self.machinery_idx),
-            provenance={
-                name: _move(tensor) for name, tensor in self.provenance.items()
-            },
-            mil_provenance={
-                name: _move(tensor) for name, tensor in self.mil_provenance.items()
-            },
-            binding_context={
-                name: _move(tensor) for name, tensor in self.binding_context.items()
-            },
-            tcell_context={
-                name: _move(tensor) for name, tensor in self.tcell_context.items()
-            },
+            provenance={name: _move(tensor) for name, tensor in self.provenance.items()},
+            mil_provenance={name: _move(tensor) for name, tensor in self.mil_provenance.items()},
+            binding_context={name: _move(tensor) for name, tensor in self.binding_context.items()},
+            tcell_context={name: _move(tensor) for name, tensor in self.tcell_context.items()},
             tcell_mil_provenance={
                 name: _move(tensor) for name, tensor in self.tcell_mil_provenance.items()
             },
@@ -526,9 +513,7 @@ class PrestoCollator:
                     continue
                 value = spec.transform(raw) if spec.transform is not None else float(raw)
                 values.append(float(value))
-                is_enabled = not (
-                    spec.task_name == "tcell" and sample.use_tcell_pathway_mil
-                )
+                is_enabled = not (spec.task_name == "tcell" and sample.use_tcell_pathway_mil)
                 mask.append(1.0 if is_enabled else 0.0)
                 has_any = has_any or is_enabled
 
@@ -559,10 +544,7 @@ class PrestoCollator:
             dtype=torch.long,
         )
         bind_target_log10 = torch.tensor(
-            [
-                float(getattr(sample, "bind_target_log10", 0.0) or 0.0)
-                for sample in samples
-            ],
+            [float(getattr(sample, "bind_target_log10", 0.0) or 0.0) for sample in samples],
             dtype=torch.float32,
         )
         return {
@@ -659,10 +641,13 @@ class PrestoCollator:
         resolved_classes = {cls for cls in groups if cls in {"I", "II"}}
         if len(resolved_classes) < 2:
             whole = list(range(len(mhc_classes)))
-            default_label = normalize_mhc_class(
-                mhc_classes[0] if mhc_classes else None,
-                default=None,
-            ) or ""
+            default_label = (
+                normalize_mhc_class(
+                    mhc_classes[0] if mhc_classes else None,
+                    default=None,
+                )
+                or ""
+            )
             return [(default_label, whole)]
 
         ordered_classes = [cls for cls in ("I", "II") if cls in groups]
@@ -754,24 +739,15 @@ class PrestoCollator:
             # path whenever MIL is active, so the axes would have received
             # gradient only at index 0.
             "cell_lineage_idx": torch.tensor(
-                [
-                    cell_lineage_index(value)
-                    for value in (cell_lineages or [None] * n_instances)
-                ],
+                [cell_lineage_index(value) for value in (cell_lineages or [None] * n_instances)],
                 dtype=torch.long,
             ),
             "sample_origin_idx": torch.tensor(
-                [
-                    sample_origin_index(value)
-                    for value in (sample_origins or [None] * n_instances)
-                ],
+                [sample_origin_index(value) for value in (sample_origins or [None] * n_instances)],
                 dtype=torch.long,
             ),
             "disease_state_idx": torch.tensor(
-                [
-                    disease_state_index(value)
-                    for value in (disease_states or [None] * n_instances)
-                ],
+                [disease_state_index(value) for value in (disease_states or [None] * n_instances)],
                 dtype=torch.long,
             ),
         }
@@ -782,10 +758,7 @@ class PrestoCollator:
         # elution loss. Declared class is available here; predicted class is a
         # worse answer to the same question.
         outputs["machinery_idx"] = torch.tensor(
-            [
-                excision_machinery_index(default_machinery_for_class(cls))
-                for cls in mhc_classes
-            ],
+            [excision_machinery_index(default_machinery_for_class(cls)) for cls in mhc_classes],
             dtype=torch.long,
         )
         if any(v for v in flank_ns):
@@ -838,8 +811,12 @@ class PrestoCollator:
         task_matchers = {
             "binding_kd": lambda measurement_name, assay_family: measurement_name == "kd",
             "binding_kd_direct": lambda measurement_name, assay_family: assay_family == "KD",
-            "binding_kd_proxy_ic50": lambda measurement_name, assay_family: assay_family == "KD_PROXY_IC50",
-            "binding_kd_proxy_ec50": lambda measurement_name, assay_family: assay_family == "KD_PROXY_EC50",
+            "binding_kd_proxy_ic50": lambda measurement_name, assay_family: (
+                assay_family == "KD_PROXY_IC50"
+            ),
+            "binding_kd_proxy_ec50": lambda measurement_name, assay_family: (
+                assay_family == "KD_PROXY_EC50"
+            ),
             "binding_ic50": lambda measurement_name, assay_family: assay_family == "IC50",
             "binding_ec50": lambda measurement_name, assay_family: assay_family == "EC50",
             "binding_unknown": lambda measurement_name, assay_family: measurement_name == "unknown",
@@ -853,9 +830,7 @@ class PrestoCollator:
 
             for sample in samples:
                 raw = sample.bind_value
-                measurement_name = self._normalize_binding_measurement(
-                    sample.bind_measurement_type
-                )
+                measurement_name = self._normalize_binding_measurement(sample.bind_measurement_type)
                 assay_family = self._categorize_binding_assay_type(
                     sample.binding_assay_type or sample.bind_measurement_type
                 )
@@ -960,9 +935,7 @@ class PrestoCollator:
 
         return (prep, geometry, readout)
 
-    def _collate_provenance(
-        self, samples: List[PrestoSample]
-    ) -> Dict[str, torch.Tensor]:
+    def _collate_provenance(self, samples: List[PrestoSample]) -> Dict[str, torch.Tensor]:
         """Per-row provenance and cellular state.
 
         Kept separate from `machinery` because sample prep and cellular state
@@ -1015,9 +988,7 @@ class PrestoCollator:
             if sample.machinery:
                 indices.append(excision_machinery_index(sample.machinery))
                 continue
-            indices.append(
-                excision_machinery_index(default_machinery_for_class(sample.mhc_class))
-            )
+            indices.append(excision_machinery_index(default_machinery_for_class(sample.mhc_class)))
         return torch.tensor(indices, dtype=torch.long)
 
     def _collate_binding_context(
@@ -1119,7 +1090,11 @@ class PrestoCollator:
                 masks.append(1.0)
                 has_label = True
 
-            bins = {str(token).strip() for token in (sample.tcr_evidence_method_bins or ()) if str(token).strip()}
+            bins = {
+                str(token).strip()
+                for token in (sample.tcr_evidence_method_bins or ())
+                if str(token).strip()
+            }
             if bins:
                 method_targets.append(
                     [1.0 if name in bins else 0.0 for name in TCR_EVIDENCE_METHOD_BINS]
@@ -1268,8 +1243,7 @@ class PrestoCollator:
     ) -> str:
         culture = self._norm_text(f"{effector_culture} {apc_culture}")
         has_in_vitro_fields = any(
-            self._norm_text(v)
-            for v in (in_vitro_process, in_vitro_responder, in_vitro_stimulator)
+            self._norm_text(v) for v in (in_vitro_process, in_vitro_responder, in_vitro_stimulator)
         )
         if not culture and not has_in_vitro_fields:
             return "unknown"
@@ -1337,13 +1311,15 @@ class PrestoCollator:
             except (TypeError, ValueError):
                 pass
 
-        combined = " ".join([
-            self._norm_text(effector_culture),
-            self._norm_text(apc_culture),
-            self._norm_text(in_vitro_process),
-            self._norm_text(in_vitro_responder),
-            self._norm_text(in_vitro_stimulator),
-        ]).strip()
+        combined = " ".join(
+            [
+                self._norm_text(effector_culture),
+                self._norm_text(apc_culture),
+                self._norm_text(in_vitro_process),
+                self._norm_text(in_vitro_responder),
+                self._norm_text(in_vitro_stimulator),
+            ]
+        ).strip()
         if not combined:
             return None
 
@@ -1432,14 +1408,14 @@ class PrestoCollator:
             )
 
             method_idx = TCELL_ASSAY_METHOD_TO_IDX.get(method, TCELL_ASSAY_METHOD_TO_IDX["OTHER"])
-            readout_idx = TCELL_ASSAY_READOUT_TO_IDX.get(readout, TCELL_ASSAY_READOUT_TO_IDX["OTHER"])
+            readout_idx = TCELL_ASSAY_READOUT_TO_IDX.get(
+                readout, TCELL_ASSAY_READOUT_TO_IDX["OTHER"]
+            )
             apc_idx = TCELL_APC_TYPE_TO_IDX.get(apc_type, TCELL_APC_TYPE_TO_IDX["OTHER"])
             culture_idx = TCELL_CULTURE_CONTEXT_TO_IDX.get(
                 culture, TCELL_CULTURE_CONTEXT_TO_IDX["OTHER"]
             )
-            stim_idx = TCELL_STIM_CONTEXT_TO_IDX.get(
-                stim, TCELL_STIM_CONTEXT_TO_IDX["OTHER"]
-            )
+            stim_idx = TCELL_STIM_CONTEXT_TO_IDX.get(stim, TCELL_STIM_CONTEXT_TO_IDX["OTHER"])
             pep_format_idx = TCELL_PEPTIDE_FORMAT_TO_IDX.get(
                 pep_format,
                 TCELL_PEPTIDE_FORMAT_TO_IDX["OTHER"],
@@ -1463,24 +1439,12 @@ class PrestoCollator:
             targets["tcell_peptide_format"].append(pep_format_idx)
 
             has_tcell = sample.tcell_label is not None and not sample.use_tcell_pathway_mil
-            masks["tcell_assay_method"].append(
-                1.0 if has_tcell and method_idx != 0 else 0.0
-            )
-            masks["tcell_assay_readout"].append(
-                1.0 if has_tcell and readout_idx != 0 else 0.0
-            )
-            masks["tcell_apc_type"].append(
-                1.0 if has_tcell and apc_idx != 0 else 0.0
-            )
-            masks["tcell_culture_context"].append(
-                1.0 if has_tcell and culture_idx != 0 else 0.0
-            )
-            masks["tcell_stim_context"].append(
-                1.0 if has_tcell and stim_idx != 0 else 0.0
-            )
-            masks["tcell_peptide_format"].append(
-                1.0 if has_tcell and pep_format_idx != 0 else 0.0
-            )
+            masks["tcell_assay_method"].append(1.0 if has_tcell and method_idx != 0 else 0.0)
+            masks["tcell_assay_readout"].append(1.0 if has_tcell and readout_idx != 0 else 0.0)
+            masks["tcell_apc_type"].append(1.0 if has_tcell and apc_idx != 0 else 0.0)
+            masks["tcell_culture_context"].append(1.0 if has_tcell and culture_idx != 0 else 0.0)
+            masks["tcell_stim_context"].append(1.0 if has_tcell and stim_idx != 0 else 0.0)
+            masks["tcell_peptide_format"].append(1.0 if has_tcell and pep_format_idx != 0 else 0.0)
             masks["tcell_culture_duration"].append(
                 1.0 if has_tcell and culture_duration_hours is not None else 0.0
             )
@@ -1495,12 +1459,10 @@ class PrestoCollator:
             dtype=torch.float32,
         )
         target_tensors = {
-            key: torch.tensor(values, dtype=torch.long)
-            for key, values in targets.items()
+            key: torch.tensor(values, dtype=torch.long) for key, values in targets.items()
         }
         mask_tensors = {
-            key: torch.tensor(values, dtype=torch.float32)
-            for key, values in masks.items()
+            key: torch.tensor(values, dtype=torch.float32) for key, values in masks.items()
         }
         return context_tensors, target_tensors, mask_tensors
 

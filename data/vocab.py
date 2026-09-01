@@ -13,8 +13,26 @@ AA_VOCAB = [
     "<UNK>",  # 1 - unknown
     "<BOS>",  # 2 - beginning of sequence
     "<EOS>",  # 3 - end of sequence
-    "A", "C", "D", "E", "F", "G", "H", "I", "K", "L",
-    "M", "N", "P", "Q", "R", "S", "T", "V", "W", "Y",
+    "A",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "K",
+    "L",
+    "M",
+    "N",
+    "P",
+    "Q",
+    "R",
+    "S",
+    "T",
+    "V",
+    "W",
+    "Y",
     "X",  # unknown/any amino acid
     "<MISSING>",  # dedicated missing-value token
 ]
@@ -27,9 +45,7 @@ AA_VOCAB = [
 #: annotation junk ("YXGEVXVSV + INDIST(X2, X6)") and genuine but unmodelled
 #: residues -- selenocysteine `U` appears in real human selenoproteins and
 #: reached the tokenizer through hitlist flanks, aborting training mid-epoch.
-ENCODABLE_RESIDUES = frozenset(
-    token for token in AA_VOCAB if len(token) == 1
-)
+ENCODABLE_RESIDUES = frozenset(token for token in AA_VOCAB if len(token) == 1)
 
 
 def is_encodable_sequence(sequence: str) -> bool:
@@ -59,7 +75,15 @@ IDX_TO_AA = {i: aa for i, aa in enumerate(AA_VOCAB)}
 # Full-length chains
 CHAIN_TYPES_FULL = ["TRA", "TRB", "TRG", "TRD", "IGH", "IGK", "IGL"]
 # CDR3-only variants (common in sequencing data)
-CHAIN_TYPES_CDR3 = ["TRA_CDR3", "TRB_CDR3", "TRG_CDR3", "TRD_CDR3", "IGH_CDR3", "IGK_CDR3", "IGL_CDR3"]
+CHAIN_TYPES_CDR3 = [
+    "TRA_CDR3",
+    "TRB_CDR3",
+    "TRG_CDR3",
+    "TRD_CDR3",
+    "IGH_CDR3",
+    "IGK_CDR3",
+    "IGL_CDR3",
+]
 # Combined
 CHAIN_TYPES = CHAIN_TYPES_FULL + CHAIN_TYPES_CDR3
 CHAIN_TO_IDX = {ct: i for i, ct in enumerate(CHAIN_TYPES)}
@@ -67,8 +91,13 @@ IDX_TO_CHAIN = {i: ct for i, ct in enumerate(CHAIN_TYPES)}
 
 # Map CDR3 types to their full-length parent
 CDR3_TO_FULL = {
-    "TRA_CDR3": "TRA", "TRB_CDR3": "TRB", "TRG_CDR3": "TRG", "TRD_CDR3": "TRD",
-    "IGH_CDR3": "IGH", "IGK_CDR3": "IGK", "IGL_CDR3": "IGL",
+    "TRA_CDR3": "TRA",
+    "TRB_CDR3": "TRB",
+    "TRG_CDR3": "TRG",
+    "TRD_CDR3": "TRD",
+    "IGH_CDR3": "IGH",
+    "IGK_CDR3": "IGK",
+    "IGL_CDR3": "IGL",
 }
 FULL_TO_CDR3 = {v: k for k, v in CDR3_TO_FULL.items()}
 
@@ -89,24 +118,24 @@ IDX_TO_MHC = {i: mt for i, mt in enumerate(MHC_TYPES)}
 # Full-length MHC chain types
 MHC_CHAIN_TYPES_FULL = [
     # Class I heavy chains (alpha)
-    "MHC_I_ALPHA",      # HLA-A, HLA-B, HLA-C, H2-K, H2-D, etc.
+    "MHC_I_ALPHA",  # HLA-A, HLA-B, HLA-C, H2-K, H2-D, etc.
     # Class I light chain
-    "B2M",              # Beta-2-microglobulin (invariant)
+    "B2M",  # Beta-2-microglobulin (invariant)
     # Class II chains
-    "MHC_II_ALPHA",     # HLA-DRA, HLA-DQA, HLA-DPA, H2-Aa, etc.
-    "MHC_II_BETA",      # HLA-DRB, HLA-DQB, HLA-DPB, H2-Ab, etc.
+    "MHC_II_ALPHA",  # HLA-DRA, HLA-DQA, HLA-DPA, H2-Aa, etc.
+    "MHC_II_BETA",  # HLA-DRB, HLA-DQB, HLA-DPB, H2-Ab, etc.
     # Non-classical Class I
     "HLA_E_ALPHA",
     "HLA_F_ALPHA",
     "HLA_G_ALPHA",
     # Class I-like (for future expansion)
-    "MR1_ALPHA",        # MR1 (presents microbial metabolites to MAIT cells)
-    "CD1_ALPHA",        # CD1 family (presents lipids)
+    "MR1_ALPHA",  # MR1 (presents microbial metabolites to MAIT cells)
+    "CD1_ALPHA",  # CD1 family (presents lipids)
 ]
 
 # Pseudosequence variants (e.g., from NetMHCpan, MHCflurry)
 MHC_CHAIN_TYPES_PSEUDO = [
-    "MHC_I_ALPHA_PSEUDO",     # 34-residue pseudosequence
+    "MHC_I_ALPHA_PSEUDO",  # 34-residue pseudosequence
     "MHC_II_ALPHA_PSEUDO",
     "MHC_II_BETA_PSEUDO",
 ]
@@ -155,11 +184,11 @@ MHC_II_LOCI = {
 # These map the detailed chain types above to a compact label set that
 # the model predicts to learn MHC structural distinctions.
 MHC_CHAIN_FINE_TYPES = [
-    "MHC_I",        # Class I alpha (classical + non-classical: HLA-A,-B,-C,-E,-F,-G, H2-K,-D,-L, Qa, Tla)
-    "MHC_IIa",      # Class II alpha (DRA, DQA, DPA, H2-Aa, H2-Ea)
-    "MHC_IIb",      # Class II beta (DRB, DQB, DPB, H2-Ab, H2-Eb)
-    "B2M",          # Beta-2-microglobulin
-    "unknown",      # Unresolvable
+    "MHC_I",  # Class I alpha (classical + non-classical: HLA-A,-B,-C,-E,-F,-G, H2-K,-D,-L, Qa, Tla)
+    "MHC_IIa",  # Class II alpha (DRA, DQA, DPA, H2-Aa, H2-Ea)
+    "MHC_IIb",  # Class II beta (DRB, DQB, DPB, H2-Ab, H2-Eb)
+    "B2M",  # Beta-2-microglobulin
+    "unknown",  # Unresolvable
 ]
 MHC_CHAIN_FINE_TO_IDX = {ct: i for i, ct in enumerate(MHC_CHAIN_FINE_TYPES)}
 IDX_TO_MHC_CHAIN_FINE = {i: ct for i, ct in enumerate(MHC_CHAIN_FINE_TYPES)}
@@ -172,11 +201,19 @@ N_MHC_CHAIN_FINE_TYPES = len(MHC_CHAIN_FINE_TYPES)
 # UniProt taxonomy, IEDB organism names, VDJdb antigen_species.
 ORGANISM_CATEGORIES = [
     # Animal (MHC sources + host organisms) — first 6
-    "human", "nhp", "murine", "other_mammal", "bird", "other_vertebrate",
+    "human",
+    "nhp",
+    "murine",
+    "other_mammal",
+    "bird",
+    "other_vertebrate",
     # Other animals
     "invertebrate",
     # Foreign (pathogens)
-    "fungi", "bacteria", "viruses", "archaea",
+    "fungi",
+    "bacteria",
+    "viruses",
+    "archaea",
 ]
 ORGANISM_TO_IDX = {cat: i for i, cat in enumerate(ORGANISM_CATEGORIES)}
 IDX_TO_ORGANISM = {i: cat for i, cat in enumerate(ORGANISM_CATEGORIES)}
@@ -186,7 +223,9 @@ N_ORGANISM_CATEGORIES = len(ORGANISM_CATEGORIES)
 # CHAIN SPECIES (6-class vertebrate subset)
 # =============================================================================
 # Used for BOTH MHC chain species heads AND TCR/BCR chain attribute classifier.
-CHAIN_SPECIES_CATEGORIES = ORGANISM_CATEGORIES[:6]  # human, nhp, murine, other_mammal, bird, other_vertebrate
+CHAIN_SPECIES_CATEGORIES = ORGANISM_CATEGORIES[
+    :6
+]  # human, nhp, murine, other_mammal, bird, other_vertebrate
 CHAIN_SPECIES_TO_IDX = {sp: i for i, sp in enumerate(CHAIN_SPECIES_CATEGORIES)}
 IDX_TO_CHAIN_SPECIES = {i: sp for i, sp in enumerate(CHAIN_SPECIES_CATEGORIES)}
 N_CHAIN_SPECIES = len(CHAIN_SPECIES_CATEGORIES)
@@ -206,17 +245,40 @@ FOREIGN_CATEGORIES = frozenset({"bacteria", "viruses", "fungi", "archaea"})
 
 FINE_SPECIES = [
     # Primates
-    "human", "macaque", "chimpanzee", "gorilla", "orangutan", "baboon", "other_nhp",
+    "human",
+    "macaque",
+    "chimpanzee",
+    "gorilla",
+    "orangutan",
+    "baboon",
+    "other_nhp",
     # Rodents
-    "mouse", "rat",
+    "mouse",
+    "rat",
     # Mammals
-    "cattle", "pig", "horse", "sheep", "goat", "dog", "cat", "rabbit", "other_mammal",
+    "cattle",
+    "pig",
+    "horse",
+    "sheep",
+    "goat",
+    "dog",
+    "cat",
+    "rabbit",
+    "other_mammal",
     # Birds
-    "chicken", "other_bird",
+    "chicken",
+    "other_bird",
     # Fish
-    "salmon", "zebrafish", "other_fish",
+    "salmon",
+    "zebrafish",
+    "other_fish",
     # Non-animal
-    "other_vertebrate", "invertebrate", "viruses", "bacteria", "fungi", "archaea",
+    "other_vertebrate",
+    "invertebrate",
+    "viruses",
+    "bacteria",
+    "fungi",
+    "archaea",
 ]
 FINE_SPECIES_TO_IDX = {sp: i for i, sp in enumerate(FINE_SPECIES)}
 N_FINE_SPECIES = len(FINE_SPECIES)
@@ -226,7 +288,6 @@ N_FINE_SPECIES = len(FINE_SPECIES)
 _SPECIES_PATTERNS: list[Tuple[Tuple[str, ...], str]] = [
     # --- Human ---
     (("homo sapiens", "human"), "human"),
-
     # --- NHP: specific species first ---
     (("chimpanzee", "pan troglodytes", "pan paniscus", "patr-"), "chimpanzee"),
     (("gorilla", "gogo-"), "gorilla"),
@@ -234,17 +295,31 @@ _SPECIES_PATTERNS: list[Tuple[Tuple[str, ...], str]] = [
     (("baboon", "papio", "paan-"), "baboon"),
     (("macaque", "macaca", "rhesus", "mamu-"), "macaque"),
     # Catch-all NHP
-    (("nhp", "aotus", "night monkey", "aona-", "cercopithecus",
-      "saguinus", "callithrix", "saimiri", "ateles", "pithecia",
-      "leontopithecus", "hylobates", "chlorocebus", "cercocebus",
-      "primate"), "other_nhp"),
-
+    (
+        (
+            "nhp",
+            "aotus",
+            "night monkey",
+            "aona-",
+            "cercopithecus",
+            "saguinus",
+            "callithrix",
+            "saimiri",
+            "ateles",
+            "pithecia",
+            "leontopithecus",
+            "hylobates",
+            "chlorocebus",
+            "cercocebus",
+            "primate",
+        ),
+        "other_nhp",
+    ),
     # --- Rodents ---
     (("mus musculus", "mouse", "c57bl", "balb/c"), "mouse"),
     (("rattus", "rat "), "rat"),
     # Catch-all murine token (maps to mouse if nothing more specific)
     (("murine", "h2-", "h-2"), "mouse"),
-
     # --- Other mammals (specific first) ---
     (("bos taurus", "bos ", "bovine", "cow", "cattle", "bola-", "bos grunniens"), "cattle"),
     (("sus scrofa", "sus ", "porcine", "pig", "swine", "sla-"), "pig"),
@@ -255,58 +330,144 @@ _SPECIES_PATTERNS: list[Tuple[Tuple[str, ...], str]] = [
     (("felis", "feline", "cat "), "cat"),
     (("rabbit", "oryctolagus"), "rabbit"),
     (("mammal",), "other_mammal"),
-
     # --- Birds ---
     (("gallus", "chicken", "gaga-"), "chicken"),
     (("duck", "turkey", "quail", "bird", "avian", "aves"), "other_bird"),
-
     # --- Pathogens (BEFORE fish, so "salmonella" → bacteria, not fish) ---
-
     # --- Viruses ---
-    (("virus", "viral", "influenza", "sars", "cov",
-      "hiv", "hcv", "hbv", "ebv", "cmv", "hsv", "vzv",
-      "htlv", "dengue", "zika", "ebola", "measles",
-      "hepatitis", "retrovirus", "coronavirus",
-      "adenovirus", "papillomavirus", "herpes",
-      "vaccinia", "poxvirus", "flavivirus",
-      "paramyxovirus", "orthomyxovirus",
-      "phage", "bacteriophage"), "viruses"),
-
+    (
+        (
+            "virus",
+            "viral",
+            "influenza",
+            "sars",
+            "cov",
+            "hiv",
+            "hcv",
+            "hbv",
+            "ebv",
+            "cmv",
+            "hsv",
+            "vzv",
+            "htlv",
+            "dengue",
+            "zika",
+            "ebola",
+            "measles",
+            "hepatitis",
+            "retrovirus",
+            "coronavirus",
+            "adenovirus",
+            "papillomavirus",
+            "herpes",
+            "vaccinia",
+            "poxvirus",
+            "flavivirus",
+            "paramyxovirus",
+            "orthomyxovirus",
+            "phage",
+            "bacteriophage",
+        ),
+        "viruses",
+    ),
     # --- Bacteria ---
-    (("mycobacterium", "tuberculosis", "escherichia", "e. coli",
-      "staphylococcus", "streptococcus", "salmonella",
-      "clostridium", "listeria", "helicobacter",
-      "chlamydia", "borrelia", "treponema",
-      "pseudomonas", "bacillus", "legionella",
-      "neisseria", "rickettsia", "bartonella",
-      "bacterium", "bacteria", "bacterial"), "bacteria"),
-
+    (
+        (
+            "mycobacterium",
+            "tuberculosis",
+            "escherichia",
+            "e. coli",
+            "staphylococcus",
+            "streptococcus",
+            "salmonella",
+            "clostridium",
+            "listeria",
+            "helicobacter",
+            "chlamydia",
+            "borrelia",
+            "treponema",
+            "pseudomonas",
+            "bacillus",
+            "legionella",
+            "neisseria",
+            "rickettsia",
+            "bartonella",
+            "bacterium",
+            "bacteria",
+            "bacterial",
+        ),
+        "bacteria",
+    ),
     # --- Fungi ---
-    (("candida", "aspergillus", "cryptococcus",
-      "coccidioides", "histoplasma", "blastomyces",
-      "saccharomyces", "yeast", "fungus", "fungi", "fungal",
-      "pneumocystis", "trichophyton"), "fungi"),
-
+    (
+        (
+            "candida",
+            "aspergillus",
+            "cryptococcus",
+            "coccidioides",
+            "histoplasma",
+            "blastomyces",
+            "saccharomyces",
+            "yeast",
+            "fungus",
+            "fungi",
+            "fungal",
+            "pneumocystis",
+            "trichophyton",
+        ),
+        "fungi",
+    ),
     # --- Archaea ---
-    (("archaea", "archaeal", "methanobacterium",
-      "halobacterium", "sulfolobus", "thermococcus"), "archaea"),
-
+    (
+        ("archaea", "archaeal", "methanobacterium", "halobacterium", "sulfolobus", "thermococcus"),
+        "archaea",
+    ),
     # --- Fish (AFTER bacteria, so "salmonella" doesn't match "salmon") ---
     (("salmo salar", "salmo ", "salmon", "trout", "oncorhynchus"), "salmon"),
     (("danio", "zebrafish"), "zebrafish"),
     (("fish", "pisces"), "other_fish"),
-
     # --- Other vertebrate ---
-    (("reptile", "reptilia", "amphibian", "amphibia",
-      "frog", "xenopus", "turtle", "lizard", "snake",
-      "alligator", "crocodile", "salamander"), "other_vertebrate"),
-
+    (
+        (
+            "reptile",
+            "reptilia",
+            "amphibian",
+            "amphibia",
+            "frog",
+            "xenopus",
+            "turtle",
+            "lizard",
+            "snake",
+            "alligator",
+            "crocodile",
+            "salamander",
+        ),
+        "other_vertebrate",
+    ),
     # --- Invertebrate ---
-    (("drosophila", "insect", "arthropod", "arachnid",
-      "mosquito", "tick", "worm", "nematode", "mollusk",
-      "caenorhabditis", "c. elegans", "invertebrate",
-      "schistosoma", "plasmodium", "toxoplasma",
-      "leishmania", "trypanosoma", "parasite"), "invertebrate"),
+    (
+        (
+            "drosophila",
+            "insect",
+            "arthropod",
+            "arachnid",
+            "mosquito",
+            "tick",
+            "worm",
+            "nematode",
+            "mollusk",
+            "caenorhabditis",
+            "c. elegans",
+            "invertebrate",
+            "schistosoma",
+            "plasmodium",
+            "toxoplasma",
+            "leishmania",
+            "trypanosoma",
+            "parasite",
+        ),
+        "invertebrate",
+    ),
 ]
 
 
@@ -341,30 +502,60 @@ def normalize_species(raw: Optional[str]) -> Optional[str]:
 
 FINE_TO_ORGANISM: Dict[str, str] = {
     "human": "human",
-    "macaque": "nhp", "chimpanzee": "nhp", "gorilla": "nhp",
-    "orangutan": "nhp", "baboon": "nhp", "other_nhp": "nhp",
-    "mouse": "murine", "rat": "murine",
-    "cattle": "other_mammal", "pig": "other_mammal", "horse": "other_mammal",
-    "sheep": "other_mammal", "goat": "other_mammal", "dog": "other_mammal",
-    "cat": "other_mammal", "rabbit": "other_mammal", "other_mammal": "other_mammal",
-    "chicken": "bird", "other_bird": "bird",
-    "salmon": "other_vertebrate", "zebrafish": "other_vertebrate", "other_fish": "other_vertebrate",
+    "macaque": "nhp",
+    "chimpanzee": "nhp",
+    "gorilla": "nhp",
+    "orangutan": "nhp",
+    "baboon": "nhp",
+    "other_nhp": "nhp",
+    "mouse": "murine",
+    "rat": "murine",
+    "cattle": "other_mammal",
+    "pig": "other_mammal",
+    "horse": "other_mammal",
+    "sheep": "other_mammal",
+    "goat": "other_mammal",
+    "dog": "other_mammal",
+    "cat": "other_mammal",
+    "rabbit": "other_mammal",
+    "other_mammal": "other_mammal",
+    "chicken": "bird",
+    "other_bird": "bird",
+    "salmon": "other_vertebrate",
+    "zebrafish": "other_vertebrate",
+    "other_fish": "other_vertebrate",
     "other_vertebrate": "other_vertebrate",
     "invertebrate": "invertebrate",
-    "viruses": "viruses", "bacteria": "bacteria",
-    "fungi": "fungi", "archaea": "archaea",
+    "viruses": "viruses",
+    "bacteria": "bacteria",
+    "fungi": "fungi",
+    "archaea": "archaea",
 }
 
 FINE_TO_CHAIN_SPECIES: Dict[str, Optional[str]] = {
     "human": "human",
-    "macaque": "nhp", "chimpanzee": "nhp", "gorilla": "nhp",
-    "orangutan": "nhp", "baboon": "nhp", "other_nhp": "nhp",
-    "mouse": "murine", "rat": "murine",
-    "cattle": "other_mammal", "pig": "other_mammal", "horse": "other_mammal",
-    "sheep": "other_mammal", "goat": "other_mammal", "dog": "other_mammal",
-    "cat": "other_mammal", "rabbit": "other_mammal", "other_mammal": "other_mammal",
-    "chicken": "bird", "other_bird": "bird",
-    "salmon": "other_vertebrate", "zebrafish": "other_vertebrate", "other_fish": "other_vertebrate",
+    "macaque": "nhp",
+    "chimpanzee": "nhp",
+    "gorilla": "nhp",
+    "orangutan": "nhp",
+    "baboon": "nhp",
+    "other_nhp": "nhp",
+    "mouse": "murine",
+    "rat": "murine",
+    "cattle": "other_mammal",
+    "pig": "other_mammal",
+    "horse": "other_mammal",
+    "sheep": "other_mammal",
+    "goat": "other_mammal",
+    "dog": "other_mammal",
+    "cat": "other_mammal",
+    "rabbit": "other_mammal",
+    "other_mammal": "other_mammal",
+    "chicken": "bird",
+    "other_bird": "bird",
+    "salmon": "other_vertebrate",
+    "zebrafish": "other_vertebrate",
+    "other_fish": "other_vertebrate",
     "other_vertebrate": "other_vertebrate",
 }
 # Non-animal categories → None (not valid chain species)
@@ -378,16 +569,28 @@ FINE_TO_MHC_SPECIES = FINE_TO_CHAIN_SPECIES
 FINE_TO_B2M_KEY: Dict[str, Optional[str]] = {
     "human": "human",
     # NHP → human B2M (highly conserved across primates)
-    "macaque": "human", "chimpanzee": "human", "gorilla": "human",
-    "orangutan": "human", "baboon": "human", "other_nhp": "human",
-    "mouse": "mouse", "rat": "rat",
-    "cattle": "cattle", "pig": "pig", "horse": "horse",
-    "sheep": "sheep", "goat": "cattle",  # closest available
-    "dog": "dog", "cat": "cat",
+    "macaque": "human",
+    "chimpanzee": "human",
+    "gorilla": "human",
+    "orangutan": "human",
+    "baboon": "human",
+    "other_nhp": "human",
+    "mouse": "mouse",
+    "rat": "rat",
+    "cattle": "cattle",
+    "pig": "pig",
+    "horse": "horse",
+    "sheep": "sheep",
+    "goat": "cattle",  # closest available
+    "dog": "dog",
+    "cat": "cat",
     "rabbit": "cattle",  # closest available
     "other_mammal": "cattle",
-    "chicken": "chicken", "other_bird": "chicken",
-    "salmon": "salmon", "zebrafish": "salmon", "other_fish": "salmon",
+    "chicken": "chicken",
+    "other_bird": "chicken",
+    "salmon": "salmon",
+    "zebrafish": "salmon",
+    "other_fish": "salmon",
     "other_vertebrate": "salmon",  # salmon B2M as closest available non-mammal/non-bird
 }
 # Non-animal categories → None
@@ -396,8 +599,7 @@ for _fs in FINE_SPECIES:
         FINE_TO_B2M_KEY[_fs] = None
 
 FINE_TO_IS_FOREIGN: Dict[str, bool] = {
-    fs: (fs in {"viruses", "bacteria", "fungi", "archaea"})
-    for fs in FINE_SPECIES
+    fs: (fs in {"viruses", "bacteria", "fungi", "archaea"}) for fs in FINE_SPECIES
 }
 
 
@@ -420,6 +622,7 @@ def normalize_organism(raw: Optional[str]) -> Optional[str]:
         return None
     return FINE_TO_ORGANISM[fine]
 
+
 # T-cell assay context vocabularies (IEDB/CEDAR assay metadata).
 TCELL_ASSAY_METHODS = [
     "unknown",
@@ -434,12 +637,8 @@ TCELL_ASSAY_METHODS = [
     "BIOASSAY",
     "OTHER",
 ]
-TCELL_ASSAY_METHOD_TO_IDX = {
-    name: i for i, name in enumerate(TCELL_ASSAY_METHODS)
-}
-IDX_TO_TCELL_ASSAY_METHOD = {
-    i: name for i, name in enumerate(TCELL_ASSAY_METHODS)
-}
+TCELL_ASSAY_METHOD_TO_IDX = {name: i for i, name in enumerate(TCELL_ASSAY_METHODS)}
+IDX_TO_TCELL_ASSAY_METHOD = {i: name for i, name in enumerate(TCELL_ASSAY_METHODS)}
 
 TCELL_ASSAY_READOUTS = [
     "unknown",
@@ -458,12 +657,8 @@ TCELL_ASSAY_READOUTS = [
     "MULTIMER_BINDING",
     "OTHER",
 ]
-TCELL_ASSAY_READOUT_TO_IDX = {
-    name: i for i, name in enumerate(TCELL_ASSAY_READOUTS)
-}
-IDX_TO_TCELL_ASSAY_READOUT = {
-    i: name for i, name in enumerate(TCELL_ASSAY_READOUTS)
-}
+TCELL_ASSAY_READOUT_TO_IDX = {name: i for i, name in enumerate(TCELL_ASSAY_READOUTS)}
+IDX_TO_TCELL_ASSAY_READOUT = {i: name for i, name in enumerate(TCELL_ASSAY_READOUTS)}
 
 TCELL_APC_TYPES = [
     "unknown",
@@ -490,12 +685,8 @@ TCELL_CULTURE_CONTEXTS = [
     "NON_SPECIFIC_ACTIVATION",
     "OTHER",
 ]
-TCELL_CULTURE_CONTEXT_TO_IDX = {
-    name: i for i, name in enumerate(TCELL_CULTURE_CONTEXTS)
-}
-IDX_TO_TCELL_CULTURE_CONTEXT = {
-    i: name for i, name in enumerate(TCELL_CULTURE_CONTEXTS)
-}
+TCELL_CULTURE_CONTEXT_TO_IDX = {name: i for i, name in enumerate(TCELL_CULTURE_CONTEXTS)}
+IDX_TO_TCELL_CULTURE_CONTEXT = {i: name for i, name in enumerate(TCELL_CULTURE_CONTEXTS)}
 
 TCELL_STIM_CONTEXTS = [
     "unknown",
@@ -506,9 +697,7 @@ TCELL_STIM_CONTEXTS = [
     "OTHER",
 ]
 TCELL_STIM_CONTEXT_TO_IDX = {name: i for i, name in enumerate(TCELL_STIM_CONTEXTS)}
-IDX_TO_TCELL_STIM_CONTEXT = {
-    i: name for i, name in enumerate(TCELL_STIM_CONTEXTS)
-}
+IDX_TO_TCELL_STIM_CONTEXT = {i: name for i, name in enumerate(TCELL_STIM_CONTEXTS)}
 
 TCELL_PEPTIDE_FORMATS = [
     "unknown",
@@ -518,12 +707,8 @@ TCELL_PEPTIDE_FORMATS = [
     "WHOLE_PROTEIN",
     "OTHER",
 ]
-TCELL_PEPTIDE_FORMAT_TO_IDX = {
-    name: i for i, name in enumerate(TCELL_PEPTIDE_FORMATS)
-}
-IDX_TO_TCELL_PEPTIDE_FORMAT = {
-    i: name for i, name in enumerate(TCELL_PEPTIDE_FORMATS)
-}
+TCELL_PEPTIDE_FORMAT_TO_IDX = {name: i for i, name in enumerate(TCELL_PEPTIDE_FORMATS)}
+IDX_TO_TCELL_PEPTIDE_FORMAT = {i: name for i, name in enumerate(TCELL_PEPTIDE_FORMATS)}
 
 # Binding assay context vocabularies (quantitative affinity metadata).
 # Appended entries keep existing indices stable, so an old checkpoint's
@@ -543,12 +728,8 @@ BINDING_ASSAY_TYPES = [
     "KOFF",
     "KON",
 ]
-BINDING_ASSAY_TYPE_TO_IDX = {
-    name: i for i, name in enumerate(BINDING_ASSAY_TYPES)
-}
-IDX_TO_BINDING_ASSAY_TYPE = {
-    i: name for i, name in enumerate(BINDING_ASSAY_TYPES)
-}
+BINDING_ASSAY_TYPE_TO_IDX = {name: i for i, name in enumerate(BINDING_ASSAY_TYPES)}
+IDX_TO_BINDING_ASSAY_TYPE = {i: name for i, name in enumerate(BINDING_ASSAY_TYPES)}
 
 BINDING_ASSAY_METHODS = [
     "unknown",
@@ -563,12 +744,8 @@ BINDING_ASSAY_METHODS = [
     "PURIFIED_DIRECT_RADIOACTIVITY",
     "OTHER",
 ]
-BINDING_ASSAY_METHOD_TO_IDX = {
-    name: i for i, name in enumerate(BINDING_ASSAY_METHODS)
-}
-IDX_TO_BINDING_ASSAY_METHOD = {
-    i: name for i, name in enumerate(BINDING_ASSAY_METHODS)
-}
+BINDING_ASSAY_METHOD_TO_IDX = {name: i for i, name in enumerate(BINDING_ASSAY_METHODS)}
+IDX_TO_BINDING_ASSAY_METHOD = {i: name for i, name in enumerate(BINDING_ASSAY_METHODS)}
 
 BINDING_ASSAY_PREP = [
     "unknown",
@@ -667,12 +844,12 @@ def get_base_chain_type(chain_type: str) -> str:
 # tasks/protease_detectability_spec.md.
 EXCISION_MACHINERY = [
     "unknown",
-    "proteasome",     # class I in vivo: a mixture over beta1/beta2/beta5
-    "cathepsin",      # class II in vivo: endo/lysosomal
-    "trypsin",        # C-term K/R, not before P
-    "chymotrypsin",   # C-term F/W/Y/L/M, not before P  (MaxQuant Chymotrypsin+)
-    "lysc",           # C-term K, P allowed
-    "gluc",           # C-term E/D in bicarbonate buffer, not before P
+    "proteasome",  # class I in vivo: a mixture over beta1/beta2/beta5
+    "cathepsin",  # class II in vivo: endo/lysosomal
+    "trypsin",  # C-term K/R, not before P
+    "chymotrypsin",  # C-term F/W/Y/L/M, not before P  (MaxQuant Chymotrypsin+)
+    "lysc",  # C-term K, P allowed
+    "gluc",  # C-term E/D in bicarbonate buffer, not before P
 ]
 EXCISION_MACHINERY_TO_IDX = {name: i for i, name in enumerate(EXCISION_MACHINERY)}
 IDX_TO_EXCISION_MACHINERY = {i: name for i, name in enumerate(EXCISION_MACHINERY)}
@@ -810,11 +987,11 @@ PROCESSING_STIMULUS_TO_IDX = {name: i for i, name in enumerate(PROCESSING_STIMUL
 # while ERAP1-KO shifts only the N-terminus.
 APM_PERTURBATIONS = [
     "none",
-    "peptide_supply",     # TAP1/2, PSMB5/8/9/10 -- what reaches the ER
-    "n_term_trimming",    # ERAP1/2 -- shifts the N-terminus specifically
-    "loading_complex",    # TAPBP, CALR, CANX, PDIA3 -- stability, not cleavage
-    "mhc_null",           # B2M -- abolishes class I presentation
-    "class_ii_loading",   # HLA-DM/DO, CD74, CIITA -- editing and register
+    "peptide_supply",  # TAP1/2, PSMB5/8/9/10 -- what reaches the ER
+    "n_term_trimming",  # ERAP1/2 -- shifts the N-terminus specifically
+    "loading_complex",  # TAPBP, CALR, CANX, PDIA3 -- stability, not cleavage
+    "mhc_null",  # B2M -- abolishes class I presentation
+    "class_ii_loading",  # HLA-DM/DO, CD74, CIITA -- editing and register
     "other",
     # "the arm was not resolved", which is NOT the same claim as "none".
     #
@@ -833,22 +1010,35 @@ APM_PERTURBATION_TO_IDX = {name: i for i, name in enumerate(APM_PERTURBATIONS)}
 
 # hitlist APM gene flag -> mechanism group.
 APM_GENE_TO_GROUP: Dict[str, str] = {
-    "tap1": "peptide_supply", "tap2": "peptide_supply",
-    "tap_inhibitor": "peptide_supply", "tap_deficient_line": "peptide_supply",
-    "psmb5": "peptide_supply", "psmb8": "peptide_supply",
-    "psmb9": "peptide_supply", "psmb10": "peptide_supply",
+    "tap1": "peptide_supply",
+    "tap2": "peptide_supply",
+    "tap_inhibitor": "peptide_supply",
+    "tap_deficient_line": "peptide_supply",
+    "psmb5": "peptide_supply",
+    "psmb8": "peptide_supply",
+    "psmb9": "peptide_supply",
+    "psmb10": "peptide_supply",
     "proteasome_inhibitor": "peptide_supply",
-    "erap1": "n_term_trimming", "erap2": "n_term_trimming",
+    "erap1": "n_term_trimming",
+    "erap2": "n_term_trimming",
     "erap_inhibitor": "n_term_trimming",
-    "tapbp": "loading_complex", "calr": "loading_complex",
-    "canx": "loading_complex", "pdia3": "loading_complex",
-    "ganab": "loading_complex", "sppl3": "loading_complex",
+    "tapbp": "loading_complex",
+    "calr": "loading_complex",
+    "canx": "loading_complex",
+    "pdia3": "loading_complex",
+    "ganab": "loading_complex",
+    "sppl3": "loading_complex",
     "b2m": "mhc_null",
-    "hla_dm": "class_ii_loading", "hla_do": "class_ii_loading",
-    "cd74": "class_ii_loading", "ciita": "class_ii_loading",
-    "rfx": "class_ii_loading", "bls": "class_ii_loading",
-    "cathepsin": "class_ii_loading", "cathepsin_inhibitor": "class_ii_loading",
-    "irf2": "other", "nlrc5": "other",
+    "hla_dm": "class_ii_loading",
+    "hla_do": "class_ii_loading",
+    "cd74": "class_ii_loading",
+    "ciita": "class_ii_loading",
+    "rfx": "class_ii_loading",
+    "bls": "class_ii_loading",
+    "cathepsin": "class_ii_loading",
+    "cathepsin_inhibitor": "class_ii_loading",
+    "irf2": "other",
+    "nlrc5": "other",
 }
 
 # hitlist condition_category -> stimulus. Cytokine treatment is an induction
@@ -982,9 +1172,7 @@ def processing_stimulus_index(name: Optional[str]) -> int:
     `none` like any other, which for these two is also what the alias did.
     """
     token = str(name or "").strip().lower()
-    return PROCESSING_STIMULUS_TO_IDX.get(
-        token, PROCESSING_STIMULUS_TO_IDX["none"]
-    )
+    return PROCESSING_STIMULUS_TO_IDX.get(token, PROCESSING_STIMULUS_TO_IDX["none"])
 
 
 def apm_perturbation_index(name: Optional[str]) -> int:
@@ -1055,8 +1243,12 @@ def apm_group_for_genes(genes: Optional[Any]) -> str:
     if not groups:
         return "none"
     for candidate in (
-        "mhc_null", "peptide_supply", "n_term_trimming",
-        "loading_complex", "class_ii_loading", "other",
+        "mhc_null",
+        "peptide_supply",
+        "n_term_trimming",
+        "loading_complex",
+        "class_ii_loading",
+        "other",
     ):
         if candidate in groups:
             return candidate
@@ -1086,6 +1278,7 @@ def is_unmapped_condition(condition: Optional[str]) -> bool:
     text = str(condition or "").strip()
     return bool(text) and text not in CONDITION_TO_STIMULUS
 
+
 # ---------------------------------------------------------------------------
 # Sample provenance, factorized (Tier 3 biological state -- all INPUTS).
 # ---------------------------------------------------------------------------
@@ -1113,14 +1306,14 @@ def is_unmapped_condition(condition: Optional[str]) -> bool:
 #: non-haematopoietic cells generally do not unless induced.
 CELL_LINEAGES = [
     "unknown",
-    "b_lineage",          # B-cell, plasma cell, lymphoblastoid
-    "t_lineage",          # T cell, CD4+, CD8+
-    "myeloid",            # monocyte, macrophage, myeloblast, dendritic
-    "mixed_leukocyte",    # PBMC, mononuclear, splenocyte, lymph node cells
+    "b_lineage",  # B-cell, plasma cell, lymphoblastoid
+    "t_lineage",  # T cell, CD4+, CD8+
+    "myeloid",  # monocyte, macrophage, myeloblast, dendritic
+    "mixed_leukocyte",  # PBMC, mononuclear, splenocyte, lymph node cells
     "epithelial",
     "melanocytic",
     "fibroblast_stromal",  # fibroblast, endothelial, osteoblast, Schwann
-    "neural",             # neuroblast, neuron, glial, neuroendocrine
+    "neural",  # neuroblast, neuron, glial, neuroendocrine
     "hepatocyte",
 ]
 CELL_LINEAGE_TO_IDX = {name: i for i, name in enumerate(CELL_LINEAGES)}
@@ -1128,14 +1321,19 @@ CELL_LINEAGE_TO_IDX = {name: i for i, name in enumerate(CELL_LINEAGES)}
 _CELL_LINEAGE_PATTERNS: Tuple[Tuple[str, str], ...] = (
     (r"\bplasma cell\b|\bb[- ]cell\b|\blymphoblast", "b_lineage"),
     (r"\bt[- ]cell\b|\bcd[48]\+", "t_lineage"),
-    (r"\bdendritic\b|\bmacrophage\b|\bmonocyte\b|\bmyeloblast\b"
-     r"|\bmegakaryoblast\b|\bmast cell\b", "myeloid"),
-    (r"\bpbmc\b|\bmononuclear\b|\bsplenocyte\b|\blymph node cells\b"
-     r"|\blymphocyte\b|\bplatelet\b", "mixed_leukocyte"),
+    (
+        r"\bdendritic\b|\bmacrophage\b|\bmonocyte\b|\bmyeloblast\b"
+        r"|\bmegakaryoblast\b|\bmast cell\b",
+        "myeloid",
+    ),
+    (
+        r"\bpbmc\b|\bmononuclear\b|\bsplenocyte\b|\blymph node cells\b"
+        r"|\blymphocyte\b|\bplatelet\b",
+        "mixed_leukocyte",
+    ),
     (r"\bepithelial\b", "epithelial"),
     (r"\bmelanocyte\b|\bmelanoma\b", "melanocytic"),
-    (r"\bfibroblast\b|\bendothelial\b|\bosteoblast\b|\bschwann\b",
-     "fibroblast_stromal"),
+    (r"\bfibroblast\b|\bendothelial\b|\bosteoblast\b|\bschwann\b", "fibroblast_stromal"),
     (r"\bneuroblast\b|\bneuron\b|\bglial\b|\bneuroendocrine\b", "neural"),
     (r"\bhepatocyte\b", "hepatocyte"),
 )
@@ -1157,9 +1355,7 @@ def cell_lineage_for(cell_type: Optional[str]) -> str:
 
 
 def cell_lineage_index(name: Optional[str]) -> int:
-    return CELL_LINEAGE_TO_IDX.get(
-        str(name or "").strip().lower(), CELL_LINEAGE_TO_IDX["unknown"]
-    )
+    return CELL_LINEAGE_TO_IDX.get(str(name or "").strip().lower(), CELL_LINEAGE_TO_IDX["unknown"])
 
 
 #: Immortalization status. Ternary rather than boolean so "not recorded" is

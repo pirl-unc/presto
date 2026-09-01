@@ -30,6 +30,7 @@ from presto.data.loaders import (
     VDJdbRecord,
     create_dataloader,
 )
+
 MHC_ALPHA_SEQ = (
     "MAVMAPRTLVLLLSGALALTQTWAGSHSMRYFFTSVSRPGRGEPRFIAVGYVDDTQFVRFDSDAASQRMEPRAPWIEQEGPEYWDGETRKVKAHSQTHRVDLGTLRGYYNQSEAGSHTVQRMYGCDVGSDWRFLRGYHQYAYDGKDYIALKEDLRSWTAADMAAQTTKHKWEAAHVAEQL"
     "RAYLDGTCVEWLRRYLENGKETLQRTDAPKTHMTHHAVSDHEATLRCWALSFYPAEITLTWQRDGEDQTQDTELVETRPAGDGTFQKWAAVVVPSGQEQRYTCHVQHEGLPKPLTLRWE"
@@ -61,10 +62,26 @@ def test_load_iedb_stability_parses_multilevel_export(tmp_path):
     path = tmp_path / "iedb_stability.csv"
     rows = [
         ["Epitope", "MHC Restriction", "Assay", "Assay", "Assay", "Assay", "MHC Restriction"],
-        ["Name", "Name", "Response measured", "Units", "Quantitative measurement", "Measurement inequality", "MHC Class"],
+        [
+            "Name",
+            "Name",
+            "Response measured",
+            "Units",
+            "Quantitative measurement",
+            "Measurement inequality",
+            "MHC Class",
+        ],
         ["SIINFEKL", "HLA-A*02:01", "half life", "min", "360", "<", "I"],
         ["SIINFEKL", "HLA-A*02:01", "50% dissociation temperature", "C", "57", "", "I"],
-        ["SIINFEKL", "HLA-A*02:01", "half maximal inhibitory concentration (IC50)", "nM", "100", "", "I"],
+        [
+            "SIINFEKL",
+            "HLA-A*02:01",
+            "half maximal inhibitory concentration (IC50)",
+            "nM",
+            "100",
+            "",
+            "I",
+        ],
     ]
     with path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
@@ -91,7 +108,15 @@ def test_load_iedb_kinetics_parses_response_rows_and_units(tmp_path):
     path = tmp_path / "iedb_kinetics.csv"
     rows = [
         ["Epitope", "MHC Restriction", "Assay", "Assay", "Assay", "Assay", "MHC Restriction"],
-        ["Name", "Name", "Response measured", "Units", "Quantitative measurement", "Measurement inequality", "Class"],
+        [
+            "Name",
+            "Name",
+            "Response measured",
+            "Units",
+            "Quantitative measurement",
+            "Measurement inequality",
+            "Class",
+        ],
         ["SIINFEKL", "HLA-A*02:01", "on rate", "nM^-1s^-1", "2.0", "", "I"],
         ["SIINFEKL", "HLA-A*02:01", "off rate", "1/s", "0.05", "<", "I"],
     ]
@@ -217,9 +242,36 @@ def test_load_iedb_tcell_preserves_multiple_restriction_alleles(tmp_path):
 def test_load_iedb_binding_parses_multilevel_export(tmp_path):
     path = tmp_path / "iedb_binding.csv"
     rows = [
-        ["Epitope", "MHC Restriction", "Assay", "Assay", "Assay", "Assay", "MHC Restriction", "Epitope"],
-        ["Name", "Name", "Response measured", "Units", "Measurement inequality", "Quantitative measurement", "Class", "Species"],
-        ["SIINFEKL", "HLA-A*02:01", "half maximal inhibitory concentration (IC50)", "nM", "<", "250", "I", "human"],
+        [
+            "Epitope",
+            "MHC Restriction",
+            "Assay",
+            "Assay",
+            "Assay",
+            "Assay",
+            "MHC Restriction",
+            "Epitope",
+        ],
+        [
+            "Name",
+            "Name",
+            "Response measured",
+            "Units",
+            "Measurement inequality",
+            "Quantitative measurement",
+            "Class",
+            "Species",
+        ],
+        [
+            "SIINFEKL",
+            "HLA-A*02:01",
+            "half maximal inhibitory concentration (IC50)",
+            "nM",
+            "<",
+            "250",
+            "I",
+            "human",
+        ],
     ]
     with path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
@@ -242,8 +294,22 @@ def test_load_iedb_binding_preserves_measurement_type_for_split_targets(tmp_path
         ["Epitope", "MHC Restriction", "Assay", "Assay", "Assay", "MHC Restriction"],
         ["Name", "Name", "Response measured", "Units", "Quantitative measurement", "Class"],
         ["SIINFEKL", "HLA-A*02:01", "dissociation constant KD", "nM", "50", "I"],
-        ["GILGFVFTL", "HLA-A*02:01", "half maximal inhibitory concentration (IC50)", "nM", "500", "I"],
-        ["LLWNGPMAV", "HLA-A*02:01", "half maximal effective concentration (EC50)", "nM", "5000", "I"],
+        [
+            "GILGFVFTL",
+            "HLA-A*02:01",
+            "half maximal inhibitory concentration (IC50)",
+            "nM",
+            "500",
+            "I",
+        ],
+        [
+            "LLWNGPMAV",
+            "HLA-A*02:01",
+            "half maximal effective concentration (EC50)",
+            "nM",
+            "5000",
+            "I",
+        ],
     ]
     with path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
@@ -422,7 +488,14 @@ def test_load_iedb_bcell_parses_chain_types(tmp_path):
     path = tmp_path / "iedb_bcell.csv"
     rows = [
         ["Epitope", "Assay", "Assay", "Assay Antibody", "Assay Antibody", "Epitope"],
-        ["Name", "Response measured", "Qualitative Measure", "Heavy chain isotype", "Light chain isotype", "Species"],
+        [
+            "Name",
+            "Response measured",
+            "Qualitative Measure",
+            "Heavy chain isotype",
+            "Light chain isotype",
+            "Species",
+        ],
         ["SIINFEKL", "qualitative binding", "Positive", "IgG1", "kappa", "human"],
         ["GILGFVFTL", "qualitative binding", "negative", "IgM", "lambda", "human"],
     ]
@@ -456,10 +529,54 @@ def test_load_10x_vdj_parses_t_and_b_chains(tmp_path):
             "cdr3",
             "cdr3_nt",
         ],
-        ["cell1", "true", "true", "TRA", "TRAV12-2", "TRAJ42", "TRAC", "true", "CAVRDSNYQLIW", "TGT..."],
-        ["cell1", "true", "true", "TRB", "TRBV7-9", "TRBJ2-7", "TRBC1", "true", "CASSLGQGELFF", "TGT..."],
-        ["cell2", "true", "true", "IGH", "IGHV3-23", "IGHJ4", "IGHM", "true", "CARDRSTGYYYY", "TGT..."],
-        ["cell2", "true", "true", "IGK", "IGKV1-39", "IGKJ1", "IGKC", "true", "CQQYNSYPYTF", "TGT..."],
+        [
+            "cell1",
+            "true",
+            "true",
+            "TRA",
+            "TRAV12-2",
+            "TRAJ42",
+            "TRAC",
+            "true",
+            "CAVRDSNYQLIW",
+            "TGT...",
+        ],
+        [
+            "cell1",
+            "true",
+            "true",
+            "TRB",
+            "TRBV7-9",
+            "TRBJ2-7",
+            "TRBC1",
+            "true",
+            "CASSLGQGELFF",
+            "TGT...",
+        ],
+        [
+            "cell2",
+            "true",
+            "true",
+            "IGH",
+            "IGHV3-23",
+            "IGHJ4",
+            "IGHM",
+            "true",
+            "CARDRSTGYYYY",
+            "TGT...",
+        ],
+        [
+            "cell2",
+            "true",
+            "true",
+            "IGK",
+            "IGKV1-39",
+            "IGKJ1",
+            "IGKC",
+            "true",
+            "CQQYNSYPYTF",
+            "TGT...",
+        ],
     ]
     with path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
@@ -511,7 +628,9 @@ def test_load_vdjdb_parses_evidence_metadata(tmp_path):
             "Influenza A virus",
             "PMID:28629751",
             "3",
-            '{"identification":"tetramer-sort ","singlecell":"yes","sequencing":"amplicon-seq","verification":"antigen-loaded-targets,antigen-expressing-targets"}',
+            '{"identification":"tetramer-sort ","singlecell":"yes",'
+            '"sequencing":"amplicon-seq",'
+            '"verification":"antigen-loaded-targets,antigen-expressing-targets"}',
         ],
     ]
     with path.open("w", newline="", encoding="utf-8") as f:
@@ -1065,40 +1184,44 @@ def test_create_dataloader_balanced_batches_use_proportional_task_quotas():
 
 
 def test_create_dataloader_balanced_batches_preserve_allele_class_and_species_diversity():
-    binding_records = [
-        BindingRecord(
-            peptide=f"SIINFEK{i}",
-            mhc_allele="HLA-A*02:01",
-            value=50.0 + float(i),
-            measurement_type="IC50",
-            mhc_class="I",
-            species="Homo sapiens",
-            source="iedb",
-        )
-        for i in range(2)
-    ] + [
-        BindingRecord(
-            peptide=f"DRPEPTIDE{i}",
-            mhc_allele="HLA-DRB1*01:01",
-            value=500.0 + float(i),
-            measurement_type="IC50",
-            mhc_class="II",
-            species="Homo sapiens",
-            source="iedb",
-        )
-        for i in range(2)
-    ] + [
-        BindingRecord(
-            peptide=f"MAMUPEPT{i}",
-            mhc_allele="Mamu-A*01:01",
-            value=150.0 + float(i),
-            measurement_type="IC50",
-            mhc_class="I",
-            species="Macaca mulatta",
-            source="iedb",
-        )
-        for i in range(2)
-    ]
+    binding_records = (
+        [
+            BindingRecord(
+                peptide=f"SIINFEK{i}",
+                mhc_allele="HLA-A*02:01",
+                value=50.0 + float(i),
+                measurement_type="IC50",
+                mhc_class="I",
+                species="Homo sapiens",
+                source="iedb",
+            )
+            for i in range(2)
+        ]
+        + [
+            BindingRecord(
+                peptide=f"DRPEPTIDE{i}",
+                mhc_allele="HLA-DRB1*01:01",
+                value=500.0 + float(i),
+                measurement_type="IC50",
+                mhc_class="II",
+                species="Homo sapiens",
+                source="iedb",
+            )
+            for i in range(2)
+        ]
+        + [
+            BindingRecord(
+                peptide=f"MAMUPEPT{i}",
+                mhc_allele="Mamu-A*01:01",
+                value=150.0 + float(i),
+                measurement_type="IC50",
+                mhc_class="I",
+                species="Macaca mulatta",
+                source="iedb",
+            )
+            for i in range(2)
+        ]
+    )
     dataset = PrestoDataset(
         binding_records=binding_records,
         mhc_sequences={

@@ -397,7 +397,9 @@ def test_scramble_peptide_with_anchor_opposite_forces_charged_anchors():
 
     for seed in range(20):
         scrambled = _scramble_peptide_with_anchor_changes(
-            random.Random(seed), peptide, anchor_opposite=True,
+            random.Random(seed),
+            peptide,
+            anchor_opposite=True,
         )
         assert len(scrambled) == len(peptide)
         assert scrambled != peptide
@@ -412,7 +414,9 @@ def test_scramble_peptide_anchor_opposite_false_does_not_force_charged():
     any_non_charged = False
     for seed in range(50):
         scrambled = _scramble_peptide_with_anchor_changes(
-            random.Random(seed), peptide, anchor_opposite=False,
+            random.Random(seed),
+            peptide,
+            anchor_opposite=False,
         )
         if scrambled[1] not in charged or scrambled[-1] not in charged:
             any_non_charged = True
@@ -719,10 +723,7 @@ def test_resolve_run_args_prefers_train_unified_config(tmp_path):
 def test_resolve_run_args_falls_back_to_train_iedb_config(tmp_path):
     cfg = tmp_path / "train.yaml"
     cfg.write_text(
-        "train:\n"
-        "  iedb:\n"
-        "    epochs: 6\n"
-        "    max_binding: 123\n",
+        "train:\n  iedb:\n    epochs: 6\n    max_binding: 123\n",
         encoding="utf-8",
     )
     args = argparse.Namespace(config=str(cfg), profile="full")
@@ -984,7 +985,9 @@ def test_write_mhc_sequence_coverage_report_persists_json_and_csv(tmp_path):
     assert csv_path is not None and csv_path.exists()
     assert "\"rows_considered\": 10" in json_path.read_text(encoding="utf-8")
     header = csv_path.read_text(encoding="utf-8").splitlines()[0]
-    assert header == "scope,modality,state,species,count,fraction_of_total_rows,fraction_within_scope"
+    assert (
+        header == "scope,modality,state,species,count,fraction_of_total_rows,fraction_within_scope"
+    )
 
 
 def test_filter_records_to_resolved_mhc_drops_unresolved_and_trims_elution_alleles():
@@ -1230,8 +1233,11 @@ def test_load_records_from_merged_tsv_maps_assays_and_tcell_context(tmp_path):
             "effector_culture_condition\tapc_culture_condition\tin_vitro_process_type\t"
             "in_vitro_responder_cell\tin_vitro_stimulator_cell\tcdr3_alpha\tcdr3_beta\ttrav\ttrbv\tspecies\n"
             "SIINFEKL\tHLA-A*02:01\tI\t\t\t\tiedb\tbinding\t42\tIC50\t0\t\t\t\t\t\t\t\t\t\t\t\t\t\thuman\n"
-            "GILGFVFTL\tHLA-A*02:01\tI\t\t\t\tiedb\tbinding\t\tligand presentation\t0\tpositive\t\t\t\t\t\t\t\t\t\t\t\t\thuman\n"
-            "NLVPMVATV\tHLA-A*02:01\tI\t\t\t\tiedb\ttcell\t\t\t0\tpositive\tIFNg release\tELISPOT\tPBMC\t"
+            "GILGFVFTL\tHLA-A*02:01\tI\t\t\t\tiedb\tbinding\t\t"
+            "ligand presentation\t0\tpositive"
+            "\t\t\t\t\t\t\t\t\t\t\t\t\thuman\n"
+            "NLVPMVATV\tHLA-A*02:01\tI\t\t\t\tiedb\ttcell\t\t\t0\t"
+            "positive\tIFNg release\tELISPOT\tPBMC\t"
             "Direct ex vivo\tNA\tNA\tNA\tNA\t\t\t\t\thuman\n"
             "GLCTLVAML\tHLA-A*02:01\tI\t\t\t\tvdjdb\ttcr\t\t\t0\t\t\t\t\t\t\t\t\t\tCAVRDSNYQLIW\tCASSIRSSYEQYF\tTRAV12-2\tTRBV7-9\thuman\n"
         ),
@@ -1283,8 +1289,11 @@ def test_load_records_from_merged_tsv_preserves_bagged_mhc_restrictions(tmp_path
             "effector_culture_condition\tapc_culture_condition\tin_vitro_process_type\t"
             "in_vitro_responder_cell\tin_vitro_stimulator_cell\tcdr3_alpha\tcdr3_beta\ttrav\ttrbv\tspecies\n"
             "SIINFEKL\tHLA-A2\tHLA-A*02:01;HLA-A*02:02\tserotype_expanded\t2\tI\t\t\t\tiedb\tbinding\t42\tIC50\t0\t\t\t\t\t\t\t\t\t\t\t\t\t\thuman\n"
-            "GILGFVFTL\tHLA-A2\tHLA-A*02:01;HLA-A*02:02\tserotype_expanded\t2\tI\t\t\t\tiedb\tbinding\t\tligand presentation\t0\tpositive\t\t\t\t\t\t\t\t\t\t\t\t\thuman\n"
-            "NLVPMVATV\tH2-b class I\tH2-D*b;H2-K*b\thaplotype_expanded\t2\tI\t\t\t\tiedb\ttcell\t\t\t0\tpositive\tIFNg release\tELISPOT\tPBMC\t"
+            "GILGFVFTL\tHLA-A2\tHLA-A*02:01;HLA-A*02:02\tserotype_expanded\t2\t"
+            "I\t\t\t\tiedb\tbinding\t\tligand presentation\t0\tpositive"
+            "\t\t\t\t\t\t\t\t\t\t\t\t\thuman\n"
+            "NLVPMVATV\tH2-b class I\tH2-D*b;H2-K*b\thaplotype_expanded\t2\t"
+            "I\t\t\t\tiedb\ttcell\t\t\t0\tpositive\tIFNg release\tELISPOT\tPBMC\t"
             "Direct ex vivo\tNA\tNA\tNA\tNA\t\t\t\t\thuman\n"
         ),
         encoding="utf-8",
@@ -1321,7 +1330,9 @@ def test_load_records_from_merged_tsv_preserves_bagged_mhc_restrictions(tmp_path
     assert len(tcr_evidence) == 0
 
 
-def test_load_records_from_merged_tsv_drops_invalid_peptides_and_sanitizes_optional_sequences(tmp_path):
+def test_load_records_from_merged_tsv_drops_invalid_peptides_and_sanitizes_optional_sequences(
+    tmp_path,
+):
     merged = tmp_path / "merged_deduped.tsv"
     merged.write_text(
         (
@@ -1330,7 +1341,8 @@ def test_load_records_from_merged_tsv_drops_invalid_peptides_and_sanitizes_optio
             "effector_culture_condition\tapc_culture_condition\tin_vitro_process_type\t"
             "in_vitro_responder_cell\tin_vitro_stimulator_cell\tcdr3_alpha\tcdr3_beta\ttrav\ttrbv\tspecies\n"
             "SIINFEKL\tHLA-A*02:01\tI\t\t\t\tiedb\tbinding\t42\tIC50\t0\t\t\t\t\t\t\t\t\t\t\t\t\t\thuman\n"
-            "PKYVKQNTLKLAT + BIOT(P1)\tHLA-A*02:01\tI\t\t\t\tiedb\tbinding\t120\tIC50\t0\t\t\t\t\t\t\t\t\t\t\t\t\t\thuman\n"
+            "PKYVKQNTLKLAT + BIOT(P1)\tHLA-A*02:01\tI\t\t\t\tiedb\tbinding\t"
+            "120\tIC50\t0\t\t\t\t\t\t\t\t\t\t\t\t\t\thuman\n"
             "GILGFVFTL\tHLA-A*02:01\tI\t\t\t\tvdjdb\ttcr\t\t\t0\t\t\t\t\t\t\t\t\t\tNA\tCASSIRSSYEQYF\tTRAV12-2\tTRBV7-9\thuman\n"
         ),
         encoding="utf-8",
@@ -1556,12 +1568,16 @@ def test_synthetic_binding_negatives_stay_in_parent_binding_task_group():
     )
 
     synthetic_samples = [
-        sample for sample in dataset.samples
+        sample
+        for sample in dataset.samples
         if (sample.sample_source or "").startswith("synthetic_negative_")
     ]
     assert synthetic_samples
     assert all(sample.assay_group == "binding_ic50" for sample in synthetic_samples)
-    assert all((sample.synthetic_kind or "").startswith("synthetic_negative_") for sample in synthetic_samples)
+    assert all(
+        (sample.synthetic_kind or "").startswith("synthetic_negative_")
+        for sample in synthetic_samples
+    )
 
 
 def test_augment_binding_peptide_scramble_forces_anchor_changes():
@@ -1624,7 +1640,9 @@ def test_augment_binding_default_anchor_strategy_skips_anchor_opposite():
             weak_value_max_nM=50000.0,
             seed=seed,
         )
-        scramble_recs = [rec for rec in augmented if rec.source == "synthetic_negative_peptide_scramble"]
+        scramble_recs = [
+            rec for rec in augmented if rec.source == "synthetic_negative_peptide_scramble"
+        ]
         if scramble_recs:
             s = scramble_recs[0].peptide
             if s[1] not in charged or s[-1] not in charged:
@@ -1658,7 +1676,9 @@ def test_augment_binding_weak_binder_skips_anchor_opposite():
             seed=seed,
             class_i_anchor_strategy="property_opposite",
         )
-        scramble_recs = [rec for rec in augmented if rec.source == "synthetic_negative_peptide_scramble"]
+        scramble_recs = [
+            rec for rec in augmented if rec.source == "synthetic_negative_peptide_scramble"
+        ]
         if scramble_recs:
             s = scramble_recs[0].peptide
             if s[1] not in charged or s[-1] not in charged:
@@ -1767,7 +1787,9 @@ def test_augment_elution_records_with_allele_mismatch_mode():
         and rec.alleles
         and rec.alleles[0] != source_allele_by_peptide[rec.peptide]
     ]
-    assert real_peptide_random_mhc_negatives, "expected at least one real-peptide/random-MHC synthetic negative"
+    assert real_peptide_random_mhc_negatives, (
+        "expected at least one real-peptide/random-MHC synthetic negative"
+    )
 
 
 def test_augment_elution_records_adds_hard_pair_negatives_from_known_non_presenters():
@@ -1823,7 +1845,9 @@ def test_augment_processing_records_with_synthetic_negatives():
     assert stats["added"] == 2
     assert stats["flank_shuffle"] == 1
     assert stats["peptide_scramble"] == 1
-    negatives = [rec for rec in augmented if rec.source.startswith("synthetic_negative_processing_")]
+    negatives = [
+        rec for rec in augmented if rec.source.startswith("synthetic_negative_processing_")
+    ]
     assert len(negatives) == 2
     assert all(rec.label == 0.0 for rec in negatives)
     assert all(rec.flank_n and rec.flank_c for rec in negatives)
@@ -1879,7 +1903,9 @@ def test_cascade_binding_negatives_to_downstream_adds_elution_and_tcell():
     assert stats["elution_added"] == 1
     assert stats["tcell_added"] == 1
 
-    synthetic_elution = [rec for rec in out_elution if rec.source == "synthetic_negative_from_binding"]
+    synthetic_elution = [
+        rec for rec in out_elution if rec.source == "synthetic_negative_from_binding"
+    ]
     synthetic_tcell = [rec for rec in out_tcell if rec.source == "synthetic_negative_from_binding"]
     assert len(synthetic_elution) == 1
     assert len(synthetic_tcell) == 1
@@ -1926,9 +1952,7 @@ def test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved(tmp_path, mo
     # (`~/code`, holding a `mhcseqs/` directory) is on sys.path. This test fakes
     # the whole data layer and is exercising the strict-resolution failure path,
     # not the environment precondition, so opt out of the check.
-    monkeypatch.setattr(
-        "presto.scripts.train_iedb._assert_mhcseqs_importable", lambda: None
-    )
+    monkeypatch.setattr("presto.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
 
     args = argparse.Namespace(
         data_dir=str(tmp_path),

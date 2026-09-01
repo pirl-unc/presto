@@ -37,6 +37,7 @@ from ..training.checkpointing import load_model_from_checkpoint
 @dataclass
 class PresentationResult:
     """Result from presentation prediction."""
+
     peptide: str
     mhc_class: str
     processing_prob: float
@@ -51,6 +52,7 @@ class PresentationResult:
 @dataclass
 class RecognitionResult:
     """Result from repertoire-level recognition/immunogenicity prediction."""
+
     peptide: str
     mhc_class: str
     presentation_prob: float
@@ -61,6 +63,7 @@ class RecognitionResult:
 @dataclass
 class TiledPresentationHit:
     """One tiled peptide prediction."""
+
     peptide: str
     start: int
     end: int
@@ -75,6 +78,7 @@ class TiledPresentationHit:
 @dataclass
 class TiledPresentationResult:
     """Protein tiling prediction result."""
+
     protein_length: int
     total_candidates: int
     min_length: int
@@ -146,9 +150,7 @@ class Predictor:
             index_csv=index_csv,
             auto_load_index_csv=auto_load_index_csv,
         )
-        self.max_affinity_nM = float(
-            getattr(model, "max_affinity_nM", DEFAULT_MAX_AFFINITY_NM)
-        )
+        self.max_affinity_nM = float(getattr(model, "max_affinity_nM", DEFAULT_MAX_AFFINITY_NM))
         resolved_midpoint = (
             float(binding_midpoint_nM)
             if binding_midpoint_nM is not None
@@ -173,7 +175,11 @@ class Predictor:
         uniq: List[Path] = []
         seen: set[str] = set()
         for candidate in candidates:
-            key = str(candidate.expanduser().resolve()) if candidate.exists() else str(candidate.expanduser())
+            key = (
+                str(candidate.expanduser().resolve())
+                if candidate.exists()
+                else str(candidate.expanduser())
+            )
             if key in seen:
                 continue
             seen.add(key)
@@ -358,8 +364,7 @@ class Predictor:
                 alpha_allele = class_ii_default_dra_allele(species=species, beta_allele=allele)
                 if alpha_allele is None:
                     raise ValueError(
-                        "No native default DRA mapping is available for DR beta allele "
-                        f"{allele!r}."
+                        f"No native default DRA mapping is available for DR beta allele {allele!r}."
                     )
                 alpha_exact = lookup_exact_mhc_input(alpha_allele)
                 beta_exact = lookup_exact_mhc_input(allele)
@@ -380,12 +385,16 @@ class Predictor:
                 )
                 if resolved is not None:
                     return resolved
-        if mhc_class == "II" and allele and is_class_ii_dr_beta_allele(allele) and not explicit_mhc_b:
+        if (
+            mhc_class == "II"
+            and allele
+            and is_class_ii_dr_beta_allele(allele)
+            and not explicit_mhc_b
+        ):
             alpha_allele = class_ii_default_dra_allele(species=species, beta_allele=allele)
             if alpha_allele is None:
                 raise ValueError(
-                    "No native default DRA mapping is available for DR beta allele "
-                    f"{allele!r}."
+                    f"No native default DRA mapping is available for DR beta allele {allele!r}."
                 )
             alpha_seq = self._get_mhc_sequence(alpha_allele, None)
             beta_seq = self._get_mhc_sequence(allele, mhc_sequence)
@@ -407,13 +416,11 @@ class Predictor:
         )
         return prepared.groove_half_1, prepared.groove_half_2
 
-    def _tokenize(
-        self, seq: str, max_len: int, truncate: str = "right"
-    ) -> torch.Tensor:
+    def _tokenize(self, seq: str, max_len: int, truncate: str = "right") -> torch.Tensor:
         """Tokenize a sequence. `truncate` chooses which end survives."""
-        return self.tokenizer.batch_encode(
-            [seq], max_len=max_len, pad=True, truncate=truncate
-        ).to(self.device)
+        return self.tokenizer.batch_encode([seq], max_len=max_len, pad=True, truncate=truncate).to(
+            self.device
+        )
 
     def _binding_prob_from_kd_log10(self, kd_log10_nM: float) -> float:
         """Map log10(KD nM) to a calibrated [0,1] binding probability.
@@ -492,13 +499,9 @@ class Predictor:
         # and the default right-truncation after the tiled one was fixed,
         # because the test that pinned it inspected only the tiled call site.
         flank_n_tok = (
-            self._tokenize(flank_n, max_len=self._flank_len, truncate="left")
-            if flank_n
-            else None
+            self._tokenize(flank_n, max_len=self._flank_len, truncate="left") if flank_n else None
         )
-        flank_c_tok = (
-            self._tokenize(flank_c, max_len=self._flank_len) if flank_c else None
-        )
+        flank_c_tok = self._tokenize(flank_c, max_len=self._flank_len) if flank_c else None
 
         # Forward pass
         outputs = self.model(
@@ -517,19 +520,19 @@ class Predictor:
         # Extract results
         proc_prob = torch.sigmoid(outputs["processing_logit"]).item()
         bind_prob = None
-        if "assays" in outputs and isinstance(outputs["assays"], dict) and "KD_nM" in outputs["assays"]:
+        if (
+            "assays" in outputs
+            and isinstance(outputs["assays"], dict)
+            and "KD_nM" in outputs["assays"]
+        ):
             kd_log10 = outputs["assays"]["KD_nM"].item()
             bind_prob = self._binding_prob_from_kd_log10(kd_log10)
         else:
             bind_prob = torch.sigmoid(outputs["binding_logit"]).item()
         pres_prob = torch.sigmoid(outputs["presentation_logit"]).item()
 
-        latents = {
-            k: v.item() for k, v in outputs["binding_latents"].items()
-        }
-        assays = {
-            k: v.item() for k, v in outputs["assays"].items()
-        }
+        latents = {k: v.item() for k, v in outputs["binding_latents"].items()}
+        assays = {k: v.item() for k, v in outputs["assays"].items()}
 
         if explicit_mhc_class is not None:
             reported_mhc_class = explicit_mhc_class
@@ -626,8 +629,8 @@ class Predictor:
             max_here = min(max_length, seq_len - start)
             for length in range(min_length, max_here + 1):
                 end = start + length
-                flank_n = sequence[max(0, start - flank_size):start] if flank_size > 0 else ""
-                flank_c = sequence[end:min(seq_len, end + flank_size)] if flank_size > 0 else ""
+                flank_n = sequence[max(0, start - flank_size) : start] if flank_size > 0 else ""
+                flank_c = sequence[end : min(seq_len, end + flank_size)] if flank_size > 0 else ""
                 tiles.append(
                     {
                         "peptide": sequence[start:end],
@@ -676,7 +679,9 @@ class Predictor:
                     flank_n_list, max_len=self._flank_len, pad=True, truncate="left"
                 ).to(self.device)
             if any(flank_c_list):
-                flank_c_tok = self.tokenizer.batch_encode(flank_c_list, max_len=self._flank_len, pad=True).to(self.device)
+                flank_c_tok = self.tokenizer.batch_encode(
+                    flank_c_list, max_len=self._flank_len, pad=True
+                ).to(self.device)
 
             mhc_a_tok = mhc_a_tok_single.expand(pep_tok.shape[0], -1)
             mhc_b_tok = mhc_b_tok_single.expand(pep_tok.shape[0], -1)
@@ -706,11 +711,13 @@ class Predictor:
             proc_probs = torch.sigmoid(outputs["processing_logit"]).view(-1).tolist()
             pres_probs = torch.sigmoid(outputs["presentation_logit"]).view(-1).tolist()
 
-            if "assays" in outputs and isinstance(outputs["assays"], dict) and "KD_nM" in outputs["assays"]:
+            if (
+                "assays" in outputs
+                and isinstance(outputs["assays"], dict)
+                and "KD_nM" in outputs["assays"]
+            ):
                 kd_log10 = outputs["assays"]["KD_nM"].view(-1)
-                bind_probs = [
-                    self._binding_prob_from_kd_log10(float(v.item())) for v in kd_log10
-                ]
+                bind_probs = [self._binding_prob_from_kd_log10(float(v.item())) for v in kd_log10]
             else:
                 bind_probs = torch.sigmoid(outputs["binding_logit"]).view(-1).tolist()
 
@@ -720,8 +727,7 @@ class Predictor:
 
             for idx, tile in enumerate(batch_tiles):
                 assays = {
-                    assay_name: float(values[idx])
-                    for assay_name, values in assays_by_name.items()
+                    assay_name: float(values[idx]) for assay_name, values in assays_by_name.items()
                 }
                 hits.append(
                     TiledPresentationHit(
@@ -797,9 +803,7 @@ class Predictor:
             raise ValueError("Must provide alleles or mhc_sequences")
 
         # Use alleles or sequences
-        seqs = mhc_sequences if mhc_sequences else [
-            self._get_mhc_sequence(a) for a in alleles
-        ]
+        seqs = mhc_sequences if mhc_sequences else [self._get_mhc_sequence(a) for a in alleles]
 
         per_allele = []
         probs = []
@@ -817,10 +821,12 @@ class Predictor:
                 species_of_origin=species_of_origin,
                 require_species_for_class_i_b2m=require_species_for_class_i_b2m,
             )
-            per_allele.append({
-                "allele": allele if allele is not None else f"seq_{i}",
-                "presentation_prob": result.presentation_prob,
-            })
+            per_allele.append(
+                {
+                    "allele": allele if allele is not None else f"seq_{i}",
+                    "presentation_prob": result.presentation_prob,
+                }
+            )
             probs.append(result.presentation_prob)
 
         # Noisy-OR aggregation

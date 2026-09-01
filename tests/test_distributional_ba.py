@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import math
 
 import pytest
 import torch
@@ -17,8 +16,6 @@ from presto.scripts.distributional_ba.heads import (
     HEAD_REGISTRY,
     GaussianHead,
     HLGaussHead,
-    LogMSEHead,
-    MHCflurryHead,
     QuantileHead,
     TwoHotHead,
 )
@@ -33,8 +30,6 @@ from presto.scripts.distributional_ba.losses import (
 )
 from presto.scripts.distributional_ba.assay_context import (
     AssayContextEncoder,
-    D1AffineIntegration,
-    D2LogitIntegration,
 )
 from presto.scripts.distributional_ba.metrics import point_metrics, calibration_metrics
 
@@ -46,6 +41,7 @@ B, D, CTX = 4, 384, 32  # batch, encoder dim (3*128), context dim
 # Condition matrix
 # ---------------------------------------------------------------------------
 
+
 def test_32_conditions():
     assert len(CONDITIONS) == 32
     ids = [c.cond_id for c in CONDITIONS]
@@ -56,16 +52,20 @@ def test_32_conditions():
 # Forward pass shape checks for all 4 head types
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("head_type,assay_mode", [
-    ("mhcflurry", "affine"),
-    ("mhcflurry", "additive"),
-    ("log_mse", "affine"),
-    ("log_mse", "additive"),
-    ("twohot", "d1_affine"),
-    ("twohot", "d2_logit"),
-    ("hlgauss", "d1_affine"),
-    ("hlgauss", "d2_logit"),
-])
+
+@pytest.mark.parametrize(
+    "head_type,assay_mode",
+    [
+        ("mhcflurry", "affine"),
+        ("mhcflurry", "additive"),
+        ("log_mse", "affine"),
+        ("log_mse", "additive"),
+        ("twohot", "d1_affine"),
+        ("twohot", "d2_logit"),
+        ("hlgauss", "d1_affine"),
+        ("hlgauss", "d2_logit"),
+    ],
+)
 def test_head_forward_shape(head_type, assay_mode):
     kwargs = dict(in_dim=D, ctx_dim=CTX, max_nM=50_000.0, assay_mode=assay_mode)
     if head_type in ("twohot", "hlgauss"):
@@ -87,14 +87,18 @@ def test_head_forward_shape(head_type, assay_mode):
 # Loss backward — gradient flow
 # ---------------------------------------------------------------------------
 
-@pytest.mark.parametrize("head_type,assay_mode", [
-    ("mhcflurry", "affine"),
-    ("log_mse", "affine"),
-    ("twohot", "d1_affine"),
-    ("hlgauss", "d1_affine"),
-    ("twohot", "d2_logit"),
-    ("hlgauss", "d2_logit"),
-])
+
+@pytest.mark.parametrize(
+    "head_type,assay_mode",
+    [
+        ("mhcflurry", "affine"),
+        ("log_mse", "affine"),
+        ("twohot", "d1_affine"),
+        ("hlgauss", "d1_affine"),
+        ("twohot", "d2_logit"),
+        ("hlgauss", "d2_logit"),
+    ],
+)
 def test_loss_backward(head_type, assay_mode):
     kwargs = dict(in_dim=D, ctx_dim=CTX, max_nM=50_000.0, assay_mode=assay_mode)
     if head_type in ("twohot", "hlgauss"):
@@ -121,13 +125,14 @@ def test_loss_backward(head_type, assay_mode):
 # Survival NLL edge cases
 # ---------------------------------------------------------------------------
 
+
 def test_survival_nll_threshold_below_range():
     """Threshold below all bins → P(Y >= threshold) ≈ 1 → loss ≈ 0."""
     K = 16
     probs = torch.softmax(torch.randn(1, K), dim=-1)
     edges = torch.linspace(1.0, 10.0, K + 1)
     threshold = torch.tensor([0.5])  # below range
-    direction = torch.tensor([1])    # >, meaning true >= threshold
+    direction = torch.tensor([1])  # >, meaning true >= threshold
 
     loss = survival_nll(probs, edges, threshold, direction)
     # Almost all mass is above threshold, so loss should be near 0
@@ -140,7 +145,7 @@ def test_survival_nll_threshold_above_range():
     probs = torch.softmax(torch.randn(1, K), dim=-1)
     edges = torch.linspace(1.0, 10.0, K + 1)
     threshold = torch.tensor([11.0])  # above range
-    direction = torch.tensor([1])     # >, meaning true >= threshold
+    direction = torch.tensor([1])  # >, meaning true >= threshold
 
     loss = survival_nll(probs, edges, threshold, direction)
     assert loss.item() > 1.0  # should be large (-log(small))
@@ -149,6 +154,7 @@ def test_survival_nll_threshold_above_range():
 # ---------------------------------------------------------------------------
 # Target vector properties
 # ---------------------------------------------------------------------------
+
 
 def test_twohot_target_sums_to_one():
     head = TwoHotHead(in_dim=D, ctx_dim=CTX, n_bins=64, assay_mode="d1_affine")
@@ -180,6 +186,7 @@ def test_hlgauss_target_sums_to_approx_one():
 # D1-affine vs D2-logit produce different outputs
 # ---------------------------------------------------------------------------
 
+
 def test_d1_vs_d2_different_outputs():
     """Different assay contexts should produce different predictions."""
     head_d1 = TwoHotHead(in_dim=D, ctx_dim=CTX, n_bins=32, assay_mode="d1_affine")
@@ -202,6 +209,7 @@ def test_d1_vs_d2_different_outputs():
 # Assay context encoder
 # ---------------------------------------------------------------------------
 
+
 def test_assay_context_encoder():
     enc = AssayContextEncoder(factor_dim=8, ctx_dim=CTX)
     type_idx = torch.zeros(B, dtype=torch.long)
@@ -216,9 +224,11 @@ def test_assay_context_encoder():
 # Full model build
 # ---------------------------------------------------------------------------
 
+
 @pytest.mark.parametrize("cond_id", [1, 5, 7, 13, 21, 29])
 def test_build_model_smoke(cond_id):
     from presto.scripts.distributional_ba.config import CONDITIONS_BY_ID
+
     spec = CONDITIONS_BY_ID[cond_id]
     model = build_model(spec)
 
@@ -234,6 +244,7 @@ def test_build_model_smoke(cond_id):
 # ---------------------------------------------------------------------------
 # Calibration metrics on synthetic data
 # ---------------------------------------------------------------------------
+
 
 def test_calibration_metrics_smoke():
     K = 32
@@ -258,6 +269,7 @@ def test_calibration_metrics_smoke():
 # Point metrics
 # ---------------------------------------------------------------------------
 
+
 def test_point_metrics_perfect():
     pred = torch.tensor([10.0, 100.0, 1000.0, 10000.0])
     true = torch.tensor([10.0, 100.0, 1000.0, 10000.0])
@@ -271,6 +283,7 @@ def test_point_metrics_perfect():
 # ---------------------------------------------------------------------------
 # Standalone loss functions
 # ---------------------------------------------------------------------------
+
 
 def test_distributional_ce():
     logits = torch.randn(B, 32)
@@ -301,6 +314,7 @@ def test_mhcflurry_censored_loss_exact():
 # ---------------------------------------------------------------------------
 # Gaussian head tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.parametrize("assay_mode", ["affine", "additive"])
 def test_gaussian_head_forward_shape(assay_mode):
@@ -363,6 +377,7 @@ def test_censored_gaussian_nll_consistent():
 # ---------------------------------------------------------------------------
 # Quantile head tests
 # ---------------------------------------------------------------------------
+
 
 @pytest.mark.parametrize("assay_mode", ["affine", "additive"])
 def test_quantile_head_forward_shape(assay_mode):
@@ -435,8 +450,10 @@ def test_censored_pinball_right_censored():
 # V2 config tests
 # ---------------------------------------------------------------------------
 
+
 def test_v2_28_conditions():
     from presto.scripts.distributional_ba.config_v2 import CONDITIONS_V2
+
     assert len(CONDITIONS_V2) == 28
     ids = [c.cond_id for c in CONDITIONS_V2]
     assert ids == list(range(1, 29))
@@ -445,6 +462,7 @@ def test_v2_28_conditions():
 def test_v2_build_model_smoke():
     from presto.scripts.distributional_ba.config_v2 import CONDITIONS_V2_BY_ID
     from presto.scripts.distributional_ba.config import build_model
+
     # Test one of each new head type
     for cond_id in [1, 5, 9, 13, 21]:
         spec = CONDITIONS_V2_BY_ID[cond_id]
@@ -461,9 +479,11 @@ def test_v2_build_model_smoke():
 # Content-conditioned assay context tests
 # ---------------------------------------------------------------------------
 
+
 def test_content_conditioned_assay_context():
     """AssayContextEncoder with repr_dim > 0 accepts binding logit + mol repr."""
     from presto.scripts.distributional_ba.assay_context import AssayContextEncoder
+
     repr_dim = 384
     enc = AssayContextEncoder(ctx_dim=32, repr_dim=repr_dim)
     B = 4
@@ -603,7 +623,9 @@ def test_v6_groove_backend_smoke():
     assert out["pred_ic50_nM"].shape == (2,)
 
 
-@pytest.mark.parametrize("head_type", ["mhcflurry", "log_mse", "twohot", "hlgauss", "gaussian", "quantile"])
+@pytest.mark.parametrize(
+    "head_type", ["mhcflurry", "log_mse", "twohot", "hlgauss", "gaussian", "quantile"]
+)
 def test_compute_binding_signal(head_type):
     """All heads implement compute_binding_signal returning (B,) scalar."""
     head_cls = HEAD_REGISTRY[head_type]
@@ -623,6 +645,7 @@ def test_compute_binding_signal(head_type):
 
 def test_v5_conditions():
     from presto.scripts.distributional_ba.config_v5 import CONDITIONS_V5
+
     assert len(CONDITIONS_V5) == 6
     dims = [c.embed_dim for c in CONDITIONS_V5]
     assert dims == [32, 64, 96, 128, 192, 256]
@@ -632,9 +655,11 @@ def test_v5_conditions():
 # Assay combo prediction tests
 # ---------------------------------------------------------------------------
 
+
 def test_predict_all_combos_point():
     """predict_all_combos returns per-combo point predictions."""
     from presto.scripts.distributional_ba.assay_combos import predict_all_combos
+
     spec = ConditionSpec(cond_id=99, head_type="mhcflurry", assay_mode="additive", max_nM=50_000)
     model = build_model(spec, content_conditioned=True)
     model.eval()
@@ -642,12 +667,28 @@ def test_predict_all_combos_point():
     mhc_a = torch.randint(1, 20, (1, 40))
     mhc_b = torch.randint(1, 20, (1, 40))
     combos = [
-        {"assay_type_idx": 0, "assay_prep_idx": 0, "assay_geometry_idx": 0, "assay_readout_idx": 0,
-         "assay_type": "unknown", "assay_prep": "unknown", "assay_geometry": "unknown",
-         "assay_readout": "unknown", "count": 100},
-        {"assay_type_idx": 1, "assay_prep_idx": 1, "assay_geometry_idx": 1, "assay_readout_idx": 1,
-         "assay_type": "KD", "assay_prep": "PURIFIED", "assay_geometry": "COMPETITIVE",
-         "assay_readout": "RADIOACTIVITY", "count": 50},
+        {
+            "assay_type_idx": 0,
+            "assay_prep_idx": 0,
+            "assay_geometry_idx": 0,
+            "assay_readout_idx": 0,
+            "assay_type": "unknown",
+            "assay_prep": "unknown",
+            "assay_geometry": "unknown",
+            "assay_readout": "unknown",
+            "count": 100,
+        },
+        {
+            "assay_type_idx": 1,
+            "assay_prep_idx": 1,
+            "assay_geometry_idx": 1,
+            "assay_readout_idx": 1,
+            "assay_type": "KD",
+            "assay_prep": "PURIFIED",
+            "assay_geometry": "COMPETITIVE",
+            "assay_readout": "RADIOACTIVITY",
+            "count": 50,
+        },
     ]
     results = predict_all_combos(model, pep, mhc_a, mhc_b, combos)
     assert len(results) == 2
@@ -660,17 +701,27 @@ def test_predict_all_combos_point():
 def test_predict_all_combos_distributional():
     """predict_all_combos returns probs/edges for distributional heads."""
     from presto.scripts.distributional_ba.assay_combos import predict_all_combos
-    spec = ConditionSpec(cond_id=99, head_type="hlgauss", assay_mode="d1_affine",
-                         max_nM=50_000, sigma_mult=0.75)
+
+    spec = ConditionSpec(
+        cond_id=99, head_type="hlgauss", assay_mode="d1_affine", max_nM=50_000, sigma_mult=0.75
+    )
     model = build_model(spec, content_conditioned=True)
     model.eval()
     pep = torch.randint(1, 20, (1, 15))
     mhc_a = torch.randint(1, 20, (1, 40))
     mhc_b = torch.randint(1, 20, (1, 40))
     combos = [
-        {"assay_type_idx": 0, "assay_prep_idx": 0, "assay_geometry_idx": 0, "assay_readout_idx": 0,
-         "assay_type": "unknown", "assay_prep": "unknown", "assay_geometry": "unknown",
-         "assay_readout": "unknown", "count": 100},
+        {
+            "assay_type_idx": 0,
+            "assay_prep_idx": 0,
+            "assay_geometry_idx": 0,
+            "assay_readout_idx": 0,
+            "assay_type": "unknown",
+            "assay_prep": "unknown",
+            "assay_geometry": "unknown",
+            "assay_readout": "unknown",
+            "count": 100,
+        },
     ]
     results = predict_all_combos(model, pep, mhc_a, mhc_b, combos)
     assert len(results) == 1
@@ -685,19 +736,37 @@ def test_predict_all_combos_distributional():
 def test_predict_marginal_distributional():
     """predict_marginal produces a mixture distribution for distributional heads."""
     from presto.scripts.distributional_ba.assay_combos import predict_marginal
-    spec = ConditionSpec(cond_id=99, head_type="hlgauss", assay_mode="d1_affine",
-                         max_nM=50_000, sigma_mult=0.75)
+
+    spec = ConditionSpec(
+        cond_id=99, head_type="hlgauss", assay_mode="d1_affine", max_nM=50_000, sigma_mult=0.75
+    )
     model = build_model(spec, content_conditioned=True)
     pep = torch.randint(1, 20, (1, 15))
     mhc_a = torch.randint(1, 20, (1, 40))
     mhc_b = torch.randint(1, 20, (1, 40))
     combos = [
-        {"assay_type_idx": 0, "assay_prep_idx": 0, "assay_geometry_idx": 0, "assay_readout_idx": 0,
-         "assay_type": "unknown", "assay_prep": "unknown", "assay_geometry": "unknown",
-         "assay_readout": "unknown", "count": 100},
-        {"assay_type_idx": 1, "assay_prep_idx": 1, "assay_geometry_idx": 0, "assay_readout_idx": 0,
-         "assay_type": "KD", "assay_prep": "PURIFIED", "assay_geometry": "unknown",
-         "assay_readout": "unknown", "count": 50},
+        {
+            "assay_type_idx": 0,
+            "assay_prep_idx": 0,
+            "assay_geometry_idx": 0,
+            "assay_readout_idx": 0,
+            "assay_type": "unknown",
+            "assay_prep": "unknown",
+            "assay_geometry": "unknown",
+            "assay_readout": "unknown",
+            "count": 100,
+        },
+        {
+            "assay_type_idx": 1,
+            "assay_prep_idx": 1,
+            "assay_geometry_idx": 0,
+            "assay_readout_idx": 0,
+            "assay_type": "KD",
+            "assay_prep": "PURIFIED",
+            "assay_geometry": "unknown",
+            "assay_readout": "unknown",
+            "count": 50,
+        },
     ]
     result = predict_marginal(model, pep, mhc_a, mhc_b, combos)
     assert "ic50_nM" in result

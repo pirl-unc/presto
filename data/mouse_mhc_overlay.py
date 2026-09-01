@@ -181,9 +181,7 @@ def _candidate_uniprot_gene_queries(imgt_gene_symbol: str) -> List[str]:
 def _uniprot_search(query: str, timeout: int = 30, size: int = 100) -> List[Dict[str, object]]:
     params = {
         "query": query,
-        "fields": (
-            "accession,id,reviewed,protein_name,gene_names,organism_name,length,sequence"
-        ),
+        "fields": ("accession,id,reviewed,protein_name,gene_names,organism_name,length,sequence"),
         "format": "json",
         "size": str(size),
     }
@@ -360,7 +358,9 @@ def build_mouse_mhc_overlay(
                         "uniprot_accession": accession,
                         "uniprot_entry_id": str(row.get("uniProtkbId") or ""),
                         "uniprot_entry_type": entry_type,
-                        "uniprot_record_url": UNIPROT_ENTRY_URL_TEMPLATE.format(accession=accession),
+                        "uniprot_record_url": UNIPROT_ENTRY_URL_TEMPLATE.format(
+                            accession=accession
+                        ),
                         "uniprot_protein_name": protein_name,
                         "uniprot_gene_names": ";".join(gene_names),
                         "allele_derivation_rule": derivation_rule,
@@ -382,7 +382,11 @@ def build_mouse_mhc_overlay(
                     prev_acc = prev.get("uniprot_accession", "")
                     cur_acc = out_row.get("uniprot_accession", "")
 
-                    current_wins = (cur_reviewed, cur_len, cur_acc) > (prev_reviewed, prev_len, prev_acc)
+                    current_wins = (cur_reviewed, cur_len, cur_acc) > (
+                        prev_reviewed,
+                        prev_len,
+                        prev_acc,
+                    )
                     if current_wins:
                         prev["selected"] = "0"
                         prev["selection_reason"] = "replaced_by_higher_rank"

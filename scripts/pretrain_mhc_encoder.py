@@ -108,8 +108,7 @@ class GroupBalancedBatchSampler(Sampler[List[int]]):
                 f"batch_size={self.batch_size} too small for {len(self.group_names)} groups"
             )
         self.slots_by_group = {
-            group: base + (1 if i < extra else 0)
-            for i, group in enumerate(self.group_names)
+            group: base + (1 if i < extra else 0) for i, group in enumerate(self.group_names)
         }
         self.num_batches = max(
             math.ceil(len(self.groups[group]) / float(self.slots_by_group[group]))
@@ -217,7 +216,9 @@ def build_mhc_warmstart_samples(
         if chain_type == "MHC_IIb" and not half_2:
             stats["skip_missing_groove"] += 1
             continue
-        if chain_type == "MHC_I" and (not _is_valid_mhc_segment(half_1) or not _is_valid_mhc_segment(half_2)):
+        if chain_type == "MHC_I" and (
+            not _is_valid_mhc_segment(half_1) or not _is_valid_mhc_segment(half_2)
+        ):
             stats["skip_invalid_groove_chars"] += 1
             continue
         if chain_type == "MHC_IIa" and not _is_valid_mhc_segment(half_1):
@@ -299,12 +300,16 @@ def _split_samples(
             n_val = len(rows) - 1
         val.extend(rows[:n_val])
         train.extend(rows[n_val:])
-    return train, val, {
-        "train_rows": len(train),
-        "val_rows": len(val),
-        "train_groups": dict(Counter(s.group_key for s in train)),
-        "val_groups": dict(Counter(s.group_key for s in val)),
-    }
+    return (
+        train,
+        val,
+        {
+            "train_rows": len(train),
+            "val_rows": len(val),
+            "train_groups": dict(Counter(s.group_key for s in train)),
+            "val_groups": dict(Counter(s.group_key for s in val)),
+        },
+    )
 
 
 def _collate_samples(
@@ -318,14 +323,30 @@ def _collate_samples(
     return {
         "mhc_a_tok": mhc_a_tok,
         "mhc_b_tok": mhc_b_tok,
-        "class_target": torch.tensor([s.class_target for s in samples], dtype=torch.long, device=device),
-        "species_target": torch.tensor([s.species_target for s in samples], dtype=torch.long, device=device),
-        "type_a_target": torch.tensor([s.type_a_target for s in samples], dtype=torch.long, device=device),
-        "type_b_target": torch.tensor([s.type_b_target for s in samples], dtype=torch.long, device=device),
-        "type_a_mask": torch.tensor([s.type_a_mask for s in samples], dtype=torch.float32, device=device),
-        "type_b_mask": torch.tensor([s.type_b_mask for s in samples], dtype=torch.float32, device=device),
-        "species_a_mask": torch.tensor([s.species_a_mask for s in samples], dtype=torch.float32, device=device),
-        "species_b_mask": torch.tensor([s.species_b_mask for s in samples], dtype=torch.float32, device=device),
+        "class_target": torch.tensor(
+            [s.class_target for s in samples], dtype=torch.long, device=device
+        ),
+        "species_target": torch.tensor(
+            [s.species_target for s in samples], dtype=torch.long, device=device
+        ),
+        "type_a_target": torch.tensor(
+            [s.type_a_target for s in samples], dtype=torch.long, device=device
+        ),
+        "type_b_target": torch.tensor(
+            [s.type_b_target for s in samples], dtype=torch.long, device=device
+        ),
+        "type_a_mask": torch.tensor(
+            [s.type_a_mask for s in samples], dtype=torch.float32, device=device
+        ),
+        "type_b_mask": torch.tensor(
+            [s.type_b_mask for s in samples], dtype=torch.float32, device=device
+        ),
+        "species_a_mask": torch.tensor(
+            [s.species_a_mask for s in samples], dtype=torch.float32, device=device
+        ),
+        "species_b_mask": torch.tensor(
+            [s.species_b_mask for s in samples], dtype=torch.float32, device=device
+        ),
     }
 
 
@@ -336,11 +357,17 @@ def _derived_class_logits(
     type_b_mask: torch.Tensor,
 ) -> torch.Tensor:
     a = torch.stack(
-        [mhc_a_type_logits[:, TYPE_I], torch.logsumexp(mhc_a_type_logits[:, TYPE_IIA:TYPE_IIB + 1], dim=-1)],
+        [
+            mhc_a_type_logits[:, TYPE_I],
+            torch.logsumexp(mhc_a_type_logits[:, TYPE_IIA : TYPE_IIB + 1], dim=-1),
+        ],
         dim=-1,
     )
     b = torch.stack(
-        [mhc_b_type_logits[:, TYPE_I], torch.logsumexp(mhc_b_type_logits[:, TYPE_IIA:TYPE_IIB + 1], dim=-1)],
+        [
+            mhc_b_type_logits[:, TYPE_I],
+            torch.logsumexp(mhc_b_type_logits[:, TYPE_IIA : TYPE_IIB + 1], dim=-1),
+        ],
         dim=-1,
     )
     mask_a = type_a_mask.unsqueeze(-1)
@@ -569,9 +596,7 @@ def main() -> None:
         train_metrics = _epoch_pass(
             model, train_loader, tokenizer, device=device, optimizer=optimizer
         )
-        val_metrics = _epoch_pass(
-            model, val_loader, tokenizer, device=device, optimizer=None
-        )
+        val_metrics = _epoch_pass(model, val_loader, tokenizer, device=device, optimizer=None)
         epoch_row = {
             "epoch": epoch,
             "train_loss": train_metrics["loss"],

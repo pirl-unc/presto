@@ -50,26 +50,41 @@ DESIGNS = (
         "A03",
         "shared_base_segment_residual + split_kd_proxy on P04 positional base",
         (
-            "--d-model", "128",
-            "--peptide-pos-mode", "concat_start_end_frac",
-            "--groove-pos-mode", "concat_start_end_frac",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--affinity-assay-residual-mode", "shared_base_segment_residual",
-            "--kd-grouping-mode", "split_kd_proxy",
+            "--d-model",
+            "128",
+            "--peptide-pos-mode",
+            "concat_start_end_frac",
+            "--groove-pos-mode",
+            "concat_start_end_frac",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--affinity-assay-residual-mode",
+            "shared_base_segment_residual",
+            "--kd-grouping-mode",
+            "split_kd_proxy",
         ),
     ),
     DesignSpec(
         "A07",
-        "shared_base_factorized_context_plus_segment_residual + split_kd_proxy on P04 positional base",
+        "shared_base_factorized_context_plus_segment_residual + split_kd_proxy on P04 "
+            "positional base",
         (
-            "--d-model", "128",
-            "--peptide-pos-mode", "concat_start_end_frac",
-            "--groove-pos-mode", "concat_start_end_frac",
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--affinity-assay-residual-mode", "shared_base_factorized_context_plus_segment_residual",
-            "--kd-grouping-mode", "split_kd_proxy",
+            "--d-model",
+            "128",
+            "--peptide-pos-mode",
+            "concat_start_end_frac",
+            "--groove-pos-mode",
+            "concat_start_end_frac",
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--affinity-assay-residual-mode",
+            "shared_base_factorized_context_plus_segment_residual",
+            "--kd-grouping-mode",
+            "split_kd_proxy",
         ),
     ),
 )
@@ -81,17 +96,27 @@ def _run_id(prefix: str, design_id: str, target_label: str) -> str:
 
 def _common_args(*, alleles: Sequence[str], probes: Sequence[str], warm_start: str) -> List[str]:
     return [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--extra-probe-peptides", ",".join(probes[1:]),
-        "--measurement-profile", "numeric_no_qualitative",
-        "--qualifier-filter", "all",
-        "--affinity-loss-mode", "assay_heads_only",
-        "--init-checkpoint", warm_start,
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--extra-probe-peptides",
+        ",".join(probes[1:]),
+        "--measurement-profile",
+        "numeric_no_qualitative",
+        "--qualifier-filter",
+        "all",
+        "--affinity-loss-mode",
+        "assay_heads_only",
+        "--init-checkpoint",
+        warm_start,
         "--no-synthetic-negatives",
-        "--binding-contrastive-weight", "0",
-        "--binding-peptide-contrastive-weight", "0",
-        "--probe-plot-frequency", "off",
+        "--binding-contrastive-weight",
+        "0",
+        "--binding-peptide-contrastive-weight",
+        "0",
+        "--probe-plot-frequency",
+        "off",
     ]
 
 
@@ -108,7 +133,10 @@ def _write_variants(path: Path, runs: Sequence[Mapping[str, Any]]) -> None:
     ]
     for run in runs:
         lines.append(
-            f"| `{run['design_id']}` | `{run['target_label']}` | `{run.get('app_id','')}` | `{run['run_id']}` | {run['description']} |"
+            (
+                f"| `{run['design_id']}` | `{run['target_label']}` | `{run.get('app_id', '')}` | "
+                f"`{run['run_id']}` | {run['description']} |"
+            )
         )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -134,9 +162,12 @@ def _launch(
     extra_args.extend(list(design.extra_args))
     extra_args.extend(
         [
-            "--design-id", f"{design.design_id}_{target_label}",
-            "--affinity-target-encoding", target_encoding,
-            "--max-affinity-nm", str(max_affinity_nm),
+            "--design-id",
+            f"{design.design_id}_{target_label}",
+            "--affinity-target-encoding",
+            target_encoding,
+            "--max-affinity-nm",
+            str(max_affinity_nm),
         ]
     )
     cmd = [
@@ -173,7 +204,11 @@ def _launch(
             app_id = ""
             while True:
                 if time.time() - start > timeout_s:
-                    existing = log_path.read_text(encoding="utf-8", errors="replace") if log_path.exists() else ""
+                    existing = (
+                        log_path.read_text(encoding="utf-8", errors="replace")
+                        if log_path.exists()
+                        else ""
+                    )
                     raise subprocess.TimeoutExpired(cmd=cmd, timeout=timeout_s, output=existing)
                 if log_path.exists():
                     output = log_path.read_text(encoding="utf-8", errors="replace")
@@ -185,7 +220,11 @@ def _launch(
                     break
                 time.sleep(0.5)
             if not app_id:
-                output = log_path.read_text(encoding="utf-8", errors="replace") if log_path.exists() else ""
+                output = (
+                    log_path.read_text(encoding="utf-8", errors="replace")
+                    if log_path.exists()
+                    else ""
+                )
                 raise RuntimeError(f"No app id in detached output for {run_id}:\n{output}")
             return {
                 "design_id": design.design_id,

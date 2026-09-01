@@ -89,26 +89,31 @@ def probe_peptide(model, tokenizer, allele_sequences, device):
             raise ValueError(f"Cannot resolve allele: {allele}")
         groove1, groove2 = grooves
         pep_tok = torch.tensor(tokenizer.encode(PEPTIDE, max_len=50)).unsqueeze(0).to(device)
-        mhc_a_tok = torch.tensor(
-            tokenizer.encode(groove1, max_len=120)
-        ).unsqueeze(0).to(device)
-        mhc_b_tok = torch.tensor(
-            tokenizer.encode(groove2, max_len=120)
-        ).unsqueeze(0).to(device)
+        mhc_a_tok = torch.tensor(tokenizer.encode(groove1, max_len=120)).unsqueeze(0).to(device)
+        mhc_b_tok = torch.tensor(tokenizer.encode(groove2, max_len=120)).unsqueeze(0).to(device)
 
         with torch.no_grad():
             outputs = model(
-                pep_tok=pep_tok, mhc_a_tok=mhc_a_tok, mhc_b_tok=mhc_b_tok,
-                mhc_class="I", species="human",
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                mhc_class="I",
+                species="human",
             )
 
         entry = {}
         for key in [
-            "processing_logit", "binding_logit", "presentation_logit",
-            "elution_logit", "ms_detectability_logit",
-            "recognition_cd8_logit", "recognition_cd4_logit",
-            "immunogenicity_cd8_logit", "immunogenicity_cd4_logit",
-            "immunogenicity_logit", "foreignness_logit",
+            "processing_logit",
+            "binding_logit",
+            "presentation_logit",
+            "elution_logit",
+            "ms_detectability_logit",
+            "recognition_cd8_logit",
+            "recognition_cd4_logit",
+            "immunogenicity_cd8_logit",
+            "immunogenicity_cd4_logit",
+            "immunogenicity_logit",
+            "foreignness_logit",
         ]:
             if key in outputs:
                 val = outputs[key]
@@ -179,9 +184,14 @@ def main():
 
     print(f"Loading data from {merged_tsv}...")
     (
-        binding_records, kinetics_records, stability_records,
-        processing_records, elution_records, tcell_records,
-        vdjdb_records, merged_stats,
+        binding_records,
+        kinetics_records,
+        stability_records,
+        processing_records,
+        elution_records,
+        tcell_records,
+        vdjdb_records,
+        merged_stats,
     ) = load_records_from_merged_tsv(
         merged_tsv=merged_tsv,
         max_binding=MAX_BINDING,
@@ -201,7 +211,9 @@ def main():
     # Collect unique alleles from all record types, then resolve sequences
     index_csv = str(DATA_DIR / "mhc_index.csv")
     all_alleles: list[str] = []
-    for rec in binding_records + kinetics_records + stability_records + processing_records + tcell_records:
+    for rec in (
+        binding_records + kinetics_records + stability_records + processing_records + tcell_records
+    ):
         a = getattr(rec, "mhc_allele", None)
         if a:
             all_alleles.append(a.strip())
@@ -285,12 +297,16 @@ def main():
     train_dataset, _ = torch.utils.data.random_split(dataset, [train_size, val_size])
 
     collator = PrestoCollator()
-    loader = create_dataloader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, collator=collator)
+    loader = create_dataloader(
+        train_dataset, batch_size=BATCH_SIZE, shuffle=True, collator=collator
+    )
     print(f"Dataset: {len(dataset)} total, {train_size} train, {len(loader)} batches/epoch")
 
     # --- Model ---
     model = Presto(
-        d_model=D_MODEL, n_layers=N_LAYERS, n_heads=N_HEADS,
+        d_model=D_MODEL,
+        n_layers=N_LAYERS,
+        n_heads=N_HEADS,
         use_pmhc_interaction_block=True,
     ).to(device)
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -338,7 +354,9 @@ def main():
 
         batch_idx += 1
         total_loss, task_losses, _ = compute_loss(
-            model, batch, device,
+            model,
+            batch,
+            device,
             uncertainty_weighting=uw,
             regularization=regularization_cfg,
         )
@@ -363,8 +381,10 @@ def main():
             a24 = probes.get("HLA-A*24:02", {})
             print(
                 f"\n[batch {batch_idx}] loss={loss_scalars['total']:.4f} | "
-                f"A0201 bind={a02.get('binding_prob', '?'):.3f} pres={a02.get('presentation_prob', '?'):.3f} | "
-                f"A2402 bind={a24.get('binding_prob', '?'):.3f} pres={a24.get('presentation_prob', '?'):.3f}"
+                f"A0201 bind={a02.get('binding_prob', '?'):.3f} "
+                f"pres={a02.get('presentation_prob', '?'):.3f} | "
+                f"A2402 bind={a24.get('binding_prob', '?'):.3f} "
+                f"pres={a24.get('presentation_prob', '?'):.3f}"
             )
 
     pbar.close()
@@ -383,6 +403,7 @@ def main():
 
 def make_plots(history, out_dir):
     import matplotlib
+
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
@@ -392,12 +413,26 @@ def make_plots(history, out_dir):
     fig, axes = plt.subplots(1, 2, figsize=(14, 5))
     for allele, color in zip(ALLELES, ["tab:blue", "tab:orange"]):
         bind_probs = [h["probes"].get(allele, {}).get("binding_prob", None) for h in probe_entries]
-        pres_probs = [h["probes"].get(allele, {}).get("presentation_prob", None) for h in probe_entries]
-        proc_probs = [h["probes"].get(allele, {}).get("processing_prob", None) for h in probe_entries]
+        pres_probs = [
+            h["probes"].get(allele, {}).get("presentation_prob", None) for h in probe_entries
+        ]
+        proc_probs = [
+            h["probes"].get(allele, {}).get("processing_prob", None) for h in probe_entries
+        ]
         axes[0].plot(steps, bind_probs, "-o", color=color, label=f"{allele} binding", markersize=4)
-        axes[0].plot(steps, pres_probs, "--s", color=color, label=f"{allele} presentation", markersize=4)
+        axes[0].plot(
+            steps, pres_probs, "--s", color=color, label=f"{allele} presentation", markersize=4
+        )
         if proc_probs[0] is not None:
-            axes[0].plot(steps, proc_probs, ":^", color=color, label=f"{allele} processing", markersize=4, alpha=0.6)
+            axes[0].plot(
+                steps,
+                proc_probs,
+                ":^",
+                color=color,
+                label=f"{allele} processing",
+                markersize=4,
+                alpha=0.6,
+            )
     axes[0].set_xlabel("Minibatch")
     axes[0].set_ylabel("Probability")
     axes[0].set_title("SLLQHLIGL: Binding & Presentation (IEDB)")
@@ -406,7 +441,9 @@ def make_plots(history, out_dir):
     axes[0].grid(True, alpha=0.3)
 
     for allele, color in zip(ALLELES, ["tab:blue", "tab:orange"]):
-        bind_logits = [h["probes"].get(allele, {}).get("binding_logit", None) for h in probe_entries]
+        bind_logits = [
+            h["probes"].get(allele, {}).get("binding_logit", None) for h in probe_entries
+        ]
         axes[1].plot(steps, bind_logits, "-o", color=color, label=allele, markersize=4)
     axes[1].set_xlabel("Minibatch")
     axes[1].set_ylabel("Logit")
@@ -450,10 +487,15 @@ def make_plots(history, out_dir):
         fig.savefig(out_dir / "total_loss.png", dpi=150)
         plt.close(fig)
 
-    latent_keys = sorted(set(
-        k for h in probe_entries for allele in ALLELES
-        for k in h["probes"].get(allele, {}) if k.startswith("latent_norm_")
-    ))
+    latent_keys = sorted(
+        set(
+            k
+            for h in probe_entries
+            for allele in ALLELES
+            for k in h["probes"].get(allele, {})
+            if k.startswith("latent_norm_")
+        )
+    )
     if latent_keys:
         fig, axes = plt.subplots(1, 2, figsize=(14, 5))
         for ax_idx, allele in enumerate(ALLELES):
@@ -470,10 +512,15 @@ def make_plots(history, out_dir):
         fig.savefig(out_dir / "latent_norms.png", dpi=150)
         plt.close(fig)
 
-    assay_keys = sorted(set(
-        k for h in probe_entries for allele in ALLELES
-        for k in h["probes"].get(allele, {}) if k.startswith("assay_")
-    ))
+    assay_keys = sorted(
+        set(
+            k
+            for h in probe_entries
+            for allele in ALLELES
+            for k in h["probes"].get(allele, {})
+            if k.startswith("assay_")
+        )
+    )
     if assay_keys:
         fig, axes = plt.subplots(1, len(assay_keys), figsize=(5 * len(assay_keys), 4))
         if len(assay_keys) == 1:
@@ -491,12 +538,15 @@ def make_plots(history, out_dir):
         plt.close(fig)
 
     rec_keys = [
-        ("recognition_cd8_prob", "Recog CD8"), ("recognition_cd4_prob", "Recog CD4"),
-        ("immunogenicity_cd8_prob", "Immuno CD8"), ("immunogenicity_cd4_prob", "Immuno CD4"),
+        ("recognition_cd8_prob", "Recog CD8"),
+        ("recognition_cd4_prob", "Recog CD4"),
+        ("immunogenicity_cd8_prob", "Immuno CD8"),
+        ("immunogenicity_cd4_prob", "Immuno CD4"),
         ("foreignness_prob", "Foreignness"),
     ]
     available_rec = [
-        (key, label) for key, label in rec_keys
+        (key, label)
+        for key, label in rec_keys
         if any(h["probes"].get(ALLELES[0], {}).get(key) is not None for h in probe_entries)
     ]
     if available_rec:

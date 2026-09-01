@@ -8,10 +8,10 @@ import torch
 # Test Data Fixtures
 # --------------------------------------------------------------------------
 
+
 @pytest.fixture
 def tiny_dataset():
     """Create tiny synthetic dataset for smoke testing."""
-    from presto.data.tokenizer import Tokenizer
 
     # 8 samples with varying tasks
     samples = []
@@ -35,6 +35,7 @@ def tiny_dataset():
 @pytest.fixture
 def tokenizer():
     from presto.data.tokenizer import Tokenizer
+
     return Tokenizer()
 
 
@@ -42,12 +43,14 @@ def tokenizer():
 # Trainer Smoke Tests
 # --------------------------------------------------------------------------
 
+
 class TestTrainerSmoke:
     """Smoke tests to verify training loop works."""
 
     def test_trainer_init(self):
         from presto.training.trainer import Trainer
         from presto.models.presto import Presto
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         trainer = Trainer(model, lr=1e-3)
         assert trainer is not None
@@ -161,8 +164,12 @@ class TestTrainerSmoke:
 
         batch = {
             "pep_tok": tokenizer.batch_encode(["SIINFEKL", "GILGFVFTL"], max_len=15, pad=True),
-            "mhc_a_tok": tokenizer.batch_encode(["MAVMAPRTLLLLLSGALALTQTWAG"] * 2, max_len=50, pad=True),
-            "mhc_b_tok": tokenizer.batch_encode(["IQRTPKIQVYSRHPAENGKSNFLNC"] * 2, max_len=50, pad=True),
+            "mhc_a_tok": tokenizer.batch_encode(
+                ["MAVMAPRTLLLLLSGALALTQTWAG"] * 2, max_len=50, pad=True
+            ),
+            "mhc_b_tok": tokenizer.batch_encode(
+                ["IQRTPKIQVYSRHPAENGKSNFLNC"] * 2, max_len=50, pad=True
+            ),
             "mhc_class": ["I", "I"],
             "t_half_target": torch.tensor([[1.5], [2.0]], dtype=torch.float32),
             "t_half_mask": torch.tensor([1.0, 1.0], dtype=torch.float32),

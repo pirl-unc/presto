@@ -188,11 +188,13 @@ def load_format_c(path: Path) -> list[dict]:
         }
         epoch_rows = []
         if cand.get("val_best_loss") is not None:
-            epoch_rows.append({
-                "epoch": 1,
-                "val_loss": cand.get("val_best_loss"),
-                "train_loss": cand.get("train_best_loss"),
-            })
+            epoch_rows.append(
+                {
+                    "epoch": 1,
+                    "val_loss": cand.get("val_best_loss"),
+                    "train_loss": cand.get("train_best_loss"),
+                }
+            )
         epoch_df = pd.DataFrame(epoch_rows)
 
         # Try per-candidate probe CSV
@@ -204,14 +206,16 @@ def load_format_c(path: Path) -> list[dict]:
                 pass
             break
 
-        results.append({
-            "config": config,
-            "epoch_df": epoch_df,
-            "probe_df": probe_df,
-            "test_metrics": {},
-            "raw_summary": cand,
-            "run_name": label,
-        })
+        results.append(
+            {
+                "config": config,
+                "epoch_df": epoch_df,
+                "probe_df": probe_df,
+                "test_metrics": {},
+                "raw_summary": cand,
+                "run_name": label,
+            }
+        )
     return results
 
 
@@ -305,9 +309,13 @@ def aggregate_and_plot(exp_dir: Path) -> pd.DataFrame:
     epoch_df = pd.concat(epoch_frames, ignore_index=True) if epoch_frames else pd.DataFrame()
     probe_df = pd.concat(probe_frames, ignore_index=True) if probe_frames else pd.DataFrame()
     if not epoch_df.empty:
-        epoch_df["display_label"] = epoch_df["run_id"].map(summary_df.set_index("run_id")["display_label"])
+        epoch_df["display_label"] = epoch_df["run_id"].map(
+            summary_df.set_index("run_id")["display_label"]
+        )
     if not probe_df.empty:
-        probe_df["display_label"] = probe_df["run_id"].map(summary_df.set_index("run_id")["display_label"])
+        probe_df["display_label"] = probe_df["run_id"].map(
+            summary_df.set_index("run_id")["display_label"]
+        )
 
     summary_df.to_csv(output_dir / "condition_summary.csv", index=False)
     epoch_df.to_csv(output_dir / "epoch_summary.csv", index=False)
@@ -369,8 +377,15 @@ def write_readme(exp_dir: Path, spec: dict, summary_df: pd.DataFrame) -> None:
 
         # Build conditions table
         cols = ["label"]
-        for c in ["final_epoch", "best_val_loss", "best_val_spearman",
-                   "test_spearman", "test_auroc", "test_f1", "test_rmse_log10"]:
+        for c in [
+            "final_epoch",
+            "best_val_loss",
+            "best_val_spearman",
+            "test_spearman",
+            "test_auroc",
+            "test_f1",
+            "test_rmse_log10",
+        ]:
             if c in summary_df.columns:
                 cols.append(c)
 
@@ -392,8 +407,12 @@ def write_readme(exp_dir: Path, spec: dict, summary_df: pd.DataFrame) -> None:
     # Plots
     lines.append("## Plots")
     lines.append("")
-    for png in ["training_curves.png", "final_probe_heatmap.png",
-                "test_spearman_ranking.png", "test_metric_grid.png"]:
+    for png in [
+        "training_curves.png",
+        "final_probe_heatmap.png",
+        "test_spearman_ranking.png",
+        "test_metric_grid.png",
+    ]:
         if (exp_dir / "results" / png).exists():
             lines.append(f"![{png}](results/{png})")
             lines.append("")
@@ -420,7 +439,8 @@ def write_launch_json(exp_dir: Path, spec: dict) -> None:
         "agent": spec["agent"],
         "modal_run_dirs": [f"modal_runs/{d}" for d in spec["modal_runs"]],
         "collection_timestamp": datetime.now().isoformat(),
-        "note": "These runs were collected retrospectively from modal_runs/ into the experiment registry.",
+        "note": "These runs were collected retrospectively from modal_runs/ into the experiment "
+            "registry.",
     }
     write_json(repro / "launch.json", payload)
 
@@ -451,13 +471,15 @@ FAMILIES = [
         "title": "A*02:01/A*24:02 Target Encoding & Probe Systematic Comparison",
         "date": "2026-03-08",
         "agent": "Claude Code (claude-opus-4-6)",
-        "description": "Systematic comparison of target encoding modes (direct, IC50-exact, numeric-synth), "
-                       "probe configurations (probe-only, shared-probe, peptide-rank, allele-rank), "
-                       "and training variants (balanced, contrastive, warmstart, synthetics) on the "
-                       "2-allele HLA-A*02:01/A*24:02 panel.",
-        "training_notes": "2-allele panel (A*02:01, A*24:02). 10 epochs, batch 512 (direct/numeric) or 128 (IC50-exact). "
-                          "GrooveTransformerModel, seed 42. Various measurement profiles and assay modes. "
-                          "Some runs warm-started from mhc-pretrain-20260308b.",
+        "description": "Systematic comparison of target encoding modes (direct, IC50-exact, "
+            "numeric-synth), "
+        "probe configurations (probe-only, shared-probe, peptide-rank, allele-rank), "
+        "and training variants (balanced, contrastive, warmstart, synthetics) on the "
+        "2-allele HLA-A*02:01/A*24:02 panel.",
+        "training_notes": "2-allele panel (A*02:01, A*24:02). 10 epochs, batch 512 "
+            "(direct/numeric) or 128 (IC50-exact). "
+        "GrooveTransformerModel, seed 42. Various measurement profiles and assay modes. "
+        "Some runs warm-started from mhc-pretrain-20260308b.",
         "format": "A",
         "modal_runs": [
             "a0201-a2402-direct-balanced-20260308a",
@@ -486,11 +508,12 @@ FAMILIES = [
         "date": "2026-03-08",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "Three 7-allele panel training variants: IC50-exact warmstart, "
-                       "IC50-exact warmstart with synthetics + peptide ranking, and "
-                       "quantitative affinity warmstart.",
-        "training_notes": "7-allele class-I panel (A*02:01, A*03:01, A*11:01, A*01:01, A*24:02, B*07:02, B*44:02). "
-                          "12 epochs, batch 140, GrooveTransformerModel, warm-start from mhc-pretrain-20260308b. "
-                          "IC50-exact or quantitative affinity measurement profiles.",
+        "IC50-exact warmstart with synthetics + peptide ranking, and "
+        "quantitative affinity warmstart.",
+        "training_notes": "7-allele class-I panel (A*02:01, A*03:01, A*11:01, A*01:01, A*24:02, "
+            "B*07:02, B*44:02). "
+        "12 epochs, batch 140, GrooveTransformerModel, warm-start from mhc-pretrain-20260308b. "
+        "IC50-exact or quantitative affinity measurement profiles.",
         "format": "A",
         "modal_runs": [
             "class1-panel-ic50-exact-warmstart-20260308a",
@@ -505,9 +528,9 @@ FAMILIES = [
         "date": "2026-03-10",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "Broad 7-allele baseline using full Presto model (not groove-only) "
-                       "with numeric_no_qualitative measurement profile.",
+        "with numeric_no_qualitative measurement profile.",
         "training_notes": "7-allele class-I panel, numeric_no_qualitative, qualifier_filter=all. "
-                          "Full Presto model with 4.8M params. Warm-start from mhc-pretrain-20260308b.",
+        "Full Presto model with 4.8M params. Warm-start from mhc-pretrain-20260308b.",
         "format": "A",
         "modal_runs": [
             "presto-7allele-broad",
@@ -520,9 +543,9 @@ FAMILIES = [
         "date": "2026-02-26",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "Sweep over d_model, n_layers, and n_heads to find optimal "
-                       "model dimensions. Two sweep runs with different batch sizes.",
+        "model dimensions. Two sweep runs with different batch sizes.",
         "training_notes": "Sweep of d_model={224,...}, n_layers={4,5}, n_heads={4,8}. "
-                          "20M tokens per candidate, batch 64. Ranking by val_drop_per_epoch.",
+        "20M tokens per candidate, batch 64. Ranking by val_drop_per_epoch.",
         "format": "C",
         "modal_runs": [
             "sweep20m-live-20260226-20260226T171152Z",
@@ -536,9 +559,9 @@ FAMILIES = [
         "date": "2026-03-09",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "Comparative benchmark of different score-path configurations "
-                       "(e004 vs e006) with and without peptide ranking.",
+        "(e004 vs e006) with and without peptide ranking.",
         "training_notes": "Various score-path configurations on 2-allele panel. "
-                          "See individual run summaries for details.",
+        "See individual run summaries for details.",
         "format": "scorepath",
         "modal_runs": [
             "scorepath_bench",
@@ -551,9 +574,10 @@ FAMILIES = [
         "date": "2026-03-01",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "Diagnostic runs for debugging training issues: reservoir sampling, "
-                       "motif scanning, repair iterations, and small-GPU diagnostics.",
-        "training_notes": "Diagnostic profile: max_binding=40K, d_model=128, n_layers=2, n_heads=4. "
-                          "1-3 epochs, batch 256. Various cap_sampling strategies.",
+        "motif scanning, repair iterations, and small-GPU diagnostics.",
+        "training_notes": "Diagnostic profile: max_binding=40K, d_model=128, n_layers=2, "
+            "n_heads=4. "
+        "1-3 epochs, batch 256. Various cap_sampling strategies.",
         "format": "B",
         "modal_runs": [
             "diaggpu-small-20260228",
@@ -571,9 +595,9 @@ FAMILIES = [
         "date": "2026-03-05",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "Training trajectory analysis with small/filtered data subsets "
-                       "to study convergence patterns and loss dynamics.",
+        "to study convergence patterns and loss dynamics.",
         "training_notes": "Canary profile with max_batches=80, max_val_batches=20. "
-                          "6 epochs (small) or 1 epoch (full filtered). d_model=128, n_layers=2, n_heads=4.",
+        "6 epochs (small) or 1 epoch (full filtered). d_model=128, n_layers=2, n_heads=4.",
         "format": "B",
         "modal_runs": [
             "traj-small-20260305T090347",
@@ -588,9 +612,10 @@ FAMILIES = [
         "date": "2026-03-07",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "Verification runs after code refactoring to ensure training "
-                       "behavior was preserved across commits.",
-        "training_notes": "1 epoch each on full profile, batch 128. d_model=128, n_layers=2, n_heads=4. "
-                          "Each run tagged with a git commit hash.",
+        "behavior was preserved across commits.",
+        "training_notes": "1 epoch each on full profile, batch 128. d_model=128, n_layers=2, "
+            "n_heads=4. "
+        "Each run tagged with a git commit hash.",
         "format": "B",
         "modal_runs": [
             "refactor-e1-57725c3a",
@@ -606,9 +631,9 @@ FAMILIES = [
         "date": "2026-03-10",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "Quick and full regression check of the legacy_m1 baseline "
-                       "to verify probe discrimination was preserved.",
+        "to verify probe discrimination was preserved.",
         "training_notes": "7-allele panel, IC50-exact, warmstart. "
-                          "Quick (3 epoch) and full (12 epoch) runs. GrooveTransformerModel.",
+        "Quick (3 epoch) and full (12 epoch) runs. GrooveTransformerModel.",
         "format": "A",
         "modal_runs": [
             "regcheck",
@@ -621,9 +646,9 @@ FAMILIES = [
         "date": "2026-03-08",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "MHC sequence pretraining on 54K sequences for chain_type, species, "
-                       "and class classification. Used as warm-start checkpoint for downstream runs.",
+        "and class classification. Used as warm-start checkpoint for downstream runs.",
         "training_notes": "54,419 MHC sequences, 48,977 train / 5,442 val. 1 epoch, batch 192. "
-                          "d_model=128, n_layers=2, n_heads=4. Classification targets: chain_type, species, class.",
+        "d_model=128, n_layers=2, n_heads=4. Classification targets: chain_type, species, class.",
         "format": "A",
         "modal_runs": [
             "mhc-pretrain-20260308b",
@@ -636,9 +661,9 @@ FAMILIES = [
         "date": "2026-02-16",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "First training run on IEDB data with 2K row cap per assay family. "
-                       "Small model (d_model=64, 1 layer, 2 heads) with 10 epochs.",
+        "Small model (d_model=64, 1 layer, 2 heads) with 10 epochs.",
         "training_notes": "IEDB data, max 2K rows per assay family. 10 epochs, batch 256, lr=1e-4. "
-                          "d_model=64, n_layers=1, n_heads=2. Earliest successful training run.",
+        "d_model=64, n_layers=1, n_heads=2. Earliest successful training run.",
         "format": "B",
         "modal_runs": [
             "iedb-2k-10ep-20260216i",
@@ -651,9 +676,9 @@ FAMILIES = [
         "date": "2026-02-26",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "Early full-scale and probe-tracking training runs that established "
-                       "baseline behavior before the diagnostic/groove refactoring.",
+        "baseline behavior before the diagnostic/groove refactoring.",
         "training_notes": "Full profile, various batch sizes. d_model=128, n_layers=2, n_heads=4. "
-                          "Limited metrics data (empty metrics files in some runs).",
+        "Limited metrics data (empty metrics files in some runs).",
         "format": "B",
         "modal_runs": [
             "full-bs128-fastprobe-perflive-20260228",
@@ -667,9 +692,9 @@ FAMILIES = [
         "date": "2026-02-26",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "Batch-size memory profiling to find the OOM boundary. "
-                       "Tested batch sizes from 64 to 192.",
+        "Tested batch sizes from 64 to 192.",
         "training_notes": "Memory profiling only (no training metrics). Tested batch sizes: "
-                          "64, 96, 112, 128, 160, 176, 180, 192.",
+        "64, 96, 112, 128, 160, 176, 180, 192.",
         "format": "logs_only",
         "modal_runs": [
             "memory_probe_20260226",
@@ -691,7 +716,7 @@ def process_family(spec: dict) -> pd.DataFrame:
     runs_dir = exp_dir / "results" / "runs"
     runs_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Processing {spec['exp_id']}: {spec['title']}")
     print(f"  → {exp_dir.name}")
 
@@ -707,10 +732,12 @@ def process_family(spec: dict) -> pd.DataFrame:
                 logs = sorted(mr_path.glob("*.log"))
                 log_summary = []
                 for log in logs:
-                    log_summary.append({
-                        "name": log.name,
-                        "size_bytes": log.stat().st_size,
-                    })
+                    log_summary.append(
+                        {
+                            "name": log.name,
+                            "size_bytes": log.stat().st_size,
+                        }
+                    )
                 write_json(runs_dir / f"{mr_name}_logs.json", log_summary)
 
         write_launch_json(exp_dir, spec)
@@ -748,7 +775,11 @@ def process_family(spec: dict) -> pd.DataFrame:
                 data = load_format_a(sub)
                 normalize_to_aggregate(data, runs_dir / sub.name, sub.name)
 
-    elif fmt == "A" and len(spec["modal_runs"]) == 1 and spec["modal_runs"][0] == "presto-7allele-broad":
+    elif (
+        fmt == "A"
+        and len(spec["modal_runs"]) == 1
+        and spec["modal_runs"][0] == "presto-7allele-broad"
+    ):
         # presto-7allele-broad has a dated subdirectory
         base = MODAL_RUNS / "presto-7allele-broad"
         for sub in sorted(base.iterdir()):
@@ -861,7 +892,9 @@ def generate_log_entry(spec: dict, summary_df: pd.DataFrame, exp_dirname: str) -
 
     lines.append("- **Artifact paths**:")
     lines.append(f"  - experiment dir: `experiments/{exp_dirname}/`")
-    lines.append(f"  - condition summary: `experiments/{exp_dirname}/results/condition_summary.csv`")
+    lines.append(
+        f"  - condition summary: `experiments/{exp_dirname}/results/condition_summary.csv`"
+    )
 
     lines.append(f"- **Takeaway**: {spec['description'].split('.')[0]}.")
     lines.append("")
@@ -887,7 +920,9 @@ def main():
         summary_df = process_family(spec)
         # Find the directory we just created
         matching = sorted(EXPERIMENTS.glob(f"{spec['date']}*_claude_{spec['slug']}"))
-        exp_dirname = matching[-1].name if matching else f"{spec['date']}_0000_claude_{spec['slug']}"
+        exp_dirname = (
+            matching[-1].name if matching else f"{spec['date']}_0000_claude_{spec['slug']}"
+        )
 
         entry = generate_log_entry(spec, summary_df, exp_dirname)
         log_entries.append(entry)
@@ -899,13 +934,16 @@ def main():
     # Append all entries to experiment_log.md
     log_path = EXPERIMENTS / "experiment_log.md"
     separator = "\n\n---\n\n"
-    new_section = separator.join([
-        "## Retrospective Collection (EXP-21 through EXP-33)\n\n"
-        "The following experiments were collected retrospectively from `modal_runs/` "
-        "directories that had not been registered in the experiment registry. "
-        "Each entry below points to a newly created experiment directory with "
-        "normalized data, plots, and reproducibility metadata.\n",
-    ] + log_entries)
+    new_section = separator.join(
+        [
+            "## Retrospective Collection (EXP-21 through EXP-33)\n\n"
+            "The following experiments were collected retrospectively from `modal_runs/` "
+            "directories that had not been registered in the experiment registry. "
+            "Each entry below points to a newly created experiment directory with "
+            "normalized data, plots, and reproducibility metadata.\n",
+        ]
+        + log_entries
+    )
 
     with log_path.open("a") as f:
         f.write("\n\n" + new_section)

@@ -8,7 +8,9 @@ def _assert_metric_artifacts(run_dir):
     metrics_jsonl = run_dir / "metrics.jsonl"
     assert metrics_csv.exists()
     assert metrics_jsonl.exists()
-    assert metrics_csv.read_text(encoding="utf-8").strip().splitlines()[0] == "step,split,metric,value"
+    assert (
+        metrics_csv.read_text(encoding="utf-8").strip().splitlines()[0] == "step,split,metric,value"
+    )
     assert len(metrics_jsonl.read_text(encoding="utf-8").strip().splitlines()) >= 1
 
 
@@ -36,6 +38,3 @@ def test_train_synthetic_writes_metrics_artifacts(tmp_path):
     metrics_csv = run_dir / "metrics.csv"
     contents = metrics_csv.read_text(encoding="utf-8")
     assert "uw_weight_binding" in contents
-
-
-

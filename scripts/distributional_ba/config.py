@@ -18,19 +18,23 @@ class ConditionSpec:
     """One cell of the 32-condition matrix."""
 
     cond_id: int
-    head_type: str          # mhcflurry | log_mse | twohot | hlgauss
-    assay_mode: str         # additive | affine | d1_affine | d2_logit
-    max_nM: float           # 50_000 or 100_000
-    n_bins: int = 128       # distributional only
+    head_type: str  # mhcflurry | log_mse | twohot | hlgauss
+    assay_mode: str  # additive | affine | d1_affine | d2_logit
+    max_nM: float  # 50_000 or 100_000
+    n_bins: int = 128  # distributional only
     sigma_mult: float = 0.75  # hlgauss only
-    embed_dim: int = 128    # encoder embedding dimension
+    embed_dim: int = 128  # encoder embedding dimension
     label: str = ""
 
     def __post_init__(self):
         if not self.label:
             object.__setattr__(
-                self, "label",
-                f"c{self.cond_id:02d}_{self.head_type}_{self.assay_mode}_max{int(self.max_nM/1000)}k"
+                self,
+                "label",
+                (
+                    f"c{self.cond_id:02d}_{self.head_type}_{self.assay_mode}_ma"
+                    f"x{int(self.max_nM / 1000)}k"
+                )
                 + (f"_K{self.n_bins}" if self.head_type in ("twohot", "hlgauss") else "")
                 + (f"_s{self.sigma_mult}" if self.head_type == "hlgauss" else "")
                 + (f"_d{self.embed_dim}" if self.embed_dim != 128 else ""),
@@ -45,14 +49,16 @@ def _make_conditions() -> List[ConditionSpec]:
     def _add(head_type, assay_mode, max_nM, n_bins=128, sigma_mult=0.75):
         nonlocal cid
         cid += 1
-        conds.append(ConditionSpec(
-            cond_id=cid,
-            head_type=head_type,
-            assay_mode=assay_mode,
-            max_nM=max_nM,
-            n_bins=n_bins,
-            sigma_mult=sigma_mult,
-        ))
+        conds.append(
+            ConditionSpec(
+                cond_id=cid,
+                head_type=head_type,
+                assay_mode=assay_mode,
+                max_nM=max_nM,
+                n_bins=n_bins,
+                sigma_mult=sigma_mult,
+            )
+        )
 
     # Block 1 (8): Core method × MAX — K=128, D1-affine, sigma=0.75
     for max_nM in (50_000, 100_000):
@@ -106,6 +112,7 @@ CONDITIONS_BY_ID: Dict[int, ConditionSpec] = {c.cond_id: c for c in CONDITIONS}
 # Model wrapper
 # ---------------------------------------------------------------------------
 
+
 class DistributionalModel(nn.Module):
     """Encoder + assay context + head wrapper.
 
@@ -131,7 +138,10 @@ class DistributionalModel(nn.Module):
         assay_input_mode = str(assay_input_mode).strip().lower()
         if assay_input_mode not in {"factorized", "none"}:
             raise ValueError(
-                f"Unsupported assay_input_mode {assay_input_mode!r}. Expected 'factorized' or 'none'."
+                (
+                    f"Unsupported assay_input_mode {assay_input_mode!r}. Expected 'factorized' or "
+                    f"'none'."
+                )
             )
         self.assay_input_mode = assay_input_mode
 
@@ -163,17 +173,25 @@ class DistributionalModel(nn.Module):
             kwargs["binding_logit"] = binding_signal.detach()
             kwargs["mol_repr"] = h.detach()
         return self.assay_ctx(
-            assay_type_idx, assay_prep_idx, assay_geometry_idx, assay_readout_idx,
+            assay_type_idx,
+            assay_prep_idx,
+            assay_geometry_idx,
+            assay_readout_idx,
             **kwargs,
         )
 
     def forward(
         self,
-        pep_tok, mhc_a_tok, mhc_b_tok,
-        assay_type_idx=None, assay_prep_idx=None,
-        assay_geometry_idx=None, assay_readout_idx=None,
+        pep_tok,
+        mhc_a_tok,
+        mhc_b_tok,
+        assay_type_idx=None,
+        assay_prep_idx=None,
+        assay_geometry_idx=None,
+        assay_readout_idx=None,
     ):
         import torch
+
         h = self.encode_input(pep_tok, mhc_a_tok, mhc_b_tok)
         B = h.shape[0]
         device = h.device
@@ -188,7 +206,11 @@ class DistributionalModel(nn.Module):
             assay_readout_idx = torch.zeros(B, dtype=torch.long, device=device)
 
         assay_emb = self._compute_assay_emb(
-            h, assay_type_idx, assay_prep_idx, assay_geometry_idx, assay_readout_idx,
+            h,
+            assay_type_idx,
+            assay_prep_idx,
+            assay_geometry_idx,
+            assay_readout_idx,
         )
         return self.head(h, assay_emb)
 

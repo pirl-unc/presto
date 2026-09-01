@@ -43,12 +43,12 @@ def evaluate_probe_panel(
                 if grooves is None:
                     continue
                 groove1, groove2 = grooves
-                mhc_a_tok = torch.tensor(
-                    tokenizer.encode(groove1, max_len=120)
-                ).unsqueeze(0).to(device)
-                mhc_b_tok = torch.tensor(
-                    tokenizer.encode(groove2, max_len=120)
-                ).unsqueeze(0).to(device)
+                mhc_a_tok = (
+                    torch.tensor(tokenizer.encode(groove1, max_len=120)).unsqueeze(0).to(device)
+                )
+                mhc_b_tok = (
+                    torch.tensor(tokenizer.encode(groove2, max_len=120)).unsqueeze(0).to(device)
+                )
 
                 out = model(pep_tok, mhc_a_tok, mhc_b_tok)
                 ic50_nM = float(out["pred_ic50_nM"][0].item())
@@ -118,17 +118,28 @@ def evaluate_held_out(
 
             ic50_nM = bind_target.float().reshape(-1).to(device)
             mask = bind_mask.float().reshape(-1).to(device)
-            qual = (bind_qual.long().reshape(-1).to(device) if bind_qual is not None
-                    else torch.zeros_like(mask, dtype=torch.long))
+            qual = (
+                bind_qual.long().reshape(-1).to(device)
+                if bind_qual is not None
+                else torch.zeros_like(mask, dtype=torch.long)
+            )
 
             h = model.encode_input(pep_tok, mhc_a_tok, mhc_b_tok)
             binding_ctx = getattr(batch, "binding_context", {})
             assay_emb = model._compute_assay_emb(
                 h,
-                binding_ctx.get("assay_type_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)),
-                binding_ctx.get("assay_prep_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)),
-                binding_ctx.get("assay_geometry_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)),
-                binding_ctx.get("assay_readout_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)),
+                binding_ctx.get(
+                    "assay_type_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)
+                ),
+                binding_ctx.get(
+                    "assay_prep_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)
+                ),
+                binding_ctx.get(
+                    "assay_geometry_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)
+                ),
+                binding_ctx.get(
+                    "assay_readout_idx", torch.zeros(h.shape[0], dtype=torch.long, device=device)
+                ),
             )
 
             out = model.head(h, assay_emb)

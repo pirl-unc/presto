@@ -103,11 +103,7 @@ def binary_metrics(
     precision = true_pos / (true_pos + false_pos) if (true_pos + false_pos) else 0.0
     recall = true_pos / (true_pos + false_neg) if (true_pos + false_neg) else 0.0
     specificity = true_neg / (true_neg + false_pos) if (true_neg + false_pos) else 0.0
-    f1 = (
-        2 * precision * recall / (precision + recall)
-        if (precision + recall)
-        else 0.0
-    )
+    f1 = 2 * precision * recall / (precision + recall) if (precision + recall) else 0.0
     metrics: Dict[str, float] = {
         "accuracy": (true_pos + true_neg) / max(len(y_true), 1),
         "balanced_accuracy": 0.5 * (recall + specificity),
@@ -232,9 +228,7 @@ class TaskPredictionAccumulator:
             return summary
 
         sources = np.asarray(self._sources, dtype=object)
-        is_synthetic = np.asarray(
-            [str(src).startswith("synthetic_negative") for src in sources]
-        )
+        is_synthetic = np.asarray([str(src).startswith("synthetic_negative") for src in sources])
         if not is_synthetic.any():
             return summary
 
@@ -248,9 +242,7 @@ class TaskPredictionAccumulator:
         else:
             # Stated explicitly: "no real negatives" is a property of the
             # corpus that a reader must see, not an absence to skim past.
-            summary["real_only_n_negatives"] = float(
-                int((real_mask & ~positives).sum())
-            )
+            summary["real_only_n_negatives"] = float(int((real_mask & ~positives).sum()))
 
         for kind in sorted({str(src) for src in sources[is_synthetic]}):
             selector = positives | (sources == kind)
@@ -286,9 +278,7 @@ class TaskPredictionAccumulator:
                 "y_pred": pred_value,
                 "y_prob": _logistic(pred_value) if is_binary else "",
             }
-            for sample_id, true_value, pred_value in zip(
-                self._sample_ids, self._true, self._pred
-            )
+            for sample_id, true_value, pred_value in zip(self._sample_ids, self._true, self._pred)
         ]
 
 
@@ -421,7 +411,9 @@ def write_holdout_artifacts(
     predictions_path = out_path / f"{split}_predictions.csv"
     if rows:
         with predictions_path.open("w", newline="") as handle:
-            writer = csv.DictWriter(handle, fieldnames=["task", "sample_id", "y_true", "y_pred", "y_prob"])
+            writer = csv.DictWriter(
+                handle, fieldnames=["task", "sample_id", "y_true", "y_pred", "y_prob"]
+            )
             writer.writeheader()
             writer.writerows(rows)
     return payload

@@ -107,18 +107,26 @@ class GaussianHead(AffinityHead):
 
         y = self._nm_to_log1p(ic50_nM)
 
-        is_exact = (qual == 0)
-        is_censored = (qual != 0)
+        is_exact = qual == 0
+        is_censored = qual != 0
         exact_mask = mask * is_exact.float()
         censor_mask = mask * is_censored.float()
 
         # Exact: standard Gaussian NLL
         nll_exact = gaussian_nll(mu, sigma, y)
-        loss_exact = _masked_mean(nll_exact, exact_mask) if exact_mask.sum() > 0 else torch.tensor(0.0, device=h.device)
+        loss_exact = (
+            _masked_mean(nll_exact, exact_mask)
+            if exact_mask.sum() > 0
+            else torch.tensor(0.0, device=h.device)
+        )
 
         # Censored: Tobit NLL
         nll_censor = censored_gaussian_nll(mu, sigma, y, qual)
-        loss_censor = _masked_mean(nll_censor, censor_mask) if censor_mask.sum() > 0 else torch.tensor(0.0, device=h.device)
+        loss_censor = (
+            _masked_mean(nll_censor, censor_mask)
+            if censor_mask.sum() > 0
+            else torch.tensor(0.0, device=h.device)
+        )
 
         n_exact = exact_mask.sum().clamp(min=1.0)
         n_censor = censor_mask.sum().clamp(min=1.0)

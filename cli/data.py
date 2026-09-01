@@ -38,8 +38,6 @@ from ..data.mouse_mhc_overlay import (
 )
 
 
-
-
 def cmd_data_download(args: Any) -> int:
     """Handle 'presto data download' command."""
     outdir = Path(args.outdir)
@@ -91,7 +89,9 @@ def cmd_data_download(args: Any) -> int:
         print("  --all              Download all datasets", file=sys.stderr)
         print("  --dataset NAME     Download specific dataset(s)", file=sys.stderr)
         print("  --source SOURCE    Download by source (iedb, vdjdb, mcpas, imgt)", file=sys.stderr)
-        print("  --category CAT     Download by category (binding, tcell, tcr, ...)", file=sys.stderr)
+        print(
+            "  --category CAT     Download by category (binding, tcell, tcr, ...)", file=sys.stderr
+        )
         print("\nUse 'presto data list' to see available datasets.", file=sys.stderr)
         return 1
 
@@ -117,10 +117,7 @@ def cmd_data_list(args: Any) -> int:
         manifest = list_local_datasets(datadir)
 
         if args.json:
-            output = {
-                "data_dir": str(datadir),
-                "datasets": {}
-            }
+            output = {"data_dir": str(datadir), "datasets": {}}
             for name, state in manifest.downloads.items():
                 info = DATASETS.get(name)
                 if args.source and info and info.source not in args.source:
@@ -360,7 +357,11 @@ def _process_dataset(
     # Determine input file (may be in subdirectory for zips)
     if input_path.is_dir():
         # Find CSV/TSV files in directory
-        csv_files = list(input_path.glob("*.csv")) + list(input_path.glob("*.tsv")) + list(input_path.glob("*.txt"))
+        csv_files = (
+            list(input_path.glob("*.csv"))
+            + list(input_path.glob("*.tsv"))
+            + list(input_path.glob("*.txt"))
+        )
         if not csv_files:
             return 0
         # Use the largest file (likely the main data file)
@@ -387,8 +388,17 @@ def _process_dataset(
             for row in reader:
                 # Extract peptide (try multiple column names)
                 peptide = None
-                for col in ['peptide', 'Epitope', 'epitope', 'Description', 'description',
-                            'Linear Sequence', 'linear sequence', 'antigen.epitope', 'cdr3']:
+                for col in [
+                    'peptide',
+                    'Epitope',
+                    'epitope',
+                    'Description',
+                    'description',
+                    'Linear Sequence',
+                    'linear sequence',
+                    'antigen.epitope',
+                    'cdr3',
+                ]:
                     if col in row and row[col]:
                         peptide = row[col].strip()
                         break
@@ -518,11 +528,7 @@ def cmd_data_merge(args: Any) -> int:
         output_path = datadir / "merged_deduped.tsv"
     assay_outdir = None
     if args.per_assay_csv:
-        assay_outdir = (
-            Path(args.assay_outdir)
-            if args.assay_outdir
-            else datadir / "merged_assays"
-        )
+        assay_outdir = Path(args.assay_outdir) if args.assay_outdir else datadir / "merged_assays"
 
     # Parse record types
     record_types = args.types if args.types else None
@@ -538,6 +544,7 @@ def cmd_data_merge(args: Any) -> int:
 
         if args.json:
             import json
+
             print(json.dumps(stats, indent=2))
         elif verbose and assay_outdir is not None:
             print(f"Per-assay CSVs written to: {assay_outdir}")
@@ -547,6 +554,7 @@ def cmd_data_merge(args: Any) -> int:
     except Exception as e:
         print(f"Error during merge: {e}", file=sys.stderr)
         import traceback
+
         traceback.print_exc()
         return 1
 
@@ -931,9 +939,7 @@ def cmd_data_mhc_index_resolve(args: Any) -> int:
         alleles.extend([a.strip() for a in args.alleles.split(",") if a.strip()])
     if args.allele_file:
         try:
-            alleles.extend(
-                _read_alleles_from_file(Path(args.allele_file), args.column)
-            )
+            alleles.extend(_read_alleles_from_file(Path(args.allele_file), args.column))
         except MHCIndexError as exc:
             print(f"Error reading alleles: {exc}", file=sys.stderr)
             return 1

@@ -38,6 +38,7 @@ AFFINITY_DAG_FAMILY_MODES = {
 # Unit conversion utilities
 # --------------------------------------------------------------------------
 
+
 def to_log10_nM(value: torch.Tensor) -> torch.Tensor:
     """Convert nM to log10(nM)."""
     return torch.log10(value.clamp(min=1e-6))
@@ -89,6 +90,7 @@ def noisy_or_logit(a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
 # --------------------------------------------------------------------------
 # Individual prediction heads
 # --------------------------------------------------------------------------
+
 
 class KDHead(nn.Module):
     """Predicts KD in log10(nM)."""
@@ -199,6 +201,7 @@ class TmHead(nn.Module):
 # Combined assay heads
 # --------------------------------------------------------------------------
 
+
 class AssayHeads(nn.Module):
     """Combined module for all binding/kinetics/stability assay heads.
 
@@ -262,7 +265,12 @@ class AssayHeads(nn.Module):
         if self.affinity_assay_residual_mode == "pooled_single_output":
             residual_input_dim = 0
         elif self.affinity_assay_residual_mode == "shared_base_segment_residual":
-            residual_input_dim = self.sequence_summary_dim + self.assay_context_dim + self._conditioning_probs_dim + 1
+            residual_input_dim = (
+                self.sequence_summary_dim
+                + self.assay_context_dim
+                + self._conditioning_probs_dim
+                + 1
+            )
         elif self.affinity_assay_residual_mode == "shared_base_factorized_context_residual":
             residual_input_dim = self.factorized_context_dim + self._conditioning_probs_dim + 1
         elif self.affinity_assay_residual_mode in {
@@ -271,7 +279,12 @@ class AssayHeads(nn.Module):
             "dag_method_leaf",
             "dag_prep_readout_leaf",
         }:
-            residual_input_dim = self.sequence_summary_dim + self.factorized_context_dim + self._conditioning_probs_dim + 1
+            residual_input_dim = (
+                self.sequence_summary_dim
+                + self.factorized_context_dim
+                + self._conditioning_probs_dim
+                + 1
+            )
         else:
             residual_input_dim = d_model + self.assay_context_dim
         stability_input_dim = d_model + self.stability_score_dim
@@ -482,12 +495,8 @@ class AssayHeads(nn.Module):
         if binding_latents is not None:
             # Derive kinetic values from latents (physics-based)
             log_koff = smooth_range_bound(binding_latents["log_koff"], -8.0, 8.0)
-            log_kon_intrinsic = smooth_range_bound(
-                binding_latents["log_kon_intrinsic"], -8.0, 8.0
-            )
-            log_kon_chaperone = smooth_range_bound(
-                binding_latents["log_kon_chaperone"], -8.0, 8.0
-            )
+            log_kon_intrinsic = smooth_range_bound(binding_latents["log_kon_intrinsic"], -8.0, 8.0)
+            log_kon_chaperone = smooth_range_bound(binding_latents["log_kon_chaperone"], -8.0, 8.0)
 
             # kon_total = kon_intrinsic + kon_chaperone
             kon_intrinsic = torch.pow(10, log_kon_intrinsic)
@@ -727,9 +736,11 @@ class AssayHeads(nn.Module):
     ) -> Dict[str, torch.Tensor]:
         outputs: Dict[str, torch.Tensor] = {}
         for method_name, head in head_bank.items():
-            outputs[self.method_output_key(base_name, method_name)] = self._affinity_residual_output(
-                base_log10=family_anchor,
-                residual=head(residual_input),
+            outputs[self.method_output_key(base_name, method_name)] = (
+                self._affinity_residual_output(
+                    base_log10=family_anchor,
+                    residual=head(residual_input),
+                )
             )
         return outputs
 
@@ -743,21 +754,17 @@ class AssayHeads(nn.Module):
         readout_bank: nn.ModuleDict,
     ) -> Dict[str, torch.Tensor]:
         outputs: Dict[str, torch.Tensor] = {}
-        prep_residuals = {
-            prep_name: head(residual_input)
-            for prep_name, head in prep_bank.items()
-        }
+        prep_residuals = {prep_name: head(residual_input) for prep_name, head in prep_bank.items()}
         readout_residuals = {
-            readout_name: head(residual_input)
-            for readout_name, head in readout_bank.items()
+            readout_name: head(residual_input) for readout_name, head in readout_bank.items()
         }
         for prep_name, prep_residual in prep_residuals.items():
             for readout_name, readout_residual in readout_residuals.items():
-                outputs[
-                    self.prep_readout_output_key(base_name, prep_name, readout_name)
-                ] = self._affinity_residual_output(
-                    base_log10=family_anchor,
-                    residual=prep_residual + readout_residual,
+                outputs[self.prep_readout_output_key(base_name, prep_name, readout_name)] = (
+                    self._affinity_residual_output(
+                        base_log10=family_anchor,
+                        residual=prep_residual + readout_residual,
+                    )
                 )
         return outputs
 
@@ -934,14 +941,14 @@ class AssayHeads(nn.Module):
         """Direct prediction fallback when latents not available."""
         # Simple linear prediction
         if not hasattr(self, f"_fallback_{assay}"):
-            setattr(self, f"_fallback_{assay}",
-                    nn.Linear(z.shape[-1], 1).to(z.device))
+            setattr(self, f"_fallback_{assay}", nn.Linear(z.shape[-1], 1).to(z.device))
         return getattr(self, f"_fallback_{assay}")(z)
 
 
 # --------------------------------------------------------------------------
 # T-cell functional assay head
 # --------------------------------------------------------------------------
+
 
 class TCellHead(nn.Module):
     """Predicts T-cell functional assay outcome.
@@ -1075,11 +1082,15 @@ class TCellAssayHead(nn.Module):
         if culture_duration_hours is None:
             duration_hours = torch.zeros(batch_size, 1, dtype=torch.float32, device=device)
         else:
-            duration_hours = culture_duration_hours.to(device=device, dtype=torch.float32).view(batch_size, 1)
+            duration_hours = culture_duration_hours.to(device=device, dtype=torch.float32).view(
+                batch_size, 1
+            )
         known_duration = (duration_hours > 0.0).float()
         default_log_dur = self.duration_default(culture_idx)
         log_duration = torch.log1p(duration_hours.clamp(min=0.0))
-        mixed_log_duration = known_duration * log_duration + (1.0 - known_duration) * default_log_dur
+        mixed_log_duration = (
+            known_duration * log_duration + (1.0 - known_duration) * default_log_dur
+        )
         return self.duration_proj(mixed_log_duration)
 
     def _context_parts(
@@ -1094,21 +1105,15 @@ class TCellAssayHead(nn.Module):
         batch_size: int,
         device: torch.device,
     ) -> Dict[str, torch.Tensor]:
-        method_i = self._idx_or_default(
-            assay_method_idx, batch_size, device, self.n_assay_methods
-        )
+        method_i = self._idx_or_default(assay_method_idx, batch_size, device, self.n_assay_methods)
         readout_i = self._idx_or_default(
             assay_readout_idx, batch_size, device, self.n_assay_readouts
         )
-        apc_i = self._idx_or_default(
-            apc_type_idx, batch_size, device, self.n_apc_types
-        )
+        apc_i = self._idx_or_default(apc_type_idx, batch_size, device, self.n_apc_types)
         culture_i = self._idx_or_default(
             culture_context_idx, batch_size, device, self.n_culture_contexts
         )
-        stim_i = self._idx_or_default(
-            stim_context_idx, batch_size, device, self.n_stim_contexts
-        )
+        stim_i = self._idx_or_default(stim_context_idx, batch_size, device, self.n_stim_contexts)
         pepfmt_i = self._idx_or_default(
             peptide_format_idx, batch_size, device, self.n_peptide_formats
         )
@@ -1142,6 +1147,7 @@ class TCellAssayHead(nn.Module):
         if panel_mode:
             batch_size, n_panel, _ = ctx_vec.shape
             ctx_flat = ctx_vec.reshape(batch_size * n_panel, self.ctx_dim)
+
             def _expand(t: torch.Tensor) -> torch.Tensor:
                 if t.ndim == 1:
                     t = t.unsqueeze(-1)
@@ -1311,6 +1317,7 @@ class TCellAssayHead(nn.Module):
 # --------------------------------------------------------------------------
 # Elution/MS head
 # --------------------------------------------------------------------------
+
 
 class ElutionHead(nn.Module):
     """Elution logit = presentation + MS detectability (S9.3).
@@ -1540,9 +1547,7 @@ class ExcisionHead(nn.Module):
         # C-side only, deliberately: the immunoproteasome swap shifts the
         # C-terminal cut, while N-terminal trimming is ERAP work and rides the
         # APM axis instead.
-        self.stimulus_profile_c = nn.Parameter(
-            torch.zeros(self.n_stimulus, window, self.n_aa)
-        )
+        self.stimulus_profile_c = nn.Parameter(torch.zeros(self.n_stimulus, window, self.n_aa))
         self.invivo_bias = nn.Parameter(torch.zeros(self.n_apm))
 
         self.context_c = nn.Linear(d_model, self.n_machinery)
@@ -1618,9 +1623,7 @@ class ExcisionHead(nn.Module):
         return picked.sum(dim=1)
 
     @staticmethod
-    def _window_preference_all(
-        profile: torch.Tensor, window_idx: torch.Tensor
-    ) -> torch.Tensor:
+    def _window_preference_all(profile: torch.Tensor, window_idx: torch.Tensor) -> torch.Tensor:
         """The same sum for *every* condition at once -> (batch, n_cond).
 
         Used to build the counterfactual panels. Must stay exactly consistent
@@ -1708,9 +1711,7 @@ class ExcisionHead(nn.Module):
             is_mhc = torch.zeros_like(c_terminus_score)
         else:
             source = peptide_source_idx.long()
-            is_protein = (source == self.protein_source_index).to(
-                c_terminus_score.dtype
-            )
+            is_protein = (source == self.protein_source_index).to(c_terminus_score.dtype)
             # Positive test, not `1 - is_protein`. PEPTIDE_SOURCES is
             # ['unknown', 'mhc', 'protein'], so the negated form routed
             # `unknown` rows down the in-vivo branch -- asserting proteasomal
@@ -1727,11 +1728,7 @@ class ExcisionHead(nn.Module):
         # it uses information rather than leaking it. This is the same category
         # as the MHC allele, not the same category as "was this ELISPOT".
         baseline_index = torch.zeros_like(machinery_idx)
-        apm = (
-            apm_perturbation_idx.long()
-            if apm_perturbation_idx is not None
-            else baseline_index
-        )
+        apm = apm_perturbation_idx.long() if apm_perturbation_idx is not None else baseline_index
         stimulus = (
             processing_stimulus_idx.long()
             if processing_stimulus_idx is not None
@@ -1750,9 +1747,7 @@ class ExcisionHead(nn.Module):
             + self._window_preference(self.stimulus_profile_c, stimulus, window_c)
             + context_c
         )
-        invivo_n = (
-            self._window_preference(self.invivo_profile_n, apm, window_n) + context_n
-        )
+        invivo_n = self._window_preference(self.invivo_profile_n, apm, window_n) + context_n
 
         c_terminus_score = is_protein * c_terminus_score + is_mhc * invivo_c
         n_terminus_score = is_protein * n_terminus_score + is_mhc * invivo_n
@@ -1764,10 +1759,7 @@ class ExcisionHead(nn.Module):
         # for MHC selection, so the in-vivo branch contributes no length term.
         length_score = is_protein * length_score
 
-        bias = (
-            is_protein * self.bias[machinery_idx]
-            + is_mhc * self.invivo_bias[apm]
-        )
+        bias = is_protein * self.bias[machinery_idx] + is_mhc * self.invivo_bias[apm]
         logit = n_terminus_score + c_terminus_score + length_score + missed_cleavage_score + bias
 
         # Counterfactual tracks: the excision logit this peptide would show
@@ -1793,31 +1785,17 @@ class ExcisionHead(nn.Module):
         # matching `excision_logit` -- which is the column the panel loss
         # gathers, so the supervision would target a quantity the model never
         # reports. That bug has shipped here once already.
-        apm_panel = (
-            logit.unsqueeze(1)
-            + not_protein.unsqueeze(1)
-            * (
-                self._window_preference_all(self.invivo_profile_c, window_c)
-                - self._window_preference(
-                    self.invivo_profile_c, apm, window_c
-                ).unsqueeze(1)
-                + self._window_preference_all(self.invivo_profile_n, window_n)
-                - self._window_preference(
-                    self.invivo_profile_n, apm, window_n
-                ).unsqueeze(1)
-                + self.invivo_bias.unsqueeze(0)
-                - self.invivo_bias[apm].unsqueeze(1)
-            )
+        apm_panel = logit.unsqueeze(1) + not_protein.unsqueeze(1) * (
+            self._window_preference_all(self.invivo_profile_c, window_c)
+            - self._window_preference(self.invivo_profile_c, apm, window_c).unsqueeze(1)
+            + self._window_preference_all(self.invivo_profile_n, window_n)
+            - self._window_preference(self.invivo_profile_n, apm, window_n).unsqueeze(1)
+            + self.invivo_bias.unsqueeze(0)
+            - self.invivo_bias[apm].unsqueeze(1)
         )
-        stimulus_panel = (
-            logit.unsqueeze(1)
-            + not_protein.unsqueeze(1)
-            * (
-                self._window_preference_all(self.stimulus_profile_c, window_c)
-                - self._window_preference(
-                    self.stimulus_profile_c, stimulus, window_c
-                ).unsqueeze(1)
-            )
+        stimulus_panel = logit.unsqueeze(1) + not_protein.unsqueeze(1) * (
+            self._window_preference_all(self.stimulus_profile_c, window_c)
+            - self._window_preference(self.stimulus_profile_c, stimulus, window_c).unsqueeze(1)
         )
         return {
             "excision_panel_apm": apm_panel,

@@ -63,7 +63,6 @@ def infer_model_config_from_state_dict(state_dict: Dict[str, torch.Tensor]) -> D
                 n_heads = candidate
                 break
 
-
     config: Dict[str, Any] = {}
     if d_model is not None:
         config["d_model"] = d_model
@@ -112,7 +111,9 @@ def _extract_state_and_config(
 ) -> Tuple[Dict[str, torch.Tensor], Dict[str, Any]]:
     if isinstance(checkpoint_payload, dict) and "model_state_dict" in checkpoint_payload:
         state_dict = checkpoint_payload["model_state_dict"]
-        model_config = checkpoint_payload.get("model_config") or checkpoint_payload.get("config") or {}
+        model_config = (
+            checkpoint_payload.get("model_config") or checkpoint_payload.get("config") or {}
+        )
     else:
         state_dict = checkpoint_payload
         model_config = {}
@@ -198,9 +199,7 @@ def load_model_from_checkpoint(
         "n_layers": n_layers if n_layers is not None else model_config.get("n_layers"),
         "n_heads": n_heads if n_heads is not None else model_config.get("n_heads"),
         "max_affinity_nM": (
-            max_affinity_nM
-            if max_affinity_nM is not None
-            else model_config.get("max_affinity_nM")
+            max_affinity_nM if max_affinity_nM is not None else model_config.get("max_affinity_nM")
         ),
         "binding_midpoint_nM": (
             binding_midpoint_nM
@@ -228,7 +227,6 @@ def load_model_from_checkpoint(
     if resolved["binding_log10_scale"] is None:
         resolved["binding_log10_scale"] = DEFAULT_BINDING_LOG10_SCALE
 
-
     model = Presto(
         d_model=int(resolved["d_model"]),
         n_layers=int(resolved["n_layers"]),
@@ -239,5 +237,3 @@ def load_model_from_checkpoint(
     )
     model.load_state_dict(state_dict, strict=strict)
     return model, payload
-
-

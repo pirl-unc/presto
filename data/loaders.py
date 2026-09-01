@@ -104,9 +104,9 @@ def _normalize_mhc_sequence_lookup(
             variants.add(normalize_allele_name(key))
         except ValueError:
             # ValueError only: an unparseable allele name is expected data and is
-        # skippable, but `except Exception` also swallowed the RuntimeError
-        # raised when mhcgnomes is unavailable -- which would silently
-        # degrade every allele in the index rather than failing loudly.
+            # skippable, but `except Exception` also swallowed the RuntimeError
+            # raised when mhcgnomes is unavailable -- which would silently
+            # degrade every allele in the index rather than failing loudly.
             pass
         for variant in variants:
             normalized[variant] = seq
@@ -122,10 +122,14 @@ def _coerce_exact_mhc_input(
         return value
     return ExactMHCInput(
         allele=str(getattr(value, "allele", None) or value.get("allele") or allele).strip(),
-        sequence=str(getattr(value, "sequence", None) or value.get("sequence") or "").strip().upper(),
+        sequence=str(getattr(value, "sequence", None) or value.get("sequence") or "")
+        .strip()
+        .upper(),
         groove1=str(getattr(value, "groove1", None) or value.get("groove1") or "").strip().upper(),
         groove2=str(getattr(value, "groove2", None) or value.get("groove2") or "").strip().upper(),
-        mhc_class=str(getattr(value, "mhc_class", None) or value.get("mhc_class") or "").strip().upper(),
+        mhc_class=str(getattr(value, "mhc_class", None) or value.get("mhc_class") or "")
+        .strip()
+        .upper(),
         chain=str(getattr(value, "chain", None) or value.get("chain") or "").strip().lower(),
         groove_status=str(
             getattr(value, "groove_status", None) or value.get("groove_status") or ""
@@ -160,17 +164,19 @@ def _normalize_exact_mhc_input_lookup(
             normalized[variant.upper()] = record
     return normalized
 
+
 @dataclass
 class BindingRecord:
     """Binding affinity measurement (IC50, KD, EC50)."""
+
     peptide: str
     mhc_allele: str
-    value: float                    # In nM
-    qualifier: int = 0              # -1='<', 0='=', 1='>'
+    value: float  # In nM
+    qualifier: int = 0  # -1='<', 0='=', 1='>'
     measurement_type: str = "IC50"  # IC50, KD, EC50
     unit: str = "nM"
-    flank_n: str = ""               # N-terminal flanking sequence in the source protein
-    flank_c: str = ""               # C-terminal flanking sequence in the source protein
+    flank_n: str = ""  # N-terminal flanking sequence in the source protein
+    flank_c: str = ""  # C-terminal flanking sequence in the source protein
     assay_type: Optional[str] = None
     assay_method: Optional[str] = None
     effector_culture_condition: Optional[str] = None
@@ -186,10 +192,11 @@ class BindingRecord:
 @dataclass
 class KineticsRecord:
     """Binding kinetics measurement (kon, koff)."""
+
     peptide: str
     mhc_allele: str
-    kon: Optional[float] = None     # Association rate (1/Ms)
-    koff: Optional[float] = None    # Dissociation rate (1/s)
+    kon: Optional[float] = None  # Association rate (1/Ms)
+    koff: Optional[float] = None  # Dissociation rate (1/s)
     kon_qualifier: int = 0
     koff_qualifier: int = 0
     assay_type: Optional[str] = None
@@ -205,10 +212,11 @@ class KineticsRecord:
 @dataclass
 class StabilityRecord:
     """pMHC stability measurement (t_half, Tm)."""
+
     peptide: str
     mhc_allele: str
     t_half: Optional[float] = None  # Half-life (hours)
-    tm: Optional[float] = None      # Melting temperature (C)
+    tm: Optional[float] = None  # Melting temperature (C)
     t_half_qualifier: int = 0
     tm_qualifier: int = 0
     assay_type: Optional[str] = None
@@ -228,10 +236,11 @@ class StabilityRecord:
 @dataclass
 class ProcessingRecord:
     """Antigen processing data (cleavage, TAP transport)."""
+
     peptide: str
-    flank_n: str = ""               # N-terminal flanking sequence
-    flank_c: str = ""               # C-terminal flanking sequence
-    label: float = 1.0              # Processing outcome (0-1)
+    flank_n: str = ""  # N-terminal flanking sequence
+    flank_c: str = ""  # C-terminal flanking sequence
+    label: float = 1.0  # Processing outcome (0-1)
     processing_type: str = "cleavage"  # cleavage, tap, processing
     mhc_allele: Optional[str] = None
     mhc_class: Optional[str] = None
@@ -243,11 +252,12 @@ class ProcessingRecord:
 @dataclass
 class ElutionRecord:
     """Mass spectrometry / elution data."""
+
     peptide: str
-    alleles: List[str]              # Can be multiple (deconvolution needed)
-    detected: bool = True           # Was peptide detected?
-    flank_n: str = ""               # N-terminal flanking sequence in the source protein
-    flank_c: str = ""               # C-terminal flanking sequence in the source protein
+    alleles: List[str]  # Can be multiple (deconvolution needed)
+    detected: bool = True  # Was peptide detected?
+    flank_n: str = ""  # N-terminal flanking sequence in the source protein
+    flank_c: str = ""  # C-terminal flanking sequence in the source protein
     # Cellular state at the time the peptide was produced. Conditions the
     # in-vivo termini; see docs/model_io_contract.md Tier 3.
     stimulus: Optional[str] = None
@@ -278,9 +288,10 @@ class ElutionRecord:
 @dataclass
 class TCellRecord:
     """T-cell assay data (IEDB format)."""
+
     peptide: str
     mhc_allele: str
-    response: float                 # 0 or 1
+    response: float  # 0 or 1
     alleles: Optional[List[str]] = None
     assay_type: Optional[str] = None  # Assay response measured (e.g. IFNg release)
     assay_method: Optional[str] = None  # Method (ELISPOT/ICS/multimer/etc.)
@@ -308,8 +319,9 @@ class TCellRecord:
 @dataclass
 class BCellRecord:
     """B-cell assay data with inferred BCR chain classes."""
+
     peptide: str
-    response: float                 # 0 or 1
+    response: float  # 0 or 1
     assay_type: Optional[str] = None
     heavy_chain_isotype: Optional[str] = None
     light_chain_isotype: Optional[str] = None
@@ -323,8 +335,9 @@ class BCellRecord:
 @dataclass
 class Sc10xVDJRecord:
     """10x VDJ contig record with normalized chain labels."""
+
     barcode: str
-    chain_type: str                 # TRA/TRB/TRG/TRD/IGH/IGK/IGL
+    chain_type: str  # TRA/TRB/TRG/TRD/IGH/IGK/IGL
     cdr3: Optional[str] = None
     cdr3_nt: Optional[str] = None
     v_gene: Optional[str] = None
@@ -341,16 +354,17 @@ class Sc10xVDJRecord:
 @dataclass
 class VDJdbRecord:
     """VDJdb TCR-pMHC data with V/J gene annotations."""
+
     peptide: str
-    mhc_a: str                      # MHC alpha chain allele
-    mhc_b: Optional[str] = None     # MHC beta chain (Class II) or B2M
+    mhc_a: str  # MHC alpha chain allele
+    mhc_b: Optional[str] = None  # MHC beta chain (Class II) or B2M
     cdr3_alpha: Optional[str] = None
     cdr3_beta: Optional[str] = None
     v_alpha: Optional[str] = None
     j_alpha: Optional[str] = None
     v_beta: Optional[str] = None
     j_beta: Optional[str] = None
-    gene: str = "TRB"               # TRA, TRB, etc.
+    gene: str = "TRB"  # TRA, TRB, etc.
     mhc_class: Optional[str] = None
     species: Optional[str] = None
     antigen_species: Optional[str] = None  # Pathogen species
@@ -382,15 +396,14 @@ class TcrEvidenceRecord:
     method_bins: Tuple[str, ...] = ()
     score: Optional[int] = None
     reference_id: Optional[str] = None
+
     def __post_init__(self) -> None:
         # Derive the bins from the raw method strings when a caller did not
         # supply them. They used to be computed in only one construction path,
         # so a record built any other way -- including every test and any
         # direct caller -- carried empty bins, and `tcr_evidence_method` was
         # never supervised even though the method metadata was right there.
-        if not self.method_bins and (
-            self.method_identification or self.method_verification
-        ):
+        if not self.method_bins and (self.method_identification or self.method_verification):
             object.__setattr__(
                 self,
                 "method_bins",
@@ -400,7 +413,6 @@ class TcrEvidenceRecord:
             )
 
 
-
 # Backward compatibility alias
 TCRpMHCRecord = VDJdbRecord
 
@@ -408,15 +420,17 @@ TCRpMHCRecord = VDJdbRecord
 @dataclass
 class UniProtProtein:
     """A protein record from UniProt SwissProt with organism category."""
+
     accession: str
     sequence: str
-    category: str   # one of ORGANISM_CATEGORIES
+    category: str  # one of ORGANISM_CATEGORIES
     organism: str = ""
 
 
 # =============================================================================
 # Flexible Column Detection
 # =============================================================================
+
 
 def _sniff_column(header: List[str], candidates: List[str]) -> Optional[int]:
     """Find column index matching any candidate name (case-insensitive)."""
@@ -607,7 +621,17 @@ def _is_binding_affinity_measurement(measurement: str, unit: str) -> bool:
     """Whether a measurement likely represents binding affinity in concentration units."""
     m = (measurement or "").lower()
     u = (unit or "").lower().strip()
-    if any(token in m for token in ("ic50", "ec50", "kd", "inhibitory concentration", "effective concentration", "dissociation constant")):
+    if any(
+        token in m
+        for token in (
+            "ic50",
+            "ec50",
+            "kd",
+            "inhibitory concentration",
+            "effective concentration",
+            "dissociation constant",
+        )
+    ):
         return True
     if u in {"nm", "nanomolar", "n m"}:
         return True
@@ -717,6 +741,7 @@ def _parse_inequality_qualifier(value: str) -> int:
 # IEDB Loaders
 # =============================================================================
 
+
 def load_iedb_binding(path: Union[str, Path]) -> Iterator[BindingRecord]:
     """Load IEDB binding data with flexible column detection.
 
@@ -741,7 +766,15 @@ def load_iedb_binding(path: Union[str, Path]) -> Iterator[BindingRecord]:
     )
     value_idx = _sniff_column(
         header,
-        ['assay quantitative measurement', 'quantitative measurement', 'measurement value', 'value', 'ic50 (nm)', 'kd (nm)', 'ec50 (nm)'],
+        [
+            'assay quantitative measurement',
+            'quantitative measurement',
+            'measurement value',
+            'value',
+            'ic50 (nm)',
+            'kd (nm)',
+            'ec50 (nm)',
+        ],
     )
     qual_idx = _sniff_column(
         header,
@@ -754,11 +787,19 @@ def load_iedb_binding(path: Union[str, Path]) -> Iterator[BindingRecord]:
     unit_idx = _sniff_column(header, ['assay units', 'measurement unit', 'units', 'unit'])
     assay_idx = _sniff_column(header, ['assay method', 'assay group', 'assay', 'assay type'])
     class_idx = _sniff_column(header, ['mhc restriction class', 'mhc class', 'class', 'mhc_class'])
-    species_idx = _sniff_column(header, ['epitope species', 'host organism', 'organism', 'species', 'host'])
-    antigen_species_idx = _sniff_column(header, [
-        'antigen source organism', 'source organism', 'epitope source organism',
-        'antigen.species', 'pathogen',
-    ])
+    species_idx = _sniff_column(
+        header, ['epitope species', 'host organism', 'organism', 'species', 'host']
+    )
+    antigen_species_idx = _sniff_column(
+        header,
+        [
+            'antigen source organism',
+            'source organism',
+            'epitope source organism',
+            'antigen.species',
+            'pathogen',
+        ],
+    )
 
     for row in rows:
         peptide = _get_column(row, pep_idx)
@@ -813,8 +854,12 @@ def load_iedb_kinetics(path: Union[str, Path]) -> Iterator[KineticsRecord]:
     if not header:
         return
 
-    pep_idx = _sniff_column(header, ['epitope name', 'linear peptide sequence', 'peptide', 'epitope'])
-    allele_idx = _sniff_column(header, ['mhc restriction name', 'mhc allele name', 'allele', 'mhc allele'])
+    pep_idx = _sniff_column(
+        header, ['epitope name', 'linear peptide sequence', 'peptide', 'epitope']
+    )
+    allele_idx = _sniff_column(
+        header, ['mhc restriction name', 'mhc allele name', 'allele', 'mhc allele']
+    )
     kon_idx = _sniff_column(header, ['kon', 'ka', 'k_on', 'association rate'])
     koff_idx = _sniff_column(header, ['koff', 'kd', 'k_off', 'dissociation rate'])
     response_idx = _sniff_column(
@@ -829,11 +874,19 @@ def load_iedb_kinetics(path: Union[str, Path]) -> Iterator[KineticsRecord]:
     ineq_idx = _sniff_column(header, ['measurement inequality', 'inequality', 'qualifier'])
     assay_idx = _sniff_column(header, ['assay method', 'assay group', 'assay', 'assay type'])
     class_idx = _sniff_column(header, ['mhc restriction class', 'mhc class', 'class'])
-    species_idx = _sniff_column(header, ['epitope species', 'host organism', 'organism', 'species', 'host'])
-    antigen_species_idx = _sniff_column(header, [
-        'antigen source organism', 'source organism', 'epitope source organism',
-        'antigen.species', 'pathogen',
-    ])
+    species_idx = _sniff_column(
+        header, ['epitope species', 'host organism', 'organism', 'species', 'host']
+    )
+    antigen_species_idx = _sniff_column(
+        header,
+        [
+            'antigen source organism',
+            'source organism',
+            'epitope source organism',
+            'antigen.species',
+            'pathogen',
+        ],
+    )
 
     def _normalize_rate_units(value: Optional[float], units: str, is_kon: bool) -> Optional[float]:
         if value is None:
@@ -965,11 +1018,19 @@ def load_iedb_stability(path: Union[str, Path]) -> Iterator[StabilityRecord]:
     ineq_idx = _sniff_column(header, ['measurement inequality', 'inequality', 'qualifier'])
     assay_idx = _sniff_column(header, ['assay group', 'assay', 'assay type', 'method'])
     class_idx = _sniff_column(header, ['mhc class', 'class'])
-    species_idx = _sniff_column(header, ['epitope species', 'host organism', 'organism', 'species', 'host'])
-    antigen_species_idx = _sniff_column(header, [
-        'antigen source organism', 'source organism', 'epitope source organism',
-        'antigen.species', 'pathogen',
-    ])
+    species_idx = _sniff_column(
+        header, ['epitope species', 'host organism', 'organism', 'species', 'host']
+    )
+    antigen_species_idx = _sniff_column(
+        header,
+        [
+            'antigen source organism',
+            'source organism',
+            'epitope source organism',
+            'antigen.species',
+            'pathogen',
+        ],
+    )
 
     def _convert_time_to_hours(value: float, units: str) -> float:
         unit = units.lower().strip()
@@ -1015,14 +1076,11 @@ def load_iedb_stability(path: Union[str, Path]) -> Iterator[StabilityRecord]:
             or 'effective concentration' in measurement
             or 'dissociation constant' in measurement
         )
-        is_half_life = (
-            not is_ic50_like
-            and (
-                'half life' in measurement
-                or 'half-life' in measurement
-                or 't1/2' in measurement
-                or 'dissociation half life' in measurement
-            )
+        is_half_life = not is_ic50_like and (
+            'half life' in measurement
+            or 'half-life' in measurement
+            or 't1/2' in measurement
+            or 'dissociation half life' in measurement
         )
         is_tm = (
             'dissociation temperature' in measurement
@@ -1072,18 +1130,32 @@ def load_iedb_processing(path: Union[str, Path]) -> Iterator[ProcessingRecord]:
     if not header:
         return
 
-    pep_idx = _sniff_column(header, ['epitope name', 'linear peptide sequence', 'peptide', 'epitope'])
+    pep_idx = _sniff_column(
+        header, ['epitope name', 'linear peptide sequence', 'peptide', 'epitope']
+    )
     flankn_idx = _sniff_column(header, ['n-terminal', 'flank_n', 'n_flank', 'upstream'])
     flankc_idx = _sniff_column(header, ['c-terminal', 'flank_c', 'c_flank', 'downstream'])
-    label_idx = _sniff_column(header, ['assay qualitative measurement', 'outcome', 'label', 'processed', 'cleaved'])
-    type_idx = _sniff_column(header, ['assay response measured', 'processing type', 'type', 'method'])
+    label_idx = _sniff_column(
+        header, ['assay qualitative measurement', 'outcome', 'label', 'processed', 'cleaved']
+    )
+    type_idx = _sniff_column(
+        header, ['assay response measured', 'processing type', 'type', 'method']
+    )
     allele_idx = _sniff_column(header, ['mhc restriction name', 'mhc allele name', 'allele'])
     class_idx = _sniff_column(header, ['mhc restriction class', 'mhc class', 'class'])
-    species_idx = _sniff_column(header, ['epitope species', 'host organism', 'organism', 'species', 'host'])
-    antigen_species_idx = _sniff_column(header, [
-        'antigen source organism', 'source organism', 'epitope source organism',
-        'antigen.species', 'pathogen',
-    ])
+    species_idx = _sniff_column(
+        header, ['epitope species', 'host organism', 'organism', 'species', 'host']
+    )
+    antigen_species_idx = _sniff_column(
+        header,
+        [
+            'antigen source organism',
+            'source organism',
+            'epitope source organism',
+            'antigen.species',
+            'pathogen',
+        ],
+    )
 
     for row in rows:
         peptide = _get_column(row, pep_idx)
@@ -1092,7 +1164,10 @@ def load_iedb_processing(path: Union[str, Path]) -> Iterator[ProcessingRecord]:
 
         processing_type = _get_column(row, type_idx, 'processing')
         ptype_lower = processing_type.lower()
-        if not any(term in ptype_lower for term in ('processing', 'cleavage', 'tap', 'proteasome', 'transport')):
+        if not any(
+            term in ptype_lower
+            for term in ('processing', 'cleavage', 'tap', 'proteasome', 'transport')
+        ):
             continue
 
         label_str = _get_column(row, label_idx, '1')
@@ -1129,19 +1204,33 @@ def load_iedb_elution(path: Union[str, Path]) -> Iterator[ElutionRecord]:
     if not header:
         return
 
-    pep_idx = _sniff_column(header, ['epitope name', 'linear peptide sequence', 'peptide', 'epitope'])
-    allele_idx = _sniff_column(header, ['mhc restriction name', 'mhc allele name', 'allele', 'mhc allele', 'alleles'])
-    cell_idx = _sniff_column(header, ['antigen presenting cell name', 'cell type', 'cell line', 'apc name', 'cell'])
+    pep_idx = _sniff_column(
+        header, ['epitope name', 'linear peptide sequence', 'peptide', 'epitope']
+    )
+    allele_idx = _sniff_column(
+        header, ['mhc restriction name', 'mhc allele name', 'allele', 'mhc allele', 'alleles']
+    )
+    cell_idx = _sniff_column(
+        header, ['antigen presenting cell name', 'cell type', 'cell line', 'apc name', 'cell']
+    )
     tissue_idx = _sniff_column(header, ['tissue', 'tissue type', 'sample'])
     class_idx = _sniff_column(header, ['mhc restriction class', 'mhc class', 'class'])
     species_idx = _sniff_column(header, ['epitope species', 'host organism', 'organism', 'species'])
     response_idx = _sniff_column(header, ['assay response measured', 'response measured'])
     assay_method_idx = _sniff_column(header, ['assay method', 'assay type', 'assay group'])
-    detected_idx = _sniff_column(header, ['assay qualitative measurement', 'detected', 'positive', 'hit'])
-    antigen_species_idx = _sniff_column(header, [
-        'antigen source organism', 'source organism', 'epitope source organism',
-        'antigen.species', 'pathogen',
-    ])
+    detected_idx = _sniff_column(
+        header, ['assay qualitative measurement', 'detected', 'positive', 'hit']
+    )
+    antigen_species_idx = _sniff_column(
+        header,
+        [
+            'antigen source organism',
+            'source organism',
+            'epitope source organism',
+            'antigen.species',
+            'pathogen',
+        ],
+    )
 
     for row in rows:
         peptide = _get_column(row, pep_idx)
@@ -1151,7 +1240,10 @@ def load_iedb_elution(path: Union[str, Path]) -> Iterator[ElutionRecord]:
         response_measured = _get_column(row, response_idx)
         assay_method = _get_column(row, assay_method_idx)
         lowered_context = f"{response_measured} {assay_method}".lower()
-        if not any(term in lowered_context for term in ('ligand presentation', 'mass spectrometry', 'elution', 'immunopeptid')):
+        if not any(
+            term in lowered_context
+            for term in ('ligand presentation', 'mass spectrometry', 'elution', 'immunopeptid')
+        ):
             continue
 
         alleles = _parse_alleles(_get_column(row, allele_idx))
@@ -1199,7 +1291,13 @@ def load_iedb_tcell(path: Union[str, Path]) -> Iterator[TCellRecord]:
     )
     outcome_idx = _sniff_column(
         header,
-        ['assay qualitative measurement', 'qualitative measurement', 'positive/negative', 'outcome', 'response'],
+        [
+            'assay qualitative measurement',
+            'qualitative measurement',
+            'positive/negative',
+            'outcome',
+            'response',
+        ],
     )
     assay_idx = _sniff_column(
         header,
@@ -1214,10 +1312,16 @@ def load_iedb_tcell(path: Union[str, Path]) -> Iterator[TCellRecord]:
         header,
         ['epitope species', 'host organism', 'organism', 'species'],
     )
-    antigen_species_idx = _sniff_column(header, [
-        'antigen source organism', 'source organism', 'epitope source organism',
-        'antigen.species', 'pathogen',
-    ])
+    antigen_species_idx = _sniff_column(
+        header,
+        [
+            'antigen source organism',
+            'source organism',
+            'epitope source organism',
+            'antigen.species',
+            'pathogen',
+        ],
+    )
     effector_culture_idx = _sniff_column(
         header,
         ['effector cell culture condition', 'effector culture condition'],
@@ -1435,6 +1539,7 @@ def load_10x_vdj(path: Union[str, Path]) -> Iterator[Sc10xVDJRecord]:
 # VDJdb Loader
 # =============================================================================
 
+
 def load_vdjdb(path: Union[str, Path]) -> Iterator[VDJdbRecord]:
     """Load VDJdb TCR-pMHC data."""
     lines = list(_open_file(path))
@@ -1550,6 +1655,7 @@ def load_mcpas_tcr_evidence(path: Union[str, Path]) -> Iterator[TcrEvidenceRecor
 # Simple CSV Loaders (for backward compatibility)
 # =============================================================================
 
+
 def load_binding_csv(path: str) -> List[BindingRecord]:
     """Load binding data from simple CSV format."""
     return list(load_iedb_binding(path))
@@ -1613,12 +1719,14 @@ def load_uniprot_proteins(path: Union[str, Path]) -> List[UniProtProtein]:
         for row in reader:
             if len(row) <= max(acc_idx, seq_idx, cat_idx):
                 continue
-            proteins.append(UniProtProtein(
-                accession=row[acc_idx],
-                sequence=row[seq_idx],
-                category=row[cat_idx],
-                organism=row[org_idx] if org_idx < len(row) else "",
-            ))
+            proteins.append(
+                UniProtProtein(
+                    accession=row[acc_idx],
+                    sequence=row[seq_idx],
+                    category=row[cat_idx],
+                    organism=row[org_idx] if org_idx < len(row) else "",
+                )
+            )
     return proteins
 
 
@@ -1674,7 +1782,8 @@ class PrestoDataset(Dataset):
             tcr_evidence_records = [vdjdb_record_to_tcr_evidence(rec) for rec in vdjdb_records]
         if sc10x_records:
             warnings.warn(
-                "Ignoring sc10x_records: receptor-sequence supervision is disabled in canonical Presto.",
+                "Ignoring sc10x_records: receptor-sequence supervision is disabled in canonical "
+                    "Presto.",
                 RuntimeWarning,
             )
         self.mhc_sequences = _normalize_mhc_sequence_lookup(mhc_sequences)
@@ -1701,7 +1810,9 @@ class PrestoDataset(Dataset):
             src = _source_label(source)
             return src if src.startswith("synthetic_negative") else None
 
-        def _organism_fields(antigen_species: Optional[str]) -> Tuple[Optional[str], Optional[float]]:
+        def _organism_fields(
+            antigen_species: Optional[str],
+        ) -> Tuple[Optional[str], Optional[float]]:
             """Map raw antigen_species → (species_of_origin, foreignness_label)."""
             cat = normalize_organism(antigen_species)
             if cat is None:
@@ -1733,7 +1844,7 @@ class PrestoDataset(Dataset):
             return "binding_affinity"
 
         # Add binding samples
-        for rec in (binding_records or []):
+        for rec in binding_records or []:
             mhc_class = self._resolve_mhc_class_value(rec.mhc_class, rec.mhc_allele)
             src = _source_label(rec.source)
             is_no_mhc_alpha = src == "synthetic_negative_no_mhc_alpha"
@@ -1754,33 +1865,35 @@ class PrestoDataset(Dataset):
             is_synth = src.startswith("synthetic_negative")
             bind_label = "negative" if is_synth or float(rec.value) >= 50000.0 else "positive"
             so, fl = _organism_fields(rec.antigen_species)
-            self.samples.append(PrestoSample(
-                peptide=rec.peptide,
-                flank_n=rec.flank_n or None,
-                flank_c=rec.flank_c or None,
-                mhc_a=mhc_a_seq,
-                mhc_b=mhc_b_seq,
-                mhc_class=mhc_class,
-                bind_value=rec.value,
-                bind_qual=rec.qualifier,
-                bind_measurement_type=rec.measurement_type,
-                binding_assay_type=rec.assay_type or rec.measurement_type,
-                binding_assay_method=rec.assay_method,
-                binding_effector_culture=rec.effector_culture_condition,
-                binding_apc_culture=rec.apc_culture_condition,
-                species=rec.species,
-                species_of_origin=so,
-                foreignness_label=fl,
-                sample_source=src,
-                assay_group=_binding_assay_group(rec.measurement_type, rec.source),
-                label_bucket=bind_label,
-                primary_allele=rec.mhc_allele,
-                synthetic_kind=_synthetic_kind(rec.source),
-                sample_id=f"bind_{len(self.samples)}",
-            ))
+            self.samples.append(
+                PrestoSample(
+                    peptide=rec.peptide,
+                    flank_n=rec.flank_n or None,
+                    flank_c=rec.flank_c or None,
+                    mhc_a=mhc_a_seq,
+                    mhc_b=mhc_b_seq,
+                    mhc_class=mhc_class,
+                    bind_value=rec.value,
+                    bind_qual=rec.qualifier,
+                    bind_measurement_type=rec.measurement_type,
+                    binding_assay_type=rec.assay_type or rec.measurement_type,
+                    binding_assay_method=rec.assay_method,
+                    binding_effector_culture=rec.effector_culture_condition,
+                    binding_apc_culture=rec.apc_culture_condition,
+                    species=rec.species,
+                    species_of_origin=so,
+                    foreignness_label=fl,
+                    sample_source=src,
+                    assay_group=_binding_assay_group(rec.measurement_type, rec.source),
+                    label_bucket=bind_label,
+                    primary_allele=rec.mhc_allele,
+                    synthetic_kind=_synthetic_kind(rec.source),
+                    sample_id=f"bind_{len(self.samples)}",
+                )
+            )
 
         # Add kinetics samples
-        for rec in (kinetics_records or []):
+        for rec in kinetics_records or []:
             mhc_class = self._resolve_mhc_class_value(rec.mhc_class, rec.mhc_allele)
             mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
                 mhc_class=mhc_class,
@@ -1789,28 +1902,30 @@ class PrestoDataset(Dataset):
                 direct_seq=rec.mhc_sequence,
             )
             so, fl = _organism_fields(rec.antigen_species)
-            self.samples.append(PrestoSample(
-                peptide=rec.peptide,
-                mhc_a=mhc_a_seq,
-                mhc_b=mhc_b_seq,
-                mhc_class=mhc_class,
-                kon=rec.kon,
-                koff=rec.koff,
-                kinetics_assay_type=rec.assay_type,
-                kinetics_assay_method=rec.assay_method,
-                species=rec.species,
-                species_of_origin=so,
-                foreignness_label=fl,
-                sample_source=_source_label(rec.source),
-                assay_group="binding_kinetics",
-                label_bucket=None,
-                primary_allele=rec.mhc_allele,
-                synthetic_kind=_synthetic_kind(rec.source),
-                sample_id=f"kin_{len(self.samples)}",
-            ))
+            self.samples.append(
+                PrestoSample(
+                    peptide=rec.peptide,
+                    mhc_a=mhc_a_seq,
+                    mhc_b=mhc_b_seq,
+                    mhc_class=mhc_class,
+                    kon=rec.kon,
+                    koff=rec.koff,
+                    kinetics_assay_type=rec.assay_type,
+                    kinetics_assay_method=rec.assay_method,
+                    species=rec.species,
+                    species_of_origin=so,
+                    foreignness_label=fl,
+                    sample_source=_source_label(rec.source),
+                    assay_group="binding_kinetics",
+                    label_bucket=None,
+                    primary_allele=rec.mhc_allele,
+                    synthetic_kind=_synthetic_kind(rec.source),
+                    sample_id=f"kin_{len(self.samples)}",
+                )
+            )
 
         # Add stability samples
-        for rec in (stability_records or []):
+        for rec in stability_records or []:
             mhc_class = self._resolve_mhc_class_value(rec.mhc_class, rec.mhc_allele)
             mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
                 mhc_class=mhc_class,
@@ -1819,30 +1934,32 @@ class PrestoDataset(Dataset):
                 direct_seq=rec.mhc_sequence,
             )
             so, fl = _organism_fields(rec.antigen_species)
-            self.samples.append(PrestoSample(
-                peptide=rec.peptide,
-                mhc_a=mhc_a_seq,
-                mhc_b=mhc_b_seq,
-                mhc_class=mhc_class,
-                t_half=rec.t_half,
-                tm=rec.tm,
-                t_half_qual=rec.t_half_qualifier,
-                tm_qual=rec.tm_qualifier,
-                stability_assay_type=rec.assay_type,
-                stability_assay_method=rec.assay_method,
-                species=rec.species,
-                species_of_origin=so,
-                foreignness_label=fl,
-                sample_source=_source_label(rec.source),
-                assay_group="binding_stability",
-                label_bucket=None,
-                primary_allele=rec.mhc_allele,
-                synthetic_kind=_synthetic_kind(rec.source),
-                sample_id=f"stab_{len(self.samples)}",
-            ))
+            self.samples.append(
+                PrestoSample(
+                    peptide=rec.peptide,
+                    mhc_a=mhc_a_seq,
+                    mhc_b=mhc_b_seq,
+                    mhc_class=mhc_class,
+                    t_half=rec.t_half,
+                    tm=rec.tm,
+                    t_half_qual=rec.t_half_qualifier,
+                    tm_qual=rec.tm_qualifier,
+                    stability_assay_type=rec.assay_type,
+                    stability_assay_method=rec.assay_method,
+                    species=rec.species,
+                    species_of_origin=so,
+                    foreignness_label=fl,
+                    sample_source=_source_label(rec.source),
+                    assay_group="binding_stability",
+                    label_bucket=None,
+                    primary_allele=rec.mhc_allele,
+                    synthetic_kind=_synthetic_kind(rec.source),
+                    sample_id=f"stab_{len(self.samples)}",
+                )
+            )
 
         # Add processing samples
-        for rec in (processing_records or []):
+        for rec in processing_records or []:
             mhc_class = self._resolve_mhc_class_value(rec.mhc_class, rec.mhc_allele)
             mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
                 mhc_class=mhc_class,
@@ -1850,56 +1967,58 @@ class PrestoDataset(Dataset):
                 allele=rec.mhc_allele,
             )
             so, fl = _organism_fields(rec.antigen_species)
-            self.samples.append(PrestoSample(
-                peptide=rec.peptide,
-                flank_n=rec.flank_n,
-                flank_c=rec.flank_c,
-                mhc_a=mhc_a_seq,
-                mhc_b=mhc_b_seq,
-                mhc_class=mhc_class,
-                processing_label=rec.label,
-                species=rec.species,
-                species_of_origin=so,
-                foreignness_label=fl,
-                sample_source=_source_label(rec.source),
-                assay_group="processing",
-                label_bucket=_binary_bucket(rec.label),
-                primary_allele=rec.mhc_allele,
-                synthetic_kind=_synthetic_kind(rec.source),
-                sample_id=f"proc_{len(self.samples)}",
-            ))
+            self.samples.append(
+                PrestoSample(
+                    peptide=rec.peptide,
+                    flank_n=rec.flank_n,
+                    flank_c=rec.flank_c,
+                    mhc_a=mhc_a_seq,
+                    mhc_b=mhc_b_seq,
+                    mhc_class=mhc_class,
+                    processing_label=rec.label,
+                    species=rec.species,
+                    species_of_origin=so,
+                    foreignness_label=fl,
+                    sample_source=_source_label(rec.source),
+                    assay_group="processing",
+                    label_bucket=_binary_bucket(rec.label),
+                    primary_allele=rec.mhc_allele,
+                    synthetic_kind=_synthetic_kind(rec.source),
+                    sample_id=f"proc_{len(self.samples)}",
+                )
+            )
 
         # Add non-MHC shotgun samples (MS detectability + excision).
         # These rows have no MHC at all: mhc_a/mhc_b stay empty and the model
         # substitutes a <MISSING> token per segment. They exist to identify the
         # detectability term, which immunopeptidomics alone cannot separate
         # from excision. See data/bulk_ms.py.
-        for rec in (bulk_ms_records or []):
-            self.samples.append(PrestoSample(
-                peptide=rec.peptide,
-                flank_n=rec.flank_n or None,
-                flank_c=rec.flank_c or None,
-                mhc_a="",
-                mhc_b="",
-                mhc_class=None,
-                machinery=rec.machinery,
-                peptide_source="protein",
-                enzymatic_digest=rec.machinery,
-                ms_detectability_label=rec.detectability_label,
-                excision_label=rec.excision_label,
-                source_protein=rec.protein_id or None,
-                sample_source=_source_label(rec.source),
-                assay_group="bulk_ms",
-                label_bucket=(
-                    "positive" if (rec.excision_label or 0.0) >= 0.5 else "negative"
-                ),
-                primary_allele=None,
-                synthetic_kind=None,
-                sample_id=f"bulk_{len(self.samples)}",
-            ))
+        for rec in bulk_ms_records or []:
+            self.samples.append(
+                PrestoSample(
+                    peptide=rec.peptide,
+                    flank_n=rec.flank_n or None,
+                    flank_c=rec.flank_c or None,
+                    mhc_a="",
+                    mhc_b="",
+                    mhc_class=None,
+                    machinery=rec.machinery,
+                    peptide_source="protein",
+                    enzymatic_digest=rec.machinery,
+                    ms_detectability_label=rec.detectability_label,
+                    excision_label=rec.excision_label,
+                    source_protein=rec.protein_id or None,
+                    sample_source=_source_label(rec.source),
+                    assay_group="bulk_ms",
+                    label_bucket=("positive" if (rec.excision_label or 0.0) >= 0.5 else "negative"),
+                    primary_allele=None,
+                    synthetic_kind=None,
+                    sample_id=f"bulk_{len(self.samples)}",
+                )
+            )
 
         # Add elution samples
-        for rec in (elution_records or []):
+        for rec in elution_records or []:
             mil_mhc_a_list: List[str] = []
             mil_mhc_b_list: List[str] = []
             mil_mhc_class_list: List[str] = []
@@ -1922,41 +2041,43 @@ class PrestoDataset(Dataset):
             mhc_b_seq = mil_mhc_b_list[0] if mil_mhc_b_list else ""
             mhc_class = mil_mhc_class_list[0] if mil_mhc_class_list else "I"
             so, fl = _organism_fields(rec.antigen_species)
-            self.samples.append(PrestoSample(
-                peptide=rec.peptide,
-                flank_n=rec.flank_n or None,
-                flank_c=rec.flank_c or None,
-                mhc_a=mhc_a_seq,
-                mhc_b=mhc_b_seq,
-                mhc_class=mhc_class,
-                peptide_source="mhc",
-                processing_stimulus=getattr(rec, "stimulus", None),
-                apm_perturbation=getattr(rec, "apm_perturbation", None),
-                cell_lineage=cell_lineage_for(getattr(rec, "cell_type", None)),
-                sample_origin=sample_origin_for(getattr(rec, "is_cell_line", None)),
-                disease_state=disease_state_for(
-                    is_healthy=getattr(rec, "is_healthy_tissue", None),
-                    is_cancer=getattr(rec, "is_cancer", None),
-                    is_tumor_adjacent=getattr(rec, "is_tumor_adjacent", None),
-                ),
-                elution_label=1.0 if rec.detected else 0.0,
-                mil_mhc_a_list=mil_mhc_a_list,
-                mil_mhc_b_list=mil_mhc_b_list,
-                mil_mhc_class_list=mil_mhc_class_list,
-                mil_species_list=mil_species_list,
-                species=rec.species,
-                species_of_origin=so,
-                foreignness_label=fl,
-                sample_source=_source_label(rec.source),
-                assay_group="elution_ms",
-                label_bucket="positive" if rec.detected else "negative",
-                primary_allele=(alleles[0] if alleles else None),
-                synthetic_kind=_synthetic_kind(rec.source),
-                sample_id=f"elut_{len(self.samples)}",
-            ))
+            self.samples.append(
+                PrestoSample(
+                    peptide=rec.peptide,
+                    flank_n=rec.flank_n or None,
+                    flank_c=rec.flank_c or None,
+                    mhc_a=mhc_a_seq,
+                    mhc_b=mhc_b_seq,
+                    mhc_class=mhc_class,
+                    peptide_source="mhc",
+                    processing_stimulus=getattr(rec, "stimulus", None),
+                    apm_perturbation=getattr(rec, "apm_perturbation", None),
+                    cell_lineage=cell_lineage_for(getattr(rec, "cell_type", None)),
+                    sample_origin=sample_origin_for(getattr(rec, "is_cell_line", None)),
+                    disease_state=disease_state_for(
+                        is_healthy=getattr(rec, "is_healthy_tissue", None),
+                        is_cancer=getattr(rec, "is_cancer", None),
+                        is_tumor_adjacent=getattr(rec, "is_tumor_adjacent", None),
+                    ),
+                    elution_label=1.0 if rec.detected else 0.0,
+                    mil_mhc_a_list=mil_mhc_a_list,
+                    mil_mhc_b_list=mil_mhc_b_list,
+                    mil_mhc_class_list=mil_mhc_class_list,
+                    mil_species_list=mil_species_list,
+                    species=rec.species,
+                    species_of_origin=so,
+                    foreignness_label=fl,
+                    sample_source=_source_label(rec.source),
+                    assay_group="elution_ms",
+                    label_bucket="positive" if rec.detected else "negative",
+                    primary_allele=(alleles[0] if alleles else None),
+                    synthetic_kind=_synthetic_kind(rec.source),
+                    sample_id=f"elut_{len(self.samples)}",
+                )
+            )
 
         # Add T-cell samples
-        for rec in (tcell_records or []):
+        for rec in tcell_records or []:
             explicit_mhc_class = normalize_mhc_class(rec.mhc_class, default=None)
             mhc_class = self._resolve_mhc_class_optional_value(rec.mhc_class, rec.mhc_allele)
             mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
@@ -1999,38 +2120,40 @@ class PrestoDataset(Dataset):
                     tcell_mil_species_list = [item[3] for item in pathway_instances]
                     use_tcell_pathway_mil = True
             so, fl = _organism_fields(rec.antigen_species)
-            self.samples.append(PrestoSample(
-                peptide=rec.peptide,
-                mhc_a=mhc_a_seq,
-                mhc_b=mhc_b_seq,
-                mhc_class=mhc_class,
-                tcell_label=rec.response,
-                tcell_assay_method=rec.assay_method,
-                tcell_assay_readout=rec.assay_type,
-                tcell_apc_name=rec.apc_name,
-                tcell_effector_culture=rec.effector_culture_condition,
-                tcell_apc_culture=rec.apc_culture_condition,
-                tcell_in_vitro_process=rec.in_vitro_process_type,
-                tcell_in_vitro_responder=rec.in_vitro_responder_cell,
-                tcell_in_vitro_stimulator=rec.in_vitro_stimulator_cell,
-                use_tcell_pathway_mil=use_tcell_pathway_mil,
-                tcell_mil_mhc_a_list=tcell_mil_mhc_a_list,
-                tcell_mil_mhc_b_list=tcell_mil_mhc_b_list,
-                tcell_mil_mhc_class_list=tcell_mil_mhc_class_list,
-                tcell_mil_species_list=tcell_mil_species_list,
-                species=rec.species,
-                species_of_origin=so,
-                foreignness_label=fl,
-                sample_source=_source_label(rec.source),
-                assay_group="tcell_response",
-                label_bucket=_binary_bucket(rec.response),
-                primary_allele=rec.mhc_allele,
-                synthetic_kind=_synthetic_kind(rec.source),
-                sample_id=f"tcell_{len(self.samples)}",
-            ))
+            self.samples.append(
+                PrestoSample(
+                    peptide=rec.peptide,
+                    mhc_a=mhc_a_seq,
+                    mhc_b=mhc_b_seq,
+                    mhc_class=mhc_class,
+                    tcell_label=rec.response,
+                    tcell_assay_method=rec.assay_method,
+                    tcell_assay_readout=rec.assay_type,
+                    tcell_apc_name=rec.apc_name,
+                    tcell_effector_culture=rec.effector_culture_condition,
+                    tcell_apc_culture=rec.apc_culture_condition,
+                    tcell_in_vitro_process=rec.in_vitro_process_type,
+                    tcell_in_vitro_responder=rec.in_vitro_responder_cell,
+                    tcell_in_vitro_stimulator=rec.in_vitro_stimulator_cell,
+                    use_tcell_pathway_mil=use_tcell_pathway_mil,
+                    tcell_mil_mhc_a_list=tcell_mil_mhc_a_list,
+                    tcell_mil_mhc_b_list=tcell_mil_mhc_b_list,
+                    tcell_mil_mhc_class_list=tcell_mil_mhc_class_list,
+                    tcell_mil_species_list=tcell_mil_species_list,
+                    species=rec.species,
+                    species_of_origin=so,
+                    foreignness_label=fl,
+                    sample_source=_source_label(rec.source),
+                    assay_group="tcell_response",
+                    label_bucket=_binary_bucket(rec.response),
+                    primary_allele=rec.mhc_allele,
+                    synthetic_kind=_synthetic_kind(rec.source),
+                    sample_id=f"tcell_{len(self.samples)}",
+                )
+            )
 
         # Add pMHC-only receptor-evidence samples.
-        for rec in (tcr_evidence_records or []):
+        for rec in tcr_evidence_records or []:
             mhc_class = self._resolve_mhc_class_value(rec.mhc_class, rec.mhc_a)
             mhc_a_seq, mhc_b_seq = self._resolve_mhc_pair_sequences(
                 mhc_class=mhc_class,
@@ -2039,23 +2162,25 @@ class PrestoDataset(Dataset):
                 mhc_b=rec.mhc_b,
             )
             so, fl = _organism_fields(rec.antigen_species)
-            self.samples.append(PrestoSample(
-                peptide=rec.peptide,
-                mhc_a=mhc_a_seq,
-                mhc_b=mhc_b_seq,
-                mhc_class=mhc_class,
-                tcr_evidence_label=rec.evidence_label,
-                tcr_evidence_method_bins=tuple(rec.method_bins or ()),
-                species=rec.species,
-                species_of_origin=so,
-                foreignness_label=fl,
-                sample_source=_source_label(rec.source),
-                assay_group="tcr_evidence",
-                label_bucket="positive",
-                primary_allele=rec.mhc_a,
-                synthetic_kind=_synthetic_kind(rec.source),
-                sample_id=f"tcrev_{len(self.samples)}",
-            ))
+            self.samples.append(
+                PrestoSample(
+                    peptide=rec.peptide,
+                    mhc_a=mhc_a_seq,
+                    mhc_b=mhc_b_seq,
+                    mhc_class=mhc_class,
+                    tcr_evidence_label=rec.evidence_label,
+                    tcr_evidence_method_bins=tuple(rec.method_bins or ()),
+                    species=rec.species,
+                    species_of_origin=so,
+                    foreignness_label=fl,
+                    sample_source=_source_label(rec.source),
+                    assay_group="tcr_evidence",
+                    label_bucket="positive",
+                    primary_allele=rec.mhc_a,
+                    synthetic_kind=_synthetic_kind(rec.source),
+                    sample_id=f"tcrev_{len(self.samples)}",
+                )
+            )
 
         if self._mhc_x_sequence_count > 0:
             example_text = ", ".join(self._mhc_x_allele_examples[:5]) or "(unlabeled)"
@@ -2109,9 +2234,7 @@ class PrestoDataset(Dataset):
             inferred = _infer_mhc_class(allele)
             if inferred is not None:
                 return inferred
-            raise ValueError(
-                f"mhcgnomes failed to infer MHC class for allele: {allele!r}"
-            )
+            raise ValueError(f"mhcgnomes failed to infer MHC class for allele: {allele!r}")
         return "I"
 
     @staticmethod
@@ -2344,7 +2467,9 @@ class PrestoDataset(Dataset):
             self._resolved_mhc_pair_cache[cache_key] = resolved
             return resolved
 
-        mhc_a_seq = self._get_mhc_sequence(allele, direct_seq_clean) if (allele or direct_seq_clean) else ""
+        mhc_a_seq = (
+            self._get_mhc_sequence(allele, direct_seq_clean) if (allele or direct_seq_clean) else ""
+        )
         mhc_b_seq = ""
         if cls == "II":
             mhc_b_seq = self._resolve_mhc_b_sequence(
@@ -2464,7 +2589,11 @@ class PrestoDataset(Dataset):
             self._mhc_x_sequence_count += 1
             self._mhc_x_residue_total += int(seq.count("X"))
             allele_text = str(allele or "").strip()
-            if allele_text and allele_text not in self._mhc_x_allele_examples and len(self._mhc_x_allele_examples) < 8:
+            if (
+                allele_text
+                and allele_text not in self._mhc_x_allele_examples
+                and len(self._mhc_x_allele_examples) < 8
+            ):
                 self._mhc_x_allele_examples.append(allele_text)
 
         if len(seq) >= MIN_MHC_CHAIN_LENGTH and _looks_like_nucleotide_sequence(seq):
@@ -2477,9 +2606,7 @@ class PrestoDataset(Dataset):
         if len(seq) < MIN_MHC_CHAIN_LENGTH:
             normalized_class = normalize_mhc_class(mhc_class)
             is_class_i_beta = (
-                allow_short_class_i_beta
-                and chain_label == "mhc_b"
-                and normalized_class == "I"
+                allow_short_class_i_beta and chain_label == "mhc_b" and normalized_class == "I"
             )
             if not is_class_i_beta:
                 allele_text = str(allele or "").strip() or "<unknown>"
@@ -2731,7 +2858,15 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             machinery_counts[machinery] += 1
             branch_counts[branch] += 1
 
-        for idx, (task, source, label, allele, mhc_class, species, synthetic) in self._metadata_by_index.items():
+        for idx, (
+            task,
+            source,
+            label,
+            allele,
+            mhc_class,
+            species,
+            synthetic,
+        ) in self._metadata_by_index.items():
             # Product of inverse frequencies to upweight underrepresented strata.
             weight = 1.0
             weight *= 1.0 / float(task_counts[task] + 1)
@@ -3015,9 +3150,7 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
                     partner_sets[idx_j].add(idx_i)
 
         self._binding_rankable_partner_indices = {
-            idx: tuple(sorted(partners))
-            for idx, partners in partner_sets.items()
-            if partners
+            idx: tuple(sorted(partners)) for idx, partners in partner_sets.items() if partners
         }
         self._binding_rankable_seed_indices = sorted(self._binding_rankable_partner_indices.keys())
 
@@ -3252,7 +3385,10 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         batch_mhc_class_counts[mhc_class] += 1
         batch_species_counts[species] += 1
         batch_synthetic_counts[synthetic] += 1
-        if getattr(self.dataset[idx], "bind_value", None) is not None and batch_binding_indices is not None:
+        if (
+            getattr(self.dataset[idx], "bind_value", None) is not None
+            and batch_binding_indices is not None
+        ):
             batch_binding_indices.append(idx)
             peptide = self._binding_peptide_by_index.get(idx, "")
             if peptide and batch_binding_peptide_counts is not None:
@@ -3338,7 +3474,9 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         fractional: List[Tuple[float, str]] = []
         assigned = 0
         for task in shuffled_tasks:
-            raw = remaining_slots * (max(1, self._task_sizes.get(task, 0)) / float(total_task_samples))
+            raw = remaining_slots * (
+                max(1, self._task_sizes.get(task, 0)) / float(total_task_samples)
+            )
             extra = int(raw)
             quotas[task] += extra
             assigned += extra
@@ -3515,66 +3653,235 @@ AMINO_ACIDS = "ACDEFGHIKLMNPQRSTVWY"
 
 # Realistic allele pools
 CLASS_I_ALLELES = [
-    "HLA-A*01:01", "HLA-A*02:01", "HLA-A*02:03", "HLA-A*02:06", "HLA-A*03:01",
-    "HLA-A*11:01", "HLA-A*23:01", "HLA-A*24:02", "HLA-A*26:01", "HLA-A*29:02",
-    "HLA-A*30:01", "HLA-A*30:02", "HLA-A*31:01", "HLA-A*32:01", "HLA-A*33:01",
-    "HLA-A*68:01", "HLA-A*68:02",
-    "HLA-B*07:02", "HLA-B*08:01", "HLA-B*13:02", "HLA-B*14:02", "HLA-B*15:01",
-    "HLA-B*18:01", "HLA-B*27:05", "HLA-B*35:01", "HLA-B*38:01", "HLA-B*39:01",
-    "HLA-B*40:01", "HLA-B*44:02", "HLA-B*44:03", "HLA-B*45:01", "HLA-B*46:01",
-    "HLA-B*49:01", "HLA-B*50:01", "HLA-B*51:01", "HLA-B*52:01", "HLA-B*53:01",
-    "HLA-B*55:01", "HLA-B*56:01", "HLA-B*57:01", "HLA-B*58:01",
-    "HLA-C*01:02", "HLA-C*02:02", "HLA-C*03:03", "HLA-C*03:04", "HLA-C*04:01",
-    "HLA-C*05:01", "HLA-C*06:02", "HLA-C*07:01", "HLA-C*07:02", "HLA-C*08:02",
-    "HLA-C*12:03", "HLA-C*14:02", "HLA-C*15:02", "HLA-C*16:01",
+    "HLA-A*01:01",
+    "HLA-A*02:01",
+    "HLA-A*02:03",
+    "HLA-A*02:06",
+    "HLA-A*03:01",
+    "HLA-A*11:01",
+    "HLA-A*23:01",
+    "HLA-A*24:02",
+    "HLA-A*26:01",
+    "HLA-A*29:02",
+    "HLA-A*30:01",
+    "HLA-A*30:02",
+    "HLA-A*31:01",
+    "HLA-A*32:01",
+    "HLA-A*33:01",
+    "HLA-A*68:01",
+    "HLA-A*68:02",
+    "HLA-B*07:02",
+    "HLA-B*08:01",
+    "HLA-B*13:02",
+    "HLA-B*14:02",
+    "HLA-B*15:01",
+    "HLA-B*18:01",
+    "HLA-B*27:05",
+    "HLA-B*35:01",
+    "HLA-B*38:01",
+    "HLA-B*39:01",
+    "HLA-B*40:01",
+    "HLA-B*44:02",
+    "HLA-B*44:03",
+    "HLA-B*45:01",
+    "HLA-B*46:01",
+    "HLA-B*49:01",
+    "HLA-B*50:01",
+    "HLA-B*51:01",
+    "HLA-B*52:01",
+    "HLA-B*53:01",
+    "HLA-B*55:01",
+    "HLA-B*56:01",
+    "HLA-B*57:01",
+    "HLA-B*58:01",
+    "HLA-C*01:02",
+    "HLA-C*02:02",
+    "HLA-C*03:03",
+    "HLA-C*03:04",
+    "HLA-C*04:01",
+    "HLA-C*05:01",
+    "HLA-C*06:02",
+    "HLA-C*07:01",
+    "HLA-C*07:02",
+    "HLA-C*08:02",
+    "HLA-C*12:03",
+    "HLA-C*14:02",
+    "HLA-C*15:02",
+    "HLA-C*16:01",
 ]
 
 CLASS_II_ALLELES = [
-    "HLA-DRB1*01:01", "HLA-DRB1*03:01", "HLA-DRB1*04:01", "HLA-DRB1*04:05",
-    "HLA-DRB1*07:01", "HLA-DRB1*08:02", "HLA-DRB1*09:01", "HLA-DRB1*10:01",
-    "HLA-DRB1*11:01", "HLA-DRB1*12:01", "HLA-DRB1*13:02", "HLA-DRB1*14:01",
-    "HLA-DRB1*15:01", "HLA-DRB1*16:02",
-    "HLA-DPA1*01:03/DPB1*02:01", "HLA-DPA1*01:03/DPB1*04:01",
-    "HLA-DPA1*02:01/DPB1*01:01", "HLA-DPA1*02:01/DPB1*05:01",
-    "HLA-DQA1*01:02/DQB1*06:02", "HLA-DQA1*05:01/DQB1*02:01",
-    "HLA-DQA1*05:01/DQB1*03:01", "HLA-DQA1*03:01/DQB1*03:02",
+    "HLA-DRB1*01:01",
+    "HLA-DRB1*03:01",
+    "HLA-DRB1*04:01",
+    "HLA-DRB1*04:05",
+    "HLA-DRB1*07:01",
+    "HLA-DRB1*08:02",
+    "HLA-DRB1*09:01",
+    "HLA-DRB1*10:01",
+    "HLA-DRB1*11:01",
+    "HLA-DRB1*12:01",
+    "HLA-DRB1*13:02",
+    "HLA-DRB1*14:01",
+    "HLA-DRB1*15:01",
+    "HLA-DRB1*16:02",
+    "HLA-DPA1*01:03/DPB1*02:01",
+    "HLA-DPA1*01:03/DPB1*04:01",
+    "HLA-DPA1*02:01/DPB1*01:01",
+    "HLA-DPA1*02:01/DPB1*05:01",
+    "HLA-DQA1*01:02/DQB1*06:02",
+    "HLA-DQA1*05:01/DQB1*02:01",
+    "HLA-DQA1*05:01/DQB1*03:01",
+    "HLA-DQA1*03:01/DQB1*03:02",
 ]
 
 # V gene families
-V_ALPHA_GENES = ["TRAV1-1", "TRAV1-2", "TRAV2", "TRAV3", "TRAV4", "TRAV5",
-                 "TRAV6", "TRAV8-1", "TRAV8-2", "TRAV8-3", "TRAV9-1", "TRAV9-2",
-                 "TRAV10", "TRAV12-1", "TRAV12-2", "TRAV12-3", "TRAV13-1",
-                 "TRAV14/DV4", "TRAV16", "TRAV17", "TRAV19", "TRAV20", "TRAV21",
-                 "TRAV22", "TRAV23/DV6", "TRAV24", "TRAV25", "TRAV26-1", "TRAV26-2",
-                 "TRAV27", "TRAV29/DV5", "TRAV30", "TRAV34", "TRAV35", "TRAV36/DV7",
-                 "TRAV38-1", "TRAV38-2/DV8", "TRAV39", "TRAV40", "TRAV41"]
+V_ALPHA_GENES = [
+    "TRAV1-1",
+    "TRAV1-2",
+    "TRAV2",
+    "TRAV3",
+    "TRAV4",
+    "TRAV5",
+    "TRAV6",
+    "TRAV8-1",
+    "TRAV8-2",
+    "TRAV8-3",
+    "TRAV9-1",
+    "TRAV9-2",
+    "TRAV10",
+    "TRAV12-1",
+    "TRAV12-2",
+    "TRAV12-3",
+    "TRAV13-1",
+    "TRAV14/DV4",
+    "TRAV16",
+    "TRAV17",
+    "TRAV19",
+    "TRAV20",
+    "TRAV21",
+    "TRAV22",
+    "TRAV23/DV6",
+    "TRAV24",
+    "TRAV25",
+    "TRAV26-1",
+    "TRAV26-2",
+    "TRAV27",
+    "TRAV29/DV5",
+    "TRAV30",
+    "TRAV34",
+    "TRAV35",
+    "TRAV36/DV7",
+    "TRAV38-1",
+    "TRAV38-2/DV8",
+    "TRAV39",
+    "TRAV40",
+    "TRAV41",
+]
 
-V_BETA_GENES = ["TRBV2", "TRBV3-1", "TRBV4-1", "TRBV4-2", "TRBV4-3", "TRBV5-1",
-                "TRBV5-4", "TRBV5-5", "TRBV5-6", "TRBV5-8", "TRBV6-1", "TRBV6-2",
-                "TRBV6-3", "TRBV6-4", "TRBV6-5", "TRBV6-6", "TRBV6-8", "TRBV6-9",
-                "TRBV7-2", "TRBV7-3", "TRBV7-4", "TRBV7-6", "TRBV7-7", "TRBV7-8",
-                "TRBV7-9", "TRBV9", "TRBV10-1", "TRBV10-2", "TRBV10-3", "TRBV11-1",
-                "TRBV11-2", "TRBV11-3", "TRBV12-3", "TRBV12-4", "TRBV12-5",
-                "TRBV13", "TRBV14", "TRBV15", "TRBV16", "TRBV18", "TRBV19",
-                "TRBV20-1", "TRBV24-1", "TRBV25-1", "TRBV27", "TRBV28", "TRBV29-1",
-                "TRBV30"]
+V_BETA_GENES = [
+    "TRBV2",
+    "TRBV3-1",
+    "TRBV4-1",
+    "TRBV4-2",
+    "TRBV4-3",
+    "TRBV5-1",
+    "TRBV5-4",
+    "TRBV5-5",
+    "TRBV5-6",
+    "TRBV5-8",
+    "TRBV6-1",
+    "TRBV6-2",
+    "TRBV6-3",
+    "TRBV6-4",
+    "TRBV6-5",
+    "TRBV6-6",
+    "TRBV6-8",
+    "TRBV6-9",
+    "TRBV7-2",
+    "TRBV7-3",
+    "TRBV7-4",
+    "TRBV7-6",
+    "TRBV7-7",
+    "TRBV7-8",
+    "TRBV7-9",
+    "TRBV9",
+    "TRBV10-1",
+    "TRBV10-2",
+    "TRBV10-3",
+    "TRBV11-1",
+    "TRBV11-2",
+    "TRBV11-3",
+    "TRBV12-3",
+    "TRBV12-4",
+    "TRBV12-5",
+    "TRBV13",
+    "TRBV14",
+    "TRBV15",
+    "TRBV16",
+    "TRBV18",
+    "TRBV19",
+    "TRBV20-1",
+    "TRBV24-1",
+    "TRBV25-1",
+    "TRBV27",
+    "TRBV28",
+    "TRBV29-1",
+    "TRBV30",
+]
 
 J_ALPHA_GENES = [f"TRAJ{i}" for i in range(1, 62)]
-J_BETA_GENES = ["TRBJ1-1", "TRBJ1-2", "TRBJ1-3", "TRBJ1-4", "TRBJ1-5", "TRBJ1-6",
-                "TRBJ2-1", "TRBJ2-2", "TRBJ2-3", "TRBJ2-4", "TRBJ2-5", "TRBJ2-6", "TRBJ2-7"]
+J_BETA_GENES = [
+    "TRBJ1-1",
+    "TRBJ1-2",
+    "TRBJ1-3",
+    "TRBJ1-4",
+    "TRBJ1-5",
+    "TRBJ1-6",
+    "TRBJ2-1",
+    "TRBJ2-2",
+    "TRBJ2-3",
+    "TRBJ2-4",
+    "TRBJ2-5",
+    "TRBJ2-6",
+    "TRBJ2-7",
+]
 
 # Cell types and tissues
-CELL_TYPES = ["PBMC", "B-LCL", "DC", "Monocyte", "CD8+ T cell", "CD4+ T cell",
-              "A375", "HeLa", "K562", "JY", "C1R", "T2"]
+CELL_TYPES = [
+    "PBMC",
+    "B-LCL",
+    "DC",
+    "Monocyte",
+    "CD8+ T cell",
+    "CD4+ T cell",
+    "A375",
+    "HeLa",
+    "K562",
+    "JY",
+    "C1R",
+    "T2",
+]
 
 TISSUES = ["blood", "tumor", "thymus", "spleen", "lymph node", "lung", "liver"]
 
 # Assay types
-BINDING_ASSAYS = ["competitive binding", "fluorescence polarization",
-                  "purified MHC/direct", "cellular MHC/competitive"]
-TCELL_ASSAYS = ["IFNg release", "ELISPOT", "51Cr release", "cytotoxicity",
-                "proliferation", "intracellular cytokine staining",
-                "tetramer staining", "multimer staining"]
+BINDING_ASSAYS = [
+    "competitive binding",
+    "fluorescence polarization",
+    "purified MHC/direct",
+    "cellular MHC/competitive",
+]
+TCELL_ASSAYS = [
+    "IFNg release",
+    "ELISPOT",
+    "51Cr release",
+    "cytotoxicity",
+    "proliferation",
+    "intracellular cytokine staining",
+    "tetramer staining",
+    "multimer staining",
+]
 
 
 def random_peptide(min_len: int = 8, max_len: int = 15) -> str:
@@ -3634,18 +3941,20 @@ def generate_synthetic_binding_data(
         qual_weights = [0.15, 0.7, 0.15]
         qualifier = random.choices([-1, 0, 1], weights=qual_weights)[0]
 
-        records.append(BindingRecord(
-            peptide=random_peptide(pep_len, pep_len),
-            mhc_allele=allele,
-            value=ic50,
-            qualifier=qualifier,
-            measurement_type=random.choice(["IC50", "KD", "EC50"]),
-            unit="nM",
-            assay_type=random.choice(BINDING_ASSAYS),
-            mhc_class=mhc_class,
-            species="human",
-            source="synthetic",
-        ))
+        records.append(
+            BindingRecord(
+                peptide=random_peptide(pep_len, pep_len),
+                mhc_allele=allele,
+                value=ic50,
+                qualifier=qualifier,
+                measurement_type=random.choice(["IC50", "KD", "EC50"]),
+                unit="nM",
+                assay_type=random.choice(BINDING_ASSAYS),
+                mhc_class=mhc_class,
+                species="human",
+                source="synthetic",
+            )
+        )
 
     return records
 
@@ -3668,15 +3977,17 @@ def generate_synthetic_kinetics_data(
         kon = 10 ** random.uniform(3, 6)
         koff = 10 ** random.uniform(-4, -1)
 
-        records.append(KineticsRecord(
-            peptide=random_peptide(pep_len, pep_len),
-            mhc_allele=allele,
-            kon=kon,
-            koff=koff,
-            assay_type="surface plasmon resonance",
-            mhc_class=mhc_class,
-            source="synthetic",
-        ))
+        records.append(
+            KineticsRecord(
+                peptide=random_peptide(pep_len, pep_len),
+                mhc_allele=allele,
+                kon=kon,
+                koff=koff,
+                assay_type="surface plasmon resonance",
+                mhc_class=mhc_class,
+                source="synthetic",
+            )
+        )
 
     return records
 
@@ -3699,15 +4010,17 @@ def generate_synthetic_stability_data(
         t_half = 10 ** random.uniform(-1, 2)
         tm = random.gauss(50, 10)
 
-        records.append(StabilityRecord(
-            peptide=random_peptide(pep_len, pep_len),
-            mhc_allele=allele,
-            t_half=t_half,
-            tm=max(20, min(80, tm)),
-            assay_type="thermal stability",
-            mhc_class=mhc_class,
-            source="synthetic",
-        ))
+        records.append(
+            StabilityRecord(
+                peptide=random_peptide(pep_len, pep_len),
+                mhc_allele=allele,
+                t_half=t_half,
+                tm=max(20, min(80, tm)),
+                assay_type="thermal stability",
+                mhc_class=mhc_class,
+                source="synthetic",
+            )
+        )
 
     return records
 
@@ -3720,14 +4033,16 @@ def generate_synthetic_processing_data(
     for _ in range(n_samples):
         peptide = random_peptide(9, 11)
 
-        records.append(ProcessingRecord(
-            peptide=peptide,
-            flank_n=random_flank(10),
-            flank_c=random_flank(10),
-            label=float(random.random() > 0.3),  # 70% positive
-            processing_type=random.choice(["cleavage", "tap", "processing"]),
-            source="synthetic",
-        ))
+        records.append(
+            ProcessingRecord(
+                peptide=peptide,
+                flank_n=random_flank(10),
+                flank_c=random_flank(10),
+                label=float(random.random() > 0.3),  # 70% positive
+                processing_type=random.choice(["cleavage", "tap", "processing"]),
+                source="synthetic",
+            )
+        )
 
     return records
 
@@ -3749,16 +4064,18 @@ def generate_synthetic_elution_data(
         n_alleles = random.randint(min_alleles, max_alleles)
         sample_alleles = random.sample(alleles, n_alleles)
 
-        records.append(ElutionRecord(
-            peptide=random_peptide(8, 12),
-            alleles=sample_alleles,
-            detected=True,  # MS data is typically positive-only
-            cell_type=random.choice(CELL_TYPES),
-            tissue=random.choice(TISSUES),
-            mhc_class="I",
-            species="human",
-            source="synthetic",
-        ))
+        records.append(
+            ElutionRecord(
+                peptide=random_peptide(8, 12),
+                alleles=sample_alleles,
+                detected=True,  # MS data is typically positive-only
+                cell_type=random.choice(CELL_TYPES),
+                tissue=random.choice(TISSUES),
+                mhc_class="I",
+                species="human",
+                source="synthetic",
+            )
+        )
 
     return records
 
@@ -3780,21 +4097,23 @@ def generate_synthetic_tcell_data(
         # Include TCR info for some samples
         has_tcr = include_tcr and random.random() > 0.5
 
-        records.append(TCellRecord(
-            peptide=random_peptide(pep_len, pep_len),
-            mhc_allele=allele,
-            response=float(random.random() > 0.4),  # 60% positive
-            assay_type=random.choice(TCELL_ASSAYS),
-            tcr_a_cdr3=random_tcr_cdr3("alpha") if has_tcr else None,
-            tcr_b_cdr3=random_tcr_cdr3("beta") if has_tcr else None,
-            v_alpha=random.choice(V_ALPHA_GENES) if has_tcr else None,
-            j_alpha=random.choice(J_ALPHA_GENES) if has_tcr else None,
-            v_beta=random.choice(V_BETA_GENES) if has_tcr else None,
-            j_beta=random.choice(J_BETA_GENES) if has_tcr else None,
-            mhc_class=mhc_class,
-            species="human",
-            source="synthetic",
-        ))
+        records.append(
+            TCellRecord(
+                peptide=random_peptide(pep_len, pep_len),
+                mhc_allele=allele,
+                response=float(random.random() > 0.4),  # 60% positive
+                assay_type=random.choice(TCELL_ASSAYS),
+                tcr_a_cdr3=random_tcr_cdr3("alpha") if has_tcr else None,
+                tcr_b_cdr3=random_tcr_cdr3("beta") if has_tcr else None,
+                v_alpha=random.choice(V_ALPHA_GENES) if has_tcr else None,
+                j_alpha=random.choice(J_ALPHA_GENES) if has_tcr else None,
+                v_beta=random.choice(V_BETA_GENES) if has_tcr else None,
+                j_beta=random.choice(J_BETA_GENES) if has_tcr else None,
+                mhc_class=mhc_class,
+                species="human",
+                source="synthetic",
+            )
+        )
 
     return records
 
@@ -3817,22 +4136,24 @@ def generate_synthetic_vdjdb_data(
         gene = random.choice(["TRA", "TRB"])
         is_alpha = gene == "TRA"
 
-        records.append(VDJdbRecord(
-            peptide=random_peptide(pep_len, pep_len),
-            mhc_a=allele,
-            mhc_b="B2M" if mhc_class == "I" else None,
-            cdr3_alpha=random_tcr_cdr3("alpha") if is_alpha else None,
-            cdr3_beta=random_tcr_cdr3("beta") if not is_alpha else None,
-            v_alpha=random.choice(V_ALPHA_GENES) if is_alpha else None,
-            j_alpha=random.choice(J_ALPHA_GENES) if is_alpha else None,
-            v_beta=random.choice(V_BETA_GENES) if not is_alpha else None,
-            j_beta=random.choice(J_BETA_GENES) if not is_alpha else None,
-            gene=gene,
-            mhc_class=mhc_class,
-            species="human",
-            antigen_species=random.choice(pathogens),
-            source="synthetic",
-        ))
+        records.append(
+            VDJdbRecord(
+                peptide=random_peptide(pep_len, pep_len),
+                mhc_a=allele,
+                mhc_b="B2M" if mhc_class == "I" else None,
+                cdr3_alpha=random_tcr_cdr3("alpha") if is_alpha else None,
+                cdr3_beta=random_tcr_cdr3("beta") if not is_alpha else None,
+                v_alpha=random.choice(V_ALPHA_GENES) if is_alpha else None,
+                j_alpha=random.choice(J_ALPHA_GENES) if is_alpha else None,
+                v_beta=random.choice(V_BETA_GENES) if not is_alpha else None,
+                j_beta=random.choice(J_BETA_GENES) if not is_alpha else None,
+                gene=gene,
+                mhc_class=mhc_class,
+                species="human",
+                antigen_species=random.choice(pathogens),
+                source="synthetic",
+            )
+        )
 
     return records
 
@@ -3863,70 +4184,137 @@ def generate_synthetic_mhc_sequences(
 # CSV Writers (for testing/export)
 # =============================================================================
 
+
 def write_binding_csv(records: List[BindingRecord], path: str) -> None:
     """Write binding records to CSV."""
     with open(path, 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow([
-            'peptide', 'mhc_allele', 'measurement_value', 'measurement_inequality',
-            'measurement_type', 'unit', 'assay_type', 'mhc_class', 'species'
-        ])
+        writer.writerow(
+            [
+                'peptide',
+                'mhc_allele',
+                'measurement_value',
+                'measurement_inequality',
+                'measurement_type',
+                'unit',
+                'assay_type',
+                'mhc_class',
+                'species',
+            ]
+        )
         for rec in records:
             qual = {-1: '<', 0: '=', 1: '>'}.get(rec.qualifier, '=')
-            writer.writerow([
-                rec.peptide, rec.mhc_allele, rec.value, qual,
-                rec.measurement_type, rec.unit, rec.assay_type or '',
-                rec.mhc_class, rec.species
-            ])
+            writer.writerow(
+                [
+                    rec.peptide,
+                    rec.mhc_allele,
+                    rec.value,
+                    qual,
+                    rec.measurement_type,
+                    rec.unit,
+                    rec.assay_type or '',
+                    rec.mhc_class,
+                    rec.species,
+                ]
+            )
 
 
 def write_elution_csv(records: List[ElutionRecord], path: str) -> None:
     """Write elution records to CSV."""
     with open(path, 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow(['peptide', 'alleles', 'detected', 'cell_type', 'tissue', 'mhc_class', 'species'])
+        writer.writerow(
+            ['peptide', 'alleles', 'detected', 'cell_type', 'tissue', 'mhc_class', 'species']
+        )
         for rec in records:
-            writer.writerow([
-                rec.peptide, ','.join(rec.alleles), 1 if rec.detected else 0,
-                rec.cell_type or '', rec.tissue or '', rec.mhc_class, rec.species
-            ])
+            writer.writerow(
+                [
+                    rec.peptide,
+                    ','.join(rec.alleles),
+                    1 if rec.detected else 0,
+                    rec.cell_type or '',
+                    rec.tissue or '',
+                    rec.mhc_class,
+                    rec.species,
+                ]
+            )
 
 
 def write_tcr_csv(records: List[TCellRecord], path: str) -> None:
     """Write T-cell records to CSV."""
     with open(path, 'w', newline='') as f:
         writer = csv.writer(f)
-        writer.writerow([
-            'peptide', 'mhc_allele', 'response', 'assay_type',
-            'tcr_a_cdr3', 'tcr_b_cdr3', 'v_alpha', 'j_alpha', 'v_beta', 'j_beta',
-            'mhc_class', 'species'
-        ])
+        writer.writerow(
+            [
+                'peptide',
+                'mhc_allele',
+                'response',
+                'assay_type',
+                'tcr_a_cdr3',
+                'tcr_b_cdr3',
+                'v_alpha',
+                'j_alpha',
+                'v_beta',
+                'j_beta',
+                'mhc_class',
+                'species',
+            ]
+        )
         for rec in records:
-            writer.writerow([
-                rec.peptide, rec.mhc_allele, rec.response, rec.assay_type or '',
-                rec.tcr_a_cdr3 or '', rec.tcr_b_cdr3 or '',
-                rec.v_alpha or '', rec.j_alpha or '', rec.v_beta or '', rec.j_beta or '',
-                rec.mhc_class, rec.species
-            ])
+            writer.writerow(
+                [
+                    rec.peptide,
+                    rec.mhc_allele,
+                    rec.response,
+                    rec.assay_type or '',
+                    rec.tcr_a_cdr3 or '',
+                    rec.tcr_b_cdr3 or '',
+                    rec.v_alpha or '',
+                    rec.j_alpha or '',
+                    rec.v_beta or '',
+                    rec.j_beta or '',
+                    rec.mhc_class,
+                    rec.species,
+                ]
+            )
 
 
 def write_vdjdb_tsv(records: List[VDJdbRecord], path: str) -> None:
     """Write VDJdb records to TSV."""
     with open(path, 'w', newline='') as f:
         writer = csv.writer(f, delimiter='\t')
-        writer.writerow([
-            'gene', 'cdr3', 'v.segm', 'j.segm', 'antigen.epitope',
-            'mhc.a', 'mhc.b', 'mhc.class', 'species', 'antigen.species'
-        ])
+        writer.writerow(
+            [
+                'gene',
+                'cdr3',
+                'v.segm',
+                'j.segm',
+                'antigen.epitope',
+                'mhc.a',
+                'mhc.b',
+                'mhc.class',
+                'species',
+                'antigen.species',
+            ]
+        )
         for rec in records:
             cdr3 = rec.cdr3_alpha or rec.cdr3_beta or ''
             v = rec.v_alpha or rec.v_beta or ''
             j = rec.j_alpha or rec.j_beta or ''
-            writer.writerow([
-                rec.gene, cdr3, v, j, rec.peptide,
-                rec.mhc_a, rec.mhc_b or '', rec.mhc_class, rec.species,
-                rec.antigen_species or ''
-            ])
+            writer.writerow(
+                [
+                    rec.gene,
+                    cdr3,
+                    v,
+                    j,
+                    rec.peptide,
+                    rec.mhc_a,
+                    rec.mhc_b or '',
+                    rec.mhc_class,
+                    rec.species,
+                    rec.antigen_species or '',
+                ]
+            )
 
 
 def write_mhc_fasta(sequences: Dict[str, str], path: str) -> None:
@@ -3935,7 +4323,7 @@ def write_mhc_fasta(sequences: Dict[str, str], path: str) -> None:
         for name, seq in sequences.items():
             f.write(f">{name}\n")
             for i in range(0, len(seq), 60):
-                f.write(seq[i:i+60] + "\n")
+                f.write(seq[i : i + 60] + "\n")
 
 
 # Backward compatibility alias

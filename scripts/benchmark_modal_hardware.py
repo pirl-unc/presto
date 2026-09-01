@@ -14,7 +14,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Mapping, Sequence
 
 from experiment_registry import default_agent_label, initialize_experiment_dir
-from benchmark_broad_frontier_5ep import DESIGNS as FRONTIER_DESIGNS, DEFAULT_ALLELES, DEFAULT_PROBES, DEFAULT_WARM_START
+from benchmark_broad_frontier_5ep import (
+    DESIGNS as FRONTIER_DESIGNS,
+    DEFAULT_ALLELES,
+    DEFAULT_PROBES,
+    DEFAULT_WARM_START,
+)
 
 APP_ID_PATTERN = re.compile(r"\bap-[A-Za-z0-9]+\b")
 GPU_CHOICES = ("A100", "H100!", "H200")
@@ -38,19 +43,29 @@ def _run_id(prefix: str, design_id: str, gpu: str) -> str:
 
 def _common_args(*, alleles: Sequence[str], probes: Sequence[str]) -> List[str]:
     return [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--extra-probe-peptides", ",".join(probes[1:]),
-        "--measurement-profile", "numeric_no_qualitative",
-        "--qualifier-filter", "all",
-        "--probe-plot-frequency", "off",
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--extra-probe-peptides",
+        ",".join(probes[1:]),
+        "--measurement-profile",
+        "numeric_no_qualitative",
+        "--qualifier-filter",
+        "all",
+        "--probe-plot-frequency",
+        "off",
         "--no-synthetic-negatives",
-        "--binding-contrastive-weight", "0",
-        "--binding-peptide-contrastive-weight", "0",
+        "--binding-contrastive-weight",
+        "0",
+        "--binding-peptide-contrastive-weight",
+        "0",
     ]
 
 
-def _build_extra_args(design: Any, alleles: Sequence[str], probes: Sequence[str], warm_start: str) -> List[str]:
+def _build_extra_args(
+    design: Any, alleles: Sequence[str], probes: Sequence[str], warm_start: str
+) -> List[str]:
     args = _common_args(alleles=alleles, probes=probes)
     args.extend(["--design-id", design.design_id])
     if design.family == "presto":
@@ -73,21 +88,48 @@ def _write_variants(path: Path, runs: Sequence[Mapping[str, Any]]) -> None:
         "| --- | --- | --- | --- | --- |",
     ]
     for run in runs:
-        lines.append(f"| `{run['design_id']}` | `{run['requested_gpu']}` | `{run.get('app_id','')}` | `{run['run_id']}` | {run['description']} |")
+        lines.append(
+            (
+                f"| `{run['design_id']}` | `{run['requested_gpu']}` | `{run.get('app_id', '')}` | "
+                f"`{run['run_id']}` | {run['description']} |"
+            )
+        )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def _launch(run: HardwareRun, *, alleles: Sequence[str], probes: Sequence[str], warm_start: str, epochs: int, prefix: str, out_dir: Path, timeout_s: float, retries: int) -> Dict[str, Any]:
+def _launch(
+    run: HardwareRun,
+    *,
+    alleles: Sequence[str],
+    probes: Sequence[str],
+    warm_start: str,
+    epochs: int,
+    prefix: str,
+    out_dir: Path,
+    timeout_s: float,
+    retries: int,
+) -> Dict[str, Any]:
     design = _design_map()[run.design_id]
     run_id = _run_id(prefix, design.design_id, run.gpu)
     extra_args = _build_extra_args(design, alleles, probes, warm_start)
-    target = "scripts/train_modal.py::groove_baseline_run" if design.family == "groove" else "scripts/train_modal.py::focused_binding_run"
+    target = (
+        "scripts/train_modal.py::groove_baseline_run"
+        if design.family == "groove"
+        else "scripts/train_modal.py::focused_binding_run"
+    )
     cmd = [
-        "modal", "run", "--detach", target,
-        "--epochs", str(epochs),
-        "--batch-size", str(design.batch_size),
-        "--run-id", run_id,
-        "--extra-args", " ".join(extra_args),
+        "modal",
+        "run",
+        "--detach",
+        target,
+        "--epochs",
+        str(epochs),
+        "--batch-size",
+        str(design.batch_size),
+        "--run-id",
+        run_id,
+        "--extra-args",
+        " ".join(extra_args),
     ]
     log_path = out_dir / "launch_logs" / f"{run_id}.log"
     log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -109,7 +151,11 @@ def _launch(run: HardwareRun, *, alleles: Sequence[str], probes: Sequence[str], 
             app_id = ""
             while True:
                 if time.time() - start > timeout_s:
-                    existing = log_path.read_text(encoding="utf-8", errors="replace") if log_path.exists() else ""
+                    existing = (
+                        log_path.read_text(encoding="utf-8", errors="replace")
+                        if log_path.exists()
+                        else ""
+                    )
                     raise subprocess.TimeoutExpired(cmd=cmd, timeout=timeout_s, output=existing)
                 if log_path.exists():
                     output = log_path.read_text(encoding="utf-8", errors="replace")
@@ -121,7 +167,11 @@ def _launch(run: HardwareRun, *, alleles: Sequence[str], probes: Sequence[str], 
                     break
                 time.sleep(0.5)
             if not app_id:
-                output = log_path.read_text(encoding="utf-8", errors="replace") if log_path.exists() else ""
+                output = (
+                    log_path.read_text(encoding="utf-8", errors="replace")
+                    if log_path.exists()
+                    else ""
+                )
                 raise RuntimeError(f"No app id in detached output for {run_id}:\n{output}")
             return {
                 "design_id": design.design_id,
@@ -171,11 +221,7 @@ def main() -> None:
             "ranking": False,
             "gpu_matrix": list(GPU_CHOICES),
         },
-        "tested": [
-            {"design_id": d, "gpu": g}
-            for d in DESIGN_IDS
-            for g in GPU_CHOICES
-        ],
+        "tested": [{"design_id": d, "gpu": g} for d in DESIGN_IDS for g in GPU_CHOICES],
     }
     out_dir = initialize_experiment_dir(
         out_dir=args.out_dir,

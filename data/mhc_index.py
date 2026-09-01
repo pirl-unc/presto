@@ -162,9 +162,7 @@ class MHCIndexRecord:
             is_null=_parse_bool(row.get("is_null")),
             is_questionable=_parse_bool(row.get("is_questionable")),
             is_pseudogene=_parse_bool(row.get("is_pseudogene")),
-            is_functional=(
-                _parse_bool(is_functional_raw) if is_functional_raw else None
-            ),
+            is_functional=(_parse_bool(is_functional_raw) if is_functional_raw else None),
         )
 
 
@@ -283,9 +281,8 @@ def _normalize_allele_token(token: str) -> str:
     # Normalize common compact human forms (e.g. HLA-A2 -> HLA-A*02,
     # A0201 -> HLA-A*02:01) when token appears allele-like.
     compact_candidate = value.upper().replace("_", "-")
-    if (
-        " " not in compact_candidate
-        and re.match(r"^(HLA[-_])?[A-Z][A-Z0-9]{0,6}[*]?[0-9A-Z:]+$", compact_candidate)
+    if " " not in compact_candidate and re.match(
+        r"^(HLA[-_])?[A-Z][A-Z0-9]{0,6}[*]?[0-9A-Z:]+$", compact_candidate
     ):
         try:
             value = normalize_allele_name(value)
@@ -314,7 +311,9 @@ def _normalize_allele_token(token: str) -> str:
     return value
 
 
-def _normalize_with_mhcgnomes(token: str) -> Tuple[str, Optional[str], Optional[str], Optional[str]]:
+def _normalize_with_mhcgnomes(
+    token: str,
+) -> Tuple[str, Optional[str], Optional[str], Optional[str]]:
     parsed = parse_allele_name(token)
     if parsed is None:
         raise MHCIndexError(f"mhcgnomes failed to parse allele token: {token!r}")
@@ -338,12 +337,12 @@ def _resolve_header_allele(
         except Exception as exc:
             last_error = exc
             continue
-    raise MHCIndexError(
-        f"Failed to parse allele from FASTA header: '{header}'."
-    ) from last_error
+    raise MHCIndexError(f"Failed to parse allele from FASTA header: '{header}'.") from last_error
 
 
-def _iter_fasta_paths(imgt_fasta: Optional[str], ipd_mhc_dir: Optional[str]) -> List[Tuple[Path, str]]:
+def _iter_fasta_paths(
+    imgt_fasta: Optional[str], ipd_mhc_dir: Optional[str]
+) -> List[Tuple[Path, str]]:
     paths: List[Tuple[Path, str]] = []
     if imgt_fasta:
         path = Path(imgt_fasta)
@@ -457,7 +456,9 @@ def build_mhc_index(
         with open(fasta_path, "w", encoding="utf-8") as f:
             for key in sorted(records.keys()):
                 rec = records[key]
-                f.write(f">{rec.normalized} source={rec.source} gene={rec.gene} species={rec.species}\n")
+                f.write(
+                    f">{rec.normalized} source={rec.source} gene={rec.gene} species={rec.species}\n"
+                )
                 f.write(f"{rec.sequence}\n")
 
     return stats
@@ -468,16 +469,24 @@ def build_mhc_index(
 # ---------------------------------------------------------------------------
 _NONCLASSICAL_CLASS_I_GENES = {
     # Human non-classical
-    "HLA-E", "HLA-F", "HLA-G",
+    "HLA-E",
+    "HLA-F",
+    "HLA-G",
     # Mouse non-classical (Qa, Tla family)
-    "H2-Q", "H2-T", "H2-M",
+    "H2-Q",
+    "H2-T",
+    "H2-M",
 }
 
 _CLASSICAL_CLASS_I_GENES = {
     # Human classical
-    "HLA-A", "HLA-B", "HLA-C",
+    "HLA-A",
+    "HLA-B",
+    "HLA-C",
     # Mouse classical
-    "H2-K", "H2-D", "H2-L",
+    "H2-K",
+    "H2-D",
+    "H2-L",
 }
 
 _CLASS_II_ALPHA_PATTERNS = ("DRA", "DQA", "DPA", "AA", "EA")
@@ -587,9 +596,7 @@ def augment_mhc_index(index_csv: str, output_csv: str) -> Dict[str, object]:
             else:
                 parsed = parse_class_ii_beta(rec.sequence, allele=rec.normalized, gene=rec.gene)
         else:
-            raise MHCIndexError(
-                f"Unsupported MHC class for groove augmentation: {rec.mhc_class!r}"
-            )
+            raise MHCIndexError(f"Unsupported MHC class for groove augmentation: {rec.mhc_class!r}")
 
         is_functional = (
             parsed.status in FUNCTIONAL_GROOVE_STATUSES
@@ -815,9 +822,10 @@ def _merge_sequences_with_exact_overlap(
         )
         if overlap_len < min_overlap:
             continue
-        if left_seq[left_start : left_start + overlap_len] != right_seq[
-            right_start : right_start + overlap_len
-        ]:
+        if (
+            left_seq[left_start : left_start + overlap_len]
+            != right_seq[right_start : right_start + overlap_len]
+        ):
             continue
 
         merged_start = min(0, offset)
@@ -1384,7 +1392,10 @@ def validate_mhc_index(index_csv: str) -> Dict[str, object]:
                     {
                         "row": row_idx,
                         "code": "duplicate_normalized",
-                        "message": f"Duplicate normalized allele first seen at row {seen_normalized[normalized]}",
+                        "message": (
+                            f"Duplicate normalized allele first seen at row "
+                            f"{seen_normalized[normalized]}"
+                        ),
                     }
                 )
             else:
@@ -1447,7 +1458,10 @@ def validate_mhc_index(index_csv: str) -> Dict[str, object]:
                             {
                                 "row": row_idx,
                                 "code": "seq_len_mismatch",
-                                "message": f"seq_len={seq_len} but sequence length is {len(sequence)}",
+                                "message": (
+                                    f"seq_len={seq_len} but sequence "
+                                    f"length is {len(sequence)}"
+                                ),
                             }
                         )
                 else:

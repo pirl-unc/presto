@@ -476,7 +476,8 @@ def test_augment_mhc_index_adds_groove_columns(tmp_path):
                 "species": "Homo sapiens",
                 "source": "imgt",
                 "seq_len": "89",
-                "sequence": "LEQAKSECHFFNGTERVRFLDRHFYNQEEYARFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAVDTYCRHNYG",
+                "sequence": "LEQAKSECHFFNGTERVRFLDRHFYNQEEYARFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAV"
+                    "DTYCRHNYG",
             }
         )
         writer.writerow(

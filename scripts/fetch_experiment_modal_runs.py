@@ -97,7 +97,9 @@ def _status_row(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Fetch completed Modal experiment runs into results/runs.")
+    parser = argparse.ArgumentParser(
+        description="Fetch completed Modal experiment runs into results/runs."
+    )
     parser.add_argument("--experiment-dir", required=True)
     parser.add_argument("--manifest", default="manifest.json")
     parser.add_argument("--results-subdir", default="results/runs")
@@ -127,7 +129,9 @@ def main() -> None:
             run_id = str(item["run_id"])
             required_files = _required_files(item)
             local_ready = _local_ready(results_root, run_id, required_files)
-            remote_artifacts = _remote_artifacts(str(args.volume), run_id) if run_id in completed_remote else []
+            remote_artifacts = (
+                _remote_artifacts(str(args.volume), run_id) if run_id in completed_remote else []
+            )
             fetched = local_ready
             if not local_ready and run_id in completed_remote:
                 fetched = _fetch_run(str(args.volume), run_id, results_root, required_files)

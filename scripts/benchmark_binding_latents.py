@@ -54,10 +54,31 @@ def aa_property_class(aa: str) -> int:
 # HLA Class I contact residue positions in the α chain (0-indexed)
 # These residues form the peptide-binding groove (α1+α2 domains)
 # Pocket positions: A (7), B (9,24,45), C (73), D (99,114), E (147), F (77,80,81,84)
-MHC_POCKET_POSITIONS = [7, 9, 24, 45, 59, 63, 66, 70, 73, 77, 80, 81, 84, 97, 99, 114, 116, 147, 152, 156]
+MHC_POCKET_POSITIONS = [
+    7,
+    9,
+    24,
+    45,
+    59,
+    63,
+    66,
+    70,
+    73,
+    77,
+    80,
+    81,
+    84,
+    97,
+    99,
+    114,
+    116,
+    147,
+    152,
+    156,
+]
 
 # Peptide anchor positions for 9-mers (0-indexed): P2 and P9 (PΩ)
-PEPTIDE_ANCHOR_P2 = 1   # P2 (0-indexed)
+PEPTIDE_ANCHOR_P2 = 1  # P2 (0-indexed)
 PEPTIDE_ANCHOR_POMEGA = -1  # PΩ (last residue)
 
 
@@ -144,6 +165,7 @@ def compute_binding_score(
 # Structured synthetic data generation
 # ---------------------------------------------------------------------------
 
+
 def random_peptide(length: int = 9) -> str:
     """Generate random peptide sequence."""
     return "".join(random.choice(STANDARD_AA) for _ in range(length))
@@ -169,6 +191,7 @@ def tokenize_sequence(seq: str, max_len: int) -> torch.Tensor:
 @dataclass
 class BindingSample:
     """A single binding sample with tokenized sequences."""
+
     pep_tok: torch.Tensor
     mhc_a_tok: torch.Tensor
     mhc_b_tok: torch.Tensor
@@ -225,12 +248,14 @@ def generate_structured_data(
         mhc_a_tok = tokenize_sequence(mhc_a_seq, max_len=180)
         mhc_b_tok = tokenize_sequence(b2m_seq, max_len=99)
 
-        samples.append(BindingSample(
-            pep_tok=pep_tok,
-            mhc_a_tok=mhc_a_tok,
-            mhc_b_tok=mhc_b_tok,
-            log10_kd=log10_kd,
-        ))
+        samples.append(
+            BindingSample(
+                pep_tok=pep_tok,
+                mhc_a_tok=mhc_a_tok,
+                mhc_b_tok=mhc_b_tok,
+                log10_kd=log10_kd,
+            )
+        )
 
     # Shuffle and split 80/20
     random.shuffle(samples)
@@ -251,6 +276,7 @@ def collate_binding(batch: List[Dict[str, torch.Tensor]]) -> Dict[str, torch.Ten
 # ---------------------------------------------------------------------------
 # Training loop
 # ---------------------------------------------------------------------------
+
 
 def train_and_evaluate(
     config_name: str,
@@ -437,7 +463,12 @@ def main():
     # Verify signal in data
     kds = [s.log10_kd for s in train_samples + val_samples]
     print(f"  log10(KD) range: [{min(kds):.2f}, {max(kds):.2f}]")
-    print(f"  log10(KD) mean: {sum(kds)/len(kds):.2f}, std: {(sum((k - sum(kds)/len(kds))**2 for k in kds) / len(kds))**0.5:.2f}")
+    print(
+        (
+            f"  log10(KD) mean: {sum(kds) / len(kds):.2f}, std: "
+            f"{(sum((k - sum(kds) / len(kds)) ** 2 for k in kds) / len(kds)) ** 0.5:.2f}"
+        )
+    )
     print()
 
     # Run all configurations
@@ -457,20 +488,26 @@ def main():
             lr=1e-3,
             seed=42,
         )
-        print(f"  Pearson r={result['pearson_r']:.4f}, val_loss={result['final_val_loss']:.4f}, "
-              f"params={result['n_params']:,}, time={result['wall_time']:.1f}s")
+        print(
+            f"  Pearson r={result['pearson_r']:.4f}, val_loss={result['final_val_loss']:.4f}, "
+            f"params={result['n_params']:,}, time={result['wall_time']:.1f}s"
+        )
         results.append(result)
 
     # Print comparison table
     print()
     print("=" * 100)
-    print(f"{'Config':<12} {'Params':>10} {'Train Loss':>12} {'Val Loss':>12} "
-          f"{'Pearson r':>10} {'Pred Std':>10} {'Time (s)':>10}")
+    print(
+        f"{'Config':<12} {'Params':>10} {'Train Loss':>12} {'Val Loss':>12} "
+        f"{'Pearson r':>10} {'Pred Std':>10} {'Time (s)':>10}"
+    )
     print("-" * 100)
     for r in results:
-        print(f"{r['config']:<12} {r['n_params']:>10,} {r['final_train_loss']:>12.4f} "
-              f"{r['final_val_loss']:>12.4f} {r['pearson_r']:>10.4f} "
-              f"{r['pred_std']:>10.4f} {r['wall_time']:>10.1f}")
+        print(
+            f"{r['config']:<12} {r['n_params']:>10,} {r['final_train_loss']:>12.4f} "
+            f"{r['final_val_loss']:>12.4f} {r['pearson_r']:>10.4f} "
+            f"{r['pred_std']:>10.4f} {r['wall_time']:>10.1f}"
+        )
     print("=" * 100)
 
     # Rank by Pearson r
@@ -479,8 +516,10 @@ def main():
     print("Ranking by Pearson r:")
     for i, r in enumerate(ranked):
         efficiency = r["pearson_r"] / (r["n_params"] / 1e6) if r["n_params"] > 0 else 0
-        print(f"  {i+1}. {r['config']:<12} r={r['pearson_r']:.4f}  "
-              f"(params={r['n_params']:,}, efficiency={efficiency:.2f} r/M-params)")
+        print(
+            f"  {i + 1}. {r['config']:<12} r={r['pearson_r']:.4f}  "
+            f"(params={r['n_params']:,}, efficiency={efficiency:.2f} r/M-params)"
+        )
 
 
 if __name__ == "__main__":

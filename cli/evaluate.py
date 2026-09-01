@@ -31,6 +31,7 @@ def _binary_auc(labels: Iterable[float], scores: Iterable[float]) -> Optional[fl
     auc = (sum_ranks_pos - n_pos * (n_pos + 1) / 2.0) / (n_pos * n_neg)
     return float(auc)
 
+
 def _collect_aux_metrics(model, val_loader, device: str) -> Dict[str, Any]:
     model.eval()
     tcell_labels: List[float] = []
@@ -99,8 +100,10 @@ def cmd_evaluate_synthetic(args: Any) -> int:
     if args.json:
         # Keep JSON output machine-readable.
         with contextlib.redirect_stdout(io.StringIO()):
-            binding_data, elution_data, tcr_data, mhc_sequences = train_synthetic.create_synthetic_data(
-                data_dir, args.n_binding, args.n_elution, args.n_tcr
+            binding_data, elution_data, tcr_data, mhc_sequences = (
+                train_synthetic.create_synthetic_data(
+                    data_dir, args.n_binding, args.n_elution, args.n_tcr
+                )
             )
     else:
         binding_data, elution_data, tcr_data, mhc_sequences = train_synthetic.create_synthetic_data(
@@ -119,7 +122,9 @@ def cmd_evaluate_synthetic(args: Any) -> int:
     _, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
 
     collator = PrestoCollator()
-    val_loader = create_dataloader(val_dataset, batch_size=args.batch_size, shuffle=False, collator=collator)
+    val_loader = create_dataloader(
+        val_dataset, batch_size=args.batch_size, shuffle=False, collator=collator
+    )
 
     model, _ = load_model_from_checkpoint(
         args.checkpoint,
@@ -140,7 +145,14 @@ def cmd_evaluate_synthetic(args: Any) -> int:
         print(json.dumps(payload, indent=2))
     else:
         print(f"val_loss: {val_loss:.4f}")
-        for key in ("tcell_auroc", "elution_auroc", "retrieval_n", "recall_at_1", "recall_at_5", "recall_at_10"):
+        for key in (
+            "tcell_auroc",
+            "elution_auroc",
+            "retrieval_n",
+            "recall_at_1",
+            "recall_at_5",
+            "recall_at_10",
+        ):
             print(f"{key}: {payload.get(key)}")
 
     return 0

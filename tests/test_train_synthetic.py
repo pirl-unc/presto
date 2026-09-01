@@ -111,7 +111,9 @@ def test_compute_loss_applies_tcell_upstream_prior():
                 "assay_method": torch.zeros((1, len(TCELL_ASSAY_METHODS)), dtype=torch.float32),
                 "assay_readout": torch.zeros((1, len(TCELL_ASSAY_READOUTS)), dtype=torch.float32),
                 "apc_type": torch.zeros((1, len(TCELL_APC_TYPES)), dtype=torch.float32),
-                "culture_context": torch.zeros((1, len(TCELL_CULTURE_CONTEXTS)), dtype=torch.float32),
+                "culture_context": torch.zeros(
+                    (1, len(TCELL_CULTURE_CONTEXTS)), dtype=torch.float32
+                ),
                 "stim_context": torch.zeros((1, len(TCELL_STIM_CONTEXTS)), dtype=torch.float32),
             },
             "assays": {
@@ -250,7 +252,9 @@ def test_compute_loss_applies_tcell_context_prior():
                 "assay_method": torch.zeros((2, len(TCELL_ASSAY_METHODS)), dtype=torch.float32),
                 "assay_readout": torch.zeros((2, len(TCELL_ASSAY_READOUTS)), dtype=torch.float32),
                 "apc_type": torch.zeros((2, len(TCELL_APC_TYPES)), dtype=torch.float32),
-                "culture_context": torch.zeros((2, len(TCELL_CULTURE_CONTEXTS)), dtype=torch.float32),
+                "culture_context": torch.zeros(
+                    (2, len(TCELL_CULTURE_CONTEXTS)), dtype=torch.float32
+                ),
                 "stim_context": torch.zeros((2, len(TCELL_STIM_CONTEXTS)), dtype=torch.float32),
             },
             "assays": {
@@ -286,7 +290,9 @@ def test_compute_loss_uses_mil_noisy_or_for_elution_family_tasks():
                 # MIL instance call: bag0 has two instances, bag1 has one.
                 return {
                     "elution_logit": torch.tensor([[3.0], [-3.0], [0.5]], dtype=torch.float32),
-                    "presentation_logit": torch.tensor([[2.5], [-2.0], [0.25]], dtype=torch.float32),
+                    "presentation_logit": torch.tensor(
+                        [[2.5], [-2.0], [0.25]], dtype=torch.float32
+                    ),
                     "ms_logit": torch.tensor([[2.0], [-1.5], [0.0]], dtype=torch.float32),
                 }
             # Main per-sample call (not used for elution/presentation/ms when MIL is present).
@@ -735,9 +741,7 @@ def test_compute_loss_support_weighted_aggregation_reduces_rare_task_influence()
     expected_sample_weighted = (2.0 * binding_loss + tcell_loss) / 3.0
 
     assert float(total_task_mean.item()) == pytest.approx(expected_task_mean, rel=1e-6)
-    assert float(total_sample_weighted.item()) == pytest.approx(
-        expected_sample_weighted, rel=1e-6
-    )
+    assert float(total_sample_weighted.item()) == pytest.approx(expected_sample_weighted, rel=1e-6)
     assert float(total_sample_weighted.item()) < float(total_task_mean.item())
 
 

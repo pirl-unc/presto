@@ -102,6 +102,7 @@ from presto.training.run_logger import RunLogger
 try:
     from presto.training.losses import PCGrad, UncertaintyWeighting
 except ImportError:
+
     class UncertaintyWeighting(nn.Module):
         """Fallback uncertainty weighting for older runtime environments."""
 
@@ -218,7 +219,10 @@ IEDB_DEFAULTS = {
     "perf_log_interval_batches": 100,
     "track_probe_affinity": True,
     "probe_peptide": "SLLQHLIGL",
-    "probe_alleles": "HLA-A*02:01,HLA-A*01:01,HLA-A*03:01,HLA-A*11:01,HLA-A*24:02,HLA-B*07:02,HLA-B*08:01,HLA-B*15:01,HLA-B*35:01,HLA-B*44:02",
+    "probe_alleles": (
+        "HLA-A*02:01,HLA-A*01:01,HLA-A*03:01,HLA-A*11:01,HLA-A*24:02,HLA-B*07:02,HLA-B*08:01,HLA-B*"
+        "15:01,HLA-B*35:01,HLA-B*44:02"
+    ),
     "probe_plot_file": "probe_affinity_over_epochs.png",
     "track_probe_motif_scan": True,
     "motif_scan_positions": "1,2,3,4,5,6,7,8,9",
@@ -335,9 +339,7 @@ def _call_train_epoch_compat(
     if "regularization" in params:
         kwargs["regularization"] = regularization_config
     if "supervised_loss_aggregation" in params:
-        kwargs["supervised_loss_aggregation"] = str(
-            supervised_loss_aggregation or "task_mean"
-        )
+        kwargs["supervised_loss_aggregation"] = str(supervised_loss_aggregation or "task_mean")
     if "profile_performance" in params:
         kwargs["profile_performance"] = bool(profile_performance)
     if "non_blocking_transfer" in params:
@@ -373,9 +375,7 @@ def _call_evaluate_compat(
     if "regularization" in params:
         kwargs["regularization"] = regularization_config
     if "supervised_loss_aggregation" in params:
-        kwargs["supervised_loss_aggregation"] = str(
-            supervised_loss_aggregation or "task_mean"
-        )
+        kwargs["supervised_loss_aggregation"] = str(supervised_loss_aggregation or "task_mean")
     if "use_amp" in params:
         kwargs["use_amp"] = bool(use_amp)
     if "max_mil_instances" in params:
@@ -440,11 +440,7 @@ def _apply_profile_overrides(
     if profile == "full":
         return args
 
-    overrides = (
-        CANARY_PROFILE_OVERRIDES
-        if profile == "canary"
-        else DIAGNOSTIC_PROFILE_OVERRIDES
-    )
+    overrides = CANARY_PROFILE_OVERRIDES if profile == "canary" else DIAGNOSTIC_PROFILE_OVERRIDES
     explicit_dests = explicit_dests or set()
     for key, value in overrides.items():
         if key in explicit_dests:
@@ -540,7 +536,9 @@ def _resolve_probe_specs(
                 resolved_mhc[allele] = seq
 
     tokenizer = Tokenizer()
-    pep_tok = tokenizer.batch_encode([peptide], max_len=max(50, len(peptide), 1), pad=True).to(device)
+    pep_tok = tokenizer.batch_encode([peptide], max_len=max(50, len(peptide), 1), pad=True).to(
+        device
+    )
     specs: List[Dict[str, Any]] = []
 
     for allele in alleles:
@@ -575,10 +573,7 @@ def _resolve_probe_specs(
 
     missing = [allele for allele in alleles if allele not in {spec["allele"] for spec in specs}]
     if missing:
-        print(
-            "Probe tracking warning: unresolved probe alleles skipped: "
-            + ", ".join(missing)
-        )
+        print("Probe tracking warning: unresolved probe alleles skipped: " + ", ".join(missing))
     return specs
 
 
@@ -610,7 +605,7 @@ def _evaluate_probe_affinity(
             species=None,
         )
         kd_log10 = float(outputs["assays"]["KD_nM"][0].item())
-        kd_nM = float(10.0 ** kd_log10)
+        kd_nM = float(10.0**kd_log10)
         binding_prob = float(
             binding_prob_from_kd_log10(
                 kd_log10,
@@ -757,7 +752,7 @@ def _evaluate_probe_motif_scan(
                         log10_scale=scale,
                     )
                 )
-                kd_nM = float(10.0 ** kd_log10)
+                kd_nM = float(10.0**kd_log10)
                 rank_pairs.append((aa, binding_prob, kd_nM))
                 rows.append(
                     {
@@ -773,7 +768,9 @@ def _evaluate_probe_motif_scan(
 
             rank_pairs.sort(key=lambda t: t[1], reverse=True)
             best_aa, best_prob, best_kd = rank_pairs[0]
-            wt_rank = 1 + next((idx for idx, (aa, _, _) in enumerate(rank_pairs) if aa == wt_aa), len(rank_pairs))
+            wt_rank = 1 + next(
+                (idx for idx, (aa, _, _) in enumerate(rank_pairs) if aa == wt_aa), len(rank_pairs)
+            )
             wt_prob = next((p for aa, p, _ in rank_pairs if aa == wt_aa), 0.0)
             wt_kd = next((k for aa, _, k in rank_pairs if aa == wt_aa), float("nan"))
             metrics[f"motif_{allele_tag}_p{pos_1b}_wt_rank"] = float(wt_rank)
@@ -869,6 +866,7 @@ def _compute_motif_specificity(
 
     # Group by (allele, position) → list of binding_prob per amino acid
     from collections import defaultdict
+
     grouped: Dict[Tuple[str, int], List[float]] = defaultdict(list)
     for row in motif_rows:
         key = (str(row["allele"]), int(row["position_1based"]))
@@ -917,8 +915,8 @@ def _compute_motif_specificity(
                 cosine_sim = dot / (norm_a * norm_b)
                 cosine_dists.append(1.0 - cosine_sim)
         if cosine_dists:
-            metrics["motif_inter_allele_mean_cosine_distance"] = (
-                sum(cosine_dists) / len(cosine_dists)
+            metrics["motif_inter_allele_mean_cosine_distance"] = sum(cosine_dists) / len(
+                cosine_dists
             )
     return metrics
 
@@ -1107,12 +1105,7 @@ def _evaluate_pmhc_information_flow(
                 mhc_shuf = _extract_output_vector(mhc_shuf_outputs, score_key)
                 pep_shuf = _extract_output_vector(pep_shuf_outputs, score_key)
                 both_shuf = _extract_output_vector(both_shuf_outputs, score_key)
-                if (
-                    real is None
-                    or mhc_shuf is None
-                    or pep_shuf is None
-                    or both_shuf is None
-                ):
+                if real is None or mhc_shuf is None or pep_shuf is None or both_shuf is None:
                     continue
 
                 if real.shape != mhc_shuf.shape or real.shape != pep_shuf.shape:
@@ -1203,7 +1196,7 @@ def _summarize_scalar_moments(
             var = 0.0
         out[f"{prefix}_{key}_mean"] = mean
         out[f"{prefix}_{key}_var"] = var
-        out[f"{prefix}_{key}_std"] = var ** 0.5
+        out[f"{prefix}_{key}_std"] = var**0.5
     return out
 
 
@@ -1264,7 +1257,7 @@ def _summarize_vector_moments(
                 norm_var = 0.0
             out[f"{prefix}_{key}_norm_mean"] = norm_mean
             out[f"{prefix}_{key}_norm_var"] = norm_var
-            out[f"{prefix}_{key}_norm_std"] = norm_var ** 0.5
+            out[f"{prefix}_{key}_norm_std"] = norm_var**0.5
     return out
 
 
@@ -1514,9 +1507,7 @@ def find_iedb_export_file(
 
     best = max(candidates, key=_score)
     if _score(best)[0] == 0 and lowered_keywords:
-        raise FileNotFoundError(
-            f"No export file matched keywords {lowered_keywords} under {root}"
-        )
+        raise FileNotFoundError(f"No export file matched keywords {lowered_keywords} under {root}")
     return best
 
 
@@ -1804,7 +1795,9 @@ def bootstrap_missing_modalities_for_canary(
     if not processing and n_bootstrap > 0:
         for _ in range(n_bootstrap):
             src = _sample_binding()
-            mhc_class = src.mhc_class if src.mhc_class in {"I", "II"} else infer_mhc_class(src.mhc_allele)
+            mhc_class = (
+                src.mhc_class if src.mhc_class in {"I", "II"} else infer_mhc_class(src.mhc_allele)
+            )
             processing.append(
                 ProcessingRecord(
                     peptide=src.peptide,
@@ -1911,9 +1904,7 @@ def augment_binding_records_with_synthetic_negatives(
         if peptide_text and allele_text:
             peptides_by_allele[allele_text].append(peptide_text)
     if class_i_anchor_strategy not in {"none", "property_opposite"}:
-        raise ValueError(
-            "class_i_anchor_strategy must be one of {'none', 'property_opposite'}"
-        )
+        raise ValueError("class_i_anchor_strategy must be one of {'none', 'property_opposite'}")
 
     rng = random.Random(seed)
     neg_min = min(float(weak_value_min_nM), float(weak_value_max_nM))
@@ -1925,7 +1916,9 @@ def augment_binding_records_with_synthetic_negatives(
     by_class: Dict[str, List[BindingRecord]] = {"I": [], "II": []}
     alleles_by_class: Dict[str, List[str]] = {"I": [], "II": []}
     for rec in records:
-        mhc_class = rec.mhc_class if rec.mhc_class in {"I", "II"} else infer_mhc_class(rec.mhc_allele)
+        mhc_class = (
+            rec.mhc_class if rec.mhc_class in {"I", "II"} else infer_mhc_class(rec.mhc_allele)
+        )
         by_class[mhc_class].append(rec)
         if rec.mhc_allele:
             alleles_by_class[mhc_class].append(rec.mhc_allele)
@@ -1940,16 +1933,24 @@ def augment_binding_records_with_synthetic_negatives(
     for idx in range(n_to_add):
         mode = mode_cycle[idx % len(mode_cycle)]
         source = rng.choice(records)
-        mhc_class = source.mhc_class if source.mhc_class in {"I", "II"} else infer_mhc_class(source.mhc_allele)
+        mhc_class = (
+            source.mhc_class
+            if source.mhc_class in {"I", "II"}
+            else infer_mhc_class(source.mhc_allele)
+        )
 
         class_records = by_class[mhc_class] or records
         class_alleles = alleles_by_class[mhc_class]
         if not class_alleles:
             class_alleles = sorted({rec.mhc_allele for rec in class_records if rec.mhc_allele})
 
-        peptide = source.peptide or _random_peptide(rng, _class_default_peptide_length(mhc_class, rng))
+        peptide = source.peptide or _random_peptide(
+            rng, _class_default_peptide_length(mhc_class, rng)
+        )
         allele = source.mhc_allele
-        source_mhc_seq = (source.mhc_sequence or mhc_sequences.get(source.mhc_allele) or "").strip().upper()
+        source_mhc_seq = (
+            (source.mhc_sequence or mhc_sequences.get(source.mhc_allele) or "").strip().upper()
+        )
         direct_mhc_sequence: Optional[str] = None
         source_label = f"synthetic_negative_{mode}"
 
@@ -1959,16 +1960,14 @@ def augment_binding_records_with_synthetic_negatives(
             and float(source.value) <= 500.0
             and int(source.qualifier) <= 0
         )
-        use_anchor_opposite = (
-            class_i_anchor_strategy == "property_opposite" and _is_strong_class_i
-        )
+        use_anchor_opposite = class_i_anchor_strategy == "property_opposite" and _is_strong_class_i
 
         if mode == "peptide_scramble":
             peptide = _scramble_peptide_with_anchor_changes(
-                rng, peptide, anchor_opposite=use_anchor_opposite,
-            ) or _random_peptide(
-                rng, _class_default_peptide_length(mhc_class, rng)
-            )
+                rng,
+                peptide,
+                anchor_opposite=use_anchor_opposite,
+            ) or _random_peptide(rng, _class_default_peptide_length(mhc_class, rng))
             allele = source.mhc_allele
         elif mode == "peptide_random":
             orig_peptide = peptide
@@ -1979,13 +1978,19 @@ def augment_binding_records_with_synthetic_negatives(
             peptide = "".join(new_pep)
             allele = source.mhc_allele
         elif mode == "mhc_scramble":
-            peptide = source.peptide or _random_peptide(rng, _class_default_peptide_length(mhc_class, rng))
+            peptide = source.peptide or _random_peptide(
+                rng, _class_default_peptide_length(mhc_class, rng)
+            )
             allele = source.mhc_allele
-            direct_mhc_sequence = _scramble_sequence(rng, source_mhc_seq) if source_mhc_seq else _random_mhc_sequence_like(
-                rng, source_mhc_seq, mhc_class
+            direct_mhc_sequence = (
+                _scramble_sequence(rng, source_mhc_seq)
+                if source_mhc_seq
+                else _random_mhc_sequence_like(rng, source_mhc_seq, mhc_class)
             )
         elif mode == "mhc_random":
-            peptide = source.peptide or _random_peptide(rng, _class_default_peptide_length(mhc_class, rng))
+            peptide = source.peptide or _random_peptide(
+                rng, _class_default_peptide_length(mhc_class, rng)
+            )
             allele = source.mhc_allele
             direct_mhc_sequence = _random_mhc_sequence_like(rng, source_mhc_seq, mhc_class)
         elif mode == "allele_mismatch":
@@ -2011,7 +2016,9 @@ def augment_binding_records_with_synthetic_negatives(
                 # rather than silently emitting a same-allele "negative", which
                 # would be a mislabelled positive.
                 peptide = _scramble_peptide_with_anchor_changes(
-                    rng, peptide, anchor_opposite=use_anchor_opposite,
+                    rng,
+                    peptide,
+                    anchor_opposite=use_anchor_opposite,
                 ) or _random_peptide(rng, _class_default_peptide_length(mhc_class, rng))
                 source_label = "synthetic_negative_peptide_scramble"
             else:
@@ -2020,11 +2027,15 @@ def augment_binding_records_with_synthetic_negatives(
                 peptide = donor_peptides[rng.randrange(len(donor_peptides))]
             allele = source.mhc_allele
         elif mode == "no_mhc_alpha":
-            peptide = source.peptide or _random_peptide(rng, _class_default_peptide_length(mhc_class, rng))
+            peptide = source.peptide or _random_peptide(
+                rng, _class_default_peptide_length(mhc_class, rng)
+            )
             allele = source.mhc_allele
             source_label = "synthetic_negative_no_mhc_alpha"
         else:
-            peptide = source.peptide or _random_peptide(rng, _class_default_peptide_length(mhc_class, rng))
+            peptide = source.peptide or _random_peptide(
+                rng, _class_default_peptide_length(mhc_class, rng)
+            )
             allele = source.mhc_allele
             source_label = "synthetic_negative_no_mhc_beta"
 
@@ -2172,15 +2183,14 @@ def augment_elution_records_with_synthetic_negatives(
         class_alleles = alleles_by_class[mhc_class]
         if not class_alleles:
             class_alleles = sorted(
-                {
-                    allele
-                    for rec in class_records
-                    for allele in rec.alleles
-                    if allele
-                }
+                {allele for rec in class_records for allele in rec.alleles if allele}
             )
 
-        pep_len = len(source.peptide) if source.peptide else _class_default_peptide_length(source.mhc_class, rng)
+        pep_len = (
+            len(source.peptide)
+            if source.peptide
+            else _class_default_peptide_length(source.mhc_class, rng)
+        )
         peptide = source.peptide
         alleles = list(source.alleles)
 
@@ -2302,7 +2312,9 @@ def augment_processing_records_with_synthetic_negatives(
         mode = mode_cycle[idx % len(mode_cycle)]
         flank_n_len = max(6, len(source.flank_n) if source.flank_n else 10)
         flank_c_len = max(6, len(source.flank_c) if source.flank_c else 10)
-        peptide = source.peptide or _random_peptide(rng, _class_default_peptide_length(source.mhc_class, rng))
+        peptide = source.peptide or _random_peptide(
+            rng, _class_default_peptide_length(source.mhc_class, rng)
+        )
         flank_n = source.flank_n or _random_peptide(rng, flank_n_len)
         flank_c = source.flank_c or _random_peptide(rng, flank_c_len)
         source_label = f"synthetic_negative_processing_{mode}"
@@ -2316,7 +2328,8 @@ def augment_processing_records_with_synthetic_negatives(
                 flank_c = _scramble_sequence(rng, flank_c) or _random_peptide(rng, flank_c_len)
         else:
             peptide = _scramble_sequence(rng, peptide) or _random_peptide(
-                rng, len(peptide) if peptide else _class_default_peptide_length(source.mhc_class, rng)
+                rng,
+                len(peptide) if peptide else _class_default_peptide_length(source.mhc_class, rng),
             )
 
         mode_counts[mode] += 1
@@ -2353,9 +2366,7 @@ def cascade_binding_negatives_to_downstream(
     synthetic_binding = [
         rec
         for rec in binding_records
-        if (rec.source or "").startswith("synthetic_negative")
-        and rec.mhc_allele
-        and rec.peptide
+        if (rec.source or "").startswith("synthetic_negative") and rec.mhc_allele and rec.peptide
     ]
     if not synthetic_binding:
         return elution, tcell, {"elution_added": 0, "tcell_added": 0}
@@ -2365,12 +2376,10 @@ def cascade_binding_negatives_to_downstream(
     n_tcell = max(0, int(round(len(synthetic_binding) * max(float(tcell_ratio), 0.0))))
 
     elution_keys = {
-        (rec.peptide, tuple(rec.alleles), bool(rec.detected), rec.mhc_class)
-        for rec in elution
+        (rec.peptide, tuple(rec.alleles), bool(rec.detected), rec.mhc_class) for rec in elution
     }
     tcell_keys = {
-        (rec.peptide, rec.mhc_allele, float(rec.response), rec.mhc_class)
-        for rec in tcell
+        (rec.peptide, rec.mhc_allele, float(rec.response), rec.mhc_class) for rec in tcell
     }
 
     elution_added = 0
@@ -2573,18 +2582,22 @@ def _generate_mhc_only_samples(
             continue
         bad_chars = set(seq) - MHC_SEQUENCE_ALLOWED_AA
         if bad_chars:
-            rejected.append((
-                rec.normalized or rec.allele,
-                "non_canonical_chars",
-                "".join(sorted(bad_chars)),
-            ))
+            rejected.append(
+                (
+                    rec.normalized or rec.allele,
+                    "non_canonical_chars",
+                    "".join(sorted(bad_chars)),
+                )
+            )
             continue
         if _looks_like_nucleotide_mhc_sequence(seq):
-            rejected.append((
-                rec.normalized or rec.allele,
-                f"nucleotide_like_len={len(seq)}",
-                "",
-            ))
+            rejected.append(
+                (
+                    rec.normalized or rec.allele,
+                    f"nucleotide_like_len={len(seq)}",
+                    "",
+                )
+            )
             continue
 
         mhc_class = normalize_mhc_class(rec.mhc_class, default="I")
@@ -2600,11 +2613,13 @@ def _generate_mhc_only_samples(
                     allow_fallback_truncation=False,
                 )
             except ValueError as exc:
-                rejected.append((
-                    rec.normalized or rec.allele_raw,
-                    f"groove_parse_failed:{exc}",
-                    "",
-                ))
+                rejected.append(
+                    (
+                        rec.normalized or rec.allele_raw,
+                        f"groove_parse_failed:{exc}",
+                        "",
+                    )
+                )
                 continue
             mhc_a_seq = prepared.groove_half_1
             mhc_b_seq = prepared.groove_half_2
@@ -2619,19 +2634,15 @@ def _generate_mhc_only_samples(
             rejected.append((rec.normalized or rec.allele_raw, "no_groove_inputs", ""))
             continue
 
-        bad_segments = sorted(
-            {
-                ch
-                for ch in (mhc_a_seq + mhc_b_seq)
-                if ch not in MHC_ALLOWED_AA
-            }
-        )
+        bad_segments = sorted({ch for ch in (mhc_a_seq + mhc_b_seq) if ch not in MHC_ALLOWED_AA})
         if bad_segments:
-            rejected.append((
-                rec.normalized or rec.allele_raw,
-                "non_canonical_groove_chars",
-                "".join(bad_segments),
-            ))
+            rejected.append(
+                (
+                    rec.normalized or rec.allele_raw,
+                    "non_canonical_groove_chars",
+                    "".join(bad_segments),
+                )
+            )
             continue
 
         if "X" in mhc_a_seq or "X" in mhc_b_seq:
@@ -2641,9 +2652,7 @@ def _generate_mhc_only_samples(
         valid.append((rec, mhc_a_seq, mhc_b_seq))
 
     if rejected:
-        print(
-            f"MHC augmentation: rejected {len(rejected)} alleles with invalid sequences:"
-        )
+        print(f"MHC augmentation: rejected {len(rejected)} alleles with invalid sequences:")
         for allele, reason, chars in rejected[:50]:
             print(f"  {allele:30s}  reason={reason:20s}  chars={chars}")
         if len(rejected) > 50:
@@ -2661,18 +2670,20 @@ def _generate_mhc_only_samples(
         mhc_class = normalize_mhc_class(rec.mhc_class, default="I")
         species = rec.species or infer_species(rec.normalized) or None
 
-        samples.append(PrestoSample(
-            peptide="AAAAAAAAA",  # polyalanine placeholder
-            mhc_a=mhc_a_seq,
-            mhc_b=mhc_b_seq,
-            mhc_class=mhc_class,
-            species=species,
-            sample_source="mhc_augmentation",
-            assay_group="mhc_aux",
-            synthetic_kind="mhc_only",
-            primary_allele=rec.normalized,
-            sample_id=f"mhc_aug_{len(samples)}",
-        ))
+        samples.append(
+            PrestoSample(
+                peptide="AAAAAAAAA",  # polyalanine placeholder
+                mhc_a=mhc_a_seq,
+                mhc_b=mhc_b_seq,
+                mhc_class=mhc_class,
+                species=species,
+                sample_source="mhc_augmentation",
+                assay_group="mhc_aux",
+                synthetic_kind="mhc_only",
+                primary_allele=rec.normalized,
+                sample_id=f"mhc_aug_{len(samples)}",
+            )
+        )
     return samples
 
 
@@ -2752,23 +2763,25 @@ def generate_uniprot_samples(
 
         is_foreign = protein.category in FOREIGN_CATEGORIES
 
-        samples.append(PrestoSample(
-            peptide=peptide,
-            mhc_a=mhc_seq,
-            mhc_b="",
-            mhc_class="I",
-            bind_value=bind_value,
-            bind_qual=0,
-            processing_label=0.0,
-            elution_label=0.0,
-            tcell_label=0.0,
-            species_of_origin=protein.category,
-            foreignness_label=1.0 if is_foreign else 0.0,
-            sample_source="uniprot_negative",
-            synthetic_kind="uniprot_negative",
-            species="human",
-            sample_id=f"uniprot_{i}",
-        ))
+        samples.append(
+            PrestoSample(
+                peptide=peptide,
+                mhc_a=mhc_seq,
+                mhc_b="",
+                mhc_class="I",
+                bind_value=bind_value,
+                bind_qual=0,
+                processing_label=0.0,
+                elution_label=0.0,
+                tcell_label=0.0,
+                species_of_origin=protein.category,
+                foreignness_label=1.0 if is_foreign else 0.0,
+                sample_source="uniprot_negative",
+                synthetic_kind="uniprot_negative",
+                species="human",
+                sample_id=f"uniprot_{i}",
+            )
+        )
 
     return samples
 
@@ -3304,7 +3317,9 @@ def _filter_records_to_resolved_mhc(
         "vdjdb_dropped": 0,
     }
 
-    def _keep(allele: Optional[str], direct_seq: Optional[str], source: Optional[str] = None) -> bool:
+    def _keep(
+        allele: Optional[str], direct_seq: Optional[str], source: Optional[str] = None
+    ) -> bool:
         if str(source or "") == "synthetic_negative_no_mhc_alpha":
             return True
         return _is_mhc_sequence_resolved(
@@ -3347,11 +3362,7 @@ def _filter_records_to_resolved_mhc(
         if not alleles:
             stats["elution_rows_dropped"] += 1
             continue
-        resolved_alleles = [
-            allele
-            for allele in alleles
-            if _keep(allele, None, rec.source)
-        ]
+        resolved_alleles = [allele for allele in alleles if _keep(allele, None, rec.source)]
         dropped = len(alleles) - len(resolved_alleles)
         if dropped > 0:
             stats["elution_alleles_dropped"] += dropped
@@ -3444,8 +3455,12 @@ def _write_mhc_sequence_coverage_report(
             )
 
         for state in ("resolved", "missing"):
-            state_counts = species_by_state.get(state, {}) if isinstance(species_by_state, Mapping) else {}
-            state_total = int(sum(int(state_counts.get(sp, 0) or 0) for sp in ("human", "murine", "nhp", "other")))
+            state_counts = (
+                species_by_state.get(state, {}) if isinstance(species_by_state, Mapping) else {}
+            )
+            state_total = int(
+                sum(int(state_counts.get(sp, 0) or 0) for sp in ("human", "murine", "nhp", "other"))
+            )
             state_denom = max(state_total, 1)
             for species in ("human", "murine", "nhp", "other"):
                 count = int(state_counts.get(species, 0) or 0)
@@ -3492,7 +3507,12 @@ def _write_mhc_sequence_coverage_report(
                         if isinstance(modality_species, Mapping)
                         else {}
                     )
-                    state_total = int(sum(int(state_species.get(sp, 0) or 0) for sp in ("human", "murine", "nhp", "other")))
+                    state_total = int(
+                        sum(
+                            int(state_species.get(sp, 0) or 0)
+                            for sp in ("human", "murine", "nhp", "other")
+                        )
+                    )
                     state_denom = max(state_total, 1)
                     for species in ("human", "murine", "nhp", "other"):
                         count = int(state_species.get(species, 0) or 0)
@@ -3534,6 +3554,7 @@ def _print_mhc_sequence_coverage_summary(coverage: Mapping[str, Any]) -> None:
             for species in ("human", "murine", "nhp", "other")
         )
         print(f"  {state} species buckets: {text}")
+
 
 class MHCResolutionError(RuntimeError):
     """No allele resolved to a sequence, so the model is not a pMHC model."""
@@ -3673,8 +3694,7 @@ def load_records_from_merged_tsv(
     sampling_mode = str(cap_sampling or "reservoir").strip().lower()
     if sampling_mode not in {"head", "reservoir"}:
         raise ValueError(
-            f"Unsupported cap sampling mode: {cap_sampling!r}. "
-            "Expected one of: head, reservoir."
+            f"Unsupported cap sampling mode: {cap_sampling!r}. Expected one of: head, reservoir."
         )
     sampling_rng = random.Random(int(sampling_seed))
     binding_seen = 0
@@ -4042,11 +4062,7 @@ def load_binding_records_for_alleles_from_merged_tsv(
     if not merged_tsv.exists():
         raise FileNotFoundError(f"Merged TSV not found: {merged_tsv}")
 
-    target_alleles = {
-        str(allele or "").strip()
-        for allele in alleles
-        if str(allele or "").strip()
-    }
+    target_alleles = {str(allele or "").strip() for allele in alleles if str(allele or "").strip()}
     if not target_alleles:
         return [], {
             "rows_scanned": 0,
@@ -4062,8 +4078,7 @@ def load_binding_records_for_alleles_from_merged_tsv(
     sampling_mode = str(cap_sampling or "reservoir").strip().lower()
     if sampling_mode not in {"head", "reservoir"}:
         raise ValueError(
-            f"Unsupported cap sampling mode: {cap_sampling!r}. "
-            "Expected one of: head, reservoir."
+            f"Unsupported cap sampling mode: {cap_sampling!r}. Expected one of: head, reservoir."
         )
 
     rng = random.Random(int(sampling_seed))
@@ -4105,11 +4120,13 @@ def load_binding_records_for_alleles_from_merged_tsv(
                 assay_type=(row.get("assay_type") or "").strip() or None,
                 assay_method=(row.get("assay_method") or "").strip() or None,
                 apc_name=(row.get("apc_name") or "").strip() or None,
-                effector_culture_condition=(row.get("effector_culture_condition") or "").strip() or None,
+                effector_culture_condition=(row.get("effector_culture_condition") or "").strip()
+                or None,
                 apc_culture_condition=(row.get("apc_culture_condition") or "").strip() or None,
                 in_vitro_process_type=(row.get("in_vitro_process_type") or "").strip() or None,
                 in_vitro_responder_cell=(row.get("in_vitro_responder_cell") or "").strip() or None,
-                in_vitro_stimulator_cell=(row.get("in_vitro_stimulator_cell") or "").strip() or None,
+                in_vitro_stimulator_cell=(row.get("in_vitro_stimulator_cell") or "").strip()
+                or None,
                 cdr3_alpha=None,
                 cdr3_beta=None,
                 trav=None,
@@ -4146,20 +4163,15 @@ def load_binding_records_for_alleles_from_merged_tsv(
         peptides_by_allele[rec.mhc_allele].add(rec.peptide)
         peptide_to_alleles[rec.peptide].add(rec.mhc_allele)
     shared_peptides = {
-        peptide
-        for peptide, allele_set in peptide_to_alleles.items()
-        if len(allele_set) >= 2
+        peptide for peptide, allele_set in peptide_to_alleles.items() if len(allele_set) >= 2
     }
-    shared_rows = sum(
-        1 for rec in records if rec.peptide in shared_peptides
-    )
+    shared_rows = sum(1 for rec in records if rec.peptide in shared_peptides)
     return records, {
         "rows_scanned": rows_scanned,
         "rows_selected": len(records),
         "rows_by_allele": dict(sorted(rows_by_allele.items())),
         "unique_peptides_by_allele": {
-            allele: len(peptides_by_allele.get(allele, set()))
-            for allele in sorted(target_alleles)
+            allele: len(peptides_by_allele.get(allele, set())) for allele in sorted(target_alleles)
         },
         "shared_peptides": len(shared_peptides),
         "shared_rows": shared_rows,
@@ -4223,11 +4235,13 @@ def load_probe_allele_binding_bootstrap_from_merged_tsv(
                 assay_type=(row.get("assay_type") or "").strip() or None,
                 assay_method=(row.get("assay_method") or "").strip() or None,
                 apc_name=(row.get("apc_name") or "").strip() or None,
-                effector_culture_condition=(row.get("effector_culture_condition") or "").strip() or None,
+                effector_culture_condition=(row.get("effector_culture_condition") or "").strip()
+                or None,
                 apc_culture_condition=(row.get("apc_culture_condition") or "").strip() or None,
                 in_vitro_process_type=(row.get("in_vitro_process_type") or "").strip() or None,
                 in_vitro_responder_cell=(row.get("in_vitro_responder_cell") or "").strip() or None,
-                in_vitro_stimulator_cell=(row.get("in_vitro_stimulator_cell") or "").strip() or None,
+                in_vitro_stimulator_cell=(row.get("in_vitro_stimulator_cell") or "").strip()
+                or None,
                 cdr3_alpha=None,
                 cdr3_beta=None,
                 trav=None,
@@ -4240,9 +4254,7 @@ def load_probe_allele_binding_bootstrap_from_merged_tsv(
             eligible_alleles_by_peptide[peptide].add(allele)
 
     eligible_peptides = [
-        peptide
-        for peptide, alleles in eligible_alleles_by_peptide.items()
-        if len(alleles) >= 2
+        peptide for peptide, alleles in eligible_alleles_by_peptide.items() if len(alleles) >= 2
     ]
     rng = random.Random(int(sampling_seed) + 211)
     rng.shuffle(eligible_peptides)
@@ -4298,11 +4310,13 @@ def load_probe_allele_binding_bootstrap_from_merged_tsv(
                 assay_type=(row.get("assay_type") or "").strip() or None,
                 assay_method=(row.get("assay_method") or "").strip() or None,
                 apc_name=(row.get("apc_name") or "").strip() or None,
-                effector_culture_condition=(row.get("effector_culture_condition") or "").strip() or None,
+                effector_culture_condition=(row.get("effector_culture_condition") or "").strip()
+                or None,
                 apc_culture_condition=(row.get("apc_culture_condition") or "").strip() or None,
                 in_vitro_process_type=(row.get("in_vitro_process_type") or "").strip() or None,
                 in_vitro_responder_cell=(row.get("in_vitro_responder_cell") or "").strip() or None,
-                in_vitro_stimulator_cell=(row.get("in_vitro_stimulator_cell") or "").strip() or None,
+                in_vitro_stimulator_cell=(row.get("in_vitro_stimulator_cell") or "").strip()
+                or None,
                 cdr3_alpha=None,
                 cdr3_beta=None,
                 trav=None,
@@ -4333,7 +4347,6 @@ def load_probe_allele_binding_bootstrap_from_merged_tsv(
         "selected_peptides": len(selected_peptides),
         "records_added": len(records),
     }
-
 
 
 def _assert_mhcseqs_importable() -> None:
@@ -4383,7 +4396,11 @@ def run(args: argparse.Namespace) -> None:
     run_logger = RunLogger(run_dir, config=vars(args)) if run_dir is not None else None
 
     data_dir = Path(args.data_dir)
-    merged_tsv = Path(args.merged_tsv) if getattr(args, "merged_tsv", None) else data_dir / "merged_deduped.tsv"
+    merged_tsv = (
+        Path(args.merged_tsv)
+        if getattr(args, "merged_tsv", None)
+        else data_dir / "merged_deduped.tsv"
+    )
 
     binding_records: List[BindingRecord] = []
     kinetics_records: List[KineticsRecord] = []
@@ -4425,9 +4442,7 @@ def run(args: argparse.Namespace) -> None:
         for source, count in merged_stats["rows_by_source"].items():
             print(f"    {source}: {count}")
         dropped_invalid = int(merged_stats.get("rows_dropped_invalid_peptide", 0) or 0)
-        sanitized_optional = int(
-            merged_stats.get("rows_sanitized_optional_sequences", 0) or 0
-        )
+        sanitized_optional = int(merged_stats.get("rows_sanitized_optional_sequences", 0) or 0)
         if dropped_invalid > 0 or sanitized_optional > 0:
             print(
                 "  Sequence cleanup: "
@@ -4492,9 +4507,7 @@ def run(args: argparse.Namespace) -> None:
                     "'none'. Add them to CONDITION_TO_STIMULUS:",
                     file=sys.stderr,
                 )
-                for category, count in sorted(
-                    unmapped.items(), key=lambda kv: -kv[1]
-                ):
+                for category, count in sorted(unmapped.items(), key=lambda kv: -kv[1]):
                     print(f"      {category}: {count}", file=sys.stderr)
 
         probe_family_bootstrap_records = int(
@@ -4522,10 +4535,7 @@ def run(args: argparse.Namespace) -> None:
                     sampling_seed=args.seed + 29,
                 )
             )
-            existing_binding_pairs = {
-                (rec.peptide, rec.mhc_allele)
-                for rec in binding_records
-            }
+            existing_binding_pairs = {(rec.peptide, rec.mhc_allele) for rec in binding_records}
             added = 0
             for rec in bootstrap_binding_records:
                 key = (rec.peptide, rec.mhc_allele)
@@ -4574,9 +4584,7 @@ def run(args: argparse.Namespace) -> None:
             print(f"    {assay}: {count}")
         for family, coverage in hitlist_stats["flank_coverage"].items():
             print(f"    flank coverage [{family}]: {coverage:.1%}")
-        print(
-            "    note: T-cell / TCR / processing are absent in hitlist-only mode"
-        )
+        print("    note: T-cell / TCR / processing are absent in hitlist-only mode")
     else:
         if getattr(args, "require_merged_input", True):
             raise FileNotFoundError(
@@ -4588,11 +4596,15 @@ def run(args: argparse.Namespace) -> None:
 
         print("Merged TSV not found; falling back to raw source exports.")
         iedb_dir = data_dir / "iedb"
-        binding_file = Path(args.binding_file) if args.binding_file else find_iedb_export_file(
-            iedb_dir, keywords=("mhc", "ligand")
+        binding_file = (
+            Path(args.binding_file)
+            if args.binding_file
+            else find_iedb_export_file(iedb_dir, keywords=("mhc", "ligand"))
         )
-        tcell_file = Path(args.tcell_file) if args.tcell_file else find_iedb_export_file(
-            iedb_dir, keywords=("tcell",)
+        tcell_file = (
+            Path(args.tcell_file)
+            if args.tcell_file
+            else find_iedb_export_file(iedb_dir, keywords=("tcell",))
         )
         cedar_binding_file: Optional[Path] = (
             Path(args.cedar_binding_file) if getattr(args, "cedar_binding_file", None) else None
@@ -4643,11 +4655,13 @@ def run(args: argparse.Namespace) -> None:
             max_binding=args.max_binding,
             max_elution=args.max_elution,
         )
-        primary_kinetics_records, primary_stability_records, primary_processing_records = load_iedb_additional_records(
-            binding_file=binding_file,
-            max_kinetics=args.max_kinetics,
-            max_stability=args.max_stability,
-            max_processing=args.max_processing,
+        primary_kinetics_records, primary_stability_records, primary_processing_records = (
+            load_iedb_additional_records(
+                binding_file=binding_file,
+                max_kinetics=args.max_kinetics,
+                max_stability=args.max_stability,
+                max_processing=args.max_processing,
+            )
         )
         primary_tcell_records = load_iedb_tcell_records(
             tcell_file=tcell_file,
@@ -4666,11 +4680,13 @@ def run(args: argparse.Namespace) -> None:
                 max_binding=args.max_binding,
                 max_elution=args.max_elution,
             )
-            cedar_kinetics_records, cedar_stability_records, cedar_processing_records = load_iedb_additional_records(
-                binding_file=cedar_binding_file,
-                max_kinetics=args.max_kinetics,
-                max_stability=args.max_stability,
-                max_processing=args.max_processing,
+            cedar_kinetics_records, cedar_stability_records, cedar_processing_records = (
+                load_iedb_additional_records(
+                    binding_file=cedar_binding_file,
+                    max_kinetics=args.max_kinetics,
+                    max_stability=args.max_stability,
+                    max_processing=args.max_processing,
+                )
             )
             binding_record_groups.append(cedar_binding_records)
             elution_record_groups.append(cedar_elution_records)
@@ -4805,8 +4821,7 @@ def run(args: argparse.Namespace) -> None:
 
     if invalid_alleles:
         example_text = ", ".join(
-            f"{allele}:{reason}"
-            for allele, reason in list(invalid_alleles.items())[:8]
+            f"{allele}:{reason}" for allele, reason in list(invalid_alleles.items())[:8]
         )
         if filter_unresolved_mhc:
             for allele in invalid_alleles:
@@ -4970,13 +4985,9 @@ def run(args: argparse.Namespace) -> None:
             top_msg = f" Top unresolved alleles: {top_alleles}." if top_alleles else ""
             raise RuntimeError(
                 "Unresolved MHC alleles are present in training data "
-                f"({unresolved_total} unresolved rows)."
-                + top_msg
-                + report_msg
+                f"({unresolved_total} unresolved rows)." + top_msg + report_msg
             )
-        print(
-            "WARNING: unresolved MHC alleles found in training data and strict mode is disabled."
-        )
+        print("WARNING: unresolved MHC alleles found in training data and strict mode is disabled.")
 
     # Strict mode has already raised above if it was going to, with a report
     # naming the offending alleles. This catches what strict mode does not:
@@ -4989,7 +5000,10 @@ def run(args: argparse.Namespace) -> None:
     # catalog had never been built this produced 0/88,797 resolved, no error
     # anywhere, and three epochs of wasted GPU.
     allow_zero_mhc = str(os.environ.get("PRESTO_ALLOW_ZERO_MHC", "")).strip().lower() in {
-        "1", "true", "yes", "on",
+        "1",
+        "true",
+        "yes",
+        "on",
     }
     _coverage_overall = (
         coverage_audit.get("overall", {}) if isinstance(coverage_audit, Mapping) else {}
@@ -5011,9 +5025,7 @@ def run(args: argparse.Namespace) -> None:
     synthetic_cascade_elution_ratio = (
         synthetic_pmhc_ratio * SYNTHETIC_CASCADE_ELUTION_NEGATIVE_SCALE
     )
-    synthetic_cascade_tcell_ratio = (
-        synthetic_pmhc_ratio * SYNTHETIC_CASCADE_TCELL_NEGATIVE_SCALE
-    )
+    synthetic_cascade_tcell_ratio = synthetic_pmhc_ratio * SYNTHETIC_CASCADE_TCELL_NEGATIVE_SCALE
     print(
         "Synthetic negative config: "
         f"pmhc={synthetic_pmhc_ratio:.3f}, "
@@ -5023,10 +5035,7 @@ def run(args: argparse.Namespace) -> None:
         f"derived_cascade_tcell={synthetic_cascade_tcell_ratio:.3f}"
     )
 
-    if (
-        synthetic_pmhc_ratio > 0
-        or args.synthetic_class_i_no_mhc_beta_negative_ratio > 0
-    ):
+    if synthetic_pmhc_ratio > 0 or args.synthetic_class_i_no_mhc_beta_negative_ratio > 0:
         binding_records, binding_aug_stats = augment_binding_records_with_synthetic_negatives(
             binding_records=binding_records,
             mhc_sequences=mhc_sequences,
@@ -5056,10 +5065,12 @@ def run(args: argparse.Namespace) -> None:
         print(f"Added synthetic elution negatives: {elution_aug_stats['added']}")
 
     if args.synthetic_processing_negative_ratio > 0:
-        processing_records, processing_aug_stats = augment_processing_records_with_synthetic_negatives(
-            processing_records=processing_records,
-            negative_ratio=args.synthetic_processing_negative_ratio,
-            seed=args.seed,
+        processing_records, processing_aug_stats = (
+            augment_processing_records_with_synthetic_negatives(
+                processing_records=processing_records,
+                negative_ratio=args.synthetic_processing_negative_ratio,
+                seed=args.seed,
+            )
         )
         print(f"Added synthetic processing negatives: {processing_aug_stats['added']}")
 
@@ -5085,9 +5096,7 @@ def run(args: argparse.Namespace) -> None:
         bulk_ms_records, bulk_stats = load_bulk_ms_records(
             cell_line=getattr(args, "bulk_cell_line", None) or None,
             max_records=int(getattr(args, "max_bulk_ms", 0)) or None,
-            excision_negative_ratio=float(
-                getattr(args, "bulk_excision_negative_ratio", 1.0)
-            ),
+            excision_negative_ratio=float(getattr(args, "bulk_excision_negative_ratio", 1.0)),
             seed=args.seed + 23,
         )
         print(f"Bulk (non-MHC) MS corpus: {bulk_stats['n_records']} records")
@@ -5110,9 +5119,7 @@ def run(args: argparse.Namespace) -> None:
         strict_mhc_resolution=strict_mhc_resolution,
     )
     mhc_augmentation_samples = int(getattr(args, "mhc_augmentation_samples", 0))
-    mhc_augmentation_max_fraction = float(
-        getattr(args, "mhc_augmentation_max_fraction", 0.05)
-    )
+    mhc_augmentation_max_fraction = float(getattr(args, "mhc_augmentation_max_fraction", 0.05))
     effective_mhc_augmentation_samples = _effective_mhc_augmentation_sample_limit(
         requested_samples=mhc_augmentation_samples,
         current_dataset_size=len(dataset),
@@ -5151,7 +5158,10 @@ def run(args: argparse.Namespace) -> None:
                 n_uniprot = min(n_uniprot, max_uniprot)
             if proteins and n_uniprot > 0:
                 uniprot_samples = generate_uniprot_samples(
-                    proteins, mhc_sequences, n_uniprot, seed=args.seed,
+                    proteins,
+                    mhc_sequences,
+                    n_uniprot,
+                    seed=args.seed,
                 )
                 dataset.samples.extend(uniprot_samples)
                 print(f"UniProt negatives: added {len(uniprot_samples)} samples")
@@ -5276,7 +5286,9 @@ def run(args: argparse.Namespace) -> None:
     regularization_cfg = _regularization_config_from_args(args)
     track_probe_affinity = bool(getattr(args, "track_probe_affinity", True))
     track_probe_motif_scan = bool(getattr(args, "track_probe_motif_scan", True))
-    motif_scan_amino_acids = str(getattr(args, "motif_scan_amino_acids", AMINO_ACIDS) or AMINO_ACIDS)
+    motif_scan_amino_acids = str(
+        getattr(args, "motif_scan_amino_acids", AMINO_ACIDS) or AMINO_ACIDS
+    )
     motif_scan_positions_text = str(getattr(args, "motif_scan_positions", "2,9") or "2,9")
     track_pmhc_flow = bool(getattr(args, "track_pmhc_flow", True))
     pmhc_flow_batches = max(0, int(getattr(args, "pmhc_flow_batches", 2)))
@@ -5464,8 +5476,10 @@ def run(args: argparse.Namespace) -> None:
                 print(
                     "  Perf (% epoch): "
                     f"wait={float(train_task_losses.get('perf_data_wait_pct_epoch', 0.0)):.1f}%, "
-                    f"compute={float(train_task_losses.get('perf_compute_loss_pct_epoch', 0.0)):.1f}%, "
-                    f"backward={float(train_task_losses.get('perf_backward_pct_epoch', 0.0)):.1f}%, "
+                    f"compute="
+                    f"{float(train_task_losses.get('perf_compute_loss_pct_epoch', 0.0)):.1f}%, "
+                    f"backward="
+                    f"{float(train_task_losses.get('perf_backward_pct_epoch', 0.0)):.1f}%, "
                     f"optim={float(train_task_losses.get('perf_optimizer_pct_epoch', 0.0)):.1f}%"
                 )
                 if perf_wait > max(perf_compute + perf_backward + perf_optim, 0.0):
@@ -5477,7 +5491,9 @@ def run(args: argparse.Namespace) -> None:
                     "  GPU peak: "
                     f"allocated={gpu_metrics['gpu_peak_allocated_gib']:.2f} GiB, "
                     f"reserved={gpu_metrics['gpu_peak_reserved_gib']:.2f} GiB, "
-                    f"alloc/row≈{gpu_metrics['gpu_peak_allocated_bytes_per_batch_row'] / (1024**2):.2f} MiB"
+                    f"alloc/row≈"
+                    f"{gpu_metrics['gpu_peak_allocated_bytes_per_batch_row'] / (1024**2):.2f}"
+                    f" MiB"
                 )
             if probe_rows:
                 probe_text = ", ".join(
@@ -5495,12 +5511,14 @@ def run(args: argparse.Namespace) -> None:
                     ranked = sorted(rows, key=lambda r: float(r["binding_prob"]), reverse=True)
                     top = ranked[0]
                     wt = next((r for r in ranked if str(r["sub_aa"]) == str(r["wt_aa"])), None)
-                    wt_rank = (
-                        1 + next((i for i, r in enumerate(ranked) if str(r["sub_aa"]) == str(r["wt_aa"])), len(ranked))
+                    wt_rank = 1 + next(
+                        (i for i, r in enumerate(ranked) if str(r["sub_aa"]) == str(r["wt_aa"])),
+                        len(ranked),
                     )
                     if wt is not None:
                         summary_chunks.append(
-                            f"{allele} P{pos} top={top['sub_aa']}({float(top['binding_prob']):.3f}) "
+                            f"{allele} P{pos} top={top['sub_aa']}"
+                            f"({float(top['binding_prob']):.3f}) "
                             f"wt={wt['wt_aa']} rank={wt_rank}"
                         )
                 if summary_chunks:
@@ -5528,13 +5546,9 @@ def run(args: argparse.Namespace) -> None:
                     f"[{status_text}]"
                 )
             if output_latent_metrics:
-                pmhc_var = float(
-                    output_latent_metrics.get("diag_pmhc_vec_feature_var_mean", 0.0)
-                )
+                pmhc_var = float(output_latent_metrics.get("diag_pmhc_vec_feature_var_mean", 0.0))
                 bind_var = float(output_latent_metrics.get("diag_binding_logit_var", 0.0))
-                pres_var = float(
-                    output_latent_metrics.get("diag_presentation_logit_var", 0.0)
-                )
+                pres_var = float(output_latent_metrics.get("diag_presentation_logit_var", 0.0))
                 print(
                     "  Output/latent diagnostics: "
                     f"pmhc_vec_var={pmhc_var:.4f}, "
@@ -5600,7 +5614,9 @@ def run(args: argparse.Namespace) -> None:
             probe_json = run_dir / "probe_affinity_over_epochs.json"
             probe_json.write_text(json.dumps(probe_history, indent=2), encoding="utf-8")
         if run_dir is not None and motif_history:
-            motif_artifacts = _write_probe_motif_artifacts(run_dir=run_dir, motif_history=motif_history)
+            motif_artifacts = _write_probe_motif_artifacts(
+                run_dir=run_dir, motif_history=motif_history
+            )
             motif_csv = motif_artifacts.get("csv")
             if motif_csv is not None:
                 print(f"Probe motif scan saved to {motif_csv}")
@@ -5720,7 +5736,13 @@ def main(argv=None):
             "(canary: fast smoke run; diagnostic: richer coverage/flow/latent diagnostics)"
         ),
     )
-    parser.add_argument("--data-dir", dest="data_dir", type=str, default="./data", help="Data directory with downloaded datasets")
+    parser.add_argument(
+        "--data-dir",
+        dest="data_dir",
+        type=str,
+        default="./data",
+        help="Data directory with downloaded datasets",
+    )
     parser.add_argument(
         "--merged-tsv",
         type=str,
@@ -5740,29 +5762,47 @@ def main(argv=None):
         action="store_false",
         help="Allow fallback to raw source exports when merged TSV is unavailable",
     )
-    parser.add_argument("--binding-file", type=str, default=None, help="Override path to IEDB MHC ligand export")
-    parser.add_argument("--tcell-file", type=str, default=None, help="Override path to IEDB T-cell export")
-    parser.add_argument("--cedar-binding-file", type=str, default=None, help="Optional path to CEDAR MHC ligand export")
-    parser.add_argument("--cedar-tcell-file", type=str, default=None, help="Optional path to CEDAR T-cell export")
+    parser.add_argument(
+        "--binding-file", type=str, default=None, help="Override path to IEDB MHC ligand export"
+    )
+    parser.add_argument(
+        "--tcell-file", type=str, default=None, help="Override path to IEDB T-cell export"
+    )
+    parser.add_argument(
+        "--cedar-binding-file",
+        type=str,
+        default=None,
+        help="Optional path to CEDAR MHC ligand export",
+    )
+    parser.add_argument(
+        "--cedar-tcell-file", type=str, default=None, help="Optional path to CEDAR T-cell export"
+    )
     parser.add_argument(
         "--vdjdb-file",
         type=str,
         default=None,
         help="Override path to VDJdb export used for pMHC-only TCR-evidence supervision",
     )
-    parser.add_argument("--index-csv", type=str, default=None, help="Optional built MHC index CSV for allele->sequence resolution")
+    parser.add_argument(
+        "--index-csv",
+        type=str,
+        default=None,
+        help="Optional built MHC index CSV for allele->sequence resolution",
+    )
     parser.add_argument(
         "--strict-mhc-resolution",
         dest="strict_mhc_resolution",
         action="store_true",
         default=True,
-        help="Require all non-ablation MHC alleles to resolve to amino-acid sequences (default: true)",
+        help="Require all non-ablation MHC alleles to resolve to amino-acid sequences (default: "
+            "true)",
     )
     parser.add_argument(
         "--allow-unresolved-mhc",
         dest="strict_mhc_resolution",
         action="store_false",
-        help="Allow unresolved MHC alleles (debug only; unresolved MHC chains become empty sequences)",
+        help="Allow unresolved MHC alleles (debug only; unresolved MHC chains become empty "
+            "sequences)",
     )
     parser.add_argument(
         "--filter-unresolved-mhc",
@@ -5770,8 +5810,7 @@ def main(argv=None):
         action="store_true",
         default=True,
         help=(
-            "Drop unresolved-MHC rows before dataset construction "
-            "(resolved-only training subset)"
+            "Drop unresolved-MHC rows before dataset construction (resolved-only training subset)"
         ),
     )
     parser.add_argument(
@@ -5780,12 +5819,39 @@ def main(argv=None):
         action="store_false",
         help="Disable unresolved-MHC row filtering",
     )
-    parser.add_argument("--max-binding", type=int, default=0, help="Max binding records to load (<=0 means no limit)")
-    parser.add_argument("--max-kinetics", type=int, default=0, help="Max kinetics records to load (<=0 means no limit)")
-    parser.add_argument("--max-stability", type=int, default=0, help="Max stability records to load (<=0 means no limit)")
-    parser.add_argument("--max-processing", type=int, default=0, help="Max processing records to load (<=0 means no limit)")
-    parser.add_argument("--max-elution", type=int, default=0, help="Max elution records to load (<=0 means no limit)")
-    parser.add_argument("--max-tcell", type=int, default=0, help="Max T-cell records to load (<=0 means no limit)")
+    parser.add_argument(
+        "--max-binding",
+        type=int,
+        default=0,
+        help="Max binding records to load (<=0 means no limit)",
+    )
+    parser.add_argument(
+        "--max-kinetics",
+        type=int,
+        default=0,
+        help="Max kinetics records to load (<=0 means no limit)",
+    )
+    parser.add_argument(
+        "--max-stability",
+        type=int,
+        default=0,
+        help="Max stability records to load (<=0 means no limit)",
+    )
+    parser.add_argument(
+        "--max-processing",
+        type=int,
+        default=0,
+        help="Max processing records to load (<=0 means no limit)",
+    )
+    parser.add_argument(
+        "--max-elution",
+        type=int,
+        default=0,
+        help="Max elution records to load (<=0 means no limit)",
+    )
+    parser.add_argument(
+        "--max-tcell", type=int, default=0, help="Max T-cell records to load (<=0 means no limit)"
+    )
     parser.add_argument(
         "--max-vdjdb",
         type=int,
@@ -5948,7 +6014,9 @@ def main(argv=None):
     parser.add_argument("--n_layers", type=int, default=2, help="Number of layers")
     parser.add_argument("--n_heads", type=int, default=4, help="Number of attention heads")
     parser.add_argument("--checkpoint", type=str, default=None, help="Save checkpoint path")
-    parser.add_argument("--run-dir", dest="run_dir", type=str, default=None, help="Run artifact directory")
+    parser.add_argument(
+        "--run-dir", dest="run_dir", type=str, default=None, help="Run artifact directory"
+    )
     parser.add_argument("--weight_decay", type=float, default=0.01, help="Weight decay")
     parser.add_argument(
         "--use-uncertainty-weighting",
@@ -5996,7 +6064,9 @@ def main(argv=None):
             "(0 disables rolling perf logs)"
         ),
     )
-    parser.add_argument("--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradient conflicts")
+    parser.add_argument(
+        "--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradient conflicts"
+    )
     parser.add_argument(
         "--consistency-cascade-weight",
         type=float,

@@ -5,12 +5,10 @@ import tempfile
 import zipfile
 from pathlib import Path
 
-import pytest
 
 import presto.data.downloaders as downloaders
 from presto.data.downloaders import (
     DATASETS,
-    DatasetInfo,
     DownloadManifest,
     DownloadState,
     ReferenceInfo,
@@ -249,9 +247,15 @@ class TestAssayDeduplicator:
         """Multiple values from same reference are aggregated by median."""
         ref = ReferenceInfo(pubmed_id="12345")
         records = [
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=10.0, value_type="IC50", reference=ref),
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=20.0, value_type="IC50", reference=ref),
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=30.0, value_type="IC50", reference=ref),
+            AssayRecord(
+                peptide="AAA", mhc_allele="HLA-A", value=10.0, value_type="IC50", reference=ref
+            ),
+            AssayRecord(
+                peptide="AAA", mhc_allele="HLA-A", value=20.0, value_type="IC50", reference=ref
+            ),
+            AssayRecord(
+                peptide="AAA", mhc_allele="HLA-A", value=30.0, value_type="IC50", reference=ref
+            ),
         ]
         deduplicator = AssayDeduplicator(aggregate_same_ref="median")
         result = deduplicator.deduplicate(records)
@@ -262,9 +266,15 @@ class TestAssayDeduplicator:
         """Multiple values from same reference can be aggregated by mean."""
         ref = ReferenceInfo(pubmed_id="12345")
         records = [
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=10.0, value_type="IC50", reference=ref),
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=20.0, value_type="IC50", reference=ref),
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=30.0, value_type="IC50", reference=ref),
+            AssayRecord(
+                peptide="AAA", mhc_allele="HLA-A", value=10.0, value_type="IC50", reference=ref
+            ),
+            AssayRecord(
+                peptide="AAA", mhc_allele="HLA-A", value=20.0, value_type="IC50", reference=ref
+            ),
+            AssayRecord(
+                peptide="AAA", mhc_allele="HLA-A", value=30.0, value_type="IC50", reference=ref
+            ),
         ]
         deduplicator = AssayDeduplicator(aggregate_same_ref="mean")
         result = deduplicator.deduplicate(records)
@@ -276,8 +286,12 @@ class TestAssayDeduplicator:
         ref_old = ReferenceInfo(pubmed_id="11111", year=2010)
         ref_new = ReferenceInfo(pubmed_id="22222", year=2020)
         records = [
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=10.0, value_type="IC50", reference=ref_old),
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=20.0, value_type="IC50", reference=ref_new),
+            AssayRecord(
+                peptide="AAA", mhc_allele="HLA-A", value=10.0, value_type="IC50", reference=ref_old
+            ),
+            AssayRecord(
+                peptide="AAA", mhc_allele="HLA-A", value=20.0, value_type="IC50", reference=ref_new
+            ),
         ]
         deduplicator = AssayDeduplicator(prefer_recent=True)
         result = deduplicator.deduplicate(records)
@@ -289,10 +303,22 @@ class TestAssayDeduplicator:
         ref1 = ReferenceInfo(pubmed_id="11111")
         ref2 = ReferenceInfo(pubmed_id="22222")
         records = [
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=10.0, value_type="IC50",
-                       qualifier=-1, reference=ref1),  # <10
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=20.0, value_type="IC50",
-                       qualifier=0, reference=ref2),  # =20
+            AssayRecord(
+                peptide="AAA",
+                mhc_allele="HLA-A",
+                value=10.0,
+                value_type="IC50",
+                qualifier=-1,
+                reference=ref1,
+            ),  # <10
+            AssayRecord(
+                peptide="AAA",
+                mhc_allele="HLA-A",
+                value=20.0,
+                value_type="IC50",
+                qualifier=0,
+                reference=ref2,
+            ),  # =20
         ]
         deduplicator = AssayDeduplicator(prefer_exact=True, prefer_recent=False)
         result = deduplicator.deduplicate(records)
@@ -303,8 +329,12 @@ class TestAssayDeduplicator:
         """Deduplicator tracks statistics."""
         ref = ReferenceInfo(pubmed_id="12345")
         records = [
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=10.0, value_type="IC50", reference=ref),
-            AssayRecord(peptide="AAA", mhc_allele="HLA-A", value=20.0, value_type="IC50", reference=ref),
+            AssayRecord(
+                peptide="AAA", mhc_allele="HLA-A", value=10.0, value_type="IC50", reference=ref
+            ),
+            AssayRecord(
+                peptide="AAA", mhc_allele="HLA-A", value=20.0, value_type="IC50", reference=ref
+            ),
         ]
         deduplicator = AssayDeduplicator()
         deduplicator.deduplicate(records)

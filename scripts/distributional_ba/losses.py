@@ -15,6 +15,7 @@ import torch.nn.functional as F
 # Regression losses
 # ---------------------------------------------------------------------------
 
+
 def mhcflurry_censored_loss(
     pred_bounded: torch.Tensor,
     target_bounded: torch.Tensor,
@@ -66,6 +67,7 @@ def log_censored_mse(
 # ---------------------------------------------------------------------------
 # Distributional losses
 # ---------------------------------------------------------------------------
+
 
 def distributional_cross_entropy(
     logits: torch.Tensor,
@@ -216,8 +218,10 @@ def censored_gaussian_nll(
     # direction=1: (mu - t)/sigma ✓
     # direction=-1: (t - mu)/sigma = -1 * (mu - t)/sigma ... so arg = -direction * (mu - t)/sigma?
     # No: direction=-1: arg = (t - mu)/sigma = (-1) * (mu - t)/sigma
-    # And we want: direction * (mu - t) / sigma?  For dir=1: (mu-t)/sigma ✓. For dir=-1: -(mu-t)/sigma = (t-mu)/sigma ✓
-    # Wait that's wrong. direction * (mu - t) / sigma for dir=-1 gives -1*(mu-t)/sigma = (t-mu)/sigma ✓
+    # And we want: direction * (mu - t) / sigma?  For dir=1: (mu-t)/sigma ✓. For dir=-1:
+    # -(mu-t)/sigma = (t-mu)/sigma ✓
+    # Wait that's wrong. direction * (mu - t) / sigma for dir=-1 gives -1*(mu-t)/sigma =
+    # (t-mu)/sigma ✓
 
     phi_arg = direction.float() * (mu - threshold_y) / sigma_safe
     # Phi(x) = 0.5 * (1 + erf(x / sqrt(2)))
@@ -228,6 +232,7 @@ def censored_gaussian_nll(
 # ---------------------------------------------------------------------------
 # Quantile losses
 # ---------------------------------------------------------------------------
+
 
 def censored_pinball_loss(
     quantiles: torch.Tensor,
@@ -255,8 +260,8 @@ def censored_pinball_loss(
         (B, Q) per-example per-quantile loss.
     """
     target_exp = target.unsqueeze(-1).expand_as(quantiles)  # (B, Q)
-    tau_exp = tau.unsqueeze(0).expand_as(quantiles)          # (B, Q)
-    dir_exp = direction.unsqueeze(-1).expand_as(quantiles)   # (B, Q)
+    tau_exp = tau.unsqueeze(0).expand_as(quantiles)  # (B, Q)
+    dir_exp = direction.unsqueeze(-1).expand_as(quantiles)  # (B, Q)
 
     residual = target_exp - quantiles  # positive when under-predicting
 
@@ -283,6 +288,7 @@ def censored_pinball_loss(
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def _masked_mean(loss: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
     """Mean of loss over masked (valid) elements."""

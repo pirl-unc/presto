@@ -50,7 +50,9 @@ class HistoricalAblationEncoder(nn.Module):
 
     def _encode_segment(self, tok: torch.Tensor) -> torch.Tensor:
         batch_size, seq_len = tok.shape
-        positions = torch.arange(seq_len, device=tok.device).unsqueeze(0).expand(batch_size, seq_len)
+        positions = (
+            torch.arange(seq_len, device=tok.device).unsqueeze(0).expand(batch_size, seq_len)
+        )
         x = self.aa_embedding(tok) + self.pos_embedding(positions)
         pad_mask = tok == 0
         x = self.encoder(x, src_key_padding_mask=pad_mask)

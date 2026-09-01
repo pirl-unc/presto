@@ -55,7 +55,9 @@ class DistributionalBase(AffinityHead):
         elif assay_mode == "d2_logit":
             self.integration = D2LogitIntegration(ctx_dim, n_bins)
         else:
-            raise ValueError(f"Distributional heads require d1_affine or d2_logit, got {assay_mode}")
+            raise ValueError(
+                f"Distributional heads require d1_affine or d2_logit, got {assay_mode}"
+            )
 
     def _nm_to_log1p(self, ic50_nM: torch.Tensor) -> torch.Tensor:
         return torch.log(1.0 + ic50_nM.clamp(min=0.0, max=self.max_nM))
@@ -132,8 +134,8 @@ class DistributionalBase(AffinityHead):
 
         y = self._nm_to_log1p(ic50_nM)
 
-        is_exact = (qual == 0)
-        is_censored = (qual != 0)
+        is_exact = qual == 0
+        is_censored = qual != 0
 
         # --- Exact samples: cross-entropy with soft target ---
         if centers.dim() == 1:
@@ -155,8 +157,16 @@ class DistributionalBase(AffinityHead):
         exact_mask = mask * is_exact.float()
         censor_mask = mask * is_censored.float()
 
-        loss_exact = _masked_mean(ce, exact_mask) if exact_mask.sum() > 0 else torch.tensor(0.0, device=h.device)
-        loss_censor = _masked_mean(surv, censor_mask) if censor_mask.sum() > 0 else torch.tensor(0.0, device=h.device)
+        loss_exact = (
+            _masked_mean(ce, exact_mask)
+            if exact_mask.sum() > 0
+            else torch.tensor(0.0, device=h.device)
+        )
+        loss_censor = (
+            _masked_mean(surv, censor_mask)
+            if censor_mask.sum() > 0
+            else torch.tensor(0.0, device=h.device)
+        )
 
         # Weight by fraction of samples
         n_exact = exact_mask.sum().clamp(min=1.0)

@@ -51,13 +51,17 @@ class MHCPretrainWrapper(nn.Module):
         self.species_b_head = nn.Linear(d, N_SPECIES)
 
     def forward(
-        self, mhc_a_tok: torch.Tensor, mhc_b_tok: torch.Tensor,
+        self,
+        mhc_a_tok: torch.Tensor,
+        mhc_b_tok: torch.Tensor,
     ) -> Dict[str, torch.Tensor]:
         mhc_a_vec = self.encoder._encode_segment(
-            mhc_a_tok, pos_mode=self.encoder.groove_pos_mode,
+            mhc_a_tok,
+            pos_mode=self.encoder.groove_pos_mode,
         )
         mhc_b_vec = self.encoder._encode_segment(
-            mhc_b_tok, pos_mode=self.encoder.groove_pos_mode,
+            mhc_b_tok,
+            pos_mode=self.encoder.groove_pos_mode,
         )
         return {
             "mhc_a_type_logits": self.type_a_head(mhc_a_vec),
@@ -180,13 +184,17 @@ def main() -> None:
         raise FileNotFoundError(f"MHC index not found: {index_csv}")
 
     samples, dataset_stats = build_mhc_warmstart_samples(
-        index_csv, max_samples=args.max_samples, seed=args.seed,
+        index_csv,
+        max_samples=args.max_samples,
+        seed=args.seed,
     )
     if not samples:
         raise RuntimeError("No MHC samples built from the index")
 
     train_samples, val_samples, split_stats = _split_samples(
-        samples, val_fraction=args.val_fraction, seed=args.seed,
+        samples,
+        val_fraction=args.val_fraction,
+        seed=args.seed,
     )
 
     train_ds = MHCWarmStartDataset(train_samples)
@@ -194,14 +202,19 @@ def main() -> None:
     train_loader = DataLoader(
         train_ds,
         batch_sampler=GroupBalancedBatchSampler(
-            train_ds, batch_size=args.batch_size, seed=args.seed,
+            train_ds,
+            batch_size=args.batch_size,
+            seed=args.seed,
         ),
         collate_fn=lambda items: items,
         num_workers=0,
     )
     val_loader = DataLoader(
-        val_ds, batch_size=args.batch_size, shuffle=False,
-        collate_fn=lambda items: items, num_workers=0,
+        val_ds,
+        batch_size=args.batch_size,
+        shuffle=False,
+        collate_fn=lambda items: items,
+        num_workers=0,
     )
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -214,27 +227,43 @@ def main() -> None:
     )
     wrapper = MHCPretrainWrapper(encoder).to(device)
     optimizer = torch.optim.AdamW(
-        wrapper.parameters(), lr=args.lr, weight_decay=args.weight_decay,
+        wrapper.parameters(),
+        lr=args.lr,
+        weight_decay=args.weight_decay,
     )
     tokenizer = Tokenizer()
 
-    print(json.dumps({
-        "event": "mhc_pretrain_groove_setup",
-        "rows": len(samples),
-        "train_rows": len(train_samples),
-        "val_rows": len(val_samples),
-        "embed_dim": args.embed_dim,
-        "device": device,
-        "dataset_stats": dataset_stats,
-    }, sort_keys=True), flush=True)
+    print(
+        json.dumps(
+            {
+                "event": "mhc_pretrain_groove_setup",
+                "rows": len(samples),
+                "train_rows": len(train_samples),
+                "val_rows": len(val_samples),
+                "embed_dim": args.embed_dim,
+                "device": device,
+                "dataset_stats": dataset_stats,
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
 
     epochs_log: List[Dict[str, Any]] = []
     for epoch in range(1, args.epochs + 1):
         train_metrics = _epoch_pass(
-            wrapper, train_loader, tokenizer, device=device, optimizer=optimizer,
+            wrapper,
+            train_loader,
+            tokenizer,
+            device=device,
+            optimizer=optimizer,
         )
         val_metrics = _epoch_pass(
-            wrapper, val_loader, tokenizer, device=device, optimizer=None,
+            wrapper,
+            val_loader,
+            tokenizer,
+            device=device,
+            optimizer=None,
         )
         row = {
             "epoch": epoch,
@@ -266,7 +295,12 @@ def main() -> None:
         "encoder_checkpoint": str(encoder_path),
     }
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True))
-    print(json.dumps({"event": "mhc_pretrain_done", "encoder_path": str(encoder_path)}, sort_keys=True), flush=True)
+    print(
+        json.dumps(
+            {"event": "mhc_pretrain_done", "encoder_path": str(encoder_path)}, sort_keys=True
+        ),
+        flush=True,
+    )
 
 
 if __name__ == "__main__":

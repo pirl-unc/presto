@@ -434,7 +434,9 @@ class TestPredictPresentationCalibration:
     """Tests for calibrated binding probability from KD predictions."""
 
     class _DummyModel(torch.nn.Module):
-        def __init__(self, kd_log10: float = 3.0, binding_logit: float = 0.0, include_kd: bool = True):
+        def __init__(
+            self, kd_log10: float = 3.0, binding_logit: float = 0.0, include_kd: bool = True
+        ):
             super().__init__()
             self.kd_log10 = kd_log10
             self.binding_logit = binding_logit
@@ -490,7 +492,9 @@ class TestPredictPresentationCalibration:
             mhc_sequence="MAVMAPRTLLLLLSGALALTQTWAG",
             species="human",
         )
-        assert pytest.approx(result.binding_prob, rel=1e-4) == float(torch.sigmoid(torch.tensor(-2.0)))
+        assert pytest.approx(result.binding_prob, rel=1e-4) == float(
+            torch.sigmoid(torch.tensor(-2.0))
+        )
 
     def test_uses_model_binding_calibration_by_default(self):
         model = self._DummyModel(kd_log10=3.2, binding_logit=0.0, include_kd=True)
@@ -505,7 +509,10 @@ class TestPredictPresentationCalibration:
         expected = 1.0 / (
             1.0
             + math.exp(
-                -((math.log10(model.binding_midpoint_nM) - model.kd_log10) / model.binding_log10_scale)
+                -(
+                    (math.log10(model.binding_midpoint_nM) - model.kd_log10)
+                    / model.binding_log10_scale
+                )
             )
         )
         assert result.binding_prob == pytest.approx(expected, rel=1e-6)

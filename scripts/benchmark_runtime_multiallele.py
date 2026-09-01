@@ -25,19 +25,32 @@ BASE_ALLELES = (
     "HLA-B*44:02",
 )
 BASE_EXTRA_ARGS = [
-    "--source", "iedb",
-    "--alleles", ",".join(BASE_ALLELES),
-    "--probe-peptide", "SLLQHLIGL",
-    "--extra-probe-peptides", "FLRYLLFGI,NFLIKFLLI",
-    "--measurement-profile", "all_binding_rows",
-    "--qualifier-filter", "all",
-    "--groove-pos-mode", "triple",
-    "--binding-core-lengths", "8,9,10,11",
-    "--binding-core-refinement", "shared",
-    "--affinity-loss-mode", "assay_heads_only",
-    "--binding-contrastive-weight", "1.0",
-    "--binding-peptide-contrastive-weight", "0.5",
-    "--init-checkpoint", "/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt",
+    "--source",
+    "iedb",
+    "--alleles",
+    ",".join(BASE_ALLELES),
+    "--probe-peptide",
+    "SLLQHLIGL",
+    "--extra-probe-peptides",
+    "FLRYLLFGI,NFLIKFLLI",
+    "--measurement-profile",
+    "all_binding_rows",
+    "--qualifier-filter",
+    "all",
+    "--groove-pos-mode",
+    "triple",
+    "--binding-core-lengths",
+    "8,9,10,11",
+    "--binding-core-refinement",
+    "shared",
+    "--affinity-loss-mode",
+    "assay_heads_only",
+    "--binding-contrastive-weight",
+    "1.0",
+    "--binding-peptide-contrastive-weight",
+    "0.5",
+    "--init-checkpoint",
+    "/checkpoints/mhc-pretrain-20260308b/mhc_pretrain.pt",
 ]
 
 
@@ -51,20 +64,136 @@ class Variant:
 VARIANTS: Sequence[Variant] = (
     Variant("R00", "nw=0 pin=0 tf32=0", ("--no-persistent-workers",)),
     Variant("R01", "nw=0 pin=1 tf32=0", ("--pin-memory", "--no-persistent-workers")),
-    Variant("R02", "nw=0 pin=0 tf32=1", ("--allow-tf32", "--matmul-precision", "high", "--no-persistent-workers")),
-    Variant("R03", "nw=0 pin=1 tf32=1", ("--pin-memory", "--allow-tf32", "--matmul-precision", "high", "--no-persistent-workers")),
-    Variant("R04", "nw=2 pin=1 persist=0 p2 tf32=0", ("--num-workers", "2", "--pin-memory", "--no-persistent-workers", "--prefetch-factor", "2")),
-    Variant("R05", "nw=4 pin=1 persist=0 p2 tf32=0", ("--num-workers", "4", "--pin-memory", "--no-persistent-workers", "--prefetch-factor", "2")),
-    Variant("R06", "nw=8 pin=1 persist=0 p2 tf32=0", ("--num-workers", "8", "--pin-memory", "--no-persistent-workers", "--prefetch-factor", "2")),
-    Variant("R07", "nw=2 pin=1 persist=1 p2 tf32=0", ("--num-workers", "2", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2")),
-    Variant("R08", "nw=4 pin=1 persist=1 p2 tf32=0", ("--num-workers", "4", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2")),
-    Variant("R09", "nw=8 pin=1 persist=1 p2 tf32=0", ("--num-workers", "8", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2")),
-    Variant("R10", "nw=2 pin=1 persist=0 p2 tf32=1", ("--num-workers", "2", "--pin-memory", "--no-persistent-workers", "--prefetch-factor", "2", "--allow-tf32", "--matmul-precision", "high")),
-    Variant("R11", "nw=4 pin=1 persist=0 p2 tf32=1", ("--num-workers", "4", "--pin-memory", "--no-persistent-workers", "--prefetch-factor", "2", "--allow-tf32", "--matmul-precision", "high")),
-    Variant("R12", "nw=8 pin=1 persist=0 p2 tf32=1", ("--num-workers", "8", "--pin-memory", "--no-persistent-workers", "--prefetch-factor", "2", "--allow-tf32", "--matmul-precision", "high")),
-    Variant("R13", "nw=2 pin=1 persist=1 p2 tf32=1", ("--num-workers", "2", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2", "--allow-tf32", "--matmul-precision", "high")),
-    Variant("R14", "nw=4 pin=1 persist=1 p2 tf32=1", ("--num-workers", "4", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2", "--allow-tf32", "--matmul-precision", "high")),
-    Variant("R15", "nw=8 pin=1 persist=1 p2 tf32=1", ("--num-workers", "8", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2", "--allow-tf32", "--matmul-precision", "high")),
+    Variant(
+        "R02",
+        "nw=0 pin=0 tf32=1",
+        ("--allow-tf32", "--matmul-precision", "high", "--no-persistent-workers"),
+    ),
+    Variant(
+        "R03",
+        "nw=0 pin=1 tf32=1",
+        ("--pin-memory", "--allow-tf32", "--matmul-precision", "high", "--no-persistent-workers"),
+    ),
+    Variant(
+        "R04",
+        "nw=2 pin=1 persist=0 p2 tf32=0",
+        ("--num-workers", "2", "--pin-memory", "--no-persistent-workers", "--prefetch-factor", "2"),
+    ),
+    Variant(
+        "R05",
+        "nw=4 pin=1 persist=0 p2 tf32=0",
+        ("--num-workers", "4", "--pin-memory", "--no-persistent-workers", "--prefetch-factor", "2"),
+    ),
+    Variant(
+        "R06",
+        "nw=8 pin=1 persist=0 p2 tf32=0",
+        ("--num-workers", "8", "--pin-memory", "--no-persistent-workers", "--prefetch-factor", "2"),
+    ),
+    Variant(
+        "R07",
+        "nw=2 pin=1 persist=1 p2 tf32=0",
+        ("--num-workers", "2", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2"),
+    ),
+    Variant(
+        "R08",
+        "nw=4 pin=1 persist=1 p2 tf32=0",
+        ("--num-workers", "4", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2"),
+    ),
+    Variant(
+        "R09",
+        "nw=8 pin=1 persist=1 p2 tf32=0",
+        ("--num-workers", "8", "--pin-memory", "--persistent-workers", "--prefetch-factor", "2"),
+    ),
+    Variant(
+        "R10",
+        "nw=2 pin=1 persist=0 p2 tf32=1",
+        (
+            "--num-workers",
+            "2",
+            "--pin-memory",
+            "--no-persistent-workers",
+            "--prefetch-factor",
+            "2",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ),
+    ),
+    Variant(
+        "R11",
+        "nw=4 pin=1 persist=0 p2 tf32=1",
+        (
+            "--num-workers",
+            "4",
+            "--pin-memory",
+            "--no-persistent-workers",
+            "--prefetch-factor",
+            "2",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ),
+    ),
+    Variant(
+        "R12",
+        "nw=8 pin=1 persist=0 p2 tf32=1",
+        (
+            "--num-workers",
+            "8",
+            "--pin-memory",
+            "--no-persistent-workers",
+            "--prefetch-factor",
+            "2",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ),
+    ),
+    Variant(
+        "R13",
+        "nw=2 pin=1 persist=1 p2 tf32=1",
+        (
+            "--num-workers",
+            "2",
+            "--pin-memory",
+            "--persistent-workers",
+            "--prefetch-factor",
+            "2",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ),
+    ),
+    Variant(
+        "R14",
+        "nw=4 pin=1 persist=1 p2 tf32=1",
+        (
+            "--num-workers",
+            "4",
+            "--pin-memory",
+            "--persistent-workers",
+            "--prefetch-factor",
+            "2",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ),
+    ),
+    Variant(
+        "R15",
+        "nw=8 pin=1 persist=1 p2 tf32=1",
+        (
+            "--num-workers",
+            "8",
+            "--pin-memory",
+            "--persistent-workers",
+            "--prefetch-factor",
+            "2",
+            "--allow-tf32",
+            "--matmul-precision",
+            "high",
+        ),
+    ),
 )
 
 
@@ -85,7 +214,10 @@ def _write_manifest(output_dir: Path, rows: List[Dict[str, Any]]) -> None:
     ]
     for row in rows:
         lines.append(
-            f"| `{row['variant_id']}` | {row['description']} | `{row['run_id']}` | `{row.get('app_id', '')}` | {row.get('url', '')} |"
+            (
+                f"| `{row['variant_id']}` | {row['description']} | `{row['run_id']}` | "
+                f"`{row.get('app_id', '')}` | {row.get('url', '')} |"
+            )
         )
     (output_dir / "variants.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
@@ -268,7 +400,8 @@ def _write_summary(output_dir: Path, rows: Sequence[Mapping[str, Any]]) -> None:
     lines = [
         "# Multi-Allele Runtime Benchmark",
         "",
-        "| variant | epoch wall s | setup s | gpu util mean % | val loss | `SLLQHLIGL` A02 / A24 | ratio | correct probes |",
+        "| variant | epoch wall s | setup s | gpu util mean % | val loss | `SLLQHLIGL` A02 / "
+            "A24 | ratio | correct probes |",
         "| --- | ---: | ---: | ---: | ---: | --- | ---: | ---: |",
     ]
     for row in rows:
@@ -282,7 +415,9 @@ def _write_summary(output_dir: Path, rows: Sequence[Mapping[str, Any]]) -> None:
         setup_wall_text = f"{float(setup_wall):.2f}" if isinstance(setup_wall, (int, float)) else ""
         gpu_util_text = f"{float(gpu_util):.1f}" if isinstance(gpu_util, (int, float)) else ""
         val_loss_text = f"{float(val_loss):.4f}" if isinstance(val_loss, (int, float)) else ""
-        ratio_text = f"{ratio:.1f}x" if isinstance(ratio, (int, float)) and math.isfinite(ratio) else ""
+        ratio_text = (
+            f"{ratio:.1f}x" if isinstance(ratio, (int, float)) and math.isfinite(ratio) else ""
+        )
         lines.append(
             f"| `{row['variant_id']}` | "
             f"{epoch_wall_text} | "
@@ -374,12 +509,16 @@ def collect(args: argparse.Namespace) -> None:
             float(row.get("epoch_wall_s_mean") or float("inf")),
         ),
     )
-    _write_summary(output_dir, ok_rows_sorted + [row for row in result_rows if row.get("status") != "ok"])
+    _write_summary(
+        output_dir, ok_rows_sorted + [row for row in result_rows if row.get("status") != "ok"]
+    )
     print(json.dumps({"rows": result_rows, "top": ok_rows_sorted[:3]}, indent=2), flush=True)
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Launch/collect the 44k multi-allele runtime benchmark")
+    parser = argparse.ArgumentParser(
+        description="Launch/collect the 44k multi-allele runtime benchmark"
+    )
     subparsers = parser.add_subparsers(dest="cmd", required=True)
 
     launch_parser = subparsers.add_parser("launch")
@@ -391,7 +530,9 @@ def main() -> None:
     launch_parser.set_defaults(func=launch)
 
     collect_parser = subparsers.add_parser("collect")
-    collect_parser.add_argument("--output-dir", type=str, default="modal_runs/runtime_multiallele_44k")
+    collect_parser.add_argument(
+        "--output-dir", type=str, default="modal_runs/runtime_multiallele_44k"
+    )
     collect_parser.set_defaults(func=collect)
 
     args = parser.parse_args()

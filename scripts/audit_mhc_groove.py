@@ -30,9 +30,8 @@ from typing import Optional
 # Cys pair finder
 # ---------------------------------------------------------------------------
 
-def find_cys_pairs(
-    seq: str, min_sep: int = 48, max_sep: int = 72
-) -> list[tuple[int, int, int]]:
+
+def find_cys_pairs(seq: str, min_sep: int = 48, max_sep: int = 72) -> list[tuple[int, int, int]]:
     """
     Find all Cys-Cys pairs with separation in [min_sep, max_sep].
     Returns list of (cys1_idx, cys2_idx, separation).
@@ -78,7 +77,7 @@ ALPHA2_END_AFTER_CYS2 = 20
 # For filtering: the alpha2 cys1 must be in this raw-sequence range
 # to qualify. A full precursor with signal peptide puts it ~125;
 # a mature protein puts it ~101. Fragments may be smaller.
-ALPHA2_CYS1_RAW_MIN = 60   # must be at least 60 residues in
+ALPHA2_CYS1_RAW_MIN = 60  # must be at least 60 residues in
 ALPHA2_CYS1_RAW_MAX = 180  # shouldn't be this late
 
 # Fallback: alpha3 Cys1 is at mature position ~203 (conserved Ig-fold
@@ -129,7 +128,9 @@ def _infer_mature_start_from_cys(cys1_raw: int, seq: str) -> int:
     return sp_len
 
 
-def parse_mhci_groove(seq: str, allele: str = "", species: str = "", gene: str = "") -> GrooveParseResult:
+def parse_mhci_groove(
+    seq: str, allele: str = "", species: str = "", gene: str = ""
+) -> GrooveParseResult:
     r = GrooveParseResult(allele=allele, species=species, gene=gene, seq_len=len(seq))
 
     # Step 1: find all Cys pairs with Ig-fold-like separation
@@ -169,7 +170,9 @@ def parse_mhci_groove(seq: str, allele: str = "", species: str = "", gene: str =
                 break
         if alpha3_fallback is None:
             r.status = "no_alpha2_pair"
-            r.flags.append(f"no qualifying Cys pair in range [{ALPHA2_CYS1_RAW_MIN},{ALPHA2_CYS1_RAW_MAX}]")
+            r.flags.append(
+                f"no qualifying Cys pair in range [{ALPHA2_CYS1_RAW_MIN},{ALPHA2_CYS1_RAW_MAX}]"
+            )
             return r
         # Use alpha3 pair to infer domain boundaries
         r.flags.append("alpha3_fallback")
@@ -249,6 +252,7 @@ def parse_mhci_groove(seq: str, allele: str = "", species: str = "", gene: str =
 # Main: run over all Class I sequences in the index
 # ---------------------------------------------------------------------------
 
+
 def main():
     index_path = "data/mhc_index.csv"
 
@@ -269,7 +273,9 @@ def main():
             continue
         class_i_rows.append(r)
 
-    print(f"Total Class I entries: {len(class_i_rows)} (skipped {skipped_nonclassical} non-classical)")
+    print(
+        f"Total Class I entries: {len(class_i_rows)} (skipped {skipped_nonclassical} non-classical)"
+    )
     print()
 
     results = []
@@ -292,7 +298,12 @@ def main():
     print()
 
     ok_results = [r for r in results if r.status == "ok"]
-    print(f"Successfully parsed: {len(ok_results)} / {len(results)} ({100*len(ok_results)/len(results):.1f}%)")
+    print(
+        (
+            f"Successfully parsed: {len(ok_results)} / {len(results)} "
+            f"({100 * len(ok_results) / len(results):.1f}%)"
+        )
+    )
     print()
 
     # Alpha1 length distribution
@@ -304,7 +315,7 @@ def main():
         bar = "#" * min(count // 10, 80)
         if count >= 10 or length < 80 or length > 100:
             print(f"  {length:3d} aa: {count:6d}  {bar}")
-    print(f"  min={min(a1_lens)}, median={sorted(a1_lens)[len(a1_lens)//2]}, max={max(a1_lens)}")
+    print(f"  min={min(a1_lens)}, median={sorted(a1_lens)[len(a1_lens) // 2]}, max={max(a1_lens)}")
     print()
 
     print("=== Alpha2 (groove half 2) length distribution ===")
@@ -313,7 +324,7 @@ def main():
         bar = "#" * min(count // 10, 80)
         if count >= 10 or length < 80 or length > 100:
             print(f"  {length:3d} aa: {count:6d}  {bar}")
-    print(f"  min={min(a2_lens)}, median={sorted(a2_lens)[len(a2_lens)//2]}, max={max(a2_lens)}")
+    print(f"  min={min(a2_lens)}, median={sorted(a2_lens)[len(a2_lens) // 2]}, max={max(a2_lens)}")
     print()
 
     # Alpha2 disulfide separation distribution
@@ -337,8 +348,13 @@ def main():
     sp_entries = [r for r in ok_results if r.inferred_mature_start > 0]
     if sp_entries:
         sp_lens = [r.inferred_mature_start for r in sp_entries]
-        print(f"  With SP: {len(sp_entries)} ({100*len(sp_entries)/len(ok_results):.1f}%)")
-        print(f"  SP len: min={min(sp_lens)}, median={sorted(sp_lens)[len(sp_lens)//2]}, max={max(sp_lens)}")
+        print(f"  With SP: {len(sp_entries)} ({100 * len(sp_entries) / len(ok_results):.1f}%)")
+        print(
+            (
+                f"  SP len: min={min(sp_lens)}, median={sorted(sp_lens)[len(sp_lens) // 2]}, "
+                f"max={max(sp_lens)}"
+            )
+        )
     print()
 
     # Species breakdown for failures
@@ -353,7 +369,7 @@ def main():
             for f in fails[:3]:
                 print(f"    {f.allele} (len={f.seq_len}, status={f.status}, flags={f.flags})")
             if len(fails) > 3:
-                print(f"    ... and {len(fails)-3} more")
+                print(f"    ... and {len(fails) - 3} more")
         print()
 
     # Flagged but successful
@@ -376,12 +392,22 @@ def main():
             print(f"  Short alpha1 examples (<80aa): {len(short_a1)}")
             for r in short_a1[:5]:
                 sp_note = f" (SP={r.inferred_mature_start})" if r.inferred_mature_start > 0 else ""
-                print(f"    {r.allele} ({r.species}): a1={r.alpha1_len}, a2={r.alpha2_len}, seq_len={r.seq_len}{sp_note}")
+                print(
+                    (
+                        f"    {r.allele} ({r.species}): a1={r.alpha1_len}, a2={r.alpha2_len}, "
+                        f"seq_len={r.seq_len}{sp_note}"
+                    )
+                )
         if long_a1:
             print(f"  Long alpha1 examples (>100aa): {len(long_a1)}")
             for r in long_a1[:5]:
                 sp_note = f" (SP={r.inferred_mature_start})" if r.inferred_mature_start > 0 else ""
-                print(f"    {r.allele} ({r.species}): a1={r.alpha1_len}, a2={r.alpha2_len}, seq_len={r.seq_len}{sp_note}")
+                print(
+                    (
+                        f"    {r.allele} ({r.species}): a1={r.alpha1_len}, a2={r.alpha2_len}, "
+                        f"seq_len={r.seq_len}{sp_note}"
+                    )
+                )
 
     # Per-species summary for successful parses
     print()
@@ -398,11 +424,16 @@ def main():
             continue
         a1 = stats["a1_lens"]
         a2 = stats["a2_lens"]
-        a1_med = sorted(a1)[len(a1)//2]
-        a2_med = sorted(a2)[len(a2)//2]
+        a1_med = sorted(a1)[len(a1) // 2]
+        a2_med = sorted(a2)[len(a2) // 2]
         a1_range = f"{min(a1)}-{max(a1)}"
         a2_range = f"{min(a2)}-{max(a2)}"
-        print(f"  {sp:35s}: n={stats['count']:5d}  a1={a1_med:3d} ({a1_range:>7s})  a2={a2_med:3d} ({a2_range:>7s})")
+        print(
+            (
+                f"  {sp:35s}: n={stats['count']:5d}  a1={a1_med:3d} ({a1_range:>7s})  "
+                f"a2={a2_med:3d} ({a2_range:>7s})"
+            )
+        )
 
 
 if __name__ == "__main__":

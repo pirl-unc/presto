@@ -102,13 +102,15 @@ def enumerate_core_windows(
         if P < core_len:
             continue
         for start in range(P - core_len + 1):
-            core_windows.append({
-                "start": start,
-                "core_len": core_len,
-                "core": peptide[start : start + core_len],
-                "pfr_n": peptide[:start],
-                "pfr_c": peptide[start + core_len :],
-            })
+            core_windows.append(
+                {
+                    "start": start,
+                    "core_len": core_len,
+                    "core": peptide[start : start + core_len],
+                    "pfr_n": peptide[:start],
+                    "pfr_c": peptide[start + core_len :],
+                }
+            )
 
     return core_windows
 
@@ -126,9 +128,7 @@ def _class_probs_from_input(
     if class_probs is not None:
         probs = class_probs.to(device=device, dtype=torch.float32)
         if probs.ndim != 2 or probs.shape[-1] != 2:
-            raise ValueError(
-                f"class_probs must have shape (batch, 2); got {tuple(probs.shape)}"
-            )
+            raise ValueError(f"class_probs must have shape (batch, 2); got {tuple(probs.shape)}")
         if probs.shape[0] != batch_size:
             if probs.shape[0] == 1:
                 probs = probs.expand(batch_size, -1)
@@ -203,7 +203,11 @@ def _species_probs_from_input(
                 dtype=torch.float32,
             )
         probs = torch.zeros((1, n_species), device=device, dtype=torch.float32)
-        sp_idx = PROCESSING_SPECIES_BUCKETS.index(normalized) if normalized in PROCESSING_SPECIES_BUCKETS else 0
+        sp_idx = (
+            PROCESSING_SPECIES_BUCKETS.index(normalized)
+            if normalized in PROCESSING_SPECIES_BUCKETS
+            else 0
+        )
         probs[0, sp_idx] = 1.0
         return probs.expand(batch_size, -1)
 
@@ -217,7 +221,11 @@ def _species_probs_from_input(
                 # Unknown species: uniform probs for this sample
                 probs[idx, :] = 1.0 / n_species
             else:
-                sp_idx = PROCESSING_SPECIES_BUCKETS.index(label) if label in PROCESSING_SPECIES_BUCKETS else 0
+                sp_idx = (
+                    PROCESSING_SPECIES_BUCKETS.index(label)
+                    if label in PROCESSING_SPECIES_BUCKETS
+                    else 0
+                )
                 probs[idx, sp_idx] = 1.0
         return probs
 
@@ -253,9 +261,7 @@ class ProcessingModule(nn.Module):
     def __init__(self, d_model: int = 256, n_layers: int = 2, n_heads: int = 4):
         super().__init__()
         self.d_model = d_model
-        self.encoder = SequenceEncoder(
-            d_model=d_model, n_layers=n_layers, n_heads=n_heads
-        )
+        self.encoder = SequenceEncoder(d_model=d_model, n_layers=n_layers, n_heads=n_heads)
         # Fixed-window flank path: lightweight FFN over pooled N/C flank embeddings.
         self.flank_embed = nn.Embedding(len(AA_VOCAB), d_model, padding_idx=0)
         self.flank_fuse = nn.Sequential(
@@ -423,12 +429,8 @@ class BindingModule(nn.Module):
             Dict with log_koff, log_kon_intrinsic, log_kon_chaperone (all log10 scale)
         """
         log_koff = smooth_range_bound(self.head_log_koff(pmhc_vec), -8.0, 8.0)
-        log_kon_intrinsic = smooth_range_bound(
-            self.head_log_kon_intrinsic(pmhc_vec), -8.0, 8.0
-        )
-        log_kon_chaperone = smooth_range_bound(
-            self.head_log_kon_chaperone(pmhc_vec), -8.0, 8.0
-        )
+        log_kon_intrinsic = smooth_range_bound(self.head_log_kon_intrinsic(pmhc_vec), -8.0, 8.0)
+        log_kon_chaperone = smooth_range_bound(self.head_log_kon_chaperone(pmhc_vec), -8.0, 8.0)
 
         return {
             "log_koff": log_koff,
@@ -445,12 +447,8 @@ class BindingModule(nn.Module):
         """
         log_koff = smooth_range_bound(latents["log_koff"], -8.0, 8.0)
         # Combine kon_intrinsic and kon_chaperone (sum in linear space)
-        kon_intrinsic = torch.pow(
-            10, smooth_range_bound(latents["log_kon_intrinsic"], -8.0, 8.0)
-        )
-        kon_chaperone = torch.pow(
-            10, smooth_range_bound(latents["log_kon_chaperone"], -8.0, 8.0)
-        )
+        kon_intrinsic = torch.pow(10, smooth_range_bound(latents["log_kon_intrinsic"], -8.0, 8.0))
+        kon_chaperone = torch.pow(10, smooth_range_bound(latents["log_kon_chaperone"], -8.0, 8.0))
         kon_total = kon_intrinsic + kon_chaperone
         log_kon_total = torch.log10(kon_total.clamp(min=1e-10, max=1e10))
 
@@ -540,40 +538,44 @@ class PMHCEncoder(nn.Module):
         aux_layers = max(1, n_layers // 2)
 
         # MHC encoder (self-attention only)
-        self.mhc_encoder = SequenceEncoder(
-            d_model=d_model, n_layers=n_layers, n_heads=n_heads
-        )
+        self.mhc_encoder = SequenceEncoder(d_model=d_model, n_layers=n_layers, n_heads=n_heads)
 
         # Peptide embedding (shared vocab with MHC)
         from ..data.vocab import AA_VOCAB
+
         self.pep_embedding = nn.Embedding(len(AA_VOCAB), d_model)
         self.pep_pos_enc = nn.Embedding(64, d_model)  # Max peptide length
 
         # Cross-attention layers: peptide attends to MHC
-        self.cross_attention_layers = nn.ModuleList([
-            nn.MultiheadAttention(d_model, n_heads, dropout=0.1, batch_first=True)
-            for _ in range(n_cross_layers)
-        ])
-        self.cross_norms = nn.ModuleList([
-            nn.LayerNorm(d_model) for _ in range(n_cross_layers)
-        ])
-        self.cross_ffn = nn.ModuleList([
-            nn.Sequential(
-                nn.Linear(d_model, d_model * 4),
-                nn.GELU(),
-                nn.Linear(d_model * 4, d_model),
-                nn.Dropout(0.1),
-            ) for _ in range(n_cross_layers)
-        ])
-        self.ffn_norms = nn.ModuleList([
-            nn.LayerNorm(d_model) for _ in range(n_cross_layers)
-        ])
+        self.cross_attention_layers = nn.ModuleList(
+            [
+                nn.MultiheadAttention(d_model, n_heads, dropout=0.1, batch_first=True)
+                for _ in range(n_cross_layers)
+            ]
+        )
+        self.cross_norms = nn.ModuleList([nn.LayerNorm(d_model) for _ in range(n_cross_layers)])
+        self.cross_ffn = nn.ModuleList(
+            [
+                nn.Sequential(
+                    nn.Linear(d_model, d_model * 4),
+                    nn.GELU(),
+                    nn.Linear(d_model * 4, d_model),
+                    nn.Dropout(0.1),
+                )
+                for _ in range(n_cross_layers)
+            ]
+        )
+        self.ffn_norms = nn.ModuleList([nn.LayerNorm(d_model) for _ in range(n_cross_layers)])
 
         # Final peptide self-attention after cross-attention
         self.pep_self_attention = nn.TransformerEncoder(
             nn.TransformerEncoderLayer(
-                d_model=d_model, nhead=n_heads, dim_feedforward=d_model * 4,
-                dropout=0.1, batch_first=True, norm_first=True,
+                d_model=d_model,
+                nhead=n_heads,
+                dim_feedforward=d_model * 4,
+                dropout=0.1,
+                batch_first=True,
+                norm_first=True,
             ),
             num_layers=aux_layers,
             enable_nested_tensor=False,  # keep norm_first without nested tensor warnings
@@ -621,10 +623,9 @@ class PMHCEncoder(nn.Module):
         # 3. Cross-attention: peptide attends to MHC
         # This lets P2 see the B-pocket, PΩ see the F-pocket
         x = pep_emb
-        for i, (attn, norm, ffn, ffn_norm) in enumerate(zip(
-            self.cross_attention_layers, self.cross_norms,
-            self.cross_ffn, self.ffn_norms
-        )):
+        for i, (attn, norm, ffn, ffn_norm) in enumerate(
+            zip(self.cross_attention_layers, self.cross_norms, self.cross_ffn, self.ffn_norms)
+        ):
             # Cross-attention (peptide queries, MHC keys/values)
             attn_out, _ = attn(x, mhc_context, mhc_context)
             x = norm(x + attn_out)
@@ -665,9 +666,7 @@ class CoreWindowScorer(nn.Module):
 
         self.peptide_embed = nn.Embedding(len(AA_VOCAB), d_model, padding_idx=0)
         self.core_proj = nn.Linear(d_model, d_model)
-        self.groove_attention = nn.MultiheadAttention(
-            d_model, n_heads, batch_first=True
-        )
+        self.groove_attention = nn.MultiheadAttention(d_model, n_heads, batch_first=True)
         self.pfr_proj = nn.Sequential(
             nn.Linear(d_model * 2 + 20 * 2 + 2, d_model),
             nn.GELU(),
@@ -778,12 +777,8 @@ class CoreWindowScorer(nn.Module):
         c_adj_start = ends
         c_adj_end = torch.minimum(ends + self.adjacent_k, pep_len_expanded)
 
-        n_adj_sum = _gather_prefix(prefix_emb, n_adj_end) - _gather_prefix(
-            prefix_emb, n_adj_start
-        )
-        c_adj_sum = _gather_prefix(prefix_emb, c_adj_end) - _gather_prefix(
-            prefix_emb, c_adj_start
-        )
+        n_adj_sum = _gather_prefix(prefix_emb, n_adj_end) - _gather_prefix(prefix_emb, n_adj_start)
+        c_adj_sum = _gather_prefix(prefix_emb, c_adj_end) - _gather_prefix(prefix_emb, c_adj_start)
         n_adj_mean = n_adj_sum / (n_adj_end - n_adj_start).float().unsqueeze(-1).clamp(min=1.0)
         c_adj_mean = c_adj_sum / (c_adj_end - c_adj_start).float().unsqueeze(-1).clamp(min=1.0)
 
@@ -791,8 +786,7 @@ class CoreWindowScorer(nn.Module):
         aa_idx = aa_lookup[pep_tok.clamp(min=0, max=aa_lookup.shape[0] - 1)]
         aa_valid = aa_idx >= 0
         aa_one_hot = (
-            F.one_hot(aa_idx.clamp(min=0), num_classes=20).float()
-            * aa_valid.unsqueeze(-1).float()
+            F.one_hot(aa_idx.clamp(min=0), num_classes=20).float() * aa_valid.unsqueeze(-1).float()
         )
         prefix_counts = torch.cat(
             [aa_one_hot.new_zeros((batch_size, 1, aa_one_hot.shape[-1])), aa_one_hot.cumsum(dim=1)],
@@ -820,9 +814,11 @@ class CoreWindowScorer(nn.Module):
         )
         pfr_vec = self.pfr_proj(pfr_features)
 
-        mhc_pair_vec = self.mhc_pair_proj(
-            torch.cat([mhc_a_pooled, mhc_b_pooled], dim=-1)
-        ).unsqueeze(1).expand(-1, num_core_windows, -1)
+        mhc_pair_vec = (
+            self.mhc_pair_proj(torch.cat([mhc_a_pooled, mhc_b_pooled], dim=-1))
+            .unsqueeze(1)
+            .expand(-1, num_core_windows, -1)
+        )
         core_window_vec = self.core_window_norm(
             self.core_window_proj(
                 torch.cat(
@@ -908,11 +904,7 @@ class PresentationBottleneck(nn.Module):
         w_p = F.softplus(self.w_proc)
         w_b = F.softplus(self.w_bind)
         w_r = F.softplus(self.w_prior)
-        combined = (
-            w_p * proc_vec
-            + w_b * bind_logit
-            + self.bias
-        )
+        combined = w_p * proc_vec + w_b * bind_logit + self.bias
         if core_window_prior_logit is not None:
             combined = combined + w_r * core_window_prior_logit
         return combined
