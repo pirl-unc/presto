@@ -407,9 +407,13 @@ class Predictor:
         )
         return prepared.groove_half_1, prepared.groove_half_2
 
-    def _tokenize(self, seq: str, max_len: int) -> torch.Tensor:
-        """Tokenize a sequence."""
-        return self.tokenizer.batch_encode([seq], max_len=max_len, pad=True).to(self.device)
+    def _tokenize(
+        self, seq: str, max_len: int, truncate: str = "right"
+    ) -> torch.Tensor:
+        """Tokenize a sequence. `truncate` chooses which end survives."""
+        return self.tokenizer.batch_encode(
+            [seq], max_len=max_len, pad=True, truncate=truncate
+        ).to(self.device)
 
     def _binding_prob_from_kd_log10(self, kd_log10_nM: float) -> float:
         """Map log10(KD nM) to a calibrated [0,1] binding probability.
@@ -482,8 +486,19 @@ class Predictor:
         pep_tok = self._tokenize(peptide, max_len=max(50, len(peptide), 1))
         mhc_a_tok = self._tokenize(mhc_a_seq, max_len=self._MAX_MHC_INPUT_LEN)
         mhc_b_tok = self._tokenize(mhc_b_seq, max_len=self._MAX_MHC_INPUT_LEN)
-        flank_n_tok = self._tokenize(flank_n, max_len=30) if flank_n else None
-        flank_c_tok = self._tokenize(flank_c, max_len=30) if flank_c else None
+        # Same contract as the tiled path below and as the collator: keep
+        # `_flank_len` residues and truncate the N-flank from the left, so the
+        # residues nearest the junction survive. This path kept a hard-coded 30
+        # and the default right-truncation after the tiled one was fixed,
+        # because the test that pinned it inspected only the tiled call site.
+        flank_n_tok = (
+            self._tokenize(flank_n, max_len=self._flank_len, truncate="left")
+            if flank_n
+            else None
+        )
+        flank_c_tok = (
+            self._tokenize(flank_c, max_len=self._flank_len) if flank_c else None
+        )
 
         # Forward pass
         outputs = self.model(

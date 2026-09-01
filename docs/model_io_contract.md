@@ -198,6 +198,39 @@ source=mhc:      excision(conditions)   → TAP → bind → present → detect 
                                                     MHC term
 ```
 
+### The excision subsite window
+
+Each junction is scored over a **±5-residue Schechter–Berger window**, not a
+single residue:
+
+```
+C-junction:  peptide[-5:]  ‖  c_flank[:5]      P5..P1 ‖ P1'..P5'
+N-junction:  n_flank[-5:]  ‖  peptide[:5]      P5..P1 ‖ P1'..P5'
+```
+
+The peptide supplies one side of each junction and is always present; only the
+flank side can be absent, and those positions fall to `<MISSING>`, which is a
+real column of every profile rather than a padding hack. Contributions are
+additive over subsites.
+
+Five per side matches mhcflurry's `short_flanks` setting and is the widest
+window this corpus can fill — hitlist caps flanks at 10 residues, so 93.7% of
+class I rows carry both 5-residue flanks and **0%** carry 15. Configurable via
+`ExcisionHead(junction_window=...)`.
+
+**Only the in-vivo branch is windowed.** The in-vitro branch stays P1-only
+because its labels are *generated* from a P1 rule
+(`data/bulk_ms.py::would_cleave`), so extra positions there would be capacity
+to memorize the label generator rather than biology — and those rows are pinned
+to known protease specificities anyway.
+
+**Class II gets nothing from this yet.** All 1,395,872 class II MS rows carry
+zero flank sequence, so every class II junction residue is `<MISSING>` and
+`invivo_profile_n[apm, <MISSING>]` is a per-APM constant with no sequence
+content. Since `default_machinery_for_class` routes class II to cathepsin, the
+cathepsin specificity this window exists to express is unfunded until hitlist
+supplies class II flanks.
+
 ## 6. Supervision map
 
 | output | supervised by | loss | negatives |

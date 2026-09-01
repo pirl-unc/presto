@@ -1399,6 +1399,8 @@ class ExcisionHead(nn.Module):
         n_apm: int = 1,
         protein_source_index: int = 2,
         mhc_source_index: int = 1,
+        junction_window: int = 5,
+        missing_residue_index: Optional[int] = None,
     ):
         super().__init__()
         self.n_machinery = int(n_machinery)
@@ -1496,12 +1498,51 @@ class ExcisionHead(nn.Module):
         # rather than negating the other -- `!= protein` silently
         # includes `unknown`.
         self.mhc_source_index = int(mhc_source_index)
-        self.invivo_profile_c = nn.Parameter(torch.zeros(self.n_apm, self.n_aa))
-        self.invivo_profile_n = nn.Parameter(torch.zeros(self.n_apm, self.n_aa))
+
+        # ---- in-vivo subsite window ---------------------------------------
+        #
+        # `junction_window` is residues per side, so each junction reads
+        # `2 * junction_window` positions:
+        #
+        #     C-junction:  peptide[-w:]  ||  c_flank[:w]     P{w}..P1 | P1'..P{w}'
+        #     N-junction:  n_flank[-w:]  ||  peptide[:w]     P{w}..P1 | P1'..P{w}'
+        #
+        # One residue per side (the original shape) cannot express protease
+        # specificity, which spans the Schechter-Berger subsites. 5 per side
+        # matches mhcflurry's `short_flanks` setting, and is the widest window
+        # our data can actually fill: hitlist caps flanks at 10 residues, so
+        # 93.7% of class I rows carry both 5-residue flanks and 0% carry 15.
+        #
+        # Only the *in-vivo* tables are windowed. The in-vitro branch stays
+        # P1-only on purpose: its labels are generated from a P1 rule
+        # (`data/bulk_ms.py::would_cleave`), so extra positions there would be
+        # capacity to memorize the generator rather than biology -- and those
+        # rows are pinned to known rules anyway.
+        self.junction_window = int(junction_window)
+        # Which column means "no residue here". Passed in rather than assumed
+        # so the head cannot drift from AA_TO_IDX["<MISSING>"]; defaults to the
+        # last column, which is where AA_VOCAB puts it.
+        self.missing_residue_index = (
+            self.n_aa - 1 if missing_residue_index is None else int(missing_residue_index)
+        )
+        window = 2 * self.junction_window
+        #: Column order within a junction window: P{w}..P1 then P1'..P{w}'.
+        #: P1 is at index `junction_window - 1`, P1' at `junction_window`.
+        self.window_size = window
+        self.p1_window_index = self.junction_window - 1
+        self.p1_prime_window_index = self.junction_window
+        self.invivo_profile_c = nn.Parameter(torch.zeros(self.n_apm, window, self.n_aa))
+        self.invivo_profile_n = nn.Parameter(torch.zeros(self.n_apm, window, self.n_aa))
         # Cytokine state shifts catalytic specificity (immunoproteasome
         # subunits favour different P1 residues), so the stimulus contributes an
         # additive residual rather than its own table.
-        self.stimulus_profile_c = nn.Parameter(torch.zeros(self.n_stimulus, self.n_aa))
+        #
+        # C-side only, deliberately: the immunoproteasome swap shifts the
+        # C-terminal cut, while N-terminal trimming is ERAP work and rides the
+        # APM axis instead.
+        self.stimulus_profile_c = nn.Parameter(
+            torch.zeros(self.n_stimulus, window, self.n_aa)
+        )
         self.invivo_bias = nn.Parameter(torch.zeros(self.n_apm))
 
         self.context_c = nn.Linear(d_model, self.n_machinery)
@@ -1536,6 +1577,62 @@ class ExcisionHead(nn.Module):
             return torch.zeros(0, device=self.p1_profile_c.device)
         return torch.softmax(self.mixture_logits, dim=0)
 
+    def _resolve_window(
+        self,
+        window_idx: Optional[torch.Tensor],
+        p1_idx: torch.Tensor,
+        p1_prime_idx: torch.Tensor,
+    ) -> torch.Tensor:
+        """Window indices, synthesized from the P1/P1' scalars when absent.
+
+        Keeps the head usable by a caller that only has the two junction
+        residues: those land on their real subsites and every other position
+        goes to <MISSING>, which is a genuine column of each profile. The
+        result is the pre-window behaviour exactly, so an old call site is
+        degraded rather than broken.
+        """
+        if window_idx is not None:
+            return window_idx.long()
+        batch = p1_idx.shape[0]
+        filled = torch.full(
+            (batch, self.window_size),
+            self.missing_residue_index,
+            dtype=torch.long,
+            device=p1_idx.device,
+        )
+        filled[:, self.p1_window_index] = p1_idx.long()
+        filled[:, self.p1_prime_window_index] = p1_prime_idx.long()
+        return filled
+
+    @staticmethod
+    def _window_preference(
+        profile: torch.Tensor, condition_idx: torch.Tensor, window_idx: torch.Tensor
+    ) -> torch.Tensor:
+        """Sum a `(n_cond, window, n_aa)` table over one row's window.
+
+        `profile[condition_idx]` is (batch, window, n_aa); gathering the
+        observed residue at each position and summing gives (batch,).
+        """
+        rows = profile[condition_idx]
+        picked = rows.gather(2, window_idx.unsqueeze(-1)).squeeze(-1)
+        return picked.sum(dim=1)
+
+    @staticmethod
+    def _window_preference_all(
+        profile: torch.Tensor, window_idx: torch.Tensor
+    ) -> torch.Tensor:
+        """The same sum for *every* condition at once -> (batch, n_cond).
+
+        Used to build the counterfactual panels. Must stay exactly consistent
+        with `_window_preference`, since the panel's observed column has to
+        reproduce `excision_logit`.
+        """
+        batch = window_idx.shape[0]
+        n_cond, window, _ = profile.shape
+        expanded = profile.unsqueeze(0).expand(batch, n_cond, window, -1)
+        index = window_idx.unsqueeze(1).unsqueeze(-1).expand(batch, n_cond, window, 1)
+        return expanded.gather(3, index).squeeze(-1).sum(dim=2)
+
     def _junction_score(
         self,
         profile: torch.Tensor,
@@ -1560,6 +1657,12 @@ class ExcisionHead(nn.Module):
         p1_n_idx: torch.Tensor,
         p1_prime_n_idx: torch.Tensor,
         peptide_len: torch.Tensor,
+        # Subsite windows for the in-vivo branch, each (batch, 2*junction_window)
+        # ordered P{w}..P1 || P1'..P{w}'. Optional: when absent the window is
+        # synthesized from the P1/P1' scalars with every other position set to
+        # <MISSING>, so an older caller gets exactly the previous behaviour.
+        window_c_idx: Optional[torch.Tensor] = None,
+        window_n_idx: Optional[torch.Tensor] = None,
         peptide_tokens: Optional[torch.Tensor] = None,
         peptide_source_idx: Optional[torch.Tensor] = None,
         processing_stimulus_idx: Optional[torch.Tensor] = None,
@@ -1636,12 +1739,22 @@ class ExcisionHead(nn.Module):
             if processing_stimulus_idx is not None
             else baseline_index
         )
+        # Each junction contributes the sum of its per-position preferences.
+        # Additive over subsites rather than jointly encoded: with ~10^2
+        # (position, residue) cells per condition the additive form is what the
+        # data can identify, and it degrades gracefully -- an absent flank
+        # lands every one of its positions on the <MISSING> column instead of
+        # making the whole junction unrepresentable.
+        window_c = self._resolve_window(window_c_idx, p1_c_idx, p1_prime_c_idx)
+        window_n = self._resolve_window(window_n_idx, p1_n_idx, p1_prime_n_idx)
         invivo_c = (
-            self.invivo_profile_c[apm, p1_c_long]
-            + self.stimulus_profile_c[stimulus, p1_c_long]
+            self._window_preference(self.invivo_profile_c, apm, window_c)
+            + self._window_preference(self.stimulus_profile_c, stimulus, window_c)
             + context_c
         )
-        invivo_n = self.invivo_profile_n[apm, p1_n_long] + context_n
+        invivo_n = (
+            self._window_preference(self.invivo_profile_n, apm, window_n) + context_n
+        )
 
         c_terminus_score = is_protein * c_terminus_score + is_mhc * invivo_c
         n_terminus_score = is_protein * n_terminus_score + is_mhc * invivo_n
@@ -1676,14 +1789,24 @@ class ExcisionHead(nn.Module):
         # row except the one that happened to be at index 0. The panel loss
         # gathers exactly that column, so the perturbed rows this feature
         # exists for were supervised on a quantity the model never reports.
+        # Each add/subtract pair widens exactly as the scalar term did: the
+        # candidate's whole-window sum in, the observed condition's whole-window
+        # sum out. If the two ever disagree the observed column silently stops
+        # matching `excision_logit` -- which is the column the panel loss
+        # gathers, so the supervision would target a quantity the model never
+        # reports. That bug has shipped here once already.
         apm_panel = (
             logit.unsqueeze(1)
             + not_protein.unsqueeze(1)
             * (
-                self.invivo_profile_c[:, p1_c_long].t()
-                - self.invivo_profile_c[apm, p1_c_long].unsqueeze(1)
-                + self.invivo_profile_n[:, p1_n_long].t()
-                - self.invivo_profile_n[apm, p1_n_long].unsqueeze(1)
+                self._window_preference_all(self.invivo_profile_c, window_c)
+                - self._window_preference(
+                    self.invivo_profile_c, apm, window_c
+                ).unsqueeze(1)
+                + self._window_preference_all(self.invivo_profile_n, window_n)
+                - self._window_preference(
+                    self.invivo_profile_n, apm, window_n
+                ).unsqueeze(1)
                 + self.invivo_bias.unsqueeze(0)
                 - self.invivo_bias[apm].unsqueeze(1)
             )
@@ -1692,8 +1815,10 @@ class ExcisionHead(nn.Module):
             logit.unsqueeze(1)
             + not_protein.unsqueeze(1)
             * (
-                self.stimulus_profile_c[:, p1_c_long].t()
-                - self.stimulus_profile_c[stimulus, p1_c_long].unsqueeze(1)
+                self._window_preference_all(self.stimulus_profile_c, window_c)
+                - self._window_preference(
+                    self.stimulus_profile_c, stimulus, window_c
+                ).unsqueeze(1)
             )
         )
         return {
