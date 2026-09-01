@@ -248,21 +248,21 @@ Algorithm:
 class GrooveResult:
     allele: str
     gene: str
-    mhc_class: str           # "I" or "II"
-    chain: str                # "alpha" (Class I or II alpha) or "beta" (Class II beta)
-    seq_len: int              # full input sequence length
-    mature_start: int         # inferred signal peptide cleavage position
-    groove_seq: str           # extracted groove domain(s)
-    groove_half_1: str        # alpha1 (Class I) or alpha1 from alpha chain (Class II)
-    groove_half_2: str        # alpha2 (Class I) or beta1 from beta chain (Class II)
+    mhc_class: str  # "I" or "II"
+    chain: str  # "alpha" (Class I or II alpha) or "beta" (Class II beta)
+    seq_len: int  # full input sequence length
+    mature_start: int  # inferred signal peptide cleavage position
+    groove_seq: str  # extracted groove domain(s)
+    groove_half_1: str  # alpha1 (Class I) or alpha1 from alpha chain (Class II)
+    groove_half_2: str  # alpha2 (Class I) or beta1 from beta chain (Class II)
     groove_h1_len: int
     groove_h2_len: int
-    anchor_type: str          # "alpha2_cys", "alpha3_cys", "beta1_cys", "beta2_cys", "fixed_offset"
+    anchor_type: str  # "alpha2_cys", "alpha3_cys", "beta1_cys", "beta2_cys", "fixed_offset"
     anchor_cys1: Optional[int]
     anchor_cys2: Optional[int]
     anchor_sep: Optional[int]
-    status: str               # "ok", "alpha3_fallback", "no_cys_pairs", "groove_absent", "too_short"
-    flags: List[str]          # warnings, e.g. "long_sp(48)", "alpha1_short(55)"
+    status: str  # "ok", "alpha3_fallback", "no_cys_pairs", "groove_absent", "too_short"
+    flags: List[str]  # warnings, e.g. "long_sp(48)", "alpha1_short(55)"
 ```
 
 ### 3.6 Unified Dispatch
@@ -435,8 +435,8 @@ Replace the current 5-segment scheme:
 SEG_NFLANK = 0
 SEG_PEPTIDE = 1
 SEG_CFLANK = 2
-SEG_MHC_A = 3    # full alpha chain
-SEG_MHC_B = 4    # full beta chain / B2M
+SEG_MHC_A = 3  # full alpha chain
+SEG_MHC_B = 4  # full beta chain / B2M
 
 # NEW:
 SEG_NFLANK = 0
@@ -473,7 +473,7 @@ max_mhc_len = 400  # accommodates full precursor + SP + TM + cyto
 
 # NEW:
 max_groove_len = 120  # generous ceiling for a single groove half
-                       # (actual max observed: 102 aa for alpha2)
+# (actual max observed: 102 aa for alpha2)
 ```
 
 This reduces MHC token count from ~800 (two chains × 400) to ~240 (two halves × 120), a **3.3× reduction** in MHC sequence length. This directly improves attention efficiency and memory usage.
@@ -487,16 +487,17 @@ In `data/collate.py`:
 @dataclass
 class PrestoSample:
     peptide: str = ""
-    groove_half_1: str = ""    # was mhc_a
-    groove_half_2: str = ""    # was mhc_b
+    groove_half_1: str = ""  # was mhc_a
+    groove_half_2: str = ""  # was mhc_b
     mhc_class: Optional[str] = None
     # ... rest unchanged
+
 
 # PrestoBatch changes:
 @dataclass
 class PrestoBatch:
-    groove_1_tok: torch.Tensor   # was mhc_a_tok
-    groove_2_tok: torch.Tensor   # was mhc_b_tok
+    groove_1_tok: torch.Tensor  # was mhc_a_tok
+    groove_2_tok: torch.Tensor  # was mhc_b_tok
     mhc_class: List[Optional[str]]
     # ... rest unchanged
 ```

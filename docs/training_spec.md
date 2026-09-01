@@ -257,11 +257,11 @@ def censor_aware_loss(pred, target, qualifier):
     """
     residual = pred - target
     if qualifier == '=':
-        return residual ** 2
+        return residual**2
     elif qualifier == '<':
-        return relu(residual) ** 2    # penalize only if pred > upper bound
+        return relu(residual) ** 2  # penalize only if pred > upper bound
     elif qualifier == '>':
-        return relu(-residual) ** 2   # penalize only if pred < lower bound
+        return relu(-residual) ** 2  # penalize only if pred < lower bound
 ```
 
 ### Multi-allele bag MIL loss
@@ -270,7 +270,7 @@ For elution/presentation/MS with multi-allele bags:
 
 ```python
 # Collator emits instance_to_bag mapping and bag_label
-instance_probs = sigmoid(instance_logits)   # per-allele presentation probs
+instance_probs = sigmoid(instance_logits)  # per-allele presentation probs
 bag_prob = 1 - scatter_prod(1 - instance_probs, instance_to_bag)  # Noisy-OR
 loss = bce(bag_prob, bag_label)
 ```

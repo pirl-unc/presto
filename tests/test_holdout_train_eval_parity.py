@@ -53,9 +53,7 @@ class TestProvenanceChangesTheScore:
         with torch.no_grad():
             with_prov = model(**kwargs, provenance=batch.provenance)
             without = model(**kwargs)
-        assert not torch.allclose(
-            with_prov["presentation_logit"], without["presentation_logit"]
-        )
+        assert not torch.allclose(with_prov["presentation_logit"], without["presentation_logit"])
 
     def test_gap2_edge_is_inert_without_provenance(self, batch):
         """Quantifies what the skew cost: the whole edge, at eval."""

@@ -213,8 +213,8 @@ The current single-decay bias doesn't capture this.
 ```python
 # Class I: alpha groove = positions 1-182, beta (B2M) = no groove role
 # Class II: alpha groove = positions 1-90 only, beta groove = positions 1-90
-groove_bias_a = class_probs[:,:1] * bias_a_classI + class_probs[:,1:2] * bias_a_classII
-groove_bias_b = class_probs[:,:1] * bias_b_classI + class_probs[:,1:2] * bias_b_classII
+groove_bias_a = class_probs[:, :1] * bias_a_classI + class_probs[:, 1:2] * bias_a_classII
+groove_bias_b = class_probs[:, :1] * bias_b_classI + class_probs[:, 1:2] * bias_b_classII
 ```
 
 **Longer-term consideration — MHC-II single-chain input:**

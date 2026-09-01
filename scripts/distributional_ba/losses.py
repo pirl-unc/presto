@@ -203,26 +203,17 @@ def censored_gaussian_nll(
     """
     sigma_safe = sigma.clamp(min=1e-6)
 
-    # z = (mu - threshold) / sigma for direction=1
-    # z = (threshold - mu) / sigma for direction=-1
-    # P(correct side) = Phi(-z) = 1 - Phi(z)
-    # Actually: for direction=1, P(Y >= t) = Phi((mu - t)/sigma)
-    # z_for_phi = (mu - threshold) / sigma * direction ... let me be precise
-
-    # direction=1: want P(Y >= t) = Phi((mu - t)/sigma)
-    # direction=-1: want P(Y <= t) = Phi((t - mu)/sigma)
-    # Unified: Phi(direction * (mu - t) / sigma) ... no
-    # direction=1: arg = (mu - t)/sigma
-    # direction=-1: arg = (t - mu)/sigma = -(mu - t)/sigma
-    # So arg = -direction * (t - mu) / sigma = direction * (mu - t) / sigma ... wait
-    # direction=1: (mu - t)/sigma ✓
-    # direction=-1: (t - mu)/sigma = -1 * (mu - t)/sigma ... so arg = -direction * (mu - t)/sigma?
-    # No: direction=-1: arg = (t - mu)/sigma = (-1) * (mu - t)/sigma
-    # And we want: direction * (mu - t) / sigma?  For dir=1: (mu-t)/sigma ✓. For dir=-1:
-    # -(mu-t)/sigma = (t-mu)/sigma ✓
-    # Wait that's wrong. direction * (mu - t) / sigma for dir=-1 gives -1*(mu-t)/sigma =
-    # (t-mu)/sigma ✓
-
+    # P(observation lands on the censored side), as one expression for both
+    # directions:
+    #
+    #   direction=+1 (">"):  P(Y >= t) = Phi((mu - t) / sigma)
+    #   direction=-1 ("<"):  P(Y <= t) = Phi((t - mu) / sigma)
+    #
+    # and (t - mu) = -(mu - t), so multiplying by `direction` covers both.
+    #
+    # This replaced twenty lines of the original derivation, which ended on
+    # "Wait that's wrong" about the formula below -- the formula is right, and
+    # a comment that says otherwise costs the next reader an afternoon.
     phi_arg = direction.float() * (mu - threshold_y) / sigma_safe
     # Phi(x) = 0.5 * (1 + erf(x / sqrt(2)))
     log_phi = torch.log((0.5 * (1.0 + torch.erf(phi_arg / math.sqrt(2.0)))).clamp(min=1e-8))

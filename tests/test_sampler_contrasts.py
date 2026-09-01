@@ -25,14 +25,22 @@ def _paired_records(n_peptides=60, seed=0):
         protein = f"P{i % 7:04d}"
         records.append(
             BulkMSRecord(
-                peptide=peptide, machinery="trypsin", protein_id=protein,
-                detectability_label=1.0, excision_label=1.0, flank_c="AAAA",
+                peptide=peptide,
+                machinery="trypsin",
+                protein_id=protein,
+                detectability_label=1.0,
+                excision_label=1.0,
+                flank_c="AAAA",
             )
         )
         records.append(
             BulkMSRecord(
-                peptide=peptide, machinery="gluc", protein_id=protein,
-                detectability_label=None, excision_label=0.0, flank_c="AAAA",
+                peptide=peptide,
+                machinery="gluc",
+                protein_id=protein,
+                detectability_label=None,
+                excision_label=0.0,
+                flank_c="AAAA",
             )
         )
     return records
@@ -81,8 +89,12 @@ class TestContrastGroups:
         mhc_seq = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
         records = [
             BindingRecord(
-                peptide=f"SIINFEKL{aa}", mhc_allele="HLA-A*02:01", value=25.0,
-                measurement_type="IC50", mhc_sequence=mhc_seq, mhc_class="I",
+                peptide=f"SIINFEKL{aa}",
+                mhc_allele="HLA-A*02:01",
+                value=25.0,
+                measurement_type="IC50",
+                mhc_sequence=mhc_seq,
+                mhc_class="I",
             )
             for aa in "ACDEFGHIKLMNPQRSTVWY"
         ]

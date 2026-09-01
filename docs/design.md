@@ -294,9 +294,9 @@ For residue at index `i` in a peptide of length `L`:
 
 ```python
 peptide_pos[i] = (
-    learned_nterm_embed[i]           +   # distance from N-terminus (table: 50 entries)
-    learned_cterm_embed[L - 1 - i]   +   # distance from C-terminus (table: 50 entries)
-    MLP_frac(i / (L - 1))               # fractional position in [0, 1] -> d_model
+    learned_nterm_embed[i]  # distance from N-terminus (table: 50 entries)
+    + learned_cterm_embed[L - 1 - i]  # distance from C-terminus (table: 50 entries)
+    + MLP_frac(i / (L - 1))  # fractional position in [0, 1] -> d_model
 )
 ```
 
@@ -312,7 +312,7 @@ encoding. See S6 for specification.
 #### N-Flank Residues: Distance-from-Cleavage Encoding
 
 ```python
-nflank_pos[j] = learned_nflank_dist_embed[j]   # table: 25 entries
+nflank_pos[j] = learned_nflank_dist_embed[j]  # table: 25 entries
 # j = distance from cleavage site, counting backward
 ```
 
@@ -323,7 +323,7 @@ signal.
 #### C-Flank Residues: Distance-from-Cleavage Encoding
 
 ```python
-cflank_pos[j] = learned_cflank_dist_embed[j]   # table: 25 entries (separate from N-flank)
+cflank_pos[j] = learned_cflank_dist_embed[j]  # table: 25 entries (separate from N-flank)
 # j = distance from cleavage site, counting forward
 ```
 
@@ -334,8 +334,8 @@ learn this distinction.
 #### MHC Alpha/Beta Chain: Sequential Positional Encoding
 
 ```python
-mhc_a_pos[i] = learned_mhc_a_pos_embed[i]   # table: max_mhc_a_len entries
-mhc_b_pos[i] = learned_mhc_b_pos_embed[i]   # table: max_mhc_b_len entries (separate)
+mhc_a_pos[i] = learned_mhc_a_pos_embed[i]  # table: max_mhc_a_len entries
+mhc_b_pos[i] = learned_mhc_b_pos_embed[i]  # table: max_mhc_b_len entries (separate)
 ```
 
 Positions are sequential indices into the full-length MHC chain sequence.
@@ -348,8 +348,8 @@ Broadcast to ALL tokens. Encodes metadata about the input:
 
 ```python
 global_cond = (
-    species_embed[species_id]                 +   # 7 species categories
-    chain_completeness_embed[completeness_bits]    # bitfield (see below)
+    species_embed[species_id]  # 7 species categories
+    + chain_completeness_embed[completeness_bits]  # bitfield (see below)
 )
 ```
 
@@ -424,9 +424,9 @@ H in R^{n_tokens x d_model}
 
 Per-segment pooled vectors are extracted for downstream modules:
 ```python
-mhc_a_vec = masked_mean(H[mhc_a_tokens])   # (d_model,)
-mhc_b_vec = masked_mean(H[mhc_b_tokens])   # (d_model,)
-peptide_H = H[peptide_tokens]               # (L_pep, d_model)
+mhc_a_vec = masked_mean(H[mhc_a_tokens])  # (d_model,)
+mhc_b_vec = masked_mean(H[mhc_b_tokens])  # (d_model,)
+peptide_H = H[peptide_tokens]  # (L_pep, d_model)
 ```
 
 ## 4.4 Computational Sharing for Multi-Allele Mode
@@ -479,8 +479,8 @@ mhc_b_type_probs = softmax(mhc_b_type_logits)
 ```python
 # P(class I) = P(a is MHC_I) * P(b is B2M)
 # P(class II) = P(a is MHC_IIa) * P(b is MHC_IIb)
-class1_prob = mhc_a_type_probs[0] * mhc_b_type_probs[3]   # MHC_I x B2M
-class2_prob = mhc_a_type_probs[1] * mhc_b_type_probs[2]   # MHC_IIa x MHC_IIb
+class1_prob = mhc_a_type_probs[0] * mhc_b_type_probs[3]  # MHC_I x B2M
+class2_prob = mhc_a_type_probs[1] * mhc_b_type_probs[2]  # MHC_IIa x MHC_IIb
 class_probs = normalize([class1_prob, class2_prob])  # (2,)
 ```
 
@@ -503,9 +503,16 @@ mhc_b_species_probs = softmax(mhc_b_species_logits)
 Lightweight head that scores whether the two chains form a functional heterodimer:
 
 ```python
-compat_logit = Linear_compat(concat(mhc_a_vec, mhc_b_vec,
-                                     mhc_a_type_probs, mhc_b_type_probs,
-                                     mhc_a_species_probs, mhc_b_species_probs))
+compat_logit = Linear_compat(
+    concat(
+        mhc_a_vec,
+        mhc_b_vec,
+        mhc_a_type_probs,
+        mhc_b_type_probs,
+        mhc_a_species_probs,
+        mhc_b_species_probs,
+    )
+)
 chain_compat_prob = sigmoid(compat_logit)
 ```
 
@@ -519,9 +526,9 @@ to the latent queries that explicitly receive it (processing, binding,
 presentation; not recognition/immunogenicity):
 
 ```python
-context_vec = MLP_context(concat(class_probs,
-                                  mhc_a_species_probs, mhc_b_species_probs,
-                                  chain_compat_prob))  # -> (d_model,)
+context_vec = MLP_context(
+    concat(class_probs, mhc_a_species_probs, mhc_b_species_probs, chain_compat_prob)
+)  # -> (d_model,)
 ```
 
 **What information does context_vec carry that isn't in the MHC token sequences?**
@@ -543,8 +550,9 @@ From the processing latent vectors (after Level 1 computation):
 
 ```python
 # Use class-prob-weighted combination of processing latent vectors
-processing_mixed_vec = (class_probs[0] * processing_class1_vec
-                      + class_probs[1] * processing_class2_vec)
+processing_mixed_vec = (
+    class_probs[0] * processing_class1_vec + class_probs[1] * processing_class2_vec
+)
 source_species_logits = Linear_source_species(processing_mixed_vec)  # (n_species,)
 source_species_probs = softmax(source_species_logits)
 # Categories: {human, murine, nhp, other}
@@ -564,13 +572,11 @@ the peptide. For class I, learns that core = full peptide.
 ## 6.1 Core Pointer Head
 
 ```python
-peptide_H = H[peptide_start : peptide_end]            # (L_pep, d_model)
-mhc_pool = mean_pool(mhc_a_vec, mhc_b_vec)            # (d_model,)
+peptide_H = H[peptide_start:peptide_end]  # (L_pep, d_model)
+mhc_pool = mean_pool(mhc_a_vec, mhc_b_vec)  # (d_model,)
 
 # Core start position logits
-start_logits = Linear_start(
-    concat(peptide_H, mhc_pool.expand(L_pep, -1))
-)                                                       # (L_pep, 1) -> (L_pep,)
+start_logits = Linear_start(concat(peptide_H, mhc_pool.expand(L_pep, -1)))  # (L_pep, 1) -> (L_pep,)
 
 # Mask invalid positions
 min_core_width = 8
@@ -579,8 +585,8 @@ start_logits[L_pep - min_core_width + 1 :] = -inf
 core_start_probs = softmax(start_logits)
 
 # Differentiable core width
-core_width_logit = Linear_width(mhc_pool)               # scalar
-core_width = 8.0 + 2.0 * sigmoid(core_width_logit)      # in [8.0, 10.0]
+core_width_logit = Linear_width(mhc_pool)  # scalar
+core_width = 8.0 + 2.0 * sigmoid(core_width_logit)  # in [8.0, 10.0]
 # Initialize bias so sigmoid ~ 0.5 -> core_width ~ 9.0
 
 # Expected start
@@ -813,8 +819,7 @@ def compute_latent(query_token, key_value_tokens, n_layers=2):
         # Cross-attention
         residual = x
         x = layer_norm(x)
-        x = multi_head_cross_attention(query=x, key=key_value_tokens,
-                                        value=key_value_tokens)
+        x = multi_head_cross_attention(query=x, key=key_value_tokens, value=key_value_tokens)
         x = residual + x
         # FFN
         residual = x
@@ -911,7 +916,7 @@ DDA vs DIA) and should be modeled separately from biological presentation.
 
 **Readout heads on ms_detectability:**
 ```python
-ms_detectability_logit = Linear_ms_detect(ms_detectability_vec)   # base detectability
+ms_detectability_logit = Linear_ms_detect(ms_detectability_vec)  # base detectability
 
 # Platform-specific bias terms (optional, if platform metadata available):
 orbitrap_bias = Linear_orbitrap(ms_detectability_vec)
@@ -954,9 +959,9 @@ class-specific calibration:
 binding_affinity_vec = compute_latent(binding_affinity_query, kv=pep_mhc_kv_with_core)
 
 # Class-specific readout (in output heads):
-kd_class1 = KD_head_class1(binding_affinity_vec)   # calibrated for class I scale
-kd_class2 = KD_head_class2(binding_affinity_vec)   # calibrated for class II scale
-kd_mixed  = class_probs[0] * kd_class1 + class_probs[1] * kd_class2
+kd_class1 = KD_head_class1(binding_affinity_vec)  # calibrated for class I scale
+kd_class2 = KD_head_class2(binding_affinity_vec)  # calibrated for class II scale
+kd_mixed = class_probs[0] * kd_class1 + class_probs[1] * kd_class2
 ```
 
 **Rationale for shared binding**: Class I and II share the same
@@ -1124,8 +1129,7 @@ channels.
 **Computed as MLP (not cross-attention):**
 
 ```python
-immunogenicity_cd8_input = concat(binding_affinity_vec, binding_stability_vec,
-                                   recognition_cd8_vec)
+immunogenicity_cd8_input = concat(binding_affinity_vec, binding_stability_vec, recognition_cd8_vec)
 immunogenicity_cd8_vec = MLP_immunogenicity_cd8(immunogenicity_cd8_input)
 # 2-layer MLP, 3*d_model -> d_model
 ```
@@ -1162,8 +1166,7 @@ equally expressive for this case.
 #### `immunogenicity_cd4` -- CD4 Immunogenicity
 
 ```python
-immunogenicity_cd4_input = concat(binding_affinity_vec, binding_stability_vec,
-                                   recognition_cd4_vec)
+immunogenicity_cd4_input = concat(binding_affinity_vec, binding_stability_vec, recognition_cd4_vec)
 immunogenicity_cd4_vec = MLP_immunogenicity_cd4(immunogenicity_cd4_input)
 # 2-layer MLP, 3*d_model -> d_model
 ```
@@ -1237,13 +1240,13 @@ def per_allele_forward(peptide, flanks, allele, species, tcr=None):
 
     # Level 0: Processing (shared across alleles) + MS detectability + species_of_origin
     processing_class1_vec = compute_latent(
-        processing_class1_query, kv=[pep_flank_H[pep+flank], context_vec])
+        processing_class1_query, kv=[pep_flank_H[pep + flank], context_vec]
+    )
     processing_class2_vec = compute_latent(
-        processing_class2_query, kv=[pep_flank_H[pep+flank], context_vec])
-    ms_detectability_vec = compute_latent(
-        ms_detectability_query, kv=[pep_flank_H[pep_only]])
-    species_of_origin_vec = compute_latent(
-        species_of_origin_query, kv=[pep_flank_H[pep_only]])
+        processing_class2_query, kv=[pep_flank_H[pep + flank], context_vec]
+    )
+    ms_detectability_vec = compute_latent(ms_detectability_query, kv=[pep_flank_H[pep_only]])
+    species_of_origin_vec = compute_latent(species_of_origin_query, kv=[pep_flank_H[pep_only]])
     foreignness_vec = foreignness_proj(species_of_origin_vec)  # Linear: d_model -> d_model
 
     # Level 1: Binding
@@ -1254,32 +1257,46 @@ def per_allele_forward(peptide, flanks, allele, species, tcr=None):
     # Level 2: Presentation (NO token access)
     presentation_class1_vec = compute_latent(
         presentation_class1_query,
-        kv=[processing_class1_vec, binding_affinity_vec,
-            binding_stability_vec, context_vec])
+        kv=[processing_class1_vec, binding_affinity_vec, binding_stability_vec, context_vec],
+    )
     presentation_class2_vec = compute_latent(
         presentation_class2_query,
-        kv=[processing_class2_vec, binding_affinity_vec,
-            binding_stability_vec, core_context_vec, context_vec])
+        kv=[
+            processing_class2_vec,
+            binding_affinity_vec,
+            binding_stability_vec,
+            core_context_vec,
+            context_vec,
+        ],
+    )
 
     # Level 2.5: Recognition (peptide + foreignness)
-    recognition_cd8_vec = compute_latent(
-        recognition_cd8_query, kv=[pep_H, foreignness_vec])
-    recognition_cd4_vec = compute_latent(
-        recognition_cd4_query, kv=[pep_H, foreignness_vec])
+    recognition_cd8_vec = compute_latent(recognition_cd8_query, kv=[pep_H, foreignness_vec])
+    recognition_cd4_vec = compute_latent(recognition_cd4_query, kv=[pep_H, foreignness_vec])
 
     # Level 3: Immunogenicity (MLP)
     immunogenicity_cd8_vec = MLP_immunogenicity_cd8(
-        concat(binding_affinity_vec, binding_stability_vec, recognition_cd8_vec))
+        concat(binding_affinity_vec, binding_stability_vec, recognition_cd8_vec)
+    )
     immunogenicity_cd4_vec = MLP_immunogenicity_cd4(
-        concat(binding_affinity_vec, binding_stability_vec, recognition_cd4_vec))
+        concat(binding_affinity_vec, binding_stability_vec, recognition_cd4_vec)
+    )
 
     return AlleleResult(
-        processing_class1_vec, processing_class2_vec,
-        binding_affinity_vec, binding_stability_vec,
-        presentation_class1_vec, presentation_class2_vec,
-        recognition_cd8_vec, recognition_cd4_vec,
-        immunogenicity_cd8_vec, immunogenicity_cd4_vec,
-        ms_detectability_vec, core_info, class_probs)
+        processing_class1_vec,
+        processing_class2_vec,
+        binding_affinity_vec,
+        binding_stability_vec,
+        presentation_class1_vec,
+        presentation_class2_vec,
+        recognition_cd8_vec,
+        recognition_cd4_vec,
+        immunogenicity_cd8_vec,
+        immunogenicity_cd4_vec,
+        ms_detectability_vec,
+        core_info,
+        class_probs,
+    )
 ```
 
 ## 8.3 MIL Aggregation
@@ -1299,8 +1316,8 @@ def stable_noisy_or(logits):
     Returns: scalar aggregated logit
     """
     # log(1 - sigmoid(x)) = -softplus(x)
-    log_1_minus_p = -softplus(logits)            # (n_alleles,)
-    log_all_miss = log_1_minus_p.sum(dim=0)       # scalar
+    log_1_minus_p = -softplus(logits)  # (n_alleles,)
+    log_all_miss = log_1_minus_p.sum(dim=0)  # scalar
     # patient_prob = 1 - exp(log_all_miss)
     # Convert back to logit: log(p / (1-p))
     patient_logit = -log_all_miss - softplus(-log_all_miss)
@@ -1319,15 +1336,15 @@ operation in log space for numerical stability.
 ```python
 # Presentation-level MIL (Noisy-OR)
 patient_presentation_class1_logit = stable_noisy_or(
-    class1_presentation_logits)    # (n_class1_alleles,) -> scalar
+    class1_presentation_logits
+)  # (n_class1_alleles,) -> scalar
 patient_presentation_class2_logit = stable_noisy_or(
-    class2_presentation_logits)    # (n_class2_alleles,) -> scalar
+    class2_presentation_logits
+)  # (n_class2_alleles,) -> scalar
 
 # Immunogenicity-level MIL (Noisy-OR)
-patient_immunogenicity_cd8_logit = stable_noisy_or(
-    class1_immunogenicity_logits)
-patient_immunogenicity_cd4_logit = stable_noisy_or(
-    class2_immunogenicity_logits)
+patient_immunogenicity_cd8_logit = stable_noisy_or(class1_immunogenicity_logits)
+patient_immunogenicity_cd4_logit = stable_noisy_or(class2_immunogenicity_logits)
 ```
 
 **Why aggregate immunogenicity per-allele:** Presentation is allele-specific,
@@ -1361,10 +1378,10 @@ binding_class2_logit = binding_base_logit - delta_class2(class_probs)
 binding_logit = class_probs[0] * binding_class1_logit + class_probs[1] * binding_class2_logit
 
 # Assay-specific heads
-kd_nM = KDHead(binding_affinity_vec)          # log10(nM) regression
-ic50_nM = IC50Head(binding_affinity_vec)      # log10(nM) regression
-t_half = THalfHead(binding_stability_vec)     # hours regression
-tm = TmHead(binding_stability_vec)            # Celsius regression
+kd_nM = KDHead(binding_affinity_vec)  # log10(nM) regression
+ic50_nM = IC50Head(binding_affinity_vec)  # log10(nM) regression
+t_half = THalfHead(binding_stability_vec)  # hours regression
+tm = TmHead(binding_stability_vec)  # Celsius regression
 ```
 
 **Censor-aware regression loss** for binding data with <, =, > qualifiers.
@@ -1372,23 +1389,27 @@ tm = TmHead(binding_stability_vec)            # Celsius regression
 ## 9.2 Processing Heads
 
 ```python
-processing_class1_logit = Linear(processing_class1_vec)   # P(processed by class I pathway)
-processing_class2_logit = Linear(processing_class2_vec)   # P(processed by class II pathway)
+processing_class1_logit = Linear(processing_class1_vec)  # P(processed by class I pathway)
+processing_class2_logit = Linear(processing_class2_vec)  # P(processed by class II pathway)
 
 # Mixed processing probability (weighted by class_probs)
-processing_logit = (class_probs[0] * processing_class1_logit
-                  + class_probs[1] * processing_class2_logit)
+processing_logit = (
+    class_probs[0] * processing_class1_logit + class_probs[1] * processing_class2_logit
+)
 ```
 
 ## 9.3 Presentation/Elution Heads
 
 ```python
 presentation_class1_logit = PresentationBottleneck(
-    processing_class1_vec, binding_affinity_vec, binding_stability_vec)
+    processing_class1_vec, binding_affinity_vec, binding_stability_vec
+)
 presentation_class2_logit = PresentationBottleneck(
-    processing_class2_vec, binding_affinity_vec, binding_stability_vec)
-presentation_logit = (class_probs[0] * presentation_class1_logit
-                    + class_probs[1] * presentation_class2_logit)
+    processing_class2_vec, binding_affinity_vec, binding_stability_vec
+)
+presentation_logit = (
+    class_probs[0] * presentation_class1_logit + class_probs[1] * presentation_class2_logit
+)
 
 # Elution/MS output includes MS detectability bias
 elution_logit = presentation_logit + ms_detectability_logit
@@ -1401,8 +1422,9 @@ ms_logit = presentation_logit + ms_detectability_logit
 # Population-level
 recognition_cd8_logit = Linear(recognition_cd8_vec)
 recognition_cd4_logit = Linear(recognition_cd4_vec)
-recognition_repertoire_logit = (class_probs[0] * recognition_cd8_logit
-                              + class_probs[1] * recognition_cd4_logit)
+recognition_repertoire_logit = (
+    class_probs[0] * recognition_cd8_logit + class_probs[1] * recognition_cd4_logit
+)
 
 # TCR-specific matching (planned future path; currently disabled)
 match_logit = TCRpMHCMatcher(tcr_vec, pmhc_vec)
@@ -1413,8 +1435,9 @@ match_logit = TCRpMHCMatcher(tcr_vec, pmhc_vec)
 ```python
 immunogenicity_cd8_logit = Linear(immunogenicity_cd8_vec)
 immunogenicity_cd4_logit = Linear(immunogenicity_cd4_vec)
-immunogenicity_logit = (class_probs[0] * immunogenicity_cd8_logit
-                      + class_probs[1] * immunogenicity_cd4_logit)
+immunogenicity_logit = (
+    class_probs[0] * immunogenicity_cd8_logit + class_probs[1] * immunogenicity_cd4_logit
+)
 ```
 
 ## 9.6 Auxiliary Heads
@@ -1437,9 +1460,9 @@ similarity search, and as the pMHC-side anchor for TCR matching
 (`tcr_spec.md`):
 
 ```python
-pmhc_vec = Linear_pmhc(concat(binding_affinity_vec,
-                                presentation_class1_vec,
-                                presentation_class2_vec))  # -> (d_model,)
+pmhc_vec = Linear_pmhc(
+    concat(binding_affinity_vec, presentation_class1_vec, presentation_class2_vec)
+)  # -> (d_model,)
 ```
 
 This is a learned projection from the latent vectors that best summarize
@@ -1467,13 +1490,13 @@ attested combinations as parallel outputs.
 Seven embedding tables define the assay configuration space:
 
 ```python
-method_emb   = nn.Embedding(n_methods, d_ctx)      # ELISpot, ICS, multimer, ...
-readout_emb  = nn.Embedding(n_readouts, d_ctx)      # IFNg, IL-2, TNFa, ...
-apc_emb      = nn.Embedding(n_apcs, d_ctx)           # DC, PBMC, B-LCL, ...
-culture_emb  = nn.Embedding(n_cultures, d_ctx)       # ex_vivo, short_restim, IVS, ...
-stim_emb     = nn.Embedding(n_stims, d_ctx)           # ex_vivo, in_vitro_stim, ...
-pepfmt_emb   = nn.Embedding(n_pepfmts, d_ctx)        # minimal, long, pool, TMG, ...
-duration_emb = nn.Linear(1, d_ctx)                    # log(culture_duration_hours)
+method_emb = nn.Embedding(n_methods, d_ctx)  # ELISpot, ICS, multimer, ...
+readout_emb = nn.Embedding(n_readouts, d_ctx)  # IFNg, IL-2, TNFa, ...
+apc_emb = nn.Embedding(n_apcs, d_ctx)  # DC, PBMC, B-LCL, ...
+culture_emb = nn.Embedding(n_cultures, d_ctx)  # ex_vivo, short_restim, IVS, ...
+stim_emb = nn.Embedding(n_stims, d_ctx)  # ex_vivo, in_vitro_stim, ...
+pepfmt_emb = nn.Embedding(n_pepfmts, d_ctx)  # minimal, long, pool, TMG, ...
+duration_emb = nn.Linear(1, d_ctx)  # log(culture_duration_hours)
 ```
 
 ### 10.2.1 Peptide Format Categories
@@ -1541,10 +1564,15 @@ finer-grained signal.
 ### 10.2.3 Full Context Vector
 
 ```python
-ctx_vec = (method_emb(config.method) + readout_emb(config.readout)
-         + apc_emb(config.apc) + culture_emb(config.culture)
-         + stim_emb(config.stim) + pepfmt_emb(config.pepfmt)
-         + duration_feature)
+ctx_vec = (
+    method_emb(config.method)
+    + readout_emb(config.readout)
+    + apc_emb(config.apc)
+    + culture_emb(config.culture)
+    + stim_emb(config.stim)
+    + pepfmt_emb(config.pepfmt)
+    + duration_feature
+)
 # ctx_vec: (d_ctx,)
 ```
 
@@ -1553,26 +1581,32 @@ ctx_vec = (method_emb(config.method) + readout_emb(config.readout)
 For each attested assay configuration:
 
 ```python
-def tcell_output(self, config,
-                 presentation_class1_logit, presentation_class2_logit,
-                 immunogenicity_cd8_vec, immunogenicity_cd4_vec,
-                 binding_class1_logit, binding_class2_logit,
-                 class_probs):
+def tcell_output(
+    self,
+    config,
+    presentation_class1_logit,
+    presentation_class2_logit,
+    immunogenicity_cd8_vec,
+    immunogenicity_cd4_vec,
+    binding_class1_logit,
+    binding_class2_logit,
+    class_probs,
+):
 
     ctx_vec = compute_ctx_vec(config)
 
     # Bias: scalar sensitivity/threshold shift
-    bias = self.bias_proj(ctx_vec)                                  # scalar
+    bias = self.bias_proj(ctx_vec)  # scalar
 
     # Feature gate: which immunogenicity features this readout detects
-    gate = sigmoid(self.gate_proj(ctx_vec))                         # (d_model,)
+    gate = sigmoid(self.gate_proj(ctx_vec))  # (d_model,)
 
     # Signal from gated immunogenicity vectors
-    cd8_signal = self.signal_proj(gate * immunogenicity_cd8_vec)    # scalar
-    cd4_signal = self.signal_proj(gate * immunogenicity_cd4_vec)    # scalar
+    cd8_signal = self.signal_proj(gate * immunogenicity_cd8_vec)  # scalar
+    cd4_signal = self.signal_proj(gate * immunogenicity_cd4_vec)  # scalar
 
     # Soft processing gate: does processing matter for this config?
-    proc_weight = sigmoid(self.proc_gate(ctx_vec))     # scalar in [0, 1]
+    proc_weight = sigmoid(self.proc_gate(ctx_vec))  # scalar in [0, 1]
     # MINIMAL_EPITOPE -> ~0, LONG_PEPTIDE/TMG -> ~1
 
     # Soft class ambiguity gate
@@ -1580,10 +1614,12 @@ def tcell_output(self, config,
     # MINIMAL_EPITOPE -> ~0, LONG_PEPTIDE/POOL/TMG -> ~1
 
     # Upstream biology with soft processing inclusion
-    cd8_upstream = (proc_weight * presentation_class1_logit
-                  + (1 - proc_weight) * binding_class1_logit)
-    cd4_upstream = (proc_weight * presentation_class2_logit
-                  + (1 - proc_weight) * binding_class2_logit)
+    cd8_upstream = (
+        proc_weight * presentation_class1_logit + (1 - proc_weight) * binding_class1_logit
+    )
+    cd4_upstream = (
+        proc_weight * presentation_class2_logit + (1 - proc_weight) * binding_class2_logit
+    )
 
     # Per-lineage logits
     cd8_logit = cd8_upstream + cd8_signal + bias
@@ -1647,12 +1683,20 @@ tuples that appear in the training data. Store as a registry:
 
 ```python
 self.attested_configs = [
-    Config(method=ELISPOT, readout=IFNG, apc=DC, culture=EX_VIVO,
-           stim=EX_VIVO, pepfmt=MINIMAL_EPITOPE),
-    Config(method=ELISPOT, readout=IFNG, apc=PBMC, culture=SHORT_RESTIM,
-           stim=IN_VITRO_STIM, pepfmt=LONG_PEPTIDE),
-    Config(method=ICS, readout=IFNG, apc=PBMC, culture=EX_VIVO,
-           stim=EX_VIVO, pepfmt=MINIMAL_EPITOPE),
+    Config(
+        method=ELISPOT, readout=IFNG, apc=DC, culture=EX_VIVO, stim=EX_VIVO, pepfmt=MINIMAL_EPITOPE
+    ),
+    Config(
+        method=ELISPOT,
+        readout=IFNG,
+        apc=PBMC,
+        culture=SHORT_RESTIM,
+        stim=IN_VITRO_STIM,
+        pepfmt=LONG_PEPTIDE,
+    ),
+    Config(
+        method=ICS, readout=IFNG, apc=PBMC, culture=EX_VIVO, stim=EX_VIVO, pepfmt=MINIMAL_EPITOPE
+    ),
     # ... all attested combinations
 ]
 ```
@@ -1779,18 +1823,39 @@ At d_model = 512: approximately 55M parameters.
 ## A.1 T-Cell Assay Methods
 ```python
 TCELL_ASSAY_METHODS = [
-    "unknown", "ELISPOT", "ICS", "MULTIMER", "CYTOTOXICITY",
-    "PROLIFERATION", "ELISA", "LUMINEX", "CYTOKINE_CAPTURE",
-    "DEGRANULATION", "ACTIVATION_MARKER", "OTHER",
+    "unknown",
+    "ELISPOT",
+    "ICS",
+    "MULTIMER",
+    "CYTOTOXICITY",
+    "PROLIFERATION",
+    "ELISA",
+    "LUMINEX",
+    "CYTOKINE_CAPTURE",
+    "DEGRANULATION",
+    "ACTIVATION_MARKER",
+    "OTHER",
 ]
 ```
 
 ## A.2 T-Cell Readouts
 ```python
 TCELL_ASSAY_READOUTS = [
-    "unknown", "IFNg", "IL2", "TNFa", "IL4", "IL5", "IL10",
-    "IL17", "GMCSF", "GRANZYME_B", "PERFORIN", "CD107A",
-    "MULTIMER_BINDING", "PROLIFERATION", "ACTIVATION",
+    "unknown",
+    "IFNg",
+    "IL2",
+    "TNFa",
+    "IL4",
+    "IL5",
+    "IL10",
+    "IL17",
+    "GMCSF",
+    "GRANZYME_B",
+    "PERFORIN",
+    "CD107A",
+    "MULTIMER_BINDING",
+    "PROLIFERATION",
+    "ACTIVATION",
     "OTHER",
 ]
 ```
@@ -1798,38 +1863,56 @@ TCELL_ASSAY_READOUTS = [
 ## A.3 APC Types
 ```python
 TCELL_APC_TYPES = [
-    "unknown", "DC", "PBMC", "BLCL", "T2", "K562",
-    "AUTOLOGOUS", "MONOCYTE", "MACROPHAGE", "OTHER",
+    "unknown",
+    "DC",
+    "PBMC",
+    "BLCL",
+    "T2",
+    "K562",
+    "AUTOLOGOUS",
+    "MONOCYTE",
+    "MACROPHAGE",
+    "OTHER",
 ]
 ```
 
 ## A.4 Culture Contexts
 ```python
 TCELL_CULTURE_CONTEXTS = [
-    "unknown", "DIRECT_EX_VIVO", "SHORT_RESTIM", "IN_VITRO",
-    "IN_VIVO", "ENGINEERED", "CELL_LINE_CLONE",
-    "NON_SPECIFIC_ACTIVATION", "OTHER",
+    "unknown",
+    "DIRECT_EX_VIVO",
+    "SHORT_RESTIM",
+    "IN_VITRO",
+    "IN_VIVO",
+    "ENGINEERED",
+    "CELL_LINE_CLONE",
+    "NON_SPECIFIC_ACTIVATION",
+    "OTHER",
 ]
 ```
 
 ## A.5 Stimulation Contexts
 ```python
 TCELL_STIM_CONTEXTS = [
-    "unknown", "EX_VIVO", "IN_VITRO_STIM", "IN_VIVO",
-    "ENGINEERED", "OTHER",
+    "unknown",
+    "EX_VIVO",
+    "IN_VITRO_STIM",
+    "IN_VIVO",
+    "ENGINEERED",
+    "OTHER",
 ]
 ```
 
 ## A.6 Peptide Formats
 ```python
 TCELL_PEPTIDE_FORMATS = [
-    "unknown",           # not annotated
-    "MINIMAL_EPITOPE",   # exact 8-15mer pulsed
-    "LONG_PEPTIDE",      # single 16-30mer pulsed
-    "PEPTIDE_POOL",      # overlapping peptides covering a region
-    "WHOLE_PROTEIN",     # full protein antigen
-    "TMG",               # tandem minigene construct
-    "PEPTIDE_MIX",       # defined mixture of synthetic peptides
+    "unknown",  # not annotated
+    "MINIMAL_EPITOPE",  # exact 8-15mer pulsed
+    "LONG_PEPTIDE",  # single 16-30mer pulsed
+    "PEPTIDE_POOL",  # overlapping peptides covering a region
+    "WHOLE_PROTEIN",  # full protein antigen
+    "TMG",  # tandem minigene construct
+    "PEPTIDE_MIX",  # defined mixture of synthetic peptides
 ]
 ```
 

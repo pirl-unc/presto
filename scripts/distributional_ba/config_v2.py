@@ -23,14 +23,16 @@ def _make_conditions_v2() -> List[ConditionSpec]:
     def _add(head_type, assay_mode, max_nM, n_bins=128, sigma_mult=0.75):
         nonlocal cid
         cid += 1
-        conds.append(ConditionSpec(
-            cond_id=cid,
-            head_type=head_type,
-            assay_mode=assay_mode,
-            max_nM=max_nM,
-            n_bins=n_bins,
-            sigma_mult=sigma_mult,
-        ))
+        conds.append(
+            ConditionSpec(
+                cond_id=cid,
+                head_type=head_type,
+                assay_mode=assay_mode,
+                max_nM=max_nM,
+                n_bins=n_bins,
+                sigma_mult=sigma_mult,
+            )
+        )
 
     # Block 1 (4): Regression baselines — additive (best from v1)
     for max_nM in (50_000, 250_000):

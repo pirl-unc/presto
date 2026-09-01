@@ -85,8 +85,7 @@ def _make_designs() -> Tuple[DesignSpec, ...]:
                 design_id=f"G{idx:02d}",
                 family="groove_transformer",
                 description=(
-                    f"G1-style groove transformer, peptide={pep_mode}, "
-                    f"groove={groove_mode}"
+                    f"G1-style groove transformer, peptide={pep_mode}, groove={groove_mode}"
                 ),
                 extra_args=(
                     "--model-variant",

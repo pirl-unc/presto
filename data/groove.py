@@ -374,11 +374,7 @@ def parse_class_i(
     half_1 = _slice_or_empty(cleaned, mature_start, alpha2_start)
     half_2 = _slice_or_empty(cleaned, alpha2_start, alpha2_end)
     secondary = next(
-        (
-            pair
-            for pair in pairs
-            if pair[0] > c2 + 10
-        ),
+        (pair for pair in pairs if pair[0] > c2 + 10),
         None,
     )
     if len(half_1) < 50:
@@ -572,9 +568,7 @@ def parse_class_ii_beta(
         else None
     )
     downstream_beta2 = [
-        pair
-        for pair in beta2_candidates
-        if beta1_pair is None or pair[0] > beta1_pair[1] + 10
+        pair for pair in beta2_candidates if beta1_pair is None or pair[0] > beta1_pair[1] + 10
     ]
     beta2_pair = (
         min(downstream_beta2, key=lambda item: (abs(item[2] - 56), item[0]))
@@ -740,7 +734,7 @@ def prepare_mhc_input(
             mhc_class="I",
             groove_half_1=_fallback_truncate(cleaned, DEFAULT_CLASS_I_GROOVE_HALF_1_LEN),
             groove_half_2=_fallback_truncate(
-                cleaned[DEFAULT_CLASS_I_GROOVE_HALF_1_LEN :],
+                cleaned[DEFAULT_CLASS_I_GROOVE_HALF_1_LEN:],
                 DEFAULT_CLASS_I_GROOVE_HALF_2_LEN,
             ),
             groove_status_a=parsed.status,
@@ -760,8 +754,7 @@ def prepare_mhc_input(
         )
     if not allow_fallback_truncation:
         raise ValueError(
-            "Class-II groove extraction failed: "
-            f"alpha={parsed_a.status}, beta={parsed_b.status}"
+            f"Class-II groove extraction failed: alpha={parsed_a.status}, beta={parsed_b.status}"
         )
     return PreparedMHCInput(
         mhc_class="II",

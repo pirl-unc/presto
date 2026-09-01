@@ -36,9 +36,7 @@ from presto.models.presto import Presto  # noqa: E402
 from presto.scripts.train_synthetic import compute_loss  # noqa: E402
 
 CLASS1_SEQ = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
-CLASS2_SEQ = (
-    "RATPENYLFQGRQECYAFNGTQRFLERYIYNREEFARFDSDVGEFRAVTELGRPAAEYWNSQKDIL"
-)
+CLASS2_SEQ = "RATPENYLFQGRQECYAFNGTQRFLERYIYNREEFARFDSDVGEFRAVTELGRPAAEYWNSQKDIL"
 SEQS = {
     "HLA-A*02:01": CLASS1_SEQ,
     "HLA-B*07:02": CLASS1_SEQ,
@@ -312,7 +310,6 @@ def _every_modality_batch():
     return PrestoCollator()([dataset[i] for i in range(len(dataset))])
 
 
-
 #: Below this, a parameter is receiving nothing in any practical sense.
 #:
 #: An exact `== 0.0` test is knife-edge. `class2_pfr_score.2.bias` shows
@@ -366,19 +363,15 @@ def _dead_after_warmup(model):
     return {
         name
         for name, param in model.named_parameters()
-        if param.grad is None
-        or float(param.grad.abs().sum()) < EFFECTIVELY_ZERO_GRADIENT
+        if param.grad is None or float(param.grad.abs().sum()) < EFFECTIVELY_ZERO_GRADIENT
     }
 
 
 @pytest.fixture(scope="module", params=TOPOLOGIES)
 def gradient_report(request):
     torch.manual_seed(0)
-    model = Presto(
-        d_model=32, n_layers=2, n_heads=4, latent_topology=request.param
-    )
+    model = Presto(d_model=32, n_layers=2, n_heads=4, latent_topology=request.param)
     return model, _dead_after_warmup(model)
-
 
 
 @pytest.fixture(scope="module")
@@ -388,9 +381,7 @@ def dead_in_any_topology():
     dead_union: set = set()
     for topology in TOPOLOGIES:
         torch.manual_seed(0)
-        model = Presto(
-            d_model=32, n_layers=2, n_heads=4, latent_topology=topology
-        )
+        model = Presto(d_model=32, n_layers=2, n_heads=4, latent_topology=topology)
         dead = _dead_after_warmup(model)
         known.update(name for name, _ in model.named_parameters())
         dead_union |= dead
@@ -420,8 +411,7 @@ class TestGradientCoverage:
         known, dead_union = dead_in_any_topology
         stale = sorted((ALLOWED_DEAD & known) - dead_union)
         assert stale == [], (
-            f"these are trained under every topology and should leave the "
-            f"allowlist: {stale}"
+            f"these are trained under every topology and should leave the allowlist: {stale}"
         )
 
     def test_allowlist_refers_to_real_parameters(self, gradient_report):
@@ -429,9 +419,7 @@ class TestGradientCoverage:
         model, _ = gradient_report
         known = {name for name, _ in model.named_parameters()}
         missing = sorted(ALLOWED_DEAD - known)
-        assert missing == [], (
-            f"allowlist names parameters that no longer exist: {missing}"
-        )
+        assert missing == [], f"allowlist names parameters that no longer exist: {missing}"
 
     def test_the_vast_majority_of_parameters_train(self, gradient_report):
         """Ceiling is 0.5%; the measured figure is 0.131%.
@@ -447,8 +435,7 @@ class TestGradientCoverage:
         dead_params = sum(sizes[name] for name in dead)
         total = sum(sizes.values())
         assert dead_params / total < 0.005, (
-            f"{dead_params}/{total} parameters are untrained "
-            f"({100 * dead_params / total:.3f}%)"
+            f"{dead_params}/{total} parameters are untrained ({100 * dead_params / total:.3f}%)"
         )
 
 
@@ -485,9 +472,7 @@ class TestTheAllowlistIsWellFormed:
     }
 
     def test_no_parameter_is_in_two_categories(self):
-        counts = collections.Counter(
-            [name for names in self.CATEGORIES.values() for name in names]
-        )
+        counts = collections.Counter([name for names in self.CATEGORIES.values() for name in names])
         assert [name for name, n in counts.items() if n > 1] == []
 
     def test_the_union_is_what_allowed_dead_contains(self):
@@ -500,9 +485,7 @@ class TestTheAllowlistIsWellFormed:
     def test_every_category_is_non_empty(self):
         """An empty category is finished work; delete it rather than keep it."""
         empty = sorted(label for label, names in self.CATEGORIES.items() if not names)
-        assert empty == [], (
-            f"these categories are empty and should be removed: {empty}"
-        )
+        assert empty == [], f"these categories are empty and should be removed: {empty}"
 
 
 # ---------------------------------------------------------------------------
@@ -573,8 +556,7 @@ class TestEveryTaskIsSupervised:
             if dataclasses.is_dataclass(getattr(loaders, name))
             and name != "PrestoSample"
             and any(
-                field.name == "core_start"
-                for field in dataclasses.fields(getattr(loaders, name))
+                field.name == "core_start" for field in dataclasses.fields(getattr(loaders, name))
             )
         ]
         assert carriers == [], (

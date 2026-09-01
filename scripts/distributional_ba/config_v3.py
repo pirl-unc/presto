@@ -21,13 +21,15 @@ def _make_conditions_v3() -> List[ConditionSpec]:
     for embed_dim in (128, 256, 384, 512):
         for max_nM in (25_000, 50_000, 75_000, 100_000, 125_000, 150_000):
             cid += 1
-            conds.append(ConditionSpec(
-                cond_id=cid,
-                head_type="mhcflurry",
-                assay_mode="additive",
-                max_nM=max_nM,
-                embed_dim=embed_dim,
-            ))
+            conds.append(
+                ConditionSpec(
+                    cond_id=cid,
+                    head_type="mhcflurry",
+                    assay_mode="additive",
+                    max_nM=max_nM,
+                    embed_dim=embed_dim,
+                )
+            )
 
     assert len(conds) == 24, f"Expected 24 conditions, got {len(conds)}"
     return conds

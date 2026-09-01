@@ -1,6 +1,5 @@
 """Tests for mouse MHC overlay builder."""
 
-
 from presto.data import mouse_mhc_overlay
 
 

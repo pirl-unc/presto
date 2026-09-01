@@ -41,8 +41,10 @@ ABLATION_DESIGNS: Tuple[AblationSpec, ...] = tuple(
         variant=f"a{i}",
         design_id=f"A{i}",
         extra_args=(
-            "--embed-dim", "128",
-            "--hidden-dim", "128",
+            "--embed-dim",
+            "128",
+            "--hidden-dim",
+            "128",
         ),
     )
     for i in range(1, 9)
@@ -55,13 +57,19 @@ def _run_id(prefix: str, design_id: str) -> str:
 
 def _common_args(*, alleles: Sequence[str], probes: Sequence[str]) -> List[str]:
     return [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--extra-probe-peptides", ",".join(probes[1:]),
-        "--measurement-profile", "numeric_no_qualitative",
-        "--qualifier-filter", "all",
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--extra-probe-peptides",
+        ",".join(probes[1:]),
+        "--measurement-profile",
+        "numeric_no_qualitative",
+        "--qualifier-filter",
+        "all",
         "--no-synthetic-negatives",
-        "--probe-plot-frequency", "off",
+        "--probe-plot-frequency",
+        "off",
     ]
 
 
@@ -166,9 +174,7 @@ def main() -> None:
     # `tested`, which reads these. Computing it afterwards was a plain
     # use-before-definition -- ruff F821, and a NameError on every run.
     selected_design_ids = {
-        part.strip().upper()
-        for part in str(args.design_ids).split(",")
-        if part.strip()
+        part.strip().upper() for part in str(args.design_ids).split(",") if part.strip()
     }
     selected_designs = tuple(
         design

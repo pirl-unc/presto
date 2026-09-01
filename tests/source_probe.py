@@ -48,9 +48,7 @@ def region_between(source: str, start: str, end: str, *, where: str = "the sourc
     """The slice between two markers, each required to be unique."""
     begin = unique_index(source, start, where=where)
     finish = unique_index(source, end, where=where)
-    assert begin < finish, (
-        f"{start!r} appears after {end!r} in {where}; the region is inverted"
-    )
+    assert begin < finish, f"{start!r} appears after {end!r} in {where}; the region is inverted"
     return source[begin:finish]
 
 
@@ -69,9 +67,7 @@ def assert_every_occurrence(
         f"expected at least {minimum} occurrence(s) of {marker!r}, found "
         f"{len(found)}; if a call site was removed, update this test on purpose"
     )
-    offenders = [
-        offset for offset in found if requirement not in source[offset : offset + window]
-    ]
+    offenders = [offset for offset in found if requirement not in source[offset : offset + window]]
     assert not offenders, (
         f"{len(offenders)} of {len(found)} occurrence(s) of {marker!r} lack "
         f"{requirement!r} within {window} characters: offsets {offenders}"

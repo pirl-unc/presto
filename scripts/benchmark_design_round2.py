@@ -42,14 +42,22 @@ PRESTO_FACTORIAL: Tuple[DesignSpec, ...] = tuple(
         design_id=f"P{idx:02d}",
         kind="presto",
         extra_args=(
-            "--d-model", "128",
-            "--peptide-pos-mode", peptide_pos,
-            "--groove-pos-mode", groove_pos,
-            "--binding-core-lengths", "8,9,10,11",
-            "--binding-core-refinement", "shared",
-            "--affinity-assay-residual-mode", residual_mode,
-            "--binding-kinetic-input-mode", "affinity_vec",
-            "--binding-direct-segment-mode", "off",
+            "--d-model",
+            "128",
+            "--peptide-pos-mode",
+            peptide_pos,
+            "--groove-pos-mode",
+            groove_pos,
+            "--binding-core-lengths",
+            "8,9,10,11",
+            "--binding-core-refinement",
+            "shared",
+            "--affinity-assay-residual-mode",
+            residual_mode,
+            "--binding-kinetic-input-mode",
+            "affinity_vec",
+            "--binding-direct-segment-mode",
+            "off",
         ),
     )
     for idx, (peptide_pos, groove_pos, residual_mode) in enumerate(
@@ -71,48 +79,72 @@ GROOVE_CONTROLS: Tuple[DesignSpec, ...] = (
         design_id="G0",
         kind="groove",
         extra_args=(
-            "--model-variant", "mlp",
-            "--embed-dim", "64",
-            "--hidden-dim", "128",
-            "--binding-contrastive-weight", "0",
-            "--binding-peptide-contrastive-weight", "0",
+            "--model-variant",
+            "mlp",
+            "--embed-dim",
+            "64",
+            "--hidden-dim",
+            "128",
+            "--binding-contrastive-weight",
+            "0",
+            "--binding-peptide-contrastive-weight",
+            "0",
         ),
     ),
     DesignSpec(
         design_id="G1",
         kind="groove",
         extra_args=(
-            "--model-variant", "transformer",
-            "--embed-dim", "128",
-            "--hidden-dim", "256",
-            "--n-layers", "2",
-            "--n-heads", "4",
-            "--binding-contrastive-weight", "0",
-            "--binding-peptide-contrastive-weight", "0",
+            "--model-variant",
+            "transformer",
+            "--embed-dim",
+            "128",
+            "--hidden-dim",
+            "256",
+            "--n-layers",
+            "2",
+            "--n-heads",
+            "4",
+            "--binding-contrastive-weight",
+            "0",
+            "--binding-peptide-contrastive-weight",
+            "0",
         ),
     ),
     DesignSpec(
         design_id="G0R",
         kind="groove",
         extra_args=(
-            "--model-variant", "mlp",
-            "--embed-dim", "64",
-            "--hidden-dim", "128",
-            "--binding-contrastive-weight", "1.0",
-            "--binding-peptide-contrastive-weight", "0.5",
+            "--model-variant",
+            "mlp",
+            "--embed-dim",
+            "64",
+            "--hidden-dim",
+            "128",
+            "--binding-contrastive-weight",
+            "1.0",
+            "--binding-peptide-contrastive-weight",
+            "0.5",
         ),
     ),
     DesignSpec(
         design_id="G1R",
         kind="groove",
         extra_args=(
-            "--model-variant", "transformer",
-            "--embed-dim", "128",
-            "--hidden-dim", "256",
-            "--n-layers", "2",
-            "--n-heads", "4",
-            "--binding-contrastive-weight", "1.0",
-            "--binding-peptide-contrastive-weight", "0.5",
+            "--model-variant",
+            "transformer",
+            "--embed-dim",
+            "128",
+            "--hidden-dim",
+            "256",
+            "--n-layers",
+            "2",
+            "--n-heads",
+            "4",
+            "--binding-contrastive-weight",
+            "1.0",
+            "--binding-peptide-contrastive-weight",
+            "0.5",
         ),
     ),
 )
@@ -126,13 +158,19 @@ def _run_id(prefix: str, design_id: str) -> str:
 
 def _common_broad_args(*, alleles: Sequence[str], probes: Sequence[str]) -> List[str]:
     return [
-        "--alleles", ",".join(alleles),
-        "--probe-peptide", probes[0],
-        "--extra-probe-peptides", ",".join(probes[1:]),
-        "--measurement-profile", "numeric_no_qualitative",
-        "--qualifier-filter", "all",
+        "--alleles",
+        ",".join(alleles),
+        "--probe-peptide",
+        probes[0],
+        "--extra-probe-peptides",
+        ",".join(probes[1:]),
+        "--measurement-profile",
+        "numeric_no_qualitative",
+        "--qualifier-filter",
+        "all",
         "--no-synthetic-negatives",
-        "--probe-plot-frequency", "off",
+        "--probe-plot-frequency",
+        "off",
     ]
 
 
@@ -147,10 +185,14 @@ def _build_extra_args(
     if design.kind == "presto":
         args.extend(
             [
-                "--affinity-loss-mode", "full",
-                "--init-checkpoint", warm_start,
-                "--binding-contrastive-weight", "0",
-                "--binding-peptide-contrastive-weight", "0",
+                "--affinity-loss-mode",
+                "full",
+                "--init-checkpoint",
+                warm_start,
+                "--binding-contrastive-weight",
+                "0",
+                "--binding-peptide-contrastive-weight",
+                "0",
             ]
         )
     args.extend(design.extra_args)
@@ -256,9 +298,7 @@ def main() -> None:
     # `tested`, which reads these. Computing it afterwards was a plain
     # use-before-definition -- ruff F821, and a NameError on every run.
     selected_design_ids = {
-        part.strip().upper()
-        for part in str(args.design_ids).split(",")
-        if part.strip()
+        part.strip().upper() for part in str(args.design_ids).split(",") if part.strip()
     }
     selected_designs = tuple(
         design

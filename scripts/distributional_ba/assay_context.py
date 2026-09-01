@@ -86,6 +86,7 @@ class AssayContextEncoder(nn.Module):
 # Integration modules — modify head predictions based on assay context
 # ---------------------------------------------------------------------------
 
+
 class AdditiveIntegration(nn.Module):
     """Additive bias: pred = base + bias(ctx)."""
 
@@ -139,10 +140,10 @@ class D1AffineIntegration(nn.Module):
         Returns:
             dict with ``centers`` (B, K) and ``edges`` (B, K+1).
         """
-        s = F.softplus(self.scale(ctx))   # (B, 1)
-        b = self.bias(ctx)                # (B, 1)
+        s = F.softplus(self.scale(ctx))  # (B, 1)
+        b = self.bias(ctx)  # (B, 1)
         adj_centers = s * centers.unsqueeze(0) + b  # (B, K)
-        adj_edges = s * edges.unsqueeze(0) + b      # (B, K+1)
+        adj_edges = s * edges.unsqueeze(0) + b  # (B, K+1)
         return {"centers": adj_centers, "edges": adj_edges}
 
 

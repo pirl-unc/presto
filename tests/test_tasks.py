@@ -129,15 +129,15 @@ class TestLabelDerivation:
 
     def test_mhc_pairing_derivation(self):
         task = MHCPairingTask()
-        assert task.derive_label(
-            {"mhc_a_allele": "HLA-A*02:01", "mhc_b_allele": "B2M"}
-        ) == 1
-        assert task.derive_label(
-            {"mhc_a_allele": "HLA-DRA*01:01", "mhc_b_allele": "HLA-DRB1*01:01"}
-        ) == 1
-        assert task.derive_label(
-            {"mhc_a_allele": "HLA-DRA*01:01", "mhc_b_allele": "HLA-DQB1*06:02"}
-        ) == 0
+        assert task.derive_label({"mhc_a_allele": "HLA-A*02:01", "mhc_b_allele": "B2M"}) == 1
+        assert (
+            task.derive_label({"mhc_a_allele": "HLA-DRA*01:01", "mhc_b_allele": "HLA-DRB1*01:01"})
+            == 1
+        )
+        assert (
+            task.derive_label({"mhc_a_allele": "HLA-DRA*01:01", "mhc_b_allele": "HLA-DQB1*06:02"})
+            == 0
+        )
 
 
 class TestNegativeGeneration:

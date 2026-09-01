@@ -1,17 +1,29 @@
 line-length = 100
 target-version = "py311"
-exclude = [
+# `extend-exclude`, not `exclude`: the latter *replaces* ruff's built-in
+# defaults, which is how `.venv`, `build/` and `node_modules/` came to be
+# skipped only incidentally by `respect-gitignore`. With that flag off,
+# `ruff check .` reported 37,222 findings from site-packages.
+extend-exclude = [
   "presto_old_code_starts",
   ".pytest_cache",
   "__pycache__",
+  # Frozen snapshots of scripts as they ran. Editing them to satisfy a linter
+  # would falsify the experiment record.
+  #
+  # This lived in `[lint.per-file-ignores]` and I deleted it as dead config,
+  # reasoning that `lint.sh` never passed the path. That was wrong: lint.sh is
+  # one caller among many. Editor and LSP integrations, pre-commit hooks and a
+  # bare `ruff check .` all read this file, and after the deletion `ruff check
+  # .` reported 546 findings here while `ruff format .` offered to rewrite the
+  # snapshots. Exclusion belongs in the config, where every caller sees it.
+  "experiments",
 ]
 
 [format]
-# Preserve existing quote style and magic trailing commas: the goal here is to
-# get lines under the limit, not to restyle a codebase that has never been
-# formatter-managed. Minimizes the diff to what the line-length rule needs.
+# Preserve the existing quote style: the goal was to get lines under the limit,
+# not to restyle a codebase that has never been formatter-managed.
 quote-style = "preserve"
-skip-magic-trailing-comma = false
 
 [lint]
 # Widened from ["E9", "F63", "F7", "F82"] to the full E/F sets.

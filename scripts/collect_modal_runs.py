@@ -440,7 +440,7 @@ def write_launch_json(exp_dir: Path, spec: dict) -> None:
         "modal_run_dirs": [f"modal_runs/{d}" for d in spec["modal_runs"]],
         "collection_timestamp": datetime.now().isoformat(),
         "note": "These runs were collected retrospectively from modal_runs/ into the experiment "
-            "registry.",
+        "registry.",
     }
     write_json(repro / "launch.json", payload)
 
@@ -472,12 +472,12 @@ FAMILIES = [
         "date": "2026-03-08",
         "agent": "Claude Code (claude-opus-4-6)",
         "description": "Systematic comparison of target encoding modes (direct, IC50-exact, "
-            "numeric-synth), "
+        "numeric-synth), "
         "probe configurations (probe-only, shared-probe, peptide-rank, allele-rank), "
         "and training variants (balanced, contrastive, warmstart, synthetics) on the "
         "2-allele HLA-A*02:01/A*24:02 panel.",
         "training_notes": "2-allele panel (A*02:01, A*24:02). 10 epochs, batch 512 "
-            "(direct/numeric) or 128 (IC50-exact). "
+        "(direct/numeric) or 128 (IC50-exact). "
         "GrooveTransformerModel, seed 42. Various measurement profiles and assay modes. "
         "Some runs warm-started from mhc-pretrain-20260308b.",
         "format": "A",
@@ -511,7 +511,7 @@ FAMILIES = [
         "IC50-exact warmstart with synthetics + peptide ranking, and "
         "quantitative affinity warmstart.",
         "training_notes": "7-allele class-I panel (A*02:01, A*03:01, A*11:01, A*01:01, A*24:02, "
-            "B*07:02, B*44:02). "
+        "B*07:02, B*44:02). "
         "12 epochs, batch 140, GrooveTransformerModel, warm-start from mhc-pretrain-20260308b. "
         "IC50-exact or quantitative affinity measurement profiles.",
         "format": "A",
@@ -576,7 +576,7 @@ FAMILIES = [
         "description": "Diagnostic runs for debugging training issues: reservoir sampling, "
         "motif scanning, repair iterations, and small-GPU diagnostics.",
         "training_notes": "Diagnostic profile: max_binding=40K, d_model=128, n_layers=2, "
-            "n_heads=4. "
+        "n_heads=4. "
         "1-3 epochs, batch 256. Various cap_sampling strategies.",
         "format": "B",
         "modal_runs": [
@@ -614,7 +614,7 @@ FAMILIES = [
         "description": "Verification runs after code refactoring to ensure training "
         "behavior was preserved across commits.",
         "training_notes": "1 epoch each on full profile, batch 128. d_model=128, n_layers=2, "
-            "n_heads=4. "
+        "n_heads=4. "
         "Each run tagged with a git commit hash.",
         "format": "B",
         "modal_runs": [

@@ -26,9 +26,7 @@ class SinusoidalPE(nn.Module):
 
         pe = torch.zeros(max_len, d_model)
         position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
-        div_term = torch.exp(
-            torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model)
-        )
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
         pe = pe.unsqueeze(0)  # (1, max_len, d_model)
@@ -158,7 +156,7 @@ class SequenceEncoder(nn.Module):
 
         # Create attention mask for transformer (True = ignore)
         # For empty sequences, set first position to attend to avoid NaN
-        attn_mask = (mask == 0)
+        attn_mask = mask == 0
         # Fix: ensure at least one position is attended to per sequence
         attn_mask[:, 0] = attn_mask[:, 0] & has_content
 

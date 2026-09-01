@@ -20,8 +20,7 @@ def test_every_parameter_is_classified(topology):
     """
     model = Presto(d_model=32, n_layers=2, n_heads=4, latent_topology=topology)
     unmatched = sorted(
-        name for name, _ in model.named_parameters()
-        if model._classify_parameter(name) == "other"
+        name for name, _ in model.named_parameters() if model._classify_parameter(name) == "other"
     )
     assert unmatched == [], f"{topology}: unclassified parameters would be frozen"
 
@@ -32,7 +31,8 @@ def test_expanded_binding_latents_classify_as_binding():
     them, so STAGE_BINDING_CLASS1 froze the latents it was meant to train."""
     model = Presto(d_model=32, n_layers=2, n_heads=4, latent_topology="expanded")
     binding = [
-        name for name, _ in model.named_parameters()
+        name
+        for name, _ in model.named_parameters()
         if model._classify_parameter(name) == "binding_query"
     ]
     assert any("binding_affinity" in name for name in binding)

@@ -9081,3 +9081,48 @@ work that validated an assumption instead of the real path.
 - **No validation training run.** The brev baseline predates the whole series,
   so it no longer describes this code. Needs a single cheap GPU and an idle
   check on the shared org box before provisioning.
+
+---
+
+## Lint config: from narrow-and-dead to broad-and-enforced (2026-09-01)
+
+Four PRs, #22 through #25. Recorded here because AGENTS.md asks for it and the
+whole series skipped the step -- the reviewer of #24 noted that too.
+
+- [x] #22 — AST guard for un-failable assertions and single-match source
+      anchoring; 14 live instances fixed
+- [x] #23 — widen the config that actually runs (`ruff.toml`, not the dead
+      `[tool.ruff]` block in pyproject); 107 findings fixed
+- [x] #24 — fix the 638 E501 rather than ignoring them; add `scripts/` to CI
+- [x] #25 — review fixes: restore experiment protection, invert `lint.sh`,
+      enforce the formatter
+
+### What this cost, and what it bought
+
+Roughly 700 lines of mechanical reflow across ~90 files, plus 83 files of
+formatter adoption. It bought: `scripts/` linted for the first time (383 hidden
+findings), `F821` on (which caught three undefined names I introduced during
+it), un-failable assertions guarded in package code as well as tests, and a
+config where nothing is suppressed except `__init__.py` re-exports.
+
+### Mistakes worth remembering
+
+- **Dead config is invisible.** A `[tool.ruff]` block in `pyproject.toml` never
+  ran because `ruff.toml` takes precedence. Every "lint clean" in #7-#22 meant
+  a much narrower rule set than it read as.
+- **"CI does not lint it" is not "the config is dead."** I deleted the
+  `experiments/**` stanza on that reasoning and stripped the only protection
+  that reaches editors, pre-commit and `ruff check .`. Config-level rules have
+  more callers than the CI script.
+- **Enumerated lists rot.** `lint.sh` listed directories and silently omitted
+  the largest one. Appending to the list would have fixed the instance and kept
+  the mechanism; `ruff check .` plus `extend-exclude` fixes both.
+
+### Left open, deliberately
+
+- `__init__.py` keeps its `F401` exemption: 2,035 re-exports where the import
+  *is* the feature. Removing it means generating `__all__` for eight packages,
+  which changes `import *` semantics.
+- The scripted splitter's continuation lines indent +4 from the statement
+  rather than aligning under the opening quote. `ruff format` accepts both, so
+  they are stable, but they read as scripted output.

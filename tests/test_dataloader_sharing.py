@@ -93,13 +93,9 @@ class TestAppliedWhereItMatters:
         # came first and would have passed even if the sharing call had
         # escaped its guard entirely.
         source = inspect.getsource(loaders.create_dataloader)
-        unique_index(
-            source, "_use_file_system_sharing()", where="create_dataloader"
-        )
+        unique_index(source, "_use_file_system_sharing()", where="create_dataloader")
         lines = source.splitlines()
-        call_lines = [
-            i for i, line in enumerate(lines) if "_use_file_system_sharing()" in line
-        ]
+        call_lines = [i for i, line in enumerate(lines) if "_use_file_system_sharing()" in line]
         assert len(call_lines) == 1, call_lines
         index = call_lines[0]
         preceding = lines[index - 1].strip()

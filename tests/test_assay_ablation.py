@@ -67,9 +67,7 @@ class TestForwardPass:
         pep_tok, mhc_a_tok, mhc_b_tok = _make_inputs()
 
         with torch.no_grad():
-            out = _forward_with_context(
-                model, variant, pep_tok, mhc_a_tok, mhc_b_tok
-            )
+            out = _forward_with_context(model, variant, pep_tok, mhc_a_tok, mhc_b_tok)
 
         assert isinstance(out, dict), f"Expected dict, got {type(out)}"
         assert "ic50" in out, f"Missing 'ic50' key in output for {variant}"
@@ -86,9 +84,7 @@ class TestForwardPass:
             model.eval()
 
             with torch.no_grad():
-                out = _forward_with_context(
-                    model, variant, pep_tok, mhc_a_tok, mhc_b_tok
-                )
+                out = _forward_with_context(model, variant, pep_tok, mhc_a_tok, mhc_b_tok)
 
             for key in ("ic50", "kd", "ec50"):
                 assert key in out, f"{variant} missing '{key}' key"
@@ -128,20 +124,14 @@ class TestBackwardPass:
         model.train()
         pep_tok, mhc_a_tok, mhc_b_tok = _make_inputs()
 
-        out = _forward_with_context(
-            model, variant, pep_tok, mhc_a_tok, mhc_b_tok
-        )
+        out = _forward_with_context(model, variant, pep_tok, mhc_a_tok, mhc_b_tok)
 
         target = torch.randn(BATCH, 1)
         loss = torch.nn.functional.mse_loss(out["ic50"], target)
         loss.backward()
 
         # At least some parameters should have gradients
-        grads = [
-            p.grad
-            for p in model.parameters()
-            if p.grad is not None
-        ]
+        grads = [p.grad for p in model.parameters() if p.grad is not None]
         assert len(grads) > 0, f"No gradients computed for {variant}"
 
 
@@ -161,6 +151,4 @@ class TestPredictIC50:
         with torch.no_grad():
             ic50 = model.predict_ic50(pep_tok, mhc_a_tok, mhc_b_tok)
 
-        assert ic50.shape == (BATCH, 1), (
-            f"predict_ic50 shape {ic50.shape} != (4,1) for {variant}"
-        )
+        assert ic50.shape == (BATCH, 1), f"predict_ic50 shape {ic50.shape} != (4,1) for {variant}"

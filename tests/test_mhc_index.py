@@ -6,6 +6,22 @@ from pathlib import Path
 from presto.data import mhc_index
 
 
+#: A sequence long enough to need splitting across source lines.
+#:
+#: Adjacent literals concatenate at parse time, so a stray space before a
+#: closing quote or a residue dropped at a seam would silently change the
+#: sequence under test -- no syntax error, no signal at the join. Joining an
+#: explicit list keeps each fragment visible, and the length assertion turns a
+#: seam edit into a collection-time failure instead of a wrong expectation.
+_SPLIT_SEQUENCE = "".join(
+    [
+        "LEQAKSECHFFNGTERVRFLDRHFYNQEEYARFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAV",
+        "DTYCRHNYG",
+    ]
+)
+assert len(_SPLIT_SEQUENCE) == 77, len(_SPLIT_SEQUENCE)
+
+
 def _write_fasta(path: Path, records: list[tuple[str, str]]) -> None:
     with open(path, "w", encoding="utf-8") as f:
         for header, sequence in records:
@@ -475,9 +491,8 @@ def test_augment_mhc_index_adds_groove_columns(tmp_path):
                 "mhc_class": "II",
                 "species": "Homo sapiens",
                 "source": "imgt",
-                "seq_len": "89",
-                "sequence": "LEQAKSECHFFNGTERVRFLDRHFYNQEEYARFDSDVGEYRAVTELGRPDAEYWNSQKDLLEQRRAAV"
-                    "DTYCRHNYG",
+                "seq_len": str(len(_SPLIT_SEQUENCE)),
+                "sequence": _SPLIT_SEQUENCE,
             }
         )
         writer.writerow(

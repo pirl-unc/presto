@@ -1459,8 +1459,7 @@ def validate_mhc_index(index_csv: str) -> Dict[str, object]:
                                 "row": row_idx,
                                 "code": "seq_len_mismatch",
                                 "message": (
-                                    f"seq_len={seq_len} but sequence "
-                                    f"length is {len(sequence)}"
+                                    f"seq_len={seq_len} but sequence length is {len(sequence)}"
                                 ),
                             }
                         )

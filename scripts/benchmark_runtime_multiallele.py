@@ -401,7 +401,7 @@ def _write_summary(output_dir: Path, rows: Sequence[Mapping[str, Any]]) -> None:
         "# Multi-Allele Runtime Benchmark",
         "",
         "| variant | epoch wall s | setup s | gpu util mean % | val loss | `SLLQHLIGL` A02 / "
-            "A24 | ratio | correct probes |",
+        "A24 | ratio | correct probes |",
         "| --- | ---: | ---: | ---: | ---: | --- | ---: | ---: |",
     ]
     for row in rows:

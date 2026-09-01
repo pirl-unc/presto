@@ -234,7 +234,7 @@ def write_reproducibility_bundle(
         "- Launcher snapshot: `source/` (if the source script existed at bundle creation time)",
         "",
         "These files freeze the launch invocation and environment for this experiment family so "
-            "later agents can rerun or extend it without relying on current launcher defaults.",
+        "later agents can rerun or extend it without relying on current launcher defaults.",
         "",
     ]
     (reproduce_dir / "README.md").write_text("\n".join(readme_lines), encoding="utf-8")

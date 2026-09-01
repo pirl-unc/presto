@@ -59,9 +59,7 @@ class TestBindingIsAssayInvariant:
     def test_binding_prediction_ignores_the_assay_label(self, model, sequence_inputs):
         with torch.no_grad():
             base = model(**sequence_inputs)
-            with_ctx = model(
-                **sequence_inputs, binding_context=FORBIDDEN_BINDING_CONTEXT
-            )
+            with_ctx = model(**sequence_inputs, binding_context=FORBIDDEN_BINDING_CONTEXT)
         for key in ("binding_logit", "binding_affinity_score", "binding_mixed_kd_log10"):
             assert torch.allclose(base[key], with_ctx[key]), (
                 f"{key} moved when an assay label was attached; the prediction "
@@ -102,9 +100,7 @@ class TestTCellIsContextInvariant:
         from presto.models.heads import TCellAssayHead
 
         parameters = inspect.signature(TCellAssayHead.forward).parameters
-        assert key not in parameters, (
-            f"{key} is back on the T-cell head's forward signature"
-        )
+        assert key not in parameters, f"{key} is back on the T-cell head's forward signature"
 
     def test_training_loop_does_not_supply_tcell_context(self):
         import inspect
@@ -118,9 +114,7 @@ class TestTCellIsContextInvariant:
         # `region_between` requires both markers to be unique, so a second
         # forward call fails here instead of being silently skipped.
         source = inspect.getsource(train_synthetic.compute_loss)
-        forward = region_between(
-            source, "outputs = model(", "provenance=", where="compute_loss"
-        )
+        forward = region_between(source, "outputs = model(", "provenance=", where="compute_loss")
         assert "tcell_context=" not in forward
 
 
@@ -170,12 +164,8 @@ class TestCellularStateIsAnOutputAxis:
         """
         base = dict(batch.provenance)
         altered = dict(batch.provenance)
-        altered["apm_perturbation_idx"] = torch.full_like(
-            base["apm_perturbation_idx"], 3
-        )
-        altered["processing_stimulus_idx"] = torch.full_like(
-            base["processing_stimulus_idx"], 2
-        )
+        altered["apm_perturbation_idx"] = torch.full_like(base["apm_perturbation_idx"], 3)
+        altered["processing_stimulus_idx"] = torch.full_like(base["processing_stimulus_idx"], 2)
         return base, altered
 
     @pytest.mark.parametrize(
@@ -239,6 +229,8 @@ class TestCellularStateIsAnOutputAxis:
     def test_no_cellular_state_embedding_on_the_input_path(self):
         model = Presto(d_model=32, n_layers=2, n_heads=4)
         assert not hasattr(model, "processing_condition_embed")
+
+
 class TestBiologicalStateIsAnInput:
     """The other half of the contract: causal state may be, and is, an input.
 
@@ -271,9 +263,7 @@ class TestBiologicalStateIsAnInput:
             ("disease_state_idx", 3),
         ],
     )
-    def test_state_reaches_the_prediction_once_trained(
-        self, provenance_key, alternate
-    ):
+    def test_state_reaches_the_prediction_once_trained(self, provenance_key, alternate):
         """Zero-init means no effect at init; the effect must appear with values.
 
         Asserting invariance here would be asserting the bug: these axes exist
@@ -318,10 +308,18 @@ class TestBiologicalStateIsAnInput:
         seq = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
         dataset = PrestoDataset(
             elution_records=[
-                ElutionRecord(peptide="LLDGTATLRF", alleles=["HLA-A*02:01"],
-                              detected=True, cell_type="Monocyte"),
-                ElutionRecord(peptide="SIINFEKLAA", alleles=["HLA-A*02:01"],
-                              detected=True, cell_type="Epithelial cell"),
+                ElutionRecord(
+                    peptide="LLDGTATLRF",
+                    alleles=["HLA-A*02:01"],
+                    detected=True,
+                    cell_type="Monocyte",
+                ),
+                ElutionRecord(
+                    peptide="SIINFEKLAA",
+                    alleles=["HLA-A*02:01"],
+                    detected=True,
+                    cell_type="Epithelial cell",
+                ),
             ],
             mhc_sequences={"HLA-A*02:01": seq},
             strict_mhc_resolution=False,

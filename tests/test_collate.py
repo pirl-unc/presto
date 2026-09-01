@@ -681,7 +681,4 @@ class TestStabilityAssayDescriptors:
         )
 
         assert IDX_TO_BINDING_ASSAY_PREP[int(context["assay_prep_idx"][0])] == "PURIFIED"
-        assert (
-            IDX_TO_BINDING_ASSAY_GEOMETRY[int(context["assay_geometry_idx"][0])]
-            == "COMPETITIVE"
-        )
+        assert IDX_TO_BINDING_ASSAY_GEOMETRY[int(context["assay_geometry_idx"][0])] == "COMPETITIVE"

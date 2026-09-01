@@ -139,9 +139,7 @@ class TestKnownDeadRows:
 
     def test_every_token_is_accounted_for(self):
         """No third category: a token either has data or is declared dead."""
-        assert set(PROCESSING_STIMULI) == (
-            set(STIMULI_WITH_DATA) | set(STIMULI_WITHOUT_DATA)
-        )
+        assert set(PROCESSING_STIMULI) == (set(STIMULI_WITH_DATA) | set(STIMULI_WITHOUT_DATA))
 
 
 class TestInfectionMapping:
@@ -253,8 +251,7 @@ class TestEveryCorpusCategoryIsMapped:
     @pytest.mark.parametrize("category", sorted(REVIEWED))
     def test_reviewed_category_is_mapped(self, category):
         assert not is_unmapped_condition(category), (
-            f"{category!r} is not in CONDITION_TO_STIMULUS and would be scored "
-            "as unstimulated"
+            f"{category!r} is not in CONDITION_TO_STIMULUS and would be scored as unstimulated"
         )
 
     def test_the_reviewed_set_matches_the_mapping_table(self):
@@ -319,10 +316,7 @@ class TestEveryCorpusCategoryIsMapped:
         1.46.0 moved unresolvable-arm rows to the empty string, and the mapping
         must stay correct for the day such a deposit reappears.
         """
-        assert (
-            CONDITION_TO_STIMULUS["cytokine_treatment_generic"]
-            == "cytokine_unspecified"
-        )
+        assert CONDITION_TO_STIMULUS["cytokine_treatment_generic"] == "cytokine_unspecified"
         assert stimulus_for_condition("cytokine_treatment_generic") != "none"
 
     def test_apm_lesions_are_not_stimuli(self):

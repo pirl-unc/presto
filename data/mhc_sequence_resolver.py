@@ -90,11 +90,7 @@ def _load_mhcseqs_input_lookup(search_dir: Optional[str] = None) -> Dict[str, Ex
 @lru_cache(maxsize=4)
 def _load_mhcseqs_sequence_lookup(search_dir: Optional[str] = None) -> Dict[str, str]:
     lookup = _load_mhcseqs_input_lookup(search_dir=search_dir)
-    return {
-        key: value.sequence
-        for key, value in lookup.items()
-        if value.sequence
-    }
+    return {key: value.sequence for key, value in lookup.items() if value.sequence}
 
 
 def _resolve_input_via_mhcseqs(
@@ -191,9 +187,7 @@ def resolve_class_i_groove_halves(
         allele,
         mhcseqs_search_dir=mhcseqs_search_dir,
     )
-    if exact is not None and (
-        str(exact.groove1 or "").strip() or str(exact.groove2 or "").strip()
-    ):
+    if exact is not None and (str(exact.groove1 or "").strip() or str(exact.groove2 or "").strip()):
         return (
             str(exact.groove1 or "").strip().upper(),
             str(exact.groove2 or "").strip().upper(),

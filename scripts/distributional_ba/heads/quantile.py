@@ -124,7 +124,7 @@ class QuantileHead(AffinityHead):
         metrics = {}
         for i, tau_val in enumerate(QUANTILE_LEVELS):
             qloss = _masked_mean(loss_per_q[:, i], mask)
-            metrics[f"loss_q{int(tau_val*100)}"] = float(qloss.detach())
+            metrics[f"loss_q{int(tau_val * 100)}"] = float(qloss.detach())
 
         # Crossing penalty (should be near-zero after sort)
         crossing = torch.relu(quantiles[:, :-1] - quantiles[:, 1:]).sum(dim=-1)

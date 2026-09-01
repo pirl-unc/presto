@@ -49,6 +49,7 @@ def test_parser_train_iedb_default_record_caps_unlimited():
     assert args.synthetic_class_i_no_mhc_beta_negative_ratio > 0.0
     assert args.synthetic_processing_negative_ratio > 0.0
 
+
 def test_parser_wires_train_synthetic_run_dir():
     parser = create_parser()
     args = parser.parse_args(

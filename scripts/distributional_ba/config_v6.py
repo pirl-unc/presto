@@ -28,13 +28,15 @@ def _make_conditions_v6() -> List[ConditionSpec]:
                 cid += 1
                 # hlgauss requires d2_logit; mhcflurry uses additive
                 assay_mode = "d2_logit" if head_type == "hlgauss" else "additive"
-                conds.append(ConditionSpec(
-                    cond_id=cid,
-                    head_type=head_type,
-                    assay_mode=assay_mode,
-                    max_nM=max_nM,
-                    embed_dim=embed_dim,
-                ))
+                conds.append(
+                    ConditionSpec(
+                        cond_id=cid,
+                        head_type=head_type,
+                        assay_mode=assay_mode,
+                        max_nM=max_nM,
+                        embed_dim=embed_dim,
+                    )
+                )
 
     assert len(conds) == 16, f"Expected 16 conditions, got {len(conds)}"
     return conds

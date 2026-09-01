@@ -88,9 +88,7 @@ except ImportError as exc:  # pragma: no cover - exercised via install docs
 
 
 APP_NAME = os.environ.get("RUNPLZ_APP_NAME", "presto-train")
-BASE_IMAGE = os.environ.get(
-    "RUNPLZ_IMAGE", "pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime"
-)
+BASE_IMAGE = os.environ.get("RUNPLZ_IMAGE", "pytorch/pytorch:2.4.0-cuda12.1-cudnn9-runtime")
 # Default to one cheap GPU, not a multi-GPU box. Presto training is a single-GPU
 # job: the Stage 4 factorial is 15 independent runs (5 arms x 3 seeds), so a
 # 4xA100 instance would idle three GPUs per run and bill for them. Expressed as
@@ -118,8 +116,7 @@ def env_bool(name: str, default: bool = False) -> bool:
     if token in FALSE_VALUES:
         return False
     raise ValueError(
-        f"{name} must be one of {sorted(TRUE_VALUES)} or {sorted(FALSE_VALUES)}; "
-        f"got {raw!r}"
+        f"{name} must be one of {sorted(TRUE_VALUES)} or {sorted(FALSE_VALUES)}; got {raw!r}"
     )
 
 
@@ -130,9 +127,7 @@ def brev_config_from_env() -> BrevConfig:
         instance_type=os.environ.get("RUNPLZ_BREV_INSTANCE_TYPE") or None,
         mode=os.environ.get("RUNPLZ_BREV_MODE", "container"),
         on_finish=os.environ.get("RUNPLZ_BREV_ON_FINISH", "leave"),
-        ssh_ready_wait_seconds=int(
-            os.environ.get("RUNPLZ_BREV_SSH_READY_WAIT_SECONDS", "2400")
-        ),
+        ssh_ready_wait_seconds=int(os.environ.get("RUNPLZ_BREV_SSH_READY_WAIT_SECONDS", "2400")),
     )
 
 
@@ -243,11 +238,7 @@ def training_argv() -> list[str]:
 #: 4xA100, but presto training is single-GPU work: taking one device leaves the
 #: other three free rather than idling them under this job.
 def worker_env() -> dict:
-    forwarded = {
-        name: value
-        for name, value in os.environ.items()
-        if name.startswith("PRESTO_")
-    }
+    forwarded = {name: value for name, value in os.environ.items() if name.startswith("PRESTO_")}
     forwarded.setdefault("CUDA_VISIBLE_DEVICES", os.environ.get("PRESTO_CUDA_DEVICE", "0"))
     # MIL bags make peak memory scale with batch_size * max_mil_instances, not
     # batch_size, so allocation is bursty and fragments badly. Expandable
@@ -325,8 +316,7 @@ def train() -> None:
     for required in ("summary.json", "val_metrics.csv"):
         if required not in produced:
             raise SystemExit(
-                f"expected {required} in the run directory; the held-out pass "
-                "did not complete"
+                f"expected {required} in the run directory; the held-out pass did not complete"
             )
 
 

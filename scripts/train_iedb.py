@@ -5795,14 +5795,14 @@ def main(argv=None):
         action="store_true",
         default=True,
         help="Require all non-ablation MHC alleles to resolve to amino-acid sequences (default: "
-            "true)",
+        "true)",
     )
     parser.add_argument(
         "--allow-unresolved-mhc",
         dest="strict_mhc_resolution",
         action="store_false",
         help="Allow unresolved MHC alleles (debug only; unresolved MHC chains become empty "
-            "sequences)",
+        "sequences)",
     )
     parser.add_argument(
         "--filter-unresolved-mhc",

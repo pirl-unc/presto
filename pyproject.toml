@@ -29,7 +29,10 @@ hitlist = [
 ]
 dev = [
   "pytest>=7.0",
-  "ruff>=0.3.0",
+  # Floor matches the version CI pins (see .github/workflows/ci.yml). A much
+  # older ruff does not understand `extend-exclude` in ruff.toml and would
+  # lint the frozen experiment snapshots.
+  "ruff>=0.16.0",
   "mkdocs>=1.5.0",
 ]
 

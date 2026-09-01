@@ -16,11 +16,13 @@ import torch.nn as nn
 # Binding Heads Tests
 # --------------------------------------------------------------------------
 
+
 class TestBindingHeads:
     """Test binding affinity prediction heads."""
 
     def test_kd_head(self):
         from presto.models.heads import KDHead
+
         head = KDHead(d_model=64)
         z = torch.randn(2, 64)
         pred = head(z)
@@ -28,6 +30,7 @@ class TestBindingHeads:
 
     def test_ic50_head(self):
         from presto.models.heads import IC50Head
+
         head = IC50Head(d_model=64)
         z = torch.randn(2, 64)
         pred = head(z)
@@ -35,6 +38,7 @@ class TestBindingHeads:
 
     def test_ec50_head(self):
         from presto.models.heads import EC50Head
+
         head = EC50Head(d_model=64)
         z = torch.randn(2, 64)
         pred = head(z)
@@ -45,11 +49,13 @@ class TestBindingHeads:
 # Kinetics Heads Tests
 # --------------------------------------------------------------------------
 
+
 class TestKineticsHeads:
     """Test kinetics prediction heads."""
 
     def test_kon_head(self):
         from presto.models.heads import KonHead
+
         head = KonHead(d_model=64)
         z = torch.randn(2, 64)
         pred = head(z)
@@ -57,6 +63,7 @@ class TestKineticsHeads:
 
     def test_koff_head(self):
         from presto.models.heads import KoffHead
+
         head = KoffHead(d_model=64)
         z = torch.randn(2, 64)
         pred = head(z)
@@ -67,11 +74,13 @@ class TestKineticsHeads:
 # Stability Heads Tests
 # --------------------------------------------------------------------------
 
+
 class TestStabilityHeads:
     """Test stability prediction heads."""
 
     def test_half_life_head(self):
         from presto.models.heads import HalfLifeHead
+
         head = HalfLifeHead(input_dim=64)
         z = torch.randn(2, 64)
         pred = head(z)
@@ -79,6 +88,7 @@ class TestStabilityHeads:
 
     def test_tm_head(self):
         from presto.models.heads import TmHead
+
         head = TmHead(input_dim=64)
         z = torch.randn(2, 64)
         pred = head(z)
@@ -89,11 +99,13 @@ class TestStabilityHeads:
 # Combined Assay Heads Tests
 # --------------------------------------------------------------------------
 
+
 class TestAssayHeads:
     """Test combined assay heads module."""
 
     def test_assay_heads_all_outputs(self):
         from presto.models.heads import AssayHeads
+
         heads = AssayHeads(d_model=64)
         ba_vec = torch.randn(2, 64)
         bs_vec = torch.randn(2, 64)
@@ -106,6 +118,7 @@ class TestAssayHeads:
 
     def test_assay_heads_gradient_flow(self):
         from presto.models.heads import AssayHeads
+
         heads = AssayHeads(d_model=64)
         ba_vec = torch.randn(2, 64, requires_grad=True)
         bs_vec = torch.randn(2, 64, requires_grad=True)
@@ -276,11 +289,13 @@ class TestAssayHeads:
 # T-cell Head Tests
 # --------------------------------------------------------------------------
 
+
 class TestTCellHead:
     """Test T-cell functional assay head."""
 
     def test_tcell_head_basic(self):
         from presto.models.heads import TCellHead
+
         head = TCellHead(d_model=64)
         pmhc_vec = torch.randn(2, 64)
         tcr_vec = torch.randn(2, 64)
@@ -290,6 +305,7 @@ class TestTCellHead:
     def test_tcell_head_without_tcr(self):
         """Can predict with repertoire-level features instead of specific TCR."""
         from presto.models.heads import TCellHead
+
         head = TCellHead(d_model=64)
         pmhc_vec = torch.randn(2, 64)
         logit = head(pmhc_vec, tcr_vec=None)
@@ -359,11 +375,13 @@ class TestTCellHead:
 # Elution/MS Head Tests
 # --------------------------------------------------------------------------
 
+
 class TestElutionHead:
     """Test elution/MS detection head."""
 
     def test_elution_head(self):
         from presto.models.heads import ElutionHead
+
         head = ElutionHead()
         pres = torch.randn(2, 1)
         ms_detect = torch.randn(2, 1)
@@ -390,12 +408,14 @@ class TestElutionHead:
 # Multi-Head Module Tests
 # --------------------------------------------------------------------------
 
+
 class TestMultiTaskHeads:
     """Test multi-task head configuration."""
 
     def test_all_heads_share_encoder(self):
         """All heads should work with same encoder output."""
         from presto.models.heads import AssayHeads, ElutionHead, TCellHead
+
         d_model = 64
         assay = AssayHeads(d_model=d_model)
         elution = ElutionHead()
@@ -415,6 +435,7 @@ class TestMultiTaskHeads:
     def test_heads_independent_gradients(self):
         """Different heads should have independent gradients."""
         from presto.models.heads import KDHead, IC50Head
+
         kd = KDHead(d_model=64)
         ic50 = IC50Head(d_model=64)
 
@@ -439,11 +460,13 @@ class TestMultiTaskHeads:
 # Unit Conversion Tests
 # --------------------------------------------------------------------------
 
+
 class TestUnitConversions:
     """Test unit conversion utilities."""
 
     def test_to_log10_nm(self):
         from presto.models.heads import to_log10_nM
+
         # 1 nM -> log10(1) = 0
         assert torch.allclose(to_log10_nM(torch.tensor(1.0)), torch.tensor(0.0))
         # 1000 nM -> log10(1000) = 3
@@ -451,6 +474,7 @@ class TestUnitConversions:
 
     def test_from_log10_nm(self):
         from presto.models.heads import from_log10_nM
+
         # log10(1) = 0 -> 1 nM
         assert torch.allclose(from_log10_nM(torch.tensor(0.0)), torch.tensor(1.0))
         # log10(1000) = 3 -> 1000 nM
@@ -458,6 +482,7 @@ class TestUnitConversions:
 
     def test_normalize_tm(self):
         from presto.models.heads import normalize_tm, denormalize_tm
+
         # Room temp ~25C normalized
         tm_raw = torch.tensor(25.0)
         tm_norm = normalize_tm(tm_raw)

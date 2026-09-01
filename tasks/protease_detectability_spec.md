@@ -136,7 +136,8 @@ directly (`models/presto.py:2650-2664`):
 ```python
 processing_class1_vec = self.processing_class1_proj(processing_vec)
 presentation_class1_vec = self.presentation_class1_vec_norm(
-    self.presentation_class1_mlp(torch.cat([processing_class1_vec, interaction_vec], -1)))
+    self.presentation_class1_mlp(torch.cat([processing_class1_vec, interaction_vec], -1))
+)
 ```
 
 `M` perfectly separates the two corpora — every MHC row is `M=proteasome`, every

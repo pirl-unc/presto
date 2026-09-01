@@ -79,16 +79,12 @@ class TestWindowExtraction:
         picked different residues the same junction would be scored from two
         different P1s depending on the source.
         """
-        window = Presto._last_valid_window(
-            self.TOKENS, 3, self.TOKENS.device, MISSING, 5
-        )
+        window = Presto._last_valid_window(self.TOKENS, 3, self.TOKENS.device, MISSING, 5)
         scalar = Presto._last_valid_token(self.TOKENS, 3, self.TOKENS.device, MISSING)
         assert torch.equal(window[:, -1], scalar)
 
     def test_p1_prime_column_agrees_with_the_single_token_picker(self):
-        window = Presto._first_valid_window(
-            self.TOKENS, 3, self.TOKENS.device, MISSING, 5
-        )
+        window = Presto._first_valid_window(self.TOKENS, 3, self.TOKENS.device, MISSING, 5)
         scalar = Presto._first_valid_token(self.TOKENS, 3, self.TOKENS.device, MISSING)
         assert torch.equal(window[:, 0], scalar)
 
@@ -322,17 +318,13 @@ class TestWideningIsAStrictGeneralization:
         with torch.no_grad():
             head.invivo_profile_c.zero_()
             head.invivo_profile_c[apm_index, head.p1_window_index] = p1_values
-            head.invivo_profile_c[apm_index, head.p1_prime_window_index] = (
-                p1_prime_values
-            )
+            head.invivo_profile_c[apm_index, head.p1_prime_window_index] = p1_prime_values
 
         window = torch.full((1, head.window_size), head.missing_residue_index)
         window[0, head.p1_window_index] = AA_TO_IDX["K"]
         window[0, head.p1_prime_window_index] = AA_TO_IDX["A"]
 
-        got = head._window_preference(
-            head.invivo_profile_c, torch.tensor([apm_index]), window
-        )
+        got = head._window_preference(head.invivo_profile_c, torch.tensor([apm_index]), window)
         # What a P1-only head computed: the two populated cells, plus the
         # <MISSING> column at every other position -- which is zero here.
         expected = p1_values[AA_TO_IDX["K"]] + p1_prime_values[AA_TO_IDX["A"]]
