@@ -921,6 +921,14 @@ CONDITION_TO_STIMULUS: Dict[str, str] = {
     "MHC-I_loss_B2M": "none",
     "TAP_perturbation": "none",
     "tapasin_perturbation": "none",
+    # TAPBPR/TAPBPL, split out of `tapasin_perturbation` by hitlist. Different
+    # gene, different mechanism: tapasin/TAPBP works inside the peptide-loading
+    # complex bridging TAP to MHC-I, while TAPBPR is a PLC-independent editor
+    # acting on peptide-receptive MHC-I away from TAP (Boyle 2013, Hermann
+    # 2015). Collapsing the two was wrong. Both are standing lesions rather
+    # than applied treatments, so both read `none` here and ride the
+    # `apm_perturbation` axis. See presto#14.
+    "TAPBPR_perturbation": "none",
     "ERAP1_perturbation": "none",
     "HLA-DM_perturbation": "none",  # arrives as apm=class_ii_loading
     "ERAP2_perturbation": "none",
