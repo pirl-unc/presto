@@ -56,6 +56,7 @@ import random
 import sys
 from typing import Any, Dict, FrozenSet, List, Optional, Sequence, Tuple, Union
 
+from .flank_selection import UNRESOLVED_RESIDUE
 from .vocab import (
     apm_group_for_row,
     drop_unencodable_sequence,
@@ -467,19 +468,6 @@ def _select_best_mapping(frame):
     sort_keys = []
     if "is_canonical_transcript" in frame.columns:
         sort_keys.append(("is_canonical_transcript", False))
-    # Prefer a mapping whose flanks are resolved over one carrying `X`.
-    #
-    # `X` marks an unresolved residue, and every N-side occurrence sits at
-    # protein position 0 -- which is exactly the junction residue the excision
-    # head reads. Without this rule, 525 evidence rows reached training with an
-    # X in the chosen N-flank and 514 of them had a clean alternative in the
-    # same group: the worst available choice, picked by accident of ordering.
-    if {"n_flank", "c_flank"} <= set(frame.columns):
-        unresolved = frame["n_flank"].fillna("").astype(str).str.contains("X", regex=False) | frame[
-            "c_flank"
-        ].fillna("").astype(str).str.contains("X", regex=False)
-        ordered = frame.assign(_unresolved_flank=unresolved)
-        sort_keys.append(("_unresolved_flank", True))
     if "protein_id" in frame.columns:
         sort_keys.append(("protein_id", True))
     if sort_keys:
@@ -488,8 +476,57 @@ def _select_best_mapping(frame):
             ascending=[asc for _, asc in sort_keys],
             kind="stable",
         )
-    collapsed = ordered.drop_duplicates(subset=["evidence_row_id"], keep="first")
-    return collapsed.drop(columns=["_unresolved_flank"], errors="ignore")
+    return ordered.drop_duplicates(subset=["evidence_row_id"], keep="first")
+
+
+def unresolved_flank_mask(frame):
+    """Rows whose chosen flanks carry an unresolved residue (`X`).
+
+    Computed on the flanks as hitlist emits them, before any cleaning, so a
+    flank blanked for some other reason is not mistaken for a resolved one.
+    """
+    import pandas as pd
+
+    present = [column for column in ("n_flank", "c_flank") if column in frame.columns]
+    if not present:
+        return pd.Series(False, index=frame.index)
+    mask = pd.Series(False, index=frame.index)
+    for column in present:
+        text = frame[column].fillna("").astype(str)
+        mask = mask | text.str.contains(UNRESOLVED_RESIDUE, regex=False)
+    return mask
+
+
+def drop_unresolved_flank_rows(frame):
+    """Discard rows whose chosen flank has a residue of unknown identity.
+
+    `X` means "a residue is here and we do not know which". hitlist emits it
+    where a transcript's 5' CDS is incomplete, so the first codon is partial;
+    the rows are overwhelmingly non-canonical models (44,485 non-canonical vs
+    1,507 canonical, ~10x the corpus-wide ratio). The mechanism is the standard
+    explanation and fits the evidence, but the CDS-completeness flag is not
+    exposed in the training table, so the correlation is verified and the cause
+    is not.
+
+    Dropping rather than substituting is the point. The obvious alternative --
+    prefer whichever candidate protein has a clean flank -- reattributes the
+    peptide to a **different gene** in 91% of the rows it changes, which is a
+    worse error than an honest unknown: a flank only means anything if the
+    source protein is right.
+
+    The cost is small enough to state exactly, measured on hitlist 1.55.2 after
+    the collapse: **862 of 4,418,352** MS evidence rows (0.0195%) and **86 of
+    891,685** binding rows (0.0096%). Both verified to leave zero `X` in the
+    surviving flanks. In exchange `X` stops appearing in training data at all,
+    leaving it free to mean an unknown residue and nothing else.
+    """
+    if not {"n_flank", "c_flank"} & set(frame.columns):
+        return frame, 0
+    mask = unresolved_flank_mask(frame)
+    dropped = int(mask.sum())
+    if not dropped:
+        return frame, 0
+    return frame.loc[~mask], dropped
 
 
 def mapping_ambiguity_stats(frame) -> Dict[str, Any]:
@@ -642,6 +679,14 @@ def load_records_from_hitlist(
         )
         binding_frame = _select_best_mapping(binding_frame)
         ms_frame = _select_best_mapping(ms_frame)
+        # Only after the collapse: a row is dropped for the flank it actually
+        # trains on, not for one some rejected candidate happened to carry.
+        binding_frame, binding_unresolved = drop_unresolved_flank_rows(binding_frame)
+        ms_frame, ms_unresolved = drop_unresolved_flank_rows(ms_frame)
+        mapping_ambiguity["rows_dropped_unresolved_flank"] = {
+            "binding": binding_unresolved,
+            "ms": ms_unresolved,
+        }
 
     binding_records: List[BindingRecord] = []
     kinetics_records: List[KineticsRecord] = []
