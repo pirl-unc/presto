@@ -1,7 +1,7 @@
 """A protein terminus is not a missing flank.
 
 Both arrive as a short or empty flank string, and until now both encoded as
-`<MISSING>` -- a token that means "we do not know what is here". For a peptide
+`?` -- a token that means "we do not know what is here". For a peptide
 at its protein's own terminus that is the opposite of true: there is nothing
 upstream (or downstream), and that absence is a fact about the biology.
 
@@ -31,27 +31,49 @@ from presto.data.hitlist_source import (  # noqa: E402
 from presto.data.vocab import AA_TO_IDX, AA_VOCAB  # noqa: E402
 from presto.models.presto import Presto  # noqa: E402
 
-MISSING = AA_TO_IDX["<MISSING>"]
-TERMINUS = AA_TO_IDX["<TERMINUS>"]
+UNKNOWN_FLANK = AA_TO_IDX["?"]
+N_TERMINUS = AA_TO_IDX["^"]
+C_TERMINUS = AA_TO_IDX["$"]
 
 
-class TestTheTokensAreDistinct:
-    def test_terminus_is_its_own_token(self):
-        assert TERMINUS != MISSING
-        assert AA_VOCAB[TERMINUS] == "<TERMINUS>"
+class TestTheFlankAlphabetIsDistinct:
+    """Four states, four tokens. `X` is the one that is a residue."""
 
-    def test_terminus_was_appended(self):
+    def test_the_markers_are_separate_tokens(self):
+        assert len({N_TERMINUS, C_TERMINUS, UNKNOWN_FLANK, AA_TO_IDX["X"]}) == 4
+
+    def test_the_two_termini_are_not_the_same_event(self):
+        """`^` is about where translation began; `$` is about whether a cut was
+        needed. Collapsing them would tie the two claims together."""
+        assert N_TERMINUS != C_TERMINUS
+        assert AA_VOCAB[N_TERMINUS] == "^"
+        assert AA_VOCAB[C_TERMINUS] == "$"
+
+    def test_markers_were_appended(self):
         """Existing residue indices must not shift; checkpoints index by
         position."""
-        assert AA_VOCAB[-1] == "<TERMINUS>"
-        assert AA_VOCAB[MISSING] == "<MISSING>"
+        assert AA_VOCAB[-3:] == ["^", "$", "?"]
+        assert AA_VOCAB[AA_TO_IDX["X"]] == "X"
 
-    def test_terminus_is_not_an_encodable_residue(self):
-        """It must never be produced by tokenizing a sequence -- only by the
-        window extractor deciding a flank ran out of protein."""
-        from presto.data.vocab import ENCODABLE_RESIDUES
+    def test_markers_are_not_encodable_residues(self):
+        """They must never come from tokenizing a real sequence -- only from
+        the window extractor describing an absence."""
+        from presto.data.vocab import ENCODABLE_RESIDUES, FLANK_MARKERS
 
-        assert "<TERMINUS>" not in ENCODABLE_RESIDUES
+        assert not (FLANK_MARKERS & ENCODABLE_RESIDUES)
+        assert "X" in ENCODABLE_RESIDUES, "X is a residue, not a marker"
+
+    def test_every_marker_is_learnable(self):
+        """None of these are pinned. `X` used to be held at a fixed zero vector
+        with a gradient hook, on the reasoning that an ambiguous residue should
+        contribute nothing -- but in this corpus X is not noise, it is the
+        unresolved initiator residue of a reference protein in all 45,992
+        occurrences, and that is a specific context worth representing."""
+        model = Presto(d_model=32, n_layers=2, n_heads=4)
+        for symbol in ("X", "^", "$", "?"):
+            vector = model.aa_embedding.weight[AA_TO_IDX[symbol]]
+            assert vector.requires_grad
+            assert float(vector.norm()) > 0.0, f"{symbol} is pinned to zero"
 
 
 class TestFlankContext:
@@ -72,7 +94,7 @@ class TestFlankContext:
 
     @pytest.mark.parametrize("position", [None, float("nan")])
     def test_unmapped_is_never_a_terminus(self, position):
-        """No mapping means no knowledge, which is exactly `<MISSING>`."""
+        """No mapping means no knowledge, which is exactly `?`."""
         _, terminus = flank_context("ACD", position)
         assert terminus is False
 
@@ -153,12 +175,21 @@ class TestTheModelSeesTheDifference:
             )
         assert torch.allclose(without["excision_logit"], explicit_false["excision_logit"])
 
-    def test_the_pad_helper_selects_per_row(self):
+    @pytest.mark.parametrize("side,expected", [("n", N_TERMINUS), ("c", C_TERMINUS)])
+    def test_the_pad_helper_selects_per_row_and_per_side(self, side, expected):
+        """The side decides which marker: `^` before the protein starts, `$`
+        after it ends."""
         model = self._model_with_trained_profiles()
-        pads = model._pad_for_side(torch.tensor([True, False, True]), 3, torch.device("cpu"))
-        assert pads.tolist() == [TERMINUS, MISSING, TERMINUS]
+        token = getattr(model, f"{side}_terminus_token_idx")
+        pads = model._pad_for_side(
+            torch.tensor([True, False, True]),
+            3,
+            torch.device("cpu"),
+            terminus_token=token,
+        )
+        assert pads.tolist() == [expected, UNKNOWN_FLANK, expected]
 
     def test_a_missing_flag_falls_back_to_missing(self):
         model = self._model_with_trained_profiles()
         pads = model._pad_for_side(None, 2, torch.device("cpu"))
-        assert pads.tolist() == [MISSING, MISSING]
+        assert pads.tolist() == [UNKNOWN_FLANK, UNKNOWN_FLANK]

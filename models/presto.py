@@ -329,8 +329,11 @@ class Presto(nn.Module):
         self.binding_midpoint_log10_nM = math.log10(max(self.binding_midpoint_nM, 1e-12))
         self.binding_log10_scale = max(float(binding_log10_scale), 1e-6)
         self.missing_token_idx = int(AA_TO_IDX["<MISSING>"])
-        #: "nothing here, and that is a fact" -- see AA_VOCAB.
-        self.terminus_token_idx = int(AA_TO_IDX["<TERMINUS>"])
+        # Flank alphabet: `^` before the protein starts, `$` after it ends,
+        # `?` when the flank was never determined. See AA_VOCAB.
+        self.n_terminus_token_idx = int(AA_TO_IDX["^"])
+        self.c_terminus_token_idx = int(AA_TO_IDX["$"])
+        self.unknown_flank_token_idx = int(AA_TO_IDX["?"])
 
         # ------------------------------------------------------------------
         # Latent topology selection
@@ -458,10 +461,17 @@ class Presto(nn.Module):
         # Single token stream encoder
         # ------------------------------------------------------------------
         self.aa_embedding = nn.Embedding(len(AA_VOCAB), d_model, padding_idx=0)
-        # Keep ambiguous 'X' neutral: fixed zero vector.
-        with torch.no_grad():
-            self.aa_embedding.weight[self.x_token_idx].zero_()
-        self.aa_embedding.weight.register_hook(self._zero_x_embedding_grad)
+        # `X` learns like any other token.
+        #
+        # It used to be pinned to a fixed zero vector, with a gradient hook
+        # zeroing its row on every backward pass, on the reasoning that an
+        # ambiguous residue should contribute nothing. But "unresolved" is not
+        # "neutral": in this corpus X is not scattered sequencing noise at all
+        # -- all 45,992 occurrences sit at `position == len(flank)`, i.e. the
+        # unresolved *initiator* residue of a reference protein. That is a
+        # highly specific context and worth a representation. The same applies
+        # to the flank markers `^`, `$` and `?`: each denotes a distinct state
+        # the model should be able to weigh, not a hole to be zeroed out.
         self.segment_embedding = nn.Embedding(5, d_model)
 
         # Segment-specific positional encoding (design S3.2.3)
@@ -1083,8 +1093,6 @@ class Presto(nn.Module):
                     nn.init.xavier_uniform_(module.out_proj.weight)
                     if module.out_proj.bias is not None:
                         nn.init.zeros_(module.out_proj.bias)
-        with torch.no_grad():
-            self.aa_embedding.weight[self.x_token_idx].zero_()
 
     @property
     def apc_cell_type_context_proj(self) -> nn.Sequential:
@@ -1205,24 +1213,12 @@ class Presto(nn.Module):
             unexpected_keys,
             error_msgs=error_msgs,
         )
-        with torch.no_grad():
-            self.aa_embedding.weight[self.x_token_idx].zero_()
 
     @staticmethod
     def _masked_mean(x: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
         """Mask-aware mean over sequence dimension."""
         mask_f = mask.unsqueeze(-1).float()
         return (x * mask_f).sum(dim=1) / mask_f.sum(dim=1).clamp(min=1.0)
-
-    def _zero_x_embedding_grad(self, grad: torch.Tensor) -> torch.Tensor:
-        """Keep X token embedding fixed at zero by zeroing its gradient row."""
-        if grad is None:
-            return grad
-        if grad.ndim != 2:
-            return grad
-        grad = grad.clone()
-        grad[self.x_token_idx].zero_()
-        return grad
 
     def _segment_tensor(self, length: int, seg_id: int, device: torch.device) -> torch.Tensor:
         return torch.full((length,), seg_id, device=device, dtype=torch.long)
@@ -1254,21 +1250,29 @@ class Presto(nn.Module):
         return torch.where(present, picked, torch.full_like(picked, fallback)).long()
 
     def _pad_for_side(
-        self, is_terminus: Optional[torch.Tensor], batch_size: int, device
+        self,
+        is_terminus: Optional[torch.Tensor],
+        batch_size: int,
+        device,
+        *,
+        terminus_token: Optional[int] = None,
     ) -> torch.Tensor:
         """Per-row pad token for one flank side.
 
-        <TERMINUS> where the protein ended, <MISSING> otherwise. A caller that
-        passes no flag gets <MISSING> everywhere, which is the behaviour before
-        the distinction existed.
+        `terminus_token` where the protein ended -- `^` on the N side, `$` on
+        the C side -- and `?` otherwise, meaning the flank was never
+        determined. A caller passing no flag gets `?` throughout, which is the
+        honest reading of "this caller has no flank information".
         """
-        base = torch.full((batch_size,), self.missing_token_idx, dtype=torch.long, device=device)
-        if is_terminus is None:
+        base = torch.full(
+            (batch_size,), self.unknown_flank_token_idx, dtype=torch.long, device=device
+        )
+        if is_terminus is None or terminus_token is None:
             return base
         flag = is_terminus.reshape(-1).to(device=device, dtype=torch.bool)
         if flag.shape[0] != batch_size:
             return base
-        return torch.where(flag, torch.full_like(base, self.terminus_token_idx), base)
+        return torch.where(flag, torch.full_like(base, int(terminus_token)), base)
 
     @staticmethod
     def _pad_values(fallback, batch_size: int, width: int, device) -> torch.Tensor:
@@ -3477,8 +3481,18 @@ class Presto(nn.Module):
         )
         fallback_token = self.missing_token_idx
         window = self.excision_head.junction_window
-        n_pad = self._pad_for_side(flank_n_is_terminus, batch_size, pep_tok.device)
-        c_pad = self._pad_for_side(flank_c_is_terminus, batch_size, pep_tok.device)
+        n_pad = self._pad_for_side(
+            flank_n_is_terminus,
+            batch_size,
+            pep_tok.device,
+            terminus_token=self.n_terminus_token_idx,
+        )
+        c_pad = self._pad_for_side(
+            flank_c_is_terminus,
+            batch_size,
+            pep_tok.device,
+            terminus_token=self.c_terminus_token_idx,
+        )
         peptide_lengths = (pep_tok != 0).long().sum(dim=1)
         excision_outputs = self.excision_head(
             processing_vec=junction_vec,

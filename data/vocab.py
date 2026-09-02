@@ -34,21 +34,32 @@ AA_VOCAB = [
     "W",
     "Y",
     "X",  # unknown/any amino acid
-    "<MISSING>",  # dedicated missing-value token
-    # "there is nothing here, and that is a fact" -- distinct from <MISSING>,
-    # which means "we do not know what is here".
+    "<MISSING>",  # dedicated missing-value token, for absent non-flank segments
+    # ---- flank alphabet -------------------------------------------------
     #
-    # A peptide at a protein's N-terminus has no upstream residue, and one at
-    # the C-terminus has no downstream residue. Encoding either as <MISSING>
-    # tells the model the context is unknown when it is definitively empty, and
-    # the C-terminal case is the sharper one: such a peptide required no
-    # proteasomal C-terminal cut at all, because the terminus already existed.
-    # The excision head was being asked to score a cleavage that never had to
-    # happen, on 8.0% of rows (5.1% on the N side), using a token that means
-    # the opposite of what is true.
+    # A position in a flank window can be absent for four different reasons,
+    # and they make different claims:
     #
-    # Appended last, so every existing residue index keeps its meaning.
-    "<TERMINUS>",
+    #   X   a residue IS here, identity unresolved. Already above, and it
+    #       arrives from real data: 45,992 rows carry one, and in every case
+    #       `position == len(flank)` -- it is the unresolved *initiator*
+    #       residue of a reference protein, never an interior gap.
+    #   ^   before the protein starts. No residue exists, and the peptide's
+    #       N-terminus is the protein's own.
+    #   $   after the protein ends. No residue exists -- and this one is
+    #       load-bearing: such a peptide required no proteasomal C-terminal cut
+    #       at all, because the terminus was already there.
+    #   ?   the flank was never determined. Genuinely unknown, and the state a
+    #       caller is in when it has a peptide but no source protein.
+    #
+    # `^` and `$` are separate rather than one shared "terminus" token because
+    # they are not the same event: one is about where translation began, the
+    # other about whether a cut was needed.
+    #
+    # Appended, so every existing residue index keeps its meaning.
+    "^",
+    "$",
+    "?",
 ]
 
 #: Residues the tokenizer can actually encode, derived from AA_VOCAB so there
@@ -59,7 +70,16 @@ AA_VOCAB = [
 #: annotation junk ("YXGEVXVSV + INDIST(X2, X6)") and genuine but unmodelled
 #: residues -- selenocysteine `U` appears in real human selenoproteins and
 #: reached the tokenizer through hitlist flanks, aborting training mid-epoch.
-ENCODABLE_RESIDUES = frozenset(token for token in AA_VOCAB if len(token) == 1)
+#: Structural markers in the flank alphabet. Single characters like a residue,
+#: but each describes the *absence* of one, so a real sequence containing them
+#: is malformed rather than informative -- `is_encodable_sequence` must keep
+#: rejecting it. `X` is deliberately not here: an unresolved residue is a real
+#: thing to encode, and 45,992 rows carry one.
+FLANK_MARKERS = frozenset({"^", "$", "?"})
+
+ENCODABLE_RESIDUES = frozenset(
+    token for token in AA_VOCAB if len(token) == 1 and token not in FLANK_MARKERS
+)
 
 
 def is_encodable_sequence(sequence: str) -> bool:

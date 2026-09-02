@@ -12,6 +12,7 @@ import torch
 
 from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
+from .sequence_augmentation import AugmentationConfig, augment_sample_sequences
 from .vocab import (
     cell_lineage_index,
     disease_state_index,
@@ -502,12 +503,17 @@ class PrestoCollator:
         max_mhc_len: int = 120,
         max_tcr_len: int = 200,
         max_flank_len: int = DEFAULT_MAX_FLANK_LEN,
+        augmentation: Optional[AugmentationConfig] = None,
     ):
         self.tokenizer = tokenizer or Tokenizer()
         self.max_pep_len = max_pep_len
         self.max_mhc_len = max_mhc_len
         self.max_tcr_len = max_tcr_len
         self.max_flank_len = max_flank_len
+        #: Training-time sequence corruption. Off by default, so validation and
+        #: inference are never augmented by accident -- a collator shared
+        #: between splits would otherwise quietly corrupt the held-out set.
+        self.augmentation = augmentation or AugmentationConfig()
 
     def _collate_targets(
         self, samples: List[PrestoSample]
@@ -1488,6 +1494,12 @@ class PrestoCollator:
         Returns:
             PrestoBatch
         """
+        # Corrupt before tokenizing, so the augmentation is visible in any dump
+        # of the batch and costs nothing at the tensor level. A no-op unless a
+        # config was supplied, which validation and inference never do.
+        if self.augmentation.is_active:
+            for sample in samples:
+                augment_sample_sequences(sample, self.augmentation)
 
         # Tokenize sequences
         pep_tok, pep_lengths = self.tokenizer.batch_encode(
