@@ -19,6 +19,9 @@ _SPLIT_SEQUENCE = "".join(
         "DTYCRHNYG",
     ]
 )
+#: 77 residues. The fixture row using this deliberately *declares* 89, to
+#: exercise `seq_len_mismatch`; this assertion pins the real length so a seam
+#: edit cannot quietly change what "mismatch" means.
 assert len(_SPLIT_SEQUENCE) == 77, len(_SPLIT_SEQUENCE)
 
 
@@ -491,7 +494,15 @@ def test_augment_mhc_index_adds_groove_columns(tmp_path):
                 "mhc_class": "II",
                 "species": "Homo sapiens",
                 "source": "imgt",
-                "seq_len": str(len(_SPLIT_SEQUENCE)),
+                # Deliberately WRONG: 89 declared against 77 actual residues.
+                # This is the only fixture in the repo exercising the
+                # `seq_len_mismatch` condition that `mhc_index` validates
+                # (data/mhc_index.py), and `augment_mhc_index` passes
+                # `rec.seq_len` straight through, so it is also the only guard
+                # on that value surviving augmentation. Do not "fix" it to
+                # match the sequence -- a previous pass did, silently, while
+                # reflowing long lines.
+                "seq_len": "89",
                 "sequence": _SPLIT_SEQUENCE,
             }
         )
