@@ -15,13 +15,20 @@ import pytest
 from presto.scripts.train_iedb import MHCResolutionError  # noqa: E402
 
 
-def _raise_if_zero(coverage, allow_env=None):
+def _raise_if_zero(coverage):
     """The guard as `run()` applies it, kept in one place.
 
     Mirrors the check in `train_iedb.run()` rather than importing it, because
     the check lives inline after the strict-resolution branch -- it has to,
     since running before it would preempt the strict path's unresolved-allele
     report. `TestGuardMatchesTheImplementation` pins the two together.
+
+    Reads `PRESTO_ALLOW_ZERO_MHC` from the real environment, exactly as `run()`
+    does. It used to also accept an `allow_env=` parameter that nothing read
+    and no caller passed -- a test written as `_raise_if_zero(cov,
+    allow_env="1")` would have silently consulted the process environment
+    instead and appeared to exercise the escape hatch while testing the
+    opposite. Callers monkeypatch the variable instead.
     """
     import os
 

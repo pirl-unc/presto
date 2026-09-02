@@ -2116,7 +2116,22 @@ def compute_loss(
         bind_mask = getattr(batch, "bind_mask", None)
         if bind_target is not None and bind_mask is not None and panel_context:
             panel_terms = []
-            target_flat = bind_target.reshape(-1).float().to(device)
+            # Normalize into the space the panel actually predicts.
+            #
+            # `predict_assay_panel` returns a *KD offset* in normalized log10
+            # space, and `bind_target` is raw nM (up to DEFAULT_MAX_AFFINITY_NM
+            # = 50,000) -- which is why the main binding spec above applies
+            # exactly this transform with `assume_log10=False`. This loss did
+            # not, so it was regressing a log-space head against a raw-nM
+            # target: `loss_binding_assay_panel` sat at ~142,900, an order of
+            # magnitude above the total loss, and could not fall because no
+            # head output can reach 50,000. It dominated the gradient and the
+            # model learned nothing -- val loss moved 0.012% over 10 epochs.
+            target_flat = normalize_binding_target_log10(
+                bind_target.reshape(-1).float().to(device),
+                max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
+                assume_log10=False,
+            )
             mask_flat = bind_mask.reshape(-1).float().to(device)
             for axis in ("assay_type", "assay_prep", "assay_geometry", "assay_readout"):
                 panel = outputs.get(f"binding_assay_panel_{axis}")

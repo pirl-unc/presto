@@ -40,6 +40,18 @@ dev = [
 presto = "presto.cli.main:main"
 
 [tool.setuptools]
+# Enumerated on purpose, and it has to be.
+#
+# `package-dir = { "presto" = "." }` maps the repo root onto the `presto`
+# package, which `[tool.setuptools.packages.find]` cannot express: discovery
+# would report `cli`, `data`, ... as top-level packages, and `import presto`
+# stops working entirely (verified).
+#
+# So the list stays, and stays a maintenance risk: it had already drifted,
+# missing `presto.scripts.distributional_ba` and its `.heads` subpackage, both
+# of which have `__init__.py`. Editable installs hide that via the path hook;
+# a wheel or sdist ships without them. `tests/test_packaging.py` now fails
+# when the list and the filesystem disagree.
 packages = [
   "presto",
   "presto.cli",
@@ -48,6 +60,8 @@ packages = [
   "presto.models",
   "presto.training",
   "presto.scripts",
+  "presto.scripts.distributional_ba",
+  "presto.scripts.distributional_ba.heads",
 ]
 package-dir = { "presto" = "." }
 
