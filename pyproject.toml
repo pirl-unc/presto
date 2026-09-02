@@ -29,10 +29,16 @@ hitlist = [
 ]
 dev = [
   "pytest>=7.0",
-  # Floor matches the version CI pins (see .github/workflows/ci.yml). A much
-  # older ruff does not understand `extend-exclude` in ruff.toml and would
-  # lint the frozen experiment snapshots.
-  "ruff>=0.16.0",
+  # Pinned, not a floor, and matching CI (.github/workflows/ci.yml) and
+  # `required-version` in ruff.toml.
+  #
+  # `ruff format --check .` is a blocking gate and formatter output is not
+  # stable across ruff minors, so a contributor on a newer ruff and a CI on an
+  # older one disagree about files neither of them touched. An earlier comment
+  # here claimed the floor was needed because old ruff lacks `extend-exclude`;
+  # that is false -- it predates 0.1 -- and a reader who checked would have
+  # concluded the pin was cargo-cult and relaxed it.
+  "ruff==0.16.0",
   "mkdocs>=1.5.0",
 ]
 

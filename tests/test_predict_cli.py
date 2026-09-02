@@ -76,7 +76,7 @@ def test_cmd_predict_tile_requires_one_sequence_source():
         protein_sequence="AAAA",
         protein_file="protein.fa",
     )
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="(?i)protein"):
         predict_cli.cmd_predict_tile(args)
 
 

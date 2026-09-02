@@ -1,56 +1,75 @@
 line-length = 100
 target-version = "py311"
+
 # `extend-exclude`, not `exclude`: the latter *replaces* ruff's built-in
 # defaults, which is how `.venv`, `build/` and `node_modules/` came to be
-# skipped only incidentally by `respect-gitignore`. With that flag off,
-# `ruff check .` reported 37,222 findings from site-packages.
+# skipped only incidentally by `respect-gitignore`.
+#
+# Paths carry a trailing `/`, which anchors them to the project root. Verified:
+# with `experiments/`, a nested `scripts/experiments/` is still linted, so a
+# future helper package of that name cannot silently escape -- the same
+# invisible-directory failure that hid 383 findings in `scripts/`.
+#
+# `.pytest_cache` and `__pycache__` are deliberately absent: the first is in
+# ruff's defaults (restored by using `extend-`), and the second holds only
+# `.pyc`, which ruff never discovers as a source file. Carrying them would be
+# more dead config in the file whose subject is dead config.
 extend-exclude = [
-  "presto_old_code_starts",
-  ".pytest_cache",
-  "__pycache__",
-  # setuptools output. Ruff's defaults cover `_build` and `dist` but not plain
-  # `build`, so this was reachable by any caller passing
-  # `--no-respect-gitignore`: 93 findings from copied sources.
-  "build",
-  # Frozen snapshots of scripts as they ran. Editing them to satisfy a linter
+  "presto_old_code_starts/",
+  # setuptools output. Ruff's defaults cover `_build` and `dist`, not `build`.
+  "build/",
+  # Frozen snapshots of scripts as they ran; editing them to satisfy a linter
   # would falsify the experiment record.
-  #
-  # This lived in `[lint.per-file-ignores]` and I deleted it as dead config,
-  # reasoning that `lint.sh` never passed the path. That was wrong: lint.sh is
-  # one caller among many. Editor and LSP integrations, pre-commit hooks and a
-  # bare `ruff check .` all read this file, and after the deletion `ruff check
-  # .` reported 546 findings here while `ruff format .` offered to rewrite the
-  # snapshots. Exclusion belongs in the config, where every caller sees it.
-  "experiments",
+  "experiments/",
 ]
+
+# Exclusions must hold for an explicitly-named path, not only for traversal.
+#
+# Without this, `ruff check experiments/<run>/launch.py` reports findings and
+# `ruff format` rewrites the file -- and naming an explicit path is exactly
+# what editor format-on-save and pre-commit hooks do. The exclusion above was
+# protecting `ruff check .` and nothing else, which is not where the risk was.
+force-exclude = true
+
+# Pin the version, not a floor. `ruff format --check .` is a blocking gate and
+# formatter output is not stable across ruff minors, so a contributor on a
+# newer ruff and a CI on an older one disagree about files neither of them
+# touched. CI installs this exact version; so does the dev extra.
+required-version = "0.16.0"
 
 [format]
 # Preserve the existing quote style: the goal was to get lines under the limit,
-# not to restyle a codebase that has never been formatter-managed.
+# not to restyle a codebase that had never been formatter-managed.
 quote-style = "preserve"
 
 [lint]
-# Widened from ["E9", "F63", "F7", "F82"] to the full E/F sets.
+# Rule families, not hand-picked codes.
 #
-# A `[tool.ruff]` block in pyproject.toml declared `select = ["E", "F"]` and
-# never ran, because ruff.toml takes precedence -- so "lint clean" meant far
-# less than it read as. This is that intent, applied to the config that
-# actually executes.
+# This started as ["E9", "F63", "F7", "F82"] while a dead `[tool.ruff]` block
+# in pyproject.toml claimed ["E", "F"] -- so "lint clean" meant far less than
+# it read as. Widening it to E and F found 987 issues.
 #
-# Note what is NOT carried over: the dead block also listed `F821` under
-# `ignore`, while `F82` was already active here. Adopting it wholesale would
-# have *weakened* undefined-name checking. Undefined names stay on.
-select = [
-  "E",
-  "F",
-  "B011",   # assert False -- unreachable under python -O
-  "B015",   # pointless comparison, almost always a dropped assert
-  "B018",   # useless expression, ditto
-  "PT015",  # assertion that is always false
-  "PT017",  # asserting on an exception in `except` instead of pytest.raises
+# B and PT are named as families rather than as B011/B015/B018/PT015/PT017,
+# which is how they were first written. Enumerating codes means the next
+# bugbear or pytest-style rule -- the next un-failable-assertion check --
+# never arrives. That is the same enumerated-list rot removed from `lint.sh`,
+# applied to the rule set.
+select = ["E", "F", "B", "PT"]
+
+# Declined explicitly, which is what makes selecting whole families
+# affordable. These are current noise rather than latent defects; they are
+# debt, and the counts are why they are not fixed here rather than an argument
+# that they should not be.
+ignore = [
+  "PT006",  # 39x: parametrize names as a string vs a tuple. Pure style.
+  "PT018",  # 15x: composite assertions. Splitting them aids debugging, but not
+            # enough to justify touching 15 unrelated tests right now.
+  "B905",   # 28x: `zip(..., strict=)`. Genuinely useful -- it catches length
+            # mismatches -- but adding `strict=True` changes behaviour at each
+            # site and wants per-call review, not a sweep.
 ]
 
 [lint.per-file-ignores]
-# Re-exports are the entire point of a package __init__; ruff has no way to
-# tell one from an unused import.
+# Re-exports are the entire point of a package __init__; ruff cannot tell one
+# from an unused import.
 "__init__.py" = ["F401"]

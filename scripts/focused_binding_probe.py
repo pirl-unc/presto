@@ -941,7 +941,7 @@ def _split_records_by_peptide(
 
     rng = random.Random(seed + 53)
     val_peptides: set[str] = set()
-    for category, peptides in grouped_keys.items():
+    for peptides in grouped_keys.values():
         bucket = list(peptides)
         rng.shuffle(bucket)
         if len(bucket) <= 1:
@@ -4836,10 +4836,10 @@ def main() -> None:
             if pep and allele:
                 peptide_allele_preds[pep][allele]["kd"] = row.get("kd_log10")
                 peptide_allele_preds[pep][allele]["ic50"] = row.get("ic50_log10")
-        for pep, allele_map in peptide_allele_preds.items():
+        for allele_map in peptide_allele_preds.values():
             kd_vals = []
             ic50_vals = []
-            for allele, preds in allele_map.items():
+            for preds in allele_map.values():
                 kd_v = preds.get("kd")
                 ic50_v = preds.get("ic50")
                 if kd_v is not None and ic50_v is not None:

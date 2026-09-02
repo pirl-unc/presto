@@ -1785,6 +1785,7 @@ class PrestoDataset(Dataset):
                 "Ignoring sc10x_records: receptor-sequence supervision is disabled in canonical "
                 "Presto.",
                 RuntimeWarning,
+                stacklevel=2,
             )
         self.mhc_sequences = _normalize_mhc_sequence_lookup(mhc_sequences)
         self.mhc_exact_inputs = _normalize_exact_mhc_input_lookup(mhc_exact_inputs)
@@ -2189,6 +2190,7 @@ class PrestoDataset(Dataset):
                 f"sequences={self._mhc_x_sequence_count}, residues={self._mhc_x_residue_total}, "
                 f"examples={example_text}",
                 RuntimeWarning,
+                stacklevel=2,
             )
 
         self._assign_fixed_metadata()

@@ -291,7 +291,7 @@ def _split_samples(
     rng = random.Random(int(seed))
     train: List[MHCWarmStartSample] = []
     val: List[MHCWarmStartSample] = []
-    for group, rows in grouped.items():
+    for _group, rows in grouped.items():
         rows = list(rows)
         rng.shuffle(rows)
         n_val = int(round(len(rows) * float(val_fraction)))

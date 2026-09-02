@@ -35,7 +35,7 @@ class TestRealUnparseableAllelesAreTolerated:
         """The data failure mode must be ValueError, whatever mhcgnomes uses."""
         from presto.data.allele_resolver import normalize_allele_name
 
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="failed to parse allele"):
             normalize_allele_name(bad_allele)
 
     def test_sequence_lookup_skips_an_unparseable_key(self):
