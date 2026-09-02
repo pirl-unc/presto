@@ -318,7 +318,20 @@ def _every_modality_batch():
 #: "trained" across runs and made the allowlist unstable. Ten orders of
 #: magnitude below a real gradient is starved, whether or not it is exactly
 #: zero.
-EFFECTIVELY_ZERO_GRADIENT = 1e-8
+#: Raised from 1e-8 after `core_window_score.2.bias` began straddling it
+#: (1.95e-08 / 3.83e-09 / 4.79e-09 across three seeds), flipping the allowlist
+#: between runs. That parameter is softmax-invariant -- it cannot receive real
+#: signal -- and what it accumulates is float cancellation noise, which drifts
+#: with unrelated changes to the graph.
+#:
+#: Measured separation on a warmed-up full-modality batch:
+#:
+#:   largest allowlisted (noise) : 1.95e-08
+#:   smallest genuinely live     : 1.67e-06   (class2_pfr_score.0.bias)
+#:
+#: ~86x of daylight, and 1e-7 sits in the middle of it. Anything that needs a
+#: tighter threshold than this to look alive is not alive.
+EFFECTIVELY_ZERO_GRADIENT = 1e-7
 
 #: Both topologies, because they allocate different modules. `expanded` is the
 #: default and the one design.md specifies; `collapsed` is still constructible

@@ -106,9 +106,13 @@ class TestWindowShape:
         assert head.p1_prime_window_index == head.junction_window
 
     def test_missing_index_tracks_the_vocabulary(self):
-        """Hard-coding the last column would drift if AA_VOCAB grew."""
-        assert _model().excision_head.missing_residue_index == AA_TO_IDX["<MISSING>"]
-        assert _model().excision_head.missing_residue_index == len(AA_VOCAB) - 1
+        """Hard-coding the last column would drift if AA_VOCAB grew -- and it
+        did: `<TERMINUS>` was appended after `<MISSING>`, so "the last entry"
+        stopped meaning "missing". The index must come from the name."""
+        head = _model().excision_head
+        assert head.missing_residue_index == AA_TO_IDX["<MISSING>"]
+        assert head.missing_residue_index != len(AA_VOCAB) - 1
+        assert AA_VOCAB[-1] == "<TERMINUS>"
 
     @pytest.mark.parametrize("width", [3, 5, 7])
     def test_the_window_is_configurable(self, width):

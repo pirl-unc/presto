@@ -35,6 +35,20 @@ AA_VOCAB = [
     "Y",
     "X",  # unknown/any amino acid
     "<MISSING>",  # dedicated missing-value token
+    # "there is nothing here, and that is a fact" -- distinct from <MISSING>,
+    # which means "we do not know what is here".
+    #
+    # A peptide at a protein's N-terminus has no upstream residue, and one at
+    # the C-terminus has no downstream residue. Encoding either as <MISSING>
+    # tells the model the context is unknown when it is definitively empty, and
+    # the C-terminal case is the sharper one: such a peptide required no
+    # proteasomal C-terminal cut at all, because the terminus already existed.
+    # The excision head was being asked to score a cleavage that never had to
+    # happen, on 8.0% of rows (5.1% on the N side), using a token that means
+    # the opposite of what is true.
+    #
+    # Appended last, so every existing residue index keeps its meaning.
+    "<TERMINUS>",
 ]
 
 #: Residues the tokenizer can actually encode, derived from AA_VOCAB so there
