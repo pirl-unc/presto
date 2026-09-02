@@ -79,6 +79,31 @@ they are indistinguishable from a coin. With 800 T-cell records capped and 112
 real-only validation rows this is under-powered rather than proof of a defect,
 but it is not evidence of skill either.
 
+## Second arm: pan-allele, same budget
+
+Same caps and hyperparameters with `--hitlist-mhc-class I` instead of a single
+allele: 567 alleles, 479 resolved, 12,502 samples. A harder task at equal cost,
+run to check the first arm was not memorising one allele's motif.
+
+| metric | HLA-A*02:01 | pan-allele (479) |
+|---|---:|---:|
+| binding Spearman (n≈1130) | 0.823 | **0.781** |
+| binding affinity probe Spearman | 0.828 | **0.766** |
+| binding KD Spearman | 0.878 | **0.850** |
+| binding IC50 Spearman | 0.774 | 0.222 |
+| immunogenicity real-only AUROC | 0.512 | 0.570 |
+| tcell real-only AUROC | 0.519 | 0.597 |
+
+Binding generalises: Spearman 0.78 across 479 alleles against 0.82 on one, so
+the single-allele number is not memorisation. IC50 collapses to 0.222, which is
+the one number here worth chasing -- it is a smaller, noisier subset and the
+pan-allele split spreads it thinner.
+
+Elution and presentation read AUROC **1.000** in this arm.
+`elution_real_only_n_negatives = 0` again: still no real negatives, so it is
+still decoy detection, and a perfect score is a reminder of that rather than a
+result.
+
 ## Takeaway
 
 The pipeline trains end to end on real data and **binding is genuinely

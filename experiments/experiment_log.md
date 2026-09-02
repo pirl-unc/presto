@@ -549,9 +549,29 @@ Best val loss **0.6708** (epoch 5; 6–8 overfit, expected at this size).
   0.519 (n=112), against 0.74–0.82 versus decoys. Under-powered at 800 capped
   T-cell records rather than proven broken.
 
+### Second arm: pan-allele at the same budget
+
+Same caps and hyperparameters with `--hitlist-mhc-class I`: 567 alleles, 479
+resolved, 12,502 samples. Run to check the first arm was not memorising one
+allele's motif.
+
+| metric | HLA-A*02:01 | pan-allele (479) |
+|---|---:|---:|
+| binding Spearman (n≈1130) | 0.823 | **0.781** |
+| binding affinity probe | 0.828 | **0.766** |
+| binding KD | 0.878 | **0.850** |
+| binding IC50 | 0.774 | 0.222 |
+| immunogenicity real-only AUROC | 0.512 | 0.570 |
+| tcell real-only AUROC | 0.519 | 0.597 |
+
+Binding generalises — 0.78 across 479 alleles against 0.82 on one. IC50 falling
+to 0.222 is the one number worth chasing. Elution/presentation read AUROC 1.000
+with `elution_real_only_n_negatives = 0`, so a perfect score is a reminder that
+it is decoy detection, not a result.
+
 ### Takeaway
 
-The pipeline trains end to end on real data and binding is genuinely learned.
-Presentation and T-cell claims are not supported by this run — the first for
-lack of real negatives in the corpus, the second for lack of scale. Both need a
-GPU run.
+The pipeline trains end to end on real data and binding is genuinely learned,
+pan-allele. Presentation and T-cell claims are not supported by either arm —
+the first for lack of real negatives in the corpus, the second for lack of
+scale. Both need a GPU run.
