@@ -623,7 +623,7 @@ class PMHCEncoder(nn.Module):
         # 3. Cross-attention: peptide attends to MHC
         # This lets P2 see the B-pocket, PΩ see the F-pocket
         x = pep_emb
-        for i, (attn, norm, ffn, ffn_norm) in enumerate(
+        for _i, (attn, norm, ffn, ffn_norm) in enumerate(
             zip(self.cross_attention_layers, self.cross_norms, self.cross_ffn, self.ffn_norms)
         ):
             # Cross-attention (peptide queries, MHC keys/values)

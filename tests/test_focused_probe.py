@@ -1282,7 +1282,7 @@ def test_parse_synthetic_modes_validates_and_normalizes():
         "peptide_scramble",
         "mhc_random",
     )
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Unknown synthetic modes"):
         _parse_synthetic_modes("bad_mode")
 
 

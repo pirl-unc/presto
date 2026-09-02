@@ -421,7 +421,7 @@ class TestPredictTiledPresentation:
         assert scores == sorted(scores, reverse=True)
 
     def test_predict_tiled_presentation_validates_length_range(self, predictor):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="(?i)length"):
             predictor.predict_tiled_presentation(
                 protein_sequence="MPEPSLLQHLIGLQWERTY",
                 allele="HLA-A*02:01",
@@ -562,7 +562,7 @@ class TestPredictPresentationMultiAllele:
 
     def test_multi_allele_requires_input(self, predictor):
         """Must provide alleles or sequences."""
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="(?i)allele"):
             predictor.predict_presentation_multi_allele(peptide="SIINFEKL")
 
 

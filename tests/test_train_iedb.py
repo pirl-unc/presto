@@ -1699,7 +1699,7 @@ def test_augment_binding_invalid_anchor_strategy_raises():
         ),
     ]
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="class_i_anchor_strategy must be one of"):
         augment_binding_records_with_synthetic_negatives(
             binding_records=base,
             mhc_sequences={"HLA-A*02:01": "A" * 181},

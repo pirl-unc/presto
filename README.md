@@ -83,6 +83,7 @@ Reference: `docs/training_spec.md` section "Synthetic Negative Schedule".
 
 ```bash
 ./develop.sh
-./lint.sh
+./lint.sh          # ruff check + ruff format --check
+ruff format .      # apply formatting (lint.sh only *checks* it)
 ./test.sh
 ```

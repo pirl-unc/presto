@@ -918,7 +918,7 @@ def list_datasets(
         List of DatasetInfo objects
     """
     result = []
-    for name, info in DATASETS.items():
+    for _name, info in DATASETS.items():
         if sources and info.source not in sources:
             continue
         if categories and info.category not in categories:
@@ -1130,7 +1130,7 @@ class AssayDeduplicator:
 
         # Process each group
         deduped = []
-        for key, group_records in groups.items():
+        for _key, group_records in groups.items():
             if len(group_records) == 1:
                 deduped.append(group_records[0])
                 continue
@@ -1143,7 +1143,7 @@ class AssayDeduplicator:
 
             # Aggregate within each reference
             ref_representatives = []
-            for ref_key, ref_records in by_ref.items():
+            for ref_records in by_ref.values():
                 if len(ref_records) == 1:
                     ref_representatives.append(ref_records[0])
                 else:

@@ -1449,7 +1449,7 @@ def _write_probe_artifacts(
         by_tag.setdefault(tag, []).append(row)
 
     fig, ax = plt.subplots(figsize=(9.5, 5.5))
-    for tag, rows in sorted(by_tag.items()):
+    for _tag, rows in sorted(by_tag.items()):
         rows_sorted = sorted(rows, key=lambda r: int(r.get("epoch", 0)))
         epochs = [int(r["epoch"]) for r in rows_sorted]
         kd_nM = [float(r["kd_nM"]) for r in rows_sorted]
@@ -6357,7 +6357,7 @@ def main(argv=None):
     parser.add_argument("--device", type=str, default=None, help="Device override")
     explicit_dests = _explicit_cli_dests(parser, argv)
     args = parser.parse_args(argv)
-    setattr(args, "_explicit_cli_dests", explicit_dests)
+    args._explicit_cli_dests = explicit_dests
     run(args)
 
 

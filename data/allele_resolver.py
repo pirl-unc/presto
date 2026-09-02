@@ -166,7 +166,7 @@ def _require_mhcgnomes() -> Any:
     parse_fn = getattr(function_api, "parse", None)
     if not callable(parse_fn):
         raise RuntimeError("mhcgnomes is installed but does not expose a callable parse API.")
-    setattr(mhcgnomes, "parse", parse_fn)
+    mhcgnomes.parse = parse_fn
     return mhcgnomes
 
 
