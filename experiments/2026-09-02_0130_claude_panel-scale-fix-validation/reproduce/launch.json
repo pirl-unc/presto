@@ -1,0 +1,18 @@
+{
+  "command": "python -m presto train unified",
+  "data_source": "hitlist",
+  "hitlist_allele": "HLA-A*02:01",
+  "max_binding": 2500,
+  "max_elution": 2500,
+  "max_tcell": 800,
+  "max_vdjdb": 800,
+  "max_stability": 400,
+  "epochs": 8,
+  "batch_size": 32,
+  "d_model": 64,
+  "n_layers": 2,
+  "n_heads": 4,
+  "device": "cpu",
+  "env_overrides": {},
+  "gpu": null
+}
