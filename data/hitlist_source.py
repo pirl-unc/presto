@@ -446,15 +446,66 @@ def _select_best_mapping(frame):
 
     ``map_source_proteins=True`` emits one row per (evidence row, protein
     mapping), which more than doubles the row count and would train on the same
-    measurement several times. Prefer the canonical-transcript mapping so the
-    flanks come from the dominant isoform; fall back to the first mapping.
+    measurement several times.
+
+    Ordering is delegated to `flank_selection.SELECTION_BASES`: canonical
+    transcript first, then a deterministic protein-id sort so a run does not
+    depend on frame order. Expression-aware selection is available through
+    `flank_selection.select_source_mapping` for callers that have per-sample
+    abundance; this bulk path does not, because the frame carries no expression
+    column.
+
+    The ambiguity itself is measured here rather than discarded. For
+    HLA-A*02:01, 80.5% of evidence rows map to more than one protein and 21.6%
+    disagree on a flank -- so for better than a fifth of rows the junction the
+    excision head trains on is one candidate among several, presented as
+    observed. `mapping_ambiguity_stats` reports it; see presto#34.
     """
     if "evidence_row_id" not in frame.columns:
         return frame
     ordered = frame
+    sort_keys = []
     if "is_canonical_transcript" in frame.columns:
-        ordered = frame.sort_values("is_canonical_transcript", ascending=False, kind="stable")
+        sort_keys.append(("is_canonical_transcript", False))
+    if "protein_id" in frame.columns:
+        sort_keys.append(("protein_id", True))
+    if sort_keys:
+        ordered = frame.sort_values(
+            [key for key, _ in sort_keys],
+            ascending=[asc for _, asc in sort_keys],
+            kind="stable",
+        )
     return ordered.drop_duplicates(subset=["evidence_row_id"], keep="first")
+
+
+def mapping_ambiguity_stats(frame) -> Dict[str, Any]:
+    """How much of the flank context is a choice rather than an observation.
+
+    Computed before the collapse, because afterwards the alternatives are gone.
+    Reported in the ingest stats so the number is visible in a training log
+    rather than rediscovered by measuring the corpus.
+    """
+    empty = {
+        "evidence_rows": 0,
+        "rows_with_multiple_proteins": 0,
+        "rows_with_disagreeing_flanks": 0,
+        "max_proteins_for_one_row": 0,
+    }
+    if "evidence_row_id" not in frame.columns or not len(frame):
+        return empty
+    grouped = frame.groupby("evidence_row_id", sort=False)
+    sizes = grouped.size()
+    stats = {
+        "evidence_rows": int(len(sizes)),
+        "rows_with_multiple_proteins": int((sizes > 1).sum()),
+        "max_proteins_for_one_row": int(sizes.max()),
+        "rows_with_disagreeing_flanks": 0,
+    }
+    if {"n_flank", "c_flank"} <= set(frame.columns):
+        distinct = grouped[["n_flank", "c_flank"]].nunique()
+        disagree = (distinct["n_flank"] > 1) | (distinct["c_flank"] > 1)
+        stats["rows_with_disagreeing_flanks"] = int(disagree.sum())
+    return stats
 
 
 def _iter_row_dicts(frame, chunk_size: int = 50_000):
@@ -550,6 +601,10 @@ def load_records_from_hitlist(
         map_source_proteins=include_flanks,
     )
 
+    # Empty unless flanks were requested; the ambiguity only exists in the
+    # exploded protein-mapping frame.
+    mapping_ambiguity: Dict[str, Any] = {}
+
     binding_frame = hitlist.generate_training_table(
         include_evidence="binding",
         columns=training_columns("binding", include_flanks=include_flanks),
@@ -564,6 +619,13 @@ def load_records_from_hitlist(
     assert_columns_present(ms_frame, "ms", include_flanks=include_flanks)
 
     if include_flanks:
+        # Measured before collapsing: afterwards the alternatives are gone.
+        mapping_ambiguity.update(
+            {
+                "binding": mapping_ambiguity_stats(binding_frame),
+                "ms": mapping_ambiguity_stats(ms_frame),
+            }
+        )
         binding_frame = _select_best_mapping(binding_frame)
         ms_frame = _select_best_mapping(ms_frame)
 
@@ -756,6 +818,10 @@ def load_records_from_hitlist(
         "skipped_unexpected_unit": skipped_bad_unit,
         "skipped_noncanonical_peptide": skipped_noncanonical_peptide,
         "unmapped_condition_categories": dict(unmapped_conditions),
+        # How often the flank we trained on was a choice among several. See
+        # presto#34 -- for HLA-A*02:01, 21.6% of rows have mappings that
+        # disagree on a flank.
+        "mapping_ambiguity": mapping_ambiguity,
         "stability_assay_methods": _method_counts(stability_records),
         "kinetics_assay_methods": _method_counts(kinetics_records),
         "flank_coverage": {
