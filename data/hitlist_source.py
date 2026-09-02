@@ -467,15 +467,29 @@ def _select_best_mapping(frame):
     sort_keys = []
     if "is_canonical_transcript" in frame.columns:
         sort_keys.append(("is_canonical_transcript", False))
+    # Prefer a mapping whose flanks are resolved over one carrying `X`.
+    #
+    # `X` marks an unresolved residue, and every N-side occurrence sits at
+    # protein position 0 -- which is exactly the junction residue the excision
+    # head reads. Without this rule, 525 evidence rows reached training with an
+    # X in the chosen N-flank and 514 of them had a clean alternative in the
+    # same group: the worst available choice, picked by accident of ordering.
+    if {"n_flank", "c_flank"} <= set(frame.columns):
+        unresolved = frame["n_flank"].fillna("").astype(str).str.contains("X", regex=False) | frame[
+            "c_flank"
+        ].fillna("").astype(str).str.contains("X", regex=False)
+        ordered = frame.assign(_unresolved_flank=unresolved)
+        sort_keys.append(("_unresolved_flank", True))
     if "protein_id" in frame.columns:
         sort_keys.append(("protein_id", True))
     if sort_keys:
-        ordered = frame.sort_values(
+        ordered = ordered.sort_values(
             [key for key, _ in sort_keys],
             ascending=[asc for _, asc in sort_keys],
             kind="stable",
         )
-    return ordered.drop_duplicates(subset=["evidence_row_id"], keep="first")
+    collapsed = ordered.drop_duplicates(subset=["evidence_row_id"], keep="first")
+    return collapsed.drop(columns=["_unresolved_flank"], errors="ignore")
 
 
 def mapping_ambiguity_stats(frame) -> Dict[str, Any]:
