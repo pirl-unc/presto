@@ -1516,9 +1516,16 @@ class ExcisionHead(nn.Module):
         #
         # One residue per side (the original shape) cannot express protease
         # specificity, which spans the Schechter-Berger subsites. 5 per side
-        # matches mhcflurry's `short_flanks` setting, and is the widest window
-        # our data can actually fill: hitlist caps flanks at 10 residues, so
-        # 93.7% of class I rows carry both 5-residue flanks and 0% carry 15.
+        # matches mhcflurry's `short_flanks` setting, which is their better
+        # processing ablation.
+        #
+        # It is no longer the widest window available. This comment used to say
+        # 5 was all the data could fill -- hitlist capped flanks at 10 residues
+        # and 0% of rows carried 15. hitlist 1.55.2 raised DEFAULT_FLANK to 15,
+        # and 89.3% of class I rows now carry both 15-residue flanks. So 15/15,
+        # mhcflurry's production setting, became a real ablation rather than an
+        # impossibility. 5 stays the default on the empirical result, not on
+        # availability; `junction_window` is the knob.
         #
         # Only the *in-vivo* tables are windowed. The in-vitro branch stays
         # P1-only on purpose: its labels are generated from a P1 rule
