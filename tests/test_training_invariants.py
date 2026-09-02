@@ -59,6 +59,16 @@ def model():
 
 
 def _terms(model, batch):
+    """Loss and its terms, measured deterministically.
+
+    `eval()` is not incidental. The model carries 26 active dropout modules, so
+    two identical calls in train mode differ by ~0.004 -- and the tests below
+    compare two calls to decide whether a target perturbation moved the loss.
+    In train mode they were comparing dropout noise. That passed by luck until
+    an unrelated merge shifted the RNG state, which is the whole failure mode
+    this file exists to catch, reproduced inside it.
+    """
+    model.eval()
     loss, parts, _ = compute_loss(model, batch, "cpu")
     values = {
         name: float(value)
