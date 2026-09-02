@@ -32,27 +32,35 @@ from presto.data.vocab import AA_TO_IDX, AA_VOCAB  # noqa: E402
 from presto.models.presto import Presto  # noqa: E402
 
 UNKNOWN_FLANK = AA_TO_IDX["?"]
-N_TERMINUS = AA_TO_IDX["^"]
-C_TERMINUS = AA_TO_IDX["$"]
+BOUNDARY = AA_TO_IDX["X"]
 
 
 class TestTheFlankAlphabetIsDistinct:
-    """Four states, four tokens. `X` is the one that is a residue."""
+    """Two markers. `X` is a residue code that doubles as the boundary pad."""
 
-    def test_the_markers_are_separate_tokens(self):
-        assert len({N_TERMINUS, C_TERMINUS, UNKNOWN_FLANK, AA_TO_IDX["X"]}) == 4
+    def test_boundary_and_unknown_are_different_tokens(self):
+        assert BOUNDARY != UNKNOWN_FLANK
 
-    def test_the_two_termini_are_not_the_same_event(self):
-        """`^` is about where translation began; `$` is about whether a cut was
-        needed. Collapsing them would tie the two claims together."""
-        assert N_TERMINUS != C_TERMINUS
-        assert AA_VOCAB[N_TERMINUS] == "^"
-        assert AA_VOCAB[C_TERMINUS] == "$"
+    def test_the_boundary_pad_is_x(self):
+        """Not a new symbol: 4.33% of mapped flanks reaching position 0 already
+        start with X, an unresolved initiator. "Ran out of protein" and
+        "unresolved residue at the protein edge" are the same situation."""
+        assert AA_VOCAB[BOUNDARY] == "X"
+
+    def test_one_boundary_symbol_suffices(self):
+        """Start and end need no separate symbols. The N and C junctions are
+        scored by different tensors, each with a position axis, so which
+        boundary was hit is already encoded by which parameter is indexed."""
+        from presto.models.presto import Presto
+
+        head = Presto(d_model=32, n_layers=2, n_heads=4).excision_head
+        assert head.invivo_profile_n.shape == head.invivo_profile_c.shape
+        assert head.invivo_profile_n.data_ptr() != head.invivo_profile_c.data_ptr()
 
     def test_markers_were_appended(self):
         """Existing residue indices must not shift; checkpoints index by
         position."""
-        assert AA_VOCAB[-3:] == ["^", "$", "?"]
+        assert AA_VOCAB[-1] == "?"
         assert AA_VOCAB[AA_TO_IDX["X"]] == "X"
 
     def test_markers_are_not_encodable_residues(self):
@@ -70,7 +78,7 @@ class TestTheFlankAlphabetIsDistinct:
         unresolved initiator residue of a reference protein in all 45,992
         occurrences, and that is a specific context worth representing."""
         model = Presto(d_model=32, n_layers=2, n_heads=4)
-        for symbol in ("X", "^", "$", "?"):
+        for symbol in ("X", "?"):
             vector = model.aa_embedding.weight[AA_TO_IDX[symbol]]
             assert vector.requires_grad
             assert float(vector.norm()) > 0.0, f"{symbol} is pinned to zero"
@@ -175,19 +183,16 @@ class TestTheModelSeesTheDifference:
             )
         assert torch.allclose(without["excision_logit"], explicit_false["excision_logit"])
 
-    @pytest.mark.parametrize("side,expected", [("n", N_TERMINUS), ("c", C_TERMINUS)])
-    def test_the_pad_helper_selects_per_row_and_per_side(self, side, expected):
-        """The side decides which marker: `^` before the protein starts, `$`
-        after it ends."""
+    def test_the_pad_helper_selects_per_row(self):
+        """Boundary rows pad with X, the rest with ?."""
         model = self._model_with_trained_profiles()
-        token = getattr(model, f"{side}_terminus_token_idx")
         pads = model._pad_for_side(
             torch.tensor([True, False, True]),
             3,
             torch.device("cpu"),
-            terminus_token=token,
+            boundary_token=model.boundary_token_idx,
         )
-        assert pads.tolist() == [expected, UNKNOWN_FLANK, expected]
+        assert pads.tolist() == [BOUNDARY, UNKNOWN_FLANK, BOUNDARY]
 
     def test_a_missing_flag_falls_back_to_missing(self):
         model = self._model_with_trained_profiles()

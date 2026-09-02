@@ -112,8 +112,8 @@ class TestWindowShape:
         head = _model().excision_head
         assert head.missing_residue_index == AA_TO_IDX["<MISSING>"]
         assert head.missing_residue_index != len(AA_VOCAB) - 1
-        assert AA_VOCAB[-3:] == ["^", "$", "?"], (
-            "the flank alphabet is appended last; if that changed, the index "
+        assert AA_VOCAB[-1] == "?", (
+            "the flank markers are appended last; if that changed, the index "
             "must still come from the name rather than from a position"
         )
 

@@ -1124,14 +1124,15 @@ class TestDesignAlignment:
         *initiator* residue of a reference protein, never an interior gap. That
         is a specific context and worth a representation.
 
-        The flank markers `^`, `$` and `?` are unpinned for the same reason --
-        each denotes a distinct state to weigh, not a hole to zero out.
+        `?` is unpinned for the same reason: "no flank was determined" is a
+        state to weigh, not a hole to zero out. `X` now doubles as the
+        protein-boundary pad, which makes pinning it doubly wrong.
         """
         from presto.data.vocab import AA_TO_IDX
         from presto.models.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
-        for symbol in ("X", "^", "$", "?"):
+        for symbol in ("X", "?"):
             index = AA_TO_IDX[symbol]
             with torch.no_grad():
                 row = model.aa_embedding.weight[index]
