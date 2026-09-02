@@ -329,10 +329,9 @@ class Presto(nn.Module):
         self.binding_midpoint_log10_nM = math.log10(max(self.binding_midpoint_nM, 1e-12))
         self.binding_log10_scale = max(float(binding_log10_scale), 1e-6)
         self.missing_token_idx = int(AA_TO_IDX["<MISSING>"])
-        # Flank alphabet: `^` before the protein starts, `$` after it ends,
-        # `?` when the flank was never determined. See AA_VOCAB.
-        self.n_terminus_token_idx = int(AA_TO_IDX["^"])
-        self.c_terminus_token_idx = int(AA_TO_IDX["$"])
+        # Flank alphabet: `X` where the protein boundary is, `?` where the
+        # flank was never determined. See AA_VOCAB.
+        self.boundary_token_idx = int(AA_TO_IDX["X"])
         self.unknown_flank_token_idx = int(AA_TO_IDX["?"])
 
         # ------------------------------------------------------------------
@@ -1255,24 +1254,28 @@ class Presto(nn.Module):
         batch_size: int,
         device,
         *,
-        terminus_token: Optional[int] = None,
+        boundary_token: Optional[int] = None,
     ) -> torch.Tensor:
         """Per-row pad token for one flank side.
 
-        `terminus_token` where the protein ended -- `^` on the N side, `$` on
-        the C side -- and `?` otherwise, meaning the flank was never
-        determined. A caller passing no flag gets `?` throughout, which is the
-        honest reading of "this caller has no flank information".
+        `X` where the protein boundary was reached, `?` where the flank was
+        never determined. A caller passing no flag gets `?` throughout, which
+        is the honest reading of "this caller has no flank information".
+
+        Which boundary was hit -- start or end -- needs no second symbol: the N
+        and C junctions are scored by different tensors, each with its own
+        position axis, so that is already encoded by which parameter is
+        indexed.
         """
         base = torch.full(
             (batch_size,), self.unknown_flank_token_idx, dtype=torch.long, device=device
         )
-        if is_terminus is None or terminus_token is None:
+        if is_terminus is None or boundary_token is None:
             return base
         flag = is_terminus.reshape(-1).to(device=device, dtype=torch.bool)
         if flag.shape[0] != batch_size:
             return base
-        return torch.where(flag, torch.full_like(base, int(terminus_token)), base)
+        return torch.where(flag, torch.full_like(base, int(boundary_token)), base)
 
     @staticmethod
     def _pad_values(fallback, batch_size: int, width: int, device) -> torch.Tensor:
@@ -3485,13 +3488,13 @@ class Presto(nn.Module):
             flank_n_is_terminus,
             batch_size,
             pep_tok.device,
-            terminus_token=self.n_terminus_token_idx,
+            boundary_token=self.boundary_token_idx,
         )
         c_pad = self._pad_for_side(
             flank_c_is_terminus,
             batch_size,
             pep_tok.device,
-            terminus_token=self.c_terminus_token_idx,
+            boundary_token=self.boundary_token_idx,
         )
         peptide_lengths = (pep_tok != 0).long().sum(dim=1)
         excision_outputs = self.excision_head(

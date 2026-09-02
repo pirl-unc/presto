@@ -37,28 +37,29 @@ AA_VOCAB = [
     "<MISSING>",  # dedicated missing-value token, for absent non-flank segments
     # ---- flank alphabet -------------------------------------------------
     #
-    # A position in a flank window can be absent for four different reasons,
-    # and they make different claims:
+    # Two markers, not four. A position in a flank window is absent for one of
+    # two reasons, and only these two need distinguishing:
     #
-    #   X   a residue IS here, identity unresolved. Already above, and it
-    #       arrives from real data: 45,992 rows carry one, and in every case
-    #       `position == len(flank)` -- it is the unresolved *initiator*
-    #       residue of a reference protein, never an interior gap.
-    #   ^   before the protein starts. No residue exists, and the peptide's
-    #       N-terminus is the protein's own.
-    #   $   after the protein ends. No residue exists -- and this one is
-    #       load-bearing: such a peptide required no proteasomal C-terminal cut
-    #       at all, because the terminus was already there.
-    #   ?   the flank was never determined. Genuinely unknown, and the state a
-    #       caller is in when it has a peptide but no source protein.
+    #   X   no residue is here because the protein boundary is -- we ran off
+    #       the start or the end. `X` rather than a new symbol because that is
+    #       already what the data uses: of 1,061,574 mapped flanks reaching
+    #       position 0, 93% start with the initiator `M` and 4.33% with `X`,
+    #       an unresolved initiator residue. "Ran out of protein" and
+    #       "unresolved residue at the protein edge" are the same situation.
+    #   ?   the flank was never determined. Genuinely unknown -- the state a
+    #       caller is in with a peptide but no source protein.
     #
-    # `^` and `$` are separate rather than one shared "terminus" token because
-    # they are not the same event: one is about where translation began, the
-    # other about whether a cut was needed.
+    # Separate `^` (before start) and `$` (after end) markers were tried and
+    # dropped as redundant: the N and C junctions are scored by *different*
+    # tensors (`invivo_profile_n` / `invivo_profile_c`), each with its own
+    # position axis, so which boundary was hit is already encoded by which
+    # parameter gets indexed. A second symbol only duplicated that.
     #
-    # Appended, so every existing residue index keeps its meaning.
-    "^",
-    "$",
+    # Known collision, accepted: `X` also appears as a genuine interior
+    # unresolved residue in 337 C-flank rows across 13 proteins (0.0014%). On
+    # the N side there is no collision at all -- every one of the 45,992 X's
+    # sits at protein position 0. Merging costs those 337 rows and buys one
+    # fewer token to learn.
     "?",
 ]
 
@@ -70,12 +71,15 @@ AA_VOCAB = [
 #: annotation junk ("YXGEVXVSV + INDIST(X2, X6)") and genuine but unmodelled
 #: residues -- selenocysteine `U` appears in real human selenoproteins and
 #: reached the tokenizer through hitlist flanks, aborting training mid-epoch.
-#: Structural markers in the flank alphabet. Single characters like a residue,
-#: but each describes the *absence* of one, so a real sequence containing them
-#: is malformed rather than informative -- `is_encodable_sequence` must keep
-#: rejecting it. `X` is deliberately not here: an unresolved residue is a real
-#: thing to encode, and 45,992 rows carry one.
-FLANK_MARKERS = frozenset({"^", "$", "?"})
+#: Structural markers in the flank alphabet: characters that describe the
+#: *absence* of a residue, so a real sequence containing one is malformed
+#: rather than informative and `is_encodable_sequence` must keep rejecting it.
+#:
+#: `X` is deliberately not here. It is a genuine residue code -- "one is here,
+#: identity unresolved" -- and 45,992 rows carry it legitimately, so a sequence
+#: containing X must still encode. That it doubles as the protein-boundary pad
+#: is a deliberate merge, not a reason to reject real data.
+FLANK_MARKERS = frozenset({"?"})
 
 ENCODABLE_RESIDUES = frozenset(
     token for token in AA_VOCAB if len(token) == 1 and token not in FLANK_MARKERS
