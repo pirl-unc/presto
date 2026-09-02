@@ -504,3 +504,54 @@
 - **Comparison**: not comparable to any baseline in `model_to_beat.md`. Those were all trained through the merged-TSV path with empty flank segments; see the caveat at the top of that file.
 - **Takeaway**: the plumbing is real — both corpora co-train, the expanded DAG trains, and the two new losses get substantive support. Nothing is claimed about quality: one epoch, `d_model=32`, one allele, CPU. The decision gate is the Stage 4 factorial (arms A-E), which has not been run.
 - **Defects fixed en route**: (1) `train unified` silently dropped every MHC row because sequence resolution was gated on `if args.index_csv:` while the resolver is mhcseqs-first with the CSV as fallback; (2) `float("nan")` passing a null check in the hitlist adapter, which would have admitted NaN affinity targets.
+
+---
+
+## 2026-09-02 · Panel-scale fix validation — the first run that learns
+
+**Agent:** claude (Opus 5) · **Dir:** [`2026-09-02_0130_claude_panel-scale-fix-validation`](2026-09-02_0130_claude_panel-scale-fix-validation/) · **Commit:** `2688399` (clean) · **Hardware:** local CPU, no GPU
+
+### Why
+
+`AffinityPredictor.predict_assay_panel` returns a KD offset in normalized log10
+space; the panel loss regressed it against `bind_target` **raw** (nanomolar, to
+50,000). `loss_binding_assay_panel` sat near 142,900 — an order of magnitude
+above the total loss — and could not fall, because no head output reaches
+50,000. It dominated every gradient, and the model learned nothing:
+
+| | before | after |
+|---|---|---|
+| synthetic val loss | 9924.72 → 9923.51 / 10 epochs (**0.012%**) | 1.9511 → 0.9156 / 40 (**53%**) |
+| `loss_binding_assay_panel` | 142,888 → 142,879 (frozen) | 2.82 → 1.56 |
+
+Nothing about the bug was exceptional — finite loss, training ran to
+completion, 1,417 tests passed. Only the magnitude gave it away.
+
+### Contract
+
+hitlist 1.55.2, MS + binding evidence, `map_source_proteins=True`, restricted to
+`HLA-A*02:01`. Caps: binding 2500 / elution 2500 / t-cell 800 / VDJdb 800 /
+stability 400 → 21,189 samples. Synthetic negatives pmhc 1.000, processing
+0.500, derived 0.500. d_model 64, 2 layers, 4 heads, expanded topology, 8
+epochs, batch 32. Peptide-grouped split.
+
+### Held-out results
+
+Best val loss **0.6708** (epoch 5; 6–8 overfit, expected at this size).
+
+- **Binding, genuinely learned:** Spearman **0.823** (n=1137), affinity probe
+  **0.828**, KD **0.878** (n=70), IC50 **0.774** (n=236), t_half 0.736 (n=73).
+- **Elution / presentation AUROC 0.996 / 0.981 is not presentation skill.**
+  `elution_real_only_n_negatives = 0`: the corpus supplies no real negatives, so
+  every negative is a synthetic decoy and the number measures peptide realism.
+  The decoy-stratified metrics report this rather than the headline figure.
+- **T-cell / immunogenicity at chance on real negatives:** AUROC 0.512 and
+  0.519 (n=112), against 0.74–0.82 versus decoys. Under-powered at 800 capped
+  T-cell records rather than proven broken.
+
+### Takeaway
+
+The pipeline trains end to end on real data and binding is genuinely learned.
+Presentation and T-cell claims are not supported by this run — the first for
+lack of real negatives in the corpus, the second for lack of scale. Both need a
+GPU run.
