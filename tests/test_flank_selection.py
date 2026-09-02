@@ -163,36 +163,36 @@ class TestIngestRecordsAmbiguity:
         assert stats["evidence_rows"] == 0
 
 
-class TestResolvedFlanksArePreferred:
-    """Between otherwise-tied candidates, take the one without an `X`.
+class TestUnresolvedFlanksAreDroppedNotSubstituted:
+    """`X` disqualifies a row; it never redirects the choice to another protein.
 
-    `X` marks an unresolved residue, and every N-side occurrence in this corpus
-    sits at protein position 0 -- which is precisely the junction residue the
-    excision head reads. A candidate carrying one is therefore the worst
-    available training example for exactly the task the flank exists to serve.
+    The tempting rule -- "prefer whichever candidate has a clean flank" -- was
+    implemented, measured, and removed. Of the rows it changed, **91%** also
+    changed which *gene* the peptide was attributed to: it was not picking a
+    better transcript of the same protein, it was swapping the protein. A flank
+    is only meaningful if the source protein is right, so that trades a known
+    unknown for a possibly-wrong origin.
 
-    Measured: before this rule, 525 evidence rows reached training with an X in
-    the chosen N-flank and 514 had a clean alternative in the same group. The
-    rule takes it to 431, and 421 of those are *canonical* mappings whose
-    initiator is genuinely unresolved -- the right answer, since the
-    alternatives are non-canonical isoforms offering a confident-looking
-    residue in place of an honest unknown.
+    Dropping instead costs 862 of 4,418,352 MS evidence rows (0.0195%) and 86 of
+    891,685 binding rows, and buys back a single meaning for `X`.
     """
 
-    NO_CANONICAL = [
-        _mapping("P1", "G1", "XCDEF", "CCCCC"),
-        _mapping("P2", "G2", "ACDEF", "CCCCC"),
-    ]
+    def test_selection_ignores_flank_cleanliness(self):
+        """The whole point: an X candidate does not lose *the selection*."""
+        candidates = [
+            _mapping("P1", "G1", "XCDEF", "CCCCC"),
+            _mapping("P2", "G2", "ACDEF", "CCCCC"),
+        ]
+        choice = select_source_mapping(candidates)
+        assert choice.basis == "deterministic_order"
+        assert choice.mapping["protein_id"] == "P1"
 
-    def test_a_resolved_flank_wins_when_nothing_is_canonical(self):
-        choice = select_source_mapping(self.NO_CANONICAL)
-        assert choice.basis == "resolved_flank"
-        assert choice.mapping["protein_id"] == "P2"
+    def test_resolved_flank_is_not_a_selection_basis(self):
+        from presto.data.flank_selection import SELECTION_BASES
 
-    def test_canonical_still_outranks_resolved(self):
-        """Deliberate. A canonical transcript with an unresolved initiator is a
-        better claim about origin than a non-canonical isoform with a confident
-        residue -- and `X` can now represent the uncertainty honestly."""
+        assert "resolved_flank" not in SELECTION_BASES
+
+    def test_canonical_with_an_unresolved_initiator_still_wins(self):
         candidates = [
             _mapping("P1", "G1", "XCDEF", "CCCCC", canonical=True),
             _mapping("P2", "G2", "ACDEF", "CCCCC"),
@@ -201,30 +201,74 @@ class TestResolvedFlanksArePreferred:
         assert choice.basis == "canonical_transcript"
         assert choice.mapping["protein_id"] == "P1"
 
-    def test_resolved_is_preferred_within_canonical_candidates(self):
-        candidates = [
-            _mapping("P1", "G1", "XCDEF", "CCCCC", canonical=True),
-            _mapping("P2", "G2", "ACDEF", "CCCCC", canonical=True),
-        ]
-        choice = select_source_mapping(candidates)
-        assert choice.mapping["protein_id"] == "P2"
-
-    def test_all_unresolved_falls_through_deterministically(self):
-        candidates = [
-            _mapping("P9", "G9", "XCDEF", "CCCCC"),
-            _mapping("P3", "G3", "XAAAA", "CCCCC"),
-        ]
-        choice = select_source_mapping(candidates)
-        assert choice.basis == "deterministic_order"
-        assert choice.mapping["protein_id"] == "P3"
-
-    def test_expression_still_outranks_everything(self):
-        """An expressed protein is evidence; a resolved flank is only tidier."""
-        choice = select_source_mapping(self.NO_CANONICAL, expression={"G1": 99.0, "G2": 1.0})
+    def test_expression_is_unaffected(self):
+        choice = select_source_mapping(
+            [
+                _mapping("P1", "G1", "XCDEF", "CCCCC"),
+                _mapping("P2", "G2", "ACDEF", "CCCCC"),
+            ],
+            expression={"G1": 99.0, "G2": 1.0},
+        )
         assert choice.basis == "expression"
         assert choice.mapping["protein_id"] == "P1"
 
-    def test_the_bulk_path_applies_the_same_preference(self):
+    def test_has_unresolved_flank_reads_both_sides(self):
+        from presto.data.flank_selection import has_unresolved_flank
+
+        assert has_unresolved_flank(_mapping("P", "G", "XCDEF", "CCCCC"))
+        assert has_unresolved_flank(_mapping("P", "G", "ACDEF", "CCCCX"))
+        assert not has_unresolved_flank(_mapping("P", "G", "ACDEF", "CCCCC"))
+
+
+class TestDropUnresolvedFlankRows:
+    """The bulk filter, applied after the collapse."""
+
+    @staticmethod
+    def _frame():
+        pd = pytest.importorskip("pandas")
+        return pd.DataFrame(
+            [
+                {"evidence_row_id": "r1", "n_flank": "XCDEF", "c_flank": "CCCCC"},
+                {"evidence_row_id": "r2", "n_flank": "ACDEF", "c_flank": "CCCCC"},
+                {"evidence_row_id": "r3", "n_flank": "ACDEF", "c_flank": "CCCCX"},
+            ]
+        )
+
+    def test_rows_with_an_unresolved_flank_are_dropped(self):
+        from presto.data.hitlist_source import drop_unresolved_flank_rows
+
+        kept, dropped = drop_unresolved_flank_rows(self._frame())
+        assert dropped == 2
+        assert kept["evidence_row_id"].tolist() == ["r2"]
+
+    def test_clean_frames_are_returned_untouched(self):
+        pd = pytest.importorskip("pandas")
+        from presto.data.hitlist_source import drop_unresolved_flank_rows
+
+        frame = pd.DataFrame([{"evidence_row_id": "r1", "n_flank": "AC", "c_flank": "DE"}])
+        kept, dropped = drop_unresolved_flank_rows(frame)
+        assert dropped == 0
+        assert kept is frame
+
+    def test_missing_flank_columns_are_tolerated(self):
+        pd = pytest.importorskip("pandas")
+        from presto.data.hitlist_source import drop_unresolved_flank_rows
+
+        frame = pd.DataFrame([{"evidence_row_id": "r1"}])
+        kept, dropped = drop_unresolved_flank_rows(frame)
+        assert dropped == 0
+        assert len(kept) == 1
+
+    def test_null_flanks_are_not_unresolved(self):
+        pd = pytest.importorskip("pandas")
+        from presto.data.hitlist_source import drop_unresolved_flank_rows
+
+        frame = pd.DataFrame([{"evidence_row_id": "r1", "n_flank": None, "c_flank": None}])
+        _, dropped = drop_unresolved_flank_rows(frame)
+        assert dropped == 0
+
+    def test_the_collapse_no_longer_reorders_on_cleanliness(self):
+        """Regression: the removed rule would have kept P2 here."""
         pd = pytest.importorskip("pandas")
         from presto.data.hitlist_source import _select_best_mapping
 
@@ -248,5 +292,29 @@ class TestResolvedFlanksArePreferred:
         )
         kept = _select_best_mapping(frame)
         assert len(kept) == 1
-        assert kept.iloc[0]["n_flank"] == "ACDEF"
-        assert "_unresolved_flank" not in kept.columns, "scratch column leaked"
+        assert kept.iloc[0]["n_flank"] == "XCDEF"
+        assert "_unresolved_flank" not in kept.columns
+
+
+class TestXIsAbsentFromTrainingData:
+    """After the filter, `X` is produced by augmentation and nothing else.
+
+    This is the property the filter exists to buy. If a future change lets a
+    data-borne `X` back into a flank, the token means two things again and this
+    test should fail rather than the ambiguity being rediscovered downstream.
+    """
+
+    def test_augmentation_is_the_only_source_of_x(self):
+        import inspect
+
+        from presto.data import hitlist_source
+
+        source = inspect.getsource(hitlist_source)
+        assert "drop_unresolved_flank_rows(binding_frame)" in source
+        assert "drop_unresolved_flank_rows(ms_frame)" in source
+
+    def test_the_unknown_residue_constants_agree(self):
+        from presto.data.flank_selection import UNRESOLVED_RESIDUE
+        from presto.data.sequence_augmentation import UNKNOWN_RESIDUE
+
+        assert UNRESOLVED_RESIDUE == UNKNOWN_RESIDUE == "X"

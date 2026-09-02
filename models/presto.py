@@ -353,7 +353,6 @@ class Presto(nn.Module):
             self.CROSS_ATTN_LATENTS = list(self.EXPANDED_LATENT_ORDER)
             self.BINDING_LATENT_NAMES = set(self.EXPANDED_BINDING_LATENT_NAMES)
 
-        self.x_token_idx = int(AA_TO_IDX["X"])
         # Binding latent architecture config
         self.binding_n_latent_layers = binding_n_latent_layers
         self.binding_n_queries = binding_n_queries
