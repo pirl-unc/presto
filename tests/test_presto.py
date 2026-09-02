@@ -1113,22 +1113,51 @@ class TestDesignAlignment:
         assert seg.shape == (2, 1)
         assert torch.all(seg == AA_TO_IDX["<MISSING>"])
 
-    def test_x_embedding_row_is_fixed_zero(self):
-        from presto.models.presto import Presto
+    def test_x_embedding_is_learnable(self):
+        """`X` learns like any other token; it used to be pinned.
+
+        The old behaviour held it at a fixed zero vector and registered a
+        gradient hook zeroing its row on every backward pass, reasoning that an
+        ambiguous residue should contribute nothing. But "unresolved" is not
+        "neutral", and in this corpus X is not scattered noise: all 45,992
+        occurrences sit at `position == len(flank)`, i.e. the unresolved
+        *initiator* residue of a reference protein, never an interior gap. That
+        is a specific context and worth a representation.
+
+        The flank markers `^`, `$` and `?` are unpinned for the same reason --
+        each denotes a distinct state to weigh, not a hole to zero out.
+        """
         from presto.data.vocab import AA_TO_IDX
+        from presto.models.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
-        x_idx = AA_TO_IDX["X"]
-        with torch.no_grad():
-            x_row = model.aa_embedding.weight[x_idx]
-        assert torch.allclose(x_row, torch.zeros_like(x_row))
+        for symbol in ("X", "^", "$", "?"):
+            index = AA_TO_IDX[symbol]
+            with torch.no_grad():
+                row = model.aa_embedding.weight[index]
+            assert not torch.allclose(row, torch.zeros_like(row)), (
+                f"{symbol!r} is initialized to a zero vector"
+            )
 
+        x_idx = AA_TO_IDX["X"]
         tok = torch.tensor([[x_idx, x_idx]], dtype=torch.long)
-        out = model.aa_embedding(tok).sum()
-        out.backward()
+        model.aa_embedding(tok).sum().backward()
         grad = model.aa_embedding.weight.grad
         assert grad is not None
-        assert torch.allclose(grad[x_idx], torch.zeros_like(grad[x_idx]))
+        assert not torch.allclose(grad[x_idx], torch.zeros_like(grad[x_idx])), (
+            "the X gradient is still being zeroed, so it cannot learn"
+        )
+
+    def test_pad_is_still_pinned(self):
+        """Unpinning X must not have unpinned padding, which genuinely should
+        contribute nothing."""
+        from presto.models.presto import Presto
+
+        model = Presto(d_model=64, n_layers=2, n_heads=4)
+        with torch.no_grad():
+            pad_row = model.aa_embedding.weight[0]
+        assert torch.allclose(pad_row, torch.zeros_like(pad_row))
+        assert model.aa_embedding.padding_idx == 0
 
     def test_stream_builder_has_no_class_embedding_input(self):
         """Class is no longer a token-stream conditioning input."""
