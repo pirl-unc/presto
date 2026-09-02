@@ -8,9 +8,12 @@ could not represent what the head models. Each junction now reads
     C-junction:  peptide[-w:]  ||  c_flank[:w]     P{w}..P1 | P1'..P{w}'
     N-junction:  n_flank[-w:]  ||  peptide[:w]     P{w}..P1 | P1'..P{w}'
 
-`w = 5` mirrors mhcflurry's `short_flanks`, and is the widest window the corpus
-can fill: hitlist caps flanks at 10 residues, so 93.7% of class I rows carry
-both 5-residue flanks and 0% carry 15.
+`w = 5` mirrors mhcflurry's `short_flanks`, their better processing ablation.
+
+It is chosen on that result, not on availability. It was originally both --
+hitlist capped flanks at 10 residues and no row carried 15 -- but hitlist
+1.55.2 raised DEFAULT_FLANK to 15 and 89.3% of class I rows now carry both
+15-residue flanks, so the wider window is a runnable ablation.
 
 Only the **in-vivo** branch is windowed. The in-vitro branch stays P1-only
 because its labels are generated from a P1 rule
@@ -353,3 +356,56 @@ class TestWideningIsAStrictGeneralization:
         every = head._window_preference_all(head.invivo_profile_c, window)
         picked = every.gather(1, condition.unsqueeze(1)).squeeze(1)
         assert torch.allclose(one, picked, atol=1e-6)
+
+
+class TestTheCorpusActuallySuppliesFlanks:
+    """Junction context must exist in the data, not just in the head.
+
+    The window is only worth its parameters if the corpus fills it. For a long
+    time it did not for class II: every one of 1,395,872 class II MS rows
+    carried zero flank sequence, so every class II junction residue was
+    `<MISSING>` and the cathepsin specificity this head exists to express had
+    no data behind it. Nothing in the suite said so -- it was found by
+    measuring, and the code comments asserting "0% carry 15 residues" then went
+    stale the moment hitlist raised its default.
+
+    So the claim is checked rather than written down. Skipped where hitlist is
+    absent (CI installs without the extra) or its corpus cannot be queried.
+    """
+
+    #: Coverage floors, well under the measured values on hitlist 1.55.2
+    #: (class I 94.5% / class II 89.6% with both flanks >= 5). These are a
+    #: regression guard, not a target -- a drop to zero is the failure that
+    #: actually happened.
+    MIN_COVERAGE = {"I": 0.70, "II": 0.70}
+
+    @staticmethod
+    def _frame():
+        hitlist = pytest.importorskip("hitlist")
+        from presto.data.hitlist_source import training_columns
+
+        try:
+            return hitlist.generate_training_table(
+                include_evidence="ms",
+                columns=training_columns("ms", include_flanks=True),
+                map_source_proteins=True,
+            )
+        except Exception as exc:  # noqa: BLE001 - unbuilt index, missing download
+            pytest.skip(f"cannot query hitlist flanks: {exc}")
+
+    @pytest.mark.parametrize("mhc_class", sorted(MIN_COVERAGE))
+    def test_both_flanks_are_present_for_most_rows(self, mhc_class):
+        frame = self._frame()
+        rows = frame[frame["mhc_class"].astype(str) == mhc_class]
+        if not len(rows):
+            pytest.skip(f"no class {mhc_class} rows in this corpus")
+        window = _model().excision_head.junction_window
+        n_len = rows["n_flank"].fillna("").astype(str).str.len()
+        c_len = rows["c_flank"].fillna("").astype(str).str.len()
+        covered = ((n_len >= window) & (c_len >= window)).mean()
+        floor = self.MIN_COVERAGE[mhc_class]
+        assert covered >= floor, (
+            f"only {covered:.1%} of class {mhc_class} rows carry both "
+            f"{window}-residue flanks (floor {floor:.0%}). The excision window "
+            "is reading <MISSING> for the rest, so its subsites have no data."
+        )

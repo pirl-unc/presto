@@ -213,10 +213,14 @@ flank side can be absent, and those positions fall to `<MISSING>`, which is a
 real column of every profile rather than a padding hack. Contributions are
 additive over subsites.
 
-Five per side matches mhcflurry's `short_flanks` setting and is the widest
-window this corpus can fill — hitlist caps flanks at 10 residues, so 93.7% of
-class I rows carry both 5-residue flanks and **0%** carry 15. Configurable via
-`ExcisionHead(junction_window=...)`.
+Five per side matches mhcflurry's `short_flanks` setting, their better
+processing ablation. Configurable via `ExcisionHead(junction_window=...)`.
+
+It is chosen on that result, not on availability. Until hitlist 1.55.2 it was
+both: flanks were capped at 10 residues and **no** row carried 15.
+`DEFAULT_FLANK` is 15 now, and 89.3% of class I rows carry both 15-residue
+flanks, so mhcflurry's production 15/15 is a runnable ablation rather than an
+impossibility.
 
 **Only the in-vivo branch is windowed.** The in-vitro branch stays P1-only
 because its labels are *generated* from a P1 rule
@@ -224,12 +228,24 @@ because its labels are *generated* from a P1 rule
 to memorize the label generator rather than biology — and those rows are pinned
 to known protease specificities anyway.
 
-**Class II gets nothing from this yet.** All 1,395,872 class II MS rows carry
-zero flank sequence, so every class II junction residue is `<MISSING>` and
-`invivo_profile_n[apm, <MISSING>]` is a per-APM constant with no sequence
-content. Since `default_machinery_for_class` routes class II to cathepsin, the
-cathepsin specificity this window exists to express is unfunded until hitlist
-supplies class II flanks.
+**Class II is funded as of hitlist 1.55.2.** It previously was not: all
+1,395,872 class II MS rows carried zero flank sequence, so every class II
+junction residue was `<MISSING>` and `invivo_profile_n[apm, <MISSING>]` was a
+per-APM constant with no sequence content. Measured on 1.55.2, class II is
+7,801,700 rows with **89.6%** carrying both 5-residue flanks.
+
+That matters more here than the class I improvement. `default_machinery_for_class`
+routes class II to cathepsin, and cathepsin specificity is S2-dominated — the
+subsite a P1-only head cannot express at all. The window's original motivation
+was cathepsin, was withdrawn for lack of data, and now has data.
+
+Measured coverage on hitlist 1.55.2, 24,466,149 MS rows:
+
+| class | rows | both flanks ≥5 | both ≥15 |
+|---|---:|---:|---:|
+| I | 16,623,806 | 94.5% | 89.3% |
+| II | 7,801,700 | 89.6% | 84.0% |
+| non-classical | 40,643 | 93.3% | 87.1% |
 
 ## 6. Supervision map
 
