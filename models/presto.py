@@ -329,6 +329,8 @@ class Presto(nn.Module):
         self.binding_midpoint_log10_nM = math.log10(max(self.binding_midpoint_nM, 1e-12))
         self.binding_log10_scale = max(float(binding_log10_scale), 1e-6)
         self.missing_token_idx = int(AA_TO_IDX["<MISSING>"])
+        #: "nothing here, and that is a fact" -- see AA_VOCAB.
+        self.terminus_token_idx = int(AA_TO_IDX["<TERMINUS>"])
 
         # ------------------------------------------------------------------
         # Latent topology selection
@@ -1251,9 +1253,44 @@ class Presto(nn.Module):
         picked = tokens.gather(1, (lengths - 1).unsqueeze(1)).squeeze(1)
         return torch.where(present, picked, torch.full_like(picked, fallback)).long()
 
+    def _pad_for_side(
+        self, is_terminus: Optional[torch.Tensor], batch_size: int, device
+    ) -> torch.Tensor:
+        """Per-row pad token for one flank side.
+
+        <TERMINUS> where the protein ended, <MISSING> otherwise. A caller that
+        passes no flag gets <MISSING> everywhere, which is the behaviour before
+        the distinction existed.
+        """
+        base = torch.full((batch_size,), self.missing_token_idx, dtype=torch.long, device=device)
+        if is_terminus is None:
+            return base
+        flag = is_terminus.reshape(-1).to(device=device, dtype=torch.bool)
+        if flag.shape[0] != batch_size:
+            return base
+        return torch.where(flag, torch.full_like(base, self.terminus_token_idx), base)
+
+    @staticmethod
+    def _pad_values(fallback, batch_size: int, width: int, device) -> torch.Tensor:
+        """Broadcast a scalar or per-row pad value to ``(batch, width)``.
+
+        `fallback` may be a per-row tensor so that a flank which is short
+        *because the protein ended* pads with <TERMINUS> while one that is
+        short because nothing was mapped pads with <MISSING>. Those are
+        opposite claims -- context that definitively does not exist, versus
+        context that is unknown -- and on the C side the first also means no
+        proteasomal cut was required.
+        """
+        if isinstance(fallback, torch.Tensor):
+            values = fallback.reshape(-1).to(device=device, dtype=torch.long)
+            if values.shape[0] == batch_size:
+                return values.unsqueeze(1).expand(batch_size, width)
+            fallback = int(values.flatten()[0]) if values.numel() else 0
+        return torch.full((batch_size, width), int(fallback), dtype=torch.long, device=device)
+
     @staticmethod
     def _last_valid_window(
-        tokens: Optional[torch.Tensor], batch_size: int, device, fallback: int, width: int
+        tokens: Optional[torch.Tensor], batch_size: int, device, fallback, width: int
     ) -> torch.Tensor:
         """The last ``width`` non-pad tokens, in sequence order.
 
@@ -1264,7 +1301,7 @@ class Presto(nn.Module):
 
         Segments are right-padded, so the valid span is ``[0, length)``.
         """
-        out = torch.full((batch_size, width), fallback, dtype=torch.long, device=device)
+        out = Presto._pad_values(fallback, batch_size, width, device)
         if tokens is None or tokens.numel() == 0:
             return out
         valid = tokens != 0
@@ -1274,12 +1311,12 @@ class Presto(nn.Module):
         idx = lengths.unsqueeze(1) - 1 - offsets.unsqueeze(0)
         in_range = idx >= 0
         picked = tokens.gather(1, idx.clamp(min=0))
-        picked = torch.where(in_range, picked, torch.full_like(picked, fallback))
+        picked = torch.where(in_range, picked, out.to(picked.device))
         return picked.to(device=device, dtype=torch.long)
 
     @staticmethod
     def _first_valid_window(
-        tokens: Optional[torch.Tensor], batch_size: int, device, fallback: int, width: int
+        tokens: Optional[torch.Tensor], batch_size: int, device, fallback, width: int
     ) -> torch.Tensor:
         """The first ``width`` non-pad tokens, in sequence order.
 
@@ -1287,7 +1324,7 @@ class Presto(nn.Module):
         than ``width`` are right-padded with ``fallback``, keeping P1' in
         column 0.
         """
-        out = torch.full((batch_size, width), fallback, dtype=torch.long, device=device)
+        out = Presto._pad_values(fallback, batch_size, width, device)
         if tokens is None or tokens.numel() == 0:
             return out
         valid = tokens != 0
@@ -1299,7 +1336,7 @@ class Presto(nn.Module):
         idx = start.unsqueeze(1) + offsets.unsqueeze(0)
         in_range = offsets.unsqueeze(0) < lengths.unsqueeze(1)
         picked = tokens.gather(1, idx.clamp(max=tokens.shape[1] - 1))
-        picked = torch.where(in_range, picked, torch.full_like(picked, fallback))
+        picked = torch.where(in_range, picked, out.to(picked.device))
         return picked.to(device=device, dtype=torch.long)
 
     def _resolve_machinery_idx(self, machinery, class_probs, batch_size, device):
@@ -1373,6 +1410,8 @@ class Presto(nn.Module):
         mhc_b_tok: torch.Tensor,
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
+        flank_n_is_terminus: Optional[torch.Tensor] = None,
+        flank_c_is_terminus: Optional[torch.Tensor] = None,
         species_id: Optional[torch.Tensor] = None,
     ) -> Dict[str, Any]:
         """Build and encode single token stream."""
@@ -2983,6 +3022,8 @@ class Presto(nn.Module):
         species_of_origin: Optional[Any] = None,
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
+        flank_n_is_terminus: Optional[torch.Tensor] = None,
+        flank_c_is_terminus: Optional[torch.Tensor] = None,
         tcell_context: Optional[Dict[str, torch.Tensor]] = None,
         return_binding_attention: bool = False,
         peptide_species: Optional[Any] = None,  # deprecated alias for species_of_origin
@@ -3436,6 +3477,8 @@ class Presto(nn.Module):
         )
         fallback_token = self.missing_token_idx
         window = self.excision_head.junction_window
+        n_pad = self._pad_for_side(flank_n_is_terminus, batch_size, pep_tok.device)
+        c_pad = self._pad_for_side(flank_c_is_terminus, batch_size, pep_tok.device)
         peptide_lengths = (pep_tok != 0).long().sum(dim=1)
         excision_outputs = self.excision_head(
             processing_vec=junction_vec,
@@ -3456,23 +3499,27 @@ class Presto(nn.Module):
             ),
             # Subsite windows for the in-vivo branch. The peptide supplies one
             # side of each junction and is always present; only the flank side
-            # can be missing, and those positions fall to <MISSING>.
+            # can be absent.
+            #
+            # An absent flank pads with <TERMINUS> where the protein ended and
+            # <MISSING> where the peptide was never mapped. Those are opposite
+            # claims: the first says the context definitively does not exist --
+            # and on the C side, that no proteasomal cut was required, because
+            # the terminus was already there.
             window_c_idx=torch.cat(
                 [
                     self._last_valid_window(
                         pep_tok, batch_size, pep_tok.device, fallback_token, window
                     ),
                     self._first_valid_window(
-                        flank_c_tok, batch_size, pep_tok.device, fallback_token, window
+                        flank_c_tok, batch_size, pep_tok.device, c_pad, window
                     ),
                 ],
                 dim=1,
             ),
             window_n_idx=torch.cat(
                 [
-                    self._last_valid_window(
-                        flank_n_tok, batch_size, pep_tok.device, fallback_token, window
-                    ),
+                    self._last_valid_window(flank_n_tok, batch_size, pep_tok.device, n_pad, window),
                     self._first_valid_window(
                         pep_tok, batch_size, pep_tok.device, fallback_token, window
                     ),
@@ -3729,6 +3776,8 @@ class Presto(nn.Module):
         species_of_origin: Optional[Any] = None,
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
+        flank_n_is_terminus: Optional[torch.Tensor] = None,
+        flank_c_is_terminus: Optional[torch.Tensor] = None,
         peptide_species: Optional[Any] = None,
         binding_context: Optional[Dict[str, torch.Tensor]] = None,
     ) -> Dict[str, Any]:
@@ -3822,6 +3871,8 @@ class Presto(nn.Module):
         species_of_origin: Optional[Any] = None,
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
+        flank_n_is_terminus: Optional[torch.Tensor] = None,
+        flank_c_is_terminus: Optional[torch.Tensor] = None,
         peptide_species: Optional[Any] = None,
     ) -> Dict[str, Any]:
         outputs = self.forward(

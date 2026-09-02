@@ -177,6 +177,13 @@ class BindingRecord:
     unit: str = "nM"
     flank_n: str = ""  # N-terminal flanking sequence in the source protein
     flank_c: str = ""  # C-terminal flanking sequence in the source protein
+    #: Whether a short flank means the protein ended there, rather than that
+    #: the peptide was never mapped. Indistinguishable from the sequence alone
+    #: and opposite claims: a terminus is context that definitively does not
+    #: exist, and on the C side it means no proteasomal cut was required.
+    #: Set by `hitlist_source.flank_context`.
+    flank_n_is_terminus: bool = False
+    flank_c_is_terminus: bool = False
     assay_type: Optional[str] = None
     assay_method: Optional[str] = None
     effector_culture_condition: Optional[str] = None
@@ -240,6 +247,13 @@ class ProcessingRecord:
     peptide: str
     flank_n: str = ""  # N-terminal flanking sequence
     flank_c: str = ""  # C-terminal flanking sequence
+    #: Whether a short flank means the protein ended there, rather than that
+    #: the peptide was never mapped. Indistinguishable from the sequence alone
+    #: and opposite claims: a terminus is context that definitively does not
+    #: exist, and on the C side it means no proteasomal cut was required.
+    #: Set by `hitlist_source.flank_context`.
+    flank_n_is_terminus: bool = False
+    flank_c_is_terminus: bool = False
     label: float = 1.0  # Processing outcome (0-1)
     processing_type: str = "cleavage"  # cleavage, tap, processing
     mhc_allele: Optional[str] = None
@@ -258,6 +272,13 @@ class ElutionRecord:
     detected: bool = True  # Was peptide detected?
     flank_n: str = ""  # N-terminal flanking sequence in the source protein
     flank_c: str = ""  # C-terminal flanking sequence in the source protein
+    #: Whether a short flank means the protein ended there, rather than that
+    #: the peptide was never mapped. Indistinguishable from the sequence alone
+    #: and opposite claims: a terminus is context that definitively does not
+    #: exist, and on the C side it means no proteasomal cut was required.
+    #: Set by `hitlist_source.flank_context`.
+    flank_n_is_terminus: bool = False
+    flank_c_is_terminus: bool = False
     # Cellular state at the time the peptide was produced. Conditions the
     # in-vivo termini; see docs/model_io_contract.md Tier 3.
     stimulus: Optional[str] = None

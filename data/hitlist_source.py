@@ -102,6 +102,10 @@ SHARED_COLUMNS: Tuple[str, ...] = (
     "source",
     "n_flank",
     "c_flank",
+    # Offset of the peptide in its source protein. The only thing separating
+    # "this peptide sits at the protein's own terminus" from "we never mapped
+    # it" -- both otherwise arrive as a short or empty flank.
+    "position",
     "evidence_row_id",
     "is_canonical_transcript",
 )
@@ -176,7 +180,11 @@ MS_COLUMNS: Tuple[str, ...] = SHARED_COLUMNS + (
 #: what lets `assert_columns_present` tell a deliberate omission apart from an
 #: upstream rename.
 PROTEIN_MAPPING_COLUMNS: FrozenSet[str] = frozenset(
-    {"n_flank", "c_flank", "is_canonical_transcript"}
+    # `position` is what separates "this peptide sits at the protein's own
+    # terminus" from "we never mapped this peptide". Both arrive as a short or
+    # empty flank; only the first is a fact about the biology. See
+    # HITLIST_FLANK_WIDTH.
+    {"n_flank", "c_flank", "is_canonical_transcript", "position"}
 )
 
 #: The `include_evidence` value hitlist expects, mapped to what we ask it for.
@@ -247,6 +255,51 @@ def require_supported_hitlist(raw_version: Optional[str]) -> None:
             "wrong either way. "
             "Upgrade with `pip install -U 'hitlist>=" + wanted + "'`."
         )
+
+
+#: Residues hitlist extracts on each side when a peptide is mapped.
+#:
+#: `hitlist.DEFAULT_FLANK`, 15 as of 1.55.2 (it was 10 before). A *mapped* row
+#: whose flank is shorter than this ran out of protein -- the peptide sits at
+#: the protein's N- or C-terminus -- rather than being unmapped. That is the
+#: whole basis for distinguishing <TERMINUS> from <MISSING>, so
+#: `tests/test_terminus_context.py` checks the assumption against live data
+#: instead of trusting this number.
+HITLIST_FLANK_WIDTH = 15
+
+
+def flank_context(
+    flank: Optional[str], position: Optional[float], *, width: int = HITLIST_FLANK_WIDTH
+) -> Tuple[str, bool]:
+    """``(sequence, is_terminus)`` for one side of a peptide.
+
+    A flank shorter than ``width`` on a *mapped* row means the protein ended
+    there. On an unmapped row (no ``position``) a short flank means only that
+    nothing is known, which is a different statement and must not be encoded
+    as though the protein terminated.
+    """
+    raw = str(flank or "").strip()
+    text = drop_unencodable_sequence(flank)
+    mapped = position is not None and position == position  # NaN-safe
+    # Measured on the RAW length, not the cleaned one. `drop_unencodable_sequence`
+    # blanks a flank entirely when it carries one unrepresentable residue
+    # (selenocysteine, annotation junk), and a blanked flank on a mapped row
+    # would otherwise be read as "the protein ended here" -- inventing a
+    # terminus out of a tokenizer limitation.
+    return text, bool(mapped and len(raw) < int(width))
+
+
+def _flank_fields(row) -> Dict[str, Any]:
+    """The four flank fields for a record, from one mapping row."""
+    position = row.get("position")
+    n_text, n_terminus = flank_context(row.get("n_flank"), position)
+    c_text, c_terminus = flank_context(row.get("c_flank"), position)
+    return {
+        "flank_n": n_text,
+        "flank_c": c_text,
+        "flank_n_is_terminus": n_terminus,
+        "flank_c_is_terminus": c_terminus,
+    }
 
 
 def training_columns(evidence: str, *, include_flanks: bool) -> List[str]:
@@ -575,8 +628,7 @@ def load_records_from_hitlist(
                     measurement_type=response,
                     assay_type=response,
                     assay_method=assay_method,
-                    flank_n=drop_unencodable_sequence(row.get("n_flank")),
-                    flank_c=drop_unencodable_sequence(row.get("c_flank")),
+                    **_flank_fields(row),
                     **common,
                 )
             )
@@ -654,8 +706,7 @@ def load_records_from_hitlist(
                 peptide=peptide,
                 alleles=alleles,
                 detected=True,
-                flank_n=drop_unencodable_sequence(row.get("n_flank")),
-                flank_c=drop_unencodable_sequence(row.get("c_flank")),
+                **_flank_fields(row),
                 stimulus=stimulus_for_condition(condition_category),
                 apm_perturbation=apm_group_for_row(
                     _clean(row.get("apm_genes_perturbed")),

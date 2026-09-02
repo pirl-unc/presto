@@ -159,6 +159,12 @@ class PrestoSample:
     peptide: str
     flank_n: Optional[str] = None
     flank_c: Optional[str] = None
+    #: Whether a short flank means the protein ended there rather than that the
+    #: peptide was never mapped. Indistinguishable from the sequence alone, and
+    #: opposite claims: a terminus is context that definitively does not exist,
+    #: and on the C side it means no proteasomal cut was required at all.
+    flank_n_is_terminus: bool = False
+    flank_c_is_terminus: bool = False
 
     # MHC
     mhc_a: str = ""  # Groove half 1: alpha1 (class I/II)
@@ -296,6 +302,11 @@ class PrestoBatch:
     mhc_class: List[Optional[str]]
 
     # Optional sequences
+    #: Per-row: is the corresponding flank a protein terminus? Consumed by the
+    #: excision window, which pads a terminus with <TERMINUS> and an unmapped
+    #: flank with <MISSING>.
+    flank_n_is_terminus: Optional[torch.Tensor] = None
+    flank_c_is_terminus: Optional[torch.Tensor] = None
     flank_n_tok: Optional[torch.Tensor] = None
     flank_c_tok: Optional[torch.Tensor] = None
 
@@ -406,6 +417,8 @@ class PrestoBatch:
             mhc_a_tok=_move(self.mhc_a_tok),
             mhc_b_tok=_move(self.mhc_b_tok),
             mhc_class=self.mhc_class,
+            flank_n_is_terminus=_move(self.flank_n_is_terminus),
+            flank_c_is_terminus=_move(self.flank_c_is_terminus),
             flank_n_tok=_move(self.flank_n_tok),
             flank_c_tok=_move(self.flank_c_tok),
             bind_target=_move(self.bind_target),
@@ -1808,6 +1821,14 @@ class PrestoCollator:
             mhc_a_tok=mhc_a_tok,
             mhc_b_tok=mhc_b_tok,
             mhc_class=mhc_class,
+            flank_n_is_terminus=torch.tensor(
+                [bool(getattr(x, "flank_n_is_terminus", False)) for x in samples],
+                dtype=torch.bool,
+            ),
+            flank_c_is_terminus=torch.tensor(
+                [bool(getattr(x, "flank_c_is_terminus", False)) for x in samples],
+                dtype=torch.bool,
+            ),
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
             bind_target=bind_target,
