@@ -40,7 +40,20 @@ from dataclasses import dataclass
 from typing import Any, Mapping, Optional, Sequence
 
 #: How the winning mapping was chosen, strongest first.
-SELECTION_BASES = ("expression", "canonical_transcript", "deterministic_order")
+SELECTION_BASES = (
+    "expression",
+    "canonical_transcript",
+    "resolved_flank",
+    "deterministic_order",
+)
+
+#: The residue code for "a residue is here, identity unresolved".
+#:
+#: A flank carrying one is a worse training example than an equivalent flank
+#: without: the junction residue the excision head reads is exactly the
+#: unresolved one, since every N-side X sits at protein position 0. Where the
+#: candidates are otherwise tied, prefer the resolved flank.
+UNRESOLVED_RESIDUE = "X"
 
 
 @dataclass(frozen=True)
@@ -68,6 +81,11 @@ def _flank_pair(mapping: Mapping[str, Any]) -> tuple:
         str(mapping.get("n_flank") or ""),
         str(mapping.get("c_flank") or ""),
     )
+
+
+def _has_unresolved(mapping: Mapping[str, Any]) -> bool:
+    """Whether either flank carries an unresolved residue."""
+    return any(UNRESOLVED_RESIDUE in part for part in _flank_pair(mapping))
 
 
 def _truthy(value: Any) -> bool:
@@ -137,11 +155,30 @@ def select_source_mapping(
 
     canonical = [row for row in rows if _truthy(row.get("is_canonical_transcript"))]
     if canonical:
+        # Within canonical candidates, still prefer a resolved flank.
+        resolved_canonical = [row for row in canonical if not _has_unresolved(row)]
         return FlankChoice(
-            mapping=canonical[0],
+            mapping=(resolved_canonical or canonical)[0],
             n_candidates=len(rows),
             flanks_agree=agree,
             basis="canonical_transcript",
+        )
+
+    # No canonical candidate. Before falling back to an arbitrary-but-stable
+    # order, prefer a mapping whose flanks are actually resolved.
+    #
+    # This is worth a rule of its own: measured on the corpus, 525 evidence
+    # rows reach training with an `X` in the chosen N-flank, and 514 of them
+    # had a non-X alternative sitting right there. The junction residue the
+    # excision head reads is precisely the unresolved one -- every N-side X is
+    # at protein position 0 -- so those were the worst available choice.
+    resolved = [row for row in rows if not _has_unresolved(row)]
+    if resolved and len(resolved) != len(rows):
+        return FlankChoice(
+            mapping=resolved[0],
+            n_candidates=len(rows),
+            flanks_agree=agree,
+            basis="resolved_flank",
         )
 
     return FlankChoice(

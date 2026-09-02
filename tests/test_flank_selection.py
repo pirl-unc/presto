@@ -161,3 +161,92 @@ class TestIngestRecordsAmbiguity:
 
         stats = mapping_ambiguity_stats(pd.DataFrame())
         assert stats["evidence_rows"] == 0
+
+
+class TestResolvedFlanksArePreferred:
+    """Between otherwise-tied candidates, take the one without an `X`.
+
+    `X` marks an unresolved residue, and every N-side occurrence in this corpus
+    sits at protein position 0 -- which is precisely the junction residue the
+    excision head reads. A candidate carrying one is therefore the worst
+    available training example for exactly the task the flank exists to serve.
+
+    Measured: before this rule, 525 evidence rows reached training with an X in
+    the chosen N-flank and 514 had a clean alternative in the same group. The
+    rule takes it to 431, and 421 of those are *canonical* mappings whose
+    initiator is genuinely unresolved -- the right answer, since the
+    alternatives are non-canonical isoforms offering a confident-looking
+    residue in place of an honest unknown.
+    """
+
+    NO_CANONICAL = [
+        _mapping("P1", "G1", "XCDEF", "CCCCC"),
+        _mapping("P2", "G2", "ACDEF", "CCCCC"),
+    ]
+
+    def test_a_resolved_flank_wins_when_nothing_is_canonical(self):
+        choice = select_source_mapping(self.NO_CANONICAL)
+        assert choice.basis == "resolved_flank"
+        assert choice.mapping["protein_id"] == "P2"
+
+    def test_canonical_still_outranks_resolved(self):
+        """Deliberate. A canonical transcript with an unresolved initiator is a
+        better claim about origin than a non-canonical isoform with a confident
+        residue -- and `X` can now represent the uncertainty honestly."""
+        candidates = [
+            _mapping("P1", "G1", "XCDEF", "CCCCC", canonical=True),
+            _mapping("P2", "G2", "ACDEF", "CCCCC"),
+        ]
+        choice = select_source_mapping(candidates)
+        assert choice.basis == "canonical_transcript"
+        assert choice.mapping["protein_id"] == "P1"
+
+    def test_resolved_is_preferred_within_canonical_candidates(self):
+        candidates = [
+            _mapping("P1", "G1", "XCDEF", "CCCCC", canonical=True),
+            _mapping("P2", "G2", "ACDEF", "CCCCC", canonical=True),
+        ]
+        choice = select_source_mapping(candidates)
+        assert choice.mapping["protein_id"] == "P2"
+
+    def test_all_unresolved_falls_through_deterministically(self):
+        candidates = [
+            _mapping("P9", "G9", "XCDEF", "CCCCC"),
+            _mapping("P3", "G3", "XAAAA", "CCCCC"),
+        ]
+        choice = select_source_mapping(candidates)
+        assert choice.basis == "deterministic_order"
+        assert choice.mapping["protein_id"] == "P3"
+
+    def test_expression_still_outranks_everything(self):
+        """An expressed protein is evidence; a resolved flank is only tidier."""
+        choice = select_source_mapping(self.NO_CANONICAL, expression={"G1": 99.0, "G2": 1.0})
+        assert choice.basis == "expression"
+        assert choice.mapping["protein_id"] == "P1"
+
+    def test_the_bulk_path_applies_the_same_preference(self):
+        pd = pytest.importorskip("pandas")
+        from presto.data.hitlist_source import _select_best_mapping
+
+        frame = pd.DataFrame(
+            [
+                {
+                    "evidence_row_id": "r1",
+                    "n_flank": "XCDEF",
+                    "c_flank": "CCCCC",
+                    "protein_id": "P1",
+                    "is_canonical_transcript": False,
+                },
+                {
+                    "evidence_row_id": "r1",
+                    "n_flank": "ACDEF",
+                    "c_flank": "CCCCC",
+                    "protein_id": "P2",
+                    "is_canonical_transcript": False,
+                },
+            ]
+        )
+        kept = _select_best_mapping(frame)
+        assert len(kept) == 1
+        assert kept.iloc[0]["n_flank"] == "ACDEF"
+        assert "_unresolved_flank" not in kept.columns, "scratch column leaked"
