@@ -96,11 +96,25 @@ RESOLVED_MAPPING_CATEGORIES = frozenset(
 )
 
 #: Categories whose junction is not known. `unmapped` belongs here: a peptide
-#: with no source protein at all has no junction context, and masking it is
-#: the same statement as masking an ambiguous one.
+#: with no source protein at all has no junction context, and that is the same
+#: statement as an ambiguous one, not a weaker one.
 UNRESOLVED_MAPPING_CATEGORIES = frozenset(
     category for category, resolved in MAPPING_CATEGORY_RESOLVED.items() if not resolved
 )
+
+#: Categories whose flanks the masking policy actually rewrites.
+#:
+#: Not the same question as `UNRESOLVED_MAPPING_CATEGORIES`, which is about
+#: whether the junction is *known*. An `unmapped` row is unresolved but has
+#: nothing to rewrite: it reached the collapse with no candidate mapping at
+#: all, so both flanks are already empty. Masking it is a no-op, and the two
+#: policies are byte-identical on those rows.
+#:
+#: The distinction matters downstream. A stratified analysis asking "what did
+#: masking change?" must use this set -- folding `unmapped` in would dilute the
+#: stratum with rows the two arms treat identically. On this corpus that is
+#: 6,212 of 16,721 binding rows, so the dilution would be severe.
+MASKED_MAPPING_CATEGORIES = UNRESOLVED_MAPPING_CATEGORIES - {MAPPING_CATEGORY_UNMAPPED}
 
 #: Production behavior and its explicit experimental comparator. The legacy
 #: policy reproduces the old semantics--global canonical preference followed

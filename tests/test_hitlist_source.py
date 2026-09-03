@@ -758,6 +758,5 @@ class TestMaskingUnmappedRowsChangesNothing:
 
         frame = pd.DataFrame([{"n_flank": "AAAA", "c_flank": "", "position": None}])
         assert _mapping_present_mask(frame).tolist() == [True], (
-            "a row with a flank must count as present, so it can never be "
-            "classified unmapped"
+            "a row with a flank must count as present, so it can never be classified unmapped"
         )

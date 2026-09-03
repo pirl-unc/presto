@@ -665,3 +665,12 @@ H100 checks. Reproduction and raw artifact paths are recorded in the
 The comparator preserves the prior semantic behavior (inject one arbitrary
 junction) but uses stable candidate ordering instead of reproducing the old
 frame-order accident byte for byte.
+
+### 2026-09-03_1746_claude_flank-context-fixes
+- **Agent**: claude
+- **Dir**: [2026-09-03_1746_claude_flank-context-fixes](experiments/2026-09-03_1746_claude_flank-context-fixes)
+- **Source script**: `experiments/2026-09-03_1746_claude_flank-context-fixes/code/launch.py`
+- **Status**: launched
+- **Dataset**: `{"allele": "HLA-A*02:01", "artifact_sha256": {"binding.parquet": "fbcae6f762f43edb4eb87b1a7c7f3849757859204d37f3ce82d1f83c23cece9f", "observations.parquet": "f51440ab229fd187d2548b4dddcd1fc04580d97d45fb4d5b8e0222aa8080f928", "observations_meta.json": "ac459e184fc6c54c73f7f1b4fc7dff424b2360b13f55f12bb68a3bbb743de118", "peptide_mappings.parquet": "45580c16649daf75b11b51497d9d96dfaa987cdcf1197d6449deaa9261f6ec5c", "peptide_mappings_meta.json": "9a93de21753029ac08f1ba05e1a667ee6d7fd1b63a885bdc8dade1e626c7cbbb"}, "binding": "all qualifying numeric rows", "elution_cap": 20000, "kinetics_cap": 500, "mhc_index_sha256": "497938937f01394aeb18a3db15314f04ac1be162efe2844a1f018bcaff121063", "source": "hitlist==1.55.8", "split": "peptide-disjoint 80/10/10", "stability_cap": 1000}`
+- **Training**: `{"batch_size": 256, "epochs": 10, "gpu": "H100!", "model": "Presto expanded d128/l2/h4", "optimizer": "AdamW lr=2.8e-4 weight_decay=0.01", "synthetic_data": "disabled"}`
+- **Tested**: `[{"seeds": [42, 43, 44], "source_mapping_policy": "legacy_global_canonical"}, {"seeds": [42, 43, 44], "source_mapping_policy": "mask_unresolved"}]`

@@ -476,3 +476,24 @@ class TestResolutionIsDefinedOnce:
         )
 
         assert MAPPING_CATEGORY_UNMAPPED in UNRESOLVED_MAPPING_CATEGORIES
+
+    def test_masking_rewrites_less_than_unresolved_covers(self):
+        """Two different questions, so two different sets.
+
+        "Is the junction known?" and "does masking rewrite this row?" are not
+        the same. An unmapped row is unresolved but has no flank to rewrite,
+        and conflating them would dilute any "what did masking change?"
+        stratum with rows both policies treat identically -- 6,212 of 16,721
+        binding rows on the current corpus.
+        """
+        from presto.data.flank_selection import (
+            MAPPING_CATEGORY_UNMAPPED,
+            MASKED_MAPPING_CATEGORIES,
+            UNRESOLVED_MAPPING_CATEGORIES,
+        )
+
+        assert MASKED_MAPPING_CATEGORIES < UNRESOLVED_MAPPING_CATEGORIES
+        assert MAPPING_CATEGORY_UNMAPPED not in MASKED_MAPPING_CATEGORIES
+        assert UNRESOLVED_MAPPING_CATEGORIES - MASKED_MAPPING_CATEGORIES == {
+            MAPPING_CATEGORY_UNMAPPED
+        }

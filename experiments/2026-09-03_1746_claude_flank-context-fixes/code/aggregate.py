@@ -19,6 +19,7 @@ REPO_ROOT = EXPERIMENT_DIR.parent.parent
 if str(REPO_ROOT.parent) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT.parent))
 
+from presto.data.flank_selection import MASKED_MAPPING_CATEGORIES
 from presto.training.holdout_eval import (
     binding_threshold_metrics,
     regression_metrics,
@@ -37,14 +38,11 @@ EXPECTED_MHC_INDEX_HASH = (
 EXPECTED_POLICIES = ("legacy_global_canonical", "mask_unresolved")
 EXPECTED_SEEDS = (42, 43, 44)
 SPLITS = ("val", "test")
-#: The rows whose flanks masking actually alters -- deliberately NOT imported
-#: from `flank_selection.UNRESOLVED_MAPPING_CATEGORIES`, which also contains
-#: `unmapped`. An unmapped row has no flank to clear (a row carrying a flank
-#: counts as present, so it can never be classified unmapped), so masking is a
-#: no-op there and including it would dilute this stratum with rows the two
-#: policies treat identically. Frozen here also keeps `unresolved_union`
-#: comparable to the 2026-09-02_1720 family's stratum of the same name.
-UNRESOLVED_CATEGORIES = frozenset({"cross_gene_unresolved", "within_gene_unresolved"})
+#: The rows whose flanks masking actually rewrites. Imported, not restated:
+#: this stratum answers "what did masking change?", which is exactly what
+#: `MASKED_MAPPING_CATEGORIES` names. Adding a mapping category updates this
+#: analysis with it.
+UNRESOLVED_CATEGORIES = MASKED_MAPPING_CATEGORIES
 SCOPES = (
     "overall",
     "single",

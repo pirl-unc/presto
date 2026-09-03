@@ -64,11 +64,11 @@ from .flank_selection import (
     MAPPING_CATEGORY_UNMAPPED,
     MAPPING_CATEGORY_WITHIN_GENE_CANONICAL,
     MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED,
+    MASKED_MAPPING_CATEGORIES,
     RESOLVED_MAPPING_CATEGORIES,
     SOURCE_MAPPING_POLICIES,
     SOURCE_MAPPING_POLICY_LEGACY,
     SOURCE_MAPPING_POLICY_MASK_UNRESOLVED,
-    UNRESOLVED_MAPPING_CATEGORIES,
     UNRESOLVED_RESIDUE,
 )
 from .vocab import (
@@ -772,7 +772,7 @@ def _mask_unresolved_mapping_context(frame):
         # no `evidence_row_id` to group on, so there is nothing to mask.
         return frame
     masked = frame.copy()
-    unresolved = masked["source_mapping_category"].isin(UNRESOLVED_MAPPING_CATEGORIES)
+    unresolved = masked["source_mapping_category"].isin(MASKED_MAPPING_CATEGORIES)
     for column in ("n_flank", "c_flank"):
         if column in masked.columns:
             masked.loc[unresolved, column] = ""
@@ -1273,7 +1273,7 @@ __all__ = [
     "PROTEIN_MAPPING_COLUMNS",
     "COLUMNS_BY_EVIDENCE",
     "MAPPING_CATEGORIES",
-    "UNRESOLVED_MAPPING_CATEGORIES",
+    "MASKED_MAPPING_CATEGORIES",
     "training_columns",
     "assert_columns_present",
     "normalize_ingested_peptide",
