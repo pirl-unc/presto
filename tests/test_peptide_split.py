@@ -8,7 +8,11 @@ generalization from recall.
 """
 
 from presto.data.bulk_ms import BulkMSRecord
-from presto.data.loaders import PrestoDataset, peptide_grouped_split_indices
+from presto.data.loaders import (
+    PrestoDataset,
+    peptide_grouped_split_indices,
+    peptide_grouped_three_way_split_indices,
+)
 
 
 def _dataset(n_peptides=40):
@@ -99,6 +103,38 @@ class TestPeptideGroupedSplit:
         dataset = PrestoDataset(bulk_ms_records=records, strict_mhc_resolution=False)
         train, val = peptide_grouped_split_indices(dataset, 0.5, seed=42)
         assert train and val
+
+
+class TestPeptideGroupedThreeWaySplit:
+    def test_partitions_are_complete_and_peptide_disjoint(self):
+        dataset = _dataset(n_peptides=100)
+        train, val, test = peptide_grouped_three_way_split_indices(
+            dataset, val_fraction=0.1, test_fraction=0.1, seed=42
+        )
+
+        assert train and val and test
+        assert sorted(train + val + test) == list(range(len(dataset)))
+        peptide_sets = [
+            {dataset[index].peptide for index in indices} for indices in (train, val, test)
+        ]
+        assert not (peptide_sets[0] & peptide_sets[1])
+        assert not (peptide_sets[0] & peptide_sets[2])
+        assert not (peptide_sets[1] & peptide_sets[2])
+
+    def test_is_deterministic_and_approximately_honors_fractions(self):
+        dataset = _dataset(n_peptides=100)
+        first = peptide_grouped_three_way_split_indices(dataset, 0.1, 0.2, seed=7)
+        second = peptide_grouped_three_way_split_indices(dataset, 0.1, 0.2, seed=7)
+        assert first == second
+        _, val, test = first
+        assert 0.05 <= len(val) / len(dataset) <= 0.15
+        assert 0.15 <= len(test) / len(dataset) <= 0.25
+
+    def test_zero_test_fraction_preserves_two_way_split(self):
+        dataset = _dataset()
+        expected_train, expected_val = peptide_grouped_split_indices(dataset, 0.2, seed=42)
+        train, val, test = peptide_grouped_three_way_split_indices(dataset, 0.2, 0.0, seed=42)
+        assert (train, val, test) == (expected_train, expected_val, [])
 
 
 def test_row_split_leaks_where_grouped_split_does_not():

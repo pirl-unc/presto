@@ -575,3 +575,93 @@ The pipeline trains end to end on real data and binding is genuinely learned,
 pan-allele. Presentation and T-cell claims are not supported by either arm —
 the first for lack of real negatives in the corpus, the second for lack of
 scale. Both need a GPU run.
+
+## 2026-09-02--03 · Source-junction ambiguity masking
+
+**Agent/model:** Codex / GPT-5 · **Dir:**
+[`2026-09-02_1720_codex_source-junction-masking`](2026-09-02_1720_codex_source-junction-masking/)
+· **Commit:** `a1cdcc0d27d63a7440188f98f0dc503c596c8dfd` (dirty)
+
+### Question
+
+Does replacing arbitrary source-protein junction choices with explicit unknown
+flanks improve held-out prediction enough to justify candidate-junction
+marginalization?
+
+### Contract
+
+- **Dataset/curation:** hitlist 1.55.8, `HLA-A*02:01`, 7--30 aa; all 16,721
+  qualifying numeric binding rows plus reservoir-capped elution 20,000,
+  stability 1,000, and kinetics 2, for 37,723 rows per seed. Peptide-disjoint
+  80/10/10 split; seeds 42/43/44 and modality sampling seeds 59/60/61. Binding
+  inequalities retained for censor-aware loss; exact metrics use
+  `qualifier == 0`; threshold metrics use a qualifier-aware `<=500 nM` label.
+  No merged TSV, bulk proteomics, processing, T-cell, TCR, or RNA expression.
+- **Frozen inputs:** rebuilt 5,880,924-row mapping contract v2 with
+  `gene_biotype`; artifact hashes and exact curation details are in the
+  [experiment README](2026-09-02_1720_codex_source-junction-masking/README.md).
+- **Training/pretraining:** expanded Presto d128/l2/h4, 10 epochs, batch 256,
+  AdamW `2.8e-4`, weight decay 0.01, AMP; no pretraining. Task-mean supervised
+  aggregation with uncertainty weighting.
+- **Synthetic-data contract:** pMHC, class-I-no-B2M, processing-negative, and
+  MHC-augmentation counts zero. The configured UniProt ratio was the default
+  0.1, but no UniProt file was mounted, so zero such rows entered the audited
+  37,723-row dataset.
+- **Loss and assay mapping:** affinity -> censor-aware canonical KD and
+  KD/IC50/EC50 assay outputs; half-life/Tm -> censor-aware stability outputs;
+  kon/koff -> MSE kinetics outputs; positive MS -> BCE elution and presentation
+  outputs. Ordinary task base weight 1.0; MHC auxiliary type losses 0.1.
+  Consistency weights: cascade 0.2, assay-affinity 0.1,
+  assay-presentation 0.1, no-B2M 0.5, T-cell-context 0.05, T-cell-upstream 0.2.
+- **Conditions:** `legacy_global_canonical` versus `mask_unresolved`, paired at
+  seeds 42/43/44. The masked policy preserves single/agreed mappings and a
+  unique canonical source only within one gene; cross-gene and residual
+  within-gene disagreements become `?/?`. Targets and target weights are
+  identical.
+- **Hardware/runtime:** requested `H100!`; all six workers observed NVIDIA H100
+  80GB HBM3 with 81,559 MiB. Peak allocated memory was 31.63--32.00 GiB and
+  peak reserved memory 53.05--64.28 GiB. Mean runtime 4,870 s legacy /
+  4,828 s masked; 29,095 GPU-seconds total.
+
+### Held-out results
+
+Mean +/- sample SD over three seeds; RMSE is `log10(nM)`.
+
+| Split / scope | Policy | Exact n/seed | Spearman | Pearson | RMSE | <=500 nM bal. acc. | AUROC | AUPRC |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| Validation overall | legacy | 1320 +/- 27 | 0.7523 +/- .0145 | 0.7401 +/- .0138 | 0.9969 +/- .0157 | 0.8439 +/- .0164 | 0.9157 +/- .0083 | 0.8594 +/- .0128 |
+| Validation overall | masked | 1320 +/- 27 | 0.7554 +/- .0163 | 0.7455 +/- .0160 | 0.9824 +/- .0168 | 0.8481 +/- .0086 | 0.9170 +/- .0110 | 0.8590 +/- .0171 |
+| Test overall | legacy | 1384 +/- 50 | 0.7643 +/- .0091 | 0.7542 +/- .0107 | 0.9873 +/- .0293 | 0.8584 +/- .0052 | 0.9186 +/- .0050 | 0.8607 +/- .0117 |
+| Test overall | masked | 1384 +/- 50 | 0.7673 +/- .0131 | 0.7571 +/- .0157 | 0.9813 +/- .0236 | 0.8576 +/- .0072 | 0.9186 +/- .0078 | 0.8631 +/- .0151 |
+| Test unresolved | legacy | 29 +/- 11 | 0.7608 +/- .0634 | 0.7594 +/- .0799 | 0.9853 +/- .1764 | 0.9033 +/- .0372 | 0.9689 +/- .0273 | 0.9728 +/- .0099 |
+| Test unresolved | masked | 29 +/- 11 | 0.7470 +/- .0347 | 0.7520 +/- .0758 | 0.9982 +/- .2337 | 0.9306 +/- .0078 | 0.9764 +/- .0146 | 0.9761 +/- .0176 |
+
+Full validation/test metrics for `single`, `flanks_agree`,
+`within_gene_canonical`, both unresolved categories, their union, and
+`unmapped` are in
+[`condition_metric_summary.csv`](2026-09-02_1720_codex_source-junction-masking/results/condition_metric_summary.csv).
+All six per-example validation/test prediction dumps are preserved under
+`results/runs/`.
+
+### Winner and takeaway
+
+**Preferred policy: `mask_unresolved`; do not build candidate marginalization
+now.** The choice is based on semantic correctness plus overall parity, not a
+headline accuracy win. On the predeclared primary unresolved exact test scope,
+masked-minus-legacy Spearman deltas were -0.0532/+0.0156/-0.0037 (mean
+**-0.0138**) and RMSE deltas were +0.0723/+0.0159/-0.0495 (mean **+0.0129**).
+The direction was inconsistent and missed both marginalization thresholds.
+Overall test deltas were +0.0030 Spearman and -0.0059 RMSE, with no material
+regression. Keep valid peptide/MHC labels at full weight, encode unresolved
+junctions as unknown, defer the GM12878-only expression join, and revisit a
+costlier candidate model only with materially broader transcript-aware data or
+a separately powered multi-allele experiment.
+
+The original `20260902a` launch was stopped before results were read after an
+X-filter parity confound was found. The corrected `20260902b` arms passed exact
+row parity, frozen-hash, hitlist-version, MHC-index, requested-GPU, and observed
+H100 checks. Reproduction and raw artifact paths are recorded in the
+[experiment directory](2026-09-02_1720_codex_source-junction-masking/).
+The comparator preserves the prior semantic behavior (inject one arbitrary
+junction) but uses stable candidate ordering instead of reproducing the old
+frame-order accident byte for byte.

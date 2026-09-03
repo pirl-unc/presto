@@ -957,6 +957,16 @@ def create_parser() -> argparse.ArgumentParser:
         help="Skip the hitlist source-protein join (parity control for Experiment 0a)",
     )
     train_iedb.add_argument(
+        "--source-mapping-policy",
+        choices=["mask_unresolved", "legacy_global_canonical"],
+        default="mask_unresolved",
+        help=(
+            "How disagreeing source junctions enter the model: mask unresolved "
+            "junctions as ?/? (default), or reproduce the legacy global-canonical "
+            "selection for controlled comparisons"
+        ),
+    )
+    train_iedb.add_argument(
         "--merged-tsv",
         type=str,
         default=None,
@@ -1122,6 +1132,12 @@ def create_parser() -> argparse.ArgumentParser:
         help="Maximum synthetic weak-affinity value (nM)",
     )
     train_iedb.add_argument("--val-frac", type=float, default=0.2, help="Validation fraction")
+    train_iedb.add_argument(
+        "--test-frac",
+        type=float,
+        default=0.0,
+        help="Held-out test fraction (0 disables; peptide-disjoint when enabled)",
+    )
     train_iedb.add_argument("--epochs", type=int, default=5, help="Number of epochs")
     train_iedb.add_argument("--batch_size", type=int, default=512, help="Batch size")
     train_iedb.add_argument(

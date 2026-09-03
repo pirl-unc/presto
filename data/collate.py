@@ -285,6 +285,14 @@ class PrestoSample:
     label_bucket: Optional[str] = None
     primary_allele: Optional[str] = None
     synthetic_kind: Optional[str] = None
+    # Source-junction provenance. Diagnostics only: these fields never enter
+    # model.forward. Empty/zero means the sample did not come through the
+    # hitlist protein-mapping path.
+    source_mapping_category: str = ""
+    source_mapping_n_candidates: int = 0
+    source_mapping_n_genes: int = 0
+    source_mapping_n_flank_pairs: int = 0
+    flank_context_resolved: bool = False
     dataset_index: int = -1
     peptide_id: int = -1
     allele_id: int = -1
@@ -403,6 +411,11 @@ class PrestoBatch:
     #: for each kind of synthetic decoy: mixing them yields AUPRC ~1.0 that
     #: measures peptide realism rather than presentation.
     sample_sources: List[str] = field(default_factory=list)
+    source_mapping_categories: List[str] = field(default_factory=list)
+    source_mapping_n_candidates: Optional[torch.Tensor] = None
+    source_mapping_n_genes: Optional[torch.Tensor] = None
+    source_mapping_n_flank_pairs: Optional[torch.Tensor] = None
+    flank_context_resolved: Optional[torch.Tensor] = None
     targets: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_masks: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_quals: Dict[str, torch.Tensor] = field(default_factory=dict)
@@ -454,6 +467,11 @@ class PrestoBatch:
             primary_alleles=self.primary_alleles,
             sample_ids=self.sample_ids,
             sample_sources=self.sample_sources,
+            source_mapping_categories=self.source_mapping_categories,
+            source_mapping_n_candidates=_move(self.source_mapping_n_candidates),
+            source_mapping_n_genes=_move(self.source_mapping_n_genes),
+            source_mapping_n_flank_pairs=_move(self.source_mapping_n_flank_pairs),
+            flank_context_resolved=_move(self.flank_context_resolved),
             targets={name: _move(tensor) for name, tensor in self.targets.items()},
             target_masks={name: _move(tensor) for name, tensor in self.target_masks.items()},
             target_quals={name: _move(tensor) for name, tensor in self.target_quals.items()},
@@ -1875,6 +1893,19 @@ class PrestoCollator:
             primary_alleles=[s.primary_allele or "" for s in samples],
             sample_ids=[s.sample_id for s in samples],
             sample_sources=[s.sample_source or "" for s in samples],
+            source_mapping_categories=[s.source_mapping_category or "" for s in samples],
+            source_mapping_n_candidates=torch.tensor(
+                [int(s.source_mapping_n_candidates) for s in samples], dtype=torch.long
+            ),
+            source_mapping_n_genes=torch.tensor(
+                [int(s.source_mapping_n_genes) for s in samples], dtype=torch.long
+            ),
+            source_mapping_n_flank_pairs=torch.tensor(
+                [int(s.source_mapping_n_flank_pairs) for s in samples], dtype=torch.long
+            ),
+            flank_context_resolved=torch.tensor(
+                [bool(s.flank_context_resolved) for s in samples], dtype=torch.bool
+            ),
             targets=targets,
             target_masks=target_masks,
             target_quals=target_quals,

@@ -194,6 +194,11 @@ class BindingRecord:
     antigen_species: Optional[str] = None  # Source organism of the epitope
     source: str = "iedb"
     alleles: Optional[List[str]] = None
+    source_mapping_category: str = ""
+    source_mapping_n_candidates: int = 0
+    source_mapping_n_genes: int = 0
+    source_mapping_n_flank_pairs: int = 0
+    flank_context_resolved: bool = False
 
 
 @dataclass
@@ -214,6 +219,11 @@ class KineticsRecord:
     antigen_species: Optional[str] = None
     source: str = "iedb"
     alleles: Optional[List[str]] = None
+    source_mapping_category: str = ""
+    source_mapping_n_candidates: int = 0
+    source_mapping_n_genes: int = 0
+    source_mapping_n_flank_pairs: int = 0
+    flank_context_resolved: bool = False
 
 
 @dataclass
@@ -238,6 +248,11 @@ class StabilityRecord:
     antigen_species: Optional[str] = None
     source: str = "iedb"
     alleles: Optional[List[str]] = None
+    source_mapping_category: str = ""
+    source_mapping_n_candidates: int = 0
+    source_mapping_n_genes: int = 0
+    source_mapping_n_flank_pairs: int = 0
+    flank_context_resolved: bool = False
 
 
 @dataclass
@@ -304,6 +319,11 @@ class ElutionRecord:
     species: Optional[str] = None
     antigen_species: Optional[str] = None
     source: str = "iedb"
+    source_mapping_category: str = ""
+    source_mapping_n_candidates: int = 0
+    source_mapping_n_genes: int = 0
+    source_mapping_n_flank_pairs: int = 0
+    flank_context_resolved: bool = False
 
 
 @dataclass
@@ -1832,6 +1852,22 @@ class PrestoDataset(Dataset):
             src = _source_label(source)
             return src if src.startswith("synthetic_negative") else None
 
+        def _source_mapping_fields(record: Any) -> Dict[str, Any]:
+            """Diagnostics-only mapping provenance copied without model routing."""
+            return {
+                "source_mapping_category": str(
+                    getattr(record, "source_mapping_category", "") or ""
+                ),
+                "source_mapping_n_candidates": int(
+                    getattr(record, "source_mapping_n_candidates", 0) or 0
+                ),
+                "source_mapping_n_genes": int(getattr(record, "source_mapping_n_genes", 0) or 0),
+                "source_mapping_n_flank_pairs": int(
+                    getattr(record, "source_mapping_n_flank_pairs", 0) or 0
+                ),
+                "flank_context_resolved": bool(getattr(record, "flank_context_resolved", False)),
+            }
+
         def _organism_fields(
             antigen_species: Optional[str],
         ) -> Tuple[Optional[str], Optional[float]]:
@@ -1910,6 +1946,7 @@ class PrestoDataset(Dataset):
                     label_bucket=bind_label,
                     primary_allele=rec.mhc_allele,
                     synthetic_kind=_synthetic_kind(rec.source),
+                    **_source_mapping_fields(rec),
                     sample_id=f"bind_{len(self.samples)}",
                 )
             )
@@ -1942,6 +1979,7 @@ class PrestoDataset(Dataset):
                     label_bucket=None,
                     primary_allele=rec.mhc_allele,
                     synthetic_kind=_synthetic_kind(rec.source),
+                    **_source_mapping_fields(rec),
                     sample_id=f"kin_{len(self.samples)}",
                 )
             )
@@ -1976,6 +2014,7 @@ class PrestoDataset(Dataset):
                     label_bucket=None,
                     primary_allele=rec.mhc_allele,
                     synthetic_kind=_synthetic_kind(rec.source),
+                    **_source_mapping_fields(rec),
                     sample_id=f"stab_{len(self.samples)}",
                 )
             )
@@ -2094,6 +2133,7 @@ class PrestoDataset(Dataset):
                     label_bucket="positive" if rec.detected else "negative",
                     primary_allele=(alleles[0] if alleles else None),
                     synthetic_kind=_synthetic_kind(rec.source),
+                    **_source_mapping_fields(rec),
                     sample_id=f"elut_{len(self.samples)}",
                 )
             )
@@ -4409,3 +4449,73 @@ def peptide_grouped_split_indices(
         for index in group
     ]
     return sorted(train_indices), sorted(val_indices)
+
+
+def peptide_grouped_three_way_split_indices(
+    dataset,
+    val_fraction: float,
+    test_fraction: float,
+    seed: int,
+) -> Tuple[List[int], List[int], List[int]]:
+    """Peptide-disjoint train/validation/test indices.
+
+    The two-way helper remains the source of truth when ``test_fraction`` is
+    zero, preserving historical splits exactly. With a test split, test groups
+    are allocated first and validation groups second from one seeded peptide
+    ordering; at least one peptide group is reserved for training.
+    """
+    val_fraction = float(val_fraction)
+    test_fraction = float(test_fraction)
+    if val_fraction <= 0.0 or test_fraction < 0.0:
+        raise ValueError("val_fraction must be > 0 and test_fraction must be >= 0")
+    if val_fraction + test_fraction >= 1.0:
+        raise ValueError("val_fraction + test_fraction must be < 1")
+    if test_fraction == 0.0:
+        train, val = peptide_grouped_split_indices(dataset, val_fraction, seed)
+        return train, val, []
+
+    peptide_groups: Dict[str, List[int]] = defaultdict(list)
+    for index in range(len(dataset)):
+        peptide = str(getattr(dataset[index], "peptide", "") or "").strip().upper()
+        peptide_groups[peptide].append(index)
+    if len(peptide_groups) < 3:
+        raise ValueError(
+            "A peptide-disjoint train/validation/test split needs at least three distinct peptides"
+        )
+
+    peptides = sorted(peptide_groups)
+    random.Random(seed + 53).shuffle(peptides)
+    target_test_rows = max(1, int(len(dataset) * test_fraction))
+    target_val_rows = max(1, int(len(dataset) * val_fraction))
+
+    test_peptides: set[str] = set()
+    test_rows = 0
+    for peptide in peptides:
+        if test_rows >= target_test_rows or len(peptides) - len(test_peptides) <= 2:
+            break
+        test_peptides.add(peptide)
+        test_rows += len(peptide_groups[peptide])
+
+    val_peptides: set[str] = set()
+    val_rows = 0
+    for peptide in peptides:
+        if peptide in test_peptides:
+            continue
+        if val_rows >= target_val_rows or (
+            len(peptides) - len(test_peptides) - len(val_peptides) <= 1
+        ):
+            break
+        val_peptides.add(peptide)
+        val_rows += len(peptide_groups[peptide])
+
+    train_indices: List[int] = []
+    val_indices: List[int] = []
+    test_indices: List[int] = []
+    for peptide, group in peptide_groups.items():
+        if peptide in test_peptides:
+            test_indices.extend(group)
+        elif peptide in val_peptides:
+            val_indices.extend(group)
+        else:
+            train_indices.extend(group)
+    return sorted(train_indices), sorted(val_indices), sorted(test_indices)

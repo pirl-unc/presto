@@ -3,8 +3,8 @@
 A peptide usually occurs in more than one protein. On hitlist 1.55.2 for
 HLA-A*02:01: **80.5%** of evidence rows map to more than one protein (worst
 case 2,985), and **21.6%** have mappings that disagree on a flank -- 157,423
-rows where the junction the excision head trains on is one candidate among
-several, presented as though it were observed.
+rows where the junction is not directly observed. Unresolved groups now carry
+explicit unknown context rather than one arbitrary candidate.
 
 `map_source_proteins=True` hands presto every candidate and the collapse
 happens locally, so the choice is ours to make deliberately. These tests pin
@@ -49,10 +49,23 @@ class TestRanking:
         assert choice.mapping["protein_id"] == "P2"
         assert choice.expression_score == 50.0
 
-    def test_canonical_wins_without_expression(self):
+    def test_canonical_does_not_claim_to_resolve_across_genes(self):
         choice = select_source_mapping(DISAGREEING)
+        assert choice.basis == "deterministic_order"
+        assert choice.mapping["protein_id"] == "P1"
+        assert choice.category == "cross_gene_unresolved"
+        assert choice.flank_context_resolved is False
+
+    def test_canonical_resolves_within_one_gene(self):
+        candidates = [
+            _mapping("P2", "G", "GGG", "TTT"),
+            _mapping("P1", "G", "AAA", "CCC", canonical=True),
+        ]
+        choice = select_source_mapping(candidates)
         assert choice.basis == "canonical_transcript"
         assert choice.mapping["protein_id"] == "P1"
+        assert choice.category == "within_gene_canonical"
+        assert choice.flank_context_resolved is True
 
     def test_deterministic_order_is_the_last_resort(self):
         plain = [_mapping("P9", "G9", "A", "C"), _mapping("P3", "G3", "G", "T")]
@@ -68,10 +81,10 @@ class TestRanking:
         assert forward.mapping["protein_id"] == backward.mapping["protein_id"]
 
     def test_an_unknown_gene_does_not_score_as_zero(self):
-        """A partial expression table must degrade to the canonical rule, not
-        silently prefer whichever gene happens to be listed."""
+        """An irrelevant table degrades to unresolved cross-gene handling."""
         choice = select_source_mapping(DISAGREEING, expression={"GENEZ": 99.0})
-        assert choice.basis == "canonical_transcript"
+        assert choice.basis == "deterministic_order"
+        assert choice.category == "cross_gene_unresolved"
 
     def test_every_basis_is_named(self):
         for basis in ("expression", "canonical_transcript", "deterministic_order"):
@@ -163,6 +176,99 @@ class TestIngestRecordsAmbiguity:
         assert stats["evidence_rows"] == 0
 
 
+class TestProductionMappingPolicy:
+    """The vectorized production collapse must not invent a source junction."""
+
+    @staticmethod
+    def _row(
+        evidence_row_id,
+        protein,
+        gene,
+        transcript,
+        n_flank,
+        c_flank,
+        *,
+        canonical=False,
+        position=10,
+    ):
+        return {
+            "evidence_row_id": evidence_row_id,
+            "protein_id": protein,
+            "gene_name": gene,
+            "gene_id": f"ID_{gene}" if gene else "",
+            "transcript_id": transcript,
+            "n_flank": n_flank,
+            "c_flank": c_flank,
+            "position": position,
+            "is_canonical_transcript": canonical,
+        }
+
+    @classmethod
+    def _frame(cls):
+        return [
+            cls._row("single", "P1", "G1", "T1", "AAA", "CCC", canonical=True),
+            cls._row("agree", "P2", "G2", "T2", "AAA", "CCC", canonical=True),
+            cls._row("agree", "P3", "G3", "T3", "AAA", "CCC", canonical=True),
+            cls._row("within", "P4", "G4", "T4", "AAA", "CCC", canonical=True),
+            cls._row("within", "P5", "G4", "T5", "GGG", "TTT"),
+            cls._row("cross", "P6", "G6", "T6", "AAA", "CCC", canonical=True),
+            cls._row("cross", "P7", "G7", "T7", "GGG", "TTT", canonical=True),
+            cls._row("within_unresolved", "P8", "G8", "T8", "AAA", "CCC"),
+            cls._row("within_unresolved", "P9", "G8", "T9", "GGG", "TTT"),
+            # One canonical transcript occurring twice at different positions
+            # remains ambiguous; canonical identity cannot pick the occurrence.
+            cls._row("repeat", "P10", "G10", "T10", "AAA", "CCC", canonical=True),
+            cls._row("repeat", "P10", "G10", "T10", "GGG", "TTT", canonical=True, position=30),
+            cls._row("missing_ids", "", "", "", "AAA", "CCC"),
+            cls._row("missing_ids", "", "", "", "GGG", "TTT", position=20),
+        ]
+
+    def test_categories_and_unknown_context(self):
+        pd = pytest.importorskip("pandas")
+        from presto.data.hitlist_source import _collapse_source_mappings
+
+        collapsed, stats = _collapse_source_mappings(pd.DataFrame(self._frame()))
+        rows = collapsed.set_index("evidence_row_id")
+        assert rows.loc["single", "source_mapping_category"] == "single"
+        assert rows.loc["agree", "source_mapping_category"] == "flanks_agree"
+        assert rows.loc["within", "source_mapping_category"] == "within_gene_canonical"
+        assert rows.loc["within", "protein_id"] == "P4"
+        for evidence_id, category in (
+            ("cross", "cross_gene_unresolved"),
+            ("within_unresolved", "within_gene_unresolved"),
+            ("repeat", "within_gene_unresolved"),
+            ("missing_ids", "within_gene_unresolved"),
+        ):
+            assert rows.loc[evidence_id, "source_mapping_category"] == category
+            assert rows.loc[evidence_id, "n_flank"] == "?"
+            assert rows.loc[evidence_id, "c_flank"] == "?"
+            assert bool(rows.loc[evidence_id, "flank_context_resolved"]) is False
+            assert rows.loc[evidence_id, "position"] != rows.loc[evidence_id, "position"]
+
+        assert rows.loc["agree", "source_mapping_n_candidates"] == 2
+        assert rows.loc["agree", "source_mapping_n_flank_pairs"] == 1
+        assert stats["category_counts"]["cross_gene_unresolved"] == 1
+        assert stats["rows_with_disagreeing_flanks"] == 5
+
+    def test_frame_order_does_not_change_the_result(self):
+        pd = pytest.importorskip("pandas")
+        from presto.data.hitlist_source import _collapse_source_mappings
+
+        frame = pd.DataFrame(self._frame())
+        forward, _ = _collapse_source_mappings(frame)
+        backward, _ = _collapse_source_mappings(frame.iloc[::-1])
+        columns = [
+            "evidence_row_id",
+            "protein_id",
+            "n_flank",
+            "c_flank",
+            "source_mapping_category",
+        ]
+        forward_rows = forward[columns].sort_values("evidence_row_id").reset_index(drop=True)
+        backward_rows = backward[columns].sort_values("evidence_row_id").reset_index(drop=True)
+        pd.testing.assert_frame_equal(forward_rows, backward_rows)
+
+
 class TestUnresolvedFlanksAreDroppedNotSubstituted:
     """`X` disqualifies a row; it never redirects the choice to another protein.
 
@@ -192,14 +298,15 @@ class TestUnresolvedFlanksAreDroppedNotSubstituted:
 
         assert "resolved_flank" not in SELECTION_BASES
 
-    def test_canonical_with_an_unresolved_initiator_still_wins(self):
+    def test_cleanliness_and_cross_gene_canonical_status_do_not_rank(self):
         candidates = [
-            _mapping("P1", "G1", "XCDEF", "CCCCC", canonical=True),
+            _mapping("P9", "G1", "XCDEF", "CCCCC", canonical=True),
             _mapping("P2", "G2", "ACDEF", "CCCCC"),
         ]
         choice = select_source_mapping(candidates)
-        assert choice.basis == "canonical_transcript"
-        assert choice.mapping["protein_id"] == "P1"
+        assert choice.basis == "deterministic_order"
+        assert choice.mapping["protein_id"] == "P2"
+        assert choice.flank_context_resolved is False
 
     def test_expression_is_unaffected(self):
         choice = select_source_mapping(
@@ -267,8 +374,8 @@ class TestDropUnresolvedFlankRows:
         _, dropped = drop_unresolved_flank_rows(frame)
         assert dropped == 0
 
-    def test_the_collapse_no_longer_reorders_on_cleanliness(self):
-        """Regression: the removed rule would have kept P2 here."""
+    def test_the_collapse_masks_disagreement_instead_of_ranking_cleanliness(self):
+        """Neither the X row nor the clean row is asserted as the source."""
         pd = pytest.importorskip("pandas")
         from presto.data.hitlist_source import _select_best_mapping
 
@@ -292,7 +399,8 @@ class TestDropUnresolvedFlankRows:
         )
         kept = _select_best_mapping(frame)
         assert len(kept) == 1
-        assert kept.iloc[0]["n_flank"] == "XCDEF"
+        assert kept.iloc[0]["n_flank"] == "?"
+        assert kept.iloc[0]["source_mapping_category"] == "within_gene_unresolved"
         assert "_unresolved_flank" not in kept.columns
 
 

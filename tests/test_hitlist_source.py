@@ -19,6 +19,7 @@ from presto.data.hitlist_source import (  # noqa: E402
     assert_columns_present,
     training_columns,
     _clean,
+    _collapse_source_mappings,
     _method_counts,
     _qualifier_from_inequality,
     _select_best_mapping,
@@ -40,7 +41,12 @@ def _binding_row(**overrides):
         "source": "iedb",
         "n_flank": "AAAAAAAAAA",
         "c_flank": "CCCCCCCCCC",
+        "position": 10,
         "evidence_row_id": "row-1",
+        "gene_name": "GENE1",
+        "gene_id": "ENSG1",
+        "protein_id": "ENSP1",
+        "transcript_id": "ENST1",
         "is_canonical_transcript": True,
         "response_measured": IC50,
         "quantitative_value": 25.0,
@@ -63,7 +69,12 @@ def _ms_row(**overrides):
         "source": "iedb",
         "n_flank": "GGGGGGGGGG",
         "c_flank": "TTTTTTTTTT",
+        "position": 10,
         "evidence_row_id": "ms-1",
+        "gene_name": "GENE1",
+        "gene_id": "ENSG1",
+        "protein_id": "ENSP1",
+        "transcript_id": "ENST1",
         "is_canonical_transcript": True,
         "cell_line_name": "HeLa",
         "source_tissue": "Skin",
@@ -122,13 +133,66 @@ class TestHelpers:
     def test_select_best_mapping_prefers_canonical_transcript(self):
         frame = pd.DataFrame(
             [
-                {"evidence_row_id": "a", "is_canonical_transcript": False, "n_flank": "NO"},
-                {"evidence_row_id": "a", "is_canonical_transcript": True, "n_flank": "YES"},
+                {
+                    "evidence_row_id": "a",
+                    "gene_name": "G",
+                    "protein_id": "P2",
+                    "transcript_id": "T2",
+                    "is_canonical_transcript": False,
+                    "n_flank": "NO",
+                },
+                {
+                    "evidence_row_id": "a",
+                    "gene_name": "G",
+                    "protein_id": "P1",
+                    "transcript_id": "T1",
+                    "is_canonical_transcript": True,
+                    "n_flank": "YES",
+                },
             ]
         )
         collapsed = _select_best_mapping(frame)
         assert len(collapsed) == 1
         assert collapsed.iloc[0]["n_flank"] == "YES"
+        assert collapsed.iloc[0]["source_mapping_category"] == "within_gene_canonical"
+
+    def test_legacy_policy_keeps_cross_gene_choice_for_control_only(self):
+        frame = pd.DataFrame(
+            [
+                _binding_row(
+                    gene_name="GENE2",
+                    protein_id="P2",
+                    transcript_id="T2",
+                    n_flank="BBBB",
+                    c_flank="DDDD",
+                ),
+                _binding_row(
+                    gene_name="GENE1",
+                    protein_id="P1",
+                    transcript_id="T1",
+                    n_flank="AAAA",
+                    c_flank="CCCC",
+                ),
+            ]
+        )
+        masked, masked_stats = _collapse_source_mappings(frame)
+        legacy, legacy_stats = _collapse_source_mappings(
+            frame, source_mapping_policy="legacy_global_canonical"
+        )
+
+        assert masked.iloc[0]["n_flank"] == masked.iloc[0]["c_flank"] == "?"
+        assert legacy.iloc[0]["n_flank"] == "AAAA"
+        assert legacy.iloc[0]["c_flank"] == "CCCC"
+        assert masked.iloc[0]["source_mapping_category"] == "cross_gene_unresolved"
+        assert legacy.iloc[0]["source_mapping_category"] == "cross_gene_unresolved"
+        assert masked_stats["source_mapping_policy"] == "mask_unresolved"
+        assert legacy_stats["source_mapping_policy"] == "legacy_global_canonical"
+
+    def test_unknown_mapping_policy_is_rejected(self):
+        with pytest.raises(ValueError, match="source_mapping_policy"):
+            _collapse_source_mappings(
+                pd.DataFrame([_binding_row()]), source_mapping_policy="coin_flip"
+            )
 
     def test_method_counts_labels_missing_as_unspecified(self):
         class Rec:
@@ -149,7 +213,86 @@ class TestRouting:
         assert record.measurement_type == IC50
         assert record.flank_n == "AAAAAAAAAA"
         assert record.flank_c == "CCCCCCCCCC"
+        assert record.source_mapping_category == "single"
+        assert record.source_mapping_n_candidates == 1
+        assert record.flank_context_resolved is True
         assert stats["flank_coverage"]["binding"] == 1.0
+
+    def test_cross_gene_disagreement_keeps_label_but_masks_flanks(self, monkeypatch):
+        rows = [
+            _binding_row(
+                gene_name="GENE1",
+                gene_id="ENSG1",
+                protein_id="ENSP1",
+                transcript_id="ENST1",
+                n_flank="AAAAAAAAAA",
+                c_flank="CCCCCCCCCC",
+            ),
+            _binding_row(
+                gene_name="GENE2",
+                gene_id="ENSG2",
+                protein_id="ENSP2",
+                transcript_id="ENST2",
+                n_flank="GGGGGGGGGG",
+                c_flank="TTTTTTTTTT",
+            ),
+        ]
+        _install_stub_hitlist(monkeypatch, rows, [])
+        binding, _, _, _, _, _, _, stats = load_records_from_hitlist()
+        assert len(binding) == 1
+        record = binding[0]
+        assert record.value == 25.0
+        assert record.flank_n == record.flank_c == "?"
+        assert record.flank_n_is_terminus is False
+        assert record.flank_c_is_terminus is False
+        assert record.source_mapping_category == "cross_gene_unresolved"
+        assert record.flank_context_resolved is False
+        assert stats["mapping_ambiguity"]["binding"]["category_counts"] == {
+            "cross_gene_unresolved": 1
+        }
+
+        from presto.data.collate import PrestoCollator
+        from presto.data.loaders import PrestoDataset
+
+        dataset = PrestoDataset(binding_records=binding, strict_mhc_resolution=False)
+        sample = dataset[0]
+        assert sample.bind_value == 25.0
+        assert sample.source_mapping_category == "cross_gene_unresolved"
+        batch = PrestoCollator()([sample])
+        assert batch.bind_mask.tolist() == [1.0]
+        assert batch.source_mapping_categories == ["cross_gene_unresolved"]
+        assert batch.source_mapping_n_candidates.tolist() == [2]
+        assert batch.flank_context_resolved.tolist() == [False]
+        moved = batch.to("cpu")
+        assert moved.source_mapping_categories == ["cross_gene_unresolved"]
+        assert moved.source_mapping_n_genes.tolist() == [2]
+
+    def test_policies_filter_selected_x_before_masking(self, monkeypatch):
+        """Policy changes flank input, never which supervised rows survive."""
+        rows = [
+            _binding_row(
+                gene_name="GENE1",
+                gene_id="ENSG1",
+                protein_id="ENSP1",
+                transcript_id="ENST1",
+                n_flank="XAAAAAAAAA",
+                c_flank="CCCCCCCCCC",
+            ),
+            _binding_row(
+                gene_name="GENE2",
+                gene_id="ENSG2",
+                protein_id="ENSP2",
+                transcript_id="ENST2",
+                n_flank="GGGGGGGGGG",
+                c_flank="TTTTTTTTTT",
+                is_canonical_transcript=False,
+            ),
+        ]
+        _install_stub_hitlist(monkeypatch, rows, [])
+        masked, *_ = load_records_from_hitlist(source_mapping_policy="mask_unresolved")
+        legacy, *_ = load_records_from_hitlist(source_mapping_policy="legacy_global_canonical")
+
+        assert masked == legacy == []
 
     def test_nan_value_is_skipped(self, monkeypatch):
         """float(nan) does not raise, so NaN must be tested for explicitly.

@@ -5,16 +5,17 @@ for HLA-A*02:01 alone: **80.5%** of evidence rows map to more than one protein
 (the worst maps to 2,985), and **21.6%** have mappings that *disagree on a
 flank* -- 157,423 rows where the junction context is genuinely ambiguous.
 
-The excision head scores a cleavage from its junction residues, so for those
-rows we are training on one candidate junction as though it were the observed
-one. The proteasome cut some specific protein; we do not know which.
+The excision head scores a cleavage from its junction residues. Presto now
+preserves a flank pair only when candidates agree, expression resolves a gene,
+or a unique canonical source resolves within one gene. Otherwise the context
+is explicitly unknown; the peptide/MHC measurement remains usable.
 
 `map_source_proteins=True` returns one row per (evidence row, protein mapping)
 and the collapse happens here, which means every candidate is in hand at the
 moment the choice is made. What was missing was a place to make that choice
 deliberately, and any record that a choice was made at all.
 
-Ranking, strongest evidence first:
+Resolution evidence, strongest first:
 
 1. **Expression.** If the sample's transcript/gene abundance is known, the
    protein that is actually expressed is the one the peptide most likely came
@@ -22,21 +23,20 @@ Ranking, strongest evidence first:
    candidate genes by TPM and, where transcript rows exist, by the summed TPM
    of the isoforms whose translation actually contains the peptide. Callers
    pass the resulting per-gene scores in as `expression`.
-2. **Canonical transcript.** The previous behaviour, and a reasonable
-   tie-break, but not evidence: a peptide's canonical-transcript occurrence is
-   not necessarily the one that was processed.
-3. **Deterministic order.** Sorted by protein identifier so a run is
-   reproducible rather than dependent on frame order.
+2. **Canonical transcript within one gene.** A reasonable isoform tie-break,
+   but never evidence for choosing between genes: each gene normally brings
+   its own canonical transcript.
+3. **Agreement.** When every candidate has the same junction, which source row
+   represents it is immaterial.
 
-Flank *cleanliness* is deliberately absent from that ranking -- see
-`UNRESOLVED_RESIDUE`. A row whose chosen flank is unresolved is dropped by
-`hitlist_source.drop_unresolved_flank_rows` rather than reassigned to whichever
-other protein happens to offer a confident-looking residue.
+Flank *cleanliness* is deliberately absent from that evidence -- see
+`UNRESOLVED_RESIDUE`. A row whose chosen flank contains an unresolved amino
+acid is dropped rather than reassigned to whichever other protein happens to
+offer a confident-looking residue.
 
-The choice is reported alongside the result. A downstream consumer can then
-down-weight ambiguous rows, or marginalise over candidates the way the binding
-core already marginalises over registers, instead of rediscovering the
-ambiguity by measuring it.
+The choice is reported alongside the result. A downstream consumer must replace
+the flank pair with unknown context when ``flank_context_resolved`` is false;
+candidate marginalization remains a possible later model extension.
 """
 
 from __future__ import annotations
@@ -64,6 +64,48 @@ SELECTION_BASES = (
 #: `drop_unresolved_flank_rows`.
 UNRESOLVED_RESIDUE = "X"
 
+#: Structural marker for "source mapping was attempted but the junction could
+#: not be resolved". Unlike an empty flank, this records a known uncertainty.
+UNKNOWN_FLANK_CONTEXT = "?"
+
+MAPPING_CATEGORY_SINGLE = "single"
+MAPPING_CATEGORY_FLANKS_AGREE = "flanks_agree"
+MAPPING_CATEGORY_WITHIN_GENE_CANONICAL = "within_gene_canonical"
+MAPPING_CATEGORY_EXPRESSION_RESOLVED = "expression_resolved"
+MAPPING_CATEGORY_CROSS_GENE_UNRESOLVED = "cross_gene_unresolved"
+MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED = "within_gene_unresolved"
+MAPPING_CATEGORY_UNMAPPED = "unmapped"
+
+MAPPING_CATEGORIES = (
+    MAPPING_CATEGORY_SINGLE,
+    MAPPING_CATEGORY_FLANKS_AGREE,
+    MAPPING_CATEGORY_WITHIN_GENE_CANONICAL,
+    MAPPING_CATEGORY_EXPRESSION_RESOLVED,
+    MAPPING_CATEGORY_CROSS_GENE_UNRESOLVED,
+    MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED,
+    MAPPING_CATEGORY_UNMAPPED,
+)
+
+UNRESOLVED_MAPPING_CATEGORIES = frozenset(
+    {
+        MAPPING_CATEGORY_CROSS_GENE_UNRESOLVED,
+        MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED,
+    }
+)
+
+#: Production behavior and its explicit experimental comparator. The legacy
+#: policy reproduces the old semantics--global canonical preference followed
+#: by one arbitrary source--but makes the last-resort ordering deterministic.
+#: The bulk path formerly fell through to frame order because it did not
+#: project protein_id, so byte-for-byte historical replay is neither possible
+#: nor desirable in a controlled comparison.
+SOURCE_MAPPING_POLICY_MASK_UNRESOLVED = "mask_unresolved"
+SOURCE_MAPPING_POLICY_LEGACY = "legacy_global_canonical"
+SOURCE_MAPPING_POLICIES = (
+    SOURCE_MAPPING_POLICY_MASK_UNRESOLVED,
+    SOURCE_MAPPING_POLICY_LEGACY,
+)
+
 
 @dataclass(frozen=True)
 class FlankChoice:
@@ -79,6 +121,10 @@ class FlankChoice:
     basis: str
     #: Expression score of the winner, when expression was used.
     expression_score: Optional[float] = None
+    n_genes: int = 0
+    n_flank_pairs: int = 0
+    category: str = ""
+    flank_context_resolved: bool = False
 
     @property
     def is_ambiguous(self) -> bool:
@@ -139,10 +185,75 @@ def select_source_mapping(
     rows = list(candidates)
     distinct_flanks = {_flank_pair(row) for row in rows}
     agree = len(distinct_flanks) == 1
+    genes = {str(row.get(gene_field) or "").strip() for row in rows} - {""}
+    n_genes = len(genes)
+
+    def _source_key(row: Mapping[str, Any]) -> str:
+        return str(row.get("transcript_id") or row.get(protein_field) or "").strip()
+
+    def _position(row: Mapping[str, Any]) -> float:
+        try:
+            return float(row.get("position"))
+        except (TypeError, ValueError):
+            return float("inf")
+
+    def _usable_canonical(subset: Sequence[Mapping[str, Any]]):
+        canonical_rows = [
+            row for row in subset if _truthy(row.get("is_canonical_transcript"))
+        ]
+        sources = {_source_key(row) for row in canonical_rows} - {""}
+        pairs = {_flank_pair(row) for row in canonical_rows}
+        if len(sources) == 1 and len(pairs) == 1:
+            return canonical_rows[0]
+        return None
+
+    def _result(
+        row: Mapping[str, Any],
+        *,
+        basis: str,
+        category: str,
+        resolved: bool,
+        expression_score: Optional[float] = None,
+    ) -> FlankChoice:
+        return FlankChoice(
+            mapping=row,
+            n_candidates=len(rows),
+            flanks_agree=agree,
+            basis=basis,
+            expression_score=expression_score,
+            n_genes=n_genes,
+            n_flank_pairs=len(distinct_flanks),
+            category=category,
+            flank_context_resolved=resolved,
+        )
 
     # Deterministic baseline order, so every rule below breaks ties the same
     # way and a run is reproducible regardless of frame order.
-    rows.sort(key=lambda row: str(row.get(protein_field) or ""))
+    rows.sort(
+        key=lambda row: (
+            str(row.get(protein_field) or ""),
+            str(row.get("transcript_id") or ""),
+            _position(row),
+            _flank_pair(row),
+        )
+    )
+
+    if len(rows) == 1:
+        return _result(
+            rows[0],
+            basis="deterministic_order",
+            category=MAPPING_CATEGORY_SINGLE,
+            resolved=True,
+        )
+
+    if agree:
+        canonical = _usable_canonical(rows)
+        return _result(
+            canonical or rows[0],
+            basis="canonical_transcript" if canonical else "deterministic_order",
+            category=MAPPING_CATEGORY_FLANKS_AGREE,
+            resolved=True,
+        )
 
     if expression:
         scored = [
@@ -153,27 +264,47 @@ def select_source_mapping(
             if score is not None
         ]
         if scored:
-            best_score, best_row = max(scored, key=lambda pair: pair[0])
-            return FlankChoice(
-                mapping=best_row,
-                n_candidates=len(rows),
-                flanks_agree=agree,
-                basis="expression",
-                expression_score=float(best_score),
+            best_score = max(score for score, _ in scored)
+            best_genes = {
+                str(row.get(gene_field) or "").strip()
+                for score, row in scored
+                if score == best_score
+            } - {""}
+            if len(best_genes) == 1:
+                best_gene = next(iter(best_genes))
+                gene_rows = [
+                    row
+                    for row in rows
+                    if str(row.get(gene_field) or "").strip() == best_gene
+                ]
+                gene_pairs = {_flank_pair(row) for row in gene_rows}
+                canonical = _usable_canonical(gene_rows)
+                if len(gene_pairs) == 1 or canonical is not None:
+                    return _result(
+                        canonical or gene_rows[0],
+                        basis="expression",
+                        category=MAPPING_CATEGORY_EXPRESSION_RESOLVED,
+                        resolved=True,
+                        expression_score=float(best_score),
+                    )
+
+    if n_genes == 1:
+        canonical = _usable_canonical(rows)
+        if canonical is not None:
+            return _result(
+                canonical,
+                basis="canonical_transcript",
+                category=MAPPING_CATEGORY_WITHIN_GENE_CANONICAL,
+                resolved=True,
             )
-
-    canonical = [row for row in rows if _truthy(row.get("is_canonical_transcript"))]
-    if canonical:
-        return FlankChoice(
-            mapping=canonical[0],
-            n_candidates=len(rows),
-            flanks_agree=agree,
-            basis="canonical_transcript",
-        )
-
-    return FlankChoice(
-        mapping=rows[0],
-        n_candidates=len(rows),
-        flanks_agree=agree,
+        category = MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED
+    elif n_genes > 1:
+        category = MAPPING_CATEGORY_CROSS_GENE_UNRESOLVED
+    else:
+        category = MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED
+    return _result(
+        rows[0],
         basis="deterministic_order",
+        category=category,
+        resolved=False,
     )

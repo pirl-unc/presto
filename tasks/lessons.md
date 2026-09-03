@@ -16,6 +16,15 @@
   clean worktree and branch directly from freshly fetched `origin/main`. Do not
   mix, stash, or otherwise disturb the existing changes.
 
+## 2026-09-02
+
+- Keep three versions separate for editable dependencies: the live source/runtime
+  version (`package.__version__`), the install-time `.dist-info` version reported by
+  `pip` / `importlib.metadata`, and the version that produced a cached artifact. Do
+  not assign the current runtime version to an older artifact unless its provenance
+  metadata stamps that version; otherwise label the producer version as inferred and
+  state the evidence.
+
 ## 2026-08-26
 
 - State an ablation as a factorial, not "with vs without". Adding a corpus usually adds
