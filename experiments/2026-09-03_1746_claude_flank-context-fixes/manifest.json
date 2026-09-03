@@ -1,0 +1,122 @@
+[
+  {
+    "policy": "legacy_global_canonical",
+    "requested_gpu": "H100!",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-flank-context-fix-20260903a-legacy-e010-s42",
+    "seed": 42,
+    "status": "launching"
+  },
+  {
+    "policy": "mask_unresolved",
+    "requested_gpu": "H100!",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-flank-context-fix-20260903a-masked-e010-s42",
+    "seed": 42,
+    "status": "launching"
+  },
+  {
+    "policy": "legacy_global_canonical",
+    "requested_gpu": "H100!",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-flank-context-fix-20260903a-legacy-e010-s43",
+    "seed": 43,
+    "status": "launching"
+  },
+  {
+    "policy": "mask_unresolved",
+    "requested_gpu": "H100!",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-flank-context-fix-20260903a-masked-e010-s43",
+    "seed": 43,
+    "status": "launching"
+  },
+  {
+    "policy": "legacy_global_canonical",
+    "requested_gpu": "H100!",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-flank-context-fix-20260903a-legacy-e010-s44",
+    "seed": 44,
+    "status": "launching"
+  },
+  {
+    "policy": "mask_unresolved",
+    "requested_gpu": "H100!",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-flank-context-fix-20260903a-masked-e010-s44",
+    "seed": 44,
+    "status": "launching"
+  }
+]
