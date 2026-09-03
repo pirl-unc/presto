@@ -1,0 +1,23 @@
+{
+  "consistent_rmse_reduction_and_mean_at_least_0.02": false,
+  "consistent_spearman_improvement_and_mean_at_least_0.01": false,
+  "invest_in_candidate_marginalization": false,
+  "material_overall_regression_definition": "mean exact Spearman delta < -0.01 or mean exact RMSE delta > +0.02",
+  "no_material_overall_regression": true,
+  "overall_exact_rmse_mean_delta": 0.0036736648515128443,
+  "overall_exact_spearman_mean_delta": 0.002161810391649458,
+  "primary_scope": "test binding exact-only unresolved_union",
+  "recommendation": "keep explicit unknown masking and defer candidate marginalization",
+  "unresolved_exact_rmse_delta_masked_minus_legacy_by_seed": {
+    "42": 0.05127323049407995,
+    "43": -0.11289403898211237,
+    "44": 0.09515170298107312
+  },
+  "unresolved_exact_rmse_mean_reduction": -0.011176964831013566,
+  "unresolved_exact_spearman_delta_masked_minus_legacy_by_seed": {
+    "42": -0.03591267650405627,
+    "43": 0.07470918034252094,
+    "44": -0.05711468019092736
+  },
+  "unresolved_exact_spearman_mean_delta": -0.0061060587841542295
+}

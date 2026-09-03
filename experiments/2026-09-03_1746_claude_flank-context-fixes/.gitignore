@@ -1,2 +1,14 @@
 # Checkpoints remain recoverable from the Modal volume paths in manifest.json.
 results/runs/*/model.pt
+
+# Derived scaffold: symlinks used to run aggregate.py over the
+# best-checkpoint artifacts. Rebuildable, and symlinks do not belong in git.
+results/runs_best_checkpoint/
+
+# As-run per-example dumps: superseded by results/runs/*/best_checkpoint_eval/,
+# which is the set the writeup says to prefer. What they showed -- the size of
+# the evaluation-checkpoint artifact -- is preserved in condition_metrics.csv
+# and paired_differences.json for both sets. Raw rows remain on the Modal
+# volume paths recorded in manifest.json.
+results/runs/*/val_predictions.csv
+results/runs/*/test_predictions.csv

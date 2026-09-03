@@ -666,11 +666,103 @@ The comparator preserves the prior semantic behavior (inject one arbitrary
 junction) but uses stable candidate ordering instead of reproducing the old
 frame-order accident byte for byte.
 
-### 2026-09-03_1746_claude_flank-context-fixes
-- **Agent**: claude
-- **Dir**: [2026-09-03_1746_claude_flank-context-fixes](experiments/2026-09-03_1746_claude_flank-context-fixes)
-- **Source script**: `experiments/2026-09-03_1746_claude_flank-context-fixes/code/launch.py`
-- **Status**: launched
-- **Dataset**: `{"allele": "HLA-A*02:01", "artifact_sha256": {"binding.parquet": "fbcae6f762f43edb4eb87b1a7c7f3849757859204d37f3ce82d1f83c23cece9f", "observations.parquet": "f51440ab229fd187d2548b4dddcd1fc04580d97d45fb4d5b8e0222aa8080f928", "observations_meta.json": "ac459e184fc6c54c73f7f1b4fc7dff424b2360b13f55f12bb68a3bbb743de118", "peptide_mappings.parquet": "45580c16649daf75b11b51497d9d96dfaa987cdcf1197d6449deaa9261f6ec5c", "peptide_mappings_meta.json": "9a93de21753029ac08f1ba05e1a667ee6d7fd1b63a885bdc8dade1e626c7cbbb"}, "binding": "all qualifying numeric rows", "elution_cap": 20000, "kinetics_cap": 500, "mhc_index_sha256": "497938937f01394aeb18a3db15314f04ac1be162efe2844a1f018bcaff121063", "source": "hitlist==1.55.8", "split": "peptide-disjoint 80/10/10", "stability_cap": 1000}`
-- **Training**: `{"batch_size": 256, "epochs": 10, "gpu": "H100!", "model": "Presto expanded d128/l2/h4", "optimizer": "AdamW lr=2.8e-4 weight_decay=0.01", "synthetic_data": "disabled"}`
-- **Tested**: `[{"seeds": [42, 43, 44], "source_mapping_policy": "legacy_global_canonical"}, {"seeds": [42, 43, 44], "source_mapping_policy": "mask_unresolved"}]`
+## 2026-09-03 - Flank context wired end to end, on corrected mapping data
+
+**Agent/model:** Claude / Opus 5 - **Dir:**
+[`2026-09-03_1746_claude_flank-context-fixes`](2026-09-03_1746_claude_flank-context-fixes/)
+- **Commit:** `e58dd9ffbcd09163a7e08aabeed0d6be318184be` (branch `claude/flank-context-and-data-fixes`, dirty)
+
+### Question
+
+Does the `20260902b` legacy-vs-masked verdict survive on corrected code, and
+what changes once a protein terminus actually reaches the model? It never had:
+`flank_n_is_terminus` was declared on three record dataclasses, moved to the
+device by `PrestoBatch.to` and branched on by `Presto._pad_for_side`, but no
+`PrestoSample(...)` construction in `data/loaders.py` passed it. Every row
+arrived `False`, so the `X` boundary pad was unreachable and every flank -
+terminus or not - padded with `?`. On this corpus that is 3.2% of binding rows
+with an N-terminus and 2.9% with a C-terminus, all previously told the context
+was unknown when in fact it definitively did not exist.
+
+### Contract
+
+- **Dataset/curation:** identical to `20260902b` - hitlist 1.55.8 frozen
+  artifacts (same five SHA256s, hash-verified in-container before the GPU is
+  touched), `HLA-A*02:01`, 16,721 binding + 20,000 elution + 1,000 stability
+  + 2 kinetics = 37,723 rows per seed, peptide-disjoint 80/10/10, seeds
+  42/43/44, sampling seeds 59/60/61. Mapping categories are byte-identical to
+  `20260902b` seed for seed, so the data-correctness fixes below are
+  defensive on this corpus rather than corpus-changing.
+- **Split seed changed.** The three-way splitter reused the two-way helper's
+  `seed + 53` peptide order and filled *test* from the front where two-way
+  fills *validation* from the front, so at a given seed every held-out test
+  peptide had already been used for model selection. Now `seed + 101`. Test
+  splits are therefore not comparable row-for-row with `20260902b`.
+- **Training:** Presto expanded d128/l2/h4, AdamW lr 2.8e-4 wd 0.01, batch 256,
+  10 epochs, bf16 autocast. Synthetic negatives, MHC augmentation and probe
+  tracking disabled. Loss terms and assay-label -> output mapping unchanged
+  from `20260902b`.
+- **Requested GPU** `H100!`; **observed** on all six:
+  `NVIDIA H100 80GB HBM3, 81559 MiB, 580.95.05`.
+  4,104-5,556 s per run, 28,168 GPU-seconds total, ~1h21m wall in parallel.
+- **Supervision parity** between the two policies verified for all four
+  evidence families before launch (`results/data_audit.json`).
+
+### Corrections carried in this family
+
+Terminus wiring; `?` removed from flank sequence strings entirely (one
+representation per layer: `""` in the frame, `None` on the sample, a pad
+token in the tensor); a candidate collapse that could let a left-join miss
+outrank the real mapping and still be stamped `single`/resolved;
+`_canonical_mask` reading a float-encoded flag as False; `_flank_coverage`
+gating on resolution so it printed the same number for both arms; three
+drifted copies of "which categories are resolved"; and the split fix above.
+
+### Evaluation checkpoint
+
+These runs launched before `train_iedb` reloaded the best-validation
+checkpoint for the held-out pass, so `results/` scores whatever epoch training
+stopped on while carrying `best_val_loss` from a different one. Four of six
+runs selected an epoch before the last (7, 4, 10, 7, 10, 9). `model.pt` is the
+selected epoch, so every run was re-scored offline from it - splits re-derived
+and verified identical to each original before any metric was written - into
+`results/best_checkpoint/`. **Prefer that set.**
+
+### Held-out test, overall (best checkpoint, mean +- sd, seeds 42-44)
+
+| Metric | `legacy_global_canonical` | `mask_unresolved` |
+|---|---|---|
+| exact Spearman | 0.7536 +- 0.0062 | 0.7604 +- 0.0057 |
+| exact RMSE log10(nM) | 1.0039 +- 0.0177 | 0.9948 +- 0.0135 |
+| <=500 nM AUROC | 0.9164 +- 0.0034 | 0.9190 +- 0.0025 |
+| <=500 nM AUPRC | 0.8677 +- 0.0048 | 0.8711 +- 0.0080 |
+| <=500 nM F1 | 0.8274 +- 0.0067 | 0.8191 +- 0.0068 |
+| <=500 nM balanced acc. | 0.8484 +- 0.0089 | 0.8419 +- 0.0062 |
+
+### Decision gate
+
+| Quantity | 20260902b | this, as-run | this, best ckpt |
+|---|---|---|---|
+| `overall_exact_spearman_mean_delta` | +0.00300 | +0.00216 | +0.00683 |
+| `overall_exact_rmse_mean_delta` | -0.00594 | +0.00367 | -0.00909 |
+| `unresolved_exact_spearman_mean_delta` | -0.01377 | -0.00611 | -0.01779 |
+| `unresolved_exact_rmse_mean_reduction` | -0.01290 | -0.01118 | +0.03204 |
+| `invest_in_candidate_marginalization` | false | false | false |
+
+### Winner and takeaway
+
+**`mask_unresolved`, and defer candidate-junction marginalization.** The
+`20260902b` verdict reproduces on corrected code and survives the terminus
+wiring, the corrected mapping data and a new split seed.
+
+Two things matter more than the verdict. First, re-scoring the *same six runs*
+from their selected checkpoints flips the sign of
+`unresolved_exact_rmse_mean_reduction` and nearly triples
+`unresolved_exact_spearman_mean_delta` - the evaluation-checkpoint artifact
+was comparable in magnitude to the effect being measured, which means any
+earlier family evaluated at a non-selected epoch carries the same distortion.
+Second, the unresolved test stratum is 37 rows (28 exact) and its per-seed
+deltas flip sign (-0.0094 / +0.0459 / -0.0899). The negative result is a
+statement about statistical power on `HLA-A*02:01`, not evidence that junction
+context is unimportant - and it is the same limitation `20260902b` reported,
+now with the checkpoint confound removed.
