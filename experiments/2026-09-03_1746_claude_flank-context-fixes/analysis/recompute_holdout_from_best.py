@@ -36,9 +36,13 @@ from pathlib import Path
 
 EXPERIMENT_DIR = Path(__file__).resolve().parent.parent
 REPO_ROOT = EXPERIMENT_DIR.parent.parent
-if str(REPO_ROOT.parent) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT.parent))
 
+# Deliberately NOT inserting `REPO_ROOT.parent` on sys.path, which is what the
+# sibling analysis scripts do. `presto`, `mhcseqs` and `hitlist` are all
+# editable installs, so the import works without it -- and adding `~/code`
+# puts the sibling *source checkouts* ahead of their own package finders, so
+# `import mhcseqs` resolves the checkout root as an empty namespace package.
+# Presto guards that case and aborts; hitlist's does not, and skips instead.
 from presto.scripts import train_iedb  # noqa: E402
 
 #: What the replay must not inherit from the original run.
