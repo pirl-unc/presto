@@ -264,20 +264,15 @@ class TestEveryCorpusCategoryIsMapped:
 
         Queries hitlist directly rather than a pinned list, so it is
         bidirectional by construction: anything the corpus emits and this repo
-        has not mapped fails here. Skipped where hitlist is absent or too old
-        -- CI installs without the extra -- which is why `REVIEWED` exists as a
-        floor that always runs.
+        has not mapped fails here. It is skipped only where hitlist is absent
+        -- CI installs without the extra. Once the package imports, an old API,
+        unbuilt cache, or incompatible corpus is a failure rather than an
+        excuse not to run the contract. `REVIEWED` remains the hermetic floor.
         """
         hitlist = pytest.importorskip("hitlist")
-        try:
-            frame = hitlist.generate_training_table(
-                include_evidence="ms", columns=["condition_category"]
-            )
-        except Exception as exc:  # noqa: BLE001 - any build/IO failure is a skip
-            # An unbuilt index, a missing download, or a schema this release
-            # does not have. None of those are a mapping error, and failing on
-            # them would make the suite depend on local corpus state.
-            pytest.skip(f"cannot query hitlist condition categories: {exc}")
+        frame = hitlist.generate_training_table(
+            include_evidence="ms", columns=["condition_category"]
+        )
         seen = {
             str(value).strip()
             for value in frame["condition_category"].dropna().unique()

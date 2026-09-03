@@ -18,7 +18,12 @@ and this module enforces those:
    classic `assert (condition, "message")` -- a non-empty tuple, always truthy,
    so the message argument silently disables the check.
 
-Both rules run over this repo's own test suite. They are deliberately narrow:
+3. **Broad exceptions converted into skips.** A test that catches
+   ``Exception`` and calls ``pytest.skip`` reports a broken API, corrupt cache,
+   or assertion bug as unavailable infrastructure. Only a narrowly identified
+   unavailable prerequisite may skip.
+
+All three rules run over this repo's own test suite. They are deliberately narrow:
 a meta-test with false positives gets suppressed, and then it guards nothing.
 """
 
@@ -86,6 +91,40 @@ def _calls_getsource(func) -> bool:
             if isinstance(target, ast.Attribute) and target.attr == "getsource":
                 return True
     return False
+
+
+def _is_pytest_skip_call(node: ast.AST) -> bool:
+    return (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Attribute)
+        and isinstance(node.func.value, ast.Name)
+        and node.func.value.id == "pytest"
+        and node.func.attr == "skip"
+    )
+
+
+def _catches_broad_exception(handler: ast.ExceptHandler) -> bool:
+    caught = handler.type
+    if caught is None:
+        return True
+    if isinstance(caught, ast.Name):
+        return caught.id in {"Exception", "BaseException"}
+    if isinstance(caught, ast.Tuple):
+        return any(
+            isinstance(item, ast.Name) and item.id in {"Exception", "BaseException"}
+            for item in caught.elts
+        )
+    return False
+
+
+def _broad_skip_handlers(tree: ast.Module) -> list[int]:
+    return [
+        handler.lineno
+        for handler in ast.walk(tree)
+        if isinstance(handler, ast.ExceptHandler)
+        and _catches_broad_exception(handler)
+        and any(_is_pytest_skip_call(node) for node in ast.walk(handler))
+    ]
 
 
 def _anchor_calls(func) -> list[int]:
@@ -186,6 +225,23 @@ class TestAssertionsCanFail:
         assert offenders == [], "these assertions can never fail:\n  " + "\n  ".join(offenders)
 
 
+class TestSkipsAreNarrow:
+    """A runtime defect must not be reported as an unavailable prerequisite."""
+
+    def test_no_broad_exception_handler_turns_a_failure_into_a_skip(self):
+        offenders: list[str] = []
+        for path in _test_files():
+            for lineno in _broad_skip_handlers(_parse(path)):
+                offenders.append(f"{path.name}:{lineno}")
+        assert offenders == [], (
+            "these broad exception handlers convert arbitrary test failures "
+            "into skips:\n  "
+            + "\n  ".join(offenders)
+            + "\n\nCatch only the unavailable prerequisite, or let the "
+            "original failure fail the test."
+        )
+
+
 class TestTheGuardsThemselvesWork:
     """Fault injection, applied to the meta-tests.
 
@@ -250,3 +306,19 @@ class TestTheGuardsThemselvesWork:
         """`PROCESSING_STIMULI.index("none")` is not source inspection."""
         func = ast.parse("def test_thing():\n    assert VOCAB.index('none') == 0\n").body[0]
         assert not _calls_getsource(func)
+
+    @pytest.mark.parametrize(
+        "snippet",
+        [
+            "try:\n    query()\nexcept Exception:\n    pytest.skip('broken')",
+            "try:\n    query()\nexcept BaseException:\n    pytest.skip('broken')",
+            "try:\n    query()\nexcept:\n    pytest.skip('broken')",
+            "try:\n    query()\nexcept (OSError, Exception):\n    pytest.skip('broken')",
+        ],
+    )
+    def test_broad_skip_detector_catches_the_real_shapes(self, snippet):
+        assert _broad_skip_handlers(ast.parse(snippet)) != []
+
+    def test_broad_skip_detector_allows_a_narrow_prerequisite(self):
+        source = "try:\n    import optional\nexcept ImportError:\n    pytest.skip('not installed')"
+        assert _broad_skip_handlers(ast.parse(source)) == []

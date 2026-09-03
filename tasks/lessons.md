@@ -1,5 +1,21 @@
 # Lessons
 
+## 2026-09-03
+
+- Never catch a broad runtime exception in a test and translate it to
+  `pytest.skip`: that turns broken APIs, stale caches, schema drift, and import
+  shadowing into apparent environmental absence. Skip only a specifically
+  identified missing optional prerequisite; once it imports, let the original
+  failure fail loudly, and keep an AST meta-test preventing the broad pattern
+  from returning.
+- Put pytest options in the configuration file pytest actually loads. This repo
+  has `pytest.ini`, so a `[tool.pytest.ini_options]` block in `pyproject.toml` is
+  ignored; assert the effective option through `pytestconfig` rather than
+  merely checking configuration text.
+- When a focused fix needs its own PR while the main worktree is dirty, create a
+  clean worktree and branch directly from freshly fetched `origin/main`. Do not
+  mix, stash, or otherwise disturb the existing changes.
+
 ## 2026-08-26
 
 - State an ablation as a factorial, not "with vs without". Adding a corpus usually adds

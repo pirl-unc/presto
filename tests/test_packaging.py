@@ -57,6 +57,17 @@ def test_no_declared_package_is_missing_from_disk():
     assert stale == [], f"declared but not on disk: {stale}"
 
 
+def test_pytest_uses_importlib_mode(pytestconfig):
+    """Sibling checkout roots must not shadow their editable packages.
+
+    Pytest's default prepend mode puts the repository parent on ``sys.path``.
+    Given sibling ``presto/`` and ``hitlist/`` checkouts, ``import hitlist``
+    then resolves the latter checkout root as an empty namespace package and
+    never reaches its editable package finder.
+    """
+    assert pytestconfig.getoption("importmode") == "importlib"
+
+
 @pytest.mark.parametrize(
     "module",
     [
