@@ -376,8 +376,10 @@ class TestTheCorpusActuallySuppliesFlanks:
     measuring, and the code comments asserting "0% carry 15 residues" then went
     stale the moment hitlist raised its default.
 
-    So the claim is checked rather than written down. Skipped where hitlist is
-    absent (CI installs without the extra) or its corpus cannot be queried.
+    So the claim is checked rather than written down. It is skipped only where
+    hitlist is not installed (CI installs without the extra). Once the package
+    imports, a broken API, cache, schema, or corpus is the failure under test
+    and must fail loudly.
     """
 
     #: Coverage floors, well under the measured values on hitlist 1.55.2
@@ -391,21 +393,17 @@ class TestTheCorpusActuallySuppliesFlanks:
         hitlist = pytest.importorskip("hitlist")
         from presto.data.hitlist_source import training_columns
 
-        try:
-            return hitlist.generate_training_table(
-                include_evidence="ms",
-                columns=training_columns("ms", include_flanks=True),
-                map_source_proteins=True,
-            )
-        except Exception as exc:  # noqa: BLE001 - unbuilt index, missing download
-            pytest.skip(f"cannot query hitlist flanks: {exc}")
+        return hitlist.generate_training_table(
+            include_evidence="ms",
+            columns=training_columns("ms", include_flanks=True),
+            map_source_proteins=True,
+        )
 
     @pytest.mark.parametrize("mhc_class", sorted(MIN_COVERAGE))
     def test_both_flanks_are_present_for_most_rows(self, mhc_class):
         frame = self._frame()
         rows = frame[frame["mhc_class"].astype(str) == mhc_class]
-        if not len(rows):
-            pytest.skip(f"no class {mhc_class} rows in this corpus")
+        assert len(rows), f"hitlist corpus contains no class {mhc_class} rows"
         window = _model().excision_head.junction_window
         n_len = rows["n_flank"].fillna("").astype(str).str.len()
         c_len = rows["c_flank"].fillna("").astype(str).str.len()

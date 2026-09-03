@@ -9126,3 +9126,82 @@ config where nothing is suppressed except `__init__.py` re-exports.
 - The scripted splitter's continuation lines indent +4 from the statement
   rather than aligning under the opening quote. `ruff format` accepts both, so
   they are stable, but they read as scripted output.
+
+---
+
+# Fail-loud Hitlist integration tests (2026-09-03)
+
+## Problem and contract
+
+Default pytest collection inserts `/Users/iskander/code` ahead of editable
+package finders. On a machine with sibling source checkouts, `import hitlist`
+therefore resolves `/Users/iskander/code/hitlist` as an empty namespace package
+instead of loading `hitlist/hitlist/__init__.py`. Three corpus-contract tests
+catch every exception and turn this broken import into a skip, hiding loss of
+the class-I/class-II flank-coverage guards and the condition-vocabulary guard.
+
+The fix must make normal `pytest` resolve installed/editable packages
+consistently and must reserve skipping for a genuinely uninstalled optional
+dependency. Once Hitlist is importable, API, cache, schema, or corpus failures
+are test failures. The unrelated tensor-sharing strategy check may remain
+platform-skipped because macOS exposes no `file_descriptor` backend to exercise;
+production multi-worker loaders still invoke the Linux workaround whenever
+`num_workers > 0`.
+
+## Plan
+
+- [x] Reproduce and pin the import-shadowing failure independently of the local
+      Hitlist corpus, including proof that the resolved module is the real
+      distribution rather than a namespace package.
+- [x] Configure pytest's import mode at repository scope so ordinary local and
+      CI invocations use the same package resolution.
+- [x] Narrow the three corpus tests' skip boundary to missing Hitlist only;
+      allow broken API/import/cache/corpus behavior to fail with its original
+      diagnostic.
+- [x] Add focused regression tests for the fail-loud behavior so a future broad
+      `except Exception: pytest.skip(...)` cannot silently return.
+- [x] Run the three real corpus checks with default pytest, the focused unit
+      suite, lint/format checks, and the full suite; confirm only the genuine
+      platform skip remains.
+- [x] Review the final diff for minimality, record verification here, commit on
+      a clean branch from current `origin/main`, push, and open a dedicated PR.
+
+## Review
+
+### Verification
+
+- The two corpus contract classes run for real rather than skipping:
+  `TestTheCorpusActuallySuppliesFlanks` and `TestEveryCorpusCategoryIsMapped`
+  are 40 passed against Hitlist 1.55.8, resolved from
+  `~/code/hitlist/hitlist/__init__.py` -- the installed distribution, not the
+  checkout root as an empty namespace package.
+- `tests/test_test_quality.py` and `tests/test_packaging.py`: 27 passed,
+  including the fault-injection cases for the new broad-skip detector.
+- `lint.sh`: all checks passed, 219 files already formatted.
+- Full suite, same worktree and same source, import mode as the only variable:
+  `--import-mode=importlib` gives 14 failed / 1643 passed / 1 skipped, and
+  `--import-mode=prepend` gives 15 failed / 1642 passed / 1 skipped. The
+  failure sets are identical except that prepend additionally fails this
+  branch's own `test_pytest_uses_importlib_mode`, which is the assertion
+  working. The `pytest.ini` change therefore causes no collateral failure.
+- The single remaining skip in both runs is the intended platform one,
+  `tests/test_dataloader_sharing.py:31: platform offers only file_system
+  sharing`. No corpus test skips any more.
+
+### On the 14 failures seen from this worktree
+
+They do not belong to this branch. The editable install resolves `presto` to
+the absolute path `~/code/presto`, so a worktree runs its own `tests/` against
+the primary checkout's source. That checkout currently carries unrelated
+uncommitted source-junction-masking work, so this branch's `origin/main` tests
+were pairing with newer source. Running the same four modules
+(`test_flank_selection`, `test_hitlist_source`, `test_loaders`,
+`test_predictor`) in the primary checkout, where tests and source match, gives
+140 passed. Worth remembering: a worktree cannot independently validate source
+behavior under a path-pinned editable install.
+
+### Scope note
+
+The new `TestSkipsAreNarrow` guard is repo-wide. A future legitimate skip must
+name its unavailable prerequisite in the `except` clause rather than catching
+`Exception`, which is the intent but is a constraint on all contributors.
