@@ -5693,6 +5693,36 @@ def run(args: argparse.Namespace) -> None:
                 _resolve_output_tensor,
             )
 
+            # Score the model the run selected, not the one it stopped on.
+            #
+            # `args.checkpoint` holds the best-validation epoch; training then
+            # keeps going to `--epochs`. Evaluating the live model therefore
+            # reported the *last* epoch while stamping `best_val_loss` from a
+            # different one onto the same summary. On the 20260902b family that
+            # was epoch 10 against a minimum at epoch 7, val loss 0.5623 vs
+            # 0.5542 -- past the minimum and rising.
+            eval_model = model
+            if args.checkpoint and os.path.exists(args.checkpoint):
+                from presto.training.checkpointing import load_model_from_checkpoint
+
+                try:
+                    eval_model, checkpoint_payload = load_model_from_checkpoint(
+                        args.checkpoint, map_location=device
+                    )
+                    eval_model.to(device)
+                    eval_model.eval()
+                    best_epoch = checkpoint_payload.get("epoch")
+                    print(
+                        "Held-out evaluation uses the best-validation checkpoint"
+                        + (f" (epoch {best_epoch})" if best_epoch else "")
+                    )
+                except Exception as exc:  # noqa: BLE001 - fall back, but say so
+                    print(
+                        f"WARNING: could not reload {args.checkpoint} for held-out "
+                        f"evaluation ({exc}); scoring the final-epoch model instead"
+                    )
+                    eval_model = model
+
             def _forward(model_ref, batch_ref):
                 # Provenance must be passed here or the held-out pass scores a
                 # different function than training optimizes: without it every
@@ -5716,7 +5746,7 @@ def run(args: argparse.Namespace) -> None:
                 if split_loader is None:
                     continue
                 accumulators = collect_holdout_predictions(
-                    model=model,
+                    model=eval_model,
                     loader=split_loader,
                     device=device,
                     specs=LOSS_TASK_SPECS,

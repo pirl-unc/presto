@@ -1,7 +1,13 @@
 [
   {
+    "finished_at": "2026-09-03T19:21:19.729438+00:00",
+    "hardware": {
+      "hitlist_runtime_and_distribution": "1.55.8|1.55.8",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.95.05",
+      "requested_gpu": "H100!"
+    },
     "policy": "legacy_global_canonical",
-    "requested_gpu": "H100!",
+    "remote_run_dir": "/checkpoints/presto-flank-context-fix-20260903a-legacy-e010-s42",
     "required_files": [
       "config.json",
       "model.pt",
@@ -16,8 +22,10 @@
       "hardware.json"
     ],
     "run_id": "presto-flank-context-fix-20260903a-legacy-e010-s42",
+    "runtime_seconds": 4610.103293180466,
     "seed": 42,
-    "status": "launching"
+    "started_at": "2026-09-03T18:04:29.626189+00:00",
+    "status": "complete"
   },
   {
     "policy": "mask_unresolved",

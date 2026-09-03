@@ -101,3 +101,56 @@ class TestHoldoutForwardPassesProvenance:
         source = inspect.getsource(train_iedb)
         assert "holdout_error.json" in source
         assert "Held-out metric pass FAILED" in source
+
+
+class TestHoldoutScoresTheSelectedModel:
+    """Training selects a model; evaluation must score that one.
+
+    `--checkpoint` holds the best-validation epoch, and training then continues
+    to `--epochs`. The held-out pass was handed the live in-memory model, so it
+    reported the *last* epoch while `write_holdout_artifacts` stamped
+    `best_val_loss` -- from a different epoch -- onto the same summary. On the
+    2026-09-02 masked/s42 run the minimum was epoch 7 at val loss 0.5542 and
+    training stopped at epoch 10 on 0.5623, past the minimum and rising.
+
+    Nothing caught it because both models produce plausible numbers, and the
+    summary carried a label suggesting the right one had been used. Asserted
+    against the source for the same reason as the provenance test above: the
+    eval block is inline in `run()` and is not importable.
+    """
+
+    @staticmethod
+    def _eval_region():
+        import inspect as _inspect
+
+        import presto.scripts.train_iedb as train_iedb
+
+        from source_probe import region_between
+
+        return region_between(
+            _inspect.getsource(train_iedb),
+            "Score the model the run selected",
+            "payload = write_holdout_artifacts",
+            where="train_iedb",
+        )
+
+    def test_the_best_checkpoint_is_reloaded(self):
+        region = self._eval_region()
+        assert "load_model_from_checkpoint" in region, (
+            "the held-out pass stopped reloading the best checkpoint; it would "
+            "score whatever epoch training happened to stop on"
+        )
+
+    def test_the_reloaded_model_is_what_gets_scored(self):
+        """Reloading is useless if the call site still passes the live model."""
+        region = self._eval_region()
+        assert "model=eval_model" in region, (
+            "held-out predictions are being collected from the live model "
+            "again, not the reloaded best checkpoint"
+        )
+        assert "model=model," not in region
+
+    def test_a_failed_reload_is_announced_not_silent(self):
+        """Falling back to the final model is allowed; hiding it is not."""
+        region = self._eval_region()
+        assert "WARNING" in region and "final-epoch model" in region
