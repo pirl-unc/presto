@@ -692,3 +692,72 @@ class TestResolvedIsNaNSafe:
 
         assert _mapping_fields({"flank_context_resolved": True})["flank_context_resolved"] is True
         assert _mapping_fields({})["flank_context_resolved"] is False
+
+
+class TestMaskingUnmappedRowsChangesNothing:
+    """`unmapped` joined the unresolved set; that must not move any data.
+
+    Deriving resolved/unresolved from one table put `unmapped` in the
+    unresolved set for the first time, so the masking step now visits those
+    rows. It is a no-op by construction and this pins the construction:
+    `unmapped` means no candidate was *present*, and `_mapping_present_mask`
+    counts a non-empty flank as present -- so an unmapped row has no flank to
+    clear. If that ever stops holding, the two policies stop being paired.
+    """
+
+    @staticmethod
+    def _frame():
+        return pd.DataFrame(
+            [
+                {
+                    "evidence_row_id": "mapped",
+                    "gene_name": "G1",
+                    "gene_id": "G1",
+                    "protein_id": "P1",
+                    "transcript_id": "T1",
+                    "position": 10,
+                    "n_flank": "AAAA",
+                    "c_flank": "CCCC",
+                    "is_canonical_transcript": True,
+                },
+                {
+                    "evidence_row_id": "missed",
+                    "gene_name": "",
+                    "gene_id": "",
+                    "protein_id": "",
+                    "transcript_id": "",
+                    "position": None,
+                    "n_flank": "",
+                    "c_flank": "",
+                    "is_canonical_transcript": False,
+                },
+            ]
+        )
+
+    def test_the_two_policies_agree_on_unmapped_rows(self):
+        from presto.data.hitlist_source import _collapse_source_mappings
+
+        legacy, _ = _collapse_source_mappings(
+            self._frame(), source_mapping_policy="legacy_global_canonical"
+        )
+        masked, _ = _collapse_source_mappings(
+            self._frame(), source_mapping_policy="mask_unresolved"
+        )
+        legacy = legacy.set_index("evidence_row_id")
+        masked = masked.set_index("evidence_row_id")
+        assert legacy.loc["missed", "source_mapping_category"] == "unmapped"
+        for column in ("n_flank", "c_flank"):
+            assert legacy.loc["missed", column] == masked.loc["missed", column] == ""
+        # The resolved row is untouched by either policy.
+        for column in ("n_flank", "c_flank"):
+            assert legacy.loc["mapped", column] == masked.loc["mapped", column]
+
+    def test_an_unmapped_row_cannot_carry_a_flank(self):
+        """The invariant the no-op rests on."""
+        from presto.data.hitlist_source import _mapping_present_mask
+
+        frame = pd.DataFrame([{"n_flank": "AAAA", "c_flank": "", "position": None}])
+        assert _mapping_present_mask(frame).tolist() == [True], (
+            "a row with a flank must count as present, so it can never be "
+            "classified unmapped"
+        )
