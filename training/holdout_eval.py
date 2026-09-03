@@ -34,18 +34,30 @@ DEFAULT_BINDING_THRESHOLD_NM = 500.0
 
 
 def _rankdata(values: np.ndarray) -> np.ndarray:
-    """Average ranks, ties shared (the Spearman/AUROC convention)."""
+    """Average ranks, ties shared (the Spearman/AUROC convention).
+
+    Tie-averaging is vectorized rather than looped. The held-out summary now
+    recomputes this family per task, per synthetic-decoy kind, and per mapping
+    category -- tens of passes over the full split -- so an interpreted
+    per-element loop here set the cost of the whole evaluation.
+    """
+    n = len(values)
+    if n == 0:
+        return np.empty(0, dtype=float)
     order = np.argsort(values, kind="mergesort")
-    ranks = np.empty(len(values), dtype=float)
-    ranks[order] = np.arange(1, len(values) + 1, dtype=float)
-    # average tied ranks
     sorted_values = values[order]
-    start = 0
-    for i in range(1, len(values) + 1):
-        if i == len(values) or sorted_values[i] != sorted_values[start]:
-            if i - start > 1:
-                ranks[order[start:i]] = ranks[order[start:i]].mean()
-            start = i
+    # Start of each run of equal values, in sorted order.
+    is_start = np.empty(n, dtype=bool)
+    is_start[0] = True
+    np.not_equal(sorted_values[1:], sorted_values[:-1], out=is_start[1:])
+    starts = np.flatnonzero(is_start)
+    ends = np.append(starts[1:], n)
+    # A run covering sorted positions [s, e) holds 1-based ranks s+1..e, whose
+    # mean is (s + e + 1) / 2. `cumsum(is_start) - 1` maps each position to its
+    # run, so every tied element gets that mean in one scatter.
+    group_mean = (starts + ends + 1) / 2.0
+    ranks = np.empty(n, dtype=float)
+    ranks[order] = group_mean[np.cumsum(is_start) - 1]
     return ranks
 
 

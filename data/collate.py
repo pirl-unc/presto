@@ -411,11 +411,15 @@ class PrestoBatch:
     #: for each kind of synthetic decoy: mixing them yields AUPRC ~1.0 that
     #: measures peptide realism rather than presentation.
     sample_sources: List[str] = field(default_factory=list)
+    #: Diagnostics only: these never enter `model.forward`, they are read on
+    #: the host to stratify held-out metrics. Plain lists rather than tensors
+    #: for exactly that reason -- as tensors they were copied to the device
+    #: every step and pulled straight back per task during eval.
     source_mapping_categories: List[str] = field(default_factory=list)
-    source_mapping_n_candidates: Optional[torch.Tensor] = None
-    source_mapping_n_genes: Optional[torch.Tensor] = None
-    source_mapping_n_flank_pairs: Optional[torch.Tensor] = None
-    flank_context_resolved: Optional[torch.Tensor] = None
+    source_mapping_n_candidates: List[int] = field(default_factory=list)
+    source_mapping_n_genes: List[int] = field(default_factory=list)
+    source_mapping_n_flank_pairs: List[int] = field(default_factory=list)
+    flank_context_resolved: List[bool] = field(default_factory=list)
     targets: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_masks: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_quals: Dict[str, torch.Tensor] = field(default_factory=dict)
@@ -468,10 +472,10 @@ class PrestoBatch:
             sample_ids=self.sample_ids,
             sample_sources=self.sample_sources,
             source_mapping_categories=self.source_mapping_categories,
-            source_mapping_n_candidates=_move(self.source_mapping_n_candidates),
-            source_mapping_n_genes=_move(self.source_mapping_n_genes),
-            source_mapping_n_flank_pairs=_move(self.source_mapping_n_flank_pairs),
-            flank_context_resolved=_move(self.flank_context_resolved),
+            source_mapping_n_candidates=self.source_mapping_n_candidates,
+            source_mapping_n_genes=self.source_mapping_n_genes,
+            source_mapping_n_flank_pairs=self.source_mapping_n_flank_pairs,
+            flank_context_resolved=self.flank_context_resolved,
             targets={name: _move(tensor) for name, tensor in self.targets.items()},
             target_masks={name: _move(tensor) for name, tensor in self.target_masks.items()},
             target_quals={name: _move(tensor) for name, tensor in self.target_quals.items()},
@@ -1894,18 +1898,10 @@ class PrestoCollator:
             sample_ids=[s.sample_id for s in samples],
             sample_sources=[s.sample_source or "" for s in samples],
             source_mapping_categories=[s.source_mapping_category or "" for s in samples],
-            source_mapping_n_candidates=torch.tensor(
-                [int(s.source_mapping_n_candidates) for s in samples], dtype=torch.long
-            ),
-            source_mapping_n_genes=torch.tensor(
-                [int(s.source_mapping_n_genes) for s in samples], dtype=torch.long
-            ),
-            source_mapping_n_flank_pairs=torch.tensor(
-                [int(s.source_mapping_n_flank_pairs) for s in samples], dtype=torch.long
-            ),
-            flank_context_resolved=torch.tensor(
-                [bool(s.flank_context_resolved) for s in samples], dtype=torch.bool
-            ),
+            source_mapping_n_candidates=[int(s.source_mapping_n_candidates) for s in samples],
+            source_mapping_n_genes=[int(s.source_mapping_n_genes) for s in samples],
+            source_mapping_n_flank_pairs=[int(s.source_mapping_n_flank_pairs) for s in samples],
+            flank_context_resolved=[bool(s.flank_context_resolved) for s in samples],
             targets=targets,
             target_masks=target_masks,
             target_quals=target_quals,

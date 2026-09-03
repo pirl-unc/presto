@@ -1928,6 +1928,8 @@ class PrestoDataset(Dataset):
                     peptide=rec.peptide,
                     flank_n=rec.flank_n or None,
                     flank_c=rec.flank_c or None,
+                    flank_n_is_terminus=rec.flank_n_is_terminus,
+                    flank_c_is_terminus=rec.flank_c_is_terminus,
                     mhc_a=mhc_a_seq,
                     mhc_b=mhc_b_seq,
                     mhc_class=mhc_class,
@@ -2033,6 +2035,8 @@ class PrestoDataset(Dataset):
                     peptide=rec.peptide,
                     flank_n=rec.flank_n,
                     flank_c=rec.flank_c,
+                    flank_n_is_terminus=rec.flank_n_is_terminus,
+                    flank_c_is_terminus=rec.flank_c_is_terminus,
                     mhc_a=mhc_a_seq,
                     mhc_b=mhc_b_seq,
                     mhc_class=mhc_class,
@@ -2107,6 +2111,8 @@ class PrestoDataset(Dataset):
                     peptide=rec.peptide,
                     flank_n=rec.flank_n or None,
                     flank_c=rec.flank_c or None,
+                    flank_n_is_terminus=rec.flank_n_is_terminus,
+                    flank_c_is_terminus=rec.flank_c_is_terminus,
                     mhc_a=mhc_a_seq,
                     mhc_b=mhc_b_seq,
                     mhc_class=mhc_class,
@@ -4466,13 +4472,18 @@ def peptide_grouped_three_way_split_indices(
     """
     val_fraction = float(val_fraction)
     test_fraction = float(test_fraction)
+    if test_fraction == 0.0:
+        # Delegate before validating: the two-way helper accepts fractions this
+        # one rejects (it clamps with `max(1, ...)`, so `--val-frac 0` yields a
+        # one-row validation split), and it is the source of truth for the
+        # no-test case. Validating first turned a working command line into a
+        # crash after the whole corpus had been loaded.
+        train, val = peptide_grouped_split_indices(dataset, val_fraction, seed)
+        return train, val, []
     if val_fraction <= 0.0 or test_fraction < 0.0:
         raise ValueError("val_fraction must be > 0 and test_fraction must be >= 0")
     if val_fraction + test_fraction >= 1.0:
         raise ValueError("val_fraction + test_fraction must be < 1")
-    if test_fraction == 0.0:
-        train, val = peptide_grouped_split_indices(dataset, val_fraction, seed)
-        return train, val, []
 
     peptide_groups: Dict[str, List[int]] = defaultdict(list)
     for index in range(len(dataset)):
@@ -4484,7 +4495,14 @@ def peptide_grouped_three_way_split_indices(
         )
 
     peptides = sorted(peptide_groups)
-    random.Random(seed + 53).shuffle(peptides)
+    # A different stream from the two-way helper's `seed + 53`, deliberately.
+    # Sharing it made the test set a subset of the validation set: both shuffle
+    # the same sorted peptides identically, the two-way helper fills validation
+    # from the front and this one fills *test* from the front, so at a given
+    # seed every held-out test peptide had already been used to select models
+    # in earlier `--test-frac 0` runs. The test split has to be drawn
+    # independently of the split that tuning saw.
+    random.Random(seed + 101).shuffle(peptides)
     target_test_rows = max(1, int(len(dataset) * test_fraction))
     target_val_rows = max(1, int(len(dataset) * val_fraction))
 

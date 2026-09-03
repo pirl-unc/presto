@@ -4487,6 +4487,8 @@ def run(args: argparse.Namespace) -> None:
                 print(f"    {assay}: {count}")
             for family, coverage in hitlist_stats["flank_coverage"].items():
                 print(f"    flank coverage [{family}]: {coverage:.1%}")
+            for family, resolved in hitlist_stats.get("flank_resolution", {}).items():
+                print(f"    flank resolution [{family}]: {resolved:.1%}")
             print(
                 "    skipped: "
                 f"no_numeric_value={hitlist_stats['skipped_no_numeric_value']}, "
@@ -4590,6 +4592,8 @@ def run(args: argparse.Namespace) -> None:
             print(f"    {assay}: {count}")
         for family, coverage in hitlist_stats["flank_coverage"].items():
             print(f"    flank coverage [{family}]: {coverage:.1%}")
+        for family, resolved in hitlist_stats.get("flank_resolution", {}).items():
+            print(f"    flank resolution [{family}]: {resolved:.1%}")
         print("    note: T-cell / TCR / processing are absent in hitlist-only mode")
     else:
         if getattr(args, "require_merged_input", True):
@@ -5181,6 +5185,20 @@ def run(args: argparse.Namespace) -> None:
         raise RuntimeError(f"Need at least {minimum_samples} samples for the requested split.")
 
     split_mode = str(getattr(args, "split_mode", "peptide_group"))
+    if split_mode == "peptide_group" and test_fraction > 0.0:
+        # A peptide-grouped split partitions *peptides*, so the row count above
+        # is the wrong precondition: a thousand rows of two distinct peptides
+        # passes it and then fails inside the splitter. Check what the split
+        # actually needs, and say so.
+        distinct_peptides = len(
+            {str(dataset[i].peptide).strip().upper() for i in range(len(dataset))}
+        )
+        if distinct_peptides < 3:
+            raise RuntimeError(
+                f"A peptide-disjoint train/validation/test split needs at least three "
+                f"distinct peptides; this corpus has {distinct_peptides}. "
+                f"Use --test-frac 0 or --split-mode random_rows."
+            )
     if split_mode == "peptide_group":
         train_indices, val_indices, test_indices = peptide_grouped_three_way_split_indices(
             dataset, float(args.val_frac), test_fraction, args.seed

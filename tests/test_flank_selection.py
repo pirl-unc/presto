@@ -161,7 +161,7 @@ class TestIngestRecordsAmbiguity:
         assert stats["rows_with_disagreeing_flanks"] == 1
         assert stats["max_proteins_for_one_row"] == 2
 
-        collapsed = _select_best_mapping(frame)
+        collapsed = _select_best_mapping(frame, source_mapping_policy="legacy_global_canonical")
         assert len(collapsed) == 2, "one row per evidence row after collapse"
         assert mapping_ambiguity_stats(collapsed)["rows_with_disagreeing_flanks"] == 0, (
             "after collapsing the alternatives are gone, which is why the "
@@ -240,8 +240,10 @@ class TestProductionMappingPolicy:
             ("missing_ids", "within_gene_unresolved"),
         ):
             assert rows.loc[evidence_id, "source_mapping_category"] == category
-            assert rows.loc[evidence_id, "n_flank"] == "?"
-            assert rows.loc[evidence_id, "c_flank"] == "?"
+            # Cleared, not marked. The unknown-context embedding comes from
+            # padding the flank window, not from a residue in the string.
+            assert rows.loc[evidence_id, "n_flank"] == ""
+            assert rows.loc[evidence_id, "c_flank"] == ""
             assert bool(rows.loc[evidence_id, "flank_context_resolved"]) is False
             assert rows.loc[evidence_id, "position"] != rows.loc[evidence_id, "position"]
 
@@ -397,9 +399,9 @@ class TestDropUnresolvedFlankRows:
                 },
             ]
         )
-        kept = _select_best_mapping(frame)
+        kept = _select_best_mapping(frame, source_mapping_policy="mask_unresolved")
         assert len(kept) == 1
-        assert kept.iloc[0]["n_flank"] == "?"
+        assert kept.iloc[0]["n_flank"] == ""
         assert kept.iloc[0]["source_mapping_category"] == "within_gene_unresolved"
         assert "_unresolved_flank" not in kept.columns
 
@@ -426,3 +428,51 @@ class TestXIsAbsentFromTrainingData:
         from presto.data.sequence_augmentation import UNKNOWN_RESIDUE
 
         assert UNRESOLVED_RESIDUE == UNKNOWN_RESIDUE == "X"
+
+
+class TestResolutionIsDefinedOnce:
+    """Three copies of "which categories are resolved" had already drifted.
+
+    `select_source_mapping` asserted it per branch, `hitlist_source` re-derived
+    it as a set comprehension that omitted `expression_resolved`, and
+    `UNRESOLVED_MAPPING_CATEGORIES` was a third set that was the complement of
+    neither -- leaving `unmapped` in none of them. Adding a category meant
+    editing three places with nothing tying them together.
+    """
+
+    def test_every_category_has_a_resolution_verdict(self):
+        from presto.data.flank_selection import (
+            MAPPING_CATEGORIES,
+            MAPPING_CATEGORY_RESOLVED,
+        )
+
+        assert set(MAPPING_CATEGORIES) == set(MAPPING_CATEGORY_RESOLVED)
+
+    def test_the_two_sets_partition_the_categories(self):
+        from presto.data.flank_selection import (
+            MAPPING_CATEGORIES,
+            RESOLVED_MAPPING_CATEGORIES,
+            UNRESOLVED_MAPPING_CATEGORIES,
+        )
+
+        assert not (RESOLVED_MAPPING_CATEGORIES & UNRESOLVED_MAPPING_CATEGORIES)
+        assert RESOLVED_MAPPING_CATEGORIES | UNRESOLVED_MAPPING_CATEGORIES == set(
+            MAPPING_CATEGORIES
+        )
+
+    def test_expression_resolved_counts_as_resolved(self):
+        """The copy in `hitlist_source` left this one out."""
+        from presto.data.flank_selection import (
+            MAPPING_CATEGORY_EXPRESSION_RESOLVED,
+            RESOLVED_MAPPING_CATEGORIES,
+        )
+
+        assert MAPPING_CATEGORY_EXPRESSION_RESOLVED in RESOLVED_MAPPING_CATEGORIES
+
+    def test_an_unmapped_peptide_has_no_resolved_junction(self):
+        from presto.data.flank_selection import (
+            MAPPING_CATEGORY_UNMAPPED,
+            UNRESOLVED_MAPPING_CATEGORIES,
+        )
+
+        assert MAPPING_CATEGORY_UNMAPPED in UNRESOLVED_MAPPING_CATEGORIES

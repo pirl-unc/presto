@@ -28,9 +28,11 @@ from typing import Optional
 
 from .vocab import ENCODABLE_RESIDUES
 
-#: What an undetermined flank looks like. One character is enough: the window
-#: extractor pads the rest of the window with the same marker.
-UNKNOWN_FLANK = "?"
+#: What an undetermined flank looks like on a sample: absent. The model
+#: supplies the unknown-context embedding from the tensor side, padding the
+#: window with `?` (`Presto._pad_for_side`), so no sentinel belongs in the
+#: sequence string itself.
+UNKNOWN_FLANK = None
 
 #: What an unresolved residue looks like.
 UNKNOWN_RESIDUE = "X"

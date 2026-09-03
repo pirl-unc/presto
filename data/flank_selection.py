@@ -64,10 +64,6 @@ SELECTION_BASES = (
 #: `drop_unresolved_flank_rows`.
 UNRESOLVED_RESIDUE = "X"
 
-#: Structural marker for "source mapping was attempted but the junction could
-#: not be resolved". Unlike an empty flank, this records a known uncertainty.
-UNKNOWN_FLANK_CONTEXT = "?"
-
 MAPPING_CATEGORY_SINGLE = "single"
 MAPPING_CATEGORY_FLANKS_AGREE = "flanks_agree"
 MAPPING_CATEGORY_WITHIN_GENE_CANONICAL = "within_gene_canonical"
@@ -76,21 +72,34 @@ MAPPING_CATEGORY_CROSS_GENE_UNRESOLVED = "cross_gene_unresolved"
 MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED = "within_gene_unresolved"
 MAPPING_CATEGORY_UNMAPPED = "unmapped"
 
-MAPPING_CATEGORIES = (
-    MAPPING_CATEGORY_SINGLE,
-    MAPPING_CATEGORY_FLANKS_AGREE,
-    MAPPING_CATEGORY_WITHIN_GENE_CANONICAL,
-    MAPPING_CATEGORY_EXPRESSION_RESOLVED,
-    MAPPING_CATEGORY_CROSS_GENE_UNRESOLVED,
-    MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED,
-    MAPPING_CATEGORY_UNMAPPED,
+#: Whether each category means "we know which junction this peptide came
+#: from". One table, because this fact was previously written down three
+#: times -- once per branch of `select_source_mapping`, once as a set
+#: comprehension in `hitlist_source`, and once as
+#: `UNRESOLVED_MAPPING_CATEGORIES` -- and the three had already drifted:
+#: the `hitlist_source` copy omitted `expression_resolved`, and `unmapped`
+#: was in neither the resolved set nor the unresolved one.
+MAPPING_CATEGORY_RESOLVED = {
+    MAPPING_CATEGORY_SINGLE: True,
+    MAPPING_CATEGORY_FLANKS_AGREE: True,
+    MAPPING_CATEGORY_WITHIN_GENE_CANONICAL: True,
+    MAPPING_CATEGORY_EXPRESSION_RESOLVED: True,
+    MAPPING_CATEGORY_CROSS_GENE_UNRESOLVED: False,
+    MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED: False,
+    MAPPING_CATEGORY_UNMAPPED: False,
+}
+
+MAPPING_CATEGORIES = tuple(MAPPING_CATEGORY_RESOLVED)
+
+RESOLVED_MAPPING_CATEGORIES = frozenset(
+    category for category, resolved in MAPPING_CATEGORY_RESOLVED.items() if resolved
 )
 
+#: Categories whose junction is not known. `unmapped` belongs here: a peptide
+#: with no source protein at all has no junction context, and masking it is
+#: the same statement as masking an ambiguous one.
 UNRESOLVED_MAPPING_CATEGORIES = frozenset(
-    {
-        MAPPING_CATEGORY_CROSS_GENE_UNRESOLVED,
-        MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED,
-    }
+    category for category, resolved in MAPPING_CATEGORY_RESOLVED.items() if not resolved
 )
 
 #: Production behavior and its explicit experimental comparator. The legacy
@@ -198,9 +207,7 @@ def select_source_mapping(
             return float("inf")
 
     def _usable_canonical(subset: Sequence[Mapping[str, Any]]):
-        canonical_rows = [
-            row for row in subset if _truthy(row.get("is_canonical_transcript"))
-        ]
+        canonical_rows = [row for row in subset if _truthy(row.get("is_canonical_transcript"))]
         sources = {_source_key(row) for row in canonical_rows} - {""}
         pairs = {_flank_pair(row) for row in canonical_rows}
         if len(sources) == 1 and len(pairs) == 1:
@@ -212,9 +219,10 @@ def select_source_mapping(
         *,
         basis: str,
         category: str,
-        resolved: bool,
         expression_score: Optional[float] = None,
     ) -> FlankChoice:
+        # Resolution follows from the category; it is not a second, separately
+        # asserted fact that a call site could get wrong.
         return FlankChoice(
             mapping=row,
             n_candidates=len(rows),
@@ -224,7 +232,7 @@ def select_source_mapping(
             n_genes=n_genes,
             n_flank_pairs=len(distinct_flanks),
             category=category,
-            flank_context_resolved=resolved,
+            flank_context_resolved=MAPPING_CATEGORY_RESOLVED[category],
         )
 
     # Deterministic baseline order, so every rule below breaks ties the same
@@ -243,7 +251,6 @@ def select_source_mapping(
             rows[0],
             basis="deterministic_order",
             category=MAPPING_CATEGORY_SINGLE,
-            resolved=True,
         )
 
     if agree:
@@ -252,7 +259,6 @@ def select_source_mapping(
             canonical or rows[0],
             basis="canonical_transcript" if canonical else "deterministic_order",
             category=MAPPING_CATEGORY_FLANKS_AGREE,
-            resolved=True,
         )
 
     if expression:
@@ -273,9 +279,7 @@ def select_source_mapping(
             if len(best_genes) == 1:
                 best_gene = next(iter(best_genes))
                 gene_rows = [
-                    row
-                    for row in rows
-                    if str(row.get(gene_field) or "").strip() == best_gene
+                    row for row in rows if str(row.get(gene_field) or "").strip() == best_gene
                 ]
                 gene_pairs = {_flank_pair(row) for row in gene_rows}
                 canonical = _usable_canonical(gene_rows)
@@ -284,7 +288,6 @@ def select_source_mapping(
                         canonical or gene_rows[0],
                         basis="expression",
                         category=MAPPING_CATEGORY_EXPRESSION_RESOLVED,
-                        resolved=True,
                         expression_score=float(best_score),
                     )
 
@@ -295,7 +298,6 @@ def select_source_mapping(
                 canonical,
                 basis="canonical_transcript",
                 category=MAPPING_CATEGORY_WITHIN_GENE_CANONICAL,
-                resolved=True,
             )
         category = MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED
     elif n_genes > 1:
@@ -306,5 +308,4 @@ def select_source_mapping(
         rows[0],
         basis="deterministic_order",
         category=category,
-        resolved=False,
     )
