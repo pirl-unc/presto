@@ -165,14 +165,26 @@ class TestPrestoReportsMhcseqsUnchanged:
 class TestClassIIUsesBothChains:
     """Alpha supplies the first groove half, beta the second."""
 
-    @staticmethod
-    def _pair():
-        mhcseqs = pytest.importorskip("mhcseqs")
-        alpha = mhcseqs.lookup("HLA-DRA*01:01")
-        beta = mhcseqs.lookup("HLA-DRB1*01:01")
-        if not (alpha.ok and beta.ok):
-            pytest.skip("mhcseqs cannot resolve the DR reference pair")
-        return alpha.sequence, beta.sequence
+    #: Real HLA-DRA*01:01 / DRB1*01:01 chains, inlined rather than looked up.
+    #: `mhcseqs.lookup` needs a built corpus (`mhcseqs build`) that CI does not
+    #: have, and a fixture that skips when the data is missing tests nothing on
+    #: the machine where it matters most.
+    DRA = (
+        "MAISGVPVLGFFIIAVLMSAQESWAIKEEHVIIQAEFYLNPDQSGEFMFDFDGDEIFHVDMAKKETVWRLEEFGRFASFEAQGA"
+        "LANIAVDKANLEIMTKRSNYTPITNVPPEVTVLTNSPVELREPNVLICFIDKFTPPVVNVTWLRNGKPVTTGVSETVFLPREDH"
+        "LFRKFHYLPFLPSTEDVYDCRVEHWGLDEPLLKHWEFDAPSPLPETTENVVCALGLTVGLVGIIIGTIFIIKGVRKSNAAERRG"
+        "PL"
+    )
+    DRB = (
+        "MVCLKLPGGSCMTALTVTLMVLSSPLALAGDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGR"
+        "PDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRRVEPKVTVYPSKTQPLQHHNLLVCSVSGFYPGSIEVRWFRNGQEEK"
+        "AGVVSTGLIQNGDWTFQTLVMLETVPRSGEVYTCQVEHPSVTSPLTVEWRARSESAQSKMLSGVGGFVLGLLFLGAGLFIYFRN"
+        "QKGHSGLQPTGFLS"
+    )
+
+    @classmethod
+    def _pair(cls):
+        return cls.DRA, cls.DRB
 
     def test_each_half_comes_from_its_own_chain(self):
         alpha_seq, beta_seq = self._pair()

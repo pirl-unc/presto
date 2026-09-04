@@ -126,11 +126,21 @@ class TestPredictPresentation:
         on a sequence with no domains at all. mhcseqs declines it, correctly,
         which is the whole point of delegating to it.
         """
-        mhcseqs = pytest.importorskip("mhcseqs")
-        alpha = mhcseqs.lookup("HLA-DRA*01:01")
-        beta = mhcseqs.lookup("HLA-DRB1*01:01")
-        if not (alpha.ok and beta.ok):
-            pytest.skip("mhcseqs cannot resolve the DR reference pair")
+        # Inlined real chains: `mhcseqs.lookup` needs a built corpus that CI
+        # does not have, and skipping there would leave this untested exactly
+        # where regressions land.
+        alpha_seq = (
+            "MAISGVPVLGFFIIAVLMSAQESWAIKEEHVIIQAEFYLNPDQSGEFMFDFDGDEIFHVDMAKKETVWRLEEFGRFASFEAQGA"
+            "LANIAVDKANLEIMTKRSNYTPITNVPPEVTVLTNSPVELREPNVLICFIDKFTPPVVNVTWLRNGKPVTTGVSETVFLPREDH"
+            "LFRKFHYLPFLPSTEDVYDCRVEHWGLDEPLLKHWEFDAPSPLPETTENVVCALGLTVGLVGIIIGTIFIIKGVRKSNAAERRG"
+            "PL"
+        )
+        beta_seq = (
+            "MVCLKLPGGSCMTALTVTLMVLSSPLALAGDTRPRFLWQLKFECHFFNGTERVRLLERCIYNQEESVRFDSDVGEYRAVTELGR"
+            "PDAEYWNSQKDLLEQRRAAVDTYCRHNYGVGESFTVQRRVEPKVTVYPSKTQPLQHHNLLVCSVSGFYPGSIEVRWFRNGQEEK"
+            "AGVVSTGLIQNGDWTFQTLVMLETVPRSGEVYTCQVEHPSVTSPLTVEWRARSESAQSKMLSGVGGFVLGLLFLGAGLFIYFRN"
+            "QKGHSGLQPTGFLS"
+        )
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         predictor = Predictor(
@@ -138,13 +148,13 @@ class TestPredictPresentation:
             device="cpu",
             auto_load_index_csv=False,
             allele_sequences={
-                "HLA-DRA*01:01": alpha.sequence,
-                "HLA-DRB1*01:01": beta.sequence,
+                "HLA-DRA*01:01": alpha_seq,
+                "HLA-DRB1*01:01": beta_seq,
             },
         )
         prepared = prepare_mhc_input(
-            mhc_a=alpha.sequence,
-            mhc_b=beta.sequence,
+            mhc_a=alpha_seq,
+            mhc_b=beta_seq,
             mhc_class="II",
         )
         assert prepared.groove_half_1 and prepared.groove_half_2, (
