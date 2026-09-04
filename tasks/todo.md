@@ -9610,4 +9610,6 @@ diagnostic support artifacts are emitted for every run with a run directory.
   were both `d79853d`. GitHub reported no PR associated with
   `claude/restore-unmapped-masking` and no open PRs in `pirl-unc/presto`, so
   there was no active or stacked PR to update. This change set is prepared as a
-  dedicated PR from that branch rather than stacked on another change.
+  dedicated PR from that branch rather than stacked on another change. It was
+  committed as `1e01aee`, pushed, and opened as PR
+  [#45](https://github.com/pirl-unc/presto/pull/45).
