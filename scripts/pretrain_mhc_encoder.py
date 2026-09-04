@@ -25,7 +25,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset, Sampler
 
 from presto.data.allele_resolver import normalize_species_label
-from presto.data.groove import parse_class_i, parse_class_ii_alpha, parse_class_ii_beta
+from presto.data.groove import groove_record
 from presto.data.loaders import MHC_ALLOWED_AA
 from presto.data.mhc_index import infer_fine_chain_type, load_mhc_index
 from presto.data.tokenizer import Tokenizer
@@ -154,21 +154,21 @@ def _record_groove_halves(record: Any, chain_type: str) -> Tuple[str, str]:
     if chain_type == "MHC_I":
         if half_1 and half_2:
             return half_1, half_2
-        parsed = parse_class_i(sequence)
+        parsed = groove_record(sequence, mhc_class="I", chain="alpha")
         if parsed.ok:
             return parsed.groove_half_1, parsed.groove_half_2
         return "", ""
     if chain_type == "MHC_IIa":
         if half_1:
             return half_1, ""
-        parsed = parse_class_ii_alpha(sequence)
+        parsed = groove_record(sequence, mhc_class="II", chain="alpha")
         if parsed.ok:
             return parsed.groove_half_1, ""
         return "", ""
     if chain_type == "MHC_IIb":
         if half_2:
             return "", half_2
-        parsed = parse_class_ii_beta(sequence)
+        parsed = groove_record(sequence, mhc_class="II", chain="beta")
         if parsed.ok:
             return "", parsed.groove_half_2
         return "", ""

@@ -118,20 +118,37 @@ class TestPredictPresentation:
         return Predictor(model, device="cpu")
 
     def test_resolve_class_ii_dr_beta_only_uses_default_dra(self):
+        """A DR beta allele on its own pairs with the default DRA.
+
+        Real chains, not `"D" * 181`. The old cysteine-anchored parser
+        truncated any string to roughly groove length and called the result a
+        groove, so poly-D stood in for a real alpha chain and this test passed
+        on a sequence with no domains at all. mhcseqs declines it, correctly,
+        which is the whole point of delegating to it.
+        """
+        mhcseqs = pytest.importorskip("mhcseqs")
+        alpha = mhcseqs.lookup("HLA-DRA*01:01")
+        beta = mhcseqs.lookup("HLA-DRB1*01:01")
+        if not (alpha.ok and beta.ok):
+            pytest.skip("mhcseqs cannot resolve the DR reference pair")
+
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         predictor = Predictor(
             model,
             device="cpu",
             auto_load_index_csv=False,
             allele_sequences={
-                "HLA-DRA*01:01": "D" * 181,
-                "HLA-DRB1*01:01": "E" * 181,
+                "HLA-DRA*01:01": alpha.sequence,
+                "HLA-DRB1*01:01": beta.sequence,
             },
         )
         prepared = prepare_mhc_input(
-            mhc_a="D" * 181,
-            mhc_b="E" * 181,
+            mhc_a=alpha.sequence,
+            mhc_b=beta.sequence,
             mhc_class="II",
+        )
+        assert prepared.groove_half_1 and prepared.groove_half_2, (
+            "fixture must supply parseable chains, or this asserts nothing"
         )
 
         mhc_a_seq, mhc_b_seq = predictor._resolve_mhc_pair_sequences(

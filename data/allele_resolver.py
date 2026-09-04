@@ -247,12 +247,22 @@ def normalize_mhc_class(value: Optional[str], default: Optional[str] = None) -> 
         return default
     normalized = str(value).strip().upper().replace("_", "").replace(" ", "")
     normalized = normalized.replace("/", "").replace("*", "")
-    if normalized in _MHC_CLASS_I_ALIASES or (
-        normalized.startswith("I") and not normalized.startswith("II")
-    ):
+    if normalized in _MHC_CLASS_I_ALIASES:
         return "I"
-    if normalized in _MHC_CLASS_II_ALIASES or normalized.startswith("II"):
+    if normalized in _MHC_CLASS_II_ALIASES:
         return "II"
+    # Prefix fallback for subclass labels the alias tables do not enumerate
+    # ("Ia1" and friends). Longest prefix first, and a suffix that continues
+    # the Roman numeral is a *different* class, not a subclass of this one:
+    # "III" is complement/TNF and "IV" is not an MHC class at all, but
+    # `startswith` matched them as II and I respectively and handed
+    # non-antigen-presenting loci to a groove parser. See presto#42.
+    for prefix, label in (("II", "II"), ("I", "I")):
+        if normalized.startswith(prefix):
+            suffix = normalized[len(prefix) :]
+            if suffix[:1] in {"I", "V", "X"}:
+                return default
+            return label
     return default
 
 
