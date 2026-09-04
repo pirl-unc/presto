@@ -1097,12 +1097,58 @@ def create_parser() -> argparse.ArgumentParser:
         ),
     )
     train_iedb.add_argument(
+        "--data-seed",
+        type=int,
+        default=None,
+        help=(
+            "Base seed for record caps and synthetic-data generation; defaults to "
+            "--seed. Pin it across model seeds for controlled sweeps."
+        ),
+    )
+    train_iedb.add_argument(
+        "--exclude-target",
+        action="append",
+        choices=["kon", "koff", "t_half", "tm"],
+        default=[],
+        help=(
+            "Explicitly remove an under-supported quantitative target before splitting; "
+            "repeat for multiple targets."
+        ),
+    )
+    train_iedb.add_argument(
         "--synthetic-pmhc-negative-ratio",
         type=float,
         default=1.0,
         help=(
             "Primary synthetic non-binding pMHC ratio per real binding sample "
-            "(also drives downstream elution/T-cell synthetic negatives)"
+            "(also sets downstream defaults unless explicitly overridden)"
+        ),
+    )
+    train_iedb.add_argument(
+        "--synthetic-elution-negative-ratio",
+        type=float,
+        default=None,
+        help=(
+            "Synthetic elution decoys per real elution row; default derives from "
+            "--synthetic-pmhc-negative-ratio."
+        ),
+    )
+    train_iedb.add_argument(
+        "--synthetic-cascade-elution-negative-ratio",
+        type=float,
+        default=None,
+        help=(
+            "Binding-negative rows to cascade into elution; default derives from "
+            "--synthetic-pmhc-negative-ratio."
+        ),
+    )
+    train_iedb.add_argument(
+        "--synthetic-cascade-tcell-negative-ratio",
+        type=float,
+        default=None,
+        help=(
+            "Binding-negative rows to cascade into T-cell supervision; default derives from "
+            "--synthetic-pmhc-negative-ratio."
         ),
     )
     train_iedb.add_argument(
@@ -1137,6 +1183,57 @@ def create_parser() -> argparse.ArgumentParser:
         type=float,
         default=0.0,
         help="Held-out test fraction (0 disables; peptide-disjoint when enabled)",
+    )
+    train_iedb.add_argument(
+        "--require-split-target",
+        action="append",
+        default=[],
+        help="Require this collated target in every requested split; repeat as needed.",
+    )
+    train_iedb.add_argument(
+        "--require-all-active-target-support",
+        action="store_true",
+        help="Require every target present anywhere in the dataset to occur in every split.",
+    )
+    train_iedb.add_argument(
+        "--require-binary-balance-target",
+        action="append",
+        default=[],
+        help="Require both positive and negative examples for this target in every split.",
+    )
+    train_iedb.add_argument(
+        "--require-all-active-binary-balance",
+        action="store_true",
+        help="Require both classes for every active binary target in every split.",
+    )
+    train_iedb.add_argument(
+        "--min-split-target-support",
+        type=int,
+        default=1,
+        help="Minimum examples per required target and split.",
+    )
+    train_iedb.add_argument(
+        "--require-traceable-lineage",
+        action="store_true",
+        help=(
+            "Require stable observation identity and complete selected-mapping lineage "
+            "for mapped source rows."
+        ),
+    )
+    train_iedb.add_argument(
+        "--forbid-fake-null-sequences",
+        action="store_true",
+        help="Fail if an optional sequence is the valid-looking null artifact NAN.",
+    )
+    train_iedb.add_argument(
+        "--expected-split-support-sha256",
+        default=None,
+        help="Require the exact split-support fingerprint produced by a prior preflight.",
+    )
+    train_iedb.add_argument(
+        "--data-preflight-only",
+        action="store_true",
+        help="Build, split, audit, and gate the dataset, then exit before model training.",
     )
     train_iedb.add_argument("--epochs", type=int, default=5, help="Number of epochs")
     train_iedb.add_argument("--batch_size", type=int, default=512, help="Batch size")

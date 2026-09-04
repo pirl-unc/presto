@@ -16,8 +16,10 @@ from presto.data.mhc_index import AUGMENTED_INDEX_FIELDS
 from presto.data.loaders import (
     BindingRecord,
     ElutionRecord,
+    KineticsRecord,
     MIN_MHC_CHAIN_LENGTH,
     ProcessingRecord,
+    StabilityRecord,
     TCellRecord,
 )
 from presto.scripts.train_iedb import (
@@ -28,11 +30,13 @@ from presto.scripts.train_iedb import (
     _audit_mhc_sequence_coverage,
     _collect_unique_alleles,
     _effective_mhc_augmentation_sample_limit,
+    _exclude_sparse_record_targets,
     _filter_records_to_resolved_mhc,
     _force_opposite_anchors,
     _generate_mhc_only_samples,
     _opposite_residues,
     _resolve_run_args,
+    _resolve_synthetic_negative_ratios,
     _scramble_peptide_with_anchor_changes,
     _write_mhc_sequence_coverage_report,
     audit_loaded_mhc_sequence_quality,
@@ -52,6 +56,76 @@ from presto.scripts.train_iedb import (
     resolve_mhc_sequences_from_index,
     run,
 )
+
+
+def test_synthetic_negative_ratios_keep_legacy_defaults_but_allow_independent_overrides():
+    assert _resolve_synthetic_negative_ratios(1.0) == (1.0, 0.5, 0.5, 0.5)
+    assert _resolve_synthetic_negative_ratios(
+        0.0,
+        elution_ratio=1.0,
+        cascade_elution_ratio=0.0,
+        cascade_tcell_ratio=0.0,
+    ) == (0.0, 1.0, 0.0, 0.0)
+    assert _resolve_synthetic_negative_ratios(-1.0, elution_ratio=-2.0) == (
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+    )
+
+
+def test_exclude_sparse_record_targets_preserves_supported_values_and_drops_empty_rows():
+    kinetics = [
+        KineticsRecord("SIINFEKL", "HLA-A*02:01", kon=1.5, koff=0.02),
+        KineticsRecord("GILGFVFTL", "HLA-A*02:01", koff=0.03),
+    ]
+    stability = [
+        StabilityRecord("SIINFEKL", "HLA-A*02:01", t_half=2.0, tm=55.0),
+        StabilityRecord("GILGFVFTL", "HLA-A*02:01", tm=60.0),
+    ]
+
+    kept_kinetics, kept_stability, removed = _exclude_sparse_record_targets(
+        kinetics,
+        stability,
+        ["koff", "tm"],
+    )
+
+    assert len(kept_kinetics) == 1
+    assert kept_kinetics[0].kon == 1.5
+    assert kept_kinetics[0].koff is None
+    assert len(kept_stability) == 1
+    assert kept_stability[0].t_half == 2.0
+    assert kept_stability[0].tm is None
+    assert removed == {"koff": 2, "tm": 2}
+
+
+def test_exclude_sparse_record_targets_rejects_unknown_names():
+    with pytest.raises(ValueError, match="only supports sparse quantitative targets"):
+        _exclude_sparse_record_targets([], [], ["elution"])
+
+
+def test_downstream_cascade_does_not_create_a_synthetic_only_task():
+    binding = [
+        BindingRecord(
+            peptide="SIINFEKL",
+            mhc_allele="HLA-A*02:01",
+            value=50_000.0,
+            source="synthetic_negative_peptide_scramble",
+        )
+    ]
+
+    elution, tcell, stats = cascade_binding_negatives_to_downstream(
+        binding_records=binding,
+        elution_records=[],
+        tcell_records=[],
+        elution_ratio=1.0,
+        tcell_ratio=1.0,
+        seed=7,
+    )
+
+    assert elution == []
+    assert tcell == []
+    assert stats == {"elution_added": 0, "tcell_added": 0}
 
 
 def _write_text(path: Path, text: str) -> None:
@@ -983,7 +1057,7 @@ def test_write_mhc_sequence_coverage_report_persists_json_and_csv(tmp_path):
     csv_path = paths["csv"]
     assert json_path is not None and json_path.exists()
     assert csv_path is not None and csv_path.exists()
-    assert "\"rows_considered\": 10" in json_path.read_text(encoding="utf-8")
+    assert '"rows_considered": 10' in json_path.read_text(encoding="utf-8")
     header = csv_path.read_text(encoding="utf-8").splitlines()[0]
     assert (
         header == "scope,modality,state,species,count,fraction_of_total_rows,fraction_within_scope"
@@ -1743,7 +1817,7 @@ def test_augment_elution_records_with_synthetic_negatives():
     assert stats["peptide_random_mhc_random"] == 0
     negatives = [rec for rec in augmented if not rec.detected]
     assert len(negatives) == 1
-    assert negatives[0].source == "synthetic_negative"
+    assert negatives[0].source == "synthetic_negative_elution_peptide_random_mhc_real"
     assert negatives[0].alleles == ["HLA-A*02:01"]
 
 
@@ -1779,7 +1853,12 @@ def test_augment_elution_records_with_allele_mismatch_mode():
     assert stats["peptide_real_mhc_random"] == 1
     assert stats["peptide_random_mhc_random"] == 1
 
-    negatives = [rec for rec in augmented if rec.source == "synthetic_negative"]
+    negatives = [rec for rec in augmented if rec.source.startswith("synthetic_negative_elution_")]
+    assert {rec.source for rec in negatives} == {
+        "synthetic_negative_elution_peptide_random_mhc_real",
+        "synthetic_negative_elution_peptide_real_mhc_random",
+        "synthetic_negative_elution_peptide_random_mhc_random",
+    }
     real_peptide_random_mhc_negatives = [
         rec
         for rec in negatives

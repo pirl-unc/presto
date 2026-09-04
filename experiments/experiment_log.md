@@ -578,6 +578,14 @@ scale. Both need a GPU run.
 
 ## 2026-09-02--03 · Source-junction ambiguity masking
 
+> **Validity erratum (2026-09-04):** This family is preserved as historical
+> output but is not decision-grade. In the legacy arm, nullable unmapped flanks
+> became the amino-acid string `NAN`; masking cleared them. Thus 6,212 unmapped
+> binding rows changed for an accidental normalization reason alongside the
+> intended ambiguous junctions. Model seeds also changed capped membership,
+> sparse targets lacked held-out support, and elution was all-positive. The
+> stated mapping-policy winner is withdrawn pending the gated 2026-09-04 rerun.
+
 **Agent/model:** Codex / GPT-5 · **Dir:**
 [`2026-09-02_1720_codex_source-junction-masking`](2026-09-02_1720_codex_source-junction-masking/)
 · **Commit:** `a1cdcc0d27d63a7440188f98f0dc503c596c8dfd` (dirty)
@@ -667,6 +675,13 @@ junction) but uses stable candidate ordering instead of reproducing the old
 frame-order accident byte for byte.
 
 ## 2026-09-03 - Flank context wired end to end, on corrected mapping data
+
+> **Validity erratum (2026-09-04):** This rerun fixed terminus and checkpoint
+> handling but retained the same null-to-`NAN` policy confound on 6,212 unmapped
+> binding rows. Its archived metrics remain reproducible; its mapping-policy
+> conclusion is withdrawn. The 2026-09-04 remediation also fixes seed-dependent
+> caps, sparse held-out targets, and all-positive binary supervision before any
+> replacement GPU run can start.
 
 **Agent/model:** Claude / Opus 5 - **Dir:**
 [`2026-09-03_1746_claude_flank-context-fixes`](2026-09-03_1746_claude_flank-context-fixes/)

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "status": "passed_local_not_launch_authoritative",
+  "date": "2026-09-04",
+  "gpu_training_started": false,
+  "conditions": {
+    "legacy_global_canonical:42": "995f8aec2be02d35ba40c7f6e9826ffafbb907af6950effab2b95a45d41a0255",
+    "mask_unresolved:42": "f437d875faeefa9c4c838a9b8a7b9d46ddec8f864cd752adea124b6e9ba0e75b",
+    "legacy_global_canonical:43": "051e633c7fae94d67252bdb103a40668f80e6145b4cf9b77d535bc89f2a34dbe",
+    "mask_unresolved:43": "bb0aa3c794915c869866fb61b2a8c2f297b59efdd62e058e5f9e4219fa1aeb74",
+    "legacy_global_canonical:44": "20a766bac30b5a28149de50b3c52f113233a7fb329f0aa9cbe679288a033a458",
+    "mask_unresolved:44": "90e567b8e666d58e0c82ecfa3547833ec64010f18c10c41287fee328134e1320"
+  },
+  "invariants": {
+    "all_six_support_gates_passed": true,
+    "dataset_supervision_contract_sha256": "44aa27cf8cab8860d55459655f21eb9f550560b4880483008e325802a50c753e",
+    "dataset_membership_identical_across_policies_and_seeds": true,
+    "policy_pair_split_supervision_identical_for_every_seed": true,
+    "lineage_issue_count": 0,
+    "duplicate_sample_id_count": 0,
+    "fake_null_sequence_count": 0,
+    "resolved_mhc_alleles": 92,
+    "requested_mhc_alleles": 92
+  },
+  "data_funnel": {
+    "binding_loaded": 16721,
+    "kinetics_loaded": 2,
+    "stability_loaded": 1000,
+    "elution_loaded": 20000,
+    "koff_labels_excluded": 2,
+    "tm_labels_excluded": 11,
+    "half_life_records_retained": 989,
+    "elution_decoys_added": 20000,
+    "final_samples": 57710
+  },
+  "local_environment": {
+    "hitlist_distribution": "1.55.8",
+    "hitlist_imported_source": "editable checkout 1.58.0",
+    "mhcseqs_distribution": "2.5.12",
+    "mhcseqs_imported_source": "editable checkout 2.6.11",
+    "mhcgnomes_distribution": "3.41.0"
+  },
+  "launch_environment_note": "This local verification exercises the final repository code and frozen data, but editable checkouts shadow two pinned distributions. The Modal launcher separately requires hitlist==1.55.8, mhcseqs==2.6.10, and mhcgnomes==3.41.0 in every preflight and training worker before GPU launch."
+}

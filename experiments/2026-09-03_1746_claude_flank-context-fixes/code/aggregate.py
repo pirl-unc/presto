@@ -19,7 +19,6 @@ REPO_ROOT = EXPERIMENT_DIR.parent.parent
 if str(REPO_ROOT.parent) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT.parent))
 
-from presto.data.flank_selection import MASKED_MAPPING_CATEGORIES
 from presto.training.holdout_eval import (
     binding_threshold_metrics,
     regression_metrics,
@@ -38,11 +37,12 @@ EXPECTED_MHC_INDEX_HASH = (
 EXPECTED_POLICIES = ("legacy_global_canonical", "mask_unresolved")
 EXPECTED_SEEDS = (42, 43, 44)
 SPLITS = ("val", "test")
-#: The rows whose flanks masking actually rewrites. Imported, not restated:
-#: this stratum answers "what did masking change?", which is exactly what
-#: `MASKED_MAPPING_CATEGORIES` names. Adding a mapping category updates this
-#: analysis with it.
-UNRESOLVED_CATEGORIES = MASKED_MAPPING_CATEGORIES
+#: The ambiguous-junction stratum this historical family reported as
+#: `unresolved_union`. Keep it frozen so deleting the disproven production
+#: masking constant does not retroactively change a completed analysis.
+UNRESOLVED_CATEGORIES = frozenset(
+    {"cross_gene_unresolved", "within_gene_unresolved"}
+)
 SCOPES = (
     "overall",
     "single",

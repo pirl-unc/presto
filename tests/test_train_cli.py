@@ -46,8 +46,62 @@ def test_parser_train_iedb_default_record_caps_unlimited():
     assert args.strict_mhc_resolution is True
     # Synthetic negative categories are enabled by default.
     assert args.synthetic_pmhc_negative_ratio > 0.0
+    assert args.synthetic_elution_negative_ratio is None
+    assert args.synthetic_cascade_elution_negative_ratio is None
+    assert args.synthetic_cascade_tcell_negative_ratio is None
     assert args.synthetic_class_i_no_mhc_beta_negative_ratio > 0.0
     assert args.synthetic_processing_negative_ratio > 0.0
+
+
+def test_parser_wires_data_preflight_contract_flags():
+    parser = create_parser()
+    args = parser.parse_args(
+        [
+            "train",
+            "unified",
+            "--data-seed",
+            "17",
+            "--synthetic-elution-negative-ratio",
+            "1",
+            "--synthetic-cascade-elution-negative-ratio",
+            "0",
+            "--synthetic-cascade-tcell-negative-ratio",
+            "0",
+            "--exclude-target",
+            "koff",
+            "--exclude-target",
+            "tm",
+            "--require-split-target",
+            "elution",
+            "--require-all-active-target-support",
+            "--require-binary-balance-target",
+            "elution",
+            "--require-all-active-binary-balance",
+            "--min-split-target-support",
+            "3",
+            "--require-traceable-lineage",
+            "--forbid-fake-null-sequences",
+            "--expected-split-support-sha256",
+            "abc123",
+            "--data-preflight-only",
+        ]
+    )
+
+    assert args.func is train_cli.cmd_train_unified
+    assert args.data_seed == 17
+    assert args.synthetic_elution_negative_ratio == 1.0
+    assert args.synthetic_cascade_elution_negative_ratio == 0.0
+    assert args.synthetic_cascade_tcell_negative_ratio == 0.0
+    assert args.exclude_target == ["koff", "tm"]
+    assert args.require_split_target == ["elution"]
+    assert args.require_all_active_target_support is True
+    assert args.require_binary_balance_target == ["elution"]
+    assert args.require_all_active_binary_balance is True
+    assert args.min_split_target_support == 3
+    assert args.require_traceable_lineage is True
+    assert args.forbid_fake_null_sequences is True
+    assert args.expected_split_support_sha256 == "abc123"
+    assert args.data_preflight_only is True
 
 
 def test_parser_wires_train_synthetic_run_dir():

@@ -230,3 +230,34 @@
 - A scale mismatch does not raise, so nothing catches it but magnitude. The assay-panel loss regressed a normalized-log10 head against a raw-nanomolar target: finite loss, training ran to completion, all 1,417 tests passed, and the model learned nothing — validation moved 0.012% over ten epochs while one term sat at ~142,900 and swamped every gradient. Normalizing it took the same run to a 36% reduction. When a model trains but does not learn, print the per-task loss magnitudes before touching architecture; a term orders of magnitude off its neighbours is the whole answer.
 - Do not "tidy" a fixture whose value looks wrong. A test row declared `seq_len: "89"` against 77 residues; I made it self-consistent while reflowing long lines and deleted the only in-repo example of the `seq_len_mismatch` condition the code validates. Deliberately-wrong data is a fixture, not a typo — check what consumes it before making it agree with itself.
 - State the invariant that is true, not the one that is tidy. I wrote a guard asserting benchmark argv tuples alternate flag/value; 27 of 75 failed because `store_true` flags legitimately carry no value. The real invariant — no two consecutive values — is weaker, actually holds, and still catches the shift it was written for. A guard built on a premise the data contradicts gets deleted, not fixed.
+
+## 2026-09-04
+
+- Do not infer production masking behavior from a tiny synthetic frame. Audit the
+  actual corpus at both the source-row and expanded training-record levels, with
+  stable row identifiers and explicit before/after transition counts. A four-row
+  example can exercise code paths without establishing their prevalence or
+  semantics.
+- A controlled experiment is not ready merely because its flags look aligned.
+  Compare invariant preflight fingerprints against the reference family before
+  launch, including row counts, coverage, resolution, masking rates, and pinned
+  parser versions. Any unexplained mismatch means the supposedly single-variable
+  comparison is not yet controlled.
+- When frame-level and record-level audits make contradictory claims about the
+  same signal, stop the launch and reconcile lineage through filtering, joins,
+  grouping, and record expansion. A green test suite or matching aggregate
+  coverage cannot establish semantic correctness while that conservation check
+  fails.
+- Delete constants that encode disproven invariants instead of renaming or
+  numerically adjusting them. Preserve the measured counterexample near the
+  surviving logic so the false assumption is not independently re-derived.
+- Pin biologic sequence parsers as part of the data contract and verify their
+  extracted boundaries on the actual allele set. A dependency version that moves
+  mature-chain starts changes model inputs even when the training code is
+  otherwise identical.
+- Never normalize a nullable sequence with `str(value or "")`. Floating NaN is
+  truthy and stringifies to `"nan"`; after upper-casing, `"NAN"` is composed
+  entirely of valid amino-acid codes and silently becomes fake biological
+  sequence. Detect pandas/NumPy nulls before string conversion and test every
+  sequence-normalization entrypoint with `None`, `float("nan")`, `pd.NA`, and
+  empty strings.

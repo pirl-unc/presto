@@ -24,7 +24,7 @@ import math
 import warnings
 from collections import defaultdict
 from pathlib import Path
-from typing import Dict, List, Optional, Iterator, Union, Any, Tuple, Mapping
+from typing import Dict, List, Optional, Iterator, Union, Any, Tuple, Mapping, Sequence
 from dataclasses import dataclass
 import random
 import re
@@ -199,6 +199,20 @@ class BindingRecord:
     source_mapping_n_genes: int = 0
     source_mapping_n_flank_pairs: int = 0
     flank_context_resolved: bool = False
+    # Stable source-observation and selected protein-mapping lineage. These
+    # fields are diagnostics only and never enter the model.
+    evidence_row_id: str = ""
+    assay_iri: str = ""
+    reference_iri: str = ""
+    pmid: str = ""
+    mapping_gene_name: str = ""
+    mapping_gene_id: str = ""
+    mapping_protein_id: str = ""
+    mapping_transcript_id: str = ""
+    mapping_position: Optional[int] = None
+    mapping_proteome: str = ""
+    mapping_proteome_source: str = ""
+    mapping_is_canonical_transcript: Optional[bool] = None
 
 
 @dataclass
@@ -224,6 +238,18 @@ class KineticsRecord:
     source_mapping_n_genes: int = 0
     source_mapping_n_flank_pairs: int = 0
     flank_context_resolved: bool = False
+    evidence_row_id: str = ""
+    assay_iri: str = ""
+    reference_iri: str = ""
+    pmid: str = ""
+    mapping_gene_name: str = ""
+    mapping_gene_id: str = ""
+    mapping_protein_id: str = ""
+    mapping_transcript_id: str = ""
+    mapping_position: Optional[int] = None
+    mapping_proteome: str = ""
+    mapping_proteome_source: str = ""
+    mapping_is_canonical_transcript: Optional[bool] = None
 
 
 @dataclass
@@ -253,6 +279,18 @@ class StabilityRecord:
     source_mapping_n_genes: int = 0
     source_mapping_n_flank_pairs: int = 0
     flank_context_resolved: bool = False
+    evidence_row_id: str = ""
+    assay_iri: str = ""
+    reference_iri: str = ""
+    pmid: str = ""
+    mapping_gene_name: str = ""
+    mapping_gene_id: str = ""
+    mapping_protein_id: str = ""
+    mapping_transcript_id: str = ""
+    mapping_position: Optional[int] = None
+    mapping_proteome: str = ""
+    mapping_proteome_source: str = ""
+    mapping_is_canonical_transcript: Optional[bool] = None
 
 
 @dataclass
@@ -324,6 +362,18 @@ class ElutionRecord:
     source_mapping_n_genes: int = 0
     source_mapping_n_flank_pairs: int = 0
     flank_context_resolved: bool = False
+    evidence_row_id: str = ""
+    assay_iri: str = ""
+    reference_iri: str = ""
+    pmid: str = ""
+    mapping_gene_name: str = ""
+    mapping_gene_id: str = ""
+    mapping_protein_id: str = ""
+    mapping_transcript_id: str = ""
+    mapping_position: Optional[int] = None
+    mapping_proteome: str = ""
+    mapping_proteome_source: str = ""
+    mapping_is_canonical_transcript: Optional[bool] = None
 
 
 @dataclass
@@ -1868,6 +1918,42 @@ class PrestoDataset(Dataset):
                 "flank_context_resolved": bool(getattr(record, "flank_context_resolved", False)),
             }
 
+        def _source_lineage_fields(
+            record: Any, alleles: Optional[Sequence[str]] = None
+        ) -> Dict[str, Any]:
+            """Copy traceability metadata without making it a model input."""
+            source_alleles = tuple(
+                str(value).strip() for value in (alleles or ()) if str(value).strip()
+            )
+            return {
+                "evidence_row_id": str(getattr(record, "evidence_row_id", "") or ""),
+                "assay_iri": str(getattr(record, "assay_iri", "") or ""),
+                "reference_iri": str(getattr(record, "reference_iri", "") or ""),
+                "pmid": str(getattr(record, "pmid", "") or ""),
+                "source_sample_label": str(getattr(record, "sample_label", "") or ""),
+                "source_sample_attribution": str(getattr(record, "sample_attribution", "") or ""),
+                "mapping_gene_name": str(getattr(record, "mapping_gene_name", "") or ""),
+                "mapping_gene_id": str(getattr(record, "mapping_gene_id", "") or ""),
+                "mapping_protein_id": str(getattr(record, "mapping_protein_id", "") or ""),
+                "mapping_transcript_id": str(getattr(record, "mapping_transcript_id", "") or ""),
+                "mapping_position": getattr(record, "mapping_position", None),
+                "mapping_proteome": str(getattr(record, "mapping_proteome", "") or ""),
+                "mapping_proteome_source": str(
+                    getattr(record, "mapping_proteome_source", "") or ""
+                ),
+                "mapping_is_canonical_transcript": getattr(
+                    record, "mapping_is_canonical_transcript", None
+                ),
+                "source_mhc_alleles": source_alleles,
+            }
+
+        def _sample_id(prefix: str, record: Any) -> str:
+            """Use source identity when available; retain legacy fallback IDs."""
+            evidence_row_id = str(getattr(record, "evidence_row_id", "") or "").strip()
+            if evidence_row_id:
+                return f"{prefix}:{evidence_row_id}"
+            return f"{prefix}_{len(self.samples)}"
+
         def _organism_fields(
             antigen_species: Optional[str],
         ) -> Tuple[Optional[str], Optional[float]]:
@@ -1949,7 +2035,10 @@ class PrestoDataset(Dataset):
                     primary_allele=rec.mhc_allele,
                     synthetic_kind=_synthetic_kind(rec.source),
                     **_source_mapping_fields(rec),
-                    sample_id=f"bind_{len(self.samples)}",
+                    **_source_lineage_fields(
+                        rec, rec.alleles or ([rec.mhc_allele] if rec.mhc_allele else [])
+                    ),
+                    sample_id=_sample_id("bind", rec),
                 )
             )
 
@@ -1982,7 +2071,10 @@ class PrestoDataset(Dataset):
                     primary_allele=rec.mhc_allele,
                     synthetic_kind=_synthetic_kind(rec.source),
                     **_source_mapping_fields(rec),
-                    sample_id=f"kin_{len(self.samples)}",
+                    **_source_lineage_fields(
+                        rec, rec.alleles or ([rec.mhc_allele] if rec.mhc_allele else [])
+                    ),
+                    sample_id=_sample_id("kin", rec),
                 )
             )
 
@@ -2017,7 +2109,10 @@ class PrestoDataset(Dataset):
                     primary_allele=rec.mhc_allele,
                     synthetic_kind=_synthetic_kind(rec.source),
                     **_source_mapping_fields(rec),
-                    sample_id=f"stab_{len(self.samples)}",
+                    **_source_lineage_fields(
+                        rec, rec.alleles or ([rec.mhc_allele] if rec.mhc_allele else [])
+                    ),
+                    sample_id=_sample_id("stab", rec),
                 )
             )
 
@@ -2140,7 +2235,8 @@ class PrestoDataset(Dataset):
                     primary_allele=(alleles[0] if alleles else None),
                     synthetic_kind=_synthetic_kind(rec.source),
                     **_source_mapping_fields(rec),
-                    sample_id=f"elut_{len(self.samples)}",
+                    **_source_lineage_fields(rec, rec.alleles),
+                    sample_id=_sample_id("elut", rec),
                 )
             )
 

@@ -22,6 +22,7 @@ contract.
 import pytest
 
 torch = pytest.importorskip("torch")
+pd = pytest.importorskip("pandas")
 
 from presto.data.hitlist_source import (  # noqa: E402
     HITLIST_FLANK_WIDTH,
@@ -104,6 +105,12 @@ class TestFlankContext:
     def test_unmapped_is_never_a_terminus(self, position):
         """No mapping means no knowledge, which is exactly `?`."""
         _, terminus = flank_context("ACD", position)
+        assert terminus is False
+
+    @pytest.mark.parametrize("value", [None, float("nan"), pd.NA])
+    def test_null_flank_is_not_a_terminus_with_a_mapping_position(self, value):
+        text, terminus = flank_context(value, 10.0)
+        assert text == ""
         assert terminus is False
 
     def test_an_unencodable_flank_is_not_mistaken_for_a_terminus(self):

@@ -32,6 +32,25 @@ import numpy as np
 # A peptide:MHC pair at or under 500 nM is the conventional binder cutoff.
 DEFAULT_BINDING_THRESHOLD_NM = 500.0
 
+PREDICTION_LINEAGE_FIELDS = (
+    "peptide",
+    "mhc_alleles",
+    "evidence_row_id",
+    "assay_iri",
+    "reference_iri",
+    "pmid",
+    "source_sample_label",
+    "source_sample_attribution",
+    "mapping_gene_name",
+    "mapping_gene_id",
+    "mapping_protein_id",
+    "mapping_transcript_id",
+    "mapping_position",
+    "mapping_proteome",
+    "mapping_proteome_source",
+    "mapping_is_canonical_transcript",
+)
+
 
 def _rankdata(values: np.ndarray) -> np.ndarray:
     """Average ranks, ties shared (the Spearman/AUROC convention).
@@ -248,6 +267,7 @@ class TaskPredictionAccumulator:
         self._mapping_n_genes: List[int] = []
         self._mapping_n_flank_pairs: List[int] = []
         self._flank_context_resolved: List[bool] = []
+        self._lineage: List[Dict[str, Any]] = []
 
     def add(
         self,
@@ -262,6 +282,7 @@ class TaskPredictionAccumulator:
         mapping_n_flank_pairs: Optional[Sequence[int]] = None,
         flank_context_resolved: Optional[Sequence[bool]] = None,
         qualifiers: Optional[Sequence[int]] = None,
+        lineage: Optional[Mapping[str, Sequence[Any]]] = None,
     ) -> None:
         for position, keep in enumerate(mask):
             if float(keep) <= 0.0:
@@ -297,6 +318,17 @@ class TaskPredictionAccumulator:
                 self._flank_context_resolved.append(bool(flank_context_resolved[position]))
             else:
                 self._flank_context_resolved.append(False)
+            self._lineage.append(
+                {
+                    field: (
+                        values[position]
+                        if (values := (lineage or {}).get(field)) is not None
+                        and position < len(values)
+                        else ""
+                    )
+                    for field in PREDICTION_LINEAGE_FIELDS
+                }
+            )
 
     def __len__(self) -> int:
         return len(self._true)
@@ -419,6 +451,7 @@ class TaskPredictionAccumulator:
                 "source_mapping_n_genes": n_genes,
                 "source_mapping_n_flank_pairs": n_flank_pairs,
                 "flank_context_resolved": flank_resolved,
+                **lineage,
             }
             for (
                 sample_id,
@@ -431,6 +464,7 @@ class TaskPredictionAccumulator:
                 n_genes,
                 n_flank_pairs,
                 flank_resolved,
+                lineage,
             ) in zip(
                 self._sample_ids,
                 self._sources,
@@ -442,6 +476,7 @@ class TaskPredictionAccumulator:
                 self._mapping_n_genes,
                 self._mapping_n_flank_pairs,
                 self._flank_context_resolved,
+                self._lineage,
             )
         ]
 
@@ -546,6 +581,7 @@ def collect_holdout_predictions(
                     _host_sequence(getattr(moved, "source_mapping_n_flank_pairs", None)),
                     _host_sequence(getattr(moved, "flank_context_resolved", None)),
                     _host_vector(get_qual_fn(moved, spec)) if get_qual_fn is not None else None,
+                    getattr(moved, "source_lineage", None),
                 )
     return accumulators
 
@@ -610,6 +646,7 @@ def write_holdout_artifacts(
                     "source_mapping_n_genes",
                     "source_mapping_n_flank_pairs",
                     "flank_context_resolved",
+                    *PREDICTION_LINEAGE_FIELDS,
                 ],
             )
             writer.writeheader()

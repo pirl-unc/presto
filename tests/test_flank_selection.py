@@ -245,7 +245,8 @@ class TestProductionMappingPolicy:
             assert rows.loc[evidence_id, "n_flank"] == ""
             assert rows.loc[evidence_id, "c_flank"] == ""
             assert bool(rows.loc[evidence_id, "flank_context_resolved"]) is False
-            assert rows.loc[evidence_id, "position"] != rows.loc[evidence_id, "position"]
+            assert rows.loc[evidence_id, "position"] == 10
+            assert bool(rows.loc[evidence_id, "source_mapping_context_masked"])
 
         assert rows.loc["agree", "source_mapping_n_candidates"] == 2
         assert rows.loc["agree", "source_mapping_n_flank_pairs"] == 1
@@ -477,23 +478,20 @@ class TestResolutionIsDefinedOnce:
 
         assert MAPPING_CATEGORY_UNMAPPED in UNRESOLVED_MAPPING_CATEGORIES
 
-    def test_masking_rewrites_less_than_unresolved_covers(self):
-        """Two different questions, so two different sets.
+    def test_masking_covers_unmapped_rows_too(self):
+        """An unmapped row can carry a flank, so masking it is not a no-op.
 
-        "Is the junction known?" and "does masking rewrite this row?" are not
-        the same. An unmapped row is unresolved but has no flank to rewrite,
-        and conflating them would dilute any "what did masking change?"
-        stratum with rows both policies treat identically -- 6,212 of 16,721
-        binding rows on the current corpus.
+        A previous change excluded `unmapped` from the masked set, reasoning
+        that a row carrying a flank counts as present and therefore cannot be
+        classified unmapped. That holds on a synthetic frame and fails on the
+        corpus: excluding it moved binding flank coverage from 0.590 to 0.963,
+        roughly 37% of rows. Whether those flanks *should* be masked is an
+        open modelling question -- their provenance is not understood -- but
+        it is not something to change while calling it a refactor.
         """
         from presto.data.flank_selection import (
             MAPPING_CATEGORY_UNMAPPED,
-            MASKED_MAPPING_CATEGORIES,
             UNRESOLVED_MAPPING_CATEGORIES,
         )
 
-        assert MASKED_MAPPING_CATEGORIES < UNRESOLVED_MAPPING_CATEGORIES
-        assert MAPPING_CATEGORY_UNMAPPED not in MASKED_MAPPING_CATEGORIES
-        assert UNRESOLVED_MAPPING_CATEGORIES - MASKED_MAPPING_CATEGORIES == {
-            MAPPING_CATEGORY_UNMAPPED
-        }
+        assert MAPPING_CATEGORY_UNMAPPED in UNRESOLVED_MAPPING_CATEGORIES

@@ -64,8 +64,8 @@ from .flank_selection import (
     MAPPING_CATEGORY_UNMAPPED,
     MAPPING_CATEGORY_WITHIN_GENE_CANONICAL,
     MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED,
-    MASKED_MAPPING_CATEGORIES,
     RESOLVED_MAPPING_CATEGORIES,
+    UNRESOLVED_MAPPING_CATEGORIES,
     SOURCE_MAPPING_POLICIES,
     SOURCE_MAPPING_POLICY_LEGACY,
     SOURCE_MAPPING_POLICY_MASK_UNRESOLVED,
@@ -77,6 +77,8 @@ from .vocab import (
     is_unmapped_condition,
     stimulus_for_condition,
     is_encodable_sequence,
+    is_missing_scalar,
+    normalize_sequence_text,
 )
 from .loaders import (
     BindingRecord,
@@ -115,6 +117,11 @@ SHARED_COLUMNS: Tuple[str, ...] = (
     "host",
     "source_organism",
     "source",
+    # Source-observation identity. These remain attached after mapping
+    # expansion/collapse so a model prediction can be traced to the raw row.
+    "assay_iri",
+    "reference_iri",
+    "pmid",
     "n_flank",
     "c_flank",
     # Offset of the peptide in its source protein. The only thing separating
@@ -130,6 +137,8 @@ SHARED_COLUMNS: Tuple[str, ...] = (
     "protein_id",
     "transcript_id",
     "is_canonical_transcript",
+    "proteome",
+    "proteome_source",
 )
 
 #: `SHARED_COLUMNS` plus the in-vitro measurement itself. `response_measured`
@@ -215,6 +224,8 @@ PROTEIN_MAPPING_COLUMNS: FrozenSet[str] = frozenset(
         "transcript_id",
         "is_canonical_transcript",
         "position",
+        "proteome",
+        "proteome_source",
     }
 )
 
@@ -309,7 +320,7 @@ def flank_context(
     nothing is known, which is a different statement and must not be encoded
     as though the protein terminated.
     """
-    raw = str(flank or "").strip()
+    raw = normalize_sequence_text(flank)
     text = drop_unencodable_sequence(flank)
     position_text = str(position).strip() if position is not None else ""
     mapped = (
@@ -322,12 +333,17 @@ def flank_context(
     # (selenocysteine, annotation junk), and a blanked flank on a mapped row
     # would otherwise be read as "the protein ended here" -- inventing a
     # terminus out of a tokenizer limitation.
-    return text, bool(mapped and len(raw) < int(width))
+    return text, bool(mapped and not is_missing_scalar(flank) and len(raw) < int(width))
 
 
 def _flank_fields(row) -> Dict[str, Any]:
     """The four flank fields for a record, from one mapping row."""
-    position = row.get("position")
+    # Keep the selected mapping position as provenance even when the policy
+    # deliberately hides its junction context from the model.  The dedicated
+    # marker controls terminus inference; overloading a missing `position`
+    # erased useful lineage and made otherwise mapped rows untraceable.
+    context_masked = str(row.get("source_mapping_context_masked", False)).lower() == "true"
+    position = None if context_masked else row.get("position")
     n_text, n_terminus = flank_context(row.get("n_flank"), position)
     c_text, c_terminus = flank_context(row.get("c_flank"), position)
     return {
@@ -363,6 +379,39 @@ def _mapping_fields(row) -> Dict[str, Any]:
         "source_mapping_n_genes": _count("source_mapping_n_genes"),
         "source_mapping_n_flank_pairs": _count("source_mapping_n_flank_pairs"),
         "flank_context_resolved": _flag("flank_context_resolved"),
+    }
+
+
+def _lineage_fields(row) -> Dict[str, Any]:
+    """Stable observation and selected-mapping identity for one record."""
+
+    position = row.get("position")
+    try:
+        numeric_position = float(position)
+    except (TypeError, ValueError):
+        mapping_position = None
+    else:
+        mapping_position = int(numeric_position) if numeric_position == numeric_position else None
+
+    canonical = row.get("is_canonical_transcript")
+    if canonical is None or _clean(canonical) == "":
+        canonical_value = None
+    else:
+        canonical_value = str(canonical).strip().lower() in {"1", "1.0", "true", "yes", "t"}
+
+    return {
+        "evidence_row_id": _clean(row.get("evidence_row_id")),
+        "assay_iri": _clean(row.get("assay_iri")),
+        "reference_iri": _clean(row.get("reference_iri")),
+        "pmid": _clean(row.get("pmid")),
+        "mapping_gene_name": _clean(row.get("gene_name")),
+        "mapping_gene_id": _clean(row.get("gene_id")),
+        "mapping_protein_id": _clean(row.get("protein_id")),
+        "mapping_transcript_id": _clean(row.get("transcript_id")),
+        "mapping_position": mapping_position,
+        "mapping_proteome": _clean(row.get("proteome")),
+        "mapping_proteome_source": _clean(row.get("proteome_source")),
+        "mapping_is_canonical_transcript": canonical_value,
     }
 
 
@@ -474,7 +523,7 @@ _MINUTES_PER_HOUR = 60.0
 
 def _qualifier_from_inequality(text: Any) -> int:
     """Map hitlist's ``measurement_inequality`` to Presto's censor code."""
-    token = str(text or "").strip()
+    token = _clean(text)
     if token.startswith("<"):
         return -1
     if token.startswith(">"):
@@ -485,8 +534,8 @@ def _qualifier_from_inequality(text: Any) -> int:
 def _split_allele_set(value: Any) -> List[str]:
     """Split a hitlist allele-set cell into a list of allele names."""
     if isinstance(value, (list, tuple, set)):
-        return [str(v).strip() for v in value if str(v).strip()]
-    token = str(value or "").strip()
+        return [token for item in value if (token := _clean(item))]
+    token = _clean(value)
     if not token:
         return []
     for sep in (";", ","):
@@ -772,15 +821,15 @@ def _mask_unresolved_mapping_context(frame):
         # no `evidence_row_id` to group on, so there is nothing to mask.
         return frame
     masked = frame.copy()
-    unresolved = masked["source_mapping_category"].isin(MASKED_MAPPING_CATEGORIES)
+    unresolved = masked["source_mapping_category"].isin(UNRESOLVED_MAPPING_CATEGORIES)
+    masked["source_mapping_context_masked"] = False
     for column in ("n_flank", "c_flank"):
         if column in masked.columns:
             masked.loc[unresolved, column] = ""
-    if "position" in masked.columns:
-        # Load-bearing: `flank_context` reads a missing position as "not
-        # mapped" and so reports `is_terminus=False`. Without this, a cleared
-        # flank would be read as a protein terminus and pad with `X`.
-        masked.loc[unresolved, "position"] = float("nan")
+    # Do not erase the selected mapping position: it is source lineage.  This
+    # separate marker tells `_flank_fields` that the cleared context is absent,
+    # rather than a true protein terminus, without changing provenance.
+    masked.loc[unresolved, "source_mapping_context_masked"] = True
     return masked
 
 
@@ -892,7 +941,7 @@ def normalize_ingested_peptide(peptide: Optional[str]) -> str:
     Peptides are targets, so an unrepresentable residue drops the row: unlike
     a flank, the epitope cannot degrade to "absent".
     """
-    text = str(peptide or "").strip().upper()
+    text = normalize_sequence_text(peptide)
     return text if is_encodable_sequence(text) else ""
 
 
@@ -976,6 +1025,10 @@ def load_records_from_hitlist(
     )
     assert_columns_present(binding_frame, "binding", include_flanks=include_flanks)
     assert_columns_present(ms_frame, "ms", include_flanks=include_flanks)
+    source_rows_before_mapping_collapse = {
+        "binding": len(binding_frame),
+        "ms": len(ms_frame),
+    }
 
     if include_flanks:
         # Select and filter before either experimental policy transforms the
@@ -1018,6 +1071,7 @@ def load_records_from_hitlist(
     skipped_unroutable = 0
     skipped_bad_unit = 0
     skipped_noncanonical_peptide = 0
+    skipped_missing_mhc_allele = 0
     unmapped_conditions: Dict[str, int] = {}
 
     for row in _iter_row_dicts(binding_frame):
@@ -1061,6 +1115,7 @@ def load_records_from_hitlist(
             source=_clean(row.get("source")) or "hitlist",
             alleles=allele_set or None,
             **_mapping_fields(row),
+            **_lineage_fields(row),
         )
 
         if response in _AFFINITY_RESPONSES:
@@ -1129,6 +1184,7 @@ def load_records_from_hitlist(
         if not alleles:
             # Matches the merged-TSV loader, which drops elution rows with no
             # resolvable allele.
+            skipped_missing_mhc_allele += 1
             continue
         peptide = normalize_ingested_peptide(row.get("peptide"))
         if not peptide:
@@ -1168,9 +1224,16 @@ def load_records_from_hitlist(
                 antigen_species=_clean(row.get("source_organism")) or None,
                 source=_clean(row.get("source")) or "hitlist",
                 **_mapping_fields(row),
+                **_lineage_fields(row),
             )
         )
 
+    counts_before_cap = {
+        "binding": len(binding_records),
+        "kinetics": len(kinetics_records),
+        "stability": len(stability_records),
+        "elution": len(elution_records),
+    }
     binding_records = list(_cap_list(binding_records, max_binding, sampling_seed))
     stability_records = list(_cap_list(stability_records, max_stability, sampling_seed))
     kinetics_records = list(_cap_list(kinetics_records, max_kinetics, sampling_seed))
@@ -1203,6 +1266,13 @@ def load_records_from_hitlist(
 
     stats: Dict[str, Any] = {
         "source": "hitlist",
+        "sampling_seed": int(sampling_seed),
+        "source_rows_before_mapping_collapse": source_rows_before_mapping_collapse,
+        "source_rows_after_mapping_collapse": {
+            "binding": len(binding_frame),
+            "ms": len(ms_frame),
+        },
+        "counts_before_cap": counts_before_cap,
         "counts": {
             "binding": len(binding_records),
             "kinetics": len(kinetics_records),
@@ -1212,10 +1282,26 @@ def load_records_from_hitlist(
             "tcell": 0,
             "tcr_evidence": 0,
         },
+        "rows_dropped_by_cap": {
+            name: counts_before_cap[name] - count
+            for name, count in {
+                "binding": len(binding_records),
+                "kinetics": len(kinetics_records),
+                "stability": len(stability_records),
+                "elution": len(elution_records),
+            }.items()
+        },
+        "requested_caps": {
+            "binding": max_binding,
+            "kinetics": max_kinetics,
+            "stability": max_stability,
+            "elution": max_elution,
+        },
         "skipped_no_numeric_value": skipped_no_value,
         "skipped_unroutable_response": skipped_unroutable,
         "skipped_unexpected_unit": skipped_bad_unit,
         "skipped_noncanonical_peptide": skipped_noncanonical_peptide,
+        "skipped_missing_mhc_allele": skipped_missing_mhc_allele,
         "unmapped_condition_categories": dict(unmapped_conditions),
         # How often the flank we trained on was a choice among several. See
         # presto#34 -- for HLA-A*02:01, 21.6% of rows have mappings that
@@ -1273,7 +1359,7 @@ __all__ = [
     "PROTEIN_MAPPING_COLUMNS",
     "COLUMNS_BY_EVIDENCE",
     "MAPPING_CATEGORIES",
-    "MASKED_MAPPING_CATEGORIES",
+    "UNRESOLVED_MAPPING_CATEGORIES",
     "training_columns",
     "assert_columns_present",
     "normalize_ingested_peptide",
