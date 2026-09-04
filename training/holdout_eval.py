@@ -34,7 +34,8 @@ DEFAULT_BINDING_THRESHOLD_NM = 500.0
 
 PREDICTION_LINEAGE_FIELDS = (
     "peptide",
-    "mhc_alleles",
+    "source_mhc_alleles",
+    "resolved_mhc_alleles",
     "evidence_row_id",
     "assay_iri",
     "reference_iri",

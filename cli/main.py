@@ -1007,7 +1007,13 @@ def create_parser() -> argparse.ArgumentParser:
         help="Override path to VDJdb export used for pMHC-only TCR-evidence supervision",
     )
     train_iedb.add_argument(
-        "--index-csv", type=str, default=None, help="Optional built MHC index CSV"
+        "--index-csv",
+        type=str,
+        default=None,
+        help=(
+            "Optional fallback MHC index CSV; mhcseqs is the canonical default for "
+            "allele-to-sequence resolution and MHC augmentation"
+        ),
     )
     train_iedb.add_argument(
         "--strict-mhc-resolution",
@@ -1044,7 +1050,7 @@ def create_parser() -> argparse.ArgumentParser:
         dest="mhc_augmentation_samples",
         type=int,
         default=60000,
-        help="Number of MHC-only augmentation samples from index (0 to disable)",
+        help="Number of MHC-only augmentation samples from mhcseqs or an index (0 disables)",
     )
     train_iedb.add_argument(
         "--max-binding",

@@ -1205,6 +1205,7 @@ def load_records_from_hitlist(
                 peptide=peptide,
                 alleles=alleles,
                 detected=True,
+                source_alleles=tuple(alleles),
                 **_flank_fields(row),
                 stimulus=stimulus_for_condition(condition_category),
                 apm_perturbation=apm_group_for_row(

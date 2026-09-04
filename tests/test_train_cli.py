@@ -2,6 +2,7 @@
 
 from presto.cli import train as train_cli
 from presto.cli.main import create_parser
+from presto.scripts.train_iedb import IEDB_DEFAULTS
 
 
 def test_parser_wires_train_iedb_run_dir():
@@ -51,6 +52,30 @@ def test_parser_train_iedb_default_record_caps_unlimited():
     assert args.synthetic_cascade_tcell_negative_ratio is None
     assert args.synthetic_class_i_no_mhc_beta_negative_ratio > 0.0
     assert args.synthetic_processing_negative_ratio > 0.0
+
+
+def test_data_integrity_parser_defaults_match_config_merge_registry():
+    args = create_parser().parse_args(["train", "unified"])
+    destinations = (
+        "data_seed",
+        "exclude_target",
+        "synthetic_elution_negative_ratio",
+        "synthetic_cascade_elution_negative_ratio",
+        "synthetic_cascade_tcell_negative_ratio",
+        "require_split_target",
+        "require_all_active_target_support",
+        "require_binary_balance_target",
+        "require_all_active_binary_balance",
+        "min_split_target_support",
+        "require_traceable_lineage",
+        "forbid_fake_null_sequences",
+        "expected_split_support_sha256",
+        "data_preflight_only",
+    )
+
+    for destination in destinations:
+        assert destination in IEDB_DEFAULTS
+        assert getattr(args, destination) == IEDB_DEFAULTS[destination]
 
 
 def test_parser_wires_data_preflight_contract_flags():

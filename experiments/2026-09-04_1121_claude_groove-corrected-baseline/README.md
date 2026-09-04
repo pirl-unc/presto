@@ -108,6 +108,9 @@ Dataset supervision membership is identical across all policies and seeds, and
 paired split supervision is identical within each seed. The local environment
 has editable Hitlist/mhcseqs checkouts shadowing two distribution versions, so
 this evidence does not replace the launcher's exact pinned-package check.
+The checked-in fingerprints were refreshed after lineage was split into the
+complete source MHC allele set and the resolved model-input allele set; target
+counts and the representative active-target support table are unchanged.
 
 ## Results and closure
 

@@ -261,3 +261,29 @@
   sequence. Detect pandas/NumPy nulls before string conversion and test every
   sequence-normalization entrypoint with `None`, `float("nan")`, `pd.NA`, and
   empty strings.
+- A required-lineage gate must begin by checking the required identity key. Do
+  not put the rest of the validation under `if identity`: that makes missing
+  identity bypass the gate it is supposed to enforce.
+- Every new CLI destination supported by YAML/JSON configuration must be added
+  to the canonical defaults registry in the same change and tested through the
+  config merge, including repeatable lists, nullable values, and booleans.
+- Keep source provenance immutable across resolution joins. For multi-allele
+  observations, store the complete reported allele set separately from the
+  resolved model-facing subset; filtering one must never rewrite the other.
+- A common funnel schema needs an adapter for every loader. Reading Hitlist-only
+  keys from merged-TSV statistics silently produces a pretty but incomplete
+  audit on the default path; test required stages and drop reasons per source.
+- Keep the curation seed and split/model seed visibly separate in rerun commands.
+  When validating split stability across model seeds, pin `data_seed` once and
+  vary only `seed`; otherwise reservoir membership changes and a curation drift
+  can be mistaken for a split effect. Assert the dataset-level supervision hash
+  before accepting any per-split comparison.
+- A package catalog may mix named alleles, accessions, partial grooves, and
+  invalid sequences even when single-allele lookup is reliable. Default
+  augmentation must select canonical named alleles with complete class-correct
+  groove inputs and report rejection counts; never sample the raw catalog
+  inventory directly.
+- Do not guard a canonical-resolver retry with `if fallback_path`. When
+  `mhcseqs` is primary and the CSV is optional, the resolver must be called for
+  missing training, augmentation, and diagnostic alleles even when the fallback
+  path is absent; the resolver itself decides whether a supplement is needed.

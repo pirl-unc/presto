@@ -80,22 +80,30 @@ def audit_split_support(
                     duplicate_sample_ids.add(sample_id)
                 all_sample_ids.add(sample_id)
 
-                evidence_row_id = str(getattr(sample, "evidence_row_id", "") or "")
+                evidence_row_id = str(getattr(sample, "evidence_row_id", "") or "").strip()
+                mapped = int(getattr(sample, "source_mapping_n_candidates", 0) or 0) > 0
+                lineage_failures: list[str] = []
+                if mapped and not evidence_row_id:
+                    lineage_failures.append("missing_evidence_row_id")
                 if evidence_row_id:
                     has_observation_source = bool(
                         str(getattr(sample, "assay_iri", "") or "")
                         or str(getattr(sample, "reference_iri", "") or "")
                     )
-                    mapped = int(getattr(sample, "source_mapping_n_candidates", 0) or 0) > 0
                     has_selected_mapping = bool(
                         str(getattr(sample, "mapping_protein_id", "") or "")
                         and getattr(sample, "mapping_position", None) is not None
                         and str(getattr(sample, "mapping_proteome", "") or "")
                     )
-                    if not has_observation_source or (mapped and not has_selected_mapping):
-                        lineage_issue_count += 1
-                        if len(lineage_issue_examples) < 10:
-                            lineage_issue_examples.append(sample_id or evidence_row_id)
+                    if not has_observation_source:
+                        lineage_failures.append("missing_observation_source")
+                    if mapped and not has_selected_mapping:
+                        lineage_failures.append("incomplete_selected_mapping")
+                if lineage_failures:
+                    lineage_issue_count += 1
+                    if len(lineage_issue_examples) < 10:
+                        identity = sample_id or evidence_row_id or "<missing-sample-id>"
+                        lineage_issue_examples.append(f"{identity} ({','.join(lineage_failures)})")
 
                 for field in ("flank_n", "flank_c"):
                     value = str(getattr(sample, field, "") or "").strip().upper()
@@ -312,7 +320,7 @@ def write_data_funnel_artifacts(out_dir: Path | str, funnel: Mapping[str, Any]) 
     with csv_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=("kind", "stage", "name", "count"))
         writer.writeheader()
-        for kind in ("stages", "drop_reasons", "additions"):
+        for kind in ("stages", "drop_reasons", "additions", "diagnostics"):
             for stage, counts in payload.get(kind, {}).items():
                 if not isinstance(counts, Mapping):
                     continue

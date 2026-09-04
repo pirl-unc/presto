@@ -335,7 +335,8 @@ class TestRouting:
         assert batch.source_mapping_n_candidates == [2]
         assert batch.flank_context_resolved == [False]
         assert batch.source_lineage["peptide"] == ["SIINFEKLA"]
-        assert batch.source_lineage["mhc_alleles"] == ["HLA-A*02:01"]
+        assert batch.source_lineage["source_mhc_alleles"] == ["HLA-A*02:01"]
+        assert batch.source_lineage["resolved_mhc_alleles"] == ["HLA-A*02:01"]
         assert batch.source_lineage["mapping_protein_id"] == ["ENSP1"]
         assert batch.source_lineage["source_sample_label"] == [""]
         moved = batch.to("cpu")
@@ -448,6 +449,7 @@ class TestRouting:
         _, _, _, _, elution, _, _, stats = load_records_from_hitlist()
         assert len(elution) == 1
         assert elution[0].alleles == ["HLA-A*02:01", "HLA-B*07:02"]
+        assert elution[0].source_alleles == ("HLA-A*02:01", "HLA-B*07:02")
         assert elution[0].flank_n == "GGGGGGGGGG"
         assert stats["flank_coverage"]["elution"] == 1.0
 
@@ -458,6 +460,8 @@ class TestRouting:
         batch = PrestoCollator()([sample])
         assert batch.source_lineage["source_sample_label"] == ["HeLa-A02"]
         assert batch.source_lineage["source_sample_attribution"] == ["monoallelic"]
+        assert batch.source_lineage["source_mhc_alleles"] == ["HLA-A*02:01;HLA-B*07:02"]
+        assert batch.source_lineage["resolved_mhc_alleles"] == ["HLA-A*02:01;HLA-B*07:02"]
 
     def test_ms_row_without_alleles_is_dropped(self, monkeypatch):
         _install_stub_hitlist(monkeypatch, [], [_ms_row(mhc_allele_set="", mhc_restriction="")])

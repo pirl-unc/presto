@@ -23,6 +23,7 @@ def _sample(sample_id: str, label: float, *, flank: str = "AAAA") -> PrestoSampl
         sample_id=sample_id,
         primary_allele="HLA-A*02:01",
         source_mhc_alleles=("HLA-A*02:01",),
+        resolved_mhc_alleles=("HLA-A*02:01",),
         evidence_row_id=f"ms:{sample_id}",
         assay_iri=f"assay:{sample_id}",
         mapping_protein_id="ENSP1",
@@ -91,6 +92,19 @@ def test_support_gate_can_require_balance_for_every_active_binary_target():
         )
 
 
+def test_traceable_lineage_gate_rejects_mapped_sample_without_observation_id():
+    splits = _balanced_splits()
+    broken = splits["val"][0]
+    broken.evidence_row_id = ""
+
+    audit = audit_split_support(splits)
+
+    assert audit["lineage"]["issue_count"] == 1
+    assert "missing_evidence_row_id" in audit["lineage"]["issue_examples"][0]
+    with pytest.raises(RuntimeError, match="source lineage is incomplete"):
+        validate_split_support(audit, require_traceable_lineage=True)
+
+
 def test_policy_input_changes_full_hash_but_not_supervision_hash():
     legacy_splits = _balanced_splits(flank="NAN")
     masked_splits = _balanced_splits(flank="")
@@ -129,6 +143,7 @@ def test_data_funnel_artifacts_preserve_stages_and_drop_reasons(tmp_path):
             "stages": {"before_cap": {"elution": 100}, "after_cap": {"elution": 20}},
             "drop_reasons": {"cap": {"elution": 80}},
             "additions": {"synthetic": {"elution": 10}},
+            "diagnostics": {"mhc_resolution": {"resolved_mhcseqs": 92}},
         },
     )
 
@@ -136,3 +151,4 @@ def test_data_funnel_artifacts_preserve_stages_and_drop_reasons(tmp_path):
     assert payload["stages"]["before_cap"]["elution"] == 100
     assert len(payload["sha256"]) == 64
     assert "drop_reasons,cap,elution,80" in paths["csv"].read_text()
+    assert "diagnostics,mhc_resolution,resolved_mhcseqs,92" in paths["csv"].read_text()

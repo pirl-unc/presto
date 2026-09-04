@@ -56,6 +56,7 @@ from presto.data.allele_resolver import (
     class_ii_default_dra_allele,
     infer_mhc_class_optional,
     is_class_ii_dr_beta_allele,
+    normalize_allele_name,
 )
 from presto.data.cross_source_dedup import (
     UnifiedRecord,
@@ -76,6 +77,7 @@ from presto.data.loaders import peptide_grouped_three_way_split_indices
 from presto.data.mhc_index import classify_unresolved_allele, load_mhc_index
 from presto.data.mhc_sequence_resolver import (
     ExactMHCInput,
+    load_mhcseqs_catalog_inputs,
     resolve_exact_mhc_inputs,
     resolve_exact_mhc_sequences,
 )
@@ -179,7 +181,12 @@ IEDB_DEFAULTS = {
     "max_tcell": 0,
     "max_vdjdb": 0,
     "cap_sampling": "reservoir",
+    "data_seed": None,
+    "exclude_target": [],
     "synthetic_pmhc_negative_ratio": 1.0,
+    "synthetic_elution_negative_ratio": None,
+    "synthetic_cascade_elution_negative_ratio": None,
+    "synthetic_cascade_tcell_negative_ratio": None,
     "synthetic_class_i_no_mhc_beta_negative_ratio": 0.25,
     "synthetic_processing_negative_ratio": 0.5,
     "synthetic_negative_min_nM": DEFAULT_MAX_AFFINITY_NM,
@@ -211,6 +218,15 @@ IEDB_DEFAULTS = {
     "tcell_ex_vivo_margin": 0.0,
     "val_frac": 0.2,
     "test_frac": 0.0,
+    "require_split_target": [],
+    "require_all_active_target_support": False,
+    "require_binary_balance_target": [],
+    "require_all_active_binary_balance": False,
+    "min_split_target_support": 1,
+    "require_traceable_lineage": False,
+    "forbid_fake_null_sequences": False,
+    "expected_split_support_sha256": None,
+    "data_preflight_only": False,
     "checkpoint": None,
     "run_dir": None,
     "weight_decay": 0.01,
@@ -556,7 +572,7 @@ def _resolve_probe_specs(
         else:
             unresolved.append(allele)
 
-    if unresolved and index_csv:
+    if unresolved:
         seq_map, _ = resolve_mhc_sequences_from_index(index_csv=index_csv, alleles=unresolved)
         for allele in unresolved:
             seq = str(seq_map.get(allele, "")).strip().upper()
@@ -2275,6 +2291,7 @@ def augment_elution_records_with_synthetic_negatives(
                 peptide=peptide,
                 alleles=alleles,
                 detected=False,
+                source_alleles=tuple(alleles),
                 cell_type=source.cell_type,
                 tissue=source.tissue,
                 mhc_class=source.mhc_class,
@@ -2299,6 +2316,7 @@ def augment_elution_records_with_synthetic_negatives(
                         peptide=peptide,
                         alleles=[neg_allele],
                         detected=False,
+                        source_alleles=(neg_allele,),
                         cell_type=source.cell_type,
                         tissue=source.tissue,
                         mhc_class=source.mhc_class,
@@ -2440,6 +2458,7 @@ def cascade_binding_negatives_to_downstream(
                 peptide=source.peptide,
                 alleles=[source.mhc_allele],
                 detected=False,
+                source_alleles=(source.mhc_allele,),
                 mhc_class=source.mhc_class,
                 species=source.species,
                 source="synthetic_negative_from_binding",
@@ -2521,6 +2540,7 @@ def load_iedb_binding_and_elution_records(
                     peptide=rec.peptide,
                     alleles=allele_bag or [rec.mhc_allele],
                     detected=True,
+                    source_alleles=tuple(allele_bag or [rec.mhc_allele]),
                     mhc_class=rec.mhc_class or infer_mhc_class(rec.mhc_allele),
                     species=rec.species or infer_species(rec.mhc_allele),
                     source="iedb",
@@ -2597,36 +2617,52 @@ def load_vdjdb_records(
 
 
 def _generate_mhc_only_samples(
-    index_csv: str,
+    index_csv: Optional[str] = None,
     max_samples: int = 5000,
     seed: int = 42,
 ) -> List[PrestoSample]:
-    """Generate MHC-only training samples from the MHC index.
+    """Generate MHC-only samples from `mhcseqs` or an explicit CSV index.
 
     These samples have a polyalanine placeholder peptide and real MHC
     sequences. They contribute zero supervised binding/tcell/elution loss
     (no targets) but the MHC type/species classification losses train the
     base encoder's MHC representations for discriminative allele encoding.
     """
-    records = load_mhc_index(index_csv)
+    using_mhcseqs_catalog = not bool(index_csv)
+    records = (
+        list(load_mhc_index(index_csv).values())
+        if index_csv
+        else list(load_mhcseqs_catalog_inputs().values())
+    )
     # Filter to records with valid groove-half inputs.
-    valid: List[Tuple[Any, str, str]] = []
+    valid: List[Tuple[Any, str, str, str]] = []
     rejected: list[tuple[str, str, str]] = []  # (allele, reason, bad_chars)
-    for rec in records.values():
+    for rec in records:
+        allele = str(
+            getattr(rec, "normalized", "")
+            or getattr(rec, "allele", "")
+            or getattr(rec, "allele_raw", "")
+        ).strip()
+        if using_mhcseqs_catalog:
+            try:
+                allele = normalize_allele_name(allele)
+            except (AttributeError, ValueError):
+                rejected.append((allele, "not_a_named_mhc_allele", ""))
+                continue
         seq = str(rec.sequence or "").strip().upper()
         if not seq:
             continue
         if len(seq) < MIN_MHC_SEQUENCE_LEN:
-            rejected.append((rec.normalized or rec.allele, f"short_len={len(seq)}", ""))
+            rejected.append((allele, f"short_len={len(seq)}", ""))
             continue
         if "X" in seq:
-            rejected.append((rec.normalized or rec.allele, "contains_X", "X"))
+            rejected.append((allele, "contains_X", "X"))
             continue
         bad_chars = set(seq) - MHC_SEQUENCE_ALLOWED_AA
         if bad_chars:
             rejected.append(
                 (
-                    rec.normalized or rec.allele,
+                    allele,
                     "non_canonical_chars",
                     "".join(sorted(bad_chars)),
                 )
@@ -2635,7 +2671,7 @@ def _generate_mhc_only_samples(
         if _looks_like_nucleotide_mhc_sequence(seq):
             rejected.append(
                 (
-                    rec.normalized or rec.allele,
+                    allele,
                     f"nucleotide_like_len={len(seq)}",
                     "",
                 )
@@ -2643,10 +2679,30 @@ def _generate_mhc_only_samples(
             continue
 
         mhc_class = normalize_mhc_class(rec.mhc_class, default="I")
-        gene = (rec.gene or "").upper()
-        if rec.groove_half_1 or rec.groove_half_2:
-            mhc_a_seq = str(rec.groove_half_1 or "").strip().upper()
-            mhc_b_seq = str(rec.groove_half_2 or "").strip().upper()
+        gene = str(getattr(rec, "gene", "") or "").upper()
+        chain = str(getattr(rec, "chain", "") or "").lower()
+        groove_half_1 = (
+            str(getattr(rec, "groove_half_1", "") or getattr(rec, "groove1", "") or "")
+            .strip()
+            .upper()
+        )
+        groove_half_2 = (
+            str(getattr(rec, "groove_half_2", "") or getattr(rec, "groove2", "") or "")
+            .strip()
+            .upper()
+        )
+        if using_mhcseqs_catalog:
+            complete_groove = (
+                bool(groove_half_1 and groove_half_2)
+                if mhc_class == "I"
+                else bool(groove_half_2 if chain == "beta" else groove_half_1)
+            )
+            if not complete_groove:
+                rejected.append((allele, "incomplete_mhcseqs_groove", ""))
+                continue
+        if groove_half_1 or groove_half_2:
+            mhc_a_seq = groove_half_1
+            mhc_b_seq = groove_half_2
         elif mhc_class == "I":
             try:
                 prepared = prepare_mhc_input(
@@ -2657,7 +2713,7 @@ def _generate_mhc_only_samples(
             except ValueError as exc:
                 rejected.append(
                     (
-                        rec.normalized or rec.allele_raw,
+                        allele,
                         f"groove_parse_failed:{exc}",
                         "",
                     )
@@ -2665,7 +2721,7 @@ def _generate_mhc_only_samples(
                 continue
             mhc_a_seq = prepared.groove_half_1
             mhc_b_seq = prepared.groove_half_2
-        elif any(tag in gene for tag in ("DRB", "DQB", "DPB", "AB", "EB")):
+        elif chain == "beta" or any(tag in gene for tag in ("DRB", "DQB", "DPB", "AB", "EB")):
             mhc_a_seq = ""
             mhc_b_seq = seq
         else:
@@ -2673,14 +2729,14 @@ def _generate_mhc_only_samples(
             mhc_b_seq = ""
 
         if not mhc_a_seq and not mhc_b_seq:
-            rejected.append((rec.normalized or rec.allele_raw, "no_groove_inputs", ""))
+            rejected.append((allele, "no_groove_inputs", ""))
             continue
 
         bad_segments = sorted({ch for ch in (mhc_a_seq + mhc_b_seq) if ch not in MHC_ALLOWED_AA})
         if bad_segments:
             rejected.append(
                 (
-                    rec.normalized or rec.allele_raw,
+                    allele,
                     "non_canonical_groove_chars",
                     "".join(bad_segments),
                 )
@@ -2688,17 +2744,24 @@ def _generate_mhc_only_samples(
             continue
 
         if "X" in mhc_a_seq or "X" in mhc_b_seq:
-            rejected.append((rec.normalized or rec.allele_raw, "contains_X", "X"))
+            rejected.append((allele, "contains_X", "X"))
             continue
 
-        valid.append((rec, mhc_a_seq, mhc_b_seq))
+        valid.append((rec, allele, mhc_a_seq, mhc_b_seq))
 
     if rejected:
-        print(f"MHC augmentation: rejected {len(rejected)} alleles with invalid sequences:")
-        for allele, reason, chars in rejected[:50]:
+        reason_counts = Counter(reason for _, reason, _ in rejected)
+        reason_summary = ", ".join(
+            f"{reason}={count}" for reason, count in reason_counts.most_common()
+        )
+        print(
+            f"MHC augmentation: rejected {len(rejected)} unusable catalog records "
+            f"({reason_summary}); examples:"
+        )
+        for allele, reason, chars in rejected[:12]:
             print(f"  {allele:30s}  reason={reason:20s}  chars={chars}")
-        if len(rejected) > 50:
-            print(f"  ... and {len(rejected) - 50} more")
+        if len(rejected) > 12:
+            print(f"  ... and {len(rejected) - 12} more")
 
     if not valid:
         return []
@@ -2708,9 +2771,9 @@ def _generate_mhc_only_samples(
         valid = rng.sample(valid, max_samples)
 
     samples: List[PrestoSample] = []
-    for rec, mhc_a_seq, mhc_b_seq in valid:
+    for rec, allele, mhc_a_seq, mhc_b_seq in valid:
         mhc_class = normalize_mhc_class(rec.mhc_class, default="I")
-        species = rec.species or infer_species(rec.normalized) or None
+        species = getattr(rec, "species", None) or infer_species(allele) or None
 
         samples.append(
             PrestoSample(
@@ -2722,8 +2785,8 @@ def _generate_mhc_only_samples(
                 sample_source="mhc_augmentation",
                 assay_group="mhc_aux",
                 synthetic_kind="mhc_only",
-                primary_allele=rec.normalized,
-                sample_id=f"mhc_aug_{len(samples)}",
+                primary_allele=allele,
+                sample_id=f"mhc_aug:{allele}",
             )
         )
     return samples
@@ -2885,7 +2948,7 @@ def _collect_unique_alleles(
 
 
 def resolve_mhc_sequences_from_index(
-    index_csv: str,
+    index_csv: Optional[str],
     alleles: Sequence[str],
 ) -> Tuple[Dict[str, str], Dict[str, int]]:
     """Resolve allele names to sequences with mhcseqs-first lookup."""
@@ -2897,7 +2960,7 @@ def resolve_mhc_sequences_from_index(
 
 
 def resolve_mhc_inputs_from_index(
-    index_csv: str,
+    index_csv: Optional[str],
     alleles: Sequence[str],
 ) -> Tuple[Dict[str, ExactMHCInput], Dict[str, int]]:
     """Resolve allele names to groove-aware exact MHC inputs with mhcseqs-first lookup."""
@@ -3414,7 +3477,13 @@ def _filter_records_to_resolved_mhc(
         if resolved_alleles == alleles:
             elution_filtered.append(rec)
         else:
-            elution_filtered.append(replace(rec, alleles=resolved_alleles))
+            elution_filtered.append(
+                replace(
+                    rec,
+                    alleles=resolved_alleles,
+                    source_alleles=tuple(rec.source_alleles or alleles),
+                )
+            )
 
     tcell_filtered: List[TCellRecord] = []
     for rec in tcell_records:
@@ -3668,6 +3737,7 @@ def _append_with_cap_sampling(
     seen: int,
 ) -> int:
     """Append or reservoir-replace while honoring an optional cap."""
+    seen += 1
     if limit is None:
         records.append(item)
         return seen
@@ -3678,7 +3748,6 @@ def _append_with_cap_sampling(
         return seen
 
     # Reservoir sampling over all valid candidates seen for this modality.
-    seen += 1
     if len(records) < limit:
         records.append(item)
     else:
@@ -3746,26 +3815,6 @@ def load_records_from_merged_tsv(
     elution_seen = 0
     tcell_seen = 0
     vdjdb_seen = 0
-
-    def _all_requested_limits_satisfied() -> bool:
-        """Return true when every explicitly requested limit has been met."""
-        limits_and_counts = (
-            (binding_limit, len(binding_records)),
-            (kinetics_limit, len(kinetics_records)),
-            (stability_limit, len(stability_records)),
-            (processing_limit, len(processing_records)),
-            (elution_limit, len(elution_records)),
-            (tcell_limit, len(tcell_records)),
-            (vdjdb_limit, len(vdjdb_records)),
-        )
-        any_bounded = False
-        for limit, count in limits_and_counts:
-            if limit is None:
-                continue
-            any_bounded = True
-            if count < limit:
-                return False
-        return any_bounded
 
     with merged_tsv.open("r", encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle, delimiter="\t")
@@ -3973,6 +4022,7 @@ def load_records_from_merged_tsv(
                         peptide=peptide,
                         alleles=alleles,
                         detected=bool(detected > 0.5),
+                        source_alleles=tuple(alleles),
                         mhc_class=mhc_class,
                         species=species,
                         antigen_species=antigen_species_col,
@@ -4060,24 +4110,40 @@ def load_records_from_merged_tsv(
                     seen=processing_seen,
                 )
 
-            if sampling_mode == "head" and _all_requested_limits_satisfied():
-                break
-
+    counts_before_cap = {
+        "binding": binding_seen,
+        "kinetics": kinetics_seen,
+        "stability": stability_seen,
+        "processing": processing_seen,
+        "elution": elution_seen,
+        "tcell": tcell_seen,
+        "tcr_evidence": vdjdb_seen,
+    }
+    records_loaded = {
+        "binding": len(binding_records),
+        "kinetics": len(kinetics_records),
+        "stability": len(stability_records),
+        "processing": len(processing_records),
+        "elution": len(elution_records),
+        "tcell": len(tcell_records),
+        "tcr_evidence": len(vdjdb_records),
+    }
+    rows_scanned = sum(by_assay.values())
     stats = {
-        "rows_scanned": sum(by_assay.values()),
+        "rows_scanned": rows_scanned,
         "rows_by_assay": dict(sorted(by_assay.items(), key=lambda item: (-item[1], item[0]))),
         "rows_by_source": dict(sorted(by_source.items(), key=lambda item: (-item[1], item[0]))),
         "rows_dropped_invalid_peptide": rows_dropped_invalid_peptide,
         "rows_sanitized_optional_sequences": rows_sanitized_optional_sequences,
+        "skipped_invalid_peptide": rows_dropped_invalid_peptide,
+        "skipped_unroutable_or_missing_label": max(
+            0, rows_scanned - sum(counts_before_cap.values())
+        ),
         "cap_sampling": sampling_mode,
-        "records_loaded": {
-            "binding": len(binding_records),
-            "kinetics": len(kinetics_records),
-            "stability": len(stability_records),
-            "processing": len(processing_records),
-            "elution": len(elution_records),
-            "tcell": len(tcell_records),
-            "tcr_evidence": len(vdjdb_records),
+        "counts_before_cap": counts_before_cap,
+        "records_loaded": records_loaded,
+        "rows_dropped_by_cap": {
+            name: max(0, count - records_loaded[name]) for name, count in counts_before_cap.items()
         },
     }
     return (
@@ -4457,6 +4523,26 @@ def _exclude_sparse_record_targets(
     return kept_kinetics, kept_stability, {key: value for key, value in removed.items() if value}
 
 
+def _record_source_loader_funnel(
+    data_funnel: Dict[str, Any],
+    source_loader: Mapping[str, Any],
+) -> None:
+    """Normalize common loader statistics into the persisted funnel schema."""
+    before_cap = source_loader.get("counts_before_cap")
+    if isinstance(before_cap, Mapping):
+        data_funnel["stages"]["loaded_pre_cap"] = dict(before_cap)
+    cap_drops = source_loader.get("rows_dropped_by_cap")
+    if isinstance(cap_drops, Mapping):
+        data_funnel["drop_reasons"]["caps"] = dict(cap_drops)
+    source_skips = {
+        str(name): int(count)
+        for name, count in source_loader.items()
+        if str(name).startswith("skipped_") and isinstance(count, int)
+    }
+    if source_skips:
+        data_funnel["drop_reasons"]["source_ingest"] = source_skips
+
+
 def run(args: argparse.Namespace) -> None:
     """Run unified multi-source training with parsed arguments."""
     args = _resolve_run_args(args)
@@ -4500,6 +4586,7 @@ def run(args: argparse.Namespace) -> None:
         "stages": {},
         "drop_reasons": {},
         "additions": {},
+        "diagnostics": {},
     }
 
     def _current_record_counts() -> Dict[str, int]:
@@ -4869,19 +4956,7 @@ def run(args: argparse.Namespace) -> None:
     data_funnel["stages"]["loaded_post_cap"] = _current_record_counts()
     source_loader = data_funnel.get("source_loader", {})
     if isinstance(source_loader, Mapping):
-        before_cap = source_loader.get("counts_before_cap")
-        if isinstance(before_cap, Mapping):
-            data_funnel["stages"]["loaded_pre_cap"] = dict(before_cap)
-        cap_drops = source_loader.get("rows_dropped_by_cap")
-        if isinstance(cap_drops, Mapping):
-            data_funnel["drop_reasons"]["caps"] = dict(cap_drops)
-        source_skips = {
-            str(name): int(count)
-            for name, count in source_loader.items()
-            if str(name).startswith("skipped_") and isinstance(count, int)
-        }
-        if source_skips:
-            data_funnel["drop_reasons"]["source_ingest"] = source_skips
+        _record_source_loader_funnel(data_funnel, source_loader)
 
     excluded_targets = tuple(getattr(args, "exclude_target", ()) or ())
     exclusion_stats: Dict[str, int] = {}
@@ -4934,8 +5009,21 @@ def run(args: argparse.Namespace) -> None:
         tcell_records,
         vdjdb_records,
     )
-    mhc_sequences, stats = resolve_mhc_sequences_from_index(args.index_csv, unique_alleles)
-    mhc_exact_inputs, _ = resolve_mhc_inputs_from_index(args.index_csv, unique_alleles)
+    # Resolve once so the full sequences and groove records necessarily come
+    # from the same mhcseqs-first / CSV-supplemented join.
+    mhc_exact_inputs, stats = resolve_mhc_inputs_from_index(args.index_csv, unique_alleles)
+    mhc_sequences = {
+        allele: record.sequence
+        for allele, record in mhc_exact_inputs.items()
+        if str(record.sequence or "").strip()
+    }
+    data_funnel["mhc_resolution_contract"] = {
+        "resolver_order": ["mhcseqs", "index_csv"],
+        "index_csv": str(args.index_csv or ""),
+        "filter_unresolved_mhc": filter_unresolved_mhc,
+        "strict_mhc_resolution": strict_mhc_resolution,
+    }
+    data_funnel["diagnostics"]["mhc_resolution_alleles"] = dict(stats)
     print(
         "Resolved MHC sequences: "
         f"{stats['resolved']}/{stats['total']} alleles "
@@ -4943,6 +5031,11 @@ def run(args: argparse.Namespace) -> None:
         f"index_fallback={stats.get('resolved_index', 0)})"
     )
     mhc_quality = audit_loaded_mhc_sequence_quality(mhc_sequences)
+    data_funnel["diagnostics"]["mhc_sequence_quality"] = {
+        name: value
+        for name, value in mhc_quality.items()
+        if isinstance(value, (int, float)) and not isinstance(value, bool)
+    }
     print(
         "Loaded MHC sequence quality: "
         f"total={mhc_quality['total_sequences']}, "
@@ -4982,6 +5075,7 @@ def run(args: argparse.Namespace) -> None:
                 f"fragment ({MIN_MHC_SEQUENCE_LEN} aa)). "
                 f"examples={example_text}"
             )
+    data_funnel["diagnostics"]["invalid_mhc_sequences"] = {"count": len(invalid_alleles)}
 
     coverage_audit = _audit_mhc_sequence_coverage(
         binding_records=binding_records,
@@ -4992,6 +5086,9 @@ def run(args: argparse.Namespace) -> None:
         tcell_records=tcell_records,
         vdjdb_records=vdjdb_records,
         mhc_sequences=mhc_sequences,
+    )
+    data_funnel["diagnostics"]["mhc_coverage_before_filter"] = dict(
+        coverage_audit.get("overall", {})
     )
     _print_mhc_sequence_coverage_summary(coverage_audit)
     coverage_reports = _write_mhc_sequence_coverage_report(
@@ -5041,6 +5138,7 @@ def run(args: argparse.Namespace) -> None:
 
     data_funnel["stages"]["before_mhc_filter"] = _current_record_counts()
     filter_stats: Dict[str, int] = {}
+    coverage_after_filter = coverage_audit
     if unresolved_total > 0 and filter_unresolved_mhc:
         print("Filtering unresolved MHC rows before training (resolved-only mode).")
         (
@@ -5083,6 +5181,7 @@ def run(args: argparse.Namespace) -> None:
             vdjdb_records=vdjdb_records,
             mhc_sequences=mhc_sequences,
         )
+        coverage_after_filter = coverage_post
         print("Post-filter coverage:")
         _print_mhc_sequence_coverage_summary(coverage_post)
         post_reports = _write_mhc_sequence_coverage_report(
@@ -5114,6 +5213,9 @@ def run(args: argparse.Namespace) -> None:
 
     data_funnel["stages"]["after_mhc_filter"] = _current_record_counts()
     data_funnel["drop_reasons"]["mhc_filter"] = filter_stats
+    data_funnel["diagnostics"]["mhc_coverage_after_filter"] = dict(
+        coverage_after_filter.get("overall", {})
+    )
 
     if unresolved_total > 0:
         reports = _write_unresolved_mhc_report(run_dir=run_dir, audit=unresolved_audit)
@@ -5291,6 +5393,7 @@ def run(args: argparse.Namespace) -> None:
         max_fraction=mhc_augmentation_max_fraction,
     )
     mhc_only_added = 0
+    mhc_augmentation_source = "index_csv" if args.index_csv else "mhcseqs"
     if (
         mhc_augmentation_samples > 0
         and effective_mhc_augmentation_samples < mhc_augmentation_samples
@@ -5302,7 +5405,7 @@ def run(args: argparse.Namespace) -> None:
             f"effective={effective_mhc_augmentation_samples}, "
             f"base_dataset={len(dataset)})"
         )
-    if effective_mhc_augmentation_samples > 0 and args.index_csv:
+    if effective_mhc_augmentation_samples > 0:
         mhc_only = _generate_mhc_only_samples(
             index_csv=args.index_csv,
             max_samples=effective_mhc_augmentation_samples,
@@ -5345,6 +5448,7 @@ def run(args: argparse.Namespace) -> None:
         )
     )
     data_funnel["additions"]["mhc_only"] = {"samples": mhc_only_added}
+    data_funnel["mhc_resolution_contract"]["augmentation_source"] = mhc_augmentation_source
     data_funnel["additions"]["uniprot"] = {"samples": uniprot_added}
     if run_dir is not None:
         from presto.training.data_support import write_data_funnel_artifacts
@@ -6109,7 +6213,10 @@ def main(argv=None):
         "--index-csv",
         type=str,
         default=None,
-        help="Optional built MHC index CSV for allele->sequence resolution",
+        help=(
+            "Optional fallback MHC index CSV; mhcseqs is the canonical default for "
+            "allele-to-sequence resolution and MHC augmentation"
+        ),
     )
     parser.add_argument(
         "--strict-mhc-resolution",
@@ -6280,7 +6387,8 @@ def main(argv=None):
         type=int,
         default=60000,
         help=(
-            "Requested count of MHC-only auxiliary samples drawn from the MHC index "
+            "Requested count of MHC-only auxiliary samples drawn from mhcseqs or an "
+            "explicit MHC index "
             "(capped by --mhc-augmentation-max-fraction)"
         ),
     )

@@ -276,7 +276,8 @@ class TestCollectionAndArtifacts:
             [True, False, False],
             lineage={
                 "peptide": ["AAA", "BBB", "CCC"],
-                "mhc_alleles": ["HLA-A*02:01"] * 3,
+                "source_mhc_alleles": ["HLA-A*02:01;HLA-B*99:99"] * 3,
+                "resolved_mhc_alleles": ["HLA-A*02:01"] * 3,
                 "evidence_row_id": ["binding:a", "binding:b", "binding:c"],
                 "assay_iri": ["assay:a", "assay:b", "assay:c"],
                 "reference_iri": ["ref:a", "ref:b", "ref:c"],
@@ -296,7 +297,8 @@ class TestCollectionAndArtifacts:
         assert rows[1]["source_mapping_n_candidates"] == "2"
         assert rows[1]["flank_context_resolved"] == "False"
         assert rows[1]["peptide"] == "BBB"
-        assert rows[1]["mhc_alleles"] == "HLA-A*02:01"
+        assert rows[1]["source_mhc_alleles"] == "HLA-A*02:01;HLA-B*99:99"
+        assert rows[1]["resolved_mhc_alleles"] == "HLA-A*02:01"
         assert rows[1]["evidence_row_id"] == "binding:b"
         assert rows[1]["assay_iri"] == "assay:b"
         assert rows[1]["mapping_protein_id"] == "P2"

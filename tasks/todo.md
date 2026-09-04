@@ -9581,7 +9581,7 @@ diagnostic support artifacts are emitted for every run with a run directory.
   every split. All six report zero lineage issues, zero duplicate sample IDs,
   and zero fake-null optional sequences.
 - `dataset_supervision_contract_sha256` is identical across all six conditions:
-  `44aa27cf8cab8860d55459655f21eb9f550560b4880483008e325802a50c753e`.
+  `45237653fa56c729a90088a66ec35ea602bbde55c2e09320b99afb4dc8686707`.
   Split-supervision hashes match between policies for seeds 42, 43, and 44.
   Full input hashes differ between policies as intended because flank strings
   and terminus state are the declared intervention.
@@ -9613,3 +9613,95 @@ diagnostic support artifacts are emitted for every run with a run directory.
   dedicated PR from that branch rather than stacked on another change. It was
   committed as `1e01aee`, pushed, and opened as PR
   [#45](https://github.com/pirl-unc/presto/pull/45).
+
+---
+
+# PR #45 review: seamless lineage and MHC-resolution defaults (2026-09-04)
+
+## Acceptance contract
+
+Resolve all four review findings without weakening the fail-closed preflight.
+The MHC path must use `mhcseqs` as the default canonical sequence resolver,
+optionally supplement it with the CSV index, filter unresolved model inputs by
+default, and retain the complete source allele set separately from the curated
+resolved set. CLI and YAML/JSON configuration must produce the same effective
+contract, and every loader must emit enough normalized funnel statistics to
+reconstruct caps and ingest losses.
+
+## Plan
+
+- [x] Make traceable-lineage validation reject mapped source rows with no
+      observation ID, while retaining aggregated diagnostics for missing
+      observation source and incomplete selected mapping. Add regression tests
+      proving a fully mapped but ID-less sample cannot pass the gate.
+- [x] Register every data-integrity argument in `IEDB_DEFAULTS` with the exact
+      parser default and verify CLI/config merge parity for scalar, repeated,
+      nullable-ratio, and boolean gate options.
+- [x] Normalize merged-TSV loader statistics into the same pre-cap, post-cap,
+      cap-drop, and ingest-drop schema used by Hitlist. Ensure the default
+      `merged_tsv` path always writes those stages/reasons to both funnel JSON
+      and CSV, including zero-valued but meaningful stages.
+- [x] Add immutable source allele-set provenance to multi-allele records.
+      Resolution/filtering may update only the model-facing allele set; held-out
+      lineage must use the original source set. Cover mixed resolved/unresolved
+      elution bags and synthetic copies.
+- [x] Audit and harden default MHC loading/join behavior: `mhcseqs` first,
+      optional CSV supplement second, canonical alias handling, strict and
+      resolved-only defaults, explicit resolution/drop diagnostics, and no
+      requirement for `--index-csv` when `mhcseqs` can resolve the corpus.
+      Add default-path tests for no-index resolution and source-vs-curated
+      allele preservation.
+- [x] Run focused config/loader/support/MHC tests, the complete changed-area
+      suite, pinned Ruff checks, and the full suite if focused verification is
+      clean. Review the final diff, update this section with evidence, commit,
+      push PR #45, and report CI state.
+
+## Review
+
+### Result
+
+- The traceability gate now treats a missing observation ID as an explicit
+  lineage failure for any mapped source row. Its examples distinguish missing
+  identity, missing assay/reference provenance, and incomplete selected mapping.
+- Every new curation, synthetic-ratio, split-support, lineage, fake-null, and
+  preflight option is registered in `IEDB_DEFAULTS`. Public CLI defaults match
+  that registry, and JSON/YAML configuration can now set the complete contract.
+- The default merged-TSV loader now reports valid candidates before caps,
+  post-cap records, per-modality cap losses, invalid peptides, and valid rows
+  skipped for missing/unroutable labels. Head sampling continues scanning after
+  its cap so its audit describes the full input rather than only the prefix.
+- Multi-allele elution records keep an immutable `source_alleles` tuple. MHC
+  filtering changes only model-facing `alleles`; samples, batches, and held-out
+  dumps expose both `source_mhc_alleles` and `resolved_mhc_alleles`.
+- MHC sequence resolution performs one `mhcseqs`-first exact-input join and
+  derives both full sequences and groove inputs from it, using `--index-csv`
+  only as an optional supplement. Strict resolution and resolved-only filtering
+  remain on by default, with before/after coverage, source, quality, and drop
+  diagnostics in the data funnel.
+- Default MHC-only augmentation no longer disappears when `--index-csv` is
+  absent. It loads `mhcseqs`, accepts only canonical named alleles with complete
+  class-correct groove inputs, rejects accessions/partial or invalid sequences
+  with counted reasons, and fails loudly if the catalog is unusable. Missing
+  diagnostic probe alleles likewise retry the canonical resolver without
+  requiring a fallback path.
+
+### Evidence
+
+- The live no-index `mhcseqs` catalog smoke inspected 56,440 unique catalog
+  records, rejected 23,070 accession-only/incomplete/invalid inputs, and sampled
+  12 unique canonical class-I/class-II alleles with zero empty groove inputs.
+- All six production-size local preflights passed again with a fixed
+  `data_seed=42` and split seeds 42/43/44 under both mapping policies. Each has
+  57,710 samples, 92/92 alleles resolved by `mhcseqs`, zero lineage issues,
+  zero duplicate IDs, and zero fake-null sequences. Policy pairs have identical
+  split supervision, and all six share dataset supervision fingerprint
+  `45237653fa56c729a90088a66ec35ea602bbde55c2e09320b99afb4dc8686707`.
+- Focused support/config/loader/MHC/held-out regression suite: 280 passed in
+  6.24 seconds.
+- Full repository suite: 1,765 passed, 1 expected platform skip, 5 upstream
+  warnings in 718.92 seconds.
+- Ruff 0.16.0: `ruff check .` passed and all 221 governed files were already
+  formatted. `git diff --check` passed.
+- The branch is based directly on current `origin/main` (`d79853d`) with no
+  intervening dependency branch, so PR #45 is not stacked. No GPU/Modal work
+  was launched.

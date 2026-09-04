@@ -308,6 +308,7 @@ class PrestoSample:
     mapping_proteome_source: str = ""
     mapping_is_canonical_transcript: Optional[bool] = None
     source_mhc_alleles: tuple[str, ...] = ()
+    resolved_mhc_alleles: tuple[str, ...] = ()
     dataset_index: int = -1
     peptide_id: int = -1
     allele_id: int = -1
@@ -1923,7 +1924,8 @@ class PrestoCollator:
             flank_context_resolved=[bool(s.flank_context_resolved) for s in samples],
             source_lineage={
                 "peptide": [s.peptide for s in samples],
-                "mhc_alleles": [";".join(s.source_mhc_alleles) for s in samples],
+                "source_mhc_alleles": [";".join(s.source_mhc_alleles) for s in samples],
+                "resolved_mhc_alleles": [";".join(s.resolved_mhc_alleles) for s in samples],
                 "evidence_row_id": [s.evidence_row_id for s in samples],
                 "assay_iri": [s.assay_iri for s in samples],
                 "reference_iri": [s.reference_iri for s in samples],
