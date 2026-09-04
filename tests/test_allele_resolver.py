@@ -4,6 +4,8 @@ import types
 import tempfile
 import os
 
+import pytest
+
 from presto.data.allele_resolver import (
     AlleleResolver,
     AlleleRecord,
@@ -14,6 +16,7 @@ from presto.data.allele_resolver import (
     is_class_ii_dr_beta_allele,
     require_mhcgnomes,
     normalize_allele_name,
+    normalize_mhc_class,
     infer_mhc_class,
     infer_gene,
     infer_species_identity,
@@ -430,3 +433,48 @@ class TestAlleleRecord:
             species="mouse",
         )
         assert record.species == "mouse"
+
+
+class TestRomanNumeralsAreNotSubclasses:
+    """`normalize_mhc_class` prefix-matched, so other numerals were swallowed.
+
+    The prefix rule exists to accept subclass labels the alias tables do not
+    enumerate. It also accepted any string beginning with `I`, so `"III"`
+    matched the class II branch and `"IV"` the class I branch. MHC class III
+    is complement, TNF and heat-shock genes -- no peptide-binding groove at
+    all -- so this handed a non-antigen-presenting locus to a groove parser.
+    presto#42.
+    """
+
+    @pytest.mark.parametrize("label", ["III", "IIIa", "IV", "V", "IX", "XI"])
+    def test_a_different_numeral_is_not_a_class(self, label):
+        assert normalize_mhc_class(label) is None
+
+    @pytest.mark.parametrize(
+        "label,expected",
+        [
+            ("I", "I"),
+            ("Ia", "I"),
+            ("Ib", "I"),
+            ("Ic", "I"),
+            ("II", "II"),
+            ("IIa", "II"),
+            ("IIb", "II"),
+            ("class I", "I"),
+            ("class II", "II"),
+            ("MHC-I", "I"),
+            ("MHC-II", "II"),
+        ],
+    )
+    def test_real_classes_and_subclasses_still_resolve(self, label, expected):
+        assert normalize_mhc_class(label) == expected
+
+    def test_the_default_is_returned_for_a_rejected_numeral(self):
+        """Rejection must take the same path as any other unknown label."""
+        assert normalize_mhc_class("III", default="fallback") == "fallback"
+        assert normalize_mhc_class("bogus", default="fallback") == "fallback"
+
+    def test_longer_subclass_suffixes_still_work(self):
+        """The prefix rule's actual purpose is preserved."""
+        assert normalize_mhc_class("Ia1") == "I"
+        assert normalize_mhc_class("IIb2") == "II"

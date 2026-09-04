@@ -1400,6 +1400,19 @@ class Presto(nn.Module):
         seg = tok.to(device=device, dtype=torch.long)
         if seg.ndim != 2:
             raise ValueError(f"Expected 2D token tensor, got shape={tuple(seg.shape)}")
+        if seg.shape[1] == 0:
+            # A zero-width segment carries no tokens at all, so it is the same
+            # statement as `tok is None` and takes the same branch. It became
+            # reachable when groove extraction started refusing chains that
+            # have no groove -- TAP2, HLA-DM, null alleles -- instead of
+            # truncating them into one. Writing the sentinel into column 0
+            # here raised IndexError on a dimension of size 0.
+            return torch.full(
+                (batch_size, 1),
+                self.missing_token_idx,
+                dtype=torch.long,
+                device=device,
+            )
 
         # For rows that are fully padded, force a sentinel non-pad token.
         mask = seg != 0

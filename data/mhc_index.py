@@ -28,9 +28,7 @@ from .allele_resolver import (
     require_mhcgnomes,
 )
 from .groove import (
-    parse_class_i,
-    parse_class_ii_alpha,
-    parse_class_ii_beta,
+    groove_record,
 )
 
 
@@ -589,12 +587,10 @@ def augment_mhc_index(index_csv: str, output_csv: str) -> Dict[str, object]:
         normalized_class = normalize_mhc_class(rec.mhc_class, default=rec.mhc_class)
         suffix_flags = _allele_suffix_flags(rec.normalized or rec.allele_raw)
         if normalized_class == "I":
-            parsed = parse_class_i(rec.sequence, allele=rec.normalized, gene=rec.gene)
+            parsed = groove_record(rec.sequence, mhc_class="I", chain="alpha")
         elif normalized_class == "II":
-            if _is_class_ii_alpha_gene(rec.gene):
-                parsed = parse_class_ii_alpha(rec.sequence, allele=rec.normalized, gene=rec.gene)
-            else:
-                parsed = parse_class_ii_beta(rec.sequence, allele=rec.normalized, gene=rec.gene)
+            chain = "alpha" if _is_class_ii_alpha_gene(rec.gene) else "beta"
+            parsed = groove_record(rec.sequence, mhc_class="II", chain=chain)
         else:
             raise MHCIndexError(f"Unsupported MHC class for groove augmentation: {rec.mhc_class!r}")
 
@@ -709,11 +705,12 @@ def _parse_record_sequence(
     allele_name = str(allele or record.normalized or record.allele_raw or "").strip()
     normalized_class = normalize_mhc_class(record.mhc_class, default=record.mhc_class)
     if normalized_class == "I":
-        return parse_class_i(seq, allele=allele_name, gene=record.gene)
+        return groove_record(
+            seq, mhc_class="I", chain="alpha", allele=allele_name, gene=record.gene
+        )
     if normalized_class == "II":
-        if _is_class_ii_alpha_gene(record.gene):
-            return parse_class_ii_alpha(seq, allele=allele_name, gene=record.gene)
-        return parse_class_ii_beta(seq, allele=allele_name, gene=record.gene)
+        chain = "alpha" if _is_class_ii_alpha_gene(record.gene) else "beta"
+        return groove_record(seq, mhc_class="II", chain=chain, allele=allele_name, gene=record.gene)
     raise MHCIndexError(
         f"Unsupported MHC class for record parsing: {record.mhc_class!r} ({record.normalized!r})"
     )

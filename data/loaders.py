@@ -2576,14 +2576,27 @@ class PrestoDataset(Dataset):
         lookup_keys = [query, query.upper()]
         try:
             normalized = normalize_allele_name(query)
-        except Exception:
+        except Exception:  # noqa: BLE001 - an unparseable name simply has no variant
             normalized = ""
         if normalized:
             lookup_keys.extend([normalized, normalized.upper()])
+
+        # Three tiers, most specific first. `mhc_exact_inputs` is a caller
+        # handing over already-parsed grooves for this dataset, so it outranks
+        # everything -- including a sequence the same caller passed in
+        # `mhc_sequences`.
         for key in lookup_keys:
             record = self.mhc_exact_inputs.get(key)
             if record is not None:
                 return record
+
+        # `mhc_sequences` is also caller-supplied and therefore outranks the
+        # process-wide registry below. Without this, that global silently won
+        # and `mhc_sequences` did nothing at all: a caller could pass a
+        # sequence of pure tryptophan and still be handed the registry groove.
+        if any(key in self.mhc_sequences for key in lookup_keys if key):
+            return None
+
         return lookup_exact_mhc_input(query)
 
     def _get_mhc_sequence(self, allele: str, direct_seq: Optional[str]) -> str:

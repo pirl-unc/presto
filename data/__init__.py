@@ -87,12 +87,7 @@ from .allele_resolver import (
 from .groove import (
     GrooveResult,
     PreparedMHCInput,
-    find_cys_pairs,
-    classify_cys_pair,
-    parse_class_i,
-    parse_class_ii_alpha,
-    parse_class_ii_beta,
-    extract_groove,
+    groove_record,
     prepare_mhc_input,
 )
 from .loaders import (
