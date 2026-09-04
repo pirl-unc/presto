@@ -72,7 +72,7 @@ from presto.data.loaders import (
     load_uniprot_proteins,
 )
 from presto.data.groove import prepare_mhc_input
-from presto.data.loaders import peptide_grouped_split_indices
+from presto.data.loaders import peptide_grouped_three_way_split_indices
 from presto.data.mhc_index import classify_unresolved_allele, load_mhc_index
 from presto.data.mhc_sequence_resolver import (
     ExactMHCInput,
@@ -161,6 +161,7 @@ IEDB_DEFAULTS = {
     "max_bulk_ms": 0,
     "bulk_excision_negative_ratio": 1.0,
     "hitlist_flanks": True,
+    "source_mapping_policy": "mask_unresolved",
     "merged_tsv": None,
     "require_merged_input": True,
     "binding_file": None,
@@ -209,6 +210,7 @@ IEDB_DEFAULTS = {
     "tcell_in_vitro_margin": 0.1,
     "tcell_ex_vivo_margin": 0.0,
     "val_frac": 0.2,
+    "test_frac": 0.0,
     "checkpoint": None,
     "run_dir": None,
     "weight_decay": 0.01,
@@ -4475,6 +4477,9 @@ def run(args: argparse.Namespace) -> None:
                 mhc_class=getattr(args, "train_mhc_class_filter", None) or None,
                 mhc_allele=getattr(args, "hitlist_allele", None) or None,
                 include_flanks=bool(getattr(args, "hitlist_flanks", True)),
+                source_mapping_policy=str(
+                    getattr(args, "source_mapping_policy", "mask_unresolved")
+                ),
                 sampling_seed=args.seed + 17,
             )
             print("Hitlist input: curated indexes")
@@ -4482,6 +4487,8 @@ def run(args: argparse.Namespace) -> None:
                 print(f"    {assay}: {count}")
             for family, coverage in hitlist_stats["flank_coverage"].items():
                 print(f"    flank coverage [{family}]: {coverage:.1%}")
+            for family, resolved in hitlist_stats.get("flank_resolution", {}).items():
+                print(f"    flank resolution [{family}]: {resolved:.1%}")
             print(
                 "    skipped: "
                 f"no_numeric_value={hitlist_stats['skipped_no_numeric_value']}, "
@@ -4577,6 +4584,7 @@ def run(args: argparse.Namespace) -> None:
             mhc_class=getattr(args, "train_mhc_class_filter", None) or None,
             mhc_allele=getattr(args, "hitlist_allele", None) or None,
             include_flanks=bool(getattr(args, "hitlist_flanks", True)),
+            source_mapping_policy=str(getattr(args, "source_mapping_policy", "mask_unresolved")),
             sampling_seed=args.seed + 17,
         )
         print("Hitlist input: curated indexes (no merged TSV)")
@@ -4584,6 +4592,8 @@ def run(args: argparse.Namespace) -> None:
             print(f"    {assay}: {count}")
         for family, coverage in hitlist_stats["flank_coverage"].items():
             print(f"    flank coverage [{family}]: {coverage:.1%}")
+        for family, resolved in hitlist_stats.get("flank_resolution", {}).items():
+            print(f"    flank resolution [{family}]: {resolved:.1%}")
         print("    note: T-cell / TCR / processing are absent in hitlist-only mode")
     else:
         if getattr(args, "require_merged_input", True):
@@ -5169,28 +5179,51 @@ def run(args: argparse.Namespace) -> None:
             print(f"UniProt proteins.tsv not found at {uniprot_tsv}; skipping UniProt negatives")
 
     print(f"Total samples: {len(dataset)}")
-    if len(dataset) < 2:
-        raise RuntimeError("Need at least 2 samples for train/val split.")
+    test_fraction = float(getattr(args, "test_frac", 0.0))
+    minimum_samples = 3 if test_fraction > 0.0 else 2
+    if len(dataset) < minimum_samples:
+        raise RuntimeError(f"Need at least {minimum_samples} samples for the requested split.")
 
     split_mode = str(getattr(args, "split_mode", "peptide_group"))
+    if split_mode == "peptide_group" and test_fraction > 0.0:
+        # A peptide-grouped split partitions *peptides*, so the row count above
+        # is the wrong precondition: a thousand rows of two distinct peptides
+        # passes it and then fails inside the splitter. Check what the split
+        # actually needs, and say so.
+        distinct_peptides = len(
+            {str(dataset[i].peptide).strip().upper() for i in range(len(dataset))}
+        )
+        if distinct_peptides < 3:
+            raise RuntimeError(
+                f"A peptide-disjoint train/validation/test split needs at least three "
+                f"distinct peptides; this corpus has {distinct_peptides}. "
+                f"Use --test-frac 0 or --split-mode random_rows."
+            )
     if split_mode == "peptide_group":
-        train_indices, val_indices = peptide_grouped_split_indices(
-            dataset, float(args.val_frac), args.seed
+        train_indices, val_indices, test_indices = peptide_grouped_three_way_split_indices(
+            dataset, float(args.val_frac), test_fraction, args.seed
         )
         train_dataset = Subset(dataset, train_indices)
         val_dataset = Subset(dataset, val_indices)
+        test_dataset = Subset(dataset, test_indices) if test_indices else None
         train_peptides = {str(dataset[i].peptide).strip().upper() for i in train_indices}
         val_peptides = {str(dataset[i].peptide).strip().upper() for i in val_indices}
-        overlap = train_peptides & val_peptides
+        test_peptides = {str(dataset[i].peptide).strip().upper() for i in test_indices}
+        overlap = (
+            (train_peptides & val_peptides)
+            | (train_peptides & test_peptides)
+            | (val_peptides & test_peptides)
+        )
         print(
             f"Split: peptide-grouped  train={len(train_indices)} rows / "
             f"{len(train_peptides)} peptides, val={len(val_indices)} rows / "
-            f"{len(val_peptides)} peptides"
+            f"{len(val_peptides)} peptides, test={len(test_indices)} rows / "
+            f"{len(test_peptides)} peptides"
         )
         if overlap:
             raise RuntimeError(
-                f"peptide-grouped split leaked {len(overlap)} peptides into both "
-                "sides; this should be impossible and indicates a grouping bug"
+                f"peptide-grouped split leaked {len(overlap)} peptides across "
+                "partitions; this should be impossible and indicates a grouping bug"
             )
     else:
         # Row-level split. Retained only to reproduce pre-2026-08 runs: rows are
@@ -5198,14 +5231,17 @@ def run(args: argparse.Namespace) -> None:
         # 41.7% overall, 82.7% on excision rows) and every metric is optimistic.
         print("Split: random rows (WARNING: not peptide-disjoint; metrics will be optimistic)")
         val_size = max(1, int(len(dataset) * float(args.val_frac)))
-        val_size = min(val_size, len(dataset) - 1)
-        train_size = len(dataset) - val_size
+        test_size = max(1, int(len(dataset) * test_fraction)) if test_fraction > 0.0 else 0
+        if val_size + test_size >= len(dataset):
+            raise ValueError("Validation and test fractions leave no training rows")
+        train_size = len(dataset) - val_size - test_size
         split_gen = torch.Generator().manual_seed(args.seed)
-        train_dataset, val_dataset = random_split(
+        train_dataset, val_dataset, test_partition = random_split(
             dataset,
-            [train_size, val_size],
+            [train_size, val_size, test_size],
             generator=split_gen,
         )
+        test_dataset = test_partition if test_size else None
 
     collator = PrestoCollator()
     use_pin_memory = bool(getattr(args, "pin_memory", True)) and str(device).startswith("cuda")
@@ -5233,7 +5269,22 @@ def run(args: argparse.Namespace) -> None:
         pin_memory=use_pin_memory,
         collator=collator,
     )
-    print(f"Train batches: {len(train_loader)}, Val batches: {len(val_loader)}")
+    test_loader = (
+        create_dataloader(
+            test_dataset,
+            batch_size=args.batch_size,
+            shuffle=False,
+            num_workers=num_workers,
+            pin_memory=use_pin_memory,
+            collator=collator,
+        )
+        if test_dataset is not None
+        else None
+    )
+    print(
+        f"Train batches: {len(train_loader)}, Val batches: {len(val_loader)}, "
+        f"Test batches: {len(test_loader) if test_loader is not None else 0}"
+    )
     print(f"Balanced train batches: {bool(getattr(args, 'balanced_batches', True))}")
     print(
         "DataLoader config: "
@@ -5637,9 +5688,40 @@ def run(args: argparse.Namespace) -> None:
             from presto.scripts.train_synthetic import (
                 LOSS_TASK_SPECS,
                 _get_batch_mask,
+                _get_batch_qual,
                 _get_batch_target,
                 _resolve_output_tensor,
             )
+
+            # Score the model the run selected, not the one it stopped on.
+            #
+            # `args.checkpoint` holds the best-validation epoch; training then
+            # keeps going to `--epochs`. Evaluating the live model therefore
+            # reported the *last* epoch while stamping `best_val_loss` from a
+            # different one onto the same summary. On the 20260902b family that
+            # was epoch 10 against a minimum at epoch 7, val loss 0.5623 vs
+            # 0.5542 -- past the minimum and rising.
+            eval_model = model
+            if args.checkpoint and os.path.exists(args.checkpoint):
+                from presto.training.checkpointing import load_model_from_checkpoint
+
+                try:
+                    eval_model, checkpoint_payload = load_model_from_checkpoint(
+                        args.checkpoint, map_location=device
+                    )
+                    eval_model.to(device)
+                    eval_model.eval()
+                    best_epoch = checkpoint_payload.get("epoch")
+                    print(
+                        "Held-out evaluation uses the best-validation checkpoint"
+                        + (f" (epoch {best_epoch})" if best_epoch else "")
+                    )
+                except Exception as exc:  # noqa: BLE001 - fall back, but say so
+                    print(
+                        f"WARNING: could not reload {args.checkpoint} for held-out "
+                        f"evaluation ({exc}); scoring the final-epoch model instead"
+                    )
+                    eval_model = model
 
             def _forward(model_ref, batch_ref):
                 # Provenance must be passed here or the held-out pass scores a
@@ -5660,33 +5742,37 @@ def run(args: argparse.Namespace) -> None:
                     provenance=provenance,
                 )
 
-            accumulators = collect_holdout_predictions(
-                model=model,
-                loader=val_loader,
-                device=device,
-                specs=LOSS_TASK_SPECS,
-                forward_fn=_forward,
-                resolve_pred_fn=_resolve_output_tensor,
-                get_target_fn=_get_batch_target,
-                get_mask_fn=_get_batch_mask,
-            )
-            payload = write_holdout_artifacts(
-                run_dir,
-                accumulators,
-                split="val",
-                extra_summary={"best_val_loss": float(best_val_loss)},
-            )
-            scored = payload.get("tasks", {})
-            print(f"Held-out metrics written for {len(scored)} tasks -> {run_dir}")
-            for task_name, metrics in sorted(scored.items()):
-                headline = (
-                    f"auprc={metrics['auprc']:.4f}"
-                    if "auprc" in metrics
-                    else f"spearman={metrics['spearman']:.4f}"
-                    if "spearman" in metrics
-                    else f"n={metrics.get('n', 0):.0f}"
+            for split_name, split_loader in (("val", val_loader), ("test", test_loader)):
+                if split_loader is None:
+                    continue
+                accumulators = collect_holdout_predictions(
+                    model=eval_model,
+                    loader=split_loader,
+                    device=device,
+                    specs=LOSS_TASK_SPECS,
+                    forward_fn=_forward,
+                    resolve_pred_fn=_resolve_output_tensor,
+                    get_target_fn=_get_batch_target,
+                    get_mask_fn=_get_batch_mask,
+                    get_qual_fn=_get_batch_qual,
                 )
-                print(f"    {task_name}: {headline} (n={metrics.get('n', 0):.0f})")
+                payload = write_holdout_artifacts(
+                    run_dir,
+                    accumulators,
+                    split=split_name,
+                    extra_summary={"best_val_loss": float(best_val_loss)},
+                )
+                scored = payload.get("tasks", {})
+                print(f"Held-out {split_name} metrics written for {len(scored)} tasks -> {run_dir}")
+                for task_name, metrics in sorted(scored.items()):
+                    headline = (
+                        f"auprc={metrics['auprc']:.4f}"
+                        if "auprc" in metrics
+                        else f"spearman={metrics['spearman']:.4f}"
+                        if "spearman" in metrics
+                        else f"n={metrics.get('n', 0):.0f}"
+                    )
+                    print(f"    {task_name}: {headline} (n={metrics.get('n', 0):.0f})")
         except Exception as exc:  # pragma: no cover - diagnostics must not fail a run
             # Keeping the run alive is right -- a metrics bug should not destroy
             # a finished training run -- but the failure must be loud and it must
@@ -5927,6 +6013,12 @@ def main(argv=None):
         ),
     )
     parser.add_argument("--val-frac", type=float, default=0.2, help="Validation fraction")
+    parser.add_argument(
+        "--test-frac",
+        type=float,
+        default=0.0,
+        help="Held-out test fraction (0 disables; peptide-disjoint when enabled)",
+    )
     parser.add_argument("--epochs", type=int, default=5, help="Number of epochs")
     parser.add_argument("--batch_size", type=int, default=512, help="Batch size")
     parser.add_argument(

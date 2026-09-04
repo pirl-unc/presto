@@ -575,3 +575,194 @@ The pipeline trains end to end on real data and binding is genuinely learned,
 pan-allele. Presentation and T-cell claims are not supported by either arm —
 the first for lack of real negatives in the corpus, the second for lack of
 scale. Both need a GPU run.
+
+## 2026-09-02--03 · Source-junction ambiguity masking
+
+**Agent/model:** Codex / GPT-5 · **Dir:**
+[`2026-09-02_1720_codex_source-junction-masking`](2026-09-02_1720_codex_source-junction-masking/)
+· **Commit:** `a1cdcc0d27d63a7440188f98f0dc503c596c8dfd` (dirty)
+
+### Question
+
+Does replacing arbitrary source-protein junction choices with explicit unknown
+flanks improve held-out prediction enough to justify candidate-junction
+marginalization?
+
+### Contract
+
+- **Dataset/curation:** hitlist 1.55.8, `HLA-A*02:01`, 7--30 aa; all 16,721
+  qualifying numeric binding rows plus reservoir-capped elution 20,000,
+  stability 1,000, and kinetics 2, for 37,723 rows per seed. Peptide-disjoint
+  80/10/10 split; seeds 42/43/44 and modality sampling seeds 59/60/61. Binding
+  inequalities retained for censor-aware loss; exact metrics use
+  `qualifier == 0`; threshold metrics use a qualifier-aware `<=500 nM` label.
+  No merged TSV, bulk proteomics, processing, T-cell, TCR, or RNA expression.
+- **Frozen inputs:** rebuilt 5,880,924-row mapping contract v2 with
+  `gene_biotype`; artifact hashes and exact curation details are in the
+  [experiment README](2026-09-02_1720_codex_source-junction-masking/README.md).
+- **Training/pretraining:** expanded Presto d128/l2/h4, 10 epochs, batch 256,
+  AdamW `2.8e-4`, weight decay 0.01, AMP; no pretraining. Task-mean supervised
+  aggregation with uncertainty weighting.
+- **Synthetic-data contract:** pMHC, class-I-no-B2M, processing-negative, and
+  MHC-augmentation counts zero. The configured UniProt ratio was the default
+  0.1, but no UniProt file was mounted, so zero such rows entered the audited
+  37,723-row dataset.
+- **Loss and assay mapping:** affinity -> censor-aware canonical KD and
+  KD/IC50/EC50 assay outputs; half-life/Tm -> censor-aware stability outputs;
+  kon/koff -> MSE kinetics outputs; positive MS -> BCE elution and presentation
+  outputs. Ordinary task base weight 1.0; MHC auxiliary type losses 0.1.
+  Consistency weights: cascade 0.2, assay-affinity 0.1,
+  assay-presentation 0.1, no-B2M 0.5, T-cell-context 0.05, T-cell-upstream 0.2.
+- **Conditions:** `legacy_global_canonical` versus `mask_unresolved`, paired at
+  seeds 42/43/44. The masked policy preserves single/agreed mappings and a
+  unique canonical source only within one gene; cross-gene and residual
+  within-gene disagreements become `?/?`. Targets and target weights are
+  identical.
+- **Hardware/runtime:** requested `H100!`; all six workers observed NVIDIA H100
+  80GB HBM3 with 81,559 MiB. Peak allocated memory was 31.63--32.00 GiB and
+  peak reserved memory 53.05--64.28 GiB. Mean runtime 4,870 s legacy /
+  4,828 s masked; 29,095 GPU-seconds total.
+
+### Held-out results
+
+Mean +/- sample SD over three seeds; RMSE is `log10(nM)`.
+
+| Split / scope | Policy | Exact n/seed | Spearman | Pearson | RMSE | <=500 nM bal. acc. | AUROC | AUPRC |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| Validation overall | legacy | 1320 +/- 27 | 0.7523 +/- .0145 | 0.7401 +/- .0138 | 0.9969 +/- .0157 | 0.8439 +/- .0164 | 0.9157 +/- .0083 | 0.8594 +/- .0128 |
+| Validation overall | masked | 1320 +/- 27 | 0.7554 +/- .0163 | 0.7455 +/- .0160 | 0.9824 +/- .0168 | 0.8481 +/- .0086 | 0.9170 +/- .0110 | 0.8590 +/- .0171 |
+| Test overall | legacy | 1384 +/- 50 | 0.7643 +/- .0091 | 0.7542 +/- .0107 | 0.9873 +/- .0293 | 0.8584 +/- .0052 | 0.9186 +/- .0050 | 0.8607 +/- .0117 |
+| Test overall | masked | 1384 +/- 50 | 0.7673 +/- .0131 | 0.7571 +/- .0157 | 0.9813 +/- .0236 | 0.8576 +/- .0072 | 0.9186 +/- .0078 | 0.8631 +/- .0151 |
+| Test unresolved | legacy | 29 +/- 11 | 0.7608 +/- .0634 | 0.7594 +/- .0799 | 0.9853 +/- .1764 | 0.9033 +/- .0372 | 0.9689 +/- .0273 | 0.9728 +/- .0099 |
+| Test unresolved | masked | 29 +/- 11 | 0.7470 +/- .0347 | 0.7520 +/- .0758 | 0.9982 +/- .2337 | 0.9306 +/- .0078 | 0.9764 +/- .0146 | 0.9761 +/- .0176 |
+
+Full validation/test metrics for `single`, `flanks_agree`,
+`within_gene_canonical`, both unresolved categories, their union, and
+`unmapped` are in
+[`condition_metric_summary.csv`](2026-09-02_1720_codex_source-junction-masking/results/condition_metric_summary.csv).
+All six per-example validation/test prediction dumps are preserved under
+`results/runs/`.
+
+### Winner and takeaway
+
+**Preferred policy: `mask_unresolved`; do not build candidate marginalization
+now.** The choice is based on semantic correctness plus overall parity, not a
+headline accuracy win. On the predeclared primary unresolved exact test scope,
+masked-minus-legacy Spearman deltas were -0.0532/+0.0156/-0.0037 (mean
+**-0.0138**) and RMSE deltas were +0.0723/+0.0159/-0.0495 (mean **+0.0129**).
+The direction was inconsistent and missed both marginalization thresholds.
+Overall test deltas were +0.0030 Spearman and -0.0059 RMSE, with no material
+regression. Keep valid peptide/MHC labels at full weight, encode unresolved
+junctions as unknown, defer the GM12878-only expression join, and revisit a
+costlier candidate model only with materially broader transcript-aware data or
+a separately powered multi-allele experiment.
+
+The original `20260902a` launch was stopped before results were read after an
+X-filter parity confound was found. The corrected `20260902b` arms passed exact
+row parity, frozen-hash, hitlist-version, MHC-index, requested-GPU, and observed
+H100 checks. Reproduction and raw artifact paths are recorded in the
+[experiment directory](2026-09-02_1720_codex_source-junction-masking/).
+The comparator preserves the prior semantic behavior (inject one arbitrary
+junction) but uses stable candidate ordering instead of reproducing the old
+frame-order accident byte for byte.
+
+## 2026-09-03 - Flank context wired end to end, on corrected mapping data
+
+**Agent/model:** Claude / Opus 5 - **Dir:**
+[`2026-09-03_1746_claude_flank-context-fixes`](2026-09-03_1746_claude_flank-context-fixes/)
+- **Commit:** `e58dd9ffbcd09163a7e08aabeed0d6be318184be` (branch `claude/flank-context-and-data-fixes`, dirty)
+
+### Question
+
+Does the `20260902b` legacy-vs-masked verdict survive on corrected code, and
+what changes once a protein terminus actually reaches the model? It never had:
+`flank_n_is_terminus` was declared on three record dataclasses, moved to the
+device by `PrestoBatch.to` and branched on by `Presto._pad_for_side`, but no
+`PrestoSample(...)` construction in `data/loaders.py` passed it. Every row
+arrived `False`, so the `X` boundary pad was unreachable and every flank -
+terminus or not - padded with `?`. On this corpus that is 3.2% of binding rows
+with an N-terminus and 2.9% with a C-terminus, all previously told the context
+was unknown when in fact it definitively did not exist.
+
+### Contract
+
+- **Dataset/curation:** identical to `20260902b` - hitlist 1.55.8 frozen
+  artifacts (same five SHA256s, hash-verified in-container before the GPU is
+  touched), `HLA-A*02:01`, 16,721 binding + 20,000 elution + 1,000 stability
+  + 2 kinetics = 37,723 rows per seed, peptide-disjoint 80/10/10, seeds
+  42/43/44, sampling seeds 59/60/61. Mapping categories are byte-identical to
+  `20260902b` seed for seed, so the data-correctness fixes below are
+  defensive on this corpus rather than corpus-changing.
+- **Split seed changed.** The three-way splitter reused the two-way helper's
+  `seed + 53` peptide order and filled *test* from the front where two-way
+  fills *validation* from the front, so at a given seed every held-out test
+  peptide had already been used for model selection. Now `seed + 101`. Test
+  splits are therefore not comparable row-for-row with `20260902b`.
+- **Training:** Presto expanded d128/l2/h4, AdamW lr 2.8e-4 wd 0.01, batch 256,
+  10 epochs, bf16 autocast. Synthetic negatives, MHC augmentation and probe
+  tracking disabled. Loss terms and assay-label -> output mapping unchanged
+  from `20260902b`.
+- **Requested GPU** `H100!`; **observed** on all six:
+  `NVIDIA H100 80GB HBM3, 81559 MiB, 580.95.05`.
+  4,104-5,556 s per run, 28,168 GPU-seconds total, ~1h21m wall in parallel.
+- **Supervision parity** between the two policies verified for all four
+  evidence families before launch (`results/data_audit.json`).
+
+### Corrections carried in this family
+
+Terminus wiring; `?` removed from flank sequence strings entirely (one
+representation per layer: `""` in the frame, `None` on the sample, a pad
+token in the tensor); a candidate collapse that could let a left-join miss
+outrank the real mapping and still be stamped `single`/resolved;
+`_canonical_mask` reading a float-encoded flag as False; `_flank_coverage`
+gating on resolution so it printed the same number for both arms; three
+drifted copies of "which categories are resolved"; and the split fix above.
+
+### Evaluation checkpoint
+
+These runs launched before `train_iedb` reloaded the best-validation
+checkpoint for the held-out pass, so `results/` scores whatever epoch training
+stopped on while carrying `best_val_loss` from a different one. Four of six
+runs selected an epoch before the last (7, 4, 10, 7, 10, 9). `model.pt` is the
+selected epoch, so every run was re-scored offline from it - splits re-derived
+and verified identical to each original before any metric was written - into
+`results/best_checkpoint/`. **Prefer that set.**
+
+### Held-out test, overall (best checkpoint, mean +- sd, seeds 42-44)
+
+| Metric | `legacy_global_canonical` | `mask_unresolved` |
+|---|---|---|
+| exact Spearman | 0.7536 +- 0.0062 | 0.7604 +- 0.0057 |
+| exact RMSE log10(nM) | 1.0039 +- 0.0177 | 0.9948 +- 0.0135 |
+| <=500 nM AUROC | 0.9164 +- 0.0034 | 0.9190 +- 0.0025 |
+| <=500 nM AUPRC | 0.8677 +- 0.0048 | 0.8711 +- 0.0080 |
+| <=500 nM F1 | 0.8274 +- 0.0067 | 0.8191 +- 0.0068 |
+| <=500 nM balanced acc. | 0.8484 +- 0.0089 | 0.8419 +- 0.0062 |
+
+### Decision gate
+
+| Quantity | 20260902b | this, as-run | this, best ckpt |
+|---|---|---|---|
+| `overall_exact_spearman_mean_delta` | +0.00300 | +0.00216 | +0.00683 |
+| `overall_exact_rmse_mean_delta` | -0.00594 | +0.00367 | -0.00909 |
+| `unresolved_exact_spearman_mean_delta` | -0.01377 | -0.00611 | -0.01779 |
+| `unresolved_exact_rmse_mean_reduction` | -0.01290 | -0.01118 | +0.03204 |
+| `invest_in_candidate_marginalization` | false | false | false |
+
+### Winner and takeaway
+
+**`mask_unresolved`, and defer candidate-junction marginalization.** The
+`20260902b` verdict reproduces on corrected code and survives the terminus
+wiring, the corrected mapping data and a new split seed.
+
+Two things matter more than the verdict. First, re-scoring the *same six runs*
+from their selected checkpoints flips the sign of
+`unresolved_exact_rmse_mean_reduction` and nearly triples
+`unresolved_exact_spearman_mean_delta` - the evaluation-checkpoint artifact
+was comparable in magnitude to the effect being measured, which means any
+earlier family evaluated at a non-selected epoch carries the same distortion.
+Second, the unresolved test stratum is 37 rows (28 exact) and its per-seed
+deltas flip sign (-0.0094 / +0.0459 / -0.0899). The negative result is a
+statement about statistical power on `HLA-A*02:01`, not evidence that junction
+context is unimportant - and it is the same limitation `20260902b` reported,
+now with the checkpoint confound removed.

@@ -1,3 +1,128 @@
+# Source-junction ambiguity implementation (2026-09-02)
+
+## Specification
+
+### Scope and decisions
+
+- Repair the active editable hitlist install and rebuild only
+  `~/.hitlist/peptide_mappings.parquet`; do not intentionally rebuild the other
+  hitlist indexes.
+- Make Presto's production hitlist projection carry the identifiers required
+  for real deterministic selection and mapping classification: `gene_name`,
+  `protein_id`, and `transcript_id`.
+- Classify every exploded evidence-row mapping group before collapse:
+  - `single`: one mapping candidate;
+  - `flanks_agree`: multiple candidates with one flank pair;
+  - `within_gene_canonical`: disagreeing flanks, one gene, and exactly one
+    canonical source whose own occurrences agree on a flank pair;
+  - `cross_gene_unresolved`: disagreeing flanks across multiple genes;
+  - `within_gene_unresolved`: disagreeing flanks within one gene without one
+    usable canonical source.
+- Preserve the selected flank pair for the first three categories. For both
+  unresolved categories, emit explicit unknown flank context (`?` on both
+  sides) and clear terminus/position evidence; never train on one arbitrary
+  junction as if observed.
+- Carry row-level mapping metadata through hitlist records, `PrestoSample`, and
+  `PrestoBatch` for diagnostics: category, candidate count, gene count, distinct
+  flank-pair count, and a binary `flank_context_resolved` flag.
+- Do not reduce the whole observation's target weight: binding, presentation,
+  and other peptide/MHC supervision remain valid when the source junction is
+  unresolved.
+- Defer the RNA-expression join. The current usable artifact is GM12878-only
+  and gene-level; this change must not claim transcript-aware resolution.
+- Defer candidate-junction MIL/marginalization until the held-out comparison
+  below shows that flank context helps and ambiguity policy materially matters.
+
+### Implementation plan
+
+- [x] Refresh the hitlist editable install in the active shared virtualenv and
+      verify runtime and distribution metadata both report 1.55.8.
+- [x] Rebuild only `peptide_mappings.parquet`, then verify the artifact contract,
+      `gene_biotype` schema, row count, and a projected hitlist read.
+- [x] Add the production projection columns and implement the classification /
+      collapse policy in `data/hitlist_source.py` using the public selection
+      semantics in `data/flank_selection.py` where applicable.
+- [x] Thread row-level mapping metadata through record, sample, collator, device
+      transfer, and held-out prediction/diagnostic surfaces without making it a
+      model feature.
+- [x] Add focused tests for every category, frame-order invariance, missing
+      identifiers, repeated canonical occurrences, unknown-flank/terminus
+      behavior, metadata propagation, and unchanged valid target masks.
+- [x] Run focused tests, lint/format checks for touched files, and the full test
+      suite.
+- [x] Run a capped real hitlist ingest and prove unresolved rows carry `?/?`
+      while resolved rows retain their selected flanks and all assay labels.
+
+### Experiment gate
+
+- [x] Before launching, read `experiments/EXPERIMENT_WORKFLOW.md` and write a
+      detailed experiment spec under `experiments/agents/codex/plans/`.
+- [x] Register one experiment directory comparing the legacy selection policy
+      against ambiguity masking on the same rebuilt data, split, seeds, model,
+      and hardware contract.
+- [x] Report held-out validation and test metrics overall and stratified by
+      `single`, `flanks_agree`, `within_gene_canonical`, cross-gene unresolved,
+      and within-gene unresolved categories; preserve per-example predictions.
+- [x] Use the result to decide whether candidate-junction marginalization is
+      warranted, and close the experiment in `experiments/experiment_log.md`.
+
+## Review
+
+- Refreshed the active shared-virtualenv editable install so both runtime and
+  distribution metadata report hitlist 1.55.8. Rebuilt only the mappings
+  artifact: 5,880,924 rows, `gene_biotype` present, artifact contract v2.
+- Added frame-order-invariant mapping classification and production collapse.
+  Unique canonical selection is now restricted to within-gene ambiguity;
+  unresolved cross-gene/residual within-gene junctions carry `?/?` and no
+  position/terminus claim. Mapping diagnostics propagate through held-out
+  predictions without becoming model input or reducing valid assay weights.
+- Verified a capped real ingest, exact supervision parity across both policies
+  for all four loaded modalities and all three experiment seeds, focused tests,
+  full tests (`1660 passed, 4 skipped`), and lint/format checks.
+- Completed the registered six-arm H100 comparison. Masking had no material
+  overall test regression (exact Spearman +0.0030; RMSE -0.0059), but on the
+  small unresolved exact test union it was inconsistent across seeds and
+  averaged -0.0138 Spearman / +0.0129 RMSE. Keep explicit unknown masking and
+  defer candidate marginalization; the predeclared investment gate did not
+  pass. GM12878 expression remains deliberately unwired.
+
+# Mapping ambiguity path-forward assessment (2026-09-02)
+
+- [x] Verify the current `hitlist` dependency/version, cache schema, and exact ingest failure.
+- [x] Trace how Presto selects source mappings and propagates flank context, including whether bulk and single-row paths differ.
+- [x] Validate the proposed interventions (cache rebuild, expression join, ambiguity weighting/marginalization) against the present code and tests.
+- [x] Recommend a sequenced path with immediate unblock, measurement gates, and separately scoped follow-up work.
+
+## Review
+
+Recommendation: repair the cache first, then implement ambiguity handling, and defer
+the expression join until its data coverage expands.
+
+- Runtime hitlist source is 1.55.8; the active shared virtualenv's editable
+  `.dist-info` is stale at 1.55.0. The old mappings artifact was built at
+  2026-09-02 03:34 UTC, consistent with hitlist 1.55.2, but neither the parquet
+  nor its sidecar stamps a producer version, so 1.55.2 is an inference rather
+  than authoritative metadata.
+- Reproduced the blocker: projecting `gene_biotype` from the 5,862,627-row
+  mappings parquet raises `pyarrow.lib.ArrowInvalid`. The sidecar has no
+  artifact contract and its schema lacks `gene_biotype`.
+- A targeted `build_peptide_mappings()` is the minimal repair. The documented
+  `hitlist build observations` would rebuild more than the sidecar here because
+  `observations_meta.json` is also legacy and lacks its current artifact version.
+- Presto's bulk collapse requests neither `protein_id` nor `gene_name`, so its
+  advertised deterministic protein-id fallback and expression hook are not
+  active in that path. It records only aggregate ambiguity stats, not per-row
+  confidence.
+- The usable expression artifact has one line key (GM12878), 23,716 gene rows,
+  and no transcript rows. Other resolver keys currently return empty expression
+  frames, so wiring expression now has narrow and gene-only benefit.
+- Cheap ambiguity policy: preserve agreed flanks; use the unique canonical
+  transcript only for within-gene ambiguity; represent unresolved cross-gene
+  and residual within-gene disagreement as unknown flank context rather than
+  teaching one arbitrary junction as fact. Keep the assay label usable for
+  peptide/MHC paths. Treat candidate-junction marginalization as a later,
+  registered ablation gated on flanks showing held-out value.
+
 # Gap Closure: provenance/state factorization (2026-08-27)
 
 Addresses the gaps recorded in `docs/model_io_contract.md` S8.

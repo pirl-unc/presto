@@ -56,7 +56,21 @@ import random
 import sys
 from typing import Any, Dict, FrozenSet, List, Optional, Sequence, Tuple, Union
 
-from .flank_selection import UNRESOLVED_RESIDUE
+from .flank_selection import (
+    MAPPING_CATEGORIES,
+    MAPPING_CATEGORY_CROSS_GENE_UNRESOLVED,
+    MAPPING_CATEGORY_FLANKS_AGREE,
+    MAPPING_CATEGORY_SINGLE,
+    MAPPING_CATEGORY_UNMAPPED,
+    MAPPING_CATEGORY_WITHIN_GENE_CANONICAL,
+    MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED,
+    MASKED_MAPPING_CATEGORIES,
+    RESOLVED_MAPPING_CATEGORIES,
+    SOURCE_MAPPING_POLICIES,
+    SOURCE_MAPPING_POLICY_LEGACY,
+    SOURCE_MAPPING_POLICY_MASK_UNRESOLVED,
+    UNRESOLVED_RESIDUE,
+)
 from .vocab import (
     apm_group_for_row,
     drop_unencodable_sequence,
@@ -108,6 +122,13 @@ SHARED_COLUMNS: Tuple[str, ...] = (
     # it" -- both otherwise arrive as a short or empty flank.
     "position",
     "evidence_row_id",
+    # These identifiers are required by the collapse policy below. Without
+    # them the advertised protein-id fallback is really input frame order, and
+    # canonical status cannot be restricted to within-gene ambiguity.
+    "gene_name",
+    "gene_id",
+    "protein_id",
+    "transcript_id",
     "is_canonical_transcript",
 )
 
@@ -185,7 +206,16 @@ PROTEIN_MAPPING_COLUMNS: FrozenSet[str] = frozenset(
     # terminus" from "we never mapped this peptide". Both arrive as a short or
     # empty flank; only the first is a fact about the biology. See
     # HITLIST_FLANK_WIDTH.
-    {"n_flank", "c_flank", "is_canonical_transcript", "position"}
+    {
+        "n_flank",
+        "c_flank",
+        "gene_name",
+        "gene_id",
+        "protein_id",
+        "transcript_id",
+        "is_canonical_transcript",
+        "position",
+    }
 )
 
 #: The `include_evidence` value hitlist expects, mapped to what we ask it for.
@@ -281,7 +311,12 @@ def flank_context(
     """
     raw = str(flank or "").strip()
     text = drop_unencodable_sequence(flank)
-    mapped = position is not None and position == position  # NaN-safe
+    position_text = str(position).strip() if position is not None else ""
+    mapped = (
+        position is not None
+        and position_text not in {"", "nan", "NaN", "<NA>", "None"}
+        and position == position  # NaN-safe
+    )
     # Measured on the RAW length, not the cleaned one. `drop_unencodable_sequence`
     # blanks a flank entirely when it carries one unrepresentable residue
     # (selenocysteine, annotation junk), and a blanked flank on a mapped row
@@ -300,6 +335,34 @@ def _flank_fields(row) -> Dict[str, Any]:
         "flank_c": c_text,
         "flank_n_is_terminus": n_terminus,
         "flank_c_is_terminus": c_terminus,
+    }
+
+
+def _mapping_fields(row) -> Dict[str, Any]:
+    """Row-level mapping diagnostics carried to records and prediction dumps."""
+
+    def _count(name: str) -> int:
+        value = row.get(name, 0)
+        try:
+            number = float(value)
+        except (TypeError, ValueError):
+            return 0
+        return int(number) if number == number else 0
+
+    def _flag(name: str) -> bool:
+        # NaN-safe like `_count`. An unmatched join leaves an object column
+        # holding NaN, and `bool(float("nan"))` is True -- which would stamp a
+        # row as having a resolved junction precisely when nothing is known
+        # about it, the opposite of the safe default.
+        value = row.get(name, False)
+        return bool(value) if value == value else False
+
+    return {
+        "source_mapping_category": _clean(row.get("source_mapping_category")),
+        "source_mapping_n_candidates": _count("source_mapping_n_candidates"),
+        "source_mapping_n_genes": _count("source_mapping_n_genes"),
+        "source_mapping_n_flank_pairs": _count("source_mapping_n_flank_pairs"),
+        "flank_context_resolved": _flag("flank_context_resolved"),
     }
 
 
@@ -442,41 +505,298 @@ def _clean(value: Any) -> str:
     return token.strip()
 
 
-def _select_best_mapping(frame):
-    """Collapse exploded protein mappings to one row per evidence row.
+def _text_column(frame, name: str):
+    """Whitespace-normalized string column, or an empty aligned series."""
+    import pandas as pd
 
-    ``map_source_proteins=True`` emits one row per (evidence row, protein
-    mapping), which more than doubles the row count and would train on the same
-    measurement several times.
+    if name not in frame.columns:
+        return pd.Series("", index=frame.index, dtype=str)
+    return frame[name].fillna("").astype(str).str.strip()
 
-    Ordering is delegated to `flank_selection.SELECTION_BASES`: canonical
-    transcript first, then a deterministic protein-id sort so a run does not
-    depend on frame order. Expression-aware selection is available through
-    `flank_selection.select_source_mapping` for callers that have per-sample
-    abundance; this bulk path does not, because the frame carries no expression
-    column.
 
-    The ambiguity itself is measured here rather than discarded. For
-    HLA-A*02:01, 80.5% of evidence rows map to more than one protein and 21.6%
-    disagree on a flank -- so for better than a fifth of rows the junction the
-    excision head trains on is one candidate among several, presented as
-    observed. `mapping_ambiguity_stats` reports it; see presto#34.
+def _canonical_mask(frame):
+    """Boolean canonical flag tolerant of bool and serialized fixtures."""
+    if "is_canonical_transcript" not in frame.columns:
+        return _text_column(frame, "is_canonical_transcript").eq("true")
+    values = frame["is_canonical_transcript"]
+    if str(values.dtype) in {"bool", "boolean"}:
+        return values.fillna(False).astype(bool)
+    # Numeric or textual, whichever the column turns out to carry. A bool
+    # column with nulls arrives from parquet or CSV as float64, and
+    # stringifying that yields "1.0", which is in no truthy set -- so every
+    # canonical row would read as non-canonical and silently degrade
+    # `within_gene_canonical` to `within_gene_unresolved`. Taking the union
+    # rather than branching also keeps a mixed object column correct, and
+    # keeps this agreeing with the scalar `flank_selection._truthy`.
+    import pandas as pd
+
+    numeric = pd.to_numeric(values, errors="coerce").fillna(0).ne(0)
+    # Converting first maps missing object values to non-truthy strings and
+    # avoids pandas' deprecated silent downcast in object.fillna(False/"").
+    text = values.astype(str).str.strip().str.lower().isin({"1", "true", "yes", "t"})
+    return numeric | text
+
+
+def _mapping_present_mask(frame):
+    """Rows produced by a real peptide mapping rather than a left-join miss."""
+    import pandas as pd
+
+    present = pd.Series(False, index=frame.index)
+    if "position" in frame.columns:
+        present = present | frame["position"].notna()
+    for column in (
+        "gene_name",
+        "gene_id",
+        "protein_id",
+        "transcript_id",
+        "n_flank",
+        "c_flank",
+    ):
+        if column in frame.columns:
+            present = present | _text_column(frame, column).ne("")
+    return present
+
+
+def _mapping_resolution_summary(frame):
+    """One row of source-junction evidence metadata per evidence row.
+
+    Candidate multiplicity is not itself ambiguity: most multi-mappings agree
+    on both flanks. Disagreement is resolved only when it stays within one
+    known gene and exactly one canonical source contributes exactly one flank
+    pair. Canonical status is deliberately not allowed to choose between
+    genes, because every gene normally contributes its own canonical source.
     """
-    if "evidence_row_id" not in frame.columns:
-        return frame
-    ordered = frame
-    sort_keys = []
-    if "is_canonical_transcript" in frame.columns:
-        sort_keys.append(("is_canonical_transcript", False))
-    if "protein_id" in frame.columns:
-        sort_keys.append(("protein_id", True))
-    if sort_keys:
-        ordered = ordered.sort_values(
-            [key for key, _ in sort_keys],
-            ascending=[asc for _, asc in sort_keys],
-            kind="stable",
+    import pandas as pd
+
+    if "evidence_row_id" not in frame.columns or not len(frame):
+        return pd.DataFrame(
+            columns=[
+                "source_mapping_n_candidates",
+                "source_mapping_n_genes",
+                "source_mapping_n_flank_pairs",
+                "source_mapping_category",
+                "flank_context_resolved",
+            ]
         )
-    return ordered.drop_duplicates(subset=["evidence_row_id"], keep="first")
+
+    evidence_ids = frame["evidence_row_id"]
+    summary = pd.DataFrame(index=pd.Index(evidence_ids.drop_duplicates(), name="evidence_row_id"))
+    summary["source_mapping_n_candidates"] = 0
+    summary["source_mapping_n_genes"] = 0
+    summary["source_mapping_n_flank_pairs"] = 0
+    summary["source_mapping_n_canonical_sources"] = 0
+    summary["source_mapping_n_canonical_flank_pairs"] = 0
+
+    present = _mapping_present_mask(frame)
+    if present.any():
+        mapped = frame.loc[present].copy()
+        mapped["_gene_key"] = _text_column(mapped, "gene_name")
+        gene_id = _text_column(mapped, "gene_id")
+        mapped.loc[mapped["_gene_key"].eq(""), "_gene_key"] = gene_id
+        mapped["_gene_key"] = mapped["_gene_key"].where(mapped["_gene_key"].ne(""), None)
+        mapped["_flank_pair_key"] = (
+            _text_column(mapped, "n_flank") + "\x1f" + _text_column(mapped, "c_flank")
+        )
+        grouped = mapped.groupby("evidence_row_id", sort=False, dropna=False)
+        mapped_summary = pd.DataFrame(
+            {
+                "source_mapping_n_candidates": grouped.size(),
+                "source_mapping_n_genes": grouped["_gene_key"].nunique(dropna=True),
+                "source_mapping_n_flank_pairs": grouped["_flank_pair_key"].nunique(dropna=False),
+            }
+        )
+        summary.update(mapped_summary)
+
+        canonical = mapped.loc[_canonical_mask(mapped)].copy()
+        if len(canonical):
+            canonical["_source_key"] = _text_column(canonical, "transcript_id")
+            protein_id = _text_column(canonical, "protein_id")
+            canonical.loc[canonical["_source_key"].eq(""), "_source_key"] = protein_id
+            canonical["_source_key"] = canonical["_source_key"].where(
+                canonical["_source_key"].ne(""), None
+            )
+            canonical_grouped = canonical.groupby("evidence_row_id", sort=False, dropna=False)
+            canonical_summary = pd.DataFrame(
+                {
+                    "source_mapping_n_canonical_sources": canonical_grouped["_source_key"].nunique(
+                        dropna=True
+                    ),
+                    "source_mapping_n_canonical_flank_pairs": canonical_grouped[
+                        "_flank_pair_key"
+                    ].nunique(dropna=False),
+                }
+            )
+            summary.update(canonical_summary)
+
+    for column in (
+        "source_mapping_n_candidates",
+        "source_mapping_n_genes",
+        "source_mapping_n_flank_pairs",
+        "source_mapping_n_canonical_sources",
+        "source_mapping_n_canonical_flank_pairs",
+    ):
+        summary[column] = summary[column].fillna(0).astype("int64")
+
+    n_candidates = summary["source_mapping_n_candidates"]
+    n_genes = summary["source_mapping_n_genes"]
+    n_pairs = summary["source_mapping_n_flank_pairs"]
+    usable_canonical = (summary["source_mapping_n_canonical_sources"] == 1) & (
+        summary["source_mapping_n_canonical_flank_pairs"] == 1
+    )
+
+    category = pd.Series(
+        MAPPING_CATEGORY_WITHIN_GENE_UNRESOLVED,
+        index=summary.index,
+        dtype=str,
+    )
+    category.loc[n_candidates == 0] = MAPPING_CATEGORY_UNMAPPED
+    category.loc[n_candidates == 1] = MAPPING_CATEGORY_SINGLE
+    category.loc[(n_candidates > 1) & (n_pairs == 1)] = MAPPING_CATEGORY_FLANKS_AGREE
+    category.loc[(n_pairs > 1) & (n_genes > 1)] = MAPPING_CATEGORY_CROSS_GENE_UNRESOLVED
+    category.loc[(n_pairs > 1) & (n_genes == 1) & usable_canonical] = (
+        MAPPING_CATEGORY_WITHIN_GENE_CANONICAL
+    )
+    summary["source_mapping_category"] = category
+    # One table, in `flank_selection`. Re-listing the resolved categories here
+    # is how this copy came to omit `expression_resolved`.
+    summary["flank_context_resolved"] = category.isin(RESOLVED_MAPPING_CATEGORIES)
+    return summary
+
+
+def _mapping_stats_from_summary(summary) -> Dict[str, Any]:
+    if not len(summary):
+        return {
+            "evidence_rows": 0,
+            "rows_with_multiple_proteins": 0,
+            "rows_with_disagreeing_flanks": 0,
+            "max_proteins_for_one_row": 0,
+            "rows_with_resolved_flank_context": 0,
+            "category_counts": {},
+        }
+    n_candidates = summary["source_mapping_n_candidates"]
+    n_pairs = summary["source_mapping_n_flank_pairs"]
+    return {
+        "evidence_rows": int(len(summary)),
+        "rows_with_multiple_proteins": int((n_candidates > 1).sum()),
+        "rows_with_disagreeing_flanks": int((n_pairs > 1).sum()),
+        "max_proteins_for_one_row": int(n_candidates.max()),
+        "rows_with_resolved_flank_context": int(summary["flank_context_resolved"].sum()),
+        "category_counts": {
+            str(category): int(count)
+            for category, count in summary["source_mapping_category"].value_counts().items()
+        },
+    }
+
+
+def _collapse_source_mappings(
+    frame,
+    *,
+    source_mapping_policy: str = SOURCE_MAPPING_POLICY_MASK_UNRESOLVED,
+):
+    """Collapse mappings under one explicit junction-context policy.
+
+    Both policies classify rows identically. ``mask_unresolved`` clears
+    genuinely ambiguous junctions to an absent flank; ``legacy_global_canonical``
+    retains the historical global-canonical / arbitrary-source semantics as an
+    experiment-only comparator, with a stable candidate order replacing the
+    former frame-order accident.
+    """
+    if source_mapping_policy not in SOURCE_MAPPING_POLICIES:
+        raise ValueError(
+            f"source_mapping_policy must be one of {SOURCE_MAPPING_POLICIES}; "
+            f"got {source_mapping_policy!r}"
+        )
+    if "evidence_row_id" not in frame.columns:
+        return frame, _mapping_stats_from_summary(_mapping_resolution_summary(frame))
+
+    summary = _mapping_resolution_summary(frame)
+    # A real mapping outranks a left-join miss. Without this key the blank row
+    # wins: every identifier is `""`, which sorts first ascending, so an
+    # evidence row that mapped to exactly one protein could still collapse to
+    # the empty candidate and then be stamped `single` / resolved by a summary
+    # that had excluded that row from classification. Sorting rather than
+    # filtering keeps an evidence row whose candidates are *all* misses.
+    ordered = frame.assign(
+        _mapping_present=_mapping_present_mask(frame),
+        _canonical_priority=_canonical_mask(frame),
+    )
+    sort_columns = ["_mapping_present", "_canonical_priority"]
+    ascending = [False, False]
+    for column in (
+        "gene_name",
+        "gene_id",
+        "protein_id",
+        "transcript_id",
+        "position",
+        "n_flank",
+        "c_flank",
+    ):
+        if column in ordered.columns:
+            sort_columns.append(column)
+            ascending.append(True)
+    ordered = ordered.sort_values(
+        sort_columns,
+        ascending=ascending,
+        kind="stable",
+        na_position="last",
+    )
+    collapsed = ordered.drop_duplicates(subset=["evidence_row_id"], keep="first").drop(
+        columns=["_mapping_present", "_canonical_priority"]
+    )
+    collapsed = collapsed.join(summary, on="evidence_row_id", validate="one_to_one")
+
+    if source_mapping_policy == SOURCE_MAPPING_POLICY_MASK_UNRESOLVED:
+        collapsed = _mask_unresolved_mapping_context(collapsed)
+    stats = _mapping_stats_from_summary(summary)
+    stats["source_mapping_policy"] = source_mapping_policy
+    return collapsed, stats
+
+
+def _mask_unresolved_mapping_context(frame):
+    """Clear unresolved selected junctions without changing row membership.
+
+    An unresolved junction is written as an *absent* flank, not as a sentinel
+    residue. The model already distinguishes the three states from the tensor
+    side: real residues tokenize normally, a terminus pads with `X`, and an
+    absent flank pads with `?` (`Presto._pad_for_side`). Writing a marker into
+    the sequence string was a third, redundant channel for the same fact -- and
+    the one the collator's optional-sequence cleaner erased anyway.
+
+    Returns a new frame. The caller passes the output of
+    `drop_unresolved_flank_rows`, which is a slice when rows were dropped and
+    the caller's own object when none were, so mutating in place would either
+    be chained assignment or a silent rewrite of the caller's data.
+    """
+    if "source_mapping_category" not in frame.columns:
+        # `_collapse_source_mappings` returns the frame untouched when there is
+        # no `evidence_row_id` to group on, so there is nothing to mask.
+        return frame
+    masked = frame.copy()
+    unresolved = masked["source_mapping_category"].isin(MASKED_MAPPING_CATEGORIES)
+    for column in ("n_flank", "c_flank"):
+        if column in masked.columns:
+            masked.loc[unresolved, column] = ""
+    if "position" in masked.columns:
+        # Load-bearing: `flank_context` reads a missing position as "not
+        # mapped" and so reports `is_terminus=False`. Without this, a cleared
+        # flank would be read as a protein terminus and pad with `X`.
+        masked.loc[unresolved, "position"] = float("nan")
+    return masked
+
+
+def _select_best_mapping(frame, *, source_mapping_policy):
+    """The collapsed frame under one explicit policy.
+
+    The policy is required rather than defaulted. `load_records_from_hitlist`
+    deliberately collapses under the legacy policy, drops rows whose selected
+    flank carries an `X`, and only then masks -- because masking first would
+    clear a selected `X` before the filter sees it, so the masked arm would
+    retain rows the legacy arm drops and the comparison would stop being
+    paired. A caller that got `mask_unresolved` by default and then ran the
+    filter would silently reproduce that confound.
+    """
+    collapsed, _ = _collapse_source_mappings(frame, source_mapping_policy=source_mapping_policy)
+    return collapsed
 
 
 def unresolved_flank_mask(frame):
@@ -536,27 +856,7 @@ def mapping_ambiguity_stats(frame) -> Dict[str, Any]:
     Reported in the ingest stats so the number is visible in a training log
     rather than rediscovered by measuring the corpus.
     """
-    empty = {
-        "evidence_rows": 0,
-        "rows_with_multiple_proteins": 0,
-        "rows_with_disagreeing_flanks": 0,
-        "max_proteins_for_one_row": 0,
-    }
-    if "evidence_row_id" not in frame.columns or not len(frame):
-        return empty
-    grouped = frame.groupby("evidence_row_id", sort=False)
-    sizes = grouped.size()
-    stats = {
-        "evidence_rows": int(len(sizes)),
-        "rows_with_multiple_proteins": int((sizes > 1).sum()),
-        "max_proteins_for_one_row": int(sizes.max()),
-        "rows_with_disagreeing_flanks": 0,
-    }
-    if {"n_flank", "c_flank"} <= set(frame.columns):
-        distinct = grouped[["n_flank", "c_flank"]].nunique()
-        disagree = (distinct["n_flank"] > 1) | (distinct["c_flank"] > 1)
-        stats["rows_with_disagreeing_flanks"] = int(disagree.sum())
-    return stats
+    return _mapping_stats_from_summary(_mapping_resolution_summary(frame))
 
 
 def _iter_row_dicts(frame, chunk_size: int = 50_000):
@@ -608,6 +908,7 @@ def load_records_from_hitlist(
     length_min: int = 7,
     length_max: int = 30,
     include_flanks: bool = True,
+    source_mapping_policy: str = SOURCE_MAPPING_POLICY_MASK_UNRESOLVED,
     sampling_seed: int = 42,
 ) -> Tuple[
     List[BindingRecord],
@@ -632,6 +933,8 @@ def load_records_from_hitlist(
 
     ``include_flanks=False`` skips the protein-mapping join, which is much
     faster and is how the Stage 0a parity check reproduces merged-TSV behavior.
+    ``source_mapping_policy`` controls only disagreeing mapped junctions; it
+    never changes the assay observation or target.
     """
     try:
         import hitlist
@@ -642,6 +945,11 @@ def load_records_from_hitlist(
         ) from exc
 
     require_supported_hitlist(getattr(hitlist, "__version__", None))
+    if source_mapping_policy not in SOURCE_MAPPING_POLICIES:
+        raise ValueError(
+            f"source_mapping_policy must be one of {SOURCE_MAPPING_POLICIES}; "
+            f"got {source_mapping_policy!r}"
+        )
 
     shared_filters = dict(
         mhc_class=mhc_class,
@@ -670,19 +978,32 @@ def load_records_from_hitlist(
     assert_columns_present(ms_frame, "ms", include_flanks=include_flanks)
 
     if include_flanks:
-        # Measured before collapsing: afterwards the alternatives are gone.
-        mapping_ambiguity.update(
-            {
-                "binding": mapping_ambiguity_stats(binding_frame),
-                "ms": mapping_ambiguity_stats(ms_frame),
-            }
+        # Select and filter before either experimental policy transforms the
+        # flanks. Otherwise masking turns a selected X into ? before the X
+        # filter runs, so the masked arm retains rows the legacy arm drops and
+        # the comparison is no longer paired. Classification and collapse still
+        # share one groupby pass per frame.
+        binding_frame, binding_mapping_stats = _collapse_source_mappings(
+            binding_frame, source_mapping_policy=SOURCE_MAPPING_POLICY_LEGACY
         )
-        binding_frame = _select_best_mapping(binding_frame)
-        ms_frame = _select_best_mapping(ms_frame)
+        ms_frame, ms_mapping_stats = _collapse_source_mappings(
+            ms_frame, source_mapping_policy=SOURCE_MAPPING_POLICY_LEGACY
+        )
         # Only after the collapse: a row is dropped for the flank it actually
         # trains on, not for one some rejected candidate happened to carry.
         binding_frame, binding_unresolved = drop_unresolved_flank_rows(binding_frame)
         ms_frame, ms_unresolved = drop_unresolved_flank_rows(ms_frame)
+        if source_mapping_policy == SOURCE_MAPPING_POLICY_MASK_UNRESOLVED:
+            binding_frame = _mask_unresolved_mapping_context(binding_frame)
+            ms_frame = _mask_unresolved_mapping_context(ms_frame)
+        binding_mapping_stats["source_mapping_policy"] = source_mapping_policy
+        ms_mapping_stats["source_mapping_policy"] = source_mapping_policy
+        mapping_ambiguity.update(
+            {
+                "binding": binding_mapping_stats,
+                "ms": ms_mapping_stats,
+            }
+        )
         mapping_ambiguity["rows_dropped_unresolved_flank"] = {
             "binding": binding_unresolved,
             "ms": ms_unresolved,
@@ -739,6 +1060,7 @@ def load_records_from_hitlist(
             antigen_species=_clean(row.get("source_organism")) or None,
             source=_clean(row.get("source")) or "hitlist",
             alleles=allele_set or None,
+            **_mapping_fields(row),
         )
 
         if response in _AFFINITY_RESPONSES:
@@ -845,6 +1167,7 @@ def load_records_from_hitlist(
                 species=_clean(row.get("host")) or None,
                 antigen_species=_clean(row.get("source_organism")) or None,
                 source=_clean(row.get("source")) or "hitlist",
+                **_mapping_fields(row),
             )
         )
 
@@ -854,12 +1177,29 @@ def load_records_from_hitlist(
     elution_records = list(_cap_list(elution_records, max_elution, sampling_seed))
 
     def _flank_coverage(records: Sequence[Any]) -> float:
+        """Fraction of records that actually carry flanking residues.
+
+        Coverage, not resolution. Gating this on `flank_context_resolved`
+        made it report the resolution rate instead, which masking does not
+        change -- so both arms of the source-mapping comparison printed the
+        same number and the stat could not audit the thing it was added for.
+        `_flank_resolution` reports resolution separately.
+        """
         if not records:
             return 0.0
         with_flank = sum(
-            1 for r in records if getattr(r, "flank_n", "") or getattr(r, "flank_c", "")
+            1
+            for r in records
+            if (getattr(r, "flank_n", "") or "") or (getattr(r, "flank_c", "") or "")
         )
         return with_flank / len(records)
+
+    def _flank_resolution(records: Sequence[Any]) -> float:
+        """Fraction of records whose source mapping resolved the junction."""
+        if not records:
+            return 0.0
+        resolved = sum(1 for r in records if bool(getattr(r, "flank_context_resolved", False)))
+        return resolved / len(records)
 
     stats: Dict[str, Any] = {
         "source": "hitlist",
@@ -886,6 +1226,10 @@ def load_records_from_hitlist(
         "flank_coverage": {
             "binding": _flank_coverage(binding_records),
             "elution": _flank_coverage(elution_records),
+        },
+        "flank_resolution": {
+            "binding": _flank_resolution(binding_records),
+            "elution": _flank_resolution(elution_records),
         },
     }
 
@@ -928,6 +1272,8 @@ __all__ = [
     "MS_COLUMNS",
     "PROTEIN_MAPPING_COLUMNS",
     "COLUMNS_BY_EVIDENCE",
+    "MAPPING_CATEGORIES",
+    "MASKED_MAPPING_CATEGORIES",
     "training_columns",
     "assert_columns_present",
     "normalize_ingested_peptide",

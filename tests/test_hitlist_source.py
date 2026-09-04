@@ -19,6 +19,7 @@ from presto.data.hitlist_source import (  # noqa: E402
     assert_columns_present,
     training_columns,
     _clean,
+    _collapse_source_mappings,
     _method_counts,
     _qualifier_from_inequality,
     _select_best_mapping,
@@ -40,7 +41,12 @@ def _binding_row(**overrides):
         "source": "iedb",
         "n_flank": "AAAAAAAAAA",
         "c_flank": "CCCCCCCCCC",
+        "position": 10,
         "evidence_row_id": "row-1",
+        "gene_name": "GENE1",
+        "gene_id": "ENSG1",
+        "protein_id": "ENSP1",
+        "transcript_id": "ENST1",
         "is_canonical_transcript": True,
         "response_measured": IC50,
         "quantitative_value": 25.0,
@@ -63,7 +69,12 @@ def _ms_row(**overrides):
         "source": "iedb",
         "n_flank": "GGGGGGGGGG",
         "c_flank": "TTTTTTTTTT",
+        "position": 10,
         "evidence_row_id": "ms-1",
+        "gene_name": "GENE1",
+        "gene_id": "ENSG1",
+        "protein_id": "ENSP1",
+        "transcript_id": "ENST1",
         "is_canonical_transcript": True,
         "cell_line_name": "HeLa",
         "source_tissue": "Skin",
@@ -122,13 +133,69 @@ class TestHelpers:
     def test_select_best_mapping_prefers_canonical_transcript(self):
         frame = pd.DataFrame(
             [
-                {"evidence_row_id": "a", "is_canonical_transcript": False, "n_flank": "NO"},
-                {"evidence_row_id": "a", "is_canonical_transcript": True, "n_flank": "YES"},
+                {
+                    "evidence_row_id": "a",
+                    "gene_name": "G",
+                    "protein_id": "P2",
+                    "transcript_id": "T2",
+                    "is_canonical_transcript": False,
+                    "n_flank": "NO",
+                },
+                {
+                    "evidence_row_id": "a",
+                    "gene_name": "G",
+                    "protein_id": "P1",
+                    "transcript_id": "T1",
+                    "is_canonical_transcript": True,
+                    "n_flank": "YES",
+                },
             ]
         )
-        collapsed = _select_best_mapping(frame)
+        collapsed = _select_best_mapping(frame, source_mapping_policy="legacy_global_canonical")
         assert len(collapsed) == 1
         assert collapsed.iloc[0]["n_flank"] == "YES"
+        assert collapsed.iloc[0]["source_mapping_category"] == "within_gene_canonical"
+
+    def test_legacy_policy_keeps_cross_gene_choice_for_control_only(self):
+        frame = pd.DataFrame(
+            [
+                _binding_row(
+                    gene_name="GENE2",
+                    protein_id="P2",
+                    transcript_id="T2",
+                    n_flank="BBBB",
+                    c_flank="DDDD",
+                ),
+                _binding_row(
+                    gene_name="GENE1",
+                    protein_id="P1",
+                    transcript_id="T1",
+                    n_flank="AAAA",
+                    c_flank="CCCC",
+                ),
+            ]
+        )
+        masked, masked_stats = _collapse_source_mappings(frame)
+        legacy, legacy_stats = _collapse_source_mappings(
+            frame, source_mapping_policy="legacy_global_canonical"
+        )
+
+        # Masking clears the junction rather than writing a sentinel residue:
+        # the model supplies the unknown-context embedding by padding the flank
+        # window with `?`, so no marker belongs in the sequence string.
+        assert masked.iloc[0]["n_flank"] == masked.iloc[0]["c_flank"] == ""
+        assert legacy.iloc[0]["n_flank"] == "AAAA"
+        assert legacy.iloc[0]["c_flank"] == "CCCC"
+        assert masked.iloc[0]["source_mapping_category"] == "cross_gene_unresolved"
+        assert legacy.iloc[0]["source_mapping_category"] == "cross_gene_unresolved"
+        assert masked_stats["source_mapping_policy"] == "mask_unresolved"
+        assert legacy_stats["source_mapping_policy"] == "legacy_global_canonical"
+
+    def test_unknown_mapping_policy_is_rejected(self):
+        with pytest.raises(ValueError, match="source_mapping_policy"):
+            _collapse_source_mappings(
+                pd.DataFrame([_binding_row()]), source_mapping_policy="coin_flip"
+            )
 
     def test_method_counts_labels_missing_as_unspecified(self):
         class Rec:
@@ -149,7 +216,91 @@ class TestRouting:
         assert record.measurement_type == IC50
         assert record.flank_n == "AAAAAAAAAA"
         assert record.flank_c == "CCCCCCCCCC"
+        assert record.source_mapping_category == "single"
+        assert record.source_mapping_n_candidates == 1
+        assert record.flank_context_resolved is True
         assert stats["flank_coverage"]["binding"] == 1.0
+
+    def test_cross_gene_disagreement_keeps_label_but_masks_flanks(self, monkeypatch):
+        rows = [
+            _binding_row(
+                gene_name="GENE1",
+                gene_id="ENSG1",
+                protein_id="ENSP1",
+                transcript_id="ENST1",
+                n_flank="AAAAAAAAAA",
+                c_flank="CCCCCCCCCC",
+            ),
+            _binding_row(
+                gene_name="GENE2",
+                gene_id="ENSG2",
+                protein_id="ENSP2",
+                transcript_id="ENST2",
+                n_flank="GGGGGGGGGG",
+                c_flank="TTTTTTTTTT",
+            ),
+        ]
+        _install_stub_hitlist(monkeypatch, rows, [])
+        binding, _, _, _, _, _, _, stats = load_records_from_hitlist()
+        assert len(binding) == 1
+        record = binding[0]
+        assert record.value == 25.0
+        assert record.flank_n == record.flank_c == ""
+        # Not a terminus: an unresolved junction must not be read as "the
+        # protein ended here". `_mask_unresolved_mapping_context` blanks the
+        # position alongside the flank, which is what keeps this false.
+        assert record.flank_n_is_terminus is False
+        assert record.flank_c_is_terminus is False
+        assert record.source_mapping_category == "cross_gene_unresolved"
+        assert record.flank_context_resolved is False
+        assert stats["mapping_ambiguity"]["binding"]["category_counts"] == {
+            "cross_gene_unresolved": 1
+        }
+
+        from presto.data.collate import PrestoCollator
+        from presto.data.loaders import PrestoDataset
+
+        dataset = PrestoDataset(binding_records=binding, strict_mhc_resolution=False)
+        sample = dataset[0]
+        assert sample.bind_value == 25.0
+        assert sample.source_mapping_category == "cross_gene_unresolved"
+        batch = PrestoCollator()([sample])
+        assert batch.bind_mask.tolist() == [1.0]
+        assert batch.source_mapping_categories == ["cross_gene_unresolved"]
+        # Host-side lists, not tensors: these are diagnostics that never enter
+        # `model.forward`, so moving them to the device and back was pure cost.
+        assert batch.source_mapping_n_candidates == [2]
+        assert batch.flank_context_resolved == [False]
+        moved = batch.to("cpu")
+        assert moved.source_mapping_categories == ["cross_gene_unresolved"]
+        assert moved.source_mapping_n_genes == [2]
+
+    def test_policies_filter_selected_x_before_masking(self, monkeypatch):
+        """Policy changes flank input, never which supervised rows survive."""
+        rows = [
+            _binding_row(
+                gene_name="GENE1",
+                gene_id="ENSG1",
+                protein_id="ENSP1",
+                transcript_id="ENST1",
+                n_flank="XAAAAAAAAA",
+                c_flank="CCCCCCCCCC",
+            ),
+            _binding_row(
+                gene_name="GENE2",
+                gene_id="ENSG2",
+                protein_id="ENSP2",
+                transcript_id="ENST2",
+                n_flank="GGGGGGGGGG",
+                c_flank="TTTTTTTTTT",
+                is_canonical_transcript=False,
+            ),
+        ]
+        _install_stub_hitlist(monkeypatch, rows, [])
+        masked, *_ = load_records_from_hitlist(source_mapping_policy="mask_unresolved")
+        legacy, *_ = load_records_from_hitlist(source_mapping_policy="legacy_global_canonical")
+
+        assert masked == legacy == []
 
     def test_nan_value_is_skipped(self, monkeypatch):
         """float(nan) does not raise, so NaN must be tested for explicitly.
@@ -342,3 +493,270 @@ class TestColumnContract:
         frame = pd.DataFrame(columns=["peptide"])
         with pytest.raises(RuntimeError, match="9.9.9"):
             assert_columns_present(frame, "ms", include_flanks=False)
+
+
+class TestTheCollapseKeepsTheRowThatActuallyMapped:
+    """A left-join miss must not outrank a real mapping.
+
+    `map_source_proteins=True` emits one row per (evidence row, mapping), and
+    an evidence row with no mapping still comes back -- with every identifier
+    empty. Empty strings sort first ascending, so the blank candidate won
+    `drop_duplicates(keep="first")` and the real flanks were discarded, while
+    the summary -- computed over `_mapping_present_mask`, which had excluded
+    that blank row -- still stamped the result `single` and resolved.
+
+    A canonical flag on the mapped row masked this, which is why the cases
+    below vary it: the plain non-canonical case is the one that failed.
+    """
+
+    @staticmethod
+    def _collapse(canonical_real, canonical_blank):
+        from presto.data.hitlist_source import _collapse_source_mappings
+
+        frame = pd.DataFrame(
+            [
+                {
+                    "evidence_row_id": "e1",
+                    "gene_name": "G1",
+                    "gene_id": "G1",
+                    "protein_id": "P1",
+                    "transcript_id": "T1",
+                    "position": 10,
+                    "n_flank": "AAAA",
+                    "c_flank": "CCCC",
+                    "is_canonical_transcript": canonical_real,
+                },
+                {
+                    "evidence_row_id": "e1",
+                    "gene_name": "",
+                    "gene_id": "",
+                    "protein_id": "",
+                    "transcript_id": "",
+                    "position": None,
+                    "n_flank": "",
+                    "c_flank": "",
+                    "is_canonical_transcript": canonical_blank,
+                },
+            ]
+        )
+        collapsed, _ = _collapse_source_mappings(
+            frame, source_mapping_policy="legacy_global_canonical"
+        )
+        return collapsed.iloc[0]
+
+    @pytest.mark.parametrize(
+        "canonical_real,canonical_blank",
+        [
+            (True, False),
+            (False, False),
+            (False, True),
+            # Float-encoded flag: what a bool column with nulls becomes on a
+            # parquet or CSV round trip. This case failed twice over, because
+            # `_canonical_mask` also read 1.0 as False.
+            (1.0, 0.0),
+        ],
+    )
+    def test_the_mapped_candidate_wins(self, canonical_real, canonical_blank):
+        row = self._collapse(canonical_real, canonical_blank)
+        assert row["n_flank"] == "AAAA"
+        assert row["c_flank"] == "CCCC"
+        assert row["protein_id"] == "P1"
+
+    def test_an_evidence_row_with_only_misses_still_survives(self):
+        """Sorting, not filtering: the row must not vanish."""
+        from presto.data.hitlist_source import _collapse_source_mappings
+
+        frame = pd.DataFrame(
+            [
+                {
+                    "evidence_row_id": "e2",
+                    "gene_name": "",
+                    "gene_id": "",
+                    "protein_id": "",
+                    "transcript_id": "",
+                    "position": None,
+                    "n_flank": "",
+                    "c_flank": "",
+                    "is_canonical_transcript": False,
+                }
+            ]
+        )
+        collapsed, _ = _collapse_source_mappings(
+            frame, source_mapping_policy="legacy_global_canonical"
+        )
+        assert len(collapsed) == 1
+        assert collapsed.iloc[0]["source_mapping_category"] == "unmapped"
+        assert not bool(collapsed.iloc[0]["flank_context_resolved"])
+
+
+class TestTheCanonicalFlagIsReadInEveryEncoding:
+    """`astype(str)` turns 1.0 into "1.0", which is in no truthy set.
+
+    A bool column carrying nulls arrives from parquet or CSV as float64, so
+    every canonical row would read as non-canonical, `usable_canonical` would
+    never be true, and every within-gene disagreement would degrade to
+    `within_gene_unresolved`. It also disagreed with the scalar
+    `flank_selection._truthy`, which returns True for 1.0.
+    """
+
+    @pytest.mark.parametrize(
+        "values,expected",
+        [
+            ([1.0, 0.0], [True, False]),
+            ([1, 0], [True, False]),
+            (["true", "false"], [True, False]),
+            (["yes", "no"], [True, False]),
+            ([True, False], [True, False]),
+            ([1.0, "true", 0], [True, True, False]),
+        ],
+    )
+    def test_truthiness_matches_the_scalar_helper(self, values, expected):
+        from presto.data.hitlist_source import _canonical_mask
+
+        mask = _canonical_mask(pd.DataFrame({"is_canonical_transcript": values}))
+        assert mask.tolist() == expected
+
+    def test_a_missing_flag_is_not_canonical(self):
+        from presto.data.hitlist_source import _canonical_mask
+
+        mask = _canonical_mask(pd.DataFrame({"is_canonical_transcript": [None, float("nan")]}))
+        assert mask.tolist() == [False, False]
+
+
+class TestMaskingIsAPureTransform:
+    """It is handed a slice, and it used to write through it.
+
+    `drop_unresolved_flank_rows` returns `frame.loc[~mask]` when rows were
+    dropped and the caller's own object when none were, so assigning into the
+    argument was either chained assignment or a silent rewrite of the caller's
+    data.
+    """
+
+    @staticmethod
+    def _frame():
+        return pd.DataFrame(
+            [
+                {
+                    "evidence_row_id": "e1",
+                    "source_mapping_category": "cross_gene_unresolved",
+                    "n_flank": "AAAA",
+                    "c_flank": "CCCC",
+                    "position": 10.0,
+                }
+            ]
+        )
+
+    def test_the_caller_s_frame_is_left_alone(self):
+        from presto.data.hitlist_source import _mask_unresolved_mapping_context
+
+        original = self._frame()
+        masked = _mask_unresolved_mapping_context(original)
+        assert original.iloc[0]["n_flank"] == "AAAA", "input was mutated"
+        assert masked.iloc[0]["n_flank"] == ""
+
+    def test_the_position_is_cleared_alongside_the_flank(self):
+        """Load-bearing: without it a cleared flank reads as a terminus.
+
+        `flank_context` calls a short flank a terminus only on a *mapped* row,
+        and `position` is what makes a row mapped.
+        """
+        from presto.data.hitlist_source import _mask_unresolved_mapping_context
+
+        masked = _mask_unresolved_mapping_context(self._frame())
+        position = masked.iloc[0]["position"]
+        assert position != position, "position must be NaN"
+
+    def test_a_frame_without_categories_is_returned_unchanged(self):
+        """`_collapse_source_mappings` no-ops when there is no `evidence_row_id`.
+
+        The masking step then received a frame with no `source_mapping_category`
+        and raised `KeyError` instead of no-opping to match.
+        """
+        from presto.data.hitlist_source import _mask_unresolved_mapping_context
+
+        frame = pd.DataFrame([{"n_flank": "AAAA", "c_flank": "CCCC"}])
+        assert _mask_unresolved_mapping_context(frame).equals(frame)
+
+
+class TestResolvedIsNaNSafe:
+    """`bool(float("nan"))` is True, so an unmatched join stamped rows resolved."""
+
+    def test_a_nan_flag_reads_as_unresolved(self):
+        from presto.data.hitlist_source import _mapping_fields
+
+        fields = _mapping_fields({"flank_context_resolved": float("nan")})
+        assert fields["flank_context_resolved"] is False
+
+    def test_a_real_flag_still_reads_through(self):
+        from presto.data.hitlist_source import _mapping_fields
+
+        assert _mapping_fields({"flank_context_resolved": True})["flank_context_resolved"] is True
+        assert _mapping_fields({})["flank_context_resolved"] is False
+
+
+class TestMaskingUnmappedRowsChangesNothing:
+    """`unmapped` joined the unresolved set; that must not move any data.
+
+    Deriving resolved/unresolved from one table put `unmapped` in the
+    unresolved set for the first time, so the masking step now visits those
+    rows. It is a no-op by construction and this pins the construction:
+    `unmapped` means no candidate was *present*, and `_mapping_present_mask`
+    counts a non-empty flank as present -- so an unmapped row has no flank to
+    clear. If that ever stops holding, the two policies stop being paired.
+    """
+
+    @staticmethod
+    def _frame():
+        return pd.DataFrame(
+            [
+                {
+                    "evidence_row_id": "mapped",
+                    "gene_name": "G1",
+                    "gene_id": "G1",
+                    "protein_id": "P1",
+                    "transcript_id": "T1",
+                    "position": 10,
+                    "n_flank": "AAAA",
+                    "c_flank": "CCCC",
+                    "is_canonical_transcript": True,
+                },
+                {
+                    "evidence_row_id": "missed",
+                    "gene_name": "",
+                    "gene_id": "",
+                    "protein_id": "",
+                    "transcript_id": "",
+                    "position": None,
+                    "n_flank": "",
+                    "c_flank": "",
+                    "is_canonical_transcript": False,
+                },
+            ]
+        )
+
+    def test_the_two_policies_agree_on_unmapped_rows(self):
+        from presto.data.hitlist_source import _collapse_source_mappings
+
+        legacy, _ = _collapse_source_mappings(
+            self._frame(), source_mapping_policy="legacy_global_canonical"
+        )
+        masked, _ = _collapse_source_mappings(
+            self._frame(), source_mapping_policy="mask_unresolved"
+        )
+        legacy = legacy.set_index("evidence_row_id")
+        masked = masked.set_index("evidence_row_id")
+        assert legacy.loc["missed", "source_mapping_category"] == "unmapped"
+        for column in ("n_flank", "c_flank"):
+            assert legacy.loc["missed", column] == masked.loc["missed", column] == ""
+        # The resolved row is untouched by either policy.
+        for column in ("n_flank", "c_flank"):
+            assert legacy.loc["mapped", column] == masked.loc["mapped", column]
+
+    def test_an_unmapped_row_cannot_carry_a_flank(self):
+        """The invariant the no-op rests on."""
+        from presto.data.hitlist_source import _mapping_present_mask
+
+        frame = pd.DataFrame([{"n_flank": "AAAA", "c_flank": "", "position": None}])
+        assert _mapping_present_mask(frame).tolist() == [True], (
+            "a row with a flank must count as present, so it can never be classified unmapped"
+        )

@@ -229,6 +229,7 @@ class TestCollectionAndArtifacts:
 
         written = json.loads((tmp_path / "summary.json").read_text())
         assert written["split"] == "val"
+        assert json.loads((tmp_path / "val_summary.json").read_text()) == written
 
         with (tmp_path / "val_predictions.csv").open() as handle:
             rows = list(csv.DictReader(handle))
@@ -252,6 +253,71 @@ class TestCollectionAndArtifacts:
         metrics = {row["metric"]: float(row["value"]) for row in rows}
         assert metrics["excision_auroc"] == pytest.approx(1.0)
         assert all(row["split"] == "val" for row in rows)
+
+    def test_mapping_categories_are_stratified_and_dumped(self, tmp_path):
+        import csv
+
+        from presto.training.holdout_eval import (
+            TaskPredictionAccumulator,
+            write_holdout_artifacts,
+        )
+
+        accumulator = TaskPredictionAccumulator("binding", "mse")
+        accumulator.add(
+            [1.0, 2.0, 3.0],
+            [1.0, 2.5, 4.0],
+            [1.0, 1.0, 1.0],
+            ["s0", "s1", "s2"],
+            ["hitlist", "hitlist", "hitlist"],
+            ["single", "cross_gene_unresolved", "cross_gene_unresolved"],
+            [1, 2, 3],
+            [1, 2, 2],
+            [1, 2, 3],
+            [True, False, False],
+        )
+        metrics = accumulator.metrics()
+        assert metrics["mapping_single_n"] == 1.0
+        assert metrics["mapping_cross_gene_unresolved_n"] == 2.0
+
+        write_holdout_artifacts(tmp_path, {"binding": accumulator}, split="test")
+        with (tmp_path / "test_predictions.csv").open() as handle:
+            rows = list(csv.DictReader(handle))
+        assert rows[0]["source_mapping_category"] == "single"
+        assert rows[1]["source_mapping_n_candidates"] == "2"
+        assert rows[1]["flank_context_resolved"] == "False"
+
+    def test_binding_metrics_separate_exact_and_definitely_classified_censors(self):
+        from presto.training.holdout_eval import TaskPredictionAccumulator
+
+        accumulator = TaskPredictionAccumulator("binding", "censor")
+        accumulator.add(
+            [2.0, 3.0, 2.5, 3.5, 3.0],
+            [2.1, 3.1, 2.4, 3.4, 2.0],
+            [1.0] * 5,
+            qualifiers=[0, 0, -1, 1, -1],
+        )
+        metrics = accumulator.metrics()
+
+        assert metrics["exact_n"] == 2.0
+        # The final <=1000 nM row is indeterminate at 500 nM and excluded.
+        assert metrics["threshold_500nm_n"] == 4.0
+        assert metrics["threshold_500nm_accuracy"] == 1.0
+
+    def test_test_summary_does_not_overwrite_validation_alias(self, tmp_path):
+        import json
+
+        from presto.training.holdout_eval import (
+            TaskPredictionAccumulator,
+            write_holdout_artifacts,
+        )
+
+        accumulator = TaskPredictionAccumulator("binding", "mse")
+        accumulator.add([1.0], [1.0], [1.0])
+        write_holdout_artifacts(tmp_path, {"binding": accumulator}, split="val")
+        write_holdout_artifacts(tmp_path, {"binding": accumulator}, split="test")
+
+        assert json.loads((tmp_path / "summary.json").read_text())["split"] == "val"
+        assert json.loads((tmp_path / "test_summary.json").read_text())["split"] == "test"
 
 
 def test_collect_applies_the_same_target_transform_as_the_loss():

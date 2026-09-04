@@ -198,3 +198,109 @@ class TestTheModelSeesTheDifference:
         model = self._model_with_trained_profiles()
         pads = model._pad_for_side(None, 2, torch.device("cpu"))
         assert pads.tolist() == [UNKNOWN_FLANK, UNKNOWN_FLANK]
+
+
+class TestTheThreeStatesReachTheModel:
+    """One batch, three provenances, three different windows.
+
+    The distinction is only worth having if it survives to the tensor the
+    excision head reads. These are the cases a pLM handling optional context
+    around a protein has to get right, and they have to be right *per row*:
+    a batch mixes peptides whose source proteins were resolved, peptides
+    sitting at a protein terminus, and peptides never mapped at all.
+    """
+
+    @staticmethod
+    def _window(flank_toks, pads, width=5):
+        return Presto._first_valid_window(
+            flank_toks, len(pads), torch.device("cpu"), torch.tensor(pads), width
+        )
+
+    def test_a_mixed_batch_pads_each_row_by_its_own_provenance(self):
+        from presto.data.collate import PrestoCollator
+        from presto.data.loaders import PrestoSample
+
+        batch = PrestoCollator()(
+            [
+                # resolved: real residues, X among them meaning "a residue is
+                # here, identity unresolved"
+                PrestoSample(peptide="SIINFEKL", flank_n="MXKLL"),
+                # protein terminus: nothing upstream exists
+                PrestoSample(peptide="SIINFEKL", flank_n=None, flank_n_is_terminus=True),
+                # never mapped: nothing is known
+                PrestoSample(peptide="SIINFEKL", flank_n=None),
+            ]
+        )
+        assert batch.flank_n_is_terminus.tolist() == [False, True, False]
+        pads = [
+            BOUNDARY if terminus else UNKNOWN_FLANK
+            for terminus in batch.flank_n_is_terminus.tolist()
+        ]
+        window = self._window(batch.flank_n_tok, pads)
+        assert [AA_VOCAB[t] for t in window[0].tolist()] == ["M", "X", "K", "L", "L"]
+        assert set(window[1].tolist()) == {BOUNDARY}
+        assert set(window[2].tolist()) == {UNKNOWN_FLANK}
+
+    def test_an_absent_flank_tensor_still_pads_per_row(self):
+        """Every row masked: the collator omits the tensor entirely."""
+        window = self._window(None, [UNKNOWN_FLANK, BOUNDARY])
+        assert set(window[0].tolist()) == {UNKNOWN_FLANK}
+        assert set(window[1].tolist()) == {BOUNDARY}
+
+    def test_no_flank_string_carries_the_unknown_marker(self):
+        """`?` is a pad token, never a character in a sequence.
+
+        It used to be both, and the two meanings were told apart by string
+        length -- a one-character `"?"` meant the whole flank was unknown,
+        while `"?"` inside a longer flank was not representable at all. The
+        sequence validator has to keep rejecting it.
+        """
+        from presto.data.vocab import is_encodable_sequence
+
+        assert not is_encodable_sequence("?")
+        assert not is_encodable_sequence("????")
+        assert is_encodable_sequence("MXKLL"), "X is a residue and must encode"
+
+
+class TestTheTerminusFlagSurvivesTheRecordToSampleHop:
+    """The flags were declared, collated, and read -- but never populated.
+
+    `BindingRecord`, `ProcessingRecord` and `ElutionRecord` all carried
+    `flank_n_is_terminus` / `flank_c_is_terminus`, `PrestoBatch` moved them to
+    the device, and `Presto._pad_for_side` branched on them. What was missing
+    was the one hop in between: no `PrestoSample(...)` construction in
+    `data/loaders.py` passed them along, so every row arrived `False` and the
+    `X` boundary pad was unreachable in training. A terminus is only a terminus
+    if it gets there.
+    """
+
+    @staticmethod
+    def _sample(**flags):
+        from presto.data.loaders import BindingRecord, PrestoDataset
+
+        record = BindingRecord(
+            peptide="SIINFEKL",
+            mhc_allele="HLA-A*02:01",
+            value=25.0,
+            flank_n="MKL",
+            flank_c="PQR",
+            **flags,
+        )
+        dataset = PrestoDataset(binding_records=[record], strict_mhc_resolution=False)
+        return dataset[0]
+
+    def test_a_terminus_record_yields_a_terminus_sample(self):
+        sample = self._sample(flank_n_is_terminus=True, flank_c_is_terminus=True)
+        assert sample.flank_n_is_terminus is True
+        assert sample.flank_c_is_terminus is True
+
+    def test_the_two_sides_are_carried_independently(self):
+        """A peptide at the protein's start is not also at its end."""
+        sample = self._sample(flank_n_is_terminus=True, flank_c_is_terminus=False)
+        assert sample.flank_n_is_terminus is True
+        assert sample.flank_c_is_terminus is False
+
+    def test_an_unmapped_record_claims_no_terminus(self):
+        sample = self._sample()
+        assert sample.flank_n_is_terminus is False
+        assert sample.flank_c_is_terminus is False

@@ -34,18 +34,30 @@ DEFAULT_BINDING_THRESHOLD_NM = 500.0
 
 
 def _rankdata(values: np.ndarray) -> np.ndarray:
-    """Average ranks, ties shared (the Spearman/AUROC convention)."""
+    """Average ranks, ties shared (the Spearman/AUROC convention).
+
+    Tie-averaging is vectorized rather than looped. The held-out summary now
+    recomputes this family per task, per synthetic-decoy kind, and per mapping
+    category -- tens of passes over the full split -- so an interpreted
+    per-element loop here set the cost of the whole evaluation.
+    """
+    n = len(values)
+    if n == 0:
+        return np.empty(0, dtype=float)
     order = np.argsort(values, kind="mergesort")
-    ranks = np.empty(len(values), dtype=float)
-    ranks[order] = np.arange(1, len(values) + 1, dtype=float)
-    # average tied ranks
     sorted_values = values[order]
-    start = 0
-    for i in range(1, len(values) + 1):
-        if i == len(values) or sorted_values[i] != sorted_values[start]:
-            if i - start > 1:
-                ranks[order[start:i]] = ranks[order[start:i]].mean()
-            start = i
+    # Start of each run of equal values, in sorted order.
+    is_start = np.empty(n, dtype=bool)
+    is_start[0] = True
+    np.not_equal(sorted_values[1:], sorted_values[:-1], out=is_start[1:])
+    starts = np.flatnonzero(is_start)
+    ends = np.append(starts[1:], n)
+    # A run covering sorted positions [s, e) holds 1-based ranks s+1..e, whose
+    # mean is (s + e + 1) / 2. `cumsum(is_start) - 1` maps each position to its
+    # run, so every tied element gets that mean in one scatter.
+    group_mean = (starts + ends + 1) / 2.0
+    ranks = np.empty(n, dtype=float)
+    ranks[order] = group_mean[np.cumsum(is_start) - 1]
     return ranks
 
 
@@ -137,6 +149,59 @@ def regression_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, floa
     return metrics
 
 
+def _safe_div(numerator: float, denominator: float) -> float:
+    return float(numerator / denominator) if denominator else 0.0
+
+
+def binding_threshold_metrics(
+    y_true_log10: np.ndarray,
+    y_pred_log10: np.ndarray,
+    qualifiers: np.ndarray,
+    *,
+    threshold_nm: float = 500.0,
+) -> Dict[str, float]:
+    """Qualifier-aware binding classification at an affinity threshold.
+
+    Exact observations are always usable. A ``<=`` observation is definite
+    only when its bound is already at or below the threshold; a ``>``
+    observation is definite only when its bound is above it. The remaining
+    censored rows do not determine a class and are excluded.
+    """
+    cutoff = math.log10(float(threshold_nm))
+    exact = qualifiers == 0
+    definite_binder = (qualifiers < 0) & (y_true_log10 <= cutoff)
+    definite_nonbinder = (qualifiers > 0) & (y_true_log10 > cutoff)
+    usable = exact | definite_binder | definite_nonbinder
+    if not usable.any():
+        return {}
+
+    labels = y_true_log10[usable] <= cutoff
+    predicted = y_pred_log10[usable] <= cutoff
+    tp = int(np.sum(predicted & labels))
+    tn = int(np.sum(~predicted & ~labels))
+    fp = int(np.sum(predicted & ~labels))
+    fn = int(np.sum(~predicted & labels))
+    precision = _safe_div(tp, tp + fp)
+    recall = _safe_div(tp, tp + fn)
+    specificity = _safe_div(tn, tn + fp)
+    metrics: Dict[str, float] = {
+        "accuracy": _safe_div(tp + tn, len(labels)),
+        "balanced_accuracy": (recall + specificity) / 2.0,
+        "precision": precision,
+        "recall": recall,
+        "f1": _safe_div(2.0 * precision * recall, precision + recall),
+        "n": float(len(labels)),
+    }
+    # Lower log10(nM) means stronger binding, so negate for ranking metrics.
+    area_under_roc = auroc(labels.astype(float), -y_pred_log10[usable])
+    area_under_pr = auprc(labels.astype(float), -y_pred_log10[usable])
+    if area_under_roc is not None:
+        metrics["auroc"] = area_under_roc
+    if area_under_pr is not None:
+        metrics["auprc"] = area_under_pr
+    return metrics
+
+
 def metrics_for_loss_type(
     loss_type: str, y_true: np.ndarray, y_pred: np.ndarray
 ) -> Dict[str, float]:
@@ -177,6 +242,12 @@ class TaskPredictionAccumulator:
         self._pred: List[float] = []
         self._sample_ids: List[str] = []
         self._sources: List[str] = []
+        self._qualifiers: List[int] = []
+        self._mapping_categories: List[str] = []
+        self._mapping_n_candidates: List[int] = []
+        self._mapping_n_genes: List[int] = []
+        self._mapping_n_flank_pairs: List[int] = []
+        self._flank_context_resolved: List[bool] = []
 
     def add(
         self,
@@ -185,6 +256,12 @@ class TaskPredictionAccumulator:
         mask: Sequence[float],
         sample_ids: Optional[Sequence[str]] = None,
         sources: Optional[Sequence[str]] = None,
+        mapping_categories: Optional[Sequence[str]] = None,
+        mapping_n_candidates: Optional[Sequence[int]] = None,
+        mapping_n_genes: Optional[Sequence[int]] = None,
+        mapping_n_flank_pairs: Optional[Sequence[int]] = None,
+        flank_context_resolved: Optional[Sequence[bool]] = None,
+        qualifiers: Optional[Sequence[int]] = None,
     ) -> None:
         for position, keep in enumerate(mask):
             if float(keep) <= 0.0:
@@ -199,6 +276,27 @@ class TaskPredictionAccumulator:
                 self._sources.append(str(sources[position]))
             else:
                 self._sources.append("")
+            if qualifiers is not None and position < len(qualifiers):
+                self._qualifiers.append(int(qualifiers[position]))
+            else:
+                self._qualifiers.append(0)
+            if mapping_categories is not None and position < len(mapping_categories):
+                self._mapping_categories.append(str(mapping_categories[position]))
+            else:
+                self._mapping_categories.append("")
+            for values, destination in (
+                (mapping_n_candidates, self._mapping_n_candidates),
+                (mapping_n_genes, self._mapping_n_genes),
+                (mapping_n_flank_pairs, self._mapping_n_flank_pairs),
+            ):
+                if values is not None and position < len(values):
+                    destination.append(int(values[position]))
+                else:
+                    destination.append(0)
+            if flank_context_resolved is not None and position < len(flank_context_resolved):
+                self._flank_context_resolved.append(bool(flank_context_resolved[position]))
+            else:
+                self._flank_context_resolved.append(False)
 
     def __len__(self) -> int:
         return len(self._true)
@@ -224,35 +322,72 @@ class TaskPredictionAccumulator:
         true_all = np.asarray(self._true)
         pred_all = np.asarray(self._pred)
         summary = metrics_for_loss_type(self.loss_type, true_all, pred_all)
-        if self.loss_type != "bce" or not self._sources:
-            return summary
 
-        sources = np.asarray(self._sources, dtype=object)
-        is_synthetic = np.asarray([str(src).startswith("synthetic_negative") for src in sources])
-        if not is_synthetic.any():
-            return summary
+        qualifiers = np.asarray(self._qualifiers, dtype=int)
+        if self.loss_type == "censor" and len(qualifiers) == len(true_all):
+            exact = qualifiers == 0
+            if exact.any():
+                for name, value in regression_metrics(true_all[exact], pred_all[exact]).items():
+                    summary[f"exact_{name}"] = value
+            if self.task_name.startswith("binding"):
+                for name, value in binding_threshold_metrics(
+                    true_all, pred_all, qualifiers, threshold_nm=500.0
+                ).items():
+                    summary[f"threshold_500nm_{name}"] = value
 
-        positives = true_all >= 0.5
-        real_mask = ~is_synthetic
-        if real_mask.sum() > 0 and len(np.unique(true_all[real_mask])) > 1:
-            for name, value in metrics_for_loss_type(
-                self.loss_type, true_all[real_mask], pred_all[real_mask]
-            ).items():
-                summary[f"real_only_{name}"] = value
-        else:
-            # Stated explicitly: "no real negatives" is a property of the
-            # corpus that a reader must see, not an absence to skim past.
-            summary["real_only_n_negatives"] = float(int((real_mask & ~positives).sum()))
+        if self.loss_type == "bce" and self._sources:
+            sources = np.asarray(self._sources, dtype=object)
+            is_synthetic = np.asarray(
+                [str(src).startswith("synthetic_negative") for src in sources]
+            )
+            if is_synthetic.any():
+                positives = true_all >= 0.5
+                real_mask = ~is_synthetic
+                if real_mask.sum() > 0 and len(np.unique(true_all[real_mask])) > 1:
+                    for name, value in metrics_for_loss_type(
+                        self.loss_type, true_all[real_mask], pred_all[real_mask]
+                    ).items():
+                        summary[f"real_only_{name}"] = value
+                else:
+                    # Stated explicitly: "no real negatives" is a property of the
+                    # corpus that a reader must see, not an absence to skim past.
+                    summary["real_only_n_negatives"] = float(int((real_mask & ~positives).sum()))
 
-        for kind in sorted({str(src) for src in sources[is_synthetic]}):
-            selector = positives | (sources == kind)
-            if len(np.unique(true_all[selector])) < 2:
-                continue
-            label = kind.replace("synthetic_negative_", "")
-            for name, value in metrics_for_loss_type(
-                self.loss_type, true_all[selector], pred_all[selector]
-            ).items():
-                summary[f"decoy_{label}_{name}"] = value
+                for kind in sorted({str(src) for src in sources[is_synthetic]}):
+                    selector = positives | (sources == kind)
+                    if len(np.unique(true_all[selector])) < 2:
+                        continue
+                    label = kind.replace("synthetic_negative_", "")
+                    for name, value in metrics_for_loss_type(
+                        self.loss_type, true_all[selector], pred_all[selector]
+                    ).items():
+                        summary[f"decoy_{label}_{name}"] = value
+
+        # Every task keeps the same held-out examples while exposing a mapping
+        # category breakdown. This is diagnostics, not a different objective.
+        if self._mapping_categories:
+            categories = np.asarray(self._mapping_categories, dtype=object)
+            for category in sorted({str(value) for value in categories if str(value)}):
+                selector = categories == category
+                for name, value in metrics_for_loss_type(
+                    self.loss_type, true_all[selector], pred_all[selector]
+                ).items():
+                    summary[f"mapping_{category}_{name}"] = value
+                if self.loss_type == "censor":
+                    category_exact = selector & (qualifiers == 0)
+                    if category_exact.any():
+                        for name, value in regression_metrics(
+                            true_all[category_exact], pred_all[category_exact]
+                        ).items():
+                            summary[f"mapping_{category}_exact_{name}"] = value
+                    if self.task_name.startswith("binding"):
+                        for name, value in binding_threshold_metrics(
+                            true_all[selector],
+                            pred_all[selector],
+                            qualifiers[selector],
+                            threshold_nm=500.0,
+                        ).items():
+                            summary[f"mapping_{category}_threshold_500nm_{name}"] = value
         return summary
 
     def rows(self) -> List[Dict[str, Any]]:
@@ -274,11 +409,40 @@ class TaskPredictionAccumulator:
             {
                 "task": self.task_name,
                 "sample_id": sample_id,
+                "source": source,
+                "qualifier": qualifier,
                 "y_true": true_value,
                 "y_pred": pred_value,
                 "y_prob": _logistic(pred_value) if is_binary else "",
+                "source_mapping_category": mapping_category,
+                "source_mapping_n_candidates": n_candidates,
+                "source_mapping_n_genes": n_genes,
+                "source_mapping_n_flank_pairs": n_flank_pairs,
+                "flank_context_resolved": flank_resolved,
             }
-            for sample_id, true_value, pred_value in zip(self._sample_ids, self._true, self._pred)
+            for (
+                sample_id,
+                source,
+                qualifier,
+                true_value,
+                pred_value,
+                mapping_category,
+                n_candidates,
+                n_genes,
+                n_flank_pairs,
+                flank_resolved,
+            ) in zip(
+                self._sample_ids,
+                self._sources,
+                self._qualifiers,
+                self._true,
+                self._pred,
+                self._mapping_categories,
+                self._mapping_n_candidates,
+                self._mapping_n_genes,
+                self._mapping_n_flank_pairs,
+                self._flank_context_resolved,
+            )
         ]
 
 
@@ -312,6 +476,7 @@ def collect_holdout_predictions(
     resolve_pred_fn,
     get_target_fn,
     get_mask_fn,
+    get_qual_fn=None,
     max_batches: int = 0,
 ) -> Dict[str, TaskPredictionAccumulator]:
     """Run a held-out pass and collect masked predictions for every task.
@@ -327,6 +492,16 @@ def collect_holdout_predictions(
     accumulators: Dict[str, TaskPredictionAccumulator] = {
         spec.name: TaskPredictionAccumulator(spec.name, spec.loss_type) for spec in specs
     }
+
+    def _host_sequence(value):
+        if isinstance(value, torch.Tensor):
+            return value.detach().cpu().tolist()
+        return value
+
+    def _host_vector(value):
+        if isinstance(value, torch.Tensor):
+            return value.reshape(-1).detach().cpu().tolist()
+        return value
 
     model.eval()
     with torch.no_grad():
@@ -365,6 +540,12 @@ def collect_holdout_predictions(
                     mask_vec,
                     sample_ids,
                     getattr(moved, "sample_sources", None),
+                    getattr(moved, "source_mapping_categories", None),
+                    _host_sequence(getattr(moved, "source_mapping_n_candidates", None)),
+                    _host_sequence(getattr(moved, "source_mapping_n_genes", None)),
+                    _host_sequence(getattr(moved, "source_mapping_n_flank_pairs", None)),
+                    _host_sequence(getattr(moved, "flank_context_resolved", None)),
+                    _host_vector(get_qual_fn(moved, spec)) if get_qual_fn is not None else None,
                 )
     return accumulators
 
@@ -375,10 +556,10 @@ def write_holdout_artifacts(
     split: str = "val",
     extra_summary: Optional[Mapping[str, Any]] = None,
 ) -> Dict[str, Any]:
-    """Write ``summary.json`` and ``<split>_predictions.csv`` for a held-out pass.
+    """Write split-specific summary, metrics, and predictions for a held-out pass.
 
-    This is the artifact contract the experiment registry expects and that the
-    unified trainer previously did not produce.
+    ``summary.json`` remains the validation-summary compatibility alias. A
+    later test pass writes ``test_summary.json`` without overwriting it.
     """
     import csv
     import json
@@ -391,7 +572,10 @@ def write_holdout_artifacts(
     payload: Dict[str, Any] = {"split": split, "tasks": summary}
     if extra_summary:
         payload.update(dict(extra_summary))
-    (out_path / "summary.json").write_text(json.dumps(payload, indent=2))
+    rendered_summary = json.dumps(payload, indent=2)
+    (out_path / f"{split}_summary.json").write_text(rendered_summary)
+    if split == "val" or not (out_path / "summary.json").exists():
+        (out_path / "summary.json").write_text(rendered_summary)
 
     # Flat metric CSV written here rather than through RunLogger: the logger is
     # closed in the trainer's `finally` block, so anything logged afterwards
@@ -412,7 +596,21 @@ def write_holdout_artifacts(
     if rows:
         with predictions_path.open("w", newline="") as handle:
             writer = csv.DictWriter(
-                handle, fieldnames=["task", "sample_id", "y_true", "y_pred", "y_prob"]
+                handle,
+                fieldnames=[
+                    "task",
+                    "sample_id",
+                    "source",
+                    "qualifier",
+                    "y_true",
+                    "y_pred",
+                    "y_prob",
+                    "source_mapping_category",
+                    "source_mapping_n_candidates",
+                    "source_mapping_n_genes",
+                    "source_mapping_n_flank_pairs",
+                    "flank_context_resolved",
+                ],
             )
             writer.writeheader()
             writer.writerows(rows)
