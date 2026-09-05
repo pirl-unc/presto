@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "experiment_id": "2026-09-05_0957_codex_pr45-integrity-e2e",
+  "status": "passed",
+  "launch_commit": "c4dc1cf6c60ccca68eb3e467fffd70b3067945df",
+  "hardware": "cpu",
+  "runtime_seconds": 112,
+  "merged_preflight": {
+    "source": "merged_tsv",
+    "rows_scanned": 3266972,
+    "final_samples": 287,
+    "split_rows": {"train": 173, "val": 57, "test": 57},
+    "resolved_alleles": 232,
+    "reported_alleles": 269,
+    "post_filter_resolved_rows": 296,
+    "post_filter_rows": 296,
+    "index_fallback_alleles": 0,
+    "support_sha256": "aa0d7c25bd0896141d7706293e2a5754591a85f622319949e10478772a87849e",
+    "dataset_contract_sha256": "47efb679d2e9a1d84beec57444e1a5062c7938017a6efdf4e18f78fa5fadd45e",
+    "dataset_supervision_contract_sha256": "eaf94f18d612ce85dcef8c574ea2498408c51980c4385c1086ded532256b0e24"
+  },
+  "training": {
+    "source": "hitlist",
+    "final_samples": 216,
+    "split_rows": {"train": 130, "val": 43, "test": 43},
+    "resolved_alleles": 63,
+    "reported_alleles": 63,
+    "resolved_mhc_rows": 717,
+    "mhc_rows": 717,
+    "index_fallback_alleles": 0,
+    "support_sha256": "2587f4cc26fa531afb71fd999bc4d9517495a798ac7e78452835de62687f3cb2",
+    "dataset_contract_sha256": "e1c7012b94ca6b787b0beab642247eb18140dca11db5b9e3b4a847b8ab0267f1",
+    "dataset_supervision_contract_sha256": "4a1d280e5f23b2ce3c93d463215b79905c21d4b8cacae3b0728bc963bb873186",
+    "lineage_issues": 0,
+    "duplicate_sample_ids": 0,
+    "fake_null_sequences": 0,
+    "selected_checkpoint_epoch": 1,
+    "validation": {
+      "overall_loss": 3.384141484896342,
+      "binding_n": 18,
+      "binding_exact_n": 14,
+      "binding_exact_spearman": -0.2043956043956044,
+      "binding_exact_pearson": -0.27179734418330703,
+      "binding_exact_rmse_log10_nm": 1.6213329829144325,
+      "binding_500nm_balanced_accuracy": 0.5,
+      "binding_500nm_auroc": 0.3888888888888889,
+      "binding_500nm_auprc": 0.3433455433455434
+    },
+    "test": {
+      "overall_loss": 3.2907013495763144,
+      "binding_n": 19,
+      "binding_exact_n": 13,
+      "binding_exact_spearman": -0.15934065934065933,
+      "binding_exact_pearson": 0.0877020545634125,
+      "binding_exact_rmse_log10_nm": 1.6278301178356804,
+      "binding_500nm_balanced_accuracy": 0.5,
+      "binding_500nm_auroc": 0.4166666666666667,
+      "binding_500nm_auprc": 0.24203574203574205
+    }
+  },
+  "artifacts": {
+    "model": {
+      "path": "artifacts/2026-09-05_0957_codex_pr45-integrity-e2e/model-c4dc1cf.pt",
+      "sha256": "eabcd8954190d4638aa7529cab519f4c562cfea17c5292a37cb3b9d78ca3d7d9"
+    },
+    "train_log": {
+      "path": "artifacts/2026-09-05_0957_codex_pr45-integrity-e2e/train-c4dc1cf.log",
+      "sha256": "933527177c3009328b7488bb3dd940e66bd922efa75ae64ff4958bbedc3d21bd"
+    },
+    "merged_preflight_log": {
+      "path": "artifacts/2026-09-05_0957_codex_pr45-integrity-e2e/merged-preflight-c4dc1cf.log",
+      "sha256": "2b13de87d9fe5312051c42aca8c93ff652cec25d3d56cd7db85662615a55cd14"
+    }
+  }
+}

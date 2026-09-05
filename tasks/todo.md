@@ -9752,7 +9752,7 @@ scope.
       redundant compatibility logic where the canonical contract is sufficient.
       Keep the implementation small and update the experiment snapshot only
       where it is the code actually executed by the frozen bundle.
-- [ ] Run focused tests, exact aggregation fixtures, real Hitlist and merged-TSV
+- [x] Run focused tests, exact aggregation fixtures, real Hitlist and merged-TSV
       preflights, pinned Ruff/format/diff checks, and the full repository suite.
       Register and run a capped local end-to-end training/evaluation smoke with
       validation/test prediction dumps, then document artifacts, metrics,
@@ -9760,4 +9760,54 @@ scope.
 
 ## Review
 
-Pending implementation and verification.
+### Result
+
+- The frozen aggregator now pairs on the emitted canonical fields
+  `source_mhc_alleles` and `resolved_mhc_alleles`. Its integration test executes
+  policy parity and metric emission against real-schema fixtures, rather than
+  accepting an obsolete alias.
+- Traceability now requires a stable evidence-row identity for every
+  Hitlist-derived observation, including explicitly unmapped rows. Selected
+  mapping coordinates remain required only when a mapping actually exists.
+- Binding, kinetics, and stability samples preserve every reported allele in
+  immutable source lineage while resolved lineage contains only the primary
+  allele actually encoded for the model. Elution likewise keeps its original
+  co-expressed source set while filtering only model-facing alleles.
+- Dataset fingerprints use a fixed-size, order-independent streaming multiset
+  accumulator instead of retaining two Python digest strings per sample. The
+  hash remains deterministic and multiplicity-sensitive without full-corpus
+  auxiliary memory growth.
+- `data_source=hitlist` and `data_source=merged_tsv` now choose exactly one
+  loader each. The data audit configures its requested Hitlist directory before
+  loading and validates that same snapshot's five artifacts. There is no
+  opportunistic hybrid or default-directory retry.
+- Public and config-file defaults agree, use `mhcseqs` as the canonical MHC
+  source, require resolved model inputs, and do not require an index CSV.
+  Checkpoints now serialize structural topology and held-out evaluation fails
+  closed if the selected checkpoint cannot be reconstructed. Successful runs
+  evaluate every validation/test batch and record complete held-out losses.
+
+### Verification evidence
+
+- A non-default symlinked Hitlist snapshot supplied both audited hashes and
+  loaded records: 16,721 binding, 2 kinetics, 1,000 capped stability, and
+  20,000 capped elution rows in the audit condition.
+- Six production-size preflights (two mapping policies, split seeds 42/43/44,
+  fixed data seed 42) each produced 57,710 samples and passed lineage,
+  duplicate-ID, fake-null, and required-target gates. Policy-pair supervision
+  hashes match at every seed; the common dataset supervision hash is
+  `4e1086862347ffa35e15ea88de0b076da9d7747bb0d74a4c9eb2abcc70ec4629`.
+- The registered local smoke at
+  `experiments/2026-09-05_0957_codex_pr45-integrity-e2e/` ran from clean commit
+  `c4dc1cf6c60ccca68eb3e467fffd70b3067945df`. The merged path scanned
+  3,266,972 rows and emitted its complete funnel; the exact Hitlist-only path
+  resolved 63/63 alleles and 717/717 MHC row inputs through `mhcseqs` with no
+  index fallback, trained, reloaded its selected checkpoint, and emitted full
+  43-row validation and test prediction dumps. All integrity issue counts are
+  zero and no `holdout_error.json` exists.
+- Final focused regression suite: 101 passed. Final full repository suite:
+  1,773 passed, 1 expected platform skip, 5 upstream warnings in 715.39
+  seconds. Pinned Ruff check/format and `git diff --check` passed.
+- The branch remains a direct descendant of `origin/main`; PR #45 is the only
+  open PR and is not stacked. Final publication and CI state are recorded in
+  the PR after the experiment-record commit is pushed.

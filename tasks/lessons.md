@@ -308,3 +308,10 @@
   changes parameter structure, including latent topology. Held-out evaluation
   must fail if the selected checkpoint cannot be reconstructed; silently
   scoring the final in-memory epoch makes the artifact internally inconsistent.
+- A capped in-loop validation pass is an optimization control, not the final
+  evaluation contract. Rebuild an uncapped held-out loader for the selected
+  checkpoint, compute full loss terms, and emit every validation/test example;
+  never fall back to the last in-memory model or the capped iterator.
+- End-to-end verification must exercise each named data source while competing
+  files are present. Otherwise an opportunistic loader branch can look healthy
+  in isolation while silently creating a hybrid corpus in production.

@@ -1,0 +1,459 @@
+{
+  "binary_targets": [
+    "elution",
+    "excision",
+    "foreignness",
+    "ms_detectability",
+    "presentation",
+    "processing",
+    "tcell",
+    "tcr_evidence",
+    "tcr_evidence_method"
+  ],
+  "dataset_contract_sha256": "47efb679d2e9a1d84beec57444e1a5062c7938017a6efdf4e18f78fa5fadd45e",
+  "dataset_fingerprint_algorithm": "sha256-modular-sum-v1",
+  "dataset_supervision_contract_sha256": "eaf94f18d612ce85dcef8c574ea2498408c51980c4385c1086ded532256b0e24",
+  "fake_null_sequences": {
+    "count": 0,
+    "examples": []
+  },
+  "lineage": {
+    "duplicate_sample_id_count": 0,
+    "duplicate_sample_id_examples": [],
+    "issue_count": 0,
+    "issue_examples": []
+  },
+  "schema_version": 2,
+  "sha256": "aa0d7c25bd0896141d7706293e2a5754591a85f622319949e10478772a87849e",
+  "splits": {
+    "test": {
+      "rows": 57,
+      "sample_contract_sha256": "fb144c525fffea8256061067ada189b95ff501b245ee76d6cf4660d638dfe118",
+      "supervision_contract_sha256": "1e8d6502354f806e21fbcff7399bc139ddde951da0a4f8ae7092c9337ba89107",
+      "targets": {
+        "binding": {
+          "censored_lower": 0,
+          "censored_upper": 1,
+          "count": 18,
+          "exact": 17
+        },
+        "binding_ic50": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 6,
+          "exact": 6
+        },
+        "binding_kd": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 2,
+          "exact": 2
+        },
+        "binding_kd_direct": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 2,
+          "exact": 2
+        },
+        "binding_kd_proxy_ec50": {
+          "censored_lower": 0,
+          "censored_upper": 1,
+          "count": 1,
+          "exact": 0
+        },
+        "binding_kd_proxy_ic50": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 8,
+          "exact": 8
+        },
+        "binding_unknown": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 1,
+          "exact": 1
+        },
+        "elution": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 13,
+          "exact": 0,
+          "negative": 4,
+          "positive": 9
+        },
+        "foreignness": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 45,
+          "exact": 0,
+          "negative": 14,
+          "positive": 31
+        },
+        "koff": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 3,
+          "exact": 0
+        },
+        "kon": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 1,
+          "exact": 0
+        },
+        "species_of_origin": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 45,
+          "exact": 0
+        },
+        "t_half": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 3,
+          "exact": 3
+        },
+        "tcell": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 12,
+          "exact": 0,
+          "negative": 7,
+          "positive": 5
+        },
+        "tcell_apc_type": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 9,
+          "exact": 0
+        },
+        "tcell_assay_method": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 12,
+          "exact": 0
+        },
+        "tcell_assay_readout": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 12,
+          "exact": 0
+        },
+        "tcell_culture_context": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 12,
+          "exact": 0
+        },
+        "tcell_peptide_format": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 12,
+          "exact": 0
+        },
+        "tcell_stim_context": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 12,
+          "exact": 0
+        },
+        "tcr_evidence": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 6,
+          "exact": 0,
+          "negative": 0,
+          "positive": 6
+        },
+        "tm": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 1,
+          "exact": 1
+        }
+      }
+    },
+    "train": {
+      "rows": 173,
+      "sample_contract_sha256": "3d1a7c229ce36860b53394ab211367aba9e7863ca612bda09792e64469b72778",
+      "supervision_contract_sha256": "e7e2556a84e077f673335338086d39752bedd75f311104fc7cf3d30fccf651df",
+      "targets": {
+        "binding": {
+          "censored_lower": 0,
+          "censored_upper": 13,
+          "count": 47,
+          "exact": 34
+        },
+        "binding_ec50": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 1,
+          "exact": 1
+        },
+        "binding_ic50": {
+          "censored_lower": 0,
+          "censored_upper": 2,
+          "count": 15,
+          "exact": 13
+        },
+        "binding_kd": {
+          "censored_lower": 0,
+          "censored_upper": 4,
+          "count": 4,
+          "exact": 0
+        },
+        "binding_kd_direct": {
+          "censored_lower": 0,
+          "censored_upper": 4,
+          "count": 4,
+          "exact": 0
+        },
+        "binding_kd_proxy_ec50": {
+          "censored_lower": 0,
+          "censored_upper": 6,
+          "count": 8,
+          "exact": 2
+        },
+        "binding_kd_proxy_ic50": {
+          "censored_lower": 0,
+          "censored_upper": 1,
+          "count": 19,
+          "exact": 18
+        },
+        "elution": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 45,
+          "exact": 0,
+          "negative": 10,
+          "positive": 35
+        },
+        "foreignness": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 138,
+          "exact": 0,
+          "negative": 57,
+          "positive": 81
+        },
+        "koff": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 8,
+          "exact": 0
+        },
+        "kon": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 4,
+          "exact": 0
+        },
+        "species_of_origin": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 138,
+          "exact": 0
+        },
+        "t_half": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 18,
+          "exact": 18
+        },
+        "tcell": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 37,
+          "exact": 0,
+          "negative": 17,
+          "positive": 20
+        },
+        "tcell_apc_type": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 32,
+          "exact": 0
+        },
+        "tcell_assay_method": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 37,
+          "exact": 0
+        },
+        "tcell_assay_readout": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 37,
+          "exact": 0
+        },
+        "tcell_culture_context": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 37,
+          "exact": 0
+        },
+        "tcell_peptide_format": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 37,
+          "exact": 0
+        },
+        "tcell_stim_context": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 37,
+          "exact": 0
+        },
+        "tcr_evidence": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 13,
+          "exact": 0,
+          "negative": 0,
+          "positive": 13
+        },
+        "tm": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 1,
+          "exact": 1
+        }
+      }
+    },
+    "val": {
+      "rows": 57,
+      "sample_contract_sha256": "3c1f5fe4aa2e970433aabcdb12855a3e63f5e353419cd068a57d0dfdc6c28902",
+      "supervision_contract_sha256": "f154668f165f06c9d1f85a9a53b6743d75a5189245102584d34d221b743a1e62",
+      "targets": {
+        "binding": {
+          "censored_lower": 0,
+          "censored_upper": 4,
+          "count": 17,
+          "exact": 13
+        },
+        "binding_ic50": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 4,
+          "exact": 4
+        },
+        "binding_kd": {
+          "censored_lower": 0,
+          "censored_upper": 1,
+          "count": 1,
+          "exact": 0
+        },
+        "binding_kd_direct": {
+          "censored_lower": 0,
+          "censored_upper": 1,
+          "count": 1,
+          "exact": 0
+        },
+        "binding_kd_proxy_ec50": {
+          "censored_lower": 0,
+          "censored_upper": 1,
+          "count": 2,
+          "exact": 1
+        },
+        "binding_kd_proxy_ic50": {
+          "censored_lower": 0,
+          "censored_upper": 2,
+          "count": 10,
+          "exact": 8
+        },
+        "elution": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 15,
+          "exact": 0,
+          "negative": 6,
+          "positive": 9
+        },
+        "foreignness": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 39,
+          "exact": 0,
+          "negative": 16,
+          "positive": 23
+        },
+        "koff": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 5,
+          "exact": 0
+        },
+        "kon": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 2,
+          "exact": 0
+        },
+        "species_of_origin": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 39,
+          "exact": 0
+        },
+        "t_half": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 1,
+          "exact": 1
+        },
+        "tcell": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 14,
+          "exact": 0,
+          "negative": 7,
+          "positive": 7
+        },
+        "tcell_apc_type": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 12,
+          "exact": 0
+        },
+        "tcell_assay_method": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 14,
+          "exact": 0
+        },
+        "tcell_assay_readout": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 14,
+          "exact": 0
+        },
+        "tcell_culture_context": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 14,
+          "exact": 0
+        },
+        "tcell_peptide_format": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 14,
+          "exact": 0
+        },
+        "tcell_stim_context": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 14,
+          "exact": 0
+        },
+        "tcr_evidence": {
+          "censored_lower": 0,
+          "censored_upper": 0,
+          "count": 3,
+          "exact": 0,
+          "negative": 0,
+          "positive": 3
+        }
+      }
+    }
+  }
+}

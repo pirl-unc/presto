@@ -7,9 +7,8 @@
   },
   "git": {
     "branch": "claude/restore-unmapped-masking",
-    "commit": null,
-    "dirty": false,
-    "note": "The exact clean launch commit is recorded by the launcher and filled here after completion."
+    "commit": "c4dc1cf6c60ccca68eb3e467fffd70b3067945df",
+    "dirty": false
   },
   "launcher": "experiments/2026-09-05_0957_codex_pr45-integrity-e2e/reproduce/launch.sh",
   "merged_preflight": {
@@ -64,6 +63,14 @@
     "n_heads": 4,
     "latent_topology": "expanded (public CLI default)",
     "max_train_batches": 2,
-    "max_val_batches": 1
+    "max_val_batches": 1,
+    "selected_checkpoint_evaluation": "full validation and test splits"
+  },
+  "runtime": {
+    "started_at": "2026-09-05T11:11:14-04:00",
+    "finished_at": "2026-09-05T11:13:06-04:00",
+    "merged_preflight_seconds": 59,
+    "hitlist_train_evaluate_seconds": 53,
+    "total_seconds": 112
   }
 }

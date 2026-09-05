@@ -781,3 +781,85 @@ deltas flip sign (-0.0094 / +0.0459 / -0.0899). The negative result is a
 statement about statistical power on `HLA-A*02:01`, not evidence that junction
 context is unimportant - and it is the same limitation `20260902b` reported,
 now with the checkpoint confound removed.
+
+## 2026-09-05 - PR #45 data-integrity end-to-end smoke
+
+**Experiment id:** `2026-09-05_0957_codex_pr45-integrity-e2e`
+
+**Agent/model:** Codex / GPT-5
+
+**Directory:**
+[`2026-09-05_0957_codex_pr45-integrity-e2e`](2026-09-05_0957_codex_pr45-integrity-e2e/)
+
+**Commit:** `c4dc1cf6c60ccca68eb3e467fffd70b3067945df` (clean)
+
+### Question and data contract
+
+Does the repaired PR load both named data sources through unique paths, resolve
+MHC inputs directly from `mhcseqs`, train, reconstruct the selected checkpoint,
+and emit fully traceable validation/test results?
+
+- `merged_tsv` preflight: scanned 3,266,972 rows; reservoir-capped binding 96,
+  kinetics 24, stability 24, processing 24, elution 96, T-cell 96, and TCR
+  evidence 24; recorded all pre-cap candidates, cap losses, ingest drops, and
+  MHC-filter losses. The final 287 samples split 173/57/57 by peptide.
+- Exact Hitlist-only training path: HLA-A*02:01, reservoir-capped 96 binding,
+  2 kinetics, 24 stability, and 96 elution observations. `kon`, `koff`, and
+  `tm` were excluded, leaving binding, half-life, and elution supervision.
+  Every synthetic ratio and MHC augmentation was zero. The final 216 samples
+  split 130/43/43 by peptide with data seed and split seed independently fixed
+  at 42.
+- Both conditions used strict resolved-only MHC inputs with `mhcseqs` first and
+  no index CSV. The merged preflight resolved 232/269 reported alleles before
+  explicit filtering and 296/296 model-facing rows afterward. Hitlist resolved
+  63/63 alleles and 717/717 row-wise inputs. CSV fallback count was zero.
+- Both audits had zero lineage issues, duplicate sample IDs, and fake-null
+  sequences. Hitlist support/dataset/supervision hashes were `2587f4cc...`,
+  `e1c7012b...`, and `4a1d280e...`; complete values are in the experiment
+  summary.
+
+### Training, losses, and output mapping
+
+No pretraining was used. The CPU smoke used expanded Presto d32/l1/h4 (411,722
+parameters), AdamW lr 2.8e-4 and weight decay 0.01, batch 16, MIL cap 16, one
+epoch, two training batches, and one in-loop validation batch. Learned
+uncertainty weighting was off. Standard unified losses were active with
+cascade/assay-affinity/assay-presentation/no-B2M/T-cell-context/T-cell-upstream
+consistency weights 0.2/0.1/0.1/0.5/0.05/0.2, MIL contrastive/sparsity weights
+0.1/0.02, and binding contrastive weight 1.0 where labels supplied support.
+
+Binding affinity labels map to the binding/affinity-family outputs and their
+IC50/KD variants; half-life maps to `assays.t_half`; elution detection maps to
+elution/presentation outputs. Source organism and MHC annotations map to their
+auxiliary species/class/type outputs. The selected epoch-1 checkpoint was
+reconstructed with its expanded topology before full, uncapped held-out
+evaluation. Per-example validation and test prediction dumps are committed.
+
+### Conditions and held-out metrics
+
+RMSE is `log10(nM)`; exact metrics exclude censored observations.
+
+| Condition | Result | Runtime |
+|---|---|---:|
+| Default merged-TSV preflight | Complete funnel; 287 samples; all post-filter MHC rows resolved | 59 s |
+| Exact Hitlist train/evaluate | Train + selected-checkpoint full validation/test dumps completed | 53 s |
+
+| Split | Overall loss | Exact affinity n | Spearman | Pearson | RMSE | <=500 nM bal. acc. | AUROC | AUPRC |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Validation | 3.3841 | 14 | -0.2044 | -0.2718 | 1.6213 | 0.5000 | 0.3889 | 0.3433 |
+| Test | 3.2907 | 13 | -0.1593 | 0.0877 | 1.6278 | 0.5000 | 0.4167 | 0.2420 |
+
+Half-life had four observations in each held-out split (validation/test RMSE
+3.3849/2.6119). Elution was all-positive (21/20), so discrimination metrics
+are undefined. These tiny-run values are recorded for reproducibility, not as
+a model-quality result.
+
+### Winner and takeaway
+
+There is no model winner: this was a path-integrity verification. All hard
+gates passed. Named sources now select exact loaders, merged curation is fully
+auditable, MHC joins work from `mhcseqs` without an index, lineage remains
+source-faithful, the selected checkpoint reloads exactly, and complete held-out
+artifacts exist. The narrow, one-class Hitlist elution slice remains unsuitable
+for claims of corpus completeness or model discrimination. Requested GPU:
+none; observed hardware: local CPU. Total wall time was 112 seconds.
