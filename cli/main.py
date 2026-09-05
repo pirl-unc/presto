@@ -929,11 +929,10 @@ def create_parser() -> argparse.ArgumentParser:
         dest="latent_topology",
         type=str,
         choices=["collapsed", "expanded"],
-        default="collapsed",
+        default="expanded",
         help=(
-            "Latent DAG topology. 'expanded' gives each latent in design.md S7.1 its "
-            "own query and segment scope; 'collapsed' folds them into five shared "
-            "latents plus projections (the historical default)."
+            "Latent DAG topology. 'expanded' is the canonical design.md S7.1 topology; "
+            "'collapsed' is an explicit smaller ablation."
         ),
     )
     train_iedb.add_argument(

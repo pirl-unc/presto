@@ -304,3 +304,7 @@
   never its parent. A sibling checkout with the same package name can otherwise
   be imported as an empty namespace package and poison every later test in that
   Python process.
+- A self-describing checkpoint must preserve every constructor option that
+  changes parameter structure, including latent topology. Held-out evaluation
+  must fail if the selected checkpoint cannot be reconstructed; silently
+  scoring the final in-memory epoch makes the artifact internally inconsistent.

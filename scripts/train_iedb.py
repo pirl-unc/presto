@@ -5982,23 +5982,16 @@ def run(args: argparse.Namespace) -> None:
             if args.checkpoint and os.path.exists(args.checkpoint):
                 from presto.training.checkpointing import load_model_from_checkpoint
 
-                try:
-                    eval_model, checkpoint_payload = load_model_from_checkpoint(
-                        args.checkpoint, map_location=device
-                    )
-                    eval_model.to(device)
-                    eval_model.eval()
-                    best_epoch = checkpoint_payload.get("epoch")
-                    print(
-                        "Held-out evaluation uses the best-validation checkpoint"
-                        + (f" (epoch {best_epoch})" if best_epoch else "")
-                    )
-                except Exception as exc:  # noqa: BLE001 - fall back, but say so
-                    print(
-                        f"WARNING: could not reload {args.checkpoint} for held-out "
-                        f"evaluation ({exc}); scoring the final-epoch model instead"
-                    )
-                    eval_model = model
+                eval_model, checkpoint_payload = load_model_from_checkpoint(
+                    args.checkpoint, map_location=device
+                )
+                eval_model.to(device)
+                eval_model.eval()
+                best_epoch = checkpoint_payload.get("epoch")
+                print(
+                    "Held-out evaluation uses the best-validation checkpoint"
+                    + (f" (epoch {best_epoch})" if best_epoch else "")
+                )
 
             def _forward(model_ref, batch_ref):
                 # Provenance must be passed here or the held-out pass scores a
@@ -6080,6 +6073,7 @@ def run(args: argparse.Namespace) -> None:
                 )
             except Exception:  # pragma: no cover - never mask the original
                 pass
+            raise RuntimeError("Held-out artifact generation failed") from exc
 
     print(f"\nTraining complete. Best val_loss: {best_val_loss:.4f}")
 

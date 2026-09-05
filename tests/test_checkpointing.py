@@ -15,6 +15,7 @@ def test_save_model_checkpoint_contains_model_config(tmp_path):
         max_affinity_nM=100000.0,
         binding_midpoint_nM=800.0,
         binding_log10_scale=0.5,
+        latent_topology="collapsed",
     )
     path = tmp_path / "checkpoint.pt"
     save_model_checkpoint(path, model=model, epoch=2, step=10)
@@ -25,6 +26,7 @@ def test_save_model_checkpoint_contains_model_config(tmp_path):
     assert payload["model_config"]["d_model"] == 64
     assert payload["model_config"]["n_layers"] == 2
     assert payload["model_config"]["n_heads"] == 4
+    assert payload["model_config"]["latent_topology"] == "collapsed"
     assert payload["model_config"]["max_affinity_nM"] == 100000.0
     assert payload["model_config"]["binding_midpoint_nM"] == 800.0
     assert payload["model_config"]["binding_log10_scale"] == 0.5
@@ -41,6 +43,7 @@ def test_load_model_from_checkpoint_uses_embedded_config(tmp_path):
         max_affinity_nM=120000.0,
         binding_midpoint_nM=1200.0,
         binding_log10_scale=0.45,
+        latent_topology="collapsed",
     )
     path = tmp_path / "checkpoint.pt"
     save_model_checkpoint(path, model=model)
@@ -50,6 +53,9 @@ def test_load_model_from_checkpoint_uses_embedded_config(tmp_path):
     assert loaded.max_affinity_nM == 120000.0
     assert loaded.binding_midpoint_nM == 1200.0
     assert loaded.binding_log10_scale == 0.45
+    assert loaded.latent_topology == "collapsed"
+    for key, value in model.state_dict().items():
+        assert torch.equal(loaded.state_dict()[key], value)
     assert "model_state_dict" in payload
 
 

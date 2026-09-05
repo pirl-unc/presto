@@ -45,6 +45,7 @@ def test_parser_train_iedb_default_record_caps_unlimited():
     assert args.pmhc_flow_max_samples == 512
     assert args.filter_unresolved_mhc is True
     assert args.strict_mhc_resolution is True
+    assert args.latent_topology == IEDB_DEFAULTS["latent_topology"] == "expanded"
     # Synthetic negative categories are enabled by default.
     assert args.synthetic_pmhc_negative_ratio > 0.0
     assert args.synthetic_elution_negative_ratio is None

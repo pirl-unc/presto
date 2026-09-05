@@ -20,9 +20,10 @@ The training split gate requires overall binding, half-life, and elution
 support in train, validation, and test; sparse binding-method subheads are
 reported but are not independently required by this capped smoke.
 
-The model is a small one-layer, 32-dimensional CPU configuration trained for
-one epoch with two training batches and one in-loop validation batch. The
-post-training held-out pass still scores every validation and test example.
+The model is a small one-layer, 32-dimensional CPU configuration using the
+canonical expanded latent topology, trained for one epoch with two training
+batches and one in-loop validation batch. The post-training held-out pass still
+scores every validation and test example.
 No pretraining checkpoint is used. Active supervised outputs are determined by
 the retained real assay rows: affinity-family binding outputs, half-life, and
 elution/presentation outputs. Standard unified loss terms are used with learned
