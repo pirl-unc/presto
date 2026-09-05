@@ -29,6 +29,28 @@ DEFAULT_BINARY_TARGETS = frozenset(
 )
 
 
+class _StreamingMultisetHash:
+    """Fixed-size, order-independent SHA-256 multiset fingerprint."""
+
+    __slots__ = ("_count", "_sum")
+
+    _MODULUS = 1 << 256
+    _DOMAIN = b"presto-multiset-sha256-v1\0"
+
+    def __init__(self) -> None:
+        self._count = 0
+        self._sum = 0
+
+    def update(self, payload: bytes) -> None:
+        digest = hashlib.sha256(payload).digest()
+        self._sum = (self._sum + int.from_bytes(digest, "big")) % self._MODULUS
+        self._count += 1
+
+    def hexdigest(self) -> str:
+        state = self._DOMAIN + self._count.to_bytes(16, "big") + self._sum.to_bytes(32, "big")
+        return hashlib.sha256(state).hexdigest()
+
+
 def _masked_values(target: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
     """Flatten target values selected by a broadcast-compatible mask."""
     target = target.detach().cpu()
@@ -62,8 +84,8 @@ def audit_split_support(
     lineage_issue_examples: list[str] = []
     fake_null_sequence_count = 0
     fake_null_sequence_examples: list[str] = []
-    all_sample_contract_digests: list[str] = []
-    all_supervision_contract_digests: list[str] = []
+    dataset_contract = _StreamingMultisetHash()
+    dataset_supervision_contract = _StreamingMultisetHash()
 
     for split_name, dataset in splits.items():
         target_counts: Dict[str, Dict[str, Any]] = {}
@@ -81,9 +103,13 @@ def audit_split_support(
                 all_sample_ids.add(sample_id)
 
                 evidence_row_id = str(getattr(sample, "evidence_row_id", "") or "").strip()
+                source_mapping_category = str(
+                    getattr(sample, "source_mapping_category", "") or ""
+                ).strip()
                 mapped = int(getattr(sample, "source_mapping_n_candidates", 0) or 0) > 0
+                source_observation = bool(source_mapping_category) or mapped
                 lineage_failures: list[str] = []
-                if mapped and not evidence_row_id:
+                if source_observation and not evidence_row_id:
                     lineage_failures.append("missing_evidence_row_id")
                 if evidence_row_id:
                     has_observation_source = bool(
@@ -118,7 +144,7 @@ def audit_split_support(
                     sample_payload, sort_keys=True, separators=(",", ":"), default=str
                 ).encode()
                 full_contract.update(rendered)
-                all_sample_contract_digests.append(hashlib.sha256(rendered).hexdigest())
+                dataset_contract.update(rendered)
                 invariant_payload = dict(sample_payload)
                 for field in (
                     "flank_n",
@@ -134,9 +160,7 @@ def audit_split_support(
                     default=str,
                 ).encode()
                 supervision_contract.update(invariant_rendered)
-                all_supervision_contract_digests.append(
-                    hashlib.sha256(invariant_rendered).hexdigest()
-                )
+                dataset_supervision_contract.update(invariant_rendered)
             batch = collate(samples)
             for target_name, mask in batch.target_masks.items():
                 target = batch.targets.get(target_name)
@@ -175,7 +199,8 @@ def audit_split_support(
         }
 
     payload: Dict[str, Any] = {
-        "schema_version": 1,
+        "schema_version": 2,
+        "dataset_fingerprint_algorithm": "sha256-modular-sum-v1",
         "binary_targets": sorted(binary),
         "splits": split_payload,
         "lineage": {
@@ -188,12 +213,8 @@ def audit_split_support(
             "count": fake_null_sequence_count,
             "examples": fake_null_sequence_examples,
         },
-        "dataset_contract_sha256": hashlib.sha256(
-            "".join(sorted(all_sample_contract_digests)).encode()
-        ).hexdigest(),
-        "dataset_supervision_contract_sha256": hashlib.sha256(
-            "".join(sorted(all_supervision_contract_digests)).encode()
-        ).hexdigest(),
+        "dataset_contract_sha256": dataset_contract.hexdigest(),
+        "dataset_supervision_contract_sha256": dataset_supervision_contract.hexdigest(),
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     payload["sha256"] = hashlib.sha256(canonical).hexdigest()

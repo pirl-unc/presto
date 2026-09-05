@@ -9705,3 +9705,59 @@ reconstruct caps and ingest losses.
 - The branch is based directly on current `origin/main` (`d79853d`) with no
   intervening dependency branch, so PR #45 is not stacked. No GPU/Modal work
   was launched.
+
+---
+
+# PR #45 final integrity closure and end-to-end smoke (2026-09-05)
+
+## Scope and acceptance contract
+
+Resolve the five remaining review findings through the single canonical data,
+lineage, prediction, and Hitlist-loading paths. Do not introduce legacy column
+aliases, schema guessing, or silent data-directory fallbacks. The completed PR
+must prove that aggregation consumes the exact emitted held-out schema, every
+Hitlist observation (mapped or unmapped) requires stable identity, reported and
+model-facing MHC allele sets remain distinct, full-corpus fingerprints use
+constant auxiliary memory, and an explicit Hitlist snapshot supplies both the
+audited bytes and the loaded records.
+
+Verification must cover unit/integration regressions, exact experiment
+aggregation, real loader/preflight paths, and a registered local end-to-end
+training smoke that reaches held-out prediction emission. No GPU launch is in
+scope.
+
+## Plan
+
+- [x] Update experiment aggregation to pair on the canonical held-out columns
+      (`source_mhc_alleles`, `resolved_mhc_alleles`) and add an integration
+      fixture that runs the actual aggregator through policy parity and metric
+      emission without any compatibility aliases.
+- [x] Make lineage identity mandatory for every Hitlist-derived observation,
+      including `unmapped` rows with zero candidates, while keeping selected
+      protein/position/proteome requirements conditional on an actual mapping.
+      Add mapped, unmapped, synthetic, and legacy-source boundary tests.
+- [x] Refactor record-to-sample lineage so binding, kinetics, and stability keep
+      every reported allele only in source lineage and record only the primary
+      allele whose sequence/groove was actually supplied to the model as
+      resolved lineage. Verify unresolved and multi-allele cases explicitly.
+- [x] Replace per-sample digest-string lists with a fixed-size,
+      order-independent streaming multiset fingerprint. Preserve multiplicity,
+      policy-pair invariance, and deterministic hashes; add focused tests and
+      regenerate the six checked-in preflight fingerprints.
+- [x] Configure the Hitlist data directory before the first audit load, using
+      the package's one authoritative configuration mechanism. Test that a
+      non-default snapshot controls both record counts and hashes, with no
+      environment/default-directory fallback.
+- [x] Review all affected paths for schema or resolver duplication and remove
+      redundant compatibility logic where the canonical contract is sufficient.
+      Keep the implementation small and update the experiment snapshot only
+      where it is the code actually executed by the frozen bundle.
+- [ ] Run focused tests, exact aggregation fixtures, real Hitlist and merged-TSV
+      preflights, pinned Ruff/format/diff checks, and the full repository suite.
+      Register and run a capped local end-to-end training/evaluation smoke with
+      validation/test prediction dumps, then document artifacts, metrics,
+      limitations, and the final PR/CI state.
+
+## Review
+
+Pending implementation and verification.

@@ -1925,15 +1925,24 @@ class PrestoDataset(Dataset):
             }
 
         def _source_lineage_fields(
-            record: Any, alleles: Optional[Sequence[str]] = None
+            record: Any, resolved_alleles: Optional[Sequence[str]] = None
         ) -> Dict[str, Any]:
             """Copy traceability metadata without making it a model input."""
-            reported_alleles = getattr(record, "source_alleles", ()) or alleles or ()
+            primary_allele = str(getattr(record, "mhc_allele", "") or "").strip()
+            reported_alleles = (
+                getattr(record, "source_alleles", ()) or getattr(record, "alleles", ()) or ()
+            )
             source_alleles = tuple(
                 str(value).strip() for value in reported_alleles if str(value).strip()
             )
+            if not source_alleles and primary_allele:
+                source_alleles = (primary_allele,)
+            if not source_alleles:
+                source_alleles = tuple(
+                    str(value).strip() for value in (resolved_alleles or ()) if str(value).strip()
+                )
             resolved_alleles = tuple(
-                str(value).strip() for value in (alleles or ()) if str(value).strip()
+                str(value).strip() for value in (resolved_alleles or ()) if str(value).strip()
             )
             return {
                 "evidence_row_id": str(getattr(record, "evidence_row_id", "") or ""),
@@ -1957,6 +1966,23 @@ class PrestoDataset(Dataset):
                 "source_mhc_alleles": source_alleles,
                 "resolved_mhc_alleles": resolved_alleles,
             }
+
+        def _resolved_primary_alleles(
+            allele: Optional[str],
+            mhc_class: Optional[str],
+            mhc_a_sequence: str,
+            mhc_b_sequence: str,
+        ) -> Tuple[str, ...]:
+            """Return the primary allele only when its model segment exists."""
+            allele = str(allele or "").strip()
+            if not allele:
+                return ()
+            primary_sequence = (
+                mhc_b_sequence
+                if mhc_class == "II" and is_class_ii_dr_beta_allele(allele)
+                else mhc_a_sequence
+            )
+            return (allele,) if primary_sequence else ()
 
         def _sample_id(prefix: str, record: Any) -> str:
             """Use source identity when available; retain legacy fallback IDs."""
@@ -2047,7 +2073,13 @@ class PrestoDataset(Dataset):
                     synthetic_kind=_synthetic_kind(rec.source),
                     **_source_mapping_fields(rec),
                     **_source_lineage_fields(
-                        rec, rec.alleles or ([rec.mhc_allele] if rec.mhc_allele else [])
+                        rec,
+                        _resolved_primary_alleles(
+                            rec.mhc_allele,
+                            mhc_class,
+                            mhc_a_seq,
+                            mhc_b_seq,
+                        ),
                     ),
                     sample_id=_sample_id("bind", rec),
                 )
@@ -2083,7 +2115,13 @@ class PrestoDataset(Dataset):
                     synthetic_kind=_synthetic_kind(rec.source),
                     **_source_mapping_fields(rec),
                     **_source_lineage_fields(
-                        rec, rec.alleles or ([rec.mhc_allele] if rec.mhc_allele else [])
+                        rec,
+                        _resolved_primary_alleles(
+                            rec.mhc_allele,
+                            mhc_class,
+                            mhc_a_seq,
+                            mhc_b_seq,
+                        ),
                     ),
                     sample_id=_sample_id("kin", rec),
                 )
@@ -2121,7 +2159,13 @@ class PrestoDataset(Dataset):
                     synthetic_kind=_synthetic_kind(rec.source),
                     **_source_mapping_fields(rec),
                     **_source_lineage_fields(
-                        rec, rec.alleles or ([rec.mhc_allele] if rec.mhc_allele else [])
+                        rec,
+                        _resolved_primary_alleles(
+                            rec.mhc_allele,
+                            mhc_class,
+                            mhc_a_seq,
+                            mhc_b_seq,
+                        ),
                     ),
                     sample_id=_sample_id("stab", rec),
                 )
@@ -2194,6 +2238,7 @@ class PrestoDataset(Dataset):
             mil_mhc_b_list: List[str] = []
             mil_mhc_class_list: List[str] = []
             mil_species_list: List[str] = []
+            resolved_alleles: List[str] = []
 
             alleles = rec.alleles if rec.alleles else [None]
             for allele in alleles:
@@ -2207,6 +2252,14 @@ class PrestoDataset(Dataset):
                 mil_mhc_b_list.append(mhc_b_seq_i)
                 mil_mhc_class_list.append(mhc_class_i)
                 mil_species_list.append(rec.species)
+                resolved_alleles.extend(
+                    _resolved_primary_alleles(
+                        allele,
+                        mhc_class_i,
+                        mhc_a_seq_i,
+                        mhc_b_seq_i,
+                    )
+                )
 
             mhc_a_seq = mil_mhc_a_list[0] if mil_mhc_a_list else ""
             mhc_b_seq = mil_mhc_b_list[0] if mil_mhc_b_list else ""
@@ -2246,7 +2299,7 @@ class PrestoDataset(Dataset):
                     primary_allele=(alleles[0] if alleles else None),
                     synthetic_kind=_synthetic_kind(rec.source),
                     **_source_mapping_fields(rec),
-                    **_source_lineage_fields(rec, rec.alleles),
+                    **_source_lineage_fields(rec, resolved_alleles),
                     sample_id=_sample_id("elut", rec),
                 )
             )

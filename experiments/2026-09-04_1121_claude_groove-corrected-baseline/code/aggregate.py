@@ -17,8 +17,8 @@ import numpy as np
 
 EXPERIMENT_DIR = Path(__file__).resolve().parent.parent
 REPO_ROOT = EXPERIMENT_DIR.parent.parent
-if str(REPO_ROOT.parent) not in sys.path:
-    sys.path.insert(0, str(REPO_ROOT.parent))
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from presto.training.holdout_eval import (  # noqa: E402
     binary_metrics,
@@ -104,7 +104,8 @@ PAIRING_FIELDS = (
     "task",
     "sample_id",
     "peptide",
-    "mhc_alleles",
+    "source_mhc_alleles",
+    "resolved_mhc_alleles",
     "source",
     "qualifier",
     "y_true",

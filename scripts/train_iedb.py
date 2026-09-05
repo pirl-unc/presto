@@ -4600,7 +4600,10 @@ def run(args: argparse.Namespace) -> None:
             "tcr_evidence": len(vdjdb_records),
         }
 
-    if merged_tsv.exists():
+    data_source = str(getattr(args, "data_source", "merged_tsv"))
+    if data_source not in {"merged_tsv", "hitlist"}:
+        raise ValueError(f"Unsupported data source: {data_source!r}")
+    if data_source == "merged_tsv" and merged_tsv.exists():
         print(f"Merged input: {merged_tsv}")
         (
             binding_records,
@@ -4640,72 +4643,6 @@ def run(args: argparse.Namespace) -> None:
                 f"dropped_invalid_peptide={dropped_invalid}, "
                 f"sanitized_optional_seq_fields={sanitized_optional}"
             )
-
-        if str(getattr(args, "data_source", "merged_tsv")) == "hitlist":
-            # Override the quantitative-assay and elution modalities with the
-            # hitlist curated indexes. The reason is flanks: the merged TSV has
-            # no flank columns, so those segments reach the model as a single
-            # <MISSING> token. Processing / T-cell / TCR records stay on the
-            # merged path because hitlist's training table does not carry them.
-            from presto.data.hitlist_source import load_records_from_hitlist
-
-            (
-                binding_records,
-                kinetics_records,
-                stability_records,
-                _hitlist_processing,
-                elution_records,
-                _hitlist_tcell,
-                _hitlist_tcr,
-                hitlist_stats,
-            ) = load_records_from_hitlist(
-                max_binding=args.max_binding,
-                max_kinetics=args.max_kinetics,
-                max_stability=args.max_stability,
-                max_elution=args.max_elution,
-                mhc_class=getattr(args, "train_mhc_class_filter", None) or None,
-                mhc_allele=getattr(args, "hitlist_allele", None) or None,
-                include_flanks=bool(getattr(args, "hitlist_flanks", True)),
-                source_mapping_policy=str(
-                    getattr(args, "source_mapping_policy", "mask_unresolved")
-                ),
-                sampling_seed=data_seed + 17,
-            )
-            data_funnel["source_loader"] = hitlist_stats
-            print("Hitlist input: curated indexes")
-            for assay, count in hitlist_stats["counts"].items():
-                print(f"    {assay}: {count}")
-            for family, coverage in hitlist_stats["flank_coverage"].items():
-                print(f"    flank coverage [{family}]: {coverage:.1%}")
-            for family, resolved in hitlist_stats.get("flank_resolution", {}).items():
-                print(f"    flank resolution [{family}]: {resolved:.1%}")
-            print(
-                "    skipped: "
-                f"no_numeric_value={hitlist_stats['skipped_no_numeric_value']}, "
-                f"unroutable={hitlist_stats['skipped_unroutable_response']}, "
-                f"unexpected_unit={hitlist_stats['skipped_unexpected_unit']}"
-            )
-            if hitlist_stats["stability_assay_methods"]:
-                print("    stability assay methods:")
-                for method, count in hitlist_stats["stability_assay_methods"].items():
-                    print(f"      {method}: {count}")
-            # A condition hitlist emits that CONDITION_TO_STIMULUS does not know
-            # is scored as "not known to be stimulated", which is wrong whenever
-            # the category names a real treatment. This count was already being
-            # computed and simply never read, which is how SPPL3_perturbation
-            # and IRF2_perturbation (20,220 rows) stayed unmapped. Loud on
-            # stderr, because a silent line here is what failed last time.
-            unmapped = hitlist_stats.get("unmapped_condition_categories") or {}
-            if unmapped:
-                total = sum(unmapped.values())
-                print(
-                    f"    WARNING: {len(unmapped)} unmapped condition_category "
-                    f"value(s) covering {total} rows fell back to stimulus "
-                    "'none'. Add them to CONDITION_TO_STIMULUS:",
-                    file=sys.stderr,
-                )
-                for category, count in sorted(unmapped.items(), key=lambda kv: -kv[1]):
-                    print(f"      {category}: {count}", file=sys.stderr)
 
         probe_family_bootstrap_records = int(
             getattr(args, "probe_family_bootstrap_records", 0) or 0
@@ -4748,7 +4685,7 @@ def run(args: argparse.Namespace) -> None:
                 f"added_records={added}"
             )
 
-    elif str(getattr(args, "data_source", "merged_tsv")) == "hitlist":
+    elif data_source == "hitlist":
         # hitlist supplies binding / stability / kinetics / elution on its own,
         # so a hitlist-sourced run does not need the merged TSV at all. This
         # matters for remote execution: the merged TSV is a gitignored 1 GB
@@ -6441,8 +6378,8 @@ def main(argv=None):
         "--require-traceable-lineage",
         action="store_true",
         help=(
-            "Require stable observation identity and complete selected-mapping lineage "
-            "for mapped source rows."
+            "Require stable identity for source observations and complete selected-mapping "
+            "lineage for mapped rows."
         ),
     )
     parser.add_argument(

@@ -287,3 +287,20 @@
   `mhcseqs` is primary and the CSV is optional, the resolver must be called for
   missing training, augmentation, and diagnostic alleles even when the fallback
   path is absent; the resolver itself decides whether a supplement is needed.
+
+## 2026-09-05
+
+- Define source-derived mapping observations from the union of their explicit
+  mapping signals: a mapping category identifies mapped and unmapped Hitlist
+  rows, while a positive candidate count independently proves mapping occurred.
+  Test both signals instead of assuming either field always implies the other.
+- A named data source must select one exact loader path. Do not let the
+  presence of an unrelated file silently turn a source-specific run into a
+  hybrid dataset; any hybrid contract must be explicit and separately named.
+- Load immutable curated records once when auditing several split seeds. Reuse
+  that dataset for deterministic resplitting instead of retaining or rebuilding
+  multiple full-corpus copies at the same time.
+- A frozen experiment script must add the repository root itself to `sys.path`,
+  never its parent. A sibling checkout with the same package name can otherwise
+  be imported as an empty namespace package and poison every later test in that
+  Python process.

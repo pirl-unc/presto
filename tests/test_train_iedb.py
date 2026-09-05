@@ -2220,6 +2220,40 @@ def test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved(tmp_path, mo
     assert "modality,source,allele,category,count" in detail_rows.splitlines()[0]
 
 
+def test_hitlist_data_source_never_reads_an_available_merged_tsv(tmp_path, monkeypatch):
+    (tmp_path / "merged_deduped.tsv").write_text("placeholder\n", encoding="utf-8")
+
+    class HitlistSelected(RuntimeError):
+        pass
+
+    def _hitlist_selected(**kwargs):
+        raise HitlistSelected
+
+    def _merged_must_not_run(**kwargs):
+        raise AssertionError("hitlist source touched merged TSV")
+
+    monkeypatch.setattr("presto.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
+    monkeypatch.setattr(
+        "presto.scripts.train_iedb.load_records_from_merged_tsv",
+        _merged_must_not_run,
+    )
+    monkeypatch.setattr(
+        "presto.data.hitlist_source.load_records_from_hitlist",
+        _hitlist_selected,
+    )
+
+    with pytest.raises(HitlistSelected):
+        run(
+            argparse.Namespace(
+                config=None,
+                profile="full",
+                data_source="hitlist",
+                data_dir=str(tmp_path),
+                run_dir=None,
+            )
+        )
+
+
 def test_filter_records_to_resolved_mhc_drops_invalid_direct_mhc_sequences():
     binding = [
         BindingRecord(

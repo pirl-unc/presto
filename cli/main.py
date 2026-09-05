@@ -943,10 +943,9 @@ def create_parser() -> argparse.ArgumentParser:
         choices=["merged_tsv", "hitlist"],
         default="merged_tsv",
         help=(
-            "Where binding/stability/kinetics/elution records come from. "
-            "'hitlist' uses the curated upstream indexes, which supply source-protein "
-            "flanks (the merged TSV has none); processing/T-cell/TCR records still come "
-            "from the merged TSV in either mode because hitlist does not carry them."
+            "Select exactly one training source: 'merged_tsv' loads the canonical merged "
+            "table; 'hitlist' loads the curated binding/stability/kinetics/elution indexes "
+            "with source-protein flanks and does not read the merged TSV."
         ),
     )
     train_iedb.add_argument(
@@ -1222,8 +1221,8 @@ def create_parser() -> argparse.ArgumentParser:
         "--require-traceable-lineage",
         action="store_true",
         help=(
-            "Require stable observation identity and complete selected-mapping lineage "
-            "for mapped source rows."
+            "Require stable identity for source observations and complete selected-mapping "
+            "lineage for mapped rows."
         ),
     )
     train_iedb.add_argument(

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "agent": "codex/gpt-5",
+  "cwd": "/Users/iskander/code/presto",
+  "environment": {
+    "HITLIST_DATA_DIR": "/Users/iskander/.hitlist"
+  },
+  "git": {
+    "branch": "claude/restore-unmapped-masking",
+    "commit": null,
+    "dirty": false,
+    "note": "The exact clean launch commit is recorded by the launcher and filled here after completion."
+  },
+  "launcher": "experiments/2026-09-05_0957_codex_pr45-integrity-e2e/reproduce/launch.sh",
+  "merged_preflight": {
+    "data_source": "merged_tsv",
+    "mhc_sequence_source": "mhcseqs",
+    "index_csv": null,
+    "data_seed": 42,
+    "split_seed": 42,
+    "split": "peptide_group_60_20_20",
+    "caps": {
+      "binding": 96,
+      "kinetics": 24,
+      "stability": 24,
+      "processing": 24,
+      "elution": 96,
+      "tcell": 96,
+      "tcr_evidence": 24
+    }
+  },
+  "condition": {
+    "device": "cpu",
+    "gpu": null,
+    "data_source": "hitlist",
+    "mhc_sequence_source": "mhcseqs",
+    "index_csv": null,
+    "source_mapping_policy": "mask_unresolved",
+    "data_seed": 42,
+    "split_seed": 42,
+    "split": "peptide_group_60_20_20",
+    "caps": {
+      "binding": 96,
+      "kinetics": 2,
+      "stability": 24,
+      "elution": 96
+    },
+    "excluded_targets": ["kon", "koff", "tm"],
+    "synthetic_ratios": {
+      "pmhc": 0,
+      "elution": 0,
+      "cascade_elution": 0,
+      "cascade_tcell": 0,
+      "class_i_no_mhc_beta": 0,
+      "processing": 0,
+      "uniprot": 0
+    },
+    "mhc_augmentation_samples": 0,
+    "epochs": 1,
+    "batch_size": 16,
+    "d_model": 32,
+    "n_layers": 1,
+    "n_heads": 4,
+    "max_train_batches": 2,
+    "max_val_batches": 1
+  }
+}

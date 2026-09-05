@@ -6,6 +6,7 @@ import pytest
 
 from presto.data.collate import PrestoSample
 from presto.training.data_support import (
+    _StreamingMultisetHash,
     audit_split_support,
     validate_split_support,
     write_data_funnel_artifacts,
@@ -103,6 +104,66 @@ def test_traceable_lineage_gate_rejects_mapped_sample_without_observation_id():
     assert "missing_evidence_row_id" in audit["lineage"]["issue_examples"][0]
     with pytest.raises(RuntimeError, match="source lineage is incomplete"):
         validate_split_support(audit, require_traceable_lineage=True)
+
+
+def test_traceable_lineage_gate_rejects_unmapped_source_observation_without_id():
+    splits = _balanced_splits()
+    broken = splits["val"][0]
+    broken.evidence_row_id = ""
+    broken.source_mapping_category = "unmapped"
+    broken.source_mapping_n_candidates = 0
+    broken.mapping_protein_id = ""
+    broken.mapping_position = None
+    broken.mapping_proteome = ""
+
+    audit = audit_split_support(splits)
+
+    assert audit["lineage"]["issue_count"] == 1
+    assert "missing_evidence_row_id" in audit["lineage"]["issue_examples"][0]
+    with pytest.raises(RuntimeError, match="source lineage is incomplete"):
+        validate_split_support(audit, require_traceable_lineage=True)
+
+
+def test_traceable_lineage_does_not_require_source_ids_for_generated_or_legacy_rows():
+    generated = _sample("generated", 0.0)
+    generated.sample_source = "synthetic_negative_binding"
+    generated.evidence_row_id = ""
+    generated.assay_iri = ""
+    generated.source_mapping_category = ""
+    generated.source_mapping_n_candidates = 0
+    generated.mapping_protein_id = ""
+    generated.mapping_position = None
+    generated.mapping_proteome = ""
+    legacy = _sample("legacy", 1.0)
+    legacy.sample_source = "legacy_tsv"
+    legacy.evidence_row_id = ""
+    legacy.assay_iri = ""
+    legacy.source_mapping_category = ""
+    legacy.source_mapping_n_candidates = 0
+    legacy.mapping_protein_id = ""
+    legacy.mapping_position = None
+    legacy.mapping_proteome = ""
+
+    audit = audit_split_support({"train": [generated, legacy]})
+
+    assert audit["lineage"]["issue_count"] == 0
+    validate_split_support(audit, require_traceable_lineage=True)
+
+
+def test_streaming_multiset_hash_is_order_independent_and_preserves_multiplicity():
+    first = _StreamingMultisetHash()
+    second = _StreamingMultisetHash()
+    duplicated = _StreamingMultisetHash()
+    for value in (b"alpha", b"beta", b"gamma"):
+        first.update(value)
+    for value in (b"gamma", b"alpha", b"beta"):
+        second.update(value)
+        duplicated.update(value)
+    duplicated.update(b"alpha")
+
+    assert first.hexdigest() == second.hexdigest()
+    assert duplicated.hexdigest() != first.hexdigest()
+    assert not hasattr(first, "__dict__")
 
 
 def test_policy_input_changes_full_hash_but_not_supervision_hash():
