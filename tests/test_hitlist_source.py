@@ -30,6 +30,7 @@ from presto.data.hitlist_source import (  # noqa: E402
 from presto.data.vocab import drop_unencodable_sequence  # noqa: E402
 
 IC50 = "half maximal inhibitory concentration (IC50)"
+TEST_MHC_SEQUENCE = "ACDEFGHIKLMNPQRSTVWY" * 10
 
 
 def _binding_row(**overrides):
@@ -320,7 +321,11 @@ class TestRouting:
         from presto.data.collate import PrestoCollator
         from presto.data.loaders import PrestoDataset
 
-        dataset = PrestoDataset(binding_records=binding, strict_mhc_resolution=False)
+        dataset = PrestoDataset(
+            binding_records=binding,
+            mhc_sequences={"HLA-A*02:01": TEST_MHC_SEQUENCE},
+            strict_mhc_resolution=False,
+        )
         sample = dataset[0]
         assert sample.bind_value == 25.0
         assert sample.source_mapping_category == "cross_gene_unresolved"
@@ -456,7 +461,14 @@ class TestRouting:
         from presto.data.collate import PrestoCollator
         from presto.data.loaders import PrestoDataset
 
-        sample = PrestoDataset(elution_records=elution, strict_mhc_resolution=False)[0]
+        sample = PrestoDataset(
+            elution_records=elution,
+            mhc_sequences={
+                "HLA-A*02:01": TEST_MHC_SEQUENCE,
+                "HLA-B*07:02": TEST_MHC_SEQUENCE,
+            },
+            strict_mhc_resolution=False,
+        )[0]
         batch = PrestoCollator()([sample])
         assert batch.source_lineage["source_sample_label"] == ["HeLa-A02"]
         assert batch.source_lineage["source_sample_attribution"] == ["monoallelic"]

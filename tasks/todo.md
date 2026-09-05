@@ -9808,6 +9808,12 @@ scope.
 - Final focused regression suite: 101 passed. Final full repository suite:
   1,773 passed, 1 expected platform skip, 5 upstream warnings in 715.39
   seconds. Pinned Ruff check/format and `git diff --check` passed.
+- The first clean Linux CI exposed three environment-dependent tests: the
+  audit stub was installed after importing optional Hitlist, and two resolved
+  lineage assertions relied on the developer machine's global MHC registry.
+  The fixtures now install the Hitlist stub before module execution and provide
+  explicit deterministic MHC sequences whenever resolved lineage is expected;
+  production semantics and paths are unchanged.
 - The branch remains a direct descendant of `origin/main`; PR #45 is the only
   open PR and is not stacked. Final publication and CI state are recorded in
   the PR after the experiment-record commit is pushed.

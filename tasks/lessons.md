@@ -315,3 +315,10 @@
 - End-to-end verification must exercise each named data source while competing
   files are present. Otherwise an opportunistic loader branch can look healthy
   in isolation while silently creating a hybrid corpus in production.
+- A lineage test that expects an allele to be resolved must supply the exact
+  sequence input itself. Letting an installed process-wide MHC registry satisfy
+  the assertion makes local success depend on optional machine state and lets
+  clean CI exercise a different semantic case.
+- Install optional-package stubs before importing the script under test. A
+  monkeypatch applied after module execution cannot isolate a top-level import
+  and creates a local-only pass when that optional package happens to exist.

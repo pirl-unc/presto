@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+import types
 from pathlib import Path
 
 
@@ -89,13 +90,19 @@ def test_aggregator_pairs_and_emits_metrics_from_canonical_prediction_schema(tmp
 
 
 def test_data_audit_selects_validated_snapshot_before_loading(tmp_path, monkeypatch):
+    configured = []
+    hitlist = types.ModuleType("hitlist")
+    hitlist.__version__ = "test"
+    downloads = types.ModuleType("hitlist.downloads")
+    downloads.set_data_dir = lambda path: configured.append(Path(path))
+    downloads.data_dir = lambda: configured[-1]
+    monkeypatch.setitem(sys.modules, "hitlist", hitlist)
+    monkeypatch.setitem(sys.modules, "hitlist.downloads", downloads)
+
     audit = _load_script("presto_pr45_data_audit", "analysis/data_audit.py")
     artifact_names = ("observations.parquet", "binding.parquet")
     for name in artifact_names:
         (tmp_path / name).write_bytes(name.encode())
-    configured = []
-    monkeypatch.setattr(audit, "set_data_dir", lambda path: configured.append(Path(path)))
-    monkeypatch.setattr(audit, "configured_hitlist_data_dir", lambda: configured[-1])
 
     selected = audit._configure_hitlist_snapshot(tmp_path, artifact_names)
 
