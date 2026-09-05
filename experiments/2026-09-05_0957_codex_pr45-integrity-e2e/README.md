@@ -16,6 +16,9 @@ reservoir caps of 96 binding, 2 kinetics, 24 stability, and 96 elution
 observations. `kon`, `koff`, and `tm` are excluded from training; all
 synthetic-data ratios and MHC augmentation are zero. Both conditions use a
 peptide-grouped 60/20/20 split with fixed data and split seed 42.
+The training split gate requires overall binding, half-life, and elution
+support in train, validation, and test; sparse binding-method subheads are
+reported but are not independently required by this capped smoke.
 
 The model is a small one-layer, 32-dimensional CPU configuration trained for
 one epoch with two training batches and one in-loop validation batch. The

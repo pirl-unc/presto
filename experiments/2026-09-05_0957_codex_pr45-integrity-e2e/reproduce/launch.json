@@ -39,6 +39,7 @@
     "data_seed": 42,
     "split_seed": 42,
     "split": "peptide_group_60_20_20",
+    "required_split_targets": ["binding", "t_half", "elution"],
     "caps": {
       "binding": 96,
       "kinetics": 2,

@@ -40,7 +40,9 @@ env HITLIST_DATA_DIR=/Users/iskander/.hitlist \
   --val-frac 0.2 \
   --test-frac 0.2 \
   --split-mode peptide_group \
-  --require-all-active-target-support \
+  --require-split-target binding \
+  --require-split-target t_half \
+  --require-split-target elution \
   --require-traceable-lineage \
   --forbid-fake-null-sequences \
   --epochs 1 \
