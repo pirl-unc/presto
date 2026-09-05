@@ -5979,6 +5979,7 @@ def run(args: argparse.Namespace) -> None:
             # was epoch 10 against a minimum at epoch 7, val loss 0.5623 vs
             # 0.5542 -- past the minimum and rising.
             eval_model = model
+            selected_epoch = int(args.epochs)
             if args.checkpoint and os.path.exists(args.checkpoint):
                 from presto.training.checkpointing import load_model_from_checkpoint
 
@@ -5988,10 +5989,17 @@ def run(args: argparse.Namespace) -> None:
                 eval_model.to(device)
                 eval_model.eval()
                 best_epoch = checkpoint_payload.get("epoch")
+                selected_epoch = int(best_epoch or args.epochs)
                 print(
                     "Held-out evaluation uses the best-validation checkpoint"
                     + (f" (epoch {best_epoch})" if best_epoch else "")
                 )
+
+            heldout_regularization_cfg = _regularization_for_epoch(
+                base_regularization=regularization_cfg,
+                epoch_idx=max(0, selected_epoch - 1),
+                total_epochs=args.epochs,
+            )
 
             def _forward(model_ref, batch_ref):
                 # Provenance must be passed here or the held-out pass scores a
@@ -6015,6 +6023,18 @@ def run(args: argparse.Namespace) -> None:
             for split_name, split_loader in (("val", val_loader), ("test", test_loader)):
                 if split_loader is None:
                     continue
+                heldout_loss, heldout_loss_terms = _call_evaluate_compat(
+                    eval_model,
+                    split_loader,
+                    device,
+                    regularization_config=heldout_regularization_cfg,
+                    supervised_loss_aggregation=str(
+                        getattr(args, "supervised_loss_aggregation", "task_mean")
+                    ),
+                    use_amp=use_amp,
+                    max_mil_instances=max_mil_instances,
+                    max_val_batches=0,
+                )
                 accumulators = collect_holdout_predictions(
                     model=eval_model,
                     loader=split_loader,
@@ -6030,7 +6050,11 @@ def run(args: argparse.Namespace) -> None:
                     run_dir,
                     accumulators,
                     split=split_name,
-                    extra_summary={"best_val_loss": float(best_val_loss)},
+                    extra_summary={
+                        "best_val_loss": float(best_val_loss),
+                        "overall_loss": float(heldout_loss),
+                        "loss_terms": heldout_loss_terms,
+                    },
                 )
                 scored = payload.get("tasks", {})
                 print(f"Held-out {split_name} metrics written for {len(scored)} tasks -> {run_dir}")

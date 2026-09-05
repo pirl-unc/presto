@@ -155,3 +155,15 @@ class TestHoldoutScoresTheSelectedModel:
         region = self._eval_region()
         assert "final-epoch model" not in region
         assert "except Exception" not in region
+
+    def test_each_selected_checkpoint_split_gets_a_full_overall_loss(self):
+        """Per-task prediction metrics do not replace the requested overall loss."""
+        import inspect
+
+        import presto.scripts.train_iedb as train_iedb
+
+        source = inspect.getsource(train_iedb)
+        assert "heldout_loss, heldout_loss_terms = _call_evaluate_compat" in source
+        assert "max_val_batches=0" in source
+        assert '"overall_loss": float(heldout_loss)' in source
+        assert '"loss_terms": heldout_loss_terms' in source
