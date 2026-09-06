@@ -68,6 +68,12 @@
 
 ## Review
 
+> **2026-09-04 correction:** The completed 2026-09-02/03 experiments below are
+> historical artifacts, not valid policy-selection evidence. Their legacy arm
+> converted nullable unmapped flanks to `NAN` while masking cleared them, so the
+> comparison was not restricted to genuinely ambiguous junctions. See the
+> data-trust audit and remediation plan later in this file.
+
 - Refreshed the active shared-virtualenv editable install so both runtime and
   distribution metadata report hitlist 1.55.8. Rebuilt only the mappings
   artifact: 5,880,924 rows, `gene_biotype` present, artifact contract v2.
@@ -9330,3 +9336,540 @@ behavior under a path-pinned editable install.
 The new `TestSkipsAreNarrow` guard is repo-wide. A future legitimate skip must
 name its unavailable prerequisite in the `except` clause rather than catching
 `Exception`, which is the intent but is a constraint on all contributors.
+
+---
+
+# Training-data trust audit (2026-09-04)
+
+## Question and acceptance criteria
+
+Determine whether the exact data contract proposed for the groove-corrected
+2x3 retrain is trustworthy, complete relative to its declared source scope,
+balanced across supervised tasks, and independently checkable after parsing.
+Do not equate a successful load, a green suite, or matching aggregate MHC
+coverage with any of these four claims.
+
+The audit must distinguish:
+
+- source completeness from intentional curation exclusions;
+- physical row counts from non-null target support and effective sampled/loss
+  weight;
+- source-row fields from expanded training-record fields;
+- internal consistency checks from validation against independently maintained
+  sequence/source artifacts.
+
+## Plan
+
+- [x] Freeze the exact proposed launcher, arguments, dependency pins, source
+      artifacts, and preflight outputs; identify any unresolved differences
+      between the two experiment arms beyond the groove representation.
+- [x] Inventory each raw/derived corpus and trace source counts through parsing,
+      deduplication, MHC resolution, curation, split assignment, and final
+      target masks, with explicit drop reasons and provenance/version evidence.
+- [x] Measure support for every supervised task and assay family after all
+      filters, including qualifiers/censoring, source, MHC class/species/allele,
+      peptide length, positives/negatives or value distributions, and
+      train/validation/test counts.
+- [x] Inspect the sampler and loss weighting, then distinguish dataset balance
+      from the effective task composition seen by optimization. Use recorded or
+      reproducible batch histograms where available.
+- [x] Reconcile the flank-masking frame/record discrepancy with stable lineage
+      and genuine nonempty-to-empty transition counts before treating flank
+      context as trustworthy.
+- [x] Independently validate parsed examples where possible: reconstruct
+      peptide-plus-flank junctions against source proteins/positions; compare
+      parsed MHC sequences/grooves against separately maintained IMGT/IPD or
+      pinned `mhcseqs` references; and round-trip sampled assay values,
+      qualifiers, methods, and allele names to archived raw records.
+- [x] Report proven facts, known omissions, unverifiable surfaces, and blockers.
+      Give an explicit launch/no-launch recommendation and the smallest durable
+      checks needed to turn the audit into a repeatable gate.
+
+## Review
+
+### Verdict
+
+Do not launch the 2x3 family. The exact proposed parsed dataset is neither a
+complete unified corpus nor balanced across its active tasks, and a null-value
+normalization defect makes the legacy-vs-masked flank contrast semantically
+wrong. The frozen input hashes are useful provenance, but they do not rescue
+the parsed contract.
+
+### Exact proposed corpus (`hitlist==1.55.8`)
+
+- Frozen Hitlist and MHC-index artifacts on disk match every SHA256 declared by
+  the launcher.
+- Final proposed rows: binding 16,721; elution 20,000; stability 1,000;
+  kinetics 2; total 37,723. Processing, T-cell, TCR evidence, bulk MS,
+  synthetic negatives, UniProt negatives, and MHC augmentation are absent.
+- The caps retain 20,000 / 726,766 eligible elution rows (2.75%) and 1,000 /
+  2,150 stability rows (46.5%). Sampling seed is training seed + 17, so the
+  three nominal training seeds also use different capped datasets.
+- Active target support is highly uneven: IC50-like 13,291, EC50-like 2,298,
+  KD 1,132, half-life 989, Tm 11, koff 2, kon 0. All 20,000 elution labels are
+  positive, while every synthetic-negative path is disabled.
+- Kinetics has no validation rows in any seed. Seeds 42/43 put both rows in
+  train; seed 44 puts one in train and one in test. `--no-balanced-batches` is
+  explicit. Per-batch `task_mean` aggregation and learned uncertainty weights
+  do not create absent labels or held-out support.
+- Binding is publication-skewed: the pre-mapping eligible frame has 16,724
+  rows but only 221 references; one PMID contributes 4,061 rows and 8,638 rows
+  have no PMID. The split is peptide-disjoint, not reference- or sample-
+  disjoint. The parsed dataset discards the identifiers needed to measure or
+  enforce the latter.
+
+### Root cause of the flank contradiction
+
+`drop_unencodable_sequence(float("nan"))` returns the literal string `"NAN"`:
+`str(nan).upper()` consists entirely of valid amino-acid letters. Consequently
+all 6,212 parsed binding records categorized `unmapped` carry fake `NAN` on
+both flanks in the legacy policy. Masking produces 6,691 genuine
+nonempty-to-empty transitions: 6,212 unmapped, 431 cross-gene unresolved, and
+48 within-gene unresolved. The frame-level audit saw nulls correctly; the
+record conversion invented sequence content. `normalize_ingested_peptide`
+has the same null-normalization defect, although no resulting fake peptide was
+shown in this corpus audit.
+
+### Independent checks and remaining lineage gap
+
+- All 95 MHC allele names reachable from the filtered MS frame resolve in the
+  2.6.10 catalog. Their full sequences exactly match entries in the separately
+  stored IMGT FASTA, every groove is nonempty/contiguous, and all report
+  `groove_status=ok`. HLA-A*02:01 specifically is the exact 365-aa IMGT
+  HLA00005 sequence with contiguous groove intervals `[24,114)` and
+  `[114,207)`.
+- One ingested IEDB affinity row (assay 11074) and one CEDAR affinity row
+  (assay 22939592) matched the archived raw exports exactly on peptide, allele,
+  response type, unit, inequality, and value. The raw files still match the
+  sizes/mtimes recorded by Hitlist, though the build metadata does not record
+  raw-source hashes.
+- Durable record-level validation is not currently possible. The Presto
+  records and held-out dumps drop `assay_iri`, `reference_iri`, PMID,
+  `evidence_row_id`, selected protein/transcript ID, position, proteome,
+  peptide, and allele. Sequential IDs such as `bind_0` prove ordering only;
+  they do not identify a source observation or selected junction.
+
+### Minimum launch gate
+
+1. Make sequence normalization null-safe before string conversion and add
+   pandas/NumPy null tests for peptides and every optional sequence field.
+2. Preserve stable observation and selected-mapping lineage through records,
+   samples, splits, and prediction dumps; validate flank+peptide+flank against
+   the selected source protein at the recorded position.
+3. Emit pre-cap/post-cap/drop-reason and per-target train/val/test support
+   tables. Fail on zero validation support, one-class classification targets,
+   fake null tokens, or an unapproved task/source imbalance.
+4. Either label this as a deliberately narrow affinity/elution experiment or
+   restore the omitted canonical tasks. Do not call it complete or unified.
+5. Make preflight mandatory in the launch path and compare a machine-readable
+   fingerprint, not rounded log lines, with only the declared experimental
+   variable allowlisted.
+
+---
+
+# Training-data trust fixes and launch preflight (2026-09-04)
+
+## Scope and acceptance contract
+
+Repair the data-integrity failures found by the training-data trust audit and
+make the stopped `2026-09-04_1121_claude_groove-corrected-baseline` launcher
+incapable of starting GPU work unless its exact production dataset passes a
+machine-readable, paired-condition preflight. This is a deliberately narrow
+HLA-A*02:01 quantitative-binding/stability plus elution/decoy study, not a
+complete or balanced unified Presto corpus.
+
+The implementation must preserve current default training behavior outside
+this experiment. New gates are explicit trainer/launcher contracts, while
+diagnostic support artifacts are emitted for every run with a run directory.
+
+## Plan
+
+- [x] Make all optional-sequence normalization null-safe before conversion to
+      text. Cover `None`, floating and NumPy NaN, `pd.NA`, empty/whitespace
+      strings, valid lower-case sequence, and invalid residues at the shared
+      helper plus both Hitlist peptide/flank entrypoints. Confirm no null can
+      become the valid-looking residue string `NAN` or create a false terminus.
+- [x] Preserve direct Hitlist lineage without lossy renaming: observation
+      (`evidence_row_id`), assay/reference/PMID, selected gene/protein/
+      transcript, mapping position, proteome/proteome source, peptide, and MHC
+      allele set. Thread it through binding/kinetics/stability/elution records,
+      `PrestoSample`, `PrestoBatch`, device transfer, and held-out CSV dumps.
+      Derive stable Hitlist sample IDs from observation identity rather than
+      dataset order, with positional IDs retained only as a fallback for legacy
+      sources.
+- [x] Add a reusable split-support audit that reports every active target for
+      train/validation/test, including exact/censored counts and binary class
+      counts. Persist JSON and CSV with the run artifacts. Add explicit gates
+      for required targets, minimum per-split support, and both-class binary
+      support; errors must name every failed target/split/condition.
+- [x] Separate capped-data sampling from model/split seed. Add an explicit data
+      sampling seed to the trainer, preserve the historical `seed + 17`
+      default when absent, and pin one shared sampling seed across every arm of
+      this experiment.
+- [x] Replace the experiment's optional toy preflight with a mandatory exact-
+      contract preflight: load both policies with production caps and shared
+      sampling seed, assert lineage uniqueness/completeness and null safety,
+      assert supervision/split parity outside the declared flank-policy fields,
+      evaluate support/class gates, and write a deterministic fingerprint.
+      GPU launch must consume that fingerprint and abort if any invariant or
+      frozen artifact hash differs. Use a fresh temporary run path so stale
+      artifacts cannot satisfy the gate.
+- [x] Repair the experiment description and bundle: state included/excluded
+      modalities, caps, synthetic-decoy semantics, split and sampling seeds,
+      losses, label-to-output mapping, and why elution metrics are decoy
+      discrimination rather than biological positive-vs-negative validation.
+      Ensure the timestamped directory has `README.md`, `reproduce/launch.sh`,
+      `reproduce/launch.json`, and `reproduce/source/launch.py` before it is
+      presented as launch-ready.
+- [x] Review every current changed/new file for adjacent defects and historical
+      artifact drift. Check PR/branch ancestry on GitHub and report whether an
+      open or stacked PR exists; do not rewrite completed experiment results.
+- [x] Verify with focused regression tests, the exact local corpus preflight for
+      all three seeds and both policies, formatter/lint, and the relevant/full
+      test suite. Review the final diff for minimality and record commands,
+      results, remaining scientific limitations, and the launch verdict below.
+
+## Review
+
+### Result
+
+- Fixed the root defect at the shared sequence boundary: non-string nulls are
+  rejected before conversion, so `float("nan")`, NumPy NaN, and `pd.NA` cannot
+  become the encodable amino-acid string `NAN`. Hitlist peptide, flank, allele-
+  set, and inequality parsing use null-safe normalization, with real string
+  sequences kept distinct from tabular missing sentinels.
+- The corrected corpus changes the interpretation of issue #44. Legacy flank
+  coverage is 62.8% for binding versus 60.0% when unresolved contexts are
+  masked, not the old fake-sequence 96.3% versus 60.0%. Elution coverage is
+  97.6% versus 87.3%. The 6,212 unmapped binding rows now carry no invented
+  sequence in either arm. The 2026-09-02 and 2026-09-03 completed experiment
+  records contain prominent validity errata; their bytes remain preserved but
+  their masking-effect conclusions are withdrawn.
+- Source lineage now survives from Hitlist rows through records, samples,
+  batches, device transfer, and validation/test CSVs: evidence/assay/reference/
+  PMID, peptide, complete source allele set, sample label/attribution, selected
+  gene/protein/transcript, position, proteome/source, and canonical status.
+  Source-derived stable IDs replace order-only IDs where source identity exists.
+- Every run directory now receives hashed `data_funnel` and `split_support`
+  JSON/CSV artifacts. Explicit gates reject missing active targets, one-class
+  active binary targets, incomplete/duplicate lineage, fake null sequences, and
+  drift from the exact preflight fingerprint.
+- Data sampling is controlled by a fixed `data_seed`; model seeds change only
+  the peptide-grouped split. Sparse `koff` (2 labels) and Tm (11 labels) are
+  explicitly removed. Synthetic binding and downstream cascades are disabled
+  for this experiment; 20,000 elution decoys are added through an independent
+  ratio and retain their three generation-mode labels.
+- The launcher runs all six production-size CPU preflights before any GPU spawn,
+  pins and validates Hitlist/mhcseqs/mhcgnomes plus input hashes, rejects reused
+  run directories, requires complete run artifacts, and makes the training run
+  reproduce its own preflight hash. The aggregator revalidates the run/config/
+  hardware/data contracts and emits generated-decoy metrics separately.
+- The experiment is now documented as a narrow HLA-A*02:01 affinity/half-life
+  plus elution-decoy study. It is not described as a complete or biologically
+  balanced unified corpus. Elution has no observed real negatives, and the
+  peptide-disjoint split does not establish reference- or sample-disjoint
+  generalization; both limitations remain explicit in the interpretation.
+
+### Exact preflight evidence
+
+- All six policy/seed conditions (policies `legacy_global_canonical` and
+  `mask_unresolved`; seeds 42, 43, 44) completed the full local CPU preflight.
+  Each produced 57,710 samples: 16,721 observed binding, 989 retained half-life,
+  20,000 observed elution, and 20,000 mode-labelled elution decoys.
+- All 92 requested MHC alleles resolved. Every active target has train,
+  validation, and test support; elution and foreignness have both classes in
+  every split. All six report zero lineage issues, zero duplicate sample IDs,
+  and zero fake-null optional sequences.
+- `dataset_supervision_contract_sha256` is identical across all six conditions:
+  `45237653fa56c729a90088a66ec35ea602bbde55c2e09320b99afb4dc8686707`.
+  Split-supervision hashes match between policies for seeds 42, 43, and 44.
+  Full input hashes differ between policies as intended because flank strings
+  and terminus state are the declared intervention.
+- The durable summary and representative support table are in
+  `experiments/2026-09-04_1121_claude_groove-corrected-baseline/results/`.
+  The local environment imports editable Hitlist 1.58.0 and mhcseqs 2.6.11
+  checkouts (distribution metadata 1.55.8 and 2.5.12 respectively), so this is
+  code/data validation rather than a substitute for the launcher's exact
+  `hitlist==1.55.8`, `mhcseqs==2.6.10`, `mhcgnomes==3.41.0` worker check.
+
+### Verification
+
+- Final focused data/loader/collator/evaluation/CLI/trainer tests: 275 passed.
+- Full repository suite: 1,757 passed, 1 expected platform skip, 5 upstream
+  warnings in 984.25 seconds.
+- Repository-pinned Ruff 0.16.0: `ruff check .` passed; `ruff format --check .`
+  reported 221 files already formatted.
+- `python -m py_compile` passed for the changed source, trainer, launcher, and
+  aggregators; `git diff --check` passed; the reproducibility launcher snapshot
+  is byte-identical to `code/launch.py`.
+- No Modal/GPU training was launched.
+
+### PR / branch state
+
+- Before publication, `git fetch origin` confirmed local HEAD and `origin/main`
+  were both `d79853d`. GitHub reported no PR associated with
+  `claude/restore-unmapped-masking` and no open PRs in `pirl-unc/presto`, so
+  there was no active or stacked PR to update. This change set is prepared as a
+  dedicated PR from that branch rather than stacked on another change. It was
+  committed as `1e01aee`, pushed, and opened as PR
+  [#45](https://github.com/pirl-unc/presto/pull/45).
+
+---
+
+# PR #45 review: seamless lineage and MHC-resolution defaults (2026-09-04)
+
+## Acceptance contract
+
+Resolve all four review findings without weakening the fail-closed preflight.
+The MHC path must use `mhcseqs` as the default canonical sequence resolver,
+optionally supplement it with the CSV index, filter unresolved model inputs by
+default, and retain the complete source allele set separately from the curated
+resolved set. CLI and YAML/JSON configuration must produce the same effective
+contract, and every loader must emit enough normalized funnel statistics to
+reconstruct caps and ingest losses.
+
+## Plan
+
+- [x] Make traceable-lineage validation reject mapped source rows with no
+      observation ID, while retaining aggregated diagnostics for missing
+      observation source and incomplete selected mapping. Add regression tests
+      proving a fully mapped but ID-less sample cannot pass the gate.
+- [x] Register every data-integrity argument in `IEDB_DEFAULTS` with the exact
+      parser default and verify CLI/config merge parity for scalar, repeated,
+      nullable-ratio, and boolean gate options.
+- [x] Normalize merged-TSV loader statistics into the same pre-cap, post-cap,
+      cap-drop, and ingest-drop schema used by Hitlist. Ensure the default
+      `merged_tsv` path always writes those stages/reasons to both funnel JSON
+      and CSV, including zero-valued but meaningful stages.
+- [x] Add immutable source allele-set provenance to multi-allele records.
+      Resolution/filtering may update only the model-facing allele set; held-out
+      lineage must use the original source set. Cover mixed resolved/unresolved
+      elution bags and synthetic copies.
+- [x] Audit and harden default MHC loading/join behavior: `mhcseqs` first,
+      optional CSV supplement second, canonical alias handling, strict and
+      resolved-only defaults, explicit resolution/drop diagnostics, and no
+      requirement for `--index-csv` when `mhcseqs` can resolve the corpus.
+      Add default-path tests for no-index resolution and source-vs-curated
+      allele preservation.
+- [x] Run focused config/loader/support/MHC tests, the complete changed-area
+      suite, pinned Ruff checks, and the full suite if focused verification is
+      clean. Review the final diff, update this section with evidence, commit,
+      push PR #45, and report CI state.
+
+## Review
+
+### Result
+
+- The traceability gate now treats a missing observation ID as an explicit
+  lineage failure for any mapped source row. Its examples distinguish missing
+  identity, missing assay/reference provenance, and incomplete selected mapping.
+- Every new curation, synthetic-ratio, split-support, lineage, fake-null, and
+  preflight option is registered in `IEDB_DEFAULTS`. Public CLI defaults match
+  that registry, and JSON/YAML configuration can now set the complete contract.
+- The default merged-TSV loader now reports valid candidates before caps,
+  post-cap records, per-modality cap losses, invalid peptides, and valid rows
+  skipped for missing/unroutable labels. Head sampling continues scanning after
+  its cap so its audit describes the full input rather than only the prefix.
+- Multi-allele elution records keep an immutable `source_alleles` tuple. MHC
+  filtering changes only model-facing `alleles`; samples, batches, and held-out
+  dumps expose both `source_mhc_alleles` and `resolved_mhc_alleles`.
+- MHC sequence resolution performs one `mhcseqs`-first exact-input join and
+  derives both full sequences and groove inputs from it, using `--index-csv`
+  only as an optional supplement. Strict resolution and resolved-only filtering
+  remain on by default, with before/after coverage, source, quality, and drop
+  diagnostics in the data funnel.
+- Default MHC-only augmentation no longer disappears when `--index-csv` is
+  absent. It loads `mhcseqs`, accepts only canonical named alleles with complete
+  class-correct groove inputs, rejects accessions/partial or invalid sequences
+  with counted reasons, and fails loudly if the catalog is unusable. Missing
+  diagnostic probe alleles likewise retry the canonical resolver without
+  requiring a fallback path.
+
+### Evidence
+
+- The live no-index `mhcseqs` catalog smoke inspected 56,440 unique catalog
+  records, rejected 23,070 accession-only/incomplete/invalid inputs, and sampled
+  12 unique canonical class-I/class-II alleles with zero empty groove inputs.
+- All six production-size local preflights passed again with a fixed
+  `data_seed=42` and split seeds 42/43/44 under both mapping policies. Each has
+  57,710 samples, 92/92 alleles resolved by `mhcseqs`, zero lineage issues,
+  zero duplicate IDs, and zero fake-null sequences. Policy pairs have identical
+  split supervision, and all six share dataset supervision fingerprint
+  `45237653fa56c729a90088a66ec35ea602bbde55c2e09320b99afb4dc8686707`.
+- Focused support/config/loader/MHC/held-out regression suite: 280 passed in
+  6.24 seconds.
+- Full repository suite: 1,765 passed, 1 expected platform skip, 5 upstream
+  warnings in 718.92 seconds.
+- Ruff 0.16.0: `ruff check .` passed and all 221 governed files were already
+  formatted. `git diff --check` passed.
+- The branch is based directly on current `origin/main` (`d79853d`) with no
+  intervening dependency branch, so PR #45 is not stacked. No GPU/Modal work
+  was launched.
+
+---
+
+# PR #45 final integrity closure and end-to-end smoke (2026-09-05)
+
+## Scope and acceptance contract
+
+Resolve the five remaining review findings through the single canonical data,
+lineage, prediction, and Hitlist-loading paths. Do not introduce legacy column
+aliases, schema guessing, or silent data-directory fallbacks. The completed PR
+must prove that aggregation consumes the exact emitted held-out schema, every
+Hitlist observation (mapped or unmapped) requires stable identity, reported and
+model-facing MHC allele sets remain distinct, full-corpus fingerprints use
+constant auxiliary memory, and an explicit Hitlist snapshot supplies both the
+audited bytes and the loaded records.
+
+Verification must cover unit/integration regressions, exact experiment
+aggregation, real loader/preflight paths, and a registered local end-to-end
+training smoke that reaches held-out prediction emission. No GPU launch is in
+scope.
+
+## Plan
+
+- [x] Update experiment aggregation to pair on the canonical held-out columns
+      (`source_mhc_alleles`, `resolved_mhc_alleles`) and add an integration
+      fixture that runs the actual aggregator through policy parity and metric
+      emission without any compatibility aliases.
+- [x] Make lineage identity mandatory for every Hitlist-derived observation,
+      including `unmapped` rows with zero candidates, while keeping selected
+      protein/position/proteome requirements conditional on an actual mapping.
+      Add mapped, unmapped, synthetic, and legacy-source boundary tests.
+- [x] Refactor record-to-sample lineage so binding, kinetics, and stability keep
+      every reported allele only in source lineage and record only the primary
+      allele whose sequence/groove was actually supplied to the model as
+      resolved lineage. Verify unresolved and multi-allele cases explicitly.
+- [x] Replace per-sample digest-string lists with a fixed-size,
+      order-independent streaming multiset fingerprint. Preserve multiplicity,
+      policy-pair invariance, and deterministic hashes; add focused tests and
+      regenerate the six checked-in preflight fingerprints.
+- [x] Configure the Hitlist data directory before the first audit load, using
+      the package's one authoritative configuration mechanism. Test that a
+      non-default snapshot controls both record counts and hashes, with no
+      environment/default-directory fallback.
+- [x] Review all affected paths for schema or resolver duplication and remove
+      redundant compatibility logic where the canonical contract is sufficient.
+      Keep the implementation small and update the experiment snapshot only
+      where it is the code actually executed by the frozen bundle.
+- [x] Run focused tests, exact aggregation fixtures, real Hitlist and merged-TSV
+      preflights, pinned Ruff/format/diff checks, and the full repository suite.
+      Register and run a capped local end-to-end training/evaluation smoke with
+      validation/test prediction dumps, then document artifacts, metrics,
+      limitations, and the final PR/CI state.
+
+## Review
+
+### Result
+
+- The frozen aggregator now pairs on the emitted canonical fields
+  `source_mhc_alleles` and `resolved_mhc_alleles`. Its integration test executes
+  policy parity and metric emission against real-schema fixtures, rather than
+  accepting an obsolete alias.
+- Traceability now requires a stable evidence-row identity for every
+  Hitlist-derived observation, including explicitly unmapped rows. Selected
+  mapping coordinates remain required only when a mapping actually exists.
+- Binding, kinetics, and stability samples preserve every reported allele in
+  immutable source lineage while resolved lineage contains only the primary
+  allele actually encoded for the model. Elution likewise keeps its original
+  co-expressed source set while filtering only model-facing alleles.
+- Dataset fingerprints use a fixed-size, order-independent streaming multiset
+  accumulator instead of retaining two Python digest strings per sample. The
+  hash remains deterministic and multiplicity-sensitive without full-corpus
+  auxiliary memory growth.
+- `data_source=hitlist` and `data_source=merged_tsv` now choose exactly one
+  loader each. The data audit configures its requested Hitlist directory before
+  loading and validates that same snapshot's five artifacts. There is no
+  opportunistic hybrid or default-directory retry.
+- Public and config-file defaults agree, use `mhcseqs` as the canonical MHC
+  source, require resolved model inputs, and do not require an index CSV.
+  Checkpoints now serialize structural topology and held-out evaluation fails
+  closed if the selected checkpoint cannot be reconstructed. Successful runs
+  evaluate every validation/test batch and record complete held-out losses.
+
+### Verification evidence
+
+- A non-default symlinked Hitlist snapshot supplied both audited hashes and
+  loaded records: 16,721 binding, 2 kinetics, 1,000 capped stability, and
+  20,000 capped elution rows in the audit condition.
+- Six production-size preflights (two mapping policies, split seeds 42/43/44,
+  fixed data seed 42) each produced 57,710 samples and passed lineage,
+  duplicate-ID, fake-null, and required-target gates. Policy-pair supervision
+  hashes match at every seed; the common dataset supervision hash is
+  `4e1086862347ffa35e15ea88de0b076da9d7747bb0d74a4c9eb2abcc70ec4629`.
+- The registered local smoke at
+  `experiments/2026-09-05_0957_codex_pr45-integrity-e2e/` ran from clean commit
+  `c4dc1cf6c60ccca68eb3e467fffd70b3067945df`. The merged path scanned
+  3,266,972 rows and emitted its complete funnel; the exact Hitlist-only path
+  resolved 63/63 alleles and 717/717 MHC row inputs through `mhcseqs` with no
+  index fallback, trained, reloaded its selected checkpoint, and emitted full
+  43-row validation and test prediction dumps. All integrity issue counts are
+  zero and no `holdout_error.json` exists.
+- Final focused regression suite: 101 passed. Final full repository suite:
+  1,773 passed, 1 expected platform skip, 5 upstream warnings in 715.39
+  seconds. Pinned Ruff check/format and `git diff --check` passed.
+- The first clean Linux CI exposed three environment-dependent tests: the
+  audit stub was installed after importing optional Hitlist, and two resolved
+  lineage assertions relied on the developer machine's global MHC registry.
+  The fixtures now install the Hitlist stub before module execution and provide
+  explicit deterministic MHC sequences whenever resolved lineage is expected;
+  production semantics and paths are unchanged.
+- The branch remains a direct descendant of `origin/main`; PR #45 is the only
+  open PR and is not stacked. Final publication and CI state are recorded in
+  the PR after the experiment-record commit is pushed.
+
+---
+
+# PR #45 class-II lineage and Hitlist funnel closure (2026-09-05)
+
+## Scope and acceptance contract
+
+Close the two remaining review findings without adding schema aliases or data
+fallbacks. A class-II allele is resolved in lineage exactly when the chain
+segment exported for that allele is present in the model input, including DQ
+and DP beta chains whose segment occupies `mhc_b`. Hitlist flank-filter losses
+must appear as one explicit normalized `drop_reasons` category in both funnel
+JSON and flattened CSV, while the detailed loader statistics remain intact.
+
+## Plan
+
+- [x] Make primary-allele lineage use the exact resolved MHC chain metadata for
+      class II, with a nonempty-segment rule only when chain metadata is absent.
+      Preserve the existing DR behavior where a resolved default alpha partner
+      cannot make an unresolved beta allele look resolved.
+- [x] Add focused DQB1/DPB1 beta-chain tests that supply exact `groove2` inputs
+      and prove the allele appears in sample/batch resolved lineage. Retain an
+      unresolved-beta boundary test so partner-only inputs cannot pass.
+- [x] Promote Hitlist `mapping_ambiguity.rows_dropped_unresolved_flank` into a
+      canonical `drop_reasons.unresolved_flank` mapping, and test its JSON/CSV
+      representation with binding and MS counts.
+- [x] Run focused loader/funnel tests, a real mhcseqs DQ/DP resolution smoke,
+      the changed-area suite, Ruff/format/diff checks, and the full repository
+      suite. Run and register a deterministic Hitlist preflight that proves the
+      real flank-filter counts are present in both artifacts.
+- [x] Review the final diff for a single chain-selection path and a single
+      funnel adapter, update lessons/results/PR documentation, commit, push,
+      and wait for green GitHub CI.
+
+## Review
+
+- `PrestoDataset` now selects primary class-II lineage from the exact resolver's
+  alpha/beta chain metadata, caches that decision once per allele, and retains
+  the DR-specific beta rule as the strict boundary when exact metadata is not
+  available. Real `mhcseqs` inputs placed DQB1 and DPB1 exclusively in `mhc_b`
+  (93 and 91 residues) and both survived sample and batch lineage.
+- `_record_source_loader_funnel` now promotes the one destructive nested
+  Hitlist counter into `drop_reasons.unresolved_flank`. The registered real-data
+  preflight emitted binding=4 and ms=235 in both JSON and CSV while preserving
+  the full nested loader diagnostics.
+- Registered evidence lives in
+  `experiments/2026-09-05_2213_codex_pr45-lineage-funnel-closure/`. The exact
+  Hitlist path resolved 63/63 alleles and 717/717 row inputs through `mhcseqs`
+  with no index fallback; 216 samples split 130/43/43 with zero lineage,
+  duplicate-ID, or fake-null issues.
+- Focused regressions: 6 passed. Changed-area loader/training/support suite: 117
+  passed. Full repository suite: 1,777 passed, 1 expected platform skip, 5
+  upstream warnings in 1,965.65 seconds. Pinned Ruff check/format and
+  `git diff --check` passed before publication.
+- PR #45 publication and CI status are recorded after the final experiment
+  commit is pushed.

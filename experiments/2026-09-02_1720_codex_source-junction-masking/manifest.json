@@ -1,0 +1,170 @@
+[
+  {
+    "finished_at": "2026-09-03T04:01:05.804919+00:00",
+    "hardware": {
+      "hitlist_runtime_and_distribution": "1.55.8|1.55.8",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.95.05",
+      "requested_gpu": "H100!"
+    },
+    "policy": "legacy_global_canonical",
+    "remote_run_dir": "/checkpoints/presto-source-junction-mask-20260902b-legacy-e010-s42",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-source-junction-mask-20260902b-legacy-e010-s42",
+    "runtime_seconds": 4385.854012727737,
+    "seed": 42,
+    "started_at": "2026-09-03T02:47:59.950963+00:00",
+    "status": "complete"
+  },
+  {
+    "finished_at": "2026-09-03T04:07:03.464699+00:00",
+    "hardware": {
+      "hitlist_runtime_and_distribution": "1.55.8|1.55.8",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.95.05",
+      "requested_gpu": "H100!"
+    },
+    "policy": "mask_unresolved",
+    "remote_run_dir": "/checkpoints/presto-source-junction-mask-20260902b-masked-e010-s42",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-source-junction-mask-20260902b-masked-e010-s42",
+    "runtime_seconds": 4743.311023950577,
+    "seed": 42,
+    "started_at": "2026-09-03T02:48:00.153726+00:00",
+    "status": "complete"
+  },
+  {
+    "finished_at": "2026-09-03T04:20:14.222276+00:00",
+    "hardware": {
+      "hitlist_runtime_and_distribution": "1.55.8|1.55.8",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.95.05",
+      "requested_gpu": "H100!"
+    },
+    "policy": "legacy_global_canonical",
+    "remote_run_dir": "/checkpoints/presto-source-junction-mask-20260902b-legacy-e010-s43",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-source-junction-mask-20260902b-legacy-e010-s43",
+    "runtime_seconds": 5533.951894521713,
+    "seed": 43,
+    "started_at": "2026-09-03T02:48:00.270446+00:00",
+    "status": "complete"
+  },
+  {
+    "finished_at": "2026-09-03T04:01:30.982313+00:00",
+    "hardware": {
+      "hitlist_runtime_and_distribution": "1.55.8|1.55.8",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.95.05",
+      "requested_gpu": "H100!"
+    },
+    "policy": "mask_unresolved",
+    "remote_run_dir": "/checkpoints/presto-source-junction-mask-20260902b-masked-e010-s43",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-source-junction-mask-20260902b-masked-e010-s43",
+    "runtime_seconds": 4410.627660036087,
+    "seed": 43,
+    "started_at": "2026-09-03T02:48:00.354722+00:00",
+    "status": "complete"
+  },
+  {
+    "finished_at": "2026-09-03T04:06:11.248481+00:00",
+    "hardware": {
+      "hitlist_runtime_and_distribution": "1.55.8|1.55.8",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.95.05",
+      "requested_gpu": "H100!"
+    },
+    "policy": "legacy_global_canonical",
+    "remote_run_dir": "/checkpoints/presto-source-junction-mask-20260902b-legacy-e010-s44",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-source-junction-mask-20260902b-legacy-e010-s44",
+    "runtime_seconds": 4690.3506672382355,
+    "seed": 44,
+    "started_at": "2026-09-03T02:48:00.897852+00:00",
+    "status": "complete"
+  },
+  {
+    "finished_at": "2026-09-03T04:16:53.352981+00:00",
+    "hardware": {
+      "hitlist_runtime_and_distribution": "1.55.8|1.55.8",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.95.05",
+      "requested_gpu": "H100!"
+    },
+    "policy": "mask_unresolved",
+    "remote_run_dir": "/checkpoints/presto-source-junction-mask-20260902b-masked-e010-s44",
+    "required_files": [
+      "config.json",
+      "model.pt",
+      "val_summary.json",
+      "test_summary.json",
+      "val_metrics.csv",
+      "test_metrics.csv",
+      "val_predictions.csv",
+      "test_predictions.csv",
+      "condition_result.json",
+      "data_contract.json",
+      "hardware.json"
+    ],
+    "run_id": "presto-source-junction-mask-20260902b-masked-e010-s44",
+    "runtime_seconds": 5331.105158090591,
+    "seed": 44,
+    "started_at": "2026-09-03T02:48:02.247863+00:00",
+    "status": "complete"
+  }
+]

@@ -1,0 +1,441 @@
+{
+  "artifact_sha256": {
+    "binding.parquet": "fbcae6f762f43edb4eb87b1a7c7f3849757859204d37f3ce82d1f83c23cece9f",
+    "observations.parquet": "f51440ab229fd187d2548b4dddcd1fc04580d97d45fb4d5b8e0222aa8080f928",
+    "observations_meta.json": "ac459e184fc6c54c73f7f1b4fc7dff424b2360b13f55f12bb68a3bbb743de118",
+    "peptide_mappings.parquet": "45580c16649daf75b11b51497d9d96dfaa987cdcf1197d6449deaa9261f6ec5c",
+    "peptide_mappings_meta.json": "9a93de21753029ac08f1ba05e1a667ee6d7fd1b63a885bdc8dade1e626c7cbbb"
+  },
+  "hitlist_version": "1.55.8",
+  "per_seed": {
+    "42": {
+      "binding_categories": {
+        "cross_gene_unresolved": 431,
+        "flanks_agree": 2325,
+        "single": 7527,
+        "unmapped": 6212,
+        "within_gene_canonical": 178,
+        "within_gene_unresolved": 48
+      },
+      "binding_exact_categories": {
+        "cross_gene_unresolved": 308,
+        "flanks_agree": 1904,
+        "single": 6863,
+        "unmapped": 4411,
+        "within_gene_canonical": 102,
+        "within_gene_unresolved": 41
+      },
+      "loader_stats": {
+        "counts": {
+          "binding": 16721,
+          "elution": 20000,
+          "kinetics": 2,
+          "processing": 0,
+          "stability": 1000,
+          "tcell": 0,
+          "tcr_evidence": 0
+        },
+        "flank_coverage": {
+          "binding": 0.5998445069074816,
+          "elution": 0.87265
+        },
+        "kinetics_assay_methods": {
+          "purified MHC/direct/fluorescence": 2
+        },
+        "mapping_ambiguity": {
+          "binding": {
+            "category_counts": {
+              "cross_gene_unresolved": 1008,
+              "flanks_agree": 6512,
+              "single": 9796,
+              "unmapped": 11528,
+              "within_gene_canonical": 781,
+              "within_gene_unresolved": 159
+            },
+            "evidence_rows": 29784,
+            "max_proteins_for_one_row": 200,
+            "rows_with_disagreeing_flanks": 1948,
+            "rows_with_multiple_proteins": 8460,
+            "rows_with_resolved_flank_context": 17089,
+            "source_mapping_policy": "mask_unresolved"
+          },
+          "ms": {
+            "category_counts": {
+              "cross_gene_unresolved": 75388,
+              "flanks_agree": 428698,
+              "single": 122097,
+              "unmapped": 18082,
+              "within_gene_canonical": 80674,
+              "within_gene_unresolved": 2110
+            },
+            "evidence_rows": 727049,
+            "max_proteins_for_one_row": 2985,
+            "rows_with_disagreeing_flanks": 158172,
+            "rows_with_multiple_proteins": 586870,
+            "rows_with_resolved_flank_context": 631469,
+            "source_mapping_policy": "mask_unresolved"
+          },
+          "rows_dropped_unresolved_flank": {
+            "binding": 4,
+            "ms": 235
+          }
+        },
+        "skipped_no_numeric_value": 9813,
+        "skipped_noncanonical_peptide": 50,
+        "skipped_unexpected_unit": 0,
+        "skipped_unroutable_response": 1092,
+        "source": "hitlist",
+        "stability_assay_methods": {
+          "cellular MHC/direct/fluorescence": 39,
+          "purified MHC/direct/fluorescence": 503,
+          "purified MHC/direct/radioactivity": 458
+        },
+        "unmapped_condition_categories": {}
+      },
+      "policy_supervision_parity": {
+        "binding": true,
+        "elution": true,
+        "kinetics": true,
+        "stability": true
+      },
+      "record_counts": {
+        "binding": 16721,
+        "dataset": 37723,
+        "elution": 20000,
+        "kinetics": 2,
+        "stability": 1000
+      },
+      "sampling_seed": 59,
+      "split_audit": {
+        "test": {
+          "binding_categories": {
+            "cross_gene_unresolved": 44,
+            "flanks_agree": 250,
+            "single": 755,
+            "unmapped": 669,
+            "within_gene_canonical": 24,
+            "within_gene_unresolved": 7
+          },
+          "binding_exact_rows": 1434,
+          "binding_rows": 1749,
+          "peptides": 2899,
+          "rows": 3776
+        },
+        "train": {
+          "binding_categories": {
+            "cross_gene_unresolved": 359,
+            "flanks_agree": 1832,
+            "single": 6043,
+            "unmapped": 4974,
+            "within_gene_canonical": 143,
+            "within_gene_unresolved": 38
+          },
+          "binding_exact_rows": 10896,
+          "binding_rows": 13389,
+          "peptides": 23095,
+          "rows": 30175
+        },
+        "val": {
+          "binding_categories": {
+            "cross_gene_unresolved": 28,
+            "flanks_agree": 243,
+            "single": 729,
+            "unmapped": 569,
+            "within_gene_canonical": 11,
+            "within_gene_unresolved": 3
+          },
+          "binding_exact_rows": 1299,
+          "binding_rows": 1583,
+          "peptides": 2898,
+          "rows": 3772
+        }
+      }
+    },
+    "43": {
+      "binding_categories": {
+        "cross_gene_unresolved": 431,
+        "flanks_agree": 2325,
+        "single": 7527,
+        "unmapped": 6212,
+        "within_gene_canonical": 178,
+        "within_gene_unresolved": 48
+      },
+      "binding_exact_categories": {
+        "cross_gene_unresolved": 308,
+        "flanks_agree": 1904,
+        "single": 6863,
+        "unmapped": 4411,
+        "within_gene_canonical": 102,
+        "within_gene_unresolved": 41
+      },
+      "loader_stats": {
+        "counts": {
+          "binding": 16721,
+          "elution": 20000,
+          "kinetics": 2,
+          "processing": 0,
+          "stability": 1000,
+          "tcell": 0,
+          "tcr_evidence": 0
+        },
+        "flank_coverage": {
+          "binding": 0.5998445069074816,
+          "elution": 0.8693
+        },
+        "kinetics_assay_methods": {
+          "purified MHC/direct/fluorescence": 2
+        },
+        "mapping_ambiguity": {
+          "binding": {
+            "category_counts": {
+              "cross_gene_unresolved": 1008,
+              "flanks_agree": 6512,
+              "single": 9796,
+              "unmapped": 11528,
+              "within_gene_canonical": 781,
+              "within_gene_unresolved": 159
+            },
+            "evidence_rows": 29784,
+            "max_proteins_for_one_row": 200,
+            "rows_with_disagreeing_flanks": 1948,
+            "rows_with_multiple_proteins": 8460,
+            "rows_with_resolved_flank_context": 17089,
+            "source_mapping_policy": "mask_unresolved"
+          },
+          "ms": {
+            "category_counts": {
+              "cross_gene_unresolved": 75388,
+              "flanks_agree": 428698,
+              "single": 122097,
+              "unmapped": 18082,
+              "within_gene_canonical": 80674,
+              "within_gene_unresolved": 2110
+            },
+            "evidence_rows": 727049,
+            "max_proteins_for_one_row": 2985,
+            "rows_with_disagreeing_flanks": 158172,
+            "rows_with_multiple_proteins": 586870,
+            "rows_with_resolved_flank_context": 631469,
+            "source_mapping_policy": "mask_unresolved"
+          },
+          "rows_dropped_unresolved_flank": {
+            "binding": 4,
+            "ms": 235
+          }
+        },
+        "skipped_no_numeric_value": 9813,
+        "skipped_noncanonical_peptide": 50,
+        "skipped_unexpected_unit": 0,
+        "skipped_unroutable_response": 1092,
+        "source": "hitlist",
+        "stability_assay_methods": {
+          "cellular MHC/direct/fluorescence": 45,
+          "purified MHC/direct/fluorescence": 512,
+          "purified MHC/direct/radioactivity": 443
+        },
+        "unmapped_condition_categories": {}
+      },
+      "policy_supervision_parity": {
+        "binding": true,
+        "elution": true,
+        "kinetics": true,
+        "stability": true
+      },
+      "record_counts": {
+        "binding": 16721,
+        "dataset": 37723,
+        "elution": 20000,
+        "kinetics": 2,
+        "stability": 1000
+      },
+      "sampling_seed": 60,
+      "split_audit": {
+        "test": {
+          "binding_categories": {
+            "cross_gene_unresolved": 23,
+            "flanks_agree": 231,
+            "single": 780,
+            "unmapped": 616,
+            "within_gene_canonical": 13,
+            "within_gene_unresolved": 4
+          },
+          "binding_exact_rows": 1384,
+          "binding_rows": 1667,
+          "peptides": 2919,
+          "rows": 3773
+        },
+        "train": {
+          "binding_categories": {
+            "cross_gene_unresolved": 369,
+            "flanks_agree": 1892,
+            "single": 6026,
+            "unmapped": 4976,
+            "within_gene_canonical": 134,
+            "within_gene_unresolved": 38
+          },
+          "binding_exact_rows": 10934,
+          "binding_rows": 13435,
+          "peptides": 23124,
+          "rows": 30178
+        },
+        "val": {
+          "binding_categories": {
+            "cross_gene_unresolved": 39,
+            "flanks_agree": 202,
+            "single": 721,
+            "unmapped": 620,
+            "within_gene_canonical": 31,
+            "within_gene_unresolved": 6
+          },
+          "binding_exact_rows": 1311,
+          "binding_rows": 1619,
+          "peptides": 2915,
+          "rows": 3772
+        }
+      }
+    },
+    "44": {
+      "binding_categories": {
+        "cross_gene_unresolved": 431,
+        "flanks_agree": 2325,
+        "single": 7527,
+        "unmapped": 6212,
+        "within_gene_canonical": 178,
+        "within_gene_unresolved": 48
+      },
+      "binding_exact_categories": {
+        "cross_gene_unresolved": 308,
+        "flanks_agree": 1904,
+        "single": 6863,
+        "unmapped": 4411,
+        "within_gene_canonical": 102,
+        "within_gene_unresolved": 41
+      },
+      "loader_stats": {
+        "counts": {
+          "binding": 16721,
+          "elution": 20000,
+          "kinetics": 2,
+          "processing": 0,
+          "stability": 1000,
+          "tcell": 0,
+          "tcr_evidence": 0
+        },
+        "flank_coverage": {
+          "binding": 0.5998445069074816,
+          "elution": 0.8683
+        },
+        "kinetics_assay_methods": {
+          "purified MHC/direct/fluorescence": 2
+        },
+        "mapping_ambiguity": {
+          "binding": {
+            "category_counts": {
+              "cross_gene_unresolved": 1008,
+              "flanks_agree": 6512,
+              "single": 9796,
+              "unmapped": 11528,
+              "within_gene_canonical": 781,
+              "within_gene_unresolved": 159
+            },
+            "evidence_rows": 29784,
+            "max_proteins_for_one_row": 200,
+            "rows_with_disagreeing_flanks": 1948,
+            "rows_with_multiple_proteins": 8460,
+            "rows_with_resolved_flank_context": 17089,
+            "source_mapping_policy": "mask_unresolved"
+          },
+          "ms": {
+            "category_counts": {
+              "cross_gene_unresolved": 75388,
+              "flanks_agree": 428698,
+              "single": 122097,
+              "unmapped": 18082,
+              "within_gene_canonical": 80674,
+              "within_gene_unresolved": 2110
+            },
+            "evidence_rows": 727049,
+            "max_proteins_for_one_row": 2985,
+            "rows_with_disagreeing_flanks": 158172,
+            "rows_with_multiple_proteins": 586870,
+            "rows_with_resolved_flank_context": 631469,
+            "source_mapping_policy": "mask_unresolved"
+          },
+          "rows_dropped_unresolved_flank": {
+            "binding": 4,
+            "ms": 235
+          }
+        },
+        "skipped_no_numeric_value": 9813,
+        "skipped_noncanonical_peptide": 50,
+        "skipped_unexpected_unit": 0,
+        "skipped_unroutable_response": 1092,
+        "source": "hitlist",
+        "stability_assay_methods": {
+          "cellular MHC/direct/fluorescence": 39,
+          "purified MHC/direct/fluorescence": 485,
+          "purified MHC/direct/radioactivity": 476
+        },
+        "unmapped_condition_categories": {}
+      },
+      "policy_supervision_parity": {
+        "binding": true,
+        "elution": true,
+        "kinetics": true,
+        "stability": true
+      },
+      "record_counts": {
+        "binding": 16721,
+        "dataset": 37723,
+        "elution": 20000,
+        "kinetics": 2,
+        "stability": 1000
+      },
+      "sampling_seed": 61,
+      "split_audit": {
+        "test": {
+          "binding_categories": {
+            "cross_gene_unresolved": 53,
+            "flanks_agree": 248,
+            "single": 747,
+            "unmapped": 596,
+            "within_gene_canonical": 20,
+            "within_gene_unresolved": 6
+          },
+          "binding_exact_rows": 1334,
+          "binding_rows": 1670,
+          "peptides": 2904,
+          "rows": 3774
+        },
+        "train": {
+          "binding_categories": {
+            "cross_gene_unresolved": 346,
+            "flanks_agree": 1859,
+            "single": 6048,
+            "unmapped": 4983,
+            "within_gene_canonical": 145,
+            "within_gene_unresolved": 37
+          },
+          "binding_exact_rows": 10945,
+          "binding_rows": 13418,
+          "peptides": 23133,
+          "rows": 30177
+        },
+        "val": {
+          "binding_categories": {
+            "cross_gene_unresolved": 32,
+            "flanks_agree": 218,
+            "single": 732,
+            "unmapped": 633,
+            "within_gene_canonical": 13,
+            "within_gene_unresolved": 5
+          },
+          "binding_exact_rows": 1350,
+          "binding_rows": 1633,
+          "peptides": 2941,
+          "rows": 3772
+        }
+      }
+    }
+  }
+}

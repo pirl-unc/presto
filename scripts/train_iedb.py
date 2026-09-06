@@ -56,6 +56,7 @@ from presto.data.allele_resolver import (
     class_ii_default_dra_allele,
     infer_mhc_class_optional,
     is_class_ii_dr_beta_allele,
+    normalize_allele_name,
 )
 from presto.data.cross_source_dedup import (
     UnifiedRecord,
@@ -76,6 +77,7 @@ from presto.data.loaders import peptide_grouped_three_way_split_indices
 from presto.data.mhc_index import classify_unresolved_allele, load_mhc_index
 from presto.data.mhc_sequence_resolver import (
     ExactMHCInput,
+    load_mhcseqs_catalog_inputs,
     resolve_exact_mhc_inputs,
     resolve_exact_mhc_sequences,
 )
@@ -179,7 +181,12 @@ IEDB_DEFAULTS = {
     "max_tcell": 0,
     "max_vdjdb": 0,
     "cap_sampling": "reservoir",
+    "data_seed": None,
+    "exclude_target": [],
     "synthetic_pmhc_negative_ratio": 1.0,
+    "synthetic_elution_negative_ratio": None,
+    "synthetic_cascade_elution_negative_ratio": None,
+    "synthetic_cascade_tcell_negative_ratio": None,
     "synthetic_class_i_no_mhc_beta_negative_ratio": 0.25,
     "synthetic_processing_negative_ratio": 0.5,
     "synthetic_negative_min_nM": DEFAULT_MAX_AFFINITY_NM,
@@ -211,6 +218,15 @@ IEDB_DEFAULTS = {
     "tcell_ex_vivo_margin": 0.0,
     "val_frac": 0.2,
     "test_frac": 0.0,
+    "require_split_target": [],
+    "require_all_active_target_support": False,
+    "require_binary_balance_target": [],
+    "require_all_active_binary_balance": False,
+    "min_split_target_support": 1,
+    "require_traceable_lineage": False,
+    "forbid_fake_null_sequences": False,
+    "expected_split_support_sha256": None,
+    "data_preflight_only": False,
     "checkpoint": None,
     "run_dir": None,
     "weight_decay": 0.01,
@@ -292,6 +308,32 @@ MIN_MHC_SEQUENCE_LEN = int(MIN_MHC_CHAIN_LENGTH)
 # Keep uncertainty-weighting task indexing aligned with the actual
 # supervised loss registry used by train/eval (`train_synthetic`).
 IEDB_LOSS_TASK_NAMES = tuple(LOSS_TASK_NAMES)
+
+
+def _resolve_synthetic_negative_ratios(
+    pmhc_ratio: float,
+    *,
+    elution_ratio: Optional[float] = None,
+    cascade_elution_ratio: Optional[float] = None,
+    cascade_tcell_ratio: Optional[float] = None,
+) -> Tuple[float, float, float, float]:
+    """Resolve independently overridable augmentation ratios.
+
+    ``None`` preserves the historical coupling to the pMHC ratio. Explicit
+    values let a controlled experiment add one decoy family without silently
+    activating the others.
+    """
+    pmhc = max(float(pmhc_ratio), 0.0)
+
+    def _resolve(value: Optional[float], scale: float) -> float:
+        return max(float(pmhc * scale if value is None else value), 0.0)
+
+    return (
+        pmhc,
+        _resolve(elution_ratio, SYNTHETIC_ELUTION_NEGATIVE_SCALE),
+        _resolve(cascade_elution_ratio, SYNTHETIC_CASCADE_ELUTION_NEGATIVE_SCALE),
+        _resolve(cascade_tcell_ratio, SYNTHETIC_CASCADE_TCELL_NEGATIVE_SCALE),
+    )
 
 
 def summarize_uncertainty_weights(
@@ -530,7 +572,7 @@ def _resolve_probe_specs(
         else:
             unresolved.append(allele)
 
-    if unresolved and index_csv:
+    if unresolved:
         seq_map, _ = resolve_mhc_sequences_from_index(index_csv=index_csv, alleles=unresolved)
         for allele in unresolved:
             seq = str(seq_map.get(allele, "")).strip().upper()
@@ -2249,11 +2291,12 @@ def augment_elution_records_with_synthetic_negatives(
                 peptide=peptide,
                 alleles=alleles,
                 detected=False,
+                source_alleles=tuple(alleles),
                 cell_type=source.cell_type,
                 tissue=source.tissue,
                 mhc_class=source.mhc_class,
                 species=source.species,
-                source="synthetic_negative",
+                source=f"synthetic_negative_elution_{mode}",
             )
         )
 
@@ -2273,6 +2316,7 @@ def augment_elution_records_with_synthetic_negatives(
                         peptide=peptide,
                         alleles=[neg_allele],
                         detected=False,
+                        source_alleles=(neg_allele,),
                         cell_type=source.cell_type,
                         tissue=source.tissue,
                         mhc_class=source.mhc_class,
@@ -2374,8 +2418,22 @@ def cascade_binding_negatives_to_downstream(
         return elution, tcell, {"elution_added": 0, "tcell_added": 0}
 
     rng = random.Random(seed + 53)
-    n_elution = max(0, int(round(len(synthetic_binding) * max(float(elution_ratio), 0.0))))
-    n_tcell = max(0, int(round(len(synthetic_binding) * max(float(tcell_ratio), 0.0))))
+    # A synthetic negative is meaningful only as a contrast for an observed
+    # positive in that downstream modality. Cascading into an empty corpus
+    # silently activates an all-negative task and teaches absence without a
+    # single positive example.
+    has_elution_positive = any(bool(record.detected) for record in elution)
+    has_tcell_positive = any(float(record.response) > 0.5 for record in tcell)
+    n_elution = (
+        max(0, int(round(len(synthetic_binding) * max(float(elution_ratio), 0.0))))
+        if has_elution_positive
+        else 0
+    )
+    n_tcell = (
+        max(0, int(round(len(synthetic_binding) * max(float(tcell_ratio), 0.0))))
+        if has_tcell_positive
+        else 0
+    )
 
     elution_keys = {
         (rec.peptide, tuple(rec.alleles), bool(rec.detected), rec.mhc_class) for rec in elution
@@ -2400,6 +2458,7 @@ def cascade_binding_negatives_to_downstream(
                 peptide=source.peptide,
                 alleles=[source.mhc_allele],
                 detected=False,
+                source_alleles=(source.mhc_allele,),
                 mhc_class=source.mhc_class,
                 species=source.species,
                 source="synthetic_negative_from_binding",
@@ -2481,6 +2540,7 @@ def load_iedb_binding_and_elution_records(
                     peptide=rec.peptide,
                     alleles=allele_bag or [rec.mhc_allele],
                     detected=True,
+                    source_alleles=tuple(allele_bag or [rec.mhc_allele]),
                     mhc_class=rec.mhc_class or infer_mhc_class(rec.mhc_allele),
                     species=rec.species or infer_species(rec.mhc_allele),
                     source="iedb",
@@ -2557,36 +2617,52 @@ def load_vdjdb_records(
 
 
 def _generate_mhc_only_samples(
-    index_csv: str,
+    index_csv: Optional[str] = None,
     max_samples: int = 5000,
     seed: int = 42,
 ) -> List[PrestoSample]:
-    """Generate MHC-only training samples from the MHC index.
+    """Generate MHC-only samples from `mhcseqs` or an explicit CSV index.
 
     These samples have a polyalanine placeholder peptide and real MHC
     sequences. They contribute zero supervised binding/tcell/elution loss
     (no targets) but the MHC type/species classification losses train the
     base encoder's MHC representations for discriminative allele encoding.
     """
-    records = load_mhc_index(index_csv)
+    using_mhcseqs_catalog = not bool(index_csv)
+    records = (
+        list(load_mhc_index(index_csv).values())
+        if index_csv
+        else list(load_mhcseqs_catalog_inputs().values())
+    )
     # Filter to records with valid groove-half inputs.
-    valid: List[Tuple[Any, str, str]] = []
+    valid: List[Tuple[Any, str, str, str]] = []
     rejected: list[tuple[str, str, str]] = []  # (allele, reason, bad_chars)
-    for rec in records.values():
+    for rec in records:
+        allele = str(
+            getattr(rec, "normalized", "")
+            or getattr(rec, "allele", "")
+            or getattr(rec, "allele_raw", "")
+        ).strip()
+        if using_mhcseqs_catalog:
+            try:
+                allele = normalize_allele_name(allele)
+            except (AttributeError, ValueError):
+                rejected.append((allele, "not_a_named_mhc_allele", ""))
+                continue
         seq = str(rec.sequence or "").strip().upper()
         if not seq:
             continue
         if len(seq) < MIN_MHC_SEQUENCE_LEN:
-            rejected.append((rec.normalized or rec.allele, f"short_len={len(seq)}", ""))
+            rejected.append((allele, f"short_len={len(seq)}", ""))
             continue
         if "X" in seq:
-            rejected.append((rec.normalized or rec.allele, "contains_X", "X"))
+            rejected.append((allele, "contains_X", "X"))
             continue
         bad_chars = set(seq) - MHC_SEQUENCE_ALLOWED_AA
         if bad_chars:
             rejected.append(
                 (
-                    rec.normalized or rec.allele,
+                    allele,
                     "non_canonical_chars",
                     "".join(sorted(bad_chars)),
                 )
@@ -2595,7 +2671,7 @@ def _generate_mhc_only_samples(
         if _looks_like_nucleotide_mhc_sequence(seq):
             rejected.append(
                 (
-                    rec.normalized or rec.allele,
+                    allele,
                     f"nucleotide_like_len={len(seq)}",
                     "",
                 )
@@ -2603,10 +2679,30 @@ def _generate_mhc_only_samples(
             continue
 
         mhc_class = normalize_mhc_class(rec.mhc_class, default="I")
-        gene = (rec.gene or "").upper()
-        if rec.groove_half_1 or rec.groove_half_2:
-            mhc_a_seq = str(rec.groove_half_1 or "").strip().upper()
-            mhc_b_seq = str(rec.groove_half_2 or "").strip().upper()
+        gene = str(getattr(rec, "gene", "") or "").upper()
+        chain = str(getattr(rec, "chain", "") or "").lower()
+        groove_half_1 = (
+            str(getattr(rec, "groove_half_1", "") or getattr(rec, "groove1", "") or "")
+            .strip()
+            .upper()
+        )
+        groove_half_2 = (
+            str(getattr(rec, "groove_half_2", "") or getattr(rec, "groove2", "") or "")
+            .strip()
+            .upper()
+        )
+        if using_mhcseqs_catalog:
+            complete_groove = (
+                bool(groove_half_1 and groove_half_2)
+                if mhc_class == "I"
+                else bool(groove_half_2 if chain == "beta" else groove_half_1)
+            )
+            if not complete_groove:
+                rejected.append((allele, "incomplete_mhcseqs_groove", ""))
+                continue
+        if groove_half_1 or groove_half_2:
+            mhc_a_seq = groove_half_1
+            mhc_b_seq = groove_half_2
         elif mhc_class == "I":
             try:
                 prepared = prepare_mhc_input(
@@ -2617,7 +2713,7 @@ def _generate_mhc_only_samples(
             except ValueError as exc:
                 rejected.append(
                     (
-                        rec.normalized or rec.allele_raw,
+                        allele,
                         f"groove_parse_failed:{exc}",
                         "",
                     )
@@ -2625,7 +2721,7 @@ def _generate_mhc_only_samples(
                 continue
             mhc_a_seq = prepared.groove_half_1
             mhc_b_seq = prepared.groove_half_2
-        elif any(tag in gene for tag in ("DRB", "DQB", "DPB", "AB", "EB")):
+        elif chain == "beta" or any(tag in gene for tag in ("DRB", "DQB", "DPB", "AB", "EB")):
             mhc_a_seq = ""
             mhc_b_seq = seq
         else:
@@ -2633,14 +2729,14 @@ def _generate_mhc_only_samples(
             mhc_b_seq = ""
 
         if not mhc_a_seq and not mhc_b_seq:
-            rejected.append((rec.normalized or rec.allele_raw, "no_groove_inputs", ""))
+            rejected.append((allele, "no_groove_inputs", ""))
             continue
 
         bad_segments = sorted({ch for ch in (mhc_a_seq + mhc_b_seq) if ch not in MHC_ALLOWED_AA})
         if bad_segments:
             rejected.append(
                 (
-                    rec.normalized or rec.allele_raw,
+                    allele,
                     "non_canonical_groove_chars",
                     "".join(bad_segments),
                 )
@@ -2648,17 +2744,24 @@ def _generate_mhc_only_samples(
             continue
 
         if "X" in mhc_a_seq or "X" in mhc_b_seq:
-            rejected.append((rec.normalized or rec.allele_raw, "contains_X", "X"))
+            rejected.append((allele, "contains_X", "X"))
             continue
 
-        valid.append((rec, mhc_a_seq, mhc_b_seq))
+        valid.append((rec, allele, mhc_a_seq, mhc_b_seq))
 
     if rejected:
-        print(f"MHC augmentation: rejected {len(rejected)} alleles with invalid sequences:")
-        for allele, reason, chars in rejected[:50]:
+        reason_counts = Counter(reason for _, reason, _ in rejected)
+        reason_summary = ", ".join(
+            f"{reason}={count}" for reason, count in reason_counts.most_common()
+        )
+        print(
+            f"MHC augmentation: rejected {len(rejected)} unusable catalog records "
+            f"({reason_summary}); examples:"
+        )
+        for allele, reason, chars in rejected[:12]:
             print(f"  {allele:30s}  reason={reason:20s}  chars={chars}")
-        if len(rejected) > 50:
-            print(f"  ... and {len(rejected) - 50} more")
+        if len(rejected) > 12:
+            print(f"  ... and {len(rejected) - 12} more")
 
     if not valid:
         return []
@@ -2668,9 +2771,9 @@ def _generate_mhc_only_samples(
         valid = rng.sample(valid, max_samples)
 
     samples: List[PrestoSample] = []
-    for rec, mhc_a_seq, mhc_b_seq in valid:
+    for rec, allele, mhc_a_seq, mhc_b_seq in valid:
         mhc_class = normalize_mhc_class(rec.mhc_class, default="I")
-        species = rec.species or infer_species(rec.normalized) or None
+        species = getattr(rec, "species", None) or infer_species(allele) or None
 
         samples.append(
             PrestoSample(
@@ -2682,8 +2785,8 @@ def _generate_mhc_only_samples(
                 sample_source="mhc_augmentation",
                 assay_group="mhc_aux",
                 synthetic_kind="mhc_only",
-                primary_allele=rec.normalized,
-                sample_id=f"mhc_aug_{len(samples)}",
+                primary_allele=allele,
+                sample_id=f"mhc_aug:{allele}",
             )
         )
     return samples
@@ -2845,7 +2948,7 @@ def _collect_unique_alleles(
 
 
 def resolve_mhc_sequences_from_index(
-    index_csv: str,
+    index_csv: Optional[str],
     alleles: Sequence[str],
 ) -> Tuple[Dict[str, str], Dict[str, int]]:
     """Resolve allele names to sequences with mhcseqs-first lookup."""
@@ -2857,7 +2960,7 @@ def resolve_mhc_sequences_from_index(
 
 
 def resolve_mhc_inputs_from_index(
-    index_csv: str,
+    index_csv: Optional[str],
     alleles: Sequence[str],
 ) -> Tuple[Dict[str, ExactMHCInput], Dict[str, int]]:
     """Resolve allele names to groove-aware exact MHC inputs with mhcseqs-first lookup."""
@@ -3374,7 +3477,13 @@ def _filter_records_to_resolved_mhc(
         if resolved_alleles == alleles:
             elution_filtered.append(rec)
         else:
-            elution_filtered.append(replace(rec, alleles=resolved_alleles))
+            elution_filtered.append(
+                replace(
+                    rec,
+                    alleles=resolved_alleles,
+                    source_alleles=tuple(rec.source_alleles or alleles),
+                )
+            )
 
     tcell_filtered: List[TCellRecord] = []
     for rec in tcell_records:
@@ -3628,6 +3737,7 @@ def _append_with_cap_sampling(
     seen: int,
 ) -> int:
     """Append or reservoir-replace while honoring an optional cap."""
+    seen += 1
     if limit is None:
         records.append(item)
         return seen
@@ -3638,7 +3748,6 @@ def _append_with_cap_sampling(
         return seen
 
     # Reservoir sampling over all valid candidates seen for this modality.
-    seen += 1
     if len(records) < limit:
         records.append(item)
     else:
@@ -3706,26 +3815,6 @@ def load_records_from_merged_tsv(
     elution_seen = 0
     tcell_seen = 0
     vdjdb_seen = 0
-
-    def _all_requested_limits_satisfied() -> bool:
-        """Return true when every explicitly requested limit has been met."""
-        limits_and_counts = (
-            (binding_limit, len(binding_records)),
-            (kinetics_limit, len(kinetics_records)),
-            (stability_limit, len(stability_records)),
-            (processing_limit, len(processing_records)),
-            (elution_limit, len(elution_records)),
-            (tcell_limit, len(tcell_records)),
-            (vdjdb_limit, len(vdjdb_records)),
-        )
-        any_bounded = False
-        for limit, count in limits_and_counts:
-            if limit is None:
-                continue
-            any_bounded = True
-            if count < limit:
-                return False
-        return any_bounded
 
     with merged_tsv.open("r", encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle, delimiter="\t")
@@ -3933,6 +4022,7 @@ def load_records_from_merged_tsv(
                         peptide=peptide,
                         alleles=alleles,
                         detected=bool(detected > 0.5),
+                        source_alleles=tuple(alleles),
                         mhc_class=mhc_class,
                         species=species,
                         antigen_species=antigen_species_col,
@@ -4020,24 +4110,40 @@ def load_records_from_merged_tsv(
                     seen=processing_seen,
                 )
 
-            if sampling_mode == "head" and _all_requested_limits_satisfied():
-                break
-
+    counts_before_cap = {
+        "binding": binding_seen,
+        "kinetics": kinetics_seen,
+        "stability": stability_seen,
+        "processing": processing_seen,
+        "elution": elution_seen,
+        "tcell": tcell_seen,
+        "tcr_evidence": vdjdb_seen,
+    }
+    records_loaded = {
+        "binding": len(binding_records),
+        "kinetics": len(kinetics_records),
+        "stability": len(stability_records),
+        "processing": len(processing_records),
+        "elution": len(elution_records),
+        "tcell": len(tcell_records),
+        "tcr_evidence": len(vdjdb_records),
+    }
+    rows_scanned = sum(by_assay.values())
     stats = {
-        "rows_scanned": sum(by_assay.values()),
+        "rows_scanned": rows_scanned,
         "rows_by_assay": dict(sorted(by_assay.items(), key=lambda item: (-item[1], item[0]))),
         "rows_by_source": dict(sorted(by_source.items(), key=lambda item: (-item[1], item[0]))),
         "rows_dropped_invalid_peptide": rows_dropped_invalid_peptide,
         "rows_sanitized_optional_sequences": rows_sanitized_optional_sequences,
+        "skipped_invalid_peptide": rows_dropped_invalid_peptide,
+        "skipped_unroutable_or_missing_label": max(
+            0, rows_scanned - sum(counts_before_cap.values())
+        ),
         "cap_sampling": sampling_mode,
-        "records_loaded": {
-            "binding": len(binding_records),
-            "kinetics": len(kinetics_records),
-            "stability": len(stability_records),
-            "processing": len(processing_records),
-            "elution": len(elution_records),
-            "tcell": len(tcell_records),
-            "tcr_evidence": len(vdjdb_records),
+        "counts_before_cap": counts_before_cap,
+        "records_loaded": records_loaded,
+        "rows_dropped_by_cap": {
+            name: max(0, count - records_loaded[name]) for name, count in counts_before_cap.items()
         },
     }
     return (
@@ -4376,11 +4482,83 @@ def _assert_mhcseqs_importable() -> None:
         )
 
 
+def _exclude_sparse_record_targets(
+    kinetics_records: Sequence[KineticsRecord],
+    stability_records: Sequence[StabilityRecord],
+    excluded_targets: Sequence[str],
+) -> Tuple[List[KineticsRecord], List[StabilityRecord], Dict[str, int]]:
+    """Remove explicitly out-of-scope sparse targets before dataset creation."""
+    excluded = set(excluded_targets)
+    supported = {"kon", "koff", "t_half", "tm"}
+    unknown = sorted(excluded - supported)
+    if unknown:
+        raise ValueError(
+            "--exclude-target only supports sparse quantitative targets "
+            f"{sorted(supported)}; got {unknown}"
+        )
+
+    removed = dict.fromkeys(sorted(supported), 0)
+    kept_kinetics: List[KineticsRecord] = []
+    for record in kinetics_records:
+        updates: Dict[str, Any] = {}
+        for target in ("kon", "koff"):
+            if target in excluded and getattr(record, target) is not None:
+                updates[target] = None
+                removed[target] += 1
+        updated = replace(record, **updates) if updates else record
+        if updated.kon is not None or updated.koff is not None:
+            kept_kinetics.append(updated)
+
+    kept_stability: List[StabilityRecord] = []
+    for record in stability_records:
+        updates = {}
+        for target in ("t_half", "tm"):
+            if target in excluded and getattr(record, target) is not None:
+                updates[target] = None
+                removed[target] += 1
+        updated = replace(record, **updates) if updates else record
+        if updated.t_half is not None or updated.tm is not None:
+            kept_stability.append(updated)
+
+    return kept_kinetics, kept_stability, {key: value for key, value in removed.items() if value}
+
+
+def _record_source_loader_funnel(
+    data_funnel: Dict[str, Any],
+    source_loader: Mapping[str, Any],
+) -> None:
+    """Normalize common loader statistics into the persisted funnel schema."""
+    before_cap = source_loader.get("counts_before_cap")
+    if isinstance(before_cap, Mapping):
+        data_funnel["stages"]["loaded_pre_cap"] = dict(before_cap)
+    cap_drops = source_loader.get("rows_dropped_by_cap")
+    if isinstance(cap_drops, Mapping):
+        data_funnel["drop_reasons"]["caps"] = dict(cap_drops)
+    source_skips = {
+        str(name): int(count)
+        for name, count in source_loader.items()
+        if str(name).startswith("skipped_") and isinstance(count, int)
+    }
+    if source_skips:
+        data_funnel["drop_reasons"]["source_ingest"] = source_skips
+    mapping_ambiguity = source_loader.get("mapping_ambiguity")
+    if isinstance(mapping_ambiguity, Mapping):
+        unresolved_flank = mapping_ambiguity.get("rows_dropped_unresolved_flank")
+        if isinstance(unresolved_flank, Mapping):
+            data_funnel["drop_reasons"]["unresolved_flank"] = {
+                str(name): int(count)
+                for name, count in unresolved_flank.items()
+                if isinstance(count, int) and not isinstance(count, bool)
+            }
+
+
 def run(args: argparse.Namespace) -> None:
     """Run unified multi-source training with parsed arguments."""
     args = _resolve_run_args(args)
     torch.manual_seed(args.seed)
     random.seed(args.seed)
+    data_seed_arg = getattr(args, "data_seed", None)
+    data_seed = int(args.seed if data_seed_arg is None else data_seed_arg)
 
     _assert_mhcseqs_importable()
     device = args.device or ("cuda" if torch.cuda.is_available() else "cpu")
@@ -4411,8 +4589,30 @@ def run(args: argparse.Namespace) -> None:
     elution_records: List[ElutionRecord] = []
     tcell_records: List[TCellRecord] = []
     vdjdb_records: List[TcrEvidenceRecord] = []
+    data_funnel: Dict[str, Any] = {
+        "schema_version": 1,
+        "data_seed_base": data_seed,
+        "stages": {},
+        "drop_reasons": {},
+        "additions": {},
+        "diagnostics": {},
+    }
 
-    if merged_tsv.exists():
+    def _current_record_counts() -> Dict[str, int]:
+        return {
+            "binding": len(binding_records),
+            "kinetics": len(kinetics_records),
+            "stability": len(stability_records),
+            "processing": len(processing_records),
+            "elution": len(elution_records),
+            "tcell": len(tcell_records),
+            "tcr_evidence": len(vdjdb_records),
+        }
+
+    data_source = str(getattr(args, "data_source", "merged_tsv"))
+    if data_source not in {"merged_tsv", "hitlist"}:
+        raise ValueError(f"Unsupported data source: {data_source!r}")
+    if data_source == "merged_tsv" and merged_tsv.exists():
         print(f"Merged input: {merged_tsv}")
         (
             binding_records,
@@ -4433,8 +4633,9 @@ def run(args: argparse.Namespace) -> None:
             max_tcell=args.max_tcell,
             max_vdjdb=args.max_vdjdb,
             cap_sampling=getattr(args, "cap_sampling", "reservoir"),
-            sampling_seed=args.seed + 17,
+            sampling_seed=data_seed + 17,
         )
+        data_funnel["source_loader"] = merged_stats
         print(f"  Merged rows scanned: {merged_stats['rows_scanned']}")
         print(f"  Cap sampling: {merged_stats.get('cap_sampling', 'unknown')}")
         print("  Merged rows by assay:")
@@ -4451,71 +4652,6 @@ def run(args: argparse.Namespace) -> None:
                 f"dropped_invalid_peptide={dropped_invalid}, "
                 f"sanitized_optional_seq_fields={sanitized_optional}"
             )
-
-        if str(getattr(args, "data_source", "merged_tsv")) == "hitlist":
-            # Override the quantitative-assay and elution modalities with the
-            # hitlist curated indexes. The reason is flanks: the merged TSV has
-            # no flank columns, so those segments reach the model as a single
-            # <MISSING> token. Processing / T-cell / TCR records stay on the
-            # merged path because hitlist's training table does not carry them.
-            from presto.data.hitlist_source import load_records_from_hitlist
-
-            (
-                binding_records,
-                kinetics_records,
-                stability_records,
-                _hitlist_processing,
-                elution_records,
-                _hitlist_tcell,
-                _hitlist_tcr,
-                hitlist_stats,
-            ) = load_records_from_hitlist(
-                max_binding=args.max_binding,
-                max_kinetics=args.max_kinetics,
-                max_stability=args.max_stability,
-                max_elution=args.max_elution,
-                mhc_class=getattr(args, "train_mhc_class_filter", None) or None,
-                mhc_allele=getattr(args, "hitlist_allele", None) or None,
-                include_flanks=bool(getattr(args, "hitlist_flanks", True)),
-                source_mapping_policy=str(
-                    getattr(args, "source_mapping_policy", "mask_unresolved")
-                ),
-                sampling_seed=args.seed + 17,
-            )
-            print("Hitlist input: curated indexes")
-            for assay, count in hitlist_stats["counts"].items():
-                print(f"    {assay}: {count}")
-            for family, coverage in hitlist_stats["flank_coverage"].items():
-                print(f"    flank coverage [{family}]: {coverage:.1%}")
-            for family, resolved in hitlist_stats.get("flank_resolution", {}).items():
-                print(f"    flank resolution [{family}]: {resolved:.1%}")
-            print(
-                "    skipped: "
-                f"no_numeric_value={hitlist_stats['skipped_no_numeric_value']}, "
-                f"unroutable={hitlist_stats['skipped_unroutable_response']}, "
-                f"unexpected_unit={hitlist_stats['skipped_unexpected_unit']}"
-            )
-            if hitlist_stats["stability_assay_methods"]:
-                print("    stability assay methods:")
-                for method, count in hitlist_stats["stability_assay_methods"].items():
-                    print(f"      {method}: {count}")
-            # A condition hitlist emits that CONDITION_TO_STIMULUS does not know
-            # is scored as "not known to be stimulated", which is wrong whenever
-            # the category names a real treatment. This count was already being
-            # computed and simply never read, which is how SPPL3_perturbation
-            # and IRF2_perturbation (20,220 rows) stayed unmapped. Loud on
-            # stderr, because a silent line here is what failed last time.
-            unmapped = hitlist_stats.get("unmapped_condition_categories") or {}
-            if unmapped:
-                total = sum(unmapped.values())
-                print(
-                    f"    WARNING: {len(unmapped)} unmapped condition_category "
-                    f"value(s) covering {total} rows fell back to stimulus "
-                    "'none'. Add them to CONDITION_TO_STIMULUS:",
-                    file=sys.stderr,
-                )
-                for category, count in sorted(unmapped.items(), key=lambda kv: -kv[1]):
-                    print(f"      {category}: {count}", file=sys.stderr)
 
         probe_family_bootstrap_records = int(
             getattr(args, "probe_family_bootstrap_records", 0) or 0
@@ -4539,7 +4675,7 @@ def run(args: argparse.Namespace) -> None:
                     max_records=probe_family_bootstrap_records,
                     max_peptides=probe_family_bootstrap_peptides,
                     max_rows_per_peptide=probe_family_bootstrap_per_peptide,
-                    sampling_seed=args.seed + 29,
+                    sampling_seed=data_seed + 29,
                 )
             )
             existing_binding_pairs = {(rec.peptide, rec.mhc_allele) for rec in binding_records}
@@ -4558,7 +4694,7 @@ def run(args: argparse.Namespace) -> None:
                 f"added_records={added}"
             )
 
-    elif str(getattr(args, "data_source", "merged_tsv")) == "hitlist":
+    elif data_source == "hitlist":
         # hitlist supplies binding / stability / kinetics / elution on its own,
         # so a hitlist-sourced run does not need the merged TSV at all. This
         # matters for remote execution: the merged TSV is a gitignored 1 GB
@@ -4585,8 +4721,9 @@ def run(args: argparse.Namespace) -> None:
             mhc_allele=getattr(args, "hitlist_allele", None) or None,
             include_flanks=bool(getattr(args, "hitlist_flanks", True)),
             source_mapping_policy=str(getattr(args, "source_mapping_policy", "mask_unresolved")),
-            sampling_seed=args.seed + 17,
+            sampling_seed=data_seed + 17,
         )
+        data_funnel["source_loader"] = hitlist_stats
         print("Hitlist input: curated indexes (no merged TSV)")
         for assay, count in hitlist_stats["counts"].items():
             print(f"    {assay}: {count}")
@@ -4713,32 +4850,32 @@ def run(args: argparse.Namespace) -> None:
         binding_records = _merge_records_with_limit(
             binding_record_groups,
             max_records=args.max_binding,
-            seed=args.seed + 11,
+            seed=data_seed + 11,
         )
         elution_records = _merge_records_with_limit(
             elution_record_groups,
             max_records=args.max_elution,
-            seed=args.seed + 12,
+            seed=data_seed + 12,
         )
         kinetics_records = _merge_records_with_limit(
             kinetics_record_groups,
             max_records=args.max_kinetics,
-            seed=args.seed + 13,
+            seed=data_seed + 13,
         )
         stability_records = _merge_records_with_limit(
             stability_record_groups,
             max_records=args.max_stability,
-            seed=args.seed + 14,
+            seed=data_seed + 14,
         )
         processing_records = _merge_records_with_limit(
             processing_record_groups,
             max_records=args.max_processing,
-            seed=args.seed + 15,
+            seed=data_seed + 15,
         )
         tcell_records = _merge_records_with_limit(
             tcell_record_groups,
             max_records=args.max_tcell,
-            seed=args.seed + 16,
+            seed=data_seed + 16,
         )
         if vdjdb_file is not None:
             vdjdb_records = load_vdjdb_records(
@@ -4752,7 +4889,7 @@ def run(args: argparse.Namespace) -> None:
                 kinetics_records=kinetics_records,
                 stability_records=stability_records,
                 processing_records=processing_records,
-                seed=args.seed,
+                seed=data_seed,
             )
         )
         if any(canary_stats.values()):
@@ -4762,6 +4899,25 @@ def run(args: argparse.Namespace) -> None:
                 f"stability={canary_stats['stability']}, "
                 f"processing={canary_stats['processing']}"
             )
+    data_funnel["stages"]["loaded_post_cap"] = _current_record_counts()
+    source_loader = data_funnel.get("source_loader", {})
+    if isinstance(source_loader, Mapping):
+        _record_source_loader_funnel(data_funnel, source_loader)
+
+    excluded_targets = tuple(getattr(args, "exclude_target", ()) or ())
+    exclusion_stats: Dict[str, int] = {}
+    if excluded_targets:
+        kinetics_records, stability_records, exclusion_stats = _exclude_sparse_record_targets(
+            kinetics_records,
+            stability_records,
+            excluded_targets,
+        )
+        print(
+            "Explicitly excluded sparse targets: "
+            + ", ".join(f"{target}={count}" for target, count in sorted(exclusion_stats.items()))
+        )
+    data_funnel["stages"]["after_target_exclusion"] = _current_record_counts()
+    data_funnel["drop_reasons"]["target_exclusion"] = exclusion_stats
     print(f"  Binding: {len(binding_records)}")
     print(f"  Kinetics: {len(kinetics_records)}")
     print(f"  Stability: {len(stability_records)}")
@@ -4799,8 +4955,21 @@ def run(args: argparse.Namespace) -> None:
         tcell_records,
         vdjdb_records,
     )
-    mhc_sequences, stats = resolve_mhc_sequences_from_index(args.index_csv, unique_alleles)
-    mhc_exact_inputs, _ = resolve_mhc_inputs_from_index(args.index_csv, unique_alleles)
+    # Resolve once so the full sequences and groove records necessarily come
+    # from the same mhcseqs-first / CSV-supplemented join.
+    mhc_exact_inputs, stats = resolve_mhc_inputs_from_index(args.index_csv, unique_alleles)
+    mhc_sequences = {
+        allele: record.sequence
+        for allele, record in mhc_exact_inputs.items()
+        if str(record.sequence or "").strip()
+    }
+    data_funnel["mhc_resolution_contract"] = {
+        "resolver_order": ["mhcseqs", "index_csv"],
+        "index_csv": str(args.index_csv or ""),
+        "filter_unresolved_mhc": filter_unresolved_mhc,
+        "strict_mhc_resolution": strict_mhc_resolution,
+    }
+    data_funnel["diagnostics"]["mhc_resolution_alleles"] = dict(stats)
     print(
         "Resolved MHC sequences: "
         f"{stats['resolved']}/{stats['total']} alleles "
@@ -4808,6 +4977,11 @@ def run(args: argparse.Namespace) -> None:
         f"index_fallback={stats.get('resolved_index', 0)})"
     )
     mhc_quality = audit_loaded_mhc_sequence_quality(mhc_sequences)
+    data_funnel["diagnostics"]["mhc_sequence_quality"] = {
+        name: value
+        for name, value in mhc_quality.items()
+        if isinstance(value, (int, float)) and not isinstance(value, bool)
+    }
     print(
         "Loaded MHC sequence quality: "
         f"total={mhc_quality['total_sequences']}, "
@@ -4847,6 +5021,7 @@ def run(args: argparse.Namespace) -> None:
                 f"fragment ({MIN_MHC_SEQUENCE_LEN} aa)). "
                 f"examples={example_text}"
             )
+    data_funnel["diagnostics"]["invalid_mhc_sequences"] = {"count": len(invalid_alleles)}
 
     coverage_audit = _audit_mhc_sequence_coverage(
         binding_records=binding_records,
@@ -4857,6 +5032,9 @@ def run(args: argparse.Namespace) -> None:
         tcell_records=tcell_records,
         vdjdb_records=vdjdb_records,
         mhc_sequences=mhc_sequences,
+    )
+    data_funnel["diagnostics"]["mhc_coverage_before_filter"] = dict(
+        coverage_audit.get("overall", {})
     )
     _print_mhc_sequence_coverage_summary(coverage_audit)
     coverage_reports = _write_mhc_sequence_coverage_report(
@@ -4904,6 +5082,9 @@ def run(args: argparse.Namespace) -> None:
             )
             print(f"Unresolved MHC by category (top 10): {by_category_text}")
 
+    data_funnel["stages"]["before_mhc_filter"] = _current_record_counts()
+    filter_stats: Dict[str, int] = {}
+    coverage_after_filter = coverage_audit
     if unresolved_total > 0 and filter_unresolved_mhc:
         print("Filtering unresolved MHC rows before training (resolved-only mode).")
         (
@@ -4946,6 +5127,7 @@ def run(args: argparse.Namespace) -> None:
             vdjdb_records=vdjdb_records,
             mhc_sequences=mhc_sequences,
         )
+        coverage_after_filter = coverage_post
         print("Post-filter coverage:")
         _print_mhc_sequence_coverage_summary(coverage_post)
         post_reports = _write_mhc_sequence_coverage_report(
@@ -4974,6 +5156,12 @@ def run(args: argparse.Namespace) -> None:
             mhc_sequences=mhc_sequences,
         )
         unresolved_total = int(unresolved_audit.get("total_unresolved", 0))
+
+    data_funnel["stages"]["after_mhc_filter"] = _current_record_counts()
+    data_funnel["drop_reasons"]["mhc_filter"] = filter_stats
+    data_funnel["diagnostics"]["mhc_coverage_after_filter"] = dict(
+        coverage_after_filter.get("overall", {})
+    )
 
     if unresolved_total > 0:
         reports = _write_unresolved_mhc_report(run_dir=run_dir, audit=unresolved_audit)
@@ -5030,21 +5218,30 @@ def run(args: argparse.Namespace) -> None:
             "peptide-only run is genuinely what you want."
         )
 
-    synthetic_pmhc_ratio = max(float(args.synthetic_pmhc_negative_ratio), 0.0)
-    synthetic_elution_ratio = synthetic_pmhc_ratio * SYNTHETIC_ELUTION_NEGATIVE_SCALE
-    synthetic_cascade_elution_ratio = (
-        synthetic_pmhc_ratio * SYNTHETIC_CASCADE_ELUTION_NEGATIVE_SCALE
+    (
+        synthetic_pmhc_ratio,
+        synthetic_elution_ratio,
+        synthetic_cascade_elution_ratio,
+        synthetic_cascade_tcell_ratio,
+    ) = _resolve_synthetic_negative_ratios(
+        args.synthetic_pmhc_negative_ratio,
+        elution_ratio=getattr(args, "synthetic_elution_negative_ratio", None),
+        cascade_elution_ratio=getattr(args, "synthetic_cascade_elution_negative_ratio", None),
+        cascade_tcell_ratio=getattr(args, "synthetic_cascade_tcell_negative_ratio", None),
     )
-    synthetic_cascade_tcell_ratio = synthetic_pmhc_ratio * SYNTHETIC_CASCADE_TCELL_NEGATIVE_SCALE
     print(
         "Synthetic negative config: "
         f"pmhc={synthetic_pmhc_ratio:.3f}, "
         f"processing={max(float(args.synthetic_processing_negative_ratio), 0.0):.3f}, "
-        f"derived_elution={synthetic_elution_ratio:.3f}, "
-        f"derived_cascade_elution={synthetic_cascade_elution_ratio:.3f}, "
-        f"derived_cascade_tcell={synthetic_cascade_tcell_ratio:.3f}"
+        f"elution={synthetic_elution_ratio:.3f}, "
+        f"cascade_elution={synthetic_cascade_elution_ratio:.3f}, "
+        f"cascade_tcell={synthetic_cascade_tcell_ratio:.3f}"
     )
 
+    binding_aug_stats: Dict[str, int] = {}
+    elution_aug_stats: Dict[str, int] = {}
+    processing_aug_stats: Dict[str, int] = {}
+    cascade_stats: Dict[str, int] = {}
     if synthetic_pmhc_ratio > 0 or args.synthetic_class_i_no_mhc_beta_negative_ratio > 0:
         binding_records, binding_aug_stats = augment_binding_records_with_synthetic_negatives(
             binding_records=binding_records,
@@ -5052,7 +5249,7 @@ def run(args: argparse.Namespace) -> None:
             negative_ratio=synthetic_pmhc_ratio,
             weak_value_min_nM=args.synthetic_negative_min_nM,
             weak_value_max_nM=args.synthetic_negative_max_nM,
-            seed=args.seed,
+            seed=data_seed,
             class_i_no_mhc_beta_ratio=args.synthetic_class_i_no_mhc_beta_negative_ratio,
         )
         print(
@@ -5070,7 +5267,7 @@ def run(args: argparse.Namespace) -> None:
         elution_records, elution_aug_stats = augment_elution_records_with_synthetic_negatives(
             elution_records=elution_records,
             negative_ratio=synthetic_elution_ratio,
-            seed=args.seed,
+            seed=data_seed,
         )
         print(f"Added synthetic elution negatives: {elution_aug_stats['added']}")
 
@@ -5079,7 +5276,7 @@ def run(args: argparse.Namespace) -> None:
             augment_processing_records_with_synthetic_negatives(
                 processing_records=processing_records,
                 negative_ratio=args.synthetic_processing_negative_ratio,
-                seed=args.seed,
+                seed=data_seed,
             )
         )
         print(f"Added synthetic processing negatives: {processing_aug_stats['added']}")
@@ -5091,13 +5288,19 @@ def run(args: argparse.Namespace) -> None:
             tcell_records=tcell_records,
             elution_ratio=synthetic_cascade_elution_ratio,
             tcell_ratio=synthetic_cascade_tcell_ratio,
-            seed=args.seed,
+            seed=data_seed,
         )
         print(
             "Cascaded binding negatives downstream: "
             f"elution={cascade_stats['elution_added']}, "
             f"tcell={cascade_stats['tcell_added']}"
         )
+
+    data_funnel["stages"]["after_synthetic_augmentation"] = _current_record_counts()
+    data_funnel["additions"]["synthetic_binding"] = binding_aug_stats
+    data_funnel["additions"]["synthetic_elution"] = elution_aug_stats
+    data_funnel["additions"]["synthetic_processing"] = processing_aug_stats
+    data_funnel["additions"]["synthetic_cascade"] = cascade_stats
 
     bulk_ms_records = []
     if bool(getattr(args, "bulk_ms", False)):
@@ -5107,7 +5310,7 @@ def run(args: argparse.Namespace) -> None:
             cell_line=getattr(args, "bulk_cell_line", None) or None,
             max_records=int(getattr(args, "max_bulk_ms", 0)) or None,
             excision_negative_ratio=float(getattr(args, "bulk_excision_negative_ratio", 1.0)),
-            seed=args.seed + 23,
+            seed=data_seed + 23,
         )
         print(f"Bulk (non-MHC) MS corpus: {bulk_stats['n_records']} records")
         print(f"    observed: {bulk_stats['n_observed']}")
@@ -5135,6 +5338,8 @@ def run(args: argparse.Namespace) -> None:
         current_dataset_size=len(dataset),
         max_fraction=mhc_augmentation_max_fraction,
     )
+    mhc_only_added = 0
+    mhc_augmentation_source = "index_csv" if args.index_csv else "mhcseqs"
     if (
         mhc_augmentation_samples > 0
         and effective_mhc_augmentation_samples < mhc_augmentation_samples
@@ -5146,19 +5351,21 @@ def run(args: argparse.Namespace) -> None:
             f"effective={effective_mhc_augmentation_samples}, "
             f"base_dataset={len(dataset)})"
         )
-    if effective_mhc_augmentation_samples > 0 and args.index_csv:
+    if effective_mhc_augmentation_samples > 0:
         mhc_only = _generate_mhc_only_samples(
             index_csv=args.index_csv,
             max_samples=effective_mhc_augmentation_samples,
-            seed=args.seed,
+            seed=data_seed,
         )
         if mhc_only:
             dataset.samples.extend(mhc_only)
+            mhc_only_added = len(mhc_only)
             print(f"MHC augmentation: added {len(mhc_only)} MHC-only samples")
 
     # UniProt negative samples (species_of_origin + foreignness supervision)
     uniprot_ratio = float(getattr(args, "uniprot_negative_ratio", 0.1))
     max_uniprot = int(getattr(args, "max_uniprot", 0))
+    uniprot_added = 0
     if uniprot_ratio > 0:
         uniprot_tsv = data_dir / "uniprot" / "proteins.tsv"
         if uniprot_tsv.exists():
@@ -5171,14 +5378,29 @@ def run(args: argparse.Namespace) -> None:
                     proteins,
                     mhc_sequences,
                     n_uniprot,
-                    seed=args.seed,
+                    seed=data_seed,
                 )
                 dataset.samples.extend(uniprot_samples)
+                uniprot_added = len(uniprot_samples)
                 print(f"UniProt negatives: added {len(uniprot_samples)} samples")
         else:
             print(f"UniProt proteins.tsv not found at {uniprot_tsv}; skipping UniProt negatives")
 
     print(f"Total samples: {len(dataset)}")
+    data_funnel["stages"]["final_dataset"] = {"samples": len(dataset)}
+    data_funnel["stages"]["final_samples_by_source"] = dict(
+        sorted(
+            Counter(str(sample.sample_source or "unknown") for sample in dataset.samples).items()
+        )
+    )
+    data_funnel["additions"]["mhc_only"] = {"samples": mhc_only_added}
+    data_funnel["mhc_resolution_contract"]["augmentation_source"] = mhc_augmentation_source
+    data_funnel["additions"]["uniprot"] = {"samples": uniprot_added}
+    if run_dir is not None:
+        from presto.training.data_support import write_data_funnel_artifacts
+
+        funnel_paths = write_data_funnel_artifacts(run_dir, data_funnel)
+        print(f"Data funnel written: json={funnel_paths['json']}, csv={funnel_paths['csv']}")
     test_fraction = float(getattr(args, "test_frac", 0.0))
     minimum_samples = 3 if test_fraction > 0.0 else 2
     if len(dataset) < minimum_samples:
@@ -5244,6 +5466,70 @@ def run(args: argparse.Namespace) -> None:
         test_dataset = test_partition if test_size else None
 
     collator = PrestoCollator()
+    support_gate_requested = bool(
+        getattr(args, "require_all_active_target_support", False)
+        or getattr(args, "require_split_target", None)
+        or getattr(args, "require_binary_balance_target", None)
+        or getattr(args, "require_all_active_binary_balance", False)
+        or getattr(args, "require_traceable_lineage", False)
+        or getattr(args, "forbid_fake_null_sequences", False)
+        or getattr(args, "expected_split_support_sha256", None)
+        or getattr(args, "data_preflight_only", False)
+    )
+    if run_dir is not None or support_gate_requested:
+        from presto.training.data_support import (
+            audit_split_support,
+            validate_split_support,
+            write_split_support_artifacts,
+        )
+
+        split_support = audit_split_support(
+            {
+                "train": train_dataset,
+                "val": val_dataset,
+                **({"test": test_dataset} if test_dataset is not None else {}),
+            },
+            collator=collator,
+        )
+        if run_dir is not None:
+            paths = write_split_support_artifacts(run_dir, split_support)
+            print(
+                "Split support written: "
+                f"json={paths['json']}, csv={paths['csv']}, "
+                f"sha256={split_support['sha256']}"
+            )
+        try:
+            validate_split_support(
+                split_support,
+                required_targets=tuple(getattr(args, "require_split_target", ()) or ()),
+                require_all_active=bool(getattr(args, "require_all_active_target_support", False)),
+                binary_balance_targets=tuple(
+                    getattr(args, "require_binary_balance_target", ()) or ()
+                ),
+                require_all_active_binary_balance=bool(
+                    getattr(args, "require_all_active_binary_balance", False)
+                ),
+                min_count=int(getattr(args, "min_split_target_support", 1)),
+                require_traceable_lineage=bool(getattr(args, "require_traceable_lineage", False)),
+                forbid_fake_null_sequences=bool(getattr(args, "forbid_fake_null_sequences", False)),
+            )
+            expected_support_hash = str(
+                getattr(args, "expected_split_support_sha256", "") or ""
+            ).strip()
+            if expected_support_hash and split_support["sha256"] != expected_support_hash:
+                raise RuntimeError(
+                    "Split-support fingerprint differs from mandatory preflight: "
+                    f"expected={expected_support_hash}, observed={split_support['sha256']}"
+                )
+        except Exception:
+            if run_logger is not None:
+                run_logger.close()
+            raise
+        if bool(getattr(args, "data_preflight_only", False)):
+            if run_logger is not None:
+                run_logger.close()
+            print("Data preflight complete; model training was not started.")
+            return
     use_pin_memory = bool(getattr(args, "pin_memory", True)) and str(device).startswith("cuda")
     use_non_blocking_transfer = bool(use_pin_memory and str(device).startswith("cuda"))
     num_workers = max(0, int(getattr(args, "num_workers", 0)))
@@ -5702,26 +5988,27 @@ def run(args: argparse.Namespace) -> None:
             # was epoch 10 against a minimum at epoch 7, val loss 0.5623 vs
             # 0.5542 -- past the minimum and rising.
             eval_model = model
+            selected_epoch = int(args.epochs)
             if args.checkpoint and os.path.exists(args.checkpoint):
                 from presto.training.checkpointing import load_model_from_checkpoint
 
-                try:
-                    eval_model, checkpoint_payload = load_model_from_checkpoint(
-                        args.checkpoint, map_location=device
-                    )
-                    eval_model.to(device)
-                    eval_model.eval()
-                    best_epoch = checkpoint_payload.get("epoch")
-                    print(
-                        "Held-out evaluation uses the best-validation checkpoint"
-                        + (f" (epoch {best_epoch})" if best_epoch else "")
-                    )
-                except Exception as exc:  # noqa: BLE001 - fall back, but say so
-                    print(
-                        f"WARNING: could not reload {args.checkpoint} for held-out "
-                        f"evaluation ({exc}); scoring the final-epoch model instead"
-                    )
-                    eval_model = model
+                eval_model, checkpoint_payload = load_model_from_checkpoint(
+                    args.checkpoint, map_location=device
+                )
+                eval_model.to(device)
+                eval_model.eval()
+                best_epoch = checkpoint_payload.get("epoch")
+                selected_epoch = int(best_epoch or args.epochs)
+                print(
+                    "Held-out evaluation uses the best-validation checkpoint"
+                    + (f" (epoch {best_epoch})" if best_epoch else "")
+                )
+
+            heldout_regularization_cfg = _regularization_for_epoch(
+                base_regularization=regularization_cfg,
+                epoch_idx=max(0, selected_epoch - 1),
+                total_epochs=args.epochs,
+            )
 
             def _forward(model_ref, batch_ref):
                 # Provenance must be passed here or the held-out pass scores a
@@ -5745,6 +6032,18 @@ def run(args: argparse.Namespace) -> None:
             for split_name, split_loader in (("val", val_loader), ("test", test_loader)):
                 if split_loader is None:
                     continue
+                heldout_loss, heldout_loss_terms = _call_evaluate_compat(
+                    eval_model,
+                    split_loader,
+                    device,
+                    regularization_config=heldout_regularization_cfg,
+                    supervised_loss_aggregation=str(
+                        getattr(args, "supervised_loss_aggregation", "task_mean")
+                    ),
+                    use_amp=use_amp,
+                    max_mil_instances=max_mil_instances,
+                    max_val_batches=0,
+                )
                 accumulators = collect_holdout_predictions(
                     model=eval_model,
                     loader=split_loader,
@@ -5760,7 +6059,11 @@ def run(args: argparse.Namespace) -> None:
                     run_dir,
                     accumulators,
                     split=split_name,
-                    extra_summary={"best_val_loss": float(best_val_loss)},
+                    extra_summary={
+                        "best_val_loss": float(best_val_loss),
+                        "overall_loss": float(heldout_loss),
+                        "loss_terms": heldout_loss_terms,
+                    },
                 )
                 scored = payload.get("tasks", {})
                 print(f"Held-out {split_name} metrics written for {len(scored)} tasks -> {run_dir}")
@@ -5803,6 +6106,7 @@ def run(args: argparse.Namespace) -> None:
                 )
             except Exception:  # pragma: no cover - never mask the original
                 pass
+            raise RuntimeError("Held-out artifact generation failed") from exc
 
     print(f"\nTraining complete. Best val_loss: {best_val_loss:.4f}")
 
@@ -5873,7 +6177,10 @@ def main(argv=None):
         "--index-csv",
         type=str,
         default=None,
-        help="Optional built MHC index CSV for allele->sequence resolution",
+        help=(
+            "Optional fallback MHC index CSV; mhcseqs is the canonical default for "
+            "allele-to-sequence resolution and MHC augmentation"
+        ),
     )
     parser.add_argument(
         "--strict-mhc-resolution",
@@ -5956,12 +6263,58 @@ def main(argv=None):
         ),
     )
     parser.add_argument(
+        "--data-seed",
+        type=int,
+        default=None,
+        help=(
+            "Seed for record caps and synthetic-data generation; defaults to --seed so "
+            "historical behavior is unchanged. Pin it across model seeds for controlled sweeps."
+        ),
+    )
+    parser.add_argument(
+        "--exclude-target",
+        action="append",
+        choices=["kon", "koff", "t_half", "tm"],
+        default=[],
+        help=(
+            "Explicitly remove an under-supported quantitative target before splitting; "
+            "repeat for multiple targets."
+        ),
+    )
+    parser.add_argument(
         "--synthetic-pmhc-negative-ratio",
         type=float,
         default=1.0,
         help=(
             "Primary synthetic non-binding pMHC ratio per real binding sample "
-            "(also drives downstream elution/T-cell synthetic negatives)"
+            "(also sets downstream defaults unless explicitly overridden)"
+        ),
+    )
+    parser.add_argument(
+        "--synthetic-elution-negative-ratio",
+        type=float,
+        default=None,
+        help=(
+            "Synthetic elution decoys per real elution row; default derives from "
+            "--synthetic-pmhc-negative-ratio."
+        ),
+    )
+    parser.add_argument(
+        "--synthetic-cascade-elution-negative-ratio",
+        type=float,
+        default=None,
+        help=(
+            "Binding-negative rows to cascade into elution; default derives from "
+            "--synthetic-pmhc-negative-ratio."
+        ),
+    )
+    parser.add_argument(
+        "--synthetic-cascade-tcell-negative-ratio",
+        type=float,
+        default=None,
+        help=(
+            "Binding-negative rows to cascade into T-cell supervision; default derives from "
+            "--synthetic-pmhc-negative-ratio."
         ),
     )
     parser.add_argument(
@@ -5998,7 +6351,8 @@ def main(argv=None):
         type=int,
         default=60000,
         help=(
-            "Requested count of MHC-only auxiliary samples drawn from the MHC index "
+            "Requested count of MHC-only auxiliary samples drawn from mhcseqs or an "
+            "explicit MHC index "
             "(capped by --mhc-augmentation-max-fraction)"
         ),
     )
@@ -6018,6 +6372,57 @@ def main(argv=None):
         type=float,
         default=0.0,
         help="Held-out test fraction (0 disables; peptide-disjoint when enabled)",
+    )
+    parser.add_argument(
+        "--require-split-target",
+        action="append",
+        default=[],
+        help="Require this collated target in every requested split; repeat as needed.",
+    )
+    parser.add_argument(
+        "--require-all-active-target-support",
+        action="store_true",
+        help="Require every target present anywhere in the dataset to occur in every split.",
+    )
+    parser.add_argument(
+        "--require-binary-balance-target",
+        action="append",
+        default=[],
+        help="Require both positive and negative examples for this target in every split.",
+    )
+    parser.add_argument(
+        "--require-all-active-binary-balance",
+        action="store_true",
+        help="Require both classes for every active binary target in every split.",
+    )
+    parser.add_argument(
+        "--min-split-target-support",
+        type=int,
+        default=1,
+        help="Minimum examples per required target and split (default: 1).",
+    )
+    parser.add_argument(
+        "--require-traceable-lineage",
+        action="store_true",
+        help=(
+            "Require stable identity for source observations and complete selected-mapping "
+            "lineage for mapped rows."
+        ),
+    )
+    parser.add_argument(
+        "--forbid-fake-null-sequences",
+        action="store_true",
+        help="Fail if an optional sequence is the valid-looking null artifact NAN.",
+    )
+    parser.add_argument(
+        "--expected-split-support-sha256",
+        default=None,
+        help="Require the exact split-support fingerprint produced by a prior preflight.",
+    )
+    parser.add_argument(
+        "--data-preflight-only",
+        action="store_true",
+        help="Build, split, audit, and gate the dataset, then exit before model training.",
     )
     parser.add_argument("--epochs", type=int, default=5, help="Number of epochs")
     parser.add_argument("--batch_size", type=int, default=512, help="Batch size")

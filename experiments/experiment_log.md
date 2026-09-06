@@ -578,6 +578,14 @@ scale. Both need a GPU run.
 
 ## 2026-09-02--03 · Source-junction ambiguity masking
 
+> **Validity erratum (2026-09-04):** This family is preserved as historical
+> output but is not decision-grade. In the legacy arm, nullable unmapped flanks
+> became the amino-acid string `NAN`; masking cleared them. Thus 6,212 unmapped
+> binding rows changed for an accidental normalization reason alongside the
+> intended ambiguous junctions. Model seeds also changed capped membership,
+> sparse targets lacked held-out support, and elution was all-positive. The
+> stated mapping-policy winner is withdrawn pending the gated 2026-09-04 rerun.
+
 **Agent/model:** Codex / GPT-5 · **Dir:**
 [`2026-09-02_1720_codex_source-junction-masking`](2026-09-02_1720_codex_source-junction-masking/)
 · **Commit:** `a1cdcc0d27d63a7440188f98f0dc503c596c8dfd` (dirty)
@@ -667,6 +675,13 @@ junction) but uses stable candidate ordering instead of reproducing the old
 frame-order accident byte for byte.
 
 ## 2026-09-03 - Flank context wired end to end, on corrected mapping data
+
+> **Validity erratum (2026-09-04):** This rerun fixed terminus and checkpoint
+> handling but retained the same null-to-`NAN` policy confound on 6,212 unmapped
+> binding rows. Its archived metrics remain reproducible; its mapping-policy
+> conclusion is withdrawn. The 2026-09-04 remediation also fixes seed-dependent
+> caps, sparse held-out targets, and all-positive binary supervision before any
+> replacement GPU run can start.
 
 **Agent/model:** Claude / Opus 5 - **Dir:**
 [`2026-09-03_1746_claude_flank-context-fixes`](2026-09-03_1746_claude_flank-context-fixes/)
@@ -766,3 +781,140 @@ deltas flip sign (-0.0094 / +0.0459 / -0.0899). The negative result is a
 statement about statistical power on `HLA-A*02:01`, not evidence that junction
 context is unimportant - and it is the same limitation `20260902b` reported,
 now with the checkpoint confound removed.
+
+## 2026-09-05 - PR #45 data-integrity end-to-end smoke
+
+**Experiment id:** `2026-09-05_0957_codex_pr45-integrity-e2e`
+
+**Agent/model:** Codex / GPT-5
+
+**Directory:**
+[`2026-09-05_0957_codex_pr45-integrity-e2e`](2026-09-05_0957_codex_pr45-integrity-e2e/)
+
+**Commit:** `c4dc1cf6c60ccca68eb3e467fffd70b3067945df` (clean)
+
+### Question and data contract
+
+Does the repaired PR load both named data sources through unique paths, resolve
+MHC inputs directly from `mhcseqs`, train, reconstruct the selected checkpoint,
+and emit fully traceable validation/test results?
+
+- `merged_tsv` preflight: scanned 3,266,972 rows; reservoir-capped binding 96,
+  kinetics 24, stability 24, processing 24, elution 96, T-cell 96, and TCR
+  evidence 24; recorded all pre-cap candidates, cap losses, ingest drops, and
+  MHC-filter losses. The final 287 samples split 173/57/57 by peptide.
+- Exact Hitlist-only training path: HLA-A*02:01, reservoir-capped 96 binding,
+  2 kinetics, 24 stability, and 96 elution observations. `kon`, `koff`, and
+  `tm` were excluded, leaving binding, half-life, and elution supervision.
+  Every synthetic ratio and MHC augmentation was zero. The final 216 samples
+  split 130/43/43 by peptide with data seed and split seed independently fixed
+  at 42.
+- Both conditions used strict resolved-only MHC inputs with `mhcseqs` first and
+  no index CSV. The merged preflight resolved 232/269 reported alleles before
+  explicit filtering and 296/296 model-facing rows afterward. Hitlist resolved
+  63/63 alleles and 717/717 row-wise inputs. CSV fallback count was zero.
+- Both audits had zero lineage issues, duplicate sample IDs, and fake-null
+  sequences. Hitlist support/dataset/supervision hashes were `2587f4cc...`,
+  `e1c7012b...`, and `4a1d280e...`; complete values are in the experiment
+  summary.
+
+### Training, losses, and output mapping
+
+No pretraining was used. The CPU smoke used expanded Presto d32/l1/h4 (411,722
+parameters), AdamW lr 2.8e-4 and weight decay 0.01, batch 16, MIL cap 16, one
+epoch, two training batches, and one in-loop validation batch. Learned
+uncertainty weighting was off. Standard unified losses were active with
+cascade/assay-affinity/assay-presentation/no-B2M/T-cell-context/T-cell-upstream
+consistency weights 0.2/0.1/0.1/0.5/0.05/0.2, MIL contrastive/sparsity weights
+0.1/0.02, and binding contrastive weight 1.0 where labels supplied support.
+
+Binding affinity labels map to the binding/affinity-family outputs and their
+IC50/KD variants; half-life maps to `assays.t_half`; elution detection maps to
+elution/presentation outputs. Source organism and MHC annotations map to their
+auxiliary species/class/type outputs. The selected epoch-1 checkpoint was
+reconstructed with its expanded topology before full, uncapped held-out
+evaluation. Per-example validation and test prediction dumps are committed.
+
+### Conditions and held-out metrics
+
+RMSE is `log10(nM)`; exact metrics exclude censored observations.
+
+| Condition | Result | Runtime |
+|---|---|---:|
+| Default merged-TSV preflight | Complete funnel; 287 samples; all post-filter MHC rows resolved | 59 s |
+| Exact Hitlist train/evaluate | Train + selected-checkpoint full validation/test dumps completed | 53 s |
+
+| Split | Overall loss | Exact affinity n | Spearman | Pearson | RMSE | <=500 nM bal. acc. | AUROC | AUPRC |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Validation | 3.3841 | 14 | -0.2044 | -0.2718 | 1.6213 | 0.5000 | 0.3889 | 0.3433 |
+| Test | 3.2907 | 13 | -0.1593 | 0.0877 | 1.6278 | 0.5000 | 0.4167 | 0.2420 |
+
+Half-life had four observations in each held-out split (validation/test RMSE
+3.3849/2.6119). Elution was all-positive (21/20), so discrimination metrics
+are undefined. These tiny-run values are recorded for reproducibility, not as
+a model-quality result.
+
+### Winner and takeaway
+
+There is no model winner: this was a path-integrity verification. All hard
+gates passed. Named sources now select exact loaders, merged curation is fully
+auditable, MHC joins work from `mhcseqs` without an index, lineage remains
+source-faithful, the selected checkpoint reloads exactly, and complete held-out
+artifacts exist. The narrow, one-class Hitlist elution slice remains unsuitable
+for claims of corpus completeness or model discrimination. Requested GPU:
+none; observed hardware: local CPU. Total wall time was 112 seconds.
+
+## 2026-09-06 - PR #45 class-II lineage and Hitlist funnel closure
+
+**Experiment id:** `2026-09-05_2213_codex_pr45-lineage-funnel-closure`
+
+**Agent/model:** Codex / GPT-5
+
+**Directory:**
+[`2026-09-05_2213_codex_pr45-lineage-funnel-closure`](2026-09-05_2213_codex_pr45-lineage-funnel-closure/)
+
+**Code commit:** `15003dacf310de3534325cb2db7fd6f3e2e89481`
+(the experiment bundle alone was uncommitted at launch; production and test
+files matched this commit)
+
+### Question and data contract
+
+Does the production data path preserve standalone DQ/DP beta alleles as
+resolved lineage when their real `mhcseqs` records export `groove2`, and does a
+real flank-enabled Hitlist load promote its unresolved-flank removals into the
+canonical funnel JSON and CSV?
+
+- MHC condition: default `mhcseqs`, no index CSV, real `HLA-DQB1*06:02` and
+  `HLA-DPB1*02:01` records.
+- Hitlist condition: `/Users/iskander/.hitlist`, HLA-A*02:01,
+  `mask_unresolved`, flanks enabled, reservoir caps of 96 binding, 2 kinetics,
+  24 stability, and 96 elution observations. Data/split seeds were 42/42;
+  `kon`, `koff`, and `tm` were excluded; all synthetic ratios and MHC
+  augmentation were zero.
+- The loader saw 16,721 binding, 2 kinetics, 2,150 stability, and 726,766
+  elution observations before caps. It resolved 63/63 alleles and 717/717 MHC
+  row inputs through `mhcseqs`, with zero index fallback.
+- The 216 samples split 130/43/43 by peptide. Lineage issues, duplicate sample
+  IDs, and fake-null sequences were all zero. The split support, dataset, and
+  supervision hashes were `2587f4cc...`, `e1c7012b...`, and `4a1d280e...`;
+  full hashes are in the experiment README and artifacts.
+
+### Conditions and results
+
+| Condition | Result |
+|---|---|
+| DQB1 beta lineage | 93-residue `groove2` populated `mhc_b`; sample and batch resolved lineage passed |
+| DPB1 beta lineage | 91-residue `groove2` populated `mhc_b`; sample and batch resolved lineage passed |
+| Hitlist funnel | 4 binding and 235 MS unresolved-flank drops present in both JSON and CSV |
+
+No pretraining, model initialization, optimization, loss terms, or assay-output
+mapping applied. This was a data preflight, so predictive validation/test
+metrics and prediction dumps were intentionally not produced. Requested GPU:
+none; observed hardware: local CPU. Runtime was approximately 73 seconds.
+
+### Winner and takeaway
+
+There is no model winner. Both reviewed audit contracts pass on the real
+external data paths: chain-aware lineage now represents DQ/DP beta model inputs
+correctly, while the common funnel exposes the Hitlist flank-filter loss without
+discarding the detailed source-loader diagnostics.

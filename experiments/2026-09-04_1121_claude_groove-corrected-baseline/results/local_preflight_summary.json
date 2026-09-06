@@ -1,0 +1,45 @@
+{
+  "schema_version": 2,
+  "status": "passed_local_not_launch_authoritative",
+  "date": "2026-09-05",
+  "gpu_training_started": false,
+  "conditions": {
+    "legacy_global_canonical:42": "c3fac0fe7bfedc5d2171c572951f140d2dde7310817756c9b4894dedf0ef77b4",
+    "mask_unresolved:42": "806aa4b9d8a5287ddebd328a9bfc68d84c3a367d3efe21d9b16da29e4827b1f6",
+    "legacy_global_canonical:43": "588451bc915be008494d70c0025cd71a58a0aeedbe5ccca6110cec9f540d1be1",
+    "mask_unresolved:43": "90ec539d0c1bb34ce486704d62e4a32d60aaf48cf66a15c5d28a8a9d59647008",
+    "legacy_global_canonical:44": "6e4a8677a7fd951147c61a33240615665daa1a08abfbe8d4bed7fa27c606e63e",
+    "mask_unresolved:44": "93944f33c3c57546ae0c5c0b34a8bc84671087039acc881c90c50bad3f728739"
+  },
+  "invariants": {
+    "all_six_support_gates_passed": true,
+    "dataset_fingerprint_algorithm": "sha256-modular-sum-v1",
+    "dataset_supervision_contract_sha256": "4e1086862347ffa35e15ea88de0b076da9d7747bb0d74a4c9eb2abcc70ec4629",
+    "dataset_membership_identical_across_policies_and_seeds": true,
+    "policy_pair_split_supervision_identical_for_every_seed": true,
+    "lineage_issue_count": 0,
+    "duplicate_sample_id_count": 0,
+    "fake_null_sequence_count": 0,
+    "resolved_mhc_alleles": 92,
+    "requested_mhc_alleles": 92
+  },
+  "data_funnel": {
+    "binding_loaded": 16721,
+    "kinetics_loaded": 2,
+    "stability_loaded": 1000,
+    "elution_loaded": 20000,
+    "koff_labels_excluded": 2,
+    "tm_labels_excluded": 11,
+    "half_life_records_retained": 989,
+    "elution_decoys_added": 20000,
+    "final_samples": 57710
+  },
+  "local_environment": {
+    "hitlist_distribution": "1.55.8",
+    "hitlist_imported_source": "editable checkout 1.58.0",
+    "mhcseqs_distribution": "2.5.12",
+    "mhcseqs_imported_source": "editable checkout 2.6.11",
+    "mhcgnomes_distribution": "3.41.0"
+  },
+  "launch_environment_note": "This local verification exercises the final repository code and frozen data, but editable checkouts shadow two pinned distributions. The Modal launcher separately requires hitlist==1.55.8, mhcseqs==2.6.10, and mhcgnomes==3.41.0 in every preflight and training worker before GPU launch."
+}

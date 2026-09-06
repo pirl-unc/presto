@@ -293,6 +293,22 @@ class PrestoSample:
     source_mapping_n_genes: int = 0
     source_mapping_n_flank_pairs: int = 0
     flank_context_resolved: bool = False
+    evidence_row_id: str = ""
+    assay_iri: str = ""
+    reference_iri: str = ""
+    pmid: str = ""
+    source_sample_label: str = ""
+    source_sample_attribution: str = ""
+    mapping_gene_name: str = ""
+    mapping_gene_id: str = ""
+    mapping_protein_id: str = ""
+    mapping_transcript_id: str = ""
+    mapping_position: Optional[int] = None
+    mapping_proteome: str = ""
+    mapping_proteome_source: str = ""
+    mapping_is_canonical_transcript: Optional[bool] = None
+    source_mhc_alleles: tuple[str, ...] = ()
+    resolved_mhc_alleles: tuple[str, ...] = ()
     dataset_index: int = -1
     peptide_id: int = -1
     allele_id: int = -1
@@ -420,6 +436,9 @@ class PrestoBatch:
     source_mapping_n_genes: List[int] = field(default_factory=list)
     source_mapping_n_flank_pairs: List[int] = field(default_factory=list)
     flank_context_resolved: List[bool] = field(default_factory=list)
+    #: Host-side source lineage, including peptide/allele identity. Kept as
+    #: lists so evaluation can write traceable rows without GPU transfers.
+    source_lineage: Dict[str, List[Any]] = field(default_factory=dict)
     targets: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_masks: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_quals: Dict[str, torch.Tensor] = field(default_factory=dict)
@@ -476,6 +495,7 @@ class PrestoBatch:
             source_mapping_n_genes=self.source_mapping_n_genes,
             source_mapping_n_flank_pairs=self.source_mapping_n_flank_pairs,
             flank_context_resolved=self.flank_context_resolved,
+            source_lineage=self.source_lineage,
             targets={name: _move(tensor) for name, tensor in self.targets.items()},
             target_masks={name: _move(tensor) for name, tensor in self.target_masks.items()},
             target_quals={name: _move(tensor) for name, tensor in self.target_quals.items()},
@@ -1902,6 +1922,27 @@ class PrestoCollator:
             source_mapping_n_genes=[int(s.source_mapping_n_genes) for s in samples],
             source_mapping_n_flank_pairs=[int(s.source_mapping_n_flank_pairs) for s in samples],
             flank_context_resolved=[bool(s.flank_context_resolved) for s in samples],
+            source_lineage={
+                "peptide": [s.peptide for s in samples],
+                "source_mhc_alleles": [";".join(s.source_mhc_alleles) for s in samples],
+                "resolved_mhc_alleles": [";".join(s.resolved_mhc_alleles) for s in samples],
+                "evidence_row_id": [s.evidence_row_id for s in samples],
+                "assay_iri": [s.assay_iri for s in samples],
+                "reference_iri": [s.reference_iri for s in samples],
+                "pmid": [s.pmid for s in samples],
+                "source_sample_label": [s.source_sample_label for s in samples],
+                "source_sample_attribution": [s.source_sample_attribution for s in samples],
+                "mapping_gene_name": [s.mapping_gene_name for s in samples],
+                "mapping_gene_id": [s.mapping_gene_id for s in samples],
+                "mapping_protein_id": [s.mapping_protein_id for s in samples],
+                "mapping_transcript_id": [s.mapping_transcript_id for s in samples],
+                "mapping_position": [s.mapping_position for s in samples],
+                "mapping_proteome": [s.mapping_proteome for s in samples],
+                "mapping_proteome_source": [s.mapping_proteome_source for s in samples],
+                "mapping_is_canonical_transcript": [
+                    s.mapping_is_canonical_transcript for s in samples
+                ],
+            },
             targets=targets,
             target_masks=target_masks,
             target_quals=target_quals,

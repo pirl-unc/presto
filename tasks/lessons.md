@@ -230,3 +230,105 @@
 - A scale mismatch does not raise, so nothing catches it but magnitude. The assay-panel loss regressed a normalized-log10 head against a raw-nanomolar target: finite loss, training ran to completion, all 1,417 tests passed, and the model learned nothing — validation moved 0.012% over ten epochs while one term sat at ~142,900 and swamped every gradient. Normalizing it took the same run to a 36% reduction. When a model trains but does not learn, print the per-task loss magnitudes before touching architecture; a term orders of magnitude off its neighbours is the whole answer.
 - Do not "tidy" a fixture whose value looks wrong. A test row declared `seq_len: "89"` against 77 residues; I made it self-consistent while reflowing long lines and deleted the only in-repo example of the `seq_len_mismatch` condition the code validates. Deliberately-wrong data is a fixture, not a typo — check what consumes it before making it agree with itself.
 - State the invariant that is true, not the one that is tidy. I wrote a guard asserting benchmark argv tuples alternate flag/value; 27 of 75 failed because `store_true` flags legitimately carry no value. The real invariant — no two consecutive values — is weaker, actually holds, and still catches the shift it was written for. A guard built on a premise the data contradicts gets deleted, not fixed.
+
+## 2026-09-04
+
+- Do not infer production masking behavior from a tiny synthetic frame. Audit the
+  actual corpus at both the source-row and expanded training-record levels, with
+  stable row identifiers and explicit before/after transition counts. A four-row
+  example can exercise code paths without establishing their prevalence or
+  semantics.
+- A controlled experiment is not ready merely because its flags look aligned.
+  Compare invariant preflight fingerprints against the reference family before
+  launch, including row counts, coverage, resolution, masking rates, and pinned
+  parser versions. Any unexplained mismatch means the supposedly single-variable
+  comparison is not yet controlled.
+- When frame-level and record-level audits make contradictory claims about the
+  same signal, stop the launch and reconcile lineage through filtering, joins,
+  grouping, and record expansion. A green test suite or matching aggregate
+  coverage cannot establish semantic correctness while that conservation check
+  fails.
+- Delete constants that encode disproven invariants instead of renaming or
+  numerically adjusting them. Preserve the measured counterexample near the
+  surviving logic so the false assumption is not independently re-derived.
+- Pin biologic sequence parsers as part of the data contract and verify their
+  extracted boundaries on the actual allele set. A dependency version that moves
+  mature-chain starts changes model inputs even when the training code is
+  otherwise identical.
+- Never normalize a nullable sequence with `str(value or "")`. Floating NaN is
+  truthy and stringifies to `"nan"`; after upper-casing, `"NAN"` is composed
+  entirely of valid amino-acid codes and silently becomes fake biological
+  sequence. Detect pandas/NumPy nulls before string conversion and test every
+  sequence-normalization entrypoint with `None`, `float("nan")`, `pd.NA`, and
+  empty strings.
+- A required-lineage gate must begin by checking the required identity key. Do
+  not put the rest of the validation under `if identity`: that makes missing
+  identity bypass the gate it is supposed to enforce.
+- Every new CLI destination supported by YAML/JSON configuration must be added
+  to the canonical defaults registry in the same change and tested through the
+  config merge, including repeatable lists, nullable values, and booleans.
+- Keep source provenance immutable across resolution joins. For multi-allele
+  observations, store the complete reported allele set separately from the
+  resolved model-facing subset; filtering one must never rewrite the other.
+- A common funnel schema needs an adapter for every loader. Reading Hitlist-only
+  keys from merged-TSV statistics silently produces a pretty but incomplete
+  audit on the default path; test required stages and drop reasons per source.
+- Keep the curation seed and split/model seed visibly separate in rerun commands.
+  When validating split stability across model seeds, pin `data_seed` once and
+  vary only `seed`; otherwise reservoir membership changes and a curation drift
+  can be mistaken for a split effect. Assert the dataset-level supervision hash
+  before accepting any per-split comparison.
+- A package catalog may mix named alleles, accessions, partial grooves, and
+  invalid sequences even when single-allele lookup is reliable. Default
+  augmentation must select canonical named alleles with complete class-correct
+  groove inputs and report rejection counts; never sample the raw catalog
+  inventory directly.
+- Do not guard a canonical-resolver retry with `if fallback_path`. When
+  `mhcseqs` is primary and the CSV is optional, the resolver must be called for
+  missing training, augmentation, and diagnostic alleles even when the fallback
+  path is absent; the resolver itself decides whether a supplement is needed.
+
+## 2026-09-05
+
+- Derive resolved MHC lineage from the chain segment actually exported for the
+  allele, not from a locus-family shortcut. Class-II beta loci include DRB,
+  DQB, and DPB; exact resolver metadata is the authoritative alpha/beta signal,
+  and tests must cover beta-only `groove2` exports plus a partner-only negative
+  boundary.
+- Normalize every loader-side destructive filter into the common funnel at the
+  adapter boundary, including counters nested under diagnostic groupings. A
+  source statistic is not auditable merely because it survives somewhere in
+  loader JSON: assert the canonical `drop_reasons` category in both persisted
+  JSON and flattened CSV.
+- Define source-derived mapping observations from the union of their explicit
+  mapping signals: a mapping category identifies mapped and unmapped Hitlist
+  rows, while a positive candidate count independently proves mapping occurred.
+  Test both signals instead of assuming either field always implies the other.
+- A named data source must select one exact loader path. Do not let the
+  presence of an unrelated file silently turn a source-specific run into a
+  hybrid dataset; any hybrid contract must be explicit and separately named.
+- Load immutable curated records once when auditing several split seeds. Reuse
+  that dataset for deterministic resplitting instead of retaining or rebuilding
+  multiple full-corpus copies at the same time.
+- A frozen experiment script must add the repository root itself to `sys.path`,
+  never its parent. A sibling checkout with the same package name can otherwise
+  be imported as an empty namespace package and poison every later test in that
+  Python process.
+- A self-describing checkpoint must preserve every constructor option that
+  changes parameter structure, including latent topology. Held-out evaluation
+  must fail if the selected checkpoint cannot be reconstructed; silently
+  scoring the final in-memory epoch makes the artifact internally inconsistent.
+- A capped in-loop validation pass is an optimization control, not the final
+  evaluation contract. Rebuild an uncapped held-out loader for the selected
+  checkpoint, compute full loss terms, and emit every validation/test example;
+  never fall back to the last in-memory model or the capped iterator.
+- End-to-end verification must exercise each named data source while competing
+  files are present. Otherwise an opportunistic loader branch can look healthy
+  in isolation while silently creating a hybrid corpus in production.
+- A lineage test that expects an allele to be resolved must supply the exact
+  sequence input itself. Letting an installed process-wide MHC registry satisfy
+  the assertion makes local success depend on optional machine state and lets
+  clean CI exercise a different semantic case.
+- Install optional-package stubs before importing the script under test. A
+  monkeypatch applied after module execution cannot isolate a top-level import
+  and creates a local-only pass when that optional package happens to exist.

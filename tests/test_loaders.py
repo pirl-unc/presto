@@ -57,6 +57,101 @@ MHC_DR_GROOVE = prepare_mhc_input(
 MHC_WITH_X_GROOVE = prepare_mhc_input(mhc_a=MHC_WITH_X_SEQ, mhc_class="I")
 
 
+def test_quantitative_records_separate_reported_from_model_facing_alleles():
+    reported = ["HLA-A*02:01", "HLA-B*99:99"]
+    dataset = PrestoDataset(
+        binding_records=[
+            BindingRecord(
+                peptide="SIINFEKL",
+                mhc_allele="HLA-A*02:01",
+                alleles=reported,
+                value=50.0,
+                mhc_class="I",
+            )
+        ],
+        kinetics_records=[
+            KineticsRecord(
+                peptide="GILGFVFTL",
+                mhc_allele="HLA-A*02:01",
+                alleles=reported,
+                koff=0.1,
+                mhc_class="I",
+            )
+        ],
+        stability_records=[
+            StabilityRecord(
+                peptide="NLVPMVATV",
+                mhc_allele="HLA-A*02:01",
+                alleles=reported,
+                t_half=2.0,
+                mhc_class="I",
+            )
+        ],
+        mhc_sequences={"HLA-A*02:01": MHC_ALPHA_SEQ},
+    )
+
+    assert len(dataset) == 3
+    for sample in dataset:
+        assert sample.source_mhc_alleles == tuple(reported)
+        assert sample.resolved_mhc_alleles == ("HLA-A*02:01",)
+
+
+@pytest.mark.parametrize("allele", ["HLA-DQB1*06:02", "HLA-DPB1*02:01"])
+def test_class_ii_beta_exact_inputs_are_resolved_in_lineage(allele):
+    dataset = PrestoDataset(
+        binding_records=[
+            BindingRecord(
+                peptide="PKYVKQNTLKLAT",
+                mhc_allele=allele,
+                value=75.0,
+                mhc_class="II",
+            )
+        ],
+        mhc_exact_inputs={
+            allele: ExactMHCInput(
+                allele=allele,
+                sequence=MHC_DR_BETA_SEQ,
+                groove1="",
+                groove2=MHC_DR_GROOVE.groove_half_2,
+                mhc_class="II",
+                chain="beta",
+            )
+        },
+    )
+
+    sample = dataset[0]
+    assert sample.mhc_a == ""
+    assert sample.mhc_b == MHC_DR_GROOVE.groove_half_2
+    assert sample.source_mhc_alleles == (allele,)
+    assert sample.resolved_mhc_alleles == (allele,)
+
+    batch = PrestoCollator()([sample])
+    assert batch.source_lineage["resolved_mhc_alleles"] == [allele]
+
+
+def test_class_ii_dr_partner_does_not_resolve_missing_primary_beta_lineage():
+    allele = "HLA-DRB1*99:99"
+    dataset = PrestoDataset(
+        binding_records=[
+            BindingRecord(
+                peptide="PKYVKQNTLKLAT",
+                mhc_allele=allele,
+                value=75.0,
+                mhc_class="II",
+                species="human",
+            )
+        ],
+        mhc_sequences={"HLA-DRA*01:01": MHC_DR_ALPHA_SEQ},
+        strict_mhc_resolution=False,
+    )
+
+    sample = dataset[0]
+    assert sample.mhc_a == MHC_DR_GROOVE.groove_half_1
+    assert sample.mhc_b == ""
+    assert sample.source_mhc_alleles == (allele,)
+    assert sample.resolved_mhc_alleles == ()
+
+
 def test_load_iedb_stability_parses_multilevel_export(tmp_path):
     """IEDB-style two-row headers should parse stability rows."""
     path = tmp_path / "iedb_stability.csv"
@@ -789,6 +884,8 @@ def test_presto_dataset_allows_unresolved_mhc_allele_when_not_strict():
     )
     sample = dataset[0]
     assert sample.mhc_a == ""
+    assert sample.source_mhc_alleles == ("HLA-A*99:99",)
+    assert sample.resolved_mhc_alleles == ()
 
 
 def test_presto_dataset_keeps_class_i_no_mhc_beta_negative_empty_beta_chain():

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "agent": "codex/gpt-5",
+  "cwd": "/Users/iskander/code/presto",
+  "environment": {
+    "HITLIST_DATA_DIR": "/Users/iskander/.hitlist"
+  },
+  "git": {
+    "branch": "claude/restore-unmapped-masking",
+    "commit": "15003dacf310de3534325cb2db7fd6f3e2e89481",
+    "dirty": true,
+    "dirty_scope": "Only this new experiment bundle was uncommitted; all production and test files matched the recorded commit."
+  },
+  "class_ii_lineage": {
+    "alleles": [
+      "HLA-DQB1*06:02",
+      "HLA-DPB1*02:01"
+    ],
+    "mhc_sequence_source": "mhcseqs",
+    "index_csv": null
+  },
+  "hitlist_preflight": {
+    "data_source": "hitlist",
+    "allele": "HLA-A*02:01",
+    "source_mapping_policy": "mask_unresolved",
+    "include_flanks": true,
+    "data_seed": 42,
+    "split_seed": 42,
+    "split": "peptide_group_60_20_20",
+    "caps": {
+      "binding": 96,
+      "kinetics": 2,
+      "stability": 24,
+      "elution": 96
+    },
+    "excluded_targets": [
+      "kon",
+      "koff",
+      "tm"
+    ],
+    "synthetic_ratios": 0,
+    "mhc_augmentation_samples": 0,
+    "required_gates": [
+      "traceable_lineage",
+      "no_fake_null_sequences"
+    ],
+    "mode": "data_preflight_only"
+  },
+  "runtime": {
+    "started_at": "2026-09-06T08:38:12-04:00",
+    "finished_at": "2026-09-06T08:39:25-04:00",
+    "total_seconds": 73
+  }
+}

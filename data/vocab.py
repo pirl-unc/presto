@@ -86,12 +86,48 @@ ENCODABLE_RESIDUES = frozenset(
 )
 
 
+def is_missing_scalar(value: Any) -> bool:
+    """Return whether a non-string scalar is a tabular missing sentinel."""
+    if value is None:
+        return True
+    if isinstance(value, str):
+        return False
+    try:
+        unequal_to_self = value != value
+        if bool(unequal_to_self):
+            return True
+    except (TypeError, ValueError):
+        # pandas.NA has no truth value; its stable scalar rendering is handled
+        # without importing pandas into this core module.
+        pass
+    return str(value) in {"nan", "NaN", "<NA>", "NaT", "None"}
+
+
+def normalize_sequence_text(sequence: Any) -> str:
+    """Normalize one nullable sequence without inventing text from nulls.
+
+    ``str(value or "")`` is unsafe for tabular inputs: floating NaN is truthy
+    and becomes ``"NAN"``, which happens to contain only valid amino-acid
+    letters.  pandas' ``NA`` is worse because asking for its truth value raises.
+    Keep genuine string values (including a real lower-case ``"nan"`` peptide)
+    distinct from non-string null sentinels, and reject the latter before
+    upper-casing.
+    """
+    if is_missing_scalar(sequence):
+        return ""
+    if not isinstance(sequence, str):
+        rendered = str(sequence)
+    else:
+        rendered = sequence
+    return rendered.strip().upper()
+
+
 def is_encodable_sequence(sequence: str) -> bool:
     """True when every residue can be tokenized. Empty is not encodable."""
     return bool(sequence) and not (set(sequence) - ENCODABLE_RESIDUES)
 
 
-def drop_unencodable_sequence(sequence: str) -> str:
+def drop_unencodable_sequence(sequence: Any) -> str:
     """Blank an optional sequence that cannot be tokenized.
 
     Optional context (flanks, auxiliary sequences) degrades to "absent" rather
@@ -100,7 +136,7 @@ def drop_unencodable_sequence(sequence: str) -> str:
     and many rows legitimately carry no flank at all. This mirrors what the
     merged-TSV loader already does via `_normalize_optional_aa_sequence`.
     """
-    text = str(sequence or "").strip().upper()
+    text = normalize_sequence_text(sequence)
     if not text or (set(text) - ENCODABLE_RESIDUES):
         return ""
     return text

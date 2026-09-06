@@ -1,5 +1,14 @@
 # Flank context wired end to end, on corrected mapping data
 
+> **Validity erratum (2026-09-04):** Retain these files as the exact historical
+> record, but do not use this rerun to choose a mapping policy. It still
+> converted nullable unmapped flanks into the valid-looking sequence `NAN` in
+> the legacy arm and cleared them in the masked arm, so the purportedly paired
+> intervention included 6,212 accidental unmapped-row changes. Best-checkpoint
+> rescoring fixed the checkpoint defect but cannot fix this data-contract
+> confound. Sparse held-out targets, seed-dependent caps, and all-positive
+> elution are also documented by the 2026-09-04 audit.
+
 **Experiment id:** `2026-09-03_1746_claude_flank-context-fixes`
 **Run dates:** 2026-09-03
 **Agent/model:** Claude / Opus 5
