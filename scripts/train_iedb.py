@@ -4541,6 +4541,15 @@ def _record_source_loader_funnel(
     }
     if source_skips:
         data_funnel["drop_reasons"]["source_ingest"] = source_skips
+    mapping_ambiguity = source_loader.get("mapping_ambiguity")
+    if isinstance(mapping_ambiguity, Mapping):
+        unresolved_flank = mapping_ambiguity.get("rows_dropped_unresolved_flank")
+        if isinstance(unresolved_flank, Mapping):
+            data_funnel["drop_reasons"]["unresolved_flank"] = {
+                str(name): int(count)
+                for name, count in unresolved_flank.items()
+                if isinstance(count, int) and not isinstance(count, bool)
+            }
 
 
 def run(args: argparse.Namespace) -> None:

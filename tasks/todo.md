@@ -9817,3 +9817,40 @@ scope.
 - The branch remains a direct descendant of `origin/main`; PR #45 is the only
   open PR and is not stacked. Final publication and CI state are recorded in
   the PR after the experiment-record commit is pushed.
+
+---
+
+# PR #45 class-II lineage and Hitlist funnel closure (2026-09-05)
+
+## Scope and acceptance contract
+
+Close the two remaining review findings without adding schema aliases or data
+fallbacks. A class-II allele is resolved in lineage exactly when the chain
+segment exported for that allele is present in the model input, including DQ
+and DP beta chains whose segment occupies `mhc_b`. Hitlist flank-filter losses
+must appear as one explicit normalized `drop_reasons` category in both funnel
+JSON and flattened CSV, while the detailed loader statistics remain intact.
+
+## Plan
+
+- [x] Make primary-allele lineage use the exact resolved MHC chain metadata for
+      class II, with a nonempty-segment rule only when chain metadata is absent.
+      Preserve the existing DR behavior where a resolved default alpha partner
+      cannot make an unresolved beta allele look resolved.
+- [x] Add focused DQB1/DPB1 beta-chain tests that supply exact `groove2` inputs
+      and prove the allele appears in sample/batch resolved lineage. Retain an
+      unresolved-beta boundary test so partner-only inputs cannot pass.
+- [x] Promote Hitlist `mapping_ambiguity.rows_dropped_unresolved_flank` into a
+      canonical `drop_reasons.unresolved_flank` mapping, and test its JSON/CSV
+      representation with binding and MS counts.
+- [ ] Run focused loader/funnel tests, a real mhcseqs DQ/DP resolution smoke,
+      the changed-area suite, Ruff/format/diff checks, and the full repository
+      suite. Run and register a deterministic Hitlist preflight that proves the
+      real flank-filter counts are present in both artifacts.
+- [ ] Review the final diff for a single chain-selection path and a single
+      funnel adapter, update lessons/results/PR documentation, commit, push,
+      and wait for green GitHub CI.
+
+## Review
+
+Pending implementation and verification.

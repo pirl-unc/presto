@@ -1967,6 +1967,8 @@ class PrestoDataset(Dataset):
                 "resolved_mhc_alleles": resolved_alleles,
             }
 
+        primary_allele_chain_cache: Dict[str, str] = {}
+
         def _resolved_primary_alleles(
             allele: Optional[str],
             mhc_class: Optional[str],
@@ -1977,11 +1979,18 @@ class PrestoDataset(Dataset):
             allele = str(allele or "").strip()
             if not allele:
                 return ()
-            primary_sequence = (
-                mhc_b_sequence
-                if mhc_class == "II" and is_class_ii_dr_beta_allele(allele)
-                else mhc_a_sequence
-            )
+            if allele not in primary_allele_chain_cache:
+                exact_input = self._lookup_exact_mhc_input(allele)
+                primary_allele_chain_cache[allele] = (
+                    str(exact_input.chain or "").strip().lower() if exact_input else ""
+                )
+            exact_chain = primary_allele_chain_cache[allele]
+            if mhc_class != "II" or exact_chain == "alpha":
+                primary_sequence = mhc_a_sequence
+            elif exact_chain == "beta" or is_class_ii_dr_beta_allele(allele):
+                primary_sequence = mhc_b_sequence
+            else:
+                primary_sequence = mhc_a_sequence or mhc_b_sequence
             return (allele,) if primary_sequence else ()
 
         def _sample_id(prefix: str, record: Any) -> str:

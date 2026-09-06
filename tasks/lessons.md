@@ -290,6 +290,16 @@
 
 ## 2026-09-05
 
+- Derive resolved MHC lineage from the chain segment actually exported for the
+  allele, not from a locus-family shortcut. Class-II beta loci include DRB,
+  DQB, and DPB; exact resolver metadata is the authoritative alpha/beta signal,
+  and tests must cover beta-only `groove2` exports plus a partner-only negative
+  boundary.
+- Normalize every loader-side destructive filter into the common funnel at the
+  adapter boundary, including counters nested under diagnostic groupings. A
+  source statistic is not auditable merely because it survives somewhere in
+  loader JSON: assert the canonical `drop_reasons` category in both persisted
+  JSON and flattened CSV.
 - Define source-derived mapping observations from the union of their explicit
   mapping signals: a mapping category identifies mapped and unmapped Hitlist
   rows, while a positive candidate count independently proves mapping occurred.

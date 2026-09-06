@@ -1676,6 +1676,26 @@ def test_merged_loader_stats_populate_common_data_funnel(tmp_path):
     assert funnel["drop_reasons"]["source_ingest"]["skipped_invalid_peptide"] == 1
 
 
+def test_hitlist_flank_filter_stats_populate_common_data_funnel(tmp_path):
+    funnel = {"stages": {}, "drop_reasons": {}}
+    stats = {"mapping_ambiguity": {"rows_dropped_unresolved_flank": {"binding": 4, "ms": 235}}}
+
+    train_iedb_module._record_source_loader_funnel(funnel, stats)
+
+    assert funnel["drop_reasons"]["unresolved_flank"] == {"binding": 4, "ms": 235}
+
+    from presto.training.data_support import write_data_funnel_artifacts
+
+    paths = write_data_funnel_artifacts(tmp_path, funnel)
+    payload = json.loads(paths["json"].read_text())
+    assert payload["drop_reasons"]["unresolved_flank"] == {"binding": 4, "ms": 235}
+    rows = list(csv.DictReader(paths["csv"].open()))
+    assert {(row["kind"], row["stage"], row["name"], row["count"]) for row in rows} == {
+        ("drop_reasons", "unresolved_flank", "binding", "4"),
+        ("drop_reasons", "unresolved_flank", "ms", "235"),
+    }
+
+
 def test_augment_binding_records_with_synthetic_negatives_range_and_modes():
     base = [
         BindingRecord(
