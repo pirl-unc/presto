@@ -1,0 +1,243 @@
+{
+  "additions": {
+    "mhc_only": {
+      "samples": 0
+    },
+    "synthetic_binding": {},
+    "synthetic_cascade": {},
+    "synthetic_elution": {},
+    "synthetic_processing": {},
+    "uniprot": {
+      "samples": 0
+    }
+  },
+  "data_seed_base": 42,
+  "diagnostics": {
+    "invalid_mhc_sequences": {
+      "count": 0
+    },
+    "mhc_coverage_after_filter": {
+      "missing_fraction": 0.0,
+      "missing_rows": 0,
+      "resolved_fraction": 1.0,
+      "resolved_rows": 717,
+      "rows_considered": 717
+    },
+    "mhc_coverage_before_filter": {
+      "missing_fraction": 0.0,
+      "missing_rows": 0,
+      "resolved_fraction": 1.0,
+      "resolved_rows": 717,
+      "rows_considered": 717
+    },
+    "mhc_resolution_alleles": {
+      "missing": 0,
+      "resolved": 63,
+      "resolved_index": 0,
+      "resolved_mhcseqs": 63,
+      "total": 63
+    },
+    "mhc_sequence_quality": {
+      "noncanonical_count": 0,
+      "nucleotide_like_count": 0,
+      "short_count": 0,
+      "total_sequences": 63,
+      "x_residue_total": 0,
+      "x_sequence_count": 0
+    }
+  },
+  "drop_reasons": {
+    "caps": {
+      "binding": 16625,
+      "elution": 726670,
+      "kinetics": 0,
+      "stability": 2126
+    },
+    "mhc_filter": {},
+    "source_ingest": {
+      "skipped_missing_mhc_allele": 0,
+      "skipped_no_numeric_value": 9813,
+      "skipped_noncanonical_peptide": 50,
+      "skipped_unexpected_unit": 0,
+      "skipped_unroutable_response": 1092
+    },
+    "target_exclusion": {
+      "koff": 2
+    },
+    "unresolved_flank": {
+      "binding": 4,
+      "ms": 235
+    }
+  },
+  "mhc_resolution_contract": {
+    "augmentation_source": "mhcseqs",
+    "filter_unresolved_mhc": true,
+    "index_csv": "",
+    "resolver_order": [
+      "mhcseqs",
+      "index_csv"
+    ],
+    "strict_mhc_resolution": true
+  },
+  "schema_version": 1,
+  "sha256": "53117d9051e6dc22281a196145c3fe38e871d2c4a96d34735f149c7101b981e3",
+  "source_loader": {
+    "counts": {
+      "binding": 96,
+      "elution": 96,
+      "kinetics": 2,
+      "processing": 0,
+      "stability": 24,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "counts_before_cap": {
+      "binding": 16721,
+      "elution": 726766,
+      "kinetics": 2,
+      "stability": 2150
+    },
+    "flank_coverage": {
+      "binding": 0.6145833333333334,
+      "elution": 0.8958333333333334
+    },
+    "flank_resolution": {
+      "binding": 0.6145833333333334,
+      "elution": 0.8958333333333334
+    },
+    "kinetics_assay_methods": {
+      "purified MHC/direct/fluorescence": 2
+    },
+    "mapping_ambiguity": {
+      "binding": {
+        "category_counts": {
+          "cross_gene_unresolved": 1008,
+          "flanks_agree": 6512,
+          "single": 9796,
+          "unmapped": 11528,
+          "within_gene_canonical": 781,
+          "within_gene_unresolved": 159
+        },
+        "evidence_rows": 29784,
+        "max_proteins_for_one_row": 200,
+        "rows_with_disagreeing_flanks": 1948,
+        "rows_with_multiple_proteins": 8460,
+        "rows_with_resolved_flank_context": 17089,
+        "source_mapping_policy": "mask_unresolved"
+      },
+      "ms": {
+        "category_counts": {
+          "cross_gene_unresolved": 75388,
+          "flanks_agree": 428698,
+          "single": 122097,
+          "unmapped": 18082,
+          "within_gene_canonical": 80674,
+          "within_gene_unresolved": 2110
+        },
+        "evidence_rows": 727049,
+        "max_proteins_for_one_row": 2985,
+        "rows_with_disagreeing_flanks": 158172,
+        "rows_with_multiple_proteins": 586870,
+        "rows_with_resolved_flank_context": 631469,
+        "source_mapping_policy": "mask_unresolved"
+      },
+      "rows_dropped_unresolved_flank": {
+        "binding": 4,
+        "ms": 235
+      }
+    },
+    "requested_caps": {
+      "binding": 96,
+      "elution": 96,
+      "kinetics": 2,
+      "stability": 24
+    },
+    "rows_dropped_by_cap": {
+      "binding": 16625,
+      "elution": 726670,
+      "kinetics": 0,
+      "stability": 2126
+    },
+    "sampling_seed": 59,
+    "skipped_missing_mhc_allele": 0,
+    "skipped_no_numeric_value": 9813,
+    "skipped_noncanonical_peptide": 50,
+    "skipped_unexpected_unit": 0,
+    "skipped_unroutable_response": 1092,
+    "source": "hitlist",
+    "source_rows_after_mapping_collapse": {
+      "binding": 29780,
+      "ms": 726814
+    },
+    "source_rows_before_mapping_collapse": {
+      "binding": 65543,
+      "ms": 4039663
+    },
+    "stability_assay_methods": {
+      "cellular MHC/direct/fluorescence": 2,
+      "purified MHC/direct/fluorescence": 12,
+      "purified MHC/direct/radioactivity": 10
+    },
+    "unmapped_condition_categories": {}
+  },
+  "stages": {
+    "after_mhc_filter": {
+      "binding": 96,
+      "elution": 96,
+      "kinetics": 0,
+      "processing": 0,
+      "stability": 24,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "after_synthetic_augmentation": {
+      "binding": 96,
+      "elution": 96,
+      "kinetics": 0,
+      "processing": 0,
+      "stability": 24,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "after_target_exclusion": {
+      "binding": 96,
+      "elution": 96,
+      "kinetics": 0,
+      "processing": 0,
+      "stability": 24,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "before_mhc_filter": {
+      "binding": 96,
+      "elution": 96,
+      "kinetics": 0,
+      "processing": 0,
+      "stability": 24,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "final_dataset": {
+      "samples": 216
+    },
+    "final_samples_by_source": {
+      "iedb": 214,
+      "supplement": 2
+    },
+    "loaded_post_cap": {
+      "binding": 96,
+      "elution": 96,
+      "kinetics": 2,
+      "processing": 0,
+      "stability": 24,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "loaded_pre_cap": {
+      "binding": 16721,
+      "elution": 726766,
+      "kinetics": 2,
+      "stability": 2150
+    }
+  }
+}

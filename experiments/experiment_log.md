@@ -863,3 +863,58 @@ source-faithful, the selected checkpoint reloads exactly, and complete held-out
 artifacts exist. The narrow, one-class Hitlist elution slice remains unsuitable
 for claims of corpus completeness or model discrimination. Requested GPU:
 none; observed hardware: local CPU. Total wall time was 112 seconds.
+
+## 2026-09-06 - PR #45 class-II lineage and Hitlist funnel closure
+
+**Experiment id:** `2026-09-05_2213_codex_pr45-lineage-funnel-closure`
+
+**Agent/model:** Codex / GPT-5
+
+**Directory:**
+[`2026-09-05_2213_codex_pr45-lineage-funnel-closure`](2026-09-05_2213_codex_pr45-lineage-funnel-closure/)
+
+**Code commit:** `15003dacf310de3534325cb2db7fd6f3e2e89481`
+(the experiment bundle alone was uncommitted at launch; production and test
+files matched this commit)
+
+### Question and data contract
+
+Does the production data path preserve standalone DQ/DP beta alleles as
+resolved lineage when their real `mhcseqs` records export `groove2`, and does a
+real flank-enabled Hitlist load promote its unresolved-flank removals into the
+canonical funnel JSON and CSV?
+
+- MHC condition: default `mhcseqs`, no index CSV, real `HLA-DQB1*06:02` and
+  `HLA-DPB1*02:01` records.
+- Hitlist condition: `/Users/iskander/.hitlist`, HLA-A*02:01,
+  `mask_unresolved`, flanks enabled, reservoir caps of 96 binding, 2 kinetics,
+  24 stability, and 96 elution observations. Data/split seeds were 42/42;
+  `kon`, `koff`, and `tm` were excluded; all synthetic ratios and MHC
+  augmentation were zero.
+- The loader saw 16,721 binding, 2 kinetics, 2,150 stability, and 726,766
+  elution observations before caps. It resolved 63/63 alleles and 717/717 MHC
+  row inputs through `mhcseqs`, with zero index fallback.
+- The 216 samples split 130/43/43 by peptide. Lineage issues, duplicate sample
+  IDs, and fake-null sequences were all zero. The split support, dataset, and
+  supervision hashes were `2587f4cc...`, `e1c7012b...`, and `4a1d280e...`;
+  full hashes are in the experiment README and artifacts.
+
+### Conditions and results
+
+| Condition | Result |
+|---|---|
+| DQB1 beta lineage | 93-residue `groove2` populated `mhc_b`; sample and batch resolved lineage passed |
+| DPB1 beta lineage | 91-residue `groove2` populated `mhc_b`; sample and batch resolved lineage passed |
+| Hitlist funnel | 4 binding and 235 MS unresolved-flank drops present in both JSON and CSV |
+
+No pretraining, model initialization, optimization, loss terms, or assay-output
+mapping applied. This was a data preflight, so predictive validation/test
+metrics and prediction dumps were intentionally not produced. Requested GPU:
+none; observed hardware: local CPU. Runtime was approximately 73 seconds.
+
+### Winner and takeaway
+
+There is no model winner. Both reviewed audit contracts pass on the real
+external data paths: chain-aware lineage now represents DQ/DP beta model inputs
+correctly, while the common funnel exposes the Hitlist flank-filter loss without
+discarding the detailed source-loader diagnostics.

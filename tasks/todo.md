@@ -9843,14 +9843,33 @@ JSON and flattened CSV, while the detailed loader statistics remain intact.
 - [x] Promote Hitlist `mapping_ambiguity.rows_dropped_unresolved_flank` into a
       canonical `drop_reasons.unresolved_flank` mapping, and test its JSON/CSV
       representation with binding and MS counts.
-- [ ] Run focused loader/funnel tests, a real mhcseqs DQ/DP resolution smoke,
+- [x] Run focused loader/funnel tests, a real mhcseqs DQ/DP resolution smoke,
       the changed-area suite, Ruff/format/diff checks, and the full repository
       suite. Run and register a deterministic Hitlist preflight that proves the
       real flank-filter counts are present in both artifacts.
-- [ ] Review the final diff for a single chain-selection path and a single
+- [x] Review the final diff for a single chain-selection path and a single
       funnel adapter, update lessons/results/PR documentation, commit, push,
       and wait for green GitHub CI.
 
 ## Review
 
-Pending implementation and verification.
+- `PrestoDataset` now selects primary class-II lineage from the exact resolver's
+  alpha/beta chain metadata, caches that decision once per allele, and retains
+  the DR-specific beta rule as the strict boundary when exact metadata is not
+  available. Real `mhcseqs` inputs placed DQB1 and DPB1 exclusively in `mhc_b`
+  (93 and 91 residues) and both survived sample and batch lineage.
+- `_record_source_loader_funnel` now promotes the one destructive nested
+  Hitlist counter into `drop_reasons.unresolved_flank`. The registered real-data
+  preflight emitted binding=4 and ms=235 in both JSON and CSV while preserving
+  the full nested loader diagnostics.
+- Registered evidence lives in
+  `experiments/2026-09-05_2213_codex_pr45-lineage-funnel-closure/`. The exact
+  Hitlist path resolved 63/63 alleles and 717/717 row inputs through `mhcseqs`
+  with no index fallback; 216 samples split 130/43/43 with zero lineage,
+  duplicate-ID, or fake-null issues.
+- Focused regressions: 6 passed. Changed-area loader/training/support suite: 117
+  passed. Full repository suite: 1,777 passed, 1 expected platform skip, 5
+  upstream warnings in 1,965.65 seconds. Pinned Ruff check/format and
+  `git diff --check` passed before publication.
+- PR #45 publication and CI status are recorded after the final experiment
+  commit is pushed.
