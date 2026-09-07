@@ -32,6 +32,10 @@ import numpy as np
 # A peptide:MHC pair at or under 500 nM is the conventional binder cutoff.
 DEFAULT_BINDING_THRESHOLD_NM = 500.0
 
+# Persist this with held-out artifacts so old row-wise AP can be distinguished
+# from the corrected threshold-group estimator without guessing from values.
+AUPRC_ESTIMATOR = "average_precision_distinct_thresholds_v2"
+
 PREDICTION_LINEAGE_FIELDS = (
     "peptide",
     "source_mhc_alleles",
@@ -110,16 +114,24 @@ def auroc(y_true: np.ndarray, y_score: np.ndarray) -> Optional[float]:
 
 
 def auprc(y_true: np.ndarray, y_score: np.ndarray) -> Optional[float]:
-    """Average precision — the step-wise sum, not trapezoidal interpolation."""
+    """Non-interpolated average precision at distinct score thresholds.
+
+    All observations sharing a score enter together. Counting individual hits
+    within a tie makes AP depend on input order, even for a constant predictor.
+    As with AUROC, retain the reporting policy of omitting one-class results.
+    """
     positives = y_true > 0.5
     n_pos = int(positives.sum())
     if n_pos == 0 or n_pos == len(y_true):
         return None
     order = np.argsort(-y_score, kind="mergesort")
-    hits = positives[order].astype(float)
-    cumulative_hits = np.cumsum(hits)
-    precision = cumulative_hits / np.arange(1, len(hits) + 1)
-    return float((precision * hits).sum() / n_pos)
+    sorted_scores = y_score[order]
+    # Inclusive final position of each score group, including the last group.
+    ends = np.r_[np.flatnonzero(sorted_scores[1:] != sorted_scores[:-1]), len(order) - 1]
+    cumulative_hits = np.cumsum(positives[order])[ends]
+    precision = cumulative_hits / (ends + 1)
+    new_hits = np.diff(np.r_[0, cumulative_hits])
+    return float(np.sum(precision * new_hits) / n_pos)
 
 
 def binary_metrics(
@@ -609,6 +621,7 @@ def write_holdout_artifacts(
     payload: Dict[str, Any] = {"split": split, "tasks": summary}
     if extra_summary:
         payload.update(dict(extra_summary))
+    payload["metric_estimators"] = {"auprc": AUPRC_ESTIMATOR}
     rendered_summary = json.dumps(payload, indent=2)
     (out_path / f"{split}_summary.json").write_text(rendered_summary)
     if split == "val" or not (out_path / "summary.json").exists():
