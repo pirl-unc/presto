@@ -1,0 +1,221 @@
+{
+  "condition": "after",
+  "runtime_seconds": 70.03798287501559,
+  "routed_quantitative_rows_before_caps": {
+    "binding": 249292,
+    "stability": 12259,
+    "kinetics": 106
+  },
+  "non_descriptor_record_sha256": {
+    "binding": "e27ca8471a011105942ca306879ae366eab1a1592d1e902fa81730b0536e1624",
+    "kinetics": "a4f9821de4aeeb8aaca449292b981c4c543914ebebc25262c5cfc07824903ed6",
+    "stability": "426b60962d6c0ae58a5d7e4e6866f1a80ac3072317b3c42e3738b6d1e04a0ed8"
+  },
+  "missing_descriptor_counts": {
+    "binding": {
+      "assay_type": 0,
+      "apc_culture_condition": 249292,
+      "assay_method": 0,
+      "effector_culture_condition": 249292
+    },
+    "stability": {
+      "assay_type": 0,
+      "assay_method": 0
+    },
+    "kinetics": {
+      "assay_type": 0,
+      "assay_method": 0
+    }
+  },
+  "selector_counts_before_caps": {
+    "binding": {
+      "assay_type": {
+        "KD_PROXY_EC50": 56876,
+        "IC50": 73312,
+        "OTHER": 7489,
+        "KD_PROXY_IC50": 88857,
+        "EC50": 1717,
+        "KD": 21041
+      },
+      "assay_method": {
+        "PURIFIED_DIRECT_FLUORESCENCE": 60788,
+        "PURIFIED_COMPETITIVE_FLUORESCENCE": 36840,
+        "CELLULAR_DIRECT_FLUORESCENCE": 1698,
+        "PURIFIED_COMPETITIVE_RADIOACTIVITY": 140462,
+        "OTHER": 1599,
+        "CELLULAR_COMPETITIVE_FLUORESCENCE": 6681,
+        "CELLULAR_COMPETITIVE_RADIOACTIVITY": 920,
+        "CELLULAR_TCELL_INHIBITION": 206,
+        "LYSATE_DIRECT_RADIOACTIVITY": 14,
+        "PURIFIED_DIRECT_RADIOACTIVITY": 84
+      },
+      "assay_prep": {
+        "PURIFIED": 238258,
+        "CELLULAR": 9508,
+        "OTHER": 1239,
+        "LYSATE": 17,
+        "BINDING_ASSAY": 270
+      },
+      "assay_geometry": {
+        "DIRECT": 62587,
+        "COMPETITIVE": 184903,
+        "OTHER": 1596,
+        "T_CELL_INHIBITION": 206
+      },
+      "assay_readout": {
+        "FLUORESCENCE": 106010,
+        "RADIOACTIVITY": 141480,
+        "OTHER": 1802
+      }
+    },
+    "stability": {
+      "assay_type": {
+        "T_HALF": 11100,
+        "TM": 1159
+      },
+      "assay_method": {
+        "CELLULAR_DIRECT_FLUORESCENCE": 492,
+        "PURIFIED_DIRECT_RADIOACTIVITY": 6838,
+        "PURIFIED_DIRECT_FLUORESCENCE": 4906,
+        "LYSATE_DIRECT_RADIOACTIVITY": 12,
+        "OTHER": 11
+      },
+      "assay_prep": {
+        "CELLULAR": 503,
+        "PURIFIED": 11744,
+        "LYSATE": 12
+      },
+      "assay_geometry": {
+        "DIRECT": 12259
+      },
+      "assay_readout": {
+        "FLUORESCENCE": 5398,
+        "RADIOACTIVITY": 6861
+      }
+    },
+    "kinetics": {
+      "assay_type": {
+        "KOFF": 70,
+        "KON": 32,
+        "OTHER": 4
+      },
+      "assay_method": {
+        "LYSATE_DIRECT_RADIOACTIVITY": 12,
+        "PURIFIED_DIRECT_FLUORESCENCE": 79,
+        "CELLULAR_DIRECT_FLUORESCENCE": 5,
+        "OTHER": 10
+      },
+      "assay_prep": {
+        "LYSATE": 12,
+        "PURIFIED": 79,
+        "CELLULAR": 5,
+        "BINDING_ASSAY": 10
+      },
+      "assay_geometry": {
+        "DIRECT": 96,
+        "OTHER": 10
+      },
+      "assay_readout": {
+        "RADIOACTIVITY": 12,
+        "FLUORESCENCE": 84,
+        "OTHER": 10
+      }
+    }
+  },
+  "loader_stats": {
+    "rows_scanned": 3266972,
+    "rows_by_assay": {
+      "elution_ms": 2630813,
+      "binding_affinity": 249292,
+      "tcell_response": 207987,
+      "tcr_evidence": 166285,
+      "binding_t_half": 11308,
+      "binding_tm": 1179,
+      "binding_koff": 72,
+      "binding_kon": 36
+    },
+    "rows_by_source": {
+      "iedb": 3100687,
+      "vdjdb": 152583,
+      "mcpas": 13702
+    },
+    "rows_dropped_invalid_peptide": 156765,
+    "rows_sanitized_optional_sequences": 9877,
+    "skipped_invalid_peptide": 156765,
+    "skipped_unroutable_or_missing_label": 230,
+    "cap_sampling": "head",
+    "counts_before_cap": {
+      "binding": 249292,
+      "kinetics": 106,
+      "stability": 12259,
+      "processing": 0,
+      "elution": 2630813,
+      "tcell": 207987,
+      "tcr_evidence": 166285
+    },
+    "records_loaded": {
+      "binding": 1,
+      "kinetics": 1,
+      "stability": 1,
+      "processing": 0,
+      "elution": 1,
+      "tcell": 1,
+      "tcr_evidence": 1
+    },
+    "rows_dropped_by_cap": {
+      "binding": 249291,
+      "kinetics": 105,
+      "stability": 12258,
+      "processing": 0,
+      "elution": 2630812,
+      "tcell": 207986,
+      "tcr_evidence": 166284
+    }
+  },
+  "retained_records": {
+    "binding": 1,
+    "kinetics": 1,
+    "stability": 1
+  },
+  "example_record": {
+    "peptide": "EVMPVSMAK",
+    "mhc_allele": "HLA-A*03:01",
+    "value": 473.0,
+    "qualifier": 0,
+    "measurement_type": "dissociation constant KD (~EC50)",
+    "unit": "nM",
+    "flank_n": "",
+    "flank_c": "",
+    "flank_n_is_terminus": false,
+    "flank_c_is_terminus": false,
+    "assay_type": "dissociation constant KD (~EC50)",
+    "assay_method": "purified MHC/direct/fluorescence",
+    "effector_culture_condition": null,
+    "apc_culture_condition": null,
+    "mhc_sequence": null,
+    "mhc_class": "I",
+    "species": "human",
+    "antigen_species": "viruses",
+    "source": "iedb",
+    "alleles": [
+      "HLA-A*03:01"
+    ],
+    "source_mapping_category": "",
+    "source_mapping_n_candidates": 0,
+    "source_mapping_n_genes": 0,
+    "source_mapping_n_flank_pairs": 0,
+    "flank_context_resolved": false,
+    "evidence_row_id": "",
+    "assay_iri": "",
+    "reference_iri": "",
+    "pmid": "",
+    "mapping_gene_name": "",
+    "mapping_gene_id": "",
+    "mapping_protein_id": "",
+    "mapping_transcript_id": "",
+    "mapping_position": null,
+    "mapping_proteome": "",
+    "mapping_proteome_source": "",
+    "mapping_is_canonical_transcript": null
+  }
+}

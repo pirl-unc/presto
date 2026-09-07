@@ -10101,9 +10101,24 @@ Verification:
   the PR and verify required CI. Keep current full-corpus/split support and
   predictive quality claims in #48/#53.
 
-- [ ] Implement and verify metadata preservation and gradient routing.
-- [ ] Complete registered real-source before/after audit.
+- [x] Implement and verify metadata preservation and gradient routing.
+- [x] Complete registered real-source before/after audit.
 - [ ] Publish PR, verify its base/head/body and CI.
-- [ ] Document the shared #48/#50/#51 supervision design and #53 dependencies.
+- [x] Document the shared #48/#50/#51 supervision design and #53 dependencies.
 
 Review results: pending.
+
+The metadata repair passes 184 focused tests (including 12 new adapter/routing
+tests), pinned full lint/format and strict docs build. Seven adapter assertions
+failed on the base before the fix. Registered source audit:
+`experiments/2026-09-07_1908_codex_binding-metadata-preservation/README.md`.
+Actual before/after loader passes preserve all non-descriptor fingerprints,
+row counts and funnel stats. Method metadata is recovered for 249,292 binding,
+12,259 stability and 106 kinetic records; all had been lost before. The real
+473 nM EVMPVSMAK/A*03:01 example reaches its recorded output selectors.
+Counts are before curation/splitting and make no adequacy or quality claim.
+
+Shared next-group design is in `tasks/specs/2026-09-07_shared-supervision.md`:
+effective observation/target/prediction resolution should serve loss, support
+and export, with common T-cell bag-panel aggregation and correct CE/vector
+identity. #48/#50/#51 and fresh-training #53 remain open.

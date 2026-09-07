@@ -918,3 +918,47 @@ There is no model winner. Both reviewed audit contracts pass on the real
 external data paths: chain-aware lineage now represents DQ/DP beta model inputs
 correctly, while the common funnel exposes the Hitlist flank-filter loss without
 discarding the detailed source-loader diagnostics.
+
+## 2026-09-07_1908_codex_binding-metadata-preservation
+
+**Date:** 2026-09-07. **Agent/model:** Codex / GPT-6.
+**Directory:** [binding metadata preservation](2026-09-07_1908_codex_binding-metadata-preservation/).
+**Code:** `ddc06448fc906ea4fd51dc12c670accc137a23b9`; only experiment/plan/design
+files dirty. **Reproduce:** directory `reproduce/launch.sh`, `launch.json`,
+actual before/after loader sources and frozen analyzer. OMP/MKL threads 1;
+local CPU, no requested or observed GPU. Runtime 159.657 seconds overall.
+
+**Dataset/curation:** identical full `data/merged_deduped.tsv`, 1,028,889,889
+bytes, SHA-256 `46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`.
+Canonical merged adapters instrumented before caps; head cap one retained
+record per modality bounds memory. The scan measures all routed quantitative
+source observations before MHC filtering or splitting. No source/synthetic
+mixture, units, values, qualifiers, curation or sample order changes.
+
+| Condition | Binding rows / missing method | Stability rows / missing method | Kinetic rows / missing method |
+|---|---:|---:|---:|
+| Before metadata preservation | 249,292 / 249,292 | 12,259 / 12,259 | 106 / 106 |
+| After metadata preservation | 249,292 / 0 | 12,259 / 0 | 106 / 0 |
+
+All ordered non-descriptor record fingerprints and loader statistics match.
+Binding type-column counts are unchanged. Preparation/readout columns now
+receive their observed selectors: e.g. 238,258 PURIFIED preparations and
+106,010 FLUORESCENCE readouts. Observed OTHER values remain distinct from
+unknown metadata. Culture fields are absent throughout this source; fixtures
+verify preservation without claiming real culture support. A real 473 nM
+EVMPVSMAK/A*03:01 observation traces through actual MHC resolution and dataset
+collation to the intended fixed columns, with resolved sequence evidence saved.
+
+**Training/evaluation contract:** no pretraining, optimization, augmentation,
+new splits or predictive evaluation. Validation/test metrics and prediction
+dumps are intentionally absent for this source/selector audit. Existing
+binding labels supervise affinity and selected descriptor columns with their
+existing censor-aware transform. Kinetic/stability descriptors are preserved
+without adding binding-panel losses. No loss terms/weights are changed.
+
+**Preferred condition/takeaway:** preserve observed metadata. This repairs
+ingestion for all routed quantitative methods in the available source while
+preserving numeric/source conservation. It does not establish post-curation
+per-column/split adequacy or model quality (#48/#53). Full tables, missingness,
+fingerprints and real-example trace are in the experiment results. Runtime
+differences are not interpreted as performance evidence.
