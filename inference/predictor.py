@@ -455,6 +455,8 @@ class Predictor:
         flank_n: str = None,
         flank_c: str = None,
         require_species_for_class_i_b2m: bool = True,
+        flank_n_is_terminus: bool = False,
+        flank_c_is_terminus: bool = False,
     ) -> PresentationResult:
         """Predict presentation probability for a peptide-MHC pair.
 
@@ -470,6 +472,8 @@ class Predictor:
             species_of_origin: Optional override for peptide source organism latent
             flank_n: N-terminal processing flank
             flank_c: C-terminal processing flank
+            flank_n_is_terminus: Observed protein N terminus, not an unknown flank
+            flank_c_is_terminus: Observed protein C terminus, not an unknown flank
             require_species_for_class_i_b2m: Deprecated compatibility flag. Ignored in
                 groove-half mode because class-I beta2m is not part of the model input.
 
@@ -515,6 +519,8 @@ class Predictor:
             species_of_origin=species_of_origin,
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
+            flank_n_is_terminus=torch.tensor([flank_n_is_terminus], device=self.device),
+            flank_c_is_terminus=torch.tensor([flank_c_is_terminus], device=self.device),
         )
 
         # Extract results
@@ -697,6 +703,14 @@ class Predictor:
                 species_of_origin=species_of_origin,
                 flank_n_tok=flank_n_tok,
                 flank_c_tok=flank_c_tok,
+                flank_n_is_terminus=torch.tensor(
+                    [tile["start"] == len(tile["flank_n"]) for tile in batch_tiles],
+                    device=self.device,
+                ),
+                flank_c_is_terminus=torch.tensor(
+                    [tile["end"] + len(tile["flank_c"]) == seq_len for tile in batch_tiles],
+                    device=self.device,
+                ),
             )
 
             if reported_mhc_class is None:

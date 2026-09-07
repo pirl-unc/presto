@@ -1199,25 +1199,22 @@ class TCellAssayHead(nn.Module):
         binding_class1_logit: torch.Tensor,
         binding_class2_logit: torch.Tensor,
         class_probs: torch.Tensor,
-        assay_method_idx: Optional[torch.Tensor] = None,
-        assay_readout_idx: Optional[torch.Tensor] = None,
-        apc_type_idx: Optional[torch.Tensor] = None,
-        culture_context_idx: Optional[torch.Tensor] = None,
-        stim_context_idx: Optional[torch.Tensor] = None,
-        peptide_format_idx: Optional[torch.Tensor] = None,
-        culture_duration_hours: Optional[torch.Tensor] = None,
     ) -> Dict[str, torch.Tensor]:
-        """Predict panel logits across categorical assay axes."""
+        """Sweep each output axis from the same unknown-reference baseline.
+
+        A column denotes a response outcome, not a probability of that assay
+        category. Per-example metadata must not redefine a fixed output track.
+        """
         batch_size = immunogenicity_cd8_vec.shape[0]
         device = immunogenicity_cd8_vec.device
         parts = self._context_parts(
-            assay_method_idx=assay_method_idx,
-            assay_readout_idx=assay_readout_idx,
-            apc_type_idx=apc_type_idx,
-            culture_context_idx=culture_context_idx,
-            stim_context_idx=stim_context_idx,
-            peptide_format_idx=peptide_format_idx,
-            culture_duration_hours=culture_duration_hours,
+            assay_method_idx=None,
+            assay_readout_idx=None,
+            apc_type_idx=None,
+            culture_context_idx=None,
+            stim_context_idx=None,
+            peptide_format_idx=None,
+            culture_duration_hours=None,
             batch_size=batch_size,
             device=device,
         )
@@ -1260,16 +1257,12 @@ class TCellAssayHead(nn.Module):
     ) -> torch.Tensor:
         """Predict the context-free T-cell assay outcome.
 
-        Takes no assay-context arguments, by design. All seven that used to be
-        here -- assay method, readout, APC type, culture context, stimulation
-        context, peptide format, culture duration -- are named in
-        docs/assay_modeling_contract.md as forbidden per-example inputs. While
-        they were accepted, a T-cell prediction could not be obtained without
-        first declaring an assay setup, and the head's output moved when one
-        was supplied.
+        Takes no observed assay-context arguments. Biological APC/repertoire
+        context belongs in scoped upstream components, not in a descriptor
+        vector that changes the meaning of a fixed assay track.
 
-        What this returns is the marginal: the response with no context
-        declared. `predict_panel` supplies the per-condition structure as
+        This is an unknown-reference response, not a mathematical marginal
+        over assay setups. `predict_panel` supplies per-condition structure as
         output tracks, sweeping each axis from this same baseline, and the
         observed context routes which track the loss reads.
 

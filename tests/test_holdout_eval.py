@@ -173,7 +173,7 @@ class TestCollectionAndArtifacts:
             device="cpu",
             specs=[spec],
             forward_fn=lambda _m, _b: outputs,
-            resolve_pred_fn=lambda out, paths: out[paths[0][0]],
+            resolve_pred_fn=lambda out, batch, spec: out[spec.pred_paths[0][0]],
             get_target_fn=lambda b, s: b.targets[s.name],
             get_mask_fn=lambda b, s: b.masks[s.name],
         )
@@ -201,7 +201,7 @@ class TestCollectionAndArtifacts:
             device="cpu",
             specs=[spec],
             forward_fn=lambda _m, _b: outputs,
-            resolve_pred_fn=lambda out, paths: out[paths[0][0]],
+            resolve_pred_fn=lambda out, batch, spec: out[spec.pred_paths[0][0]],
             get_target_fn=lambda b, s: b.targets[s.name],
             get_mask_fn=lambda b, s: b.masks[s.name],
         )
@@ -373,7 +373,7 @@ def test_collect_applies_the_same_target_transform_as_the_loss():
         device="cpu",
         specs=[_Spec()],
         forward_fn=lambda _m, _b: {"kd": predictions},
-        resolve_pred_fn=lambda out, paths: out[paths[0][0]],
+        resolve_pred_fn=lambda out, batch, spec: out[spec.pred_paths[0][0]],
         get_target_fn=lambda _b, _s: targets,
         get_mask_fn=lambda _b, _s: torch.ones(3),
     )

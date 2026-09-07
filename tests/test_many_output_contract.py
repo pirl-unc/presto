@@ -1,14 +1,7 @@
-"""The model is many-output: conditions are predicted, never supplied.
+"""Sequence-only encoding, biological context downstream, fixed assay outputs.
 
-The DNA-model analogy is exact. Enformer-style trunks read sequence alone and
-emit thousands of tracks, one per (cell type, assay); the track identity is an
-output index, never an input feature. Presto reads peptide and MHC and emits
-one output per assay configuration and per condition.
-
-`docs/assay_modeling_contract.md` states the rule and names the forbidden
-inputs. These tests assert it as an observable property -- passing a forbidden
-input must not move the prediction -- rather than by reading the source, since
-the source has been wrong twice.
+Assay apparatus selects supervision. Biological APC state may change downstream
+predictions, but must never change residue representations or intrinsic binding.
 """
 
 import pytest
@@ -91,6 +84,10 @@ class TestTCellIsContextInvariant:
         assert torch.allclose(base["tcell_logit"], with_ctx["tcell_logit"]), (
             "the T-cell prediction moved when an assay setup was supplied"
         )
+        for axis in base["tcell_panel_logits"]:
+            torch.testing.assert_close(
+                base["tcell_panel_logits"][axis], with_ctx["tcell_panel_logits"][axis]
+            )
 
     @pytest.mark.parametrize("key", sorted(FORBIDDEN_TCELL_CONTEXT))
     def test_head_signature_rejects_each_forbidden_key(self, key):
@@ -99,8 +96,8 @@ class TestTCellIsContextInvariant:
 
         from presto.models.heads import TCellAssayHead
 
-        parameters = inspect.signature(TCellAssayHead.forward).parameters
-        assert key not in parameters, f"{key} is back on the T-cell head's forward signature"
+        for method in (TCellAssayHead.forward, TCellAssayHead.predict_panel):
+            assert key not in inspect.signature(method).parameters
 
     def test_training_loop_does_not_supply_tcell_context(self):
         import inspect
@@ -114,8 +111,14 @@ class TestTCellIsContextInvariant:
         # `region_between` requires both markers to be unique, so a second
         # forward call fails here instead of being silently skipped.
         source = inspect.getsource(train_synthetic.compute_loss)
-        forward = region_between(source, "outputs = model(", "provenance=", where="compute_loss")
+        forward = region_between(
+            source, "outputs = model(", "return_binding_attention=", where="compute_loss"
+        )
         assert "tcell_context=" not in forward
+        from presto.data.collate import PrestoCollator, PrestoSample
+
+        batch = PrestoCollator()([PrestoSample(peptide="SIINFEKL")])
+        assert "tcell_context" not in batch.model_inputs()
 
 
 class TestPanelsCoverEveryConfiguration:
@@ -143,14 +146,11 @@ class TestPanelsCoverEveryConfiguration:
         assert "assay_method" in panel
 
 
-class TestCellularStateIsAnOutputAxis:
-    """APM state and stimulus are predicted across, not conditioned on.
+class TestCellularStateInitializationAndPanels:
+    """Zero-init and counterfactual tracks coexist with biological conditioning.
 
-    `docs/assay_modeling_contract.md` names "stimulation context" as a
-    forbidden input. The gap-2 fix had routed it inward on purpose -- into the
-    processing latent -- because that was the only way found at the time to
-    give the in-vivo excision profiles gradient. Sweeping the profiles instead
-    keeps the gradient and drops the input.
+    Initialization invariance is not a restriction on downstream context.
+    TestBiologicalStateIsAnInput checks the effect with nonzero parameters.
     """
 
     def _provenance_pair(self, batch):
@@ -172,7 +172,7 @@ class TestCellularStateIsAnOutputAxis:
         "output_key",
         ["binding_logit", "presentation_logit", "elution_logit", "excision_logit"],
     )
-    def test_prediction_does_not_move_with_cellular_state(self, output_key):
+    def test_zero_initialized_state_has_no_effect_yet(self, output_key):
         import sys
 
         sys.path.insert(0, "tests")
@@ -193,8 +193,7 @@ class TestCellularStateIsAnOutputAxis:
             base = model(**kwargs, provenance=base_prov)
             altered = model(**kwargs, provenance=altered_prov)
         assert torch.allclose(base[output_key], altered[output_key]), (
-            f"{output_key} moved when the cellular condition changed; the "
-            "model is conditioned on cell state rather than predicting across it"
+            f"{output_key} moved despite zero-initialized condition parameters"
         )
 
     def test_the_panel_distinguishes_conditions_once_trained(self):

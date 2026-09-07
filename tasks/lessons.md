@@ -1,5 +1,30 @@
 # Lessons
 
+## 2026-09-07
+
+- Freeze source and test files during a full regression run. Tests using
+  inspect.getsource resolve live file lines against already-imported code
+  offsets; edits or formatting mid-run can make them inspect a different
+  function. Finish edits first, then run the final suite on an immutable commit.
+
+## 2026-09-06
+
+- Sequence-only encoding is not context-free biological prediction. Keep
+  metadata out of residue encodings while allowing explicitly scoped cellular
+  and repertoire context into downstream biological components.
+- Never conflate APC MHC with the organism/selection-system MHC conditioning
+  the T-cell repertoire. Likewise keep APC species, MHC molecular species,
+  individual TCR species, repertoire-system species and antigen species
+  independent; missing fields do not authorize copying another role's value.
+- The user's repertoire-context requirement supersedes the previous proposed
+  peptide-plus-foreignness-only recognition restriction. Historical lessons
+  using that restriction as an example must not override the clarified design.
+- APC processing knockouts/interference and APC cytokines are permitted
+  biological inputs. Scope them by affected component/cell, retain concurrent
+  interventions, and distinguish unknown status from an explicit control.
+  Do not classify a field as forbidden solely because its source column says
+  stimulation, culture, or assay context.
+
 ## 2026-09-03
 
 - Never catch a broad runtime exception in a test and translate it to

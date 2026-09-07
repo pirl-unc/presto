@@ -9873,3 +9873,203 @@ JSON and flattened CSV, while the detailed loader statistics remain intact.
   `git diff --check` passed before publication.
 - PR #45 publication and CI status are recorded after the final experiment
   commit is pushed.
+
+---
+
+# Sequence-only encoding with role-specific biological context (2026-09-06)
+
+## Status and scope
+
+User-directed target-design clarification after the docs/code consistency
+audit. This section records the intended contract, not an implemented feature
+or a completed experiment. This turn changes planning/correction notes only;
+production-code changes and reconciliation of the canonical docs remain pending.
+
+## Specification
+
+### Encoding boundary
+
+The sequence encoder consumes biological sequences and their structural
+positions/masks only. Cellular state, species annotations, assay descriptors,
+and repertoire context must not be injected into residue embeddings or the
+sequence encoder. Downstream biological components may consume explicitly
+scoped biological context alongside sequence-derived representations.
+
+MHC molecules in either presenting or repertoire context are resolved through
+the same mhcseqs preparation path and sequence-encoded; an allele name is not a
+free categorical substitute for molecular sequence. Their downstream roles
+remain distinct even when their sequences happen to be identical.
+
+### Independent biological roles
+
+The following are semantic fields; final public identifier spelling remains
+to be consolidated with the shared sample/batch/prediction schema.
+
+| Context | Meaning and downstream use |
+|---|---|
+| APC MHC molecules | Molecules expressed by the presenting APC; retain the molecule/set supplying the presentation and pMHC-binding context. |
+| Repertoire-system MHC molecules | Reported organism/selection-system MHC context that conditions repertoire recognition; not implicitly the APC allele set. |
+| APC species | Species of the presenting cell; scoped to APC biology. |
+| MHC species | Molecular origin of each MHC molecule, including an introduced molecule; keep separate from the cell carrying it. |
+| TCR species | Molecular origin of an individual receptor when reported; do not substitute it for the repertoire-system species. |
+| Repertoire-system species | Species of the system whose T-cell repertoire is being modeled; scoped to repertoire recognition/response. |
+| Antigen species | Source-organism context for the antigen; distinct from all cell, receptor and MHC species roles. |
+| APC processing interventions | Record affected component and intervention kind (for example knockout, knockdown or inhibition), permitting simultaneous interventions. Route to the relevant processing/loading/assembly component. |
+| APC cytokine state/exposure | Record cytokines affecting the APC, permitting simultaneous exposures and retaining reported dose/time when available. Route to APC biological components. |
+
+Do not populate one species role from another or copy APC MHC into repertoire
+MHC because a field is missing. Molecule-origin inference from its own sequence
+is separate from observed metadata and must retain its derivation. Unknown,
+explicitly untreated/unperturbed, and experimentally perturbed states remain
+distinct. Antigen species is contextual information, not by itself a definitive
+self/nonself label.
+
+### Downstream permissions
+
+- APC state may condition processing, loading, assembly and presentation through
+  their designated dependencies. It must not alter encoded peptide/MHC content
+  or become an unrestricted feature stream for intrinsic binding.
+- Repertoire recognition may depend on repertoire-system MHC and species. This
+  supersedes the blanket peptide-plus-foreignness-only recognition restriction
+  in the previous proposed design; sequence-only encoding does not require
+  context-free recognition.
+- TCR-specific context is distinct from repertoire context and remains optional.
+  Recording a receptor-origin field does not establish that a receptor-specific
+  sequence matcher is implemented or trained.
+- Measurement apparatus (assay method/readout, instrument, platform) remains
+  output-track/loss-routing information, not biological predictor input.
+  Classify a cytokine field by which cell/state it describes, not by a generic
+  column name such as stimulation or assay context.
+- Counterfactual biological-state outputs may coexist with prediction conditioned
+  on a known state; they do not replace that state with an unspecified baseline.
+- One shared preparation/forwarding path must preserve these roles in training,
+  inference, MIL, tiling and held-out evaluation.
+
+## Plan and acceptance checks
+
+- [x] Record the user-directed encoding/context distinction and independent roles.
+- [x] Record the correction to the previous repertoire-recognition restriction.
+- [ ] Reconcile the canonical docs around this target and one role-aware schema.
+- [ ] Implement context routing and a single shared model-input preparation path.
+- [ ] Verify fixed sequences yield identical encoder states under changes to any
+      biological metadata; verify downstream effects in the permitted branches
+      with nonzero parameters so zero initialization cannot hide missing wiring.
+- [ ] Test discordant APC/MHC/TCR/repertoire species and distinct presenting versus
+      repertoire MHC sets, including missing-role cases with no inferred copying.
+- [ ] Test multiple interventions/cytokines and unknown versus explicit control
+      states; preserve original observations and per-field provenance.
+- [ ] Verify training/inference/MIL parity and assay-metadata invariance of every
+      fixed output track, then evaluate only the context dimensions with actual
+      recorded supervision and held-out support.
+
+## Review of this clarification
+
+Only tasks/todo.md and tasks/lessons.md were updated. No model behavior, data,
+training run, checkpoint or published PR was changed. Implementation and
+scientific validation are explicitly not claimed complete.
+
+---
+
+# Publish unified model I/O issue and begin drift-repair PR (2026-09-07)
+
+## Specification and scope
+
+Publish the user's agreed sequence-only-encoding / role-specific-biological-
+context design as a GitHub issue with complete input/output inventories,
+commit-pinned current-behavior evidence, docs-versus-docs and docs-versus-code
+gaps, and checkable acceptance criteria. Preserve the existing design notes.
+Verify the open PR #45 has passing checks and is mergeable, merge its inspected
+head, then branch from updated main for a separate model-I/O repair PR.
+
+The new PR must distinguish the normative target from present capabilities,
+repair directly verified information-flow/output/forwarding defects, and
+include behavioral regression tests. Do not imply that documenting or exposing
+a context field proves it is supervised or scientifically validated. Keep
+broader corpus integration and unimplemented scientific extensions visible in
+the issue rather than claiming a complete biological model.
+
+## Plan
+
+- [x] Inspect current branch, existing issues, input signature and actual output
+      schema; identify related source-mapping issues and PR #45.
+- [x] Publish and verify the complete design/drift issue (#46).
+- [x] Verify PR #45 checks and merge its exact head; update main and create a
+      new branch without discarding uncommitted planning notes.
+- [x] Freeze the implementation scope and acceptance tests before model edits.
+- [x] Align canonical docs and fix the selected model input/output defects
+      through shared code paths, with targeted behavioral tests.
+- [x] Run focused and full regression checks; create a new PR linked to the
+      issue, report its exact scope and remaining tracked work, and verify CI.
+
+## Review
+
+Issue: https://github.com/pirl-unc/presto/issues/46. PR #45 merged at
+2560ef51d0d69735e73bb72286f7acbe22b4488f after all checks passed on inspected
+head 695d96517bd1f46abe648f1932c70a71feb6a6f2. New branch:
+codex/model-io-contract, based on origin/main. Existing notes preserved.
+
+### Initial repair PR: bounded implementation contract
+
+- Remove species/completeness conditioning from the sequence encoder. Biological
+  conditions remain downstream; test encoder and binding isolation with altered
+  host metadata/flank presence. Do not add a checkpoint fallback for removed
+  parameters; document the architecture change.
+- Read CD4 recognition from its own latent, preserving separate CD8/CD4 paths.
+- Make every fixed T-cell panel independent of supplied assay descriptors and
+  supervise selected columns against response outcomes, not method/context IDs.
+  Preserve metadata only for loss routing. Check actual selected-track gradients.
+- Honor binding-panel censoring via the same quantitative loss semantics as its
+  source measurement; do not claim complete family-specific assay restructuring.
+- Carry terminus flags through ordinary training, MIL, held-out scoring, model
+  convenience forwards and predictor paths; share batch-to-model input assembly
+  where those paths consume the same schema.
+- Make model_io_contract.md the executable-interface reference with a clear
+  target/current split; reconcile top-level canonical docs and stale status
+  claims. Explicitly document independent future context roles, actual groove
+  representation, raw output units, assay versus biological versus diagnostic
+  outputs, and pending source/context/validation support.
+- Acceptance: targeted behavioral tests for all changes, checkpoint round-trip
+  for new models, relevant existing tests and full regression suite/CI. This PR
+  references #46 without closing its larger corpus/repertoire-schema program.
+
+Implemented the bounded first repair, with shared row input assembly and shared
+selected-response extraction. Collation/MIL/capping/contrastive construction,
+convenience forwards, presentation inference and CLI now carry boundary flags;
+tiling handles short nonempty boundary-reaching flanks too. Consolidated the
+duplicated docs into one complete I/O contract plus descriptive guides, with
+explicit implemented/target distinctions rather than competing pseudocode.
+
+Verification so far: focused routing, prediction, checkpoint and unit training
+tests pass; strict MkDocs build and pinned Ruff lint pass. Updated stale
+source-probe tests to inspect the shared forward contract. Added executable
+documentation checks for every forward argument and ordered panel vocabulary.
+Full regression/CI closure is in progress. No scientific experiment was launched,
+and no full-corpus or biological-validation claim is made. #46 remains open.
+
+Initial full run: 1782 passed, 1 skipped, 6 failed. Four failures read a different
+function through inspect.getsource because source files were edited after import;
+one used an already-updated absent-output exemption, and one still expected the
+old stimulus table layout. The stimulus check now reads the canonical output row
+and compares ordered values. Re-plan for closure: freeze all code/tests before
+restarting the full suite; do not edit/format while it runs. Focused reruns must
+also confirm the original source-probe assertions pass without weakening them.
+
+### Final verification and handoff
+
+- PR #47: https://github.com/pirl-unc/presto/pull/47; based directly on merged
+  main, not stacked on an unmerged PR. Marked ready for review.
+- Frozen code revision: 0c9cba12405fee3ffe4bf6e2d2594a01076f3212.
+- Full local rerun: `OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q`:
+  **1791 passed, 1 skipped** (2089.67 seconds). No failures.
+- Full PR CI: **1789 passed, 3 skipped** (877.06 seconds); push and PR lint/test
+  plus docs jobs all succeeded on the same code revision.
+- Targeted closure: 132 source/routing/vocabulary/panel checks passed; final
+  interface/vocabulary/routing check run passed 21 tests.
+- Ruff 0.16.0 lint and repository format check pass; strict MkDocs build passes;
+  `git diff --check` passes. Checkpoint round trips and end-to-end unit training
+  are included in the passing suites.
+- This final log update changes verification notes only. Any CI rerun triggered
+  by it is separate from the successfully verified code revision above.
+- #46 remains open for independent context roles, concurrent interventions,
+  repertoire conditioning, remaining source/serving/assay gaps and scientific
+  validation. No full-corpus experiment or model-quality claim was made.

@@ -107,7 +107,7 @@ def test_compute_loss_applies_tcell_upstream_prior():
             "ms_logit": torch.zeros((1, 1), dtype=torch.float32),
             "immunogenicity_logit": torch.tensor([0.0], dtype=torch.float32),
             "tcell_logit": torch.tensor([[3.0]], dtype=torch.float32),
-            "tcell_context_logits": {
+            "tcell_panel_logits": {
                 "assay_method": torch.zeros((1, len(TCELL_ASSAY_METHODS)), dtype=torch.float32),
                 "assay_readout": torch.zeros((1, len(TCELL_ASSAY_READOUTS)), dtype=torch.float32),
                 "apc_type": torch.zeros((1, len(TCELL_APC_TYPES)), dtype=torch.float32),
@@ -248,7 +248,7 @@ def test_compute_loss_applies_tcell_context_prior():
             "ms_logit": torch.zeros((2, 1), dtype=torch.float32),
             "immunogenicity_logit": torch.zeros(2, dtype=torch.float32),
             "tcell_logit": torch.tensor([[-1.0], [2.0]], dtype=torch.float32),
-            "tcell_context_logits": {
+            "tcell_panel_logits": {
                 "assay_method": torch.zeros((2, len(TCELL_ASSAY_METHODS)), dtype=torch.float32),
                 "assay_readout": torch.zeros((2, len(TCELL_ASSAY_READOUTS)), dtype=torch.float32),
                 "apc_type": torch.zeros((2, len(TCELL_APC_TYPES)), dtype=torch.float32),

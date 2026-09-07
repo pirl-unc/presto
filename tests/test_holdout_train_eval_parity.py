@@ -89,10 +89,13 @@ class TestHoldoutForwardPassesProvenance:
             "accumulators = collect_holdout_predictions",
             where="train_iedb",
         )
-        assert "provenance=provenance" in forward_src, (
-            "the held-out forward dropped provenance again; validation would "
-            "score a different function than training optimizes"
-        )
+        assert "model_ref(**batch_ref.model_inputs())" in forward_src
+        from presto.data.collate import PrestoCollator, PrestoSample
+
+        batch = PrestoCollator()([PrestoSample(peptide="SIINFEKL", flank_n_is_terminus=True)])
+        inputs = batch.model_inputs()
+        assert inputs["provenance"] is batch.provenance
+        assert inputs["flank_n_is_terminus"].item()
 
     def test_holdout_failure_is_recorded_not_swallowed(self):
         """A skipped pass must leave evidence, not just a printed line."""

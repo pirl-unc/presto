@@ -123,22 +123,23 @@ def _processing_species_idx_tensor(
     batch_size: int,
     device: torch.device,
 ) -> torch.Tensor:
-    """Convert processing species override to per-sample embedding ids."""
+    """Convert host species to downstream ids; unknown has its own row."""
     species_map = {name: idx for idx, name in enumerate(PROCESSING_SPECIES_BUCKETS)}
+    unknown_idx = len(PROCESSING_SPECIES_BUCKETS)
 
     if isinstance(species, str):
         normalized = normalize_processing_species_label(species, default=None)
-        idx = species_map.get(normalized, 0)
+        idx = species_map.get(normalized, unknown_idx)
         return torch.full((batch_size,), idx, dtype=torch.long, device=device)
 
     if isinstance(species, (list, tuple)):
-        ids = torch.zeros(batch_size, dtype=torch.long, device=device)
+        ids = torch.full((batch_size,), unknown_idx, dtype=torch.long, device=device)
         for i in range(batch_size):
             label = normalize_processing_species_label(
                 species[i] if i < len(species) else None,
                 default=None,
             )
-            ids[i] = species_map.get(label, 0)
+            ids[i] = species_map.get(label, unknown_idx)
         return ids
 
     if isinstance(species, torch.Tensor):
@@ -150,7 +151,7 @@ def _processing_species_idx_tensor(
                 raise ValueError(
                     f"species id tensor batch mismatch: expected {batch_size}, got {sp.shape[0]}"
                 )
-            return sp.to(dtype=torch.long).clamp(min=0, max=len(PROCESSING_SPECIES_BUCKETS) - 1)
+            return sp.to(dtype=torch.long).clamp(min=0, max=unknown_idx)
         if sp.ndim == 2:
             if sp.shape[0] == 1:
                 sp = sp.expand(batch_size, -1)
@@ -163,12 +164,12 @@ def _processing_species_idx_tensor(
                 .to(dtype=torch.long)
                 .clamp(
                     min=0,
-                    max=len(PROCESSING_SPECIES_BUCKETS) - 1,
+                    max=unknown_idx,
                 )
             )
         raise ValueError(f"unsupported species tensor rank {sp.ndim}; expected 1 or 2")
 
-    return torch.zeros(batch_size, dtype=torch.long, device=device)
+    return torch.full((batch_size,), unknown_idx, dtype=torch.long, device=device)
 
 
 class Presto(nn.Module):
@@ -558,10 +559,6 @@ class Presto(nn.Module):
         self.core_position_embed = nn.Embedding(self.core_window_size, d_model)
         self.pfr_length_embed = nn.Embedding(self.max_pfr_length + 1, self.pfr_length_dim)
 
-        # Global conditioning embedding (design S3.2.4)
-        self.species_cond_embed = nn.Embedding(7, d_model)  # 7 species categories
-        self.chain_completeness_embed = nn.Embedding(64, d_model)  # 6-bit bitfield
-
         encoder_layer = nn.TransformerEncoderLayer(
             d_model=d_model,
             nhead=n_heads,
@@ -940,14 +937,13 @@ class Presto(nn.Module):
         self.cell_lineage_embed = self._zero_init_embedding(len(CELL_LINEAGES), d_model)
         self.sample_origin_embed = self._zero_init_embedding(len(SAMPLE_ORIGINS), d_model)
         self.disease_state_embed = self._zero_init_embedding(len(DISEASE_STATES), d_model)
+        self.processing_species_embed = self._zero_init_embedding(
+            len(PROCESSING_SPECIES_BUCKETS) + 1, d_model
+        )
 
-        # There is deliberately no cellular-condition embedding on the input
-        # path. It used to live here, feeding a token into the processing
-        # latent so that APM state and stimulus conditioned presentation. That
-        # is the pattern docs/assay_modeling_contract.md forbids, and it made a
-        # presentation prediction impossible without first declaring the cell's
-        # state. Those axes are now output tracks -- see
-        # ExcisionHead.forward's excision_panel_apm / excision_panel_stimulus.
+        # Biological context is permitted downstream, never in residue states.
+        # APM/stimulus categories currently condition the excision head; their
+        # richer role-specific replacement is tracked in issue #46.
 
         # Machinery-conditioned excision readout. Output-side only: the
         # machinery indexes this head and never reaches the trunk.
@@ -1429,11 +1425,8 @@ class Presto(nn.Module):
         mhc_b_tok: torch.Tensor,
         flank_n_tok: Optional[torch.Tensor] = None,
         flank_c_tok: Optional[torch.Tensor] = None,
-        flank_n_is_terminus: Optional[torch.Tensor] = None,
-        flank_c_is_terminus: Optional[torch.Tensor] = None,
-        species_id: Optional[torch.Tensor] = None,
     ) -> Dict[str, Any]:
-        """Build and encode single token stream."""
+        """Encode residue segments without biological or assay metadata."""
         device = pep_tok.device
         batch_size = pep_tok.shape[0]
 
@@ -1637,56 +1630,7 @@ class Presto(nn.Module):
             dim=1,
         )
 
-        # Global conditioning embedding (design S3.2.4)
-        if species_id is None:
-            species_id = torch.zeros(batch_size, dtype=torch.long, device=device)
-
-        # Chain completeness bitfield (computed per sample; avoids cross-sample leakage)
-        has_nflank = (
-            (flank_n_tok != 0).any(dim=1)
-            if flank_n_tok is not None
-            else torch.zeros(batch_size, dtype=torch.bool, device=device)
-        )
-        has_cflank = (
-            (flank_c_tok != 0).any(dim=1)
-            if flank_c_tok is not None
-            else torch.zeros(batch_size, dtype=torch.bool, device=device)
-        )
-        has_mhc_a = (
-            (mhc_a_tok != 0).any(dim=1)
-            if mhc_a_tok is not None
-            else torch.zeros(batch_size, dtype=torch.bool, device=device)
-        )
-        has_mhc_b = (
-            (mhc_b_tok != 0).any(dim=1)
-            if mhc_b_tok is not None
-            else torch.zeros(batch_size, dtype=torch.bool, device=device)
-        )
-        completeness_id = (
-            (has_nflank.long() << 0)
-            | (has_cflank.long() << 1)
-            | (has_mhc_a.long() << 2)
-            | (has_mhc_b.long() << 3)
-        )
-
-        species_cond = self.species_cond_embed(species_id)
-
-        completeness_cond = self.chain_completeness_embed(completeness_id)
-        global_cond = species_cond + completeness_cond  # (batch_size, d_model)
-
-        # Keep peptide token states independent of non-peptide modality presence
-        # and immune-system side info. This preserves strict peptide-only flow for
-        # species_of_origin -> foreignness -> recognition.
-        token_cond = global_cond.unsqueeze(1).expand(-1, tok_ids.shape[1], -1).clone()
-        pep_positions = (seg_ids == self.SEG_PEPTIDE).unsqueeze(0).expand(batch_size, -1)
-        token_cond[pep_positions] = 0.0
-
-        x = (
-            self.aa_embedding(tok_ids)
-            + self.segment_embedding(seg_ids).unsqueeze(0)
-            + pos_embed
-            + token_cond
-        )
+        x = self.aa_embedding(tok_ids) + self.segment_embedding(seg_ids).unsqueeze(0) + pos_embed
 
         # Segment-blocked base attention: tokens only self-attend within their segment.
         seg_block_mask = seg_ids.unsqueeze(0) != seg_ids.unsqueeze(1)
@@ -2887,8 +2831,6 @@ class Presto(nn.Module):
                 "groove_2_end_pos",
                 "nflank_dist_pos",
                 "cflank_dist_pos",
-                "species_cond_embed",
-                "chain_completeness_embed",
                 "context_token_proj",
             ),
             (),
@@ -3008,7 +2950,6 @@ class Presto(nn.Module):
             mhc_b_tok=mhc_b_tok,
             flank_n_tok=None,
             flank_c_tok=None,
-            species_id=torch.zeros(batch_size, dtype=torch.long, device=device),
         )
         early = stream["early_states"]
         seg_masks = stream["segment_masks"]
@@ -3054,7 +2995,9 @@ class Presto(nn.Module):
         outputs: Dict[str, Any] = {}
 
         immune_species_input = immune_species if immune_species is not None else species
-        mhc_species_input = mhc_species if mhc_species is not None else species
+        # A host's species does not identify the molecular MHC species (e.g.
+        # humanized mice). Only an explicit molecular override may do that.
+        mhc_species_input = mhc_species
         species_of_origin_override = (
             species_of_origin if species_of_origin is not None else peptide_species
         )
@@ -3062,20 +3005,12 @@ class Presto(nn.Module):
         # ------------------------------------------------------------------
         # 1) Build single token stream and pooled representations
         # ------------------------------------------------------------------
-        # Resolve species_id for global conditioning (per-sample)
-        species_id = _processing_species_idx_tensor(
-            species=immune_species_input,
-            batch_size=pep_tok.shape[0],
-            device=pep_tok.device,
-        )
-
         stream = self._build_single_stream(
             pep_tok=pep_tok,
             mhc_a_tok=mhc_a_tok,
             mhc_b_tok=mhc_b_tok,
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
-            species_id=species_id,
         )
         h = stream["states"]
         early = stream["early_states"]
@@ -3253,6 +3188,9 @@ class Presto(nn.Module):
             _axis("cell_lineage_idx", self.cell_lineage_embed)
             + _axis("sample_origin_idx", self.sample_origin_embed)
             + _axis("disease_state_idx", self.disease_state_embed)
+            + self.processing_species_embed(
+                _processing_species_idx_tensor(immune_species_input, batch_size, pep_tok.device)
+            )
         ).unsqueeze(1)
 
         # Processing extra tokens: peptide terminal residues + length.
@@ -3689,8 +3627,8 @@ class Presto(nn.Module):
         # ------------------------------------------------------------------
         # 10) Recognition and immunogenicity readouts
         # ------------------------------------------------------------------
-        recognition_cd8_logit = self.recognition_cd8_head(recognition_vec)
-        recognition_cd4_logit = self.recognition_cd4_head(recognition_vec)
+        recognition_cd8_logit = self.recognition_cd8_head(recognition_cd8_raw)
+        recognition_cd4_logit = self.recognition_cd4_head(recognition_cd4_raw)
         outputs["recognition_cd8_logit"] = recognition_cd8_logit
         outputs["recognition_cd4_logit"] = recognition_cd4_logit
         outputs["recognition_cd8_prob"] = torch.sigmoid(recognition_cd8_logit)
@@ -3748,9 +3686,8 @@ class Presto(nn.Module):
         outputs["immunogenicity_mixed_prob"] = torch.sigmoid(immunogenicity_mixture_logit)
 
         # ------------------------------------------------------------------
-        # 11) Context-conditioned T-cell assay output (S10.3)
+        # 11) Fixed T-cell assay tracks. Metadata selects losses, not inputs.
         # ------------------------------------------------------------------
-        context = tcell_context or {}
         tcell_logit = self.tcell_assay_head(
             immunogenicity_cd8_vec=immunogenicity_cd8_vec,
             immunogenicity_cd4_vec=immunogenicity_cd4_vec,
@@ -3768,13 +3705,6 @@ class Presto(nn.Module):
             binding_class1_logit=binding_class1_logit,
             binding_class2_logit=binding_class2_logit,
             class_probs=class_probs,
-            assay_method_idx=context.get("assay_method_idx"),
-            assay_readout_idx=context.get("assay_readout_idx"),
-            apc_type_idx=context.get("apc_type_idx"),
-            culture_context_idx=context.get("culture_context_idx"),
-            stim_context_idx=context.get("stim_context_idx"),
-            peptide_format_idx=context.get("peptide_format_idx"),
-            culture_duration_hours=context.get("culture_duration_hours"),
         )
         outputs["tcell_logit"] = tcell_logit
         outputs["tcell_prob"] = torch.sigmoid(tcell_logit)
@@ -3824,6 +3754,8 @@ class Presto(nn.Module):
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
             peptide_species=peptide_species,
+            flank_n_is_terminus=flank_n_is_terminus,
+            flank_c_is_terminus=flank_c_is_terminus,
             binding_context=None,
         )
         affinity_keys = {
@@ -3916,6 +3848,8 @@ class Presto(nn.Module):
             flank_n_tok=flank_n_tok,
             flank_c_tok=flank_c_tok,
             peptide_species=peptide_species,
+            flank_n_is_terminus=flank_n_is_terminus,
+            flank_c_is_terminus=flank_c_is_terminus,
         )
         presentation_keys = {
             "pep_vec",

@@ -340,19 +340,16 @@ class TestDocsMatchTheVocabulary:
 
     def _stimulus_row(self) -> str:
         for line in self.CONTRACT.read_text().splitlines():
-            if line.startswith("| `stimulus`"):
+            if line.startswith("| `excision_panel_stimulus`"):
                 return line
-        raise AssertionError("no `stimulus` row in docs/model_io_contract.md")
+        raise AssertionError("no `excision_panel_stimulus` row in docs/model_io_contract.md")
 
     def test_documented_token_set_matches_code(self):
         row = self._stimulus_row()
-        braced = re.search(r"\{([^}]*)\}", row)
-        assert braced, f"no token set in the stimulus row: {row}"
-        documented = {tok.strip() for tok in braced.group(1).split(",") if tok.strip()}
-        assert documented == set(PROCESSING_STIMULI), (
+        documented = [tok.strip() for tok in row.split("|")[2].split(",") if tok.strip()]
+        assert documented == list(PROCESSING_STIMULI), (
             "docs/model_io_contract.md lists a different stimulus vocabulary "
-            f"than data/vocab.py.\n  only in docs: {sorted(documented - set(PROCESSING_STIMULI))}"
-            f"\n  only in code: {sorted(set(PROCESSING_STIMULI) - documented)}"
+            f"than data/vocab.py: {documented} != {list(PROCESSING_STIMULI)}"
         )
 
     @pytest.mark.parametrize("retired", ["basal", "ifn_ab", "inducer"])

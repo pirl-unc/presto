@@ -166,6 +166,8 @@ class TaskLossSpec:
     qual_attr: Optional[str] = None
     target_transform: Optional[Callable[[torch.Tensor], torch.Tensor]] = None
     base_weight: float = 1.0
+    # Metadata selects one response column; it is never a category target.
+    selector_key: Optional[str] = None
 
 
 LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
@@ -264,61 +266,49 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         name="tcell_assay_method",
         target_key="tcell_assay_method",
         mask_key="tcell_assay_method",
-        pred_paths=(
-            ("tcell_panel_logits", "assay_method"),
-            ("tcell_context_logits", "assay_method"),
-        ),
-        loss_type="ce",
+        pred_paths=(("tcell_panel_logits", "assay_method"),),
+        loss_type="bce",
+        selector_key="assay_method_idx",
     ),
     TaskLossSpec(
         name="tcell_assay_readout",
         target_key="tcell_assay_readout",
         mask_key="tcell_assay_readout",
-        pred_paths=(
-            ("tcell_panel_logits", "assay_readout"),
-            ("tcell_context_logits", "assay_readout"),
-        ),
-        loss_type="ce",
+        pred_paths=(("tcell_panel_logits", "assay_readout"),),
+        loss_type="bce",
+        selector_key="assay_readout_idx",
     ),
     TaskLossSpec(
         name="tcell_apc_type",
         target_key="tcell_apc_type",
         mask_key="tcell_apc_type",
-        pred_paths=(
-            ("tcell_panel_logits", "apc_type"),
-            ("tcell_context_logits", "apc_type"),
-        ),
-        loss_type="ce",
+        pred_paths=(("tcell_panel_logits", "apc_type"),),
+        loss_type="bce",
+        selector_key="apc_type_idx",
     ),
     TaskLossSpec(
         name="tcell_culture_context",
         target_key="tcell_culture_context",
         mask_key="tcell_culture_context",
-        pred_paths=(
-            ("tcell_panel_logits", "culture_context"),
-            ("tcell_context_logits", "culture_context"),
-        ),
-        loss_type="ce",
+        pred_paths=(("tcell_panel_logits", "culture_context"),),
+        loss_type="bce",
+        selector_key="culture_context_idx",
     ),
     TaskLossSpec(
         name="tcell_stim_context",
         target_key="tcell_stim_context",
         mask_key="tcell_stim_context",
-        pred_paths=(
-            ("tcell_panel_logits", "stim_context"),
-            ("tcell_context_logits", "stim_context"),
-        ),
-        loss_type="ce",
+        pred_paths=(("tcell_panel_logits", "stim_context"),),
+        loss_type="bce",
+        selector_key="stim_context_idx",
     ),
     TaskLossSpec(
         name="tcell_peptide_format",
         target_key="tcell_peptide_format",
         mask_key="tcell_peptide_format",
-        pred_paths=(
-            ("tcell_panel_logits", "peptide_format"),
-            ("tcell_context_logits", "peptide_format"),
-        ),
-        loss_type="ce",
+        pred_paths=(("tcell_panel_logits", "peptide_format"),),
+        loss_type="bce",
+        selector_key="peptide_format_idx",
     ),
     TaskLossSpec(
         name="kon",
@@ -977,6 +967,15 @@ def _batch_mapping(batch, attr_name: str) -> Optional[Dict[str, torch.Tensor]]:
     return value if isinstance(value, dict) else None
 
 
+def _resolve_task_prediction(outputs, batch, spec: TaskLossSpec) -> Optional[torch.Tensor]:
+    """Resolve the same supervised response for training and held-out dumps."""
+    pred = _resolve_output_tensor(outputs, spec.pred_paths)
+    if pred is not None and spec.selector_key is not None:
+        index = batch.tcell_context[spec.selector_key].reshape(-1).long().to(pred.device)
+        pred = pred.gather(1, index.unsqueeze(1)).squeeze(1)
+    return pred
+
+
 def _infer_fine_chain_types_for_batch(batch) -> Optional[list]:
     """Infer fine MHC chain types for alpha and beta chains from batch metadata."""
     classes = getattr(batch, "mhc_class", None)
@@ -1264,6 +1263,8 @@ def _get_mil_channel(
         "species": getattr(batch, f"{prefix}_species", None),
         "flank_n_tok": getattr(batch, f"{prefix}_flank_n_tok", None),
         "flank_c_tok": getattr(batch, f"{prefix}_flank_c_tok", None),
+        "flank_n_is_terminus": getattr(batch, f"{prefix}_flank_n_is_terminus", None),
+        "flank_c_is_terminus": getattr(batch, f"{prefix}_flank_c_is_terminus", None),
         "instance_to_bag": getattr(batch, f"{prefix}_instance_to_bag", None),
         "bag_label": getattr(batch, f"{prefix}_bag_label", None),
         "bag_sample_ids": getattr(batch, f"{prefix}_bag_sample_ids", []),
@@ -1294,6 +1295,8 @@ def _slice_mil_channel(
         "mhc_b_tok",
         "flank_n_tok",
         "flank_c_tok",
+        "flank_n_is_terminus",
+        "flank_c_is_terminus",
         "instance_to_bag",
         "machinery_idx",
     ):
@@ -1475,6 +1478,9 @@ def _build_contrastive_mil_channel(
         contrastive["flank_c_tok"] = channel["flank_c_tok"][anchor_index_t]
     else:
         contrastive["flank_c_tok"] = None
+    for key in ("flank_n_is_terminus", "flank_c_is_terminus"):
+        value = channel.get(key)
+        contrastive[key] = value[anchor_index_t] if isinstance(value, torch.Tensor) else None
     # Cellular state follows the anchor, like pep_tok and the flanks: the
     # condition belongs to the sample the peptide came from, and only the MHC
     # is swapped in to make the synthetic negative. Omitting it would run every
@@ -1524,6 +1530,16 @@ def _run_mil_forward(
         flank_c_tok=(
             channel["flank_c_tok"].to(device)
             if isinstance(channel.get("flank_c_tok"), torch.Tensor)
+            else None
+        ),
+        flank_n_is_terminus=(
+            channel["flank_n_is_terminus"].to(device)
+            if channel.get("flank_n_is_terminus") is not None
+            else None
+        ),
+        flank_c_is_terminus=(
+            channel["flank_c_is_terminus"].to(device)
+            if channel.get("flank_c_is_terminus") is not None
             else None
         ),
         # tcell_context is deliberately not forwarded, matching the row path
@@ -1969,25 +1985,7 @@ def compute_loss(
     )
     with amp_ctx:
         outputs = model(
-            pep_tok=batch.pep_tok,
-            mhc_a_tok=batch.mhc_a_tok,
-            mhc_b_tok=batch.mhc_b_tok,
-            mhc_class=batch.mhc_class,
-            species=batch.processing_species,
-            flank_n_tok=batch.flank_n_tok,
-            flank_c_tok=batch.flank_c_tok,
-            machinery=getattr(batch, "machinery_idx", None),
-            # Deliberately NOT passing tcell_context. Its seven keys -- apc_type,
-            # assay_method, assay_readout, culture_context, culture_duration,
-            # peptide_format, stim_context -- are every one of them on the forbidden-input
-            # list in docs/assay_modeling_contract.md. Conditioning on them means a T-cell
-            # prediction cannot be obtained without first declaring an assay setup.
-            #
-            # The head defaults each axis to its "unknown" entry, so the prediction becomes
-            # the context-free marginal, and predict_panel sweeps each axis from that
-            # baseline to give one output per condition. The observed context still routes
-            # which panel column the loss reads, which the Output Contract allows.
-            provenance=getattr(batch, "provenance", None) or None,
+            **batch.model_inputs(),
             return_binding_attention=return_binding_attention,
         )
         if profile_performance:
@@ -2043,7 +2041,7 @@ def compute_loss(
             if support <= 0:
                 continue
 
-            pred = _resolve_output_tensor(outputs, spec.pred_paths)
+            pred = _resolve_task_prediction(outputs, batch, spec)
             if pred is None:
                 continue
             qual_tensor = _get_batch_qual(batch, spec)
@@ -2142,7 +2140,12 @@ def compute_loss(
                 if index_long.shape[0] != panel.shape[0]:
                     continue
                 chosen = panel.gather(1, index_long.unsqueeze(1)).squeeze(1)
-                per_row = F.smooth_l1_loss(chosen, target_flat[: chosen.shape[0]], reduction="none")
+                per_row = censor_aware_loss(
+                    chosen,
+                    target_flat,
+                    batch.bind_qual.reshape(-1).long().to(device),
+                    reduction="none",
+                )
                 denominator = mask_flat[: chosen.shape[0]].sum() + 1e-8
                 panel_terms.append((per_row * mask_flat[: chosen.shape[0]]).sum() / denominator)
             if panel_terms:
