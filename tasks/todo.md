@@ -10073,3 +10073,37 @@ also confirm the original source-probe assertions pass without weakening them.
 - #46 remains open for independent context roles, concurrent interventions,
   repertoire conditioning, remaining source/serving/assay gaps and scientific
   validation. No full-corpus experiment or model-quality claim was made.
+
+## Preserve quantitative assay metadata (#49) — 2026-09-07
+
+Specification: second independent repair PR, based directly on merged main
+`b2e939e`. PR #54 separately repairs #52. Preserve `assay_type` and
+`assay_method` from merged TSV binding rows, plus the existing binding culture
+fields. Apply the same preservation to kinetic and stability records, retaining
+their value-type fallback when observed assay type is absent.
+
+The existing collator owns descriptor categorization and target selection.
+Preserving observed type may correctly change a family selector that previously
+fell back to value_type; do not invent a new categorization policy or silently
+discard conflicting descriptors. Values, units, qualifiers, sampling and model
+forward inputs retain their existing contracts. Kinetic/stability descriptors
+are preserved without adding affinity-panel losses to those rows.
+
+Verification:
+- Tabular adapter tests cover five quantitative families, missing descriptors,
+  non-default/conflicting type descriptors and cultures.
+- Trace real record fields through PrestoDataset and binding_context selectors.
+- Prove the selected preparation/readout embedding rows receive gradient while
+  assay metadata does not enter model inputs or change fixed forward outputs.
+- Register a source audit with source hash, before/after row/selector counts,
+  missingness, unchanged numeric-record fingerprints and capped sample evidence.
+- Run relevant ingestion, collation, loss/routing and regression suites; publish
+  the PR and verify required CI. Keep current full-corpus/split support and
+  predictive quality claims in #48/#53.
+
+- [ ] Implement and verify metadata preservation and gradient routing.
+- [ ] Complete registered real-source before/after audit.
+- [ ] Publish PR, verify its base/head/body and CI.
+- [ ] Document the shared #48/#50/#51 supervision design and #53 dependencies.
+
+Review results: pending.
