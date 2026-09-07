@@ -10203,11 +10203,27 @@ closure scope. Read deployment configuration before any release; if none is
 configured, document that finding instead of inventing a service or package
 release.
 
-- [ ] Merge #47 at the verified head and verify merged main.
-- [ ] Inspect and perform any configured deployment applicable to #47.
+- [x] Merge #47 at the verified head and verify merged main.
+- [x] Inspect and perform any configured deployment applicable to #47.
 - [ ] Preserve audit evidence and publish the #52 repair with validation.
 - [ ] Publish the #49 repair with source/selector evidence and validation.
 - [ ] Record the shared follow-up design for #48/#50/#51 and #53 prerequisites.
 - [ ] Verify CI and record PR links, results and remaining work.
 
 Review results: pending.
+
+Merge/deployment: #47 merged as `b2e939e9d4baa6c67dfda34dd55199080d725f87`
+at 2026-09-07 18:48:50 UTC. No configured deployment/release workflow, Pages,
+release history or GitHub deployment exists; CI builds docs without publishing.
+
+#52 repair: six regression assertions failed on the old implementation;
+all 50 holdout/parity tests pass after threshold-group AP and artifact estimator
+metadata. Local sklearn 1.5.2 cross-check: 500 arrays, max error 3.33e-16.
+Registered archive correction considered 301 CSVs, selected 39 canonical files,
+reproduced all 1,123 comparable archived AP values, and reissued 738 changed
+metrics in 36 summaries. No other summary values changed; production code was
+frozen at `93a9c7b` for that audit. Full report is in the registered experiment.
+An additional 65 canonical real-data trainer tests pass (115 focused tests
+total). Full pinned lint/format and strict docs build pass. The first format
+check found two audit Markdown code blocks; formatting those blocks resolved
+the gate without changing the published issue semantics.

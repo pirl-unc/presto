@@ -25,9 +25,15 @@ from tempfile import TemporaryDirectory
 from presto.scripts.train_iedb import load_records_from_merged_tsv
 
 row = dict(
-    peptide="SIINFEKL", mhc_allele="HLA-A*02:01", mhc_class="I",
-    source="audit_fixture", record_type="binding", value="100",
-    value_type="IC50", qualifier="0", assay_type="IC50",
+    peptide="SIINFEKL",
+    mhc_allele="HLA-A*02:01",
+    mhc_class="I",
+    source="audit_fixture",
+    record_type="binding",
+    value="100",
+    value_type="IC50",
+    qualifier="0",
+    assay_type="IC50",
     assay_method="purified MHC/direct/fluorescence",
 )
 with TemporaryDirectory() as directory:
@@ -37,8 +43,14 @@ with TemporaryDirectory() as directory:
         writer.writeheader()
         writer.writerow(row)
     records = load_records_from_merged_tsv(
-        path, max_binding=10, max_kinetics=10, max_stability=10,
-        max_processing=10, max_elution=10, max_tcell=10, max_vdjdb=10,
+        path,
+        max_binding=10,
+        max_kinetics=10,
+        max_stability=10,
+        max_processing=10,
+        max_elution=10,
+        max_tcell=10,
+        max_vdjdb=10,
     )[0]
     print(records[0].assay_method)  # None
 ```

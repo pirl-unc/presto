@@ -1,0 +1,20 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "commit": "93a9c7b24c6108577dcf40c94a9ff34e6c30cc5c",
+  "dirty_status": "?? experiments/2026-09-07_1851_codex_average-precision-correction/\n?? experiments/agents/codex/plans/2026-09-07_average-precision-correction.md\n",
+  "command": "bash experiments/2026-09-07_1851_codex_average-precision-correction/reproduce/launch.sh",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "python": "3.12.6",
+  "numpy": "2.2.6",
+  "sklearn": "1.5.2",
+  "gpu": null,
+  "optimizer_steps": 0,
+  "source_sha256": {
+    "holdout_eval.py": "9b0107d43b38ec9a1b84d6850f7d9345d4c4a61bf4bf6918fdf8d914c75f3bd1",
+    "recompute.py": "9d9d1baa2ffed893fdb5314323fc73deaacfc6bc25b9b83b9bcb7a3f924ce7c1"
+  }
+}

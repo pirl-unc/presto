@@ -9,8 +9,8 @@ import numpy as np
 from presto.training.holdout_eval import auprc
 
 scores = np.array([0.5, 0.5])
-print(auprc(np.array([1., 0.]), scores))  # 1.0
-print(auprc(np.array([0., 1.]), scores))  # 0.5
+print(auprc(np.array([1.0, 0.0]), scores))  # 1.0
+print(auprc(np.array([0.0, 1.0]), scores))  # 0.5
 ```
 
 Both inputs describe the same uninformative predictor with positive prevalence 0.5. Threshold-based average precision must be **0.5** for both.

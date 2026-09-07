@@ -1,5 +1,15 @@
 # Source-junction ambiguity masking
 
+## 2026-09-07 AP correction
+
+The archived canonical prediction files contain tied scores affected by #52.
+[The retrospective correction](../2026-09-07_1851_codex_average-precision-correction/README.md)
+provides checksummed source paths, per-task/stratum deltas and corrected summary
+copies. Original predictions and summaries remain preserved. Use the reissued
+AP values for affected entries; other metrics and all existing data-validity
+errata retain their original scope.
+
+
 > **Validity erratum (2026-09-04):** Retain these files as the exact historical
 > record, but do not use this family to choose a mapping policy. Nullable
 > unmapped flanks were converted through `str(float("nan")).upper()` into the
