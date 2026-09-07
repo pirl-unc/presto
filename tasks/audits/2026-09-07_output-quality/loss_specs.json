@@ -1,0 +1,577 @@
+[
+  {
+    "name": "binding",
+    "target_key": "binding",
+    "mask_key": "binding",
+    "pred_paths": [
+      [
+        "assays",
+        "KD_nM"
+      ]
+    ],
+    "loss_type": "censor",
+    "target_attr": "bind_target",
+    "mask_attr": "bind_mask",
+    "qual_key": "binding",
+    "qual_attr": "bind_qual",
+    "target_transform": true,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "binding_kd",
+    "target_key": "binding_kd",
+    "mask_key": "binding_kd",
+    "pred_paths": [
+      [
+        "assays",
+        "KD_nM"
+      ]
+    ],
+    "loss_type": "censor",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": "binding_kd",
+    "qual_attr": null,
+    "target_transform": true,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "binding_ic50",
+    "target_key": "binding_ic50",
+    "mask_key": "binding_ic50",
+    "pred_paths": [
+      [
+        "assays",
+        "IC50_nM"
+      ]
+    ],
+    "loss_type": "censor",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": "binding_ic50",
+    "qual_attr": null,
+    "target_transform": true,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "binding_ec50",
+    "target_key": "binding_ec50",
+    "mask_key": "binding_ec50",
+    "pred_paths": [
+      [
+        "assays",
+        "EC50_nM"
+      ]
+    ],
+    "loss_type": "censor",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": "binding_ec50",
+    "qual_attr": null,
+    "target_transform": true,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "elution",
+    "target_key": "elution",
+    "mask_key": "elution",
+    "pred_paths": [
+      [
+        "elution_logit"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": "elution_label",
+    "mask_attr": "elution_mask",
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "presentation",
+    "target_key": "elution",
+    "mask_key": "elution",
+    "pred_paths": [
+      [
+        "presentation_logit"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": "elution_label",
+    "mask_attr": "elution_mask",
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "tcell",
+    "target_key": "tcell",
+    "mask_key": "tcell",
+    "pred_paths": [
+      [
+        "tcell_logit"
+      ],
+      [
+        "recognition_repertoire_logit"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": "tcell_label",
+    "mask_attr": "tcell_mask",
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "immunogenicity",
+    "target_key": "tcell",
+    "mask_key": "tcell",
+    "pred_paths": [
+      [
+        "immunogenicity_logit"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": "tcell_label",
+    "mask_attr": "tcell_mask",
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "tcell_assay_method",
+    "target_key": "tcell_assay_method",
+    "mask_key": "tcell_assay_method",
+    "pred_paths": [
+      [
+        "tcell_panel_logits",
+        "assay_method"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": "assay_method_idx"
+  },
+  {
+    "name": "tcell_assay_readout",
+    "target_key": "tcell_assay_readout",
+    "mask_key": "tcell_assay_readout",
+    "pred_paths": [
+      [
+        "tcell_panel_logits",
+        "assay_readout"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": "assay_readout_idx"
+  },
+  {
+    "name": "tcell_apc_type",
+    "target_key": "tcell_apc_type",
+    "mask_key": "tcell_apc_type",
+    "pred_paths": [
+      [
+        "tcell_panel_logits",
+        "apc_type"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": "apc_type_idx"
+  },
+  {
+    "name": "tcell_culture_context",
+    "target_key": "tcell_culture_context",
+    "mask_key": "tcell_culture_context",
+    "pred_paths": [
+      [
+        "tcell_panel_logits",
+        "culture_context"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": "culture_context_idx"
+  },
+  {
+    "name": "tcell_stim_context",
+    "target_key": "tcell_stim_context",
+    "mask_key": "tcell_stim_context",
+    "pred_paths": [
+      [
+        "tcell_panel_logits",
+        "stim_context"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": "stim_context_idx"
+  },
+  {
+    "name": "tcell_peptide_format",
+    "target_key": "tcell_peptide_format",
+    "mask_key": "tcell_peptide_format",
+    "pred_paths": [
+      [
+        "tcell_panel_logits",
+        "peptide_format"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": "peptide_format_idx"
+  },
+  {
+    "name": "kon",
+    "target_key": "kon",
+    "mask_key": "kon",
+    "pred_paths": [
+      [
+        "assays",
+        "kon"
+      ]
+    ],
+    "loss_type": "mse",
+    "target_attr": "kon_target",
+    "mask_attr": "kon_mask",
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "koff",
+    "target_key": "koff",
+    "mask_key": "koff",
+    "pred_paths": [
+      [
+        "assays",
+        "koff"
+      ]
+    ],
+    "loss_type": "mse",
+    "target_attr": "koff_target",
+    "mask_attr": "koff_mask",
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "t_half",
+    "target_key": "t_half",
+    "mask_key": "t_half",
+    "pred_paths": [
+      [
+        "assays",
+        "t_half"
+      ]
+    ],
+    "loss_type": "censor",
+    "target_attr": "t_half_target",
+    "mask_attr": "t_half_mask",
+    "qual_key": "t_half",
+    "qual_attr": "t_half_qual",
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "tm",
+    "target_key": "tm",
+    "mask_key": "tm",
+    "pred_paths": [
+      [
+        "assays",
+        "Tm"
+      ]
+    ],
+    "loss_type": "censor",
+    "target_attr": "tm_target",
+    "mask_attr": "tm_mask",
+    "qual_key": "tm",
+    "qual_attr": "tm_qual",
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "binding_affinity_probe",
+    "target_key": "binding",
+    "mask_key": "binding",
+    "pred_paths": [
+      [
+        "binding_affinity_probe_kd"
+      ]
+    ],
+    "loss_type": "censor",
+    "target_attr": "bind_target",
+    "mask_attr": "bind_mask",
+    "qual_key": "binding",
+    "qual_attr": "bind_qual",
+    "target_transform": true,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "ms_detectability",
+    "target_key": "ms_detectability",
+    "mask_key": "ms_detectability",
+    "pred_paths": [
+      [
+        "ms_detectability_logit"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 0.5,
+    "selector_key": null
+  },
+  {
+    "name": "excision",
+    "target_key": "excision",
+    "mask_key": "excision",
+    "pred_paths": [
+      [
+        "excision_logit"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "processing",
+    "target_key": "processing",
+    "mask_key": "processing",
+    "pred_paths": [
+      [
+        "processing_logit"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": "processing_label",
+    "mask_attr": "processing_mask",
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "core_start",
+    "target_key": "core_start",
+    "mask_key": "core_start",
+    "pred_paths": [
+      [
+        "core_start_logit"
+      ]
+    ],
+    "loss_type": "ce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "mhc_class",
+    "target_key": "mhc_class",
+    "mask_key": "mhc_class",
+    "pred_paths": [
+      [
+        "mhc_class_logits"
+      ]
+    ],
+    "loss_type": "ce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 0.1,
+    "selector_key": null
+  },
+  {
+    "name": "mhc_species",
+    "target_key": "mhc_species",
+    "mask_key": "mhc_species",
+    "pred_paths": [
+      [
+        "mhc_species_logits"
+      ]
+    ],
+    "loss_type": "ce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 0.1,
+    "selector_key": null
+  },
+  {
+    "name": "mhc_a_fine_type",
+    "target_key": "mhc_a_fine_type",
+    "mask_key": "mhc_a_fine_type",
+    "pred_paths": [
+      [
+        "mhc_a_type_logits"
+      ]
+    ],
+    "loss_type": "ce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 0.1,
+    "selector_key": null
+  },
+  {
+    "name": "mhc_b_fine_type",
+    "target_key": "mhc_b_fine_type",
+    "mask_key": "mhc_b_fine_type",
+    "pred_paths": [
+      [
+        "mhc_b_type_logits"
+      ]
+    ],
+    "loss_type": "ce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 0.1,
+    "selector_key": null
+  },
+  {
+    "name": "tcr_evidence",
+    "target_key": "tcr_evidence",
+    "mask_key": "tcr_evidence",
+    "pred_paths": [
+      [
+        "tcr_evidence_logit"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": "tcr_evidence_target",
+    "mask_attr": "tcr_evidence_mask",
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 0.05,
+    "selector_key": null
+  },
+  {
+    "name": "tcr_evidence_method",
+    "target_key": "tcr_evidence_method",
+    "mask_key": "tcr_evidence_method",
+    "pred_paths": [
+      [
+        "tcr_evidence_method_logits"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": "tcr_evidence_method_target",
+    "mask_attr": "tcr_evidence_method_mask",
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 0.02,
+    "selector_key": null
+  },
+  {
+    "name": "species_of_origin",
+    "target_key": "species_of_origin",
+    "mask_key": "species_of_origin",
+    "pred_paths": [
+      [
+        "species_of_origin_logits"
+      ]
+    ],
+    "loss_type": "ce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  },
+  {
+    "name": "foreignness",
+    "target_key": "foreignness",
+    "mask_key": "foreignness",
+    "pred_paths": [
+      [
+        "foreignness_logit"
+      ]
+    ],
+    "loss_type": "bce",
+    "target_attr": null,
+    "mask_attr": null,
+    "qual_key": null,
+    "qual_attr": null,
+    "target_transform": false,
+    "base_weight": 1.0,
+    "selector_key": null
+  }
+]

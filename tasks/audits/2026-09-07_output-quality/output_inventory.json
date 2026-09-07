@@ -1,0 +1,1533 @@
+[
+  {
+    "path": "pep_vec",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_a_vec",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_b_vec",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_a_type_logits",
+    "shape": [
+      1,
+      5
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_b_type_logits",
+    "shape": [
+      1,
+      5
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_a_species_logits",
+    "shape": [
+      1,
+      6
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_b_species_logits",
+    "shape": [
+      1,
+      6
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_class_logits",
+    "shape": [
+      1,
+      2
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_class_probs_inferred",
+    "shape": [
+      1,
+      2
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_class_pred",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.int64",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_species_logits",
+    "shape": [
+      1,
+      6
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_species_probs_inferred",
+    "shape": [
+      1,
+      6
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_species_pred",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.int64",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "chain_compat_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "chain_compat_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_class_probs",
+    "shape": [
+      1,
+      2
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_species_probs",
+    "shape": [
+      1,
+      6
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "mhc_species_probs_inferred"
+  },
+  {
+    "path": "mhc_is_class1_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "mhc_is_class2_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "species_probs",
+    "shape": [
+      1,
+      6
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "mhc_species_probs_inferred"
+  },
+  {
+    "path": "apc_cell_type_context_vec",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "groove_vec",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_window_mask",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.bool",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_window_start",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.int64",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_window_length",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.int64",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_window_prior_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_window_score_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_window_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_window_posterior_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_start_logit",
+    "shape": [
+      1,
+      12
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_start_prob",
+    "shape": [
+      1,
+      12
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_start_probs",
+    "shape": [
+      1,
+      12
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "core_start_prob"
+  },
+  {
+    "path": "core_membership_prob",
+    "shape": [
+      1,
+      12
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_relative_position_index",
+    "shape": [
+      1,
+      12
+    ],
+    "dtype": "torch.int64",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_length",
+    "shape": [
+      1,
+      12
+    ],
+    "dtype": "torch.int64",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "npfr_length",
+    "shape": [
+      1,
+      12
+    ],
+    "dtype": "torch.int64",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "cpfr_length",
+    "shape": [
+      1,
+      12
+    ],
+    "dtype": "torch.int64",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "core_length_norm",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "npfr_length_norm",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "cpfr_length_norm",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "excision_panel_apm",
+    "shape": [
+      1,
+      8
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "excision_panel_stimulus",
+    "shape": [
+      1,
+      7
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "excision_logit",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "excision_n_terminus_score",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "excision_c_terminus_score",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "excision_length_score",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "excision_missed_cleavage_score",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "excision_prob",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "excision_machinery_idx",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.int64",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.processing_class1",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.processing_class2",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.species_of_origin",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.foreignness",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.ms_detectability",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.binding_affinity",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.binding_stability",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.presentation_class1",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.presentation_class2",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.recognition_cd8",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.recognition_cd4",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.pmhc_interaction",
+    "shape": [
+      1,
+      256
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.processing",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "latent_vecs.processing_class1"
+  },
+  {
+    "path": "latent_vecs.recognition",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "latent_vecs.recognition_cd8"
+  },
+  {
+    "path": "latent_vecs.immunogenicity_cd8",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.immunogenicity_cd4",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "latent_vecs.processing_mixed",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "latent_vecs.processing_class1"
+  },
+  {
+    "path": "latent_vecs.recognition_mixed",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "latent_vecs.recognition_cd8"
+  },
+  {
+    "path": "latent_vecs.immunogenicity_mixed",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "latent_vecs.immunogenicity_cd8"
+  },
+  {
+    "path": "latent_vecs.presentation_mixed",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "latent_vecs.presentation_class1"
+  },
+  {
+    "path": "species_of_origin_logits",
+    "shape": [
+      1,
+      11
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "foreignness_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "foreignness_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "pmhc_vec",
+    "shape": [
+      1,
+      256
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "latent_vecs.pmhc_interaction"
+  },
+  {
+    "path": "pmhc_interaction_vec",
+    "shape": [
+      1,
+      256
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "latent_vecs.pmhc_interaction"
+  },
+  {
+    "path": "processing_class1_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "processing_class2_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "processing_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "processing_mixed_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "processing_logit"
+  },
+  {
+    "path": "processing_class1_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "processing_class2_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "processing_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "processing_mixed_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_assay_context_vec",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_affinity_score_raw",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_affinity_score",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_affinity_probe_kd_raw",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "binding_affinity_score_raw"
+  },
+  {
+    "path": "binding_affinity_probe_kd",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "binding_affinity_score"
+  },
+  {
+    "path": "binding_stability_score_raw",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_stability_score",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_sequence_summary_vec",
+    "shape": [
+      1,
+      32
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_assay_panel_assay_type",
+    "shape": [
+      1,
+      11
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_assay_panel_assay_prep",
+    "shape": [
+      1,
+      6
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_assay_panel_assay_geometry",
+    "shape": [
+      1,
+      5
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_assay_panel_assay_readout",
+    "shape": [
+      1,
+      4
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_latents.log_koff",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_latents.log_kon_intrinsic",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_latents.log_kon_chaperone",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_logit_from_core",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_kd_bias_raw",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_kd_bias",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_kd_bias_cap",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_probe_mix_weight",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_core_kd_log10",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_mixed_kd_log10",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "assays.koff",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "assays.kon",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "assays.KD_nM",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "assays.IC50_nM",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "assays.EC50_nM",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "assays.KD_proxy_ic50_nM",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "assays.KD_nM"
+  },
+  {
+    "path": "assays.KD_proxy_ec50_nM",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "assays.KD_nM"
+  },
+  {
+    "path": "assays.t_half",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "assays.Tm",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_base_logit",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_class1_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_class2_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_logit",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_mixed_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_class1_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_class2_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_prob",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "binding_mixed_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "presentation_class1_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "presentation_class2_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "presentation_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "presentation_mixed_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "presentation_logit"
+  },
+  {
+    "path": "presentation_class1_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "presentation_class2_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "presentation_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "presentation_mixed_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "presentation_prob"
+  },
+  {
+    "path": "presentation_invivo_excision_term",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "ms_detectability_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "elution_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "elution_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "ms_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "elution_logit"
+  },
+  {
+    "path": "ms_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "recognition_cd8_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "recognition_cd4_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "recognition_cd8_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "recognition_cd4_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "recognition_repertoire_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "recognition_repertoire_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "recognition_mixed_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "recognition_repertoire_logit"
+  },
+  {
+    "path": "recognition_mixed_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "recognition_repertoire_prob"
+  },
+  {
+    "path": "immunogenicity_cd8_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "immunogenicity_cd4_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "immunogenicity_cd8_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "immunogenicity_cd4_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "immunogenicity_recognition_term",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "immunogenicity_mixture_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "immunogenicity_mixed_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "immunogenicity_mixture_logit"
+  },
+  {
+    "path": "immunogenicity_logit",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "immunogenicity_prob",
+    "shape": [
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "immunogenicity_mixed_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcell_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcell_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcell_context_logits.assay_method",
+    "shape": [
+      1,
+      11
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcell_context_logits.assay_readout",
+    "shape": [
+      1,
+      15
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcell_context_logits.apc_type",
+    "shape": [
+      1,
+      9
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcell_context_logits.culture_context",
+    "shape": [
+      1,
+      9
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcell_context_logits.stim_context",
+    "shape": [
+      1,
+      6
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcell_context_logits.peptide_format",
+    "shape": [
+      1,
+      6
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcell_panel_logits.assay_method",
+    "shape": [
+      1,
+      11
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "tcell_context_logits.assay_method"
+  },
+  {
+    "path": "tcell_panel_logits.assay_readout",
+    "shape": [
+      1,
+      15
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "tcell_context_logits.assay_readout"
+  },
+  {
+    "path": "tcell_panel_logits.apc_type",
+    "shape": [
+      1,
+      9
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "tcell_context_logits.apc_type"
+  },
+  {
+    "path": "tcell_panel_logits.culture_context",
+    "shape": [
+      1,
+      9
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "tcell_context_logits.culture_context"
+  },
+  {
+    "path": "tcell_panel_logits.stim_context",
+    "shape": [
+      1,
+      6
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "tcell_context_logits.stim_context"
+  },
+  {
+    "path": "tcell_panel_logits.peptide_format",
+    "shape": [
+      1,
+      6
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": "tcell_context_logits.peptide_format"
+  },
+  {
+    "path": "tcr_evidence_logit",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcr_evidence_prob",
+    "shape": [
+      1,
+      1
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcr_evidence_method_logits",
+    "shape": [
+      1,
+      3
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  },
+  {
+    "path": "tcr_evidence_method_probs",
+    "shape": [
+      1,
+      3
+    ],
+    "dtype": "torch.float32",
+    "same_tensor_as": ""
+  }
+]
