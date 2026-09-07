@@ -1,0 +1,5141 @@
+{
+  "selected": [
+    {
+      "id": "83cd2c14d941",
+      "path": "experiments/2026-09-02_0130_claude_panel-scale-fix-validation/val_predictions_sample.csv",
+      "sha256": "7a6772a747301af307ace2a03ffce68c1ce0dc231b5ffdfe711df1ee04d744bf",
+      "split": "val",
+      "partial": true,
+      "summary_path": null,
+      "summary_sha256": null
+    },
+    {
+      "id": "e54d124d22db",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s42/test_predictions.csv",
+      "sha256": "c49724d3eb5030f1d39a3f303a1f4130250f8301921804bc40751662616d8f8b",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s42/test_summary.json",
+      "summary_sha256": "97d1acc41d3a1fc83741a446879c1b2028d66797697698c9a2ff8f137c2ceee2"
+    },
+    {
+      "id": "dcfab4fd1d1e",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s42/val_predictions.csv",
+      "sha256": "5d9b17a268d4cfd96d24ea68b12f431bc7e4788db15a50514551cb11669a552e",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s42/val_summary.json",
+      "summary_sha256": "7bb2f7c3aaaa9cc48d0af656a8f5bfed1ebc92d85ea9f9df31b9559a8009e3a8"
+    },
+    {
+      "id": "fc4d8639e856",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s43/test_predictions.csv",
+      "sha256": "165231f65ee9adb1467e799248d4d1b06177eaca262119eefd177307f94f13f6",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s43/test_summary.json",
+      "summary_sha256": "7cbd091fe346bafd131c502e0c0f4bf2a393697a73e6961b11b31a0f04a13663"
+    },
+    {
+      "id": "982ac137c6dd",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s43/val_predictions.csv",
+      "sha256": "d6fc2969042e9880b7061e4fbeaff14f2a4dd9d5bd90a1b74f34627e68971fbc",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s43/val_summary.json",
+      "summary_sha256": "8cf7cafdae92406a70d7852f625f2218de0b19fea8dfc47aca44fffd6ecae5d4"
+    },
+    {
+      "id": "7a9faaa99da2",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s44/test_predictions.csv",
+      "sha256": "6decfc412fcab6d09fb9f8eef7a42a1687b2679c931c04ec80b6e80d5765516d",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s44/test_summary.json",
+      "summary_sha256": "a63488a1ad3747ee0c7ec8117793a7be88f187827d66baecb7ed6121b38826b2"
+    },
+    {
+      "id": "37cf010bbea3",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s44/val_predictions.csv",
+      "sha256": "1d79c21405821e2d58214c4c2ad6adcec73fc02c7befe74337f940f4b88c18b2",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-legacy-e010-s44/val_summary.json",
+      "summary_sha256": "de3947cee9235712f7208d01074b90f39cfffdfc283d359bdace064cb947e741"
+    },
+    {
+      "id": "778113f9a9c1",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s42/test_predictions.csv",
+      "sha256": "935d3c738676fa68796cb21625ccc7f0ae72ac5512b7bcc72c212198dc04c4a1",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s42/test_summary.json",
+      "summary_sha256": "9c45790163ca0d45cb3152d6ce5ec1062ddc13b0694d792873a61bd116474288"
+    },
+    {
+      "id": "67ada123fabe",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s42/val_predictions.csv",
+      "sha256": "1088fe40c6d5fd070b73b5d2be5f9700dfca590c98762139c08acbb519d56a18",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s42/val_summary.json",
+      "summary_sha256": "29e223303fbbcca983452d17ec1809255a350297680f04dd6ae459f584674a99"
+    },
+    {
+      "id": "3617411d4bce",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s43/test_predictions.csv",
+      "sha256": "6f583f8fc1cb005088dcd408205002981e66b9e20236b6491aaac3410d58721f",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s43/test_summary.json",
+      "summary_sha256": "5afee60f7070eb4d4d970f3853b2f96f95204c2270b893c0fc6a111f4530d5fc"
+    },
+    {
+      "id": "ca9ba8ab8c10",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s43/val_predictions.csv",
+      "sha256": "6ec5dc17aae6749e8fb257cf49131802b8ffacc90b39f2ab6e30cc478a33cde8",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s43/val_summary.json",
+      "summary_sha256": "92a2269e9776d3f9b1a6a9fbe80c009988e2a3553bda6fd3bde6d111132fb9b6"
+    },
+    {
+      "id": "4cb465a747cd",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s44/test_predictions.csv",
+      "sha256": "bbab4fa6c9180dd7db96aabee758234a775c0dddde3083b5a2f6eeabbbe69773",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s44/test_summary.json",
+      "summary_sha256": "fe382a0065000db27231dce454f44e36518e624d1c2074ef62717d8c64724913"
+    },
+    {
+      "id": "b0efe7c2d377",
+      "path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s44/val_predictions.csv",
+      "sha256": "393a65b36391a133aa5ddb2ad9c8ae3d471f5130a3be7ae417327f67763decaa",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-02_1720_codex_source-junction-masking/results/runs/presto-source-junction-mask-20260902b-masked-e010-s44/val_summary.json",
+      "summary_sha256": "d77952f4a1acce55c7f6091d45b47a57a159fa40044aefc32951c13428385b4f"
+    },
+    {
+      "id": "61bcbd350cf5",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s42/best_checkpoint_eval/test_predictions.csv",
+      "sha256": "b5c6f1da21cfc82905173a7da7b81aaa2334ccb198afbb632b9689f58b8ba982",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s42/best_checkpoint_eval/test_summary.json",
+      "summary_sha256": "5ac94fee7c6281f3708ebd2d60bad6107f7dd92d9a17c0203c79cca42b0fc0fc"
+    },
+    {
+      "id": "c4f69db6e3eb",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s42/best_checkpoint_eval/val_predictions.csv",
+      "sha256": "74259fe000d0cf32d18ef46e38c851c16c5a38d1dd540ded91ce4ee343ca8b39",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s42/best_checkpoint_eval/val_summary.json",
+      "summary_sha256": "b556a9d399bd3802aecaa0a9b7abb75f973017157fb713e77fb5d6383a115853"
+    },
+    {
+      "id": "34b4ba8e688b",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s42/test_predictions.csv",
+      "sha256": "4d4abe17ca803347e1898c20cc2caba15dd3a6db592d9be2c7b3eb79dba7467a",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s42/test_summary.json",
+      "summary_sha256": "58340f152a610b8638e4bd89eeb0bf4b4153e7bbf828d4851d97de84a1426a0b"
+    },
+    {
+      "id": "efbcbe8c54f6",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s42/val_predictions.csv",
+      "sha256": "a3e58ff6ec6d9aa5b121a7c27e0d65b2464acbeb0359de2c7a2d658ac874c441",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s42/val_summary.json",
+      "summary_sha256": "6c2dfae038845321b418f6fd94a62412b75b93f8c102dbfedffe830a1eff3fb7"
+    },
+    {
+      "id": "4e2196649e84",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s43/best_checkpoint_eval/test_predictions.csv",
+      "sha256": "2742c2338e2d8726d4056cfc6d0fe5345f234e57ea5c5c401a76456a05c9ac0d",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s43/best_checkpoint_eval/test_summary.json",
+      "summary_sha256": "0071a8d5fec1f1067b9fe790b9343d27248f365dd6a5070685a05a80febba807"
+    },
+    {
+      "id": "0bbfb2cdf3e6",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s43/best_checkpoint_eval/val_predictions.csv",
+      "sha256": "e89520805f409e62da6fc11e9218c5834c9225c60dbabd6c6c195420c09e396e",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s43/best_checkpoint_eval/val_summary.json",
+      "summary_sha256": "ab2516711a786c3bb7825d39f5fa126cbd858ec28ab0314be0addd805d0ad43a"
+    },
+    {
+      "id": "015deaa68a3a",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s43/test_predictions.csv",
+      "sha256": "fa57646cb1d55506de96181e5b7f93ff98f97945f2f094a586db337fd3eda8d5",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s43/test_summary.json",
+      "summary_sha256": "b595db96d68e95d712c2e63158f006d9a31aad995ee6fc3852b8221b4736d7e5"
+    },
+    {
+      "id": "047eb63e7b12",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s43/val_predictions.csv",
+      "sha256": "17f41537a1db2c9b7f00d0a4ec27e1cdb5a2be885633368e4b202a035c74fab7",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s43/val_summary.json",
+      "summary_sha256": "302ef3ce6c862f6da56664ae39d9a34da5f93b26ff36fd54e620cf96ead8936b"
+    },
+    {
+      "id": "a674d956bbd8",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s44/best_checkpoint_eval/test_predictions.csv",
+      "sha256": "0e7cad204b79cc71f21c1ecf6529704919f06b31df42e32d4e44a36eacdab656",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s44/best_checkpoint_eval/test_summary.json",
+      "summary_sha256": "0786b54911c35edf8560e9405cc1086bdddb0a511c71132c357e90dc79ba5793"
+    },
+    {
+      "id": "d8cde8338863",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s44/best_checkpoint_eval/val_predictions.csv",
+      "sha256": "6cb43cbeb6c9b8cb5883725935801073a902d0ac25bfe75143cae20af6f81335",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s44/best_checkpoint_eval/val_summary.json",
+      "summary_sha256": "c5be7f72b35b9f0c84f401e2a20a803e517d59c1835808aeb038b1efa2d08d0c"
+    },
+    {
+      "id": "fa9723a42f0a",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s44/test_predictions.csv",
+      "sha256": "b5da492f79c534ff51328bd94e7f1bb70e48a051de77ff0bb9f8ea16ec6bc107",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s44/test_summary.json",
+      "summary_sha256": "03506f13ecc2255daffa924f81926fe23aea287ec0e2e54bf8ffc95f295eb94d"
+    },
+    {
+      "id": "c00122456a7f",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s44/val_predictions.csv",
+      "sha256": "5d2a4e4f74bc3fbf87ccdc535fc413e2558eebe93b2e5fd222c99f1af3e62df3",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-legacy-e010-s44/val_summary.json",
+      "summary_sha256": "742dc34b3c897eb2989d8d4dcab25ad03e0adc6f4d003ac45e9661ae92fd5442"
+    },
+    {
+      "id": "aaad2a6ea12d",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s42/best_checkpoint_eval/test_predictions.csv",
+      "sha256": "1aa12adeab6ae193aa78db91f3f4813b7ca92e928de162707d3dd7bff52712f3",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s42/best_checkpoint_eval/test_summary.json",
+      "summary_sha256": "dc9ab7ffada53a4d00bac8d79643fa9abe16b1300bcf012f47d3c05b679016bc"
+    },
+    {
+      "id": "fe4d3906cf24",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s42/best_checkpoint_eval/val_predictions.csv",
+      "sha256": "895756065cfe9318bf6b51b9974df1e76f29ad06b3f84ef16c025c2344643811",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s42/best_checkpoint_eval/val_summary.json",
+      "summary_sha256": "163d4e8587cf2a4af941b7eddb519aaa8dd313ae13a8e8546872abe247b7340c"
+    },
+    {
+      "id": "500dbd848593",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s42/test_predictions.csv",
+      "sha256": "f113e95066ea1a26622ef34e7a0c9c822453ace39fe14279055a767fbe1684cb",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s42/test_summary.json",
+      "summary_sha256": "6214a9c2d5aec4b8d858c5dc3f31028d90d3ba80b424afd82c0b72af90b22969"
+    },
+    {
+      "id": "6ff9c0904af2",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s42/val_predictions.csv",
+      "sha256": "f7979e6dbe8f9e1614deb331df050303180ff007c14021e841df8a9adc7af241",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s42/val_summary.json",
+      "summary_sha256": "69424eda3e81774f4b93f99bb90159bea2fd04e12b2bb9c5d767320c66796d71"
+    },
+    {
+      "id": "a0c85783be24",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s43/best_checkpoint_eval/test_predictions.csv",
+      "sha256": "9956240c7b8460cee374ed625582bfe828744a53a18823313b2a7a5df2359599",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s43/best_checkpoint_eval/test_summary.json",
+      "summary_sha256": "ab50a30d6f8f9886bcaca92f67edaee11c7ae548a40e3b8123b0a41030af5ee7"
+    },
+    {
+      "id": "a7ecc6a774c6",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s43/best_checkpoint_eval/val_predictions.csv",
+      "sha256": "fcca72c2ceb6f59b4bf847616e7660c1c33dbe7c78e5fd9106863ae74f597b45",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s43/best_checkpoint_eval/val_summary.json",
+      "summary_sha256": "c78f706cc60ed282adf8b06a57833f699f63d78aa47d1a378db95777084b1dd5"
+    },
+    {
+      "id": "404570977433",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s43/test_predictions.csv",
+      "sha256": "77404e21de46468d72996ffce9f4c730f654b5c060981712444526fd54a6666e",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s43/test_summary.json",
+      "summary_sha256": "728d70a0f49dc2cc4432c72da183f20a181ae79968e420a5ce0833a0a0243667"
+    },
+    {
+      "id": "b07131b77fae",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s43/val_predictions.csv",
+      "sha256": "fa8e8205b9d4a46e77e3fc38d0500d3a0799ceb0ee8f3d87d4a2e19566b09d3d",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s43/val_summary.json",
+      "summary_sha256": "874aa7ed282669da8a9a2250e8e812b10cf33edeade051729c5f4605596fd4f3"
+    },
+    {
+      "id": "82ea5158558f",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s44/best_checkpoint_eval/test_predictions.csv",
+      "sha256": "a7c80ffdb65f8900a2f0b29d153d7bebf6a22f40c4c131532214b626f73b1f97",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s44/best_checkpoint_eval/test_summary.json",
+      "summary_sha256": "5f97d5bcc0a67923e3eb209725f49f676a5b2a458df87674f1e11abd0abdabb4"
+    },
+    {
+      "id": "26a6951fc151",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s44/best_checkpoint_eval/val_predictions.csv",
+      "sha256": "8b84b3eea43693bc35ae919df9caa65b4bf93dc1e83d2e39f08a08a4b69b711a",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s44/best_checkpoint_eval/val_summary.json",
+      "summary_sha256": "ea94c505bc7a18604c74379171f1eff93430744fed072041c98d38a5230846a8"
+    },
+    {
+      "id": "1494bca855b9",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s44/test_predictions.csv",
+      "sha256": "762c16dc5b0c04702fd2c33f696dbcad80228c1457e4ed8ed7a9cfc60af17798",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s44/test_summary.json",
+      "summary_sha256": "4f86f6f81c8ac4224c4fd26eeee4afaf790f089c58c9f6b36c5c3c7dceb33155"
+    },
+    {
+      "id": "6df5f639fb7f",
+      "path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s44/val_predictions.csv",
+      "sha256": "9543cfd23515034633e0facbc49e18d1e3d049c61f6cdcfcac3d88b29265ca5d",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-03_1746_claude_flank-context-fixes/results/runs/presto-flank-context-fix-20260903a-masked-e010-s44/val_summary.json",
+      "summary_sha256": "e56992074577cf0513c08d0f2da8b937e6b86952b6c44d36d83612164c7efcf3"
+    },
+    {
+      "id": "9bc13e132e52",
+      "path": "experiments/2026-09-05_0957_codex_pr45-integrity-e2e/results/run/test_predictions.csv",
+      "sha256": "bd8fda4505826a2818bbecb7aa7e022dc744be8d2f218a384c424b8b0d4bc508",
+      "split": "test",
+      "partial": false,
+      "summary_path": "experiments/2026-09-05_0957_codex_pr45-integrity-e2e/results/run/test_summary.json",
+      "summary_sha256": "34b0779c1c61b2a7d1a19a7c992f82d4d2a3f50ed0187189b3cf21f774037c36"
+    },
+    {
+      "id": "5021646d07f8",
+      "path": "experiments/2026-09-05_0957_codex_pr45-integrity-e2e/results/run/val_predictions.csv",
+      "sha256": "50e73cd96771e11a4516a3510a557d4372d9a7bf6d9fb01f15a515edb798f48e",
+      "split": "val",
+      "partial": false,
+      "summary_path": "experiments/2026-09-05_0957_codex_pr45-integrity-e2e/results/run/val_summary.json",
+      "summary_sha256": "ddbf23adac23d5e226769f038169057fc27db6fddea06a0b09ad7aac12d68b25"
+    }
+  ],
+  "excluded": [
+    {
+      "path": "experiments/2026-02-16_0817_claude_iedb-2k-baseline/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-02-26_0817_claude_arch-dimension-sweep/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "epoch",
+        "peptide",
+        "allele",
+        "tag",
+        "ic50_log10",
+        "ic50_nM",
+        "binding_prob",
+        "processing_prob",
+        "presentation_prob",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-02-26_0817_claude_early-baselines/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-01_0817_claude_diagnostic-runs/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "epoch",
+        "peptide",
+        "allele",
+        "tag",
+        "ic50_log10",
+        "ic50_nM",
+        "binding_prob",
+        "processing_prob",
+        "presentation_prob",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-05_0817_claude_training-trajectories/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "epoch",
+        "peptide",
+        "allele",
+        "tag",
+        "ic50_log10",
+        "ic50_nM",
+        "binding_prob",
+        "processing_prob",
+        "presentation_prob",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-07_0819_claude_refactor-verification/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-08_0817_claude_a0201-a2402-target-bakeoff/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "epoch",
+        "peptide",
+        "allele",
+        "ic50_log10",
+        "ic50_nM",
+        "binding_prob",
+        "probe_kd_log10",
+        "probe_kd_nM",
+        "kd_log10",
+        "kd_nM",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-08_0817_claude_class1-panel-quant/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "epoch",
+        "peptide",
+        "allele",
+        "kd_log10",
+        "kd_nM",
+        "ic50_log10",
+        "ic50_nM",
+        "probe_kd_log10",
+        "probe_kd_nM",
+        "binding_prob",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-08_0817_claude_mhc-pretraining/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-09_0817_claude_scorepath-bench/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "epoch",
+        "peptide",
+        "allele",
+        "kd_log10",
+        "kd_nM",
+        "ic50_log10",
+        "ic50_nM",
+        "probe_kd_log10",
+        "probe_kd_nM",
+        "binding_prob",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-10_0817_claude_m1-regression-check/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "epoch",
+        "peptide",
+        "allele",
+        "kd_log10",
+        "kd_nM",
+        "ic50_log10",
+        "ic50_nM",
+        "probe_kd_log10",
+        "probe_kd_nM",
+        "binding_prob",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-10_0817_claude_presto-7allele-broad/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "epoch",
+        "peptide",
+        "allele",
+        "kd_log10",
+        "kd_nM",
+        "ic50_log10",
+        "ic50_nM",
+        "probe_kd_log10",
+        "probe_kd_nM",
+        "binding_prob",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1131_claude_distributional-ba-heads-v2/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "allele",
+        "epoch",
+        "ic50_log10",
+        "ic50_nM",
+        "peptide",
+        "sigma",
+        "iqr",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "label",
+        "run_id",
+        "allele",
+        "epoch",
+        "ic50_log10",
+        "ic50_nM",
+        "peptide",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c01/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c01/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c02/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c02/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c03/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c03/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c04/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c04/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c05/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c05/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c06/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c06/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c07/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c07/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c08/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c08/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c09/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c09/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c10/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c10/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c11/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c11/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c12/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1445_codex_clean-distributional-ba-heads/results/runs/dist-ba-clean-fix-c12/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10",
+        "entropy"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-13_1500_claude_content-conditioned-assay/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "allele",
+        "epoch",
+        "ic50_log10",
+        "ic50_nM",
+        "peptide",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "label",
+        "run_id",
+        "warm_start",
+        "allele",
+        "epoch",
+        "ic50_log10",
+        "ic50_nM",
+        "peptide"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep/results/runs/dist-ba-regwarm-20ep-c01/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep/results/runs/dist-ba-regwarm-20ep-c01/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep/results/runs/dist-ba-regwarm-20ep-c02/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep/results/runs/dist-ba-regwarm-20ep-c02/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep/results/runs/dist-ba-regwarm-20ep-c03/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep/results/runs/dist-ba-regwarm-20ep-c03/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep/results/runs/dist-ba-regwarm-20ep-c04/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-14_1047_codex_mhcflurry-logmse-warmstart-20ep/results/runs/dist-ba-regwarm-20ep-c04/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "split",
+        "sample_id",
+        "dataset_index",
+        "peptide_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "qualifier",
+        "is_exact",
+        "masked",
+        "true_ic50_nM",
+        "true_ic50_log10",
+        "pred_ic50_nM",
+        "pred_ic50_log10"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-14_1800_claude_v6-winner-extended-training/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "allele",
+        "epoch",
+        "ic50_log10",
+        "ic50_nM",
+        "peptide",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-15_1011_codex_exp16-mainpath-baseline-rebuild/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "allele",
+        "epoch",
+        "ic50_log10",
+        "ic50_nM",
+        "peptide",
+        "entropy",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-15_1226_codex_exp21-seed-epoch-confirmation/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "allele",
+        "epoch",
+        "ic50_log10",
+        "ic50_nM",
+        "peptide",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1010_codex_presto-mainpath-affinity-seqonly-replication/results/runs/presto-mainpath-affinity-seqonly-e050-s42/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1010_codex_presto-mainpath-affinity-seqonly-replication/results/runs/presto-mainpath-affinity-seqonly-e050-s42/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1333_codex_exp21-winner-rerun/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "allele",
+        "epoch",
+        "ic50_log10",
+        "ic50_nM",
+        "peptide",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1415_codex_presto-full-output-exp21-retry/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-16_1415_codex_presto-full-output-exp21-retry/results/runs/presto-exp21-full-20260316a-pf03_log10_100k_full-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1415_codex_presto-full-output-exp21-retry/results/runs/presto-exp21-full-20260316a-pf03_log10_100k_full-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1415_codex_presto-full-output-exp21-retry/results/runs/presto-exp21-full-20260316a-pf07_mhcflurry_100k_full-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1415_codex_presto-full-output-exp21-retry/results/runs/presto-exp21-full-20260316a-pf07_mhcflurry_100k_full-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension/results/runs/presto-pf07-opt-20260316a-pf07_ctrl_lr1e3_constant-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension/results/runs/presto-pf07-opt-20260316a-pf07_ctrl_lr1e3_constant-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension/results/runs/presto-pf07-opt-20260316a-pf07_lr1e4_constant-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension/results/runs/presto-pf07-opt-20260316a-pf07_lr1e4_constant-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension/results/runs/presto-pf07-opt-20260316a-pf07_lr1e4_warmup_cosine-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension/results/runs/presto-pf07-opt-20260316a-pf07_lr1e4_warmup_cosine-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension/results/runs/presto-pf07-opt-20260316a-pf07_lr2p8e4_onecycle-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension/results/runs/presto-pf07-opt-20260316a-pf07_lr2p8e4_onecycle-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension/results/runs/presto-pf07-opt-20260316a-pf07_lr2p8e4_warmup_cosine-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1441_codex_pf07-mainpath-optimization-extension/results/runs/presto-pf07-opt-20260316a-pf07_lr2p8e4_warmup_cosine-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1454_claude_factorized-ablation-7allele/results/runs/fac-ablation-c4-20260316a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1454_claude_factorized-ablation-7allele/results/runs/fac-ablation-c4-20260316a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1454_claude_factorized-ablation-7allele/results/runs/fac-ablation-c6-20260316a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1454_claude_factorized-ablation-7allele/results/runs/fac-ablation-c6-20260316a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1454_claude_factorized-ablation-7allele/results/runs/fac-ablation-c7-20260316a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1454_claude_factorized-ablation-7allele/results/runs/fac-ablation-c7-20260316a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0_cross0-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0_cross0-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0_cross0p001-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0_cross0p001-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0_cross0p004-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0_cross0p004-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p0025_cross0-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p0025_cross0-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p0025_cross0p001-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p0025_cross0p001-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p0025_cross0p004-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p0025_cross0p004-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p01_cross0-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p01_cross0-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p01_cross0p001-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p01_cross0p001-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p01_cross0p004-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p01_cross0p004-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p04_cross0-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p04_cross0-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p04_cross0p001-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p04_cross0p001-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p04_cross0p004-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_1621_codex_pf07-output-tying-weight-sweep/results/runs/presto-pf07-tiewt-20260316a-pf07_kd0p04_cross0p004-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2142_codex_exp21-honest-no-assay-repeat/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "label",
+        "allele",
+        "epoch",
+        "ic50_log10",
+        "ic50_nM",
+        "peptide",
+        "display_label"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2227_claude_lr-stability-7allele/results/runs/lr-stab-s1-20260316b/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2227_claude_lr-stability-7allele/results/runs/lr-stab-s1-20260316b/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2227_claude_lr-stability-7allele/results/runs/lr-stab-s2-20260316b/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2227_claude_lr-stability-7allele/results/runs/lr-stab-s2-20260316b/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2227_claude_lr-stability-7allele/results/runs/lr-stab-s3-20260316b/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2227_claude_lr-stability-7allele/results/runs/lr-stab-s3-20260316b/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2227_claude_lr-stability-7allele/results/runs/lr-stab-s5-20260316b/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2227_claude_lr-stability-7allele/results/runs/lr-stab-s5-20260316b/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2227_claude_lr-stability-7allele/results/runs/lr-stab-s6-20260316b/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2227_claude_lr-stability-7allele/results/runs/lr-stab-s6-20260316b/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2355_codex_pf07-assay-structured-dag-sweep/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-16_2355_codex_pf07-assay-structured-dag-sweep/results/runs/presto-pf07-dag-20260316a-pf07_control-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2355_codex_pf07-assay-structured-dag-sweep/results/runs/presto-pf07-dag-20260316a-pf07_control-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2355_codex_pf07-assay-structured-dag-sweep/results/runs/presto-pf07-dag-20260316a-pf07_dag_family-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2355_codex_pf07-assay-structured-dag-sweep/results/runs/presto-pf07-dag-20260316a-pf07_dag_family-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2355_codex_pf07-assay-structured-dag-sweep/results/runs/presto-pf07-dag-20260316a-pf07_dag_method_leaf-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2355_codex_pf07-assay-structured-dag-sweep/results/runs/presto-pf07-dag-20260316a-pf07_dag_method_leaf-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2355_codex_pf07-assay-structured-dag-sweep/results/runs/presto-pf07-dag-20260316a-pf07_dag_prep_readout_leaf-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-16_2355_codex_pf07-assay-structured-dag-sweep/results/runs/presto-pf07-dag-20260316a-pf07_dag_prep_readout_leaf-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-a1-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-a1-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-a1-s43-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-a1-s43-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-a1-s44-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-a1-s44-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-a2-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-a2-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b1-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b1-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b1-s43-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b1-s43-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b1-s44-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b1-s44-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b2-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b2-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b2-s43-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b2-s43-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b3-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-b3-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-c1-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-c1-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-c1-s43-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-c1-s43-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-c1-s44-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-c1-s44-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d1-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d1-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d1-s43-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d1-s43-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d1-s44-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d1-s44-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d2-s43-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d2-s43-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d3-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d3-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d3-s43-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d3-s43-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d3-s44-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-d3-s44-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l1-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l1-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l1-s43-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l1-s43-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l1-s44-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l1-s44-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l2-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l2-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l2-s43-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l2-s43-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l2-s44-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-l2-s44-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p1-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p1-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p1-s43-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p1-s43-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p1-s44-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p1-s44-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p2-s42-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p2-s42-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p2-s43-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p2-s43-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p2-s44-20260317a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1042_claude_7allele-bakeoff/results/runs/bakeoff-p2-s44-20260317a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "run_id",
+        "display_label",
+        "epoch",
+        "peptide",
+        "allele",
+        "output_name",
+        "prediction_nM"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_control_constant-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_control_constant-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_dag_family_constant-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_dag_family_constant-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_dag_method_leaf_constant-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_dag_method_leaf_constant-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_dag_method_leaf_warmup_cosine-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_dag_method_leaf_warmup_cosine-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_dag_prep_readout_leaf_constant-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_dag_prep_readout_leaf_constant-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_dag_prep_readout_leaf_warmup_cosine-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1205_codex_pf07-dag-epoch-curve-rerun/results/runs/presto-pf07-dagcurve-20260317a-pf07_dag_prep_readout_leaf_warmup_cosine-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_control_constant-pretrain_0ep-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_control_constant-pretrain_0ep-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_control_constant-pretrain_1ep-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_control_constant-pretrain_1ep-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_control_constant-pretrain_2ep-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_control_constant-pretrain_2ep-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_method_leaf_constant-pretrain_0ep-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_method_leaf_constant-pretrain_0ep-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_method_leaf_constant-pretrain_1ep-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_method_leaf_constant-pretrain_1ep-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_method_leaf_constant-pretrain_2ep-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_method_leaf_constant-pretrain_2ep-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_prep_readout_leaf_constant-pretrain_0ep-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_prep_readout_leaf_constant-pretrain_0ep-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_prep_readout_leaf_constant-pretrain_1ep-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_prep_readout_leaf_constant-pretrain_1ep-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_prep_readout_leaf_constant-pretrain_2ep-e050-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1212_codex_pf07-mhc-pretrain-impact-sweep/results/runs/presto-pf07-mhcpre-20260317a-pf07_dag_prep_readout_leaf_constant-pretrain_2ep-e050-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1404_codex_pf07-all-classI-1ep-pretrain-epoch-sweep/results/runs/presto-pf07-allclass1-20260317a-pf07_control_constant-e010-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1404_codex_pf07-all-classI-1ep-pretrain-epoch-sweep/results/runs/presto-pf07-allclass1-20260317a-pf07_control_constant-e010-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1404_codex_pf07-all-classI-1ep-pretrain-epoch-sweep/results/runs/presto-pf07-allclass1-20260317a-pf07_dag_method_leaf_constant-e010-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1404_codex_pf07-all-classI-1ep-pretrain-epoch-sweep/results/runs/presto-pf07-allclass1-20260317a-pf07_dag_method_leaf_constant-e010-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1404_codex_pf07-all-classI-1ep-pretrain-epoch-sweep/results/runs/presto-pf07-allclass1-20260317a-pf07_dag_prep_readout_leaf_constant-e010-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-17_1404_codex_pf07-all-classI-1ep-pretrain-epoch-sweep/results/runs/presto-pf07-allclass1-20260317a-pf07_dag_prep_readout_leaf_constant-e010-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1007_codex_cpu-vs-mps-focused-pf07-smoke/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-19_1007_codex_cpu-vs-mps-focused-pf07-smoke/results/runs/presto-focused-device-smoke-20260319a-cpu-e001-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1007_codex_cpu-vs-mps-focused-pf07-smoke/results/runs/presto-focused-device-smoke-20260319a-cpu-e001-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1201_codex_cpu-vs-mps-focused-pf07-smoke-mpssafe/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-19_1201_codex_cpu-vs-mps-focused-pf07-smoke-mpssafe/results/runs/presto-focused-device-smoke-20260319b-cpu-e001-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1201_codex_cpu-vs-mps-focused-pf07-smoke-mpssafe/results/runs/presto-focused-device-smoke-20260319b-cpu-e001-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1201_codex_cpu-vs-mps-focused-pf07-smoke-mpssafe/results/runs/presto-focused-device-smoke-20260319b-mps-e001-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1201_codex_cpu-vs-mps-focused-pf07-smoke-mpssafe/results/runs/presto-focused-device-smoke-20260319b-mps-e001-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1236_codex_cpu-vs-mps-focused-pf07-minitrain-mpssafe/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-19_1236_codex_cpu-vs-mps-focused-pf07-minitrain-mpssafe/results/runs/presto-focused-device-minitrain-20260319a-cpu-e003-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1236_codex_cpu-vs-mps-focused-pf07-minitrain-mpssafe/results/runs/presto-focused-device-minitrain-20260319a-cpu-e003-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1236_codex_cpu-vs-mps-focused-pf07-minitrain-mpssafe/results/runs/presto-focused-device-minitrain-20260319a-mps-e003-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1236_codex_cpu-vs-mps-focused-pf07-minitrain-mpssafe/results/runs/presto-focused-device-minitrain-20260319a-mps-e003-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1338_codex_cpu-vs-mps-manual-dropout-parity/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-19_1338_codex_cpu-vs-mps-manual-dropout-parity/results/runs/presto-focused-device-manualdrop-20260319a-cpu-e003-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1338_codex_cpu-vs-mps-manual-dropout-parity/results/runs/presto-focused-device-manualdrop-20260319a-cpu-e003-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1338_codex_cpu-vs-mps-manual-dropout-parity/results/runs/presto-focused-device-manualdrop-20260319a-mps-e003-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1338_codex_cpu-vs-mps-manual-dropout-parity/results/runs/presto-focused-device-manualdrop-20260319a-mps-e003-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1412_codex_cpu-vs-mps-seeded-manual-dropout-parity/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-19_1412_codex_cpu-vs-mps-seeded-manual-dropout-parity/results/runs/presto-focused-device-seededmanual-20260319a-cpu-e003-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1412_codex_cpu-vs-mps-seeded-manual-dropout-parity/results/runs/presto-focused-device-seededmanual-20260319a-cpu-e003-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1412_codex_cpu-vs-mps-seeded-manual-dropout-parity/results/runs/presto-focused-device-seededmanual-20260319a-mps-e003-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1412_codex_cpu-vs-mps-seeded-manual-dropout-parity/results/runs/presto-focused-device-seededmanual-20260319a-mps-e003-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1505_codex_cpu-vs-mps-allclass1-manualdropout-validation/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-19_1505_codex_cpu-vs-mps-allclass1-manualdropout-validation/results/runs/presto-allclass1-device-manualdropout-20260319a-cpu-e003-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1505_codex_cpu-vs-mps-allclass1-manualdropout-validation/results/runs/presto-allclass1-device-manualdropout-20260319a-cpu-e003-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1505_codex_cpu-vs-mps-allclass1-manualdropout-validation/results/runs/presto-allclass1-device-manualdropout-20260319a-mps-e003-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-19_1505_codex_cpu-vs-mps-allclass1-manualdropout-validation/results/runs/presto-allclass1-device-manualdropout-20260319a-mps-e003-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-20_0920_codex_cpu-vs-mps-allclass1-auto-default-confirmation/results/final_probe_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": []
+    },
+    {
+      "path": "experiments/2026-03-20_0920_codex_cpu-vs-mps-allclass1-auto-default-confirmation/results/runs/presto-allclass1-device-auto-20260320a-cpu-e003-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-20_0920_codex_cpu-vs-mps-allclass1-auto-default-confirmation/results/runs/presto-allclass1-device-auto-20260320a-cpu-e003-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-20_0920_codex_cpu-vs-mps-allclass1-auto-default-confirmation/results/runs/presto-allclass1-device-auto-20260320a-mps-e003-s43/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-20_0920_codex_cpu-vs-mps-allclass1-auto-default-confirmation/results/runs/presto-allclass1-device-auto-20260320a-mps-e003-s43/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-28_claude_class1-best-hits/results/runs/class1-f1-s42-20260328a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-28_claude_class1-best-hits/results/runs/class1-f1-s42-20260328a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-28_claude_class1-best-hits/results/runs/class1-f1-s44-20260328a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-28_claude_class1-best-hits/results/runs/class1-f1-s44-20260328a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-28_claude_class1-best-hits/results/runs/class1-f2-s42-20260328a/test_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    },
+    {
+      "path": "experiments/2026-03-28_claude_class1-best-hits/results/runs/class1-f2-s42-20260328a/val_predictions.csv",
+      "reason": "Different trainer schema or unlabeled probe",
+      "columns": [
+        "sample_id",
+        "peptide",
+        "allele",
+        "measurement_type",
+        "sample_source",
+        "pred_output",
+        "target_nM",
+        "target_log10",
+        "qualifier",
+        "mask",
+        "pred_log10",
+        "pred_nM",
+        "binding_prob"
+      ]
+    }
+  ],
+  "loss_types": {
+    "binding": "censor",
+    "binding_kd": "censor",
+    "binding_ic50": "censor",
+    "binding_ec50": "censor",
+    "elution": "bce",
+    "presentation": "bce",
+    "tcell": "bce",
+    "immunogenicity": "bce",
+    "tcell_assay_method": "bce",
+    "tcell_assay_readout": "bce",
+    "tcell_apc_type": "bce",
+    "tcell_culture_context": "bce",
+    "tcell_stim_context": "bce",
+    "tcell_peptide_format": "bce",
+    "kon": "mse",
+    "koff": "mse",
+    "t_half": "censor",
+    "tm": "censor",
+    "binding_affinity_probe": "censor",
+    "ms_detectability": "bce",
+    "excision": "bce",
+    "processing": "bce",
+    "core_start": "ce",
+    "mhc_class": "ce",
+    "mhc_species": "ce",
+    "mhc_a_fine_type": "ce",
+    "mhc_b_fine_type": "ce",
+    "tcr_evidence": "bce",
+    "tcr_evidence_method": "bce",
+    "species_of_origin": "ce",
+    "foreignness": "bce"
+  }
+}

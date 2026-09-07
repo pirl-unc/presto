@@ -1,0 +1,223 @@
+{
+  "kind": "deterministic code-contract diagnostics, NOT predictive evaluation",
+  "head": "1535b5a208b2ab59b70b83d850b1f0a7e1959537",
+  "dirty_status": " M tasks/todo.md\n?? tasks/audits/\n",
+  "model_config": {
+    "d_model": 32,
+    "n_layers": 2,
+    "n_heads": 4,
+    "latent_topology": "expanded"
+  },
+  "optimizer_steps": 0,
+  "inventory": {
+    "loss_specs": 31,
+    "tensor_paths": 172,
+    "distinct_tensor_objects": 144,
+    "binding_panel_columns": 26,
+    "tcell_panel_columns": 56
+  },
+  "support_gate": {
+    "passes_all_active_and_binary_balance": true,
+    "observed_method_columns": {
+      "ELISPOT": {
+        "positive": 1,
+        "negative": 0
+      },
+      "ICS": {
+        "positive": 0,
+        "negative": 1
+      }
+    },
+    "reported_train_targets": {
+      "tcell": {
+        "count": 2,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "negative": 1,
+        "positive": 1
+      },
+      "tcell_apc_type": {
+        "count": 0,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      },
+      "tcell_assay_method": {
+        "count": 2,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      },
+      "tcell_assay_readout": {
+        "count": 2,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      },
+      "tcell_culture_context": {
+        "count": 0,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      },
+      "tcell_peptide_format": {
+        "count": 2,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      },
+      "tcell_stim_context": {
+        "count": 2,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      }
+    },
+    "binary_targets": [
+      "elution",
+      "excision",
+      "foreignness",
+      "ms_detectability",
+      "presentation",
+      "processing",
+      "tcell",
+      "tcr_evidence",
+      "tcr_evidence_method"
+    ],
+    "mhc_class_has_loss_target_but_absent_from_support": true
+  },
+  "tcell_mil": {
+    "loss_keys": [
+      "consistency_binding_orthogonality",
+      "immunogenicity_mil",
+      "mhc_a_fine_type",
+      "mhc_b_fine_type",
+      "mhc_class",
+      "tcell_mil"
+    ],
+    "selected_method_index": 1,
+    "selected_method_gradient_abs_sum": 0.0,
+    "unknown_method_gradient_abs_sum": 0.013667329214513302,
+    "panel_mask": [
+      0.0
+    ],
+    "dumped_tcell_rows": 0,
+    "support_targets": {
+      "tcell_apc_type": {
+        "count": 0,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      },
+      "tcell_assay_method": {
+        "count": 0,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      },
+      "tcell_assay_readout": {
+        "count": 0,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      },
+      "tcell_culture_context": {
+        "count": 0,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      },
+      "tcell_peptide_format": {
+        "count": 0,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      },
+      "tcell_stim_context": {
+        "count": 0,
+        "exact": 0,
+        "censored_lower": 0,
+        "censored_upper": 0
+      }
+    }
+  },
+  "elution_mil": {
+    "instances": 2,
+    "instance_probability": 0.5,
+    "training_bag_probability": 0.75,
+    "training_bag_loss": 0.28768208622932434,
+    "dumped_row_probability": 0.5
+  },
+  "vector_holdout": {
+    "mhc_class_target_count": 1,
+    "mhc_class_dump_count": 0,
+    "method_rows": [
+      {
+        "task": "tcr_evidence_method",
+        "sample_id": "receptor-evidence",
+        "source": "audit_fixture",
+        "y_true": 1.0
+      },
+      {
+        "task": "tcr_evidence_method",
+        "sample_id": "",
+        "source": "",
+        "y_true": 0.0
+      },
+      {
+        "task": "tcr_evidence_method",
+        "sample_id": "",
+        "source": "",
+        "y_true": 0.0
+      }
+    ]
+  },
+  "merged_binding_metadata": {
+    "source_method": "purified MHC/direct/fluorescence",
+    "record_method": null,
+    "record_assay_type": null,
+    "batch_selectors": {
+      "assay_type_idx": [
+        4
+      ],
+      "assay_method_idx": [
+        0
+      ],
+      "assay_prep_idx": [
+        0
+      ],
+      "assay_geometry_idx": [
+        0
+      ],
+      "assay_readout_idx": [
+        0
+      ]
+    }
+  },
+  "real_source_example": {
+    "path": "data/merged_deduped.tsv",
+    "line": 6,
+    "row_sha256": "2abe0c13f325256f3161d5f2cb337680e4e1573de4b8c343c33ddf47de0ea846",
+    "fields": {
+      "peptide": "EVMPVSMAK",
+      "mhc_allele": "HLA-A*03:01",
+      "value": "473.0",
+      "value_type": "dissociation constant KD (~EC50)",
+      "qualifier": "0",
+      "assay_type": "dissociation constant KD (~EC50)",
+      "assay_method": "purified MHC/direct/fluorescence",
+      "record_type": "binding",
+      "source": "iedb"
+    }
+  },
+  "average_precision_ties": {
+    "scores": [
+      0.5,
+      0.5
+    ],
+    "expected_average_precision": 0.5,
+    "positive_first": 1.0,
+    "negative_first": 0.5
+  }
+}

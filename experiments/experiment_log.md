@@ -919,6 +919,44 @@ external data paths: chain-aware lineage now represents DQ/DP beta model inputs
 correctly, while the common funnel exposes the Hitlist flank-filter loss without
 discarding the detailed source-loader diagnostics.
 
+## 2026-09-07_1851_codex_average-precision-correction
+
+**Date:** 2026-09-07. **Agent/model:** Codex / GPT-6.
+**Directory:** [average-precision correction](2026-09-07_1851_codex_average-precision-correction/).
+**Code:** `93a9c7b24c6108577dcf40c94a9ff34e6c30cc5c`; experiment-only dirty files.
+**Reproduce:** directory `reproduce/launch.sh`, `launch.json`, `inputs.json` and
+frozen analyzer/estimator source. OMP/MKL threads 1, local CPU, no requested or
+observed GPU, 7.065 seconds.
+
+Retrospective correction of existing canonical validation/test predictions;
+no new pretraining, training, inference or model selection. Discovered 301
+local CSVs; selected 39 canonical-schema files / 428,537 rows with source
+SHA-256 hashes and preserved split identity. The partial sample file is
+identified; 262 other-schema/empty/probe files are excluded. Original source,
+curation, synthetic-data, training, loss weights and assay contracts are linked
+through each source experiment. BCE task labels retain their task logits;
+binding targets use the existing qualifier-aware 500 nM classifier. No label,
+source, split, synthetic mixture or prediction is changed.
+
+| Condition | Validation corrected AP entries | Test corrected AP entries |
+|---|---:|---:|
+| September 2 source-junction masking: row-wise → threshold-group AP | 121 / 184 | 114 / 186 |
+| September 3 flank-context fixes: row-wise → threshold-group AP | 253 / 364 | 250 / 364 |
+| September 5 PR #45 smoke: row-wise → threshold-group AP | 0 / 12 | 0 / 13 |
+
+All 1,123 compared old AP values reproduce their archives. Reissued 738 metrics
+in 36 explicitly versioned summary copies; 385 are unchanged. Maximum absolute
+delta 0.083333, in small strata. Corrected AP matches scikit-learn 1.5.2 across
+500 seeded tied/untied arrays to 3.33e-16. `ap_deltas.csv` preserves every metric,
+support/tie count and delta; summary JSON links full source validation/test
+dumps and corrected files. Original non-AP metrics (including regression,
+other threshold metrics and available loss metadata) remain exactly unchanged.
+Missing historical loss/output artifacts are not reconstructed by this audit.
+
+Preferred estimator: `average_precision_distinct_thresholds_v2`. No model
+winner or new-encoder quality result. The earlier masking/null-to-NAN validity
+errata still apply; changed AP values do not restore withdrawn causal claims.
+
 ## 2026-09-07_1908_codex_binding-metadata-preservation
 
 **Date:** 2026-09-07. **Agent/model:** Codex / GPT-6.
