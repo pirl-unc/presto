@@ -9998,7 +9998,7 @@ the issue rather than claiming a complete biological model.
 - [x] Freeze the implementation scope and acceptance tests before model edits.
 - [x] Align canonical docs and fix the selected model input/output defects
       through shared code paths, with targeted behavioral tests.
-- [ ] Run focused and full regression checks; create a new PR linked to the
+- [x] Run focused and full regression checks; create a new PR linked to the
       issue, report its exact scope and remaining tracked work, and verify CI.
 
 ## Review
@@ -10053,3 +10053,23 @@ old stimulus table layout. The stimulus check now reads the canonical output row
 and compares ordered values. Re-plan for closure: freeze all code/tests before
 restarting the full suite; do not edit/format while it runs. Focused reruns must
 also confirm the original source-probe assertions pass without weakening them.
+
+### Final verification and handoff
+
+- PR #47: https://github.com/pirl-unc/presto/pull/47; based directly on merged
+  main, not stacked on an unmerged PR. Marked ready for review.
+- Frozen code revision: 0c9cba12405fee3ffe4bf6e2d2594a01076f3212.
+- Full local rerun: `OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q`:
+  **1791 passed, 1 skipped** (2089.67 seconds). No failures.
+- Full PR CI: **1789 passed, 3 skipped** (877.06 seconds); push and PR lint/test
+  plus docs jobs all succeeded on the same code revision.
+- Targeted closure: 132 source/routing/vocabulary/panel checks passed; final
+  interface/vocabulary/routing check run passed 21 tests.
+- Ruff 0.16.0 lint and repository format check pass; strict MkDocs build passes;
+  `git diff --check` passes. Checkpoint round trips and end-to-end unit training
+  are included in the passing suites.
+- This final log update changes verification notes only. Any CI rerun triggered
+  by it is separate from the successfully verified code revision above.
+- #46 remains open for independent context roles, concurrent interventions,
+  repertoire conditioning, remaining source/serving/assay gaps and scientific
+  validation. No full-corpus experiment or model-quality claim was made.
