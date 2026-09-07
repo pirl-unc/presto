@@ -10103,10 +10103,13 @@ Verification:
 
 - [x] Implement and verify metadata preservation and gradient routing.
 - [x] Complete registered real-source before/after audit.
-- [ ] Publish PR, verify its base/head/body and CI.
+- [x] Publish PR and verify its base/head/body; track full CI on the linked PR.
 - [x] Document the shared #48/#50/#51 supervision design and #53 dependencies.
 
-Review results: pending.
+Review results: PR #55 is open and ready for review against main, independent
+of PR #54. Both PR bases/heads/bodies were read back and verified. #54's full
+CI is green; #55's lint/docs pass and its full suites were running at this
+notes update. Final check results are recorded on the PR checks and body.
 
 The metadata repair passes 184 focused tests (including 12 new adapter/routing
 tests), pinned full lint/format and strict docs build. Seven adapter assertions
@@ -10122,3 +10125,13 @@ Shared next-group design is in `tasks/specs/2026-09-07_shared-supervision.md`:
 effective observation/target/prediction resolution should serve loss, support
 and export, with common T-cell bag-panel aggregation and correct CE/vector
 identity. #48/#50/#51 and fresh-training #53 remain open.
+
+Published repair PRs:
+
+- #54 https://github.com/pirl-unc/presto/pull/54 — fixes #52, head `ace85eb`.
+- #55 https://github.com/pirl-unc/presto/pull/55 — fixes #49, production `ddc0644`.
+
+Both production changes together passed 234 focused tests in isolated checkout
+`81face3`, with imports explicitly verified to originate in that checkout.
+No new training or inference service was launched. #47 was merged as `b2e939e`
+and its main-branch CI passed; no deployment/release/service is configured.
