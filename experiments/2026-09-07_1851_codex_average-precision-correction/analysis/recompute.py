@@ -136,7 +136,7 @@ def main():
             "reissued_metrics": len(replacements), "corrected_summary": corrected_path,
         })
     with (result_dir / "ap_deltas.csv").open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows_out[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(rows_out[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows_out)
     # Independent local reference; this is not a package/runtime dependency.

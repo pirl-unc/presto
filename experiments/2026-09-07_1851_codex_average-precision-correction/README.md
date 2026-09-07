@@ -70,6 +70,9 @@ remain omitted under Presto's reporting policy. Runtime: 7.065 seconds on local
 CPU. Production commit: `93a9c7b24c6108577dcf40c94a9ff34e6c30cc5c`; only the
 experiment bundle/plan were uncommitted. Frozen estimator and analyzer sources
 are retained in `reproduce/source/`; the analyzer imports the frozen estimator.
+The original frozen analyzer used CSV CRLF terminators. The canonical analyzer
+and checked-in delta CSV use LF for repository whitespace checks; parsed CSV
+records were asserted identical during normalization. No metric changed.
 
 ## Decision and handoff
 

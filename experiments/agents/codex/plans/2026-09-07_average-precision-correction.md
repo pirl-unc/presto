@@ -29,4 +29,3 @@ Record code revision, dirty status, source snapshots, exact command/env, CPU
 runtime, considered/excluded files, sample and tie counts, corrected metrics,
 all mismatches, summary paths and limitations. Add the completed family to
 experiment_log.md; no new training result or new-model quality claim.
-
