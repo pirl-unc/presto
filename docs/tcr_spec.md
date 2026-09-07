@@ -1,170 +1,43 @@
-# TCR Encoder Specification (Future Feature)
+# Receptor-specific pathway: future work
 
-> **Status: specification only. The implementation was removed on 2026-08-31.**
->
-> `models/tcr.py` (364 lines) and `tests/test_tcr.py` (252 lines) existed and
-> were exported from `models/__init__.py`, but nothing instantiated them: all
-> eight exported symbols had zero references outside those two files, and
-> `RepertoireHead` appeared only in the list of checkpoint keys that are
-> actively *dropped* on load. TCR sequences never reached `Presto.forward` --
-> `TcrEvidenceRecord` contributes a binary "some receptor was found" label and
-> nothing more.
->
-> `tasks/receptor_removal_plan.md` calls for exactly this: "no TCR-conditioned
-> forward path or pMHC:TCR matcher in the canonical model". Keeping an exported
-> but unwired subsystem invited someone to import it and get a model component
-> that is never trained and never runs.
->
-> This document stays as the design record. Recover the implementation from
-> git history (`git log -- models/tcr.py`) if the pathway is revived.
+The authoritative desired design is [model_io_contract.md](model_io_contract.md).
+This page records the boundary of a future extension, not an implemented API.
 
-This document specifies the planned optional TCR pathway and its intended
-integration into Presto.
+## What exists now
 
-**Canonical status (current):** TCR-conditioned recognition/matching is not active
-in canonical training or inference. TCR inputs are reserved for future work.
+Canonical Presto has no TCR-sequence input, `tcr_vec`, `match_logit` or
+receptor-specific affinity output. The unused standalone TCR implementation was
+removed; its history can be inspected with `git log -- models/tcr.py`.
+No checkpoint key-dropping migration should revive it implicitly.
 
-Model architecture is in `design.md`. Training strategy is in `training_spec.md`.
+VDJdb/McPAS and other receptor records can contribute **pMHC-only evidence**
+and evidence-method supervision. That is an active objective, but does not
+predict whether a specified receptor recognizes the pMHC.
 
----
+`Predictor.predict_recognition` and `presto predict recognition` report
+repertoire-level recognition/immunogenicity, not receptor-specific matching.
+The current recognition path still lacks the complete presented-pMHC and
+selection-system context required by the desired design.
 
-# 1. Planned Behavior
+## Intended extension
 
-When enabled in a future release, TCR support will:
-1. Encode TCR alpha/beta chains into a shared representation (`tcr_vec`).
-2. Optionally modulate recognition latents via gated cross-attention.
-3. Compute a TCR-specific pMHC match score (`match_logit`).
-4. Support optional chain/cell auxiliary supervision.
+- Encode paired receptor sequences without species or assay metadata in the
+  residue encoder. Preserve absent chains and pairing/source provenance.
+- Keep individual receptor species independent of the species of the system
+  whose repertoire is being modeled.
+- Keep presenting APC MHC separate from repertoire-selection MHC.
+- Explicitly distinguish population/repertoire recognition from a specified
+  TCR–pMHC match; supplying a receptor must not silently change the meaning of
+  the same output.
+- Match against the presented pMHC representation. Repertoire-level recognition
+  is not restricted to peptide plus foreignness.
+- Add receptor-specific binding/functional outputs only with declared source
+  evidence, negatives, loss semantics and independent held-out support.
 
-Current canonical behavior:
-- recognition uses peptide + foreignness (no TCR token path),
-- no TCR-conditioned matching output is used,
-- no TCR objective is active in canonical training.
+Attention architecture, contrastive loss, missing-chain handling and multi-TCR
+aggregation are implementation choices to settle in a new scoped specification.
+An old cosine-similarity prototype is not a commitment to a validated matching
+model. No multi-TCR bag or receptor-specific canonical training is claimed here.
 
----
-
-# 2. Planned TCR Input Sequence
-
-```
-[TCR_CLS] [TRA] alpha_1 alpha_2 ... [SEP] [TRB] beta_1 beta_2 ... [SEP]
-```
-
-When only one chain is available (planned):
-```
-# beta-only
-[TCR_CLS] <MISSING> [SEP] [TRB] beta_1 ... [SEP]
-
-# alpha-only
-[TCR_CLS] [TRA] alpha_1 ... [SEP] <MISSING> [SEP]
-```
-
-The TCR token stream is separate from the pMHC token stream (`design.md` S3.1).
-
----
-
-# 3. Planned Per-Token Embedding
-
-```python
-tcr_token_repr[i] = aa_embed[i] + tcr_segment_embed[i] + tcr_position_embed[i]
-```
-
-`aa_embed` is shared with the pMHC encoder.
-
-## 3.1 TCR Segment Embedding
-
-| Segment | Tokens |
-|---------|--------|
-| `SEG_TCR_ALPHA` | `[TRA]`, alpha residues |
-| `SEG_TCR_BETA` | `[TRB]`, beta residues |
-| `SEG_TCR_GLOBAL` | `[TCR_CLS]`, `[SEP]` |
-
-## 3.2 CDR-Annotated Positional Encoding (Planned)
-
-CDR boundaries from IMGT numbering (ANARCI or explicit annotation), with
-region embeddings and CDR3 dual-terminus encoding.
-
----
-
-# 4. Planned TCR Encoder Architecture
-
-Small transformer over TCR tokens only:
-- layers: `N_tcr` ~ 3-4,
-- dimension: same `d_model` as pMHC path,
-- attention: full self-attention within TCR tokens,
-- style: pre-norm transformer.
-
----
-
-# 5. Planned Integration into Recognition Latents
-
-## 5.1 Gated Residual Cross-Attention (Planned)
-
-Recognition starts from peptide-only latent computation; a gated residual TCR
-contribution is optionally added when TCR is available.
-
-## 5.2 Gating Rationale
-
-TCR presence changes semantics from population-level recognizability to
-TCR-specific matching. The planned gate handles this transition.
-
----
-
-# 6. Planned TCR-pMHC Match Score
-
-Canonical planned anchor is `pmhc_vec` (from `design.md` S9.7):
-
-```python
-pmhc_embed = Linear_proj_pmhc(pmhc_vec)  # (d_model,)
-tcr_embed = Linear_proj_tcr(tcr_vec)  # (d_model,)
-match_logit = cosine_similarity(pmhc_embed, tcr_embed) / temperature
-match_prob = sigmoid(match_logit)
-```
-
-Supervision source (future): known TCR:pMHC pairs from VDJdb/McPAS.
-
----
-
-# 7. Planned Contrastive Objective
-
-Optional InfoNCE objective in shared TCR-pMHC embedding space:
-
-```python
-pmhc_embeds = Linear_proj(pmhc_vec)
-tcr_embeds = Linear_proj(tcr_vec)
-L_contrastive = infonce(pmhc_embeds, tcr_embeds, temperature=0.07)
-```
-
-Not active in canonical training.
-
----
-
-# 8. Planned Missing-Chain Handling
-
-| Situation | Planned strategy |
-|-----------|------------------|
-| No TCR | Skip TCR pathway; recognition remains peptide + foreignness |
-| Single-chain TCR | Use `<MISSING>` in absent chain segment |
-| Paired TCR | Full TCR encoding |
-
----
-
-# 9. Planned Multi-TCR Bag Support
-
-Future MIL semantics mirror multi-allele Noisy-OR:
-
-```python
-per_tcr_match_probs = [sigmoid(match_logit_i) for tcr_i in tcr_bag]
-bag_match_prob = 1 - prod(1 - p for p in per_tcr_match_probs)
-```
-
----
-
-# 10. Implementation Status
-
-| Component | Status | Notes |
-|-----------|--------|-------|
-| TCR pathway in canonical model/training | Not active | Reserved future feature |
-| Standalone TCR utility modules | Prototype-only | Kept for future integration work |
-| TCR-conditioned recognition/matching outputs | Not active | No canonical guarantees yet |
-| Contrastive TCR-pMHC objective | Not active | Planned |
-| Multi-TCR bag training/inference | Not active | Planned |
+See [issue #46](https://github.com/pirl-unc/presto/issues/46) for the unified
+input/output program and acceptance gates.

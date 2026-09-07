@@ -13,13 +13,13 @@ python -m presto predict presentation --checkpoint presto.pt --peptide SIINFEKL 
 
 ## Canonical Docs
 
-- High-level goals, data, inputs/outputs: `docs/design.md`
-- Canonical assay modeling contract: `docs/assay_modeling_contract.md`
-- Complete model input/output contract: `docs/model_io_contract.md`
+- Single authoritative input/output design: [model I/O contract](docs/model_io_contract.md)
+- Current architecture guide: [design](docs/design.md)
+- Assay policy summary: [assay modeling](docs/assay_modeling_contract.md)
 - Assay source inventory and supervision map: `docs/assay_learning_scheme.md`
 - Training and batch construction spec: `docs/training_spec.md`
 - CLI usage: `docs/cli.md`
-- Repo inventory and retention guide: `docs/repo_inventory.md`
+- Repo inventory and retention guide: [repo inventory](docs/repo_inventory.md)
 - Implementation status audit: `TODO.md`
 
 ## Repo At A Glance
@@ -35,12 +35,18 @@ What is intentionally local-only and ignored:
 - large regenerable derived datasets such as `data/merged_deduped.tsv`
 - transient launch logs and caches
 
-If you need to decide whether something belongs in git, start with `docs/repo_inventory.md`.
-If you need to decide what is safe to delete locally right now, jump to the `Operational Checklist` section in `docs/repo_inventory.md`.
-
 ## Canonical Assay Rule
 
-Canonical Presto is sequence-only on the input side for assay prediction. Assay identity may choose supervision targets or output heads, but must never be fed back in as a predictive input feature for affinity, T-cell assays, mass spec, or related outputs.
+Presto uses sequence-only encoding with scoped downstream biological context.
+APC state, interventions and cytokines are allowed biological inputs. Presenting
+MHC and repertoire-selection MHC, and APC/MHC/TCR/repertoire/antigen species,
+are distinct roles. Assay identity only selects fixed output tracks and losses.
+
+The full role-specific schema is not implemented yet. The
+[I/O contract](docs/model_io_contract.md) separates target design, actual outputs
+and remaining gaps; [issue #46](https://github.com/pirl-unc/presto/issues/46)
+tracks implementation. Receptor evidence is currently pMHC-only, not matching
+against a supplied TCR.
 
 ## Mouse MHC Overlay (IMGT + UniProt, Provenance Tracked)
 
@@ -66,6 +72,11 @@ The catalog includes explicit source columns per emitted protein:
 
 Canonical unified training defaults enable all synthetic-negative categories.
 
+These are synthetic hypotheses, not measured negatives. In particular,
+`no_mhc_beta` currently deletes the second groove segment (class-I alpha2),
+not beta2m. Its assembly interpretation and missing-sequence priors are known
+design drift tracked in #46, not scientifically validated defaults.
+
 | Category | Modes | Default control (unified) | Primary target effect |
 |---|---|---|---|
 | pMHC negatives | `peptide_scramble`, `peptide_random`, `mhc_scramble`, `mhc_random`, `no_mhc_alpha`, `no_mhc_beta` | `--synthetic-pmhc-negative-ratio 1.0` and `--synthetic-class-i-no-mhc-beta-negative-ratio 0.25` | Drive weak/non-binder supervision (`binding`/`affinity`) and low downstream presentation |
@@ -77,7 +88,7 @@ Semantics:
 - `random` = de novo generation/sampling.
 - `scramble` = permutation of existing sequence content.
 
-Reference: `docs/training_spec.md` section "Synthetic Negative Schedule".
+Reference: [training guide](docs/training_spec.md).
 
 ## Development
 

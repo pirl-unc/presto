@@ -328,8 +328,8 @@ class PrestoBatch:
 
     # Optional sequences
     #: Per-row: is the corresponding flank a protein terminus? Consumed by the
-    #: excision window, which pads a terminus with <TERMINUS> and an unmapped
-    #: flank with <MISSING>.
+    #: excision window, which currently pads a terminus with X and an unknown
+    #: flank with ?. Missing encoder segments separately use <MISSING>.
     flank_n_is_terminus: Optional[torch.Tensor] = None
     flank_c_is_terminus: Optional[torch.Tensor] = None
     flank_n_tok: Optional[torch.Tensor] = None
@@ -372,9 +372,7 @@ class PrestoBatch:
     # Per-MIL-instance provenance. Needed because the elution loss runs through
     # the bag path whenever MIL is active, and that forward is separate.
     mil_provenance: Dict[str, torch.Tensor] = field(default_factory=dict)
-    # Legacy T-cell assay metadata. Keep for supervision bookkeeping while the
-    # context-conditioned T-cell path is being refactored toward the same
-    # outputs-only assay contract.
+    # T-cell assay descriptors select supervised response columns, not inputs.
     tcell_context: Dict[str, torch.Tensor] = field(default_factory=dict)
     tcell_mil_context: Dict[str, torch.Tensor] = field(default_factory=dict)
 
@@ -386,6 +384,8 @@ class PrestoBatch:
     mil_species: Optional[List[str]] = None
     mil_flank_n_tok: Optional[torch.Tensor] = None
     mil_flank_c_tok: Optional[torch.Tensor] = None
+    mil_flank_n_is_terminus: Optional[torch.Tensor] = None
+    mil_flank_c_is_terminus: Optional[torch.Tensor] = None
     mil_instance_to_bag: Optional[torch.Tensor] = None
     mil_bag_label: Optional[torch.Tensor] = None
     mil_bag_sample_ids: List[str] = field(default_factory=list)
@@ -396,6 +396,8 @@ class PrestoBatch:
     tcell_mil_species: Optional[List[str]] = None
     tcell_mil_flank_n_tok: Optional[torch.Tensor] = None
     tcell_mil_flank_c_tok: Optional[torch.Tensor] = None
+    tcell_mil_flank_n_is_terminus: Optional[torch.Tensor] = None
+    tcell_mil_flank_c_is_terminus: Optional[torch.Tensor] = None
     tcell_mil_instance_to_bag: Optional[torch.Tensor] = None
     tcell_mil_bag_label: Optional[torch.Tensor] = None
     tcell_mil_bag_sample_ids: List[str] = field(default_factory=list)
@@ -442,6 +444,27 @@ class PrestoBatch:
     targets: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_masks: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_quals: Dict[str, torch.Tensor] = field(default_factory=dict)
+
+    def model_inputs(self) -> Dict[str, Any]:
+        """One row-level forward contract shared by training and evaluation.
+
+        Assay descriptors, labels and source identities remain outside the
+        model. Biological context and observed boundary flags are included.
+        Call after moving the batch to the model device.
+        """
+        return {
+            "pep_tok": self.pep_tok,
+            "mhc_a_tok": self.mhc_a_tok,
+            "mhc_b_tok": self.mhc_b_tok,
+            "mhc_class": self.mhc_class,
+            "species": self.processing_species,
+            "flank_n_tok": self.flank_n_tok,
+            "flank_c_tok": self.flank_c_tok,
+            "flank_n_is_terminus": self.flank_n_is_terminus,
+            "flank_c_is_terminus": self.flank_c_is_terminus,
+            "machinery": self.machinery_idx,
+            "provenance": self.provenance,
+        }
 
     def to(self, device: str, non_blocking: bool = False) -> "PrestoBatch":
         """Move batch to device."""
@@ -519,6 +542,8 @@ class PrestoBatch:
             mil_species=self.mil_species,
             mil_flank_n_tok=_move(self.mil_flank_n_tok),
             mil_flank_c_tok=_move(self.mil_flank_c_tok),
+            mil_flank_n_is_terminus=_move(self.mil_flank_n_is_terminus),
+            mil_flank_c_is_terminus=_move(self.mil_flank_c_is_terminus),
             mil_instance_to_bag=_move(self.mil_instance_to_bag),
             mil_bag_label=_move(self.mil_bag_label),
             mil_bag_sample_ids=self.mil_bag_sample_ids,
@@ -529,6 +554,8 @@ class PrestoBatch:
             tcell_mil_species=self.tcell_mil_species,
             tcell_mil_flank_n_tok=_move(self.tcell_mil_flank_n_tok),
             tcell_mil_flank_c_tok=_move(self.tcell_mil_flank_c_tok),
+            tcell_mil_flank_n_is_terminus=_move(self.tcell_mil_flank_n_is_terminus),
+            tcell_mil_flank_c_is_terminus=_move(self.tcell_mil_flank_c_is_terminus),
             tcell_mil_instance_to_bag=_move(self.tcell_mil_instance_to_bag),
             tcell_mil_bag_label=_move(self.tcell_mil_bag_label),
             tcell_mil_bag_sample_ids=self.tcell_mil_bag_sample_ids,
@@ -725,6 +752,8 @@ class PrestoCollator:
         species: List[str],
         flank_ns: List[str],
         flank_cs: List[str],
+        flank_n_termini: List[bool],
+        flank_c_termini: List[bool],
         instance_to_bag: List[int],
         bag_labels: List[float],
         bag_sample_ids: List[str],
@@ -743,6 +772,8 @@ class PrestoCollator:
             "species": None,
             "flank_n_tok": None,
             "flank_c_tok": None,
+            "flank_n_is_terminus": None,
+            "flank_c_is_terminus": None,
             "instance_to_bag": None,
             "bag_label": None,
             "bag_sample_ids": bag_sample_ids,
@@ -767,6 +798,8 @@ class PrestoCollator:
         )
         outputs["mhc_class"] = mhc_classes
         outputs["species"] = species
+        outputs["flank_n_is_terminus"] = torch.tensor(flank_n_termini, dtype=torch.bool)
+        outputs["flank_c_is_terminus"] = torch.tensor(flank_c_termini, dtype=torch.bool)
         # Per-instance cellular state. Without this the MIL forward falls back
         # to the default condition for every instance, and since the elution
         # loss runs through the bag path whenever MIL is active, the whole
@@ -1414,7 +1447,7 @@ class PrestoCollator:
             "peptide_format_idx": [],
             "culture_duration_hours": [],
         }
-        targets: Dict[str, List[int]] = {
+        targets: Dict[str, List[float]] = {
             "tcell_assay_method": [],
             "tcell_assay_readout": [],
             "tcell_apc_type": [],
@@ -1492,12 +1525,10 @@ class PrestoCollator:
                 float(culture_duration_hours) if culture_duration_hours is not None else 0.0
             )
 
-            targets["tcell_assay_method"].append(method_idx)
-            targets["tcell_assay_readout"].append(readout_idx)
-            targets["tcell_apc_type"].append(apc_idx)
-            targets["tcell_culture_context"].append(culture_idx)
-            targets["tcell_stim_context"].append(stim_idx)
-            targets["tcell_peptide_format"].append(pep_format_idx)
+            # Each observed assay column predicts the measured T-cell
+            # response, not the category of the apparatus that measured it.
+            for values in targets.values():
+                values.append(float(sample.tcell_label) if sample.tcell_label is not None else 0.0)
 
             has_tcell = sample.tcell_label is not None and not sample.use_tcell_pathway_mil
             masks["tcell_assay_method"].append(1.0 if has_tcell and method_idx != 0 else 0.0)
@@ -1520,7 +1551,7 @@ class PrestoCollator:
             dtype=torch.float32,
         )
         target_tensors = {
-            key: torch.tensor(values, dtype=torch.long) for key, values in targets.items()
+            key: torch.tensor(values, dtype=torch.float32) for key, values in targets.items()
         }
         mask_tensors = {
             key: torch.tensor(values, dtype=torch.float32) for key, values in masks.items()
@@ -1691,6 +1722,8 @@ class PrestoCollator:
         mil_species: List[str] = []
         mil_flank_ns: List[str] = []
         mil_flank_cs: List[str] = []
+        mil_flank_n_termini: List[bool] = []
+        mil_flank_c_termini: List[bool] = []
         mil_apm: List[Optional[str]] = []
         mil_lineages: List[Optional[str]] = []
         mil_origins: List[Optional[str]] = []
@@ -1706,6 +1739,8 @@ class PrestoCollator:
         tcell_mil_species: List[str] = []
         tcell_mil_flank_ns: List[str] = []
         tcell_mil_flank_cs: List[str] = []
+        tcell_mil_flank_n_termini: List[bool] = []
+        tcell_mil_flank_c_termini: List[bool] = []
         tcell_mil_instance_to_bag: List[int] = []
         tcell_mil_apm: List[Optional[str]] = []
         tcell_mil_lineages: List[Optional[str]] = []
@@ -1766,6 +1801,8 @@ class PrestoCollator:
                     mil_species.append(species_list[i])
                     mil_flank_ns.append(self._sanitize_optional_sequence(sample.flank_n))
                     mil_flank_cs.append(self._sanitize_optional_sequence(sample.flank_c))
+                    mil_flank_n_termini.append(sample.flank_n_is_terminus)
+                    mil_flank_c_termini.append(sample.flank_c_is_terminus)
                     mil_apm.append(sample.apm_perturbation)
                     mil_lineages.append(sample.cell_lineage)
                     mil_origins.append(sample.sample_origin)
@@ -1817,6 +1854,8 @@ class PrestoCollator:
                 tcell_mil_species.append(species_list[i])
                 tcell_mil_flank_ns.append(self._sanitize_optional_sequence(sample.flank_n))
                 tcell_mil_flank_cs.append(self._sanitize_optional_sequence(sample.flank_c))
+                tcell_mil_flank_n_termini.append(sample.flank_n_is_terminus)
+                tcell_mil_flank_c_termini.append(sample.flank_c_is_terminus)
                 tcell_mil_instance_to_bag.append(bag_index)
                 tcell_mil_source_samples.append(sample)
                 # Per-instance cellular state, collected the same way the
@@ -1843,6 +1882,8 @@ class PrestoCollator:
             species=mil_species,
             flank_ns=mil_flank_ns,
             flank_cs=mil_flank_cs,
+            flank_n_termini=mil_flank_n_termini,
+            flank_c_termini=mil_flank_c_termini,
             instance_to_bag=mil_instance_to_bag,
             bag_labels=mil_bag_labels,
             bag_sample_ids=mil_bag_sample_ids,
@@ -1861,6 +1902,8 @@ class PrestoCollator:
             species=tcell_mil_species,
             flank_ns=tcell_mil_flank_ns,
             flank_cs=tcell_mil_flank_cs,
+            flank_n_termini=tcell_mil_flank_n_termini,
+            flank_c_termini=tcell_mil_flank_c_termini,
             instance_to_bag=tcell_mil_instance_to_bag,
             bag_labels=tcell_mil_bag_labels,
             bag_sample_ids=tcell_mil_bag_sample_ids,
@@ -1958,6 +2001,8 @@ class PrestoCollator:
             mil_species=mil_tensors["species"],
             mil_flank_n_tok=mil_tensors["flank_n_tok"],
             mil_flank_c_tok=mil_tensors["flank_c_tok"],
+            mil_flank_n_is_terminus=mil_tensors["flank_n_is_terminus"],
+            mil_flank_c_is_terminus=mil_tensors["flank_c_is_terminus"],
             mil_instance_to_bag=mil_tensors["instance_to_bag"],
             mil_bag_label=mil_tensors["bag_label"],
             mil_bag_sample_ids=mil_tensors["bag_sample_ids"],
@@ -1970,6 +2015,8 @@ class PrestoCollator:
             tcell_mil_species=tcell_mil_tensors["species"],
             tcell_mil_flank_n_tok=tcell_mil_tensors["flank_n_tok"],
             tcell_mil_flank_c_tok=tcell_mil_tensors["flank_c_tok"],
+            tcell_mil_flank_n_is_terminus=tcell_mil_tensors["flank_n_is_terminus"],
+            tcell_mil_flank_c_is_terminus=tcell_mil_tensors["flank_c_is_terminus"],
             tcell_mil_instance_to_bag=tcell_mil_tensors["instance_to_bag"],
             tcell_mil_bag_label=tcell_mil_tensors["bag_label"],
             tcell_mil_bag_sample_ids=tcell_mil_tensors["bag_sample_ids"],

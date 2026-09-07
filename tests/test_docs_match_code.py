@@ -36,6 +36,7 @@ KNOWN_NOT_OUTPUTS = {
     # Abandoned subsystem; docs/tcr_spec.md carries an abandoned banner.
     "tcr_vec": "models/tcr.py is abandoned, see tcr_spec.md",
     "match_logit": "models/tcr.py is abandoned, see tcr_spec.md",
+    "match_prob": "receptor-specific matching is explicitly absent in the I/O contract",
     # Internal latents, reachable via latent_vecs / trunk_state rather than as
     # top-level output keys.
     "binding_affinity_vec": "trunk latent",
@@ -87,6 +88,32 @@ def _documented_output_identifiers():
 
 
 class TestDocumentedOutputsExist:
+    def test_canonical_contract_lists_every_forward_argument(self):
+        import inspect
+
+        contract = (DOCS / "model_io_contract.md").read_text()
+        for name in inspect.signature(Presto.forward).parameters:
+            if name != "self":
+                assert f"`{name}`" in contract, f"undocumented model input: {name}"
+
+    def test_canonical_panel_vocabularies_match_code(self):
+        from presto.data import vocab
+
+        contract = (DOCS / "model_io_contract.md").read_text()
+        for field in (
+            "BINDING_ASSAY_TYPES",
+            "BINDING_ASSAY_PREP",
+            "BINDING_ASSAY_GEOMETRY",
+            "BINDING_ASSAY_READOUT",
+            "TCELL_ASSAY_METHODS",
+            "TCELL_ASSAY_READOUTS",
+            "TCELL_APC_TYPES",
+            "TCELL_CULTURE_CONTEXTS",
+            "TCELL_STIM_CONTEXTS",
+            "TCELL_PEPTIDE_FORMATS",
+        ):
+            assert ", ".join(getattr(vocab, field)) in contract, f"stale panel vocabulary: {field}"
+
     def test_every_documented_output_is_produced(self, output_keys):
         documented = _documented_output_identifiers()
         missing = {

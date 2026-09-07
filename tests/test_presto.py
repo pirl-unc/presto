@@ -1092,16 +1092,15 @@ class TestDesignAlignment:
         assert hasattr(model, "mhc_b_pos")
         assert not hasattr(model, "position_embedding")
 
-    def test_global_conditioning_embedding(self):
-        """Design S3.2.4: global conditioning embedding tables exist."""
+    def test_metadata_is_not_globally_embedded(self):
+        """Sequence encoding excludes cross-segment presence and metadata."""
         from presto.models.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
-        assert hasattr(model, "species_cond_embed")
-        assert model.species_cond_embed.num_embeddings == 7
+        assert not hasattr(model, "species_cond_embed")
+        assert model.processing_species_embed.num_embeddings == 7
         assert not hasattr(model, "mhc_class_cond_embed")
-        assert hasattr(model, "chain_completeness_embed")
-        assert model.chain_completeness_embed.num_embeddings == 64
+        assert not hasattr(model, "chain_completeness_embed")
 
     def test_missing_segment_uses_dedicated_missing_token(self):
         """Missing optional segments should map to <MISSING>, not <UNK>."""

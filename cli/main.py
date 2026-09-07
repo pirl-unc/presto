@@ -1656,6 +1656,16 @@ def create_parser() -> argparse.ArgumentParser:
     predict_presentation.add_argument("--flank-n", type=str, default=None, help="N-terminal flank")
     predict_presentation.add_argument("--flank-c", type=str, default=None, help="C-terminal flank")
     predict_presentation.add_argument(
+        "--flank-n-is-terminus",
+        action="store_true",
+        help="The supplied N-flank reaches an observed protein boundary",
+    )
+    predict_presentation.add_argument(
+        "--flank-c-is-terminus",
+        action="store_true",
+        help="The supplied C-flank reaches an observed protein boundary",
+    )
+    predict_presentation.add_argument(
         "--index-csv",
         type=str,
         default=None,

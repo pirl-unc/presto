@@ -66,8 +66,16 @@ python -m presto predict tile \
   --max-length 11
 ```
 
-`predict recognition` is reserved for a future TCR pathway and is currently not
-active in canonical inference.
+`predict recognition` reports repertoire-level recognition and immunogenicity.
+It does not accept a TCR sequence or perform receptor-specific matching.
+
+`predict presentation` accepts `--flank-n-is-terminus` and
+`--flank-c-is-terminus` for observed protein boundaries, including short flanks
+that reach a protein end. Omit these for genuinely unknown context. Protein
+tiling derives the flags from its supplied complete sequence and coordinates.
+The full role-specific biological context API remains pending; see the
+[model I/O contract](model_io_contract.md) for actual inputs, output units and
+the difference between implemented and desired behavior.
 
 ## Evaluation
 

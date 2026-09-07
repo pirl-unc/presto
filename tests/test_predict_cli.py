@@ -61,6 +61,8 @@ def test_parser_predict_presentation_accepts_species_and_index():
             "viruses",
             "--index-csv",
             "mhc_index.csv",
+            "--flank-n-is-terminus",
+            "--flank-c-is-terminus",
         ]
     )
     assert args.species == "human"
@@ -68,6 +70,8 @@ def test_parser_predict_presentation_accepts_species_and_index():
     assert args.immune_species == "human"
     assert args.species_of_origin == "viruses"
     assert args.index_csv == "mhc_index.csv"
+    assert args.flank_n_is_terminus is True
+    assert args.flank_c_is_terminus is True
 
 
 def test_cmd_predict_tile_requires_one_sequence_source():

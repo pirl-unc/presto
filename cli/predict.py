@@ -80,6 +80,8 @@ def cmd_predict_presentation(args: Any) -> int:
         species_of_origin=getattr(args, "species_of_origin", None),
         flank_n=args.flank_n,
         flank_c=args.flank_c,
+        flank_n_is_terminus=args.flank_n_is_terminus,
+        flank_c_is_terminus=args.flank_c_is_terminus,
     )
     _emit_output(asdict(result), args)
     return 0

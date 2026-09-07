@@ -5976,7 +5976,7 @@ def run(args: argparse.Namespace) -> None:
                 _get_batch_mask,
                 _get_batch_qual,
                 _get_batch_target,
-                _resolve_output_tensor,
+                _resolve_task_prediction,
             )
 
             # Score the model the run selected, not the one it stopped on.
@@ -6011,23 +6011,7 @@ def run(args: argparse.Namespace) -> None:
             )
 
             def _forward(model_ref, batch_ref):
-                # Provenance must be passed here or the held-out pass scores a
-                # different function than training optimizes: without it every
-                # row is evaluated at the default cellular state, and the
-                # in-vivo excision -> presentation edge contributes exactly
-                # zero, so both halves of gap 2 vanish at evaluation time.
-                provenance = getattr(batch_ref, "provenance", None) or None
-                return model_ref(
-                    pep_tok=batch_ref.pep_tok,
-                    mhc_a_tok=batch_ref.mhc_a_tok,
-                    mhc_b_tok=batch_ref.mhc_b_tok,
-                    mhc_class=batch_ref.mhc_class,
-                    species=batch_ref.processing_species,
-                    flank_n_tok=batch_ref.flank_n_tok,
-                    flank_c_tok=batch_ref.flank_c_tok,
-                    machinery=getattr(batch_ref, "machinery_idx", None),
-                    provenance=provenance,
-                )
+                return model_ref(**batch_ref.model_inputs())
 
             for split_name, split_loader in (("val", val_loader), ("test", test_loader)):
                 if split_loader is None:
@@ -6050,7 +6034,7 @@ def run(args: argparse.Namespace) -> None:
                     device=device,
                     specs=LOSS_TASK_SPECS,
                     forward_fn=_forward,
-                    resolve_pred_fn=_resolve_output_tensor,
+                    resolve_pred_fn=_resolve_task_prediction,
                     get_target_fn=_get_batch_target,
                     get_mask_fn=_get_batch_mask,
                     get_qual_fn=_get_batch_qual,

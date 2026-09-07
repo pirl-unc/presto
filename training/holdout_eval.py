@@ -519,9 +519,9 @@ def collect_holdout_predictions(
 
     The callables are injected rather than imported so this module stays free of
     a dependency on the training scripts (which import it): ``forward_fn(model,
-    batch)`` returns the outputs dict, and the three resolver callables are the
-    same ones the loss loop uses, so metrics are computed on exactly the
-    tensors that were supervised.
+    batch)`` returns the outputs dict; ``resolve_pred_fn(outputs, batch, spec)``
+    selects the supervised response column using the same resolver as the loss
+    loop. Target/mask/qualifier callables share its transformation contract.
     """
     import torch
 
@@ -552,7 +552,7 @@ def collect_holdout_predictions(
                 mask = get_mask_fn(moved, spec)
                 if target is None or mask is None:
                     continue
-                pred = resolve_pred_fn(outputs, spec.pred_paths)
+                pred = resolve_pred_fn(outputs, moved, spec)
                 if pred is None:
                     continue
                 # Apply the same target transform the loss uses. Without this
