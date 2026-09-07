@@ -10045,3 +10045,11 @@ source-probe tests to inspect the shared forward contract. Added executable
 documentation checks for every forward argument and ordered panel vocabulary.
 Full regression/CI closure is in progress. No scientific experiment was launched,
 and no full-corpus or biological-validation claim is made. #46 remains open.
+
+Initial full run: 1782 passed, 1 skipped, 6 failed. Four failures read a different
+function through inspect.getsource because source files were edited after import;
+one used an already-updated absent-output exemption, and one still expected the
+old stimulus table layout. The stimulus check now reads the canonical output row
+and compares ordered values. Re-plan for closure: freeze all code/tests before
+restarting the full suite; do not edit/format while it runs. Focused reruns must
+also confirm the original source-probe assertions pass without weakening them.

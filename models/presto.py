@@ -151,7 +151,7 @@ def _processing_species_idx_tensor(
                 raise ValueError(
                     f"species id tensor batch mismatch: expected {batch_size}, got {sp.shape[0]}"
                 )
-            return sp.to(dtype=torch.long).clamp(min=0, max=len(PROCESSING_SPECIES_BUCKETS) - 1)
+            return sp.to(dtype=torch.long).clamp(min=0, max=unknown_idx)
         if sp.ndim == 2:
             if sp.shape[0] == 1:
                 sp = sp.expand(batch_size, -1)
@@ -164,7 +164,7 @@ def _processing_species_idx_tensor(
                 .to(dtype=torch.long)
                 .clamp(
                     min=0,
-                    max=len(PROCESSING_SPECIES_BUCKETS) - 1,
+                    max=unknown_idx,
                 )
             )
         raise ValueError(f"unsupported species tensor rank {sp.ndim}; expected 1 or 2")

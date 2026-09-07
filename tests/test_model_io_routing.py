@@ -62,6 +62,7 @@ def test_host_context_is_downstream_and_not_a_molecular_species_override():
     unknown = _processing_species_idx_tensor(None, 1, torch.device("cpu"))
     human = _processing_species_idx_tensor("human", 1, torch.device("cpu"))
     assert unknown.item() != human.item()
+    assert _processing_species_idx_tensor(unknown, 1, torch.device("cpu")).item() == unknown.item()
 
 
 def test_other_segment_presence_does_not_change_encoded_mhc_or_binding():

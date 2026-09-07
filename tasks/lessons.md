@@ -1,5 +1,12 @@
 # Lessons
 
+## 2026-09-07
+
+- Freeze source and test files during a full regression run. Tests using
+  inspect.getsource resolve live file lines against already-imported code
+  offsets; edits or formatting mid-run can make them inspect a different
+  function. Finish edits first, then run the final suite on an immutable commit.
+
 ## 2026-09-06
 
 - Sequence-only encoding is not context-free biological prediction. Keep
