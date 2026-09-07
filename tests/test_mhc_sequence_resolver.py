@@ -2,6 +2,8 @@
 
 import types
 
+import pytest
+
 from presto.data import mhc_sequence_resolver as resolver
 from presto.data.mhc_sequence_resolver import ExactMHCInput
 
@@ -147,6 +149,40 @@ def test_lookup_exact_mhc_input_normalizes_query(monkeypatch):
     resolved = resolver.lookup_exact_mhc_input("A0201")
 
     assert resolved == record
+
+
+def test_load_mhcseqs_catalog_inputs_deduplicates_lookup_aliases(monkeypatch):
+    record = ExactMHCInput(
+        allele="HLA-A*02:01",
+        sequence="A" * 181,
+        groove1="A" * 90,
+        groove2="C" * 93,
+        mhc_class="I",
+        source="mhcseqs",
+    )
+    monkeypatch.setattr(
+        resolver,
+        "_load_mhcseqs_input_lookup",
+        lambda search_dir=None: {
+            "HLA-A*02:01": record,
+            "hla-a*02:01": record,
+        },
+    )
+
+    catalog = resolver.load_mhcseqs_catalog_inputs()
+
+    assert catalog == {"HLA-A*02:01": record}
+
+
+def test_load_mhcseqs_catalog_inputs_fails_loudly_when_catalog_is_empty(monkeypatch):
+    monkeypatch.setattr(
+        resolver,
+        "_load_mhcseqs_input_lookup",
+        lambda search_dir=None: {},
+    )
+
+    with pytest.raises(RuntimeError, match="no usable exact MHC inputs"):
+        resolver.load_mhcseqs_catalog_inputs()
 
 
 def test_resolve_class_i_groove_halves_prefers_exact_mhcseqs(monkeypatch):

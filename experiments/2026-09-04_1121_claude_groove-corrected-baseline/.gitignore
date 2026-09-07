@@ -1,0 +1,4 @@
+# Model checkpoints are large and remain recoverable from the Modal volume
+# paths in manifest.json. Held-out prediction dumps and every other closure
+# artifact are intentionally tracked.
+results/runs/*/model.pt

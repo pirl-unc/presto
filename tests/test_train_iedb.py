@@ -2,6 +2,7 @@
 
 import argparse
 import csv
+import json
 import random
 from pathlib import Path
 
@@ -13,11 +14,14 @@ from presto.data import PrestoDataset
 from presto.data.collate import PrestoBatch
 from presto.data.cross_source_dedup import UnifiedRecord
 from presto.data.mhc_index import AUGMENTED_INDEX_FIELDS
+from presto.data.mhc_sequence_resolver import ExactMHCInput
 from presto.data.loaders import (
     BindingRecord,
     ElutionRecord,
+    KineticsRecord,
     MIN_MHC_CHAIN_LENGTH,
     ProcessingRecord,
+    StabilityRecord,
     TCellRecord,
 )
 from presto.scripts.train_iedb import (
@@ -28,11 +32,13 @@ from presto.scripts.train_iedb import (
     _audit_mhc_sequence_coverage,
     _collect_unique_alleles,
     _effective_mhc_augmentation_sample_limit,
+    _exclude_sparse_record_targets,
     _filter_records_to_resolved_mhc,
     _force_opposite_anchors,
     _generate_mhc_only_samples,
     _opposite_residues,
     _resolve_run_args,
+    _resolve_synthetic_negative_ratios,
     _scramble_peptide_with_anchor_changes,
     _write_mhc_sequence_coverage_report,
     audit_loaded_mhc_sequence_quality,
@@ -52,6 +58,76 @@ from presto.scripts.train_iedb import (
     resolve_mhc_sequences_from_index,
     run,
 )
+
+
+def test_synthetic_negative_ratios_keep_legacy_defaults_but_allow_independent_overrides():
+    assert _resolve_synthetic_negative_ratios(1.0) == (1.0, 0.5, 0.5, 0.5)
+    assert _resolve_synthetic_negative_ratios(
+        0.0,
+        elution_ratio=1.0,
+        cascade_elution_ratio=0.0,
+        cascade_tcell_ratio=0.0,
+    ) == (0.0, 1.0, 0.0, 0.0)
+    assert _resolve_synthetic_negative_ratios(-1.0, elution_ratio=-2.0) == (
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+    )
+
+
+def test_exclude_sparse_record_targets_preserves_supported_values_and_drops_empty_rows():
+    kinetics = [
+        KineticsRecord("SIINFEKL", "HLA-A*02:01", kon=1.5, koff=0.02),
+        KineticsRecord("GILGFVFTL", "HLA-A*02:01", koff=0.03),
+    ]
+    stability = [
+        StabilityRecord("SIINFEKL", "HLA-A*02:01", t_half=2.0, tm=55.0),
+        StabilityRecord("GILGFVFTL", "HLA-A*02:01", tm=60.0),
+    ]
+
+    kept_kinetics, kept_stability, removed = _exclude_sparse_record_targets(
+        kinetics,
+        stability,
+        ["koff", "tm"],
+    )
+
+    assert len(kept_kinetics) == 1
+    assert kept_kinetics[0].kon == 1.5
+    assert kept_kinetics[0].koff is None
+    assert len(kept_stability) == 1
+    assert kept_stability[0].t_half == 2.0
+    assert kept_stability[0].tm is None
+    assert removed == {"koff": 2, "tm": 2}
+
+
+def test_exclude_sparse_record_targets_rejects_unknown_names():
+    with pytest.raises(ValueError, match="only supports sparse quantitative targets"):
+        _exclude_sparse_record_targets([], [], ["elution"])
+
+
+def test_downstream_cascade_does_not_create_a_synthetic_only_task():
+    binding = [
+        BindingRecord(
+            peptide="SIINFEKL",
+            mhc_allele="HLA-A*02:01",
+            value=50_000.0,
+            source="synthetic_negative_peptide_scramble",
+        )
+    ]
+
+    elution, tcell, stats = cascade_binding_negatives_to_downstream(
+        binding_records=binding,
+        elution_records=[],
+        tcell_records=[],
+        elution_ratio=1.0,
+        tcell_ratio=1.0,
+        seed=7,
+    )
+
+    assert elution == []
+    assert tcell == []
+    assert stats == {"elution_added": 0, "tcell_added": 0}
 
 
 def _write_text(path: Path, text: str) -> None:
@@ -694,6 +770,30 @@ def test_generate_mhc_only_samples_filters_short_and_nucleotide_like_sequences(t
     assert samples[0].sample_source == "mhc_augmentation"
 
 
+def test_generate_mhc_only_samples_defaults_to_mhcseqs_catalog(monkeypatch):
+    record = ExactMHCInput(
+        allele="HLA-A*02:01",
+        sequence="A" * 181,
+        groove1="C" * 90,
+        groove2="D" * 93,
+        mhc_class="I",
+        chain="alpha",
+        source="mhcseqs",
+    )
+    monkeypatch.setattr(
+        "presto.scripts.train_iedb.load_mhcseqs_catalog_inputs",
+        lambda: {record.allele: record},
+    )
+
+    samples = _generate_mhc_only_samples(index_csv=None, max_samples=10, seed=13)
+
+    assert len(samples) == 1
+    assert samples[0].primary_allele == "HLA-A*02:01"
+    assert samples[0].mhc_a == "C" * 90
+    assert samples[0].mhc_b == "D" * 93
+    assert samples[0].sample_id == "mhc_aug:HLA-A*02:01"
+
+
 def test_resolve_run_args_canary_keeps_explicit_caps():
     args = argparse.Namespace(profile="canary", config=None, max_binding=33, epochs=2)
     resolved = _resolve_run_args(args)
@@ -730,6 +830,52 @@ def test_resolve_run_args_falls_back_to_train_iedb_config(tmp_path):
     resolved = _resolve_run_args(args)
     assert resolved.epochs == 6
     assert resolved.max_binding == 123
+
+
+def test_resolve_run_args_merges_all_data_integrity_options_from_config(tmp_path):
+    cfg = tmp_path / "train.json"
+    cfg.write_text(
+        json.dumps(
+            {
+                "train": {
+                    "unified": {
+                        "data_seed": 91,
+                        "exclude_target": ["kon", "tm"],
+                        "synthetic_elution_negative_ratio": 0.75,
+                        "synthetic_cascade_elution_negative_ratio": 0.0,
+                        "synthetic_cascade_tcell_negative_ratio": 0.25,
+                        "require_split_target": ["KD_nM", "elution"],
+                        "require_all_active_target_support": True,
+                        "require_binary_balance_target": ["elution"],
+                        "require_all_active_binary_balance": True,
+                        "min_split_target_support": 3,
+                        "require_traceable_lineage": True,
+                        "forbid_fake_null_sequences": True,
+                        "expected_split_support_sha256": "a" * 64,
+                        "data_preflight_only": True,
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    resolved = _resolve_run_args(argparse.Namespace(config=str(cfg), profile="full"))
+
+    assert resolved.data_seed == 91
+    assert resolved.exclude_target == ["kon", "tm"]
+    assert resolved.synthetic_elution_negative_ratio == 0.75
+    assert resolved.synthetic_cascade_elution_negative_ratio == 0.0
+    assert resolved.synthetic_cascade_tcell_negative_ratio == 0.25
+    assert resolved.require_split_target == ["KD_nM", "elution"]
+    assert resolved.require_all_active_target_support is True
+    assert resolved.require_binary_balance_target == ["elution"]
+    assert resolved.require_all_active_binary_balance is True
+    assert resolved.min_split_target_support == 3
+    assert resolved.require_traceable_lineage is True
+    assert resolved.forbid_fake_null_sequences is True
+    assert resolved.expected_split_support_sha256 == "a" * 64
+    assert resolved.data_preflight_only is True
 
 
 def test_canary_bootstrap_backfills_missing_modalities():
@@ -876,6 +1022,37 @@ def test_resolve_mhc_sequences_from_index_maps_input_alleles(tmp_path, monkeypat
     assert stats["total"] == 2
 
 
+def test_probe_specs_resolve_missing_alleles_from_mhcseqs_without_index(monkeypatch):
+    calls = []
+
+    def _resolve(*, index_csv, alleles):
+        calls.append((index_csv, tuple(alleles)))
+        return (
+            {"HLA-A*02:01": "A" * 181},
+            {
+                "total": 1,
+                "resolved": 1,
+                "resolved_mhcseqs": 1,
+                "resolved_index": 0,
+                "missing": 0,
+            },
+        )
+
+    monkeypatch.setattr(train_iedb_module, "resolve_mhc_sequences_from_index", _resolve)
+
+    specs = train_iedb_module._resolve_probe_specs(
+        probe_peptide="SIINFEKL",
+        probe_alleles=["HLA-A*02:01"],
+        mhc_sequences={},
+        index_csv=None,
+        device="cpu",
+    )
+
+    assert calls == [(None, ("HLA-A*02:01",))]
+    assert len(specs) == 1
+    assert specs[0]["allele"] == "HLA-A*02:01"
+
+
 def test_audit_mhc_sequence_coverage_reports_resolved_missing_and_species_buckets():
     binding = [
         BindingRecord(
@@ -911,6 +1088,7 @@ def test_audit_mhc_sequence_coverage_reports_resolved_missing_and_species_bucket
         ElutionRecord(
             peptide="SSYRRPVGI",
             alleles=["H2-K*b", "H2-K*zzz"],
+            source_alleles=("H2-K*b", "H2-K*zzz"),
             detected=True,
             mhc_class="I",
             species="mouse",
@@ -983,7 +1161,7 @@ def test_write_mhc_sequence_coverage_report_persists_json_and_csv(tmp_path):
     csv_path = paths["csv"]
     assert json_path is not None and json_path.exists()
     assert csv_path is not None and csv_path.exists()
-    assert "\"rows_considered\": 10" in json_path.read_text(encoding="utf-8")
+    assert '"rows_considered": 10' in json_path.read_text(encoding="utf-8")
     header = csv_path.read_text(encoding="utf-8").splitlines()[0]
     assert (
         header == "scope,modality,state,species,count,fraction_of_total_rows,fraction_within_scope"
@@ -1054,6 +1232,14 @@ def test_filter_records_to_resolved_mhc_drops_unresolved_and_trims_elution_allel
     assert len(processing_out) == 0
     assert len(elution_out) == 1
     assert elution_out[0].alleles == ["H2-K*b"]
+    assert elution_out[0].source_alleles == ("H2-K*b", "H2-K*zzz")
+    dataset = PrestoDataset(
+        elution_records=elution_out,
+        mhc_sequences={"H2-K*b": "A" * 181},
+        strict_mhc_resolution=False,
+    )
+    assert dataset[0].source_mhc_alleles == ("H2-K*b", "H2-K*zzz")
+    assert dataset[0].resolved_mhc_alleles == ("H2-K*b",)
     assert len(tcell_out) == 0
     assert len(vdjdb_out) == 0
     assert stats["binding_dropped"] == 1
@@ -1324,6 +1510,7 @@ def test_load_records_from_merged_tsv_preserves_bagged_mhc_restrictions(tmp_path
     assert binding[0].alleles == ["HLA-A*02:01", "HLA-A*02:02"]
     assert len(elution) == 1
     assert elution[0].alleles == ["HLA-A*02:01", "HLA-A*02:02"]
+    assert elution[0].source_alleles == ("HLA-A*02:01", "HLA-A*02:02")
     assert len(tcell) == 1
     assert tcell[0].mhc_allele == "H2-b class I"
     assert tcell[0].alleles == ["H2-D*b", "H2-K*b"]
@@ -1377,6 +1564,17 @@ def test_load_records_from_merged_tsv_drops_invalid_peptides_and_sanitizes_optio
     assert len(tcr_evidence) == 1
     assert stats["rows_dropped_invalid_peptide"] == 1
     assert stats["rows_sanitized_optional_sequences"] >= 1
+    assert stats["counts_before_cap"] == {
+        "binding": 1,
+        "kinetics": 0,
+        "stability": 0,
+        "processing": 0,
+        "elution": 0,
+        "tcell": 0,
+        "tcr_evidence": 1,
+    }
+    assert stats["rows_dropped_by_cap"] == {name: 0 for name in stats["counts_before_cap"]}
+    assert stats["skipped_invalid_peptide"] == 1
 
 
 def test_load_records_from_merged_tsv_cap_sampling_modes(tmp_path):
@@ -1421,6 +1619,8 @@ def test_load_records_from_merged_tsv_cap_sampling_modes(tmp_path):
     assert len(binding_head) == 10
     assert all(rec.mhc_allele == "HLA-A*02:01" for rec in binding_head)
     assert stats_head["cap_sampling"] == "head"
+    assert stats_head["counts_before_cap"]["binding"] == 100
+    assert stats_head["rows_dropped_by_cap"]["binding"] == 90
 
     # Reservoir mode should pull a representative capped sample.
     (
@@ -1443,6 +1643,57 @@ def test_load_records_from_merged_tsv_cap_sampling_modes(tmp_path):
     # With deterministic seed and 90% B*07:02 prevalence, capped sample includes B*07:02.
     assert any(rec.mhc_allele == "HLA-B*07:02" for rec in binding_reservoir)
     assert stats_reservoir["cap_sampling"] == "reservoir"
+    assert stats_reservoir["counts_before_cap"]["binding"] == 100
+    assert stats_reservoir["rows_dropped_by_cap"]["binding"] == 90
+
+
+def test_merged_loader_stats_populate_common_data_funnel(tmp_path):
+    merged = tmp_path / "merged_deduped.tsv"
+    merged.write_text(
+        "peptide\tmhc_allele\tmhc_class\tsource\trecord_type\tvalue\tvalue_type\n"
+        "SIINFEKL\tHLA-A*02:01\tI\tiedb\tbinding\t42\tIC50\n"
+        "GILGFVFTL\tHLA-A*02:01\tI\tiedb\tbinding\t43\tIC50\n"
+        "NOT_A_PEPTIDE\tHLA-A*02:01\tI\tiedb\tbinding\t44\tIC50\n",
+        encoding="utf-8",
+    )
+    *_, stats = load_records_from_merged_tsv(
+        merged,
+        max_binding=1,
+        max_kinetics=0,
+        max_stability=0,
+        max_processing=0,
+        max_elution=0,
+        max_tcell=0,
+        max_vdjdb=0,
+        cap_sampling="reservoir",
+    )
+    funnel = {"stages": {}, "drop_reasons": {}}
+
+    train_iedb_module._record_source_loader_funnel(funnel, stats)
+
+    assert funnel["stages"]["loaded_pre_cap"]["binding"] == 2
+    assert funnel["drop_reasons"]["caps"]["binding"] == 1
+    assert funnel["drop_reasons"]["source_ingest"]["skipped_invalid_peptide"] == 1
+
+
+def test_hitlist_flank_filter_stats_populate_common_data_funnel(tmp_path):
+    funnel = {"stages": {}, "drop_reasons": {}}
+    stats = {"mapping_ambiguity": {"rows_dropped_unresolved_flank": {"binding": 4, "ms": 235}}}
+
+    train_iedb_module._record_source_loader_funnel(funnel, stats)
+
+    assert funnel["drop_reasons"]["unresolved_flank"] == {"binding": 4, "ms": 235}
+
+    from presto.training.data_support import write_data_funnel_artifacts
+
+    paths = write_data_funnel_artifacts(tmp_path, funnel)
+    payload = json.loads(paths["json"].read_text())
+    assert payload["drop_reasons"]["unresolved_flank"] == {"binding": 4, "ms": 235}
+    rows = list(csv.DictReader(paths["csv"].open()))
+    assert {(row["kind"], row["stage"], row["name"], row["count"]) for row in rows} == {
+        ("drop_reasons", "unresolved_flank", "binding", "4"),
+        ("drop_reasons", "unresolved_flank", "ms", "235"),
+    }
 
 
 def test_augment_binding_records_with_synthetic_negatives_range_and_modes():
@@ -1743,7 +1994,7 @@ def test_augment_elution_records_with_synthetic_negatives():
     assert stats["peptide_random_mhc_random"] == 0
     negatives = [rec for rec in augmented if not rec.detected]
     assert len(negatives) == 1
-    assert negatives[0].source == "synthetic_negative"
+    assert negatives[0].source == "synthetic_negative_elution_peptide_random_mhc_real"
     assert negatives[0].alleles == ["HLA-A*02:01"]
 
 
@@ -1779,7 +2030,12 @@ def test_augment_elution_records_with_allele_mismatch_mode():
     assert stats["peptide_real_mhc_random"] == 1
     assert stats["peptide_random_mhc_random"] == 1
 
-    negatives = [rec for rec in augmented if rec.source == "synthetic_negative"]
+    negatives = [rec for rec in augmented if rec.source.startswith("synthetic_negative_elution_")]
+    assert {rec.source for rec in negatives} == {
+        "synthetic_negative_elution_peptide_random_mhc_real",
+        "synthetic_negative_elution_peptide_real_mhc_random",
+        "synthetic_negative_elution_peptide_random_mhc_random",
+    }
     real_peptide_random_mhc_negatives = [
         rec
         for rec in negatives
@@ -1982,6 +2238,40 @@ def test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved(tmp_path, mo
     assert "category" in allele_rows.splitlines()[0]
     detail_rows = unresolved_detail.read_text(encoding="utf-8")
     assert "modality,source,allele,category,count" in detail_rows.splitlines()[0]
+
+
+def test_hitlist_data_source_never_reads_an_available_merged_tsv(tmp_path, monkeypatch):
+    (tmp_path / "merged_deduped.tsv").write_text("placeholder\n", encoding="utf-8")
+
+    class HitlistSelected(RuntimeError):
+        pass
+
+    def _hitlist_selected(**kwargs):
+        raise HitlistSelected
+
+    def _merged_must_not_run(**kwargs):
+        raise AssertionError("hitlist source touched merged TSV")
+
+    monkeypatch.setattr("presto.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
+    monkeypatch.setattr(
+        "presto.scripts.train_iedb.load_records_from_merged_tsv",
+        _merged_must_not_run,
+    )
+    monkeypatch.setattr(
+        "presto.data.hitlist_source.load_records_from_hitlist",
+        _hitlist_selected,
+    )
+
+    with pytest.raises(HitlistSelected):
+        run(
+            argparse.Namespace(
+                config=None,
+                profile="full",
+                data_source="hitlist",
+                data_dir=str(tmp_path),
+                run_dir=None,
+            )
+        )
 
 
 def test_filter_records_to_resolved_mhc_drops_invalid_direct_mhc_sequences():

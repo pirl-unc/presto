@@ -150,7 +150,20 @@ class TestHoldoutScoresTheSelectedModel:
         )
         assert "model=model," not in region
 
-    def test_a_failed_reload_is_announced_not_silent(self):
-        """Falling back to the final model is allowed; hiding it is not."""
+    def test_a_failed_reload_never_scores_a_different_model(self):
+        """A broken best checkpoint must fail rather than change the eval model."""
         region = self._eval_region()
-        assert "WARNING" in region and "final-epoch model" in region
+        assert "final-epoch model" not in region
+        assert "except Exception" not in region
+
+    def test_each_selected_checkpoint_split_gets_a_full_overall_loss(self):
+        """Per-task prediction metrics do not replace the requested overall loss."""
+        import inspect
+
+        import presto.scripts.train_iedb as train_iedb
+
+        source = inspect.getsource(train_iedb)
+        assert "heldout_loss, heldout_loss_terms = _call_evaluate_compat" in source
+        assert "max_val_batches=0" in source
+        assert '"overall_loss": float(heldout_loss)' in source
+        assert '"loss_terms": heldout_loss_terms' in source

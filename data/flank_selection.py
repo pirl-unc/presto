@@ -102,19 +102,15 @@ UNRESOLVED_MAPPING_CATEGORIES = frozenset(
     category for category, resolved in MAPPING_CATEGORY_RESOLVED.items() if not resolved
 )
 
-#: Categories whose flanks the masking policy actually rewrites.
-#:
-#: Not the same question as `UNRESOLVED_MAPPING_CATEGORIES`, which is about
-#: whether the junction is *known*. An `unmapped` row is unresolved but has
-#: nothing to rewrite: it reached the collapse with no candidate mapping at
-#: all, so both flanks are already empty. Masking it is a no-op, and the two
-#: policies are byte-identical on those rows.
-#:
-#: The distinction matters downstream. A stratified analysis asking "what did
-#: masking change?" must use this set -- folding `unmapped` in would dilute the
-#: stratum with rows the two arms treat identically. On this corpus that is
-#: 6,212 of 16,721 binding rows, so the dilution would be severe.
-MASKED_MAPPING_CATEGORIES = UNRESOLVED_MAPPING_CATEGORIES - {MAPPING_CATEGORY_UNMAPPED}
+#: Note for anyone tempted to narrow `UNRESOLVED_MAPPING_CATEGORIES` again:
+#: an `unmapped` row *can* carry a flank, so masking it is not a no-op. A
+#: previous change excluded `unmapped` on the reasoning that a row with a flank
+#: counts as "present" and therefore cannot be classified unmapped. That holds
+#: on a synthetic frame and does not hold on the corpus: excluding `unmapped`
+#: moved binding flank coverage from 0.590 to 0.963, roughly 37% of rows.
+#: Whether those flanks *should* be masked is a real question -- their
+#: provenance is not currently understood -- but it is a modelling decision,
+#: not a refactor.
 
 #: Production behavior and its explicit experimental comparator. The legacy
 #: policy reproduces the old semantics--global canonical preference followed

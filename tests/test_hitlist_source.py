@@ -25,9 +25,12 @@ from presto.data.hitlist_source import (  # noqa: E402
     _select_best_mapping,
     _split_allele_set,
     load_records_from_hitlist,
+    normalize_ingested_peptide,
 )
+from presto.data.vocab import drop_unencodable_sequence  # noqa: E402
 
 IC50 = "half maximal inhibitory concentration (IC50)"
+TEST_MHC_SEQUENCE = "ACDEFGHIKLMNPQRSTVWY" * 10
 
 
 def _binding_row(**overrides):
@@ -39,6 +42,9 @@ def _binding_row(**overrides):
         "host": "Homo sapiens (human)",
         "source_organism": "Homo sapiens",
         "source": "iedb",
+        "assay_iri": "http://www.iedb.org/assay/11074",
+        "reference_iri": "http://www.iedb.org/reference/42",
+        "pmid": "12345678",
         "n_flank": "AAAAAAAAAA",
         "c_flank": "CCCCCCCCCC",
         "position": 10,
@@ -48,6 +54,8 @@ def _binding_row(**overrides):
         "protein_id": "ENSP1",
         "transcript_id": "ENST1",
         "is_canonical_transcript": True,
+        "proteome": "Homo sapiens",
+        "proteome_source": "species",
         "response_measured": IC50,
         "quantitative_value": 25.0,
         "measurement_units": "nM",
@@ -67,6 +75,9 @@ def _ms_row(**overrides):
         "host": "Homo sapiens (human)",
         "source_organism": "Homo sapiens",
         "source": "iedb",
+        "assay_iri": "http://www.iedb.org/assay/22001",
+        "reference_iri": "http://www.iedb.org/reference/84",
+        "pmid": "87654321",
         "n_flank": "GGGGGGGGGG",
         "c_flank": "TTTTTTTTTT",
         "position": 10,
@@ -76,6 +87,8 @@ def _ms_row(**overrides):
         "protein_id": "ENSP1",
         "transcript_id": "ENST1",
         "is_canonical_transcript": True,
+        "proteome": "Homo sapiens",
+        "proteome_source": "species",
         "cell_line_name": "HeLa",
         "source_tissue": "Skin",
     }
@@ -106,6 +119,18 @@ def _install_stub_hitlist(monkeypatch, binding_rows, ms_rows):
 
 
 class TestHelpers:
+    @pytest.mark.parametrize(
+        "value",
+        [None, float("nan"), pd.NA, "", "   "],
+        ids=["none", "float-nan", "pandas-na", "empty", "whitespace"],
+    )
+    def test_nullable_sequences_never_become_fake_amino_acids(self, value):
+        assert drop_unencodable_sequence(value) == ""
+        assert normalize_ingested_peptide(value) == ""
+
+    def test_real_lowercase_nan_peptide_remains_distinct_from_float_nan(self):
+        assert normalize_ingested_peptide("nan") == "NAN"
+
     def test_qualifier_from_inequality(self):
         assert _qualifier_from_inequality("<") == -1
         assert _qualifier_from_inequality("<=") == -1
@@ -124,6 +149,13 @@ class TestHelpers:
         assert _split_allele_set(["HLA-A*02:01"]) == ["HLA-A*02:01"]
         assert _split_allele_set("") == []
         assert _split_allele_set(None) == []
+        assert _split_allele_set(float("nan")) == []
+        assert _split_allele_set(pd.NA) == []
+        assert _split_allele_set(["HLA-A*02:01", pd.NA, float("nan")]) == ["HLA-A*02:01"]
+
+    @pytest.mark.parametrize("value", [None, float("nan"), pd.NA, ""])
+    def test_null_qualifiers_are_exact(self, value):
+        assert _qualifier_from_inequality(value) == 0
 
     def test_clean_normalizes_missing_markers(self):
         assert _clean("nan") == ""
@@ -207,6 +239,25 @@ class TestHelpers:
 
 
 class TestRouting:
+    def test_ingest_stats_preserve_pre_cap_counts_and_drop_reasons(self, monkeypatch):
+        rows = [
+            _binding_row(evidence_row_id="row-1"),
+            _binding_row(evidence_row_id="row-2", peptide="GILGFVFTL"),
+        ]
+        _install_stub_hitlist(monkeypatch, rows, [])
+
+        binding, _, _, _, _, _, _, stats = load_records_from_hitlist(
+            max_binding=1,
+            sampling_seed=59,
+        )
+
+        assert len(binding) == 1
+        assert stats["sampling_seed"] == 59
+        assert stats["counts_before_cap"]["binding"] == 2
+        assert stats["counts"]["binding"] == 1
+        assert stats["rows_dropped_by_cap"]["binding"] == 1
+        assert stats["requested_caps"]["binding"] == 1
+
     def test_affinity_row_becomes_binding_record_with_flanks(self, monkeypatch):
         _install_stub_hitlist(monkeypatch, [_binding_row()], [])
         binding, _, _, _, _, _, _, stats = load_records_from_hitlist()
@@ -219,6 +270,15 @@ class TestRouting:
         assert record.source_mapping_category == "single"
         assert record.source_mapping_n_candidates == 1
         assert record.flank_context_resolved is True
+        assert record.evidence_row_id == "row-1"
+        assert record.assay_iri.endswith("/11074")
+        assert record.reference_iri.endswith("/42")
+        assert record.pmid == "12345678"
+        assert record.mapping_gene_id == "ENSG1"
+        assert record.mapping_protein_id == "ENSP1"
+        assert record.mapping_transcript_id == "ENST1"
+        assert record.mapping_position == 10
+        assert record.mapping_proteome == "Homo sapiens"
         assert stats["flank_coverage"]["binding"] == 1.0
 
     def test_cross_gene_disagreement_keeps_label_but_masks_flanks(self, monkeypatch):
@@ -247,10 +307,11 @@ class TestRouting:
         assert record.value == 25.0
         assert record.flank_n == record.flank_c == ""
         # Not a terminus: an unresolved junction must not be read as "the
-        # protein ended here". `_mask_unresolved_mapping_context` blanks the
-        # position alongside the flank, which is what keeps this false.
+        # protein ended here". The masking marker suppresses terminus inference
+        # without deleting the selected mapping from the lineage record.
         assert record.flank_n_is_terminus is False
         assert record.flank_c_is_terminus is False
+        assert record.mapping_position == 10
         assert record.source_mapping_category == "cross_gene_unresolved"
         assert record.flank_context_resolved is False
         assert stats["mapping_ambiguity"]["binding"]["category_counts"] == {
@@ -260,10 +321,17 @@ class TestRouting:
         from presto.data.collate import PrestoCollator
         from presto.data.loaders import PrestoDataset
 
-        dataset = PrestoDataset(binding_records=binding, strict_mhc_resolution=False)
+        dataset = PrestoDataset(
+            binding_records=binding,
+            mhc_sequences={"HLA-A*02:01": TEST_MHC_SEQUENCE},
+            strict_mhc_resolution=False,
+        )
         sample = dataset[0]
         assert sample.bind_value == 25.0
         assert sample.source_mapping_category == "cross_gene_unresolved"
+        assert sample.sample_id == "bind:row-1"
+        assert sample.evidence_row_id == "row-1"
+        assert sample.source_mhc_alleles == ("HLA-A*02:01",)
         batch = PrestoCollator()([sample])
         assert batch.bind_mask.tolist() == [1.0]
         assert batch.source_mapping_categories == ["cross_gene_unresolved"]
@@ -271,9 +339,15 @@ class TestRouting:
         # `model.forward`, so moving them to the device and back was pure cost.
         assert batch.source_mapping_n_candidates == [2]
         assert batch.flank_context_resolved == [False]
+        assert batch.source_lineage["peptide"] == ["SIINFEKLA"]
+        assert batch.source_lineage["source_mhc_alleles"] == ["HLA-A*02:01"]
+        assert batch.source_lineage["resolved_mhc_alleles"] == ["HLA-A*02:01"]
+        assert batch.source_lineage["mapping_protein_id"] == ["ENSP1"]
+        assert batch.source_lineage["source_sample_label"] == [""]
         moved = batch.to("cpu")
         assert moved.source_mapping_categories == ["cross_gene_unresolved"]
         assert moved.source_mapping_n_genes == [2]
+        assert moved.source_lineage == batch.source_lineage
 
     def test_policies_filter_selected_x_before_masking(self, monkeypatch):
         """Policy changes flank input, never which supervised rows survive."""
@@ -372,12 +446,34 @@ class TestRouting:
         assert len(kinetics) == 1 and kinetics[0].koff == 0.01
 
     def test_ms_row_becomes_elution_record_with_allele_bag(self, monkeypatch):
-        _install_stub_hitlist(monkeypatch, [], [_ms_row()])
+        _install_stub_hitlist(
+            monkeypatch,
+            [],
+            [_ms_row(sample_label="HeLa-A02", sample_attribution="monoallelic")],
+        )
         _, _, _, _, elution, _, _, stats = load_records_from_hitlist()
         assert len(elution) == 1
         assert elution[0].alleles == ["HLA-A*02:01", "HLA-B*07:02"]
+        assert elution[0].source_alleles == ("HLA-A*02:01", "HLA-B*07:02")
         assert elution[0].flank_n == "GGGGGGGGGG"
         assert stats["flank_coverage"]["elution"] == 1.0
+
+        from presto.data.collate import PrestoCollator
+        from presto.data.loaders import PrestoDataset
+
+        sample = PrestoDataset(
+            elution_records=elution,
+            mhc_sequences={
+                "HLA-A*02:01": TEST_MHC_SEQUENCE,
+                "HLA-B*07:02": TEST_MHC_SEQUENCE,
+            },
+            strict_mhc_resolution=False,
+        )[0]
+        batch = PrestoCollator()([sample])
+        assert batch.source_lineage["source_sample_label"] == ["HeLa-A02"]
+        assert batch.source_lineage["source_sample_attribution"] == ["monoallelic"]
+        assert batch.source_lineage["source_mhc_alleles"] == ["HLA-A*02:01;HLA-B*07:02"]
+        assert batch.source_lineage["resolved_mhc_alleles"] == ["HLA-A*02:01;HLA-B*07:02"]
 
     def test_ms_row_without_alleles_is_dropped(self, monkeypatch):
         _install_stub_hitlist(monkeypatch, [], [_ms_row(mhc_allele_set="", mhc_restriction="")])
@@ -654,17 +750,20 @@ class TestMaskingIsAPureTransform:
         assert original.iloc[0]["n_flank"] == "AAAA", "input was mutated"
         assert masked.iloc[0]["n_flank"] == ""
 
-    def test_the_position_is_cleared_alongside_the_flank(self):
-        """Load-bearing: without it a cleared flank reads as a terminus.
-
-        `flank_context` calls a short flank a terminus only on a *mapped* row,
-        and `position` is what makes a row mapped.
-        """
-        from presto.data.hitlist_source import _mask_unresolved_mapping_context
+    def test_mapping_position_is_preserved_but_context_is_marked_masked(self):
+        """Mask model input without destroying the chosen mapping lineage."""
+        from presto.data.hitlist_source import _flank_fields, _mask_unresolved_mapping_context
 
         masked = _mask_unresolved_mapping_context(self._frame())
-        position = masked.iloc[0]["position"]
-        assert position != position, "position must be NaN"
+        row = masked.iloc[0]
+        assert row["position"] == 10.0
+        assert bool(row["source_mapping_context_masked"])
+        assert _flank_fields(row) == {
+            "flank_n": "",
+            "flank_c": "",
+            "flank_n_is_terminus": False,
+            "flank_c_is_terminus": False,
+        }
 
     def test_a_frame_without_categories_is_returned_unchanged(self):
         """`_collapse_source_mappings` no-ops when there is no `evidence_row_id`.

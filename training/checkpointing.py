@@ -96,6 +96,7 @@ def build_model_config(model: Presto) -> Dict[str, Any]:
         "d_model": int(model.d_model),
         "n_layers": int(n_layers),
         "n_heads": int(n_heads),
+        "latent_topology": str(model.latent_topology),
         "max_affinity_nM": float(getattr(model, "max_affinity_nM", DEFAULT_MAX_AFFINITY_NM)),
         "binding_midpoint_nM": float(
             getattr(model, "binding_midpoint_nM", DEFAULT_BINDING_MIDPOINT_NM)
@@ -169,6 +170,7 @@ def load_model_from_checkpoint(
     d_model: Optional[int] = None,
     n_layers: Optional[int] = None,
     n_heads: Optional[int] = None,
+    latent_topology: Optional[str] = None,
     max_affinity_nM: Optional[float] = None,
     binding_midpoint_nM: Optional[float] = None,
     binding_log10_scale: Optional[float] = None,
@@ -198,6 +200,9 @@ def load_model_from_checkpoint(
         "d_model": d_model if d_model is not None else model_config.get("d_model"),
         "n_layers": n_layers if n_layers is not None else model_config.get("n_layers"),
         "n_heads": n_heads if n_heads is not None else model_config.get("n_heads"),
+        "latent_topology": (
+            latent_topology if latent_topology is not None else model_config.get("latent_topology")
+        ),
         "max_affinity_nM": (
             max_affinity_nM if max_affinity_nM is not None else model_config.get("max_affinity_nM")
         ),
@@ -220,6 +225,8 @@ def load_model_from_checkpoint(
         resolved["n_layers"] = 4
     if resolved["n_heads"] is None:
         resolved["n_heads"] = 8
+    if resolved["latent_topology"] is None:
+        resolved["latent_topology"] = "expanded"
     if resolved["max_affinity_nM"] is None:
         resolved["max_affinity_nM"] = DEFAULT_MAX_AFFINITY_NM
     if resolved["binding_midpoint_nM"] is None:
@@ -231,6 +238,7 @@ def load_model_from_checkpoint(
         d_model=int(resolved["d_model"]),
         n_layers=int(resolved["n_layers"]),
         n_heads=int(resolved["n_heads"]),
+        latent_topology=str(resolved["latent_topology"]),
         max_affinity_nM=float(resolved["max_affinity_nM"]),
         binding_midpoint_nM=float(resolved["binding_midpoint_nM"]),
         binding_log10_scale=float(resolved["binding_log10_scale"]),

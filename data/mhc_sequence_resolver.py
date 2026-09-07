@@ -135,6 +135,37 @@ def lookup_exact_mhc_input(
         return None
 
 
+def load_mhcseqs_catalog_inputs(
+    *,
+    mhcseqs_search_dir: Optional[str] = None,
+) -> Dict[str, ExactMHCInput]:
+    """Load one canonical exact-input record per `mhcseqs` allele.
+
+    Unlike single-allele lookup, catalog loading is intentionally fail-loud:
+    callers use it when they explicitly need the full inventory (for example
+    MHC-only augmentation), so silently returning an empty collection would
+    change the requested training contract.
+    """
+    if mhcseqs_search_dir is None:
+        env_search_dir = str(os.environ.get("PRESTO_MHCSEQS_SEARCH_DIR", "")).strip()
+        if env_search_dir:
+            mhcseqs_search_dir = env_search_dir
+        elif Path("/opt/mhcseqs/mhc-full-seqs.csv").exists():
+            mhcseqs_search_dir = "/opt/mhcseqs"
+
+    catalog: Dict[str, ExactMHCInput] = {}
+    for record in _load_mhcseqs_input_lookup(search_dir=mhcseqs_search_dir).values():
+        allele = str(record.allele or "").strip()
+        if allele and str(record.sequence or "").strip():
+            catalog.setdefault(allele, record)
+    if not catalog:
+        raise RuntimeError(
+            "mhcseqs returned no usable exact MHC inputs; build or provide its "
+            "mhc-full-seqs.csv catalog before requesting MHC-only augmentation."
+        )
+    return dict(sorted(catalog.items()))
+
+
 def find_matching_allele_sequence(
     allele_sequences: Optional[Mapping[str, str]],
     allele: str,

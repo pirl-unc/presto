@@ -36,8 +36,14 @@ Default canonical input:
 - merged table: `data/merged_deduped.tsv` (or `--merged-tsv` override).
 
 Canonical behavior:
+- `--data-source merged_tsv` reads only the merged table, while
+  `--data-source hitlist` reads only the curated Hitlist binding, kinetics,
+  stability, and elution indexes. Source selection never depends on whether an
+  unrelated input file happens to exist.
 - merged input is required by default (`--require-merged-input`),
 - raw-source fallback is non-canonical and only enabled with `--allow-raw-fallback`.
+- MHC sequence resolution uses `mhcseqs` by default. `--index-csv` is an
+  optional supplement, not a prerequisite for resolution or augmentation.
 - MHC alleles must resolve to amino-acid sequences by default (`--strict-mhc-resolution`).
   Unresolved alleles are a hard error, with unresolved-allele reports written to
   the run directory for triage. `--allow-unresolved-mhc` is debug-only.
