@@ -10135,3 +10135,54 @@ Both production changes together passed 234 focused tests in isolated checkout
 `81face3`, with imports explicitly verified to originate in that checkout.
 No new training or inference service was launched. #47 was merged as `b2e939e`
 and its main-branch CI passed; no deployment/release/service is configured.
+
+## Independent review against main — 2026-09-07
+
+Scope: inspect the complete proposed diff against merge base
+`b2e939e9d4baa6c67dfda34dd55199080d725f87`, without implementing fixes.
+Trace quantitative assay metadata through ingestion, dataset construction,
+collation and supervision; inspect the audit's reproducibility contract.
+Only report introduced, actionable defects supported by concrete affected
+paths, with applicable repository-rule references where they materially apply.
+
+- [x] Inspect all changed source, tests and audit artifacts against the base.
+- [x] Trace affected consumers and verify candidate regressions with focused tests.
+- [x] Deduplicate and prioritize findings; record verification and final verdict.
+
+### Review results
+
+No actionable introduced defects found. The 191 ingestion/collation/model-I/O
+checks and 65 loss/gradient/assay checks passed (256 total; one upstream PyTorch
+warning). Tests used the shared Python environment after the repository-local
+venv lacked tqdm; imports were verified to resolve this checkout. Full regression
+and the full-source audit were not rerun.
+
+Verified all recorded production/source hashes, before/after loader ASTs against
+the supplied merge base/current source, analyzer snapshot equality, and stored
+JSON count/fingerprint/delta invariants. `git diff --check` passed. Ruff could not
+run: the installed shared version is 0.15.21 versus the required 0.16.0, and the
+repository-local venv has no Ruff executable. No code fixes or scientific
+experiments were made; only this review plan/result note was added.
+
+## Merge #54/#55 and continue the repair series — 2026-09-07
+
+Specification: merge both reviewed, green PRs, preserving the local independent
+review note. Merge #54 first, integrate its main revision into #55 if shared
+task/experiment logs conflict, preserve both append-only records and verify
+production-code parity before merging #55. Recheck configured deployment and
+perform only an existing applicable release/deployment step.
+
+Then continue with the next concrete shared-supervision PR for #48/#50/#51.
+Inspect MIL loss and held-out extraction before fixing the scope; use one
+effective bag observation/prediction definition for loss and export, including
+selected T-cell response columns. Preserve fixed predictive inputs, qualifiers,
+boundary flags, source identity and current loss semantics unless a deliberate
+tested repair changes them. Keep uncompleted issue criteria explicitly open.
+
+- [ ] Merge #54 and integrate main into #55 while preserving both audit records.
+- [ ] Verify and merge #55; check deployment configuration and merged state.
+- [ ] Inspect shared supervision paths and write the next implementation spec.
+- [ ] Implement the next PR with meaningful behavioral regression tests.
+- [ ] Publish it against merged main and verify CI/results.
+
+Review results: pending.
