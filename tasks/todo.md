@@ -10073,3 +10073,157 @@ also confirm the original source-probe assertions pass without weakening them.
 - #46 remains open for independent context roles, concurrent interventions,
   repertoire conditioning, remaining source/serving/assay gaps and scientific
   validation. No full-corpus experiment or model-quality claim was made.
+
+## PR #47 independent review — 2026-09-07
+
+Review specification: inspect head `1535b5a` against its main base, following
+changed values from collation through model outputs, losses, held-out extraction,
+and prediction. Check the authoritative contract against implemented behavior.
+Treat the checkpoint break and explicitly deferred #46 work as accepted scope.
+Report only actionable defects with affected paths and reproducible evidence;
+leave production source unchanged during this review.
+
+- [x] Verify head/base and current CI; read guidance and relevant lessons.
+- [x] Trace encoder/context and CD4 routing, response selectors and censoring.
+- [x] Trace row/MIL/predictor boundary flags and public entrypoint compatibility.
+- [x] Run focused regression checks and reproduce any candidate defects.
+- [x] Record findings, verification evidence, and review limitations.
+
+Review results: no actionable regression identified in the bounded PR diff.
+Remote main remains `2560ef51d0d69735e73bb72286f7acbe22b4488f`, and the
+reviewed remote/local head remains `1535b5a208b2ab59b70b83d850b1f0a7e1959537`.
+Read the changed production paths, their callers and the authoritative contract.
+Verified downstream host isolation, distinct CD4/CD8 readouts, shared selected
+response extraction, source qualifiers, and row/MIL/prediction flag forwarding.
+
+Independent verification: `OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 pytest -q
+tests/test_model_io_routing.py tests/test_many_output_contract.py
+tests/test_holdout_eval.py tests/test_holdout_train_eval_parity.py
+tests/test_predict_cli.py tests/test_heads.py tests/test_docs_match_code.py
+tests/test_gradient_coverage.py` — **140 passed in 13.51 seconds**.
+`git diff --check` passes. No production source or test changes were made.
+At the last CI check, both docs jobs passed and both lint/test jobs were still
+running on the notes-only head. This review did not rerun the full local suite,
+launch a scientific experiment, or validate deferred #46 capabilities. Review
+notes are local only; no GitHub review, comment, merge, or push was submitted.
+
+## Output supervision and prediction-quality audit — 2026-09-07
+
+Specification: audit PR #47 head and the canonical real-data trainer to determine
+what is emitted, what is supervised, and what predictive quality has actually
+been demonstrated. Produce a durable evidence report and file concrete GitHub
+issues, linked to #46/#47 and existing related issues. This task audits code,
+unit diagnostics and existing data/run artifacts; it does not commission a new
+training experiment. Distinguish observed facts, historical measurements and
+unmeasured coverage explicitly.
+
+Output coverage scope: enumerate canonical outputs and aliases; map assay and
+biological outputs to targets, source adapters, transforms/qualifiers, masks,
+loss weights and row/MIL paths. Check per-column support and gradient-test
+coverage, source/mode exclusions, synthetic versus real labels, and whether
+current support gates can detect unsupported tracks. Use existing reproducible
+corpus reports where available without presenting older counts as current.
+
+Prediction-quality scope: audit selected-checkpoint reconstruction, train/val/test
+contracts, per-example extraction, panel/MIL/diagnostic coverage, target units,
+metrics and probe ground-truth provenance. Inspect recent registered real-data
+runs for loss curves, known-example fits, held-out quality and compatibility
+with the new encoder. Define separate fitting and generalization acceptance
+criteria, avoiding ungrounded global pass thresholds across heterogeneous tasks.
+
+- [x] Inspect existing issues, source contracts and recent registered evidence.
+- [x] Build an evidence-backed output/supervision matrix and identify gaps.
+- [x] Audit evaluation and known-example paths; assess existing quality evidence.
+- [x] Verify concrete gaps with focused diagnostics/tests or artifact checks.
+- [x] Write detailed issues with pinned evidence, scope and acceptance criteria;
+      publish them and verify the resulting bodies/links.
+- [x] Record final findings, issue URLs, verification and remaining uncertainty.
+
+Review results: the detailed report and reproducible code diagnostics are in
+`tasks/audits/2026-09-07_output-quality/README.md`. Inventory: 31 canonical
+loss tasks, 172 tensor paths / 144 tensor objects in the inspected expanded
+configuration, including aliases and diagnostics. These are implementation
+counts, not an endpoint or biological-validation count.
+
+Published and read back all six issue titles/bodies/open states:
+
+- #48 https://github.com/pirl-unc/presto/issues/48 — complete per-column/source/split supervision census and gates.
+- #49 https://github.com/pirl-unc/presto/issues/49 — merged binding adapter loses observed assay metadata.
+- #50 https://github.com/pirl-unc/presto/issues/50 — T-cell MIL has no selected assay-panel response loss.
+- #51 https://github.com/pirl-unc/presto/issues/51 — held-out bag/panel/vector extraction and identity gaps.
+- #52 https://github.com/pirl-unc/presto/issues/52 — average precision depends on row order within tied scores.
+- #53 https://github.com/pirl-unc/presto/issues/53 — fresh compatible real-data fitting and validation/test baseline, with the preceding measurement prerequisites.
+
+Verification: 136 focused tests passed in 12.52 seconds across support,
+gradients, holdout collection/parity, I/O routing, training loss/MIL and collation;
+two existing scheduler deprecation warnings. Deterministic fixtures reproduced
+all reported defects without an optimizer step. Pinned Ruff 0.16.0 format/lint
+and `git diff --check` pass. All four PR #47 checks now succeed on `1535b5a`.
+Production code/tests remain unchanged; no new GPU or predictive experiment
+was launched. Historical corpus counts and old-encoder results are explicitly
+distinguished from the unmeasured current full-corpus coverage and quality.
+
+User's runplz follow-up: confirmed PR #167 merged and 4.4.4 published. Local
+editable runtime reports 4.4.4 but distribution metadata reports 3.24.31.
+Useful for orchestration; existing runplz #165 tracks long detached Modal runs
+and later collection. Large artifacts need a Volume under the return-archive
+limit. No duplicate runplz issue, package modification or provider job.
+
+## Merge #47 and begin audit repair PR series — 2026-09-07
+
+Specification: merge the reviewed, green #47 head, inspect existing release and
+deployment configuration, and begin a reviewable series addressing #48–#53.
+Preserve the uncommitted audit evidence. New follow-up PRs target merged main
+unless an explicit implementation dependency requires stacking; do not merge
+the new repair PRs under the authorization to merge #47.
+
+Initial independent repairs:
+
+1. #52: compute average precision at distinct score thresholds, preserve
+   absent-class behavior, validate with tied/untied reference cases and
+   permutation tests, and audit available archived prediction dumps without
+   rewriting historical results silently. Include estimator provenance and
+   metric deltas for affected artifacts.
+2. #49: preserve observed binding assay descriptors through merged ingestion,
+   verify source-to-selected-column/gradient routing, measure affected source
+   rows and selector support on the available real corpus, and audit analogous
+   kinetic/stability descriptor handling. Keep quantitative-family semantics
+   and fixed model inputs unchanged.
+
+Subsequent shared design: #48/#50/#51 should share effective supervision
+resolution (row/bag/column identity, target, qualifier and aggregation) so
+coverage, T-cell bag-panel objectives and held-out extraction cannot drift.
+#53 follows the measurement repairs with a separately registered fresh real-data
+training experiment. Starting this series does not imply these later issues
+are already complete or a trained model is deployable.
+
+Verification: regression tests targeted to each repair, pinned lint/format,
+required CI on the published PRs, verified PR bodies/base/head and clear issue
+closure scope. Read deployment configuration before any release; if none is
+configured, document that finding instead of inventing a service or package
+release.
+
+- [x] Merge #47 at the verified head and verify merged main.
+- [x] Inspect and perform any configured deployment applicable to #47.
+- [ ] Preserve audit evidence and publish the #52 repair with validation.
+- [ ] Publish the #49 repair with source/selector evidence and validation.
+- [ ] Record the shared follow-up design for #48/#50/#51 and #53 prerequisites.
+- [ ] Verify CI and record PR links, results and remaining work.
+
+Review results: pending.
+
+Merge/deployment: #47 merged as `b2e939e9d4baa6c67dfda34dd55199080d725f87`
+at 2026-09-07 18:48:50 UTC. No configured deployment/release workflow, Pages,
+release history or GitHub deployment exists; CI builds docs without publishing.
+
+#52 repair: six regression assertions failed on the old implementation;
+all 50 holdout/parity tests pass after threshold-group AP and artifact estimator
+metadata. Local sklearn 1.5.2 cross-check: 500 arrays, max error 3.33e-16.
+Registered archive correction considered 301 CSVs, selected 39 canonical files,
+reproduced all 1,123 comparable archived AP values, and reissued 738 changed
+metrics in 36 summaries. No other summary values changed; production code was
+frozen at `93a9c7b` for that audit. Full report is in the registered experiment.
+An additional 65 canonical real-data trainer tests pass (115 focused tests
+total). Full pinned lint/format and strict docs build pass. The first format
+check found two audit Markdown code blocks; formatting those blocks resolved
+the gate without changing the published issue semantics.

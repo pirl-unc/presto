@@ -43,6 +43,33 @@ class TestEstimators:
         score = np.array([0.9, 0.8, 0.7])
         assert auprc(y, score) == pytest.approx((1.0 + 2.0 / 3.0) / 2.0)
 
+    @pytest.mark.parametrize(
+        "labels,scores,expected",
+        [
+            ([1, 0], [0.5, 0.5], 0.5),
+            ([0, 1], [0.5, 0.5], 0.5),
+            ([1, 0, 1, 0, 0], [0.5] * 5, 0.4),
+            ([1, 0, 1, 0], [0.9, 0.9, 0.3, 0.1], 7.0 / 12.0),
+            ([0, 0, 1, 1], [0.9, 0.8, 0.2, 0.1], 5.0 / 12.0),
+        ],
+    )
+    def test_auprc_threshold_groups(self, labels, scores, expected):
+        # Golden values also cross-checked against sklearn average_precision_score.
+        assert auprc(np.array(labels), np.array(scores)) == pytest.approx(expected)
+
+    def test_auprc_invariant_to_dataset_permutation_with_ties(self):
+        labels = np.array([1, 0, 1, 0, 1, 0, 0])
+        scores = np.array([0.9, 0.9, 0.5, 0.5, 0.5, 0.1, 0.1])
+        expected = 0.5 / 3.0 + 0.6 * 2.0 / 3.0
+        rng = np.random.default_rng(52)
+        for _ in range(40):
+            order = rng.permutation(len(labels))
+            assert auprc(labels[order], scores[order]) == pytest.approx(expected)
+
+    @pytest.mark.parametrize("labels", [[], [0, 0], [1, 1]])
+    def test_auprc_undefined_without_both_classes(self, labels):
+        assert auprc(np.array(labels), np.zeros(len(labels))) is None
+
     def test_spearman_is_rank_based(self):
         y = np.array([1.0, 2.0, 3.0, 4.0])
         # monotone but very non-linear: Spearman 1, Pearson < 1
@@ -125,6 +152,26 @@ def test_binary_metrics_balanced_accuracy_on_imbalanced_data():
 def test_regression_metrics_rmse_is_exact():
     metrics = regression_metrics(np.array([0.0, 0.0]), np.array([3.0, 4.0]))
     assert metrics["rmse"] == pytest.approx(np.sqrt(12.5))
+
+
+def test_tied_average_precision_reaches_binary_strata_and_binding_thresholds():
+    accumulator = TaskPredictionAccumulator("elution", "bce")
+    accumulator.add(
+        [1.0, 0.0, 1.0, 0.0],
+        [0.0] * 4,
+        [1.0] * 4,
+        sources=["real", "real", "real", "synthetic_negative_shuffle"],
+        mapping_categories=["single"] * 4,
+    )
+    metrics = accumulator.metrics()
+    assert metrics["auprc"] == pytest.approx(0.5)
+    assert metrics["mapping_single_auprc"] == pytest.approx(0.5)
+    assert metrics["real_only_auprc"] == pytest.approx(2.0 / 3.0)
+    assert metrics["decoy_shuffle_auprc"] == pytest.approx(2.0 / 3.0)
+
+    binding = TaskPredictionAccumulator("binding", "censor")
+    binding.add([1.0, 4.0], [3.0, 3.0], [1.0, 1.0], qualifiers=[0, 0])
+    assert binding.metrics()["threshold_500nm_auprc"] == pytest.approx(0.5)
 
 
 class TestCollectionAndArtifacts:
@@ -229,6 +276,7 @@ class TestCollectionAndArtifacts:
 
         written = json.loads((tmp_path / "summary.json").read_text())
         assert written["split"] == "val"
+        assert written["metric_estimators"]["auprc"] == "average_precision_distinct_thresholds_v2"
         assert json.loads((tmp_path / "val_summary.json").read_text()) == written
 
         with (tmp_path / "val_predictions.csv").open() as handle:
