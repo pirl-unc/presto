@@ -1,0 +1,33 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "commit": "ddc06448fc906ea4fd51dc12c670accc137a23b9",
+  "dirty_status": "?? experiments/2026-09-07_1908_codex_binding-metadata-preservation/\n?? experiments/agents/codex/plans/2026-09-07_binding-metadata-preservation.md\n",
+  "command": "bash experiments/2026-09-07_1908_codex_binding-metadata-preservation/reproduce/launch.sh",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "python": "3.12.6",
+  "mhcseqs": "2.5.12",
+  "data_path": "data/merged_deduped.tsv",
+  "data_sha256": "46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c",
+  "data_bytes": 1028889889,
+  "cap_sampling": "head",
+  "caps_per_modality": 1,
+  "sampling_seed": 42,
+  "gpu": null,
+  "optimizer_steps": 0,
+  "production_sha256": {
+    "scripts/train_iedb.py": "6bd23f1e38efa7927f20a61eb42f590d84fc9454512fdbad0749a82404a08bb9",
+    "data/collate.py": "7495a3b0cb24addedb16f1eaeb70e6d0b9a1bf810dc140c4d22a545e79435d25",
+    "data/loaders.py": "55a514eda9c79cfc8d1e50ad26d4f563e54e33d24f7ce36e025f074f2aa38cfc",
+    "data/vocab.py": "af225825bb8bbaf7b5c2776aa9f0b56ab0e0a43ca5533b9429486ec485d54311",
+    "data/cross_source_dedup.py": "7d1e0f4ba5b7b0ff2746240520ad7fcd20e5f0cc958191c416f7744f8bfcf8d0"
+  },
+  "source_sha256": {
+    "audit.py": "d1556721916aebc35feb1acb8e07c387d48a817c68286e8a98ba21147a73326c",
+    "load_before.py": "ea7512f88cf7948c10c6e1e82481c35d60c44c40880baae58e14c805202b1e2e",
+    "load_after.py": "c6d3b0e138cc9119035ce61afdf07acfe42e39de666e657417e652fd9caff3b8"
+  }
+}

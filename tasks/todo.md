@@ -10227,3 +10227,116 @@ An additional 65 canonical real-data trainer tests pass (115 focused tests
 total). Full pinned lint/format and strict docs build pass. The first format
 check found two audit Markdown code blocks; formatting those blocks resolved
 the gate without changing the published issue semantics.
+
+## Preserve quantitative assay metadata (#49) — 2026-09-07
+
+Specification: second independent repair PR, based directly on merged main
+`b2e939e`. PR #54 separately repairs #52. Preserve `assay_type` and
+`assay_method` from merged TSV binding rows, plus the existing binding culture
+fields. Apply the same preservation to kinetic and stability records, retaining
+their value-type fallback when observed assay type is absent.
+
+The existing collator owns descriptor categorization and target selection.
+Preserving observed type may correctly change a family selector that previously
+fell back to value_type; do not invent a new categorization policy or silently
+discard conflicting descriptors. Values, units, qualifiers, sampling and model
+forward inputs retain their existing contracts. Kinetic/stability descriptors
+are preserved without adding affinity-panel losses to those rows.
+
+Verification:
+- Tabular adapter tests cover five quantitative families, missing descriptors,
+  non-default/conflicting type descriptors and cultures.
+- Trace real record fields through PrestoDataset and binding_context selectors.
+- Prove the selected preparation/readout embedding rows receive gradient while
+  assay metadata does not enter model inputs or change fixed forward outputs.
+- Register a source audit with source hash, before/after row/selector counts,
+  missingness, unchanged numeric-record fingerprints and capped sample evidence.
+- Run relevant ingestion, collation, loss/routing and regression suites; publish
+  the PR and verify required CI. Keep current full-corpus/split support and
+  predictive quality claims in #48/#53.
+
+- [x] Implement and verify metadata preservation and gradient routing.
+- [x] Complete registered real-source before/after audit.
+- [x] Publish PR and verify its base/head/body; track full CI on the linked PR.
+- [x] Document the shared #48/#50/#51 supervision design and #53 dependencies.
+
+Review results: PR #55 is open and ready for review against main, independent
+of PR #54. Both PR bases/heads/bodies were read back and verified. #54's full
+CI is green; #55's lint/docs pass and its full suites were running at this
+notes update. Final check results are recorded on the PR checks and body.
+
+The metadata repair passes 184 focused tests (including 12 new adapter/routing
+tests), pinned full lint/format and strict docs build. Seven adapter assertions
+failed on the base before the fix. Registered source audit:
+`experiments/2026-09-07_1908_codex_binding-metadata-preservation/README.md`.
+Actual before/after loader passes preserve all non-descriptor fingerprints,
+row counts and funnel stats. Method metadata is recovered for 249,292 binding,
+12,259 stability and 106 kinetic records; all had been lost before. The real
+473 nM EVMPVSMAK/A*03:01 example reaches its recorded output selectors.
+Counts are before curation/splitting and make no adequacy or quality claim.
+
+Shared next-group design is in `tasks/specs/2026-09-07_shared-supervision.md`:
+effective observation/target/prediction resolution should serve loss, support
+and export, with common T-cell bag-panel aggregation and correct CE/vector
+identity. #48/#50/#51 and fresh-training #53 remain open.
+
+Published repair PRs:
+
+- #54 https://github.com/pirl-unc/presto/pull/54 — fixes #52, head `ace85eb`.
+- #55 https://github.com/pirl-unc/presto/pull/55 — fixes #49, production `ddc0644`.
+
+Both production changes together passed 234 focused tests in isolated checkout
+`81face3`, with imports explicitly verified to originate in that checkout.
+No new training or inference service was launched. #47 was merged as `b2e939e`
+and its main-branch CI passed; no deployment/release/service is configured.
+
+## Independent review against main — 2026-09-07
+
+Scope: inspect the complete proposed diff against merge base
+`b2e939e9d4baa6c67dfda34dd55199080d725f87`, without implementing fixes.
+Trace quantitative assay metadata through ingestion, dataset construction,
+collation and supervision; inspect the audit's reproducibility contract.
+Only report introduced, actionable defects supported by concrete affected
+paths, with applicable repository-rule references where they materially apply.
+
+- [x] Inspect all changed source, tests and audit artifacts against the base.
+- [x] Trace affected consumers and verify candidate regressions with focused tests.
+- [x] Deduplicate and prioritize findings; record verification and final verdict.
+
+### Review results
+
+No actionable introduced defects found. The 191 ingestion/collation/model-I/O
+checks and 65 loss/gradient/assay checks passed (256 total; one upstream PyTorch
+warning). Tests used the shared Python environment after the repository-local
+venv lacked tqdm; imports were verified to resolve this checkout. Full regression
+and the full-source audit were not rerun.
+
+Verified all recorded production/source hashes, before/after loader ASTs against
+the supplied merge base/current source, analyzer snapshot equality, and stored
+JSON count/fingerprint/delta invariants. `git diff --check` passed. Ruff could not
+run: the installed shared version is 0.15.21 versus the required 0.16.0, and the
+repository-local venv has no Ruff executable. No code fixes or scientific
+experiments were made; only this review plan/result note was added.
+
+## Merge #54/#55 and continue the repair series — 2026-09-07
+
+Specification: merge both reviewed, green PRs, preserving the local independent
+review note. Merge #54 first, integrate its main revision into #55 if shared
+task/experiment logs conflict, preserve both append-only records and verify
+production-code parity before merging #55. Recheck configured deployment and
+perform only an existing applicable release/deployment step.
+
+Then continue with the next concrete shared-supervision PR for #48/#50/#51.
+Inspect MIL loss and held-out extraction before fixing the scope; use one
+effective bag observation/prediction definition for loss and export, including
+selected T-cell response columns. Preserve fixed predictive inputs, qualifiers,
+boundary flags, source identity and current loss semantics unless a deliberate
+tested repair changes them. Keep uncompleted issue criteria explicitly open.
+
+- [ ] Merge #54 and integrate main into #55 while preserving both audit records.
+- [ ] Verify and merge #55; check deployment configuration and merged state.
+- [ ] Inspect shared supervision paths and write the next implementation spec.
+- [ ] Implement the next PR with meaningful behavioral regression tests.
+- [ ] Publish it against merged main and verify CI/results.
+
+Review results: pending.

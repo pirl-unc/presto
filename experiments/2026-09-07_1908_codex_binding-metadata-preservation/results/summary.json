@@ -1,0 +1,412 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "kind": "Full-source adapter/selector audit; no training",
+  "data_path": "data/merged_deduped.tsv",
+  "data_sha256": "46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c",
+  "runtime_seconds": 159.65736395819113,
+  "commit": "ddc06448fc906ea4fd51dc12c670accc137a23b9",
+  "dirty_status": "?? experiments/2026-09-07_1908_codex_binding-metadata-preservation/\n?? experiments/agents/codex/plans/2026-09-07_binding-metadata-preservation.md\n?? tasks/specs/\n",
+  "unchanged_row_counts": true,
+  "unchanged_non_descriptor_fingerprints": true,
+  "unchanged_loader_stats": true,
+  "selector_changes": {
+    "binding": {
+      "assay_type": {
+        "EC50": {
+          "before": 1717,
+          "after": 1717,
+          "delta": 0
+        },
+        "IC50": {
+          "before": 73312,
+          "after": 73312,
+          "delta": 0
+        },
+        "KD": {
+          "before": 21041,
+          "after": 21041,
+          "delta": 0
+        },
+        "KD_PROXY_EC50": {
+          "before": 56876,
+          "after": 56876,
+          "delta": 0
+        },
+        "KD_PROXY_IC50": {
+          "before": 88857,
+          "after": 88857,
+          "delta": 0
+        },
+        "OTHER": {
+          "before": 7489,
+          "after": 7489,
+          "delta": 0
+        }
+      },
+      "assay_method": {
+        "CELLULAR_COMPETITIVE_FLUORESCENCE": {
+          "before": 0,
+          "after": 6681,
+          "delta": 6681
+        },
+        "CELLULAR_COMPETITIVE_RADIOACTIVITY": {
+          "before": 0,
+          "after": 920,
+          "delta": 920
+        },
+        "CELLULAR_DIRECT_FLUORESCENCE": {
+          "before": 0,
+          "after": 1698,
+          "delta": 1698
+        },
+        "CELLULAR_TCELL_INHIBITION": {
+          "before": 0,
+          "after": 206,
+          "delta": 206
+        },
+        "LYSATE_DIRECT_RADIOACTIVITY": {
+          "before": 0,
+          "after": 14,
+          "delta": 14
+        },
+        "OTHER": {
+          "before": 0,
+          "after": 1599,
+          "delta": 1599
+        },
+        "PURIFIED_COMPETITIVE_FLUORESCENCE": {
+          "before": 0,
+          "after": 36840,
+          "delta": 36840
+        },
+        "PURIFIED_COMPETITIVE_RADIOACTIVITY": {
+          "before": 0,
+          "after": 140462,
+          "delta": 140462
+        },
+        "PURIFIED_DIRECT_FLUORESCENCE": {
+          "before": 0,
+          "after": 60788,
+          "delta": 60788
+        },
+        "PURIFIED_DIRECT_RADIOACTIVITY": {
+          "before": 0,
+          "after": 84,
+          "delta": 84
+        },
+        "unknown": {
+          "before": 249292,
+          "after": 0,
+          "delta": -249292
+        }
+      },
+      "assay_prep": {
+        "BINDING_ASSAY": {
+          "before": 0,
+          "after": 270,
+          "delta": 270
+        },
+        "CELLULAR": {
+          "before": 0,
+          "after": 9508,
+          "delta": 9508
+        },
+        "LYSATE": {
+          "before": 0,
+          "after": 17,
+          "delta": 17
+        },
+        "OTHER": {
+          "before": 0,
+          "after": 1239,
+          "delta": 1239
+        },
+        "PURIFIED": {
+          "before": 0,
+          "after": 238258,
+          "delta": 238258
+        },
+        "unknown": {
+          "before": 249292,
+          "after": 0,
+          "delta": -249292
+        }
+      },
+      "assay_geometry": {
+        "COMPETITIVE": {
+          "before": 0,
+          "after": 184903,
+          "delta": 184903
+        },
+        "DIRECT": {
+          "before": 0,
+          "after": 62587,
+          "delta": 62587
+        },
+        "OTHER": {
+          "before": 0,
+          "after": 1596,
+          "delta": 1596
+        },
+        "T_CELL_INHIBITION": {
+          "before": 0,
+          "after": 206,
+          "delta": 206
+        },
+        "unknown": {
+          "before": 249292,
+          "after": 0,
+          "delta": -249292
+        }
+      },
+      "assay_readout": {
+        "FLUORESCENCE": {
+          "before": 0,
+          "after": 106010,
+          "delta": 106010
+        },
+        "OTHER": {
+          "before": 0,
+          "after": 1802,
+          "delta": 1802
+        },
+        "RADIOACTIVITY": {
+          "before": 0,
+          "after": 141480,
+          "delta": 141480
+        },
+        "unknown": {
+          "before": 249292,
+          "after": 0,
+          "delta": -249292
+        }
+      }
+    },
+    "stability": {
+      "assay_type": {
+        "TM": {
+          "before": 1159,
+          "after": 1159,
+          "delta": 0
+        },
+        "T_HALF": {
+          "before": 11100,
+          "after": 11100,
+          "delta": 0
+        }
+      },
+      "assay_method": {
+        "CELLULAR_DIRECT_FLUORESCENCE": {
+          "before": 0,
+          "after": 492,
+          "delta": 492
+        },
+        "LYSATE_DIRECT_RADIOACTIVITY": {
+          "before": 0,
+          "after": 12,
+          "delta": 12
+        },
+        "OTHER": {
+          "before": 0,
+          "after": 11,
+          "delta": 11
+        },
+        "PURIFIED_DIRECT_FLUORESCENCE": {
+          "before": 0,
+          "after": 4906,
+          "delta": 4906
+        },
+        "PURIFIED_DIRECT_RADIOACTIVITY": {
+          "before": 0,
+          "after": 6838,
+          "delta": 6838
+        },
+        "unknown": {
+          "before": 12259,
+          "after": 0,
+          "delta": -12259
+        }
+      },
+      "assay_prep": {
+        "CELLULAR": {
+          "before": 0,
+          "after": 503,
+          "delta": 503
+        },
+        "LYSATE": {
+          "before": 0,
+          "after": 12,
+          "delta": 12
+        },
+        "PURIFIED": {
+          "before": 0,
+          "after": 11744,
+          "delta": 11744
+        },
+        "unknown": {
+          "before": 12259,
+          "after": 0,
+          "delta": -12259
+        }
+      },
+      "assay_geometry": {
+        "DIRECT": {
+          "before": 0,
+          "after": 12259,
+          "delta": 12259
+        },
+        "unknown": {
+          "before": 12259,
+          "after": 0,
+          "delta": -12259
+        }
+      },
+      "assay_readout": {
+        "FLUORESCENCE": {
+          "before": 0,
+          "after": 5398,
+          "delta": 5398
+        },
+        "RADIOACTIVITY": {
+          "before": 0,
+          "after": 6861,
+          "delta": 6861
+        },
+        "unknown": {
+          "before": 12259,
+          "after": 0,
+          "delta": -12259
+        }
+      }
+    },
+    "kinetics": {
+      "assay_type": {
+        "KOFF": {
+          "before": 70,
+          "after": 70,
+          "delta": 0
+        },
+        "KON": {
+          "before": 32,
+          "after": 32,
+          "delta": 0
+        },
+        "OTHER": {
+          "before": 4,
+          "after": 4,
+          "delta": 0
+        }
+      },
+      "assay_method": {
+        "CELLULAR_DIRECT_FLUORESCENCE": {
+          "before": 0,
+          "after": 5,
+          "delta": 5
+        },
+        "LYSATE_DIRECT_RADIOACTIVITY": {
+          "before": 0,
+          "after": 12,
+          "delta": 12
+        },
+        "OTHER": {
+          "before": 0,
+          "after": 10,
+          "delta": 10
+        },
+        "PURIFIED_DIRECT_FLUORESCENCE": {
+          "before": 0,
+          "after": 79,
+          "delta": 79
+        },
+        "unknown": {
+          "before": 106,
+          "after": 0,
+          "delta": -106
+        }
+      },
+      "assay_prep": {
+        "BINDING_ASSAY": {
+          "before": 0,
+          "after": 10,
+          "delta": 10
+        },
+        "CELLULAR": {
+          "before": 0,
+          "after": 5,
+          "delta": 5
+        },
+        "LYSATE": {
+          "before": 0,
+          "after": 12,
+          "delta": 12
+        },
+        "PURIFIED": {
+          "before": 0,
+          "after": 79,
+          "delta": 79
+        },
+        "unknown": {
+          "before": 106,
+          "after": 0,
+          "delta": -106
+        }
+      },
+      "assay_geometry": {
+        "DIRECT": {
+          "before": 0,
+          "after": 96,
+          "delta": 96
+        },
+        "OTHER": {
+          "before": 0,
+          "after": 10,
+          "delta": 10
+        },
+        "unknown": {
+          "before": 106,
+          "after": 0,
+          "delta": -106
+        }
+      },
+      "assay_readout": {
+        "FLUORESCENCE": {
+          "before": 0,
+          "after": 84,
+          "delta": 84
+        },
+        "OTHER": {
+          "before": 0,
+          "after": 10,
+          "delta": 10
+        },
+        "RADIOACTIVITY": {
+          "before": 0,
+          "after": 12,
+          "delta": 12
+        },
+        "unknown": {
+          "before": 106,
+          "after": 0,
+          "delta": -106
+        }
+      }
+    }
+  },
+  "real_example_context": {
+    "assay_type_idx": [
+      3
+    ],
+    "assay_method_idx": [
+      2
+    ],
+    "assay_prep_idx": [
+      1
+    ],
+    "assay_geometry_idx": [
+      2
+    ],
+    "assay_readout_idx": [
+      2
+    ]
+  }
+}
