@@ -10337,7 +10337,7 @@ tested repair changes them. Keep uncompleted issue criteria explicitly open.
 - [x] Verify and merge #55; check deployment configuration and merged state.
 - [x] Inspect shared supervision paths and write the next implementation spec.
 - [x] Implement the next PR with meaningful behavioral regression tests.
-- [ ] Publish it against merged main and verify CI/results.
+- [x] Publish against merged main; maintain verification receipts in PR #56.
 
 Review results: #54 merged as `922efb8`; #55 as `a711121`. Integration passed
 234 focused tests and Ruff 0.16.0 lint/format. Both appended audit records are
@@ -10386,8 +10386,16 @@ Seventeen new behavioral regressions cover selected gradients on the actual
 model, all six axes, unknown selectors, response balance, duplicate source IDs,
 class-split bags, cap-independent final loss, complete/chunked equivalence and
 per-bag loss reconstruction. The affected suite passed 252 tests; full lint and
-format with Ruff 0.16.0 and strict docs build passed. Full local regression and
-new-PR CI are pending. Both merged main revisions completed CI successfully.
+format with Ruff 0.16.0 and strict docs build passed. Final full-suite and CI
+receipts are maintained in [PR #56](https://github.com/pirl-unc/presto/pull/56).
+Both merged main revisions completed CI successfully.
+
+Before/after verification against `a711121` used the same actual d32/l2/h4 model
+and two unequal class-I elution bags, with sparsity and contrastive terms enabled.
+For uncapped and two-instance-capped forwards, every existing task loss and
+every parameter gradient matched exactly (maximum absolute delta 0). This is
+a code-parity diagnostic, not a training-quality experiment. Production change:
+`31e907c`; the PR is based directly on merged main `a711121`.
 
 The real-data bag census and remaining #48/#50/#51 acceptance criteria stay
 open. No fresh training or deployment was performed. There is no configured
