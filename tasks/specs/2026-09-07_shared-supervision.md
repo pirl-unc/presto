@@ -1,8 +1,15 @@
 # Shared supervision for coverage, MIL and held-out artifacts
 
-Status: proposed next implementation group after the independent #49/#52
-repairs. Related issues: #48, #50, #51; experimental consumer: #53.
+Status: partially implemented in PR #56 after the merged #49/#52 repairs.
+Related issues: #48, #50, #51; experimental consumer: #53.
 Author: Codex / GPT-6, 2026-09-07. Baseline: merged #47 (`b2e939e`).
+
+PR #56 implements shared bag targets/predictions, selected T-cell bag-panel
+objectives, complete/chunked final evaluation and bag identity/export. Its
+split-support census consumes the same target views but remains separate from
+the legacy row-mask table. The general row/derived/panel registry, endpoint
+gates, CE/vector identity, real-source census and experiment closure remain
+future steps below. Full issue acceptance is not claimed by the bag repair.
 
 ## Problem and boundary
 

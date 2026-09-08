@@ -412,6 +412,7 @@ def _call_evaluate_compat(
     use_amp: bool = False,
     max_mil_instances: int = 0,
     max_val_batches: int = 0,
+    mil_chunk_size: int = 0,
 ) -> Tuple[float, Dict[str, float]]:
     """Call evaluate across old/new script signatures."""
     kwargs = {}
@@ -426,6 +427,8 @@ def _call_evaluate_compat(
         kwargs["max_mil_instances"] = int(max_mil_instances)
     if "max_batches" in params:
         kwargs["max_batches"] = int(max_val_batches)
+    if "mil_chunk_size" in params:
+        kwargs["mil_chunk_size"] = int(mil_chunk_size)
     result = evaluate(model, val_loader, device, **kwargs)
     if isinstance(result, tuple) and len(result) == 2 and isinstance(result[1], dict):
         return float(result[0]), result[1]
@@ -6021,6 +6024,10 @@ def run(args: argparse.Namespace) -> None:
             def _forward(model_ref, batch_ref):
                 return model_ref(**batch_ref.model_inputs())
 
+            from presto.training.mil import DEFAULT_MIL_EVAL_CHUNK_SIZE
+
+            # Final loss and dumps use full-precision, complete bags with the
+            # same deterministic chunk size. Training/in-loop caps stay separate.
             for split_name, split_loader in (("val", val_loader), ("test", test_loader)):
                 if split_loader is None:
                     continue
@@ -6032,8 +6039,9 @@ def run(args: argparse.Namespace) -> None:
                     supervised_loss_aggregation=str(
                         getattr(args, "supervised_loss_aggregation", "task_mean")
                     ),
-                    use_amp=use_amp,
-                    max_mil_instances=max_mil_instances,
+                    use_amp=False,
+                    max_mil_instances=0,
+                    mil_chunk_size=DEFAULT_MIL_EVAL_CHUNK_SIZE,
                     max_val_batches=0,
                 )
                 accumulators = collect_holdout_predictions(
@@ -6046,6 +6054,7 @@ def run(args: argparse.Namespace) -> None:
                     get_target_fn=_get_batch_target,
                     get_mask_fn=_get_batch_mask,
                     get_qual_fn=_get_batch_qual,
+                    mil_chunk_size=DEFAULT_MIL_EVAL_CHUNK_SIZE,
                 )
                 payload = write_holdout_artifacts(
                     run_dir,
@@ -6053,6 +6062,11 @@ def run(args: argparse.Namespace) -> None:
                     split=split_name,
                     extra_summary={
                         "best_val_loss": float(best_val_loss),
+                        "mil_evaluation": {
+                            "instance_cap": 0,
+                            "chunk_size": DEFAULT_MIL_EVAL_CHUNK_SIZE,
+                            "use_amp": False,
+                        },
                         "overall_loss": float(heldout_loss),
                         "loss_terms": heldout_loss_terms,
                     },

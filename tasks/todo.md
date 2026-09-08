@@ -10333,10 +10333,70 @@ selected T-cell response columns. Preserve fixed predictive inputs, qualifiers,
 boundary flags, source identity and current loss semantics unless a deliberate
 tested repair changes them. Keep uncompleted issue criteria explicitly open.
 
-- [ ] Merge #54 and integrate main into #55 while preserving both audit records.
-- [ ] Verify and merge #55; check deployment configuration and merged state.
-- [ ] Inspect shared supervision paths and write the next implementation spec.
-- [ ] Implement the next PR with meaningful behavioral regression tests.
-- [ ] Publish it against merged main and verify CI/results.
+- [x] Merge #54 and integrate main into #55 while preserving both audit records.
+- [x] Verify and merge #55; check deployment configuration and merged state.
+- [x] Inspect shared supervision paths and write the next implementation spec.
+- [x] Implement the next PR with meaningful behavioral regression tests.
+- [x] Publish against merged main; maintain verification receipts in PR #56.
 
-Review results: pending.
+Review results: #54 merged as `922efb8`; #55 as `a711121`. Integration passed
+234 focused tests and Ruff 0.16.0 lint/format. Both appended audit records are
+preserved. No deployment exists (CI only; no GitHub deployments).
+
+### Next PR specification: shared MIL observations
+
+Baseline: `a711121`, branch `codex/shared-mil-supervision`. Scope: implement
+the bag portion of #50/#51 with a reusable target view for #48. The real-data
+coverage census, CE/vector and binding/excision panel export remain open.
+
+- Extract channel materialization, slicing and forwarding into `training/mil.py`,
+  keeping trainer compatibility imports. Define scalar and six selected T-cell
+  panel bag tasks there. Resolve labels, selectors, masks and support without a
+  model; reject malformed memberships or inconsistent selectors within a bag.
+- Preserve source-row positions explicitly through collation/device transfer.
+  Class-split elution bags retain separate bag IDs and the original source row;
+  duplicate sample strings must never cause lineage to be assigned by guessing.
+- Gather a fixed observed panel column per instance, aggregate Noisy-OR in
+  float32 log space, and use the same effective prediction for loss and export.
+  Unknown selectors have zero support. Keep scalar proxy/alias weights and
+  row masks unchanged. New bag panel objectives have explicit weight 1, separate
+  from row objectives (as existing scalar T-cell MIL objectives already are).
+- Preserve bag-aware training sampling and sparsity/contrastive semantics.
+  Evaluate complete bags in deterministic forward chunks, accumulating bag
+  sufficient statistics so full panel/attention outputs need not be retained.
+  The training instance cap must not control final selected-checkpoint metrics.
+- Export bag observations with source lineage, bag identity, original/evaluated
+  counts, selector index/name, output path and per-observation BCE. Reconcile
+  exported bag counts with target-view support. Never substitute a row prediction
+  for an active elution bag or silently drop an active supported bag head.
+- Verify positive/negative and unequal bags, mixed row/bag batches, unknown and
+  multiple selectors, selected/unselected gradients, capping/boundaries/lineage,
+  exact 0.5 + 0.5 -> 0.75 parity and full/chunked equivalence. Reconstruct bag
+  task loss from exported rows. Run affected tests plus pinned lint/format and
+  full CI before reporting the next PR ready.
+- Consume the same bag target views in split-support audits. Add a separately
+  named MIL census with zero-support columns, selected/unknown counts, response
+  balance, instance totals and source counts; mark the ms alias. Preserve the
+  legacy row-mask table until #48 replaces its broader endpoint/gate semantics.
+
+### Implementation review
+
+Shared target/prediction resolution now serves training, support and export.
+Seventeen new behavioral regressions cover selected gradients on the actual
+model, all six axes, unknown selectors, response balance, duplicate source IDs,
+class-split bags, cap-independent final loss, complete/chunked equivalence and
+per-bag loss reconstruction. The affected suite passed 252 tests; full lint and
+format with Ruff 0.16.0 and strict docs build passed. Final full-suite and CI
+receipts are maintained in [PR #56](https://github.com/pirl-unc/presto/pull/56).
+Both merged main revisions completed CI successfully.
+
+Before/after verification against `a711121` used the same actual d32/l2/h4 model
+and two unequal class-I elution bags, with sparsity and contrastive terms enabled.
+For uncapped and two-instance-capped forwards, every existing task loss and
+every parameter gradient matched exactly (maximum absolute delta 0). This is
+a code-parity diagnostic, not a training-quality experiment. Production change:
+`31e907c`; the PR is based directly on merged main `a711121`.
+
+The real-data bag census and remaining #48/#50/#51 acceptance criteria stay
+open. No fresh training or deployment was performed. There is no configured
+deployment in this repository.

@@ -45,8 +45,17 @@ from presto.data import (
     write_tcr_csv,
     write_mhc_fasta,
 )
-from presto.training.losses import censor_aware_loss, mil_bag_loss, UncertaintyWeighting
+from presto.training.losses import censor_aware_loss, UncertaintyWeighting
 from presto.training.checkpointing import save_model_checkpoint
+from presto.training.mil import (
+    MIL_TASKS,
+    MIL_TASK_BASE_WEIGHTS,
+    get_mil_channel as _get_mil_channel,
+    slice_mil_channel as _slice_mil_channel,
+    run_mil_forward as _run_mil_forward,  # noqa: F401 -- compatibility export
+    predict_mil_channel,
+    resolve_mil_targets,
+)
 from presto.training.config_io import (
     load_config_file,
     merge_namespace_with_config,
@@ -1166,48 +1175,6 @@ def _masked_mean(values: torch.Tensor, mask: Optional[torch.Tensor]) -> Optional
     return (values * mask_vec).sum() / (denom + 1e-8)
 
 
-def _build_mil_prob_matrix(
-    inst_probs: torch.Tensor,
-    instance_to_bag: torch.Tensor,
-    n_bags: int,
-) -> tuple[torch.Tensor, torch.Tensor]:
-    """Pack flat instance probabilities into a dense (bag, instance) matrix."""
-    if inst_probs.ndim != 1:
-        raise ValueError(f"Expected flat probabilities, got shape={tuple(inst_probs.shape)}")
-    if instance_to_bag.ndim != 1:
-        raise ValueError(f"Expected flat bag indices, got shape={tuple(instance_to_bag.shape)}")
-    if inst_probs.shape[0] != instance_to_bag.shape[0]:
-        raise ValueError(
-            "Instance probability length and bag-index length differ: "
-            f"{inst_probs.shape[0]} vs {instance_to_bag.shape[0]}"
-        )
-    if n_bags <= 0:
-        raise ValueError("n_bags must be positive")
-
-    counts = torch.bincount(instance_to_bag, minlength=n_bags)
-    max_instances = int(counts.max().item()) if counts.numel() > 0 else 0
-    if max_instances <= 0:
-        empty = torch.zeros((n_bags, 1), dtype=inst_probs.dtype, device=inst_probs.device)
-        return empty, empty
-
-    probs = torch.zeros(
-        (n_bags, max_instances),
-        dtype=inst_probs.dtype,
-        device=inst_probs.device,
-    )
-    mask = torch.zeros_like(probs)
-    offsets = torch.zeros((n_bags,), dtype=torch.long, device=inst_probs.device)
-
-    for idx in range(inst_probs.shape[0]):
-        bag_idx = int(instance_to_bag[idx].item())
-        pos = int(offsets[bag_idx].item())
-        probs[bag_idx, pos] = inst_probs[idx]
-        mask[bag_idx, pos] = 1.0
-        offsets[bag_idx] = offsets[bag_idx] + 1
-
-    return probs, mask
-
-
 def _bag_aware_instance_cap(
     instance_to_bag: torch.Tensor,
     max_mil_instances: int,
@@ -1249,75 +1216,6 @@ def _bag_aware_instance_cap(
     keep = torch.tensor(chosen, dtype=torch.long, device=instance_to_bag.device)
     keep, _ = torch.sort(keep)
     return keep
-
-
-def _get_mil_channel(
-    batch,
-    prefix: str,
-) -> Optional[Dict[str, Any]]:
-    channel = {
-        "pep_tok": getattr(batch, f"{prefix}_pep_tok", None),
-        "mhc_a_tok": getattr(batch, f"{prefix}_mhc_a_tok", None),
-        "mhc_b_tok": getattr(batch, f"{prefix}_mhc_b_tok", None),
-        "mhc_class": getattr(batch, f"{prefix}_mhc_class", None),
-        "species": getattr(batch, f"{prefix}_species", None),
-        "flank_n_tok": getattr(batch, f"{prefix}_flank_n_tok", None),
-        "flank_c_tok": getattr(batch, f"{prefix}_flank_c_tok", None),
-        "flank_n_is_terminus": getattr(batch, f"{prefix}_flank_n_is_terminus", None),
-        "flank_c_is_terminus": getattr(batch, f"{prefix}_flank_c_is_terminus", None),
-        "instance_to_bag": getattr(batch, f"{prefix}_instance_to_bag", None),
-        "bag_label": getattr(batch, f"{prefix}_bag_label", None),
-        "bag_sample_ids": getattr(batch, f"{prefix}_bag_sample_ids", []),
-        "provenance": getattr(batch, f"{prefix}_provenance", None),
-        "machinery_idx": getattr(batch, f"{prefix}_machinery_idx", None),
-    }
-    required = (
-        channel["pep_tok"],
-        channel["mhc_a_tok"],
-        channel["mhc_b_tok"],
-        channel["instance_to_bag"],
-        channel["bag_label"],
-    )
-    if any(value is None for value in required):
-        return None
-    return channel
-
-
-def _slice_mil_channel(
-    channel: Dict[str, Any],
-    keep: torch.Tensor,
-) -> Dict[str, Any]:
-    keep_list = keep.tolist()
-    sliced = dict(channel)
-    for key in (
-        "pep_tok",
-        "mhc_a_tok",
-        "mhc_b_tok",
-        "flank_n_tok",
-        "flank_c_tok",
-        "flank_n_is_terminus",
-        "flank_c_is_terminus",
-        "instance_to_bag",
-        "machinery_idx",
-    ):
-        value = channel.get(key)
-        if isinstance(value, torch.Tensor):
-            sliced[key] = value[keep]
-    for key in ("mhc_class", "species"):
-        value = channel.get(key)
-        if isinstance(value, list):
-            sliced[key] = [value[i] for i in keep_list]
-    # Provenance is per-instance too. `sliced = dict(channel)` shallow-copies
-    # it, so without this the capped forward gets full-length condition
-    # tensors against truncated inputs and dies in torch.cat -- which any run
-    # with max_mil_instances set and a bag larger than the cap would hit.
-    provenance = channel.get("provenance")
-    if isinstance(provenance, dict):
-        sliced["provenance"] = {
-            name: (tensor[keep] if isinstance(tensor, torch.Tensor) else tensor)
-            for name, tensor in provenance.items()
-        }
-    return sliced
 
 
 def _group_mil_instances(
@@ -1504,140 +1402,57 @@ def _build_contrastive_mil_channel(
     return contrastive
 
 
-def _run_mil_forward(
-    model,
-    *,
-    channel: Dict[str, Any],
-    device: str,
-    tcell_context: Optional[Dict[str, torch.Tensor]] = None,
-    provenance: Optional[Dict[str, torch.Tensor]] = None,
-) -> Dict[str, Any]:
-    # Declared per-instance machinery. Omitting it makes the model fall back to
-    # a threshold on *predicted* class, which now feeds the elution loss via
-    # the excision -> presentation edge.
-    channel_machinery = channel.get("machinery_idx")
-    return model(
-        pep_tok=channel["pep_tok"].to(device),
-        mhc_a_tok=channel["mhc_a_tok"].to(device),
-        mhc_b_tok=channel["mhc_b_tok"].to(device),
-        mhc_class=channel["mhc_class"],
-        species=channel["species"],
-        flank_n_tok=(
-            channel["flank_n_tok"].to(device)
-            if isinstance(channel.get("flank_n_tok"), torch.Tensor)
-            else None
-        ),
-        flank_c_tok=(
-            channel["flank_c_tok"].to(device)
-            if isinstance(channel.get("flank_c_tok"), torch.Tensor)
-            else None
-        ),
-        flank_n_is_terminus=(
-            channel["flank_n_is_terminus"].to(device)
-            if channel.get("flank_n_is_terminus") is not None
-            else None
-        ),
-        flank_c_is_terminus=(
-            channel["flank_c_is_terminus"].to(device)
-            if channel.get("flank_c_is_terminus") is not None
-            else None
-        ),
-        # tcell_context is deliberately not forwarded, matching the row path
-        # and both holdout forwards. Passing it here would make predict_panel
-        # sweep from the observed context on the bag path and from the
-        # all-unknown baseline everywhere else, so the same panel outputs
-        # would be two different functions averaged into one loss.
-        machinery=(
-            channel_machinery.to(device) if isinstance(channel_machinery, torch.Tensor) else None
-        ),
-        provenance=(
-            {name: value.to(device) for name, value in provenance.items()} if provenance else None
-        ),
-    )
-
-
 def _compute_mil_channel_losses(
     model,
     *,
     batch,
     device: str,
     channel_prefix: str,
-    task_to_output: Mapping[str, str],
     regularization: Mapping[str, float],
     max_mil_instances: int = 0,
-    tcell_context: Optional[Dict[str, torch.Tensor]] = None,
+    mil_chunk_size: int = 0,
     enable_contrastive: bool = False,
-) -> tuple[Dict[str, torch.Tensor], Dict[str, torch.Tensor], Dict[str, float]]:
-    """Compute bag-level MIL supervision and regularization for one channel."""
-    mil_losses: Dict[str, torch.Tensor] = {}
-    mil_regularization: Dict[str, torch.Tensor] = {}
-    mil_metrics: Dict[str, float] = {}
-
+) -> tuple[Dict[str, torch.Tensor], Dict[str, torch.Tensor], Dict[str, float], Dict[str, float]]:
+    """Consume the same effective bag predictions exported by held-out eval."""
+    mil_losses, mil_regularization, mil_metrics, support = {}, {}, {}, {}
     channel = _get_mil_channel(batch, channel_prefix)
-    if channel is None:
-        return mil_losses, mil_regularization, mil_metrics
+    if channel is None or channel["bag_label"].numel() == 0:
+        return mil_losses, mil_regularization, mil_metrics, support
 
-    bag_label = channel["bag_label"].to(device=device, dtype=torch.float32)
-    if bag_label.numel() == 0:
-        return mil_losses, mil_regularization, mil_metrics
-
-    n_instances = int(channel["pep_tok"].shape[0])
-    if max_mil_instances > 0 and n_instances > max_mil_instances:
-        keep = _bag_aware_instance_cap(
-            instance_to_bag=channel["instance_to_bag"].to(dtype=torch.long),
-            max_mil_instances=max_mil_instances,
-        )
+    targets = resolve_mil_targets(channel, MIL_TASKS[channel_prefix])
+    if max_mil_instances > 0:
+        keep = _bag_aware_instance_cap(channel["instance_to_bag"].long(), max_mil_instances)
         channel = _slice_mil_channel(channel, keep)
-        if tcell_context:
-            tcell_context = {
-                key: value[keep]
-                for key, value in tcell_context.items()
-                if isinstance(value, torch.Tensor)
-            }
-
-    outputs = _run_mil_forward(
+    predictions = predict_mil_channel(
         model,
         channel=channel,
+        targets=targets,
         device=device,
-        tcell_context=tcell_context,
-        provenance=channel.get("provenance"),
+        chunk_size=mil_chunk_size,
     )
+    bag_label = channel["bag_label"].to(device=device, dtype=torch.float32)
     instance_to_bag = channel["instance_to_bag"].to(device=device, dtype=torch.long)
-    n_bags = int(bag_label.shape[0])
-    bag_probs_by_task: Dict[str, torch.Tensor] = {}
-
+    bag_probs_by_task = {}
     sparsity_weight = float(regularization.get("mil_bag_sparsity_weight", 0.0))
     sparsity_target = float(regularization.get("mil_bag_sparsity_target_sum", 1.5))
-
-    for task_name, output_key in task_to_output.items():
-        logits = outputs.get(output_key)
-        if not isinstance(logits, torch.Tensor):
-            continue
-        inst_probs = torch.sigmoid(_as_float_vector(logits))
-        prob_matrix, mask_matrix = _build_mil_prob_matrix(
-            inst_probs=inst_probs,
-            instance_to_bag=instance_to_bag,
-            n_bags=n_bags,
-        )
-        bag_loss, bag_probs = mil_bag_loss(
-            inst_probs=prob_matrix,
-            bag_labels=bag_label,
-            mask=mask_matrix,
-        )
-        mil_losses[task_name] = bag_loss
+    for task_name, prediction in predictions.items():
+        mask = prediction.target.mask
+        bag_probs = prediction.probabilities
+        mil_losses[task_name] = prediction.loss()
+        support[task_name] = float(prediction.target.support)
+        mil_metrics[f"batch_support_{task_name}"] = support[task_name]
         bag_probs_by_task[task_name] = bag_probs
         mil_metrics[f"out_{channel_prefix}_{task_name}_prob_mean"] = float(
-            bag_probs.detach().mean().item()
+            bag_probs[mask].detach().mean().item()
         )
         mil_metrics[f"out_{channel_prefix}_{task_name}_prob_var"] = float(
-            bag_probs.detach().var(unbiased=False).item()
+            bag_probs[mask].detach().var(unbiased=False).item()
         )
         if sparsity_weight > 0.0:
-            bag_sum = (prob_matrix * mask_matrix).sum(dim=-1)
-            sparsity_loss = F.softplus(
-                bag_sum - torch.tensor(sparsity_target, device=bag_sum.device)
-            ).mean()
-            mil_regularization[f"{task_name}_mil_sparsity"] = sparsity_weight * sparsity_loss
+            bag_sum = prediction.instance_probability_sums[mask]
+            mil_regularization[f"{task_name}_mil_sparsity"] = (
+                sparsity_weight * F.softplus(bag_sum - sparsity_target).mean()
+            )
             mil_metrics[f"out_{channel_prefix}_{task_name}_bag_sum_mean"] = float(
                 bag_sum.detach().mean().item()
             )
@@ -1653,30 +1468,23 @@ def _compute_mil_channel_losses(
         )
         contrastive_channel = _build_contrastive_mil_channel(channel, pairs)
         if contrastive_channel is not None:
-            contrastive_outputs = _run_mil_forward(
+            contrastive_channel["bag_label"] = torch.zeros(
+                len(contrastive_channel["anchor_bag_indices"]),
+                device=bag_label.device,
+            )
+            contrastive_targets = resolve_mil_targets(
+                contrastive_channel,
+                [spec for spec in MIL_TASKS["mil"] if spec.name == "presentation"],
+            )
+            contrastive_predictions = predict_mil_channel(
                 model,
                 channel=contrastive_channel,
+                targets=contrastive_targets,
                 device=device,
-                tcell_context=None,
-                provenance=contrastive_channel.get("provenance"),
+                chunk_size=mil_chunk_size,
             )
-            contrastive_logits = contrastive_outputs.get("presentation_logit")
-            if isinstance(contrastive_logits, torch.Tensor):
-                contrastive_probs = torch.sigmoid(_as_float_vector(contrastive_logits))
-                contrastive_prob_matrix, contrastive_mask = _build_mil_prob_matrix(
-                    inst_probs=contrastive_probs,
-                    instance_to_bag=contrastive_channel["instance_to_bag"],
-                    n_bags=int(contrastive_channel["anchor_bag_indices"].shape[0]),
-                )
-                _, contrastive_bag_probs = mil_bag_loss(
-                    inst_probs=contrastive_prob_matrix,
-                    bag_labels=torch.zeros(
-                        int(contrastive_channel["anchor_bag_indices"].shape[0]),
-                        device=device,
-                        dtype=torch.float32,
-                    ),
-                    mask=contrastive_mask,
-                )
+            if "presentation" in contrastive_predictions:
+                contrastive_bag_probs = contrastive_predictions["presentation"].probabilities
                 original_bag_probs = bag_probs_by_task["presentation"][
                     contrastive_channel["anchor_bag_indices"]
                 ]
@@ -1695,7 +1503,7 @@ def _compute_mil_channel_losses(
                     (original_scores - contrastive_scores).detach().mean().item()
                 )
 
-    return mil_losses, mil_regularization, mil_metrics
+    return mil_losses, mil_regularization, mil_metrics, support
 
 
 def _compute_consistency_losses(
@@ -1961,6 +1769,7 @@ def compute_loss(
     non_blocking_transfer: bool = False,
     use_amp: bool = False,
     max_mil_instances: int = 0,
+    mil_chunk_size: int = 0,
 ):
     """Compute multi-task loss for a batch."""
     # Move batch to device
@@ -2029,7 +1838,7 @@ def compute_loss(
         supervised_loss_support: Dict[str, float] = {}
         supervised_start = time.perf_counter() if profile_performance else 0.0
         for spec in LOSS_TASK_SPECS:
-            if has_mil_elution and spec.name in {"elution", "presentation"}:
+            if has_mil_elution and spec.name in {s.name for s in MIL_TASKS["mil"]}:
                 # These tasks are trained at bag-level via Noisy-OR MIL below.
                 continue
             target = _get_batch_target(batch, spec)
@@ -2158,58 +1967,40 @@ def compute_loss(
         if has_mil_elution or has_tcell_mil:
             mil_start = time.perf_counter() if profile_performance else 0.0
             if has_mil_elution:
-                mil_losses, mil_regularization, mil_metrics = _compute_mil_channel_losses(
-                    model=model,
-                    batch=batch,
-                    device=device,
-                    channel_prefix="mil",
-                    task_to_output={
-                        "elution": "elution_logit",
-                        "presentation": "presentation_logit",
-                        "ms": "ms_logit",
-                    },
-                    regularization=regularization_cfg,
-                    max_mil_instances=max_mil_instances,
-                    enable_contrastive=True,
+                mil_losses, mil_regularization, mil_metrics, mil_support = (
+                    _compute_mil_channel_losses(
+                        model=model,
+                        batch=batch,
+                        device=device,
+                        channel_prefix="mil",
+                        regularization=regularization_cfg,
+                        max_mil_instances=max_mil_instances,
+                        mil_chunk_size=mil_chunk_size,
+                        enable_contrastive=True,
+                    )
                 )
                 supervised_losses.update(mil_losses)
-                mil_bag_label = getattr(batch, "mil_bag_label", None)
-                mil_support = (
-                    float(mil_bag_label.numel()) if isinstance(mil_bag_label, torch.Tensor) else 1.0
-                )
-                for name in mil_losses:
-                    supervised_loss_support[name] = mil_support
+                supervised_loss_support.update(mil_support)
                 output_metrics.update(mil_metrics)
             else:
                 mil_regularization = {}
 
             tcell_mil_regularization: Dict[str, torch.Tensor] = {}
             if has_tcell_mil:
-                tcell_mil_losses, tcell_mil_regularization, tcell_mil_metrics = (
+                tcell_mil_losses, tcell_mil_regularization, tcell_mil_metrics, tcell_support = (
                     _compute_mil_channel_losses(
                         model=model,
                         batch=batch,
                         device=device,
                         channel_prefix="tcell_mil",
-                        task_to_output={
-                            "tcell_mil": "tcell_logit",
-                            "immunogenicity_mil": "immunogenicity_logit",
-                        },
                         regularization=regularization_cfg,
                         max_mil_instances=max_mil_instances,
-                        tcell_context=batch.tcell_mil_context if batch.tcell_mil_context else None,
+                        mil_chunk_size=mil_chunk_size,
                         enable_contrastive=False,
                     )
                 )
                 supervised_losses.update(tcell_mil_losses)
-                tcell_mil_bag_label = getattr(batch, "tcell_mil_bag_label", None)
-                tcell_mil_support = (
-                    float(tcell_mil_bag_label.numel())
-                    if isinstance(tcell_mil_bag_label, torch.Tensor)
-                    else 1.0
-                )
-                for name in tcell_mil_losses:
-                    supervised_loss_support[name] = tcell_mil_support
+                supervised_loss_support.update(tcell_support)
                 output_metrics.update(tcell_mil_metrics)
 
             if profile_performance:
@@ -2261,7 +2052,9 @@ def compute_loss(
                 base_weight = (
                     max(float(spec.base_weight), 0.0)
                     if spec is not None
-                    else PANEL_TASK_BASE_WEIGHTS.get(task_name, 1.0)
+                    else PANEL_TASK_BASE_WEIGHTS.get(
+                        task_name, MIL_TASK_BASE_WEIGHTS.get(task_name, 1.0)
+                    )
                 )
                 if base_weight <= 0.0:
                     continue
@@ -2543,6 +2336,7 @@ def evaluate(
     use_amp: bool = False,
     max_mil_instances: int = 0,
     max_batches: int = 0,
+    mil_chunk_size: int = 0,
 ) -> Tuple[float, Dict[str, float]]:
     """Evaluate model on validation set."""
     model.eval()
@@ -2570,6 +2364,7 @@ def evaluate(
                 supervised_loss_aggregation=supervised_loss_aggregation,
                 use_amp=use_amp,
                 max_mil_instances=max_mil_instances,
+                mil_chunk_size=mil_chunk_size,
             )
             pep_tok = getattr(batch, "pep_tok", None)
             if isinstance(pep_tok, torch.Tensor) and pep_tok.ndim >= 1:
