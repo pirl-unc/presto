@@ -297,7 +297,9 @@ synthetic parentage, curation fingerprints and split assignment as traceable
 record lineage through held-out dumps.
 
 Row task routing is `LOSS_TASK_SPECS` in
-[scripts/train_synthetic.py](https://github.com/pirl-unc/presto/blob/main/scripts/train_synthetic.py).
+[training/supervision.py](https://github.com/pirl-unc/presto/blob/main/training/supervision.py),
+alongside explicit binding/excision panel specs. The trainer retains compatibility
+imports and the established uncertainty-parameter order.
 Bag tasks and effective target/prediction resolution are shared in
 [training/mil.py](https://github.com/pirl-unc/presto/blob/main/training/mil.py):
 
@@ -307,7 +309,8 @@ Bag tasks and effective target/prediction resolution are shared in
 - Processing, presentation/elution, T-cell/immunogenicity, receptor evidence:
   binary objectives when labels exist; some are proxies sharing the same label.
 - T-cell panels: selected-column response BCE, not method-ID classification.
-- MHC identity and evidence-method classification: categorical auxiliary tasks.
+- MHC identity, source species and core position: categorical auxiliary tasks.
+- Evidence-method membership: three-component binary auxiliary objective.
 - MIL: bag-level Noisy-OR objectives on supported channels; not an assertion that
   every molecule in a positive bag is positive.
 
@@ -327,14 +330,32 @@ batch/channel, original/evaluated counts, selected column name/index and bag
 BCE. Two 0.5 instances therefore yield 0.75 in both the objective and the dump.
 Existing scalar proxy and ms/elution alias objectives retain their weights.
 
-Split-support schema v3 adds `mil_targets` and `mil_split_support.csv` from the
-same target resolver, including zero-support columns, unknown-selector counts,
-response balance and source counts. The legacy `targets` table still counts
-row masks; these tables are not additive endpoint counts. The global endpoint
-manifest, coverage gates, CE/vector identity and binding/excision panel exports
-remain follow-ups in #48/#51. Optional model heads may be absent: this target
-census records label availability, not proof of parameter updates or adequate
-scientific supervision. The current real-source census remains part of #50.
+Row exports preserve a categorical class vector per sample, named evidence-method
+components with repeated source identity, and each supervised panel's selected
+column. Records carry raw numeric source targets, transformed targets, units,
+qualifiers, output paths and per-observation loss/reduction weight. In particular,
+source half-life values are hours and their training target is log10(minutes).
+Masked observations do not participate in loss calculation; malformed active
+shapes, nonfinite objectives and missing censor qualifiers fail explicitly.
+
+`<split>_loss_ledger.json` verifies the persisted prediction CSV against effective
+observation counts and the selected-checkpoint evaluation pass. It reconstructs
+each batch's supervised losses, including the mean across binding/excision panel
+axes, and combines them with recorded task weights and regularization terms.
+Task summaries average batches where the task is present; overall loss averages
+all batches. Missing/corrupt required predictions fail closure while preserving
+the checkpoint and an error artifact. Empty splits still produce header-only
+prediction/metric files. Summaries enumerate declared output/column support,
+including zero support, absent optional predictions and the ms/elution alias.
+
+Split-support schema v4 adds `row_targets` and `row_split_support.csv` alongside
+`mil_targets` and `mil_split_support.csv`, all using the shared target resolvers.
+These include derived categorical targets, vector components, selected columns,
+response/qualifier counts and source counts. The legacy `targets` table still
+counts row masks; these tables are not additive endpoint counts. The global
+endpoint manifest and adequacy gates remain #48. Optional model heads may be
+absent: this target census records label availability, not proof of parameter
+updates or adequate scientific supervision. The real-source census remains #50.
 
 Row counts in historical experiments do not describe today's default corpus.
 Merged TSV and Hitlist are explicit mutually exclusive primary source choices;

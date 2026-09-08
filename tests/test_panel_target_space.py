@@ -52,45 +52,34 @@ class TestTargetNormalization:
 
 
 class TestPanelLossIsNormalized:
-    """Source-level, because the transform is applied inside `compute_loss`.
+    """Every panel axis must compare its output with log10(nM), with censoring."""
 
-    Enumerated rather than anchored on the first match, per presto#18: every
-    place the panel loss reads `bind_target` must normalize it.
-    """
+    @pytest.mark.parametrize(
+        "axis", ["assay_type", "assay_prep", "assay_geometry", "assay_readout"]
+    )
+    @pytest.mark.parametrize("qualifier,expected", [(-1, 1.0), (0, 1.0), (1, 0.0)])
+    def test_panel_target_space_and_censoring(self, axis, qualifier, expected):
+        from presto.data.collate import PrestoCollator, PrestoSample
+        from presto.scripts.train_synthetic import compute_loss
 
-    def test_panel_loss_normalizes_its_target(self):
-        import inspect
+        class Panel(torch.nn.Module):
+            def forward(self, **kwargs):
+                # 3 is log10(1000 nM); the 100 nM label is 2 in this space.
+                # The unknown-reference selector is a supervised panel column.
+                return {f"binding_assay_panel_{axis}": torch.tensor([[3.0]], requires_grad=True)}
 
-        from presto.scripts import train_synthetic
-
-        from source_probe import region_between
-
-        source = inspect.getsource(train_synthetic.compute_loss)
-        block = region_between(
-            source,
-            "panel_context = getattr(batch",
-            'supervised_loss_support["binding_assay_panel"]',
-            where="compute_loss",
+        batch = PrestoCollator()(
+            [
+                PrestoSample(
+                    peptide="ACDEFGHIK",
+                    mhc_a="ACDEFGHIK",
+                    mhc_b="LMNPQRSTV",
+                    mhc_class="I",
+                    bind_value=100.0,
+                    bind_qual=qualifier,
+                )
+            ]
         )
-        assert "binding_assay_panel" in block
-        assert "normalize_binding_target_log10" in block, (
-            "the assay panel is being supervised against a raw-nM target while "
-            "predicting a normalized log10 KD offset; the loss term will sit "
-            "around 142,900 and swamp every other gradient"
-        )
-
-    def test_no_panel_loss_reads_bind_target_unnormalized(self):
-        """Guards the shape, not one call site."""
-        import inspect
-        import re
-
-        from presto.scripts import train_synthetic
-
-        source = inspect.getsource(train_synthetic.compute_loss)
-        reads = [m.start() for m in re.finditer(r"bind_target\.reshape", source)]
-        assert reads, "bind_target is no longer reshaped here; update this test"
-        for offset in reads:
-            window = source[max(0, offset - 200) : offset + 200]
-            assert "normalize_binding_target_log10" in window, (
-                f"a raw bind_target read at offset {offset} is not normalized"
-            )
+        _, losses, metrics = compute_loss(Panel(), batch, "cpu")
+        assert float(losses["binding_assay_panel"]) == pytest.approx(expected)
+        assert metrics["batch_support_binding_assay_panel"] == 1

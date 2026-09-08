@@ -413,6 +413,7 @@ def _call_evaluate_compat(
     max_mil_instances: int = 0,
     max_val_batches: int = 0,
     mil_chunk_size: int = 0,
+    batch_receipts: Optional[list] = None,
 ) -> Tuple[float, Dict[str, float]]:
     """Call evaluate across old/new script signatures."""
     kwargs = {}
@@ -429,6 +430,8 @@ def _call_evaluate_compat(
         kwargs["max_batches"] = int(max_val_batches)
     if "mil_chunk_size" in params:
         kwargs["mil_chunk_size"] = int(mil_chunk_size)
+    if "batch_receipts" in params:
+        kwargs["batch_receipts"] = batch_receipts
     result = evaluate(model, val_loader, device, **kwargs)
     if isinstance(result, tuple) and len(result) == 2 and isinstance(result[1], dict):
         return float(result[0]), result[1]
@@ -6031,6 +6034,7 @@ def run(args: argparse.Namespace) -> None:
             for split_name, split_loader in (("val", val_loader), ("test", test_loader)):
                 if split_loader is None:
                     continue
+                batch_receipts = []
                 heldout_loss, heldout_loss_terms = _call_evaluate_compat(
                     eval_model,
                     split_loader,
@@ -6043,6 +6047,7 @@ def run(args: argparse.Namespace) -> None:
                     max_mil_instances=0,
                     mil_chunk_size=DEFAULT_MIL_EVAL_CHUNK_SIZE,
                     max_val_batches=0,
+                    batch_receipts=batch_receipts,
                 )
                 accumulators = collect_holdout_predictions(
                     model=eval_model,
@@ -6060,6 +6065,7 @@ def run(args: argparse.Namespace) -> None:
                     run_dir,
                     accumulators,
                     split=split_name,
+                    expected_batches=batch_receipts,
                     extra_summary={
                         "best_val_loss": float(best_val_loss),
                         "mil_evaluation": {
@@ -6082,14 +6088,9 @@ def run(args: argparse.Namespace) -> None:
                         else f"n={metrics.get('n', 0):.0f}"
                     )
                     print(f"    {task_name}: {headline} (n={metrics.get('n', 0):.0f})")
-        except Exception as exc:  # pragma: no cover - diagnostics must not fail a run
-            # Keeping the run alive is right -- a metrics bug should not destroy
-            # a finished training run -- but the failure must be loud and it must
-            # leave a trace on disk. A silently skipped pass is indistinguishable
-            # from "no data to score", and the experiment contract requires
-            # held-out metrics: absent artifacts would otherwise read as a
-            # legitimate result. The same swallow-and-continue pattern is what
-            # kept an ImportError invisible in CI for months.
+        except Exception as exc:  # pragma: no cover - preserve checkpoint and original error
+            # The checkpoint survives, but missing or inconsistent required
+            # evidence must fail experiment closure and leave a diagnostic.
             import traceback
 
             print(f"Held-out metric pass FAILED: {type(exc).__name__}: {exc}")

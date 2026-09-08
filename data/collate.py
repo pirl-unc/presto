@@ -226,7 +226,7 @@ class PrestoSample:
     source_protein: Optional[str] = None
 
     # Stability
-    t_half: Optional[float] = None
+    t_half: Optional[float] = None  # Hours in source records; collated as log10(minutes).
     tm: Optional[float] = None
     # Half-life spans several mutually non-comparable methods (radioactivity vs
     # fluorescence dissociation, purified vs cellular vs lysate MHC). Kept so the
@@ -444,6 +444,8 @@ class PrestoBatch:
     #: lists so evaluation can write traceable rows without GPU transfers.
     source_lineage: Dict[str, List[Any]] = field(default_factory=dict)
     targets: Dict[str, torch.Tensor] = field(default_factory=dict)
+    # Source precision is host-side bookkeeping, including on devices without float64.
+    raw_targets: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_masks: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_quals: Dict[str, torch.Tensor] = field(default_factory=dict)
 
@@ -522,6 +524,7 @@ class PrestoBatch:
             flank_context_resolved=self.flank_context_resolved,
             source_lineage=self.source_lineage,
             targets={name: _move(tensor) for name, tensor in self.targets.items()},
+            raw_targets=self.raw_targets,
             target_masks={name: _move(tensor) for name, tensor in self.target_masks.items()},
             target_quals={name: _move(tensor) for name, tensor in self.target_quals.items()},
             machinery_idx=_move(self.machinery_idx),
@@ -1622,6 +1625,21 @@ class PrestoCollator:
             )
 
         targets, target_masks = self._collate_targets(samples)
+        # Preserve source quantitative values before log/clamp/scale transforms.
+        # This bookkeeping is never included in model_inputs().
+        raw_targets = {
+            spec.task_name: torch.tensor(
+                [
+                    float(value)
+                    if (value := getattr(sample, spec.sample_field)) is not None
+                    else 0.0
+                    for sample in samples
+                ],
+                dtype=torch.float64,
+            ).reshape(targets[spec.task_name].shape)
+            for spec in TARGET_SPECS
+            if spec.task_name in targets
+        }
         fixed_metadata = self._collate_fixed_metadata(samples)
         binding_pair_indices = self._collate_binding_pair_indices(samples)
         binding_targets, binding_masks, binding_quals = self._collate_binding_measurement_targets(
@@ -1632,6 +1650,9 @@ class PrestoCollator:
         machinery_idx = self._collate_machinery(samples)
         provenance = self._collate_provenance(samples)
         targets.update(binding_targets)
+        if "binding" in raw_targets:
+            for name, target in binding_targets.items():
+                raw_targets[name] = raw_targets["binding"].reshape(target.shape)
         target_masks.update(binding_masks)
         tcr_evidence_targets, tcr_evidence_masks = self._collate_tcr_evidence_targets(samples)
         targets.update(tcr_evidence_targets)
@@ -1995,6 +2016,7 @@ class PrestoCollator:
                 ],
             },
             targets=targets,
+            raw_targets=raw_targets,
             target_masks=target_masks,
             target_quals=target_quals,
             binding_context=binding_context,

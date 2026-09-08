@@ -102,12 +102,25 @@ class TestContractCompliance:
 
     def test_assay_labels_may_still_route_supervision(self):
         """Allowed, and required for the panel to train at all."""
-        import inspect
-
+        from presto.data.collate import PrestoCollator, PrestoSample
         from presto.scripts import train_synthetic
 
-        source = inspect.getsource(train_synthetic.compute_loss)
-        assert "binding_assay_panel" in source
+        batch = PrestoCollator()(
+            [
+                PrestoSample(
+                    peptide="ACDEFGHIK",
+                    mhc_a="ACDEFGHIK",
+                    mhc_b="LMNPQRSTV",
+                    mhc_class="I",
+                    bind_value=100.0,
+                    binding_assay_type="KD",
+                )
+            ]
+        )
+        model = Presto(d_model=32, n_layers=1, n_heads=4).eval()
+        _, losses, metrics = train_synthetic.compute_loss(model, batch, "cpu")
+        assert torch.isfinite(losses["binding_assay_panel"])
+        assert metrics["batch_support_binding_assay_panel"] == 1
 
 
 class TestExcisionPanelAgreesWithTheScalarReadout:

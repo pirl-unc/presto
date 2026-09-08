@@ -357,3 +357,11 @@
 - Install optional-package stubs before importing the script under test. A
   monkeypatch applied after module execution cannot isolate a top-level import
   and creates a local-only pass when that optional package happens to exist.
+
+## 2026-09-08
+
+- Trace units from the loader record through dataset construction, collation
+  and output heads before declaring a mismatch. A multiplication by 60 can
+  convert hours to minutes; it does not establish a minutes-to-seconds contract.
+  Existing source-unit declarations and semantic regression tests take priority
+  over an inferred unit from one transform.

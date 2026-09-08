@@ -10400,3 +10400,132 @@ a code-parity diagnostic, not a training-quality experiment. Production change:
 The real-data bag census and remaining #48/#50/#51 acceptance criteria stay
 open. No fresh training or deployment was performed. There is no configured
 deployment in this repository.
+
+## Independent review against main — 2026-09-07
+
+Scope: review the proposed diff against `a7111210ce660f78fdc1eb87d2e768aabe138046`
+without implementing fixes. Trace shared MIL target/prediction resolution through
+training, support counting, collation and held-out artifacts; compare old/new
+behavior and verify candidate defects with focused tests or minimal diagnostics.
+Exclude pre-existing issues and intentional scope changes, and attribute any
+repository-specific findings to the applicable instruction lines.
+
+- [x] Read root/scoped guidance and relevant lessons; inventory the diff.
+- [x] Inspect each changed production path and its consumers/tests.
+- [x] Run focused verification and resolve potential regressions.
+- [x] Record review results and return prioritized actionable findings as JSON.
+
+### Review results
+
+No actionable introduced defects found. The affected MIL/export/support suite
+passed 116 tests; trainer, collator, invariant and end-to-end integration passed
+118 tests (234 total). Tests ran with the existing shared Python environment;
+the repository-local venv does not contain pytest. Direct base/current loss and
+parameter-gradient parity was exact for unequal elution bags with sparsity and
+contrastive regularization, both uncapped and capped at two instances. Mixed
+sequence lengths, classes and boundary inputs agreed between full and one-instance
+chunked forwards for both latent topologies (maximum probability delta 5.96e-8).
+`git diff --check` passed. Pinned Ruff was not run: the available version is
+0.15.21 rather than the required 0.16.0. No production/test source was changed;
+only this review plan/results note was added. No scientific experiment or GPU
+validation was performed.
+
+## Autonomous output-quality repair series — 2026-09-07
+
+Objective: create, review, verify and merge a sequence of PRs addressing the
+remaining #48+ output-coverage and real-data quality issues. #49/#52 are merged;
+#56 supplies shared MIL supervision. Preserve the independent #56 review above.
+No user approval is required between reviewed, verified PRs in this series.
+Broader schema #46 and historical source-mapping #34/#44 remain outside this
+specific #48+ repair series unless a verified dependency requires a scoped fix.
+
+- [ ] Finish row/vector/categorical/panel observation coverage for #51 using
+      shared executable supervision, review the PR against main, verify and merge.
+- [ ] Complete declared endpoint/column/source/split coverage and prospective
+      gates for #48; run the registered real-source census, also closing #50's
+      outstanding source-observation counts. Review, verify and merge.
+- [ ] Register and execute #53's fresh real-data fitting and held-out evaluation
+      with complete reproducibility, metrics and prediction artifacts. Address
+      diagnosed implementation defects through reviewed PRs; preserve honest
+      performance findings. Merge the evidence and close satisfied criteria.
+- [ ] Audit each issue's actual acceptance evidence before final closure; leave
+      the goal active while any required implementation or validation is missing.
+
+### Next implementation specification — row/panel observation coverage
+
+Baseline `9edf237`, branch `codex/row-supervision-exports`. Extract the existing
+TaskLossSpec, registry and pure target/mask/qualifier/prediction/loss resolvers to
+`training/supervision.py`, retaining trainer compatibility imports and the
+existing uncertainty-weight parameter ordering. Add explicit panel specs for
+binding assay type/preparation/geometry/readout and excision APM/stimulus.
+Preserve the existing mean-across-axes reduction, group weights, censor policy,
+unknown-reference binding/excision supervision and output-side descriptors.
+
+Resolved target views must be model-independent and carry source-row positions,
+component or selector identity, raw/collated/transformed targets, masks,
+qualifiers and units. Preserve original quantitative values before collation
+transforms rather than reconstructing a clipped source value. Resolve CE as one
+observation with a class vector, and vector BCE as named components with repeated
+source identity. Reject incompatible active shapes or selectors descriptively.
+Preserve #56's complete MIL observations and training sampling semantics.
+
+Training, split-support counting and export must consume the shared definition.
+The support report must enumerate zero support and distinguish aggregate loss
+groups from independently selected output columns and aliases. The broader
+source-kind/manifest/adequacy gates remain the following #48 PR, not a claim that
+nonzero support is sufficient.
+
+Held-out records must include categorical class identities/probabilities,
+vector component names, selected panel column names, raw/transformed target and
+units/qualifier, source lineage, per-observation loss and its reduction weight.
+Check exported counts and reconstruct per-task loss under the canonical batch
+reduction. Preserve enough batch loss/weight/regularizer information to compare
+with selected-checkpoint evaluation. Missing/malformed expected artifacts must
+fail closure while preserving the checkpoint and original error.
+
+Verification: mixed row/bag batches, unequal bags, positive/negative/graded and
+masked observations, every categorical auxiliary, multiple vector samples,
+censored quantitative panels, explicit unknown selectors and zero support.
+Compare prior and new losses/gradients for unchanged objectives, and reconstruct
+losses from dumps. Run affected regression, pinned Ruff and strict docs, review
+the complete diff separately, then publish/merge only with verified checks.
+Track final check receipts in the PR to avoid repeated notes-only CI commits.
+
+- [x] Inspect current main, open issues, scoped guidance and lessons.
+- [x] Write the shared observation specification before code changes.
+- [x] Implement shared row/panel target and prediction resolution.
+- [x] Integrate complete export, support counting and loss reconciliation.
+- [ ] Verify behavioral parity and targeted failures; review the final diff.
+- [ ] Publish, verify CI, merge and proceed to the next repair.
+
+### Row/panel implementation review — 2026-09-08
+
+Training, support counting and held-out export share observation definitions.
+Source numeric values retain their original precision on the host; half-life
+records are hours and targets are log10(minutes), as the loaders and existing
+collator regression establish. This is metadata clarification, not a change to
+the half-life objective. CSV records preserve class vectors, named components,
+selected columns and lineage; the written CSV is read back to reconstruct losses
+and reconcile counts, task weights and regularizers with canonical evaluation.
+Zero-support and absent optional columns remain explicit in support summaries.
+
+Review against `9edf237` compared the same actual d32/l1/h4 model on row-only and
+mixed row/bag batches under task-mean and sample-weighted aggregation. All 27
+task/regularization losses, total loss and every parameter gradient matched
+exactly (maximum absolute delta 0). This is a code-parity diagnostic, not a
+training-quality experiment. The targeted observation suite initially passed
+12 tests and the existing affected suite passed 89; subsequent precision,
+device-transfer and malformed-observation checks are included in final testing.
+
+The first full local attempt completed 969 passing tests and one skip, with
+three failures in tests inspecting the removed inline panel implementation.
+The run was interrupted after 30 minutes to replace those tests with direct
+behavioral assertions covering all four binding axes and exact/left/right
+censoring. Final affected-suite and full CI receipts belong in the PR before
+merge. Pinned Ruff lint/format and the strict docs build passed before those
+last test/precision refinements and are rerun on the published revision.
+
+The source-mapping/context scope stays unchanged. #48's prospective endpoint
+manifest and real-source census, #50's real bag incidence and #53's trained
+validation/test baseline remain later PRs. No training experiment or deployment
+was performed; the repository has CI but no configured deployment.

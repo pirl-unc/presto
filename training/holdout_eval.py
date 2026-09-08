@@ -8,8 +8,8 @@ canonical trainer, and why every March 2026 experiment ran the probe script
 instead.
 
 This module closes that gap by deriving the metric family from the loss type
-already declared in the task registry (``TaskLossSpec.loss_type`` in
-``scripts/train_synthetic.py``):
+already declared in the shared task registry (``TaskLossSpec.loss_type`` in
+``training/supervision.py``):
 
 - ``bce``            -> binary metrics (AUROC, AUPRC, F1, balanced accuracy)
 - ``mse`` / ``censor`` -> regression metrics (Spearman, Pearson, RMSE)
@@ -280,7 +280,72 @@ MIL_OBSERVATION_FIELDS = (
     "selector_index",
     "selector_name",
     "observation_loss",
+    "loss_group",
+    "loss_type",
+    "loss_reduction_weight",
+    "observation_weight",
+    "raw_target",
+    "raw_unit",
+    "target_unit",
+    "prediction_unit",
+    "component_index",
+    "component_name",
+    "class_names",
+    "class_logits",
+    "class_probabilities",
+    "target_class_name",
+    "predicted_class_name",
+    "canonical_output",
 )
+
+
+class PredictionCollection(dict):
+    """Accumulators plus the expected per-batch loss/support for artifact closure."""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.batch_losses = []
+        self.batch_support = []
+        self.batch_observation_counts = []
+        self.output_support = {}
+
+
+def _declare_output_support(collection, specs):
+    for spec in specs:
+        collection.output_support.setdefault(
+            spec.name,
+            {
+                "target_observations": 0,
+                "exported_observations": 0,
+                "missing_output_observations": 0,
+                "alias_of": "elution" if spec.name == "ms" else "",
+                "columns": {
+                    name: {"target": 0, "exported": 0} for name in getattr(spec, "columns", ())
+                },
+                "components": {
+                    name: {"target": 0, "exported": 0}
+                    for name in getattr(spec, "component_names", ())
+                },
+            },
+        )
+
+
+def _record_output_support(collection, targets, predictions):
+    for name, target in targets.items():
+        entry = collection.output_support[name]
+        exported = name in predictions
+        entry["target_observations"] += target.support
+        entry["exported_observations"] += target.support if exported else 0
+        entry["missing_output_observations"] += 0 if exported else target.support
+        for field, indices in (
+            ("columns", target.selectors),
+            ("components", getattr(target, "components", None)),
+        ):
+            if indices is not None:
+                for index, counts in enumerate(entry[field].values()):
+                    count = int(((target.mask > 0) & (indices == index)).sum())
+                    counts["target"] += count
+                    counts["exported"] += count if exported else 0
 
 
 class TaskPredictionAccumulator:
@@ -460,6 +525,18 @@ class TaskPredictionAccumulator:
                             threshold_nm=500.0,
                         ).items():
                             summary[f"mapping_{category}_threshold_500nm_{name}"] = value
+        if self.loss_type == "ce":
+            losses = [item.get("observation_loss", "") for item in self._observations]
+            if losses and all(value != "" for value in losses):
+                summary["cross_entropy"] = float(np.mean(losses))
+        for field, prefix in (("component_name", "component"), ("selector_name", "column")):
+            names = np.asarray([item.get(field, "") for item in self._observations])
+            for name in sorted(set(names) - {""}):
+                selection = names == name
+                for metric, value in metrics_for_loss_type(
+                    self.loss_type, true_all[selection], pred_all[selection]
+                ).items():
+                    summary[f"{prefix}_{name}_{metric}"] = value
         return summary
 
     def rows(self) -> List[Dict[str, Any]]:
@@ -596,6 +673,17 @@ def _add_mil_predictions(accumulators, predictions, channel, batch, batch_index)
                 "selector_index": selectors[i] if selectors is not None else "",
                 "selector_name": target.spec.columns[selectors[i]] if selectors is not None else "",
                 "observation_loss": losses[i],
+                "loss_group": name,
+                "loss_type": "bce",
+                "loss_reduction_weight": 1.0 / target.support,
+                "observation_weight": 1.0,
+                "raw_target": float(target.labels[i]),
+                "raw_unit": "response",
+                "target_unit": "response",
+                "prediction_unit": "logit",
+                "canonical_output": "elution_logit"
+                if name == "ms"
+                else ".".join(target.spec.output_path),
             }
             for i in range(n_bags)
         ]
@@ -619,6 +707,129 @@ def _add_mil_predictions(accumulators, predictions, channel, batch, batch_index)
         )
         if len(acc) - before != target.support:
             raise ValueError(f"MIL export support mismatch for {name}")
+
+
+def _add_row_predictions(accumulators, predictions, batch, batch_index):
+    import json
+
+    import torch
+
+    def host(tensor):
+        return tensor.detach().cpu().tolist()
+
+    group_axes = {}
+    for prediction in predictions.values():
+        name = prediction.target.group
+        group_axes[name] = group_axes.get(name, 0) + 1
+    for name, prediction in predictions.items():
+        target, spec = prediction.target, prediction.target.spec
+        rows = host(target.source_rows)
+
+        def select(values, rows=rows, name=name):
+            if values is None or len(values) == 0:
+                return None
+            if isinstance(values, torch.Tensor):
+                values = host(values)
+            if rows and max(rows) >= len(values):
+                raise ValueError(f"{name}: source metadata is shorter than the observation rows")
+            return [values[row] for row in rows]
+
+        is_ce = spec.loss_type == "ce"
+        values = prediction.values
+        predicted = values.argmax(dim=-1) if is_ce else values
+        labels = host(target.transformed)
+        raw = host(target.raw_target)
+        predicted_values = host(predicted)
+        components = host(target.components) if target.components is not None else None
+        selectors = host(target.selectors) if target.selectors is not None else None
+        loss_values = host(prediction.losses)
+        weights = host(target.mask / (target.mask.sum() + 1e-8) / group_axes[target.group])
+        observation_weights = host(target.mask)
+        class_names = getattr(spec, "class_names", ())
+        if is_ce and not class_names:
+            class_names = tuple(str(i) for i in range(values.shape[1]))
+        class_logits = host(values) if is_ce else None
+        class_probabilities = host(values.softmax(-1)) if is_ce else None
+        columns = getattr(spec, "columns", ())
+        component_names = getattr(spec, "component_names", ())
+        observations = []
+        for i, row in enumerate(rows):
+            component = components[i] if components is not None else None
+            selector = selectors[i] if selectors is not None else None
+            info = {
+                "observation_kind": "categorical"
+                if is_ce
+                else "component"
+                if component is not None
+                else "panel"
+                if selector is not None
+                else "row",
+                "batch_index": batch_index,
+                "source_row_index": row,
+                "output_path": ".".join(prediction.output_path),
+                "canonical_output": "elution_logit"
+                if name == "ms"
+                else ".".join(prediction.output_path),
+                "raw_target": raw[i],
+                "raw_unit": getattr(spec, "raw_unit", ""),
+                "target_unit": getattr(spec, "target_unit", ""),
+                "prediction_unit": "class_index"
+                if is_ce
+                else "logit"
+                if spec.loss_type == "bce"
+                else getattr(spec, "target_unit", ""),
+                "component_index": component if component is not None else "",
+                "component_name": component_names[component]
+                if component_names and component is not None
+                else str(component)
+                if component is not None
+                else "",
+                "selector_axis": getattr(spec, "axis", ""),
+                "selector_index": selector if selector is not None else "",
+                "selector_name": columns[selector]
+                if columns and selector is not None
+                else str(selector)
+                if selector is not None
+                else "",
+                "observation_loss": loss_values[i],
+                "loss_group": target.group,
+                "loss_type": spec.loss_type,
+                "loss_reduction_weight": weights[i],
+                "observation_weight": observation_weights[i],
+            }
+            if is_ce and target.mask[i] > 0:
+                info.update(
+                    class_names=json.dumps(class_names),
+                    # String -inf preserves structurally masked classes in valid JSON.
+                    class_logits=json.dumps(
+                        [value if math.isfinite(value) else str(value) for value in class_logits[i]]
+                    ),
+                    class_probabilities=json.dumps(class_probabilities[i]),
+                    target_class_name=class_names[int(labels[i])],
+                    predicted_class_name=class_names[int(predicted_values[i])],
+                )
+            observations.append(info)
+        acc = accumulators.setdefault(name, TaskPredictionAccumulator(name, spec.loss_type))
+        before = len(acc)
+        acc.add(
+            labels,
+            predicted_values,
+            host(target.mask),
+            sample_ids=select(getattr(batch, "sample_ids", None)),
+            sources=select(getattr(batch, "sample_sources", None)),
+            mapping_categories=select(getattr(batch, "source_mapping_categories", None)),
+            mapping_n_candidates=select(getattr(batch, "source_mapping_n_candidates", None)),
+            mapping_n_genes=select(getattr(batch, "source_mapping_n_genes", None)),
+            mapping_n_flank_pairs=select(getattr(batch, "source_mapping_n_flank_pairs", None)),
+            flank_context_resolved=select(getattr(batch, "flank_context_resolved", None)),
+            qualifiers=host(target.qualifiers) if target.qualifiers is not None else None,
+            lineage={
+                key: select(value) for key, value in getattr(batch, "source_lineage", {}).items()
+            },
+            observations=observations,
+        )
+        if len(acc) - before != target.support:
+            raise ValueError(f"{name}: prediction export support mismatch")
 
 
 def collect_holdout_predictions(
@@ -655,19 +866,22 @@ def collect_holdout_predictions(
     if mil_chunk_size is None:
         mil_chunk_size = DEFAULT_MIL_EVAL_CHUNK_SIZE
 
-    accumulators: Dict[str, TaskPredictionAccumulator] = {
-        spec.name: TaskPredictionAccumulator(spec.name, spec.loss_type) for spec in specs
-    }
+    from .supervision import (
+        PANEL_TASK_SPECS,
+        make_row_target,
+        pair_row_prediction,
+        resolve_row_targets,
+        resolve_row_predictions,
+        reduce_row_predictions,
+        _resolve_output_tensor,
+    )
 
-    def _host_sequence(value):
-        if isinstance(value, torch.Tensor):
-            return value.detach().cpu().tolist()
-        return value
-
-    def _host_vector(value):
-        if isinstance(value, torch.Tensor):
-            return value.reshape(-1).detach().cpu().tolist()
-        return value
+    accumulators = PredictionCollection(
+        {spec.name: TaskPredictionAccumulator(spec.name, spec.loss_type) for spec in specs}
+    )
+    _declare_output_support(accumulators, (*specs, *PANEL_TASK_SPECS))
+    for mil_specs in MIL_TASKS.values():
+        _declare_output_support(accumulators, mil_specs)
 
     model.eval()
     with torch.no_grad():
@@ -676,7 +890,8 @@ def collect_holdout_predictions(
                 break
             moved = batch.to(device) if hasattr(batch, "to") else batch
             outputs = forward_fn(model, moved)
-            sample_ids = getattr(moved, "sample_ids", None)
+            batch_losses, batch_support = {}, {}
+            observation_counts = {}
             bag_tasks = set()
             for prefix, mil_specs in MIL_TASKS.items():
                 channel = get_mil_channel(moved, prefix)
@@ -690,50 +905,80 @@ def collect_holdout_predictions(
                     device=device,
                     chunk_size=mil_chunk_size,
                 )
+                _record_output_support(accumulators, targets, predictions)
                 _add_mil_predictions(accumulators, predictions, channel, moved, batch_index)
+                observation_counts.update(
+                    {name: prediction.target.support for name, prediction in predictions.items()}
+                )
+                batch_losses.update(
+                    {name: float(prediction.loss()) for name, prediction in predictions.items()}
+                )
+                batch_support.update(
+                    {
+                        name: prediction.target.weight_sum
+                        if hasattr(prediction.target, "weight_sum")
+                        else float(prediction.target.support)
+                        for name, prediction in predictions.items()
+                    }
+                )
                 if prefix == "mil":
                     # The canonical loss replaces elution/presentation/ms row
                     # objectives with all class-split bags from this batch.
                     bag_tasks.update(spec.name for spec in mil_specs)
+            row_predictions = {}
+            row_targets = {}
             for spec in specs:
                 if spec.name in bag_tasks:
                     continue
                 target = get_target_fn(moved, spec)
                 mask = get_mask_fn(moved, spec)
-                if target is None or mask is None:
+                if target is None or mask is None or not bool((mask > 0).any()):
                     continue
+                selector_key = getattr(spec, "selector_key", None)
+                selectors = (
+                    getattr(moved, getattr(spec, "selector_context", "tcell_context"), {}).get(
+                        selector_key
+                    )
+                    if selector_key
+                    else None
+                )
+                view = make_row_target(
+                    spec,
+                    target,
+                    mask,
+                    raw_target=getattr(moved, "raw_targets", {}).get(
+                        getattr(spec, "target_key", spec.name), target
+                    ),
+                    qualifiers=get_qual_fn(moved, spec) if get_qual_fn is not None else None,
+                    selectors=selectors,
+                )
+                row_targets[spec.name] = view
                 pred = resolve_pred_fn(outputs, moved, spec)
                 if pred is None:
                     continue
-                # Apply the same target transform the loss uses. Without this
-                # the dump compares raw targets (e.g. nM) against predictions in
-                # the transformed space, and for the mhcflurry-style affinity
-                # encoding -- which inverts, so higher means stronger binder --
-                # that flips the sign of every correlation.
-                target_tensor = target.reshape(-1).float()
-                if getattr(spec, "target_transform", None) is not None:
-                    target_tensor = spec.target_transform(target_tensor)
-                target_vec = target_tensor.detach().cpu().numpy()
-                mask_vec = mask.reshape(-1).float().detach().cpu().numpy()
-                pred_vec = pred.reshape(-1).float().detach().cpu().numpy()
-                if len(pred_vec) != len(target_vec):
-                    # Multi-output heads (e.g. CE logits) do not line up
-                    # element-wise; those tasks are scored by loss only.
-                    continue
-                accumulators[spec.name].add(
-                    target_vec,
-                    pred_vec,
-                    mask_vec,
-                    sample_ids,
-                    getattr(moved, "sample_sources", None),
-                    getattr(moved, "source_mapping_categories", None),
-                    _host_sequence(getattr(moved, "source_mapping_n_candidates", None)),
-                    _host_sequence(getattr(moved, "source_mapping_n_genes", None)),
-                    _host_sequence(getattr(moved, "source_mapping_n_flank_pairs", None)),
-                    _host_sequence(getattr(moved, "flank_context_resolved", None)),
-                    _host_vector(get_qual_fn(moved, spec)) if get_qual_fn is not None else None,
-                    getattr(moved, "source_lineage", None),
+                path = next(
+                    (
+                        path
+                        for path in spec.pred_paths
+                        if _resolve_output_tensor(outputs, (path,)) is not None
+                    ),
+                    (),
                 )
+                row_predictions[spec.name] = pair_row_prediction(view, pred, path)
+            panel_targets = resolve_row_targets(moved, PANEL_TASK_SPECS)
+            row_targets.update(panel_targets)
+            row_predictions.update(resolve_row_predictions(outputs, panel_targets))
+            _record_output_support(accumulators, row_targets, row_predictions)
+            _add_row_predictions(accumulators, row_predictions, moved, batch_index)
+            losses, support = reduce_row_predictions(row_predictions)
+            batch_losses.update({name: float(value) for name, value in losses.items()})
+            batch_support.update(support)
+            observation_counts.update(
+                {name: prediction.target.support for name, prediction in row_predictions.items()}
+            )
+            accumulators.batch_losses.append(batch_losses)
+            accumulators.batch_support.append(batch_support)
+            accumulators.batch_observation_counts.append(observation_counts)
     return accumulators
 
 
@@ -742,6 +987,7 @@ def write_holdout_artifacts(
     accumulators: Mapping[str, TaskPredictionAccumulator],
     split: str = "val",
     extra_summary: Optional[Mapping[str, Any]] = None,
+    expected_batches: Optional[Sequence[Mapping[str, Any]]] = None,
 ) -> Dict[str, Any]:
     """Write split-specific summary, metrics, and predictions for a held-out pass.
 
@@ -760,48 +1006,60 @@ def write_holdout_artifacts(
     if extra_summary:
         payload.update(dict(extra_summary))
     payload["metric_estimators"] = {"auprc": AUPRC_ESTIMATOR}
-    rendered_summary = json.dumps(payload, indent=2)
-    (out_path / f"{split}_summary.json").write_text(rendered_summary)
-    if split == "val" or not (out_path / "summary.json").exists():
-        (out_path / "summary.json").write_text(rendered_summary)
 
     # Flat metric CSV written here rather than through RunLogger: the logger is
     # closed in the trainer's `finally` block, so anything logged afterwards
     # hits a closed file. Keeping the artifact self-contained avoids coupling
     # this pass to that lifecycle.
     flat = flatten_summary(summary)
-    if flat:
-        with (out_path / f"{split}_metrics.csv").open("w", newline="") as handle:
-            writer = csv.writer(handle)
-            writer.writerow(["split", "metric", "value"])
-            for metric_name, value in sorted(flat.items()):
-                writer.writerow([split, metric_name, value])
+    with (out_path / f"{split}_metrics.csv").open("w", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(["split", "metric", "value"])
+        for metric_name, value in sorted(flat.items()):
+            writer.writerow([split, metric_name, value])
 
     rows: List[Dict[str, Any]] = []
     for accumulator in accumulators.values():
         rows.extend(accumulator.rows())
     predictions_path = out_path / f"{split}_predictions.csv"
-    if rows:
-        with predictions_path.open("w", newline="") as handle:
-            writer = csv.DictWriter(
-                handle,
-                fieldnames=[
-                    "task",
-                    "sample_id",
-                    "source",
-                    "qualifier",
-                    "y_true",
-                    "y_pred",
-                    "y_prob",
-                    "source_mapping_category",
-                    "source_mapping_n_candidates",
-                    "source_mapping_n_genes",
-                    "source_mapping_n_flank_pairs",
-                    "flank_context_resolved",
-                    *PREDICTION_LINEAGE_FIELDS,
-                    *MIL_OBSERVATION_FIELDS,
-                ],
-            )
-            writer.writeheader()
-            writer.writerows(rows)
+    with predictions_path.open("w", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=[
+                "task",
+                "sample_id",
+                "source",
+                "qualifier",
+                "y_true",
+                "y_pred",
+                "y_prob",
+                "source_mapping_category",
+                "source_mapping_n_candidates",
+                "source_mapping_n_genes",
+                "source_mapping_n_flank_pairs",
+                "flank_context_resolved",
+                *PREDICTION_LINEAGE_FIELDS,
+                *MIL_OBSERVATION_FIELDS,
+            ],
+        )
+        writer.writeheader()
+        writer.writerows(rows)
+    if isinstance(accumulators, PredictionCollection):
+        from .evaluation_ledger import reconcile_prediction_artifact
+
+        ledger = reconcile_prediction_artifact(predictions_path, accumulators, expected_batches)
+        ledger_name = f"{split}_loss_ledger.json"
+        (out_path / ledger_name).write_text(json.dumps(ledger, indent=2, allow_nan=False))
+        payload["loss_reconciliation"] = {
+            "verified": True,
+            "canonical_evaluation_compared": ledger["canonical_evaluation_compared"],
+            "artifact": ledger_name,
+        }
+        payload["output_support"] = accumulators.output_support
+    elif expected_batches is not None:
+        raise ValueError("canonical evaluation reconciliation requires a PredictionCollection")
+    rendered_summary = json.dumps(payload, indent=2, allow_nan=False)
+    (out_path / f"{split}_summary.json").write_text(rendered_summary)
+    if split == "val" or not (out_path / "summary.json").exists():
+        (out_path / "summary.json").write_text(rendered_summary)
     return payload

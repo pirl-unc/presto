@@ -15,9 +15,8 @@ import argparse
 import tempfile
 import time
 from collections import Counter, defaultdict
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Mapping, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
 import torch
 import torch.nn as nn
@@ -45,8 +44,27 @@ from presto.data import (
     write_tcr_csv,
     write_mhc_fasta,
 )
-from presto.training.losses import censor_aware_loss, UncertaintyWeighting
+from presto.training.losses import UncertaintyWeighting
 from presto.training.checkpointing import save_model_checkpoint
+from presto.training.supervision import (
+    TaskLossSpec as TaskLossSpec,
+    LOSS_TASK_SPECS as LOSS_TASK_SPECS,
+    LOSS_TASK_NAMES,
+    LOSS_TASK_NAME_TO_INDEX,
+    LOSS_TASK_NAME_TO_SPEC,
+    PANEL_TASK_BASE_WEIGHTS,
+    _ELUTION_SPEC as _ELUTION_SPEC,
+    _as_float_vector,
+    _resolve_output_tensor as _resolve_output_tensor,
+    _resolve_task_prediction as _resolve_task_prediction,
+    _get_batch_target as _get_batch_target,
+    _get_batch_mask as _get_batch_mask,
+    _get_batch_qual as _get_batch_qual,
+    _compute_task_loss_vector as _compute_task_loss_vector,
+    resolve_row_targets,
+    resolve_row_predictions,
+    reduce_row_predictions,
+)
 from presto.training.mil import (
     MIL_TASKS,
     MIL_TASK_BASE_WEIGHTS,
@@ -64,15 +82,10 @@ from presto.training.config_io import (
 from presto.training.losses import PCGrad
 from presto.training.run_logger import RunLogger
 from presto.data.allele_resolver import (
-    PROCESSING_SPECIES_TO_IDX,
-    infer_gene,
     normalize_mhc_class,
-    normalize_processing_species_label,
     normalize_species_label,
 )
-from presto.data.mhc_index import infer_fine_chain_type
 from presto.data.vocab import (
-    MHC_CHAIN_FINE_TO_IDX,
     TCELL_CULTURE_CONTEXT_TO_IDX,
     TCELL_STIM_CONTEXT_TO_IDX,
 )
@@ -158,359 +171,6 @@ def build_warmup_cosine_scheduler(
         schedulers=[warmup, cosine],
         milestones=[warmup_steps],
     )
-
-
-@dataclass(frozen=True)
-class TaskLossSpec:
-    """Specification for a supervised training loss."""
-
-    name: str
-    target_key: str
-    mask_key: str
-    pred_paths: Tuple[Tuple[str, ...], ...]
-    loss_type: str  # one of: "censor", "bce", "mse"
-    target_attr: Optional[str] = None
-    mask_attr: Optional[str] = None
-    qual_key: Optional[str] = None
-    qual_attr: Optional[str] = None
-    target_transform: Optional[Callable[[torch.Tensor], torch.Tensor]] = None
-    base_weight: float = 1.0
-    # Metadata selects one response column; it is never a category target.
-    selector_key: Optional[str] = None
-
-
-LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
-    TaskLossSpec(
-        name="binding",
-        target_key="binding",
-        mask_key="binding",
-        pred_paths=(("assays", "KD_nM"),),
-        loss_type="censor",
-        target_attr="bind_target",
-        mask_attr="bind_mask",
-        qual_key="binding",
-        qual_attr="bind_qual",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
-    ),
-    TaskLossSpec(
-        name="binding_kd",
-        target_key="binding_kd",
-        mask_key="binding_kd",
-        pred_paths=(("assays", "KD_nM"),),
-        loss_type="censor",
-        qual_key="binding_kd",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
-    ),
-    TaskLossSpec(
-        name="binding_ic50",
-        target_key="binding_ic50",
-        mask_key="binding_ic50",
-        pred_paths=(("assays", "IC50_nM"),),
-        loss_type="censor",
-        qual_key="binding_ic50",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
-    ),
-    TaskLossSpec(
-        name="binding_ec50",
-        target_key="binding_ec50",
-        mask_key="binding_ec50",
-        pred_paths=(("assays", "EC50_nM"),),
-        loss_type="censor",
-        qual_key="binding_ec50",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
-    ),
-    TaskLossSpec(
-        name="elution",
-        target_key="elution",
-        mask_key="elution",
-        pred_paths=(("elution_logit",),),
-        loss_type="bce",
-        target_attr="elution_label",
-        mask_attr="elution_mask",
-    ),
-    TaskLossSpec(
-        name="presentation",
-        target_key="elution",
-        mask_key="elution",
-        pred_paths=(("presentation_logit",),),
-        loss_type="bce",
-        target_attr="elution_label",
-        mask_attr="elution_mask",
-    ),
-    TaskLossSpec(
-        name="tcell",
-        target_key="tcell",
-        mask_key="tcell",
-        pred_paths=(("tcell_logit",), ("recognition_repertoire_logit",)),
-        loss_type="bce",
-        target_attr="tcell_label",
-        mask_attr="tcell_mask",
-    ),
-    TaskLossSpec(
-        name="immunogenicity",
-        target_key="tcell",
-        mask_key="tcell",
-        pred_paths=(("immunogenicity_logit",),),
-        loss_type="bce",
-        target_attr="tcell_label",
-        mask_attr="tcell_mask",
-    ),
-    TaskLossSpec(
-        name="tcell_assay_method",
-        target_key="tcell_assay_method",
-        mask_key="tcell_assay_method",
-        pred_paths=(("tcell_panel_logits", "assay_method"),),
-        loss_type="bce",
-        selector_key="assay_method_idx",
-    ),
-    TaskLossSpec(
-        name="tcell_assay_readout",
-        target_key="tcell_assay_readout",
-        mask_key="tcell_assay_readout",
-        pred_paths=(("tcell_panel_logits", "assay_readout"),),
-        loss_type="bce",
-        selector_key="assay_readout_idx",
-    ),
-    TaskLossSpec(
-        name="tcell_apc_type",
-        target_key="tcell_apc_type",
-        mask_key="tcell_apc_type",
-        pred_paths=(("tcell_panel_logits", "apc_type"),),
-        loss_type="bce",
-        selector_key="apc_type_idx",
-    ),
-    TaskLossSpec(
-        name="tcell_culture_context",
-        target_key="tcell_culture_context",
-        mask_key="tcell_culture_context",
-        pred_paths=(("tcell_panel_logits", "culture_context"),),
-        loss_type="bce",
-        selector_key="culture_context_idx",
-    ),
-    TaskLossSpec(
-        name="tcell_stim_context",
-        target_key="tcell_stim_context",
-        mask_key="tcell_stim_context",
-        pred_paths=(("tcell_panel_logits", "stim_context"),),
-        loss_type="bce",
-        selector_key="stim_context_idx",
-    ),
-    TaskLossSpec(
-        name="tcell_peptide_format",
-        target_key="tcell_peptide_format",
-        mask_key="tcell_peptide_format",
-        pred_paths=(("tcell_panel_logits", "peptide_format"),),
-        loss_type="bce",
-        selector_key="peptide_format_idx",
-    ),
-    TaskLossSpec(
-        name="kon",
-        target_key="kon",
-        mask_key="kon",
-        pred_paths=(("assays", "kon"),),
-        loss_type="mse",
-        target_attr="kon_target",
-        mask_attr="kon_mask",
-    ),
-    TaskLossSpec(
-        name="koff",
-        target_key="koff",
-        mask_key="koff",
-        pred_paths=(("assays", "koff"),),
-        loss_type="mse",
-        target_attr="koff_target",
-        mask_attr="koff_mask",
-    ),
-    TaskLossSpec(
-        # Censor-aware, not plain MSE. 51 half-life rows carry an inequality and
-        # the qualifier was collected then ignored, so a ">2h" measurement was
-        # trained as if it were exactly 2h. The t_half target transform is
-        # monotone increasing (unlike the inverting affinity encoding), so the
-        # censor codes carry through unchanged.
-        name="t_half",
-        target_key="t_half",
-        mask_key="t_half",
-        pred_paths=(("assays", "t_half"),),
-        loss_type="censor",
-        target_attr="t_half_target",
-        mask_attr="t_half_mask",
-        qual_key="t_half",
-        qual_attr="t_half_qual",
-    ),
-    TaskLossSpec(
-        name="tm",
-        target_key="tm",
-        mask_key="tm",
-        pred_paths=(("assays", "Tm"),),
-        loss_type="censor",
-        qual_key="tm",
-        qual_attr="tm_qual",
-        target_attr="tm_target",
-        mask_attr="tm_mask",
-    ),
-    TaskLossSpec(
-        name="binding_affinity_probe",
-        target_key="binding",
-        mask_key="binding",
-        pred_paths=(("binding_affinity_probe_kd",),),
-        loss_type="censor",
-        target_attr="bind_target",
-        mask_attr="bind_mask",
-        qual_key="binding",
-        qual_attr="bind_qual",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
-        base_weight=1.0,
-    ),
-    TaskLossSpec(
-        # Supervises the detectability latent directly. Without it the latent
-        # is a free bottleneck that silently absorbs whatever the presentation
-        # pathway cannot explain; the shotgun corpus is what makes it
-        # identifiable. Targets are graded over the fractionation-depth ladder,
-        # so BCE is used with soft targets.
-        name="ms_detectability",
-        target_key="ms_detectability",
-        mask_key="ms_detectability",
-        pred_paths=(("ms_detectability_logit",),),
-        loss_type="bce",
-        base_weight=0.5,
-    ),
-    TaskLossSpec(
-        # Machinery-conditioned excision. Positives are peptides an arm
-        # actually observed; negatives relabel a peptide with an enzyme whose
-        # cleavage rule its termini violate.
-        name="excision",
-        target_key="excision",
-        mask_key="excision",
-        pred_paths=(("excision_logit",),),
-        loss_type="bce",
-        base_weight=1.0,
-    ),
-    TaskLossSpec(
-        name="processing",
-        target_key="processing",
-        mask_key="processing",
-        pred_paths=(("processing_logit",),),
-        loss_type="bce",
-        target_attr="processing_label",
-        mask_attr="processing_mask",
-    ),
-    TaskLossSpec(
-        name="core_start",
-        target_key="core_start",
-        mask_key="core_start",
-        pred_paths=(("core_start_logit",),),
-        loss_type="ce",
-    ),
-    TaskLossSpec(
-        name="mhc_class",
-        target_key="mhc_class",
-        mask_key="mhc_class",
-        pred_paths=(("mhc_class_logits",),),
-        loss_type="ce",
-        base_weight=0.1,
-    ),
-    TaskLossSpec(
-        name="mhc_species",
-        target_key="mhc_species",
-        mask_key="mhc_species",
-        pred_paths=(("mhc_species_logits",),),
-        loss_type="ce",
-        base_weight=0.1,
-    ),
-    TaskLossSpec(
-        name="mhc_a_fine_type",
-        target_key="mhc_a_fine_type",
-        mask_key="mhc_a_fine_type",
-        pred_paths=(("mhc_a_type_logits",),),
-        loss_type="ce",
-        base_weight=0.1,
-    ),
-    TaskLossSpec(
-        name="mhc_b_fine_type",
-        target_key="mhc_b_fine_type",
-        mask_key="mhc_b_fine_type",
-        pred_paths=(("mhc_b_type_logits",),),
-        loss_type="ce",
-        base_weight=0.1,
-    ),
-    TaskLossSpec(
-        name="tcr_evidence",
-        target_key="tcr_evidence",
-        mask_key="tcr_evidence",
-        pred_paths=(("tcr_evidence_logit",),),
-        loss_type="bce",
-        target_attr="tcr_evidence_target",
-        mask_attr="tcr_evidence_mask",
-        base_weight=0.05,
-    ),
-    TaskLossSpec(
-        name="tcr_evidence_method",
-        target_key="tcr_evidence_method",
-        mask_key="tcr_evidence_method",
-        pred_paths=(("tcr_evidence_method_logits",),),
-        loss_type="bce",
-        target_attr="tcr_evidence_method_target",
-        mask_attr="tcr_evidence_method_mask",
-        base_weight=0.02,
-    ),
-    TaskLossSpec(
-        name="species_of_origin",
-        target_key="species_of_origin",
-        mask_key="species_of_origin",
-        pred_paths=(("species_of_origin_logits",),),
-        loss_type="ce",
-    ),
-    TaskLossSpec(
-        name="foreignness",
-        target_key="foreignness",
-        mask_key="foreignness",
-        pred_paths=(("foreignness_logit",),),
-        loss_type="bce",
-    ),
-)
-
-#: The elution spec, looked up once. The condition panel is supervised against
-#: the elution label, so it needs the same target and mask resolution the
-#: ordinary elution loss uses rather than a second hand-rolled copy.
-#: Base weights for losses assembled outside LOSS_TASK_SPECS.
-#:
-#: Both panels supervise a gathered column rather than a single output path,
-#: so they cannot be declared as ordinary specs. Naming their weight here
-#: keeps it a decision rather than a fall-through default.
-PANEL_TASK_BASE_WEIGHTS: Dict[str, float] = {
-    "excision_condition_panel": 1.0,
-    "binding_assay_panel": 1.0,
-}
-
-_ELUTION_SPEC = next(
-    (spec for spec in LOSS_TASK_SPECS if getattr(spec, "name", "") == "elution"),
-    None,
-)
-
-
-LOSS_TASK_NAMES: Tuple[str, ...] = tuple(spec.name for spec in LOSS_TASK_SPECS)
-LOSS_TASK_NAME_TO_INDEX: Dict[str, int] = {name: idx for idx, name in enumerate(LOSS_TASK_NAMES)}
-LOSS_TASK_NAME_TO_SPEC: Dict[str, TaskLossSpec] = {spec.name: spec for spec in LOSS_TASK_SPECS}
 
 
 def _normalize_supervised_loss_aggregation(mode: Optional[str]) -> str:
@@ -691,13 +351,6 @@ def _summarize_outputs(outputs: Dict[str, object]) -> Dict[str, float]:
     for key in sorted(outputs):
         _flatten_output_metrics(str(key), outputs[key], metrics)
     return metrics
-
-
-def _as_float_vector(tensor: torch.Tensor) -> torch.Tensor:
-    vec = tensor.float()
-    if vec.ndim > 1 and vec.shape[-1] == 1:
-        vec = vec.squeeze(-1)
-    return vec
 
 
 def _max_bucket_fraction(values: Sequence[str]) -> float:
@@ -952,213 +605,6 @@ def _compute_binding_contrastive_loss(
     if weight <= 0.0:
         return None, metrics
     return weight * torch.stack(pair_losses).mean(), metrics
-
-
-def _resolve_output_tensor(
-    outputs: Dict[str, object],
-    pred_paths: Sequence[Tuple[str, ...]],
-) -> Optional[torch.Tensor]:
-    for path in pred_paths:
-        current: object = outputs
-        valid = True
-        for part in path:
-            if not isinstance(current, dict) or part not in current:
-                valid = False
-                break
-            current = current[part]
-        if valid and isinstance(current, torch.Tensor):
-            return current
-    return None
-
-
-def _batch_mapping(batch, attr_name: str) -> Optional[Dict[str, torch.Tensor]]:
-    value = getattr(batch, attr_name, None)
-    return value if isinstance(value, dict) else None
-
-
-def _resolve_task_prediction(outputs, batch, spec: TaskLossSpec) -> Optional[torch.Tensor]:
-    """Resolve the same supervised response for training and held-out dumps."""
-    pred = _resolve_output_tensor(outputs, spec.pred_paths)
-    if pred is not None and spec.selector_key is not None:
-        index = batch.tcell_context[spec.selector_key].reshape(-1).long().to(pred.device)
-        pred = pred.gather(1, index.unsqueeze(1)).squeeze(1)
-    return pred
-
-
-def _infer_fine_chain_types_for_batch(batch) -> Optional[list]:
-    """Infer fine MHC chain types for alpha and beta chains from batch metadata."""
-    classes = getattr(batch, "mhc_class", None)
-    alleles = getattr(batch, "primary_alleles", None)
-    if not isinstance(classes, (list, tuple)):
-        return None
-    n = len(classes)
-    if not isinstance(alleles, (list, tuple)) or len(alleles) != n:
-        alleles = [""] * n
-
-    a_labels: list = []
-    b_labels: list = []
-    a_masks: list = []
-    b_masks: list = []
-    for i in range(n):
-        mc = str(classes[i]).strip().upper()
-        allele = str(alleles[i]).strip()
-        gene = infer_gene(allele) if allele else ""
-
-        # Alpha chain fine type
-        if mc == "II":
-            a_ft = infer_fine_chain_type(gene, "II")
-            # For class II, alpha goes in slot a
-            if a_ft in ("MHC_IIb",):
-                # Gene-inferred as beta but in alpha slot — keep as-is
-                pass
-            a_labels.append(MHC_CHAIN_FINE_TO_IDX.get(a_ft, MHC_CHAIN_FINE_TO_IDX["unknown"]))
-            a_masks.append(1.0 if a_ft != "unknown" else 0.0)
-            # Beta chain for class II
-            b_ft = "MHC_IIb"
-            b_labels.append(MHC_CHAIN_FINE_TO_IDX[b_ft])
-            b_masks.append(1.0)
-        elif mc in ("I", ""):
-            a_ft = infer_fine_chain_type(gene, "I")
-            a_labels.append(MHC_CHAIN_FINE_TO_IDX.get(a_ft, MHC_CHAIN_FINE_TO_IDX["unknown"]))
-            a_masks.append(1.0 if a_ft != "unknown" else 0.0)
-            # In groove-half mode, the second MHC segment for class I is alpha2.
-            b_labels.append(MHC_CHAIN_FINE_TO_IDX["MHC_I"])
-            b_masks.append(1.0)
-        else:
-            a_labels.append(MHC_CHAIN_FINE_TO_IDX["unknown"])
-            a_masks.append(0.0)
-            b_labels.append(MHC_CHAIN_FINE_TO_IDX["unknown"])
-            b_masks.append(0.0)
-
-    return a_labels, b_labels, a_masks, b_masks
-
-
-def _get_batch_target(batch, spec: TaskLossSpec) -> Optional[torch.Tensor]:
-    if spec.name == "mhc_class":
-        classes = getattr(batch, "mhc_class", None)
-        if not isinstance(classes, (list, tuple)):
-            return None
-        labels = []
-        for cls in classes:
-            normalized = str(cls).strip().upper()
-            labels.append(1 if normalized == "II" else 0)
-        return torch.tensor(labels, dtype=torch.long, device=batch.pep_tok.device)
-    if spec.name == "mhc_species":
-        species_values = getattr(batch, "processing_species", None)
-        if not isinstance(species_values, (list, tuple)):
-            return None
-        labels = []
-        for raw in species_values:
-            bucket = normalize_processing_species_label(raw, default=None)
-            if bucket is None:
-                # Unknown species: use placeholder label (masked out by _get_batch_mask)
-                labels.append(0)
-            else:
-                labels.append(PROCESSING_SPECIES_TO_IDX[bucket])
-        return torch.tensor(labels, dtype=torch.long, device=batch.pep_tok.device)
-    if spec.name == "mhc_a_fine_type":
-        result = _infer_fine_chain_types_for_batch(batch)
-        if result is None:
-            return None
-        a_labels, _, _, _ = result
-        return torch.tensor(a_labels, dtype=torch.long, device=batch.pep_tok.device)
-    if spec.name == "mhc_b_fine_type":
-        result = _infer_fine_chain_types_for_batch(batch)
-        if result is None:
-            return None
-        _, b_labels, _, _ = result
-        return torch.tensor(b_labels, dtype=torch.long, device=batch.pep_tok.device)
-
-    targets = _batch_mapping(batch, "targets")
-    if targets is not None and spec.target_key in targets:
-        return targets[spec.target_key]
-    if spec.target_attr:
-        return getattr(batch, spec.target_attr, None)
-    return None
-
-
-def _get_batch_mask(batch, spec: TaskLossSpec) -> Optional[torch.Tensor]:
-    if spec.name == "mhc_class":
-        classes = getattr(batch, "mhc_class", None)
-        if not isinstance(classes, (list, tuple)):
-            return None
-        mask = []
-        for cls in classes:
-            normalized = str(cls).strip().upper()
-            mask.append(1.0 if normalized in {"I", "II"} else 0.0)
-        return torch.tensor(mask, dtype=torch.float32, device=batch.pep_tok.device)
-    if spec.name == "mhc_species":
-        species_values = getattr(batch, "processing_species", None)
-        if not isinstance(species_values, (list, tuple)):
-            return None
-        mask = []
-        for raw in species_values:
-            bucket = normalize_processing_species_label(raw, default=None)
-            mask.append(1.0 if bucket is not None else 0.0)
-        return torch.tensor(mask, dtype=torch.float32, device=batch.pep_tok.device)
-    if spec.name == "mhc_a_fine_type":
-        result = _infer_fine_chain_types_for_batch(batch)
-        if result is None:
-            return None
-        _, _, a_masks, _ = result
-        return torch.tensor(a_masks, dtype=torch.float32, device=batch.pep_tok.device)
-    if spec.name == "mhc_b_fine_type":
-        result = _infer_fine_chain_types_for_batch(batch)
-        if result is None:
-            return None
-        _, _, _, b_masks = result
-        return torch.tensor(b_masks, dtype=torch.float32, device=batch.pep_tok.device)
-
-    target_masks = _batch_mapping(batch, "target_masks")
-    if target_masks is not None and spec.mask_key in target_masks:
-        return target_masks[spec.mask_key]
-    if spec.mask_attr:
-        return getattr(batch, spec.mask_attr, None)
-    return None
-
-
-def _get_batch_qual(batch, spec: TaskLossSpec) -> Optional[torch.Tensor]:
-    target_quals = _batch_mapping(batch, "target_quals")
-    if target_quals is not None and spec.qual_key and spec.qual_key in target_quals:
-        return target_quals[spec.qual_key]
-    if spec.qual_attr:
-        return getattr(batch, spec.qual_attr, None)
-    return None
-
-
-def _compute_task_loss_vector(
-    spec: TaskLossSpec,
-    pred: torch.Tensor,
-    target: torch.Tensor,
-    qual_tensor: Optional[torch.Tensor] = None,
-) -> Optional[torch.Tensor]:
-    if spec.loss_type == "ce":
-        target_idx = target.long().view(-1)
-        return nn.functional.cross_entropy(pred, target_idx, reduction="none")
-
-    pred_vec = _as_float_vector(pred)
-    target_vec = _as_float_vector(target)
-
-    if spec.target_transform is not None:
-        target_vec = spec.target_transform(target_vec)
-
-    if spec.loss_type == "bce":
-        return nn.functional.binary_cross_entropy_with_logits(
-            pred_vec, target_vec, reduction="none"
-        )
-    if spec.loss_type == "mse":
-        return nn.functional.mse_loss(pred_vec, target_vec, reduction="none")
-    if spec.loss_type == "censor":
-        if qual_tensor is None:
-            return None
-        qual_vec = _as_float_vector(qual_tensor).to(dtype=torch.long)
-        return censor_aware_loss(
-            pred_vec,
-            target_vec,
-            qual_vec,
-            reduction="none",
-        )
-    raise ValueError(f"Unknown loss type: {spec.loss_type}")
 
 
 def _masked_mean(values: torch.Tensor, mask: Optional[torch.Tensor]) -> Optional[torch.Tensor]:
@@ -1834,133 +1280,12 @@ def compute_loss(
                 else 0
             )
 
-        supervised_losses: Dict[str, torch.Tensor] = {}
-        supervised_loss_support: Dict[str, float] = {}
         supervised_start = time.perf_counter() if profile_performance else 0.0
-        for spec in LOSS_TASK_SPECS:
-            if has_mil_elution and spec.name in {s.name for s in MIL_TASKS["mil"]}:
-                # These tasks are trained at bag-level via Noisy-OR MIL below.
-                continue
-            target = _get_batch_target(batch, spec)
-            mask = _get_batch_mask(batch, spec)
-            if target is None or mask is None:
-                continue
-            mask_float = _as_float_vector(mask)
-            support = float(mask_float.sum().detach().item())
-            if support <= 0:
-                continue
-
-            pred = _resolve_task_prediction(outputs, batch, spec)
-            if pred is None:
-                continue
-            qual_tensor = _get_batch_qual(batch, spec)
-            loss_vector = _compute_task_loss_vector(spec, pred, target, qual_tensor=qual_tensor)
-            if loss_vector is None:
-                continue
-
-            masked_loss = (loss_vector * mask_float).sum() / (mask_float.sum() + 1e-8)
-            supervised_losses[spec.name] = masked_loss
-            supervised_loss_support[spec.name] = support
-            output_metrics[f"batch_support_{spec.name}"] = support
-        # Cellular-condition panel: tie the observed condition's column to the
-        # elution label.
-        #
-        # The condition is a supervision selector, not an input. The model
-        # predicts excision under every APM state and every stimulus from
-        # peptide and MHC alone; this picks the column that was actually
-        # observed. Without it the swept in-vivo profiles would be computed and
-        # read by nothing -- reopening gap 2 in a new disguise, which is why
-        # tests/test_gradient_coverage.py pins those four parameters by name.
-        condition_provenance = getattr(batch, "provenance", None) or {}
-        elution_target = _get_batch_target(batch, _ELUTION_SPEC) if _ELUTION_SPEC else None
-        elution_mask = _get_batch_mask(batch, _ELUTION_SPEC) if _ELUTION_SPEC else None
-        if elution_target is not None and elution_mask is not None and condition_provenance:
-            condition_terms = []
-            elution_flat = elution_target.reshape(-1).float().to(device)
-            elution_mask_flat = elution_mask.reshape(-1).float().to(device)
-            for panel_key, index_key in (
-                ("excision_panel_apm", "apm_perturbation_idx"),
-                ("excision_panel_stimulus", "processing_stimulus_idx"),
-            ):
-                panel = outputs.get(panel_key)
-                index = condition_provenance.get(index_key)
-                if panel is None or index is None:
-                    continue
-                index_long = index.reshape(-1).long().to(device)
-                if index_long.shape[0] != panel.shape[0]:
-                    continue
-                chosen = panel.gather(1, index_long.unsqueeze(1)).squeeze(1)
-                limit = min(chosen.shape[0], elution_flat.shape[0])
-                per_row = F.binary_cross_entropy_with_logits(
-                    chosen[:limit], elution_flat[:limit], reduction="none"
-                )
-                denominator = elution_mask_flat[:limit].sum() + 1e-8
-                condition_terms.append((per_row * elution_mask_flat[:limit]).sum() / denominator)
-            if condition_terms:
-                supervised_losses["excision_condition_panel"] = torch.stack(condition_terms).mean()
-                # Record support like any other task. Without it the default
-                # support-weighted aggregation gives this loss weight 1.0
-                # against tasks carrying support in the thousands, so the
-                # panel would contribute ~1/N of the gradient and train
-                # essentially not at all.
-                supervised_loss_support["excision_condition_panel"] = float(
-                    elution_mask_flat.sum().item()
-                )
-
-        # Assay panel: tie the observed assay's column to the measurement.
-        #
-        # The assay label is used only to *select which output is supervised*,
-        # which docs/assay_modeling_contract.md explicitly allows ("assay
-        # labels may choose supervision targets"). The model still predicts
-        # every column from peptide and MHC alone, so nothing about the assay
-        # reaches the input path.
-        #
-        # Without this the panel would be computed and read by nothing -- the
-        # exact "published but untrained" failure the rest of this work
-        # removed, which is how tests/test_gradient_coverage.py caught it.
-        panel_context = getattr(batch, "binding_context", None) or {}
-        bind_target = getattr(batch, "bind_target", None)
-        bind_mask = getattr(batch, "bind_mask", None)
-        if bind_target is not None and bind_mask is not None and panel_context:
-            panel_terms = []
-            # Normalize into the space the panel actually predicts.
-            #
-            # `predict_assay_panel` returns a *KD offset* in normalized log10
-            # space, and `bind_target` is raw nM (up to DEFAULT_MAX_AFFINITY_NM
-            # = 50,000) -- which is why the main binding spec above applies
-            # exactly this transform with `assume_log10=False`. This loss did
-            # not, so it was regressing a log-space head against a raw-nM
-            # target: `loss_binding_assay_panel` sat at ~142,900, an order of
-            # magnitude above the total loss, and could not fall because no
-            # head output can reach 50,000. It dominated the gradient and the
-            # model learned nothing -- val loss moved 0.012% over 10 epochs.
-            target_flat = normalize_binding_target_log10(
-                bind_target.reshape(-1).float().to(device),
-                max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-                assume_log10=False,
-            )
-            mask_flat = bind_mask.reshape(-1).float().to(device)
-            for axis in ("assay_type", "assay_prep", "assay_geometry", "assay_readout"):
-                panel = outputs.get(f"binding_assay_panel_{axis}")
-                index = panel_context.get(f"{axis}_idx")
-                if panel is None or index is None:
-                    continue
-                index_long = index.reshape(-1).long().to(device)
-                if index_long.shape[0] != panel.shape[0]:
-                    continue
-                chosen = panel.gather(1, index_long.unsqueeze(1)).squeeze(1)
-                per_row = censor_aware_loss(
-                    chosen,
-                    target_flat,
-                    batch.bind_qual.reshape(-1).long().to(device),
-                    reduction="none",
-                )
-                denominator = mask_flat[: chosen.shape[0]].sum() + 1e-8
-                panel_terms.append((per_row * mask_flat[: chosen.shape[0]]).sum() / denominator)
-            if panel_terms:
-                supervised_losses["binding_assay_panel"] = torch.stack(panel_terms).mean()
-                supervised_loss_support["binding_assay_panel"] = float(mask_flat.sum().item())
-
+        row_targets = resolve_row_targets(batch)
+        row_predictions = resolve_row_predictions(outputs, row_targets)
+        supervised_losses, supervised_loss_support = reduce_row_predictions(row_predictions)
+        for task_name, support in supervised_loss_support.items():
+            output_metrics[f"batch_support_{task_name}"] = support
         if profile_performance:
             perf_metrics["perf_supervised_loss_sec"] = float(time.perf_counter() - supervised_start)
 
@@ -2045,10 +1370,8 @@ def compute_loss(
             supervised_task_weights: Dict[str, float] = {}
             for task_name, task_loss in supervised_losses.items():
                 spec = LOSS_TASK_NAME_TO_SPEC.get(task_name)
-                # The panel losses are assembled outside LOSS_TASK_SPECS
-                # because they gather a column rather than reading a single
-                # output path. They still need a declared weight: falling
-                # through to 1.0 is a silent default, not a decision.
+                # Panel axes reduce to declared groups, separate from the
+                # established uncertainty-parameter indices in LOSS_TASK_SPECS.
                 base_weight = (
                     max(float(spec.base_weight), 0.0)
                     if spec is not None
@@ -2337,6 +1660,7 @@ def evaluate(
     max_mil_instances: int = 0,
     max_batches: int = 0,
     mil_chunk_size: int = 0,
+    batch_receipts: Optional[list] = None,
 ) -> Tuple[float, Dict[str, float]]:
     """Evaluate model on validation set."""
     model.eval()
@@ -2366,6 +1690,10 @@ def evaluate(
                 max_mil_instances=max_mil_instances,
                 mil_chunk_size=mil_chunk_size,
             )
+            if batch_receipts is not None:
+                from presto.training.evaluation_ledger import evaluation_receipt
+
+                batch_receipts.append(evaluation_receipt(n_batches, loss, loss_dict, output_dict))
             pep_tok = getattr(batch, "pep_tok", None)
             if isinstance(pep_tok, torch.Tensor) and pep_tok.ndim >= 1:
                 total_samples += int(pep_tok.shape[0])
