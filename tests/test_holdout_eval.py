@@ -229,8 +229,9 @@ class TestCollectionAndArtifacts:
         assert [row["sample_id"] for row in accumulator.rows()] == ["s0", "s1"]
         assert accumulator.metrics()["auroc"] == pytest.approx(1.0)
 
-    def test_shape_mismatch_is_skipped_not_crashed(self):
-        """Multi-class heads do not line up element-wise with their targets."""
+    def test_categorical_vectors_preserve_one_observation_per_sample(self):
+        """A class axis is part of the prediction, not a sample axis."""
+        import json
         import torch
 
         from presto.training.holdout_eval import collect_holdout_predictions
@@ -252,7 +253,10 @@ class TestCollectionAndArtifacts:
             get_target_fn=lambda b, s: b.targets[s.name],
             get_mask_fn=lambda b, s: b.masks[s.name],
         )
-        assert len(accumulators["mhc_class"]) == 0
+        rows = accumulators["mhc_class"].rows()
+        assert [row["sample_id"] for row in rows] == ["a", "b"]
+        assert json.loads(rows[0]["class_probabilities"]) == pytest.approx([0.2] * 5)
+        assert accumulators["mhc_class"].metrics()["accuracy"] == 0.5
 
     def test_artifacts_are_written(self, tmp_path):
         import csv
@@ -424,6 +428,7 @@ def test_collect_applies_the_same_target_transform_as_the_loss():
         resolve_pred_fn=lambda out, batch, spec: out[spec.pred_paths[0][0]],
         get_target_fn=lambda _b, _s: targets,
         get_mask_fn=lambda _b, _s: torch.ones(3),
+        get_qual_fn=lambda _b, _s: torch.zeros(3, dtype=torch.long),
     )
     metrics = accumulators["binding"].metrics()
     assert metrics["spearman"] == pytest.approx(1.0)
