@@ -263,7 +263,12 @@ def audit_split_support(
                         if len(fake_null_sequence_examples) < 10:
                             fake_null_sequence_examples.append(f"{sample_id}:{field}")
 
-                sample_payload = asdict(sample) if is_dataclass(sample) else vars(sample)
+                sample_payload = dict(asdict(sample) if is_dataclass(sample) else vars(sample))
+                # Keep the established sample/input fingerprints comparable.
+                # The declared-output census separately fingerprints evidence
+                # origins, which do not change model inputs or selected labels.
+                sample_payload.pop("target_provenance", None)
+                sample_payload.pop("bulk_ms_observed", None)
                 rendered = json.dumps(
                     sample_payload, sort_keys=True, separators=(",", ":"), default=str
                 ).encode()

@@ -32,6 +32,7 @@ import re
 from torch.utils.data import Dataset, DataLoader, Sampler
 
 from .bulk_ms import BulkMSRecord
+from .label_provenance import bulk_target_provenance, record_target_provenance
 from .vocab import (
     cell_lineage_for,
     default_machinery_for_class,
@@ -2066,6 +2067,7 @@ class PrestoDataset(Dataset):
                     mhc_b=mhc_b_seq,
                     mhc_class=mhc_class,
                     bind_value=rec.value,
+                    target_provenance=record_target_provenance(rec.source, "binding"),
                     bind_qual=rec.qualifier,
                     bind_measurement_type=rec.measurement_type,
                     binding_assay_type=rec.assay_type or rec.measurement_type,
@@ -2112,6 +2114,7 @@ class PrestoDataset(Dataset):
                     mhc_class=mhc_class,
                     kon=rec.kon,
                     koff=rec.koff,
+                    target_provenance=record_target_provenance(rec.source, "kon", "koff"),
                     kinetics_assay_type=rec.assay_type,
                     kinetics_assay_method=rec.assay_method,
                     species=rec.species,
@@ -2154,6 +2157,7 @@ class PrestoDataset(Dataset):
                     mhc_class=mhc_class,
                     t_half=rec.t_half,
                     tm=rec.tm,
+                    target_provenance=record_target_provenance(rec.source, "t_half", "tm"),
                     t_half_qual=rec.t_half_qualifier,
                     tm_qual=rec.tm_qualifier,
                     stability_assay_type=rec.assay_type,
@@ -2200,6 +2204,7 @@ class PrestoDataset(Dataset):
                     mhc_b=mhc_b_seq,
                     mhc_class=mhc_class,
                     processing_label=rec.label,
+                    target_provenance=record_target_provenance(rec.source, "processing"),
                     species=rec.species,
                     species_of_origin=so,
                     foreignness_label=fl,
@@ -2231,6 +2236,8 @@ class PrestoDataset(Dataset):
                     enzymatic_digest=rec.machinery,
                     ms_detectability_label=rec.detectability_label,
                     excision_label=rec.excision_label,
+                    bulk_ms_observed=rec.observed,
+                    target_provenance=bulk_target_provenance(rec.observed),
                     source_protein=rec.protein_id or None,
                     sample_source=_source_label(rec.source),
                     assay_group="bulk_ms",
@@ -2295,6 +2302,7 @@ class PrestoDataset(Dataset):
                         is_tumor_adjacent=getattr(rec, "is_tumor_adjacent", None),
                     ),
                     elution_label=1.0 if rec.detected else 0.0,
+                    target_provenance=record_target_provenance(rec.source, "elution"),
                     mil_mhc_a_list=mil_mhc_a_list,
                     mil_mhc_b_list=mil_mhc_b_list,
                     mil_mhc_class_list=mil_mhc_class_list,
@@ -2364,6 +2372,7 @@ class PrestoDataset(Dataset):
                     mhc_b=mhc_b_seq,
                     mhc_class=mhc_class,
                     tcell_label=rec.response,
+                    target_provenance=record_target_provenance(rec.source, "tcell"),
                     tcell_assay_method=rec.assay_method,
                     tcell_assay_readout=rec.assay_type,
                     tcell_apc_name=rec.apc_name,
@@ -2406,6 +2415,7 @@ class PrestoDataset(Dataset):
                     mhc_b=mhc_b_seq,
                     mhc_class=mhc_class,
                     tcr_evidence_label=rec.evidence_label,
+                    target_provenance=record_target_provenance(rec.source, "tcr_evidence"),
                     tcr_evidence_method_bins=tuple(rec.method_bins or ()),
                     species=rec.species,
                     species_of_origin=so,
@@ -2429,6 +2439,11 @@ class PrestoDataset(Dataset):
                 stacklevel=2,
             )
 
+        # Every foreignness value above is derived by _organism_fields. Keep
+        # that derivation explicit rather than inferring it later from a label.
+        for sample in self.samples:
+            if sample.foreignness_label is not None:
+                sample.target_provenance["organism"] = "organism_derived"
         self._assign_fixed_metadata()
 
     def _assign_fixed_metadata(self) -> None:

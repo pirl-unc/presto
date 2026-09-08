@@ -285,6 +285,11 @@ class PrestoSample:
     label_bucket: Optional[str] = None
     primary_allele: Optional[str] = None
     synthetic_kind: Optional[str] = None
+    # Target-specific evidence origins, retained on the host for coverage audits.
+    # A raw source name alone does not establish a measured label. These values
+    # describe label construction; they are not features or model inputs.
+    target_provenance: dict[str, str] = field(default_factory=dict)
+    bulk_ms_observed: Optional[bool] = None
     # Source-junction provenance. Diagnostics only: these fields never enter
     # model.forward. Empty/zero means the sample did not come through the
     # hitlist protein-mapping path.
@@ -955,8 +960,9 @@ class PrestoCollator:
 
         return targets, masks, quals
 
-    def _categorize_binding_assay_type(self, assay_type: Optional[str]) -> str:
-        token = self._norm_text(assay_type)
+    @classmethod
+    def _categorize_binding_assay_type(cls, assay_type: Optional[str]) -> str:
+        token = cls._norm_text(assay_type)
         if not token:
             return "unknown"
         if "kd (~ic50)" in token:
