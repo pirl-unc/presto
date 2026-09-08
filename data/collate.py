@@ -389,6 +389,7 @@ class PrestoBatch:
     mil_instance_to_bag: Optional[torch.Tensor] = None
     mil_bag_label: Optional[torch.Tensor] = None
     mil_bag_sample_ids: List[str] = field(default_factory=list)
+    mil_bag_sample_indices: List[int] = field(default_factory=list)
     tcell_mil_pep_tok: Optional[torch.Tensor] = None
     tcell_mil_mhc_a_tok: Optional[torch.Tensor] = None
     tcell_mil_mhc_b_tok: Optional[torch.Tensor] = None
@@ -401,6 +402,7 @@ class PrestoBatch:
     tcell_mil_instance_to_bag: Optional[torch.Tensor] = None
     tcell_mil_bag_label: Optional[torch.Tensor] = None
     tcell_mil_bag_sample_ids: List[str] = field(default_factory=list)
+    tcell_mil_bag_sample_indices: List[int] = field(default_factory=list)
     # Per-instance provenance for the T-cell bag path. The collator already
     # computes this; without the field it was built and discarded, so the
     # T-cell MIL forward silently used the default cellular state.
@@ -547,6 +549,7 @@ class PrestoBatch:
             mil_instance_to_bag=_move(self.mil_instance_to_bag),
             mil_bag_label=_move(self.mil_bag_label),
             mil_bag_sample_ids=self.mil_bag_sample_ids,
+            mil_bag_sample_indices=self.mil_bag_sample_indices,
             tcell_mil_pep_tok=_move(self.tcell_mil_pep_tok),
             tcell_mil_mhc_a_tok=_move(self.tcell_mil_mhc_a_tok),
             tcell_mil_mhc_b_tok=_move(self.tcell_mil_mhc_b_tok),
@@ -559,6 +562,7 @@ class PrestoBatch:
             tcell_mil_instance_to_bag=_move(self.tcell_mil_instance_to_bag),
             tcell_mil_bag_label=_move(self.tcell_mil_bag_label),
             tcell_mil_bag_sample_ids=self.tcell_mil_bag_sample_ids,
+            tcell_mil_bag_sample_indices=self.tcell_mil_bag_sample_indices,
         )
 
 
@@ -1732,6 +1736,7 @@ class PrestoCollator:
         mil_instance_to_bag: List[int] = []
         mil_bag_labels: List[float] = []
         mil_bag_sample_ids: List[str] = []
+        mil_bag_sample_indices: List[int] = []
         tcell_mil_peptides: List[str] = []
         tcell_mil_mhc_as: List[str] = []
         tcell_mil_mhc_bs: List[str] = []
@@ -1749,9 +1754,10 @@ class PrestoCollator:
         tcell_mil_stimuli: List[Optional[str]] = []
         tcell_mil_bag_labels: List[float] = []
         tcell_mil_bag_sample_ids: List[str] = []
+        tcell_mil_bag_sample_indices: List[int] = []
         tcell_mil_source_samples: List[PrestoSample] = []
 
-        for sample in samples:
+        for sample_index, sample in enumerate(samples):
             if sample.elution_label is None:
                 continue
 
@@ -1792,6 +1798,7 @@ class PrestoCollator:
                 if len(grouped_indices) > 1 and class_label:
                     bag_sample_id = f"{sample.sample_id}:{class_label}"
                 mil_bag_sample_ids.append(bag_sample_id)
+                mil_bag_sample_indices.append(sample_index)
 
                 for i in indices:
                     mil_peptides.append(sample.peptide)
@@ -1810,7 +1817,7 @@ class PrestoCollator:
                     mil_stimuli.append(sample.processing_stimulus)
                     mil_instance_to_bag.append(bag_index)
 
-        for sample in samples:
+        for sample_index, sample in enumerate(samples):
             if sample.tcell_label is None or not sample.use_tcell_pathway_mil:
                 continue
 
@@ -1845,6 +1852,7 @@ class PrestoCollator:
             bag_index = len(tcell_mil_bag_labels)
             tcell_mil_bag_labels.append(float(sample.tcell_label))
             tcell_mil_bag_sample_ids.append(sample.sample_id)
+            tcell_mil_bag_sample_indices.append(sample_index)
 
             for i in range(n_instances):
                 tcell_mil_peptides.append(sample.peptide)
@@ -2006,6 +2014,7 @@ class PrestoCollator:
             mil_instance_to_bag=mil_tensors["instance_to_bag"],
             mil_bag_label=mil_tensors["bag_label"],
             mil_bag_sample_ids=mil_tensors["bag_sample_ids"],
+            mil_bag_sample_indices=mil_bag_sample_indices,
             mil_provenance=mil_tensors.get("provenance", {}),
             mil_machinery_idx=mil_tensors.get("machinery_idx"),
             tcell_mil_pep_tok=tcell_mil_tensors["pep_tok"],
@@ -2020,6 +2029,7 @@ class PrestoCollator:
             tcell_mil_instance_to_bag=tcell_mil_tensors["instance_to_bag"],
             tcell_mil_bag_label=tcell_mil_tensors["bag_label"],
             tcell_mil_bag_sample_ids=tcell_mil_tensors["bag_sample_ids"],
+            tcell_mil_bag_sample_indices=tcell_mil_bag_sample_indices,
             tcell_mil_provenance=tcell_mil_tensors.get("provenance", {}),
             tcell_mil_machinery_idx=tcell_mil_tensors.get("machinery_idx"),
         )

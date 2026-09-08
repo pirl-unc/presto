@@ -264,6 +264,25 @@ def _logistic(value: float) -> float:
     return exp_value / (1.0 + exp_value)
 
 
+# Additional identity for effective bag observations. Empty values on legacy
+# row records preserve their established schema/meaning.
+MIL_OBSERVATION_FIELDS = (
+    "observation_kind",
+    "batch_index",
+    "bag_index",
+    "bag_id",
+    "source_row_index",
+    "instance_count",
+    "evaluated_instance_count",
+    "bag_instance_indices",
+    "output_path",
+    "selector_axis",
+    "selector_index",
+    "selector_name",
+    "observation_loss",
+)
+
+
 class TaskPredictionAccumulator:
     """Collects masked per-example predictions for one task across batches."""
 
@@ -281,6 +300,7 @@ class TaskPredictionAccumulator:
         self._mapping_n_flank_pairs: List[int] = []
         self._flank_context_resolved: List[bool] = []
         self._lineage: List[Dict[str, Any]] = []
+        self._observations: List[Dict[str, Any]] = []
 
     def add(
         self,
@@ -296,10 +316,17 @@ class TaskPredictionAccumulator:
         flank_context_resolved: Optional[Sequence[bool]] = None,
         qualifiers: Optional[Sequence[int]] = None,
         lineage: Optional[Mapping[str, Sequence[Any]]] = None,
+        observations: Optional[Sequence[Mapping[str, Any]]] = None,
     ) -> None:
         for position, keep in enumerate(mask):
             if float(keep) <= 0.0:
                 continue
+            observation = (
+                observations[position] if observations is not None else {"observation_kind": "row"}
+            )
+            self._observations.append(
+                {field: observation.get(field, "") for field in MIL_OBSERVATION_FIELDS}
+            )
             self._true.append(float(y_true[position]))
             self._pred.append(float(y_pred[position]))
             if sample_ids is not None and position < len(sample_ids):
@@ -465,6 +492,7 @@ class TaskPredictionAccumulator:
                 "source_mapping_n_flank_pairs": n_flank_pairs,
                 "flank_context_resolved": flank_resolved,
                 **lineage,
+                **observation,
             }
             for (
                 sample_id,
@@ -478,6 +506,7 @@ class TaskPredictionAccumulator:
                 n_flank_pairs,
                 flank_resolved,
                 lineage,
+                observation,
             ) in zip(
                 self._sample_ids,
                 self._sources,
@@ -490,6 +519,7 @@ class TaskPredictionAccumulator:
                 self._mapping_n_flank_pairs,
                 self._flank_context_resolved,
                 self._lineage,
+                self._observations,
             )
         ]
 
@@ -515,6 +545,82 @@ def flatten_summary(summary: Mapping[str, Mapping[str, float]]) -> Dict[str, flo
     return flat
 
 
+def _add_mil_predictions(accumulators, predictions, channel, batch, batch_index):
+    """Join by collator source positions, never by potentially duplicated IDs."""
+    import json
+
+    import torch
+
+    if not predictions:
+        return
+    n_bags = channel["bag_label"].numel()
+    rows = channel["bag_sample_indices"]
+    sample_ids = getattr(batch, "sample_ids", [])
+    if len(rows) != n_bags or any(i < 0 or i >= len(sample_ids) for i in rows):
+        raise ValueError("MIL export requires explicit bag source-row positions")
+    if len(channel["bag_sample_ids"]) != n_bags:
+        raise ValueError("MIL export requires one bag ID per bag")
+
+    def select(values):
+        if values is None:
+            return None
+        if isinstance(values, torch.Tensor):
+            values = values.reshape(-1).detach().cpu().tolist()
+        return [values[i] for i in rows]
+
+    def host(tensor):
+        return tensor.detach().cpu().tolist()
+
+    membership = host(channel["instance_to_bag"])
+    members = [[] for _ in range(n_bags)]
+    for instance_index, bag_index in enumerate(membership):
+        members[bag_index].append(instance_index)
+    for name, prediction in predictions.items():
+        target = prediction.target
+        selectors = host(target.selectors) if target.selectors is not None else None
+        losses = host(prediction.losses)
+        original_counts = host(target.instance_counts)
+        evaluated_counts = host(prediction.evaluated_counts)
+        observations = [
+            {
+                "observation_kind": "bag",
+                "batch_index": batch_index,
+                "bag_index": i,
+                "bag_id": channel["bag_sample_ids"][i],
+                "source_row_index": rows[i],
+                "instance_count": original_counts[i],
+                "evaluated_instance_count": evaluated_counts[i],
+                "bag_instance_indices": json.dumps(members[i]),
+                "output_path": ".".join(target.spec.output_path),
+                "selector_axis": target.spec.axis,
+                "selector_index": selectors[i] if selectors is not None else "",
+                "selector_name": target.spec.columns[selectors[i]] if selectors is not None else "",
+                "observation_loss": losses[i],
+            }
+            for i in range(n_bags)
+        ]
+        acc = accumulators.setdefault(name, TaskPredictionAccumulator(name, "bce"))
+        before = len(acc)
+        acc.add(
+            host(target.labels),
+            host(prediction.logits),
+            host(target.mask),
+            sample_ids=select(sample_ids),
+            sources=select(getattr(batch, "sample_sources", None)),
+            mapping_categories=select(getattr(batch, "source_mapping_categories", None)),
+            mapping_n_candidates=select(getattr(batch, "source_mapping_n_candidates", None)),
+            mapping_n_genes=select(getattr(batch, "source_mapping_n_genes", None)),
+            mapping_n_flank_pairs=select(getattr(batch, "source_mapping_n_flank_pairs", None)),
+            flank_context_resolved=select(getattr(batch, "flank_context_resolved", None)),
+            lineage={
+                key: select(values) for key, values in getattr(batch, "source_lineage", {}).items()
+            },
+            observations=observations,
+        )
+        if len(acc) - before != target.support:
+            raise ValueError(f"MIL export support mismatch for {name}")
+
+
 def collect_holdout_predictions(
     model,
     loader,
@@ -526,6 +632,7 @@ def collect_holdout_predictions(
     get_mask_fn,
     get_qual_fn=None,
     max_batches: int = 0,
+    mil_chunk_size: Optional[int] = None,
 ) -> Dict[str, TaskPredictionAccumulator]:
     """Run a held-out pass and collect masked predictions for every task.
 
@@ -536,6 +643,17 @@ def collect_holdout_predictions(
     loop. Target/mask/qualifier callables share its transformation contract.
     """
     import torch
+
+    from .mil import (
+        DEFAULT_MIL_EVAL_CHUNK_SIZE,
+        MIL_TASKS,
+        get_mil_channel,
+        predict_mil_channel,
+        resolve_mil_targets,
+    )
+
+    if mil_chunk_size is None:
+        mil_chunk_size = DEFAULT_MIL_EVAL_CHUNK_SIZE
 
     accumulators: Dict[str, TaskPredictionAccumulator] = {
         spec.name: TaskPredictionAccumulator(spec.name, spec.loss_type) for spec in specs
@@ -559,7 +677,27 @@ def collect_holdout_predictions(
             moved = batch.to(device) if hasattr(batch, "to") else batch
             outputs = forward_fn(model, moved)
             sample_ids = getattr(moved, "sample_ids", None)
+            bag_tasks = set()
+            for prefix, mil_specs in MIL_TASKS.items():
+                channel = get_mil_channel(moved, prefix)
+                if channel is None or not channel["bag_label"].numel():
+                    continue
+                targets = resolve_mil_targets(channel, mil_specs)
+                predictions = predict_mil_channel(
+                    model,
+                    channel=channel,
+                    targets=targets,
+                    device=device,
+                    chunk_size=mil_chunk_size,
+                )
+                _add_mil_predictions(accumulators, predictions, channel, moved, batch_index)
+                if prefix == "mil":
+                    # The canonical loss replaces elution/presentation/ms row
+                    # objectives with all class-split bags from this batch.
+                    bag_tasks.update(spec.name for spec in mil_specs)
             for spec in specs:
+                if spec.name in bag_tasks:
+                    continue
                 target = get_target_fn(moved, spec)
                 mask = get_mask_fn(moved, spec)
                 if target is None or mask is None:
@@ -661,6 +799,7 @@ def write_holdout_artifacts(
                     "source_mapping_n_flank_pairs",
                     "flank_context_resolved",
                     *PREDICTION_LINEAGE_FIELDS,
+                    *MIL_OBSERVATION_FIELDS,
                 ],
             )
             writer.writeheader()

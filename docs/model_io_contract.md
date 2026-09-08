@@ -296,8 +296,10 @@ candidates/category, selected protein/transcript/gene/coordinates/proteome,
 synthetic parentage, curation fingerprints and split assignment as traceable
 record lineage through held-out dumps.
 
-Canonical task routing is `LOSS_TASK_SPECS` in
-[scripts/train_synthetic.py](https://github.com/pirl-unc/presto/blob/main/scripts/train_synthetic.py):
+Row task routing is `LOSS_TASK_SPECS` in
+[scripts/train_synthetic.py](https://github.com/pirl-unc/presto/blob/main/scripts/train_synthetic.py).
+Bag tasks and effective target/prediction resolution are shared in
+[training/mil.py](https://github.com/pirl-unc/presto/blob/main/training/mil.py):
 
 - Binding/family affinities and half-life/Tm: censor-aware quantitative loss.
   Binding descriptor panels now use the same qualifier-aware loss.
@@ -308,6 +310,31 @@ Canonical task routing is `LOSS_TASK_SPECS` in
 - MHC identity and evidence-method classification: categorical auxiliary tasks.
 - MIL: bag-level Noisy-OR objectives on supported channels; not an assertion that
   every molecule in a positive bag is positive.
+
+T-cell pathway bags supervise each observed panel axis by selecting the same
+fixed column at every candidate molecule, then applying Noisy-OR against the
+bag response. Unknown selectors have zero panel support. These six
+`tcell_<axis>_mil` objectives have explicit base weight 1, separate from ordinary
+row objectives, like the existing scalar T-cell MIL objectives. They do not add
+learned uncertainty parameters. Bag labels never enable ordinary row masks,
+and observed assay descriptors never enter the forward inputs.
+
+Selected-checkpoint validation/test loss and prediction dumps traverse complete
+bags in full precision with 128-instance forward chunks. Training and in-loop
+validation may retain their configured sampling cap. Dumps preserve the bag ID,
+source-row position and lineage, candidate membership indices within each
+batch/channel, original/evaluated counts, selected column name/index and bag
+BCE. Two 0.5 instances therefore yield 0.75 in both the objective and the dump.
+Existing scalar proxy and ms/elution alias objectives retain their weights.
+
+Split-support schema v3 adds `mil_targets` and `mil_split_support.csv` from the
+same target resolver, including zero-support columns, unknown-selector counts,
+response balance and source counts. The legacy `targets` table still counts
+row masks; these tables are not additive endpoint counts. The global endpoint
+manifest, coverage gates, CE/vector identity and binding/excision panel exports
+remain follow-ups in #48/#51. Optional model heads may be absent: this target
+census records label availability, not proof of parameter updates or adequate
+scientific supervision. The current real-source census remains part of #50.
 
 Row counts in historical experiments do not describe today's default corpus.
 Merged TSV and Hitlist are explicit mutually exclusive primary source choices;

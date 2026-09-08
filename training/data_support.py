@@ -12,6 +12,7 @@ from typing import Any, Dict, Iterable, Mapping, Optional, Sequence
 import torch
 
 from presto.data.collate import PrestoCollator
+from .mil import MIL_TASKS, get_mil_channel, resolve_mil_targets
 
 
 DEFAULT_BINARY_TARGETS = frozenset(
@@ -62,6 +63,59 @@ def _masked_values(target: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
     return target.reshape(-1)[mask.reshape(-1) > 0]
 
 
+def _response_counts():
+    return {"count": 0, "positive": 0, "negative": 0, "graded": 0}
+
+
+def _add_response_counts(entry, values):
+    entry["count"] += int(values.numel())
+    entry["positive"] += int((values > 0.5).sum().item())
+    entry["negative"] += int((values <= 0.5).sum().item())
+    entry["graded"] += int(((values > 0) & (values < 1)).sum().item())
+
+
+def _empty_mil_support():
+    return {
+        spec.name: {
+            **_response_counts(),
+            "instances": 0,
+            "unknown_selector": 0,
+            "channel": prefix,
+            "output_path": ".".join(spec.output_path),
+            "alias_of": "elution" if spec.name == "ms" else "",
+            "columns": {column: _response_counts() for column in spec.columns},
+            "sources": {},
+        }
+        for prefix, specs in MIL_TASKS.items()
+        for spec in specs
+    }
+
+
+def _accumulate_mil_support(entries, batch):
+    for prefix, specs in MIL_TASKS.items():
+        channel = get_mil_channel(batch, prefix)
+        if channel is None:
+            continue
+        for name, target in resolve_mil_targets(channel, specs).items():
+            entry = entries[name]
+            _add_response_counts(entry, target.labels[target.mask])
+            entry["instances"] += int(target.instance_counts[target.mask].sum().item())
+            entry["unknown_selector"] += int((~target.mask).sum().item())
+            if target.selectors is not None:
+                for index, column in enumerate(target.spec.columns):
+                    # Unknown has observed selectors but zero supported labels.
+                    mask = target.mask & (target.selectors == index)
+                    _add_response_counts(entry["columns"][column], target.labels[mask])
+            rows = channel["bag_sample_indices"]
+            if len(rows) != target.labels.numel():
+                raise ValueError("MIL support requires explicit bag source-row positions")
+            sources = [batch.sample_sources[i] for i in rows]
+            for source in sorted(set(sources)):
+                mask = target.mask & torch.tensor([s == source for s in sources])
+                counts = entry["sources"].setdefault(source, _response_counts())
+                _add_response_counts(counts, target.labels[mask])
+
+
 def audit_split_support(
     splits: Mapping[str, Iterable[Any]],
     *,
@@ -71,9 +125,10 @@ def audit_split_support(
 ) -> Dict[str, Any]:
     """Count effective target support after dataset construction and splitting.
 
-    Counting collated masks rather than record classes makes this use the same
-    routing contract as the loss. That catches, for example, a present
-    ``StabilityRecord`` whose only label was lost before ``target_masks``.
+    The legacy ``targets`` table counts row masks. ``mil_targets`` resolves the
+    bag observations used by loss/export, including selected panel columns.
+    These are separate views, not additive endpoint counts: elution row masks
+    are replaced by bags in training. Full endpoint/gate unification is #48.
     """
     collate = collator or PrestoCollator()
     binary = frozenset(binary_targets)
@@ -89,6 +144,7 @@ def audit_split_support(
 
     for split_name, dataset in splits.items():
         target_counts: Dict[str, Dict[str, Any]] = {}
+        mil_counts = _empty_mil_support()
         full_contract = hashlib.sha256()
         supervision_contract = hashlib.sha256()
         row_count = len(dataset) if hasattr(dataset, "__len__") else 0
@@ -162,6 +218,7 @@ def audit_split_support(
                 supervision_contract.update(invariant_rendered)
                 dataset_supervision_contract.update(invariant_rendered)
             batch = collate(samples)
+            _accumulate_mil_support(mil_counts, batch)
             for target_name, mask in batch.target_masks.items():
                 target = batch.targets.get(target_name)
                 if target is None:
@@ -194,12 +251,13 @@ def audit_split_support(
         split_payload[split_name] = {
             "rows": row_count,
             "targets": dict(sorted(target_counts.items())),
+            "mil_targets": mil_counts,
             "sample_contract_sha256": full_contract.hexdigest(),
             "supervision_contract_sha256": supervision_contract.hexdigest(),
         }
 
     payload: Dict[str, Any] = {
-        "schema_version": 2,
+        "schema_version": 3,
         "dataset_fingerprint_algorithm": "sha256-modular-sum-v1",
         "binary_targets": sorted(binary),
         "splits": split_payload,
@@ -323,7 +381,34 @@ def write_split_support_artifacts(out_dir: Path | str, audit: Mapping[str, Any])
                         **{field: counts.get(field, "") for field in fields[3:]},
                     }
                 )
-    return {"json": json_path, "csv": csv_path}
+    mil_csv_path = output / "mil_split_support.csv"
+    mil_fields = (
+        "split",
+        "target",
+        "column",
+        "count",
+        "positive",
+        "negative",
+        "graded",
+        "instances",
+        "unknown_selector",
+        "alias_of",
+    )
+    with mil_csv_path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=mil_fields)
+        writer.writeheader()
+        for split_name, split in audit.get("splits", {}).items():
+            for name, entry in split.get("mil_targets", {}).items():
+                for column, counts in [("*", entry), *entry.get("columns", {}).items()]:
+                    writer.writerow(
+                        {
+                            "split": split_name,
+                            "target": name,
+                            "column": column,
+                            **{field: counts.get(field, "") for field in mil_fields[3:]},
+                        }
+                    )
+    return {"json": json_path, "csv": csv_path, "mil_csv": mil_csv_path}
 
 
 def write_data_funnel_artifacts(out_dir: Path | str, funnel: Mapping[str, Any]) -> Dict[str, Path]:
