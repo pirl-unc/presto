@@ -20,8 +20,11 @@ def record_target_provenance(source: Optional[str], *targets: str) -> dict[str, 
     return dict.fromkeys(targets, origin)
 
 
-def bulk_target_provenance(observed: bool) -> dict[str, str]:
+def bulk_target_provenance(observed: bool, generated_kind: str = "") -> dict[str, str]:
     """Depth is an ordinal proxy; wrong-enzyme labels are generated controls."""
     if observed:
         return {"excision": "bulk_observed_product", "ms_detectability": "bulk_depth_proxy"}
-    return {"excision": "generated:bulk_wrong_enzyme", "ms_detectability": "unknown"}
+    return {
+        "excision": f"generated:{generated_kind}" if generated_kind else "unknown",
+        "ms_detectability": "unknown",
+    }

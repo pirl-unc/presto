@@ -123,6 +123,96 @@ class OutputSpec:
     required: bool = True
 
 
+@dataclass(frozen=True)
+class ParameterRowSpec:
+    endpoint: str
+    parameter: str
+    columns: tuple[str, ...]
+    interpretation: str = "column_parameter"
+
+
+def declared_parameter_rows(contract, model) -> tuple[ParameterRowSpec, ...]:
+    """Map output columns to actual parameter rows, without shape guessing.
+
+    Shared/composed outputs can have no dedicated row. A mapped row may also
+    participate in other computations; observing its update is not causal
+    attribution to a particular label or objective.
+    """
+    model = getattr(model, "_orig_mod", model)
+    params = dict(model.named_parameters())
+    declarations = []
+
+    def rows(endpoint, parameter, interpretation="column_parameter"):
+        columns = contract.outputs[endpoint].columns or ("",)
+        value = params.get(parameter)
+        if value is None or value.ndim == 0 or value.shape[0] != len(columns):
+            raise ValueError(f"Missing or incompatible declared parameter rows: {parameter}")
+        declarations.append(ParameterRowSpec(endpoint, parameter, columns, interpretation))
+
+    def readout(endpoint, path):
+        module = model.get_submodule(path)
+        linear = [
+            (name, part)
+            for name, part in module.named_modules()
+            if isinstance(part, torch.nn.Linear)
+        ]
+        if not linear:
+            raise ValueError(f"No linear readout in declared module {path}")
+        name, layer = linear[-1]
+        prefix = f"{path}.{name}" if name else path
+        rows(endpoint, f"{prefix}.weight")
+        if layer.bias is not None:
+            rows(endpoint, f"{prefix}.bias")
+
+    for endpoint in contract.outputs:
+        if endpoint.startswith("tcell_panel_logits."):
+            axis = endpoint.split(".", 1)[1]
+            rows(endpoint, f"tcell_assay_head.{axis}_embed.weight")
+        if endpoint.startswith("binding_assay_panel_"):
+            axis = endpoint.removeprefix("binding_assay_panel_")
+            rows(endpoint, f"affinity_predictor.assay_panel_embed.{axis}.weight")
+    for suffix in ("invivo_profile_c", "invivo_profile_n", "invivo_bias"):
+        rows("excision_panel_apm", f"excision_head.{suffix}")
+    rows("excision_panel_stimulus", "excision_head.stimulus_profile_c")
+    for endpoint, path in (
+        ("mhc_a_type_logits", "mhc_a_type_head"),
+        ("mhc_b_type_logits", "mhc_b_type_head"),
+        ("species_of_origin_logits", "species_of_origin_head"),
+        ("tcr_evidence_method_logits", "tcr_evidence_method_head"),
+        ("tcr_evidence_logit", "tcr_evidence_head"),
+        ("binding_affinity_probe_kd", "affinity_predictor.binding_affinity_probe"),
+        ("assays.Tm", "affinity_predictor.assay_heads.tm"),
+        ("assays.t_half", "affinity_predictor.assay_heads.t_half_residual"),
+    ):
+        readout(endpoint, path)
+    mode = contract.configuration.affinity_assay_residual_mode
+    for family in ("ic50", "ec50"):
+        base = "affinity_predictor.assay_heads"
+        if mode == "pooled_single_output":
+            continue
+        suffix = "leaf_residual" if mode.startswith("dag_") else "residual"
+        readout(f"assays.{family.upper()}_nM", f"{base}.{family}_{suffix}")
+        proxy = f"assays.KD_proxy_{family}_nM"
+        if proxy in contract.outputs:
+            readout(proxy, f"{base}.kd_proxy_{family}_{suffix}")
+        if mode.startswith("dag_"):
+            readout(f"assays.{family.upper()}_family_anchor_nM", f"{base}.{family}_family_residual")
+        if mode == "dag_method_leaf":
+            for method in BINDING_ASSAY_METHODS:
+                endpoint = f"assays.{AssayHeads.method_output_key(f'{family.upper()}_nM', method)}"
+                readout(endpoint, f"{base}.{family}_method_leaf_residuals.{method}")
+        if mode == "dag_prep_readout_leaf":
+            for prep in BINDING_ASSAY_PREP:
+                for readout_name in BINDING_ASSAY_READOUT:
+                    key = AssayHeads.prep_readout_output_key(
+                        f"{family.upper()}_nM", prep, readout_name
+                    )
+                    endpoint = f"assays.{key}"
+                    readout(endpoint, f"{base}.{family}_prep_leaf_residuals.{prep}")
+                    readout(endpoint, f"{base}.{family}_readout_leaf_residuals.{readout_name}")
+    return tuple(declarations)
+
+
 @dataclass
 class OutputContract:
     configuration: OutputConfiguration
@@ -270,9 +360,15 @@ def build_output_contract(configuration: OutputConfiguration | None = None) -> O
                 role,
                 tuple(f"binding:{name}" for name in BINDING_ASSAY_TYPES)
                 if source == "binding"
-                else (source,),
+                else {
+                    "annotation": ("source_annotation",),
+                    "organism": ("organism_derived",),
+                    "excision": ("bulk_observed_product",),
+                    "ms_detectability": ("bulk_depth_proxy",),
+                }.get(source, (source,)),
                 "Support depends on selected labels and source provenance; "
-                "no adequacy claim is implied.",
+                "generated:<kind> families are recorded separately with synthetic role. "
+                "No adequacy claim is implied.",
             ),
         )
         group = spec.loss_group or spec.name

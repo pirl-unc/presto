@@ -1239,6 +1239,16 @@ def create_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Build, split, audit, and gate the dataset, then exit before model training.",
     )
+    train_iedb.add_argument(
+        "--supported-output-manifest",
+        default=None,
+        help="Freeze and enforce declared per-output evidence requirements before fitting.",
+    )
+    train_iedb.add_argument(
+        "--track-output-updates",
+        action="store_true",
+        help="Record per-column output gradients and parameter updates (requires a run directory).",
+    )
     train_iedb.add_argument("--epochs", type=int, default=5, help="Number of epochs")
     train_iedb.add_argument("--batch_size", type=int, default=512, help="Batch size")
     train_iedb.add_argument(

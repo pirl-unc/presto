@@ -56,7 +56,11 @@ def evaluate_supported_outputs(
         result["outputs"] = list(decisions.values())
         return result
     required = {"schema_version", "model_contract", "source_contract", "claims"}
-    if set(manifest) != required or manifest["schema_version"] != 1:
+    if (
+        set(manifest) != required
+        or type(manifest["schema_version"]) is not int
+        or manifest["schema_version"] != 1
+    ):
         raise ValueError(
             "Manifest requires schema_version=1, model_contract, source_contract and claims"
         )
@@ -83,6 +87,8 @@ def evaluate_supported_outputs(
         if not isinstance(claim, dict) or set(claim) != fields:
             raise ValueError(f"Each claim requires exactly {sorted(fields)}")
         endpoint = claim["endpoint"]
+        if not isinstance(endpoint, str):
+            raise ValueError("Claim endpoint must be a canonical output name")
         if endpoint in contract.aliases:
             raise ValueError(
                 f"{endpoint} is an alias of {contract.canonical(endpoint)}; "
@@ -114,8 +120,18 @@ def evaluate_supported_outputs(
                 )
         if not set(claim["evidence_roles"]) <= {"direct", "proxy", "auxiliary", "synthetic"}:
             raise ValueError(f"{endpoint}: unknown provenance cannot satisfy evidence requirements")
-        if any(x == "*" or not x for x in claim["source_families"] + claim["raw_sources"]):
+        if any(
+            x == "*" or not x.strip() or x != x.strip()
+            for x in claim["source_families"] + claim["raw_sources"]
+        ):
             raise ValueError(f"{endpoint}: source families and raw sources must be explicit")
+        allowed_families = set(contract.outputs[endpoint].source_families)
+        for family in claim["source_families"]:
+            if family.startswith("generated:") and family.removeprefix("generated:").strip():
+                if "synthetic" not in claim["evidence_roles"]:
+                    raise ValueError(f"{endpoint}: generated families require the synthetic role")
+            elif family not in allowed_families:
+                raise ValueError(f"{endpoint}: undeclared source family {family!r}")
         minimums = claim["minimums"]
         if (
             not isinstance(minimums, dict)

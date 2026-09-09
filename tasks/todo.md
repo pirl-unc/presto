@@ -10597,8 +10597,8 @@ uses the frozen supported subset for a real-data fitting check and adequate
 held-out baseline; no all-output quality claim is inferred from the gates.
 
 - [x] Merge #57 after verified CI and review closure.
-- [ ] Implement endpoint/source declaration, exact census and prospective gates.
-- [ ] Integrate per-column gradient/update evidence and verify all source paths.
+- [x] Implement endpoint/source declaration, exact census and prospective gates.
+- [x] Integrate per-column gradient/update evidence and verify all source paths.
 - [ ] Review, publish and merge the coverage implementation.
 - [ ] Register, execute and close the real-source coverage/gradient evidence PR.
 
@@ -10621,11 +10621,12 @@ deployments). Detailed real-source census planning is in
   selected columns, CE class incidence, censor/response counts and global zeros.
 - [x] Implement explicit prospective claim evaluation, including per-column
   unique response balance, missing-split rejection and alias-claim rejection.
-- [ ] Integrate census/manifest persistence with canonical CLI/defaults and
-  preflight. These new library APIs are not yet invoked by `train_iedb.run`.
-- [ ] Implement per-column gradient and dedicated parameter-row update tracking.
-- [ ] Exercise actual merged/Hitlist/bulk source selection paths and complete
-  review/full CI before opening and merging the implementation PR.
+- [x] Integrate census/manifest persistence with canonical CLI/defaults and
+  preflight, freezing the declaration before source loading.
+- [x] Implement per-column gradient and dedicated parameter-row update tracking.
+- [x] Exercise actual merged/Hitlist/bulk source selection paths, with competing
+  merged/raw files present and full dataset/split/collation/census construction.
+- [ ] Complete review/full CI before merging the implementation PR.
 
 Verification at this checkpoint: `pytest -q tests/test_output_coverage.py
 tests/test_data_support.py tests/test_bulk_ms_ingest.py --tb=short` passed **76
@@ -10661,3 +10662,58 @@ Review details to preserve during integration:
   strict malformed-manifest tests, and explicit provenance for future bulk
   unobserved candidate types beyond the currently implemented wrong-enzyme
   generator. These are not grounds for claiming the infrastructure complete.
+
+### Coverage implementation checkpoint — integrated preflight and updates
+
+Canonical preflight now collates once for legacy support and exact coverage,
+persists both reports before enforcing the prospective manifest, and leaves
+failed/invalid declarations inspectable. CLI/config defaults preserve all new
+flags and output variants. Model construction uses the same declared variants.
+Tracking observes actual optimizer hooks and does not add a backward pass or
+replace gradients. It distinguishes fixed, frozen, zero-initialized, unused and
+shared parameters; host provenance survives device transfer outside model inputs.
+
+The source-path/manifest/bulk ingest suite passed **44 tests in 8.53s**. It uses
+actual merged TSV parsing, dataset construction, splitting, collation and census;
+external Hitlist records/frames and exact MHC resolution are deterministic
+fixtures. All four primary-source/bulk combinations pass despite competing
+files. Hitlist-only support contains no T-cell rows. Bulk loader statistics now
+persist in the data funnel, and generated controls preserve explicit provenance
+without changing sampler grouping. Unknown unobserved candidate origins remain
+unknown. The accepted protein-sequence argument no longer falsely reports that
+detectability negatives were produced.
+
+The preceding integration run passed all eight exact loss/model-update/optimizer
+state parity comparisons across both topologies, both loss aggregation modes and
+ordinary training versus PCGrad. The remaining one of 117 tests failed only on
+the test fixture's tuple-versus-JSON-list comparison, which is fixed and now
+passes. Final verification adds uncertainty-weighted parity and actual parameter
+mapping validation across all 32 declared topology/residual/grouping combinations.
+Pinned lint, focused regressions, docs, complete diff review and full CI remain
+required before merge. No real-data experiment has run and #48/#50/#53 remain open.
+
+### Coverage implementation review — ready for PR CI
+
+Reviewed the complete implementation against merged main `0e09976`, including
+source conversion, canonical/alias counting, exact claim intersections, unchanged
+loss ordering and optimizer hooks. New evidence fields are appended to public
+data classes to preserve positional constructor compatibility. The default model
+options still match the previous constructor defaults. No source mixture, label
+value, loss weight, model equation or sampler grouping is changed by the audit.
+
+Final affected regression suite: **309 tests passed in 68.79s**. All 12 exact
+comparisons (two topologies × two aggregation modes × ordinary, uncertainty-
+weighted and PCGrad training) preserve losses, every model/uncertainty parameter
+and optimizer state. Actual output and parameter-row declarations validate for
+all 32 topology/residual/grouping combinations. A subsequent **81-test suite
+passed in 12.01s** after the constructor compatibility refinement and final
+runner test. That test supplies a frozen manifest to the actual unified trainer,
+runs one fixture batch, verifies automatic tracking/checkpoint creation, and
+checks validation/test prediction and loss-ledger exports. This is integration
+verification, not the registered real-data fitting/quality experiment.
+
+Repository-wide Ruff 0.16.0 lint and format (247 Python files), strict MkDocs
+build and `git diff --check` pass. The implementation is ready to publish for
+full CI. Remaining real-source census/update evidence and the fresh measured
+training/held-out baseline are explicitly deferred to the following PRs; #48,
+#50 and #53 remain open until their evidence is verified.

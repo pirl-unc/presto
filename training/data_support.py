@@ -188,6 +188,7 @@ def audit_split_support(
     collator: Optional[PrestoCollator] = None,
     binary_targets: Sequence[str] = tuple(DEFAULT_BINARY_TARGETS),
     chunk_size: int = 512,
+    output_census=None,
 ) -> Dict[str, Any]:
     """Count effective target support after dataset construction and splitting.
 
@@ -195,7 +196,8 @@ def audit_split_support(
     ``mil_targets`` resolve the observations used by loss/export, including
     selected panels and vector components. These are separate views, not
     additive endpoint counts: elution row masks are replaced by bags in training.
-    Full endpoint/gate unification is #48.
+    An optional declared-output census consumes these same collated chunks;
+    its canonical endpoint counts and prospective gates are separate artifacts.
     """
     collate = collator or PrestoCollator()
     binary = frozenset(binary_targets)
@@ -210,6 +212,8 @@ def audit_split_support(
     dataset_supervision_contract = _StreamingMultisetHash()
 
     for split_name, dataset in splits.items():
+        if output_census is not None:
+            output_census.declare_split(split_name)
         target_counts: Dict[str, Dict[str, Any]] = {}
         mil_counts = _empty_mil_support()
         row_counts = _empty_row_support()
@@ -291,6 +295,8 @@ def audit_split_support(
                 supervision_contract.update(invariant_rendered)
                 dataset_supervision_contract.update(invariant_rendered)
             batch = collate(samples)
+            if output_census is not None:
+                output_census.add_batch(split_name, samples, batch)
             _accumulate_mil_support(mil_counts, batch)
             _accumulate_row_support(row_counts, batch)
             for target_name, mask in batch.target_masks.items():

@@ -2237,7 +2237,7 @@ class PrestoDataset(Dataset):
                     ms_detectability_label=rec.detectability_label,
                     excision_label=rec.excision_label,
                     bulk_ms_observed=rec.observed,
-                    target_provenance=bulk_target_provenance(rec.observed),
+                    target_provenance=bulk_target_provenance(rec.observed, rec.generated_kind),
                     source_protein=rec.protein_id or None,
                     sample_source=_source_label(rec.source),
                     assay_group="bulk_ms",

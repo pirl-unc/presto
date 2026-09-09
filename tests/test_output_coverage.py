@@ -15,6 +15,7 @@ from presto.training.output_contract import (
     RESIDUAL_MODES,
     OutputConfiguration,
     build_output_contract,
+    declared_parameter_rows,
     label_evidence,
 )
 from presto.training.output_coverage import OutputCoverageCensus, write_output_coverage_artifacts
@@ -63,6 +64,7 @@ def test_actual_model_declares_every_output_and_alias(topology, residual, groupi
         outputs = model(**batch.model_inputs())
     contract = build_output_contract(config)
     contract.validate_outputs(outputs)
+    assert declared_parameter_rows(contract, model)
     assert len(contract.objectives) == 48
     assert contract.objectives["mil:ms"].endpoint == contract.objectives["mil:elution"].endpoint
     assert "ms_logit" not in contract.outputs
@@ -177,7 +179,13 @@ def test_actual_bulk_conversion_preserves_generated_and_proxy_origins():
             BulkMSRecord(
                 peptide="ACDEFGHIK", detectability_label=0.7, excision_label=1, observed=True
             ),
-            BulkMSRecord(peptide="ACDEFGHIK", machinery="lysc", excision_label=0, observed=False),
+            BulkMSRecord(
+                peptide="ACDEFGHIK",
+                machinery="lysc",
+                excision_label=0,
+                observed=False,
+                generated_kind="bulk_wrong_enzyme",
+            ),
         ]
     )
     assert [s.bulk_ms_observed for s in dataset] == [True, False]
@@ -333,6 +341,24 @@ def test_census_rejects_nonfinite_active_observations():
     with OutputCoverageCensus(build_output_contract()) as census:
         with pytest.raises(ValueError, match="nonfinite active observation"):
             add(census, [sample(bind_value=float("nan"))])
+
+
+def test_class_split_elution_bags_are_two_observations_from_one_source():
+    row = sample(
+        elution_label=1,
+        mil_mhc_a_list=["ACDEFGHIK", "ACDEFGHIK"],
+        mil_mhc_b_list=["LMNPQRSTV", "LMNPQRSTV"],
+        mil_mhc_class_list=["I", "II"],
+    )
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(census, [row])
+        counts = census.counts("train", "elution_logit")
+        assert counts["observations"] == counts["instances"] == 2
+        assert (
+            counts["unique_observations"] == counts["source_rows"] == counts["training_rows"] == 1
+        )
+        assert census.objective_hits["train"]["mil:elution"]["observations"] == 2
+        assert census.objective_hits["train"]["mil:ms"]["observations"] == 2
 
 
 def test_new_evidence_metadata_has_its_own_hash_without_changing_legacy_input_hashes():

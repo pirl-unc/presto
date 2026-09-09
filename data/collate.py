@@ -285,11 +285,6 @@ class PrestoSample:
     label_bucket: Optional[str] = None
     primary_allele: Optional[str] = None
     synthetic_kind: Optional[str] = None
-    # Target-specific evidence origins, retained on the host for coverage audits.
-    # A raw source name alone does not establish a measured label. These values
-    # describe label construction; they are not features or model inputs.
-    target_provenance: dict[str, str] = field(default_factory=dict)
-    bulk_ms_observed: Optional[bool] = None
     # Source-junction provenance. Diagnostics only: these fields never enter
     # model.forward. Empty/zero means the sample did not come through the
     # hitlist protein-mapping path.
@@ -319,6 +314,11 @@ class PrestoSample:
     allele_id: int = -1
     bind_target_log10: Optional[float] = None
     sample_id: str = ""
+    # Append host evidence fields to preserve positional constructor compatibility.
+    # A raw source name alone does not establish a measured label. These values
+    # describe label construction; they are not features or model inputs.
+    target_provenance: dict[str, str] = field(default_factory=dict)
+    bulk_ms_observed: Optional[bool] = None
 
 
 @dataclass
@@ -453,6 +453,8 @@ class PrestoBatch:
     raw_targets: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_masks: Dict[str, torch.Tensor] = field(default_factory=dict)
     target_quals: Dict[str, torch.Tensor] = field(default_factory=dict)
+    # Evidence origins stay on the host for optional training-update audits.
+    sample_evidence: List[Dict[str, Any]] = field(default_factory=list)
 
     def model_inputs(self) -> Dict[str, Any]:
         """One row-level forward contract shared by training and evaluation.
@@ -522,6 +524,7 @@ class PrestoBatch:
             primary_alleles=self.primary_alleles,
             sample_ids=self.sample_ids,
             sample_sources=self.sample_sources,
+            sample_evidence=self.sample_evidence,
             source_mapping_categories=self.source_mapping_categories,
             source_mapping_n_candidates=self.source_mapping_n_candidates,
             source_mapping_n_genes=self.source_mapping_n_genes,
@@ -1995,6 +1998,16 @@ class PrestoCollator:
             primary_alleles=[s.primary_allele or "" for s in samples],
             sample_ids=[s.sample_id for s in samples],
             sample_sources=[s.sample_source or "" for s in samples],
+            sample_evidence=[
+                {
+                    "sample_source": s.sample_source,
+                    "synthetic_kind": s.synthetic_kind,
+                    "target_provenance": dict(s.target_provenance),
+                    "binding_assay_type": s.binding_assay_type,
+                    "bind_measurement_type": s.bind_measurement_type,
+                }
+                for s in samples
+            ],
             source_mapping_categories=[s.source_mapping_category or "" for s in samples],
             source_mapping_n_candidates=[int(s.source_mapping_n_candidates) for s in samples],
             source_mapping_n_genes=[int(s.source_mapping_n_genes) for s in samples],

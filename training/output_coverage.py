@@ -14,7 +14,7 @@ import tempfile
 from collections import defaultdict
 from pathlib import Path
 
-from .mil import MIL_TASKS, get_mil_channel, resolve_mil_targets
+from .mil import MIL_TASKS, get_mil_channel, resolve_mil_targets, mil_observation_slots
 from .output_contract import OutputContract, label_evidence
 from .supervision import resolve_row_targets
 
@@ -84,8 +84,8 @@ class OutputCoverageCensus:
                 column_name TEXT NOT NULL, role TEXT NOT NULL, family TEXT NOT NULL,
                 origin TEXT NOT NULL, observation_key TEXT NOT NULL, target REAL NOT NULL,
                 qualifier INTEGER, loss_type TEXT NOT NULL, instances INTEGER NOT NULL,
-                scope TEXT NOT NULL,
-                UNIQUE(row_id, endpoint, column_name, observation_key)
+                scope TEXT NOT NULL, occurrence INTEGER NOT NULL,
+                UNIQUE(row_id, endpoint, column_name, observation_key, scope, occurrence)
             );
             CREATE INDEX observations_endpoint ON observations(endpoint, column_name, row_id);
         """)
@@ -179,7 +179,15 @@ class OutputCoverageCensus:
             self.splits[split] += 1
 
         def add(
-            objective_id, sample_index, column, value, raw_value, qualifier, mask_weight, instances
+            objective_id,
+            sample_index,
+            column,
+            value,
+            raw_value,
+            qualifier,
+            mask_weight,
+            instances,
+            occurrence=0,
         ):
             objective = self.contract.objectives[objective_id]
             if not math.isfinite(value) or not math.isfinite(raw_value):
@@ -212,11 +220,13 @@ class OutputCoverageCensus:
                 objective.loss_type,
                 instances,
                 objective.channel,
+                occurrence,
             )
             inserted = self.db.execute(
                 """INSERT OR IGNORE INTO observations
-                (row_id,endpoint,column_name,role,family,origin,observation_key,target,qualifier,loss_type,instances,scope)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
+                (row_id,endpoint,column_name,role,family,origin,observation_key,target,qualifier,
+                 loss_type,instances,scope,occurrence)
+                VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
                 record,
             )
             if inserted.rowcount:
@@ -230,6 +240,7 @@ class OutputCoverageCensus:
                         "target": value,
                         "instances": instances,
                         "scope": objective.channel,
+                        "occurrence": occurrence,
                     }
                 )
             hits = self.objective_hits[split][objective_id]
@@ -261,6 +272,7 @@ class OutputCoverageCensus:
             channel = get_mil_channel(batch, channel_name)
             if channel is None:
                 continue
+            slots = mil_observation_slots(channel, source_rows=len(samples))
             for name, target in resolve_mil_targets(channel, specs).items():
                 for index in target.mask.nonzero().flatten().tolist():
                     column = (
@@ -278,6 +290,7 @@ class OutputCoverageCensus:
                         None,
                         1.0,
                         int(target.instance_counts[index]),
+                        occurrence=slots[index],
                     )
         self.db.commit()
 
