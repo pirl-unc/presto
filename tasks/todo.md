@@ -10848,7 +10848,7 @@ parity and metadata availability/mismatch counts. #48/#50/#53 remain open.
 - [x] Write the #60 implementation and verification specification before code.
 - [x] Register the lineage experiment and capture its baseline.
 - [x] Restore metadata through loader, samples, batches and held-out exports.
-- [ ] Verify source conservation, metadata recovery and unchanged model inputs.
+- [x] Verify source conservation, metadata recovery and unchanged model inputs.
 - [ ] Review, verify CI and merge #60's repair, then resume the coverage census.
 
 The baseline ran at clean `15f2855` in 147.505 seconds and observed every one of
@@ -10862,3 +10862,20 @@ binding selectors lose observed assay type/method and culture descriptors, while
 canonical and focused loaders preserve them. This is a Presto adapter defect,
 not an upstream Hitlist omission. Keep it separate from #60's metadata-only
 repair; fix it before interpreting affected selected-column supervision.
+
+### Merged lineage review — complete source reconciliation
+
+After scan at clean `87ce95b` completed in 187.212 seconds. Comparison at clean
+`859be29` (1.730 seconds) validates identical ordered non-lineage payloads for
+all 2,702,233 accepted records, unchanged source metadata/populations, all skip
+counts and cap statistics. Recovered 2,426,673 PMID values, 1,316 DOI values and
+362,176 reference-text values exactly; there are zero dropped/invented/changed
+values after repair. Original assay IDs remain absent in the current source.
+
+Reviewed the shared metadata copier and all seven record/sample paths, binding
+selectors, collator/device transfer, census identity gate and row/MIL exports.
+New fields append to public dataclasses; publication-only rows retain legacy
+sample IDs. No model/loss/target/split changes or curation bypass. Local suites
+passed 434 affected regressions and 48 focused-probe/audit tests; Ruff passes.
+Complete receipts, snapshots and comparison tables are closed in the experiment
+README/canonical log. Full remote CI and exact-head PR review remain merge gates.

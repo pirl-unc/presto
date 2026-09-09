@@ -1121,16 +1121,55 @@ this merge and restores the publication-lineage path tracked in #60.
 
 **Date/agent/model:** 2026-09-09; Codex / GPT-6.
 **Directory:** [merged publication lineage](2026-09-09_1419_codex_merged-lineage/).
-**Status:** registered; before/after source audit pending.
+**Status:** ingestion metadata recovery and strict before/after reconciliation complete;
+PR review and full CI pending.
 
-Use the identical full merged TSV and corrected #61 routing, with SHA-256
-`46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c` and
-3,423,737 input rows. Measure existing publication/observation metadata recovery
-at the actual reader/record boundary, every record before a one-record head cap
-per modality; require unchanged non-lineage payloads and all loader counts.
-No MHC filtering, curation/source changes, new labels or synthetic data. No
-pretraining, training, model/loss changes, validation/test split or predictive
-metrics: this audit verifies metadata and payload parity. Directory reproduction
-scripts freeze invocations and production snapshots; use the pinned isolated
-inventory environment, local CPU, OMP/MKL threads one and no GPU. Results and
-runtime will be closed out after execution; no preferred result is claimed yet.
+Same unchanged `data/merged_deduped.tsv` as #61: 3,423,737 input rows, SHA-256
+`46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`.
+Every accepted record is observed before a one-record head cap per modality,
+seed 17. No MHC filtering, curation/cache changes, new labels or synthetic data.
+Corrected #61 assay routes, units and qualifiers are unchanged. Existing
+binding/kinetics/stability, processing, elution, T-cell and receptor-evidence
+label/output mappings and loss terms/weights are unchanged; this family runs
+no pretraining, optimization, or predictive evaluation. No validation/test split
+or prediction-quality metrics apply to an ingestion metadata audit. Deterministic
+fixtures separately verify actual model inputs/labels and held-out row/bag exports.
+
+Reproduction is `bash reproduce/launch.sh before`, `after`, then `compare` at
+their recorded commits. Each phase freezes `results/<phase>/invocation.json`
+and its own `reproduce/` bundle. Pinned isolated Python 3.12.6 / torch 2.7.0 /
+Hitlist 1.59.1 release environment, complete dependency versions and linked
+package-source receipt; OMP/MKL threads one, local CPU, no GPU/Modal run.
+Raw logs: `artifacts/2026-09-09_1419_codex_merged-lineage/`.
+
+| Condition | Clean commit | Seconds | Result |
+|---|---|---:|---|
+| Before metadata repair | `15f2855` | 147.505 | Every available publication value dropped |
+| After shared propagation | `87ce95b` | 187.212 | Every available publication value retained |
+| Exact source/payload comparison | `859be29` | 1.730 | All 42 field/modality groups and frozen snapshots reconcile |
+
+| Modality | Accepted records | Recovered PMIDs | Recovered DOIs | Recovered reference texts |
+|---|---:|---:|---:|---:|
+| Binding | 241,803 | 62,712 | 0 | 179,091 |
+| Kinetics | 102 | 102 | 0 | 0 |
+| Stability | 12,259 | 3,131 | 0 | 9,128 |
+| Processing | 0 | 0 | 0 | 0 |
+| Elution | 2,073,797 | 2,061,734 | 0 | 12,063 |
+| T-cell | 207,987 | 171,899 | 0 | 36,088 |
+| TCR evidence | 166,285 | 127,095 | 1,316 | 125,806 |
+
+**Preferred condition:** repaired publication propagation. Every accepted record
+retains identical ordered non-lineage payloads; all source hashes, populations,
+skip reasons, caps and field availability agree. After repair there are zero
+dropped, invented or changed metadata values. Publication fields overlap and
+must not be summed as distinct observations. Absent original assay IDs remain
+absent, with fallback identity visible to the census. Processing's zero real
+source support is not filled by its propagation fixture. Metadata-inclusive
+diagnostic hashes change; actual input/target/selector tensors do not.
+
+This resolves #60's adapter omission. It does not establish model fitting or
+held-out quality, close #48/#50/#53, or bypass Hitlist #444's upstream curation
+problem. Alternate binding-selector descriptor loss was separately reproduced
+and filed as Presto #62. Local verification passed 434 affected regressions and
+48 focused-probe/audit checks; full CI is pending. The README preserves the
+initial no-tests-collected command failure and links the corrected passing log.

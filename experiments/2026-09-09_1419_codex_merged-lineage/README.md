@@ -2,7 +2,7 @@
 
 - Agent/model: Codex / GPT-6; date: 2026-09-09.
 - Base: merged PR #61, `8cebd17660b67c0e4908017e0de9fccf5b00c653`.
-- Status: before phase completed; implementation and regression verification underway.
+- Status: before/after reconciliation completed; PR review and full CI pending.
 - Plan: [lineage recovery](../agents/codex/plans/2026-09-09_merged-lineage.md).
 - Specification: [Presto #60 repair](../../tasks/merged_lineage_spec.md).
 
@@ -64,7 +64,51 @@ changed during the run. This establishes ingestion loss, not predictive quality.
 
 ## Handoff
 
-- Status: metadata propagation implemented; 434 affected regressions and 48
-  focused-probe/audit checks passed. Ruff 0.16.0 lint/format passed (253 files).
-- Next step: capture the after phase, then run `bash reproduce/launch.sh compare`.
-- Remaining: after-phase reconciliation, final review and CI.
+The after phase ran at clean `87ce95b2515a9a3be2dcdc05017bff2e1b20e856` in
+187.212 seconds. Comparison at clean `859be29e353d4937dfe61a584cda1953281aa0ec`
+completed in 1.730 seconds. Both phases use identical dependency versions,
+package-source receipt, Python/platform, source hash, caps, seed and OMP/MKL
+settings. These instrumented scan runtimes are not a controlled throughput
+benchmark. [Comparison JSON](results/compare/result.json) and
+[per-field CSV](results/compare/field_counts.csv) reconcile all 42 field/modality
+groups and verify every frozen launcher/production snapshot and CSV/JSON pair.
+
+| Modality | Accepted records | PMIDs recovered | DOIs recovered | Reference texts recovered |
+|---|---:|---:|---:|---:|
+| Binding | 241,803 | 62,712 | 0 | 179,091 |
+| Kinetics | 102 | 102 | 0 | 0 |
+| Stability | 12,259 | 3,131 | 0 | 9,128 |
+| Processing | 0 | 0 | 0 | 0 |
+| Elution | 2,073,797 | 2,061,734 | 0 | 12,063 |
+| T-cell | 207,987 | 171,899 | 0 | 36,088 |
+| TCR evidence | 166,285 | 127,095 | 1,316 | 125,806 |
+| Total | 2,702,233 | 2,426,673 | 1,316 | 362,176 |
+
+Before values were zero in every publication field. After values match every
+available source value, with **zero dropped, invented or changed values**.
+Field counts overlap and are not additive observation counts. Original
+observation/assay/reference IDs remain absent in this corpus. Processing has no
+real rows here; its propagation is covered by the all-modality fixture.
+
+All seven ordered non-lineage payload hashes, source metadata hashes, input
+counts, routing/skip reasons and cap statistics match exactly. The unchanged
+population excludes 156,765 invalid peptides and 564,739 unsupported or
+missing-label classifications under #61's policy. No new training population,
+supervision, validation/test performance or original assay identity is claimed.
+The preferred condition is the repaired metadata path; output coverage and
+fresh fitting/generalization evidence remain #48/#50/#53 work.
+
+Validation passed 434 affected regression tests in 7.38 seconds and 48
+focused-probe/audit checks in 22.08 seconds. The initial expanded test command
+named a nonexistent focused-probe test file and collected no tests; that receipt
+is retained as `focused-tests.log`, while the actual passing expanded suite is
+`focused-tests-v2.log` under the raw-artifact root. Ruff 0.16.0 lint/format passed
+(253 files); the experiment's canonical scripts were checked separately.
+The tests prove actual input/target/selector tensor parity, missing-ID fallback
+semantics, cap selection, distinct observations sharing a publication, device
+transfer, and source-row alignment in real row/bag prediction export code.
+
+The raw cache upstream defect remains Hitlist #444 (still open at review), with
+independent evidence already posted there. Newly reproduced alternate-selector
+descriptor loss is Presto #62; it is outside this metadata-only repair. Final
+PR review/CI/merge remain pending. No deployment workflow exists in Presto.
