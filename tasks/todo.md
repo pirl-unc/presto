@@ -10924,3 +10924,20 @@ panel constructions and 1,000 selected bootstrap rows recover source type/method
 culture fields are absent in this real subset. After selected-column distributions
 match the source exactly. This is a scoped ingestion result, not full-corpus
 coverage or predictive quality. Full CI and final PR review remain required.
+
+### Next PR — canonical real-source coverage evidence (#48/#50)
+
+Specification: `tasks/canonical_coverage_evidence_spec.md`. The final PR #64 CI
+test run passed 2,061 tests / 3 skipped; its duplicate branch run is still live.
+The next branch starts at the reviewed head and will rebase onto verified merged
+main before its first experiment. No new experiment or cloud compute has launched.
+
+- [x] Inspect canonical preflight, full-corpus memory requirements and remote API.
+- [x] Write the detailed source, hardware, instrumentation and verification spec.
+- [ ] Merge #64 after all final-head checks, verify tree/#62 closure, rebase.
+- [ ] Register the new census family and freeze arguments/environment/source data.
+- [ ] Implement and verify observational instrumentation and durable execution.
+- [ ] Run and reconcile the uncapped merged measured condition first.
+- [ ] Complete separate source/augmentation census conditions and update diagnostics.
+- [ ] Freeze prospective claims, close artifacts, review/CI/merge the evidence PR.
+- [ ] Continue #53's fresh real-data fit and held-out predictive evaluation.
