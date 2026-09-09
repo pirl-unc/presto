@@ -49,3 +49,19 @@ Before/after source counts, selected-column distributions, runtimes, exact
 non-descriptor payload reconciliation and all failed receipts will be closed
 here and in the canonical experiment log. No result or preferred condition is
 claimed before execution. #48/#50/#53 remain separate acceptance work.
+
+## Baseline
+
+The before phase completed at clean `e6d6b607d95e801637a6f92be45ea3c2d866bd31`
+in 111.439 seconds (panel 43.416, bootstrap 66.333). This original commit is
+preserved on `codex/binding-selector-audit`; the working branch was then rebased
+onto merged #63 (`48182ae`), whose tree exactly matches reviewed `2cce640`.
+
+Panel: 23,210 accepted constructions, one retained. Bootstrap: 1,000 selected
+records from 500 peptides. Both scopes lose assay type and method on every
+record. Culture fields are absent in this subset. Fallback measurement labels
+preserve the affinity-family column populations here, while every method/prep/
+geometry/readout column becomes unknown. Complete column distributions and
+field counts are in `results/before/`; these scopes overlap and are not additive.
+No source/production hash changed during the scan. After repair/reconciliation
+and final validation remain required.

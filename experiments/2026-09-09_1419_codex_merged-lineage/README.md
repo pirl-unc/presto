@@ -2,7 +2,7 @@
 
 - Agent/model: Codex / GPT-6; date: 2026-09-09.
 - Base: merged PR #61, `8cebd17660b67c0e4908017e0de9fccf5b00c653`.
-- Status: before/after reconciliation completed; PR review and full CI pending.
+- Status: complete; merged in PR #63.
 - Plan: [lineage recovery](../agents/codex/plans/2026-09-09_merged-lineage.md).
 - Specification: [Presto #60 repair](../../tasks/merged_lineage_spec.md).
 
@@ -110,5 +110,9 @@ transfer, and source-row alignment in real row/bag prediction export code.
 
 The raw cache upstream defect remains Hitlist #444 (still open at review), with
 independent evidence already posted there. Newly reproduced alternate-selector
-descriptor loss is Presto #62; it is outside this metadata-only repair. Final
-PR review/CI/merge remain pending. No deployment workflow exists in Presto.
+descriptor loss is Presto #62; it is outside this metadata-only repair. PR #63 merged as `48182ae1d2a36994470338b9422329590bc7c413` on 2026-09-09,
+with a tree identical to reviewed `2cce64003bd1f689b86ef8cee7b68663dd859e7b`.
+Final branch/PR CI 34365828888 and 34365866862 passed lint/tests and docs.
+The final PR job reported **2,039 passed, 3 skipped** in 946.36 seconds; its
+actual log is preserved as `ci-2cce640.log` under the raw-artifact root.
+No deployment workflow exists in Presto. The next PR addresses #62.

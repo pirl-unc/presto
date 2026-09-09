@@ -1122,7 +1122,7 @@ this merge and restores the publication-lineage path tracked in #60.
 **Date/agent/model:** 2026-09-09; Codex / GPT-6.
 **Directory:** [merged publication lineage](2026-09-09_1419_codex_merged-lineage/).
 **Status:** ingestion metadata recovery and strict before/after reconciliation complete;
-PR review and full CI pending.
+merged in PR #63.
 
 Same unchanged `data/merged_deduped.tsv` as #61: 3,423,737 input rows, SHA-256
 `46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`.
@@ -1171,8 +1171,14 @@ This resolves #60's adapter omission. It does not establish model fitting or
 held-out quality, close #48/#50/#53, or bypass Hitlist #444's upstream curation
 problem. Alternate binding-selector descriptor loss was separately reproduced
 and filed as Presto #62. Local verification passed 434 affected regressions and
-48 focused-probe/audit checks; full CI is pending. The README preserves the
+48 focused-probe/audit checks; final full CI passed. The README preserves the
 initial no-tests-collected command failure and links the corrected passing log.
+
+PR #63 merged as `48182ae1d2a36994470338b9422329590bc7c413`, with a tree
+identical to reviewed `2cce640`. Final branch/PR CI 34365828888 and 34365866862
+passed lint/tests/docs; the final PR log reports 2,039 passed, 3 skipped in
+946.36 seconds and is preserved under the raw-artifact root. The next repair
+is #62, then the uncapped census/update and predictive acceptance work resumes.
 
 ## 2026-09-09_1457_codex_binding-selectors
 

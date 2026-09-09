@@ -1,0 +1,387 @@
+{
+  "bootstrap": {
+    "actual_columns": [
+      {
+        "assay_method": "unknown",
+        "assay_type": "EC50",
+        "geometry": "unknown",
+        "prep": "unknown",
+        "readout": "unknown",
+        "records": 1
+      },
+      {
+        "assay_method": "unknown",
+        "assay_type": "IC50",
+        "geometry": "unknown",
+        "prep": "unknown",
+        "readout": "unknown",
+        "records": 141
+      },
+      {
+        "assay_method": "unknown",
+        "assay_type": "KD",
+        "geometry": "unknown",
+        "prep": "unknown",
+        "readout": "unknown",
+        "records": 172
+      },
+      {
+        "assay_method": "unknown",
+        "assay_type": "KD_PROXY_EC50",
+        "geometry": "unknown",
+        "prep": "unknown",
+        "readout": "unknown",
+        "records": 613
+      },
+      {
+        "assay_method": "unknown",
+        "assay_type": "KD_PROXY_IC50",
+        "geometry": "unknown",
+        "prep": "unknown",
+        "readout": "unknown",
+        "records": 73
+      }
+    ],
+    "elapsed_seconds": 66.33299545804039,
+    "expected_columns": [
+      {
+        "assay_method": "PURIFIED_DIRECT_FLUORESCENCE",
+        "assay_type": "EC50",
+        "geometry": "DIRECT",
+        "prep": "PURIFIED",
+        "readout": "FLUORESCENCE",
+        "records": 1
+      },
+      {
+        "assay_method": "CELLULAR_COMPETITIVE_FLUORESCENCE",
+        "assay_type": "IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "CELLULAR",
+        "readout": "FLUORESCENCE",
+        "records": 13
+      },
+      {
+        "assay_method": "CELLULAR_COMPETITIVE_RADIOACTIVITY",
+        "assay_type": "IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "CELLULAR",
+        "readout": "RADIOACTIVITY",
+        "records": 2
+      },
+      {
+        "assay_method": "PURIFIED_COMPETITIVE_FLUORESCENCE",
+        "assay_type": "IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "PURIFIED",
+        "readout": "FLUORESCENCE",
+        "records": 77
+      },
+      {
+        "assay_method": "PURIFIED_COMPETITIVE_RADIOACTIVITY",
+        "assay_type": "IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "PURIFIED",
+        "readout": "RADIOACTIVITY",
+        "records": 49
+      },
+      {
+        "assay_method": "PURIFIED_COMPETITIVE_FLUORESCENCE",
+        "assay_type": "KD",
+        "geometry": "COMPETITIVE",
+        "prep": "PURIFIED",
+        "readout": "FLUORESCENCE",
+        "records": 172
+      },
+      {
+        "assay_method": "PURIFIED_DIRECT_FLUORESCENCE",
+        "assay_type": "KD_PROXY_EC50",
+        "geometry": "DIRECT",
+        "prep": "PURIFIED",
+        "readout": "FLUORESCENCE",
+        "records": 613
+      },
+      {
+        "assay_method": "PURIFIED_COMPETITIVE_FLUORESCENCE",
+        "assay_type": "KD_PROXY_IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "PURIFIED",
+        "readout": "FLUORESCENCE",
+        "records": 2
+      },
+      {
+        "assay_method": "PURIFIED_COMPETITIVE_RADIOACTIVITY",
+        "assay_type": "KD_PROXY_IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "PURIFIED",
+        "readout": "RADIOACTIVITY",
+        "records": 71
+      }
+    ],
+    "field_counts": [
+      {
+        "changed": 0,
+        "dropped": 1000,
+        "field": "assay_type",
+        "invented": 0,
+        "matched": 0,
+        "record_present": 0,
+        "records": 1000,
+        "selector": "bootstrap",
+        "source_present": 1000
+      },
+      {
+        "changed": 0,
+        "dropped": 1000,
+        "field": "assay_method",
+        "invented": 0,
+        "matched": 0,
+        "record_present": 0,
+        "records": 1000,
+        "selector": "bootstrap",
+        "source_present": 1000
+      },
+      {
+        "changed": 0,
+        "dropped": 0,
+        "field": "effector_culture_condition",
+        "invented": 0,
+        "matched": 1000,
+        "record_present": 0,
+        "records": 1000,
+        "selector": "bootstrap",
+        "source_present": 0
+      },
+      {
+        "changed": 0,
+        "dropped": 0,
+        "field": "apc_culture_condition",
+        "invented": 0,
+        "matched": 1000,
+        "record_present": 0,
+        "records": 1000,
+        "selector": "bootstrap",
+        "source_present": 0
+      }
+    ],
+    "non_descriptor_payload_sha256": "754cc8999233be7f2c12e2f29d6e07331add0ab9b04e17ddb0dd2bb152eda7f5",
+    "observed_records": 1000,
+    "retained_non_descriptor_sha256": "754cc8999233be7f2c12e2f29d6e07331add0ab9b04e17ddb0dd2bb152eda7f5",
+    "retained_records": 1000,
+    "selector": "bootstrap",
+    "source_descriptors_sha256": "0c86d5c449a3d47fa5e1883924277e256052ea5dfca99d90f144e0421f55000b",
+    "stats": {
+      "eligible_peptides": 2304,
+      "records_added": 1000,
+      "selected_peptides": 500
+    }
+  },
+  "panel": {
+    "actual_columns": [
+      {
+        "assay_method": "unknown",
+        "assay_type": "EC50",
+        "geometry": "unknown",
+        "prep": "unknown",
+        "readout": "unknown",
+        "records": 247
+      },
+      {
+        "assay_method": "unknown",
+        "assay_type": "IC50",
+        "geometry": "unknown",
+        "prep": "unknown",
+        "readout": "unknown",
+        "records": 8386
+      },
+      {
+        "assay_method": "unknown",
+        "assay_type": "KD",
+        "geometry": "unknown",
+        "prep": "unknown",
+        "readout": "unknown",
+        "records": 1664
+      },
+      {
+        "assay_method": "unknown",
+        "assay_type": "KD_PROXY_EC50",
+        "geometry": "unknown",
+        "prep": "unknown",
+        "readout": "unknown",
+        "records": 4227
+      },
+      {
+        "assay_method": "unknown",
+        "assay_type": "KD_PROXY_IC50",
+        "geometry": "unknown",
+        "prep": "unknown",
+        "readout": "unknown",
+        "records": 8686
+      }
+    ],
+    "elapsed_seconds": 43.416236999910325,
+    "expected_columns": [
+      {
+        "assay_method": "CELLULAR_DIRECT_FLUORESCENCE",
+        "assay_type": "EC50",
+        "geometry": "DIRECT",
+        "prep": "CELLULAR",
+        "readout": "FLUORESCENCE",
+        "records": 165
+      },
+      {
+        "assay_method": "PURIFIED_DIRECT_FLUORESCENCE",
+        "assay_type": "EC50",
+        "geometry": "DIRECT",
+        "prep": "PURIFIED",
+        "readout": "FLUORESCENCE",
+        "records": 82
+      },
+      {
+        "assay_method": "CELLULAR_COMPETITIVE_FLUORESCENCE",
+        "assay_type": "IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "CELLULAR",
+        "readout": "FLUORESCENCE",
+        "records": 1651
+      },
+      {
+        "assay_method": "CELLULAR_COMPETITIVE_RADIOACTIVITY",
+        "assay_type": "IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "CELLULAR",
+        "readout": "RADIOACTIVITY",
+        "records": 23
+      },
+      {
+        "assay_method": "PURIFIED_COMPETITIVE_FLUORESCENCE",
+        "assay_type": "IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "PURIFIED",
+        "readout": "FLUORESCENCE",
+        "records": 1722
+      },
+      {
+        "assay_method": "PURIFIED_COMPETITIVE_RADIOACTIVITY",
+        "assay_type": "IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "PURIFIED",
+        "readout": "RADIOACTIVITY",
+        "records": 4990
+      },
+      {
+        "assay_method": "CELLULAR_COMPETITIVE_FLUORESCENCE",
+        "assay_type": "KD",
+        "geometry": "COMPETITIVE",
+        "prep": "CELLULAR",
+        "readout": "FLUORESCENCE",
+        "records": 13
+      },
+      {
+        "assay_method": "OTHER",
+        "assay_type": "KD",
+        "geometry": "OTHER",
+        "prep": "BINDING_ASSAY",
+        "readout": "OTHER",
+        "records": 5
+      },
+      {
+        "assay_method": "PURIFIED_COMPETITIVE_FLUORESCENCE",
+        "assay_type": "KD",
+        "geometry": "COMPETITIVE",
+        "prep": "PURIFIED",
+        "readout": "FLUORESCENCE",
+        "records": 1646
+      },
+      {
+        "assay_method": "PURIFIED_DIRECT_FLUORESCENCE",
+        "assay_type": "KD_PROXY_EC50",
+        "geometry": "DIRECT",
+        "prep": "PURIFIED",
+        "readout": "FLUORESCENCE",
+        "records": 4227
+      },
+      {
+        "assay_method": "PURIFIED_COMPETITIVE_FLUORESCENCE",
+        "assay_type": "KD_PROXY_IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "PURIFIED",
+        "readout": "FLUORESCENCE",
+        "records": 105
+      },
+      {
+        "assay_method": "PURIFIED_COMPETITIVE_RADIOACTIVITY",
+        "assay_type": "KD_PROXY_IC50",
+        "geometry": "COMPETITIVE",
+        "prep": "PURIFIED",
+        "readout": "RADIOACTIVITY",
+        "records": 8581
+      }
+    ],
+    "field_counts": [
+      {
+        "changed": 0,
+        "dropped": 23210,
+        "field": "assay_type",
+        "invented": 0,
+        "matched": 0,
+        "record_present": 0,
+        "records": 23210,
+        "selector": "panel",
+        "source_present": 23210
+      },
+      {
+        "changed": 0,
+        "dropped": 23210,
+        "field": "assay_method",
+        "invented": 0,
+        "matched": 0,
+        "record_present": 0,
+        "records": 23210,
+        "selector": "panel",
+        "source_present": 23210
+      },
+      {
+        "changed": 0,
+        "dropped": 0,
+        "field": "effector_culture_condition",
+        "invented": 0,
+        "matched": 23210,
+        "record_present": 0,
+        "records": 23210,
+        "selector": "panel",
+        "source_present": 0
+      },
+      {
+        "changed": 0,
+        "dropped": 0,
+        "field": "apc_culture_condition",
+        "invented": 0,
+        "matched": 23210,
+        "record_present": 0,
+        "records": 23210,
+        "selector": "panel",
+        "source_present": 0
+      }
+    ],
+    "non_descriptor_payload_sha256": "0ffd7ba1ad5960901a44dd27ebbbc64410dd43f41627ce4449e3e69dcbfac82e",
+    "observed_records": 23210,
+    "retained_non_descriptor_sha256": "6ff59da850292402cd228b1b80262450d62f44a73cab736f0ea47212f82b5a45",
+    "retained_records": 1,
+    "selector": "panel",
+    "source_descriptors_sha256": "6669050fdb13a6f2829752ea2df56dbe98e0be6b554bc986208bf4881c85f556",
+    "stats": {
+      "cap_sampling": "head",
+      "rows_by_allele": {
+        "HLA-A*03:01": 1
+      },
+      "rows_scanned": 29144,
+      "rows_selected": 1,
+      "shared_peptides": 0,
+      "shared_rows": 0,
+      "unique_peptides_by_allele": {
+        "HLA-A*02:01": 0,
+        "HLA-A*03:01": 1
+      }
+    }
+  }
+}

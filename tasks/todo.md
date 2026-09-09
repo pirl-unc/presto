@@ -10849,7 +10849,8 @@ parity and metadata availability/mismatch counts. #48/#50/#53 remain open.
 - [x] Register the lineage experiment and capture its baseline.
 - [x] Restore metadata through loader, samples, batches and held-out exports.
 - [x] Verify source conservation, metadata recovery and unchanged model inputs.
-- [ ] Review, verify CI and merge #60's repair, then resume the coverage census.
+- [x] Review, verify CI and merge #60's repair.
+- [ ] Resume the coverage census after the additional #62 dependency.
 
 The baseline ran at clean `15f2855` in 147.505 seconds and observed every one of
 3,423,737 source rows / 2,702,233 supported typed records. Every available
@@ -10887,8 +10888,23 @@ next PR only after #63 merges and its tree is verified, with the next branch
 based on main. Specification: `tasks/binding_selector_spec.md`.
 
 - [x] Reproduce descriptor loss and file #62; write implementation/audit spec.
-- [ ] Register and run the exact real-source selector baseline.
+- [x] Register and run the exact real-source selector baseline.
 - [ ] Restore descriptors and verify all four loader paths and output selection.
 - [ ] Reconcile source populations/non-descriptor payloads and close artifacts.
 - [ ] Rebase onto verified merged main, review, run CI and merge.
 - [ ] Resume #48/#50 census/update evidence and #53 predictive acceptance.
+
+### PR #63 merged; selector baseline captured
+
+Merged #63 as `48182ae`, verified identical to reviewed `2cce640`. Final branch/PR
+CI passed; final PR log reports 2,039 passed and 3 skipped. #60 is closed and
+Presto has no deployment workflow. The next isolated branch now bases directly
+on this merged main. Baseline audit commit `e6d6b60` is preserved on remote
+`codex/binding-selector-audit` before the branch rebase.
+
+The selector baseline completed in 111.439 seconds: 23,210 panel constructions
+before a one-record head cap, plus 1,000 selected bootstrap records. Every
+record in both scopes loses observed assay type and method; culture fields are
+absent in this real subset. Existing measurement fallbacks preserve affinity
+family counts here, but all known method/preparation/geometry/readout selectors
+become unknown. Culture preservation and conflicting labels require fixtures.
