@@ -10891,7 +10891,7 @@ based on main. Specification: `tasks/binding_selector_spec.md`.
 - [x] Register and run the exact real-source selector baseline.
 - [x] Restore descriptors and verify all four loader paths and output selection.
 - [x] Reconcile source populations/non-descriptor payloads and close artifacts.
-- [ ] Rebase onto verified merged main, review, run CI and merge.
+- [x] Rebase onto verified merged main, review, run CI and merge.
 - [ ] Resume #48/#50 census/update evidence and #53 predictive acceptance.
 
 ### PR #63 merged; selector baseline captured
@@ -10924,3 +10924,144 @@ panel constructions and 1,000 selected bootstrap rows recover source type/method
 culture fields are absent in this real subset. After selected-column distributions
 match the source exactly. This is a scoped ingestion result, not full-corpus
 coverage or predictive quality. Full CI and final PR review remain required.
+
+### Next PR — canonical real-source coverage evidence (#48/#50)
+
+Specification: `tasks/canonical_coverage_evidence_spec.md`. The final PR #64 CI
+test run passed 2,061 tests / 3 skipped; its duplicate branch run is still live.
+The next branch starts at the reviewed head and will rebase onto verified merged
+main before its first experiment. No new experiment or cloud compute has launched.
+
+- [x] Inspect canonical preflight, full-corpus memory requirements and remote API.
+- [x] Write the detailed source, hardware, instrumentation and verification spec.
+- [x] Merge #64 after all final-head checks, verify tree/#62 closure, rebase.
+- [x] Register the new census family and freeze arguments/environment/source data.
+- [x] Implement and verify observational instrumentation; validate the remote SDK declaration.
+- [ ] Run and reconcile the uncapped merged measured condition first.
+- [ ] Complete separate source/augmentation census conditions and update diagnostics.
+- [ ] Freeze prospective claims, close artifacts, review/CI/merge the evidence PR.
+- [ ] Continue #53's fresh real-data fit and held-out predictive evaluation.
+
+Image-build recovery after the approved upload:
+
+- [x] Preserve the initial `37cbb17` build failure before data loading.
+- [x] Derive source archive packages from the authoritative package manifest.
+- [x] Isolate named retry receipts/outputs and reject reused or unsafe names.
+- [x] Verify a wheel and canonical packaging checks in an isolated snapshot copy.
+- [x] Launch `merged_measured --attempt package_manifest` and confirm its call state.
+- [x] Stop and preserve its remote import failure before worker entry/data load.
+- [x] Verify explicit SDK serialization in a fresh isolated interpreter.
+- [x] Launch `merged_measured --attempt serialized_entry` and verify worker progress.
+
+The live `d6a690a` worker passed frozen source/input/curation hash checks and
+entered full merged-data loading. App `ap-PPrESGuLvIKrTYEYNnwTPG`, call
+`fc-01M23HN1ZCVA1M5NF5Q1P0GFNJ`; startup receipts are in the experiment attempt
+directory. Observed CPU torch 2.7.0+cpu and 192 GiB visible RAM. Collect/reconcile
+the existing call before scheduling more conditions; do not restart it because
+a local watcher expires. Training/prediction quality remains untested.
+
+PR #64 merged as `190360a7e2596eb5f62682088f1ef63270bf5eeb` at 15:41:16 UTC;
+the tree exactly matches reviewed `b1f4646` and #62 is closed. Both final-head CI
+jobs passed 2,061 tests, 3 skipped (PR 663.26 seconds; branch 941.30 seconds).
+Both full logs are preserved under the selector-audit raw root. No deployment
+workflow exists. The next specification was committed before instrumentation,
+then rebased onto merged main (`81b26be`); production code remains unchanged.
+
+Registered `experiments/2026-09-09_1541_codex_canonical-coverage/`, freezing six
+full trainer argument dictionaries and ten input files totaling 1,464,177,529
+bytes. Resolved augmented pMHC/elution/cascade-elution/cascade-T-cell ratios are
+1.0/0.5/0.5/0.5. The first instrumentation suite passed 74 tests in 9.88 seconds;
+final candidate provenance and launcher checks remain before the first launch.
+
+Final instrumentation verification passed 75 tests in 8.16 seconds; canonical
+reports match exactly at chunk sizes 1/2/512 and generated candidates are excluded
+without altering census counts. Ruff passes. Offline Modal 1.1.4 declarations
+accept the CPU/RAM/timeout contract. Actual remote persistence, environment and
+full-source runtime remain to be verified during the first registered launch.
+
+The automatic approval reviewer rejected the attempted data upload before any
+transfer or remote compute, requiring explicit authorization for the ten frozen
+files and the `iskandr` Modal workspace / `presto-data` volume / experiment prefix.
+The separately authorized git push succeeded. Do not retry or indirectly export
+the blocked payload before approval. Source-archive review found historical raw
+datasets under tracked `data/`; packaging now selects only required source and
+the B2M resource. That first local archive was never uploaded. Final packaging /
+canonical instrumentation checks pass 76 tests in 7.60 seconds; Ruff passes.
+Prepare the corrected clean archive and a draft evidence PR while upload approval
+is pending. #48/#50/#53 remain open; no full census or training has run.
+
+### Draft #65 author review — execution and identity boundaries
+
+The next review reproduced two local defects before execution: a modified live
+launcher could use an older archived launcher while claiming its frozen source,
+and `sample_id=None` produced a diagnostic ID starting with literal `None`.
+Both are fixed. Snapshot checks now require one matching executing-launcher
+entry before image construction. Missing IDs remain in canonical evidence but
+are excluded from diagnostic candidates. Modal1.1.4/profile/workspace checks
+bind the requested destination; both volumes and app explicitly use environment
+`main`. The actual read-only workspace lookup returned `iskandr` without transfer.
+
+Local tests passed 85 cases in 9.85 seconds, including the seven launch-boundary
+checks and two null/empty-ID parity cases. Ruff passes. The previous mismatch
+regression is preserved in `launcher-review-before.log`; final checks are in
+`prelaunch-review-tests.log`. Freeze/publish this updated source bundle and keep
+the PR draft pending the real-source phases. The upload approval request is
+still unanswered; the automatic goal continuation does not authorize transfer.
+
+### Upload approved and complete — 2026-09-09 16:32 UTC
+
+The user explicitly said "Upload please". Uploaded all ten frozen files
+(1,464,177,529 bytes) to workspace `iskandr`, environment `main`, volume
+`presto-data`, prefix `2026-09-09_1541_codex_canonical-coverage/`. No overwrite.
+All local hashes match before/after; read-only remote listing exactly matches
+all ten names and sizes. Canonical upload receipts preserve the actual dirty
+launcher snapshot and its receipt-variable correction. Nineteen focused checks
+pass. `340e208` CI is complete: 2,061 passed / 3 skipped, full PR log preserved.
+Freeze the corrected launcher on a clean commit and start the registered first
+CPU census. Upload authorization persists; do not ask for it again.
+
+### Review against main — 2026-09-09
+
+Scope: inspect the proposed diff against `190360a7e2596eb5f62682088f1ef63270bf5eeb`
+without fixing implementation. Review canonical census instrumentation, launcher
+execution/reproduction boundaries, frozen conditions and supporting receipts.
+Verify actionable defects against the canonical trainer and local focused tests;
+do not launch cloud jobs, upload data, or alter historical experiment artifacts.
+Report only introduced defects with precise changed locations, priorities, and
+applicable repository-rule citations.
+
+- [x] Read applicable guidance and inspect the full diff inventory.
+- [x] Trace new instrumentation and launcher behavior against canonical consumers.
+- [x] Run focused local checks and validate suspected defects independently.
+- [x] Deduplicate findings and record review verification/results.
+
+Review results: 29 experiment-local checks passed; the broader canonical
+preflight/output-coverage/data-support/output-contract selection passed 134 tests
+in 17.61 seconds (including those 29). Six launch/handle source receipts match
+their recorded Git blobs and frozen arguments. A clean temporary Git fixture
+reproduced one introduced integration defect: `prepare()` changes the existing
+packaging-discovery assertion from passing to failing with nine undeclared
+snapshot packages under `artifacts/`. Report this as P2; no production fix made.
+No cloud calls, data transfers, or modifications to historical artifacts occurred.
+
+### Resolve PR #65 packaging-discovery review
+
+Specification: `tasks/canonical_coverage_evidence_spec.md`, review repair section.
+Add only the generated top-level `artifacts/` root to the packaging check's
+existing exclusions. Exercise the actual preparation command in a clean temporary
+Git checkout and verify ordinary discovery remains valid afterward. Keep detection
+of undeclared source packages, including a nested `data/artifacts` package.
+
+- [x] Review the finding, preserve review notes and record the corrective lesson.
+- [x] Reproduce with permanent preparation/discovery regression tests.
+- [x] Apply the root artifact exclusion and verify the working checkout plus regressions.
+- [x] Review the final diff and update the experiment guidance for PR #65.
+
+Review results: both new regressions failed before the fix (2 failures in 1.41
+seconds). The one-entry exclusion passes all 24 packaging/launcher checks in
+3.20 seconds, including normal discovery with existing snapshots and a clean
+temporary checkout before/after the actual preparation command. Undeclared source
+packages and nested `data/artifacts` remain visible. Ruff 0.16.0 lint and format
+checks pass. README/spec guidance now requires the working-checkout check;
+historical snapshots and receipts are retained. Final diff is limited to package
+discovery tests and review documentation.

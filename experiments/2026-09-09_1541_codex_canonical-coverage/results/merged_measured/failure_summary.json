@@ -1,0 +1,21 @@
+{
+  "app_id": "ap-2NjIAHmEYvAgM1ghTB4SEz",
+  "attempt": "initial",
+  "call_id": null,
+  "condition": "merged_measured",
+  "data_loaded": false,
+  "decision": "Derive archive roots from pyproject.toml, verify an isolated local wheel, retry with a distinct named attempt using the same uploaded inputs and condition.",
+  "dirty": false,
+  "elapsed_seconds": null,
+  "error": "package directory './inference' does not exist",
+  "failed_image_id": "im-zuxbkqRdna3GuYqY2g4WVq",
+  "git_commit": "37cbb1742591e7c29f07496c8d49404b15306bbe",
+  "metrics": null,
+  "metrics_note": "No census or model evaluation ran.",
+  "raw_build_log": "artifacts/2026-09-09_1541_codex_canonical-coverage/merged-measured-launch.log",
+  "raw_build_log_sha256": "79d47adfd9e87f603a4a87f9aa0fafb94007c91f2abc15989972556230bcfd66",
+  "runtime_note": "The initial launcher did not capture launch elapsed time.",
+  "status": "image_build_failed",
+  "training_started": false,
+  "worker_started": false
+}

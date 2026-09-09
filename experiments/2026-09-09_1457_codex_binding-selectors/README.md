@@ -1,6 +1,6 @@
 # Alternate binding-selector descriptor recovery
 
-Date/agent/model: 2026-09-09; Codex / GPT-6. Status: source comparison complete; PR review/CI pending.
+Date/agent/model: 2026-09-09; Codex / GPT-6. Status: source comparison closed; PR #64 reviewed, CI passed and merged.
 Plan: [selector repair](../agents/codex/plans/2026-09-09_binding-selectors.md).
 PR base is merged #63, `48182ae1d2a36994470338b9422329590bc7c413`.
 The earlier baseline used its identical reviewed tree, preserved on the audit branch.
@@ -122,6 +122,12 @@ contracts. Complete before/after column distributions are in their result JSONs.
 
 Four audit/comparison tests passed in 2.28 seconds, including rejection of changed
 payloads and wrong selected columns; they overlap the previously reported affected
-suite. Final full CI and author review are the remaining merge gates. No deployment
+suite. Final full CI and author review passed. No deployment
 workflow exists. Next: resume #48/#50 uncapped census/update evidence and #53
 fitting/generalization acceptance with the repaired adapters.
+
+PR #64 merged at `190360a7e2596eb5f62682088f1ef63270bf5eeb` on 2026-09-09
+15:41:16 UTC. The merge tree is identical to reviewed `b1f4646`; #62 is closed.
+Both final-head CI runs passed 2,061 tests / 3 skipped (663.26 and 941.30 seconds).
+Their complete logs are preserved in the raw-artifact root. The posted review
+was performed by the implementation author, not an independent reviewer.

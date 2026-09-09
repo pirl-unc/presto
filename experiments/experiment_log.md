@@ -1233,6 +1233,81 @@ qualifiers, units and selected records are unchanged. Complete per-field and
 per-column JSON/CSV counts, source hashes, frozen launchers and the comparison
 are preserved. New regressions first failed 10 cases (12 passed), then the
 repaired code passed 247 affected tests in 21.46 seconds. Four overlapping audit
-checks pass, including negative controls. Ruff lint/format passes. #62's final
-PR review/CI remain; #48/#50 uncapped coverage/update evidence and #53 real-data
+checks pass, including negative controls. Ruff lint/format passes. PR #64 merged
+as `190360a7` with a tree identical to reviewed `b1f4646`; #62 is closed. Both
+final-head CI runs passed 2,061 tests / 3 skipped. #48/#50 uncapped coverage/update evidence and #53 real-data
 fitting/held-out performance remain separate work.
+
+## 2026-09-09 15:41 — Canonical full-source output coverage (registered)
+
+- Agent/model: Codex / GPT-6.
+- Directory: [2026-09-09_1541_codex_canonical-coverage](2026-09-09_1541_codex_canonical-coverage/).
+- Status: inputs uploaded and verified; `merged_measured` is running as attempt
+  `serialized_entry`, after two preserved startup failures. Production base is
+  merged PR #64, `190360a7`; live frozen source is `d6a690a`.
+- Dataset: frozen merged TSV, exclusive Hitlist and explicit Hitlist-plus-bulk,
+  each measured-only and augmented, no modality caps. Ten input files total
+  1,464,177,529 bytes; exact hashes and complete arguments are in the directory.
+  Data seed 17, peptide-group train/validation/test 80/10/10, split seed 42,
+  strict complete MHC resolution plus canonical filtering, ambiguous flanks masked.
+- Assay/qualifier policy: repaired canonical loaders; unsupported source families
+  remain explicit omissions. No source union or cache edits. Direct/proxy/auxiliary
+  and generated labels stay separate; aliases do not inflate endpoint coverage.
+- Synthetic contract: measured conditions disable generation; augmented explicit
+  pMHC/elution/cascade-elution/cascade-T-cell ratios 1.0/0.5/0.5/0.5, missing-beta
+  0.25, processing 0.5, MHC-only 60,000 at fraction 0.05. Wrong-enzyme bulk labels
+  are disabled in measured conditions and enabled at ratio 1.0 in augmented bulk.
+- Training/pretraining: none in the census. Actual objective mapping, weights and
+  multiplicity come from the executable registry. Later gradient diagnostics must
+  freeze real train candidates and optimization settings before execution.
+- Hardware: first merged measured condition alone, Modal CPU 4/8 requested/limit,
+  RAM 64/192 GiB requested/limit, four-hour timeout, no GPU. Actual runtime/hardware
+  evidence remains pending. No preferred condition or predictive winner yet.
+- Validation/test: support counts only; no predictive loss or metrics. Prediction
+  dumps are inapplicable to this phase; #53 still requires fresh predictive eval.
+- Raw artifacts: `artifacts/2026-09-09_1541_codex_canonical-coverage/` and uniquely
+  named Modal volume prefixes recorded by each launched receipt.
+- Decision: verify observational parity, run the uncapped merged measured audit,
+  reconcile it, then schedule the remaining source/augmentation conditions.
+- Preparation update: 76 instrumentation/canonical checks pass, including exact
+  report parity and exclusion of unrelated raw corpora from the code archive.
+  Automatic approval review rejected the ten-file Modal upload pending explicit
+  authorization for its payload and destination. No source transfer, remote
+  census or training occurred; the frozen code/input manifest are reviewable.
+- Further author review fixed live-launcher/archive mismatch and null diagnostic
+  IDs before launch, with 85 local checks passing in 9.85 seconds. The pinned
+  client's read-only lookup confirmed workspace `iskandr`; app and volume
+  environment is explicitly `main`. This is preparation evidence, not a source
+  census or predictive result. Data-upload approval remains pending.
+- Upload closure: the user explicitly approved transfer on 2026-09-09 at16:32 UTC.
+  All ten files (1,464,177,529 bytes) reached the specified `iskandr/main` workspace/
+  environment, `presto-data` volume and family prefix without overwriting. Local
+  before/after hashes and remote names/sizes match; content hashing will repeat
+  before the census. `results/upload/` preserves the exact dirty source diff,
+  launcher, invocation and receipt. Nineteen focused checks pass after correcting
+  receipt-variable shadowing. No census or training condition has launched yet.
+- Initial launch at clean `37cbb17`: app `ap-2NjIAHmEYvAgM1ghTB4SEz` failed
+  installing Presto because the source archive omitted declared package
+  `inference`. No worker call or data load occurred; no source-support or
+  predictive metrics exist. The initial receipt and raw build log are preserved.
+  Derive archive roots from the authoritative package manifest, verify a wheel
+  locally from an isolated snapshot copy, then retry with an explicit attempt
+  name. Dataset bytes and source/hardware conditions remain unchanged.
+- Packaging verification at `d8f06ee`: wheel build succeeds with all nine declared
+  packages/all archived production Python sources; five canonical packaging
+  tests pass in 2.09 seconds from an isolated copy. The Modal image built, but
+  `package_manifest` failed before worker entry because the SDK relocated its
+  file import to `/root/launch.py`. App `ap-e5tn40CmWftp3a6wCcf0qy` was explicitly
+  stopped; failed-attempt receipt includes call ID and elapsed time. No data was
+  loaded. Explicit serialized transport now passes a fresh-process round-trip
+  with Modal 1.1.4 (one test, 0.48 seconds), plus 28 focused tests in 4.29 seconds.
+  Retry as `serialized_entry` with the same condition/input/hardware contract.
+- Live attempt `serialized_entry` at clean `d6a690a`: app
+  `ap-PPrESGuLvIKrTYEYNnwTPG`, call `fc-01M23HN1ZCVA1M5NF5Q1P0GFNJ`.
+  Worker startup and canonical full merged-data loading are confirmed after the
+  frozen code/input/curation hash checks. Observed Python 3.12.1, CPU torch
+  2.7.0+cpu, Hitlist 1.59.1, mhcseqs 2.5.12, mhcgnomes 3.41.0, Modal 1.1.4;
+  `/proc/meminfo` reports 192 GiB. Startup receipts are copied into the attempt
+  directory. Counts, runtime closure and source reconciliation remain pending;
+  no fitting or predictive evaluation has run. CI at earlier `37cbb17` passed
+  2,061 tests / 3 skipped in 865.08 seconds, with its complete log retained.
