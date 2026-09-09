@@ -10989,3 +10989,15 @@ regression is preserved in `launcher-review-before.log`; final checks are in
 `prelaunch-review-tests.log`. Freeze/publish this updated source bundle and keep
 the PR draft pending the real-source phases. The upload approval request is
 still unanswered; the automatic goal continuation does not authorize transfer.
+
+### Upload approved and complete — 2026-09-09 16:32 UTC
+
+The user explicitly said "Upload please". Uploaded all ten frozen files
+(1,464,177,529 bytes) to workspace `iskandr`, environment `main`, volume
+`presto-data`, prefix `2026-09-09_1541_codex_canonical-coverage/`. No overwrite.
+All local hashes match before/after; read-only remote listing exactly matches
+all ten names and sizes. Canonical upload receipts preserve the actual dirty
+launcher snapshot and its receipt-variable correction. Nineteen focused checks
+pass. `340e208` CI is complete: 2,061 passed / 3 skipped, full PR log preserved.
+Freeze the corrected launcher on a clean commit and start the registered first
+CPU census. Upload authorization persists; do not ask for it again.

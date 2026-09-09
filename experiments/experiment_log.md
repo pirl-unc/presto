@@ -1278,3 +1278,10 @@ fitting/held-out performance remain separate work.
   client's read-only lookup confirmed workspace `iskandr`; app and volume
   environment is explicitly `main`. This is preparation evidence, not a source
   census or predictive result. Data-upload approval remains pending.
+- Upload closure: the user explicitly approved transfer on 2026-09-09 at16:32 UTC.
+  All ten files (1,464,177,529 bytes) reached the specified `iskandr/main` workspace/
+  environment, `presto-data` volume and family prefix without overwriting. Local
+  before/after hashes and remote names/sizes match; content hashing will repeat
+  before the census. `results/upload/` preserves the exact dirty source diff,
+  launcher, invocation and receipt. Nineteen focused checks pass after correcting
+  receipt-variable shadowing. No census or training condition has launched yet.

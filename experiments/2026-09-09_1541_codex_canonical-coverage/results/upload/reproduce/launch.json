@@ -1,0 +1,24 @@
+{
+  "action": "upload",
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-09-09_1541_codex_canonical-coverage/code/launch.py",
+    "upload"
+  ],
+  "authorization": "User explicitly approved: Upload please",
+  "destination": {
+    "environment": "main",
+    "prefix": "2026-09-09_1541_codex_canonical-coverage",
+    "volume": "presto-data",
+    "workspace": "iskandr"
+  },
+  "dirty": true,
+  "environment": {
+    "MODAL_PROFILE": "iskandr"
+  },
+  "git_commit": "340e208f1599c17a197f6b3fe5ab4da7b631270a",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "source_patch": "source.patch",
+  "source_snapshot": "launch.py",
+  "verification": "All local hashes matched before/after; remote file names and sizes exactly match ten-file manifest; remote content hashes checked by census before data construction."
+}

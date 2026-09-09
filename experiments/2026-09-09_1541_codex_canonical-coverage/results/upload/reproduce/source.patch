@@ -1,0 +1,15 @@
+diff --git a/experiments/2026-09-09_1541_codex_canonical-coverage/code/launch.py b/experiments/2026-09-09_1541_codex_canonical-coverage/code/launch.py
+index 55fcc19..0ba8f77 100644
+--- a/experiments/2026-09-09_1541_codex_canonical-coverage/code/launch.py
++++ b/experiments/2026-09-09_1541_codex_canonical-coverage/code/launch.py
+@@ -121,8 +121,8 @@ def upload():
+     volume = modal.Volume.from_name("presto-data", environment_name=destination["environment"])
+     with volume.batch_upload() as batch:
+         for entry in manifest:
+-            destination = str(Path(entry["remote_path"]).relative_to("/inputs"))
+-            batch.put_file(entry["local_path"], destination)
++            remote_path = str(Path(entry["remote_path"]).relative_to("/inputs"))
++            batch.put_file(entry["local_path"], remote_path)
+     for entry in manifest:
+         if file_hash(entry["local_path"]) != entry["sha256"]:
+             raise RuntimeError(f"Input changed during upload: {entry['local_path']}")

@@ -1,7 +1,7 @@
 # Canonical full-source output coverage
 
 - Agent/model: Codex / GPT-6; date: 2026-09-09.
-- Status: instrumentation verified; data-upload approval pending; no condition launched.
+- Status: upload authorized and verified; first census condition is ready to launch.
 - Production base: merged PR #64, `190360a7e2596eb5f62682088f1ef63270bf5eeb`.
 - Plan: [detailed specification](../../tasks/canonical_coverage_evidence_spec.md).
 - Prior evidence: [source inventory](../2026-09-09_1106_codex_output-coverage/),
@@ -52,6 +52,17 @@ receipts. Do not overwrite prior results or repair shared caches during an audit
 
 ## Handoff
 
+The user explicitly approved the upload on 2026-09-09 ("Upload please"). All ten
+files, **1,464,177,529 bytes**, were uploaded without overwriting existing objects
+to workspace `iskandr`, environment `main`, volume `presto-data`, under this
+family's prefix. Local hashes matched before/after transfer; remote file names
+and byte counts match the manifest exactly. The census verifies content hashes
+again before data construction. [Upload receipts](results/upload/) preserve the
+actual launcher snapshot and its two-line dirty diff against `340e208` (a receipt
+variable shadowing correction), exact command/environment and user authorization.
+Nineteen focused audit/launcher checks passed after that correction. The reviewed
+`340e208` CI passed 2,061 tests / 3 skipped. No census or model training has run yet.
+
 - Status: observational instrumentation passed 75 focused/canonical checks in
   8.16 seconds, including unchanged full reports at chunk sizes 1/2/512, retained
   SQLite integrity, failed-gate restoration, duplicate-ID tie handling and
@@ -75,7 +86,7 @@ receipts. Do not overwrite prior results or repair shared caches during an audit
   or compute was involved. Updated tests passed **85 cases in 9.85 seconds**
   (including the earlier cases), and Ruff passes. Use the new frozen snapshot;
   the earlier `0158c25` launcher intentionally fails the new self-identity check.
-- Next step: freeze the clean source archive, upload immutable inputs, then
-  launch and reconcile the uncapped merged measured condition.
+- Next step: freeze the corrected clean source archive, then launch and reconcile
+  the uncapped merged measured condition using the uploaded inputs.
 - Open questions: actual per-column support, source-contamination impact,
   generated-parent provenance, rare assay incidence and per-column updates.

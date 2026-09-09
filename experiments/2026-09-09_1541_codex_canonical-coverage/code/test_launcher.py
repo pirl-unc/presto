@@ -117,3 +117,42 @@ def test_ambiguous_launcher_receipt_is_rejected(tmp_path, launcher, duplicates):
     (tmp_path / "source_receipt.json").write_text(json.dumps({"files": [entry] * duplicates}))
     with pytest.raises(RuntimeError, match="exactly one executing launcher entry"):
         launcher.execute("unused", tmp_path)
+
+
+def test_upload_receipt_preserves_verified_destination(tmp_path, monkeypatch, launcher):
+    source = tmp_path / "input.txt"
+    source.write_text("fixture")
+    manifest = [
+        {
+            "local_path": str(source),
+            "remote_path": "/inputs/family/input.txt",
+            "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+        }
+    ]
+    (tmp_path / "input_manifest.json").write_text(json.dumps(manifest))
+    monkeypatch.setattr(launcher, "EXPERIMENT", tmp_path)
+    monkeypatch.setattr(launcher, "RAW", tmp_path / "receipt")
+    uploaded = []
+
+    class Batch:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *_):
+            return False
+
+        def put_file(self, local_path, remote_path):
+            uploaded.append((local_path, remote_path))
+
+    def volume(name, *, environment_name):
+        assert (name, environment_name) == ("presto-data", "main")
+        return SimpleNamespace(batch_upload=Batch)
+
+    destination = {"profile": "iskandr", "workspace": "iskandr", "environment": "main"}
+    modal = SimpleNamespace(__version__="1.1.4", Volume=SimpleNamespace(from_name=volume))
+    monkeypatch.setattr(launcher, "modal_destination", lambda: (modal, destination))
+    launcher.upload()
+    receipt = json.loads((tmp_path / "receipt/upload.json").read_text())
+    assert receipt["destination"] == destination
+    assert receipt["files"] == manifest
+    assert uploaded == [(str(source), "family/input.txt")]

@@ -77,6 +77,11 @@ work and request approval for the concrete manifest and `iskandr` workspace /
 `presto-data` volume / `2026-09-09_1541_codex_canonical-coverage/` prefix. Do not
 retry the upload or indirectly export the same payload pending that authorization.
 
+**2026-09-09 16:32 UTC:** the user explicitly approved the requested upload
+("Upload please"). Transfer and the registered audit may proceed. Preserve the
+verified destination mapping in the upload receipt; individual file paths must
+not overwrite that mapping while iterating the manifest.
+
 ### Pre-launch review follow-up
 
 The archived source hash alone does not verify the local launcher that actually
