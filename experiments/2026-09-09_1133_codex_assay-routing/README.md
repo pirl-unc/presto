@@ -1,7 +1,7 @@
 # Full-source assay routing correction
 
 - Date/agent/model: 2026-09-09; Codex / GPT-6.
-- Status: full-source baseline completed; correction and after condition pending.
+- Status: before and after source scans completed; strict payload comparison next.
 - Issue: [Presto #59](https://github.com/pirl-unc/presto/issues/59).
 - Specification: [assay routing](../../tasks/assay_routing_spec.md).
 - Prior evidence: [source inventory and flagged-study trace](../2026-09-09_1106_codex_output-coverage/).
@@ -82,3 +82,22 @@ record hashes, complete loader stats and the status receipt. The baseline's
 two audit tests verify observation beyond the retained cap and restoration of
 production hooks after failure. The final correction must preserve payload
 hashes for unaffected groups and explain every changed route.
+
+## Corrected source scan
+
+The after condition ran at clean `ce30bbe9b1ea80a1f29ecefd9234bf21e496ab24`, with
+the identical file hash and all 927 descriptor groups retained. Pre-cap records
+are now binding 241,803; kinetics 102; stability 12,259; elution 2,073,797;
+T-cell 207,987; TCR evidence 166,285. There are 564,739 explicit omissions:
+561,829 unsupported qualitative-binding measurements, 1,262 structures, four
+equilibrium association constants, 1,166 non-MS presentation observations,
+and 478 missing supported quantitative labels. Invalid-peptide and optional-
+sequence sanitization counts are unchanged. All skip reasons reconcile with the
+actual loader's aggregate omissions and every pre-cap append count.
+
+Run `bash reproduce/compare.sh` after preserving the after receipt. This checks
+every descriptor population, permits only the declared route transitions,
+requires zero newly invented targets, and requires identical ordered payload
+hashes for every unchanged group. Raw input and production module hashes were
+stable across the complete after scan. No downstream MHC filtering, split,
+gradient audit or predictive evaluation has been run.
