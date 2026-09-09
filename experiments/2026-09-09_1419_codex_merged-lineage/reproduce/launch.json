@@ -1,0 +1,17 @@
+{
+  "status": "registered_before_launch",
+  "agent_model": "Codex / GPT-6",
+  "conditions": ["before", "after", "compare"],
+  "source": "data/merged_deduped.tsv",
+  "source_sha256": "46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c",
+  "source_fields": ["pmid", "doi", "reference_text", "evidence_row_id", "assay_iri", "reference_iri"],
+  "retained_cap_per_modality": 1,
+  "sampling": "head",
+  "sampling_seed": 17,
+  "measurement_scope": "all source rows and typed records before caps; no MHC filtering",
+  "environment": {"OMP_NUM_THREADS": "1", "MKL_NUM_THREADS": "1"},
+  "hardware": "local CPU; no GPU",
+  "training": null,
+  "predictive_evaluation": null,
+  "actual_invocations": "results/<condition>/invocation.json and reproduce/ are frozen at launch"
+}

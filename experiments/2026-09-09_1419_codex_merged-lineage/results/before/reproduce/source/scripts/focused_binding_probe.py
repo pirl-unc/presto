@@ -42,7 +42,6 @@ from presto.data.groove import prepare_mhc_input
 from presto.data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
 from presto.data.mhc_sequence_resolver import ExactMHCInput, resolve_class_i_groove_halves
 from presto.data.tokenizer import Tokenizer
-from presto.data.source_lineage import source_lineage_fields
 from presto.data.vocab import (
     BINDING_ASSAY_METHODS,
     BINDING_ASSAY_PREP,
@@ -1398,7 +1397,6 @@ def _load_binding_records_from_merged_tsv(
                 continue
 
             record = BindingRecord(
-                **source_lineage_fields(row),
                 peptide=peptide,
                 mhc_allele=allele,
                 value=value,

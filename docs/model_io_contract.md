@@ -296,6 +296,16 @@ candidates/category, selected protein/transcript/gene/coordinates/proteome,
 synthetic parentage, curation fingerprints and split assignment as traceable
 record lineage through held-out dumps.
 
+The merged TSV adapter preserves available PMID, DOI, reference text and original
+observation/assay/reference IDs through every emitted modality, samples,
+host-side batch lineage and row/bag prediction exports. Binding panel and probe
+selectors also preserve those source fields. Missing columns remain empty;
+publication IDs never substitute for original assay-observation identity. The
+current merged source contains publication metadata but lacks original assay IDs,
+so its coverage census still reports fallback observation identity. Restoring
+metadata changes diagnostic hashes that include sample provenance; it does not
+change model inputs or labels.
+
 Row task routing is `LOSS_TASK_SPECS` in
 [training/supervision.py](https://github.com/pirl-unc/presto/blob/main/training/supervision.py),
 alongside explicit binding/excision panel specs. The trainer retains compatibility

@@ -10826,3 +10826,56 @@ presentation with no method. No model/loss changes, study blacklist, source
 cache edits or MHC/split quality claims are part of this PR. Full CI and final
 artifact verification remain the merge gate. Lineage #60 is next, with the full
 #48/#50 census and #53 fresh training/held-out evidence still required afterward.
+
+### PR #61 closure and next PR — merged publication lineage
+
+PR #61 merged on 2026-09-09 as `8cebd17660b67c0e4908017e0de9fccf5b00c653`.
+The merged tree is identical to reviewed head
+`3c30d73b0d48b7dcb0a8842e6c46f5c1761f3ab2`. Both final-head CI runs (branch
+34360660081 and PR 34360770090) passed lint/tests and docs. The earlier identical
+production-code CI run 34360127179 passed **2,029 tests, 3 skipped**; its log is
+preserved under the assay-routing raw-artifact root. Review is posted on the PR,
+#59 is closed, and Presto has no deployment workflow.
+
+Started `codex/merged-source-lineage` directly on merged main. The next PR's
+specification is `tasks/merged_lineage_spec.md`: restore existing publication and
+observation metadata through all seven canonical modalities and held-out
+exports, without inventing original assay IDs or altering model inputs/labels.
+The full-source before/after experiment must establish exact non-lineage payload
+parity and metadata availability/mismatch counts. #48/#50/#53 remain open.
+
+- [x] Merge and verify #61, then create the next branch from updated main.
+- [x] Write the #60 implementation and verification specification before code.
+- [x] Register the lineage experiment and capture its baseline.
+- [x] Restore metadata through loader, samples, batches and held-out exports.
+- [x] Verify source conservation, metadata recovery and unchanged model inputs.
+- [ ] Review, verify CI and merge #60's repair, then resume the coverage census.
+
+The baseline ran at clean `15f2855` in 147.505 seconds and observed every one of
+3,423,737 source rows / 2,702,233 supported typed records. Every available
+publication field was dropped. The shared six-field metadata path is now
+implemented; initial semantic and audit-hook checks passed 12 tests. Broader
+regression checks and full-source after reconciliation remain required.
+
+Additional triage reproduced and filed Presto #62: the panel and probe-bootstrap
+binding selectors lose observed assay type/method and culture descriptors, while
+canonical and focused loaders preserve them. This is a Presto adapter defect,
+not an upstream Hitlist omission. Keep it separate from #60's metadata-only
+repair; fix it before interpreting affected selected-column supervision.
+
+### Merged lineage review — complete source reconciliation
+
+After scan at clean `87ce95b` completed in 187.212 seconds. Comparison at clean
+`859be29` (1.730 seconds) validates identical ordered non-lineage payloads for
+all 2,702,233 accepted records, unchanged source metadata/populations, all skip
+counts and cap statistics. Recovered 2,426,673 PMID values, 1,316 DOI values and
+362,176 reference-text values exactly; there are zero dropped/invented/changed
+values after repair. Original assay IDs remain absent in the current source.
+
+Reviewed the shared metadata copier and all seven record/sample paths, binding
+selectors, collator/device transfer, census identity gate and row/MIL exports.
+New fields append to public dataclasses; publication-only rows retain legacy
+sample IDs. No model/loss/target/split changes or curation bypass. Local suites
+passed 434 affected regressions and 48 focused-probe/audit tests; Ruff passes.
+Complete receipts, snapshots and comparison tables are closed in the experiment
+README/canonical log. Full remote CI and exact-head PR review remain merge gates.

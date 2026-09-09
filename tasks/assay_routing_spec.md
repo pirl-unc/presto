@@ -66,7 +66,7 @@ change model/loss equations or silently apply a study blacklist to shared data.
 - [x] Finalize descriptor policy against baseline groups and implement it.
 - [x] Verify semantic tests and execute the registered after condition.
 - [x] Reconcile source transitions and unaffected payload hashes; close artifacts.
-- [ ] Review, publish, verify CI and merge; start lineage #60 next.
+- [x] Review, publish, verify CI and merge; start lineage #60 next.
 
 ## Baseline-informed policy
 

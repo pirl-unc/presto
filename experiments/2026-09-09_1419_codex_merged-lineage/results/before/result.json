@@ -1,0 +1,806 @@
+{
+  "condition": "before",
+  "field_counts": [
+    {
+      "changed": 0,
+      "dropped": 62712,
+      "field": "pmid",
+      "invented": 0,
+      "matched": 179091,
+      "modality": "binding",
+      "record_present": 0,
+      "records": 241803,
+      "source_present": 62712
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "doi",
+      "invented": 0,
+      "matched": 241803,
+      "modality": "binding",
+      "record_present": 0,
+      "records": 241803,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 179091,
+      "field": "reference_text",
+      "invented": 0,
+      "matched": 62712,
+      "modality": "binding",
+      "record_present": 0,
+      "records": 241803,
+      "source_present": 179091
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "evidence_row_id",
+      "invented": 0,
+      "matched": 241803,
+      "modality": "binding",
+      "record_present": 0,
+      "records": 241803,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "assay_iri",
+      "invented": 0,
+      "matched": 241803,
+      "modality": "binding",
+      "record_present": 0,
+      "records": 241803,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "reference_iri",
+      "invented": 0,
+      "matched": 241803,
+      "modality": "binding",
+      "record_present": 0,
+      "records": 241803,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 102,
+      "field": "pmid",
+      "invented": 0,
+      "matched": 0,
+      "modality": "kinetics",
+      "record_present": 0,
+      "records": 102,
+      "source_present": 102
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "doi",
+      "invented": 0,
+      "matched": 102,
+      "modality": "kinetics",
+      "record_present": 0,
+      "records": 102,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "reference_text",
+      "invented": 0,
+      "matched": 102,
+      "modality": "kinetics",
+      "record_present": 0,
+      "records": 102,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "evidence_row_id",
+      "invented": 0,
+      "matched": 102,
+      "modality": "kinetics",
+      "record_present": 0,
+      "records": 102,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "assay_iri",
+      "invented": 0,
+      "matched": 102,
+      "modality": "kinetics",
+      "record_present": 0,
+      "records": 102,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "reference_iri",
+      "invented": 0,
+      "matched": 102,
+      "modality": "kinetics",
+      "record_present": 0,
+      "records": 102,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 3131,
+      "field": "pmid",
+      "invented": 0,
+      "matched": 9128,
+      "modality": "stability",
+      "record_present": 0,
+      "records": 12259,
+      "source_present": 3131
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "doi",
+      "invented": 0,
+      "matched": 12259,
+      "modality": "stability",
+      "record_present": 0,
+      "records": 12259,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 9128,
+      "field": "reference_text",
+      "invented": 0,
+      "matched": 3131,
+      "modality": "stability",
+      "record_present": 0,
+      "records": 12259,
+      "source_present": 9128
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "evidence_row_id",
+      "invented": 0,
+      "matched": 12259,
+      "modality": "stability",
+      "record_present": 0,
+      "records": 12259,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "assay_iri",
+      "invented": 0,
+      "matched": 12259,
+      "modality": "stability",
+      "record_present": 0,
+      "records": 12259,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "reference_iri",
+      "invented": 0,
+      "matched": 12259,
+      "modality": "stability",
+      "record_present": 0,
+      "records": 12259,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "pmid",
+      "invented": 0,
+      "matched": 0,
+      "modality": "processing",
+      "record_present": 0,
+      "records": 0,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "doi",
+      "invented": 0,
+      "matched": 0,
+      "modality": "processing",
+      "record_present": 0,
+      "records": 0,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "reference_text",
+      "invented": 0,
+      "matched": 0,
+      "modality": "processing",
+      "record_present": 0,
+      "records": 0,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "evidence_row_id",
+      "invented": 0,
+      "matched": 0,
+      "modality": "processing",
+      "record_present": 0,
+      "records": 0,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "assay_iri",
+      "invented": 0,
+      "matched": 0,
+      "modality": "processing",
+      "record_present": 0,
+      "records": 0,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "reference_iri",
+      "invented": 0,
+      "matched": 0,
+      "modality": "processing",
+      "record_present": 0,
+      "records": 0,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 2061734,
+      "field": "pmid",
+      "invented": 0,
+      "matched": 12063,
+      "modality": "elution",
+      "record_present": 0,
+      "records": 2073797,
+      "source_present": 2061734
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "doi",
+      "invented": 0,
+      "matched": 2073797,
+      "modality": "elution",
+      "record_present": 0,
+      "records": 2073797,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 12063,
+      "field": "reference_text",
+      "invented": 0,
+      "matched": 2061734,
+      "modality": "elution",
+      "record_present": 0,
+      "records": 2073797,
+      "source_present": 12063
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "evidence_row_id",
+      "invented": 0,
+      "matched": 2073797,
+      "modality": "elution",
+      "record_present": 0,
+      "records": 2073797,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "assay_iri",
+      "invented": 0,
+      "matched": 2073797,
+      "modality": "elution",
+      "record_present": 0,
+      "records": 2073797,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "reference_iri",
+      "invented": 0,
+      "matched": 2073797,
+      "modality": "elution",
+      "record_present": 0,
+      "records": 2073797,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 171899,
+      "field": "pmid",
+      "invented": 0,
+      "matched": 36088,
+      "modality": "tcell",
+      "record_present": 0,
+      "records": 207987,
+      "source_present": 171899
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "doi",
+      "invented": 0,
+      "matched": 207987,
+      "modality": "tcell",
+      "record_present": 0,
+      "records": 207987,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 36088,
+      "field": "reference_text",
+      "invented": 0,
+      "matched": 171899,
+      "modality": "tcell",
+      "record_present": 0,
+      "records": 207987,
+      "source_present": 36088
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "evidence_row_id",
+      "invented": 0,
+      "matched": 207987,
+      "modality": "tcell",
+      "record_present": 0,
+      "records": 207987,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "assay_iri",
+      "invented": 0,
+      "matched": 207987,
+      "modality": "tcell",
+      "record_present": 0,
+      "records": 207987,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "reference_iri",
+      "invented": 0,
+      "matched": 207987,
+      "modality": "tcell",
+      "record_present": 0,
+      "records": 207987,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 127095,
+      "field": "pmid",
+      "invented": 0,
+      "matched": 39190,
+      "modality": "tcr_evidence",
+      "record_present": 0,
+      "records": 166285,
+      "source_present": 127095
+    },
+    {
+      "changed": 0,
+      "dropped": 1316,
+      "field": "doi",
+      "invented": 0,
+      "matched": 164969,
+      "modality": "tcr_evidence",
+      "record_present": 0,
+      "records": 166285,
+      "source_present": 1316
+    },
+    {
+      "changed": 0,
+      "dropped": 125806,
+      "field": "reference_text",
+      "invented": 0,
+      "matched": 40479,
+      "modality": "tcr_evidence",
+      "record_present": 0,
+      "records": 166285,
+      "source_present": 125806
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "evidence_row_id",
+      "invented": 0,
+      "matched": 166285,
+      "modality": "tcr_evidence",
+      "record_present": 0,
+      "records": 166285,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "assay_iri",
+      "invented": 0,
+      "matched": 166285,
+      "modality": "tcr_evidence",
+      "record_present": 0,
+      "records": 166285,
+      "source_present": 0
+    },
+    {
+      "changed": 0,
+      "dropped": 0,
+      "field": "reference_iri",
+      "invented": 0,
+      "matched": 166285,
+      "modality": "tcr_evidence",
+      "record_present": 0,
+      "records": 166285,
+      "source_present": 0
+    }
+  ],
+  "input_rows": 3423737,
+  "mismatch_examples": {
+    "binding:pmid": [
+      {
+        "actual": "",
+        "expected": "15104671",
+        "input_record_ordinal": 5
+      },
+      {
+        "actual": "",
+        "expected": "15104671",
+        "input_record_ordinal": 7
+      },
+      {
+        "actual": "",
+        "expected": "15104671",
+        "input_record_ordinal": 9
+      }
+    ],
+    "binding:reference_text": [
+      {
+        "actual": "",
+        "expected": "submission mikkel harndahl kasper lamberth sune justesen gustav r der michael madsen christina sylvester-hvid morten nielsen claus lundegaard mette voldby larsen sheila tang s ren brunak ole lund s ren buus 2006 large scale analysis of peptide-hla class i interactions",
+        "input_record_ordinal": 6
+      },
+      {
+        "actual": "",
+        "expected": "submission mikkel harndahl kasper lamberth sune justesen gustav r der michael madsen christina sylvester-hvid morten nielsen claus lundegaard mette voldby larsen sheila tang s ren brunak ole lund s ren buus 2006 large scale analysis of peptide-hla class i interactions",
+        "input_record_ordinal": 8
+      },
+      {
+        "actual": "",
+        "expected": "submission mikkel harndahl kasper lamberth sune justesen gustav r der michael madsen christina sylvester-hvid morten nielsen claus lundegaard mette voldby larsen sheila tang s ren brunak ole lund s ren buus 2006 large scale analysis of peptide-hla class i interactions",
+        "input_record_ordinal": 10
+      }
+    ],
+    "elution:pmid": [
+      {
+        "actual": "",
+        "expected": "15116427",
+        "input_record_ordinal": 141
+      },
+      {
+        "actual": "",
+        "expected": "15116427",
+        "input_record_ordinal": 143
+      },
+      {
+        "actual": "",
+        "expected": "27841757",
+        "input_record_ordinal": 144
+      }
+    ],
+    "elution:reference_text": [
+      {
+        "actual": "",
+        "expected": "submission angela wahl 1 fredda schafer 1 wilfried bardet 1 rico buchli 2 william hildebrand 1 2009 characterization of endogenously loaded hla-a 0201 class i peptides following influenza a virus infection",
+        "input_record_ordinal": 15019
+      },
+      {
+        "actual": "",
+        "expected": "submission angela wahl 1 fredda schafer 1 wilfried bardet 1 rico buchli 2 william hildebrand 1 2009 characterization of endogenously loaded hla-a 0201 class i peptides following influenza a virus infection",
+        "input_record_ordinal": 144267
+      },
+      {
+        "actual": "",
+        "expected": "submission etienne caron ph.d. krystel vincent m.sc. marie-h l ne fortier ph.d. jean-philippe laverdure m.sc. alexandre bramoull m.sc. philippe roux ph.d. s bastien lemieux ph.d. pierre thibault ph.d. claude perreault m.d. ph.d. 2010 mhc class i peptides convey intracellular mtor signals to the cell surface",
+        "input_record_ordinal": 159124
+      }
+    ],
+    "kinetics:pmid": [
+      {
+        "actual": "",
+        "expected": "1889458",
+        "input_record_ordinal": 13399
+      },
+      {
+        "actual": "",
+        "expected": "1889458",
+        "input_record_ordinal": 13400
+      },
+      {
+        "actual": "",
+        "expected": "1889458",
+        "input_record_ordinal": 13401
+      }
+    ],
+    "stability:pmid": [
+      {
+        "actual": "",
+        "expected": "15039371",
+        "input_record_ordinal": 1407
+      },
+      {
+        "actual": "",
+        "expected": "15039371",
+        "input_record_ordinal": 1410
+      },
+      {
+        "actual": "",
+        "expected": "15039371",
+        "input_record_ordinal": 1412
+      }
+    ],
+    "stability:reference_text": [
+      {
+        "actual": "",
+        "expected": "submission michael rasmussen m.sc mikkel nors harndahl ph.d. anne bregnballe kristensen b.sc. ida kallehauge nielsen b.sc. kasper w jorgensen ph.d. anette stryhn ph.d. morten nielsen ph.d. s ren buus buus md ph.d. 2014 large scale analysis of peptide - hla-i stability",
+        "input_record_ordinal": 1408
+      },
+      {
+        "actual": "",
+        "expected": "submission michael rasmussen m.sc mikkel nors harndahl ph.d. anne bregnballe kristensen b.sc. ida kallehauge nielsen b.sc. kasper w jorgensen ph.d. anette stryhn ph.d. morten nielsen ph.d. s ren buus buus md ph.d. 2014 large scale analysis of peptide - hla-i stability",
+        "input_record_ordinal": 2236
+      },
+      {
+        "actual": "",
+        "expected": "submission michael rasmussen m.sc mikkel nors harndahl ph.d. anne bregnballe kristensen b.sc. ida kallehauge nielsen b.sc. kasper w jorgensen ph.d. anette stryhn ph.d. morten nielsen ph.d. s ren buus buus md ph.d. 2014 large scale analysis of peptide - hla-i stability",
+        "input_record_ordinal": 71255
+      }
+    ],
+    "tcell:pmid": [
+      {
+        "actual": "",
+        "expected": "15448372",
+        "input_record_ordinal": 3045227
+      },
+      {
+        "actual": "",
+        "expected": "15448372",
+        "input_record_ordinal": 3045228
+      },
+      {
+        "actual": "",
+        "expected": "7684468",
+        "input_record_ordinal": 3045229
+      }
+    ],
+    "tcell:reference_text": [
+      {
+        "actual": "",
+        "expected": "submission 10x genomics 2020 cd8 t cells of healthy donors 1-4: single cell immune profiling dataset by cell ranger 3.0.2",
+        "input_record_ordinal": 3045721
+      },
+      {
+        "actual": "",
+        "expected": "submission 10x genomics 2020 cd8 t cells of healthy donors 1-4: single cell immune profiling dataset by cell ranger 3.0.2",
+        "input_record_ordinal": 3047319
+      },
+      {
+        "actual": "",
+        "expected": "submission 10x genomics 2020 cd8 t cells of healthy donors 1-4: single cell immune profiling dataset by cell ranger 3.0.2",
+        "input_record_ordinal": 3047485
+      }
+    ],
+    "tcr_evidence:doi": [
+      {
+        "actual": "",
+        "expected": "10.1101/2020.05.04.20085779",
+        "input_record_ordinal": 3258445
+      },
+      {
+        "actual": "",
+        "expected": "10.1101/2020.05.04.20085779",
+        "input_record_ordinal": 3259351
+      },
+      {
+        "actual": "",
+        "expected": "10.1016/j.xcrm.2023.101017",
+        "input_record_ordinal": 3262060
+      }
+    ],
+    "tcr_evidence:pmid": [
+      {
+        "actual": "",
+        "expected": "28629751",
+        "input_record_ordinal": 3257417
+      },
+      {
+        "actual": "",
+        "expected": "25609818",
+        "input_record_ordinal": 3257418
+      },
+      {
+        "actual": "",
+        "expected": "28629751",
+        "input_record_ordinal": 3257419
+      }
+    ],
+    "tcr_evidence:reference_text": [
+      {
+        "actual": "",
+        "expected": "pmid:28629751",
+        "input_record_ordinal": 3257417
+      },
+      {
+        "actual": "",
+        "expected": "pmid:25609818",
+        "input_record_ordinal": 3257418
+      },
+      {
+        "actual": "",
+        "expected": "pmid:28629751",
+        "input_record_ordinal": 3257419
+      }
+    ]
+  },
+  "non_lineage_payload_sha256": {
+    "binding": "23316204988741b16ed8b70370d4370bd015afb964b97775b50f3b692889056c",
+    "elution": "b80ab5a446dac96d4c781157a85d5fb07af57050552c780e1681ce8fdce48d16",
+    "kinetics": "bc77ff1f7ca983b3896158728cafc4948889d30ef05442665db042ee8e20ec12",
+    "processing": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stability": "c24e3b219cd6604b108ab5a6eacc4f10d87b22c0c8aef6d0e122f9d491eafafc",
+    "tcell": "e0b633c4263fefd636dc3efb3591f8728e33315d322723e54d3dab41793b46b0",
+    "tcr_evidence": "88e695f09bbaa952a58d708d469c8ea6c0b0c2e82e29c4d6362652c9edfcb81e"
+  },
+  "source_columns": [
+    "peptide",
+    "mhc_allele",
+    "mhc_allele_set",
+    "mhc_allele_provenance",
+    "mhc_allele_bag_size",
+    "mhc_class",
+    "pmid",
+    "doi",
+    "reference_text",
+    "source",
+    "record_type",
+    "value",
+    "value_type",
+    "qualifier",
+    "response",
+    "assay_type",
+    "assay_method",
+    "apc_name",
+    "cell_hla_allele_set",
+    "cell_hla_n_alleles",
+    "effector_culture_condition",
+    "apc_culture_condition",
+    "in_vitro_process_type",
+    "in_vitro_responder_cell",
+    "in_vitro_stimulator_cell",
+    "cdr3_alpha",
+    "cdr3_beta",
+    "trav",
+    "trbv",
+    "species",
+    "antigen_species"
+  ],
+  "source_field_availability": {
+    "assay_iri": 0,
+    "doi": 1316,
+    "evidence_row_id": 0,
+    "pmid": 3133664,
+    "reference_iri": 0,
+    "reference_text": 376725
+  },
+  "source_fields_present": {
+    "assay_iri": false,
+    "doi": true,
+    "evidence_row_id": false,
+    "pmid": true,
+    "reference_iri": false,
+    "reference_text": true
+  },
+  "source_metadata_sha256": {
+    "binding": "75fc04ce2666c0d8ea5a7a2fbfab6e46639c70204ea0fac9ceb7adbdd33fd4df",
+    "elution": "bbf7153033a5fe4302e1a30f5ff1a39ad596c759634fd0a04e664411f9c391ea",
+    "kinetics": "b2ffd3c1514124435617754079aaf3c1477bd4b82570ea480df64950f47e2aee",
+    "processing": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stability": "df42070314d1a2ca054bd98db4300803b95fb1762991b45112f5148d9910dc82",
+    "tcell": "9dcdf4b9e983db3b8dd52321961e19c2be667382b4d55d146458f3e2595f8fed",
+    "tcr_evidence": "8fe53bb7534a0300589c69d635ed9427f65fb7e96a15542bc0135e6108e966eb"
+  },
+  "source_sha256": "46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c",
+  "stats": {
+    "cap_sampling": "head",
+    "counts_before_cap": {
+      "binding": 241803,
+      "elution": 2073797,
+      "kinetics": 102,
+      "processing": 0,
+      "stability": 12259,
+      "tcell": 207987,
+      "tcr_evidence": 166285
+    },
+    "records_loaded": {
+      "binding": 1,
+      "elution": 1,
+      "kinetics": 1,
+      "processing": 0,
+      "stability": 1,
+      "tcell": 1,
+      "tcr_evidence": 1
+    },
+    "rows_by_assay": {
+      "binding_affinity": 242051,
+      "binding_association_constant": 4,
+      "binding_koff": 72,
+      "binding_kon": 32,
+      "binding_qualitative": 561829,
+      "binding_structure": 1262,
+      "binding_t_half": 11308,
+      "binding_tm": 1179,
+      "elution_ms": 2073797,
+      "presentation_non_ms": 1166,
+      "tcell_response": 207987,
+      "tcr_evidence": 166285
+    },
+    "rows_by_source": {
+      "iedb": 3100687,
+      "mcpas": 13702,
+      "vdjdb": 152583
+    },
+    "rows_dropped_by_cap": {
+      "binding": 241802,
+      "elution": 2073796,
+      "kinetics": 101,
+      "processing": 0,
+      "stability": 12258,
+      "tcell": 207986,
+      "tcr_evidence": 166284
+    },
+    "rows_dropped_invalid_peptide": 156765,
+    "rows_sanitized_optional_sequences": 9877,
+    "rows_scanned": 3266972,
+    "skipped_by_reason": {
+      "missing_binding_affinity_value": 248,
+      "missing_binding_koff_value": 2,
+      "missing_binding_t_half_value": 208,
+      "missing_binding_tm_value": 20,
+      "unsupported_binding_association_constant": 4,
+      "unsupported_binding_qualitative": 561829,
+      "unsupported_binding_structure": 1262,
+      "unsupported_presentation_non_ms": 1166
+    },
+    "skipped_invalid_peptide": 156765,
+    "skipped_unroutable_or_missing_label": 564739
+  }
+}
