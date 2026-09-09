@@ -1242,8 +1242,9 @@ fitting/held-out performance remain separate work.
 
 - Agent/model: Codex / GPT-6.
 - Directory: [2026-09-09_1541_codex_canonical-coverage](2026-09-09_1541_codex_canonical-coverage/).
-- Status: registered after the routing/lineage/selector repairs; no full condition
-  launched yet. Production base is merged PR #64, `190360a7`.
+- Status: inputs uploaded and verified; the first attempt failed during image
+  construction before a worker call/data loading. Production base is merged PR
+  #64, `190360a7`. The packaging correction is being verified before a retry.
 - Dataset: frozen merged TSV, exclusive Hitlist and explicit Hitlist-plus-bulk,
   each measured-only and augmented, no modality caps. Ten input files total
   1,464,177,529 bytes; exact hashes and complete arguments are in the directory.
@@ -1285,3 +1286,10 @@ fitting/held-out performance remain separate work.
   before the census. `results/upload/` preserves the exact dirty source diff,
   launcher, invocation and receipt. Nineteen focused checks pass after correcting
   receipt-variable shadowing. No census or training condition has launched yet.
+- Initial launch at clean `37cbb17`: app `ap-2NjIAHmEYvAgM1ghTB4SEz` failed
+  installing Presto because the source archive omitted declared package
+  `inference`. No worker call or data load occurred; no source-support or
+  predictive metrics exist. The initial receipt and raw build log are preserved.
+  Derive archive roots from the authoritative package manifest, verify a wheel
+  locally from an isolated snapshot copy, then retry with an explicit attempt
+  name. Dataset bytes and source/hardware conditions remain unchanged.

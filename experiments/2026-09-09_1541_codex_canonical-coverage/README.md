@@ -1,7 +1,8 @@
 # Canonical full-source output coverage
 
 - Agent/model: Codex / GPT-6; date: 2026-09-09.
-- Status: upload authorized and verified; first census condition is ready to launch.
+- Status: upload verified; first image build failed before data loading; packaging
+  correction and a separately recorded retry are in preparation.
 - Production base: merged PR #64, `190360a7e2596eb5f62682088f1ef63270bf5eeb`.
 - Plan: [detailed specification](../../tasks/canonical_coverage_evidence_spec.md).
 - Prior evidence: [source inventory](../2026-09-09_1106_codex_output-coverage/),
@@ -63,6 +64,29 @@ variable shadowing correction), exact command/environment and user authorization
 Nineteen focused audit/launcher checks passed after that correction. The reviewed
 `340e208` CI passed 2,061 tests / 3 skipped. No census or model training has run yet.
 
+The first launch at clean `37cbb17` reached Modal app
+[`ap-2NjIAHmEYvAgM1ghTB4SEz`](https://modal.com/apps/iskandr/main/ap-2NjIAHmEYvAgM1ghTB4SEz)
+but image construction failed: `package directory './inference' does not exist`.
+No worker call was submitted and no data loaded. The source archive's duplicated
+package list omitted a declared package. [Initial receipts](results/merged_measured/)
+and `artifacts/2026-09-09_1541_codex_canonical-coverage/merged-measured-launch.log`
+preserve that failure. Runtime, observed census hardware, support counts and
+predictive metrics are unavailable for this attempt. Dependency layers completed.
+
+The launcher now derives archive package roots from `pyproject.toml` and isolates
+explicit retries with `--attempt package_manifest`. Initial receipts and remote
+logs remain unchanged; repeat attempt names are rejected. A local wheel build
+from a copy of the next clean snapshot is required before retrying the same
+condition/data/hardware contract. No additional input upload is needed.
+The corrected launcher/instrumentation passes 28 focused tests in 13.15 seconds
+and Ruff 0.16.0. An initial expanded check passed 32 tests but exposed that the
+canonical packaging test discovers preserved raw source snapshots under local
+`artifacts/`; rerun that check in the isolated source copy without changing or
+deleting those historical artifacts.
+
+Earlier preparation and review history (the upload authorization above supersedes
+the earlier transfer block):
+
 - Status: observational instrumentation passed 75 focused/canonical checks in
   8.16 seconds, including unchanged full reports at chunk sizes 1/2/512, retained
   SQLite integrity, failed-gate restoration, duplicate-ID tie handling and
@@ -86,7 +110,7 @@ Nineteen focused audit/launcher checks passed after that correction. The reviewe
   or compute was involved. Updated tests passed **85 cases in 9.85 seconds**
   (including the earlier cases), and Ruff passes. Use the new frozen snapshot;
   the earlier `0158c25` launcher intentionally fails the new self-identity check.
-- Next step: freeze the corrected clean source archive, then launch and reconcile
+- Next step: verify a wheel from the corrected clean source archive, then launch and reconcile
   the uncapped merged measured condition using the uploaded inputs.
 - Open questions: actual per-column support, source-contamination impact,
   generated-parent provenance, rare assay incidence and per-column updates.

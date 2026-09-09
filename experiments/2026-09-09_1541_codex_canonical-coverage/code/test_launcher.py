@@ -4,6 +4,8 @@ import hashlib
 import importlib.util
 import json
 import sys
+import tomllib
+from contextlib import nullcontext
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
 
@@ -18,6 +20,100 @@ def launcher():
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
+
+
+def test_archive_contains_python_sources_for_every_declared_package(launcher):
+    project = tomllib.loads((launcher.ROOT / "pyproject.toml").read_text())
+    expected = set()
+    for package in project["tool"]["setuptools"]["packages"]:
+        directory = launcher.ROOT.joinpath(*package.split(".")[1:])
+        expected.update(str(path.relative_to(launcher.ROOT)) for path in directory.glob("*.py"))
+    archived = set(launcher.archive_paths(sorted(expected)))
+    assert expected <= archived, sorted(expected - archived)
+
+
+def test_archive_follows_added_package_without_changing_launcher(tmp_path, monkeypatch, launcher):
+    (tmp_path / "pyproject.toml").write_text(
+        '[tool.setuptools]\npackages = ["presto", "presto.future_package"]\n'
+    )
+    monkeypatch.setattr(launcher, "ROOT", tmp_path)
+    assert launcher.archive_paths(
+        ["future_package/__init__.py", "future_package/input.parquet", "data/raw.tsv"]
+    ) == ["future_package/__init__.py"]
+
+
+@pytest.mark.parametrize("attempt", ["", "..", "../retry", "/tmp/retry", "retry/child", "a b"])
+def test_invalid_attempt_rejected_before_snapshot_access(tmp_path, launcher, attempt):
+    with pytest.raises(ValueError, match="Unsafe or empty attempt"):
+        launcher.execute("unused", tmp_path / "missing", attempt)
+
+
+def test_retry_preserves_initial_receipts_and_cannot_overwrite(tmp_path, monkeypatch, launcher):
+    snapshot = tmp_path / "snapshot"
+    family = snapshot / "experiments" / launcher.FAMILY
+    (family / "code").mkdir(parents=True)
+    for name in ("launch.py", "census.py"):
+        (family / "code" / name).write_bytes(Path(launcher.__file__).with_name(name).read_bytes())
+    remote_initial = f"/results/{launcher.FAMILY}/condition"
+    (family / "conditions.json").write_text(
+        json.dumps({"condition": {"run_dir": remote_initial, "seed": 42}})
+    )
+    files = [
+        {
+            "relative_path": str(path.relative_to(snapshot)),
+            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+        }
+        for path in sorted(snapshot.rglob("*"))
+        if path.is_file()
+    ]
+    (snapshot / "source_receipt.json").write_text(json.dumps({"files": files}))
+    local_family = tmp_path / "local"
+    monkeypatch.setattr(launcher, "EXPERIMENT", local_family)
+    image = SimpleNamespace()
+    for method in (
+        "pip_install", "pip_install_from_requirements", "add_local_dir", "run_commands", "env"
+    ):
+        setattr(image, method, lambda *args, **kwargs: image)
+    spawned = []
+
+    def spawn(*args):
+        spawned.append(args)
+        return SimpleNamespace(object_id="fc-fixture", get=lambda: {"fixture": True})
+
+    app = SimpleNamespace(
+        app_id="ap-fixture",
+        function=lambda **kwargs: lambda fn: SimpleNamespace(spawn=spawn),
+        run=lambda **kwargs: nullcontext(),
+    )
+    modal = SimpleNamespace(
+        __version__="1.1.4",
+        Image=SimpleNamespace(debian_slim=lambda **kwargs: image),
+        Volume=SimpleNamespace(from_name=lambda *args, **kwargs: None),
+        App=lambda *args: app,
+        enable_output=nullcontext,
+    )
+    destination = {"profile": "iskandr", "workspace": "iskandr", "environment": "main"}
+    monkeypatch.setattr(launcher, "modal_destination", lambda: (modal, destination))
+    launcher.execute("condition", snapshot)
+    initial_path = local_family / "results/condition/handle.json"
+    initial_bytes = initial_path.read_bytes()
+    launcher.execute("condition", snapshot, "package_manifest")
+    retry = json.loads(
+        (local_family / "results/condition/attempts/package_manifest/handle.json").read_text()
+    )
+    remote_retry = remote_initial + "/attempts/package_manifest"
+    assert spawned == [
+        ("condition", "initial", remote_initial),
+        ("condition", "package_manifest", remote_retry),
+    ]
+    assert retry["args"] == {"run_dir": remote_retry, "seed": 42}
+    assert retry["attempt"] == "package_manifest"
+    assert retry["status"] == "remote_complete"
+    assert retry["finished_unix"] >= retry["started_unix"]
+    assert initial_path.read_bytes() == initial_bytes
+    with pytest.raises(FileExistsError):
+        launcher.execute("condition", snapshot, "package_manifest")
+    assert len(spawned) == 2
 
 
 def test_changed_live_launcher_is_rejected_before_image_preparation(

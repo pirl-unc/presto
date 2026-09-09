@@ -208,14 +208,12 @@ def retained_census(output):
         coverage_preflight.OutputCoverageCensus = original
 
 
-def run(condition, *, attempt="initial", run_dir=None):
+def run(condition):
     import hitlist
     import mhcseqs
     from presto.scripts import train_iedb
 
     args = json.loads((EXPERIMENT / "conditions.json").read_text())[condition]
-    if run_dir is not None:
-        args["run_dir"] = run_dir
     output = Path(args["run_dir"])
     output.mkdir(parents=True, exist_ok=False)
     started = time.monotonic()
@@ -223,7 +221,6 @@ def run(condition, *, attempt="initial", run_dir=None):
     sources = json.loads((EXPERIMENT / "input_manifest.json").read_text())
     state = {
         "condition": condition,
-        "attempt": attempt,
         "status": "running",
         "source": receipt,
         "args": args,

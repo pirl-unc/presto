@@ -104,6 +104,35 @@ Its evidence stays in the census even when excluded from diagnostic candidates.
   workspace mismatch handling using offline fixtures; then freeze a new archive.
 - [x] Publish the review evidence without retrying the unapproved data upload.
 
+### First image-build failure and revised execution plan
+
+The approved input upload completed and remote names/sizes match. The first
+`merged_measured` launch used clean `37cbb17`; Modal app
+`ap-2NjIAHmEYvAgM1ghTB4SEz` failed while installing Presto because the source
+archive omitted its declared `inference` package. No worker call/data load ran.
+The Python/dependency image layers built successfully. This is launcher packaging,
+not a source/curation or model failure. Preserve the initial receipt/build log.
+
+Derive source-package roots from `pyproject.toml`'s authoritative package list
+instead of duplicating it in the archive filter. Verify every declared package's
+Python sources is included while raw corpora remain excluded. Build a wheel from
+an isolated copy of the corrected snapshot locally before another remote launch.
+Do not modify a frozen snapshot by running a build inside it.
+
+Add an explicit named-attempt option for launch receipts, remote logs and output
+directories, retaining initial behavior for the already-recorded attempt. Reject
+unsafe/empty attempt names and refuse existing attempt directories. Both local
+and remote receipts must record the actual attempt/output path; retries do not
+become additional source conditions. Retry only after these checks, using the
+same uploaded bytes, source/augmentation parameters and CPU/RAM/timeout contract.
+Do not re-upload or change the source data to resolve this packaging failure.
+
+Run the canonical packaging checks against the isolated source copy as well:
+their on-disk discovery includes preserved `artifacts/` snapshots in a developer
+checkout, although those snapshots are not declared production packages. Keep
+that first local failure in the verification log; do not delete audit evidence
+or modify production package discovery just to make this working tree pass.
+
 ## Instrumentation and verification
 
 Experiment-local wrappers may add receipts, progress, SQLite retention and

@@ -5,14 +5,11 @@ import asyncio
 import hashlib
 import json
 import os
-import re
 import shlex
 import shutil
 import subprocess
 import sys
 import tarfile
-import time
-import tomllib
 from pathlib import Path
 
 EXPERIMENT = Path(__file__).resolve().parents[1]
@@ -33,12 +30,7 @@ def file_hash(path):
 
 def archive_paths(tracked):
     """Ship executable source and required package resources, never raw corpora."""
-    project = tomllib.loads((ROOT / "pyproject.toml").read_text())
-    package_roots = {
-        package.split(".")[1]
-        for package in project["tool"]["setuptools"]["packages"]
-        if package.startswith("presto.")
-    }
+    package_roots = {"cli", "data", "models", "training", "scripts"}
     required = {
         "__init__.py",
         "__main__.py",
@@ -62,14 +54,6 @@ def archive_paths(tracked):
             )
         )
     )
-
-
-def attempt_path(path, attempt):
-    """Preserve initial receipts and give explicit retries their own directory."""
-    if re.fullmatch(r"[a-z0-9][a-z0-9_-]*", attempt) is None:
-        raise ValueError(f"Unsafe or empty attempt name: {attempt!r}")
-    path = Path(path)
-    return path if attempt == "initial" else path / "attempts" / attempt
 
 
 def prepare():
@@ -154,7 +138,7 @@ def upload():
     print("Uploaded frozen inputs without overwriting existing objects", flush=True)
 
 
-def remote_census(condition, attempt, run_dir):
+def remote_census(condition):
     """Global function so Modal can serialize its implementation and durable call."""
     import importlib.util
     import modal
@@ -165,27 +149,23 @@ def remote_census(condition, attempt, run_dir):
     logs = Path("/results") / family / "logs"
     logs.mkdir(parents=True, exist_ok=True)
     output_volume = modal.Volume.from_name("presto-checkpoints", environment_name="main")
-    log_name = condition if attempt == "initial" else f"{condition}-{attempt}"
     try:
-        with (logs / f"{log_name}.log").open("x", buffering=1) as log:
+        with (logs / f"{condition}.log").open("x", buffering=1) as log:
             with redirect_stdout(log), redirect_stderr(log):
                 spec = importlib.util.spec_from_file_location("canonical_census_worker", worker)
                 module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(module)
-                module.run(condition, attempt=attempt, run_dir=run_dir)
+                module.run(condition)
     finally:
         output_volume.commit()
     return {
         "condition": condition,
-        "attempt": attempt,
         "output_volume": "presto-checkpoints",
-        "output_path": str(Path(run_dir).relative_to("/results")),
-        "log_path": str((logs / f"{log_name}.log").relative_to("/results")),
+        "output_path": f"{family}/{condition}",
     }
 
 
-def execute(condition, snapshot, attempt="initial"):
-    local_result = attempt_path(EXPERIMENT / "results" / condition, attempt)
+def execute(condition, snapshot):
     snapshot = snapshot.resolve()
     receipt = json.loads((snapshot / "source_receipt.json").read_text())
     for entry in receipt["files"]:
@@ -204,8 +184,7 @@ def execute(condition, snapshot, attempt="initial"):
     configs = json.loads((frozen_experiment / "conditions.json").read_text())
     if condition not in configs:
         raise ValueError(f"Unregistered condition {condition}")
-    args = dict(configs[condition])
-    args["run_dir"] = str(attempt_path(args["run_dir"], attempt))
+    local_result = EXPERIMENT / "results" / condition
     local_result.mkdir(parents=True, exist_ok=False)
     bundle = local_result / "reproduce"
     bundle.mkdir()
@@ -215,13 +194,11 @@ def execute(condition, snapshot, attempt="initial"):
         "argv": sys.argv,
         "cwd": str(ROOT),
         "condition": condition,
-        "attempt": attempt,
         "source_receipt": receipt,
-        "args": args,
+        "args": configs[condition],
         "modal_version": modal.__version__,
         "destination": destination,
         "status": "preparing_image",
-        "started_unix": time.time(),
     }
     write_json(bundle / "launch.json", invocation)
     (bundle / "launch.sh").write_text(
@@ -271,7 +248,7 @@ def execute(condition, snapshot, attempt="initial"):
             modal.enable_output(),
             app.run(detach=True, environment_name=destination["environment"]),
         ):
-            call = remote.spawn(condition, attempt, args["run_dir"])
+            call = remote.spawn(condition)
             invocation.update(status="running", app_id=app.app_id, call_id=call.object_id)
             write_json(local_result / "handle.json", invocation)
             print(json.dumps({"app_id": app.app_id, "call_id": call.object_id}), flush=True)
@@ -281,11 +258,6 @@ def execute(condition, snapshot, attempt="initial"):
         invocation.update(status="launch_or_remote_failed", error=repr(exc))
         raise
     finally:
-        invocation.update(
-            app_id=app.app_id,
-            finished_unix=time.time(),
-            elapsed_seconds=time.time() - invocation["started_unix"],
-        )
         write_json(local_result / "handle.json", invocation)
 
 
@@ -294,7 +266,6 @@ if __name__ == "__main__":
     parser.add_argument("action", choices=("prepare", "upload", "execute"))
     parser.add_argument("--condition", default="merged_measured")
     parser.add_argument("--snapshot", type=Path)
-    parser.add_argument("--attempt", default="initial")
     options = parser.parse_args()
     os.chdir(ROOT)
     if options.action == "prepare":
@@ -304,4 +275,4 @@ if __name__ == "__main__":
     elif options.snapshot is None:
         parser.error("execute requires --snapshot from a clean prepare receipt")
     else:
-        execute(options.condition, options.snapshot, options.attempt)
+        execute(options.condition, options.snapshot)
