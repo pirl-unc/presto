@@ -10971,3 +10971,21 @@ the B2M resource. That first local archive was never uploaded. Final packaging /
 canonical instrumentation checks pass 76 tests in 7.60 seconds; Ruff passes.
 Prepare the corrected clean archive and a draft evidence PR while upload approval
 is pending. #48/#50/#53 remain open; no full census or training has run.
+
+### Draft #65 author review — execution and identity boundaries
+
+The next review reproduced two local defects before execution: a modified live
+launcher could use an older archived launcher while claiming its frozen source,
+and `sample_id=None` produced a diagnostic ID starting with literal `None`.
+Both are fixed. Snapshot checks now require one matching executing-launcher
+entry before image construction. Missing IDs remain in canonical evidence but
+are excluded from diagnostic candidates. Modal1.1.4/profile/workspace checks
+bind the requested destination; both volumes and app explicitly use environment
+`main`. The actual read-only workspace lookup returned `iskandr` without transfer.
+
+Local tests passed 85 cases in 9.85 seconds, including the seven launch-boundary
+checks and two null/empty-ID parity cases. Ruff passes. The previous mismatch
+regression is preserved in `launcher-review-before.log`; final checks are in
+`prelaunch-review-tests.log`. Freeze/publish this updated source bundle and keep
+the PR draft pending the real-source phases. The upload approval request is
+still unanswered; the automatic goal continuation does not authorize transfer.

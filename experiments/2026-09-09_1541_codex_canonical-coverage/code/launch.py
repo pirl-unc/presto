@@ -1,6 +1,7 @@
 """Freeze, upload and execute registered coverage conditions on Modal CPU."""
 
 import argparse
+import asyncio
 import hashlib
 import json
 import os
@@ -92,14 +93,32 @@ def prepare():
     print(snapshot, flush=True)
 
 
-def upload():
+def modal_destination():
+    """Verify the pinned client's actual workspace without logging credentials."""
     import modal
+    from modal.config import _lookup_workspace, _profile, config
+
+    if modal.__version__ != "1.1.4":
+        raise RuntimeError("This frozen launcher requires Modal 1.1.4")
+    if _profile != "iskandr":
+        raise RuntimeError("Launch with MODAL_PROFILE=iskandr for the registered destination")
+    # The pinned client's own profile command uses this read-only lookup.
+    workspace = asyncio.run(
+        _lookup_workspace(config["server_url"], config["token_id"], config["token_secret"])
+    ).username
+    if workspace != "iskandr":
+        raise RuntimeError(f"Authenticated workspace {workspace!r} differs from 'iskandr'")
+    return modal, {"profile": _profile, "workspace": workspace, "environment": "main"}
+
+
+def upload():
+    modal, destination = modal_destination()
 
     manifest = json.loads((EXPERIMENT / "input_manifest.json").read_text())
     for entry in manifest:
         if file_hash(entry["local_path"]) != entry["sha256"]:
             raise RuntimeError(f"Frozen local input changed: {entry['local_path']}")
-    volume = modal.Volume.from_name("presto-data")
+    volume = modal.Volume.from_name("presto-data", environment_name=destination["environment"])
     with volume.batch_upload() as batch:
         for entry in manifest:
             destination = str(Path(entry["remote_path"]).relative_to("/inputs"))
@@ -109,7 +128,12 @@ def upload():
             raise RuntimeError(f"Input changed during upload: {entry['local_path']}")
     write_json(
         RAW / "upload.json",
-        {"volume": "presto-data", "files": manifest, "modal_version": modal.__version__},
+        {
+            "volume": "presto-data",
+            "files": manifest,
+            "modal_version": modal.__version__,
+            "destination": destination,
+        },
     )
     print("Uploaded frozen inputs without overwriting existing objects", flush=True)
 
@@ -124,7 +148,7 @@ def remote_census(condition):
     worker = Path("/opt/presto/experiments") / family / "code/census.py"
     logs = Path("/results") / family / "logs"
     logs.mkdir(parents=True, exist_ok=True)
-    output_volume = modal.Volume.from_name("presto-checkpoints")
+    output_volume = modal.Volume.from_name("presto-checkpoints", environment_name="main")
     try:
         with (logs / f"{condition}.log").open("x", buffering=1) as log:
             with redirect_stdout(log), redirect_stderr(log):
@@ -142,13 +166,20 @@ def remote_census(condition):
 
 
 def execute(condition, snapshot):
-    import modal
-
     snapshot = snapshot.resolve()
     receipt = json.loads((snapshot / "source_receipt.json").read_text())
     for entry in receipt["files"]:
         if file_hash(snapshot / entry["relative_path"]) != entry["sha256"]:
             raise RuntimeError(f"Snapshot changed: {entry['relative_path']}")
+    launcher_path = f"experiments/{FAMILY}/code/launch.py"
+    launcher_entries = [
+        entry for entry in receipt["files"] if entry["relative_path"] == launcher_path
+    ]
+    if len(launcher_entries) != 1:
+        raise RuntimeError("Frozen receipt requires exactly one executing launcher entry")
+    if file_hash(Path(__file__).resolve()) != launcher_entries[0]["sha256"]:
+        raise RuntimeError("Executing launcher differs from frozen source; prepare a new snapshot")
+    modal, destination = modal_destination()
     frozen_experiment = snapshot / "experiments" / FAMILY
     configs = json.loads((frozen_experiment / "conditions.json").read_text())
     if condition not in configs:
@@ -166,6 +197,7 @@ def execute(condition, snapshot):
         "source_receipt": receipt,
         "args": configs[condition],
         "modal_version": modal.__version__,
+        "destination": destination,
         "status": "preparing_image",
     }
     write_json(bundle / "launch.json", invocation)
@@ -203,12 +235,19 @@ def execute(condition, snapshot):
         memory=(65536, 196608),
         timeout=14400,
         volumes={
-            "/inputs": modal.Volume.from_name("presto-data"),
-            "/results": modal.Volume.from_name("presto-checkpoints"),
+            "/inputs": modal.Volume.from_name(
+                "presto-data", environment_name=destination["environment"]
+            ),
+            "/results": modal.Volume.from_name(
+                "presto-checkpoints", environment_name=destination["environment"]
+            ),
         },
     )(remote_census)
     try:
-        with modal.enable_output(), app.run(detach=True):
+        with (
+            modal.enable_output(),
+            app.run(detach=True, environment_name=destination["environment"]),
+        ):
             call = remote.spawn(condition)
             invocation.update(status="running", app_id=app.app_id, call_id=call.object_id)
             write_json(local_result / "handle.json", invocation)

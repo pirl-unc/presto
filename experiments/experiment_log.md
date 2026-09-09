@@ -1273,3 +1273,8 @@ fitting/held-out performance remain separate work.
   Automatic approval review rejected the ten-file Modal upload pending explicit
   authorization for its payload and destination. No source transfer, remote
   census or training occurred; the frozen code/input manifest are reviewable.
+- Further author review fixed live-launcher/archive mismatch and null diagnostic
+  IDs before launch, with 85 local checks passing in 9.85 seconds. The pinned
+  client's read-only lookup confirmed workspace `iskandr`; app and volume
+  environment is explicitly `main`. This is preparation evidence, not a source
+  census or predictive result. Data-upload approval remains pending.

@@ -58,7 +58,7 @@ class CandidateSelection:
         if sample.synthetic_kind or source == "synthetic" or source.startswith("synthetic_"):
             self.synthetic_hits += 1
             return
-        identity = str(sample.sample_id)
+        identity = str(sample.sample_id or "")
         if not identity:
             self.missing_identity_hits += 1
             return

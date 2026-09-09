@@ -168,6 +168,25 @@ def test_candidates_exclude_generated_rows_without_changing_census(tmp_path):
     assert candidates["excluded_synthetic_observation_hits"] > 0
 
 
+@pytest.mark.parametrize("identity", [None, ""])
+def test_missing_candidate_identity_preserves_census_without_invented_id(tmp_path, identity):
+    row = dataclasses.replace(samples()["train"][0], sample_id=identity)
+    kwargs = dict(
+        splits={"train": [row]},
+        collator=PrestoCollator(),
+        args=_resolve_run_args(argparse.Namespace()),
+        data_seed=17,
+        manifest=None,
+    )
+    baseline = coverage_preflight.audit_training_coverage(**kwargs)
+    with WORKER.retained_census(tmp_path):
+        result = coverage_preflight.audit_training_coverage(**kwargs, output_dir=tmp_path)
+    assert result == baseline
+    candidates = json.loads((tmp_path / "training_candidates.json").read_text())
+    assert candidates["samples"] == []
+    assert candidates["missing_identity_observation_hits"] > 0
+
+
 def test_registered_source_conditions_are_uncapped_and_do_not_union_sources():
     conditions = json.loads((Path(__file__).parents[1] / "conditions.json").read_text())
     assert len(conditions) == 6

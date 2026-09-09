@@ -66,6 +66,15 @@ receipts. Do not overwrite prior results or repair shared caches during an audit
   in the first archive; that archive was never uploaded.
 - Final verification including source-package exclusion passed 76 tests in
   7.60 seconds; the prior 75-test result is an overlapping earlier check.
+- Continued author review reproduced a live-launcher mismatch that reached image
+  construction despite a frozen archive, and a null sample ID converted to text
+  `None`. Execution now checks its own archived bytes before any image work;
+  absent IDs remain absent without changing census counts. Modal client/profile
+  and the authenticated workspace are checked, and volume/app environment is
+  explicitly `main`. The read-only lookup verified `iskandr`; no data transfer
+  or compute was involved. Updated tests passed **85 cases in 9.85 seconds**
+  (including the earlier cases), and Ruff passes. Use the new frozen snapshot;
+  the earlier `0158c25` launcher intentionally fails the new self-identity check.
 - Next step: freeze the clean source archive, upload immutable inputs, then
   launch and reconcile the uncapped merged measured condition.
 - Open questions: actual per-column support, source-contamination impact,

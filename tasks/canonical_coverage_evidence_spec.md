@@ -77,6 +77,28 @@ work and request approval for the concrete manifest and `iskandr` workspace /
 `presto-data` volume / `2026-09-09_1541_codex_canonical-coverage/` prefix. Do not
 retry the upload or indirectly export the same payload pending that authorization.
 
+### Pre-launch review follow-up
+
+The archived source hash alone does not verify the local launcher that actually
+declares the remote function. Before image creation, require the executing
+launcher to match its frozen source entry; reject missing/duplicate entries and
+changed bytes. Keep the existing clean production snapshot checks. Bind both
+volume lookups and the app to Modal environment `main`. Require the pinned
+Modal 1.1.4 client/profile `iskandr`, and verify the actual authenticated workspace
+through the same read-only lookup used by that client's profile command. Record
+only profile/workspace/environment names; never record credentials. These checks
+enforce the existing requested destination and do not authorize an upload.
+
+Normalize absent candidate sample IDs with the canonical missing-value rule:
+`None` must remain missing, not become a snapshot labeled with the text `None`.
+Its evidence stays in the census even when excluded from diagnostic candidates.
+
+- [x] Reproduce changed-launcher and null-identity blind spots locally.
+- [x] Add the narrow launcher/destination/identity corrections.
+- [x] Verify unchanged census counts, rejection before image creation, and
+  workspace mismatch handling using offline fixtures; then freeze a new archive.
+- [x] Publish the review evidence without retrying the unapproved data upload.
+
 ## Instrumentation and verification
 
 Experiment-local wrappers may add receipts, progress, SQLite retention and
