@@ -10599,7 +10599,7 @@ held-out baseline; no all-output quality claim is inferred from the gates.
 - [x] Merge #57 after verified CI and review closure.
 - [x] Implement endpoint/source declaration, exact census and prospective gates.
 - [x] Integrate per-column gradient/update evidence and verify all source paths.
-- [ ] Review, publish and merge the coverage implementation.
+- [x] Review, publish and merge the coverage implementation.
 - [ ] Register, execute and close the real-source coverage/gradient evidence PR.
 
 PR #57 merged as `0e09976cfe01efedaeb8ac35c9a52990358665cb`, with its tree
@@ -10626,7 +10626,7 @@ deployments). Detailed real-source census planning is in
 - [x] Implement per-column gradient and dedicated parameter-row update tracking.
 - [x] Exercise actual merged/Hitlist/bulk source selection paths, with competing
   merged/raw files present and full dataset/split/collation/census construction.
-- [ ] Complete review/full CI before merging the implementation PR.
+- [x] Complete review/full CI before merging the implementation PR.
 
 Verification at this checkpoint: `pytest -q tests/test_output_coverage.py
 tests/test_data_support.py tests/test_bulk_ms_ingest.py --tb=short` passed **76
@@ -10717,3 +10717,44 @@ build and `git diff --check` pass. The implementation is ready to publish for
 full CI. Remaining real-source census/update evidence and the fresh measured
 training/held-out baseline are explicitly deferred to the following PRs; #48,
 #50 and #53 remain open until their evidence is verified.
+
+### PR #58 closure and next PR specification
+
+PR #58, **Declare output supervision coverage and gate training claims**, merged
+on 2026-09-09 as `d9a666a07085289b168105089d29dd4e675add61`. Its tree is identical
+to reviewed head `a6c13754491090362b2318a29257fd5e942e68b5`. Both branch CI
+34295809181 and PR CI 34297818764 passed lint/tests and docs, and a review receipt
+is posted on the PR. No deployment is configured. The next branch,
+`codex/real-source-output-evidence`, is based directly on merged main.
+
+The next PR follows the detailed plan in
+`experiments/agents/codex/plans/2026-09-08_output-coverage-census.md` and must
+include registered real-source evidence, not just launcher infrastructure:
+
+- [ ] Freeze source files, curation/dependency versions, git state, complete
+  invocation, explicit caps/seeds/augmentation/split contract and actual hardware
+  in one timestamped experiment directory before running.
+- [ ] Census uncapped measured and effective augmented populations on default
+  merged, exclusive Hitlist and opt-in bulk paths. Preserve source identities,
+  direct/proxy/generated evidence, all selected columns, zeros and #50's T-cell
+  row/pathway-bag incidence.
+- [ ] Freeze a deterministic real-training subset and bounded gradient/update
+  conditions before optimization, including initialization/frozen/unused-column
+  controls and both topologies. Keep eligibility and predictive quality separate.
+- [ ] File confirmed upstream data/curation problems in `pirl-unc/hitlist`, as
+  explicitly requested by the user. Search existing issues first; add new
+  reproducible evidence to an existing issue for the same defect. Include source
+  versions/IDs, expected versus observed behavior, impact counts and a minimal
+  reproducer, then link the upstream issue from this audit/PR. Do not silently
+  repair a shared cache or claim a Presto adapter bug belongs to Hitlist.
+- [ ] Close out available counts, metrics, artifacts and failures in the README
+  and canonical experiment log; identify the supported subset prospectively for
+  #53. Review and merge the evidence PR only after its artifacts reconcile.
+
+Upstream triage already found existing Hitlist issue #444: the curated
+`exclude_from_ms` flag was reported to have no reader, allowing non-elution
+studies into the MS corpus. This is an existing upstream report, not an
+independently measured finding from the new census. Verify its impact on the
+actual frozen input before interpreting elution supervision; do not create a
+duplicate issue or silently change the corpus. Bulk candidate generation is
+already tracked upstream in #361. No new real-source experiment has launched.

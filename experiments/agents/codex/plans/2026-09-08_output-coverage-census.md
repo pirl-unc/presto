@@ -1,7 +1,8 @@
 # Real-source endpoint coverage and update audit (#48/#50)
 
-Agent/model: Codex / GPT-6. Status: planned; not launched. Prerequisite: merge
-the shared row/panel exports and the prospective endpoint coverage implementation.
+Agent/model: Codex / GPT-6. Status: planned; not launched. Prerequisites are
+merged: row/panel exports in PR #57 and prospective coverage in PR #58. The
+evidence branch starts from merged main `d9a666a07085289b168105089d29dd4e675add61`.
 The implementation specification is in `tasks/todo.md`.
 
 ## Question and decisions
@@ -75,6 +76,20 @@ The census has no model fitting. Gradient updates are mechanism diagnostics,
 not an adequate training budget or a replacement for #53's fitting/baseline work.
 
 ## Hardware, artifacts and closure
+
+The user explicitly requests upstream issue filing for data/curation problems.
+File confirmed Hitlist defects in `pirl-unc/hitlist` with exact source versions,
+row/study identifiers, impact counts, expected/observed behavior and reproducible
+commands. Check existing issues first and attach additional evidence there when
+the defect is already tracked. Link every finding in the experiment README and
+PR. Presto adapter defects belong in Presto; do not silently alter shared input
+caches to conceal either category.
+
+Existing Hitlist #444 reports that `exclude_from_ms` has no reader and non-MS
+studies enter the observations corpus. Check the actual frozen cache/curation
+version for this condition before interpreting its elution labels. The issue's
+reported counts are not results of this experiment. Upstream #361 already tracks
+unobserved bulk candidate generation; do not file a duplicate for that limitation.
 
 Use CPU for source preparation/census. If gradient diagnostics use Modal,
 request `PRESTO_MODAL_GPU=H100!` explicitly and save observed GPU/memory evidence.
