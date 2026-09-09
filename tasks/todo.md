@@ -10771,7 +10771,7 @@ census or quality run. The original #48/#50/#53 evidence requirements remain.
 
 - [x] Freeze and close the read-only source inventory, retaining the first failed
   launcher receipt and corrected successful receipt separately.
-- [ ] Reconcile every source-method trace bucket with the actual loader totals,
+- [x] Reconcile every source-method trace bucket with the actual loader totals,
   without modifying the input corpus or repeating expensive full loads.
 - [ ] Publish reproducible evidence to existing Hitlist #444 and file distinct
   Presto issues for incorrect assay routing and dropped source lineage.

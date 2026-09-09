@@ -1005,7 +1005,7 @@ differences are not interpreted as performance evidence.
 
 - **Date / agent**: 2026-09-09; Codex / GPT-6.
 - **Experiment**: [2026-09-09_1106_codex_output-coverage](2026-09-09_1106_codex_output-coverage/).
-- **Status**: corrected source inventory completed; routing trace and uncapped census/update phases pending.
+- **Status**: source inventory and routing trace completed; uncapped census/update phases pending.
 - **Contract**: current merged TSV and exclusive Hitlist cache, read-only; prospective 80/10/10 peptide splits, data seed 17, split/model seed 42.
 - **Training / synthetic data**: none in inventory; later measured/augmented conditions and bounded optimizer diagnostics are specified in the README.
 - **Validation/test metrics**: not applicable to metadata inventory; no prediction-quality claim.
@@ -1040,3 +1040,14 @@ production routing changes. No preferred trained condition, changed loss/weight,
 synthetic labels, validation/test predictions or predictive metrics exist in
 this metadata-only phase. The next decision is to repair incorrect evidence
 routing/lineage before treating these populations as supervision support.
+
+The clean `4e949da09a9960031b09ee249eb3a57ad894c44e` route trace completed in
+6.311 seconds and reconciled all 43 method/response groups exactly to the actual
+loader buckets. There are 492,858 non-MS-method rows routed to elution (442,612
+negative responses), including 418,890 microarray rows from PMID 32903714.
+Another 4,118 rows explicitly say MS and require study-level curation. Two
+numeric crystallography rows also enter affinity despite their `3D structure`
+type. SQLite confirms the excluded observation subset's 33,101 global distinct
+peptides. Full tables and immutable trace invocation/source are registered;
+the frozen raw subset/SQLite paths are in the result. These are source-routing
+findings, not evidence that the model has learned meaningful predictions.

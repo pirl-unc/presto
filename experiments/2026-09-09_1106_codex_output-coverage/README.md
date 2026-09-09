@@ -1,7 +1,7 @@
 # Real-source output coverage and update audit
 
 - Date: 2026-09-09; agent/model: Codex / GPT-6.
-- Status: corrected inventory completed; source-routing trace next. The full
+- Status: corrected inventory and source-routing trace completed. The full
   census and optimizer diagnostics have not run.
 - Presto base: PR #58, `d9a666a07085289b168105089d29dd4e675add61`.
 - Detailed plan: [coverage census](../agents/codex/plans/2026-09-08_output-coverage-census.md).
@@ -114,14 +114,32 @@ File the confirmed adapter routing and lineage defects in Presto, and add the
 independent cache evidence to existing Hitlist #444. Hitlist #361 remains an
 existing bulk-candidate report, not a new finding from this inventory.
 
+The route trace completed in **6.311 seconds** at clean
+`4e949da09a9960031b09ee249eb3a57ad894c44e`. All 43 source-method/response groups
+reconcile exactly with the actual loader buckets. Of the 496,976 elution rows,
+**492,858 have non-MS methods**; 4,118 explicitly say cellular MHC/mass
+spectrometry and require the upstream study-level curation decision. The
+non-MS-method group includes 442,612 negative responses. PMID 32903714 alone
+contributes 418,890 microarray rows (410,723 negative, 8,167 positive) mislabeled
+as elution. Two numeric `3D structure`/`x-ray crystallography` rows are also
+routed as affinity, with values 2.7 and 2.5 treated as nM by `BindingRecord`.
+Both presence and absence of a scalar are insufficient assay definitions.
+
+The read-only SQLite reconciliation confirms that the 40,355 excluded Hitlist
+observation rows contain **33,101 distinct peptides** globally. Complete trace
+tables, subset line references and source hashes are in `results/route_trace/`.
+The raw flagged subset and SQLite database remain under the raw-artifact root
+at the paths recorded in the result JSON. No peptide sequences are needed in
+the public grouped trace to reproduce or describe these routing defects.
+
 Close each informative phase with JSON/CSV summaries, raw artifact links,
 runtime and source/config hashes, conclusions and canonical experiment-log
 updates. Do not close #48/#50 on launcher code or fixture tests.
 
 ## Handoff
 
-- Status: inventory closed; routing/lineage defects require triage before census.
-- Next step: reconcile the source-method trace, publish issues and specify the
+- Status: inventory and trace closed; adapter defects require repair before census.
+- Next step: publish issues and specify the
   adapter corrections before changing production code.
 - Open questions: source contamination, traceable evidence, rare assay support,
   canonical augmentation leakage and actual per-column update incidence.
