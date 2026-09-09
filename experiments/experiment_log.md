@@ -1122,7 +1122,7 @@ this merge and restores the publication-lineage path tracked in #60.
 **Date/agent/model:** 2026-09-09; Codex / GPT-6.
 **Directory:** [merged publication lineage](2026-09-09_1419_codex_merged-lineage/).
 **Status:** ingestion metadata recovery and strict before/after reconciliation complete;
-PR review and full CI pending.
+merged in PR #63.
 
 Same unchanged `data/merged_deduped.tsv` as #61: 3,423,737 input rows, SHA-256
 `46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`.
@@ -1171,5 +1171,68 @@ This resolves #60's adapter omission. It does not establish model fitting or
 held-out quality, close #48/#50/#53, or bypass Hitlist #444's upstream curation
 problem. Alternate binding-selector descriptor loss was separately reproduced
 and filed as Presto #62. Local verification passed 434 affected regressions and
-48 focused-probe/audit checks; full CI is pending. The README preserves the
+48 focused-probe/audit checks; final full CI passed. The README preserves the
 initial no-tests-collected command failure and links the corrected passing log.
+
+PR #63 merged as `48182ae1d2a36994470338b9422329590bc7c413`, with a tree
+identical to reviewed `2cce640`. Final branch/PR CI 34365828888 and 34365866862
+passed lint/tests/docs; the final PR log reports 2,039 passed, 3 skipped in
+946.36 seconds and is preserved under the raw-artifact root. The next repair
+is #62, then the uncapped census/update and predictive acceptance work resumes.
+
+## 2026-09-09_1457_codex_binding-selectors
+
+**Date/agent/model:** 2026-09-09; Codex / GPT-6.
+**Directory:** [alternate selector descriptors](2026-09-09_1457_codex_binding-selectors/).
+**Status:** before/after descriptor recovery and exact population reconciliation
+complete; PR review/full CI pending.
+
+Read the unchanged 3,423,737-row merged TSV SHA-256
+`46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`.
+Run the actual panel/bootstrap selectors for HLA-A*02:01 / HLA-A*03:01, seed 17.
+Panel observations include every construction before a one-record head cap;
+bootstrap uses max_records=2000, max_peptides=500, max_rows_per_peptide=4 and
+selects 1,000 records. These overlapping scopes are not a full-corpus census.
+No MHC resolution, curation/cache change, pretraining, training, synthetic data,
+validation/test split or predictive metrics. Prediction dumps are intentionally
+absent for this ingestion/selector audit. Numeric targets, qualifiers, units,
+loss equations/weights and source families are unchanged; source descriptors
+select their observed output columns. Cultures are copied without claiming a
+new culture-specific quantitative loss.
+
+Pinned isolated Python 3.12.6 / torch 2.7.0 / Hitlist 1.59.1 release environment,
+all dependency versions, explicit isolated PYTHONPATH, OMP/MKL threads one,
+local CPU and no GPU/Modal run. Raw logs live under
+`artifacts/2026-09-09_1457_codex_binding-selectors/` in the primary checkout.
+Run each phase's exact `results/<condition>/reproduce/launch.sh` at its recorded
+commit. Baseline commit is preserved on `codex/binding-selector-audit`; the
+repair branch was rebased onto merged #63's identical tree before source edits.
+
+| Condition | Clean commit | Seconds | Result |
+|---|---|---:|---|
+| Before omission | `e6d6b60` | 111.439 | Every observed type/method dropped |
+| After eight-line repair | `37a06cd` | 49.342 | Every observed descriptor retained |
+| Source/selection reconciliation | `c6b0eeb` | 0.191 | Populations, non-descriptor payloads and contracts identical |
+
+| Scope | Constructed records | Retained records | Recovered type values | Recovered method values |
+|---|---:|---:|---:|---:|
+| Panel | 23,210 | 1 | 23,210 | 23,210 |
+| Bootstrap | 1,000 | 1,000 | 1,000 | 1,000 |
+
+**Preferred condition:** repaired source descriptor propagation. All available
+fields match the normalized source exactly, with zero lost/invented/changed
+values. Every actual post-repair type/method/preparation/geometry/readout column
+matches the source's collator factorization. Affinity-family column populations
+already agreed via measurement fallback in this real subset. Culture fields
+are absent here; fixtures verify known/missing cultures and conflicting labels.
+These timing observations are not a controlled throughput benchmark.
+
+Every selector statistic, ordered constructed/retained non-descriptor payload
+hash and source-descriptor hash reconciles. Publication lineage, numerical values,
+qualifiers, units and selected records are unchanged. Complete per-field and
+per-column JSON/CSV counts, source hashes, frozen launchers and the comparison
+are preserved. New regressions first failed 10 cases (12 passed), then the
+repaired code passed 247 affected tests in 21.46 seconds. Four overlapping audit
+checks pass, including negative controls. Ruff lint/format passes. #62's final
+PR review/CI remain; #48/#50 uncapped coverage/update evidence and #53 real-data
+fitting/held-out performance remain separate work.

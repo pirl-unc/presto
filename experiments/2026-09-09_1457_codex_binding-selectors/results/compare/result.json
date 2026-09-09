@@ -1,0 +1,126 @@
+{
+  "elapsed_seconds": 0.19090916588902473,
+  "every_descriptor_and_selected_column_matches_source": true,
+  "field_counts": [
+    {
+      "before_record_present": 0,
+      "changed": 0,
+      "dropped": 0,
+      "field": "assay_type",
+      "invented": 0,
+      "matched": 23210,
+      "record_present": 23210,
+      "records": 23210,
+      "recovered_values": 23210,
+      "selector": "panel",
+      "source_present": 23210
+    },
+    {
+      "before_record_present": 0,
+      "changed": 0,
+      "dropped": 0,
+      "field": "assay_method",
+      "invented": 0,
+      "matched": 23210,
+      "record_present": 23210,
+      "records": 23210,
+      "recovered_values": 23210,
+      "selector": "panel",
+      "source_present": 23210
+    },
+    {
+      "before_record_present": 0,
+      "changed": 0,
+      "dropped": 0,
+      "field": "effector_culture_condition",
+      "invented": 0,
+      "matched": 23210,
+      "record_present": 0,
+      "records": 23210,
+      "recovered_values": 0,
+      "selector": "panel",
+      "source_present": 0
+    },
+    {
+      "before_record_present": 0,
+      "changed": 0,
+      "dropped": 0,
+      "field": "apc_culture_condition",
+      "invented": 0,
+      "matched": 23210,
+      "record_present": 0,
+      "records": 23210,
+      "recovered_values": 0,
+      "selector": "panel",
+      "source_present": 0
+    },
+    {
+      "before_record_present": 0,
+      "changed": 0,
+      "dropped": 0,
+      "field": "assay_type",
+      "invented": 0,
+      "matched": 1000,
+      "record_present": 1000,
+      "records": 1000,
+      "recovered_values": 1000,
+      "selector": "bootstrap",
+      "source_present": 1000
+    },
+    {
+      "before_record_present": 0,
+      "changed": 0,
+      "dropped": 0,
+      "field": "assay_method",
+      "invented": 0,
+      "matched": 1000,
+      "record_present": 1000,
+      "records": 1000,
+      "recovered_values": 1000,
+      "selector": "bootstrap",
+      "source_present": 1000
+    },
+    {
+      "before_record_present": 0,
+      "changed": 0,
+      "dropped": 0,
+      "field": "effector_culture_condition",
+      "invented": 0,
+      "matched": 1000,
+      "record_present": 0,
+      "records": 1000,
+      "recovered_values": 0,
+      "selector": "bootstrap",
+      "source_present": 0
+    },
+    {
+      "before_record_present": 0,
+      "changed": 0,
+      "dropped": 0,
+      "field": "apc_culture_condition",
+      "invented": 0,
+      "matched": 1000,
+      "record_present": 0,
+      "records": 1000,
+      "recovered_values": 0,
+      "selector": "bootstrap",
+      "source_present": 0
+    }
+  ],
+  "phase_sha256": {
+    "after": {
+      "field_counts.csv": "412194aab3fb7e7ec938a9db2768ff2c1e7ccb71538634df6afef2242286c9a8",
+      "invocation.json": "f7230a41183cbdca84f76dc9a9775ddeedbbe675917c78b3d72e1db2029687b0",
+      "result.json": "aa8a603f08e6d306860c4d9725c582b191814a4607f09e32fd9b0cc04c7492fe",
+      "status.json": "8806dab87ba3a19c526d7f43875e361af6af312552ae32fcd71f3dbb0c328316"
+    },
+    "before": {
+      "field_counts.csv": "dde810ceb6a8d5e18904fdd3c540f5dd2047ad5539985999973b445398114760",
+      "invocation.json": "3796fe644dc0b3f0e938fdd7b6000cb41cef6fa4213b89bfeab58d1de2b769d8",
+      "result.json": "384bb7861514fa9c8f53d51b02dd478dc20c8874a8df6d70ad93c7d1739879a0",
+      "status.json": "cae83c7094899d10564572757c810a02d6a61d5a58ea6d2b8b64a6d696596b5f"
+    }
+  },
+  "populations_and_non_descriptor_payloads_identical": true,
+  "status": "completed"
+}

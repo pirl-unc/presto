@@ -1,0 +1,14 @@
+{
+  "status": "registered_before_launch",
+  "agent_model": "Codex / GPT-6",
+  "source": "/Users/iskander/code/presto/data/merged_deduped.tsv",
+  "source_sha256": "46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c",
+  "alleles": ["HLA-A*02:01", "HLA-A*03:01"],
+  "seed": 17,
+  "panel": {"retained_cap": 1, "sampling": "head", "audit_scope": "every accepted record before cap"},
+  "bootstrap": {"max_records": 2000, "max_peptides": 500, "max_rows_per_peptide": 4},
+  "hardware": "local CPU; no GPU",
+  "training": null,
+  "predictive_evaluation": null,
+  "actual_invocations": "results/<condition>/invocation.json and reproduce/"
+}
