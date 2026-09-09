@@ -11065,3 +11065,73 @@ packages and nested `data/artifacts` remain visible. Ruff 0.16.0 lint and format
 checks pass. README/spec guidance now requires the working-checkout check;
 historical snapshots and receipts are retained. Final diff is limited to package
 discovery tests and review documentation.
+
+### Independent review against main — 2026-09-09
+
+Review specification: compare the current tree with merge base
+`190360a7e2596eb5f62682088f1ef63270bf5eeb`. Inspect the entire diff, separating
+canonical implementation from historical execution snapshots. Trace census
+instrumentation and launcher inputs/outputs through their existing consumers;
+check packaging regressions and reproduce concrete defects with local tests.
+Do not modify implementation, run cloud jobs, or transfer data. Final comments
+must identify introduced, actionable defects and cite applicable project-specific
+rules where they support the finding.
+
+- [x] Inspect changed code, conditions, and applicable guidance.
+- [x] Trace affected canonical paths and validate suspected defects locally.
+- [x] Deduplicate findings and record verification results.
+
+Review results: no actionable introduced defects found. Shared-environment Python
+3.12.6 passed 36 packaging/experiment checks in 4.83 seconds and 105 canonical
+coverage/preflight/support/contract checks in 9.45 seconds. The checkout `.venv`
+lacks pytest; no dependencies were installed or changed. All six launch/handle
+receipts match their recorded Git source blobs and condition arguments; every
+registered condition resolves without argument changes. All 21 JSON artifacts
+parse, all 12 added Python files compile, and `git diff --check` passes.
+No cloud jobs, uploads, implementation changes, or historical artifact edits were
+performed; full-source cloud execution was not independently rerun.
+
+### PR #65 merged; next #48 task: coverage report reuse
+
+PR #65 merged as `8b5f60fd40684b8af5edfae3c3c52a42fc8b2bfa` at 20:03:02 UTC.
+The merge tree exactly matches reviewed `3267ad0`. Both final CI runs passed
+2,063 tests / 3 skipped (674.08 and 708.18 seconds); complete logs are retained
+under the canonical-coverage raw root. No deployment workflow is configured.
+The user's explicit merge request publishes the reviewed tooling/provenance;
+full coverage/update/quality acceptance stays in open #48/#50/#53.
+
+Next specification: `tasks/coverage_report_reuse_spec.md`.
+
+- [x] Verify/merge PR #65, inspect deployment configuration, branch from main.
+- [x] Inspect the repeated-count bottleneck and write the bounded repair spec.
+- [x] Reproduce redundant work and implement exact categorical/single-group reuse.
+- [x] Verify semantic parity, invalidation and query reduction; run required checks.
+- [x] Close the original census if complete and register any real-data comparison.
+- [ ] Review and publish the next PR with precise validation/performance scope.
+
+Review results: 106 coverage/preflight/support/experiment tests passed in 59.57
+seconds. Ruff 0.16.0 lint and format checks pass. The new SQL-trace regressions
+failed on the baseline's redundant scans and pass with reuse; duplicate/conflicting
+source rows, filters, empty selections, facet options, batch invalidation and
+independent returned dictionaries retain their meanings. An initial fixture
+expectation was corrected: different class targets produce different observation
+identities even when the source row is shared.
+
+Software differential verification loads the unmodified merged-base implementation
+alongside the candidate. Complete reports and repeated reports match exactly for
+32 topology/residual/KD-grouping configurations over canonical row, bag, panel,
+vector, censoring, duplicate-source and mixed-source fixtures across train/val/test
+plus an empty split. All 4,608 filtered categorical count comparisons also match.
+The script, hashes and results are retained at
+`artifacts/2026-09-09_1541_codex_canonical-coverage/verify_report_reuse.py` and
+`report-reuse-parity.json`; focused output is `report-reuse-tests.log`.
+This is software verification, not a runtime benchmark or predictive evaluation;
+no new cloud comparison was launched and no full-report speedup is claimed.
+
+The original frozen census completed successfully in 12,652.535 seconds, peak RSS
+14.31 GiB, with 2,081,922 retained samples. The client DNS error receipt is preserved
+alongside the successful remote receipt. All available summaries were collected;
+input/evidence/dataset hashes and all 717 output CSV rows reconcile. README and
+the canonical experiment log now close this condition and explicitly report zero
+processing/pathway T-cell MIL support and positive-only TCR evidence. Other source
+conditions and actual training/update/quality evidence remain pending in #48/#50/#53.
