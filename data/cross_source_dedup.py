@@ -29,6 +29,7 @@ from .allele_resolver import (
     parse_allele_name,
 )
 from .vocab import normalize_organism
+from .assay_types import binding_assay_bucket, elution_assay_bucket
 
 
 _CELL_CONTEXT_WS_RE = re.compile(r"\s+")
@@ -1673,49 +1674,30 @@ def record_to_row(rec: UnifiedRecord) -> Dict[str, Any]:
     }
 
 
+def assay_measurement_label(rec: UnifiedRecord) -> str:
+    """Preserve the first declared measurement label, including descriptor fallbacks."""
+    return next(
+        (
+            text.strip()
+            for text in (rec.value_type, rec.assay_type, rec.assay_method)
+            if text and text.strip()
+        ),
+        "",
+    )
+
+
 def classify_assay_type(rec: UnifiedRecord) -> str:
-    """Map a unified record into a simplified assay bucket."""
+    """Map source assay semantics to a bucket independently of scalar missingness."""
     if rec._assay_bucket_cache:
         return rec._assay_bucket_cache
 
     assay = "unknown"
     if rec.record_type == "elution":
-        assay = "elution_ms"
+        assay = elution_assay_bucket(rec.assay_method or "")
     elif rec.record_type == "processing":
         assay = "processing"
     elif rec.record_type == "binding":
-        method_text = " ".join(
-            token
-            for token in (
-                (rec.value_type or "").strip().lower(),
-                (rec.assay_method or "").strip().lower(),
-            )
-            if token
-        )
-        if any(
-            token in method_text
-            for token in ("processing", "cleavage", "tap transport", "tap assay", "erap")
-        ):
-            assay = "processing"
-        elif any(token in method_text for token in ("kon", "on rate", "association rate", "ka")):
-            assay = "binding_kon"
-        elif any(token in method_text for token in ("koff", "off rate", "dissociation rate")):
-            assay = "binding_koff"
-        elif any(token in method_text for token in ("t_half", "half life", "half-life", "t1/2")):
-            assay = "binding_t_half"
-        elif any(token in method_text for token in ("tm", "melt", "dissociation temperature")):
-            assay = "binding_tm"
-        elif rec.value is None:
-            if any(token in method_text for token in ("dia", "data-independent")):
-                assay = "elution_ms_dia"
-            elif any(token in method_text for token in ("dda", "data-dependent")):
-                assay = "elution_ms_dda"
-            elif any(token in method_text for token in ("targeted", "prm", "srm", "srm/ms", "mrm")):
-                assay = "elution_ms_targeted"
-            else:
-                assay = "elution_ms"
-        else:
-            assay = "binding_affinity"
+        assay = binding_assay_bucket(assay_measurement_label(rec), rec.assay_method or "")
     elif rec.record_type == "tcell":
         assay = "tcell_response"
     elif rec.record_type == "tcr":

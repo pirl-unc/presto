@@ -63,7 +63,7 @@ change model/loss equations or silently apply a study blacklist to shared data.
 ## Sequence
 
 - [x] Register and execute full-source baseline before production edits.
-- [ ] Finalize descriptor policy against baseline groups and implement it.
+- [x] Finalize descriptor policy against baseline groups and implement it.
 - [ ] Verify semantic tests and execute the registered after condition.
 - [ ] Reconcile source transitions and unaffected payload hashes; close artifacts.
 - [ ] Review, publish, verify CI and merge; start lineage #60 next.

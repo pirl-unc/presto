@@ -24,6 +24,28 @@ opportunistically unioned based on local files. Bulk-MS is separately enabled.
 Use the run's normalized funnel, lineage/support audit and split metadata to
 describe what was actually used.
 
+Merged binding-format rows route by their declared measurement: `value_type`,
+then `assay_type`, then an exact measurement label in `assay_method` when both
+are absent. Supported concentration, rate and stability labels retain their
+existing units and censor qualifiers. A missing scalar remains a missing label
+in that family; it does not become elution. A scalar from structural or
+qualitative-binding measurements does not become an nM affinity target.
+
+Binding-format presentation rows require an explicit MS method or a recognized
+MS acquisition term. Presentation measured by Edman degradation, coelution or
+T-cell recognition, and presentation with an unknown method, remains outside
+the MS objective. An explicit `record_type=elution` declares the existing elution
+contract directly. Acquisition subtype detection happens after that distinction.
+
+Qualitative binding, structure, equilibrium association constants and unknown
+measurement types remain separate source buckets. They are preserved in assay
+exports and counted as unsupported in the merged loader's `skipped_by_reason`.
+That dictionary also reports missing supported labels and required context;
+its mutually exclusive counts reconcile with the compatibility aggregate
+`skipped_unroutable_or_missing_label`. The normalized funnel exports the detailed
+partition instead of also counting the aggregate. These omitted observations
+may support future objectives; they are not negative training labels today.
+
 ## Current target-to-output mapping
 
 | Observations | Output/loss path | Caveat |

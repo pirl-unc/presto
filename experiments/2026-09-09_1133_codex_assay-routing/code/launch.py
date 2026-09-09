@@ -84,8 +84,15 @@ def freeze(args, output):
     receipt["git"]["dirty"] = bool(receipt["git"]["status"])
     snapshot = EXPERIMENT / "reproduce/source" / output.name
     snapshot.mkdir(parents=True, exist_ok=False)
-    for name in ("data/cross_source_dedup.py", "scripts/train_iedb.py", "data/loaders.py"):
+    for name in (
+        "data/cross_source_dedup.py",
+        "data/assay_types.py",
+        "scripts/train_iedb.py",
+        "data/loaders.py",
+    ):
         source = ROOT / name
+        if not source.exists():
+            continue
         receipt["production_files"][name] = hash_file(source)
         destination = snapshot / name
         destination.parent.mkdir(parents=True, exist_ok=True)

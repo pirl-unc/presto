@@ -10789,3 +10789,21 @@ Next PR specification is `tasks/assay_routing_spec.md`; register a separate
 full-source before/after family at `2026-09-09_1133_codex_assay-routing` and
 finalize the supported descriptor vocabulary against its baseline. Correct
 assay routing first, then preserve lineage, then resume the full census.
+
+### Assay routing implementation checkpoint — Presto #59
+
+The full-source baseline at clean `1c5d1ea` completed in 100.868 seconds and
+reconciled all 3,423,737 rows before any production edit. The correction now
+uses explicit controlled measurement labels, requires MS evidence on binding-
+format presentation rows, and retains unsupported qualitative/structural/
+equilibrium-association observations as distinct source buckets. Every skipped
+training record has a mutually exclusive reason; the funnel exports that
+partition without double-counting its compatibility aggregate. Canonical,
+panel and focused binding selectors preserve fallback measurement identity.
+
+The first affected regression suite passed 188 tests in 11.53 seconds. After
+adding focused-selector and complete missing-label/context cases, another
+198 tests passed in 5.82 seconds, including Hitlist adapter regressions and the
+registered audit's pre-cap observation/restoration checks. Repository Ruff
+0.16.0 lint and format passed (250 Python files). The after condition and strict
+source/payload reconciliation remain required before PR review and CI.

@@ -124,6 +124,7 @@ def test_classify_assay_type_routes_binding_and_elution_rows():
         record_type="binding",
         value=None,
         value_type="ligand presentation",
+        assay_method="mass spectrometry",
     )
     assert classify_assay_type(binding) == "binding_affinity"
     assert classify_assay_type(elution) == "elution_ms"

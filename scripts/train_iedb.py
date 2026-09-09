@@ -60,6 +60,7 @@ from presto.data.allele_resolver import (
 )
 from presto.data.cross_source_dedup import (
     UnifiedRecord,
+    assay_measurement_label,
     classify_assay_type,
     parse_allele_set_field,
     parse_iedb_binding,
@@ -3809,6 +3810,7 @@ def load_records_from_merged_tsv(
     by_source: Dict[str, int] = {}
     rows_dropped_invalid_peptide = 0
     rows_sanitized_optional_sequences = 0
+    skipped_by_reason: Counter[str] = Counter()
 
     binding_limit = _normalize_limit(max_binding)
     kinetics_limit = _normalize_limit(max_kinetics)
@@ -3898,6 +3900,7 @@ def load_records_from_merged_tsv(
 
             if assay_type == "binding_affinity":
                 if value is None:
+                    skipped_by_reason["missing_binding_affinity_value"] += 1
                     continue
                 binding_seen = _append_with_cap_sampling(
                     binding_records,
@@ -3906,7 +3909,7 @@ def load_records_from_merged_tsv(
                         mhc_allele=mhc_allele,
                         value=value,
                         qualifier=qualifier,
-                        measurement_type=value_type or "IC50",
+                        measurement_type=assay_measurement_label(unified),
                         assay_type=assay_type_col or None,
                         assay_method=assay_method_col or None,
                         effector_culture_condition=effector_culture_col or None,
@@ -3926,6 +3929,7 @@ def load_records_from_merged_tsv(
 
             if assay_type == "binding_kon":
                 if value is None:
+                    skipped_by_reason["missing_binding_kon_value"] += 1
                     continue
                 kinetics_seen = _append_with_cap_sampling(
                     kinetics_records,
@@ -3952,6 +3956,7 @@ def load_records_from_merged_tsv(
 
             if assay_type == "binding_koff":
                 if value is None:
+                    skipped_by_reason["missing_binding_koff_value"] += 1
                     continue
                 kinetics_seen = _append_with_cap_sampling(
                     kinetics_records,
@@ -3978,6 +3983,7 @@ def load_records_from_merged_tsv(
 
             if assay_type == "binding_t_half":
                 if value is None:
+                    skipped_by_reason["missing_binding_t_half_value"] += 1
                     continue
                 stability_seen = _append_with_cap_sampling(
                     stability_records,
@@ -4004,6 +4010,7 @@ def load_records_from_merged_tsv(
 
             if assay_type == "binding_tm":
                 if value is None:
+                    skipped_by_reason["missing_binding_tm_value"] += 1
                     continue
                 stability_seen = _append_with_cap_sampling(
                     stability_records,
@@ -4038,6 +4045,7 @@ def load_records_from_merged_tsv(
                 if not alleles and mhc_allele:
                     alleles = [mhc_allele]
                 if not alleles:
+                    skipped_by_reason["missing_elution_alleles"] += 1
                     continue
                 elution_seen = _append_with_cap_sampling(
                     elution_records,
@@ -4061,6 +4069,7 @@ def load_records_from_merged_tsv(
             if assay_type == "tcell_response":
                 response_value = _parse_binary_response(response)
                 if response_value is None:
+                    skipped_by_reason["missing_tcell_response"] += 1
                     continue
                 tcell_seen = _append_with_cap_sampling(
                     tcell_records,
@@ -4091,6 +4100,7 @@ def load_records_from_merged_tsv(
 
             if assay_type in {"tcr_pmhc", "tcr_evidence"}:
                 if not mhc_allele:
+                    skipped_by_reason["missing_tcr_allele"] += 1
                     continue
                 vdjdb_seen = _append_with_cap_sampling(
                     vdjdb_records,
@@ -4132,6 +4142,9 @@ def load_records_from_merged_tsv(
                     rng=sampling_rng,
                     seen=processing_seen,
                 )
+                continue
+
+            skipped_by_reason[f"unsupported_{assay_type}"] += 1
 
     counts_before_cap = {
         "binding": binding_seen,
@@ -4152,6 +4165,9 @@ def load_records_from_merged_tsv(
         "tcr_evidence": len(vdjdb_records),
     }
     rows_scanned = sum(by_assay.values())
+    skipped_total = rows_scanned - sum(counts_before_cap.values())
+    if sum(skipped_by_reason.values()) != skipped_total:
+        raise AssertionError("Merged source skip reasons do not reconcile with routed records")
     stats = {
         "rows_scanned": rows_scanned,
         "rows_by_assay": dict(sorted(by_assay.items(), key=lambda item: (-item[1], item[0]))),
@@ -4159,9 +4175,8 @@ def load_records_from_merged_tsv(
         "rows_dropped_invalid_peptide": rows_dropped_invalid_peptide,
         "rows_sanitized_optional_sequences": rows_sanitized_optional_sequences,
         "skipped_invalid_peptide": rows_dropped_invalid_peptide,
-        "skipped_unroutable_or_missing_label": max(
-            0, rows_scanned - sum(counts_before_cap.values())
-        ),
+        "skipped_unroutable_or_missing_label": skipped_total,
+        "skipped_by_reason": dict(sorted(skipped_by_reason.items())),
         "cap_sampling": sampling_mode,
         "counts_before_cap": counts_before_cap,
         "records_loaded": records_loaded,
@@ -4274,7 +4289,7 @@ def load_binding_records_for_alleles_from_merged_tsv(
                     mhc_allele=allele,
                     value=value,
                     qualifier=qualifier,
-                    measurement_type=value_type or "IC50",
+                    measurement_type=assay_measurement_label(unified),
                     mhc_class=mhc_class,
                     species=species,
                     antigen_species=antigen_species_col,
@@ -4463,7 +4478,7 @@ def load_probe_allele_binding_bootstrap_from_merged_tsv(
                     mhc_allele=allele,
                     value=value,
                     qualifier=qualifier,
-                    measurement_type=value_type or "IC50",
+                    measurement_type=assay_measurement_label(unified),
                     mhc_class=mhc_class,
                     species=species,
                     antigen_species=antigen_species_col,
@@ -4562,6 +4577,12 @@ def _record_source_loader_funnel(
         for name, count in source_loader.items()
         if str(name).startswith("skipped_") and isinstance(count, int)
     }
+    detailed_skips = source_loader.get("skipped_by_reason")
+    if isinstance(detailed_skips, Mapping):
+        # The merged loader's detailed reasons partition its compatibility
+        # aggregate. Export one representation, so the funnel cannot count both.
+        source_skips.pop("skipped_unroutable_or_missing_label", None)
+        source_skips.update({str(name): int(count) for name, count in detailed_skips.items()})
     if source_skips:
         data_funnel["drop_reasons"]["source_ingest"] = source_skips
     mapping_ambiguity = source_loader.get("mapping_ambiguity")
