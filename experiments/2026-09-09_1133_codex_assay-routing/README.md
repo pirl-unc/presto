@@ -1,7 +1,7 @@
 # Full-source assay routing correction
 
 - Date/agent/model: 2026-09-09; Codex / GPT-6.
-- Status: before and after source scans completed; strict payload comparison next.
+- Status: before/after audit and strict payload comparison completed.
 - Issue: [Presto #59](https://github.com/pirl-unc/presto/issues/59).
 - Specification: [assay routing](../../tasks/assay_routing_spec.md).
 - Prior evidence: [source inventory and flagged-study trace](../2026-09-09_1106_codex_output-coverage/).
@@ -53,13 +53,6 @@ correction must prevent unsupported structural/qualitative measurements from
 being relabeled as nM affinity or MS outcomes, with explicit source-ingest counts.
 This does not establish supervision adequacy (#48/#50) or model quality (#53).
 
-## Handoff
-
-- Status: baseline complete at clean `1c5d1eacf94a6956f2e3cbc55869ffa07e94d396`
-  in 100.868 seconds; source hashes unchanged.
-- Next step: implement the explicit descriptor policy in the linked specification.
-- Remaining: after-condition comparison, semantic regressions, review and CI.
-
 ## Baseline results
 
 All 3,423,737 input rows reconcile: 156,765 invalid peptides and 3,266,972
@@ -86,7 +79,8 @@ hashes for unaffected groups and explain every changed route.
 ## Corrected source scan
 
 The after condition ran at clean `ce30bbe9b1ea80a1f29ecefd9234bf21e496ab24`, with
-the identical file hash and all 927 descriptor groups retained. Pre-cap records
+the identical file hash and all 927 descriptor groups retained, in **98.096
+seconds** (baseline **100.868 seconds**). Pre-cap records
 are now binding 241,803; kinetics 102; stability 12,259; elution 2,073,797;
 T-cell 207,987; TCR evidence 166,285. There are 564,739 explicit omissions:
 561,829 unsupported qualitative-binding measurements, 1,262 structures, four
@@ -101,3 +95,50 @@ requires zero newly invented targets, and requires identical ordered payload
 hashes for every unchanged group. Raw input and production module hashes were
 stable across the complete after scan. No downstream MHC filtering, split,
 gradient audit or predictive evaluation has been run.
+
+## Reconciliation and decision
+
+The comparison at clean `e06cbaf` passed every invariant. All 927 descriptor
+populations and numeric examples are identical. The 798 unchanged groups retain
+identical ordered payload hashes for **all 2,702,233 accepted records**. The
+other 129 groups contain **564,509 incorrect targets** and produce no replacement
+target. Before/after pre-cap totals are 3,266,742 / 2,702,233.
+
+| Before route | Corrected source bucket | Rows |
+|---|---|---:|
+| Affinity | Qualitative binding | 6,250 |
+| Affinity | Structure | 1,239 |
+| On-rate | Equilibrium association constant | 4 |
+| Elution | Affinity with missing value | 248 |
+| Elution | Qualitative binding | 555,579 |
+| Elution | Structure | 23 |
+| Elution | Non-MS presentation | 1,166 |
+
+Preferred condition: explicit assay semantics, with unsupported/missing labels
+visible in the source inventory and the normalized funnel. Source files, valid
+target values, units, qualifiers, descriptors and record ordering are unchanged.
+Runtime differences are not interpreted as a performance result. Models/losses
+are not changed; prior training on the old routed population is not a controlled
+quality baseline for the corrected population.
+
+Reproduction: `reproduce/launch.sh before`, `reproduce/launch.sh after`, and
+`reproduce/compare.sh`, checked out at their recorded commits. Each command's
+actual Python argv, environment and source/production hashes are in its receipt.
+The comparison input hashes and source snapshot are also preserved. Its JSON
+contains every changed group and both loader-stat dictionaries; CSV contains
+the full transition table. Large unchanged inputs remain at their recorded
+shared paths. New repeat runs must select fresh output directories.
+
+Semantic validation passed 188 affected tests, then 198 tests after adding the
+focused-selector and missing-label/context cases. These overlapping runs include
+raw Hitlist regression coverage and the audit's own pre-cap observation checks.
+Pinned Ruff 0.16.0 lint/format passed on all 250 production/test files; immutable
+experiment snapshots are excluded and new canonical audit code was checked
+explicitly. Full PR CI is the remaining integration gate.
+
+## Handoff
+
+- Status: source correction and all experiment evidence closed; PR CI pending.
+- Next step: merge #59's correction after review/CI, then repair lineage #60.
+- Remaining scope: Hitlist #444 curation, #48/#50 coverage/update evidence and
+  #53 predictive fitting/generalization; this audit closes none of those claims.

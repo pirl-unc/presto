@@ -138,8 +138,15 @@ updates. Do not close #48/#50 on launcher code or fixture tests.
 
 ## Handoff
 
-- Status: inventory and trace closed; adapter defects require repair before census.
-- Next step: publish issues and specify the
-  adapter corrections before changing production code.
+- Status: inventory and trace closed; full coverage/update phases remain pending.
+- Next step: merge the independently registered
+  [routing correction](../2026-09-09_1133_codex_assay-routing/), then preserve
+  merged lineage in Presto #60 before resuming the full census.
 - Open questions: source contamination, traceable evidence, rare assay support,
   canonical augmentation leakage and actual per-column update incidence.
+
+Published upstream evidence is on [Hitlist #444](https://github.com/pirl-unc/hitlist/issues/444#issuecomment-5601129610).
+Presto routing and lineage defects are filed separately as
+[#59](https://github.com/pirl-unc/presto/issues/59) and
+[#60](https://github.com/pirl-unc/presto/issues/60). The source inventory is
+complete; the broader #48/#50/#53 work is not closed by these metadata results.

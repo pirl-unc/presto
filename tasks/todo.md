@@ -10807,3 +10807,22 @@ adding focused-selector and complete missing-label/context cases, another
 registered audit's pre-cap observation/restoration checks. Repository Ruff
 0.16.0 lint and format passed (250 Python files). The after condition and strict
 source/payload reconciliation remain required before PR review and CI.
+
+### Assay routing review — registered before/after reconciliation passed
+
+The after condition completed at clean `ce30bbe` in 98.096 seconds with unchanged
+input/production hashes. Comparison at clean `e06cbaf` validates all 927 source
+descriptor populations. All 2,702,233 accepted records in 798 unchanged groups
+retain identical ordered payload hashes. The remaining 129 groups remove
+564,509 incorrectly assigned targets; no new target is invented. All 564,739
+unsupported/missing-label omissions reconcile, including 478 missing numeric
+labels. Complete before/after counts, transition tables, source snapshots and
+receipts are closed in the README and canonical experiment log.
+
+Reviewed the production diff and its shared classifier consumers: canonical
+loader, assay exports, cell-HLA joins and binding selectors. The two old elution
+fixtures now explicitly declare their MS method; tests separately reject
+presentation with no method. No model/loss changes, study blacklist, source
+cache edits or MHC/split quality claims are part of this PR. Full CI and final
+artifact verification remain the merge gate. Lineage #60 is next, with the full
+#48/#50 census and #53 fresh training/held-out evidence still required afterward.

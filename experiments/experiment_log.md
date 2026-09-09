@@ -1056,7 +1056,7 @@ findings, not evidence that the model has learned meaningful predictions.
 
 **Date/agent/model:** 2026-09-09; Codex / GPT-6.
 **Directory:** [assay routing correction](2026-09-09_1133_codex_assay-routing/).
-**Status:** full-source baseline completed; correction and after condition pending.
+**Status:** before/after source audit and payload reconciliation completed.
 
 Identical complete merged TSV (3,423,737 rows, SHA-256
 `46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`). Observe
@@ -1080,5 +1080,33 @@ quantitative labels. The baseline wrongly routes 1,239 structural scalars and
 6,250 qualitative-binding scalars into affinity, and four equilibrium association
 constants into on-rate. Supported concentration families total 241,803 rows;
 explicit MS-method presentation totals 2,073,797. Baseline group fingerprints,
-complete metadata, runtime and source snapshots are preserved. No corrected
-population or predictive performance has yet been measured.
+complete metadata, runtime and source snapshots are preserved for the comparison
+below. No predictive performance was measured by either source audit.
+
+The corrected condition at clean `ce30bbe9b1ea80a1f29ecefd9234bf21e496ab24`
+completed in **98.096 seconds** with identical source hashes. Reconciliation at
+clean `e06cbaf` retains all 927 descriptor populations; 798 unchanged groups
+preserve every ordered payload hash for **2,702,233 accepted records**. The
+129 changed groups remove **564,509 incorrectly routed targets**, with no new
+invented target and explicit, disjoint skip reasons.
+
+| Old route → corrected source bucket | Rows |
+|---|---:|
+| Affinity → qualitative binding | 6,250 |
+| Affinity → structure | 1,239 |
+| On-rate → equilibrium association constant | 4 |
+| Elution → missing affinity value | 248 |
+| Elution → qualitative binding | 555,579 |
+| Elution → structure | 23 |
+| Elution → non-MS presentation | 1,166 |
+
+Corrected pre-cap records: binding 241,803; kinetics 102; stability 12,259;
+elution 2,073,797; T-cell 207,987; TCR evidence 166,285. Omissions are 564,739,
+including 478 missing quantitative labels. Every row, skip reason and emitted
+payload reconciles. `reproduce/compare.sh` freezes comparison inputs and source;
+complete JSON/CSV transition tables and both production snapshots are retained.
+Preferred condition is explicit assay semantics. No loss equation, parameter,
+synthetic-data contract or predictive metric changes; no validation/test split
+was used because this is ingestion verification. Prior models trained with the
+old incorrectly routed population are not a controlled quality baseline for the
+corrected one. Hitlist #444 and Presto #60/#48/#50/#53 remain separate work.
