@@ -1051,3 +1051,22 @@ type. SQLite confirms the excluded observation subset's 33,101 global distinct
 peptides. Full tables and immutable trace invocation/source are registered;
 the frozen raw subset/SQLite paths are in the result. These are source-routing
 findings, not evidence that the model has learned meaningful predictions.
+
+## 2026-09-09_1133_codex_assay-routing
+
+**Date/agent/model:** 2026-09-09; Codex / GPT-6.
+**Directory:** [assay routing correction](2026-09-09_1133_codex_assay-routing/).
+**Status:** registered before/after full-source audit; baseline pending.
+
+Identical complete merged TSV (3,423,737 rows, SHA-256
+`46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`). Observe
+canonical classification and every constructed record before a one-record head
+cap per modality; no MHC filtering, study blacklist, source edits or generated
+data. Compare descriptor/response/route counts and ordered record payload hashes
+before/after #59. Existing supported target transforms, loss terms and weights
+are unchanged. No pretraining, training, validation/test splits, predictions or
+predictive metrics: this is a source-ingestion audit. Reproduction uses directory
+`reproduce/launch.sh` and per-condition immutable invocation/production snapshots,
+with the pinned isolated inventory environment. Local CPU, OMP/MKL threads one,
+no GPU requested. Runtime and condition results will be recorded after launch;
+no preferred result is claimed prospectively.

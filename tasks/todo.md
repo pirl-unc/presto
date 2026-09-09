@@ -10773,11 +10773,19 @@ census or quality run. The original #48/#50/#53 evidence requirements remain.
   launcher receipt and corrected successful receipt separately.
 - [x] Reconcile every source-method trace bucket with the actual loader totals,
   without modifying the input corpus or repeating expensive full loads.
-- [ ] Publish reproducible evidence to existing Hitlist #444 and file distinct
+- [x] Publish reproducible evidence to existing Hitlist #444 and file distinct
   Presto issues for incorrect assay routing and dropped source lineage.
-- [ ] Write the production-fix specification after tracing explicit MS evidence,
+- [x] Write the production-fix specification after tracing explicit MS evidence,
   qualitative binding and unresolved assay cases; preserve units/censoring and
   avoid inventing numeric affinity targets for qualitative measurements.
 - [ ] Implement/review the necessary adapter changes with focused semantic tests
   and registered before/after source conservation evidence before continuing the
   full census. Keep all unsupported/unknown evidence visible in audit counters.
+
+Published upstream evidence:
+https://github.com/pirl-unc/hitlist/issues/444#issuecomment-5601129610.
+Presto #59 tracks assay misrouting; #60 tracks publication/observation lineage.
+Next PR specification is `tasks/assay_routing_spec.md`; register a separate
+full-source before/after family at `2026-09-09_1133_codex_assay-routing` and
+finalize the supported descriptor vocabulary against its baseline. Correct
+assay routing first, then preserve lineage, then resume the full census.
