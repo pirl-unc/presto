@@ -1,0 +1,153 @@
+{
+  "overall": {
+    "rows_considered": 3432262,
+    "resolved_rows": 2766823,
+    "missing_rows": 665439,
+    "resolved_fraction": 0.8061223181680186,
+    "missing_fraction": 0.19387768183198137
+  },
+  "species_by_state": {
+    "resolved": {
+      "human": 2419587,
+      "murine": 334608,
+      "nhp": 7522,
+      "other": 5106
+    },
+    "missing": {
+      "human": 562594,
+      "murine": 100505,
+      "nhp": 1393,
+      "other": 947
+    }
+  },
+  "by_modality": {
+    "binding": {
+      "rows": 241803,
+      "resolved_rows": 235626,
+      "missing_rows": 6177,
+      "resolved_fraction": 0.9744544112355926,
+      "missing_fraction": 0.02554558876440739
+    },
+    "kinetics": {
+      "rows": 102,
+      "resolved_rows": 97,
+      "missing_rows": 5,
+      "resolved_fraction": 0.9509803921568627,
+      "missing_fraction": 0.049019607843137254
+    },
+    "stability": {
+      "rows": 12259,
+      "resolved_rows": 11985,
+      "missing_rows": 274,
+      "resolved_fraction": 0.9776490741496043,
+      "missing_fraction": 0.022350925850395626
+    },
+    "elution": {
+      "rows": 2803826,
+      "resolved_rows": 2208462,
+      "missing_rows": 595364,
+      "resolved_fraction": 0.7876601472416619,
+      "missing_fraction": 0.21233985275833808
+    },
+    "tcell": {
+      "rows": 207987,
+      "resolved_rows": 148283,
+      "missing_rows": 59704,
+      "resolved_fraction": 0.7129435974363783,
+      "missing_fraction": 0.28705640256362175
+    },
+    "vdjdb": {
+      "rows": 166285,
+      "resolved_rows": 162370,
+      "missing_rows": 3915,
+      "resolved_fraction": 0.9764560844333524,
+      "missing_fraction": 0.023543915566647623
+    }
+  },
+  "by_modality_species": {
+    "binding": {
+      "resolved": {
+        "human": 219859,
+        "murine": 7858,
+        "nhp": 6945,
+        "other": 964
+      },
+      "missing": {
+        "human": 2912,
+        "murine": 3211,
+        "nhp": 0,
+        "other": 54
+      }
+    },
+    "kinetics": {
+      "resolved": {
+        "human": 38,
+        "murine": 59,
+        "nhp": 0,
+        "other": 0
+      },
+      "missing": {
+        "human": 3,
+        "murine": 2,
+        "nhp": 0,
+        "other": 0
+      }
+    },
+    "stability": {
+      "resolved": {
+        "human": 11581,
+        "murine": 211,
+        "nhp": 0,
+        "other": 193
+      },
+      "missing": {
+        "human": 59,
+        "murine": 117,
+        "nhp": 0,
+        "other": 98
+      }
+    },
+    "elution": {
+      "resolved": {
+        "human": 1928443,
+        "murine": 276820,
+        "nhp": 13,
+        "other": 3186
+      },
+      "missing": {
+        "human": 550531,
+        "murine": 44799,
+        "nhp": 1,
+        "other": 33
+      }
+    },
+    "tcell": {
+      "resolved": {
+        "human": 103719,
+        "murine": 43237,
+        "nhp": 564,
+        "other": 763
+      },
+      "missing": {
+        "human": 8422,
+        "murine": 51119,
+        "nhp": 24,
+        "other": 139
+      }
+    },
+    "vdjdb": {
+      "resolved": {
+        "human": 155947,
+        "murine": 6423,
+        "nhp": 0,
+        "other": 0
+      },
+      "missing": {
+        "human": 667,
+        "murine": 1257,
+        "nhp": 1368,
+        "other": 623
+      }
+    }
+  }
+}

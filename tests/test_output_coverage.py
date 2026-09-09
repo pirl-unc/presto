@@ -173,6 +173,105 @@ def test_censoring_vector_components_and_class_incidence():
             assert counts["positive"] == counts["negative"] == 1
 
 
+def test_class_columns_reuse_invariant_counts_and_invalidate_after_appending():
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(census, [sample()])
+        queries = []
+        census.db.set_trace_callback(queries.append)
+        base = census.counts("train", "mhc_class_logits")
+        first = census.counts("train", "mhc_class_logits", "I")
+        second = census.counts("train", "mhc_class_logits", "II")
+        assert first["positive"] == second["negative"] == 1
+        assert first["negative"] == second["positive"] == 0
+        assert first["facets"] == second["facets"] == base["facets"]
+        assert sum("GROUP BY f.field" in query for query in queries) == 2
+        first["facets"].clear()
+        base["observations"] = -1
+        assert census.counts("train", "mhc_class_logits")["observations"] == 1
+        assert census.counts("train", "mhc_class_logits", "I")["facets"]
+
+        add(census, [sample(sample_id="second", evidence_row_id="assay-2", mhc_class="II")])
+        updated = census.counts("train", "mhc_class_logits", "I")
+        assert updated["observations"] == 2
+        assert updated["positive"] == updated["negative"] == 1
+
+
+def test_class_response_uniqueness_preserves_repeated_and_conflicting_source_rows():
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(
+            census,
+            [sample(), sample(sample_id="repeat"), sample(sample_id="conflicting", mhc_class="II")],
+        )
+        for column in ("I", "II"):
+            counts = census.counts("train", "mhc_class_logits", column)
+            assert counts["observations"] == 3
+            assert counts["unique_observations"] == 2
+            assert counts["unique_positive"] == counts["unique_negative"] == 1
+            assert counts["positive"] == (2 if column == "I" else 1)
+            assert counts["negative"] == (1 if column == "I" else 2)
+
+
+@pytest.mark.parametrize(
+    "filters,expected",
+    [
+        ({}, 2),
+        ({"sources": ["iedb"]}, 1),
+        ({"sources": ["other"]}, 1),
+        ({"sources": []}, 0),
+        ({"roles": ["auxiliary"]}, 2),
+        ({"roles": ["direct"]}, 0),
+        ({"families": ["absent"]}, 0),
+    ],
+)
+@pytest.mark.parametrize("include_facets", [False, True])
+def test_class_count_reuse_keeps_filters_and_facet_options_separate(
+    filters, expected, include_facets
+):
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(census, [sample(), sample(sample_id="other", sample_source="other", mhc_class="II")])
+        # Prime the unfiltered, facet-bearing result before requesting another selection.
+        census.counts("train", "mhc_class_logits")
+        counts = census.counts(
+            "train", "mhc_class_logits", "I", include_facets=include_facets, **filters
+        )
+        assert counts["observations"] == expected
+        assert ("facets" in counts) is include_facets
+        assert counts["positive"] + counts["negative"] == expected
+        assert census.counts("val", "mhc_class_logits", "I")["observations"] == 0
+
+
+@pytest.mark.parametrize("sources", [("iedb", "iedb"), ("iedb", "other")])
+def test_report_reuses_only_single_group_counts_and_keeps_independent_results(sources):
+    contract = build_output_contract()
+    contract.outputs = {"assays.KD_nM": contract.outputs["assays.KD_nM"]}
+    with OutputCoverageCensus(contract) as census:
+        add(
+            census,
+            [
+                sample(
+                    sample_id=str(i),
+                    evidence_row_id=str(i),
+                    sample_source=source,
+                    bind_value=25,
+                    bind_measurement_type="KD",
+                    binding_assay_type="KD",
+                )
+                for i, source in enumerate(sources)
+            ],
+        )
+        queries = []
+        census.db.set_trace_callback(queries.append)
+        entry = census.report()["splits"]["train"]["outputs"]["assays.KD_nM"]
+        groups = entry["evidence"]
+        assert sum(group["observations"] for group in groups) == entry["observations"] == 2
+        expected_scans = 1 if len(set(sources)) == 1 else 3
+        assert sum("GROUP BY f.field,f.value" in query for query in queries) == expected_scans
+        original_facets = dict(entry["facets"])
+        groups[0]["facets"].clear()
+        assert entry["facets"] == original_facets
+        assert "evidence" not in groups[0]
+
+
 def test_actual_bulk_conversion_preserves_generated_and_proxy_origins():
     dataset = PrestoDataset(
         bulk_ms_records=[

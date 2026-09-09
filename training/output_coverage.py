@@ -12,6 +12,7 @@ import math
 import sqlite3
 import tempfile
 from collections import defaultdict
+from copy import deepcopy
 from pathlib import Path
 
 from .mil import MIL_TASKS, get_mil_channel, resolve_mil_targets, mil_observation_slots
@@ -95,6 +96,7 @@ class OutputCoverageCensus:
         )
         self._hash_sum = 0
         self._hash_count = 0
+        self._class_counts = {}
 
     def __enter__(self):
         return self
@@ -128,6 +130,7 @@ class OutputCoverageCensus:
 
     def add_batch(self, split: str, samples, batch) -> None:
         """Consume the same collated batch used by the canonical support audit."""
+        self._class_counts.clear()
         self.declare_split(split)
         row_ids = []
         origins = []
@@ -335,11 +338,35 @@ class OutputCoverageCensus:
         if spec.shape == "classes" and column:
             index = spec.columns.index(column)
             positive, negative = f"o.target={index}", f"o.target!={index}"
-        else:
-            positive, negative = (
-                "o.loss_type='bce' AND o.target>0.5",
-                "o.loss_type='bce' AND o.target<=0.5",
+            result = self.counts(
+                split,
+                endpoint,
+                roles=roles,
+                families=families,
+                sources=sources,
+                include_facets=include_facets,
             )
+            if result["observations"]:
+                balance = self.db.execute(
+                    f"""SELECT COALESCE(SUM({positive}),0), COALESCE(SUM({negative}),0),
+                        COUNT(DISTINCT CASE WHEN {positive} THEN o.observation_key END),
+                        COUNT(DISTINCT CASE WHEN {negative} THEN o.observation_key END)
+                    FROM observations o JOIN samples s ON s.id=o.row_id WHERE {where}""",
+                    args,
+                ).fetchone()
+                result.update(
+                    zip(("positive", "negative", "unique_positive", "unique_negative"), balance)
+                )
+            return result
+
+        # Categorical columns share every count except their response balance.
+        cache_key = (where, tuple(args), include_facets)
+        if spec.shape == "classes" and cache_key in self._class_counts:
+            return deepcopy(self._class_counts[cache_key])
+        positive, negative = (
+            "o.loss_type='bce' AND o.target>0.5",
+            "o.loss_type='bce' AND o.target<=0.5",
+        )
         row = self.db.execute(
             f"""SELECT COUNT(*), COUNT(DISTINCT s.id),
                 COUNT(DISTINCT CASE WHEN s.traceable
@@ -383,6 +410,8 @@ class OutputCoverageCensus:
                 args,
             ):
                 result[f"distinct_{field}s"] = count
+        if spec.shape == "classes":
+            self._class_counts[cache_key] = deepcopy(result)
         return result
 
     def report(self) -> dict:
@@ -414,21 +443,27 @@ class OutputCoverageCensus:
                     ORDER BY o.role,o.family,s.source""",
                     (split, endpoint),
                 ).fetchall()
-                entry["evidence"] = []
+                evidence = []
                 for role, family, source in groups:
                     filters = dict(roles=[role], families=[family], sources=[source])
-                    entry["evidence"].append(
+                    if len(groups) == 1:
+                        # This group is the entire endpoint population, including its columns.
+                        group_counts = deepcopy(entry)
+                    else:
+                        group_counts = self.counts(split, endpoint, **filters)
+                        group_counts["columns"] = {
+                            column: self.counts(split, endpoint, column, **filters)
+                            for column in spec.columns
+                        }
+                    evidence.append(
                         {
                             "role": role,
                             "family": family,
                             "source": source,
-                            **self.counts(split, endpoint, **filters),
-                            "columns": {
-                                column: self.counts(split, endpoint, column, **filters)
-                                for column in spec.columns
-                            },
+                            **group_counts,
                         }
                     )
+                entry["evidence"] = evidence
                 entries[endpoint] = entry
             report["splits"][split] = {
                 "rows": rows,
