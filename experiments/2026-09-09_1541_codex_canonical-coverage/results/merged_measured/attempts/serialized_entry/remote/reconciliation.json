@@ -1,0 +1,33 @@
+{
+  "canonical_endpoints": 110,
+  "csv_rows_reconciled": 717,
+  "dataset_hashes_match_legacy_support": true,
+  "elapsed_seconds": 12652.534932305,
+  "evidence_hash_matches_report_and_state": true,
+  "note": "Support census only; no optimization or predictive evaluation. All copied summary fields reconciled; retained SQLite remains available for independent querying.",
+  "peak_rss_gib": 14.311393737792969,
+  "prediction_metrics": null,
+  "source_contract": {
+    "bulk_ms": false,
+    "data_seed": 17,
+    "data_source": "merged_tsv",
+    "dataset_contract_sha256": "0b6f9b3204fb8cd854d58529fd080d3ba547cefe583d63c86d3dfc1c2e300261",
+    "dataset_supervision_contract_sha256": "2d67df7cfa811ca06d6c4d7fc4b0ebcb7ad0e53f6cf5b109236727ad12373d15",
+    "output_evidence_sha256": "402d39621ab8a1bded2a80084bdd8e6459bd979e992e23ee3e2fb56430d89c22",
+    "split_mode": "peptide_group",
+    "split_rows": {
+      "test": 208192,
+      "train": 1665530,
+      "val": 208200
+    },
+    "split_seed": 42
+  },
+  "source_hashes_before_after_equal": true,
+  "split_rows": {
+    "test": 208192,
+    "train": 1665530,
+    "val": 208200
+  },
+  "status": "complete",
+  "total_rows": 2081922
+}

@@ -1,8 +1,8 @@
 # Canonical full-source output coverage
 
 - Agent/model: Codex / GPT-6; date: 2026-09-09.
-- Status: upload verified; `merged_measured` is running as attempt
-  `serialized_entry`, after two preserved startup failures before data loading.
+- Status: `merged_measured` completed successfully as attempt `serialized_entry`;
+  remaining source/augmentation conditions and update diagnostics are pending.
 - Production base: merged PR #64, `190360a7e2596eb5f62682088f1ef63270bf5eeb`.
 - Plan: [detailed specification](../../tasks/canonical_coverage_evidence_spec.md).
 - Prior evidence: [source inventory](../2026-09-09_1106_codex_output-coverage/),
@@ -53,7 +53,7 @@ receipts. Do not overwrite prior results or repair shared caches during an audit
 
 ## Handoff
 
-The live attempt uses clean `d6a690a510750ee66b9224ba4faa76c647e4f0b6`:
+The completed attempt used clean `d6a690a510750ee66b9224ba4faa76c647e4f0b6`:
 
 - App: [`ap-PPrESGuLvIKrTYEYNnwTPG`](https://modal.com/apps/iskandr/main/ap-PPrESGuLvIKrTYEYNnwTPG).
 - Call: `fc-01M23HN1ZCVA1M5NF5Q1P0GFNJ`; container:
@@ -66,16 +66,42 @@ The live attempt uses clean `d6a690a510750ee66b9224ba4faa76c647e4f0b6`:
 
 The worker entered successfully and reached the canonical merged-data loader
 after checking all frozen source/input hashes and the pinned Hitlist curation
-hash. Direct container log inspection confirms the full merged input path;
-support counts are still pending. Observed environment is Python 3.12.1,
+hash. Direct container log inspection confirmed the full merged input path.
+Observed environment was Python 3.12.1,
 torch 2.7.0+cpu, Hitlist 1.59.1, mhcseqs 2.5.12, mhcgnomes 3.41.0 and Modal 1.1.4.
 `/proc/meminfo` reports 201,326,592 KiB (192 GiB); the queried cgroup-v2 files
-were unavailable. No GPU was requested. Preserve the current call if a local
-watcher expires; inspect its actual state before considering any retry.
+were unavailable. No GPU was requested.
 
-The census is incomplete and no fitting or predictive evaluation has run. Copy
-all available final summaries/receipts and reconcile retained SQLite counts,
-source funnels and split support before scheduling the other five conditions.
+The remote census completed in **12,652.535 seconds (3 hours 31 minutes)** with
+**14.31 GiB peak RSS**, after 1,785 report count calls. The local watcher lost DNS
+connectivity and wrote a client error to `handle.json`; that receipt is preserved.
+The successful remote `status.json` and durable call result establish completion.
+All available final reports, source funnels, split support, environment and
+candidate snapshots are in [remote results](results/merged_measured/attempts/serialized_entry/remote/).
+The 8,797,626,368-byte SQLite database remains in the output volume. The final
+worker log is `artifacts/2026-09-09_1541_codex_canonical-coverage/merged-measured-final-worker.log`.
+
+All ten input hashes match before/after execution. Report/state/source-contract
+evidence fingerprints agree, dataset fingerprints match legacy split support,
+and every output CSV cell matches its JSON counterpart. These checks are recorded
+in `remote/reconciliation.json`; independent SQLite comparison remains available.
+
+| Split | Retained examples | IC50 observations | T-cell response observations | TCR evidence observations |
+|---|---:|---:|---:|---:|
+| Train | 1,665,530 | 55,423 | 118,222 | 133,170 |
+| Validation | 208,200 | 6,978 | 15,266 | 10,456 |
+| Test | 208,192 | 6,791 | 14,795 | 18,744 |
+
+The total is **2,081,922** examples with no modality caps or generated samples.
+Processing and pathway T-cell MIL bags have zero observed support here; the
+T-cell response counts above are row labels. TCR evidence is positive-only in all
+three splits. Assay-specific and evidence-role details remain explicit in the
+complete report; canonical KD counts include the declared proxy families. These
+are supervision counts, not adequate-power or prediction-quality claims. No
+fitting/pretraining ran, so predictive metrics and per-example prediction dumps
+are inapplicable. The other five conditions and real-training update diagnostics
+remain pending. Prefer reducing redundant report queries before repeating this
+expensive phase; no winner among source/augmentation conditions is established.
 
 The user explicitly approved the upload on 2026-09-09 ("Upload please"). All ten
 files, **1,464,177,529 bytes**, were uploaded without overwriting existing objects
@@ -133,7 +159,8 @@ The remote entry now explicitly uses Modal 1.1.4's serialized transport and load
 the worker from the frozen `/opt/presto` tree. The actual SDK round-trip passes
 in a fresh isolated interpreter without importing the local launcher (one test,
 0.48 seconds); all 28 focused checks pass in 4.29 seconds, and Ruff passes.
-Attempt `serialized_entry` is now running, with the same input bytes and condition.
+Attempt `serialized_entry` subsequently completed with the same input bytes and
+condition; its final results appear above.
 
 Earlier preparation and review history (the upload authorization above supersedes
 the earlier transfer block):
@@ -161,7 +188,7 @@ the earlier transfer block):
   or compute was involved. Updated tests passed **85 cases in 9.85 seconds**
   (including the earlier cases), and Ruff passes. Use the new frozen snapshot;
   the earlier `0158c25` launcher intentionally fails the new self-identity check.
-- Next step: collect and reconcile the live uncapped merged measured condition,
-  then schedule the other source/augmentation conditions based on actual resource use.
-- Open questions: actual per-column support, source-contamination impact,
-  generated-parent provenance, rare assay incidence and per-column updates.
+- Next step: reduce repeated reporting work, then schedule the other source/
+  augmentation conditions based on the completed census's resource use.
+- Open questions: support across the remaining conditions, source-contamination
+  impact, generated-parent provenance and real per-column updates.

@@ -1,5 +1,5 @@
 {
-  "app_id": "ap-PPrESGuLvIKrTYEYNnwTPG",
+  "agent_model": "Codex / GPT-6",
   "args": {
     "affinity_assay_residual_mode": "legacy",
     "affinity_target_encoding": "log10",
@@ -128,30 +128,28 @@
     "vdjdb_file": null,
     "weight_decay": 0.01
   },
-  "argv": [
-    "experiments/2026-09-09_1541_codex_canonical-coverage/code/launch.py",
-    "execute",
-    "--condition",
-    "merged_measured",
-    "--attempt",
-    "serialized_entry",
-    "--snapshot",
-    "/Users/iskander/code/presto/artifacts/2026-09-09_1541_codex_canonical-coverage/prepared/d6a690a510750ee66b9224ba4faa76c647e4f0b6/presto"
-  ],
   "attempt": "serialized_entry",
-  "call_id": "fc-01M23HN1ZCVA1M5NF5Q1P0GFNJ",
   "condition": "merged_measured",
-  "cwd": "/Users/iskander/code/presto",
-  "destination": {
-    "environment": "main",
-    "profile": "iskandr",
-    "workspace": "iskandr"
+  "environment": {
+    "HITLIST_DATA_DIR": "/inputs/2026-09-09_1541_codex_canonical-coverage/hitlist",
+    "MKL_NUM_THREADS": "4",
+    "OMP_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "4",
+    "PRESTO_MHCSEQS_SEARCH_DIR": "/inputs/2026-09-09_1541_codex_canonical-coverage/mhcseqs",
+    "TQDM_DISABLE": "1"
   },
-  "elapsed_seconds": 12615.57796406746,
-  "error": "ConnectionError('[Errno 8] nodename nor servname provided, or not known')",
-  "finished_unix": 1788985649.305985,
-  "modal_version": "1.1.4",
-  "source_receipt": {
+  "gpu": null,
+  "platform": "Linux-4.19.0-gvisor-x86_64-with-glibc2.31",
+  "python": "3.12.1 (main, Jan 11 2024, 10:22:40) [GCC 10.2.1 20210110]",
+  "requested_cpu": [
+    4,
+    8
+  ],
+  "requested_memory_mib": [
+    65536,
+    196608
+  ],
+  "source": {
     "archive_sha256": "4f01548c4fea5379faf81249938782ebdfeba55d79f94009d033bc68d0fe9d81",
     "dirty": false,
     "files": [
@@ -683,6 +681,7 @@
     "git_commit": "d6a690a510750ee66b9224ba4faa76c647e4f0b6",
     "local_snapshot": "/Users/iskander/code/presto/artifacts/2026-09-09_1541_codex_canonical-coverage/prepared/d6a690a510750ee66b9224ba4faa76c647e4f0b6/presto"
   },
-  "started_unix": 1788973033.728021,
-  "status": "launch_or_remote_failed"
+  "started_unix": 1788973067.9146228,
+  "status": "running",
+  "timeout_seconds": 14400
 }
