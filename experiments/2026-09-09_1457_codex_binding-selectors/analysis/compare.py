@@ -1,11 +1,13 @@
 """Reconcile descriptor recovery while requiring identical selector populations."""
 
+import argparse
 import csv
 import hashlib
 import json
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -52,7 +54,10 @@ def compare(before, after):
 def main():
     from presto.scripts.experiment_registry import write_reproducibility_bundle
 
-    output = EXPERIMENT / "results" / "compare"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--output-dir", type=Path)
+    args = parser.parse_args()
+    output = args.output_dir or EXPERIMENT / "results" / "compare"
     if output.exists():
         raise FileExistsError(output)
     git_status = subprocess.check_output(
@@ -68,6 +73,7 @@ def main():
             for name in ("PYTHONPATH", "OMP_NUM_THREADS", "MKL_NUM_THREADS")
         },
     )
+    started = time.perf_counter()
     results, receipts, inputs = {}, {}, {}
     for condition in ("before", "after"):
         directory = EXPERIMENT / "results" / condition
@@ -112,6 +118,7 @@ def main():
         field_counts=rows,
         populations_and_non_descriptor_payloads_identical=True,
         every_descriptor_and_selected_column_matches_source=True,
+        elapsed_seconds=time.perf_counter() - started,
     )
     (output / "result.json").write_text(json.dumps(payload, sort_keys=True, indent=2) + "\n")
     with (output / "field_counts.csv").open("w", newline="") as handle:

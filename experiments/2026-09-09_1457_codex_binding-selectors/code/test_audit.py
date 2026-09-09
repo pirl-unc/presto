@@ -1,6 +1,7 @@
 """Selector audit counts actual constructions and restores runner-local hooks."""
 
 import csv
+import copy
 import importlib.util
 from pathlib import Path
 
@@ -76,3 +77,22 @@ def test_failure_restores_hooks(tmp_path, monkeypatch):
         audit.inspect_selector(source(tmp_path / "source.tsv"), "panel")
     assert runner.BindingRecord is fail
     assert runner.classify_assay_type is original_classifier
+
+
+def test_comparison_rejects_payload_and_column_drift(tmp_path):
+    spec = importlib.util.spec_from_file_location(
+        "selector_compare", Path(__file__).parents[1] / "analysis/compare.py"
+    )
+    comparison = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(comparison)
+    path = source(tmp_path / "source.tsv")
+    results = {name: audit.inspect_selector(path, name) for name in ("panel", "bootstrap")}
+    assert len(comparison.compare(results, results)) == 8
+    changed = copy.deepcopy(results)
+    changed["panel"]["non_descriptor_payload_sha256"] = "changed"
+    with pytest.raises(AssertionError, match="non_descriptor_payload"):
+        comparison.compare(results, changed)
+    changed = copy.deepcopy(results)
+    changed["bootstrap"]["actual_columns"][0]["readout"] = "unknown"
+    with pytest.raises(AssertionError, match="Wrong columns"):
+        comparison.compare(results, changed)
