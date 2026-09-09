@@ -1,7 +1,8 @@
 # Real-source output coverage and update audit
 
 - Date: 2026-09-09; agent/model: Codex / GPT-6.
-- Status: registered preparation; no census or optimizer diagnostic has run.
+- Status: initial inventory failed before data scanning; corrected inventory
+  pending. No census or optimizer diagnostic has run.
 - Presto base: PR #58, `d9a666a07085289b168105089d29dd4e675add61`.
 - Detailed plan: [coverage census](../agents/codex/plans/2026-09-08_output-coverage-census.md).
 - Raw artifacts/environment: `artifacts/2026-09-09_1106_codex_output-coverage/`.
@@ -62,6 +63,21 @@ require those artifacts from an adequately trained selected checkpoint. No
 pretraining or synthetic-only quality demonstration substitutes for that work.
 
 ## Upstream findings and closure
+
+The initial inventory launch at `96b3ff6` stopped after 0.476 seconds because
+the launcher treated the curation YAML as a mapping, while Hitlist stores a list
+and exposes a canonical `load_pmid_overrides()` mapping adapter. No source scan
+ran. Preserve `results/inventory/`, `reproduce/inventory_invocation.json` and
+`reproduce/source/launch.py` as the failed receipt. The corrected launcher calls
+the provider's loader; its three fixture/installed-curation checks precede the
+second launch via `reproduce/inventory_v2.sh`. This is a local launcher error,
+not a Hitlist bug. Later snapshots live under distinct phase-output directories.
+
+Reproduction requires an environment created from `reproduce/environment.txt`
+plus this checkout installed with `uv pip install --no-deps --editable .`.
+The frozen scripts record the exact original paths; for a repeat inspection,
+pass a fresh `--output-dir` with a unique basename. Existing evidence directories
+and SQLite files are never overwritten.
 
 File confirmed Hitlist data/curation problems with reproducible source versions,
 study/record examples and impact counts. Add new evidence to existing issues

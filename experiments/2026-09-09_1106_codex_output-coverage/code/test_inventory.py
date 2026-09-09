@@ -21,6 +21,13 @@ def database():
     return db
 
 
+def test_actual_pinned_curation_uses_the_provider_loader():
+    excluded = inventory.excluded_studies()
+    assert len(excluded) == 11
+    assert excluded["32903714"]["exclude_from_ms"] is True
+    assert "microarray" in excluded["32903714"]["study_label"]
+
+
 def test_parquet_count_preserves_duplicates_and_null_pmid_is_not_a_match(tmp_path):
     path = tmp_path / "observations.parquet"
     pq.write_table(

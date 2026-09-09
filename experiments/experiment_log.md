@@ -1000,3 +1000,14 @@ preserving numeric/source conservation. It does not establish post-curation
 per-column/split adequacy or model quality (#48/#53). Full tables, missingness,
 fingerprints and real-example trace are in the experiment results. Runtime
 differences are not interpreted as performance evidence.
+
+### 2026-09-09_1106_codex_output-coverage
+
+- **Date / agent**: 2026-09-09; Codex / GPT-6.
+- **Experiment**: [2026-09-09_1106_codex_output-coverage](2026-09-09_1106_codex_output-coverage/).
+- **Status**: source inventory running; uncapped census/update phases pending.
+- **Contract**: current merged TSV and exclusive Hitlist cache, read-only; prospective 80/10/10 peptide splits, data seed 17, split/model seed 42.
+- **Training / synthetic data**: none in inventory; later measured/augmented conditions and bounded optimizer diagnostics are specified in the README.
+- **Validation/test metrics**: not applicable to metadata inventory; no prediction-quality claim.
+- **Hardware**: local CPU; no Modal GPU requested.
+- **Reproduction**: experiment `reproduce/launch.sh`, phase invocation and source snapshot; pinned isolated environment.

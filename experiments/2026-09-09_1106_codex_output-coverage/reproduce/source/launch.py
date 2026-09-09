@@ -89,9 +89,9 @@ def freeze_invocation(args, output):
     json_write(output / "invocation.json", receipt)
     bundle = EXPERIMENT / "reproduce"
     bundle.mkdir(exist_ok=True)
-    json_write(bundle / f"{output.name}_invocation.json", receipt)
-    snapshot = bundle / "source" / output.name
-    snapshot.mkdir(parents=True, exist_ok=False)
+    json_write(bundle / f"{args.phase}_invocation.json", receipt)
+    snapshot = bundle / "source"
+    snapshot.mkdir(exist_ok=True)
     shutil.copy2(__file__, snapshot / "launch.py")
     (bundle / "environment.txt").write_text(
         "\n".join(
@@ -199,21 +199,17 @@ def scan_merged(path, excluded, db, output):
     }
 
 
-def excluded_studies():
-    from hitlist.curation import load_pmid_overrides
-
-    return {
-        str(key): value
-        for key, value in load_pmid_overrides().items()
-        if value.get("exclude_from_ms") is True
-    }
-
-
 def inventory(args, output):
+    import yaml
 
     hitlist_root = Path(importlib.util.find_spec("hitlist").origin).parent
     overrides = hitlist_root / "data" / "pmid_overrides.yaml"
-    excluded = excluded_studies()
+    entries = yaml.safe_load(overrides.read_text())
+    excluded = {
+        str(key): value
+        for key, value in entries.items()
+        if isinstance(value, dict) and value.get("exclude_from_ms") is True
+    }
     if not excluded:
         raise RuntimeError("No excluded studies found; inspect the curation schema/version")
     curation = {
