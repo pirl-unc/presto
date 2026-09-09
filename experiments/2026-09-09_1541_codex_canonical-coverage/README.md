@@ -107,8 +107,16 @@ condition/data/hardware contract. No additional input upload is needed.
 The corrected launcher/instrumentation passes 28 focused tests in 13.15 seconds
 and Ruff 0.16.0. An initial expanded check passed 32 tests but exposed that the
 canonical packaging test discovers preserved raw source snapshots under local
-`artifacts/`; rerun that check in the isolated source copy without changing or
-deleting those historical artifacts.
+`artifacts/`. Testing the isolated source copy left that checkout regression
+unresolved. The review repair explicitly excludes the generated top-level
+`artifacts/` directory from package discovery. Verify ordinary packaging checks
+in the working checkout after preparation as well as the isolated build; the
+regression test runs the actual preparation command and retains detection of
+undeclared source packages, including nested packages named `artifacts`.
+Both new regressions failed before the exclusion; all 24 packaging/launcher tests
+now pass in 3.20 seconds, including normal discovery with existing snapshots.
+Ruff 0.16.0 lint and formatting checks pass. The failure and passing logs remain
+under the raw root as `packaging-review-before.log` and `packaging-review-after.log`.
 
 The `d8f06ee` wheel build succeeded with all nine packages and all archived
 production Python sources present; five canonical packaging tests passed in

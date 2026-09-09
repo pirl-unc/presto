@@ -127,11 +127,11 @@ become additional source conditions. Retry only after these checks, using the
 same uploaded bytes, source/augmentation parameters and CPU/RAM/timeout contract.
 Do not re-upload or change the source data to resolve this packaging failure.
 
-Run the canonical packaging checks against the isolated source copy as well:
-their on-disk discovery includes preserved `artifacts/` snapshots in a developer
-checkout, although those snapshots are not declared production packages. Keep
-that first local failure in the verification log; do not delete audit evidence
-or modify production package discovery just to make this working tree pass.
+Run the canonical packaging checks against the isolated source copy and the
+working checkout after preparation. The first verification only checked the
+isolated copy and left a checkout regression: discovery included generated
+`artifacts/` snapshots as production packages. Preserve its failure evidence and
+apply the review repair below so the normal workflow also passes.
 
 ### Remote entry-point import failure and revised execution plan
 
@@ -150,6 +150,26 @@ declaration and round-trip the actual SDK serialization in a fresh interpreter
 without the launcher's module on its import path. Preserve this failed attempt
 and record a new `serialized_entry` attempt; keep the same uploaded inputs,
 condition, image dependency pins and hardware limits. Do not reuse result paths.
+
+## Review repair: generated artifacts and package discovery
+
+The reviewer reproduced packaging discovery passing in a clean checkout and
+failing after `prepare()`. The intended source snapshot is valid, but discovery
+must treat the existing git-ignored top-level `artifacts/` directory as generated
+output, alongside its existing `build/` and `experiments/` exclusions. Add that
+single directory to `tests/test_packaging.py::NOT_SHIPPED`; retain the current
+top-level-only matching so a real nested package named `artifacts` is checked.
+Keep existing archive locations, source receipts and recorded attempts intact.
+
+Before the fix, add regressions that fail on the current implementation. One
+must run the real `prepare` CLI from a clean temporary Git checkout containing
+the declared packages, verify the extracted snapshot and compare ordinary package
+discovery before/after preparation. Another must prove generated snapshots are
+excluded while new source packages and a nested `data/artifacts` remain visible.
+Then run the normal packaging suite in this working checkout, the launcher
+regressions, and pinned Ruff lint/format checks. No cloud run is needed to verify
+this local workflow repair. Correct the README's isolated-only guidance after
+verification; retain original failed-run receipts as history.
 
 ## Instrumentation and verification
 

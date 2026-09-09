@@ -365,3 +365,10 @@
   convert hours to minutes; it does not establish a minutes-to-seconds contract.
   Existing source-unit declarations and semantic regression tests take priority
   over an inferred unit from one transform.
+
+## 2026-09-09
+
+- A passing isolated build does not resolve a workflow that breaks subsequent
+  tests in the user's checkout. Verify discovery before and after the real
+  preparation command. Explicitly exclude generated artifact roots while keeping
+  undeclared source packages, including similarly named nested packages, visible.

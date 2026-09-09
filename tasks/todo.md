@@ -11019,3 +11019,49 @@ launcher snapshot and its receipt-variable correction. Nineteen focused checks
 pass. `340e208` CI is complete: 2,061 passed / 3 skipped, full PR log preserved.
 Freeze the corrected launcher on a clean commit and start the registered first
 CPU census. Upload authorization persists; do not ask for it again.
+
+### Review against main — 2026-09-09
+
+Scope: inspect the proposed diff against `190360a7e2596eb5f62682088f1ef63270bf5eeb`
+without fixing implementation. Review canonical census instrumentation, launcher
+execution/reproduction boundaries, frozen conditions and supporting receipts.
+Verify actionable defects against the canonical trainer and local focused tests;
+do not launch cloud jobs, upload data, or alter historical experiment artifacts.
+Report only introduced defects with precise changed locations, priorities, and
+applicable repository-rule citations.
+
+- [x] Read applicable guidance and inspect the full diff inventory.
+- [x] Trace new instrumentation and launcher behavior against canonical consumers.
+- [x] Run focused local checks and validate suspected defects independently.
+- [x] Deduplicate findings and record review verification/results.
+
+Review results: 29 experiment-local checks passed; the broader canonical
+preflight/output-coverage/data-support/output-contract selection passed 134 tests
+in 17.61 seconds (including those 29). Six launch/handle source receipts match
+their recorded Git blobs and frozen arguments. A clean temporary Git fixture
+reproduced one introduced integration defect: `prepare()` changes the existing
+packaging-discovery assertion from passing to failing with nine undeclared
+snapshot packages under `artifacts/`. Report this as P2; no production fix made.
+No cloud calls, data transfers, or modifications to historical artifacts occurred.
+
+### Resolve PR #65 packaging-discovery review
+
+Specification: `tasks/canonical_coverage_evidence_spec.md`, review repair section.
+Add only the generated top-level `artifacts/` root to the packaging check's
+existing exclusions. Exercise the actual preparation command in a clean temporary
+Git checkout and verify ordinary discovery remains valid afterward. Keep detection
+of undeclared source packages, including a nested `data/artifacts` package.
+
+- [x] Review the finding, preserve review notes and record the corrective lesson.
+- [x] Reproduce with permanent preparation/discovery regression tests.
+- [x] Apply the root artifact exclusion and verify the working checkout plus regressions.
+- [x] Review the final diff and update the experiment guidance for PR #65.
+
+Review results: both new regressions failed before the fix (2 failures in 1.41
+seconds). The one-entry exclusion passes all 24 packaging/launcher checks in
+3.20 seconds, including normal discovery with existing snapshots and a clean
+temporary checkout before/after the actual preparation command. Undeclared source
+packages and nested `data/artifacts` remain visible. Ruff 0.16.0 lint and format
+checks pass. README/spec guidance now requires the working-checkout check;
+historical snapshots and receipts are retained. Final diff is limited to package
+discovery tests and review documentation.
