@@ -10891,7 +10891,7 @@ based on main. Specification: `tasks/binding_selector_spec.md`.
 - [x] Register and run the exact real-source selector baseline.
 - [x] Restore descriptors and verify all four loader paths and output selection.
 - [x] Reconcile source populations/non-descriptor payloads and close artifacts.
-- [ ] Rebase onto verified merged main, review, run CI and merge.
+- [x] Rebase onto verified merged main, review, run CI and merge.
 - [ ] Resume #48/#50 census/update evidence and #53 predictive acceptance.
 
 ### PR #63 merged; selector baseline captured
@@ -10934,10 +10934,29 @@ main before its first experiment. No new experiment or cloud compute has launche
 
 - [x] Inspect canonical preflight, full-corpus memory requirements and remote API.
 - [x] Write the detailed source, hardware, instrumentation and verification spec.
-- [ ] Merge #64 after all final-head checks, verify tree/#62 closure, rebase.
-- [ ] Register the new census family and freeze arguments/environment/source data.
-- [ ] Implement and verify observational instrumentation and durable execution.
+- [x] Merge #64 after all final-head checks, verify tree/#62 closure, rebase.
+- [x] Register the new census family and freeze arguments/environment/source data.
+- [x] Implement and verify observational instrumentation; validate the remote SDK declaration.
 - [ ] Run and reconcile the uncapped merged measured condition first.
 - [ ] Complete separate source/augmentation census conditions and update diagnostics.
 - [ ] Freeze prospective claims, close artifacts, review/CI/merge the evidence PR.
 - [ ] Continue #53's fresh real-data fit and held-out predictive evaluation.
+
+PR #64 merged as `190360a7e2596eb5f62682088f1ef63270bf5eeb` at 15:41:16 UTC;
+the tree exactly matches reviewed `b1f4646` and #62 is closed. Both final-head CI
+jobs passed 2,061 tests, 3 skipped (PR 663.26 seconds; branch 941.30 seconds).
+Both full logs are preserved under the selector-audit raw root. No deployment
+workflow exists. The next specification was committed before instrumentation,
+then rebased onto merged main (`81b26be`); production code remains unchanged.
+
+Registered `experiments/2026-09-09_1541_codex_canonical-coverage/`, freezing six
+full trainer argument dictionaries and ten input files totaling 1,464,177,529
+bytes. Resolved augmented pMHC/elution/cascade-elution/cascade-T-cell ratios are
+1.0/0.5/0.5/0.5. The first instrumentation suite passed 74 tests in 9.88 seconds;
+final candidate provenance and launcher checks remain before the first launch.
+
+Final instrumentation verification passed 75 tests in 8.16 seconds; canonical
+reports match exactly at chunk sizes 1/2/512 and generated candidates are excluded
+without altering census counts. Ruff passes. Offline Modal 1.1.4 declarations
+accept the CPU/RAM/timeout contract. Actual remote persistence, environment and
+full-source runtime remain to be verified during the first registered launch.

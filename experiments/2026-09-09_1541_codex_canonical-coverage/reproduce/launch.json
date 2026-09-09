@@ -1,0 +1,11 @@
+{
+  "status": "registered_not_launched",
+  "agent_model": "Codex / GPT-6",
+  "production_base": "190360a7e2596eb5f62682088f1ef63270bf5eeb",
+  "first_condition": "merged_measured",
+  "cpu_request_limit": [4, 8],
+  "memory_mib_request_limit": [65536, 196608],
+  "timeout_seconds": 14400,
+  "gpu": null,
+  "note": "Per-launch immutable receipts replace no prior invocation and record actual clean source SHA, arguments, environment and durable handles."
+}

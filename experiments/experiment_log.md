@@ -1233,6 +1233,38 @@ qualifiers, units and selected records are unchanged. Complete per-field and
 per-column JSON/CSV counts, source hashes, frozen launchers and the comparison
 are preserved. New regressions first failed 10 cases (12 passed), then the
 repaired code passed 247 affected tests in 21.46 seconds. Four overlapping audit
-checks pass, including negative controls. Ruff lint/format passes. #62's final
-PR review/CI remain; #48/#50 uncapped coverage/update evidence and #53 real-data
+checks pass, including negative controls. Ruff lint/format passes. PR #64 merged
+as `190360a7` with a tree identical to reviewed `b1f4646`; #62 is closed. Both
+final-head CI runs passed 2,061 tests / 3 skipped. #48/#50 uncapped coverage/update evidence and #53 real-data
 fitting/held-out performance remain separate work.
+
+## 2026-09-09 15:41 — Canonical full-source output coverage (registered)
+
+- Agent/model: Codex / GPT-6.
+- Directory: [2026-09-09_1541_codex_canonical-coverage](2026-09-09_1541_codex_canonical-coverage/).
+- Status: registered after the routing/lineage/selector repairs; no full condition
+  launched yet. Production base is merged PR #64, `190360a7`.
+- Dataset: frozen merged TSV, exclusive Hitlist and explicit Hitlist-plus-bulk,
+  each measured-only and augmented, no modality caps. Ten input files total
+  1,464,177,529 bytes; exact hashes and complete arguments are in the directory.
+  Data seed 17, peptide-group train/validation/test 80/10/10, split seed 42,
+  strict complete MHC resolution plus canonical filtering, ambiguous flanks masked.
+- Assay/qualifier policy: repaired canonical loaders; unsupported source families
+  remain explicit omissions. No source union or cache edits. Direct/proxy/auxiliary
+  and generated labels stay separate; aliases do not inflate endpoint coverage.
+- Synthetic contract: measured conditions disable generation; augmented explicit
+  pMHC/elution/cascade-elution/cascade-T-cell ratios 1.0/0.5/0.5/0.5, missing-beta
+  0.25, processing 0.5, MHC-only 60,000 at fraction 0.05. Wrong-enzyme bulk labels
+  are disabled in measured conditions and enabled at ratio 1.0 in augmented bulk.
+- Training/pretraining: none in the census. Actual objective mapping, weights and
+  multiplicity come from the executable registry. Later gradient diagnostics must
+  freeze real train candidates and optimization settings before execution.
+- Hardware: first merged measured condition alone, Modal CPU 4/8 requested/limit,
+  RAM 64/192 GiB requested/limit, four-hour timeout, no GPU. Actual runtime/hardware
+  evidence remains pending. No preferred condition or predictive winner yet.
+- Validation/test: support counts only; no predictive loss or metrics. Prediction
+  dumps are inapplicable to this phase; #53 still requires fresh predictive eval.
+- Raw artifacts: `artifacts/2026-09-09_1541_codex_canonical-coverage/` and uniquely
+  named Modal volume prefixes recorded by each launched receipt.
+- Decision: verify observational parity, run the uncapped merged measured audit,
+  reconcile it, then schedule the remaining source/augmentation conditions.
