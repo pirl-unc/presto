@@ -10889,7 +10889,7 @@ based on main. Specification: `tasks/binding_selector_spec.md`.
 
 - [x] Reproduce descriptor loss and file #62; write implementation/audit spec.
 - [x] Register and run the exact real-source selector baseline.
-- [ ] Restore descriptors and verify all four loader paths and output selection.
+- [x] Restore descriptors and verify all four loader paths and output selection.
 - [ ] Reconcile source populations/non-descriptor payloads and close artifacts.
 - [ ] Rebase onto verified merged main, review, run CI and merge.
 - [ ] Resume #48/#50 census/update evidence and #53 predictive acceptance.

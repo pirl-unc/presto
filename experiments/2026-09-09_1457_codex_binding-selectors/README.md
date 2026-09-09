@@ -65,3 +65,13 @@ geometry/readout column becomes unknown. Complete column distributions and
 field counts are in `results/before/`; these scopes overlap and are not additive.
 No source/production hash changed during the scan. After repair/reconciliation
 and final validation remain required.
+
+The new 22-case regression suite reproduced **10 failures / 12 passes** before
+the fix, including zero selected-panel gradients for both alternate loaders.
+The eight-line correction copies the four normalized fields from the existing
+UnifiedRecord into both BindingRecord constructors. The affected suite then
+passed **247 tests in 21.46 seconds**, including source/target/selector parity
+across all four loaders, missing and conflicting descriptors, preserved lineage
+and selected gradients with invariant fixed predictions. Ruff 0.16.0 lint and
+format passed (255 files). The before/after test logs are in the raw-artifact
+root as `regression-before.log` and `regression-after.log`.
