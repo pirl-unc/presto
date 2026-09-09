@@ -1056,7 +1056,7 @@ findings, not evidence that the model has learned meaningful predictions.
 
 **Date/agent/model:** 2026-09-09; Codex / GPT-6.
 **Directory:** [assay routing correction](2026-09-09_1133_codex_assay-routing/).
-**Status:** registered before/after full-source audit; baseline pending.
+**Status:** full-source baseline completed; correction and after condition pending.
 
 Identical complete merged TSV (3,423,737 rows, SHA-256
 `46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`). Observe
@@ -1070,3 +1070,15 @@ predictive metrics: this is a source-ingestion audit. Reproduction uses director
 with the pinned isolated inventory environment. Local CPU, OMP/MKL threads one,
 no GPU requested. Runtime and condition results will be recorded after launch;
 no preferred result is claimed prospectively.
+
+The clean `1c5d1eacf94a6956f2e3cbc55869ffa07e94d396` baseline completed in
+100.868 seconds with unchanged source hashes. All 3,423,737 input rows reconcile
+to 156,765 invalid peptides and 3,266,972 classifications in 927 groups. Actual
+pre-cap records: binding 249,292; kinetics 106; stability 12,259; elution 2,630,813;
+T-cell 207,987; TCR evidence 166,285. Another 230 classified rows have missing
+quantitative labels. The baseline wrongly routes 1,239 structural scalars and
+6,250 qualitative-binding scalars into affinity, and four equilibrium association
+constants into on-rate. Supported concentration families total 241,803 rows;
+explicit MS-method presentation totals 2,073,797. Baseline group fingerprints,
+complete metadata, runtime and source snapshots are preserved. No corrected
+population or predictive performance has yet been measured.

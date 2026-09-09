@@ -62,8 +62,38 @@ change model/loss equations or silently apply a study blacklist to shared data.
 
 ## Sequence
 
-- [ ] Register and execute full-source baseline before production edits.
+- [x] Register and execute full-source baseline before production edits.
 - [ ] Finalize descriptor policy against baseline groups and implement it.
 - [ ] Verify semantic tests and execute the registered after condition.
 - [ ] Reconcile source transitions and unaffected payload hashes; close artifacts.
 - [ ] Review, publish, verify CI and merge; start lineage #60 next.
+
+## Baseline-informed policy
+
+The baseline at clean `1c5d1ea` completed in 100.868 seconds. All 3,423,737 input
+rows are accounted for: 156,765 invalid peptides and 3,266,972 classifications
+in 927 descriptor groups. Every constructed record reconciles with pre-cap
+loader counts. Structural scalars (1,239), qualitative-binding scalars (6,250)
+and equilibrium association constants (4) currently enter inappropriate
+quantitative objectives. The five supported concentration response types total
+241,803 rows. Explicit MS-method presentation totals 2,073,797 rows; 1,166 other
+presentation rows have Edman degradation, T-cell recognition or coelution
+methods and cannot be called MS observations by this adapter.
+
+Use explicit normalized controlled measurement labels and compact aliases.
+Prefer `value_type`, then `assay_type`, then an exact measurement label in
+`assay_method` when higher-priority fields are absent. Do not guess a unit or
+family from an arbitrary scalar or a short substring. Distinguish qualitative
+binding, structure, equilibrium association constant, non-MS/unknown-method
+presentation and otherwise unknown binding buckets. Missing numeric labels in
+supported quantitative families retain their family but get a missing-label
+skip reason. Explicit `record_type=elution` is already an elution declaration;
+binding-format rows require an explicit MS method or a presentation label plus
+a recognized MS acquisition term. Presentation alone with an absent method is
+not an MS declaration. Valid unsupported source observations remain exportable.
+
+Persist mutually exclusive skip reasons and assert that they sum to the existing
+aggregate unroutable/missing-label counter. The normalized funnel substitutes
+the detailed reasons for that aggregate when available, so it cannot double
+count the same omissions. Binding selectors must use the same fallback
+measurement label when `value_type` is absent; preserve all observed descriptors.
