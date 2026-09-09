@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "status": "planned",
+  "agent_model": "Codex / GPT-6",
+  "experiment": "2026-09-09_1106_codex_output-coverage",
+  "phase": "inventory",
+  "argv": ["artifacts/2026-09-09_1106_codex_output-coverage/.venv/bin/python", "experiments/2026-09-09_1106_codex_output-coverage/code/launch.py", "inventory"],
+  "environment": {"OMP_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "HITLIST_DATA_DIR": "/Users/iskander/.hitlist"},
+  "git_at_registration": {"commit": "051c115", "branch": "codex/real-source-output-evidence", "dirty": true},
+  "note": "The executed phase writes its full invocation, exact git SHA/dirty state and installed dependency/source hashes before data inspection."
+}
