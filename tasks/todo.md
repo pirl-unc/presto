@@ -10879,3 +10879,16 @@ sample IDs. No model/loss/target/split changes or curation bypass. Local suites
 passed 434 affected regressions and 48 focused-probe/audit tests; Ruff passes.
 Complete receipts, snapshots and comparison tables are closed in the experiment
 README/canonical log. Full remote CI and exact-head PR review remain merge gates.
+
+### Alternate binding selectors — Presto #62
+
+Prepare in an isolated checkout of reviewed #63 while its CI runs. Publish the
+next PR only after #63 merges and its tree is verified, with the next branch
+based on main. Specification: `tasks/binding_selector_spec.md`.
+
+- [x] Reproduce descriptor loss and file #62; write implementation/audit spec.
+- [ ] Register and run the exact real-source selector baseline.
+- [ ] Restore descriptors and verify all four loader paths and output selection.
+- [ ] Reconcile source populations/non-descriptor payloads and close artifacts.
+- [ ] Rebase onto verified merged main, review, run CI and merge.
+- [ ] Resume #48/#50 census/update evidence and #53 predictive acceptance.
