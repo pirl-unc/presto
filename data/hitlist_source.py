@@ -17,7 +17,8 @@ pathway, so this is a prerequisite for any excision modeling.
 
 Coverage note: hitlist's training table covers **MS/elution and in-vitro
 binding evidence only**. T-cell response, TCR evidence, and IEDB processing
-exports are not in it, so those modalities still come from the merged TSV. See
+exports are not in it. They are available in merged-TSV mode and absent from
+Hitlist-only mode; source selection does not implicitly union the two. See
 ``load_records_from_hitlist`` for what this module does and does not return.
 
 The column contract

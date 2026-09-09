@@ -49,6 +49,73 @@ The complete source and target map is in
 [assay_learning_scheme.md](assay_learning_scheme.md). Availability of a parser
 does not mean every assay family has been loaded or has held-out support.
 
+## Output coverage and prospective claims
+
+First run the intended curation and split configuration without fitting:
+
+```bash
+python -m presto train unified --data-dir ./data --run-dir ./artifacts/preflight \
+  --data-preflight-only --data-seed 17 --seed 42 --val-frac 0.1 --test-frac 0.1
+```
+
+`output_coverage.json` contains the executable output contract, source contract,
+per-split counts and evidence strata. `output_coverage.csv` is the flat canonical
+count view. Existing `split_support.json` and its tables retain their schema and
+fingerprints. `supported_outputs.json` marks every canonical cell undeclared
+until a prospective manifest is supplied. Output existence is not support.
+
+Create a JSON manifest with exactly these top-level fields:
+
+| Field | Required value |
+|---|---|
+| `schema_version` | Integer `1` |
+| `model_contract` | The preflight's `contract.configuration` object |
+| `source_contract` | The preflight's `source_contract` object, including fingerprints |
+| `claims` | A nonempty list of explicitly scoped claims |
+
+Each claim contains exactly `endpoint`, `columns`, `required_splits`,
+`evidence_roles`, `source_families`, `raw_sources`, and `minimums`. Use canonical
+endpoint names and named panel/class/component columns; a scalar column is `""`.
+The split/role/family/source lists must be explicit. Roles are `direct`, `proxy`,
+`auxiliary`, and `synthetic`; unknown provenance cannot pass. Regular families
+come from the declared endpoint, while generated families use the exact
+`generated:<kind>` string with the `synthetic` role. Each claim's filters apply
+jointly before exact distinct counting.
+
+Choose and justify minimums in the experiment plan before fitting; the code
+does not choose scientifically adequate thresholds. Every claim requires
+positive `unique_observations` and `distinct_peptides` minimums. Binary and
+categorical objectives additionally require explicit `unique_positive` and
+`unique_negative` minimums; quantitative objectives require `unique_exact`.
+Those balance/exact minimums may be zero when explicitly justified. Original
+source identity coverage is available as `traceable_observations` and
+`untraceable_rows`; unique counts can otherwise include fallback sample IDs.
+
+Run the same curation/split configuration with
+`--supported-output-manifest path/to/claims.json` and a fresh run directory.
+The manifest is copied to `supported_output_manifest.json` before source loading;
+an existing different declaration cannot be overwritten. Missing splits,
+incompatible contracts, malformed claims or insufficient counts stop fitting
+and leave reports for inspection. Undeclared columns remain undeclared even
+when the selected subset passes. This gate does not disable other objectives;
+it scopes evidence claims about the run.
+
+Declared training runs automatically record `output_updates.json`; exploratory
+runs can opt in with `--track-output-updates`. Both options require a run directory
+or checkpoint path. The tracker observes initialization, frozen stages, label
+exposures, column output derivatives and actual optimizer changes. Output
+derivatives are observed before PCGrad, while parameter gradients are observed
+after clipping/projection. Zero-gradient rows may change through weight decay
+or optimizer state, and shared readouts may have no dedicated column parameter.
+Counts are training exposures rather than distinct source measurements. Tracking
+adds diagnostic overhead and does not supply prediction-quality evidence.
+
+Model output variants may be set in YAML/JSON `train.unified` configuration,
+including `affinity_assay_residual_mode`, `kd_grouping_mode`,
+`affinity_target_encoding`, `core_window_lengths`, `binding_direct_segment_mode`
+and `binding_kinetic_input_mode`. The manifest must match the selected variant.
+The output contract fixes `max_affinity_nM` to the shared loss convention, 50000.
+
 ## Batches and model inputs
 
 The collator builds sparse targets, masks and qualifiers. Canonical row training

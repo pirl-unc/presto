@@ -15,6 +15,7 @@ import argparse
 import tempfile
 import time
 from collections import Counter, defaultdict
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
 
@@ -1462,6 +1463,7 @@ def train_epoch(
     use_amp: bool = False,
     max_mil_instances: int = 0,
     max_batches: int = 0,
+    output_tracker=None,
 ) -> Tuple[float, Dict[str, float]]:
     """Train for one epoch."""
     model.train()
@@ -1499,48 +1501,49 @@ def train_epoch(
         batch_start = time.perf_counter()
         perf_data_wait_sec += batch_start - prev_batch_end
         compute_start = time.perf_counter()
-        loss, loss_dict, output_dict = compute_loss(
-            model,
-            batch,
-            device,
-            uncertainty_weighting,
-            regularization=regularization,
-            supervised_loss_aggregation=supervised_loss_aggregation,
-            profile_performance=profile_performance,
-            non_blocking_transfer=non_blocking_transfer,
-            use_amp=use_amp,
-            max_mil_instances=max_mil_instances,
-        )
-        compute_elapsed = time.perf_counter() - compute_start
-        perf_compute_loss_sec += compute_elapsed
-        batch_samples = 0
-        pep_tok = getattr(batch, "pep_tok", None)
-        if isinstance(pep_tok, torch.Tensor) and pep_tok.ndim >= 1:
-            batch_samples = int(pep_tok.shape[0])
-
-        stepped_optimizer = False
-        if pcgrad is not None and len(loss_dict) > 1:
-            step_start = time.perf_counter()
-            stepped_optimizer = (
-                pcgrad.step(list(loss_dict.values()), model.parameters()) is not None
+        with output_tracker.observe_batch(batch) if output_tracker is not None else nullcontext():
+            loss, loss_dict, output_dict = compute_loss(
+                model,
+                batch,
+                device,
+                uncertainty_weighting,
+                regularization=regularization,
+                supervised_loss_aggregation=supervised_loss_aggregation,
+                profile_performance=profile_performance,
+                non_blocking_transfer=non_blocking_transfer,
+                use_amp=use_amp,
+                max_mil_instances=max_mil_instances,
             )
-            backward_elapsed = time.perf_counter() - step_start
-            optimizer_elapsed = 0.0
-            perf_backward_sec += backward_elapsed
-        else:
-            optimizer.zero_grad()
-            backward_start = time.perf_counter()
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-            backward_elapsed = time.perf_counter() - backward_start
-            perf_backward_sec += backward_elapsed
-            optim_start = time.perf_counter()
-            optimizer.step()
-            stepped_optimizer = True
-            optimizer_elapsed = time.perf_counter() - optim_start
-            perf_optimizer_sec += optimizer_elapsed
-        if stepped_optimizer and scheduler is not None:
-            scheduler.step()
+            compute_elapsed = time.perf_counter() - compute_start
+            perf_compute_loss_sec += compute_elapsed
+            batch_samples = 0
+            pep_tok = getattr(batch, "pep_tok", None)
+            if isinstance(pep_tok, torch.Tensor) and pep_tok.ndim >= 1:
+                batch_samples = int(pep_tok.shape[0])
+
+            stepped_optimizer = False
+            if pcgrad is not None and len(loss_dict) > 1:
+                step_start = time.perf_counter()
+                stepped_optimizer = (
+                    pcgrad.step(list(loss_dict.values()), model.parameters()) is not None
+                )
+                backward_elapsed = time.perf_counter() - step_start
+                optimizer_elapsed = 0.0
+                perf_backward_sec += backward_elapsed
+            else:
+                optimizer.zero_grad()
+                backward_start = time.perf_counter()
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+                backward_elapsed = time.perf_counter() - backward_start
+                perf_backward_sec += backward_elapsed
+                optim_start = time.perf_counter()
+                optimizer.step()
+                stepped_optimizer = True
+                optimizer_elapsed = time.perf_counter() - optim_start
+                perf_optimizer_sec += optimizer_elapsed
+            if stepped_optimizer and scheduler is not None:
+                scheduler.step()
 
         total_loss += loss.item()
         for name, value in loss_dict.items():

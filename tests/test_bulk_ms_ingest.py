@@ -7,12 +7,16 @@ exercised, which is the same shape as the bugs this branch spent its time
 finding.
 """
 
+import sys
+from types import ModuleType
+
 import pytest
 
 pd = pytest.importorskip("pandas")
 
 from presto.data.bulk_ms import (  # noqa: E402
     _iter_frame_rows,
+    load_bulk_ms_records,
     records_from_bulk_frame,
 )
 
@@ -116,3 +120,30 @@ class TestStreaming:
 
     def test_iter_frame_rows_handles_an_empty_frame(self):
         assert list(_iter_frame_rows(_frame([]), chunk_size=4)) == []
+
+
+def test_native_generated_controls_keep_explicit_provenance():
+    from presto.data.loaders import PrestoDataset
+
+    records, _ = records_from_bulk_frame(_frame([_row(peptide="ACDEFGHIK")]))
+    assert [record.generated_kind for record in records] == ["", "bulk_wrong_enzyme"]
+    observed, generated = PrestoDataset(bulk_ms_records=records).samples
+    assert observed.target_provenance == {
+        "excision": "bulk_observed_product",
+        "ms_detectability": "bulk_depth_proxy",
+    }
+    assert generated.target_provenance["excision"] == "generated:bulk_wrong_enzyme"
+    assert generated.synthetic_kind is None  # Preserve existing sampler grouping.
+    records[1].generated_kind = ""
+    unknown = PrestoDataset(bulk_ms_records=[records[1]])[0]
+    assert set(unknown.target_provenance.values()) == {"unknown"}
+
+
+def test_protein_argument_does_not_claim_unproduced_detectability_negatives(monkeypatch):
+    provider = ModuleType("hitlist.bulk_proteomics")
+    provider.load_bulk_peptides = lambda **kwargs: _frame([_row(peptide="ACDEFGHIK")])
+    monkeypatch.setitem(sys.modules, "hitlist.bulk_proteomics", provider)
+    records, stats = load_bulk_ms_records(protein_sequences={"example": "ACDEFGHIK"})
+    assert stats["protein_sequences_supplied"]
+    assert not stats["in_silico_negatives_available"]
+    assert all(record.detectability_label is None for record in records if not record.observed)

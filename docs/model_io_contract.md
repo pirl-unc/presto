@@ -352,10 +352,44 @@ Split-support schema v4 adds `row_targets` and `row_split_support.csv` alongside
 `mil_targets` and `mil_split_support.csv`, all using the shared target resolvers.
 These include derived categorical targets, vector components, selected columns,
 response/qualifier counts and source counts. The legacy `targets` table still
-counts row masks; these tables are not additive endpoint counts. The global
-endpoint manifest and adequacy gates remain #48. Optional model heads may be
-absent: this target census records label availability, not proof of parameter
-updates or adequate scientific supervision. The real-source census remains #50.
+counts row masks; these tables are not additive endpoint counts.
+
+The executable declaration in `training/output_contract.py` canonicalizes
+published aliases, shapes, units, columns and the existing row/MIL objectives.
+`output_coverage.json` and `.csv` count effective observations per split and
+canonical column, including zeros. The JSON also separates original source
+identities, fallback identities, distinct peptides/alleles, context, response
+balance, censoring and raw source/evidence families. Repeated alias objectives
+remain visible in the objective ledger without multiplying unique evidence.
+Class-split elution bags retain their separate effective observations while
+sharing their original source identity.
+
+Target provenance travels as host metadata. Typed assay records, generated
+controls, organism-derived foreignness and bulk-MS proxies remain distinct.
+Bulk observed products do not establish isolated cleavage measurements;
+fractionation-depth labels are ordinal detectability proxies. Wrong-enzyme
+controls carry an explicit generation kind. Passing protein sequences to the
+current bulk loader does not produce unobserved detectability candidates.
+
+A prospective `--supported-output-manifest` declares a subset of canonical
+columns, required splits, admissible evidence and explicit count requirements.
+It is frozen before data loading and checked against model configuration and
+curated-input/evidence fingerprints before fitting. Unknown origins, aliases as
+independent claims and missing support cannot satisfy the gate. Passing means
+the declared requirements were met; it establishes neither prediction quality
+nor adequacy of thresholds chosen by the experimenter. Exploratory runs without
+a manifest report all outputs as undeclared. See the
+[training guide](training_spec.md#output-coverage-and-prospective-claims) for use.
+
+`output_updates.json` separately records column-label exposures, output
+derivatives, initialization/trainability, final optimizer gradients and actual
+dedicated parameter-row changes. Fixed-rule replacements and outputs without a
+dedicated parameter row are explicit. Weight decay, shared gradients and indirect
+updates cannot establish direct supervision. Tracking is automatic for declared
+runs and otherwise opt-in with `--track-output-updates`.
+
+The real-source census/update evidence remains #48/#50; the fresh fitted and
+held-out baseline remains #53. Infrastructure tests do not close those claims.
 
 Row counts in historical experiments do not describe today's default corpus.
 Merged TSV and Hitlist are explicit mutually exclusive primary source choices;

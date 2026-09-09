@@ -19,7 +19,7 @@ import random
 import re
 import sys
 from collections import Counter, defaultdict
-from dataclasses import replace
+from dataclasses import asdict, replace
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
@@ -99,6 +99,7 @@ from presto.training.config_io import (
     load_config_file,
     merge_namespace_with_config,
 )
+from presto.training.output_contract import OutputConfiguration
 from presto.training.run_logger import RunLogger
 
 try:
@@ -137,6 +138,7 @@ except ImportError:
 
 
 IEDB_DEFAULTS = {
+    **asdict(OutputConfiguration()),
     "profile": "full",
     "epochs": 5,
     "batch_size": 512,
@@ -227,6 +229,8 @@ IEDB_DEFAULTS = {
     "forbid_fake_null_sequences": False,
     "expected_split_support_sha256": None,
     "data_preflight_only": False,
+    "supported_output_manifest": None,
+    "track_output_updates": False,
     "checkpoint": None,
     "run_dir": None,
     "weight_decay": 0.01,
@@ -370,6 +374,7 @@ def _call_train_epoch_compat(
     use_amp: bool = False,
     max_mil_instances: int = 0,
     max_batches: int = 0,
+    output_tracker=None,
 ) -> Tuple[float, Dict[str, float]]:
     """Call train_epoch across old/new script signatures."""
     kwargs = {}
@@ -396,6 +401,10 @@ def _call_train_epoch_compat(
         kwargs["max_mil_instances"] = int(max_mil_instances)
     if "max_batches" in params:
         kwargs["max_batches"] = int(max_batches)
+    if output_tracker is not None:
+        if "output_tracker" not in params:
+            raise RuntimeError("Requested output-update tracking is unsupported by train_epoch")
+        kwargs["output_tracker"] = output_tracker
 
     result = train_epoch(model, train_loader, optimizer, device, **kwargs)
     if isinstance(result, tuple) and len(result) == 2 and isinstance(result[1], dict):
@@ -4587,6 +4596,26 @@ def run(args: argparse.Namespace) -> None:
     run_dir = Path(run_dir_arg) if run_dir_arg else None
     if run_dir is None and args.checkpoint:
         run_dir = Path(args.checkpoint).resolve().parent
+    supported_manifest = None
+    manifest_path = getattr(args, "supported_output_manifest", None)
+    if manifest_path:
+        from presto.training.supported_outputs import load_supported_output_manifest
+
+        if run_dir is None:
+            raise ValueError("--supported-output-manifest requires --run-dir or --checkpoint")
+        # Freeze the declaration before loading/curating any training data.
+        supported_manifest = load_supported_output_manifest(manifest_path)
+        run_dir.mkdir(parents=True, exist_ok=True)
+        frozen_manifest_path = run_dir / "supported_output_manifest.json"
+        frozen_text = json.dumps(supported_manifest, indent=2, sort_keys=True) + "\n"
+        if (
+            frozen_manifest_path.exists()
+            and json.loads(frozen_manifest_path.read_text()) != supported_manifest
+        ):
+            raise ValueError("Run directory already contains a different supported-output manifest")
+        frozen_manifest_path.write_text(frozen_text)
+    if bool(getattr(args, "track_output_updates", False)) and run_dir is None:
+        raise ValueError("--track-output-updates requires --run-dir or --checkpoint")
     run_logger = RunLogger(run_dir, config=vars(args)) if run_dir is not None else None
 
     data_dir = Path(args.data_dir)
@@ -5331,6 +5360,7 @@ def run(args: argparse.Namespace) -> None:
         print(f"    excision negatives: {bulk_stats['n_excision_negatives']}")
         for machinery, count in bulk_stats["machinery_counts"].items():
             print(f"    {machinery}: {count}")
+        data_funnel["additions"]["bulk_ms"] = dict(bulk_stats)
 
     dataset = PrestoDataset(
         bulk_ms_records=bulk_ms_records,
@@ -5489,30 +5519,25 @@ def run(args: argparse.Namespace) -> None:
         or getattr(args, "forbid_fake_null_sequences", False)
         or getattr(args, "expected_split_support_sha256", None)
         or getattr(args, "data_preflight_only", False)
+        or supported_manifest is not None
     )
     if run_dir is not None or support_gate_requested:
-        from presto.training.data_support import (
-            audit_split_support,
-            validate_split_support,
-            write_split_support_artifacts,
-        )
+        from presto.training.data_support import validate_split_support
+        from presto.training.coverage_preflight import audit_training_coverage
 
-        split_support = audit_split_support(
-            {
-                "train": train_dataset,
-                "val": val_dataset,
-                **({"test": test_dataset} if test_dataset is not None else {}),
-            },
-            collator=collator,
-        )
-        if run_dir is not None:
-            paths = write_split_support_artifacts(run_dir, split_support)
-            print(
-                "Split support written: "
-                f"json={paths['json']}, csv={paths['csv']}, "
-                f"sha256={split_support['sha256']}"
-            )
         try:
+            split_support, supported_report = audit_training_coverage(
+                {
+                    "train": train_dataset,
+                    "val": val_dataset,
+                    **({"test": test_dataset} if test_dataset is not None else {}),
+                },
+                collator=collator,
+                args=args,
+                data_seed=data_seed,
+                manifest=supported_manifest,
+                output_dir=run_dir,
+            )
             validate_split_support(
                 split_support,
                 required_targets=tuple(getattr(args, "require_split_target", ()) or ()),
@@ -5597,7 +5622,7 @@ def run(args: argparse.Namespace) -> None:
         d_model=args.d_model,
         n_layers=args.n_layers,
         n_heads=args.n_heads,
-        latent_topology=str(getattr(args, "latent_topology", "expanded")),
+        **asdict(OutputConfiguration.from_object(args)),
     ).to(device)
     print(f"Latent topology: {model.latent_topology}")
     n_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -5701,6 +5726,12 @@ def run(args: argparse.Namespace) -> None:
     if torch.cuda.is_available() and str(device).startswith("cuda"):
         cuda_stats_device = torch.device(device)
 
+    output_tracker = None
+    if supported_manifest is not None or bool(getattr(args, "track_output_updates", False)):
+        from presto.training.output_updates import OutputUpdateTracker
+
+        output_tracker = OutputUpdateTracker(model, optimizer, output_dir=run_dir)
+
     try:
         for epoch in range(args.epochs):
             if cuda_stats_device is not None:
@@ -5712,6 +5743,8 @@ def run(args: argparse.Namespace) -> None:
             )
             max_batches_per_epoch = max_epoch_batches
             max_val_batches_per_epoch = int(getattr(args, "max_val_batches", 0))
+            if output_tracker is not None:
+                output_tracker.epoch = epoch + 1
             train_loss, train_task_losses = _call_train_epoch_compat(
                 model,
                 train_loader,
@@ -5730,7 +5763,10 @@ def run(args: argparse.Namespace) -> None:
                 use_amp=use_amp,
                 max_mil_instances=max_mil_instances,
                 max_batches=max_batches_per_epoch,
+                output_tracker=output_tracker,
             )
+            if output_tracker is not None:
+                output_tracker.write()
             val_loss, val_task_losses = _call_evaluate_compat(
                 model,
                 val_loader,
@@ -5954,6 +5990,8 @@ def run(args: argparse.Namespace) -> None:
         if run_logger is not None:
             run_logger.log(args.epochs, "summary", {"best_val_loss": best_val_loss})
     finally:
+        if output_tracker is not None:
+            output_tracker.close()
         if run_dir is not None and probe_history:
             probe_plot = _write_probe_artifacts(
                 run_dir=run_dir,
@@ -6430,6 +6468,16 @@ def main(argv=None):
         "--data-preflight-only",
         action="store_true",
         help="Build, split, audit, and gate the dataset, then exit before model training.",
+    )
+    parser.add_argument(
+        "--supported-output-manifest",
+        default=None,
+        help="Freeze and enforce declared per-output evidence requirements before fitting.",
+    )
+    parser.add_argument(
+        "--track-output-updates",
+        action="store_true",
+        help="Record per-column output gradients and parameter updates (requires a run directory).",
     )
     parser.add_argument("--epochs", type=int, default=5, help="Number of epochs")
     parser.add_argument("--batch_size", type=int, default=512, help="Batch size")

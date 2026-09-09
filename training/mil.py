@@ -277,6 +277,20 @@ def resolve_mil_targets(channel, specs) -> Dict[str, MILTarget]:
     return targets
 
 
+def mil_observation_slots(channel, *, source_rows: int) -> list[int]:
+    """Stable within-row bag ordinals, including class-split elution bags."""
+    rows = channel["bag_sample_indices"]
+    if len(rows) != channel["bag_label"].numel():
+        raise ValueError("MIL evidence requires explicit source positions for every bag")
+    seen, slots = {}, []
+    for row in rows:
+        if type(row) is not int or not 0 <= row < source_rows:
+            raise ValueError("MIL evidence source position is outside the original batch")
+        slots.append(seen.get(row, 0))
+        seen[row] = seen.get(row, 0) + 1
+    return slots
+
+
 def predict_mil_channel(
     model, *, channel, targets, device, chunk_size=0
 ) -> Dict[str, MILPrediction]:

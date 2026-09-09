@@ -10439,7 +10439,7 @@ No user approval is required between reviewed, verified PRs in this series.
 Broader schema #46 and historical source-mapping #34/#44 remain outside this
 specific #48+ repair series unless a verified dependency requires a scoped fix.
 
-- [ ] Finish row/vector/categorical/panel observation coverage for #51 using
+- [x] Finish row/vector/categorical/panel observation coverage for #51 using
       shared executable supervision, review the PR against main, verify and merge.
 - [ ] Complete declared endpoint/column/source/split coverage and prospective
       gates for #48; run the registered real-source census, also closing #50's
@@ -10495,8 +10495,8 @@ Track final check receipts in the PR to avoid repeated notes-only CI commits.
 - [x] Write the shared observation specification before code changes.
 - [x] Implement shared row/panel target and prediction resolution.
 - [x] Integrate complete export, support counting and loss reconciliation.
-- [ ] Verify behavioral parity and targeted failures; review the final diff.
-- [ ] Publish, verify CI, merge and proceed to the next repair.
+- [x] Verify behavioral parity and targeted failures; review the final diff.
+- [x] Publish, verify CI, merge and proceed to the next repair.
 
 ### Row/panel implementation review — 2026-09-08
 
@@ -10529,3 +10529,191 @@ The source-mapping/context scope stays unchanged. #48's prospective endpoint
 manifest and real-source census, #50's real bag incidence and #53's trained
 validation/test baseline remain later PRs. No training experiment or deployment
 was performed; the repository has CI but no configured deployment.
+
+### Next specification — declared endpoint coverage and prospective gates (#48)
+
+The preceding goal turn made concrete progress by publishing PR #57 at
+`3221473`; its 220 affected tests and final pinned lint/format/docs pass. Full
+GitHub CI is currently live. Merge it only after final revision checks pass;
+then create the coverage branch directly from merged main. This specification
+is prepared while CI runs and does not change the reviewed production revision.
+
+1. Build an executable endpoint contract from the shared row/panel and MIL task
+   specs. Canonicalize public aliases and probability/logit views; retain a
+   separate objective list with existing multiplicity and weights. Describe
+   output shape/columns/classes, units/transforms, selectors, masks/qualifiers,
+   admissible source families, direct/proxy/auxiliary/diagnostic roles and
+   supported model configurations. Explicitly classify published quantities
+   without direct labels; tensor existence or indirect gradient is not support.
+   Validate emitted outputs against that declaration for supported topologies,
+   affinity residual/grouping modes and other declared output variants.
+2. Count effective observations per canonical endpoint/column and split from
+   the same target views, including zero-support entries. Separate source rows,
+   effective observations, unique source observations, peptides and alleles.
+   Retain class/species/context, exact/censored and positive/negative/graded
+   counts, stratified by raw source and each generated-label family. Aliases and
+   duplicated KD objectives must not inflate unique observation counts. Use
+   disk-backed exact distinct counting for large corpora rather than multiplying
+   in-memory Python string sets across every output. Preserve existing audit
+   fingerprints and legacy tables as explicitly separate compatibility views.
+3. Trace source roles through the actual loader fields, not source-name guesses
+   alone. Preserve target-specific provenance where construction loses it:
+   bulk-MS wrong-enzyme negatives currently share `bulk_proteomics` with observed
+   rows and lose `observed=False` on conversion to PrestoSample. Depth-derived
+   detectability is an ordinal proxy; it is not a measured intrinsic probability.
+   Keep measured binding family, generic-KD proxy, organism-derived foreignness,
+   elution/presentation proxies and T-cell/recognition claims separate. Unknown
+   provenance must stay unknown and cannot satisfy direct-measurement gates.
+4. Add a versioned prospective supported-endpoint manifest with explicit
+   canonical columns, required splits, allowed evidence roles/source families,
+   model/source contract, and minimum observations/distinct peptides/response
+   balance or exact-value support. Reject unknown endpoints, aliases used as
+   independent claims, missing splits and incompatible configurations. Report
+   every undeclared/underpowered endpoint with its reason. Exploratory runs may
+   produce a complete unsupported report; quality claims require a validated
+   manifest frozen before fitting. Do not infer thresholds from a completed
+   run or treat a default count of one as evidence of adequacy. Wire CLI/config
+   defaults, preflight and persisted run metadata together.
+5. Add per-column output-gradient and parameter-row update observations for
+   real training batches. Record initialization, trainability/frozen stages,
+   selected label support, gradient observations and actual optimizer changes
+   separately. A shared tensor gradient or decay-only update must not establish
+   a column's direct supervision. Explicitly represent fixed rule quantities,
+   shared readouts and output columns without a dedicated parameter row. Keep
+   the tracker optional outside audit/quality runs and preserve optimization.
+6. Verify the ELISPOT-positive/ICS-negative gate counterexample, all-zero columns,
+   aliases/multiple objectives, measured versus every generated family,
+   row/bag/vector/CE cases, censoring, distinct counts and split determinism.
+   Exercise default merged, exclusive Hitlist and opt-in bulk-MS construction
+   while competing inputs exist. Test frozen/zero-init/unused/indirect parameter
+   cases and both supported topologies. Review the complete diff and require
+   final CI before merge.
+
+The implementation PR supplies the complete contract, census and gating/tracking
+infrastructure. A following registered evidence PR runs the real-source census
+and per-column update audit on those paths, also fulfilling #50's remaining
+incidence requirement. #48 stays open until that evidence is verified. #53 then
+uses the frozen supported subset for a real-data fitting check and adequate
+held-out baseline; no all-output quality claim is inferred from the gates.
+
+- [x] Merge #57 after verified CI and review closure.
+- [x] Implement endpoint/source declaration, exact census and prospective gates.
+- [x] Integrate per-column gradient/update evidence and verify all source paths.
+- [ ] Review, publish and merge the coverage implementation.
+- [ ] Register, execute and close the real-source coverage/gradient evidence PR.
+
+PR #57 merged as `0e09976cfe01efedaeb8ac35c9a52990358665cb`, with its tree
+identical to reviewed `3221473`. PR CI 34267130967 passed 1,852 tests (3 skipped),
+including all new observation tests; branch CI 34267087345 also passed. #51 is
+closed. The current implementation branch is `codex/declared-output-coverage`,
+based directly on merged main. No deployment is configured (zero GitHub
+deployments). Detailed real-source census planning is in
+`experiments/agents/codex/plans/2026-09-08_output-coverage-census.md`.
+
+### Coverage implementation checkpoint — foundation verified
+
+- [x] Declare public quantities and conditional aliases against the 48 existing
+  row and bag objectives, preserving their groups, base weights and reductions.
+- [x] Preserve typed record provenance through sample construction, including
+  bulk observed/generated labels and organism-derived foreignness. Keep these
+  fields outside model inputs and existing sampler grouping.
+- [x] Implement a SQLite census with exact distinct counts, source/role strata,
+  selected columns, CE class incidence, censor/response counts and global zeros.
+- [x] Implement explicit prospective claim evaluation, including per-column
+  unique response balance, missing-split rejection and alias-claim rejection.
+- [x] Integrate census/manifest persistence with canonical CLI/defaults and
+  preflight, freezing the declaration before source loading.
+- [x] Implement per-column gradient and dedicated parameter-row update tracking.
+- [x] Exercise actual merged/Hitlist/bulk source selection paths, with competing
+  merged/raw files present and full dataset/split/collation/census construction.
+- [ ] Complete review/full CI before merging the implementation PR.
+
+Verification at this checkpoint: `pytest -q tests/test_output_coverage.py
+tests/test_data_support.py tests/test_bulk_ms_ingest.py --tb=short` passed **76
+tests in 5.14s**. The new tests cover 32 actual model configurations (both
+topologies, eight affinity residual modes and both KD grouping modes), plus
+alternate encoding/direct readout/multiple core lengths. Pinned Ruff 0.16.0
+lint and `git diff --check` passed. No real-data experiment has run, no PR has
+been opened for this branch, and #48 remains open.
+
+Review details to preserve during integration:
+
+- The repeated `ms` objective is on the MIL path; there is no `row:ms` loss
+  specification. The first test run mistakenly referenced that nonexistent row
+  objective after successfully validating each model's output declaration; the
+  assertion now checks `mil:ms` against `mil:elution`.
+- With multiple core-window lengths, projected `core_start_prob` is not generally
+  `softmax(core_start_logit)`. It is explicitly declared as a separate derived
+  quantity, with only `core_start_probs` as its identity alias.
+- New evidence metadata has its own census hash. Legacy sample/input hashes
+  deliberately exclude those two new metadata fields, and a regression test
+  proves metadata changes do not alter the established input fingerprints.
+- Counts distinguish constructed training rows from traceable original source
+  rows. Missing original identities stay visible as untraceable; sample IDs are
+  only fallback observation keys. The bulk adapter currently has no original
+  evidence-row identifiers, so a later real census must not report its fallback
+  sample identities as proven original observations.
+- Keep distinct allele counting inside SQLite; do not materialize repeated
+  allele-frequency dictionaries for every endpoint/source/column in JSON.
+- `bulk_ms.load_bulk_ms_records(protein_sequences=...)` currently records the
+  argument but does not generate in-silico detectability negatives. The existing
+  availability statistic must not be used as evidence that such labels exist.
+- Remaining review hardening includes exact allowed source-family declarations,
+  strict malformed-manifest tests, and explicit provenance for future bulk
+  unobserved candidate types beyond the currently implemented wrong-enzyme
+  generator. These are not grounds for claiming the infrastructure complete.
+
+### Coverage implementation checkpoint — integrated preflight and updates
+
+Canonical preflight now collates once for legacy support and exact coverage,
+persists both reports before enforcing the prospective manifest, and leaves
+failed/invalid declarations inspectable. CLI/config defaults preserve all new
+flags and output variants. Model construction uses the same declared variants.
+Tracking observes actual optimizer hooks and does not add a backward pass or
+replace gradients. It distinguishes fixed, frozen, zero-initialized, unused and
+shared parameters; host provenance survives device transfer outside model inputs.
+
+The source-path/manifest/bulk ingest suite passed **44 tests in 8.53s**. It uses
+actual merged TSV parsing, dataset construction, splitting, collation and census;
+external Hitlist records/frames and exact MHC resolution are deterministic
+fixtures. All four primary-source/bulk combinations pass despite competing
+files. Hitlist-only support contains no T-cell rows. Bulk loader statistics now
+persist in the data funnel, and generated controls preserve explicit provenance
+without changing sampler grouping. Unknown unobserved candidate origins remain
+unknown. The accepted protein-sequence argument no longer falsely reports that
+detectability negatives were produced.
+
+The preceding integration run passed all eight exact loss/model-update/optimizer
+state parity comparisons across both topologies, both loss aggregation modes and
+ordinary training versus PCGrad. The remaining one of 117 tests failed only on
+the test fixture's tuple-versus-JSON-list comparison, which is fixed and now
+passes. Final verification adds uncertainty-weighted parity and actual parameter
+mapping validation across all 32 declared topology/residual/grouping combinations.
+Pinned lint, focused regressions, docs, complete diff review and full CI remain
+required before merge. No real-data experiment has run and #48/#50/#53 remain open.
+
+### Coverage implementation review — ready for PR CI
+
+Reviewed the complete implementation against merged main `0e09976`, including
+source conversion, canonical/alias counting, exact claim intersections, unchanged
+loss ordering and optimizer hooks. New evidence fields are appended to public
+data classes to preserve positional constructor compatibility. The default model
+options still match the previous constructor defaults. No source mixture, label
+value, loss weight, model equation or sampler grouping is changed by the audit.
+
+Final affected regression suite: **309 tests passed in 68.79s**. All 12 exact
+comparisons (two topologies × two aggregation modes × ordinary, uncertainty-
+weighted and PCGrad training) preserve losses, every model/uncertainty parameter
+and optimizer state. Actual output and parameter-row declarations validate for
+all 32 topology/residual/grouping combinations. A subsequent **81-test suite
+passed in 12.01s** after the constructor compatibility refinement and final
+runner test. That test supplies a frozen manifest to the actual unified trainer,
+runs one fixture batch, verifies automatic tracking/checkpoint creation, and
+checks validation/test prediction and loss-ledger exports. This is integration
+verification, not the registered real-data fitting/quality experiment.
+
+Repository-wide Ruff 0.16.0 lint and format (247 Python files), strict MkDocs
+build and `git diff --check` pass. The implementation is ready to publish for
+full CI. Remaining real-source census/update evidence and the fresh measured
+training/held-out baseline are explicitly deferred to the following PRs; #48,
+#50 and #53 remain open until their evidence is verified.
