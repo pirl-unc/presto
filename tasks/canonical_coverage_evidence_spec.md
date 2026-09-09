@@ -64,6 +64,19 @@ and launcher. Hash every source before and after each condition. Upload into a
 new experiment-specific volume prefix; do not replace existing shared objects.
 Preserve a durable detached app/call handle and commit outputs on success/failure.
 
+Source-package review found tracked historical raw ZIP/FASTA files under `data/`.
+Archive only Python package sources, packaging files, the required 1.5 KB B2M
+resource and the current experiment's executable/configuration files. Raw
+datasets enter exclusively through the explicit ten-file input manifest. Retain
+the first local broad archive as an unlaunched preparation receipt; do not ship it.
+
+Automatic approval review rejected the ten-file Modal upload because it requires
+explicit user authorization for the local payload and external destination.
+No data was transferred and no cloud computation launched. Complete code/review
+work and request approval for the concrete manifest and `iskandr` workspace /
+`presto-data` volume / `2026-09-09_1541_codex_canonical-coverage/` prefix. Do not
+retry the upload or indirectly export the same payload pending that authorization.
+
 ## Instrumentation and verification
 
 Experiment-local wrappers may add receipts, progress, SQLite retention and

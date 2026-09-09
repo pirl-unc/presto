@@ -200,3 +200,32 @@ def test_registered_source_conditions_are_uncapped_and_do_not_union_sources():
                 if key.startswith("synthetic_") and key.endswith("ratio")
             )
             assert args["mhc_augmentation_samples"] == args["bulk_excision_negative_ratio"] == 0
+
+
+def test_source_archive_excludes_raw_datasets_and_historical_artifacts():
+    spec = importlib.util.spec_from_file_location(
+        "census_launcher", Path(__file__).with_name("launch.py")
+    )
+    launcher = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(launcher)
+    prefix = f"experiments/{launcher.FAMILY}/"
+    required = [
+        "__init__.py",
+        "data/loaders.py",
+        "models/presto.py",
+        "data/b2m_sequences.csv",
+        prefix + "code/census.py",
+        prefix + "conditions.json",
+        prefix + "input_manifest.json",
+        prefix + "reproduce/environment.txt",
+    ]
+    excluded = [
+        "data/merged_deduped.tsv",
+        "data/mhc_index.csv",
+        "data/iedb/tcell_full_v3.zip",
+        "data/vdjdb/vdjdb.zip",
+        "artifacts/private.json",
+        prefix + "results/large.sqlite",
+        prefix + "results/reproduce/source/launch.py",
+    ]
+    assert launcher.archive_paths(required + excluded) == sorted(required)

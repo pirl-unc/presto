@@ -10960,3 +10960,14 @@ reports match exactly at chunk sizes 1/2/512 and generated candidates are exclud
 without altering census counts. Ruff passes. Offline Modal 1.1.4 declarations
 accept the CPU/RAM/timeout contract. Actual remote persistence, environment and
 full-source runtime remain to be verified during the first registered launch.
+
+The automatic approval reviewer rejected the attempted data upload before any
+transfer or remote compute, requiring explicit authorization for the ten frozen
+files and the `iskandr` Modal workspace / `presto-data` volume / experiment prefix.
+The separately authorized git push succeeded. Do not retry or indirectly export
+the blocked payload before approval. Source-archive review found historical raw
+datasets under tracked `data/`; packaging now selects only required source and
+the B2M resource. That first local archive was never uploaded. Final packaging /
+canonical instrumentation checks pass 76 tests in 7.60 seconds; Ruff passes.
+Prepare the corrected clean archive and a draft evidence PR while upload approval
+is pending. #48/#50/#53 remain open; no full census or training has run.

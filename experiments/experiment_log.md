@@ -1268,3 +1268,8 @@ fitting/held-out performance remain separate work.
   named Modal volume prefixes recorded by each launched receipt.
 - Decision: verify observational parity, run the uncapped merged measured audit,
   reconcile it, then schedule the remaining source/augmentation conditions.
+- Preparation update: 76 instrumentation/canonical checks pass, including exact
+  report parity and exclusion of unrelated raw corpora from the code archive.
+  Automatic approval review rejected the ten-file Modal upload pending explicit
+  authorization for its payload and destination. No source transfer, remote
+  census or training occurred; the frozen code/input manifest are reviewable.

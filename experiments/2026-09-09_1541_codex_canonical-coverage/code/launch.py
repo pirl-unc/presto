@@ -27,6 +27,34 @@ def file_hash(path):
         return hashlib.file_digest(handle, "sha256").hexdigest()
 
 
+def archive_paths(tracked):
+    """Ship executable source and required package resources, never raw corpora."""
+    package_roots = {"cli", "data", "models", "training", "scripts"}
+    required = {
+        "__init__.py",
+        "__main__.py",
+        "pyproject.toml",
+        "README.md",
+        "data/b2m_sequences.csv",
+    }
+    prefix = f"experiments/{FAMILY}/"
+    experiment_files = {"conditions.json", "input_manifest.json", "reproduce/environment.txt"}
+    return sorted(
+        name
+        for name in tracked
+        if name in required
+        or (Path(name).parts[0] in package_roots and name.endswith(".py"))
+        or (
+            name.startswith(prefix)
+            and (
+                name.removeprefix(prefix) in experiment_files
+                or name.removeprefix(prefix).startswith("code/")
+                and name.endswith(".py")
+            )
+        )
+    )
+
+
 def prepare():
     if subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT).strip():
         raise RuntimeError("Freeze only a clean committed source tree")
@@ -34,18 +62,10 @@ def prepare():
     target = RAW / "prepared" / commit
     target.mkdir(parents=True, exist_ok=False)
     archive = target / "source.tar"
-    paths = [
-        "__init__.py",
-        "__main__.py",
-        "cli",
-        "data",
-        "models",
-        "training",
-        "scripts",
-        "pyproject.toml",
-        "README.md",
-        str(EXPERIMENT.relative_to(ROOT)),
-    ]
+    tracked = subprocess.check_output(
+        ["git", "ls-tree", "-r", "--name-only", commit], cwd=ROOT, text=True
+    ).splitlines()
+    paths = archive_paths(tracked)
     subprocess.run(
         ["git", "archive", "--format=tar", "--output", str(archive), commit, *paths],
         cwd=ROOT,

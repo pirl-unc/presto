@@ -1,7 +1,7 @@
 # Canonical full-source output coverage
 
 - Agent/model: Codex / GPT-6; date: 2026-09-09.
-- Status: instrumentation verified; no condition launched.
+- Status: instrumentation verified; data-upload approval pending; no condition launched.
 - Production base: merged PR #64, `190360a7e2596eb5f62682088f1ef63270bf5eeb`.
 - Plan: [detailed specification](../../tasks/canonical_coverage_evidence_spec.md).
 - Prior evidence: [source inventory](../2026-09-09_1106_codex_output-coverage/),
@@ -58,6 +58,14 @@ receipts. Do not overwrite prior results or repair shared caches during an audit
   exclusion of generated rows from diagnostic candidates. Ruff 0.16.0 passes.
   The Modal 1.1.4 declaration passed an offline API check with the specified
   resource tuple; shared Python is 3.12.6. No remote job has launched.
+- Automatic approval review rejected the 1,464,177,529-byte upload pending
+  explicit authorization for the ten files in `input_manifest.json` and the
+  `iskandr` workspace's `presto-data` volume, under this experiment's prefix.
+  No upload occurred. Source packaging was narrowed to executable code/config
+  and the required B2M resource after local review found historical raw datasets
+  in the first archive; that archive was never uploaded.
+- Final verification including source-package exclusion passed 76 tests in
+  7.60 seconds; the prior 75-test result is an overlapping earlier check.
 - Next step: freeze the clean source archive, upload immutable inputs, then
   launch and reconcile the uncapped merged measured condition.
 - Open questions: actual per-column support, source-contamination impact,
