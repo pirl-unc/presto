@@ -1173,3 +1173,22 @@ problem. Alternate binding-selector descriptor loss was separately reproduced
 and filed as Presto #62. Local verification passed 434 affected regressions and
 48 focused-probe/audit checks; full CI is pending. The README preserves the
 initial no-tests-collected command failure and links the corrected passing log.
+
+## 2026-09-09_1457_codex_binding-selectors
+
+**Date/agent/model:** 2026-09-09; Codex / GPT-6.
+**Directory:** [alternate selector descriptors](2026-09-09_1457_codex_binding-selectors/).
+**Status:** registered before launch; no results claimed.
+
+Use the frozen full merged TSV SHA-256
+`46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`
+and actual panel/bootstrap selectors for HLA-A*02:01 / HLA-A*03:01, seed 17.
+Observe all panel constructions before a one-record head cap; bootstrap uses
+max_records=2000, max_peptides=500, max_rows_per_peptide=4. Preserve source
+populations, units, qualifiers, publication metadata and non-descriptor payloads.
+Count observed versus retained assay/culture fields and actual collator-selected
+columns. No MHC filtering, curation, training/pretraining, synthetic generation,
+validation/test split or predictive metrics; this is bounded selector verification.
+Pinned isolated environment, local CPU, OMP/MKL one, no GPU. Exact invocation,
+production/input hashes and launcher snapshots will be frozen per condition.
+The README will close complete counts, runtime and before/after reconciliation.
