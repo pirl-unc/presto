@@ -12,7 +12,6 @@ import torch
 
 from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
-from .source_lineage import SOURCE_LINEAGE_FIELDS
 from .sequence_augmentation import AugmentationConfig, augment_sample_sequences
 from .vocab import (
     cell_lineage_index,
@@ -320,8 +319,6 @@ class PrestoSample:
     # describe label construction; they are not features or model inputs.
     target_provenance: dict[str, str] = field(default_factory=dict)
     bulk_ms_observed: Optional[bool] = None
-    doi: str = ""
-    reference_text: str = ""
 
 
 @dataclass
@@ -2020,7 +2017,10 @@ class PrestoCollator:
                 "peptide": [s.peptide for s in samples],
                 "source_mhc_alleles": [";".join(s.source_mhc_alleles) for s in samples],
                 "resolved_mhc_alleles": [";".join(s.resolved_mhc_alleles) for s in samples],
-                **{name: [getattr(s, name) for s in samples] for name in SOURCE_LINEAGE_FIELDS},
+                "evidence_row_id": [s.evidence_row_id for s in samples],
+                "assay_iri": [s.assay_iri for s in samples],
+                "reference_iri": [s.reference_iri for s in samples],
+                "pmid": [s.pmid for s in samples],
                 "source_sample_label": [s.source_sample_label for s in samples],
                 "source_sample_attribution": [s.source_sample_attribution for s in samples],
                 "mapping_gene_name": [s.mapping_gene_name for s in samples],

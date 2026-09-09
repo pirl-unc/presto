@@ -83,7 +83,6 @@ from presto.data.mhc_sequence_resolver import (
     resolve_exact_mhc_sequences,
 )
 from presto.data.vocab import FOREIGN_CATEGORIES
-from presto.data.source_lineage import source_lineage_fields
 from presto.models.presto import Presto
 from presto.models.affinity import (
     DEFAULT_MAX_AFFINITY_NM,
@@ -3870,11 +3869,7 @@ def load_records_from_merged_tsv(
             trav = (row.get("trav") or "").strip()
             trbv = (row.get("trbv") or "").strip()
 
-            lineage = source_lineage_fields(row)
             unified = UnifiedRecord(
-                pmid=lineage["pmid"],
-                doi=lineage["doi"],
-                reference_text=lineage["reference_text"],
                 peptide=peptide,
                 mhc_allele=mhc_allele,
                 mhc_class=mhc_class,
@@ -3910,7 +3905,6 @@ def load_records_from_merged_tsv(
                 binding_seen = _append_with_cap_sampling(
                     binding_records,
                     BindingRecord(
-                        **lineage,
                         peptide=peptide,
                         mhc_allele=mhc_allele,
                         value=value,
@@ -3940,7 +3934,6 @@ def load_records_from_merged_tsv(
                 kinetics_seen = _append_with_cap_sampling(
                     kinetics_records,
                     KineticsRecord(
-                        **lineage,
                         peptide=peptide,
                         mhc_allele=mhc_allele,
                         kon=value,
@@ -3968,7 +3961,6 @@ def load_records_from_merged_tsv(
                 kinetics_seen = _append_with_cap_sampling(
                     kinetics_records,
                     KineticsRecord(
-                        **lineage,
                         peptide=peptide,
                         mhc_allele=mhc_allele,
                         kon=None,
@@ -3996,7 +3988,6 @@ def load_records_from_merged_tsv(
                 stability_seen = _append_with_cap_sampling(
                     stability_records,
                     StabilityRecord(
-                        **lineage,
                         peptide=peptide,
                         mhc_allele=mhc_allele,
                         t_half=value,
@@ -4024,7 +4015,6 @@ def load_records_from_merged_tsv(
                 stability_seen = _append_with_cap_sampling(
                     stability_records,
                     StabilityRecord(
-                        **lineage,
                         peptide=peptide,
                         mhc_allele=mhc_allele,
                         t_half=None,
@@ -4060,7 +4050,6 @@ def load_records_from_merged_tsv(
                 elution_seen = _append_with_cap_sampling(
                     elution_records,
                     ElutionRecord(
-                        **lineage,
                         peptide=peptide,
                         alleles=alleles,
                         detected=bool(detected > 0.5),
@@ -4085,7 +4074,6 @@ def load_records_from_merged_tsv(
                 tcell_seen = _append_with_cap_sampling(
                     tcell_records,
                     TCellRecord(
-                        **lineage,
                         peptide=peptide,
                         mhc_allele=mhc_allele,
                         response=response_value,
@@ -4117,7 +4105,6 @@ def load_records_from_merged_tsv(
                 vdjdb_seen = _append_with_cap_sampling(
                     vdjdb_records,
                     TcrEvidenceRecord(
-                        **lineage,
                         peptide=peptide,
                         mhc_a=mhc_allele,
                         mhc_class=mhc_class,
@@ -4141,7 +4128,6 @@ def load_records_from_merged_tsv(
                 processing_seen = _append_with_cap_sampling(
                     processing_records,
                     ProcessingRecord(
-                        **lineage,
                         peptide=peptide,
                         label=label,
                         processing_type=value_type or "processing",
@@ -4299,7 +4285,6 @@ def load_binding_records_for_alleles_from_merged_tsv(
             seen = _append_with_cap_sampling(
                 records,
                 BindingRecord(
-                    **source_lineage_fields(row),
                     peptide=peptide,
                     mhc_allele=allele,
                     value=value,
@@ -4489,7 +4474,6 @@ def load_probe_allele_binding_bootstrap_from_merged_tsv(
                 continue
             records.append(
                 BindingRecord(
-                    **source_lineage_fields(row),
                     peptide=peptide,
                     mhc_allele=allele,
                     value=value,

@@ -70,8 +70,8 @@ diagnostic hash separately from input parity.
 ## Closure
 
 - [x] Branch from verified merged #61 and register the experiment.
-- [ ] Capture before metadata loss, implement the shared propagation path.
-- [ ] Prove semantic/end-to-end metadata preservation and unchanged inputs/labels.
+- [x] Capture before metadata loss, implement the shared propagation path.
+- [x] Prove semantic/end-to-end metadata preservation and unchanged inputs/labels.
 - [ ] Run the after scan and reconcile every row and non-lineage payload hash.
 - [ ] Close experiment README/canonical log, review full diff and verify CI.
 - [ ] Merge #60 repair, then resume #48/#50 coverage/update evidence.

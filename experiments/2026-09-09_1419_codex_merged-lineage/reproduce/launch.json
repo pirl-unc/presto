@@ -1,7 +1,7 @@
 {
   "status": "registered_before_launch",
   "agent_model": "Codex / GPT-6",
-  "conditions": ["before", "after"],
+  "conditions": ["before", "after", "compare"],
   "source": "data/merged_deduped.tsv",
   "source_sha256": "46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c",
   "source_fields": ["pmid", "doi", "reference_text", "evidence_row_id", "assay_iri", "reference_iri"],

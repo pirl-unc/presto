@@ -237,69 +237,9 @@ def inspect_loader(path):
     }
 
 
-def compare_results(before, after):
-    for name in (
-        "stats",
-        "input_rows",
-        "source_columns",
-        "source_fields_present",
-        "source_field_availability",
-        "non_lineage_payload_sha256",
-        "source_metadata_sha256",
-        "source_sha256",
-    ):
-        assert before[name] == after[name], f"Before/after mismatch: {name}"
-    assert len(before["field_counts"]) == len(after["field_counts"]) == 42
-    for old, new in zip(before["field_counts"], after["field_counts"], strict=True):
-        for name in ("modality", "field", "records", "source_present"):
-            assert old[name] == new[name], f"Changed field population: {old} / {new}"
-        assert new["matched"] == new["records"], f"Unrecovered metadata: {new}"
-        assert new["record_present"] == new["source_present"]
-        assert new["dropped"] == new["invented"] == new["changed"] == 0
-    return {
-        "stats": after["stats"],
-        "input_rows": after["input_rows"],
-        "field_counts": [
-            dict(
-                new,
-                before_record_present=old["record_present"],
-                recovered_values=new["record_present"] - old["record_present"],
-            )
-            for old, new in zip(before["field_counts"], after["field_counts"], strict=True)
-        ],
-        "all_non_lineage_payloads_identical": True,
-        "all_source_metadata_preserved": True,
-    }
-
-
-def compare_phases():
-    results, hashes = {}, {}
-    for condition in ("before", "after"):
-        directory = EXPERIMENT / "results" / condition
-        status = json.loads((directory / "status.json").read_text())
-        receipt = json.loads((directory / "invocation.json").read_text())
-        assert status["status"] == "completed" and not receipt["git"]["dirty"]
-        snapshot = directory / "reproduce" / "source"
-        assert hash_file(snapshot / "launch.py") == receipt["launcher_sha256"]
-        for name, expected in receipt["production_files"].items():
-            assert hash_file(snapshot / name) == expected, f"Changed frozen source: {name}"
-        results[condition] = json.loads((directory / "result.json").read_text())
-        with (directory / "field_counts.csv").open() as handle:
-            csv_rows = list(csv.DictReader(handle))
-        expected_rows = [
-            {k: str(v) for k, v in row.items()} for row in results[condition]["field_counts"]
-        ]
-        assert csv_rows == expected_rows, f"CSV/JSON mismatch: {condition}"
-        hashes[condition] = {
-            name: hash_file(directory / name)
-            for name in ("result.json", "field_counts.csv", "invocation.json", "status.json")
-        }
-    return dict(compare_results(results["before"], results["after"]), phase_artifact_sha256=hashes)
-
-
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("condition", choices=["before", "after", "compare"])
+    parser.add_argument("condition", choices=["before", "after"])
     parser.add_argument("--output-dir", type=Path)
     args = parser.parse_args()
     for name in ("OMP_NUM_THREADS", "MKL_NUM_THREADS"):
@@ -312,7 +252,7 @@ def main():
     source = ROOT / "data/merged_deduped.tsv"
     try:
         assert hash_file(source) == SOURCE_HASH, "Source differs from declared input"
-        result = compare_phases() if args.condition == "compare" else inspect_loader(source)
+        result = inspect_loader(source)
         assert hash_file(source) == SOURCE_HASH, "Source changed during audit"
         for name, expected in receipt["production_files"].items():
             assert hash_file(ROOT / name) == expected, (

@@ -1,6 +1,7 @@
 """Verify audit coverage before caps and restoration of runner-local hooks."""
 
 import csv
+import copy
 import importlib.util
 from pathlib import Path
 
@@ -82,3 +83,17 @@ def test_hooks_restored_after_loader_failure(tmp_path, monkeypatch):
         audit.inspect_loader(source(tmp_path / "source.tsv"))
     assert runner.csv is csv
     assert runner._append_with_cap_sampling is fail
+
+
+def test_comparison_rejects_payload_drift_and_lost_metadata(tmp_path):
+    result = audit.inspect_loader(source(tmp_path / "source.tsv"))
+    result["source_sha256"] = "fixture"
+    assert audit.compare_results(result, result)["all_source_metadata_preserved"]
+    changed = copy.deepcopy(result)
+    changed["non_lineage_payload_sha256"]["binding"] = "changed"
+    with pytest.raises(AssertionError, match="non_lineage_payload"):
+        audit.compare_results(result, changed)
+    changed = copy.deepcopy(result)
+    changed["field_counts"][0]["matched"] -= 1
+    with pytest.raises(AssertionError, match="Unrecovered metadata"):
+        audit.compare_results(result, changed)

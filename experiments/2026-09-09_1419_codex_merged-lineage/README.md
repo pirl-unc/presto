@@ -2,7 +2,7 @@
 
 - Agent/model: Codex / GPT-6; date: 2026-09-09.
 - Base: merged PR #61, `8cebd17660b67c0e4908017e0de9fccf5b00c653`.
-- Status: registered; before phase pending.
+- Status: before phase completed; implementation and regression verification underway.
 - Plan: [lineage recovery](../agents/codex/plans/2026-09-09_merged-lineage.md).
 - Specification: [Presto #60 repair](../../tasks/merged_lineage_spec.md).
 
@@ -51,8 +51,20 @@ Supported target transforms, loss terms/weights, source populations and sampler
 behavior must remain unchanged. Diagnostic hashes including restored metadata
 may change and are distinct from actual model-input parity.
 
+## Baseline result
+
+The before phase ran at clean `15f28552a54ca2fb1c7a508ab7270db4a8ff4717` in
+147.505 seconds. All 3,423,737 source rows and 2,702,233 supported records
+reconciled. All available publication fields were lost at typed-record
+construction. Exact availability by modality/field is preserved in
+[`results/before/field_counts.csv`](results/before/field_counts.csv); DOI is
+populated only on 1,316 emitted TCR-evidence rows. Original observation/assay/
+reference-ID columns are absent from the input. No source or production hash
+changed during the run. This establishes ingestion loss, not predictive quality.
+
 ## Handoff
 
-- Status: before phase pending.
-- Next step: capture full-source metadata loss before production changes.
-- Remaining: metadata propagation, after-phase reconciliation, review and CI.
+- Status: metadata propagation implemented; 434 affected regressions and 48
+  focused-probe/audit checks passed. Ruff 0.16.0 lint/format passed (253 files).
+- Next step: capture the after phase, then run `bash reproduce/launch.sh compare`.
+- Remaining: after-phase reconciliation, final review and CI.

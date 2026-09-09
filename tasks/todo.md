@@ -10846,7 +10846,19 @@ parity and metadata availability/mismatch counts. #48/#50/#53 remain open.
 
 - [x] Merge and verify #61, then create the next branch from updated main.
 - [x] Write the #60 implementation and verification specification before code.
-- [ ] Register the lineage experiment and capture its baseline.
-- [ ] Restore metadata through loader, samples, batches and held-out exports.
+- [x] Register the lineage experiment and capture its baseline.
+- [x] Restore metadata through loader, samples, batches and held-out exports.
 - [ ] Verify source conservation, metadata recovery and unchanged model inputs.
 - [ ] Review, verify CI and merge #60's repair, then resume the coverage census.
+
+The baseline ran at clean `15f2855` in 147.505 seconds and observed every one of
+3,423,737 source rows / 2,702,233 supported typed records. Every available
+publication field was dropped. The shared six-field metadata path is now
+implemented; initial semantic and audit-hook checks passed 12 tests. Broader
+regression checks and full-source after reconciliation remain required.
+
+Additional triage reproduced and filed Presto #62: the panel and probe-bootstrap
+binding selectors lose observed assay type/method and culture descriptors, while
+canonical and focused loaders preserve them. This is a Presto adapter defect,
+not an upstream Hitlist omission. Keep it separate from #60's metadata-only
+repair; fix it before interpreting affected selected-column supervision.
