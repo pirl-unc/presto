@@ -1242,9 +1242,9 @@ fitting/held-out performance remain separate work.
 
 - Agent/model: Codex / GPT-6.
 - Directory: [2026-09-09_1541_codex_canonical-coverage](2026-09-09_1541_codex_canonical-coverage/).
-- Status: inputs uploaded and verified; the first attempt failed during image
-  construction before a worker call/data loading. Production base is merged PR
-  #64, `190360a7`. The packaging correction is being verified before a retry.
+- Status: inputs uploaded and verified; `merged_measured` is running as attempt
+  `serialized_entry`, after two preserved startup failures. Production base is
+  merged PR #64, `190360a7`; live frozen source is `d6a690a`.
 - Dataset: frozen merged TSV, exclusive Hitlist and explicit Hitlist-plus-bulk,
   each measured-only and augmented, no modality caps. Ten input files total
   1,464,177,529 bytes; exact hashes and complete arguments are in the directory.
@@ -1302,3 +1302,12 @@ fitting/held-out performance remain separate work.
   loaded. Explicit serialized transport now passes a fresh-process round-trip
   with Modal 1.1.4 (one test, 0.48 seconds), plus 28 focused tests in 4.29 seconds.
   Retry as `serialized_entry` with the same condition/input/hardware contract.
+- Live attempt `serialized_entry` at clean `d6a690a`: app
+  `ap-PPrESGuLvIKrTYEYNnwTPG`, call `fc-01M23HN1ZCVA1M5NF5Q1P0GFNJ`.
+  Worker startup and canonical full merged-data loading are confirmed after the
+  frozen code/input/curation hash checks. Observed Python 3.12.1, CPU torch
+  2.7.0+cpu, Hitlist 1.59.1, mhcseqs 2.5.12, mhcgnomes 3.41.0, Modal 1.1.4;
+  `/proc/meminfo` reports 192 GiB. Startup receipts are copied into the attempt
+  directory. Counts, runtime closure and source reconciliation remain pending;
+  no fitting or predictive evaluation has run. CI at earlier `37cbb17` passed
+  2,061 tests / 3 skipped in 865.08 seconds, with its complete log retained.

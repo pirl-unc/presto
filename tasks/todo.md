@@ -10951,7 +10951,14 @@ Image-build recovery after the approved upload:
 - [x] Launch `merged_measured --attempt package_manifest` and confirm its call state.
 - [x] Stop and preserve its remote import failure before worker entry/data load.
 - [x] Verify explicit SDK serialization in a fresh isolated interpreter.
-- [ ] Launch `merged_measured --attempt serialized_entry` and verify worker progress.
+- [x] Launch `merged_measured --attempt serialized_entry` and verify worker progress.
+
+The live `d6a690a` worker passed frozen source/input/curation hash checks and
+entered full merged-data loading. App `ap-PPrESGuLvIKrTYEYNnwTPG`, call
+`fc-01M23HN1ZCVA1M5NF5Q1P0GFNJ`; startup receipts are in the experiment attempt
+directory. Observed CPU torch 2.7.0+cpu and 192 GiB visible RAM. Collect/reconcile
+the existing call before scheduling more conditions; do not restart it because
+a local watcher expires. Training/prediction quality remains untested.
 
 PR #64 merged as `190360a7e2596eb5f62682088f1ef63270bf5eeb` at 15:41:16 UTC;
 the tree exactly matches reviewed `b1f4646` and #62 is closed. Both final-head CI

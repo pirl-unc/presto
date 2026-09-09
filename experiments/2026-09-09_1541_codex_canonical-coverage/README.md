@@ -1,8 +1,8 @@
 # Canonical full-source output coverage
 
 - Agent/model: Codex / GPT-6; date: 2026-09-09.
-- Status: upload verified; packaging verified; a remote-entry correction is ready
-  after two preserved startup failures before data loading.
+- Status: upload verified; `merged_measured` is running as attempt
+  `serialized_entry`, after two preserved startup failures before data loading.
 - Production base: merged PR #64, `190360a7e2596eb5f62682088f1ef63270bf5eeb`.
 - Plan: [detailed specification](../../tasks/canonical_coverage_evidence_spec.md).
 - Prior evidence: [source inventory](../2026-09-09_1106_codex_output-coverage/),
@@ -53,6 +53,30 @@ receipts. Do not overwrite prior results or repair shared caches during an audit
 
 ## Handoff
 
+The live attempt uses clean `d6a690a510750ee66b9224ba4faa76c647e4f0b6`:
+
+- App: [`ap-PPrESGuLvIKrTYEYNnwTPG`](https://modal.com/apps/iskandr/main/ap-PPrESGuLvIKrTYEYNnwTPG).
+- Call: `fc-01M23HN1ZCVA1M5NF5Q1P0GFNJ`; container:
+  `ta-01M23HN2CS1NEKZ4DS3Z430S7R`.
+- [Launch and startup receipts](results/merged_measured/attempts/serialized_entry/).
+- Remote output: `presto-checkpoints`, path
+  `2026-09-09_1541_codex_canonical-coverage/merged_measured/attempts/serialized_entry`.
+- Worker log: same volume,
+  `2026-09-09_1541_codex_canonical-coverage/logs/merged_measured-serialized_entry.log`.
+
+The worker entered successfully and reached the canonical merged-data loader
+after checking all frozen source/input hashes and the pinned Hitlist curation
+hash. Direct container log inspection confirms the full merged input path;
+support counts are still pending. Observed environment is Python 3.12.1,
+torch 2.7.0+cpu, Hitlist 1.59.1, mhcseqs 2.5.12, mhcgnomes 3.41.0 and Modal 1.1.4.
+`/proc/meminfo` reports 201,326,592 KiB (192 GiB); the queried cgroup-v2 files
+were unavailable. No GPU was requested. Preserve the current call if a local
+watcher expires; inspect its actual state before considering any retry.
+
+The census is incomplete and no fitting or predictive evaluation has run. Copy
+all available final summaries/receipts and reconcile retained SQLite counts,
+source funnels and split support before scheduling the other five conditions.
+
 The user explicitly approved the upload on 2026-09-09 ("Upload please"). All ten
 files, **1,464,177,529 bytes**, were uploaded without overwriting existing objects
 to workspace `iskandr`, environment `main`, volume `presto-data`, under this
@@ -62,7 +86,9 @@ again before data construction. [Upload receipts](results/upload/) preserve the
 actual launcher snapshot and its two-line dirty diff against `340e208` (a receipt
 variable shadowing correction), exact command/environment and user authorization.
 Nineteen focused audit/launcher checks passed after that correction. The reviewed
-`340e208` CI passed 2,061 tests / 3 skipped. No census or model training has run yet.
+`340e208` CI passed 2,061 tests / 3 skipped. These were prelaunch checks.
+CI at `37cbb17` also passed 2,061 tests / 3 skipped (865.08 seconds); its full
+PR log is preserved in the raw root. Later-head CI remains a separate gate.
 
 The first launch at clean `37cbb17` reached Modal app
 [`ap-2NjIAHmEYvAgM1ghTB4SEz`](https://modal.com/apps/iskandr/main/ap-2NjIAHmEYvAgM1ghTB4SEz)
@@ -99,7 +125,7 @@ The remote entry now explicitly uses Modal 1.1.4's serialized transport and load
 the worker from the frozen `/opt/presto` tree. The actual SDK round-trip passes
 in a fresh isolated interpreter without importing the local launcher (one test,
 0.48 seconds); all 28 focused checks pass in 4.29 seconds, and Ruff passes.
-The next attempt is `serialized_entry`, with the same input bytes and condition.
+Attempt `serialized_entry` is now running, with the same input bytes and condition.
 
 Earlier preparation and review history (the upload authorization above supersedes
 the earlier transfer block):
@@ -127,7 +153,7 @@ the earlier transfer block):
   or compute was involved. Updated tests passed **85 cases in 9.85 seconds**
   (including the earlier cases), and Ruff passes. Use the new frozen snapshot;
   the earlier `0158c25` launcher intentionally fails the new self-identity check.
-- Next step: verify a wheel from the corrected clean source archive, then launch and reconcile
-  the uncapped merged measured condition using the uploaded inputs.
+- Next step: collect and reconcile the live uncapped merged measured condition,
+  then schedule the other source/augmentation conditions based on actual resource use.
 - Open questions: actual per-column support, source-contamination impact,
   generated-parent provenance, rare assay incidence and per-column updates.

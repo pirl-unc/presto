@@ -1,0 +1,37 @@
+{
+  "app_id": "ap-PPrESGuLvIKrTYEYNnwTPG",
+  "call_id": "fc-01M23HN1ZCVA1M5NF5Q1P0GFNJ",
+  "container_id": "ta-01M23HN2CS1NEKZ4DS3Z430S7R",
+  "data_preflight_only": true,
+  "evidence": "Worker entered the canonical merged loader, which follows successful frozen source/input/curation hash checks. Direct container inspection shows the full merged input path.",
+  "files": {
+    "containers.json": "eda7960cf5b406b1ef165fa42fb8aea8de9f0a22bc1684aa28f8ae88955df596",
+    "environment.json": "0927c45aca169a74f8768a0757b359fa0d6c88e693d8e4d08e5099797716668c",
+    "first_loader_progress.txt": "7a717c15c67431b82aa5daa9fda71b20d1058fa925288b711b00544aef70552c",
+    "hardware.json": "4414afc440a1bba4d8867cdacbbae5650461f35bbf7fe062899f9533976a8907",
+    "invocation.json": "8837a9522777dc9b11b6889363e4f75fee6db90b1ac8c110bfb65d0d5a4d1bfa",
+    "package_sources.json": "07d802de8216c2b483c870da698b2bb01e0b596779a56288d1830d3068c7a1a4"
+  },
+  "note": "Startup observation only. Final status, summaries and source/split reconciliation remain required. An earlier local invocation used a mistyped nonexistent snapshot path and stopped before Modal access; its raw error log is preserved separately.",
+  "read_command_argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-m",
+    "modal",
+    "container",
+    "exec",
+    "ta-01M23HN2CS1NEKZ4DS3Z430S7R",
+    "--",
+    "python",
+    "-c",
+    "from pathlib import Path; import json; log = Path(\"/results/2026-09-09_1541_codex_canonical-coverage/logs/merged_measured-serialized_entry.log\"); print(log.read_text()[-4500:]); output = Path(\"/results/2026-09-09_1541_codex_canonical-coverage/merged_measured/attempts/serialized_entry\"); print(\"OUTPUT_FILES\", sorted(path.name for path in output.iterdir())); print(Path(\"/proc/meminfo\").read_text().splitlines()[:3])"
+  ],
+  "read_environment": {
+    "MODAL_PROFILE": "iskandr"
+  },
+  "recorded_unix": 1788973364.5915132,
+  "source_commit": "d6a690a510750ee66b9224ba4faa76c647e4f0b6",
+  "source_dirty": false,
+  "status": "worker_running_in_canonical_loader",
+  "support_counts": null,
+  "training_started": false
+}
