@@ -33,7 +33,11 @@ from torch.utils.data import DataLoader, Dataset, Sampler
 
 from presto.data import BindingRecord, PrestoCollator, PrestoDataset, create_dataloader
 from presto.data.allele_resolver import infer_mhc_class_optional, normalize_mhc_class
-from presto.data.cross_source_dedup import UnifiedRecord, classify_assay_type
+from presto.data.cross_source_dedup import (
+    UnifiedRecord,
+    assay_measurement_label,
+    classify_assay_type,
+)
 from presto.data.groove import prepare_mhc_input
 from presto.data.mhc_index import build_mhc_sequence_lookup, load_mhc_index
 from presto.data.mhc_sequence_resolver import ExactMHCInput, resolve_class_i_groove_halves
@@ -1397,7 +1401,7 @@ def _load_binding_records_from_merged_tsv(
                 mhc_allele=allele,
                 value=value,
                 qualifier=int(str(row.get("qualifier") or "0").strip() or 0),
-                measurement_type=value_type or "IC50",
+                measurement_type=assay_measurement_label(unified),
                 assay_type=str(row.get("assay_type") or "").strip() or None,
                 assay_method=str(row.get("assay_method") or "").strip() or None,
                 effector_culture_condition=str(row.get("effector_culture_condition") or "").strip()

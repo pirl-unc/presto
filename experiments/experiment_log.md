@@ -1000,3 +1000,113 @@ preserving numeric/source conservation. It does not establish post-curation
 per-column/split adequacy or model quality (#48/#53). Full tables, missingness,
 fingerprints and real-example trace are in the experiment results. Runtime
 differences are not interpreted as performance evidence.
+
+### 2026-09-09_1106_codex_output-coverage
+
+- **Date / agent**: 2026-09-09; Codex / GPT-6.
+- **Experiment**: [2026-09-09_1106_codex_output-coverage](2026-09-09_1106_codex_output-coverage/).
+- **Status**: source inventory and routing trace completed; uncapped census/update phases pending.
+- **Contract**: current merged TSV and exclusive Hitlist cache, read-only; prospective 80/10/10 peptide splits, data seed 17, split/model seed 42.
+- **Training / synthetic data**: none in inventory; later measured/augmented conditions and bounded optimizer diagnostics are specified in the README.
+- **Validation/test metrics**: not applicable to metadata inventory; no prediction-quality claim.
+- **Hardware**: local CPU; no Modal GPU requested.
+- **Reproduction**: experiment `reproduce/launch.sh`, phase invocation and source snapshot; pinned isolated environment.
+
+Initial invocation at `96b3ff6` failed before scanning (0.476 seconds): the local
+launcher assumed the provider's YAML was a mapping. The corrected launcher uses
+Hitlist's canonical curation loader. Its three tests passed before the clean
+`aada2b19ac74346c5a71ea603498352045c4cc91` inventory completed in **38.804 seconds**.
+Both receipts and immutable source snapshots are retained; successful reproduction
+uses `reproduce/inventory_v2.sh`. Pinned Hitlist 1.59.1, mhcseqs 2.5.12,
+mhcgnomes 3.41.0 and all transitive versions/source hashes are recorded.
+
+| Source condition | Total rows | Rows from MS-excluded studies |
+|---|---:|---:|
+| Observations parquet | 4,439,643 | 40,355 |
+| Binding parquet | 891,885 | 472,497 |
+| Default merged TSV | 3,423,737 | 514,190 |
+
+The read-only inventory reproduces Hitlist #444 against the frozen observations
+hash `f51440ab229fd187d2548b4dddcd1fc04580d97d45fb4d5b8e0222aa8080f928` and
+curation hash `e0270f2b417619a318ef03549e7cb7d46231bb3dbb6a088d8367a239cd6b3308`.
+MS exclusions do not invalidate all binding evidence from the same publications.
+The unchanged merged file has SHA-256
+`46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`.
+Its complete flagged subset passes through the actual uncapped adapter: 375
+invalid peptides dropped, 15,641 affinity, 11 Tm, 496,976 elution and 1,187
+T-cell records emitted, all without PMID lineage. These are pre-MHC-filter
+loader counts. A separate method trace will reconcile their attribution before
+production routing changes. No preferred trained condition, changed loss/weight,
+synthetic labels, validation/test predictions or predictive metrics exist in
+this metadata-only phase. The next decision is to repair incorrect evidence
+routing/lineage before treating these populations as supervision support.
+
+The clean `4e949da09a9960031b09ee249eb3a57ad894c44e` route trace completed in
+6.311 seconds and reconciled all 43 method/response groups exactly to the actual
+loader buckets. There are 492,858 non-MS-method rows routed to elution (442,612
+negative responses), including 418,890 microarray rows from PMID 32903714.
+Another 4,118 rows explicitly say MS and require study-level curation. Two
+numeric crystallography rows also enter affinity despite their `3D structure`
+type. SQLite confirms the excluded observation subset's 33,101 global distinct
+peptides. Full tables and immutable trace invocation/source are registered;
+the frozen raw subset/SQLite paths are in the result. These are source-routing
+findings, not evidence that the model has learned meaningful predictions.
+
+## 2026-09-09_1133_codex_assay-routing
+
+**Date/agent/model:** 2026-09-09; Codex / GPT-6.
+**Directory:** [assay routing correction](2026-09-09_1133_codex_assay-routing/).
+**Status:** before/after source audit and payload reconciliation completed.
+
+Identical complete merged TSV (3,423,737 rows, SHA-256
+`46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`). Observe
+canonical classification and every constructed record before a one-record head
+cap per modality; no MHC filtering, study blacklist, source edits or generated
+data. Compare descriptor/response/route counts and ordered record payload hashes
+before/after #59. Existing supported target transforms, loss terms and weights
+are unchanged. No pretraining, training, validation/test splits, predictions or
+predictive metrics: this is a source-ingestion audit. Reproduction uses directory
+`reproduce/launch.sh` and per-condition immutable invocation/production snapshots,
+with the pinned isolated inventory environment. Local CPU, OMP/MKL threads one,
+no GPU requested. Runtime and condition results will be recorded after launch;
+no preferred result is claimed prospectively.
+
+The clean `1c5d1eacf94a6956f2e3cbc55869ffa07e94d396` baseline completed in
+100.868 seconds with unchanged source hashes. All 3,423,737 input rows reconcile
+to 156,765 invalid peptides and 3,266,972 classifications in 927 groups. Actual
+pre-cap records: binding 249,292; kinetics 106; stability 12,259; elution 2,630,813;
+T-cell 207,987; TCR evidence 166,285. Another 230 classified rows have missing
+quantitative labels. The baseline wrongly routes 1,239 structural scalars and
+6,250 qualitative-binding scalars into affinity, and four equilibrium association
+constants into on-rate. Supported concentration families total 241,803 rows;
+explicit MS-method presentation totals 2,073,797. Baseline group fingerprints,
+complete metadata, runtime and source snapshots are preserved for the comparison
+below. No predictive performance was measured by either source audit.
+
+The corrected condition at clean `ce30bbe9b1ea80a1f29ecefd9234bf21e496ab24`
+completed in **98.096 seconds** with identical source hashes. Reconciliation at
+clean `e06cbaf` retains all 927 descriptor populations; 798 unchanged groups
+preserve every ordered payload hash for **2,702,233 accepted records**. The
+129 changed groups remove **564,509 incorrectly routed targets**, with no new
+invented target and explicit, disjoint skip reasons.
+
+| Old route → corrected source bucket | Rows |
+|---|---:|
+| Affinity → qualitative binding | 6,250 |
+| Affinity → structure | 1,239 |
+| On-rate → equilibrium association constant | 4 |
+| Elution → missing affinity value | 248 |
+| Elution → qualitative binding | 555,579 |
+| Elution → structure | 23 |
+| Elution → non-MS presentation | 1,166 |
+
+Corrected pre-cap records: binding 241,803; kinetics 102; stability 12,259;
+elution 2,073,797; T-cell 207,987; TCR evidence 166,285. Omissions are 564,739,
+including 478 missing quantitative labels. Every row, skip reason and emitted
+payload reconciles. `reproduce/compare.sh` freezes comparison inputs and source;
+complete JSON/CSV transition tables and both production snapshots are retained.
+Preferred condition is explicit assay semantics. No loss equation, parameter,
+synthetic-data contract or predictive metric changes; no validation/test split
+was used because this is ingestion verification. Prior models trained with the
+old incorrectly routed population are not a controlled quality baseline for the
+corrected one. Hitlist #444 and Presto #60/#48/#50/#53 remain separate work.

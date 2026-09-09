@@ -515,10 +515,9 @@ _EXPECTED_UNITS = {
     "50% dissociation temperature": "°C",
 }
 
-# Everything else (qualitative binding, ligand presentation, MHC binding, 3D
-# structure) carries no numeric value. The merged-TSV loader drops those rows
-# (``if value is None: continue``), so we drop them too and count them, rather
-# than silently changing the training contract while migrating sources.
+# Other response families (including qualitative binding and structure) have
+# no supported numeric target here, even when a source supplies a scalar.
+# Exclude and count them; scalar presence does not establish a concentration.
 _MINUTES_PER_HOUR = 60.0
 
 

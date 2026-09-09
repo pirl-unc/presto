@@ -10599,7 +10599,7 @@ held-out baseline; no all-output quality claim is inferred from the gates.
 - [x] Merge #57 after verified CI and review closure.
 - [x] Implement endpoint/source declaration, exact census and prospective gates.
 - [x] Integrate per-column gradient/update evidence and verify all source paths.
-- [ ] Review, publish and merge the coverage implementation.
+- [x] Review, publish and merge the coverage implementation.
 - [ ] Register, execute and close the real-source coverage/gradient evidence PR.
 
 PR #57 merged as `0e09976cfe01efedaeb8ac35c9a52990358665cb`, with its tree
@@ -10626,7 +10626,7 @@ deployments). Detailed real-source census planning is in
 - [x] Implement per-column gradient and dedicated parameter-row update tracking.
 - [x] Exercise actual merged/Hitlist/bulk source selection paths, with competing
   merged/raw files present and full dataset/split/collation/census construction.
-- [ ] Complete review/full CI before merging the implementation PR.
+- [x] Complete review/full CI before merging the implementation PR.
 
 Verification at this checkpoint: `pytest -q tests/test_output_coverage.py
 tests/test_data_support.py tests/test_bulk_ms_ingest.py --tb=short` passed **76
@@ -10717,3 +10717,112 @@ build and `git diff --check` pass. The implementation is ready to publish for
 full CI. Remaining real-source census/update evidence and the fresh measured
 training/held-out baseline are explicitly deferred to the following PRs; #48,
 #50 and #53 remain open until their evidence is verified.
+
+### PR #58 closure and next PR specification
+
+PR #58, **Declare output supervision coverage and gate training claims**, merged
+on 2026-09-09 as `d9a666a07085289b168105089d29dd4e675add61`. Its tree is identical
+to reviewed head `a6c13754491090362b2318a29257fd5e942e68b5`. Both branch CI
+34295809181 and PR CI 34297818764 passed lint/tests and docs, and a review receipt
+is posted on the PR. No deployment is configured. The next branch,
+`codex/real-source-output-evidence`, is based directly on merged main.
+
+The next PR follows the detailed plan in
+`experiments/agents/codex/plans/2026-09-08_output-coverage-census.md` and must
+include registered real-source evidence, not just launcher infrastructure:
+
+- [ ] Freeze source files, curation/dependency versions, git state, complete
+  invocation, explicit caps/seeds/augmentation/split contract and actual hardware
+  in one timestamped experiment directory before running.
+- [ ] Census uncapped measured and effective augmented populations on default
+  merged, exclusive Hitlist and opt-in bulk paths. Preserve source identities,
+  direct/proxy/generated evidence, all selected columns, zeros and #50's T-cell
+  row/pathway-bag incidence.
+- [ ] Freeze a deterministic real-training subset and bounded gradient/update
+  conditions before optimization, including initialization/frozen/unused-column
+  controls and both topologies. Keep eligibility and predictive quality separate.
+- [ ] File confirmed upstream data/curation problems in `pirl-unc/hitlist`, as
+  explicitly requested by the user. Search existing issues first; add new
+  reproducible evidence to an existing issue for the same defect. Include source
+  versions/IDs, expected versus observed behavior, impact counts and a minimal
+  reproducer, then link the upstream issue from this audit/PR. Do not silently
+  repair a shared cache or claim a Presto adapter bug belongs to Hitlist.
+- [ ] Close out available counts, metrics, artifacts and failures in the README
+  and canonical experiment log; identify the supported subset prospectively for
+  #53. Review and merge the evidence PR only after its artifacts reconcile.
+
+Upstream triage already found existing Hitlist issue #444: the curated
+`exclude_from_ms` flag was reported to have no reader, allowing non-elution
+studies into the MS corpus. This is an existing upstream report, not an
+independently measured finding from the new census. Verify its impact on the
+actual frozen input before interpreting elution supervision; do not create a
+duplicate issue or silently change the corpus. Bulk candidate generation is
+already tracked upstream in #361. No new real-source experiment has launched.
+
+### Real-source inventory checkpoint and revised next-PR order
+
+The registered inventory now completed at clean `aada2b1`, in 38.804 seconds,
+with an isolated pinned release environment and immutable file/curation hashes.
+It reproduces Hitlist #444's 40,355 excluded observation rows. The uncapped actual
+merged loader emits 496,976 elution records from the complete MS-excluded-study
+subset and loses existing PMID lineage on every emitted modality. These findings
+change the dependency order: verify and fix the adapter before a full output
+census or quality run. The original #48/#50/#53 evidence requirements remain.
+
+- [x] Freeze and close the read-only source inventory, retaining the first failed
+  launcher receipt and corrected successful receipt separately.
+- [x] Reconcile every source-method trace bucket with the actual loader totals,
+  without modifying the input corpus or repeating expensive full loads.
+- [x] Publish reproducible evidence to existing Hitlist #444 and file distinct
+  Presto issues for incorrect assay routing and dropped source lineage.
+- [x] Write the production-fix specification after tracing explicit MS evidence,
+  qualitative binding and unresolved assay cases; preserve units/censoring and
+  avoid inventing numeric affinity targets for qualitative measurements.
+- [ ] Implement/review the necessary adapter changes with focused semantic tests
+  and registered before/after source conservation evidence before continuing the
+  full census. Keep all unsupported/unknown evidence visible in audit counters.
+
+Published upstream evidence:
+https://github.com/pirl-unc/hitlist/issues/444#issuecomment-5601129610.
+Presto #59 tracks assay misrouting; #60 tracks publication/observation lineage.
+Next PR specification is `tasks/assay_routing_spec.md`; register a separate
+full-source before/after family at `2026-09-09_1133_codex_assay-routing` and
+finalize the supported descriptor vocabulary against its baseline. Correct
+assay routing first, then preserve lineage, then resume the full census.
+
+### Assay routing implementation checkpoint — Presto #59
+
+The full-source baseline at clean `1c5d1ea` completed in 100.868 seconds and
+reconciled all 3,423,737 rows before any production edit. The correction now
+uses explicit controlled measurement labels, requires MS evidence on binding-
+format presentation rows, and retains unsupported qualitative/structural/
+equilibrium-association observations as distinct source buckets. Every skipped
+training record has a mutually exclusive reason; the funnel exports that
+partition without double-counting its compatibility aggregate. Canonical,
+panel and focused binding selectors preserve fallback measurement identity.
+
+The first affected regression suite passed 188 tests in 11.53 seconds. After
+adding focused-selector and complete missing-label/context cases, another
+198 tests passed in 5.82 seconds, including Hitlist adapter regressions and the
+registered audit's pre-cap observation/restoration checks. Repository Ruff
+0.16.0 lint and format passed (250 Python files). The after condition and strict
+source/payload reconciliation remain required before PR review and CI.
+
+### Assay routing review — registered before/after reconciliation passed
+
+The after condition completed at clean `ce30bbe` in 98.096 seconds with unchanged
+input/production hashes. Comparison at clean `e06cbaf` validates all 927 source
+descriptor populations. All 2,702,233 accepted records in 798 unchanged groups
+retain identical ordered payload hashes. The remaining 129 groups remove
+564,509 incorrectly assigned targets; no new target is invented. All 564,739
+unsupported/missing-label omissions reconcile, including 478 missing numeric
+labels. Complete before/after counts, transition tables, source snapshots and
+receipts are closed in the README and canonical experiment log.
+
+Reviewed the production diff and its shared classifier consumers: canonical
+loader, assay exports, cell-HLA joins and binding selectors. The two old elution
+fixtures now explicitly declare their MS method; tests separately reject
+presentation with no method. No model/loss changes, study blacklist, source
+cache edits or MHC/split quality claims are part of this PR. Full CI and final
+artifact verification remain the merge gate. Lineage #60 is next, with the full
+#48/#50 census and #53 fresh training/held-out evidence still required afterward.
