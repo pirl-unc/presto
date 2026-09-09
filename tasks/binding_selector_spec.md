@@ -32,10 +32,10 @@ observed methods must choose the same columns as the canonical path. Actual
 fixed model predictions remain independent of assay descriptors. Preserve
 publication metadata and genuine observation identity from the preceding PR.
 
-- [ ] Verify previous merge and create branch from main.
-- [ ] Register exact source contract; capture baseline and expected selectors.
-- [ ] Restore the omitted fields; test path parity and unchanged selection.
-- [ ] Reconcile real-source counts and payloads; close experiment artifacts.
+- [x] Verify previous merge and create branch from main.
+- [x] Register exact source contract; capture baseline and expected selectors.
+- [x] Restore the omitted fields; test path parity and unchanged selection.
+- [x] Reconcile real-source counts and payloads; close experiment artifacts.
 - [ ] Review, run full CI, merge, then resume #48/#50 census and #53 quality run.
 
 ## Exact source verification contract

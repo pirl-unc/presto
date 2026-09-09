@@ -10890,7 +10890,7 @@ based on main. Specification: `tasks/binding_selector_spec.md`.
 - [x] Reproduce descriptor loss and file #62; write implementation/audit spec.
 - [x] Register and run the exact real-source selector baseline.
 - [x] Restore descriptors and verify all four loader paths and output selection.
-- [ ] Reconcile source populations/non-descriptor payloads and close artifacts.
+- [x] Reconcile source populations/non-descriptor payloads and close artifacts.
 - [ ] Rebase onto verified merged main, review, run CI and merge.
 - [ ] Resume #48/#50 census/update evidence and #53 predictive acceptance.
 
@@ -10908,3 +10908,19 @@ record in both scopes loses observed assay type and method; culture fields are
 absent in this real subset. Existing measurement fallbacks preserve affinity
 family counts here, but all known method/preparation/geometry/readout selectors
 become unknown. Culture preservation and conflicting labels require fixtures.
+
+### Binding selector repair verified — #62
+
+The eight-line repair passes 247 affected tests (21.46 seconds), after the new
+regressions first demonstrated 10 failures / 12 passes on the old code. Actual
+observed panel rows now receive gradients, with fixed predictions unchanged.
+Ruff passes; four additional/overlapping audit checks pass, including negative
+comparison controls.
+
+After scan at clean `37a06cd` took 49.342 seconds. Comparison at clean `c6b0eeb`
+(0.191 seconds) verifies identical selection/statistics, retained and constructed
+non-descriptor payloads, source descriptors and dependency contracts. All 23,210
+panel constructions and 1,000 selected bootstrap rows recover source type/method;
+culture fields are absent in this real subset. After selected-column distributions
+match the source exactly. This is a scoped ingestion result, not full-corpus
+coverage or predictive quality. Full CI and final PR review remain required.

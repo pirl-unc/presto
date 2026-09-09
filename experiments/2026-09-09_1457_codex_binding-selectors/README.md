@@ -1,8 +1,9 @@
 # Alternate binding-selector descriptor recovery
 
-Date/agent/model: 2026-09-09; Codex / GPT-6. Status: registered before launch.
+Date/agent/model: 2026-09-09; Codex / GPT-6. Status: source comparison complete; PR review/CI pending.
 Plan: [selector repair](../agents/codex/plans/2026-09-09_binding-selectors.md).
-Base is reviewed PR #63 head `2cce640`; the eventual PR follows its merge.
+PR base is merged #63, `48182ae1d2a36994470338b9422329590bc7c413`.
+The earlier baseline used its identical reviewed tree, preserved on the audit branch.
 
 ## Source and selection
 
@@ -45,10 +46,9 @@ and loss-selector behavior. Existing target transforms, units, qualifiers and
 loss equations/weights are unchanged; the repaired descriptors select the
 observed output columns instead of fallback/unknown columns.
 
-Before/after source counts, selected-column distributions, runtimes, exact
-non-descriptor payload reconciliation and all failed receipts will be closed
-here and in the canonical experiment log. No result or preferred condition is
-claimed before execution. #48/#50/#53 remain separate acceptance work.
+Before/after counts, selected-column distributions, runtimes and exact payload
+reconciliation are closed below and in the canonical experiment log. #48/#50/#53
+remain separate acceptance work.
 
 ## Baseline
 
@@ -75,3 +75,53 @@ across all four loaders, missing and conflicting descriptors, preserved lineage
 and selected gradients with invariant fixed predictions. Ruff 0.16.0 lint and
 format passed (255 files). The before/after test logs are in the raw-artifact
 root as `regression-before.log` and `regression-after.log`.
+
+## Completed comparison
+
+After ran at clean `37a06cdbde591bb08f883d5d84cbf6274fdba786` in 49.342
+seconds. Comparison ran at clean `c6b0eeb` in 0.191 seconds. The production
+repair is exactly eight assignments across two constructors. These scan timings
+were not a controlled throughput benchmark and do not support a speed claim.
+
+| Condition | Panel constructions / retained | Bootstrap selected | Total seconds |
+|---|---:|---:|---:|
+| Before: descriptors omitted | 23,210 / 1 | 1,000 | 111.439 |
+| After: source descriptors retained | 23,210 / 1 | 1,000 | 49.342 |
+
+| Field | Panel recovered values | Bootstrap recovered values |
+|---|---:|---:|
+| Assay type | 23,210 | 1,000 |
+| Assay method | 23,210 | 1,000 |
+| Effector culture | 0 | 0 |
+| APC culture | 0 | 0 |
+
+These scopes overlap and must not be added as distinct observations. Culture
+fields have no real support in this subset; whitespace and missing/known culture
+handling are tested in fixtures. Every post-repair field matches its normalized
+source, with zero lost, invented or changed values. The actual post-repair
+method/type/preparation/geometry/readout column distributions exactly match
+those calculated from the input descriptors by the same collator. Affinity-family
+columns already agreed through measurement-label fallback for these real rows;
+conflicting type labels are covered by the regression fixtures.
+
+Every selector statistic, observed/retained count, ordered non-descriptor payload
+hash and source-descriptor hash is identical. Publication fields, numeric values,
+units, qualifiers and selection order are conserved. This verifies the declared
+allele/selection scope, not all-corpus prevalence, post-MHC support or prediction
+quality. The preferred condition is the repaired descriptor path.
+
+Reproduce comparison with `bash results/compare/reproduce/launch.sh` from this
+experiment directory at the recorded commit. The script freezes the actual
+root-relative invocation and environment. To repeat on a later checkout, run the
+canonical analysis script from the repository root with `--output-dir` pointing
+to a fresh directory and the same recorded environment.
+[Comparison JSON](results/compare/result.json) and [field counts](results/compare/field_counts.csv)
+verify CSV/JSON agreement, immutable launcher snapshots, production hashes at
+the preserved before/after git commits, and identical source/dependency/selection
+contracts. Complete before/after column distributions are in their result JSONs.
+
+Four audit/comparison tests passed in 2.28 seconds, including rejection of changed
+payloads and wrong selected columns; they overlap the previously reported affected
+suite. Final full CI and author review are the remaining merge gates. No deployment
+workflow exists. Next: resume #48/#50 uncapped census/update evidence and #53
+fitting/generalization acceptance with the repaired adapters.
