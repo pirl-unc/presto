@@ -1005,9 +1005,38 @@ differences are not interpreted as performance evidence.
 
 - **Date / agent**: 2026-09-09; Codex / GPT-6.
 - **Experiment**: [2026-09-09_1106_codex_output-coverage](2026-09-09_1106_codex_output-coverage/).
-- **Status**: source inventory running; uncapped census/update phases pending.
+- **Status**: corrected source inventory completed; routing trace and uncapped census/update phases pending.
 - **Contract**: current merged TSV and exclusive Hitlist cache, read-only; prospective 80/10/10 peptide splits, data seed 17, split/model seed 42.
 - **Training / synthetic data**: none in inventory; later measured/augmented conditions and bounded optimizer diagnostics are specified in the README.
 - **Validation/test metrics**: not applicable to metadata inventory; no prediction-quality claim.
 - **Hardware**: local CPU; no Modal GPU requested.
 - **Reproduction**: experiment `reproduce/launch.sh`, phase invocation and source snapshot; pinned isolated environment.
+
+Initial invocation at `96b3ff6` failed before scanning (0.476 seconds): the local
+launcher assumed the provider's YAML was a mapping. The corrected launcher uses
+Hitlist's canonical curation loader. Its three tests passed before the clean
+`aada2b19ac74346c5a71ea603498352045c4cc91` inventory completed in **38.804 seconds**.
+Both receipts and immutable source snapshots are retained; successful reproduction
+uses `reproduce/inventory_v2.sh`. Pinned Hitlist 1.59.1, mhcseqs 2.5.12,
+mhcgnomes 3.41.0 and all transitive versions/source hashes are recorded.
+
+| Source condition | Total rows | Rows from MS-excluded studies |
+|---|---:|---:|
+| Observations parquet | 4,439,643 | 40,355 |
+| Binding parquet | 891,885 | 472,497 |
+| Default merged TSV | 3,423,737 | 514,190 |
+
+The read-only inventory reproduces Hitlist #444 against the frozen observations
+hash `f51440ab229fd187d2548b4dddcd1fc04580d97d45fb4d5b8e0222aa8080f928` and
+curation hash `e0270f2b417619a318ef03549e7cb7d46231bb3dbb6a088d8367a239cd6b3308`.
+MS exclusions do not invalidate all binding evidence from the same publications.
+The unchanged merged file has SHA-256
+`46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c`.
+Its complete flagged subset passes through the actual uncapped adapter: 375
+invalid peptides dropped, 15,641 affinity, 11 Tm, 496,976 elution and 1,187
+T-cell records emitted, all without PMID lineage. These are pre-MHC-filter
+loader counts. A separate method trace will reconcile their attribution before
+production routing changes. No preferred trained condition, changed loss/weight,
+synthetic labels, validation/test predictions or predictive metrics exist in
+this metadata-only phase. The next decision is to repair incorrect evidence
+routing/lineage before treating these populations as supervision support.

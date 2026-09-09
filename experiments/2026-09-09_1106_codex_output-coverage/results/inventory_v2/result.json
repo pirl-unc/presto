@@ -1,0 +1,680 @@
+{
+  "curation": {
+    "exclusions": {
+      "19734234": {
+        "study_label": "Ishizuka 2009 \u2014 T cell cross-reactivity assay (NOT MS)"
+      },
+      "31611695": {
+        "study_label": "Chen 2019 \u2014 MARIA computational tool (NOT MS)"
+      },
+      "32716529": {
+        "study_label": "Walters 2020 \u2014 HLA-E binding assay (NOT elution)"
+      },
+      "32903714": {
+        "study_label": "Wendorff 2020 \u2014 HLA-DP peptide microarray (NOT MS)"
+      },
+      "33020145": {
+        "study_label": "Ruibal 2020 \u2014 Qa-1/HLA-E cross-species binding (NOT elution)"
+      },
+      "33203899": {
+        "study_label": "Mbiribindi 2020 \u2014 HLA-E + EBV peptides (NOT elution)"
+      },
+      "33705522": {
+        "study_label": "Dai 2021 \u2014 ML method + yeast display (NOT MS)"
+      },
+      "34535575": {
+        "study_label": "Wang 2021 \u2014 brushtail possum MHC-I structure (NOT cellular IP)"
+      },
+      "35296092": {
+        "study_label": "Wei 2022 \u2014 pig SLA-I RPLD-MS (NOT cellular IP)"
+      },
+      "35486722": {
+        "study_label": "Obermair 2022 \u2014 MEDi display platform (NOT MS)"
+      },
+      "35781135": {
+        "study_label": "Huisman 2022 \u2014 yeast display MHC-II (NOT MS)"
+      }
+    },
+    "path": "/Users/iskander/code/presto/artifacts/2026-09-09_1106_codex_output-coverage/.venv/lib/python3.12/site-packages/hitlist/data/pmid_overrides.yaml",
+    "sha256": "e0270f2b417619a318ef03549e7cb7d46231bb3dbb6a088d8367a239cd6b3308"
+  },
+  "excluded_study_counts": [
+    {
+      "distinct_peptides": 4976,
+      "kind": "binding",
+      "pmid": "19734234",
+      "rows": 15521,
+      "source_file": "binding.parquet",
+      "study_label": "Ishizuka 2009 \u2014 T cell cross-reactivity assay (NOT MS)"
+    },
+    {
+      "distinct_peptides": 7,
+      "kind": "binding",
+      "pmid": "31611695",
+      "rows": 9,
+      "source_file": "binding.parquet",
+      "study_label": "Chen 2019 \u2014 MARIA computational tool (NOT MS)"
+    },
+    {
+      "distinct_peptides": 104,
+      "kind": "binding",
+      "pmid": "32716529",
+      "rows": 104,
+      "source_file": "binding.parquet",
+      "study_label": "Walters 2020 \u2014 HLA-E binding assay (NOT elution)"
+    },
+    {
+      "distinct_peptides": 69815,
+      "kind": "binding",
+      "pmid": "32903714",
+      "rows": 418890,
+      "source_file": "binding.parquet",
+      "study_label": "Wendorff 2020 \u2014 HLA-DP peptide microarray (NOT MS)"
+    },
+    {
+      "distinct_peptides": 154,
+      "kind": "binding",
+      "pmid": "33020145",
+      "rows": 612,
+      "source_file": "binding.parquet",
+      "study_label": "Ruibal 2020 \u2014 Qa-1/HLA-E cross-species binding (NOT elution)"
+    },
+    {
+      "distinct_peptides": 69,
+      "kind": "binding",
+      "pmid": "33203899",
+      "rows": 69,
+      "source_file": "binding.parquet",
+      "study_label": "Mbiribindi 2020 \u2014 HLA-E + EBV peptides (NOT elution)"
+    },
+    {
+      "distinct_peptides": 31,
+      "kind": "binding",
+      "pmid": "34535575",
+      "rows": 31,
+      "source_file": "binding.parquet",
+      "study_label": "Wang 2021 \u2014 brushtail possum MHC-I structure (NOT cellular IP)"
+    },
+    {
+      "distinct_peptides": 4,
+      "kind": "binding",
+      "pmid": "35296092",
+      "rows": 5,
+      "source_file": "binding.parquet",
+      "study_label": "Wei 2022 \u2014 pig SLA-I RPLD-MS (NOT cellular IP)"
+    },
+    {
+      "distinct_peptides": 9802,
+      "kind": "binding",
+      "pmid": "35486722",
+      "rows": 37232,
+      "source_file": "binding.parquet",
+      "study_label": "Obermair 2022 \u2014 MEDi display platform (NOT MS)"
+    },
+    {
+      "distinct_peptides": 24,
+      "kind": "binding",
+      "pmid": "35781135",
+      "rows": 24,
+      "source_file": "binding.parquet",
+      "study_label": "Huisman 2022 \u2014 yeast display MHC-II (NOT MS)"
+    },
+    {
+      "distinct_peptides": 4976,
+      "kind": "binding",
+      "pmid": "19734234",
+      "rows": 15499,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Ishizuka 2009 \u2014 T cell cross-reactivity assay (NOT MS)"
+    },
+    {
+      "distinct_peptides": 588,
+      "kind": "tcell",
+      "pmid": "19734234",
+      "rows": 1176,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Ishizuka 2009 \u2014 T cell cross-reactivity assay (NOT MS)"
+    },
+    {
+      "distinct_peptides": 3949,
+      "kind": "binding",
+      "pmid": "31611695",
+      "rows": 4539,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Chen 2019 \u2014 MARIA computational tool (NOT MS)"
+    },
+    {
+      "distinct_peptides": 69815,
+      "kind": "binding",
+      "pmid": "32903714",
+      "rows": 418890,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Wendorff 2020 \u2014 HLA-DP peptide microarray (NOT MS)"
+    },
+    {
+      "distinct_peptides": 154,
+      "kind": "binding",
+      "pmid": "33020145",
+      "rows": 616,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Ruibal 2020 \u2014 Qa-1/HLA-E cross-species binding (NOT elution)"
+    },
+    {
+      "distinct_peptides": 69,
+      "kind": "binding",
+      "pmid": "33203899",
+      "rows": 69,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Mbiribindi 2020 \u2014 HLA-E + EBV peptides (NOT elution)"
+    },
+    {
+      "distinct_peptides": 8212,
+      "kind": "binding",
+      "pmid": "33705522",
+      "rows": 12154,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Dai 2021 \u2014 ML method + yeast display (NOT MS)"
+    },
+    {
+      "distinct_peptides": 5614,
+      "kind": "binding",
+      "pmid": "34535575",
+      "rows": 5615,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Wang 2021 \u2014 brushtail possum MHC-I structure (NOT cellular IP)"
+    },
+    {
+      "distinct_peptides": 12008,
+      "kind": "binding",
+      "pmid": "35296092",
+      "rows": 12093,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Wei 2022 \u2014 pig SLA-I RPLD-MS (NOT cellular IP)"
+    },
+    {
+      "distinct_peptides": 9802,
+      "kind": "binding",
+      "pmid": "35486722",
+      "rows": 37232,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Obermair 2022 \u2014 MEDi display platform (NOT MS)"
+    },
+    {
+      "distinct_peptides": 11,
+      "kind": "tcell",
+      "pmid": "35486722",
+      "rows": 11,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Obermair 2022 \u2014 MEDi display platform (NOT MS)"
+    },
+    {
+      "distinct_peptides": 3786,
+      "kind": "binding",
+      "pmid": "35781135",
+      "rows": 6296,
+      "source_file": "merged_deduped.tsv",
+      "study_label": "Huisman 2022 \u2014 yeast display MHC-II (NOT MS)"
+    },
+    {
+      "distinct_peptides": 3143,
+      "kind": "ms",
+      "pmid": "31611695",
+      "rows": 3841,
+      "source_file": "observations.parquet",
+      "study_label": "Chen 2019 \u2014 MARIA computational tool (NOT MS)"
+    },
+    {
+      "distinct_peptides": 2,
+      "kind": "ms",
+      "pmid": "33020145",
+      "rows": 4,
+      "source_file": "observations.parquet",
+      "study_label": "Ruibal 2020 \u2014 Qa-1/HLA-E cross-species binding (NOT elution)"
+    },
+    {
+      "distinct_peptides": 8212,
+      "kind": "ms",
+      "pmid": "33705522",
+      "rows": 12154,
+      "source_file": "observations.parquet",
+      "study_label": "Dai 2021 \u2014 ML method + yeast display (NOT MS)"
+    },
+    {
+      "distinct_peptides": 5584,
+      "kind": "ms",
+      "pmid": "34535575",
+      "rows": 5584,
+      "source_file": "observations.parquet",
+      "study_label": "Wang 2021 \u2014 brushtail possum MHC-I structure (NOT cellular IP)"
+    },
+    {
+      "distinct_peptides": 12388,
+      "kind": "ms",
+      "pmid": "35296092",
+      "rows": 12491,
+      "source_file": "observations.parquet",
+      "study_label": "Wei 2022 \u2014 pig SLA-I RPLD-MS (NOT cellular IP)"
+    },
+    {
+      "distinct_peptides": 3774,
+      "kind": "ms",
+      "pmid": "35781135",
+      "rows": 6281,
+      "source_file": "observations.parquet",
+      "study_label": "Huisman 2022 \u2014 yeast display MHC-II (NOT MS)"
+    }
+  ],
+  "interpretation": "MS exclusions apply to MS evidence, not all binding/T-cell rows. Loader counts precede MHC resolution/filtering; this is not prediction evidence.",
+  "merged_flagged_subset_loader": {
+    "modalities": {
+      "binding": {
+        "pmids": {
+          "": 15641
+        },
+        "records": 15641
+      },
+      "elution": {
+        "pmids": {
+          "": 496976
+        },
+        "records": 496976
+      },
+      "kinetics": {
+        "pmids": {},
+        "records": 0
+      },
+      "processing": {
+        "pmids": {},
+        "records": 0
+      },
+      "stability": {
+        "pmids": {
+          "": 11
+        },
+        "records": 11
+      },
+      "tcell": {
+        "pmids": {
+          "": 1187
+        },
+        "records": 1187
+      },
+      "tcr_evidence": {
+        "pmids": {},
+        "records": 0
+      }
+    },
+    "stats": {
+      "cap_sampling": "reservoir",
+      "counts_before_cap": {
+        "binding": 15641,
+        "elution": 496976,
+        "kinetics": 0,
+        "processing": 0,
+        "stability": 11,
+        "tcell": 1187,
+        "tcr_evidence": 0
+      },
+      "records_loaded": {
+        "binding": 15641,
+        "elution": 496976,
+        "kinetics": 0,
+        "processing": 0,
+        "stability": 11,
+        "tcell": 1187,
+        "tcr_evidence": 0
+      },
+      "rows_by_assay": {
+        "binding_affinity": 15641,
+        "binding_tm": 11,
+        "elution_ms": 496976,
+        "tcell_response": 1187
+      },
+      "rows_by_source": {
+        "iedb": 513815
+      },
+      "rows_dropped_by_cap": {
+        "binding": 0,
+        "elution": 0,
+        "kinetics": 0,
+        "processing": 0,
+        "stability": 0,
+        "tcell": 0,
+        "tcr_evidence": 0
+      },
+      "rows_dropped_invalid_peptide": 375,
+      "rows_sanitized_optional_sequences": 0,
+      "rows_scanned": 513815,
+      "skipped_invalid_peptide": 375,
+      "skipped_unroutable_or_missing_label": 0
+    }
+  },
+  "phase": "inventory",
+  "raw_sqlite": "/Users/iskander/code/presto/artifacts/2026-09-09_1106_codex_output-coverage/inventory_v2/excluded.sqlite",
+  "schema_version": 1,
+  "source_files": {
+    "/Users/iskander/.hitlist/binding.parquet": {
+      "contents": {
+        "row_groups": 1,
+        "rows": 891885,
+        "rows_from_excluded_ms_studies": 472497,
+        "scanned_rows": 891885,
+        "schema": {
+          "allele_resolution": "dictionary<values=string, indices=int8, ordered=0>",
+          "antigen_processing_comments": "large_string",
+          "assay_comments": "large_string",
+          "assay_iri": "large_string",
+          "assay_method": "dictionary<values=string, indices=int8, ordered=0>",
+          "attributed_sample_label": "large_string",
+          "cell_line_name": "dictionary<values=string, indices=int8, ordered=0>",
+          "cell_name": "dictionary<values=string, indices=int8, ordered=0>",
+          "cell_type": "dictionary<values=string, indices=int8, ordered=0>",
+          "culture_condition": "dictionary<values=string, indices=int8, ordered=0>",
+          "disease": "dictionary<values=string, indices=int8, ordered=0>",
+          "disease_stage": "dictionary<values=string, indices=int8, ordered=0>",
+          "has_ptm": "bool",
+          "host": "dictionary<values=string, indices=int8, ordered=0>",
+          "host_age": "dictionary<values=string, indices=int8, ordered=0>",
+          "host_mhc_types": "large_string",
+          "is_binding_assay": "bool",
+          "is_monoallelic": "bool",
+          "is_non_peptide_ligand": "bool",
+          "measurement_inequality": "dictionary<values=string, indices=int8, ordered=0>",
+          "measurement_units": "dictionary<values=string, indices=int8, ordered=0>",
+          "mhc_allele_provenance": "dictionary<values=string, indices=int8, ordered=0>",
+          "mhc_allele_set": "large_string",
+          "mhc_allele_set_size": "int64",
+          "mhc_class": "dictionary<values=string, indices=int8, ordered=0>",
+          "mhc_restriction": "dictionary<values=string, indices=int16, ordered=0>",
+          "mhc_species": "dictionary<values=string, indices=int8, ordered=0>",
+          "monoallelic_host": "large_string",
+          "peptide": "large_string",
+          "peptide_extended": "large_string",
+          "peptide_modifications": "large_string",
+          "pmid": "int64",
+          "process_type": "dictionary<values=string, indices=int8, ordered=0>",
+          "qualitative_measurement": "dictionary<values=string, indices=int8, ordered=0>",
+          "quantitative_measurement": "large_string",
+          "quantitative_value": "double",
+          "reference_iri": "large_string",
+          "reference_title": "large_string",
+          "response_measured": "dictionary<values=string, indices=int8, ordered=0>",
+          "serotype": "dictionary<values=string, indices=int8, ordered=0>",
+          "serotypes": "large_string",
+          "source": "dictionary<values=string, indices=int8, ordered=0>",
+          "source_organism": "dictionary<values=string, indices=int16, ordered=0>",
+          "source_tissue": "dictionary<values=string, indices=int8, ordered=0>",
+          "species": "dictionary<values=string, indices=int16, ordered=0>",
+          "src_activated_apc": "bool",
+          "src_adjacent_to_tumor": "bool",
+          "src_cancer": "bool",
+          "src_cell_line": "bool",
+          "src_ebv_lcl": "bool",
+          "src_ex_vivo": "bool",
+          "src_healthy_reproductive": "bool",
+          "src_healthy_reproductive_female": "bool",
+          "src_healthy_reproductive_male": "bool",
+          "src_healthy_thymus": "bool",
+          "src_healthy_tissue": "bool",
+          "submission_id": "large_string"
+        }
+      },
+      "exists": true,
+      "sha256": "fbcae6f762f43edb4eb87b1a7c7f3849757859204d37f3ce82d1f83c23cece9f",
+      "stat": [
+        15078814,
+        1788320059106778818,
+        143061384
+      ]
+    },
+    "/Users/iskander/.hitlist/bulk_proteomics.parquet": {
+      "contents": {
+        "row_groups": 3,
+        "rows": 2269288,
+        "schema": {
+          "abundance_log2_normalized": "double",
+          "abundance_percentile": "double",
+          "acquisition_mode": "large_string",
+          "cell_line_name": "large_string",
+          "digestion": "large_string",
+          "digestion_enzyme": "large_string",
+          "end_position": "int64",
+          "enrichment": "large_string",
+          "evidence_kind": "large_string",
+          "fdr": "large_string",
+          "fractionation": "large_string",
+          "fractionation_ph": "double",
+          "fragmentation": "large_string",
+          "gene_symbol": "large_string",
+          "granularity": "large_string",
+          "instrument": "large_string",
+          "instrument_type": "large_string",
+          "labeling": "large_string",
+          "length": "int64",
+          "log2_intensity": "double",
+          "modifications": "large_string",
+          "n_fractions": "int64",
+          "n_fractions_in_run": "int64",
+          "n_peptides": "int64",
+          "n_replicates_detected": "int64",
+          "peptide": "large_string",
+          "perturbation": "large_string",
+          "pmid": "int64",
+          "quantification": "large_string",
+          "reference": "large_string",
+          "sample_label": "large_string",
+          "search_engine": "large_string",
+          "source": "large_string",
+          "species": "large_string",
+          "start_position": "int64",
+          "study_label": "large_string",
+          "uniprot_acc": "large_string"
+        }
+      },
+      "exists": true,
+      "sha256": "147ec4490b43f1455abae59f1899db3d50535986b7d85ad85786732c277a11b2",
+      "stat": [
+        45385899,
+        1788363391783502091,
+        114221093
+      ]
+    },
+    "/Users/iskander/.hitlist/manifest.json": {
+      "exists": true,
+      "sha256": "45c447dc0d34d8886211cc32e7110ebdfaac2c67aaf77a96e7dfbe894f6dcf4a",
+      "stat": [
+        664653,
+        1788319788131046828,
+        143058329
+      ]
+    },
+    "/Users/iskander/.hitlist/observations.parquet": {
+      "contents": {
+        "row_groups": 5,
+        "rows": 4439643,
+        "rows_from_excluded_ms_studies": 40355,
+        "scanned_rows": 4439643,
+        "schema": {
+          "allele_resolution": "dictionary<values=string, indices=int8, ordered=0>",
+          "antigen_processing_comments": "large_string",
+          "assay_comments": "large_string",
+          "assay_iri": "large_string",
+          "assay_method": "dictionary<values=string, indices=int8, ordered=0>",
+          "attributed_sample_label": "large_string",
+          "cell_line_name": "dictionary<values=string, indices=int16, ordered=0>",
+          "cell_name": "dictionary<values=string, indices=int16, ordered=0>",
+          "cell_type": "dictionary<values=string, indices=int8, ordered=0>",
+          "culture_condition": "dictionary<values=string, indices=int8, ordered=0>",
+          "disease": "dictionary<values=string, indices=int8, ordered=0>",
+          "disease_stage": "dictionary<values=string, indices=int8, ordered=0>",
+          "has_ptm": "bool",
+          "host": "dictionary<values=string, indices=int8, ordered=0>",
+          "host_age": "dictionary<values=string, indices=int8, ordered=0>",
+          "host_mhc_types": "large_string",
+          "is_binding_assay": "bool",
+          "is_monoallelic": "bool",
+          "is_non_peptide_ligand": "bool",
+          "is_potential_contaminant": "bool",
+          "measurement_inequality": "dictionary<values=string, indices=int8, ordered=0>",
+          "measurement_units": "dictionary<values=string, indices=int8, ordered=0>",
+          "mhc_allele_provenance": "dictionary<values=string, indices=int8, ordered=0>",
+          "mhc_allele_set": "large_string",
+          "mhc_allele_set_size": "int64",
+          "mhc_class": "dictionary<values=string, indices=int8, ordered=0>",
+          "mhc_restriction": "dictionary<values=string, indices=int16, ordered=0>",
+          "mhc_species": "dictionary<values=string, indices=int8, ordered=0>",
+          "monoallelic_host": "large_string",
+          "peptide": "large_string",
+          "peptide_extended": "large_string",
+          "peptide_modifications": "large_string",
+          "pmid": "int64",
+          "process_type": "dictionary<values=string, indices=int8, ordered=0>",
+          "qualitative_measurement": "dictionary<values=string, indices=int8, ordered=0>",
+          "quantitative_measurement": "large_string",
+          "quantitative_value": "double",
+          "reference_iri": "large_string",
+          "reference_title": "large_string",
+          "response_measured": "dictionary<values=string, indices=int8, ordered=0>",
+          "serotype": "dictionary<values=string, indices=int8, ordered=0>",
+          "serotypes": "large_string",
+          "source": "dictionary<values=string, indices=int8, ordered=0>",
+          "source_organism": "dictionary<values=string, indices=int16, ordered=0>",
+          "source_tissue": "dictionary<values=string, indices=int8, ordered=0>",
+          "species": "dictionary<values=string, indices=int16, ordered=0>",
+          "src_activated_apc": "bool",
+          "src_adjacent_to_tumor": "bool",
+          "src_cancer": "bool",
+          "src_cell_line": "bool",
+          "src_ebv_lcl": "bool",
+          "src_ex_vivo": "bool",
+          "src_healthy_reproductive": "bool",
+          "src_healthy_reproductive_female": "bool",
+          "src_healthy_reproductive_male": "bool",
+          "src_healthy_thymus": "bool",
+          "src_healthy_tissue": "bool",
+          "submission_id": "large_string",
+          "supplementary_file": "large_string"
+        }
+      },
+      "exists": true,
+      "sha256": "f51440ab229fd187d2548b4dddcd1fc04580d97d45fb4d5b8e0222aa8080f928",
+      "stat": [
+        118405340,
+        1788320057472289294,
+        143061360
+      ]
+    },
+    "/Users/iskander/.hitlist/observations_meta.json": {
+      "exists": true,
+      "sha256": "ac459e184fc6c54c73f7f1b4fc7dff424b2360b13f55f12bb68a3bbb743de118",
+      "stat": [
+        6518,
+        1788320071282830910,
+        105798213
+      ]
+    },
+    "/Users/iskander/.hitlist/peptide_mappings.parquet": {
+      "contents": {
+        "row_groups": 6,
+        "rows": 5880924,
+        "schema": {
+          "c_flank": "large_string",
+          "gene_biotype": "large_string",
+          "gene_id": "large_string",
+          "gene_name": "large_string",
+          "is_canonical_transcript": "bool",
+          "n_flank": "large_string",
+          "peptide": "large_string",
+          "position": "int64",
+          "protein_id": "large_string",
+          "proteome": "large_string",
+          "proteome_source": "large_string",
+          "transcript_id": "large_string"
+        }
+      },
+      "exists": true,
+      "sha256": "45580c16649daf75b11b51497d9d96dfaa987cdcf1197d6449deaa9261f6ec5c",
+      "stat": [
+        176123848,
+        1788382672136380740,
+        114240829
+      ]
+    },
+    "/Users/iskander/.hitlist/peptide_mappings_meta.json": {
+      "exists": true,
+      "sha256": "9a93de21753029ac08f1ba05e1a667ee6d7fd1b63a885bdc8dade1e626c7cbbb",
+      "stat": [
+        64215,
+        1788382673117996972,
+        106982692
+      ]
+    },
+    "/Users/iskander/code/presto/data/merged_deduped.tsv": {
+      "contents": {
+        "columns": [
+          "peptide",
+          "mhc_allele",
+          "mhc_allele_set",
+          "mhc_allele_provenance",
+          "mhc_allele_bag_size",
+          "mhc_class",
+          "pmid",
+          "doi",
+          "reference_text",
+          "source",
+          "record_type",
+          "value",
+          "value_type",
+          "qualifier",
+          "response",
+          "assay_type",
+          "assay_method",
+          "apc_name",
+          "cell_hla_allele_set",
+          "cell_hla_n_alleles",
+          "effector_culture_condition",
+          "apc_culture_condition",
+          "in_vitro_process_type",
+          "in_vitro_responder_cell",
+          "in_vitro_stimulator_cell",
+          "cdr3_alpha",
+          "cdr3_beta",
+          "trav",
+          "trbv",
+          "species",
+          "antigen_species"
+        ],
+        "excluded_subset": "/Users/iskander/code/presto/artifacts/2026-09-09_1106_codex_output-coverage/inventory_v2/excluded_studies.tsv",
+        "record_types": {
+          "binding": 3045226,
+          "tcell": 212190,
+          "tcr": 166321
+        },
+        "rows": 3423737,
+        "rows_from_excluded_ms_studies": 514190,
+        "sources": {
+          "iedb": 3257416,
+          "mcpas": 13738,
+          "vdjdb": 152583
+        },
+        "subset_sha256": "e28e5c0a86c884e321dc8ba77a10f37051aa8a9f1a824651ddfaf506d1412f26"
+      },
+      "exists": true,
+      "sha256": "46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c",
+      "stat": [
+        1028889889,
+        1773778809198693306,
+        101675779
+      ]
+    },
+    "/Users/iskander/code/presto/data/merged_deduped_funnel.tsv": {
+      "exists": true,
+      "sha256": "fbde304d79c5540c532a00abd5c237adb6f32683226be037ec0afd02285aa079",
+      "stat": [
+        1591,
+        1773778809207361900,
+        101675797
+      ]
+    }
+  }
+}

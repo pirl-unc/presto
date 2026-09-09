@@ -336,90 +336,9 @@ def inventory(args, output):
     )
 
 
-def route_trace(args, output):
-    """Attribute the frozen merged subset's actual assay buckets to source studies."""
-    from presto.data.cross_source_dedup import UnifiedRecord, classify_assay_type
-    from presto.scripts.train_iedb import _normalize_required_aa_sequence, _parse_float_or_none
-
-    baseline = json.loads((EXPERIMENT / "results" / "inventory_v2" / "result.json").read_text())
-    merged = baseline["source_files"][str(ROOT / "data" / "merged_deduped.tsv")]["contents"]
-    subset = Path(merged["excluded_subset"])
-    if hash_file(subset) != merged["subset_sha256"]:
-        raise RuntimeError("Flagged-study subset differs from the frozen inventory")
-    groups, examples, invalid = Counter(), {}, Counter()
-    fields = ("pmid", "record_type", "value_type", "assay_type", "assay_method", "response")
-    with subset.open(newline="") as handle:
-        for line, row in enumerate(csv.DictReader(handle, delimiter="\t"), 2):
-            peptide = _normalize_required_aa_sequence(row["peptide"])
-            if not peptide:
-                invalid[row["pmid"]] += 1
-                continue
-            record = UnifiedRecord(
-                peptide=peptide,
-                mhc_allele=row["mhc_allele"],
-                source=row["source"],
-                record_type=row["record_type"],
-                value=_parse_float_or_none(row["value"]),
-                value_type=row["value_type"],
-                assay_type=row["assay_type"],
-                assay_method=row["assay_method"],
-                response=row["response"],
-            )
-            bucket = classify_assay_type(record)
-            key = (*[row[field] for field in fields], bucket, record.value is not None)
-            groups[key] += 1
-            examples.setdefault(
-                key,
-                {
-                    "subset_line": line,
-                    "source": row["source"],
-                    "numeric_value": record.value,
-                    "mhc_class": row["mhc_class"],
-                },
-            )
-    records = [
-        dict(zip((*fields, "bucket", "has_numeric_value"), key), rows=count, **examples[key])
-        for key, count in sorted(groups.items())
-    ]
-    by_bucket = Counter()
-    for row in records:
-        by_bucket[row["bucket"]] += row["rows"]
-    if by_bucket != baseline["merged_flagged_subset_loader"]["stats"]["rows_by_assay"]:
-        raise RuntimeError("Trace counts do not reconcile with the actual baseline loader")
-    with sqlite3.connect(f"file:{baseline['raw_sqlite']}?mode=ro", uri=True) as db:
-        totals = [
-            dict(source_file=name, rows=count, distinct_peptides=peptides)
-            for name, count, peptides in db.execute(
-                "SELECT source_file,COUNT(*),COUNT(DISTINCT peptide) "
-                "FROM excluded GROUP BY source_file ORDER BY source_file"
-            )
-        ]
-    result = {
-        "schema_version": 1,
-        "source_subset": str(subset),
-        "subset_sha256": merged["subset_sha256"],
-        "invalid_peptides_by_pmid": dict(invalid),
-        "by_bucket": dict(by_bucket),
-        "groups": records,
-        "excluded_source_totals": totals,
-    }
-    json_write(output / "result.json", result)
-    with (output / "routing.csv").open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=records[0])
-        writer.writeheader()
-        writer.writerows(records)
-    print(
-        json.dumps(
-            {"by_bucket": by_bucket, "excluded_source_totals": totals, "groups": len(records)},
-            indent=2,
-        ),
-        flush=True,
-    )
-
-
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("phase", choices=["inventory", "route_trace"])
+    parser.add_argument("phase", choices=["inventory"])
     parser.add_argument(
         "--hitlist-dir",
         type=Path,
@@ -433,7 +352,7 @@ def main():
     receipt = freeze_invocation(args, output)
     started = time.perf_counter()
     try:
-        {"inventory": inventory, "route_trace": route_trace}[args.phase](args, output)
+        inventory(args, output)
     except BaseException as exc:
         json_write(
             output / "status.json",

@@ -1,8 +1,8 @@
 # Real-source output coverage and update audit
 
 - Date: 2026-09-09; agent/model: Codex / GPT-6.
-- Status: initial inventory failed before data scanning; corrected inventory
-  pending. No census or optimizer diagnostic has run.
+- Status: corrected inventory completed; source-routing trace next. The full
+  census and optimizer diagnostics have not run.
 - Presto base: PR #58, `d9a666a07085289b168105089d29dd4e675add61`.
 - Detailed plan: [coverage census](../agents/codex/plans/2026-09-08_output-coverage-census.md).
 - Raw artifacts/environment: `artifacts/2026-09-09_1106_codex_output-coverage/`.
@@ -79,10 +79,40 @@ The frozen scripts record the exact original paths; for a repeat inspection,
 pass a fresh `--output-dir` with a unique basename. Existing evidence directories
 and SQLite files are never overwritten.
 
-File confirmed Hitlist data/curation problems with reproducible source versions,
-study/record examples and impact counts. Add new evidence to existing issues
-when applicable. Hitlist #444 and #361 are known reports, not findings measured
-by this experiment yet. Presto adapter defects stay in Presto.
+The corrected inventory completed in **38.804 seconds** on local CPU at clean
+Presto commit `aada2b19ac74346c5a71ea603498352045c4cc91` with the pinned release
+environment. Reproduce with `reproduce/inventory_v2.sh`; its invocation, launcher
+snapshot, status, source hashes and complete grouped counts are preserved under
+`reproduce/` and `results/inventory_v2/`. All source stability checks passed.
+
+| Frozen source | Total rows | Rows from studies curated `exclude_from_ms` |
+|---|---:|---:|
+| Hitlist observations | 4,439,643 | 40,355 |
+| Hitlist binding | 891,885 | 472,497 |
+| Default merged TSV | 3,423,737 | 514,190 |
+
+The observation count independently reproduces Hitlist #444. Exclusion applies
+to MS evidence, so the binding count is not a blanket removal recommendation.
+The observations SHA-256 is
+`f51440ab229fd187d2548b4dddcd1fc04580d97d45fb4d5b8e0222aa8080f928`;
+the installed Hitlist 1.59.1 curation SHA-256 is
+`e0270f2b417619a318ef03549e7cb7d46231bb3dbb6a088d8367a239cd6b3308`.
+The cache's producer version is not inferred from the installed package version.
+
+Loading the complete flagged merged subset through the actual Presto adapter,
+with every modality cap disabled, drops 375 invalid peptides and emits 15,641
+affinity, 11 melting-temperature, **496,976 elution** and 1,187 T-cell records.
+Every emitted record lacks the source PMID despite that field being present in
+the TSV. These counts precede MHC resolution and all downstream filtering;
+they are not final training counts. The classifier's missing-numeric-value
+fallback routes binding observations to elution without requiring an MS method.
+
+Before the full census or training, run `reproduce/route_trace.sh` to attribute
+those assay buckets to source methods/studies and reconcile exactly with the
+actual loader totals. Preserve the original inventory and launcher snapshots.
+File the confirmed adapter routing and lineage defects in Presto, and add the
+independent cache evidence to existing Hitlist #444. Hitlist #361 remains an
+existing bulk-candidate report, not a new finding from this inventory.
 
 Close each informative phase with JSON/CSV summaries, raw artifact links,
 runtime and source/config hashes, conclusions and canonical experiment-log
@@ -90,7 +120,8 @@ updates. Do not close #48/#50 on launcher code or fixture tests.
 
 ## Handoff
 
-- Status: preparing isolated environment and first frozen inventory launcher.
-- Next step: inventory and verify exclusions before the uncapped census.
+- Status: inventory closed; routing/lineage defects require triage before census.
+- Next step: reconcile the source-method trace, publish issues and specify the
+  adapter corrections before changing production code.
 - Open questions: source contamination, traceable evidence, rare assay support,
   canonical augmentation leakage and actual per-column update incidence.

@@ -10758,3 +10758,26 @@ independently measured finding from the new census. Verify its impact on the
 actual frozen input before interpreting elution supervision; do not create a
 duplicate issue or silently change the corpus. Bulk candidate generation is
 already tracked upstream in #361. No new real-source experiment has launched.
+
+### Real-source inventory checkpoint and revised next-PR order
+
+The registered inventory now completed at clean `aada2b1`, in 38.804 seconds,
+with an isolated pinned release environment and immutable file/curation hashes.
+It reproduces Hitlist #444's 40,355 excluded observation rows. The uncapped actual
+merged loader emits 496,976 elution records from the complete MS-excluded-study
+subset and loses existing PMID lineage on every emitted modality. These findings
+change the dependency order: verify and fix the adapter before a full output
+census or quality run. The original #48/#50/#53 evidence requirements remain.
+
+- [x] Freeze and close the read-only source inventory, retaining the first failed
+  launcher receipt and corrected successful receipt separately.
+- [ ] Reconcile every source-method trace bucket with the actual loader totals,
+  without modifying the input corpus or repeating expensive full loads.
+- [ ] Publish reproducible evidence to existing Hitlist #444 and file distinct
+  Presto issues for incorrect assay routing and dropped source lineage.
+- [ ] Write the production-fix specification after tracing explicit MS evidence,
+  qualitative binding and unresolved assay cases; preserve units/censoring and
+  avoid inventing numeric affinity targets for qualitative measurements.
+- [ ] Implement/review the necessary adapter changes with focused semantic tests
+  and registered before/after source conservation evidence before continuing the
+  full census. Keep all unsupported/unknown evidence visible in audit counters.
