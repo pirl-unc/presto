@@ -11107,7 +11107,7 @@ Next specification: `tasks/coverage_report_reuse_spec.md`.
 - [x] Reproduce redundant work and implement exact categorical/single-group reuse.
 - [x] Verify semantic parity, invalidation and query reduction; run required checks.
 - [x] Close the original census if complete and register any real-data comparison.
-- [ ] Review and publish the next PR with precise validation/performance scope.
+- [x] Review and publish the next PR with precise validation/performance scope.
 
 Review results: 106 coverage/preflight/support/experiment tests passed in 59.57
 seconds. Ruff 0.16.0 lint and format checks pass. The new SQL-trace regressions
@@ -11135,3 +11135,8 @@ input/evidence/dataset hashes and all 717 output CSV rows reconcile. README and
 the canonical experiment log now close this condition and explicitly report zero
 processing/pathway T-cell MIL support and positive-only TCR evidence. Other source
 conditions and actual training/update/quality evidence remain pending in #48/#50/#53.
+
+Published [PR #66](https://github.com/pirl-unc/presto/pull/66), based directly on
+main after #65. Implementation and census closure are separate commits for review;
+GitHub code CI is running and local verification above is complete. This final
+publication note changes no tested code. Leave #66 open for independent review.
