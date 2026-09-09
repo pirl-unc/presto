@@ -1116,3 +1116,21 @@ with a tree identical to reviewed `3c30d73`. Final branch/PR CI 34360660081 and
 34360770090 passed lint/tests and docs; the earlier identical production-code
 CI run 34360127179 reported 2,029 passed, 3 skipped. The next branch starts from
 this merge and restores the publication-lineage path tracked in #60.
+
+## 2026-09-09_1419_codex_merged-lineage
+
+**Date/agent/model:** 2026-09-09; Codex / GPT-6.
+**Directory:** [merged publication lineage](2026-09-09_1419_codex_merged-lineage/).
+**Status:** registered; before/after source audit pending.
+
+Use the identical full merged TSV and corrected #61 routing, with SHA-256
+`46c5722ce92a28a6002c028a8584ea5d6f62d6f8d950aaca82518cd25b2e359c` and
+3,423,737 input rows. Measure existing publication/observation metadata recovery
+at the actual reader/record boundary, every record before a one-record head cap
+per modality; require unchanged non-lineage payloads and all loader counts.
+No MHC filtering, curation/source changes, new labels or synthetic data. No
+pretraining, training, model/loss changes, validation/test split or predictive
+metrics: this audit verifies metadata and payload parity. Directory reproduction
+scripts freeze invocations and production snapshots; use the pinned isolated
+inventory environment, local CPU, OMP/MKL threads one and no GPU. Results and
+runtime will be closed out after execution; no preferred result is claimed yet.
