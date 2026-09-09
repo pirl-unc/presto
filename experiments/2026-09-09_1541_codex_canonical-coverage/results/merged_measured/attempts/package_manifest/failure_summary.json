@@ -1,0 +1,23 @@
+{
+  "app_id": "ap-e5tn40CmWftp3a6wCcf0qy",
+  "attempt": "package_manifest",
+  "call_id": "fc-01M23H9A3SRT3Z5TYKDWVCWE6J",
+  "condition": "merged_measured",
+  "data_loaded": false,
+  "decision": "Use the pinned SDK serialized=True transport for the self-contained remote entry; retain the same source/data/hardware contract.",
+  "dirty": false,
+  "elapsed_seconds": 125.88791799545288,
+  "error": "IndexError(1) at /root/launch.py: ROOT = EXPERIMENT.parents[1]",
+  "finished_unix": 1788972767.830781,
+  "git_commit": "d8f06ee40a69d213f85175be05c4e294a7914930",
+  "image_built": true,
+  "metrics": null,
+  "metrics_note": "No census or evaluation ran; elapsed time includes image build and failed container startup.",
+  "raw_log": "artifacts/2026-09-09_1541_codex_canonical-coverage/merged-measured-package-manifest-launch.log",
+  "raw_log_sha256": "2092a84a38f05faab86d40039568e8334ebef734c4b32d028f73d77f5d27ccce",
+  "started_unix": 1788972641.942863,
+  "status": "worker_import_failed_app_stopped",
+  "stop_command": "MODAL_PROFILE=iskandr /Users/iskander/code/shared-virtual-env/bin/python -m modal app stop ap-e5tn40CmWftp3a6wCcf0qy",
+  "training_started": false,
+  "worker_function_entered": false
+}

@@ -133,6 +133,24 @@ checkout, although those snapshots are not declared production packages. Keep
 that first local failure in the verification log; do not delete audit evidence
 or modify production package discovery just to make this working tree pass.
 
+### Remote entry-point import failure and revised execution plan
+
+The corrected `d8f06ee` snapshot built a wheel locally, passed all five packaging
+checks from an isolated copy, and built its Modal image successfully. Attempt
+`package_manifest` submitted call `fc-01M23H9A3SRT3Z5TYKDWVCWE6J` in app
+`ap-e5tn40CmWftp3a6wCcf0qy`, but the pinned SDK's default file import relocated
+`launch.py` to `/root/launch.py`. Module-level local checkout discovery then
+raised `IndexError` before the worker function entered. The app was explicitly
+stopped and its local watcher exited; no data loading or census ran.
+
+Use Modal 1.1.4's explicit `serialized=True` option for the self-contained remote
+entry point. Its implementation already loads the worker from the frozen
+`/opt/presto` tree and does not require local checkout globals. Verify the
+declaration and round-trip the actual SDK serialization in a fresh interpreter
+without the launcher's module on its import path. Preserve this failed attempt
+and record a new `serialized_entry` attempt; keep the same uploaded inputs,
+condition, image dependency pins and hardware limits. Do not reuse result paths.
+
 ## Instrumentation and verification
 
 Experiment-local wrappers may add receipts, progress, SQLite retention and

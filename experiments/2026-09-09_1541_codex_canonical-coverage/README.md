@@ -1,8 +1,8 @@
 # Canonical full-source output coverage
 
 - Agent/model: Codex / GPT-6; date: 2026-09-09.
-- Status: upload verified; first image build failed before data loading; packaging
-  correction and a separately recorded retry are in preparation.
+- Status: upload verified; packaging verified; a remote-entry correction is ready
+  after two preserved startup failures before data loading.
 - Production base: merged PR #64, `190360a7e2596eb5f62682088f1ef63270bf5eeb`.
 - Plan: [detailed specification](../../tasks/canonical_coverage_evidence_spec.md).
 - Prior evidence: [source inventory](../2026-09-09_1106_codex_output-coverage/),
@@ -83,6 +83,23 @@ and Ruff 0.16.0. An initial expanded check passed 32 tests but exposed that the
 canonical packaging test discovers preserved raw source snapshots under local
 `artifacts/`; rerun that check in the isolated source copy without changing or
 deleting those historical artifacts.
+
+The `d8f06ee` wheel build succeeded with all nine packages and all archived
+production Python sources present; five canonical packaging tests passed in
+2.09 seconds from the isolated copy. The [build receipt](results/verification/package_build.json)
+records commands, environment, wheel hash and unchanged frozen snapshot hashes.
+The Modal image also built successfully. Attempt `package_manifest`, app
+[`ap-e5tn40CmWftp3a6wCcf0qy`](https://modal.com/apps/iskandr/main/ap-e5tn40CmWftp3a6wCcf0qy),
+then failed during import of the SDK-relocated `/root/launch.py`: local checkout
+discovery raised `IndexError` before the worker entered. The app was stopped;
+[retry failure receipts](results/merged_measured/attempts/package_manifest/)
+preserve its call ID, total launch elapsed time and raw log. No data was loaded.
+
+The remote entry now explicitly uses Modal 1.1.4's serialized transport and loads
+the worker from the frozen `/opt/presto` tree. The actual SDK round-trip passes
+in a fresh isolated interpreter without importing the local launcher (one test,
+0.48 seconds); all 28 focused checks pass in 4.29 seconds, and Ruff passes.
+The next attempt is `serialized_entry`, with the same input bytes and condition.
 
 Earlier preparation and review history (the upload authorization above supersedes
 the earlier transfer block):

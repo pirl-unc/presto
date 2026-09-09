@@ -1293,3 +1293,12 @@ fitting/held-out performance remain separate work.
   Derive archive roots from the authoritative package manifest, verify a wheel
   locally from an isolated snapshot copy, then retry with an explicit attempt
   name. Dataset bytes and source/hardware conditions remain unchanged.
+- Packaging verification at `d8f06ee`: wheel build succeeds with all nine declared
+  packages/all archived production Python sources; five canonical packaging
+  tests pass in 2.09 seconds from an isolated copy. The Modal image built, but
+  `package_manifest` failed before worker entry because the SDK relocated its
+  file import to `/root/launch.py`. App `ap-e5tn40CmWftp3a6wCcf0qy` was explicitly
+  stopped; failed-attempt receipt includes call ID and elapsed time. No data was
+  loaded. Explicit serialized transport now passes a fresh-process round-trip
+  with Modal 1.1.4 (one test, 0.48 seconds), plus 28 focused tests in 4.29 seconds.
+  Retry as `serialized_entry` with the same condition/input/hardware contract.

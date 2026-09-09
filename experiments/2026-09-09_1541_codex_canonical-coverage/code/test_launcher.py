@@ -75,14 +75,19 @@ def test_retry_preserves_initial_receipts_and_cannot_overwrite(tmp_path, monkeyp
     ):
         setattr(image, method, lambda *args, **kwargs: image)
     spawned = []
+    declarations = []
 
     def spawn(*args):
         spawned.append(args)
         return SimpleNamespace(object_id="fc-fixture", get=lambda: {"fixture": True})
 
+    def declare(**kwargs):
+        declarations.append(kwargs)
+        return lambda fn: SimpleNamespace(spawn=spawn)
+
     app = SimpleNamespace(
         app_id="ap-fixture",
-        function=lambda **kwargs: lambda fn: SimpleNamespace(spawn=spawn),
+        function=declare,
         run=lambda **kwargs: nullcontext(),
     )
     modal = SimpleNamespace(
@@ -106,6 +111,7 @@ def test_retry_preserves_initial_receipts_and_cannot_overwrite(tmp_path, monkeyp
         ("condition", "initial", remote_initial),
         ("condition", "package_manifest", remote_retry),
     ]
+    assert all(declaration.get("serialized") is True for declaration in declarations)
     assert retry["args"] == {"run_dir": remote_retry, "seed": 42}
     assert retry["attempt"] == "package_manifest"
     assert retry["status"] == "remote_complete"

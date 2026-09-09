@@ -10947,8 +10947,11 @@ Image-build recovery after the approved upload:
 - [x] Preserve the initial `37cbb17` build failure before data loading.
 - [x] Derive source archive packages from the authoritative package manifest.
 - [x] Isolate named retry receipts/outputs and reject reused or unsafe names.
-- [ ] Verify a wheel and canonical packaging checks in an isolated snapshot copy.
-- [ ] Launch `merged_measured --attempt package_manifest` and confirm its call state.
+- [x] Verify a wheel and canonical packaging checks in an isolated snapshot copy.
+- [x] Launch `merged_measured --attempt package_manifest` and confirm its call state.
+- [x] Stop and preserve its remote import failure before worker entry/data load.
+- [x] Verify explicit SDK serialization in a fresh isolated interpreter.
+- [ ] Launch `merged_measured --attempt serialized_entry` and verify worker progress.
 
 PR #64 merged as `190360a7e2596eb5f62682088f1ef63270bf5eeb` at 15:41:16 UTC;
 the tree exactly matches reviewed `b1f4646` and #62 is closed. Both final-head CI

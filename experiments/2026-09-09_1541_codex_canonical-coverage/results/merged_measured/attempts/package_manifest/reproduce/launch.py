@@ -254,7 +254,6 @@ def execute(condition, snapshot, attempt="initial"):
     app = modal.App("presto-codex-canonical-coverage")
     remote = app.function(
         image=image,
-        serialized=True,
         cpu=(4, 8),
         memory=(65536, 196608),
         timeout=14400,
