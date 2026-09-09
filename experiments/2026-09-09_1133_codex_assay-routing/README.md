@@ -138,7 +138,10 @@ explicitly. Full PR CI is the remaining integration gate.
 
 ## Handoff
 
-- Status: source correction and all experiment evidence closed; PR CI pending.
-- Next step: merge #59's correction after review/CI, then repair lineage #60.
+- Status: source correction and experiment evidence closed; PR #61 merged as
+  `8cebd17660b67c0e4908017e0de9fccf5b00c653`, identical to reviewed `3c30d73`.
+  Final-head branch and PR CI passed lint/tests and docs; the identical
+  production-code CI run reported 2,029 passed and 3 skipped.
+- Next step: repair lineage #60 on `codex/merged-source-lineage` from merged main.
 - Remaining scope: Hitlist #444 curation, #48/#50 coverage/update evidence and
   #53 predictive fitting/generalization; this audit closes none of those claims.

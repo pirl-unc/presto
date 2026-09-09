@@ -10826,3 +10826,27 @@ presentation with no method. No model/loss changes, study blacklist, source
 cache edits or MHC/split quality claims are part of this PR. Full CI and final
 artifact verification remain the merge gate. Lineage #60 is next, with the full
 #48/#50 census and #53 fresh training/held-out evidence still required afterward.
+
+### PR #61 closure and next PR — merged publication lineage
+
+PR #61 merged on 2026-09-09 as `8cebd17660b67c0e4908017e0de9fccf5b00c653`.
+The merged tree is identical to reviewed head
+`3c30d73b0d48b7dcb0a8842e6c46f5c1761f3ab2`. Both final-head CI runs (branch
+34360660081 and PR 34360770090) passed lint/tests and docs. The earlier identical
+production-code CI run 34360127179 passed **2,029 tests, 3 skipped**; its log is
+preserved under the assay-routing raw-artifact root. Review is posted on the PR,
+#59 is closed, and Presto has no deployment workflow.
+
+Started `codex/merged-source-lineage` directly on merged main. The next PR's
+specification is `tasks/merged_lineage_spec.md`: restore existing publication and
+observation metadata through all seven canonical modalities and held-out
+exports, without inventing original assay IDs or altering model inputs/labels.
+The full-source before/after experiment must establish exact non-lineage payload
+parity and metadata availability/mismatch counts. #48/#50/#53 remain open.
+
+- [x] Merge and verify #61, then create the next branch from updated main.
+- [x] Write the #60 implementation and verification specification before code.
+- [ ] Register the lineage experiment and capture its baseline.
+- [ ] Restore metadata through loader, samples, batches and held-out exports.
+- [ ] Verify source conservation, metadata recovery and unchanged model inputs.
+- [ ] Review, verify CI and merge #60's repair, then resume the coverage census.

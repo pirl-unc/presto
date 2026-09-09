@@ -1110,3 +1110,9 @@ synthetic-data contract or predictive metric changes; no validation/test split
 was used because this is ingestion verification. Prior models trained with the
 old incorrectly routed population are not a controlled quality baseline for the
 corrected one. Hitlist #444 and Presto #60/#48/#50/#53 remain separate work.
+
+The correction merged in PR #61 as `8cebd17660b67c0e4908017e0de9fccf5b00c653`,
+with a tree identical to reviewed `3c30d73`. Final branch/PR CI 34360660081 and
+34360770090 passed lint/tests and docs; the earlier identical production-code
+CI run 34360127179 reported 2,029 passed, 3 skipped. The next branch starts from
+this merge and restores the publication-lineage path tracked in #60.
