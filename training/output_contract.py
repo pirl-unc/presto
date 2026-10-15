@@ -364,7 +364,8 @@ def build_output_contract(configuration: OutputConfiguration | None = None) -> O
                     "annotation": ("source_annotation",),
                     "organism": ("organism_derived",),
                     "excision": ("bulk_observed_product",),
-                    "ms_detectability": ("bulk_depth_proxy",),
+                    # The raw bulk loader has no qualified detectability labels.
+                    "ms_detectability": (),
                 }.get(source, (source,)),
                 "Support depends on selected labels and source provenance; "
                 "generated:<kind> families are recorded separately with synthetic role. "

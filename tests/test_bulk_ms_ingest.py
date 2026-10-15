@@ -130,7 +130,7 @@ def test_native_generated_controls_keep_explicit_provenance():
     observed, generated = PrestoDataset(bulk_ms_records=records).samples
     assert observed.target_provenance == {
         "excision": "bulk_observed_product",
-        "ms_detectability": "bulk_depth_proxy",
+        "ms_detectability": "unknown",
     }
     assert generated.target_provenance["excision"] == "generated:bulk_wrong_enzyme"
     assert generated.synthetic_kind is None  # Preserve existing sampler grouping.
@@ -147,3 +147,15 @@ def test_protein_argument_does_not_claim_unproduced_detectability_negatives(monk
     assert stats["protein_sequences_supplied"]
     assert not stats["in_silico_negatives_available"]
     assert all(record.detectability_label is None for record in records if not record.observed)
+
+
+@pytest.mark.parametrize("count", [pd.NA, float("nan"), ""])
+def test_missing_bulk_count_metadata_remains_unknown(count):
+    records, stats = records_from_bulk_frame(
+        _frame([_row(n_replicates_detected=count, n_fractions_in_run=count)]),
+        excision_negative_ratio=0,
+    )
+    assert records[0].n_replicates_detected is None
+    assert records[0].n_fractions is None
+    assert records[0].detectability_label is None
+    assert stats["n_detectability_labels"] == 0
