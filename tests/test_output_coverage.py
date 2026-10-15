@@ -198,7 +198,12 @@ def test_actual_bulk_conversion_preserves_generated_and_proxy_origins():
         assert census.counts("train", "excision_logit", roles=["proxy"])["positive"] == 1
         assert census.counts("train", "excision_logit", roles=["synthetic"])["negative"] == 1
         assert census.counts("train", "excision_logit", roles=["direct"])["observations"] == 0
-        assert census.counts("train", "ms_detectability_logit", roles=["proxy"])["graded"] == 1
+        # An explicitly supplied label remains visible, but observing its
+        # peptide does not establish a qualified detectability source.
+        assert census.counts("train", "ms_detectability_logit", roles=["unknown"])["graded"] == 1
+        assert (
+            census.counts("train", "ms_detectability_logit", roles=["proxy"])["observations"] == 0
+        )
 
 
 @pytest.mark.parametrize(

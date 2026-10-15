@@ -6,8 +6,9 @@ Specification: [bulk-supervision-validity-spec.md](bulk-supervision-validity-spe
 - [x] Isolate the work from the dirty coverage-report checkout.
 - [x] Prove unsupported depth-label regression and remove its production path.
 - [x] Add missing-label mask/provenance coverage and update current documentation.
-- [ ] Version, format, lint, full tests and final-head CI.
-- [ ] Open the next PR in the training-readiness series and record its limits.
+- [x] Bump version, format and lint.
+- [ ] Full tests and final-head CI.
+- [x] Open the next PR in the training-readiness series and record its limits.
 
 ## Review
 
@@ -17,8 +18,12 @@ of known/missing fraction and replicate counts generated unsupported targets
 before the change; all 21 now retain missing detectability, nullable replicate
 metadata and the original excision/control labels. This is not a model test or
 the full suite. Formatting/lint pass; full CI (including collation and coverage
-preflight) remains required. #70 stays open for verified scoped-data consumption;
-#71, #48 and #53 track remaining acceptance work.
+preflight) remains required. The first full CI run passed 2,087 tests with three
+skips and exposed one old coverage expectation for a manually supplied label.
+That regression now requires unknown evidence rather than a supported proxy;
+the complete suite is being rerun. PR #72 references #70, which stays open for
+verified scoped-data consumption; #71, #48 and #53 track remaining acceptance
+work.
 
 # Source-junction ambiguity implementation (2026-09-02)
 
