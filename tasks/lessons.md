@@ -379,3 +379,12 @@
   tests in the user's checkout. Verify discovery before and after the real
   preparation command. Explicitly exclude generated artifact roots while keeping
   undeclared source packages, including similarly named nested packages, visible.
+
+
+## 2026-10-15
+
+- The user explicitly deferred MHCflurry and authorized a Hitlist/Presto PR
+  series. Respect that scope. Use datacache for shared immutable input artifacts,
+  retain citable sources and distinct cell/MHC/condition/assay fields, and deliver
+  actual hashes, label policies, partitions, coverage and leakage reports. Software
+  tests alone do not qualify a corpus or establish biological independence.

@@ -1,3 +1,36 @@
+# Frozen Hitlist consumer — 2026-10-15
+
+Specification: [frozen-hitlist-spec.md](frozen-hitlist-spec.md).
+
+- [x] Read repository rules, existing adapter, lineage, partition and evaluation contracts.
+- [x] Create an isolated branch from current main; preserve the dirty user checkout.
+- [x] Write scope and acceptance before implementation.
+- [ ] Finish Hitlist #645 / PR #686 review, merge and release first.
+- [x] Add verified datacache-managed frozen bundle admission and trainer configuration.
+- [x] Preserve measured-observation linkage and original assay policy through records, batches and predictions.
+- [ ] Preserve every generated-control parent in the next dependent PR.
+- [ ] Freeze actual membership and audit selected partitions with the frozen registry.
+- [ ] Test corruption, mapping alternatives, reused experiments, generated parents and unknowns.
+- [ ] Review, bump version, format/lint, full CI, merge and verify GitHub release artifacts.
+
+## Review
+
+Hitlist #686 merged as e087b07; clean-main release build 38784053730 is running.
+Frozen admission verifies real Hitlist bundles, installs shared datacache copies,
+and rejects damage, stale-at-creation opt-outs and missing schema. Tests use the
+real scanner, generation publisher and bundle verifier. Mapping alternatives
+retain one vote even with flanks disabled; conflicting non-mapping context fails.
+Measured records preserve manifest identity, contributors and original labels
+through host batches and prediction exports. Review reproduced five label
+admission defects (#75); finite/domain/unit/censoring checks fix them and record
+a versioned label policy. Formatting, lint, strict docs and focused tests pass;
+full CI and the clean-main package release remain required.
+
+This first consumer PR does not close #71. Generated parents and actual partition
+membership/audits are the next dependent change. Peptide grouping alone does not
+establish biological independence. The verified scoped bulk-MS consumer remains
+#70; frozen Hitlist training explicitly rejects adding mutable bulk inputs.
+
 # Review and ship Presto training-readiness PR — 2026-10-14
 
 - [x] Review the full diff, caller contracts, failure paths and regression coverage.

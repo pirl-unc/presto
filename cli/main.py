@@ -943,9 +943,17 @@ def create_parser() -> argparse.ArgumentParser:
         default="merged_tsv",
         help=(
             "Select exactly one training source: 'merged_tsv' loads the canonical merged "
-            "table; 'hitlist' loads the curated binding/stability/kinetics/elution indexes "
-            "with source-protein flanks and does not read the merged TSV."
+            "table; 'hitlist' requires a verified --hitlist-bundle and covers "
+            "binding/stability/kinetics/elution only."
         ),
+    )
+    train_iedb.add_argument(
+        "--hitlist-bundle",
+        help="Frozen Hitlist bundle directory; verified and shared through datacache",
+    )
+    train_iedb.add_argument(
+        "--hitlist-bundle-sha256",
+        help="Expected SHA-256 of the frozen bundle's manifest.json",
     )
     train_iedb.add_argument(
         "--no-hitlist-flanks",

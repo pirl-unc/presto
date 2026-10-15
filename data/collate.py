@@ -322,6 +322,13 @@ class PrestoSample:
     bulk_ms_observed: Optional[bool] = None
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
 
 
 @dataclass
