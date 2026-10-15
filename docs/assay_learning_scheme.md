@@ -16,7 +16,15 @@ about today's corpus.
 | IEDB/CEDAR raw exports | Inputs to source parsing/merge | Inclusion and label support must be audited in the actual merged artifact |
 | VDJdb/McPAS | pMHC-only receptor evidence when included | Not sequence-conditioned TCR matching; positive evidence is not balanced negative supervision |
 | mhcseqs / MHC reference resources | MHC sequence resolution and molecular identity support | Reference availability does not prove every source allele is resolved |
-| Optional bulk non-MHC MS | Excision/detectability proxy supervision under capture/digestion routing | Disabled by default; candidate negatives and validation incomplete |
+| Optional bulk non-MHC MS | Observed-product excision proxies under capture/digestion routing | Disabled by default; no qualified detectability targets in the raw-table path |
+
+The raw bulk loader leaves detectability unlabeled, including when fraction and
+replicate counts are populated. Those counts do not establish comparable
+protocols, independent replicates or first-seen depth. Earlier depth-proxy
+experiments remain historical records and do not validate a detectability
+probability. The replacement input is tracked in
+[Presto #70](https://github.com/pirl-unc/presto/issues/70), using Hitlist's
+[verified search-scoped contract](https://github.com/pirl-unc/hitlist/blob/main/docs/detectability.md).
 | Other receptor/structure/B-cell resources | Auxiliary utilities or future integrations | Do not claim canonical receptor matching from their availability |
 
 `merged_tsv` and `hitlist` are mutually exclusive primary selections, not
@@ -61,7 +69,7 @@ may support future objectives; they are not negative training labels today.
 | T-cell assay metadata + response | Selected fixed `tcell_panel_logits` column with response BCE | Metadata is a selector, not a classification target; per-axis approximation |
 | Receptor evidence | `tcr_evidence_logit` BCE and method-category auxiliary | No individual TCR input |
 | MHC identity | Class/species/fine-type auxiliaries | Some current source-derived targets still conflate host/molecular roles |
-| Bulk-MS | Excision/detectability proxy objectives | Generated negatives are not measured non-detections |
+| Bulk-MS | Observed-product excision proxies and generated wrong-enzyme controls | Detectability stays unlabeled; controls are not measured non-detections |
 
 Detailed output units and complete ordered vocabularies are maintained in the
 I/O contract. Unlabeled tasks are masked, not assigned negative labels. A

@@ -338,7 +338,6 @@ def test_selected_sources_reach_census_with_competing_inputs(
     assert bulk_evidence == (
         {
             ("bulk_observed_product", "proxy"),
-            ("bulk_depth_proxy", "proxy"),
             ("generated:bulk_wrong_enzyme", "synthetic"),
         }
         if bulk

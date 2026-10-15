@@ -259,11 +259,9 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         base_weight=1.0,
     ),
     TaskLossSpec(
-        # Supervises the detectability latent directly. Without it the latent
-        # is a free bottleneck that silently absorbs whatever the presentation
-        # pathway cannot explain; the shotgun corpus is what makes it
-        # identifiable. Targets are graded over the fractionation-depth ladder,
-        # so BCE is used with soft targets.
+        # Available only when an explicit detectability label is supplied.
+        # Raw bulk observations have no qualified targets; fraction counts
+        # alone cannot separate detectability from acquisition/context effects.
         name="ms_detectability",
         target_key="ms_detectability",
         mask_key="ms_detectability",

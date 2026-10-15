@@ -2249,11 +2249,11 @@ class PrestoDataset(Dataset):
                 )
             )
 
-        # Add non-MHC shotgun samples (MS detectability + excision).
+        # Add non-MHC shotgun samples with explicitly supplied task labels.
         # These rows have no MHC at all: mhc_a/mhc_b stay empty and the model
-        # substitutes a <MISSING> token per segment. They exist to identify the
-        # detectability term, which immunopeptidomics alone cannot separate
-        # from excision. See data/bulk_ms.py.
+        # substitutes a <MISSING> token per segment. The raw bulk loader supplies
+        # excision proxies only; it cannot qualify detectability from fraction
+        # counts. Other callers must establish their label provenance explicitly.
         for rec in bulk_ms_records or []:
             self.samples.append(
                 PrestoSample(

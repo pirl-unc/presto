@@ -1,18 +1,10 @@
 """Non-MHC shotgun proteomics corpus (MS detectability + excision).
 
-This loader supplies depth-derived ordinal targets and observed-product or
-wrong-enzyme proxy labels. It does not establish an intrinsic detectability
-probability or isolate a cleavage effect from every acquisition/context effect.
-
-Two supervision signals come out of this module:
-
-``ms_detectability_label``
-    Graded, from the fractionation-depth ladder. Bekker-Jensen ran HeLa at
-    12/14/39/46/50/70 fractions; a peptide seen in a shallow run is highly
-    detectable, one that only appears in the deepest run is marginal. Combined
-    with ``n_replicates_detected`` (1/2/3) this is an ordinal target, which is
-    better supervision than presence/absence and does not depend on
-    peptide-level intensities landing (hitlist#95).
+This loader supplies observed-product and wrong-enzyme proxy labels. It does
+not supply detectability targets: the raw observation table does not establish
+search-space membership, comparable protocols or independent replicate counts.
+Fraction counts alone cannot establish first-seen depth or a detectability
+probability (presto#70, hitlist#654).
 
 ``excision_label``
     Whether machinery ``M`` would produce this peptide. Positives are the
@@ -30,10 +22,11 @@ and the excision signal is carried by ``s_C`` alone. That is the correct
 half: the C-terminal junction is where the protease rule lives. Wiring the
 proteome in would light up ``s_N`` as well.
 
-Second: detectability targets currently cover observed peptides only.
-``protein_sequences`` is reserved for a future in-silico candidate path; passing
-it does not currently generate unobserved candidates or negative labels. See
-hitlist#361 and tasks/protease_detectability_spec.md S3.2.
+Second: ``detectability_label`` stays missing for every imported observation
+and generated control. ``protein_sequences`` does not generate candidates.
+The replacement must consume Hitlist's verified search-scoped candidate export
+and preserve its manifest; passing an arbitrary protein dictionary cannot
+establish a historical search space. See presto#70 and hitlist#681.
 """
 
 from __future__ import annotations
@@ -47,6 +40,7 @@ from .vocab import (
     EXCISION_P1_PRIME_BLOCKED,
     EXCISION_P1_RULES,
     is_encodable_sequence,
+    is_missing_scalar,
 )
 
 # hitlist's canonical enzyme strings -> Presto machinery names.
@@ -58,11 +52,6 @@ ENZYME_TO_MACHINERY = {
     "LysC": "lysc",
     "GluC": "gluc",
 }
-
-# Depth ladder -> detectability target. A peptide first seen in a shallow run
-# is easy to detect; one that only shows up at 70 fractions is marginal.
-_DEPTH_SCORE = {12: 1.0, 14: 1.0, 39: 0.8, 46: 0.7, 50: 0.6, 70: 0.4}
-_DEFAULT_DEPTH_SCORE = 0.6
 
 
 @dataclass
@@ -77,8 +66,8 @@ class BulkMSRecord:
     excision_label: Optional[float] = None
     protein_id: str = ""
     cell_line: str = ""
-    n_fractions: int = 0
-    n_replicates_detected: int = 0
+    n_fractions: Optional[int] = None
+    n_replicates_detected: Optional[int] = None
     observed: bool = True
     source: str = "bulk_proteomics"
     acquisition: Dict[str, Any] = field(default_factory=dict)
@@ -104,22 +93,11 @@ def machinery_for_enzyme(enzyme: str) -> str:
     return _ENZYME_TO_MACHINERY_FOLDED.get(str(enzyme or "").strip().lower(), "unknown")
 
 
-def detectability_from_depth(
-    n_fractions: Optional[int], n_replicates_detected: Optional[int] = None
-) -> float:
-    """Graded detectability from fractionation depth and reproducibility.
-
-    Depth sets the base: shallower detection means easier detection. Replicate
-    count nudges it, since a peptide found in all three replicates is a more
-    reliable observation than one found in a single run.
-    """
-    base = _DEPTH_SCORE.get(int(n_fractions or 0), _DEFAULT_DEPTH_SCORE)
-    replicates = int(n_replicates_detected or 0)
-    if replicates >= 3:
-        base = min(1.0, base + 0.1)
-    elif replicates == 1:
-        base = max(0.0, base - 0.1)
-    return float(base)
+def _optional_count(value) -> Optional[int]:
+    """Preserve unknown observation metadata without inventing zero counts."""
+    if is_missing_scalar(value) or (isinstance(value, str) and not value.strip()):
+        return None
+    return int(value)
 
 
 def would_cleave(machinery: str, p1: str, p1_prime: str) -> bool:
@@ -210,20 +188,18 @@ def records_from_bulk_frame(
         if machinery == "unknown":
             continue
         machinery_counts[machinery] = machinery_counts.get(machinery, 0) + 1
-        detect = detectability_from_depth(
-            row.get("n_fractions_in_run"), row.get("n_replicates_detected")
-        )
         records.append(
             BulkMSRecord(
                 peptide=peptide,
                 machinery=machinery,
-                detectability_label=detect,
-                # Observed under this enzyme, so this enzyme produced it.
+                detectability_label=None,
+                # Observed-product proxy; this does not isolate cleavage
+                # from abundance, assignment or acquisition effects.
                 excision_label=1.0,
                 protein_id=str(row.get("uniprot_acc") or ""),
                 cell_line=str(row.get("cell_line_name") or ""),
-                n_fractions=int(row.get("n_fractions_in_run") or 0),
-                n_replicates_detected=int(row.get("n_replicates_detected") or 0),
+                n_fractions=_optional_count(row.get("n_fractions_in_run")),
+                n_replicates_detected=_optional_count(row.get("n_replicates_detected")),
                 observed=True,
             )
         )
@@ -252,6 +228,8 @@ def records_from_bulk_frame(
         "n_records": len(records),
         "n_observed": sum(1 for r in records if r.observed),
         "n_excision_negatives": n_excision_negatives,
+        "n_detectability_labels": 0,
+        "detectability_status": "unavailable_without_verified_search_scope",
         "machinery_counts": dict(sorted(machinery_counts.items(), key=lambda kv: -kv[1])),
         # Dropped rows must be visible: a corpus where selenocysteine-bearing
         # peptides silently vanish would otherwise report identical stats to
@@ -273,9 +251,8 @@ def load_bulk_ms_records(
     """Load bulk shotgun records from hitlist.
 
     ``protein_sequences`` is accepted for the in-silico-negative path
-    (hitlist#361); it is not required for the depth-graded targets that this
-    module produces today, and passing it currently has no effect beyond being
-    recorded in the returned stats.
+    (hitlist#361); passing it currently has no effect beyond being recorded in
+    the returned stats. This raw-table path produces no detectability labels.
     """
     try:
         from hitlist.bulk_proteomics import load_bulk_peptides

@@ -21,9 +21,11 @@ def record_target_provenance(source: Optional[str], *targets: str) -> dict[str, 
 
 
 def bulk_target_provenance(observed: bool, generated_kind: str = "") -> dict[str, str]:
-    """Depth is an ordinal proxy; wrong-enzyme labels are generated controls."""
+    """Observation is an excision proxy, not evidence for a detectability target."""
     if observed:
-        return {"excision": "bulk_observed_product", "ms_detectability": "bulk_depth_proxy"}
+        # A manually supplied detectability label has no verified source
+        # contract merely because its record says the peptide was observed.
+        return {"excision": "bulk_observed_product", "ms_detectability": "unknown"}
     return {
         "excision": f"generated:{generated_kind}" if generated_kind else "unknown",
         "ms_detectability": "unknown",
