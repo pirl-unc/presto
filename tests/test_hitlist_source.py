@@ -859,3 +859,23 @@ class TestMaskingUnmappedRowsChangesNothing:
         assert _mapping_present_mask(frame).tolist() == [True], (
             "a row with a flank must count as present, so it can never be classified unmapped"
         )
+
+
+@pytest.mark.parametrize(
+    "changes,counter",
+    [
+        ({"quantitative_value": float("inf")}, "skipped_invalid_numeric_value"),
+        ({"quantitative_value": -1}, "skipped_invalid_numeric_value"),
+        ({"measurement_inequality": "approximately"}, "skipped_unsupported_inequality"),
+        (
+            {"response_measured": "off rate", "measurement_units": "1/min"},
+            "skipped_unexpected_unit",
+        ),
+        ({"response_measured": "on rate", "measurement_units": "nM"}, "skipped_unexpected_unit"),
+    ],
+)
+def test_invalid_assay_labels_are_excluded_with_reason(monkeypatch, changes, counter):
+    _install_stub_hitlist(monkeypatch, [_binding_row(**changes)], [])
+    *groups, stats = load_records_from_hitlist()
+    assert not any(groups)
+    assert stats[counter] == 1

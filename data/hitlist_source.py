@@ -53,6 +53,7 @@ set is public, asserted on load, and pinned in
 
 from __future__ import annotations
 
+import math
 import random
 import sys
 from typing import Any, Dict, FrozenSet, List, Optional, Sequence, Tuple, Union
@@ -194,9 +195,9 @@ MS_COLUMNS: Tuple[str, ...] = SHARED_COLUMNS + (
     # `sample_attribution` is what separates them, and it doubles as an
     # evidence tier -- `allele_exact` / `elution_conditions` are per-peptide,
     # while `class_pool` / `pmid_ambiguous` resolve only to a pool or a
-    # deposit. `sample_label` is the biological sample, which is the right
-    # grouping key for a leakage-safe split: peptide-disjoint splits do not
-    # stop the same sample appearing on both sides. See presto#15.
+    # deposit. `sample_label` is a display label, not a specimen/donor ID.
+    # Biological-independence audits require the frozen reviewed lineage
+    # sidecars; peptide-disjointness alone does not establish independence.
     "sample_attribution",
     "is_control_arm",
     "sample_label",
@@ -401,6 +402,13 @@ def _lineage_fields(row) -> Dict[str, Any]:
         canonical_value = str(canonical).strip().lower() in {"1", "1.0", "true", "yes", "t"}
 
     return {
+        "source_bundle_id": _clean(row.get("source_bundle_id")),
+        "provenance_id": _clean(row.get("provenance_id")),
+        "provenance_status": _clean(row.get("provenance_status")),
+        "source_endpoint": _clean(row.get("response_measured")),
+        "source_units": _clean(row.get("measurement_units")),
+        "source_inequality": _clean(row.get("measurement_inequality")),
+        "source_value": _clean(row.get("quantitative_value")),
         "evidence_row_id": _clean(row.get("evidence_row_id")),
         "assay_iri": _clean(row.get("assay_iri")),
         "reference_iri": _clean(row.get("reference_iri")),
@@ -513,6 +521,8 @@ _EXPECTED_UNITS = {
     **{response: "nM" for response in _AFFINITY_RESPONSES},
     "half life": "min",
     "50% dissociation temperature": "°C",
+    "off rate": "1/s",
+    "on rate": "1/Ms",
 }
 
 # Other response families (including qualitative binding and structure) have
@@ -524,11 +534,13 @@ _MINUTES_PER_HOUR = 60.0
 def _qualifier_from_inequality(text: Any) -> int:
     """Map hitlist's ``measurement_inequality`` to Presto's censor code."""
     token = _clean(text)
-    if token.startswith("<"):
+    if token in {"<", "<=", "≤"}:
         return -1
-    if token.startswith(">"):
+    if token in {">", ">=", "≥"}:
         return 1
-    return 0
+    if token in {"", "="}:
+        return 0
+    raise ValueError(f"Unsupported measurement inequality: {token!r}")
 
 
 def _split_allele_set(value: Any) -> List[str]:
@@ -947,6 +959,8 @@ def normalize_ingested_peptide(peptide: Optional[str]) -> str:
 
 def load_records_from_hitlist(
     *,
+    bundle_dir: Optional[str] = None,
+    bundle_sha256: Optional[str] = None,
     max_binding: Optional[int] = None,
     max_stability: Optional[int] = None,
     max_kinetics: Optional[int] = None,
@@ -969,7 +983,11 @@ def load_records_from_hitlist(
     List[TcrEvidenceRecord],
     Dict[str, Any],
 ]:
-    """Build Presto records from the hitlist curated indexes.
+    """Build records from a verified frozen bundle, or the legacy live-index API.
+
+    ``bundle_dir`` uses only verified artifact bytes, shared via datacache; the
+    manifest SHA-256 can additionally be pinned by ``bundle_sha256``. Without
+    it, this compatibility API reads live indexes and records that limitation.
 
     Returns the same 8-tuple shape as
     ``scripts/train_iedb.py::load_records_from_merged_tsv`` so the two sources
@@ -1013,16 +1031,27 @@ def load_records_from_hitlist(
     # exploded protein-mapping frame.
     mapping_ambiguity: Dict[str, Any] = {}
 
-    binding_frame = hitlist.generate_training_table(
-        include_evidence="binding",
-        columns=training_columns("binding", include_flanks=include_flanks),
-        **shared_filters,
-    )
-    ms_frame = hitlist.generate_training_table(
-        include_evidence="ms",
-        columns=training_columns("ms", include_flanks=include_flanks),
-        **shared_filters,
-    )
+    bundle = None
+    if bundle_dir is not None:
+        from .frozen_hitlist import load_frozen_hitlist_bundle, training_frames
+
+        bundle = load_frozen_hitlist_bundle(bundle_dir, expected_sha256=bundle_sha256)
+        binding_frame, ms_frame = training_frames(
+            bundle, include_flanks=include_flanks, **shared_filters
+        )
+    else:
+        if bundle_sha256 is not None:
+            raise ValueError("bundle_sha256 requires bundle_dir")
+        binding_frame = hitlist.generate_training_table(
+            include_evidence="binding",
+            columns=training_columns("binding", include_flanks=include_flanks),
+            **shared_filters,
+        )
+        ms_frame = hitlist.generate_training_table(
+            include_evidence="ms",
+            columns=training_columns("ms", include_flanks=include_flanks),
+            **shared_filters,
+        )
     assert_columns_present(binding_frame, "binding", include_flanks=include_flanks)
     assert_columns_present(ms_frame, "ms", include_flanks=include_flanks)
     source_rows_before_mapping_collapse = {
@@ -1068,6 +1097,8 @@ def load_records_from_hitlist(
     elution_records: List[ElutionRecord] = []
 
     skipped_no_value = 0
+    skipped_invalid_numeric = 0
+    skipped_inequality = 0
     skipped_unroutable = 0
     skipped_bad_unit = 0
     skipped_noncanonical_peptide = 0
@@ -1090,6 +1121,10 @@ def load_records_from_hitlist(
             skipped_no_value += 1
             continue
 
+        if not math.isfinite(value) or (response not in _TM_RESPONSES and value <= 0):
+            skipped_invalid_numeric += 1
+            continue
+
         expected_unit = _EXPECTED_UNITS.get(response)
         if expected_unit is not None:
             unit = _clean(row.get("measurement_units"))
@@ -1104,7 +1139,11 @@ def load_records_from_hitlist(
 
         allele = _clean(row.get("mhc_restriction"))
         allele_set = _split_allele_set(row.get("mhc_allele_set"))
-        qualifier = _qualifier_from_inequality(row.get("measurement_inequality"))
+        try:
+            qualifier = _qualifier_from_inequality(row.get("measurement_inequality"))
+        except ValueError:
+            skipped_inequality += 1
+            continue
         assay_method = _clean(row.get("assay_method")) or None
         common = dict(
             peptide=peptide,
@@ -1267,6 +1306,19 @@ def load_records_from_hitlist(
 
     stats: Dict[str, Any] = {
         "source": "hitlist",
+        "input_mode": "frozen_bundle" if bundle is not None else "legacy_live_indexes",
+        "label_policy": {
+            "version": 1,
+            "endpoint_units": dict(_EXPECTED_UNITS),
+            "numeric_values": "finite; positive except temperature in degrees Celsius",
+            "censoring": {"lower": [">", ">=", "≥"], "upper": ["<", "<=", "≤"], "exact": ["=", ""]},
+            "missing_inequality": "treated as exact; original empty value retained",
+            "record_transforms": {"half life": "minutes divided by 60 to hours"},
+            "unsupported": "excluded with reason counts; original frozen artifacts retained",
+            "ms": "observed MHC elution; no implicit detectability or processing label",
+        },
+        "frozen_bundle": bundle.receipt() if bundle is not None else None,
+        "filters": shared_filters,
         "sampling_seed": int(sampling_seed),
         "source_rows_before_mapping_collapse": source_rows_before_mapping_collapse,
         "source_rows_after_mapping_collapse": {
@@ -1299,6 +1351,8 @@ def load_records_from_hitlist(
             "elution": max_elution,
         },
         "skipped_no_numeric_value": skipped_no_value,
+        "skipped_invalid_numeric_value": skipped_invalid_numeric,
+        "skipped_unsupported_inequality": skipped_inequality,
         "skipped_unroutable_response": skipped_unroutable,
         "skipped_unexpected_unit": skipped_bad_unit,
         "skipped_noncanonical_peptide": skipped_noncanonical_peptide,

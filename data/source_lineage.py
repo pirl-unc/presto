@@ -10,6 +10,13 @@ SOURCE_LINEAGE_FIELDS = (
     "pmid",
     "doi",
     "reference_text",
+    "source_bundle_id",
+    "provenance_id",
+    "provenance_status",
+    "source_endpoint",
+    "source_units",
+    "source_inequality",
+    "source_value",
 )
 
 

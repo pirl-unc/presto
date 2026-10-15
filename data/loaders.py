@@ -218,6 +218,13 @@ class BindingRecord:
     # Publication/observation provenance stays outside predictive inputs.
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
 
 
 @dataclass
@@ -258,6 +265,13 @@ class KineticsRecord:
     # Publication/observation provenance stays outside predictive inputs.
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
 
 
 @dataclass
@@ -302,6 +316,13 @@ class StabilityRecord:
     # Publication/observation provenance stays outside predictive inputs.
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
 
 
 @dataclass
@@ -332,6 +353,13 @@ class ProcessingRecord:
     pmid: str = ""
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
 
 
 @dataclass
@@ -400,6 +428,13 @@ class ElutionRecord:
     # Publication/observation provenance stays outside predictive inputs.
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
 
 
 @dataclass
@@ -438,6 +473,13 @@ class TCellRecord:
     pmid: str = ""
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
 
 
 @dataclass
@@ -527,6 +569,13 @@ class TcrEvidenceRecord:
     pmid: str = ""
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
 
     def __post_init__(self) -> None:
         # Derive the bins from the raw method strings when a caller did not

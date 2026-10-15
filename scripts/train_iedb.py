@@ -162,6 +162,8 @@ IEDB_DEFAULTS = {
     "split_mode": "peptide_group",
     "train_mhc_class_filter": None,
     "hitlist_allele": None,
+    "hitlist_bundle": None,
+    "hitlist_bundle_sha256": None,
     "bulk_ms": False,
     "bulk_cell_line": None,
     "max_bulk_ms": 0,
@@ -4700,6 +4702,28 @@ def run(args: argparse.Namespace) -> None:
     data_source = str(getattr(args, "data_source", "merged_tsv"))
     if data_source not in {"merged_tsv", "hitlist"}:
         raise ValueError(f"Unsupported data source: {data_source!r}")
+    if data_source == "hitlist":
+        if not getattr(args, "hitlist_bundle", None):
+            raise ValueError(
+                "--data-source hitlist requires --hitlist-bundle (verified frozen inputs)"
+            )
+        if getattr(args, "bulk_ms", False):
+            raise ValueError(
+                "Frozen Hitlist training cannot add live --bulk-ms inputs; "
+                "the verified search-scoped consumer is tracked in Presto #70"
+            )
+        if (
+            int(getattr(args, "mhc_augmentation_samples", 0)) > 0
+            or float(getattr(args, "uniprot_negative_ratio", 0.1)) > 0
+        ):
+            raise ValueError(
+                "Frozen Hitlist training cannot add unpinned MHC/UniProt auxiliary inputs; "
+                "set --mhc-augmentation-samples 0 --uniprot-negative-ratio 0"
+            )
+        if getattr(args, "profile", "full") == "canary":
+            raise ValueError(
+                "The canary profile fabricates modalities outside the frozen Hitlist scope"
+            )
     if data_source == "merged_tsv" and merged_tsv.exists():
         print(f"Merged input: {merged_tsv}")
         (
@@ -4801,6 +4825,8 @@ def run(args: argparse.Namespace) -> None:
             vdjdb_records,
             hitlist_stats,
         ) = load_records_from_hitlist(
+            bundle_dir=args.hitlist_bundle,
+            bundle_sha256=getattr(args, "hitlist_bundle_sha256", None),
             max_binding=args.max_binding,
             max_kinetics=args.max_kinetics,
             max_stability=args.max_stability,
@@ -4812,7 +4838,7 @@ def run(args: argparse.Namespace) -> None:
             sampling_seed=data_seed + 17,
         )
         data_funnel["source_loader"] = hitlist_stats
-        print("Hitlist input: curated indexes (no merged TSV)")
+        print(f"Hitlist input: {hitlist_stats['frozen_bundle']['bundle_id']}")
         for assay, count in hitlist_stats["counts"].items():
             print(f"    {assay}: {count}")
         for family, coverage in hitlist_stats["flank_coverage"].items():

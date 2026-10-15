@@ -2268,6 +2268,9 @@ def test_hitlist_data_source_never_reads_an_available_merged_tsv(tmp_path, monke
                 config=None,
                 profile="full",
                 data_source="hitlist",
+                hitlist_bundle="explicit-frozen-fixture",
+                mhc_augmentation_samples=0,
+                uniprot_negative_ratio=0,
                 data_dir=str(tmp_path),
                 run_dir=None,
             )

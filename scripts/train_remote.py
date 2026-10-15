@@ -17,34 +17,26 @@ Modality coverage
 -----------------
 hitlist supplies binding and MS evidence only -- ``include_evidence`` accepts
 ``ms``, ``binding`` or ``both``, and there is no T-cell or receptor table. A
-hitlist-only run therefore trains binding, stability, kinetics, elution and the
-shotgun corpus, while the immunogenicity, recognition and TCR heads receive
+hitlist-only run therefore covers binding, stability, kinetics and elution,
+while the immunogenicity, recognition and TCR heads receive
 **zero gradient** for its entire duration.
 
-Set ``PRESTO_MERGED_TSV`` to a merged TSV on the worker to supply those. The
-trainer keeps hitlist for binding and elution regardless, because the TSV has
-no flank columns.
+Hitlist-only mode does not union a merged TSV or live bulk-MS inputs.
 
 Data
 ----
-This launcher runs **hitlist-sourced** training, which needs no merged TSV. That
-is deliberate: `data/merged_deduped.tsv` is a gitignored 1 GB file, and runplz
-stages the repo git-aware, so shipping it to every worker would be both slow and
-a reproducibility hazard. hitlist-only mode covers binding, stability, kinetics,
-elution and the non-MHC shotgun corpus; T-cell, TCR and IEDB processing rows are
-absent, which is fine for the Stage 4 factorial (its metric is elution AUPRC).
-
-hitlist caches its built indexes under `~/.hitlist/`. On a persistent Brev box
-that cache survives between runs, so only the first run pays the build cost.
-Set `PRESTO_HITLIST_BUILD=1` to build on the worker when the cache is cold;
-expect it to take a while the first time.
+Set ``PRESTO_HITLIST_BUNDLE`` to a verified frozen bundle on the worker and
+``PRESTO_HITLIST_BUNDLE_SHA256`` to its published manifest digest. Presto verifies
+and shares the artifact set through datacache. Publish/build inputs separately;
+training never rebuilds the worker's mutable cache. The search-scoped bulk-MS
+consumer is tracked separately in Presto #70.
 
 Corpus size
 -----------
 ``PRESTO_MAX_*`` caps are per-modality and ``0`` means unlimited. Capping
-elution and binding does not bound the epoch, because ``--bulk-ms`` pulls the
-shotgun corpus and ``PRESTO_MAX_BULK_MS`` defaults to 0. Set every cap you care
-about, and check the printed ``Train batches:`` line before walking away.
+elution and binding does not bound the epoch when additional modalities are
+selected. Check the recorded modality counts and ``Train batches:`` before
+starting a long run. Frozen Hitlist runs reject live bulk-MS additions.
 
 Throughput
 ----------
@@ -136,7 +128,7 @@ app = App(APP_NAME, brev_config=brev_config_from_env())
 image = (
     Image.from_registry(BASE_IMAGE)
     .apt_install("rsync", "git")
-    .pip_install("hitlist>=1.53.0", "pandas>=2.0", "pyarrow")
+    .pip_install("hitlist>=1.74.0", "pandas>=2.0", "pyarrow")
     .pip_install_local_dir(".", editable=True)
 )
 
@@ -157,6 +149,10 @@ def training_argv() -> list[str]:
         "unified",
         "--data-source",
         "hitlist",
+        "--mhc-augmentation-samples",
+        "0",
+        "--uniprot-negative-ratio",
+        "0",
         "--run-dir",
         out_dir,
         "--checkpoint",
@@ -179,14 +175,15 @@ def training_argv() -> list[str]:
         os.environ.get("PRESTO_LATENT_TOPOLOGY", "expanded"),
     ]
 
-    # Optional merged TSV. hitlist carries only binding and MS evidence, so
-    # without this the T-cell, TCR and IEDB-processing modalities contribute
-    # nothing and their heads receive no gradient for the whole run. The
-    # trainer keeps hitlist for binding/elution (it has flanks; the TSV does
-    # not) and takes the remaining modalities from here.
-    merged_tsv = os.environ.get("PRESTO_MERGED_TSV", "").strip()
-    if merged_tsv:
-        argv += ["--merged-tsv", merged_tsv]
+    bundle = os.environ.get("PRESTO_HITLIST_BUNDLE", "").strip()
+    if not bundle:
+        raise ValueError("PRESTO_HITLIST_BUNDLE must identify frozen Hitlist inputs on the worker")
+    argv += ["--hitlist-bundle", bundle]
+    digest = os.environ.get("PRESTO_HITLIST_BUNDLE_SHA256", "").strip()
+    if digest:
+        argv += ["--hitlist-bundle-sha256", digest]
+    if os.environ.get("PRESTO_MERGED_TSV", "").strip():
+        raise ValueError("Hitlist-only training does not consume PRESTO_MERGED_TSV")
 
     mhc_class = os.environ.get("PRESTO_HITLIST_MHC_CLASS")
     if mhc_class:
@@ -195,7 +192,7 @@ def training_argv() -> list[str]:
     if allele:
         argv += ["--hitlist-allele", allele]
 
-    if env_bool("PRESTO_BULK_MS", default=True):
+    if env_bool("PRESTO_BULK_MS", default=False):
         argv.append("--bulk-ms")
         cell_line = os.environ.get("PRESTO_BULK_CELL_LINE")
         if cell_line:
@@ -299,8 +296,7 @@ def train() -> None:
         raise SystemExit("hitlist resolved to an empty namespace package")
 
     if env_bool("PRESTO_HITLIST_BUILD", default=False):
-        print("Building hitlist indexes (cold cache)...", flush=True)
-        subprocess.run(["hitlist", "build", "observations"], check=True)
+        raise ValueError("Publish a frozen bundle separately; PRESTO_HITLIST_BUILD is unsupported")
 
     argv = training_argv()
     print("Command: " + " ".join(shlex.quote(part) for part in argv), flush=True)

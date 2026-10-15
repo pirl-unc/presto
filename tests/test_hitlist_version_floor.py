@@ -16,6 +16,11 @@ resolve, while a long-lived environment can sit on a stale wheel indefinitely.
 
 import pytest
 
+from presto.data.frozen_hitlist import (
+    MINIMUM_FROZEN_HITLIST_VERSION,
+    load_frozen_hitlist_bundle,
+    require_frozen_hitlist_version,
+)
 from presto.data.hitlist_source import (  # noqa: E402
     MINIMUM_HITLIST_VERSION,
     _parse_version,
@@ -75,12 +80,12 @@ class TestFloorEnforcement:
 
 
 class TestDeclaredDependencyAgrees:
-    """The runtime guard and the packaging floor must not drift apart."""
+    """Packaging and remote workers must support the canonical frozen path."""
 
     def test_pyproject_floor_matches_the_runtime_floor(self):
         from pathlib import Path
 
-        wanted = ".".join(str(part) for part in MINIMUM_HITLIST_VERSION)
+        wanted = ".".join(str(part) for part in MINIMUM_FROZEN_HITLIST_VERSION)
         text = (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text()
         assert f'"hitlist>={wanted}"' in text
 
@@ -88,6 +93,20 @@ class TestDeclaredDependencyAgrees:
         """A worker built from an older wheel would train on wrong labels."""
         from pathlib import Path
 
-        wanted = ".".join(str(part) for part in MINIMUM_HITLIST_VERSION)
+        wanted = ".".join(str(part) for part in MINIMUM_FROZEN_HITLIST_VERSION)
         launcher = (Path(__file__).resolve().parents[1] / "scripts" / "train_remote.py").read_text()
         assert f'"hitlist>={wanted}"' in launcher
+
+
+class TestFrozenFloorEnforcement:
+    @pytest.mark.parametrize("raw", ["1.74.0", "1.75.0", "2.0.0"])
+    def test_supported(self, raw):
+        require_frozen_hitlist_version(raw)
+
+    @pytest.mark.parametrize("raw", ["1.53.0", "1.73.9", None, "", "unknown"])
+    def test_old_or_unknown_version_rejected_before_any_input_read(self, raw, monkeypatch):
+        import hitlist
+
+        monkeypatch.setattr(hitlist, "__version__", raw)
+        with pytest.raises(RuntimeError, match="coherent dataset generations"):
+            load_frozen_hitlist_bundle("/not-an-existing-bundle")

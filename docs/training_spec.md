@@ -24,8 +24,10 @@ options must be registered there as well as in the CLI parser.
 
 - The default primary source is `merged_tsv`, normally
   `data/merged_deduped.tsv`. Build it with `presto data merge --datadir ./data`.
-- `--data-source hitlist` explicitly selects the curated Hitlist pMHC indexes
-  instead. It does not union them with merged T-cell/TCR rows.
+- `--data-source hitlist --hitlist-bundle /path/to/bundle` selects a frozen
+  Hitlist training bundle. `--hitlist-bundle-sha256` pins `manifest.json` to a
+  published digest. See [frozen inputs](frozen_hitlist.md). It does not union
+  merged T-cell/TCR rows or live bulk-MS inputs.
 - The existing `--allow-raw-fallback` is an explicit debug option, not the
   production source-selection design. Missing required primary data must not
   silently pick another corpus.
