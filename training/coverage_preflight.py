@@ -17,6 +17,7 @@ def audit_training_coverage(
     data_seed: int,
     manifest: dict | None,
     output_dir=None,
+    frozen_membership=None,
 ):
     """Collate once, persist evidence before gating, and return the legacy audit.
 
@@ -37,6 +38,18 @@ def audit_training_coverage(
             "output_evidence_sha256": census.sha256,
             "split_rows": {name: value["rows"] for name, value in legacy["splits"].items()},
         }
+        if frozen_membership is not None:
+            source_contract["frozen_membership"] = {
+                name: frozen_membership[name]
+                for name in (
+                    "source_bundle_id",
+                    "assignment_sha256",
+                    "policy",
+                    "membership_sha256",
+                    "parent_graph_sha256",
+                    "artifacts",
+                )
+            }
         coverage = census.report()
         coverage["source_contract"] = source_contract
         output = Path(output_dir) if output_dir is not None else None

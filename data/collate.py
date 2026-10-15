@@ -329,6 +329,14 @@ class PrestoSample:
     source_units: str = ""
     source_inequality: str = ""
     source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
 
 
 @dataclass

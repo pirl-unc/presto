@@ -225,6 +225,14 @@ class BindingRecord:
     source_units: str = ""
     source_inequality: str = ""
     source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
 
 
 @dataclass
@@ -272,6 +280,14 @@ class KineticsRecord:
     source_units: str = ""
     source_inequality: str = ""
     source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
 
 
 @dataclass
@@ -323,6 +339,14 @@ class StabilityRecord:
     source_units: str = ""
     source_inequality: str = ""
     source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
 
 
 @dataclass
@@ -360,6 +384,14 @@ class ProcessingRecord:
     source_units: str = ""
     source_inequality: str = ""
     source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
 
 
 @dataclass
@@ -435,6 +467,14 @@ class ElutionRecord:
     source_units: str = ""
     source_inequality: str = ""
     source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
 
 
 @dataclass
@@ -480,6 +520,14 @@ class TCellRecord:
     source_units: str = ""
     source_inequality: str = ""
     source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
 
 
 @dataclass
@@ -576,6 +624,14 @@ class TcrEvidenceRecord:
     source_units: str = ""
     source_inequality: str = ""
     source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
 
     def __post_init__(self) -> None:
         # Derive the bins from the raw method strings when a caller did not
@@ -2079,6 +2135,9 @@ class PrestoDataset(Dataset):
             evidence_row_id = str(getattr(record, "evidence_row_id", "") or "").strip()
             if evidence_row_id:
                 return f"{prefix}:{evidence_row_id}"
+            generated_id = str(getattr(record, "generated_id", "") or "").strip()
+            if generated_id:
+                return f"{prefix}:{generated_id}"
             return f"{prefix}_{len(self.samples)}"
 
         def _organism_fields(

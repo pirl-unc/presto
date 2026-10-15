@@ -11,7 +11,6 @@ import pytest
 
 from presto.cli.main import create_parser
 from presto.data.collate import PrestoCollator
-from presto.data.loaders import BindingRecord, ElutionRecord
 from presto.data.mhc_sequence_resolver import ExactMHCInput
 from presto.models.presto import Presto
 from presto.scripts import train_iedb
@@ -20,6 +19,9 @@ from presto.training.output_contract import OutputConfiguration, build_output_co
 from presto.training.output_coverage import OutputCoverageCensus
 from presto.training.supported_outputs import evaluate_supported_outputs
 from test_output_coverage import sample, manifest_for
+from test_frozen_hitlist import frozen_bundle as _frozen_bundle
+
+frozen_bundle = _frozen_bundle
 
 
 def split_samples():
@@ -173,14 +175,16 @@ def test_manifest_is_frozen_before_any_source_loader_and_cannot_be_replaced(tmp_
         train_iedb.run(args)
 
 
+@pytest.mark.parametrize("frozen_bundle", ["three_peptides"], indirect=True)
 @pytest.mark.parametrize("data_source", ["merged_tsv", "hitlist"])
 @pytest.mark.parametrize("bulk", [False, True])
 def test_selected_sources_reach_census_with_competing_inputs(
-    tmp_path, monkeypatch, data_source, bulk
+    tmp_path, monkeypatch, data_source, bulk, frozen_bundle
 ):
     """Use actual TSV parsing, dataset conversion, splitting, collation and census.
 
-    Only external Hitlist records/frames and the exact MHC resolver are fixtures.
+    Hitlist uses its actual scanner, frozen bundle, partitions and membership audit.
+    Only source CSVs, bulk frames and the exact MHC resolver are fixtures.
     Their presence must never turn source selection into an implicit union.
     """
     from presto.data import hitlist_source
@@ -229,35 +233,12 @@ def test_selected_sources_reach_census_with_competing_inputs(
     monkeypatch.setattr(train_iedb, "find_iedb_export_file", unexpected_raw)
     calls = []
 
+    actual_load_hitlist = hitlist_source.load_records_from_hitlist
+
     def load_hitlist(**kwargs):
-        assert kwargs["bundle_dir"] == str(tmp_path / "frozen-fixture")
+        assert kwargs["bundle_dir"] == str(frozen_bundle)
         calls.append("hitlist")
-        binding = [
-            BindingRecord(
-                peptide,
-                allele,
-                30,
-                measurement_type="KD",
-                source="hitlist_fixture",
-                evidence_row_id=f"hitlist:{index}",
-            )
-            for index, peptide in enumerate(peptides)
-        ]
-        elution = [ElutionRecord(peptides[0], [allele], source="hitlist_fixture")]
-        return (
-            binding,
-            [],
-            [],
-            [],
-            elution,
-            [],
-            [],
-            {
-                "counts": {"binding": 12, "elution": 1},
-                "flank_coverage": {},
-                "frozen_bundle": {"bundle_id": "sha256:fixture"},
-            },
-        )
+        return actual_load_hitlist(**kwargs)
 
     monkeypatch.setattr(hitlist_source, "load_records_from_hitlist", load_hitlist)
     if data_source == "hitlist":
@@ -297,7 +278,11 @@ def test_selected_sources_reach_census_with_competing_inputs(
     run_dir = tmp_path / "run"
     args = arguments(
         **(
-            {"data_source": "hitlist", "hitlist_bundle": str(tmp_path / "frozen-fixture")}
+            {
+                "data_source": "hitlist",
+                "hitlist_bundle": str(frozen_bundle),
+                "hitlist_flanks": False,
+            }
             if data_source == "hitlist"
             else {}
         ),
@@ -328,7 +313,9 @@ def test_selected_sources_reach_census_with_competing_inputs(
     assert set(coverage["splits"]) == {"train", "val", "test"}
     assert coverage["source_contract"]["data_source"] == data_source
     assert coverage["source_contract"]["bulk_ms"] is bulk
-    assert sum(split["rows"] for split in coverage["splits"].values()) == 13 + 2 * bulk
+    assert sum(split["rows"] for split in coverage["splits"].values()) == (
+        9 if data_source == "hitlist" else 13 + 2 * bulk
+    )
     tcell_count = sum(
         split["outputs"]["tcell_panel_logits.assay_method"]["observations"]
         for split in coverage["splits"].values()
@@ -341,8 +328,7 @@ def test_selected_sources_reach_census_with_competing_inputs(
         for entry in output["evidence"]
     ]
     assert {entry["source"] for entry in evidence} == (
-        {"iedb" if data_source == "merged_tsv" else "hitlist_fixture"}
-        | ({"bulk_proteomics"} if bulk else set())
+        {"iedb"} | ({"bulk_proteomics"} if bulk else set())
     )
     bulk_evidence = {
         (entry["family"], entry["role"])

@@ -67,11 +67,61 @@ does not imply a detectability or excision target. Live bulk-MS inputs cannot be
 added to a frozen Hitlist run; verified search-scoped consumption is tracked in
 [Presto #70](https://github.com/pirl-unc/presto/issues/70).
 
+## Frozen membership and generated controls
+
+After source/target and MHC-resolution filtering, Presto assigns measured
+observations before generating controls. Connected components keep repeated
+peptides, IEDB/CEDAR assay mirrors, shared contributor rows and known reviewed
+experiment/acquisition identities together. The seed orders equal-sized
+components deterministically; components are never broken to hit a requested
+fraction. Actual counts and the largest component are reported. Too few
+components for the requested nonempty partitions is an error.
+
+`--frozen-partition-policy` defaults to `peptide_disjoint`. A stronger policy
+(`independent_experiments`, `specimen_disjoint`, `donor_disjoint`, `whole_study`)
+requires the corresponding reviewed identity coverage. Required unknowns fail
+with an inspectable audit, rather than silently weakening the policy. Every
+frozen policy additionally keeps actual model peptide sequences disjoint.
+A peptide holdout alone does not establish independent donors or experiments.
+`--split-mode random_rows` is unavailable for frozen inputs.
+
+To reuse published membership, supply `--frozen-assignment-file PATH` and
+`--frozen-assignment-sha256 DIGEST`. The parquet requires `evidence_row_id`,
+`source_bundle_id` and `source_partition` (`train`, `val`, `test`). Every selected
+observation must be assigned once; extra filtered observations are counted.
+Conflicting identities, split components, missing membership and failed policy
+audits are errors. Fractions declare the required partitions; a supplied
+assignment determines their actual sizes.
+
+Controls draw all peptide/allele/flank donors inside their parent partition.
+`generated_id`, `generation_kind`, seed/draw index, `parent_ids` and transitive
+`root_observation_ids` survive dataset conversion, collation and prediction
+exports. These are host metadata. Generated labels have no measured assay ID.
+Known selected positive elution pairs are excluded from generated negatives;
+real-MHC binding controls cannot duplicate selected measured pairs. Rejected
+attempts are counted. Other generated labels remain explicit assumptions.
+
+Datacache stores reusable artifacts under the Hitlist data directory:
+
+| Directory | Inspection artifacts |
+| --- | --- |
+| `presto-partitions/<contract hash>` | `assignments.tsv/parquet`, `policy.json`, `coverage.json`, `lineage_audit.json` |
+| `presto-membership/<contract hash>` | `membership.tsv/parquet`, `parent_graph.parquet`, `root_lineage_audit.json`, `model_peptide_audit.json`, `coverage.json`, `records_without_model_sample.json` |
+
+The first artifact freezes selected measured observations; the second records
+actual model samples after generation and dataset filtering. Parent graphs retain
+records omitted from final model samples, so cascaded controls remain traceable.
+TSV exports retain readable original endpoint/units/censor/value fields and links
+back to the source bundle's full cell/assay context. Target provenance separates
+measured, proxy and generated supervision. The data funnel records shared paths,
+policy and all artifact hashes; the prospective output-support contract pins
+membership and parent-graph identities. Predictions carry partition and parent
+fields. A failed final overlap audit is saved before training is refused.
+
 ## Qualification still required
 
-This adapter establishes frozen acquisition and measured-record traceability.
-Generated-control parents, actual partition artifacts and biological leakage
-audits remain tracked in [#71](https://github.com/pirl-unc/presto/issues/71).
+These contracts implement the frozen-input and descendant requirements of
+[#71](https://github.com/pirl-unc/presto/issues/71).
 A bundle identity or a passing software test is not a training-readiness claim.
 Qualify the actual selected corpus and partitions, report unknown lineage, and
 publish held-out evaluation evidence before making that claim.

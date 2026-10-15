@@ -1,3 +1,25 @@
+# Frozen partitions and generated parents — 2026-10-15
+
+Specification: [frozen-partitions-spec.md](frozen-partitions-spec.md).
+
+- [x] Inspect trainer augmentation/split order and write the integration contract.
+- [x] Assign/freeze measured observation partitions with reviewed lineage.
+- [x] Generate controls within partitions and preserve all parent identities.
+- [x] Implement datacache publication of final membership, hashes and audits.
+- [ ] Verify regression and prediction-export coverage, then full release gates.
+- [ ] Rebase after part 1, version, merge and publish verified release artifacts.
+
+## Review
+
+Presto #76 merged as 2e6d923 and its clean-main 0.1.2 GitHub release was downloaded
+and hash-verified. This branch is rebased on that merge and bumps to 0.1.3.
+The real frozen fixture now exercises the canonical trainer through source
+selection, partition assignment, dataset conversion, collation and output census.
+Known generated-label collisions are tracked in #78. Focused generator/lineage
+checks and integration gates pass: 130 focused cases, format/lint and strict docs.
+Full final-head validation remains required.
+The artifacts implemented here do not qualify the actual corpus (#678/#680).
+
 # Frozen Hitlist consumer — 2026-10-15
 
 Specification: [frozen-hitlist-spec.md](frozen-hitlist-spec.md).
