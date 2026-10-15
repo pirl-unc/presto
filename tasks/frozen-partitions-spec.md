@@ -2,8 +2,8 @@
 
 ## Integration order
 
-This branch follows the frozen-admission PR (base 0aa7cc2). Land and release that
-PR first; rebase this dependent branch on its squash merge. Keep the user checkout
+This branch follows the frozen-admission PR #76 (merged as 2e6d923). Its clean-main
+0.1.2 release is published and downloaded/hash-verified. The dependent branch is rebased onto that merge. Keep the user checkout
 untouched and MHCflurry out of scope. The first PR supplies measured-observation
 bundle/contributor identities but does not yet qualify generated controls/splits.
 
@@ -28,6 +28,30 @@ unless the actual biological audit can establish it. Default peptide-disjoint
 qualification is narrower; unresolved biological axes stay explicitly inconclusive.
 
 ## Generated records
+
+Use one host-metadata helper to identify generated records from their complete
+generated payload, generation kind, seed, draw index and immediate parent IDs.
+Retain the transitive measured roots separately. Preserve the chosen peptide donor
+record instead of reducing donor pools to strings. Where an allele is sampled
+from a deduplicated pool, explicitly select the first supporting record in stable
+input order as its metadata donor; this preserves the existing random sequence
+while making the derivation inspectable. Known-negative allele donors must come
+from the matching peptide's negative evidence. The policy and parents are explicit,
+not an assertion that mismatched alleles are measured negatives.
+
+Frozen generation rejects missing root lineage, mixed bundle identities or mixed
+partition membership. Legacy generation may remain unresolved, with that status
+recorded explicitly. Never copy a parent's assay ID or measured value metadata
+onto a generated target. Cascaded controls name the generated immediate parent
+and its measured roots, and generated sample IDs remain stable through loaders.
+
+Review reproduced a single-allele elution control that exactly duplicates a known
+positive pair with the opposite label. Reject generated elution pairs overlapping
+known positive candidate restrictions and count rejected attempts. For binding
+controls retaining a real MHC, reject already measured peptide/allele pairs;
+mutated/absent MHC controls remain a distinct input contract. Include hard-pair
+and promiscuous-peptide cases. Requested generation attempts do not guarantee an
+admitted row count. This source-validity correction accompanies parent tracing.
 
 Carry source_partition as host metadata on measured records/samples. Generate
 binding, elution and cascade controls separately inside each assigned partition.

@@ -956,6 +956,25 @@ def create_parser() -> argparse.ArgumentParser:
         help="Expected SHA-256 of the frozen bundle's manifest.json",
     )
     train_iedb.add_argument(
+        "--frozen-assignment-file",
+        help="Optional frozen observation/partition parquet; requires its SHA-256",
+    )
+    train_iedb.add_argument("--frozen-assignment-sha256", help="SHA-256 of the assignment parquet")
+    train_iedb.add_argument(
+        "--frozen-partition-policy",
+        default="peptide_disjoint",
+        choices=[
+            "peptide_disjoint",
+            "pmhc_disjoint",
+            "independent_experiments",
+            "specimen_disjoint",
+            "donor_disjoint",
+            "whole_study",
+            "report_only",
+        ],
+        help="Required measured-root independence policy; unknown required identities fail",
+    )
+    train_iedb.add_argument(
         "--no-hitlist-flanks",
         dest="hitlist_flanks",
         action="store_false",

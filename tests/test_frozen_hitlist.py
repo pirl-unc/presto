@@ -34,7 +34,7 @@ def test_corpus_qualification_requires_an_explicit_complete_pin():
 
 
 @pytest.fixture
-def frozen_bundle(tmp_path, monkeypatch):
+def frozen_bundle(tmp_path, monkeypatch, request):
     from hitlist import builder, curation, downloads, supplement, write_training_bundle
     from hitlist.parquet_io import atomic_write_parquet
 
@@ -108,6 +108,12 @@ def frozen_bundle(tmp_path, monkeypatch):
             ],
             ["http://iedb.org/assay/3", *common, "purified MHC", "half life", "min", ">", "120"],
         ]
+        if getattr(request, "param", None) == "three_peptides":
+            rows = [
+                [row[0] + str(group), *row[1:3], peptide, *row[4:]]
+                for group, peptide in enumerate(("SLYNTVATL", "ACDEFGHIK", "LMNPQRSTV"))
+                for row in rows
+            ]
         missing_fields = [
             "Submission ID",
             "Title",
