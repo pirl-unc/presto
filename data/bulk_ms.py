@@ -288,22 +288,14 @@ def dual_corpus_transfer_set(
     mhc_peptides: Iterable[str],
     bulk_records: Sequence[BulkMSRecord],
 ) -> Tuple[List[BulkMSRecord], Dict[str, Any]]:
-    """Peptides observed in *both* corpora, for testing detectability transfer.
+    """Select overlapping peptide sequences without qualifying their labels.
 
-    ``ms_detectability`` is trained and scored on shotgun rows but *used* on MHC
-    rows, inside the elution sum. Nothing in the current evaluation asks whether
-    it means anything for an MHC ligand -- presentation and detectability are
-    scored on disjoint row sets, so the transfer is assumed rather than
-    measured.
-
-    Peptides present in both corpora make that measurable: their shotgun
-    detection is a label, and they are MHC ligands, so a detectability term that
-    generalizes should predict the former for molecules drawn from the latter.
-    24,125 such peptides exist in the built indexes (9-mers 4,559, 10-mers
-    3,016, 11-mers 2,628, 8-mers 1,627).
-
-    Returns the bulk records whose peptide also occurs in ``mhc_peptides``,
-    which are the rows to score, plus a length histogram for reporting.
+    Returns bulk records whose peptide occurs in ``mhc_peptides`` and a length
+    histogram. This selection preserves missing detectability labels and
+    generated controls. Overlap alone does not provide a detectability target
+    or establish independent held-out evaluation; the raw bulk path supplies
+    no such targets. A transfer evaluation needs verified search-scoped labels
+    and a separately audited split (presto#70/#71).
     """
     wanted = {str(p).strip().upper() for p in mhc_peptides if str(p).strip()}
     overlap = [r for r in bulk_records if r.peptide.upper() in wanted]

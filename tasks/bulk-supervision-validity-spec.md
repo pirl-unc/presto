@@ -28,3 +28,18 @@ bundle with source/reference/protocol/occurrence provenance and scoped observed
 labels. #71 preserves training lineage; #48/#53 gate supported endpoints and
 real-data quality. This first PR removes invalid supervision permanently; it
 does not claim the replacement dataset or the full readiness tracker is done.
+
+## Release review — #73/#74
+
+The initial built wheel and source archive both omitted `b2m_sequences.csv`,
+which the data package opens at import. Explicitly include that one runtime
+resource; do not bundle raw training corpora. Build the wheel from the source
+archive in CI after the full suite, then install it into an isolated package
+environment using the tested dependencies. From outside the checkout, verify
+the imported package path/version, B2M resources, actual bulk collation masks
+and CLI startup. Upload the tested artifacts for publication from merged main.
+
+PyPI's `presto` belongs to an unrelated project. Preserve this repository's
+distribution/import name for the GitHub release; document the exact wheel URL
+and separate environments. Record source SHA, CI receipt and both distribution
+hashes. A future PyPI namespace requires an explicit naming choice.

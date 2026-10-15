@@ -1,5 +1,12 @@
 # Lessons
 
+## 2026-10-14
+
+- When the user requests review, iteration and deployment, keep ownership through
+  passing final-head checks, merge, clean-main build and verified publication.
+  A draft PR or running CI is an intermediate checkpoint, not completion.
+  Check the actual package namespace and release destination before publishing.
+
 ## 2026-09-07
 
 - Freeze source and test files during a full regression run. Tests using

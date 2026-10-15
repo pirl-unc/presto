@@ -1,3 +1,32 @@
+# Review and ship Presto training-readiness PR — 2026-10-14
+
+- [x] Review the full diff, caller contracts, failure paths and regression coverage.
+- [x] File discovered defects; fix them with meaningful before/after evidence.
+- [ ] Finish formatting, lint, full tests and exact-head CI.
+- [ ] Merge the reviewed PR and validate/build from clean main.
+- [ ] Publish verified release artifacts and confirm their public bytes/version.
+- [ ] Record the release receipt and next dependency in the readiness tracker.
+
+## Review/release scope
+
+Review index admission and archival/offline compatibility in Hitlist #682, and
+missing detectability masks/provenance in Presto #72. Preserve existing user
+worktrees and caches; use isolated checkouts and CI for memory-heavy checks.
+Do not treat software release as certification of the training corpus.
+Hitlist uses its existing clean-main release workflow and PyPI upload. Presto
+has no release workflow and its distribution name collides with an unrelated
+PyPI project; prepare verified GitHub wheel/source artifacts while resolving
+the requested publication destination. Never upload to the unrelated project.
+A release must identify the merged SHA, test results and artifact hashes.
+
+Review found #73 (PyPI namespace collision) and #74 (wheel/source missing the
+B2M resource required during data imports). The initial artifacts lack the CSV;
+corrected wheel and source archives contain its exact bytes and pass twine
+checks. CI now installs and exercises the wheel outside the checkout after the
+full suite. The prior implementation head passed the full suite; rerun on this
+reviewed head before merge. The overlap helper documentation now states that
+sequence overlap itself neither qualifies labels nor establishes a holdout.
+
 # Bulk supervision validity — #70, first PR
 
 Specification: [bulk-supervision-validity-spec.md](bulk-supervision-validity-spec.md).
