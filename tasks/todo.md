@@ -1,3 +1,14 @@
+# Frozen partitions and generated parents — 2026-10-15
+
+Specification: [frozen-partitions-spec.md](frozen-partitions-spec.md).
+
+- [x] Inspect trainer augmentation/split order and write the integration contract.
+- [ ] Assign/freeze measured observation partitions with reviewed lineage.
+- [ ] Generate controls within partitions and preserve all parent identities.
+- [ ] Publish actual final membership, hashes and leakage/coverage audits.
+- [ ] Verify regression and prediction-export coverage, then full release gates.
+- [ ] Rebase after part 1, version, merge and publish verified release artifacts.
+
 # Frozen Hitlist consumer — 2026-10-15
 
 Specification: [frozen-hitlist-spec.md](frozen-hitlist-spec.md).
