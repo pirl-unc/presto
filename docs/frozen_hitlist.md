@@ -4,6 +4,9 @@ Canonical Hitlist training requires a frozen bundle produced by
 `hitlist.write_training_bundle(...)` with current verified indexes. Supply its
 directory with `--data-source hitlist --hitlist-bundle /path/to/bundle` and its
 published `manifest.json` SHA-256 with `--hitlist-bundle-sha256 DIGEST`.
+Disable unfrozen auxiliary sources with `--mhc-augmentation-samples 0
+--uniprot-negative-ratio 0`. The canary profile fabricates extra modalities and
+is unavailable for frozen Hitlist runs.
 The bundle must contain both the training projection needed by the requested
 modalities and Hitlist's identities, contributors and reviewed-lineage sidecars.
 Use an unprojected export unless you have explicitly checked the column contract
