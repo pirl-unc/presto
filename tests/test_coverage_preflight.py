@@ -230,6 +230,7 @@ def test_selected_sources_reach_census_with_competing_inputs(
     calls = []
 
     def load_hitlist(**kwargs):
+        assert kwargs["bundle_dir"] == str(tmp_path / "frozen-fixture")
         calls.append("hitlist")
         binding = [
             BindingRecord(
@@ -251,7 +252,11 @@ def test_selected_sources_reach_census_with_competing_inputs(
             elution,
             [],
             [],
-            {"counts": {"binding": 12, "elution": 1}, "flank_coverage": {}},
+            {
+                "counts": {"binding": 12, "elution": 1},
+                "flank_coverage": {},
+                "frozen_bundle": {"bundle_id": "sha256:fixture"},
+            },
         )
 
     monkeypatch.setattr(hitlist_source, "load_records_from_hitlist", load_hitlist)
@@ -291,7 +296,11 @@ def test_selected_sources_reach_census_with_competing_inputs(
     monkeypatch.setattr(train_iedb, "Presto", unexpected_raw)
     run_dir = tmp_path / "run"
     args = arguments(
-        **({"data_source": "hitlist"} if data_source == "hitlist" else {}),
+        **(
+            {"data_source": "hitlist", "hitlist_bundle": str(tmp_path / "frozen-fixture")}
+            if data_source == "hitlist"
+            else {}
+        ),
         data_dir=str(tmp_path),
         run_dir=str(run_dir),
         data_preflight_only=True,
@@ -308,6 +317,11 @@ def test_selected_sources_reach_census_with_competing_inputs(
         mhc_augmentation_samples=0,
         uniprot_negative_ratio=0,
     )
+    if data_source == "hitlist" and bulk:
+        with pytest.raises(ValueError, match="verified search-scoped consumer"):
+            train_iedb.run(args)
+        assert calls == []
+        return
     train_iedb.run(args)
     assert calls == (["hitlist"] if data_source == "hitlist" else []) + (["bulk"] if bulk else [])
     coverage = json.loads((run_dir / "output_coverage.json").read_text())

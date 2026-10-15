@@ -13,6 +13,21 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+MINIMUM_FROZEN_HITLIST_VERSION = (1, 74, 0)
+
+
+def require_frozen_hitlist_version(raw: str | None) -> None:
+    """Frozen admission requires the coherent-generation publication contract."""
+    from .hitlist_source import _parse_version
+
+    version = _parse_version(raw)
+    if version is None or version < MINIMUM_FROZEN_HITLIST_VERSION:
+        wanted = ".".join(map(str, MINIMUM_FROZEN_HITLIST_VERSION))
+        raise RuntimeError(
+            f"Frozen Hitlist inputs require Hitlist >={wanted}; found {raw!r}. "
+            "Earlier versions do not guarantee coherent dataset generations."
+        )
+
 
 def _sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -69,6 +84,7 @@ def load_frozen_hitlist_bundle(
     function never follows unpinned URLs or silently regenerates input data.
     """
     try:
+        import hitlist
         from datacache import inspect_bundle, install_bundle
         from hitlist import verify_training_bundle
         from hitlist.downloads import data_dir
@@ -77,6 +93,7 @@ def load_frozen_hitlist_bundle(
             "Frozen Hitlist inputs require presto[hitlist] with Hitlist >=1.74.0"
         ) from exc
 
+    require_frozen_hitlist_version(getattr(hitlist, "__version__", None))
     source = Path(directory).resolve()
     manifest_path = source / "manifest.json"
     digest = _sha256(manifest_path)

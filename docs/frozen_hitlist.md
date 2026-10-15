@@ -76,6 +76,25 @@ A bundle identity or a passing software test is not a training-readiness claim.
 Qualify the actual selected corpus and partitions, report unknown lineage, and
 publish held-out evaluation evidence before making that claim.
 
+The three corpus-specific regression checks require explicit qualification data:
+
+```bash
+PRESTO_TEST_HITLIST_BUNDLE=/path/to/frozen/bundle \
+PRESTO_TEST_HITLIST_BUNDLE_SHA256=MANIFEST_SHA256 \
+./test.sh tests/test_excision_window.py tests/test_stimulus_vocabulary.py
+```
+
+These check both MHC classes' flank coverage and every observed condition category.
+Presto verifies and shares the bundle through datacache before reading it. With
+neither variable, the three checks are reported as skipped, meaning corpus
+qualification is unavailable. An incomplete pin, missing data, corrupt payload,
+incompatible schema or failed coverage assertion fails. Ordinary software CI
+still builds and consumes a small real-schema frozen Hitlist fixture; it does
+not certify the full corpus. See [#77](https://github.com/pirl-unc/presto/issues/77).
+
 The programmatic `load_records_from_hitlist()` call without `bundle_dir` retains
 legacy live-index compatibility and marks `input_mode=legacy_live_indexes`.
 Canonical training does not use that path.
+The legacy adapter requires Hitlist 1.53 or newer; frozen ingestion enforces 1.74
+or newer for its coherent-generation contract, matching the installation extra
+and remote launcher.

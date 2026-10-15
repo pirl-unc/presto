@@ -87,6 +87,24 @@ Do not modify the user's dirty working tree or shared editable dependencies.
 
 ## Remaining series
 
+## Full-suite review adjustment — #77
+
+The first complete CI run found seven integration failures. Keep legacy live
+adapter compatibility at 1.53 while enforcing a separate 1.74 frozen-input
+runtime floor matching packaging and remote workers. Update the competing-input
+fixture to supply a bundle and explicitly expect rejection of live bulk union.
+
+Real-corpus qualification must select a frozen bundle and its SHA-256 through
+`PRESTO_TEST_HITLIST_BUNDLE` and `PRESTO_TEST_HITLIST_BUNDLE_SHA256`. With neither,
+report these three checks as unavailable; with either alone or a broken supplied
+bundle, fail. Preserve both class-specific flank coverage floors and the complete
+observed condition-vocabulary check. Ordinary CI still exercises real Hitlist
+generation, export, verification and ingestion on a small fixture. Document and
+run the separate qualification invocation when #680 publishes the actual corpus.
+
+Verify the changed contracts with the failing test files and frozen integration
+tests, then rerun formatting, lint, docs and the complete suite on a fixed head.
+
 After #71, implement verified search-scoped detectability (#70/Hitlist #681),
 then build/publish the actual pinned corpus and frozen cohorts (#680, including
 CI publication fix #685), then support census and bounded real-data qualification

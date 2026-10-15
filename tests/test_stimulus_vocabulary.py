@@ -259,20 +259,14 @@ class TestEveryCorpusCategoryIsMapped:
         TAPBPR_perturbation through."""
         assert self.REVIEWED == frozenset(CONDITION_TO_STIMULUS)
 
-    def test_no_corpus_category_is_unmapped(self):
+    def test_no_corpus_category_is_unmapped(self, qualified_hitlist_ms_frame):
         """The only check that can catch a category nobody has reviewed.
 
-        Queries hitlist directly rather than a pinned list, so it is
-        bidirectional by construction: anything the corpus emits and this repo
-        has not mapped fails here. It is skipped only where hitlist is absent
-        -- CI installs without the extra. Once the package imports, an old API,
-        unbuilt cache, or incompatible corpus is a failure rather than an
-        excuse not to run the contract. `REVIEWED` remains the hermetic floor.
+        Inspect every category in the explicitly pinned qualification corpus.
+        An absent qualification input is reported separately; a supplied broken
+        or incompatible corpus fails. `REVIEWED` remains the hermetic floor.
         """
-        hitlist = pytest.importorskip("hitlist")
-        frame = hitlist.generate_training_table(
-            include_evidence="ms", columns=["condition_category"]
-        )
+        frame = qualified_hitlist_ms_frame
         seen = {
             str(value).strip()
             for value in frame["condition_category"].dropna().unique()

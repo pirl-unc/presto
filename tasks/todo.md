@@ -5,7 +5,7 @@ Specification: [frozen-hitlist-spec.md](frozen-hitlist-spec.md).
 - [x] Read repository rules, existing adapter, lineage, partition and evaluation contracts.
 - [x] Create an isolated branch from current main; preserve the dirty user checkout.
 - [x] Write scope and acceptance before implementation.
-- [ ] Finish Hitlist #645 / PR #686 review, merge and release first.
+- [x] Finish Hitlist #645 / PR #686 review, merge and release first.
 - [x] Add verified datacache-managed frozen bundle admission and trainer configuration.
 - [x] Preserve measured-observation linkage and original assay policy through records, batches and predictions.
 - [ ] Preserve every generated-control parent in the next dependent PR.
@@ -15,7 +15,13 @@ Specification: [frozen-hitlist-spec.md](frozen-hitlist-spec.md).
 
 ## Review
 
-Hitlist #686 merged as e087b07; clean-main release build 38784053730 is running.
+Hitlist #686 merged as e087b07 and 1.74.0 is published on PyPI with verified hashes.
+First full Presto CI: 2,102 passed and seven integration failures, tracked in #77.
+The review adjustment in the specification separates frozen/legacy version floors
+and explicitly pinned corpus qualification from ordinary software CI.
+The corrected integration files pass 164 tests; three real-corpus checks report
+unavailable without an explicit qualification bundle. Format, lint and strict
+docs pass. Full final-head CI is required before merge.
 Frozen admission verifies real Hitlist bundles, installs shared datacache copies,
 and rejects damage, stale-at-creation opt-outs and missing schema. Tests use the
 real scanner, generation publisher and bundle verifier. Mapping alternatives

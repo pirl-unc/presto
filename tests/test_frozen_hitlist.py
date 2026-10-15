@@ -14,6 +14,25 @@ from presto.data.hitlist_source import load_records_from_hitlist
 from presto.data.source_lineage import SOURCE_LINEAGE_FIELDS
 
 
+def test_corpus_qualification_requires_an_explicit_complete_pin():
+    from conftest import _qualification_bundle_inputs
+
+    with pytest.raises(pytest.skip.Exception, match="qualification unavailable"):
+        _qualification_bundle_inputs({})
+    for partial in (
+        {"PRESTO_TEST_HITLIST_BUNDLE": "/some/corpus"},
+        {"PRESTO_TEST_HITLIST_BUNDLE_SHA256": "a" * 64},
+    ):
+        with pytest.raises(pytest.fail.Exception, match="both Hitlist bundle path"):
+            _qualification_bundle_inputs(partial)
+    assert _qualification_bundle_inputs(
+        {
+            "PRESTO_TEST_HITLIST_BUNDLE": "/some/corpus",
+            "PRESTO_TEST_HITLIST_BUNDLE_SHA256": "a" * 64,
+        }
+    ) == ("/some/corpus", "a" * 64)
+
+
 @pytest.fixture
 def frozen_bundle(tmp_path, monkeypatch):
     from hitlist import builder, curation, downloads, supplement, write_training_bundle

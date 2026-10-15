@@ -376,10 +376,9 @@ class TestTheCorpusActuallySuppliesFlanks:
     measuring, and the code comments asserting "0% carry 15 residues" then went
     stale the moment hitlist raised its default.
 
-    So the claim is checked rather than written down. It is skipped only where
-    hitlist is not installed (CI installs without the extra). Once the package
-    imports, a broken API, cache, schema, or corpus is the failure under test
-    and must fail loudly.
+    Qualify an explicitly supplied frozen corpus and manifest hash. Without
+    them this qualification is unavailable, regardless of installed packages.
+    Once supplied, broken APIs, hashes, schemas and coverage fail loudly.
     """
 
     #: Coverage floors, well under the measured values on hitlist 1.55.2
@@ -388,21 +387,12 @@ class TestTheCorpusActuallySuppliesFlanks:
     #: actually happened.
     MIN_COVERAGE = {"I": 0.70, "II": 0.70}
 
-    @staticmethod
-    def _frame():
-        hitlist = pytest.importorskip("hitlist")
-        from presto.data.hitlist_source import training_columns
-
-        return hitlist.generate_training_table(
-            include_evidence="ms",
-            columns=training_columns("ms", include_flanks=True),
-            map_source_proteins=True,
-        )
-
     @pytest.mark.parametrize("mhc_class", sorted(MIN_COVERAGE))
-    def test_both_flanks_are_present_for_most_rows(self, mhc_class):
-        frame = self._frame()
-        rows = frame[frame["mhc_class"].astype(str) == mhc_class]
+    def test_both_flanks_are_present_for_most_rows(self, mhc_class, qualified_hitlist_ms_frame):
+        from hitlist.curation import mhc_class_spellings
+
+        frame = qualified_hitlist_ms_frame
+        rows = frame[frame["mhc_class"].isin(mhc_class_spellings(mhc_class))]
         assert len(rows), f"hitlist corpus contains no class {mhc_class} rows"
         window = _model().excision_head.junction_window
         n_len = rows["n_flank"].fillna("").astype(str).str.len()
