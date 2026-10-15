@@ -17,8 +17,8 @@ Modality coverage
 -----------------
 hitlist supplies binding and MS evidence only -- ``include_evidence`` accepts
 ``ms``, ``binding`` or ``both``, and there is no T-cell or receptor table. A
-hitlist-only run therefore trains binding, stability, kinetics, elution and the
-shotgun corpus, while the immunogenicity, recognition and TCR heads receive
+hitlist-only run therefore covers binding, stability, kinetics and elution,
+while the immunogenicity, recognition and TCR heads receive
 **zero gradient** for its entire duration.
 
 Hitlist-only mode does not union a merged TSV or live bulk-MS inputs.
@@ -34,9 +34,9 @@ consumer is tracked separately in Presto #70.
 Corpus size
 -----------
 ``PRESTO_MAX_*`` caps are per-modality and ``0`` means unlimited. Capping
-elution and binding does not bound the epoch, because ``--bulk-ms`` pulls the
-shotgun corpus and ``PRESTO_MAX_BULK_MS`` defaults to 0. Set every cap you care
-about, and check the printed ``Train batches:`` line before walking away.
+elution and binding does not bound the epoch when additional modalities are
+selected. Check the recorded modality counts and ``Train batches:`` before
+starting a long run. Frozen Hitlist runs reject live bulk-MS additions.
 
 Throughput
 ----------
@@ -149,6 +149,10 @@ def training_argv() -> list[str]:
         "unified",
         "--data-source",
         "hitlist",
+        "--mhc-augmentation-samples",
+        "0",
+        "--uniprot-negative-ratio",
+        "0",
         "--run-dir",
         out_dir,
         "--checkpoint",

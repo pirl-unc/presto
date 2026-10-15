@@ -4712,6 +4712,18 @@ def run(args: argparse.Namespace) -> None:
                 "Frozen Hitlist training cannot add live --bulk-ms inputs; "
                 "the verified search-scoped consumer is tracked in Presto #70"
             )
+        if (
+            int(getattr(args, "mhc_augmentation_samples", 0)) > 0
+            or float(getattr(args, "uniprot_negative_ratio", 0.1)) > 0
+        ):
+            raise ValueError(
+                "Frozen Hitlist training cannot add unpinned MHC/UniProt auxiliary inputs; "
+                "set --mhc-augmentation-samples 0 --uniprot-negative-ratio 0"
+            )
+        if getattr(args, "profile", "full") == "canary":
+            raise ValueError(
+                "The canary profile fabricates modalities outside the frozen Hitlist scope"
+            )
     if data_source == "merged_tsv" and merged_tsv.exists():
         print(f"Merged input: {merged_tsv}")
         (

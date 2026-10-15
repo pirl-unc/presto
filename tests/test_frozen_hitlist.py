@@ -401,3 +401,31 @@ def test_frozen_input_cli_options_and_training_guard(tmp_path, monkeypatch):
     args.bulk_ms = True
     with pytest.raises(ValueError, match="cannot add live --bulk-ms"):
         run(args)
+
+
+@pytest.mark.parametrize(
+    "options,reason",
+    [
+        ({"mhc_augmentation_samples": 1}, "unpinned MHC/UniProt"),
+        ({"uniprot_negative_ratio": 0.1}, "unpinned MHC/UniProt"),
+        ({"profile": "canary"}, "canary profile"),
+    ],
+)
+def test_frozen_run_rejects_unfrozen_auxiliary_sources(tmp_path, monkeypatch, options, reason):
+    from argparse import Namespace
+    from presto.scripts.train_iedb import run
+
+    monkeypatch.setattr("presto.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
+    values = dict(
+        config=None,
+        profile="full",
+        data_source="hitlist",
+        data_dir=str(tmp_path),
+        run_dir=None,
+        hitlist_bundle="explicit-fixture",
+        mhc_augmentation_samples=0,
+        uniprot_negative_ratio=0,
+    )
+    values.update(options)
+    with pytest.raises(ValueError, match=reason):
+        run(Namespace(**values))
