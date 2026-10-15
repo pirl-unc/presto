@@ -1,3 +1,19 @@
+# Bulk supervision validity — #70, first PR
+
+Specification: [bulk-supervision-validity-spec.md](bulk-supervision-validity-spec.md).
+
+- [x] Audit committed bulk loader and write the scientific label contract.
+- [x] Isolate the work from the dirty coverage-report checkout.
+- [ ] Prove unsupported depth-label regression and remove its production path.
+- [ ] Verify missing-label masks/provenance and update current documentation.
+- [ ] Version, format, lint, full tests and final-head CI.
+- [ ] Open the next PR in the training-readiness series and record its limits.
+
+## Review
+
+Pending. This stage removes unsupported labels; #70 stays open for verified
+scoped-data consumption. #71, #48 and #53 track remaining acceptance work.
+
 # Source-junction ambiguity implementation (2026-09-02)
 
 ## Specification
