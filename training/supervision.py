@@ -6,7 +6,6 @@ from typing import Any, Callable, Dict, Optional, Sequence, Tuple
 import torch
 import torch.nn as nn
 
-from ..models.affinity import DEFAULT_MAX_AFFINITY_NM, normalize_binding_target_log10
 from ..data.allele_resolver import (
     PROCESSING_SPECIES_TO_IDX,
     PROCESSING_SPECIES_BUCKETS,
@@ -27,6 +26,7 @@ from ..data.vocab import (
 )
 from .losses import censor_aware_loss
 from .mil import MIL_TASKS
+from .target_policy import AFFINITY_TARGET_POLICY
 
 
 @dataclass(frozen=True)
@@ -67,11 +67,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         mask_attr="bind_mask",
         qual_key="binding",
         qual_attr="bind_qual",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
+        target_transform=AFFINITY_TARGET_POLICY,
     ),
     TaskLossSpec(
         name="binding_kd",
@@ -80,11 +76,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         pred_paths=(("assays", "KD_nM"),),
         loss_type="censor",
         qual_key="binding_kd",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
+        target_transform=AFFINITY_TARGET_POLICY,
     ),
     TaskLossSpec(
         name="binding_ic50",
@@ -93,11 +85,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         pred_paths=(("assays", "IC50_nM"),),
         loss_type="censor",
         qual_key="binding_ic50",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
+        target_transform=AFFINITY_TARGET_POLICY,
     ),
     TaskLossSpec(
         name="binding_ec50",
@@ -106,11 +94,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         pred_paths=(("assays", "EC50_nM"),),
         loss_type="censor",
         qual_key="binding_ec50",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
+        target_transform=AFFINITY_TARGET_POLICY,
     ),
     TaskLossSpec(
         name="elution",
@@ -251,11 +235,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         mask_attr="bind_mask",
         qual_key="binding",
         qual_attr="bind_qual",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
+        target_transform=AFFINITY_TARGET_POLICY,
         base_weight=1.0,
     ),
     TaskLossSpec(

@@ -6,6 +6,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from .output_coverage import COUNT_FIELDS, OutputCoverageCensus
+from .target_policy import affinity_target_policies
 
 
 def _canonical_json(value):
@@ -68,6 +69,8 @@ def evaluate_supported_outputs(
         asdict(contract.configuration)
     ):
         raise ValueError("Manifest model_contract differs from the declared model configuration")
+    if source_contract.get("affinity_target_policies") != affinity_target_policies(contract):
+        raise ValueError("Source contract requires the current canonical affinity target policies")
     if _canonical_json(manifest["source_contract"]) != _canonical_json(source_contract):
         raise ValueError("Manifest source_contract differs from the curated data contract")
     if not isinstance(manifest["claims"], list) or not manifest["claims"]:

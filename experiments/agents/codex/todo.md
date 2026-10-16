@@ -98,3 +98,6 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [ ] Run and close the [corrected human IC50 fitting diagnostic](plans/corrected-human-fit.md) under the unchanged prospective manifest.
 
 - Corrected-human IC50 attempt stopped before optimization: 211 raw/effective target mismatches; preserve/publish audit in #109, canonical target-policy qualification next in #110.
+
+- [x] Audit canonical affinity policies on all 2,614 public frozen IC50 rows; retain 211 clipped IDs and 54 exact-value changes (2026-10-16_1000).
+- [ ] Complete the separate prospective effective-target fit after #110 software release, preserving raw-measurement evaluation.

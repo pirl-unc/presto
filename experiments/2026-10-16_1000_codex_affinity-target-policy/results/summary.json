@@ -1,0 +1,110 @@
+{
+  "direct_ic50_counts": [
+    {
+      "column": "",
+      "endpoint": "assays.IC50_nM",
+      "n_above_maximum_observations": 157,
+      "n_below_minimum_observations": 0,
+      "n_clipped_exact_observations": 39,
+      "n_clipped_left_censored_observations": 0,
+      "n_clipped_observations": 157,
+      "n_clipped_right_censored_observations": 118,
+      "n_clipped_unique_observations": 157,
+      "n_exact_observations": 1599,
+      "n_left_censored_observations": 0,
+      "n_observations": 2074,
+      "n_right_censored_observations": 475,
+      "n_untraceable_clipped_observations": 0,
+      "objective_id": "row:binding_ic50",
+      "split": "train"
+    },
+    {
+      "column": "",
+      "endpoint": "assays.IC50_nM",
+      "n_above_maximum_observations": 31,
+      "n_below_minimum_observations": 0,
+      "n_clipped_exact_observations": 8,
+      "n_clipped_left_censored_observations": 0,
+      "n_clipped_observations": 31,
+      "n_clipped_right_censored_observations": 23,
+      "n_clipped_unique_observations": 31,
+      "n_exact_observations": 210,
+      "n_left_censored_observations": 0,
+      "n_observations": 265,
+      "n_right_censored_observations": 55,
+      "n_untraceable_clipped_observations": 0,
+      "objective_id": "row:binding_ic50",
+      "split": "val"
+    },
+    {
+      "column": "",
+      "endpoint": "assays.IC50_nM",
+      "n_above_maximum_observations": 23,
+      "n_below_minimum_observations": 0,
+      "n_clipped_exact_observations": 7,
+      "n_clipped_left_censored_observations": 0,
+      "n_clipped_observations": 23,
+      "n_clipped_right_censored_observations": 16,
+      "n_clipped_unique_observations": 23,
+      "n_exact_observations": 214,
+      "n_left_censored_observations": 0,
+      "n_observations": 275,
+      "n_right_censored_observations": 61,
+      "n_untraceable_clipped_observations": 0,
+      "objective_id": "row:binding_ic50",
+      "split": "test"
+    }
+  ],
+  "input_pins": {
+    "archived-supported-outputs.json": {
+      "sha256": "13fe8bd4dab158bd06ae31fc7996fba98f73b3944fa68c3f57463beec34e7cb0",
+      "size": 3346,
+      "url": "https://github.com/pirl-unc/presto/releases/download/corrected-human-preflight-v1/prospective-supported-outputs.json"
+    },
+    "ic50-raw-effective-targets.tsv": {
+      "sha256": "59c73feeec2ba00041fcc3f8a91b6701ef31bd3f5d3ce6db01de188c45f44583",
+      "size": 3468131,
+      "url": "https://github.com/pirl-unc/presto/releases/download/corrected-human-target-policy-audit-v1/ic50-raw-effective-targets.tsv"
+    }
+  },
+  "limitations": [
+    "Label-only samples omit MHC sequences and do not requalify complete model inputs or auxiliary-label coverage.",
+    "The archived supported-output manifest supplies model configuration only; it is not rebound or qualified.",
+    "Objective and panel exposures are not independent source observations.",
+    "Unknown donor/specimen/acquisition lineage and shared studies remain unchanged.",
+    "No model, predictive evaluation or training-readiness claim is produced."
+  ],
+  "n_checkpoints": 0,
+  "n_clipped_exact_observations": 54,
+  "n_clipped_observations": 211,
+  "n_optimization_steps": 0,
+  "n_predictions": 0,
+  "n_verified_observations": 2614,
+  "peak_rss_bytes": 271433728,
+  "producer": {
+    "batch_size": 128,
+    "dependencies": {
+      "datacache": "1.27.1",
+      "mhcseqs": "2.6.12",
+      "numpy": "2.5.3",
+      "pandas": "2.3.3",
+      "pyarrow": "25.0.1",
+      "torch": "2.14.1"
+    },
+    "device": "cpu",
+    "dirty": false,
+    "gpu": null,
+    "imported_module": "/private/tmp/presto-affinity-target-policy/__init__.py",
+    "machine": "arm64",
+    "n_workers": 0,
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "presto_version": "0.1.16",
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "source_checkout": "/private/tmp/presto-affinity-target-policy",
+    "source_commit": "ca9e883034a8842b99394deb11b8155abd83b597",
+    "timeout_seconds": 600,
+    "torch_threads": 1
+  },
+  "status": "canonical label audit matches the independent published target audit",
+  "wall_seconds_including_input_acquisition": 2.013964665995445
+}

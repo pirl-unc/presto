@@ -223,10 +223,16 @@ def test_typed_generated_records_and_missing_provenance_are_not_direct(generated
 
 
 def manifest_for(contract, *, columns=None):
+    from presto.training.target_policy import affinity_target_policies
+
     return {
         "schema_version": 1,
         "model_contract": asdict(contract.configuration),
-        "source_contract": {"data_source": "merged_tsv", "data_seed": 7},
+        "source_contract": {
+            "data_source": "merged_tsv",
+            "data_seed": 7,
+            "affinity_target_policies": affinity_target_policies(contract),
+        },
         "claims": [
             {
                 "endpoint": "tcell_panel_logits.assay_method",

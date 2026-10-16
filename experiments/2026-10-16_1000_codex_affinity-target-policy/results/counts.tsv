@@ -1,0 +1,106 @@
+split	objective_id	endpoint	column	n_observations	n_exact_observations	n_left_censored_observations	n_right_censored_observations	n_clipped_observations	n_below_minimum_observations	n_above_maximum_observations	n_clipped_exact_observations	n_clipped_left_censored_observations	n_clipped_right_censored_observations	n_clipped_unique_observations	n_untraceable_clipped_observations
+train	row:binding	assays.KD_nM		2074	1599	0	475	157	0	157	39	0	118	157	0
+train	row:binding_kd	assays.KD_nM		0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_ic50	assays.IC50_nM		2074	1599	0	475	157	0	157	39	0	118	157	0
+train	row:binding_ec50	assays.EC50_nM		0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_affinity_probe	binding_affinity_probe_kd		2074	1599	0	475	157	0	157	39	0	118	157	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type		2074	1599	0	475	157	0	157	39	0	118	157	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KD	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KD_PROXY_IC50	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KD_PROXY_EC50	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	IC50	2074	1599	0	475	157	0	157	39	0	118	157	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	EC50	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	OTHER	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	T_HALF	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	TM	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KOFF	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KON	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep		2074	1599	0	475	157	0	157	39	0	118	157	0
+train	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	PURIFIED	2010	1573	0	437	151	0	151	36	0	115	151	0
+train	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	CELLULAR	64	26	0	38	6	0	6	3	0	3	6	0
+train	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	LYSATE	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	BINDING_ASSAY	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	OTHER	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry		2074	1599	0	475	157	0	157	39	0	118	157	0
+train	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	COMPETITIVE	2074	1599	0	475	157	0	157	39	0	118	157	0
+train	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	DIRECT	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	T_CELL_INHIBITION	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	OTHER	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout		2074	1599	0	475	157	0	157	39	0	118	157	0
+train	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+train	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	RADIOACTIVITY	1385	1210	0	175	7	0	7	5	0	2	7	0
+train	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	FLUORESCENCE	689	389	0	300	150	0	150	34	0	116	150	0
+train	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	OTHER	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding	assays.KD_nM		265	210	0	55	31	0	31	8	0	23	31	0
+val	row:binding_kd	assays.KD_nM		0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_ic50	assays.IC50_nM		265	210	0	55	31	0	31	8	0	23	31	0
+val	row:binding_ec50	assays.EC50_nM		0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_affinity_probe	binding_affinity_probe_kd		265	210	0	55	31	0	31	8	0	23	31	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type		265	210	0	55	31	0	31	8	0	23	31	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KD	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KD_PROXY_IC50	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KD_PROXY_EC50	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	IC50	265	210	0	55	31	0	31	8	0	23	31	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	EC50	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	OTHER	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	T_HALF	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	TM	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KOFF	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KON	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep		265	210	0	55	31	0	31	8	0	23	31	0
+val	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	PURIFIED	259	208	0	51	31	0	31	8	0	23	31	0
+val	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	CELLULAR	6	2	0	4	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	LYSATE	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	BINDING_ASSAY	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	OTHER	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry		265	210	0	55	31	0	31	8	0	23	31	0
+val	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	COMPETITIVE	265	210	0	55	31	0	31	8	0	23	31	0
+val	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	DIRECT	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	T_CELL_INHIBITION	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	OTHER	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout		265	210	0	55	31	0	31	8	0	23	31	0
+val	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+val	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	RADIOACTIVITY	187	163	0	24	3	0	3	2	0	1	3	0
+val	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	FLUORESCENCE	78	47	0	31	28	0	28	6	0	22	28	0
+val	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	OTHER	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding	assays.KD_nM		275	214	0	61	23	0	23	7	0	16	23	0
+test	row:binding_kd	assays.KD_nM		0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_ic50	assays.IC50_nM		275	214	0	61	23	0	23	7	0	16	23	0
+test	row:binding_ec50	assays.EC50_nM		0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_affinity_probe	binding_affinity_probe_kd		275	214	0	61	23	0	23	7	0	16	23	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type		275	214	0	61	23	0	23	7	0	16	23	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KD	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KD_PROXY_IC50	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KD_PROXY_EC50	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	IC50	275	214	0	61	23	0	23	7	0	16	23	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	EC50	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	OTHER	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	T_HALF	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	TM	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KOFF	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_type	binding_assay_panel_assay_type	KON	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep		275	214	0	61	23	0	23	7	0	16	23	0
+test	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	PURIFIED	264	209	0	55	23	0	23	7	0	16	23	0
+test	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	CELLULAR	11	5	0	6	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	LYSATE	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	BINDING_ASSAY	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_prep	binding_assay_panel_assay_prep	OTHER	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry		275	214	0	61	23	0	23	7	0	16	23	0
+test	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	COMPETITIVE	275	214	0	61	23	0	23	7	0	16	23	0
+test	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	DIRECT	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	T_CELL_INHIBITION	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_geometry	binding_assay_panel_assay_geometry	OTHER	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout		275	214	0	61	23	0	23	7	0	16	23	0
+test	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	unknown	0	0	0	0	0	0	0	0	0	0	0	0
+test	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	RADIOACTIVITY	192	171	0	21	1	0	1	0	0	1	1	0
+test	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	FLUORESCENCE	83	43	0	40	22	0	22	7	0	15	22	0
+test	row:binding_assay_panel_assay_readout	binding_assay_panel_assay_readout	OTHER	0	0	0	0	0	0	0	0	0	0	0	0

@@ -7,6 +7,7 @@ from .data_support import audit_split_support, write_split_support_artifacts
 from .output_contract import OutputConfiguration, build_output_contract
 from .output_coverage import OutputCoverageCensus, write_output_coverage_artifacts
 from .supported_outputs import evaluate_supported_outputs, require_supported_outputs
+from .target_policy import affinity_target_policies
 
 
 def audit_training_coverage(
@@ -36,6 +37,7 @@ def audit_training_coverage(
             "dataset_contract_sha256": legacy["dataset_contract_sha256"],
             "dataset_supervision_contract_sha256": legacy["dataset_supervision_contract_sha256"],
             "output_evidence_sha256": census.sha256,
+            "affinity_target_policies": affinity_target_policies(contract),
             "split_rows": {name: value["rows"] for name, value in legacy["splits"].items()},
         }
         if frozen_membership is not None:
@@ -56,6 +58,7 @@ def audit_training_coverage(
         if output is not None:
             write_split_support_artifacts(output, legacy)
             write_output_coverage_artifacts(output, coverage)
+            census.affinity_target_audit.write_artifacts(output, census.splits)
         try:
             support = evaluate_supported_outputs(census, manifest, source_contract=source_contract)
         except ValueError as exc:

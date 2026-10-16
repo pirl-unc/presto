@@ -20,9 +20,10 @@ from ..data.vocab import (
 from ..models.heads import AssayHeads
 from .mil import MIL_TASKS
 from .supervision import PANEL_TASK_BASE_WEIGHTS, ROW_TASK_SPECS
+from .target_policy import AffinityTargetPolicy
 
 
-CONTRACT_VERSION = 1
+CONTRACT_VERSION = 2
 RESIDUAL_MODES = (
     "legacy",
     "pooled_single_output",
@@ -109,6 +110,7 @@ class ObjectiveBinding:
     source_target: str
     evidence_role: str
     reduction: str
+    target_policy: dict | None = None
 
 
 @dataclass(frozen=True)
@@ -390,6 +392,9 @@ def build_output_contract(configuration: OutputConfiguration | None = None) -> O
             source,
             role,
             "mean_active_axes_then_masked_mean" if spec.loss_group else "masked_mean",
+            spec.target_transform.to_dict()
+            if isinstance(spec.target_transform, AffinityTargetPolicy)
+            else None,
         )
     for channel, specs in MIL_TASKS.items():
         for spec in specs:
