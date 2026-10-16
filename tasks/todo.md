@@ -1,10 +1,20 @@
 # Frozen component allocation — #105
 
 - [x] Record observed size/support bias and prospective compatibility contract.
-- [ ] Implement explicit label-blind relative-deficit allocation and legacy preservation.
-- [ ] Verify regressions and audit the exact public9,000-root cohort.
-- [ ] Publish/verify assignments and support/lineage reports; close experiment registry.
-- [ ] Format/lint/full checks, review, merge and distribute0.1.13.
+- [x] Implement explicit label-blind relative-deficit allocation and legacy preservation.
+- [x] Verify regressions and audit the exact public 9,000-root cohort.
+- [x] Publish/verify assignments and support/lineage reports; close experiment registry.
+- [ ] Format/lint/full checks, review, merge and distribute 0.1.13.
+
+## Allocation review
+
+Format/lint, 72 focused regressions and the full local suite pass (2,276 tests,
+four explicit skips; 525.13 seconds). All 12 public assets were independently
+downloaded through datacache and hash-verified. Analysis verifies all 17 archive
+members, exact original V1 membership, unchanged observation/component identities
+and zero split components. V2 improves direct-KD support to 406/71/33 while
+kinetics remains sparse and biological independence remains unresolved. Final
+CI, merge and clean-main distribution remain pending.
 
 # Frozen Hitlist cap policy — #103
 

@@ -1,0 +1,368 @@
+{
+  "files": {
+    "inventory.json": {
+      "path": "/Users/iskander/.hitlist/presto-component-allocation/audit/bundles/2026-10-16T06-40-26Z/inventory.json",
+      "sha256": "b8e6591df78dd39bbe161da61162cf3eca7e1674429c034b329a64a5b7c7c730",
+      "size_bytes": 2656
+    },
+    "run.tar.gz": {
+      "path": "/Users/iskander/.hitlist/presto-component-allocation/audit/bundles/2026-10-16T06-40-26Z/run.tar.gz",
+      "sha256": "f7a66f2a87e0d8b343730240c41f94e61cd649096f30c861504d102fb9d3994d",
+      "size_bytes": 3727118
+    },
+    "summary.json": {
+      "path": "/Users/iskander/.hitlist/presto-component-allocation/audit/bundles/2026-10-16T06-40-26Z/summary.json",
+      "sha256": "3305b4c0da6d7f4252197b742cb488443caaca5b0eed787238571304f76dcc0a",
+      "size_bytes": 10271
+    }
+  },
+  "summary": {
+    "allocator_sha256": "1a2f586400993b9fd002557a382ece3954f183a3b38e7f79cc93810cb9fe0656",
+    "commit": "83431016f30f9bae1ba47601ce4b2346db28cd52",
+    "config": {
+      "hardware": "local CPU, no GPU; bounded65536-row source scans",
+      "model_constructed": false,
+      "n_selected_observations": 9000,
+      "policies": [
+        "absolute_deficit_v1",
+        "relative_deficit_v2"
+      ],
+      "predictive_outcomes_used": false,
+      "seed": 42,
+      "source_manifest_sha256": "039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d",
+      "status": "prospective component allocation audit; preserve original roots and grouping",
+      "test_frac": 0.1,
+      "val_frac": 0.1
+    },
+    "dirty": false,
+    "n_selected_observations": 9000,
+    "no_predictive_outcomes_used": true,
+    "original_v1_membership_reproduced_exactly": true,
+    "peak_rss_bytes": 769818624,
+    "policies": {
+      "absolute_deficit_v1": {
+        "audit_verdict": "pass",
+        "endpoint_counts": [
+          {
+            "n_observations": 40,
+            "source_endpoint": "",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 181,
+            "source_endpoint": "",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 44,
+            "source_endpoint": "",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 5,
+            "source_endpoint": "50% dissociation temperature",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 131,
+            "source_endpoint": "50% dissociation temperature",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 3,
+            "source_endpoint": "50% dissociation temperature",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 4,
+            "source_endpoint": "dissociation constant KD",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 506,
+            "source_endpoint": "dissociation constant KD",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 8,
+            "source_endpoint": "dissociation constant KD (~EC50)",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 137,
+            "source_endpoint": "dissociation constant KD (~EC50)",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 6,
+            "source_endpoint": "dissociation constant KD (~EC50)",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 37,
+            "source_endpoint": "dissociation constant KD (~IC50)",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 1056,
+            "source_endpoint": "dissociation constant KD (~IC50)",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 62,
+            "source_endpoint": "dissociation constant KD (~IC50)",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 24,
+            "source_endpoint": "half life",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 482,
+            "source_endpoint": "half life",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 41,
+            "source_endpoint": "half life",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 6,
+            "source_endpoint": "half maximal effective concentration (EC50)",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 88,
+            "source_endpoint": "half maximal effective concentration (EC50)",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 5,
+            "source_endpoint": "half maximal effective concentration (EC50)",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 137,
+            "source_endpoint": "half maximal inhibitory concentration (IC50)",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 2334,
+            "source_endpoint": "half maximal inhibitory concentration (IC50)",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 104,
+            "source_endpoint": "half maximal inhibitory concentration (IC50)",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 639,
+            "source_endpoint": "ligand presentation",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 2266,
+            "source_endpoint": "ligand presentation",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 635,
+            "source_endpoint": "ligand presentation",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 19,
+            "source_endpoint": "off rate",
+            "source_partition": "train"
+          }
+        ],
+        "n_components": 5843,
+        "n_largest_component_observations": 31,
+        "n_moved_observations": 0,
+        "partition_counts": {
+          "test": 900,
+          "train": 7200,
+          "val": 900
+        }
+      },
+      "relative_deficit_v2": {
+        "audit_verdict": "pass",
+        "endpoint_counts": [
+          {
+            "n_observations": 27,
+            "source_endpoint": "",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 206,
+            "source_endpoint": "",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 32,
+            "source_endpoint": "",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 6,
+            "source_endpoint": "50% dissociation temperature",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 128,
+            "source_endpoint": "50% dissociation temperature",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 5,
+            "source_endpoint": "50% dissociation temperature",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 33,
+            "source_endpoint": "dissociation constant KD",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 406,
+            "source_endpoint": "dissociation constant KD",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 71,
+            "source_endpoint": "dissociation constant KD",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 21,
+            "source_endpoint": "dissociation constant KD (~EC50)",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 119,
+            "source_endpoint": "dissociation constant KD (~EC50)",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 11,
+            "source_endpoint": "dissociation constant KD (~EC50)",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 135,
+            "source_endpoint": "dissociation constant KD (~IC50)",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 931,
+            "source_endpoint": "dissociation constant KD (~IC50)",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 89,
+            "source_endpoint": "dissociation constant KD (~IC50)",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 53,
+            "source_endpoint": "half life",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 442,
+            "source_endpoint": "half life",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 52,
+            "source_endpoint": "half life",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 6,
+            "source_endpoint": "half maximal effective concentration (EC50)",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 91,
+            "source_endpoint": "half maximal effective concentration (EC50)",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 2,
+            "source_endpoint": "half maximal effective concentration (EC50)",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 259,
+            "source_endpoint": "half maximal inhibitory concentration (IC50)",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 2065,
+            "source_endpoint": "half maximal inhibitory concentration (IC50)",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 251,
+            "source_endpoint": "half maximal inhibitory concentration (IC50)",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 357,
+            "source_endpoint": "ligand presentation",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 2797,
+            "source_endpoint": "ligand presentation",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 386,
+            "source_endpoint": "ligand presentation",
+            "source_partition": "val"
+          },
+          {
+            "n_observations": 3,
+            "source_endpoint": "off rate",
+            "source_partition": "test"
+          },
+          {
+            "n_observations": 15,
+            "source_endpoint": "off rate",
+            "source_partition": "train"
+          },
+          {
+            "n_observations": 1,
+            "source_endpoint": "off rate",
+            "source_partition": "val"
+          }
+        ],
+        "n_components": 5843,
+        "n_largest_component_observations": 31,
+        "n_moved_observations": 3060,
+        "partition_counts": {
+          "test": 900,
+          "train": 7200,
+          "val": 900
+        }
+      }
+    },
+    "presto_version": "0.1.13",
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "runtime_seconds": 7.350594916002592,
+    "started_utc": "2026-10-16T06:40:18.830306+00:00",
+    "status": "success",
+    "versions": {
+      "datacache": "1.27.1",
+      "hitlist": "1.78.0",
+      "numpy": "2.5.3",
+      "pandas": "2.3.3",
+      "pyarrow": "25.0.1"
+    }
+  }
+}

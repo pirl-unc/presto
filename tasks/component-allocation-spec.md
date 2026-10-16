@@ -1,9 +1,9 @@
 # Versioned component allocation — Presto #105
 
-The actual human preflight has510 direct-KD observations across119 intact
-components, but506/0/4 train/validation/test;19 kinetics observations across12
+The actual human preflight has 510 direct-KD observations across 119 intact
+components, but 506/0/4 train/validation/test; 19 kinetics observations across 12
 components all enter train. The absolute-deficit allocator sorts largest first
-and initially favors the80% partition. Overall exact counts hide this component-
+and initially favors the 80% partition. Overall exact counts hide this component-
 size/assay-support imbalance. Fix allocation without breaking grouping or touching
 any historical membership, predictions or source labels.
 
@@ -31,9 +31,9 @@ bias on heterogeneous components and the new proportional allocation; test giant
 components, unequal fractions, zero test fraction, determinism, unknown policies,
 whole-component integrity and external assignments. Verify canonical Hitlist flag
 propagation and scoped historical membership preservation. Run format/lint/full
-suite and final-head CI, version0.1.13, separate PR/merge/clean-main distribution.
+suite and final-head CI, version 0.1.13, separate PR/merge/clean-main distribution.
 
-Actual qualification is a preregistered allocation audit on the exact9,000 public
+Actual qualification is a preregistered allocation audit on the exact 9,000 public
 roots from human-corpus-preflight-v1. Recover existing groups and verify v1 exactly
 reproduces original assignments before comparing v2. Retain every component and
 observation; do not re-cap/re-filter/construct a model. Publish both assignments,
@@ -41,5 +41,5 @@ per-assay endpoint/class/censor support, component-size distribution and overlap
 source-lineage limitations through datacache, with hashes and readable summaries.
 No predictive outcomes enter this comparison. Missing biological identities remain
 unknown; grouping remains limited by the frozen reviewed registry. A better support
-balance is not biological independence or training readiness. The corrected1.78
+balance is not biological independence or training readiness. The corrected 1.78
 corpus is a separate generation and requires its own subsequent frozen qualification.
