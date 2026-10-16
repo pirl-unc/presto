@@ -1,3 +1,10 @@
+# Internal excision scoring contract — Presto #88
+
+- [x] File the observed rule inconsistency and specify compatibility explicitly.
+- [ ] Implement versioned internal-site masking and checkpoint/resume semantics.
+- [ ] Verify known boundaries and exact historical predictions.
+- [ ] Format, lint, full tests, review, PR, merge and verified distribution.
+
 # Trypsin/P search contract — Presto #82
 
 - [x] Read primary enzyme documentation and frozen search settings.
