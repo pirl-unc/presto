@@ -1,3 +1,11 @@
+# Scope-aware contrast groups — Presto #81
+
+- [x] Record failure, design and verification boundary.
+- [x] Reproduce capped one-class groups and actual batch over-allocation (#86).
+- [x] Retain valid contrast categories, isolate scopes and debit seeded task quotas.
+- [x] 116 targeted loader/contrast/bulk tests passed before adding explicit legacy-source cases.
+- [ ] Format, lint, full tests, review, PR, merge and release.
+
 - [x] Fix scoped metadata constructor regression (#84); 197 targeted tests pass.
 - [ ] Repeat complete suite and actual audit after content-addressing repeated run receipts (#85).
 # Verified scoped proteomics adapter — 2026-10-15

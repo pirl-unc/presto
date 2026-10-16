@@ -3254,6 +3254,7 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         self._machinery_by_index: Dict[int, str] = {}
         self._branch_by_index: Dict[int, str] = {}
         self._contrast_groups: List[Tuple[int, ...]] = []
+        self._contrast_categories: List[Dict[int, str]] = []
 
         task_counts: Dict[str, int] = defaultdict(int)
         source_counts: Dict[str, int] = defaultdict(int)
@@ -3476,54 +3477,91 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             return lower_a - upper_b
         return 0.0
 
-    # Contrast groups. The identification argument behind the shotgun branch is
-    # a statement about *comparisons*, so the sampler has to make those
-    # comparisons occur inside a batch rather than hope they do:
-    #
-    #   protease      same peptide, different machinery  -> isolates excision
-    #   detectability same protein + machinery, observed vs not -> isolates
-    #                 detectability with abundance held fixed
-    #
-    # This generalizes the same-peptide/different-allele co-batching that
-    # binding already relies on for its ranking losses.
+    # Co-batch supported comparisons. Same-parent/search contrasts control the
+    # captured context; they do not establish intrinsic detectability or causality.
     CONTRAST_MAX_GROUP = 8
     BINDING_FAMILY_MAX_GROUP = 64
 
+    @staticmethod
+    def _binary_contrast_label(value) -> Optional[str]:
+        if value is None:
+            return None
+        try:
+            numeric = float(value)
+        except (TypeError, ValueError):
+            return None
+        return str(int(numeric)) if numeric in (0.0, 1.0) else None
+
+    @classmethod
+    def _contrast_scope(cls, sample: PrestoSample) -> Optional[Tuple[str, ...]]:
+        values = tuple(
+            str(getattr(sample, name, "") or "").strip()
+            for name in (
+                "source_bundle_id",
+                "source_search_space_id",
+                "source_protocol_id",
+                "source_reference_sha256",
+            )
+        )
+        if any(values) or sample.source_label_evidence or sample.scoped_peptide_id:
+            return ("scoped", *values) if all(values) else None
+        # Compatibility only: legacy source labels do not prove a shared search.
+        return ("legacy", cls._sample_source(sample))
+
+    @staticmethod
+    def _varied_contrast_indices(indices, categories, limit, rng):
+        """Reserve distinct categories before filling either group or batch caps."""
+        buckets = defaultdict(list)
+        for idx in indices:
+            buckets[categories[idx]].append(idx)
+        if limit < 2 or len(buckets) < 2:
+            return ()
+        keys = list(buckets)
+        rng.shuffle(keys)
+        for bucket in buckets.values():
+            rng.shuffle(bucket)
+        chosen = [buckets[key].pop() for key in keys[:limit]]
+        remainder = [idx for bucket in buckets.values() for idx in bucket]
+        rng.shuffle(remainder)
+        return tuple(chosen + remainder[: max(0, limit - len(chosen))])
+
     def _build_contrast_index(self) -> None:
-        by_peptide: Dict[str, List[int]] = defaultdict(list)
-        by_protein: Dict[Tuple[str, str], List[int]] = defaultdict(list)
+        by_peptide = defaultdict(list)
+        by_protein = defaultdict(list)
+        protease_categories, detectability_categories = {}, {}
         for idx in self._all_indices:
             if self._branch_by_index.get(idx) != "shotgun":
                 continue
             sample = self.dataset[idx]
+            scope = self._contrast_scope(sample)
+            if scope is None:
+                continue
+            scope = (self._metadata_by_index[idx][0], *scope)
+            machinery = self._machinery_by_index.get(idx, "unknown")
             peptide = str(getattr(sample, "peptide", "") or "").strip().upper()
-            if peptide:
-                by_peptide[peptide].append(idx)
+            if peptide and self._binary_contrast_label(sample.excision_label) is not None:
+                by_peptide[(peptide, *scope)].append(idx)
+                protease_categories[idx] = machinery
             protein = self._sample_source_protein(sample)
-            if protein != "unknown_protein":
-                by_protein[(protein, self._machinery_by_index.get(idx, "unknown"))].append(idx)
+            label = self._binary_contrast_label(sample.ms_detectability_label)
+            if protein != "unknown_protein" and label is not None:
+                by_protein[(protein, machinery, *scope)].append(idx)
+                detectability_categories[idx] = label
 
-        groups: List[Tuple[int, ...]] = []
-
-        # protease contrast: the group must actually vary the machinery
-        for indices in by_peptide.values():
-            if len(indices) < 2:
-                continue
-            machineries = {self._machinery_by_index.get(i) for i in indices}
-            if len(machineries) < 2:
-                continue
-            groups.append(tuple(indices[: self.CONTRAST_MAX_GROUP]))
-
-        # detectability contrast: same protein and enzyme, differing outcome
-        for indices in by_protein.values():
-            if len(indices) < 2:
-                continue
-            labels = {self._label_bucket_by_index(i) for i in indices}
-            if len(labels) < 2:
-                continue
-            groups.append(tuple(indices[: self.CONTRAST_MAX_GROUP]))
-
-        self._contrast_groups = groups
+        self._contrast_groups = []
+        self._contrast_categories = []
+        rng = random.Random(self.seed)
+        for candidates, categories in (
+            (by_peptide, protease_categories),
+            (by_protein, detectability_categories),
+        ):
+            for indices in candidates.values():
+                group = self._varied_contrast_indices(
+                    indices, categories, self.CONTRAST_MAX_GROUP, rng
+                )
+                if group:
+                    self._contrast_groups.append(group)
+                    self._contrast_categories.append({idx: categories[idx] for idx in group})
 
     def _label_bucket_by_index(self, idx: int) -> str:
         metadata = self._metadata_by_index.get(idx)
@@ -3964,18 +4002,26 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
                     break
                 if len(batch) >= self.batch_size:
                     break
-                group = self._contrast_groups[rng.randrange(len(self._contrast_groups))]
+                group_index = rng.randrange(len(self._contrast_groups))
+                group = self._contrast_groups[group_index]
+                group_task = self._metadata_by_index[group[0]][0]
                 fresh = [i for i in group if i not in in_batch]
                 if len(fresh) < 2:
                     continue
                 take = min(
                     len(fresh),
                     self.MAX_ROWS_PER_CONTRAST_GROUP,
-                    max(2, contrast_budget - contrast_rows_used),
-                    max(2, self.batch_size - len(batch)),
+                    contrast_budget - contrast_rows_used,
+                    self.batch_size - len(batch),
+                    quotas.get(group_task, 0),
                 )
-                contrast_rows_used += take
-                for idx in fresh[:take]:
+                selected = self._varied_contrast_indices(
+                    fresh, self._contrast_categories[group_index], take, rng
+                )
+                contrast_rows_used += len(selected)
+                if selected:
+                    quotas[group_task] -= len(selected)
+                for idx in selected:
                     if len(batch) >= self.batch_size:
                         break
                     self._record_batch_index(
