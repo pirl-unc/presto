@@ -1,0 +1,37 @@
+{
+  "n_verified_run_files": 48,
+  "n_selected_observations_verified_against_public_native_source": 9053,
+  "native_source_sha256": "f902341e90c1c57defc93f4bc540ffcbea1b41061afb4492ddd8aaa7642c65bd",
+  "n_model_checkpoints": 0,
+  "n_prediction_files": 0,
+  "n_credential_pattern_matches_in_non_catalog_run_artifacts": 0,
+  "known_public_protein_sequence_pattern_matches": {
+    "mhc-catalog/mhc-full-seqs.csv": {
+      "n_protein_literal_matches": 42,
+      "verified_public_catalog_sha256": "1d64f5af13f49497ea5c7219f8ec21edd1f973aecd3a6627a065fc554ef022c5"
+    },
+    "mhc-catalog/mhc-seqs-raw.csv": {
+      "n_protein_literal_matches": 11,
+      "verified_public_catalog_sha256": "4c61d2683c07f8aeee7845fb75038636fbb8d867adf5d55535d371ece16a94eb"
+    }
+  },
+  "catalog_artifacts_identical_to_verified_public_baseline": {
+    "mhc-full-seqs.csv": {
+      "sha256": "1d64f5af13f49497ea5c7219f8ec21edd1f973aecd3a6627a065fc554ef022c5",
+      "size_bytes": 61978594
+    },
+    "mhc-merge-report.txt": {
+      "sha256": "090f90ca4713cb55b22f43cfefb99e0d2246ebe2cbf2b5ac450393ad701964cb",
+      "size_bytes": 17142
+    },
+    "mhc-seqs-raw.csv": {
+      "sha256": "4c61d2683c07f8aeee7845fb75038636fbb8d867adf5d55535d371ece16a94eb",
+      "size_bytes": 32454808
+    },
+    "mhc-validation-report.txt": {
+      "sha256": "349f7aeafdbaa1edfe2de53f8bd674810a1e4fecaa2c7356feeeabc15016ce39",
+      "size_bytes": 76756
+    }
+  },
+  "interpretation": "All selected observations join exactly to the verified public source. Protein sequence literals matching a generic key-prefix pattern belong to the unchanged, hash-verified public catalog."
+}

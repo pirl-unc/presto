@@ -1478,3 +1478,27 @@ All 12 public assets were independently downloaded and hash-verified through
 datacache; all 17 archive members and intact observation/component identities
 were verified again from public bytes. Full local suite: 2,276 passed, four explicit
 skips in 525.13 seconds. Software CI/merge/distribution remain tracked in PR #106.
+
+## 2026-10-16 — Corrected frozen human corpus preflight
+
+- Agent/model: Codex (GPT-6).
+- Experiment: [2026-10-16_0750_codex_corrected-human-preflight](2026-10-16_0750_codex_corrected-human-preflight/).
+- Actual recipe: clean `e2e1e827f7b677f7c4f4d37dfc4ca9f386c58ffb`; released Presto 0.1.13 / Hitlist 1.78.0. Corrected native manifest `b180eba804532f633a6d61bb350584dbe24f8df4b4b96f02c6ec492c60144372`. Exact source/config/dependency/producer pins and local environment overrides are in the reproduction bundle and manifest. A failed local prelaunch is preserved; #107 fixes shell failure propagation before Modal.
+- Data: human-source/HLA, both classes; 13,190 binding / 3,909,515 elution / 19 kinetics / 741 stability eligible before caps. Explicit reservoir caps 5,000/5,000/1,000/1,000, effective independent family stream seed 59. Strict MHC filtering retains 4,492/3,856/19/686, totaling 9,053 roots/model samples. Full original/resolved MHC and source lineage remain available.
+- Partition: explicit relative_deficit_v2, peptide/lineage components, seed 42, requested 80/10/10; actual train/validation/test 7,241/906/906. No generated samples or missing observation IDs. Every selected ID/peptide joins exactly to the public native source with cited cell/MHC/condition/assay context.
+- Training/pretraining: none; canonical data_preflight_only and a forbidden model constructor. All synthetic ratios, augmentation and regularization weights zero. All 221 canonical output declarations remain undeclared. No prediction files, checkpoints or held-out predictive metrics exist; validation/test are retained for support and leakage audits.
+- Prospective candidate: assays.IC50_nM, log10(nM), direct binding:IC50 from IEDB/CEDAR. Minimum 50 observations, 50 distinct peptides and 50 exact values in each split, fixed before launch. Actual counts pass without adjustment. The new supported-output manifest binds exact fingerprints for the next fit; its canonical gate has not been executed. Empty inequality is treated as exact under the frozen loader policy, with original emptiness retained.
+
+| Condition / split | Direct IC50 observations | Distinct peptides | Exact values | Class I / II |
+| --- | ---: | ---: | ---: | ---: |
+| Corrected preflight, train | 2,074 | 1,031 | 1,599 | 877 / 1,197 |
+| Corrected preflight, validation | 265 | 126 | 210 | 99 / 166 |
+| Corrected preflight, test | 275 | 126 | 214 | 101 / 174 |
+
+- Runtime/hardware: 985.768 seconds; runner peak RSS 11,749,728,256 bytes excluding children; eight CPUs, 64 GiB RAM, 512 GiB scratch, one Torch/BLAS thread, zero loader workers, GPU explicitly none. Catalog reused through unchanged datacache recipe with four exact public-baseline hashes.
+- Leakage: zero peptide/observation/pMHC/known-origin overlap; shared studies 159 train/validation, 153 train/test, 109 validation/test. Only 87/9,053 roots have known origins. All donor/specimen/acquisition identities are unknown. Unknown is not an independence pass.
+- Unsupported/sparse evidence: off-rate 19/0/0; direct KD exact 144/6/5; elution positive-only 3,088/394/374; no measured processing or T-cell/TCR response records. Source generation, cap algorithm and selected roots differ from the old preflight/allocation audit, so its task counts and model results do not transfer.
+- Artifacts: [corrected-human-preflight-v1](https://github.com/pirl-unc/presto/releases/tag/corrected-human-preflight-v1), complete 48-member run archive SHA-256 `ce8d55cf1e7a14fb898f997918133f708526d145c65f01f97c37e2b0df6db0c8`, inventories, assignments/membership, full coverage, label policies, lineage audits, source-context tables, prospective manifest and reproduction recipes. Datacache owns acquisition, analysis and publication.
+- Decision: proceed to the separately prospective bounded IC50 fitting diagnostic only after the unchanged canonical manifest gate passes. No winner or predictive-quality claim exists in this data-only family. #48/#53 and Hitlist #678/#680 remain open.
+
+Publication closure: all 23 public downloads, 48 archive members, 9,053 source/partition joins and the fixed candidate counts independently verify through datacache. See the family verification receipt. No manifest gate or fitting result is implied.
