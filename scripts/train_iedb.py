@@ -170,6 +170,7 @@ IEDB_DEFAULTS = {
     "frozen_assignment_file": None,
     "frozen_assignment_sha256": None,
     "frozen_partition_policy": "peptide_disjoint",
+    "hitlist_component_allocation": "relative_deficit_v2",
     "bulk_ms": False,
     "bulk_cell_line": None,
     "max_bulk_ms": 0,
@@ -5518,6 +5519,9 @@ def run(args: argparse.Namespace) -> None:
             val_frac=float(args.val_frac),
             test_frac=float(getattr(args, "test_frac", 0.0)),
             policy=getattr(args, "frozen_partition_policy", "peptide_disjoint"),
+            component_allocation=getattr(
+                args, "hitlist_component_allocation", "relative_deficit_v2"
+            ),
             assignment_file=getattr(args, "frozen_assignment_file", None),
             assignment_sha256=getattr(args, "frozen_assignment_sha256", None),
         )

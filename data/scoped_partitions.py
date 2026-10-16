@@ -186,6 +186,7 @@ def prepare_scoped_partitions(
             )
     assigned = _assign_components(
         [[identity] for identity in frame.sample_id],
+        allocation="absolute_deficit_v1",
         seed=seed,
         val_frac=val_frac,
         test_frac=test_frac,

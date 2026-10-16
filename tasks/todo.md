@@ -1,3 +1,11 @@
+# Frozen component allocation — #105
+
+- [x] Record observed size/support bias and prospective compatibility contract.
+- [ ] Implement explicit label-blind relative-deficit allocation and legacy preservation.
+- [ ] Verify regressions and audit the exact public9,000-root cohort.
+- [ ] Publish/verify assignments and support/lineage reports; close experiment registry.
+- [ ] Format/lint/full checks, review, merge and distribute0.1.13.
+
 # Frozen Hitlist cap policy — #103
 
 - [x] Specify compatibility, actual policy metadata and bounded retention.
