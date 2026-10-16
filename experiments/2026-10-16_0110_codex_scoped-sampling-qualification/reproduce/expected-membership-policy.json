@@ -1,0 +1,49 @@
+{
+  "algorithm": "scoped-peptide-membership-v1",
+  "external_assignment_sha256": null,
+  "generated_controls": "none; absences are scoped candidates without invented assay IDs",
+  "label_policy": {
+    "ambiguous_occurrences": "mask parent and flanks; all occurrences remain in source sidecar",
+    "biological_replicates": "missing; one aggregate scope is not a biological replicate",
+    "censoring": "not_applicable",
+    "depth": "missing; no comparable depth series",
+    "endpoint": "observed_in_selected_search_scope",
+    "enzyme_contract": "Trypsin/P routes to trypsin_p; ordinary Trypsin stays proline-blocked",
+    "evidence_role": "proxy",
+    "excision": "no labels or generated controls supplied by this adapter",
+    "independence": "not established; one experiment, unresolved donors and specimens",
+    "units": "binary",
+    "version": 2,
+    "vote": "one peptide per verified search scope; collapse before capping"
+  },
+  "policy": "peptide_disjoint_within_search",
+  "presto_version": "0.1.11",
+  "projection_artifacts": {
+    "README.md": {
+      "sha256": "930d5db4c29a2946ca398974a761fbc3510cbe4aa5454db732298df2dcbd0916",
+      "size_bytes": 1006
+    },
+    "coverage.json": {
+      "sha256": "e78ef9525c7b6b0bbd8eecefd8aef3f4d488ef2229d48aa12c351d434dad42de",
+      "size_bytes": 328
+    },
+    "inspection.tsv": {
+      "sha256": "1a3478d1c3076b07182b199e4b51c082921cd8592daae1310050a6f20dabafb6",
+      "size_bytes": 13366
+    },
+    "label_policy.json": {
+      "sha256": "72699727bfaa9835e1f9e29f72876318e3d5c92d7e5030211521dc67bd9de881",
+      "size_bytes": 2495
+    },
+    "records.parquet": {
+      "sha256": "1ad5d3a88c5cc75bd1a54182af1a43d375edc1550c472e0bcff961c659687e6f",
+      "size_bytes": 74283567
+    }
+  },
+  "recipe_sha256": "93fd3852bb2ac12f0389b2c59b4da448a90d3a842cc50a0474056560ba44dfa4",
+  "seed": 42,
+  "selection_sha256": "f36b9c22b2f6fc96be6fc3571caa9aefa418d42e8cc439c487d9ba613398ba76",
+  "source_bundle_id": "sha256:441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b",
+  "test_frac": 0.1,
+  "val_frac": 0.1
+}
