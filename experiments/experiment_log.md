@@ -1364,3 +1364,40 @@ No cross-partition peptides, candidate IDs or measured observation IDs; known pr
 - Validation Presto AUROC/AP/log loss/Brier:0.80628/0.33324/0.55073/0.18739. Test:0.82984/0.38070/0.54864/0.18618. Train-prevalence val/test log loss0.33634/0.34454; train-only length/composition logistic0.27268/0.26899. Complete metric tables, 1,000 paired bootstrap intervals, coefficients and every held-out prediction retained publicly.
 - Preferred probability baseline: length/composition logistic. Presto improves AP point estimates but fails both baselines on probability quality. No readiness claim; #94 tracks a prospective follow-up. All splits share the search and proteins, donor/specimen independence unresolved.
 - [Download](https://github.com/pirl-unc/presto/releases/tag/scoped-detectability-qualification-v1): partitions, source/cell/assay context, policies, lineage/leakage/support reports, predictions, checkpoint, logs and inventories; fit SHA-256 `ab664220951f912433022684aa408ed0280c7786f9772661694acb87caa7351c`.
+
+## 2026-10-16 — Codex: actual human-corpus frozen-input preflight
+
+Agent/model Codex (GPT-6); [complete contract and results](2026-10-16_0045_codex_human-corpus-preflight/README.md).
+Clean source `2c73f2fb57c5d47c09c492e1f55d1b3ccecfe312`, Presto0.1.10;
+Hitlist1.76 baseline manifest `039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d`.
+Both MHC classes, human peptide source, original endpoints/units/censoring,
+strict sequence resolution, no flanks or synthetic/auxiliary data. Official MHC
+FASTA commits/hashes and full environment retained. CPU8/64GiB, one thread, no
+GPU; runtime1,950.43s, runner peak RSS21,010,509,824bytes (children excluded).
+No pretraining, fitting, predictions or model/baseline comparison; all priors0.
+
+| Selected evidence | Train | Validation | Test |
+| --- | ---: | ---: | ---: |
+| Samples | 7,200 | 900 | 900 |
+| Binding | 4,121 | 177 | 192 |
+| Direct KD | 506 | 0 | 4 |
+| Elution positives / negatives | 2,447 / 0 | 679 / 0 | 679 / 0 |
+| Half-life | 482 | 41 | 24 |
+| Temperature | 131 | 3 | 5 |
+| Off-rate | 19 | 0 | 0 |
+
+No peptide/observation/pMHC/known-origin overlap, but studies overlap and all
+donor/specimen/acquisition identities are unknown. Only79 selected roots have
+known origins. All221 output declarations remain undeclared; positive-only
+elution and missing held-out direct KD/kinetics support preclude broad readiness.
+Validation/test performance is inapplicable because model construction was
+forbidden. No winner. Protocol deviation: recorded reservoir flag ignored; actual
+per-family Random(59).sample selection preserved (#103). Producer predates
+curation fixes #694/#696. Original disk/worker failures also retained (#98/#99).
+
+All46 original archive files verified; full catalogs, membership TSV/parquet,
+source/cell/assay lineage, label/partition policies, support/leakage reports and
+runtime receipts are [downloadable](https://github.com/pirl-unc/presto/releases/tag/human-corpus-preflight-v1).
+Archive SHA-256 `444ac92e859da9afd3fcdf3c27ee3ae282f70a6134ac9c42f3c528cdcc1dae80`.
+Takeaway: ingestion/partition pipeline accepted; preserve limitations and qualify
+a separate corrected corpus before target-specific fitting. #678/#680/#48/#53 open.
