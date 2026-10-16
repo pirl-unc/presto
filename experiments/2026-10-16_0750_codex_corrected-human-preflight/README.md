@@ -42,7 +42,13 @@ fetches the released producer through datacache. CPU: eight, RAM: 64 GiB, scratc
 function/work limits: 50/45 minutes. Runtime, runner-only RSS, all logs, pip check,
 versions, catalog, membership, funnel, coverage and leakage evidence are retained.
 
-Status: recipe frozen before launch; no results yet.
+A first local prelaunch used the tooling interpreter, which lacked filelock. The
+wheel fetch failed; the hash guard then rejected the empty path before a remote
+app ran. The unchanged log is [preserved](results/prelaunch-failure.log). #107 fixes
+the shell wrapper to propagate a fetch failure before invoking Modal. The actual
+retry uses the shared-environment interpreter; no shared packages were modified.
+
+Status: corrected recipe frozen before remote launch; no experiment results yet.
 Next Step: execute, recover, independently verify and publish the complete bundle.
 Open Questions: whether the fixed IC50 support requirement passes and how much
 experimental-origin independence remains unresolved. #678/#680 and #48/#53 stay open.
