@@ -35,7 +35,7 @@ Final-head CI and deployment remain pending.
 - [x] Register the two-condition contract and exploratory repeated-test limitation.
 - [x] Fix shared-volume SQLite scratch (#102), preserve the first attempt, then run canonical preflight and both bounded fits with frozen membership.
 - [x] Publish and verify all predictions, exposure, baseline and uncertainty artifacts (14 independent downloads).
-- [ ] Close registry; format/lint/full checks, review, merge and release 0.1.11.
+- [x] Close registry; format/lint/full checks, review, merge and release 0.1.11.
 
 ## Sampling review
 
@@ -43,14 +43,17 @@ Both bounded conditions completed with identical frozen membership; all 122
 archive files and probability metrics from saved predictions verify. Shuffled
 batches improve over balanced sampling and prevalence, but logistic remains
 preferred on validation. Full local software gates pass (2,262 passed, four
-skips); final publication/CI/release remain pending.
+skips). Merged #101; clean-main CI passed 2,263 tests with three explicit skips.
+Version 0.1.11 is published and all four assets independently verified; the public
+wheel passes 43 scoped-input/partition regressions. #94 is closed as an investigation;
+logistic remains the preferred probability baseline.
 
 # Actual human-corpus preflight
 
 - [x] Register baseline limits, source pins, caps and CPU-only resource contract.
 - [x] Execute canonical frozen admission and preserve actual partitions/audits.
 - [x] Publish complete artifacts, hashes, support/coverage and independence limits (ten independent downloads).
-- [ ] Close experiment registry; format/lint/full gates, review, merge/release0.1.10.
+- [x] Close experiment registry; format/lint/full gates, review, merge/release 0.1.10.
 
 ## Human-preflight review
 
