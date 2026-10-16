@@ -37,6 +37,7 @@ DEFAULT_BINDING_THRESHOLD_NM = 500.0
 # Persist this with held-out artifacts so old row-wise AP can be distinguished
 # from the corrected threshold-group estimator without guessing from values.
 AUPRC_ESTIMATOR = "average_precision_distinct_thresholds_v2"
+AFFINITY_THRESHOLD_ESTIMATOR = "physical_nm_when_available_conservative_censor_v2"
 
 PREDICTION_LINEAGE_FIELDS = (
     "peptide",
@@ -92,6 +93,10 @@ def spearman(y_true: np.ndarray, y_pred: np.ndarray) -> Optional[float]:
 
 def pearson(y_true: np.ndarray, y_pred: np.ndarray) -> Optional[float]:
     if len(y_true) < 2:
+        return None
+    # The mean of a constant floating-point vector can round away from its
+    # repeated value. Detect degeneracy before that residual creates a false r.
+    if np.all(y_true == y_true[0]) or np.all(y_pred == y_pred[0]):
         return None
     true_centered = y_true - y_true.mean()
     pred_centered = y_pred - y_pred.mean()
@@ -190,6 +195,7 @@ def binding_threshold_metrics(
     qualifiers: np.ndarray,
     *,
     threshold_nm: float = 500.0,
+    raw_target_nm: Optional[Sequence[float]] = None,
 ) -> Dict[str, float]:
     """Qualifier-aware binding classification at an affinity threshold.
 
@@ -197,16 +203,31 @@ def binding_threshold_metrics(
     only when its bound is already at or below the threshold; a ``>``
     observation is definite only when its bound is above it. The remaining
     censored rows do not determine a class and are excluded.
+
+    Aligned physical nM targets avoid rounding a measured threshold value
+    across the cutoff during log transformation or serialization. NaN denotes
+    unavailable physical values; these retain the transformed-log diagnostic.
+    Counts expose both bases. Predictions remain continuous log10(nM) estimates.
     """
     cutoff = math.log10(float(threshold_nm))
+    at_or_below = y_true_log10 <= cutoff
+    physical = np.zeros(len(y_true_log10), dtype=bool)
+    if raw_target_nm is not None:
+        raw = np.asarray(raw_target_nm, dtype=float)
+        if raw.shape != y_true_log10.shape:
+            raise ValueError("Physical nM targets must align with transformed targets")
+        physical = ~np.isnan(raw)
+        if np.any(physical & (~np.isfinite(raw) | (raw <= 0))):
+            raise ValueError("Physical nM targets must be finite and positive, or NaN if unknown")
+        at_or_below = np.where(physical, raw <= threshold_nm, at_or_below)
     exact = qualifiers == 0
-    definite_binder = (qualifiers < 0) & (y_true_log10 <= cutoff)
-    definite_nonbinder = (qualifiers > 0) & (y_true_log10 > cutoff)
+    definite_binder = (qualifiers < 0) & at_or_below
+    definite_nonbinder = (qualifiers > 0) & ~at_or_below
     usable = exact | definite_binder | definite_nonbinder
     if not usable.any():
         return {}
 
-    labels = y_true_log10[usable] <= cutoff
+    labels = at_or_below[usable]
     predicted = y_pred_log10[usable] <= cutoff
     tp = int(np.sum(predicted & labels))
     tn = int(np.sum(~predicted & ~labels))
@@ -222,6 +243,8 @@ def binding_threshold_metrics(
         "recall": recall,
         "f1": _safe_div(2.0 * precision * recall, precision + recall),
         "n": float(len(labels)),
+        "n_physical_target_observations": float(np.sum(usable & physical)),
+        "n_transformed_target_observations": float(np.sum(usable & ~physical)),
     }
     # Lower log10(nM) means stronger binding, so negate for ranking metrics.
     area_under_roc = auroc(labels.astype(float), -y_pred_log10[usable])
@@ -437,6 +460,34 @@ class TaskPredictionAccumulator:
     def __len__(self) -> int:
         return len(self._true)
 
+    def _physical_affinity_targets(self) -> np.ndarray:
+        """Recover nM values from the effective objective, retaining source precision."""
+        values = np.full(len(self._true), np.nan)
+        for index, (observation, lineage) in enumerate(zip(self._observations, self._lineage)):
+            if observation.get("raw_unit") != "nM":
+                continue
+            try:
+                raw = float(observation["raw_target"])
+            except (TypeError, ValueError):
+                continue
+            if not math.isfinite(raw) or raw <= 0:
+                continue
+            if lineage.get("source_units") == "nM":
+                try:
+                    source = float(lineage["source_value"])
+                except (TypeError, ValueError):
+                    source = math.nan
+                # Source lineage cannot substitute a different objective label.
+                if (
+                    math.isfinite(source)
+                    and 0 < source <= np.finfo(np.float32).max
+                    and raw <= np.finfo(np.float32).max
+                    and np.float32(source) == np.float32(raw)
+                ):
+                    raw = source
+            values[index] = raw
+        return values
+
     def metrics(self) -> Dict[str, float]:
         """Overall metrics, plus a breakdown by what the negatives actually are.
 
@@ -460,6 +511,7 @@ class TaskPredictionAccumulator:
         summary = metrics_for_loss_type(self.loss_type, true_all, pred_all)
 
         qualifiers = np.asarray(self._qualifiers, dtype=int)
+        physical_affinity = self._physical_affinity_targets()
         if self.loss_type == "censor" and len(qualifiers) == len(true_all):
             exact = qualifiers == 0
             if exact.any():
@@ -467,7 +519,11 @@ class TaskPredictionAccumulator:
                     summary[f"exact_{name}"] = value
             if self.task_name.startswith("binding"):
                 for name, value in binding_threshold_metrics(
-                    true_all, pred_all, qualifiers, threshold_nm=500.0
+                    true_all,
+                    pred_all,
+                    qualifiers,
+                    threshold_nm=500.0,
+                    raw_target_nm=physical_affinity,
                 ).items():
                     summary[f"threshold_500nm_{name}"] = value
 
@@ -522,6 +578,7 @@ class TaskPredictionAccumulator:
                             pred_all[selector],
                             qualifiers[selector],
                             threshold_nm=500.0,
+                            raw_target_nm=physical_affinity[selector],
                         ).items():
                             summary[f"mapping_{category}_threshold_500nm_{name}"] = value
         if self.loss_type == "ce":
@@ -1004,7 +1061,11 @@ def write_holdout_artifacts(
     payload: Dict[str, Any] = {"split": split, "tasks": summary}
     if extra_summary:
         payload.update(dict(extra_summary))
-    payload["metric_estimators"] = {"auprc": AUPRC_ESTIMATOR}
+    payload["metric_estimators"] = {
+        "auprc": AUPRC_ESTIMATOR,
+        "pearson": "constant_input_undefined_v2",
+        "binding_threshold": AFFINITY_THRESHOLD_ESTIMATOR,
+    }
 
     # Flat metric CSV written here rather than through RunLogger: the logger is
     # closed in the trainer's `finally` block, so anything logged afterwards

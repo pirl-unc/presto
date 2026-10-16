@@ -213,6 +213,16 @@ selected-column resolver as training. Preserve validation/test loss,
 per-example predictions, qualifier-aware regression/threshold metrics and
 source/mapping lineage. State explicitly when a test split is absent.
 
+Binding threshold reports use physical nM targets when retained by the effective
+objective, including source precision when the source value agrees at the raw
+target's float32 precision. This keeps an exact 500 nM measurement on the
+`<=500 nM` boundary after log transformation or export. Unsupported or missing
+physical values retain the transformed-target diagnostic; report counts identify
+each basis. Predictions keep their continuous log10(nM) cutoff. Conservative
+censor-direction rules remain unchanged. Pearson is undefined for an exactly
+constant input vector. Held-out JSON records both estimator policies so earlier
+reports remain distinguishable.
+
 All scientific experiments must follow
 [EXPERIMENT_WORKFLOW.md](https://github.com/pirl-unc/presto/blob/main/experiments/EXPERIMENT_WORKFLOW.md), freeze launch
 configuration and dataset curation, and close out artifacts and metrics in the

@@ -1,3 +1,24 @@
+## 2026-10-16 — Physical affinity reporting audit; failed quality decision unchanged
+
+- **Agent/model:** Codex / GPT-6; [experiment and reproduction](2026-10-16_1405_codex_physical-affinity-metrics/README.md).
+- **Recipe:** clean `9a8de46dee32dbe626153f7b7442fbe8c8ce0e1f`, Presto 0.1.18 candidate;
+  hash-verified public 0.1.16/Hitlist 1.78.0 run, all 90 archive files and 2,614 IC50
+  observations (train/validation/test 2,074/265/275). Original source contexts,
+  raw nM values/censor operators, predictions and frozen cohort membership retained.
+- **Conditions:** data-only replay of every original predictor in effective and raw
+  target spaces; no training, pretraining, synthetic data, loss or checkpoint changes.
+  Original AdamW 200-step canonical fit and mean/ridge baselines remain the contract.
+- **Result:** four exact 500 nM training labels corrected; six constant-mean Pearson
+  entries now undefined. All 20 comparisons retain exact RMSE/MAE/Spearman. Validation/
+  test classifications unchanged; Presto effective RMSE 1.165477/1.310036 versus ridge
+  1.037626/1.138279. Selected training threshold accuracy changes .630918 to .628986.
+  Canonical summaries use physical nM for all classifiable observations, no fallback.
+- **Resources:** CPU only, no GPU/cloud; builder .835 s, process peak RSS 623,738,880 bytes.
+- **Decision:** quality screen still fails, ridge still preferred. This additive
+  [public audit](https://github.com/pirl-unc/presto/releases/tag/affinity-metric-numerics-audit-v1)
+  preserves the historical run. Shared studies, unknown biological identities,
+  species-role ambiguity and narrow predictions remain limitations; #53 remains open.
+
 ## 2026-10-16 — Frozen effective-target IC50 fit: finite fitting, failed quality screen
 
 - **Agent/model:** Codex / GPT-6; [experiment and full metrics](2026-10-16_1030_codex_effective-target-fit/README.md).

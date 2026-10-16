@@ -1,0 +1,66 @@
+{
+  "agent": "codex",
+  "auditor_version": "0.1.18",
+  "commit": "9a8de46dee32dbe626153f7b7442fbe8c8ce0e1f",
+  "dirty": false,
+  "execution": "CPU data-only replay; no model fitting or new predictions",
+  "inputs": {
+    "inventory.json": {
+      "sha256": "8539de79868d541c53688c7af30e388f834042338bfdb5dd77a4b40abca88494",
+      "size": 12810,
+      "url": "https://github.com/pirl-unc/presto/releases/download/effective-target-fit-qualification-v1/inventory.json"
+    },
+    "run.tar.gz": {
+      "sha256": "134c5ce774ad473f7f5a61273cdad864f31d17e1428e5703405a3e5243448bc9",
+      "size": 17475241,
+      "url": "https://github.com/pirl-unc/presto/releases/download/effective-target-fit-qualification-v1/run.tar.gz"
+    }
+  },
+  "limits": [
+    "No retraining, changed prediction or new biological evidence.",
+    "Shared studies, unknown donor/specimen/acquisition identities, species-context and narrow-prediction limitations remain.",
+    "Conservative censor-direction grouping retained; strict/inclusive operators remain original lineage fields."
+  ],
+  "metric_implementation": {
+    "sha256": "07425ca77d8393768cf0a7fe56713710db66ee79e3b74870caabf4d48dfee383",
+    "size": 48035
+  },
+  "model": "GPT-6",
+  "n_changed_heldout_binding_labels": 0,
+  "n_corrected_training_boundary_observations": 4,
+  "n_corrected_undefined_correlations": 6,
+  "n_source_observations": 2614,
+  "n_verified_archive_files": 90,
+  "original_producer": {
+    "hitlist": "1.78.0",
+    "presto": "0.1.16",
+    "recipe_commit": "1067714c768af2e4f3184154c85903bb3c46cf4b"
+  },
+  "process_peak_rss_bytes": 623738880,
+  "recipe": {
+    "sha256": "826c357a80e36ec919ae689bcf4937fcb9150b0a65699e99016c2751c89bd7bd",
+    "size": 13845
+  },
+  "regression_metrics_unchanged_except_undefined_correlations": true,
+  "runtime_scope": "audit builder only; source acquisition/imports excluded",
+  "runtime_seconds": 0.8347179999982473,
+  "unchanged_historical_decision": {
+    "all_output_readiness_established": false,
+    "biological_independence_established": false,
+    "bounded_fitting_check_passed": true,
+    "finite_optimization": true,
+    "n_nonfinite_tracked_elements": 0,
+    "preferred_over_ridge": false,
+    "primary_target_space": "effective: float32 log10(clip(nM, 0.001, 50000))",
+    "raw_target_diagnostics": "Reported separately; original measurements/bounds remain unchanged.",
+    "selection_rule": "Canonical complete-validation aggregate loss selects checkpoint; test is descriptive only.",
+    "training_rmse_improved": true,
+    "validation_quality_screen_passed": false
+  },
+  "versions": {
+    "datacache": "1.27.1",
+    "numpy": "2.5.3",
+    "pandas": "2.3.3",
+    "torch": "2.14.1"
+  }
+}
