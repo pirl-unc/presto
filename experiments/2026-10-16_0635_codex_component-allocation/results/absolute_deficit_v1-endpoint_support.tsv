@@ -1,0 +1,61 @@
+source_partition	source_endpoint	source_units	source_inequality	n_observations
+test				40
+test	50% dissociation temperature	°C		5
+test	dissociation constant KD	nM	=	3
+test	dissociation constant KD	nM	>	1
+test	dissociation constant KD (~EC50)	nM	=	8
+test	dissociation constant KD (~IC50)	nM		21
+test	dissociation constant KD (~IC50)	nM	=	9
+test	dissociation constant KD (~IC50)	nM	>	7
+test	half life	min		11
+test	half life	min	=	13
+test	half maximal effective concentration (EC50)	nM	=	3
+test	half maximal effective concentration (EC50)	nM	>	3
+test	half maximal inhibitory concentration (IC50)	nM		47
+test	half maximal inhibitory concentration (IC50)	nM	=	44
+test	half maximal inhibitory concentration (IC50)	nM	>	38
+test	half maximal inhibitory concentration (IC50)	nM	>=	8
+test	ligand presentation			639
+train				181
+train	50% dissociation temperature	°C		125
+train	50% dissociation temperature	°C	=	6
+train	dissociation constant KD	nM		141
+train	dissociation constant KD	nM	=	43
+train	dissociation constant KD	nM	>	322
+train	dissociation constant KD (~EC50)	nM		8
+train	dissociation constant KD (~EC50)	nM	=	115
+train	dissociation constant KD (~EC50)	nM	>	14
+train	dissociation constant KD (~IC50)	nM		727
+train	dissociation constant KD (~IC50)	nM	=	125
+train	dissociation constant KD (~IC50)	nM	>	204
+train	half life	min		87
+train	half life	min	=	371
+train	half life	min	>	23
+train	half life	min	>=	1
+train	half maximal effective concentration (EC50)	nM		18
+train	half maximal effective concentration (EC50)	nM	=	59
+train	half maximal effective concentration (EC50)	nM	>	11
+train	half maximal inhibitory concentration (IC50)	nM		947
+train	half maximal inhibitory concentration (IC50)	nM	=	854
+train	half maximal inhibitory concentration (IC50)	nM	>	485
+train	half maximal inhibitory concentration (IC50)	nM	>=	48
+train	ligand presentation			2266
+train	off rate	1/s		5
+train	off rate	1/s	=	14
+val				44
+val	50% dissociation temperature	°C		3
+val	dissociation constant KD (~EC50)	nM	=	4
+val	dissociation constant KD (~EC50)	nM	>	2
+val	dissociation constant KD (~IC50)	nM		34
+val	dissociation constant KD (~IC50)	nM	=	17
+val	dissociation constant KD (~IC50)	nM	>	11
+val	half life	min		15
+val	half life	min	=	23
+val	half life	min	>	3
+val	half maximal effective concentration (EC50)	nM		3
+val	half maximal effective concentration (EC50)	nM	=	2
+val	half maximal inhibitory concentration (IC50)	nM		37
+val	half maximal inhibitory concentration (IC50)	nM	=	42
+val	half maximal inhibitory concentration (IC50)	nM	>	20
+val	half maximal inhibitory concentration (IC50)	nM	>=	5
+val	ligand presentation			635

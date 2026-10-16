@@ -84,6 +84,24 @@ does not imply a detectability or excision target. Live bulk-MS inputs cannot be
 added to a frozen Hitlist run; verified search-scoped consumption is tracked in
 [Presto #70](https://github.com/pirl-unc/presto/issues/70).
 
+## Component allocation policy
+
+Canonical Hitlist training defaults to `--hitlist-component-allocation
+relative_deficit_v2`. Whole components remain ordered by descending size and a
+seeded tie break; allocation compares each partition's remaining fraction of its
+requested capacity. This avoids filling most of the large training partition
+before considering holdouts. No assay values or predictive outcomes enter this
+rule. Indivisible large components can still prevent exact fractions or adequate
+held-out endpoint support; inspect the resulting coverage and leakage reports.
+
+`absolute_deficit_v1` reproduces the historical allocation. The Python preparation
+API defaults to v1 for compatibility, and scoped-search membership explicitly
+retains v1. Frozen receipts record the selected allocator and whether assignments
+were computed or loaded from an external pinned file. External assignments remain
+authoritative after whole-component/nonempty-partition validation. Historical
+membership artifacts never change; policy/source/producer hashes identify new
+runs. The actual human preflight and #105 document the observed v1 support bias.
+
 ## Frozen membership and generated controls
 
 After source/target and MHC-resolution filtering, Presto assigns measured

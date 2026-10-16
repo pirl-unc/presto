@@ -46,6 +46,16 @@ def add_training_source_arguments(parser):
         help="Required measured-root independence policy; unknown required identities fail",
     )
     parser.add_argument(
+        "--hitlist-component-allocation",
+        default="relative_deficit_v2",
+        choices=["absolute_deficit_v1", "relative_deficit_v2"],
+        help=(
+            "Frozen Hitlist whole-component allocation: v2 balances fractional remaining "
+            "capacity; v1 reproduces the historical absolute-deficit policy. "
+            "Scoped-search membership retains its own frozen v1 policy."
+        ),
+    )
+    parser.add_argument(
         "--scoped-bundle", help="Optional local PXD bundle; requires its manifest hash"
     )
     parser.add_argument("--scoped-bundle-sha256", help="Expected local scoped manifest SHA-256")

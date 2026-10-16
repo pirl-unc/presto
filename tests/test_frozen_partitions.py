@@ -306,3 +306,82 @@ def test_prediction_exports_keep_generated_parents_and_partition(frozen_bundle, 
     for row in predictions:
         for name, value in expected[row["sample_id"]].items():
             assert row[name] == value
+
+
+def test_relative_allocation_avoids_concentrating_large_components_in_train():
+    from collections import Counter
+
+    from presto.data.frozen_partitions import _assign_components, _digest
+
+    components = [[f"large:{i}:{j}" for j in range(10)] for i in range(10)]
+    components += [[f"small:{i}"] for i in range(100)]
+    old = _assign_components(components, seed=42, val_frac=0.1, test_frac=0.1)
+    assert _digest(old) == "17434ef479ad925f227a237028e1f0311d65d2c603fa6f0a5388a2677c854323"
+    assert Counter(old[group[0]][0] for group in components if len(group) > 1) == {"train": 10}
+    new = _assign_components(
+        components, seed=42, val_frac=0.1, test_frac=0.1, allocation="relative_deficit_v2"
+    )
+    assert Counter(new[group[0]][0] for group in components if len(group) > 1) == {
+        "train": 8,
+        "val": 1,
+        "test": 1,
+    }
+    assert Counter(partition for partition, _ in new.values()) == {
+        "train": 160,
+        "val": 20,
+        "test": 20,
+    }
+    assert all(len({new[key] for key in group}) == 1 for group in components)
+    assert new == _assign_components(
+        list(reversed(components)),
+        seed=42,
+        val_frac=0.1,
+        test_frac=0.1,
+        allocation="relative_deficit_v2",
+    )
+    assert new != _assign_components(
+        components, seed=43, val_frac=0.1, test_frac=0.1, allocation="relative_deficit_v2"
+    )
+
+
+@pytest.mark.parametrize("test_frac", [0, 0.1])
+def test_relative_allocation_preserves_giant_components_and_required_splits(test_frac):
+    from presto.data.frozen_partitions import _assign_components
+
+    components = [[f"giant:{i}" for i in range(1000)]] + [[f"small:{i}"] for i in range(12)]
+    assigned = _assign_components(
+        components, seed=3, val_frac=0.1, test_frac=test_frac, allocation="relative_deficit_v2"
+    )
+    assert len(assigned) == 1012
+    assert all(len({assigned[key] for key in group}) == 1 for group in components)
+    assert {partition for partition, _ in assigned.values()} == (
+        {"train", "val", "test"} if test_frac else {"train", "val"}
+    )
+    assert {assigned[key][0] for key in components[0]} == {"train"}
+
+
+def test_unknown_component_allocation_is_rejected():
+    from presto.data.frozen_partitions import _assign_components
+
+    with pytest.raises(ValueError, match="Unknown component allocation"):
+        _assign_components([], seed=42, val_frac=0.1, test_frac=0.1, allocation="unrecorded")
+
+
+@pytest.mark.parametrize("frozen_bundle", ["three_peptides"], indirect=True)
+def test_relative_receipt_and_external_assignments_preserve_frozen_roots(frozen_bundle, tmp_path):
+    original, _ = prepare(frozen_bundle)
+    relative, _ = prepare(frozen_bundle, component_allocation="relative_deficit_v2")
+    assert relative.receipt["algorithm"] == "source-lineage-components-v2"
+    assert relative.receipt["component_allocation"] == "relative_deficit_v2"
+    assert relative.receipt["assignment_origin"] == "computed"
+    assert original.receipt["algorithm"] == "source-lineage-components-v1"
+    external = tmp_path / "historical.parquet"
+    original.assignments.to_parquet(external, index=False)
+    restored, _ = prepare(
+        frozen_bundle,
+        component_allocation="relative_deficit_v2",
+        assignment_file=external,
+        assignment_sha256=_sha256(external),
+    )
+    assert restored.assignments.equals(original.assignments)
+    assert restored.receipt["assignment_origin"] == "external"

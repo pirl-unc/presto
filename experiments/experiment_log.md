@@ -1438,3 +1438,43 @@ successful archive member and per-example log loss/Brier independently verified;
 [Download](https://github.com/pirl-unc/presto/releases/tag/scoped-sampling-qualification-v1).
 One search/seed, overlapping proteins, unknown donor/specimen identities and proxy
 labels limit conclusions. No default change or readiness claim; #48/#53/#678 open.
+
+## 2026-10-16 — Codex: label-blind component-allocation audit
+
+Agent/model Codex (GPT-6); [complete contract/results](2026-10-16_0635_codex_component-allocation/README.md).
+Clean source `83431016f30f9bae1ba47601ce4b2346db28cd52`, Presto 0.1.13; exact 9,000
+human-preflight roots from Hitlist 1.76 manifest `039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d`.
+Original admission/caps/MHC filtering/labels unchanged; 5,843 components, largest 31.
+V1 exactly reproduces original assignments. V2 compares remaining fractional
+capacity; no assay labels or predictive outcomes enter allocation. Seed 42, 80/10/10.
+
+| Endpoint | V1 train/val/test | V2 train/val/test |
+| --- | ---: | ---: |
+| All observations | 7,200/900/900 | 7,200/900/900 |
+| Direct KD | 506/0/4 | 406/71/33 |
+| Off rate | 19/0/0 | 15/1/3 |
+| Stability | 613/44/29 | 570/57/59 |
+| Elution positives | 2,447/679/679 | 3,003/418/384 |
+
+3,060 roots move; every observation/component remains intact. Both peptide/root
+leakage audits pass with known origins together; studies overlap and all donor/
+specimen/acquisition identities remain unknown. Original source/registry predates
+later curation fixes. Endpoints/proxies, units, censoring, classes and human-readable
+source context retained. Positive-only elution and extremely sparse kinetics still
+prevent broad qualification. No model/pretraining/optimizer/regularization, generated
+labels, predictions or validation/test performance; regression/500 nM metrics do not
+apply. Preferred allocation V2 for future Hitlist; historical/scoped policies preserved.
+
+Local CPU/no GPU, 7.35 s, peak RSS 769,818,624 bytes; bounded 65,536-row scans. Hitlist 1.78
+audit code, datacache 1.27.1, pandas 2.3.3 / numpy 2.5.3 / pyarrow 25.0.1 / Python 3.12.6.
+All 17 output archive members and identity invariants verified; SHA256
+f7a66f2a87e0d8b343730240c41f94e61cd649096f30c861504d102fb9d3994d.
+[Downloads](https://github.com/pirl-unc/presto/releases/tag/component-allocation-audit-v1)
+include proposed assignments, support/lineage reports and original runtime/source
+receipts through datacache. This is support balance, not biological independence or
+training readiness; #48/#53/#678/#680 remain open.
+
+All 12 public assets were independently downloaded and hash-verified through
+datacache; all 17 archive members and intact observation/component identities
+were verified again from public bytes. Full local suite: 2,276 passed, four explicit
+skips in 525.13 seconds. Software CI/merge/distribution remain tracked in PR #106.

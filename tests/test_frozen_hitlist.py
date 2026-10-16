@@ -418,6 +418,11 @@ def test_frozen_input_cli_options_and_training_guard(tmp_path, monkeypatch):
         ]
     )
     assert args.hitlist_bundle_sha256 == "a" * 64
+    assert args.hitlist_component_allocation == "relative_deficit_v2"
+    legacy = parser.parse_args(
+        ["train", "unified", "--hitlist-component-allocation", "absolute_deficit_v1"]
+    )
+    assert legacy.hitlist_component_allocation == "absolute_deficit_v1"
     monkeypatch.setattr("presto.scripts.train_iedb._assert_mhcseqs_importable", lambda: None)
     args.hitlist_bundle = None
     with pytest.raises(ValueError, match="requires --hitlist-bundle"):

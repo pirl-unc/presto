@@ -176,10 +176,17 @@ def test_manifest_is_frozen_before_any_source_loader_and_cannot_be_replaced(tmp_
 
 
 @pytest.mark.parametrize("frozen_bundle", ["three_peptides"], indirect=True)
-@pytest.mark.parametrize("data_source", ["merged_tsv", "hitlist"])
+@pytest.mark.parametrize(
+    "data_source,allocation",
+    [
+        ("merged_tsv", "relative_deficit_v2"),
+        ("hitlist", "absolute_deficit_v1"),
+        ("hitlist", "relative_deficit_v2"),
+    ],
+)
 @pytest.mark.parametrize("bulk", [False, True])
 def test_selected_sources_reach_census_with_competing_inputs(
-    tmp_path, monkeypatch, data_source, bulk, frozen_bundle
+    tmp_path, monkeypatch, data_source, allocation, bulk, frozen_bundle
 ):
     """Use actual TSV parsing, dataset conversion, splitting, collation and census.
 
@@ -282,6 +289,7 @@ def test_selected_sources_reach_census_with_competing_inputs(
                 "data_source": "hitlist",
                 "hitlist_bundle": str(frozen_bundle),
                 "hitlist_flanks": False,
+                "hitlist_component_allocation": allocation,
             }
             if data_source == "hitlist"
             else {}
@@ -344,6 +352,9 @@ def test_selected_sources_reach_census_with_competing_inputs(
         else set()
     )
     funnel = json.loads((run_dir / "data_funnel.json").read_text())
+    if data_source == "hitlist":
+        assert funnel["frozen_assignments"]["component_allocation"] == allocation
+        assert funnel["frozen_assignments"]["assignment_origin"] == "computed"
     if bulk:
         assert funnel["additions"]["bulk_ms"]["n_records"] == 2
         assert not funnel["additions"]["bulk_ms"]["in_silico_negatives_available"]

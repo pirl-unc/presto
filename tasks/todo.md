@@ -1,3 +1,21 @@
+# Frozen component allocation — #105
+
+- [x] Record observed size/support bias and prospective compatibility contract.
+- [x] Implement explicit label-blind relative-deficit allocation and legacy preservation.
+- [x] Verify regressions and audit the exact public 9,000-root cohort.
+- [x] Publish/verify assignments and support/lineage reports; close experiment registry.
+- [ ] Format/lint/full checks, review, merge and distribute 0.1.13.
+
+## Allocation review
+
+Format/lint, 72 focused regressions and the full local suite pass (2,276 tests,
+four explicit skips; 525.13 seconds). All 12 public assets were independently
+downloaded through datacache and hash-verified. Analysis verifies all 17 archive
+members, exact original V1 membership, unchanged observation/component identities
+and zero split components. V2 improves direct-KD support to 406/71/33 while
+kinetics remains sparse and biological independence remains unresolved. Final
+CI, merge and clean-main distribution remain pending.
+
 # Frozen Hitlist cap policy — #103
 
 - [x] Specify compatibility, actual policy metadata and bounded retention.
@@ -17,7 +35,7 @@ Final-head CI and deployment remain pending.
 - [x] Register the two-condition contract and exploratory repeated-test limitation.
 - [x] Fix shared-volume SQLite scratch (#102), preserve the first attempt, then run canonical preflight and both bounded fits with frozen membership.
 - [x] Publish and verify all predictions, exposure, baseline and uncertainty artifacts (14 independent downloads).
-- [ ] Close registry; format/lint/full checks, review, merge and release 0.1.11.
+- [x] Close registry; format/lint/full checks, review, merge and release 0.1.11.
 
 ## Sampling review
 
@@ -25,14 +43,17 @@ Both bounded conditions completed with identical frozen membership; all 122
 archive files and probability metrics from saved predictions verify. Shuffled
 batches improve over balanced sampling and prevalence, but logistic remains
 preferred on validation. Full local software gates pass (2,262 passed, four
-skips); final publication/CI/release remain pending.
+skips). Merged #101; clean-main CI passed 2,263 tests with three explicit skips.
+Version 0.1.11 is published and all four assets independently verified; the public
+wheel passes 43 scoped-input/partition regressions. #94 is closed as an investigation;
+logistic remains the preferred probability baseline.
 
 # Actual human-corpus preflight
 
 - [x] Register baseline limits, source pins, caps and CPU-only resource contract.
 - [x] Execute canonical frozen admission and preserve actual partitions/audits.
 - [x] Publish complete artifacts, hashes, support/coverage and independence limits (ten independent downloads).
-- [ ] Close experiment registry; format/lint/full gates, review, merge/release0.1.10.
+- [x] Close experiment registry; format/lint/full gates, review, merge/release 0.1.10.
 
 ## Human-preflight review
 
