@@ -4,7 +4,7 @@
 - [x] Freeze and verify launcher, original-model diagnostic and baseline implementation.
 - [x] Preserve/stop the incompatible raw-target attempt before optimization; file #110.
 - [x] Audit all 2,614 source-linked IC50 rows and guard against relaunching the mismatch.
-- [ ] Publish/independently verify the complete interrupted archive, target-policy audit and inspection table.
+- [x] Publish/independently verify all 19 public assets, 25 archived files, 2,614 source/context/partition joins and every effective target.
 - [ ] Close registry, review, merge and release 0.1.15 after final checks.
 
 ## Target-policy review
@@ -15,6 +15,8 @@ The raw-target plan cannot be executed honestly without a new explicit contract;
 no manifest or criterion was relaxed. Seven focused safeguards and the full local
 suite (2,276 passed, four skips) pass. #110 owns canonical policy disclosure,
 per-objective changed-target audits and prospective binding before a future fit.
+All 19 public downloads verify. The raw-target relaunch guard also rejects the
+full frozen cohort with exactly 211 changed measurements/bounds.
 
 # Corrected human consumer qualification
 
