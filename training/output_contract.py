@@ -11,6 +11,7 @@ from typing import Any, Mapping
 import torch
 
 from ..data.collate import PrestoCollator
+from ..data.species_context import MOLECULAR_SPECIES_POLICY
 from ..data.vocab import (
     BINDING_ASSAY_METHODS,
     BINDING_ASSAY_PREP,
@@ -23,7 +24,7 @@ from .supervision import PANEL_TASK_BASE_WEIGHTS, ROW_TASK_SPECS
 from .target_policy import AffinityTargetPolicy
 
 
-CONTRACT_VERSION = 2
+CONTRACT_VERSION = 3
 RESIDUAL_MODES = (
     "legacy",
     "pooled_single_output",
@@ -226,7 +227,11 @@ class OutputContract:
         return self.aliases[path].canonical if path in self.aliases else path
 
     def to_dict(self) -> dict:
-        return {"schema_version": CONTRACT_VERSION, **asdict(self)}
+        return {
+            "schema_version": CONTRACT_VERSION,
+            "molecular_mhc_species_policy": MOLECULAR_SPECIES_POLICY,
+            **asdict(self),
+        }
 
     def validate_outputs(self, outputs: Mapping[str, Any]) -> None:
         """Reject undeclared quantities, wrong shapes and drifting alias values."""

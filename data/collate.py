@@ -13,6 +13,7 @@ import torch
 from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
 from .source_lineage import ALL_SOURCE_LINEAGE_FIELDS
+from .species_context import SPECIES_LINEAGE_FIELDS, species_lineage_fields
 from .sequence_augmentation import AugmentationConfig, augment_sample_sequences
 from .vocab import (
     cell_lineage_index,
@@ -346,6 +347,7 @@ class PrestoSample:
     source_protocol_id: str = ""
     source_reference_sha256: str = ""
     source_parent_assignment_basis: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -482,6 +484,7 @@ class PrestoBatch:
     target_quals: Dict[str, torch.Tensor] = field(default_factory=dict)
     # Evidence origins stay on the host for optional training-update audits.
     sample_evidence: List[Dict[str, Any]] = field(default_factory=list)
+    molecular_mhc_species: List[Optional[str]] = field(default_factory=list)
 
     def model_inputs(self) -> Dict[str, Any]:
         """One row-level forward contract shared by training and evaluation.
@@ -548,6 +551,7 @@ class PrestoBatch:
             same_peptide_diff_allele_pairs=_move(self.same_peptide_diff_allele_pairs),
             same_allele_diff_peptide_pairs=_move(self.same_allele_diff_peptide_pairs),
             processing_species=self.processing_species,
+            molecular_mhc_species=self.molecular_mhc_species,
             primary_alleles=self.primary_alleles,
             sample_ids=self.sample_ids,
             sample_sources=self.sample_sources,
@@ -1978,6 +1982,7 @@ class PrestoCollator:
         else:
             tcell_mil_context = {}
 
+        species_details = [species_lineage_fields(sample) for sample in samples]
         return PrestoBatch(
             pep_tok=pep_tok,
             mhc_a_tok=mhc_a_tok,
@@ -2022,6 +2027,9 @@ class PrestoCollator:
             same_peptide_diff_allele_pairs=binding_pair_indices["same_peptide_diff_allele_pairs"],
             same_allele_diff_peptide_pairs=binding_pair_indices["same_allele_diff_peptide_pairs"],
             processing_species=[s.species for s in samples],
+            molecular_mhc_species=[
+                row["molecular_mhc_species_bucket"] or None for row in species_details
+            ],
             primary_alleles=[s.primary_allele or "" for s in samples],
             sample_ids=[s.sample_id for s in samples],
             sample_sources=[s.sample_source or "" for s in samples],
@@ -2045,6 +2053,7 @@ class PrestoCollator:
                 "source_mhc_alleles": [";".join(s.source_mhc_alleles) for s in samples],
                 "resolved_mhc_alleles": [";".join(s.resolved_mhc_alleles) for s in samples],
                 **{name: [getattr(s, name) for s in samples] for name in ALL_SOURCE_LINEAGE_FIELDS},
+                **{name: [row[name] for row in species_details] for name in SPECIES_LINEAGE_FIELDS},
                 "source_sample_label": [s.source_sample_label for s in samples],
                 "source_sample_attribution": [s.source_sample_attribution for s in samples],
                 "mapping_gene_name": [s.mapping_gene_name for s in samples],

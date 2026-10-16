@@ -68,6 +68,19 @@ def test_insufficient_independent_components_fail(frozen_bundle):
 
 
 @pytest.mark.parametrize("frozen_bundle", ["three_peptides"], indirect=True)
+def test_frozen_species_roles_bind_membership_and_reject_sample_drift(frozen_bundle):
+    partitions, groups = prepare(frozen_bundle)
+    model = model_dataset(groups)
+    _, original = finalize_frozen_membership(partitions, model, groups)
+    groups["binding_records"][0].species_context["presenting_species"] = "Rattus norvegicus"
+    with pytest.raises(ValueError, match="no longer matches"):
+        finalize_frozen_membership(partitions, model, groups)
+    changed = model_dataset(groups)
+    _, revised = finalize_frozen_membership(partitions, changed, groups)
+    assert original["membership_sha256"] != revised["membership_sha256"]
+
+
+@pytest.mark.parametrize("frozen_bundle", ["three_peptides"], indirect=True)
 def test_reproducible_assignments_and_actual_membership(frozen_bundle):
     partitions, groups = prepare(frozen_bundle)
     assert partitions.receipt["coverage"]["n_selected_observations"] == 9

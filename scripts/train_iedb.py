@@ -43,7 +43,6 @@ from presto.data import (
     infer_mhc_class,
     infer_species,
     normalize_mhc_class,
-    normalize_processing_species_label,
     load_iedb_binding,
     load_iedb_kinetics,
     load_iedb_stability,
@@ -84,6 +83,7 @@ from presto.data.mhc_sequence_resolver import (
 )
 from presto.data.vocab import FOREIGN_CATEGORIES
 from presto.data.source_lineage import generated_record, source_lineage_fields
+from presto.data.species_context import molecular_mhc_species
 from presto.models.presto import Presto
 from presto.models.affinity import (
     DEFAULT_MAX_AFFINITY_NM,
@@ -3326,18 +3326,11 @@ def _write_unresolved_mhc_report(
     return outputs
 
 
-def _coarse_species_bucket(
-    species: Optional[str],
-    allele: Optional[str],
-) -> str:
-    bucket = normalize_processing_species_label(species)
-    if bucket in {None, "", "other"}:
-        inferred = normalize_processing_species_label(infer_species(str(allele or "")))
-        if inferred:
-            bucket = inferred
-    if bucket not in {"human", "murine", "nhp", "other"}:
-        bucket = "other"
-    return str(bucket)
+def _coarse_species_bucket(allele: Optional[str]) -> str:
+    bucket = molecular_mhc_species((allele,))["molecular_mhc_species_bucket"]
+    if not bucket:
+        return "unknown"
+    return bucket if bucket in {"human", "murine", "nhp"} else "other"
 
 
 def _audit_mhc_sequence_coverage(
@@ -3367,7 +3360,6 @@ def _audit_mhc_sequence_coverage(
         modality: str,
         allele: Optional[str],
         direct_seq: Optional[str],
-        species: Optional[str],
         source: Optional[str] = None,
     ) -> None:
         # Synthetic class-I no-alpha negatives intentionally ablate MHCa.
@@ -3379,7 +3371,7 @@ def _audit_mhc_sequence_coverage(
             mhc_sequences=mhc_sequences,
         )
         state = "resolved" if resolved else "missing"
-        sp = _coarse_species_bucket(species=species, allele=allele)
+        sp = _coarse_species_bucket(allele=allele)
         overall_state[state] += 1
         modality_state[modality][state] += 1
         species_by_state[state][sp] += 1
@@ -3390,7 +3382,6 @@ def _audit_mhc_sequence_coverage(
             modality="binding",
             allele=rec.mhc_allele,
             direct_seq=rec.mhc_sequence,
-            species=rec.species,
             source=rec.source,
         )
     for rec in kinetics_records:
@@ -3398,7 +3389,6 @@ def _audit_mhc_sequence_coverage(
             modality="kinetics",
             allele=rec.mhc_allele,
             direct_seq=rec.mhc_sequence,
-            species=rec.species,
             source=rec.source,
         )
     for rec in stability_records:
@@ -3406,7 +3396,6 @@ def _audit_mhc_sequence_coverage(
             modality="stability",
             allele=rec.mhc_allele,
             direct_seq=rec.mhc_sequence,
-            species=rec.species,
             source=rec.source,
         )
     for rec in processing_records:
@@ -3414,7 +3403,6 @@ def _audit_mhc_sequence_coverage(
             modality="processing",
             allele=rec.mhc_allele,
             direct_seq=None,
-            species=rec.species,
             source=rec.source,
         )
     for rec in elution_records:
@@ -3426,7 +3414,6 @@ def _audit_mhc_sequence_coverage(
                 modality="elution",
                 allele=allele,
                 direct_seq=None,
-                species=rec.species,
                 source=rec.source,
             )
     for rec in tcell_records:
@@ -3434,7 +3421,6 @@ def _audit_mhc_sequence_coverage(
             modality="tcell",
             allele=rec.mhc_allele,
             direct_seq=rec.mhc_sequence,
-            species=rec.species,
             source=rec.source,
         )
     for rec in vdjdb_records:
@@ -3442,7 +3428,6 @@ def _audit_mhc_sequence_coverage(
             modality="vdjdb",
             allele=rec.mhc_a,
             direct_seq=None,
-            species=getattr(rec, "species", None),
             source=rec.source,
         )
 
@@ -3469,6 +3454,7 @@ def _audit_mhc_sequence_coverage(
             "murine": int(counter.get("murine", 0)),
             "nhp": int(counter.get("nhp", 0)),
             "other": int(counter.get("other", 0)),
+            "unknown": int(counter.get("unknown", 0)),
         }
 
     species_summary = {

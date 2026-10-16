@@ -1,3 +1,11 @@
+# Molecular MHC species and source-role provenance — #115
+
+- [x] Review native evidence and specify a bounded molecular-label/provenance correction.
+- [x] Carry independent native species axes through typed records, samples and exports.
+- [x] Derive masked molecular MHC supervision and coverage from allele identity.
+- [ ] Verify row/MIL/lineage/fingerprint paths and publish the actual source-linked audit.
+- [ ] Format/lint/full checks, review, merge and distribute 0.1.19.
+
 # Physical affinity metric reporting — #116
 
 - [x] Specify observed numerical defects, compatibility and immutable-run boundaries.
@@ -20,7 +28,7 @@ No held-out classes or failed quality decision change. Full CI and release remai
 - [x] Prepare and test a new isolated recipe with verified released producer pins.
 - [x] Publish and freeze the new prospective manifest without changing historical contracts.
 - [x] Run canonical full-input qualification and bounded fitting; preserve all outcomes.
-- [ ] Audit/publish complete artifacts and comparisons, then review/merge/release 0.1.17.
+- [x] Audit/publish complete artifacts and comparisons, then review/merge/release 0.1.17.
 
 ## Effective-fit review
 

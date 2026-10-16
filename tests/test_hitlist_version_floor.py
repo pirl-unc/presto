@@ -50,11 +50,11 @@ class TestVersionParsing:
 
 
 class TestFloorEnforcement:
-    @pytest.mark.parametrize("raw", ["1.53.0", "1.53.1", "1.54.0", "2.0.0"])
+    @pytest.mark.parametrize("raw", ["1.75.0", "1.78.0", "1.80.0", "2.0.0"])
     def test_supported_versions_pass(self, raw):
         require_supported_hitlist(raw)
 
-    @pytest.mark.parametrize("raw", ["1.41", "1.45.0", "1.46.0", "1.52.9", "0.9"])
+    @pytest.mark.parametrize("raw", ["1.41", "1.45.0", "1.53.0", "1.74.9", "0.9"])
     def test_versions_below_the_floor_raise(self, raw):
         with pytest.raises(RuntimeError, match="too old"):
             require_supported_hitlist(raw)
@@ -66,6 +66,7 @@ class TestFloorEnforcement:
         message = str(excinfo.value)
         assert "apm_genes_perturbed" in message
         assert "1.53.0" in message
+        assert "species-role provenance" in message
 
     @pytest.mark.parametrize("raw", [None, "", "unknown"])
     def test_unreadable_version_is_allowed_through(self, raw):
@@ -76,9 +77,8 @@ class TestFloorEnforcement:
         require_supported_hitlist(raw)
 
     def test_the_floor_matches_what_the_module_documents(self):
-        """1.53.0 for the arm-attribution columns; 1.46.0 was only enough for
-        the per-sample APM split (presto#13, then presto#15)."""
-        assert MINIMUM_HITLIST_VERSION == (1, 53, 0)
+        """Native species-role fields use the existing validated dependency floor."""
+        assert MINIMUM_HITLIST_VERSION == (1, 75, 0)
 
 
 class TestDeclaredDependencyAgrees:
