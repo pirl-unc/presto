@@ -35,3 +35,12 @@ comparison tables and paired bootstrap intervals. Archive every original file,
 publish all hashes and independently download them. No silent historical edits.
 
 Pin pandas2.3.3/pyarrow25.0.1/numpy2.5.3/scipy1.18.1/scikit-learn1.9.1 and released Hitlist1.75.0/datacache1.27.1 to match the original cohort serialization and baseline contract. Torch2.14.1 CPU and mhcseqs2.6.13 are explicit. This separate experiment environment does not change the shared environment or the frozen human-cohort producer.
+
+## Infrastructure correction before fitting (#102)
+
+The first actual preflight placed a disposable 730MB SQLite database inside the
+shared-volume publication staging directory. Keep that scratch on local temporary
+storage and final outputs in datacache. This changes storage placement only; do
+not relax the original membership/support fingerprint. A regression simulates a
+publication filesystem that cannot host SQLite and verifies final output and
+scratch cleanup. Preserve the stopped attempt before retrying either condition.

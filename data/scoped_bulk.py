@@ -180,9 +180,10 @@ def _projection(directory, digest, manifest, root):
         )
         counts_by_evidence = Counter(dict.fromkeys(EVIDENCE, 0))
         preview = []
-        with TemporaryDirectory(
-            prefix=".collapse-", dir=Path(outputs["records.parquet"]).parent
-        ) as scratch:
+        # The publication cache may live on a shared/network filesystem. Keep
+        # disposable random-I/O SQLite state on local temporary storage; only
+        # complete reusable outputs belong in the datacache generation.
+        with TemporaryDirectory(prefix="presto-scoped-collapse-") as scratch:
             connection = sqlite3.connect(str(Path(scratch) / "occurrences.sqlite"))
             try:
                 connection.execute("PRAGMA cache_size=-8192")

@@ -1,7 +1,7 @@
 # Scoped sampling investigation — #94
 
 - [x] Register the two-condition contract and exploratory repeated-test limitation.
-- [ ] Run canonical preflight and both bounded fits with frozen membership.
+- [ ] Fix shared-volume SQLite scratch (#102), preserve the first attempt, then run canonical preflight and both bounded fits with frozen membership.
 - [ ] Publish and verify all predictions, exposure, baseline and uncertainty artifacts.
 - [ ] Close registry; format/lint/full checks, review, merge and release 0.1.11.
 

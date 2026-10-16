@@ -246,6 +246,28 @@ def test_capping_after_collapse_and_verified_cache_reuse(scoped_bundle, monkeypa
     assert records == again and stats["projection"] == reused["projection"]
 
 
+def test_publication_cache_need_not_support_sqlite(scoped_bundle, monkeypatch):
+    directory, manifest_sha256, cache = scoped_bundle
+    connect = sqlite3.connect
+    scratch_paths = []
+
+    def local_sqlite(database, *args, **kwargs):
+        path = Path(database).resolve()
+        if path.is_relative_to(cache.resolve()):
+            raise sqlite3.OperationalError("SQLite unavailable on publication filesystem")
+        scratch_paths.append(path)
+        return connect(database, *args, **kwargs)
+
+    monkeypatch.setattr(sqlite3, "connect", local_sqlite)
+    records, stats = load_scoped_bulk_records(
+        directory, bundle_sha256=manifest_sha256, cache_dir=cache
+    )
+    assert records
+    assert stats["n_records"] == len(records)
+    assert scratch_paths and all(not path.parent.exists() for path in scratch_paths)
+    assert (Path(stats["projection"]["directory"]) / "records.parquet").is_file()
+
+
 def test_bad_pin_and_corrupt_payload_are_rejected(scoped_bundle):
     directory, digest, cache = scoped_bundle
     with pytest.raises(ValueError, match="requires its manifest"):
