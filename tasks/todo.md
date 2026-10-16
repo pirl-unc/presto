@@ -1,3 +1,10 @@
+# Corrected human consumer qualification
+
+- [x] Register released producers, frozen corrected inputs and prospective IC50 evidence thresholds.
+- [ ] Freeze and run canonical preflight with explicit reservoir/v2 policies.
+- [ ] Publish and independently verify new membership, source/label support and leakage limits.
+- [ ] Close experiment registry; format/lint/full checks, review, merge and distribute 0.1.14.
+
 # Frozen component allocation — #105
 
 - [x] Record observed size/support bias and prospective compatibility contract.

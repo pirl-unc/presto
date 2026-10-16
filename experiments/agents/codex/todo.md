@@ -92,3 +92,5 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [x] Run and close [human-corpus frozen preflight](plans/human-corpus-preflight.md): actual source admission, partitions, supervision coverage and leakage limitations.
 
 - [x] Run and close [component allocation audit](plans/component-allocation.md) on the frozen public human cohort; preserve historical memberships.
+
+- [ ] Run and close [corrected human preflight](plans/corrected-human-preflight.md) with new membership and a frozen candidate IC50 support declaration.

@@ -1,0 +1,23 @@
+{
+  "purpose": "Prospective fixed candidate requirements for the next fitting diagnostic; not a trained-output claim or executed manifest gate.",
+  "output": "assays.IC50_nM",
+  "columns": [
+    ""
+  ],
+  "evidence_family": "binding:IC50",
+  "evidence_role": "direct",
+  "raw_sources": [
+    "iedb",
+    "cedar"
+  ],
+  "required_splits": [
+    "train",
+    "val",
+    "test"
+  ],
+  "minimum_unique_observations": 50,
+  "minimum_unique_peptides": 50,
+  "minimum_unique_exact_observations": 50,
+  "target_space": "log10(nM)",
+  "decision_if_insufficient": "Record failure; do not relax thresholds or claim readiness."
+}
