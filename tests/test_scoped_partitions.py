@@ -152,6 +152,14 @@ def test_canonical_scoped_preflight_never_reads_unrelated_sources(
     assert funnel["stages"]["loaded_post_cap"]["bulk_ms"] == 4
     assert funnel["frozen_membership"]["policy"] == "peptide_disjoint_within_search"
     assert (run_dir / "split_support.json").exists()
+    configured = json.loads((run_dir / "config.json").read_text())
+    effective = json.loads((run_dir / "regularization.json").read_text())
+    assert configured["binding_orthogonality_weight"] == 0.01
+    assert configured["balanced_batches"] is True
+    assert effective["base"]["binding_orthogonality_weight"] == 0.01
+    assert len(effective["epochs"]) == configured["epochs"]
+    assert effective["epochs"][0]["parameters"]["consistency_cascade_weight"] == 0.0
+    assert effective["epochs"][0]["parameters"]["binding_orthogonality_weight"] == 0.01
 
 
 @pytest.mark.parametrize(

@@ -41,3 +41,15 @@ def test_pick_train_section_prefers_nested_train_subcommand():
     section = pick_train_section(config, "synthetic")
     assert section["epochs"] == 2
     assert section["batch_size"] == 4
+
+
+def test_explicit_boolean_default_is_not_replaced_by_config():
+    from presto.training.config_io import merge_namespace_with_config
+
+    args = Namespace(balanced_batches=True, _explicit_cli_dests={"balanced_batches"})
+    assert (
+        merge_namespace_with_config(
+            args, {"balanced_batches": True}, {"balanced_batches": False}
+        ).balanced_batches
+        is True
+    )

@@ -206,3 +206,20 @@ roles, no cross-role default copying, full training/serving/MIL parity,
 groove-correct priors, family-specific quantitative routing, joint assay panels,
 full-corpus support and scientific validation. Checkpoint migration fallbacks
 are not part of the new design.
+
+### Effective regularization receipts
+
+The canonical trainer exposes `--binding-orthogonality-weight` (default `0.01`;
+`0` disables it). Disabling the other consistency weights alone does not disable
+this prior. The direct script and unified CLI also accept the corresponding
+JSON/YAML field. Explicit CLI values, including a value equal to the default,
+take precedence over config files. Negative or nonfinite prior weights fail
+before data/model work.
+
+Every run directory, including preflight, now contains `regularization.json`
+with the complete base regularization parameters and configured epoch schedule.
+`config.json` explicitly records the binding-orthogonality weight and balanced
+sampling default. These are configuration receipts; per-loss metrics and output
+update/support reports establish which losses actually ran. The 2026-10-15 scoped
+qualification retains its original hidden-prior deviation and failed probability
+quality (#94/#95); its archived results have not been rewritten.

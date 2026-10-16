@@ -203,6 +203,8 @@ IEDB_DEFAULTS = {
     "synthetic_processing_negative_ratio": 0.5,
     "synthetic_negative_min_nM": DEFAULT_MAX_AFFINITY_NM,
     "synthetic_negative_max_nM": DEFAULT_MAX_AFFINITY_NM,
+    "binding_orthogonality_weight": 0.01,
+    "balanced_batches": True,
     "consistency_cascade_weight": 0.2,
     "consistency_assay_affinity_weight": 0.1,
     "consistency_assay_presentation_weight": 0.1,
@@ -478,22 +480,9 @@ def _explicit_cli_dests(
     argv: Optional[Sequence[str]],
 ) -> set[str]:
     """Infer which argparse destinations were explicitly set on the CLI."""
-    option_to_dest: Dict[str, str] = {}
-    for action in parser._actions:
-        for option in action.option_strings:
-            option_to_dest[option] = action.dest
+    from presto.training.config_io import explicit_cli_destinations
 
-    raw_args = list(sys.argv[1:] if argv is None else argv)
-    explicit: set[str] = set()
-    for token in raw_args:
-        text = str(token)
-        if not text.startswith("-"):
-            continue
-        option = text.split("=", 1)[0]
-        dest = option_to_dest.get(option)
-        if dest:
-            explicit.add(dest)
-    return explicit
+    return explicit_cli_destinations(parser, list(sys.argv[1:] if argv is None else argv))
 
 
 def _apply_profile_overrides(
@@ -4723,6 +4712,7 @@ def _record_source_loader_funnel(
 def run(args: argparse.Namespace) -> None:
     """Run unified multi-source training with parsed arguments."""
     args = _resolve_run_args(args)
+    regularization_cfg = _regularization_config_from_args(args)
     torch.manual_seed(args.seed)
     random.seed(args.seed)
     data_seed_arg = getattr(args, "data_seed", None)
@@ -4762,6 +4752,29 @@ def run(args: argparse.Namespace) -> None:
     if bool(getattr(args, "track_output_updates", False)) and run_dir is None:
         raise ValueError("--track-output-updates requires --run-dir or --checkpoint")
     run_logger = RunLogger(run_dir, config=vars(args)) if run_dir is not None else None
+    if run_dir is not None:
+        (run_dir / "regularization.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "base": regularization_cfg,
+                    "schedule": "canonical_consistency_ramp_v1",
+                    "interpretation": "Configured weights; execution needs loss metrics.",
+                    "epochs": [
+                        {
+                            "epoch": index + 1,
+                            "parameters": _regularization_for_epoch(
+                                regularization_cfg, index, int(args.epochs)
+                            ),
+                        }
+                        for index in range(int(args.epochs))
+                    ],
+                },
+                indent=2,
+                allow_nan=False,
+            )
+            + "\n"
+        )
 
     data_dir = Path(args.data_dir)
     merged_tsv = (
@@ -5941,7 +5954,6 @@ def run(args: argparse.Namespace) -> None:
         total_steps=max(1, int(args.epochs) * max(train_steps_per_epoch, 1)),
     )
     pcgrad = PCGrad(optimizer) if args.use_pcgrad else None
-    regularization_cfg = _regularization_config_from_args(args)
     track_probe_affinity = bool(getattr(args, "track_probe_affinity", True))
     track_probe_motif_scan = bool(getattr(args, "track_probe_motif_scan", True))
     motif_scan_amino_acids = str(
@@ -6903,6 +6915,12 @@ def main(argv=None):
     )
     parser.add_argument(
         "--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradient conflicts"
+    )
+    parser.add_argument(
+        "--binding-orthogonality-weight",
+        type=float,
+        default=IEDB_DEFAULTS["binding_orthogonality_weight"],
+        help="Weight for binding affinity/stability latent orthogonality (0 disables)",
     )
     parser.add_argument(
         "--consistency-cascade-weight",

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from argparse import Namespace
+from argparse import Namespace, _SubParsersAction
 import json
 from pathlib import Path
 from typing import Any, Dict, Mapping, Optional
@@ -57,18 +57,38 @@ def pick_train_section(config: Mapping[str, Any], subcommand: str) -> Dict[str, 
     return pick_config_section(config, subcommand)
 
 
+def explicit_cli_destinations(parser, argv, namespace=None):
+    """Track supplied options in the selected command tree, including --key=value."""
+    option_to_dest = {}
+    pending = [parser]
+    while pending:
+        current = pending.pop()
+        for action in current._actions:
+            option_to_dest.update({option: action.dest for option in action.option_strings})
+            if isinstance(action, _SubParsersAction) and namespace is not None:
+                selected = action.choices.get(getattr(namespace, action.dest, None))
+                if selected is not None:
+                    pending.append(selected)
+    return {
+        option_to_dest[option]
+        for token in argv
+        if (option := str(token).split("=", 1)[0]) in option_to_dest
+    }
+
+
 def merge_namespace_with_config(
     args: Namespace,
     defaults: Mapping[str, Any],
     config: Mapping[str, Any],
 ) -> Namespace:
-    """Merge config values into args when CLI value remains at parser default.
+    """Merge config into omitted defaults, preserving explicitly supplied CLI values.
 
     CLI values always take precedence over config values.
     """
     merged = Namespace(**vars(args))
+    explicit = set(getattr(args, "_explicit_cli_dests", ()) or ())
     for key, default in defaults.items():
-        if key not in config:
+        if key not in config or key in explicit:
             continue
         current = getattr(merged, key, default)
         if current == default:
