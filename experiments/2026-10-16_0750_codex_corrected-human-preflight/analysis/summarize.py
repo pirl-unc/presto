@@ -9,7 +9,7 @@ import sys
 import tarfile
 from pathlib import Path
 
-from datacache import materialize
+from datacache import fetch_file, materialize
 
 FAMILY = Path(__file__).resolve().parents[1]
 
@@ -34,6 +34,17 @@ def main():
     assert receipt["summary"]["status"] == "success"
     for name, expected in receipt["files"].items():
         assert pin(root / name) == {k: expected[k] for k in ("sha256", "size_bytes")}
+    source_table = Path(
+        fetch_file(
+            "https://github.com/pirl-unc/hitlist/releases/download/human-cohort-corrected-v1/training.parquet",
+            filename="corrected-human-training.parquet",
+            cache_root=Path.home()
+            / ".hitlist/presto-corrected-human-qualification/source-contexts",
+            expected_sha256="f902341e90c1c57defc93f4bc540ffcbea1b41061afb4492ddd8aaa7642c65bd",
+            expected_size=188175209,
+            show_progress=False,
+        )
+    )
     inventory = json.loads((root / "inventory.json").read_text())
     files = {}
     with tarfile.open(root / "run.tar.gz") as archive:
@@ -162,6 +173,124 @@ def main():
             "Source generation, reservoir selection and allocation all change from the original baseline; this is not a causal ablation.",
         ],
     }
+    import pandas as pd
+    import pyarrow.parquet as pq
+
+    assignments = pd.read_parquet(io.BytesIO(files["frozen_assignments/assignments.parquet"]))
+    wanted = set(assignments.evidence_row_id)
+    assert len(wanted) == len(assignments)
+    context_fields = [
+        "evidence_row_id",
+        "peptide",
+        "evidence_kind",
+        "source",
+        "provenance_id",
+        "pmid",
+        "assay_iri",
+        "reference_iri",
+        "reference_title",
+        "supplementary_file",
+        "mhc_class",
+        "mhc_restriction",
+        "restriction_evidence",
+        "mhc_allele_set",
+        "mhc_allele_provenance",
+        "sample_mhc",
+        "sample_mhc_origin",
+        "mhc_genotype",
+        "mhc_basis",
+        "cell_line_name",
+        "cell_type",
+        "source_tissue",
+        "cell_name",
+        "sample_label",
+        "sample_group",
+        "sample_attribution",
+        "condition_id",
+        "condition_status",
+        "condition_reference",
+        "condition_category",
+        "condition_culture",
+        "culture_condition",
+        "perturbation",
+        "arm_resolution",
+        "assay_method",
+        "response_measured",
+        "measurement_units",
+        "measurement_inequality",
+        "quantitative_measurement",
+        "quantitative_value",
+        "qualitative_measurement",
+        "experimental_origin_ids",
+        "experimental_origin_status",
+        "donor_ids",
+        "donor_status",
+        "specimen_ids",
+        "specimen_status",
+        "acquisition_ids",
+        "acquisition_status",
+    ]
+    pieces = []
+    for batch in pq.ParquetFile(source_table).iter_batches(batch_size=8192, columns=context_fields):
+        table = batch.to_pandas()
+        selected = table[table.evidence_row_id.isin(wanted)]
+        if len(selected):
+            pieces.append(selected)
+    selected = pd.concat(pieces, ignore_index=True)
+    assert not selected.evidence_row_id.duplicated().any()
+    assert set(selected.evidence_row_id) == wanted
+    contexts = assignments[["evidence_row_id", "source_partition", "peptide"]].merge(
+        selected,
+        on="evidence_row_id",
+        how="left",
+        validate="one_to_one",
+        suffixes=("_assigned", ""),
+    )
+    assert contexts.peptide_assigned.tolist() == contexts.peptide.tolist()
+    contexts = contexts.drop(columns="peptide_assigned").sort_values(
+        ["source_partition", "evidence_kind", "pmid", "evidence_row_id"]
+    )
+    facets = []
+    fields = [
+        "source",
+        "evidence_kind",
+        "mhc_class",
+        "cell_line_name",
+        "cell_type",
+        "sample_attribution",
+        "condition_id",
+        "condition_status",
+        "condition_category",
+        "sample_mhc",
+        "restriction_evidence",
+        "assay_method",
+        "response_measured",
+        "measurement_units",
+        "measurement_inequality",
+        "experimental_origin_status",
+        "donor_status",
+        "specimen_status",
+        "acquisition_status",
+    ]
+    for split, group in contexts.groupby("source_partition", sort=True):
+        for field in fields:
+            values = group[field].astype(object).where(group[field].notna(), "")
+            for value, count in values.value_counts(dropna=False, sort=False).items():
+                facets.append(
+                    {
+                        "split": split,
+                        "field": field,
+                        "value": str(value),
+                        "n_observations": int(count),
+                    }
+                )
+    facet_table = pd.DataFrame(facets).sort_values(["split", "field", "value"])
+    summary["context_join"] = {
+        "n_observations": len(contexts),
+        "identity_and_peptide_verified": True,
+        "source_table": pin(source_table),
+        "preview_policy": "First 3 rows per split/evidence-kind/MHC-class after split/evidence-kind/PMID/observation-ID sorting; not representative.",
+    }
     report_names = [
         "data_funnel.json",
         "data_funnel.csv",
@@ -178,11 +307,19 @@ def main():
         "qualification-summary.json",
         "candidate-support-counts.json",
         "prospective-supported-outputs.json",
+        "selected-source-contexts.tsv",
+        "source-context-counts.tsv",
+        "source-context-preview.tsv",
     ]
 
     def builder(inputs, outputs):
         for name in report_names:
             Path(outputs[name.replace("/", "-")]).write_bytes(files[name])
+        contexts.to_csv(outputs["selected-source-contexts.tsv"], sep="\t", index=False)
+        facet_table.to_csv(outputs["source-context-counts.tsv"], sep="\t", index=False)
+        contexts.groupby(["source_partition", "evidence_kind", "mhc_class"], dropna=False).head(
+            3
+        ).to_csv(outputs["source-context-preview.tsv"], sep="\t", index=False)
         write(outputs["qualification-summary.json"], summary)
         write(outputs["candidate-support-counts.json"], candidate_report)
         write(outputs["prospective-supported-outputs.json"], prospective)
@@ -195,6 +332,7 @@ def main():
                 "run.tar.gz": root / "run.tar.gz",
                 "inventory.json": root / "inventory.json",
                 "receipt.json": receipt_path,
+                "source-training.parquet": source_table,
                 "recipe.py": Path(__file__),
                 "candidate-support.json": FAMILY / "reproduce/candidate-support.json",
             }.items()
@@ -204,7 +342,8 @@ def main():
         builder=builder,
     )
     for name, path in paths.items():
-        shutil.copyfile(path, FAMILY / "results" / name)
+        if name != "selected-source-contexts.tsv":
+            shutil.copyfile(path, FAMILY / "results" / name)
     write(
         FAMILY / "results/analysis-receipt.json",
         {name: {"path": str(path), **pin(path)} for name, path in paths.items()},
