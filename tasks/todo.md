@@ -1,3 +1,13 @@
+# Protected release CI and superseded feature runs — #120
+
+Pinned actionlint 1.7.7, repository formatting/lint and strict docs pass. The
+reviewed event matrix preserves unique groups for both pending and active main/tag
+runs; PR/feature cancellations are confined to their workflow and event.
+
+- [x] Specify event/ref groups, pending-run protection and release gates.
+- [x] Implement and validate concurrency and document the event matrix.
+- [ ] Format/lint/full CI, review, merge and distribute 0.1.20 after 0.1.19.
+
 # Molecular MHC species and source-role provenance — #115
 
 - [x] Review native evidence and specify a bounded molecular-label/provenance correction.
