@@ -106,3 +106,11 @@ inspection-only extension: no source value, fit input, objective, partition,
 criterion or prediction changes. Preserve partial/conflicting native attribution
 as recorded; the human-source/HLA cohort is not a human-host-only cohort.
 The prospective consumer correction belongs to #115, not this historical run.
+
+## Public replay cache isolation — #118
+
+Keep datacache generations separate when the same pinned run is read from its
+original recovered path and independently downloaded public path. Bind the
+analysis namespace to resolved input location in addition to script SHA; never
+force-refresh the old generation. Replay every metric/source/ledger check and
+require all five derived output hashes to equal the original published outputs.

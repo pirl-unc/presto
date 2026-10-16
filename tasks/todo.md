@@ -12,7 +12,9 @@ Canonical gate passed; 200 finite steps improve exact training error but the
 validation screen fails against the mean/ridge baselines. All 90 archive members,
 9,053 source joins and 2,614 IC50 rows independently verify. Species attribution,
 numerical errata and narrow predictions are tracked in #115/#116/#117. Final
-publication, CI, merge and release remain.
+CI, merge and release remain. All 30 public downloads verify and all five derived
+outputs reproduce byte-for-byte from the public run. Cache-only replay isolation
+is fixed as #118; the original generation remains unchanged.
 
 # Explicit affinity target policy — #110
 

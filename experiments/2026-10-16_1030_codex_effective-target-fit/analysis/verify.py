@@ -589,10 +589,14 @@ def main():
         fig.savefig(outputs["loss-curves.png"], dpi=180)
         plt.close(fig)
 
+    # Local paths participate in datacache dependency identity. A public replay
+    # gets its own namespace; never force-refresh the original generation (#118).
+    input_location = hashlib.sha256(str(root.resolve()).encode()).hexdigest()
     paths = materialize(
         Path.home()
         / ".hitlist/presto-effective-target-fit/analysis"
-        / pin(__file__)["sha256"],
+        / pin(__file__)["sha256"]
+        / input_location,
         {
             name: {"path": str(root / name), "sha256": pin(root / name)["sha256"]}
             for name in ("run.tar.gz", "inventory.json")

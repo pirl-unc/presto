@@ -139,3 +139,13 @@ joins and all 2,614 IC50 targets independently verify; plots were inspected.
 Nine experiment regressions pass against the actual released producer. Repository
 lint/format and strict docs pass; the full local suite previously passed 2,281
 with four skips, and final publication CI/release checks are recorded in the PR.
+
+## Public verification and replay
+
+All 30 public downloads independently verify. The current analysis replay also
+reproduces all five derived artifacts byte-for-byte from the downloaded run;
+`results/public-replay.json` records the hashes. #118 isolates datacache namespaces
+by input location so public replay cannot collide with the original local
+generation. This cache-only change does not alter metrics or published bytes.
+The immutable public recipe bundle records publication commit f5f6b52; the
+current repository verifier contains the additive replay correction.
