@@ -2413,7 +2413,7 @@ class PrestoDataset(Dataset):
                     ),
                     primary_allele=None,
                     synthetic_kind=None,
-                    **source_lineage_fields(rec),
+                    **source_lineage_fields(rec, include_scoped=True),
                     sample_id=(
                         f"scoped:{rec.source_bundle_id}:{rec.scoped_peptide_id}"
                         if rec.scoped_peptide_id

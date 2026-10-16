@@ -1311,3 +1311,36 @@ fitting/held-out performance remain separate work.
   directory. Counts, runtime closure and source reconciliation remain pending;
   no fitting or predictive evaluation has run. CI at earlier `37cbb17` passed
   2,061 tests / 3 skipped in 865.08 seconds, with its complete log retained.
+
+### 2026-10-15_2100_codex_scoped-proteomics-admission
+
+- Date/agent: 2026-10-15 America/New_York, Codex / GPT-6.
+- Experiment: [published-scope admission](2026-10-15_2100_codex_scoped-proteomics-admission/).
+- Exact input: Hitlist PXD013455 HeLa Trypsin/P public manifest
+  `441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b`;
+  code `e4fe7e19ab3208fdc74e54b9dc2b16fcae35ac24`. Full occurrence collapse,
+  reservoir seed 42, cap 10,000. Original/reanalysis citations, cell/assay/search
+  conditions and unresolved donor/specimen identities remain pinned.
+- Training/pretraining/synthetic/loss contract: none. This is a registered data
+  admission and canonical collation/support audit, not model fitting. Binary
+  observed-in-search labels map to ms_detectability_logit as proxy support only;
+  MS/MS, matching and scoped absence are separate. Excision and depth are absent.
+- CPU only, one Torch thread; no Modal/GPU. Admission and support: 74.38 seconds,
+  peak RSS 595,787,776 bytes. Reproduction/source/environment and all output hashes
+  are recorded in the experiment directory; reusable TSV/parquet/reports live in
+  shared datacache.
+
+| Condition | MS/MS | Matching | Scoped absence | Total |
+| --- | ---: | ---: | ---: | ---: |
+| Full collapsed projection | 143,216 | 20,778 | 1,287,164 | 1,451,158 |
+| Seed-42 admission | 960 | 154 | 8,886 | 10,000 |
+
+All admitted rows retain candidate linkage; 1,114 positives retain original
+observation IDs. Zero canonical lineage issues/duplicate sample IDs. Full input
+has 153,980 peptides with ambiguous occurrences, whose parent/flanks are masked.
+Validation/test metrics and prediction dumps: not applicable, because no split,
+fitting or inference was performed. No winner/model baseline promotion. Takeaway:
+the actual public archive is admitted with honest masks and lineage; the next
+canonical trainer experiment must establish frozen membership and bounded fitting.
+A single HeLa search and unresolved biological identities do not establish
+independent experiment/donor/specimen generalization. Status: admission audit closed.

@@ -19,6 +19,8 @@ from .bulk_ms import BulkMSRecord, machinery_for_enzyme
 from .frozen_hitlist import _sha256
 from .vocab import is_encodable_sequence
 
+MINIMUM_SCOPED_HITLIST_VERSION = (1, 75, 0)
+
 EVIDENCE = {
     "By MS/MS": "scoped_msms",
     "By matching": "scoped_matching",
@@ -54,8 +56,9 @@ def _admit_bundle(directory, expected_sha256, cache_dir):
 
     from .hitlist_source import _parse_version
 
-    if (_parse_version(hitlist.__version__) or ()) < (1, 75, 0):
-        raise RuntimeError("Scoped proteomics requires Hitlist >=1.75.0")
+    if (_parse_version(hitlist.__version__) or ()) < MINIMUM_SCOPED_HITLIST_VERSION:
+        wanted = ".".join(map(str, MINIMUM_SCOPED_HITLIST_VERSION))
+        raise RuntimeError(f"Scoped proteomics requires Hitlist >={wanted}")
     from hitlist import load_pxd013455_bundle, verify_pxd013455_bundle
 
     root = Path(cache_dir) if cache_dir is not None else data_dir() / "presto-scoped-proteomics"

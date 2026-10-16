@@ -328,7 +328,9 @@ def test_scoped_metadata_survives_actual_prediction_exports(scoped_bundle, tmp_p
 
     records, _ = load(scoped_bundle)
     samples = PrestoDataset(bulk_ms_records=records).samples
-    expected = {sample.sample_id: source_lineage_fields(sample) for sample in samples}
+    expected = {
+        sample.sample_id: source_lineage_fields(sample, include_scoped=True) for sample in samples
+    }
     accumulators = collect_holdout_predictions(
         Presto(d_model=32, n_layers=1, n_heads=4).eval(),
         [PrestoCollator()(samples)],

@@ -24,11 +24,50 @@ small summaries and hashes/locations, not duplicate data tables.
 
 ## Results
 
-Pending. Runtime, peak RSS, full/admitted support and source/candidate linkage
-will be recorded in `results/summary.json`. Artifact hashes and paths will be in
-`results/artifacts.json`; closure will update this README and the canonical log.
-No model baseline promotion or broad training-readiness claim is intended.
+Admission passed against the public pinned archive, using code commit
+`e4fe7e19ab3208fdc74e54b9dc2b16fcae35ac24`. All 10,000 selected peptides retain
+candidate lookup and frozen scope identity. The canonical lineage audit reports
+zero issues and zero duplicate sample IDs. The 1,114 positives additionally retain
+original observation IDs; the 8,886 absent candidates do not invent measured IDs.
+The canonical census's `untraceable_rows` refers to missing measured-observation
+IDs, not missing candidate linkage. All labels count as proxy support; direct
+intrinsic-detectability support and excision/depth labels are zero.
 
-Status: planned, not launched.
-Next Step: run after the final adapter source-lineage regression passes.
-Open Questions: actual mapping ambiguity and label support after one-vote collapse.
+| Evidence | Full unique peptides | Admitted peptides |
+| --- | ---: | ---: |
+| Direct MS/MS identification | 143,216 | 960 |
+| Match-between-runs identification | 20,778 | 154 |
+| Not observed in this search | 1,287,164 | 8,886 |
+| Total | 1,451,158 | 10,000 |
+
+The source has 1,656,863 candidate occurrences and 172,033 observations, supported
+by 12,287 leading-razor parents. Of the collapsed peptides, 153,980 have multiple
+candidate occurrences and therefore mask parent/flank inputs. No invalid peptide
+sequences were excluded. The 8,039 source observations outside the candidate
+window remain in the source bundle, not as extra labels.
+
+Admission plus canonical support audit took 74.38 seconds; measured process peak
+RSS was 595,787,776 bytes (568.2 MiB), before audit-artifact publication. Hardware:
+macOS arm64 CPU, one Torch thread, no GPU. Versions: Presto 0.1.4, Hitlist 1.75.0,
+datacache 1.27.1, pyarrow 25.0.1 and Torch 2.14.1. The existing environment was
+not modified; PYTHONPATH selected the isolated feature checkout and previously
+verified public Hitlist/datacache wheel imports. Exact invocation/import paths
+and environment overrides are in [reproduce/launch.json](reproduce/launch.json).
+
+[Summary](results/summary.json) preserves the complete counts and limitations.
+[Artifact receipt](results/artifacts.json) lists SHA-256, byte sizes and shared
+locations for admitted TSV/parquet, source receipt, canonical support/coverage
+JSON and CSV, and README. All reusable tables are datacache-owned. Source and
+projection sidecars remain available through the pinned receipt.
+
+This establishes adapter admission and collation, not training readiness. No
+fitting, synthetic data, objective optimization, held-out partitions or prediction
+dumps were produced. Validation/test metrics are intentionally not applicable.
+One HeLa search cannot qualify experiment/donor/specimen-independent performance,
+MBR is not direct MS/MS, and leading-razor support is not unique parent proof.
+No model baseline is promoted.
+
+Status: admission audit closed; public artifact publication follows PR #83 release.
+Next Step: canonical trainer integration, frozen within-search membership, explicit
+shared/unknown lineage audits, then bounded fitting and held-out baselines (#70).
+Open Questions: cross-experiment detectability generalization remains unsupported.

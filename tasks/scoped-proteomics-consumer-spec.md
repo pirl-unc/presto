@@ -82,3 +82,15 @@ tracked data and 904 MB of archived experiments, which does not explain the full
 concurrent disk change. Use a sparse feature checkout; retain all original files.
 The migration to pinned shared data artifacts is tracked separately in #80. Do not
 bypass memory/disk safeguards or run a full corpus build on this pressured laptop.
+
+## Full-suite review correction
+
+The full suite caught a constructor regression: adding scoped fields to the shared
+lineage extractor also passes them into MHC record constructors. Separate common
+lineage extraction from explicitly requested scoped fields; keep the union for
+host collation and predictions. Preserve existing frozen-MHC field contracts.
+Align package and remote floors with the maximum of supported source requirements.
+Restore the small tracked experiment scripts used as test fixtures in the sparse
+checkout. Rerun all failing selectors and source paths, then the full suite.
+The recorded admission audit remains evidence for its exact recorded commit;
+repeat it after the correction before publishing final consumer artifacts.

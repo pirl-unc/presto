@@ -26,7 +26,11 @@ and public release remain required. The first local full run was deliberately
 stopped after 39 passing tests to correct a missing source-reference URI found by
 the canonical support audit. The new regression failed with three lineage issues
 before the fix and passes afterward. A registered real-data admission audit will
-exercise the public archive before canonical trainer integration.
+exercise the public archive before canonical trainer integration. That registered
+audit now passes: 1,451,158 globally collapsed peptides, 10,000 admitted records,
+960 MS/MS + 154 matching + 8,886 scoped absences, zero lineage issues/duplicate
+IDs, no excision/depth labels; all reusable outputs are in datacache. Details and
+hashes are recorded in the canonical experiment registry.
 
 # Frozen partitions and generated parents — 2026-10-15
 

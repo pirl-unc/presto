@@ -6,7 +6,7 @@ import hashlib
 import json
 from typing import Any
 
-SOURCE_LINEAGE_FIELDS = (
+COMMON_SOURCE_LINEAGE_FIELDS = (
     "evidence_row_id",
     "assay_iri",
     "reference_iri",
@@ -28,6 +28,9 @@ SOURCE_LINEAGE_FIELDS = (
     "parent_ids",
     "root_observation_ids",
     "generation_lineage_status",
+)
+
+SCOPED_SOURCE_LINEAGE_FIELDS = (
     "scoped_peptide_id",
     "candidate_id",
     "candidate_lookup_key",
@@ -40,15 +43,21 @@ SOURCE_LINEAGE_FIELDS = (
 )
 
 
-def source_lineage_fields(source: Any) -> dict[str, str]:
+SOURCE_LINEAGE_FIELDS = COMMON_SOURCE_LINEAGE_FIELDS + SCOPED_SOURCE_LINEAGE_FIELDS
+
+
+def source_lineage_fields(source: Any, *, include_scoped: bool = False) -> dict[str, str]:
     """Copy available source values without deriving IDs or conflating their roles.
 
     Merged rows and typed records share this policy: absent/None becomes an
     empty string and surrounding whitespace is removed. Publication identifiers
     and reference text never substitute for original assay/observation identity.
+    Scoped candidate fields require explicit opt-in because ordinary assay-record
+    constructors accept only the common observation/publication contract.
     """
     values = {}
-    for name in SOURCE_LINEAGE_FIELDS:
+    fields = SOURCE_LINEAGE_FIELDS if include_scoped else COMMON_SOURCE_LINEAGE_FIELDS
+    for name in fields:
         value = source.get(name) if isinstance(source, Mapping) else getattr(source, name, None)
         values[name] = "" if value is None else str(value).strip()
     return values
