@@ -58,7 +58,7 @@ def main():
     os.environ["XDG_CACHE_HOME"] = str(CACHE / "xdg")
     import datacache
     import torch
-    from baselines import compare, expected_rows
+    from baselines import compare, expected_rows, require_raw_target_contract
     from diagnostic import install
     from presto.scripts import train_iedb
 
@@ -110,6 +110,7 @@ def main():
                         cohort = expected_rows(
                             work / "membership.tsv", work / "selected-source-contexts.tsv"
                         )
+                        require_raw_target_contract(cohort)
                         train_ids = cohort[cohort.source_partition == "train"].sample_id.tolist()
                         catalog = build_mhc_catalog()
                         os.environ["PRESTO_MHCSEQS_SEARCH_DIR"] = catalog["directory"]

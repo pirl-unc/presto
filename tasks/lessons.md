@@ -1,5 +1,13 @@
 # Lessons
 
+## 2026-10-16
+
+- Before launching a real-data fit, execute every active target transformation on
+  the frozen raw labels and compare physical values, censor boundaries and units.
+  Coverage counts and preserved source columns do not prove that effective targets
+  equal the original measurements. Baseline target space must be declared before
+  predictions; a discovered mismatch requires a preserved stop and a new contract.
+
 ## 2026-10-14
 
 - When the user requests review, iteration and deployment, keep ownership through

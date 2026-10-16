@@ -1,0 +1,134 @@
+✓ Initialized. View run at 
+https://modal.com/apps/iskandr/main/ap-NHWJGaFjbR7PiL1j7pvlbd
+✓ Created objects.
+├── ✓ Uploaded 
+│   /private/tmp/presto-corrected-human-fit/experiments/2026-10-16_0840_codex_co
+│   rrected-human-fit/code/launch.py
+├── ✓ Uploaded 
+│   /private/tmp/presto-corrected-human-fit/experiments/2026-10-16_0840_codex_co
+│   rrected-human-fit/reproduce/producer.json
+├── ✓ Uploaded 
+│   /private/tmp/presto-corrected-human-fit/experiments/2026-10-16_0840_codex_co
+│   rrected-human-fit/reproduce/frozen-inputs.json
+├── ✓ Uploaded 
+│   /private/tmp/presto-corrected-human-fit/experiments/2026-10-16_0840_codex_co
+│   rrected-human-fit/reproduce/mhc-sources.json
+├── ✓ Uploaded 
+│   /private/tmp/presto-corrected-human-fit/experiments/2026-10-16_0840_codex_co
+│   rrected-human-fit/reproduce/launch.json
+├── ✓ Uploaded 
+│   /private/tmp/presto-corrected-human-fit/experiments/2026-10-16_0840_codex_co
+│   rrected-human-fit/code/common.py
+├── ✓ Uploaded 
+│   /private/tmp/presto-corrected-human-fit/experiments/2026-10-16_0840_codex_co
+│   rrected-human-fit/code/diagnostic.py
+├── ✓ Uploaded 
+│   /private/tmp/presto-corrected-human-fit/experiments/2026-10-16_0840_codex_co
+│   rrected-human-fit/code/baselines.py
+├── ✓ Uploaded 
+│   /private/tmp/presto-corrected-human-fit/experiments/2026-10-16_0840_codex_co
+│   rrected-human-fit/code/fit.py
+├── ✓ Uploaded 
+│   /private/tmp/presto-corrected-human-fit/experiments/2026-10-16_0840_codex_co
+│   rrected-human-fit/reproduce/consumer-constraints.txt
+├── ✓ Uploaded /Users/iskander/.hitlist/presto-0.1.13-py3-none-any.whl
+└── ✓ Created Function execute.
+
+[1ACopying:   0%|          | 0.00/2.00k [00:00<?, ?B/s]
+[1A                                                    
+[1A
+[1ACopying:   0%|          | 0.00/1.84k [00:00<?, ?B/s]
+[1A                                                    
+[1A
+[1ACopying:   0%|          | 0.00/692 [00:00<?, ?B/s]
+[1A                                                  
+[1A
+[1ACopying:   0%|          | 0.00/403 [00:00<?, ?B/s]
+[1A                                                  
+[1A
+[1ACopying:   0%|          | 0.00/788 [00:00<?, ?B/s]
+[1A                                                  
+[1A
+[1ACopying:   0%|          | 0.00/9.18k [00:00<?, ?B/s]
+[1A                                                    
+[1A
+[1ACopying:   0%|          | 0.00/14.0k [00:00<?, ?B/s]
+[1A                                                    
+[1A
+[1ACopying:   0%|          | 0.00/4.46k [00:00<?, ?B/s]
+[1A                                                    
+[1A
+[1ACopying:   0%|          | 0.00/3.27k [00:00<?, ?B/s]
+[1A                                                    
+[1ATraceback (most recent call last):
+  File "/pkg/modal/_runtime/container_io_manager.py", line 987, in handle_input_exception
+    yield
+  File "/pkg/modal/_container_entrypoint.py", line 189, in run_input_sync
+    values = io_context.call_function_sync()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/pkg/modal/_runtime/container_io_manager.py", line 266, in call_function_sync
+    expected_value_or_values = self.finalized_function.callable(*args, **kwargs)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/launch.py", line 85, in execute
+    subprocess.run([sys.executable, str(root / "fit.py")], check=True)
+  File "/usr/local/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/local/bin/python', '/opt/qualification/fit.py']' died with <Signals.SIGTERM: 15>.
+Stopping app - uncaught exception raised locally: CalledProcessError(-15, ['/usr/local/bin/python', '/opt/qualification/fit.py']).
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /private/tmp/presto-corrected-human-fit/experiments/2026-10-16_0840_codex_co │
+│ rrected-human-fit/code/launch.py:121 in main                                 │
+│                                                                              │
+│   120 │   }                                                                  │
+│ ❱ 121 │   receipt = execute.remote(metadata)                                 │
+│   122 │   with tempfile.TemporaryDirectory(prefix="corrected-human-fit-downl │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ object.py:49 in wrapped                                                      │
+│                                                                              │
+│    48 │   │   await self.hydrate()                                           │
+│ ❱  49 │   │   return await method(self, *args, **kwargs)                     │
+│    50                                                                        │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:2067 in remote                                                  │
+│                                                                              │
+│   2066 │   │                                                                 │
+│ ❱ 2067 │   │   return await self._call_function(args, kwargs)                │
+│   2068                                                                       │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:2004 in _call_function                                          │
+│                                                                              │
+│   2003 │   │                                                                 │
+│ ❱ 2004 │   │   return await invocation.run_function()                        │
+│   2005                                                                       │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ functions.py:515 in run_function                                             │
+│                                                                              │
+│    514 │   │   │   # No more retries left.                                   │
+│ ❱  515 │   │   │   return await _process_result(                             │
+│    516 │   │   │   │   await_response.output.result, await_response.output.d │
+│                                                                              │
+│ /Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/modal/_ │
+│ utils/function_utils.py:572 in _process_result                               │
+│                                                                              │
+│   571 │   │   │                                                              │
+│ ❱ 572 │   │   │   raise exc_with_hints(exc)                                  │
+│   573                                                                        │
+│                                                                              │
+│     ...Remote call to Modal Function (ta-01M51YVCB8ZPDG81J16XGN3HXR)...      │
+│                                                                              │
+│ /root/launch.py:85 in execute                                                │
+│                                                                              │
+│ ❱ 85 subprocess.run([sys.executable, str(root / "fit.py")], check=True)      │
+│                                                                              │
+│                                                                              │
+│ /usr/local/lib/python3.12/subprocess.py:571 in run                           │
+│                                                                              │
+│ ❱ 571 raise CalledProcessError(retcode, process.args,                        │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+CalledProcessError: Command '['/usr/local/bin/python', 
+'/opt/qualification/fit.py']' died with <Signals.SIGTERM: 15>.

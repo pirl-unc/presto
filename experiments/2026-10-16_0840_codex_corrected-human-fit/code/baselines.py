@@ -206,6 +206,25 @@ def expected_rows(membership_path, contexts_path):
     return frame
 
 
+def require_raw_target_contract(frame):
+    """Fail this family's original measurement-space contract before model work."""
+    import torch
+    from presto.training.supervision import LOSS_TASK_SPECS
+
+    spec = next(s for s in LOSS_TASK_SPECS if s.name == "binding_ic50")
+    effective = spec.target_transform(
+        torch.tensor(frame.source_value.to_numpy(float), dtype=torch.float32)
+    ).numpy()
+    expected = frame.target_log10_nM.to_numpy(float)
+    changed = ~np.isclose(effective, expected, atol=1e-5, rtol=1e-5)
+    if changed.any():
+        raise ValueError(
+            f"Canonical IC50 target transform changes {int(changed.sum())} original measurements/bounds; "
+            "this frozen raw-target fitting contract is blocked by Presto #110. "
+            "Do not rebind its manifest or baseline targets."
+        )
+
+
 def verified_predictions(path, expected):
     rows = pd.read_csv(path, keep_default_na=False)
     rows = rows[rows.task == "binding_ic50"].copy()

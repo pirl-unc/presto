@@ -1,6 +1,6 @@
 {
   "experiment_id": "2026-10-16_0840_codex_corrected-human-fit",
-  "status": "prospective; not yet launched",
+  "status": "Stopped before optimization: original raw-target contract conflicts with canonical clipping",
   "agent": "Codex",
   "model": "GPT-6",
   "producer": {
@@ -41,5 +41,12 @@
     "loader_workers": 0,
     "work_limit_seconds": 5400,
     "function_timeout_seconds": 5700
-  }
+  },
+  "actual_recipe_commit": "124c85b6da23d4c74dbef961999936c573025192",
+  "actual_recipe_dirty": false,
+  "modal_app_id": "ap-NHWJGaFjbR7PiL1j7pvlbd",
+  "issue": "https://github.com/pirl-unc/presto/issues/110",
+  "n_checkpoints": 0,
+  "n_prediction_files": 0,
+  "public_release": "https://github.com/pirl-unc/presto/releases/tag/corrected-human-target-policy-audit-v1"
 }

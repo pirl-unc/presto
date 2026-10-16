@@ -146,3 +146,13 @@ def test_training_hook_preserves_signature_and_rejects_heldout(modules, tmp_path
     assert inspect.signature(trainer.train_epoch) == inspect.signature(epoch)
     with pytest.raises(ValueError, match="frozen training IC50 cohort"):
         trainer.train_epoch(None, SimpleNamespace(dataset=[sample]), None, "cpu")
+
+
+def test_raw_target_guard_rejects_canonical_clipping_before_fitting(modules):
+    frame = pd.DataFrame(
+        {"source_value": [1.0, 500.0, 50000.0], "target_log10_nM": np.log10([1.0, 500.0, 50000.0])}
+    )
+    modules.baselines.require_raw_target_contract(frame)
+    frame.loc[0] = [1000000.0, 6.0]
+    with pytest.raises(ValueError, match="changes 1 original measurements/bounds"):
+        modules.baselines.require_raw_target_contract(frame)

@@ -81,3 +81,13 @@ columns (length, 20 amino-acid fractions, I/II indicators) are fixed. The exact
 public candidate manifest SHA-256 is
 13fe8bd4dab158bd06ae31fc7996fba98f73b3944fa68c3f57463beec34e7cb0.
 The frozen preflight minima passed; no predictions have been generated.
+
+## Post-launch scope change — 2026-10-16
+
+The original attempt was stopped and preserved before optimization after reviewing
+the released canonical transform. It clips 211 frozen IC50 values/bounds at
+50,000 nM, conflicting with this plan's original measurement-space verification.
+No checkpoint/prediction exists. This PR now closes the stopped family with a
+complete raw/effective-target audit and a fail-fast relaunch guard. It does not
+change the historical plan, manifest, targets or quality thresholds. #110 owns
+canonical policy qualification; any replacement fit is a separate prospective family.
