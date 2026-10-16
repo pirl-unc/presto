@@ -10,38 +10,42 @@ from pathlib import Path
 
 import modal
 
-FAMILY = Path(__file__).resolve().parents[1]
-REPOSITORY = FAMILY.parents[1]
-WHEEL = Path(os.environ["PRESTO_QUALIFICATION_WHEEL"]).resolve(strict=True)
 app = modal.App("presto-human-corpus-preflight")
 volume = modal.Volume.from_name("presto-data", create_if_missing=False)
-image = (
-    modal.Image.debian_slim(python_version="3.12")
-    .pip_install_from_requirements(
-        str(FAMILY / "reproduce/hitlist-requirements.txt"), extra_options="--require-hashes"
+if modal.is_local():
+    FAMILY = Path(__file__).resolve().parents[1]
+    REPOSITORY = FAMILY.parents[1]
+    WHEEL = Path(os.environ["PRESTO_QUALIFICATION_WHEEL"]).resolve(strict=True)
+    image = (
+        modal.Image.debian_slim(python_version="3.12")
+        .pip_install_from_requirements(
+            str(FAMILY / "reproduce/hitlist-requirements.txt"), extra_options="--require-hashes"
+        )
+        .add_local_file(
+            str(FAMILY / "reproduce/consumer-constraints.txt"),
+            "/opt/qualification/constraints.txt",
+            copy=True,
+        )
+        .run_commands(
+            "python -m pip install torch==2.14.1+cpu mhcseqs==2.6.13 "
+            "--extra-index-url https://download.pytorch.org/whl/cpu "
+            "--constraint /opt/qualification/constraints.txt "
+            "--report /opt/qualification/consumer-install.json"
+        )
+        .add_local_file(str(WHEEL), "/opt/qualification/" + WHEEL.name, copy=True)
+        .run_commands(
+            "python -m pip install --no-deps /opt/qualification/" + WHEEL.name,
+            "python -m pip check",
+        )
+        .env({"OMP_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1"})
+        .add_local_file(str(FAMILY / "code/preflight.py"), "/opt/qualification/preflight.py")
+        .add_local_file(str(FAMILY / "reproduce/launch.json"), "/opt/qualification/launch.json")
+        .add_local_file(
+            str(FAMILY / "reproduce/mhc-sources.json"), "/opt/qualification/mhc-sources.json"
+        )
     )
-    .add_local_file(
-        str(FAMILY / "reproduce/consumer-constraints.txt"),
-        "/opt/qualification/constraints.txt",
-        copy=True,
-    )
-    .run_commands(
-        "python -m pip install torch==2.14.1+cpu mhcseqs==2.6.13 "
-        "--extra-index-url https://download.pytorch.org/whl/cpu "
-        "--constraint /opt/qualification/constraints.txt "
-        "--report /opt/qualification/consumer-install.json"
-    )
-    .add_local_file(str(WHEEL), "/opt/qualification/" + WHEEL.name, copy=True)
-    .run_commands(
-        "python -m pip install --no-deps /opt/qualification/" + WHEEL.name, "python -m pip check"
-    )
-    .env({"OMP_NUM_THREADS": "1", "MKL_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1"})
-    .add_local_file(str(FAMILY / "code/preflight.py"), "/opt/qualification/preflight.py")
-    .add_local_file(str(FAMILY / "reproduce/launch.json"), "/opt/qualification/launch.json")
-    .add_local_file(
-        str(FAMILY / "reproduce/mhc-sources.json"), "/opt/qualification/mhc-sources.json"
-    )
-)
+else:
+    image = modal.Image.debian_slim(python_version="3.12")
 
 
 def digest(path):
