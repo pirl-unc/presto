@@ -1,3 +1,22 @@
+# Explicit effective regularization — #95
+
+- [x] Diagnose the actual fit deviation and record the prospective fix contract.
+- [x] Expose and validate all effective regularization values before data loading.
+- [x] Verify parser/config/loss/preflight receipts (116 focused tests).
+- [x] Complete local full suite (2,261 passed, four skips), format/lint/strict docs.
+- [ ] Complete final-head CI and release gates.
+- [ ] Review, merge and publish 0.1.9; preserve the original experiment.
+
+## Review
+
+The original numeric defaults are preserved. Every inherited regularization key
+is declared, all weights are validated before dependency/data work, and canonical
+preflight writes base and per-epoch effective settings. Explicit CLI values now
+survive config merging even when equal to defaults (#96), including nested
+unified/synthetic CLI routes. Format/lint, 116 focused regressions and strict docs
+pass. The complete local suite passes 2,261 tests with four skips.
+Final-head CI and release remain pending.
+
 # Canonical scoped training — Presto #70
 
 - [x] Inspect canonical trainer/coverage contracts and specify the bounded source.

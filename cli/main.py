@@ -744,6 +744,12 @@ def create_parser() -> argparse.ArgumentParser:
         "--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradients"
     )
     train_synth.add_argument(
+        "--binding-orthogonality-weight",
+        type=float,
+        default=0.01,
+        help="Weight for binding affinity/stability latent orthogonality (0 disables)",
+    )
+    train_synth.add_argument(
         "--consistency-cascade-weight",
         type=float,
         default=0.0,
@@ -1381,6 +1387,12 @@ def create_parser() -> argparse.ArgumentParser:
         "--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradients"
     )
     train_iedb.add_argument(
+        "--binding-orthogonality-weight",
+        type=float,
+        default=0.01,
+        help="Weight for binding affinity/stability latent orthogonality (0 disables)",
+    )
+    train_iedb.add_argument(
         "--consistency-cascade-weight",
         type=float,
         default=0.2,
@@ -1877,6 +1889,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     """
     parser = create_parser()
     args = parser.parse_args(argv)
+
+    from ..training.config_io import explicit_cli_destinations
+
+    args._explicit_cli_dests = explicit_cli_destinations(
+        parser, list(sys.argv[1:] if argv is None else argv), args
+    )
 
     if args.command is None:
         parser.print_help()
