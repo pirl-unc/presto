@@ -1,9 +1,29 @@
+# Corrected human IC50 fitting attempt and target-policy audit
+
+- [x] Specify fixed producers, exact candidate manifest, optimization and baseline criteria.
+- [x] Freeze and verify launcher, original-model diagnostic and baseline implementation.
+- [x] Preserve/stop the incompatible raw-target attempt before optimization; file #110.
+- [x] Audit all 2,614 source-linked IC50 rows and guard against relaunching the mismatch.
+- [x] Publish/independently verify all 19 public assets, 25 archived files, 2,614 source/context/partition joins and every effective target.
+- [ ] Close registry, review, merge and release 0.1.15 after final checks.
+
+## Target-policy review
+
+No checkpoint or prediction exists. The original producer clips affinity targets
+at 50,000 nM, changing 211 IC50 values/bounds (54 exact, 157 right censored).
+The raw-target plan cannot be executed honestly without a new explicit contract;
+no manifest or criterion was relaxed. Seven focused safeguards and the full local
+suite (2,276 passed, four skips) pass. #110 owns canonical policy disclosure,
+per-objective changed-target audits and prospective binding before a future fit.
+All 19 public downloads verify. The raw-target relaunch guard also rejects the
+full frozen cohort with exactly 211 changed measurements/bounds.
+
 # Corrected human consumer qualification
 
 - [x] Register released producers, frozen corrected inputs and prospective IC50 evidence thresholds.
 - [x] Freeze and run canonical preflight with explicit reservoir/v2 policies.
 - [x] Publish and independently verify new membership, source/label support and leakage limits.
-- [ ] Close experiment registry; format/lint/full checks, review, merge and distribute 0.1.14.
+- [x] Close experiment registry; format/lint/full checks, review, merge and distribute 0.1.14.
 
 ## Corrected preflight review
 
@@ -14,8 +34,9 @@ observation/source-context joins verify. Explicit reservoir/v2 membership is
 every split; no model or prediction exists and the future manifest gate has not
 run. Full local tests pass 2,276 with four skips; actual-recipe CI passes 2,277
 with three skips, docs and distribution checks. All 23 public assets, 48 archive members, 9,053 observation/context/partition joins
-and the fixed candidate counts independently verify. Final review/merge/release
-remain. See the registered family for sparse outputs,
+and the fixed candidate counts independently verify. Merged #108 and distributed as 0.1.14; clean-main CI passed 2,277 tests
+(three skips), all four public release assets verify, and 28 public-wheel frozen-data
+regressions pass. See the registered family for sparse outputs,
 shared studies and unknown biological identities.
 
 # Frozen component allocation — #105

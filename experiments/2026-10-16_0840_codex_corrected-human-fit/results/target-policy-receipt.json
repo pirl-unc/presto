@@ -1,0 +1,101 @@
+{
+  "summary": {
+    "status": "fitting attempt stopped before optimization; target policy mismatch",
+    "original_recipe_commit": "124c85b6da23d4c74dbef961999936c573025192",
+    "producer": {
+      "presto_version": "0.1.13",
+      "source_commit": "a6f8af39256db799ddff417cd16386ea66cea0c4",
+      "wheel_name": "presto-0.1.13-py3-none-any.whl",
+      "wheel_url": "https://github.com/pirl-unc/presto/releases/download/v0.1.13/presto-0.1.13-py3-none-any.whl",
+      "wheel_sha256": "6bdc3f9cce3272ffe02261652ebb3bf1b97da8dfc21c8ea358c8d01382f9cd81",
+      "wheel_size_bytes": 705270,
+      "hitlist_version": "1.78.0"
+    },
+    "canonical_task": "binding_ic50",
+    "effective_policy": "log10(clip(raw_nM, 0.001, 50000)); original qualifier retained",
+    "planned_policy": "log10(raw_nM); original qualifier retained",
+    "counts": [
+      {
+        "split": "train",
+        "n_observations": 2074,
+        "n_exact": 1599,
+        "n_clipped_observations": 157,
+        "n_clipped_exact": 39,
+        "n_clipped_left_censored": 0,
+        "n_clipped_right_censored": 118,
+        "raw_min_nM": 0.06,
+        "raw_max_nM": 1000000.0
+      },
+      {
+        "split": "val",
+        "n_observations": 265,
+        "n_exact": 210,
+        "n_clipped_observations": 31,
+        "n_clipped_exact": 8,
+        "n_clipped_left_censored": 0,
+        "n_clipped_right_censored": 23,
+        "raw_min_nM": 1.0,
+        "raw_max_nM": 180000.0
+      },
+      {
+        "split": "test",
+        "n_observations": 275,
+        "n_exact": 214,
+        "n_clipped_observations": 23,
+        "n_clipped_exact": 7,
+        "n_clipped_left_censored": 0,
+        "n_clipped_right_censored": 16,
+        "raw_min_nM": 0.083,
+        "raw_max_nM": 500000.0
+      }
+    ],
+    "n_source_verified_observations": 2614,
+    "n_clipped_observations": 211,
+    "n_clipped_exact": 54,
+    "n_verified_interrupted_archive_members": 25,
+    "n_checkpoints": 0,
+    "n_predictions": 0,
+    "analysis_versions": {
+      "presto": "0.1.13",
+      "torch": "2.14.1",
+      "numpy": "2.5.3",
+      "pandas": "2.3.3",
+      "matplotlib": "3.11.2",
+      "datacache": "1.27.1"
+    },
+    "issue": "https://github.com/pirl-unc/presto/issues/110",
+    "limitations": [
+      "No Presto optimization, performance result or replacement target policy is qualified.",
+      "Complete buffered training log and full preflight completion are unavailable for the interrupted process.",
+      "Existing canonical clipping is retained; changing the scientific objective is a separate explicit decision.",
+      "Unknown donor/specimen/acquisition lineage and shared studies remain unchanged."
+    ]
+  },
+  "artifacts": {
+    "target-policy-audit.json": {
+      "path": "/Users/iskander/.hitlist/presto-corrected-human-fit/target-policy-audit/b1d26cd3bcfddf0a3b0b7797c7fc71b967c5b1036e43bf65265c7061867b9770/bundles/2026-10-16T09-20-29Z/target-policy-audit.json",
+      "sha256": "751d35a75e70b9e8c375e08c021f020d4a72df2625c294426b2b75461a424a36",
+      "size_bytes": 2505
+    },
+    "target-policy-counts.tsv": {
+      "path": "/Users/iskander/.hitlist/presto-corrected-human-fit/target-policy-audit/b1d26cd3bcfddf0a3b0b7797c7fc71b967c5b1036e43bf65265c7061867b9770/bundles/2026-10-16T09-20-29Z/target-policy-counts.tsv",
+      "sha256": "959072fb816f0f72c0f34c66053d57323e282feb79394166e072fdcf9085bd41",
+      "size_bytes": 256
+    },
+    "ic50-raw-effective-targets.tsv": {
+      "path": "/Users/iskander/.hitlist/presto-corrected-human-fit/target-policy-audit/b1d26cd3bcfddf0a3b0b7797c7fc71b967c5b1036e43bf65265c7061867b9770/bundles/2026-10-16T09-20-29Z/ic50-raw-effective-targets.tsv",
+      "sha256": "59c73feeec2ba00041fcc3f8a91b6701ef31bd3f5d3ce6db01de188c45f44583",
+      "size_bytes": 3468131
+    },
+    "target-policy-preview.tsv": {
+      "path": "/Users/iskander/.hitlist/presto-corrected-human-fit/target-policy-audit/b1d26cd3bcfddf0a3b0b7797c7fc71b967c5b1036e43bf65265c7061867b9770/bundles/2026-10-16T09-20-29Z/target-policy-preview.tsv",
+      "sha256": "04e0c985ee6d66ebd0a48407de9d94450df20a69ef84cd9fe6583716a5be9c44",
+      "size_bytes": 10778
+    },
+    "target-policy.png": {
+      "path": "/Users/iskander/.hitlist/presto-corrected-human-fit/target-policy-audit/b1d26cd3bcfddf0a3b0b7797c7fc71b967c5b1036e43bf65265c7061867b9770/bundles/2026-10-16T09-20-29Z/target-policy.png",
+      "sha256": "8f181f0fc4601ac5d553b64489410e222f0285c8526f46cdfcc7825d90261451",
+      "size_bytes": 92294
+    }
+  }
+}

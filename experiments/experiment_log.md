@@ -1,5 +1,37 @@
 
 
+## 2026-10-16 — Corrected human IC50 target-policy audit; fit stopped before optimization
+
+- **Agent/model:** Codex / GPT-6; [experiment directory](2026-10-16_0840_codex_corrected-human-fit/README.md).
+- **Source/reproduction:** clean recipe `124c85b6da23d4c74dbef961999936c573025192`, tag
+  `experiment-corrected-human-fit-20261016`; actual released Presto 0.1.13 / Hitlist 1.78.0,
+  unchanged corrected native source, verified MHC catalog and all 9,053 frozen observations
+  (7,241/906/906). Full config/source/pins and manual preservation are in `reproduce/`.
+- **Finding:** canonical IC50 targets apply `log10(clip(nM,0.001,50000))` while the prospective
+  plan required original log10(nM). Of 2,614 direct IC50 observations, 211 values/bounds
+  change: train 157 (39 exact), validation 31 (8 exact), test 23 (7 exact). All 2,614 source
+  joins verify; raw values, units, operators, original/resolved MHC, cell/condition and citations
+  remain in the full inspection table. #110 tracks canonical policy disclosure and qualification.
+- **Run/conditions:** CPU-only (8 CPU, 64 GiB RAM, 512 GiB scratch, one Torch/BLAS thread,
+  zero loader workers); no GPU. Application started 08:56:49 UTC, preservation receipt
+  09:07:24 UTC. No complete runner runtime or peak-RSS receipt. One attempt, manually
+  stopped during admission before optimization; 25 original files preserved. Buffered log
+  limitations are explicit. No manifest rebind or criterion change.
+- **Planned, unexecuted optimization:** fresh expanded d32/l1/h4 full profile, two epochs ×
+  at most 100 batches, shuffled batch 64, learning rate .001, weight decay .01, uncertainty
+  weighting; all explicit regularization/synthetic ratios zero, all observed families,
+  only direct IC50 claimed. Complete validation would select the checkpoint, followed by
+  fresh-model validation/test evaluation. No pretraining or synthetic examples.
+- **Validation/test metrics:** unavailable: zero checkpoints, predictions or optimization
+  results. No preferred model; baseline arithmetic was validated only on training labels.
+  This is a label-policy audit, not a trained-model result. A tested relaunch guard now
+  rejects the mismatch before model work; the original source snapshot remains unchanged.
+- **Decision:** publish the preserved stop and source-linked raw/effective audit; require
+  explicit policy qualification and a separate prospective family before replacement fitting.
+  Shared studies and unknown biological lineage remain limitations. [Public audit artifacts](https://github.com/pirl-unc/presto/releases/tag/corrected-human-target-policy-audit-v1)
+  include the complete table, counts, plot, source recipe, archive inventory and hashes.
+
+
 ### 2026-03-15_1226_codex_exp21-seed-epoch-confirmation
 - **Agent**: codex
 - **Dir**: [2026-03-15_1226_codex_exp21-seed-epoch-confirmation](experiments/2026-03-15_1226_codex_exp21-seed-epoch-confirmation)

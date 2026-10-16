@@ -1,0 +1,72 @@
+{
+  "analysis_versions": {
+    "datacache": "1.27.1",
+    "matplotlib": "3.11.2",
+    "numpy": "2.5.3",
+    "pandas": "2.3.3",
+    "presto": "0.1.13",
+    "torch": "2.14.1"
+  },
+  "canonical_task": "binding_ic50",
+  "counts": [
+    {
+      "n_clipped_exact": 39,
+      "n_clipped_left_censored": 0,
+      "n_clipped_observations": 157,
+      "n_clipped_right_censored": 118,
+      "n_exact": 1599,
+      "n_observations": 2074,
+      "raw_max_nM": 1000000.0,
+      "raw_min_nM": 0.06,
+      "split": "train"
+    },
+    {
+      "n_clipped_exact": 8,
+      "n_clipped_left_censored": 0,
+      "n_clipped_observations": 31,
+      "n_clipped_right_censored": 23,
+      "n_exact": 210,
+      "n_observations": 265,
+      "raw_max_nM": 180000.0,
+      "raw_min_nM": 1.0,
+      "split": "val"
+    },
+    {
+      "n_clipped_exact": 7,
+      "n_clipped_left_censored": 0,
+      "n_clipped_observations": 23,
+      "n_clipped_right_censored": 16,
+      "n_exact": 214,
+      "n_observations": 275,
+      "raw_max_nM": 500000.0,
+      "raw_min_nM": 0.083,
+      "split": "test"
+    }
+  ],
+  "effective_policy": "log10(clip(raw_nM, 0.001, 50000)); original qualifier retained",
+  "issue": "https://github.com/pirl-unc/presto/issues/110",
+  "limitations": [
+    "No Presto optimization, performance result or replacement target policy is qualified.",
+    "Complete buffered training log and full preflight completion are unavailable for the interrupted process.",
+    "Existing canonical clipping is retained; changing the scientific objective is a separate explicit decision.",
+    "Unknown donor/specimen/acquisition lineage and shared studies remain unchanged."
+  ],
+  "n_checkpoints": 0,
+  "n_clipped_exact": 54,
+  "n_clipped_observations": 211,
+  "n_predictions": 0,
+  "n_source_verified_observations": 2614,
+  "n_verified_interrupted_archive_members": 25,
+  "original_recipe_commit": "124c85b6da23d4c74dbef961999936c573025192",
+  "planned_policy": "log10(raw_nM); original qualifier retained",
+  "producer": {
+    "hitlist_version": "1.78.0",
+    "presto_version": "0.1.13",
+    "source_commit": "a6f8af39256db799ddff417cd16386ea66cea0c4",
+    "wheel_name": "presto-0.1.13-py3-none-any.whl",
+    "wheel_sha256": "6bdc3f9cce3272ffe02261652ebb3bf1b97da8dfc21c8ea358c8d01382f9cd81",
+    "wheel_size_bytes": 705270,
+    "wheel_url": "https://github.com/pirl-unc/presto/releases/download/v0.1.13/presto-0.1.13-py3-none-any.whl"
+  },
+  "status": "fitting attempt stopped before optimization; target policy mismatch"
+}
