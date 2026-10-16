@@ -2,6 +2,12 @@
 
 ## 2026-10-16
 
+- Copy optimizer and scheduler names from the pinned trainer when writing a
+  prospective experiment plan. A base learning rate is not a constant schedule,
+  and AdamW should not be shortened to Adam. Preserve any original published
+  plan and timestamp corrections; never imply that prose changes alter the
+  already frozen executable recipe.
+
 - Before carrying a prospective contract across software releases, inspect every
   embedded artifact fingerprint. Producer-version receipts can change while
   observations and membership stay identical. Declare the expected metadata

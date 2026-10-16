@@ -1,0 +1,39 @@
+{
+  "immutable_recipe_commit": "1067714c768af2e4f3184154c85903bb3c46cf4b",
+  "issue": "https://github.com/pirl-unc/presto/issues/114",
+  "kind": "prose clarification; pinned executable recipe unchanged",
+  "observed_run_state": {
+    "checkpoints": [],
+    "model_gate_present": false,
+    "observed_utc": "2026-10-16T10:48:59.919476+00:00",
+    "work_exists": true
+  },
+  "original_plan": "https://github.com/pirl-unc/presto/releases/download/effective-target-fit-contract-v1/plan.md",
+  "original_prose": "Adam lr .001, weight decay .01",
+  "precise_protocol": {
+    "base_learning_rate": 0.001,
+    "initial_learning_rate": 1e-06,
+    "minimum_learning_rate": 0.0001,
+    "optimizer": "torch.optim.AdamW",
+    "scheduler": "linear warmup followed by cosine decay",
+    "total_optimizer_steps": 200,
+    "warmup_fraction": 0.05,
+    "warmup_steps": 10,
+    "weight_decay": 0.01
+  },
+  "producer_commit": "e35d759a378f3c4fe6199b07deb59b632447358c",
+  "recorded_utc": "2026-10-16T10:50:46.439354+00:00",
+  "released_script_sha256": {
+    "train_iedb.py": "374beb1f93dc022f47736227230ca3e3438829ae872591318c4450726d93cc8a",
+    "train_synthetic.py": "4b6ab77f768d4757dd40fc59dfc177cc85987a6ff58027914332f4ec6ba2d669"
+  },
+  "unchanged": [
+    "executed code",
+    "producer wheel",
+    "launch configuration",
+    "source inputs",
+    "partition membership",
+    "effective/raw target policies",
+    "selection rules and support minima"
+  ]
+}

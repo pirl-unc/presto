@@ -38,8 +38,9 @@ that a clipped exact target equals its original measurement.
 ## Fit and baselines
 
 Use the previous unexecuted bounded design: one CPU-only d32/l1/h4 expanded
-model; two epochs of at most 100 batches; shuffled batches of 64; Adam lr .001,
-weight decay .01; uncertainty weighting; no PCGrad/AMP/compile; all augmentation,
+model; two epochs of at most 100 batches; shuffled batches of 64; AdamW base lr .001,
+weight decay .01; canonical 5% linear warmup (10 of 200 steps) followed by cosine
+decay to .0001; uncertainty weighting; no PCGrad/AMP/compile; all augmentation,
 consistency/orthogonality/sparsity/contrastive priors zero; complete validation
 and complete MIL bags. Canonical aggregate validation loss selects checkpoint.
 No tuning or selection uses test results. Resource limits: eight CPU, 64 GiB RAM,
@@ -84,3 +85,12 @@ result is exploratory and peptide-disjoint, not blinded external validation or
 biological independence. Positive-only elution and missing processing/T-cell/TCR
 support do not become claims. Hitlist #678 and Presto #48/#53 remain open wherever
 these broader requirements are unsupported. MHCflurry remains out of scope.
+
+## Optimizer wording clarification — #114
+
+The immutable published plan used the short name “Adam.” The pinned executable
+trainer has always used AdamW plus the canonical warmup/cosine scheduler described
+above. `results/protocol-notes.json` records the released script hashes, precise
+settings and a 10:48:59 UTC observation showing no model gate or checkpoint. The
+executed code, launch parameters, data, target policy and evaluation decisions
+have not changed. Preserve the original public plan alongside this clarification.

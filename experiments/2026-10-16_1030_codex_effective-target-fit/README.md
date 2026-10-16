@@ -61,3 +61,13 @@ Validation before launch: nine experiment checks pass against released 0.1.16,
 including effective/raw metrics and pre-model gate refusal. Full repository
 regression passed 2,281 tests (four skips); formatting, lint and strict docs pass.
 These checks are prerequisites, not predictive evidence.
+
+## Protocol clarification
+
+[Issue #114](https://github.com/pirl-unc/presto/issues/114) corrects the prose name
+“Adam” to the pinned trainer's **AdamW with 5% linear warmup and cosine decay**
+(base learning rate .001; final minimum .0001; weight decay .01). The executable
+producer and configuration always specified this behavior. The original public
+plan remains immutable. `results/protocol-notes.json` retains precise settings,
+released source hashes and the observation that the model gate had not run at
+10:48:59 UTC. No code, source, split, threshold or selection rule changed.
