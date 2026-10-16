@@ -144,3 +144,38 @@ and mismatched trainer resumes fail. Bare state dictionaries cannot identify a
 scoring contract and therefore load historical version 1. Save a self-describing
 checkpoint when creating a new model with corrected scoring. Qualification runs
 must record both the vocabulary and scoring versions.
+
+## Canonical scoped training inputs
+
+`presto train unified --data-source scoped_bulk` selects the verified public
+PXD013455 search bundle. An explicit local `--scoped-bundle` requires its
+`--scoped-bundle-sha256`. Set `--mhc-augmentation-samples 0` and
+`--uniprot-negative-ratio 0`; live `--bulk-ms`, canary modalities and stronger
+independence policies are rejected. `--max-scoped-bulk` caps peptides after the
+full source projection has collapsed repeated candidate occurrences. Zero means
+all peptides. The canonical script entry point exposes the same source and pin
+arguments as the unified CLI.
+
+Membership is frozen before dataset conversion, then verified again against the
+converted samples. The shared datacache bundle contains `membership.tsv` and
+parquet, assignment parquet, coverage, source registry, label policy and leakage
+audit. It retains exact candidate IDs or ambiguous-parent lookup keys, measured
+IDs where present, source citations, cell line, endpoint, units, censoring and
+partition. The registry supplies cell conditions and assay/protocol details.
+MHC allele sets are explicitly not applicable to this shotgun experiment.
+External assignment parquets require a hash and exact selected source membership.
+
+This source supports **peptide-disjoint evaluation within one captured search**.
+All partitions share that experiment; known protein overlap is reported and
+ambiguous parents remain masked. Donor/specimen independence is inconclusive.
+The labels are search-observation proxies, separated into MS/MS, matching and
+scoped absence. No measured negative assay IDs, generated controls, excision or
+depth labels are invented. The generated-parent graph is consequently empty.
+
+Use `--data-preflight-only --run-dir ...` to write the existing canonical support
+and coverage reports. They pin the frozen membership receipt. A fitting run can
+require that exact `--expected-split-support-sha256`; labels, partitions and
+source evidence must agree. Freeze a supported-output declaration before fitting
+and report held-out predictions and baselines for the explicitly supported
+endpoint. Admission, a successful preflight or a short fitting run alone does
+not establish training readiness.
