@@ -973,6 +973,7 @@ def load_records_from_hitlist(
     include_flanks: bool = True,
     source_mapping_policy: str = SOURCE_MAPPING_POLICY_MASK_UNRESOLVED,
     sampling_seed: int = 42,
+    cap_sampling: str = "uniform_list",
 ) -> Tuple[
     List[BindingRecord],
     List[KineticsRecord],
@@ -1002,7 +1003,19 @@ def load_records_from_hitlist(
     faster and is how the Stage 0a parity check reproduces merged-TSV behavior.
     ``source_mapping_policy`` controls only disagreeing mapped junctions; it
     never changes the assay observation or target.
+
+    ``cap_sampling`` selects ``head`` or bounded-memory ``reservoir`` sampling.
+    The Python API default ``uniform_list`` preserves historical random.sample
+    selection exactly, including its full record-list retention. Canonical
+    training passes its explicitly configured head/reservoir policy.
     """
+    algorithms = {
+        "uniform_list": "python_random_sample_v1",
+        "head": "first_eligible_v1",
+        "reservoir": "python_random_algorithm_r_v1",
+    }
+    if cap_sampling not in algorithms:
+        raise ValueError(f"Unknown cap_sampling {cap_sampling!r}; expected {sorted(algorithms)}")
     try:
         import hitlist
     except ImportError as exc:  # pragma: no cover - exercised via install docs
@@ -1091,10 +1104,15 @@ def load_records_from_hitlist(
             "ms": ms_unresolved,
         }
 
-    binding_records: List[BindingRecord] = []
-    kinetics_records: List[KineticsRecord] = []
-    stability_records: List[StabilityRecord] = []
-    elution_records: List[ElutionRecord] = []
+    sampled = {
+        name: _CappedRecords(cap, sampling_seed, cap_sampling)
+        for name, cap in (
+            ("binding", max_binding),
+            ("kinetics", max_kinetics),
+            ("stability", max_stability),
+            ("elution", max_elution),
+        )
+    }
 
     skipped_no_value = 0
     skipped_invalid_numeric = 0
@@ -1158,7 +1176,7 @@ def load_records_from_hitlist(
         )
 
         if response in _AFFINITY_RESPONSES:
-            binding_records.append(
+            sampled["binding"].append(
                 BindingRecord(
                     value=value,
                     qualifier=qualifier,
@@ -1172,7 +1190,7 @@ def load_records_from_hitlist(
         elif response in _T_HALF_RESPONSES:
             # hitlist reports half life in minutes; StabilityRecord.t_half is
             # in hours (data/collate.py converts back to minutes downstream).
-            stability_records.append(
+            sampled["stability"].append(
                 StabilityRecord(
                     t_half=value / _MINUTES_PER_HOUR,
                     t_half_qualifier=qualifier,
@@ -1182,7 +1200,7 @@ def load_records_from_hitlist(
                 )
             )
         elif response in _TM_RESPONSES:
-            stability_records.append(
+            sampled["stability"].append(
                 StabilityRecord(
                     tm=value,
                     tm_qualifier=qualifier,
@@ -1192,7 +1210,7 @@ def load_records_from_hitlist(
                 )
             )
         elif response in _KOFF_RESPONSES:
-            kinetics_records.append(
+            sampled["kinetics"].append(
                 KineticsRecord(
                     koff=value,
                     koff_qualifier=qualifier,
@@ -1202,7 +1220,7 @@ def load_records_from_hitlist(
                 )
             )
         elif response in _KON_RESPONSES:
-            kinetics_records.append(
+            sampled["kinetics"].append(
                 KineticsRecord(
                     kon=value,
                     kon_qualifier=qualifier,
@@ -1239,7 +1257,7 @@ def load_records_from_hitlist(
             unmapped_conditions[condition_category] = (
                 unmapped_conditions.get(condition_category, 0) + 1
             )
-        elution_records.append(
+        sampled["elution"].append(
             ElutionRecord(
                 peptide=peptide,
                 alleles=alleles,
@@ -1268,16 +1286,11 @@ def load_records_from_hitlist(
             )
         )
 
-    counts_before_cap = {
-        "binding": len(binding_records),
-        "kinetics": len(kinetics_records),
-        "stability": len(stability_records),
-        "elution": len(elution_records),
-    }
-    binding_records = list(_cap_list(binding_records, max_binding, sampling_seed))
-    stability_records = list(_cap_list(stability_records, max_stability, sampling_seed))
-    kinetics_records = list(_cap_list(kinetics_records, max_kinetics, sampling_seed))
-    elution_records = list(_cap_list(elution_records, max_elution, sampling_seed))
+    counts_before_cap = {name: sampler.n_seen_records for name, sampler in sampled.items()}
+    binding_records = sampled["binding"].finish()
+    stability_records = sampled["stability"].finish()
+    kinetics_records = sampled["kinetics"].finish()
+    elution_records = sampled["elution"].finish()
 
     def _flank_coverage(records: Sequence[Any]) -> float:
         """Fraction of records that actually carry flanking residues.
@@ -1320,6 +1333,17 @@ def load_records_from_hitlist(
         "frozen_bundle": bundle.receipt() if bundle is not None else None,
         "filters": shared_filters,
         "sampling_seed": int(sampling_seed),
+        "cap_sampling": cap_sampling,
+        "cap_policy": {
+            "algorithm": algorithms[cap_sampling],
+            "random_streams": "independent per assay family, each initialized with sampling_seed",
+            "record_retention": (
+                "all eligible records before selection"
+                if cap_sampling == "uniform_list"
+                else "at most the positive cap per family; absent/nonpositive caps are unlimited"
+            ),
+            "frame_memory": "projected source frames are still loaded before record selection",
+        },
         "source_rows_before_mapping_collapse": source_rows_before_mapping_collapse,
         "source_rows_after_mapping_collapse": {
             "binding": len(binding_frame),
@@ -1397,6 +1421,38 @@ def _method_counts(records: Sequence[Any]) -> Dict[str, int]:
         key = getattr(record, "assay_method", None) or "unspecified"
         counts[key] = counts.get(key, 0) + 1
     return dict(sorted(counts.items(), key=lambda kv: -kv[1]))
+
+
+class _CappedRecords:
+    """Retain a bounded eligible stream without losing full admission counts."""
+
+    def __init__(self, cap, seed, mode):
+        self.cap = cap
+        self.seed = seed
+        self.mode = mode
+        self.records = []
+        self.n_seen_records = 0
+        self.rng = random.Random(seed)
+
+    def append(self, record):
+        self.n_seen_records += 1
+        if (
+            self.mode == "uniform_list"
+            or self.cap is None
+            or self.cap <= 0
+            or len(self.records) < self.cap
+        ):
+            self.records.append(record)
+        elif self.mode == "reservoir":
+            index = self.rng.randrange(self.n_seen_records)
+            if index < self.cap:
+                self.records[index] = record
+
+    def finish(self):
+        if self.mode == "uniform_list":
+            records, self.records = self.records, []
+            return _cap_list(records, self.cap, self.seed)
+        return self.records
 
 
 def _cap_list(records: List[Any], cap: Optional[int], seed: int) -> List[Any]:

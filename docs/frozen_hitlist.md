@@ -28,6 +28,23 @@ A remote launcher uses `PRESTO_HITLIST_BUNDLE` and
 `PRESTO_HITLIST_BUNDLE_SHA256` for a bundle already installed on the worker;
 `PRESTO_HITLIST_BUILD` is no longer a training-time operation.
 
+## Record caps and reproducibility
+
+Canonical training honors `--cap-sampling head|reservoir`. `head` keeps the first
+eligible records; `reservoir` uses Python Random Algorithm R. Each assay family
+has an independent stream initialized with the recorded source sampling seed.
+Positive caps bound retained record objects; full projected input dataframes are
+still loaded, and every eligible row is inspected for complete admission counts.
+Absent or nonpositive caps remain unlimited. The data funnel records the actual
+algorithm, seed, mode and memory boundary.
+
+The Python loader defaults to `cap_sampling="uniform_list"` to preserve existing
+`random.sample` selections exactly. Before 0.1.12 the canonical Hitlist route also
+used that algorithm, ignoring its configured cap-sampling mode (#103). New
+canonical reservoir runs can therefore select different records with the same
+seed. Preserve historical frozen membership and record this change when comparing
+experiments; do not relabel an old run as Algorithm R.
+
 ## Human inspection and lineage
 
 | Artifact or field | Meaning |

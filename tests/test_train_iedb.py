@@ -2240,13 +2240,17 @@ def test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved(tmp_path, mo
     assert "modality,source,allele,category,count" in detail_rows.splitlines()[0]
 
 
-def test_hitlist_data_source_never_reads_an_available_merged_tsv(tmp_path, monkeypatch):
+@pytest.mark.parametrize("cap_sampling", ["head", "reservoir"])
+def test_hitlist_data_source_never_reads_an_available_merged_tsv(
+    tmp_path, monkeypatch, cap_sampling
+):
     (tmp_path / "merged_deduped.tsv").write_text("placeholder\n", encoding="utf-8")
 
     class HitlistSelected(RuntimeError):
         pass
 
     def _hitlist_selected(**kwargs):
+        assert kwargs["cap_sampling"] == cap_sampling
         raise HitlistSelected
 
     def _merged_must_not_run(**kwargs):
@@ -2268,6 +2272,7 @@ def test_hitlist_data_source_never_reads_an_available_merged_tsv(tmp_path, monke
                 config=None,
                 profile="full",
                 data_source="hitlist",
+                cap_sampling=cap_sampling,
                 hitlist_bundle="explicit-frozen-fixture",
                 mhc_augmentation_samples=0,
                 uniprot_negative_ratio=0,
