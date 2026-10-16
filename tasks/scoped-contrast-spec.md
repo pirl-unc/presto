@@ -34,3 +34,13 @@ machinery variation retained after truncation and legacy grouping. Compare the
 full existing sampler/loader suite, then formatting, lint and complete tests.
 Version 0.1.5; review, PR, merge and verified public GitHub distribution release.
 Presto #70 remains open for canonical frozen membership and actual fitting.
+
+## Actual-batch review correction — #86
+
+The new emitted-batch test also exposed over-allocation: contrast rows were added
+on top of full task quotas. Keep contrast groups within the same assay/task and
+debit each selected group from its task allocation before ordinary draws. A task
+with fewer than two available slots cannot receive a contrast pair. Preserve the
+exact batch size, per-task coverage when feasible and both contrast categories;
+never truncate a completed batch to repair an over-allocation. Test small and
+normal batches over repeated epochs with mixed tasks.

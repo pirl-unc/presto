@@ -1,3 +1,3 @@
 """Presto: Unified immunoinformatics library for presentation, recognition, and immunogenicity."""
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"

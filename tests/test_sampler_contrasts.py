@@ -1,17 +1,11 @@
-"""Tests for contrast-group co-batching in the balanced sampler.
-
-The shotgun branch identifies its terms by *comparison*: same peptide across
-enzymes isolates excision, same protein and enzyme across outcomes isolates
-detectability. Random sampling confounds both with per-protein abundance, so
-the sampler has to place complete groups in a batch rather than hope they land
-together.
-"""
+"""Co-batch genuine comparisons without claiming biological identifiability."""
 
 import random
 
 import pytest
 
 from presto.data.bulk_ms import BulkMSRecord
+from presto.data.collate import PrestoSample
 from presto.data.loaders import BalancedMiniBatchSampler, PrestoDataset
 
 BATCH_SIZE = 16
@@ -102,3 +96,111 @@ class TestContrastGroups:
         sampler = BalancedMiniBatchSampler(dataset, batch_size=8, seed=0)
         assert sampler._contrast_groups == []
         assert sampler._contrast_quota() == 0
+
+
+def scoped_sample(label, **overrides):
+    fields = dict(
+        peptide="ACDEFGHIK",
+        machinery="trypsin",
+        source_protein="P00001",
+        assay_group="bulk_ms",
+        ms_detectability_label=label,
+        label_bucket="positive",  # Generic/excision labels must not select this comparison.
+        source_bundle_id="bundle-a",
+        source_search_space_id="search-a",
+        source_protocol_id="protocol-a",
+        source_reference_sha256="reference-a",
+        source_label_evidence="By MS/MS" if label else "not observed in scope",
+    )
+    fields.update(overrides)
+    return PrestoSample(**fields)
+
+
+def test_capped_group_and_actual_batches_keep_both_detectability_outcomes():
+    samples = [scoped_sample(1.0) for _ in range(8)] + [scoped_sample(0.0)]
+    sampler = BalancedMiniBatchSampler(samples, batch_size=2, seed=3)
+    assert sampler._contrast_groups
+    for group in sampler._contrast_groups:
+        assert len(group) <= sampler.CONTRAST_MAX_GROUP
+        assert {samples[i].ms_detectability_label for i in group} == {0.0, 1.0}
+    for batch in sampler:
+        assert len(batch) == len(set(batch)) == 2
+        assert {samples[i].ms_detectability_label for i in batch} == {0.0, 1.0}
+
+
+@pytest.mark.parametrize(
+    "field",
+    ["source_bundle_id", "source_search_space_id", "source_protocol_id", "source_reference_sha256"],
+)
+def test_detectability_groups_do_not_cross_captured_scopes(field):
+    samples = [
+        scoped_sample(1.0),
+        scoped_sample(0.0, label_bucket="negative", **{field: "different"}),
+    ]
+    assert BalancedMiniBatchSampler(samples, batch_size=2)._contrast_groups == []
+
+
+@pytest.mark.parametrize("bad_label", [None, float("nan"), float("inf"), -1, 0.5, 2])
+def test_detectability_groups_require_actual_binary_targets(bad_label):
+    samples = [scoped_sample(1.0), scoped_sample(bad_label, label_bucket="negative")]
+    assert BalancedMiniBatchSampler(samples, batch_size=2)._contrast_groups == []
+
+
+@pytest.mark.parametrize("field", ["source_protein", "source_protocol_id"])
+def test_unknown_parent_or_partial_scope_does_not_create_comparison(field):
+    samples = [scoped_sample(1.0), scoped_sample(0.0, label_bucket="negative", **{field: ""})]
+    assert BalancedMiniBatchSampler(samples, batch_size=2)._contrast_groups == []
+
+
+def test_excision_only_rows_do_not_create_detectability_groups():
+    samples = [
+        scoped_sample(None, excision_label=1.0, label_bucket="positive"),
+        scoped_sample(None, excision_label=0.0, label_bucket="negative"),
+    ]
+    assert BalancedMiniBatchSampler(samples, batch_size=2)._contrast_groups == []
+
+
+def test_protease_variation_survives_both_group_and_batch_caps():
+    records = [BulkMSRecord("ACDEFGHIK", machinery="trypsin", excision_label=1.0) for _ in range(8)]
+    records.append(BulkMSRecord("ACDEFGHIK", machinery="gluc", excision_label=0.0))
+    dataset = PrestoDataset(bulk_ms_records=records)
+    first = list(BalancedMiniBatchSampler(dataset, batch_size=2, seed=7))
+    assert first == list(BalancedMiniBatchSampler(dataset, batch_size=2, seed=7))
+    assert all({dataset[i].machinery for i in batch} == {"trypsin", "gluc"} for batch in first)
+
+
+def test_detectability_only_rows_do_not_create_protease_comparisons():
+    samples = [scoped_sample(1.0), scoped_sample(0.0, machinery="gluc")]
+    assert BalancedMiniBatchSampler(samples, batch_size=2)._contrast_groups == []
+
+
+@pytest.mark.parametrize("batch_size", [1, 2, 3, 8, 16])
+def test_contrast_seeds_consume_task_quota_and_never_overfill_batches(batch_size):
+    samples = [scoped_sample(float(i % 2)) for i in range(20)]
+    samples += [
+        PrestoSample(peptide="ACDEFGHIK", bind_value=100, assay_group="binding_affinity")
+        for _ in range(20)
+    ]
+    sampler = BalancedMiniBatchSampler(samples, batch_size=batch_size, seed=11)
+    for _ in range(3):
+        for batch in sampler:
+            assert len(batch) == len(set(batch)) == batch_size
+            if batch_size >= 2:
+                assert {samples[i].assay_group for i in batch} == {"bulk_ms", "binding_affinity"}
+
+
+@pytest.mark.parametrize("separate_source", [False, True])
+def test_legacy_comparisons_are_explicitly_separated_by_source(separate_source):
+    records = [
+        BulkMSRecord("ACDEFGHIK", detectability_label=1.0, protein_id="P00001"),
+        BulkMSRecord(
+            "ACDEFGHIR",
+            detectability_label=0.0,
+            protein_id="P00001",
+            observed=False,
+            source="other_legacy" if separate_source else "bulk_proteomics",
+        ),
+    ]
+    dataset = PrestoDataset(bulk_ms_records=records)
+    sampler = BalancedMiniBatchSampler(dataset, batch_size=2)
+    assert bool(sampler._contrast_groups) is not separate_source
