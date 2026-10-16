@@ -2,8 +2,17 @@
 
 - [x] Specify observed numerical defects, compatibility and immutable-run boundaries.
 - [x] Implement constant-vector handling and physical target threshold reporting.
-- [ ] Verify numerical/canonical regressions and publish the actual additive audit.
+- [x] Verify numerical/canonical regressions and publish the actual additive audit.
 - [ ] Format/lint/full checks, review, merge and distribute 0.1.18.
+
+## Physical-metric review
+
+All 116 focused numerical, policy, extraction-parity and coverage regressions pass.
+Formatting, lint and strict docs pass. The clean recipe audits all 2,614 IC50 rows
+and 90 original archive files. All 14 public audit assets independently download
+and verify through datacache; a separate NumPy/scikit-learn replay verifies all 20
+comparisons, four source-context boundary joins and six undefined correlations.
+No held-out classes or failed quality decision change. Full CI and release remain.
 
 # Prospective effective-target fit — #110/#53
 
