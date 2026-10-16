@@ -11,7 +11,7 @@
 - [x] Specify observed numerical defects, compatibility and immutable-run boundaries.
 - [x] Implement constant-vector handling and physical target threshold reporting.
 - [x] Verify numerical/canonical regressions and publish the actual additive audit.
-- [ ] Format/lint/full checks, review, merge and distribute 0.1.18.
+- [x] Format/lint/full checks, review, merge and distribute 0.1.18.
 
 ## Physical-metric review
 
@@ -20,7 +20,9 @@ Formatting, lint and strict docs pass. The clean recipe audits all 2,614 IC50 ro
 and 90 original archive files. All 14 public audit assets independently download
 and verify through datacache; a separate NumPy/scikit-learn replay verifies all 20
 comparisons, four source-context boundary joins and six undefined correlations.
-No held-out classes or failed quality decision change. Full CI and release remain.
+No held-out classes or failed quality decision change. Merged #119 and distributed
+as 0.1.18; exact clean-main CI passed 2,297 tests (three qualification skips). All
+four public release assets and 116 focused public-wheel regressions verify.
 
 # Prospective effective-target fit — #110/#53
 
@@ -35,8 +37,9 @@ No held-out classes or failed quality decision change. Full CI and release remai
 Canonical gate passed; 200 finite steps improve exact training error but the
 validation screen fails against the mean/ridge baselines. All 90 archive members,
 9,053 source joins and 2,614 IC50 rows independently verify. Species attribution,
-numerical errata and narrow predictions are tracked in #115/#116/#117. Final
-CI, merge and release remain. All 30 public downloads verify and all five derived
+numerical errata and narrow predictions are tracked in #115/#116/#117. Exact
+clean-main CI passed 2,282 tests (three qualification skips); #113 merged and
+0.1.17 is distributed. All 30 public downloads verify and all five derived
 outputs reproduce byte-for-byte from the public run. Cache-only replay isolation
 is fixed as #118; the original generation remains unchanged.
 

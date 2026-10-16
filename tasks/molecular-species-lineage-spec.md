@@ -32,7 +32,7 @@ No performance claim or new optimization is part of this PR.
    host, processing or antigen organism as a substitute. Preserve fine identities
    in provenance even though the existing head has six coarse buckets.
 4. Add a dedicated collated molecular-species field, preserve it on device
-   transfer and MIL instance expansion, and make the canonical supervision target
+   transfer and MIL parent prediction exports, and make the canonical row supervision target
    and mask read it. Use the same resolver in MHC sequence coverage so a rat host
    expressing HLA is counted as human MHC. Keep the host/processing role unchanged
    in this bounded correction and document the remaining conditioning limitation.
