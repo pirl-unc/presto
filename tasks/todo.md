@@ -9,8 +9,8 @@
 
 Format/lint and 138 focused tests pass. Legacy Python API selections are exact;
 canonical head/reservoir modes are explicit and retain at most the cap plus the
-record being inspected. Source dataframe memory is unchanged. Full suite and
-final-head deployment remain pending.
+record being inspected. Source dataframe memory is unchanged. The complete local suite passes 2,269 tests with four explicit skips (520.37s).
+Final-head CI and deployment remain pending.
 
 # Scoped sampling investigation — #94
 
