@@ -1,0 +1,10 @@
+{
+  "commit": "fb39e8d302ef77a1b5a3160eb3fe442398418cf0",
+  "status": "failed; no atomic generation or public audit",
+  "issue": "https://github.com/pirl-unc/presto/issues/125",
+  "recipe_sha256": "3f277b89d9a62f70ca36e9999a79a762ede4de20e0229c9728d93ef87d5fe4da",
+  "snapshot_call_validation": {
+    "audit.py": "copyfile() takes 2 positional arguments but 5 were given",
+    "audit_v2.py": "both actual snapshot calls succeeded with byte-identical outputs"
+  }
+}

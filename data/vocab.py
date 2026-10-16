@@ -5,6 +5,7 @@ organism categories, and biological compatibility matrices.
 """
 
 import re
+from functools import lru_cache
 from typing import Any, Dict, Optional, Set, Tuple
 
 # Amino acid vocabulary with special tokens
@@ -570,6 +571,35 @@ def normalize_species(raw: Optional[str]) -> Optional[str]:
             return label
 
     return None
+
+
+def normalize_single_species(raw: Optional[str]) -> Optional[str]:
+    """Conservatively parse a single supported species role.
+
+    Legacy normalize_species retains its first-substring behavior (#123). Native
+    role fields use bounded aliases, require one category, and reject explicit
+    lists instead of silently selecting the first organism.
+    """
+    if raw is None:
+        return None
+    return _single_species_from_text(str(raw).strip().lower())
+
+
+@lru_cache(maxsize=16384)
+def _single_species_from_text(value):
+    if value in FINE_SPECIES_TO_IDX:
+        return value
+    if re.search(r"[;|/+&]|\b(?:and|or)\b", value):
+        return None
+    matches = {
+        label
+        for keywords, label in _SPECIES_PATTERNS
+        if any(
+            re.search(r"(?<!\w)" + re.escape(keyword.strip()) + r"(?!\w)", value)
+            for keyword in keywords
+        )
+    }
+    return next(iter(matches)) if len(matches) == 1 else None
 
 
 # ---- Roll-up mappings (fine → coarser views) ----

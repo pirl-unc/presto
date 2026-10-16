@@ -1,12 +1,40 @@
+# Native presenting-cell processing context — #115
+
+- [x] Review role evidence, current row/MIL routing and specify the bounded change.
+- [x] Implement one role-aware processing resolver and generated-parent provenance.
+- [x] Bind prospective policy/fingerprints and verify row/MIL/export regressions.
+- [x] Register/freeze/run/publish/independently verify actual source-context audit.
+- [ ] Format/lint/full CI, review, merge and distribute 0.1.21 after 0.1.20.
+
+## Native-presenter review
+
+All 225 focused regressions, formatting, lint and strict docs pass. The successful
+clean audit at 060fbfed9d2f99f2937e637624a9e88d1df786c3 preserves all 9,053
+source rows/partitions and 2,614 IC50 raw/effective values/operators. Native context
+is 109 human / 15 rat / 8,929 unknown; 8,936 processing buckets change. All IC50
+presenters remain unknown. All 18 public assets and all original/native source
+joins independently verify. The initial failed packaging recipe/log are preserved
+and corrected as #125; no historical artifact is replaced. Full final-head CI,
+merge and exact clean-main distribution remain gates. #115/#123 remain open.
+
+The first full local run found one stale schema-3 assertion and was interrupted
+after 58 passing tests; it is not counted as a pass. The isolated affinity-policy
+run reproduced that assertion (one failed, four passed). Update its explicit
+expectation to schema 4, preserve every value/censoring check, and rerun the full
+suite on the new clean commit before merging. The executed data-audit code and
+all public evidence remain unchanged.
+
 # Protected release CI and superseded feature runs — #120
 
 Pinned actionlint 1.7.7, repository formatting/lint and strict docs pass. The
 reviewed event matrix preserves unique groups for both pending and active main/tag
-runs; PR/feature cancellations are confined to their workflow and event.
+runs; PR/feature cancellations are confined to their workflow and event. Merged
+#122 as d9df79c and distributed 0.1.20. Clean-main CI passed 2,310 tests (three
+qualification skips); all four public assets and 168 public-wheel regressions verify.
 
 - [x] Specify event/ref groups, pending-run protection and release gates.
 - [x] Implement and validate concurrency and document the event matrix.
-- [ ] Format/lint/full CI, review, merge and distribute 0.1.20 after 0.1.19.
+- [x] Format/lint/full CI, review, merge and distribute 0.1.20 after 0.1.19.
 
 # Molecular MHC species and source-role provenance — #115
 
@@ -14,7 +42,7 @@ runs; PR/feature cancellations are confined to their workflow and event.
 - [x] Carry independent native species axes through typed records, samples and exports.
 - [x] Derive masked molecular MHC supervision and coverage from allele identity.
 - [x] Verify row/MIL/lineage/fingerprint paths and publish the actual source-linked audit.
-- [ ] Format/lint/full checks, review, merge and distribute 0.1.19.
+- [x] Format/lint/full checks, review, merge and distribute 0.1.19.
 
 ## Molecular-species review
 
@@ -23,7 +51,9 @@ The clean recipe verifies all 9,053 canonical auxiliary labels and preserves all
 elution labels change (seven train, one validation). All 14 public assets and every
 original membership/species/native column independently verify through datacache.
 Focused row/MIL/export/lineage/fingerprint/policy regressions, formatting, lint and
-strict docs pass. Full CI, merge and distribution remain. #115 remains open for
+strict docs pass. Merged #121 and distributed 0.1.19: exact-main CI passed 2,310
+tests with three qualification skips, and all four public assets plus 168 public-wheel
+regressions independently verified. #115 remains open for
 processing conditioning and antigen attribution; context gaps stay explicit.
 
 # Physical affinity metric reporting — #116

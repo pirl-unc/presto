@@ -1621,6 +1621,8 @@ class PrestoCollator:
             for sample in samples:
                 augment_sample_sequences(sample, self.augmentation)
 
+        species_details = [species_lineage_fields(sample) for sample in samples]
+
         # Tokenize sequences
         pep_tok, pep_lengths = self.tokenizer.batch_encode(
             [s.peptide for s in samples],
@@ -1845,10 +1847,15 @@ class PrestoCollator:
                 n_instances=n_instances,
                 fallback=sample.mhc_class or "I",
             )
-            species_list = self._expand_with_fallback(
-                sample.mil_species_list,
-                n_instances=n_instances,
-                fallback=sample.species or "",
+            processing = species_details[sample_index]
+            species_list = (
+                [processing["processing_species"]] * n_instances
+                if sample.species_context
+                else self._expand_with_fallback(
+                    sample.mil_species_list,
+                    n_instances=n_instances,
+                    fallback=processing["processing_species"],
+                )
             )
 
             grouped_indices = self._split_indices_by_mhc_class(mhc_class_list)
@@ -1904,10 +1911,15 @@ class PrestoCollator:
                 n_instances=n_instances,
                 fallback=sample.mhc_class or "",
             )
-            species_list = self._expand_with_fallback(
-                sample.tcell_mil_species_list,
-                n_instances=n_instances,
-                fallback=sample.species or "",
+            processing = species_details[sample_index]
+            species_list = (
+                [processing["processing_species"]] * n_instances
+                if sample.species_context
+                else self._expand_with_fallback(
+                    sample.tcell_mil_species_list,
+                    n_instances=n_instances,
+                    fallback=processing["processing_species"],
+                )
             )
 
             bag_index = len(tcell_mil_bag_labels)
@@ -1982,7 +1994,6 @@ class PrestoCollator:
         else:
             tcell_mil_context = {}
 
-        species_details = [species_lineage_fields(sample) for sample in samples]
         return PrestoBatch(
             pep_tok=pep_tok,
             mhc_a_tok=mhc_a_tok,
@@ -2026,7 +2037,7 @@ class PrestoCollator:
             bind_target_log10=fixed_metadata["bind_target_log10"],
             same_peptide_diff_allele_pairs=binding_pair_indices["same_peptide_diff_allele_pairs"],
             same_allele_diff_peptide_pairs=binding_pair_indices["same_allele_diff_peptide_pairs"],
-            processing_species=[s.species for s in samples],
+            processing_species=[row["processing_species"] or None for row in species_details],
             molecular_mhc_species=[
                 row["molecular_mhc_species_bucket"] or None for row in species_details
             ],

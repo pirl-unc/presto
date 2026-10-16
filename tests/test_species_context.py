@@ -112,13 +112,13 @@ def test_rat_host_hla_roles_survive_adapter_device_mil_and_predictions(monkeypat
         assert row.species_context["reported_antigen_species"] == "Homo sapiens"
     batch = PrestoCollator()(list(dataset)).to("cpu")
     assert batch.molecular_mhc_species == ["human", "human"]
-    assert batch.processing_species == [fields["host"]] * 2
+    assert batch.processing_species == [fields["presenting_species"]] * 2
     target = resolve_row_targets(batch)["mhc_species"]
     assert target.target.tolist() == [PROCESSING_SPECIES_TO_IDX["human"]] * 2
     assert target.mask.tolist() == [1, 1]
     assert "species_context" not in batch.model_inputs()
     assert "molecular_mhc_species" not in batch.model_inputs()
-    assert batch.mil_species == [fields["host"]] * 2
+    assert batch.mil_species == [fields["presenting_species"]] * 2
     predictions = collect_holdout_predictions(
         SpeciesAndElutionModel(),
         [batch],
@@ -141,6 +141,10 @@ def test_rat_host_hla_roles_survive_adapter_device_mil_and_predictions(monkeypat
         assert row["introduced_mhc_species"] == "Homo sapiens"
         assert row["molecular_mhc_species_bucket"] == "human"
         assert row["species_context_reference"] == fields["species_context_reference"]
+        assert row["processing_species"] == fields["presenting_species"]
+        assert row["processing_species_bucket"] == "murine"
+        assert row["processing_species_basis"] == "native_presenting_species"
+        assert row["processing_species_status"] == "resolved"
 
 
 def test_generated_context_preserves_consensus_without_relabeling_molecular_identity():
@@ -190,7 +194,7 @@ def test_unknown_native_axes_and_conflicting_parent_contexts_stay_empty():
 
 def test_role_change_alters_coverage_fingerprint_and_policy_is_declared():
     contract = build_output_contract()
-    assert contract.to_dict()["schema_version"] == 3
+    assert contract.to_dict()["schema_version"] == 4
     assert contract.to_dict()["molecular_mhc_species_policy"] == MOLECULAR_SPECIES_POLICY
     sample = PrestoSample(
         peptide="ACDEFGHIK",

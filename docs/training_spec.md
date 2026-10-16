@@ -176,10 +176,11 @@ must have a consistent known species; mixed or unresolved identities are masked.
 Recorded host or processing species never supplies this target. Native host,
 antigen, presenter, in-vivo/lineage host and introduced-MHC evidence remains in
 separate source-provenance fields, with citations and unresolved attribution notes.
-The prospective output contract records this policy (schema 3), and final frozen
-membership binds these role fields. Historical contracts and results remain intact.
-Processing conditioning and source-antigen attribution retain their documented
-limitations under #115/#46; this molecular-label correction does not resolve them.
+The prospective output contract records the molecular and processing policies
+(schema 4), and final frozen membership binds these role fields. Historical
+contracts and results remain intact. Native processing context uses the explicit
+presenter as described below. Antigen attribution, repertoire context and legacy
+API/sampler roles retain their documented limitations under #115/#46.
 
 Censor qualifiers are `-1` for an upper bound, `0` for exact, `1` for a lower
 bound. Exact values use squared error; inequalities penalize only violations of
@@ -263,3 +264,18 @@ sampling default. These are configuration receipts; per-loss metrics and output
 update/support reports establish which losses actually ran. The 2026-10-15 scoped
 qualification retains its original hidden-prior deviation and failed probability
 quality (#94/#95); its archived results have not been rewritten.
+
+### Native presenter context
+
+The canonical native row and both MIL paths use only Hitlist's explicit reviewed
+`presenting_species` for processing context. Unknown, mixed or unsupported values
+reach the model's unknown context; host, MHC and antigen fields never supply a
+fallback. The raw roles remain inspectable. Legacy inputs without a role dictionary
+retain their explicit species behavior, with that compatibility basis recorded.
+Generated examples preserve only unanimous parent processing context, independently
+of a swapped MHC. Unknown/conflicting parents stay unknown. Parent context enters
+lineage ledgers; derived input, bucket, basis and status enter membership/support
+fingerprints and prediction exports. The prospective source contract must bind
+`native_presenter_and_generated_parent_context_v1`. Old qualifications cannot
+silently authorize changed context. Antigen attribution, repertoire-relative
+foreignness and the legacy sampler's host grouping remain explicit follow-ups.
