@@ -3,7 +3,7 @@
 - [x] Specify compatibility, prospective policy binding and complete clipped-row audit.
 - [x] Share one executable policy across affinity objectives and declare it in contracts.
 - [x] Count and export traceable changed targets during canonical preflight.
-- [ ] Verify regressions and audit the frozen public IC50 observations without a model.
+- [x] Verify focused regressions and audit the frozen public IC50 observations without a model.
 - [ ] Publish evidence, format/lint/full checks, review, merge and distribute 0.1.16.
 
 # Corrected human IC50 fitting attempt and target-policy audit
@@ -11420,3 +11420,10 @@ packages and nested `data/artifacts` remain visible. Ruff 0.16.0 lint and format
 checks pass. README/spec guidance now requires the working-checkout check;
 historical snapshots and receipts are retained. Final diff is limited to package
 discovery tests and review documentation.
+
+## Review — explicit affinity policy (#110/#111)
+
+- Canonical transforms retain bit-identical historical clipping and original censor direction. The executable object supplies objective/source-contract metadata; omitted or different prospective policy is rejected even with no clipped values.
+- 77 focused tests pass. Real canonical census matches every one of 2,614 public IC50 targets/directions and all 211 clipped source IDs, including 54 exact changes. Public audit has 14 independently downloaded/hash-verified assets, all 211 complete source-context joins and five reproduction members verified.
+- Full row tables remain in datacache/public downloads; versioned source contains recipes, compact reports and pins. Original stopped experiment and manifests are immutable. Full model-input preflight and a new prospective fit remain separate work.
+- #111 documentation now describes removed depth labels and the shipped scoped source. Strict docs and formatting/lint pass. Full regression and final-head CI/release remain required before shipment.

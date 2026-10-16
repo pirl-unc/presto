@@ -1534,3 +1534,14 @@ skips in 525.13 seconds. Software CI/merge/distribution remain tracked in PR #10
 - Decision: proceed to the separately prospective bounded IC50 fitting diagnostic only after the unchanged canonical manifest gate passes. No winner or predictive-quality claim exists in this data-only family. #48/#53 and Hitlist #678/#680 remain open.
 
 Publication closure: all 23 public downloads, 48 archive members, 9,053 source/partition joins and the fixed candidate counts independently verify through datacache. See the family verification receipt. No manifest gate or fitting result is implied.
+
+
+## 2026-10-16 — Canonical affinity target-policy audit
+
+- Agent/model: Codex / GPT-6. [Family](2026-10-16_1000_codex_affinity-target-policy/README.md).
+- Clean producer: candidate Presto 0.1.16 `ca9e883034a8842b99394deb11b8155abd83b597`; frozen recipe tag `experiment-affinity-target-policy-20261016`. Datacache 1.27.1 retains the two public pinned inputs and complete output generation.
+- Contract: all 2,614 published corrected-human IC50 labels, original IDs/units/censor operators and train/val/test membership. Canonical float32 `log10(clip(nM, 0.001, 50000))`, original direction retained. Label-only samples preserve class/allele identity; no MHC sequences, synthetic data, model, pretraining, training, loss optimization or predictions. The archived manifest supplies configuration only and is not rebound.
+- Condition: canonical collator/census versus the independent released-0.1.13 posthoc target audit. All effective targets/directions and 211 clipped source IDs agree. Train/val/test clipping is 157/31/23, including 39/8/7 exact and 118/23/16 right-censored values; zero below-minimum values. Validation/test prediction and quality metrics are absent because no model is constructed. No preferred model.
+- Hardware: local arm64 CPU, one Torch/BLAS thread, no GPU/workers, batch 128, ten-minute alarm. Observed wall time 2.014 s including inputs; peak RSS 271,433,728 bytes.
+- Artifacts: [public audit](https://github.com/pirl-unc/presto/releases/tag/affinity-target-policy-audit-v1), complete canonical changed-row table, flat counts, full 86-field clipped-source context, producer/runtime receipt, source recipe, plan and hashes.
+- Decision: canonical target-policy evidence agrees with frozen measurements. A new prospective fitting contract must explicitly accept effective targets and separately evaluate raw measurements/bounds. Unknown donor/specimen/acquisition identity and shared studies persist; this is not predictive readiness.
