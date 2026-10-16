@@ -3,8 +3,18 @@
 - [x] Review native evidence and specify a bounded molecular-label/provenance correction.
 - [x] Carry independent native species axes through typed records, samples and exports.
 - [x] Derive masked molecular MHC supervision and coverage from allele identity.
-- [ ] Verify row/MIL/lineage/fingerprint paths and publish the actual source-linked audit.
+- [x] Verify row/MIL/lineage/fingerprint paths and publish the actual source-linked audit.
 - [ ] Format/lint/full checks, review, merge and distribute 0.1.19.
+
+## Molecular-species review
+
+The clean recipe verifies all 9,053 canonical auxiliary labels and preserves all
+2,614 IC50 raw/effective targets, operators and partitions. Eight rat-host/HLA
+elution labels change (seven train, one validation). All 14 public assets and every
+original membership/species/native column independently verify through datacache.
+Focused row/MIL/export/lineage/fingerprint/policy regressions, formatting, lint and
+strict docs pass. Full CI, merge and distribution remain. #115 remains open for
+processing conditioning and antigen attribution; context gaps stay explicit.
 
 # Physical affinity metric reporting — #116
 
