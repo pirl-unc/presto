@@ -11536,7 +11536,11 @@ discovery tests and review documentation.
 Spec: [assay-context-applicability-spec.md](assay-context-applicability-spec.md).
 
 - [x] Review #126 and define source-preparation versus missing-context semantics.
-- [ ] Preserve raw methods and implement conservative applicability reporting.
-- [ ] Verify loading, generated parents, frozen membership, predictions and coverage.
+- [x] Preserve raw methods and implement conservative applicability reporting.
+- [x] Verify loading, generated parents, frozen membership, predictions and coverage.
 - [ ] Publish an independently verified additive audit of all historical source rows.
 - [ ] Format/lint/full tests/docs, review, merge and verified public release.
+
+Review: 193 focused regressions and strict documentation pass. The independent
+real-source replay passes all 9,053 rows and all 2,614 unchanged IC50 targets.
+Full local tests, public download replay and exact-head release checks follow.

@@ -473,7 +473,8 @@ generated controls, `parent_assay_contexts`. Explicit purified-MHC measurements
 report cellular processing as `not_applicable`; explicit cellular-MHC or native
 elution evidence reports `applicable`. Unknown or contradictory preparation stays
 `unknown`. `processing_context_availability` separately records whether applicable
-presenter context resolves. Missing presenter evidence does not invalidate a
+presenter species resolves. A resolved species does not establish cell type,
+condition, specimen identity or a complete assay context. Missing presenter evidence does not invalidate a
 purified-MHC binding label. Generated controls inherit only unanimous parent
 applicability and never acquire a measured assay identity or source method.
 
