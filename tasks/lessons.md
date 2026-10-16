@@ -2,6 +2,18 @@
 
 ## 2026-10-16
 
+- Copy optimizer and scheduler names from the pinned trainer when writing a
+  prospective experiment plan. A base learning rate is not a constant schedule,
+  and AdamW should not be shortened to Adam. Preserve any original published
+  plan and timestamp corrections; never imply that prose changes alter the
+  already frozen executable recipe.
+
+- Before carrying a prospective contract across software releases, inspect every
+  embedded artifact fingerprint. Producer-version receipts can change while
+  observations and membership stay identical. Declare the expected metadata
+  delta explicitly and require canonical recomputation; never silently accept a
+  drifted source contract or confuse receipt identity with biological membership.
+
 - Before launching a real-data fit, execute every active target transformation on
   the frozen raw labels and compare physical values, censor boundaries and units.
   Coverage counts and preserved source columns do not prove that effective targets

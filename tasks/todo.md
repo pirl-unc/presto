@@ -1,10 +1,28 @@
+# Prospective effective-target fit — #110/#53
+
+- [x] Specify the new declared target space, raw-space diagnostics, baselines and limits.
+- [x] Prepare and test a new isolated recipe with verified released producer pins.
+- [x] Publish and freeze the new prospective manifest without changing historical contracts.
+- [x] Run canonical full-input qualification and bounded fitting; preserve all outcomes.
+- [ ] Audit/publish complete artifacts and comparisons, then review/merge/release 0.1.17.
+
+## Effective-fit review
+
+Canonical gate passed; 200 finite steps improve exact training error but the
+validation screen fails against the mean/ridge baselines. All 90 archive members,
+9,053 source joins and 2,614 IC50 rows independently verify. Species attribution,
+numerical errata and narrow predictions are tracked in #115/#116/#117. Final
+CI, merge and release remain. All 30 public downloads verify and all five derived
+outputs reproduce byte-for-byte from the public run. Cache-only replay isolation
+is fixed as #118; the original generation remains unchanged.
+
 # Explicit affinity target policy — #110
 
 - [x] Specify compatibility, prospective policy binding and complete clipped-row audit.
 - [x] Share one executable policy across affinity objectives and declare it in contracts.
 - [x] Count and export traceable changed targets during canonical preflight.
 - [x] Verify focused regressions and audit the frozen public IC50 observations without a model.
-- [ ] Publish evidence, format/lint/full checks, review, merge and distribute 0.1.16.
+- [x] Publish evidence, format/lint/full checks, review, merge and distribute 0.1.16.
 
 # Corrected human IC50 fitting attempt and target-policy audit
 
@@ -13,7 +31,7 @@
 - [x] Preserve/stop the incompatible raw-target attempt before optimization; file #110.
 - [x] Audit all 2,614 source-linked IC50 rows and guard against relaunching the mismatch.
 - [x] Publish/independently verify all 19 public assets, 25 archived files, 2,614 source/context/partition joins and every effective target.
-- [ ] Close registry, review, merge and release 0.1.15 after final checks.
+- [x] Close registry, review, merge and release 0.1.15 after final checks.
 
 ## Target-policy review
 
@@ -11427,3 +11445,11 @@ discovery tests and review documentation.
 - 77 focused tests pass. Real canonical census matches every one of 2,614 public IC50 targets/directions and all 211 clipped source IDs, including 54 exact changes. Public audit has 14 independently downloaded/hash-verified assets, all 211 complete source-context joins and five reproduction members verified.
 - Full row tables remain in datacache/public downloads; versioned source contains recipes, compact reports and pins. Original stopped experiment and manifests are immutable. Full model-input preflight and a new prospective fit remain separate work.
 - #111 documentation now describes removed depth labels and the shipped scoped source. Strict docs and formatting/lint pass. Full ./test.sh passes: 2,281 tests, four skips, 812 warnings in 521.00 s. Final-head CI and verified clean-main release remain required before shipment.
+
+## Effective-target recipe review
+
+- Nine focused contract checks pass, including separate effective/raw measurement and censor metrics, training-only baseline fitting, identity preservation and pre-model gate refusal. Independent arithmetic recomputation agrees on a mixed-label fixture.
+- Verified frozen-input arithmetic reproduces 2,614 targets, 211 clipped observations, 54 clipped exact values and 1,599 exact training-baseline rows. No held-out predictions or qualified new manifest yet.
+- Formatting/lint and strict docs pass. Full ./test.sh: 2,281 passed, four skipped, 812 warnings in 508.81 seconds. The library source is unchanged from reviewed #112 except the 0.1.17 version.
+- Review found producer-version provenance in the frozen membership receipt; the new declaration now names the expected metadata change and requires the unchanged partition recipe hash plus all semantic membership/label fingerprints. Historical contracts remain immutable.
+- Released 0.1.16 producer pins, new public declaration, canonical qualification/fit and complete public evidence remain required.

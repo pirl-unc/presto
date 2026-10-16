@@ -1,0 +1,378 @@
+{
+  "test": {
+    "effective": {
+      "length_composition_class_ridge": {
+        "binding_500nM": {
+          "accuracy": 0.68,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.5477948876729777,
+          "auroc": 0.697027027027027,
+          "balanced_accuracy": 0.6765765765765765,
+          "f1": 0.576923076923077,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 275,
+          "n_negative": 185,
+          "n_positive": 90,
+          "precision": 0.5084745762711864,
+          "recall": 0.6666666666666666,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 1.7207241047353146,
+        "censor_satisfaction_fraction": 0.03278688524590164,
+        "mae": 0.9229271904460061,
+        "n_exact": 214,
+        "n_left_censored": 0,
+        "n_observations": 275,
+        "n_right_censored": 61,
+        "pearson": 0.40555797000093985,
+        "rmse": 1.1382785332778433,
+        "spearman": 0.39392325610229234,
+        "undefined_metrics": []
+      },
+      "presto": {
+        "binding_500nM": {
+          "accuracy": 0.6727272727272727,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.5531586176180384,
+          "auroc": 0.6951951951951952,
+          "balanced_accuracy": 0.5,
+          "f1": 0.0,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 275,
+          "n_negative": 185,
+          "n_positive": 90,
+          "precision": null,
+          "recall": 0.0,
+          "threshold_nM": 500,
+          "undefined_metrics": [
+            "precision"
+          ]
+        },
+        "censor_aware_mse": 1.7251401184553288,
+        "censor_satisfaction_fraction": 0.03278688524590164,
+        "mae": 1.016989321404389,
+        "n_exact": 214,
+        "n_left_censored": 0,
+        "n_observations": 275,
+        "n_right_censored": 61,
+        "pearson": 0.38948256030435097,
+        "rmse": 1.3100356032252576,
+        "spearman": 0.3372713192410538,
+        "undefined_metrics": []
+      },
+      "train_mean": {
+        "binding_500nM": {
+          "accuracy": 0.32727272727272727,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.32727272727272727,
+          "auroc": 0.5,
+          "balanced_accuracy": 0.5,
+          "f1": 0.4931506849315069,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 275,
+          "n_negative": 185,
+          "n_positive": 90,
+          "precision": 0.32727272727272727,
+          "recall": 1.0,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 1.997327183186162,
+        "censor_satisfaction_fraction": 0.0,
+        "mae": 1.039034257066031,
+        "n_exact": 214,
+        "n_left_censored": 0,
+        "n_observations": 275,
+        "n_right_censored": 61,
+        "pearson": 8.916791345008318e-17,
+        "rmse": 1.2486864680035228,
+        "spearman": null,
+        "undefined_metrics": [
+          "spearman"
+        ]
+      }
+    },
+    "raw": {
+      "length_composition_class_ridge": {
+        "binding_500nM": {
+          "accuracy": 0.68,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.5477948876729777,
+          "auroc": 0.697027027027027,
+          "balanced_accuracy": 0.6765765765765765,
+          "f1": 0.576923076923077,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 275,
+          "n_negative": 185,
+          "n_positive": 90,
+          "precision": 0.5084745762711864,
+          "recall": 0.6666666666666666,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 1.8271568608322235,
+        "censor_satisfaction_fraction": 0.03278688524590164,
+        "mae": 0.9313692912596249,
+        "n_exact": 214,
+        "n_left_censored": 0,
+        "n_observations": 275,
+        "n_right_censored": 61,
+        "pearson": 0.40680176239849913,
+        "rmse": 1.151585350681354,
+        "spearman": 0.39377626500990137,
+        "undefined_metrics": []
+      },
+      "presto": {
+        "binding_500nM": {
+          "accuracy": 0.6727272727272727,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.5531586176180384,
+          "auroc": 0.6951951951951952,
+          "balanced_accuracy": 0.5,
+          "f1": 0.0,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 275,
+          "n_negative": 185,
+          "n_positive": 90,
+          "precision": null,
+          "recall": 0.0,
+          "threshold_nM": 500,
+          "undefined_metrics": [
+            "precision"
+          ]
+        },
+        "censor_aware_mse": 1.824701616390946,
+        "censor_satisfaction_fraction": 0.03278688524590164,
+        "mae": 1.0254314253569727,
+        "n_exact": 214,
+        "n_left_censored": 0,
+        "n_observations": 275,
+        "n_right_censored": 61,
+        "pearson": 0.38826917622747736,
+        "rmse": 1.3209479235429324,
+        "spearman": 0.33740268220357406,
+        "undefined_metrics": []
+      },
+      "train_mean": {
+        "binding_500nM": {
+          "accuracy": 0.32727272727272727,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.32727272727272727,
+          "auroc": 0.5,
+          "balanced_accuracy": 0.5,
+          "f1": 0.4931506849315069,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 275,
+          "n_negative": 185,
+          "n_positive": 90,
+          "precision": 0.32727272727272727,
+          "recall": 1.0,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 2.129726075297462,
+        "censor_satisfaction_fraction": 0.0,
+        "mae": 1.0474763643523755,
+        "n_exact": 214,
+        "n_left_censored": 0,
+        "n_observations": 275,
+        "n_right_censored": 61,
+        "pearson": -1.2340334207730435e-16,
+        "rmse": 1.2639415596787766,
+        "spearman": null,
+        "undefined_metrics": [
+          "spearman"
+        ]
+      }
+    }
+  },
+  "val": {
+    "effective": {
+      "length_composition_class_ridge": {
+        "binding_500nM": {
+          "accuracy": 0.6264150943396226,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.4894220439170469,
+          "auroc": 0.6775925224201086,
+          "balanced_accuracy": 0.6290261462675255,
+          "f1": 0.5395348837209302,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 265,
+          "n_negative": 174,
+          "n_positive": 91,
+          "precision": 0.46774193548387094,
+          "recall": 0.6373626373626373,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 1.6772447188367963,
+        "censor_satisfaction_fraction": 0.0,
+        "mae": 0.8483691388918395,
+        "n_exact": 210,
+        "n_left_censored": 0,
+        "n_observations": 265,
+        "n_right_censored": 55,
+        "pearson": 0.3986885965705675,
+        "rmse": 1.03762645248034,
+        "spearman": 0.41528577548134415,
+        "undefined_metrics": []
+      },
+      "presto": {
+        "binding_500nM": {
+          "accuracy": 0.6566037735849056,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.5286318205045005,
+          "auroc": 0.6717822407477579,
+          "balanced_accuracy": 0.5,
+          "f1": 0.0,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 265,
+          "n_negative": 174,
+          "n_positive": 91,
+          "precision": null,
+          "recall": 0.0,
+          "threshold_nM": 500,
+          "undefined_metrics": [
+            "precision"
+          ]
+        },
+        "censor_aware_mse": 1.4954154041664578,
+        "censor_satisfaction_fraction": 0.0,
+        "mae": 0.9488887846469879,
+        "n_exact": 210,
+        "n_left_censored": 0,
+        "n_observations": 265,
+        "n_right_censored": 55,
+        "pearson": 0.2829823546828859,
+        "rmse": 1.1654770444837181,
+        "spearman": 0.3632847115104097,
+        "undefined_metrics": []
+      },
+      "train_mean": {
+        "binding_500nM": {
+          "accuracy": 0.3433962264150943,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.3433962264150943,
+          "auroc": 0.5,
+          "balanced_accuracy": 0.5,
+          "f1": 0.5112359550561798,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 265,
+          "n_negative": 174,
+          "n_positive": 91,
+          "precision": 0.3433962264150943,
+          "recall": 1.0,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 1.842623424994765,
+        "censor_satisfaction_fraction": 0.0,
+        "mae": 0.9579101688208663,
+        "n_exact": 210,
+        "n_left_censored": 0,
+        "n_observations": 265,
+        "n_right_censored": 55,
+        "pearson": 2.0468407515496003e-16,
+        "rmse": 1.1376330302762145,
+        "spearman": null,
+        "undefined_metrics": [
+          "spearman"
+        ]
+      }
+    },
+    "raw": {
+      "length_composition_class_ridge": {
+        "binding_500nM": {
+          "accuracy": 0.6264150943396226,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.4894220439170469,
+          "auroc": 0.6775925224201086,
+          "balanced_accuracy": 0.6290261462675255,
+          "f1": 0.5395348837209302,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 265,
+          "n_negative": 174,
+          "n_positive": 91,
+          "precision": 0.46774193548387094,
+          "recall": 0.6373626373626373,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 1.795985486421433,
+        "censor_satisfaction_fraction": 0.0,
+        "mae": 0.8543125098270081,
+        "n_exact": 210,
+        "n_left_censored": 0,
+        "n_observations": 265,
+        "n_right_censored": 55,
+        "pearson": 0.3998844714463089,
+        "rmse": 1.047534219986944,
+        "spearman": 0.415333803629397,
+        "undefined_metrics": []
+      },
+      "presto": {
+        "binding_500nM": {
+          "accuracy": 0.6566037735849056,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.5286318205045005,
+          "auroc": 0.6717822407477579,
+          "balanced_accuracy": 0.5,
+          "f1": 0.0,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 265,
+          "n_negative": 174,
+          "n_positive": 91,
+          "precision": null,
+          "recall": 0.0,
+          "threshold_nM": 500,
+          "undefined_metrics": [
+            "precision"
+          ]
+        },
+        "censor_aware_mse": 1.595346914599198,
+        "censor_satisfaction_fraction": 0.0,
+        "mae": 0.9548321579120065,
+        "n_exact": 210,
+        "n_left_censored": 0,
+        "n_observations": 265,
+        "n_right_censored": 55,
+        "pearson": 0.28310417185257736,
+        "rmse": 1.173962877749333,
+        "spearman": 0.3634662576259104,
+        "undefined_metrics": []
+      },
+      "train_mean": {
+        "binding_500nM": {
+          "accuracy": 0.3433962264150943,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.3433962264150943,
+          "auroc": 0.5,
+          "balanced_accuracy": 0.5,
+          "f1": 0.5112359550561798,
+          "n_ambiguous_bounds": 0,
+          "n_eligible_observations": 265,
+          "n_negative": 174,
+          "n_positive": 91,
+          "precision": 0.3433962264150943,
+          "recall": 1.0,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 1.9767800708391714,
+        "censor_satisfaction_fraction": 0.0,
+        "mae": 0.96385354048704,
+        "n_exact": 210,
+        "n_left_censored": 0,
+        "n_observations": 265,
+        "n_right_censored": 55,
+        "pearson": -9.010770752878597e-17,
+        "rmse": 1.1492791680340626,
+        "spearman": null,
+        "undefined_metrics": [
+          "spearman"
+        ]
+      }
+    }
+  }
+}

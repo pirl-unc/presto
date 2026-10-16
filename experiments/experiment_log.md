@@ -1,4 +1,38 @@
+## 2026-10-16 — Frozen effective-target IC50 fit: finite fitting, failed quality screen
 
+- **Agent/model:** Codex / GPT-6; [experiment and full metrics](2026-10-16_1030_codex_effective-target-fit/README.md).
+- **Source/reproduction:** clean `1067714c768af2e4f3184154c85903bb3c46cf4b`, released Presto 0.1.16 / Hitlist 1.78.0;
+  unchanged native manifest `b180eba8…`, all 9,053 source-linked observations and 7,241/906/906
+  frozen peptide-component partitions; published prospective effective-target contract passed
+  before model construction. All raw/effective values, units, censor operators and citations retained.
+- **Training:** fresh d32/l1/h4 expanded, 200 shuffled batches ×64, AdamW .001/.01,
+  5% warmup/cosine, uncertainty weighting, no pretraining/synthetic examples or specified priors.
+  Active measured families optimized; only IC50 declared. Full aggregate validation selects epoch 1;
+  fresh checkpoint reload, every validation/test prediction and complete loss ledger retained.
+- **Conditions:** one Presto fit; train-only exact-IC50 mean and alpha=1 length/composition/class
+  ridge comparators. Effective float32 clipped targets primary; raw physical targets diagnostic.
+
+| Split | Predictor | Effective RMSE | Raw RMSE | Effective Spearman |
+| --- | --- | ---: | ---: | ---: |
+| val | Presto | 1.165477 | 1.173963 | 0.363285 |
+| val | Train mean | 1.137633 | 1.149279 | undefined |
+| val | Ridge | 1.037626 | 1.047534 | 0.415286 |
+| test | Presto | 1.310036 | 1.320948 | 0.337271 |
+| test | Train mean | 1.248686 | 1.263942 | undefined |
+| test | Ridge | 1.138279 | 1.151585 | 0.393923 |
+
+- **Fitting:** 200 finite steps, no nonfinite tracked elements; direct gradients every batch;
+  exact training RMSE 1.607139→1.337708. Complete validation/test loss .499515671/.549559624.
+  Selected predictions vary by less than .03 log10(nM); physical 500 nM binder recall is zero.
+- **Decision:** quality screen fails; validation paired RMSE intervals versus mean
+  [-.075366,.124810], ridge [.020137,.239649]. Ridge preferred; test is descriptive.
+- **Resources:** CPU-only, 8 CPU/64 GiB/512 GiB scratch, zero GPU/workers, one Torch thread;
+  4489.710s, runner peak RSS 14,530,875,392 bytes. No budget extension.
+- **Evidence/limits:** [complete downloads](https://github.com/pirl-unc/presto/releases/tag/effective-target-fit-qualification-v1); 90 archive files, source joins,
+  metrics, baselines, paired bootstrap and losses independently verified. Shared studies,
+  unknown donor/specimen/acquisition identities; 220 other outputs undeclared. Additive native
+  species audit exposes eight rat-host/HLA elution rows (#115); numerical errata #116 preserve
+  original results; #117 owns prospective diagnosis of near-constant predictions. #53 stays open.
 
 ## 2026-10-16 — Corrected human IC50 target-policy audit; fit stopped before optimization
 

@@ -1,0 +1,1301 @@
+{
+  "canonical_manifest_gate_passed": true,
+  "comparison": {
+    "test": {
+      "effective": {
+        "length_composition_class_ridge": {
+          "binding_500nM": {
+            "accuracy": 0.68,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.5477948876729777,
+            "auroc": 0.697027027027027,
+            "balanced_accuracy": 0.6765765765765765,
+            "f1": 0.576923076923077,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 275,
+            "n_negative": 185,
+            "n_positive": 90,
+            "precision": 0.5084745762711864,
+            "recall": 0.6666666666666666,
+            "threshold_nM": 500,
+            "undefined_metrics": []
+          },
+          "censor_aware_mse": 1.7207241047353146,
+          "censor_satisfaction_fraction": 0.03278688524590164,
+          "mae": 0.9229271904460061,
+          "n_exact": 214,
+          "n_left_censored": 0,
+          "n_observations": 275,
+          "n_right_censored": 61,
+          "pearson": 0.40555797000093985,
+          "rmse": 1.1382785332778433,
+          "spearman": 0.39392325610229234,
+          "undefined_metrics": []
+        },
+        "presto": {
+          "binding_500nM": {
+            "accuracy": 0.6727272727272727,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.5531586176180384,
+            "auroc": 0.6951951951951952,
+            "balanced_accuracy": 0.5,
+            "f1": 0.0,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 275,
+            "n_negative": 185,
+            "n_positive": 90,
+            "precision": null,
+            "recall": 0.0,
+            "threshold_nM": 500,
+            "undefined_metrics": [
+              "precision"
+            ]
+          },
+          "censor_aware_mse": 1.7251401184553288,
+          "censor_satisfaction_fraction": 0.03278688524590164,
+          "mae": 1.016989321404389,
+          "n_exact": 214,
+          "n_left_censored": 0,
+          "n_observations": 275,
+          "n_right_censored": 61,
+          "pearson": 0.38948256030435097,
+          "rmse": 1.3100356032252576,
+          "spearman": 0.3372713192410538,
+          "undefined_metrics": []
+        },
+        "train_mean": {
+          "binding_500nM": {
+            "accuracy": 0.32727272727272727,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.32727272727272727,
+            "auroc": 0.5,
+            "balanced_accuracy": 0.5,
+            "f1": 0.4931506849315069,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 275,
+            "n_negative": 185,
+            "n_positive": 90,
+            "precision": 0.32727272727272727,
+            "recall": 1.0,
+            "threshold_nM": 500,
+            "undefined_metrics": []
+          },
+          "censor_aware_mse": 1.997327183186162,
+          "censor_satisfaction_fraction": 0.0,
+          "mae": 1.039034257066031,
+          "n_exact": 214,
+          "n_left_censored": 0,
+          "n_observations": 275,
+          "n_right_censored": 61,
+          "pearson": 8.916791345008318e-17,
+          "rmse": 1.2486864680035228,
+          "spearman": null,
+          "undefined_metrics": [
+            "spearman"
+          ]
+        }
+      },
+      "raw": {
+        "length_composition_class_ridge": {
+          "binding_500nM": {
+            "accuracy": 0.68,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.5477948876729777,
+            "auroc": 0.697027027027027,
+            "balanced_accuracy": 0.6765765765765765,
+            "f1": 0.576923076923077,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 275,
+            "n_negative": 185,
+            "n_positive": 90,
+            "precision": 0.5084745762711864,
+            "recall": 0.6666666666666666,
+            "threshold_nM": 500,
+            "undefined_metrics": []
+          },
+          "censor_aware_mse": 1.8271568608322235,
+          "censor_satisfaction_fraction": 0.03278688524590164,
+          "mae": 0.9313692912596249,
+          "n_exact": 214,
+          "n_left_censored": 0,
+          "n_observations": 275,
+          "n_right_censored": 61,
+          "pearson": 0.40680176239849913,
+          "rmse": 1.151585350681354,
+          "spearman": 0.39377626500990137,
+          "undefined_metrics": []
+        },
+        "presto": {
+          "binding_500nM": {
+            "accuracy": 0.6727272727272727,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.5531586176180384,
+            "auroc": 0.6951951951951952,
+            "balanced_accuracy": 0.5,
+            "f1": 0.0,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 275,
+            "n_negative": 185,
+            "n_positive": 90,
+            "precision": null,
+            "recall": 0.0,
+            "threshold_nM": 500,
+            "undefined_metrics": [
+              "precision"
+            ]
+          },
+          "censor_aware_mse": 1.824701616390946,
+          "censor_satisfaction_fraction": 0.03278688524590164,
+          "mae": 1.0254314253569727,
+          "n_exact": 214,
+          "n_left_censored": 0,
+          "n_observations": 275,
+          "n_right_censored": 61,
+          "pearson": 0.38826917622747736,
+          "rmse": 1.3209479235429324,
+          "spearman": 0.33740268220357406,
+          "undefined_metrics": []
+        },
+        "train_mean": {
+          "binding_500nM": {
+            "accuracy": 0.32727272727272727,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.32727272727272727,
+            "auroc": 0.5,
+            "balanced_accuracy": 0.5,
+            "f1": 0.4931506849315069,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 275,
+            "n_negative": 185,
+            "n_positive": 90,
+            "precision": 0.32727272727272727,
+            "recall": 1.0,
+            "threshold_nM": 500,
+            "undefined_metrics": []
+          },
+          "censor_aware_mse": 2.129726075297462,
+          "censor_satisfaction_fraction": 0.0,
+          "mae": 1.0474763643523755,
+          "n_exact": 214,
+          "n_left_censored": 0,
+          "n_observations": 275,
+          "n_right_censored": 61,
+          "pearson": -1.2340334207730435e-16,
+          "rmse": 1.2639415596787766,
+          "spearman": null,
+          "undefined_metrics": [
+            "spearman"
+          ]
+        }
+      }
+    },
+    "val": {
+      "effective": {
+        "length_composition_class_ridge": {
+          "binding_500nM": {
+            "accuracy": 0.6264150943396226,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.4894220439170469,
+            "auroc": 0.6775925224201086,
+            "balanced_accuracy": 0.6290261462675255,
+            "f1": 0.5395348837209302,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 265,
+            "n_negative": 174,
+            "n_positive": 91,
+            "precision": 0.46774193548387094,
+            "recall": 0.6373626373626373,
+            "threshold_nM": 500,
+            "undefined_metrics": []
+          },
+          "censor_aware_mse": 1.6772447188367963,
+          "censor_satisfaction_fraction": 0.0,
+          "mae": 0.8483691388918395,
+          "n_exact": 210,
+          "n_left_censored": 0,
+          "n_observations": 265,
+          "n_right_censored": 55,
+          "pearson": 0.3986885965705675,
+          "rmse": 1.03762645248034,
+          "spearman": 0.41528577548134415,
+          "undefined_metrics": []
+        },
+        "presto": {
+          "binding_500nM": {
+            "accuracy": 0.6566037735849056,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.5286318205045005,
+            "auroc": 0.6717822407477579,
+            "balanced_accuracy": 0.5,
+            "f1": 0.0,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 265,
+            "n_negative": 174,
+            "n_positive": 91,
+            "precision": null,
+            "recall": 0.0,
+            "threshold_nM": 500,
+            "undefined_metrics": [
+              "precision"
+            ]
+          },
+          "censor_aware_mse": 1.4954154041664578,
+          "censor_satisfaction_fraction": 0.0,
+          "mae": 0.9488887846469879,
+          "n_exact": 210,
+          "n_left_censored": 0,
+          "n_observations": 265,
+          "n_right_censored": 55,
+          "pearson": 0.2829823546828859,
+          "rmse": 1.1654770444837181,
+          "spearman": 0.3632847115104097,
+          "undefined_metrics": []
+        },
+        "train_mean": {
+          "binding_500nM": {
+            "accuracy": 0.3433962264150943,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.3433962264150943,
+            "auroc": 0.5,
+            "balanced_accuracy": 0.5,
+            "f1": 0.5112359550561798,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 265,
+            "n_negative": 174,
+            "n_positive": 91,
+            "precision": 0.3433962264150943,
+            "recall": 1.0,
+            "threshold_nM": 500,
+            "undefined_metrics": []
+          },
+          "censor_aware_mse": 1.842623424994765,
+          "censor_satisfaction_fraction": 0.0,
+          "mae": 0.9579101688208663,
+          "n_exact": 210,
+          "n_left_censored": 0,
+          "n_observations": 265,
+          "n_right_censored": 55,
+          "pearson": 2.0468407515496003e-16,
+          "rmse": 1.1376330302762145,
+          "spearman": null,
+          "undefined_metrics": [
+            "spearman"
+          ]
+        }
+      },
+      "raw": {
+        "length_composition_class_ridge": {
+          "binding_500nM": {
+            "accuracy": 0.6264150943396226,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.4894220439170469,
+            "auroc": 0.6775925224201086,
+            "balanced_accuracy": 0.6290261462675255,
+            "f1": 0.5395348837209302,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 265,
+            "n_negative": 174,
+            "n_positive": 91,
+            "precision": 0.46774193548387094,
+            "recall": 0.6373626373626373,
+            "threshold_nM": 500,
+            "undefined_metrics": []
+          },
+          "censor_aware_mse": 1.795985486421433,
+          "censor_satisfaction_fraction": 0.0,
+          "mae": 0.8543125098270081,
+          "n_exact": 210,
+          "n_left_censored": 0,
+          "n_observations": 265,
+          "n_right_censored": 55,
+          "pearson": 0.3998844714463089,
+          "rmse": 1.047534219986944,
+          "spearman": 0.415333803629397,
+          "undefined_metrics": []
+        },
+        "presto": {
+          "binding_500nM": {
+            "accuracy": 0.6566037735849056,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.5286318205045005,
+            "auroc": 0.6717822407477579,
+            "balanced_accuracy": 0.5,
+            "f1": 0.0,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 265,
+            "n_negative": 174,
+            "n_positive": 91,
+            "precision": null,
+            "recall": 0.0,
+            "threshold_nM": 500,
+            "undefined_metrics": [
+              "precision"
+            ]
+          },
+          "censor_aware_mse": 1.595346914599198,
+          "censor_satisfaction_fraction": 0.0,
+          "mae": 0.9548321579120065,
+          "n_exact": 210,
+          "n_left_censored": 0,
+          "n_observations": 265,
+          "n_right_censored": 55,
+          "pearson": 0.28310417185257736,
+          "rmse": 1.173962877749333,
+          "spearman": 0.3634662576259104,
+          "undefined_metrics": []
+        },
+        "train_mean": {
+          "binding_500nM": {
+            "accuracy": 0.3433962264150943,
+            "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+            "auprc": 0.3433962264150943,
+            "auroc": 0.5,
+            "balanced_accuracy": 0.5,
+            "f1": 0.5112359550561798,
+            "n_ambiguous_bounds": 0,
+            "n_eligible_observations": 265,
+            "n_negative": 174,
+            "n_positive": 91,
+            "precision": 0.3433962264150943,
+            "recall": 1.0,
+            "threshold_nM": 500,
+            "undefined_metrics": []
+          },
+          "censor_aware_mse": 1.9767800708391714,
+          "censor_satisfaction_fraction": 0.0,
+          "mae": 0.96385354048704,
+          "n_exact": 210,
+          "n_left_censored": 0,
+          "n_observations": 265,
+          "n_right_censored": 55,
+          "pearson": -9.010770752878597e-17,
+          "rmse": 1.1492791680340626,
+          "spearman": null,
+          "undefined_metrics": [
+            "spearman"
+          ]
+        }
+      }
+    }
+  },
+  "decision": {
+    "all_output_readiness_established": false,
+    "biological_independence_established": false,
+    "bounded_fitting_check_passed": true,
+    "finite_optimization": true,
+    "n_nonfinite_tracked_elements": 0,
+    "preferred_over_ridge": false,
+    "primary_target_space": "effective: float32 log10(clip(nM, 0.001, 50000))",
+    "raw_target_diagnostics": "Reported separately; original measurements/bounds remain unchanged.",
+    "selection_rule": "Canonical complete-validation aggregate loss selects checkpoint; test is descriptive only.",
+    "training_rmse_improved": true,
+    "validation_quality_screen_passed": false
+  },
+  "frozen_membership": {
+    "artifacts": {
+      "README.md": {
+        "sha256": "622566f36e89d8a428f4940019923d6cc565dab2f63436d638f1021aa54e62fa",
+        "size_bytes": 599
+      },
+      "coverage.json": {
+        "sha256": "137d0256db59b8fe10d13a7c3197ad30d5c59b9e152713ef44aeb7c400fc9ec2",
+        "size_bytes": 396
+      },
+      "membership.parquet": {
+        "sha256": "17b68c7a39f3bb1623907bed9014ff47e3d454380482f2b02ac9ff430dfaa603",
+        "size_bytes": 667218
+      },
+      "membership.tsv": {
+        "sha256": "8959e60c0d9b8049aec25095b9c354d456b48f97ba8fb31d7b786e2861113e99",
+        "size_bytes": 5855249
+      },
+      "model_peptide_audit.json": {
+        "sha256": "a8d7b2dfff805cfa360c44cc2f73ffd35203d7ca49bb9a370f0edfb03e3538f7",
+        "size_bytes": 8585
+      },
+      "parent_graph.parquet": {
+        "sha256": "d694a85559428d9ad3f1beb5ac57ee7955587cb861b6d67ea81904d2e4fa138c",
+        "size_bytes": 540888
+      },
+      "policy.json": {
+        "sha256": "a47a3c2806856c5c5c717b796b00de3e556a9dfc45a3dbef1d6df51d7a940f0c",
+        "size_bytes": 569
+      },
+      "records_without_model_sample.json": {
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "size_bytes": 3
+      },
+      "root_lineage_audit.json": {
+        "sha256": "da145ed37eff3a12390581167145eb70b4886c28bf4c5204ff7c46be0749c423",
+        "size_bytes": 18634
+      }
+    },
+    "assignment_sha256": "07d4744c10d7f5d825880bd0bdf3efcb47bd97e8d8725c623916d84b71bbdf1b",
+    "membership_sha256": "12ed561ae2c8e670290b8dd16826c9834aa7b40e7dfff7132d254588c550fbd2",
+    "parent_graph_sha256": "2dba2460212ed052dd5ec586ce7bef6c469472833ae0cb819f9c9c99a976c450",
+    "policy": "peptide_disjoint",
+    "source_bundle_id": "sha256:b180eba804532f633a6d61bb350584dbe24f8df4b4b96f02c6ec492c60144372"
+  },
+  "heldout_loss_reconciliation": {
+    "test": {
+      "all_persisted_objective_losses_reconciled": true,
+      "n_batches": 15,
+      "overall_loss": 0.5495596237643026
+    },
+    "val": {
+      "all_persisted_objective_losses_reconciled": true,
+      "n_batches": 15,
+      "overall_loss": 0.4995156708876937
+    }
+  },
+  "independent_metric_recomputation": [
+    {
+      "binding_500nM_accuracy": 0.3690821256038647,
+      "binding_500nM_auprc": 0.30390236324254594,
+      "binding_500nM_auroc": 0.36535161918812087,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.5391672547635851,
+      "binding_500nM_precision": 0.3690821256038647,
+      "binding_500nM_recall": 1.0,
+      "censor_aware_mse": 3.9473972552281884,
+      "censor_satisfaction_fraction": 0.00631578947368421,
+      "mae": 1.3673423965827907,
+      "pearson": -0.316523466271737,
+      "predictor": "initial",
+      "rmse": 1.607139098190655,
+      "spearman": -0.3121004569098829,
+      "split": "train",
+      "target_space": "effective"
+    },
+    {
+      "binding_500nM_accuracy": 0.6285024154589371,
+      "binding_500nM_auprc": 0.5757756981492927,
+      "binding_500nM_auroc": 0.6950672690682552,
+      "binding_500nM_balanced_accuracy": 0.631713877953545,
+      "binding_500nM_f1": 0.5613234455219623,
+      "binding_500nM_precision": 0.4974721941354904,
+      "binding_500nM_recall": 0.643979057591623,
+      "censor_aware_mse": 1.7489481238409954,
+      "censor_satisfaction_fraction": 0.035789473684210524,
+      "mae": 0.8820344529322566,
+      "pearson": 0.4443353303725893,
+      "predictor": "length_composition_class_ridge",
+      "rmse": 1.0892821796587944,
+      "spearman": 0.431014760200291,
+      "split": "train",
+      "target_space": "effective"
+    },
+    {
+      "binding_500nM_accuracy": 0.6309178743961352,
+      "binding_500nM_auprc": 0.510495517685541,
+      "binding_500nM_auroc": 0.6333359725150934,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.0,
+      "binding_500nM_precision": null,
+      "binding_500nM_recall": 0.0,
+      "censor_aware_mse": 1.7889306485820402,
+      "censor_satisfaction_fraction": 0.037894736842105266,
+      "mae": 1.0507581530230876,
+      "pearson": 0.3405080309211135,
+      "predictor": "selected",
+      "rmse": 1.3377076811272757,
+      "spearman": 0.3007006828565611,
+      "split": "train",
+      "target_space": "effective"
+    },
+    {
+      "binding_500nM_accuracy": 0.3690821256038647,
+      "binding_500nM_auprc": 0.3690821256038647,
+      "binding_500nM_auroc": 0.5,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.5391672547635851,
+      "binding_500nM_precision": 0.3690821256038647,
+      "binding_500nM_recall": 1.0,
+      "censor_aware_mse": 1.9556899504633347,
+      "censor_satisfaction_fraction": 0.008421052631578947,
+      "mae": 0.994159790763458,
+      "pearson": null,
+      "predictor": "train_mean",
+      "rmse": 1.215905946339919,
+      "spearman": null,
+      "split": "train",
+      "target_space": "effective"
+    },
+    {
+      "binding_500nM_accuracy": 0.3710144927536232,
+      "binding_500nM_auprc": 0.3063104426765258,
+      "binding_500nM_auroc": 0.3664819548451101,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.5412262156448203,
+      "binding_500nM_precision": 0.3710144927536232,
+      "binding_500nM_recall": 1.0,
+      "censor_aware_mse": 4.115401837848878,
+      "censor_satisfaction_fraction": 0.00631578947368421,
+      "mae": 1.3734424641683987,
+      "pearson": -0.31758397535537286,
+      "predictor": "initial",
+      "rmse": 1.6197363171777892,
+      "spearman": -0.3120665157070642,
+      "split": "train",
+      "target_space": "raw"
+    },
+    {
+      "binding_500nM_accuracy": 0.6275362318840579,
+      "binding_500nM_auprc": 0.5759468330654117,
+      "binding_500nM_auroc": 0.6930573556707629,
+      "binding_500nM_balanced_accuracy": 0.6304873511904763,
+      "binding_500nM_f1": 0.5611838360842345,
+      "binding_500nM_precision": 0.49848331648129424,
+      "binding_500nM_recall": 0.6419270833333334,
+      "censor_aware_mse": 1.8527210116507151,
+      "censor_satisfaction_fraction": 0.035789473684210524,
+      "mae": 0.8881345193326373,
+      "pearson": 0.44366320833446804,
+      "predictor": "length_composition_class_ridge",
+      "rmse": 1.0998981058463169,
+      "spearman": 0.4309810607082747,
+      "split": "train",
+      "target_space": "raw"
+    },
+    {
+      "binding_500nM_accuracy": 0.6289855072463768,
+      "binding_500nM_auprc": 0.5123390118776393,
+      "binding_500nM_auroc": 0.6323624711981567,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.0,
+      "binding_500nM_precision": null,
+      "binding_500nM_recall": 0.0,
+      "censor_aware_mse": 1.8758168582479222,
+      "censor_satisfaction_fraction": 0.037894736842105266,
+      "mae": 1.0568582196303185,
+      "pearson": 0.3402671816136562,
+      "predictor": "selected",
+      "rmse": 1.345477486235197,
+      "spearman": 0.30076422382884066,
+      "split": "train",
+      "target_space": "raw"
+    },
+    {
+      "binding_500nM_accuracy": 0.3710144927536232,
+      "binding_500nM_auprc": 0.3710144927536232,
+      "binding_500nM_auroc": 0.5,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.5412262156448203,
+      "binding_500nM_precision": 0.3710144927536232,
+      "binding_500nM_recall": 1.0,
+      "censor_aware_mse": 2.0709610616009693,
+      "censor_satisfaction_fraction": 0.008421052631578947,
+      "mae": 1.0002598592666079,
+      "pearson": null,
+      "predictor": "train_mean",
+      "rmse": 1.2272860559646295,
+      "spearman": null,
+      "split": "train",
+      "target_space": "raw"
+    },
+    {
+      "binding_500nM_accuracy": 0.6264150943396226,
+      "binding_500nM_auprc": 0.4894220439170468,
+      "binding_500nM_auroc": 0.6775925224201086,
+      "binding_500nM_balanced_accuracy": 0.6290261462675255,
+      "binding_500nM_f1": 0.5395348837209303,
+      "binding_500nM_precision": 0.46774193548387094,
+      "binding_500nM_recall": 0.6373626373626373,
+      "censor_aware_mse": 1.6772447188367963,
+      "censor_satisfaction_fraction": 0.0,
+      "mae": 0.8483691388918395,
+      "pearson": 0.3986885965705676,
+      "predictor": "length_composition_class_ridge",
+      "rmse": 1.03762645248034,
+      "spearman": 0.41528577548134415,
+      "split": "val",
+      "target_space": "effective"
+    },
+    {
+      "binding_500nM_accuracy": 0.6566037735849056,
+      "binding_500nM_auprc": 0.5286318205045005,
+      "binding_500nM_auroc": 0.6717822407477579,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.0,
+      "binding_500nM_precision": null,
+      "binding_500nM_recall": 0.0,
+      "censor_aware_mse": 1.4954154041664578,
+      "censor_satisfaction_fraction": 0.0,
+      "mae": 0.9488887846469879,
+      "pearson": 0.282982354682886,
+      "predictor": "presto",
+      "rmse": 1.1654770444837181,
+      "spearman": 0.3632847115104097,
+      "split": "val",
+      "target_space": "effective"
+    },
+    {
+      "binding_500nM_accuracy": 0.3433962264150943,
+      "binding_500nM_auprc": 0.3433962264150943,
+      "binding_500nM_auroc": 0.5,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.5112359550561798,
+      "binding_500nM_precision": 0.3433962264150943,
+      "binding_500nM_recall": 1.0,
+      "censor_aware_mse": 1.842623424994765,
+      "censor_satisfaction_fraction": 0.0,
+      "mae": 0.9579101688208663,
+      "pearson": null,
+      "predictor": "train_mean",
+      "rmse": 1.1376330302762145,
+      "spearman": null,
+      "split": "val",
+      "target_space": "effective"
+    },
+    {
+      "binding_500nM_accuracy": 0.6264150943396226,
+      "binding_500nM_auprc": 0.4894220439170468,
+      "binding_500nM_auroc": 0.6775925224201086,
+      "binding_500nM_balanced_accuracy": 0.6290261462675255,
+      "binding_500nM_f1": 0.5395348837209303,
+      "binding_500nM_precision": 0.46774193548387094,
+      "binding_500nM_recall": 0.6373626373626373,
+      "censor_aware_mse": 1.795985486421433,
+      "censor_satisfaction_fraction": 0.0,
+      "mae": 0.8543125098270081,
+      "pearson": 0.3998844714463088,
+      "predictor": "length_composition_class_ridge",
+      "rmse": 1.047534219986944,
+      "spearman": 0.415333803629397,
+      "split": "val",
+      "target_space": "raw"
+    },
+    {
+      "binding_500nM_accuracy": 0.6566037735849056,
+      "binding_500nM_auprc": 0.5286318205045005,
+      "binding_500nM_auroc": 0.6717822407477579,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.0,
+      "binding_500nM_precision": null,
+      "binding_500nM_recall": 0.0,
+      "censor_aware_mse": 1.595346914599198,
+      "censor_satisfaction_fraction": 0.0,
+      "mae": 0.9548321579120065,
+      "pearson": 0.2831041718525775,
+      "predictor": "presto",
+      "rmse": 1.173962877749333,
+      "spearman": 0.36346625762591034,
+      "split": "val",
+      "target_space": "raw"
+    },
+    {
+      "binding_500nM_accuracy": 0.3433962264150943,
+      "binding_500nM_auprc": 0.3433962264150943,
+      "binding_500nM_auroc": 0.5,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.5112359550561798,
+      "binding_500nM_precision": 0.3433962264150943,
+      "binding_500nM_recall": 1.0,
+      "censor_aware_mse": 1.9767800708391714,
+      "censor_satisfaction_fraction": 0.0,
+      "mae": 0.96385354048704,
+      "pearson": null,
+      "predictor": "train_mean",
+      "rmse": 1.1492791680340626,
+      "spearman": null,
+      "split": "val",
+      "target_space": "raw"
+    },
+    {
+      "binding_500nM_accuracy": 0.68,
+      "binding_500nM_auprc": 0.5477948876729779,
+      "binding_500nM_auroc": 0.697027027027027,
+      "binding_500nM_balanced_accuracy": 0.6765765765765765,
+      "binding_500nM_f1": 0.5769230769230769,
+      "binding_500nM_precision": 0.5084745762711864,
+      "binding_500nM_recall": 0.6666666666666666,
+      "censor_aware_mse": 1.7207241047353146,
+      "censor_satisfaction_fraction": 0.03278688524590164,
+      "mae": 0.9229271904460061,
+      "pearson": 0.40555797000093996,
+      "predictor": "length_composition_class_ridge",
+      "rmse": 1.1382785332778433,
+      "spearman": 0.39392325610229234,
+      "split": "test",
+      "target_space": "effective"
+    },
+    {
+      "binding_500nM_accuracy": 0.6727272727272727,
+      "binding_500nM_auprc": 0.5531586176180385,
+      "binding_500nM_auroc": 0.6951951951951952,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.0,
+      "binding_500nM_precision": null,
+      "binding_500nM_recall": 0.0,
+      "censor_aware_mse": 1.7251401184553288,
+      "censor_satisfaction_fraction": 0.03278688524590164,
+      "mae": 1.016989321404389,
+      "pearson": 0.38948256030435124,
+      "predictor": "presto",
+      "rmse": 1.3100356032252576,
+      "spearman": 0.3372713192410538,
+      "split": "test",
+      "target_space": "effective"
+    },
+    {
+      "binding_500nM_accuracy": 0.32727272727272727,
+      "binding_500nM_auprc": 0.32727272727272727,
+      "binding_500nM_auroc": 0.5,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.4931506849315068,
+      "binding_500nM_precision": 0.32727272727272727,
+      "binding_500nM_recall": 1.0,
+      "censor_aware_mse": 1.997327183186162,
+      "censor_satisfaction_fraction": 0.0,
+      "mae": 1.039034257066031,
+      "pearson": null,
+      "predictor": "train_mean",
+      "rmse": 1.2486864680035228,
+      "spearman": null,
+      "split": "test",
+      "target_space": "effective"
+    },
+    {
+      "binding_500nM_accuracy": 0.68,
+      "binding_500nM_auprc": 0.5477948876729779,
+      "binding_500nM_auroc": 0.697027027027027,
+      "binding_500nM_balanced_accuracy": 0.6765765765765765,
+      "binding_500nM_f1": 0.5769230769230769,
+      "binding_500nM_precision": 0.5084745762711864,
+      "binding_500nM_recall": 0.6666666666666666,
+      "censor_aware_mse": 1.8271568608322235,
+      "censor_satisfaction_fraction": 0.03278688524590164,
+      "mae": 0.9313692912596249,
+      "pearson": 0.406801762398499,
+      "predictor": "length_composition_class_ridge",
+      "rmse": 1.151585350681354,
+      "spearman": 0.3937762650099014,
+      "split": "test",
+      "target_space": "raw"
+    },
+    {
+      "binding_500nM_accuracy": 0.6727272727272727,
+      "binding_500nM_auprc": 0.5531586176180385,
+      "binding_500nM_auroc": 0.6951951951951952,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.0,
+      "binding_500nM_precision": null,
+      "binding_500nM_recall": 0.0,
+      "censor_aware_mse": 1.824701616390946,
+      "censor_satisfaction_fraction": 0.03278688524590164,
+      "mae": 1.0254314253569727,
+      "pearson": 0.3882691762274777,
+      "predictor": "presto",
+      "rmse": 1.3209479235429324,
+      "spearman": 0.33740268220357406,
+      "split": "test",
+      "target_space": "raw"
+    },
+    {
+      "binding_500nM_accuracy": 0.32727272727272727,
+      "binding_500nM_auprc": 0.32727272727272727,
+      "binding_500nM_auroc": 0.5,
+      "binding_500nM_balanced_accuracy": 0.5,
+      "binding_500nM_f1": 0.4931506849315068,
+      "binding_500nM_precision": 0.32727272727272727,
+      "binding_500nM_recall": 1.0,
+      "censor_aware_mse": 2.129726075297462,
+      "censor_satisfaction_fraction": 0.0,
+      "mae": 1.0474763643523755,
+      "pearson": null,
+      "predictor": "train_mean",
+      "rmse": 1.2639415596787766,
+      "spearman": null,
+      "split": "test",
+      "target_space": "raw"
+    }
+  ],
+  "independent_paired_bootstrap_recomputation": true,
+  "limitations": [
+    "Studies overlap; donor/specimen/acquisition identity is unknown.",
+    "All other outputs remain undeclared; no broad readiness claim.",
+    "Presto uses all observed families/censoring; baselines fit exact IC50 only.",
+    "Effective targets clip source values/bounds; raw-target errors are separate diagnostics.",
+    "Labels were inspected for qualification; this is exploratory peptide-disjoint evaluation.",
+    "Eight elution rows record rat hosts with human HLA. Host/MHC species conflation (#115) is uncorrected in this historical run; its shared-objective influence is unquantified. See the additive native species audit."
+  ],
+  "n_source_verified_ic50_observations": 2614,
+  "n_source_verified_membership_observations": 9053,
+  "n_verified_archive_members": 90,
+  "numerical_reporting_notes": [
+    "Serialized effective targets are restored to their declared float32 type before independent float64 arithmetic.",
+    "Constant-predictor Pearson is null in independent metrics; original reports retain tiny finite rounding artifacts (#116).",
+    "The original effective-space 500 nM classifier rounds four exact training boundary labels to nonbinder; raw-space physical diagnostics retain them. No held-out boundary labels differ (#116)."
+  ],
+  "protocol_clarification_timeline": {
+    "clarification_preceded_model_construction": true,
+    "clarification_recorded_utc": "2026-10-16T10:50:46.439354+00:00",
+    "initial_checkpoint_file_written_utc": "2026-10-16T11:08:18.773028+00:00",
+    "model_gate_file_written_utc": "2026-10-16T11:08:16.204116+00:00"
+  },
+  "supported_outputs": [
+    {
+      "claim": {
+        "columns": [
+          ""
+        ],
+        "endpoint": "assays.IC50_nM",
+        "evidence_roles": [
+          "direct"
+        ],
+        "minimums": {
+          "distinct_peptides": 50,
+          "unique_exact": 50,
+          "unique_observations": 50
+        },
+        "raw_sources": [
+          "iedb",
+          "cedar"
+        ],
+        "required_splits": [
+          "train",
+          "val",
+          "test"
+        ],
+        "source_families": [
+          "binding:IC50"
+        ]
+      },
+      "column": "",
+      "endpoint": "assays.IC50_nM",
+      "reasons": [],
+      "splits": {
+        "test": {
+          "distinct_peptides": 126,
+          "distinct_primary_alleles": 46,
+          "distinct_resolved_alleles": 46,
+          "distinct_source_alleles": 46,
+          "exact": 214,
+          "facets": {
+            "apm_perturbation": {
+              "unknown": 275
+            },
+            "machinery": {
+              "unknown": 275
+            },
+            "mhc_class": {
+              "I": 101,
+              "II": 174
+            },
+            "peptide_source": {
+              "unknown": 275
+            },
+            "processing_stimulus": {
+              "unknown": 275
+            },
+            "species": {
+              "Homo sapiens (human)": 275
+            },
+            "species_of_origin": {
+              "human": 275
+            },
+            "tcell_apc_name": {
+              "unknown": 275
+            },
+            "tcell_assay_method": {
+              "unknown": 275
+            },
+            "tcell_assay_readout": {
+              "unknown": 275
+            },
+            "tcell_effector_culture": {
+              "unknown": 275
+            },
+            "tcell_in_vitro_process": {
+              "unknown": 275
+            }
+          },
+          "graded": 0,
+          "instances": 275,
+          "left_censored": 0,
+          "negative": 0,
+          "observations": 275,
+          "positive": 0,
+          "right_censored": 61,
+          "source_rows": 275,
+          "traceable_observations": 275,
+          "training_rows": 275,
+          "unique_exact": 214,
+          "unique_negative": 0,
+          "unique_observations": 275,
+          "unique_positive": 0,
+          "untraceable_rows": 0
+        },
+        "train": {
+          "distinct_peptides": 1031,
+          "distinct_primary_alleles": 70,
+          "distinct_resolved_alleles": 70,
+          "distinct_source_alleles": 70,
+          "exact": 1599,
+          "facets": {
+            "apm_perturbation": {
+              "unknown": 2074
+            },
+            "machinery": {
+              "unknown": 2074
+            },
+            "mhc_class": {
+              "I": 877,
+              "II": 1197
+            },
+            "peptide_source": {
+              "unknown": 2074
+            },
+            "processing_stimulus": {
+              "unknown": 2074
+            },
+            "species": {
+              "Homo sapiens (human)": 2074
+            },
+            "species_of_origin": {
+              "human": 2074
+            },
+            "tcell_apc_name": {
+              "unknown": 2074
+            },
+            "tcell_assay_method": {
+              "unknown": 2074
+            },
+            "tcell_assay_readout": {
+              "unknown": 2074
+            },
+            "tcell_effector_culture": {
+              "unknown": 2074
+            },
+            "tcell_in_vitro_process": {
+              "unknown": 2074
+            }
+          },
+          "graded": 0,
+          "instances": 2074,
+          "left_censored": 0,
+          "negative": 0,
+          "observations": 2074,
+          "positive": 0,
+          "right_censored": 475,
+          "source_rows": 2074,
+          "traceable_observations": 2074,
+          "training_rows": 2074,
+          "unique_exact": 1599,
+          "unique_negative": 0,
+          "unique_observations": 2074,
+          "unique_positive": 0,
+          "untraceable_rows": 0
+        },
+        "val": {
+          "distinct_peptides": 126,
+          "distinct_primary_alleles": 50,
+          "distinct_resolved_alleles": 50,
+          "distinct_source_alleles": 50,
+          "exact": 210,
+          "facets": {
+            "apm_perturbation": {
+              "unknown": 265
+            },
+            "machinery": {
+              "unknown": 265
+            },
+            "mhc_class": {
+              "I": 99,
+              "II": 166
+            },
+            "peptide_source": {
+              "unknown": 265
+            },
+            "processing_stimulus": {
+              "unknown": 265
+            },
+            "species": {
+              "Homo sapiens (human)": 265
+            },
+            "species_of_origin": {
+              "human": 265
+            },
+            "tcell_apc_name": {
+              "unknown": 265
+            },
+            "tcell_assay_method": {
+              "unknown": 265
+            },
+            "tcell_assay_readout": {
+              "unknown": 265
+            },
+            "tcell_effector_culture": {
+              "unknown": 265
+            },
+            "tcell_in_vitro_process": {
+              "unknown": 265
+            }
+          },
+          "graded": 0,
+          "instances": 265,
+          "left_censored": 0,
+          "negative": 0,
+          "observations": 265,
+          "positive": 0,
+          "right_censored": 55,
+          "source_rows": 265,
+          "traceable_observations": 265,
+          "training_rows": 265,
+          "unique_exact": 210,
+          "unique_negative": 0,
+          "unique_observations": 265,
+          "unique_positive": 0,
+          "untraceable_rows": 0
+        }
+      },
+      "status": "requirements_met"
+    }
+  ],
+  "training_diagnostic": {
+    "effective": {
+      "initial": {
+        "binding_500nM": {
+          "accuracy": 0.3690821256038647,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.3039023632425458,
+          "auroc": 0.36535161918812087,
+          "balanced_accuracy": 0.5,
+          "f1": 0.539167254763585,
+          "n_ambiguous_bounds": 4,
+          "n_eligible_observations": 2070,
+          "n_negative": 1306,
+          "n_positive": 764,
+          "precision": 0.3690821256038647,
+          "recall": 1.0,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 3.9473972552281884,
+        "censor_satisfaction_fraction": 0.00631578947368421,
+        "mae": 1.3673423965827907,
+        "n_exact": 1599,
+        "n_left_censored": 0,
+        "n_observations": 2074,
+        "n_right_censored": 475,
+        "pearson": -0.31652346627173683,
+        "rmse": 1.607139098190655,
+        "spearman": -0.3121004569098829,
+        "undefined_metrics": []
+      },
+      "length_composition_class_ridge": {
+        "binding_500nM": {
+          "accuracy": 0.6285024154589371,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.5757756981492929,
+          "auroc": 0.6950672690682552,
+          "balanced_accuracy": 0.631713877953545,
+          "f1": 0.5613234455219623,
+          "n_ambiguous_bounds": 4,
+          "n_eligible_observations": 2070,
+          "n_negative": 1306,
+          "n_positive": 764,
+          "precision": 0.4974721941354904,
+          "recall": 0.643979057591623,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 1.7489481238409954,
+        "censor_satisfaction_fraction": 0.035789473684210524,
+        "mae": 0.8820344529322566,
+        "n_exact": 1599,
+        "n_left_censored": 0,
+        "n_observations": 2074,
+        "n_right_censored": 475,
+        "pearson": 0.4443353303725895,
+        "rmse": 1.0892821796587944,
+        "spearman": 0.43101476020029106,
+        "undefined_metrics": []
+      },
+      "selected": {
+        "binding_500nM": {
+          "accuracy": 0.6309178743961352,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.5104955176855414,
+          "auroc": 0.6333359725150934,
+          "balanced_accuracy": 0.5,
+          "f1": 0.0,
+          "n_ambiguous_bounds": 4,
+          "n_eligible_observations": 2070,
+          "n_negative": 1306,
+          "n_positive": 764,
+          "precision": null,
+          "recall": 0.0,
+          "threshold_nM": 500,
+          "undefined_metrics": [
+            "precision"
+          ]
+        },
+        "censor_aware_mse": 1.7889306485820402,
+        "censor_satisfaction_fraction": 0.037894736842105266,
+        "mae": 1.0507581530230876,
+        "n_exact": 1599,
+        "n_left_censored": 0,
+        "n_observations": 2074,
+        "n_right_censored": 475,
+        "pearson": 0.3405080309211137,
+        "rmse": 1.3377076811272757,
+        "spearman": 0.3007006828565611,
+        "undefined_metrics": []
+      },
+      "train_mean": {
+        "binding_500nM": {
+          "accuracy": 0.3690821256038647,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.36908212560386466,
+          "auroc": 0.5,
+          "balanced_accuracy": 0.5,
+          "f1": 0.539167254763585,
+          "n_ambiguous_bounds": 4,
+          "n_eligible_observations": 2070,
+          "n_negative": 1306,
+          "n_positive": 764,
+          "precision": 0.3690821256038647,
+          "recall": 1.0,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 1.9556899504633347,
+        "censor_satisfaction_fraction": 0.008421052631578947,
+        "mae": 0.994159790763458,
+        "n_exact": 1599,
+        "n_left_censored": 0,
+        "n_observations": 2074,
+        "n_right_censored": 475,
+        "pearson": -1.2425694584222488e-16,
+        "rmse": 1.215905946339919,
+        "spearman": null,
+        "undefined_metrics": [
+          "spearman"
+        ]
+      }
+    },
+    "raw": {
+      "initial": {
+        "binding_500nM": {
+          "accuracy": 0.3710144927536232,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.3063104426765258,
+          "auroc": 0.3664819548451101,
+          "balanced_accuracy": 0.5,
+          "f1": 0.5412262156448203,
+          "n_ambiguous_bounds": 4,
+          "n_eligible_observations": 2070,
+          "n_negative": 1302,
+          "n_positive": 768,
+          "precision": 0.3710144927536232,
+          "recall": 1.0,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 4.115401837848878,
+        "censor_satisfaction_fraction": 0.00631578947368421,
+        "mae": 1.3734424641683987,
+        "n_exact": 1599,
+        "n_left_censored": 0,
+        "n_observations": 2074,
+        "n_right_censored": 475,
+        "pearson": -0.3175839753553728,
+        "rmse": 1.6197363171777892,
+        "spearman": -0.3120665157070641,
+        "undefined_metrics": []
+      },
+      "length_composition_class_ridge": {
+        "binding_500nM": {
+          "accuracy": 0.6275362318840579,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.5759468330654124,
+          "auroc": 0.6930573556707629,
+          "balanced_accuracy": 0.6304873511904763,
+          "f1": 0.5611838360842345,
+          "n_ambiguous_bounds": 4,
+          "n_eligible_observations": 2070,
+          "n_negative": 1302,
+          "n_positive": 768,
+          "precision": 0.49848331648129424,
+          "recall": 0.6419270833333334,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 1.8527210116507151,
+        "censor_satisfaction_fraction": 0.035789473684210524,
+        "mae": 0.8881345193326373,
+        "n_exact": 1599,
+        "n_left_censored": 0,
+        "n_observations": 2074,
+        "n_right_censored": 475,
+        "pearson": 0.44366320833446826,
+        "rmse": 1.0998981058463169,
+        "spearman": 0.4309810607082747,
+        "undefined_metrics": []
+      },
+      "selected": {
+        "binding_500nM": {
+          "accuracy": 0.6289855072463768,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.51233901187764,
+          "auroc": 0.6323624711981567,
+          "balanced_accuracy": 0.5,
+          "f1": 0.0,
+          "n_ambiguous_bounds": 4,
+          "n_eligible_observations": 2070,
+          "n_negative": 1302,
+          "n_positive": 768,
+          "precision": null,
+          "recall": 0.0,
+          "threshold_nM": 500,
+          "undefined_metrics": [
+            "precision"
+          ]
+        },
+        "censor_aware_mse": 1.8758168582479222,
+        "censor_satisfaction_fraction": 0.037894736842105266,
+        "mae": 1.0568582196303185,
+        "n_exact": 1599,
+        "n_left_censored": 0,
+        "n_observations": 2074,
+        "n_right_censored": 475,
+        "pearson": 0.3402671816136563,
+        "rmse": 1.345477486235197,
+        "spearman": 0.3007642238288406,
+        "undefined_metrics": []
+      },
+      "train_mean": {
+        "binding_500nM": {
+          "accuracy": 0.3710144927536232,
+          "ambiguity_policy": "Collapsed strict/inclusive qualifiers use conservative bounds.",
+          "auprc": 0.3710144927536232,
+          "auroc": 0.5,
+          "balanced_accuracy": 0.5,
+          "f1": 0.5412262156448203,
+          "n_ambiguous_bounds": 4,
+          "n_eligible_observations": 2070,
+          "n_negative": 1302,
+          "n_positive": 768,
+          "precision": 0.3710144927536232,
+          "recall": 1.0,
+          "threshold_nM": 500,
+          "undefined_metrics": []
+        },
+        "censor_aware_mse": 2.0709610616009693,
+        "censor_satisfaction_fraction": 0.008421052631578947,
+        "mae": 1.0002598592666079,
+        "n_exact": 1599,
+        "n_left_censored": 0,
+        "n_observations": 2074,
+        "n_right_censored": 475,
+        "pearson": 9.414009943315582e-17,
+        "rmse": 1.2272860559646295,
+        "spearman": null,
+        "undefined_metrics": [
+          "spearman"
+        ]
+      }
+    }
+  }
+}

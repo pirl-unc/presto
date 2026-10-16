@@ -1,0 +1,98 @@
+{
+  "n_clipped_exact_observations": 54,
+  "n_clipped_observations": 211,
+  "n_ic50_observations": 2614,
+  "status": "passed before model construction",
+  "target_policy": {
+    "row:binding": {
+      "input_dtype": "float32",
+      "input_unit": "nM",
+      "maximum_nM": 50000.0,
+      "minimum_nM": 0.001,
+      "operation": "clip_then_log10",
+      "qualifier_policy": "preserve_original_direction",
+      "schema_version": 1,
+      "target_unit": "log10(nM)"
+    },
+    "row:binding_affinity_probe": {
+      "input_dtype": "float32",
+      "input_unit": "nM",
+      "maximum_nM": 50000.0,
+      "minimum_nM": 0.001,
+      "operation": "clip_then_log10",
+      "qualifier_policy": "preserve_original_direction",
+      "schema_version": 1,
+      "target_unit": "log10(nM)"
+    },
+    "row:binding_assay_panel_assay_geometry": {
+      "input_dtype": "float32",
+      "input_unit": "nM",
+      "maximum_nM": 50000.0,
+      "minimum_nM": 0.001,
+      "operation": "clip_then_log10",
+      "qualifier_policy": "preserve_original_direction",
+      "schema_version": 1,
+      "target_unit": "log10(nM)"
+    },
+    "row:binding_assay_panel_assay_prep": {
+      "input_dtype": "float32",
+      "input_unit": "nM",
+      "maximum_nM": 50000.0,
+      "minimum_nM": 0.001,
+      "operation": "clip_then_log10",
+      "qualifier_policy": "preserve_original_direction",
+      "schema_version": 1,
+      "target_unit": "log10(nM)"
+    },
+    "row:binding_assay_panel_assay_readout": {
+      "input_dtype": "float32",
+      "input_unit": "nM",
+      "maximum_nM": 50000.0,
+      "minimum_nM": 0.001,
+      "operation": "clip_then_log10",
+      "qualifier_policy": "preserve_original_direction",
+      "schema_version": 1,
+      "target_unit": "log10(nM)"
+    },
+    "row:binding_assay_panel_assay_type": {
+      "input_dtype": "float32",
+      "input_unit": "nM",
+      "maximum_nM": 50000.0,
+      "minimum_nM": 0.001,
+      "operation": "clip_then_log10",
+      "qualifier_policy": "preserve_original_direction",
+      "schema_version": 1,
+      "target_unit": "log10(nM)"
+    },
+    "row:binding_ec50": {
+      "input_dtype": "float32",
+      "input_unit": "nM",
+      "maximum_nM": 50000.0,
+      "minimum_nM": 0.001,
+      "operation": "clip_then_log10",
+      "qualifier_policy": "preserve_original_direction",
+      "schema_version": 1,
+      "target_unit": "log10(nM)"
+    },
+    "row:binding_ic50": {
+      "input_dtype": "float32",
+      "input_unit": "nM",
+      "maximum_nM": 50000.0,
+      "minimum_nM": 0.001,
+      "operation": "clip_then_log10",
+      "qualifier_policy": "preserve_original_direction",
+      "schema_version": 1,
+      "target_unit": "log10(nM)"
+    },
+    "row:binding_kd": {
+      "input_dtype": "float32",
+      "input_unit": "nM",
+      "maximum_nM": 50000.0,
+      "minimum_nM": 0.001,
+      "operation": "clip_then_log10",
+      "qualifier_policy": "preserve_original_direction",
+      "schema_version": 1,
+      "target_unit": "log10(nM)"
+    }
+  }
+}
