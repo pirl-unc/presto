@@ -3,7 +3,7 @@
 - [x] Inspect canonical trainer/coverage contracts and specify the bounded source.
 - [x] Freeze legible scoped membership and leakage/support artifacts through datacache.
 - [x] Integrate the existing canonical trainer/CLI without unrelated live inputs.
-- [ ] Verify synthetic regressions and register actual preflight/fitting evidence.
+- [x] Verify synthetic regressions and register actual preflight/fitting evidence.
 - [ ] Run full gates, review, merge and publish version 0.1.8.
 
 ## Review
@@ -12,8 +12,14 @@
 tests pass. The actual canonical preflight is exercised with a synthetic schema
 fixture and cannot read unrelated sources or construct a model. Scope guards,
 projection hashes and exact membership/junction conversion are enforced.
-The direct script parser gap is tracked and fixed as #91. Actual-data experiment,
-full software gates and release remain pending; no readiness claim.
+The direct script parser gap is tracked and fixed as #91. Full local gates pass
+(2,250 passed, four skips), final implementation CI passes, and strict docs pass.
+The actual clean preflight and 200-step fit have complete frozen membership and
+held-out predictions. Nine public assets were independently re-downloaded and
+hash-verified through datacache. Probability quality failed both baselines (#94),
+and a hidden active orthogonality prior deviated from the experiment plan (#95).
+The original run is preserved with those limitations; no readiness claim.
+Final results documentation CI, merge and version 0.1.8 distribution remain.
 
 # Internal excision scoring contract — Presto #88
 
