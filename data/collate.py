@@ -337,6 +337,15 @@ class PrestoSample:
     parent_ids: str = ""
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
+    scoped_peptide_id: str = ""
+    candidate_id: str = ""
+    candidate_lookup_key: str = ""
+    source_n_candidate_occurrences: str = ""
+    source_label_evidence: str = ""
+    source_search_space_id: str = ""
+    source_protocol_id: str = ""
+    source_reference_sha256: str = ""
+    source_parent_assignment_basis: str = ""
 
 
 @dataclass

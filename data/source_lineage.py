@@ -28,6 +28,15 @@ SOURCE_LINEAGE_FIELDS = (
     "parent_ids",
     "root_observation_ids",
     "generation_lineage_status",
+    "scoped_peptide_id",
+    "candidate_id",
+    "candidate_lookup_key",
+    "source_n_candidate_occurrences",
+    "source_label_evidence",
+    "source_search_space_id",
+    "source_protocol_id",
+    "source_reference_sha256",
+    "source_parent_assignment_basis",
 )
 
 

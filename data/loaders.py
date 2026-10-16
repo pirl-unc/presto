@@ -2363,6 +2363,22 @@ class PrestoDataset(Dataset):
         # excision proxies only; it cannot qualify detectability from fraction
         # counts. Other callers must establish their label provenance explicitly.
         for rec in bulk_ms_records or []:
+            if rec.source_label_evidence and (
+                not all(
+                    (
+                        rec.source_bundle_id,
+                        rec.scoped_peptide_id,
+                        rec.source_protocol_id,
+                        rec.source_search_space_id,
+                        rec.source_reference_sha256,
+                    )
+                )
+                or rec.detectability_label != float(rec.observed)
+                or bool(rec.evidence_row_id) != rec.observed
+                or rec.generated_kind
+                or rec.excision_label is not None
+            ):
+                raise ValueError("Scoped bulk labels require complete, consistent source lineage")
             self.samples.append(
                 PrestoSample(
                     peptide=rec.peptide,
@@ -2377,14 +2393,32 @@ class PrestoDataset(Dataset):
                     ms_detectability_label=rec.detectability_label,
                     excision_label=rec.excision_label,
                     bulk_ms_observed=rec.observed,
-                    target_provenance=bulk_target_provenance(rec.observed, rec.generated_kind),
+                    flank_n_is_terminus=rec.flank_n_is_terminus,
+                    flank_c_is_terminus=rec.flank_c_is_terminus,
+                    target_provenance=bulk_target_provenance(
+                        rec.observed, rec.generated_kind, scoped_evidence=rec.source_label_evidence
+                    ),
                     source_protein=rec.protein_id or None,
                     sample_source=_source_label(rec.source),
                     assay_group="bulk_ms",
-                    label_bucket=("positive" if (rec.excision_label or 0.0) >= 0.5 else "negative"),
+                    label_bucket=(
+                        "positive"
+                        if (
+                            rec.detectability_label
+                            if rec.detectability_label is not None
+                            else rec.excision_label or 0.0
+                        )
+                        >= 0.5
+                        else "negative"
+                    ),
                     primary_allele=None,
                     synthetic_kind=None,
-                    sample_id=f"bulk_{len(self.samples)}",
+                    **source_lineage_fields(rec),
+                    sample_id=(
+                        f"scoped:{rec.source_bundle_id}:{rec.scoped_peptide_id}"
+                        if rec.scoped_peptide_id
+                        else f"bulk_{len(self.samples)}"
+                    ),
                 )
             )
 

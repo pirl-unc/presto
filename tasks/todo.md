@@ -5,9 +5,9 @@ Specification: [scoped-proteomics-consumer-spec.md](scoped-proteomics-consumer-s
 - [x] Recover and publicly verify Hitlist's PXD013455 source archive.
 - [x] Read source schemas, trainer/host metadata and scientific limitations.
 - [x] Define delivery boundary, label policy, one-vote handling and resource plan.
-- [ ] Implement verified datacache admission and collapsed record projection.
-- [ ] Preserve scoped identity through dataset, host batches and prediction exports.
-- [ ] Classify support; test integrity, null labels, mappings and legacy behavior.
+- [x] Implement verified datacache admission and collapsed record projection.
+- [x] Preserve scoped identity through dataset, host batches and prediction exports.
+- [x] Classify support; test integrity, null labels, mappings and legacy behavior.
 - [ ] Review, version, format/lint/full tests, merge and verify release downloads.
 - [ ] Next PR: canonical trainer, frozen partitions and registered real preflight.
 
@@ -16,6 +16,13 @@ Specification: [scoped-proteomics-consumer-spec.md](scoped-proteomics-consumer-s
 Hitlist 1.75.0 and the public PXD013455 archive are deployed and hash-verified.
 Presto #76/#79 shipped as 0.1.2/0.1.3; #71 is closed with verified release evidence.
 The current adapter PR does not yet close #70 or establish training readiness.
+The initial focused adapter/legacy/coverage/frozen-lineage suite passes 147 tests,
+including real prediction exports. Format/lint and strict docs pass. Review added
+explicit known-terminus preservation and a TSV inspection preview. Reproduced
+older sampler truncation and Trypsin/P vocabulary defects are tracked in #81/#82;
+this adapter generates no excision labels or controls. Lock regeneration remains
+blocked by the pre-existing Python-floor conflict in #69. Full final-head gates
+and public release remain required.
 
 # Frozen partitions and generated parents — 2026-10-15
 
