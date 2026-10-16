@@ -1,0 +1,78 @@
+{
+  "test": {
+    "effective": {
+      "independence_limit": "Unknown biological identity and shared studies remain unresolved.",
+      "n_exact_observations": 214,
+      "n_peptides": 105,
+      "n_resamples": 1000,
+      "paired_presto_minus_baseline_rmse_95_intervals": {
+        "length_composition_class_ridge": [
+          0.054816707360807175,
+          0.2760017978328141
+        ],
+        "train_mean": [
+          -0.052456457954147946,
+          0.1529770148659053
+        ]
+      },
+      "sampling_unit": "peptide; all same-peptide observations travel together",
+      "seed": 4242
+    },
+    "raw": {
+      "independence_limit": "Unknown biological identity and shared studies remain unresolved.",
+      "n_exact_observations": 214,
+      "n_peptides": 105,
+      "n_resamples": 1000,
+      "paired_presto_minus_baseline_rmse_95_intervals": {
+        "length_composition_class_ridge": [
+          0.053448369316832514,
+          0.2735053382626826
+        ],
+        "train_mean": [
+          -0.05837817695614055,
+          0.15042270715509296
+        ]
+      },
+      "sampling_unit": "peptide; all same-peptide observations travel together",
+      "seed": 4242
+    }
+  },
+  "val": {
+    "effective": {
+      "independence_limit": "Unknown biological identity and shared studies remain unresolved.",
+      "n_exact_observations": 210,
+      "n_peptides": 100,
+      "n_resamples": 1000,
+      "paired_presto_minus_baseline_rmse_95_intervals": {
+        "length_composition_class_ridge": [
+          0.020137467542194094,
+          0.2396489209736154
+        ],
+        "train_mean": [
+          -0.07536590807416442,
+          0.1248096253345315
+        ]
+      },
+      "sampling_unit": "peptide; all same-peptide observations travel together",
+      "seed": 4242
+    },
+    "raw": {
+      "independence_limit": "Unknown biological identity and shared studies remain unresolved.",
+      "n_exact_observations": 210,
+      "n_peptides": 100,
+      "n_resamples": 1000,
+      "paired_presto_minus_baseline_rmse_95_intervals": {
+        "length_composition_class_ridge": [
+          0.020061859290505805,
+          0.23770484489511182
+        ],
+        "train_mean": [
+          -0.07883349693301238,
+          0.12164364445744259
+        ]
+      },
+      "sampling_unit": "peptide; all same-peptide observations travel together",
+      "seed": 4242
+    }
+  }
+}

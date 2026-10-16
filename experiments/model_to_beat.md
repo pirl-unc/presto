@@ -86,6 +86,18 @@ promoting any post-migration result. See `tasks/todo.md` Stage 0.
 
 ## Active Baselines
 
+### Frozen human-source/HLA IC50 cohort — provisional
+
+Train-only alpha=1 ridge (length, composition, MHC class) is the baseline to beat
+for the exact 9,053-row frozen cohort and declared effective target space.
+Validation/test exact IC50 RMSE: **1.037626 / 1.138279 log10(nM)**; raw-space
+RMSE: 1.047534 / 1.151585. The 200-step canonical Presto fit fails its prospective
+quality screen and has near-constant predictions. This is exploratory
+peptide-disjoint evidence with shared studies, unknown biological identity and
+explicit species-context limitations; it is not an external validation result.
+[Full contract and comparison](2026-10-16_1030_codex_effective-target-fit/README.md).
+
+
 ## 7-Allele Numeric Class I Binding, Strict Seq-Only
 
 - Status: `active`

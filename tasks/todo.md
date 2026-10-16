@@ -3,8 +3,16 @@
 - [x] Specify the new declared target space, raw-space diagnostics, baselines and limits.
 - [x] Prepare and test a new isolated recipe with verified released producer pins.
 - [x] Publish and freeze the new prospective manifest without changing historical contracts.
-- [ ] Run canonical full-input qualification and bounded fitting; preserve all outcomes.
+- [x] Run canonical full-input qualification and bounded fitting; preserve all outcomes.
 - [ ] Audit/publish complete artifacts and comparisons, then review/merge/release 0.1.17.
+
+## Effective-fit review
+
+Canonical gate passed; 200 finite steps improve exact training error but the
+validation screen fails against the mean/ridge baselines. All 90 archive members,
+9,053 source joins and 2,614 IC50 rows independently verify. Species attribution,
+numerical errata and narrow predictions are tracked in #115/#116/#117. Final
+publication, CI, merge and release remain.
 
 # Explicit affinity target policy — #110
 
@@ -21,7 +29,7 @@
 - [x] Preserve/stop the incompatible raw-target attempt before optimization; file #110.
 - [x] Audit all 2,614 source-linked IC50 rows and guard against relaunching the mismatch.
 - [x] Publish/independently verify all 19 public assets, 25 archived files, 2,614 source/context/partition joins and every effective target.
-- [ ] Close registry, review, merge and release 0.1.15 after final checks.
+- [x] Close registry, review, merge and release 0.1.15 after final checks.
 
 ## Target-policy review
 

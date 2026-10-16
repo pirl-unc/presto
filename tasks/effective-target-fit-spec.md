@@ -94,3 +94,15 @@ above. `results/protocol-notes.json` records the released script hashes, precise
 settings and a 10:48:59 UTC observation showing no model gate or checkpoint. The
 executed code, launch parameters, data, target policy and evaluation decisions
 have not changed. Preserve the original public plan alongside this clarification.
+
+## Additive species inspection audit — #115
+
+During the running fit, the coverage report exposed eight recorded rat hosts
+alongside human HLA. Audit every selected observation against the SAME pinned
+native training parquet, retaining all existing species/context fields and
+source citations in an additional datacache table. Verify original membership
+and peptide joins; publish counts and the eight source-linked rows. This is an
+inspection-only extension: no source value, fit input, objective, partition,
+criterion or prediction changes. Preserve partial/conflicting native attribution
+as recorded; the human-source/HLA cohort is not a human-host-only cohort.
+The prospective consumer correction belongs to #115, not this historical run.
