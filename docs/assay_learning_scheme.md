@@ -103,3 +103,36 @@ No model-quality claim follows from correct loss wiring alone. Complete corpus
 integration, context-role harmonization, supported negatives, joint assay
 configuration modeling and held-out validation remain tracked in
 [issue #46](https://github.com/pirl-unc/presto/issues/46).
+
+## Trypsin/P and checkpoint vocabulary
+
+The verified PXD013455 search declares **Trypsin/P**. It permits K/R cleavage
+before proline, while ordinary Trypsin excludes that boundary ([Cox Lab Andromeda
+enzyme documentation](https://cox-labs.github.io/coxdocs/andromeda_enzymes.html)).
+Presto preserves these as `trypsin_p` and `trypsin`, including their digest and
+output-side machinery categories. This search rule is not evidence that every
+permitted cleavage occurred. Rule-derived wrong-enzyme controls remain synthetic;
+the scoped detectability adapter supplies no excision labels or controls.
+
+The contradictory historical description `Trypsin/P (cleaves K/R except before P)`
+is unqualified. Raw ingestion drops and reports those rows in
+`n_contradictory_enzyme_rows`, `n_unknown_enzyme_rows` and `rejected_enzyme_counts`.
+The verified adapter rejects an unknown enzyme contract. The original protocol
+string remains in its frozen source registry. Consumer policy version 2 creates a
+new immutable datacache projection; previous admission artifacts retain their
+historical policy and producer identity.
+
+New models use excision vocabulary version 2: `trypsin_p` is appended without
+renumbering existing categories. Checkpoints record `excision_machinery_version`.
+The loader recognizes a historical seven-entry head as version 1 and constructs
+that exact model, preserving its weights and predictions. It does not pad or copy
+weights to imply a trained Trypsin/P category. Legacy models reject `trypsin_p`
+and its numeric index. Trainer resume requires the same vocabulary; load the
+checkpoint with `load_model_from_checkpoint` before constructing its trainer.
+Unknown versions, contradictory configuration and unrecognized head sizes fail.
+
+The existing internal missed-cleavage penalty counts K/R without applying the
+ordinary Trypsin proline exclusion. That separate scoring inconsistency is tracked
+in [#88](https://github.com/pirl-unc/presto/issues/88); it is retained here to avoid
+silently altering historical checkpoint predictions. It must be resolved with an
+explicit scoring contract before reporting canonical qualification fits.

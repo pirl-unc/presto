@@ -13,7 +13,7 @@ from ..models.affinity import (
     DEFAULT_MAX_AFFINITY_NM,
     normalize_binding_target_log10,
 )
-from .checkpointing import save_model_checkpoint
+from .checkpointing import checkpoint_machinery_version, save_model_checkpoint
 from .losses import PCGrad, censor_aware_loss, CombinedLoss, safe_bce_with_logits
 
 
@@ -318,6 +318,16 @@ class Trainer:
             path: Path to checkpoint
         """
         checkpoint = torch.load(path, map_location=self.device)
+        version = checkpoint_machinery_version(
+            checkpoint["model_state_dict"],
+            checkpoint.get("model_config") or checkpoint.get("config"),
+        )
+        if version != self.model.excision_machinery_version:
+            raise ValueError(
+                f"Checkpoint excision machinery version {version} does not match trainer model "
+                f"version {self.model.excision_machinery_version}; construct the matching model "
+                "with load_model_from_checkpoint before resuming"
+            )
         self.model.load_state_dict(checkpoint["model_state_dict"])
         self.optimizer.load_state_dict(checkpoint["optimizer_state_dict"])
         self.step_count = checkpoint.get("step_count", checkpoint.get("step", 0))

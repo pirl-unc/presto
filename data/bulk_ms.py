@@ -45,13 +45,13 @@ from .vocab import (
 
 # hitlist's canonical enzyme strings -> Presto machinery names.
 ENZYME_TO_MACHINERY = {
-    "Trypsin/P (cleaves K/R except before P)": "trypsin",
-    "Trypsin/P": "trypsin",
+    "Trypsin/P": "trypsin_p",
     "Trypsin": "trypsin",
     "Chymotrypsin": "chymotrypsin",
     "LysC": "lysc",
     "GluC": "gluc",
 }
+CONTRADICTORY_ENZYMES = {"trypsin/p (cleaves k/r except before p)"}
 
 
 @dataclass
@@ -103,12 +103,9 @@ _ENZYME_TO_MACHINERY_FOLDED = {
 def machinery_for_enzyme(enzyme: str) -> str:
     """Map a hitlist ``digestion_enzyme`` string to a machinery name.
 
-    Case-insensitive. The lookup used to be exact, and the corpus happens to
-    write "Trypsin/P (cleaves K/R except before P)" and "LysC" with exactly the
-    capitalization in the table -- so it worked, by luck. A lowercase export, a
-    hitlist schema change or a hand-written test row would have mapped every
-    enzyme to "unknown", and rows with unknown machinery are silently skipped,
-    so the entire shotgun corpus would vanish with no error.
+    Case-insensitive. Trypsin/P permits K/R-P; ordinary Trypsin excludes it.
+    The contradictory legacy description returns unknown and is counted
+    explicitly by the raw loader. A verified scoped input rejects unknown rules.
     """
     return _ENZYME_TO_MACHINERY_FOLDED.get(str(enzyme or "").strip().lower(), "unknown")
 
@@ -194,6 +191,8 @@ def records_from_bulk_frame(
     machinery_counts: Dict[str, int] = {}
     n_excision_negatives = 0
     n_unencodable_peptides = 0
+    rejected_enzyme_counts: Dict[str, int] = {}
+    n_contradictory_enzyme_rows = 0
 
     for row in rows:
         peptide = str(row.get("peptide") or "").strip().upper()
@@ -206,6 +205,9 @@ def records_from_bulk_frame(
             continue
         machinery = machinery_for_enzyme(row.get("digestion_enzyme"))
         if machinery == "unknown":
+            enzyme = str(row.get("digestion_enzyme") or "").strip()
+            rejected_enzyme_counts[enzyme] = rejected_enzyme_counts.get(enzyme, 0) + 1
+            n_contradictory_enzyme_rows += int(enzyme.lower() in CONTRADICTORY_ENZYMES)
             continue
         machinery_counts[machinery] = machinery_counts.get(machinery, 0) + 1
         records.append(
@@ -255,6 +257,9 @@ def records_from_bulk_frame(
         # peptides silently vanish would otherwise report identical stats to
         # one where they never existed.
         "n_unencodable_peptides": n_unencodable_peptides,
+        "n_unknown_enzyme_rows": sum(rejected_enzyme_counts.values()),
+        "n_contradictory_enzyme_rows": n_contradictory_enzyme_rows,
+        "rejected_enzyme_counts": dict(sorted(rejected_enzyme_counts.items())),
     }
     return records, stats
 

@@ -2,8 +2,15 @@
 
 - [x] Read primary enzyme documentation and frozen search settings.
 - [x] Specify indexed vocabulary and legacy checkpoint behavior.
-- [ ] Reproduce rule/category mismatch and implement explicit versioning.
+- [x] Reproduce rule/category mismatch and implement explicit versioning.
 - [ ] Verify legacy/new predictions, run gates, PR, merge and release.
+
+## Review
+
+115 focused enzyme, checkpoint, scoped/bulk and excision tests pass. A checkpoint
+created by the unchanged 0.1.5 implementation is also checked against the new
+loader, without parameter migration. Internal missed-cleavage scoring remains a
+separate explicit defect (#88). Complete gates and release remain pending.
 
 # Scope-aware contrast groups — Presto #81
 

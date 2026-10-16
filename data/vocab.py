@@ -924,7 +924,19 @@ EXCISION_MACHINERY = [
     "chymotrypsin",  # C-term F/W/Y/L/M, not before P  (MaxQuant Chymotrypsin+)
     "lysc",  # C-term K, P allowed
     "gluc",  # C-term E/D in bicarbonate buffer, not before P
+    "trypsin_p",  # MaxQuant Trypsin/P: C-term K/R, including before P
 ]
+EXCISION_MACHINERY_VERSION = 2
+EXCISION_MACHINERY_VOCABULARIES = {1: tuple(EXCISION_MACHINERY[:7]), 2: tuple(EXCISION_MACHINERY)}
+
+
+def excision_machinery_vocabulary(version: int = EXCISION_MACHINERY_VERSION) -> Tuple[str, ...]:
+    """Return an exact vocabulary; old checkpoint indices never acquire new meanings."""
+    if type(version) is not int or version not in EXCISION_MACHINERY_VOCABULARIES:
+        raise ValueError(f"Unsupported excision machinery vocabulary version: {version!r}")
+    return EXCISION_MACHINERY_VOCABULARIES[version]
+
+
 EXCISION_MACHINERY_TO_IDX = {name: i for i, name in enumerate(EXCISION_MACHINERY)}
 IDX_TO_EXCISION_MACHINERY = {i: name for i, name in enumerate(EXCISION_MACHINERY)}
 
@@ -937,6 +949,7 @@ EXCISION_P1_RULES: Dict[str, str] = {
     "chymotrypsin": "FWYLM",
     "lysc": "K",
     "gluc": "ED",
+    "trypsin_p": "KR",
 }
 
 # P1' residues that block cleavage for a given machinery ("not before P").
@@ -946,6 +959,7 @@ EXCISION_P1_PRIME_BLOCKED: Dict[str, str] = {
     "chymotrypsin": "P",
     "gluc": "P",
     "lysc": "",
+    "trypsin_p": "",
 }
 
 # Machinery whose profile is pinned to a known rule rather than learned.
@@ -997,7 +1011,7 @@ PEPTIDE_SOURCES = ["unknown", "mhc", "protein"]
 PEPTIDE_SOURCE_TO_IDX = {name: i for i, name in enumerate(PEPTIDE_SOURCES)}
 
 # Tier 2: post-capture step. Non-`none` only when peptide_source == "protein".
-ENZYMATIC_DIGESTS = ["none", "trypsin", "chymotrypsin", "lysc", "gluc"]
+ENZYMATIC_DIGESTS = ["none", "trypsin", "chymotrypsin", "lysc", "gluc", "trypsin_p"]
 ENZYMATIC_DIGEST_TO_IDX = {name: i for i, name in enumerate(ENZYMATIC_DIGESTS)}
 
 # Tier 3: what was applied to the cells. "Stimulus" rather than "cytokine

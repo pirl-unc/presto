@@ -27,7 +27,8 @@ EVIDENCE = {
     "not observed in scope": "scoped_unobserved",
 }
 POLICY = {
-    "version": 1,
+    "version": 2,
+    "enzyme_contract": "Trypsin/P routes to trypsin_p; ordinary Trypsin stays proline-blocked",
     "endpoint": "observed_in_selected_search_scope",
     "units": "binary",
     "censoring": "not_applicable",

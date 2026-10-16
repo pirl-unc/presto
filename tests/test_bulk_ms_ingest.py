@@ -83,6 +83,23 @@ class TestEnzymeRouting:
     def test_unknown_enzyme_rows_are_skipped(self):
         records, stats = records_from_bulk_frame(_frame([_row(enzyme="some-unlisted-protease")]))
         assert records == []
+        assert stats["n_unknown_enzyme_rows"] == 1
+        assert stats["rejected_enzyme_counts"] == {"some-unlisted-protease": 1}
+
+    def test_contradictory_legacy_enzyme_is_explicitly_unqualified(self):
+        enzyme = "Trypsin/P (cleaves K/R except before P)"
+        records, stats = records_from_bulk_frame(_frame([_row(enzyme=enzyme)]))
+        assert records == []
+        assert stats["n_contradictory_enzyme_rows"] == 1
+        assert stats["rejected_enzyme_counts"] == {enzyme: 1}
+
+    @pytest.mark.parametrize("spelling", ["Trypsin/P", "trypsin/p", " TRYPSIN/P "])
+    def test_trypsin_p_has_a_distinct_category(self, spelling):
+        records, stats = records_from_bulk_frame(
+            _frame([_row(enzyme=spelling)]), excision_negative_ratio=0
+        )
+        assert records[0].machinery == "trypsin_p"
+        assert stats["machinery_counts"] == {"trypsin_p": 1}
 
     @pytest.mark.parametrize("enzyme", ["trypsin", "chymotrypsin", "lysc", "gluc"])
     def test_each_known_enzyme_routes(self, enzyme):
