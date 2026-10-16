@@ -1,3 +1,10 @@
+# Actual human-corpus preflight
+
+- [x] Register baseline limits, source pins, caps and CPU-only resource contract.
+- [ ] Execute canonical frozen admission and preserve actual partitions/audits.
+- [ ] Publish complete artifacts, hashes, support/coverage and independence limits.
+- [ ] Close experiment registry; format/lint/full gates, review, merge/release0.1.10.
+
 # Explicit effective regularization — #95
 
 - [x] Diagnose the actual fit deviation and record the prospective fix contract.
