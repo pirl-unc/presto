@@ -10,6 +10,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import torch
 
 from ..models.presto import Presto
+from ..data.vocab import EXCISION_MACHINERY_VOCABULARIES, excision_machinery_vocabulary
 from ..models.affinity import (
     DEFAULT_MAX_AFFINITY_NM,
     DEFAULT_BINDING_MIDPOINT_NM,
@@ -20,6 +21,22 @@ from ..models.affinity import (
 CHECKPOINT_FORMAT = "presto.v2"
 CHECKPOINT_FORMAT_VERSION = 2
 MODEL_CLASS = "presto.models.presto.Presto"
+
+
+def checkpoint_machinery_version(state_dict, model_config=None) -> int:
+    """Recognize an exact head vocabulary, without padding or copying fitted weights."""
+    bias = state_dict.get("excision_head.bias")
+    sizes = {len(names): version for version, names in EXCISION_MACHINERY_VOCABULARIES.items()}
+    if bias is None or bias.ndim != 1 or bias.shape[0] not in sizes:
+        raise ValueError("Checkpoint has no recognized excision machinery head shape")
+    inferred = sizes[bias.shape[0]]
+    declared = (model_config or {}).get("excision_machinery_version", inferred)
+    excision_machinery_vocabulary(declared)
+    if declared != inferred:
+        raise ValueError(
+            f"Checkpoint excision machinery version {declared} contradicts head version {inferred}"
+        )
+    return declared
 
 
 def _count_transformer_layers(state_dict: Dict[str, torch.Tensor], prefix: str) -> Optional[int]:
@@ -63,7 +80,9 @@ def infer_model_config_from_state_dict(state_dict: Dict[str, torch.Tensor]) -> D
                 n_heads = candidate
                 break
 
-    config: Dict[str, Any] = {}
+    config: Dict[str, Any] = {
+        "excision_machinery_version": checkpoint_machinery_version(state_dict),
+    }
     if d_model is not None:
         config["d_model"] = d_model
     if n_layers is not None:
@@ -97,6 +116,7 @@ def build_model_config(model: Presto) -> Dict[str, Any]:
         "n_layers": int(n_layers),
         "n_heads": int(n_heads),
         "latent_topology": str(model.latent_topology),
+        "excision_machinery_version": model.excision_machinery_version,
         "max_affinity_nM": float(getattr(model, "max_affinity_nM", DEFAULT_MAX_AFFINITY_NM)),
         "binding_midpoint_nM": float(
             getattr(model, "binding_midpoint_nM", DEFAULT_BINDING_MIDPOINT_NM)
@@ -120,7 +140,11 @@ def _extract_state_and_config(
         model_config = {}
     if not model_config:
         model_config = infer_model_config_from_state_dict(state_dict)
-    return state_dict, dict(model_config)
+    model_config = dict(model_config)
+    model_config["excision_machinery_version"] = checkpoint_machinery_version(
+        state_dict, model_config
+    )
+    return state_dict, model_config
 
 
 def save_model_checkpoint(
@@ -235,6 +259,7 @@ def load_model_from_checkpoint(
         resolved["binding_log10_scale"] = DEFAULT_BINDING_LOG10_SCALE
 
     model = Presto(
+        excision_machinery_version=model_config["excision_machinery_version"],
         d_model=int(resolved["d_model"]),
         n_layers=int(resolved["n_layers"]),
         n_heads=int(resolved["n_heads"]),

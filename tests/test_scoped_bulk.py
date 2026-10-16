@@ -188,6 +188,7 @@ def test_one_vote_labels_nullable_counts_and_host_lineage(scoped_bundle):
         "not observed in scope": 1,
     }
     assert all(row.n_replicates_detected is None and row.excision_label is None for row in records)
+    assert {row.machinery for row in records} == {"trypsin_p"}
     by_peptide = {row.peptide: row for row in records}
     ambiguous = by_peptide["YVVAAAALK"]
     assert ambiguous.source_n_candidate_occurrences == "2"
@@ -202,6 +203,10 @@ def test_one_vote_labels_nullable_counts_and_host_lineage(scoped_bundle):
     assert negative.detectability_label == 0 and not negative.evidence_row_id
     samples = PrestoDataset(bulk_ms_records=records).samples
     batch = PrestoCollator()(samples)
+    assert {sample.enzymatic_digest for sample in samples} == {"trypsin_p"}
+    from presto.data.vocab import EXCISION_MACHINERY_TO_IDX
+
+    assert (batch.model_inputs()["machinery"] == EXCISION_MACHINERY_TO_IDX["trypsin_p"]).all()
     assert batch.target_masks["ms_detectability"].all()
     assert "excision" not in batch.target_masks
     assert batch.source_lineage["candidate_lookup_key"] == [row.peptide for row in records]
