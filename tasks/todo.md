@@ -1,3 +1,11 @@
+# Prospective effective-target fit — #110/#53
+
+- [x] Specify the new declared target space, raw-space diagnostics, baselines and limits.
+- [x] Prepare and test a new isolated recipe (release pins remain pending).
+- [ ] Publish and freeze the new prospective manifest without changing historical contracts.
+- [ ] Run canonical full-input qualification and bounded fitting; preserve all outcomes.
+- [ ] Audit/publish complete artifacts and comparisons, then review/merge/release 0.1.17.
+
 # Explicit affinity target policy — #110
 
 - [x] Specify compatibility, prospective policy binding and complete clipped-row audit.
@@ -11427,3 +11435,11 @@ discovery tests and review documentation.
 - 77 focused tests pass. Real canonical census matches every one of 2,614 public IC50 targets/directions and all 211 clipped source IDs, including 54 exact changes. Public audit has 14 independently downloaded/hash-verified assets, all 211 complete source-context joins and five reproduction members verified.
 - Full row tables remain in datacache/public downloads; versioned source contains recipes, compact reports and pins. Original stopped experiment and manifests are immutable. Full model-input preflight and a new prospective fit remain separate work.
 - #111 documentation now describes removed depth labels and the shipped scoped source. Strict docs and formatting/lint pass. Full ./test.sh passes: 2,281 tests, four skips, 812 warnings in 521.00 s. Final-head CI and verified clean-main release remain required before shipment.
+
+## Effective-target recipe review
+
+- Nine focused contract checks pass, including separate effective/raw measurement and censor metrics, training-only baseline fitting, identity preservation and pre-model gate refusal. Independent arithmetic recomputation agrees on a mixed-label fixture.
+- Verified frozen-input arithmetic reproduces 2,614 targets, 211 clipped observations, 54 clipped exact values and 1,599 exact training-baseline rows. No held-out predictions or qualified new manifest yet.
+- Formatting/lint and strict docs pass. Full ./test.sh: 2,281 passed, four skipped, 812 warnings in 508.81 seconds. The library source is unchanged from reviewed #112 except the 0.1.17 version.
+- Review found producer-version provenance in the frozen membership receipt; the new declaration now names the expected metadata change and requires the unchanged partition recipe hash plus all semantic membership/label fingerprints. Historical contracts remain immutable.
+- Released 0.1.16 producer pins, new public declaration, canonical qualification/fit and complete public evidence remain required.
