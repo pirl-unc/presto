@@ -4965,6 +4965,7 @@ def run(args: argparse.Namespace) -> None:
             include_flanks=bool(getattr(args, "hitlist_flanks", True)),
             source_mapping_policy=str(getattr(args, "source_mapping_policy", "mask_unresolved")),
             sampling_seed=data_seed + 17,
+            cap_sampling=getattr(args, "cap_sampling", "reservoir"),
         )
         data_funnel["source_loader"] = hitlist_stats
         print(f"Hitlist input: {hitlist_stats['frozen_bundle']['bundle_id']}")

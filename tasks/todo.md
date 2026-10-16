@@ -1,3 +1,17 @@
+# Frozen Hitlist cap policy — #103
+
+- [x] Specify compatibility, actual policy metadata and bounded retention.
+- [x] Honor canonical head/reservoir flags with full source/drop counts.
+- [x] Verify selection, lineage and bounded record-object retention (138 focused tests).
+- [ ] Format/lint/full tests, review, merge and publish 0.1.12.
+
+## Cap-policy review
+
+Format/lint and 138 focused tests pass. Legacy Python API selections are exact;
+canonical head/reservoir modes are explicit and retain at most the cap plus the
+record being inspected. Source dataframe memory is unchanged. The complete local suite passes 2,269 tests with four explicit skips (520.37s).
+Final-head CI and deployment remain pending.
+
 # Scoped sampling investigation — #94
 
 - [x] Register the two-condition contract and exploratory repeated-test limitation.
