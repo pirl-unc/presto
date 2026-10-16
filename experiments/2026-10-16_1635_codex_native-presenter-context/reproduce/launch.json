@@ -1,0 +1,11 @@
+{
+  "agent": "codex",
+  "model": "GPT-6",
+  "kind": "data-only native presenting-cell processing audit",
+  "command": "python code/audit.py",
+  "expected_package_version": "0.1.21",
+  "n_expected_observations": 9053,
+  "n_expected_ic50_observations": 2614,
+  "optimization": "none; preserve historical observations, membership, predictions and decisions",
+  "gpu": null
+}

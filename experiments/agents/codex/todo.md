@@ -101,3 +101,5 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 
 - [x] Audit canonical affinity policies on all 2,614 public frozen IC50 rows; retain 211 clipped IDs and 54 exact-value changes (2026-10-16_1000).
 - [ ] Complete the separate prospective effective-target fit after #110 software release, preserving raw-measurement evaluation.
+
+- [ ] Execute and publish the registered native-presenter-context data audit; preserve failed historical fitting evidence.

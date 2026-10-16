@@ -1,8 +1,8 @@
 # Native presenting-cell processing context — #115
 
 - [x] Review role evidence, current row/MIL routing and specify the bounded change.
-- [ ] Implement one role-aware processing resolver and generated-parent provenance.
-- [ ] Bind prospective policy/fingerprints and verify row/MIL/export regressions.
+- [x] Implement one role-aware processing resolver and generated-parent provenance.
+- [x] Bind prospective policy/fingerprints and verify row/MIL/export regressions.
 - [ ] Register/freeze/run/publish/independently verify actual source-context audit.
 - [ ] Format/lint/full CI, review, merge and distribute 0.1.21 after 0.1.20.
 
@@ -22,7 +22,7 @@ runs; PR/feature cancellations are confined to their workflow and event.
 - [x] Carry independent native species axes through typed records, samples and exports.
 - [x] Derive masked molecular MHC supervision and coverage from allele identity.
 - [x] Verify row/MIL/lineage/fingerprint paths and publish the actual source-linked audit.
-- [ ] Format/lint/full checks, review, merge and distribute 0.1.19.
+- [x] Format/lint/full checks, review, merge and distribute 0.1.19.
 
 ## Molecular-species review
 
@@ -31,7 +31,9 @@ The clean recipe verifies all 9,053 canonical auxiliary labels and preserves all
 elution labels change (seven train, one validation). All 14 public assets and every
 original membership/species/native column independently verify through datacache.
 Focused row/MIL/export/lineage/fingerprint/policy regressions, formatting, lint and
-strict docs pass. Full CI, merge and distribution remain. #115 remains open for
+strict docs pass. Merged #121 and distributed 0.1.19: exact-main CI passed 2,310
+tests with three qualification skips, and all four public assets plus 168 public-wheel
+regressions independently verified. #115 remains open for
 processing conditioning and antigen attribution; context gaps stay explicit.
 
 # Physical affinity metric reporting — #116
