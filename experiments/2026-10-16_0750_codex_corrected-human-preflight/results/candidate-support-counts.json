@@ -1,0 +1,52 @@
+{
+  "candidate": {
+    "columns": [
+      ""
+    ],
+    "decision_if_insufficient": "Record failure; do not relax thresholds or claim readiness.",
+    "evidence_family": "binding:IC50",
+    "evidence_role": "direct",
+    "minimum_unique_exact_observations": 50,
+    "minimum_unique_observations": 50,
+    "minimum_unique_peptides": 50,
+    "output": "assays.IC50_nM",
+    "purpose": "Prospective fixed candidate requirements for the next fitting diagnostic; not a trained-output claim or executed manifest gate.",
+    "raw_sources": [
+      "iedb",
+      "cedar"
+    ],
+    "required_splits": [
+      "train",
+      "val",
+      "test"
+    ],
+    "target_space": "log10(nM)"
+  },
+  "canonical_manifest_gate_executed": false,
+  "counts": [
+    {
+      "counts_available": true,
+      "distinct_peptides": 1031,
+      "split": "train",
+      "unique_exact": 1599,
+      "unique_observations": 2074
+    },
+    {
+      "counts_available": true,
+      "distinct_peptides": 126,
+      "split": "val",
+      "unique_exact": 210,
+      "unique_observations": 265
+    },
+    {
+      "counts_available": true,
+      "distinct_peptides": 126,
+      "split": "test",
+      "unique_exact": 214,
+      "unique_observations": 275
+    }
+  ],
+  "fixed_candidate_minima_met": true,
+  "interpretation": "Count evidence for the next prospective fit; no trained-output claim.",
+  "reasons": []
+}

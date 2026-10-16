@@ -1,0 +1,111 @@
+{
+  "overall": {
+    "rows_considered": 21984,
+    "resolved_rows": 17754,
+    "missing_rows": 4230,
+    "resolved_fraction": 0.8075873362445415,
+    "missing_fraction": 0.1924126637554585
+  },
+  "species_by_state": {
+    "resolved": {
+      "human": 17746,
+      "murine": 8,
+      "nhp": 0,
+      "other": 0
+    },
+    "missing": {
+      "human": 4224,
+      "murine": 6,
+      "nhp": 0,
+      "other": 0
+    }
+  },
+  "by_modality": {
+    "binding": {
+      "rows": 5000,
+      "resolved_rows": 4492,
+      "missing_rows": 508,
+      "resolved_fraction": 0.8984,
+      "missing_fraction": 0.1016
+    },
+    "kinetics": {
+      "rows": 19,
+      "resolved_rows": 19,
+      "missing_rows": 0,
+      "resolved_fraction": 1.0,
+      "missing_fraction": 0.0
+    },
+    "stability": {
+      "rows": 741,
+      "resolved_rows": 686,
+      "missing_rows": 55,
+      "resolved_fraction": 0.9257759784075573,
+      "missing_fraction": 0.07422402159244265
+    },
+    "elution": {
+      "rows": 16224,
+      "resolved_rows": 12557,
+      "missing_rows": 3667,
+      "resolved_fraction": 0.7739768244575936,
+      "missing_fraction": 0.2260231755424063
+    }
+  },
+  "by_modality_species": {
+    "binding": {
+      "resolved": {
+        "human": 4492,
+        "murine": 0,
+        "nhp": 0,
+        "other": 0
+      },
+      "missing": {
+        "human": 508,
+        "murine": 0,
+        "nhp": 0,
+        "other": 0
+      }
+    },
+    "kinetics": {
+      "resolved": {
+        "human": 19,
+        "murine": 0,
+        "nhp": 0,
+        "other": 0
+      },
+      "missing": {
+        "human": 0,
+        "murine": 0,
+        "nhp": 0,
+        "other": 0
+      }
+    },
+    "stability": {
+      "resolved": {
+        "human": 686,
+        "murine": 0,
+        "nhp": 0,
+        "other": 0
+      },
+      "missing": {
+        "human": 55,
+        "murine": 0,
+        "nhp": 0,
+        "other": 0
+      }
+    },
+    "elution": {
+      "resolved": {
+        "human": 12549,
+        "murine": 8,
+        "nhp": 0,
+        "other": 0
+      },
+      "missing": {
+        "human": 3661,
+        "murine": 6,
+        "nhp": 0,
+        "other": 0
+      }
+    }
+  }
+}

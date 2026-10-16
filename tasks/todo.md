@@ -1,10 +1,30 @@
+# Corrected human consumer qualification
+
+- [x] Register released producers, frozen corrected inputs and prospective IC50 evidence thresholds.
+- [x] Freeze and run canonical preflight with explicit reservoir/v2 policies.
+- [x] Publish and independently verify new membership, source/label support and leakage limits.
+- [ ] Close experiment registry; format/lint/full checks, review, merge and distribute 0.1.14.
+
+## Corrected preflight review
+
+The clean recipe ran with released Presto 0.1.13 / Hitlist 1.78.0 in 985.768s,
+runner peak RSS 11,749,728,256 bytes. All 48 archive members and all 9,053 selected
+observation/source-context joins verify. Explicit reservoir/v2 membership is
+7,241/906/906. Direct IC50 meets the fixed 50-observation/peptide/exact minima in
+every split; no model or prediction exists and the future manifest gate has not
+run. Full local tests pass 2,276 with four skips; actual-recipe CI passes 2,277
+with three skips, docs and distribution checks. All 23 public assets, 48 archive members, 9,053 observation/context/partition joins
+and the fixed candidate counts independently verify. Final review/merge/release
+remain. See the registered family for sparse outputs,
+shared studies and unknown biological identities.
+
 # Frozen component allocation — #105
 
 - [x] Record observed size/support bias and prospective compatibility contract.
 - [x] Implement explicit label-blind relative-deficit allocation and legacy preservation.
 - [x] Verify regressions and audit the exact public 9,000-root cohort.
 - [x] Publish/verify assignments and support/lineage reports; close experiment registry.
-- [ ] Format/lint/full checks, review, merge and distribute 0.1.13.
+- [x] Format/lint/full checks, review, merge and distribute 0.1.13.
 
 ## Allocation review
 
@@ -13,22 +33,24 @@ four explicit skips; 525.13 seconds). All 12 public assets were independently
 downloaded through datacache and hash-verified. Analysis verifies all 17 archive
 members, exact original V1 membership, unchanged observation/component identities
 and zero split components. V2 improves direct-KD support to 406/71/33 while
-kinetics remains sparse and biological independence remains unresolved. Final
-CI, merge and clean-main distribution remain pending.
+kinetics remains sparse and biological independence remains unresolved. Merged in #106 and distributed as 0.1.13; clean-main CI passed 2,277 tests with
+three explicit skips, and all four public release assets plus 49 public-wheel
+regressions independently verify.
 
 # Frozen Hitlist cap policy — #103
 
 - [x] Specify compatibility, actual policy metadata and bounded retention.
 - [x] Honor canonical head/reservoir flags with full source/drop counts.
 - [x] Verify selection, lineage and bounded record-object retention (138 focused tests).
-- [ ] Format/lint/full tests, review, merge and publish 0.1.12.
+- [x] Format/lint/full tests, review, merge and publish 0.1.12.
 
 ## Cap-policy review
 
 Format/lint and 138 focused tests pass. Legacy Python API selections are exact;
 canonical head/reservoir modes are explicit and retain at most the cap plus the
 record being inspected. Source dataframe memory is unchanged. The complete local suite passes 2,269 tests with four explicit skips (520.37s).
-Final-head CI and deployment remain pending.
+Merged in #104 and distributed as 0.1.12. Clean-main CI passed 2,270 tests with
+three explicit skips; all four public assets and 138 public-wheel regressions verify.
 
 # Scoped sampling investigation — #94
 
