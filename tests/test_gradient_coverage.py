@@ -297,7 +297,9 @@ def _every_modality_batch():
         ],
         bulk_ms_records=[
             BulkMSRecord(
-                peptide="SAMPLERPEP",
+                # An allowed internal R-A site exercises the missed-cleavage
+                # penalty; the previous R-P site is correctly excluded (#92).
+                peptide="SAMPLERAPEK",
                 machinery="trypsin",
                 detectability_label=1.0,
                 excision_label=1.0,
