@@ -100,7 +100,9 @@ def _components(identities, contributors, registry, policy):
     return [sorted(values) for values in members.values()]
 
 
-def _assign_components(components, *, seed, val_frac, test_frac):
+def _assign_components(components, *, seed, val_frac, test_frac, allocation="absolute_deficit_v1"):
+    if allocation not in {"absolute_deficit_v1", "relative_deficit_v2"}:
+        raise ValueError(f"Unknown component allocation policy: {allocation}")
     if (
         not all(math.isfinite(value) for value in (val_frac, test_frac))
         or val_frac <= 0
@@ -125,9 +127,14 @@ def _assign_components(components, *, seed, val_frac, test_frac):
     for index, group in enumerate(ordered):
         empty = [name for name in fractions if not counts[name]]
         eligible = empty if len(ordered) - index == len(empty) else list(fractions)
-        chosen = max(
-            eligible, key=lambda name: (targets[name] - counts[name], -PARTITIONS.index(name))
-        )
+
+        def priority(name):
+            deficit = targets[name] - counts[name]
+            if allocation == "relative_deficit_v2":
+                deficit /= targets[name]
+            return deficit, -PARTITIONS.index(name)
+
+        chosen = max(eligible, key=priority)
         component_id = "component:" + _digest(group)
         for identity in group:
             assignments[identity] = (chosen, component_id)
@@ -166,6 +173,7 @@ def prepare_frozen_partitions(
     val_frac,
     test_frac,
     policy="peptide_disjoint",
+    component_allocation="absolute_deficit_v1",
     assignment_file=None,
     assignment_sha256=None,
     cache_dir=None,
@@ -205,7 +213,13 @@ def prepare_frozen_partitions(
     )
     registry = bundle.lineage_registry()
     components = _components(identities, contributors, registry, policy)
-    assigned = _assign_components(components, seed=seed, val_frac=val_frac, test_frac=test_frac)
+    assigned = _assign_components(
+        components,
+        seed=seed,
+        val_frac=val_frac,
+        test_frac=test_frac,
+        allocation=component_allocation,
+    )
     external = None
     if bool(assignment_file) != bool(assignment_sha256):
         raise ValueError("External assignments require both a file and its SHA-256")
@@ -255,7 +269,13 @@ def prepare_frozen_partitions(
     }
     audit = audit_splits(partitions, policy=policy, registry=registry)
     contract = {
-        "algorithm": "source-lineage-components-v1",
+        "algorithm": (
+            "source-lineage-components-v1"
+            if component_allocation == "absolute_deficit_v1"
+            else "source-lineage-components-v2"
+        ),
+        "component_allocation": component_allocation,
+        "assignment_origin": "external" if assignment_file else "computed",
         "presto_version": __version__,
         "source_bundle_id": bundle.bundle_id,
         "policy": policy,

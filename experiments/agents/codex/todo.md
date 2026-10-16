@@ -90,3 +90,5 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
   - Record full val/test metric bundle plus probe metrics
 
 - [x] Run and close [human-corpus frozen preflight](plans/human-corpus-preflight.md): actual source admission, partitions, supervision coverage and leakage limitations.
+
+- [ ] Run and close [component allocation audit](plans/component-allocation.md) on the frozen public human cohort; preserve historical memberships.
