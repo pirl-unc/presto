@@ -115,3 +115,6 @@ Reference: [training guide](docs/training_spec.md).
 ruff format .      # apply formatting (lint.sh only *checks* it)
 ./test.sh
 ```
+
+Verified bulk proteomics: see [scoped inputs](docs/scoped_proteomics.md) for the
+PXD013455 Python adapter, frozen source hashes, evidence classes and limitations.

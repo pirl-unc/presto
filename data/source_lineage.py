@@ -30,16 +30,34 @@ SOURCE_LINEAGE_FIELDS = (
     "generation_lineage_status",
 )
 
+SCOPED_SOURCE_LINEAGE_FIELDS = (
+    "scoped_peptide_id",
+    "candidate_id",
+    "candidate_lookup_key",
+    "source_n_candidate_occurrences",
+    "source_label_evidence",
+    "source_search_space_id",
+    "source_protocol_id",
+    "source_reference_sha256",
+    "source_parent_assignment_basis",
+)
 
-def source_lineage_fields(source: Any) -> dict[str, str]:
+
+ALL_SOURCE_LINEAGE_FIELDS = SOURCE_LINEAGE_FIELDS + SCOPED_SOURCE_LINEAGE_FIELDS
+
+
+def source_lineage_fields(source: Any, *, include_scoped: bool = False) -> dict[str, str]:
     """Copy available source values without deriving IDs or conflating their roles.
 
     Merged rows and typed records share this policy: absent/None becomes an
     empty string and surrounding whitespace is removed. Publication identifiers
     and reference text never substitute for original assay/observation identity.
+    Scoped candidate fields require explicit opt-in because ordinary assay-record
+    constructors accept only the common observation/publication contract.
     """
     values = {}
-    for name in SOURCE_LINEAGE_FIELDS:
+    fields = ALL_SOURCE_LINEAGE_FIELDS if include_scoped else SOURCE_LINEAGE_FIELDS
+    for name in fields:
         value = source.get(name) if isinstance(source, Mapping) else getattr(source, name, None)
         values[name] = "" if value is None else str(value).strip()
     return values
@@ -106,7 +124,9 @@ def generated_record(record: Any, *, parents, kind: str, seed: int, draw_index: 
         "generation_lineage_status": "resolved" if resolved else "unresolved",
     }
     payload = {
-        name: value for name, value in asdict(record).items() if name not in SOURCE_LINEAGE_FIELDS
+        name: value
+        for name, value in asdict(record).items()
+        if name not in ALL_SOURCE_LINEAGE_FIELDS
     }
     identity = json.dumps(
         {"record_type": type(record).__name__, "payload": payload, "lineage": lineage},

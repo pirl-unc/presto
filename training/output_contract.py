@@ -364,8 +364,7 @@ def build_output_contract(configuration: OutputConfiguration | None = None) -> O
                     "annotation": ("source_annotation",),
                     "organism": ("organism_derived",),
                     "excision": ("bulk_observed_product",),
-                    # The raw bulk loader has no qualified detectability labels.
-                    "ms_detectability": (),
+                    "ms_detectability": ("scoped_msms", "scoped_matching", "scoped_unobserved"),
                 }.get(source, (source,)),
                 "Support depends on selected labels and source provenance; "
                 "generated:<kind> families are recorded separately with synthetic role. "
@@ -589,6 +588,12 @@ def label_evidence(objective: ObjectiveBinding, sample) -> LabelEvidence:
             and assay != "KD"
         ):
             role = "proxy"
+    if family == "ms_detectability" and origin in {
+        "scoped_msms",
+        "scoped_matching",
+        "scoped_unobserved",
+    }:
+        return LabelEvidence("proxy", origin, source, origin)
     if origin in {"bulk_observed_product", "bulk_depth_proxy"}:
         role, family = "proxy", origin
     if origin != "assay_record" and origin not in {"bulk_observed_product", "bulk_depth_proxy"}:

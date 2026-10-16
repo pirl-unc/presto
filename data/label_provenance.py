@@ -20,8 +20,14 @@ def record_target_provenance(source: Optional[str], *targets: str) -> dict[str, 
     return dict.fromkeys(targets, origin)
 
 
-def bulk_target_provenance(observed: bool, generated_kind: str = "") -> dict[str, str]:
-    """Observation is an excision proxy, not evidence for a detectability target."""
+def bulk_target_provenance(
+    observed: bool, generated_kind: str = "", *, scoped_evidence: str = ""
+) -> dict[str, str]:
+    """Keep verified scoped detection proxies separate from raw excision controls."""
+    if scoped_evidence:
+        from .scoped_bulk import EVIDENCE
+
+        return {"excision": "unknown", "ms_detectability": EVIDENCE[scoped_evidence]}
     if observed:
         # A manually supplied detectability label has no verified source
         # contract merely because its record says the peptide was observed.

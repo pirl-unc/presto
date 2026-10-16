@@ -16,6 +16,8 @@ resolve, while a long-lived environment can sit on a stale wheel indefinitely.
 
 import pytest
 
+from presto.data.scoped_bulk import MINIMUM_SCOPED_HITLIST_VERSION
+
 from presto.data.frozen_hitlist import (
     MINIMUM_FROZEN_HITLIST_VERSION,
     load_frozen_hitlist_bundle,
@@ -85,7 +87,9 @@ class TestDeclaredDependencyAgrees:
     def test_pyproject_floor_matches_the_runtime_floor(self):
         from pathlib import Path
 
-        wanted = ".".join(str(part) for part in MINIMUM_FROZEN_HITLIST_VERSION)
+        wanted = ".".join(
+            map(str, max(MINIMUM_FROZEN_HITLIST_VERSION, MINIMUM_SCOPED_HITLIST_VERSION))
+        )
         text = (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text()
         assert f'"hitlist>={wanted}"' in text
 
@@ -93,7 +97,9 @@ class TestDeclaredDependencyAgrees:
         """A worker built from an older wheel would train on wrong labels."""
         from pathlib import Path
 
-        wanted = ".".join(str(part) for part in MINIMUM_FROZEN_HITLIST_VERSION)
+        wanted = ".".join(
+            map(str, max(MINIMUM_FROZEN_HITLIST_VERSION, MINIMUM_SCOPED_HITLIST_VERSION))
+        )
         launcher = (Path(__file__).resolve().parents[1] / "scripts" / "train_remote.py").read_text()
         assert f'"hitlist>={wanted}"' in launcher
 

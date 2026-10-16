@@ -24,9 +24,9 @@ proteome in would light up ``s_N`` as well.
 
 Second: ``detectability_label`` stays missing for every imported observation
 and generated control. ``protein_sequences`` does not generate candidates.
-The replacement must consume Hitlist's verified search-scoped candidate export
-and preserve its manifest; passing an arbitrary protein dictionary cannot
-establish a historical search space. See presto#70 and hitlist#681.
+The verified ``scoped_bulk`` adapter consumes Hitlist's frozen candidate export
+and preserves its manifest. Passing an arbitrary protein dictionary to this raw
+loader cannot establish a historical search space. See presto#70 and hitlist#681.
 """
 
 from __future__ import annotations
@@ -72,6 +72,26 @@ class BulkMSRecord:
     source: str = "bulk_proteomics"
     acquisition: Dict[str, Any] = field(default_factory=dict)
     generated_kind: str = ""
+    flank_n_is_terminus: bool = False
+    flank_c_is_terminus: bool = False
+    # Verified scoped evidence, retained only as host metadata.
+    evidence_row_id: str = ""
+    reference_iri: str = ""
+    source_bundle_id: str = ""
+    source_partition: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    pmid: str = ""
+    doi: str = ""
+    scoped_peptide_id: str = ""
+    candidate_id: str = ""
+    candidate_lookup_key: str = ""
+    source_n_candidate_occurrences: str = ""
+    source_label_evidence: str = ""
+    source_search_space_id: str = ""
+    source_protocol_id: str = ""
+    source_reference_sha256: str = ""
+    source_parent_assignment_basis: str = ""
 
 
 #: Case-folded view of ENZYME_TO_MACHINERY, built once.
