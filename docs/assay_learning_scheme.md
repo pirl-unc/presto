@@ -131,8 +131,16 @@ and its numeric index. Trainer resume requires the same vocabulary; load the
 checkpoint with `load_model_from_checkpoint` before constructing its trainer.
 Unknown versions, contradictory configuration and unrecognized head sizes fail.
 
-The existing internal missed-cleavage penalty counts K/R without applying the
-ordinary Trypsin proline exclusion. That separate scoring inconsistency is tracked
-in [#88](https://github.com/pirl-unc/presto/issues/88); it is retained here to avoid
-silently altering historical checkpoint predictions. It must be resolved with an
-explicit scoring contract before reporting canonical qualification fits.
+Internal missed-cleavage scoring has its own `excision_scoring_version`, independent
+of vocabulary size. New models use version 2: a site requires an immediately
+following peptide residue, and the declared P1-prime exclusion applies. Thus K-P
+and R-P count for Trypsin/P but not ordinary Trypsin; terminal residues and padding
+never create internal sites. These are rule penalties, not measured probabilities.
+
+Checkpoints without the scoring field retain version 1, including the eight-category
+checkpoints produced by 0.1.6. The loader preserves their original internal-site
+calculation exactly. New checkpoints record the version explicitly; unknown versions
+and mismatched trainer resumes fail. Bare state dictionaries cannot identify a
+scoring contract and therefore load historical version 1. Save a self-describing
+checkpoint when creating a new model with corrected scoring. Qualification runs
+must record both the vocabulary and scoring versions.

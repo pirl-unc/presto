@@ -13,7 +13,11 @@ from ..models.affinity import (
     DEFAULT_MAX_AFFINITY_NM,
     normalize_binding_target_log10,
 )
-from .checkpointing import checkpoint_machinery_version, save_model_checkpoint
+from .checkpointing import (
+    checkpoint_machinery_version,
+    checkpoint_scoring_version,
+    save_model_checkpoint,
+)
 from .losses import PCGrad, censor_aware_loss, CombinedLoss, safe_bce_with_logits
 
 
@@ -326,6 +330,15 @@ class Trainer:
             raise ValueError(
                 f"Checkpoint excision machinery version {version} does not match trainer model "
                 f"version {self.model.excision_machinery_version}; construct the matching model "
+                "with load_model_from_checkpoint before resuming"
+            )
+        scoring = checkpoint_scoring_version(
+            checkpoint.get("model_config") or checkpoint.get("config")
+        )
+        if scoring != self.model.excision_scoring_version:
+            raise ValueError(
+                f"Checkpoint excision scoring version {scoring} does not match trainer model "
+                f"version {self.model.excision_scoring_version}; construct the matching model "
                 "with load_model_from_checkpoint before resuming"
             )
         self.model.load_state_dict(checkpoint["model_state_dict"])

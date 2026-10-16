@@ -1,9 +1,18 @@
 # Internal excision scoring contract — Presto #88
 
 - [x] File the observed rule inconsistency and specify compatibility explicitly.
-- [ ] Implement versioned internal-site masking and checkpoint/resume semantics.
-- [ ] Verify known boundaries and exact historical predictions.
+- [x] Implement versioned internal-site masking and checkpoint/resume semantics.
+- [x] Verify known boundaries and checkpoint round trips (98 tests passed; two corpus skips).
 - [ ] Format, lint, full tests, review, PR, merge and verified distribution.
+
+## Review
+
+The focused scoring/checkpoint/excision suite passes 98 tests with two explicit
+missing-corpus skips. A checkpoint created by unchanged 0.1.6 (f30442e) with
+internal K-P/R-P sites loads with vocabulary 2/scoring 1 and produces exactly
+identical excision, missed-cleavage and detectability outputs. No weights or
+scoring semantics are migrated. Format/lint and strict docs pass; complete
+regression and deployment gates remain pending.
 
 # Trypsin/P search contract — Presto #82
 
