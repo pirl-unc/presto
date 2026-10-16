@@ -56,6 +56,23 @@ def test_host_never_supplies_an_unknown_mhc_label():
     assert batch.molecular_mhc_species == [None]
 
 
+def test_old_or_omitted_policy_cannot_pass_a_new_qualification():
+    from presto.training.supported_outputs import evaluate_supported_outputs
+    from test_output_coverage import manifest_for
+
+    for policy in (None, "processing_host_species_v0"):
+        with OutputCoverageCensus(build_output_contract()) as census:
+            manifest = manifest_for(census.contract)
+            if policy is None:
+                del manifest["source_contract"]["molecular_mhc_species_policy"]
+            else:
+                manifest["source_contract"]["molecular_mhc_species_policy"] = policy
+            with pytest.raises(ValueError, match="molecular MHC species policy"):
+                evaluate_supported_outputs(
+                    census, manifest, source_contract=manifest["source_contract"]
+                )
+
+
 class SpeciesAndElutionModel(torch.nn.Module):
     def forward(self, **inputs):
         n_samples = len(inputs["pep_tok"])

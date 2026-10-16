@@ -71,6 +71,11 @@ def evaluate_supported_outputs(
         raise ValueError("Manifest model_contract differs from the declared model configuration")
     if source_contract.get("affinity_target_policies") != affinity_target_policies(contract):
         raise ValueError("Source contract requires the current canonical affinity target policies")
+    if (
+        source_contract.get("molecular_mhc_species_policy")
+        != contract.to_dict()["molecular_mhc_species_policy"]
+    ):
+        raise ValueError("Source contract requires the current molecular MHC species policy")
     if _canonical_json(manifest["source_contract"]) != _canonical_json(source_contract):
         raise ValueError("Manifest source_contract differs from the curated data contract")
     if not isinstance(manifest["claims"], list) or not manifest["claims"]:
