@@ -1,3 +1,10 @@
+# Physical affinity metric reporting — #116
+
+- [x] Specify observed numerical defects, compatibility and immutable-run boundaries.
+- [x] Implement constant-vector handling and physical target threshold reporting.
+- [ ] Verify numerical/canonical regressions and publish the actual additive audit.
+- [ ] Format/lint/full checks, review, merge and distribute 0.1.18.
+
 # Prospective effective-target fit — #110/#53
 
 - [x] Specify the new declared target space, raw-space diagnostics, baselines and limits.
