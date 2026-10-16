@@ -1,6 +1,6 @@
 # Prospective effective-target IC50 fit
 
-Status: recipe preparation; no model has run. Agent/model: Codex / GPT-6.
+Status: frozen before launch; no model result exists. Agent/model: Codex / GPT-6.
 
 This is a new family after the stopped raw-target attempt. It explicitly accepts
 Presto's historical float32 `log10(clip(nM, 0.001, 50000))` objective and retains
@@ -40,3 +40,24 @@ Launch requires the released 0.1.16 wheel and a clean, frozen recipe. The canoni
 full-data support gate and target audit must pass before the first model is
 constructed. Outcomes, including failures, will be retained and published before
 this family is considered complete. No validation/test predictions exist yet.
+
+## Frozen declaration and producer
+
+The [prospective contract](https://github.com/pirl-unc/presto/releases/tag/effective-target-fit-contract-v1)
+publishes 11 independently verified assets, including the paired old/new
+manifests and membership-policy receipts. New manifest SHA-256:
+`a90c6d620554635079a5e8ec5927ec3050822d8fa7327279d54327924c7bd661`.
+Its full gate must still pass on the actual cohort before model construction.
+
+Actual package producer is released Presto 0.1.16 (`e35d759`), wheel SHA-256
+`0eecf96f12308580e5f59047c77364a2b5386cc5b1b133527dcb34e3ec8253a5`,
+with Hitlist 1.78.0 and the unchanged pinned consumer environment. The repository
+PR version 0.1.17 records this experiment and is not the fitted package producer.
+`reproduce/producer.json`, `frozen-inputs.json`, `launch.json` and `source/` freeze
+the exact inputs and executed source. The clean launch commit is recorded by the
+launcher; no mutable wheel, manifest or source fallback is permitted.
+
+Validation before launch: nine experiment checks pass against released 0.1.16,
+including effective/raw metrics and pre-model gate refusal. Full repository
+regression passed 2,281 tests (four skips); formatting, lint and strict docs pass.
+These checks are prerequisites, not predictive evidence.

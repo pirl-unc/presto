@@ -1,0 +1,57 @@
+{
+  "added_paths": [
+    "source_contract.affinity_target_policies"
+  ],
+  "changed_paths": [
+    "source_contract.frozen_membership.artifacts.policy.json"
+  ],
+  "dirty": false,
+  "membership_receipt_change": {
+    "expected_artifact": {
+      "sha256": "a47a3c2806856c5c5c717b796b00de3e556a9dfc45a3dbef1d6df51d7a940f0c",
+      "size_bytes": 569
+    },
+    "field": "presto_version",
+    "new": "0.1.16",
+    "old": "0.1.13",
+    "old_artifact": {
+      "sha256": "f64d2e7b69216aab4e640904a306fb17e65a43e6e55bce8272fc705b5ff1fc9d",
+      "size_bytes": 569
+    },
+    "partition_recipe_sha256": "1a2f586400993b9fd002557a382ece3954f183a3b38e7f79cc93810cb9fe0656",
+    "status": "prospective expected receipt; canonical full-input gate must reproduce it"
+  },
+  "new_manifest": {
+    "sha256": "a90c6d620554635079a5e8ec5927ec3050822d8fa7327279d54327924c7bd661",
+    "size": 6366,
+    "url": "https://github.com/pirl-unc/presto/releases/download/effective-target-fit-contract-v1/prospective-supported-outputs.json"
+  },
+  "old_manifest": {
+    "sha256": "13fe8bd4dab158bd06ae31fc7996fba98f73b3944fa68c3f57463beec34e7cb0",
+    "size": 3346,
+    "url": "https://github.com/pirl-unc/presto/releases/download/corrected-human-preflight-v1/prospective-supported-outputs.json"
+  },
+  "producer": {
+    "hitlist_version": "1.78.0",
+    "presto_version": "0.1.16",
+    "source_commit": "e35d759a378f3c4fe6199b07deb59b632447358c",
+    "wheel_name": "presto-0.1.16-py3-none-any.whl",
+    "wheel_sha256": "0eecf96f12308580e5f59047c77364a2b5386cc5b1b133527dcb34e3ec8253a5",
+    "wheel_size_bytes": 708498,
+    "wheel_url": "https://github.com/pirl-unc/presto/releases/download/v0.1.16/presto-0.1.16-py3-none-any.whl"
+  },
+  "reason": "New family explicitly trains and compares in the historical effective target space; raw measurement diagnostics remain separate.",
+  "scope": "A declaration is not a passed canonical full-input qualification or a fitted result.",
+  "script": {
+    "sha256": "83681c3ce7f3dcf7161b926c379e135512fbf06bcbeba18140a9cf185f08fe24",
+    "size": 8530
+  },
+  "source_commit": "e15ca3afb2bb00eefa9088c356b841ba8797bfbf",
+  "status": "new prospective family; original declaration immutable",
+  "unchanged": [
+    "model_contract",
+    "claims",
+    "dataset/supervision/evidence fingerprints",
+    "source/partition/parent graph fingerprints"
+  ]
+}

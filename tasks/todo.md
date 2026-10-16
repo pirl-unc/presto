@@ -1,8 +1,8 @@
 # Prospective effective-target fit — #110/#53
 
 - [x] Specify the new declared target space, raw-space diagnostics, baselines and limits.
-- [x] Prepare and test a new isolated recipe (release pins remain pending).
-- [ ] Publish and freeze the new prospective manifest without changing historical contracts.
+- [x] Prepare and test a new isolated recipe with verified released producer pins.
+- [x] Publish and freeze the new prospective manifest without changing historical contracts.
 - [ ] Run canonical full-input qualification and bounded fitting; preserve all outcomes.
 - [ ] Audit/publish complete artifacts and comparisons, then review/merge/release 0.1.17.
 
@@ -12,7 +12,7 @@
 - [x] Share one executable policy across affinity objectives and declare it in contracts.
 - [x] Count and export traceable changed targets during canonical preflight.
 - [x] Verify focused regressions and audit the frozen public IC50 observations without a model.
-- [ ] Publish evidence, format/lint/full checks, review, merge and distribute 0.1.16.
+- [x] Publish evidence, format/lint/full checks, review, merge and distribute 0.1.16.
 
 # Corrected human IC50 fitting attempt and target-policy audit
 

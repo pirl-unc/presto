@@ -1,0 +1,132 @@
+{
+  "agent": "codex",
+  "code_files": {
+    "baselines.py": "9bf7b66971343a3cdba14b0ab9a7d47d5759175ce55fadd406d8679dbdd9357a",
+    "common.py": "9d157ddaee9d194be47d024935d3dab3fb17467477ad0336125a9b7d0beec665",
+    "declare.py": "83681c3ce7f3dcf7161b926c379e135512fbf06bcbeba18140a9cf185f08fe24",
+    "diagnostic.py": "df17ac659f16d6cde892a21fa16936be34d8f881fed6c020fd8b0548b181c5dc",
+    "fetch_wheel.py": "3415758e43e7e9a3887dd07b64aa527316ce31c8a12a637d43e6f3f419c5fd67",
+    "fit.py": "3d06a0706237a233bff3fb74cbd56ede3f3cdf710543bb5ea2464eb9cbee7f42",
+    "launch.py": "0ea6d77572298e26a8e1e4cb0aff42b893b5f05430f73c26a2c9f95dd125aeff"
+  },
+  "configuration": {
+    "balanced_batches": false,
+    "batch_size": 64,
+    "binding_contrastive_weight": 0,
+    "binding_orthogonality_weight": 0,
+    "bulk_ms": false,
+    "cap_sampling": "reservoir",
+    "consistency_assay_affinity_weight": 0,
+    "consistency_assay_presentation_weight": 0,
+    "consistency_cascade_weight": 0,
+    "consistency_no_b2m_weight": 0,
+    "consistency_tcell_context_weight": 0,
+    "consistency_tcell_upstream_weight": 0,
+    "d_model": 32,
+    "data_preflight_only": false,
+    "data_seed": 42,
+    "data_source": "hitlist",
+    "device": "cpu",
+    "epochs": 2,
+    "filter_unresolved_mhc": true,
+    "frozen_partition_policy": "peptide_disjoint",
+    "hitlist_bundle_sha256": "b180eba804532f633a6d61bb350584dbe24f8df4b4b96f02c6ec492c60144372",
+    "hitlist_component_allocation": "relative_deficit_v2",
+    "hitlist_flanks": false,
+    "latent_topology": "expanded",
+    "lr": 0.001,
+    "max_batches": 100,
+    "max_binding": 5000,
+    "max_elution": 5000,
+    "max_kinetics": 1000,
+    "max_mil_instances": 0,
+    "max_stability": 1000,
+    "max_val_batches": 0,
+    "mhc_attention_sparsity_weight": 0,
+    "mhc_augmentation_samples": 0,
+    "mil_bag_sparsity_weight": 0,
+    "mil_contrastive_weight": 0,
+    "n_heads": 4,
+    "n_layers": 1,
+    "num_workers": 0,
+    "pin_memory": false,
+    "profile": "full",
+    "require_traceable_lineage": true,
+    "seed": 42,
+    "source_mapping_policy": "mask_unresolved",
+    "split_mode": "peptide_group",
+    "strict_mhc_resolution": true,
+    "synthetic_cascade_elution_negative_ratio": 0,
+    "synthetic_cascade_tcell_negative_ratio": 0,
+    "synthetic_class_i_no_mhc_beta_negative_ratio": 0,
+    "synthetic_elution_negative_ratio": 0,
+    "synthetic_pmhc_negative_ratio": 0,
+    "synthetic_processing_negative_ratio": 0,
+    "test_frac": 0.1,
+    "track_output_latent_stats": false,
+    "track_output_updates": true,
+    "track_pmhc_flow": false,
+    "track_probe_affinity": false,
+    "track_probe_motif_scan": false,
+    "uniprot_negative_ratio": 0,
+    "use_amp": false,
+    "use_compile": false,
+    "use_pcgrad": false,
+    "use_uncertainty_weighting": true,
+    "val_frac": 0.1,
+    "weight_decay": 0.01
+  },
+  "contract_release": "https://github.com/pirl-unc/presto/releases/tag/effective-target-fit-contract-v1",
+  "inputs": {
+    "archived-supported-outputs.json": {
+      "sha256": "13fe8bd4dab158bd06ae31fc7996fba98f73b3944fa68c3f57463beec34e7cb0",
+      "size": 3346,
+      "url": "https://github.com/pirl-unc/presto/releases/download/corrected-human-preflight-v1/prospective-supported-outputs.json"
+    },
+    "membership.tsv": {
+      "sha256": "8959e60c0d9b8049aec25095b9c354d456b48f97ba8fb31d7b786e2861113e99",
+      "size": 5855249,
+      "url": "https://github.com/pirl-unc/presto/releases/download/corrected-human-preflight-v1/membership.tsv"
+    },
+    "prospective-supported-outputs.json": {
+      "sha256": "a90c6d620554635079a5e8ec5927ec3050822d8fa7327279d54327924c7bd661",
+      "size": 6366,
+      "url": "https://github.com/pirl-unc/presto/releases/download/effective-target-fit-contract-v1/prospective-supported-outputs.json"
+    },
+    "selected-source-contexts.tsv": {
+      "sha256": "02f006a4f68367b73efa4ce0c40a5d8ce5162bdf5fb1b15c9a3e0a649cb4f23e",
+      "size": 6120614,
+      "url": "https://github.com/pirl-unc/presto/releases/download/corrected-human-preflight-v1/selected-source-contexts.tsv"
+    }
+  },
+  "limitations": [
+    "Peptide-disjoint exploratory cohort; shared studies and unknown donor/specimen/acquisition identities.",
+    "Only direct IC50 is declared; other active outputs remain undeclared.",
+    "Effective target clipping changes exact values and censor bounds; raw-space diagnostics remain separate."
+  ],
+  "model": "GPT-6",
+  "producer": {
+    "hitlist_version": "1.78.0",
+    "presto_version": "0.1.16",
+    "source_commit": "e35d759a378f3c4fe6199b07deb59b632447358c",
+    "wheel_name": "presto-0.1.16-py3-none-any.whl",
+    "wheel_sha256": "0eecf96f12308580e5f59047c77364a2b5386cc5b1b133527dcb34e3ec8253a5",
+    "wheel_size_bytes": 708498,
+    "wheel_url": "https://github.com/pirl-unc/presto/releases/download/v0.1.16/presto-0.1.16-py3-none-any.whl"
+  },
+  "resources": {
+    "cpu": 8,
+    "function_timeout_seconds": 5700,
+    "gpu": null,
+    "memory_mib": 65536,
+    "n_workers": 0,
+    "scratch_mib": 524288,
+    "torch_threads": 1,
+    "work_alarm_seconds": 5400
+  },
+  "status": "frozen before launch; full canonical qualification and fitting remain pending",
+  "target_spaces": {
+    "effective": "float32 log10(clip(nM, 0.001, 50000)); original qualifier retained",
+    "raw": "original log10(nM) measurement/bound; original operator preserved"
+  }
+}
