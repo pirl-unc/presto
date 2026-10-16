@@ -118,6 +118,26 @@ including `affinity_assay_residual_mode`, `kd_grouping_mode`,
 and `binding_kinetic_input_mode`. The manifest must match the selected variant.
 The output contract fixes `max_affinity_nM` to the shared loss convention, 50000.
 
+Affinity objectives and their descriptor panels use
+`log10(clip(value_nM, 0.001, 50000))` on collated float32 values. The original
+inequality direction is retained. Clipping changes exact values and censor
+bounds; it is not evidence that the original measurement had that value.
+Each applicable objective declares this executable policy, and the prospective
+`source_contract.affinity_target_policies` binds it even when no current value
+clips. Older manifests require their archived producer for reproduction; the
+current gate rejects omitted or different policies without migrating them.
+
+Preflight writes `affinity_target_audit.json` and `affinity_target_changes.tsv`
+before the manifest gate, including failures. Counts distinguish exact, left-
+and right-censored labels, clipped objective exposures and distinct clipped
+source observations. Aliases and panel axes are separate objective exposures.
+The changed-row table retains source identity, citations, original value/unit/
+operator and MHC allele sets beside the collated and effective targets. Original
+source text preserves precision; the audit's float32 value is not that text.
+The [public frozen IC50 audit](https://github.com/pirl-unc/presto/releases/tag/corrected-human-target-policy-audit-v1)
+illustrates why declaring only `log10(nM)` is insufficient. Passing this policy
+gate establishes neither scientific suitability nor predictive performance.
+
 ## Batches and model inputs
 
 The collator builds sparse targets, masks and qualifiers. Canonical row training

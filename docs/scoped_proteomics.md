@@ -44,8 +44,16 @@ These metadata are available to human inspection and prediction exports; they
 are not model inputs. Parent support through leading-razor assignments does not
 independently establish every possible peptide parent.
 
-The canonical trainer integration, frozen within-search partitions and bounded
-real-data preflight remain [Presto #70](https://github.com/pirl-unc/presto/issues/70).
-This Python adapter assigns no partitions. A single cultured-cell experiment
+The canonical trainer accepts `--data-source scoped_bulk` and
+`--max-scoped-bulk`, with optional pinned `--scoped-bundle` and
+`--scoped-bundle-sha256`. It freezes within-search membership and source lineage;
+existing assignments can be supplied with `--frozen-assignment-file` and
+`--frozen-assignment-sha256`. Run `--data-preflight-only` to retain coverage and
+leakage reports before fitting. Disable live auxiliary inputs with
+`--mhc-augmentation-samples 0 --uniprot-negative-ratio 0` and leave `--bulk-ms`
+unset. The Python adapter alone assigns no partitions.
+The [published bounded qualification](https://github.com/pirl-unc/presto/releases/tag/scoped-sampling-qualification-v1)
+contains frozen inputs, assignments, predictions and baseline comparisons.
+A single cultured-cell experiment
 cannot establish experiment-, donor- or specimen-independent held-out performance.
 Neither software tests nor projection counts establish training readiness.

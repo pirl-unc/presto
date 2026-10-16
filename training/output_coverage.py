@@ -17,6 +17,7 @@ from pathlib import Path
 from .mil import MIL_TASKS, get_mil_channel, resolve_mil_targets, mil_observation_slots
 from .output_contract import OutputContract, label_evidence
 from .supervision import resolve_row_targets
+from .target_policy import AffinityTargetAudit
 
 
 COUNT_FIELDS = (
@@ -89,6 +90,7 @@ class OutputCoverageCensus:
             );
             CREATE INDEX observations_endpoint ON observations(endpoint, column_name, row_id);
         """)
+        self.affinity_target_audit = AffinityTargetAudit(self.db, contract)
         self.splits: dict[str, int] = {}
         self.objective_hits = defaultdict(
             lambda: defaultdict(lambda: {"observations": 0, "mask_weight": 0.0})
@@ -207,6 +209,17 @@ class OutputCoverageCensus:
                 qualifier,
             ]
             key = json.dumps(identity, separators=(",", ":"))
+            self.affinity_target_audit.add(
+                split=split,
+                row_id=row_ids[sample_index],
+                objective_id=objective_id,
+                column=column,
+                observation_key=key,
+                sample=samples[sample_index],
+                raw_target=raw_value,
+                effective_target=value,
+                qualifier=qualifier,
+            )
             record = (
                 row_ids[sample_index],
                 objective.endpoint,

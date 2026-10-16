@@ -1,3 +1,11 @@
+# Explicit affinity target policy — #110
+
+- [x] Specify compatibility, prospective policy binding and complete clipped-row audit.
+- [x] Share one executable policy across affinity objectives and declare it in contracts.
+- [x] Count and export traceable changed targets during canonical preflight.
+- [ ] Verify regressions and audit the frozen public IC50 observations without a model.
+- [ ] Publish evidence, format/lint/full checks, review, merge and distribute 0.1.16.
+
 # Corrected human IC50 fitting attempt and target-policy audit
 
 - [x] Specify fixed producers, exact candidate manifest, optimization and baseline criteria.

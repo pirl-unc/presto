@@ -374,12 +374,22 @@ remain visible in the objective ledger without multiplying unique evidence.
 Class-split elution bags retain their separate effective observations while
 sharing their original source identity.
 
+Affinity bindings also declare the executable clipping policy: collated nM
+values are clipped to 0.001–50,000 before log10, with their original censor
+direction retained. Preflight exports `affinity_target_audit.json` and the full
+source-linked `affinity_target_changes.tsv`, including clipped exact measurements
+and censor bounds. Prospective source contracts must bind this policy explicitly.
+Original source values and operators remain separate from effective targets.
+
 Target provenance travels as host metadata. Typed assay records, generated
 controls, organism-derived foreignness and bulk-MS proxies remain distinct.
 Bulk observed products do not establish isolated cleavage measurements;
-fractionation-depth labels are ordinal detectability proxies. Wrong-enzyme
-controls carry an explicit generation kind. Passing protein sequences to the
-current bulk loader does not produce unobserved detectability candidates.
+fractionation depth does not supply detectability supervision. The legacy bulk
+loader leaves detectability labels missing. The verified scoped-search adapter
+provides binary within-search observation proxies, distinguishing MS/MS, matching
+and unobserved candidates. Wrong-enzyme controls in the legacy path carry an
+explicit generation kind. Passing protein sequences to that loader does not
+produce unobserved detectability candidates.
 
 A prospective `--supported-output-manifest` declares a subset of canonical
 columns, required splits, admissible evidence and explicit count requirements.
