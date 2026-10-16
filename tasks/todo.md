@@ -17,6 +17,13 @@ joins independently verify. The initial failed packaging recipe/log are preserve
 and corrected as #125; no historical artifact is replaced. Full final-head CI,
 merge and exact clean-main distribution remain gates. #115/#123 remain open.
 
+The first full local run found one stale schema-3 assertion and was interrupted
+after 58 passing tests; it is not counted as a pass. The isolated affinity-policy
+run reproduced that assertion (one failed, four passed). Update its explicit
+expectation to schema 4, preserve every value/censoring check, and rerun the full
+suite on the new clean commit before merging. The executed data-audit code and
+all public evidence remain unchanged.
+
 # Protected release CI and superseded feature runs — #120
 
 Pinned actionlint 1.7.7, repository formatting/lint and strict docs pass. The

@@ -46,7 +46,7 @@ def test_policy_preserves_historical_values_and_all_affinity_aliases():
         assert policy["operation"] == "clip_then_log10"
         assert policy["minimum_nM"] == 0.001 and policy["maximum_nM"] == 50000.0
         assert policy["qualifier_policy"] == "preserve_original_direction"
-    assert contract.to_dict()["schema_version"] == 3
+    assert contract.to_dict()["schema_version"] == 4
     with pytest.raises(ValueError, match="positive and ordered"):
         AffinityTargetPolicy(minimum_nM=0)
 
