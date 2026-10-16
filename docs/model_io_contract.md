@@ -42,8 +42,8 @@ These are roles, not a claim that every field is already accepted by the API.
 | Presenting MHC molecule | Class-correct groove pair, resolved from sequence/alleles | Binding, presentation, presented-pMHC recognition | Binding/presentation implemented; recognition context incomplete |
 | APC MHC set | Co-expressed molecules with class-II partner identities | Per-molecule predictions and bag aggregation | MIL exists; shared serving preparation incomplete |
 | Repertoire-system MHC set | MHC shaping the queried organism's selected repertoire | Repertoire recognition and response | Not implemented |
-| APC species | Species of the presenting cell | APC biology | Legacy host field only; independent schema pending |
-| Molecular MHC species | Origin of each MHC molecule | Molecular inference/routing | Inference and explicit override; source-target separation incomplete |
+| APC species | Species of the presenting cell | APC biology | Native row/MIL consumer uses reviewed presenter; missing context stays unknown; direct API retains legacy names |
+| Molecular MHC species | Origin of each MHC molecule | Molecular inference/routing | Inference/explicit override and independent allele-derived auxiliary; native source roles preserved |
 | Individual TCR species | Origin of a specified receptor | Optional receptor context | Not implemented in canonical model |
 | Repertoire-system species | Species of the system whose repertoire is queried | Repertoire recognition/response | Not independently implemented |
 | Antigen species | Source organism of antigen | Origin and repertoire-relative context | Source-origin override exists; full relative context pending |
@@ -117,6 +117,17 @@ Raw tensor interface (batch size B):
 | `provenance` | Current coarse process/cell-state tensor dictionary, detailed below |
 | `binding_context`, `tcell_context` | Existing accepted but ignored forward arguments; metadata is used by losses instead |
 | `return_binding_attention` | Diagnostic output request, not a biological input |
+
+The native Hitlist consumer routes only explicit `presenting_species` into row and
+MIL processing context. Missing or ambiguous presenter roles use the unknown model
+context; recorded host, in-vivo/lineage host, molecular MHC and antigen source remain
+separate provenance. Generated examples retain only unanimous parent processing
+context. Legacy records without the role dictionary retain their explicit species
+behavior, identified as a compatibility basis rather than reviewed native evidence.
+Molecular auxiliary labels follow explicit allele consensus independently. These
+policies are prospective and do not relabel historical fits. Antigen-source and
+repertoire-relative interpretation, legacy host-based sampling and independent
+APC/repertoire names in the direct serving API remain limitations.
 
 The existing aliases are listed to describe reality, not to endorse another
 compatibility layer. Replacing them with the role-specific schema is pending.

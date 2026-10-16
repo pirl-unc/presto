@@ -3,7 +3,7 @@
 from functools import lru_cache
 
 from .allele_resolver import infer_species_identity, normalize_species_label
-from .vocab import is_missing_scalar
+from .vocab import is_missing_scalar, normalize_single_species
 
 # Prefix original source claims; reviewed role fields retain Hitlist's names.
 NATIVE_SPECIES_COLUMNS = {
@@ -30,13 +30,24 @@ NATIVE_SPECIES_COLUMNS = {
         )
     },
 }
-SPECIES_ROLE_FIELDS = (*NATIVE_SPECIES_COLUMNS, "species_context_origin")
+SPECIES_ROLE_FIELDS = (
+    *NATIVE_SPECIES_COLUMNS,
+    "species_context_origin",
+    "parent_processing_species",
+)
 MOLECULAR_SPECIES_FIELDS = (
     "molecular_mhc_species",
     "molecular_mhc_species_bucket",
     "molecular_mhc_species_status",
 )
-SPECIES_LINEAGE_FIELDS = SPECIES_ROLE_FIELDS + MOLECULAR_SPECIES_FIELDS
+PROCESSING_SPECIES_FIELDS = (
+    "processing_species",
+    "processing_species_bucket",
+    "processing_species_basis",
+    "processing_species_status",
+)
+SPECIES_LINEAGE_FIELDS = SPECIES_ROLE_FIELDS + MOLECULAR_SPECIES_FIELDS + PROCESSING_SPECIES_FIELDS
+PROCESSING_SPECIES_POLICY = "native_presenter_and_generated_parent_context_v1"
 MOLECULAR_SPECIES_POLICY = "explicit_allele_identity_consensus_v1"
 
 
@@ -91,8 +102,32 @@ def reported_species_fields(source):
     return {name: _text(context.get(name)) for name in SPECIES_ROLE_FIELDS}
 
 
+def processing_species_context(source):
+    """Resolve APC processing context independently of host or molecular MHC."""
+    context = getattr(source, "species_context", {}) or {}
+    if not context:
+        value = _text(getattr(source, "species", None))
+        bucket = normalize_species_label(value) or ""
+        basis = "legacy_explicit_species"
+    elif context.get("species_context_origin") == "generated_parent_consensus":
+        value = _text(context.get("parent_processing_species"))
+        bucket = normalize_species_label(normalize_single_species(value)) or ""
+        basis = "generated_parent_consensus"
+    else:
+        value = _text(context.get("presenting_species"))
+        bucket = normalize_species_label(normalize_single_species(value)) or ""
+        basis = "native_presenting_species"
+    return {
+        "processing_species": value if bucket else "",
+        "processing_species_bucket": bucket,
+        "processing_species_basis": basis,
+        "processing_species_status": "resolved" if bucket else "unresolved" if value else "unknown",
+    }
+
+
 def species_lineage_fields(sample):
     return {
         **reported_species_fields(sample),
         **sample_mhc_species(sample),
+        **processing_species_context(sample),
     }

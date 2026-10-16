@@ -130,7 +130,7 @@ def _processing_species_idx_tensor(
     batch_size: int,
     device: torch.device,
 ) -> torch.Tensor:
-    """Convert host species to downstream ids; unknown has its own row."""
+    """Convert explicit processing context to ids; unknown has its own row."""
     species_map = {name: idx for idx, name in enumerate(PROCESSING_SPECIES_BUCKETS)}
     unknown_idx = len(PROCESSING_SPECIES_BUCKETS)
 

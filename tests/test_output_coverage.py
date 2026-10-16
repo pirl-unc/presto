@@ -233,6 +233,7 @@ def manifest_for(contract, *, columns=None):
             "data_seed": 7,
             "affinity_target_policies": affinity_target_policies(contract),
             "molecular_mhc_species_policy": contract.to_dict()["molecular_mhc_species_policy"],
+            "processing_species_policy": contract.to_dict()["processing_species_policy"],
         },
         "claims": [
             {

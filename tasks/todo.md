@@ -1,3 +1,11 @@
+# Native presenting-cell processing context — #115
+
+- [x] Review role evidence, current row/MIL routing and specify the bounded change.
+- [ ] Implement one role-aware processing resolver and generated-parent provenance.
+- [ ] Bind prospective policy/fingerprints and verify row/MIL/export regressions.
+- [ ] Register/freeze/run/publish/independently verify actual source-context audit.
+- [ ] Format/lint/full CI, review, merge and distribute 0.1.21 after 0.1.20.
+
 # Protected release CI and superseded feature runs — #120
 
 Pinned actionlint 1.7.7, repository formatting/lint and strict docs pass. The

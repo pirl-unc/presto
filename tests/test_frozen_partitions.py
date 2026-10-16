@@ -81,6 +81,21 @@ def test_frozen_species_roles_bind_membership_and_reject_sample_drift(frozen_bun
 
 
 @pytest.mark.parametrize("frozen_bundle", ["three_peptides"], indirect=True)
+def test_legacy_processing_context_binds_final_record_and_sample(frozen_bundle):
+    partitions, groups = prepare(frozen_bundle)
+    record = groups["binding_records"][0]
+    record.species_context = {}
+    record.species = "human"
+    model = model_dataset(groups)
+    _, original = finalize_frozen_membership(partitions, model, groups)
+    record.species = "rat"
+    with pytest.raises(ValueError, match="no longer matches"):
+        finalize_frozen_membership(partitions, model, groups)
+    _, revised = finalize_frozen_membership(partitions, model_dataset(groups), groups)
+    assert original["membership_sha256"] != revised["membership_sha256"]
+
+
+@pytest.mark.parametrize("frozen_bundle", ["three_peptides"], indirect=True)
 def test_reproducible_assignments_and_actual_membership(frozen_bundle):
     partitions, groups = prepare(frozen_bundle)
     assert partitions.receipt["coverage"]["n_selected_observations"] == 9
