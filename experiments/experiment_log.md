@@ -1318,7 +1318,7 @@ fitting/held-out performance remain separate work.
 - Experiment: [published-scope admission](2026-10-15_2100_codex_scoped-proteomics-admission/).
 - Exact input: Hitlist PXD013455 HeLa Trypsin/P public manifest
   `441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b`;
-  code `e4fe7e19ab3208fdc74e54b9dc2b16fcae35ac24`. Full occurrence collapse,
+  code `27cde9717ae7e59997581e4ae633e0cd644a7faa`. Full occurrence collapse,
   reservoir seed 42, cap 10,000. Original/reanalysis citations, cell/assay/search
   conditions and unresolved donor/specimen identities remain pinned.
 - Training/pretraining/synthetic/loss contract: none. This is a registered data

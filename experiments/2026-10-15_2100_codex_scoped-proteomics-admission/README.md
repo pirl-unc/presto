@@ -25,7 +25,7 @@ small summaries and hashes/locations, not duplicate data tables.
 ## Results
 
 Admission passed against the public pinned archive, using code commit
-`e4fe7e19ab3208fdc74e54b9dc2b16fcae35ac24`. All 10,000 selected peptides retain
+`27cde9717ae7e59997581e4ae633e0cd644a7faa`. All 10,000 selected peptides retain
 candidate lookup and frozen scope identity. The canonical lineage audit reports
 zero issues and zero duplicate sample IDs. The 1,114 positives additionally retain
 original observation IDs; the 8,886 absent candidates do not invent measured IDs.
@@ -46,8 +46,8 @@ candidate occurrences and therefore mask parent/flank inputs. No invalid peptide
 sequences were excluded. The 8,039 source observations outside the candidate
 window remain in the source bundle, not as extra labels.
 
-Admission plus canonical support audit took 74.38 seconds; measured process peak
-RSS was 595,787,776 bytes (568.2 MiB), before audit-artifact publication. Hardware:
+Using the reusable full projection, admission plus canonical support audit took 6.25 seconds; measured process peak
+RSS was 511,868,928 bytes (488.2 MiB), before audit-artifact publication. Hardware:
 macOS arm64 CPU, one Torch thread, no GPU. Versions: Presto 0.1.4, Hitlist 1.75.0,
 datacache 1.27.1, pyarrow 25.0.1 and Torch 2.14.1. The existing environment was
 not modified; PYTHONPATH selected the isolated feature checkout and previously
@@ -66,6 +66,16 @@ dumps were produced. Validation/test metrics are intentionally not applicable.
 One HeLa search cannot qualify experiment/donor/specimen-independent performance,
 MBR is not direct MS/MS, and leading-razor support is not unique parent proof.
 No model baseline is promoted.
+
+The initial admission run at `e4fe7e1` took 74.38 seconds including projection
+construction. Full-suite review then found and fixed the unrelated assay-constructor
+regression (#84). A repeat exposed a fixed cache namespace (#85); no previous
+bundle was damaged. The corrected run above passed with identical membership and
+counts. These are admission timings, not training throughput measurements.
+
+[Portable publication receipt](results/publication.json) pins the full projection
+plus the 10,000-record audit. An independent streaming check verified all 17 archive
+members, sizes and hashes; portable JSON/README files contain no local machine paths.
 
 Status: admission audit closed; public artifact publication follows PR #83 release.
 Next Step: canonical trainer integration, frozen within-search membership, explicit
