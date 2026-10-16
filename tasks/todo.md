@@ -3,18 +3,31 @@
 - [x] Review role evidence, current row/MIL routing and specify the bounded change.
 - [x] Implement one role-aware processing resolver and generated-parent provenance.
 - [x] Bind prospective policy/fingerprints and verify row/MIL/export regressions.
-- [ ] Register/freeze/run/publish/independently verify actual source-context audit.
+- [x] Register/freeze/run/publish/independently verify actual source-context audit.
 - [ ] Format/lint/full CI, review, merge and distribute 0.1.21 after 0.1.20.
+
+## Native-presenter review
+
+All 225 focused regressions, formatting, lint and strict docs pass. The successful
+clean audit at 060fbfed9d2f99f2937e637624a9e88d1df786c3 preserves all 9,053
+source rows/partitions and 2,614 IC50 raw/effective values/operators. Native context
+is 109 human / 15 rat / 8,929 unknown; 8,936 processing buckets change. All IC50
+presenters remain unknown. All 18 public assets and all original/native source
+joins independently verify. The initial failed packaging recipe/log are preserved
+and corrected as #125; no historical artifact is replaced. Full final-head CI,
+merge and exact clean-main distribution remain gates. #115/#123 remain open.
 
 # Protected release CI and superseded feature runs — #120
 
 Pinned actionlint 1.7.7, repository formatting/lint and strict docs pass. The
 reviewed event matrix preserves unique groups for both pending and active main/tag
-runs; PR/feature cancellations are confined to their workflow and event.
+runs; PR/feature cancellations are confined to their workflow and event. Merged
+#122 as d9df79c and distributed 0.1.20. Clean-main CI passed 2,310 tests (three
+qualification skips); all four public assets and 168 public-wheel regressions verify.
 
 - [x] Specify event/ref groups, pending-run protection and release gates.
 - [x] Implement and validate concurrency and document the event matrix.
-- [ ] Format/lint/full CI, review, merge and distribute 0.1.20 after 0.1.19.
+- [x] Format/lint/full CI, review, merge and distribute 0.1.20 after 0.1.19.
 
 # Molecular MHC species and source-role provenance — #115
 

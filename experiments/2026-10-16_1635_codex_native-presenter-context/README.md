@@ -112,3 +112,12 @@ generation or public release. `code/audit.py` remains byte-for-byte intact;
 snapshot calls in isolation reproduces the initial exception and verifies the
 corrected files byte-for-byte. The initial recipe, log and receipt are included in
 the public evidence. Only the successful v2 run is reported as completed.
+
+## Public verification receipt
+
+All 18 published assets were independently downloaded and hash-verified through
+datacache. The verifier rechecked all 9,053 original membership/role/native joins,
+8,936 processing-context changes and all 2,614 unchanged IC50 values, operators,
+partitions and effective targets. `results/publication.json` pins every public
+asset; `results/public-verification.json` records the independent receipt. The
+published README is the pre-publication snapshot pinned by that manifest.
