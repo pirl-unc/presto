@@ -13,6 +13,7 @@ import torch
 from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
 from .source_lineage import ALL_SOURCE_LINEAGE_FIELDS
+from .assay_context import ASSAY_CONTEXT_FIELDS, assay_context_fields
 from .species_context import SPECIES_LINEAGE_FIELDS, species_lineage_fields
 from .sequence_augmentation import AugmentationConfig, augment_sample_sequences
 from .vocab import (
@@ -348,6 +349,9 @@ class PrestoSample:
     source_reference_sha256: str = ""
     source_parent_assignment_basis: str = ""
     species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -2064,6 +2068,10 @@ class PrestoCollator:
                 "source_mhc_alleles": [";".join(s.source_mhc_alleles) for s in samples],
                 "resolved_mhc_alleles": [";".join(s.resolved_mhc_alleles) for s in samples],
                 **{name: [getattr(s, name) for s in samples] for name in ALL_SOURCE_LINEAGE_FIELDS},
+                **{
+                    name: [assay_context_fields(s)[name] for s in samples]
+                    for name in ASSAY_CONTEXT_FIELDS
+                },
                 **{name: [row[name] for row in species_details] for name in SPECIES_LINEAGE_FIELDS},
                 "source_sample_label": [s.source_sample_label for s in samples],
                 "source_sample_attribution": [s.source_sample_attribution for s in samples],

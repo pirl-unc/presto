@@ -465,3 +465,20 @@ round-trip with their saved architecture configuration. Old checkpoints containi
 `species_cond_embed`/`chain_completeness_embed` are incompatible and should be
 used with their original code or retrained; no silent key dropping, parameter
 migration or checkpoint fallback is introduced.
+
+### Assay-context applicability in provenance
+
+Source lineage preserves `source_assay_method`, `source_evidence_kind` and, for
+generated controls, `parent_assay_contexts`. Explicit purified-MHC measurements
+report cellular processing as `not_applicable`; explicit cellular-MHC or native
+elution evidence reports `applicable`. Unknown or contradictory preparation stays
+`unknown`. `processing_context_availability` separately records whether applicable
+presenter context resolves. Missing presenter evidence does not invalidate a
+purified-MHC binding label. Generated controls inherit only unanimous parent
+applicability and never acquire a measured assay identity or source method.
+
+These are non-predictive inspection/coverage/prediction-export fields. They change
+neither model tensors nor raw/effective targets. Output contract schema 5 binds
+`explicit_preparation_and_elution_applicability_v1`; a prospective support manifest
+must include that policy. Frozen final membership v4 binds these provenance fields
+and rejects drift. Historical schemas and fitting artifacts remain immutable.

@@ -194,7 +194,7 @@ def test_unknown_native_axes_and_conflicting_parent_contexts_stay_empty():
 
 def test_role_change_alters_coverage_fingerprint_and_policy_is_declared():
     contract = build_output_contract()
-    assert contract.to_dict()["schema_version"] == 4
+    assert contract.to_dict()["schema_version"] == 5
     assert contract.to_dict()["molecular_mhc_species_policy"] == MOLECULAR_SPECIES_POLICY
     sample = PrestoSample(
         peptide="ACDEFGHIK",

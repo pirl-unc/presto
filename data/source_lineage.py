@@ -17,6 +17,9 @@ SOURCE_LINEAGE_FIELDS = (
     "provenance_id",
     "provenance_status",
     "source_endpoint",
+    "source_assay_method",
+    "source_evidence_kind",
+    "parent_assay_contexts",
     "source_units",
     "source_inequality",
     "source_value",
@@ -113,6 +116,16 @@ def generated_record(record: Any, *, parents, kind: str, seed: int, draw_index: 
             resolved = False
     if bundle and not resolved:
         raise ValueError("Frozen generated records require every measured parent identity")
+    from .assay_context import source_assay_contexts
+
+    parent_contexts = {
+        json.dumps(context, sort_keys=True)
+        for parent in parents
+        for context in source_assay_contexts(parent)
+    }
+    record.parent_assay_contexts = json.dumps([json.loads(c) for c in sorted(parent_contexts)])
+    record.source_assay_method = ""
+    record.source_evidence_kind = ""
     if hasattr(record, "species_context"):
         from .species_context import (
             SPECIES_ROLE_FIELDS,

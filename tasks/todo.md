@@ -11530,3 +11530,13 @@ discovery tests and review documentation.
 - Formatting/lint and strict docs pass. Full ./test.sh: 2,281 passed, four skipped, 812 warnings in 508.81 seconds. The library source is unchanged from reviewed #112 except the 0.1.17 version.
 - Review found producer-version provenance in the frozen membership receipt; the new declaration now names the expected metadata change and requires the unchanged partition recipe hash plus all semantic membership/label fingerprints. Historical contracts remain immutable.
 - Released 0.1.16 producer pins, new public declaration, canonical qualification/fit and complete public evidence remain required.
+
+# Assay-context applicability — 2026-10-16
+
+Spec: [assay-context-applicability-spec.md](assay-context-applicability-spec.md).
+
+- [x] Review #126 and define source-preparation versus missing-context semantics.
+- [ ] Preserve raw methods and implement conservative applicability reporting.
+- [ ] Verify loading, generated parents, frozen membership, predictions and coverage.
+- [ ] Publish an independently verified additive audit of all historical source rows.
+- [ ] Format/lint/full tests/docs, review, merge and verified public release.

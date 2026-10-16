@@ -11,6 +11,7 @@ from typing import Any, Mapping
 import torch
 
 from ..data.collate import PrestoCollator
+from ..data.assay_context import ASSAY_CONTEXT_POLICY
 from ..data.species_context import MOLECULAR_SPECIES_POLICY, PROCESSING_SPECIES_POLICY
 from ..data.vocab import (
     BINDING_ASSAY_METHODS,
@@ -24,7 +25,7 @@ from .supervision import PANEL_TASK_BASE_WEIGHTS, ROW_TASK_SPECS
 from .target_policy import AffinityTargetPolicy
 
 
-CONTRACT_VERSION = 4
+CONTRACT_VERSION = 5
 RESIDUAL_MODES = (
     "legacy",
     "pooled_single_output",
@@ -231,6 +232,7 @@ class OutputContract:
             "schema_version": CONTRACT_VERSION,
             "molecular_mhc_species_policy": MOLECULAR_SPECIES_POLICY,
             "processing_species_policy": PROCESSING_SPECIES_POLICY,
+            "assay_context_policy": ASSAY_CONTEXT_POLICY,
             **asdict(self),
         }
 

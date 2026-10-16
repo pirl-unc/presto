@@ -115,6 +115,8 @@ from .loaders import (
 #: reason this loader exists at all (see the module docstring).
 SHARED_COLUMNS: Tuple[str, ...] = (
     "peptide",
+    "evidence_kind",
+    "assay_method",
     "mhc_restriction",
     "mhc_allele_set",
     "mhc_class",
@@ -158,7 +160,6 @@ BINDING_COLUMNS: Tuple[str, ...] = SHARED_COLUMNS + (
     "quantitative_value",
     "measurement_units",
     "measurement_inequality",
-    "assay_method",
 )
 
 #: `SHARED_COLUMNS` plus the biological sample an eluted peptide came out of.
@@ -416,6 +417,8 @@ def _lineage_fields(row) -> Dict[str, Any]:
         "provenance_id": _clean(row.get("provenance_id")),
         "provenance_status": _clean(row.get("provenance_status")),
         "source_endpoint": _clean(row.get("response_measured")),
+        "source_assay_method": _clean(row.get("assay_method")),
+        "source_evidence_kind": _clean(row.get("evidence_kind")),
         "source_units": _clean(row.get("measurement_units")),
         "source_inequality": _clean(row.get("measurement_inequality")),
         "source_value": _clean(row.get("quantitative_value")),
