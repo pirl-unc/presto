@@ -1,0 +1,1486 @@
+{
+  "split": "val",
+  "tasks": {
+    "ms_detectability": {
+      "accuracy": 0.707,
+      "balanced_accuracy": 0.7312317105613195,
+      "precision": 0.22988505747126436,
+      "recall": 0.7619047619047619,
+      "f1": 0.35320088300220753,
+      "n_positive": 105.0,
+      "n": 1000.0,
+      "auroc": 0.8062782654961426,
+      "auprc": 0.33323774334735456
+    }
+  },
+  "best_val_loss": 0.5499260555952787,
+  "mil_evaluation": {
+    "instance_cap": 0,
+    "chunk_size": 128,
+    "use_amp": false
+  },
+  "overall_loss": 0.5499260555952787,
+  "loss_terms": {
+    "loss_consistency_binding_orthogonality": 1.597821119503351e-05,
+    "loss_ms_detectability": 0.5499100759625435,
+    "batch_max_mhc_class_fraction": 1.0,
+    "batch_max_species_fraction": 1.0,
+    "batch_supervised_weight_ms_detectability": 1.0,
+    "batch_support_ms_detectability": 62.5,
+    "batch_unique_mhc_classes": 1.0,
+    "batch_unique_species": 1.0,
+    "out_apc_cell_type_context_vec_mean": 0.007584387465612963,
+    "out_apc_cell_type_context_vec_var": 0.017258524894714355,
+    "out_assays_EC50_nM_mean": 1.6312592327594757,
+    "out_assays_EC50_nM_var": 7.379339876933955e-05,
+    "out_assays_IC50_nM_mean": 1.5160556361079216,
+    "out_assays_IC50_nM_var": 0.00035579977702582255,
+    "out_assays_KD_nM_mean": 1.8176649436354637,
+    "out_assays_KD_nM_var": 3.5617534095422343e-06,
+    "out_assays_KD_proxy_ec50_nM_mean": 1.8176649436354637,
+    "out_assays_KD_proxy_ec50_nM_var": 3.5617534095422343e-06,
+    "out_assays_KD_proxy_ic50_nM_mean": 1.8176649436354637,
+    "out_assays_KD_proxy_ic50_nM_var": 3.5617534095422343e-06,
+    "out_assays_Tm_mean": -0.03142953687347472,
+    "out_assays_Tm_var": 2.8151499236628297e-05,
+    "out_assays_koff_mean": 0.5539308115839958,
+    "out_assays_koff_var": 0.006279007066041231,
+    "out_assays_kon_mean": 0.2949875742197037,
+    "out_assays_kon_var": 0.0004094862124475185,
+    "out_assays_t_half_mean": -2.542282462120056,
+    "out_assays_t_half_var": 0.006209810875589028,
+    "out_binding_affinity_probe_kd_mean": -0.08012733096256852,
+    "out_binding_affinity_probe_kd_raw_mean": -0.13525099772959948,
+    "out_binding_affinity_probe_kd_raw_var": 4.158504418683151e-05,
+    "out_binding_affinity_probe_kd_var": 3.718559958088008e-05,
+    "out_binding_affinity_score_mean": -0.08012733096256852,
+    "out_binding_affinity_score_raw_mean": -0.13525099772959948,
+    "out_binding_affinity_score_raw_var": 4.158504418683151e-05,
+    "out_binding_affinity_score_var": 3.718559958088008e-05,
+    "out_binding_assay_context_vec_mean": 0.0,
+    "out_binding_assay_context_vec_var": 0.0,
+    "out_binding_assay_panel_assay_geometry_mean": -0.006836484171799384,
+    "out_binding_assay_panel_assay_geometry_var": 0.0007575051458843518,
+    "out_binding_assay_panel_assay_prep_mean": 0.006129607019829564,
+    "out_binding_assay_panel_assay_prep_var": 0.00023556724499940174,
+    "out_binding_assay_panel_assay_readout_mean": 0.003533656004947261,
+    "out_binding_assay_panel_assay_readout_var": 0.00043586178617260884,
+    "out_binding_assay_panel_assay_type_mean": 0.0005583496085250772,
+    "out_binding_assay_panel_assay_type_var": 0.0003160368050885154,
+    "out_binding_base_logit_mean": 2.5180147141218185,
+    "out_binding_base_logit_prob_mean": 0.9253942333161831,
+    "out_binding_base_logit_prob_var": 1.3849903135465524e-07,
+    "out_binding_base_logit_var": 2.9075671363898437e-05,
+    "out_binding_class1_logit_mean": 3.3161535561084747,
+    "out_binding_class1_logit_prob_mean": 0.9649783633649349,
+    "out_binding_class1_logit_prob_var": 3.31844566270334e-08,
+    "out_binding_class1_logit_var": 2.9075671363898437e-05,
+    "out_binding_class1_prob_mean": 0.9649783633649349,
+    "out_binding_class1_prob_var": 3.31844566270334e-08,
+    "out_binding_class2_logit_mean": 1.7198758572340012,
+    "out_binding_class2_logit_prob_mean": 0.8481114953756332,
+    "out_binding_class2_logit_prob_var": 4.822307868579401e-07,
+    "out_binding_class2_logit_var": 2.9075671363898437e-05,
+    "out_binding_class2_prob_mean": 0.8481114953756332,
+    "out_binding_class2_prob_var": 4.822307868579401e-07,
+    "out_binding_core_kd_log10_mean": 7.7111749947071075,
+    "out_binding_core_kd_log10_var": 0.00021193552493059542,
+    "out_binding_kd_bias_abs_mean": 0.03712941939011216,
+    "out_binding_kd_bias_cap_mean": 0.20141328871250153,
+    "out_binding_kd_bias_cap_var": 0.0,
+    "out_binding_kd_bias_mean": -0.03712941939011216,
+    "out_binding_kd_bias_near_cap_rate": 0.0,
+    "out_binding_kd_bias_raw_abs_mean": 0.22605545818805695,
+    "out_binding_kd_bias_raw_mean": -0.22605545818805695,
+    "out_binding_kd_bias_raw_var": 5.784105155726138e-05,
+    "out_binding_kd_bias_var": 1.034465054061684e-06,
+    "out_binding_latents_log_koff_mean": 0.5543233267962933,
+    "out_binding_latents_log_koff_var": 0.006288918317295611,
+    "out_binding_latents_log_kon_chaperone_mean": 0.1729906126856804,
+    "out_binding_latents_log_kon_chaperone_var": 0.00048019326823123265,
+    "out_binding_latents_log_kon_intrinsic_mean": -0.31660016998648643,
+    "out_binding_latents_log_kon_intrinsic_var": 0.0008156963922374416,
+    "out_binding_log_koff_near_lower_rate": 0.0,
+    "out_binding_log_koff_near_upper_rate": 0.0,
+    "out_binding_log_kon_chaperone_near_lower_rate": 0.0,
+    "out_binding_log_kon_chaperone_near_upper_rate": 0.0,
+    "out_binding_log_kon_intrinsic_near_lower_rate": 0.0,
+    "out_binding_log_kon_intrinsic_near_upper_rate": 0.0,
+    "out_binding_logit_from_core_mean": -14.426605582237244,
+    "out_binding_logit_from_core_near_cap_rate": 0.0,
+    "out_binding_logit_from_core_var": 0.0019503581934259273,
+    "out_binding_logit_mean": 3.3161535561084747,
+    "out_binding_logit_prob_mean": 0.9649783633649349,
+    "out_binding_logit_prob_var": 3.31844566270334e-08,
+    "out_binding_logit_var": 2.9075671363898437e-05,
+    "out_binding_mixed_kd_log10_mean": 1.867697760462761,
+    "out_binding_mixed_kd_log10_var": 4.059126879951691e-06,
+    "out_binding_mixed_logit_mean": 3.3161535561084747,
+    "out_binding_mixed_logit_prob_mean": 0.9649783633649349,
+    "out_binding_mixed_logit_prob_var": 3.31844566270334e-08,
+    "out_binding_mixed_logit_var": 2.9075671363898437e-05,
+    "out_binding_mixed_prob_mean": 0.9649783633649349,
+    "out_binding_mixed_prob_var": 3.31844566270334e-08,
+    "out_binding_prob_mean": 0.9649783633649349,
+    "out_binding_prob_var": 3.31844566270334e-08,
+    "out_binding_probe_core_kd_l1_mean": 1.897792287170887,
+    "out_binding_probe_core_kd_signed_mean": -1.897792287170887,
+    "out_binding_probe_mix_weight_mean": 0.7500000596046448,
+    "out_binding_probe_mix_weight_var": 0.0,
+    "out_binding_same_peptide_diff_allele_pairs": 0.0,
+    "out_binding_same_peptide_exact_pairs": 0.0,
+    "out_binding_same_peptide_labeled_pairs": 0.0,
+    "out_binding_same_peptide_rankable_pairs": 0.0,
+    "out_binding_sequence_summary_vec_mean": 0.0,
+    "out_binding_sequence_summary_vec_var": 0.0,
+    "out_binding_stability_score_mean": 0.07436302118003368,
+    "out_binding_stability_score_raw_mean": 0.07441307883709669,
+    "out_binding_stability_score_raw_var": 4.6960176405264065e-05,
+    "out_binding_stability_score_var": 4.6896889216441195e-05,
+    "out_chain_compat_logit_mean": 0.35366207361221313,
+    "out_chain_compat_logit_prob_mean": 0.5875053405761719,
+    "out_chain_compat_logit_prob_var": 0.0,
+    "out_chain_compat_logit_var": 0.0,
+    "out_chain_compat_prob_mean": 0.5875053405761719,
+    "out_chain_compat_prob_var": 0.0,
+    "out_core_length_mean": 8.7919921875,
+    "out_core_length_norm_mean": 0.6519561968743801,
+    "out_core_length_norm_var": 0.057204978773370385,
+    "out_core_length_var": 0.30494079552590847,
+    "out_core_membership_prob_mean": 0.019999999552965164,
+    "out_core_membership_prob_var": 0.0012937884166603908,
+    "out_core_relative_position_index_mean": 23.273242235183716,
+    "out_core_relative_position_index_var": 213.206805229187,
+    "out_core_start_logit_mean": -8395.459747314453,
+    "out_core_start_logit_prob_mean": 0.08244502497836947,
+    "out_core_start_logit_prob_var": 0.03555047116242349,
+    "out_core_start_logit_var": 13439915.6875,
+    "out_core_start_prob_mean": 0.019999999785795808,
+    "out_core_start_prob_var": 0.00633102172287181,
+    "out_core_start_probs_mean": 0.019999999785795808,
+    "out_core_start_probs_var": 0.00633102172287181,
+    "out_core_window_length_mean": 7.970340073108673,
+    "out_core_window_length_var": 0.6657860204577446,
+    "out_core_window_logit_mean": -8812.561218261719,
+    "out_core_window_logit_prob_mean": 0.06101430696435273,
+    "out_core_window_logit_prob_var": 0.027643200708553195,
+    "out_core_window_logit_var": 10451755.4375,
+    "out_core_window_mask_mean": 0.11874322267249227,
+    "out_core_window_mask_var": 0.10451639257371426,
+    "out_core_window_posterior_prob_mean": 0.014829977415502071,
+    "out_core_window_posterior_prob_var": 0.0047817434096941724,
+    "out_core_window_prior_logit_mean": -8812.567626953125,
+    "out_core_window_prior_logit_prob_mean": 0.059660118306055665,
+    "out_core_window_prior_logit_prob_var": 0.026385211385786533,
+    "out_core_window_prior_logit_var": 10451659.6875,
+    "out_core_window_score_logit_mean": -8812.562377929688,
+    "out_core_window_score_logit_prob_mean": 0.060726625146344304,
+    "out_core_window_score_logit_prob_var": 0.027379135019145906,
+    "out_core_window_score_logit_var": 10451735.0625,
+    "out_core_window_start_mean": 10.764830231666565,
+    "out_core_window_start_var": 42.4789457321167,
+    "out_cpfr_length_mean": 0.9612851589918137,
+    "out_cpfr_length_norm_mean": 0.17676128819584846,
+    "out_cpfr_length_norm_var": 0.014896015403792262,
+    "out_cpfr_length_var": 8.832400113344193,
+    "out_elution_logit_mean": -0.9759283848106861,
+    "out_elution_logit_prob_mean": 0.35466818138957024,
+    "out_elution_logit_prob_var": 0.09159498894587159,
+    "out_elution_logit_var": 3.6740452349185944,
+    "out_elution_prob_mean": 0.35466818138957024,
+    "out_elution_prob_var": 0.09159498894587159,
+    "out_excision_c_terminus_score_mean": 1.1865455508232117,
+    "out_excision_c_terminus_score_var": 0.034148727310821414,
+    "out_excision_length_score_mean": 0.0,
+    "out_excision_length_score_var": 0.0,
+    "out_excision_logit_mean": 0.05656944832298905,
+    "out_excision_logit_prob_mean": 0.5122493747621775,
+    "out_excision_logit_prob_var": 0.0198623068863526,
+    "out_excision_logit_var": 0.3605392640456557,
+    "out_excision_machinery_idx_mean": 7.0,
+    "out_excision_machinery_idx_var": 0.0,
+    "out_excision_missed_cleavage_score_mean": -0.8088973611593246,
+    "out_excision_missed_cleavage_score_var": 0.27227381337434053,
+    "out_excision_n_terminus_score_mean": -0.3210787605494261,
+    "out_excision_n_terminus_score_var": 0.008661469182698056,
+    "out_excision_panel_apm_mean": 0.056569445645436645,
+    "out_excision_panel_apm_var": 0.3605392640456557,
+    "out_excision_panel_stimulus_mean": 0.05656944737711456,
+    "out_excision_panel_stimulus_var": 0.3605392640456557,
+    "out_excision_prob_mean": 0.5122493747621775,
+    "out_excision_prob_var": 0.0198623068863526,
+    "out_foreignness_logit_mean": 0.3252509403973818,
+    "out_foreignness_logit_prob_mean": 0.5804753974080086,
+    "out_foreignness_logit_prob_var": 0.000354129293555161,
+    "out_foreignness_logit_var": 0.0060103572031948715,
+    "out_foreignness_prob_mean": 0.5804753974080086,
+    "out_foreignness_prob_var": 0.000354129293555161,
+    "out_groove_vec_mean": 0.009386962046846747,
+    "out_groove_vec_var": 0.25101912021636963,
+    "out_immunogenicity_cd4_logit_mean": 0.019864976406097412,
+    "out_immunogenicity_cd4_logit_prob_mean": 0.5049587525427341,
+    "out_immunogenicity_cd4_logit_prob_var": 0.0003804659572779201,
+    "out_immunogenicity_cd4_logit_var": 0.0061043158057145774,
+    "out_immunogenicity_cd4_prob_mean": 0.5049587525427341,
+    "out_immunogenicity_cd4_prob_var": 0.0003804659572779201,
+    "out_immunogenicity_cd8_logit_mean": -0.6883405260741711,
+    "out_immunogenicity_cd8_logit_prob_mean": 0.3350200057029724,
+    "out_immunogenicity_cd8_logit_prob_var": 0.0007799804152455181,
+    "out_immunogenicity_cd8_logit_var": 0.01593866100301966,
+    "out_immunogenicity_cd8_prob_mean": 0.3350200057029724,
+    "out_immunogenicity_cd8_prob_var": 0.0007799804152455181,
+    "out_immunogenicity_logit_mean": -0.6883405260741711,
+    "out_immunogenicity_logit_prob_mean": 0.3350200057029724,
+    "out_immunogenicity_logit_prob_var": 0.0007799804152455181,
+    "out_immunogenicity_logit_var": 0.01593866100301966,
+    "out_immunogenicity_mixed_logit_mean": -0.6883405260741711,
+    "out_immunogenicity_mixed_logit_prob_mean": 0.3350200057029724,
+    "out_immunogenicity_mixed_logit_prob_var": 0.0007799804152455181,
+    "out_immunogenicity_mixed_logit_var": 0.01593866100301966,
+    "out_immunogenicity_mixed_prob_mean": 0.3350200057029724,
+    "out_immunogenicity_mixed_prob_var": 0.0007799804152455181,
+    "out_immunogenicity_mixture_logit_mean": -0.6883405260741711,
+    "out_immunogenicity_mixture_logit_prob_mean": 0.3350200057029724,
+    "out_immunogenicity_mixture_logit_prob_var": 0.0007799804152455181,
+    "out_immunogenicity_mixture_logit_var": 0.01593866100301966,
+    "out_immunogenicity_prob_mean": 0.3350200057029724,
+    "out_immunogenicity_prob_var": 0.0007799804152455181,
+    "out_immunogenicity_recognition_term_mean": 0.038814153987914324,
+    "out_immunogenicity_recognition_term_var": 0.0012002070652670227,
+    "out_latent_vecs_binding_affinity_mean": -0.0600223948713392,
+    "out_latent_vecs_binding_affinity_var": 0.5911402925848961,
+    "out_latent_vecs_binding_stability_mean": -0.038829687517136335,
+    "out_latent_vecs_binding_stability_var": 0.8956702500581741,
+    "out_latent_vecs_foreignness_mean": 0.014708263101056218,
+    "out_latent_vecs_foreignness_var": 0.10594566585496068,
+    "out_latent_vecs_immunogenicity_cd4_mean": -5.122274160385132e-09,
+    "out_latent_vecs_immunogenicity_cd4_var": 0.99983249604702,
+    "out_latent_vecs_immunogenicity_cd8_mean": 4.7963112648208295e-09,
+    "out_latent_vecs_immunogenicity_cd8_var": 0.999753262847662,
+    "out_latent_vecs_immunogenicity_mixed_mean": 4.7963112648208295e-09,
+    "out_latent_vecs_immunogenicity_mixed_var": 0.999753262847662,
+    "out_latent_vecs_ms_detectability_mean": -0.11048611300066113,
+    "out_latent_vecs_ms_detectability_var": 0.7476303055882454,
+    "out_latent_vecs_pmhc_interaction_mean": 0.0004501508083194494,
+    "out_latent_vecs_pmhc_interaction_var": 1.0025686770677567,
+    "out_latent_vecs_presentation_class1_mean": 4.004687081948788e-09,
+    "out_latent_vecs_presentation_class1_var": 0.9999397769570351,
+    "out_latent_vecs_presentation_class2_mean": -2.1420418772066796e-09,
+    "out_latent_vecs_presentation_class2_var": 0.9999388419091702,
+    "out_latent_vecs_presentation_mixed_mean": 4.004687081948788e-09,
+    "out_latent_vecs_presentation_mixed_var": 0.9999397769570351,
+    "out_latent_vecs_processing_class1_mean": 0.1133758332580328,
+    "out_latent_vecs_processing_class1_var": 0.3876859247684479,
+    "out_latent_vecs_processing_class2_mean": 0.10227200016379356,
+    "out_latent_vecs_processing_class2_var": 0.2931994404643774,
+    "out_latent_vecs_processing_mean": 0.1133758332580328,
+    "out_latent_vecs_processing_mixed_mean": 0.1133758332580328,
+    "out_latent_vecs_processing_mixed_var": 0.3876859247684479,
+    "out_latent_vecs_processing_var": 0.3876859247684479,
+    "out_latent_vecs_recognition_cd4_mean": -0.17926045786589384,
+    "out_latent_vecs_recognition_cd4_var": 0.5096375718712807,
+    "out_latent_vecs_recognition_cd8_mean": -0.126941311173141,
+    "out_latent_vecs_recognition_cd8_var": 0.9044076427817345,
+    "out_latent_vecs_recognition_mean": -0.126941311173141,
+    "out_latent_vecs_recognition_mixed_mean": -0.126941311173141,
+    "out_latent_vecs_recognition_mixed_var": 0.9044076427817345,
+    "out_latent_vecs_recognition_var": 0.9044076427817345,
+    "out_latent_vecs_species_of_origin_mean": -0.18715566955506802,
+    "out_latent_vecs_species_of_origin_var": 0.8520329929888248,
+    "out_mhc_a_species_logits_mean": -0.27831384167075157,
+    "out_mhc_a_species_logits_var": 0.33166733384132385,
+    "out_mhc_a_type_logits_mean": -0.032564401626586914,
+    "out_mhc_a_type_logits_var": 0.17241118848323822,
+    "out_mhc_a_vec_mean": 0.12246477603912354,
+    "out_mhc_a_vec_var": 0.7776058316230774,
+    "out_mhc_b_species_logits_mean": -0.4071898479014635,
+    "out_mhc_b_species_logits_var": 0.17762383818626404,
+    "out_mhc_b_type_logits_mean": -0.16180984675884247,
+    "out_mhc_b_type_logits_var": 0.1647700071334839,
+    "out_mhc_b_vec_mean": 0.03823123360052705,
+    "out_mhc_b_vec_var": 0.6289910078048706,
+    "out_mhc_class_logits_mean": -0.6969528831541538,
+    "out_mhc_class_logits_var": 0.007621087599545717,
+    "out_mhc_class_pred_mean": 1.0,
+    "out_mhc_class_pred_var": 0.0,
+    "out_mhc_class_probs_inferred_mean": 0.5,
+    "out_mhc_class_probs_inferred_var": 0.0018956330604851246,
+    "out_mhc_class_probs_mean": 0.5,
+    "out_mhc_class_probs_var": 0.25,
+    "out_mhc_is_class1_prob_mean": 1.0,
+    "out_mhc_is_class1_prob_var": 0.0,
+    "out_mhc_is_class2_prob_mean": 0.0,
+    "out_mhc_is_class2_prob_var": 0.0,
+    "out_mhc_species_logits_mean": -1.8068631887435913,
+    "out_mhc_species_logits_var": 0.029190707951784134,
+    "out_mhc_species_pred_mean": 0.0,
+    "out_mhc_species_pred_var": 0.0,
+    "out_mhc_species_probs_inferred_mean": 0.1666666716337204,
+    "out_mhc_species_probs_inferred_var": 0.0009010179783217609,
+    "out_mhc_species_probs_mean": 0.1666666716337204,
+    "out_mhc_species_probs_var": 0.0009010179783217609,
+    "out_ms_detectability_logit_mean": -0.5442801909521222,
+    "out_ms_detectability_logit_prob_mean": 0.396974740549922,
+    "out_ms_detectability_logit_prob_var": 0.056255482602864504,
+    "out_ms_detectability_logit_var": 1.455372802913189,
+    "out_ms_logit_mean": -0.9759283848106861,
+    "out_ms_logit_prob_mean": 0.35466818138957024,
+    "out_ms_logit_prob_var": 0.09159498894587159,
+    "out_ms_logit_var": 3.6740452349185944,
+    "out_ms_prob_mean": 0.35466818138957024,
+    "out_ms_prob_var": 0.09159498894587159,
+    "out_npfr_length_mean": 24.5,
+    "out_npfr_length_norm_mean": 0.1712825307622552,
+    "out_npfr_length_norm_var": 0.013731982908211648,
+    "out_npfr_length_var": 208.25,
+    "out_pep_vec_mean": -0.06533329421654344,
+    "out_pep_vec_var": 0.1344334832392633,
+    "out_pmhc_interaction_vec_mean": 0.0004501508083194494,
+    "out_pmhc_interaction_vec_var": 1.0025686770677567,
+    "out_pmhc_vec_mean": 0.0004501508083194494,
+    "out_pmhc_vec_var": 1.0025686770677567,
+    "out_presentation_class1_logit_mean": -0.1988530824892223,
+    "out_presentation_class1_logit_prob_mean": 0.45143646001815796,
+    "out_presentation_class1_logit_prob_var": 0.005974031169898808,
+    "out_presentation_class1_logit_var": 0.10056551452726126,
+    "out_presentation_class1_prob_mean": 0.45143646001815796,
+    "out_presentation_class1_prob_var": 0.005974031169898808,
+    "out_presentation_class2_logit_mean": 1.1933399215340614,
+    "out_presentation_class2_logit_prob_mean": 0.7642991356551647,
+    "out_presentation_class2_logit_prob_var": 0.002131056389771402,
+    "out_presentation_class2_logit_var": 0.0639245011843741,
+    "out_presentation_class2_prob_mean": 0.7642991356551647,
+    "out_presentation_class2_prob_var": 0.002131056389771402,
+    "out_presentation_invivo_excision_term_mean": 0.0,
+    "out_presentation_invivo_excision_term_var": 0.0,
+    "out_presentation_logit_mean": -0.1988530824892223,
+    "out_presentation_logit_prob_mean": 0.45143646001815796,
+    "out_presentation_logit_prob_var": 0.005974031169898808,
+    "out_presentation_logit_var": 0.10056551452726126,
+    "out_presentation_mixed_logit_mean": -0.1988530824892223,
+    "out_presentation_mixed_logit_prob_mean": 0.45143646001815796,
+    "out_presentation_mixed_logit_prob_var": 0.005974031169898808,
+    "out_presentation_mixed_logit_var": 0.10056551452726126,
+    "out_presentation_mixed_prob_mean": 0.45143646001815796,
+    "out_presentation_mixed_prob_var": 0.005974031169898808,
+    "out_presentation_prob_mean": 0.45143646001815796,
+    "out_presentation_prob_var": 0.005974031169898808,
+    "out_processing_class1_logit_mean": 0.13453142531216145,
+    "out_processing_class1_logit_prob_mean": 0.5334112904965878,
+    "out_processing_class1_logit_prob_var": 0.0013988185783091467,
+    "out_processing_class1_logit_var": 0.02277322963345796,
+    "out_processing_class1_prob_mean": 0.5334112904965878,
+    "out_processing_class1_prob_var": 0.0013988185783091467,
+    "out_processing_class2_logit_mean": 0.09599196398630738,
+    "out_processing_class2_logit_prob_mean": 0.5237483493983746,
+    "out_processing_class2_logit_prob_var": 0.001995543119846843,
+    "out_processing_class2_logit_var": 0.03268011356703937,
+    "out_processing_class2_prob_mean": 0.5237483493983746,
+    "out_processing_class2_prob_var": 0.001995543119846843,
+    "out_processing_logit_mean": 0.13453142531216145,
+    "out_processing_logit_prob_mean": 0.5334112904965878,
+    "out_processing_logit_prob_var": 0.0013988185783091467,
+    "out_processing_logit_var": 0.02277322963345796,
+    "out_processing_mixed_logit_mean": 0.13453142531216145,
+    "out_processing_mixed_logit_prob_mean": 0.5334112904965878,
+    "out_processing_mixed_logit_prob_var": 0.0013988185783091467,
+    "out_processing_mixed_logit_var": 0.02277322963345796,
+    "out_processing_mixed_prob_mean": 0.5334112904965878,
+    "out_processing_mixed_prob_var": 0.0013988185783091467,
+    "out_processing_prob_mean": 0.5334112904965878,
+    "out_processing_prob_var": 0.0013988185783091467,
+    "out_recognition_cd4_logit_mean": 0.05085391766624525,
+    "out_recognition_cd4_logit_prob_mean": 0.512627674266696,
+    "out_recognition_cd4_logit_prob_var": 0.001808524328225758,
+    "out_recognition_cd4_logit_var": 0.029388222377747297,
+    "out_recognition_cd4_prob_mean": 0.512627674266696,
+    "out_recognition_cd4_prob_var": 0.001808524328225758,
+    "out_recognition_cd8_logit_mean": 0.305796573869884,
+    "out_recognition_cd8_logit_prob_mean": 0.5744587332010269,
+    "out_recognition_cd8_logit_prob_var": 0.004297209045034833,
+    "out_recognition_cd8_logit_var": 0.07449741428717971,
+    "out_recognition_cd8_prob_mean": 0.5744587332010269,
+    "out_recognition_cd8_prob_var": 0.004297209045034833,
+    "out_recognition_mixed_logit_mean": 0.305796573869884,
+    "out_recognition_mixed_logit_prob_mean": 0.5744587332010269,
+    "out_recognition_mixed_logit_prob_var": 0.004297209045034833,
+    "out_recognition_mixed_logit_var": 0.07449741428717971,
+    "out_recognition_mixed_prob_mean": 0.5744587332010269,
+    "out_recognition_mixed_prob_var": 0.004297209045034833,
+    "out_recognition_repertoire_logit_mean": 0.305796573869884,
+    "out_recognition_repertoire_logit_prob_mean": 0.5744587332010269,
+    "out_recognition_repertoire_logit_prob_var": 0.004297209045034833,
+    "out_recognition_repertoire_logit_var": 0.07449741428717971,
+    "out_recognition_repertoire_prob_mean": 0.5744587332010269,
+    "out_recognition_repertoire_prob_var": 0.004297209045034833,
+    "out_species_of_origin_logits_mean": 0.20174594968557358,
+    "out_species_of_origin_logits_var": 0.13441309425979853,
+    "out_species_probs_mean": 0.1666666716337204,
+    "out_species_probs_var": 0.0009010179783217609,
+    "out_tcell_context_logits_apc_type_mean": 1.459080919623375,
+    "out_tcell_context_logits_apc_type_var": 0.049021772807464004,
+    "out_tcell_context_logits_assay_method_mean": 1.5777090564370155,
+    "out_tcell_context_logits_assay_method_var": 0.05137306428514421,
+    "out_tcell_context_logits_assay_readout_mean": 1.4145266935229301,
+    "out_tcell_context_logits_assay_readout_var": 0.04110385465901345,
+    "out_tcell_context_logits_culture_context_mean": 1.3641119450330734,
+    "out_tcell_context_logits_culture_context_var": 0.037737621110863984,
+    "out_tcell_context_logits_peptide_format_mean": 1.5875181257724762,
+    "out_tcell_context_logits_peptide_format_var": 0.03792415978386998,
+    "out_tcell_context_logits_stim_context_mean": 1.4538658112287521,
+    "out_tcell_context_logits_stim_context_var": 0.03555709728971124,
+    "out_tcell_logit_mean": 1.4178469479084015,
+    "out_tcell_logit_prob_mean": 0.8033959940075874,
+    "out_tcell_logit_prob_var": 0.0007804222695995122,
+    "out_tcell_logit_var": 0.03229971067048609,
+    "out_tcell_panel_logits_apc_type_mean": 1.459080919623375,
+    "out_tcell_panel_logits_apc_type_var": 0.049021772807464004,
+    "out_tcell_panel_logits_assay_method_mean": 1.5777090564370155,
+    "out_tcell_panel_logits_assay_method_var": 0.05137306428514421,
+    "out_tcell_panel_logits_assay_readout_mean": 1.4145266935229301,
+    "out_tcell_panel_logits_assay_readout_var": 0.04110385465901345,
+    "out_tcell_panel_logits_culture_context_mean": 1.3641119450330734,
+    "out_tcell_panel_logits_culture_context_var": 0.037737621110863984,
+    "out_tcell_panel_logits_peptide_format_mean": 1.5875181257724762,
+    "out_tcell_panel_logits_peptide_format_var": 0.03792415978386998,
+    "out_tcell_panel_logits_stim_context_mean": 1.4538658112287521,
+    "out_tcell_panel_logits_stim_context_var": 0.03555709728971124,
+    "out_tcell_prob_mean": 0.8033959940075874,
+    "out_tcell_prob_var": 0.0007804222695995122,
+    "out_tcr_evidence_logit_mean": -0.10177803225815296,
+    "out_tcr_evidence_logit_prob_mean": 0.47458646446466446,
+    "out_tcr_evidence_logit_prob_var": 8.54012503168633e-05,
+    "out_tcr_evidence_logit_var": 0.001374683590256609,
+    "out_tcr_evidence_method_logits_mean": -0.3138577491044998,
+    "out_tcr_evidence_method_logits_var": 0.1472340226173401,
+    "out_tcr_evidence_method_probs_mean": 0.4244975373148918,
+    "out_tcr_evidence_method_probs_var": 0.008579791872762144,
+    "out_tcr_evidence_prob_mean": 0.47458646446466446,
+    "out_tcr_evidence_prob_var": 8.54012503168633e-05,
+    "eval_samples": 1000.0,
+    "eval_samples_per_sec": 71.51227633355329,
+    "eval_batches": 16.0,
+    "eval_sec": 13.983613041986246
+  },
+  "metric_estimators": {
+    "auprc": "average_precision_distinct_thresholds_v2"
+  },
+  "loss_reconciliation": {
+    "verified": true,
+    "canonical_evaluation_compared": true,
+    "artifact": "val_loss_ledger.json"
+  },
+  "output_support": {
+    "binding": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "binding_kd": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "binding_ic50": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "binding_ec50": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "elution": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "presentation": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tcell": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "immunogenicity": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tcell_assay_method": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "ELISPOT": {
+          "target": 0,
+          "exported": 0
+        },
+        "ICS": {
+          "target": 0,
+          "exported": 0
+        },
+        "MULTIMER": {
+          "target": 0,
+          "exported": 0
+        },
+        "ELISA": {
+          "target": 0,
+          "exported": 0
+        },
+        "CYTOTOXICITY_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "PROLIFERATION_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "BIOASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_assay_readout": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "IFNG": {
+          "target": 0,
+          "exported": 0
+        },
+        "TNFA": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL2": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL4": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL5": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL10": {
+          "target": 0,
+          "exported": 0
+        },
+        "GMCSF": {
+          "target": 0,
+          "exported": 0
+        },
+        "CYTOTOXICITY": {
+          "target": 0,
+          "exported": 0
+        },
+        "PROLIFERATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "ACTIVATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "QUAL_BINDING": {
+          "target": 0,
+          "exported": 0
+        },
+        "KD": {
+          "target": 0,
+          "exported": 0
+        },
+        "MULTIMER_BINDING": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_apc_type": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "DENDRITIC": {
+          "target": 0,
+          "exported": 0
+        },
+        "B_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "PBMC": {
+          "target": 0,
+          "exported": 0
+        },
+        "SPLENOCYTE": {
+          "target": 0,
+          "exported": 0
+        },
+        "T2_B_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "B_LCL": {
+          "target": 0,
+          "exported": 0
+        },
+        "T_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_culture_context": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "DIRECT_EX_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "SHORT_RESTIM": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "ENGINEERED": {
+          "target": 0,
+          "exported": 0
+        },
+        "CELL_LINE_CLONE": {
+          "target": 0,
+          "exported": 0
+        },
+        "NON_SPECIFIC_ACTIVATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_stim_context": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "EX_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO_STIM": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "ENGINEERED": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_peptide_format": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "MINIMAL_EPITOPE": {
+          "target": 0,
+          "exported": 0
+        },
+        "LONG_PEPTIDE": {
+          "target": 0,
+          "exported": 0
+        },
+        "PEPTIDE_POOL": {
+          "target": 0,
+          "exported": 0
+        },
+        "WHOLE_PROTEIN": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "kon": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "koff": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "t_half": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tm": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "binding_affinity_probe": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "ms_detectability": {
+      "target_observations": 1000,
+      "exported_observations": 1000,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "excision": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "processing": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "core_start": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "mhc_class": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "mhc_species": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "mhc_a_fine_type": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "mhc_b_fine_type": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tcr_evidence": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tcr_evidence_method": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {
+        "multimer_binding": {
+          "target": 0,
+          "exported": 0
+        },
+        "target_cell_functional": {
+          "target": 0,
+          "exported": 0
+        },
+        "functional_readout": {
+          "target": 0,
+          "exported": 0
+        }
+      }
+    },
+    "species_of_origin": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "foreignness": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "binding_assay_panel_assay_type": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "KD": {
+          "target": 0,
+          "exported": 0
+        },
+        "KD_PROXY_IC50": {
+          "target": 0,
+          "exported": 0
+        },
+        "KD_PROXY_EC50": {
+          "target": 0,
+          "exported": 0
+        },
+        "IC50": {
+          "target": 0,
+          "exported": 0
+        },
+        "EC50": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        },
+        "T_HALF": {
+          "target": 0,
+          "exported": 0
+        },
+        "TM": {
+          "target": 0,
+          "exported": 0
+        },
+        "KOFF": {
+          "target": 0,
+          "exported": 0
+        },
+        "KON": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "binding_assay_panel_assay_prep": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "PURIFIED": {
+          "target": 0,
+          "exported": 0
+        },
+        "CELLULAR": {
+          "target": 0,
+          "exported": 0
+        },
+        "LYSATE": {
+          "target": 0,
+          "exported": 0
+        },
+        "BINDING_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "binding_assay_panel_assay_geometry": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "COMPETITIVE": {
+          "target": 0,
+          "exported": 0
+        },
+        "DIRECT": {
+          "target": 0,
+          "exported": 0
+        },
+        "T_CELL_INHIBITION": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "binding_assay_panel_assay_readout": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "RADIOACTIVITY": {
+          "target": 0,
+          "exported": 0
+        },
+        "FLUORESCENCE": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "excision_panel_apm": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "none": {
+          "target": 0,
+          "exported": 0
+        },
+        "peptide_supply": {
+          "target": 0,
+          "exported": 0
+        },
+        "n_term_trimming": {
+          "target": 0,
+          "exported": 0
+        },
+        "loading_complex": {
+          "target": 0,
+          "exported": 0
+        },
+        "mhc_null": {
+          "target": 0,
+          "exported": 0
+        },
+        "class_ii_loading": {
+          "target": 0,
+          "exported": 0
+        },
+        "other": {
+          "target": 0,
+          "exported": 0
+        },
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "excision_panel_stimulus": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "none": {
+          "target": 0,
+          "exported": 0
+        },
+        "ifn_gamma": {
+          "target": 0,
+          "exported": 0
+        },
+        "ifn_type1": {
+          "target": 0,
+          "exported": 0
+        },
+        "tnf_alpha": {
+          "target": 0,
+          "exported": 0
+        },
+        "tlr": {
+          "target": 0,
+          "exported": 0
+        },
+        "cell_activation": {
+          "target": 0,
+          "exported": 0
+        },
+        "cytokine_unspecified": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "ms": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "elution",
+      "columns": {},
+      "components": {}
+    },
+    "tcell_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "immunogenicity_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tcell_assay_method_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "ELISPOT": {
+          "target": 0,
+          "exported": 0
+        },
+        "ICS": {
+          "target": 0,
+          "exported": 0
+        },
+        "MULTIMER": {
+          "target": 0,
+          "exported": 0
+        },
+        "ELISA": {
+          "target": 0,
+          "exported": 0
+        },
+        "CYTOTOXICITY_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "PROLIFERATION_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "BIOASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_assay_readout_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "IFNG": {
+          "target": 0,
+          "exported": 0
+        },
+        "TNFA": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL2": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL4": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL5": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL10": {
+          "target": 0,
+          "exported": 0
+        },
+        "GMCSF": {
+          "target": 0,
+          "exported": 0
+        },
+        "CYTOTOXICITY": {
+          "target": 0,
+          "exported": 0
+        },
+        "PROLIFERATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "ACTIVATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "QUAL_BINDING": {
+          "target": 0,
+          "exported": 0
+        },
+        "KD": {
+          "target": 0,
+          "exported": 0
+        },
+        "MULTIMER_BINDING": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_apc_type_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "DENDRITIC": {
+          "target": 0,
+          "exported": 0
+        },
+        "B_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "PBMC": {
+          "target": 0,
+          "exported": 0
+        },
+        "SPLENOCYTE": {
+          "target": 0,
+          "exported": 0
+        },
+        "T2_B_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "B_LCL": {
+          "target": 0,
+          "exported": 0
+        },
+        "T_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_culture_context_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "DIRECT_EX_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "SHORT_RESTIM": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "ENGINEERED": {
+          "target": 0,
+          "exported": 0
+        },
+        "CELL_LINE_CLONE": {
+          "target": 0,
+          "exported": 0
+        },
+        "NON_SPECIFIC_ACTIVATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_stim_context_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "EX_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO_STIM": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "ENGINEERED": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_peptide_format_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "MINIMAL_EPITOPE": {
+          "target": 0,
+          "exported": 0
+        },
+        "LONG_PEPTIDE": {
+          "target": 0,
+          "exported": 0
+        },
+        "PEPTIDE_POOL": {
+          "target": 0,
+          "exported": 0
+        },
+        "WHOLE_PROTEIN": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    }
+  }
+}

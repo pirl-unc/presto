@@ -1,0 +1,35 @@
+{
+  "batches_with_direct_labels": 0,
+  "batches_with_labels": 200,
+  "batches_with_output_gradient": 200,
+  "column": "",
+  "differentiable_forward_calls": 200,
+  "endpoint": "ms_detectability_logit",
+  "forward_calls": 200,
+  "label_observations_seen": 12800,
+  "nonfinite_output_gradient_elements": 0,
+  "output_gradient_abs_sum": 83.70540378973237,
+  "parameter_mapping": "no_dedicated_row_declared",
+  "parameter_rows": [],
+  "positive_labels_seen": 6314,
+  "source_evidence": [
+    {
+      "family": "scoped_matching",
+      "observations_seen": 917,
+      "role": "proxy",
+      "source": "pxd013455-hela-tryp46-v1"
+    },
+    {
+      "family": "scoped_msms",
+      "observations_seen": 5397,
+      "role": "proxy",
+      "source": "pxd013455-hela-tryp46-v1"
+    },
+    {
+      "family": "scoped_unobserved",
+      "observations_seen": 6486,
+      "role": "proxy",
+      "source": "pxd013455-hela-tryp46-v1"
+    }
+  ]
+}

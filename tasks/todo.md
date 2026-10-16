@@ -1,3 +1,26 @@
+# Canonical scoped training — Presto #70
+
+- [x] Inspect canonical trainer/coverage contracts and specify the bounded source.
+- [x] Freeze legible scoped membership and leakage/support artifacts through datacache.
+- [x] Integrate the existing canonical trainer/CLI without unrelated live inputs.
+- [x] Verify synthetic regressions and register actual preflight/fitting evidence.
+- [ ] Run full gates, review, merge and publish version 0.1.8.
+
+## Review
+
+138 focused source, membership, CLI, canonical trainer and frozen MHC partition
+tests pass. The actual canonical preflight is exercised with a synthetic schema
+fixture and cannot read unrelated sources or construct a model. Scope guards,
+projection hashes and exact membership/junction conversion are enforced.
+The direct script parser gap is tracked and fixed as #91. Full local gates pass
+(2,250 passed, four skips), final implementation CI passes, and strict docs pass.
+The actual clean preflight and 200-step fit have complete frozen membership and
+held-out predictions. Nine public assets were independently re-downloaded and
+hash-verified through datacache. Probability quality failed both baselines (#94),
+and a hidden active orthogonality prior deviated from the experiment plan (#95).
+The original run is preserved with those limitations; no readiness claim.
+Final results documentation CI, merge and version 0.1.8 distribution remain.
+
 # Internal excision scoring contract — Presto #88
 
 - [x] File the observed rule inconsistency and specify compatibility explicitly.

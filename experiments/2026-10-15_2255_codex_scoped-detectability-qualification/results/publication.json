@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "source_manifest_sha256": "441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b",
+  "fit_commit": "65173d2598746ebb848031783833f74c833679f2",
+  "status": "pipeline accepted; probability quality failed; nonzero undeclared regularizer is a protocol deviation",
+  "files": {
+    "preflight-run.tar.gz": {
+      "url": "https://github.com/pirl-unc/presto/releases/download/scoped-detectability-qualification-v1/preflight-run.tar.gz",
+      "sha256": "fb0881f60ed993614e683a2f9e588e6f02b83d91228a78b01833db5ab47e9244",
+      "size": 2040012
+    },
+    "preflight-summary.json": {
+      "url": "https://github.com/pirl-unc/presto/releases/download/scoped-detectability-qualification-v1/preflight-summary.json",
+      "sha256": "08e6ff1f4d7a765465384c8892a3e8aef7737fd140f68577155a27907f7888ae",
+      "size": 8240
+    },
+    "preflight-inventory.json": {
+      "url": "https://github.com/pirl-unc/presto/releases/download/scoped-detectability-qualification-v1/preflight-inventory.json",
+      "sha256": "3008b45f0a947edb697a992f3d07b5999735879ad4131928c07c9c8c6d46a151",
+      "size": 3479
+    },
+    "fit-run.tar.gz": {
+      "url": "https://github.com/pirl-unc/presto/releases/download/scoped-detectability-qualification-v1/fit-run.tar.gz",
+      "sha256": "ab664220951f912433022684aa408ed0280c7786f9772661694acb87caa7351c",
+      "size": 5463430
+    },
+    "fit-summary.json": {
+      "url": "https://github.com/pirl-unc/presto/releases/download/scoped-detectability-qualification-v1/fit-summary.json",
+      "sha256": "8459bee72c6dbc246e124e8d0169723386b4cf9e8d5aa12dcf7d4f0443298953",
+      "size": 10915
+    },
+    "fit-inventory.json": {
+      "url": "https://github.com/pirl-unc/presto/releases/download/scoped-detectability-qualification-v1/fit-inventory.json",
+      "sha256": "dcbd72da69456055a0c4e9de4fe3dd2da8515500a517b2aa6e89a4b361dc8fe2",
+      "size": 6823
+    }
+  },
+  "issues": [
+    "https://github.com/pirl-unc/presto/issues/94",
+    "https://github.com/pirl-unc/presto/issues/95"
+  ]
+}

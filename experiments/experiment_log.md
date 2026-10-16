@@ -1344,3 +1344,23 @@ the actual public archive is admitted with honest masks and lineage; the next
 canonical trainer experiment must establish frozen membership and bounded fitting.
 A single HeLa search and unresolved biological identities do not establish
 independent experiment/donor/specimen generalization. Status: admission audit closed.
+
+
+## 2026-10-15 — Codex: frozen within-search detectability preflight
+
+Family: [scoped-detectability-qualification](2026-10-15_2255_codex_scoped-detectability-qualification/README.md). Clean producer `a15c1a45f9d9eda9d111459b6f1d9f86a56e8e29`; Presto 0.1.8 with distinct Trypsin/P and versioned scoring. Canonical data-only preflight on the pinned public PXD013455 HeLa search succeeded in 108.78 seconds, runner peak RSS 998,916,096 bytes, CPU one thread. Frozen train/validation/test membership is 8,000/1,000/1,000 peptides with positive proxy support 912/105/109 and scoped absences 7,088/895/891. No generated controls, excision/depth labels, MHC inputs or fitting. All prospectively registered support thresholds are met; other outputs remain undeclared.
+
+No cross-partition peptides, candidate IDs or measured observation IDs; known proteins overlap and all splits share one search. Donor/specimen independence remains inconclusive. Complete membership TSV/parquet, source registry, label policies, overlap and output-coverage reports are in datacache, pinned by the family receipt. Run archive SHA-256 `fb0881f60ed993614e683a2f9e588e6f02b83d91228a78b01833db5ab47e9244`. This is admission/coverage evidence, not predictive quality. The registered bounded canonical fit and train-only baselines follow with the exact support fingerprint required.
+
+
+### 2026-10-15_2255_codex_scoped-detectability-qualification — actual fit closure
+
+- Agent/model: Codex (GPT-6); [experiment](2026-10-15_2255_codex_scoped-detectability-qualification/README.md).
+- Clean fit commit `65173d2598746ebb848031783833f74c833679f2`; exact frozen launch, versions, datacache paths and public hashes in the experiment.
+- PXD013455 HeLa Trypsin/P search, 10,000 collapsed peptides, source manifest `441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b`; 8,000/1,000/1,000 train/validation/test, 912/105/109 positives. MS/MS/matching/scoped absences are proxies, no synthetic labels, excision or depth supervision; MHC and binding concentration/censoring metrics not applicable.
+- No pretraining; expanded d32/l1/h4, batch64, lr0.001, two epochs capped100 batches each, seed42. CPU/one Torch/BLAS thread, no GPU; 1,027.01s and runner peak RSS7,912,128,512bytes. Selected epoch1 by validation loss.
+- Declared output only `ms_detectability_logit`; 200 gradient-bearing proxy batches. Balanced sampling exposed 6,314 positive labels of12,800, versus frozen train prevalence11.40%. Other outputs unsupported.
+- Protocol deviation: six exposed consistency weights zero but hidden binding-orthogonality weight0.01 active; uncertainty task weighting and weight decay0.01 also active. Original results/config preserved; #95 tracks the omitted effective configuration.
+- Validation Presto AUROC/AP/log loss/Brier:0.80628/0.33324/0.55073/0.18739. Test:0.82984/0.38070/0.54864/0.18618. Train-prevalence val/test log loss0.33634/0.34454; train-only length/composition logistic0.27268/0.26899. Complete metric tables, 1,000 paired bootstrap intervals, coefficients and every held-out prediction retained publicly.
+- Preferred probability baseline: length/composition logistic. Presto improves AP point estimates but fails both baselines on probability quality. No readiness claim; #94 tracks a prospective follow-up. All splits share the search and proteins, donor/specimen independence unresolved.
+- [Download](https://github.com/pirl-unc/presto/releases/tag/scoped-detectability-qualification-v1): partitions, source/cell/assay context, policies, lineage/leakage/support reports, predictions, checkpoint, logs and inventories; fit SHA-256 `ab664220951f912433022684aa408ed0280c7786f9772661694acb87caa7351c`.

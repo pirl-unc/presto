@@ -164,6 +164,9 @@ IEDB_DEFAULTS = {
     "hitlist_allele": None,
     "hitlist_bundle": None,
     "hitlist_bundle_sha256": None,
+    "scoped_bundle": None,
+    "scoped_bundle_sha256": None,
+    "max_scoped_bulk": 0,
     "frozen_assignment_file": None,
     "frozen_assignment_sha256": None,
     "frozen_partition_policy": "peptide_disjoint",
@@ -4774,6 +4777,8 @@ def run(args: argparse.Namespace) -> None:
     elution_records: List[ElutionRecord] = []
     tcell_records: List[TCellRecord] = []
     vdjdb_records: List[TcrEvidenceRecord] = []
+    bulk_ms_records = []
+    scoped_partitions = None
     data_funnel: Dict[str, Any] = {
         "schema_version": 1,
         "data_seed_base": data_seed,
@@ -4792,11 +4797,12 @@ def run(args: argparse.Namespace) -> None:
             "elution": len(elution_records),
             "tcell": len(tcell_records),
             "tcr_evidence": len(vdjdb_records),
+            "bulk_ms": len(bulk_ms_records),
         }
 
     frozen_partitions = None
     data_source = str(getattr(args, "data_source", "merged_tsv"))
-    if data_source not in {"merged_tsv", "hitlist"}:
+    if data_source not in {"merged_tsv", "hitlist", "scoped_bulk"}:
         raise ValueError(f"Unsupported data source: {data_source!r}")
     if data_source == "hitlist":
         if getattr(args, "split_mode", "peptide_group") != "peptide_group":
@@ -4822,6 +4828,18 @@ def run(args: argparse.Namespace) -> None:
             raise ValueError(
                 "The canary profile fabricates modalities outside the frozen Hitlist scope"
             )
+    if data_source == "scoped_bulk":
+        if args.split_mode != "peptide_group" or args.frozen_partition_policy != "peptide_disjoint":
+            raise ValueError("Scoped bulk supports only peptide-disjoint within-search partitions")
+        if args.bulk_ms or args.mhc_augmentation_samples > 0 or args.uniprot_negative_ratio > 0:
+            raise ValueError(
+                "Scoped bulk cannot mix live auxiliary inputs; disable --bulk-ms and set "
+                "--mhc-augmentation-samples 0 --uniprot-negative-ratio 0"
+            )
+        if args.profile == "canary":
+            raise ValueError("The canary profile fabricates modalities outside the scoped search")
+        if args.max_scoped_bulk < 0:
+            raise ValueError("--max-scoped-bulk must be nonnegative")
     if data_source == "merged_tsv" and merged_tsv.exists():
         print(f"Merged input: {merged_tsv}")
         (
@@ -4944,6 +4962,30 @@ def run(args: argparse.Namespace) -> None:
         for family, resolved in hitlist_stats.get("flank_resolution", {}).items():
             print(f"    flank resolution [{family}]: {resolved:.1%}")
         print("    note: T-cell / TCR / processing are absent in hitlist-only mode")
+    elif data_source == "scoped_bulk":
+        from presto.data.scoped_bulk import load_scoped_bulk_records
+        from presto.data.scoped_partitions import prepare_scoped_partitions
+
+        bulk_ms_records, scoped_stats = load_scoped_bulk_records(
+            args.scoped_bundle,
+            bundle_sha256=args.scoped_bundle_sha256,
+            max_records=args.max_scoped_bulk or None,
+            seed=data_seed + 23,
+        )
+        scoped_partitions = prepare_scoped_partitions(
+            bulk_ms_records,
+            scoped_stats,
+            seed=args.seed,
+            val_frac=float(args.val_frac),
+            test_frac=float(args.test_frac),
+            assignment_file=args.frozen_assignment_file,
+            assignment_sha256=args.frozen_assignment_sha256,
+        )
+        data_funnel["source_loader"] = scoped_stats
+        data_funnel["frozen_assignments"] = scoped_partitions.receipt
+        print(
+            f"Scoped search input: {len(bulk_ms_records)} peptide proxies; no excision/depth labels"
+        )
     else:
         if getattr(args, "require_merged_input", True):
             raise FileNotFoundError(
@@ -5145,6 +5187,7 @@ def run(args: argparse.Namespace) -> None:
         and not elution_records
         and not tcell_records
         and not vdjdb_records
+        and not bulk_ms_records
     ):
         raise RuntimeError("No usable unified training records were loaded.")
 
@@ -5169,14 +5212,18 @@ def run(args: argparse.Namespace) -> None:
     )
     # Resolve once so the full sequences and groove records necessarily come
     # from the same mhcseqs-first / CSV-supplemented join.
-    mhc_exact_inputs, stats = resolve_mhc_inputs_from_index(args.index_csv, unique_alleles)
+    if data_source == "scoped_bulk":
+        stats = {"resolved": 0, "total": 0}
+    else:
+        mhc_exact_inputs, stats = resolve_mhc_inputs_from_index(args.index_csv, unique_alleles)
     mhc_sequences = {
         allele: record.sequence
         for allele, record in mhc_exact_inputs.items()
         if str(record.sequence or "").strip()
     }
     data_funnel["mhc_resolution_contract"] = {
-        "resolver_order": ["mhcseqs", "index_csv"],
+        "resolver_order": [] if data_source == "scoped_bulk" else ["mhcseqs", "index_csv"],
+        "scope": "not applicable to shotgun peptides" if data_source == "scoped_bulk" else "MHC",
         "index_csv": str(args.index_csv or ""),
         "filter_unresolved_mhc": filter_unresolved_mhc,
         "strict_mhc_resolution": strict_mhc_resolution,
@@ -5555,7 +5602,6 @@ def run(args: argparse.Namespace) -> None:
     data_funnel["additions"]["synthetic_processing"] = processing_aug_stats
     data_funnel["additions"]["synthetic_cascade"] = cascade_stats
 
-    bulk_ms_records = []
     if bool(getattr(args, "bulk_ms", False)):
         from presto.data.bulk_ms import load_bulk_ms_records
 
@@ -5659,6 +5705,10 @@ def run(args: argparse.Namespace) -> None:
         )
         data_funnel["frozen_membership"] = membership_receipt
         print(f"Final frozen membership: {membership_receipt['directory']}")
+    if scoped_partitions is not None:
+        frozen_indices, membership_receipt = scoped_partitions.finalize(dataset)
+        data_funnel["frozen_membership"] = membership_receipt
+        print(f"Frozen within-search membership: {membership_receipt['directory']}")
     if run_dir is not None:
         from presto.training.data_support import write_data_funnel_artifacts
 
@@ -5689,7 +5739,11 @@ def run(args: argparse.Namespace) -> None:
         val_dataset = Subset(dataset, frozen_indices["val"])
         test_dataset = Subset(dataset, frozen_indices["test"]) if frozen_indices["test"] else None
         print(
-            "Split: frozen observations and their generated descendants; "
+            (
+                "Split: frozen peptide proxies within one search; "
+                if scoped_partitions is not None
+                else "Split: frozen observations and their generated descendants; "
+            )
             + ", ".join(f"{name}={len(rows)}" for name, rows in frozen_indices.items())
         )
     elif split_mode == "peptide_group":
@@ -6388,6 +6442,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Train Presto on unified multi-source immunology data"
     )
+    from presto.cli.training_sources import add_training_source_arguments
+
+    add_training_source_arguments(parser)
     parser.add_argument("--config", type=str, default=None, help="Optional JSON/YAML config file")
     parser.add_argument(
         "--profile",
