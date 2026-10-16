@@ -58,6 +58,8 @@ import random
 import sys
 from typing import Any, Dict, FrozenSet, List, Optional, Sequence, Tuple, Union
 
+from .species_context import NATIVE_SPECIES_COLUMNS, native_species_context
+
 from .flank_selection import (
     MAPPING_CATEGORIES,
     MAPPING_CATEGORY_CROSS_GENE_UNRESOLVED,
@@ -118,6 +120,11 @@ SHARED_COLUMNS: Tuple[str, ...] = (
     "mhc_class",
     "host",
     "source_organism",
+    *(
+        column
+        for column in NATIVE_SPECIES_COLUMNS.values()
+        if column not in {"host", "source_organism"}
+    ),
     "source",
     # Source-observation identity. These remain attached after mapping
     # expansion/collapse so a model prediction can be traced to the raw row.
@@ -238,7 +245,8 @@ COLUMNS_BY_EVIDENCE: Dict[str, Tuple[str, ...]] = {
 }
 
 
-#: Oldest hitlist whose column semantics match what this module assumes.
+#: Minimum validated Hitlist release for the full native species-role and
+#: observation contract. This matches the existing declared dependency floor.
 #:
 #: 1.53.0 for the arm-attribution columns (`sample_attribution`,
 #: `is_control_arm`, `sample_label`), which landed across
@@ -255,7 +263,7 @@ COLUMNS_BY_EVIDENCE: Dict[str, Tuple[str, ...]] = {
 #: and reports nothing -- 816,023 observations (18.4%) carry the wrong
 #: perturbation label, 716,992 of them genuinely-unperturbed rows wearing their
 #: study's panel. That is why this is an assertion and not a comment.
-MINIMUM_HITLIST_VERSION = (1, 53, 0)
+MINIMUM_HITLIST_VERSION = (1, 75, 0)
 
 
 def _parse_version(raw: Optional[str]) -> Optional[Tuple[int, ...]]:
@@ -290,6 +298,7 @@ def require_supported_hitlist(raw_version: Optional[str]) -> None:
         wanted = ".".join(str(part) for part in MINIMUM_HITLIST_VERSION)
         raise RuntimeError(
             f"hitlist {raw_version} is too old for this loader; need >= {wanted}. "
+            "The expanded source contract requires native species-role provenance. "
             "Before 1.46.0 `apm_genes_perturbed` was ORed across a study, so "
             "genuinely unperturbed control rows carry their study's knockout "
             "panel -- 18.4% of observations on the corpus this was measured "
@@ -402,6 +411,7 @@ def _lineage_fields(row) -> Dict[str, Any]:
         canonical_value = str(canonical).strip().lower() in {"1", "1.0", "true", "yes", "t"}
 
     return {
+        "species_context": native_species_context(row),
         "source_bundle_id": _clean(row.get("source_bundle_id")),
         "provenance_id": _clean(row.get("provenance_id")),
         "provenance_status": _clean(row.get("provenance_status")),

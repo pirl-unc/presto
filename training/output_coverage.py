@@ -14,6 +14,8 @@ import tempfile
 from collections import defaultdict
 from pathlib import Path
 
+from ..data.species_context import species_lineage_fields
+
 from .mil import MIL_TASKS, get_mil_channel, resolve_mil_targets, mil_observation_slots
 from .output_contract import OutputContract, label_evidence
 from .supervision import resolve_row_targets
@@ -154,6 +156,10 @@ class OutputCoverageCensus:
                 (row_id, name, str(getattr(sample, name, None) or "unknown"))
                 for name in CONTEXT_FIELDS
             ]
+            facets.extend(
+                (row_id, name, value or "unknown")
+                for name, value in species_lineage_fields(sample).items()
+            )
             for attr, field in (
                 ("source_mhc_alleles", "source_allele"),
                 ("resolved_mhc_alleles", "resolved_allele"),

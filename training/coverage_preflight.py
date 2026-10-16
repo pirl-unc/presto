@@ -38,6 +38,7 @@ def audit_training_coverage(
             "dataset_supervision_contract_sha256": legacy["dataset_supervision_contract_sha256"],
             "output_evidence_sha256": census.sha256,
             "affinity_target_policies": affinity_target_policies(contract),
+            "molecular_mhc_species_policy": contract.to_dict()["molecular_mhc_species_policy"],
             "split_rows": {name: value["rows"] for name, value in legacy["splits"].items()},
         }
         if frozen_membership is not None:

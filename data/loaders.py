@@ -25,7 +25,7 @@ import warnings
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Optional, Iterator, Union, Any, Tuple, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import random
 import re
 
@@ -233,6 +233,7 @@ class BindingRecord:
     parent_ids: str = ""
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -288,6 +289,7 @@ class KineticsRecord:
     parent_ids: str = ""
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -347,6 +349,7 @@ class StabilityRecord:
     parent_ids: str = ""
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -392,6 +395,7 @@ class ProcessingRecord:
     parent_ids: str = ""
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -475,6 +479,7 @@ class ElutionRecord:
     parent_ids: str = ""
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -528,6 +533,7 @@ class TCellRecord:
     parent_ids: str = ""
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -632,6 +638,7 @@ class TcrEvidenceRecord:
     parent_ids: str = ""
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         # Derive the bins from the raw method strings when a caller did not
@@ -2086,6 +2093,7 @@ class PrestoDataset(Dataset):
             )
             return {
                 **source_lineage_fields(record),
+                "species_context": dict(getattr(record, "species_context", {}) or {}),
                 "source_sample_label": str(getattr(record, "sample_label", "") or ""),
                 "source_sample_attribution": str(getattr(record, "sample_attribution", "") or ""),
                 "mapping_gene_name": str(getattr(record, "mapping_gene_name", "") or ""),
@@ -2353,6 +2361,7 @@ class PrestoDataset(Dataset):
                     primary_allele=rec.mhc_allele,
                     synthetic_kind=_synthetic_kind(rec.source),
                     **source_lineage_fields(rec),
+                    species_context=dict(rec.species_context),
                     sample_id=_sample_id("proc", rec),
                 )
             )
@@ -2569,6 +2578,7 @@ class PrestoDataset(Dataset):
                     primary_allele=rec.mhc_allele,
                     synthetic_kind=_synthetic_kind(rec.source),
                     **source_lineage_fields(rec),
+                    species_context=dict(rec.species_context),
                     sample_id=_sample_id("tcell", rec),
                 )
             )
@@ -2601,6 +2611,7 @@ class PrestoDataset(Dataset):
                     primary_allele=rec.mhc_a,
                     synthetic_kind=_synthetic_kind(rec.source),
                     **source_lineage_fields(rec),
+                    species_context=dict(rec.species_context),
                     sample_id=_sample_id("tcrev", rec),
                 )
             )

@@ -171,6 +171,16 @@ The executable task registry is the source of truth. In particular:
 | MHC class/species/fine type | Auxiliary categorical objectives |
 | Core start | CE only where actual labels/masks are present |
 
+The MHC-species auxiliary uses explicit molecular allele identity. A genotype bag
+must have a consistent known species; mixed or unresolved identities are masked.
+Recorded host or processing species never supplies this target. Native host,
+antigen, presenter, in-vivo/lineage host and introduced-MHC evidence remains in
+separate source-provenance fields, with citations and unresolved attribution notes.
+The prospective output contract records this policy (schema 3), and final frozen
+membership binds these role fields. Historical contracts and results remain intact.
+Processing conditioning and source-antigen attribution retain their documented
+limitations under #115/#46; this molecular-label correction does not resolve them.
+
 Censor qualifiers are `-1` for an upper bound, `0` for exact, `1` for a lower
 bound. Exact values use squared error; inequalities penalize only violations of
 the bound in the transformed target space. Every consumer of a measurement must

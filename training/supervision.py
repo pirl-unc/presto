@@ -553,8 +553,10 @@ def _get_batch_target(batch, spec: TaskLossSpec) -> Optional[torch.Tensor]:
             labels.append(1 if normalized == "II" else 0)
         return torch.tensor(labels, dtype=torch.long, device=batch.pep_tok.device)
     if spec.name == "mhc_species":
-        species_values = getattr(batch, "processing_species", None)
-        if not isinstance(species_values, (list, tuple)):
+        species_values = getattr(batch, "molecular_mhc_species", None)
+        if not isinstance(species_values, (list, tuple)) or len(species_values) != len(
+            batch.pep_tok
+        ):
             return None
         labels = []
         for raw in species_values:
@@ -597,8 +599,10 @@ def _get_batch_mask(batch, spec: TaskLossSpec) -> Optional[torch.Tensor]:
             mask.append(1.0 if normalized in {"I", "II"} else 0.0)
         return torch.tensor(mask, dtype=torch.float32, device=batch.pep_tok.device)
     if spec.name == "mhc_species":
-        species_values = getattr(batch, "processing_species", None)
-        if not isinstance(species_values, (list, tuple)):
+        species_values = getattr(batch, "molecular_mhc_species", None)
+        if not isinstance(species_values, (list, tuple)) or len(species_values) != len(
+            batch.pep_tok
+        ):
             return None
         mask = []
         for raw in species_values:

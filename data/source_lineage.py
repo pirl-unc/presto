@@ -113,6 +113,16 @@ def generated_record(record: Any, *, parents, kind: str, seed: int, draw_index: 
             resolved = False
     if bundle and not resolved:
         raise ValueError("Frozen generated records require every measured parent identity")
+    if hasattr(record, "species_context"):
+        from .species_context import SPECIES_ROLE_FIELDS, reported_species_fields
+
+        contexts = [reported_species_fields(parent) for parent in parents]
+        inherited = {}
+        for name in SPECIES_ROLE_FIELDS:
+            values = {context[name] for context in contexts}
+            inherited[name] = next(iter(values)) if len(values) == 1 else ""
+        inherited["species_context_origin"] = "generated_parent_consensus"
+        record.species_context = inherited
     lineage = {
         "source_bundle_id": bundle,
         "source_partition": partition,

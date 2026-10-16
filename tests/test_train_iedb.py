@@ -1129,12 +1129,14 @@ def test_audit_mhc_sequence_coverage_reports_resolved_missing_and_species_bucket
         "murine": 2,
         "nhp": 0,
         "other": 0,
+        "unknown": 0,
     }
     assert coverage["species_by_state"]["missing"] == {
         "human": 1,
         "murine": 1,
         "nhp": 1,
         "other": 0,
+        "unknown": 0,
     }
     assert coverage["by_modality"]["binding"]["resolved_rows"] == 1
     assert coverage["by_modality"]["binding"]["missing_rows"] == 1

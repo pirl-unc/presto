@@ -1,0 +1,11 @@
+{
+  "agent": "codex",
+  "model": "GPT-6",
+  "kind": "data-only molecular species and native provenance audit",
+  "command": "python code/audit.py",
+  "expected_package_version": "0.1.19",
+  "n_expected_observations": 9053,
+  "n_expected_ic50_observations": 2614,
+  "optimization": "none; historical observations, membership, predictions and decisions preserved",
+  "gpu": null
+}

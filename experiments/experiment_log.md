@@ -1,3 +1,22 @@
+## 2026-10-16 — Molecular MHC species and independent source-role audit
+
+- **Agent/model:** Codex / GPT-6; [experiment and reproduction](2026-10-16_1440_codex_molecular-species-lineage/README.md).
+- **Recipe:** clean `ec0446fcb820d72d0041067cbee6074882837b3f`, Presto 0.1.19 candidate;
+  hash-pinned native Hitlist 1.78.0 corpus and historical Presto 0.1.16 membership/
+  inspection tables. All 9,053 observations and 7,241/906/906 assignments preserved.
+- **Conditions:** data-only canonical label and native provenance comparison; no model,
+  pretraining, synthetic data, training, loss/weight change or new predictions. All splits
+  inspected for source integrity, no new held-out performance estimate or preferred model.
+- **Result:** eight rat-host/HLA elution labels (seven train, one validation) change from
+  host-derived murine to molecular human; all 2,614 IC50 values/operators/partitions and
+  effective targets remain unchanged. Native context remains 50 resolved, 47 partial,
+  8,956 unknown. Reviewed presenters include 15 rat rows; distinct source roles retained.
+- **Resources:** CPU only, no cloud/GPU; builder 128.576 s, peak process RSS 631,259,136 bytes.
+- **Decision:** bind the prospective molecular policy, preserve native role evidence and
+  [publish the full source-linked audit](https://github.com/pirl-unc/presto/releases/tag/molecular-species-lineage-audit-v1).
+  Processing conditioning, antigen attribution, unknown biological lineage and failed
+  IC50 quality remain open. Historical run and qualification contract are unchanged.
+
 ## 2026-10-16 — Physical affinity reporting audit; failed quality decision unchanged
 
 - **Agent/model:** Codex / GPT-6; [experiment and reproduction](2026-10-16_1405_codex_physical-affinity-metrics/README.md).
