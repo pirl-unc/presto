@@ -19,6 +19,12 @@ successful merged-main run, together with their SHA-256 hashes and source commit
 The source archive builds the tested wheel; no training datasets or model weights
 are included. A software release does not certify the training data or model quality.
 
+CI cancels superseded updates within the same pull request or feature-branch push.
+PR and push checks have separate groups, and both final-head validations gate merge.
+Each main-push and immutable-tag run has its own protected group, so neither running
+nor pending release validation can be displaced by a later update. Distribution
+still requires successful checks on the exact merged-main commit.
+
 ## Quickstart
 
 ```bash

@@ -4,6 +4,21 @@ on:
   push:
   pull_request:
 
+# PR and feature-push updates supersede only their own event/ref group.
+# Protected runs use unique IDs: even pending main/tag runs must not be replaced.
+concurrency:
+  group: >-
+    ${{ github.workflow }}-${{ github.event_name }}-${{
+      (github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number)) ||
+      (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/') &&
+       github.ref != 'refs/heads/main' && github.ref) ||
+      format('run-{0}', github.run_id)
+    }}
+  cancel-in-progress: >-
+    ${{ github.event_name == 'pull_request' ||
+        (github.event_name == 'push' && startsWith(github.ref, 'refs/heads/') &&
+         github.ref != 'refs/heads/main') }}
+
 jobs:
   lint-test:
     runs-on: ubuntu-latest
