@@ -234,6 +234,9 @@ class BindingRecord:
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
     species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -290,6 +293,9 @@ class KineticsRecord:
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
     species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -350,6 +356,9 @@ class StabilityRecord:
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
     species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -396,6 +405,9 @@ class ProcessingRecord:
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
     species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -480,6 +492,9 @@ class ElutionRecord:
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
     species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -534,6 +549,9 @@ class TCellRecord:
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
     species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -639,6 +657,9 @@ class TcrEvidenceRecord:
     root_observation_ids: str = ""
     generation_lineage_status: str = ""
     species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
     def __post_init__(self) -> None:
         # Derive the bins from the raw method strings when a caller did not

@@ -68,6 +68,22 @@ def test_insufficient_independent_components_fail(frozen_bundle):
 
 
 @pytest.mark.parametrize("frozen_bundle", ["three_peptides"], indirect=True)
+def test_final_membership_preserves_and_rejects_drifted_assay_preparation(frozen_bundle):
+    partitions, groups = prepare(frozen_bundle)
+    records = groups["binding_records"]
+    records[0].source_assay_method = "purified MHC/direct"
+    records[0].source_evidence_kind = "binding"
+    model = model_dataset(groups)
+    _, original = finalize_frozen_membership(partitions, model, groups)
+    records[0].source_assay_method = "cellular MHC/direct"
+    with pytest.raises(ValueError, match="no longer matches"):
+        finalize_frozen_membership(partitions, model, groups)
+    changed = model_dataset(groups)
+    _, revised = finalize_frozen_membership(partitions, changed, groups)
+    assert original["membership_sha256"] != revised["membership_sha256"]
+
+
+@pytest.mark.parametrize("frozen_bundle", ["three_peptides"], indirect=True)
 def test_frozen_species_roles_bind_membership_and_reject_sample_drift(frozen_bundle):
     partitions, groups = prepare(frozen_bundle)
     model = model_dataset(groups)

@@ -409,6 +409,7 @@ def finalize_frozen_membership(partitions, dataset, record_groups, *, cache_dir=
     from hitlist import audit_splits
     from hitlist.downloads import data_dir
     from .source_lineage import record_lineage_id, source_lineage_fields
+    from .assay_context import assay_context_fields
     from .species_context import (
         processing_species_context,
         reported_species_fields,
@@ -427,6 +428,7 @@ def finalize_frozen_membership(partitions, dataset, record_groups, *, cache_dir=
                 **metadata,
                 **reported_species_fields(record),
                 **processing_species_context(record),
+                **assay_context_fields(record),
             }
             if (
                 not key
@@ -487,6 +489,8 @@ def finalize_frozen_membership(partitions, dataset, record_groups, *, cache_dir=
             != {name: ledger[key][name] for name in reported_species_fields(sample)}
             or processing_species_context(sample)
             != {name: ledger[key][name] for name in processing_species_context(sample)}
+            or assay_context_fields(sample)
+            != {name: ledger[key][name] for name in assay_context_fields(sample)}
         ):
             raise ValueError("Model sample no longer matches its final record lineage")
         if not sample.sample_id or sample.sample_id in sample_ids:
@@ -502,6 +506,7 @@ def finalize_frozen_membership(partitions, dataset, record_groups, *, cache_dir=
                 "peptide": sample.peptide,
                 **source_lineage_fields(sample),
                 **species_lineage_fields(sample),
+                **assay_context_fields(sample),
                 "sample_source": sample.sample_source or "",
                 "assay_group": sample.assay_group or "",
                 "synthetic_kind": sample.synthetic_kind or "",
@@ -544,7 +549,7 @@ def finalize_frozen_membership(partitions, dataset, record_groups, *, cache_dir=
     final_ids = {row["record_id"] for row in rows}
     excluded = sorted(set(ledger) - final_ids)
     contract = {
-        "algorithm": "frozen-final-membership-v3-processing-context",
+        "algorithm": "frozen-final-membership-v4-assay-applicability",
         "presto_version": __version__,
         "source_bundle_id": partitions.bundle.bundle_id,
         "assignment_sha256": partitions.receipt["artifacts"]["assignments.parquet"]["sha256"],

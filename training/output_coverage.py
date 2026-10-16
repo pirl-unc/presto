@@ -15,6 +15,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from ..data.species_context import species_lineage_fields
+from ..data.assay_context import assay_context_fields
 
 from .mil import MIL_TASKS, get_mil_channel, resolve_mil_targets, mil_observation_slots
 from .output_contract import OutputContract, label_evidence
@@ -42,6 +43,9 @@ COUNT_FIELDS = (
     "unique_exact",
 )
 CONTEXT_FIELDS = (
+    "source_assay_method",
+    "source_evidence_kind",
+    "parent_assay_contexts",
     "mhc_class",
     "species",
     "species_of_origin",
@@ -159,6 +163,9 @@ class OutputCoverageCensus:
             facets.extend(
                 (row_id, name, value or "unknown")
                 for name, value in species_lineage_fields(sample).items()
+            )
+            facets.extend(
+                (row_id, name, value) for name, value in assay_context_fields(sample).items()
             )
             for attr, field in (
                 ("source_mhc_alleles", "source_allele"),

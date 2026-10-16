@@ -11530,3 +11530,21 @@ discovery tests and review documentation.
 - Formatting/lint and strict docs pass. Full ./test.sh: 2,281 passed, four skipped, 812 warnings in 508.81 seconds. The library source is unchanged from reviewed #112 except the 0.1.17 version.
 - Review found producer-version provenance in the frozen membership receipt; the new declaration now names the expected metadata change and requires the unchanged partition recipe hash plus all semantic membership/label fingerprints. Historical contracts remain immutable.
 - Released 0.1.16 producer pins, new public declaration, canonical qualification/fit and complete public evidence remain required.
+
+# Assay-context applicability — 2026-10-16
+
+Spec: [assay-context-applicability-spec.md](assay-context-applicability-spec.md).
+
+- [x] Review #126 and define source-preparation versus missing-context semantics.
+- [x] Preserve raw methods and implement conservative applicability reporting.
+- [x] Verify loading, generated parents, frozen membership, predictions and coverage.
+- [x] Publish an independently verified additive audit of all historical source rows.
+- [ ] Format/lint/full tests/docs, review, merge and verified public release.
+
+Review: 193 focused regressions and strict documentation pass. The independent
+real-source replay passes all 9,053 rows and all 2,614 unchanged IC50 targets.
+Full local tests, public download replay and exact-head release checks follow.
+
+Public closure: all 21 evidence downloads and all 11 core artifacts pass an
+independent replay using the downloaded verifier and original pinned inputs.
+The next donor-aware Atlas consumer/independence gate is tracked in #127.

@@ -1,0 +1,12 @@
+{
+  "agent": "codex",
+  "model": "GPT-6",
+  "command": "python code/audit.py",
+  "expected_version": "0.1.22",
+  "kind": "CPU additive assay applicability audit",
+  "optimization": "none",
+  "gpu": null,
+  "n_expected_observations": 9053,
+  "n_expected_ic50_observations": 2614,
+  "preserve_historical_partitions_predictions_and_targets": true
+}

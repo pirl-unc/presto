@@ -81,6 +81,8 @@ def evaluate_supported_outputs(
         != contract.to_dict()["processing_species_policy"]
     ):
         raise ValueError("Source contract requires the current processing species policy")
+    if source_contract.get("assay_context_policy") != contract.to_dict()["assay_context_policy"]:
+        raise ValueError("Source contract requires the current assay context applicability policy")
     if _canonical_json(manifest["source_contract"]) != _canonical_json(source_contract):
         raise ValueError("Manifest source_contract differs from the curated data contract")
     if not isinstance(manifest["claims"], list) or not manifest["claims"]:

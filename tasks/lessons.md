@@ -415,3 +415,10 @@
 - When adapting an audit recipe, scope replacements to one syntax location and
   inspect every changed call. Exercise snapshot/publication paths before freezing
   a real-source run. Preserve failed executed recipes and logs as separate attempts.
+
+## 2026-10-16 — source qualification priority
+
+Prioritize source lineage and donor/specimen independence before more fitting when
+the user identifies those as blockers. Interpret missing context against the assay:
+a purified-MHC binding reaction does not require a cellular processing assignment.
+Keep applicability reporting separate from model features and the measured label.
