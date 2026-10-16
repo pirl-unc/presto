@@ -1,3 +1,25 @@
+# Internal excision scoring contract — Presto #88
+
+- [x] File the observed rule inconsistency and specify compatibility explicitly.
+- [x] Implement versioned internal-site masking and checkpoint/resume semantics.
+- [x] Verify known boundaries and checkpoint round trips (98 tests passed; two corpus skips).
+- [ ] Format, lint, full tests, review, PR, merge and verified distribution.
+
+## Review
+
+The focused scoring/checkpoint/excision suite passes 98 tests with two explicit
+missing-corpus skips. A checkpoint created by unchanged 0.1.6 (f30442e) with
+internal K-P/R-P sites loads with vocabulary 2/scoring 1 and produces exactly
+identical excision, missed-cleavage and detectability outputs. No weights or
+scoring semantics are migrated. Format/lint and strict docs pass; complete
+regression and deployment gates remain pending. The first CI/full local run found
+two gradient-coverage fixture failures: its only interior Trypsin site was R-P,
+correctly excluded by scoring version 2 (#92). The fixture now supplies an allowed
+R-A site and a compatible terminal K; thresholds and allowlists are unchanged.
+The expanded focused suite passes 119 tests with two explicit missing-corpus skips.
+The interrupted local run had 1,457 passes and those two failures; the final full
+suite is rerun after the fix.
+
 # Trypsin/P search contract — Presto #82
 
 - [x] Read primary enzyme documentation and frozen search settings.

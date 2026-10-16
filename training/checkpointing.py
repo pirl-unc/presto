@@ -10,6 +10,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import torch
 
 from ..models.presto import Presto
+from ..models.heads import validate_excision_scoring_version
 from ..data.vocab import EXCISION_MACHINERY_VOCABULARIES, excision_machinery_vocabulary
 from ..models.affinity import (
     DEFAULT_MAX_AFFINITY_NM,
@@ -21,6 +22,13 @@ from ..models.affinity import (
 CHECKPOINT_FORMAT = "presto.v2"
 CHECKPOINT_FORMAT_VERSION = 2
 MODEL_CLASS = "presto.models.presto.Presto"
+
+
+def checkpoint_scoring_version(model_config=None) -> int:
+    """An absent semantic version means historical scoring, regardless of vocabulary."""
+    return validate_excision_scoring_version(
+        (model_config or {}).get("excision_scoring_version", 1)
+    )
 
 
 def checkpoint_machinery_version(state_dict, model_config=None) -> int:
@@ -82,6 +90,7 @@ def infer_model_config_from_state_dict(state_dict: Dict[str, torch.Tensor]) -> D
 
     config: Dict[str, Any] = {
         "excision_machinery_version": checkpoint_machinery_version(state_dict),
+        "excision_scoring_version": 1,
     }
     if d_model is not None:
         config["d_model"] = d_model
@@ -117,6 +126,7 @@ def build_model_config(model: Presto) -> Dict[str, Any]:
         "n_heads": int(n_heads),
         "latent_topology": str(model.latent_topology),
         "excision_machinery_version": model.excision_machinery_version,
+        "excision_scoring_version": model.excision_scoring_version,
         "max_affinity_nM": float(getattr(model, "max_affinity_nM", DEFAULT_MAX_AFFINITY_NM)),
         "binding_midpoint_nM": float(
             getattr(model, "binding_midpoint_nM", DEFAULT_BINDING_MIDPOINT_NM)
@@ -144,6 +154,7 @@ def _extract_state_and_config(
     model_config["excision_machinery_version"] = checkpoint_machinery_version(
         state_dict, model_config
     )
+    model_config["excision_scoring_version"] = checkpoint_scoring_version(model_config)
     return state_dict, model_config
 
 
@@ -260,6 +271,7 @@ def load_model_from_checkpoint(
 
     model = Presto(
         excision_machinery_version=model_config["excision_machinery_version"],
+        excision_scoring_version=model_config["excision_scoring_version"],
         d_model=int(resolved["d_model"]),
         n_layers=int(resolved["n_layers"]),
         n_heads=int(resolved["n_heads"]),

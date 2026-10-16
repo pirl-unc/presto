@@ -28,7 +28,13 @@ from .presto_modules import (
     ClassProcessingPredictor,
     PrestoTrunkState,
 )
-from .heads import TCellAssayHead, ElutionHead, ExcisionHead
+from .heads import (
+    TCellAssayHead,
+    ElutionHead,
+    ExcisionHead,
+    EXCISION_SCORING_VERSION,
+    validate_excision_scoring_version,
+)
 from .affinity import (
     AFFINITY_TARGET_ENCODINGS,
     DEFAULT_MAX_AFFINITY_NM,
@@ -316,6 +322,7 @@ class Presto(nn.Module):
         binding_direct_segment_mode: str = "off",
         latent_topology: str = "expanded",
         excision_machinery_version: int = EXCISION_MACHINERY_VERSION,
+        excision_scoring_version: int = EXCISION_SCORING_VERSION,
     ):
         """Initialize Presto."""
         super().__init__()
@@ -326,6 +333,7 @@ class Presto(nn.Module):
             excision_machinery_version
         )
         self.excision_machinery_version = excision_machinery_version
+        self.excision_scoring_version = validate_excision_scoring_version(excision_scoring_version)
         self.max_affinity_nM = float(max_affinity_nM)
         affinity_target_encoding = str(affinity_target_encoding).strip().lower()
         if affinity_target_encoding not in AFFINITY_TARGET_ENCODINGS:
@@ -954,6 +962,7 @@ class Presto(nn.Module):
         # Machinery-conditioned excision readout. Output-side only: the
         # machinery indexes this head and never reaches the trunk.
         self.excision_head = ExcisionHead(
+            scoring_version=self.excision_scoring_version,
             d_model=d_model,
             n_machinery=len(self.excision_machinery_vocabulary),
             n_aa=len(AA_VOCAB),
