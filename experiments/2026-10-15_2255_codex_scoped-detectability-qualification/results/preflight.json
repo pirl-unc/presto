@@ -1,0 +1,165 @@
+{
+  "directory": "/Users/iskander/.hitlist/presto-scoped-qualification/preflight/859363c1269376d7725bcfcc29f1adb8b8330fd7e789daf31ee4655a7227ab30/bundles/2026-10-16T02-59-00Z",
+  "summary_sha256": "08e6ff1f4d7a765465384c8892a3e8aef7737fd140f68577155a27907f7888ae",
+  "stage": "preflight",
+  "commit": "a15c1a45f9d9eda9d111459b6f1d9f86a56e8e29",
+  "dirty": false,
+  "presto_version": "0.1.8",
+  "status": "success",
+  "runtime_seconds": 108.77661541700945,
+  "process_peak_rss_bytes": 998916096,
+  "versions": {
+    "torch": "2.14.1",
+    "pandas": "2.3.3",
+    "pyarrow": "25.0.1",
+    "hitlist_runtime": "1.75.0",
+    "datacache_runtime": "1.27.1"
+  },
+  "config": {
+    "data_source": "scoped_bulk",
+    "scoped_bundle_sha256": "441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b",
+    "max_scoped_bulk": 10000,
+    "seed": 42,
+    "data_seed": 42,
+    "val_frac": 0.1,
+    "test_frac": 0.1,
+    "split_mode": "peptide_group",
+    "mhc_augmentation_samples": 0,
+    "uniprot_negative_ratio": 0,
+    "bulk_ms": false,
+    "profile": "full",
+    "device": "cpu",
+    "num_workers": 0,
+    "pin_memory": false,
+    "d_model": 32,
+    "n_layers": 1,
+    "n_heads": 4,
+    "latent_topology": "expanded",
+    "epochs": 2,
+    "batch_size": 64,
+    "lr": 0.001,
+    "max_batches": 100,
+    "max_val_batches": 0,
+    "track_pmhc_flow": false,
+    "track_output_latent_stats": false,
+    "profile_performance": false,
+    "data_preflight_only": true,
+    "require_traceable_lineage": true,
+    "require_binary_balance_target": [
+      "ms_detectability"
+    ],
+    "min_split_target_support": 50,
+    "synthetic_pmhc_negative_ratio": 0,
+    "synthetic_elution_negative_ratio": 0,
+    "synthetic_processing_negative_ratio": 0,
+    "synthetic_cascade_elution_negative_ratio": 0,
+    "synthetic_cascade_tcell_negative_ratio": 0,
+    "synthetic_class_i_no_mhc_beta_negative_ratio": 0,
+    "consistency_cascade_weight": 0,
+    "consistency_assay_affinity_weight": 0,
+    "consistency_assay_presentation_weight": 0,
+    "consistency_no_b2m_weight": 0,
+    "consistency_tcell_context_weight": 0,
+    "consistency_tcell_upstream_weight": 0
+  },
+  "artifacts": {
+    "inventory.json": {
+      "sha256": "3008b45f0a947edb697a992f3d07b5999735879ad4131928c07c9c8c6d46a151",
+      "size_bytes": 3479
+    },
+    "run.tar.gz": {
+      "sha256": "fb0881f60ed993614e683a2f9e588e6f02b83d91228a78b01833db5ab47e9244",
+      "size_bytes": 2040012
+    }
+  },
+  "coverage": {
+    "full_projection": {
+      "n_ambiguous_peptides": 153980,
+      "n_candidate_occurrences": 1656863,
+      "n_invalid_sequence_occurrences": 0,
+      "n_peptides": 1451158,
+      "n_peptides_by_evidence": {
+        "By MS/MS": 143216,
+        "By matching": 20778,
+        "not observed in scope": 1287164
+      },
+      "n_source_observations": 172033,
+      "n_supported_parents": 12287
+    },
+    "n_dropped_by_cap": 1441158,
+    "n_selected_peptides": 10000,
+    "partitions": {
+      "test": {
+        "n_measured_observations": 109,
+        "n_peptides": 1000,
+        "n_peptides_by_evidence": {
+          "By MS/MS": 91,
+          "By matching": 18,
+          "not observed in scope": 891
+        },
+        "n_unknown_parents": 110
+      },
+      "train": {
+        "n_measured_observations": 912,
+        "n_peptides": 8000,
+        "n_peptides_by_evidence": {
+          "By MS/MS": 782,
+          "By matching": 130,
+          "not observed in scope": 7088
+        },
+        "n_unknown_parents": 844
+      },
+      "val": {
+        "n_measured_observations": 105,
+        "n_peptides": 1000,
+        "n_peptides_by_evidence": {
+          "By MS/MS": 95,
+          "By matching": 10,
+          "not observed in scope": 895
+        },
+        "n_unknown_parents": 114
+      }
+    }
+  },
+  "source_bundle_id": "sha256:441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b",
+  "membership_sha256": "b8743e33e6cc7aa68c535c9553900212bef71705d09ee7bffdf95f8e90444b00",
+  "assignment_sha256": "3280f2a0226341ee6fc8c0bf1376759e202dd2815ba0b9630ec75a086aafc9c4",
+  "split_support_sha256": "54e9c5527bd63925a508fe4ac89c0b1cd75e7a20fb159db58efe0ca4c7a18ec0",
+  "lineage": {
+    "duplicate_sample_id_count": 0,
+    "duplicate_sample_id_examples": [],
+    "issue_count": 0,
+    "issue_examples": []
+  },
+  "leakage_audit": {
+    "claim": "peptide-disjoint evaluation within one captured search",
+    "donor_independence": "inconclusive; unresolved source identity",
+    "experimental_independence": "not established; all partitions reuse this experiment",
+    "pairwise": {
+      "test/train": {
+        "n_shared_candidate_ids": 0,
+        "n_shared_known_proteins": 473,
+        "n_shared_measured_observation_ids": 0,
+        "n_shared_peptides": 0,
+        "n_shared_search_scopes": 1
+      },
+      "test/val": {
+        "n_shared_candidate_ids": 0,
+        "n_shared_known_proteins": 123,
+        "n_shared_measured_observation_ids": 0,
+        "n_shared_peptides": 0,
+        "n_shared_search_scopes": 1
+      },
+      "train/val": {
+        "n_shared_candidate_ids": 0,
+        "n_shared_known_proteins": 495,
+        "n_shared_measured_observation_ids": 0,
+        "n_shared_peptides": 0,
+        "n_shared_search_scopes": 1
+      }
+    },
+    "peptide_disjoint": true,
+    "protein_independence": "not required; known overlap reported, ambiguous parents masked",
+    "specimen_independence": "inconclusive; unresolved source identity"
+  }
+}

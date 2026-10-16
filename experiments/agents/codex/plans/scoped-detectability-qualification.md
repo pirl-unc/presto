@@ -38,3 +38,16 @@ summaries belong in Git. Publish downloadable archives and per-file inventories.
 This bounded exercise cannot establish general proteomic detectability or full
 multi-output training readiness. A failed support/fit/evaluation gate remains
 visible and gets an issue; do not mask it by silently changing the cohort.
+
+Before fitting, freeze the baseline details: train-only StandardScaler followed
+by LogisticRegression(C=1, solver=lbfgs, max_iter=1000, tol=1e-4, class_weight=None,
+random_state=42). Features are peptide length and the 20 amino-acid fractions.
+No held-out feature, threshold or calibration selection. Keep threshold 0.5 for
+classification metrics. Compute 1,000 paired peptide-bootstrap resamples per
+held-out split, seed 4242, with percentile 95% intervals for log loss, AUROC and
+AP and paired model-minus-baseline differences. Shared proteins and a single
+experiment limit these intervals; they are not donor/experiment uncertainty.
+Treat finite complete predictions and exact lineage as pipeline acceptance.
+Report whether the bounded model improves log loss and ranking over prevalence
+and the composition baseline, without treating failure as permission to tune
+against test data or treating success as full model readiness.

@@ -1344,3 +1344,10 @@ the actual public archive is admitted with honest masks and lineage; the next
 canonical trainer experiment must establish frozen membership and bounded fitting.
 A single HeLa search and unresolved biological identities do not establish
 independent experiment/donor/specimen generalization. Status: admission audit closed.
+
+
+## 2026-10-15 — Codex: frozen within-search detectability preflight
+
+Family: [scoped-detectability-qualification](2026-10-15_2255_codex_scoped-detectability-qualification/README.md). Clean producer `a15c1a45f9d9eda9d111459b6f1d9f86a56e8e29`; Presto 0.1.8 with distinct Trypsin/P and versioned scoring. Canonical data-only preflight on the pinned public PXD013455 HeLa search succeeded in 108.78 seconds, runner peak RSS 998,916,096 bytes, CPU one thread. Frozen train/validation/test membership is 8,000/1,000/1,000 peptides with positive proxy support 912/105/109 and scoped absences 7,088/895/891. No generated controls, excision/depth labels, MHC inputs or fitting. All prospectively registered support thresholds are met; other outputs remain undeclared.
+
+No cross-partition peptides, candidate IDs or measured observation IDs; known proteins overlap and all splits share one search. Donor/specimen independence remains inconclusive. Complete membership TSV/parquet, source registry, label policies, overlap and output-coverage reports are in datacache, pinned by the family receipt. Run archive SHA-256 `fb0881f60ed993614e683a2f9e588e6f02b83d91228a78b01833db5ab47e9244`. This is admission/coverage evidence, not predictive quality. The registered bounded canonical fit and train-only baselines follow with the exact support fingerprint required.
