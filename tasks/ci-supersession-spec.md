@@ -43,3 +43,12 @@ artifacts and independently verify public release hashes and the wheel.
 Final PR and feature-push checks both gate merge. Distribution uses the exact
 successful clean-main push artifact after merge; unique protected groups retain
 both pending and running release evidence. No trigger or job is removed.
+
+## Live supersession check
+
+Initial candidate `66805ca17640ef73e1689e373bf95b4d66ccc400` started feature-push
+run 38928892699 and PR run 38928900809. Both were in progress before this
+follow-up documentation commit. The separate clean-main 0.1.19 release run
+38928041308 was also in progress. Verify that this update cancels only the two
+superseded feature/PR runs and leaves the main run intact; record observed outcomes
+on PR #122 before merging. Require successful complete checks on the final head.
