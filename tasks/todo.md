@@ -1,3 +1,10 @@
+# Trypsin/P search contract — Presto #82
+
+- [x] Read primary enzyme documentation and frozen search settings.
+- [x] Specify indexed vocabulary and legacy checkpoint behavior.
+- [ ] Reproduce rule/category mismatch and implement explicit versioning.
+- [ ] Verify legacy/new predictions, run gates, PR, merge and release.
+
 # Scope-aware contrast groups — Presto #81
 
 - [x] Record failure, design and verification boundary.
