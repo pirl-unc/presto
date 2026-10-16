@@ -44,3 +44,13 @@ storage and final outputs in datacache. This changes storage placement only; do
 not relax the original membership/support fingerprint. A regression simulates a
 publication filesystem that cannot host SQLite and verifies final output and
 scratch cleanup. Preserve the stopped attempt before retrying either condition.
+
+## Prospective producer provenance binding
+
+Before the retry, derive the expected policy.json by changing only the original
+policy's presto_version from 0.1.8 to 0.1.11. Its recipe hash must already match
+the unchanged scoped-partition implementation. Preserve both policy files and
+both support declarations. Replace only that known policy artifact hash/size in
+the new declaration; all assignment, membership, parent-graph, coverage, leakage,
+source registry, evidence and support fingerprints remain exactly the originals.
+This records the new producer without accepting altered data or thresholds.
