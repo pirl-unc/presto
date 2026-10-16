@@ -53,7 +53,7 @@ def digest(path):
     volumes={"/data": volume},
     cpu=(8, 8),
     memory=(65536, 65536),
-    ephemeral_disk=102400,
+    ephemeral_disk=524288,
     timeout=3000,
     max_containers=1,
     retries=0,

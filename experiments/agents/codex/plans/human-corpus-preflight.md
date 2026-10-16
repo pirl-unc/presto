@@ -32,7 +32,7 @@ negative/qualifier coverage are measurements to inform the next prospective fit.
 All regularization weights are explicitly zero even though no optimizer runs.
 No predictions/loss performance exist because no model is constructed.
 
-Use one bounded Modal CPU job: eight CPUs, 64 GiB RAM, no GPU, 50-minute function
+Use one bounded Modal CPU job: eight CPUs, 64 GiB RAM, 512 GiB ephemeral disk (Modal minimum), no GPU, 50-minute function
 limit and 45-minute work alarm, one Torch/BLAS thread, no data-loader workers.
 The source already exists in the shared volume; verify native hashes before use.
 MHC catalog is rebuilt with mhcseqs 2.6.13 from the two official commit-and-hash-pinned FASTAs in reproduce/mhc-sources.json. The complete raw/full catalogs and merge/validation reports are retained. Package pins alone do not identify these sequence inputs.
