@@ -1,0 +1,293 @@
+{
+  "public_source": "https://github.com/pirl-unc/hitlist/releases/tag/human-cohort-baseline-v1",
+  "source_manifest_sha256": "039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d",
+  "archive_sha256": "444ac92e859da9afd3fcdf3c27ee3ae282f70a6134ac9c42f3c528cdcc1dae80",
+  "files": {
+    "config.json": {
+      "size": 4835,
+      "sha256": "81b99ec68f773ea313fec2350077f24ddc0fa072ee736df7f730d067e83a5a95"
+    },
+    "consumer-install.json": {
+      "size": 112837,
+      "sha256": "d919cb9f742240ef9b4c0d001513b0afef4e3da80ffd2f9a9e3c2643f3c43ade"
+    },
+    "data_funnel.csv": {
+      "size": 4188,
+      "sha256": "150a7a25e22fa395f6d9d844833d1f26fac17baddc27ca7ddda222cbb0a80464"
+    },
+    "data_funnel.json": {
+      "size": 15314,
+      "sha256": "676bf5d572595db78adda77b4275029d42060da10c47f289a19cec473a890b48"
+    },
+    "frozen_assignments/README.md": {
+      "size": 522,
+      "sha256": "161f8e506588ea205e680c7c62efa45c7b473250ae1d4be6dcbf33b75f609047"
+    },
+    "frozen_assignments/assignments.parquet": {
+      "size": 554934,
+      "sha256": "664a98b89851f916ac260e2659415f1c847a0b227fe00151c996e249ba731227",
+      "columns": [
+        "evidence_row_id",
+        "source_partition",
+        "component_id",
+        "source_bundle_id",
+        "peptide"
+      ],
+      "n_rows": 9000
+    },
+    "frozen_assignments/assignments.tsv": {
+      "size": 1867259,
+      "sha256": "1c2281fe408ed74774a456942f98677c44a10be01b4b934df3fee7c5d7c9c0e2"
+    },
+    "frozen_assignments/coverage.json": {
+      "size": 227,
+      "sha256": "644fcba84e6f4e51816d540023c3a436eb9a3a3413acd85d2ec997bb381649ef"
+    },
+    "frozen_assignments/lineage_audit.json": {
+      "size": 19088,
+      "sha256": "951bf0e9f0ad702fe14e40a16e687e8c05b9530c8902087577a8b54daab803a1"
+    },
+    "frozen_assignments/policy.json": {
+      "size": 477,
+      "sha256": "ac27e7e937ab9425dd37c4d8f700bae6386275694310bd783c3346d1ac9ac356"
+    },
+    "frozen_membership/README.md": {
+      "size": 599,
+      "sha256": "622566f36e89d8a428f4940019923d6cc565dab2f63436d638f1021aa54e62fa"
+    },
+    "frozen_membership/coverage.json": {
+      "size": 396,
+      "sha256": "ff1b662937c5aee28a2ae53f0058864f68faff0b01515cb2badee4170920d520"
+    },
+    "frozen_membership/membership.parquet": {
+      "size": 674129,
+      "sha256": "658dcde9253557cd28bee8493213382d3b923e5953fdcbecb1f2b8d69023741e",
+      "columns": [
+        "sample_id",
+        "record_id",
+        "peptide",
+        "evidence_row_id",
+        "assay_iri",
+        "reference_iri",
+        "pmid",
+        "doi",
+        "reference_text",
+        "source_bundle_id",
+        "provenance_id",
+        "provenance_status",
+        "source_endpoint",
+        "source_units",
+        "source_inequality",
+        "source_value",
+        "source_partition",
+        "generated_id",
+        "generation_kind",
+        "generation_seed",
+        "generation_draw_index",
+        "parent_ids",
+        "root_observation_ids",
+        "generation_lineage_status",
+        "sample_source",
+        "assay_group",
+        "synthetic_kind",
+        "target_provenance",
+        "source_mhc_alleles",
+        "resolved_mhc_alleles"
+      ],
+      "n_rows": 9000
+    },
+    "frozen_membership/membership.tsv": {
+      "size": 5802873,
+      "sha256": "f708c6557633b1713e3b0c9419ba69119937bc1728d727846cf34809f31a3556"
+    },
+    "frozen_membership/model_peptide_audit.json": {
+      "size": 8585,
+      "sha256": "6d1c197cd3e34b93fa35b5611f30a3c4a5295a8188f53b1c56d1852fbf0a1763"
+    },
+    "frozen_membership/parent_graph.parquet": {
+      "size": 545890,
+      "sha256": "24cc174df3284759c0f19772822594b7a3d15f38f9734b88929cfdf744a70c34",
+      "columns": [
+        "record_id",
+        "peptide",
+        "evidence_row_id",
+        "assay_iri",
+        "reference_iri",
+        "pmid",
+        "doi",
+        "reference_text",
+        "source_bundle_id",
+        "provenance_id",
+        "provenance_status",
+        "source_endpoint",
+        "source_units",
+        "source_inequality",
+        "source_value",
+        "source_partition",
+        "generated_id",
+        "generation_kind",
+        "generation_seed",
+        "generation_draw_index",
+        "parent_ids",
+        "root_observation_ids",
+        "generation_lineage_status"
+      ],
+      "n_rows": 9000
+    },
+    "frozen_membership/policy.json": {
+      "size": 569,
+      "sha256": "ad4bb7258ae18b79e6a39c1f223a61fba482bc0ddfa4356e342ae641cba53255"
+    },
+    "frozen_membership/records_without_model_sample.json": {
+      "size": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "frozen_membership/root_lineage_audit.json": {
+      "size": 19088,
+      "sha256": "951bf0e9f0ad702fe14e40a16e687e8c05b9530c8902087577a8b54daab803a1"
+    },
+    "invocation.json": {
+      "size": 860,
+      "sha256": "74e347578f46f955952e0a41b4655d1fe5acd0316ae6e2ce284427b2e480fcc7"
+    },
+    "launch.json": {
+      "size": 1649,
+      "sha256": "d9a35de13ea32f8cbe1bbcef085ebe627ba26076f5f3bf2e1867d57d14f1314f"
+    },
+    "metrics.csv": {
+      "size": 24,
+      "sha256": "0855f40d4a3cd75029ef0ae09a1e06736e25e72e2af4e43efa144700eebdff27"
+    },
+    "metrics.jsonl": {
+      "size": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "mhc-catalog/mhc-full-seqs.csv": {
+      "size": 61978594,
+      "sha256": "1d64f5af13f49497ea5c7219f8ec21edd1f973aecd3a6627a065fc554ef022c5"
+    },
+    "mhc-catalog/mhc-merge-report.txt": {
+      "size": 17142,
+      "sha256": "090f90ca4713cb55b22f43cfefb99e0d2246ebe2cbf2b5ac450393ad701964cb"
+    },
+    "mhc-catalog/mhc-seqs-raw.csv": {
+      "size": 32454808,
+      "sha256": "4c61d2683c07f8aeee7845fb75038636fbb8d867adf5d55535d371ece16a94eb"
+    },
+    "mhc-catalog/mhc-validation-report.txt": {
+      "size": 76756,
+      "sha256": "349f7aeafdbaa1edfe2de53f8bd674810a1e4fecaa2c7356feeeabc15016ce39"
+    },
+    "mhc-catalog.json": {
+      "size": 1456,
+      "sha256": "6462744c180192d7626a8d6d49586fc0792bb6639fc2a4d6fdcf6f88a6f32295"
+    },
+    "mhc-sources.json": {
+      "size": 692,
+      "sha256": "3df5f2e47a9bd30993e9abef1eaf6601d5d08ee5d8fa2b975e5cc3b1df490913"
+    },
+    "mhc_sequence_coverage.csv": {
+      "size": 3117,
+      "sha256": "554179c437733966429fc21d5ec6140c1f7f262e6152e7855b9b413cd3e13d6a"
+    },
+    "mhc_sequence_coverage.json": {
+      "size": 2146,
+      "sha256": "77b08a48fd5222053eb951f4b11b0b88c22ff0b3c9968e9008f0237fdfe249dc"
+    },
+    "mhc_sequence_coverage_post_filter.csv": {
+      "size": 2743,
+      "sha256": "a0c28bc2c43403ad37f5ca7b3da17a38d1935c430ef9db4ec8d9a68d9c3c7ae9"
+    },
+    "mhc_sequence_coverage_post_filter.json": {
+      "size": 2032,
+      "sha256": "cbf27275452fd8c03b8be5eba8886f8427f7da68d884e3ae97c6a9353a36161a"
+    },
+    "mil_split_support.csv": {
+      "size": 9847,
+      "sha256": "5aedc0dbbaec89b5eb9c8aa19c4aba6e655f1eb1bc86bb5c96360360ebd7390c"
+    },
+    "output_coverage.csv": {
+      "size": 54777,
+      "sha256": "5e86b307da08f2ba893456f07d631d9f6dc63a2b8b675bee12618d0f200e269a"
+    },
+    "output_coverage.json": {
+      "size": 2447000,
+      "sha256": "46f6fd8b15b037a7a4d5f5a0df018e00725a4a228984d80635a81c99828c085f"
+    },
+    "pip-check.txt": {
+      "size": 30,
+      "sha256": "9261363b733079a641c2e4cc9bc46ffa1d8336945a87f807b6cf68847dbc9b09"
+    },
+    "preflight.py": {
+      "size": 9069,
+      "sha256": "5e433f9148771d0876993869a9e556296d21daaeec4b83b02397eaaa484d1f4a"
+    },
+    "regularization.json": {
+      "size": 2532,
+      "sha256": "d72cdc1f95954cdde36e71f6e1f4b8990ebf40ec5eb32975e5d7cbb65d6fd0bb"
+    },
+    "row_split_support.csv": {
+      "size": 39884,
+      "sha256": "6f9ff31c66e2290eba809c61ac33299f86d670ab5493dd483d913e1de9fef2bc"
+    },
+    "source-manifest.json": {
+      "size": 33968,
+      "sha256": "039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d"
+    },
+    "split_support.csv": {
+      "size": 2078,
+      "sha256": "27181e0a8d9ebcd9997f4a278e49cad0e0c8770cbd4b67d85180fd5ac5e3ccc9"
+    },
+    "split_support.json": {
+      "size": 277139,
+      "sha256": "4c2b40851319a0a5fe5d317c58c059a91a305550ba558e16990d139580c8d172"
+    },
+    "supported_outputs.json": {
+      "size": 46253,
+      "sha256": "6df9e4a37fbd6cdf598a1f497387f4e7e57aba2d19f5d4d03b011b493e96bc21"
+    },
+    "training.log": {
+      "size": 5521,
+      "sha256": "ec1d8d30c5fd8102e25bd9f41ee69daf516d498a2fe88c3a37f8e7545b1f66f7"
+    },
+    "versions.json": {
+      "size": 2397,
+      "sha256": "0463b21d18f82aff0f23e8ff6846b8c6801bcc9e5c8fefa702416d6a97c35d76"
+    }
+  },
+  "credential_pattern_matches": [],
+  "embedded_manifest_matches_public_pin": true,
+  "n_membership_rows": 9000,
+  "bundle_ids": [
+    "sha256:039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d"
+  ],
+  "n_empty_evidence_ids": 0,
+  "source_types": {
+    "iedb": 8704,
+    "supplement": 265,
+    "cedar": 31
+  },
+  "n_generated_samples": 0,
+  "catalog_sources": {
+    "hla_prot.fasta": {
+      "url": "https://raw.githubusercontent.com/ANHIG/IMGTHLA/d972ae287948dc2e5468a40ff3b3d27227541189/fasta/hla_prot.fasta",
+      "sha256": "d5da882fca6427fb9c27fa4c27045ba8246b117a1d367566b4b35fb79bbbbe3a",
+      "size": 14965890,
+      "repository": "ANHIG/IMGTHLA",
+      "commit": "d972ae287948dc2e5468a40ff3b3d27227541189"
+    },
+    "ipd_mhc_prot.fasta": {
+      "url": "https://raw.githubusercontent.com/ANHIG/IPDMHC/23598004a4209aca1526a8036bb1ea6d31f718f4/MHC_prot.fasta",
+      "sha256": "8d06fdd890dcc87f4d2bd26ede15cf235a6c2e94dbcb9342a526a3d08f57b845",
+      "size": 3741574,
+      "repository": "ANHIG/IPDMHC",
+      "commit": "23598004a4209aca1526a8036bb1ea6d31f718f4"
+    }
+  },
+  "n_membership_ids_absent_from_public_source": 0,
+  "public_source_verification": {
+    "url": "https://github.com/pirl-unc/hitlist/releases/download/human-cohort-baseline-v1/training.parquet",
+    "sha256": "51e37fc5f81e3e32b9080cf096feaabe82f9001c1b90c61b5af40fae26d07d4c",
+    "size": 187997976
+  }
+}

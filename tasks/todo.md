@@ -1,9 +1,17 @@
 # Actual human-corpus preflight
 
 - [x] Register baseline limits, source pins, caps and CPU-only resource contract.
-- [ ] Execute canonical frozen admission and preserve actual partitions/audits.
-- [ ] Publish complete artifacts, hashes, support/coverage and independence limits.
+- [x] Execute canonical frozen admission and preserve actual partitions/audits.
+- [x] Publish complete artifacts, hashes, support/coverage and independence limits (ten independent downloads).
 - [ ] Close experiment registry; format/lint/full gates, review, merge/release0.1.10.
+
+## Human-preflight review
+
+Actual canonical preflight passed with 9,000 frozen samples; all 46 archive
+members independently match the original inventory. Full endpoint counts and
+lineage limitations are recorded with the historical sampling deviation (#103).
+No output is declared ready and no model was constructed. Source implementation
+CI passed; final result-publication checks and clean-main release remain pending.
 
 # Explicit effective regularization — #95
 

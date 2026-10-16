@@ -89,4 +89,4 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
   - Keep the broad 7-allele numeric contract fixed
   - Record full val/test metric bundle plus probe metrics
 
-- [ ] Run and close [human-corpus frozen preflight](plans/human-corpus-preflight.md): actual source admission, partitions, supervision coverage and leakage limitations.
+- [x] Run and close [human-corpus frozen preflight](plans/human-corpus-preflight.md): actual source admission, partitions, supervision coverage and leakage limitations.

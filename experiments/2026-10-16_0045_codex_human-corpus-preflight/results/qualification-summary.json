@@ -1,0 +1,589 @@
+{
+  "drop_reasons": {
+    "caps": {
+      "binding": 8190,
+      "elution": 3904515,
+      "kinetics": 0,
+      "stability": 0
+    },
+    "mhc_filter": {
+      "binding_dropped": 510,
+      "elution_alleles_dropped": 3489,
+      "elution_rows_dropped": 1195,
+      "kinetics_dropped": 0,
+      "processing_dropped": 0,
+      "stability_dropped": 55,
+      "tcell_dropped": 0,
+      "vdjdb_dropped": 0
+    },
+    "source_ingest": {
+      "skipped_invalid_numeric_value": 29,
+      "skipped_missing_mhc_allele": 135446,
+      "skipped_no_numeric_value": 11689,
+      "skipped_noncanonical_peptide": 606,
+      "skipped_unexpected_unit": 4,
+      "skipped_unroutable_response": 224,
+      "skipped_unsupported_inequality": 0
+    },
+    "target_exclusion": {}
+  },
+  "limitations": [
+    "Producer Hitlist 1.76.0 predates curation fixes #694/#696.",
+    "No model constructed; no predictions or performance metrics exist.",
+    "All 221 output declarations remain undeclared; support is exploratory.",
+    "Positive-only elution and human-source-only foreignness cannot qualify binary discrimination.",
+    "Validation has no direct KD or kinetics observations; test has four direct KD and no kinetics.",
+    "All donor/specimen/acquisition identities unresolved; most experimental origins unresolved.",
+    "Studies overlap across partitions; peptide-disjoint does not imply study or biological independence.",
+    "Sequence coverage counts allele occurrences; species buckets use assay host context first. Nine murine host occurrences do not mean nonhuman MHC: every retained resolved allele begins HLA-.",
+    "Strict MHC filtering removes unresolved alleles within bags and then empty bags; original sets remain in membership metadata.",
+    "Source exports have unverified release dates; historical original input and actual runtime receipts are preserved."
+  ],
+  "lineage_coverage": {
+    "test": {
+      "coverage": {
+        "acquisition": {
+          "available": true,
+          "n_unresolved_observations": 900
+        },
+        "donor": {
+          "available": true,
+          "n_unresolved_observations": 900
+        },
+        "experimental_origin": {
+          "available": true,
+          "n_unresolved_observations": 899
+        },
+        "observation": {
+          "available": true,
+          "n_unresolved_observations": 0
+        },
+        "peptide": {
+          "available": true,
+          "n_unresolved_observations": 0
+        },
+        "pmhc": {
+          "available": true,
+          "n_unresolved_observations": 311
+        },
+        "specimen": {
+          "available": true,
+          "n_unresolved_observations": 900
+        },
+        "study": {
+          "available": true,
+          "n_unresolved_observations": 42
+        }
+      },
+      "n_mapping_alternative_rows": 0,
+      "n_missing_observation_ids": 0,
+      "n_observations": 900,
+      "n_rows": 900
+    },
+    "train": {
+      "coverage": {
+        "acquisition": {
+          "available": true,
+          "n_unresolved_observations": 7200
+        },
+        "donor": {
+          "available": true,
+          "n_unresolved_observations": 7200
+        },
+        "experimental_origin": {
+          "available": true,
+          "n_unresolved_observations": 7122
+        },
+        "observation": {
+          "available": true,
+          "n_unresolved_observations": 0
+        },
+        "peptide": {
+          "available": true,
+          "n_unresolved_observations": 0
+        },
+        "pmhc": {
+          "available": true,
+          "n_unresolved_observations": 1127
+        },
+        "specimen": {
+          "available": true,
+          "n_unresolved_observations": 7200
+        },
+        "study": {
+          "available": true,
+          "n_unresolved_observations": 1222
+        }
+      },
+      "n_mapping_alternative_rows": 0,
+      "n_missing_observation_ids": 0,
+      "n_observations": 7200,
+      "n_rows": 7200
+    },
+    "val": {
+      "coverage": {
+        "acquisition": {
+          "available": true,
+          "n_unresolved_observations": 900
+        },
+        "donor": {
+          "available": true,
+          "n_unresolved_observations": 900
+        },
+        "experimental_origin": {
+          "available": true,
+          "n_unresolved_observations": 900
+        },
+        "observation": {
+          "available": true,
+          "n_unresolved_observations": 0
+        },
+        "peptide": {
+          "available": true,
+          "n_unresolved_observations": 0
+        },
+        "pmhc": {
+          "available": true,
+          "n_unresolved_observations": 340
+        },
+        "specimen": {
+          "available": true,
+          "n_unresolved_observations": 900
+        },
+        "study": {
+          "available": true,
+          "n_unresolved_observations": 41
+        }
+      },
+      "n_mapping_alternative_rows": 0,
+      "n_missing_observation_ids": 0,
+      "n_observations": 900,
+      "n_rows": 900
+    }
+  },
+  "n_verified_run_files": 46,
+  "overlaps": [
+    {
+      "left": "test",
+      "n_shared_values": {
+        "acquisition": 0,
+        "donor": 0,
+        "experimental_origin": 0,
+        "observation": 0,
+        "peptide": 0,
+        "pmhc": 0,
+        "specimen": 0,
+        "study": 161
+      },
+      "right": "train"
+    },
+    {
+      "left": "test",
+      "n_shared_values": {
+        "acquisition": 0,
+        "donor": 0,
+        "experimental_origin": 0,
+        "observation": 0,
+        "peptide": 0,
+        "pmhc": 0,
+        "specimen": 0,
+        "study": 117
+      },
+      "right": "val"
+    },
+    {
+      "left": "train",
+      "n_shared_values": {
+        "acquisition": 0,
+        "donor": 0,
+        "experimental_origin": 0,
+        "observation": 0,
+        "peptide": 0,
+        "pmhc": 0,
+        "specimen": 0,
+        "study": 162
+      },
+      "right": "val"
+    }
+  ],
+  "partition_coverage": {
+    "n_records_without_model_sample": 0,
+    "partitions": {
+      "test": {
+        "n_generated_samples": 0,
+        "n_root_observations": 900,
+        "n_samples": 900
+      },
+      "train": {
+        "n_generated_samples": 0,
+        "n_root_observations": 7200,
+        "n_samples": 7200
+      },
+      "val": {
+        "n_generated_samples": 0,
+        "n_root_observations": 900,
+        "n_samples": 900
+      }
+    }
+  },
+  "sampling_deviation": {
+    "actual": "independent per-family random.Random(59).sample of full eligible lists",
+    "issue": "https://github.com/pirl-unc/presto/issues/103",
+    "requested": "reservoir"
+  },
+  "schema_version": 1,
+  "source_counts_after_cap": {
+    "binding": 5000,
+    "elution": 5000,
+    "kinetics": 19,
+    "processing": 0,
+    "stability": 741,
+    "tcell": 0,
+    "tcr_evidence": 0
+  },
+  "source_counts_before_cap": {
+    "binding": 13190,
+    "elution": 3909515,
+    "kinetics": 19,
+    "stability": 741
+  },
+  "status": "data preflight passed; output readiness not established",
+  "supervision_counts": {
+    "test": {
+      "binding": {
+        "censored_lower": 0,
+        "censored_upper": 57,
+        "count": 192,
+        "exact": 135
+      },
+      "binding_ec50": {
+        "censored_lower": 0,
+        "censored_upper": 3,
+        "count": 6,
+        "exact": 3
+      },
+      "binding_ic50": {
+        "censored_lower": 0,
+        "censored_upper": 46,
+        "count": 137,
+        "exact": 91
+      },
+      "binding_kd": {
+        "censored_lower": 0,
+        "censored_upper": 1,
+        "count": 4,
+        "exact": 3
+      },
+      "binding_kd_direct": {
+        "censored_lower": 0,
+        "censored_upper": 1,
+        "count": 4,
+        "exact": 3
+      },
+      "binding_kd_proxy_ec50": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 8,
+        "exact": 8
+      },
+      "binding_kd_proxy_ic50": {
+        "censored_lower": 0,
+        "censored_upper": 7,
+        "count": 37,
+        "exact": 30
+      },
+      "elution": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 679,
+        "exact": 0,
+        "negative": 0,
+        "positive": 679
+      },
+      "foreignness": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 900,
+        "exact": 0,
+        "negative": 900,
+        "positive": 0
+      },
+      "species_of_origin": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 900,
+        "exact": 0
+      },
+      "t_half": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 24,
+        "exact": 24
+      },
+      "tcell_apc_type": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_assay_method": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_assay_readout": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_culture_context": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_peptide_format": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_stim_context": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tm": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 5,
+        "exact": 5
+      }
+    },
+    "train": {
+      "binding": {
+        "censored_lower": 0,
+        "censored_upper": 1084,
+        "count": 4121,
+        "exact": 3037
+      },
+      "binding_ec50": {
+        "censored_lower": 0,
+        "censored_upper": 11,
+        "count": 88,
+        "exact": 77
+      },
+      "binding_ic50": {
+        "censored_lower": 0,
+        "censored_upper": 533,
+        "count": 2334,
+        "exact": 1801
+      },
+      "binding_kd": {
+        "censored_lower": 0,
+        "censored_upper": 322,
+        "count": 506,
+        "exact": 184
+      },
+      "binding_kd_direct": {
+        "censored_lower": 0,
+        "censored_upper": 322,
+        "count": 506,
+        "exact": 184
+      },
+      "binding_kd_proxy_ec50": {
+        "censored_lower": 0,
+        "censored_upper": 14,
+        "count": 137,
+        "exact": 123
+      },
+      "binding_kd_proxy_ic50": {
+        "censored_lower": 0,
+        "censored_upper": 204,
+        "count": 1056,
+        "exact": 852
+      },
+      "elution": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 2447,
+        "exact": 0,
+        "negative": 0,
+        "positive": 2447
+      },
+      "foreignness": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 7200,
+        "exact": 0,
+        "negative": 7200,
+        "positive": 0
+      },
+      "koff": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 19,
+        "exact": 0
+      },
+      "species_of_origin": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 7200,
+        "exact": 0
+      },
+      "t_half": {
+        "censored_lower": 0,
+        "censored_upper": 24,
+        "count": 482,
+        "exact": 458
+      },
+      "tcell_apc_type": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_assay_method": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_assay_readout": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_culture_context": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_peptide_format": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_stim_context": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tm": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 131,
+        "exact": 131
+      }
+    },
+    "val": {
+      "binding": {
+        "censored_lower": 0,
+        "censored_upper": 38,
+        "count": 177,
+        "exact": 139
+      },
+      "binding_ec50": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 5,
+        "exact": 5
+      },
+      "binding_ic50": {
+        "censored_lower": 0,
+        "censored_upper": 25,
+        "count": 104,
+        "exact": 79
+      },
+      "binding_kd_proxy_ec50": {
+        "censored_lower": 0,
+        "censored_upper": 2,
+        "count": 6,
+        "exact": 4
+      },
+      "binding_kd_proxy_ic50": {
+        "censored_lower": 0,
+        "censored_upper": 11,
+        "count": 62,
+        "exact": 51
+      },
+      "elution": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 679,
+        "exact": 0,
+        "negative": 0,
+        "positive": 679
+      },
+      "foreignness": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 900,
+        "exact": 0,
+        "negative": 900,
+        "positive": 0
+      },
+      "species_of_origin": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 900,
+        "exact": 0
+      },
+      "t_half": {
+        "censored_lower": 0,
+        "censored_upper": 3,
+        "count": 41,
+        "exact": 38
+      },
+      "tcell_apc_type": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_assay_method": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_assay_readout": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_culture_context": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_peptide_format": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tcell_stim_context": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 0,
+        "exact": 0
+      },
+      "tm": {
+        "censored_lower": 0,
+        "censored_upper": 0,
+        "count": 3,
+        "exact": 3
+      }
+    }
+  }
+}

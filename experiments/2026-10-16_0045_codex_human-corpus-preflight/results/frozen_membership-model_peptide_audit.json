@@ -1,0 +1,319 @@
+{
+  "pairs": [
+    {
+      "left": "test",
+      "overlaps": {
+        "acquisition": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "donor": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "experimental_origin": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "observation": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "peptide": {
+          "coverage_complete": true,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "pmhc": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "specimen": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "study": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        }
+      },
+      "right": "train",
+      "verdict": "pass"
+    },
+    {
+      "left": "test",
+      "overlaps": {
+        "acquisition": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "donor": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "experimental_origin": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "observation": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "peptide": {
+          "coverage_complete": true,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "pmhc": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "specimen": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "study": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        }
+      },
+      "right": "val",
+      "verdict": "pass"
+    },
+    {
+      "left": "train",
+      "overlaps": {
+        "acquisition": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "donor": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "experimental_origin": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "observation": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "peptide": {
+          "coverage_complete": true,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "pmhc": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "specimen": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        },
+        "study": {
+          "coverage_complete": false,
+          "n_left_observations": 0,
+          "n_right_observations": 0,
+          "n_shared_values": 0,
+          "shared_values": []
+        }
+      },
+      "right": "val",
+      "verdict": "pass"
+    }
+  ],
+  "partitions": {
+    "test": {
+      "coverage": {
+        "acquisition": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "donor": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "experimental_origin": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "observation": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "peptide": {
+          "available": true,
+          "n_unresolved_observations": 0
+        },
+        "pmhc": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "specimen": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "study": {
+          "available": false,
+          "n_unresolved_observations": 900
+        }
+      },
+      "n_mapping_alternative_rows": 0,
+      "n_missing_observation_ids": 900,
+      "n_observations": 900,
+      "n_rows": 900
+    },
+    "train": {
+      "coverage": {
+        "acquisition": {
+          "available": false,
+          "n_unresolved_observations": 7200
+        },
+        "donor": {
+          "available": false,
+          "n_unresolved_observations": 7200
+        },
+        "experimental_origin": {
+          "available": false,
+          "n_unresolved_observations": 7200
+        },
+        "observation": {
+          "available": false,
+          "n_unresolved_observations": 7200
+        },
+        "peptide": {
+          "available": true,
+          "n_unresolved_observations": 0
+        },
+        "pmhc": {
+          "available": false,
+          "n_unresolved_observations": 7200
+        },
+        "specimen": {
+          "available": false,
+          "n_unresolved_observations": 7200
+        },
+        "study": {
+          "available": false,
+          "n_unresolved_observations": 7200
+        }
+      },
+      "n_mapping_alternative_rows": 0,
+      "n_missing_observation_ids": 7200,
+      "n_observations": 7200,
+      "n_rows": 7200
+    },
+    "val": {
+      "coverage": {
+        "acquisition": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "donor": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "experimental_origin": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "observation": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "peptide": {
+          "available": true,
+          "n_unresolved_observations": 0
+        },
+        "pmhc": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "specimen": {
+          "available": false,
+          "n_unresolved_observations": 900
+        },
+        "study": {
+          "available": false,
+          "n_unresolved_observations": 900
+        }
+      },
+      "n_mapping_alternative_rows": 0,
+      "n_missing_observation_ids": 900,
+      "n_observations": 900,
+      "n_rows": 900
+    }
+  },
+  "policy": "peptide_disjoint",
+  "schema_version": 1,
+  "scope": "Supplied partitions only; no claim about historical training weights.",
+  "verdict": "pass"
+}
