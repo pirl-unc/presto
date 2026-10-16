@@ -1,9 +1,17 @@
 # Scoped sampling investigation — #94
 
 - [x] Register the two-condition contract and exploratory repeated-test limitation.
-- [ ] Fix shared-volume SQLite scratch (#102), preserve the first attempt, then run canonical preflight and both bounded fits with frozen membership.
-- [ ] Publish and verify all predictions, exposure, baseline and uncertainty artifacts.
+- [x] Fix shared-volume SQLite scratch (#102), preserve the first attempt, then run canonical preflight and both bounded fits with frozen membership.
+- [x] Publish and verify all predictions, exposure, baseline and uncertainty artifacts (14 independent downloads).
 - [ ] Close registry; format/lint/full checks, review, merge and release 0.1.11.
+
+## Sampling review
+
+Both bounded conditions completed with identical frozen membership; all 122
+archive files and probability metrics from saved predictions verify. Shuffled
+batches improve over balanced sampling and prevalence, but logistic remains
+preferred on validation. Full local software gates pass (2,262 passed, four
+skips); final publication/CI/release remain pending.
 
 # Actual human-corpus preflight
 

@@ -1401,3 +1401,40 @@ runtime receipts are [downloadable](https://github.com/pirl-unc/presto/releases/
 Archive SHA-256 `444ac92e859da9afd3fcdf3c27ee3ae282f70a6134ac9c42f3c528cdcc1dae80`.
 Takeaway: ingestion/partition pipeline accepted; preserve limitations and qualify
 a separate corrected corpus before target-specific fitting. #678/#680/#48/#53 open.
+
+## 2026-10-16 — Codex: scoped sampling and probability qualification
+
+Agent/model Codex (GPT-6); [full contract and artifacts](2026-10-16_0110_codex_scoped-sampling-qualification/README.md).
+Clean actual source `82be704840d2aa7e87a2f646ab2f9e5866116d9a`, Presto0.1.11.
+Same pinned PXD013455 HeLa Trypsin/P source and 8,000/1,000/1,000 peptide-disjoint
+membership as the original qualification,912/105/109 positives. All source,
+assignment, parent and support fingerprints preserved; only producer policy hash
+prospectively rebound. Proxy-only detectability; no MHC, binding, excision/depth,
+synthetic or unrelated assay supervision. No pretraining. Expanded d32/l1/h4,
+batch64, lr0.001, weight decay0.01, uncertainty weighting, seeds42, two epochs
+with100 batches each. Every regularization weight explicitly zero.
+
+| Condition | Positive exposure | Val log loss/Brier | Test log loss/Brier (exploratory) |
+| --- | ---: | ---: | ---: |
+| Balanced Presto | 6,314/12,800 | 0.57755/0.19747 | 0.57618/0.19732 |
+| Shuffled Presto | 1,444/12,800 | 0.28928/0.08376 | 0.28081/0.08258 |
+| Train prevalence | train11.40% | 0.33634/0.09406 | 0.34454/0.09714 |
+| Length/composition logistic | train only | 0.27268/0.08142 | 0.26899/0.08129 |
+
+Each neural condition completed200 finite-gradient proxy batches, zero direct
+labels. Selected checkpoints balanced epoch1/shuffled epoch2; minimum unweighted
+validation log loss selects shuffled. Shuffled val/test AUROC0.77236/0.81882 and
+AP0.31172/0.37417. Logistic remains preferred for validation probability quality;
+shuffled-minus-logistic paired log-loss95% interval[0.00410,0.02800] validation,
+[-0.00015,0.02361] exploratory test. Complete predictions/metrics/coefficients and
+1,000 peptide-bootstrap intervals retained. Binding regressions/500nM metrics
+inapplicable. The already inspected test set never selects a condition.
+
+CPU8/32GiB, one Torch/BLAS thread, no GPU; total2,542.76s, runner-only peak
+RSS7,226,044,416bytes. Original shared-scratch preflight stopped before fitting;
+partial evidence retained (#102), then local POSIX SQLite scratch fixed. Every
+successful archive member and per-example log loss/Brier independently verified;
+122 files, SHA-256`16935d480378d950367aba8e15bf2e85a654797bd1e7fde216413d123bbc9c0b`.
+[Download](https://github.com/pirl-unc/presto/releases/tag/scoped-sampling-qualification-v1).
+One search/seed, overlapping proteins, unknown donor/specimen identities and proxy
+labels limit conclusions. No default change or readiness claim; #48/#53/#678 open.
