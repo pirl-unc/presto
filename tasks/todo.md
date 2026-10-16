@@ -1,3 +1,11 @@
+# Canonical scoped training — Presto #70
+
+- [x] Inspect canonical trainer/coverage contracts and specify the bounded source.
+- [ ] Freeze legible scoped membership and leakage/support artifacts through datacache.
+- [ ] Integrate the existing canonical trainer/CLI without unrelated live inputs.
+- [ ] Verify synthetic regressions and register actual preflight/fitting evidence.
+- [ ] Run full gates, review, merge and publish version 0.1.8.
+
 # Internal excision scoring contract — Presto #88
 
 - [x] File the observed rule inconsistency and specify compatibility explicitly.
