@@ -1,3 +1,11 @@
+# Corrected human IC50 fitting diagnostic
+
+- [x] Specify fixed producers, exact candidate manifest, optimization and baseline criteria.
+- [x] Freeze and verify launcher, original-model diagnostic and baseline implementation (six focused safeguards; all 2,614 source joins and 1,599 exact training rows verified).
+- [ ] Run canonical manifest gate and bounded real-data fit with unchanged membership.
+- [ ] Publish all source-linked predictions, baselines, uncertainty and failure/success evidence.
+- [ ] Verify artifacts, close registry, format/lint/full checks, review, merge and release 0.1.15.
+
 # Corrected human consumer qualification
 
 - [x] Register released producers, frozen corrected inputs and prospective IC50 evidence thresholds.

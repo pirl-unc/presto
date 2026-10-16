@@ -94,3 +94,5 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [x] Run and close [component allocation audit](plans/component-allocation.md) on the frozen public human cohort; preserve historical memberships.
 
 - [x] Run and close [corrected human preflight](plans/corrected-human-preflight.md) with new membership and a frozen candidate IC50 support declaration.
+
+- [ ] Run and close the [corrected human IC50 fitting diagnostic](plans/corrected-human-fit.md) under the unchanged prospective manifest.
