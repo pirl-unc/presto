@@ -5,22 +5,21 @@ import hashlib
 import importlib.metadata
 import json
 import os
-from pathlib import Path
 import platform
 import resource
 import signal
 import subprocess
 import sys
 import time
+from pathlib import Path
 
+import hitlist
+import presto
 import pyarrow as pa
 import pyarrow.parquet as pq
 import torch
-
 from datacache import materialize
-import hitlist
 from hitlist.downloads import data_dir
-import presto
 from presto.data.collate import PrestoCollator
 from presto.data.loaders import PrestoDataset
 from presto.data.scoped_bulk import load_scoped_bulk_records
@@ -29,9 +28,15 @@ from presto.scripts.experiment_registry import (
     initialize_experiment_dir,
     write_reproducibility_bundle,
 )
-from presto.training.data_support import audit_split_support, write_split_support_artifacts
+from presto.training.data_support import (
+    audit_split_support,
+    write_split_support_artifacts,
+)
 from presto.training.output_contract import build_output_contract
-from presto.training.output_coverage import OutputCoverageCensus, write_output_coverage_artifacts
+from presto.training.output_coverage import (
+    OutputCoverageCensus,
+    write_output_coverage_artifacts,
+)
 
 DIRECTORY = Path(__file__).resolve().parents[1]
 ROOT = DIRECTORY.parents[1]
@@ -211,8 +216,21 @@ def run():
         }
         for name, item in receipt["projection"]["artifacts"].items()
     }
+    recipe_id = hashlib.sha256(
+        json.dumps(
+            {
+                "sources": {name: item["sha256"] for name, item in sources.items()},
+                "commit": commit,
+                "launcher_sha256": digest(__file__),
+                "manifest_sha256": PIN,
+                "max_records": LIMIT,
+                "seed": SEED,
+            },
+            sort_keys=True,
+        ).encode()
+    ).hexdigest()
     artifacts = materialize(
-        data_dir() / "presto-scoped-proteomics" / "qualification" / DIRECTORY.name,
+        data_dir() / "presto-scoped-proteomics" / "qualification" / DIRECTORY.name / recipe_id,
         sources,
         transform={
             "version": "scoped-admission-audit-v1",

@@ -114,10 +114,11 @@ def run():
             "excision_label": row.excision_label,
             "flank_n": row.flank_n,
             "flank_c": row.flank_c,
-            **source_lineage_fields(row),
+            **source_lineage_fields(row, include_scoped=True),
         }
         for row in dataset
     ]
+    assert all(row["candidate_lookup_key"] == row["peptide"] for row in membership)
     commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
     summary = {
         "status": "admission_audit_passed",

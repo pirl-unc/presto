@@ -1,3 +1,5 @@
+- [x] Fix scoped metadata constructor regression (#84); 197 targeted tests pass.
+- [ ] Repeat complete suite and actual audit after content-addressing repeated run receipts (#85).
 # Verified scoped proteomics adapter — 2026-10-15
 
 Specification: [scoped-proteomics-consumer-spec.md](scoped-proteomics-consumer-spec.md).

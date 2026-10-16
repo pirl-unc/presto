@@ -29,7 +29,7 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence
 
 import numpy as np
 
-from presto.data.source_lineage import SOURCE_LINEAGE_FIELDS
+from presto.data.source_lineage import ALL_SOURCE_LINEAGE_FIELDS
 
 # A peptide:MHC pair at or under 500 nM is the conventional binder cutoff.
 DEFAULT_BINDING_THRESHOLD_NM = 500.0
@@ -42,7 +42,7 @@ PREDICTION_LINEAGE_FIELDS = (
     "peptide",
     "source_mhc_alleles",
     "resolved_mhc_alleles",
-    *SOURCE_LINEAGE_FIELDS,
+    *ALL_SOURCE_LINEAGE_FIELDS,
     "source_sample_label",
     "source_sample_attribution",
     "mapping_gene_name",

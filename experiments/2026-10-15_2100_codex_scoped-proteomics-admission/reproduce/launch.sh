@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 # Git state at launch:
-#   commit: e4fe7e19ab3208fdc74e54b9dc2b16fcae35ac24
+#   commit: 640c14e2df88b9aea7e0c957df5ad41d9b972015
 #   branch: feat/scoped-proteomics-consumer
 #   dirty: yes
 cd '/private/tmp/presto-scoped-proteomics'

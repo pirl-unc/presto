@@ -6,7 +6,7 @@ import hashlib
 import json
 from typing import Any
 
-COMMON_SOURCE_LINEAGE_FIELDS = (
+SOURCE_LINEAGE_FIELDS = (
     "evidence_row_id",
     "assay_iri",
     "reference_iri",
@@ -43,7 +43,7 @@ SCOPED_SOURCE_LINEAGE_FIELDS = (
 )
 
 
-SOURCE_LINEAGE_FIELDS = COMMON_SOURCE_LINEAGE_FIELDS + SCOPED_SOURCE_LINEAGE_FIELDS
+ALL_SOURCE_LINEAGE_FIELDS = SOURCE_LINEAGE_FIELDS + SCOPED_SOURCE_LINEAGE_FIELDS
 
 
 def source_lineage_fields(source: Any, *, include_scoped: bool = False) -> dict[str, str]:
@@ -56,7 +56,7 @@ def source_lineage_fields(source: Any, *, include_scoped: bool = False) -> dict[
     constructors accept only the common observation/publication contract.
     """
     values = {}
-    fields = SOURCE_LINEAGE_FIELDS if include_scoped else COMMON_SOURCE_LINEAGE_FIELDS
+    fields = ALL_SOURCE_LINEAGE_FIELDS if include_scoped else SOURCE_LINEAGE_FIELDS
     for name in fields:
         value = source.get(name) if isinstance(source, Mapping) else getattr(source, name, None)
         values[name] = "" if value is None else str(value).strip()
@@ -124,7 +124,9 @@ def generated_record(record: Any, *, parents, kind: str, seed: int, draw_index: 
         "generation_lineage_status": "resolved" if resolved else "unresolved",
     }
     payload = {
-        name: value for name, value in asdict(record).items() if name not in SOURCE_LINEAGE_FIELDS
+        name: value
+        for name, value in asdict(record).items()
+        if name not in ALL_SOURCE_LINEAGE_FIELDS
     }
     identity = json.dumps(
         {"record_type": type(record).__name__, "payload": payload, "lineage": lineage},

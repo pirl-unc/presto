@@ -4,8 +4,8 @@ import gzip
 import hashlib
 import io
 import json
-from pathlib import Path
 import tarfile
+from pathlib import Path
 
 from datacache import materialize
 from hitlist.downloads import data_dir
@@ -138,8 +138,16 @@ def run():
             )
         )
 
+    recipe_id = hashlib.sha256(
+        encoded(
+            {
+                "sources": {name: item["sha256"] for name, item in sources.items()},
+                "exporter_sha256": digest(__file__),
+            }
+        )
+    ).hexdigest()
     paths = materialize(
-        data_dir() / "presto-scoped-proteomics" / "publications" / DATASET,
+        data_dir() / "presto-scoped-proteomics" / "publications" / DATASET / recipe_id,
         sources,
         transform={
             "version": "presto-admission-portable-v1",

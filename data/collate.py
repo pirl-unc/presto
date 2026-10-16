@@ -12,7 +12,7 @@ import torch
 
 from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
-from .source_lineage import SOURCE_LINEAGE_FIELDS
+from .source_lineage import ALL_SOURCE_LINEAGE_FIELDS
 from .sequence_augmentation import AugmentationConfig, augment_sample_sequences
 from .vocab import (
     cell_lineage_index,
@@ -2044,7 +2044,7 @@ class PrestoCollator:
                 "peptide": [s.peptide for s in samples],
                 "source_mhc_alleles": [";".join(s.source_mhc_alleles) for s in samples],
                 "resolved_mhc_alleles": [";".join(s.resolved_mhc_alleles) for s in samples],
-                **{name: [getattr(s, name) for s in samples] for name in SOURCE_LINEAGE_FIELDS},
+                **{name: [getattr(s, name) for s in samples] for name in ALL_SOURCE_LINEAGE_FIELDS},
                 "source_sample_label": [s.source_sample_label for s in samples],
                 "source_sample_attribution": [s.source_sample_attribution for s in samples],
                 "mapping_gene_name": [s.mapping_gene_name for s in samples],
