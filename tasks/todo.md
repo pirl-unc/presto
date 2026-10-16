@@ -1,3 +1,10 @@
+# Scoped sampling investigation — #94
+
+- [x] Register the two-condition contract and exploratory repeated-test limitation.
+- [ ] Run canonical preflight and both bounded fits with frozen membership.
+- [ ] Publish and verify all predictions, exposure, baseline and uncertainty artifacts.
+- [ ] Close registry; format/lint/full checks, review, merge and release 0.1.11.
+
 # Actual human-corpus preflight
 
 - [x] Register baseline limits, source pins, caps and CPU-only resource contract.
