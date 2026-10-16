@@ -75,3 +75,8 @@ coverage; there are no new predictions or predictive metrics. Historical
 Presto 0.1.16 / Hitlist 1.78.0 targets, model results and failed IC50 quality screen
 remain unchanged. All 9,053 donor/specimen/acquisition identities remain unknown;
 source-study overlap and incomplete antigen/repertoire roles remain limitations.
+
+Public verification: all 21 release assets were independently downloaded and
+hash-verified through datacache; the downloaded verifier replayed every native
+join, original table cell, applicability annotation and unchanged IC50 target.
+See `results/public-verification.json` and `results/publication.json`.

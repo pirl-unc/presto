@@ -11538,9 +11538,13 @@ Spec: [assay-context-applicability-spec.md](assay-context-applicability-spec.md)
 - [x] Review #126 and define source-preparation versus missing-context semantics.
 - [x] Preserve raw methods and implement conservative applicability reporting.
 - [x] Verify loading, generated parents, frozen membership, predictions and coverage.
-- [ ] Publish an independently verified additive audit of all historical source rows.
+- [x] Publish an independently verified additive audit of all historical source rows.
 - [ ] Format/lint/full tests/docs, review, merge and verified public release.
 
 Review: 193 focused regressions and strict documentation pass. The independent
 real-source replay passes all 9,053 rows and all 2,614 unchanged IC50 targets.
 Full local tests, public download replay and exact-head release checks follow.
+
+Public closure: all 21 evidence downloads and all 11 core artifacts pass an
+independent replay using the downloaded verifier and original pinned inputs.
+The next donor-aware Atlas consumer/independence gate is tracked in #127.
