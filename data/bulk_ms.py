@@ -76,6 +76,7 @@ class BulkMSRecord:
     flank_c_is_terminus: bool = False
     # Verified scoped evidence, retained only as host metadata.
     evidence_row_id: str = ""
+    reference_iri: str = ""
     source_bundle_id: str = ""
     source_partition: str = ""
     source_endpoint: str = ""

@@ -81,7 +81,13 @@ def scoped_bundle(tmp_path):
         "scope": scope,
         "acquisition": acquisition,
         "search_space": search,
-        "citations": {"reanalysis": {"pmid": "33893311", "doi": "fixture"}},
+        "citations": {
+            "reanalysis": {
+                "pmid": "33893311",
+                "doi": "fixture",
+                "url": "https://pubmed.ncbi.nlm.nih.gov/33893311/",
+            }
+        },
         "cell_context": {"donor_id": None, "specimen_id": None},
         "limitations": ["one fixture scope"],
     }
@@ -93,6 +99,7 @@ def scoped_bundle(tmp_path):
             "search_space": search,
             "search_space_id": "fixture-search",
             "search_reference": {"sha256": reference},
+            "parameters": {"flank": 15},
         },
     )
     write_json(
@@ -348,3 +355,11 @@ def test_old_hitlist_fails_before_download(monkeypatch):
     monkeypatch.setattr(hitlist, "__version__", "1.74.0")
     with pytest.raises(RuntimeError, match="Hitlist >=1.75.0"):
         load_scoped_bulk_records()
+
+
+def test_scoped_records_pass_canonical_source_lineage_audit(scoped_bundle):
+    from presto.training.data_support import audit_split_support
+
+    records, _ = load(scoped_bundle)
+    audit = audit_split_support({"admitted": PrestoDataset(bulk_ms_records=records)})
+    assert audit["lineage"]["issue_count"] == 0

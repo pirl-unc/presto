@@ -110,6 +110,9 @@ def _projection(directory, digest, manifest, root):
         or candidate_manifest["search_reference"]["sha256"] != reference_sha256
         or registry["search_space"] != candidate_manifest["search_space"]
         or registry["search_space"]["fasta_sha256"] != reference_sha256
+        or registry["search_space"]["enzyme"] != scope["digestion_enzyme"]
+        or type(candidate_manifest["parameters"]["flank"]) is not int
+        or candidate_manifest["parameters"]["flank"] < 1
         or source_policy["endpoint"] != POLICY["endpoint"]
         or source_policy["units"] != "binary"
         or source_policy["censoring"] != "not_applicable"
@@ -399,6 +402,7 @@ def load_scoped_bulk_records(
                 source_parent_assignment_basis=registry["acquisition"]["protein_observation_basis"],
                 source_endpoint=POLICY["endpoint"],
                 source_units="binary",
+                reference_iri=registry["citations"]["reanalysis"]["url"],
                 pmid=registry["citations"]["reanalysis"]["pmid"],
                 doi=registry["citations"]["reanalysis"]["doi"],
                 acquisition={**registry["acquisition"], **registry["scope"]},

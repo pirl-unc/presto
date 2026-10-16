@@ -22,7 +22,11 @@ explicit known-terminus preservation and a TSV inspection preview. Reproduced
 older sampler truncation and Trypsin/P vocabulary defects are tracked in #81/#82;
 this adapter generates no excision labels or controls. Lock regeneration remains
 blocked by the pre-existing Python-floor conflict in #69. Full final-head gates
-and public release remain required.
+and public release remain required. The first local full run was deliberately
+stopped after 39 passing tests to correct a missing source-reference URI found by
+the canonical support audit. The new regression failed with three lineage issues
+before the fix and passes afterward. A registered real-data admission audit will
+exercise the public archive before canonical trainer integration.
 
 # Frozen partitions and generated parents — 2026-10-15
 
