@@ -2,7 +2,9 @@
 
 Codex / GPT-6, 2026-10-16. Registered before execution; Presto 0.1.21 candidate,
 based on merged 0.1.20. The historical fit producer remains Presto 0.1.16 and
-Hitlist 1.78.0. This audit has not yet run.
+Hitlist 1.78.0. The first audit failed during source snapshot packaging; no generation was
+published. Its exact recipe and log remain preserved. The corrected v2 recipe
+reruns every check from a new clean commit; it has not yet run.
 
 ## Prospective contract
 
@@ -50,3 +52,13 @@ imports no Presto helpers and independently rechecks all exposed native parquet
 columns, original membership and source roles, target values and presenter mapping.
 No original result or release asset is replaced. Publication and execution receipts
 will be added after the run; current status is registered.
+
+## Preserved failed attempt
+
+Initial recipe `fb39e8d302ef77a1b5a3160eb3fe442398418cf0` stopped with a
+copyfile argument-count error while snapshotting code (#125). It produced no
+atomic generation or public release. `code/audit.py` remains byte-for-byte intact;
+`code/audit_v2.py` corrects only packaging and records the prior failure. Executing
+the two actual snapshot calls in isolation reproduces the initial exception and
+verifies both corrected files byte-for-byte. `results/initial-failure.json` and
+`initial-failure.txt` preserve this attempt and will be included in publication.

@@ -408,3 +408,10 @@
   retain citable sources and distinct cell/MHC/condition/assay fields, and deliver
   actual hashes, label policies, partitions, coverage and leakage reports. Software
   tests alone do not qualify a corpus or establish biological independence.
+
+- Never put a GitHub closing keyword directly before an issue reference, even in
+  a negated sentence. GitHub closed #115 from a negated phrase in #121. Use
+  "leaves #115 open", and inspect closing events after merges.
+- When adapting an audit recipe, scope replacements to one syntax location and
+  inspect every changed call. Exercise snapshot/publication paths before freezing
+  a real-source run. Preserve failed executed recipes and logs as separate attempts.

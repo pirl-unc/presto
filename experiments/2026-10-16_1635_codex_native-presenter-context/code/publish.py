@@ -52,6 +52,9 @@ def prepare():
     files.update(
         {
             "README.md": FAMILY / "README.md",
+            "initial_failed_recipe.py": FAMILY / "code/audit.py",
+            "initial_failure.txt": FAMILY / "results/initial-failure.txt",
+            "initial_failure.json": FAMILY / "results/initial-failure.json",
             "launch.json": FAMILY / "reproduce/launch.json",
             "launch.sh": FAMILY / "reproduce/launch.sh",
             "verify.py": FAMILY / "code/verify.py",
