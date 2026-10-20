@@ -11824,3 +11824,37 @@ Review results:
   pins the fully resolved baseline commit.
 - Final-head CI/merge are pending at publication; their definitive outcomes
   are recorded in PR #66's checks and completion handoff.
+
+# TCR specificity and IC50 investigation — 2026-10-20
+
+Spec: `tasks/tcr_specificity_and_fit_spec.md`.
+
+- [x] Inspect TCRvdb paper/access, Hitlist releases and executed fit provenance.
+- [x] Implement separate paired-chain wrapper and strict normalized input contract.
+- [x] Diagnose the IC50 path with preserved training-only evidence.
+- [x] File concrete nonduplicate Hitlist data issues.
+- [ ] Verify code, document results and publish a reviewable PR.
+- [ ] Admit actual TCRvdb data when an authorized file is available.
+
+Review so far:
+
+- Separate wrapper and local interchange loader; canonical Presto behavior and
+  checkpoint format unchanged. Full-chain tail sensitivity, pMHC sensitivity,
+  padding, gradients, stale-gradient freezing, checkpoint/config round-trip and
+  strict label admission are tested with artificial fixtures.
+- First full suite: 2,394 passed, four skips in 340.87 seconds. Review then
+  hardened re-freezing and direct construction of unknown-outcome records;
+  30 focused wrapper/checkpoint/document-contract checks pass afterward. Final
+  full suite is running. Pinned Ruff 0.16.0 and strict docs pass.
+- IC50 diagnostic is registered and closed in
+  `experiments/2026-10-20_1458_codex_ic50-collapse-audit/`; training-only replay
+  matches both historical checkpoints within 1.67e-6 log10(nM). No new fit.
+- Hitlist #721, #722 and #723 filed; existing #678 updated with freshness
+  evidence and a versioned-export refresh request. Installed 1.82.2, published
+  PyPI/main 1.82.11 at check time; local observations cache fails currentness.
+  Historical fit already used the newest found corrected human bundle, produced
+  with 1.78.0. No shared environment or live cache was changed.
+- TCRvdb search: author repository has one main branch, README-only tree and
+  no releases. Analysis repositories point back to controlled access; a small
+  15-record derivative is not a full cohort. See `tasks/tcrvdb_discovery.md`.
+  No TCRvdb file, training run or qualified receptor predictions are claimed.

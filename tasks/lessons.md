@@ -466,3 +466,16 @@ Prioritize source lineage and donor/specimen independence before more fitting wh
 the user identifies those as blockers. Interpret missing context against the assay:
 a purified-MHC binding reaction does not require a cellular processing assignment.
 Keep applicability reporting separate from model features and the measured label.
+# 2026-10-20
+
+- “Validated VDJdb” can refer to independent functional re-testing (TCRvdb),
+  not a VDJdb confidence-score threshold. Resolve the cited source before
+  defining the training cohort; preserve non-validation's assay scope.
+- Distinguish installed package freshness from frozen data-export freshness.
+  A newer software version does not imply a newer training bundle, and a
+  narrowly varying predictor that fails on training needs an optimization
+  diagnostic before collecting more rows.
+- For a requested research dataset, inspect author and downstream public
+  repositories before declaring acquisition blocked. A small derived subset
+  or structure archive does not establish access to the complete functional
+  labels and QC table.
