@@ -11837,11 +11837,11 @@ Specification: [frozen issue](modular_model/issue130.md),
 - [x] Implement one loss/training/checkpoint path and canonical CLI dispatch.
 - [x] Add source preparation and explicit capability/admission reports.
 - [x] Verify gradients, invariances, missingness, censoring, subsets and round trips.
-- [ ] Pass focused/full regression, pinned lint and strict documentation.
+- [x] Pass focused/full regression, pinned lint and strict documentation.
 - [x] Publish implementation PR with precise supported/deferred scope: #131.
 
-Review: software foundation implemented. Focused integration and behavioral tests pass;
-full regression and publication remain pending. Source-specific cellular cohort
+Review: software foundation implemented and published in #131. Local software
+checks pass; exact-head remote checks are recorded on the PR. Source-specific cellular cohort
 qualification, real-data fitting and TCRvdb access remain tracked in #130.
 No new predictive quality claim.
 
@@ -11849,4 +11849,6 @@ Software review update: full parallel regression completed with 2,418 passed and
 four explicit skips in 291.12 seconds. Subsequent allocation review removes the
 unreachable attention layer from a single-core class-II subset and rejects
 unsupported declared assay branches; focused checks cover this amendment.
-PR #131 remains a draft while its final exact-head checks complete.
+At this review checkpoint, PR #131 is a draft awaiting exact-head CI. Its live
+review/CI status is authoritative on GitHub. See
+[implementation review](modular_model/implementation-review.md).
