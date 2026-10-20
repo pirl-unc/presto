@@ -11794,7 +11794,8 @@ preserve later local target-validity, training, and showcase work.
 
 - [x] Inspect current remote PR/base state and isolate the coverage-only changes.
 - [x] Review implementation and verify source/artifact provenance and parity.
-- [ ] Pass focused/full tests, pinned lint, strict docs, and final-head CI.
+- [x] Pass focused/full local tests, pinned lint and strict docs.
+- [ ] Verify final-head PR and push CI before merge.
 - [ ] Publish and merge #66; verify the merge and preserve original local work.
 - [ ] Summarize implemented purpose, data, predictions, quality, and remaining gaps.
 
@@ -11816,4 +11817,10 @@ Review results:
 - Verified all 24 copied collection files by size/hash, all 14 then-current
   family README links, verifier/source hashes and JSON parsing. All 286 original
   working-tree files and the original staged patch are unchanged.
-- Full regression and final-head CI/merge: pending.
+- Full regression passes: 2,379 tests, four explicit skips, 905 warnings in
+  292.43 seconds. Application/test source is frozen at integration `e102946`;
+  subsequent edits only record evidence and require explicit baseline/output
+  arguments in the software verifier. The repeated differential check also
+  pins the fully resolved baseline commit.
+- Final-head CI/merge are pending at publication; their definitive outcomes
+  are recorded in PR #66's checks and completion handoff.

@@ -1,4 +1,4 @@
-"""Software differential parity for output-coverage count reuse against base 8b5f60f.
+"""Software differential parity for output-coverage count reuse against a selected base.
 
 No training, predictive evaluation or runtime claim. The unmodified base census is
 loaded from git history beside the working-tree census. Both consume the
@@ -8,7 +8,9 @@ repeated reports and every filtered class count must match exactly. SQL statemen
 totals and public ``counts()`` calls per report are recorded so the change in the
 report count-call metric is explicit.
 
-Run from the repository root: ``python experiments/2026-09-09_1541_codex_canonical-coverage/analysis/verify_report_reuse.py``
+Run from the repository root with explicit ``--base-commit`` and ``--output``.
+The family README records the current integration command. Historical source and
+results remain frozen separately.
 """
 
 import argparse
@@ -33,7 +35,6 @@ from presto.training.output_coverage import OutputCoverageCensus
 
 ROOT = Path(__file__).resolve().parents[3]
 FAMILY = Path(__file__).resolve().parents[1]
-BASE = "8b5f60fd40684b8af5edfae3c3c52a42fc8b2bfa"
 FILTERS = (
     {},
     {"sources": ["iedb"]},
@@ -111,8 +112,9 @@ def git(*args):
     return subprocess.check_output(["git", *args], cwd=ROOT, text=True).strip()
 
 
-def main(base_commit=BASE, output=None):
+def main(base_commit, output):
     torch.set_num_threads(1)
+    base_commit = git("rev-parse", base_commit)
     rows = fixture_rows()
     base_source = subprocess.check_output(
         ["git", "show", f"{base_commit}:training/output_coverage.py"], cwd=ROOT
@@ -187,7 +189,6 @@ def main(base_commit=BASE, output=None):
         "configurations": results,
         "filtered_class_count_comparisons": comparisons,
     }
-    output = output or FAMILY / "results/verification/report_reuse_parity.json"
     output.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
     print(
         f"Exact report and repeated-report parity for {len(results)} configurations; "
@@ -197,7 +198,7 @@ def main(base_commit=BASE, output=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--base-commit", default=BASE)
-    parser.add_argument("--output", type=Path)
+    parser.add_argument("--base-commit", required=True)
+    parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     main(args.base_commit, args.output)

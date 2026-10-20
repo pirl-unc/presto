@@ -102,7 +102,7 @@ class work falls from 144 SQL statements under the base to 16, and a cold
 single-column claim keeps the base's 3. Its wall times depend on the machine. No
 real-data runtime or predictive claim follows from these files.
 
-The maintained [verifier](analysis/verify_report_reuse.py) now accepts
+The maintained [verifier](analysis/verify_report_reuse.py) now requires
 `--base-commit` and `--output`, so integration with newer source contracts can be
 checked without overwriting the historical evidence. The frozen script above
 preserves the exact script hash recorded in the September parity summary.
@@ -112,8 +112,8 @@ repeated reports match main `3418d0f` in all 32 configurations, and all 60,928
 filtered class counts match. The
 [separate result](results/verification/report_reuse_parity_20261020.json) pins
 the baseline, candidate and verifier hashes, including the merged provenance
-fields. Its candidate source is identical to integration commit `e102946`;
-the recorded dirty state precedes that commit. Reproduce from an environment
+fields. Its candidate source is identical to integration commit `e102946`.
+Reproduce from an environment
 importing this checkout:
 
 ```bash
