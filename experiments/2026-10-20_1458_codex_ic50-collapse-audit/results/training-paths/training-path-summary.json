@@ -1,0 +1,81 @@
+{
+  "scope": "Read-only training-path inventory; no new predictions or optimization",
+  "agent": "Codex / GPT-6",
+  "git_commit": "4be42102b8b6477d4abc9ecb7570a68184f468e5",
+  "dirty": true,
+  "python": "3.12.6",
+  "torch": "2.14.1",
+  "model_config": {
+    "d_model": 32,
+    "n_layers": 1,
+    "n_heads": 4,
+    "latent_topology": "expanded",
+    "excision_machinery_version": 2,
+    "excision_scoring_version": 2,
+    "max_affinity_nM": 50000.0,
+    "binding_midpoint_nM": 500.0,
+    "binding_log10_scale": 0.35
+  },
+  "model_dimensions": {
+    "d_model": 32,
+    "stream_layers": 1,
+    "binding_queries": 8,
+    "binding_layers": 2,
+    "pmhc_interaction_dim": 256
+  },
+  "initial_epoch": 0,
+  "selected_epoch": 1,
+  "historical_ledger_epochs": [
+    1,
+    2
+  ],
+  "historical_ledger_optimizer_steps": 200,
+  "totals": {
+    "parameter_tensors": 476,
+    "parameter_elements": 409850,
+    "unchanged_tensors": 116,
+    "elements_in_wholly_unchanged_tensors": 95453,
+    "tensors_without_optimizer_state": 108,
+    "tensors_with_nonzero_second_moment": 359
+  },
+  "evidence_limits": [
+    "Parameter deltas and Adam second moments cover only the selected epoch-1 checkpoint.",
+    "Output gradient ledger and objective summaries cover both historical epochs.",
+    "Nonzero second moments show past nonzero gradients, not useful learned biology.",
+    "Weight decay can change parameters with zero task gradient; unchanged subrows can coexist with changed tensors.",
+    "No held-out inference or quality evaluation was performed.",
+    "Optimizer parameter order is the canonical trainer's model.parameters() order; count and moment shapes verified."
+  ],
+  "source_files": {
+    "initial_checkpoint.pt": {
+      "path": "/private/tmp/presto-ic50-run/initial_checkpoint.pt",
+      "sha256": "207d6cfa57eb8aed6a145d67bb78f240bd541f38ada6904fb4e6260d51972bab"
+    },
+    "checkpoint.pt": {
+      "path": "/private/tmp/presto-ic50-run/checkpoint.pt",
+      "sha256": "1ac4e019ffa875175206f5c901b28fb7893d5d531328cb9787107a6881fdecf6"
+    },
+    "output_updates.json": {
+      "path": "/private/tmp/presto-ic50-run/output_updates.json",
+      "sha256": "66352ba3e78d62e3e2ec010084d371b722eb9ae2267cd5aabf020319e2bce653"
+    },
+    "row_split_support.csv": {
+      "path": "/private/tmp/presto-ic50-run/row_split_support.csv",
+      "sha256": "4dc3dc99409c7638b4af94662b8c41513548c44c695e940fca95aa404572d500"
+    },
+    "mil_split_support.csv": {
+      "path": "/private/tmp/presto-ic50-run/mil_split_support.csv",
+      "sha256": "950d93a424f7f9f7f1f1f53c47d7b210c8b1086fe66a3e4a825183f8c7dbf6c1"
+    },
+    "metrics.jsonl": {
+      "path": "/private/tmp/presto-ic50-run/metrics.jsonl",
+      "sha256": "e3625beadd16a800bf70bab29407933112a4fa8125c841cd725502d252b390a3"
+    },
+    "membership.tsv": {
+      "path": "/private/tmp/presto-ic50-run/membership.tsv",
+      "sha256": "8959e60c0d9b8049aec25095b9c354d456b48f97ba8fb31d7b786e2861113e99"
+    }
+  },
+  "script_sha256": "7099e88f49e8fe18dda341b7162436b7ee4e9a99e0bcd6a2dbd9185a1309cc66",
+  "runtime_seconds": 0.32213354100531433
+}

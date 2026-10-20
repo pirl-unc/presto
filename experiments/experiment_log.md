@@ -1707,3 +1707,15 @@ Publication closure: all 23 public downloads, 48 archive members, 9,053 source/p
   Isolate exact-IC50 fitting/capacity before scaling data. Representation
   contraction, shared offsets and opposing readout terms are measured, while
   their causal explanation remains open under #117.
+- **Training-path extension:** read-only full parameter/optimizer/support audit
+  of the same checkpoint family, 0.32 seconds local CPU excluding imports.
+  Selected epoch 1: 94,578/409,850 parameters are in tensors without optimizer
+  state; recognition/immunogenicity/T-cell/receptor-evidence and scalar processing
+  heads remain unchanged, while processing representations receive indirect
+  updates. Training support is 3,589 concentration records, 19 koff, 434 half-life,
+  111 Tm and 3,088 positive-only elution bags; no measured processing, T-cell/TCR,
+  kon or core-position labels. Generic KD/probe reuse and duplicate elution/MS
+  objectives are verified couplings, not an established causal explanation.
+  Source, invocation, full module tables and loss/gradient evidence are preserved
+  in the family. No new predictions, training, test selection or held-out metrics;
+  see [the architecture/training report](../docs/model_training_audit.md).

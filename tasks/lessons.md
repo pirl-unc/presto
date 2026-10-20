@@ -479,3 +479,10 @@ Keep applicability reporting separate from model features and the measured label
   repositories before declaring acquisition blocked. A small derived subset
   or structure archive does not establish access to the complete functional
   labels and QC table.
+- Distinguish shared representations from their scalar readout heads when
+  describing training. Downstream presentation gradients can train a processing
+  latent while leaving the returned processing score at initialization.
+- Audit actual loss aliases, generic target reuse and active-task normalization
+  before calling a model an IC50 fit. Source endpoint preservation is not proof
+  of independent endpoint supervision; a successful forward pass does not
+  establish that every returned output was trained.

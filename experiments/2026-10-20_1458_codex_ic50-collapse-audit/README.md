@@ -21,6 +21,22 @@ Downloads go into a separate datacache bundle, never the local live Hitlist stor
 
 Status: completed training-only artifact audit; see results below.
 
+## Prospective diagnostic extension — model/training-path inventory
+
+Registered before execution on 2026-10-20 in response to the request for a deep
+architecture and underfitting audit. Specification:
+`../../tasks/model_training_path_audit_spec.md`.
+
+Compare every named parameter in the same initial and selected checkpoints;
+aggregate exact changes and optimizer moment evidence by module and latent.
+Extract training support, historical direct-output gradient counts and objective
+weights. Parameter change is not evidence of predictive quality, and weight
+decay can move tensors without task-specific learning. The selected checkpoint
+is epoch 1, while the historical output-update ledger spans both epochs; keep
+those observation windows separate. No new optimization or held-out inference.
+Local CPU-only analysis budget remains 20 minutes of diagnostic computation.
+Source files and resulting tables will be frozen alongside the existing replay.
+
 Replay scope fixed before execution: all 877 training class-I IC50 rows, both
 initial and selected checkpoints. Resolve grooves from the archived catalog.
 Require <=2e-5 log10(nM) agreement with archived predictions before interpreting
@@ -51,7 +67,7 @@ The direct IC50 path has finite nonzero output gradients in all 200 historical
 optimizer batches, with 3,645 repeated direct-label exposures. Thus an absent
 loss mask or detached IC50 output does not explain this result. The historical
 learned uncertainty weight is about 0.95/0.94 at the two epoch summaries; it
-has not reduced this objective to near zero. Its support-normalized batch
+has not reduced this objective to near zero. Its task-normalized batch
 weight is about 0.074, within a multi-objective fit; that is a separate factor.
 
 The selected core-KD and bounded probe-KD terms have Pearson **-0.999313**.
@@ -93,3 +109,37 @@ export refresh is not an established cure.
   synthetic-data contract or selection policy changed. Exact IC50 and censored
   bounds keep the original log10(clip(nM, .001, 50000)) target contract.
   This diagnosis does not qualify any TCR or other output.
+
+## Completed training-path extension
+
+The final read-only inventory completed in 0.32 seconds of local CPU analysis,
+excluding imports, with no model forward/backward or optimizer step. The
+[model training audit](../../docs/model_training_audit.md) traces inputs,
+representations, assay losses and current TCR-wrapper limitations.
+
+- 476 parameter tensors / 409,850 parameters. At the selected epoch-1
+  checkpoint, 108 tensors containing 94,578 parameters have no optimizer state.
+  116 tensors containing 95,453 parameters remain exactly unchanged; 359 tensors
+  have nonzero Adam second moments. Parameter movement is not useful learning.
+- Recognition, immunogenicity, T-cell and receptor-evidence modules are unchanged.
+  Processing representations changed through downstream losses, while both
+  scalar processing heads remained unchanged.
+- The 7,241 training observations partition into 3,589 concentration records,
+  19 koff, 434 half-life, 111 Tm and 3,088 positive-only elution bags.
+  There are no kon, measured processing, T-cell, TCR or core-position labels.
+  Source-origin targets are all human and foreignness targets all zero.
+- Source IC50 labels additionally train generic KD, an affinity probe and a
+  binding panel. MIL elution and MS are identical predictions counted as separate
+  objectives. These verified couplings motivate controlled tests; they do not
+  establish the cause of underfit.
+- `results/training-paths/` contains parameter/module inventories, train support,
+  historical objective and output-gradient tables, source endpoint counts, input
+  hashes, execution environment and limitations.
+- `reproduce/training-paths.sh`, `reproduce/training-paths.json` and the frozen
+  `reproduce/source/training_paths.py` reproduce this extension. The existing
+  replay invocation and results remain separate.
+- Checkpoint deltas/moments cover epoch 1 only; historical gradients/objectives
+  cover both epochs. No validation/test inference or new metrics were produced.
+  All original target transforms, synthetic-data exclusions and loss weights
+  remain unchanged. The proposed next comparison separates loss routing from
+  head complexity before attributing the contraction.
