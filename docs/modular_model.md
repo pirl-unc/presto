@@ -178,8 +178,10 @@ The manifest shape is:
 The source files must include real identity supervision for those allocated tasks.
 An assay-only subset may instead omit identity tasks and supply class/species.
 Identity-only and receptor-auxiliary-only pretraining allocate no assay model.
-Bulk-only runs allocate no MHC or APC modules. Context vocabularies and feature
-slots are declared in `ModularConfig`, with no dormant task branches.
+Bulk-only runs allocate no MHC or APC modules. A class-II subset containing only
+nine-residue training peptides omits register attention entirely; longer-peptide
+requests then fail explicitly. Declared MHC branches without assay training support
+are rejected. Context vocabularies and feature slots are declared in `ModularConfig`.
 
 Training makes deterministic shuffled passes over assay observations and uses
 observation-weighted mean losses. A separate identity batch contributes 0.1 times

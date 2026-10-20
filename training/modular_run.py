@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
-from dataclasses import asdict
+from dataclasses import asdict, replace
 import json
 import math
 from pathlib import Path
@@ -93,6 +93,8 @@ def preflight(index: ObservationIndex):
             )
     scales = fit_target_scales(index)
     counts, label_values, feature_states = Counter(), defaultdict(set), defaultdict(set)
+    assay_classes, has_multi_register = set(), False
+    heldout_multi_register = False
     # Label and capability inspection is sequence-only; no training or random model scores.
     validator = ModularPresto(config)
     for row in index:
@@ -135,6 +137,11 @@ def preflight(index: ObservationIndex):
                     raise ValueError("row MHC class outside configured branches")
                 if known != "I" and len(row.peptide) < 9:
                     raise ValueError("class-II/uncertain class requires complete 9-residue cores")
+                if row.split == "train":
+                    assay_classes.update((known,) if known else config.mhc_classes)
+                    has_multi_register |= known != "I" and len(row.peptide) > 9
+                else:
+                    heldout_multi_register |= known != "I" and len(row.peptide) > 9
             if row.split == "train":
                 counts[row.endpoint] += 1
                 if ENDPOINTS[row.endpoint].route in ("cellular", "tcr_cellular"):
@@ -157,6 +164,17 @@ def preflight(index: ObservationIndex):
     for name, states in feature_states.items():
         if len(states) < 2 or states <= {"unknown", "reference"}:
             raise ValueError(f"component effect lacks contrasted training states: {name}")
+    pruning = []
+    if validator.has_pmhc:
+        if set(config.mhc_classes) - assay_classes:
+            raise ValueError("declared MHC branch has no admitted assay training support")
+        if has_multi_register and not config.register_pooling:
+            raise ValueError("multi-register training observations require register pooling")
+        if "II" in config.mhc_classes and not has_multi_register:
+            if heldout_multi_register:
+                raise ValueError("held-out multi-register peptides lack training-path support")
+            config = replace(config, register_pooling=False)
+            pruning.append("register pooling: all admitted class-II peptides have one core")
     return (
         config,
         training,
@@ -166,6 +184,7 @@ def preflight(index: ObservationIndex):
             "training_labels": dict(counts),
             "component_states": {key: sorted(value) for key, value in feature_states.items()},
             "manifest_sha256": index.manifest_sha256,
+            "module_pruning": pruning,
         },
     )
 
@@ -246,6 +265,7 @@ def fit_index(index, output_dir, *, device="cpu"):
     start_time = time.monotonic()
     initial_metadata = {
         "manifest_sha256": index.manifest_sha256,
+        "module_pruning": admission["module_pruning"],
         "training": training,
         "source_contract": index.manifest["sources"],
         "inherited": bool(inherited),

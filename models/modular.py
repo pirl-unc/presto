@@ -34,6 +34,7 @@ class ModularConfig:
     endpoints: tuple[str, ...] = ("ic50",)
     identity_tasks: tuple[str, ...] = ()
     mhc_classes: tuple[str, ...] = ("I", "II")
+    register_pooling: bool = True
     species: tuple[str, ...] = ()
     components: tuple[str, ...] = ()
     component_activity_units: dict[str, str] = field(default_factory=dict)
@@ -216,7 +217,7 @@ class ModularPresto(nn.Module):
             self.identity_heads[name] = nn.Linear(width, classes)
         if self.has_pmhc:
             self.pmhc_fusion = self._fusion(429 + 2 * len(config.species))
-            if "II" in config.mhc_classes:
+            if "II" in config.mhc_classes and config.register_pooling:
                 self.register_score = nn.Linear(128, 1, bias=False)
         source_width = 262 if config.source_context else 0
         self.context_width = (
@@ -455,6 +456,8 @@ class ModularPresto(nn.Module):
             if len(hidden) == 1:
                 attention = hidden.new_ones(1)
             else:
+                if not hasattr(self, "register_score"):
+                    raise ValueError("checkpoint has no multi-register pooling capability")
                 attention = self.register_score(hidden).squeeze(-1).softmax(0)
             pooled.append(weight * (attention[:, None] * hidden).sum(0))
             register_info.append(
