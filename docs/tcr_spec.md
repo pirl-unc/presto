@@ -1,7 +1,8 @@
-# Receptor-specific pathway: future work
+# Receptor-specific pathway
 
 The authoritative desired design is [model_io_contract.md](model_io_contract.md).
-This page records the boundary of a future extension, not an implemented API.
+This page records the boundary between canonical repertoire modeling and the
+experimental [paired-chain specificity wrapper](tcr_specificity.md).
 
 ## What exists now
 
@@ -9,6 +10,10 @@ Canonical Presto has no TCR-sequence input, `tcr_vec`, `match_logit` or
 receptor-specific affinity output. The unused standalone TCR implementation was
 removed; its history can be inspected with `git log -- models/tcr.py`.
 No checkpoint key-dropping migration should revive it implicitly.
+
+The separate `TCRSpecificityModel` now accepts paired alpha/beta chains and
+Presto pMHC inputs. It has its own checkpoint format and functional-response
+score. No trained TCR weights or validated receptor accuracy are supplied.
 
 VDJdb/McPAS and other receptor records can contribute **pMHC-only evidence**
 and evidence-method supervision. That is an active objective, but does not
@@ -19,7 +24,7 @@ repertoire-level recognition/immunogenicity, not receptor-specific matching.
 The current recognition path still lacks the complete presented-pMHC and
 selection-system context required by the desired design.
 
-## Intended extension
+## Extension contract and remaining qualification
 
 - Encode paired receptor sequences without species or assay metadata in the
   residue encoder. Preserve absent chains and pairing/source provenance.

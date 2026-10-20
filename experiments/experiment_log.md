@@ -1678,3 +1678,44 @@ Publication closure: all 23 public downloads, 48 archive members, 9,053 source/p
 - Independent replay verifies all original/native joins, prior cells, annotations, coverage and 11 artifact hashes without importing Presto. Canonical collation agrees on all 9,053 metadata rows.
 - CPU-only, Python 3.12.6, one Torch/BLAS thread; no GPU/cloud, pretraining/training, optimizer, loss weights, synthetic examples or predictions. Builder runtime 2.980692 seconds excluding imports/acquisition; peak process RSS 401,276,928 bytes. Both held-out partitions are used only for metadata preservation, so no new validation/test loss, regression or binding metrics exist and no model winner is selected.
 - [Public evidence](https://github.com/pirl-unc/presto/releases/tag/assay-context-applicability-audit-v1): source-linked observation/IC50 tables, coverage, policy, source pins, code, independent verification and hashes. Original failed IC50 quality result and unknown donor/specimen/acquisition identities persist. This resolves applicability reporting, not broader training readiness; #48/#53/#115 and Hitlist #678/#680 remain open.
+
+## 2026-10-20 — Training-only IC50 collapse audit
+
+- **Agent/model:** Codex / GPT-6.
+- **Directory:** [2026-10-20_1458_codex_ic50-collapse-audit](2026-10-20_1458_codex_ic50-collapse-audit/README.md).
+- **Dataset/curation:** 877 class-I training IC50 observations from the existing
+  2,074-row training IC50 cohort; exact source IDs, archived MHC grooves and
+  original log10(clip(nM, .001, 50000)) targets/censor qualifiers. Frozen Hitlist
+  1.78.0 bundle b180eba804532f633a6d61bb350584dbe24f8df4b4b96f02c6ec492c60144372.
+- **Training contract:** no new fit/pretraining, changed losses or generated
+  examples. Replay historical initial and selected (epoch 1) checkpoints from
+  the 200-step multi-objective run; IC50 remains the direct IC50 assay output.
+  Frozen source, invocation and dependency versions are in `reproduce/`.
+- **Hardware/runtime:** local CPU, one Torch/BLAS thread, no Modal/GPU; roughly
+  seven seconds for the final replay. Two pre-inference catalog-key failures
+  preserved; final canonical resolver and prediction parity verified.
+- **Conditions/results:** initial versus selected prediction SD 0.002809 versus
+  0.007991 log10(nM), compared with target/bound SD 1.526579. pMHC between-example
+  representation SD 0.173150 versus 0.052700. Max replay error <=1.67e-6.
+  Selected core/probe correlation -0.999313 gives partial cancellation.
+  All 200 original IC50 output-gradient batches are finite and nonzero.
+- **Held-out validation/test:** intentionally not rerun; this is training-only
+  diagnosis. Historical held-out artifacts and failed screen remain unchanged
+  in the October 16 effective-target-fit family. Per-example training replay is
+  preserved; no new validation/test prediction dumps are applicable.
+- **Preferred next condition/takeaway:** no winner or new model selected.
+  Isolate exact-IC50 fitting/capacity before scaling data. Representation
+  contraction, shared offsets and opposing readout terms are measured, while
+  their causal explanation remains open under #117.
+- **Training-path extension:** read-only full parameter/optimizer/support audit
+  of the same checkpoint family, 0.32 seconds local CPU excluding imports.
+  Selected epoch 1: 94,578/409,850 parameters are in tensors without optimizer
+  state; recognition/immunogenicity/T-cell/receptor-evidence and scalar processing
+  heads remain unchanged, while processing representations receive indirect
+  updates. Training support is 3,589 concentration records, 19 koff, 434 half-life,
+  111 Tm and 3,088 positive-only elution bags; no measured processing, T-cell/TCR,
+  kon or core-position labels. Generic KD/probe reuse and duplicate elution/MS
+  objectives are verified couplings, not an established causal explanation.
+  Source, invocation, full module tables and loss/gradient evidence are preserved
+  in the family. No new predictions, training, test selection or held-out metrics;
+  see [the architecture/training report](../docs/model_training_audit.md).

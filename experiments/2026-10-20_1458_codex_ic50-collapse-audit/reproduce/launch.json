@@ -1,0 +1,29 @@
+{
+  "agent": "Codex",
+  "model": "GPT-6",
+  "git_commit": "ee4ad60f9750996a4a8e0ecda73e84f583085dd1",
+  "dirty": true,
+  "scope": "training-only artifact analysis; no optimization or held-out evaluation",
+  "cpu_budget_minutes": 20,
+  "env": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "source_publication": "experiments/2026-10-16_1030_codex_effective-target-fit/results/publication.json",
+  "command": "python experiments/2026-10-20_1458_codex_ic50-collapse-audit/analysis/audit.py",
+  "python": "3.12.6",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "dependency_versions": {
+    "torch": "2.14.1",
+    "numpy": "2.5.4",
+    "pandas": "2.3.3",
+    "datacache": "1.29.0",
+    "hitlist": "1.82.2",
+    "mhcseqs": "2.6.13"
+  },
+  "pythonpath_used": "/private/tmp/presto-specificity-imports (presto symlink to isolated checkout)",
+  "source_implementation_note": "models/heads.py and models/presto_modules.py identical to producer v0.1.16; presto.py differs only in a docstring; replay verifies predictions",
+  "input_scope": "877 training class-I IC50 observations, no validation/test replay",
+  "diagnostic_extension": "after initial replay, quantify covariance of existing core/probe summands; no fitted parameters"
+}
