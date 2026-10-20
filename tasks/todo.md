@@ -11824,3 +11824,20 @@ Review results:
   pins the fully resolved baseline commit.
 - Final-head CI/merge are pending at publication; their definitive outcomes
   are recorded in PR #66's checks and completion handoff.
+
+## Modular model implementation — 2026-10-20
+
+Specification: [frozen issue](modular_model/issue130.md),
+[implementation handoff](modular_model/implementation-handoff.md).
+
+- [x] Publish and verify the holistic specification in issue #130.
+- [x] Establish isolated worktree and self-contained implementation handoff.
+- [ ] Implement typed observations, identity/context resolution and target contract.
+- [ ] Implement subset-allocated shared encoder, register and optional context/MS/TCR paths.
+- [ ] Implement one loss/training/checkpoint path and canonical CLI dispatch.
+- [ ] Add source preparation and explicit capability/admission reports.
+- [ ] Verify gradients, invariances, missingness, censoring, subsets and round trips.
+- [ ] Pass focused/full regression, pinned lint and strict documentation.
+- [ ] Publish implementation PR with precise supported/deferred scope.
+
+Review: pending implementation; no new predictive quality claim.

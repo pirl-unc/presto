@@ -466,3 +466,11 @@ Prioritize source lineage and donor/specimen independence before more fitting wh
 the user identifies those as blockers. Interpret missing context against the assay:
 a purified-MHC binding reaction does not require a cellular processing assignment.
 Keep applicability reporting separate from model features and the measured label.
+
+## 2026-10-20 — modular model requirements
+
+- Keep explicit class-II registers and within-peptide flanks; one whole-peptide measurement gives one loss after aggregation.
+- Species defaults are user-authorized inference assumptions with explicit overrides, never molecular supervision or source facts. Preserve APC/MHC/TCR/repertoire/antigen roles.
+- Retain concurrent component losses, unknown/control distinctions and matched cellular outcomes. Keep purified binding invariant to APC state.
+- Separate digestion from shared MS response; a combined observation fit does not establish independently calibrated detectability.
+- Compile only modules reachable from a declared subset; preserve labels, missingness, evidence tiers and coverage in one canonical path.
