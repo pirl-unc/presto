@@ -400,6 +400,50 @@
   preparation command. Explicitly exclude generated artifact roots while keeping
   undeclared source packages, including similarly named nested packages, visible.
 
+## 2026-09-10
+
+- An `AttributeError` on a sibling package's object is a diagnosis to finish,
+  not a "dependency drift" note to hand back. Resolve the symbol: check the
+  installed distribution's version and path, look for a local checkout of that
+  sibling, and compare against the declared floor of whichever package calls
+  the method. Reporting an unrelated test failure without naming its cause is
+  the lazy stopping point the root-cause rule exists to prevent.
+- In the shared virtual environment every sibling repo is installed editable
+  from `/Users/iskander/code/<repo>`. A sibling that is instead a plain PyPI
+  build is the anomaly and will silently sit behind the working-tree code that
+  imports it. Check install mode before blaming the caller.
+- `pip check` does not catch a violated floor when the requirement sits behind
+  an optional extra, and an editable install's recorded metadata can lag its
+  working tree. Read the caller's `pyproject.toml` rather than trusting a clean
+  `pip check`.
+
+## 2026-09-13
+
+- Check a cited path exactly as written before calling it missing. Twice a
+  parity script was reported absent after looking one directory too shallow; the
+  file existed at the dated path the note gave.
+- `ruff` printing "No Python files found under the given path(s)" before "All
+  checks passed!" means nothing was checked. Presto excludes `experiments/` from
+  lint on purpose, so scripts added there are unlinted by policy; say so rather
+  than reporting them as lint-clean.
+- Prefer scoping a cache to a read-only operation over detecting every mutation.
+  A SQLite connection's `total_changes` looked like a complete invalidation token,
+  but DDL table swaps, temp tables shadowing a table, backups or deserialization
+  into the connection, and writes from another connection all bypass it. Caching
+  only inside `report()` makes staleness impossible elsewhere by construction.
+- A rollback inside a library method must undo only that method's work. Use a
+  savepoint rather than `connection.rollback()`, which also discards the caller's
+  earlier uncommitted writes.
+- A mutation that survives the whole suite is a finding even when current code is
+  correct. Pair each new reuse or invalidation test with the mutant it must kill,
+  and run the new tests against the pre-fix code to prove they fail there.
+
+## 2026-09-14
+
+- A reproducibility artifact is not included merely because it exists in the
+  working tree. Before claiming that an experiment bundle is tracked, inspect
+  `git status --untracked-files=all` and the staged file list for every linked
+  script and generated summary; verify the links from a checkout-visible path.
 
 ## 2026-10-15
 

@@ -1,0 +1,88 @@
+{
+  "all_seconds": {
+    "base_8b5f60f": {
+      "cold_single_column_claim": [
+        0.9713,
+        0.9904,
+        0.9944
+      ],
+      "report_selection_work": [
+        65.6839,
+        65.8816,
+        65.8929
+      ]
+    },
+    "pr66_3532ae1": {
+      "cold_single_column_claim": [
+        1.0612,
+        1.0849,
+        1.0776
+      ],
+      "report_selection_work": [
+        13.3557,
+        13.3982,
+        13.3502
+      ]
+    },
+    "working_tree": {
+      "cold_single_column_claim": [
+        0.9953,
+        1.0184,
+        1.0125
+      ],
+      "report_selection_work": [
+        6.4858,
+        6.5057,
+        6.4811
+      ]
+    }
+  },
+  "best_seconds": {
+    "base_8b5f60f": {
+      "cold_single_column_claim": 0.9713,
+      "report_selection_work": 65.6839
+    },
+    "pr66_3532ae1": {
+      "cold_single_column_claim": 1.0612,
+      "report_selection_work": 13.3502
+    },
+    "working_tree": {
+      "cold_single_column_claim": 0.9953,
+      "report_selection_work": 6.4811
+    }
+  },
+  "classes": 11,
+  "endpoint": "species_of_origin_logits",
+  "facet_rows": 600000,
+  "identical_counts_across_implementations": true,
+  "implementation_source_sha256": {
+    "base_8b5f60f": "b930dc2e7eae1593c31f3e08f589a5b6fbf621a306f9549291fe860656561ae3",
+    "pr66_3532ae1": "b12727ea83c6b605cb1f11a19b80c2dd9e29a59c9c54879f8a7ce9dc20e73528",
+    "working_tree": "081668657e123fe2b9ca082d90dff5c23bdaea17db8c272c78886c47d2d4ae18"
+  },
+  "machine": {
+    "cpus": 10,
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "python": "3.12.6",
+    "sqlite": "3.46.0"
+  },
+  "observations": 179907,
+  "repetitions": 3,
+  "samples": 150000,
+  "script_sha256": "6f6db3b1140bf5671b5c85f8ccec56c7a2a903d1ce35cb699f0882bd1e218667",
+  "sql_statements": {
+    "base_8b5f60f": {
+      "cold_single_column_claim": 3,
+      "report_selection_work": 144
+    },
+    "pr66_3532ae1": {
+      "cold_single_column_claim": 4,
+      "report_selection_work": 56
+    },
+    "working_tree": {
+      "cold_single_column_claim": 3,
+      "report_selection_work": 16
+    }
+  },
+  "verification": "synthetic software cost check; not a real-data or full-report runtime claim"
+}

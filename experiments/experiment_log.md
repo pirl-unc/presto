@@ -1348,9 +1348,9 @@ fitting/held-out performance remain separate work.
 
 - Agent/model: Codex / GPT-6.
 - Directory: [2026-09-09_1541_codex_canonical-coverage](2026-09-09_1541_codex_canonical-coverage/).
-- Status: inputs uploaded and verified; `merged_measured` is running as attempt
-  `serialized_entry`, after two preserved startup failures. Production base is
-  merged PR #64, `190360a7`; live frozen source is `d6a690a`.
+- Status: `merged_measured` completed as attempt `serialized_entry`; the other
+  five conditions/update diagnostics remain pending. Production base is merged
+  PR #64, `190360a7`; frozen executed source is `d6a690a`.
 - Dataset: frozen merged TSV, exclusive Hitlist and explicit Hitlist-plus-bulk,
   each measured-only and augmented, no modality caps. Ten input files total
   1,464,177,529 bytes; exact hashes and complete arguments are in the directory.
@@ -1367,14 +1367,15 @@ fitting/held-out performance remain separate work.
   multiplicity come from the executable registry. Later gradient diagnostics must
   freeze real train candidates and optimization settings before execution.
 - Hardware: first merged measured condition alone, Modal CPU 4/8 requested/limit,
-  RAM 64/192 GiB requested/limit, four-hour timeout, no GPU. Actual runtime/hardware
-  evidence remains pending. No preferred condition or predictive winner yet.
+  RAM 64/192 GiB requested/limit, four-hour timeout, no GPU. Observed memory was
+  192 GiB; peak RSS was 14.31 GiB over 12,652.535 seconds. No preferred condition
+  or predictive winner yet.
 - Validation/test: support counts only; no predictive loss or metrics. Prediction
   dumps are inapplicable to this phase; #53 still requires fresh predictive eval.
 - Raw artifacts: `artifacts/2026-09-09_1541_codex_canonical-coverage/` and uniquely
   named Modal volume prefixes recorded by each launched receipt.
-- Decision: verify observational parity, run the uncapped merged measured audit,
-  reconcile it, then schedule the remaining source/augmentation conditions.
+- Decision: the merged measured audit is complete and reconciled. Reduce repeated
+  reporting work, then schedule the remaining source/augmentation conditions.
 - Preparation update: 76 instrumentation/canonical checks pass, including exact
   report parity and exclusion of unrelated raw corpora from the code archive.
   Automatic approval review rejected the ten-file Modal upload pending explicit
@@ -1408,15 +1409,50 @@ fitting/held-out performance remain separate work.
   loaded. Explicit serialized transport now passes a fresh-process round-trip
   with Modal 1.1.4 (one test, 0.48 seconds), plus 28 focused tests in 4.29 seconds.
   Retry as `serialized_entry` with the same condition/input/hardware contract.
-- Live attempt `serialized_entry` at clean `d6a690a`: app
+- Startup history for `serialized_entry` at clean `d6a690a`: app
   `ap-PPrESGuLvIKrTYEYNnwTPG`, call `fc-01M23HN1ZCVA1M5NF5Q1P0GFNJ`.
   Worker startup and canonical full merged-data loading are confirmed after the
   frozen code/input/curation hash checks. Observed Python 3.12.1, CPU torch
   2.7.0+cpu, Hitlist 1.59.1, mhcseqs 2.5.12, mhcgnomes 3.41.0, Modal 1.1.4;
   `/proc/meminfo` reports 192 GiB. Startup receipts are copied into the attempt
-  directory. Counts, runtime closure and source reconciliation remain pending;
-  no fitting or predictive evaluation has run. CI at earlier `37cbb17` passed
+  directory. Counts and reconciliation were pending at startup; their completed
+  results follow. No fitting or predictive evaluation ran. CI at earlier `37cbb17` passed
   2,061 tests / 3 skipped in 865.08 seconds, with its complete log retained.
+- Completed merged-measured result: 12,652.535 seconds, peak RSS 14.31 GiB,
+  1,785 report count calls. Train/validation/test retained rows:
+  **1,665,530 / 208,200 / 208,192**, total 2,081,922. IC50 observations:
+  55,423 / 6,978 / 6,791; T-cell response: 118,222 / 15,266 / 14,795;
+  TCR evidence: 133,170 / 10,456 / 18,744, all positive. Processing and pathway
+  T-cell MIL support are zero; the T-cell counts above describe row labels.
+  These are census counts, not predictive metrics or adequacy thresholds.
+  No fitting/pretraining ran; prediction dumps are inapplicable.
+- Report count calls are a wrapper call counter, not a runtime measure. The 1,785
+  figure used the base `8b5f60f` census. The report-reuse census (PR #66) reuses sole
+  evidence-group counts without calling `counts()`, so later conditions report fewer
+  calls for the same work (7-8% fewer on the verification fixtures); compare wall
+  time, peak RSS and SQL work instead. Differential parity against the base (Claude /
+  Opus 5, `f54dd32` plus uncommitted fix): identical reports for 32 configurations and
+  60,928 equal filtered class counts, in the family's
+  `results/verification/report_reuse_parity.json`, reproduced by
+  `analysis/verify_report_reuse.py`. A synthetic 150,000-sample check of the
+  11-class endpoint (`results/verification/class_count_cost.json`) cuts report-style
+  class work from 144 SQL statements to 16 while a cold single-column claim keeps
+  the base's 3. Software verification only; no real-data speedup is claimed.
+- The local watcher lost DNS connectivity, but the remote status and durable
+  call result confirm success. Preserve both receipts. All final summaries,
+  source/curation metadata, split support and training candidates are copied into
+  the attempt's `remote/` directory; the 8.8 GB SQLite evidence remains in its
+  original volume and the final worker log is retained locally. Input hashes
+  before/after, evidence fingerprints, legacy dataset fingerprints and all
+  output CSV/JSON cells reconcile. Reduce redundant report queries before more
+  conditions; no preferred source condition or predictive winner is established.
+
+2026-10-20 integration closure (Codex): report reuse was checked against newer
+main `3418d0f`, retaining species/assay provenance and affinity-target auditing.
+All 32 complete/repeated reports and 60,928 filtered class counts agree; see the
+family's `results/verification/report_reuse_parity_20261020.json` and README for
+source hashes and the exact verifier command. Historical verification bytes
+remain preserved. This is software parity, with no new fitting or timing claim.
 
 ### 2026-10-15_2100_codex_scoped-proteomics-admission
 

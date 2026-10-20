@@ -1,0 +1,222 @@
+{
+  "additions": {
+    "mhc_only": {
+      "samples": 0
+    },
+    "synthetic_binding": {},
+    "synthetic_cascade": {},
+    "synthetic_elution": {},
+    "synthetic_processing": {},
+    "uniprot": {
+      "samples": 0
+    }
+  },
+  "data_seed_base": 17,
+  "diagnostics": {
+    "invalid_mhc_sequences": {
+      "count": 1
+    },
+    "mhc_coverage_after_filter": {
+      "missing_fraction": 0.0,
+      "missing_rows": 0,
+      "resolved_fraction": 1.0,
+      "resolved_rows": 2766823,
+      "rows_considered": 2766823
+    },
+    "mhc_coverage_before_filter": {
+      "missing_fraction": 0.19387768183198137,
+      "missing_rows": 665439,
+      "resolved_fraction": 0.8061223181680186,
+      "resolved_rows": 2766823,
+      "rows_considered": 3432262
+    },
+    "mhc_resolution_alleles": {
+      "missing": 161,
+      "resolved": 1196,
+      "resolved_index": 1178,
+      "resolved_mhcseqs": 18,
+      "total": 1357
+    },
+    "mhc_sequence_quality": {
+      "noncanonical_count": 1,
+      "nucleotide_like_count": 0,
+      "short_count": 0,
+      "total_sequences": 1196,
+      "x_residue_total": 0,
+      "x_sequence_count": 0
+    }
+  },
+  "drop_reasons": {
+    "caps": {
+      "binding": 0,
+      "elution": 0,
+      "kinetics": 0,
+      "processing": 0,
+      "stability": 0,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "mhc_filter": {
+      "binding_dropped": 6177,
+      "elution_alleles_dropped": 595364,
+      "elution_rows_dropped": 550236,
+      "kinetics_dropped": 5,
+      "processing_dropped": 0,
+      "stability_dropped": 274,
+      "tcell_dropped": 59704,
+      "vdjdb_dropped": 3915
+    },
+    "source_ingest": {
+      "missing_binding_affinity_value": 248,
+      "missing_binding_koff_value": 2,
+      "missing_binding_t_half_value": 208,
+      "missing_binding_tm_value": 20,
+      "skipped_invalid_peptide": 156765,
+      "unsupported_binding_association_constant": 4,
+      "unsupported_binding_qualitative": 561829,
+      "unsupported_binding_structure": 1262,
+      "unsupported_presentation_non_ms": 1166
+    },
+    "target_exclusion": {}
+  },
+  "mhc_resolution_contract": {
+    "augmentation_source": "index_csv",
+    "filter_unresolved_mhc": true,
+    "index_csv": "/inputs/2026-09-09_1541_codex_canonical-coverage/data/mhc_index.csv",
+    "resolver_order": [
+      "mhcseqs",
+      "index_csv"
+    ],
+    "strict_mhc_resolution": true
+  },
+  "schema_version": 1,
+  "sha256": "fabe8a85ed55af69a3008289917284689b22e19c90ccf3a124883b30c5a39622",
+  "source_loader": {
+    "cap_sampling": "reservoir",
+    "counts_before_cap": {
+      "binding": 241803,
+      "elution": 2073797,
+      "kinetics": 102,
+      "processing": 0,
+      "stability": 12259,
+      "tcell": 207987,
+      "tcr_evidence": 166285
+    },
+    "records_loaded": {
+      "binding": 241803,
+      "elution": 2073797,
+      "kinetics": 102,
+      "processing": 0,
+      "stability": 12259,
+      "tcell": 207987,
+      "tcr_evidence": 166285
+    },
+    "rows_by_assay": {
+      "binding_affinity": 242051,
+      "binding_association_constant": 4,
+      "binding_koff": 72,
+      "binding_kon": 32,
+      "binding_qualitative": 561829,
+      "binding_structure": 1262,
+      "binding_t_half": 11308,
+      "binding_tm": 1179,
+      "elution_ms": 2073797,
+      "presentation_non_ms": 1166,
+      "tcell_response": 207987,
+      "tcr_evidence": 166285
+    },
+    "rows_by_source": {
+      "iedb": 3100687,
+      "mcpas": 13702,
+      "vdjdb": 152583
+    },
+    "rows_dropped_by_cap": {
+      "binding": 0,
+      "elution": 0,
+      "kinetics": 0,
+      "processing": 0,
+      "stability": 0,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "rows_dropped_invalid_peptide": 156765,
+    "rows_sanitized_optional_sequences": 9877,
+    "rows_scanned": 3266972,
+    "skipped_by_reason": {
+      "missing_binding_affinity_value": 248,
+      "missing_binding_koff_value": 2,
+      "missing_binding_t_half_value": 208,
+      "missing_binding_tm_value": 20,
+      "unsupported_binding_association_constant": 4,
+      "unsupported_binding_qualitative": 561829,
+      "unsupported_binding_structure": 1262,
+      "unsupported_presentation_non_ms": 1166
+    },
+    "skipped_invalid_peptide": 156765,
+    "skipped_unroutable_or_missing_label": 564739
+  },
+  "stages": {
+    "after_mhc_filter": {
+      "binding": 235626,
+      "elution": 1523561,
+      "kinetics": 97,
+      "processing": 0,
+      "stability": 11985,
+      "tcell": 148283,
+      "tcr_evidence": 162370
+    },
+    "after_synthetic_augmentation": {
+      "binding": 235626,
+      "elution": 1523561,
+      "kinetics": 97,
+      "processing": 0,
+      "stability": 11985,
+      "tcell": 148283,
+      "tcr_evidence": 162370
+    },
+    "after_target_exclusion": {
+      "binding": 241803,
+      "elution": 2073797,
+      "kinetics": 102,
+      "processing": 0,
+      "stability": 12259,
+      "tcell": 207987,
+      "tcr_evidence": 166285
+    },
+    "before_mhc_filter": {
+      "binding": 241803,
+      "elution": 2073797,
+      "kinetics": 102,
+      "processing": 0,
+      "stability": 12259,
+      "tcell": 207987,
+      "tcr_evidence": 166285
+    },
+    "final_dataset": {
+      "samples": 2081922
+    },
+    "final_samples_by_source": {
+      "iedb": 1919552,
+      "mcpas": 12516,
+      "vdjdb": 149854
+    },
+    "loaded_post_cap": {
+      "binding": 241803,
+      "elution": 2073797,
+      "kinetics": 102,
+      "processing": 0,
+      "stability": 12259,
+      "tcell": 207987,
+      "tcr_evidence": 166285
+    },
+    "loaded_pre_cap": {
+      "binding": 241803,
+      "elution": 2073797,
+      "kinetics": 102,
+      "processing": 0,
+      "stability": 12259,
+      "tcell": 207987,
+      "tcr_evidence": 166285
+    }
+  }
+}

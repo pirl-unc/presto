@@ -1,0 +1,2951 @@
+{
+  "contract": {
+    "aliases": {
+      "assays.KD_proxy_ec50_nM": {
+        "canonical": "assays.KD_nM",
+        "path": "assays.KD_proxy_ec50_nM",
+        "transform": "identity"
+      },
+      "assays.KD_proxy_ic50_nM": {
+        "canonical": "assays.KD_nM",
+        "path": "assays.KD_proxy_ic50_nM",
+        "transform": "identity"
+      },
+      "binding_affinity_probe_kd_raw": {
+        "canonical": "binding_affinity_score_raw",
+        "path": "binding_affinity_probe_kd_raw",
+        "transform": "identity"
+      },
+      "binding_affinity_score": {
+        "canonical": "binding_affinity_probe_kd",
+        "path": "binding_affinity_score",
+        "transform": "identity"
+      },
+      "binding_class1_prob": {
+        "canonical": "binding_class1_logit",
+        "path": "binding_class1_prob",
+        "transform": "sigmoid"
+      },
+      "binding_class2_prob": {
+        "canonical": "binding_class2_logit",
+        "path": "binding_class2_prob",
+        "transform": "sigmoid"
+      },
+      "binding_mixed_logit": {
+        "canonical": "binding_logit",
+        "path": "binding_mixed_logit",
+        "transform": "identity"
+      },
+      "binding_mixed_prob": {
+        "canonical": "binding_logit",
+        "path": "binding_mixed_prob",
+        "transform": "sigmoid"
+      },
+      "binding_prob": {
+        "canonical": "binding_logit",
+        "path": "binding_prob",
+        "transform": "sigmoid"
+      },
+      "chain_compat_prob": {
+        "canonical": "chain_compat_logit",
+        "path": "chain_compat_prob",
+        "transform": "sigmoid"
+      },
+      "core_start_probs": {
+        "canonical": "core_start_prob",
+        "path": "core_start_probs",
+        "transform": "identity"
+      },
+      "elution_prob": {
+        "canonical": "elution_logit",
+        "path": "elution_prob",
+        "transform": "sigmoid"
+      },
+      "excision_prob": {
+        "canonical": "excision_logit",
+        "path": "excision_prob",
+        "transform": "sigmoid"
+      },
+      "foreignness_prob": {
+        "canonical": "foreignness_logit",
+        "path": "foreignness_prob",
+        "transform": "sigmoid"
+      },
+      "immunogenicity_cd4_prob": {
+        "canonical": "immunogenicity_cd4_logit",
+        "path": "immunogenicity_cd4_prob",
+        "transform": "sigmoid"
+      },
+      "immunogenicity_cd8_prob": {
+        "canonical": "immunogenicity_cd8_logit",
+        "path": "immunogenicity_cd8_prob",
+        "transform": "sigmoid"
+      },
+      "immunogenicity_mixed_logit": {
+        "canonical": "immunogenicity_logit",
+        "path": "immunogenicity_mixed_logit",
+        "transform": "identity"
+      },
+      "immunogenicity_mixed_prob": {
+        "canonical": "immunogenicity_logit",
+        "path": "immunogenicity_mixed_prob",
+        "transform": "sigmoid"
+      },
+      "immunogenicity_mixture_logit": {
+        "canonical": "immunogenicity_logit",
+        "path": "immunogenicity_mixture_logit",
+        "transform": "identity"
+      },
+      "immunogenicity_prob": {
+        "canonical": "immunogenicity_logit",
+        "path": "immunogenicity_prob",
+        "transform": "sigmoid"
+      },
+      "mhc_class_pred": {
+        "canonical": "mhc_class_logits",
+        "path": "mhc_class_pred",
+        "transform": "argmax"
+      },
+      "mhc_class_probs_inferred": {
+        "canonical": "mhc_class_logits",
+        "path": "mhc_class_probs_inferred",
+        "transform": "softmax"
+      },
+      "mhc_species_pred": {
+        "canonical": "mhc_species_logits",
+        "path": "mhc_species_pred",
+        "transform": "argmax"
+      },
+      "mhc_species_probs_inferred": {
+        "canonical": "mhc_species_logits",
+        "path": "mhc_species_probs_inferred",
+        "transform": "softmax"
+      },
+      "ms_logit": {
+        "canonical": "elution_logit",
+        "path": "ms_logit",
+        "transform": "identity"
+      },
+      "ms_prob": {
+        "canonical": "elution_logit",
+        "path": "ms_prob",
+        "transform": "sigmoid"
+      },
+      "pmhc_vec": {
+        "canonical": "pmhc_interaction_vec",
+        "path": "pmhc_vec",
+        "transform": "identity"
+      },
+      "presentation_class1_prob": {
+        "canonical": "presentation_class1_logit",
+        "path": "presentation_class1_prob",
+        "transform": "sigmoid"
+      },
+      "presentation_class2_prob": {
+        "canonical": "presentation_class2_logit",
+        "path": "presentation_class2_prob",
+        "transform": "sigmoid"
+      },
+      "presentation_mixed_logit": {
+        "canonical": "presentation_logit",
+        "path": "presentation_mixed_logit",
+        "transform": "identity"
+      },
+      "presentation_mixed_prob": {
+        "canonical": "presentation_logit",
+        "path": "presentation_mixed_prob",
+        "transform": "sigmoid"
+      },
+      "presentation_prob": {
+        "canonical": "presentation_logit",
+        "path": "presentation_prob",
+        "transform": "sigmoid"
+      },
+      "processing_class1_prob": {
+        "canonical": "processing_class1_logit",
+        "path": "processing_class1_prob",
+        "transform": "sigmoid"
+      },
+      "processing_class2_prob": {
+        "canonical": "processing_class2_logit",
+        "path": "processing_class2_prob",
+        "transform": "sigmoid"
+      },
+      "processing_mixed_logit": {
+        "canonical": "processing_logit",
+        "path": "processing_mixed_logit",
+        "transform": "identity"
+      },
+      "processing_mixed_prob": {
+        "canonical": "processing_logit",
+        "path": "processing_mixed_prob",
+        "transform": "sigmoid"
+      },
+      "processing_prob": {
+        "canonical": "processing_logit",
+        "path": "processing_prob",
+        "transform": "sigmoid"
+      },
+      "recognition_cd4_prob": {
+        "canonical": "recognition_cd4_logit",
+        "path": "recognition_cd4_prob",
+        "transform": "sigmoid"
+      },
+      "recognition_cd8_prob": {
+        "canonical": "recognition_cd8_logit",
+        "path": "recognition_cd8_prob",
+        "transform": "sigmoid"
+      },
+      "recognition_mixed_logit": {
+        "canonical": "recognition_repertoire_logit",
+        "path": "recognition_mixed_logit",
+        "transform": "identity"
+      },
+      "recognition_mixed_prob": {
+        "canonical": "recognition_repertoire_logit",
+        "path": "recognition_mixed_prob",
+        "transform": "sigmoid"
+      },
+      "recognition_repertoire_prob": {
+        "canonical": "recognition_repertoire_logit",
+        "path": "recognition_repertoire_prob",
+        "transform": "sigmoid"
+      },
+      "tcell_context_logits.apc_type": {
+        "canonical": "tcell_panel_logits.apc_type",
+        "path": "tcell_context_logits.apc_type",
+        "transform": "identity"
+      },
+      "tcell_context_logits.assay_method": {
+        "canonical": "tcell_panel_logits.assay_method",
+        "path": "tcell_context_logits.assay_method",
+        "transform": "identity"
+      },
+      "tcell_context_logits.assay_readout": {
+        "canonical": "tcell_panel_logits.assay_readout",
+        "path": "tcell_context_logits.assay_readout",
+        "transform": "identity"
+      },
+      "tcell_context_logits.culture_context": {
+        "canonical": "tcell_panel_logits.culture_context",
+        "path": "tcell_context_logits.culture_context",
+        "transform": "identity"
+      },
+      "tcell_context_logits.peptide_format": {
+        "canonical": "tcell_panel_logits.peptide_format",
+        "path": "tcell_context_logits.peptide_format",
+        "transform": "identity"
+      },
+      "tcell_context_logits.stim_context": {
+        "canonical": "tcell_panel_logits.stim_context",
+        "path": "tcell_context_logits.stim_context",
+        "transform": "identity"
+      },
+      "tcell_prob": {
+        "canonical": "tcell_logit",
+        "path": "tcell_prob",
+        "transform": "sigmoid"
+      },
+      "tcr_evidence_method_probs": {
+        "canonical": "tcr_evidence_method_logits",
+        "path": "tcr_evidence_method_probs",
+        "transform": "sigmoid"
+      },
+      "tcr_evidence_prob": {
+        "canonical": "tcr_evidence_logit",
+        "path": "tcr_evidence_prob",
+        "transform": "sigmoid"
+      }
+    },
+    "configuration": {
+      "affinity_assay_residual_mode": "legacy",
+      "affinity_target_encoding": "log10",
+      "binding_direct_segment_mode": "off",
+      "binding_kinetic_input_mode": "affinity_vec",
+      "core_window_lengths": [
+        9
+      ],
+      "kd_grouping_mode": "merged_kd",
+      "latent_topology": "expanded",
+      "max_affinity_nM": 50000.0
+    },
+    "objectives": {
+      "mil:elution": {
+        "base_weight": 1.0,
+        "channel": "mil",
+        "endpoint": "elution_logit",
+        "evidence_role": "direct",
+        "id": "mil:elution",
+        "loss_group": "elution",
+        "loss_type": "bce",
+        "mask": "resolved_bag_mask",
+        "path": "elution_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "noisy_or_instances_then_mean_bags",
+        "selector": "",
+        "source_target": "elution",
+        "target": "bag_label",
+        "target_unit": "response"
+      },
+      "mil:ms": {
+        "base_weight": 1.0,
+        "channel": "mil",
+        "endpoint": "elution_logit",
+        "evidence_role": "direct",
+        "id": "mil:ms",
+        "loss_group": "ms",
+        "loss_type": "bce",
+        "mask": "resolved_bag_mask",
+        "path": "ms_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "noisy_or_instances_then_mean_bags",
+        "selector": "",
+        "source_target": "elution",
+        "target": "bag_label",
+        "target_unit": "response"
+      },
+      "mil:presentation": {
+        "base_weight": 1.0,
+        "channel": "mil",
+        "endpoint": "presentation_logit",
+        "evidence_role": "proxy",
+        "id": "mil:presentation",
+        "loss_group": "presentation",
+        "loss_type": "bce",
+        "mask": "resolved_bag_mask",
+        "path": "presentation_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "noisy_or_instances_then_mean_bags",
+        "selector": "",
+        "source_target": "elution",
+        "target": "bag_label",
+        "target_unit": "response"
+      },
+      "row:binding": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "assays.KD_nM",
+        "evidence_role": "direct",
+        "id": "row:binding",
+        "loss_group": "binding",
+        "loss_type": "censor",
+        "mask": "binding",
+        "path": "assays.KD_nM",
+        "qualifier": "binding",
+        "raw_unit": "nM",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "binding",
+        "target": "binding",
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_affinity_probe": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "binding_affinity_probe_kd",
+        "evidence_role": "auxiliary",
+        "id": "row:binding_affinity_probe",
+        "loss_group": "binding_affinity_probe",
+        "loss_type": "censor",
+        "mask": "binding",
+        "path": "binding_affinity_probe_kd",
+        "qualifier": "binding",
+        "raw_unit": "nM",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "binding",
+        "target": "binding",
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_assay_panel_assay_geometry": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "binding_assay_panel_assay_geometry",
+        "evidence_role": "direct",
+        "id": "row:binding_assay_panel_assay_geometry",
+        "loss_group": "binding_assay_panel",
+        "loss_type": "censor",
+        "mask": "binding",
+        "path": "binding_assay_panel_assay_geometry",
+        "qualifier": "binding",
+        "raw_unit": "nM",
+        "reduction": "mean_active_axes_then_masked_mean",
+        "selector": "binding_context.assay_geometry_idx",
+        "source_target": "binding",
+        "target": "binding",
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_assay_panel_assay_prep": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "binding_assay_panel_assay_prep",
+        "evidence_role": "direct",
+        "id": "row:binding_assay_panel_assay_prep",
+        "loss_group": "binding_assay_panel",
+        "loss_type": "censor",
+        "mask": "binding",
+        "path": "binding_assay_panel_assay_prep",
+        "qualifier": "binding",
+        "raw_unit": "nM",
+        "reduction": "mean_active_axes_then_masked_mean",
+        "selector": "binding_context.assay_prep_idx",
+        "source_target": "binding",
+        "target": "binding",
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_assay_panel_assay_readout": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "binding_assay_panel_assay_readout",
+        "evidence_role": "direct",
+        "id": "row:binding_assay_panel_assay_readout",
+        "loss_group": "binding_assay_panel",
+        "loss_type": "censor",
+        "mask": "binding",
+        "path": "binding_assay_panel_assay_readout",
+        "qualifier": "binding",
+        "raw_unit": "nM",
+        "reduction": "mean_active_axes_then_masked_mean",
+        "selector": "binding_context.assay_readout_idx",
+        "source_target": "binding",
+        "target": "binding",
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_assay_panel_assay_type": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "binding_assay_panel_assay_type",
+        "evidence_role": "direct",
+        "id": "row:binding_assay_panel_assay_type",
+        "loss_group": "binding_assay_panel",
+        "loss_type": "censor",
+        "mask": "binding",
+        "path": "binding_assay_panel_assay_type",
+        "qualifier": "binding",
+        "raw_unit": "nM",
+        "reduction": "mean_active_axes_then_masked_mean",
+        "selector": "binding_context.assay_type_idx",
+        "source_target": "binding",
+        "target": "binding",
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_ec50": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "assays.EC50_nM",
+        "evidence_role": "direct",
+        "id": "row:binding_ec50",
+        "loss_group": "binding_ec50",
+        "loss_type": "censor",
+        "mask": "binding_ec50",
+        "path": "assays.EC50_nM",
+        "qualifier": "binding_ec50",
+        "raw_unit": "nM",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "binding",
+        "target": "binding_ec50",
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_ic50": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "assays.IC50_nM",
+        "evidence_role": "direct",
+        "id": "row:binding_ic50",
+        "loss_group": "binding_ic50",
+        "loss_type": "censor",
+        "mask": "binding_ic50",
+        "path": "assays.IC50_nM",
+        "qualifier": "binding_ic50",
+        "raw_unit": "nM",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "binding",
+        "target": "binding_ic50",
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_kd": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "assays.KD_nM",
+        "evidence_role": "direct",
+        "id": "row:binding_kd",
+        "loss_group": "binding_kd",
+        "loss_type": "censor",
+        "mask": "binding_kd",
+        "path": "assays.KD_nM",
+        "qualifier": "binding_kd",
+        "raw_unit": "nM",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "binding",
+        "target": "binding_kd",
+        "target_unit": "log10(nM)"
+      },
+      "row:core_start": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "core_start_logit",
+        "evidence_role": "auxiliary",
+        "id": "row:core_start",
+        "loss_group": "core_start",
+        "loss_type": "ce",
+        "mask": "core_start",
+        "path": "core_start_logit",
+        "qualifier": "",
+        "raw_unit": "residue_index_0based",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "annotation",
+        "target": "core_start",
+        "target_unit": "residue_index_0based"
+      },
+      "row:elution": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "elution_logit",
+        "evidence_role": "direct",
+        "id": "row:elution",
+        "loss_group": "elution",
+        "loss_type": "bce",
+        "mask": "elution",
+        "path": "elution_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "elution",
+        "target": "elution",
+        "target_unit": "response"
+      },
+      "row:excision": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "excision_logit",
+        "evidence_role": "proxy",
+        "id": "row:excision",
+        "loss_group": "excision",
+        "loss_type": "bce",
+        "mask": "excision",
+        "path": "excision_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "excision",
+        "target": "excision",
+        "target_unit": "response"
+      },
+      "row:excision_panel_apm": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "excision_panel_apm",
+        "evidence_role": "proxy",
+        "id": "row:excision_panel_apm",
+        "loss_group": "excision_condition_panel",
+        "loss_type": "bce",
+        "mask": "elution",
+        "path": "excision_panel_apm",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "mean_active_axes_then_masked_mean",
+        "selector": "provenance.apm_perturbation_idx",
+        "source_target": "elution",
+        "target": "elution",
+        "target_unit": "response"
+      },
+      "row:excision_panel_stimulus": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "excision_panel_stimulus",
+        "evidence_role": "proxy",
+        "id": "row:excision_panel_stimulus",
+        "loss_group": "excision_condition_panel",
+        "loss_type": "bce",
+        "mask": "elution",
+        "path": "excision_panel_stimulus",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "mean_active_axes_then_masked_mean",
+        "selector": "provenance.processing_stimulus_idx",
+        "source_target": "elution",
+        "target": "elution",
+        "target_unit": "response"
+      },
+      "row:foreignness": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "foreignness_logit",
+        "evidence_role": "proxy",
+        "id": "row:foreignness",
+        "loss_group": "foreignness",
+        "loss_type": "bce",
+        "mask": "foreignness",
+        "path": "foreignness_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "organism",
+        "target": "foreignness",
+        "target_unit": "response"
+      },
+      "row:immunogenicity": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "immunogenicity_logit",
+        "evidence_role": "proxy",
+        "id": "row:immunogenicity",
+        "loss_group": "immunogenicity",
+        "loss_type": "bce",
+        "mask": "tcell",
+        "path": "immunogenicity_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "tcell",
+        "target": "tcell",
+        "target_unit": "response"
+      },
+      "row:koff": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "assays.koff",
+        "evidence_role": "direct",
+        "id": "row:koff",
+        "loss_group": "koff",
+        "loss_type": "mse",
+        "mask": "koff",
+        "path": "assays.koff",
+        "qualifier": "",
+        "raw_unit": "1/s",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "koff",
+        "target": "koff",
+        "target_unit": "log10(1/s)"
+      },
+      "row:kon": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "assays.kon",
+        "evidence_role": "direct",
+        "id": "row:kon",
+        "loss_group": "kon",
+        "loss_type": "mse",
+        "mask": "kon",
+        "path": "assays.kon",
+        "qualifier": "",
+        "raw_unit": "1/(M*s)",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "kon",
+        "target": "kon",
+        "target_unit": "log10(1/(M*s))"
+      },
+      "row:mhc_a_fine_type": {
+        "base_weight": 0.1,
+        "channel": "row",
+        "endpoint": "mhc_a_type_logits",
+        "evidence_role": "auxiliary",
+        "id": "row:mhc_a_fine_type",
+        "loss_group": "mhc_a_fine_type",
+        "loss_type": "ce",
+        "mask": "mhc_a_fine_type",
+        "path": "mhc_a_type_logits",
+        "qualifier": "",
+        "raw_unit": "class_index",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "annotation",
+        "target": "mhc_a_fine_type",
+        "target_unit": "class_index"
+      },
+      "row:mhc_b_fine_type": {
+        "base_weight": 0.1,
+        "channel": "row",
+        "endpoint": "mhc_b_type_logits",
+        "evidence_role": "auxiliary",
+        "id": "row:mhc_b_fine_type",
+        "loss_group": "mhc_b_fine_type",
+        "loss_type": "ce",
+        "mask": "mhc_b_fine_type",
+        "path": "mhc_b_type_logits",
+        "qualifier": "",
+        "raw_unit": "class_index",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "annotation",
+        "target": "mhc_b_fine_type",
+        "target_unit": "class_index"
+      },
+      "row:mhc_class": {
+        "base_weight": 0.1,
+        "channel": "row",
+        "endpoint": "mhc_class_logits",
+        "evidence_role": "auxiliary",
+        "id": "row:mhc_class",
+        "loss_group": "mhc_class",
+        "loss_type": "ce",
+        "mask": "mhc_class",
+        "path": "mhc_class_logits",
+        "qualifier": "",
+        "raw_unit": "class_index",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "annotation",
+        "target": "mhc_class",
+        "target_unit": "class_index"
+      },
+      "row:mhc_species": {
+        "base_weight": 0.1,
+        "channel": "row",
+        "endpoint": "mhc_species_logits",
+        "evidence_role": "auxiliary",
+        "id": "row:mhc_species",
+        "loss_group": "mhc_species",
+        "loss_type": "ce",
+        "mask": "mhc_species",
+        "path": "mhc_species_logits",
+        "qualifier": "",
+        "raw_unit": "class_index",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "annotation",
+        "target": "mhc_species",
+        "target_unit": "class_index"
+      },
+      "row:ms_detectability": {
+        "base_weight": 0.5,
+        "channel": "row",
+        "endpoint": "ms_detectability_logit",
+        "evidence_role": "proxy",
+        "id": "row:ms_detectability",
+        "loss_group": "ms_detectability",
+        "loss_type": "bce",
+        "mask": "ms_detectability",
+        "path": "ms_detectability_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "ms_detectability",
+        "target": "ms_detectability",
+        "target_unit": "response"
+      },
+      "row:presentation": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "presentation_logit",
+        "evidence_role": "proxy",
+        "id": "row:presentation",
+        "loss_group": "presentation",
+        "loss_type": "bce",
+        "mask": "elution",
+        "path": "presentation_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "elution",
+        "target": "elution",
+        "target_unit": "response"
+      },
+      "row:processing": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "processing_logit",
+        "evidence_role": "direct",
+        "id": "row:processing",
+        "loss_group": "processing",
+        "loss_type": "bce",
+        "mask": "processing",
+        "path": "processing_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "processing",
+        "target": "processing",
+        "target_unit": "response"
+      },
+      "row:species_of_origin": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "species_of_origin_logits",
+        "evidence_role": "auxiliary",
+        "id": "row:species_of_origin",
+        "loss_group": "species_of_origin",
+        "loss_type": "ce",
+        "mask": "species_of_origin",
+        "path": "species_of_origin_logits",
+        "qualifier": "",
+        "raw_unit": "class_index",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "annotation",
+        "target": "species_of_origin",
+        "target_unit": "class_index"
+      },
+      "row:t_half": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "assays.t_half",
+        "evidence_role": "direct",
+        "id": "row:t_half",
+        "loss_group": "t_half",
+        "loss_type": "censor",
+        "mask": "t_half",
+        "path": "assays.t_half",
+        "qualifier": "t_half",
+        "raw_unit": "h",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "t_half",
+        "target": "t_half",
+        "target_unit": "log10(min)"
+      },
+      "row:tcell": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "tcell_logit",
+        "evidence_role": "proxy",
+        "id": "row:tcell",
+        "loss_group": "tcell",
+        "loss_type": "bce",
+        "mask": "tcell",
+        "path": "tcell_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "tcell",
+        "target": "tcell",
+        "target_unit": "response"
+      },
+      "row:tcell_apc_type": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "tcell_panel_logits.apc_type",
+        "evidence_role": "direct",
+        "id": "row:tcell_apc_type",
+        "loss_group": "tcell_apc_type",
+        "loss_type": "bce",
+        "mask": "tcell_apc_type",
+        "path": "tcell_panel_logits.apc_type",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "tcell_context.apc_type_idx",
+        "source_target": "tcell",
+        "target": "tcell_apc_type",
+        "target_unit": "response"
+      },
+      "row:tcell_assay_method": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "tcell_panel_logits.assay_method",
+        "evidence_role": "direct",
+        "id": "row:tcell_assay_method",
+        "loss_group": "tcell_assay_method",
+        "loss_type": "bce",
+        "mask": "tcell_assay_method",
+        "path": "tcell_panel_logits.assay_method",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "tcell_context.assay_method_idx",
+        "source_target": "tcell",
+        "target": "tcell_assay_method",
+        "target_unit": "response"
+      },
+      "row:tcell_assay_readout": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "tcell_panel_logits.assay_readout",
+        "evidence_role": "direct",
+        "id": "row:tcell_assay_readout",
+        "loss_group": "tcell_assay_readout",
+        "loss_type": "bce",
+        "mask": "tcell_assay_readout",
+        "path": "tcell_panel_logits.assay_readout",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "tcell_context.assay_readout_idx",
+        "source_target": "tcell",
+        "target": "tcell_assay_readout",
+        "target_unit": "response"
+      },
+      "row:tcell_culture_context": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "tcell_panel_logits.culture_context",
+        "evidence_role": "direct",
+        "id": "row:tcell_culture_context",
+        "loss_group": "tcell_culture_context",
+        "loss_type": "bce",
+        "mask": "tcell_culture_context",
+        "path": "tcell_panel_logits.culture_context",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "tcell_context.culture_context_idx",
+        "source_target": "tcell",
+        "target": "tcell_culture_context",
+        "target_unit": "response"
+      },
+      "row:tcell_peptide_format": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "tcell_panel_logits.peptide_format",
+        "evidence_role": "direct",
+        "id": "row:tcell_peptide_format",
+        "loss_group": "tcell_peptide_format",
+        "loss_type": "bce",
+        "mask": "tcell_peptide_format",
+        "path": "tcell_panel_logits.peptide_format",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "tcell_context.peptide_format_idx",
+        "source_target": "tcell",
+        "target": "tcell_peptide_format",
+        "target_unit": "response"
+      },
+      "row:tcell_stim_context": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "tcell_panel_logits.stim_context",
+        "evidence_role": "direct",
+        "id": "row:tcell_stim_context",
+        "loss_group": "tcell_stim_context",
+        "loss_type": "bce",
+        "mask": "tcell_stim_context",
+        "path": "tcell_panel_logits.stim_context",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "tcell_context.stim_context_idx",
+        "source_target": "tcell",
+        "target": "tcell_stim_context",
+        "target_unit": "response"
+      },
+      "row:tcr_evidence": {
+        "base_weight": 0.05,
+        "channel": "row",
+        "endpoint": "tcr_evidence_logit",
+        "evidence_role": "auxiliary",
+        "id": "row:tcr_evidence",
+        "loss_group": "tcr_evidence",
+        "loss_type": "bce",
+        "mask": "tcr_evidence",
+        "path": "tcr_evidence_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "tcr_evidence",
+        "target": "tcr_evidence",
+        "target_unit": "response"
+      },
+      "row:tcr_evidence_method": {
+        "base_weight": 0.02,
+        "channel": "row",
+        "endpoint": "tcr_evidence_method_logits",
+        "evidence_role": "auxiliary",
+        "id": "row:tcr_evidence_method",
+        "loss_group": "tcr_evidence_method",
+        "loss_type": "bce",
+        "mask": "tcr_evidence_method",
+        "path": "tcr_evidence_method_logits",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "tcr_evidence",
+        "target": "tcr_evidence_method",
+        "target_unit": "response"
+      },
+      "row:tm": {
+        "base_weight": 1.0,
+        "channel": "row",
+        "endpoint": "assays.Tm",
+        "evidence_role": "direct",
+        "id": "row:tm",
+        "loss_group": "tm",
+        "loss_type": "censor",
+        "mask": "tm",
+        "path": "assays.Tm",
+        "qualifier": "tm",
+        "raw_unit": "degC",
+        "reduction": "masked_mean",
+        "selector": "",
+        "source_target": "tm",
+        "target": "tm",
+        "target_unit": "(degC-50)/15"
+      },
+      "tcell_mil:immunogenicity_mil": {
+        "base_weight": 1.0,
+        "channel": "tcell_mil",
+        "endpoint": "immunogenicity_logit",
+        "evidence_role": "proxy",
+        "id": "tcell_mil:immunogenicity_mil",
+        "loss_group": "immunogenicity_mil",
+        "loss_type": "bce",
+        "mask": "resolved_bag_mask",
+        "path": "immunogenicity_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "noisy_or_instances_then_mean_bags",
+        "selector": "",
+        "source_target": "tcell",
+        "target": "bag_label",
+        "target_unit": "response"
+      },
+      "tcell_mil:tcell_apc_type_mil": {
+        "base_weight": 1.0,
+        "channel": "tcell_mil",
+        "endpoint": "tcell_panel_logits.apc_type",
+        "evidence_role": "direct",
+        "id": "tcell_mil:tcell_apc_type_mil",
+        "loss_group": "tcell_apc_type_mil",
+        "loss_type": "bce",
+        "mask": "resolved_bag_mask",
+        "path": "tcell_panel_logits.apc_type",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "noisy_or_instances_then_mean_bags",
+        "selector": "apc_type_idx",
+        "source_target": "tcell",
+        "target": "bag_label",
+        "target_unit": "response"
+      },
+      "tcell_mil:tcell_assay_method_mil": {
+        "base_weight": 1.0,
+        "channel": "tcell_mil",
+        "endpoint": "tcell_panel_logits.assay_method",
+        "evidence_role": "direct",
+        "id": "tcell_mil:tcell_assay_method_mil",
+        "loss_group": "tcell_assay_method_mil",
+        "loss_type": "bce",
+        "mask": "resolved_bag_mask",
+        "path": "tcell_panel_logits.assay_method",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "noisy_or_instances_then_mean_bags",
+        "selector": "assay_method_idx",
+        "source_target": "tcell",
+        "target": "bag_label",
+        "target_unit": "response"
+      },
+      "tcell_mil:tcell_assay_readout_mil": {
+        "base_weight": 1.0,
+        "channel": "tcell_mil",
+        "endpoint": "tcell_panel_logits.assay_readout",
+        "evidence_role": "direct",
+        "id": "tcell_mil:tcell_assay_readout_mil",
+        "loss_group": "tcell_assay_readout_mil",
+        "loss_type": "bce",
+        "mask": "resolved_bag_mask",
+        "path": "tcell_panel_logits.assay_readout",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "noisy_or_instances_then_mean_bags",
+        "selector": "assay_readout_idx",
+        "source_target": "tcell",
+        "target": "bag_label",
+        "target_unit": "response"
+      },
+      "tcell_mil:tcell_culture_context_mil": {
+        "base_weight": 1.0,
+        "channel": "tcell_mil",
+        "endpoint": "tcell_panel_logits.culture_context",
+        "evidence_role": "direct",
+        "id": "tcell_mil:tcell_culture_context_mil",
+        "loss_group": "tcell_culture_context_mil",
+        "loss_type": "bce",
+        "mask": "resolved_bag_mask",
+        "path": "tcell_panel_logits.culture_context",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "noisy_or_instances_then_mean_bags",
+        "selector": "culture_context_idx",
+        "source_target": "tcell",
+        "target": "bag_label",
+        "target_unit": "response"
+      },
+      "tcell_mil:tcell_mil": {
+        "base_weight": 1.0,
+        "channel": "tcell_mil",
+        "endpoint": "tcell_logit",
+        "evidence_role": "proxy",
+        "id": "tcell_mil:tcell_mil",
+        "loss_group": "tcell_mil",
+        "loss_type": "bce",
+        "mask": "resolved_bag_mask",
+        "path": "tcell_logit",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "noisy_or_instances_then_mean_bags",
+        "selector": "",
+        "source_target": "tcell",
+        "target": "bag_label",
+        "target_unit": "response"
+      },
+      "tcell_mil:tcell_peptide_format_mil": {
+        "base_weight": 1.0,
+        "channel": "tcell_mil",
+        "endpoint": "tcell_panel_logits.peptide_format",
+        "evidence_role": "direct",
+        "id": "tcell_mil:tcell_peptide_format_mil",
+        "loss_group": "tcell_peptide_format_mil",
+        "loss_type": "bce",
+        "mask": "resolved_bag_mask",
+        "path": "tcell_panel_logits.peptide_format",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "noisy_or_instances_then_mean_bags",
+        "selector": "peptide_format_idx",
+        "source_target": "tcell",
+        "target": "bag_label",
+        "target_unit": "response"
+      },
+      "tcell_mil:tcell_stim_context_mil": {
+        "base_weight": 1.0,
+        "channel": "tcell_mil",
+        "endpoint": "tcell_panel_logits.stim_context",
+        "evidence_role": "direct",
+        "id": "tcell_mil:tcell_stim_context_mil",
+        "loss_group": "tcell_stim_context_mil",
+        "loss_type": "bce",
+        "mask": "resolved_bag_mask",
+        "path": "tcell_panel_logits.stim_context",
+        "qualifier": "",
+        "raw_unit": "response",
+        "reduction": "noisy_or_instances_then_mean_bags",
+        "selector": "stim_context_idx",
+        "source_target": "tcell",
+        "target": "bag_label",
+        "target_unit": "response"
+      }
+    },
+    "outputs": {
+      "apc_cell_type_context_vec": {
+        "columns": [],
+        "id": "apc_cell_type_context_vec",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "assays.EC50_nM": {
+        "columns": [],
+        "id": "assays.EC50_nM",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "batch_scalar",
+        "source_families": [
+          "binding:unknown",
+          "binding:KD",
+          "binding:KD_PROXY_IC50",
+          "binding:KD_PROXY_EC50",
+          "binding:IC50",
+          "binding:EC50",
+          "binding:OTHER",
+          "binding:T_HALF",
+          "binding:TM",
+          "binding:KOFF",
+          "binding:KON"
+        ],
+        "unit": "log10(nM)"
+      },
+      "assays.IC50_nM": {
+        "columns": [],
+        "id": "assays.IC50_nM",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "batch_scalar",
+        "source_families": [
+          "binding:unknown",
+          "binding:KD",
+          "binding:KD_PROXY_IC50",
+          "binding:KD_PROXY_EC50",
+          "binding:IC50",
+          "binding:EC50",
+          "binding:OTHER",
+          "binding:T_HALF",
+          "binding:TM",
+          "binding:KOFF",
+          "binding:KON"
+        ],
+        "unit": "log10(nM)"
+      },
+      "assays.KD_nM": {
+        "columns": [],
+        "id": "assays.KD_nM",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "batch_scalar",
+        "source_families": [
+          "binding:unknown",
+          "binding:KD",
+          "binding:KD_PROXY_IC50",
+          "binding:KD_PROXY_EC50",
+          "binding:IC50",
+          "binding:EC50",
+          "binding:OTHER",
+          "binding:T_HALF",
+          "binding:TM",
+          "binding:KOFF",
+          "binding:KON"
+        ],
+        "unit": "log10(nM)"
+      },
+      "assays.Tm": {
+        "columns": [],
+        "id": "assays.Tm",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "batch_scalar",
+        "source_families": [
+          "tm"
+        ],
+        "unit": "(degC-50)/15"
+      },
+      "assays.koff": {
+        "columns": [],
+        "id": "assays.koff",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "batch_scalar",
+        "source_families": [
+          "koff"
+        ],
+        "unit": "log10(1/s)"
+      },
+      "assays.kon": {
+        "columns": [],
+        "id": "assays.kon",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "batch_scalar",
+        "source_families": [
+          "kon"
+        ],
+        "unit": "log10(1/(M*s))"
+      },
+      "assays.t_half": {
+        "columns": [],
+        "id": "assays.t_half",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "batch_scalar",
+        "source_families": [
+          "t_half"
+        ],
+        "unit": "log10(min)"
+      },
+      "attn_layers": {
+        "columns": [],
+        "id": "attn_layers",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic_container",
+        "source_families": [],
+        "unit": "latent"
+      },
+      "binding_affinity_probe_kd": {
+        "columns": [],
+        "id": "binding_affinity_probe_kd",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "auxiliary",
+        "shape": "batch_scalar",
+        "source_families": [
+          "binding:unknown",
+          "binding:KD",
+          "binding:KD_PROXY_IC50",
+          "binding:KD_PROXY_EC50",
+          "binding:IC50",
+          "binding:EC50",
+          "binding:OTHER",
+          "binding:T_HALF",
+          "binding:TM",
+          "binding:KOFF",
+          "binding:KON"
+        ],
+        "unit": "log10(nM)"
+      },
+      "binding_affinity_score_raw": {
+        "columns": [],
+        "id": "binding_affinity_score_raw",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_assay_context_vec": {
+        "columns": [],
+        "id": "binding_assay_context_vec",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_assay_panel_assay_geometry": {
+        "columns": [
+          "unknown",
+          "COMPETITIVE",
+          "DIRECT",
+          "T_CELL_INHIBITION",
+          "OTHER"
+        ],
+        "id": "binding_assay_panel_assay_geometry",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "panel",
+        "source_families": [
+          "binding:unknown",
+          "binding:KD",
+          "binding:KD_PROXY_IC50",
+          "binding:KD_PROXY_EC50",
+          "binding:IC50",
+          "binding:EC50",
+          "binding:OTHER",
+          "binding:T_HALF",
+          "binding:TM",
+          "binding:KOFF",
+          "binding:KON"
+        ],
+        "unit": "log10(nM)"
+      },
+      "binding_assay_panel_assay_prep": {
+        "columns": [
+          "unknown",
+          "PURIFIED",
+          "CELLULAR",
+          "LYSATE",
+          "BINDING_ASSAY",
+          "OTHER"
+        ],
+        "id": "binding_assay_panel_assay_prep",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "panel",
+        "source_families": [
+          "binding:unknown",
+          "binding:KD",
+          "binding:KD_PROXY_IC50",
+          "binding:KD_PROXY_EC50",
+          "binding:IC50",
+          "binding:EC50",
+          "binding:OTHER",
+          "binding:T_HALF",
+          "binding:TM",
+          "binding:KOFF",
+          "binding:KON"
+        ],
+        "unit": "log10(nM)"
+      },
+      "binding_assay_panel_assay_readout": {
+        "columns": [
+          "unknown",
+          "RADIOACTIVITY",
+          "FLUORESCENCE",
+          "OTHER"
+        ],
+        "id": "binding_assay_panel_assay_readout",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "panel",
+        "source_families": [
+          "binding:unknown",
+          "binding:KD",
+          "binding:KD_PROXY_IC50",
+          "binding:KD_PROXY_EC50",
+          "binding:IC50",
+          "binding:EC50",
+          "binding:OTHER",
+          "binding:T_HALF",
+          "binding:TM",
+          "binding:KOFF",
+          "binding:KON"
+        ],
+        "unit": "log10(nM)"
+      },
+      "binding_assay_panel_assay_type": {
+        "columns": [
+          "unknown",
+          "KD",
+          "KD_PROXY_IC50",
+          "KD_PROXY_EC50",
+          "IC50",
+          "EC50",
+          "OTHER",
+          "T_HALF",
+          "TM",
+          "KOFF",
+          "KON"
+        ],
+        "id": "binding_assay_panel_assay_type",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "panel",
+        "source_families": [
+          "binding:unknown",
+          "binding:KD",
+          "binding:KD_PROXY_IC50",
+          "binding:KD_PROXY_EC50",
+          "binding:IC50",
+          "binding:EC50",
+          "binding:OTHER",
+          "binding:T_HALF",
+          "binding:TM",
+          "binding:KOFF",
+          "binding:KON"
+        ],
+        "unit": "log10(nM)"
+      },
+      "binding_base_logit": {
+        "columns": [],
+        "id": "binding_base_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "binding_class1_logit": {
+        "columns": [],
+        "id": "binding_class1_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "binding_class2_logit": {
+        "columns": [],
+        "id": "binding_class2_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "binding_core_kd_log10": {
+        "columns": [],
+        "id": "binding_core_kd_log10",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_direct_affinity_vec": {
+        "columns": [],
+        "id": "binding_direct_affinity_vec",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_direct_segment_gate_mean": {
+        "columns": [],
+        "id": "binding_direct_segment_gate_mean",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_direct_segment_mode": {
+        "columns": [],
+        "id": "binding_direct_segment_mode",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_direct_stability_vec": {
+        "columns": [],
+        "id": "binding_direct_stability_vec",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_kd_bias": {
+        "columns": [],
+        "id": "binding_kd_bias",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_kd_bias_cap": {
+        "columns": [],
+        "id": "binding_kd_bias_cap",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_kd_bias_raw": {
+        "columns": [],
+        "id": "binding_kd_bias_raw",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_kinetic_input_mode": {
+        "columns": [],
+        "id": "binding_kinetic_input_mode",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_latents": {
+        "columns": [],
+        "id": "binding_latents",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic_container",
+        "source_families": [],
+        "unit": "latent"
+      },
+      "binding_logit": {
+        "columns": [],
+        "id": "binding_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "binding_logit_from_core": {
+        "columns": [],
+        "id": "binding_logit_from_core",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_mhc_attention_effective_residues": {
+        "columns": [],
+        "id": "binding_mhc_attention_effective_residues",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_mhc_attention_mass": {
+        "columns": [],
+        "id": "binding_mhc_attention_mass",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_mhc_attention_token_count": {
+        "columns": [],
+        "id": "binding_mhc_attention_token_count",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_mhc_attention_valid_mask": {
+        "columns": [],
+        "id": "binding_mhc_attention_valid_mask",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_mixed_kd_log10": {
+        "columns": [],
+        "id": "binding_mixed_kd_log10",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_probe_mix_weight": {
+        "columns": [],
+        "id": "binding_probe_mix_weight",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_sequence_summary_vec": {
+        "columns": [],
+        "id": "binding_sequence_summary_vec",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_stability_score": {
+        "columns": [],
+        "id": "binding_stability_score",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "binding_stability_score_raw": {
+        "columns": [],
+        "id": "binding_stability_score_raw",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "chain_compat_logit": {
+        "columns": [],
+        "id": "chain_compat_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "core_length": {
+        "columns": [],
+        "id": "core_length",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "core_length_norm": {
+        "columns": [],
+        "id": "core_length_norm",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "core_membership_prob": {
+        "columns": [],
+        "id": "core_membership_prob",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "core_relative_position_index": {
+        "columns": [],
+        "id": "core_relative_position_index",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "core_start_logit": {
+        "columns": [],
+        "id": "core_start_logit",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "auxiliary",
+        "shape": "positions",
+        "source_families": [
+          "source_annotation"
+        ],
+        "unit": "logit"
+      },
+      "core_start_prob": {
+        "columns": [],
+        "id": "core_start_prob",
+        "note": "Projected window posterior; no independent label objective.",
+        "required": true,
+        "role": "indirect",
+        "shape": "positions",
+        "source_families": [],
+        "unit": "window_posterior_projection"
+      },
+      "core_window_length": {
+        "columns": [],
+        "id": "core_window_length",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "core_window_logit": {
+        "columns": [],
+        "id": "core_window_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "core_window_mask": {
+        "columns": [],
+        "id": "core_window_mask",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "core_window_posterior_prob": {
+        "columns": [],
+        "id": "core_window_posterior_prob",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "core_window_prior_logit": {
+        "columns": [],
+        "id": "core_window_prior_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "core_window_score_logit": {
+        "columns": [],
+        "id": "core_window_score_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "core_window_start": {
+        "columns": [],
+        "id": "core_window_start",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "cpfr_length": {
+        "columns": [],
+        "id": "cpfr_length",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "cpfr_length_norm": {
+        "columns": [],
+        "id": "cpfr_length_norm",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "elution_logit": {
+        "columns": [],
+        "id": "elution_logit",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "batch_scalar",
+        "source_families": [
+          "elution"
+        ],
+        "unit": "logit"
+      },
+      "excision_c_terminus_score": {
+        "columns": [],
+        "id": "excision_c_terminus_score",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "excision_length_score": {
+        "columns": [],
+        "id": "excision_length_score",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "excision_logit": {
+        "columns": [],
+        "id": "excision_logit",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "proxy",
+        "shape": "batch_scalar",
+        "source_families": [
+          "bulk_observed_product"
+        ],
+        "unit": "logit"
+      },
+      "excision_machinery_idx": {
+        "columns": [],
+        "id": "excision_machinery_idx",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "excision_missed_cleavage_score": {
+        "columns": [],
+        "id": "excision_missed_cleavage_score",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "excision_n_terminus_score": {
+        "columns": [],
+        "id": "excision_n_terminus_score",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "excision_panel_apm": {
+        "columns": [
+          "none",
+          "peptide_supply",
+          "n_term_trimming",
+          "loading_complex",
+          "mhc_null",
+          "class_ii_loading",
+          "other",
+          "unknown"
+        ],
+        "id": "excision_panel_apm",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "proxy",
+        "shape": "panel",
+        "source_families": [
+          "elution"
+        ],
+        "unit": "logit"
+      },
+      "excision_panel_stimulus": {
+        "columns": [
+          "none",
+          "ifn_gamma",
+          "ifn_type1",
+          "tnf_alpha",
+          "tlr",
+          "cell_activation",
+          "cytokine_unspecified"
+        ],
+        "id": "excision_panel_stimulus",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "proxy",
+        "shape": "panel",
+        "source_families": [
+          "elution"
+        ],
+        "unit": "logit"
+      },
+      "foreignness_logit": {
+        "columns": [],
+        "id": "foreignness_logit",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "proxy",
+        "shape": "batch_scalar",
+        "source_families": [
+          "organism_derived"
+        ],
+        "unit": "logit"
+      },
+      "groove_vec": {
+        "columns": [],
+        "id": "groove_vec",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "immunogenicity_cd4_logit": {
+        "columns": [],
+        "id": "immunogenicity_cd4_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "immunogenicity_cd8_logit": {
+        "columns": [],
+        "id": "immunogenicity_cd8_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "immunogenicity_logit": {
+        "columns": [],
+        "id": "immunogenicity_logit",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "proxy",
+        "shape": "batch_scalar",
+        "source_families": [
+          "tcell"
+        ],
+        "unit": "logit"
+      },
+      "immunogenicity_recognition_term": {
+        "columns": [],
+        "id": "immunogenicity_recognition_term",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "latent_vecs": {
+        "columns": [],
+        "id": "latent_vecs",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic_container",
+        "source_families": [],
+        "unit": "latent"
+      },
+      "mhc_a_species_logits": {
+        "columns": [],
+        "id": "mhc_a_species_logits",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "mhc_a_type_logits": {
+        "columns": [
+          "MHC_I",
+          "MHC_IIa",
+          "MHC_IIb",
+          "B2M",
+          "unknown"
+        ],
+        "id": "mhc_a_type_logits",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "auxiliary",
+        "shape": "classes",
+        "source_families": [
+          "source_annotation"
+        ],
+        "unit": "logit"
+      },
+      "mhc_a_vec": {
+        "columns": [],
+        "id": "mhc_a_vec",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "mhc_b_species_logits": {
+        "columns": [],
+        "id": "mhc_b_species_logits",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "mhc_b_type_logits": {
+        "columns": [
+          "MHC_I",
+          "MHC_IIa",
+          "MHC_IIb",
+          "B2M",
+          "unknown"
+        ],
+        "id": "mhc_b_type_logits",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "auxiliary",
+        "shape": "classes",
+        "source_families": [
+          "source_annotation"
+        ],
+        "unit": "logit"
+      },
+      "mhc_b_vec": {
+        "columns": [],
+        "id": "mhc_b_vec",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "mhc_class_logits": {
+        "columns": [
+          "I",
+          "II"
+        ],
+        "id": "mhc_class_logits",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "auxiliary",
+        "shape": "classes",
+        "source_families": [
+          "source_annotation"
+        ],
+        "unit": "logit"
+      },
+      "mhc_class_probs": {
+        "columns": [],
+        "id": "mhc_class_probs",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "mhc_is_class1_prob": {
+        "columns": [],
+        "id": "mhc_is_class1_prob",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "mhc_is_class2_prob": {
+        "columns": [],
+        "id": "mhc_is_class2_prob",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "mhc_species_logits": {
+        "columns": [
+          "human",
+          "nhp",
+          "murine",
+          "other_mammal",
+          "bird",
+          "other_vertebrate"
+        ],
+        "id": "mhc_species_logits",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "auxiliary",
+        "shape": "classes",
+        "source_families": [
+          "source_annotation"
+        ],
+        "unit": "logit"
+      },
+      "mhc_species_probs": {
+        "columns": [],
+        "id": "mhc_species_probs",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "ms_detectability_logit": {
+        "columns": [],
+        "id": "ms_detectability_logit",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "proxy",
+        "shape": "batch_scalar",
+        "source_families": [
+          "bulk_depth_proxy"
+        ],
+        "unit": "logit"
+      },
+      "npfr_length": {
+        "columns": [],
+        "id": "npfr_length",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "npfr_length_norm": {
+        "columns": [],
+        "id": "npfr_length_norm",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "pep_vec": {
+        "columns": [],
+        "id": "pep_vec",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "pmhc_interaction_vec": {
+        "columns": [],
+        "id": "pmhc_interaction_vec",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "presentation_class1_logit": {
+        "columns": [],
+        "id": "presentation_class1_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "presentation_class2_logit": {
+        "columns": [],
+        "id": "presentation_class2_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "presentation_invivo_excision_term": {
+        "columns": [],
+        "id": "presentation_invivo_excision_term",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "presentation_logit": {
+        "columns": [],
+        "id": "presentation_logit",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "proxy",
+        "shape": "batch_scalar",
+        "source_families": [
+          "elution"
+        ],
+        "unit": "logit"
+      },
+      "processing_class1_logit": {
+        "columns": [],
+        "id": "processing_class1_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "processing_class2_logit": {
+        "columns": [],
+        "id": "processing_class2_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "processing_logit": {
+        "columns": [],
+        "id": "processing_logit",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "batch_scalar",
+        "source_families": [
+          "processing"
+        ],
+        "unit": "logit"
+      },
+      "recognition_cd4_logit": {
+        "columns": [],
+        "id": "recognition_cd4_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "recognition_cd8_logit": {
+        "columns": [],
+        "id": "recognition_cd8_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "recognition_repertoire_logit": {
+        "columns": [],
+        "id": "recognition_repertoire_logit",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": true,
+        "role": "indirect",
+        "shape": "batch_scalar",
+        "source_families": [],
+        "unit": "logit"
+      },
+      "species_of_origin_logits": {
+        "columns": [
+          "human",
+          "nhp",
+          "murine",
+          "other_mammal",
+          "bird",
+          "other_vertebrate",
+          "invertebrate",
+          "fungi",
+          "bacteria",
+          "viruses",
+          "archaea"
+        ],
+        "id": "species_of_origin_logits",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "auxiliary",
+        "shape": "classes",
+        "source_families": [
+          "source_annotation"
+        ],
+        "unit": "logit"
+      },
+      "species_probs": {
+        "columns": [],
+        "id": "species_probs",
+        "note": "No independent label objective; gradient flow is not direct evidence.",
+        "required": false,
+        "role": "diagnostic",
+        "shape": "diagnostic",
+        "source_families": [],
+        "unit": "implementation_defined"
+      },
+      "tcell_logit": {
+        "columns": [],
+        "id": "tcell_logit",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "proxy",
+        "shape": "batch_scalar",
+        "source_families": [
+          "tcell"
+        ],
+        "unit": "logit"
+      },
+      "tcell_panel_logits.apc_type": {
+        "columns": [
+          "unknown",
+          "DENDRITIC",
+          "B_CELL",
+          "PBMC",
+          "SPLENOCYTE",
+          "T2_B_CELL",
+          "B_LCL",
+          "T_CELL",
+          "OTHER"
+        ],
+        "id": "tcell_panel_logits.apc_type",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "panel",
+        "source_families": [
+          "tcell"
+        ],
+        "unit": "logit"
+      },
+      "tcell_panel_logits.assay_method": {
+        "columns": [
+          "unknown",
+          "ELISPOT",
+          "ICS",
+          "MULTIMER",
+          "ELISA",
+          "CYTOTOXICITY_ASSAY",
+          "PROLIFERATION_ASSAY",
+          "IN_VITRO_ASSAY",
+          "IN_VIVO_ASSAY",
+          "BIOASSAY",
+          "OTHER"
+        ],
+        "id": "tcell_panel_logits.assay_method",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "panel",
+        "source_families": [
+          "tcell"
+        ],
+        "unit": "logit"
+      },
+      "tcell_panel_logits.assay_readout": {
+        "columns": [
+          "unknown",
+          "IFNG",
+          "TNFA",
+          "IL2",
+          "IL4",
+          "IL5",
+          "IL10",
+          "GMCSF",
+          "CYTOTOXICITY",
+          "PROLIFERATION",
+          "ACTIVATION",
+          "QUAL_BINDING",
+          "KD",
+          "MULTIMER_BINDING",
+          "OTHER"
+        ],
+        "id": "tcell_panel_logits.assay_readout",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "panel",
+        "source_families": [
+          "tcell"
+        ],
+        "unit": "logit"
+      },
+      "tcell_panel_logits.culture_context": {
+        "columns": [
+          "unknown",
+          "DIRECT_EX_VIVO",
+          "SHORT_RESTIM",
+          "IN_VITRO",
+          "IN_VIVO",
+          "ENGINEERED",
+          "CELL_LINE_CLONE",
+          "NON_SPECIFIC_ACTIVATION",
+          "OTHER"
+        ],
+        "id": "tcell_panel_logits.culture_context",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "panel",
+        "source_families": [
+          "tcell"
+        ],
+        "unit": "logit"
+      },
+      "tcell_panel_logits.peptide_format": {
+        "columns": [
+          "unknown",
+          "MINIMAL_EPITOPE",
+          "LONG_PEPTIDE",
+          "PEPTIDE_POOL",
+          "WHOLE_PROTEIN",
+          "OTHER"
+        ],
+        "id": "tcell_panel_logits.peptide_format",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "panel",
+        "source_families": [
+          "tcell"
+        ],
+        "unit": "logit"
+      },
+      "tcell_panel_logits.stim_context": {
+        "columns": [
+          "unknown",
+          "EX_VIVO",
+          "IN_VITRO_STIM",
+          "IN_VIVO",
+          "ENGINEERED",
+          "OTHER"
+        ],
+        "id": "tcell_panel_logits.stim_context",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "direct",
+        "shape": "panel",
+        "source_families": [
+          "tcell"
+        ],
+        "unit": "logit"
+      },
+      "tcr_evidence_logit": {
+        "columns": [],
+        "id": "tcr_evidence_logit",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "auxiliary",
+        "shape": "batch_scalar",
+        "source_families": [
+          "tcr_evidence"
+        ],
+        "unit": "logit"
+      },
+      "tcr_evidence_method_logits": {
+        "columns": [
+          "multimer_binding",
+          "target_cell_functional",
+          "functional_readout"
+        ],
+        "id": "tcr_evidence_method_logits",
+        "note": "Support depends on selected labels and source provenance; generated:<kind> families are recorded separately with synthetic role. No adequacy claim is implied.",
+        "required": true,
+        "role": "auxiliary",
+        "shape": "components",
+        "source_families": [
+          "tcr_evidence"
+        ],
+        "unit": "logit"
+      }
+    },
+    "schema_version": 1
+  },
+  "evidence_sha256": "402d39621ab8a1bded2a80084bdd8e6459bd979e992e23ee3e2fb56430d89c22",
+  "objective_hits": {
+    "test": {
+      "mil:elution": {
+        "mask_weight": 151040.0,
+        "observations": 151040
+      },
+      "mil:ms": {
+        "mask_weight": 151040.0,
+        "observations": 151040
+      },
+      "mil:presentation": {
+        "mask_weight": 151040.0,
+        "observations": 151040
+      },
+      "row:binding": {
+        "mask_weight": 22418.0,
+        "observations": 22418
+      },
+      "row:binding_affinity_probe": {
+        "mask_weight": 22418.0,
+        "observations": 22418
+      },
+      "row:binding_assay_panel_assay_geometry": {
+        "mask_weight": 22418.0,
+        "observations": 22418
+      },
+      "row:binding_assay_panel_assay_prep": {
+        "mask_weight": 22418.0,
+        "observations": 22418
+      },
+      "row:binding_assay_panel_assay_readout": {
+        "mask_weight": 22418.0,
+        "observations": 22418
+      },
+      "row:binding_assay_panel_assay_type": {
+        "mask_weight": 22418.0,
+        "observations": 22418
+      },
+      "row:binding_ec50": {
+        "mask_weight": 167.0,
+        "observations": 167
+      },
+      "row:binding_ic50": {
+        "mask_weight": 6791.0,
+        "observations": 6791
+      },
+      "row:binding_kd": {
+        "mask_weight": 1976.0,
+        "observations": 1976
+      },
+      "row:excision_panel_apm": {
+        "mask_weight": 151040.0,
+        "observations": 151040
+      },
+      "row:excision_panel_stimulus": {
+        "mask_weight": 151040.0,
+        "observations": 151040
+      },
+      "row:foreignness": {
+        "mask_weight": 194205.0,
+        "observations": 194205
+      },
+      "row:immunogenicity": {
+        "mask_weight": 14795.0,
+        "observations": 14795
+      },
+      "row:koff": {
+        "mask_weight": 9.0,
+        "observations": 9
+      },
+      "row:kon": {
+        "mask_weight": 7.0,
+        "observations": 7
+      },
+      "row:mhc_a_fine_type": {
+        "mask_weight": 208192.0,
+        "observations": 208192
+      },
+      "row:mhc_b_fine_type": {
+        "mask_weight": 208192.0,
+        "observations": 208192
+      },
+      "row:mhc_class": {
+        "mask_weight": 208192.0,
+        "observations": 208192
+      },
+      "row:mhc_species": {
+        "mask_weight": 208192.0,
+        "observations": 208192
+      },
+      "row:species_of_origin": {
+        "mask_weight": 194205.0,
+        "observations": 194205
+      },
+      "row:t_half": {
+        "mask_weight": 1075.0,
+        "observations": 1075
+      },
+      "row:tcell": {
+        "mask_weight": 14795.0,
+        "observations": 14795
+      },
+      "row:tcell_apc_type": {
+        "mask_weight": 11448.0,
+        "observations": 11448
+      },
+      "row:tcell_assay_method": {
+        "mask_weight": 14795.0,
+        "observations": 14795
+      },
+      "row:tcell_assay_readout": {
+        "mask_weight": 14795.0,
+        "observations": 14795
+      },
+      "row:tcell_culture_context": {
+        "mask_weight": 14471.0,
+        "observations": 14471
+      },
+      "row:tcell_peptide_format": {
+        "mask_weight": 14795.0,
+        "observations": 14795
+      },
+      "row:tcell_stim_context": {
+        "mask_weight": 14795.0,
+        "observations": 14795
+      },
+      "row:tcr_evidence": {
+        "mask_weight": 18744.0,
+        "observations": 18744
+      },
+      "row:tm": {
+        "mask_weight": 104.0,
+        "observations": 104
+      }
+    },
+    "train": {
+      "mil:elution": {
+        "mask_weight": 1214984.0,
+        "observations": 1214984
+      },
+      "mil:ms": {
+        "mask_weight": 1214984.0,
+        "observations": 1214984
+      },
+      "mil:presentation": {
+        "mask_weight": 1214984.0,
+        "observations": 1214984
+      },
+      "row:binding": {
+        "mask_weight": 189500.0,
+        "observations": 189500
+      },
+      "row:binding_affinity_probe": {
+        "mask_weight": 189500.0,
+        "observations": 189500
+      },
+      "row:binding_assay_panel_assay_geometry": {
+        "mask_weight": 189500.0,
+        "observations": 189500
+      },
+      "row:binding_assay_panel_assay_prep": {
+        "mask_weight": 189500.0,
+        "observations": 189500
+      },
+      "row:binding_assay_panel_assay_readout": {
+        "mask_weight": 189500.0,
+        "observations": 189500
+      },
+      "row:binding_assay_panel_assay_type": {
+        "mask_weight": 189500.0,
+        "observations": 189500
+      },
+      "row:binding_ec50": {
+        "mask_weight": 1332.0,
+        "observations": 1332
+      },
+      "row:binding_ic50": {
+        "mask_weight": 55423.0,
+        "observations": 55423
+      },
+      "row:binding_kd": {
+        "mask_weight": 16921.0,
+        "observations": 16921
+      },
+      "row:excision_panel_apm": {
+        "mask_weight": 1214984.0,
+        "observations": 1214984
+      },
+      "row:excision_panel_stimulus": {
+        "mask_weight": 1214984.0,
+        "observations": 1214984
+      },
+      "row:foreignness": {
+        "mask_weight": 1509503.0,
+        "observations": 1509503
+      },
+      "row:immunogenicity": {
+        "mask_weight": 118222.0,
+        "observations": 118222
+      },
+      "row:koff": {
+        "mask_weight": 42.0,
+        "observations": 42
+      },
+      "row:kon": {
+        "mask_weight": 18.0,
+        "observations": 18
+      },
+      "row:mhc_a_fine_type": {
+        "mask_weight": 1665530.0,
+        "observations": 1665530
+      },
+      "row:mhc_b_fine_type": {
+        "mask_weight": 1665530.0,
+        "observations": 1665530
+      },
+      "row:mhc_class": {
+        "mask_weight": 1665530.0,
+        "observations": 1665530
+      },
+      "row:mhc_species": {
+        "mask_weight": 1665530.0,
+        "observations": 1665530
+      },
+      "row:species_of_origin": {
+        "mask_weight": 1509503.0,
+        "observations": 1509503
+      },
+      "row:t_half": {
+        "mask_weight": 8763.0,
+        "observations": 8763
+      },
+      "row:tcell": {
+        "mask_weight": 118222.0,
+        "observations": 118222
+      },
+      "row:tcell_apc_type": {
+        "mask_weight": 92367.0,
+        "observations": 92367
+      },
+      "row:tcell_assay_method": {
+        "mask_weight": 118222.0,
+        "observations": 118222
+      },
+      "row:tcell_assay_readout": {
+        "mask_weight": 118222.0,
+        "observations": 118222
+      },
+      "row:tcell_culture_context": {
+        "mask_weight": 115453.0,
+        "observations": 115453
+      },
+      "row:tcell_peptide_format": {
+        "mask_weight": 118222.0,
+        "observations": 118222
+      },
+      "row:tcell_stim_context": {
+        "mask_weight": 118222.0,
+        "observations": 118222
+      },
+      "row:tcr_evidence": {
+        "mask_weight": 133170.0,
+        "observations": 133170
+      },
+      "row:tm": {
+        "mask_weight": 831.0,
+        "observations": 831
+      }
+    },
+    "val": {
+      "mil:elution": {
+        "mask_weight": 157537.0,
+        "observations": 157537
+      },
+      "mil:ms": {
+        "mask_weight": 157537.0,
+        "observations": 157537
+      },
+      "mil:presentation": {
+        "mask_weight": 157537.0,
+        "observations": 157537
+      },
+      "row:binding": {
+        "mask_weight": 23708.0,
+        "observations": 23708
+      },
+      "row:binding_affinity_probe": {
+        "mask_weight": 23708.0,
+        "observations": 23708
+      },
+      "row:binding_assay_panel_assay_geometry": {
+        "mask_weight": 23708.0,
+        "observations": 23708
+      },
+      "row:binding_assay_panel_assay_prep": {
+        "mask_weight": 23708.0,
+        "observations": 23708
+      },
+      "row:binding_assay_panel_assay_readout": {
+        "mask_weight": 23708.0,
+        "observations": 23708
+      },
+      "row:binding_assay_panel_assay_type": {
+        "mask_weight": 23708.0,
+        "observations": 23708
+      },
+      "row:binding_ec50": {
+        "mask_weight": 172.0,
+        "observations": 172
+      },
+      "row:binding_ic50": {
+        "mask_weight": 6978.0,
+        "observations": 6978
+      },
+      "row:binding_kd": {
+        "mask_weight": 2117.0,
+        "observations": 2117
+      },
+      "row:excision_panel_apm": {
+        "mask_weight": 157537.0,
+        "observations": 157537
+      },
+      "row:excision_panel_stimulus": {
+        "mask_weight": 157537.0,
+        "observations": 157537
+      },
+      "row:foreignness": {
+        "mask_weight": 191840.0,
+        "observations": 191840
+      },
+      "row:immunogenicity": {
+        "mask_weight": 15266.0,
+        "observations": 15266
+      },
+      "row:koff": {
+        "mask_weight": 15.0,
+        "observations": 15
+      },
+      "row:kon": {
+        "mask_weight": 6.0,
+        "observations": 6
+      },
+      "row:mhc_a_fine_type": {
+        "mask_weight": 208200.0,
+        "observations": 208200
+      },
+      "row:mhc_b_fine_type": {
+        "mask_weight": 208200.0,
+        "observations": 208200
+      },
+      "row:mhc_class": {
+        "mask_weight": 208200.0,
+        "observations": 208200
+      },
+      "row:mhc_species": {
+        "mask_weight": 208200.0,
+        "observations": 208200
+      },
+      "row:species_of_origin": {
+        "mask_weight": 191840.0,
+        "observations": 191840
+      },
+      "row:t_half": {
+        "mask_weight": 1115.0,
+        "observations": 1115
+      },
+      "row:tcell": {
+        "mask_weight": 15266.0,
+        "observations": 15266
+      },
+      "row:tcell_apc_type": {
+        "mask_weight": 11795.0,
+        "observations": 11795
+      },
+      "row:tcell_assay_method": {
+        "mask_weight": 15266.0,
+        "observations": 15266
+      },
+      "row:tcell_assay_readout": {
+        "mask_weight": 15266.0,
+        "observations": 15266
+      },
+      "row:tcell_culture_context": {
+        "mask_weight": 14897.0,
+        "observations": 14897
+      },
+      "row:tcell_peptide_format": {
+        "mask_weight": 15266.0,
+        "observations": 15266
+      },
+      "row:tcell_stim_context": {
+        "mask_weight": 15266.0,
+        "observations": 15266
+      },
+      "row:tcr_evidence": {
+        "mask_weight": 10456.0,
+        "observations": 10456
+      },
+      "row:tm": {
+        "mask_weight": 97.0,
+        "observations": 97
+      }
+    }
+  },
+  "splits": {
+    "test": 208192,
+    "train": 1665530,
+    "val": 208200
+  }
+}

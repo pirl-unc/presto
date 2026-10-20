@@ -1,5 +1,8 @@
 """Declared output identities and source evidence survive real model/data paths."""
 
+import random
+import sqlite3
+from copy import deepcopy
 from dataclasses import asdict, replace
 
 import pytest
@@ -171,6 +174,373 @@ def test_censoring_vector_components_and_class_incidence():
             counts = census.counts("train", "mhc_class_logits", name)
             assert counts["observations"] == 2
             assert counts["positive"] == counts["negative"] == 1
+
+
+BALANCE_FIELDS = ("positive", "negative", "unique_positive", "unique_negative")
+
+
+def test_class_columns_reuse_invariant_counts_only_within_a_reuse_block():
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(census, [sample()])
+        queries = []
+        census.db.set_trace_callback(queries.append)
+        with census.reusing_counts():
+            base = census.counts("train", "mhc_class_logits")
+            first = census.counts("train", "mhc_class_logits", "I")
+            second = census.counts("train", "mhc_class_logits", "II")
+            reused = len(queries)
+            assert first["positive"] == second["negative"] == 1
+            assert first["negative"] == second["positive"] == 0
+            assert first["facets"] == second["facets"] == base["facets"]
+            first["facets"].clear()
+            base["observations"] = -1
+            assert census.counts("train", "mhc_class_logits")["observations"] == 1
+            assert census.counts("train", "mhc_class_logits", "I")["facets"]
+        queries.clear()
+        census.counts("train", "mhc_class_logits", "I")
+        census.db.set_trace_callback(None)
+        # Inside the block: one population aggregate, two facet queries and one grouped
+        # balance for every class. Outside it nothing is cached, and a class column costs
+        # the population pass and its facet queries, as before reuse.
+        assert (reused, len(queries)) == (4, 3)
+
+        add(census, [sample(sample_id="second", evidence_row_id="assay-2", mhc_class="II")])
+        updated = census.counts("train", "mhc_class_logits", "I")
+        assert updated["observations"] == 2
+        assert updated["positive"] == updated["negative"] == 1
+
+
+def test_cold_class_column_counts_its_class_in_the_population_pass():
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(
+            census,
+            [sample(), sample(sample_id="second", evidence_row_id="assay-2", mhc_class="II")],
+        )
+        queries = []
+        census.db.set_trace_callback(queries.append)
+        with census.reusing_counts():
+            second = census.counts("train", "mhc_class_logits", "II", sources=["iedb"])
+            cold = len(queries)
+            first = census.counts("train", "mhc_class_logits", "I", sources=["iedb"])
+            census.db.set_trace_callback(None)
+            # The cached population keeps binary balance fields, not the requested class's.
+            population = census.counts("train", "mhc_class_logits", sources=["iedb"])
+        # A cold column needs only the population pass and its two facet queries, as
+        # before reuse; the next column adds one grouped balance for every class.
+        assert (cold, len(queries)) == (3, 4)
+        assert (second["positive"], second["negative"]) == (1, 1)
+        assert (first["positive"], first["negative"]) == (1, 1)
+        assert population["positive"] == 0
+
+
+def test_class_response_uniqueness_preserves_repeated_and_conflicting_source_rows():
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(
+            census,
+            [sample(), sample(sample_id="repeat"), sample(sample_id="conflicting", mhc_class="II")],
+        )
+        for column in ("I", "II"):
+            counts = census.counts("train", "mhc_class_logits", column)
+            assert counts["observations"] == 3
+            assert counts["unique_observations"] == 2
+            assert counts["unique_positive"] == counts["unique_negative"] == 1
+            assert counts["positive"] == (2 if column == "I" else 1)
+            assert counts["negative"] == (1 if column == "I" else 2)
+
+
+@pytest.mark.parametrize(
+    "filters,expected",
+    [
+        ({}, 2),
+        ({"sources": ["iedb"]}, 1),
+        ({"sources": ["other"]}, 1),
+        ({"sources": []}, 0),
+        ({"roles": ["auxiliary"]}, 2),
+        ({"roles": ["direct"]}, 0),
+        ({"families": ["absent"]}, 0),
+    ],
+)
+@pytest.mark.parametrize("include_facets", [False, True])
+def test_class_count_reuse_keeps_filters_and_facet_options_separate(
+    filters, expected, include_facets
+):
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(census, [sample(), sample(sample_id="other", sample_source="other", mhc_class="II")])
+        # Prime the unfiltered, facet-bearing result before requesting another selection.
+        census.counts("train", "mhc_class_logits")
+        counts = census.counts(
+            "train", "mhc_class_logits", "I", include_facets=include_facets, **filters
+        )
+        assert counts["observations"] == expected
+        assert ("facets" in counts) is include_facets
+        assert counts["positive"] + counts["negative"] == expected
+        assert census.counts("val", "mhc_class_logits", "I")["observations"] == 0
+
+
+def test_class_balances_match_per_class_definitions_for_every_selection():
+    """One grouped balance query equals the per-class SQL it replaces.
+
+    Rows are written directly so keys can carry conflicting targets and targets
+    can match no class index, which collated samples never produce.
+    """
+    rng = random.Random(0)
+    contract = build_output_contract()
+    endpoint = "species_of_origin_logits"
+    classes = contract.outputs[endpoint].columns
+    with OutputCoverageCensus(contract) as census:
+        for row_id in range(1, 61):
+            census.db.execute(
+                "INSERT INTO samples VALUES (?,?,?,?,?,?,?)",
+                (
+                    row_id,
+                    "train",
+                    f"s{row_id}",
+                    rng.choice(["iedb", "other"]),
+                    f"o{row_id}",
+                    1,
+                    "P",
+                ),
+            )
+            for occurrence in range(rng.choice([1, 2, 3])):
+                target = rng.choice([*range(len(classes)), -1, 0.5, len(classes)])
+                census.db.execute(
+                    "INSERT INTO observations(row_id,endpoint,column_name,role,family,origin,"
+                    "observation_key,target,qualifier,loss_type,instances,scope,occurrence) "
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (
+                        row_id,
+                        endpoint,
+                        "",
+                        rng.choice(["direct", "proxy"]),
+                        "measured",
+                        "x",
+                        f"k{rng.randrange(20)}",
+                        float(target),
+                        None,
+                        "ce",
+                        1,
+                        "row",
+                        occurrence,
+                    ),
+                )
+        census.db.commit()
+        conflicting = census.db.execute(
+            "SELECT COUNT(*) FROM (SELECT observation_key FROM observations "
+            "GROUP BY observation_key HAVING COUNT(DISTINCT target) > 1)"
+        ).fetchone()[0]
+        assert conflicting > 0
+        for filters in (
+            {},
+            {"roles": ["direct"]},
+            {"sources": ["iedb", "other"]},
+            {"sources": ["other"]},
+            {"roles": []},
+        ):
+            where, args = census._selection(
+                "train", endpoint, "", filters.get("roles"), None, filters.get("sources")
+            )
+            expected = {
+                column: census.db.execute(
+                    f"""SELECT COALESCE(SUM(o.target={index}),0),
+                        COALESCE(SUM(o.target!={index}),0),
+                        COUNT(DISTINCT CASE WHEN o.target={index} THEN o.observation_key END),
+                        COUNT(DISTINCT CASE WHEN o.target!={index} THEN o.observation_key END)
+                    FROM observations o JOIN samples s ON s.id=o.row_id WHERE {where}""",
+                    args,
+                ).fetchone()
+                for index, column in enumerate(classes)
+            }
+            options = dict(include_facets=False, **filters)
+            # Outside a reuse block every class is counted in the population pass.
+            folded = {c: census.counts("train", endpoint, c, **options) for c in classes}
+            # Inside one, a cached population sends every class through the grouped balance.
+            with census.reusing_counts():
+                census.counts("train", endpoint, **options)
+                grouped = {c: census.counts("train", endpoint, c, **options) for c in classes}
+            for column in classes:
+                for path in (folded, grouped):
+                    balance = tuple(path[column][field] for field in BALANCE_FIELDS)
+                    assert balance == expected[column], (filters, column)
+
+
+@pytest.mark.parametrize("sources", [("iedb", "iedb"), ("iedb", "other")])
+def test_report_evidence_groups_equal_filtered_counts_and_stay_independent(sources):
+    contract = build_output_contract()
+    contract.outputs = {
+        name: contract.outputs[name] for name in ("assays.KD_nM", "mhc_class_logits")
+    }
+    with OutputCoverageCensus(contract) as census:
+        add(
+            census,
+            [
+                sample(
+                    sample_id=str(i),
+                    evidence_row_id=str(i),
+                    sample_source=source,
+                    mhc_class=("I", "II")[i],
+                    bind_value=25,
+                    bind_measurement_type="KD",
+                    binding_assay_type="KD",
+                )
+                for i, source in enumerate(sources)
+            ],
+        )
+        queries = []
+        census.db.set_trace_callback(queries.append)
+        outputs = census.report()["splits"]["train"]["outputs"]
+        census.db.set_trace_callback(None)
+        groups = len(set(sources))
+        # Each endpoint runs a population aggregate, two facet queries and the group
+        # query; the class endpoint adds one balance. A sole group reuses those counts,
+        # while every group of a mixed endpoint repeats them under its own filters.
+        expected = 4 + 5 if groups == 1 else (4 + 2 * 3) + (5 + 2 * 4)
+        assert len(queries) == expected
+        for endpoint, entry in outputs.items():
+            columns = contract.outputs[endpoint].columns
+            assert len(entry["evidence"]) == groups
+            for group in entry["evidence"]:
+                filters = dict(
+                    roles=[group["role"]], families=[group["family"]], sources=[group["source"]]
+                )
+                assert "evidence" not in group
+                own = {k: v for k, v in group.items() if k not in ("role", "family", "source")}
+                assert own.pop("columns") == {
+                    column: census.counts("train", endpoint, column, **filters)
+                    for column in columns
+                }
+                assert own == census.counts("train", endpoint, **filters)
+            totals = deepcopy({k: v for k, v in entry.items() if k != "evidence"})
+            for group in entry["evidence"]:
+                group["facets"].clear()
+                for column in columns:
+                    group["columns"][column]["facets"].clear()
+            assert {k: v for k, v in entry.items() if k != "evidence"} == totals
+
+
+def table_rows(census):
+    return tuple(
+        census.db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        for table in ("samples", "facets", "observations")
+    )
+
+
+def failing_batch(census):
+    """Add a batch whose second sample is rejected after observations were written."""
+    statements = []
+    census.db.set_trace_callback(statements.append)
+    with pytest.raises(ValueError, match="nonfinite active observation"):
+        add(
+            census,
+            [
+                sample(sample_id="good", evidence_row_id="good", mhc_class="II"),
+                sample(sample_id="bad", evidence_row_id="bad", elution_label=float("nan")),
+            ],
+        )
+    census.db.set_trace_callback(None)
+    assert any("INTO observations" in statement for statement in statements)
+
+
+def test_failed_batch_leaves_census_and_counts_unchanged():
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(census, [sample()])
+        before = {c: census.counts("train", "mhc_class_logits", c) for c in ("", "I", "II")}
+        state = (dict(census.splits), census.sha256, deepcopy(census.objective_hits))
+        rows = table_rows(census)
+        failing_batch(census)
+        assert table_rows(census) == rows
+        assert (dict(census.splits), census.sha256, census.objective_hits) == state
+        assert {c: census.counts("train", "mhc_class_logits", c) for c in ("", "I", "II")} == before
+        add(census, [sample(sample_id="good", evidence_row_id="good", mhc_class="II")])
+        assert census.counts("train", "mhc_class_logits", "II")["positive"] == 1
+
+
+def test_failed_batch_undoes_only_its_own_writes():
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(
+            census,
+            [sample(), sample(sample_id="second", evidence_row_id="assay-2", mhc_class="II")],
+        )
+        census.db.execute("DELETE FROM observations WHERE endpoint='mhc_class_logits' AND target=1")
+        rows = table_rows(census)
+        failing_batch(census)
+        # The earlier uncommitted delete survives the failed batch and still rolls back.
+        assert table_rows(census) == rows
+        census.db.rollback()
+        assert table_rows(census)[2] == rows[2] + 1
+
+
+def test_failed_batch_restores_affinity_audit_counts_and_clipped_rows():
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(census, [sample(bind_value=100000, bind_measurement_type="IC50")])
+        audit = census.affinity_target_audit
+        counts = deepcopy(audit.counts)
+        changes = census.db.execute("SELECT * FROM affinity_target_changes").fetchall()
+        assert changes
+        rows = [
+            sample(
+                sample_id="clipped",
+                evidence_row_id="clipped",
+                bind_value=200000,
+                bind_measurement_type="IC50",
+                elution_label=float("nan"),
+            )
+        ]
+        with pytest.raises(ValueError, match="nonfinite active observation"):
+            add(census, rows)
+        assert census.db.execute("SELECT * FROM affinity_target_changes").fetchall() == changes
+        assert audit.counts == counts
+
+
+def test_counts_after_a_report_follow_direct_writes_and_rollbacks():
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(
+            census,
+            [sample(), sample(sample_id="second", evidence_row_id="assay-2", mhc_class="II")],
+        )
+        census.report()
+        assert census.counts("train", "mhc_class_logits", "I")["observations"] == 2
+        census.db.execute("DELETE FROM observations WHERE endpoint='mhc_class_logits' AND target=1")
+        removed = census.counts("train", "mhc_class_logits", "I")
+        assert (removed["observations"], removed["positive"], removed["negative"]) == (1, 1, 0)
+        census.db.rollback()
+        restored = census.counts("train", "mhc_class_logits", "I")
+        assert (restored["observations"], restored["positive"], restored["negative"]) == (2, 1, 1)
+
+
+def test_counts_fail_on_a_closed_census_for_every_endpoint_shape():
+    census = OutputCoverageCensus(build_output_contract())
+    add(census, [sample()])
+    census.report()
+    census.close()
+    for request in (("mhc_class_logits",), ("mhc_class_logits", "I"), ("elution_logit",)):
+        with pytest.raises(sqlite3.ProgrammingError):
+            census.counts("train", *request)
+
+
+def test_class_count_reuse_distinguishes_values_sqlite_compares_differently():
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(census, [sample(sample_source="1")])
+        with census.reusing_counts():
+            # Against the TEXT source column SQLite compares 1 as '1' but 1.0 as '1.0'.
+            assert census.counts("train", "mhc_class_logits", "I", sources=[1])["observations"] == 1
+            assert (
+                census.counts("train", "mhc_class_logits", "I", sources=[1.0])["observations"] == 0
+            )
+
+
+def test_class_columns_call_an_overridden_counts_once():
+    class CountingCensus(OutputCoverageCensus):
+        calls = 0
+
+        def counts(self, *args, **kwargs):
+            self.calls += 1
+            return super().counts(*args, **kwargs)
+
+    with CountingCensus(build_output_contract()) as census:
+        add(census, [sample()])
+        census.counts("train", "mhc_class_logits", "I")
+        census.counts("train", "mhc_class_logits", "II")
+        assert census.calls == 2
 
 
 def test_actual_bulk_conversion_preserves_generated_and_proxy_origins():
