@@ -1,5 +1,32 @@
 # Lessons
 
+## 2026-10-16
+
+- Copy optimizer and scheduler names from the pinned trainer when writing a
+  prospective experiment plan. A base learning rate is not a constant schedule,
+  and AdamW should not be shortened to Adam. Preserve any original published
+  plan and timestamp corrections; never imply that prose changes alter the
+  already frozen executable recipe.
+
+- Before carrying a prospective contract across software releases, inspect every
+  embedded artifact fingerprint. Producer-version receipts can change while
+  observations and membership stay identical. Declare the expected metadata
+  delta explicitly and require canonical recomputation; never silently accept a
+  drifted source contract or confuse receipt identity with biological membership.
+
+- Before launching a real-data fit, execute every active target transformation on
+  the frozen raw labels and compare physical values, censor boundaries and units.
+  Coverage counts and preserved source columns do not prove that effective targets
+  equal the original measurements. Baseline target space must be declared before
+  predictions; a discovered mismatch requires a preserved stop and a new contract.
+
+## 2026-10-14
+
+- When the user requests review, iteration and deployment, keep ownership through
+  passing final-head checks, merge, clean-main build and verified publication.
+  A draft PR or running CI is an intermediate checkpoint, not completion.
+  Check the actual package namespace and release destination before publishing.
+
 ## 2026-09-07
 
 - Freeze source and test files during a full regression run. Tests using
@@ -418,3 +445,24 @@
   `git status --untracked-files=all` and the staged file list for every linked
   script and generated summary; verify the links from a checkout-visible path.
 
+## 2026-10-15
+
+- The user explicitly deferred MHCflurry and authorized a Hitlist/Presto PR
+  series. Respect that scope. Use datacache for shared immutable input artifacts,
+  retain citable sources and distinct cell/MHC/condition/assay fields, and deliver
+  actual hashes, label policies, partitions, coverage and leakage reports. Software
+  tests alone do not qualify a corpus or establish biological independence.
+
+- Never put a GitHub closing keyword directly before an issue reference, even in
+  a negated sentence. GitHub closed #115 from a negated phrase in #121. Use
+  "leaves #115 open", and inspect closing events after merges.
+- When adapting an audit recipe, scope replacements to one syntax location and
+  inspect every changed call. Exercise snapshot/publication paths before freezing
+  a real-source run. Preserve failed executed recipes and logs as separate attempts.
+
+## 2026-10-16 — source qualification priority
+
+Prioritize source lineage and donor/specimen independence before more fitting when
+the user identifies those as blockers. Interpret missing context against the assay:
+a purified-MHC binding reaction does not require a cellular processing assignment.
+Keep applicability reporting separate from model features and the measured label.

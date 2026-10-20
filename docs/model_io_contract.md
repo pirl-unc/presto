@@ -42,8 +42,8 @@ These are roles, not a claim that every field is already accepted by the API.
 | Presenting MHC molecule | Class-correct groove pair, resolved from sequence/alleles | Binding, presentation, presented-pMHC recognition | Binding/presentation implemented; recognition context incomplete |
 | APC MHC set | Co-expressed molecules with class-II partner identities | Per-molecule predictions and bag aggregation | MIL exists; shared serving preparation incomplete |
 | Repertoire-system MHC set | MHC shaping the queried organism's selected repertoire | Repertoire recognition and response | Not implemented |
-| APC species | Species of the presenting cell | APC biology | Legacy host field only; independent schema pending |
-| Molecular MHC species | Origin of each MHC molecule | Molecular inference/routing | Inference and explicit override; source-target separation incomplete |
+| APC species | Species of the presenting cell | APC biology | Native row/MIL consumer uses reviewed presenter; missing context stays unknown; direct API retains legacy names |
+| Molecular MHC species | Origin of each MHC molecule | Molecular inference/routing | Inference/explicit override and independent allele-derived auxiliary; native source roles preserved |
 | Individual TCR species | Origin of a specified receptor | Optional receptor context | Not implemented in canonical model |
 | Repertoire-system species | Species of the system whose repertoire is queried | Repertoire recognition/response | Not independently implemented |
 | Antigen species | Source organism of antigen | Origin and repertoire-relative context | Source-origin override exists; full relative context pending |
@@ -117,6 +117,17 @@ Raw tensor interface (batch size B):
 | `provenance` | Current coarse process/cell-state tensor dictionary, detailed below |
 | `binding_context`, `tcell_context` | Existing accepted but ignored forward arguments; metadata is used by losses instead |
 | `return_binding_attention` | Diagnostic output request, not a biological input |
+
+The native Hitlist consumer routes only explicit `presenting_species` into row and
+MIL processing context. Missing or ambiguous presenter roles use the unknown model
+context; recorded host, in-vivo/lineage host, molecular MHC and antigen source remain
+separate provenance. Generated examples retain only unanimous parent processing
+context. Legacy records without the role dictionary retain their explicit species
+behavior, identified as a compatibility basis rather than reviewed native evidence.
+Molecular auxiliary labels follow explicit allele consensus independently. These
+policies are prospective and do not relabel historical fits. Antigen-source and
+repertoire-relative interpretation, legacy host-based sampling and independent
+APC/repertoire names in the direct serving API remain limitations.
 
 The existing aliases are listed to describe reality, not to endorse another
 compatibility layer. Replacing them with the role-specific schema is pending.
@@ -374,12 +385,22 @@ remain visible in the objective ledger without multiplying unique evidence.
 Class-split elution bags retain their separate effective observations while
 sharing their original source identity.
 
+Affinity bindings also declare the executable clipping policy: collated nM
+values are clipped to 0.001–50,000 before log10, with their original censor
+direction retained. Preflight exports `affinity_target_audit.json` and the full
+source-linked `affinity_target_changes.tsv`, including clipped exact measurements
+and censor bounds. Prospective source contracts must bind this policy explicitly.
+Original source values and operators remain separate from effective targets.
+
 Target provenance travels as host metadata. Typed assay records, generated
 controls, organism-derived foreignness and bulk-MS proxies remain distinct.
 Bulk observed products do not establish isolated cleavage measurements;
-fractionation-depth labels are ordinal detectability proxies. Wrong-enzyme
-controls carry an explicit generation kind. Passing protein sequences to the
-current bulk loader does not produce unobserved detectability candidates.
+fractionation depth does not supply detectability supervision. The legacy bulk
+loader leaves detectability labels missing. The verified scoped-search adapter
+provides binary within-search observation proxies, distinguishing MS/MS, matching
+and unobserved candidates. Wrong-enzyme controls in the legacy path carry an
+explicit generation kind. Passing protein sequences to that loader does not
+produce unobserved detectability candidates.
 
 A prospective `--supported-output-manifest` declares a subset of canonical
 columns, required splits, admissible evidence and explicit count requirements.
@@ -444,3 +465,21 @@ round-trip with their saved architecture configuration. Old checkpoints containi
 `species_cond_embed`/`chain_completeness_embed` are incompatible and should be
 used with their original code or retrained; no silent key dropping, parameter
 migration or checkpoint fallback is introduced.
+
+### Assay-context applicability in provenance
+
+Source lineage preserves `source_assay_method`, `source_evidence_kind` and, for
+generated controls, `parent_assay_contexts`. Explicit purified-MHC measurements
+report cellular processing as `not_applicable`; explicit cellular-MHC or native
+elution evidence reports `applicable`. Unknown or contradictory preparation stays
+`unknown`. `processing_context_availability` separately records whether applicable
+presenter species resolves. A resolved species does not establish cell type,
+condition, specimen identity or a complete assay context. Missing presenter evidence does not invalidate a
+purified-MHC binding label. Generated controls inherit only unanimous parent
+applicability and never acquire a measured assay identity or source method.
+
+These are non-predictive inspection/coverage/prediction-export fields. They change
+neither model tensors nor raw/effective targets. Output contract schema 5 binds
+`explicit_preparation_and_elution_applicability_v1`; a prospective support manifest
+must include that policy. Frozen final membership v4 binds these provenance fields
+and rejects drift. Historical schemas and fitting artifacts remain immutable.

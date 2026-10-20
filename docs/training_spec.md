@@ -24,8 +24,10 @@ options must be registered there as well as in the CLI parser.
 
 - The default primary source is `merged_tsv`, normally
   `data/merged_deduped.tsv`. Build it with `presto data merge --datadir ./data`.
-- `--data-source hitlist` explicitly selects the curated Hitlist pMHC indexes
-  instead. It does not union them with merged T-cell/TCR rows.
+- `--data-source hitlist --hitlist-bundle /path/to/bundle` selects a frozen
+  Hitlist training bundle. `--hitlist-bundle-sha256` pins `manifest.json` to a
+  published digest. See [frozen inputs](frozen_hitlist.md). It does not union
+  merged T-cell/TCR rows or live bulk-MS inputs.
 - The existing `--allow-raw-fallback` is an explicit debug option, not the
   production source-selection design. Missing required primary data must not
   silently pick another corpus.
@@ -116,6 +118,26 @@ including `affinity_assay_residual_mode`, `kd_grouping_mode`,
 and `binding_kinetic_input_mode`. The manifest must match the selected variant.
 The output contract fixes `max_affinity_nM` to the shared loss convention, 50000.
 
+Affinity objectives and their descriptor panels use
+`log10(clip(value_nM, 0.001, 50000))` on collated float32 values. The original
+inequality direction is retained. Clipping changes exact values and censor
+bounds; it is not evidence that the original measurement had that value.
+Each applicable objective declares this executable policy, and the prospective
+`source_contract.affinity_target_policies` binds it even when no current value
+clips. Older manifests require their archived producer for reproduction; the
+current gate rejects omitted or different policies without migrating them.
+
+Preflight writes `affinity_target_audit.json` and `affinity_target_changes.tsv`
+before the manifest gate, including failures. Counts distinguish exact, left-
+and right-censored labels, clipped objective exposures and distinct clipped
+source observations. Aliases and panel axes are separate objective exposures.
+The changed-row table retains source identity, citations, original value/unit/
+operator and MHC allele sets beside the collated and effective targets. Original
+source text preserves precision; the audit's float32 value is not that text.
+The [public frozen IC50 audit](https://github.com/pirl-unc/presto/releases/tag/corrected-human-target-policy-audit-v1)
+illustrates why declaring only `log10(nM)` is insufficient. Passing this policy
+gate establishes neither scientific suitability nor predictive performance.
+
 ## Batches and model inputs
 
 The collator builds sparse targets, masks and qualifiers. Canonical row training
@@ -148,6 +170,17 @@ The executable task registry is the source of truth. In particular:
 | Receptor evidence | Binary evidence plus categorical method auxiliary, not specific TCR matching |
 | MHC class/species/fine type | Auxiliary categorical objectives |
 | Core start | CE only where actual labels/masks are present |
+
+The MHC-species auxiliary uses explicit molecular allele identity. A genotype bag
+must have a consistent known species; mixed or unresolved identities are masked.
+Recorded host or processing species never supplies this target. Native host,
+antigen, presenter, in-vivo/lineage host and introduced-MHC evidence remains in
+separate source-provenance fields, with citations and unresolved attribution notes.
+The prospective output contract records the molecular and processing policies
+(schema 4), and final frozen membership binds these role fields. Historical
+contracts and results remain intact. Native processing context uses the explicit
+presenter as described below. Antigen attribution, repertoire context and legacy
+API/sampler roles retain their documented limitations under #115/#46.
 
 Censor qualifiers are `-1` for an upper bound, `0` for exact, `1` for a lower
 bound. Exact values use squared error; inequalities penalize only violations of
@@ -191,6 +224,16 @@ selected-column resolver as training. Preserve validation/test loss,
 per-example predictions, qualifier-aware regression/threshold metrics and
 source/mapping lineage. State explicitly when a test split is absent.
 
+Binding threshold reports use physical nM targets when retained by the effective
+objective, including source precision when the source value agrees at the raw
+target's float32 precision. This keeps an exact 500 nM measurement on the
+`<=500 nM` boundary after log transformation or export. Unsupported or missing
+physical values retain the transformed-target diagnostic; report counts identify
+each basis. Predictions keep their continuous log10(nM) cutoff. Conservative
+censor-direction rules remain unchanged. Pearson is undefined for an exactly
+constant input vector. Held-out JSON records both estimator policies so earlier
+reports remain distinguishable.
+
 All scientific experiments must follow
 [EXPERIMENT_WORKFLOW.md](https://github.com/pirl-unc/presto/blob/main/experiments/EXPERIMENT_WORKFLOW.md), freeze launch
 configuration and dataset curation, and close out artifacts and metrics in the
@@ -204,3 +247,35 @@ roles, no cross-role default copying, full training/serving/MIL parity,
 groove-correct priors, family-specific quantitative routing, joint assay panels,
 full-corpus support and scientific validation. Checkpoint migration fallbacks
 are not part of the new design.
+
+### Effective regularization receipts
+
+The canonical trainer exposes `--binding-orthogonality-weight` (default `0.01`;
+`0` disables it). Disabling the other consistency weights alone does not disable
+this prior. The direct script and unified CLI also accept the corresponding
+JSON/YAML field. Explicit CLI values, including a value equal to the default,
+take precedence over config files. Negative or nonfinite prior weights fail
+before data/model work.
+
+Every run directory, including preflight, now contains `regularization.json`
+with the complete base regularization parameters and configured epoch schedule.
+`config.json` explicitly records the binding-orthogonality weight and balanced
+sampling default. These are configuration receipts; per-loss metrics and output
+update/support reports establish which losses actually ran. The 2026-10-15 scoped
+qualification retains its original hidden-prior deviation and failed probability
+quality (#94/#95); its archived results have not been rewritten.
+
+### Native presenter context
+
+The canonical native row and both MIL paths use only Hitlist's explicit reviewed
+`presenting_species` for processing context. Unknown, mixed or unsupported values
+reach the model's unknown context; host, MHC and antigen fields never supply a
+fallback. The raw roles remain inspectable. Legacy inputs without a role dictionary
+retain their explicit species behavior, with that compatibility basis recorded.
+Generated examples preserve only unanimous parent processing context, independently
+of a swapped MHC. Unknown/conflicting parents stay unknown. Parent context enters
+lineage ledgers; derived input, bucket, basis and status enter membership/support
+fingerprints and prediction exports. The prospective source contract must bind
+`native_presenter_and_generated_parent_context_v1`. Old qualifications cannot
+silently authorize changed context. Antigen attribution, repertoire-relative
+foreignness and the legacy sampler's host grouping remain explicit follow-ups.

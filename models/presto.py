@@ -28,7 +28,13 @@ from .presto_modules import (
     ClassProcessingPredictor,
     PrestoTrunkState,
 )
-from .heads import TCellAssayHead, ElutionHead, ExcisionHead
+from .heads import (
+    TCellAssayHead,
+    ElutionHead,
+    ExcisionHead,
+    EXCISION_SCORING_VERSION,
+    validate_excision_scoring_version,
+)
 from .affinity import (
     AFFINITY_TARGET_ENCODINGS,
     DEFAULT_MAX_AFFINITY_NM,
@@ -42,7 +48,7 @@ from ..data.allele_resolver import (
 from ..data.vocab import (
     AA_VOCAB,
     AA_TO_IDX,
-    EXCISION_MACHINERY,
+    EXCISION_MACHINERY_VERSION,
     EXCISION_MACHINERY_TO_IDX,
     EXCISION_P1_PRIME_BLOCKED,
     EXCISION_P1_RULES,
@@ -54,6 +60,7 @@ from ..data.vocab import (
     PROCESSING_STIMULI,
     PROTEASOME_MIXTURE_COMPONENTS,
     excision_machinery_index,
+    excision_machinery_vocabulary,
     N_ORGANISM_CATEGORIES,
     N_MHC_SPECIES,
     ORGANISM_TO_IDX,
@@ -123,7 +130,7 @@ def _processing_species_idx_tensor(
     batch_size: int,
     device: torch.device,
 ) -> torch.Tensor:
-    """Convert host species to downstream ids; unknown has its own row."""
+    """Convert explicit processing context to ids; unknown has its own row."""
     species_map = {name: idx for idx, name in enumerate(PROCESSING_SPECIES_BUCKETS)}
     unknown_idx = len(PROCESSING_SPECIES_BUCKETS)
 
@@ -314,12 +321,19 @@ class Presto(nn.Module):
         binding_kinetic_input_mode: str = "affinity_vec",
         binding_direct_segment_mode: str = "off",
         latent_topology: str = "expanded",
+        excision_machinery_version: int = EXCISION_MACHINERY_VERSION,
+        excision_scoring_version: int = EXCISION_SCORING_VERSION,
     ):
         """Initialize Presto."""
         super().__init__()
         # ids of parameters whose deliberate init must survive _init_weights
         self._preserved_init_params: set[int] = set()
         self.d_model = d_model
+        self.excision_machinery_vocabulary = excision_machinery_vocabulary(
+            excision_machinery_version
+        )
+        self.excision_machinery_version = excision_machinery_version
+        self.excision_scoring_version = validate_excision_scoring_version(excision_scoring_version)
         self.max_affinity_nM = float(max_affinity_nM)
         affinity_target_encoding = str(affinity_target_encoding).strip().lower()
         if affinity_target_encoding not in AFFINITY_TARGET_ENCODINGS:
@@ -948,17 +962,20 @@ class Presto(nn.Module):
         # Machinery-conditioned excision readout. Output-side only: the
         # machinery indexes this head and never reaches the trunk.
         self.excision_head = ExcisionHead(
+            scoring_version=self.excision_scoring_version,
             d_model=d_model,
-            n_machinery=len(EXCISION_MACHINERY),
+            n_machinery=len(self.excision_machinery_vocabulary),
             n_aa=len(AA_VOCAB),
             pinned_profiles={
                 EXCISION_MACHINERY_TO_IDX[name]: residues
                 for name, residues in EXCISION_P1_RULES.items()
+                if name in self.excision_machinery_vocabulary
             },
             aa_to_idx=AA_TO_IDX,
             p1_prime_blocked={
                 EXCISION_MACHINERY_TO_IDX[name]: residues
                 for name, residues in EXCISION_P1_PRIME_BLOCKED.items()
+                if name in self.excision_machinery_vocabulary
             },
             mixture_target=EXCISION_MACHINERY_TO_IDX["proteasome"],
             mixture_components=[
@@ -1358,16 +1375,24 @@ class Presto(nn.Module):
         """
         if machinery is not None:
             if isinstance(machinery, torch.Tensor):
-                return machinery.to(device=device).long().reshape(-1)
-            if isinstance(machinery, str):
-                names = [machinery] * batch_size
+                values = machinery.to(device=device).reshape(-1)
+                indices = values.long()
+                if not torch.all(values == indices):
+                    raise ValueError("Excision machinery indices must be finite integers")
             else:
-                names = list(machinery)
-            return torch.tensor(
-                [excision_machinery_index(name) for name in names],
-                dtype=torch.long,
-                device=device,
-            )
+                names = [machinery] * batch_size if isinstance(machinery, str) else list(machinery)
+                indices = torch.tensor(
+                    [excision_machinery_index(name) for name in names],
+                    dtype=torch.long,
+                    device=device,
+                )
+            if torch.any((indices < 0) | (indices >= len(self.excision_machinery_vocabulary))):
+                raise ValueError(
+                    "Excision machinery is unavailable in vocabulary version "
+                    f"{self.excision_machinery_version}; "
+                    f"supported: {self.excision_machinery_vocabulary}"
+                )
+            return indices
         proteasome = EXCISION_MACHINERY_TO_IDX["proteasome"]
         cathepsin = EXCISION_MACHINERY_TO_IDX["cathepsin"]
         if class_probs is None:

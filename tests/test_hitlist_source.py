@@ -6,6 +6,8 @@ returns a caller-supplied frame from ``generate_training_table``.
 
 import sys
 import types
+import random
+import weakref
 
 import pytest
 
@@ -239,6 +241,84 @@ class TestHelpers:
 
 
 class TestRouting:
+    @pytest.mark.parametrize("mode", ["head", "reservoir", "uniform_list"])
+    def test_explicit_cap_policy_preserves_full_counts_and_source_fields(self, monkeypatch, mode):
+        rows = [
+            _binding_row(evidence_row_id=f"row-{index}", measurement_inequality="<")
+            for index in range(100)
+        ]
+        ms_rows = [_ms_row(evidence_row_id=f"ms-{index}") for index in range(100)]
+        _install_stub_hitlist(monkeypatch, rows, ms_rows)
+
+        def load(seed):
+            return load_records_from_hitlist(
+                max_binding=5,
+                max_elution=3,
+                sampling_seed=seed,
+                cap_sampling=mode,
+                include_flanks=False,
+            )
+
+        result = load(59)
+        binding, elution, stats = result[0], result[4], result[-1]
+        selected = [r.evidence_row_id for r in binding]
+        assert selected == [r.evidence_row_id for r in load(59)[0]]
+        assert len(binding) == 5 and len(elution) == 3
+        assert stats["counts_before_cap"]["binding"] == 100
+        assert stats["counts_before_cap"]["elution"] == 100
+        assert stats["rows_dropped_by_cap"]["binding"] == 95
+        assert stats["rows_dropped_by_cap"]["elution"] == 97
+        assert stats["cap_sampling"] == mode
+        assert stats["cap_policy"]["algorithm"].endswith("_v1")
+        assert all(r.qualifier == -1 and r.value == 25 for r in binding)
+        assert all(r.source_units == "nM" and r.source_endpoint == IC50 for r in binding)
+        assert all(r.alleles == ["HLA-A*02:01", "HLA-B*07:02"] for r in elution)
+        if mode == "head":
+            assert selected == [f"row-{index}" for index in range(5)]
+        else:
+            assert selected != [r.evidence_row_id for r in load(60)[0]]
+            assert any(int(identity.split("-")[1]) >= 5 for identity in selected)
+        if mode == "uniform_list":
+            expected = random.Random(59).sample([row["evidence_row_id"] for row in rows], 5)
+            assert selected == expected
+
+    @pytest.mark.parametrize("mode", ["head", "reservoir"])
+    def test_streaming_caps_bound_live_record_objects(self, monkeypatch, mode):
+        import presto.data.hitlist_source as source
+
+        _install_stub_hitlist(
+            monkeypatch,
+            [_binding_row(evidence_row_id=f"row-{index}") for index in range(200)],
+            [],
+        )
+        original = source.BindingRecord
+        live, peak = 0, 0
+
+        def released():
+            nonlocal live
+            live -= 1
+
+        def tracked_record(*args, **kwargs):
+            nonlocal live, peak
+            record = original(*args, **kwargs)
+            live += 1
+            peak = max(peak, live)
+            weakref.finalize(record, released)
+            return record
+
+        monkeypatch.setattr(source, "BindingRecord", tracked_record)
+        records, *_, stats = load_records_from_hitlist(
+            max_binding=5, cap_sampling=mode, include_flanks=False
+        )
+        assert len(records) == live == 5
+        assert peak <= 6  # retained cap plus the current eligible record
+        assert stats["counts_before_cap"]["binding"] == 200
+
+    def test_unknown_cap_policy_fails_before_loading_hitlist(self, monkeypatch):
+        monkeypatch.setitem(sys.modules, "hitlist", None)
+        with pytest.raises(ValueError, match="cap_sampling"):
+            load_records_from_hitlist(cap_sampling="silent_fallback")
+
     def test_ingest_stats_preserve_pre_cap_counts_and_drop_reasons(self, monkeypatch):
         rows = [
             _binding_row(evidence_row_id="row-1"),
@@ -859,3 +939,23 @@ class TestMaskingUnmappedRowsChangesNothing:
         assert _mapping_present_mask(frame).tolist() == [True], (
             "a row with a flank must count as present, so it can never be classified unmapped"
         )
+
+
+@pytest.mark.parametrize(
+    "changes,counter",
+    [
+        ({"quantitative_value": float("inf")}, "skipped_invalid_numeric_value"),
+        ({"quantitative_value": -1}, "skipped_invalid_numeric_value"),
+        ({"measurement_inequality": "approximately"}, "skipped_unsupported_inequality"),
+        (
+            {"response_measured": "off rate", "measurement_units": "1/min"},
+            "skipped_unexpected_unit",
+        ),
+        ({"response_measured": "on rate", "measurement_units": "nM"}, "skipped_unexpected_unit"),
+    ],
+)
+def test_invalid_assay_labels_are_excluded_with_reason(monkeypatch, changes, counter):
+    _install_stub_hitlist(monkeypatch, [_binding_row(**changes)], [])
+    *groups, stats = load_records_from_hitlist()
+    assert not any(groups)
+    assert stats[counter] == 1

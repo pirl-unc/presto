@@ -469,6 +469,28 @@ def test_failed_batch_undoes_only_its_own_writes():
         assert table_rows(census)[2] == rows[2] + 1
 
 
+def test_failed_batch_restores_affinity_audit_counts_and_clipped_rows():
+    with OutputCoverageCensus(build_output_contract()) as census:
+        add(census, [sample(bind_value=100000, bind_measurement_type="IC50")])
+        audit = census.affinity_target_audit
+        counts = deepcopy(audit.counts)
+        changes = census.db.execute("SELECT * FROM affinity_target_changes").fetchall()
+        assert changes
+        rows = [
+            sample(
+                sample_id="clipped",
+                evidence_row_id="clipped",
+                bind_value=200000,
+                bind_measurement_type="IC50",
+                elution_label=float("nan"),
+            )
+        ]
+        with pytest.raises(ValueError, match="nonfinite active observation"):
+            add(census, rows)
+        assert census.db.execute("SELECT * FROM affinity_target_changes").fetchall() == changes
+        assert audit.counts == counts
+
+
 def test_counts_after_a_report_follow_direct_writes_and_rollbacks():
     with OutputCoverageCensus(build_output_contract()) as census:
         add(
@@ -546,7 +568,12 @@ def test_actual_bulk_conversion_preserves_generated_and_proxy_origins():
         assert census.counts("train", "excision_logit", roles=["proxy"])["positive"] == 1
         assert census.counts("train", "excision_logit", roles=["synthetic"])["negative"] == 1
         assert census.counts("train", "excision_logit", roles=["direct"])["observations"] == 0
-        assert census.counts("train", "ms_detectability_logit", roles=["proxy"])["graded"] == 1
+        # An explicitly supplied label remains visible, but observing its
+        # peptide does not establish a qualified detectability source.
+        assert census.counts("train", "ms_detectability_logit", roles=["unknown"])["graded"] == 1
+        assert (
+            census.counts("train", "ms_detectability_logit", roles=["proxy"])["observations"] == 0
+        )
 
 
 @pytest.mark.parametrize(
@@ -566,10 +593,19 @@ def test_typed_generated_records_and_missing_provenance_are_not_direct(generated
 
 
 def manifest_for(contract, *, columns=None):
+    from presto.training.target_policy import affinity_target_policies
+
     return {
         "schema_version": 1,
         "model_contract": asdict(contract.configuration),
-        "source_contract": {"data_source": "merged_tsv", "data_seed": 7},
+        "source_contract": {
+            "data_source": "merged_tsv",
+            "data_seed": 7,
+            "affinity_target_policies": affinity_target_policies(contract),
+            "molecular_mhc_species_policy": contract.to_dict()["molecular_mhc_species_policy"],
+            "processing_species_policy": contract.to_dict()["processing_species_policy"],
+            "assay_context_policy": contract.to_dict()["assay_context_policy"],
+        },
         "claims": [
             {
                 "endpoint": "tcell_panel_logits.assay_method",

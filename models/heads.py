@@ -1345,6 +1345,15 @@ class ElutionHead(nn.Module):
         )
 
 
+EXCISION_SCORING_VERSION = 2
+
+
+def validate_excision_scoring_version(version: int) -> int:
+    if type(version) is not int or version not in (1, 2):
+        raise ValueError(f"Unsupported excision scoring version: {version!r}")
+    return version
+
+
 class ExcisionHead(nn.Module):
     """Machinery-conditioned peptide excision score.
 
@@ -1401,8 +1410,10 @@ class ExcisionHead(nn.Module):
         mhc_source_index: int = 1,
         junction_window: int = 5,
         missing_residue_index: Optional[int] = None,
+        scoring_version: int = EXCISION_SCORING_VERSION,
     ):
         super().__init__()
+        self.scoring_version = validate_excision_scoring_version(scoring_version)
         self.n_machinery = int(n_machinery)
         self.n_aa = int(n_aa)
         self.max_peptide_len = int(max_peptide_len)
@@ -1811,15 +1822,22 @@ class ExcisionHead(nn.Module):
         self, peptide_tokens: Optional[torch.Tensor], machinery_idx: torch.Tensor
     ) -> torch.Tensor:
         """Penalty for cleavage sites the machinery skipped inside the peptide."""
-        if peptide_tokens is None:
+        if peptide_tokens is None or peptide_tokens.shape[1] == 0:
             return torch.zeros_like(machinery_idx, dtype=self.p1_site_mask.dtype)
         tokens = peptide_tokens.long()
         valid = tokens != 0
-        lengths = valid.long().sum(dim=1)
-        positions = torch.arange(tokens.shape[1], device=tokens.device).unsqueeze(0)
-        # Exclude the C-terminal residue: that junction is scored by c_terminus_score, and
-        # counting it here would penalize every correct product.
-        interior = valid & (positions < (lengths - 1).clamp(min=0).unsqueeze(1))
         is_site = self.p1_site_mask[machinery_idx.unsqueeze(1), tokens]
+        if self.scoring_version == 1:
+            # Exact historical behavior, including its missing P1-prime exclusion.
+            lengths = valid.long().sum(dim=1)
+            positions = torch.arange(tokens.shape[1], device=tokens.device).unsqueeze(0)
+            interior = valid & (positions < (lengths - 1).clamp(min=0).unsqueeze(1))
+        else:
+            # A real next residue defines an internal boundary; padding and the
+            # C terminus cannot supply an extra missed cleavage. No wraparound.
+            next_tokens = F.pad(tokens[:, 1:], (0, 1), value=0)
+            interior = valid & (next_tokens != 0)
+            blocked = self.p1_prime_blocked[machinery_idx.unsqueeze(1), next_tokens]
+            is_site = is_site * (1.0 - blocked)
         n_missed = (is_site * interior.to(is_site.dtype)).sum(dim=1)
         return -F.softplus(self.missed_cleavage_penalty[machinery_idx]) * n_missed

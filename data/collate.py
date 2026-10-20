@@ -12,7 +12,9 @@ import torch
 
 from .allele_resolver import normalize_mhc_class
 from .tokenizer import Tokenizer
-from .source_lineage import SOURCE_LINEAGE_FIELDS
+from .source_lineage import ALL_SOURCE_LINEAGE_FIELDS
+from .assay_context import ASSAY_CONTEXT_FIELDS, assay_context_fields
+from .species_context import SPECIES_LINEAGE_FIELDS, species_lineage_fields
 from .sequence_augmentation import AugmentationConfig, augment_sample_sequences
 from .vocab import (
     cell_lineage_index,
@@ -322,6 +324,34 @@ class PrestoSample:
     bulk_ms_observed: Optional[bool] = None
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
+    scoped_peptide_id: str = ""
+    candidate_id: str = ""
+    candidate_lookup_key: str = ""
+    source_n_candidate_occurrences: str = ""
+    source_label_evidence: str = ""
+    source_search_space_id: str = ""
+    source_protocol_id: str = ""
+    source_reference_sha256: str = ""
+    source_parent_assignment_basis: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -458,6 +488,7 @@ class PrestoBatch:
     target_quals: Dict[str, torch.Tensor] = field(default_factory=dict)
     # Evidence origins stay on the host for optional training-update audits.
     sample_evidence: List[Dict[str, Any]] = field(default_factory=list)
+    molecular_mhc_species: List[Optional[str]] = field(default_factory=list)
 
     def model_inputs(self) -> Dict[str, Any]:
         """One row-level forward contract shared by training and evaluation.
@@ -524,6 +555,7 @@ class PrestoBatch:
             same_peptide_diff_allele_pairs=_move(self.same_peptide_diff_allele_pairs),
             same_allele_diff_peptide_pairs=_move(self.same_allele_diff_peptide_pairs),
             processing_species=self.processing_species,
+            molecular_mhc_species=self.molecular_mhc_species,
             primary_alleles=self.primary_alleles,
             sample_ids=self.sample_ids,
             sample_sources=self.sample_sources,
@@ -1593,6 +1625,8 @@ class PrestoCollator:
             for sample in samples:
                 augment_sample_sequences(sample, self.augmentation)
 
+        species_details = [species_lineage_fields(sample) for sample in samples]
+
         # Tokenize sequences
         pep_tok, pep_lengths = self.tokenizer.batch_encode(
             [s.peptide for s in samples],
@@ -1817,10 +1851,15 @@ class PrestoCollator:
                 n_instances=n_instances,
                 fallback=sample.mhc_class or "I",
             )
-            species_list = self._expand_with_fallback(
-                sample.mil_species_list,
-                n_instances=n_instances,
-                fallback=sample.species or "",
+            processing = species_details[sample_index]
+            species_list = (
+                [processing["processing_species"]] * n_instances
+                if sample.species_context
+                else self._expand_with_fallback(
+                    sample.mil_species_list,
+                    n_instances=n_instances,
+                    fallback=processing["processing_species"],
+                )
             )
 
             grouped_indices = self._split_indices_by_mhc_class(mhc_class_list)
@@ -1876,10 +1915,15 @@ class PrestoCollator:
                 n_instances=n_instances,
                 fallback=sample.mhc_class or "",
             )
-            species_list = self._expand_with_fallback(
-                sample.tcell_mil_species_list,
-                n_instances=n_instances,
-                fallback=sample.species or "",
+            processing = species_details[sample_index]
+            species_list = (
+                [processing["processing_species"]] * n_instances
+                if sample.species_context
+                else self._expand_with_fallback(
+                    sample.tcell_mil_species_list,
+                    n_instances=n_instances,
+                    fallback=processing["processing_species"],
+                )
             )
 
             bag_index = len(tcell_mil_bag_labels)
@@ -1997,7 +2041,10 @@ class PrestoCollator:
             bind_target_log10=fixed_metadata["bind_target_log10"],
             same_peptide_diff_allele_pairs=binding_pair_indices["same_peptide_diff_allele_pairs"],
             same_allele_diff_peptide_pairs=binding_pair_indices["same_allele_diff_peptide_pairs"],
-            processing_species=[s.species for s in samples],
+            processing_species=[row["processing_species"] or None for row in species_details],
+            molecular_mhc_species=[
+                row["molecular_mhc_species_bucket"] or None for row in species_details
+            ],
             primary_alleles=[s.primary_allele or "" for s in samples],
             sample_ids=[s.sample_id for s in samples],
             sample_sources=[s.sample_source or "" for s in samples],
@@ -2020,7 +2067,12 @@ class PrestoCollator:
                 "peptide": [s.peptide for s in samples],
                 "source_mhc_alleles": [";".join(s.source_mhc_alleles) for s in samples],
                 "resolved_mhc_alleles": [";".join(s.resolved_mhc_alleles) for s in samples],
-                **{name: [getattr(s, name) for s in samples] for name in SOURCE_LINEAGE_FIELDS},
+                **{name: [getattr(s, name) for s in samples] for name in ALL_SOURCE_LINEAGE_FIELDS},
+                **{
+                    name: [assay_context_fields(s)[name] for s in samples]
+                    for name in ASSAY_CONTEXT_FIELDS
+                },
+                **{name: [row[name] for row in species_details] for name in SPECIES_LINEAGE_FIELDS},
                 "source_sample_label": [s.source_sample_label for s in samples],
                 "source_sample_attribution": [s.source_sample_attribution for s in samples],
                 "mapping_gene_name": [s.mapping_gene_name for s in samples],

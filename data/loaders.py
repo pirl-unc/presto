@@ -25,7 +25,7 @@ import warnings
 from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List, Optional, Iterator, Union, Any, Tuple, Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import random
 import re
 
@@ -218,6 +218,25 @@ class BindingRecord:
     # Publication/observation provenance stays outside predictive inputs.
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -258,6 +277,25 @@ class KineticsRecord:
     # Publication/observation provenance stays outside predictive inputs.
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -302,6 +340,25 @@ class StabilityRecord:
     # Publication/observation provenance stays outside predictive inputs.
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -332,6 +389,25 @@ class ProcessingRecord:
     pmid: str = ""
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -400,6 +476,25 @@ class ElutionRecord:
     # Publication/observation provenance stays outside predictive inputs.
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -438,6 +533,25 @@ class TCellRecord:
     pmid: str = ""
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
 
 @dataclass
@@ -527,6 +641,25 @@ class TcrEvidenceRecord:
     pmid: str = ""
     doi: str = ""
     reference_text: str = ""
+    source_bundle_id: str = ""
+    provenance_id: str = ""
+    provenance_status: str = ""
+    source_endpoint: str = ""
+    source_units: str = ""
+    source_inequality: str = ""
+    source_value: str = ""
+    source_partition: str = ""
+    generated_id: str = ""
+    generation_kind: str = ""
+    generation_seed: str = ""
+    generation_draw_index: str = ""
+    parent_ids: str = ""
+    root_observation_ids: str = ""
+    generation_lineage_status: str = ""
+    species_context: Dict[str, str] = field(default_factory=dict)
+    source_assay_method: str = ""
+    source_evidence_kind: str = ""
+    parent_assay_contexts: str = ""
 
     def __post_init__(self) -> None:
         # Derive the bins from the raw method strings when a caller did not
@@ -1981,6 +2114,7 @@ class PrestoDataset(Dataset):
             )
             return {
                 **source_lineage_fields(record),
+                "species_context": dict(getattr(record, "species_context", {}) or {}),
                 "source_sample_label": str(getattr(record, "sample_label", "") or ""),
                 "source_sample_attribution": str(getattr(record, "sample_attribution", "") or ""),
                 "mapping_gene_name": str(getattr(record, "mapping_gene_name", "") or ""),
@@ -2030,6 +2164,9 @@ class PrestoDataset(Dataset):
             evidence_row_id = str(getattr(record, "evidence_row_id", "") or "").strip()
             if evidence_row_id:
                 return f"{prefix}:{evidence_row_id}"
+            generated_id = str(getattr(record, "generated_id", "") or "").strip()
+            if generated_id:
+                return f"{prefix}:{generated_id}"
             return f"{prefix}_{len(self.samples)}"
 
         def _organism_fields(
@@ -2245,16 +2382,33 @@ class PrestoDataset(Dataset):
                     primary_allele=rec.mhc_allele,
                     synthetic_kind=_synthetic_kind(rec.source),
                     **source_lineage_fields(rec),
+                    species_context=dict(rec.species_context),
                     sample_id=_sample_id("proc", rec),
                 )
             )
 
-        # Add non-MHC shotgun samples (MS detectability + excision).
+        # Add non-MHC shotgun samples with explicitly supplied task labels.
         # These rows have no MHC at all: mhc_a/mhc_b stay empty and the model
-        # substitutes a <MISSING> token per segment. They exist to identify the
-        # detectability term, which immunopeptidomics alone cannot separate
-        # from excision. See data/bulk_ms.py.
+        # substitutes a <MISSING> token per segment. The raw bulk loader supplies
+        # excision proxies only; it cannot qualify detectability from fraction
+        # counts. Other callers must establish their label provenance explicitly.
         for rec in bulk_ms_records or []:
+            if rec.source_label_evidence and (
+                not all(
+                    (
+                        rec.source_bundle_id,
+                        rec.scoped_peptide_id,
+                        rec.source_protocol_id,
+                        rec.source_search_space_id,
+                        rec.source_reference_sha256,
+                    )
+                )
+                or rec.detectability_label != float(rec.observed)
+                or bool(rec.evidence_row_id) != rec.observed
+                or rec.generated_kind
+                or rec.excision_label is not None
+            ):
+                raise ValueError("Scoped bulk labels require complete, consistent source lineage")
             self.samples.append(
                 PrestoSample(
                     peptide=rec.peptide,
@@ -2269,14 +2423,32 @@ class PrestoDataset(Dataset):
                     ms_detectability_label=rec.detectability_label,
                     excision_label=rec.excision_label,
                     bulk_ms_observed=rec.observed,
-                    target_provenance=bulk_target_provenance(rec.observed, rec.generated_kind),
+                    flank_n_is_terminus=rec.flank_n_is_terminus,
+                    flank_c_is_terminus=rec.flank_c_is_terminus,
+                    target_provenance=bulk_target_provenance(
+                        rec.observed, rec.generated_kind, scoped_evidence=rec.source_label_evidence
+                    ),
                     source_protein=rec.protein_id or None,
                     sample_source=_source_label(rec.source),
                     assay_group="bulk_ms",
-                    label_bucket=("positive" if (rec.excision_label or 0.0) >= 0.5 else "negative"),
+                    label_bucket=(
+                        "positive"
+                        if (
+                            rec.detectability_label
+                            if rec.detectability_label is not None
+                            else rec.excision_label or 0.0
+                        )
+                        >= 0.5
+                        else "negative"
+                    ),
                     primary_allele=None,
                     synthetic_kind=None,
-                    sample_id=f"bulk_{len(self.samples)}",
+                    **source_lineage_fields(rec, include_scoped=True),
+                    sample_id=(
+                        f"scoped:{rec.source_bundle_id}:{rec.scoped_peptide_id}"
+                        if rec.scoped_peptide_id
+                        else f"bulk_{len(self.samples)}"
+                    ),
                 )
             )
 
@@ -2427,6 +2599,7 @@ class PrestoDataset(Dataset):
                     primary_allele=rec.mhc_allele,
                     synthetic_kind=_synthetic_kind(rec.source),
                     **source_lineage_fields(rec),
+                    species_context=dict(rec.species_context),
                     sample_id=_sample_id("tcell", rec),
                 )
             )
@@ -2459,6 +2632,7 @@ class PrestoDataset(Dataset):
                     primary_allele=rec.mhc_a,
                     synthetic_kind=_synthetic_kind(rec.source),
                     **source_lineage_fields(rec),
+                    species_context=dict(rec.species_context),
                     sample_id=_sample_id("tcrev", rec),
                 )
             )
@@ -3112,6 +3286,7 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
         self._machinery_by_index: Dict[int, str] = {}
         self._branch_by_index: Dict[int, str] = {}
         self._contrast_groups: List[Tuple[int, ...]] = []
+        self._contrast_categories: List[Dict[int, str]] = []
 
         task_counts: Dict[str, int] = defaultdict(int)
         source_counts: Dict[str, int] = defaultdict(int)
@@ -3334,54 +3509,91 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
             return lower_a - upper_b
         return 0.0
 
-    # Contrast groups. The identification argument behind the shotgun branch is
-    # a statement about *comparisons*, so the sampler has to make those
-    # comparisons occur inside a batch rather than hope they do:
-    #
-    #   protease      same peptide, different machinery  -> isolates excision
-    #   detectability same protein + machinery, observed vs not -> isolates
-    #                 detectability with abundance held fixed
-    #
-    # This generalizes the same-peptide/different-allele co-batching that
-    # binding already relies on for its ranking losses.
+    # Co-batch supported comparisons. Same-parent/search contrasts control the
+    # captured context; they do not establish intrinsic detectability or causality.
     CONTRAST_MAX_GROUP = 8
     BINDING_FAMILY_MAX_GROUP = 64
 
+    @staticmethod
+    def _binary_contrast_label(value) -> Optional[str]:
+        if value is None:
+            return None
+        try:
+            numeric = float(value)
+        except (TypeError, ValueError):
+            return None
+        return str(int(numeric)) if numeric in (0.0, 1.0) else None
+
+    @classmethod
+    def _contrast_scope(cls, sample: PrestoSample) -> Optional[Tuple[str, ...]]:
+        values = tuple(
+            str(getattr(sample, name, "") or "").strip()
+            for name in (
+                "source_bundle_id",
+                "source_search_space_id",
+                "source_protocol_id",
+                "source_reference_sha256",
+            )
+        )
+        if any(values) or sample.source_label_evidence or sample.scoped_peptide_id:
+            return ("scoped", *values) if all(values) else None
+        # Compatibility only: legacy source labels do not prove a shared search.
+        return ("legacy", cls._sample_source(sample))
+
+    @staticmethod
+    def _varied_contrast_indices(indices, categories, limit, rng):
+        """Reserve distinct categories before filling either group or batch caps."""
+        buckets = defaultdict(list)
+        for idx in indices:
+            buckets[categories[idx]].append(idx)
+        if limit < 2 or len(buckets) < 2:
+            return ()
+        keys = list(buckets)
+        rng.shuffle(keys)
+        for bucket in buckets.values():
+            rng.shuffle(bucket)
+        chosen = [buckets[key].pop() for key in keys[:limit]]
+        remainder = [idx for bucket in buckets.values() for idx in bucket]
+        rng.shuffle(remainder)
+        return tuple(chosen + remainder[: max(0, limit - len(chosen))])
+
     def _build_contrast_index(self) -> None:
-        by_peptide: Dict[str, List[int]] = defaultdict(list)
-        by_protein: Dict[Tuple[str, str], List[int]] = defaultdict(list)
+        by_peptide = defaultdict(list)
+        by_protein = defaultdict(list)
+        protease_categories, detectability_categories = {}, {}
         for idx in self._all_indices:
             if self._branch_by_index.get(idx) != "shotgun":
                 continue
             sample = self.dataset[idx]
+            scope = self._contrast_scope(sample)
+            if scope is None:
+                continue
+            scope = (self._metadata_by_index[idx][0], *scope)
+            machinery = self._machinery_by_index.get(idx, "unknown")
             peptide = str(getattr(sample, "peptide", "") or "").strip().upper()
-            if peptide:
-                by_peptide[peptide].append(idx)
+            if peptide and self._binary_contrast_label(sample.excision_label) is not None:
+                by_peptide[(peptide, *scope)].append(idx)
+                protease_categories[idx] = machinery
             protein = self._sample_source_protein(sample)
-            if protein != "unknown_protein":
-                by_protein[(protein, self._machinery_by_index.get(idx, "unknown"))].append(idx)
+            label = self._binary_contrast_label(sample.ms_detectability_label)
+            if protein != "unknown_protein" and label is not None:
+                by_protein[(protein, machinery, *scope)].append(idx)
+                detectability_categories[idx] = label
 
-        groups: List[Tuple[int, ...]] = []
-
-        # protease contrast: the group must actually vary the machinery
-        for indices in by_peptide.values():
-            if len(indices) < 2:
-                continue
-            machineries = {self._machinery_by_index.get(i) for i in indices}
-            if len(machineries) < 2:
-                continue
-            groups.append(tuple(indices[: self.CONTRAST_MAX_GROUP]))
-
-        # detectability contrast: same protein and enzyme, differing outcome
-        for indices in by_protein.values():
-            if len(indices) < 2:
-                continue
-            labels = {self._label_bucket_by_index(i) for i in indices}
-            if len(labels) < 2:
-                continue
-            groups.append(tuple(indices[: self.CONTRAST_MAX_GROUP]))
-
-        self._contrast_groups = groups
+        self._contrast_groups = []
+        self._contrast_categories = []
+        rng = random.Random(self.seed)
+        for candidates, categories in (
+            (by_peptide, protease_categories),
+            (by_protein, detectability_categories),
+        ):
+            for indices in candidates.values():
+                group = self._varied_contrast_indices(
+                    indices, categories, self.CONTRAST_MAX_GROUP, rng
+                )
+                if group:
+                    self._contrast_groups.append(group)
+                    self._contrast_categories.append({idx: categories[idx] for idx in group})
 
     def _label_bucket_by_index(self, idx: int) -> str:
         metadata = self._metadata_by_index.get(idx)
@@ -3822,18 +4034,26 @@ class BalancedMiniBatchSampler(Sampler[List[int]]):
                     break
                 if len(batch) >= self.batch_size:
                     break
-                group = self._contrast_groups[rng.randrange(len(self._contrast_groups))]
+                group_index = rng.randrange(len(self._contrast_groups))
+                group = self._contrast_groups[group_index]
+                group_task = self._metadata_by_index[group[0]][0]
                 fresh = [i for i in group if i not in in_batch]
                 if len(fresh) < 2:
                     continue
                 take = min(
                     len(fresh),
                     self.MAX_ROWS_PER_CONTRAST_GROUP,
-                    max(2, contrast_budget - contrast_rows_used),
-                    max(2, self.batch_size - len(batch)),
+                    contrast_budget - contrast_rows_used,
+                    self.batch_size - len(batch),
+                    quotas.get(group_task, 0),
                 )
-                contrast_rows_used += take
-                for idx in fresh[:take]:
+                selected = self._varied_contrast_indices(
+                    fresh, self._contrast_categories[group_index], take, rng
+                )
+                contrast_rows_used += len(selected)
+                if selected:
+                    quotas[group_task] -= len(selected)
+                for idx in selected:
                     if len(batch) >= self.batch_size:
                         break
                     self._record_batch_index(

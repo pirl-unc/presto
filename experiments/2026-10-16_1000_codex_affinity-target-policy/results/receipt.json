@@ -1,0 +1,65 @@
+{
+  "artifacts": {
+    "affinity_target_audit.json": {
+      "path": "/Users/iskander/.hitlist/presto-affinity-target-policy/audits/ca9e883034a8842b99394deb11b8155abd83b597/bundles/2026-10-16T09-52-16Z/affinity_target_audit.json",
+      "sha256": "59b1615151b64bf1b8c6624642c0662b5d38a3a76129cbc4c98259a7a27a18d0",
+      "size_bytes": 73083
+    },
+    "affinity_target_changes.tsv": {
+      "path": "/Users/iskander/.hitlist/presto-affinity-target-policy/audits/ca9e883034a8842b99394deb11b8155abd83b597/bundles/2026-10-16T09-52-16Z/affinity_target_changes.tsv",
+      "sha256": "455b782e203fe014f171748e37652b6df139bdfd4719c0f0a2d0d9a968863177",
+      "size_bytes": 660993
+    },
+    "clipped-source-contexts.tsv": {
+      "path": "/Users/iskander/.hitlist/presto-affinity-target-policy/audits/ca9e883034a8842b99394deb11b8155abd83b597/bundles/2026-10-16T09-52-16Z/clipped-source-contexts.tsv",
+      "sha256": "c50414f39fdaaf5bc283a46467e861e4592834561fe735b0f5db4c57fee24905",
+      "size_bytes": 284556
+    },
+    "counts.tsv": {
+      "path": "/Users/iskander/.hitlist/presto-affinity-target-policy/audits/ca9e883034a8842b99394deb11b8155abd83b597/bundles/2026-10-16T09-52-16Z/counts.tsv",
+      "sha256": "fe81d44183e89f2e778ba29044db24f6f13f2bf306e7ce7568eca476bd86bd63",
+      "size_bytes": 11300
+    },
+    "summary.json": {
+      "path": "/Users/iskander/.hitlist/presto-affinity-target-policy/audits/ca9e883034a8842b99394deb11b8155abd83b597/bundles/2026-10-16T09-52-16Z/summary.json",
+      "sha256": "aa052b7f2496d1fd7ba1b1c3e69626158649298b8ddaedcba947b9abd79e7901",
+      "size_bytes": 4134
+    }
+  },
+  "inputs": {
+    "archived-supported-outputs.json": {
+      "sha256": "13fe8bd4dab158bd06ae31fc7996fba98f73b3944fa68c3f57463beec34e7cb0",
+      "size": 3346,
+      "url": "https://github.com/pirl-unc/presto/releases/download/corrected-human-preflight-v1/prospective-supported-outputs.json"
+    },
+    "ic50-raw-effective-targets.tsv": {
+      "sha256": "59c73feeec2ba00041fcc3f8a91b6701ef31bd3f5d3ce6db01de188c45f44583",
+      "size": 3468131,
+      "url": "https://github.com/pirl-unc/presto/releases/download/corrected-human-target-policy-audit-v1/ic50-raw-effective-targets.tsv"
+    }
+  },
+  "producer": {
+    "batch_size": 128,
+    "dependencies": {
+      "datacache": "1.27.1",
+      "mhcseqs": "2.6.12",
+      "numpy": "2.5.3",
+      "pandas": "2.3.3",
+      "pyarrow": "25.0.1",
+      "torch": "2.14.1"
+    },
+    "device": "cpu",
+    "dirty": false,
+    "gpu": null,
+    "imported_module": "/private/tmp/presto-affinity-target-policy/__init__.py",
+    "machine": "arm64",
+    "n_workers": 0,
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "presto_version": "0.1.16",
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "source_checkout": "/private/tmp/presto-affinity-target-policy",
+    "source_commit": "ca9e883034a8842b99394deb11b8155abd83b597",
+    "timeout_seconds": 600,
+    "torch_threads": 1
+  }
+}

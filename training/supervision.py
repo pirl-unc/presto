@@ -6,7 +6,6 @@ from typing import Any, Callable, Dict, Optional, Sequence, Tuple
 import torch
 import torch.nn as nn
 
-from ..models.affinity import DEFAULT_MAX_AFFINITY_NM, normalize_binding_target_log10
 from ..data.allele_resolver import (
     PROCESSING_SPECIES_TO_IDX,
     PROCESSING_SPECIES_BUCKETS,
@@ -27,6 +26,7 @@ from ..data.vocab import (
 )
 from .losses import censor_aware_loss
 from .mil import MIL_TASKS
+from .target_policy import AFFINITY_TARGET_POLICY
 
 
 @dataclass(frozen=True)
@@ -67,11 +67,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         mask_attr="bind_mask",
         qual_key="binding",
         qual_attr="bind_qual",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
+        target_transform=AFFINITY_TARGET_POLICY,
     ),
     TaskLossSpec(
         name="binding_kd",
@@ -80,11 +76,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         pred_paths=(("assays", "KD_nM"),),
         loss_type="censor",
         qual_key="binding_kd",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
+        target_transform=AFFINITY_TARGET_POLICY,
     ),
     TaskLossSpec(
         name="binding_ic50",
@@ -93,11 +85,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         pred_paths=(("assays", "IC50_nM"),),
         loss_type="censor",
         qual_key="binding_ic50",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
+        target_transform=AFFINITY_TARGET_POLICY,
     ),
     TaskLossSpec(
         name="binding_ec50",
@@ -106,11 +94,7 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         pred_paths=(("assays", "EC50_nM"),),
         loss_type="censor",
         qual_key="binding_ec50",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
+        target_transform=AFFINITY_TARGET_POLICY,
     ),
     TaskLossSpec(
         name="elution",
@@ -251,19 +235,13 @@ LOSS_TASK_SPECS: Tuple[TaskLossSpec, ...] = (
         mask_attr="bind_mask",
         qual_key="binding",
         qual_attr="bind_qual",
-        target_transform=lambda t: normalize_binding_target_log10(
-            t,
-            max_affinity_nM=DEFAULT_MAX_AFFINITY_NM,
-            assume_log10=False,
-        ),
+        target_transform=AFFINITY_TARGET_POLICY,
         base_weight=1.0,
     ),
     TaskLossSpec(
-        # Supervises the detectability latent directly. Without it the latent
-        # is a free bottleneck that silently absorbs whatever the presentation
-        # pathway cannot explain; the shotgun corpus is what makes it
-        # identifiable. Targets are graded over the fractionation-depth ladder,
-        # so BCE is used with soft targets.
+        # Available only when an explicit detectability label is supplied.
+        # Raw bulk observations have no qualified targets; fraction counts
+        # alone cannot separate detectability from acquisition/context effects.
         name="ms_detectability",
         target_key="ms_detectability",
         mask_key="ms_detectability",
@@ -575,8 +553,10 @@ def _get_batch_target(batch, spec: TaskLossSpec) -> Optional[torch.Tensor]:
             labels.append(1 if normalized == "II" else 0)
         return torch.tensor(labels, dtype=torch.long, device=batch.pep_tok.device)
     if spec.name == "mhc_species":
-        species_values = getattr(batch, "processing_species", None)
-        if not isinstance(species_values, (list, tuple)):
+        species_values = getattr(batch, "molecular_mhc_species", None)
+        if not isinstance(species_values, (list, tuple)) or len(species_values) != len(
+            batch.pep_tok
+        ):
             return None
         labels = []
         for raw in species_values:
@@ -619,8 +599,10 @@ def _get_batch_mask(batch, spec: TaskLossSpec) -> Optional[torch.Tensor]:
             mask.append(1.0 if normalized in {"I", "II"} else 0.0)
         return torch.tensor(mask, dtype=torch.float32, device=batch.pep_tok.device)
     if spec.name == "mhc_species":
-        species_values = getattr(batch, "processing_species", None)
-        if not isinstance(species_values, (list, tuple)):
+        species_values = getattr(batch, "molecular_mhc_species", None)
+        if not isinstance(species_values, (list, tuple)) or len(species_values) != len(
+            batch.pep_tok
+        ):
             return None
         mask = []
         for raw in species_values:

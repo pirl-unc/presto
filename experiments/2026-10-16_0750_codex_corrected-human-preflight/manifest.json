@@ -1,0 +1,40 @@
+{
+  "agent": "codex",
+  "model": "GPT-6",
+  "actual_recipe_commit": "e2e1e827f7b677f7c4f4d37dfc4ca9f386c58ffb",
+  "dirty": false,
+  "modal_app_id": "ap-abhFjm8vPCTQjJqnvNooK3",
+  "installed_producer": {
+    "hitlist_version": "1.78.0",
+    "presto_version": "0.1.13",
+    "source_commit": "a6f8af39256db799ddff417cd16386ea66cea0c4",
+    "wheel_name": "presto-0.1.13-py3-none-any.whl",
+    "wheel_sha256": "6bdc3f9cce3272ffe02261652ebb3bf1b97da8dfc21c8ea358c8d01382f9cd81",
+    "wheel_size_bytes": 705270,
+    "wheel_url": "https://github.com/pirl-unc/presto/releases/download/v0.1.13/presto-0.1.13-py3-none-any.whl"
+  },
+  "invocation": "PYTHONPATH=/private/tmp/hitlist175-wheel-import PATH=/Users/iskander/code/shared-virtual-env/bin:/private/tmp/presto-readiness-tools/bin:$PATH bash experiments/2026-10-16_0750_codex_corrected-human-preflight/reproduce/launch.sh",
+  "local_launch_log": "/private/tmp/presto-corrected-human-preflight-actual.log",
+  "prelaunch_failure_log": "results/prelaunch-failure.log",
+  "raw_artifacts": {
+    "inventory.json": {
+      "path": "/data/presto-qualification/corrected-human-v1/preflight/2ed3969e849b8048c6a8c77b0917d6d5ac3bdf24af1446ab04ab56bfa11bb3bc/bundles/2026-10-16T08-21-06Z/inventory.json",
+      "sha256": "a249f213f4c61c70eb3c139f6fbe0ffeb9e03a937266f898a0b6230c87bfdf36",
+      "size_bytes": 6870
+    },
+    "run.tar.gz": {
+      "path": "/data/presto-qualification/corrected-human-v1/preflight/2ed3969e849b8048c6a8c77b0917d6d5ac3bdf24af1446ab04ab56bfa11bb3bc/bundles/2026-10-16T08-21-06Z/run.tar.gz",
+      "sha256": "ce8d55cf1e7a14fb898f997918133f708526d145c65f01f97c37e2b0df6db0c8",
+      "size_bytes": 7308268
+    },
+    "summary.json": {
+      "path": "/data/presto-qualification/corrected-human-v1/preflight/2ed3969e849b8048c6a8c77b0917d6d5ac3bdf24af1446ab04ab56bfa11bb3bc/bundles/2026-10-16T08-21-06Z/summary.json",
+      "sha256": "bb4d5ce089499353961bdd09ee4695a3863b149c57d879d493a7e1970933c202",
+      "size_bytes": 8453
+    }
+  },
+  "candidate_minima_fixed_before_launch": true,
+  "runtime_seconds": 985.767801711,
+  "process_peak_rss_bytes": 11749728256,
+  "gpu": "none"
+}

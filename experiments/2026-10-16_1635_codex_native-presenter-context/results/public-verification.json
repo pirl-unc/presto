@@ -1,0 +1,151 @@
+{
+  "historical_run_preserved": true,
+  "n_changed_processing_contexts": 8936,
+  "n_ic50_values_operators_partitions_preserved": 2614,
+  "n_public_assets": 18,
+  "n_source_observations": 9053,
+  "native_columns_verified": [
+    "peptide",
+    "evidence_row_id",
+    "assay_iri",
+    "reference_iri",
+    "pmid",
+    "provenance_id",
+    "provenance_status",
+    "reference_title",
+    "response_measured",
+    "measurement_units",
+    "quantitative_value",
+    "measurement_inequality",
+    "mhc_restriction",
+    "mhc_allele_set",
+    "mhc_class",
+    "cell_line_name",
+    "cell_type",
+    "source_tissue",
+    "condition_id",
+    "condition_status",
+    "condition_reference",
+    "assay_method",
+    "host",
+    "source_organism",
+    "mhc_species",
+    "mhc_species_source",
+    "mhc_species_context_disagrees",
+    "species_context_id",
+    "species_context_status",
+    "species_context_scope",
+    "species_context_kind",
+    "species_context_reference",
+    "presenting_species",
+    "in_vivo_host_species",
+    "lineage_host_species",
+    "introduced_mhc_species",
+    "supported_foreign_species",
+    "reviewed_candidate_species",
+    "species_context_note"
+  ],
+  "no_model_or_new_full_input_qualification": true,
+  "public_downloads": {
+    "README.md": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/README.md",
+      "sha256": "07e40196f946a118485ccba1522ed53943610832b9258176dfe2d01f26015457",
+      "size": 7066
+    },
+    "SHA256SUMS": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/SHA256SUMS",
+      "sha256": "1201c5b85e9ebca9f1b82a3c7e6eb32b87cd009d76d5568a03bdff9109d86659",
+      "size": 1427
+    },
+    "audit.json": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/audit.json",
+      "sha256": "0541b37884b321b00784d216a3d4e6a5382a078cde5dc84b60f69b61bca69e6e",
+      "size": 5815
+    },
+    "audit_recipe.py": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/audit_recipe.py",
+      "sha256": "5dfd1f6716ef3fa1df565575336afcb110e407a7a4feef9ed2b70ac94d44b2e7",
+      "size": 17591
+    },
+    "changed-processing-contexts.tsv": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/changed-processing-contexts.tsv",
+      "sha256": "5b877033a5eded0ac4a57f1a7f739612665f2cbe62a0b4085459fe2dcfed7210",
+      "size": 10332030
+    },
+    "ic50-processing-contexts.tsv": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/ic50-processing-contexts.tsv",
+      "sha256": "cb74c379457e07eafdc91adc3a0256c0d8bfad3ec3ba2c70933bafdf1f6d6f69",
+      "size": 3046490
+    },
+    "initial_failed_recipe.py": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/initial_failed_recipe.py",
+      "sha256": "3f277b89d9a62f70ca36e9999a79a762ede4de20e0229c9728d93ef87d5fe4da",
+      "size": 17538
+    },
+    "initial_failure.json": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/initial_failure.json",
+      "sha256": "2f7b999bc1d9f538aed7ed291ea11e708014583fbe6faf0d586cbe9a8d4b834e",
+      "size": 465
+    },
+    "initial_failure.txt": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/initial_failure.txt",
+      "sha256": "32ba1cf5305e4a2151e77e66d9718349e5904ad159ac3d91dbb005a890998502",
+      "size": 11284
+    },
+    "launch.json": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/launch.json",
+      "sha256": "a0035df4d550e7b3a753841f7c2fc2d689596b6394c1db34ae714978678b72d2",
+      "size": 375
+    },
+    "launch.sh": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/launch.sh",
+      "sha256": "23eea610d0abb94f811693615ec7ede0afb9dae588e90939bb4c530fa503abe0",
+      "size": 141
+    },
+    "output-policy.json": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/output-policy.json",
+      "sha256": "37356128a9a52e60cd9d423d1331791f1c68e637f4dd29776909c9d5fed061a7",
+      "size": 89332
+    },
+    "plan.md": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/plan.md",
+      "sha256": "09d30114dd3524ef788c959b8494ad80dd828f06b0972b55c36c531a11e7503b",
+      "size": 3834
+    },
+    "presenter-context-observations.tsv": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/presenter-context-observations.tsv",
+      "sha256": "feb29f9a60b8e8ae5dc6a3af0477a25ade615e370f0d28044e729dfcde11c11e",
+      "size": 10513967
+    },
+    "publication.json": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/publication.json",
+      "sha256": "c2817634a1c40b144d047b32bad715f1c9d7a327b2821795f03c1d295d40ecbf",
+      "size": 4455
+    },
+    "publish.py": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/publish.py",
+      "sha256": "9a3454540d60a266fddf838564e8d3ffbaad213cc02dcea2c4ca3550973175e3",
+      "size": 5479
+    },
+    "species_context.py": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/species_context.py",
+      "sha256": "a6086ff6082563b47248c7542bcde013b655ccd6fc66dab3e5c6a547af5c5ca0",
+      "size": 4959
+    },
+    "verify.py": {
+      "path": "/Users/iskander/.hitlist/presto-presenter-context-audit/public-verification/c74efe85ec05c2a4d48c972a8936111298d58dc56927bd01123a0c767be9985e/bundles/2026-10-16T16-48-16Z/verify.py",
+      "sha256": "1f67ac331daebf13bd359686273747a51196fe3b0a09acfcea1ddbf16339204e",
+      "size": 9449
+    }
+  },
+  "publication": "https://github.com/pirl-unc/presto/releases/tag/native-presenter-context-audit-v1",
+  "verified": true,
+  "verifier": {
+    "sha256": "1f67ac331daebf13bd359686273747a51196fe3b0a09acfcea1ddbf16339204e",
+    "size": 9449
+  },
+  "versions": {
+    "datacache": "1.27.1",
+    "pyarrow": "25.0.1"
+  }
+}

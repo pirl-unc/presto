@@ -1,0 +1,12 @@
+{
+  "n_selected_observations": 9000,
+  "seed": 42,
+  "val_frac": 0.1,
+  "test_frac": 0.1,
+  "policies": ["absolute_deficit_v1", "relative_deficit_v2"],
+  "source_manifest_sha256": "039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d",
+  "model_constructed": false,
+  "predictive_outcomes_used": false,
+  "hardware": "local CPU, no GPU; bounded65536-row source scans",
+  "status": "prospective component allocation audit; preserve original roots and grouping"
+}

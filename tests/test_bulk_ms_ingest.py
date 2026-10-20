@@ -83,6 +83,23 @@ class TestEnzymeRouting:
     def test_unknown_enzyme_rows_are_skipped(self):
         records, stats = records_from_bulk_frame(_frame([_row(enzyme="some-unlisted-protease")]))
         assert records == []
+        assert stats["n_unknown_enzyme_rows"] == 1
+        assert stats["rejected_enzyme_counts"] == {"some-unlisted-protease": 1}
+
+    def test_contradictory_legacy_enzyme_is_explicitly_unqualified(self):
+        enzyme = "Trypsin/P (cleaves K/R except before P)"
+        records, stats = records_from_bulk_frame(_frame([_row(enzyme=enzyme)]))
+        assert records == []
+        assert stats["n_contradictory_enzyme_rows"] == 1
+        assert stats["rejected_enzyme_counts"] == {enzyme: 1}
+
+    @pytest.mark.parametrize("spelling", ["Trypsin/P", "trypsin/p", " TRYPSIN/P "])
+    def test_trypsin_p_has_a_distinct_category(self, spelling):
+        records, stats = records_from_bulk_frame(
+            _frame([_row(enzyme=spelling)]), excision_negative_ratio=0
+        )
+        assert records[0].machinery == "trypsin_p"
+        assert stats["machinery_counts"] == {"trypsin_p": 1}
 
     @pytest.mark.parametrize("enzyme", ["trypsin", "chymotrypsin", "lysc", "gluc"])
     def test_each_known_enzyme_routes(self, enzyme):
@@ -130,7 +147,7 @@ def test_native_generated_controls_keep_explicit_provenance():
     observed, generated = PrestoDataset(bulk_ms_records=records).samples
     assert observed.target_provenance == {
         "excision": "bulk_observed_product",
-        "ms_detectability": "bulk_depth_proxy",
+        "ms_detectability": "unknown",
     }
     assert generated.target_provenance["excision"] == "generated:bulk_wrong_enzyme"
     assert generated.synthetic_kind is None  # Preserve existing sampler grouping.
@@ -147,3 +164,15 @@ def test_protein_argument_does_not_claim_unproduced_detectability_negatives(monk
     assert stats["protein_sequences_supplied"]
     assert not stats["in_silico_negatives_available"]
     assert all(record.detectability_label is None for record in records if not record.observed)
+
+
+@pytest.mark.parametrize("count", [pd.NA, float("nan"), ""])
+def test_missing_bulk_count_metadata_remains_unknown(count):
+    records, stats = records_from_bulk_frame(
+        _frame([_row(n_replicates_detected=count, n_fractions_in_run=count)]),
+        excision_negative_ratio=0,
+    )
+    assert records[0].n_replicates_detected is None
+    assert records[0].n_fractions is None
+    assert records[0].detectability_label is None
+    assert stats["n_detectability_labels"] == 0

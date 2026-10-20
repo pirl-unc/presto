@@ -1,3 +1,109 @@
+## 2026-10-16 — Molecular MHC species and independent source-role audit
+
+- **Agent/model:** Codex / GPT-6; [experiment and reproduction](2026-10-16_1440_codex_molecular-species-lineage/README.md).
+- **Recipe:** clean `ec0446fcb820d72d0041067cbee6074882837b3f`, Presto 0.1.19 candidate;
+  hash-pinned native Hitlist 1.78.0 corpus and historical Presto 0.1.16 membership/
+  inspection tables. All 9,053 observations and 7,241/906/906 assignments preserved.
+- **Conditions:** data-only canonical label and native provenance comparison; no model,
+  pretraining, synthetic data, training, loss/weight change or new predictions. All splits
+  inspected for source integrity, no new held-out performance estimate or preferred model.
+- **Result:** eight rat-host/HLA elution labels (seven train, one validation) change from
+  host-derived murine to molecular human; all 2,614 IC50 values/operators/partitions and
+  effective targets remain unchanged. Native context remains 50 resolved, 47 partial,
+  8,956 unknown. Reviewed presenters include 15 rat rows; distinct source roles retained.
+- **Resources:** CPU only, no cloud/GPU; builder 128.576 s, peak process RSS 631,259,136 bytes.
+- **Decision:** bind the prospective molecular policy, preserve native role evidence and
+  [publish the full source-linked audit](https://github.com/pirl-unc/presto/releases/tag/molecular-species-lineage-audit-v1).
+  Processing conditioning, antigen attribution, unknown biological lineage and failed
+  IC50 quality remain open. Historical run and qualification contract are unchanged.
+
+## 2026-10-16 — Physical affinity reporting audit; failed quality decision unchanged
+
+- **Agent/model:** Codex / GPT-6; [experiment and reproduction](2026-10-16_1405_codex_physical-affinity-metrics/README.md).
+- **Recipe:** clean `9a8de46dee32dbe626153f7b7442fbe8c8ce0e1f`, Presto 0.1.18 candidate;
+  hash-verified public 0.1.16/Hitlist 1.78.0 run, all 90 archive files and 2,614 IC50
+  observations (train/validation/test 2,074/265/275). Original source contexts,
+  raw nM values/censor operators, predictions and frozen cohort membership retained.
+- **Conditions:** data-only replay of every original predictor in effective and raw
+  target spaces; no training, pretraining, synthetic data, loss or checkpoint changes.
+  Original AdamW 200-step canonical fit and mean/ridge baselines remain the contract.
+- **Result:** four exact 500 nM training labels corrected; six constant-mean Pearson
+  entries now undefined. All 20 comparisons retain exact RMSE/MAE/Spearman. Validation/
+  test classifications unchanged; Presto effective RMSE 1.165477/1.310036 versus ridge
+  1.037626/1.138279. Selected training threshold accuracy changes .630918 to .628986.
+  Canonical summaries use physical nM for all classifiable observations, no fallback.
+- **Resources:** CPU only, no GPU/cloud; builder .835 s, process peak RSS 623,738,880 bytes.
+- **Decision:** quality screen still fails, ridge still preferred. This additive
+  [public audit](https://github.com/pirl-unc/presto/releases/tag/affinity-metric-numerics-audit-v1)
+  preserves the historical run. Shared studies, unknown biological identities,
+  species-role ambiguity and narrow predictions remain limitations; #53 remains open.
+
+## 2026-10-16 — Frozen effective-target IC50 fit: finite fitting, failed quality screen
+
+- **Agent/model:** Codex / GPT-6; [experiment and full metrics](2026-10-16_1030_codex_effective-target-fit/README.md).
+- **Source/reproduction:** clean `1067714c768af2e4f3184154c85903bb3c46cf4b`, released Presto 0.1.16 / Hitlist 1.78.0;
+  unchanged native manifest `b180eba8…`, all 9,053 source-linked observations and 7,241/906/906
+  frozen peptide-component partitions; published prospective effective-target contract passed
+  before model construction. All raw/effective values, units, censor operators and citations retained.
+- **Training:** fresh d32/l1/h4 expanded, 200 shuffled batches ×64, AdamW .001/.01,
+  5% warmup/cosine, uncertainty weighting, no pretraining/synthetic examples or specified priors.
+  Active measured families optimized; only IC50 declared. Full aggregate validation selects epoch 1;
+  fresh checkpoint reload, every validation/test prediction and complete loss ledger retained.
+- **Conditions:** one Presto fit; train-only exact-IC50 mean and alpha=1 length/composition/class
+  ridge comparators. Effective float32 clipped targets primary; raw physical targets diagnostic.
+
+| Split | Predictor | Effective RMSE | Raw RMSE | Effective Spearman |
+| --- | --- | ---: | ---: | ---: |
+| val | Presto | 1.165477 | 1.173963 | 0.363285 |
+| val | Train mean | 1.137633 | 1.149279 | undefined |
+| val | Ridge | 1.037626 | 1.047534 | 0.415286 |
+| test | Presto | 1.310036 | 1.320948 | 0.337271 |
+| test | Train mean | 1.248686 | 1.263942 | undefined |
+| test | Ridge | 1.138279 | 1.151585 | 0.393923 |
+
+- **Fitting:** 200 finite steps, no nonfinite tracked elements; direct gradients every batch;
+  exact training RMSE 1.607139→1.337708. Complete validation/test loss .499515671/.549559624.
+  Selected predictions vary by less than .03 log10(nM); physical 500 nM binder recall is zero.
+- **Decision:** quality screen fails; validation paired RMSE intervals versus mean
+  [-.075366,.124810], ridge [.020137,.239649]. Ridge preferred; test is descriptive.
+- **Resources:** CPU-only, 8 CPU/64 GiB/512 GiB scratch, zero GPU/workers, one Torch thread;
+  4489.710s, runner peak RSS 14,530,875,392 bytes. No budget extension.
+- **Evidence/limits:** [complete downloads](https://github.com/pirl-unc/presto/releases/tag/effective-target-fit-qualification-v1); 90 archive files, source joins,
+  metrics, baselines, paired bootstrap and losses independently verified. Shared studies,
+  unknown donor/specimen/acquisition identities; 220 other outputs undeclared. Additive native
+  species audit exposes eight rat-host/HLA elution rows (#115); numerical errata #116 preserve
+  original results; #117 owns prospective diagnosis of near-constant predictions. #53 stays open.
+
+## 2026-10-16 — Corrected human IC50 target-policy audit; fit stopped before optimization
+
+- **Agent/model:** Codex / GPT-6; [experiment directory](2026-10-16_0840_codex_corrected-human-fit/README.md).
+- **Source/reproduction:** clean recipe `124c85b6da23d4c74dbef961999936c573025192`, tag
+  `experiment-corrected-human-fit-20261016`; actual released Presto 0.1.13 / Hitlist 1.78.0,
+  unchanged corrected native source, verified MHC catalog and all 9,053 frozen observations
+  (7,241/906/906). Full config/source/pins and manual preservation are in `reproduce/`.
+- **Finding:** canonical IC50 targets apply `log10(clip(nM,0.001,50000))` while the prospective
+  plan required original log10(nM). Of 2,614 direct IC50 observations, 211 values/bounds
+  change: train 157 (39 exact), validation 31 (8 exact), test 23 (7 exact). All 2,614 source
+  joins verify; raw values, units, operators, original/resolved MHC, cell/condition and citations
+  remain in the full inspection table. #110 tracks canonical policy disclosure and qualification.
+- **Run/conditions:** CPU-only (8 CPU, 64 GiB RAM, 512 GiB scratch, one Torch/BLAS thread,
+  zero loader workers); no GPU. Application started 08:56:49 UTC, preservation receipt
+  09:07:24 UTC. No complete runner runtime or peak-RSS receipt. One attempt, manually
+  stopped during admission before optimization; 25 original files preserved. Buffered log
+  limitations are explicit. No manifest rebind or criterion change.
+- **Planned, unexecuted optimization:** fresh expanded d32/l1/h4 full profile, two epochs ×
+  at most 100 batches, shuffled batch 64, learning rate .001, weight decay .01, uncertainty
+  weighting; all explicit regularization/synthetic ratios zero, all observed families,
+  only direct IC50 claimed. Complete validation would select the checkpoint, followed by
+  fresh-model validation/test evaluation. No pretraining or synthetic examples.
+- **Validation/test metrics:** unavailable: zero checkpoints, predictions or optimization
+  results. No preferred model; baseline arithmetic was validated only on training labels.
+  This is a label-policy audit, not a trained-model result. A tested relaunch guard now
+  rejects the mismatch before model work; the original source snapshot remains unchanged.
+- **Decision:** publish the preserved stop and source-linked raw/effective audit; require
+  explicit policy qualification and a separate prospective family before replacement fitting.
+  Shared studies and unknown biological lineage remain limitations. [Public audit artifacts](https://github.com/pirl-unc/presto/releases/tag/corrected-human-target-policy-audit-v1)
+  include the complete table, counts, plot, source recipe, archive inventory and hashes.
 
 
 ### 2026-03-15_1226_codex_exp21-seed-epoch-confirmation
@@ -1341,3 +1447,227 @@ fitting/held-out performance remain separate work.
   output CSV/JSON cells reconcile. Reduce redundant report queries before more
   conditions; no preferred source condition or predictive winner is established.
 
+### 2026-10-15_2100_codex_scoped-proteomics-admission
+
+- Date/agent: 2026-10-15 America/New_York, Codex / GPT-6.
+- Experiment: [published-scope admission](2026-10-15_2100_codex_scoped-proteomics-admission/).
+- Exact input: Hitlist PXD013455 HeLa Trypsin/P public manifest
+  `441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b`;
+  code `27cde9717ae7e59997581e4ae633e0cd644a7faa`. Full occurrence collapse,
+  reservoir seed 42, cap 10,000. Original/reanalysis citations, cell/assay/search
+  conditions and unresolved donor/specimen identities remain pinned.
+- Training/pretraining/synthetic/loss contract: none. This is a registered data
+  admission and canonical collation/support audit, not model fitting. Binary
+  observed-in-search labels map to ms_detectability_logit as proxy support only;
+  MS/MS, matching and scoped absence are separate. Excision and depth are absent.
+- CPU only, one Torch thread; no Modal/GPU. Admission and support: 74.38 seconds,
+  peak RSS 595,787,776 bytes. Reproduction/source/environment and all output hashes
+  are recorded in the experiment directory; reusable TSV/parquet/reports live in
+  shared datacache.
+
+| Condition | MS/MS | Matching | Scoped absence | Total |
+| --- | ---: | ---: | ---: | ---: |
+| Full collapsed projection | 143,216 | 20,778 | 1,287,164 | 1,451,158 |
+| Seed-42 admission | 960 | 154 | 8,886 | 10,000 |
+
+All admitted rows retain candidate linkage; 1,114 positives retain original
+observation IDs. Zero canonical lineage issues/duplicate sample IDs. Full input
+has 153,980 peptides with ambiguous occurrences, whose parent/flanks are masked.
+Validation/test metrics and prediction dumps: not applicable, because no split,
+fitting or inference was performed. No winner/model baseline promotion. Takeaway:
+the actual public archive is admitted with honest masks and lineage; the next
+canonical trainer experiment must establish frozen membership and bounded fitting.
+A single HeLa search and unresolved biological identities do not establish
+independent experiment/donor/specimen generalization. Status: admission audit closed.
+
+
+## 2026-10-15 — Codex: frozen within-search detectability preflight
+
+Family: [scoped-detectability-qualification](2026-10-15_2255_codex_scoped-detectability-qualification/README.md). Clean producer `a15c1a45f9d9eda9d111459b6f1d9f86a56e8e29`; Presto 0.1.8 with distinct Trypsin/P and versioned scoring. Canonical data-only preflight on the pinned public PXD013455 HeLa search succeeded in 108.78 seconds, runner peak RSS 998,916,096 bytes, CPU one thread. Frozen train/validation/test membership is 8,000/1,000/1,000 peptides with positive proxy support 912/105/109 and scoped absences 7,088/895/891. No generated controls, excision/depth labels, MHC inputs or fitting. All prospectively registered support thresholds are met; other outputs remain undeclared.
+
+No cross-partition peptides, candidate IDs or measured observation IDs; known proteins overlap and all splits share one search. Donor/specimen independence remains inconclusive. Complete membership TSV/parquet, source registry, label policies, overlap and output-coverage reports are in datacache, pinned by the family receipt. Run archive SHA-256 `fb0881f60ed993614e683a2f9e588e6f02b83d91228a78b01833db5ab47e9244`. This is admission/coverage evidence, not predictive quality. The registered bounded canonical fit and train-only baselines follow with the exact support fingerprint required.
+
+
+### 2026-10-15_2255_codex_scoped-detectability-qualification — actual fit closure
+
+- Agent/model: Codex (GPT-6); [experiment](2026-10-15_2255_codex_scoped-detectability-qualification/README.md).
+- Clean fit commit `65173d2598746ebb848031783833f74c833679f2`; exact frozen launch, versions, datacache paths and public hashes in the experiment.
+- PXD013455 HeLa Trypsin/P search, 10,000 collapsed peptides, source manifest `441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b`; 8,000/1,000/1,000 train/validation/test, 912/105/109 positives. MS/MS/matching/scoped absences are proxies, no synthetic labels, excision or depth supervision; MHC and binding concentration/censoring metrics not applicable.
+- No pretraining; expanded d32/l1/h4, batch64, lr0.001, two epochs capped100 batches each, seed42. CPU/one Torch/BLAS thread, no GPU; 1,027.01s and runner peak RSS7,912,128,512bytes. Selected epoch1 by validation loss.
+- Declared output only `ms_detectability_logit`; 200 gradient-bearing proxy batches. Balanced sampling exposed 6,314 positive labels of12,800, versus frozen train prevalence11.40%. Other outputs unsupported.
+- Protocol deviation: six exposed consistency weights zero but hidden binding-orthogonality weight0.01 active; uncertainty task weighting and weight decay0.01 also active. Original results/config preserved; #95 tracks the omitted effective configuration.
+- Validation Presto AUROC/AP/log loss/Brier:0.80628/0.33324/0.55073/0.18739. Test:0.82984/0.38070/0.54864/0.18618. Train-prevalence val/test log loss0.33634/0.34454; train-only length/composition logistic0.27268/0.26899. Complete metric tables, 1,000 paired bootstrap intervals, coefficients and every held-out prediction retained publicly.
+- Preferred probability baseline: length/composition logistic. Presto improves AP point estimates but fails both baselines on probability quality. No readiness claim; #94 tracks a prospective follow-up. All splits share the search and proteins, donor/specimen independence unresolved.
+- [Download](https://github.com/pirl-unc/presto/releases/tag/scoped-detectability-qualification-v1): partitions, source/cell/assay context, policies, lineage/leakage/support reports, predictions, checkpoint, logs and inventories; fit SHA-256 `ab664220951f912433022684aa408ed0280c7786f9772661694acb87caa7351c`.
+
+## 2026-10-16 — Codex: actual human-corpus frozen-input preflight
+
+Agent/model Codex (GPT-6); [complete contract and results](2026-10-16_0045_codex_human-corpus-preflight/README.md).
+Clean source `2c73f2fb57c5d47c09c492e1f55d1b3ccecfe312`, Presto0.1.10;
+Hitlist1.76 baseline manifest `039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d`.
+Both MHC classes, human peptide source, original endpoints/units/censoring,
+strict sequence resolution, no flanks or synthetic/auxiliary data. Official MHC
+FASTA commits/hashes and full environment retained. CPU8/64GiB, one thread, no
+GPU; runtime1,950.43s, runner peak RSS21,010,509,824bytes (children excluded).
+No pretraining, fitting, predictions or model/baseline comparison; all priors0.
+
+| Selected evidence | Train | Validation | Test |
+| --- | ---: | ---: | ---: |
+| Samples | 7,200 | 900 | 900 |
+| Binding | 4,121 | 177 | 192 |
+| Direct KD | 506 | 0 | 4 |
+| Elution positives / negatives | 2,447 / 0 | 679 / 0 | 679 / 0 |
+| Half-life | 482 | 41 | 24 |
+| Temperature | 131 | 3 | 5 |
+| Off-rate | 19 | 0 | 0 |
+
+No peptide/observation/pMHC/known-origin overlap, but studies overlap and all
+donor/specimen/acquisition identities are unknown. Only79 selected roots have
+known origins. All221 output declarations remain undeclared; positive-only
+elution and missing held-out direct KD/kinetics support preclude broad readiness.
+Validation/test performance is inapplicable because model construction was
+forbidden. No winner. Protocol deviation: recorded reservoir flag ignored; actual
+per-family Random(59).sample selection preserved (#103). Producer predates
+curation fixes #694/#696. Original disk/worker failures also retained (#98/#99).
+
+All46 original archive files verified; full catalogs, membership TSV/parquet,
+source/cell/assay lineage, label/partition policies, support/leakage reports and
+runtime receipts are [downloadable](https://github.com/pirl-unc/presto/releases/tag/human-corpus-preflight-v1).
+Archive SHA-256 `444ac92e859da9afd3fcdf3c27ee3ae282f70a6134ac9c42f3c528cdcc1dae80`.
+Takeaway: ingestion/partition pipeline accepted; preserve limitations and qualify
+a separate corrected corpus before target-specific fitting. #678/#680/#48/#53 open.
+
+## 2026-10-16 — Codex: scoped sampling and probability qualification
+
+Agent/model Codex (GPT-6); [full contract and artifacts](2026-10-16_0110_codex_scoped-sampling-qualification/README.md).
+Clean actual source `82be704840d2aa7e87a2f646ab2f9e5866116d9a`, Presto0.1.11.
+Same pinned PXD013455 HeLa Trypsin/P source and 8,000/1,000/1,000 peptide-disjoint
+membership as the original qualification,912/105/109 positives. All source,
+assignment, parent and support fingerprints preserved; only producer policy hash
+prospectively rebound. Proxy-only detectability; no MHC, binding, excision/depth,
+synthetic or unrelated assay supervision. No pretraining. Expanded d32/l1/h4,
+batch64, lr0.001, weight decay0.01, uncertainty weighting, seeds42, two epochs
+with100 batches each. Every regularization weight explicitly zero.
+
+| Condition | Positive exposure | Val log loss/Brier | Test log loss/Brier (exploratory) |
+| --- | ---: | ---: | ---: |
+| Balanced Presto | 6,314/12,800 | 0.57755/0.19747 | 0.57618/0.19732 |
+| Shuffled Presto | 1,444/12,800 | 0.28928/0.08376 | 0.28081/0.08258 |
+| Train prevalence | train11.40% | 0.33634/0.09406 | 0.34454/0.09714 |
+| Length/composition logistic | train only | 0.27268/0.08142 | 0.26899/0.08129 |
+
+Each neural condition completed200 finite-gradient proxy batches, zero direct
+labels. Selected checkpoints balanced epoch1/shuffled epoch2; minimum unweighted
+validation log loss selects shuffled. Shuffled val/test AUROC0.77236/0.81882 and
+AP0.31172/0.37417. Logistic remains preferred for validation probability quality;
+shuffled-minus-logistic paired log-loss95% interval[0.00410,0.02800] validation,
+[-0.00015,0.02361] exploratory test. Complete predictions/metrics/coefficients and
+1,000 peptide-bootstrap intervals retained. Binding regressions/500nM metrics
+inapplicable. The already inspected test set never selects a condition.
+
+CPU8/32GiB, one Torch/BLAS thread, no GPU; total2,542.76s, runner-only peak
+RSS7,226,044,416bytes. Original shared-scratch preflight stopped before fitting;
+partial evidence retained (#102), then local POSIX SQLite scratch fixed. Every
+successful archive member and per-example log loss/Brier independently verified;
+122 files, SHA-256`16935d480378d950367aba8e15bf2e85a654797bd1e7fde216413d123bbc9c0b`.
+[Download](https://github.com/pirl-unc/presto/releases/tag/scoped-sampling-qualification-v1).
+One search/seed, overlapping proteins, unknown donor/specimen identities and proxy
+labels limit conclusions. No default change or readiness claim; #48/#53/#678 open.
+
+## 2026-10-16 — Codex: label-blind component-allocation audit
+
+Agent/model Codex (GPT-6); [complete contract/results](2026-10-16_0635_codex_component-allocation/README.md).
+Clean source `83431016f30f9bae1ba47601ce4b2346db28cd52`, Presto 0.1.13; exact 9,000
+human-preflight roots from Hitlist 1.76 manifest `039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d`.
+Original admission/caps/MHC filtering/labels unchanged; 5,843 components, largest 31.
+V1 exactly reproduces original assignments. V2 compares remaining fractional
+capacity; no assay labels or predictive outcomes enter allocation. Seed 42, 80/10/10.
+
+| Endpoint | V1 train/val/test | V2 train/val/test |
+| --- | ---: | ---: |
+| All observations | 7,200/900/900 | 7,200/900/900 |
+| Direct KD | 506/0/4 | 406/71/33 |
+| Off rate | 19/0/0 | 15/1/3 |
+| Stability | 613/44/29 | 570/57/59 |
+| Elution positives | 2,447/679/679 | 3,003/418/384 |
+
+3,060 roots move; every observation/component remains intact. Both peptide/root
+leakage audits pass with known origins together; studies overlap and all donor/
+specimen/acquisition identities remain unknown. Original source/registry predates
+later curation fixes. Endpoints/proxies, units, censoring, classes and human-readable
+source context retained. Positive-only elution and extremely sparse kinetics still
+prevent broad qualification. No model/pretraining/optimizer/regularization, generated
+labels, predictions or validation/test performance; regression/500 nM metrics do not
+apply. Preferred allocation V2 for future Hitlist; historical/scoped policies preserved.
+
+Local CPU/no GPU, 7.35 s, peak RSS 769,818,624 bytes; bounded 65,536-row scans. Hitlist 1.78
+audit code, datacache 1.27.1, pandas 2.3.3 / numpy 2.5.3 / pyarrow 25.0.1 / Python 3.12.6.
+All 17 output archive members and identity invariants verified; SHA256
+f7a66f2a87e0d8b343730240c41f94e61cd649096f30c861504d102fb9d3994d.
+[Downloads](https://github.com/pirl-unc/presto/releases/tag/component-allocation-audit-v1)
+include proposed assignments, support/lineage reports and original runtime/source
+receipts through datacache. This is support balance, not biological independence or
+training readiness; #48/#53/#678/#680 remain open.
+
+All 12 public assets were independently downloaded and hash-verified through
+datacache; all 17 archive members and intact observation/component identities
+were verified again from public bytes. Full local suite: 2,276 passed, four explicit
+skips in 525.13 seconds. Software CI/merge/distribution remain tracked in PR #106.
+
+## 2026-10-16 — Corrected frozen human corpus preflight
+
+- Agent/model: Codex (GPT-6).
+- Experiment: [2026-10-16_0750_codex_corrected-human-preflight](2026-10-16_0750_codex_corrected-human-preflight/).
+- Actual recipe: clean `e2e1e827f7b677f7c4f4d37dfc4ca9f386c58ffb`; released Presto 0.1.13 / Hitlist 1.78.0. Corrected native manifest `b180eba804532f633a6d61bb350584dbe24f8df4b4b96f02c6ec492c60144372`. Exact source/config/dependency/producer pins and local environment overrides are in the reproduction bundle and manifest. A failed local prelaunch is preserved; #107 fixes shell failure propagation before Modal.
+- Data: human-source/HLA, both classes; 13,190 binding / 3,909,515 elution / 19 kinetics / 741 stability eligible before caps. Explicit reservoir caps 5,000/5,000/1,000/1,000, effective independent family stream seed 59. Strict MHC filtering retains 4,492/3,856/19/686, totaling 9,053 roots/model samples. Full original/resolved MHC and source lineage remain available.
+- Partition: explicit relative_deficit_v2, peptide/lineage components, seed 42, requested 80/10/10; actual train/validation/test 7,241/906/906. No generated samples or missing observation IDs. Every selected ID/peptide joins exactly to the public native source with cited cell/MHC/condition/assay context.
+- Training/pretraining: none; canonical data_preflight_only and a forbidden model constructor. All synthetic ratios, augmentation and regularization weights zero. All 221 canonical output declarations remain undeclared. No prediction files, checkpoints or held-out predictive metrics exist; validation/test are retained for support and leakage audits.
+- Prospective candidate: assays.IC50_nM, log10(nM), direct binding:IC50 from IEDB/CEDAR. Minimum 50 observations, 50 distinct peptides and 50 exact values in each split, fixed before launch. Actual counts pass without adjustment. The new supported-output manifest binds exact fingerprints for the next fit; its canonical gate has not been executed. Empty inequality is treated as exact under the frozen loader policy, with original emptiness retained.
+
+| Condition / split | Direct IC50 observations | Distinct peptides | Exact values | Class I / II |
+| --- | ---: | ---: | ---: | ---: |
+| Corrected preflight, train | 2,074 | 1,031 | 1,599 | 877 / 1,197 |
+| Corrected preflight, validation | 265 | 126 | 210 | 99 / 166 |
+| Corrected preflight, test | 275 | 126 | 214 | 101 / 174 |
+
+- Runtime/hardware: 985.768 seconds; runner peak RSS 11,749,728,256 bytes excluding children; eight CPUs, 64 GiB RAM, 512 GiB scratch, one Torch/BLAS thread, zero loader workers, GPU explicitly none. Catalog reused through unchanged datacache recipe with four exact public-baseline hashes.
+- Leakage: zero peptide/observation/pMHC/known-origin overlap; shared studies 159 train/validation, 153 train/test, 109 validation/test. Only 87/9,053 roots have known origins. All donor/specimen/acquisition identities are unknown. Unknown is not an independence pass.
+- Unsupported/sparse evidence: off-rate 19/0/0; direct KD exact 144/6/5; elution positive-only 3,088/394/374; no measured processing or T-cell/TCR response records. Source generation, cap algorithm and selected roots differ from the old preflight/allocation audit, so its task counts and model results do not transfer.
+- Artifacts: [corrected-human-preflight-v1](https://github.com/pirl-unc/presto/releases/tag/corrected-human-preflight-v1), complete 48-member run archive SHA-256 `ce8d55cf1e7a14fb898f997918133f708526d145c65f01f97c37e2b0df6db0c8`, inventories, assignments/membership, full coverage, label policies, lineage audits, source-context tables, prospective manifest and reproduction recipes. Datacache owns acquisition, analysis and publication.
+- Decision: proceed to the separately prospective bounded IC50 fitting diagnostic only after the unchanged canonical manifest gate passes. No winner or predictive-quality claim exists in this data-only family. #48/#53 and Hitlist #678/#680 remain open.
+
+Publication closure: all 23 public downloads, 48 archive members, 9,053 source/partition joins and the fixed candidate counts independently verify through datacache. See the family verification receipt. No manifest gate or fitting result is implied.
+
+
+## 2026-10-16 — Canonical affinity target-policy audit
+
+- Agent/model: Codex / GPT-6. [Family](2026-10-16_1000_codex_affinity-target-policy/README.md).
+- Clean producer: candidate Presto 0.1.16 `ca9e883034a8842b99394deb11b8155abd83b597`; frozen recipe tag `experiment-affinity-target-policy-20261016`. Datacache 1.27.1 retains the two public pinned inputs and complete output generation.
+- Contract: all 2,614 published corrected-human IC50 labels, original IDs/units/censor operators and train/val/test membership. Canonical float32 `log10(clip(nM, 0.001, 50000))`, original direction retained. Label-only samples preserve class/allele identity; no MHC sequences, synthetic data, model, pretraining, training, loss optimization or predictions. The archived manifest supplies configuration only and is not rebound.
+- Condition: canonical collator/census versus the independent released-0.1.13 posthoc target audit. All effective targets/directions and 211 clipped source IDs agree. Train/val/test clipping is 157/31/23, including 39/8/7 exact and 118/23/16 right-censored values; zero below-minimum values. Validation/test prediction and quality metrics are absent because no model is constructed. No preferred model.
+- Hardware: local arm64 CPU, one Torch/BLAS thread, no GPU/workers, batch 128, ten-minute alarm. Observed wall time 2.014 s including inputs; peak RSS 271,433,728 bytes.
+- Artifacts: [public audit](https://github.com/pirl-unc/presto/releases/tag/affinity-target-policy-audit-v1), complete canonical changed-row table, flat counts, full 86-field clipped-source context, producer/runtime receipt, source recipe, plan and hashes.
+- Decision: canonical target-policy evidence agrees with frozen measurements. A new prospective fitting contract must explicitly accept effective targets and separately evaluate raw measurements/bounds. Unknown donor/specimen/acquisition identity and shared studies persist; this is not predictive readiness.
+
+
+## 2026-10-16 — Native presenting-cell processing context audit
+
+- Agent/model: Codex / GPT-6; [registered family](2026-10-16_1635_codex_native-presenter-context/README.md).
+- Clean successful recipe `060fbfed9d2f99f2937e637624a9e88d1df786c3`, Presto 0.1.21 candidate. Original fit producer remains Presto 0.1.16 / Hitlist 1.78.0. The initial packaging failure at `fb39e8d302ef77a1b5a3160eb3fe442398418cf0` is retained with its exact recipe/log and published alongside the successful result (#125).
+- Pinned original native parquet, frozen membership/IC50/species tables and prior role audit; datacache acquisition/generation. All 9,053 IDs/order/partitions and every prior/native column retained; 2,614 IC50 raw/effective float32 targets, units and operators unchanged.
+- Native processing context: 109 human, 15 rat, 8,929 unknown. Historical host-based context changes on 8,936 rows (7,148 train / 887 validation / 901 test). All IC50 rows have unknown presenters. Twenty-seven known presenter facts retain candidate-arm consensus without an arm-specific review/reference; publication-level provenance remains, no arm identity is invented.
+- Schema 4 binds the prospective presenter policy independently of molecular MHC. All 9,053 canonical processing inputs and human molecular auxiliary labels checked. Unit regressions cover row/MS-MIL/T-cell-MIL/device/export/parent/fingerprint paths.
+- CPU data-only analysis: no cloud/GPU, model, MHC-sequence reconstruction, pretraining, fitting, optimizer, loss weights, synthetic training examples or new predictions. No new validation/test performance or preferred model; the old failed quality screen and biological-independence limitations persist. Both held-out partitions are included only for source/target preservation.
+- Builder 53.443 seconds, peak process RSS 707,395,584 bytes. Complete/changed/IC50 tables, source policies, hashes, reproduction, independent verifier and failed-attempt evidence are published at [native-presenter-context-audit-v1](https://github.com/pirl-unc/presto/releases/tag/native-presenter-context-audit-v1), with all 18 public downloads, every original/native source join and unchanged IC50 targets independently verified.
+- Decision: retain explicit native presenter context and unknown gaps. Antigen/repertoire roles and legacy API/sampler semantics remain #115/#46/#123; no broader training-readiness claim.
+
+
+## 2026-10-16 — Assay-context applicability audit
+
+- Agent/model: Codex / GPT-6; [registered family](2026-10-16_1828_codex_assay-context-applicability/README.md).
+- Clean executed recipe `18d04533d3ef1f042c49910042b96022627aee3f`, Presto 0.1.22 candidate. Frozen source inputs, immutable recipe and 11 implementation hashes are recorded; historical fit producer remains Presto 0.1.16 / Hitlist 1.78.0.
+- Contract: all 9,053 native-presenter audit rows and 2,614 IC50 rows, joined by observation ID to the pinned corrected native parquet. Every prior field, partition, raw/effective target, unit and censor operator remains unchanged. Datacache owns input acquisition, output generation and publication.
+- Condition: explicit preparation/elution applicability. IC50: 2,533 purified-MHC observations have cellular processing context marked not applicable; 81 cellular-MHC observations require it and remain unresolved. A missing method or endpoint alone does not imply applicability. No new model inputs are introduced. Schema 5 and prospective membership/support receipts bind the inspection policy.
+- Independent replay verifies all original/native joins, prior cells, annotations, coverage and 11 artifact hashes without importing Presto. Canonical collation agrees on all 9,053 metadata rows.
+- CPU-only, Python 3.12.6, one Torch/BLAS thread; no GPU/cloud, pretraining/training, optimizer, loss weights, synthetic examples or predictions. Builder runtime 2.980692 seconds excluding imports/acquisition; peak process RSS 401,276,928 bytes. Both held-out partitions are used only for metadata preservation, so no new validation/test loss, regression or binding metrics exist and no model winner is selected.
+- [Public evidence](https://github.com/pirl-unc/presto/releases/tag/assay-context-applicability-audit-v1): source-linked observation/IC50 tables, coverage, policy, source pins, code, independent verification and hashes. Original failed IC50 quality result and unknown donor/specimen/acquisition identities persist. This resolves applicability reporting, not broader training readiness; #48/#53/#115 and Hitlist #678/#680 remain open.

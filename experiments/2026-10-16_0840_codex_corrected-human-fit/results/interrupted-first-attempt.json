@@ -1,0 +1,95 @@
+{
+  "files": {
+    "run.tar.gz": {
+      "path": "/data/presto-qualification/corrected-human-fit-v1/interrupted-first-attempt/bundles/2026-10-16T09-07-24Z/run.tar.gz",
+      "sha256": "d42004d8d4dbb4867d5057cefa17381de30e496cb87e14c02ad70b5675a130e6",
+      "size_bytes": 801144
+    },
+    "inventory.json": {
+      "path": "/data/presto-qualification/corrected-human-fit-v1/interrupted-first-attempt/bundles/2026-10-16T09-07-24Z/inventory.json",
+      "sha256": "97640f986454a84bff0fa84eee00c4f8e9fc933b540ee800b7ba8f49b5f9b832",
+      "size_bytes": 3490
+    },
+    "summary.json": {
+      "path": "/data/presto-qualification/corrected-human-fit-v1/interrupted-first-attempt/bundles/2026-10-16T09-07-24Z/summary.json",
+      "sha256": "3d115d9e6f162e4134703c43301e8dda42c82e585eb55ad145fecdfd0f5eb7e6",
+      "size_bytes": 4014
+    }
+  },
+  "summary": {
+    "invocation": {
+      "commit": "124c85b6da23d4c74dbef961999936c573025192",
+      "installed_producer": {
+        "presto_version": "0.1.13",
+        "source_commit": "a6f8af39256db799ddff417cd16386ea66cea0c4",
+        "wheel_name": "presto-0.1.13-py3-none-any.whl",
+        "wheel_url": "https://github.com/pirl-unc/presto/releases/download/v0.1.13/presto-0.1.13-py3-none-any.whl",
+        "wheel_sha256": "6bdc3f9cce3272ffe02261652ebb3bf1b97da8dfc21c8ea358c8d01382f9cd81",
+        "wheel_size_bytes": 705270,
+        "hitlist_version": "1.78.0"
+      },
+      "frozen_inputs_sha256": "37c649470c666ce4b0a4b043a86be9d7ad2a3ee33086718a01adc243dfef5d8a",
+      "dirty": false,
+      "wheel": {
+        "name": "presto-0.1.13-py3-none-any.whl",
+        "sha256": "6bdc3f9cce3272ffe02261652ebb3bf1b97da8dfc21c8ea358c8d01382f9cd81"
+      },
+      "code_files": {
+        "baselines.py": "79d7b809d4f5a2ef1c2b1fb2af69aa5cd2346fb46942c64b1365483288d9d32a",
+        "common.py": "22b698a278cfa79a97a62ec281fa0aa1f1d63be199d1a4c77122853a375c6c52",
+        "diagnostic.py": "0f6e7c54514a8b5da40b449661ded300fefdf15e4bb6e5afbefee27a37ed7b8c",
+        "fetch_wheel.py": "181a517a95d06efe2643382e31f217b1eb49c0343450c9b07dc265a913bfecde",
+        "fit.py": "4fb895d53178c66d7a78363e40de0746f46e2867136a0b7c626a91dbdc00b3c1",
+        "launch.py": "eec03dcaa72062d58ad5b4fdf8b85ed67d8955adb4a3b89da0fdcfcf6e6519e2"
+      },
+      "launcher_sha256": "eec03dcaa72062d58ad5b4fdf8b85ed67d8955adb4a3b89da0fdcfcf6e6519e2",
+      "configuration_sha256": "44a404806f2abda787ca92fb8e6e503f2a41b43d11cdb305643bdd58b7a926eb",
+      "source_pins_sha256": "3df5f2e47a9bd30993e9abef1eaf6601d5d08ee5d8fa2b975e5cc3b1df490913",
+      "requirements_sha256": "842a0bc41d2bdfe1ff75d5c5bef16c8501ec2a46525ae32e9f579d8b6ceb9cf1",
+      "constraints_sha256": "e2c5dbad9b510096b3ac12b4b8ab02758c7d6b6d8dfb1248f59e577426d9d5bb",
+      "cpu_limit": 8,
+      "memory_limit_mib": 65536,
+      "scratch_limit_mib": 524288,
+      "gpu": "none",
+      "timeout_seconds": 5700
+    },
+    "status": "manually_interrupted_before_optimization",
+    "reason": "Released canonical affinity targets clamp at 50000 nM, while this prospective experiment requires original log10(nM) targets. Frozen IC50 rows above the cap: train 157 (39 exact), val 31 (8 exact), test 23 (7 exact). Preserve recipe and source artifacts; do not reinterpret this as a completed fit or a timeout.",
+    "utc": "2026-10-16T09:07:24.267179+00:00",
+    "process_status": "Name:\tpython\nState:\tT (stopped)\nTgid:\t4\nPid:\t4\nPPid:\t2\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t512\nGroups:\t \nVmSize:\t15040760 kB\nVmRSS:\t9034928 kB\nVmData:\t13686164 kB\nThreads:\t26\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000001001000\nSigCgt:\t0000000180002002\nCapInh:\t00000000a80405fb\nCapPrm:\t00000000a80405fb\nCapEff:\t00000000a80405fb\nCapBnd:\t00000000a80405fb\nCapAmb:\t00000000a80405fb\nNoNewPrivs:\t1\nSeccomp:\t0\nMems_allowed:\t1\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t0\nnonvoluntary_ctxt_switches:\t0\n",
+    "observed_files": [
+      "config.json",
+      "effective-launch.json",
+      "membership.tsv",
+      "metrics.csv",
+      "metrics.jsonl",
+      "mhc_sequence_coverage.csv",
+      "mhc_sequence_coverage.json",
+      "mhc_sequence_coverage_post_filter.csv",
+      "mhc_sequence_coverage_post_filter.json",
+      "prospective-supported-outputs.json",
+      "regularization.json",
+      "selected-source-contexts.tsv",
+      "supported_output_manifest.json",
+      "training.log"
+    ],
+    "n_checkpoint_files": 0,
+    "n_prediction_files": 0,
+    "log_limit": "Python buffered training stdout is not flushed by this manual process termination; preserve the existing bytes without claiming a complete log.",
+    "files": {
+      "run.tar.gz": {
+        "sha256": "d42004d8d4dbb4867d5057cefa17381de30e496cb87e14c02ad70b5675a130e6",
+        "size_bytes": 801144
+      },
+      "inventory.json": {
+        "sha256": "97640f986454a84bff0fa84eee00c4f8e9fc933b540ee800b7ba8f49b5f9b832",
+        "size_bytes": 3490
+      }
+    }
+  },
+  "local_paths": {
+    "run.tar.gz": "/Users/iskander/.hitlist/presto-corrected-human-fit/interrupted-first-attempt/bundles/2026-10-16T09-09-38Z/run.tar.gz",
+    "inventory.json": "/Users/iskander/.hitlist/presto-corrected-human-fit/interrupted-first-attempt/bundles/2026-10-16T09-09-38Z/inventory.json",
+    "summary.json": "/Users/iskander/.hitlist/presto-corrected-human-fit/interrupted-first-attempt/bundles/2026-10-16T09-09-38Z/summary.json"
+  }
+}

@@ -1129,12 +1129,14 @@ def test_audit_mhc_sequence_coverage_reports_resolved_missing_and_species_bucket
         "murine": 2,
         "nhp": 0,
         "other": 0,
+        "unknown": 0,
     }
     assert coverage["species_by_state"]["missing"] == {
         "human": 1,
         "murine": 1,
         "nhp": 1,
         "other": 0,
+        "unknown": 0,
     }
     assert coverage["by_modality"]["binding"]["resolved_rows"] == 1
     assert coverage["by_modality"]["binding"]["missing_rows"] == 1
@@ -2240,13 +2242,17 @@ def test_run_fails_fast_when_strict_mhc_resolution_finds_unresolved(tmp_path, mo
     assert "modality,source,allele,category,count" in detail_rows.splitlines()[0]
 
 
-def test_hitlist_data_source_never_reads_an_available_merged_tsv(tmp_path, monkeypatch):
+@pytest.mark.parametrize("cap_sampling", ["head", "reservoir"])
+def test_hitlist_data_source_never_reads_an_available_merged_tsv(
+    tmp_path, monkeypatch, cap_sampling
+):
     (tmp_path / "merged_deduped.tsv").write_text("placeholder\n", encoding="utf-8")
 
     class HitlistSelected(RuntimeError):
         pass
 
     def _hitlist_selected(**kwargs):
+        assert kwargs["cap_sampling"] == cap_sampling
         raise HitlistSelected
 
     def _merged_must_not_run(**kwargs):
@@ -2268,6 +2274,10 @@ def test_hitlist_data_source_never_reads_an_available_merged_tsv(tmp_path, monke
                 config=None,
                 profile="full",
                 data_source="hitlist",
+                cap_sampling=cap_sampling,
+                hitlist_bundle="explicit-frozen-fixture",
+                mhc_augmentation_samples=0,
+                uniprot_negative_ratio=0,
                 data_dir=str(tmp_path),
                 run_dir=None,
             )

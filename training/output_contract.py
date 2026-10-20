@@ -11,6 +11,8 @@ from typing import Any, Mapping
 import torch
 
 from ..data.collate import PrestoCollator
+from ..data.assay_context import ASSAY_CONTEXT_POLICY
+from ..data.species_context import MOLECULAR_SPECIES_POLICY, PROCESSING_SPECIES_POLICY
 from ..data.vocab import (
     BINDING_ASSAY_METHODS,
     BINDING_ASSAY_PREP,
@@ -20,9 +22,10 @@ from ..data.vocab import (
 from ..models.heads import AssayHeads
 from .mil import MIL_TASKS
 from .supervision import PANEL_TASK_BASE_WEIGHTS, ROW_TASK_SPECS
+from .target_policy import AffinityTargetPolicy
 
 
-CONTRACT_VERSION = 1
+CONTRACT_VERSION = 5
 RESIDUAL_MODES = (
     "legacy",
     "pooled_single_output",
@@ -109,6 +112,7 @@ class ObjectiveBinding:
     source_target: str
     evidence_role: str
     reduction: str
+    target_policy: dict | None = None
 
 
 @dataclass(frozen=True)
@@ -224,7 +228,13 @@ class OutputContract:
         return self.aliases[path].canonical if path in self.aliases else path
 
     def to_dict(self) -> dict:
-        return {"schema_version": CONTRACT_VERSION, **asdict(self)}
+        return {
+            "schema_version": CONTRACT_VERSION,
+            "molecular_mhc_species_policy": MOLECULAR_SPECIES_POLICY,
+            "processing_species_policy": PROCESSING_SPECIES_POLICY,
+            "assay_context_policy": ASSAY_CONTEXT_POLICY,
+            **asdict(self),
+        }
 
     def validate_outputs(self, outputs: Mapping[str, Any]) -> None:
         """Reject undeclared quantities, wrong shapes and drifting alias values."""
@@ -364,7 +374,7 @@ def build_output_contract(configuration: OutputConfiguration | None = None) -> O
                     "annotation": ("source_annotation",),
                     "organism": ("organism_derived",),
                     "excision": ("bulk_observed_product",),
-                    "ms_detectability": ("bulk_depth_proxy",),
+                    "ms_detectability": ("scoped_msms", "scoped_matching", "scoped_unobserved"),
                 }.get(source, (source,)),
                 "Support depends on selected labels and source provenance; "
                 "generated:<kind> families are recorded separately with synthetic role. "
@@ -390,6 +400,9 @@ def build_output_contract(configuration: OutputConfiguration | None = None) -> O
             source,
             role,
             "mean_active_axes_then_masked_mean" if spec.loss_group else "masked_mean",
+            spec.target_transform.to_dict()
+            if isinstance(spec.target_transform, AffinityTargetPolicy)
+            else None,
         )
     for channel, specs in MIL_TASKS.items():
         for spec in specs:
@@ -588,6 +601,12 @@ def label_evidence(objective: ObjectiveBinding, sample) -> LabelEvidence:
             and assay != "KD"
         ):
             role = "proxy"
+    if family == "ms_detectability" and origin in {
+        "scoped_msms",
+        "scoped_matching",
+        "scoped_unobserved",
+    }:
+        return LabelEvidence("proxy", origin, source, origin)
     if origin in {"bulk_observed_product", "bulk_depth_proxy"}:
         role, family = "proxy", origin
     if origin != "assay_record" and origin not in {"bulk_observed_product", "bulk_depth_proxy"}:

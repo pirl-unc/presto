@@ -744,6 +744,12 @@ def create_parser() -> argparse.ArgumentParser:
         "--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradients"
     )
     train_synth.add_argument(
+        "--binding-orthogonality-weight",
+        type=float,
+        default=0.01,
+        help="Weight for binding affinity/stability latent orthogonality (0 disables)",
+    )
+    train_synth.add_argument(
         "--consistency-cascade-weight",
         type=float,
         default=0.0,
@@ -935,18 +941,9 @@ def create_parser() -> argparse.ArgumentParser:
             "'collapsed' is an explicit smaller ablation."
         ),
     )
-    train_iedb.add_argument(
-        "--data-source",
-        dest="data_source",
-        type=str,
-        choices=["merged_tsv", "hitlist"],
-        default="merged_tsv",
-        help=(
-            "Select exactly one training source: 'merged_tsv' loads the canonical merged "
-            "table; 'hitlist' loads the curated binding/stability/kinetics/elution indexes "
-            "with source-protein flanks and does not read the merged TSV."
-        ),
-    )
+    from .training_sources import add_training_source_arguments
+
+    add_training_source_arguments(train_iedb)
     train_iedb.add_argument(
         "--no-hitlist-flanks",
         dest="hitlist_flanks",
@@ -1388,6 +1385,12 @@ def create_parser() -> argparse.ArgumentParser:
     )
     train_iedb.add_argument(
         "--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradients"
+    )
+    train_iedb.add_argument(
+        "--binding-orthogonality-weight",
+        type=float,
+        default=0.01,
+        help="Weight for binding affinity/stability latent orthogonality (0 disables)",
     )
     train_iedb.add_argument(
         "--consistency-cascade-weight",
@@ -1886,6 +1889,12 @@ def main(argv: Optional[List[str]] = None) -> int:
     """
     parser = create_parser()
     args = parser.parse_args(argv)
+
+    from ..training.config_io import explicit_cli_destinations
+
+    args._explicit_cli_dests = explicit_cli_destinations(
+        parser, list(sys.argv[1:] if argv is None else argv), args
+    )
 
     if args.command is None:
         parser.print_help()

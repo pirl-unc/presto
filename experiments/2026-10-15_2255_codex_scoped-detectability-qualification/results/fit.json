@@ -1,0 +1,324 @@
+{
+  "directory": "/Users/iskander/.hitlist/presto-scoped-qualification/fit/160c04624b5c048b15692359448a223c29fada048a8383a192b2ce4ee522cc93/bundles/2026-10-16T03-43-13Z",
+  "summary_sha256": "8459bee72c6dbc246e124e8d0169723386b4cf9e8d5aa12dcf7d4f0443298953",
+  "stage": "fit",
+  "commit": "65173d2598746ebb848031783833f74c833679f2",
+  "dirty": false,
+  "presto_version": "0.1.8",
+  "recipe_sha256": "fb8f68db51c079694e15ba85b0712d5e9e470e2609fd4c6e9c1c8ffeee4cc661",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "versions": {
+    "torch": "2.14.1",
+    "pandas": "2.3.3",
+    "pyarrow": "25.0.1",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "hitlist_runtime": "1.75.0",
+    "datacache_runtime": "1.27.1"
+  },
+  "dependency_imports": {
+    "hitlist": "/private/tmp/hitlist175-wheel-import/hitlist/__init__.py",
+    "datacache": "/private/tmp/hitlist175-wheel-import/datacache/__init__.py"
+  },
+  "torch_threads": 1,
+  "gpu": "none",
+  "wall_clock_limit_seconds": 1800,
+  "status": "success",
+  "started_utc": "2026-10-16T03:26:06.096017+00:00",
+  "finished_utc": "2026-10-16T03:43:13.445557+00:00",
+  "runtime_seconds": 1027.005627666018,
+  "process_peak_rss_bytes": 7912128512,
+  "rss_scope": "runner process only; child processes excluded",
+  "config": {
+    "data_source": "scoped_bulk",
+    "scoped_bundle_sha256": "441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b",
+    "max_scoped_bulk": 10000,
+    "seed": 42,
+    "data_seed": 42,
+    "val_frac": 0.1,
+    "test_frac": 0.1,
+    "split_mode": "peptide_group",
+    "mhc_augmentation_samples": 0,
+    "uniprot_negative_ratio": 0,
+    "bulk_ms": false,
+    "profile": "full",
+    "device": "cpu",
+    "num_workers": 0,
+    "pin_memory": false,
+    "d_model": 32,
+    "n_layers": 1,
+    "n_heads": 4,
+    "latent_topology": "expanded",
+    "epochs": 2,
+    "batch_size": 64,
+    "lr": 0.001,
+    "max_batches": 100,
+    "max_val_batches": 0,
+    "track_pmhc_flow": false,
+    "track_output_latent_stats": false,
+    "profile_performance": false,
+    "data_preflight_only": false,
+    "require_traceable_lineage": true,
+    "require_binary_balance_target": [
+      "ms_detectability"
+    ],
+    "min_split_target_support": 50,
+    "synthetic_pmhc_negative_ratio": 0,
+    "synthetic_elution_negative_ratio": 0,
+    "synthetic_processing_negative_ratio": 0,
+    "synthetic_cascade_elution_negative_ratio": 0,
+    "synthetic_cascade_tcell_negative_ratio": 0,
+    "synthetic_class_i_no_mhc_beta_negative_ratio": 0,
+    "consistency_cascade_weight": 0,
+    "consistency_assay_affinity_weight": 0,
+    "consistency_assay_presentation_weight": 0,
+    "consistency_no_b2m_weight": 0,
+    "consistency_tcell_context_weight": 0,
+    "consistency_tcell_upstream_weight": 0,
+    "expected_split_support_sha256": "54e9c5527bd63925a508fe4ac89c0b1cd75e7a20fb159db58efe0ca4c7a18ec0"
+  },
+  "membership": {
+    "algorithm": "scoped-peptide-membership-v1",
+    "artifacts": {
+      "README.md": {
+        "sha256": "24b3904b67466f160cfbc3774d08fdedf6f3ca0b8c8d9a02b5e9ec1552284c08",
+        "size_bytes": 609
+      },
+      "assignments.parquet": {
+        "sha256": "3280f2a0226341ee6fc8c0bf1376759e202dd2815ba0b9630ec75a086aafc9c4",
+        "size_bytes": 406394
+      },
+      "coverage.json": {
+        "sha256": "46bfc9ed8e1622086260a9ff7f81e97904b2d14817f008f2cf8c50b66004a62c",
+        "size_bytes": 1206
+      },
+      "leakage_audit.json": {
+        "sha256": "af00ee184df32c1bc86a54cb5c66f2dc866af5b0a388c6518bff77e2d19b894c",
+        "size_bytes": 1066
+      },
+      "membership.parquet": {
+        "sha256": "b8743e33e6cc7aa68c535c9553900212bef71705d09ee7bffdf95f8e90444b00",
+        "size_bytes": 1312026
+      },
+      "membership.tsv": {
+        "sha256": "526ea7b4e8de1dfb175a5b10c2780040356d2dfb0b62fe4b54a57ac7ee2ad37a",
+        "size_bytes": 7854134
+      },
+      "parent_graph.parquet": {
+        "sha256": "ed7eaca0799584a1a1cb52a30c5161176bf9530fce02a5d286fdf38e0ee21b1a",
+        "size_bytes": 1940
+      },
+      "policy.json": {
+        "sha256": "191e39307eb8ad9147d50277c25c09670e602428403702508f5152302f86c619",
+        "size_bytes": 2076
+      },
+      "source_registry.json": {
+        "sha256": "3b332ca731501fd70bf88d91c0135e3df621aad64fed2399408f8a66c6f6bef5",
+        "size_bytes": 8188
+      }
+    },
+    "assignment_sha256": "3280f2a0226341ee6fc8c0bf1376759e202dd2815ba0b9630ec75a086aafc9c4",
+    "coverage": {
+      "full_projection": {
+        "n_ambiguous_peptides": 153980,
+        "n_candidate_occurrences": 1656863,
+        "n_invalid_sequence_occurrences": 0,
+        "n_peptides": 1451158,
+        "n_peptides_by_evidence": {
+          "By MS/MS": 143216,
+          "By matching": 20778,
+          "not observed in scope": 1287164
+        },
+        "n_source_observations": 172033,
+        "n_supported_parents": 12287
+      },
+      "n_dropped_by_cap": 1441158,
+      "n_selected_peptides": 10000,
+      "partitions": {
+        "test": {
+          "n_measured_observations": 109,
+          "n_peptides": 1000,
+          "n_peptides_by_evidence": {
+            "By MS/MS": 91,
+            "By matching": 18,
+            "not observed in scope": 891
+          },
+          "n_unknown_parents": 110
+        },
+        "train": {
+          "n_measured_observations": 912,
+          "n_peptides": 8000,
+          "n_peptides_by_evidence": {
+            "By MS/MS": 782,
+            "By matching": 130,
+            "not observed in scope": 7088
+          },
+          "n_unknown_parents": 844
+        },
+        "val": {
+          "n_measured_observations": 105,
+          "n_peptides": 1000,
+          "n_peptides_by_evidence": {
+            "By MS/MS": 95,
+            "By matching": 10,
+            "not observed in scope": 895
+          },
+          "n_unknown_parents": 114
+        }
+      }
+    },
+    "directory": "/Users/iskander/.hitlist/presto-scoped-partitions/17679cdd21a2003181ed49cfa43f2602e51d0a7321e319863901afb3de044790/bundles/2026-10-16T02-58-56Z",
+    "external_assignment_sha256": null,
+    "generated_controls": "none; absences are scoped candidates without invented assay IDs",
+    "label_policy": {
+      "ambiguous_occurrences": "mask parent and flanks; all occurrences remain in source sidecar",
+      "biological_replicates": "missing; one aggregate scope is not a biological replicate",
+      "censoring": "not_applicable",
+      "depth": "missing; no comparable depth series",
+      "endpoint": "observed_in_selected_search_scope",
+      "enzyme_contract": "Trypsin/P routes to trypsin_p; ordinary Trypsin stays proline-blocked",
+      "evidence_role": "proxy",
+      "excision": "no labels or generated controls supplied by this adapter",
+      "independence": "not established; one experiment, unresolved donors and specimens",
+      "units": "binary",
+      "version": 2,
+      "vote": "one peptide per verified search scope; collapse before capping"
+    },
+    "membership_sha256": "b8743e33e6cc7aa68c535c9553900212bef71705d09ee7bffdf95f8e90444b00",
+    "parent_graph_sha256": "ed7eaca0799584a1a1cb52a30c5161176bf9530fce02a5d286fdf38e0ee21b1a",
+    "policy": "peptide_disjoint_within_search",
+    "presto_version": "0.1.8",
+    "projection_artifacts": {
+      "README.md": {
+        "sha256": "930d5db4c29a2946ca398974a761fbc3510cbe4aa5454db732298df2dcbd0916",
+        "size_bytes": 1006
+      },
+      "coverage.json": {
+        "sha256": "e78ef9525c7b6b0bbd8eecefd8aef3f4d488ef2229d48aa12c351d434dad42de",
+        "size_bytes": 328
+      },
+      "inspection.tsv": {
+        "sha256": "1a3478d1c3076b07182b199e4b51c082921cd8592daae1310050a6f20dabafb6",
+        "size_bytes": 13366
+      },
+      "label_policy.json": {
+        "sha256": "72699727bfaa9835e1f9e29f72876318e3d5c92d7e5030211521dc67bd9de881",
+        "size_bytes": 2495
+      },
+      "records.parquet": {
+        "sha256": "1ad5d3a88c5cc75bd1a54182af1a43d375edc1550c472e0bcff961c659687e6f",
+        "size_bytes": 74283567
+      }
+    },
+    "recipe_sha256": "93fd3852bb2ac12f0389b2c59b4da448a90d3a842cc50a0474056560ba44dfa4",
+    "seed": 42,
+    "selection_sha256": "f36b9c22b2f6fc96be6fc3571caa9aefa418d42e8cc439c487d9ba613398ba76",
+    "source_bundle_id": "sha256:441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b",
+    "test_frac": 0.1,
+    "val_frac": 0.1
+  },
+  "comparison": [
+    {
+      "split": "val",
+      "predictor": "presto",
+      "accuracy": 0.707,
+      "balanced_accuracy": 0.7312317105613195,
+      "precision": 0.22988505747126436,
+      "recall": 0.7619047619047619,
+      "f1": 0.35320088300220753,
+      "n_positive": 105,
+      "auroc": 0.8062782654961426,
+      "auprc": 0.33323774334735456,
+      "n_samples": 1000,
+      "log_loss": 0.5507323162455352,
+      "brier": 0.18739463289122815
+    },
+    {
+      "split": "val",
+      "predictor": "train_prevalence",
+      "accuracy": 0.895,
+      "balanced_accuracy": 0.5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n_positive": 105,
+      "auroc": 0.5,
+      "auprc": 0.10500000000000001,
+      "n_samples": 1000,
+      "log_loss": 0.33634277110916755,
+      "brier": 0.094056
+    },
+    {
+      "split": "val",
+      "predictor": "length_composition_logistic",
+      "accuracy": 0.893,
+      "balanced_accuracy": 0.5283054003724394,
+      "precision": 0.4375,
+      "recall": 0.06666666666666667,
+      "f1": 0.11570247933884298,
+      "n_positive": 105,
+      "auroc": 0.8219952114924182,
+      "auprc": 0.31577385884638925,
+      "n_samples": 1000,
+      "log_loss": 0.272676519423753,
+      "brier": 0.08141568771430556
+    },
+    {
+      "split": "test",
+      "predictor": "presto",
+      "accuracy": 0.718,
+      "balanced_accuracy": 0.7612310670414646,
+      "precision": 0.2535612535612536,
+      "recall": 0.8165137614678899,
+      "f1": 0.3869565217391305,
+      "n_positive": 109,
+      "auroc": 0.8298376218865515,
+      "auprc": 0.38069789861093545,
+      "n_samples": 1000,
+      "log_loss": 0.5486353222675,
+      "brier": 0.18617841777614114
+    },
+    {
+      "split": "test",
+      "predictor": "train_prevalence",
+      "accuracy": 0.891,
+      "balanced_accuracy": 0.5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n_positive": 109,
+      "auroc": 0.5,
+      "auprc": 0.109,
+      "n_samples": 1000,
+      "log_loss": 0.3445448451180099,
+      "brier": 0.097144
+    },
+    {
+      "split": "test",
+      "predictor": "length_composition_logistic",
+      "accuracy": 0.891,
+      "balanced_accuracy": 0.5201299436773443,
+      "precision": 0.5,
+      "recall": 0.045871559633027525,
+      "f1": 0.08403361344537816,
+      "n_positive": 109,
+      "auroc": 0.8415552054695785,
+      "auprc": 0.34681245809742695,
+      "n_samples": 1000,
+      "log_loss": 0.26899011960923846,
+      "brier": 0.08128520542655678
+    }
+  ],
+  "artifacts": {
+    "inventory.json": {
+      "sha256": "dcbd72da69456055a0c4e9de4fe3dd2da8515500a517b2aa6e89a4b361dc8fe2",
+      "size_bytes": 6823
+    },
+    "run.tar.gz": {
+      "sha256": "ab664220951f912433022684aa408ed0280c7786f9772661694acb87caa7351c",
+      "size_bytes": 5463430
+    }
+  }
+}

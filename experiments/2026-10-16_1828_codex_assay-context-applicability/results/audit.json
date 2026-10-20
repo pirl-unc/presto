@@ -1,0 +1,88 @@
+{
+  "agent": "codex",
+  "code": {
+    "data/assay_context.py": {
+      "sha256": "163ad9a580753a501d6070cbe1ddbf3c8292c716bd7826417356227ca194a873",
+      "size_bytes": 3759
+    },
+    "data/collate.py": {
+      "sha256": "eda1ce224382d78415d85c2f730fb0a6e2ae757974f0321491675fb405013bf3",
+      "size_bytes": 96127
+    },
+    "data/frozen_partitions.py": {
+      "sha256": "7d936e259ca652ebccdb6d76632a8a787a3bf1b30ed46bffea639e878e8afccc",
+      "size_bytes": 25848
+    },
+    "data/hitlist_source.py": {
+      "sha256": "1fa79f4f69d96d9badb9bc9b6d6848e147437b9eb8b9a2bba10386588098bc71",
+      "size_bytes": 63341
+    },
+    "data/loaders.py": {
+      "sha256": "5c8e6cd14d9c0947f755844b77a777c867bb2136466c60719b1610f9777b2912",
+      "size_bytes": 188313
+    },
+    "data/source_lineage.py": {
+      "sha256": "ef7045de1ea842e44cd5452bbd767c4c5ec5bccafc53a030e988a22ed4fb2df3",
+      "size_bytes": 6714
+    },
+    "data/species_context.py": {
+      "sha256": "a6086ff6082563b47248c7542bcde013b655ccd6fc66dab3e5c6a547af5c5ca0",
+      "size_bytes": 4959
+    },
+    "training/coverage_preflight.py": {
+      "sha256": "6e9e504274280e206e3664bd62c203006bdab28fe457e21c63e1918d797811f3",
+      "size_bytes": 4193
+    },
+    "training/output_contract.py": {
+      "sha256": "24ce65d93f871a89b219774dede737b146b364f352125ca28c26db09845ad99c",
+      "size_bytes": 25397
+    },
+    "training/output_coverage.py": {
+      "sha256": "a39c628bb7e86aa4ee6fff59dc73632326faaeba26868437096df8a7e571b727",
+      "size_bytes": 21115
+    },
+    "training/supported_outputs.py": {
+      "sha256": "6e3017bc54566db9adaa1dbcd06a54bc211e1434f2683643e676fc472ace40b4",
+      "size_bytes": 10056
+    }
+  },
+  "commit": "18d04533d3ef1f042c49910042b96022627aee3f",
+  "dirty": false,
+  "execution": "CPU additive source metadata audit; no fitting, predictions or historical changes",
+  "inputs": {
+    "prior-ic50.tsv": {
+      "sha256": "cb74c379457e07eafdc91adc3a0256c0d8bfad3ec3ba2c70933bafdf1f6d6f69",
+      "size": 3046490,
+      "url": "https://github.com/pirl-unc/presto/releases/download/native-presenter-context-audit-v1/ic50-processing-contexts.tsv"
+    },
+    "prior-observations.tsv": {
+      "sha256": "feb29f9a60b8e8ae5dc6a3af0477a25ade615e370f0d28044e729dfcde11c11e",
+      "size": 10513967,
+      "url": "https://github.com/pirl-unc/presto/releases/download/native-presenter-context-audit-v1/presenter-context-observations.tsv"
+    },
+    "training.parquet": {
+      "sha256": "f902341e90c1c57defc93f4bc540ffcbea1b41061afb4492ddd8aaa7642c65bd",
+      "size": 188175209,
+      "url": "https://github.com/pirl-unc/hitlist/releases/download/human-cohort-corrected-v1/training.parquet"
+    }
+  },
+  "model": "GPT-6",
+  "n_canonical_collator_metadata_rows": 9053,
+  "n_ic50_by_applicability": {
+    "applicable": 81,
+    "not_applicable": 2533
+  },
+  "n_observations": 9053,
+  "n_unchanged_ic50_observations_and_targets": 2614,
+  "presto_version": "0.1.22",
+  "process_peak_rss_bytes": 401276928,
+  "runtime_scope": "builder; imports/acquisition excluded",
+  "runtime_seconds": 2.9806918330141343,
+  "versions": {
+    "datacache": "1.27.1",
+    "numpy": "2.5.3",
+    "pandas": "2.3.3",
+    "pyarrow": "25.0.1",
+    "torch": "2.14.1"
+  }
+}

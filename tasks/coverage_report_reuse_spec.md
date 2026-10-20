@@ -101,3 +101,12 @@ Unchanged, with evidence: cache memory (a few MB at most on the real report),
 deep-copy cost (well under a millisecond per hit), reusing facet-bearing entries
 for facet-free requests (only a test disables facets), and grouping every endpoint
 by column or evidence group (measured slower; column grouping cannot serve classes).
+
+## Integration with current main — 2026-10-20
+
+Main `3418d0f` adds affinity-target audit counters/tables and molecular,
+presenter and assay-applicability provenance. Preserve those additions when
+merging this PR. A regression reproduced audit counters surviving a rejected
+batch after the SQL rows rolled back; snapshot/restore the audit counters with
+the existing census state. Verify complete reports against current main and
+preserve historical verifier bytes and results separately.

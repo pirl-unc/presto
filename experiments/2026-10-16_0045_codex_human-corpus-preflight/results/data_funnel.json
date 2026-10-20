@@ -1,0 +1,492 @@
+{
+  "additions": {
+    "mhc_only": {
+      "samples": 0
+    },
+    "synthetic_binding": {},
+    "synthetic_cascade": {},
+    "synthetic_elution": {},
+    "synthetic_processing": {},
+    "uniprot": {
+      "samples": 0
+    }
+  },
+  "data_seed_base": 42,
+  "diagnostics": {
+    "invalid_mhc_sequences": {
+      "count": 0
+    },
+    "mhc_coverage_after_filter": {
+      "missing_fraction": 0.0,
+      "missing_rows": 0,
+      "resolved_fraction": 1.0,
+      "resolved_rows": 17230,
+      "rows_considered": 17230
+    },
+    "mhc_coverage_before_filter": {
+      "missing_fraction": 0.19047171584288666,
+      "missing_rows": 4054,
+      "resolved_fraction": 0.8095282841571133,
+      "resolved_rows": 17230,
+      "rows_considered": 21284
+    },
+    "mhc_resolution_alleles": {
+      "missing": 124,
+      "resolved": 232,
+      "resolved_index": 0,
+      "resolved_mhcseqs": 232,
+      "total": 356
+    },
+    "mhc_sequence_quality": {
+      "noncanonical_count": 0,
+      "nucleotide_like_count": 0,
+      "short_count": 0,
+      "total_sequences": 232,
+      "x_residue_total": 0,
+      "x_sequence_count": 0
+    }
+  },
+  "drop_reasons": {
+    "caps": {
+      "binding": 8190,
+      "elution": 3904515,
+      "kinetics": 0,
+      "stability": 0
+    },
+    "mhc_filter": {
+      "binding_dropped": 510,
+      "elution_alleles_dropped": 3489,
+      "elution_rows_dropped": 1195,
+      "kinetics_dropped": 0,
+      "processing_dropped": 0,
+      "stability_dropped": 55,
+      "tcell_dropped": 0,
+      "vdjdb_dropped": 0
+    },
+    "source_ingest": {
+      "skipped_invalid_numeric_value": 29,
+      "skipped_missing_mhc_allele": 135446,
+      "skipped_no_numeric_value": 11689,
+      "skipped_noncanonical_peptide": 606,
+      "skipped_unexpected_unit": 4,
+      "skipped_unroutable_response": 224,
+      "skipped_unsupported_inequality": 0
+    },
+    "target_exclusion": {}
+  },
+  "frozen_assignments": {
+    "algorithm": "source-lineage-components-v1",
+    "artifacts": {
+      "README.md": {
+        "sha256": "161f8e506588ea205e680c7c62efa45c7b473250ae1d4be6dcbf33b75f609047",
+        "size_bytes": 522
+      },
+      "assignments.parquet": {
+        "sha256": "664a98b89851f916ac260e2659415f1c847a0b227fe00151c996e249ba731227",
+        "size_bytes": 554934
+      },
+      "assignments.tsv": {
+        "sha256": "1c2281fe408ed74774a456942f98677c44a10be01b4b934df3fee7c5d7c9c0e2",
+        "size_bytes": 1867259
+      },
+      "coverage.json": {
+        "sha256": "644fcba84e6f4e51816d540023c3a436eb9a3a3413acd85d2ec997bb381649ef",
+        "size_bytes": 227
+      },
+      "lineage_audit.json": {
+        "sha256": "951bf0e9f0ad702fe14e40a16e687e8c05b9530c8902087577a8b54daab803a1",
+        "size_bytes": 19088
+      },
+      "policy.json": {
+        "sha256": "ac27e7e937ab9425dd37c4d8f700bae6386275694310bd783c3346d1ac9ac356",
+        "size_bytes": 477
+      }
+    },
+    "coverage": {
+      "n_components": 5843,
+      "n_external_unselected_observations": 0,
+      "n_largest_component_observations": 31,
+      "n_selected_observations": 9000,
+      "partition_counts": {
+        "test": 900,
+        "train": 7200,
+        "val": 900
+      }
+    },
+    "directory": "/data/presto-qualification/human-baseline-v1/hitlist/presto-partitions/07ed8a01fa82fd3d11b3a3f63a6fe70c0667f1724a9173506e4239fd38b2baf5/bundles/2026-10-16T05-36-47Z",
+    "external_assignment_sha256": null,
+    "policy": "peptide_disjoint",
+    "presto_version": "0.1.10",
+    "recipe_sha256": "95dba13f31d42123064d1a6e1a9bc38c0a63a09deea5cf87c7f80e2ed6038580",
+    "seed": 42,
+    "selection_sha256": "94242e93e50e012231f4fde6b2ecd38fdcb0444ef6af4d4e3732ef9ad43c7408",
+    "source_bundle_id": "sha256:039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d",
+    "test_frac": 0.1,
+    "val_frac": 0.1
+  },
+  "frozen_membership": {
+    "algorithm": "frozen-final-membership-v1",
+    "artifacts": {
+      "README.md": {
+        "sha256": "622566f36e89d8a428f4940019923d6cc565dab2f63436d638f1021aa54e62fa",
+        "size_bytes": 599
+      },
+      "coverage.json": {
+        "sha256": "ff1b662937c5aee28a2ae53f0058864f68faff0b01515cb2badee4170920d520",
+        "size_bytes": 396
+      },
+      "membership.parquet": {
+        "sha256": "658dcde9253557cd28bee8493213382d3b923e5953fdcbecb1f2b8d69023741e",
+        "size_bytes": 674129
+      },
+      "membership.tsv": {
+        "sha256": "f708c6557633b1713e3b0c9419ba69119937bc1728d727846cf34809f31a3556",
+        "size_bytes": 5802873
+      },
+      "model_peptide_audit.json": {
+        "sha256": "6d1c197cd3e34b93fa35b5611f30a3c4a5295a8188f53b1c56d1852fbf0a1763",
+        "size_bytes": 8585
+      },
+      "parent_graph.parquet": {
+        "sha256": "24cc174df3284759c0f19772822594b7a3d15f38f9734b88929cfdf744a70c34",
+        "size_bytes": 545890
+      },
+      "policy.json": {
+        "sha256": "ad4bb7258ae18b79e6a39c1f223a61fba482bc0ddfa4356e342ae641cba53255",
+        "size_bytes": 569
+      },
+      "records_without_model_sample.json": {
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+        "size_bytes": 3
+      },
+      "root_lineage_audit.json": {
+        "sha256": "951bf0e9f0ad702fe14e40a16e687e8c05b9530c8902087577a8b54daab803a1",
+        "size_bytes": 19088
+      }
+    },
+    "assignment_sha256": "664a98b89851f916ac260e2659415f1c847a0b227fe00151c996e249ba731227",
+    "coverage": {
+      "n_records_without_model_sample": 0,
+      "partitions": {
+        "test": {
+          "n_generated_samples": 0,
+          "n_root_observations": 900,
+          "n_samples": 900
+        },
+        "train": {
+          "n_generated_samples": 0,
+          "n_root_observations": 7200,
+          "n_samples": 7200
+        },
+        "val": {
+          "n_generated_samples": 0,
+          "n_root_observations": 900,
+          "n_samples": 900
+        }
+      }
+    },
+    "directory": "/data/presto-qualification/human-baseline-v1/hitlist/presto-membership/4708c273b5042b91843a0d80233b497d9968c4f861358d6110548438185f366e/bundles/2026-10-16T05-36-50Z",
+    "membership_sha256": "913e0a9a54c27f413622fffafaffe7b6c5142e73d776561c4306a257b6033110",
+    "parent_graph_sha256": "48908937b7704d2a2210656fd61fbf72e949fae8d042923c6fd522e07a80908d",
+    "policy": "peptide_disjoint",
+    "presto_version": "0.1.10",
+    "recipe_sha256": "95dba13f31d42123064d1a6e1a9bc38c0a63a09deea5cf87c7f80e2ed6038580",
+    "source_bundle_id": "sha256:039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d"
+  },
+  "mhc_resolution_contract": {
+    "augmentation_source": "mhcseqs",
+    "filter_unresolved_mhc": true,
+    "index_csv": "",
+    "resolver_order": [
+      "mhcseqs",
+      "index_csv"
+    ],
+    "scope": "MHC",
+    "strict_mhc_resolution": true
+  },
+  "schema_version": 1,
+  "sha256": "335f91a82b25d5ca146d2907e764f8adfc5e68ce5b40b42a098a4e8005d071be",
+  "source_loader": {
+    "counts": {
+      "binding": 5000,
+      "elution": 5000,
+      "kinetics": 19,
+      "processing": 0,
+      "stability": 741,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "counts_before_cap": {
+      "binding": 13190,
+      "elution": 3909515,
+      "kinetics": 19,
+      "stability": 741
+    },
+    "filters": {
+      "length_max": 30,
+      "length_min": 7,
+      "map_source_proteins": false,
+      "mhc_allele": null,
+      "mhc_class": null,
+      "species": null
+    },
+    "flank_coverage": {
+      "binding": 0.0,
+      "elution": 0.0
+    },
+    "flank_resolution": {
+      "binding": 0.0,
+      "elution": 0.0
+    },
+    "frozen_bundle": {
+      "artifacts": {
+        "contributors": {
+          "file": "contributors.parquet",
+          "sha256": "dfbe4bfcd96cc5e07772497201c1c12ad9b4aac620dd92f090aa5de3723b0b8e",
+          "size_bytes": 2066297045
+        },
+        "identities": {
+          "file": "identities.parquet",
+          "sha256": "eb9010f7cd960c7d49e1290ac2111c107b589b3c6b73d832b952cfd402e7dff1",
+          "size_bytes": 141061466
+        },
+        "lineage": {
+          "file": "lineage.json",
+          "sha256": "75858cf562f65013aaae2325ea95deb70f826ea07f2373d394e8182ce459a1a5",
+          "size_bytes": 31901
+        },
+        "training": {
+          "file": "training.parquet",
+          "sha256": "51e37fc5f81e3e32b9080cf096feaabe82f9001c1b90c61b5af40fae26d07d4c",
+          "size_bytes": 187997976
+        }
+      },
+      "bundle_id": "sha256:039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d",
+      "coverage": {
+        "lineage": {
+          "acquisition": {
+            "n_distinct_resolved_identities": 0,
+            "n_resolved_observations": 0,
+            "n_unresolved_observations": 4071463
+          },
+          "donor": {
+            "n_distinct_resolved_identities": 0,
+            "n_resolved_observations": 0,
+            "n_unresolved_observations": 4071463
+          },
+          "experimental_origin": {
+            "n_distinct_resolved_identities": 17,
+            "n_resolved_observations": 57188,
+            "n_unresolved_observations": 4014275
+          },
+          "specimen": {
+            "n_distinct_resolved_identities": 0,
+            "n_resolved_observations": 0,
+            "n_unresolved_observations": 4071463
+          }
+        },
+        "n_contributor_links": 7646178,
+        "n_observations": 4071463,
+        "n_observations_with_contributors": 4071463,
+        "n_source_records": 7605968,
+        "n_unresolved_contributor_links": 0
+      },
+      "directory": "/data/presto-qualification/human-baseline-v1/hitlist/training-bundles/039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d/bundles/2026-10-16T05-23-18Z",
+      "hitlist_version": "1.76.0",
+      "input_validation": {
+        "mapping_settings": null,
+        "mappings": "not_used",
+        "observations": "current",
+        "require_current_indexes": true,
+        "scope": "Index freshness only; not label, coverage or partition certification."
+      },
+      "manifest_sha256": "039efc7854098951b5c10b3fb5b38294452eeb425e367ed1fafdeebddf34b38d",
+      "source": "/__modal/volumes/vo-7SKL6RGQSFF0wCIXJQg0a2/hitlist-qualification/runs/2d794b88453e75e4ae548326c4ffaaea05748d7df81140fcd24dbf0c8053ff71/human-cohort/0c0d3f8546913331a790414f545794ce75b65f91f98cf564ad1f6c824df658a9/artifacts/bundles/2026-10-16T03-49-57Z",
+      "training_options": {
+        "acquisition_mode": null,
+        "assay_method": null,
+        "cancer_type_backend": null,
+        "columns": null,
+        "exclude_chimeric": false,
+        "exclude_class_label_implausible": false,
+        "exclude_class_label_suspect": false,
+        "exclude_non_peptide_ligand": true,
+        "explode_mappings": null,
+        "gene": null,
+        "gene_id": null,
+        "gene_name": null,
+        "has_quantitative_value": null,
+        "host_species": null,
+        "include_evidence": "both",
+        "instrument_type": null,
+        "is_mono_allelic": null,
+        "length_max": 25,
+        "length_min": 8,
+        "map_source_proteins": false,
+        "measurement_units": null,
+        "mhc_allele": null,
+        "mhc_allele_in_set": null,
+        "mhc_allele_provenance": null,
+        "mhc_class": null,
+        "min_allele_resolution": null,
+        "peptide": null,
+        "proteome_release": 112,
+        "quantitative_value_max": null,
+        "quantitative_value_min": null,
+        "response_measured": null,
+        "restriction_evidence": null,
+        "serotype": null,
+        "serotype_source": null,
+        "source": null,
+        "source_species": "Homo sapiens",
+        "species": "Homo sapiens",
+        "with_peptide_origin": false
+      }
+    },
+    "input_mode": "frozen_bundle",
+    "kinetics_assay_methods": {
+      "binding assay": 1,
+      "purified MHC/direct/fluorescence": 18
+    },
+    "label_policy": {
+      "censoring": {
+        "exact": [
+          "=",
+          ""
+        ],
+        "lower": [
+          ">",
+          ">=",
+          "\u2265"
+        ],
+        "upper": [
+          "<",
+          "<=",
+          "\u2264"
+        ]
+      },
+      "endpoint_units": {
+        "50% dissociation temperature": "\u00b0C",
+        "dissociation constant KD": "nM",
+        "dissociation constant KD (~EC50)": "nM",
+        "dissociation constant KD (~IC50)": "nM",
+        "half life": "min",
+        "half maximal effective concentration (EC50)": "nM",
+        "half maximal inhibitory concentration (IC50)": "nM",
+        "off rate": "1/s",
+        "on rate": "1/Ms"
+      },
+      "missing_inequality": "treated as exact; original empty value retained",
+      "ms": "observed MHC elution; no implicit detectability or processing label",
+      "numeric_values": "finite; positive except temperature in degrees Celsius",
+      "record_transforms": {
+        "half life": "minutes divided by 60 to hours"
+      },
+      "unsupported": "excluded with reason counts; original frozen artifacts retained",
+      "version": 1
+    },
+    "mapping_ambiguity": {},
+    "requested_caps": {
+      "binding": 5000,
+      "elution": 5000,
+      "kinetics": 1000,
+      "stability": 1000
+    },
+    "rows_dropped_by_cap": {
+      "binding": 8190,
+      "elution": 3904515,
+      "kinetics": 0,
+      "stability": 0
+    },
+    "sampling_seed": 59,
+    "skipped_invalid_numeric_value": 29,
+    "skipped_missing_mhc_allele": 135446,
+    "skipped_no_numeric_value": 11689,
+    "skipped_noncanonical_peptide": 606,
+    "skipped_unexpected_unit": 4,
+    "skipped_unroutable_response": 224,
+    "skipped_unsupported_inequality": 0,
+    "source": "hitlist",
+    "source_rows_after_mapping_collapse": {
+      "binding": 25896,
+      "ms": 4045567
+    },
+    "source_rows_before_mapping_collapse": {
+      "binding": 25896,
+      "ms": 4045567
+    },
+    "stability_assay_methods": {
+      "cellular MHC/direct/fluorescence": 119,
+      "cellular MHC/direct/radioactivity": 3,
+      "purified MHC/direct/fluorescence": 368,
+      "purified MHC/direct/radioactivity": 251
+    },
+    "unmapped_condition_categories": {}
+  },
+  "stages": {
+    "after_mhc_filter": {
+      "binding": 4490,
+      "bulk_ms": 0,
+      "elution": 3805,
+      "kinetics": 19,
+      "processing": 0,
+      "stability": 686,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "after_synthetic_augmentation": {
+      "binding": 4490,
+      "bulk_ms": 0,
+      "elution": 3805,
+      "kinetics": 19,
+      "processing": 0,
+      "stability": 686,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "after_target_exclusion": {
+      "binding": 5000,
+      "bulk_ms": 0,
+      "elution": 5000,
+      "kinetics": 19,
+      "processing": 0,
+      "stability": 741,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "before_mhc_filter": {
+      "binding": 5000,
+      "bulk_ms": 0,
+      "elution": 5000,
+      "kinetics": 19,
+      "processing": 0,
+      "stability": 741,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "final_dataset": {
+      "samples": 9000
+    },
+    "final_samples_by_source": {
+      "cedar": 31,
+      "iedb": 8704,
+      "supplement": 265
+    },
+    "loaded_post_cap": {
+      "binding": 5000,
+      "bulk_ms": 0,
+      "elution": 5000,
+      "kinetics": 19,
+      "processing": 0,
+      "stability": 741,
+      "tcell": 0,
+      "tcr_evidence": 0
+    },
+    "loaded_pre_cap": {
+      "binding": 13190,
+      "elution": 3909515,
+      "kinetics": 19,
+      "stability": 741
+    }
+  }
+}

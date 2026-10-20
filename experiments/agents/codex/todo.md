@@ -88,3 +88,18 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
     - `hlgauss_d2_logit`
   - Keep the broad 7-allele numeric contract fixed
   - Record full val/test metric bundle plus probe metrics
+
+- [x] Run and close [human-corpus frozen preflight](plans/human-corpus-preflight.md): actual source admission, partitions, supervision coverage and leakage limitations.
+
+- [x] Run and close [component allocation audit](plans/component-allocation.md) on the frozen public human cohort; preserve historical memberships.
+
+- [x] Run and close [corrected human preflight](plans/corrected-human-preflight.md) with new membership and a frozen candidate IC50 support declaration.
+
+- [ ] Run and close the [corrected human IC50 fitting diagnostic](plans/corrected-human-fit.md) under the unchanged prospective manifest.
+
+- Corrected-human IC50 attempt stopped before optimization: 211 raw/effective target mismatches; preserve/publish audit in #109, canonical target-policy qualification next in #110.
+
+- [x] Audit canonical affinity policies on all 2,614 public frozen IC50 rows; retain 211 clipped IDs and 54 exact-value changes (2026-10-16_1000).
+- [ ] Complete the separate prospective effective-target fit after #110 software release, preserving raw-measurement evaluation.
+
+- [x] Native-presenter audit published: all 18 public assets and source/target joins independently verify; initial failed packaging evidence preserved.

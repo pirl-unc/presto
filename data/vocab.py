@@ -5,6 +5,7 @@ organism categories, and biological compatibility matrices.
 """
 
 import re
+from functools import lru_cache
 from typing import Any, Dict, Optional, Set, Tuple
 
 # Amino acid vocabulary with special tokens
@@ -572,6 +573,35 @@ def normalize_species(raw: Optional[str]) -> Optional[str]:
     return None
 
 
+def normalize_single_species(raw: Optional[str]) -> Optional[str]:
+    """Conservatively parse a single supported species role.
+
+    Legacy normalize_species retains its first-substring behavior (#123). Native
+    role fields use bounded aliases, require one category, and reject explicit
+    lists instead of silently selecting the first organism.
+    """
+    if raw is None:
+        return None
+    return _single_species_from_text(str(raw).strip().lower())
+
+
+@lru_cache(maxsize=16384)
+def _single_species_from_text(value):
+    if value in FINE_SPECIES_TO_IDX:
+        return value
+    if re.search(r"[;|/+&]|\b(?:and|or)\b", value):
+        return None
+    matches = {
+        label
+        for keywords, label in _SPECIES_PATTERNS
+        if any(
+            re.search(r"(?<!\w)" + re.escape(keyword.strip()) + r"(?!\w)", value)
+            for keyword in keywords
+        )
+    }
+    return next(iter(matches)) if len(matches) == 1 else None
+
+
 # ---- Roll-up mappings (fine → coarser views) ----
 
 FINE_TO_ORGANISM: Dict[str, str] = {
@@ -924,7 +954,19 @@ EXCISION_MACHINERY = [
     "chymotrypsin",  # C-term F/W/Y/L/M, not before P  (MaxQuant Chymotrypsin+)
     "lysc",  # C-term K, P allowed
     "gluc",  # C-term E/D in bicarbonate buffer, not before P
+    "trypsin_p",  # MaxQuant Trypsin/P: C-term K/R, including before P
 ]
+EXCISION_MACHINERY_VERSION = 2
+EXCISION_MACHINERY_VOCABULARIES = {1: tuple(EXCISION_MACHINERY[:7]), 2: tuple(EXCISION_MACHINERY)}
+
+
+def excision_machinery_vocabulary(version: int = EXCISION_MACHINERY_VERSION) -> Tuple[str, ...]:
+    """Return an exact vocabulary; old checkpoint indices never acquire new meanings."""
+    if type(version) is not int or version not in EXCISION_MACHINERY_VOCABULARIES:
+        raise ValueError(f"Unsupported excision machinery vocabulary version: {version!r}")
+    return EXCISION_MACHINERY_VOCABULARIES[version]
+
+
 EXCISION_MACHINERY_TO_IDX = {name: i for i, name in enumerate(EXCISION_MACHINERY)}
 IDX_TO_EXCISION_MACHINERY = {i: name for i, name in enumerate(EXCISION_MACHINERY)}
 
@@ -937,6 +979,7 @@ EXCISION_P1_RULES: Dict[str, str] = {
     "chymotrypsin": "FWYLM",
     "lysc": "K",
     "gluc": "ED",
+    "trypsin_p": "KR",
 }
 
 # P1' residues that block cleavage for a given machinery ("not before P").
@@ -946,6 +989,7 @@ EXCISION_P1_PRIME_BLOCKED: Dict[str, str] = {
     "chymotrypsin": "P",
     "gluc": "P",
     "lysc": "",
+    "trypsin_p": "",
 }
 
 # Machinery whose profile is pinned to a known rule rather than learned.
@@ -997,7 +1041,7 @@ PEPTIDE_SOURCES = ["unknown", "mhc", "protein"]
 PEPTIDE_SOURCE_TO_IDX = {name: i for i, name in enumerate(PEPTIDE_SOURCES)}
 
 # Tier 2: post-capture step. Non-`none` only when peptide_source == "protein".
-ENZYMATIC_DIGESTS = ["none", "trypsin", "chymotrypsin", "lysc", "gluc"]
+ENZYMATIC_DIGESTS = ["none", "trypsin", "chymotrypsin", "lysc", "gluc", "trypsin_p"]
 ENZYMATIC_DIGEST_TO_IDX = {name: i for i, name in enumerate(ENZYMATIC_DIGESTS)}
 
 # Tier 3: what was applied to the cells. "Stimulus" rather than "cytokine

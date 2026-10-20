@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "model_contract": {
+    "affinity_assay_residual_mode": "legacy",
+    "affinity_target_encoding": "log10",
+    "binding_direct_segment_mode": "off",
+    "binding_kinetic_input_mode": "affinity_vec",
+    "core_window_lengths": [
+      9
+    ],
+    "kd_grouping_mode": "merged_kd",
+    "latent_topology": "expanded",
+    "max_affinity_nM": 50000.0
+  },
+  "source_contract": {
+    "bulk_ms": false,
+    "data_seed": 42,
+    "data_source": "scoped_bulk",
+    "dataset_contract_sha256": "29d59c66068010a6e8382b09b6e0dda8718b0c985455151b5796f81e9c329ec9",
+    "dataset_supervision_contract_sha256": "304c0dc71805e66d9fb60f841855c60fa0ffc27e883ff171f2fb93e5c37899db",
+    "frozen_membership": {
+      "artifacts": {
+        "README.md": {
+          "sha256": "24b3904b67466f160cfbc3774d08fdedf6f3ca0b8c8d9a02b5e9ec1552284c08",
+          "size_bytes": 609
+        },
+        "assignments.parquet": {
+          "sha256": "3280f2a0226341ee6fc8c0bf1376759e202dd2815ba0b9630ec75a086aafc9c4",
+          "size_bytes": 406394
+        },
+        "coverage.json": {
+          "sha256": "46bfc9ed8e1622086260a9ff7f81e97904b2d14817f008f2cf8c50b66004a62c",
+          "size_bytes": 1206
+        },
+        "leakage_audit.json": {
+          "sha256": "af00ee184df32c1bc86a54cb5c66f2dc866af5b0a388c6518bff77e2d19b894c",
+          "size_bytes": 1066
+        },
+        "membership.parquet": {
+          "sha256": "b8743e33e6cc7aa68c535c9553900212bef71705d09ee7bffdf95f8e90444b00",
+          "size_bytes": 1312026
+        },
+        "membership.tsv": {
+          "sha256": "526ea7b4e8de1dfb175a5b10c2780040356d2dfb0b62fe4b54a57ac7ee2ad37a",
+          "size_bytes": 7854134
+        },
+        "parent_graph.parquet": {
+          "sha256": "ed7eaca0799584a1a1cb52a30c5161176bf9530fce02a5d286fdf38e0ee21b1a",
+          "size_bytes": 1940
+        },
+        "policy.json": {
+          "sha256": "191e39307eb8ad9147d50277c25c09670e602428403702508f5152302f86c619",
+          "size_bytes": 2076
+        },
+        "source_registry.json": {
+          "sha256": "3b332ca731501fd70bf88d91c0135e3df621aad64fed2399408f8a66c6f6bef5",
+          "size_bytes": 8188
+        }
+      },
+      "assignment_sha256": "3280f2a0226341ee6fc8c0bf1376759e202dd2815ba0b9630ec75a086aafc9c4",
+      "membership_sha256": "b8743e33e6cc7aa68c535c9553900212bef71705d09ee7bffdf95f8e90444b00",
+      "parent_graph_sha256": "ed7eaca0799584a1a1cb52a30c5161176bf9530fce02a5d286fdf38e0ee21b1a",
+      "policy": "peptide_disjoint_within_search",
+      "source_bundle_id": "sha256:441f3c66c6e6bc6a90c7cb8c54d0131676c3cb4e7a04ddbd9346061ad8f9d84b"
+    },
+    "output_evidence_sha256": "79b44c3225813c4a8f71d9cb99ec15d73c85d5f74ad0a5ec66c1dcf5a1f78397",
+    "split_mode": "peptide_group",
+    "split_rows": {
+      "test": 1000,
+      "train": 8000,
+      "val": 1000
+    },
+    "split_seed": 42
+  },
+  "claims": [
+    {
+      "endpoint": "ms_detectability_logit",
+      "columns": [
+        ""
+      ],
+      "required_splits": [
+        "train",
+        "val",
+        "test"
+      ],
+      "evidence_roles": [
+        "proxy"
+      ],
+      "source_families": [
+        "scoped_msms",
+        "scoped_matching",
+        "scoped_unobserved"
+      ],
+      "raw_sources": [
+        "pxd013455-hela-tryp46-v1"
+      ],
+      "minimums": {
+        "unique_observations": 500,
+        "distinct_peptides": 500,
+        "unique_positive": 50,
+        "unique_negative": 50
+      }
+    }
+  ]
+}

@@ -16,7 +16,15 @@ about today's corpus.
 | IEDB/CEDAR raw exports | Inputs to source parsing/merge | Inclusion and label support must be audited in the actual merged artifact |
 | VDJdb/McPAS | pMHC-only receptor evidence when included | Not sequence-conditioned TCR matching; positive evidence is not balanced negative supervision |
 | mhcseqs / MHC reference resources | MHC sequence resolution and molecular identity support | Reference availability does not prove every source allele is resolved |
-| Optional bulk non-MHC MS | Excision/detectability proxy supervision under capture/digestion routing | Disabled by default; candidate negatives and validation incomplete |
+| Optional bulk non-MHC MS | Observed-product excision proxies under capture/digestion routing | Disabled by default; no qualified detectability targets in the raw-table path |
+
+The raw bulk loader leaves detectability unlabeled, including when fraction and
+replicate counts are populated. Those counts do not establish comparable
+protocols, independent replicates or first-seen depth. Earlier depth-proxy
+experiments remain historical records and do not validate a detectability
+probability. The replacement input is tracked in
+[Presto #70](https://github.com/pirl-unc/presto/issues/70), using Hitlist's
+[verified search-scoped contract](https://github.com/pirl-unc/hitlist/blob/main/docs/detectability.md).
 | Other receptor/structure/B-cell resources | Auxiliary utilities or future integrations | Do not claim canonical receptor matching from their availability |
 
 `merged_tsv` and `hitlist` are mutually exclusive primary selections, not
@@ -61,7 +69,7 @@ may support future objectives; they are not negative training labels today.
 | T-cell assay metadata + response | Selected fixed `tcell_panel_logits` column with response BCE | Metadata is a selector, not a classification target; per-axis approximation |
 | Receptor evidence | `tcr_evidence_logit` BCE and method-category auxiliary | No individual TCR input |
 | MHC identity | Class/species/fine-type auxiliaries | Some current source-derived targets still conflate host/molecular roles |
-| Bulk-MS | Excision/detectability proxy objectives | Generated negatives are not measured non-detections |
+| Bulk-MS | Observed-product excision proxies and generated wrong-enzyme controls | Detectability stays unlabeled; controls are not measured non-detections |
 
 Detailed output units and complete ordered vocabularies are maintained in the
 I/O contract. Unlabeled tasks are masked, not assigned negative labels. A
@@ -95,3 +103,79 @@ No model-quality claim follows from correct loss wiring alone. Complete corpus
 integration, context-role harmonization, supported negatives, joint assay
 configuration modeling and held-out validation remain tracked in
 [issue #46](https://github.com/pirl-unc/presto/issues/46).
+
+## Trypsin/P and checkpoint vocabulary
+
+The verified PXD013455 search declares **Trypsin/P**. It permits K/R cleavage
+before proline, while ordinary Trypsin excludes that boundary ([Cox Lab Andromeda
+enzyme documentation](https://cox-labs.github.io/coxdocs/andromeda_enzymes.html)).
+Presto preserves these as `trypsin_p` and `trypsin`, including their digest and
+output-side machinery categories. This search rule is not evidence that every
+permitted cleavage occurred. Rule-derived wrong-enzyme controls remain synthetic;
+the scoped detectability adapter supplies no excision labels or controls.
+
+The contradictory historical description `Trypsin/P (cleaves K/R except before P)`
+is unqualified. Raw ingestion drops and reports those rows in
+`n_contradictory_enzyme_rows`, `n_unknown_enzyme_rows` and `rejected_enzyme_counts`.
+The verified adapter rejects an unknown enzyme contract. The original protocol
+string remains in its frozen source registry. Consumer policy version 2 creates a
+new immutable datacache projection; previous admission artifacts retain their
+historical policy and producer identity.
+
+New models use excision vocabulary version 2: `trypsin_p` is appended without
+renumbering existing categories. Checkpoints record `excision_machinery_version`.
+The loader recognizes a historical seven-entry head as version 1 and constructs
+that exact model, preserving its weights and predictions. It does not pad or copy
+weights to imply a trained Trypsin/P category. Legacy models reject `trypsin_p`
+and its numeric index. Trainer resume requires the same vocabulary; load the
+checkpoint with `load_model_from_checkpoint` before constructing its trainer.
+Unknown versions, contradictory configuration and unrecognized head sizes fail.
+
+Internal missed-cleavage scoring has its own `excision_scoring_version`, independent
+of vocabulary size. New models use version 2: a site requires an immediately
+following peptide residue, and the declared P1-prime exclusion applies. Thus K-P
+and R-P count for Trypsin/P but not ordinary Trypsin; terminal residues and padding
+never create internal sites. These are rule penalties, not measured probabilities.
+
+Checkpoints without the scoring field retain version 1, including the eight-category
+checkpoints produced by 0.1.6. The loader preserves their original internal-site
+calculation exactly. New checkpoints record the version explicitly; unknown versions
+and mismatched trainer resumes fail. Bare state dictionaries cannot identify a
+scoring contract and therefore load historical version 1. Save a self-describing
+checkpoint when creating a new model with corrected scoring. Qualification runs
+must record both the vocabulary and scoring versions.
+
+## Canonical scoped training inputs
+
+`presto train unified --data-source scoped_bulk` selects the verified public
+PXD013455 search bundle. An explicit local `--scoped-bundle` requires its
+`--scoped-bundle-sha256`. Set `--mhc-augmentation-samples 0` and
+`--uniprot-negative-ratio 0`; live `--bulk-ms`, canary modalities and stronger
+independence policies are rejected. `--max-scoped-bulk` caps peptides after the
+full source projection has collapsed repeated candidate occurrences. Zero means
+all peptides. The canonical script entry point exposes the same source and pin
+arguments as the unified CLI.
+
+Membership is frozen before dataset conversion, then verified again against the
+converted samples. The shared datacache bundle contains `membership.tsv` and
+parquet, assignment parquet, coverage, source registry, label policy and leakage
+audit. It retains exact candidate IDs or ambiguous-parent lookup keys, measured
+IDs where present, source citations, cell line, endpoint, units, censoring and
+partition. The registry supplies cell conditions and assay/protocol details.
+MHC allele sets are explicitly not applicable to this shotgun experiment.
+External assignment parquets require a hash and exact selected source membership.
+
+This source supports **peptide-disjoint evaluation within one captured search**.
+All partitions share that experiment; known protein overlap is reported and
+ambiguous parents remain masked. Donor/specimen independence is inconclusive.
+The labels are search-observation proxies, separated into MS/MS, matching and
+scoped absence. No measured negative assay IDs, generated controls, excision or
+depth labels are invented. The generated-parent graph is consequently empty.
+
+Use `--data-preflight-only --run-dir ...` to write the existing canonical support
+and coverage reports. They pin the frozen membership receipt. A fitting run can
+require that exact `--expected-split-support-sha256`; labels, partitions and
+source evidence must agree. Freeze a supported-output declaration before fitting
+and report held-out predictions and baselines for the explicitly supported
+endpoint. Admission, a successful preflight or a short fitting run alone does
+not establish training readiness.

@@ -1,0 +1,33 @@
+{
+  "argv": [
+    "experiments/2026-10-16_1000_codex_affinity-target-policy/reproduce/../code/audit.py"
+  ],
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  },
+  "producer": {
+    "batch_size": 128,
+    "dependencies": {
+      "datacache": "1.27.1",
+      "mhcseqs": "2.6.12",
+      "numpy": "2.5.3",
+      "pandas": "2.3.3",
+      "pyarrow": "25.0.1",
+      "torch": "2.14.1"
+    },
+    "device": "cpu",
+    "dirty": false,
+    "gpu": null,
+    "imported_module": "/private/tmp/presto-affinity-target-policy/__init__.py",
+    "machine": "arm64",
+    "n_workers": 0,
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "presto_version": "0.1.16",
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "source_checkout": "/private/tmp/presto-affinity-target-policy",
+    "source_commit": "ca9e883034a8842b99394deb11b8155abd83b597",
+    "timeout_seconds": 600,
+    "torch_threads": 1
+  }
+}

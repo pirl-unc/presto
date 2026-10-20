@@ -1,0 +1,19 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-corrected-human-preflight/experiments/2026-10-16_0750_codex_corrected-human-preflight/code/fetch_wheel.py", line 6, in <module>
+    from datacache import fetch_file
+  File "/private/tmp/hitlist175-wheel-import/datacache/__init__.py", line 37, in <module>
+    from .bundles import BundleInspection, VersionedDatasetRegistry, inspect_bundle, install_bundle
+  File "/private/tmp/hitlist175-wheel-import/datacache/bundles.py", line 14, in <module>
+    from .bundle_store import (
+  File "/private/tmp/hitlist175-wheel-import/datacache/bundle_store.py", line 37, in <module>
+    from filelock import FileLock
+ModuleNotFoundError: No module named 'filelock'
+╭───────────────────── Traceback (most recent call last) ──────────────────────╮
+│ /private/tmp/presto-corrected-human-preflight/experiments/2026-10-16_0750_co │
+│ dex_corrected-human-preflight/code/launch.py:24 in <module>                  │
+│                                                                              │
+│    23 │   ):                                                                 │
+│ ❱  24 │   │   raise ValueError("Use the exact released Presto 0.1.13 wheel") │
+│    25 │   image = (                                                          │
+╰──────────────────────────────────────────────────────────────────────────────╯
+ValueError: Use the exact released Presto 0.1.13 wheel

@@ -11,6 +11,7 @@ report count-call metric is explicit.
 Run from the repository root: ``python experiments/2026-09-09_1541_codex_canonical-coverage/analysis/verify_report_reuse.py``
 """
 
+import argparse
 import hashlib
 import importlib.util
 import itertools
@@ -110,11 +111,11 @@ def git(*args):
     return subprocess.check_output(["git", *args], cwd=ROOT, text=True).strip()
 
 
-def main():
+def main(base_commit=BASE, output=None):
     torch.set_num_threads(1)
     rows = fixture_rows()
     base_source = subprocess.check_output(
-        ["git", "show", f"{BASE}:training/output_coverage.py"], cwd=ROOT
+        ["git", "show", f"{base_commit}:training/output_coverage.py"], cwd=ROOT
     )
     results, comparisons = [], 0
     with tempfile.TemporaryDirectory() as directory:
@@ -176,7 +177,7 @@ def main():
     candidate_source = (ROOT / "training/output_coverage.py").read_bytes()
     summary = {
         "verification": "software differential parity; no timing or predictive claims",
-        "base_commit": BASE,
+        "base_commit": base_commit,
         "base_source_sha256": hashlib.sha256(base_source).hexdigest(),
         "candidate_commit": git("rev-parse", "HEAD"),
         "candidate_worktree_dirty": bool(git("status", "--porcelain", "training", "tests")),
@@ -186,7 +187,7 @@ def main():
         "configurations": results,
         "filtered_class_count_comparisons": comparisons,
     }
-    output = FAMILY / "results/verification/report_reuse_parity.json"
+    output = output or FAMILY / "results/verification/report_reuse_parity.json"
     output.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
     print(
         f"Exact report and repeated-report parity for {len(results)} configurations; "
@@ -195,4 +196,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--base-commit", default=BASE)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    main(args.base_commit, args.output)

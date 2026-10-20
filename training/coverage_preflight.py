@@ -7,6 +7,7 @@ from .data_support import audit_split_support, write_split_support_artifacts
 from .output_contract import OutputConfiguration, build_output_contract
 from .output_coverage import OutputCoverageCensus, write_output_coverage_artifacts
 from .supported_outputs import evaluate_supported_outputs, require_supported_outputs
+from .target_policy import affinity_target_policies
 
 
 def audit_training_coverage(
@@ -17,6 +18,7 @@ def audit_training_coverage(
     data_seed: int,
     manifest: dict | None,
     output_dir=None,
+    frozen_membership=None,
 ):
     """Collate once, persist evidence before gating, and return the legacy audit.
 
@@ -35,14 +37,31 @@ def audit_training_coverage(
             "dataset_contract_sha256": legacy["dataset_contract_sha256"],
             "dataset_supervision_contract_sha256": legacy["dataset_supervision_contract_sha256"],
             "output_evidence_sha256": census.sha256,
+            "affinity_target_policies": affinity_target_policies(contract),
+            "molecular_mhc_species_policy": contract.to_dict()["molecular_mhc_species_policy"],
+            "processing_species_policy": contract.to_dict()["processing_species_policy"],
+            "assay_context_policy": contract.to_dict()["assay_context_policy"],
             "split_rows": {name: value["rows"] for name, value in legacy["splits"].items()},
         }
+        if frozen_membership is not None:
+            source_contract["frozen_membership"] = {
+                name: frozen_membership[name]
+                for name in (
+                    "source_bundle_id",
+                    "assignment_sha256",
+                    "policy",
+                    "membership_sha256",
+                    "parent_graph_sha256",
+                    "artifacts",
+                )
+            }
         coverage = census.report()
         coverage["source_contract"] = source_contract
         output = Path(output_dir) if output_dir is not None else None
         if output is not None:
             write_split_support_artifacts(output, legacy)
             write_output_coverage_artifacts(output, coverage)
+            census.affinity_target_audit.write_artifacts(output, census.splits)
         try:
             support = evaluate_supported_outputs(census, manifest, source_contract=source_contract)
         except ValueError as exc:

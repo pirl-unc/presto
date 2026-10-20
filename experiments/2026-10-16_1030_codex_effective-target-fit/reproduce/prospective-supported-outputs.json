@@ -1,0 +1,195 @@
+{
+  "claims": [
+    {
+      "columns": [
+        ""
+      ],
+      "endpoint": "assays.IC50_nM",
+      "evidence_roles": [
+        "direct"
+      ],
+      "minimums": {
+        "distinct_peptides": 50,
+        "unique_exact": 50,
+        "unique_observations": 50
+      },
+      "raw_sources": [
+        "iedb",
+        "cedar"
+      ],
+      "required_splits": [
+        "train",
+        "val",
+        "test"
+      ],
+      "source_families": [
+        "binding:IC50"
+      ]
+    }
+  ],
+  "model_contract": {
+    "affinity_assay_residual_mode": "legacy",
+    "affinity_target_encoding": "log10",
+    "binding_direct_segment_mode": "off",
+    "binding_kinetic_input_mode": "affinity_vec",
+    "core_window_lengths": [
+      9
+    ],
+    "kd_grouping_mode": "merged_kd",
+    "latent_topology": "expanded",
+    "max_affinity_nM": 50000.0
+  },
+  "schema_version": 1,
+  "source_contract": {
+    "affinity_target_policies": {
+      "row:binding": {
+        "input_dtype": "float32",
+        "input_unit": "nM",
+        "maximum_nM": 50000.0,
+        "minimum_nM": 0.001,
+        "operation": "clip_then_log10",
+        "qualifier_policy": "preserve_original_direction",
+        "schema_version": 1,
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_affinity_probe": {
+        "input_dtype": "float32",
+        "input_unit": "nM",
+        "maximum_nM": 50000.0,
+        "minimum_nM": 0.001,
+        "operation": "clip_then_log10",
+        "qualifier_policy": "preserve_original_direction",
+        "schema_version": 1,
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_assay_panel_assay_geometry": {
+        "input_dtype": "float32",
+        "input_unit": "nM",
+        "maximum_nM": 50000.0,
+        "minimum_nM": 0.001,
+        "operation": "clip_then_log10",
+        "qualifier_policy": "preserve_original_direction",
+        "schema_version": 1,
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_assay_panel_assay_prep": {
+        "input_dtype": "float32",
+        "input_unit": "nM",
+        "maximum_nM": 50000.0,
+        "minimum_nM": 0.001,
+        "operation": "clip_then_log10",
+        "qualifier_policy": "preserve_original_direction",
+        "schema_version": 1,
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_assay_panel_assay_readout": {
+        "input_dtype": "float32",
+        "input_unit": "nM",
+        "maximum_nM": 50000.0,
+        "minimum_nM": 0.001,
+        "operation": "clip_then_log10",
+        "qualifier_policy": "preserve_original_direction",
+        "schema_version": 1,
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_assay_panel_assay_type": {
+        "input_dtype": "float32",
+        "input_unit": "nM",
+        "maximum_nM": 50000.0,
+        "minimum_nM": 0.001,
+        "operation": "clip_then_log10",
+        "qualifier_policy": "preserve_original_direction",
+        "schema_version": 1,
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_ec50": {
+        "input_dtype": "float32",
+        "input_unit": "nM",
+        "maximum_nM": 50000.0,
+        "minimum_nM": 0.001,
+        "operation": "clip_then_log10",
+        "qualifier_policy": "preserve_original_direction",
+        "schema_version": 1,
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_ic50": {
+        "input_dtype": "float32",
+        "input_unit": "nM",
+        "maximum_nM": 50000.0,
+        "minimum_nM": 0.001,
+        "operation": "clip_then_log10",
+        "qualifier_policy": "preserve_original_direction",
+        "schema_version": 1,
+        "target_unit": "log10(nM)"
+      },
+      "row:binding_kd": {
+        "input_dtype": "float32",
+        "input_unit": "nM",
+        "maximum_nM": 50000.0,
+        "minimum_nM": 0.001,
+        "operation": "clip_then_log10",
+        "qualifier_policy": "preserve_original_direction",
+        "schema_version": 1,
+        "target_unit": "log10(nM)"
+      }
+    },
+    "bulk_ms": false,
+    "data_seed": 42,
+    "data_source": "hitlist",
+    "dataset_contract_sha256": "4b7b047f380106be8a30ab31936817b60fe909f6865bbdac28177e987951a693",
+    "dataset_supervision_contract_sha256": "8f0d6ddc0e7889e67a9bd253aedc3a3e9f526967b25d18330f10bc777a8407c1",
+    "frozen_membership": {
+      "artifacts": {
+        "README.md": {
+          "sha256": "622566f36e89d8a428f4940019923d6cc565dab2f63436d638f1021aa54e62fa",
+          "size_bytes": 599
+        },
+        "coverage.json": {
+          "sha256": "137d0256db59b8fe10d13a7c3197ad30d5c59b9e152713ef44aeb7c400fc9ec2",
+          "size_bytes": 396
+        },
+        "membership.parquet": {
+          "sha256": "17b68c7a39f3bb1623907bed9014ff47e3d454380482f2b02ac9ff430dfaa603",
+          "size_bytes": 667218
+        },
+        "membership.tsv": {
+          "sha256": "8959e60c0d9b8049aec25095b9c354d456b48f97ba8fb31d7b786e2861113e99",
+          "size_bytes": 5855249
+        },
+        "model_peptide_audit.json": {
+          "sha256": "a8d7b2dfff805cfa360c44cc2f73ffd35203d7ca49bb9a370f0edfb03e3538f7",
+          "size_bytes": 8585
+        },
+        "parent_graph.parquet": {
+          "sha256": "d694a85559428d9ad3f1beb5ac57ee7955587cb861b6d67ea81904d2e4fa138c",
+          "size_bytes": 540888
+        },
+        "policy.json": {
+          "sha256": "a47a3c2806856c5c5c717b796b00de3e556a9dfc45a3dbef1d6df51d7a940f0c",
+          "size_bytes": 569
+        },
+        "records_without_model_sample.json": {
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "size_bytes": 3
+        },
+        "root_lineage_audit.json": {
+          "sha256": "da145ed37eff3a12390581167145eb70b4886c28bf4c5204ff7c46be0749c423",
+          "size_bytes": 18634
+        }
+      },
+      "assignment_sha256": "07d4744c10d7f5d825880bd0bdf3efcb47bd97e8d8725c623916d84b71bbdf1b",
+      "membership_sha256": "12ed561ae2c8e670290b8dd16826c9834aa7b40e7dfff7132d254588c550fbd2",
+      "parent_graph_sha256": "2dba2460212ed052dd5ec586ce7bef6c469472833ae0cb819f9c9c99a976c450",
+      "policy": "peptide_disjoint",
+      "source_bundle_id": "sha256:b180eba804532f633a6d61bb350584dbe24f8df4b4b96f02c6ec492c60144372"
+    },
+    "output_evidence_sha256": "7851ffafeaa3a79798c18213d1589520fca6ba11521e971812bf4770b8aa0a90",
+    "split_mode": "peptide_group",
+    "split_rows": {
+      "test": 906,
+      "train": 7241,
+      "val": 906
+    },
+    "split_seed": 42
+  }
+}

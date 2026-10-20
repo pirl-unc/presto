@@ -89,7 +89,7 @@ calls: 7-8% fewer on the verification fixtures. Compare later conditions by wall
 peak RSS and SQL work, not by this counter. Software verification of that change
 (Claude / Opus 5, on `f54dd32` with the uncommitted fix; candidate source hash in the
 JSON) is retained here rather than under the gitignored `artifacts/` directory:
-[analysis/verify_report_reuse.py](analysis/verify_report_reuse.py) reproduces
+[the frozen verifier](reproduce/source/verify_report_reuse_20260914.py) produced
 [results/verification/report_reuse_parity.json](results/verification/report_reuse_parity.json),
 identical reports for 32 output configurations and 60,928 equal filtered class counts
 against the base, with per-report SQL statement and call totals. The earlier parity
@@ -101,6 +101,11 @@ writing [class_count_cost.json](results/verification/class_count_cost.json), use
 class work falls from 144 SQL statements under the base to 16, and a cold
 single-column claim keeps the base's 3. Its wall times depend on the machine. No
 real-data runtime or predictive claim follows from these files.
+
+The maintained [verifier](analysis/verify_report_reuse.py) now accepts
+`--base-commit` and `--output`, so integration with newer source contracts can be
+checked without overwriting the historical evidence. The frozen script above
+preserves the exact script hash recorded in the September parity summary.
 
 All ten input hashes match before/after execution. Report/state/source-contract
 evidence fingerprints agree, dataset fingerprints match legacy split support,

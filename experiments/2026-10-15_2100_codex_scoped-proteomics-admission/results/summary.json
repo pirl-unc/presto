@@ -1,0 +1,129 @@
+{
+  "agent": "codex / GPT-6",
+  "canonical_lineage_audit": {
+    "duplicate_sample_id_count": 0,
+    "duplicate_sample_id_examples": [],
+    "issue_count": 0,
+    "issue_examples": []
+  },
+  "detectability_support": {
+    "distinct_peptides": 10000,
+    "distinct_primary_alleles": 0,
+    "distinct_resolved_alleles": 0,
+    "distinct_source_alleles": 0,
+    "exact": 0,
+    "facets": {
+      "apm_perturbation": {
+        "unknown": 10000
+      },
+      "machinery": {
+        "trypsin": 10000
+      },
+      "mhc_class": {
+        "unknown": 10000
+      },
+      "peptide_source": {
+        "protein": 10000
+      },
+      "processing_stimulus": {
+        "unknown": 10000
+      },
+      "species": {
+        "unknown": 10000
+      },
+      "species_of_origin": {
+        "unknown": 10000
+      },
+      "tcell_apc_name": {
+        "unknown": 10000
+      },
+      "tcell_assay_method": {
+        "unknown": 10000
+      },
+      "tcell_assay_readout": {
+        "unknown": 10000
+      },
+      "tcell_effector_culture": {
+        "unknown": 10000
+      },
+      "tcell_in_vitro_process": {
+        "unknown": 10000
+      }
+    },
+    "graded": 0,
+    "instances": 10000,
+    "left_censored": 0,
+    "negative": 8886,
+    "observations": 10000,
+    "positive": 1114,
+    "right_censored": 0,
+    "source_rows": 1114,
+    "traceable_observations": 1114,
+    "training_rows": 10000,
+    "unique_exact": 0,
+    "unique_negative": 8886,
+    "unique_observations": 10000,
+    "unique_positive": 1114,
+    "untraceable_rows": 8886
+  },
+  "experiment": "2026-10-15_2100_codex_scoped-proteomics-admission",
+  "full_coverage": {
+    "n_ambiguous_peptides": 153980,
+    "n_candidate_occurrences": 1656863,
+    "n_invalid_sequence_occurrences": 0,
+    "n_peptides": 1451158,
+    "n_peptides_by_evidence": {
+      "By MS/MS": 143216,
+      "By matching": 20778,
+      "not observed in scope": 1287164
+    },
+    "n_source_observations": 172033,
+    "n_supported_parents": 12287
+  },
+  "git_commit": "27cde9717ae7e59997581e4ae633e0cd644a7faa",
+  "hardware": {
+    "gpu": "none",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "processor": "arm",
+    "torch_threads": 1
+  },
+  "imports": {
+    "hitlist": "/private/tmp/hitlist175-wheel-import/hitlist/__init__.py",
+    "presto": "/private/tmp/presto-scoped-import/presto/__init__.py"
+  },
+  "limitations": [
+    "The original PXD004452 search FASTA remains unresolved; these are reanalysis labels.",
+    "Match-between-runs detections are not direct MS/MS identifications.",
+    "Leading-razor assignment does not independently establish every possible parent.",
+    "Biological specimen, donor and replicate independence are unresolved.",
+    "No first-seen depth labels or cross-protocol comparability are established.",
+    "A single cultured HeLa scope cannot establish prospective or cross-tissue detectability.",
+    "Search-engine output and standalone XML report different MaxQuant versions.",
+    "Source rows outside the chosen length, mass and digestion window do not become candidate labels.",
+    "Fractionation pH denotes the paper's reported buffer, not a measured gradient pH."
+  ],
+  "n_candidate_linked_records": 10000,
+  "n_records": 10000,
+  "n_records_by_evidence": {
+    "By MS/MS": 960,
+    "By matching": 154,
+    "not observed in scope": 8886
+  },
+  "n_source_observation_linked_records": 1114,
+  "partitions": "not_assigned; admission audit only",
+  "peak_rss_bytes": 511868928,
+  "prediction_exports": "not_produced; no model inference",
+  "runtime_scope": "admission and support audit before artifact publication",
+  "runtime_seconds": 6.251254875009181,
+  "status": "admission_audit_passed",
+  "test_metrics": "not_applicable; no fitting or evaluation",
+  "traceability_note": "Canonical census traceable_observations counts source observations; scoped absence has candidate linkage, not a measured observation ID.",
+  "validation_metrics": "not_applicable; no fitting or evaluation",
+  "versions": {
+    "datacache": "1.27.1",
+    "hitlist": "1.75.0",
+    "presto": "0.1.4",
+    "pyarrow": "25.0.1",
+    "torch": "2.14.1"
+  }
+}

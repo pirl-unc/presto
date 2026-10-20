@@ -16,6 +16,13 @@ resolve, while a long-lived environment can sit on a stale wheel indefinitely.
 
 import pytest
 
+from presto.data.scoped_bulk import MINIMUM_SCOPED_HITLIST_VERSION
+
+from presto.data.frozen_hitlist import (
+    MINIMUM_FROZEN_HITLIST_VERSION,
+    load_frozen_hitlist_bundle,
+    require_frozen_hitlist_version,
+)
 from presto.data.hitlist_source import (  # noqa: E402
     MINIMUM_HITLIST_VERSION,
     _parse_version,
@@ -43,11 +50,11 @@ class TestVersionParsing:
 
 
 class TestFloorEnforcement:
-    @pytest.mark.parametrize("raw", ["1.53.0", "1.53.1", "1.54.0", "2.0.0"])
+    @pytest.mark.parametrize("raw", ["1.75.0", "1.78.0", "1.80.0", "2.0.0"])
     def test_supported_versions_pass(self, raw):
         require_supported_hitlist(raw)
 
-    @pytest.mark.parametrize("raw", ["1.41", "1.45.0", "1.46.0", "1.52.9", "0.9"])
+    @pytest.mark.parametrize("raw", ["1.41", "1.45.0", "1.53.0", "1.74.9", "0.9"])
     def test_versions_below_the_floor_raise(self, raw):
         with pytest.raises(RuntimeError, match="too old"):
             require_supported_hitlist(raw)
@@ -59,6 +66,7 @@ class TestFloorEnforcement:
         message = str(excinfo.value)
         assert "apm_genes_perturbed" in message
         assert "1.53.0" in message
+        assert "species-role provenance" in message
 
     @pytest.mark.parametrize("raw", [None, "", "unknown"])
     def test_unreadable_version_is_allowed_through(self, raw):
@@ -69,18 +77,19 @@ class TestFloorEnforcement:
         require_supported_hitlist(raw)
 
     def test_the_floor_matches_what_the_module_documents(self):
-        """1.53.0 for the arm-attribution columns; 1.46.0 was only enough for
-        the per-sample APM split (presto#13, then presto#15)."""
-        assert MINIMUM_HITLIST_VERSION == (1, 53, 0)
+        """Native species-role fields use the existing validated dependency floor."""
+        assert MINIMUM_HITLIST_VERSION == (1, 75, 0)
 
 
 class TestDeclaredDependencyAgrees:
-    """The runtime guard and the packaging floor must not drift apart."""
+    """Packaging and remote workers must support the canonical frozen path."""
 
     def test_pyproject_floor_matches_the_runtime_floor(self):
         from pathlib import Path
 
-        wanted = ".".join(str(part) for part in MINIMUM_HITLIST_VERSION)
+        wanted = ".".join(
+            map(str, max(MINIMUM_FROZEN_HITLIST_VERSION, MINIMUM_SCOPED_HITLIST_VERSION))
+        )
         text = (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text()
         assert f'"hitlist>={wanted}"' in text
 
@@ -88,6 +97,22 @@ class TestDeclaredDependencyAgrees:
         """A worker built from an older wheel would train on wrong labels."""
         from pathlib import Path
 
-        wanted = ".".join(str(part) for part in MINIMUM_HITLIST_VERSION)
+        wanted = ".".join(
+            map(str, max(MINIMUM_FROZEN_HITLIST_VERSION, MINIMUM_SCOPED_HITLIST_VERSION))
+        )
         launcher = (Path(__file__).resolve().parents[1] / "scripts" / "train_remote.py").read_text()
         assert f'"hitlist>={wanted}"' in launcher
+
+
+class TestFrozenFloorEnforcement:
+    @pytest.mark.parametrize("raw", ["1.74.0", "1.75.0", "2.0.0"])
+    def test_supported(self, raw):
+        require_frozen_hitlist_version(raw)
+
+    @pytest.mark.parametrize("raw", ["1.53.0", "1.73.9", None, "", "unknown"])
+    def test_old_or_unknown_version_rejected_before_any_input_read(self, raw, monkeypatch):
+        import hitlist
+
+        monkeypatch.setattr(hitlist, "__version__", raw)
+        with pytest.raises(RuntimeError, match="coherent dataset generations"):
+            load_frozen_hitlist_bundle("/not-an-existing-bundle")

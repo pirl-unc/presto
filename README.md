@@ -2,6 +2,29 @@
 
 Unified immunoinformatics for pMHC presentation and T-cell recognition.
 
+## Installation
+
+Install a wheel from this repository's [GitHub releases](https://github.com/pirl-unc/presto/releases).
+The PyPI name `presto` belongs to the unrelated Immcantation repertoire toolkit;
+use a separate environment for these projects. For the 0.1.1 release:
+
+```bash
+python -m pip install https://github.com/pirl-unc/presto/releases/download/v0.1.1/presto-0.1.1-py3-none-any.whl
+```
+
+Release artifacts are built after CI runs `./lint.sh` and `./test.sh`. CI installs
+the wheel outside the checkout to verify packaged B2M resources and the bulk
+loader's missing-label masks. Publish the wheel and source archive from the
+successful merged-main run, together with their SHA-256 hashes and source commit.
+The source archive builds the tested wheel; no training datasets or model weights
+are included. A software release does not certify the training data or model quality.
+
+CI cancels superseded updates within the same pull request or feature-branch push.
+PR and push checks have separate groups, and both final-head validations gate merge.
+Each main-push and immutable-tag run has its own protected group, so neither running
+nor pending release validation can be displaced by a later update. Distribution
+still requires successful checks on the exact merged-main commit.
+
 ## Quickstart
 
 ```bash
@@ -98,3 +121,6 @@ Reference: [training guide](docs/training_spec.md).
 ruff format .      # apply formatting (lint.sh only *checks* it)
 ./test.sh
 ```
+
+Verified bulk proteomics: see [scoped inputs](docs/scoped_proteomics.md) for the
+PXD013455 Python adapter, frozen source hashes, evidence classes and limitations.

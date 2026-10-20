@@ -1,0 +1,1942 @@
+{
+  "split": "val",
+  "tasks": {
+    "binding": {
+      "rmse": 1.189234482467084,
+      "mae": 1.0054369753844754,
+      "n": 449.0,
+      "spearman": 0.14109908947391792,
+      "pearson": 0.11205796538344227,
+      "exact_rmse": 1.220859212670387,
+      "exact_mae": 0.9896064636968943,
+      "exact_n": 344.0,
+      "exact_spearman": 0.2655358323644109,
+      "exact_pearson": 0.20878107572765622,
+      "threshold_500nm_accuracy": 0.7037861915367484,
+      "threshold_500nm_balanced_accuracy": 0.5,
+      "threshold_500nm_precision": 0.0,
+      "threshold_500nm_recall": 0.0,
+      "threshold_500nm_f1": 0.0,
+      "threshold_500nm_n": 449.0,
+      "threshold_500nm_auroc": 0.6296040734748263,
+      "threshold_500nm_auprc": 0.4091945008757956
+    },
+    "binding_kd": {
+      "rmse": 0.8427399123231468,
+      "mae": 0.8279388632093158,
+      "n": 35.0,
+      "spearman": -0.6238043922195533,
+      "pearson": -0.881468886021865,
+      "exact_rmse": 0.7149189669186801,
+      "exact_mae": 0.7007951736450195,
+      "exact_n": 6.0,
+      "exact_spearman": 0.50709255283711,
+      "exact_pearson": 0.606086818036299,
+      "threshold_500nm_accuracy": 0.9714285714285714,
+      "threshold_500nm_balanced_accuracy": 0.5,
+      "threshold_500nm_precision": 0.0,
+      "threshold_500nm_recall": 0.0,
+      "threshold_500nm_f1": 0.0,
+      "threshold_500nm_n": 35.0,
+      "threshold_500nm_auroc": 0.6764705882352942,
+      "threshold_500nm_auprc": 0.08333333333333333
+    },
+    "binding_ic50": {
+      "rmse": 1.2228717856613005,
+      "mae": 1.0453466957470157,
+      "n": 265.0,
+      "spearman": 0.18623913326446026,
+      "pearson": 0.18373571136453615,
+      "exact_rmse": 1.1654770444837181,
+      "exact_mae": 0.9488887846469879,
+      "exact_n": 210.0,
+      "exact_spearman": 0.3632847115104097,
+      "exact_pearson": 0.2829823546828859,
+      "threshold_500nm_accuracy": 0.6566037735849056,
+      "threshold_500nm_balanced_accuracy": 0.5,
+      "threshold_500nm_precision": 0.0,
+      "threshold_500nm_recall": 0.0,
+      "threshold_500nm_f1": 0.0,
+      "threshold_500nm_n": 265.0,
+      "threshold_500nm_auroc": 0.6717822407477579,
+      "threshold_500nm_auprc": 0.5286318205045005
+    },
+    "binding_ec50": {
+      "rmse": 0.7379724509549275,
+      "mae": 0.6208080450693766,
+      "n": 6.0,
+      "spearman": -0.20291986247835694,
+      "pearson": 0.035501920832197546,
+      "exact_rmse": 0.7379724509549275,
+      "exact_mae": 0.6208080450693766,
+      "exact_n": 6.0,
+      "exact_spearman": -0.20291986247835694,
+      "exact_pearson": 0.035501920832197546,
+      "threshold_500nm_accuracy": 1.0,
+      "threshold_500nm_balanced_accuracy": 0.5,
+      "threshold_500nm_precision": 0.0,
+      "threshold_500nm_recall": 0.0,
+      "threshold_500nm_f1": 0.0,
+      "threshold_500nm_n": 6.0
+    },
+    "elution": {
+      "accuracy": 1.0,
+      "balanced_accuracy": 0.5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "n_positive": 394.0,
+      "n": 394.0
+    },
+    "presentation": {
+      "accuracy": 1.0,
+      "balanced_accuracy": 0.5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "n_positive": 394.0,
+      "n": 394.0
+    },
+    "t_half": {
+      "rmse": 0.7351558679267116,
+      "mae": 0.5478472533049407,
+      "n": 54.0,
+      "spearman": 0.33727545292437494,
+      "pearson": 0.34320572562796586,
+      "exact_rmse": 0.7621258365619076,
+      "exact_mae": 0.5770908880233765,
+      "exact_n": 50.0,
+      "exact_spearman": 0.33009760006364824,
+      "exact_pearson": 0.33831512015959186
+    },
+    "tm": {
+      "rmse": 1.0500486534500042,
+      "mae": 0.8937071727381812,
+      "n": 9.0,
+      "spearman": 0.523211408550422,
+      "pearson": 0.7660409469363176,
+      "exact_rmse": 1.0500486534500042,
+      "exact_mae": 0.8937071727381812,
+      "exact_n": 9.0,
+      "exact_spearman": 0.523211408550422,
+      "exact_pearson": 0.7660409469363176
+    },
+    "binding_affinity_probe": {
+      "rmse": 1.1843029175893751,
+      "mae": 1.0162076223102339,
+      "n": 449.0,
+      "spearman": 0.1472478602157738,
+      "pearson": 0.11283332410708476,
+      "exact_rmse": 1.167828230688458,
+      "exact_mae": 0.9558792620853975,
+      "exact_n": 344.0,
+      "exact_spearman": 0.27138662798847485,
+      "exact_pearson": 0.21070073799685923,
+      "threshold_500nm_accuracy": 0.7037861915367484,
+      "threshold_500nm_balanced_accuracy": 0.5,
+      "threshold_500nm_precision": 0.0,
+      "threshold_500nm_recall": 0.0,
+      "threshold_500nm_f1": 0.0,
+      "threshold_500nm_n": 449.0,
+      "threshold_500nm_auroc": 0.6315432568763681,
+      "threshold_500nm_auprc": 0.4155937346963659
+    },
+    "mhc_class": {
+      "accuracy": 0.6434878587196468,
+      "n": 906.0,
+      "cross_entropy": 0.6215251936159912
+    },
+    "mhc_species": {
+      "accuracy": 0.9988962472406181,
+      "n": 906.0,
+      "cross_entropy": 0.12885959238373154
+    },
+    "mhc_a_fine_type": {
+      "accuracy": 0.6434878587196468,
+      "n": 906.0,
+      "cross_entropy": 0.7735763316517634
+    },
+    "mhc_b_fine_type": {
+      "accuracy": 0.40176600441501104,
+      "n": 906.0,
+      "cross_entropy": 0.7555089113991256
+    },
+    "species_of_origin": {
+      "accuracy": 1.0,
+      "n": 906.0,
+      "cross_entropy": 0.00013310398760500464
+    },
+    "foreignness": {
+      "accuracy": 1.0,
+      "balanced_accuracy": 0.5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "n_positive": 0.0,
+      "n": 906.0
+    },
+    "binding_assay_panel_assay_type": {
+      "rmse": 1.1947996076721314,
+      "mae": 1.0293332500785655,
+      "n": 449.0,
+      "spearman": 0.1430035823035717,
+      "pearson": 0.14439830822386182,
+      "exact_rmse": 1.1486227415216816,
+      "exact_mae": 0.9443146011813782,
+      "exact_n": 344.0,
+      "exact_spearman": 0.26131181243548685,
+      "exact_pearson": 0.19588039346331612,
+      "threshold_500nm_accuracy": 0.7037861915367484,
+      "threshold_500nm_balanced_accuracy": 0.5,
+      "threshold_500nm_precision": 0.0,
+      "threshold_500nm_recall": 0.0,
+      "threshold_500nm_f1": 0.0,
+      "threshold_500nm_n": 449.0,
+      "threshold_500nm_auroc": 0.6282478347768155,
+      "threshold_500nm_auprc": 0.38518088286882807,
+      "column_EC50_rmse": 1.0493331787458935,
+      "column_EC50_mae": 0.912052591641744,
+      "column_EC50_n": 6.0,
+      "column_EC50_spearman": -0.20291986247835694,
+      "column_EC50_pearson": 0.038214994698324165,
+      "column_IC50_rmse": 1.2227263968933484,
+      "column_IC50_mae": 1.0459322571754455,
+      "column_IC50_n": 265.0,
+      "column_IC50_spearman": 0.1780839463450195,
+      "column_IC50_pearson": 0.18427863677582818,
+      "column_KD_rmse": 1.03151593241799,
+      "column_KD_mae": 0.9677013874053955,
+      "column_KD_n": 35.0,
+      "column_KD_spearman": -0.6316613309616274,
+      "column_KD_pearson": -0.8768196548421721,
+      "column_KD_PROXY_EC50_rmse": 0.9372669597297789,
+      "column_KD_PROXY_EC50_mae": 0.8035615831613541,
+      "column_KD_PROXY_EC50_n": 8.0,
+      "column_KD_PROXY_EC50_spearman": -0.7142857142857143,
+      "column_KD_PROXY_EC50_pearson": -0.2804536908286231,
+      "column_KD_PROXY_IC50_rmse": 1.1984623088376132,
+      "column_KD_PROXY_IC50_mae": 1.0313201804403906,
+      "column_KD_PROXY_IC50_n": 135.0,
+      "column_KD_PROXY_IC50_spearman": 0.3738791461850748,
+      "column_KD_PROXY_IC50_pearson": 0.3368568166405542
+    },
+    "binding_assay_panel_assay_prep": {
+      "rmse": 1.1956285891350948,
+      "mae": 1.029444456150245,
+      "n": 449.0,
+      "spearman": 0.1358226490334942,
+      "pearson": 0.09877187807921019,
+      "exact_rmse": 1.1494880573544337,
+      "exact_mae": 0.9443762614933211,
+      "exact_n": 344.0,
+      "exact_spearman": 0.2669048920341279,
+      "exact_pearson": 0.18624106268796942,
+      "threshold_500nm_accuracy": 0.7037861915367484,
+      "threshold_500nm_balanced_accuracy": 0.5,
+      "threshold_500nm_precision": 0.0,
+      "threshold_500nm_recall": 0.0,
+      "threshold_500nm_f1": 0.0,
+      "threshold_500nm_n": 449.0,
+      "threshold_500nm_auroc": 0.6066907775768535,
+      "threshold_500nm_auprc": 0.3796420476714128,
+      "column_CELLULAR_rmse": 0.9608241907221252,
+      "column_CELLULAR_mae": 0.7430806689792209,
+      "column_CELLULAR_n": 18.0,
+      "column_CELLULAR_spearman": -0.3624152482111554,
+      "column_CELLULAR_pearson": -0.19103190645208384,
+      "column_PURIFIED_rmse": 1.204439440274055,
+      "column_PURIFIED_mae": 1.041403964663188,
+      "column_PURIFIED_n": 431.0,
+      "column_PURIFIED_spearman": 0.15045933786092036,
+      "column_PURIFIED_pearson": 0.11646884794489906
+    },
+    "binding_assay_panel_assay_geometry": {
+      "rmse": 1.1969692198125648,
+      "mae": 1.0316024416505891,
+      "n": 449.0,
+      "spearman": 0.1458729734588522,
+      "pearson": 0.11875092986931612,
+      "exact_rmse": 1.1467841686434004,
+      "exact_mae": 0.9431189313141066,
+      "exact_n": 344.0,
+      "exact_spearman": 0.27565063236739035,
+      "exact_pearson": 0.22307456321494368,
+      "threshold_500nm_accuracy": 0.7037861915367484,
+      "threshold_500nm_balanced_accuracy": 0.5,
+      "threshold_500nm_precision": 0.0,
+      "threshold_500nm_recall": 0.0,
+      "threshold_500nm_f1": 0.0,
+      "threshold_500nm_n": 449.0,
+      "threshold_500nm_auroc": 0.6363971637955649,
+      "threshold_500nm_auprc": 0.4125596070599909,
+      "column_COMPETITIVE_rmse": 1.203570679397214,
+      "column_COMPETITIVE_mae": 1.0378241942360484,
+      "column_COMPETITIVE_n": 435.0,
+      "column_COMPETITIVE_spearman": 0.15468510452411952,
+      "column_COMPETITIVE_pearson": 0.12318324943406149,
+      "column_DIRECT_rmse": 0.9697135138315041,
+      "column_DIRECT_mae": 0.8382837006023952,
+      "column_DIRECT_n": 14.0,
+      "column_DIRECT_spearman": -0.17381748691882032,
+      "column_DIRECT_pearson": 0.01890150917282468
+    },
+    "binding_assay_panel_assay_readout": {
+      "rmse": 1.1954549275841764,
+      "mae": 1.0301324132257421,
+      "n": 449.0,
+      "spearman": 0.1738073652672548,
+      "pearson": 0.13055090574573236,
+      "exact_rmse": 1.1481206308972567,
+      "exact_mae": 0.9440257328150924,
+      "exact_n": 344.0,
+      "exact_spearman": 0.27295637176899895,
+      "exact_pearson": 0.2138538551236029,
+      "threshold_500nm_accuracy": 0.7037861915367484,
+      "threshold_500nm_balanced_accuracy": 0.5,
+      "threshold_500nm_precision": 0.0,
+      "threshold_500nm_recall": 0.0,
+      "threshold_500nm_f1": 0.0,
+      "threshold_500nm_n": 449.0,
+      "threshold_500nm_auroc": 0.6436780241743599,
+      "threshold_500nm_auprc": 0.42226542159063923,
+      "column_FLUORESCENCE_rmse": 1.2123572804894946,
+      "column_FLUORESCENCE_mae": 1.1009970931410789,
+      "column_FLUORESCENCE_n": 125.0,
+      "column_FLUORESCENCE_spearman": 0.040122444281642675,
+      "column_FLUORESCENCE_pearson": -0.06895607091974978,
+      "column_RADIOACTIVITY_rmse": 1.1888697211850612,
+      "column_RADIOACTIVITY_mae": 1.002792644739887,
+      "column_RADIOACTIVITY_n": 324.0,
+      "column_RADIOACTIVITY_spearman": 0.25130325246101637,
+      "column_RADIOACTIVITY_pearson": 0.20388962235130828
+    },
+    "ms": {
+      "accuracy": 1.0,
+      "balanced_accuracy": 0.5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "n_positive": 394.0,
+      "n": 394.0
+    },
+    "excision_panel_apm": {
+      "accuracy": 1.0,
+      "balanced_accuracy": 0.5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "n_positive": 394.0,
+      "n": 394.0,
+      "column_class_ii_loading_accuracy": 1.0,
+      "column_class_ii_loading_balanced_accuracy": 0.5,
+      "column_class_ii_loading_precision": 1.0,
+      "column_class_ii_loading_recall": 1.0,
+      "column_class_ii_loading_f1": 1.0,
+      "column_class_ii_loading_n_positive": 5.0,
+      "column_class_ii_loading_n": 5.0,
+      "column_n_term_trimming_accuracy": 1.0,
+      "column_n_term_trimming_balanced_accuracy": 0.5,
+      "column_n_term_trimming_precision": 1.0,
+      "column_n_term_trimming_recall": 1.0,
+      "column_n_term_trimming_f1": 1.0,
+      "column_n_term_trimming_n_positive": 1.0,
+      "column_n_term_trimming_n": 1.0,
+      "column_none_accuracy": 1.0,
+      "column_none_balanced_accuracy": 0.5,
+      "column_none_precision": 1.0,
+      "column_none_recall": 1.0,
+      "column_none_f1": 1.0,
+      "column_none_n_positive": 386.0,
+      "column_none_n": 386.0,
+      "column_unknown_accuracy": 1.0,
+      "column_unknown_balanced_accuracy": 0.5,
+      "column_unknown_precision": 1.0,
+      "column_unknown_recall": 1.0,
+      "column_unknown_f1": 1.0,
+      "column_unknown_n_positive": 2.0,
+      "column_unknown_n": 2.0
+    },
+    "excision_panel_stimulus": {
+      "accuracy": 1.0,
+      "balanced_accuracy": 0.5,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "n_positive": 394.0,
+      "n": 394.0,
+      "column_cell_activation_accuracy": 1.0,
+      "column_cell_activation_balanced_accuracy": 0.5,
+      "column_cell_activation_precision": 1.0,
+      "column_cell_activation_recall": 1.0,
+      "column_cell_activation_f1": 1.0,
+      "column_cell_activation_n_positive": 2.0,
+      "column_cell_activation_n": 2.0,
+      "column_ifn_gamma_accuracy": 1.0,
+      "column_ifn_gamma_balanced_accuracy": 0.5,
+      "column_ifn_gamma_precision": 1.0,
+      "column_ifn_gamma_recall": 1.0,
+      "column_ifn_gamma_f1": 1.0,
+      "column_ifn_gamma_n_positive": 18.0,
+      "column_ifn_gamma_n": 18.0,
+      "column_ifn_type1_accuracy": 1.0,
+      "column_ifn_type1_balanced_accuracy": 0.5,
+      "column_ifn_type1_precision": 1.0,
+      "column_ifn_type1_recall": 1.0,
+      "column_ifn_type1_f1": 1.0,
+      "column_ifn_type1_n_positive": 5.0,
+      "column_ifn_type1_n": 5.0,
+      "column_none_accuracy": 1.0,
+      "column_none_balanced_accuracy": 0.5,
+      "column_none_precision": 1.0,
+      "column_none_recall": 1.0,
+      "column_none_f1": 1.0,
+      "column_none_n_positive": 364.0,
+      "column_none_n": 364.0,
+      "column_tlr_accuracy": 1.0,
+      "column_tlr_balanced_accuracy": 0.5,
+      "column_tlr_precision": 1.0,
+      "column_tlr_recall": 1.0,
+      "column_tlr_f1": 1.0,
+      "column_tlr_n_positive": 5.0,
+      "column_tlr_n": 5.0
+    }
+  },
+  "best_val_loss": 0.4995156779885292,
+  "mil_evaluation": {
+    "instance_cap": 0,
+    "chunk_size": 128,
+    "use_amp": false
+  },
+  "overall_loss": 0.4995156779885292,
+  "loss_terms": {
+    "loss_binding": 1.4418370723724365,
+    "loss_binding_affinity_probe": 1.4784508347511292,
+    "loss_binding_assay_panel": 1.5457313656806946,
+    "loss_binding_ec50": 0.5482712518423796,
+    "loss_binding_ic50": 1.5802339762449265,
+    "loss_binding_kd": 0.5510726533830166,
+    "loss_elution": 6.583131965141677e-06,
+    "loss_excision_condition_panel": 6.662506660047387e-05,
+    "loss_foreignness": 0.0002797128749080002,
+    "loss_mhc_a_fine_type": 0.7734680453936259,
+    "loss_mhc_b_fine_type": 0.7559973319371541,
+    "loss_mhc_class": 0.6175759057203929,
+    "loss_mhc_species": 0.12858088264862697,
+    "loss_ms": 6.583131965141677e-06,
+    "loss_presentation": 0.00540483184158802,
+    "loss_species_of_origin": 0.0001325332064880058,
+    "loss_t_half": 0.5395078659057617,
+    "loss_tm": 1.102602243423462,
+    "batch_binding_max_allele_fraction": 0.259765625,
+    "batch_binding_samples": 56.125,
+    "batch_binding_unique_alleles": 24.75,
+    "batch_binding_unique_mhc_classes": 1.875,
+    "batch_binding_unique_species": 1.0,
+    "batch_max_allele_fraction": 0.17854166666666668,
+    "batch_max_mhc_class_fraction": 0.6591666666666666,
+    "batch_max_species_fraction": 0.9989583333333333,
+    "batch_supervised_weight_binding": 0.12973073519948525,
+    "batch_supervised_weight_binding_affinity_probe": 0.12973073519948525,
+    "batch_supervised_weight_binding_assay_panel": 0.12973073519948525,
+    "batch_supervised_weight_binding_ec50": 0.1254826254826255,
+    "batch_supervised_weight_binding_ic50": 0.12973073519948525,
+    "batch_supervised_weight_binding_kd": 0.1230694980694981,
+    "batch_supervised_weight_elution": 0.15625,
+    "batch_supervised_weight_excision_condition_panel": 0.15625,
+    "batch_supervised_weight_foreignness": 0.14210639210639214,
+    "batch_supervised_weight_mhc_a_fine_type": 0.014210639210639213,
+    "batch_supervised_weight_mhc_b_fine_type": 0.014210639210639213,
+    "batch_supervised_weight_mhc_class": 0.014210639210639213,
+    "batch_supervised_weight_mhc_species": 0.014210639210639213,
+    "batch_supervised_weight_ms": 0.15625,
+    "batch_supervised_weight_presentation": 0.15625,
+    "batch_supervised_weight_species_of_origin": 0.14210639210639214,
+    "batch_supervised_weight_t_half": 0.11904761904761907,
+    "batch_supervised_weight_tm": 0.11904761904761907,
+    "batch_support_binding": 56.125,
+    "batch_support_binding_affinity_probe": 56.125,
+    "batch_support_binding_assay_panel": 56.125,
+    "batch_support_binding_ec50": 1.2,
+    "batch_support_binding_ic50": 33.125,
+    "batch_support_binding_kd": 8.75,
+    "batch_support_elution": 56.285714285714285,
+    "batch_support_excision_condition_panel": 56.285714285714285,
+    "batch_support_foreignness": 60.4,
+    "batch_support_mhc_a_fine_type": 60.4,
+    "batch_support_mhc_b_fine_type": 60.4,
+    "batch_support_mhc_class": 60.4,
+    "batch_support_mhc_species": 60.4,
+    "batch_support_ms": 56.285714285714285,
+    "batch_support_presentation": 56.285714285714285,
+    "batch_support_species_of_origin": 60.4,
+    "batch_support_t_half": 54.0,
+    "batch_support_tm": 9.0,
+    "batch_unique_alleles": 28.4,
+    "batch_unique_mhc_classes": 2.0,
+    "batch_unique_species": 1.0666666666666667,
+    "out_apc_cell_type_context_vec_mean": 0.01024247445166111,
+    "out_apc_cell_type_context_vec_var": 0.014654263916114966,
+    "out_assays_EC50_nM_mean": 3.9894697507222494,
+    "out_assays_EC50_nM_var": 0.00021863745981439328,
+    "out_assays_IC50_nM_mean": 3.1960052331288655,
+    "out_assays_IC50_nM_var": 9.41820665805911e-05,
+    "out_assays_KD_nM_mean": 3.407625659306844,
+    "out_assays_KD_nM_var": 8.472692449383128e-05,
+    "out_assays_KD_proxy_ec50_nM_mean": 3.407625659306844,
+    "out_assays_KD_proxy_ec50_nM_var": 8.472692449383128e-05,
+    "out_assays_KD_proxy_ic50_nM_mean": 3.407625659306844,
+    "out_assays_KD_proxy_ic50_nM_var": 8.472692449383128e-05,
+    "out_assays_Tm_mean": 0.12947905510663987,
+    "out_assays_Tm_var": 0.0007193368296915044,
+    "out_assays_koff_mean": -4.387926197052002,
+    "out_assays_koff_var": 0.0039032197246948877,
+    "out_assays_kon_mean": -0.49621621966362,
+    "out_assays_kon_var": 2.6394654166021305e-06,
+    "out_assays_t_half_mean": 2.4973989645640056,
+    "out_assays_t_half_var": 0.004558238387107849,
+    "out_binding_affinity_probe_kd_mean": 3.2426562627156574,
+    "out_binding_affinity_probe_kd_raw_mean": 3.2493566513061523,
+    "out_binding_affinity_probe_kd_raw_var": 0.001362581632565707,
+    "out_binding_affinity_probe_kd_var": 0.001334167958702892,
+    "out_binding_affinity_score_mean": 3.2426562627156574,
+    "out_binding_affinity_score_raw_mean": 3.2493566513061523,
+    "out_binding_affinity_score_raw_var": 0.001362581632565707,
+    "out_binding_affinity_score_var": 0.001334167958702892,
+    "out_binding_assay_context_vec_mean": 0.0,
+    "out_binding_assay_context_vec_var": 0.0,
+    "out_binding_assay_panel_assay_geometry_mean": 3.1094152132670083,
+    "out_binding_assay_panel_assay_geometry_var": 0.0013851434302826723,
+    "out_binding_assay_panel_assay_prep_mean": 3.107553211847941,
+    "out_binding_assay_panel_assay_prep_var": 0.0011294211260974407,
+    "out_binding_assay_panel_assay_readout_mean": 3.1267929871877036,
+    "out_binding_assay_panel_assay_readout_var": 0.0007550990325398743,
+    "out_binding_assay_panel_assay_type_mean": 3.1171445210774738,
+    "out_binding_assay_panel_assay_type_var": 0.0011786125251092017,
+    "out_binding_base_logit_mean": -2.0247302055358887,
+    "out_binding_base_logit_prob_mean": 0.1166601836681366,
+    "out_binding_base_logit_prob_var": 7.371235945659768e-06,
+    "out_binding_base_logit_var": 0.000691647573451822,
+    "out_binding_class1_logit_mean": -1.8504698673884075,
+    "out_binding_class1_logit_prob_mean": 0.16137960354487102,
+    "out_binding_class1_logit_prob_var": 0.006709485376874606,
+    "out_binding_class1_logit_var": 0.5880686521530152,
+    "out_binding_class1_prob_mean": 0.16137960354487102,
+    "out_binding_class1_prob_var": 0.006709485376874606,
+    "out_binding_class2_logit_mean": -2.198990472157796,
+    "out_binding_class2_logit_prob_mean": 0.12155295610427856,
+    "out_binding_class2_logit_prob_var": 0.005959374985347192,
+    "out_binding_class2_logit_var": 0.5269615252812704,
+    "out_binding_class2_prob_mean": 0.12155295610427856,
+    "out_binding_class2_prob_var": 0.005959374985347192,
+    "out_binding_contrastive_pred_gap_mean": 0.00015849263696140326,
+    "out_binding_contrastive_required_gap_mean": 1.256933448173804,
+    "out_binding_contrastive_target_gap_mean": 1.4522894323255422,
+    "out_binding_core_kd_log10_mean": 5.1567732493082685,
+    "out_binding_core_kd_log10_var": 0.003312199485177795,
+    "out_binding_kd_bias_abs_mean": 0.10200907389322916,
+    "out_binding_kd_bias_cap_mean": 0.2009475976228714,
+    "out_binding_kd_bias_cap_var": 0.0,
+    "out_binding_kd_bias_mean": 0.10200907389322916,
+    "out_binding_kd_bias_near_cap_rate": 0.0,
+    "out_binding_kd_bias_raw_abs_mean": 1.031109340985616,
+    "out_binding_kd_bias_raw_mean": 1.031109340985616,
+    "out_binding_kd_bias_raw_var": 0.00014011173819502196,
+    "out_binding_kd_bias_var": 3.331395570664123e-07,
+    "out_binding_latents_log_koff_mean": -4.415348593393961,
+    "out_binding_latents_log_koff_var": 0.004121859651058912,
+    "out_binding_latents_log_kon_chaperone_mean": -0.5990261117617289,
+    "out_binding_latents_log_kon_chaperone_var": 2.4162664734224868e-06,
+    "out_binding_latents_log_kon_intrinsic_mean": -1.1749391476313273,
+    "out_binding_latents_log_kon_intrinsic_var": 5.088551536876669e-06,
+    "out_binding_log_koff_near_lower_rate": 0.0,
+    "out_binding_log_koff_near_upper_rate": 0.0,
+    "out_binding_log_kon_chaperone_near_lower_rate": 0.0,
+    "out_binding_log_kon_chaperone_near_upper_rate": 0.0,
+    "out_binding_log_kon_intrinsic_near_lower_rate": 0.0,
+    "out_binding_log_kon_intrinsic_near_upper_rate": 0.0,
+    "out_binding_logit_from_core_mean": -6.730019474029541,
+    "out_binding_logit_from_core_near_cap_rate": 0.0,
+    "out_binding_logit_from_core_var": 0.027598354717095694,
+    "out_binding_logit_mean": -1.2265912930170695,
+    "out_binding_logit_prob_mean": 0.22681422730286915,
+    "out_binding_logit_prob_var": 2.1325238473461166e-05,
+    "out_binding_logit_var": 0.000691647573451822,
+    "out_binding_mixed_kd_log10_mean": 3.727899996439616,
+    "out_binding_mixed_kd_log10_var": 0.00016143139170405146,
+    "out_binding_mixed_logit_mean": -1.2265912930170695,
+    "out_binding_mixed_logit_prob_mean": 0.22681422730286915,
+    "out_binding_mixed_logit_prob_var": 2.1325238473461166e-05,
+    "out_binding_mixed_logit_var": 0.000691647573451822,
+    "out_binding_mixed_prob_mean": 0.22681422730286915,
+    "out_binding_mixed_prob_var": 2.1325238473461166e-05,
+    "out_binding_prob_mean": 0.22681422730286915,
+    "out_binding_prob_var": 2.1325238473461166e-05,
+    "out_binding_probe_core_kd_l1_mean": 0.16496941149234773,
+    "out_binding_probe_core_kd_signed_mean": -0.16496941149234773,
+    "out_binding_probe_mix_weight_mean": 0.7464920282363892,
+    "out_binding_probe_mix_weight_var": 0.0,
+    "out_binding_same_peptide_diff_allele_pairs": 22.0,
+    "out_binding_same_peptide_exact_pairs": 9.6,
+    "out_binding_same_peptide_labeled_pairs": 18.733333333333334,
+    "out_binding_same_peptide_pairs_used": 19.125,
+    "out_binding_same_peptide_rankable_pairs": 10.2,
+    "out_binding_same_peptide_target_gap_mean": 1.4522894323255422,
+    "out_binding_sequence_summary_vec_mean": 0.0,
+    "out_binding_sequence_summary_vec_var": 0.0,
+    "out_binding_stability_score_mean": -0.14555657307306927,
+    "out_binding_stability_score_raw_mean": -0.14565443595250446,
+    "out_binding_stability_score_raw_var": 8.763877752547463e-05,
+    "out_binding_stability_score_var": 8.752119222966333e-05,
+    "out_chain_compat_logit_mean": -0.5932468056678772,
+    "out_chain_compat_logit_prob_mean": 0.35601090391476947,
+    "out_chain_compat_logit_prob_var": 0.00023106609090367176,
+    "out_chain_compat_logit_var": 0.004091326263733208,
+    "out_chain_compat_prob_mean": 0.35601090391476947,
+    "out_chain_compat_prob_var": 0.00023106609090367176,
+    "out_core_length_mean": 8.972916666666666,
+    "out_core_length_norm_mean": 0.8009030063947041,
+    "out_core_length_norm_var": 0.03890532292425632,
+    "out_core_length_var": 0.025162760416666666,
+    "out_core_membership_prob_mean": 0.019999999925494193,
+    "out_core_membership_prob_var": 0.0015279017000769575,
+    "out_core_relative_position_index_mean": 24.5,
+    "out_core_relative_position_index_var": 208.25,
+    "out_core_start_logit_mean": -9172.646419270834,
+    "out_core_start_logit_prob_mean": 0.036092572907606764,
+    "out_core_start_logit_prob_var": 0.014464757032692432,
+    "out_core_start_logit_var": 7563234.566666666,
+    "out_core_start_prob_mean": 0.019999999677141507,
+    "out_core_start_prob_var": 0.010453772948433955,
+    "out_core_start_probs_mean": 0.019999999677141507,
+    "out_core_start_probs_var": 0.010453772948433955,
+    "out_core_window_length_mean": 8.758772404988607,
+    "out_core_window_length_var": 0.11653059522310892,
+    "out_core_window_logit_mean": -7494.099739583334,
+    "out_core_window_logit_prob_mean": 0.10893612106641133,
+    "out_core_window_logit_prob_var": 0.032583838577071825,
+    "out_core_window_logit_var": 17073701.4,
+    "out_core_window_mask_mean": 0.2505966261029243,
+    "out_core_window_mask_var": 0.17074589431285858,
+    "out_core_window_posterior_prob_mean": 0.05906036756932735,
+    "out_core_window_posterior_prob_var": 0.027288402368625005,
+    "out_core_window_prior_logit_mean": -7494.025065104167,
+    "out_core_window_prior_logit_prob_mean": 0.12744687149922054,
+    "out_core_window_prior_logit_prob_var": 0.04414806241790454,
+    "out_core_window_prior_logit_var": 17074704.866666667,
+    "out_core_window_score_logit_mean": -7494.108203125,
+    "out_core_window_score_logit_prob_mean": 0.10684162403146426,
+    "out_core_window_score_logit_prob_var": 0.03139243113497893,
+    "out_core_window_score_logit_var": 17073585.933333334,
+    "out_core_window_start_mean": 6.35394713083903,
+    "out_core_window_start_var": 16.04024378458659,
+    "out_cpfr_length_mean": 0.26150000194708506,
+    "out_cpfr_length_norm_mean": 0.10052354981501897,
+    "out_cpfr_length_norm_var": 0.009951244853436948,
+    "out_cpfr_length_var": 1.4865509947141011,
+    "out_elution_logit_mean": 10.916461499532064,
+    "out_elution_logit_prob_mean": 0.9999753872553507,
+    "out_elution_logit_prob_var": 7.941303910759719e-11,
+    "out_elution_logit_var": 0.2923143975436687,
+    "out_elution_prob_mean": 0.9999753872553507,
+    "out_elution_prob_var": 7.941303910759719e-11,
+    "out_excision_c_terminus_score_mean": 2.2957265853881834,
+    "out_excision_c_terminus_score_var": 0.20618698199590046,
+    "out_excision_length_score_mean": 0.0,
+    "out_excision_length_score_var": 0.0,
+    "out_excision_logit_mean": 4.897827593485514,
+    "out_excision_logit_prob_mean": 0.7333022475242614,
+    "out_excision_logit_prob_var": 3.4395791992380963e-09,
+    "out_excision_logit_var": 0.7377749681472778,
+    "out_excision_machinery_idx_mean": 1.390833330154419,
+    "out_excision_machinery_idx_var": 0.2185247391462326,
+    "out_excision_missed_cleavage_score_mean": 0.0,
+    "out_excision_missed_cleavage_score_var": 0.0,
+    "out_excision_n_terminus_score_mean": 2.5961123148600262,
+    "out_excision_n_terminus_score_var": 0.1646285931269328,
+    "out_excision_panel_apm_mean": 4.819007492065429,
+    "out_excision_panel_apm_var": 0.738455573717753,
+    "out_excision_panel_stimulus_mean": 4.867491213480632,
+    "out_excision_panel_stimulus_var": 0.739684788386027,
+    "out_excision_prob_mean": 0.7333022475242614,
+    "out_excision_prob_var": 3.4395791992380963e-09,
+    "out_foreignness_logit_mean": -8.183277257283528,
+    "out_foreignness_logit_prob_mean": 0.0002796867648915698,
+    "out_foreignness_logit_prob_var": 2.4672903350027774e-10,
+    "out_foreignness_logit_var": 0.0030992340839778383,
+    "out_foreignness_prob_mean": 0.0002796867648915698,
+    "out_foreignness_prob_var": 2.4672903350027774e-10,
+    "out_groove_vec_mean": -0.025586663683255514,
+    "out_groove_vec_var": 0.25451593697071073,
+    "out_immunogenicity_cd4_logit_mean": -0.1676725596189499,
+    "out_immunogenicity_cd4_logit_prob_mean": 0.458264414469401,
+    "out_immunogenicity_cd4_logit_prob_var": 0.0004966824577422813,
+    "out_immunogenicity_cd4_logit_var": 0.008064920408651232,
+    "out_immunogenicity_cd4_prob_mean": 0.458264414469401,
+    "out_immunogenicity_cd4_prob_var": 0.0004966824577422813,
+    "out_immunogenicity_cd8_logit_mean": -0.02684186523159345,
+    "out_immunogenicity_cd8_logit_prob_mean": 0.4932910144329071,
+    "out_immunogenicity_cd8_logit_prob_var": 3.8747317375964485e-05,
+    "out_immunogenicity_cd8_logit_var": 0.0006203478784300387,
+    "out_immunogenicity_cd8_prob_mean": 0.4932910144329071,
+    "out_immunogenicity_cd8_prob_var": 3.8747317375964485e-05,
+    "out_immunogenicity_logit_mean": -0.049267569681008656,
+    "out_immunogenicity_logit_prob_mean": 0.4876892407735189,
+    "out_immunogenicity_logit_prob_var": 9.004531384562142e-05,
+    "out_immunogenicity_logit_var": 0.0014427161465088527,
+    "out_immunogenicity_mixed_logit_mean": -0.049267569681008656,
+    "out_immunogenicity_mixed_logit_prob_mean": 0.4876892407735189,
+    "out_immunogenicity_mixed_logit_prob_var": 9.004531384562142e-05,
+    "out_immunogenicity_mixed_logit_var": 0.0014427161465088527,
+    "out_immunogenicity_mixed_prob_mean": 0.4876892407735189,
+    "out_immunogenicity_mixed_prob_var": 9.004531384562142e-05,
+    "out_immunogenicity_mixture_logit_mean": -0.049267569681008656,
+    "out_immunogenicity_mixture_logit_prob_mean": 0.4876892407735189,
+    "out_immunogenicity_mixture_logit_prob_var": 9.004531384562142e-05,
+    "out_immunogenicity_mixture_logit_var": 0.0014427161465088527,
+    "out_immunogenicity_prob_mean": 0.4876892407735189,
+    "out_immunogenicity_prob_var": 9.004531384562142e-05,
+    "out_immunogenicity_recognition_term_mean": 0.04349289201200009,
+    "out_immunogenicity_recognition_term_var": 0.0020683135682096083,
+    "out_latent_vecs_binding_affinity_mean": -0.6641621033350626,
+    "out_latent_vecs_binding_affinity_var": 7.092861080169678,
+    "out_latent_vecs_binding_stability_mean": -0.07188157141208648,
+    "out_latent_vecs_binding_stability_var": 0.2615355918804804,
+    "out_latent_vecs_foreignness_mean": -0.032180775453646976,
+    "out_latent_vecs_foreignness_var": 8.303477478027343,
+    "out_latent_vecs_immunogenicity_cd4_mean": 8.29497975492662e-09,
+    "out_latent_vecs_immunogenicity_cd4_var": 0.9997048020362854,
+    "out_latent_vecs_immunogenicity_cd8_mean": 1.390775050680304e-09,
+    "out_latent_vecs_immunogenicity_cd8_var": 0.999903388818105,
+    "out_latent_vecs_immunogenicity_mixed_mean": 1.390775050680304e-09,
+    "out_latent_vecs_immunogenicity_mixed_var": 0.999903388818105,
+    "out_latent_vecs_ms_detectability_mean": 0.13964138726393382,
+    "out_latent_vecs_ms_detectability_var": 2.444281514485677,
+    "out_latent_vecs_pmhc_interaction_mean": -0.0009717548421273629,
+    "out_latent_vecs_pmhc_interaction_var": 1.0513169606526693,
+    "out_latent_vecs_presentation_class1_mean": -0.00227150598851343,
+    "out_latent_vecs_presentation_class1_var": 1.0457042455673218,
+    "out_latent_vecs_presentation_class2_mean": 0.0001860360304514567,
+    "out_latent_vecs_presentation_class2_var": 1.1102275133132935,
+    "out_latent_vecs_presentation_mixed_mean": -0.00227150598851343,
+    "out_latent_vecs_presentation_mixed_var": 1.0457042455673218,
+    "out_latent_vecs_processing_class1_mean": -1.0426316340764363,
+    "out_latent_vecs_processing_class1_var": 4.985608291625977,
+    "out_latent_vecs_processing_class2_mean": 0.035881732652584715,
+    "out_latent_vecs_processing_class2_var": 3.9339212576548257,
+    "out_latent_vecs_processing_mean": -1.0426316340764363,
+    "out_latent_vecs_processing_mixed_mean": -1.0426316340764363,
+    "out_latent_vecs_processing_mixed_var": 4.985608291625977,
+    "out_latent_vecs_processing_var": 4.985608291625977,
+    "out_latent_vecs_recognition_cd4_mean": -0.32569618821144103,
+    "out_latent_vecs_recognition_cd4_var": 1.3022042592366536,
+    "out_latent_vecs_recognition_cd8_mean": -0.10147503962119421,
+    "out_latent_vecs_recognition_cd8_var": 0.9455211798350016,
+    "out_latent_vecs_recognition_mean": -0.10147503962119421,
+    "out_latent_vecs_recognition_mixed_mean": -0.10147503962119421,
+    "out_latent_vecs_recognition_mixed_var": 0.9455211798350016,
+    "out_latent_vecs_recognition_var": 0.9455211798350016,
+    "out_latent_vecs_species_of_origin_mean": 0.5390368143717448,
+    "out_latent_vecs_species_of_origin_var": 13.425373077392578,
+    "out_mhc_a_species_logits_mean": -1.1614957729975381,
+    "out_mhc_a_species_logits_var": 2.4693564732869464,
+    "out_mhc_a_type_logits_mean": 0.015491870294014613,
+    "out_mhc_a_type_logits_var": 1.5465183893839518,
+    "out_mhc_a_vec_mean": 0.05597473507126172,
+    "out_mhc_a_vec_var": 0.7733014980951946,
+    "out_mhc_b_species_logits_mean": -1.8577207406361897,
+    "out_mhc_b_species_logits_var": 1.664618198076884,
+    "out_mhc_b_type_logits_mean": -0.6307565053304036,
+    "out_mhc_b_type_logits_var": 2.091127077738444,
+    "out_mhc_b_vec_mean": -0.028349800407886504,
+    "out_mhc_b_vec_var": 0.8295056541760762,
+    "out_mhc_class_logits_mean": -0.8960477352142334,
+    "out_mhc_class_logits_var": 0.4384890933831533,
+    "out_mhc_class_pred_mean": 0.0375,
+    "out_mhc_class_pred_var": 0.03509114583333333,
+    "out_mhc_class_probs_inferred_mean": 0.49999999403953554,
+    "out_mhc_class_probs_inferred_var": 0.08245804011821747,
+    "out_mhc_class_probs_mean": 0.5,
+    "out_mhc_class_probs_var": 0.25,
+    "out_mhc_is_class1_prob_mean": 0.609166665871938,
+    "out_mhc_is_class1_prob_var": 0.2185247391462326,
+    "out_mhc_is_class2_prob_mean": 0.3908333341280619,
+    "out_mhc_is_class2_prob_var": 0.2185247391462326,
+    "out_mhc_species_logits_mean": -3.1684875965118406,
+    "out_mhc_species_logits_var": 1.8910935481389364,
+    "out_mhc_species_pred_mean": 0.0,
+    "out_mhc_species_pred_var": 0.0,
+    "out_mhc_species_probs_inferred_mean": 0.16666666666666666,
+    "out_mhc_species_probs_inferred_var": 0.1026481568813324,
+    "out_mhc_species_probs_mean": 0.16666666666666666,
+    "out_mhc_species_probs_var": 0.1026481568813324,
+    "out_mil_elution_prob_mean": 0.9999934690339225,
+    "out_mil_elution_prob_var": 8.611879463517523e-11,
+    "out_mil_ms_prob_mean": 0.9999934690339225,
+    "out_mil_ms_prob_var": 8.611879463517523e-11,
+    "out_mil_presentation_prob_mean": 0.9946291191237313,
+    "out_mil_presentation_prob_var": 3.733818136554744e-05,
+    "out_ms_detectability_logit_mean": 4.0137496789296465,
+    "out_ms_detectability_logit_prob_mean": 0.9821731050809225,
+    "out_ms_detectability_logit_prob_var": 2.837677341934371e-06,
+    "out_ms_detectability_logit_var": 0.009194683174913128,
+    "out_ms_logit_mean": 10.916461499532064,
+    "out_ms_logit_prob_mean": 0.9999753872553507,
+    "out_ms_logit_prob_var": 7.941303910759719e-11,
+    "out_ms_logit_var": 0.2923143975436687,
+    "out_ms_prob_mean": 0.9999753872553507,
+    "out_ms_prob_var": 7.941303910759719e-11,
+    "out_npfr_length_mean": 24.5,
+    "out_npfr_length_norm_mean": 0.09857345124085744,
+    "out_npfr_length_norm_var": 0.009504290545980136,
+    "out_npfr_length_var": 208.25,
+    "out_pep_vec_mean": -0.13581843674182892,
+    "out_pep_vec_var": 1.1436110814412435,
+    "out_pmhc_interaction_vec_mean": -0.0009717548421273629,
+    "out_pmhc_interaction_vec_var": 1.0513169606526693,
+    "out_pmhc_vec_mean": -0.0009717548421273629,
+    "out_pmhc_vec_var": 1.0513169606526693,
+    "out_presentation_class1_logit_mean": 4.265769211451213,
+    "out_presentation_class1_logit_prob_mean": 0.9827182610829671,
+    "out_presentation_class1_logit_prob_var": 1.1362760190240333e-06,
+    "out_presentation_class1_logit_var": 0.01521966454347421,
+    "out_presentation_class1_prob_mean": 0.9827182610829671,
+    "out_presentation_class1_prob_var": 1.1362760190240333e-06,
+    "out_presentation_class2_logit_mean": 3.959770679473877,
+    "out_presentation_class2_logit_prob_mean": 0.9812856594721476,
+    "out_presentation_class2_logit_prob_var": 1.4372397639424623e-07,
+    "out_presentation_class2_logit_var": 0.00038919247444937357,
+    "out_presentation_class2_prob_mean": 0.9812856594721476,
+    "out_presentation_class2_prob_var": 1.4372397639424623e-07,
+    "out_presentation_invivo_excision_term_mean": 0.6645574728647868,
+    "out_presentation_invivo_excision_term_var": 0.013582573086023331,
+    "out_presentation_logit_mean": 4.250426514943441,
+    "out_presentation_logit_prob_mean": 0.9833770076433818,
+    "out_presentation_logit_prob_var": 2.327562500189136e-05,
+    "out_presentation_logit_var": 0.148806452875336,
+    "out_presentation_mixed_logit_mean": 4.250426514943441,
+    "out_presentation_mixed_logit_prob_mean": 0.9833770076433818,
+    "out_presentation_mixed_logit_prob_var": 2.327562500189136e-05,
+    "out_presentation_mixed_logit_var": 0.148806452875336,
+    "out_presentation_mixed_prob_mean": 0.9833770076433818,
+    "out_presentation_mixed_prob_var": 2.327562500189136e-05,
+    "out_presentation_prob_mean": 0.9833770076433818,
+    "out_presentation_prob_var": 2.327562500189136e-05,
+    "out_processing_class1_logit_mean": 0.8765820384025573,
+    "out_processing_class1_logit_prob_mean": 0.7059553066889445,
+    "out_processing_class1_logit_prob_var": 0.00015178692459206407,
+    "out_processing_class1_logit_var": 0.0035150499315932393,
+    "out_processing_class1_prob_mean": 0.7059553066889445,
+    "out_processing_class1_prob_var": 0.00015178692459206407,
+    "out_processing_class2_logit_mean": 1.2168111642201742,
+    "out_processing_class2_logit_prob_mean": 0.7714151938756307,
+    "out_processing_class2_logit_prob_var": 5.000947639928199e-05,
+    "out_processing_class2_logit_var": 0.0016062470967881382,
+    "out_processing_class2_prob_mean": 0.7714151938756307,
+    "out_processing_class2_prob_var": 5.000947639928199e-05,
+    "out_processing_logit_mean": 1.0144537329673766,
+    "out_processing_logit_prob_mean": 0.7326966683069865,
+    "out_processing_logit_prob_var": 0.0009135549926819901,
+    "out_processing_logit_var": 0.02452738384405772,
+    "out_processing_mixed_logit_mean": 1.0144537329673766,
+    "out_processing_mixed_logit_prob_mean": 0.7326966683069865,
+    "out_processing_mixed_logit_prob_var": 0.0009135549926819901,
+    "out_processing_mixed_logit_var": 0.02452738384405772,
+    "out_processing_mixed_prob_mean": 0.7326966683069865,
+    "out_processing_mixed_prob_var": 0.0009135549926819901,
+    "out_processing_prob_mean": 0.7326966683069865,
+    "out_processing_prob_var": 0.0009135549926819901,
+    "out_recognition_cd4_logit_mean": 0.7711220939954122,
+    "out_recognition_cd4_logit_prob_mean": 0.683617369333903,
+    "out_recognition_cd4_logit_prob_var": 0.00016618879356731971,
+    "out_recognition_cd4_logit_var": 0.0035420622987051803,
+    "out_recognition_cd4_prob_mean": 0.683617369333903,
+    "out_recognition_cd4_prob_var": 0.00016618879356731971,
+    "out_recognition_cd8_logit_mean": 0.0724480353295803,
+    "out_recognition_cd8_logit_prob_mean": 0.5180610696474711,
+    "out_recognition_cd8_logit_prob_var": 0.0004710595647338778,
+    "out_recognition_cd8_logit_var": 0.0076037485152482985,
+    "out_recognition_cd8_prob_mean": 0.5180610696474711,
+    "out_recognition_cd8_prob_var": 0.0004710595647338778,
+    "out_recognition_mixed_logit_mean": 0.34265795946121214,
+    "out_recognition_mixed_logit_prob_mean": 0.5816937685012817,
+    "out_recognition_mixed_logit_prob_var": 0.007191234827041626,
+    "out_recognition_mixed_logit_var": 0.12838121851285297,
+    "out_recognition_mixed_prob_mean": 0.5816937685012817,
+    "out_recognition_mixed_prob_var": 0.007191234827041626,
+    "out_recognition_repertoire_logit_mean": 0.34265795946121214,
+    "out_recognition_repertoire_logit_prob_mean": 0.5816937685012817,
+    "out_recognition_repertoire_logit_prob_var": 0.007191234827041626,
+    "out_recognition_repertoire_logit_var": 0.12838121851285297,
+    "out_recognition_repertoire_prob_mean": 0.5816937685012817,
+    "out_recognition_repertoire_prob_var": 0.007191234827041626,
+    "out_species_of_origin_logits_mean": -0.8221308469772339,
+    "out_species_of_origin_logits_var": 13.516973431905111,
+    "out_species_probs_mean": 0.16666666666666666,
+    "out_species_probs_var": 0.1026481568813324,
+    "out_tcell_context_logits_apc_type_mean": 3.0956314245859784,
+    "out_tcell_context_logits_apc_type_var": 0.09024629766742388,
+    "out_tcell_context_logits_assay_method_mean": 2.6418490568796793,
+    "out_tcell_context_logits_assay_method_var": 0.1267772262295087,
+    "out_tcell_context_logits_assay_readout_mean": 3.148663028081258,
+    "out_tcell_context_logits_assay_readout_var": 0.06319485915203889,
+    "out_tcell_context_logits_culture_context_mean": 3.1745624701182047,
+    "out_tcell_context_logits_culture_context_var": 0.07306504398584365,
+    "out_tcell_context_logits_peptide_format_mean": 2.9575535615285236,
+    "out_tcell_context_logits_peptide_format_var": 0.07493199532230695,
+    "out_tcell_context_logits_stim_context_mean": 2.9925247033437095,
+    "out_tcell_context_logits_stim_context_var": 0.0684250051776568,
+    "out_tcell_logit_mean": 3.249896192550659,
+    "out_tcell_logit_prob_mean": 0.9596076806386312,
+    "out_tcell_logit_prob_var": 2.7208503646155198e-05,
+    "out_tcell_logit_var": 0.031109632163619002,
+    "out_tcell_panel_logits_apc_type_mean": 3.0956314245859784,
+    "out_tcell_panel_logits_apc_type_var": 0.09024629766742388,
+    "out_tcell_panel_logits_assay_method_mean": 2.6418490568796793,
+    "out_tcell_panel_logits_assay_method_var": 0.1267772262295087,
+    "out_tcell_panel_logits_assay_readout_mean": 3.148663028081258,
+    "out_tcell_panel_logits_assay_readout_var": 0.06319485915203889,
+    "out_tcell_panel_logits_culture_context_mean": 3.1745624701182047,
+    "out_tcell_panel_logits_culture_context_var": 0.07306504398584365,
+    "out_tcell_panel_logits_peptide_format_mean": 2.9575535615285236,
+    "out_tcell_panel_logits_peptide_format_var": 0.07493199532230695,
+    "out_tcell_panel_logits_stim_context_mean": 2.9925247033437095,
+    "out_tcell_panel_logits_stim_context_var": 0.0684250051776568,
+    "out_tcell_prob_mean": 0.9596076806386312,
+    "out_tcell_prob_var": 2.7208503646155198e-05,
+    "out_tcr_evidence_logit_mean": 0.3583480636278788,
+    "out_tcr_evidence_logit_prob_mean": 0.5886392712593078,
+    "out_tcr_evidence_logit_prob_var": 3.1286683906728285e-06,
+    "out_tcr_evidence_logit_var": 5.335025549963272e-05,
+    "out_tcr_evidence_method_logits_mean": -0.42399179538091025,
+    "out_tcr_evidence_method_logits_var": 0.024535183856884638,
+    "out_tcr_evidence_method_probs_mean": 0.3962071597576141,
+    "out_tcr_evidence_method_probs_var": 0.0013696046313270926,
+    "out_tcr_evidence_prob_mean": 0.5886392712593078,
+    "out_tcr_evidence_prob_var": 3.1286683906728285e-06,
+    "eval_samples": 906.0,
+    "eval_samples_per_sec": 30.68126651322783,
+    "eval_batches": 15.0,
+    "eval_sec": 29.529419837000205
+  },
+  "metric_estimators": {
+    "auprc": "average_precision_distinct_thresholds_v2"
+  },
+  "loss_reconciliation": {
+    "verified": true,
+    "canonical_evaluation_compared": true,
+    "artifact": "val_loss_ledger.json"
+  },
+  "output_support": {
+    "binding": {
+      "target_observations": 449,
+      "exported_observations": 449,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "binding_kd": {
+      "target_observations": 35,
+      "exported_observations": 35,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "binding_ic50": {
+      "target_observations": 265,
+      "exported_observations": 265,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "binding_ec50": {
+      "target_observations": 6,
+      "exported_observations": 6,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "elution": {
+      "target_observations": 394,
+      "exported_observations": 394,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "presentation": {
+      "target_observations": 394,
+      "exported_observations": 394,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tcell": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "immunogenicity": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tcell_assay_method": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "ELISPOT": {
+          "target": 0,
+          "exported": 0
+        },
+        "ICS": {
+          "target": 0,
+          "exported": 0
+        },
+        "MULTIMER": {
+          "target": 0,
+          "exported": 0
+        },
+        "ELISA": {
+          "target": 0,
+          "exported": 0
+        },
+        "CYTOTOXICITY_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "PROLIFERATION_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "BIOASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_assay_readout": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "IFNG": {
+          "target": 0,
+          "exported": 0
+        },
+        "TNFA": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL2": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL4": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL5": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL10": {
+          "target": 0,
+          "exported": 0
+        },
+        "GMCSF": {
+          "target": 0,
+          "exported": 0
+        },
+        "CYTOTOXICITY": {
+          "target": 0,
+          "exported": 0
+        },
+        "PROLIFERATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "ACTIVATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "QUAL_BINDING": {
+          "target": 0,
+          "exported": 0
+        },
+        "KD": {
+          "target": 0,
+          "exported": 0
+        },
+        "MULTIMER_BINDING": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_apc_type": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "DENDRITIC": {
+          "target": 0,
+          "exported": 0
+        },
+        "B_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "PBMC": {
+          "target": 0,
+          "exported": 0
+        },
+        "SPLENOCYTE": {
+          "target": 0,
+          "exported": 0
+        },
+        "T2_B_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "B_LCL": {
+          "target": 0,
+          "exported": 0
+        },
+        "T_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_culture_context": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "DIRECT_EX_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "SHORT_RESTIM": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "ENGINEERED": {
+          "target": 0,
+          "exported": 0
+        },
+        "CELL_LINE_CLONE": {
+          "target": 0,
+          "exported": 0
+        },
+        "NON_SPECIFIC_ACTIVATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_stim_context": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "EX_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO_STIM": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "ENGINEERED": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_peptide_format": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "MINIMAL_EPITOPE": {
+          "target": 0,
+          "exported": 0
+        },
+        "LONG_PEPTIDE": {
+          "target": 0,
+          "exported": 0
+        },
+        "PEPTIDE_POOL": {
+          "target": 0,
+          "exported": 0
+        },
+        "WHOLE_PROTEIN": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "kon": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "koff": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "t_half": {
+      "target_observations": 54,
+      "exported_observations": 54,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tm": {
+      "target_observations": 9,
+      "exported_observations": 9,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "binding_affinity_probe": {
+      "target_observations": 449,
+      "exported_observations": 449,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "ms_detectability": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "excision": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "processing": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "core_start": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "mhc_class": {
+      "target_observations": 906,
+      "exported_observations": 906,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "mhc_species": {
+      "target_observations": 906,
+      "exported_observations": 906,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "mhc_a_fine_type": {
+      "target_observations": 906,
+      "exported_observations": 906,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "mhc_b_fine_type": {
+      "target_observations": 906,
+      "exported_observations": 906,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tcr_evidence": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tcr_evidence_method": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {
+        "multimer_binding": {
+          "target": 0,
+          "exported": 0
+        },
+        "target_cell_functional": {
+          "target": 0,
+          "exported": 0
+        },
+        "functional_readout": {
+          "target": 0,
+          "exported": 0
+        }
+      }
+    },
+    "species_of_origin": {
+      "target_observations": 906,
+      "exported_observations": 906,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "foreignness": {
+      "target_observations": 906,
+      "exported_observations": 906,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "binding_assay_panel_assay_type": {
+      "target_observations": 449,
+      "exported_observations": 449,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "KD": {
+          "target": 35,
+          "exported": 35
+        },
+        "KD_PROXY_IC50": {
+          "target": 135,
+          "exported": 135
+        },
+        "KD_PROXY_EC50": {
+          "target": 8,
+          "exported": 8
+        },
+        "IC50": {
+          "target": 265,
+          "exported": 265
+        },
+        "EC50": {
+          "target": 6,
+          "exported": 6
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        },
+        "T_HALF": {
+          "target": 0,
+          "exported": 0
+        },
+        "TM": {
+          "target": 0,
+          "exported": 0
+        },
+        "KOFF": {
+          "target": 0,
+          "exported": 0
+        },
+        "KON": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "binding_assay_panel_assay_prep": {
+      "target_observations": 449,
+      "exported_observations": 449,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "PURIFIED": {
+          "target": 431,
+          "exported": 431
+        },
+        "CELLULAR": {
+          "target": 18,
+          "exported": 18
+        },
+        "LYSATE": {
+          "target": 0,
+          "exported": 0
+        },
+        "BINDING_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "binding_assay_panel_assay_geometry": {
+      "target_observations": 449,
+      "exported_observations": 449,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "COMPETITIVE": {
+          "target": 435,
+          "exported": 435
+        },
+        "DIRECT": {
+          "target": 14,
+          "exported": 14
+        },
+        "T_CELL_INHIBITION": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "binding_assay_panel_assay_readout": {
+      "target_observations": 449,
+      "exported_observations": 449,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "RADIOACTIVITY": {
+          "target": 324,
+          "exported": 324
+        },
+        "FLUORESCENCE": {
+          "target": 125,
+          "exported": 125
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "excision_panel_apm": {
+      "target_observations": 394,
+      "exported_observations": 394,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "none": {
+          "target": 386,
+          "exported": 386
+        },
+        "peptide_supply": {
+          "target": 0,
+          "exported": 0
+        },
+        "n_term_trimming": {
+          "target": 1,
+          "exported": 1
+        },
+        "loading_complex": {
+          "target": 0,
+          "exported": 0
+        },
+        "mhc_null": {
+          "target": 0,
+          "exported": 0
+        },
+        "class_ii_loading": {
+          "target": 5,
+          "exported": 5
+        },
+        "other": {
+          "target": 0,
+          "exported": 0
+        },
+        "unknown": {
+          "target": 2,
+          "exported": 2
+        }
+      },
+      "components": {}
+    },
+    "excision_panel_stimulus": {
+      "target_observations": 394,
+      "exported_observations": 394,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "none": {
+          "target": 364,
+          "exported": 364
+        },
+        "ifn_gamma": {
+          "target": 18,
+          "exported": 18
+        },
+        "ifn_type1": {
+          "target": 5,
+          "exported": 5
+        },
+        "tnf_alpha": {
+          "target": 0,
+          "exported": 0
+        },
+        "tlr": {
+          "target": 5,
+          "exported": 5
+        },
+        "cell_activation": {
+          "target": 2,
+          "exported": 2
+        },
+        "cytokine_unspecified": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "ms": {
+      "target_observations": 394,
+      "exported_observations": 394,
+      "missing_output_observations": 0,
+      "alias_of": "elution",
+      "columns": {},
+      "components": {}
+    },
+    "tcell_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "immunogenicity_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {},
+      "components": {}
+    },
+    "tcell_assay_method_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "ELISPOT": {
+          "target": 0,
+          "exported": 0
+        },
+        "ICS": {
+          "target": 0,
+          "exported": 0
+        },
+        "MULTIMER": {
+          "target": 0,
+          "exported": 0
+        },
+        "ELISA": {
+          "target": 0,
+          "exported": 0
+        },
+        "CYTOTOXICITY_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "PROLIFERATION_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO_ASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "BIOASSAY": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_assay_readout_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "IFNG": {
+          "target": 0,
+          "exported": 0
+        },
+        "TNFA": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL2": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL4": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL5": {
+          "target": 0,
+          "exported": 0
+        },
+        "IL10": {
+          "target": 0,
+          "exported": 0
+        },
+        "GMCSF": {
+          "target": 0,
+          "exported": 0
+        },
+        "CYTOTOXICITY": {
+          "target": 0,
+          "exported": 0
+        },
+        "PROLIFERATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "ACTIVATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "QUAL_BINDING": {
+          "target": 0,
+          "exported": 0
+        },
+        "KD": {
+          "target": 0,
+          "exported": 0
+        },
+        "MULTIMER_BINDING": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_apc_type_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "DENDRITIC": {
+          "target": 0,
+          "exported": 0
+        },
+        "B_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "PBMC": {
+          "target": 0,
+          "exported": 0
+        },
+        "SPLENOCYTE": {
+          "target": 0,
+          "exported": 0
+        },
+        "T2_B_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "B_LCL": {
+          "target": 0,
+          "exported": 0
+        },
+        "T_CELL": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_culture_context_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "DIRECT_EX_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "SHORT_RESTIM": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "ENGINEERED": {
+          "target": 0,
+          "exported": 0
+        },
+        "CELL_LINE_CLONE": {
+          "target": 0,
+          "exported": 0
+        },
+        "NON_SPECIFIC_ACTIVATION": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_stim_context_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "EX_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VITRO_STIM": {
+          "target": 0,
+          "exported": 0
+        },
+        "IN_VIVO": {
+          "target": 0,
+          "exported": 0
+        },
+        "ENGINEERED": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    },
+    "tcell_peptide_format_mil": {
+      "target_observations": 0,
+      "exported_observations": 0,
+      "missing_output_observations": 0,
+      "alias_of": "",
+      "columns": {
+        "unknown": {
+          "target": 0,
+          "exported": 0
+        },
+        "MINIMAL_EPITOPE": {
+          "target": 0,
+          "exported": 0
+        },
+        "LONG_PEPTIDE": {
+          "target": 0,
+          "exported": 0
+        },
+        "PEPTIDE_POOL": {
+          "target": 0,
+          "exported": 0
+        },
+        "WHOLE_PROTEIN": {
+          "target": 0,
+          "exported": 0
+        },
+        "OTHER": {
+          "target": 0,
+          "exported": 0
+        }
+      },
+      "components": {}
+    }
+  }
+}

@@ -16,9 +16,13 @@ from contextlib import contextmanager
 from copy import deepcopy
 from pathlib import Path
 
+from ..data.species_context import species_lineage_fields
+from ..data.assay_context import assay_context_fields
+
 from .mil import MIL_TASKS, get_mil_channel, resolve_mil_targets, mil_observation_slots
 from .output_contract import OutputContract, label_evidence
 from .supervision import resolve_row_targets
+from .target_policy import AffinityTargetAudit
 
 
 COUNT_FIELDS = (
@@ -41,6 +45,9 @@ COUNT_FIELDS = (
     "unique_exact",
 )
 CONTEXT_FIELDS = (
+    "source_assay_method",
+    "source_evidence_kind",
+    "parent_assay_contexts",
     "mhc_class",
     "species",
     "species_of_origin",
@@ -132,6 +139,7 @@ class OutputCoverageCensus:
             );
             CREATE INDEX observations_endpoint ON observations(endpoint, column_name, row_id);
         """)
+        self.affinity_target_audit = AffinityTargetAudit(self.db, contract)
         self.splits: dict[str, int] = {}
         self.objective_hits = defaultdict(
             lambda: defaultdict(lambda: {"observations": 0, "mask_weight": 0.0})
@@ -181,6 +189,7 @@ class OutputCoverageCensus:
             self._hash_sum,
             self._hash_count,
             deepcopy(self.objective_hits),
+            deepcopy(self.affinity_target_audit.counts),
         )
         # A savepoint undoes only this batch, not writes made before it.
         self.db.execute("SAVEPOINT add_batch")
@@ -189,7 +198,13 @@ class OutputCoverageCensus:
         except BaseException:
             self.db.execute("ROLLBACK TO add_batch")
             self.db.execute("RELEASE add_batch")
-            self.splits, self._hash_sum, self._hash_count, self.objective_hits = state
+            (
+                self.splits,
+                self._hash_sum,
+                self._hash_count,
+                self.objective_hits,
+                self.affinity_target_audit.counts,
+            ) = state
             raise
         self.db.execute("RELEASE add_batch")
         self.db.commit()
@@ -219,6 +234,13 @@ class OutputCoverageCensus:
                 (row_id, name, str(getattr(sample, name, None) or "unknown"))
                 for name in CONTEXT_FIELDS
             ]
+            facets.extend(
+                (row_id, name, value or "unknown")
+                for name, value in species_lineage_fields(sample).items()
+            )
+            facets.extend(
+                (row_id, name, value) for name, value in assay_context_fields(sample).items()
+            )
             for attr, field in (
                 ("source_mhc_alleles", "source_allele"),
                 ("resolved_mhc_alleles", "resolved_allele"),
@@ -274,6 +296,17 @@ class OutputCoverageCensus:
                 qualifier,
             ]
             key = json.dumps(identity, separators=(",", ":"))
+            self.affinity_target_audit.add(
+                split=split,
+                row_id=row_ids[sample_index],
+                objective_id=objective_id,
+                column=column,
+                observation_key=key,
+                sample=samples[sample_index],
+                raw_target=raw_value,
+                effective_target=value,
+                qualifier=qualifier,
+            )
             record = (
                 row_ids[sample_index],
                 objective.endpoint,

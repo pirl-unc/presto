@@ -1,3 +1,453 @@
+# Native presenting-cell processing context — #115
+
+- [x] Review role evidence, current row/MIL routing and specify the bounded change.
+- [x] Implement one role-aware processing resolver and generated-parent provenance.
+- [x] Bind prospective policy/fingerprints and verify row/MIL/export regressions.
+- [x] Register/freeze/run/publish/independently verify actual source-context audit.
+- [ ] Format/lint/full CI, review, merge and distribute 0.1.21 after 0.1.20.
+
+## Native-presenter review
+
+All 225 focused regressions, formatting, lint and strict docs pass. The successful
+clean audit at 060fbfed9d2f99f2937e637624a9e88d1df786c3 preserves all 9,053
+source rows/partitions and 2,614 IC50 raw/effective values/operators. Native context
+is 109 human / 15 rat / 8,929 unknown; 8,936 processing buckets change. All IC50
+presenters remain unknown. All 18 public assets and all original/native source
+joins independently verify. The initial failed packaging recipe/log are preserved
+and corrected as #125; no historical artifact is replaced. Full final-head CI,
+merge and exact clean-main distribution remain gates. #115/#123 remain open.
+
+The first full local run found one stale schema-3 assertion and was interrupted
+after 58 passing tests; it is not counted as a pass. The isolated affinity-policy
+run reproduced that assertion (one failed, four passed). Update its explicit
+expectation to schema 4, preserve every value/censoring check, and rerun the full
+suite on the new clean commit before merging. The executed data-audit code and
+all public evidence remain unchanged.
+
+# Protected release CI and superseded feature runs — #120
+
+Pinned actionlint 1.7.7, repository formatting/lint and strict docs pass. The
+reviewed event matrix preserves unique groups for both pending and active main/tag
+runs; PR/feature cancellations are confined to their workflow and event. Merged
+#122 as d9df79c and distributed 0.1.20. Clean-main CI passed 2,310 tests (three
+qualification skips); all four public assets and 168 public-wheel regressions verify.
+
+- [x] Specify event/ref groups, pending-run protection and release gates.
+- [x] Implement and validate concurrency and document the event matrix.
+- [x] Format/lint/full CI, review, merge and distribute 0.1.20 after 0.1.19.
+
+# Molecular MHC species and source-role provenance — #115
+
+- [x] Review native evidence and specify a bounded molecular-label/provenance correction.
+- [x] Carry independent native species axes through typed records, samples and exports.
+- [x] Derive masked molecular MHC supervision and coverage from allele identity.
+- [x] Verify row/MIL/lineage/fingerprint paths and publish the actual source-linked audit.
+- [x] Format/lint/full checks, review, merge and distribute 0.1.19.
+
+## Molecular-species review
+
+The clean recipe verifies all 9,053 canonical auxiliary labels and preserves all
+2,614 IC50 raw/effective targets, operators and partitions. Eight rat-host/HLA
+elution labels change (seven train, one validation). All 14 public assets and every
+original membership/species/native column independently verify through datacache.
+Focused row/MIL/export/lineage/fingerprint/policy regressions, formatting, lint and
+strict docs pass. Merged #121 and distributed 0.1.19: exact-main CI passed 2,310
+tests with three qualification skips, and all four public assets plus 168 public-wheel
+regressions independently verified. #115 remains open for
+processing conditioning and antigen attribution; context gaps stay explicit.
+
+# Physical affinity metric reporting — #116
+
+- [x] Specify observed numerical defects, compatibility and immutable-run boundaries.
+- [x] Implement constant-vector handling and physical target threshold reporting.
+- [x] Verify numerical/canonical regressions and publish the actual additive audit.
+- [x] Format/lint/full checks, review, merge and distribute 0.1.18.
+
+## Physical-metric review
+
+All 116 focused numerical, policy, extraction-parity and coverage regressions pass.
+Formatting, lint and strict docs pass. The clean recipe audits all 2,614 IC50 rows
+and 90 original archive files. All 14 public audit assets independently download
+and verify through datacache; a separate NumPy/scikit-learn replay verifies all 20
+comparisons, four source-context boundary joins and six undefined correlations.
+No held-out classes or failed quality decision change. Merged #119 and distributed
+as 0.1.18; exact clean-main CI passed 2,297 tests (three qualification skips). All
+four public release assets and 116 focused public-wheel regressions verify.
+
+# Prospective effective-target fit — #110/#53
+
+- [x] Specify the new declared target space, raw-space diagnostics, baselines and limits.
+- [x] Prepare and test a new isolated recipe with verified released producer pins.
+- [x] Publish and freeze the new prospective manifest without changing historical contracts.
+- [x] Run canonical full-input qualification and bounded fitting; preserve all outcomes.
+- [x] Audit/publish complete artifacts and comparisons, then review/merge/release 0.1.17.
+
+## Effective-fit review
+
+Canonical gate passed; 200 finite steps improve exact training error but the
+validation screen fails against the mean/ridge baselines. All 90 archive members,
+9,053 source joins and 2,614 IC50 rows independently verify. Species attribution,
+numerical errata and narrow predictions are tracked in #115/#116/#117. Exact
+clean-main CI passed 2,282 tests (three qualification skips); #113 merged and
+0.1.17 is distributed. All 30 public downloads verify and all five derived
+outputs reproduce byte-for-byte from the public run. Cache-only replay isolation
+is fixed as #118; the original generation remains unchanged.
+
+# Explicit affinity target policy — #110
+
+- [x] Specify compatibility, prospective policy binding and complete clipped-row audit.
+- [x] Share one executable policy across affinity objectives and declare it in contracts.
+- [x] Count and export traceable changed targets during canonical preflight.
+- [x] Verify focused regressions and audit the frozen public IC50 observations without a model.
+- [x] Publish evidence, format/lint/full checks, review, merge and distribute 0.1.16.
+
+# Corrected human IC50 fitting attempt and target-policy audit
+
+- [x] Specify fixed producers, exact candidate manifest, optimization and baseline criteria.
+- [x] Freeze and verify launcher, original-model diagnostic and baseline implementation.
+- [x] Preserve/stop the incompatible raw-target attempt before optimization; file #110.
+- [x] Audit all 2,614 source-linked IC50 rows and guard against relaunching the mismatch.
+- [x] Publish/independently verify all 19 public assets, 25 archived files, 2,614 source/context/partition joins and every effective target.
+- [x] Close registry, review, merge and release 0.1.15 after final checks.
+
+## Target-policy review
+
+No checkpoint or prediction exists. The original producer clips affinity targets
+at 50,000 nM, changing 211 IC50 values/bounds (54 exact, 157 right censored).
+The raw-target plan cannot be executed honestly without a new explicit contract;
+no manifest or criterion was relaxed. Seven focused safeguards and the full local
+suite (2,276 passed, four skips) pass. #110 owns canonical policy disclosure,
+per-objective changed-target audits and prospective binding before a future fit.
+All 19 public downloads verify. The raw-target relaunch guard also rejects the
+full frozen cohort with exactly 211 changed measurements/bounds.
+
+# Corrected human consumer qualification
+
+- [x] Register released producers, frozen corrected inputs and prospective IC50 evidence thresholds.
+- [x] Freeze and run canonical preflight with explicit reservoir/v2 policies.
+- [x] Publish and independently verify new membership, source/label support and leakage limits.
+- [x] Close experiment registry; format/lint/full checks, review, merge and distribute 0.1.14.
+
+## Corrected preflight review
+
+The clean recipe ran with released Presto 0.1.13 / Hitlist 1.78.0 in 985.768s,
+runner peak RSS 11,749,728,256 bytes. All 48 archive members and all 9,053 selected
+observation/source-context joins verify. Explicit reservoir/v2 membership is
+7,241/906/906. Direct IC50 meets the fixed 50-observation/peptide/exact minima in
+every split; no model or prediction exists and the future manifest gate has not
+run. Full local tests pass 2,276 with four skips; actual-recipe CI passes 2,277
+with three skips, docs and distribution checks. All 23 public assets, 48 archive members, 9,053 observation/context/partition joins
+and the fixed candidate counts independently verify. Merged #108 and distributed as 0.1.14; clean-main CI passed 2,277 tests
+(three skips), all four public release assets verify, and 28 public-wheel frozen-data
+regressions pass. See the registered family for sparse outputs,
+shared studies and unknown biological identities.
+
+# Frozen component allocation — #105
+
+- [x] Record observed size/support bias and prospective compatibility contract.
+- [x] Implement explicit label-blind relative-deficit allocation and legacy preservation.
+- [x] Verify regressions and audit the exact public 9,000-root cohort.
+- [x] Publish/verify assignments and support/lineage reports; close experiment registry.
+- [x] Format/lint/full checks, review, merge and distribute 0.1.13.
+
+## Allocation review
+
+Format/lint, 72 focused regressions and the full local suite pass (2,276 tests,
+four explicit skips; 525.13 seconds). All 12 public assets were independently
+downloaded through datacache and hash-verified. Analysis verifies all 17 archive
+members, exact original V1 membership, unchanged observation/component identities
+and zero split components. V2 improves direct-KD support to 406/71/33 while
+kinetics remains sparse and biological independence remains unresolved. Merged in #106 and distributed as 0.1.13; clean-main CI passed 2,277 tests with
+three explicit skips, and all four public release assets plus 49 public-wheel
+regressions independently verify.
+
+# Frozen Hitlist cap policy — #103
+
+- [x] Specify compatibility, actual policy metadata and bounded retention.
+- [x] Honor canonical head/reservoir flags with full source/drop counts.
+- [x] Verify selection, lineage and bounded record-object retention (138 focused tests).
+- [x] Format/lint/full tests, review, merge and publish 0.1.12.
+
+## Cap-policy review
+
+Format/lint and 138 focused tests pass. Legacy Python API selections are exact;
+canonical head/reservoir modes are explicit and retain at most the cap plus the
+record being inspected. Source dataframe memory is unchanged. The complete local suite passes 2,269 tests with four explicit skips (520.37s).
+Merged in #104 and distributed as 0.1.12. Clean-main CI passed 2,270 tests with
+three explicit skips; all four public assets and 138 public-wheel regressions verify.
+
+# Scoped sampling investigation — #94
+
+- [x] Register the two-condition contract and exploratory repeated-test limitation.
+- [x] Fix shared-volume SQLite scratch (#102), preserve the first attempt, then run canonical preflight and both bounded fits with frozen membership.
+- [x] Publish and verify all predictions, exposure, baseline and uncertainty artifacts (14 independent downloads).
+- [x] Close registry; format/lint/full checks, review, merge and release 0.1.11.
+
+## Sampling review
+
+Both bounded conditions completed with identical frozen membership; all 122
+archive files and probability metrics from saved predictions verify. Shuffled
+batches improve over balanced sampling and prevalence, but logistic remains
+preferred on validation. Full local software gates pass (2,262 passed, four
+skips). Merged #101; clean-main CI passed 2,263 tests with three explicit skips.
+Version 0.1.11 is published and all four assets independently verified; the public
+wheel passes 43 scoped-input/partition regressions. #94 is closed as an investigation;
+logistic remains the preferred probability baseline.
+
+# Actual human-corpus preflight
+
+- [x] Register baseline limits, source pins, caps and CPU-only resource contract.
+- [x] Execute canonical frozen admission and preserve actual partitions/audits.
+- [x] Publish complete artifacts, hashes, support/coverage and independence limits (ten independent downloads).
+- [x] Close experiment registry; format/lint/full gates, review, merge/release 0.1.10.
+
+## Human-preflight review
+
+Actual canonical preflight passed with 9,000 frozen samples; all 46 archive
+members independently match the original inventory. Full endpoint counts and
+lineage limitations are recorded with the historical sampling deviation (#103).
+No output is declared ready and no model was constructed. Source implementation
+CI passed; final result-publication checks and clean-main release remain pending.
+
+# Explicit effective regularization — #95
+
+- [x] Diagnose the actual fit deviation and record the prospective fix contract.
+- [x] Expose and validate all effective regularization values before data loading.
+- [x] Verify parser/config/loss/preflight receipts (116 focused tests).
+- [x] Complete local full suite (2,261 passed, four skips), format/lint/strict docs.
+- [ ] Complete final-head CI and release gates.
+- [ ] Review, merge and publish 0.1.9; preserve the original experiment.
+
+## Review
+
+The original numeric defaults are preserved. Every inherited regularization key
+is declared, all weights are validated before dependency/data work, and canonical
+preflight writes base and per-epoch effective settings. Explicit CLI values now
+survive config merging even when equal to defaults (#96), including nested
+unified/synthetic CLI routes. Format/lint, 116 focused regressions and strict docs
+pass. The complete local suite passes 2,261 tests with four skips.
+Final-head CI and release remain pending.
+
+# Canonical scoped training — Presto #70
+
+- [x] Inspect canonical trainer/coverage contracts and specify the bounded source.
+- [x] Freeze legible scoped membership and leakage/support artifacts through datacache.
+- [x] Integrate the existing canonical trainer/CLI without unrelated live inputs.
+- [x] Verify synthetic regressions and register actual preflight/fitting evidence.
+- [ ] Run full gates, review, merge and publish version 0.1.8.
+
+## Review
+
+138 focused source, membership, CLI, canonical trainer and frozen MHC partition
+tests pass. The actual canonical preflight is exercised with a synthetic schema
+fixture and cannot read unrelated sources or construct a model. Scope guards,
+projection hashes and exact membership/junction conversion are enforced.
+The direct script parser gap is tracked and fixed as #91. Full local gates pass
+(2,250 passed, four skips), final implementation CI passes, and strict docs pass.
+The actual clean preflight and 200-step fit have complete frozen membership and
+held-out predictions. Nine public assets were independently re-downloaded and
+hash-verified through datacache. Probability quality failed both baselines (#94),
+and a hidden active orthogonality prior deviated from the experiment plan (#95).
+The original run is preserved with those limitations; no readiness claim.
+Final results documentation CI, merge and version 0.1.8 distribution remain.
+
+# Internal excision scoring contract — Presto #88
+
+- [x] File the observed rule inconsistency and specify compatibility explicitly.
+- [x] Implement versioned internal-site masking and checkpoint/resume semantics.
+- [x] Verify known boundaries and checkpoint round trips (98 tests passed; two corpus skips).
+- [ ] Format, lint, full tests, review, PR, merge and verified distribution.
+
+## Review
+
+The focused scoring/checkpoint/excision suite passes 98 tests with two explicit
+missing-corpus skips. A checkpoint created by unchanged 0.1.6 (f30442e) with
+internal K-P/R-P sites loads with vocabulary 2/scoring 1 and produces exactly
+identical excision, missed-cleavage and detectability outputs. No weights or
+scoring semantics are migrated. Format/lint and strict docs pass; complete
+regression and deployment gates remain pending. The first CI/full local run found
+two gradient-coverage fixture failures: its only interior Trypsin site was R-P,
+correctly excluded by scoring version 2 (#92). The fixture now supplies an allowed
+R-A site and a compatible terminal K; thresholds and allowlists are unchanged.
+The expanded focused suite passes 119 tests with two explicit missing-corpus skips.
+The interrupted local run had 1,457 passes and those two failures; the final full
+suite is rerun after the fix.
+
+# Trypsin/P search contract — Presto #82
+
+- [x] Read primary enzyme documentation and frozen search settings.
+- [x] Specify indexed vocabulary and legacy checkpoint behavior.
+- [x] Reproduce rule/category mismatch and implement explicit versioning.
+- [ ] Verify legacy/new predictions, run gates, PR, merge and release.
+
+## Review
+
+115 focused enzyme, checkpoint, scoped/bulk and excision tests pass. A checkpoint
+created by the unchanged 0.1.5 implementation is also checked against the new
+loader, without parameter migration. Internal missed-cleavage scoring remains a
+separate explicit defect (#88). Complete gates and release remain pending.
+
+# Scope-aware contrast groups — Presto #81
+
+- [x] Record failure, design and verification boundary.
+- [x] Reproduce capped one-class groups and actual batch over-allocation (#86).
+- [x] Retain valid contrast categories, isolate scopes and debit seeded task quotas.
+- [x] 116 targeted loader/contrast/bulk tests passed before adding explicit legacy-source cases.
+- [ ] Format, lint, full tests, review, PR, merge and release.
+
+- [x] Fix scoped metadata constructor regression (#84); 197 targeted tests pass.
+- [ ] Repeat complete suite and actual audit after content-addressing repeated run receipts (#85).
+# Verified scoped proteomics adapter — 2026-10-15
+
+Specification: [scoped-proteomics-consumer-spec.md](scoped-proteomics-consumer-spec.md).
+
+- [x] Recover and publicly verify Hitlist's PXD013455 source archive.
+- [x] Read source schemas, trainer/host metadata and scientific limitations.
+- [x] Define delivery boundary, label policy, one-vote handling and resource plan.
+- [x] Implement verified datacache admission and collapsed record projection.
+- [x] Preserve scoped identity through dataset, host batches and prediction exports.
+- [x] Classify support; test integrity, null labels, mappings and legacy behavior.
+- [ ] Review, version, format/lint/full tests, merge and verify release downloads.
+- [ ] Next PR: canonical trainer, frozen partitions and registered real preflight.
+
+## Review
+
+Hitlist 1.75.0 and the public PXD013455 archive are deployed and hash-verified.
+Presto #76/#79 shipped as 0.1.2/0.1.3; #71 is closed with verified release evidence.
+The current adapter PR does not yet close #70 or establish training readiness.
+The initial focused adapter/legacy/coverage/frozen-lineage suite passes 147 tests,
+including real prediction exports. Format/lint and strict docs pass. Review added
+explicit known-terminus preservation and a TSV inspection preview. Reproduced
+older sampler truncation and Trypsin/P vocabulary defects are tracked in #81/#82;
+this adapter generates no excision labels or controls. Lock regeneration remains
+blocked by the pre-existing Python-floor conflict in #69. Full final-head gates
+and public release remain required. The first local full run was deliberately
+stopped after 39 passing tests to correct a missing source-reference URI found by
+the canonical support audit. The new regression failed with three lineage issues
+before the fix and passes afterward. A registered real-data admission audit will
+exercise the public archive before canonical trainer integration. That registered
+audit now passes: 1,451,158 globally collapsed peptides, 10,000 admitted records,
+960 MS/MS + 154 matching + 8,886 scoped absences, zero lineage issues/duplicate
+IDs, no excision/depth labels; all reusable outputs are in datacache. Details and
+hashes are recorded in the canonical experiment registry.
+
+# Frozen partitions and generated parents — 2026-10-15
+
+Specification: [frozen-partitions-spec.md](frozen-partitions-spec.md).
+
+- [x] Inspect trainer augmentation/split order and write the integration contract.
+- [x] Assign/freeze measured observation partitions with reviewed lineage.
+- [x] Generate controls within partitions and preserve all parent identities.
+- [x] Implement datacache publication of final membership, hashes and audits.
+- [ ] Verify regression and prediction-export coverage, then full release gates.
+- [ ] Rebase after part 1, version, merge and publish verified release artifacts.
+
+## Review
+
+Presto #76 merged as 2e6d923 and its clean-main 0.1.2 GitHub release was downloaded
+and hash-verified. This branch is rebased on that merge and bumps to 0.1.3.
+The real frozen fixture now exercises the canonical trainer through source
+selection, partition assignment, dataset conversion, collation and output census.
+Known generated-label collisions are tracked in #78. Focused generator/lineage
+checks and integration gates pass: 130 focused cases, format/lint and strict docs.
+Full final-head validation remains required.
+The artifacts implemented here do not qualify the actual corpus (#678/#680).
+
+# Frozen Hitlist consumer — 2026-10-15
+
+Specification: [frozen-hitlist-spec.md](frozen-hitlist-spec.md).
+
+- [x] Read repository rules, existing adapter, lineage, partition and evaluation contracts.
+- [x] Create an isolated branch from current main; preserve the dirty user checkout.
+- [x] Write scope and acceptance before implementation.
+- [x] Finish Hitlist #645 / PR #686 review, merge and release first.
+- [x] Add verified datacache-managed frozen bundle admission and trainer configuration.
+- [x] Preserve measured-observation linkage and original assay policy through records, batches and predictions.
+- [ ] Preserve every generated-control parent in the next dependent PR.
+- [ ] Freeze actual membership and audit selected partitions with the frozen registry.
+- [ ] Test corruption, mapping alternatives, reused experiments, generated parents and unknowns.
+- [ ] Review, bump version, format/lint, full CI, merge and verify GitHub release artifacts.
+
+## Review
+
+Hitlist #686 merged as e087b07 and 1.74.0 is published on PyPI with verified hashes.
+First full Presto CI: 2,102 passed and seven integration failures, tracked in #77.
+The review adjustment in the specification separates frozen/legacy version floors
+and explicitly pinned corpus qualification from ordinary software CI.
+The corrected integration files pass 164 tests; three real-corpus checks report
+unavailable without an explicit qualification bundle. Format, lint and strict
+docs pass. Full final-head CI is required before merge.
+Frozen admission verifies real Hitlist bundles, installs shared datacache copies,
+and rejects damage, stale-at-creation opt-outs and missing schema. Tests use the
+real scanner, generation publisher and bundle verifier. Mapping alternatives
+retain one vote even with flanks disabled; conflicting non-mapping context fails.
+Measured records preserve manifest identity, contributors and original labels
+through host batches and prediction exports. Review reproduced five label
+admission defects (#75); finite/domain/unit/censoring checks fix them and record
+a versioned label policy. Formatting, lint, strict docs and focused tests pass;
+full CI and the clean-main package release remain required.
+
+This first consumer PR does not close #71. Generated parents and actual partition
+membership/audits are the next dependent change. Peptide grouping alone does not
+establish biological independence. The verified scoped bulk-MS consumer remains
+#70; frozen Hitlist training explicitly rejects adding mutable bulk inputs.
+
+# Review and ship Presto training-readiness PR — 2026-10-14
+
+- [x] Review the full diff, caller contracts, failure paths and regression coverage.
+- [x] File discovered defects; fix them with meaningful before/after evidence.
+- [ ] Finish formatting, lint, full tests and exact-head CI.
+- [ ] Merge the reviewed PR and validate/build from clean main.
+- [ ] Publish verified release artifacts and confirm their public bytes/version.
+- [ ] Record the release receipt and next dependency in the readiness tracker.
+
+## Review/release scope
+
+Review index admission and archival/offline compatibility in Hitlist #682, and
+missing detectability masks/provenance in Presto #72. Preserve existing user
+worktrees and caches; use isolated checkouts and CI for memory-heavy checks.
+Do not treat software release as certification of the training corpus.
+Hitlist uses its existing clean-main release workflow and PyPI upload. Presto
+has no release workflow and its distribution name collides with an unrelated
+PyPI project; prepare verified GitHub wheel/source artifacts while resolving
+the requested publication destination. Never upload to the unrelated project.
+A release must identify the merged SHA, test results and artifact hashes.
+
+Review found #73 (PyPI namespace collision) and #74 (wheel/source missing the
+B2M resource required during data imports). The initial artifacts lack the CSV;
+corrected wheel and source archives contain its exact bytes and pass twine
+checks. CI now installs and exercises the wheel outside the checkout after the
+full suite. The prior implementation head passed the full suite; rerun on this
+reviewed head before merge. The overlap helper documentation now states that
+sequence overlap itself neither qualifies labels nor establishes a holdout.
+
+# Bulk supervision validity — #70, first PR
+
+Specification: [bulk-supervision-validity-spec.md](bulk-supervision-validity-spec.md).
+
+- [x] Audit committed bulk loader and write the scientific label contract.
+- [x] Isolate the work from the dirty coverage-report checkout.
+- [x] Prove unsupported depth-label regression and remove its production path.
+- [x] Add missing-label mask/provenance coverage and update current documentation.
+- [x] Bump version, format and lint.
+- [ ] Full tests and final-head CI.
+- [x] Open the next PR in the training-readiness series and record its limits.
+
+## Review
+
+A dependency-light probe loaded the exact before/after raw loader modules and
+their actual vocabulary, without Torch or the pytest harness. All 21 combinations
+of known/missing fraction and replicate counts generated unsupported targets
+before the change; all 21 now retain missing detectability, nullable replicate
+metadata and the original excision/control labels. This is not a model test or
+the full suite. Formatting/lint pass; full CI (including collation and coverage
+preflight) remains required. The first full CI run passed 2,087 tests with three
+skips and exposed one old coverage expectation for a manually supplied label.
+That regression now requires unknown evidence rather than a supported proxy;
+the complete suite is being rerun. PR #72 references #70, which stays open for
+verified scoped-data consumption; #71, #48 and #53 track remaining acceptance
+work.
+
 # Source-junction ambiguity implementation (2026-09-02)
 
 ## Specification
@@ -11304,12 +11754,45 @@ Both the unstaged and staged diffs pass `git diff --check` with the repository's
 generated-CSV CRLF allowance. The P2 reproducibility-links finding is resolved.
 
 
+## Review — explicit affinity policy (#110/#111)
+
+- Canonical transforms retain bit-identical historical clipping and original censor direction. The executable object supplies objective/source-contract metadata; omitted or different prospective policy is rejected even with no clipped values.
+- 77 focused tests pass. Real canonical census matches every one of 2,614 public IC50 targets/directions and all 211 clipped source IDs, including 54 exact changes. Public audit has 14 independently downloaded/hash-verified assets, all 211 complete source-context joins and five reproduction members verified.
+- Full row tables remain in datacache/public downloads; versioned source contains recipes, compact reports and pins. Original stopped experiment and manifests are immutable. Full model-input preflight and a new prospective fit remain separate work.
+- #111 documentation now describes removed depth labels and the shipped scoped source. Strict docs and formatting/lint pass. Full ./test.sh passes: 2,281 tests, four skips, 812 warnings in 521.00 s. Final-head CI and verified clean-main release remain required before shipment.
+
+## Effective-target recipe review
+
+- Nine focused contract checks pass, including separate effective/raw measurement and censor metrics, training-only baseline fitting, identity preservation and pre-model gate refusal. Independent arithmetic recomputation agrees on a mixed-label fixture.
+- Verified frozen-input arithmetic reproduces 2,614 targets, 211 clipped observations, 54 clipped exact values and 1,599 exact training-baseline rows. No held-out predictions or qualified new manifest yet.
+- Formatting/lint and strict docs pass. Full ./test.sh: 2,281 passed, four skipped, 812 warnings in 508.81 seconds. The library source is unchanged from reviewed #112 except the 0.1.17 version.
+- Review found producer-version provenance in the frozen membership receipt; the new declaration now names the expected metadata change and requires the unchanged partition recipe hash plus all semantic membership/label fingerprints. Historical contracts remain immutable.
+- Released 0.1.16 producer pins, new public declaration, canonical qualification/fit and complete public evidence remain required.
+
+# Assay-context applicability — 2026-10-16
+
+Spec: [assay-context-applicability-spec.md](assay-context-applicability-spec.md).
+
+- [x] Review #126 and define source-preparation versus missing-context semantics.
+- [x] Preserve raw methods and implement conservative applicability reporting.
+- [x] Verify loading, generated parents, frozen membership, predictions and coverage.
+- [x] Publish an independently verified additive audit of all historical source rows.
+- [ ] Format/lint/full tests/docs, review, merge and verified public release.
+
+Review: 193 focused regressions and strict documentation pass. The independent
+real-source replay passes all 9,053 rows and all 2,614 unchanged IC50 targets.
+Full local tests, public download replay and exact-head release checks follow.
+
+Public closure: all 21 evidence downloads and all 11 core artifacts pass an
+independent replay using the downloaded verifier and original pinned inputs.
+The next donor-aware Atlas consumer/independence gate is tracked in #127.
+
 ## Finish current PR and summarize Presto — 2026-10-20
 
 Specification: `tasks/pr66_completion_spec.md`. Finish #66 in an isolated checkout;
 preserve later local target-validity, training, and showcase work.
 
-- [ ] Inspect current remote PR/base state and isolate the coverage-only changes.
+- [x] Inspect current remote PR/base state and isolate the coverage-only changes.
 - [ ] Review implementation and verify source/artifact provenance and parity.
 - [ ] Pass focused/full tests, pinned lint, strict docs, and final-head CI.
 - [ ] Publish and merge #66; verify the merge and preserve original local work.

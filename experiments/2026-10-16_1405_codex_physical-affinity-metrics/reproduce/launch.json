@@ -1,0 +1,12 @@
+{
+  "agent": "codex",
+  "model": "GPT-6",
+  "kind": "data-only numerical reporting audit; no training",
+  "command": "python code/audit.py",
+  "expected_package_version": "0.1.18",
+  "input_release": "https://github.com/pirl-unc/presto/releases/tag/effective-target-fit-qualification-v1",
+  "n_expected_ic50_observations": 2614,
+  "physical_threshold_nM": 500,
+  "selection_or_optimization": "none; all historical criteria and predictions preserved",
+  "gpu": null
+}

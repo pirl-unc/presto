@@ -17,6 +17,7 @@ seed is still a weak assertion — but it makes them reproducible, so a failure
 means something changed rather than that a draw went badly.
 """
 
+import os
 import sys
 from pathlib import Path
 
@@ -42,3 +43,23 @@ def _deterministic_torch_seed():
     except ImportError:  # pragma: no cover - torch is a hard dependency
         return
     torch.manual_seed(0)
+
+
+def _qualification_bundle_inputs(environ):
+    directory = environ.get("PRESTO_TEST_HITLIST_BUNDLE")
+    digest = environ.get("PRESTO_TEST_HITLIST_BUNDLE_SHA256")
+    if not directory and not digest:
+        pytest.skip("Real-corpus qualification unavailable: no pinned Hitlist bundle supplied")
+    if not directory or not digest:
+        pytest.fail("Corpus qualification requires both Hitlist bundle path and manifest SHA-256")
+    return directory, digest
+
+
+@pytest.fixture(scope="session")
+def qualified_hitlist_ms_frame():
+    """An explicitly selected corpus; invalid requested data must fail loudly."""
+    from presto.data.frozen_hitlist import load_frozen_hitlist_bundle, training_frames
+
+    directory, digest = _qualification_bundle_inputs(os.environ)
+    bundle = load_frozen_hitlist_bundle(directory, expected_sha256=digest)
+    return training_frames(bundle, include_flanks=True)[1]

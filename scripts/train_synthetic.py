@@ -12,6 +12,8 @@ Usage:
 """
 
 import argparse
+import math
+import sys
 import tempfile
 import time
 from collections import Counter, defaultdict
@@ -200,7 +202,7 @@ def _resolve_run_args(args: argparse.Namespace) -> argparse.Namespace:
 
 def _regularization_config_from_args(args: argparse.Namespace) -> Dict[str, float]:
     """Extract biologic consistency/prior loss weights from run args."""
-    return {
+    values = {
         "consistency_cascade_weight": float(getattr(args, "consistency_cascade_weight", 0.0)),
         "consistency_assay_affinity_weight": float(
             getattr(args, "consistency_assay_affinity_weight", 0.0)
@@ -250,6 +252,11 @@ def _regularization_config_from_args(args: argparse.Namespace) -> Dict[str, floa
         "mil_bag_sparsity_weight": float(getattr(args, "mil_bag_sparsity_weight", 0.0)),
         "mil_bag_sparsity_target_sum": float(getattr(args, "mil_bag_sparsity_target_sum", 1.5)),
     }
+
+    for name, value in values.items():
+        if not math.isfinite(value) or (name.endswith("_weight") and value < 0):
+            raise ValueError(f"Invalid regularization parameter {name}: {value}")
+    return values
 
 
 def _resolve_regularization_config(
@@ -2097,6 +2104,11 @@ def main(argv=None):
     )
     parser.add_argument("--seed", type=int, default=42, help="Random seed")
     args = parser.parse_args(argv)
+    from presto.training.config_io import explicit_cli_destinations
+
+    args._explicit_cli_dests = explicit_cli_destinations(
+        parser, list(sys.argv[1:] if argv is None else argv), args
+    )
 
     run(args)
 

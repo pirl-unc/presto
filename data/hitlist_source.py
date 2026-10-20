@@ -53,9 +53,12 @@ set is public, asserted on load, and pinned in
 
 from __future__ import annotations
 
+import math
 import random
 import sys
 from typing import Any, Dict, FrozenSet, List, Optional, Sequence, Tuple, Union
+
+from .species_context import NATIVE_SPECIES_COLUMNS, native_species_context
 
 from .flank_selection import (
     MAPPING_CATEGORIES,
@@ -112,11 +115,18 @@ from .loaders import (
 #: reason this loader exists at all (see the module docstring).
 SHARED_COLUMNS: Tuple[str, ...] = (
     "peptide",
+    "evidence_kind",
+    "assay_method",
     "mhc_restriction",
     "mhc_allele_set",
     "mhc_class",
     "host",
     "source_organism",
+    *(
+        column
+        for column in NATIVE_SPECIES_COLUMNS.values()
+        if column not in {"host", "source_organism"}
+    ),
     "source",
     # Source-observation identity. These remain attached after mapping
     # expansion/collapse so a model prediction can be traced to the raw row.
@@ -150,7 +160,6 @@ BINDING_COLUMNS: Tuple[str, ...] = SHARED_COLUMNS + (
     "quantitative_value",
     "measurement_units",
     "measurement_inequality",
-    "assay_method",
 )
 
 #: `SHARED_COLUMNS` plus the biological sample an eluted peptide came out of.
@@ -194,9 +203,9 @@ MS_COLUMNS: Tuple[str, ...] = SHARED_COLUMNS + (
     # `sample_attribution` is what separates them, and it doubles as an
     # evidence tier -- `allele_exact` / `elution_conditions` are per-peptide,
     # while `class_pool` / `pmid_ambiguous` resolve only to a pool or a
-    # deposit. `sample_label` is the biological sample, which is the right
-    # grouping key for a leakage-safe split: peptide-disjoint splits do not
-    # stop the same sample appearing on both sides. See presto#15.
+    # deposit. `sample_label` is a display label, not a specimen/donor ID.
+    # Biological-independence audits require the frozen reviewed lineage
+    # sidecars; peptide-disjointness alone does not establish independence.
     "sample_attribution",
     "is_control_arm",
     "sample_label",
@@ -237,7 +246,8 @@ COLUMNS_BY_EVIDENCE: Dict[str, Tuple[str, ...]] = {
 }
 
 
-#: Oldest hitlist whose column semantics match what this module assumes.
+#: Minimum validated Hitlist release for the full native species-role and
+#: observation contract. This matches the existing declared dependency floor.
 #:
 #: 1.53.0 for the arm-attribution columns (`sample_attribution`,
 #: `is_control_arm`, `sample_label`), which landed across
@@ -254,7 +264,7 @@ COLUMNS_BY_EVIDENCE: Dict[str, Tuple[str, ...]] = {
 #: and reports nothing -- 816,023 observations (18.4%) carry the wrong
 #: perturbation label, 716,992 of them genuinely-unperturbed rows wearing their
 #: study's panel. That is why this is an assertion and not a comment.
-MINIMUM_HITLIST_VERSION = (1, 53, 0)
+MINIMUM_HITLIST_VERSION = (1, 75, 0)
 
 
 def _parse_version(raw: Optional[str]) -> Optional[Tuple[int, ...]]:
@@ -289,6 +299,7 @@ def require_supported_hitlist(raw_version: Optional[str]) -> None:
         wanted = ".".join(str(part) for part in MINIMUM_HITLIST_VERSION)
         raise RuntimeError(
             f"hitlist {raw_version} is too old for this loader; need >= {wanted}. "
+            "The expanded source contract requires native species-role provenance. "
             "Before 1.46.0 `apm_genes_perturbed` was ORed across a study, so "
             "genuinely unperturbed control rows carry their study's knockout "
             "panel -- 18.4% of observations on the corpus this was measured "
@@ -401,6 +412,16 @@ def _lineage_fields(row) -> Dict[str, Any]:
         canonical_value = str(canonical).strip().lower() in {"1", "1.0", "true", "yes", "t"}
 
     return {
+        "species_context": native_species_context(row),
+        "source_bundle_id": _clean(row.get("source_bundle_id")),
+        "provenance_id": _clean(row.get("provenance_id")),
+        "provenance_status": _clean(row.get("provenance_status")),
+        "source_endpoint": _clean(row.get("response_measured")),
+        "source_assay_method": _clean(row.get("assay_method")),
+        "source_evidence_kind": _clean(row.get("evidence_kind")),
+        "source_units": _clean(row.get("measurement_units")),
+        "source_inequality": _clean(row.get("measurement_inequality")),
+        "source_value": _clean(row.get("quantitative_value")),
         "evidence_row_id": _clean(row.get("evidence_row_id")),
         "assay_iri": _clean(row.get("assay_iri")),
         "reference_iri": _clean(row.get("reference_iri")),
@@ -513,6 +534,8 @@ _EXPECTED_UNITS = {
     **{response: "nM" for response in _AFFINITY_RESPONSES},
     "half life": "min",
     "50% dissociation temperature": "°C",
+    "off rate": "1/s",
+    "on rate": "1/Ms",
 }
 
 # Other response families (including qualitative binding and structure) have
@@ -524,11 +547,13 @@ _MINUTES_PER_HOUR = 60.0
 def _qualifier_from_inequality(text: Any) -> int:
     """Map hitlist's ``measurement_inequality`` to Presto's censor code."""
     token = _clean(text)
-    if token.startswith("<"):
+    if token in {"<", "<=", "≤"}:
         return -1
-    if token.startswith(">"):
+    if token in {">", ">=", "≥"}:
         return 1
-    return 0
+    if token in {"", "="}:
+        return 0
+    raise ValueError(f"Unsupported measurement inequality: {token!r}")
 
 
 def _split_allele_set(value: Any) -> List[str]:
@@ -947,6 +972,8 @@ def normalize_ingested_peptide(peptide: Optional[str]) -> str:
 
 def load_records_from_hitlist(
     *,
+    bundle_dir: Optional[str] = None,
+    bundle_sha256: Optional[str] = None,
     max_binding: Optional[int] = None,
     max_stability: Optional[int] = None,
     max_kinetics: Optional[int] = None,
@@ -959,6 +986,7 @@ def load_records_from_hitlist(
     include_flanks: bool = True,
     source_mapping_policy: str = SOURCE_MAPPING_POLICY_MASK_UNRESOLVED,
     sampling_seed: int = 42,
+    cap_sampling: str = "uniform_list",
 ) -> Tuple[
     List[BindingRecord],
     List[KineticsRecord],
@@ -969,7 +997,11 @@ def load_records_from_hitlist(
     List[TcrEvidenceRecord],
     Dict[str, Any],
 ]:
-    """Build Presto records from the hitlist curated indexes.
+    """Build records from a verified frozen bundle, or the legacy live-index API.
+
+    ``bundle_dir`` uses only verified artifact bytes, shared via datacache; the
+    manifest SHA-256 can additionally be pinned by ``bundle_sha256``. Without
+    it, this compatibility API reads live indexes and records that limitation.
 
     Returns the same 8-tuple shape as
     ``scripts/train_iedb.py::load_records_from_merged_tsv`` so the two sources
@@ -984,7 +1016,19 @@ def load_records_from_hitlist(
     faster and is how the Stage 0a parity check reproduces merged-TSV behavior.
     ``source_mapping_policy`` controls only disagreeing mapped junctions; it
     never changes the assay observation or target.
+
+    ``cap_sampling`` selects ``head`` or bounded-memory ``reservoir`` sampling.
+    The Python API default ``uniform_list`` preserves historical random.sample
+    selection exactly, including its full record-list retention. Canonical
+    training passes its explicitly configured head/reservoir policy.
     """
+    algorithms = {
+        "uniform_list": "python_random_sample_v1",
+        "head": "first_eligible_v1",
+        "reservoir": "python_random_algorithm_r_v1",
+    }
+    if cap_sampling not in algorithms:
+        raise ValueError(f"Unknown cap_sampling {cap_sampling!r}; expected {sorted(algorithms)}")
     try:
         import hitlist
     except ImportError as exc:  # pragma: no cover - exercised via install docs
@@ -1013,16 +1057,27 @@ def load_records_from_hitlist(
     # exploded protein-mapping frame.
     mapping_ambiguity: Dict[str, Any] = {}
 
-    binding_frame = hitlist.generate_training_table(
-        include_evidence="binding",
-        columns=training_columns("binding", include_flanks=include_flanks),
-        **shared_filters,
-    )
-    ms_frame = hitlist.generate_training_table(
-        include_evidence="ms",
-        columns=training_columns("ms", include_flanks=include_flanks),
-        **shared_filters,
-    )
+    bundle = None
+    if bundle_dir is not None:
+        from .frozen_hitlist import load_frozen_hitlist_bundle, training_frames
+
+        bundle = load_frozen_hitlist_bundle(bundle_dir, expected_sha256=bundle_sha256)
+        binding_frame, ms_frame = training_frames(
+            bundle, include_flanks=include_flanks, **shared_filters
+        )
+    else:
+        if bundle_sha256 is not None:
+            raise ValueError("bundle_sha256 requires bundle_dir")
+        binding_frame = hitlist.generate_training_table(
+            include_evidence="binding",
+            columns=training_columns("binding", include_flanks=include_flanks),
+            **shared_filters,
+        )
+        ms_frame = hitlist.generate_training_table(
+            include_evidence="ms",
+            columns=training_columns("ms", include_flanks=include_flanks),
+            **shared_filters,
+        )
     assert_columns_present(binding_frame, "binding", include_flanks=include_flanks)
     assert_columns_present(ms_frame, "ms", include_flanks=include_flanks)
     source_rows_before_mapping_collapse = {
@@ -1062,12 +1117,19 @@ def load_records_from_hitlist(
             "ms": ms_unresolved,
         }
 
-    binding_records: List[BindingRecord] = []
-    kinetics_records: List[KineticsRecord] = []
-    stability_records: List[StabilityRecord] = []
-    elution_records: List[ElutionRecord] = []
+    sampled = {
+        name: _CappedRecords(cap, sampling_seed, cap_sampling)
+        for name, cap in (
+            ("binding", max_binding),
+            ("kinetics", max_kinetics),
+            ("stability", max_stability),
+            ("elution", max_elution),
+        )
+    }
 
     skipped_no_value = 0
+    skipped_invalid_numeric = 0
+    skipped_inequality = 0
     skipped_unroutable = 0
     skipped_bad_unit = 0
     skipped_noncanonical_peptide = 0
@@ -1090,6 +1152,10 @@ def load_records_from_hitlist(
             skipped_no_value += 1
             continue
 
+        if not math.isfinite(value) or (response not in _TM_RESPONSES and value <= 0):
+            skipped_invalid_numeric += 1
+            continue
+
         expected_unit = _EXPECTED_UNITS.get(response)
         if expected_unit is not None:
             unit = _clean(row.get("measurement_units"))
@@ -1104,7 +1170,11 @@ def load_records_from_hitlist(
 
         allele = _clean(row.get("mhc_restriction"))
         allele_set = _split_allele_set(row.get("mhc_allele_set"))
-        qualifier = _qualifier_from_inequality(row.get("measurement_inequality"))
+        try:
+            qualifier = _qualifier_from_inequality(row.get("measurement_inequality"))
+        except ValueError:
+            skipped_inequality += 1
+            continue
         assay_method = _clean(row.get("assay_method")) or None
         common = dict(
             peptide=peptide,
@@ -1119,7 +1189,7 @@ def load_records_from_hitlist(
         )
 
         if response in _AFFINITY_RESPONSES:
-            binding_records.append(
+            sampled["binding"].append(
                 BindingRecord(
                     value=value,
                     qualifier=qualifier,
@@ -1133,7 +1203,7 @@ def load_records_from_hitlist(
         elif response in _T_HALF_RESPONSES:
             # hitlist reports half life in minutes; StabilityRecord.t_half is
             # in hours (data/collate.py converts back to minutes downstream).
-            stability_records.append(
+            sampled["stability"].append(
                 StabilityRecord(
                     t_half=value / _MINUTES_PER_HOUR,
                     t_half_qualifier=qualifier,
@@ -1143,7 +1213,7 @@ def load_records_from_hitlist(
                 )
             )
         elif response in _TM_RESPONSES:
-            stability_records.append(
+            sampled["stability"].append(
                 StabilityRecord(
                     tm=value,
                     tm_qualifier=qualifier,
@@ -1153,7 +1223,7 @@ def load_records_from_hitlist(
                 )
             )
         elif response in _KOFF_RESPONSES:
-            kinetics_records.append(
+            sampled["kinetics"].append(
                 KineticsRecord(
                     koff=value,
                     koff_qualifier=qualifier,
@@ -1163,7 +1233,7 @@ def load_records_from_hitlist(
                 )
             )
         elif response in _KON_RESPONSES:
-            kinetics_records.append(
+            sampled["kinetics"].append(
                 KineticsRecord(
                     kon=value,
                     kon_qualifier=qualifier,
@@ -1200,7 +1270,7 @@ def load_records_from_hitlist(
             unmapped_conditions[condition_category] = (
                 unmapped_conditions.get(condition_category, 0) + 1
             )
-        elution_records.append(
+        sampled["elution"].append(
             ElutionRecord(
                 peptide=peptide,
                 alleles=alleles,
@@ -1229,16 +1299,11 @@ def load_records_from_hitlist(
             )
         )
 
-    counts_before_cap = {
-        "binding": len(binding_records),
-        "kinetics": len(kinetics_records),
-        "stability": len(stability_records),
-        "elution": len(elution_records),
-    }
-    binding_records = list(_cap_list(binding_records, max_binding, sampling_seed))
-    stability_records = list(_cap_list(stability_records, max_stability, sampling_seed))
-    kinetics_records = list(_cap_list(kinetics_records, max_kinetics, sampling_seed))
-    elution_records = list(_cap_list(elution_records, max_elution, sampling_seed))
+    counts_before_cap = {name: sampler.n_seen_records for name, sampler in sampled.items()}
+    binding_records = sampled["binding"].finish()
+    stability_records = sampled["stability"].finish()
+    kinetics_records = sampled["kinetics"].finish()
+    elution_records = sampled["elution"].finish()
 
     def _flank_coverage(records: Sequence[Any]) -> float:
         """Fraction of records that actually carry flanking residues.
@@ -1267,7 +1332,31 @@ def load_records_from_hitlist(
 
     stats: Dict[str, Any] = {
         "source": "hitlist",
+        "input_mode": "frozen_bundle" if bundle is not None else "legacy_live_indexes",
+        "label_policy": {
+            "version": 1,
+            "endpoint_units": dict(_EXPECTED_UNITS),
+            "numeric_values": "finite; positive except temperature in degrees Celsius",
+            "censoring": {"lower": [">", ">=", "≥"], "upper": ["<", "<=", "≤"], "exact": ["=", ""]},
+            "missing_inequality": "treated as exact; original empty value retained",
+            "record_transforms": {"half life": "minutes divided by 60 to hours"},
+            "unsupported": "excluded with reason counts; original frozen artifacts retained",
+            "ms": "observed MHC elution; no implicit detectability or processing label",
+        },
+        "frozen_bundle": bundle.receipt() if bundle is not None else None,
+        "filters": shared_filters,
         "sampling_seed": int(sampling_seed),
+        "cap_sampling": cap_sampling,
+        "cap_policy": {
+            "algorithm": algorithms[cap_sampling],
+            "random_streams": "independent per assay family, each initialized with sampling_seed",
+            "record_retention": (
+                "all eligible records before selection"
+                if cap_sampling == "uniform_list"
+                else "at most the positive cap per family; absent/nonpositive caps are unlimited"
+            ),
+            "frame_memory": "projected source frames are still loaded before record selection",
+        },
         "source_rows_before_mapping_collapse": source_rows_before_mapping_collapse,
         "source_rows_after_mapping_collapse": {
             "binding": len(binding_frame),
@@ -1299,6 +1388,8 @@ def load_records_from_hitlist(
             "elution": max_elution,
         },
         "skipped_no_numeric_value": skipped_no_value,
+        "skipped_invalid_numeric_value": skipped_invalid_numeric,
+        "skipped_unsupported_inequality": skipped_inequality,
         "skipped_unroutable_response": skipped_unroutable,
         "skipped_unexpected_unit": skipped_bad_unit,
         "skipped_noncanonical_peptide": skipped_noncanonical_peptide,
@@ -1343,6 +1434,38 @@ def _method_counts(records: Sequence[Any]) -> Dict[str, int]:
         key = getattr(record, "assay_method", None) or "unspecified"
         counts[key] = counts.get(key, 0) + 1
     return dict(sorted(counts.items(), key=lambda kv: -kv[1]))
+
+
+class _CappedRecords:
+    """Retain a bounded eligible stream without losing full admission counts."""
+
+    def __init__(self, cap, seed, mode):
+        self.cap = cap
+        self.seed = seed
+        self.mode = mode
+        self.records = []
+        self.n_seen_records = 0
+        self.rng = random.Random(seed)
+
+    def append(self, record):
+        self.n_seen_records += 1
+        if (
+            self.mode == "uniform_list"
+            or self.cap is None
+            or self.cap <= 0
+            or len(self.records) < self.cap
+        ):
+            self.records.append(record)
+        elif self.mode == "reservoir":
+            index = self.rng.randrange(self.n_seen_records)
+            if index < self.cap:
+                self.records[index] = record
+
+    def finish(self):
+        if self.mode == "uniform_list":
+            records, self.records = self.records, []
+            return _cap_list(records, self.cap, self.seed)
+        return self.records
 
 
 def _cap_list(records: List[Any], cap: Optional[int], seed: int) -> List[Any]:

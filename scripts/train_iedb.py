@@ -43,7 +43,6 @@ from presto.data import (
     infer_mhc_class,
     infer_species,
     normalize_mhc_class,
-    normalize_processing_species_label,
     load_iedb_binding,
     load_iedb_kinetics,
     load_iedb_stability,
@@ -83,7 +82,8 @@ from presto.data.mhc_sequence_resolver import (
     resolve_exact_mhc_sequences,
 )
 from presto.data.vocab import FOREIGN_CATEGORIES
-from presto.data.source_lineage import source_lineage_fields
+from presto.data.source_lineage import generated_record, source_lineage_fields
+from presto.data.species_context import molecular_mhc_species
 from presto.models.presto import Presto
 from presto.models.affinity import (
     DEFAULT_MAX_AFFINITY_NM,
@@ -162,6 +162,15 @@ IEDB_DEFAULTS = {
     "split_mode": "peptide_group",
     "train_mhc_class_filter": None,
     "hitlist_allele": None,
+    "hitlist_bundle": None,
+    "hitlist_bundle_sha256": None,
+    "scoped_bundle": None,
+    "scoped_bundle_sha256": None,
+    "max_scoped_bulk": 0,
+    "frozen_assignment_file": None,
+    "frozen_assignment_sha256": None,
+    "frozen_partition_policy": "peptide_disjoint",
+    "hitlist_component_allocation": "relative_deficit_v2",
     "bulk_ms": False,
     "bulk_cell_line": None,
     "max_bulk_ms": 0,
@@ -195,6 +204,8 @@ IEDB_DEFAULTS = {
     "synthetic_processing_negative_ratio": 0.5,
     "synthetic_negative_min_nM": DEFAULT_MAX_AFFINITY_NM,
     "synthetic_negative_max_nM": DEFAULT_MAX_AFFINITY_NM,
+    "binding_orthogonality_weight": 0.01,
+    "balanced_batches": True,
     "consistency_cascade_weight": 0.2,
     "consistency_assay_affinity_weight": 0.1,
     "consistency_assay_presentation_weight": 0.1,
@@ -470,22 +481,9 @@ def _explicit_cli_dests(
     argv: Optional[Sequence[str]],
 ) -> set[str]:
     """Infer which argparse destinations were explicitly set on the CLI."""
-    option_to_dest: Dict[str, str] = {}
-    for action in parser._actions:
-        for option in action.option_strings:
-            option_to_dest[option] = action.dest
+    from presto.training.config_io import explicit_cli_destinations
 
-    raw_args = list(sys.argv[1:] if argv is None else argv)
-    explicit: set[str] = set()
-    for token in raw_args:
-        text = str(token)
-        if not text.startswith("-"):
-            continue
-        option = text.split("=", 1)[0]
-        dest = option_to_dest.get(option)
-        if dest:
-            explicit.add(dest)
-    return explicit
+    return explicit_cli_destinations(parser, list(sys.argv[1:] if argv is None else argv))
 
 
 def _apply_profile_overrides(
@@ -1945,6 +1943,7 @@ def augment_binding_records_with_synthetic_negatives(
         return {
             "added": 0,
             "added_general": 0,
+            "n_rejected_measured_pairs": 0,
             "no_mhc_beta": 0,
             **{mode: 0 for mode in mode_cycle},
         }
@@ -1958,12 +1957,13 @@ def augment_binding_records_with_synthetic_negatives(
     # from an external corpus so the decoys share the length distribution,
     # terminal chemistry and proteome origin of the positives -- which is the
     # entire point: the only usable difference must be the allele's motif.
-    peptides_by_allele: Dict[str, List[str]] = defaultdict(list)
+    peptides_by_allele: Dict[str, List[BindingRecord]] = defaultdict(list)
     for record in records:
         peptide_text = str(getattr(record, "peptide", "") or "").strip().upper()
         allele_text = str(getattr(record, "mhc_allele", "") or "").strip()
         if peptide_text and allele_text:
-            peptides_by_allele[allele_text].append(peptide_text)
+            peptides_by_allele[allele_text].append(record)
+    measured_pairs = {(record.peptide.strip().upper(), record.mhc_allele) for record in records}
     if class_i_anchor_strategy not in {"none", "property_opposite"}:
         raise ValueError("class_i_anchor_strategy must be one of {'none', 'property_opposite'}")
 
@@ -1991,9 +1991,11 @@ def augment_binding_records_with_synthetic_negatives(
     mode_counts = {mode: 0 for mode in mode_cycle}
 
     synthetic_records: List[BindingRecord] = []
+    n_rejected_measured_pairs = 0
     for idx in range(n_to_add):
         mode = mode_cycle[idx % len(mode_cycle)]
         source = rng.choice(records)
+        parents = [source]
         mhc_class = (
             source.mhc_class
             if source.mhc_class in {"I", "II"}
@@ -2084,8 +2086,10 @@ def augment_binding_records_with_synthetic_negatives(
                 source_label = "synthetic_negative_peptide_scramble"
             else:
                 donor = donor_alleles[rng.randrange(len(donor_alleles))]
-                donor_peptides = peptides_by_allele[donor]
-                peptide = donor_peptides[rng.randrange(len(donor_peptides))]
+                donor_records = peptides_by_allele[donor]
+                donor_record = donor_records[rng.randrange(len(donor_records))]
+                parents.append(donor_record)
+                peptide = donor_record.peptide.strip().upper()
             allele = source.mhc_allele
         elif mode == "no_mhc_alpha":
             peptide = source.peptide or _random_peptide(
@@ -2103,20 +2107,38 @@ def augment_binding_records_with_synthetic_negatives(
         if not allele:
             continue
 
+        if (
+            source_label
+            in {
+                "synthetic_negative_peptide_scramble",
+                "synthetic_negative_peptide_random",
+                "synthetic_negative_allele_mismatch",
+            }
+            and (peptide.strip().upper(), allele) in measured_pairs
+        ):
+            n_rejected_measured_pairs += 1
+            continue
+
         mode_counts[mode] += 1
         synthetic_records.append(
-            BindingRecord(
-                peptide=peptide,
-                mhc_allele=allele,
-                value=rng.uniform(neg_min, neg_max),
-                qualifier=0,
-                measurement_type=source.measurement_type or "IC50",
-                unit="nM",
-                assay_type=source_label,
-                mhc_sequence=direct_mhc_sequence,
-                mhc_class=mhc_class,
-                species="synthetic",
-                source=source_label,
+            generated_record(
+                BindingRecord(
+                    peptide=peptide,
+                    mhc_allele=allele,
+                    value=rng.uniform(neg_min, neg_max),
+                    qualifier=0,
+                    measurement_type=source.measurement_type or "IC50",
+                    unit="nM",
+                    assay_type=source_label,
+                    mhc_sequence=direct_mhc_sequence,
+                    mhc_class=mhc_class,
+                    species="synthetic",
+                    source=source_label,
+                ),
+                parents=parents,
+                kind=source_label,
+                seed=seed,
+                draw_index=idx,
             )
         )
 
@@ -2132,25 +2154,31 @@ def augment_binding_records_with_synthetic_negatives(
             == "I"
         ]
         n_no_mhc_beta = max(0, int(round(len(class_i_records) * float(class_i_no_mhc_beta_ratio))))
-        for _ in range(n_no_mhc_beta):
+        for idx in range(n_no_mhc_beta):
             if not class_i_records:
                 break
             source = rng.choice(class_i_records)
             if not source.mhc_allele:
                 continue
             synthetic_records.append(
-                BindingRecord(
-                    peptide=source.peptide,
-                    mhc_allele=source.mhc_allele,
-                    value=rng.uniform(neg_min, neg_max),
-                    qualifier=0,
-                    measurement_type=source.measurement_type or "IC50",
-                    unit="nM",
-                    assay_type="synthetic_negative_no_mhc_beta",
-                    mhc_sequence=source.mhc_sequence or mhc_sequences.get(source.mhc_allele),
-                    mhc_class="I",
-                    species=source.species,
-                    source="synthetic_negative_no_mhc_beta",
+                generated_record(
+                    BindingRecord(
+                        peptide=source.peptide,
+                        mhc_allele=source.mhc_allele,
+                        value=rng.uniform(neg_min, neg_max),
+                        qualifier=0,
+                        measurement_type=source.measurement_type or "IC50",
+                        unit="nM",
+                        assay_type="synthetic_negative_no_mhc_beta",
+                        mhc_sequence=source.mhc_sequence or mhc_sequences.get(source.mhc_allele),
+                        mhc_class="I",
+                        species=source.species,
+                        source="synthetic_negative_no_mhc_beta",
+                    ),
+                    parents=[source],
+                    kind="synthetic_negative_no_mhc_beta",
+                    seed=seed,
+                    draw_index=n_to_add + idx,
                 )
             )
             no_mhc_beta_added += 1
@@ -2159,6 +2187,7 @@ def augment_binding_records_with_synthetic_negatives(
     stats = {
         "added": len(synthetic_records),
         "added_general": sum(mode_counts.values()),
+        "n_rejected_measured_pairs": n_rejected_measured_pairs,
         **mode_counts,
         "no_mhc_beta": no_mhc_beta_added + mode_counts.get("no_mhc_beta", 0),
     }
@@ -2186,6 +2215,7 @@ def augment_elution_records_with_synthetic_negatives(
         return {
             "added": 0,
             "hard_pair": 0,
+            "n_rejected_known_positive": 0,
             **{mode: 0 for mode in mode_cycle},
         }
 
@@ -2209,6 +2239,7 @@ def augment_elution_records_with_synthetic_negatives(
         alleles_by_class[mhc_class] = sorted(set(alleles_by_class[mhc_class]))
 
     known_negative_alleles_by_peptide: Dict[str, List[str]] = {}
+    negative_donors = {}
     positives_by_peptide: Dict[str, List[ElutionRecord]] = {}
     for rec in records:
         peptide = rec.peptide.strip()
@@ -2221,6 +2252,17 @@ def augment_elution_records_with_synthetic_negatives(
         for allele in rec.alleles:
             if allele and allele not in negs:
                 negs.append(allele)
+                negative_donors[(peptide, allele)] = rec
+
+    positive_pairs = {
+        (rec.peptide.strip().upper(), allele)
+        for rec in records
+        if rec.detected
+        for allele in rec.alleles
+    }
+
+    def _allele_donor(allele, class_records):
+        return next(rec for rec in class_records if allele in rec.alleles)
 
     def _sample_allele(
         pool: Sequence[str],
@@ -2236,9 +2278,11 @@ def augment_elution_records_with_synthetic_negatives(
 
     mode_counts = {mode: 0 for mode in mode_cycle}
     synthetic_records: List[ElutionRecord] = []
+    n_rejected_known_positive = 0
     for idx in range(n_to_add):
         mode = mode_cycle[idx % len(mode_cycle)]
         source = rng.choice(records)
+        parents = [source]
         mhc_class = source.mhc_class if source.mhc_class in {"I", "II"} else "I"
         class_records = by_class[mhc_class] or records
         class_alleles = alleles_by_class[mhc_class]
@@ -2276,6 +2320,11 @@ def augment_elution_records_with_synthetic_negatives(
                 )
                 if replacement:
                     sampled.append(replacement)
+                    parents.append(
+                        negative_donors[(peptide, replacement)]
+                        if preferred
+                        else _allele_donor(replacement, class_records)
+                    )
             if sampled:
                 deduped = []
                 for allele in sampled:
@@ -2292,6 +2341,7 @@ def augment_elution_records_with_synthetic_negatives(
                 replacement = _sample_allele(class_alleles)
                 if replacement:
                     sampled.append(replacement)
+                    parents.append(_allele_donor(replacement, class_records))
             if sampled:
                 deduped = []
                 for allele in sampled:
@@ -2302,18 +2352,28 @@ def augment_elution_records_with_synthetic_negatives(
         if not alleles:
             continue
 
+        if any((peptide.strip().upper(), allele) in positive_pairs for allele in alleles):
+            n_rejected_known_positive += 1
+            continue
+
         mode_counts[mode] += 1
         synthetic_records.append(
-            ElutionRecord(
-                peptide=peptide,
-                alleles=alleles,
-                detected=False,
-                source_alleles=tuple(alleles),
-                cell_type=source.cell_type,
-                tissue=source.tissue,
-                mhc_class=source.mhc_class,
-                species=source.species,
-                source=f"synthetic_negative_elution_{mode}",
+            generated_record(
+                ElutionRecord(
+                    peptide=peptide,
+                    alleles=alleles,
+                    detected=False,
+                    source_alleles=tuple(alleles),
+                    cell_type=source.cell_type,
+                    tissue=source.tissue,
+                    mhc_class=source.mhc_class,
+                    species=source.species,
+                    source=f"synthetic_negative_elution_{mode}",
+                ),
+                parents=parents,
+                kind=f"synthetic_negative_elution_{mode}",
+                seed=seed + 17,
+                draw_index=idx,
             )
         )
 
@@ -2328,17 +2388,26 @@ def augment_elution_records_with_synthetic_negatives(
             for neg_allele in neg_alleles:
                 if neg_allele in source.alleles:
                     continue
+                if (peptide.strip().upper(), neg_allele) in positive_pairs:
+                    n_rejected_known_positive += 1
+                    continue
                 synthetic_records.append(
-                    ElutionRecord(
-                        peptide=peptide,
-                        alleles=[neg_allele],
-                        detected=False,
-                        source_alleles=(neg_allele,),
-                        cell_type=source.cell_type,
-                        tissue=source.tissue,
-                        mhc_class=source.mhc_class,
-                        species=source.species,
-                        source="synthetic_negative_hard_pair",
+                    generated_record(
+                        ElutionRecord(
+                            peptide=peptide,
+                            alleles=[neg_allele],
+                            detected=False,
+                            source_alleles=(neg_allele,),
+                            cell_type=source.cell_type,
+                            tissue=source.tissue,
+                            mhc_class=source.mhc_class,
+                            species=source.species,
+                            source="synthetic_negative_hard_pair",
+                        ),
+                        parents=[source, negative_donors[(peptide, neg_allele)]],
+                        kind="synthetic_negative_hard_pair",
+                        seed=seed + 17,
+                        draw_index=n_to_add + hard_pair_added,
                     )
                 )
                 hard_pair_added += 1
@@ -2347,6 +2416,7 @@ def augment_elution_records_with_synthetic_negatives(
     return records, {
         "added": len(synthetic_records),
         "hard_pair": hard_pair_added,
+        "n_rejected_known_positive": n_rejected_known_positive,
         **mode_counts,
     }
 
@@ -2372,6 +2442,7 @@ def augment_processing_records_with_synthetic_negatives(
     synthetic_records: List[ProcessingRecord] = []
     for idx in range(n_to_add):
         source = rng.choice(records)
+        parents = [source]
         mode = mode_cycle[idx % len(mode_cycle)]
         flank_n_len = max(6, len(source.flank_n) if source.flank_n else 10)
         flank_c_len = max(6, len(source.flank_c) if source.flank_c else 10)
@@ -2384,6 +2455,7 @@ def augment_processing_records_with_synthetic_negatives(
 
         if mode == "flank_shuffle":
             donor = rng.choice(records)
+            parents.append(donor)
             flank_n = donor.flank_n or _random_peptide(rng, flank_n_len)
             flank_c = donor.flank_c or _random_peptide(rng, flank_c_len)
             if donor is source:
@@ -2397,16 +2469,22 @@ def augment_processing_records_with_synthetic_negatives(
 
         mode_counts[mode] += 1
         synthetic_records.append(
-            ProcessingRecord(
-                peptide=peptide,
-                flank_n=flank_n,
-                flank_c=flank_c,
-                label=0.0,
-                processing_type=source.processing_type,
-                mhc_allele=source.mhc_allele,
-                mhc_class=source.mhc_class,
-                species=source.species,
-                source=source_label,
+            generated_record(
+                ProcessingRecord(
+                    peptide=peptide,
+                    flank_n=flank_n,
+                    flank_c=flank_c,
+                    label=0.0,
+                    processing_type=source.processing_type,
+                    mhc_allele=source.mhc_allele,
+                    mhc_class=source.mhc_class,
+                    species=source.species,
+                    source=source_label,
+                ),
+                parents=parents,
+                kind=source_label,
+                seed=seed + 29,
+                draw_index=idx,
             )
         )
 
@@ -2460,7 +2538,7 @@ def cascade_binding_negatives_to_downstream(
     }
 
     elution_added = 0
-    for _ in range(n_elution):
+    for draw_index in range(n_elution):
         source = rng.choice(synthetic_binding)
         key = (
             source.peptide,
@@ -2471,21 +2549,27 @@ def cascade_binding_negatives_to_downstream(
         if key in elution_keys:
             continue
         elution.append(
-            ElutionRecord(
-                peptide=source.peptide,
-                alleles=[source.mhc_allele],
-                detected=False,
-                source_alleles=(source.mhc_allele,),
-                mhc_class=source.mhc_class,
-                species=source.species,
-                source="synthetic_negative_from_binding",
+            generated_record(
+                ElutionRecord(
+                    peptide=source.peptide,
+                    alleles=[source.mhc_allele],
+                    detected=False,
+                    source_alleles=(source.mhc_allele,),
+                    mhc_class=source.mhc_class,
+                    species=source.species,
+                    source="synthetic_negative_from_binding",
+                ),
+                parents=[source],
+                kind="cascade_binding_to_elution",
+                seed=seed + 53,
+                draw_index=draw_index,
             )
         )
         elution_keys.add(key)
         elution_added += 1
 
     tcell_added = 0
-    for _ in range(n_tcell):
+    for draw_index in range(n_tcell):
         source = rng.choice(synthetic_binding)
         key = (
             source.peptide,
@@ -2496,16 +2580,22 @@ def cascade_binding_negatives_to_downstream(
         if key in tcell_keys:
             continue
         tcell.append(
-            TCellRecord(
-                peptide=source.peptide,
-                mhc_allele=source.mhc_allele,
-                response=0.0,
-                assay_type="synthetic_negative",
-                assay_method="synthetic_negative",
-                effector_culture_condition="Direct ex vivo",
-                mhc_class=source.mhc_class,
-                species=source.species,
-                source="synthetic_negative_from_binding",
+            generated_record(
+                TCellRecord(
+                    peptide=source.peptide,
+                    mhc_allele=source.mhc_allele,
+                    response=0.0,
+                    assay_type="synthetic_negative",
+                    assay_method="synthetic_negative",
+                    effector_culture_condition="Direct ex vivo",
+                    mhc_class=source.mhc_class,
+                    species=source.species,
+                    source="synthetic_negative_from_binding",
+                ),
+                parents=[source],
+                kind="cascade_binding_to_tcell",
+                seed=seed + 53,
+                draw_index=draw_index,
             )
         )
         tcell_keys.add(key)
@@ -3236,18 +3326,11 @@ def _write_unresolved_mhc_report(
     return outputs
 
 
-def _coarse_species_bucket(
-    species: Optional[str],
-    allele: Optional[str],
-) -> str:
-    bucket = normalize_processing_species_label(species)
-    if bucket in {None, "", "other"}:
-        inferred = normalize_processing_species_label(infer_species(str(allele or "")))
-        if inferred:
-            bucket = inferred
-    if bucket not in {"human", "murine", "nhp", "other"}:
-        bucket = "other"
-    return str(bucket)
+def _coarse_species_bucket(allele: Optional[str]) -> str:
+    bucket = molecular_mhc_species((allele,))["molecular_mhc_species_bucket"]
+    if not bucket:
+        return "unknown"
+    return bucket if bucket in {"human", "murine", "nhp"} else "other"
 
 
 def _audit_mhc_sequence_coverage(
@@ -3277,7 +3360,6 @@ def _audit_mhc_sequence_coverage(
         modality: str,
         allele: Optional[str],
         direct_seq: Optional[str],
-        species: Optional[str],
         source: Optional[str] = None,
     ) -> None:
         # Synthetic class-I no-alpha negatives intentionally ablate MHCa.
@@ -3289,7 +3371,7 @@ def _audit_mhc_sequence_coverage(
             mhc_sequences=mhc_sequences,
         )
         state = "resolved" if resolved else "missing"
-        sp = _coarse_species_bucket(species=species, allele=allele)
+        sp = _coarse_species_bucket(allele=allele)
         overall_state[state] += 1
         modality_state[modality][state] += 1
         species_by_state[state][sp] += 1
@@ -3300,7 +3382,6 @@ def _audit_mhc_sequence_coverage(
             modality="binding",
             allele=rec.mhc_allele,
             direct_seq=rec.mhc_sequence,
-            species=rec.species,
             source=rec.source,
         )
     for rec in kinetics_records:
@@ -3308,7 +3389,6 @@ def _audit_mhc_sequence_coverage(
             modality="kinetics",
             allele=rec.mhc_allele,
             direct_seq=rec.mhc_sequence,
-            species=rec.species,
             source=rec.source,
         )
     for rec in stability_records:
@@ -3316,7 +3396,6 @@ def _audit_mhc_sequence_coverage(
             modality="stability",
             allele=rec.mhc_allele,
             direct_seq=rec.mhc_sequence,
-            species=rec.species,
             source=rec.source,
         )
     for rec in processing_records:
@@ -3324,7 +3403,6 @@ def _audit_mhc_sequence_coverage(
             modality="processing",
             allele=rec.mhc_allele,
             direct_seq=None,
-            species=rec.species,
             source=rec.source,
         )
     for rec in elution_records:
@@ -3336,7 +3414,6 @@ def _audit_mhc_sequence_coverage(
                 modality="elution",
                 allele=allele,
                 direct_seq=None,
-                species=rec.species,
                 source=rec.source,
             )
     for rec in tcell_records:
@@ -3344,7 +3421,6 @@ def _audit_mhc_sequence_coverage(
             modality="tcell",
             allele=rec.mhc_allele,
             direct_seq=rec.mhc_sequence,
-            species=rec.species,
             source=rec.source,
         )
     for rec in vdjdb_records:
@@ -3352,7 +3428,6 @@ def _audit_mhc_sequence_coverage(
             modality="vdjdb",
             allele=rec.mhc_a,
             direct_seq=None,
-            species=getattr(rec, "species", None),
             source=rec.source,
         )
 
@@ -3379,6 +3454,7 @@ def _audit_mhc_sequence_coverage(
             "murine": int(counter.get("murine", 0)),
             "nhp": int(counter.get("nhp", 0)),
             "other": int(counter.get("other", 0)),
+            "unknown": int(counter.get("unknown", 0)),
         }
 
     species_summary = {
@@ -4623,6 +4699,7 @@ def _record_source_loader_funnel(
 def run(args: argparse.Namespace) -> None:
     """Run unified multi-source training with parsed arguments."""
     args = _resolve_run_args(args)
+    regularization_cfg = _regularization_config_from_args(args)
     torch.manual_seed(args.seed)
     random.seed(args.seed)
     data_seed_arg = getattr(args, "data_seed", None)
@@ -4662,6 +4739,29 @@ def run(args: argparse.Namespace) -> None:
     if bool(getattr(args, "track_output_updates", False)) and run_dir is None:
         raise ValueError("--track-output-updates requires --run-dir or --checkpoint")
     run_logger = RunLogger(run_dir, config=vars(args)) if run_dir is not None else None
+    if run_dir is not None:
+        (run_dir / "regularization.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": 1,
+                    "base": regularization_cfg,
+                    "schedule": "canonical_consistency_ramp_v1",
+                    "interpretation": "Configured weights; execution needs loss metrics.",
+                    "epochs": [
+                        {
+                            "epoch": index + 1,
+                            "parameters": _regularization_for_epoch(
+                                regularization_cfg, index, int(args.epochs)
+                            ),
+                        }
+                        for index in range(int(args.epochs))
+                    ],
+                },
+                indent=2,
+                allow_nan=False,
+            )
+            + "\n"
+        )
 
     data_dir = Path(args.data_dir)
     merged_tsv = (
@@ -4677,6 +4777,8 @@ def run(args: argparse.Namespace) -> None:
     elution_records: List[ElutionRecord] = []
     tcell_records: List[TCellRecord] = []
     vdjdb_records: List[TcrEvidenceRecord] = []
+    bulk_ms_records = []
+    scoped_partitions = None
     data_funnel: Dict[str, Any] = {
         "schema_version": 1,
         "data_seed_base": data_seed,
@@ -4695,11 +4797,49 @@ def run(args: argparse.Namespace) -> None:
             "elution": len(elution_records),
             "tcell": len(tcell_records),
             "tcr_evidence": len(vdjdb_records),
+            "bulk_ms": len(bulk_ms_records),
         }
 
+    frozen_partitions = None
     data_source = str(getattr(args, "data_source", "merged_tsv"))
-    if data_source not in {"merged_tsv", "hitlist"}:
+    if data_source not in {"merged_tsv", "hitlist", "scoped_bulk"}:
         raise ValueError(f"Unsupported data source: {data_source!r}")
+    if data_source == "hitlist":
+        if getattr(args, "split_mode", "peptide_group") != "peptide_group":
+            raise ValueError("Frozen Hitlist membership cannot use --split-mode random_rows")
+        if not getattr(args, "hitlist_bundle", None):
+            raise ValueError(
+                "--data-source hitlist requires --hitlist-bundle (verified frozen inputs)"
+            )
+        if getattr(args, "bulk_ms", False):
+            raise ValueError(
+                "Frozen Hitlist training cannot add live --bulk-ms inputs; "
+                "the verified search-scoped consumer is tracked in Presto #70"
+            )
+        if (
+            int(getattr(args, "mhc_augmentation_samples", 0)) > 0
+            or float(getattr(args, "uniprot_negative_ratio", 0.1)) > 0
+        ):
+            raise ValueError(
+                "Frozen Hitlist training cannot add unpinned MHC/UniProt auxiliary inputs; "
+                "set --mhc-augmentation-samples 0 --uniprot-negative-ratio 0"
+            )
+        if getattr(args, "profile", "full") == "canary":
+            raise ValueError(
+                "The canary profile fabricates modalities outside the frozen Hitlist scope"
+            )
+    if data_source == "scoped_bulk":
+        if args.split_mode != "peptide_group" or args.frozen_partition_policy != "peptide_disjoint":
+            raise ValueError("Scoped bulk supports only peptide-disjoint within-search partitions")
+        if args.bulk_ms or args.mhc_augmentation_samples > 0 or args.uniprot_negative_ratio > 0:
+            raise ValueError(
+                "Scoped bulk cannot mix live auxiliary inputs; disable --bulk-ms and set "
+                "--mhc-augmentation-samples 0 --uniprot-negative-ratio 0"
+            )
+        if args.profile == "canary":
+            raise ValueError("The canary profile fabricates modalities outside the scoped search")
+        if args.max_scoped_bulk < 0:
+            raise ValueError("--max-scoped-bulk must be nonnegative")
     if data_source == "merged_tsv" and merged_tsv.exists():
         print(f"Merged input: {merged_tsv}")
         (
@@ -4801,6 +4941,8 @@ def run(args: argparse.Namespace) -> None:
             vdjdb_records,
             hitlist_stats,
         ) = load_records_from_hitlist(
+            bundle_dir=args.hitlist_bundle,
+            bundle_sha256=getattr(args, "hitlist_bundle_sha256", None),
             max_binding=args.max_binding,
             max_kinetics=args.max_kinetics,
             max_stability=args.max_stability,
@@ -4810,9 +4952,10 @@ def run(args: argparse.Namespace) -> None:
             include_flanks=bool(getattr(args, "hitlist_flanks", True)),
             source_mapping_policy=str(getattr(args, "source_mapping_policy", "mask_unresolved")),
             sampling_seed=data_seed + 17,
+            cap_sampling=getattr(args, "cap_sampling", "reservoir"),
         )
         data_funnel["source_loader"] = hitlist_stats
-        print("Hitlist input: curated indexes (no merged TSV)")
+        print(f"Hitlist input: {hitlist_stats['frozen_bundle']['bundle_id']}")
         for assay, count in hitlist_stats["counts"].items():
             print(f"    {assay}: {count}")
         for family, coverage in hitlist_stats["flank_coverage"].items():
@@ -4820,6 +4963,30 @@ def run(args: argparse.Namespace) -> None:
         for family, resolved in hitlist_stats.get("flank_resolution", {}).items():
             print(f"    flank resolution [{family}]: {resolved:.1%}")
         print("    note: T-cell / TCR / processing are absent in hitlist-only mode")
+    elif data_source == "scoped_bulk":
+        from presto.data.scoped_bulk import load_scoped_bulk_records
+        from presto.data.scoped_partitions import prepare_scoped_partitions
+
+        bulk_ms_records, scoped_stats = load_scoped_bulk_records(
+            args.scoped_bundle,
+            bundle_sha256=args.scoped_bundle_sha256,
+            max_records=args.max_scoped_bulk or None,
+            seed=data_seed + 23,
+        )
+        scoped_partitions = prepare_scoped_partitions(
+            bulk_ms_records,
+            scoped_stats,
+            seed=args.seed,
+            val_frac=float(args.val_frac),
+            test_frac=float(args.test_frac),
+            assignment_file=args.frozen_assignment_file,
+            assignment_sha256=args.frozen_assignment_sha256,
+        )
+        data_funnel["source_loader"] = scoped_stats
+        data_funnel["frozen_assignments"] = scoped_partitions.receipt
+        print(
+            f"Scoped search input: {len(bulk_ms_records)} peptide proxies; no excision/depth labels"
+        )
     else:
         if getattr(args, "require_merged_input", True):
             raise FileNotFoundError(
@@ -5021,6 +5188,7 @@ def run(args: argparse.Namespace) -> None:
         and not elution_records
         and not tcell_records
         and not vdjdb_records
+        and not bulk_ms_records
     ):
         raise RuntimeError("No usable unified training records were loaded.")
 
@@ -5045,14 +5213,18 @@ def run(args: argparse.Namespace) -> None:
     )
     # Resolve once so the full sequences and groove records necessarily come
     # from the same mhcseqs-first / CSV-supplemented join.
-    mhc_exact_inputs, stats = resolve_mhc_inputs_from_index(args.index_csv, unique_alleles)
+    if data_source == "scoped_bulk":
+        stats = {"resolved": 0, "total": 0}
+    else:
+        mhc_exact_inputs, stats = resolve_mhc_inputs_from_index(args.index_csv, unique_alleles)
     mhc_sequences = {
         allele: record.sequence
         for allele, record in mhc_exact_inputs.items()
         if str(record.sequence or "").strip()
     }
     data_funnel["mhc_resolution_contract"] = {
-        "resolver_order": ["mhcseqs", "index_csv"],
+        "resolver_order": [] if data_source == "scoped_bulk" else ["mhcseqs", "index_csv"],
+        "scope": "not applicable to shotgun peptides" if data_source == "scoped_bulk" else "MHC",
         "index_csv": str(args.index_csv or ""),
         "filter_unresolved_mhc": filter_unresolved_mhc,
         "strict_mhc_resolution": strict_mhc_resolution,
@@ -5306,6 +5478,42 @@ def run(args: argparse.Namespace) -> None:
             "peptide-only run is genuinely what you want."
         )
 
+    def _record_groups():
+        return dict(
+            binding_records=binding_records,
+            kinetics_records=kinetics_records,
+            stability_records=stability_records,
+            processing_records=processing_records,
+            elution_records=elution_records,
+            tcell_records=tcell_records,
+            tcr_evidence_records=vdjdb_records,
+        )
+
+    from presto.data.frozen_partitions import augment_within_partitions
+
+    if data_source == "hitlist":
+        from presto.data.frozen_hitlist import load_frozen_hitlist_bundle
+        from presto.data.frozen_partitions import prepare_frozen_partitions
+
+        bundle = load_frozen_hitlist_bundle(
+            args.hitlist_bundle, expected_sha256=getattr(args, "hitlist_bundle_sha256", None)
+        )
+        frozen_partitions = prepare_frozen_partitions(
+            bundle,
+            _record_groups(),
+            seed=args.seed,
+            val_frac=float(args.val_frac),
+            test_frac=float(getattr(args, "test_frac", 0.0)),
+            policy=getattr(args, "frozen_partition_policy", "peptide_disjoint"),
+            component_allocation=getattr(
+                args, "hitlist_component_allocation", "relative_deficit_v2"
+            ),
+            assignment_file=getattr(args, "frozen_assignment_file", None),
+            assignment_sha256=getattr(args, "frozen_assignment_sha256", None),
+        )
+        data_funnel["frozen_assignments"] = frozen_partitions.receipt
+        print(f"Frozen measured membership: {frozen_partitions.receipt['directory']}")
+
     (
         synthetic_pmhc_ratio,
         synthetic_elution_ratio,
@@ -5331,8 +5539,10 @@ def run(args: argparse.Namespace) -> None:
     processing_aug_stats: Dict[str, int] = {}
     cascade_stats: Dict[str, int] = {}
     if synthetic_pmhc_ratio > 0 or args.synthetic_class_i_no_mhc_beta_negative_ratio > 0:
-        binding_records, binding_aug_stats = augment_binding_records_with_synthetic_negatives(
-            binding_records=binding_records,
+        binding_records, binding_aug_stats = augment_within_partitions(
+            augment_binding_records_with_synthetic_negatives,
+            record_groups={"binding_records": binding_records},
+            enabled=frozen_partitions is not None,
             mhc_sequences=mhc_sequences,
             negative_ratio=synthetic_pmhc_ratio,
             weak_value_min_nM=args.synthetic_negative_min_nM,
@@ -5352,28 +5562,34 @@ def run(args: argparse.Namespace) -> None:
         )
 
     if synthetic_elution_ratio > 0:
-        elution_records, elution_aug_stats = augment_elution_records_with_synthetic_negatives(
-            elution_records=elution_records,
+        elution_records, elution_aug_stats = augment_within_partitions(
+            augment_elution_records_with_synthetic_negatives,
+            record_groups={"elution_records": elution_records},
+            enabled=frozen_partitions is not None,
             negative_ratio=synthetic_elution_ratio,
             seed=data_seed,
         )
         print(f"Added synthetic elution negatives: {elution_aug_stats['added']}")
 
     if args.synthetic_processing_negative_ratio > 0:
-        processing_records, processing_aug_stats = (
-            augment_processing_records_with_synthetic_negatives(
-                processing_records=processing_records,
-                negative_ratio=args.synthetic_processing_negative_ratio,
-                seed=data_seed,
-            )
+        processing_records, processing_aug_stats = augment_within_partitions(
+            augment_processing_records_with_synthetic_negatives,
+            record_groups={"processing_records": processing_records},
+            enabled=frozen_partitions is not None,
+            negative_ratio=args.synthetic_processing_negative_ratio,
+            seed=data_seed,
         )
         print(f"Added synthetic processing negatives: {processing_aug_stats['added']}")
 
     if synthetic_cascade_elution_ratio > 0 or synthetic_cascade_tcell_ratio > 0:
-        elution_records, tcell_records, cascade_stats = cascade_binding_negatives_to_downstream(
-            binding_records=binding_records,
-            elution_records=elution_records,
-            tcell_records=tcell_records,
+        elution_records, tcell_records, cascade_stats = augment_within_partitions(
+            cascade_binding_negatives_to_downstream,
+            record_groups={
+                "binding_records": binding_records,
+                "elution_records": elution_records,
+                "tcell_records": tcell_records,
+            },
+            enabled=frozen_partitions is not None,
             elution_ratio=synthetic_cascade_elution_ratio,
             tcell_ratio=synthetic_cascade_tcell_ratio,
             seed=data_seed,
@@ -5390,7 +5606,6 @@ def run(args: argparse.Namespace) -> None:
     data_funnel["additions"]["synthetic_processing"] = processing_aug_stats
     data_funnel["additions"]["synthetic_cascade"] = cascade_stats
 
-    bulk_ms_records = []
     if bool(getattr(args, "bulk_ms", False)):
         from presto.data.bulk_ms import load_bulk_ms_records
 
@@ -5485,6 +5700,19 @@ def run(args: argparse.Namespace) -> None:
     data_funnel["additions"]["mhc_only"] = {"samples": mhc_only_added}
     data_funnel["mhc_resolution_contract"]["augmentation_source"] = mhc_augmentation_source
     data_funnel["additions"]["uniprot"] = {"samples": uniprot_added}
+    frozen_indices = None
+    if frozen_partitions is not None:
+        from presto.data.frozen_partitions import finalize_frozen_membership
+
+        frozen_indices, membership_receipt = finalize_frozen_membership(
+            frozen_partitions, dataset, _record_groups()
+        )
+        data_funnel["frozen_membership"] = membership_receipt
+        print(f"Final frozen membership: {membership_receipt['directory']}")
+    if scoped_partitions is not None:
+        frozen_indices, membership_receipt = scoped_partitions.finalize(dataset)
+        data_funnel["frozen_membership"] = membership_receipt
+        print(f"Frozen within-search membership: {membership_receipt['directory']}")
     if run_dir is not None:
         from presto.training.data_support import write_data_funnel_artifacts
 
@@ -5496,7 +5724,7 @@ def run(args: argparse.Namespace) -> None:
         raise RuntimeError(f"Need at least {minimum_samples} samples for the requested split.")
 
     split_mode = str(getattr(args, "split_mode", "peptide_group"))
-    if split_mode == "peptide_group" and test_fraction > 0.0:
+    if frozen_indices is None and split_mode == "peptide_group" and test_fraction > 0.0:
         # A peptide-grouped split partitions *peptides*, so the row count above
         # is the wrong precondition: a thousand rows of two distinct peptides
         # passes it and then fails inside the splitter. Check what the split
@@ -5510,7 +5738,19 @@ def run(args: argparse.Namespace) -> None:
                 f"distinct peptides; this corpus has {distinct_peptides}. "
                 f"Use --test-frac 0 or --split-mode random_rows."
             )
-    if split_mode == "peptide_group":
+    if frozen_indices is not None:
+        train_dataset = Subset(dataset, frozen_indices["train"])
+        val_dataset = Subset(dataset, frozen_indices["val"])
+        test_dataset = Subset(dataset, frozen_indices["test"]) if frozen_indices["test"] else None
+        print(
+            (
+                "Split: frozen peptide proxies within one search; "
+                if scoped_partitions is not None
+                else "Split: frozen observations and their generated descendants; "
+            )
+            + ", ".join(f"{name}={len(rows)}" for name, rows in frozen_indices.items())
+        )
+    elif split_mode == "peptide_group":
         train_indices, val_indices, test_indices = peptide_grouped_three_way_split_indices(
             dataset, float(args.val_frac), test_fraction, args.seed
         )
@@ -5582,6 +5822,7 @@ def run(args: argparse.Namespace) -> None:
                 data_seed=data_seed,
                 manifest=supported_manifest,
                 output_dir=run_dir,
+                frozen_membership=data_funnel.get("frozen_membership"),
             )
             validate_split_support(
                 split_support,
@@ -5704,7 +5945,6 @@ def run(args: argparse.Namespace) -> None:
         total_steps=max(1, int(args.epochs) * max(train_steps_per_epoch, 1)),
     )
     pcgrad = PCGrad(optimizer) if args.use_pcgrad else None
-    regularization_cfg = _regularization_config_from_args(args)
     track_probe_affinity = bool(getattr(args, "track_probe_affinity", True))
     track_probe_motif_scan = bool(getattr(args, "track_probe_motif_scan", True))
     motif_scan_amino_acids = str(
@@ -6205,6 +6445,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Train Presto on unified multi-source immunology data"
     )
+    from presto.cli.training_sources import add_training_source_arguments
+
+    add_training_source_arguments(parser)
     parser.add_argument("--config", type=str, default=None, help="Optional JSON/YAML config file")
     parser.add_argument(
         "--profile",
@@ -6663,6 +6906,12 @@ def main(argv=None):
     )
     parser.add_argument(
         "--use-pcgrad", action="store_true", help="Use PCGrad for multi-task gradient conflicts"
+    )
+    parser.add_argument(
+        "--binding-orthogonality-weight",
+        type=float,
+        default=IEDB_DEFAULTS["binding_orthogonality_weight"],
+        help="Weight for binding affinity/stability latent orthogonality (0 disables)",
     )
     parser.add_argument(
         "--consistency-cascade-weight",
