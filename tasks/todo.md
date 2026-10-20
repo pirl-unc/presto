@@ -11793,9 +11793,27 @@ Specification: `tasks/pr66_completion_spec.md`. Finish #66 in an isolated checko
 preserve later local target-validity, training, and showcase work.
 
 - [x] Inspect current remote PR/base state and isolate the coverage-only changes.
-- [ ] Review implementation and verify source/artifact provenance and parity.
+- [x] Review implementation and verify source/artifact provenance and parity.
 - [ ] Pass focused/full tests, pinned lint, strict docs, and final-head CI.
 - [ ] Publish and merge #66; verify the merge and preserve original local work.
 - [ ] Summarize implemented purpose, data, predictions, quality, and remaining gaps.
 
-Review results: pending.
+Review results:
+
+- Integrated current main `3418d0f` in an isolated worktree. Preserved newer
+  affinity-target auditing and species/assay provenance, plus both documentation
+  histories. Later original-checkout training, target-validity and figure work
+  remains separate.
+- Reproduced and fixed a merge-integration defect: a rejected batch restored SQL
+  rows but leaked affinity-audit counters. Its regression fails before the fix
+  and passes afterward; clipped-row evidence and pre-existing counts survive.
+- 175 focused coverage/preflight/audit/provenance tests pass. Pinned Ruff 0.16.0
+  lint/format and strict MkDocs pass. Shared dependencies were read only; pinned
+  Ruff was installed separately under `/private/tmp`.
+- Complete/repeated reports agree with current main across 32 configurations and
+  60,928 filtered class selections. New evidence is separate from the historical
+  results, whose exact verifier source is preserved.
+- Verified all 24 copied collection files by size/hash, all 14 then-current
+  family README links, verifier/source hashes and JSON parsing. All 286 original
+  working-tree files and the original staged patch are unchanged.
+- Full regression and final-head CI/merge: pending.

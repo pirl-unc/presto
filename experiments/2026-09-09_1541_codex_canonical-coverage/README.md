@@ -107,6 +107,25 @@ The maintained [verifier](analysis/verify_report_reuse.py) now accepts
 checked without overwriting the historical evidence. The frozen script above
 preserves the exact script hash recorded in the September parity summary.
 
+**Current-main integration verification (2026-10-20, Codex):** complete and
+repeated reports match main `3418d0f` in all 32 configurations, and all 60,928
+filtered class counts match. The
+[separate result](results/verification/report_reuse_parity_20261020.json) pins
+the baseline, candidate and verifier hashes, including the merged provenance
+fields. Its candidate source is identical to integration commit `e102946`;
+the recorded dirty state precedes that commit. Reproduce from an environment
+importing this checkout:
+
+```bash
+python experiments/2026-09-09_1541_codex_canonical-coverage/analysis/verify_report_reuse.py \
+  --base-commit 3418d0f \
+  --output /tmp/presto-report-reuse-current-main.json
+```
+
+The regression suite additionally checks that a rejected batch restores the
+new affinity-target audit counters and clipped-row table. No new training,
+predictive evaluation or timing study was run.
+
 All ten input hashes match before/after execution. Report/state/source-contract
 evidence fingerprints agree, dataset fingerprints match legacy split support,
 and every output CSV cell matches its JSON counterpart. These checks are recorded

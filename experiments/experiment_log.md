@@ -1447,6 +1447,13 @@ fitting/held-out performance remain separate work.
   output CSV/JSON cells reconcile. Reduce redundant report queries before more
   conditions; no preferred source condition or predictive winner is established.
 
+2026-10-20 integration closure (Codex): report reuse was checked against newer
+main `3418d0f`, retaining species/assay provenance and affinity-target auditing.
+All 32 complete/repeated reports and 60,928 filtered class counts agree; see the
+family's `results/verification/report_reuse_parity_20261020.json` and README for
+source hashes and the exact verifier command. Historical verification bytes
+remain preserved. This is software parity, with no new fitting or timing claim.
+
 ### 2026-10-15_2100_codex_scoped-proteomics-admission
 
 - Date/agent: 2026-10-15 America/New_York, Codex / GPT-6.
