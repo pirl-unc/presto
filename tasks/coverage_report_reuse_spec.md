@@ -56,3 +56,48 @@ Preserve and close any newly completed original census before further launches.
 Preserve independent review notes, record the PR #65 merge and its CI evidence,
 review the final implementation, and open a new PR against main. #48/#50/#53
 remain open until their real-data/update/prediction requirements are fulfilled.
+
+## Revision after review — 2026-09-13
+
+Agent/model: Claude / Opus 5. Five independent reviews found no wrong counts for
+current callers but confirmed defects in the first implementation (`3532ae1`).
+This revision fixes them:
+
+- Class columns re-entered the public `counts()`, so a subclass override such as
+  the canonical-coverage wrapper ran twice per class column. Counting now lives in
+  private helpers and each public call reaches an override once.
+- The cache was cleared only when `add_batch` began, so a rollback or a write that
+  bypassed `add_batch` could combine stale totals with a live balance. Reuse now
+  happens only inside `reusing_counts()`, a read-only block that `report()` runs
+  in. Outside it nothing is cached, so no write, rollback, schema change, restore
+  or other connection can serve stale counts, and a closed census raises for every
+  endpoint. A first attempt keyed validity on the connection's `total_changes`; an
+  adversarial review showed that DDL table swaps, temp tables, backups and second
+  connections bypass that counter. Supported-output claims are evaluated outside
+  the block, at the base statement cost.
+- `add_batch` is atomic through a savepoint: a rejected observation undoes only
+  the batch's own rows, split counts, evidence fingerprint and objective hits,
+  leaving earlier uncommitted writes intact. This supersedes "clear cached
+  categorical counts before each added batch, including failed additions" above.
+- Cache keys compared bound values with Python equality, so `1` and `1.0` shared
+  an entry that SQLite treats as different selections. Keys now use `repr`.
+- Each class column still scanned its selection for its balance. One grouped
+  statement now yields every class's exact balance. Negative and unique-negative
+  counts follow by subtraction because `target` and `observation_key` are NOT
+  NULL, and targets match by exact equality, as `o.target=index` does. A cold
+  single-column request instead folds its class into the population pass, so it
+  issues the same statements as before reuse. Balance aggregates have one
+  definition shared by binary and class responses, and population fields are
+  mapped by name rather than position.
+- The single-group report shortcut is decided once and documented. A test compares
+  every evidence group, columns included, with its own filtered counts, which
+  also guards the assumption that evidence filters are plain IN restrictions.
+- Evidence-group columns, failed batches, rollbacks and statement totals lacked
+  tests. Each new test fails against `3532ae1` or kills a targeted mutant.
+- Parity evidence moved from `/tmp` and the gitignored `artifacts/` directory into
+  the canonical-coverage family's `analysis/` and `results/verification/`.
+
+Unchanged, with evidence: cache memory (a few MB at most on the real report),
+deep-copy cost (well under a millisecond per hit), reusing facet-bearing entries
+for facet-free requests (only a test disables facets), and grouping every endpoint
+by column or evidence group (measured slower; column grouping cannot serve classes).

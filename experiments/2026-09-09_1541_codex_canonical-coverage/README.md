@@ -81,6 +81,27 @@ candidate snapshots are in [remote results](results/merged_measured/attempts/ser
 The 8,797,626,368-byte SQLite database remains in the output volume. The final
 worker log is `artifacts/2026-09-09_1541_codex_canonical-coverage/merged-measured-final-worker.log`.
 
+**Report count calls are not comparable across the report-reuse change (PR #66).**
+The 1,785 figure counts calls to the wrapper's `counts()` override under the census
+this run froze, which matches base `8b5f60f`. Later census code reuses a sole evidence
+group's endpoint counts without calling `counts()`, so the same report makes fewer
+calls: 7-8% fewer on the verification fixtures. Compare later conditions by wall time,
+peak RSS and SQL work, not by this counter. Software verification of that change
+(Claude / Opus 5, on `f54dd32` with the uncommitted fix; candidate source hash in the
+JSON) is retained here rather than under the gitignored `artifacts/` directory:
+[analysis/verify_report_reuse.py](analysis/verify_report_reuse.py) reproduces
+[results/verification/report_reuse_parity.json](results/verification/report_reuse_parity.json),
+identical reports for 32 output configurations and 60,928 equal filtered class counts
+against the base, with per-report SQL statement and call totals. The earlier parity
+result for PR head `3532ae1` is preserved as
+[report_reuse_parity_3532ae1.json](results/verification/report_reuse_parity_3532ae1.json).
+A synthetic check, [analysis/compare_class_count_cost.py](analysis/compare_class_count_cost.py)
+writing [class_count_cost.json](results/verification/class_count_cost.json), uses
+150,000 samples of the 11-class `species_of_origin_logits` endpoint. Report-style
+class work falls from 144 SQL statements under the base to 16, and a cold
+single-column claim keeps the base's 3. Its wall times depend on the machine. No
+real-data runtime or predictive claim follows from these files.
+
 All ten input hashes match before/after execution. Report/state/source-contract
 evidence fingerprints agree, dataset fingerprints match legacy split support,
 and every output CSV cell matches its JSON counterpart. These checks are recorded

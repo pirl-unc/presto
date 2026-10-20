@@ -12,6 +12,7 @@ import math
 import sqlite3
 import tempfile
 from collections import defaultdict
+from contextlib import contextmanager
 from copy import deepcopy
 from pathlib import Path
 
@@ -53,6 +54,47 @@ CONTEXT_FIELDS = (
     "apm_perturbation",
     "processing_stimulus",
 )
+_BALANCE_FIELDS = ("positive", "negative", "unique_positive", "unique_negative")
+
+
+def _balance_expressions(positive, negative):
+    """Observation rows and distinct observation keys on each side of a response split."""
+    return dict(
+        zip(
+            _BALANCE_FIELDS,
+            (
+                f"COALESCE(SUM({positive}),0)",
+                f"COALESCE(SUM({negative}),0)",
+                f"COUNT(DISTINCT CASE WHEN {positive} THEN o.observation_key END)",
+                f"COUNT(DISTINCT CASE WHEN {negative} THEN o.observation_key END)",
+            ),
+        )
+    )
+
+
+_EXACT = "o.qualifier=0 OR (o.qualifier IS NULL AND o.loss_type='mse')"
+_POPULATION_EXPRESSIONS = {
+    "observations": "COUNT(*)",
+    "training_rows": "COUNT(DISTINCT s.id)",
+    "source_rows": (
+        "COUNT(DISTINCT CASE WHEN s.traceable "
+        "THEN LENGTH(s.source)||':'||s.source||s.origin_id END)"
+    ),
+    "unique_observations": "COUNT(DISTINCT o.observation_key)",
+    "traceable_observations": "COUNT(DISTINCT CASE WHEN s.traceable THEN o.observation_key END)",
+    "untraceable_rows": "COUNT(DISTINCT CASE WHEN NOT s.traceable THEN s.id END)",
+    "distinct_peptides": "COUNT(DISTINCT NULLIF(s.peptide,''))",
+    "graded": "COALESCE(SUM(o.loss_type='bce' AND o.target>0 AND o.target<1),0)",
+    "exact": f"COALESCE(SUM({_EXACT}),0)",
+    "left_censored": "COALESCE(SUM(o.qualifier<0),0)",
+    "right_censored": "COALESCE(SUM(o.qualifier>0),0)",
+    "instances": "COALESCE(SUM(o.instances),0)",
+    "unique_exact": f"COUNT(DISTINCT CASE WHEN {_EXACT} THEN o.observation_key END)",
+    # Binary responses are positive above 0.5 and negative at or below it.
+    **_balance_expressions(
+        "o.loss_type='bce' AND o.target>0.5", "o.loss_type='bce' AND o.target<=0.5"
+    ),
+}
 
 
 class OutputCoverageCensus:
@@ -96,7 +138,7 @@ class OutputCoverageCensus:
         )
         self._hash_sum = 0
         self._hash_count = 0
-        self._class_counts = {}
+        self._selection_cache = None
 
     def __enter__(self):
         return self
@@ -129,8 +171,30 @@ class OutputCoverageCensus:
         return hashlib.sha256(payload).hexdigest()
 
     def add_batch(self, split: str, samples, batch) -> None:
-        """Consume the same collated batch used by the canonical support audit."""
-        self._class_counts.clear()
+        """Consume the same collated batch used by the canonical support audit.
+
+        A batch is atomic: if any observation is rejected, the rows, split counts,
+        evidence fingerprint and objective hits it had already added are undone.
+        """
+        state = (
+            dict(self.splits),
+            self._hash_sum,
+            self._hash_count,
+            deepcopy(self.objective_hits),
+        )
+        # A savepoint undoes only this batch, not writes made before it.
+        self.db.execute("SAVEPOINT add_batch")
+        try:
+            self._add_batch(split, samples, batch)
+        except BaseException:
+            self.db.execute("ROLLBACK TO add_batch")
+            self.db.execute("RELEASE add_batch")
+            self.splits, self._hash_sum, self._hash_count, self.objective_hits = state
+            raise
+        self.db.execute("RELEASE add_batch")
+        self.db.commit()
+
+    def _add_batch(self, split: str, samples, batch) -> None:
         self.declare_split(split)
         row_ids = []
         origins = []
@@ -295,7 +359,6 @@ class OutputCoverageCensus:
                         int(target.instance_counts[index]),
                         occurrence=slots[index],
                     )
-        self.db.commit()
 
     def _selection(self, split, endpoint, column, roles, families, sources):
         if endpoint not in self.contract.outputs:
@@ -335,59 +398,78 @@ class OutputCoverageCensus:
         """
         where, args = self._selection(split, endpoint, column, roles, families, sources)
         spec = self.contract.outputs[endpoint]
-        if spec.shape == "classes" and column:
-            index = spec.columns.index(column)
-            positive, negative = f"o.target={index}", f"o.target!={index}"
-            result = self.counts(
-                split,
-                endpoint,
-                roles=roles,
-                families=families,
-                sources=sources,
-                include_facets=include_facets,
-            )
-            if result["observations"]:
-                balance = self.db.execute(
-                    f"""SELECT COALESCE(SUM({positive}),0), COALESCE(SUM({negative}),0),
-                        COUNT(DISTINCT CASE WHEN {positive} THEN o.observation_key END),
-                        COUNT(DISTINCT CASE WHEN {negative} THEN o.observation_key END)
-                    FROM observations o JOIN samples s ON s.id=o.row_id WHERE {where}""",
-                    args,
-                ).fetchone()
-                result.update(
-                    zip(("positive", "negative", "unique_positive", "unique_negative"), balance)
-                )
+        if spec.shape != "classes":
+            return self._population(where, args, include_facets)[0]
+        # Every class of a CE vector selects the same observations, so the population
+        # is shared and one class differs only in its response balance.
+        index = spec.columns.index(column) if column else None
+        selection = (where, repr(args))
+        population_key = ("population", *selection, include_facets)
+        result = self._cache_get(population_key)
+        if result is None:
+            # Nothing is cached for this selection yet: count the requested class in
+            # the same pass, so a single-column request costs no more than it did
+            # before reuse. The cached population keeps its binary balance fields.
+            result, balance = self._population(where, args, include_facets, index)
+            self._cache_put(population_key, result)
+            if balance is not None:
+                result.update(balance)
             return result
+        if index is not None and result["observations"]:
+            balances = self._cache_get(("balances", *selection))
+            if balances is None:
+                balances = self._class_balances(where, args)
+                self._cache_put(("balances", *selection), balances)
+            rows, keys, sole_keys = balances.get(float(index), (0, 0, 0))
+            result.update(
+                positive=rows,
+                negative=result["observations"] - rows,
+                unique_positive=keys,
+                unique_negative=result["unique_observations"] - sole_keys,
+            )
+        return result
 
-        # Categorical columns share every count except their response balance.
-        cache_key = (where, tuple(args), include_facets)
-        if spec.shape == "classes" and cache_key in self._class_counts:
-            return deepcopy(self._class_counts[cache_key])
-        positive, negative = (
-            "o.loss_type='bce' AND o.target>0.5",
-            "o.loss_type='bce' AND o.target<=0.5",
-        )
+    @contextmanager
+    def reusing_counts(self):
+        """Reuse class-endpoint counts for repeated selections within this block.
+
+        Nothing is cached outside such a block, so no write, rollback, schema change
+        or other connection can leave counts stale there. The census must not change
+        inside the block; ``report()`` runs in one. Nested blocks share the outermost
+        block's entries.
+        """
+        if self._selection_cache is not None:
+            yield
+            return
+        self._selection_cache = {}
+        try:
+            yield
+        finally:
+            self._selection_cache = None
+
+    def _cache_get(self, key):
+        # Bound values are keyed by ``repr``: SQLite treats 1 and 1.0 as different values.
+        if self._selection_cache is None or key not in self._selection_cache:
+            return None
+        return deepcopy(self._selection_cache[key])
+
+    def _cache_put(self, key, value):
+        if self._selection_cache is not None:
+            self._selection_cache[key] = deepcopy(value)
+
+    def _population(self, where, args, include_facets, class_index=None):
+        """Counts over one selection, plus one class's balance in the same pass if asked."""
+        expressions = dict(_POPULATION_EXPRESSIONS)
+        if class_index is not None:
+            balance = _balance_expressions(f"o.target={class_index}", f"o.target!={class_index}")
+            expressions.update({f"class_{field}": sql for field, sql in balance.items()})
         row = self.db.execute(
-            f"""SELECT COUNT(*), COUNT(DISTINCT s.id),
-                COUNT(DISTINCT CASE WHEN s.traceable
-                    THEN LENGTH(s.source)||':'||s.source||s.origin_id END),
-                COUNT(DISTINCT o.observation_key),
-                COUNT(DISTINCT CASE WHEN s.traceable THEN o.observation_key END),
-                COUNT(DISTINCT CASE WHEN NOT s.traceable THEN s.id END),
-                COUNT(DISTINCT NULLIF(s.peptide,'')),
-                COALESCE(SUM({positive}),0), COALESCE(SUM({negative}),0),
-                COALESCE(SUM(o.loss_type='bce' AND o.target>0 AND o.target<1),0),
-                COALESCE(SUM(o.qualifier=0 OR (o.qualifier IS NULL AND o.loss_type='mse')),0),
-                COALESCE(SUM(o.qualifier<0),0), COALESCE(SUM(o.qualifier>0),0),
-                COALESCE(SUM(o.instances),0),
-                COUNT(DISTINCT CASE WHEN {positive} THEN o.observation_key END),
-                COUNT(DISTINCT CASE WHEN {negative} THEN o.observation_key END),
-                COUNT(DISTINCT CASE WHEN o.qualifier=0
-                    OR (o.qualifier IS NULL AND o.loss_type='mse') THEN o.observation_key END)
-            FROM observations o JOIN samples s ON s.id=o.row_id WHERE {where}""",
+            f"SELECT {', '.join(expressions.values())} "
+            f"FROM observations o JOIN samples s ON s.id=o.row_id WHERE {where}",
             args,
         ).fetchone()
-        result = dict(zip(COUNT_FIELDS, row))
+        values = dict(zip(expressions, row))
+        result = {field: values[field] for field in COUNT_FIELDS}
         if include_facets:
             result["facets"] = {}
             for field, value, count in self.db.execute(
@@ -410,12 +492,36 @@ class OutputCoverageCensus:
                 args,
             ):
                 result[f"distinct_{field}s"] = count
-        if spec.shape == "classes":
-            self._class_counts[cache_key] = deepcopy(result)
-        return result
+        if class_index is None:
+            return result, None
+        return result, {field: values[f"class_{field}"] for field in _BALANCE_FIELDS}
+
+    def _class_balances(self, where, args):
+        """Per class target: labeled rows, distinct keys, and keys with no other target.
+
+        One grouped pass replaces a scan per class. Grouping by key and target leaves
+        one row per distinct pair, so a key's row count is its number of targets.
+        Negative counts follow by subtraction because ``target`` is never NULL.
+        """
+        return {
+            target: (rows, keys, sole_keys)
+            for target, rows, keys, sole_keys in self.db.execute(
+                f"""SELECT target, SUM(n), COUNT(*), SUM(targets=1) FROM (
+                    SELECT o.target AS target, COUNT(*) AS n,
+                        COUNT(*) OVER (PARTITION BY o.observation_key) AS targets
+                    FROM observations o JOIN samples s ON s.id=o.row_id
+                    WHERE {where} GROUP BY o.observation_key, o.target
+                ) GROUP BY target""",
+                args,
+            )
+        }
 
     def report(self) -> dict:
         """Declare zero-support quantities too; diagnostic existence is not a label."""
+        with self.reusing_counts():
+            return self._build_report()
+
+    def _build_report(self) -> dict:
         report = {
             "schema_version": 1,
             "evidence_sha256": self.sha256,
@@ -443,26 +549,31 @@ class OutputCoverageCensus:
                     ORDER BY o.role,o.family,s.source""",
                     (split, endpoint),
                 ).fetchall()
-                evidence = []
-                for role, family, source in groups:
-                    filters = dict(roles=[role], families=[family], sources=[source])
-                    if len(groups) == 1:
-                        # This group is the entire endpoint population, including its columns.
-                        group_counts = deepcopy(entry)
-                    else:
-                        group_counts = self.counts(split, endpoint, **filters)
-                        group_counts["columns"] = {
-                            column: self.counts(split, endpoint, column, **filters)
-                            for column in spec.columns
-                        }
-                    evidence.append(
-                        {
-                            "role": role,
-                            "family": family,
-                            "source": source,
-                            **group_counts,
-                        }
-                    )
+                if len(groups) == 1:
+                    # Evidence filters are plain IN restrictions on role, family and
+                    # source, so a sole group selects exactly the population counted
+                    # above, columns included. Copy before attaching "evidence" so the
+                    # group never contains its own evidence list.
+                    role, family, source = groups[0]
+                    evidence = [
+                        {"role": role, "family": family, "source": source, **deepcopy(entry)}
+                    ]
+                else:
+                    evidence = []
+                    for role, family, source in groups:
+                        filters = dict(roles=[role], families=[family], sources=[source])
+                        evidence.append(
+                            {
+                                "role": role,
+                                "family": family,
+                                "source": source,
+                                **self.counts(split, endpoint, **filters),
+                                "columns": {
+                                    column: self.counts(split, endpoint, column, **filters)
+                                    for column in spec.columns
+                                },
+                            }
+                        )
                 entry["evidence"] = evidence
                 entries[endpoint] = entry
             report["splits"][split] = {

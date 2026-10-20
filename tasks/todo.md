@@ -11125,6 +11125,8 @@ plus an empty split. All 4,608 filtered categorical count comparisons also match
 The script, hashes and results are retained at
 `artifacts/2026-09-09_1541_codex_canonical-coverage/verify_report_reuse.py` and
 `report-reuse-parity.json`; focused output is `report-reuse-tests.log`.
+Tracked copy of that result (`artifacts/` is gitignored):
+`experiments/2026-09-09_1541_codex_canonical-coverage/results/verification/report_reuse_parity_3532ae1.json`.
 This is software verification, not a runtime benchmark or predictive evaluation;
 no new cloud comparison was launched and no full-report speedup is claimed.
 
@@ -11140,3 +11142,177 @@ Published [PR #66](https://github.com/pirl-unc/presto/pull/66), based directly o
 main after #65. Implementation and census closure are separate commits for review;
 GitHub code CI is running and local verification above is complete. This final
 publication note changes no tested code. Leave #66 open for independent review.
+
+### Independent review of coverage-count reuse against main — 2026-09-09
+
+Review specification: compare the current tree with merge base
+`8b5f60fd40684b8af5edfae3c3c52a42fc8b2bfa`. Inspect canonical code, new tests,
+and experiment closure artifacts separately. Trace selection, categorical
+response counts, cache invalidation, and single-group report reuse through
+consumers; check baseline parity and report independence with focused tests.
+Validate the recorded artifacts and any suspected introduced defects locally.
+Do not change implementation, install dependencies, launch cloud jobs, or edit
+historical artifacts. Return only discrete, actionable findings with applicable
+repository-rule citations and a correctness verdict.
+
+- [x] Inspect the diff and applicable project guidance.
+- [x] Trace changed behavior and reproduce any concrete regressions locally.
+- [x] Verify artifacts, deduplicate findings, and record review results.
+
+
+Review results: no actionable introduced defects found. Shared-environment
+Python 3.12.6 passed 135 focused coverage/preflight/support/lineage/contract tests
+in 10.45 seconds and 32 census-wrapper/gradient checks in 12.68 seconds.
+Differential verification against the exact supplied base matched complete and
+repeated reports across 32 configurations and 4,608 filtered count selections;
+its output, byte-identical to the retained result, is tracked as
+`experiments/2026-09-09_1541_codex_canonical-coverage/results/verification/report_reuse_parity_3532ae1.json`.
+All 18 changed JSON artifacts parse, all 24 collected artifact sizes/hashes
+match, all 717 output CSV rows agree with JSON, and source/evidence/dataset
+fingerprints reconcile. The raw worker log matches its collection hash.
+Default `git diff --check` reports only generated CSV CRLF line endings;
+`core.whitespace=cr-at-eol` passes. Installed Ruff is 0.15.21 rather than pinned
+0.16.0, so pinned lint was not rerun; the full test suite was not rerun.
+No implementation, historical artifact, dependency, or cloud changes were made.
+
+### Fix verified coverage-reuse review findings — 2026-09-13
+
+Agent/model: Claude / Opus 5. Scope: every finding confirmed across five reviews
+of PR #66, plus the pre-existing non-atomic `add_batch`. Excluded with evidence:
+cache memory growth (measured ceiling of a few MB), deep-copy cost (about 0.2 ms
+per hit on the largest real payload), reusing facet-bearing entries for facet-free
+requests (only a test disables facets), grouping every endpoint by column or
+evidence group (measured slower; column grouping cannot serve classes), and a
+"semantic" cache key (SQL text plus type-exact bound values already identify the
+population).
+
+Design:
+1. Split `counts()` into private `_population()` (unchanged aggregate and facets)
+   and `_class_balances()` (one grouped statement for every class). Class columns
+   compose them without re-entering public `counts()`, so subclass overrides run
+   once, `_selection()` runs once, and balance SQL is no longer duplicated.
+2. Exact balances: positive = rows with the class target; negative = observations
+   minus positive (target is NOT NULL); unique_positive = keys with the target;
+   unique_negative = unique_observations minus keys whose only target is the class.
+   Targets map by exact float equality, matching `o.target=index`.
+3. Selection cache keyed by kind, WHERE text, `repr` of bound values and facet
+   option, active only inside a read-only `reusing_counts()` block that `report()`
+   runs in. Nothing is cached elsewhere, so writes, rollbacks, schema changes,
+   restores and other connections cannot serve stale counts. (Revised after an
+   adversarial review broke a `total_changes` validity token.) A cold class column
+   folds its balance into the population pass, matching base statement cost.
+4. `report()` decides single versus multiple evidence groups once, documents why
+   the copy precedes attaching `evidence`, and keeps the base multi-group shape.
+5. `add_batch()` is atomic through a savepoint: any exception undoes only the
+   batch's rows and restores split counts, evidence fingerprint and objective hits.
+
+- [x] Implement census changes 1-5.
+- [x] Tests: per-class SQL oracle with conflicting keys, non-integer and
+      out-of-range targets and every filter shape; formatting-independent statement
+      totals for class reuse; report parity for every evidence group including class
+      columns, single and multiple groups, plus dictionary independence; failed batch
+      leaves the census unchanged; direct write and rollback; use after close;
+      type-distinct filter values; subclass override invoked once per call.
+- [x] Tracked evidence: differential parity against base `8b5f60f` plus statement
+      counts under the canonical-coverage `analysis/` and `results/verification/`;
+      retain the earlier `3532ae1` parity result there and repoint both task-note
+      citations from `/tmp` and gitignored `artifacts/`.
+- [x] Docs: disclose that report count calls are not comparable across this change
+      in the family README and experiment log; revision note in the reuse spec;
+      lesson on verifying cited paths exactly.
+- [x] Verify: focused census suites, full suite, pinned Ruff 0.16.0 check and
+      format, parity script, and a synthetic base / PR head / fix comparison of cold
+      single-column claims and class-heavy reports (software check, no real-data
+      speed claim).
+- [x] Environment: install Ruff 0.16.0 in the shared venv; presto holds the only
+      local `required-version` pin among sibling repos.
+
+Review results — 2026-09-14 (Claude / Opus 5; uncommitted on `f54dd32`):
+
+- Census: `counts()` composes private `_population()`, built from named
+  expressions with one shared balance definition, and `_class_balances()`, one
+  grouped statement for every class. A cold class column folds its balance into
+  the population pass. Reuse happens only inside the read-only `reusing_counts()`
+  block that `report()` runs in. `add_batch()` is atomic through a savepoint, and
+  `report()` chooses the single- or multi-group branch once.
+- A first design validated cache entries with the connection's `total_changes`.
+  An adversarial review reproduced stale counts through a DDL table swap, a temp
+  table shadowing `observations`, a backup into the connection and a second
+  connection, and showed a failed batch discarding earlier uncommitted writes.
+  After the redesign, all four scenarios return counts equal to raw SQL after a
+  report, and a failed batch keeps an earlier uncommitted delete.
+- Tests: `tests/test_output_coverage.py` has 72. The new tests fail against PR head
+  `3532ae1` (10 tests), and each of 13 targeted mutants is killed: shallow or
+  column-dropping single-group copies, unfiltered group columns, a leaking or
+  always-on cache, population recomputed per column, non-atomic or
+  whole-transaction rollback, Python-equality keys, two wrong balance formulas,
+  class fields cached into the population, and a skipped fold.
+- Verification: `./test.sh` passed 2,091 tests with 1 skipped in 282.70 seconds.
+  Census and canonical-coverage family suites passed 194 tests. `./lint.sh` passes
+  with pinned Ruff 0.16.0. Differential parity against base `8b5f60f`: identical
+  complete and repeated reports for 32 configurations and 60,928 equal filtered
+  class counts; on those fixtures reports issue 16.7-19.3% fewer SQL statements
+  and 7.2-8.2% fewer `counts()` calls.
+- Synthetic cost check (150,000 samples, 11 classes, shared machine under load):
+
+  | Workload | Base `8b5f60f` | PR head `3532ae1` | Fix |
+  |---|---|---|---|
+  | Cold single-column claim | 3 statements, 0.97 s | 4, 1.06 s | 3, 1.00 s |
+  | Report-style class work | 144 statements, 65.68 s | 56, 13.35 s | 16, 6.48 s |
+
+  No real-data speedup is claimed.
+- Evidence and docs: parity and cost scripts with results are tracked under the
+  canonical-coverage `analysis/` and `results/verification/`, and the earlier
+  `3532ae1` result is retained there. Both task-note citations now point at the
+  tracked copy. The family README and experiment log disclose that report
+  count calls are not comparable across this change. The reuse spec has a
+  revision note, and lessons are recorded.
+- Unchanged, with evidence: cache memory, deep-copy cost, facet-superset reuse,
+  grouping every endpoint by column or evidence group, and a semantic cache key.
+  `analysis/` scripts sit under `experiments/`, which `ruff.toml` excludes from
+  lint by design.
+- Environment: the shared venv now has Ruff 0.16.0 instead of 0.15.21; revert with
+  `python3 -m pip install ruff==0.15.21`. Nothing is committed or pushed.
+
+### Include the coverage-reuse verification bundle — 2026-09-14
+
+Review remediation specification: preserve the existing README claims and make
+their reproducibility links valid in any checkout. Confirm that the two scripts
+and three generated JSON summaries are the exact locally produced artifacts
+described by the coverage-reuse review, add only those five files to the tracked
+change, and avoid modifying the experiment's historical results. Validate all
+relative README links, parse every added JSON file, run non-mutating script-level
+checks, and inspect the staged diff so the bundle is both auditable and complete.
+
+- [x] Audit the five untracked verification files against README/task claims and
+      check for secrets, machine-local paths, or inconsistent provenance.
+- [x] Add the two `analysis/` scripts and three `results/verification/` JSON files
+      to the change without staging unrelated user work.
+- [x] Verify README links, JSON parsing, script syntax/help or reproduction paths,
+      and the exact staged file list.
+- [x] Record the verification results and final review disposition here.
+
+Review results: the staged diff adds exactly the two linked analysis scripts and
+three linked verification summaries (1,876 lines total); no unrelated working-tree
+files were staged. All three JSON files parse, their recorded script hashes match
+the added scripts, the candidate source hash matches `training/output_coverage.py`,
+and both historical revisions resolve locally. A secret/machine-local-path scan
+was clean. All 13 local links in the experiment README resolve. The documented
+differential verifier completed successfully with identical full and repeated
+reports across 32 configurations and all 60,928 filtered class-count comparisons.
+Both the unstaged and staged diffs pass `git diff --check` with the repository's
+generated-CSV CRLF allowance. The P2 reproducibility-links finding is resolved.
+
+
+## Finish current PR and summarize Presto — 2026-10-20
+
+Specification: `tasks/pr66_completion_spec.md`. Finish #66 in an isolated checkout;
+preserve later local target-validity, training, and showcase work.
+
+- [ ] Inspect current remote PR/base state and isolate the coverage-only changes.
+- [ ] Review implementation and verify source/artifact provenance and parity.
+- [ ] Pass focused/full tests, pinned lint, strict docs, and final-head CI.
+- [ ] Publish and merge #66; verify the merge and preserve original local work.
+- [ ] Summarize implemented purpose, data, predictions, quality, and remaining gaps.
+
+Review results: pending.

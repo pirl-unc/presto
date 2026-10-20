@@ -1320,6 +1320,18 @@ fitting/held-out performance remain separate work.
   T-cell MIL support are zero; the T-cell counts above describe row labels.
   These are census counts, not predictive metrics or adequacy thresholds.
   No fitting/pretraining ran; prediction dumps are inapplicable.
+- Report count calls are a wrapper call counter, not a runtime measure. The 1,785
+  figure used the base `8b5f60f` census. The report-reuse census (PR #66) reuses sole
+  evidence-group counts without calling `counts()`, so later conditions report fewer
+  calls for the same work (7-8% fewer on the verification fixtures); compare wall
+  time, peak RSS and SQL work instead. Differential parity against the base (Claude /
+  Opus 5, `f54dd32` plus uncommitted fix): identical reports for 32 configurations and
+  60,928 equal filtered class counts, in the family's
+  `results/verification/report_reuse_parity.json`, reproduced by
+  `analysis/verify_report_reuse.py`. A synthetic 150,000-sample check of the
+  11-class endpoint (`results/verification/class_count_cost.json`) cuts report-style
+  class work from 144 SQL statements to 16 while a cold single-column claim keeps
+  the base's 3. Software verification only; no real-data speedup is claimed.
 - The local watcher lost DNS connectivity, but the remote status and durable
   call result confirm success. Preserve both receipts. All final summaries,
   source/curation metadata, split support and training candidates are copied into
@@ -1328,3 +1340,4 @@ fitting/held-out performance remain separate work.
   before/after, evidence fingerprints, legacy dataset fingerprints and all
   output CSV/JSON cells reconcile. Reduce redundant report queries before more
   conditions; no preferred source condition or predictive winner is established.
+

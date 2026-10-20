@@ -1,0 +1,587 @@
+{
+  "baseline_commit": "8b5f60fd40684b8af5edfae3c3c52a42fc8b2bfa",
+  "baseline_source_sha256": "b930dc2e7eae1593c31f3e08f589a5b6fbf621a306f9549291fe860656561ae3",
+  "candidate_source_sha256": "b12727ea83c6b605cb1f11a19b80c2dd9e29a59c9c54879f8a7ce9dc20e73528",
+  "configurations": [
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "legacy",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "2d24df0c6edd99901043fdbe918cc521bc13d4205ca86ed258843bc3f8505314"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "legacy",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "9c3d53a7522f4d3bab1be52e4cf06c04ae89534cac6519df5f4cd4c5640eefc3"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "pooled_single_output",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "6f3fc46c7cd3b25c5559b320d0f114e07199d7f366202041a98d5e985eb59d32"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "pooled_single_output",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "77ad0496437f9d586c69848543612196c8eabf394576a68bfb1090a39027f0b9"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_segment_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "9cf640ce60935352b930ad1f847cea5a7456c937953d0d9c42b5643f6b236b4e"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_segment_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "a511eef9a1fa26159d44363b7c61e6eeb37c9bb4a5369f9f2d478aeed2cf1eb6"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_factorized_context_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "4bafe63f99d2b70198f294672d8f53d7891d13e9286be8faaad559299b7c5f84"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_factorized_context_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "3471fdd19f54f8b702e982def0d39a92198e764e80d0bb1eb491fb79e6b61ffc"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_factorized_context_plus_segment_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "bca6e3e680ed4431ea556a4946fc5a9a3c8bba5c70f4e0d6de07e653d9709df3"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_factorized_context_plus_segment_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "a02ac93efe7b48e8f3653b0b8d0f34c592fcad967d48498741ec60b7fcc2db9d"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_family",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "67d6ba47d4cd494db0a85d766a985102dd49813bf9bb61c98dec6d12a728e8ad"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_family",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "142f760cc95056aa8580ed85713aa5f940245afa740407808f8cde393c2283a0"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_method_leaf",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "d69232d19544eb4e9ac0f09e42d6c8cde3919f153192ad244a69d6ba37c5578c"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_method_leaf",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "0a4f4022f853c62c1142519928d5f135df5c5e5fe857cf980e3b802122b84275"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_prep_readout_leaf",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "68941028b7472b166b9788b23b6ab3a037bdb2146c9bbcb0573bbac9dad64426"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_prep_readout_leaf",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "collapsed",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "9db1c44de8530921e627353e6bbd5d55cb560ba94bbed48a84f351767cbfbe8d"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "legacy",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "082c5cc67673a023b7664e64fdfead0306746bbd6136db5db1165972b3e04599"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "legacy",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "c4d83f1e82f46f1e5c4d0fe39dfce085283ef4d52c9f0b9a56147612124665a7"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "pooled_single_output",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "1fec7c747acac57af1d09631a9e8a684fbe75cedc788eb4b0dcd97a9b9760fac"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "pooled_single_output",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "ef118d577940476478b20ac9003912e4cb8faef6d58cf225deb2e9cc1920ec88"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_segment_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "cfbc1dc1bd514aed0d7141c264ff087ff75ee27e26f2ce17f15f5722c242a485"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_segment_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "d353483c293a9f40f3c9010b59914b25903ac38e634a0a96dd40957cb43ba64b"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_factorized_context_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "0f325e6bce09340c3224bd8cd80efbe2e3213274abcd368eb79241c4424ec9ca"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_factorized_context_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "dbaa8727743194d6f6d9d94d33e481feb63dba603e044350c22a0b021898602b"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_factorized_context_plus_segment_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "9667e12992f2666b9a748cf2fd0b1b7839a67d67114155d793f0d7487a8e39f3"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "shared_base_factorized_context_plus_segment_residual",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "3f3a460990ad978942297a5d70cd73541960d185865d9840cc8ff3ed893001fd"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_family",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "5f243d22c9d1133379a36a17c1a1a64fe4cececce21c325fae86cf3234f83107"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_family",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "2a46f512cedf8c65f99517ee68d2fc5026d649a259ad303775679c7f7f42dc05"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_method_leaf",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "c99ac7e9fb1d79d70c6bc37478c26b7f3491c2dbe0e4e52e428e7f5f9ed22adb"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_method_leaf",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "9498121e81d70f034d3661cfdc9d745364d5ea6b503aabf5de7de106cd086c4e"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_prep_readout_leaf",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "merged_kd",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "3ef7eb5b7820e3fa06b11de4caf95f09fe18ee35e95b60c2f0d5885dca55286e"
+    },
+    {
+      "complete_report_equal": true,
+      "config": {
+        "affinity_assay_residual_mode": "dag_prep_readout_leaf",
+        "affinity_target_encoding": "log10",
+        "binding_direct_segment_mode": "off",
+        "binding_kinetic_input_mode": "affinity_vec",
+        "core_window_lengths": [
+          9
+        ],
+        "kd_grouping_mode": "split_kd_proxy",
+        "latent_topology": "expanded",
+        "max_affinity_nM": 50000.0
+      },
+      "filtered_counts_equal": true,
+      "repeated_report_equal": true,
+      "report_sha256": "a9e3e0cca85453e305f8aeed45b9f1aaa3577a1769f5a4bbabb60857c5dfb4b7"
+    }
+  ],
+  "filtered_count_comparisons": 4608,
+  "fixture_script_sha256": "3b15a3f81ab543b2ca086310fcc7da836ef11cee234e06fcf128a0e6d26f04c4",
+  "samples_per_nonempty_split": 7,
+  "verification": "software differential parity; no timing or predictive claims"
+}
