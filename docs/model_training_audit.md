@@ -265,6 +265,9 @@ category row was supervised.
 The poor training fit is established: exact-IC50 training RMSE was **1.338**
 log10(nM), versus **1.216** for the training mean and **1.089** for ridge.
 It is not merely a held-out-generalization problem.
+The baselines fit exact IC50 values only, while Presto also optimizes censored
+and other task losses. This objective mismatch can affect the preferred mean
+prediction; the comparison does not isolate architecture or optimizer failure.
 
 Verified implementation/optimization concerns:
 
