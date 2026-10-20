@@ -1,0 +1,307 @@
+"""Direct observation losses, training coverage and strict modular checkpoints."""
+
+from __future__ import annotations
+
+from collections import Counter
+from dataclasses import asdict
+from pathlib import Path
+from typing import Any, Sequence
+
+import torch
+from torch.nn import functional as F
+
+from ..data.modular import ENDPOINTS, Observation, TargetScale, transformed_target
+from ..models.modular import MODEL_VERSION, ModularConfig, ModularPresto, Prediction
+
+
+IDENTITY_HEAD = {
+    "mhc_class": "mhc_class",
+    "mhc1": "mhc_species",
+    "mhc2": "mhc_species",
+    "tcr_a": "tcr_species",
+    "tcr_b": "tcr_species",
+    "tcr_lineage": "tcr_lineage",
+}
+
+
+def identity_targets(row: Observation, model: ModularPresto) -> dict[str, int]:
+    targets = {}
+    for name, label in row.identity_labels.items():
+        head = IDENTITY_HEAD.get(name)
+        if head is None or head not in model.config.identity_tasks:
+            raise ValueError(f"unsupported identity label: {name}")
+        vocabulary = (
+            ("I", "II")
+            if name == "mhc_class"
+            else (("CD4", "CD8") if name == "tcr_lineage" else model.config.species)
+        )
+        if label not in vocabulary:
+            raise ValueError(f"identity label {name}={label} outside declared vocabulary")
+        targets[name] = vocabulary.index(label)
+    return targets
+
+
+def observation_loss(
+    output: Prediction, row: Observation, scales: dict[str, TargetScale]
+) -> torch.Tensor | None:
+    if row.value is None:
+        return None
+    if output.value is None:
+        raise ValueError("missing assay prediction")
+    value = transformed_target(row.endpoint, row.value, row.unit, row.qualifier)
+    if ENDPOINTS[row.endpoint].binary:
+        return F.binary_cross_entropy_with_logits(output.value, output.value.new_tensor(value))
+    if row.endpoint not in scales:
+        raise ValueError(f"missing training-only scaler for {row.endpoint}")
+    residual = output.value - scales[row.endpoint].encode(value)
+    if row.qualifier in ("<", "<="):
+        residual = residual.clamp_min(0)
+    elif row.qualifier in (">", ">="):
+        residual = residual.clamp_max(0)
+    return residual.square()
+
+
+def batch_loss(
+    model: ModularPresto,
+    rows: Sequence[Observation],
+    outputs: Sequence[Prediction],
+    scales: dict[str, TargetScale],
+) -> tuple[torch.Tensor, dict[str, int]]:
+    if len(rows) != len(outputs):
+        raise ValueError("prediction/observation alignment mismatch")
+    losses, counts = [], Counter()
+    for row, output in zip(rows, outputs, strict=True):
+        if row.observation_id != output.observation_id or row.endpoint != output.endpoint:
+            raise ValueError("prediction identity mismatch")
+        if row.endpoint == "identity":
+            for name, target in identity_targets(row, model).items():
+                if name not in output.identity:
+                    raise ValueError(f"identity input missing for {name}")
+                logits = output.identity[name]
+                losses.append(
+                    F.cross_entropy(logits[None], torch.tensor([target], device=logits.device))
+                )
+                counts[IDENTITY_HEAD[name]] += 1
+        else:
+            loss = observation_loss(output, row, scales)
+            if loss is not None:
+                losses.append(loss)
+                counts[row.endpoint] += 1
+    if not losses:
+        raise ValueError("batch has no supported measured labels")
+    return torch.stack(losses).mean(), dict(counts)
+
+
+def optimizer_membership(model: ModularPresto, optimizer: torch.optim.Optimizer) -> None:
+    expected = {id(parameter) for parameter in model.parameters() if parameter.requires_grad}
+    actual = [id(parameter) for group in optimizer.param_groups for parameter in group["params"]]
+    if set(actual) != expected or len(actual) != len(set(actual)):
+        raise ValueError("optimizer must contain each trainable parameter exactly once")
+
+
+def train_step(
+    model: ModularPresto,
+    optimizer: torch.optim.Optimizer,
+    rows: Sequence[Observation],
+    scales: dict[str, TargetScale],
+    *,
+    identity_rows: Sequence[Observation] = (),
+    identity_weight: float = 0.1,
+) -> dict[str, Any]:
+    """One measured vote per row/bag; identity replay is a separate mean CE."""
+    if any(row.split != "train" for row in (*rows, *identity_rows)):
+        raise ValueError("training may not consume held-out observations")
+    if identity_weight < 0:
+        raise ValueError("negative identity weight")
+    if any(row.endpoint == "identity" for row in rows) and any(
+        row.endpoint != "identity" for row in rows
+    ):
+        raise ValueError("assay and identity batches must be sampled separately")
+    if any(row.endpoint != "identity" for row in identity_rows):
+        raise ValueError("identity replay contains assay rows")
+    optimizer_membership(model, optimizer)
+    model.train()
+    optimizer.zero_grad(set_to_none=True)
+    loss, counts = batch_loss(model, rows, model(rows), scales)
+    loss_parts = {"primary": float(loss.detach())}
+    if identity_rows:
+        identity_loss, identity_counts = batch_loss(
+            model, identity_rows, model(identity_rows), scales
+        )
+        loss = loss + identity_weight * identity_loss
+        loss_parts["identity"] = float(identity_loss.detach())
+        if identity_weight > 0:
+            counts = dict(Counter(counts) + Counter(identity_counts))
+    if not torch.isfinite(loss):
+        raise ValueError("nonfinite training loss")
+    loss.backward()
+    before, coverage = {}, {}
+    for name, parameter in model.named_parameters():
+        gradient = parameter.grad
+        if gradient is not None and not torch.isfinite(gradient).all():
+            optimizer.zero_grad(set_to_none=True)
+            raise ValueError(f"nonfinite gradient: {name}")
+        before[name] = parameter.detach().clone()
+        coverage[name] = {
+            "gradient_norm": float(gradient.norm()) if gradient is not None else 0.0,
+            "gradient_present": gradient is not None,
+        }
+    optimizer.step()
+    for name, parameter in model.named_parameters():
+        change = (parameter.detach() - before[name]).norm().item()
+        coverage[name]["update_norm"] = change
+        coverage[name]["gradient_and_update"] = coverage[name]["gradient_norm"] > 0 and change > 0
+    model.trained_parameters.update(
+        name for name, evidence in coverage.items() if evidence["gradient_and_update"]
+    )
+    for name, count in counts.items():
+        model.support[name]["observations"] += count
+        prefix = (
+            f"identity_heads.{name}."
+            if name in model.config.identity_tasks
+            else f"heads.{name}."
+            if name in model.heads
+            else f"offsets.{name}."
+        )
+        if any(
+            evidence["gradient_and_update"]
+            for parameter, evidence in coverage.items()
+            if parameter.startswith(prefix)
+        ):
+            model.support[name]["status"] = "directly_supervised"
+        model.support[name]["validation"] = "not_evaluated"
+    return {
+        "loss": float(loss.detach()),
+        "loss_parts": loss_parts,
+        "counts": counts,
+        "coverage": coverage,
+    }
+
+
+def coverage_summary(steps: Sequence[dict[str, Any]]) -> dict[str, Any]:
+    """Count gradient-driven updates, never count weight-decay movement as training."""
+    parameters: dict[str, dict[str, Any]] = {}
+    for step in steps:
+        for name, evidence in step["coverage"].items():
+            record = parameters.setdefault(
+                name,
+                {
+                    "gradient_steps": 0,
+                    "update_steps": 0,
+                    "gradient_and_update_steps": 0,
+                    "max_gradient_norm": 0.0,
+                },
+            )
+            record["gradient_steps"] += evidence["gradient_norm"] > 0
+            record["update_steps"] += evidence["update_norm"] > 0
+            record["gradient_and_update_steps"] += evidence["gradient_and_update"]
+            record["max_gradient_norm"] = max(
+                record["max_gradient_norm"], evidence["gradient_norm"]
+            )
+    return {
+        "parameters": parameters,
+        "untrained_parameters": [
+            name for name, value in parameters.items() if not value["gradient_and_update_steps"]
+        ],
+    }
+
+
+def save_checkpoint(
+    path: str | Path,
+    model: ModularPresto,
+    scales: dict[str, TargetScale],
+    *,
+    optimizer: torch.optim.Optimizer | None = None,
+    metadata: dict[str, Any] | None = None,
+) -> None:
+    payload = {
+        "format": MODEL_VERSION,
+        "config": asdict(model.config),
+        "state_dict": model.state_dict(),
+        "scales": {key: asdict(value) for key, value in scales.items()},
+        "support": model.support,
+        "trained_parameters": sorted(model.trained_parameters),
+        "metadata": metadata or {},
+        "optimizer": optimizer.state_dict() if optimizer is not None else None,
+    }
+    path = Path(path)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    torch.save(payload, temporary)
+    temporary.replace(path)
+
+
+def load_checkpoint(
+    path: str | Path, *, device: str = "cpu"
+) -> tuple[ModularPresto, dict[str, TargetScale], dict[str, Any]]:
+    payload = torch.load(path, map_location=device, weights_only=True)
+    if payload.get("format") != MODEL_VERSION:
+        raise ValueError("incompatible checkpoint format")
+    model = ModularPresto(ModularConfig.from_dict(payload["config"])).to(device)
+    model.load_state_dict(payload["state_dict"], strict=True)
+    if set(payload["support"]) != set(model.support):
+        raise ValueError("checkpoint support/module mismatch")
+    allowed = {"random/untrained", "indirectly_trained", "directly_supervised", "pretrained_frozen"}
+    for name, value in payload["support"].items():
+        if value.get("status") not in allowed or value.get("observations", -1) < 0:
+            raise ValueError(f"invalid checkpoint support: {name}")
+    model.support = payload["support"]
+    trained = set(payload["trained_parameters"])
+    if trained - dict(model.named_parameters()).keys():
+        raise ValueError("checkpoint training coverage refers to absent parameters")
+    model.trained_parameters = trained
+    scales = {key: TargetScale(**value) for key, value in payload["scales"].items()}
+    expected = {name for name in model.config.endpoints if not ENDPOINTS[name].binary}
+    if set(scales) != expected:
+        raise ValueError("checkpoint scaler/endpoint mismatch")
+    return model, scales, payload
+
+
+def initialize_from_checkpoint(model: ModularPresto, path: str | Path) -> dict[str, Any]:
+    """Extend a compatible pretrained subset. Every new head starts unsupported."""
+    previous, scales, payload = load_checkpoint(path, device=str(model.device))
+    old, new = asdict(previous.config), asdict(model.config)
+    # Endpoint/identity unions may grow; feature slots may not silently change meaning.
+    shared_contract = {
+        "max_length",
+        "species_defaults",
+        "identity_threshold",
+    }
+    if previous.has_pmhc:
+        shared_contract.add("mhc_classes")
+    if (
+        previous.has_pmhc
+        or previous.config.context_species
+        or any(task.endswith("species") for task in previous.config.identity_tasks)
+    ):
+        shared_contract.add("species")
+    if previous.has_context:
+        shared_contract.update(
+            {"components", "component_activity_units", "machinery_profiles", "context_species"}
+        )
+    if previous.has_digest:
+        shared_contract.add("enzymes")
+    if previous.has_context or previous.has_digest:
+        shared_contract.add("source_context")
+    if previous.has_ms:
+        shared_contract.update({"acquisition_features", "acquisition_units"})
+    if set(previous.config.endpoints) & {"bulk_observation", "elution_observation"}:
+        shared_contract.update({"observation_features", "observation_units"})
+    for key in shared_contract:
+        if old[key] != new[key]:
+            raise ValueError(f"incompatible pretrained feature contract: {key}")
+    if not set(previous.config.endpoints) <= set(model.config.endpoints) or not set(
+        previous.config.identity_tasks
+    ) <= set(model.config.identity_tasks):
+        raise ValueError("pretrained task removal requires an explicit migration")
+    current = model.state_dict()
+    inherited = []
+    for name, value in previous.state_dict().items():
+        if name not in current or current[name].shape != value.shape:
+            raise ValueError(f"incompatible pretrained module: {name}")
+        current[name] = value
+        inherited.append(name)
+    model.load_state_dict(current, strict=True)
+    model.trained_parameters.update(previous.trained_parameters)
+    for name, support in previous.support.items():
+        model.support[name] = {**support, "validation": "requires_requalification_after_finetuning"}
+    return {"inherited_parameters": inherited, "scales": scales, "metadata": payload["metadata"]}

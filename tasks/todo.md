@@ -11832,12 +11832,15 @@ Specification: [frozen issue](modular_model/issue130.md),
 
 - [x] Publish and verify the holistic specification in issue #130.
 - [x] Establish isolated worktree and self-contained implementation handoff.
-- [ ] Implement typed observations, identity/context resolution and target contract.
-- [ ] Implement subset-allocated shared encoder, register and optional context/MS/TCR paths.
-- [ ] Implement one loss/training/checkpoint path and canonical CLI dispatch.
-- [ ] Add source preparation and explicit capability/admission reports.
-- [ ] Verify gradients, invariances, missingness, censoring, subsets and round trips.
+- [x] Implement typed observations, identity/context resolution and target contract.
+- [x] Implement subset-allocated shared encoder, register and optional context/MS/TCR paths.
+- [x] Implement one loss/training/checkpoint path and canonical CLI dispatch.
+- [x] Add source preparation and explicit capability/admission reports.
+- [x] Verify gradients, invariances, missingness, censoring, subsets and round trips.
 - [ ] Pass focused/full regression, pinned lint and strict documentation.
 - [ ] Publish implementation PR with precise supported/deferred scope.
 
-Review: pending implementation; no new predictive quality claim.
+Review: software foundation implemented. Focused integration and behavioral tests pass;
+full regression and publication remain pending. Source-specific cellular cohort
+qualification, real-data fitting and TCRvdb access remain tracked in #130.
+No new predictive quality claim.

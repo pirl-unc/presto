@@ -4698,6 +4698,12 @@ def _record_source_loader_funnel(
 
 def run(args: argparse.Namespace) -> None:
     """Run unified multi-source training with parsed arguments."""
+    if getattr(args, "model_kind", "legacy") == "modular":
+        from presto.training.modular_run import run_manifest
+
+        return run_manifest(args)
+    if getattr(args, "observations_manifest", None) or getattr(args, "modular_preflight", False):
+        raise ValueError("modular inputs require --model-kind modular")
     args = _resolve_run_args(args)
     regularization_cfg = _regularization_config_from_args(args)
     torch.manual_seed(args.seed)
