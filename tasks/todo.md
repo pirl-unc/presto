@@ -11845,7 +11845,7 @@ Spec: `tasks/model_training_path_audit_spec.md`.
 - [x] Map assay labels to effective losses and actual historical batch support.
 - [x] Compare initial/selected parameters and preserve a training-only audit.
 - [x] Write a code-linked report separating trainability, learning and quality.
-- [ ] Verify report/table consistency and publish the audit with PR #129.
+- [x] Verify report/table consistency and publish the audit with PR #129.
 
 Plan check-in: proceed with read-only source/checkpoint analysis and a documented
 diagnostic extension. No production architecture changes or new fitting.
@@ -11860,6 +11860,9 @@ analysis hashes reconcile. Verified loss couplings include generic KD/probe
 reuse and duplicate elution/MS objectives. No production model changed and no
 new fitting or held-out inference occurred. Strict MkDocs and explicitly scoped
 analysis-script Ruff checks pass; module evidence is in the registered family.
+Nine documentation-contract tests pass. Audit commit `0492967` is pushed and
+PR #129's description now records the completed report and final local suite.
+Remote CI for the updated head is separate from these completed local checks.
 
 Review so far:
 
