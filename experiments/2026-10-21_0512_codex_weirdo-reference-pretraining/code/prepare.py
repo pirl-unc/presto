@@ -66,6 +66,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, default=FAMILY)
     parser.add_argument("--cohort", type=Path, default=COHORT)
+    parser.add_argument("--reconstruct-missing-groups", action="store_true")
     args = parser.parse_args()
     output, cohort = args.output.resolve(), args.cohort.resolve()
     if (
@@ -77,7 +78,11 @@ def main():
     for name in ("results", "reproduce/source", "launch_logs"):
         (output / name).mkdir(parents=True, exist_ok=True)
     cohort.mkdir(parents=True, exist_ok=True)
-    raw = ROOT / "artifacts" / output.name
+    try:
+        artifact_name = output.relative_to(ROOT / "experiments")
+    except ValueError:
+        artifact_name = Path(output.name)
+    raw = ROOT / "artifacts" / artifact_name
     raw.mkdir(parents=True, exist_ok=True)
     if (raw / "reference-audit.json.gz").exists():
         raise ValueError("raw artifact name already used; choose a distinct fresh family name")
@@ -123,6 +128,7 @@ def main():
                 reference_sha256=PINS["reference"],
                 limits=LIMITS,
                 seed=42,
+                allow_missing_groups=args.reconstruct_missing_groups,
             )
         )
         metadata = json.loads((SPLITS / "splits.json").read_text())
@@ -139,6 +145,7 @@ def main():
             categories=metadata["categories"],
             salt=metadata["salt"],
             max_seconds=900,
+            reconstruct_missing_groups=args.reconstruct_missing_groups,
             progress=lambda n: (
                 print(f"reference proteins audited={n}", flush=True) if n % 32768 == 0 else None
             ),
@@ -181,6 +188,8 @@ def main():
                             {protein["family_key"] for protein in record["proteins"]}
                         ),
                         "source_group_component": record["component"],
+                        "reference_family_bucket": record["reference_bucket"],
+                        "grouping_evidence": "audited_reference_component",
                         "reference_audit_record_sha256": hashlib.sha256(
                             json.dumps(record, sort_keys=True).encode()
                         ).hexdigest(),

@@ -11969,6 +11969,14 @@ First bounded auxiliary family: [peptide-source reference pretraining](../experi
 - [ ] Fit the declared prior/composition/network conditions only if admission passes.
 - [ ] Preserve held-out reports, checkpoint replay and complete experiment closure.
 
+Preparation review: the pinned archive lacks the adapter's assumed family-bucket
+arrays. The first attempt stopped before scanning or training and is preserved.
+An explicit amended path leaves absent groups unknown until a full reference
+audit reconstructs them; the fixed selection, labels and recipe are unchanged.
+Focused modular/CLI/documentation checks pass (133 in 15.24 seconds), along with
+repository and explicit experiment-script Ruff checks and strict MkDocs. A fresh,
+separately preserved preparation attempt follows. No auxiliary model has been fitted.
+
 Lineage preparation is implemented; source-specific cohort wiring and broader
 biological-independence audits remain part of the unfinished preparation item.
 

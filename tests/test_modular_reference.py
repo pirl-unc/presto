@@ -130,3 +130,21 @@ def test_reference_mutation_during_scan_is_rejected(tmp_path):
 
     with pytest.raises(ValueError, match="changed during audit"):
         audit(path, digest, rows, progress=mutate)
+
+
+def test_missing_archive_buckets_require_explicit_verified_reconstruction(tmp_path):
+    path, digest, rows = fixture(tmp_path)
+    rows = [
+        replace(row, group_id="", provenance={**row.provenance, "source_family_bucket": None})
+        for row in rows
+    ]
+    unapproved = audit(path, digest, rows)
+    assert unapproved["status"] == "failed"
+    assert "missing_source_bucket" in unapproved["records"][0]["discrepancies"]
+    reconstructed = audit(path, digest, rows, reconstruct_missing_groups=True)
+    assert reconstructed["status"] == "passed"
+    assert reconstructed["supplied_bucket_comparisons"] == 0
+    assert reconstructed["missing_buckets_reconstructed"] == 2
+    assert reconstructed["records"][0]["source_bucket"] is None
+    assert reconstructed["records"][0]["reference_bucket"] == bucket("EXAMPLE")
+    assert reconstructed["records"][0]["bucket_origin"] == "reference_reconstruction"

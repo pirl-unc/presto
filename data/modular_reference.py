@@ -27,6 +27,7 @@ def audit_weirdo_reference(
     chunk_proteins=2048,
     max_seconds=900,
     progress=None,
+    reconstruct_missing_groups=False,
 ):
     """Audit all selected labels/occurrences; return discrepancies without relabeling.
 
@@ -40,6 +41,8 @@ def audit_weirdo_reference(
         raise ValueError("explicit reference grouping/fold policy required")
     if chunk_proteins <= 0 or buckets <= 0 or max_seconds <= 0:
         raise ValueError("positive chunk, bucket and audit-time limits required")
+    if type(reconstruct_missing_groups) is not bool:
+        raise ValueError("reconstruct_missing_groups must be explicit boolean")
     path = Path(reference_path)
     before = path.stat()
     if file_sha256(path) != reference_sha256:
@@ -207,7 +210,10 @@ def audit_weirdo_reference(
             reasons.append("membership_mismatch")
         if folds != [row.split]:
             reasons.append("source_fold_mismatch_or_overlap")
-        if bucket != row.provenance.get("source_family_bucket"):
+        supplied_bucket = row.provenance.get("source_family_bucket")
+        if supplied_bucket is None and not reconstruct_missing_groups:
+            reasons.append("missing_source_bucket")
+        elif supplied_bucket is not None and bucket != supplied_bucket:
             reasons.append("source_bucket_mismatch")
         record = {
             "observation_id": row.observation_id,
@@ -216,7 +222,11 @@ def audit_weirdo_reference(
             "expected_mask": expected,
             "reference_mask": actual,
             "folds": folds,
-            "source_bucket": bucket,
+            "source_bucket": supplied_bucket,
+            "reference_bucket": bucket,
+            "bucket_origin": "reference_reconstruction"
+            if supplied_bucket is None
+            else "supplied_archive",
             "component": group_ids[root(index)],
             "proteins": proteins,
             "discrepancies": reasons,
@@ -242,6 +252,15 @@ def audit_weirdo_reference(
         "bucket_count": buckets,
         "selected": len(observations),
         "components": len(members),
+        "supplied_bucket_comparisons": sum(
+            row.provenance.get("source_family_bucket") is not None for row in observations
+        ),
+        "missing_buckets_reconstructed": sum(
+            record["source_bucket"] is None and record["reference_bucket"] is not None
+            for record in records
+        )
+        if reconstruct_missing_groups
+        else 0,
         "elapsed_seconds": time.monotonic() - start_time,
         "records": records,
         "discrepancies": discrepancies,

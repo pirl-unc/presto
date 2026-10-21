@@ -84,3 +84,21 @@ in a fresh process on the first training batch; do not rescore test for that
 check. Close the family and canonical experiment log on success, failed admission,
 failed screen or budget failure. The full MHC/TCR/APC/MS/affinity requirements
 remain open regardless of this result.
+
+## Amendment before fitting: absent archive group arrays
+
+The first frozen preparation attempt (`42689fd`) stopped before source scanning
+or fitting: the actual pinned NPZ has k-mer and mask arrays, but no `*_groups`
+arrays. Array headers and the failed invocation/log/source snapshot are retained.
+The original adapter incorrectly assumed the newer grouping-array layout.
+
+Keep the same input hashes, 7,000 selected rows, seeds, labels and model/baseline
+recipe. A separate recorded preparation attempt may explicitly read missing
+groups as unknown, with no admitted group ID. It must reconstruct actual protein
+occurrences, source mnemonic families/folds and minimum reference buckets by the
+original full-reference audit before admission. Supplied buckets, when present,
+still must match. Absent supplied buckets cannot count as a successful supplied-
+bucket comparison; record their absence and reconstructed values separately.
+Use the connected source-family components for admitted grouping as planned.
+Any label/fold/reference discrepancy still stops preparation. No fitting or test
+prediction has occurred, and no cohort is reselected in response to this failure.

@@ -506,6 +506,39 @@ def test_weirdo_adapter_preserves_multilabels_hashes_and_source_folds(tmp_path):
     assert rows[-1].group_id != rows[0].group_id
     with pytest.raises(ValueError, match="hash mismatch"):
         list(weirdo_observations(directory, **{**kwargs, "archive_sha256": "b" * 64}))
+    # The actual older archive lacks these newer group arrays. Keep them unknown
+    # until the selected peptides are independently audited against the reference.
+    with np.load(directory / "splits.npz") as archive:
+        arrays = {name: archive[name] for name in archive.files if not name.endswith("_groups")}
+    np.savez_compressed(directory / "splits.npz", **arrays)
+    kwargs["archive_sha256"] = file_sha256(directory / "splits.npz")
+    with pytest.raises(ValueError, match="explicit reference reconstruction"):
+        list(weirdo_observations(directory, **kwargs))
+    pending = list(weirdo_observations(directory, **kwargs, allow_missing_groups=True))
+    assert [(row.peptide, row.identity_labels) for row in pending] == [
+        (row.peptide, row.identity_labels) for row in rows
+    ]
+    assert all(
+        row.group_id == "" and row.provenance["source_family_bucket"] is None for row in pending
+    )
+    receipt = write_observations(tmp_path / "pending.jsonl", pending)
+    manifest = {
+        "schema": MANIFEST_VERSION,
+        "sources": [
+            {
+                "path": receipt["path"],
+                "sha256": receipt["sha256"],
+                "source": "weirdo_swissprot_reference",
+                "population": "software",
+                "label_policy": "reference membership",
+                "split_policy": "not audited",
+            }
+        ],
+    }
+    path = tmp_path / "pending-manifest.json"
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="missing frozen grouping"):
+        ObservationIndex(path)
 
 
 def test_pairing_labels_require_evidence_and_do_not_turn_observed_pairs_into_negatives():

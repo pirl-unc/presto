@@ -1,7 +1,8 @@
 # Peptide-source reference pretraining
 
 Registered before preparation, 2026-10-21 UTC. Agent: Codex / GPT-6.
-Status: preparation pending; no model fitted or test predictions inspected.
+Status: first preparation stopped before audit/fitting; amended preparation pending.
+No model fitted or test predictions inspected.
 
 The [prospective plan](../agents/codex/plans/weirdo-reference-pretraining.md)
 fixes source hashes, label-blind 5,000/1,000/1,000 membership, independent
@@ -21,3 +22,18 @@ only after successful reference admission and checkpoint selection.
 Completion requires full admission, executed conditions, held-out prediction
 dumps and metrics, actual runtime/support, fresh-process training-batch replay
 and canonical-log closure. A passing source audit alone is not completion.
+
+## Preparation attempt 0
+
+Frozen commit `42689fd` failed after 0.1085 seconds while reading the archive:
+`train_groups` is absent. Actual NPZ headers confirm only k-mer and mask arrays
+for train/validation/test/all. The older synthetic adapter test had supplied
+group arrays, so it did not establish compatibility with these actual bytes.
+The failure precedes selection output, reference scanning, optimization and
+model evaluation. Its invocation, source snapshot and failure/log are retained.
+
+The prospective plan now includes an explicit amendment: keep the exact hashes,
+seeds, selection sizes, labels and fitting recipe; expose missing archive groups
+as unknown, then reconstruct occurrences/families/folds and grouping from the
+pinned reference before admitting any observation. No unknown bucket is filled
+with a fabricated supplied value. The retry uses a separate attempt directory.

@@ -264,6 +264,14 @@ explicit per-split sample limits and a seed. Sampling is uniform without replace
 and independent of labels; original folds, family buckets, row indices and overlapping
 membership labels are retained. Byte/schema verification does not certify the
 upstream biological independence or create an exact species-of-origin label.
+Older archives without family buckets are rejected by default. Explicit
+`allow_missing_groups=True` preserves their absence and leaves the rows
+unadmittable until grouping is established. `audit_weirdo_reference` independently
+reconstructs selected memberships, all matching proteins/positions and source
+folds from a pinned protein reference. Its explicit missing-group reconstruction
+records inferred buckets separately from supplied ones; any membership or fold
+discrepancy fails admission. Connected source-family groups reproduce mnemonic
+prefix grouping, which is not a guarantee of homology independence.
 
 `presto.data.modular_preparation.prepare_observations` deduplicates original
 measured outcomes across exports, defers conflicting copies, preserves independent

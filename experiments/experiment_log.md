@@ -1710,7 +1710,7 @@ Publication closure: all 23 public downloads, 48 archive members, 9,053 source/p
 
 - **Date / agent:** 2026-10-21 UTC; Codex / GPT-6.
 - **Directory:** [bounded peptide-source pretraining](2026-10-21_0512_codex_weirdo-reference-pretraining/README.md).
-- **Status:** registered before preparation; no fit or model evaluation executed.
+- **Status:** initial preparation stopped before scanning/fitting; amended preparation pending. No model evaluation executed.
 - **Source/data contract:** pinned local Weirdo reference and category archive;
   uniform label-blind 5,000/1,000/1,000 train/validation/test eight-mers, seeds
   42/43/44. Every selected membership/fold/bucket must independently reconstruct
@@ -1739,3 +1739,12 @@ Publication closure: all 23 public downloads, 48 archive members, 9,053 source/p
 No winner or predictive conclusion yet. This family remains incomplete until
 admission, all executed metrics/predictions, checkpoint replay and closure are
 recorded; the full MHC/TCR/APC/MS/affinity goal remains open.
+
+Preparation attempt 0 (`42689fd`) stopped after 0.1085 seconds because the actual
+pinned archive lacks `train_groups` (and all other grouping arrays). Actual array
+headers, frozen source, invocation and failure/log are retained in the family.
+No selected-row audit, optimization or test prediction occurred. The prospective
+plan records an amendment before retry: unchanged source hashes/selection/labels,
+explicit missing-group state, and reference-derived grouping required before
+admission. No supplied bucket is invented; actual supplied buckets must still
+agree with reference reconstruction. The retry has its own attempt directory.

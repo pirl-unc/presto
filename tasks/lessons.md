@@ -491,3 +491,7 @@ Keep applicability reporting separate from model features and the measured label
 - Build focused pytest commands from actual `rg --files tests` results or a
   verified file glob. A plausible test filename can stop collection entirely;
   an invocation reporting no tests supplies no verification evidence.
+- Inspect actual archive array names, shapes and dtypes before calling an adapter
+  source-ready. A synthetic fixture with newer `*_groups` arrays did not establish
+  that the pinned Weirdo archive contains them. Missing grouping remains unknown
+  until an explicit reference audit reconstructs it; never invent supplied buckets.
