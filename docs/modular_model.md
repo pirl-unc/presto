@@ -45,6 +45,16 @@ register localization or auxiliary benefit. The
 [complete experiment record](https://github.com/pirl-unc/presto/tree/codex/modular-presto-model-20261020/experiments/2026-10-21_0353_codex_modular-memorization-control)
 preserves source pins, predictions, fixed gate and fresh-process verification.
 
+A separate, registered peptide-source pretraining comparison has also completed.
+All 7,000 selected reference memberships were audited against the pinned protein
+reference. The auxiliary-only network beat the prevalence baseline, but its
+prespecified validation comparison against amino-acid composition failed;
+composition had lower test cross entropy (0.300864 versus 0.302032). Training
+coverage and fresh-process checkpoint replay passed. This is no evidence of
+improved affinity prediction. The
+[reference-pretraining experiment](https://github.com/pirl-unc/presto/tree/codex/modular-presto-model-20261020/experiments/2026-10-21_0512_codex_weirdo-reference-pretraining)
+preserves the negative result, baselines and every held-out prediction.
+
 ## Shape and information flow
 
 One shared sequence encoder uses 20 canonical residues plus padding, width 128,

@@ -1748,3 +1748,22 @@ plan records an amendment before retry: unchanged source hashes/selection/labels
 explicit missing-group state, and reference-derived grouping required before
 admission. No supplied bucket is invented; actual supplied buckets must still
 agree with reference reconstruction. The retry has its own attempt directory.
+
+#### Closure: 2026-10-21_0512_codex_weirdo-reference-pretraining
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Full family](2026-10-21_0512_codex_weirdo-reference-pretraining/README.md).
+- **Frozen source/reproduction:** preparation `de3cdfc`, fit `1d3c96b`; exact full hashes, dirty status, command/environment and package versions in the family receipts. Tracked fit sources were clean; generated cohort/log untracked. Frozen executed model/trainer/launcher source, failed preparation and amended attempt are retained.
+- **Data:** same pinned Weirdo reference/archive/meta; fixed label-blind 5,000/1,000/1,000 eight-mers, ten overlapping reference-category memberships. All 7,000 memberships/folds agree with exact occurrences across 569,516 proteins. No selected cross-fold peptide. Train/validation/test have 3,486/705/723 connected mnemonic-family components; homology independence unverified. Missing archive buckets reconstructed explicitly, never represented as supplied evidence. No reselection/relabeling.
+- **Assays/synthetic contract:** auxiliary-only; no affinity/stability/MS/TCR outcomes, exact/censored numeric assays, synthetic sequences or generated labels. Reference absence is not absence across all biological organisms. The old table-verification statistic is not this selected-row reference audit.
+- **Training:** independent smoothed category priors; fixed `C=1` L2 logistic on 20 residue frequencies (all ten models converged); modular encoder d128/l2/h4 with ten independent source logits, mean binary CE, no initial weights/replay. AdamW 3e-4, weight decay 1e-4, dropout .1, batch 64, seed 42, max 20 epochs, patience 5 after 5. The replay weight is inactive in this auxiliary-only condition. Validation selects epoch 5 / 395 updates; stop at epoch 10 / 790 updates.
+- **Runtime/hardware:** CPU, one Torch/BLAS thread, no requested/observed GPU/Modal. Reference audit 8.96 s; baseline fit 0.067 s; network child 64.30 s (trainer 58.82 s); whole comparison 69.93 s. Peak child/parent RSS 908,427,264/468,910,080 bytes; 900 s ceiling not reached.
+
+| Fixed condition | Train CE | Validation CE | Test CE |
+| --- | ---: | ---: | ---: |
+| Training prevalence | 0.303358 | 0.292560 | 0.308435 |
+| Composition logistic | 0.294973 | 0.286331 | 0.300864 |
+| Modular source network | 0.295201 | 0.285826 | 0.302032 |
+
+- **Screen:** failed. Paired validation network-minus-prior CE=-0.006734, 95% component-bootstrap interval[-0.009581,-0.003564]; versus composition=-0.000506[-0.001971,0.001117]. 2,000 resamples, 705 connected components, seed 20261021; all categories meet the fixed support minimum. Test was evaluated once after selection and did not change the recipe. No accepted neural winner; composition has the lowest descriptive test CE.
+- **Evidence:** per-example predictions for all three splits/conditions, per-category CE/discrimination/confusions/Brier/ECE/spread, coefficients, history, coverage, plot, complete receipts and raw artifact hashes are retained. Independent sklearn AP/AUROC/CE agreement on all 90 condition/split/category cases. All 29 allocated parameter tensors/exposed features updated; fresh-process first-training-batch replay matches exactly (no test rescore). Test probability SD 0.0092–0.1108 across categories. No IC50/500 nM metrics apply to this auxiliary-only family.
+- **Takeaway:** real source pretraining and nonconstant outputs are demonstrated on this bounded reference task, but improvement over composition and affinity transfer are not established. No checkpoint promotion. The 32-row IC50 memorization control addresses a different question; full held-out affinity, MHC/TCR auxiliaries, APC/MS/TCR qualification and the overall model goal remain open.

@@ -278,3 +278,39 @@ table-verification statistic compares another k-mer table and does not replace
 selected-row auditing against the pinned reference. The next [admission specification](auxiliary-data-admission-spec.md)
 preserves these distinctions before auxiliary pretraining. No fitting ran during
 this inventory. Upstream Hitlist #723 and #726 remain open without replies.
+
+## Audited peptide-source pretraining
+
+The first bounded reference family is now closed. The old pinned Weirdo archive
+lacks the newer adapter's assumed grouping arrays; its failed preparation is
+preserved. An explicit amended path reconstructs memberships, occurrences and
+source-family groups without inventing supplied buckets. Independent scanning of
+569,516 reference proteins validates all fixed 7,000 selected labels and folds.
+There are no selected cross-fold occurrences; mnemonic-prefix grouping still
+does not establish homology independence.
+
+Frozen fit source `1d3c96b` trained the peptide-only auxiliary subset using the
+canonical trainer and fixed prior/composition controls. The network selected
+epoch 5 and stopped at epoch 10. Validation/test mean CE is 0.285826/0.302032,
+versus composition 0.286331/0.300864 and prior 0.292560/0.308435. The network beats
+prior but its validation difference from composition has a 95% interval crossing
+zero; the joint prospective screen fails. All 29 allocated tensors/exposed
+features updated, and first-training-batch predictions replay exactly in a fresh
+process. Per-category metrics, all predictions, source/recipe/coverage artifacts
+and a plot are retained in the registered family and canonical log. Independent
+sklearn AP/AUROC/CE recomputation agrees on all 90 cases.
+
+This is actual nonconstant auxiliary fitting with a negative baseline-comparison
+result, not demonstrated affinity transfer or complete annotation qualification.
+Single-chain annotation admission, real MHC/TCR cohorts, matched affinity controls
+and the rest of the full objective remain open. The next
+[single-chain specification](single-chain-auxiliary-spec.md) preserves genuine
+per-chain evidence while keeping assay/pair-level requirements strict.
+
+Full regression on immutable application/test source `1d3c96b` passes:
+**2,484 passed, four skipped, 1,056 warnings in 370.10 seconds**, four workers.
+The log is `/private/tmp/presto-reference-full-regression.log`. Application and
+test sources remained unchanged; only saved-output reporting and documentation
+were added during the run. Repository pinned Ruff and explicit checks on the
+three experiment scripts pass, as does strict MkDocs. This is software
+verification, not a reversal of the failed auxiliary comparison screen.

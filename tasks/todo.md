@@ -11966,8 +11966,8 @@ and [actual reference inventory](modular_model/auxiliary-source-inventory.json).
 First bounded auxiliary family: [peptide-source reference pretraining](../experiments/agents/codex/plans/weirdo-reference-pretraining.md).
 
 - [x] Register/freeze selection and independently audit all selected reference memberships.
-- [ ] Fit the declared prior/composition/network conditions only if admission passes.
-- [ ] Preserve held-out reports, checkpoint replay and complete experiment closure.
+- [x] Fit the declared prior/composition/network conditions only if admission passes.
+- [x] Preserve held-out reports, checkpoint replay and complete experiment closure.
 
 Preparation review: the pinned archive lacks the adapter's assumed family-bucket
 arrays. The first attempt stopped before scanning or training and is preserved.
@@ -11984,6 +11984,21 @@ components. This establishes the selected reference-label contract, not homology
 independence or species of origin. The experiment launcher will call the canonical
 trainer in a bounded child process, preserve baseline coefficients and all
 prediction dumps, and compute the prospectively declared paired validation screen.
+
+Closure: frozen source `1d3c96b` completes the registered reference comparison.
+The network's validation/test CE is 0.285826/0.302032, versus composition
+0.286331/0.300864 and prior 0.292560/0.308435. Its paired validation advantage
+over composition has 95% interval [-0.001971, 0.001117], so the required joint
+screen fails. All 29 allocated tensors/exposed features updated; first-training-
+batch fresh-process replay is exact. All prediction dumps and per-category
+metrics, baseline coefficients, history, coverage and raw hashes are retained;
+independent sklearn AP/AUROC/CE matches all 90 condition/split/category cases.
+This closes that auxiliary family only. No affinity-transfer or qualified-model
+claim follows. Full regression on immutable application/test source `1d3c96b`
+passes: 2,484 passed, four skipped, 1,056 warnings in 370.10 seconds with four
+workers. Repository Ruff and explicit experiment-code checks pass, as does strict
+MkDocs. The next single-chain admission spec is written; implementation remains
+pending. The full biological/data objective is unchanged.
 
 Lineage preparation is implemented; source-specific cohort wiring and broader
 biological-independence audits remain part of the unfinished preparation item.
