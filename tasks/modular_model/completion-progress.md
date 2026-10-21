@@ -92,3 +92,32 @@ parameterized validation test was corrected with an explicit error-message
 assertion before the successful rerun. No real-data fit or perturbation-response
 claim has been made. Quantitative MS/processing endpoints remain the next missing
 architecture paths, alongside the wider source and qualification backlog.
+
+The immutable source commit `701db80ebe2da9cb158050908fdf8a98f546d358` passes the
+complete local regression: **2,445 passed, four skipped, 712.26 seconds**. The
+skips retain their existing explicit qualification/environment conditions.
+Repository-wide Ruff lint/format and strict MkDocs pass. Source/test files were
+unchanged throughout that run; no process was restarted based on quiet output.
+
+## Source inspection and upstream quantitative requests
+
+The actual current release inventory and cached bytes were inspected. The source
+inventory is [source-inputs.json](source-inputs.json): v4 binding/other-assay/bulk
+tables and corrected-human manifest/training/context files match GitHub release
+digests. Existing datacache generations are reused in place. Weirdo reference and
+prepared archives now have actual local SHA-256 pins. This is source inspection,
+not a new fitted experiment or admission/independence certificate.
+
+The corrected-human schema contains cell type, reviewed condition/control fields,
+independent perturbation/cytokine annotations and lineage fields. The new adapter
+still needs to inspect their actual contents, preserve missingness and produce a
+complete admission/disposition report; schema presence does not fill those gaps.
+
+Filed [Hitlist #726](https://github.com/pirl-unc/hitlist/issues/726) for quantitative
+HAP1 elution/proteomics outcomes and replicate lineage. The inspected packaged
+membership CSV contains only peptide, class and restriction, while the primary
+publication reports quantitative profiling and deposited processed data. Also
+added [requirements to #95](https://github.com/pirl-unc/hitlist/issues/95#issuecomment-6307156975)
+to keep raw and normalized bulk intensities separate and preserve actual run/
+replicate and censoring evidence. Neither request claims original supplementary
+tables have already been downloaded, parsed or admitted here.

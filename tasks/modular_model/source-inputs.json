@@ -1,0 +1,94 @@
+{
+  "schema": "presto.modular.source_inventory.v1",
+  "verified_date_utc": "2026-10-21",
+  "status": "source_checksums_verified_not_training_admission",
+  "verification": "Read actual local bytes with hashlib.file_digest(..., 'sha256'); compared Hitlist values against GitHub release asset digests. Read parquet footer schemas/counts without selecting a training cohort.",
+  "freshness": "Complete GitHub release inventory inspected. ci-corpus-v4 and human-cohort-corrected-v1 are the latest general/corrected-human exports; later specialized releases need separate source-specific qualification. releases/latest alone is insufficient.",
+  "groups": [
+    {
+      "source": "hitlist-ci-corpus-v4",
+      "release": "https://github.com/pirl-unc/hitlist/releases/tag/ci-corpus-v4",
+      "published_at": "2026-10-16T07:19:05Z",
+      "local_root": "/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z",
+      "artifacts": [
+        {
+          "name": "binding.parquet",
+          "sha256": "2b3f6ea2dd647e7fc54d214eef420feaebc4e81fab97ffc0565a2de1f8695ba0",
+          "bytes": 17096569,
+          "raw_rows": 814268
+        },
+        {
+          "name": "other_assays.parquet",
+          "sha256": "c40f5227ded408830885ecba8336dbdd701172df9573b0d32e5e8a5f8fc947c2",
+          "bytes": 1259717,
+          "raw_rows": 26537
+        },
+        {
+          "name": "bulk_proteomics.parquet",
+          "sha256": "9e3d52301fe014205bc65e7a8e4554f4e75ce7caa7de8ed184d517d6688df86b",
+          "bytes": 45394459,
+          "raw_rows": 2269288
+        }
+      ]
+    },
+    {
+      "source": "hitlist-human-cohort-corrected-v1",
+      "release": "https://github.com/pirl-unc/hitlist/releases/tag/human-cohort-corrected-v1",
+      "published_at": "2026-10-16T07:58:40Z",
+      "local_root": "/Users/iskander/.hitlist/corrected-human-cohort/public-downloads/v1/bundles/2026-10-16T07-59-56Z",
+      "artifacts": [
+        {
+          "name": "manifest.json",
+          "sha256": "b180eba804532f633a6d61bb350584dbe24f8df4b4b96f02c6ec492c60144372",
+          "bytes": 33972
+        },
+        {
+          "name": "training.parquet",
+          "sha256": "f902341e90c1c57defc93f4bc540ffcbea1b41061afb4492ddd8aaa7642c65bd",
+          "bytes": 188175209,
+          "raw_rows": 4071463
+        },
+        {
+          "name": "source_contexts.tsv",
+          "sha256": "7c2cbdcb6c25fc70b31dca62353dd89a23cd582d7b6af52d79a7aad9798360a8",
+          "bytes": 147926094
+        }
+      ],
+      "context_fields_observed_in_schema": [
+        "cell_type", "sample_attribution", "is_control_arm", "condition_id",
+        "condition_status", "condition_evidence", "condition_reference",
+        "condition_control", "condition_control_for", "condition_combination",
+        "condition_knockout_genes", "condition_knockdown_genes",
+        "condition_overexpression_genes", "condition_cytokines",
+        "specimen_ids", "donor_ids", "acquisition_ids"
+      ],
+      "limitation": "Column existence does not establish complete annotations, valid condition contrasts, measured supervision or independent holdouts. Contributor/identity artifacts and actual row admission remain to verify for the new modular preparation."
+    },
+    {
+      "source": "local-weirdo-reference-and-category-splits",
+      "local_root": "/Users/iskander/code/weirdo",
+      "artifacts": [
+        {
+          "name": "data/swissprot-sequences.csv",
+          "sha256": "e9c44a34fcd3f8fb1f4151d489985dd5578a947eda3e62213d5109ace36e115d",
+          "bytes": 221588916
+        },
+        {
+          "name": "data/category-splits/splits.npz",
+          "sha256": "99b21eb93196cf2b0a0b1ae4bbb63066224a6864e48dd3a8d47fe67bd34fcf79",
+          "bytes": 41633225
+        },
+        {
+          "name": "data/category-splits/splits.json",
+          "sha256": "571356e92fd1da71cf173be9f5e59c6aa128467f347de37aa30815d78923fc1f",
+          "bytes": 1934
+        }
+      ],
+      "limitation": "This pins existing local files, not the latest Swiss-Prot release. Source-defined category memberships, reference completeness, family-group independence and previously inspected evaluation folds still need an explicit training/evaluation policy."
+    }
+  ],
+  "upstream_requests": [
+    "https://github.com/pirl-unc/hitlist/issues/726",
+    "https://github.com/pirl-unc/hitlist/issues/95#issuecomment-6307156975"
+  ]
+}
