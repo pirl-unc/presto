@@ -11963,6 +11963,12 @@ and [actual reference inventory](modular_model/auxiliary-source-inventory.json).
 - [ ] Admit genuine chain annotations and audit selected source memberships/splits.
 - [ ] Freeze/register auxiliary pretraining and held-out qualification controls.
 
+First bounded auxiliary family: [peptide-source reference pretraining](../experiments/agents/codex/plans/weirdo-reference-pretraining.md).
+
+- [ ] Register/freeze selection and independently audit all selected reference memberships.
+- [ ] Fit the declared prior/composition/network conditions only if admission passes.
+- [ ] Preserve held-out reports, checkpoint replay and complete experiment closure.
+
 Lineage preparation is implemented; source-specific cohort wiring and broader
 biological-independence audits remain part of the unfinished preparation item.
 

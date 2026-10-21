@@ -1,0 +1,10 @@
+{
+  "status": "registered_before_preparation",
+  "agent_model": "Codex / GPT-6",
+  "plan": "experiments/agents/codex/plans/weirdo-reference-pretraining.md",
+  "conditions": ["training_prevalence", "amino_acid_composition_logistic", "modular_peptide_source"],
+  "selection": {"train": 5000, "validation": 1000, "test": 1000, "seed": 42},
+  "device": "cpu",
+  "gpu": null,
+  "note": "Actual preparation invocation is recorded separately; fitting invocation will replace this planned launch receipt only when executed."
+}

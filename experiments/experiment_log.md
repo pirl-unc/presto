@@ -1705,3 +1705,37 @@ Publication closure: all 23 public downloads, 48 archive members, 9,053 source/p
 - **Evidence:** initial overall RMSE 1.43145/SD ratio .02760; final standardized loss .00053406. All 32 allocated parameter tensors and exposed features have gradient-driven updates; register weights updated on all 100 steps. A fresh process reproduced every prediction/metric and passed the public support guards. Initial/intermediate/final predictions and all threshold metrics are retained; raw-checkpoint/disposition paths/hashes are in the results receipts.
 - **Validation/test:** intentionally absent because this is a training-only capacity gate; all observations are fit targets. Historical held-out peptides excluded; future independent evaluation must account for this diagnostic exposure. No generalization winner or endpoint qualification.
 - **Decision/context:** fixed capacity gate passed with nonconstant predictions in both classes, without identity tasks. This does not demonstrate auxiliary benefit or isolate the cause of the historical failed architecture's collapse. Full-cohort mean/ridge comparisons, held-out evaluation and the wider holistic model requirements remain pending.
+
+### 2026-10-21_0512_codex_weirdo-reference-pretraining
+
+- **Date / agent:** 2026-10-21 UTC; Codex / GPT-6.
+- **Directory:** [bounded peptide-source pretraining](2026-10-21_0512_codex_weirdo-reference-pretraining/README.md).
+- **Status:** registered before preparation; no fit or model evaluation executed.
+- **Source/data contract:** pinned local Weirdo reference and category archive;
+  uniform label-blind 5,000/1,000/1,000 train/validation/test eight-mers, seeds
+  42/43/44. Every selected membership/fold/bucket must independently reconstruct
+  against all reference proteins before fitting. Source mnemonic-prefix grouping
+  does not establish homology independence. Hashes and exact policy are in the
+  [prospective plan](agents/codex/plans/weirdo-reference-pretraining.md).
+- **Training contract:** shared modular encoder, peptide-source head only; ten
+  independent membership labels per peptide with mean CE. No assay labels,
+  pretraining weights, replay, generated labels or synthetic sequences. AdamW
+  3e-4, weight decay 1e-4, dropout .1, batch 64, seed 42; at most 20 complete
+  epochs, validation patience five after five epochs. CPU, one Torch/BLAS thread;
+  fitting ceiling 15 minutes. No requested/observed Modal GPU.
+- **Reproduction:** family `reproduce/` and `code/`; actual git/env/package records
+  are generated at preparation and fitting launch. Source and code remain pinned.
+- **Qualification:** prospective validation CE comparison against prior and
+  composition controls, paired source-component bootstrap; no test-based choices.
+  Per-category support, calibration and discrimination remain required. No
+  biological species-origin or assay-transfer claim follows from this screen.
+
+| Condition | Data / outcome | Held-out validation | Held-out test |
+| --- | --- | --- | --- |
+| Training prevalence | Same reference memberships; smoothed category priors | Not run | Not run |
+| Composition logistic | Same rows; 20 residue frequencies, fixed L2 logistic models | Not run | Not run |
+| Modular peptide-source | Shared encoder plus ten independent source memberships | Not run | Not run |
+
+No winner or predictive conclusion yet. This family remains incomplete until
+admission, all executed metrics/predictions, checkpoint replay and closure are
+recorded; the full MHC/TCR/APC/MS/affinity goal remains open.
