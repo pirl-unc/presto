@@ -1,10 +1,48 @@
 {
-  "status": "registered_before_execution",
   "agent_model": "Codex / GPT-6",
-  "kind": "data_admission_only",
-  "training": null,
-  "evaluation": null,
+  "argv": [
+    "experiments/2026-10-21_0647_codex_full-ic50-admission/code/launch.py"
+  ],
+  "catalog_producer_version": "not recorded in source CSV",
+  "cwd": "/private/tmp/presto-modular-model",
   "device": "cpu",
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "evaluation": null,
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "git_commit": "2214086783b83b741a6c9f0d0dda7137cd718c09",
+  "git_status": "",
   "gpu": null,
-  "source_policy": "experiments/agents/codex/plans/full-ic50-admission.md"
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "runtime_versions": {
+    "mhcgnomes": "3.64.6",
+    "mhcseqs": "2.6.13",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "torch": "2.14.1"
+  },
+  "salt": "presto-direct-ic50-v1",
+  "sources": {
+    "binding": {
+      "path": "/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z/binding.parquet",
+      "sha256": "2b3f6ea2dd647e7fc54d214eef420feaebc4e81fab97ffc0565a2de1f8695ba0"
+    },
+    "catalog": {
+      "path": "/Users/iskander/.cache/mhcseqs/mhc-full-seqs.csv",
+      "sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1"
+    },
+    "historical_membership": {
+      "path": "/Users/iskander/.hitlist/presto-corrected-human-qualification/public-downloads/v1/bundles/2026-10-16T08-32-18Z/membership.tsv",
+      "sha256": "8959e60c0d9b8049aec25095b9c354d456b48f97ba8fb31d7b786e2861113e99"
+    },
+    "memorization": {
+      "path": "/private/tmp/presto-modular-model/data/modular_cohorts/2026-10-21-memorization-control/observations.jsonl",
+      "sha256": "145957e201c596ba82db4c900eb3715c34c81605ffadf887d0811f6f1d282ad5"
+    }
+  },
+  "training": null
 }

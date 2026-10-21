@@ -359,3 +359,30 @@ original-outcome deduplication and preserved historical partitions. Its adapter
 and recipe add 45 checks; all 199 focused modular/CLI/docs checks pass. This
 preparation keeps independent disagreeing measurements and does not carry over
 the 32-row capacity diagnostic's consistency filter. No full-cohort fit has run.
+
+## Full eligible purified IC50 cohort
+
+The [registered source family](../../experiments/2026-10-21_0647_codex_full-ic50-admission/README.md)
+executed on clean `2214086` and is closed. All 814,268 raw source dispositions,
+29,283 admitted original measurements, 84 used catalog names, raw values/units/
+qualifiers and frozen partitions independently replay. Exact-only training
+contains 21,636 measurements; the comparison adds 1,919 censored training rows
+while keeping 2,925 validation and 2,803 test observations identical. No partner
+is imputed and no measurement is clipped. There are 1,002 same-input sets with
+nonidentical independent outcomes; they remain separate observations.
+
+The frozen mechanical support screen passes separately for both classes.
+Historical exposure and all 32 memorization peptides' training assignments are
+preserved; only novel components use the declared label-blind hash policy.
+Shared studies and unknown donor/specimen/acquisition identity remain limitations,
+and old held-outs are not newly unseen data. This prepares a supplied-metadata
+assay-only comparison independently of auxiliary success; it is not a trained
+affinity result or completion of the broader model.
+
+The first posthoc verifier setup failed from an unscoped lambda replacement;
+its exact source/log are retained. The corrected independent analysis passes
+without rerunning source preparation or any fitting. Full regression on frozen
+application/test source `2214086`: **2,547 passed, four skipped, 1,055 warnings in
+292.06 seconds**, four workers. The durable log is
+`/private/tmp/presto-full-ic50-adapter-regression.log`. Repository and explicit
+experiment lint checks pass; source/test files stayed unchanged throughout.

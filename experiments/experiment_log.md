@@ -1804,3 +1804,27 @@ agree with reference reconstruction. The retry has its own attempt directory.
 - **Lineage/partition:** canonical original-assay deduplication and conflicting-copy deferral. Connect exact peptides/original assays; preserve historical and 32-row memorization exposure, defer incompatible fixed assignments, hash only new components at fixed80/10/10. Exact-only and exact-plus-censored manifests share all validation/test rows. No study/donor independence claim.
 - **Training/evaluation:** data preparation only, local CPU/one thread, no requested/observed GPU/Modal, optimizer, pretraining, synthetic labels or model predictions. No predictive metrics/dumps apply. Subsequent fitting needs its own registered recipe and matched baselines; auxiliary qualification does not block the supplied-metadata control.
 - **Status:** pending preparation and independent replay. Preserve all raw dispositions, aliases, target/split/source checks, full counts and fixed readiness outcomes before closing this family.
+
+#### Closure: 2026-10-21_0647_codex_full-ic50-admission
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Full evidence](2026-10-21_0647_codex_full-ic50-admission/README.md).
+- **Executed source:** clean `2214086783b83b741a6c9f0d0dda7137cd718c09`; exact argv, environment, runtime/parser versions, source hashes and application/launcher snapshots retained. Existing catalog producer version remains unknown.
+- **Dataset/curation:** all eligible pinned Hitlist v4 direct purified human HLA IC50 with canonical unmodified peptides, finite positive raw concentration, exact/censored qualifiers and explicit unambiguous MHC partners. All 814,268 raw dispositions replay independently; 29,283 measurements admitted, 751,790 excluded and 33,195 deferred (33,165 missing explicit partners; 30 unresolved names). No row caps, partner imputation, clipping, generated labels or synthetic sequences. Actual admitted measurements are all IEDB/nM and have unique original assay IRIs.
+- **Independent outcomes:** 1,002 same-input sets have different reported values and/or qualifiers and remain separate votes. This count does not imply all censor intervals are inconsistent. No original-outcome copies/conflicting exports occurred in this actual eligible source; targeted software tests cover their handling. All 84 used catalog names/aliases and strict groove extraction verified.
+
+| Split / class | All measurements | Exact | Exact peptide groups | Exact binders / nonbinders at 500 nM |
+| --- | ---: | ---: | ---: | ---: |
+| Train I | 15,266 | 14,375 | 6,532 | 7,815 / 6,560 |
+| Train II | 8,289 | 7,261 | 1,117 | 1,789 / 5,472 |
+| Validation I | 2,051 | 1,968 | 863 | 1,045 / 923 |
+| Validation II | 874 | 758 | 141 | 212 / 546 |
+| Test I | 1,845 | 1,758 | 777 | 991 / 767 |
+| Test II | 958 | 842 | 133 | 204 / 638 |
+
+- **Conditions:** exact-only has 21,636 training measurements; exact-plus-censored adds 1,919 bounds. Entire validation/test partitions are identical (2,925/2,803, both including censored observations). Source/manifest/label/split replay proves that only censored training exposure differs. Raw values above 50,000 nM remain: 1,577/214/188 train/validation/test, exact and censored combined.
+- **Partitions:** 9,908 peptide components, original-assay uniqueness verified; fixed old assignments and 32-row memorization exposure retained, only new components use declared hash80/10/10. Historical assignment counts 2,117/230/219 and new counts 21,438/2,695/2,584. No target-based assignment or reseeding. Old held-outs remain previously inspected, not fresh.
+- **Limits:** 114 train/validation, 117 train/test and 90 validation/test shared studies; donor/specimen/acquisition identity absent. This is not study/donor/homology independence or unseen-allele qualification. Frozen mechanical count/threshold-support readiness passes for both classes; predictive quality is untested.
+- **Training/evaluation:** none; no optimizer/pretraining, loss weights or predictive model selection. Other affinity/stability/proxy/APC/MS/TCR outcomes are outside this IC50 diagnostic contract, not relabelled as IC50. Both held-outs exist; prediction dumps, losses, correlations and classifier metrics are inapplicable because no model was evaluated. No winner/checkpoint.
+- **Hardware/runtime:** local CPU, one Torch/BLAS thread, no requested/observed GPU or Modal; 42.6482 seconds, peak process RSS 1,202,814,976 bytes. A separate four-worker regression ran concurrently; not an isolated runtime benchmark. Independent replay timing excluded.
+- **Artifacts:** full source dispositions, components, catalog aliases, paired preflights/manifests, source/recipe snapshots, independent verification and logs. Local generated cohort 137 MiB, raw preparation 407 MiB linked in receipt. The first independent-analysis setup failed from a source-edit error; failed source/log preserved, corrected analysis passes without rerunning preparation or fitting.
+- **Decision:** proceed to a separately registered supplied-metadata assay-only mean/ridge/network comparison. Neither auxiliary success nor this source audit establishes affinity learning. The full MHC/TCR/APC/MS and scientific qualification objective remains open.

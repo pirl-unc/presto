@@ -12110,8 +12110,8 @@ original assay lineage and earlier partition exposure; no 32-row consistency fil
 
 - [x] Implement strict pinned-catalog and raw Hitlist IC50 conversion with targeted checks.
 - [x] Register/freeze the full-cohort admission recipe before execution.
-- [ ] Prepare exact-only/exact-plus-censored manifests with identical held-out observations.
-- [ ] Independently replay source labels, aliases and grouping; close the data family.
+- [x] Prepare exact-only/exact-plus-censored manifests with identical held-out observations.
+- [x] Independently replay source labels, aliases and grouping; close the data family.
 - [ ] Register and execute the subsequent matched fitting/baseline comparison.
 
 The adapter and recipe have 45 new contract checks; all 199 modular/CLI/docs
@@ -12121,3 +12121,19 @@ versus independent disagreement, target-blind grouping and historical exposure.
 Repository Ruff passes for 346 Python files; the experiment launcher is separately
 linted/formatted despite repository experiment exclusions. Real preparation has
 not yet executed; prospective registration and source freezing precede it.
+
+Closure: clean `2214086` admits 29,283 measurements after independently verified
+dispositions for 814,268 raw rows. Exact-only training has 21,636 rows; adding 1,919
+censored training values leaves both held-out partitions identical. All 84 used
+catalog names and all raw labels/units/bounds/assignments replay. Retain 1,002 sets
+of nonidentical independent same-input outcomes; do not filter them for easier
+fitting. The frozen mechanical readiness screen passes for both classes. Shared
+studies, unknown donors/specimens and previously inspected held-outs remain
+explicit limitations. One posthoc verifier setup failure is preserved; corrected
+replay passed without regenerating the cohort. No full-cohort model fit ran.
+
+Full regression on immutable application/test source `2214086` passes:
+2,547 passed, four skipped, 1,055 warnings in 292.06 seconds with four workers.
+Log: `/private/tmp/presto-full-ic50-adapter-regression.log`. Source/test files
+remained unchanged; only experiment analysis/artifacts/documentation were added
+while it ran. Repository Ruff and explicit current recipe/analyzer checks pass.
