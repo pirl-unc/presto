@@ -500,3 +500,13 @@ Keep applicability reporting separate from model features and the measured label
   path and verify report-helper imports with the optional library deliberately
   unavailable in a fresh process. The broad shared environment can hide a clean
   CI collection failure; do not solve that by skipping the new tests.
+
+## 2026-10-21 — processing products before MHC selection
+
+- A request to sample antigen-processing trajectories includes the broader
+  peptide-product pool, including sub-ligand fragments and nonbinders. Do not
+  narrow the target to successfully presented pMHCs. Preserve nonbinding product
+  identities and quantities, distinguish them from degradation/removal and
+  missing observations, and expose the ligand repertoire as a downstream
+  conditional distribution. Rewards, data contracts and evaluation must retain
+  the broader support rather than assigning every nonbinder zero value.

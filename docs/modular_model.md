@@ -186,6 +186,11 @@ predictive value for perturbations.
 
 ## MS observation
 
+The proposed [processing distribution and MS design](processing_model_design.md)
+extends this observation model with source-coordinate spans and machinery-conditioned
+product pools, including nonbinders. It separates the proposed abundance/sampling
+contract from the statistical component scores implemented below.
+
 The same detector feature block and scalar readout are used in both routes:
 
 ```text
