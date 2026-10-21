@@ -1,0 +1,495 @@
+{
+  "component_size_counts": {
+    "1": 3179,
+    "2": 305,
+    "3": 94,
+    "4": 47,
+    "5": 21,
+    "6": 18,
+    "7": 3,
+    "8": 2,
+    "10": 2,
+    "11": 2,
+    "12": 2,
+    "13": 1,
+    "15": 1,
+    "19": 1,
+    "22": 1,
+    "27": 1,
+    "30": 1,
+    "39": 1,
+    "40": 1,
+    "42": 1,
+    "109": 1,
+    "2623": 1,
+    "5664": 1
+  },
+  "components": 3687,
+  "components_by_split_species": {
+    "test": {
+      "human": 430,
+      "mouse": 19,
+      "rat": 18,
+      "rhesus_macaque": 77
+    },
+    "train": {
+      "human": 2060,
+      "mouse": 80,
+      "rat": 70,
+      "rhesus_macaque": 389
+    },
+    "validation": {
+      "human": 416,
+      "mouse": 19,
+      "rat": 17,
+      "rhesus_macaque": 92
+    }
+  },
+  "conflicting_sequences": 0,
+  "counts_by_split_species": {
+    "test": {
+      "human": 6160,
+      "mouse": 42,
+      "rat": 37,
+      "rhesus_macaque": 193
+    },
+    "train": {
+      "human": 4848,
+      "mouse": 142,
+      "rat": 131,
+      "rhesus_macaque": 971
+    },
+    "validation": {
+      "human": 419,
+      "mouse": 34,
+      "rat": 35,
+      "rhesus_macaque": 206
+    }
+  },
+  "dispositions": {
+    "admitted_source": 12612,
+    "duplicate_alias": 7211,
+    "excluded": 36617
+  },
+  "elapsed_seconds": 4.409415208006976,
+  "evaluation": null,
+  "manifest": {
+    "path": "/private/tmp/presto-modular-model/data/modular_cohorts/2026-10-21-mhc-reference/manifest.json",
+    "sha256": "4e4d4a5d2b3d47fc16ddf63ddeeaf6111836138661356ab6805945f13c7ef06c"
+  },
+  "normalized_observations": {
+    "counts": {
+      "identity": 13218
+    },
+    "path": "/private/tmp/presto-modular-model/data/modular_cohorts/2026-10-21-mhc-reference/observations.jsonl",
+    "sha256": "5ba2ef6f40b047ddc256c61fb06e802c82bc2a400830a178d44a0a82455ef510"
+  },
+  "peak_rss_bytes": 641744896,
+  "qualification": "reference admission only; no model trained or biologically qualified",
+  "raw_rows": 56440,
+  "readiness": "passed",
+  "readiness_failures": [],
+  "reasons": {
+    "all_domains_already_represented": 7211,
+    "noncanonical_or_out_of_scope_domain": 1,
+    "taxon_outside_frozen_vocabulary": 27234,
+    "unsupported_class_chain": 1,
+    "unsupported_functional_flags": 679,
+    "unsupported_groove_status_or_flags": 8702
+  },
+  "replay": {
+    "annotation_labels": 13218,
+    "raw_row_dispositions": 56440,
+    "status": "passed"
+  },
+  "source_domain_alias_counts": [
+    {
+      "aliases": 8468,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "imgt",
+      "species": "human",
+      "split": "test"
+    },
+    {
+      "aliases": 65,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "imgt",
+      "species": "human",
+      "split": "test"
+    },
+    {
+      "aliases": 8468,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "imgt",
+      "species": "human",
+      "split": "test"
+    },
+    {
+      "aliases": 567,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "imgt",
+      "species": "human",
+      "split": "test"
+    },
+    {
+      "aliases": 37,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "test"
+    },
+    {
+      "aliases": 4,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "test"
+    },
+    {
+      "aliases": 37,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "test"
+    },
+    {
+      "aliases": 5,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "test"
+    },
+    {
+      "aliases": 23,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "test"
+    },
+    {
+      "aliases": 3,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "test"
+    },
+    {
+      "aliases": 23,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "test"
+    },
+    {
+      "aliases": 3,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "test"
+    },
+    {
+      "aliases": 141,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "test"
+    },
+    {
+      "aliases": 13,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "test"
+    },
+    {
+      "aliases": 141,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "test"
+    },
+    {
+      "aliases": 17,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "test"
+    },
+    {
+      "aliases": 4030,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "imgt",
+      "species": "human",
+      "split": "train"
+    },
+    {
+      "aliases": 734,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "imgt",
+      "species": "human",
+      "split": "train"
+    },
+    {
+      "aliases": 4030,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "imgt",
+      "species": "human",
+      "split": "train"
+    },
+    {
+      "aliases": 3248,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "imgt",
+      "species": "human",
+      "split": "train"
+    },
+    {
+      "aliases": 79,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "train"
+    },
+    {
+      "aliases": 15,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "train"
+    },
+    {
+      "aliases": 79,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "train"
+    },
+    {
+      "aliases": 31,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "train"
+    },
+    {
+      "aliases": 109,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "train"
+    },
+    {
+      "aliases": 15,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "train"
+    },
+    {
+      "aliases": 109,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "train"
+    },
+    {
+      "aliases": 27,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "train"
+    },
+    {
+      "aliases": 792,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "train"
+    },
+    {
+      "aliases": 69,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "train"
+    },
+    {
+      "aliases": 792,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "train"
+    },
+    {
+      "aliases": 108,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "train"
+    },
+    {
+      "aliases": 3,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "imgt",
+      "species": "human",
+      "split": "validation"
+    },
+    {
+      "aliases": 174,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "imgt",
+      "species": "human",
+      "split": "validation"
+    },
+    {
+      "aliases": 3,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "imgt",
+      "species": "human",
+      "split": "validation"
+    },
+    {
+      "aliases": 789,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "imgt",
+      "species": "human",
+      "split": "validation"
+    },
+    {
+      "aliases": 17,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "validation"
+    },
+    {
+      "aliases": 7,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "validation"
+    },
+    {
+      "aliases": 17,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "validation"
+    },
+    {
+      "aliases": 7,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "mouse",
+      "split": "validation"
+    },
+    {
+      "aliases": 39,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "validation"
+    },
+    {
+      "aliases": 3,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "validation"
+    },
+    {
+      "aliases": 39,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "validation"
+    },
+    {
+      "aliases": 2,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "uniprot",
+      "species": "rat",
+      "split": "validation"
+    },
+    {
+      "aliases": 135,
+      "mhc_class": "I",
+      "slot": "groove1",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "validation"
+    },
+    {
+      "aliases": 14,
+      "mhc_class": "II",
+      "slot": "groove1",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "validation"
+    },
+    {
+      "aliases": 135,
+      "mhc_class": "I",
+      "slot": "groove2",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "validation"
+    },
+    {
+      "aliases": 30,
+      "mhc_class": "II",
+      "slot": "groove2",
+      "source": "ipd_mhc",
+      "species": "rhesus_macaque",
+      "split": "validation"
+    }
+  ],
+  "source_domain_aliases": 33696,
+  "status": "admitted",
+  "training": null,
+  "unique_annotations": 13218
+}

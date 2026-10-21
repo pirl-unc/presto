@@ -55,6 +55,13 @@ improved affinity prediction. The
 [reference-pretraining experiment](https://github.com/pirl-unc/presto/tree/codex/modular-presto-model-20261020/experiments/2026-10-21_0512_codex_weirdo-reference-pretraining)
 preserves the negative result, baselines and every held-out prediction.
 
+A separate MHC reference audit now supplies 13,218 source-traceable single-groove
+species annotations; it has not trained a model. Its exact-domain/original-chain
+partition has a large concentration: one component contains 91.95% of human test
+annotations. The [admission evidence](https://github.com/pirl-unc/presto/tree/codex/modular-presto-model-20261020/experiments/2026-10-21_0618_codex_mhc-reference-admission)
+preserves this limitation. Neither passing source checks nor identifying species
+establishes a useful affinity representation.
+
 ## Shape and information flow
 
 One shared sequence encoder uses 20 canonical residues plus padding, width 128,

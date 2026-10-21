@@ -314,3 +314,40 @@ test sources remained unchanged; only saved-output reporting and documentation
 were added during the run. Repository pinned Ruff and explicit checks on the
 three experiment scripts pass, as does strict MkDocs. This is software
 verification, not a reversal of the failed auxiliary comparison screen.
+
+## Genuine single-chain annotations and source admission
+
+The optional baseline import correction is published at `07ce448`; all four
+exact-head GitHub checks succeeded. It preserves the failed Weirdo comparison
+and frozen sources. Single-chain species annotations are now supported for an
+actual MHC groove or TCR chain without invented partners. Pair-level targets and
+assays retain their complete-input requirements. Across auxiliary partitions,
+an exact chain cannot recur under a changed partner or slot. No parameter shapes
+were added or changed.
+
+There are 17 new cases among 154 passing focused checks, including canonical
+mixed single/full-input training, checkpoint transfer and feature support. A
+direct identical-weight comparison gives exact old/new outputs and diagnostics
+for nine complete-pair class-I/class-II/inferred-class annotation, IC50 and TCR
+binding requests. Full regression on immutable application/test source `e6cb835`
+passes: **2,502 passed, four skipped, 1,056 warnings in 323.68 seconds**, four
+workers. The log is `/private/tmp/presto-single-chain-full-regression.log`.
+Pinned repository Ruff and strict MkDocs pass. Subsequent data preparation did
+not alter those application/test sources.
+
+The [registered MHC reference admission](../../experiments/2026-10-21_0618_codex_mhc-reference-admission/README.md)
+then executed on clean `1b218e7`. It supplies 13,218 actual single-groove species
+annotations across four exactly mapped taxa, with all 56,440 raw-row dispositions
+and 33,696 source-domain aliases independently replayed. There are no conflicting
+species sequences. The manifest and generated observations are hash-pinned;
+source aliases and actual execution/source snapshots are retained. No pretraining,
+prediction, class/pairing target or absent partner was generated.
+
+The frozen component split passes its mechanical count minimum, but one human
+B/C component accounts for 91.95% of human test annotations. This concentration
+is reported without reseeding/rebalancing; exact-domain/original-chain grouping
+does not establish homology independence. Any future model comparison must
+account for per-species and per-component performance and the restricted test
+domain. Source admission is complete for this bounded contract; calibration,
+paired MHC/TCR sources, useful auxiliary transfer and all broader biological
+qualification requirements remain open.

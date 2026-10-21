@@ -1,0 +1,53 @@
+{
+  "status": "admitted",
+  "readiness": "passed",
+  "raw_rows": 56440,
+  "dispositions": {
+    "admitted_source": 12612,
+    "duplicate_alias": 7211,
+    "excluded": 36617
+  },
+  "unique_annotations": 13218,
+  "conflicting_sequences": 0,
+  "counts_by_split_species": {
+    "train": {
+      "human": 4848,
+      "rhesus_macaque": 971,
+      "mouse": 142,
+      "rat": 131
+    },
+    "validation": {
+      "human": 419,
+      "mouse": 34,
+      "rhesus_macaque": 206,
+      "rat": 35
+    },
+    "test": {
+      "human": 6160,
+      "rhesus_macaque": 193,
+      "mouse": 42,
+      "rat": 37
+    }
+  },
+  "components_by_split_species": {
+    "train": {
+      "human": 2060,
+      "mouse": 80,
+      "rat": 70,
+      "rhesus_macaque": 389
+    },
+    "validation": {
+      "human": 416,
+      "mouse": 19,
+      "rat": 17,
+      "rhesus_macaque": 92
+    },
+    "test": {
+      "human": 430,
+      "mouse": 19,
+      "rat": 18,
+      "rhesus_macaque": 77
+    }
+  },
+  "elapsed_seconds": 4.409415208006976
+}

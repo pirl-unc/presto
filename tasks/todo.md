@@ -12036,7 +12036,7 @@ do not skip the metric tests or broaden runtime dependencies for this helper.
 
 - [x] Reproduce collection/import failure with scikit-learn deliberately unavailable.
 - [x] Isolate optional imports, verify missing-dependency boundary and focused checks.
-- [ ] Publish correction and inspect exact-head CI; preserve the original fit evidence.
+- [x] Publish correction and inspect exact-head CI; preserve the original fit evidence.
 
 The fresh-process blocked-import reproduction fails before the correction and
 passes afterward. Optional sklearn/scipy baseline imports now occur only on the
@@ -12044,6 +12044,10 @@ comparison-launch path. All 137 focused modular/CLI/documentation tests pass in
 17.15 seconds, including the new dependency-boundary regression. Repository and
 explicit launcher Ruff checks pass. Recorded fit sources/results remain frozen;
 the canonical model/trainer code did not change in this CI correction.
+
+Published correction `07ce4482c93b4a65f710170878ed2148db20235a` has four successful
+GitHub jobs (two lint-test, two docs). That evidence covers the optional-import
+correction, not the subsequent single-chain application change.
 
 ### Genuine single-chain auxiliary inputs
 
@@ -12077,3 +12081,19 @@ is registered before execution. Its artificial recipe checks pass for actual
 domain-slot preservation, alias collapse, connected original chains, cross-species
 conflict deferral and quality/source-member guards. No real cohort has yet been
 admitted or used for training under this new contract.
+
+### MHC reference admission closure
+
+- [x] Execute the frozen data-only recipe and conserve every raw-row disposition.
+- [x] Independently replay species labels, every alias and component/split assignment.
+- [x] Preserve cohort hashes, concentration diagnostics, full writeup and canonical log.
+- [ ] Publish the admission bundle with the single-chain implementation.
+
+Clean recipe `1b218e7` admits 13,218 unique single-groove species annotations from
+56,440 raw rows; all 33,696 source-domain aliases replay independently. There are
+3,687 exact-domain/original-chain components and no species conflicts. Canonical
+preflight and the frozen mechanical minimum pass. A human B/C component accounts
+for 91.95% of human test annotations, so this is explicitly not a statistical
+qualification. No model was fitted, no paired labels were fabricated, and the
+frozen split was not adjusted. The separate registered family is closed with all
+artifacts and limitations; its source data do not prove auxiliary affinity benefit.

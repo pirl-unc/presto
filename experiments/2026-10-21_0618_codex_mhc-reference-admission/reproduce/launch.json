@@ -1,1 +1,40 @@
-{"status":"registered_before_preparation","agent_model":"Codex / GPT-6","plan":"experiments/agents/codex/plans/mhc-reference-admission.md","kind":"data_admission_only","device":"cpu","gpu":null,"training":null,"evaluation":null}
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-21_0618_codex_mhc-reference-admission/code/launch.py"
+  ],
+  "cwd": "/private/tmp/presto-modular-model",
+  "device": "cpu",
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "git_commit": "1b218e7f77337398889bffdefa37309597dfa6bc",
+  "git_status": "",
+  "gpu": null,
+  "kind": "data_admission_only",
+  "predictions": null,
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "runtime_versions": {
+    "mhcgnomes": "3.64.6",
+    "mhcseqs": "2.6.13",
+    "numpy": "2.5.4",
+    "torch": "2.14.1"
+  },
+  "salt": "presto-mhc-reference-v1",
+  "source": {
+    "path": "/Users/iskander/.cache/mhcseqs/mhc-full-seqs.csv",
+    "producer_version": "not recorded in the source CSV",
+    "sha256": "ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1"
+  },
+  "taxon_mapping": {
+    "Homo sapiens": "human",
+    "Macaca mulatta": "rhesus_macaque",
+    "Mus musculus (Mouse)": "mouse",
+    "Rattus norvegicus (Norway rat)": "rat"
+  },
+  "training": null
+}

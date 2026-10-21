@@ -1775,3 +1775,24 @@ agree with reference reconstruction. The retry has its own attempt directory.
 - **Partition contract:** connected exact-domain/original-chain components; fixed SHA25670/15/15 assignment, no homology-independence claim. Readiness requires at least20 domains and3 components per species/split; no salt/vocabulary reselection after inspection.
 - **Training/evaluation:** none; CPU data-only preparation, no GPU/Modal, optimizer, losses, synthetic sequences or predictions. Validation/test partitions are preparation outputs; predictive metrics are inapplicable until a separate registered fit.
 - **Status:** not executed. Actual source/code/environment, dispositions, replay checks, counts and artifact hashes must be recorded before closure. This is one source-admission step in the full model goal.
+
+#### Closure: 2026-10-21_0618_codex_mhc-reference-admission
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Complete family](2026-10-21_0618_codex_mhc-reference-admission/README.md).
+- **Frozen execution:** clean `1b218e7f77337398889bffdefa37309597dfa6bc`; exact command, environment, runtime versions and executed sources in the reproduction bundle. Pinned existing 56,440-row MHC catalog SHA256 `ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1`; its producer version is unknown, independently of installed package versions.
+- **Data/curation:** four exact human/mouse/rat/rhesus taxonomy strings, explicit functional/flag/source-member/domain guards. One species annotation per unique actual groove slot/sequence, retaining every alias. Class-II single chains remain single chains. No fabricated partner, class/pairing target, synthetic sequence or inferred species label. Nonclassical source genes remain explicit and do not certify peptide presentation.
+- **Conservation:** 12,612 original rows contribute new annotations, 7,211 are duplicate aliases and 36,617 are excluded. All 56,440 dispositions, 13,218 unique annotations and 33,696 admitted source-domain aliases replay independently against the original CSV. No conflicting species sequence; 3,687 connected components. Canonical species-only preflight passes.
+- **Partition:** exact-domain/original-protein components; fixed hash 70/15/15 assignment, unchanged after inspection. Mechanical minimum of 20 annotations and three components per species/split passes. Homology independence is unverified.
+
+| Species | Train annotations / components | Validation annotations / components | Test annotations / components |
+| --- | ---: | ---: | ---: |
+| Human | 4,848 / 2,060 | 419 / 416 | 6,160 / 430 |
+| Mouse | 142 / 80 | 34 / 19 | 42 / 19 |
+| Rat | 131 / 70 | 35 / 17 | 37 / 18 |
+| Rhesus macaque | 971 / 389 | 206 / 92 | 193 / 77 |
+
+- **Observed limitation:** a 5,664-annotation human B/C component supplies 91.95% of human test and 88.06% of all test annotations; a human A component supplies 54.10% of human training. The retained partition is strongly concentrated despite passing the mechanical minimum. This is not a broad generalization or calibration certificate; no reseeding or rebalancing was performed.
+- **Training/evaluation contract:** data-only, no optimizer, pretraining, model predictions, loss weights or synthetic labels. No affinity/stability/processing/MS/TCR assay supervision or censoring applies. Both held-out partitions exist, but predictive metrics and per-example prediction dumps are inapplicable because no model was evaluated. No preferred model or checkpoint.
+- **Hardware/runtime:** local CPU, one Torch/BLAS thread, no requested/observed GPU or Modal. Preparation 4.4094 seconds, peak process RSS 641,744,896 bytes. Independent source replay is separate from that timing.
+- **Artifacts:** complete dispositions, annotation aliases, empty conflict artifact, preflight, source hashes, actual launch/source snapshots and independent replay/concentration tables/logs. Generated shared cohort manifest SHA256 `4e4d4a5d2b3d47fc16ddf63ddeeaf6111836138661356ab6805945f13c7ef06c`; observation SHA256 `5ba2ef6f40b047ddc256c61fb06e802c82bc2a400830a178d44a0a82455ef510`.
+- **Decision:** source-traceable species annotations are available for a separately registered comparison; no MHC-class/pairing training, affinity transfer, calibrated species inference or biological qualification is established. This closes the admission family only. Controlled assay-only versus auxiliary affinity evidence and the full model objective remain open.

@@ -1,0 +1,233 @@
+{
+  "annotations": 13218,
+  "components": 3687,
+  "largest_components": [
+    {
+      "group_id": "mhc-reference:ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1:8d2b5d49673bb2222d9af0c57a02b90cf9d6645a9403354c1f390702f600d77c",
+      "n": 5664,
+      "source_genes": [
+        "B",
+        "C"
+      ],
+      "species": [
+        "human"
+      ],
+      "split": "test"
+    },
+    {
+      "group_id": "mhc-reference:ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1:47c483521f4d26e2f4a5b509c1c82a4988cc54b0400d3fa97fb554fd24f35843",
+      "n": 2623,
+      "source_genes": [
+        "A"
+      ],
+      "species": [
+        "human"
+      ],
+      "split": "train"
+    },
+    {
+      "group_id": "mhc-reference:ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1:e4b59281c6ca0d6f04c3dc1fd5bac697a77b7d19f6b3d8e9c1539a1ffbde7df2",
+      "n": 109,
+      "source_genes": [
+        "E"
+      ],
+      "species": [
+        "human"
+      ],
+      "split": "train"
+    },
+    {
+      "group_id": "mhc-reference:ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1:f6c464bb52a3d8100239a7a115ea3b2f5762dcefb56affdafd4a697ff8bd66ee",
+      "n": 42,
+      "source_genes": [
+        "C"
+      ],
+      "species": [
+        "human"
+      ],
+      "split": "test"
+    },
+    {
+      "group_id": "mhc-reference:ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1:675727249acffc96b709d1e85d88c3ceb1fb95971426f2ede0a49a4f6be34601",
+      "n": 40,
+      "source_genes": [
+        "G"
+      ],
+      "species": [
+        "human"
+      ],
+      "split": "train"
+    },
+    {
+      "group_id": "mhc-reference:ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1:dbdb88b75329fba4163ffd1b1b321080719e4bdcbf4779e4db4fe89bf4aa0a97",
+      "n": 39,
+      "source_genes": [
+        "A2"
+      ],
+      "species": [
+        "rhesus_macaque"
+      ],
+      "split": "train"
+    },
+    {
+      "group_id": "mhc-reference:ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1:9eb3cf42d1c6581710be08a1b6073524981033d10439987e6f76981ec813c558",
+      "n": 30,
+      "source_genes": [
+        "A1",
+        "AG1",
+        "AG2",
+        "AG3"
+      ],
+      "species": [
+        "rhesus_macaque"
+      ],
+      "split": "train"
+    },
+    {
+      "group_id": "mhc-reference:ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1:dd3ab26db121f6df7a264396a8b7751b18385488186295edac4cc2666c82fdb9",
+      "n": 27,
+      "source_genes": [
+        "F"
+      ],
+      "species": [
+        "human"
+      ],
+      "split": "test"
+    },
+    {
+      "group_id": "mhc-reference:ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1:7c6f97f433eb34878ddb0492255ea4442d19774b94f01f38c95135adbfff7748",
+      "n": 22,
+      "source_genes": [
+        "I"
+      ],
+      "species": [
+        "rhesus_macaque"
+      ],
+      "split": "train"
+    },
+    {
+      "group_id": "mhc-reference:ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1:b72bb9b3328c1920a8d794cd69e8bac6924aeff1601de92d1360e5b578e1fe0c",
+      "n": 19,
+      "source_genes": [
+        "B"
+      ],
+      "species": [
+        "rhesus_macaque"
+      ],
+      "split": "train"
+    }
+  ],
+  "raw_rows": 56440,
+  "source_domain_aliases_replayed": 33696,
+  "split_concentration": [
+    {
+      "components": 2060,
+      "effective_components_by_size": 3.4083403690556606,
+      "largest_component": 2623,
+      "largest_component_fraction": 0.5410478547854786,
+      "n": 4848,
+      "species": "human",
+      "split": "train"
+    },
+    {
+      "components": 389,
+      "effective_components_by_size": 149.112921081765,
+      "largest_component": 39,
+      "largest_component_fraction": 0.04016477857878476,
+      "n": 971,
+      "species": "rhesus_macaque",
+      "split": "train"
+    },
+    {
+      "components": 80,
+      "effective_components_by_size": 62.62111801242236,
+      "largest_component": 6,
+      "largest_component_fraction": 0.04225352112676056,
+      "n": 142,
+      "species": "mouse",
+      "split": "train"
+    },
+    {
+      "components": 70,
+      "effective_components_by_size": 60.214035087719296,
+      "largest_component": 4,
+      "largest_component_fraction": 0.030534351145038167,
+      "n": 131,
+      "species": "rat",
+      "split": "train"
+    },
+    {
+      "components": 416,
+      "effective_components_by_size": 411.1498829039813,
+      "largest_component": 3,
+      "largest_component_fraction": 0.007159904534606206,
+      "n": 419,
+      "species": "human",
+      "split": "validation"
+    },
+    {
+      "components": 92,
+      "effective_components_by_size": 65.8944099378882,
+      "largest_component": 6,
+      "largest_component_fraction": 0.02912621359223301,
+      "n": 206,
+      "species": "rhesus_macaque",
+      "split": "validation"
+    },
+    {
+      "components": 19,
+      "effective_components_by_size": 16.055555555555557,
+      "largest_component": 3,
+      "largest_component_fraction": 0.08823529411764706,
+      "n": 34,
+      "species": "mouse",
+      "split": "validation"
+    },
+    {
+      "components": 17,
+      "effective_components_by_size": 14.759036144578314,
+      "largest_component": 4,
+      "largest_component_fraction": 0.11428571428571428,
+      "n": 35,
+      "species": "rat",
+      "split": "validation"
+    },
+    {
+      "components": 430,
+      "effective_components_by_size": 1.182702207243677,
+      "largest_component": 5664,
+      "largest_component_fraction": 0.9194805194805195,
+      "n": 6160,
+      "species": "human",
+      "split": "test"
+    },
+    {
+      "components": 77,
+      "effective_components_by_size": 42.08926553672316,
+      "largest_component": 13,
+      "largest_component_fraction": 0.06735751295336788,
+      "n": 193,
+      "species": "rhesus_macaque",
+      "split": "test"
+    },
+    {
+      "components": 19,
+      "effective_components_by_size": 14.225806451612904,
+      "largest_component": 5,
+      "largest_component_fraction": 0.11904761904761904,
+      "n": 42,
+      "species": "mouse",
+      "split": "test"
+    },
+    {
+      "components": 18,
+      "effective_components_by_size": 15.043956043956044,
+      "largest_component": 5,
+      "largest_component_fraction": 0.13513513513513514,
+      "n": 37,
+      "species": "rat",
+      "split": "test"
+    }
+  ],
+  "status": "passed"
+}
