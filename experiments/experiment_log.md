@@ -1686,3 +1686,22 @@ Publication closure: all 23 public downloads, 48 archive members, 9,053 source/p
 - AdamW 0.0003, constant schedule, zero dropout/weight decay, seed 42, full batch; 2,000 updates/20-minute optimization ceiling. Local CPU, one thread, no GPU/Modal.
 - Target/output: direct raw log10(nM) IC50, standardized training squared residual; no auxiliary loss. Fixed overall/per-class RMSE/Spearman/spread and real-update gates are specified before fitting.
 - No validation/test split intentionally: training-only capacity diagnostic, no generalization claim. No results, winner or qualified checkpoint yet.
+
+#### Closure: 2026-10-21_0353_codex_modular-memorization-control
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Full writeup, source and artifact links](2026-10-21_0353_codex_modular-memorization-control/README.md).
+- **Frozen execution:** commit `122b611124563b653fbddbbce30f921ea0f14fff`, tracked files clean; only redirected fit log untracked. Exact argv/environment/versions in `reproduce/launch.json`, rerun helper in `reproduce/launch.sh`, executed launcher snapshot under `reproduce/source/`.
+- **Dataset/curation:** pinned Hitlist v4 binding parquet, pinned mhcseqs catalog and historical held-out exclusions. 814,268 raw rows →26,619 eligible exact purified IC50 candidates; 841 inconsistent input groups excluded for this diagnostic; 32 hash-selected consistent inputs, 16 I/16 II with explicitly named partners. All raw nM targets and original assay lineage retained. New cohort, not historical-fit membership; no clipping or partner imputation.
+- **Training/pretraining:** fresh shared d128/l2/h4 modular network, supplied human molecular species/class, direct IC50 and learned II register pooling; no auxiliaries/pretraining/replay/synthetic data. Full batch 32, AdamW constant 0.0003, weight decay/dropout 0, seed 42, one squared standardized log10(nM) loss per exact assay. Censored/proxy/stability/MS/TCR/other assays excluded from this diagnostic only.
+- **Hardware/runtime:** local CPU, one Torch/BLAS thread, no Modal/GPU requested or observed; 100 updates, 33.05 s, peak RSS 716,193,792 bytes. Prespecified 2,000-step/20-minute ceiling; first overall AND per-class gate pass at step 100.
+
+| Condition / training subset | N | RMSE log10(nM) | Spearman | Pearson | Prediction/target SD |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Assay-only, overall | 32 | 0.03294 | 0.99927 | 0.99976 | 0.99978 |
+| Assay-only, class I | 16 | 0.04333 | 1.00000 | 0.99973 | 1.00000 |
+| Assay-only, class II | 16 | 0.01711 | 0.99706 | 0.99987 | 0.99897 |
+| Training-mean comparator, overall | 32 | 1.42546 | undefined | undefined | 0 |
+
+- **Evidence:** initial overall RMSE 1.43145/SD ratio .02760; final standardized loss .00053406. All 32 allocated parameter tensors and exposed features have gradient-driven updates; register weights updated on all 100 steps. A fresh process reproduced every prediction/metric and passed the public support guards. Initial/intermediate/final predictions and all threshold metrics are retained; raw-checkpoint/disposition paths/hashes are in the results receipts.
+- **Validation/test:** intentionally absent because this is a training-only capacity gate; all observations are fit targets. Historical held-out peptides excluded; future independent evaluation must account for this diagnostic exposure. No generalization winner or endpoint qualification.
+- **Decision/context:** fixed capacity gate passed with nonconstant predictions in both classes, without identity tasks. This does not demonstrate auxiliary benefit or isolate the cause of the historical failed architecture's collapse. Full-cohort mean/ridge comparisons, held-out evaluation and the wider holistic model requirements remain pending.

@@ -5,6 +5,11 @@ last Python change: `77d9856b15abd25fa1e6f963585cbc42e446c81e`.
 Authority: [frozen specification](issue130.md), not the narrower implementation
 handoff or the PR's own completion claims.
 
+This is the preserved audit of the head above. Subsequent fixes, quantitative
+extensions and the completed assay-only 32-row fitting diagnostic are recorded
+in [completion progress](completion-progress.md); the gaps below describe the
+reviewed historical code, not the current head. The full objective remains open.
+
 ## Verdict
 
 The neural architecture follows the plan closely. The complete data-to-trained-

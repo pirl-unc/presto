@@ -11907,16 +11907,22 @@ Next slice: [quantitative measurements](modular_model/quantitative-spec.md).
 Review: 84 focused checks pass, including artificial streaming fit/closure,
 quantitative/binary coexistence, domain rejection, censoring, component sharing,
 preparation isolation and checkpoint inference. This verifies software contracts,
-not independently identified MS bias or predictive transfer. Full regression and
-strict documentation verification of this slice remain to be recorded.
+not independently identified MS bias or predictive transfer. Source `51b5f61`
+also passed full regression (2,454 passed, four skipped) and strict documentation.
 
 Completion remains unproven until every requirement has authoritative evidence.
 
 Assay-fitting control: [prospective experiment plan](../experiments/agents/codex/plans/modular-assay-only-memorization.md).
 
-- [ ] Prepare 32 source-pinned exact IC50 observations with explicit class-II pairs.
-- [ ] Freeze membership/recipe and run the supplied-metadata, assay-only gate.
-- [ ] Preserve predictions, coverage, checkpoint replay and complete experiment closure.
+- [x] Prepare 32 source-pinned exact IC50 observations with explicit class-II pairs.
+- [x] Freeze membership/recipe and run the supplied-metadata, assay-only gate.
+- [x] Preserve predictions, coverage, checkpoint replay and complete experiment closure.
+
+Review: the fixed training-only gate passed at 100 steps. Overall/class-I/class-II
+RMSE is 0.03294/0.04333/0.01711 log10(nM); all allocated parameters and exposed
+features have update evidence. Fresh-process predictions match exactly. This
+is memorization with supplied metadata, not held-out qualification or a test of
+auxiliary benefit. Full goal requirements above remain open.
 
 Progress and exact verification: [completion progress](modular_model/completion-progress.md).
 Lineage preparation is implemented; source-specific cohort wiring and broader

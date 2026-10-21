@@ -36,6 +36,15 @@ does not establish useful binding representations, transfer, or a remedy for
 constant predictions. Those claims need matched affinity comparisons and retained
 annotation evaluation. No such real-data comparison exists for this model yet.
 
+A registered assay-only capacity check has now fitted 32 real IC50 observations
+(16 per class, with explicit class-II partners) without any auxiliary task.
+At 100 updates, class-I/class-II training RMSE was 0.0433/0.0171 log10(nM), with
+prediction/target SD ratios close to one and all allocated parameters updated.
+This establishes memorization on those inputs, not held-out accuracy, correct
+register localization or auxiliary benefit. The
+[complete experiment record](https://github.com/pirl-unc/presto/tree/codex/modular-presto-model-20261020/experiments/2026-10-21_0353_codex_modular-memorization-control)
+preserves source pins, predictions, fixed gate and fresh-process verification.
+
 ## Shape and information flow
 
 One shared sequence encoder uses 20 canonical residues plus padding, width 128,
@@ -381,10 +390,11 @@ an input to the scorer, not a generated output. Ranking cannot discover restrict
 or peptide identity outside the library, and a lineage prior is not an allele-level
 restriction claim. No trained TCRvdb checkpoint is included.
 
-The next experiments remain the supervised identity qualification, registered
-32-example fitting gate, matched mean/ridge baseline comparison and held-out IC50
-qualification from issue #130. Later data gates cover matched APC perturbations,
-MS component anchors/transfer and authorized paired TCR records. Noncanonical or
-short class-II cores, PTMs, quantitative MS endpoints, reaction/stimulus-specific
-features and automatic full-source Hitlist export preparation remain unsupported.
-No scientific milestone is marked complete by the software integration fixtures.
+The assay-only 32-example fitting gate has passed. Supervised annotation
+qualification, matched pretraining/replay comparisons, mean/ridge baselines and
+held-out IC50 qualification remain pending. Other data gates cover matched APC
+perturbations, quantitative MS component anchors/transfer and authorized paired
+TCR records. Noncanonical or short class-II cores, PTMs, direct biochemical
+cleavage/transport supervision and automatic full-cohort Hitlist preparation
+remain unsupported. The training-only diagnostic does not qualify a serving model
+or complete the full architecture and data plan.

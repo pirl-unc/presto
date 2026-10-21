@@ -179,3 +179,20 @@ class-I targets include measurements above the historical clipping ceiling.
 Selected catalog groove exports agree with the installed parser. Full source
 and candidate dispositions are hashed local artifacts; small cohort and source
 receipts are reviewable. The fixed fitting gate has not yet run at this entry.
+
+The diagnostic then ran from frozen `122b611124563b653fbddbbce30f921ea0f14fff`
+and passed at 100 updates in 33.05 seconds on one CPU thread. Overall/class-I/
+class-II RMSE was 0.03294/0.04333/0.01711 log10(nM), Spearman was
+0.99927/1.00000/0.99706 and SD ratios were 0.99978/1.00000/0.99897. All 32
+allocated parameter tensors and all exposed feature columns have actual update
+evidence; register weights updated on every step. A separate process exactly
+reproduced predictions/metrics and passed the public predictor's support guards.
+
+The complete experiment README, source pins, per-example predictions, coverage,
+history, register diagnostics, plot and raw-checkpoint locations are recorded in
+the registered family and canonical log. No validation/test split was used by
+design. This establishes capacity on 32 fit targets with supplied metadata and
+no auxiliary tasks; it does not establish generalization, auxiliary utility,
+correct register localization or the historical model's collapse cause. The
+remaining full-cohort/pretraining/context/MS/TCR/resume/qualification work is
+unchanged.
