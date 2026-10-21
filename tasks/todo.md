@@ -11965,7 +11965,7 @@ and [actual reference inventory](modular_model/auxiliary-source-inventory.json).
 
 First bounded auxiliary family: [peptide-source reference pretraining](../experiments/agents/codex/plans/weirdo-reference-pretraining.md).
 
-- [ ] Register/freeze selection and independently audit all selected reference memberships.
+- [x] Register/freeze selection and independently audit all selected reference memberships.
 - [ ] Fit the declared prior/composition/network conditions only if admission passes.
 - [ ] Preserve held-out reports, checkpoint replay and complete experiment closure.
 
@@ -11976,6 +11976,14 @@ audit reconstructs them; the fixed selection, labels and recipe are unchanged.
 Focused modular/CLI/documentation checks pass (133 in 15.24 seconds), along with
 repository and explicit experiment-script Ruff checks and strict MkDocs. A fresh,
 separately preserved preparation attempt follows. No auxiliary model has been fitted.
+
+The amended preparation on frozen source `de3cdfc` passes: all 7,000 selected
+memberships were reconstructed against 569,516 reference proteins with no
+discrepancies. Train/validation/test have 3,486/705/723 connected mnemonic-family
+components. This establishes the selected reference-label contract, not homology
+independence or species of origin. The experiment launcher will call the canonical
+trainer in a bounded child process, preserve baseline coefficients and all
+prediction dumps, and compute the prospectively declared paired validation screen.
 
 Lineage preparation is implemented; source-specific cohort wiring and broader
 biological-independence audits remain part of the unfinished preparation item.
