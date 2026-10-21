@@ -259,5 +259,22 @@ The first changed-data fixture used an invalid blank JSONL record; it was replac
 with a valid changed numeric measurement so the intended resume contract gate
 is exercised. An initially mistyped test filename collected no tests; the recorded
 128-test run used actual files. Pinned Ruff lint and format pass (337 files).
-The final broad run remains to be recorded. This is software evidence; real-data
-qualification, auxiliary benefit and the full biological/data requirements remain open.
+Strict MkDocs passes. Final full regression on immutable application/test source
+`4b8f4df` completed with **2,476 passed, four skipped, 1,056 warnings in 770.15
+seconds**, using four workers. The log is `/private/tmp/presto-resume-full-regression.log`.
+The run was observed live through a quiet interval, with two workers actively
+using CPU; it was not restarted. Only data inventory/planning documentation changed
+while it ran. This is software evidence; real-data qualification, auxiliary
+benefit and the full biological/data requirements remain open.
+
+During final regression, a data-only [auxiliary source inventory](auxiliary-source-inventory.json)
+reverified actual hashes for the MHC catalog and Weirdo reference/splits. It
+records 56,440 raw MHC entries and 569,516 reference proteins. Class-II entries
+are individual alpha/beta chains (3,193 alpha grooves and 17,728 beta grooves
+present before quality filtering), not observed pairs. Raw species fields also
+include unresolved taxa and need curation. Weirdo uses mnemonic-prefix grouping
+and 20 hash buckets; these are not demonstrated homology clusters. The existing
+table-verification statistic compares another k-mer table and does not replace
+selected-row auditing against the pinned reference. The next [admission specification](auxiliary-data-admission-spec.md)
+preserves these distinctions before auxiliary pretraining. No fitting ran during
+this inventory. Upstream Hitlist #723 and #726 remain open without replies.

@@ -11939,7 +11939,7 @@ Resume specification: [durable training and evaluation continuation](modular_mod
 - [x] Persist optimizer, sampler/RNG, partial epoch and selection/coverage state.
 - [x] Pin execution contracts and enforce evaluation/closure reuse.
 - [x] Wire explicit registered CLI resume and verify interrupted-run equivalence.
-- [ ] Complete final regression and publish resume support with its tested scope.
+- [x] Complete final regression and document resume support with its tested scope.
 
 Review: 91 focused checks pass; pinned repository Ruff and strict
 MkDocs pass. A fresh retained-output comparison uses the same inference mode on
@@ -11952,7 +11952,16 @@ with four workers. The subsequent resume slice passes 128 focused modular/CLI/do
 checks, including fresh-process CPU equivalence with dropout/replay, replay of
 uncommitted updates, frozen-function retention, earlier selection/patience,
 changed-contract rejection, test-cache reuse and persistent failed coverage.
-Final broad regression is pending; no GPU/MPS bitwise claim is established.
+Full regression on immutable application/test source `4b8f4df` passes: 2,476
+passed, four skipped, 1,056 warnings in 770.15 seconds with four workers.
+Strict MkDocs also passes. No GPU/MPS bitwise claim is established.
+
+Next data preparation: [auxiliary admission specification](modular_model/auxiliary-data-admission-spec.md)
+and [actual reference inventory](modular_model/auxiliary-source-inventory.json).
+
+- [x] Reverify reference hashes and raw MHC/Weirdo annotation availability.
+- [ ] Admit genuine chain annotations and audit selected source memberships/splits.
+- [ ] Freeze/register auxiliary pretraining and held-out qualification controls.
 
 Lineage preparation is implemented; source-specific cohort wiring and broader
 biological-independence audits remain part of the unfinished preparation item.
