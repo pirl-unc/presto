@@ -17,9 +17,6 @@ import time
 import warnings
 
 import numpy as np
-from scipy.special import expit
-from sklearn.exceptions import ConvergenceWarning
-from sklearn.linear_model import LogisticRegression
 import torch
 
 from presto.data.modular import AA
@@ -193,6 +190,11 @@ def main():
     if args.mode == "replay":
         verify_training_batch(index, raw, output)
         return
+    # Only the real baseline comparison requires these optional dependencies.
+    from scipy.special import expit
+    from sklearn.exceptions import ConvergenceWarning
+    from sklearn.linear_model import LogisticRegression
+
     if (output / "reproduce/fit-launch.json").exists() or raw.exists():
         raise ValueError("refusing to overwrite an executed comparison")
     preparation = read_json(args.preparation / "results/preparation.json")

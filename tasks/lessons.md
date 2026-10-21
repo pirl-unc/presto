@@ -495,3 +495,8 @@ Keep applicability reporting separate from model features and the measured label
   source-ready. A synthetic fixture with newer `*_groups` arrays did not establish
   that the pinned Weirdo archive contains them. Missing grouping remains unknown
   until an explicit reference audit reconstructs it; never invent supplied buckets.
+- An experiment launcher imported by normal tests must not import optional
+  baseline libraries globally. Keep real fitting imports inside that execution
+  path and verify report-helper imports with the optional library deliberately
+  unavailable in a fresh process. The broad shared environment can hide a clean
+  CI collection failure; do not solve that by skipping the new tests.

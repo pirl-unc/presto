@@ -12022,3 +12022,25 @@ the successful rerun used the actual `tests/test_docs_match_code.py`. This prove
 software contracts only. No auxiliary-benefit comparison or real-data fit ran.
 The clarification is in `docs/modular_model.md` and the completion addendum; the
 frozen issue and full-goal checklist remain unchanged.
+
+### CI correction: optional baseline dependency
+
+Exact published head `d8015b9` fails test collection because the new reference
+experiment test imports a launcher that imports scikit-learn globally. CI's
+normal test environment does not install that optional baseline library.
+Local success used the broader shared environment. Keep the baseline recipe and
+frozen executed source unchanged; move optional baseline imports inside the
+actual launch path, so dependency-free report checks and canonical network/replay
+modes do not require scikit-learn. Add a fresh-process import-blocking regression;
+do not skip the metric tests or broaden runtime dependencies for this helper.
+
+- [x] Reproduce collection/import failure with scikit-learn deliberately unavailable.
+- [x] Isolate optional imports, verify missing-dependency boundary and focused checks.
+- [ ] Publish correction and inspect exact-head CI; preserve the original fit evidence.
+
+The fresh-process blocked-import reproduction fails before the correction and
+passes afterward. Optional sklearn/scipy baseline imports now occur only on the
+comparison-launch path. All 137 focused modular/CLI/documentation tests pass in
+17.15 seconds, including the new dependency-boundary regression. Repository and
+explicit launcher Ruff checks pass. Recorded fit sources/results remain frozen;
+the canonical model/trainer code did not change in this CI correction.

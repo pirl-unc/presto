@@ -3,6 +3,8 @@
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
+import sys
 from types import SimpleNamespace
 
 import numpy as np
@@ -15,6 +17,25 @@ PATH = (
 spec = importlib.util.spec_from_file_location("reference_experiment", PATH)
 experiment = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(experiment)
+
+
+def test_report_helpers_import_without_optional_baseline_library():
+    code = """
+import importlib.abc, runpy, sys
+class BlockSklearn(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname == 'sklearn' or fullname.startswith('sklearn.'):
+            raise ModuleNotFoundError('scikit-learn deliberately unavailable')
+sys.meta_path.insert(0, BlockSklearn())
+module = runpy.run_path(sys.argv[1], run_name='dependency_probe')
+report, _ = module['binary_report']([0, 1], [0.5, 0.5])
+assert report['auprc'] == 0.5
+assert not any(name == 'sklearn' or name.startswith('sklearn.') for name in sys.modules)
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", code, str(PATH)], capture_output=True, text=True, timeout=60
+    )
+    assert result.returncode == 0, result.stderr
 
 
 def test_binary_report_constant_and_perfect_predictions():
