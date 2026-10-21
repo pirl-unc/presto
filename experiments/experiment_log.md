@@ -1828,3 +1828,29 @@ agree with reference reconstruction. The retry has its own attempt directory.
 - **Hardware/runtime:** local CPU, one Torch/BLAS thread, no requested/observed GPU or Modal; 42.6482 seconds, peak process RSS 1,202,814,976 bytes. A separate four-worker regression ran concurrently; not an isolated runtime benchmark. Independent replay timing excluded.
 - **Artifacts:** full source dispositions, components, catalog aliases, paired preflights/manifests, source/recipe snapshots, independent verification and logs. Local generated cohort 137 MiB, raw preparation 407 MiB linked in receipt. The first independent-analysis setup failed from a source-edit error; failed source/log preserved, corrected analysis passes without rerunning preparation or fitting.
 - **Decision:** proceed to a separately registered supplied-metadata assay-only mean/ridge/network comparison. Neither auxiliary success nor this source audit establishes affinity learning. The full MHC/TCR/APC/MS and scientific qualification objective remains open.
+
+### 2026-10-21_1700_codex_discrete-distribution-comparison — registered before fitting
+
+- **Date/agent/model:** 2026-10-21 UTC; Codex / GPT-6. [Family](2026-10-21_1700_codex_discrete-distribution-comparison/README.md), [prospective contract](agents/codex/plans/discrete-distribution-comparison.md).
+- **Data:** entirely artificial integer-symbol strings, length 16, alphabet 0–7;
+  all 70 spans of lengths 1–5, four generic contexts per parent. Parent-disjoint
+  96/24/24 split gives 384/96/96 rows; short substrings intentionally overlap.
+  Fixed data/teacher seeds 20261021/20261022. Full target distributions are known
+  from a frozen linear hierarchical oracle. No biological sequence or assay.
+- **Training:** same two-stage start/length policy with two 83→32→1 Tanh MLPs;
+  matched initialization and minibatches for seeds 42/43/44. Adam 0.003, zero
+  weight decay, batch 16, 60 complete epochs/1,440 updates. Exact reverse KL
+  versus REINFORCE with 8 or 64 sampled spans and a leave-one-out baseline.
+  Seed-42 reward-only/no-entropy control intentionally optimizes another objective.
+  No pretraining, real assay families, quantities/censoring or affinity thresholds.
+- **Selection/evaluation:** validation reverse KL every five epochs; test once
+  after selection. Save complete distributions, multiset samples and training-row
+  replay. CPU/one thread; no requested or observed Modal GPU. Logical target-query
+  counts are not an external-oracle runtime benchmark; both methods compute dense
+  policy logits and share the precomputed teacher data.
+- **Status:** verification/source freezing pending; no fitted model or predictive
+  result yet. Full source/env/commit receipts, per-example outputs, independent
+  metric/teacher checks and closure are required before concluding this family.
+- **Claim boundary:** this tests generic learning and sampling on a known target;
+  it does not implement biological processing, infer gene-loss effects, calibrate
+  MS detection or establish a real nonbinder product distribution.
