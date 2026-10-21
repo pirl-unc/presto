@@ -46,7 +46,7 @@ def semantic_fingerprint(row: Observation, *, include_target=True) -> str:
         candidate.pop("provenance", None)
     data["mhc"] = sorted(data["mhc"], key=lambda value: json.dumps(value, sort_keys=True))
     data["context"].pop("provenance", None)
-    for family in ("components", "component_overrides"):
+    for family in ("components", "component_overrides", "cytokines", "cytokine_overrides"):
         for component in data["context"][family].values():
             component.pop("evidence", None)
     value = data.pop("value")

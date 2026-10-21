@@ -3,7 +3,7 @@
 from contextlib import contextmanager
 
 
-from ..data.modular import AA, CORECEPTORS, DELIVERY, STATES, identity_vocabulary
+from ..data.modular import AA, CORECEPTORS, DELIVERY, EXPOSURE_STATES, STATES, identity_vocabulary
 
 
 def feature_layout(model):
@@ -54,6 +54,17 @@ def feature_layout(model):
             names += [f"component:{component}:{state}" for state in STATES]
             if component in config.component_activity_units:
                 names += numeric("activity", [component])
+        if config.cell_types:
+            names += [f"cell_type:{name}" for name in (*config.cell_types, "unknown")]
+        for cytokine in config.cytokines:
+            names += [f"cytokine:{cytokine}:{state}" for state in EXPOSURE_STATES]
+            if cytokine in config.cytokine_dose_units:
+                names += [f"cytokine:{cytokine}:log1p_dose", f"cytokine:{cytokine}:dose_known"]
+            if cytokine in config.cytokine_duration_features:
+                names += [
+                    f"cytokine:{cytokine}:log1p_duration_hours",
+                    f"cytokine:{cytokine}:duration_known",
+                ]
         if model.has_cellular:
             names += [f"delivery:{value}" for value in DELIVERY]
         if model.has_coreceptor:

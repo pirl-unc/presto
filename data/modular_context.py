@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field, replace
 from typing import Mapping, Sequence
 
-from .modular import Component, Context, MHCInput, ROLES
+from .modular import Component, Context, Exposure, MachineryProfile, MHCInput, ROLES
 
 
 @dataclass(frozen=True)
@@ -107,13 +107,99 @@ def resolve_components(
     apc_species: ResolvedField,
     components: Sequence[str],
     profiles: Mapping[str, Sequence[str]],
+    *,
+    cell_type: str | None = None,
+    reference_profiles: Sequence[MachineryProfile] = (),
 ) -> dict[str, Component]:
-    reference = set(profiles.get(apc_species.value, ()))
+    reference = {
+        name: Component(
+            "reference", evidence={"source": "species_reference_profile", "qualified": False}
+        )
+        for name in profiles.get(apc_species.value, ())
+    }
+    for scope in (None, cell_type) if cell_type is not None else (None,):
+        matches = [
+            profile
+            for profile in reference_profiles
+            if profile.species == apc_species.value and profile.cell_type == scope
+        ]
+        if len(matches) > 1:
+            raise ValueError("ambiguous machinery reference profile scope")
+        if matches:
+            profile = matches[0]
+            for name, value in profile.components.items():
+                reference[name] = replace(
+                    value,
+                    evidence={
+                        **value.evidence,
+                        "source": "reference_profile",
+                        "assumption": True,
+                        "profile_id": profile.profile_id,
+                        "reference": profile.reference,
+                        "version": profile.version,
+                        "species": profile.species,
+                        "cell_type": profile.cell_type,
+                    },
+                )
     return {
         name: context.component_overrides.get(name)
         or context.components.get(name)
-        or Component("reference", evidence={"source": "species_reference_profile"})
-        if name in reference or name in context.components or name in context.component_overrides
-        else Component()
+        or reference.get(name, Component())
         for name in components
     }
+
+
+@dataclass(frozen=True)
+class ResolvedCellContext:
+    cell_type: ResolvedField
+    cytokines: dict[str, Exposure]
+    cytokine_sources: dict[str, str]
+    supplied_cytokines: dict[str, Exposure]
+    cytokine_overrides: dict[str, Exposure]
+    ignored_fields: list[str] = field(default_factory=list)
+
+
+def resolve_cell_context(
+    context: Context,
+    cell_types: Sequence[str],
+    cytokines: Sequence[str],
+    dose_units: Mapping[str, str],
+    duration_features: Sequence[str],
+    *,
+    strict: bool = True,
+) -> ResolvedCellContext:
+    """Resolve annotations without treating missing exposures as negative controls."""
+    cell = resolve_field(
+        cell_types, supplied=context.cell_type, override=context.cell_type_override
+    )
+    if strict and cell_types and cell.source == "unsupported":
+        raise ValueError("APC cell type outside checkpoint vocabulary")
+    supplied = set(context.cytokines) | set(context.cytokine_overrides)
+    if strict and cytokines and supplied - set(cytokines):
+        raise ValueError("cytokine outside checkpoint vocabulary")
+    ignored = []
+    if not cell_types and (context.cell_type is not None or context.cell_type_override is not None):
+        ignored.append("cell_type")
+    ignored.extend(f"cytokine:{name}" for name in sorted(supplied - set(cytokines)))
+    resolved, sources = {}, {}
+    for name in cytokines:
+        value = context.cytokine_overrides.get(name) or context.cytokines.get(name) or Exposure()
+        sources[name] = (
+            "override"
+            if name in context.cytokine_overrides
+            else "supplied"
+            if name in context.cytokines
+            else "unknown"
+        )
+        if value.dose is not None:
+            if name in dose_units:
+                if strict and value.unit != dose_units[name]:
+                    raise ValueError(f"cytokine dose unit mismatch: {name}")
+            else:
+                ignored.append(f"cytokine:{name}:dose")
+        if value.duration_hours is not None and name not in duration_features:
+            ignored.append(f"cytokine:{name}:duration_hours")
+        resolved[name] = value
+    return ResolvedCellContext(
+        cell, resolved, sources, context.cytokines, context.cytokine_overrides, ignored
+    )

@@ -13,6 +13,7 @@ from typing import Any, Iterable, Mapping
 SCHEMA = "presto.modular.observation.v1"
 AA = "ACDEFGHIKLMNPQRSTVWY"
 STATES = ("reference", "intact", "reduced", "lost", "unknown")
+EXPOSURE_STATES = ("present", "absent", "unknown")
 ROLES = ("mhc1", "mhc2", "immune", "apc", "repertoire", "tcr_a", "tcr_b", "antigen")
 CORECEPTORS = ("CD4", "CD8", "both", "neither", "unknown")
 DELIVERY = ("endogenous", "protein", "peptide", "preformed_pmhc", "unknown")
@@ -126,6 +127,59 @@ class Component:
 
 
 @dataclass(frozen=True)
+class Exposure:
+    state: str = "unknown"
+    dose: float | None = None
+    unit: str | None = None
+    duration_hours: float | None = None
+    evidence: dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self):
+        if self.state not in EXPOSURE_STATES:
+            raise ValueError("unsupported cytokine exposure state")
+        for value in (self.dose, self.duration_hours):
+            if value is not None and (not math.isfinite(value) or value < 0):
+                raise ValueError("exposure dose and duration must be finite and nonnegative")
+        if self.dose is not None and not self.unit:
+            raise ValueError("exposure dose requires a declared unit")
+        if self.state == "unknown" and (self.dose is not None or self.duration_hours is not None):
+            raise ValueError("unknown exposure cannot supply a measured dose or duration")
+        if self.state == "absent" and self.dose not in (None, 0):
+            raise ValueError("absent exposure cannot have a positive dose")
+
+
+@dataclass(frozen=True)
+class MachineryProfile:
+    profile_id: str
+    species: str
+    components: dict[str, Component]
+    reference: str
+    version: str
+    cell_type: str | None = None
+
+    def __post_init__(self):
+        if any(
+            not isinstance(value, str) or not value.strip()
+            for value in (self.profile_id, self.species, self.reference, self.version)
+        ):
+            raise ValueError("machinery profile requires ID, species, reference and version")
+        if self.cell_type is not None and not self.cell_type:
+            raise ValueError("profile cell type cannot be empty")
+        if not self.components or any(
+            not name or not isinstance(value, Component) for name, value in self.components.items()
+        ):
+            raise ValueError("machinery profile requires typed component priors")
+
+    @classmethod
+    def from_dict(cls, values):
+        values = dict(values)
+        values["components"] = {
+            name: Component(**value) for name, value in values.get("components", {}).items()
+        }
+        return cls(**values)
+
+
+@dataclass(frozen=True)
 class Context:
     species: dict[str, str] = field(default_factory=dict)
     species_overrides: dict[str, str] = field(default_factory=dict)
@@ -146,8 +200,18 @@ class Context:
     provenance: dict[str, Any] = field(default_factory=dict)
     auxiliary_values: dict[str, str] = field(default_factory=dict)
     auxiliary_overrides: dict[str, str] = field(default_factory=dict)
+    cell_type: str | None = None
+    cell_type_override: str | None = None
+    cytokines: dict[str, Exposure] = field(default_factory=dict)
+    cytokine_overrides: dict[str, Exposure] = field(default_factory=dict)
 
     def validate(self, max_length: int = 512) -> None:
+        for value in (self.cell_type, self.cell_type_override):
+            if value is not None and (not isinstance(value, str) or not value.strip()):
+                raise ValueError("cell type must be a nonempty vocabulary label")
+        for values in (self.cytokines, self.cytokine_overrides):
+            if any(not name or not isinstance(value, Exposure) for name, value in values.items()):
+                raise ValueError("cytokines require typed exposure records")
         for values in (self.auxiliary_values, self.auxiliary_overrides):
             for name, value in values.items():
                 categories = (name.split(":", 1)[1],) if name.startswith("peptide_source:") else ()
@@ -243,6 +307,8 @@ class Observation:
             context[key] = {
                 name: Component(**value) for name, value in context.get(key, {}).items()
             }
+        for key in ("cytokines", "cytokine_overrides"):
+            context[key] = {name: Exposure(**value) for name, value in context.get(key, {}).items()}
         data["context"] = Context(**context)
         result = cls(**data)
         result.validate()

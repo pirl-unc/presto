@@ -327,6 +327,15 @@ def initialize_from_checkpoint(model: ModularPresto, path: str | Path) -> dict[s
         shared_contract.update(
             {"components", "component_activity_units", "machinery_profiles", "context_species"}
         )
+        shared_contract.update(
+            {
+                "machinery_references",
+                "cell_types",
+                "cytokines",
+                "cytokine_dose_units",
+                "cytokine_duration_features",
+            }
+        )
     if previous.has_digest:
         shared_contract.add("enzymes")
     if previous.has_context or previous.has_digest:

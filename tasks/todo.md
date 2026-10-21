@@ -11891,6 +11891,12 @@ user attachment and preserve the full requested architecture and evidence scope.
 - [ ] Run/close registered real-data fitting, validation and transfer experiments.
 - [ ] Verify final code/docs/checkpoints, update PR and inspect final-head CI.
 
+Current implementation slice: [APC context spec](modular_model/cellular-context-spec.md).
+
+- [x] Add typed cell/cytokine observations and sourced profile resolution.
+- [x] Wire cellular-only features, training support and checkpoint contracts.
+- [x] Verify precedence, masking, contrast admission and persistence.
+
 Completion remains unproven until every requirement has authoritative evidence.
 Progress and exact verification: [completion progress](modular_model/completion-progress.md).
 Lineage preparation is implemented; source-specific cohort wiring and broader

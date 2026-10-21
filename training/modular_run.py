@@ -16,6 +16,7 @@ import time
 import torch
 
 from ..data.modular import ENDPOINTS, fit_target_scales, identity_head
+from ..data.modular_context import resolve_cell_context
 from ..data.modular_sources import ObservationIndex, file_sha256
 from ..models.modular import ModularConfig, ModularPresto
 from ..models.modular_support import feature_report
@@ -104,6 +105,7 @@ def preflight(index: ObservationIndex):
     counts, label_values, feature_states = Counter(), defaultdict(set), defaultdict(set)
     source_label_values = defaultdict(set)
     observed_features = {"acquisition": set(), "observation": set()}
+    cell_types, cytokine_states, cytokine_numeric = set(), defaultdict(set), defaultdict(set)
     assay_classes, has_multi_register = set(), False
     heldout_multi_register = False
     # Label and capability inspection is sequence-only; no training or random model scores.
@@ -127,6 +129,23 @@ def preflight(index: ObservationIndex):
             if row.endpoint not in config.endpoints:
                 raise ValueError(f"admitted row targets an unallocated endpoint: {row.endpoint}")
             route = ENDPOINTS[row.endpoint].route
+            if route in ("cellular", "tcr_cellular"):
+                cell = resolve_cell_context(
+                    row.context,
+                    config.cell_types,
+                    config.cytokines,
+                    config.cytokine_dose_units,
+                    config.cytokine_duration_features,
+                )
+                if row.split == "train":
+                    if cell.cell_type.value is not None:
+                        cell_types.add(cell.cell_type.value)
+                    for name, exposure in cell.cytokines.items():
+                        cytokine_states[name].add(exposure.state)
+                        if exposure.dose is not None:
+                            cytokine_numeric[f"{name}:dose"].add(exposure.dose)
+                        if exposure.duration_hours is not None:
+                            cytokine_numeric[f"{name}:duration_hours"].add(exposure.duration_hours)
             if route in ("bulk", "detector") or row.endpoint == "elution_observation":
                 validator._covariates(
                     config.acquisition_features,
@@ -190,6 +209,21 @@ def preflight(index: ObservationIndex):
     for name, states in feature_states.items():
         if len(states - {"unknown", "reference"}) < 2:
             raise ValueError(f"component effect lacks contrasted training states: {name}")
+    missing_cells = set(config.cell_types) - cell_types
+    if missing_cells:
+        raise ValueError(f"cell types have no observed training labels: {sorted(missing_cells)}")
+    for name in config.cytokines:
+        if not {"present", "absent"} <= cytokine_states[name]:
+            raise ValueError(f"cytokine effect lacks present/absent training contrast: {name}")
+    for suffix, names in (
+        ("dose", config.cytokine_dose_units),
+        ("duration_hours", config.cytokine_duration_features),
+    ):
+        for name in names:
+            if len(cytokine_numeric[f"{name}:{suffix}"]) < 2:
+                raise ValueError(
+                    f"cytokine numeric feature lacks varied training values: {name}:{suffix}"
+                )
     for family, configured in (
         ("acquisition", config.acquisition_features),
         ("observation", config.observation_features),
@@ -223,6 +257,9 @@ def preflight(index: ObservationIndex):
             "source_label_values": {
                 key: sorted(value) for key, value in source_label_values.items()
             },
+            "cell_types": sorted(cell_types),
+            "cytokine_states": {key: sorted(value) for key, value in cytokine_states.items()},
+            "cytokine_numeric": {key: sorted(value) for key, value in cytokine_numeric.items()},
             "observed_numeric_features": {
                 key: sorted(value) for key, value in observed_features.items()
             },

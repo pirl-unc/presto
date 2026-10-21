@@ -67,3 +67,28 @@ that CI evidence does not cover these subsequent working-tree changes. No new
 real training experiment, calibrated auxiliary predictor or qualified assay
 checkpoint exists. Full-goal source, context, MS, TCR and scientific gates remain
 open.
+
+## APC cell-type/cytokine context implementation
+
+Added typed independent cytokine exposures, supplied/override cell type, optional
+unit-declared dose and duration, and sourced/versioned machinery reference
+profiles. Species-wide and cell-specific defaults remain visibly marked priors;
+sample annotations (including unknown) and explicit overrides take precedence.
+The current repository does not yet supply a qualified biological profile catalog.
+
+The existing cellular fusion consumes these fields; purified molecular assays,
+fixed TCR-pMHC binding, digestion and the shared detector remain invariant. The
+same feature-column support guards cover new categorical/numeric columns and
+checkpoints preserve their meanings. Preflight requires cell-category exposure,
+present/absent cytokine contrasts and varied declared numeric values. These do
+not establish matched-cohort causal effects; source attribution and controlled
+predictive comparisons remain necessary.
+
+Verification: 75 focused modular and documentation checks pass, including actual
+new-column updates, unsupported-state rejection, profile/checkpoint round trips,
+reference precedence, concurrent exposures, class/cellular routing and detector
+invariance. Pinned Ruff lint and diff checks pass. A lint failure in the new
+parameterized validation test was corrected with an explicit error-message
+assertion before the successful rerun. No real-data fit or perturbation-response
+claim has been made. Quantitative MS/processing endpoints remain the next missing
+architecture paths, alongside the wider source and qualification backlog.

@@ -116,6 +116,37 @@ reference profiles. Profiles are priors; an empty perturbation list is unknown.
 Optional measured activities require declared units. Purified binding never consumes
 APC state. Paired receptor binding to supplied pMHC also excludes APC processing.
 
+Optional `cell_types` and `cytokines` vocabularies add APC context to this same
+fusion. `Context.cell_type_override` takes precedence over the supplied cell type.
+Each cytokine is an independent `Exposure` with `present`, `absent` or `unknown`
+state and optional dose/unit and duration in hours. `cytokine_overrides` replace
+individual exposures, retaining the supplied values in diagnostics. Missing
+cytokine metadata is unknown; it never creates an untreated-control label.
+
+Cell type uses one-hot columns plus unknown, and each cytokine has three state
+columns. `cytokine_dose_units` and `cytokine_duration_features` explicitly allocate
+optional `log1p(value)` and known-mask columns. Doses must match their declared
+units; no potency or unit conversion is guessed. These inputs are masked from
+purified affinity/stability, fixed receptor binding, digestion and shared MS
+response. Unallocated context families are listed as ignored; unsupported values
+within an allocated family are rejected on cellular requests.
+
+`machinery_references` contains typed `MachineryProfile` records with an ID,
+species, optional cell type, component priors, reference and version. Species-wide
+defaults are followed by a matching cell-specific profile, sample annotations
+and explicit component overrides, in that order. Even an explicit unknown state
+overrides a default. Duplicate profile scopes are rejected. Resolved priors retain
+their provenance and are marked assumptions. No curated profile catalog is shipped
+yet, and declaring a source reference does not qualify its biological evidence.
+The older `machinery_profiles` name lists remain unverified reference priors.
+
+Preflight requires training examples for each configured cell category, actual
+present/absent cytokine contrasts and varied values for declared numeric channels.
+Profile defaults do not substitute for sample-attested machinery contrasts. Input
+column support is saved in checkpoints; unseen states remain unsupported at
+inference. These checks establish input support, not causal identification or
+predictive value for perturbations.
+
 ## MS observation
 
 The same detector feature block and scalar readout are used in both routes:

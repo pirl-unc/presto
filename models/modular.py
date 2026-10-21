@@ -17,14 +17,21 @@ from ..data.modular import (
     AA,
     CORECEPTORS,
     DELIVERY,
+    EXPOSURE_STATES,
     ENDPOINTS,
     IDENTITY_TASKS,
     ROLES,
     STATES,
     Observation,
+    MachineryProfile,
     identity_vocabulary,
 )
-from ..data.modular_context import resolve_components, resolve_field, resolve_species
+from ..data.modular_context import (
+    resolve_cell_context,
+    resolve_components,
+    resolve_field,
+    resolve_species,
+)
 from .encoders import SequenceEncoder
 from .modular_support import feature_inputs, feature_layout
 
@@ -43,6 +50,11 @@ class ModularConfig:
     components: tuple[str, ...] = ()
     component_activity_units: dict[str, str] = field(default_factory=dict)
     machinery_profiles: dict[str, tuple[str, ...]] = field(default_factory=dict)
+    machinery_references: tuple[MachineryProfile, ...] = ()
+    cell_types: tuple[str, ...] = ()
+    cytokines: tuple[str, ...] = ()
+    cytokine_dose_units: dict[str, str] = field(default_factory=dict)
+    cytokine_duration_features: tuple[str, ...] = ()
     context_species: tuple[str, ...] = ()
     enzymes: tuple[str, ...] = ()
     acquisition_features: tuple[str, ...] = ()
@@ -64,6 +76,9 @@ class ModularConfig:
             "source_categories",
             "auxiliary_context",
             "components",
+            "cell_types",
+            "cytokines",
+            "cytokine_duration_features",
             "context_species",
             "enzymes",
             "acquisition_features",
@@ -103,6 +118,29 @@ class ModularConfig:
         for species, names in self.machinery_profiles.items():
             if species not in self.species or set(names) - set(self.components):
                 raise ValueError("reference profile outside declared vocabulary")
+        if any(not name or name == "unknown" for name in (*self.cell_types, *self.cytokines)):
+            raise ValueError("cell/cytokine vocabulary requires nonempty, nonreserved labels")
+        if (set(self.cytokine_dose_units) | set(self.cytokine_duration_features)) - set(
+            self.cytokines
+        ):
+            raise ValueError("cytokine numeric features require an allocated exposure")
+        if any(not unit for unit in self.cytokine_dose_units.values()):
+            raise ValueError("cytokine dose features require declared units")
+        profile_ids, profile_scopes = set(), set()
+        for profile in self.machinery_references:
+            if not isinstance(profile, MachineryProfile):
+                raise ValueError("machinery references require typed profiles")
+            scope = (profile.species, profile.cell_type)
+            if profile.profile_id in profile_ids or scope in profile_scopes:
+                raise ValueError("duplicate or ambiguous machinery reference profile")
+            profile_ids.add(profile.profile_id)
+            profile_scopes.add(scope)
+            if (
+                profile.species not in self.species
+                or (profile.cell_type is not None and profile.cell_type not in self.cell_types)
+                or set(profile.components) - set(self.components)
+            ):
+                raise ValueError("machinery reference outside declared vocabulary")
         if not 0 <= self.dropout < 1 or not 0 < self.identity_threshold <= 1:
             raise ValueError("invalid dropout or identity threshold")
         if self.max_length < 9:
@@ -112,6 +150,8 @@ class ModularConfig:
         contextual = bool(routes & {"cellular", "tcr", "tcr_cellular"})
         if self.components and not cellular:
             raise ValueError("machinery slots need a cellular outcome")
+        if (self.cell_types or self.cytokines or self.machinery_references) and not cellular:
+            raise ValueError("APC cell/cytokine context requires a cellular outcome")
         if self.context_species and not contextual:
             raise ValueError("context species slots need a contextual outcome")
         receptor = bool(routes & {"tcr", "tcr_cellular"})
@@ -153,6 +193,9 @@ class ModularConfig:
             "source_categories",
             "auxiliary_context",
             "components",
+            "cell_types",
+            "cytokines",
+            "cytokine_duration_features",
             "context_species",
             "enzymes",
             "acquisition_features",
@@ -164,6 +207,10 @@ class ModularConfig:
             data["machinery_profiles"] = {
                 key: tuple(value) for key, value in data["machinery_profiles"].items()
             }
+        if "machinery_references" in data:
+            data["machinery_references"] = tuple(
+                MachineryProfile.from_dict(value) for value in data["machinery_references"]
+            )
         return cls(**data)
 
 
@@ -258,6 +305,9 @@ class ModularPresto(nn.Module):
                 5 + (2 if name in config.component_activity_units else 0)
                 for name in config.components
             )
+            + (len(config.cell_types) + 1 if config.cell_types else 0)
+            + len(EXPOSURE_STATES) * len(config.cytokines)
+            + 2 * (len(config.cytokine_dose_units) + len(config.cytokine_duration_features))
             + (len(DELIVERY) if self.has_cellular else 0)
             + (len(CORECEPTORS) if self.has_coreceptor else 0)
             + 2 * sum(name != "mhc_pairing" for name in config.auxiliary_context)
@@ -424,10 +474,24 @@ class ModularPresto(nn.Module):
                 prediction=probabilities.get("mhc_class", ()),
                 threshold=self.config.identity_threshold,
             )
-        components = resolve_components(
-            row.context, species["apc"], self.config.components, self.config.machinery_profiles
+        cell = resolve_cell_context(
+            row.context,
+            self.config.cell_types,
+            self.config.cytokines,
+            self.config.cytokine_dose_units,
+            self.config.cytokine_duration_features,
+            strict=row.endpoint != "identity"
+            and ENDPOINTS[row.endpoint].route in ("cellular", "tcr_cellular"),
         )
-        return species, class_field, components
+        components = resolve_components(
+            row.context,
+            species["apc"],
+            self.config.components,
+            self.config.machinery_profiles,
+            cell_type=cell.cell_type.value,
+            reference_profiles=self.config.machinery_references,
+        )
+        return species, class_field, components, cell
 
     def _source(self, row, encoded):
         context = row.context
@@ -452,7 +516,7 @@ class ModularPresto(nn.Module):
             ]
         )
 
-    def _context(self, row, encoded, species, components, auxiliary):
+    def _context(self, row, encoded, species, components, auxiliary, cell):
         route = ENDPOINTS[row.endpoint].route
         cellular = route in ("cellular", "tcr_cellular")
         receptor = route in ("tcr", "tcr_cellular")
@@ -487,6 +551,22 @@ class ModularPresto(nn.Module):
                     raise ValueError(f"activity unit mismatch for {name}")
                 features.extend([component.activity or 0.0, float(component.activity is not None)])
             values.append(self._tensor(features) if cellular else self._zero(len(features)))
+        if self.config.cell_types:
+            features = [*cell.cell_type.probabilities, float(cell.cell_type.source == "unknown")]
+            values.append(self._tensor(features) if cellular else self._zero(len(features)))
+        for name in self.config.cytokines:
+            exposure = cell.cytokines[name]
+            features = [float(exposure.state == state) for state in EXPOSURE_STATES]
+            if name in self.config.cytokine_dose_units:
+                features.extend([math.log1p(exposure.dose or 0), float(exposure.dose is not None)])
+            if name in self.config.cytokine_duration_features:
+                features.extend(
+                    [
+                        math.log1p(exposure.duration_hours or 0),
+                        float(exposure.duration_hours is not None),
+                    ]
+                )
+            values.append(self._tensor(features) if cellular else self._zero(len(features)))
         if self.has_cellular:
             values.append(
                 self._tensor([float(row.context.delivery == value) for value in DELIVERY])
@@ -513,7 +593,7 @@ class ModularPresto(nn.Module):
 
     def _pmhc(self, row, mhc, encoded):
         identity = self._identity(row, mhc, encoded)
-        species, class_field, components = self._resolve(row, mhc, identity)
+        species, class_field, components, cell = self._resolve(row, mhc, identity)
         auxiliary = self._auxiliary(row, identity)
         if class_field.source in ("unknown", "unsupported"):
             raise ValueError(
@@ -522,7 +602,9 @@ class ModularPresto(nn.Module):
         pooled, register_info = [], []
         contextual = ENDPOINTS[row.endpoint].route != "pmhc"
         context = (
-            self._context(row, encoded, species, components, auxiliary) if contextual else None
+            self._context(row, encoded, species, components, auxiliary, cell)
+            if contextual
+            else None
         )
         for index, weight in enumerate(class_field.probabilities):
             if weight == 0:
@@ -575,6 +657,11 @@ class ModularPresto(nn.Module):
             "species": {name: asdict(value) for name, value in species.items()},
             "class": asdict(class_field),
             "components": {name: asdict(value) for name, value in components.items()},
+            "cell_context": {
+                **asdict(cell),
+                "applies_to_endpoint": ENDPOINTS[row.endpoint].route
+                in ("cellular", "tcr_cellular"),
+            },
             "registers": register_info,
             "auxiliary": {name: asdict(value) for name, value in auxiliary.items()},
         }
@@ -594,10 +681,11 @@ class ModularPresto(nn.Module):
             if row.endpoint == "identity":
                 mhc = row.mhc[0] if row.mhc else None
                 output.identity = self._identity(row, mhc, encoded)
-                species, mhc_class, _ = self._resolve(row, mhc, output.identity)
+                species, mhc_class, _, cell = self._resolve(row, mhc, output.identity)
                 output.diagnostics = {
                     "species": {key: asdict(value) for key, value in species.items()},
                     "class": asdict(mhc_class) if mhc_class else None,
+                    "cell_context": {**asdict(cell), "applies_to_endpoint": False},
                     "auxiliary": {
                         name: asdict(value)
                         for name, value in self._auxiliary(row, output.identity).items()
