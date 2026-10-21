@@ -280,7 +280,7 @@ def test_single_core_classii_subset_prunes_unreachable_pooling(tmp_path):
         preflight(ObservationIndex(path))
 
 
-def test_training_closure_fails_with_an_untouched_allocated_head(tmp_path):
+def test_training_closure_fails_with_an_untouched_allocated_head(tmp_path, monkeypatch):
     path, rows = fixture_manifest(tmp_path)
     rows = [
         replace(row, split="train", endpoint="kd" if i % 2 else "ic50", value=10 ** (i + 1))
@@ -306,6 +306,13 @@ def test_training_closure_fails_with_an_untouched_allocated_head(tmp_path):
     summary = json.loads((output / "summary.json").read_text())
     assert summary["coverage_gate"]["status"] == "failed"
     assert any(name.startswith("heads.") for name in summary["untrained_selected_parameters"])
+    from presto.training import modular_run
+
+    monkeypatch.setattr(
+        modular_run, "evaluate", lambda *a, **k: pytest.fail("unexpected rescoring")
+    )
+    with pytest.raises(ValueError, match="training coverage gate failed"):
+        fit_index(ObservationIndex(path), output, resume=True)
 
 
 def test_distinct_export_ids_cannot_duplicate_one_measured_outcome(tmp_path):

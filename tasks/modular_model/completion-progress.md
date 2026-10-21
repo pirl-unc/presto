@@ -229,3 +229,35 @@ Only planning documentation changed while that test process ran. The next
 [resume specification](resume-spec.md) describes durable optimizer/RNG/sampler
 state, selection recovery, pinned execution contracts and test-cache reuse;
 that implementation and its equivalence checks remain open.
+
+## Interrupted-run resume implementation
+
+The next slice adds one explicit resume path to both training CLIs. Durable
+snapshots preserve optimizer membership and state, global/local RNG states,
+sampler/replay order and cursors, partial-epoch accounting, feature/parameter
+support, frozen dependencies, scalers, patience and selected-checkpoint bytes.
+The data/configuration/source/runtime contract must match. Concurrent trainers
+in one run directory are rejected; a stopped process releases its lock.
+
+Finalization has a committed end-of-optimization phase, per-split atomic caches
+bound to the selected checkpoint, and hashed completion evidence. A reporting
+retry does not rescore completed splits. Test consumption interrupted without a
+complete cache fails closed; completed coverage failures remain failures.
+Registered retries preserve the original recipe, append attempt/failure records
+and close the registry once. CPU/CUDA/MPS RNG support is implemented, but only
+CPU equivalence has been tested. Time lost after an earlier durable snapshot is
+not included in the recovered elapsed-time accounting.
+
+Verification before final broad regression: **128 focused modular/CLI/docs checks
+pass in 16.33 seconds**. New tests compare exact weights, optimizer states,
+coverage, history, selection and prediction records against uninterrupted runs
+in a separate Python process, including dropout, replay and uncommitted work.
+They also cover frozen dependencies/scalers, patience/earlier selection,
+changed contracts and optimizer order, missing snapshots, concurrent writers,
+incomplete test evaluation, completed-result tampering and both registered CLIs.
+The first changed-data fixture used an invalid blank JSONL record; it was replaced
+with a valid changed numeric measurement so the intended resume contract gate
+is exercised. An initially mistyped test filename collected no tests; the recorded
+128-test run used actual files. Pinned Ruff lint and format pass (337 files).
+The final broad run remains to be recorded. This is software evidence; real-data
+qualification, auxiliary benefit and the full biological/data requirements remain open.

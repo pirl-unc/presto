@@ -4702,7 +4702,11 @@ def run(args: argparse.Namespace) -> None:
         from presto.training.modular_run import run_manifest
 
         return run_manifest(args)
-    if getattr(args, "observations_manifest", None) or getattr(args, "modular_preflight", False):
+    if (
+        getattr(args, "observations_manifest", None)
+        or getattr(args, "modular_preflight", False)
+        or getattr(args, "modular_resume", False)
+    ):
         raise ValueError("modular inputs require --model-kind modular")
     args = _resolve_run_args(args)
     regularization_cfg = _regularization_config_from_args(args)

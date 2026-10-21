@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import asdict
+import os
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -273,7 +274,10 @@ def save_checkpoint(
     }
     path = Path(path)
     temporary = path.with_suffix(path.suffix + ".tmp")
-    torch.save(payload, temporary)
+    with temporary.open("wb") as stream:
+        torch.save(payload, stream)
+        stream.flush()
+        os.fsync(stream.fileno())
     temporary.replace(path)
 
 

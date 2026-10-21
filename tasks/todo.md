@@ -11932,13 +11932,14 @@ Continuation specification: [task subsets and frozen dependencies](modular_model
 - [x] Freeze complete trained dependencies, including deterministic encoder behavior.
 - [x] Integrate manifest admission, trainable sampling, coverage and checkpoint persistence.
 - [x] Verify subset/frozen-function behavior and document the remaining resume gap accurately.
-- [ ] Implement and verify exact interrupted-run resume.
+- [x] Implement and verify exact interrupted-run resume on deterministic CPU fixtures.
 
 Resume specification: [durable training and evaluation continuation](modular_model/resume-spec.md).
 
-- [ ] Persist optimizer, sampler/RNG, partial epoch and selection/coverage state.
-- [ ] Pin execution contracts and enforce evaluation/closure reuse.
-- [ ] Wire explicit registered CLI resume and verify interrupted-run equivalence.
+- [x] Persist optimizer, sampler/RNG, partial epoch and selection/coverage state.
+- [x] Pin execution contracts and enforce evaluation/closure reuse.
+- [x] Wire explicit registered CLI resume and verify interrupted-run equivalence.
+- [ ] Complete final regression and publish resume support with its tested scope.
 
 Review: 91 focused checks pass; pinned repository Ruff and strict
 MkDocs pass. A fresh retained-output comparison uses the same inference mode on
@@ -11947,7 +11948,11 @@ tests cover frozen-function invariance, structural feature projection, unchanged
 scalers, rejection of unsupported states and transfer contracts, and selection
 on trainable task metrics. Full regression on immutable application/test source
 `1108838` passes: 2,461 passed, four skipped, 1,056 warnings in 394.35 seconds
-with four workers. Exact interrupted-run resume remains specified but unimplemented.
+with four workers. The subsequent resume slice passes 128 focused modular/CLI/docs
+checks, including fresh-process CPU equivalence with dropout/replay, replay of
+uncommitted updates, frozen-function retention, earlier selection/patience,
+changed-contract rejection, test-cache reuse and persistent failed coverage.
+Final broad regression is pending; no GPU/MPS bitwise claim is established.
 
 Lineage preparation is implemented; source-specific cohort wiring and broader
 biological-independence audits remain part of the unfinished preparation item.

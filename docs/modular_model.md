@@ -375,8 +375,44 @@ new labels; a frozen annotation function needs no replay. Unfrozen outputs still
 need their own supervision, and shared-parameter updates invalidate dependent
 validation status. Optimizers contain only trainable parameters. Coverage closure
 requires updates for trainable parameters and inherited support for frozen ones;
-unseen features cannot be activated in a frozen path. Exact interrupted-run resume
-and arbitrary feature/vocabulary migrations remain unimplemented.
+unseen features cannot be activated in a frozen path. Arbitrary feature/vocabulary
+migrations remain unimplemented.
+
+An interrupted modular fit resumes with the same frozen manifest and run directory:
+
+```bash
+python -m presto.cli.main train unified --model-kind modular \
+  --observations-manifest experiments/RUN/reproduce/source-manifest.json \
+  --run-dir experiments/RUN --modular-resume --device cpu
+```
+
+The original hash-pinned manifest is also accepted. `--modular-resume` cannot be
+combined with preflight or legacy training. It reuses the registered experiment;
+an ordinary launch still refuses to overwrite a prior run. Resume attempts and
+failures are recorded separately without replacing the original launch recipe.
+
+`resume.pt` preserves the current model and optimizer, ordered optimizer parameter
+names, support/freeze/scaler evidence, independent assay and replay RNGs and
+cursors, global random states, partial-epoch accounting, coverage, patience and
+the selected checkpoint. Snapshots are atomic at initialization, every
+`checkpoint_every_steps` updates (default 100), each completed epoch and before
+final evaluation. Uncommitted updates after the last snapshot are replayed.
+An exclusive process lock prevents concurrent trainers in one run directory.
+
+Resume requires matching data, resolved settings, source-code hashes, package
+versions, device and recorded backend/thread settings. Changing these is a new
+training stage, not exact resume. Fresh-process equivalence is tested on CPU with
+dropout, auxiliary replay and partial epochs; GPU/MPS bitwise equivalence has not
+been demonstrated. Recorded elapsed time includes committed work and the resumed
+invocation, not unrecorded time lost after an earlier snapshot.
+
+Final evaluation begins only after a committed end of optimization. Each split's
+metrics and prediction records have an atomic cache bound to that run and selected
+checkpoint. Reporting retries reuse caches. Test evaluation is marked before
+consumption: an interruption without a complete cache fails rather than silently
+repeating it. A completed resume verifies artifact hashes and returns the cached
+result; a failed coverage gate remains failed. These guarantees do not authorize
+new model selection using test results.
 
 Every run saves initial/selected/last checkpoints, optimizer state, resolved config,
 source manifest, source snapshots, admission census, history, parameter gradient

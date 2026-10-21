@@ -18,6 +18,14 @@ def add_training_source_arguments(parser):
         help="Validate modular source and label support without fitting",
     )
     parser.add_argument(
+        "--modular-resume",
+        action="store_true",
+        help=(
+            "Resume the same frozen modular experiment at its last durable update; "
+            "requires --run-dir"
+        ),
+    )
+    parser.add_argument(
         "--data-source",
         dest="data_source",
         type=str,

@@ -30,6 +30,21 @@ from .modular import (
     train_step,
 )
 from .modular_evaluation import evaluate
+from .modular_resume import (
+    SOURCE_FILES,
+    atomic_bytes,
+    atomic_json,
+    cached_evaluation,
+    check_contract,
+    complete_run,
+    completed_result,
+    digest,
+    execution_contract,
+    optimizer_names,
+    restore_rng,
+    run_lock,
+    save_resume,
+)
 
 DEFAULT_TRAINING = {
     "seed": 42,
@@ -46,11 +61,12 @@ DEFAULT_TRAINING = {
     "no_test_reason": None,
     "coverage_policy": "required",
     "coverage_exception_reason": None,
+    "checkpoint_every_steps": 100,
 }
 
 
 def _json(path, value):
-    Path(path).write_text(json.dumps(value, indent=2, sort_keys=True, allow_nan=False) + "\n")
+    atomic_json(path, value)
 
 
 def _jsonl(path, rows):
@@ -87,8 +103,15 @@ def preflight(index: ObservationIndex):
     if set(supplied) - DEFAULT_TRAINING.keys():
         raise ValueError("unknown modular training option")
     training = {**DEFAULT_TRAINING, **supplied}
-    for key in ("batch_size", "max_epochs", "patience", "min_epochs", "identity_batch_size"):
-        if not isinstance(training[key], int) or training[key] <= 0:
+    for key in (
+        "batch_size",
+        "max_epochs",
+        "patience",
+        "min_epochs",
+        "identity_batch_size",
+        "checkpoint_every_steps",
+    ):
+        if type(training[key]) is not int or training[key] <= 0:
             raise ValueError(f"{key} must be a positive integer")
     if training["max_steps"] is not None and (
         not isinstance(training["max_steps"], int) or training["max_steps"] <= 0
@@ -380,26 +403,61 @@ def _accumulate_coverage(total, step):
         record["max_gradient_norm"] = max(record["max_gradient_norm"], evidence["gradient_norm"])
 
 
-def fit_index(index, output_dir, *, device="cpu"):
+def fit_index(index, output_dir, *, device="cpu", resume=False):
     """Library training core; launchers must register experiments before calling."""
+    with run_lock(output_dir):
+        return _fit_index(index, output_dir, device=device, resume=resume)
+
+
+def _fit_index(index, output_dir, *, device, resume):
     config, training, scales, admission = preflight(index)
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    if (output_dir / "selected.pt").exists() or (output_dir / "history.json").exists():
-        raise ValueError("refusing to overwrite a run; exact resume is not yet supported")
-    _json(output_dir / "admission.json", admission)
-    _json(
-        output_dir / "resolved-config.json",
-        {
-            "model": asdict(config),
-            "training": training,
-            "scales": {key: asdict(value) for key, value in scales.items()},
-        },
-    )
+    contract = execution_contract(index, config, training, scales, device)
+    snapshot_path = output_dir / "resume.pt"
+    saved = None
+    if resume:
+        if not snapshot_path.exists():
+            raise ValueError("resume requires an existing durable resume.pt snapshot")
+        saved_payload = torch.load(snapshot_path, map_location="cpu", weights_only=True)
+        saved = check_contract(saved_payload, contract)
+        closed = completed_result(output_dir, contract)
+        if closed is not None:
+            _check_coverage_result(closed)
+            return closed
+        for name, expected in saved["state"]["initial_artifacts"].items():
+            if file_sha256(output_dir / name) != expected:
+                raise ValueError(f"initial run artifact changed: {name}")
+    else:
+        if any(
+            (output_dir / name).exists()
+            for name in (
+                "initial.pt",
+                "resume.pt",
+                "selected.pt",
+                "history.json",
+                "completed.json",
+            )
+        ):
+            raise ValueError("refusing to overwrite a run; use explicit resume")
+        _json(output_dir / "admission.json", admission)
+        _json(
+            output_dir / "resolved-config.json",
+            {
+                "model": asdict(config),
+                "training": training,
+                "scales": {key: asdict(value) for key, value in scales.items()},
+            },
+        )
     torch.manual_seed(training["seed"])
     rng = random.Random(training["seed"])
     identity_rng = random.Random(training["seed"] + 1)
-    model, inherited = initialized_model(config, index, device=device)
+    if saved is None:
+        model, inherited = initialized_model(config, index, device=device)
+    else:
+        model, restored_scales, saved_payload = load_checkpoint(snapshot_path, device=device)
+        if asdict(model.config) != asdict(config) or restored_scales != scales:
+            raise ValueError("resume model/scalers differ from the frozen execution contract")
     trainable = [parameter for parameter in model.parameters() if parameter.requires_grad]
     if not trainable:
         raise ValueError(
@@ -408,6 +466,10 @@ def fit_index(index, output_dir, *, device="cpu"):
     optimizer = torch.optim.AdamW(
         trainable, lr=training["learning_rate"], weight_decay=training["weight_decay"]
     )
+    if saved is not None:
+        if saved["optimizer_names"] != optimizer_names(model, optimizer):
+            raise ValueError("resume optimizer parameter order or membership changed")
+        optimizer.load_state_dict(saved_payload["optimizer"])
     trainable_assays = [
         i
         for i in index.partitions.get("train:assay", [])
@@ -422,45 +484,98 @@ def fit_index(index, output_dir, *, device="cpu"):
     replay_indices = trainable_identity if trainable_assays else []
     if not base_indices:
         raise ValueError("no observations with a trainable supervised loss")
-    replay_order, replay_position = [], 0
     validation = index.partitions.get("validation:assay", []) + index.partitions.get(
         "validation:identity", []
     )
-    coverage, history, exposures = {}, [], Counter()
-    steps, best, best_epoch, stale = 0, float("inf"), 0, 0
     start_time = time.monotonic()
-    initial_metadata = {
-        "manifest_sha256": index.manifest_sha256,
-        "module_pruning": admission["module_pruning"],
-        "training": training,
-        "source_contract": index.manifest["sources"],
-        "inherited": bool(inherited),
-        "pretrained_contract": index.manifest.get("pretrained"),
-        "inherited_parameters": inherited["inherited_parameters"] if inherited else [],
-        "frozen_targets": list(model.frozen_targets),
-        "frozen_parameters": sorted(model.frozen_parameters),
-    }
-    save_checkpoint(
-        output_dir / "initial.pt", model, scales, optimizer=optimizer, metadata=initial_metadata
-    )
-    for epoch in range(1, training["max_epochs"] + 1):
-        order = list(base_indices)
-        rng.shuffle(order)
-        epoch_losses = []
-        epoch_exposures = Counter()
-        processed = 0
-        for start in range(0, len(order), training["batch_size"]):
-            selected = order[start : start + training["batch_size"]]
+    if saved is None:
+        initial_metadata = {
+            "manifest_sha256": index.manifest_sha256,
+            "module_pruning": admission["module_pruning"],
+            "training": training,
+            "source_contract": index.manifest["sources"],
+            "inherited": bool(inherited),
+            "pretrained_contract": index.manifest.get("pretrained"),
+            "inherited_parameters": inherited["inherited_parameters"] if inherited else [],
+            "frozen_targets": list(model.frozen_targets),
+            "frozen_parameters": sorted(model.frozen_parameters),
+        }
+        save_checkpoint(
+            output_dir / "initial.pt", model, scales, optimizer=optimizer, metadata=initial_metadata
+        )
+        state = {
+            "phase": "training",
+            "epoch": 1,
+            "last_epoch": 0,
+            "order": [],
+            "position": 0,
+            "replay_order": [],
+            "replay_position": 0,
+            "epoch_losses": [],
+            "epoch_exposures": {},
+            "coverage": {},
+            "history": [],
+            "exposures": {},
+            "steps": 0,
+            "best": float("inf"),
+            "best_epoch": 0,
+            "stale": 0,
+            "elapsed_seconds": 0,
+            "selected_bytes": None,
+            "initial_artifacts": {
+                name: file_sha256(output_dir / name)
+                for name in ("initial.pt", "admission.json", "resolved-config.json")
+            },
+        }
+    else:
+        state = saved["state"]
+        initial_metadata = {
+            key: value for key, value in saved_payload["metadata"].items() if key != "resume"
+        }
+        # Construction/loading can consume RNG. Restore only after both are complete.
+        restore_rng(saved["rng"], rng, identity_rng)
+        _json(output_dir / "history.json", state["history"])
+    elapsed_before = state["elapsed_seconds"]
+
+    def snapshot():
+        state["elapsed_seconds"] = elapsed_before + time.monotonic() - start_time
+        save_resume(
+            snapshot_path,
+            model,
+            scales,
+            optimizer,
+            state,
+            contract,
+            rng,
+            identity_rng,
+            initial_metadata,
+        )
+
+    if saved is None:
+        snapshot()
+    coverage, history = state["coverage"], state["history"]
+    exposures = Counter(state["exposures"])
+    while state["phase"] == "training":
+        epoch = state["epoch"]
+        if not state["order"]:
+            state["order"] = list(base_indices)
+            rng.shuffle(state["order"])
+        order = state["order"]
+        epoch_exposures = Counter(state["epoch_exposures"])
+        while state["position"] < len(order) and (
+            training["max_steps"] is None or state["steps"] < training["max_steps"]
+        ):
+            selected = order[state["position"] : state["position"] + training["batch_size"]]
             rows = [index[i] for i in selected]
             identity_rows = []
             if replay_indices:
                 for _ in range(training["identity_batch_size"]):
-                    if replay_position == len(replay_order):
-                        replay_order = list(replay_indices)
-                        identity_rng.shuffle(replay_order)
-                        replay_position = 0
-                    identity_rows.append(index[replay_order[replay_position]])
-                    replay_position += 1
+                    if state["replay_position"] == len(state["replay_order"]):
+                        state["replay_order"] = list(replay_indices)
+                        identity_rng.shuffle(state["replay_order"])
+                        state["replay_position"] = 0
+                    identity_rows.append(index[state["replay_order"][state["replay_position"]]])
+                    state["replay_position"] += 1
             step = train_step(
                 model,
                 optimizer,
@@ -472,11 +587,13 @@ def fit_index(index, output_dir, *, device="cpu"):
             _accumulate_coverage(coverage, step)
             exposures.update(step["counts"])
             epoch_exposures.update(step["counts"])
-            processed += len(selected)
-            epoch_losses.append(step["loss"])
-            steps += 1
-            if training["max_steps"] is not None and steps >= training["max_steps"]:
-                break
+            state["exposures"] = dict(exposures)
+            state["epoch_exposures"] = dict(epoch_exposures)
+            state["position"] += len(selected)
+            state["epoch_losses"].append(step["loss"])
+            state["steps"] += 1
+            if state["steps"] % training["checkpoint_every_steps"] == 0:
+                snapshot()
         validation_metrics, _ = evaluate(
             model, index, validation, scales, batch_size=training["batch_size"]
         )
@@ -485,10 +602,10 @@ def fit_index(index, output_dir, *, device="cpu"):
             # A declared training-only diagnostic selects its last executed update.
             improved = True
         else:
-            improved = score < best
+            improved = score < state["best"]
         if improved:
-            best = score if score is not None else best
-            best_epoch, stale = epoch, 0
+            state["best"] = score if score is not None else state["best"]
+            state["best_epoch"], state["stale"] = epoch, 0
             save_checkpoint(
                 output_dir / "selected.pt",
                 model,
@@ -497,49 +614,74 @@ def fit_index(index, output_dir, *, device="cpu"):
                 metadata={
                     **initial_metadata,
                     "epoch": epoch,
-                    "steps": steps,
+                    "steps": state["steps"],
                     "coverage": coverage,
                     "selection_metric": score,
                 },
             )
+            state["selected_bytes"] = (output_dir / "selected.pt").read_bytes()
         else:
-            stale += 1
+            state["stale"] += 1
         history.append(
             {
                 "epoch": epoch,
-                "steps": steps,
-                "training_loss": sum(epoch_losses) / len(epoch_losses),
+                "steps": state["steps"],
+                "training_loss": sum(state["epoch_losses"]) / len(state["epoch_losses"]),
                 "validation": validation_metrics,
                 "selected": improved,
-                "complete_epoch": processed == len(order),
+                "complete_epoch": state["position"] == len(order),
                 "label_exposures": dict(epoch_exposures),
             }
         )
         _json(output_dir / "history.json", history)
         print(
-            f"modular epoch={epoch} steps={steps} "
+            f"modular epoch={epoch} steps={state['steps']} "
             f"loss={history[-1]['training_loss']:.6f} validation={score}",
             flush=True,
         )
-        if (training["max_steps"] is not None and steps >= training["max_steps"]) or (
-            epoch >= training["min_epochs"] and stale >= training["patience"]
+        state["last_epoch"] = epoch
+        if (
+            epoch == training["max_epochs"]
+            or (training["max_steps"] is not None and state["steps"] >= training["max_steps"])
+            or (epoch >= training["min_epochs"] and state["stale"] >= training["patience"])
         ):
-            break
+            state["phase"] = "evaluation"
+        else:
+            state.update(epoch=epoch + 1, order=[], position=0, epoch_losses=[], epoch_exposures={})
+        snapshot()
     save_checkpoint(
         output_dir / "last.pt",
         model,
         scales,
         optimizer=optimizer,
-        metadata={**initial_metadata, "epoch": epoch, "steps": steps, "coverage": coverage},
+        metadata={
+            **initial_metadata,
+            "epoch": state["last_epoch"],
+            "steps": state["steps"],
+            "coverage": coverage,
+        },
     )
+    # Recover the selection committed with this snapshot, even if a crash left a newer file.
+    if state["selected_bytes"] is None:
+        raise ValueError("evaluation phase has no selected checkpoint")
+    atomic_bytes(output_dir / "selected.pt", state["selected_bytes"])
     selected, scales, payload = load_checkpoint(output_dir / "selected.pt", device=device)
     metrics, overall_losses = {}, {}
     for split in ("train", "validation", "test"):
         indices = index.partitions.get(f"{split}:assay", []) + index.partitions.get(
             f"{split}:identity", []
         )
-        metrics[split], records = evaluate(
-            selected, index, indices, scales, batch_size=training["batch_size"]
+        metrics[split], records = cached_evaluation(
+            output_dir,
+            split,
+            {
+                "contract_sha256": digest(contract),
+                "selected_sha256": file_sha256(output_dir / "selected.pt"),
+                "split": split,
+            },
+            lambda indices=indices: evaluate(
+                selected, index, indices, scales, batch_size=training["batch_size"]
+            ),
         )
         _jsonl(output_dir / f"{split}-predictions.jsonl", records)
         assay = [row["loss"] for row in records if "identity_task" not in row]
@@ -585,9 +727,9 @@ def fit_index(index, output_dir, *, device="cpu"):
     summary = {
         "metrics": metrics,
         "overall_losses": overall_losses,
-        "elapsed_seconds": time.monotonic() - start_time,
-        "steps": steps,
-        "selected_epoch": best_epoch,
+        "elapsed_seconds": elapsed_before + time.monotonic() - start_time,
+        "steps": state["steps"],
+        "selected_epoch": state["best_epoch"],
         "training_exposures": dict(exposures),
         "unique_training_labels": admission["training_labels"],
         "support": selected.support,
@@ -596,7 +738,7 @@ def fit_index(index, output_dir, *, device="cpu"):
         "qualification": "not_qualified",
         "test_policy": training["test_policy"],
         "device": device,
-        "gpu": torch.cuda.get_device_name() if str(device).startswith("cuda") else None,
+        "gpu": torch.cuda.get_device_name(device) if str(device).startswith("cuda") else None,
     }
     _json(output_dir / "summary.json", summary)
     _json(
@@ -607,9 +749,15 @@ def fit_index(index, output_dir, *, device="cpu"):
             "input_features": features,
         },
     )
-    if coverage_gate["status"] == "failed" and training["coverage_policy"] == "required":
-        raise ValueError("training coverage gate failed; inspect summary.json and coverage.json")
+    complete_run(output_dir, contract)
+    _check_coverage_result(summary)
     return summary
+
+
+def _check_coverage_result(summary):
+    gate = summary["coverage_gate"]
+    if gate["status"] == "failed" and gate["policy"] == "required":
+        raise ValueError("training coverage gate failed; inspect summary.json and coverage.json")
 
 
 def _metric_table(summary):
@@ -635,34 +783,7 @@ def _metric_table(summary):
     return "\n".join(lines) + "\n"
 
 
-def run_manifest(args):
-    """Dispatch from both canonical CLIs; modular settings live in the frozen manifest."""
-    allowed = {"model_kind", "observations_manifest", "modular_preflight", "run_dir", "device"}
-    explicit = set(getattr(args, "_explicit_cli_dests", ()) or ())
-    if explicit - allowed - {"func", "command", "train_command"}:
-        raise ValueError(
-            "modular training settings belong in the manifest, not legacy CLI flags: "
-            + ", ".join(sorted(explicit - allowed))
-        )
-    if not getattr(args, "observations_manifest", None):
-        raise ValueError("modular model requires --observations-manifest")
-    index = ObservationIndex(args.observations_manifest)
-    _, _, _, admission = preflight(index)
-    if getattr(args, "modular_preflight", False):
-        print(json.dumps(admission, indent=2, sort_keys=True))
-        return admission
-    from ..scripts import experiment_registry as registry
-
-    output = (
-        Path(args.run_dir).resolve()
-        if getattr(args, "run_dir", None)
-        else registry.default_experiment_dir(slug="modular-model-fit", agent_label="codex")
-    )
-    root = registry.EXPERIMENTS_ROOT.resolve()
-    if output.parent != root or not re.fullmatch(
-        r"\d{4}-\d{2}-\d{2}_\d{4}_[a-z0-9_]+_[a-z0-9-]+", output.name
-    ):
-        raise ValueError("modular fits must use a timestamped top-level experiments directory")
+def _register_run(index, output, args, registry):
     if output.exists():
         raise ValueError("experiment directory already exists; choose a fresh registered run")
     output = registry.initialize_experiment_dir(
@@ -717,32 +838,86 @@ def run_manifest(args):
         ],
     )
     source_root = Path(__file__).resolve().parent.parent
-    for path in (
-        "data/modular.py",
-        "data/modular_context.py",
-        "data/modular_quantitative.py",
-        "data/modular_sources.py",
-        "data/modular_lineage.py",
-        "data/modular_preparation.py",
-        "data/modular_auxiliary.py",
-        "models/modular_dependencies.py",
-        "models/modular.py",
-        "models/modular_support.py",
-        "models/encoders.py",
-        "training/modular.py",
-        "training/modular_run.py",
-        "training/modular_evaluation.py",
-        "cli/training_sources.py",
-        "scripts/train_iedb.py",
-    ):
+    for path in SOURCE_FILES:
         target = output / "reproduce" / "source" / path
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source_root / path, target)
+    return index
+
+
+def run_manifest(args):
+    """Dispatch from both canonical CLIs; modular settings live in the frozen manifest."""
+    allowed = {
+        "model_kind",
+        "observations_manifest",
+        "modular_preflight",
+        "modular_resume",
+        "run_dir",
+        "device",
+    }
+    explicit = set(getattr(args, "_explicit_cli_dests", ()) or ())
+    if explicit - allowed - {"func", "command", "train_command"}:
+        raise ValueError(
+            "modular training settings belong in the manifest, not legacy CLI flags: "
+            + ", ".join(sorted(explicit - allowed))
+        )
+    if not getattr(args, "observations_manifest", None):
+        raise ValueError("modular model requires --observations-manifest")
+    resume = getattr(args, "modular_resume", False)
+    if resume and (not getattr(args, "run_dir", None) or getattr(args, "modular_preflight", False)):
+        raise ValueError("modular resume requires --run-dir and cannot be combined with preflight")
+    index = ObservationIndex(args.observations_manifest)
+    _, _, _, admission = preflight(index)
+    if getattr(args, "modular_preflight", False):
+        print(json.dumps(admission, indent=2, sort_keys=True))
+        return admission
+    from ..scripts import experiment_registry as registry
+
+    output = (
+        Path(args.run_dir).resolve()
+        if getattr(args, "run_dir", None)
+        else registry.default_experiment_dir(slug="modular-model-fit", agent_label="codex")
+    )
+    root = registry.EXPERIMENTS_ROOT.resolve()
+    if output.parent != root or not re.fullmatch(
+        r"\d{4}-\d{2}-\d{2}_\d{4}_[a-z0-9_]+_[a-z0-9-]+", output.name
+    ):
+        raise ValueError("modular fits must use a timestamped top-level experiments directory")
+    if resume:
+        origin_path = output / "reproduce" / "manifest-origin.json"
+        if not origin_path.exists():
+            raise ValueError("resume requires an existing registered modular experiment")
+        origin = json.loads(origin_path.read_text())
+        if index.manifest_sha256 not in (origin["original_sha256"], origin["frozen_sha256"]):
+            raise ValueError("resume manifest differs from the registered original/frozen manifest")
+        frozen_path = output / "reproduce" / "source-manifest.json"
+        if file_sha256(frozen_path) != origin["frozen_sha256"]:
+            raise ValueError("frozen registered manifest changed")
+        source_root = Path(__file__).resolve().parent.parent
+        for name in SOURCE_FILES:
+            if file_sha256(source_root / name) != file_sha256(
+                output / "reproduce" / "source" / name
+            ):
+                raise ValueError(f"registered resume implementation changed: {name}")
+        index = ObservationIndex(frozen_path)
+        _json(
+            output / "reproduce" / f"resume-attempt-{time.time_ns()}.json",
+            {
+                "manifest": str(frozen_path),
+                "resume_snapshot_sha256": file_sha256(output / "resume.pt"),
+                "device": getattr(args, "device", None) or "cpu",
+            },
+        )
+    else:
+        index = _register_run(index, output, args, registry)
     device = getattr(args, "device", None) or "cpu"
     try:
-        summary = fit_index(index, output, device=device)
+        summary = fit_index(index, output, device=device, resume=resume)
     except Exception as error:
-        _json(output / "failure.json", {"type": type(error).__name__, "message": str(error)})
+        failure = {"type": type(error).__name__, "message": str(error)}
+        _json(output / "failures" / f"{time.time_ns()}.json", failure)
+        if not (output / "failure.json").exists():
+            _json(output / "failure.json", failure)
         raise
     narrative = (
         "# Modular directly supervised fit\n\n"
@@ -767,8 +942,10 @@ def run_manifest(args):
         "`coverage.json` separates genuine gradients from parameter movement.\n"
     )
     (output / "README.md").write_text(narrative + "\n" + _metric_table(summary))
-    with registry.REGISTRY_MD.open("a") as stream:
-        stream.write(
+    heading = f"\n#### Closure: {output.name}\n"
+    existing = registry.REGISTRY_MD.read_text() if registry.REGISTRY_MD.exists() else ""
+    if heading not in existing:
+        closure = (
             f"\n#### Closure: {output.name}\n\n"
             f"Agent: Codex. Results: [{output.name}/summary.json]({output.name}/summary.json). "
             f"Selected epoch {summary['selected_epoch']}; {summary['steps']} updates; "
@@ -778,4 +955,5 @@ def run_manifest(args):
             f"{index.manifest.get('training', {}).get('no_test_reason')}.\n\n"
             + _metric_table(summary)
         )
+        atomic_bytes(registry.REGISTRY_MD, (existing + closure).encode())
     return summary

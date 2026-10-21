@@ -488,3 +488,6 @@ Keep applicability reporting separate from model features and the measured label
   and the full objective. Auxiliary classification success does not establish
   assay learning. Use a supplied-metadata assay-only control to test transfer,
   and distinguish detached classifier inputs from freezing their shared encoder.
+- Build focused pytest commands from actual `rg --files tests` results or a
+  verified file glob. A plausible test filename can stop collection entirely;
+  an invocation reporting no tests supplies no verification evidence.
