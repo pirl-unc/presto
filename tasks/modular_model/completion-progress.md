@@ -351,3 +351,11 @@ account for per-species and per-component performance and the restricted test
 domain. Source admission is complete for this bounded contract; calibration,
 paired MHC/TCR sources, useful auxiliary transfer and all broader biological
 qualification requirements remain open.
+
+Publication closure: `42eefec3a5aaba008fb7cc1740a9c6bae1362017` has four successful
+exact-head GitHub checks, including both test/distribution jobs. The next
+registered work is full eligible purified IC50 admission with raw bounds,
+original-outcome deduplication and preserved historical partitions. Its adapter
+and recipe add 45 checks; all 199 focused modular/CLI/docs checks pass. This
+preparation keeps independent disagreeing measurements and does not carry over
+the 32-row capacity diagnostic's consistency filter. No full-cohort fit has run.

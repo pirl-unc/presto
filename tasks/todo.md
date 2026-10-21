@@ -12060,7 +12060,7 @@ cohort, verify canonical loading/training, support checks and checkpoint behavio
 - [x] Encode only present chains and mask unavailable pair outputs in forward/inference.
 - [x] Guard annotated-chain overlap across splits and verify full/partial training/transfer.
 - [x] Run focused/broad verification and document the exact supported scope.
-- [ ] Publish the single-chain source and inspect its exact-head CI.
+- [x] Publish the single-chain source and inspect its exact-head CI.
 
 Focused verification: 154 modular/CLI/docs checks pass in 17.13 seconds, including
 17 new single-chain cases. The original MHC single-chain case fails before this
@@ -12087,7 +12087,7 @@ admitted or used for training under this new contract.
 - [x] Execute the frozen data-only recipe and conserve every raw-row disposition.
 - [x] Independently replay species labels, every alias and component/split assignment.
 - [x] Preserve cohort hashes, concentration diagnostics, full writeup and canonical log.
-- [ ] Publish the admission bundle with the single-chain implementation.
+- [x] Publish the admission bundle with the single-chain implementation.
 
 Clean recipe `1b218e7` admits 13,218 unique single-groove species annotations from
 56,440 raw rows; all 33,696 source-domain aliases replay independently. There are
@@ -12097,3 +12097,27 @@ for 91.95% of human test annotations, so this is explicitly not a statistical
 qualification. No model was fitted, no paired labels were fabricated, and the
 frozen split was not adjusted. The separate registered family is closed with all
 artifacts and limitations; its source data do not prove auxiliary affinity benefit.
+
+Published head `42eefec3a5aaba008fb7cc1740a9c6bae1362017` has all four successful
+CI jobs, including both test/distribution-build jobs and both documentation jobs.
+
+### Full eligible purified IC50 source admission
+
+Follow the [prospective data contract](../experiments/agents/codex/plans/full-ic50-admission.md).
+The supplied-metadata assay-only comparison must proceed independently of
+auxiliary qualification. Preserve all independent measurements, raw units/bounds,
+original assay lineage and earlier partition exposure; no 32-row consistency filter.
+
+- [x] Implement strict pinned-catalog and raw Hitlist IC50 conversion with targeted checks.
+- [x] Register/freeze the full-cohort admission recipe before execution.
+- [ ] Prepare exact-only/exact-plus-censored manifests with identical held-out observations.
+- [ ] Independently replay source labels, aliases and grouping; close the data family.
+- [ ] Register and execute the subsequent matched fitting/baseline comparison.
+
+The adapter and recipe have 45 new contract checks; all 199 modular/CLI/docs
+checks pass in 14.61 seconds. Cases cover raw exact/censored values and units,
+ambiguous catalog assignments, actual alpha/beta inputs, original-outcome copies
+versus independent disagreement, target-blind grouping and historical exposure.
+Repository Ruff passes for 346 Python files; the experiment launcher is separately
+linted/formatted despite repository experiment exclusions. Real preparation has
+not yet executed; prospective registration and source freezing precede it.
