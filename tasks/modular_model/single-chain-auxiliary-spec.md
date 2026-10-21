@@ -33,6 +33,10 @@ its requirement for a full resolved molecular pair.
    transfer, retained/frozen dependency validation and prediction support checks.
    Parameter shapes remain unchanged; do not migrate an old head to a new shape
    or treat incidental encoder exposure as directly supervised output support.
+6. Across auxiliary train/validation/test partitions, reject a repeated nonempty
+   MHC groove or TCR chain even when the partner or slot changes. Full/partial
+   views may coexist within one split. This is an exact-sequence exposure check;
+   homology grouping and annotation-to-assay exposure require separate audits.
 
 ## Verification and follow-on data preparation
 

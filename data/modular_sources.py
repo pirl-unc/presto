@@ -239,6 +239,7 @@ class ObservationIndex:
         self.partitions: dict[str, list[int]] = {}
         self.census = Counter()
         ids, groups, peptides, identities, measurements = set(), {}, {}, {}, {}
+        identity_chains = {}
         self.source_paths = []
         self.file_states = {}
         self.label_policies = {}
@@ -297,6 +298,21 @@ class ObservationIndex:
                                 peptides, observation.peptide, observation.split, "peptide"
                             )
                         if observation.endpoint == "identity":
+                            # Changing a partner must not hide an identical chain's
+                            # exposure across auxiliary annotation partitions.
+                            chains = [
+                                ("mhc", value)
+                                for mhc in observation.mhc
+                                for value in (mhc.groove1, mhc.groove2)
+                            ] + [("tcr", observation.tcr_a), ("tcr", observation.tcr_b)]
+                            for family, value in chains:
+                                if value:
+                                    self._disjoint(
+                                        identity_chains,
+                                        (family, value),
+                                        observation.split,
+                                        "identity chain",
+                                    )
                             key = tuple((x.groove1, x.groove2) for x in observation.mhc) + (
                                 observation.tcr_a,
                                 observation.tcr_b,

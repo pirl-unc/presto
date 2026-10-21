@@ -18,6 +18,7 @@ from ..data.modular import (
     observation_target,
     identity_head,
     identity_vocabulary,
+    has_identity_input,
 )
 from ..models.modular import MODEL_VERSION, ModularConfig, ModularPresto, Prediction
 from ..models.modular_support import feature_inputs, record_feature_updates
@@ -34,6 +35,8 @@ def identity_targets(row: Observation, model: ModularPresto) -> dict[str, int]:
         head = identity_head(name)
         if head is None or head not in model.config.identity_tasks:
             raise ValueError(f"unsupported identity label: {name}")
+        if not has_identity_input(row, name):
+            raise ValueError(f"identity input missing for {name}")
         vocabulary = identity_vocabulary(name, model.config.species, model.config.source_categories)
         if label not in vocabulary:
             raise ValueError(f"identity label {name}={label} outside declared vocabulary")

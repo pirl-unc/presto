@@ -25,6 +25,7 @@ from ..data.modular import (
     Observation,
     MachineryProfile,
     identity_vocabulary,
+    has_identity_input,
     endpoint_spec,
     is_endpoint,
 )
@@ -447,7 +448,9 @@ class ModularPresto(nn.Module):
                     sequences[value] = None
             pmhc = route in ("pmhc", "cellular", "tcr", "tcr_cellular", "identity")
             for mhc in row.mhc if pmhc else ():
-                sequences[mhc.groove1] = sequences[mhc.groove2] = None
+                for value in (mhc.groove1, mhc.groove2):
+                    if value:
+                        sequences[value] = None
                 known = mhc.class_override or mhc.mhc_class
                 if row.peptide and "II" in self.config.mhc_classes and known != "I":
                     for start in range(max(0, len(row.peptide) - 8)):
@@ -483,21 +486,23 @@ class ModularPresto(nn.Module):
                     [logits[index] * 0, logits[index]]
                 )
         if mhc is not None:
-            if "mhc_class" in self.identity_heads:
+            if "mhc_class" in self.identity_heads and mhc.groove1 and mhc.groove2:
                 result["mhc_class"] = self.identity_heads["mhc_class"](
                     torch.cat([encoded[mhc.groove1], encoded[mhc.groove2]])
                 )
             if "mhc_species" in self.identity_heads:
                 for name, value in (("mhc1", mhc.groove1), ("mhc2", mhc.groove2)):
-                    result[name] = self.identity_heads["mhc_species"](encoded[value])
-            if "mhc_pairing" in self.identity_heads:
+                    if value:
+                        result[name] = self.identity_heads["mhc_species"](encoded[value])
+            if "mhc_pairing" in self.identity_heads and mhc.groove1 and mhc.groove2:
                 result["mhc_pairing"] = self.identity_heads["mhc_pairing"](
                     torch.cat([encoded[mhc.groove1], encoded[mhc.groove2]])
                 )
-        if row.tcr_a and row.tcr_b:
-            if "tcr_species" in self.identity_heads:
-                for name in ("tcr_a", "tcr_b"):
+        if "tcr_species" in self.identity_heads:
+            for name in ("tcr_a", "tcr_b"):
+                if getattr(row, name):
                     result[name] = self.identity_heads["tcr_species"](encoded[getattr(row, name)])
+        if row.tcr_a and row.tcr_b:
             if "tcr_lineage" in self.identity_heads:
                 result["tcr_lineage"] = self.identity_heads["tcr_lineage"](
                     torch.cat([encoded[row.tcr_a], encoded[row.tcr_b]])
@@ -542,7 +547,7 @@ class ModularPresto(nn.Module):
             threshold=self.config.identity_threshold,
         )
         class_field = None
-        if mhc is not None:
+        if mhc is not None and mhc.groove1 and mhc.groove2:
             class_field = resolve_field(
                 ("I", "II"),
                 supplied=mhc.mhc_class,
@@ -960,12 +965,9 @@ class ModularPresto(nn.Module):
     def predict(self, rows: Sequence[Observation]) -> list[Prediction]:
         """Inference refuses random requested outputs; qualification stays visible."""
         for row in rows:
+            row.validate(self.config.max_length)
             relevant_identity = tuple(
-                name
-                for name in self.config.identity_tasks
-                if (name.startswith("mhc") and row.mhc)
-                or (name.startswith("tcr") and row.tcr_a and row.tcr_b)
-                or (name == "peptide_source" and row.peptide)
+                name for name in self.config.identity_tasks if has_identity_input(row, name)
             )
             requested = (
                 relevant_identity
@@ -1008,20 +1010,11 @@ class ModularPresto(nn.Module):
         required = {name for name, _ in self.named_parameters() if name.startswith("encoder.")}
         prefixes = set()
         for row in rows:
-            if row.peptide and "peptide_source" in self.identity_heads:
-                prefixes.add("identity_heads.peptide_source.")
-            if row.mhc:
-                prefixes.update(
-                    f"identity_heads.{task}."
-                    for task in self.config.identity_tasks
-                    if task.startswith("mhc")
-                )
-            if row.tcr_a and row.tcr_b:
-                prefixes.update(
-                    f"identity_heads.{task}."
-                    for task in self.config.identity_tasks
-                    if task.startswith("tcr")
-                )
+            prefixes.update(
+                f"identity_heads.{task}."
+                for task in self.config.identity_tasks
+                if has_identity_input(row, task)
+            )
             if row.endpoint == "identity":
                 continue
             route = endpoint_spec(row.endpoint).route

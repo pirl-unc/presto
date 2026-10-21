@@ -12044,3 +12044,25 @@ comparison-launch path. All 137 focused modular/CLI/documentation tests pass in
 17.15 seconds, including the new dependency-boundary regression. Repository and
 explicit launcher Ruff checks pass. Recorded fit sources/results remain frozen;
 the canonical model/trainer code did not change in this CI correction.
+
+### Genuine single-chain auxiliary inputs
+
+Implement [the prospective specification](modular_model/single-chain-auxiliary-spec.md).
+Reuse existing species heads/sequence slots and allocate no invented partners.
+Pair-level and assay requirements remain strict. Before preparing a real catalog
+cohort, verify canonical loading/training, support checks and checkpoint behavior.
+
+- [x] Admit explicit partial MHC/TCR auxiliary observations with target-specific requirements.
+- [x] Encode only present chains and mask unavailable pair outputs in forward/inference.
+- [x] Guard annotated-chain overlap across splits and verify full/partial training/transfer.
+- [ ] Run focused/broad verification, document the exact supported scope and publish.
+
+Focused verification: 154 modular/CLI/docs checks pass in 17.13 seconds, including
+17 new single-chain cases. The original MHC single-chain case fails before this
+change. A direct old/new model comparison with identical weights gives exact
+complete-pair output/diagnostic equality on nine class-I/class-II/inferred-class
+annotation, IC50 and TCR-binding requests. Inference still rejects untrained
+annotation heads used inside multi-MHC bags. The added bag fixture initially used
+an invalid endpoint spelling; the corrected canonical endpoint passes. Pinned
+Ruff lint/format and diff checks pass. Real catalog cohorts/calibration remain
+separate work; this change adds no parameters or scientific performance claim.

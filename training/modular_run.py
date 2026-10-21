@@ -166,12 +166,6 @@ def preflight(index: ObservationIndex):
         if row.endpoint == "identity":
             targets = identity_targets(row, validator)
             for name in targets:
-                if name.startswith("mhc") and not row.mhc:
-                    raise ValueError("MHC identity label without grooves")
-                if name.startswith("tcr") and not (row.tcr_a and row.tcr_b):
-                    raise ValueError("TCR identity label without both chains")
-                if name.startswith("peptide_source:") and not row.peptide:
-                    raise ValueError("peptide source label without a peptide")
                 if row.split == "train":
                     counts[identity_head(name)] += 1
                     label_values[identity_head(name)].add(row.identity_labels[name])

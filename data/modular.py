@@ -60,6 +60,26 @@ def identity_vocabulary(name: str, species=(), source_categories=()) -> tuple[st
     raise ValueError(f"unsupported auxiliary outcome: {name}")
 
 
+def has_identity_input(row: Observation, name: str) -> bool:
+    """Availability of a supervised output, distinct from its label/support."""
+    mhc = row.mhc[0] if len(row.mhc) == 1 else None
+    if name in ("mhc1", "mhc2"):
+        return bool(mhc and (mhc.groove1 if name == "mhc1" else mhc.groove2))
+    if name == "mhc_species":
+        return any(mhc.groove1 or mhc.groove2 for mhc in row.mhc)
+    if name in ("mhc_class", "mhc_pairing"):
+        return any(mhc.groove1 and mhc.groove2 for mhc in row.mhc)
+    if name in ("tcr_a", "tcr_b"):
+        return bool(getattr(row, name))
+    if name == "tcr_species":
+        return bool(row.tcr_a or row.tcr_b)
+    if name in ("tcr_lineage", "tcr_pairing"):
+        return bool(row.tcr_a and row.tcr_b)
+    if name == "peptide_source" or name.startswith("peptide_source:"):
+        return bool(row.peptide)
+    return False
+
+
 @dataclass(frozen=True)
 class Endpoint:
     route: str
@@ -131,9 +151,11 @@ class MHCInput:
     species2: str | None = None
     provenance: dict[str, Any] = field(default_factory=dict)
 
-    def validate(self, max_length: int = 512) -> None:
-        sequence(self.groove1, max_length=max_length)
-        sequence(self.groove2, max_length=max_length)
+    def validate(self, max_length: int = 512, *, allow_partial: bool = False) -> None:
+        sequence(self.groove1, required=not allow_partial, max_length=max_length)
+        sequence(self.groove2, required=not allow_partial, max_length=max_length)
+        if not (self.groove1 or self.groove2):
+            raise ValueError("at least one actual MHC groove sequence required")
         for value in (self.mhc_class, self.class_override):
             if value is not None and value not in ("I", "II"):
                 raise ValueError(f"unsupported MHC class: {value}")
@@ -293,7 +315,7 @@ class Observation:
         if self.qualifier not in ("=", "<", "<=", ">", ">="):
             raise ValueError("unsupported qualifier")
         for candidate in self.mhc:
-            candidate.validate(max_length)
+            candidate.validate(max_length, allow_partial=self.endpoint == "identity")
         self.context.validate(max_length)
         if self.value_encoding not in ("linear", "log2", "log10"):
             raise ValueError("unsupported raw value encoding")
@@ -309,10 +331,15 @@ class Observation:
             sequence(self.peptide, required=False, max_length=max_length)
             if self.value is not None:
                 raise ValueError("identity outcomes are labels, not scalar assay values")
-            if not self.peptide and not self.mhc and not (self.tcr_a and self.tcr_b):
-                raise ValueError("identity requires a peptide, MHC grooves or paired receptors")
+            if not self.peptide and not self.mhc and not (self.tcr_a or self.tcr_b):
+                raise ValueError("identity requires a peptide, MHC grooves or receptor sequence")
             if len(self.mhc) > 1:
-                raise ValueError("identity labels require one resolved molecular pair")
+                raise ValueError("identity labels require one molecular input")
+            for name in self.identity_labels:
+                if identity_head(name) is None:
+                    raise ValueError(f"unsupported identity label: {name}")
+                if not has_identity_input(self, name):
+                    raise ValueError(f"identity input missing for {name}")
         else:
             spec = endpoint_spec(self.endpoint)
             route = spec.route

@@ -63,7 +63,8 @@ positions and masked mean pooling. It encodes each sequence independently.
 
 | Requested outcome | Required sequences | Additional admitted inputs |
 | --- | --- | --- |
-| Molecular/chain identity | MHC groove pair or paired TCR chains | Actual identity/pairing labels during training |
+| Per-chain molecular species | Available MHC groove or TCR chain, alone or paired | Actual species label for each present input |
+| MHC class/pairing; TCR pairing/lineage | Complete MHC groove pair or paired TCR chains | Actual class, pairing or phenotyped lineage labels |
 | Peptide source membership | Peptide alone | Reference category labels; categories can overlap |
 | Purified affinity/stability | Peptide, MHC groove 1, MHC groove 2 | Molecular class/species, supplied or inferred |
 | Cellular response/elution | Same pMHC inputs | APC/immune species, independent component states, antigen delivery, source flanks/boundaries |
@@ -77,6 +78,16 @@ Class I groove segments are alpha1 and alpha2 of the heavy chain. Class II
 uses alpha1 of the alpha chain and beta1 of the beta chain. Full-MHC preparation
 uses the existing strict `mhcseqs` extraction; no partner is guessed. Allele IDs,
 study/sample IDs and cell-line names are provenance, never learned embeddings.
+
+Auxiliary observations may contain a single MHC groove or TCR chain. Missing
+partners are not encoded or fabricated; the existing shared species readout
+supervises the present input. Class/pairing/lineage outputs require their full
+input pairs, and targets naming absent inputs fail validation. Every assay still
+requires its complete resolved MHC and, where applicable, paired TCR sequences.
+Single-chain class metadata does not train the paired MHC-class head. Auxiliary
+partitions reject a repeated chain even if its partner or input slot changes;
+this exact-sequence guard does not establish homology independence or a qualified
+species inference domain.
 
 Optional identity heads predict MHC class, per-chain molecular species, TCR
 species and observed CD4/CD8 association. These use actual independent identity
