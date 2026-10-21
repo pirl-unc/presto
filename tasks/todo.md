@@ -12055,7 +12055,8 @@ cohort, verify canonical loading/training, support checks and checkpoint behavio
 - [x] Admit explicit partial MHC/TCR auxiliary observations with target-specific requirements.
 - [x] Encode only present chains and mask unavailable pair outputs in forward/inference.
 - [x] Guard annotated-chain overlap across splits and verify full/partial training/transfer.
-- [ ] Run focused/broad verification, document the exact supported scope and publish.
+- [x] Run focused/broad verification and document the exact supported scope.
+- [ ] Publish the single-chain source and inspect its exact-head CI.
 
 Focused verification: 154 modular/CLI/docs checks pass in 17.13 seconds, including
 17 new single-chain cases. The original MHC single-chain case fails before this
@@ -12066,3 +12067,13 @@ annotation heads used inside multi-MHC bags. The added bag fixture initially use
 an invalid endpoint spelling; the corrected canonical endpoint passes. Pinned
 Ruff lint/format and diff checks pass. Real catalog cohorts/calibration remain
 separate work; this change adds no parameters or scientific performance claim.
+
+Full regression on immutable application/test source `e6cb835` passes: 2,502
+passed, four skipped, 1,056 warnings in 323.68 seconds with four workers.
+Strict MkDocs passes. Only the next data-only admission recipe and planning
+documents were added while regression ran; application/test sources were fixed.
+The next [MHC reference admission](../experiments/agents/codex/plans/mhc-reference-admission.md)
+is registered before execution. Its artificial recipe checks pass for actual
+domain-slot preservation, alias collapse, connected original chains, cross-species
+conflict deferral and quality/source-member guards. No real cohort has yet been
+admitted or used for training under this new contract.
