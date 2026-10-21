@@ -18,6 +18,7 @@ import torch
 from ..data.modular import ENDPOINTS, fit_target_scales
 from ..data.modular_sources import ObservationIndex, file_sha256
 from ..models.modular import ModularConfig, ModularPresto
+from ..models.modular_support import feature_report
 from .modular import (
     IDENTITY_HEAD,
     identity_targets,
@@ -41,6 +42,8 @@ DEFAULT_TRAINING = {
     "identity_batch_size": 64,
     "test_policy": "evaluate_selected_once",
     "no_test_reason": None,
+    "coverage_policy": "required",
+    "coverage_exception_reason": None,
 }
 
 
@@ -79,6 +82,13 @@ def preflight(index: ObservationIndex):
         raise ValueError("invalid optimizer or identity replay weights")
     if training["test_policy"] not in ("evaluate_selected_once", "no_test_training_diagnostic"):
         raise ValueError("explicit supported test-use policy required")
+    if training["coverage_policy"] not in ("required", "diagnostic"):
+        raise ValueError("unsupported coverage gate policy")
+    if training["coverage_policy"] == "diagnostic" and (
+        training["test_policy"] != "no_test_training_diagnostic"
+        or not training["coverage_exception_reason"]
+    ):
+        raise ValueError("coverage exception requires a justified, declared no-test diagnostic")
     if training["test_policy"] == "no_test_training_diagnostic":
         if not training["no_test_reason"] or any(
             key.startswith("test:") for key in index.partitions
@@ -93,6 +103,7 @@ def preflight(index: ObservationIndex):
             )
     scales = fit_target_scales(index)
     counts, label_values, feature_states = Counter(), defaultdict(set), defaultdict(set)
+    observed_features = {"acquisition": set(), "observation": set()}
     assay_classes, has_multi_register = set(), False
     heldout_multi_register = False
     # Label and capability inspection is sequence-only; no training or random model scores.
@@ -119,6 +130,8 @@ def preflight(index: ObservationIndex):
                     row.context.acquisition_units,
                     config.acquisition_units,
                 )
+                if row.split == "train":
+                    observed_features["acquisition"].update(row.context.acquisition)
             if row.endpoint in ("bulk_observation", "elution_observation"):
                 validator._covariates(
                     config.observation_features,
@@ -126,6 +139,8 @@ def preflight(index: ObservationIndex):
                     row.context.observation_units,
                     config.observation_units,
                 )
+                if row.split == "train":
+                    observed_features["observation"].update(row.context.observation)
             if route in ("bulk", "digest") and row.context.enzyme is not None:
                 if row.context.enzyme not in config.enzymes:
                     raise ValueError("enzyme outside checkpoint vocabulary")
@@ -162,8 +177,17 @@ def preflight(index: ObservationIndex):
         if not index.partitions.get("train:identity") or training["identity_weight"] <= 0:
             raise ValueError("fine-tuning the shared encoder requires explicit identity replay")
     for name, states in feature_states.items():
-        if len(states) < 2 or states <= {"unknown", "reference"}:
+        if len(states - {"unknown", "reference"}) < 2:
             raise ValueError(f"component effect lacks contrasted training states: {name}")
+    for family, configured in (
+        ("acquisition", config.acquisition_features),
+        ("observation", config.observation_features),
+    ):
+        missing = set(configured) - observed_features[family]
+        if missing:
+            raise ValueError(
+                f"{family} features have no observed training values: {sorted(missing)}"
+            )
     pruning = []
     if validator.has_pmhc:
         if set(config.mhc_classes) - assay_classes:
@@ -185,6 +209,9 @@ def preflight(index: ObservationIndex):
             "component_states": {key: sorted(value) for key, value in feature_states.items()},
             "manifest_sha256": index.manifest_sha256,
             "module_pruning": pruning,
+            "observed_numeric_features": {
+                key: sorted(value) for key, value in observed_features.items()
+            },
         },
     )
 
@@ -279,6 +306,8 @@ def fit_index(index, output_dir, *, device="cpu"):
         order = list(base_indices)
         rng.shuffle(order)
         epoch_losses = []
+        epoch_exposures = Counter()
+        processed = 0
         for start in range(0, len(order), training["batch_size"]):
             selected = order[start : start + training["batch_size"]]
             rows = [index[i] for i in selected]
@@ -301,6 +330,8 @@ def fit_index(index, output_dir, *, device="cpu"):
             )
             _accumulate_coverage(coverage, step)
             exposures.update(step["counts"])
+            epoch_exposures.update(step["counts"])
+            processed += len(selected)
             epoch_losses.append(step["loss"])
             steps += 1
             if training["max_steps"] is not None and steps >= training["max_steps"]:
@@ -339,6 +370,8 @@ def fit_index(index, output_dir, *, device="cpu"):
                 "training_loss": sum(epoch_losses) / len(epoch_losses),
                 "validation": validation_metrics,
                 "selected": improved,
+                "complete_epoch": processed == len(order),
+                "label_exposures": dict(epoch_exposures),
             }
         )
         _json(output_dir / "history.json", history)
@@ -388,6 +421,19 @@ def fit_index(index, output_dir, *, device="cpu"):
         for name, evidence in selected_coverage.items()
         if not evidence["gradient_and_update_steps"]
     ]
+    features = feature_report(selected)
+    missing_features = {
+        name: value["exposed_without_update"]
+        for name, value in features.items()
+        if value["exposed_without_update"]
+    }
+    coverage_gate = {
+        "status": "failed" if unsupported or missing_features else "passed",
+        "untrained_parameters": unsupported,
+        "exposed_features_without_updates": missing_features,
+        "policy": training["coverage_policy"],
+        "exception_reason": training["coverage_exception_reason"],
+    }
     summary = {
         "metrics": metrics,
         "overall_losses": overall_losses,
@@ -398,13 +444,23 @@ def fit_index(index, output_dir, *, device="cpu"):
         "unique_training_labels": admission["training_labels"],
         "support": selected.support,
         "untrained_selected_parameters": unsupported,
+        "coverage_gate": coverage_gate,
         "qualification": "not_qualified",
         "test_policy": training["test_policy"],
         "device": device,
         "gpu": torch.cuda.get_device_name() if str(device).startswith("cuda") else None,
     }
     _json(output_dir / "summary.json", summary)
-    _json(output_dir / "coverage.json", {"all_steps": coverage, "selected": selected_coverage})
+    _json(
+        output_dir / "coverage.json",
+        {
+            "all_steps": coverage,
+            "selected": selected_coverage,
+            "input_features": features,
+        },
+    )
+    if coverage_gate["status"] == "failed" and training["coverage_policy"] == "required":
+        raise ValueError("training coverage gate failed; inspect summary.json and coverage.json")
     return summary
 
 
@@ -517,7 +573,10 @@ def run_manifest(args):
         "data/modular.py",
         "data/modular_context.py",
         "data/modular_sources.py",
+        "data/modular_lineage.py",
+        "data/modular_preparation.py",
         "models/modular.py",
+        "models/modular_support.py",
         "models/encoders.py",
         "training/modular.py",
         "training/modular_run.py",

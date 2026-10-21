@@ -474,3 +474,12 @@ Keep applicability reporting separate from model features and the measured label
 - Retain concurrent component losses, unknown/control distinctions and matched cellular outcomes. Keep purified binding invariant to APC state.
 - Separate digestion from shared MS response; a combined observation fit does not establish independently calibrated detectability.
 - Compile only modules reachable from a declared subset; preserve labels, missingness, evidence tiers and coverage in one canonical path.
+- Audit a PR against the frozen issue, not a narrower implementation handoff.
+  Separate executable architecture, source preparation, enforced training gates
+  and demonstrated predictive quality before declaring a milestone delivered.
+- A nonzero gradient for a named weight tensor does not establish support for
+  every input column or category. Audit feature/state exposure and guard unseen
+  effects; an untrained-parameter report is not an enforced closure gate.
+- The full requested pretraining/context/MS/TCR architecture remains the objective.
+  An IC50 diagnostic isolates a failure mode; it must not replace the requested
+  system or silently remove explicitly requested auxiliary supervision.

@@ -25,8 +25,9 @@ from ..data.modular import (
 )
 from ..data.modular_context import resolve_components, resolve_field, resolve_species
 from .encoders import SequenceEncoder
+from .modular_support import feature_inputs, feature_layout
 
-MODEL_VERSION = "presto.modular.v1"
+MODEL_VERSION = "presto.modular.v2"
 
 
 @dataclass(frozen=True)
@@ -251,6 +252,9 @@ class ModularPresto(nn.Module):
             else:
                 self.heads[name] = nn.Linear(128, 1)
         self.trained_parameters: set[str] = set()
+        self.feature_layout = feature_layout(self)
+        self.trained_features = {name: set() for name in self.feature_layout}
+        self.exposed_features = {name: set() for name in self.feature_layout}
         self.support = {
             name: {"status": "random/untrained", "observations": 0, "validation": "not_evaluated"}
             for name in (*config.endpoints, *config.identity_tasks)
@@ -273,16 +277,30 @@ class ModularPresto(nn.Module):
     def _encode(self, rows: Sequence[Observation]) -> dict[str, torch.Tensor]:
         sequences: dict[str, None] = {}
         for row in rows:
-            for value in (row.peptide, row.tcr_a, row.tcr_b):
+            route = ENDPOINTS[row.endpoint].route if row.endpoint != "identity" else "identity"
+            receptor = route in ("tcr", "tcr_cellular") or any(
+                name.startswith("tcr") for name in self.config.identity_tasks
+            )
+            for value in (
+                row.peptide,
+                row.tcr_a if receptor else "",
+                row.tcr_b if receptor else "",
+            ):
                 if value:
                     sequences[value] = None
-            for mhc in row.mhc:
+            pmhc = route in ("pmhc", "cellular", "tcr", "tcr_cellular", "identity")
+            for mhc in row.mhc if pmhc else ():
                 sequences[mhc.groove1] = sequences[mhc.groove2] = None
                 known = mhc.class_override or mhc.mhc_class
                 if row.peptide and "II" in self.config.mhc_classes and known != "I":
                     for start in range(max(0, len(row.peptide) - 8)):
                         sequences[row.peptide[start : start + 9]] = None
-            if self.config.source_context:
+            if self.config.source_context and route in (
+                "cellular",
+                "tcr_cellular",
+                "bulk",
+                "digest",
+            ):
                 for value in (row.context.source_n, row.context.source_c):
                     if value:
                         sequences[value] = None
@@ -695,7 +713,7 @@ class ModularPresto(nn.Module):
         was_training = self.training
         try:
             self.eval()
-            with torch.no_grad():
+            with torch.no_grad(), feature_inputs(self, enforce=True):
                 result = self(rows)
                 for output in result:
                     output.diagnostics["support"] = self.capabilities()

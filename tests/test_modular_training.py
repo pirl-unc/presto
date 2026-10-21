@@ -18,6 +18,7 @@ from presto.data.modular_sources import (
     scoped_bulk_observation,
     write_observations,
 )
+from presto.data.modular_preparation import prepare_observations
 from presto.training.modular_evaluation import binary_metrics, regression_metrics
 from presto.training.modular_run import fit_index, preflight, run_manifest
 
@@ -35,6 +36,7 @@ def fixture_manifest(tmp_path):
             unit="nM",
             split=("train", "validation", "test")[i // 2],
             group_id=f"g{i}",
+            provenance={"original_measurement_id": f"measured-r{i}"},
         )
         for i, peptide in enumerate(peptides)
     ]
@@ -267,4 +269,133 @@ def test_single_core_classii_subset_prunes_unreachable_pooling(tmp_path):
     manifest["model"]["mhc_classes"] = ["I", "II"]
     path.write_text(json.dumps(manifest))
     with pytest.raises(ValueError, match="no admitted assay training support"):
+        preflight(ObservationIndex(path))
+
+
+def test_training_closure_fails_with_an_untouched_allocated_head(tmp_path):
+    path, rows = fixture_manifest(tmp_path)
+    rows = [
+        replace(row, split="train", endpoint="kd" if i % 2 else "ic50", value=10 ** (i + 1))
+        for i, row in enumerate(rows)
+    ]
+    data_path = tmp_path / "rows.jsonl"
+    data_path.unlink()
+    receipt = write_observations(data_path, rows)
+    manifest = json.loads(path.read_text())
+    manifest["model"]["endpoints"] = ["ic50", "kd"]
+    manifest["training"] = {
+        "max_epochs": 1,
+        "max_steps": 1,
+        "batch_size": 1,
+        "test_policy": "no_test_training_diagnostic",
+        "no_test_reason": "software closure regression",
+    }
+    manifest["sources"][0]["sha256"] = receipt["sha256"]
+    path.write_text(json.dumps(manifest))
+    output = tmp_path / "failed-coverage"
+    with pytest.raises(ValueError, match="training coverage gate failed"):
+        fit_index(ObservationIndex(path), output)
+    summary = json.loads((output / "summary.json").read_text())
+    assert summary["coverage_gate"]["status"] == "failed"
+    assert any(name.startswith("heads.") for name in summary["untrained_selected_parameters"])
+
+
+def test_distinct_export_ids_cannot_duplicate_one_measured_outcome(tmp_path):
+    path, rows = fixture_manifest(tmp_path)
+    first = replace(rows[0], provenance={"original_measurement_id": "original-assay"})
+    duplicate = replace(first, observation_id="another-export-id")
+    data_path = tmp_path / "rows.jsonl"
+    data_path.unlink()
+    receipt = write_observations(data_path, [first, duplicate, *rows[1:]])
+    manifest = json.loads(path.read_text())
+    manifest["sources"][0]["sha256"] = receipt["sha256"]
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="duplicate measured outcome"):
+        ObservationIndex(path)
+
+
+def test_preparation_deduplicates_lineage_and_preserves_independent_replicates(tmp_path):
+    path, rows = fixture_manifest(tmp_path)
+    provenance = {"measurement_lineage": {"namespace": "original-study", "measurement_id": "m1"}}
+    original = replace(rows[0], provenance=provenance)
+    duplicate = replace(
+        original, observation_id="copy", source="second-export", group_id="alias-group"
+    )
+    replicate = replace(
+        original,
+        observation_id="independent",
+        value=2000,
+        provenance={
+            "measurement_lineage": {
+                **provenance["measurement_lineage"],
+                "replicate_id": "replicate-2",
+            },
+        },
+    )
+    report = prepare_observations(
+        [original, duplicate, replicate, *rows[1:]],
+        tmp_path / "prepared",
+        population="software fixture",
+        label_policy="artificial measurements",
+        split_policy="frozen synthetic groups",
+    )
+    assert report["dispositions"] == {"admitted": 7, "duplicate": 1}
+    assert report["independent_input_contradictions"] == 1
+    manifest = json.loads(path.read_text())
+    manifest["sources"] = report["sources"]
+    path.write_text(json.dumps(manifest))
+    index = ObservationIndex(path)
+    assert len(index) == 7
+    admitted = next(
+        row for row in index if row.provenance.get("group_aliases") == ["alias-group", "g0"]
+    )
+    assert len(admitted.provenance["export_aliases"]) == 2
+    assert preflight(index)[3]["training_labels"]["ic50"] == 3
+
+
+def test_preparation_reports_invalid_missing_and_conflicting_records(tmp_path):
+    _, rows = fixture_manifest(tmp_path)
+    invalid = replace(rows[0], observation_id="invalid", peptide="INVALID?")
+    missing = replace(rows[1], observation_id="missing", value=None)
+    conflicting = replace(rows[0], observation_id="conflicting-copy", value=999)
+    no_lineage = replace(rows[1], observation_id="no-lineage", provenance={})
+    report = prepare_observations(
+        [rows[0], conflicting, invalid, missing, no_lineage, rows[2]],
+        tmp_path / "prepared",
+        population="software fixture",
+        label_policy="artificial measurements",
+        split_policy="frozen",
+    )
+    assert report["dispositions"] == {"deferred": 4, "excluded": 1, "admitted": 1}
+    dispositions = [
+        json.loads(line)
+        for line in (tmp_path / "prepared/dispositions.jsonl").read_text().splitlines()
+    ]
+    assert len(dispositions) == 6
+    assert (
+        dispositions[0]["reason"]
+        == dispositions[1]["reason"]
+        == "conflicting exports of one measured outcome"
+    )
+    assert dispositions[2]["raw"]["peptide"] == "INVALID?"
+
+
+def test_preflight_rejects_configured_but_unobserved_numeric_features(tmp_path):
+    path, rows = fixture_manifest(tmp_path)
+    rows = [
+        replace(row, endpoint="ms_response", value=i % 2, unit="binary", mhc=())
+        for i, row in enumerate(rows)
+    ]
+    data_path = tmp_path / "rows.jsonl"
+    data_path.unlink()
+    receipt = write_observations(data_path, rows)
+    manifest = json.loads(path.read_text())
+    manifest["sources"][0]["sha256"] = receipt["sha256"]
+    manifest["model"] = {
+        "endpoints": ["ms_response"],
+        "acquisition_features": ["energy"],
+        "acquisition_units": {"energy": "eV"},
+    }
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="no observed training values"):
         preflight(ObservationIndex(path))

@@ -11852,3 +11852,46 @@ unsupported declared assay branches; focused checks cover this amendment.
 At this review checkpoint, PR #131 is a draft awaiting exact-head CI. Its live
 review/CI status is authoritative on GitHub. See
 [implementation review](modular_model/implementation-review.md).
+
+## Review PR #131 against the frozen plan — 2026-10-20
+
+Review specification: compare the published head `6f935093` with every major
+requirement in frozen issue #130, using executable paths and tests as evidence.
+Separate implemented software, incomplete implementation, deliberately deferred
+experiments/data, and unsupported features. Do not equate passing software tests
+with trained coverage or predictive quality. Preserve the frozen issue and avoid
+model changes during this review.
+
+- [x] Inspect architecture, source preparation, training, inference and tests.
+- [x] Identify material deviations and their user-visible consequences.
+- [x] Record a requirement/status matrix with precise code references.
+- [x] Reconcile the earlier completion wording and report the next priorities.
+
+Review results: [plan-conformance audit](modular_model/plan-conformance-review.md).
+Architecture broadly follows the spec; milestone A is partial and real-data
+milestones remain unperformed. Three synthetic software counterexamples confirm
+unused feature columns escaping training guards, accepted untrained-head closure,
+and duplicate source lineage counted under different export IDs. All four checks
+on the reviewed GitHub head have succeeded. No model implementation was changed.
+
+## Complete the holistic model — active goal, 2026-10-20
+
+Specification: [completion addendum](modular_model/completion-spec.md). Read the
+user attachment and preserve the full requested architecture and evidence scope.
+
+- [x] Revalidate PR/worktree and read the attachment, local instructions and lessons.
+- [x] Write the complete scope, decisions, evidence requirements and delivery order.
+- [x] Fix feature/category training support and enforce run-closure gates.
+- [ ] Implement source lineage deduplication, dispositions and leakage reports.
+- [ ] Complete peptide-source/MHC/TCR pretraining outputs and override semantics.
+- [ ] Complete cell-type/cytokine/profile context and quantitative processing/MS outputs.
+- [ ] Wire and pin actual Hitlist/Weirdo/identity/MS/TCR sources and qualified cohorts.
+- [ ] Complete subset continuation, freezing, resume and qualified-serving gates.
+- [ ] Complete diagnostics, baselines and executable scientific gates.
+- [ ] Run/close registered real-data fitting, validation and transfer experiments.
+- [ ] Verify final code/docs/checkpoints, update PR and inspect final-head CI.
+
+Completion remains unproven until every requirement has authoritative evidence.
+Progress and exact verification: [completion progress](modular_model/completion-progress.md).
+Lineage preparation is implemented; source-specific cohort wiring and broader
+biological-independence audits remain part of the unfinished preparation item.

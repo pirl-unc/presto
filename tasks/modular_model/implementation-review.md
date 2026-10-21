@@ -1,5 +1,11 @@
 # First implementation review
 
+Superseded for completion status by the
+[plan-conformance audit](plan-conformance-review.md). The neural foundation below
+is implemented, but milestone A remains partial: source preparation and feature-
+level support/closure guarantees are incomplete. No real-data quality gate has
+passed. Exact published-head PR and push CI subsequently succeeded.
+
 - Planning authority: issue #130 and its frozen `issue130.md` copy/receipt.
 - Implementation PR: https://github.com/pirl-unc/presto/pull/131
 - Base: `ee4ad60f9750996a4a8e0ecda73e84f583085dd1`.

@@ -402,7 +402,8 @@ def test_inference_units_and_candidate_library_ranking(tmp_path):
     receptor = row(
         "tcr_binding", tcr_a="ACDEFGHIKLMN", tcr_b="PQRSTVWYACDE", value=1, unit="binary"
     )
-    train_step(network, optimizer, [row(), receptor], scale())
+    other = replace(receptor, observation_id="r2", peptide="LMNPQRSTVWYACDE", value=0)
+    train_step(network, optimizer, [row(), receptor, other], scale())
     path = tmp_path / "model.pt"
     save_checkpoint(path, network, scale())
     predictor = ModularPredictor(path)
@@ -486,3 +487,46 @@ def test_bulk_pretraining_extends_to_pmhc_without_inventing_bulk_species_inputs(
     torch.testing.assert_close(extended.ms_fusion[0].weight, pretrained.ms_fusion[0].weight)
     assert extended.capabilities()["components"]["ms_response"]["status"] == "indirectly_trained"
     assert extended.support["elution_observation"]["status"] == "random/untrained"
+
+
+def test_unobserved_feature_columns_cannot_be_activated_at_inference(tmp_path):
+    network = model(
+        endpoints=("ms_response",),
+        acquisition_features=("energy",),
+        acquisition_units={"energy": "eV"},
+    )
+    original = row("ms_response", mhc=(), value=1, unit="binary")
+    optimizer = torch.optim.AdamW(network.parameters(), lr=3e-4, weight_decay=0)
+    train_step(network, optimizer, [original], {})
+    assert torch.count_nonzero(network.ms_fusion[0].weight.grad[:, -2:]) == 0
+    assert network.predict([original])[0].value is not None
+    unseen = replace(
+        original,
+        context=Context(
+            acquisition={"energy": 30},
+            acquisition_units={"energy": "eV"},
+        ),
+    )
+    with pytest.raises(ValueError, match="untrained input features.*energy"):
+        network.predict([unseen])
+    path = tmp_path / "feature-support.pt"
+    save_checkpoint(path, network, {})
+    restored, _, _ = load_checkpoint(path)
+    with pytest.raises(ValueError, match="untrained input features.*energy"):
+        restored.predict([unseen])
+
+
+def test_unseen_component_state_is_not_supported_by_another_state():
+    network = model(endpoints=("tcell_response",), components=("component_a",))
+    original = row(
+        "tcell_response",
+        value=1,
+        unit="binary",
+        context=Context(components={"component_a": Component("lost")}),
+    )
+    optimizer = torch.optim.AdamW(network.parameters(), lr=3e-4, weight_decay=0)
+    train_step(network, optimizer, [original], {})
+    assert network.predict([original])[0].value is not None
+    unseen = replace(original, context=Context(components={"component_a": Component("intact")}))
+    with pytest.raises(ValueError, match="untrained input features.*component_a.*intact"):
+        network.predict([unseen])

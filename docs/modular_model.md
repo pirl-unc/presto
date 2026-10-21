@@ -202,12 +202,37 @@ only evaluated after selection. A training-only diagnostic must explicitly decla
 ## Inference and current limits
 
 `presto.inference.modular.ModularPredictor` loads the new strict
-`presto.modular.v1` format. Its `predict()` returns physical units and transformed
+`presto.modular.v2` format. Version 2 requires input-feature training evidence;
+version 1 experimental checkpoints require an explicit migration and are rejected.
+Its `predict()` returns physical units and transformed
 values for regression, logits and explicitly uncalibrated scores for binary
 outcomes, identity probabilities, effective context, register diagnostics and
 training-support status. Random or unavailable requested outputs fail. A trained endpoint head cannot conceal
 untrained parameters along its requested path; longer class-II peptides require
 actual gradient/update evidence for register pooling.
+
+Input support is also checked at the column/category level. Training one machinery
+state or observing only missing acquisition metadata does not support a previously
+unseen state/value. Checkpoints retain exposed and gradient-updated input columns
+and amino-acid embedding rows. Fixed padding and unobserved entries are reported
+separately in `coverage.json`. Numeric feature slots with no observed training
+values are rejected at preflight. Inference refuses to activate unsupported columns.
+
+Run closure requires tensor and exposed-feature coverage. A failed gate preserves
+the selected checkpoint, prediction dumps, summary and coverage evidence, then
+fails the run. An intentionally incomplete training-only diagnostic can declare
+`coverage_policy="diagnostic"` and a nonempty `coverage_exception_reason`; this
+does not validate any output. Ordinary held-out runs cannot use that exception.
+
+`presto.data.modular_preparation.prepare_observations` writes source-specific pinned
+JSONL files, a per-row disposition report and a census. Original measurements need
+an explicit `measurement_lineage` (namespace, measurement ID, optional replicate)
+or preserved source assay/evidence IDs; an export-row ID alone is insufficient.
+Copied outcomes are deduplicated, conflicting exports of the same outcome are
+deferred together, and independently measured replicates are retained with their
+outcome variation reported. The training index rejects residual original-outcome
+duplicates and checks retained group aliases across frozen splits. This preparation
+primitive does not itself qualify source evidence or invent missing source adapters.
 
 `rank_pmhc()` scores a supplied candidate library for paired TCR chains. pMHC is
 an input to the scorer, not a generated output. Ranking cannot discover restriction

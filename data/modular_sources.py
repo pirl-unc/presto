@@ -17,6 +17,7 @@ from .bulk_ms import BulkMSRecord
 from .groove import prepare_mhc_input
 from .loaders import BindingRecord, KineticsRecord, StabilityRecord
 from .modular import Context, MHCInput, Observation, sequence
+from .modular_lineage import measurement_key
 
 MANIFEST_VERSION = "presto.modular.manifest.v1"
 
@@ -192,7 +193,7 @@ class ObservationIndex:
         self.offsets: list[tuple[Path, int]] = []
         self.partitions: dict[str, list[int]] = {}
         self.census = Counter()
-        ids, groups, peptides, identities = set(), {}, {}, {}
+        ids, groups, peptides, identities, measurements = set(), {}, {}, {}, {}
         self.source_paths = []
         self.file_states = {}
         for source in self.manifest["sources"]:
@@ -220,6 +221,17 @@ class ObservationIndex:
                             raise ValueError("row source disagrees with source manifest")
                         if observation.observation_id in ids:
                             raise ValueError("duplicate observation ID across admitted sources")
+                        measurement = measurement_key(observation)
+                        if measurement is None:
+                            raise ValueError(
+                                "missing original measured-outcome lineage; "
+                                "prepare row dispositions first"
+                            )
+                        if measurement in measurements:
+                            raise ValueError(
+                                f"duplicate measured outcome: {observation.observation_id} "
+                                f"and {measurements[measurement]}"
+                            )
                         if not observation.group_id:
                             raise ValueError("missing frozen grouping identity")
                         if observation.endpoint != "identity" and observation.value is None:
@@ -229,6 +241,10 @@ class ObservationIndex:
                         if observation.split == "predict":
                             raise ValueError("prediction requests cannot enter a training manifest")
                         self._disjoint(groups, observation.group_id, observation.split, "group")
+                        for alias in observation.provenance.get("group_aliases", []):
+                            if not isinstance(alias, str) or not alias:
+                                raise ValueError("invalid original group alias")
+                            self._disjoint(groups, alias, observation.split, "group alias")
                         if observation.peptide:
                             self._disjoint(
                                 peptides, observation.peptide, observation.split, "peptide"
@@ -242,6 +258,7 @@ class ObservationIndex:
                     except (ValueError, TypeError, KeyError) as error:
                         raise ValueError(f"{path} byte {offset}: {error}") from error
                     ids.add(observation.observation_id)
+                    measurements[measurement] = observation.observation_id
                     index = len(self.offsets)
                     self.offsets.append((path, offset))
                     family = "identity" if observation.endpoint == "identity" else "assay"

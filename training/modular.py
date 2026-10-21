@@ -12,6 +12,7 @@ from torch.nn import functional as F
 
 from ..data.modular import ENDPOINTS, Observation, TargetScale, transformed_target
 from ..models.modular import MODEL_VERSION, ModularConfig, ModularPresto, Prediction
+from ..models.modular_support import feature_inputs, record_feature_updates
 
 
 IDENTITY_HEAD = {
@@ -122,12 +123,14 @@ def train_step(
     optimizer_membership(model, optimizer)
     model.train()
     optimizer.zero_grad(set_to_none=True)
-    loss, counts = batch_loss(model, rows, model(rows), scales)
+    with feature_inputs(model):
+        loss, counts = batch_loss(model, rows, model(rows), scales)
     loss_parts = {"primary": float(loss.detach())}
-    if identity_rows:
-        identity_loss, identity_counts = batch_loss(
-            model, identity_rows, model(identity_rows), scales
-        )
+    if identity_rows and identity_weight > 0:
+        with feature_inputs(model):
+            identity_loss, identity_counts = batch_loss(
+                model, identity_rows, model(identity_rows), scales
+            )
         loss = loss + identity_weight * identity_loss
         loss_parts["identity"] = float(identity_loss.detach())
         if identity_weight > 0:
@@ -147,7 +150,10 @@ def train_step(
             "gradient_present": gradient is not None,
         }
     optimizer.step()
+    record_feature_updates(model, before)
     for name, parameter in model.named_parameters():
+        if not torch.isfinite(parameter).all():
+            raise ValueError(f"nonfinite parameter after optimizer update: {name}")
         change = (parameter.detach() - before[name]).norm().item()
         coverage[name]["update_norm"] = change
         coverage[name]["gradient_and_update"] = coverage[name]["gradient_norm"] > 0 and change > 0
@@ -221,6 +227,8 @@ def save_checkpoint(
         "scales": {key: asdict(value) for key, value in scales.items()},
         "support": model.support,
         "trained_parameters": sorted(model.trained_parameters),
+        "trained_features": {key: sorted(value) for key, value in model.trained_features.items()},
+        "exposed_features": {key: sorted(value) for key, value in model.exposed_features.items()},
         "metadata": metadata or {},
         "optimizer": optimizer.state_dict() if optimizer is not None else None,
     }
@@ -249,6 +257,21 @@ def load_checkpoint(
     if trained - dict(model.named_parameters()).keys():
         raise ValueError("checkpoint training coverage refers to absent parameters")
     model.trained_parameters = trained
+    for key in ("trained_features", "exposed_features"):
+        values = payload.get(key)
+        if not isinstance(values, dict) or set(values) != set(model.feature_layout):
+            raise ValueError("checkpoint input-feature support/module mismatch")
+        for name, indices in values.items():
+            size = len(model.feature_layout[name][1])
+            if not isinstance(indices, list) or any(
+                type(i) is not int or not 0 <= i < size for i in indices
+            ):
+                raise ValueError("invalid checkpoint input-feature evidence")
+            getattr(model, key)[name] = set(indices)
+    if any(
+        model.trained_features[name] - model.exposed_features[name] for name in model.feature_layout
+    ):
+        raise ValueError("trained feature lacks exposure evidence")
     scales = {key: TargetScale(**value) for key, value in payload["scales"].items()}
     expected = {name for name in model.config.endpoints if not ENDPOINTS[name].binary}
     if set(scales) != expected:
@@ -302,6 +325,11 @@ def initialize_from_checkpoint(model: ModularPresto, path: str | Path) -> dict[s
         inherited.append(name)
     model.load_state_dict(current, strict=True)
     model.trained_parameters.update(previous.trained_parameters)
+    for name in previous.feature_layout:
+        if model.feature_layout.get(name) != previous.feature_layout[name]:
+            raise ValueError(f"incompatible pretrained input feature layout: {name}")
+        model.trained_features[name] = set(previous.trained_features[name])
+        model.exposed_features[name] = set(previous.exposed_features[name])
     for name, support in previous.support.items():
         model.support[name] = {**support, "validation": "requires_requalification_after_finetuning"}
     return {"inherited_parameters": inherited, "scales": scales, "metadata": payload["metadata"]}
