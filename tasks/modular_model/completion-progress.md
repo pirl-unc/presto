@@ -220,5 +220,12 @@ repository-wide pinned Ruff lint/format (334 files) and strict MkDocs. A new
 annotation-retention assertion initially compared autograd and inference
 attention modes and differed by one float32 ULP; comparing both in the actual
 inference mode gives exact equality. Tests use artificial observations and do
-not alter the prior registered real-data fitting evidence. Full regression is
-pending on the frozen source commit.
+not alter the prior registered real-data fitting evidence.
+
+Full regression on immutable application/test source `1108838` completed with
+**2,461 passed, four skipped, 1,056 warnings in 394.35 seconds** using four pytest
+workers. The log is `/private/tmp/presto-continuation-full-regression.log`.
+Only planning documentation changed while that test process ran. The next
+[resume specification](resume-spec.md) describes durable optimizer/RNG/sampler
+state, selection recovery, pinned execution contracts and test-cache reuse;
+that implementation and its equivalence checks remain open.
