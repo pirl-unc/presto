@@ -105,3 +105,28 @@ the state and starts the next concrete changes. No active training job is assume
 Verification: targeted failing-before/passing-after contract regressions, followed
 by relevant complete regression and strict docs/lint. Real predictive checks have
 their own frozen experiments; software fixtures do not qualify endpoints.
+
+## Clarification after the identity/IC50 objection
+
+"Identity plus IC50" is a diagnostic subset, not the architecture's purpose or
+the full-goal completion criterion. Identity denotes independently supervised
+sequence annotations, not record identifiers. The assay head always retains rich
+sequence vectors. Successful annotation prediction is not evidence that the
+encoder captures peptide-MHC interactions or that the affinity fit is useful.
+
+For the affinity diagnostic, distinguish two experimental factors: auxiliary
+pretraining on/off and auxiliary replay during assay fitting on/off. Hold the
+assay cohort, partitions, supplied metadata, assay architecture, assay-update
+budget and model seeds fixed; report additional auxiliary compute separately.
+Supplied metadata isolates representation transfer from metadata inference.
+Evaluate predicted metadata as a separate serving comparison after that test.
+An assay-only supplied-metadata control must not wait for successful auxiliary
+pretraining. These are prospective comparisons, not executed experiments; exact
+recipes and thresholds must be registered before running.
+
+Detached categorical probabilities prevent direct assay gradients into auxiliary
+readout weights, but the shared encoder still changes under assay supervision.
+Retained annotation quality therefore needs measurement; replay is a proposed
+mitigation, not a guarantee. Keep the requested auxiliary pretraining interfaces
+while measuring their benefit independently of the IC50 debug and the remaining
+cellular, MS and TCR qualification.

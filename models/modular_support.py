@@ -3,7 +3,7 @@
 from contextlib import contextmanager
 
 
-from ..data.modular import AA, CORECEPTORS, DELIVERY, STATES
+from ..data.modular import AA, CORECEPTORS, DELIVERY, STATES, identity_vocabulary
 
 
 def feature_layout(model):
@@ -36,6 +36,8 @@ def feature_layout(model):
         names += [
             f"{role}:species:{species}" for role in ("mhc1", "mhc2") for species in config.species
         ]
+        if "mhc_pairing" in config.auxiliary_context:
+            names += ["auxiliary:mhc_pairing:matched", "auxiliary:mhc_pairing:mismatched"]
         result["pmhc_fusion.0.weight"] = (1, names)
     if model.has_context:
         names = vector("pmhc")
@@ -56,6 +58,16 @@ def feature_layout(model):
             names += [f"delivery:{value}" for value in DELIVERY]
         if model.has_coreceptor:
             names += [f"coreceptor:{value}" for value in CORECEPTORS]
+        for name in config.auxiliary_context:
+            if name != "mhc_pairing":
+                names += [
+                    f"auxiliary:{name}:{value}"
+                    for value in identity_vocabulary(
+                        name,
+                        config.species,
+                        config.source_categories,
+                    )
+                ]
         result["context_fusion.0.weight"] = (1, names)
     if model.has_digest:
         names = vector("peptide") + (source if config.source_context else [])

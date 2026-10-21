@@ -8,7 +8,7 @@ from typing import Sequence
 
 import torch
 
-from ..data.modular import ENDPOINTS, Observation
+from ..data.modular import ENDPOINTS, Observation, identity_vocabulary
 from ..training.modular import load_checkpoint
 
 
@@ -42,6 +42,17 @@ class ModularPredictor:
                     "mhc_class": ["I", "II"],
                     "species": list(self.model.config.species),
                     "tcr_lineage": ["CD4", "CD8"],
+                    "source_categories": list(self.model.config.source_categories),
+                    "per_output": {
+                        name: list(
+                            identity_vocabulary(
+                                name,
+                                self.model.config.species,
+                                self.model.config.source_categories,
+                            )
+                        )
+                        for name in output.identity
+                    },
                 },
                 "diagnostics": _plain(output.diagnostics),
                 "component_scores": _plain(output.components),

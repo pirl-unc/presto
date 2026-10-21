@@ -11895,3 +11895,23 @@ Completion remains unproven until every requirement has authoritative evidence.
 Progress and exact verification: [completion progress](modular_model/completion-progress.md).
 Lineage preparation is implemented; source-specific cohort wiring and broader
 biological-independence audits remain part of the unfinished preparation item.
+
+### Clarify auxiliary supervision versus assay learning — 2026-10-20
+
+The user questioned the meaning and justification of "identity plus IC50."
+Review the actual forward/loss paths before changing the architecture. Preserve
+the frozen issue and the full completion objective; this is a clarification of
+the proposed diagnostic, not a replacement milestone or a predictive result.
+
+- [x] Trace sequence inputs, annotation outputs, assay targets and gradient paths.
+- [x] Document the optional auxiliary branch, supplied-metadata control and shared-encoder drift.
+- [x] State a controlled test of auxiliary benefit separately from full-system completion.
+- [x] Verify current modular regressions and record the evidence and limitations.
+
+Review: 63 modular/model/training/documentation checks pass; pinned Ruff lint and
+format checks pass for all ten changed/new Python files, and `git diff --check`
+passes. The first test command named a nonexistent docs test and ran no tests;
+the successful rerun used the actual `tests/test_docs_match_code.py`. This proves
+software contracts only. No auxiliary-benefit comparison or real-data fit ran.
+The clarification is in `docs/modular_model.md` and the completion addendum; the
+frozen issue and full-goal checklist remain unchanged.

@@ -10,32 +10,25 @@ from typing import Any, Sequence
 import torch
 from torch.nn import functional as F
 
-from ..data.modular import ENDPOINTS, Observation, TargetScale, transformed_target
+from ..data.modular import (
+    ENDPOINTS,
+    Observation,
+    TargetScale,
+    transformed_target,
+    identity_head,
+    identity_vocabulary,
+)
 from ..models.modular import MODEL_VERSION, ModularConfig, ModularPresto, Prediction
 from ..models.modular_support import feature_inputs, record_feature_updates
-
-
-IDENTITY_HEAD = {
-    "mhc_class": "mhc_class",
-    "mhc1": "mhc_species",
-    "mhc2": "mhc_species",
-    "tcr_a": "tcr_species",
-    "tcr_b": "tcr_species",
-    "tcr_lineage": "tcr_lineage",
-}
 
 
 def identity_targets(row: Observation, model: ModularPresto) -> dict[str, int]:
     targets = {}
     for name, label in row.identity_labels.items():
-        head = IDENTITY_HEAD.get(name)
+        head = identity_head(name)
         if head is None or head not in model.config.identity_tasks:
             raise ValueError(f"unsupported identity label: {name}")
-        vocabulary = (
-            ("I", "II")
-            if name == "mhc_class"
-            else (("CD4", "CD8") if name == "tcr_lineage" else model.config.species)
-        )
+        vocabulary = identity_vocabulary(name, model.config.species, model.config.source_categories)
         if label not in vocabulary:
             raise ValueError(f"identity label {name}={label} outside declared vocabulary")
         targets[name] = vocabulary.index(label)
@@ -82,7 +75,7 @@ def batch_loss(
                 losses.append(
                     F.cross_entropy(logits[None], torch.tensor([target], device=logits.device))
                 )
-                counts[IDENTITY_HEAD[name]] += 1
+                counts[identity_head(name)] += 1
         else:
             loss = observation_loss(output, row, scales)
             if loss is not None:
@@ -160,6 +153,23 @@ def train_step(
     model.trained_parameters.update(
         name for name, evidence in coverage.items() if evidence["gradient_and_update"]
     )
+    for row in (*rows, *(identity_rows if identity_weight > 0 else ())):
+        if row.endpoint != "identity":
+            continue
+        for name, label in row.identity_labels.items():
+            if name.startswith("peptide_source:"):
+                category = name.split(":", 1)[1]
+                index = model.config.source_categories.index(category)
+                parameter_name = "identity_heads.peptide_source.weight"
+                parameter = model.get_parameter(parameter_name)
+                if (
+                    parameter.grad is not None
+                    and (
+                        parameter.grad[index].ne(0)
+                        & (parameter.detach()[index] - before[parameter_name][index]).ne(0)
+                    ).any()
+                ):
+                    model.source_label_support[category].add(label)
     for name, count in counts.items():
         model.support[name]["observations"] += count
         prefix = (
@@ -229,6 +239,9 @@ def save_checkpoint(
         "trained_parameters": sorted(model.trained_parameters),
         "trained_features": {key: sorted(value) for key, value in model.trained_features.items()},
         "exposed_features": {key: sorted(value) for key, value in model.exposed_features.items()},
+        "source_label_support": {
+            key: sorted(value) for key, value in model.source_label_support.items()
+        },
         "metadata": metadata or {},
         "optimizer": optimizer.state_dict() if optimizer is not None else None,
     }
@@ -257,6 +270,13 @@ def load_checkpoint(
     if trained - dict(model.named_parameters()).keys():
         raise ValueError("checkpoint training coverage refers to absent parameters")
     model.trained_parameters = trained
+    source_support = payload.get("source_label_support", {})
+    if set(source_support) != set(model.config.source_categories) or any(
+        not isinstance(values, list) or set(values) - {"present", "absent"}
+        for values in source_support.values()
+    ):
+        raise ValueError("invalid checkpoint peptide source output support")
+    model.source_label_support = {key: set(value) for key, value in source_support.items()}
     for key in ("trained_features", "exposed_features"):
         values = payload.get(key)
         if not isinstance(values, dict) or set(values) != set(model.feature_layout):
@@ -291,6 +311,12 @@ def initialize_from_checkpoint(model: ModularPresto, path: str | Path) -> dict[s
     }
     if previous.has_pmhc:
         shared_contract.add("mhc_classes")
+    if previous.has_pmhc or previous.has_context:
+        shared_contract.add("auxiliary_context")
+    if "peptide_source" in previous.config.identity_tasks or any(
+        name.startswith("peptide_source:") for name in previous.config.auxiliary_context
+    ):
+        shared_contract.add("source_categories")
     if (
         previous.has_pmhc
         or previous.config.context_species
@@ -325,6 +351,8 @@ def initialize_from_checkpoint(model: ModularPresto, path: str | Path) -> dict[s
         inherited.append(name)
     model.load_state_dict(current, strict=True)
     model.trained_parameters.update(previous.trained_parameters)
+    for category, values in previous.source_label_support.items():
+        model.source_label_support[category] = set(values)
     for name in previous.feature_layout:
         if model.feature_layout.get(name) != previous.feature_layout[name]:
             raise ValueError(f"incompatible pretrained input feature layout: {name}")

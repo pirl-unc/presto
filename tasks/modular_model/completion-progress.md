@@ -38,7 +38,32 @@ Data inspection:
 - The local filesystem has about 17 GiB free; reuse pinned existing inputs and
   bounded disk-backed preparation rather than duplicate large source corpora.
 
-Still pending: the early-supervision extensions, cell/cytokine/profile machinery,
+Still pending at that checkpoint: the early-supervision extensions, cell/cytokine/profile machinery,
 quantitative routes, actual source adapters/cohorts, continuation/freezing/resume,
 scientific evaluation gates and registered fitting/transfer evidence, plus final
 PR/CI validation. TCRvdb access remains unverified/unavailable from prior work.
+
+## Early-supervision implementation and identity/IC50 clarification
+
+The working implementation now adds independent peptide-source membership heads,
+MHC/TCR pairing supervision with explicit evidence requirements, per-category
+support checks, and optional supplied/override categorical inputs with endpoint
+masks. The Weirdo adapter reads hash-pinned prepared split archives and preserves
+source fold/group/category semantics with declared label-blind sampling. These
+are executable source/model interfaces; no real-data qualification is implied.
+
+The user questioned the rationale for "identity plus IC50." The code trace
+confirms that rich sequence representations feed the assay model; annotation
+heads are optional auxiliary supervision. Assay updates still change the shared
+encoder even when categorical predictions are detached. The docs now describe
+that drift explicitly. The completion spec requires a supplied-metadata assay-
+only control and separate pretraining/replay factors before claiming transfer
+benefit; those comparisons are prospective and have not run.
+
+Verification: 63 modular model/training/documentation tests pass in 5.76 seconds;
+pinned Ruff lint/format checks and diff whitespace validation pass. The published
+`9e97fd021ace06c80f2269ce91767dd3f08e4573` head has four successful GitHub CI jobs;
+that CI evidence does not cover these subsequent working-tree changes. No new
+real training experiment, calibrated auxiliary predictor or qualified assay
+checkpoint exists. Full-goal source, context, MS, TCR and scientific gates remain
+open.

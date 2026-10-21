@@ -5,6 +5,7 @@ import json
 from types import SimpleNamespace
 
 import pytest
+import numpy as np
 
 from presto.data.bulk_ms import BulkMSRecord
 from presto.data.loaders import BindingRecord, KineticsRecord, StabilityRecord
@@ -19,6 +20,7 @@ from presto.data.modular_sources import (
     write_observations,
 )
 from presto.data.modular_preparation import prepare_observations
+from presto.data.modular_auxiliary import weirdo_observations
 from presto.training.modular_evaluation import binary_metrics, regression_metrics
 from presto.training.modular_run import fit_index, preflight, run_manifest
 
@@ -137,7 +139,13 @@ def test_streaming_manifest_preflight_and_mutation_detection(tmp_path):
     path, observations = fixture_manifest(tmp_path)
     index = ObservationIndex(path)
     config, _, scales, report = preflight(index)
-    assert len(index) == 6 and index[3] == observations[3]
+    assert len(index) == 6 and index[3] == replace(
+        observations[3],
+        provenance={
+            **observations[3].provenance,
+            "evidence_policy": "artificial numeric labels; no biological claims",
+        },
+    )
     assert config.endpoints == ("ic50",) and scales["ic50"].mean == 2
     assert report["training_labels"] == {"ic50": 2}
     with (tmp_path / "rows.jsonl").open("a") as stream:
@@ -399,3 +407,118 @@ def test_preflight_rejects_configured_but_unobserved_numeric_features(tmp_path):
     path.write_text(json.dumps(manifest))
     with pytest.raises(ValueError, match="no observed training values"):
         preflight(ObservationIndex(path))
+
+
+def test_source_pretraining_requires_each_category_to_have_varied_labels(tmp_path):
+    path, rows = fixture_manifest(tmp_path)
+    rows = [
+        replace(
+            item,
+            endpoint="identity",
+            value=None,
+            unit=None,
+            mhc=(),
+            identity_labels={
+                "peptide_source:human": "present" if i % 2 else "absent",
+                "peptide_source:rodents": "absent",
+            },
+        )
+        for i, item in enumerate(rows)
+    ]
+    data_path = tmp_path / "rows.jsonl"
+    data_path.unlink()
+    receipt = write_observations(data_path, rows)
+    manifest = json.loads(path.read_text())
+    manifest["sources"][0]["sha256"] = receipt["sha256"]
+    manifest["model"] = {
+        "endpoints": [],
+        "identity_tasks": ["peptide_source"],
+        "source_categories": ["human", "rodents"],
+        "dropout": 0,
+    }
+    path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="positive and negative reference labels: rodents"):
+        preflight(ObservationIndex(path))
+    rows = [
+        replace(
+            item,
+            identity_labels={
+                **item.identity_labels,
+                "peptide_source:rodents": "absent" if i % 2 else "present",
+            },
+        )
+        for i, item in enumerate(rows)
+    ]
+    data_path.unlink()
+    receipt = write_observations(data_path, rows)
+    manifest["sources"][0]["sha256"] = receipt["sha256"]
+    path.write_text(json.dumps(manifest))
+    index = ObservationIndex(path)
+    assert preflight(index)[3]["source_label_values"]["rodents"] == ["absent", "present"]
+    summary = fit_index(index, tmp_path / "source-pretraining")
+    assert summary["coverage_gate"]["status"] == "passed"
+    assert set(summary["metrics"]["test"]) == {"peptide_source:human", "peptide_source:rodents"}
+
+
+def test_weirdo_adapter_preserves_multilabels_hashes_and_source_folds(tmp_path):
+    directory = tmp_path / "weirdo"
+    directory.mkdir()
+    np.savez_compressed(
+        directory / "splits.npz",
+        train_kmers=np.array(["ACDEFGHI", "KLMNPQRS"]),
+        train_masks=np.array([3, 2]),
+        train_groups=np.array([0, 1]),
+        val_kmers=np.array(["TVWYACDE"]),
+        val_masks=np.array([1]),
+        val_groups=np.array([0]),
+    )
+    (directory / "splits.json").write_text(
+        json.dumps(
+            {
+                "categories": ["human", "rodents"],
+                "salt": "source-family-rule",
+                "k": 8,
+                "sample_sizes": {"train": 2, "val": 1},
+            }
+        )
+    )
+    kwargs = dict(
+        archive_sha256=file_sha256(directory / "splits.npz"),
+        metadata_sha256=file_sha256(directory / "splits.json"),
+        reference_sha256="a" * 64,
+        limits={"train": 2, "validation": 1},
+        seed=42,
+    )
+    rows = list(weirdo_observations(directory, **kwargs))
+    assert rows == list(weirdo_observations(directory, **kwargs))
+    assert rows[0].identity_labels == {
+        "peptide_source:human": "present",
+        "peptide_source:rodents": "present",
+    }
+    assert rows[-1].split == "validation"
+    assert rows[-1].group_id != rows[0].group_id
+    with pytest.raises(ValueError, match="hash mismatch"):
+        list(weirdo_observations(directory, **{**kwargs, "archive_sha256": "b" * 64}))
+
+
+def test_pairing_labels_require_evidence_and_do_not_turn_observed_pairs_into_negatives():
+    sample = Observation(
+        "pair",
+        "reference",
+        "identity",
+        mhc=(MHCInput("ACDEFGHIK", "LMNPQRSTV", "II"),),
+        identity_labels={"mhc_pairing": "mismatched"},
+    )
+    with pytest.raises(ValueError, match="explicit source pairing evidence"):
+        normalized_observation(sample.to_dict(), evidence_policy="reference-pairing")
+    evidence = {"basis": "observed_pair", "reference": "source-record"}
+    sample = replace(sample, provenance={"pairing_evidence": {"mhc_pairing": evidence}})
+    with pytest.raises(ValueError, match="does not supply a measured mismatch"):
+        normalized_observation(sample.to_dict(), evidence_policy="reference-pairing")
+    sample = replace(sample, identity_labels={"mhc_pairing": "matched"})
+    assert (
+        normalized_observation(
+            sample.to_dict(), evidence_policy="reference-pairing"
+        ).identity_labels["mhc_pairing"]
+        == "matched"
+    )

@@ -530,3 +530,130 @@ def test_unseen_component_state_is_not_supported_by_another_state():
     unseen = replace(original, context=Context(components={"component_a": Component("intact")}))
     with pytest.raises(ValueError, match="untrained input features.*component_a.*intact"):
         network.predict([unseen])
+
+
+def test_peptide_source_pretraining_is_multilabel_and_needs_no_mhc(tmp_path):
+    network = model(
+        endpoints=(), identity_tasks=("peptide_source",), source_categories=("human", "rodents")
+    )
+    sample = row(
+        "identity",
+        mhc=(),
+        value=None,
+        unit=None,
+        identity_labels={
+            "peptide_source:human": "present",
+            "peptide_source:rodents": "present",
+        },
+    )
+    assert not hasattr(network, "pmhc_fusion")
+    with torch.no_grad():
+        network.identity_heads["peptide_source"].bias.fill_(2)
+    output = network([sample])[0]
+    assert sum(value.softmax(-1)[1] for value in output.identity.values()) > 1
+    optimizer = torch.optim.AdamW(network.parameters(), lr=3e-4, weight_decay=0)
+    step = train_step(network, optimizer, [sample], {})
+    assert step["counts"] == {"peptide_source": 2}
+    assert not coverage_summary([step])["untrained_parameters"]
+    assert network.source_label_support == {"human": {"present"}, "rodents": {"present"}}
+    path = tmp_path / "source.pt"
+    save_checkpoint(path, network, {})
+    restored, _, _ = load_checkpoint(path)
+    assert restored.predict([sample])[0].identity.keys() == output.identity.keys()
+
+
+def test_source_category_without_a_label_stays_unsupported():
+    network = model(
+        endpoints=(), identity_tasks=("peptide_source",), source_categories=("human", "rodents")
+    )
+    sample = row(
+        "identity",
+        mhc=(),
+        value=None,
+        unit=None,
+        identity_labels={"peptide_source:human": "present"},
+    )
+    optimizer = torch.optim.AdamW(network.parameters(), lr=3e-4, weight_decay=0)
+    step = train_step(network, optimizer, [sample], {})
+    assert step["counts"] == {"peptide_source": 1}
+    assert torch.count_nonzero(network.identity_heads["peptide_source"].weight.grad[1]) == 0
+    with pytest.raises(ValueError, match="untrained peptide source outputs.*rodents"):
+        network.predict([sample])
+
+
+def test_chain_pairing_auxiliaries_share_encoder_without_assay_heads():
+    network = model(endpoints=(), identity_tasks=("mhc_pairing", "tcr_pairing"))
+    sample = row(
+        "identity",
+        peptide="",
+        value=None,
+        unit=None,
+        tcr_a="ACDEFGHIKLMN",
+        tcr_b="PQRSTVWYACDE",
+        identity_labels={"mhc_pairing": "matched", "tcr_pairing": "matched"},
+    )
+    original = network([sample])[0]
+    altered = network([replace(sample, tcr_a="LMNPQRSTVWYA")])[0]
+    torch.testing.assert_close(original.identity["mhc_pairing"], altered.identity["mhc_pairing"])
+    assert not torch.allclose(original.identity["tcr_pairing"], altered.identity["tcr_pairing"])
+    optimizer = torch.optim.AdamW(network.parameters(), lr=3e-4, weight_decay=0)
+    step = train_step(network, optimizer, [sample], {})
+    assert step["counts"] == {"mhc_pairing": 1, "tcr_pairing": 1}
+    assert not coverage_summary([step])["untrained_parameters"]
+
+
+def test_auxiliary_overrides_keep_raw_predictions_and_respect_endpoint_masks():
+    network = model(
+        endpoints=("ic50", "tcr_binding", "tcr_response", "elution_observation"),
+        identity_tasks=("peptide_source", "mhc_pairing", "tcr_pairing", "tcr_lineage"),
+        source_categories=("human",),
+        auxiliary_context=("mhc_pairing", "tcr_pairing", "tcr_lineage", "peptide_source:human"),
+    )
+    original = row(
+        context=Context(auxiliary_values={"peptide_source:human": "present", "tcr_lineage": "CD4"})
+    )
+    overridden = replace(
+        original,
+        context=replace(
+            original.context,
+            auxiliary_overrides={
+                "peptide_source:human": "absent",
+                "tcr_lineage": "CD8",
+            },
+        ),
+    )
+    a, b = network([original, overridden])
+    torch.testing.assert_close(a.value, b.value)
+    auxiliary = b.diagnostics["candidates"][0]["auxiliary"]["peptide_source:human"]
+    assert auxiliary["value"] == "absent" and auxiliary["supplied"] == "present"
+    assert auxiliary["source"] == "override" and auxiliary["predicted"]
+    for endpoint in ("tcr_binding", "tcr_response", "elution_observation"):
+        inputs = [
+            replace(
+                item,
+                endpoint=endpoint,
+                value=1,
+                unit="binary",
+                tcr_a="ACDEFGHIKLMN",
+                tcr_b="PQRSTVWYACDE",
+            )
+            for item in (original, overridden)
+        ]
+        a, b = network(inputs)
+        if endpoint == "tcr_binding":
+            torch.testing.assert_close(a.value, b.value)
+        else:
+            assert not torch.allclose(a.value, b.value)
+        if endpoint == "elution_observation":
+            torch.testing.assert_close(a.components["ms_response"], b.components["ms_response"])
+    response = replace(
+        original,
+        endpoint="tcr_response",
+        value=1,
+        unit="binary",
+        tcr_a="ACDEFGHIKLMN",
+        tcr_b="PQRSTVWYACDE",
+    )
+    observation_loss(network([response])[0], response, {}).backward()
+    assert all(parameter.grad is None for parameter in network.identity_heads.parameters())
+    assert network.encoder.embedding.weight.grad.norm() > 0

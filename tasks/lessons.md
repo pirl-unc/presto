@@ -483,3 +483,8 @@ Keep applicability reporting separate from model features and the measured label
 - The full requested pretraining/context/MS/TCR architecture remains the objective.
   An IC50 diagnostic isolates a failure mode; it must not replace the requested
   system or silently remove explicitly requested auxiliary supervision.
+- Define "identity" as supervised sequence annotations whenever discussing the
+  model; ambiguous "identity plus IC50" shorthand obscures both information flow
+  and the full objective. Auxiliary classification success does not establish
+  assay learning. Use a supplied-metadata assay-only control to test transfer,
+  and distinguish detached classifier inputs from freezing their shared encoder.

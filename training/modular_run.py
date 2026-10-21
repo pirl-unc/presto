@@ -15,12 +15,11 @@ import time
 
 import torch
 
-from ..data.modular import ENDPOINTS, fit_target_scales
+from ..data.modular import ENDPOINTS, fit_target_scales, identity_head
 from ..data.modular_sources import ObservationIndex, file_sha256
 from ..models.modular import ModularConfig, ModularPresto
 from ..models.modular_support import feature_report
 from .modular import (
-    IDENTITY_HEAD,
     identity_targets,
     initialize_from_checkpoint,
     load_checkpoint,
@@ -103,6 +102,7 @@ def preflight(index: ObservationIndex):
             )
     scales = fit_target_scales(index)
     counts, label_values, feature_states = Counter(), defaultdict(set), defaultdict(set)
+    source_label_values = defaultdict(set)
     observed_features = {"acquisition": set(), "observation": set()}
     assay_classes, has_multi_register = set(), False
     heldout_multi_register = False
@@ -116,9 +116,13 @@ def preflight(index: ObservationIndex):
                     raise ValueError("MHC identity label without grooves")
                 if name.startswith("tcr") and not (row.tcr_a and row.tcr_b):
                     raise ValueError("TCR identity label without both chains")
+                if name.startswith("peptide_source:") and not row.peptide:
+                    raise ValueError("peptide source label without a peptide")
                 if row.split == "train":
-                    counts[IDENTITY_HEAD[name]] += 1
-                    label_values[IDENTITY_HEAD[name]].add(row.identity_labels[name])
+                    counts[identity_head(name)] += 1
+                    label_values[identity_head(name)].add(row.identity_labels[name])
+                    if name.startswith("peptide_source:"):
+                        source_label_values[name.split(":", 1)[1]].add(row.identity_labels[name])
         else:
             if row.endpoint not in config.endpoints:
                 raise ValueError(f"admitted row targets an unallocated endpoint: {row.endpoint}")
@@ -173,6 +177,13 @@ def preflight(index: ObservationIndex):
             raise ValueError(f"identity task has no labels or inherited weights: {task}")
         if counts[task] and len(label_values[task]) < 2:
             raise ValueError(f"identity task needs varied training labels: {task}")
+    if "peptide_source" in config.identity_tasks:
+        for category in config.source_categories:
+            if source_label_values[category] != {"present", "absent"}:
+                raise ValueError(
+                    "peptide source category needs positive and negative reference labels: "
+                    f"{category}"
+                )
     if config.endpoints and config.identity_tasks:
         if not index.partitions.get("train:identity") or training["identity_weight"] <= 0:
             raise ValueError("fine-tuning the shared encoder requires explicit identity replay")
@@ -209,6 +220,9 @@ def preflight(index: ObservationIndex):
             "component_states": {key: sorted(value) for key, value in feature_states.items()},
             "manifest_sha256": index.manifest_sha256,
             "module_pruning": pruning,
+            "source_label_values": {
+                key: sorted(value) for key, value in source_label_values.items()
+            },
             "observed_numeric_features": {
                 key: sorted(value) for key, value in observed_features.items()
             },
@@ -427,12 +441,18 @@ def fit_index(index, output_dir, *, device="cpu"):
         for name, value in features.items()
         if value["exposed_without_update"]
     }
+    missing_auxiliaries = [
+        f"peptide_source:{category}"
+        for category, values in selected.source_label_support.items()
+        if "peptide_source" in config.identity_tasks and not values
+    ]
     coverage_gate = {
-        "status": "failed" if unsupported or missing_features else "passed",
+        "status": "failed" if unsupported or missing_features or missing_auxiliaries else "passed",
         "untrained_parameters": unsupported,
         "exposed_features_without_updates": missing_features,
         "policy": training["coverage_policy"],
         "exception_reason": training["coverage_exception_reason"],
+        "untrained_auxiliary_outputs": missing_auxiliaries,
     }
     summary = {
         "metrics": metrics,
@@ -575,6 +595,7 @@ def run_manifest(args):
         "data/modular_sources.py",
         "data/modular_lineage.py",
         "data/modular_preparation.py",
+        "data/modular_auxiliary.py",
         "models/modular.py",
         "models/modular_support.py",
         "models/encoders.py",

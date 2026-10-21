@@ -161,8 +161,39 @@ def normalized_observation(row: dict, *, evidence_policy: str) -> Observation:
     if observation.endpoint in ("tcr_binding", "tcr_response"):
         if observation.provenance.get("tcr_sequence_scope") != "full_paired":
             raise ValueError("paired specificity requires source-attested full TCR chains")
-        if not observation.provenance.get("measured_outcome"):
+        if observation.provenance.get("measured_outcome") is not True:
             raise ValueError("database association alone is not a measured TCR outcome")
+    for task in ("mhc_pairing", "tcr_pairing"):
+        if task not in observation.identity_labels:
+            continue
+        pair_evidence = observation.provenance.get("pairing_evidence", {})
+        if not isinstance(pair_evidence, dict) or not isinstance(pair_evidence.get(task, {}), dict):
+            raise ValueError("pairing evidence must be a task-specific mapping")
+        evidence = pair_evidence.get(task, {})
+        basis = evidence.get("basis")
+        if (
+            basis
+            not in (
+                "observed_pair",
+                "measured_pairing",
+                "generated_pairing_control",
+            )
+            or not isinstance(evidence.get("reference"), str)
+            or not evidence["reference"]
+        ):
+            raise ValueError(f"{task} requires explicit source pairing evidence")
+        if basis == "observed_pair" and observation.identity_labels[task] != "matched":
+            raise ValueError("an observed pair does not supply a measured mismatch label")
+        if basis == "generated_pairing_control" and (
+            not isinstance(evidence.get("policy"), str)
+            or not evidence["policy"]
+            or not isinstance(evidence.get("parent_ids"), list)
+            or not evidence["parent_ids"]
+            or any(not isinstance(value, str) or not value for value in evidence["parent_ids"])
+        ):
+            raise ValueError(
+                "generated pairing controls require a declared policy and parent lineage"
+            )
     return replace(
         observation, provenance={**observation.provenance, "evidence_policy": evidence_policy}
     )
@@ -196,6 +227,7 @@ class ObservationIndex:
         ids, groups, peptides, identities, measurements = set(), {}, {}, {}, {}
         self.source_paths = []
         self.file_states = {}
+        self.label_policies = {}
         for source in self.manifest["sources"]:
             required = ("path", "sha256", "source", "population", "label_policy", "split_policy")
             if any(not source.get(key) for key in required):
@@ -207,6 +239,7 @@ class ObservationIndex:
             if file_sha256(path) != source["sha256"]:
                 raise ValueError(f"source hash mismatch: {path}")
             self.file_states[path] = self._file_state(path)
+            self.label_policies[path] = source["label_policy"]
             with path.open("rb") as stream:
                 while True:
                     offset = stream.tell()
@@ -254,6 +287,8 @@ class ObservationIndex:
                                 observation.tcr_a,
                                 observation.tcr_b,
                             )
+                            if not observation.mhc and not (observation.tcr_a or observation.tcr_b):
+                                key = ("peptide", observation.peptide)
                             self._disjoint(identities, key, observation.split, "identity molecule")
                     except (ValueError, TypeError, KeyError) as error:
                         raise ValueError(f"{path} byte {offset}: {error}") from error
@@ -289,7 +324,9 @@ class ObservationIndex:
             raise ValueError("pinned input changed after admission")
         with path.open("rb") as stream:
             stream.seek(offset)
-            return Observation.from_dict(json.loads(stream.readline()))
+            return normalized_observation(
+                json.loads(stream.readline()), evidence_policy=self.label_policies[path]
+            )
 
     def __iter__(self):
         for index in range(len(self)):

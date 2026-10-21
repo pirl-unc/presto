@@ -22,6 +22,7 @@ from ..data.modular import (
     ROLES,
     STATES,
     Observation,
+    identity_vocabulary,
 )
 from ..data.modular_context import resolve_components, resolve_field, resolve_species
 from .encoders import SequenceEncoder
@@ -37,6 +38,8 @@ class ModularConfig:
     mhc_classes: tuple[str, ...] = ("I", "II")
     register_pooling: bool = True
     species: tuple[str, ...] = ()
+    source_categories: tuple[str, ...] = ()
+    auxiliary_context: tuple[str, ...] = ()
     components: tuple[str, ...] = ()
     component_activity_units: dict[str, str] = field(default_factory=dict)
     machinery_profiles: dict[str, tuple[str, ...]] = field(default_factory=dict)
@@ -58,6 +61,8 @@ class ModularConfig:
             "identity_tasks",
             "mhc_classes",
             "species",
+            "source_categories",
+            "auxiliary_context",
             "components",
             "context_species",
             "enzymes",
@@ -69,6 +74,14 @@ class ModularConfig:
                 raise ValueError(f"duplicate {name}")
         if set(self.endpoints) - ENDPOINTS.keys() or set(self.identity_tasks) - set(IDENTITY_TASKS):
             raise ValueError("unsupported endpoint or identity task")
+        if "peptide_source" in self.identity_tasks and not self.source_categories:
+            raise ValueError("peptide source prediction requires declared category labels")
+        for name in self.auxiliary_context:
+            if name not in ("mhc_pairing", "tcr_pairing", "tcr_lineage") and not name.startswith(
+                "peptide_source:"
+            ):
+                raise ValueError(f"unsupported auxiliary context slot: {name}")
+            identity_vocabulary(name, self.species, self.source_categories)
         if not self.endpoints and not self.identity_tasks:
             raise ValueError("no active supervision")
         if set(self.mhc_classes) - {"I", "II"} or not self.mhc_classes:
@@ -102,6 +115,15 @@ class ModularConfig:
         if self.context_species and not contextual:
             raise ValueError("context species slots need a contextual outcome")
         receptor = bool(routes & {"tcr", "tcr_cellular"})
+        for name in self.auxiliary_context:
+            if name == "mhc_pairing" and not routes & {"pmhc", "cellular", "tcr", "tcr_cellular"}:
+                raise ValueError("MHC pairing context requires a pMHC outcome")
+            if name == "tcr_pairing" and not receptor:
+                raise ValueError("TCR pairing context requires a receptor outcome")
+            if (name == "tcr_lineage" or name.startswith("peptide_source:")) and not cellular:
+                raise ValueError("source/lineage priors require a cellular outcome")
+            if name == "tcr_lineage" and "tcr_cellular" not in routes:
+                raise ValueError("TCR lineage context requires a paired cellular outcome")
         for role in self.context_species:
             if role in ("apc", "immune") and not cellular:
                 raise ValueError("APC/immune species slots require cellular outcomes")
@@ -128,6 +150,8 @@ class ModularConfig:
             "identity_tasks",
             "mhc_classes",
             "species",
+            "source_categories",
+            "auxiliary_context",
             "components",
             "context_species",
             "enzymes",
@@ -214,10 +238,15 @@ class ModularPresto(nn.Module):
                 "mhc_species": (128, len(config.species)),
                 "tcr_species": (128, len(config.species)),
                 "tcr_lineage": (256, 2),
+                "mhc_pairing": (256, 2),
+                "tcr_pairing": (256, 2),
+                "peptide_source": (128, len(config.source_categories)),
             }[name]
             self.identity_heads[name] = nn.Linear(width, classes)
         if self.has_pmhc:
-            self.pmhc_fusion = self._fusion(429 + 2 * len(config.species))
+            self.pmhc_fusion = self._fusion(
+                429 + 2 * len(config.species) + 2 * ("mhc_pairing" in config.auxiliary_context)
+            )
             if "II" in config.mhc_classes and config.register_pooling:
                 self.register_score = nn.Linear(128, 1, bias=False)
         source_width = 262 if config.source_context else 0
@@ -231,6 +260,7 @@ class ModularPresto(nn.Module):
             )
             + (len(DELIVERY) if self.has_cellular else 0)
             + (len(CORECEPTORS) if self.has_coreceptor else 0)
+            + 2 * sum(name != "mhc_pairing" for name in config.auxiliary_context)
         )
         if self.has_context:
             self.context_fusion = self._fusion(128 + self.context_width)
@@ -255,6 +285,7 @@ class ModularPresto(nn.Module):
         self.feature_layout = feature_layout(self)
         self.trained_features = {name: set() for name in self.feature_layout}
         self.exposed_features = {name: set() for name in self.feature_layout}
+        self.source_label_support = {name: set() for name in config.source_categories}
         self.support = {
             name: {"status": "random/untrained", "observations": 0, "validation": "not_evaluated"}
             for name in (*config.endpoints, *config.identity_tasks)
@@ -318,6 +349,13 @@ class ModularPresto(nn.Module):
 
     def _identity(self, row, mhc, encoded):
         result = {}
+        if row.peptide and "peptide_source" in self.identity_heads:
+            logits = self.identity_heads["peptide_source"](encoded[row.peptide])
+            for index, category in enumerate(self.config.source_categories):
+                # Independent sigmoids represented as two logits for the common CE path.
+                result[f"peptide_source:{category}"] = torch.stack(
+                    [logits[index] * 0, logits[index]]
+                )
         if mhc is not None:
             if "mhc_class" in self.identity_heads:
                 result["mhc_class"] = self.identity_heads["mhc_class"](
@@ -326,6 +364,10 @@ class ModularPresto(nn.Module):
             if "mhc_species" in self.identity_heads:
                 for name, value in (("mhc1", mhc.groove1), ("mhc2", mhc.groove2)):
                     result[name] = self.identity_heads["mhc_species"](encoded[value])
+            if "mhc_pairing" in self.identity_heads:
+                result["mhc_pairing"] = self.identity_heads["mhc_pairing"](
+                    torch.cat([encoded[mhc.groove1], encoded[mhc.groove2]])
+                )
         if row.tcr_a and row.tcr_b:
             if "tcr_species" in self.identity_heads:
                 for name in ("tcr_a", "tcr_b"):
@@ -334,7 +376,31 @@ class ModularPresto(nn.Module):
                 result["tcr_lineage"] = self.identity_heads["tcr_lineage"](
                     torch.cat([encoded[row.tcr_a], encoded[row.tcr_b]])
                 )
+            if "tcr_pairing" in self.identity_heads:
+                result["tcr_pairing"] = self.identity_heads["tcr_pairing"](
+                    torch.cat([encoded[row.tcr_a], encoded[row.tcr_b]])
+                )
         return result
+
+    def _auxiliary(self, row, identity):
+        names = set(self.config.auxiliary_context) | {
+            name
+            for name in identity
+            if name in ("mhc_pairing", "tcr_pairing", "tcr_lineage")
+            or name.startswith("peptide_source:")
+        }
+        return {
+            name: resolve_field(
+                identity_vocabulary(name, self.config.species, self.config.source_categories),
+                supplied=row.context.auxiliary_values.get(name),
+                override=row.context.auxiliary_overrides.get(name),
+                prediction=identity[name].detach().softmax(-1).cpu().tolist()
+                if name in identity
+                else (),
+                threshold=self.config.identity_threshold,
+            )
+            for name in sorted(names)
+        }
 
     def _resolve(self, row, mhc, identity):
         # The classifier is supervised only by its own labels, not by assay gradients.
@@ -386,7 +452,7 @@ class ModularPresto(nn.Module):
             ]
         )
 
-    def _context(self, row, encoded, species, components):
+    def _context(self, row, encoded, species, components, auxiliary):
         route = ENDPOINTS[row.endpoint].route
         cellular = route in ("cellular", "tcr_cellular")
         receptor = route in ("tcr", "tcr_cellular")
@@ -434,18 +500,30 @@ class ModularPresto(nn.Module):
                 if row.endpoint in ("tcell_response", "tcr_response")
                 else self._zero(len(CORECEPTORS))
             )
+        for name in self.config.auxiliary_context:
+            if name == "mhc_pairing":
+                continue
+            allowed = (
+                (name == "tcr_pairing" and receptor)
+                or (name == "tcr_lineage" and row.endpoint == "tcr_response")
+                or (name.startswith("peptide_source:") and cellular)
+            )
+            values.append(self._tensor(auxiliary[name].probabilities) if allowed else self._zero(2))
         return torch.cat(values) if values else self._zero(0)
 
     def _pmhc(self, row, mhc, encoded):
         identity = self._identity(row, mhc, encoded)
         species, class_field, components = self._resolve(row, mhc, identity)
+        auxiliary = self._auxiliary(row, identity)
         if class_field.source in ("unknown", "unsupported"):
             raise ValueError(
                 "MHC class must be supplied or predicted by an allocated identity task"
             )
         pooled, register_info = [], []
         contextual = ENDPOINTS[row.endpoint].route != "pmhc"
-        context = self._context(row, encoded, species, components) if contextual else None
+        context = (
+            self._context(row, encoded, species, components, auxiliary) if contextual else None
+        )
         for index, weight in enumerate(class_field.probabilities):
             if weight == 0:
                 continue
@@ -462,6 +540,11 @@ class ModularPresto(nn.Module):
                         self._tensor(pfr),
                         self._tensor([float(index == 0), float(index == 1)]),
                         self._tensor(species["mhc1"].probabilities + species["mhc2"].probabilities),
+                        *(
+                            [self._tensor(auxiliary["mhc_pairing"].probabilities)]
+                            if "mhc_pairing" in self.config.auxiliary_context
+                            else []
+                        ),
                     ]
                 )
                 for _, core, pfr in register_candidates
@@ -493,6 +576,7 @@ class ModularPresto(nn.Module):
             "class": asdict(class_field),
             "components": {name: asdict(value) for name, value in components.items()},
             "registers": register_info,
+            "auxiliary": {name: asdict(value) for name, value in auxiliary.items()},
         }
         return torch.stack(pooled).sum(0), identity, diagnostics
 
@@ -514,10 +598,20 @@ class ModularPresto(nn.Module):
                 output.diagnostics = {
                     "species": {key: asdict(value) for key, value in species.items()},
                     "class": asdict(mhc_class) if mhc_class else None,
+                    "auxiliary": {
+                        name: asdict(value)
+                        for name, value in self._auxiliary(row, output.identity).items()
+                    },
                 }
                 results.append(output)
                 continue
             route = ENDPOINTS[row.endpoint].route
+            if route in ("bulk", "digest", "detector"):
+                output.identity = self._identity(row, None, encoded)
+                output.diagnostics["auxiliary"] = {
+                    name: asdict(value)
+                    for name, value in self._auxiliary(row, output.identity).items()
+                }
             if route in ("bulk", "detector") or row.endpoint == "elution_observation":
                 ms_features = torch.cat(
                     [
@@ -623,7 +717,27 @@ class ModularPresto(nn.Module):
                 "validation": "not_evaluated",
                 "identifiable_from_mixture_labels_alone": False,
             }
-        return {"outputs": outputs, "components": components}
+        source_membership = {
+            name: {
+                "status": (
+                    "not_allocated"
+                    if "peptide_source" not in self.identity_heads
+                    else "directly_supervised"
+                    if values
+                    else "random/untrained"
+                ),
+                "observed_labels": sorted(values),
+                "validation": self.support.get("peptide_source", {}).get(
+                    "validation", "not_evaluated"
+                ),
+            }
+            for name, values in self.source_label_support.items()
+        }
+        return {
+            "outputs": outputs,
+            "components": components,
+            "source_membership": source_membership,
+        }
 
     def predict(self, rows: Sequence[Observation]) -> list[Prediction]:
         """Inference refuses random requested outputs; qualification stays visible."""
@@ -633,6 +747,7 @@ class ModularPresto(nn.Module):
                 for name in self.config.identity_tasks
                 if (name.startswith("mhc") and row.mhc)
                 or (name.startswith("tcr") and row.tcr_a and row.tcr_b)
+                or (name == "peptide_source" and row.peptide)
             )
             requested = (
                 relevant_identity
@@ -641,6 +756,12 @@ class ModularPresto(nn.Module):
             )
             if not requested:
                 raise ValueError("no allocated identity capability for these inputs")
+            if "peptide_source" in requested:
+                missing_categories = [
+                    key for key, values in self.source_label_support.items() if not values
+                ]
+                if missing_categories:
+                    raise ValueError(f"untrained peptide source outputs: {missing_categories}")
             if row.endpoint in ENDPOINTS and ENDPOINTS[row.endpoint].route in (
                 "cellular",
                 "tcr_cellular",
@@ -669,6 +790,8 @@ class ModularPresto(nn.Module):
         required = {name for name, _ in self.named_parameters() if name.startswith("encoder.")}
         prefixes = set()
         for row in rows:
+            if row.peptide and "peptide_source" in self.identity_heads:
+                prefixes.add("identity_heads.peptide_source.")
             if row.mhc:
                 prefixes.update(
                     f"identity_heads.{task}."

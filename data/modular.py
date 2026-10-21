@@ -16,7 +16,45 @@ STATES = ("reference", "intact", "reduced", "lost", "unknown")
 ROLES = ("mhc1", "mhc2", "immune", "apc", "repertoire", "tcr_a", "tcr_b", "antigen")
 CORECEPTORS = ("CD4", "CD8", "both", "neither", "unknown")
 DELIVERY = ("endogenous", "protein", "peptide", "preformed_pmhc", "unknown")
-IDENTITY_TASKS = ("mhc_class", "mhc_species", "tcr_species", "tcr_lineage")
+IDENTITY_TASKS = (
+    "mhc_class",
+    "mhc_species",
+    "tcr_species",
+    "tcr_lineage",
+    "peptide_source",
+    "mhc_pairing",
+    "tcr_pairing",
+)
+IDENTITY_HEADS = {
+    "mhc_class": "mhc_class",
+    "mhc1": "mhc_species",
+    "mhc2": "mhc_species",
+    "tcr_a": "tcr_species",
+    "tcr_b": "tcr_species",
+    "tcr_lineage": "tcr_lineage",
+    "mhc_pairing": "mhc_pairing",
+    "tcr_pairing": "tcr_pairing",
+}
+
+
+def identity_head(name: str) -> str | None:
+    return "peptide_source" if name.startswith("peptide_source:") else IDENTITY_HEADS.get(name)
+
+
+def identity_vocabulary(name: str, species=(), source_categories=()) -> tuple[str, ...]:
+    if name.startswith("peptide_source:"):
+        if name.split(":", 1)[1] not in source_categories:
+            raise ValueError(f"unsupported peptide source category: {name}")
+        return ("absent", "present")
+    if name in ("mhc_pairing", "tcr_pairing"):
+        return ("matched", "mismatched")
+    if name == "mhc_class":
+        return ("I", "II")
+    if name == "tcr_lineage":
+        return ("CD4", "CD8")
+    if name in ("mhc1", "mhc2", "tcr_a", "tcr_b"):
+        return tuple(species)
+    raise ValueError(f"unsupported auxiliary outcome: {name}")
 
 
 @dataclass(frozen=True)
@@ -106,8 +144,17 @@ class Context:
     acquisition_units: dict[str, str] = field(default_factory=dict)
     observation_units: dict[str, str] = field(default_factory=dict)
     provenance: dict[str, Any] = field(default_factory=dict)
+    auxiliary_values: dict[str, str] = field(default_factory=dict)
+    auxiliary_overrides: dict[str, str] = field(default_factory=dict)
 
     def validate(self, max_length: int = 512) -> None:
+        for values in (self.auxiliary_values, self.auxiliary_overrides):
+            for name, value in values.items():
+                categories = (name.split(":", 1)[1],) if name.startswith("peptide_source:") else ()
+                if name not in ("mhc_pairing", "tcr_pairing", "tcr_lineage") and not categories:
+                    raise ValueError(f"unsupported auxiliary context: {name}")
+                if value not in identity_vocabulary(name, source_categories=categories):
+                    raise ValueError(f"unsupported auxiliary context value: {name}={value}")
         if (set(self.species) | set(self.species_overrides)) - set(ROLES):
             raise ValueError("unknown species role")
         if self.delivery not in DELIVERY:
@@ -157,8 +204,8 @@ class Observation:
             sequence(self.peptide, required=False, max_length=max_length)
             if self.value is not None:
                 raise ValueError("identity outcomes are labels, not scalar assay values")
-            if not self.mhc and not (self.tcr_a and self.tcr_b):
-                raise ValueError("identity requires MHC grooves or paired receptor sequences")
+            if not self.peptide and not self.mhc and not (self.tcr_a and self.tcr_b):
+                raise ValueError("identity requires a peptide, MHC grooves or paired receptors")
             if len(self.mhc) > 1:
                 raise ValueError("identity labels require one resolved molecular pair")
         else:

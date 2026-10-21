@@ -6,6 +6,36 @@ biological checkpoint yet. Passing software tests does not establish improved
 IC50 accuracy, useful TCR specificity or separately calibrated MS detectability.
 The default model and its checkpoint format remain unchanged.
 
+## Auxiliary annotations are not the affinity model
+
+The earlier shorthand "identity plus IC50" describes one diagnostic subset:
+sequence-annotation classification and measured IC50 regression share an encoder.
+"Identity" means labels such as molecular species and MHC class, not observation
+IDs, allele-ID embeddings or a peptide match lookup. It does not describe the
+complete processing, MS and receptor system requested in issue #130.
+
+The assay path retains the rich sequence vectors. For affinity, each peptide/core
+and each MHC groove contributes a 128-dimensional vector to a learned fusion,
+followed by register aggregation and an assay-specific scalar readout. Supplied
+or inferred class/species values provide additional inputs and class routing;
+the annotation predictions do not replace the sequence vectors. IC50 targets
+are standardized log10(nM), with one-sided losses for censored bounds.
+
+Auxiliary-only pretraining is supported, as is assay fitting with auxiliary
+replay: mean assay loss plus `identity_weight` times mean auxiliary-label loss
+(default weight 0.1). The weight is a configurable software default, not a
+validated scientific choice. Annotation labels train their classifiers and the
+shared encoder; assay labels train the encoder, fusion, active register pooling
+and assay readouts. Detaching categorical probabilities blocks the direct assay
+gradient into classifier weights. It does not freeze classifier behavior: assay
+updates to the shared encoder can still change its annotation predictions.
+
+Auxiliary tasks are optional. An affinity diagnostic can use supplied class and
+molecular species without allocating annotation heads. Learning these annotations
+does not establish useful binding representations, transfer, or a remedy for
+constant predictions. Those claims need matched affinity comparisons and retained
+annotation evaluation. No such real-data comparison exists for this model yet.
+
 ## Shape and information flow
 
 One shared sequence encoder uses 20 canonical residues plus padding, width 128,
@@ -14,7 +44,8 @@ positions and masked mean pooling. It encodes each sequence independently.
 
 | Requested outcome | Required sequences | Additional admitted inputs |
 | --- | --- | --- |
-| Molecular identity | MHC groove pair or paired TCR chains | Actual identity labels during training |
+| Molecular/chain identity | MHC groove pair or paired TCR chains | Actual identity/pairing labels during training |
+| Peptide source membership | Peptide alone | Reference category labels; categories can overlap |
 | Purified affinity/stability | Peptide, MHC groove 1, MHC groove 2 | Molecular class/species, supplied or inferred |
 | Cellular response/elution | Same pMHC inputs | APC/immune species, independent component states, antigen delivery, source flanks/boundaries |
 | Bulk MS observation | Peptide; source flanks when available | Digest and prospective acquisition context |
@@ -41,6 +72,29 @@ consistent MHC pair and APC/repertoire species from immune species. These are
 marked assumptions. Strict mode disables those defaults; antigen origin is never
 copied from the host. An uncertain or mixed pair cannot establish common species.
 A TCR lineage prediction does not establish actual coreceptor expression.
+
+Additional early tasks are `peptide_source`, `mhc_pairing` and `tcr_pairing`.
+Peptide-source prediction uses a frozen `source_categories` vocabulary and one
+independent sigmoid per category. Identity-label keys such as
+`peptide_source:human` take `present`/`absent`; omitted category labels are missing,
+not negative. A two-logit `[0, logit]` representation uses the same categorical CE
+loss and evaluator, exactly matching binary cross entropy. Each category retains
+its own supervision status; training one category cannot authorize the others.
+
+Chain-pairing heads consume the two corresponding sequence vectors and predict
+`matched`/`mismatched` for the declared source pairing task. Preparation requires
+explicit pairing evidence. An observed pair supplies a matched label; it cannot
+supply a measured mismatch. Generated pairing controls require a policy and parent
+lineage and do not establish biochemical incompatibility.
+
+`Context.auxiliary_values` and `auxiliary_overrides` preserve independent supplied
+and override values. Optional `auxiliary_context` slots declare downstream use:
+MHC pairing enters pMHC fusion, TCR pairing enters receptor fusion, and peptide-
+source/lineage priors enter applicable cellular outputs. Actual coreceptor state
+remains separate. Source/lineage overrides leave purified binding and fixed
+TCR–pMHC compatibility unchanged; none of these metadata enter the shared MS
+detector. Probabilities are detached from assay gradients; rich shared encoder
+representations remain trainable by all admitted objectives.
 
 The assay representation uses one linear/GELU fusion of sequence vectors, class,
 molecular species and 43 fixed peptide-flank features:
@@ -93,8 +147,9 @@ statuses independently. There is no automatic calibration or transfer claim.
 `presto.data.modular.Observation` is the single train/inference input. JSONL rows
 include the explicit `presto.modular.observation.v1` schema, stable observation and
 source IDs, endpoint, sequences, raw value/unit/qualifier, frozen split/group ID,
-context and provenance. Identity rows carry independent `identity_labels` and do
-not need a peptide or assay value. A candidate MHC bag belongs to one observation.
+context and provenance. Identity rows carry independent `identity_labels`; their
+sequences depend on the task and they never carry a scalar assay value. Peptide-
+source rows need only the peptide. A candidate MHC bag belongs to one observation.
 
 Supported direct regressions are `ic50`, `kd`, `ec50`, `kd_via_ic50`, `kd_via_ec50`,
 `koff`, `half_life` and `tm`. Proxy measurements remain separate. Concentration,
@@ -117,10 +172,20 @@ Source adapters in `presto.data.modular_sources` provide:
 - Paired-TCR admission requiring source-attested full paired chains and a measured
   outcome. The normalized contract is not a claim about the unavailable TCRvdb CSV.
 
-Source-specific preparation still owns cross-dataset deduplication, contradiction
-review, cell-line/parent/clone attribution and exclusion/defer reports. The training
-index verifies hashes, schema, unique observation IDs and group/peptide-disjoint
-splits; it does not certify donor or receptor-cluster independence from IDs alone.
+`presto.data.modular_auxiliary.weirdo_observations` reads Weirdo's prepared
+`splits.npz`/`splits.json` format. It requires hashes, the reference sequence hash,
+explicit per-split sample limits and a seed. Sampling is uniform without replacement
+and independent of labels; original folds, family buckets, row indices and overlapping
+membership labels are retained. Byte/schema verification does not certify the
+upstream biological independence or create an exact species-of-origin label.
+
+`presto.data.modular_preparation.prepare_observations` deduplicates original
+measured outcomes across exports, defers conflicting copies, preserves independent
+replicates and writes per-row dispositions and a census. Source adapters still
+need to establish original measurement lineage and cell-line/parent/clone
+attribution. The training index verifies hashes, schema, unique original outcomes
+and group/peptide-disjoint splits; it does not certify donor or receptor-cluster
+independence from IDs alone.
 It indexes file offsets and batches sequences/registers instead of retaining every
 candidate representation for the entire corpus. Inputs changed after admission fail.
 
