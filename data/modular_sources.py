@@ -16,7 +16,7 @@ from typing import Iterable
 from .bulk_ms import BulkMSRecord
 from .groove import prepare_mhc_input
 from .loaders import BindingRecord, KineticsRecord, StabilityRecord
-from .modular import Context, MHCInput, Observation, sequence
+from .modular import Context, MHCInput, Observation, sequence, endpoint_spec
 from .modular_lineage import measurement_key
 
 MANIFEST_VERSION = "presto.modular.manifest.v1"
@@ -158,6 +158,20 @@ def normalized_observation(row: dict, *, evidence_policy: str) -> Observation:
     if not evidence_policy:
         raise ValueError("explicit source evidence policy required")
     observation = Observation.from_dict(row)
+    if observation.endpoint != "identity" and endpoint_spec(observation.endpoint).quantitative:
+        if observation.provenance.get("measured_outcome") is not True:
+            raise ValueError("quantity supervision requires an attested measured outcome")
+        parts = endpoint_spec(observation.endpoint).parts
+        if len(parts) == 1:
+            evidence = observation.provenance.get("component_measurement", {})
+            if (
+                not isinstance(evidence, dict)
+                or evidence.get("component") != parts[0]
+                or evidence.get("basis") != "independent_component_measurement"
+                or not isinstance(evidence.get("reference"), str)
+                or not evidence["reference"]
+            ):
+                raise ValueError("component anchor requires independent measurement evidence")
     if observation.endpoint in ("tcr_binding", "tcr_response"):
         if observation.provenance.get("tcr_sequence_scope") != "full_paired":
             raise ValueError("paired specificity requires source-attested full TCR chains")

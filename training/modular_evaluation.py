@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 from collections import defaultdict
+from dataclasses import asdict
 import math
 from typing import Any
 
 import numpy as np
 import torch
 
-from ..data.modular import ENDPOINTS, transformed_target
+from ..data.modular import endpoint_spec, observation_target
 from .modular import identity_targets, observation_loss
 
 
@@ -133,21 +134,25 @@ def evaluate(model, index, indices, scales, *, batch_size=64):
                     else:
                         loss = observation_loss(output, row, scales)
                         value = float(output.value)
-                        spec = ENDPOINTS[row.endpoint]
-                        if not spec.binary:
+                        spec = endpoint_spec(row.endpoint)
+                        if not spec.binary and not spec.quantitative:
                             value = scales[row.endpoint].decode(value)
                         records.append(
                             {
                                 **base,
                                 "prediction": value,
-                                "target": transformed_target(
-                                    row.endpoint, row.value, row.unit, row.qualifier
-                                ),
+                                "target": observation_target(row),
                                 "raw_value": row.value,
                                 "raw_unit": row.unit,
                                 "target_space": "logit"
                                 if spec.binary
+                                else row.quantity_contract.target_space
+                                if spec.quantitative
                                 else (f"log10({spec.unit})" if spec.log10 else spec.unit),
+                                "quantity_contract": asdict(row.quantity_contract)
+                                if spec.quantitative
+                                else None,
+                                "value_encoding": row.value_encoding,
                                 "loss": float(loss),
                             }
                         )
@@ -167,7 +172,7 @@ def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
             metrics["accuracy"] = sum(row["target"] == row["prediction"] for row in rows) / len(
                 rows
             )
-        elif ENDPOINTS[endpoint].binary:
+        elif endpoint_spec(endpoint).binary:
             metrics.update(
                 binary_metrics(
                     [row["target"] for row in rows],
@@ -181,7 +186,8 @@ def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
                 metrics["exact"] = regression_metrics(
                     [row["target"] for row in exact],
                     [row["prediction"] for row in exact],
-                    binding=ENDPOINTS[endpoint].unit == "nM",
+                    binding=not endpoint_spec(endpoint).quantitative
+                    and endpoint_spec(endpoint).unit == "nM",
                 )
                 metrics["by_class"] = {}
                 for mhc_class in ("I", "II"):
@@ -190,7 +196,8 @@ def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
                         metrics["by_class"][mhc_class] = regression_metrics(
                             [row["target"] for row in subset],
                             [row["prediction"] for row in subset],
-                            binding=ENDPOINTS[endpoint].unit == "nM",
+                            binding=not endpoint_spec(endpoint).quantitative
+                            and endpoint_spec(endpoint).unit == "nM",
                         )
             bounds = [row for row in rows if row["qualifier"] != "="]
             if bounds:

@@ -121,3 +121,37 @@ added [requirements to #95](https://github.com/pirl-unc/hitlist/issues/95#issuec
 to keep raw and normalized bulk intensities separate and preserve actual run/
 replicate and censoring evidence. Neither request claims original supplementary
 tables have already been downloaded, parsed or admitted here.
+
+## Quantitative observation paths and preparation context
+
+Added explicitly declared quantity domains for bulk/elution observations and
+independently measured MS/digestion/cellular component targets. Each domain pins
+meaning, canonical unit, normalization, reference and target transform. Raw log
+encoding and real censor bounds survive admission, target conversion, prediction
+dumps and public inference. Incompatible domains receive separate scalar
+readouts; within a domain the MS readout is shared across bulk/elution/anchor
+paths. Feature blocks remain shared with binary observations. Quantitative-only
+subsets allocate no unused binary readout parameters.
+
+Outputs stay in the declared transformed measurement space, with training-only
+residual scaling inside the loss. Bags have one aggregated outcome/loss, with
+log-base-correct averaging. Numeric digestion preparation features have declared
+units and missingness and affect digestion alone. Allocated preparation channels
+require varied training values. Component-target admission requires explicit
+independent-measurement evidence; this is an auditable source assertion, not a
+certificate of identifiability or calibrated detector response.
+
+Verification: **84 focused tests passed in 5.21 seconds**; repository-wide Ruff
+lint and format checks pass (331 files), as does diff whitespace validation. The
+first focused quantity run exposed an overly specific test error-message match;
+the corrected assertion passes. These checks include an artificial streaming
+fit, support closure and checkpoint/inference round trips. No real-data fit or
+anchor/transfer experiment ran. All four GitHub checks on preceding published
+head `c66caae59eed3a7acef6aaea8cff7ad5d90937e9` succeeded; they do not cover these
+subsequent quantitative changes.
+
+Direct biochemical cleavage/transport supervision is still a distinct missing
+path: `cellular_quantity` means available pMHC, not an arbitrary processing assay.
+Real quantity adapters/cohorts, independent anchors and transfer qualification,
+continuation/freezing/resume, broader scientific gates and the other full-goal
+requirements remain open. Full regression for this source slice is pending.

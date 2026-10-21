@@ -25,7 +25,10 @@ from ..data.modular import (
     Observation,
     MachineryProfile,
     identity_vocabulary,
+    endpoint_spec,
+    is_endpoint,
 )
+from ..data.modular_quantitative import QuantitativeDomain, quantity_domain
 from ..data.modular_context import (
     resolve_cell_context,
     resolve_components,
@@ -61,6 +64,9 @@ class ModularConfig:
     observation_features: tuple[str, ...] = ()
     acquisition_units: dict[str, str] = field(default_factory=dict)
     observation_units: dict[str, str] = field(default_factory=dict)
+    preparation_features: tuple[str, ...] = ()
+    preparation_units: dict[str, str] = field(default_factory=dict)
+    quantity_domains: dict[str, QuantitativeDomain] = field(default_factory=dict)
     source_context: bool = False
     species_defaults: bool = True
     identity_threshold: float = 0.8
@@ -83,12 +89,22 @@ class ModularConfig:
             "enzymes",
             "acquisition_features",
             "observation_features",
+            "preparation_features",
         ):
             values = getattr(self, name)
             if len(values) != len(set(values)):
                 raise ValueError(f"duplicate {name}")
-        if set(self.endpoints) - ENDPOINTS.keys() or set(self.identity_tasks) - set(IDENTITY_TASKS):
+        if any(not is_endpoint(name) for name in self.endpoints) or set(self.identity_tasks) - set(
+            IDENTITY_TASKS
+        ):
             raise ValueError("unsupported endpoint or identity task")
+        domains = {quantity_domain(name) for name in self.endpoints} - {None}
+        if domains != set(self.quantity_domains) or any(
+            not isinstance(value, QuantitativeDomain) for value in self.quantity_domains.values()
+        ):
+            raise ValueError(
+                "quantity endpoints require exactly their declared measurement domains"
+            )
         if "peptide_source" in self.identity_tasks and not self.source_categories:
             raise ValueError("peptide source prediction requires declared category labels")
         for name in self.auxiliary_context:
@@ -110,6 +126,7 @@ class ModularConfig:
         for names, units in (
             (self.acquisition_features, self.acquisition_units),
             (self.observation_features, self.observation_units),
+            (self.preparation_features, self.preparation_units),
         ):
             if set(names) != set(units) or any(not value for value in units.values()):
                 raise ValueError("each numeric feature requires a declared unit/scale")
@@ -145,7 +162,7 @@ class ModularConfig:
             raise ValueError("invalid dropout or identity threshold")
         if self.max_length < 9:
             raise ValueError("max_length must support canonical cores")
-        routes = {ENDPOINTS[name].route for name in self.endpoints}
+        routes = {endpoint_spec(name).route for name in self.endpoints}
         cellular = bool(routes & {"cellular", "tcr_cellular"})
         contextual = bool(routes & {"cellular", "tcr", "tcr_cellular"})
         if self.components and not cellular:
@@ -173,12 +190,14 @@ class ModularConfig:
             raise ValueError("source context has no active loss path")
         if self.enzymes and not (routes & {"digest", "bulk"}):
             raise ValueError("enzyme features have no digest loss path")
-        if self.acquisition_features and not (
-            routes & {"bulk", "detector"} or "elution_observation" in self.endpoints
+        if self.preparation_features and not routes & {"digest", "bulk"}:
+            raise ValueError("preparation features have no digest loss path")
+        if self.acquisition_features and not any(
+            "ms_response" in endpoint_spec(name).parts for name in self.endpoints
         ):
             raise ValueError("acquisition features have no MS loss path")
-        if self.observation_features and not (
-            set(self.endpoints) & {"bulk_observation", "elution_observation"}
+        if self.observation_features and not any(
+            endpoint_spec(name).observation_covariates for name in self.endpoints
         ):
             raise ValueError("observation covariates have no observation loss path")
 
@@ -200,6 +219,7 @@ class ModularConfig:
             "enzymes",
             "acquisition_features",
             "observation_features",
+            "preparation_features",
         ):
             if name in data:
                 data[name] = tuple(data[name])
@@ -211,6 +231,11 @@ class ModularConfig:
             data["machinery_references"] = tuple(
                 MachineryProfile.from_dict(value) for value in data["machinery_references"]
             )
+        if "quantity_domains" in data:
+            data["quantity_domains"] = {
+                name: QuantitativeDomain(**value)
+                for name, value in data["quantity_domains"].items()
+            }
         return cls(**data)
 
 
@@ -268,15 +293,13 @@ class ModularPresto(nn.Module):
             max_len=config.max_length,
             dropout=config.dropout,
         )
-        routes = {ENDPOINTS[name].route for name in config.endpoints}
+        routes = {endpoint_spec(name).route for name in config.endpoints}
         self.has_pmhc = bool(routes & {"pmhc", "cellular", "tcr", "tcr_cellular"})
         self.has_cellular = bool(routes & {"cellular", "tcr_cellular"})
         self.has_tcr = bool(routes & {"tcr", "tcr_cellular"})
         self.has_context = self.has_cellular or self.has_tcr
         self.has_digest = bool(routes & {"bulk", "digest"})
-        self.has_ms = (
-            bool(routes & {"bulk", "detector"}) or "elution_observation" in config.endpoints
-        )
+        self.has_ms = any("ms_response" in endpoint_spec(name).parts for name in config.endpoints)
         self.has_coreceptor = bool(set(config.endpoints) & {"tcell_response", "tcr_response"})
         self.identity_heads = nn.ModuleDict()
         for name in config.identity_tasks:
@@ -315,20 +338,42 @@ class ModularPresto(nn.Module):
         if self.has_context:
             self.context_fusion = self._fusion(128 + self.context_width)
         if self.has_digest:
-            self.digest_fusion = self._fusion(128 + source_width + len(config.enzymes) + 1)
-            self.digest_score = nn.Linear(128, 1, bias=False)
+            self.digest_fusion = self._fusion(
+                128 + source_width + len(config.enzymes) + 1 + 2 * len(config.preparation_features)
+            )
         if self.has_ms:
             self.ms_fusion = self._fusion(128 + 2 * len(config.acquisition_features))
-            self.ms_score = nn.Linear(128, 1, bias=False)
+        binary_parts = {
+            part
+            for name in config.endpoints
+            if not endpoint_spec(name).quantitative
+            for part in endpoint_spec(name).parts
+        }
+        for part in sorted(binary_parts):
+            setattr(
+                self,
+                "ms_score" if part == "ms_response" else f"{part}_score",
+                nn.Linear(128, 1, bias=False),
+            )
+        self.quantity_scores = nn.ModuleDict()
+        for domain in config.quantity_domains:
+            parts = {
+                part
+                for name in config.endpoints
+                if quantity_domain(name) == domain
+                for part in endpoint_spec(name).parts
+            }
+            self.quantity_scores[domain] = nn.ModuleDict(
+                {part: nn.Linear(128, 1, bias=False) for part in sorted(parts)}
+            )
         self.heads = nn.ModuleDict()
         self.offsets = nn.ModuleDict()
         for name in config.endpoints:
-            if name in ("bulk_observation", "elution_observation"):
-                self.offsets[name] = ObservationOffset(2 * len(config.observation_features))
-                if name == "elution_observation":
-                    self.cellular_score = nn.Linear(128, 1, bias=False)
-            elif name in ("digest_observation", "ms_response"):
-                self.offsets[name] = ObservationOffset(0)
+            spec = endpoint_spec(name)
+            if spec.parts:
+                self.offsets[name] = ObservationOffset(
+                    2 * len(config.observation_features) if spec.observation_covariates else 0
+                )
             else:
                 self.heads[name] = nn.Linear(128, 1)
         self.trained_parameters: set[str] = set()
@@ -355,10 +400,30 @@ class ModularPresto(nn.Module):
     def _zero(self, length: int) -> torch.Tensor:
         return self.encoder.embedding.weight.new_zeros(length)
 
+    def _component_score(self, endpoint, part, features):
+        domain = quantity_domain(endpoint)
+        head = (
+            self.quantity_scores[domain][part]
+            if domain is not None
+            else getattr(self, "ms_score" if part == "ms_response" else f"{part}_score")
+        )
+        return head(features).squeeze(-1)
+
+    def _candidate_mean(self, endpoint, scores):
+        domain = quantity_domain(endpoint)
+        if domain is None:
+            factor = 1.0
+        else:
+            transform = self.config.quantity_domains[domain].transform
+            if transform == "identity":
+                return scores.mean()
+            factor = math.log(2) if transform == "log2" else math.log(10)
+        return (torch.logsumexp(scores * factor, 0) - math.log(len(scores))) / factor
+
     def _encode(self, rows: Sequence[Observation]) -> dict[str, torch.Tensor]:
         sequences: dict[str, None] = {}
         for row in rows:
-            route = ENDPOINTS[row.endpoint].route if row.endpoint != "identity" else "identity"
+            route = endpoint_spec(row.endpoint).route if row.endpoint != "identity" else "identity"
             receptor = route in ("tcr", "tcr_cellular") or any(
                 name.startswith("tcr") for name in self.config.identity_tasks
             )
@@ -481,7 +546,7 @@ class ModularPresto(nn.Module):
             self.config.cytokine_dose_units,
             self.config.cytokine_duration_features,
             strict=row.endpoint != "identity"
-            and ENDPOINTS[row.endpoint].route in ("cellular", "tcr_cellular"),
+            and endpoint_spec(row.endpoint).route in ("cellular", "tcr_cellular"),
         )
         components = resolve_components(
             row.context,
@@ -517,7 +582,7 @@ class ModularPresto(nn.Module):
         )
 
     def _context(self, row, encoded, species, components, auxiliary, cell):
-        route = ENDPOINTS[row.endpoint].route
+        route = endpoint_spec(row.endpoint).route
         cellular = route in ("cellular", "tcr_cellular")
         receptor = route in ("tcr", "tcr_cellular")
         values = []
@@ -600,7 +665,7 @@ class ModularPresto(nn.Module):
                 "MHC class must be supplied or predicted by an allocated identity task"
             )
         pooled, register_info = [], []
-        contextual = ENDPOINTS[row.endpoint].route != "pmhc"
+        contextual = endpoint_spec(row.endpoint).route != "pmhc"
         context = (
             self._context(row, encoded, species, components, auxiliary, cell)
             if contextual
@@ -659,7 +724,7 @@ class ModularPresto(nn.Module):
             "components": {name: asdict(value) for name, value in components.items()},
             "cell_context": {
                 **asdict(cell),
-                "applies_to_endpoint": ENDPOINTS[row.endpoint].route
+                "applies_to_endpoint": endpoint_spec(row.endpoint).route
                 in ("cellular", "tcr_cellular"),
             },
             "registers": register_info,
@@ -674,6 +739,12 @@ class ModularPresto(nn.Module):
             row.validate(self.config.max_length)
             if row.endpoint != "identity" and row.endpoint not in self.config.endpoints:
                 raise ValueError(f"endpoint not allocated: {row.endpoint}")
+            if row.endpoint != "identity" and endpoint_spec(row.endpoint).quantitative:
+                if (
+                    row.quantity_contract
+                    != self.config.quantity_domains[quantity_domain(row.endpoint)]
+                ):
+                    raise ValueError("quantity measurement contract differs from checkpoint domain")
         encoded = self._encode(rows)
         results = []
         for row in rows:
@@ -693,14 +764,15 @@ class ModularPresto(nn.Module):
                 }
                 results.append(output)
                 continue
-            route = ENDPOINTS[row.endpoint].route
+            spec = endpoint_spec(row.endpoint)
+            route = spec.route
             if route in ("bulk", "digest", "detector"):
                 output.identity = self._identity(row, None, encoded)
                 output.diagnostics["auxiliary"] = {
                     name: asdict(value)
                     for name, value in self._auxiliary(row, output.identity).items()
                 }
-            if route in ("bulk", "detector") or row.endpoint == "elution_observation":
+            if "ms_response" in spec.parts:
                 ms_features = torch.cat(
                     [
                         encoded[row.peptide],
@@ -712,9 +784,9 @@ class ModularPresto(nn.Module):
                         ),
                     ]
                 )
-                output.components["ms_response"] = self.ms_score(
-                    self.ms_fusion(ms_features)
-                ).squeeze(-1)
+                output.components["ms_response"] = self._component_score(
+                    row.endpoint, "ms_response", self.ms_fusion(ms_features)
+                )
             if route in ("bulk", "digest"):
                 enzyme = row.context.enzyme
                 if enzyme is not None and enzyme not in self.config.enzymes:
@@ -725,9 +797,17 @@ class ModularPresto(nn.Module):
                 features.append(
                     self._tensor([float(enzyme == name) for name in (*self.config.enzymes, None)])
                 )
-                output.components["digest"] = self.digest_score(
-                    self.digest_fusion(torch.cat(features))
-                ).squeeze(-1)
+                features.append(
+                    self._covariates(
+                        self.config.preparation_features,
+                        row.context.preparation,
+                        row.context.preparation_units,
+                        self.config.preparation_units,
+                    )
+                )
+                output.components["digest"] = self._component_score(
+                    row.endpoint, "digest", self.digest_fusion(torch.cat(features))
+                )
             if route in ("pmhc", "cellular", "tcr", "tcr_cellular"):
                 # Provenance differences do not duplicate a biological candidate.
                 unique = {}
@@ -749,15 +829,13 @@ class ModularPresto(nn.Module):
                     if len(unique) == 1:
                         output.identity = identity
                 output.diagnostics["candidates"] = diagnostics
-                if row.endpoint == "elution_observation":
-                    scores = self.cellular_score(torch.stack(vectors)).squeeze(-1)
-                    output.components["cellular"] = torch.logsumexp(scores, 0) - math.log(
-                        len(scores)
-                    )
+                if "cellular" in spec.parts:
+                    scores = self._component_score(row.endpoint, "cellular", torch.stack(vectors))
+                    output.components["cellular"] = self._candidate_mean(row.endpoint, scores)
                 else:
                     output.value = self.heads[row.endpoint](vectors[0]).squeeze(-1)
             if row.endpoint in self.offsets:
-                if row.endpoint in ("ms_response", "digest_observation"):
+                if not spec.observation_covariates:
                     covariates = self._zero(0)
                 else:
                     covariates = self._covariates(
@@ -777,7 +855,7 @@ class ModularPresto(nn.Module):
             name: self.support.get(
                 name, {"status": "not_allocated", "observations": 0, "validation": "not_evaluated"}
             )
-            for name in (*ENDPOINTS, *IDENTITY_TASKS)
+            for name in dict.fromkeys((*ENDPOINTS, *self.config.endpoints, *IDENTITY_TASKS))
         }
         components = {}
         for name, anchor, mixtures, allocated in (
@@ -785,9 +863,9 @@ class ModularPresto(nn.Module):
                 "ms_response",
                 "ms_response",
                 ("bulk_observation", "elution_observation"),
-                self.has_ms,
+                hasattr(self, "ms_score"),
             ),
-            ("digest", "digest_observation", ("bulk_observation",), self.has_digest),
+            ("digest", "digest_observation", ("bulk_observation",), hasattr(self, "digest_score")),
             (
                 "cellular",
                 None,
@@ -821,10 +899,40 @@ class ModularPresto(nn.Module):
             }
             for name, values in self.source_label_support.items()
         }
+        quantity_components = {}
+        for domain, readouts in self.quantity_scores.items():
+            quantity_components[domain] = {}
+            for component in readouts:
+                relevant = [
+                    name
+                    for name in self.config.endpoints
+                    if quantity_domain(name) == domain and component in endpoint_spec(name).parts
+                ]
+                direct = [
+                    name
+                    for name in relevant
+                    if len(endpoint_spec(name).parts) == 1
+                    and outputs[name]["status"] in ("directly_supervised", "pretrained_frozen")
+                ]
+                indirect = [
+                    name for name in relevant if outputs[name]["status"] == "directly_supervised"
+                ]
+                quantity_components[domain][component] = {
+                    "status": "directly_supervised"
+                    if direct
+                    else "indirectly_trained"
+                    if indirect
+                    else "random/untrained",
+                    "anchor_endpoints": direct,
+                    "validation": "not_evaluated",
+                    "identifiable_from_mixture_labels_alone": False,
+                    "contract": asdict(self.config.quantity_domains[domain]),
+                }
         return {
             "outputs": outputs,
             "components": components,
             "source_membership": source_membership,
+            "quantity_components": quantity_components,
         }
 
     def predict(self, rows: Sequence[Observation]) -> list[Prediction]:
@@ -850,7 +958,7 @@ class ModularPresto(nn.Module):
                 ]
                 if missing_categories:
                     raise ValueError(f"untrained peptide source outputs: {missing_categories}")
-            if row.endpoint in ENDPOINTS and ENDPOINTS[row.endpoint].route in (
+            if row.endpoint != "identity" and endpoint_spec(row.endpoint).route in (
                 "cellular",
                 "tcr_cellular",
             ):
@@ -894,7 +1002,7 @@ class ModularPresto(nn.Module):
                 )
             if row.endpoint == "identity":
                 continue
-            route = ENDPOINTS[row.endpoint].route
+            route = endpoint_spec(row.endpoint).route
             if route in ("pmhc", "cellular", "tcr", "tcr_cellular"):
                 prefixes.add("pmhc_fusion.")
                 if len(row.peptide) > 9 and any(
@@ -903,12 +1011,20 @@ class ModularPresto(nn.Module):
                     prefixes.add("register_score.")
             if route in ("cellular", "tcr", "tcr_cellular"):
                 prefixes.add("context_fusion.")
-            if route in ("bulk", "detector") or row.endpoint == "elution_observation":
-                prefixes.update(("ms_fusion.", "ms_score."))
+            spec = endpoint_spec(row.endpoint)
+            if "ms_response" in spec.parts:
+                prefixes.add("ms_fusion.")
             if route in ("bulk", "digest"):
-                prefixes.update(("digest_fusion.", "digest_score."))
-            if row.endpoint == "elution_observation":
-                prefixes.add("cellular_score.")
+                prefixes.add("digest_fusion.")
+            domain = quantity_domain(row.endpoint)
+            for part in spec.parts:
+                prefixes.add(
+                    f"quantity_scores.{domain}.{part}."
+                    if domain is not None
+                    else "ms_score."
+                    if part == "ms_response"
+                    else f"{part}_score."
+                )
             prefixes.update((f"heads.{row.endpoint}.", f"offsets.{row.endpoint}."))
         required.update(
             name

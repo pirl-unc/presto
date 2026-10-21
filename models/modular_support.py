@@ -83,6 +83,7 @@ def feature_layout(model):
     if model.has_digest:
         names = vector("peptide") + (source if config.source_context else [])
         names += [f"enzyme:{value}" for value in (*config.enzymes, "unknown")]
+        names += numeric("preparation", config.preparation_features)
         result["digest_fusion.0.weight"] = (1, names)
     if model.has_ms:
         names = vector("peptide") + numeric("acquisition", config.acquisition_features)

@@ -10,6 +10,8 @@ from dataclasses import asdict, dataclass, field
 import math
 from typing import Any, Iterable, Mapping
 
+from .modular_quantitative import QuantitativeDomain, QUANTITY_PARTS, quantity_domain
+
 SCHEMA = "presto.modular.observation.v1"
 AA = "ACDEFGHIKLMNPQRSTVWY"
 STATES = ("reference", "intact", "reduced", "lost", "unknown")
@@ -64,6 +66,12 @@ class Endpoint:
     unit: str
     log10: bool = False
     binary: bool = False
+    parts: tuple[str, ...] = ()
+    quantitative: bool = False
+
+    @property
+    def observation_covariates(self):
+        return self.quantitative or len(self.parts) > 1
 
 
 ENDPOINTS = {
@@ -75,14 +83,33 @@ ENDPOINTS = {
     "koff": Endpoint("pmhc", "1/s", True),
     "half_life": Endpoint("pmhc", "min", True),
     "tm": Endpoint("pmhc", "C"),
-    "bulk_observation": Endpoint("bulk", "binary", binary=True),
-    "elution_observation": Endpoint("cellular", "binary", binary=True),
-    "ms_response": Endpoint("detector", "binary", binary=True),
-    "digest_observation": Endpoint("digest", "binary", binary=True),
+    "bulk_observation": Endpoint("bulk", "binary", binary=True, parts=("digest", "ms_response")),
+    "elution_observation": Endpoint(
+        "cellular", "binary", binary=True, parts=("cellular", "ms_response")
+    ),
+    "ms_response": Endpoint("detector", "binary", binary=True, parts=("ms_response",)),
+    "digest_observation": Endpoint("digest", "binary", binary=True, parts=("digest",)),
     "tcell_response": Endpoint("cellular", "binary", binary=True),
     "tcr_binding": Endpoint("tcr", "binary", binary=True),
     "tcr_response": Endpoint("tcr_cellular", "binary", binary=True),
 }
+
+
+def endpoint_spec(name: str) -> Endpoint:
+    if name in ENDPOINTS:
+        return ENDPOINTS[name]
+    if quantity_domain(name) is not None:
+        route, parts = QUANTITY_PARTS[name.split(":", 1)[0]]
+        return Endpoint(route, "declared_quantity", parts=parts, quantitative=True)
+    raise ValueError(f"unsupported endpoint: {name}")
+
+
+def is_endpoint(name: str) -> bool:
+    try:
+        endpoint_spec(name)
+    except ValueError:
+        return False
+    return True
 
 
 def sequence(value: str, *, required: bool = True, max_length: int = 512) -> str:
@@ -204,6 +231,8 @@ class Context:
     cell_type_override: str | None = None
     cytokines: dict[str, Exposure] = field(default_factory=dict)
     cytokine_overrides: dict[str, Exposure] = field(default_factory=dict)
+    preparation: dict[str, float] = field(default_factory=dict)
+    preparation_units: dict[str, str] = field(default_factory=dict)
 
     def validate(self, max_length: int = 512) -> None:
         for value in (self.cell_type, self.cell_type_override):
@@ -230,7 +259,7 @@ class Context:
         for value in (self.source_n, self.source_c):
             if value is not None:
                 sequence(value, required=False, max_length=max_length)
-        for features in (self.acquisition, self.observation):
+        for features in (self.acquisition, self.observation, self.preparation):
             if any(not math.isfinite(value) for value in features.values()):
                 raise ValueError("nonfinite context covariate")
 
@@ -253,6 +282,8 @@ class Observation:
     identity_labels: dict[str, str] = field(default_factory=dict)
     provenance: dict[str, Any] = field(default_factory=dict)
     schema: str = SCHEMA
+    quantity_contract: QuantitativeDomain | None = None
+    value_encoding: str = "linear"
 
     def validate(self, max_length: int = 512) -> None:
         if self.schema != SCHEMA or not self.observation_id or not self.source:
@@ -264,6 +295,16 @@ class Observation:
         for candidate in self.mhc:
             candidate.validate(max_length)
         self.context.validate(max_length)
+        if self.value_encoding not in ("linear", "log2", "log10"):
+            raise ValueError("unsupported raw value encoding")
+        quantitative = self.endpoint != "identity" and endpoint_spec(self.endpoint).quantitative
+        if quantitative:
+            if not isinstance(self.quantity_contract, QuantitativeDomain):
+                raise ValueError("quantity endpoint requires a measurement contract")
+            if self.unit is not None and self.unit != self.quantity_contract.unit:
+                raise ValueError("quantitative measurement unit mismatch")
+        elif self.quantity_contract is not None or self.value_encoding != "linear":
+            raise ValueError("quantity contracts/encoded values require a quantity endpoint")
         if self.endpoint == "identity":
             sequence(self.peptide, required=False, max_length=max_length)
             if self.value is not None:
@@ -273,18 +314,17 @@ class Observation:
             if len(self.mhc) > 1:
                 raise ValueError("identity labels require one resolved molecular pair")
         else:
-            if self.endpoint not in ENDPOINTS:
-                raise ValueError(f"unsupported endpoint: {self.endpoint}")
-            route = ENDPOINTS[self.endpoint].route
+            spec = endpoint_spec(self.endpoint)
+            route = spec.route
             sequence(self.peptide, max_length=max_length)
             if route in ("pmhc", "cellular", "tcr", "tcr_cellular") and not self.mhc:
                 raise ValueError("endpoint requires resolved MHC grooves")
-            if len(self.mhc) > 1 and self.endpoint != "elution_observation":
+            if len(self.mhc) > 1 and "cellular" not in spec.parts:
                 raise ValueError("only elution observations support candidate MHC bags")
             if route in ("tcr", "tcr_cellular") and not (self.tcr_a and self.tcr_b):
                 raise ValueError("paired TCR sequences required")
             if self.value is not None:
-                transformed_target(self.endpoint, self.value, self.unit, self.qualifier)
+                observation_target(self)
             if self.identity_labels:
                 raise ValueError("identity supervision must use separately sampled identity rows")
         for value in (self.tcr_a, self.tcr_b):
@@ -310,15 +350,27 @@ class Observation:
         for key in ("cytokines", "cytokine_overrides"):
             context[key] = {name: Exposure(**value) for name, value in context.get(key, {}).items()}
         data["context"] = Context(**context)
+        if data.get("quantity_contract") is not None:
+            data["quantity_contract"] = QuantitativeDomain(**data["quantity_contract"])
         result = cls(**data)
         result.validate()
         return result
 
 
 def transformed_target(
-    endpoint: str, value: float, unit: str | None, qualifier: str = "="
+    endpoint: str,
+    value: float,
+    unit: str | None,
+    qualifier: str = "=",
+    *,
+    quantity_contract: QuantitativeDomain | None = None,
+    value_encoding: str = "linear",
 ) -> float:
-    spec = ENDPOINTS[endpoint]
+    spec = endpoint_spec(endpoint)
+    if spec.quantitative:
+        if quantity_contract is None:
+            raise ValueError("quantity target requires a measurement contract")
+        return quantity_contract.convert(value, unit, value_encoding)
     if not math.isfinite(value):
         raise ValueError("nonfinite target")
     if spec.binary:
@@ -339,6 +391,17 @@ def transformed_target(
             raise ValueError("log target must be positive")
         return math.log10(canonical)
     return canonical
+
+
+def observation_target(row: Observation) -> float:
+    return transformed_target(
+        row.endpoint,
+        row.value,
+        row.unit,
+        row.qualifier,
+        quantity_contract=row.quantity_contract,
+        value_encoding=row.value_encoding,
+    )
 
 
 @dataclass(frozen=True)
@@ -364,15 +427,23 @@ class TargetScale:
 def fit_target_scales(rows: Iterable[Observation], floor: float = 1e-3) -> dict[str, TargetScale]:
     """Only exact TRAIN outcomes fit preprocessing; bounds never set the scale."""
     moments: dict[str, list] = {}
+    quantity_contracts = {}
     active = set()
     for row in rows:
-        if row.endpoint == "identity" or ENDPOINTS[row.endpoint].binary or row.split != "train":
+        if row.endpoint == "identity" or endpoint_spec(row.endpoint).binary or row.split != "train":
             continue
         if row.value is None:
             continue
+        if endpoint_spec(row.endpoint).quantitative:
+            if (
+                row.endpoint in quantity_contracts
+                and quantity_contracts[row.endpoint] != row.quantity_contract
+            ):
+                raise ValueError("cannot fit a target scale across incompatible quantity contracts")
+            quantity_contracts[row.endpoint] = row.quantity_contract
         active.add(row.endpoint)
         if row.qualifier == "=":
-            value = transformed_target(row.endpoint, row.value, row.unit)
+            value = observation_target(row)
             count, mean, m2, first, varied = moments.get(row.endpoint, [0, 0.0, 0.0, value, False])
             count += 1
             delta = value - mean

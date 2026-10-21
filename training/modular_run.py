@@ -15,7 +15,8 @@ import time
 
 import torch
 
-from ..data.modular import ENDPOINTS, fit_target_scales, identity_head
+from ..data.modular import endpoint_spec, is_endpoint, fit_target_scales, identity_head
+from ..data.modular_quantitative import quantity_domain
 from ..data.modular_context import resolve_cell_context
 from ..data.modular_sources import ObservationIndex, file_sha256
 from ..models.modular import ModularConfig, ModularPresto
@@ -104,7 +105,8 @@ def preflight(index: ObservationIndex):
     scales = fit_target_scales(index)
     counts, label_values, feature_states = Counter(), defaultdict(set), defaultdict(set)
     source_label_values = defaultdict(set)
-    observed_features = {"acquisition": set(), "observation": set()}
+    observed_features = {"acquisition": set(), "observation": set(), "preparation": set()}
+    preparation_values = defaultdict(set)
     cell_types, cytokine_states, cytokine_numeric = set(), defaultdict(set), defaultdict(set)
     assay_classes, has_multi_register = set(), False
     heldout_multi_register = False
@@ -128,7 +130,13 @@ def preflight(index: ObservationIndex):
         else:
             if row.endpoint not in config.endpoints:
                 raise ValueError(f"admitted row targets an unallocated endpoint: {row.endpoint}")
-            route = ENDPOINTS[row.endpoint].route
+            spec = endpoint_spec(row.endpoint)
+            route = spec.route
+            if (
+                spec.quantitative
+                and row.quantity_contract != config.quantity_domains[quantity_domain(row.endpoint)]
+            ):
+                raise ValueError("quantity measurement contract differs from configured domain")
             if route in ("cellular", "tcr_cellular"):
                 cell = resolve_cell_context(
                     row.context,
@@ -146,7 +154,7 @@ def preflight(index: ObservationIndex):
                             cytokine_numeric[f"{name}:dose"].add(exposure.dose)
                         if exposure.duration_hours is not None:
                             cytokine_numeric[f"{name}:duration_hours"].add(exposure.duration_hours)
-            if route in ("bulk", "detector") or row.endpoint == "elution_observation":
+            if "ms_response" in spec.parts:
                 validator._covariates(
                     config.acquisition_features,
                     row.context.acquisition,
@@ -155,7 +163,7 @@ def preflight(index: ObservationIndex):
                 )
                 if row.split == "train":
                     observed_features["acquisition"].update(row.context.acquisition)
-            if row.endpoint in ("bulk_observation", "elution_observation"):
+            if spec.observation_covariates:
                 validator._covariates(
                     config.observation_features,
                     row.context.observation,
@@ -164,9 +172,19 @@ def preflight(index: ObservationIndex):
                 )
                 if row.split == "train":
                     observed_features["observation"].update(row.context.observation)
-            if route in ("bulk", "digest") and row.context.enzyme is not None:
-                if row.context.enzyme not in config.enzymes:
+            if route in ("bulk", "digest"):
+                if row.context.enzyme is not None and row.context.enzyme not in config.enzymes:
                     raise ValueError("enzyme outside checkpoint vocabulary")
+                validator._covariates(
+                    config.preparation_features,
+                    row.context.preparation,
+                    row.context.preparation_units,
+                    config.preparation_units,
+                )
+                if row.split == "train":
+                    observed_features["preparation"].update(row.context.preparation)
+                    for name, value in row.context.preparation.items():
+                        preparation_values[name].add(value)
             for mhc in row.mhc:
                 known = mhc.class_override or mhc.mhc_class
                 if known is None and "mhc_class" not in config.identity_tasks:
@@ -182,7 +200,7 @@ def preflight(index: ObservationIndex):
                     heldout_multi_register |= known != "I" and len(row.peptide) > 9
             if row.split == "train":
                 counts[row.endpoint] += 1
-                if ENDPOINTS[row.endpoint].route in ("cellular", "tcr_cellular"):
+                if endpoint_spec(row.endpoint).route in ("cellular", "tcr_cellular"):
                     for name in config.components:
                         component = row.context.component_overrides.get(
                             name
@@ -227,12 +245,16 @@ def preflight(index: ObservationIndex):
     for family, configured in (
         ("acquisition", config.acquisition_features),
         ("observation", config.observation_features),
+        ("preparation", config.preparation_features),
     ):
         missing = set(configured) - observed_features[family]
         if missing:
             raise ValueError(
                 f"{family} features have no observed training values: {sorted(missing)}"
             )
+    for name in config.preparation_features:
+        if len(preparation_values[name]) < 2:
+            raise ValueError(f"preparation feature lacks varied training values: {name}")
     pruning = []
     if validator.has_pmhc:
         if set(config.mhc_classes) - assay_classes:
@@ -270,7 +292,7 @@ def preflight(index: ObservationIndex):
 def _selection_score(metrics):
     if "ic50" in metrics and "exact" in metrics["ic50"]:
         return metrics["ic50"]["exact"]["rmse"]
-    assays = {key: value for key, value in metrics.items() if key in ENDPOINTS}
+    assays = {key: value for key, value in metrics.items() if is_endpoint(key)}
     metrics = assays or metrics
     count = sum(value["n"] for value in metrics.values())
     return sum(value["loss"] * value["n"] for value in metrics.values()) / count if count else None
@@ -629,6 +651,7 @@ def run_manifest(args):
     for path in (
         "data/modular.py",
         "data/modular_context.py",
+        "data/modular_quantitative.py",
         "data/modular_sources.py",
         "data/modular_lineage.py",
         "data/modular_preparation.py",

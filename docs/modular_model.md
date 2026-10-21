@@ -156,7 +156,11 @@ bulk logit    = digest score + shared MS score + bulk observation offset
 elution logit = cellular score + shared MS score + elution observation offset
 ```
 
-Digest features consume peptide, optional source context and enzyme. Shared MS
+Digest features consume peptide, optional source context, enzyme and declared
+prospective preparation covariates (`preparation_features`/`preparation_units`,
+with row values in `Context.preparation`/`preparation_units`). Each numeric field
+has a missingness indicator and needs varied training observations. Preparation
+does not enter the detector or cellular pMHC path. Shared MS
 features consume peptide and declared prospective acquisition covariates, each
 with a missingness indicator. Numeric acquisition/observation fields require matching
 unit or prepared-scale declarations in both configuration and input context. Enzyme, MHC, APC, species and TCR metadata cannot
@@ -172,6 +176,48 @@ Without independent anchor labels, component scores are indirectly trained
 diagnostics. The combined outcome can learn within-search observability without
 identifying digestion and detection separately. `capabilities()` reports those
 statuses independently. There is no automatic calibration or transfer claim.
+
+Quantitative observations use `bulk_quantity:<domain>` and
+`elution_quantity:<domain>`. Independent component measurements use
+`ms_quantity:<domain>`, `digest_quantity:<domain>` or
+`cellular_quantity:<domain>`. The last measures pMHC availability; it is not a
+generic cleavage/transport assay. Those biochemical-specific adapters remain
+unfinished. The same sequence and feature blocks support binary and quantitative
+subsets, with no unused binary readouts allocated to quantitative-only models.
+
+Each quantitative domain has an explicit `QuantitativeDomain` contract: measured
+quantity, canonical unit, `identity`/`log2`/`log10` target transform, normalization
+and source/reference. `ModularConfig.quantity_domains` maps domain names to these
+contracts; each `Observation.quantity_contract` must match exactly. Raw values
+retain their unit, qualifier and `value_encoding` (`linear`, `log2` or `log10`).
+For example, an already-log2 intensity can be converted directly to a log10
+target without exponentiating. No clipping, inferred unit conversion or raw-
+versus-normalized fallback is applied. Source inspection must establish whether
+two datasets really share a scale; matching caller-provided strings is not proof.
+
+For each domain the model allocates a bias-free scalar readout per reachable
+component. Bulk and elution share that domain's MS readout, and component anchors
+use those same weights. Different domains share the feature blocks but have
+separate readouts. Domain names select supervised outputs, not predictive dataset
+embeddings. One offset belongs to each endpoint; declared observation covariates
+can condition it. These are statistical additive models, with no automatic
+cross-domain calibration or independent component interpretation.
+
+Quantitative outputs are in transformed measurement units. Their squared/censored
+residuals are divided by the training-only target scale inside the loss, rather
+than changing the shared components' units for each endpoint. Public predictions
+return transformed and inverse-transformed values and the measurement contract.
+The quantity bag aggregator is a statistical mean in linear space, calculated in
+the declared log base when appropriate; duplicate molecules still do not create
+extra votes. Existing affinity/stability heads retain standardized internal outputs.
+
+Canonical quantity admission requires an attested measured outcome. Component
+anchor endpoints additionally require `component_measurement` provenance naming
+the component, `independent_component_measurement` basis and a source reference.
+`capabilities().quantity_components` distinguishes direct anchor supervision from
+indirect training for each domain. These declarations and software checks do not
+establish identification of digestion, availability or MS bias: source curation,
+anchors, held-out predictive evaluation and transfer evidence remain required.
 
 ## Observation and target contract
 

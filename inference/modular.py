@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from dataclasses import replace
+from dataclasses import asdict, replace
 import math
 from typing import Sequence
 
 import torch
 
-from ..data.modular import ENDPOINTS, Observation, identity_vocabulary
+from ..data.modular import endpoint_spec, Observation, identity_vocabulary
 from ..training.modular import load_checkpoint
 
 
@@ -61,13 +61,25 @@ class ModularPredictor:
                 ),
             }
             if output.value is not None:
-                spec = ENDPOINTS[row.endpoint]
+                spec = endpoint_spec(row.endpoint)
                 if spec.binary:
                     result.update(
                         logit=float(output.value),
                         score=float(output.value.sigmoid()),
                         score_interpretation="uncalibrated measured-outcome score",
                     )
+                elif spec.quantitative:
+                    transformed = float(output.value)
+                    contract = row.quantity_contract
+                    result.update(
+                        transformed_value=transformed,
+                        target_space=contract.target_space,
+                        unit=contract.unit,
+                        value=contract.inverse(transformed),
+                        quantity_contract=asdict(contract),
+                    )
+                    if result["value"] is None:
+                        result["physical_value_status"] = "outside_floating_point_range"
                 else:
                     transformed = self.scales[row.endpoint].decode(float(output.value))
                     result.update(

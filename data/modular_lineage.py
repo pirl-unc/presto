@@ -3,7 +3,7 @@
 import hashlib
 import json
 
-from .modular import Observation, transformed_target
+from .modular import Observation, observation_target
 
 
 def measurement_key(row: Observation) -> tuple[str, str, str, str] | None:
@@ -50,7 +50,8 @@ def semantic_fingerprint(row: Observation, *, include_target=True) -> str:
         for component in data["context"][family].values():
             component.pop("evidence", None)
     value = data.pop("value")
-    unit = data.pop("unit")
+    data.pop("unit")
+    data.pop("value_encoding")
     qualifier = data.pop("qualifier")
     labels = data.pop("identity_labels")
     if include_target:
@@ -58,9 +59,7 @@ def semantic_fingerprint(row: Observation, *, include_target=True) -> str:
             labels
             if row.endpoint == "identity"
             else {
-                "value": transformed_target(row.endpoint, value, unit, qualifier)
-                if value is not None
-                else None,
+                "value": observation_target(row) if value is not None else None,
                 "qualifier": qualifier,
             }
         )

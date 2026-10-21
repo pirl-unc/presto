@@ -11897,6 +11897,19 @@ Current implementation slice: [APC context spec](modular_model/cellular-context-
 - [x] Wire cellular-only features, training support and checkpoint contracts.
 - [x] Verify precedence, masking, contrast admission and persistence.
 
+Next slice: [quantitative measurements](modular_model/quantitative-spec.md).
+
+- [x] Add explicit quantity domains, raw encodings and endpoint routing.
+- [x] Share domain readouts across observation/anchor paths and add digest preparation.
+- [x] Integrate losses, admission, coverage, checkpoint and physical-unit inference.
+- [x] Verify quantitative/censored paths and document actual remaining data gates.
+
+Review: 84 focused checks pass, including artificial streaming fit/closure,
+quantitative/binary coexistence, domain rejection, censoring, component sharing,
+preparation isolation and checkpoint inference. This verifies software contracts,
+not independently identified MS bias or predictive transfer. Full regression and
+strict documentation verification of this slice remain to be recorded.
+
 Completion remains unproven until every requirement has authoritative evidence.
 Progress and exact verification: [completion progress](modular_model/completion-progress.md).
 Lineage preparation is implemented; source-specific cohort wiring and broader

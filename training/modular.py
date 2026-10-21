@@ -11,10 +11,10 @@ import torch
 from torch.nn import functional as F
 
 from ..data.modular import (
-    ENDPOINTS,
+    endpoint_spec,
     Observation,
     TargetScale,
-    transformed_target,
+    observation_target,
     identity_head,
     identity_vocabulary,
 )
@@ -42,12 +42,17 @@ def observation_loss(
         return None
     if output.value is None:
         raise ValueError("missing assay prediction")
-    value = transformed_target(row.endpoint, row.value, row.unit, row.qualifier)
-    if ENDPOINTS[row.endpoint].binary:
+    value = observation_target(row)
+    spec = endpoint_spec(row.endpoint)
+    if spec.binary:
         return F.binary_cross_entropy_with_logits(output.value, output.value.new_tensor(value))
     if row.endpoint not in scales:
         raise ValueError(f"missing training-only scaler for {row.endpoint}")
-    residual = output.value - scales[row.endpoint].encode(value)
+    residual = (
+        (output.value - value) / scales[row.endpoint].scale
+        if spec.quantitative
+        else output.value - scales[row.endpoint].encode(value)
+    )
     if row.qualifier in ("<", "<="):
         residual = residual.clamp_min(0)
     elif row.qualifier in (">", ">="):
@@ -293,7 +298,7 @@ def load_checkpoint(
     ):
         raise ValueError("trained feature lacks exposure evidence")
     scales = {key: TargetScale(**value) for key, value in payload["scales"].items()}
-    expected = {name for name in model.config.endpoints if not ENDPOINTS[name].binary}
+    expected = {name for name in model.config.endpoints if not endpoint_spec(name).binary}
     if set(scales) != expected:
         raise ValueError("checkpoint scaler/endpoint mismatch")
     return model, scales, payload
@@ -337,13 +342,16 @@ def initialize_from_checkpoint(model: ModularPresto, path: str | Path) -> dict[s
             }
         )
     if previous.has_digest:
-        shared_contract.add("enzymes")
+        shared_contract.update({"enzymes", "preparation_features", "preparation_units"})
     if previous.has_context or previous.has_digest:
         shared_contract.add("source_context")
     if previous.has_ms:
         shared_contract.update({"acquisition_features", "acquisition_units"})
-    if set(previous.config.endpoints) & {"bulk_observation", "elution_observation"}:
+    if any(endpoint_spec(name).observation_covariates for name in previous.config.endpoints):
         shared_contract.update({"observation_features", "observation_units"})
+    for domain, contract in previous.config.quantity_domains.items():
+        if model.config.quantity_domains.get(domain) != contract:
+            raise ValueError(f"incompatible pretrained measurement domain: {domain}")
     for key in shared_contract:
         if old[key] != new[key]:
             raise ValueError(f"incompatible pretrained feature contract: {key}")
