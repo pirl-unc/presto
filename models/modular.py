@@ -37,6 +37,7 @@ from ..data.modular_context import (
 )
 from .encoders import SequenceEncoder
 from .modular_support import feature_inputs, feature_layout
+from .modular_dependencies import frozen_output
 
 MODEL_VERSION = "presto.modular.v2"
 
@@ -377,6 +378,8 @@ class ModularPresto(nn.Module):
             else:
                 self.heads[name] = nn.Linear(128, 1)
         self.trained_parameters: set[str] = set()
+        self.frozen_targets: tuple[str, ...] = ()
+        self.frozen_parameters: set[str] = set()
         self.feature_layout = feature_layout(self)
         self.trained_features = {name: set() for name in self.feature_layout}
         self.exposed_features = {name: set() for name in self.feature_layout}
@@ -389,6 +392,14 @@ class ModularPresto(nn.Module):
     @staticmethod
     def _fusion(width: int) -> nn.Sequential:
         return nn.Sequential(nn.Linear(width, 128), nn.GELU())
+
+    def train(self, mode=True):
+        super().train(mode)
+        # Every declared function depends on the shared encoder. Its dropout
+        # must remain disabled for frozen behavior even while sibling heads learn.
+        if self.frozen_parameters:
+            self.encoder.eval()
+        return self
 
     @property
     def device(self):
@@ -876,12 +887,16 @@ class ModularPresto(nn.Module):
             status = "random/untrained" if allocated else "not_allocated"
             if anchor and outputs[anchor]["status"] in ("directly_supervised", "pretrained_frozen"):
                 status = outputs[anchor]["status"]
-            elif any(outputs[endpoint]["status"] == "directly_supervised" for endpoint in mixtures):
+            elif any(
+                outputs[endpoint]["status"] in ("directly_supervised", "pretrained_frozen")
+                for endpoint in mixtures
+            ):
                 status = "indirectly_trained"
             components[name] = {
                 "status": status,
                 "validation": "not_evaluated",
                 "identifiable_from_mixture_labels_alone": False,
+                "frozen": allocated and frozen_output(self, f"component:{name}"),
             }
         source_membership = {
             name: {
@@ -915,7 +930,9 @@ class ModularPresto(nn.Module):
                     and outputs[name]["status"] in ("directly_supervised", "pretrained_frozen")
                 ]
                 indirect = [
-                    name for name in relevant if outputs[name]["status"] == "directly_supervised"
+                    name
+                    for name in relevant
+                    if outputs[name]["status"] in ("directly_supervised", "pretrained_frozen")
                 ]
                 quantity_components[domain][component] = {
                     "status": "directly_supervised"
@@ -927,12 +944,17 @@ class ModularPresto(nn.Module):
                     "validation": "not_evaluated",
                     "identifiable_from_mixture_labels_alone": False,
                     "contract": asdict(self.config.quantity_domains[domain]),
+                    "frozen": frozen_output(self, f"component:{component}:{domain}"),
                 }
         return {
             "outputs": outputs,
             "components": components,
             "source_membership": source_membership,
             "quantity_components": quantity_components,
+            "freeze": {
+                "targets": list(self.frozen_targets),
+                "parameters": sorted(self.frozen_parameters),
+            },
         }
 
     def predict(self, rows: Sequence[Observation]) -> list[Prediction]:

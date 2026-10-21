@@ -196,3 +196,29 @@ no auxiliary tasks; it does not establish generalization, auxiliary utility,
 correct register localization or the historical model's collapse cause. The
 remaining full-cohort/pretraining/context/MS/TCR/resume/qualification work is
 unchanged.
+
+## Subset transfer and frozen dependencies
+
+Added explicit compatible task removal, named projection of task-dependent
+feature columns, retained endpoint scalers, and declarations that freeze entire
+trained functions. A frozen output includes its shared encoder/fusion/pooling
+dependencies; a frozen MS component includes encoder/features/readout. Dropout
+stays disabled in the frozen encoder. Parameter flags, dependency declarations,
+feature support and optimizer membership are checked and survive checkpoint
+round trips. New heads/columns remain unsupported. This does not create a
+scientific validation status or a calibrated MS component.
+
+The manifest runner can retain frozen outputs without new labels, exclude their
+rows from optimization, and train sibling modules with current-update coverage.
+Inherited scalers cannot silently be refit on a different cohort. Checkpoint
+selection excludes frozen tasks, so a constant retained IC50 metric cannot
+choose a newly trained KD/MS/TCR checkpoint. Shared updates invalidate dependent
+validation status. Exact interrupted-run resume is not implemented by this slice.
+
+Verification at this stage: **91 focused checks pass in 3.30 seconds**, plus
+repository-wide pinned Ruff lint/format (334 files) and strict MkDocs. A new
+annotation-retention assertion initially compared autograd and inference
+attention modes and differed by one float32 ULP; comparing both in the actual
+inference mode gives exact equality. Tests use artificial observations and do
+not alter the prior registered real-data fitting evidence. Full regression is
+pending on the frozen source commit.

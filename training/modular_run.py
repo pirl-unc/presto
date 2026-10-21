@@ -21,6 +21,7 @@ from ..data.modular_context import resolve_cell_context
 from ..data.modular_sources import ObservationIndex, file_sha256
 from ..models.modular import ModularConfig, ModularPresto
 from ..models.modular_support import feature_report
+from ..models.modular_dependencies import freeze_dependencies, frozen_output, row_has_trainable_loss
 from .modular import (
     identity_targets,
     initialize_from_checkpoint,
@@ -56,6 +57,28 @@ def _jsonl(path, rows):
     with Path(path).open("w") as stream:
         for row in rows:
             stream.write(json.dumps(row, sort_keys=True, allow_nan=False) + "\n")
+
+
+def initialized_model(config, index, *, device="cpu"):
+    model = ModularPresto(config).to(device)
+    inherited = None
+    reference = index.manifest.get("pretrained")
+    if reference:
+        if set(reference) - {"path", "sha256", "allow_task_removal", "freeze"}:
+            raise ValueError("unknown pretrained transfer option")
+        if type(reference.get("allow_task_removal", False)) is not bool:
+            raise ValueError("allow_task_removal must be boolean")
+        targets = reference.get("freeze", [])
+        if not isinstance(targets, list) or any(not isinstance(value, str) for value in targets):
+            raise ValueError("pretrained freeze must be a list of dependency targets")
+        path = (index.manifest_path.parent / reference["path"]).resolve()
+        if file_sha256(path) != reference["sha256"]:
+            raise ValueError("pretrained checkpoint hash mismatch")
+        inherited = initialize_from_checkpoint(
+            model, path, allow_task_removal=reference.get("allow_task_removal", False)
+        )
+        freeze_dependencies(model, targets)
+    return model, inherited
 
 
 def preflight(index: ObservationIndex):
@@ -102,7 +125,12 @@ def preflight(index: ObservationIndex):
             raise ValueError(
                 "selected-checkpoint evaluation requires validation and test partitions"
             )
-    scales = fit_target_scales(index)
+    validator, inherited = initialized_model(config, index)
+    inherited_scales = inherited["scales"] if inherited else {}
+    scales = {
+        **inherited_scales,
+        **fit_target_scales(row for row in index if row.endpoint not in inherited_scales),
+    }
     counts, label_values, feature_states = Counter(), defaultdict(set), defaultdict(set)
     source_label_values = defaultdict(set)
     observed_features = {"acquisition": set(), "observation": set(), "preparation": set()}
@@ -111,7 +139,6 @@ def preflight(index: ObservationIndex):
     assay_classes, has_multi_register = set(), False
     heldout_multi_register = False
     # Label and capability inspection is sequence-only; no training or random model scores.
-    validator = ModularPresto(config)
     for row in index:
         if row.endpoint == "identity":
             targets = identity_targets(row, validator)
@@ -207,38 +234,49 @@ def preflight(index: ObservationIndex):
                         ) or row.context.components.get(name)
                         feature_states[name].add(component.state if component else "unknown")
     for endpoint in config.endpoints:
-        if not counts[endpoint]:
+        if not counts[endpoint] and not frozen_output(validator, endpoint):
             raise ValueError(f"allocated endpoint has no training labels: {endpoint}")
     for task in config.identity_tasks:
-        if counts[task] == 0 and not index.manifest.get("pretrained"):
+        if counts[task] == 0 and not frozen_output(validator, task):
             raise ValueError(f"identity task has no labels or inherited weights: {task}")
-        if counts[task] and len(label_values[task]) < 2:
+        if counts[task] and len(label_values[task]) < 2 and not frozen_output(validator, task):
             raise ValueError(f"identity task needs varied training labels: {task}")
-    if "peptide_source" in config.identity_tasks:
+    if "peptide_source" in config.identity_tasks and not frozen_output(validator, "peptide_source"):
         for category in config.source_categories:
             if source_label_values[category] != {"present", "absent"}:
                 raise ValueError(
                     "peptide source category needs positive and negative reference labels: "
                     f"{category}"
                 )
-    if config.endpoints and config.identity_tasks:
+    if any(not frozen_output(validator, name) for name in config.endpoints) and any(
+        not frozen_output(validator, task) for task in config.identity_tasks
+    ):
         if not index.partitions.get("train:identity") or training["identity_weight"] <= 0:
             raise ValueError("fine-tuning the shared encoder requires explicit identity replay")
     for name, states in feature_states.items():
-        if len(states - {"unknown", "reference"}) < 2:
+        if (
+            len(states - {"unknown", "reference"}) < 2
+            and "context_fusion.0.weight" not in validator.frozen_parameters
+        ):
             raise ValueError(f"component effect lacks contrasted training states: {name}")
     missing_cells = set(config.cell_types) - cell_types
-    if missing_cells:
+    if missing_cells and "context_fusion.0.weight" not in validator.frozen_parameters:
         raise ValueError(f"cell types have no observed training labels: {sorted(missing_cells)}")
     for name in config.cytokines:
-        if not {"present", "absent"} <= cytokine_states[name]:
+        if (
+            not {"present", "absent"} <= cytokine_states[name]
+            and "context_fusion.0.weight" not in validator.frozen_parameters
+        ):
             raise ValueError(f"cytokine effect lacks present/absent training contrast: {name}")
     for suffix, names in (
         ("dose", config.cytokine_dose_units),
         ("duration_hours", config.cytokine_duration_features),
     ):
         for name in names:
-            if len(cytokine_numeric[f"{name}:{suffix}"]) < 2:
+            if (
+                len(cytokine_numeric[f"{name}:{suffix}"]) < 2
+                and "context_fusion.0.weight" not in validator.frozen_parameters
+            ):
                 raise ValueError(
                     f"cytokine numeric feature lacks varied training values: {name}:{suffix}"
                 )
@@ -247,16 +285,28 @@ def preflight(index: ObservationIndex):
         ("observation", config.observation_features),
         ("preparation", config.preparation_features),
     ):
+        dependencies = {
+            "acquisition": ["ms_fusion.0.weight"],
+            "preparation": ["digest_fusion.0.weight"],
+            "observation": [
+                name for name in validator.feature_layout if name.startswith("offsets.")
+            ],
+        }
         missing = set(configured) - observed_features[family]
+        if all(name in validator.frozen_parameters for name in dependencies[family]):
+            missing = set()
         if missing:
             raise ValueError(
                 f"{family} features have no observed training values: {sorted(missing)}"
             )
     for name in config.preparation_features:
-        if len(preparation_values[name]) < 2:
+        if (
+            len(preparation_values[name]) < 2
+            and "digest_fusion.0.weight" not in validator.frozen_parameters
+        ):
             raise ValueError(f"preparation feature lacks varied training values: {name}")
     pruning = []
-    if validator.has_pmhc:
+    if validator.has_pmhc and "pmhc_fusion.0.weight" not in validator.frozen_parameters:
         if set(config.mhc_classes) - assay_classes:
             raise ValueError("declared MHC branch has no admitted assay training support")
         if has_multi_register and not config.register_pooling:
@@ -266,6 +316,10 @@ def preflight(index: ObservationIndex):
                 raise ValueError("held-out multi-register peptides lack training-path support")
             config = replace(config, register_pooling=False)
             pruning.append("register pooling: all admitted class-II peptides have one core")
+    if training["test_policy"] == "evaluate_selected_once" and not any(
+        row.split == "validation" and row_has_trainable_loss(validator, row) for row in index
+    ):
+        raise ValueError("validation has no outcomes for a trainable task")
     return (
         config,
         training,
@@ -285,11 +339,20 @@ def preflight(index: ObservationIndex):
             "observed_numeric_features": {
                 key: sorted(value) for key, value in observed_features.items()
             },
+            "frozen_targets": list(validator.frozen_targets),
+            "frozen_parameters": sorted(validator.frozen_parameters),
+            "inherited_scalers": sorted(inherited_scales),
         },
     )
 
 
-def _selection_score(metrics):
+def _selection_score(metrics, model=None):
+    if model is not None:
+        metrics = {
+            key: value
+            for key, value in metrics.items()
+            if not frozen_output(model, key if is_endpoint(key) else identity_head(key))
+        }
     if "ic50" in metrics and "exact" in metrics["ic50"]:
         return metrics["ic50"]["exact"]["rmse"]
     assays = {key: value for key, value in metrics.items() if is_endpoint(key)}
@@ -307,9 +370,11 @@ def _accumulate_coverage(total, step):
                 "update_steps": 0,
                 "gradient_and_update_steps": 0,
                 "max_gradient_norm": 0.0,
+                "frozen_steps": 0,
             },
         )
         record["gradient_steps"] += evidence["gradient_norm"] > 0
+        record["frozen_steps"] += evidence.get("frozen", False)
         record["update_steps"] += evidence["update_norm"] > 0
         record["gradient_and_update_steps"] += evidence["gradient_and_update"]
         record["max_gradient_norm"] = max(record["max_gradient_norm"], evidence["gradient_norm"])
@@ -334,28 +399,29 @@ def fit_index(index, output_dir, *, device="cpu"):
     torch.manual_seed(training["seed"])
     rng = random.Random(training["seed"])
     identity_rng = random.Random(training["seed"] + 1)
-    model = ModularPresto(config).to(device)
-    inherited = None
-    if index.manifest.get("pretrained"):
-        reference = index.manifest["pretrained"]
-        path = (index.manifest_path.parent / reference["path"]).resolve()
-        if file_sha256(path) != reference["sha256"]:
-            raise ValueError("pretrained checkpoint hash mismatch")
-        inherited = initialize_from_checkpoint(model, path)
-        for endpoint, prior_scale in inherited["scales"].items():
-            if scales.get(endpoint) != prior_scale:
-                raise ValueError("inherited target scalers require an explicit migration")
+    model, inherited = initialized_model(config, index, device=device)
+    trainable = [parameter for parameter in model.parameters() if parameter.requires_grad]
+    if not trainable:
+        raise ValueError(
+            "no trainable parameters; use checkpoint inference for a fully frozen model"
+        )
     optimizer = torch.optim.AdamW(
-        model.parameters(), lr=training["learning_rate"], weight_decay=training["weight_decay"]
+        trainable, lr=training["learning_rate"], weight_decay=training["weight_decay"]
     )
-    base_indices = index.partitions.get("train:assay") or index.partitions.get("train:identity", [])
-    replay_indices = (
-        list(index.partitions.get("train:identity", []))
-        if index.partitions.get("train:assay")
-        else []
-    )
+    trainable_assays = [
+        i
+        for i in index.partitions.get("train:assay", [])
+        if row_has_trainable_loss(model, index[i])
+    ]
+    trainable_identity = [
+        i
+        for i in index.partitions.get("train:identity", [])
+        if row_has_trainable_loss(model, index[i])
+    ]
+    base_indices = trainable_assays or trainable_identity
+    replay_indices = trainable_identity if trainable_assays else []
     if not base_indices:
-        raise ValueError("no training observations")
+        raise ValueError("no observations with a trainable supervised loss")
     replay_order, replay_position = [], 0
     validation = index.partitions.get("validation:assay", []) + index.partitions.get(
         "validation:identity", []
@@ -371,6 +437,8 @@ def fit_index(index, output_dir, *, device="cpu"):
         "inherited": bool(inherited),
         "pretrained_contract": index.manifest.get("pretrained"),
         "inherited_parameters": inherited["inherited_parameters"] if inherited else [],
+        "frozen_targets": list(model.frozen_targets),
+        "frozen_parameters": sorted(model.frozen_parameters),
     }
     save_checkpoint(
         output_dir / "initial.pt", model, scales, optimizer=optimizer, metadata=initial_metadata
@@ -412,7 +480,7 @@ def fit_index(index, output_dir, *, device="cpu"):
         validation_metrics, _ = evaluate(
             model, index, validation, scales, batch_size=training["batch_size"]
         )
-        score = _selection_score(validation_metrics)
+        score = _selection_score(validation_metrics, model)
         if score is None:
             # A declared training-only diagnostic selects its last executed update.
             improved = True
@@ -492,7 +560,7 @@ def fit_index(index, output_dir, *, device="cpu"):
     unsupported = [
         name
         for name, evidence in selected_coverage.items()
-        if not evidence["gradient_and_update_steps"]
+        if not evidence["gradient_and_update_steps"] and name not in selected.frozen_parameters
     ]
     features = feature_report(selected)
     missing_features = {
@@ -512,6 +580,7 @@ def fit_index(index, output_dir, *, device="cpu"):
         "policy": training["coverage_policy"],
         "exception_reason": training["coverage_exception_reason"],
         "untrained_auxiliary_outputs": missing_auxiliaries,
+        "frozen_dependencies_with_inherited_support": sorted(selected.frozen_parameters),
     }
     summary = {
         "metrics": metrics,
@@ -656,6 +725,7 @@ def run_manifest(args):
         "data/modular_lineage.py",
         "data/modular_preparation.py",
         "data/modular_auxiliary.py",
+        "models/modular_dependencies.py",
         "models/modular.py",
         "models/modular_support.py",
         "models/encoders.py",

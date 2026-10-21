@@ -122,7 +122,7 @@ def feature_inputs(model, *, enforce=False):
                         .cpu()
                         .tolist()
                     )
-                if enforce:
+                if enforce or not model.get_parameter(name).requires_grad:
                     missing = active - model.trained_features[name]
                     if missing:
                         raise ValueError(

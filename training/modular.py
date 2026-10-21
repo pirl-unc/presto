@@ -20,6 +20,11 @@ from ..data.modular import (
 )
 from ..models.modular import MODEL_VERSION, ModularConfig, ModularPresto, Prediction
 from ..models.modular_support import feature_inputs, record_feature_updates
+from ..models.modular_dependencies import (
+    freeze_dependencies,
+    parameter_dependencies,
+    validate_freezing,
+)
 
 
 def identity_targets(row: Observation, model: ModularPresto) -> dict[str, int]:
@@ -119,6 +124,7 @@ def train_step(
     if any(row.endpoint != "identity" for row in identity_rows):
         raise ValueError("identity replay contains assay rows")
     optimizer_membership(model, optimizer)
+    validate_freezing(model)
     model.train()
     optimizer.zero_grad(set_to_none=True)
     with feature_inputs(model):
@@ -135,6 +141,8 @@ def train_step(
             counts = dict(Counter(counts) + Counter(identity_counts))
     if not torch.isfinite(loss):
         raise ValueError("nonfinite training loss")
+    if not loss.requires_grad:
+        raise ValueError("batch contains no trainable loss; frozen rows belong in evaluation")
     loss.backward()
     before, coverage = {}, {}
     for name, parameter in model.named_parameters():
@@ -146,6 +154,7 @@ def train_step(
         coverage[name] = {
             "gradient_norm": float(gradient.norm()) if gradient is not None else 0.0,
             "gradient_present": gradient is not None,
+            "frozen": name in model.frozen_parameters,
         }
     optimizer.step()
     record_feature_updates(model, before)
@@ -158,6 +167,10 @@ def train_step(
     model.trained_parameters.update(
         name for name, evidence in coverage.items() if evidence["gradient_and_update"]
     )
+    updated = {name for name, evidence in coverage.items() if evidence["gradient_and_update"]}
+    for target, support in model.support.items():
+        if parameter_dependencies(model, target) & updated:
+            support["validation"] = "not_evaluated"
     for row in (*rows, *(identity_rows if identity_weight > 0 else ())):
         if row.endpoint != "identity":
             continue
@@ -190,7 +203,8 @@ def train_step(
             if parameter.startswith(prefix)
         ):
             model.support[name]["status"] = "directly_supervised"
-        model.support[name]["validation"] = "not_evaluated"
+        if model.support[name]["status"] != "pretrained_frozen":
+            model.support[name]["validation"] = "not_evaluated"
     return {
         "loss": float(loss.detach()),
         "loss_parts": loss_parts,
@@ -211,9 +225,11 @@ def coverage_summary(steps: Sequence[dict[str, Any]]) -> dict[str, Any]:
                     "update_steps": 0,
                     "gradient_and_update_steps": 0,
                     "max_gradient_norm": 0.0,
+                    "trainable_steps": 0,
                 },
             )
             record["gradient_steps"] += evidence["gradient_norm"] > 0
+            record["trainable_steps"] += not evidence.get("frozen", False)
             record["update_steps"] += evidence["update_norm"] > 0
             record["gradient_and_update_steps"] += evidence["gradient_and_update"]
             record["max_gradient_norm"] = max(
@@ -222,7 +238,9 @@ def coverage_summary(steps: Sequence[dict[str, Any]]) -> dict[str, Any]:
     return {
         "parameters": parameters,
         "untrained_parameters": [
-            name for name, value in parameters.items() if not value["gradient_and_update_steps"]
+            name
+            for name, value in parameters.items()
+            if value["trainable_steps"] and not value["gradient_and_update_steps"]
         ],
     }
 
@@ -235,6 +253,7 @@ def save_checkpoint(
     optimizer: torch.optim.Optimizer | None = None,
     metadata: dict[str, Any] | None = None,
 ) -> None:
+    validate_freezing(model)
     payload = {
         "format": MODEL_VERSION,
         "config": asdict(model.config),
@@ -242,6 +261,8 @@ def save_checkpoint(
         "scales": {key: asdict(value) for key, value in scales.items()},
         "support": model.support,
         "trained_parameters": sorted(model.trained_parameters),
+        "frozen_targets": list(model.frozen_targets),
+        "frozen_parameters": sorted(model.frozen_parameters),
         "trained_features": {key: sorted(value) for key, value in model.trained_features.items()},
         "exposed_features": {key: sorted(value) for key, value in model.exposed_features.items()},
         "source_label_support": {
@@ -301,11 +322,20 @@ def load_checkpoint(
     expected = {name for name in model.config.endpoints if not endpoint_spec(name).binary}
     if set(scales) != expected:
         raise ValueError("checkpoint scaler/endpoint mismatch")
+    declared = payload.get("frozen_targets", [])
+    frozen = payload.get("frozen_parameters", [])
+    if not isinstance(declared, list) or not isinstance(frozen, list):
+        raise ValueError("invalid checkpoint freeze contract")
+    restored_freeze = freeze_dependencies(model, declared)
+    if restored_freeze["parameters"] != sorted(frozen):
+        raise ValueError("checkpoint frozen dependencies disagree with target declarations")
     return model, scales, payload
 
 
-def initialize_from_checkpoint(model: ModularPresto, path: str | Path) -> dict[str, Any]:
-    """Extend a compatible pretrained subset. Every new head starts unsupported."""
+def initialize_from_checkpoint(
+    model: ModularPresto, path: str | Path, *, allow_task_removal: bool = False
+) -> dict[str, Any]:
+    """Transfer compatible tasks; retained scalers keep learned output meanings."""
     previous, scales, payload = load_checkpoint(path, device=str(model.device))
     old, new = asdict(previous.config), asdict(model.config)
     # Endpoint/identity unions may grow; feature slots may not silently change meaning.
@@ -314,24 +344,34 @@ def initialize_from_checkpoint(model: ModularPresto, path: str | Path) -> dict[s
         "species_defaults",
         "identity_threshold",
     }
-    if previous.has_pmhc:
-        shared_contract.add("mhc_classes")
-    if previous.has_pmhc or previous.has_context:
+    if previous.has_pmhc and model.has_pmhc:
+        shared_contract.update({"mhc_classes", "register_pooling"})
+    if previous.has_context and model.has_context:
         shared_contract.add("auxiliary_context")
-    if "peptide_source" in previous.config.identity_tasks or any(
-        name.startswith("peptide_source:") for name in previous.config.auxiliary_context
+    if (
+        (
+            "peptide_source" in previous.config.identity_tasks
+            and "peptide_source" in model.config.identity_tasks
+        )
+        or any(name.startswith("peptide_source:") for name in previous.config.auxiliary_context)
+        and model.has_context
     ):
         shared_contract.add("source_categories")
     if (
         previous.has_pmhc
+        and model.has_pmhc
         or previous.config.context_species
-        or any(task.endswith("species") for task in previous.config.identity_tasks)
+        and model.config.context_species
+        or any(
+            task.endswith("species")
+            for task in set(previous.config.identity_tasks) & set(model.config.identity_tasks)
+        )
     ):
         shared_contract.add("species")
-    if previous.has_context:
-        shared_contract.update(
-            {"components", "component_activity_units", "machinery_profiles", "context_species"}
-        )
+    if previous.has_context and model.has_context:
+        shared_contract.add("context_species")
+    if previous.has_cellular and model.has_cellular:
+        shared_contract.update({"components", "component_activity_units", "machinery_profiles"})
         shared_contract.update(
             {
                 "machinery_references",
@@ -341,40 +381,114 @@ def initialize_from_checkpoint(model: ModularPresto, path: str | Path) -> dict[s
                 "cytokine_duration_features",
             }
         )
-    if previous.has_digest:
+    if previous.has_digest and model.has_digest:
         shared_contract.update({"enzymes", "preparation_features", "preparation_units"})
-    if previous.has_context or previous.has_digest:
+    if previous.has_cellular and model.has_cellular or previous.has_digest and model.has_digest:
         shared_contract.add("source_context")
-    if previous.has_ms:
+    if previous.has_ms and model.has_ms:
         shared_contract.update({"acquisition_features", "acquisition_units"})
-    if any(endpoint_spec(name).observation_covariates for name in previous.config.endpoints):
+    if any(
+        endpoint_spec(name).observation_covariates
+        for name in set(previous.config.endpoints) & set(model.config.endpoints)
+    ):
         shared_contract.update({"observation_features", "observation_units"})
     for domain, contract in previous.config.quantity_domains.items():
-        if model.config.quantity_domains.get(domain) != contract:
+        if (
+            domain in model.config.quantity_domains
+            and model.config.quantity_domains[domain] != contract
+        ):
             raise ValueError(f"incompatible pretrained measurement domain: {domain}")
     for key in shared_contract:
         if old[key] != new[key]:
             raise ValueError(f"incompatible pretrained feature contract: {key}")
-    if not set(previous.config.endpoints) <= set(model.config.endpoints) or not set(
-        previous.config.identity_tasks
-    ) <= set(model.config.identity_tasks):
+    removed_tasks = (set(previous.config.endpoints) | set(previous.config.identity_tasks)) - (
+        set(model.config.endpoints) | set(model.config.identity_tasks)
+    )
+    if removed_tasks and not allow_task_removal:
         raise ValueError("pretrained task removal requires an explicit migration")
-    current = model.state_dict()
-    inherited = []
+    current = {name: value.clone() for name, value in model.state_dict().items()}
+    inherited, projected = [], {}
     for name, value in previous.state_dict().items():
-        if name not in current or current[name].shape != value.shape:
+        if name not in current:
+            if allow_task_removal:
+                continue
             raise ValueError(f"incompatible pretrained module: {name}")
-        current[name] = value
+        old_layout, new_layout = previous.feature_layout.get(name), model.feature_layout.get(name)
+        if old_layout != new_layout and old_layout is not None and new_layout is not None:
+            axis, old_labels = old_layout
+            new_axis, new_labels = new_layout
+            if axis != new_axis or current[name].shape[1 - axis] != value.shape[1 - axis]:
+                raise ValueError(f"incompatible pretrained input feature layout: {name}")
+            removed = set(old_labels) - set(new_labels)
+            removable_prefixes = []
+            if name == "context_fusion.0.weight":
+                if previous.has_tcr and not model.has_tcr:
+                    removable_prefixes += ["full_peptide:", "tcr_a:", "tcr_b:"]
+                if previous.has_cellular and not model.has_cellular:
+                    removable_prefixes += [
+                        "source_",
+                        "n_terminus:",
+                        "c_terminus:",
+                        "cell_type:",
+                        "cytokine:",
+                        "component:",
+                        "activity:",
+                        "delivery:",
+                    ]
+                if previous.has_coreceptor and not model.has_coreceptor:
+                    removable_prefixes += ["coreceptor:"]
+            if any(not label.startswith(tuple(removable_prefixes)) for label in removed):
+                raise ValueError(f"retained function loses active input features: {name}")
+            old_positions = {label: index for index, label in enumerate(old_labels)}
+            copied = []
+            for j, label in enumerate(new_labels):
+                if label not in old_positions:
+                    continue
+                i = old_positions[label]
+                if axis == 1:
+                    current[name][:, j] = value[:, i]
+                else:
+                    current[name][j] = value[i]
+                copied.append(label)
+            projected[name] = {
+                "copied": copied,
+                "new": sorted(set(new_labels) - set(old_labels)),
+                "removed": sorted(set(old_labels) - set(new_labels)),
+            }
+        elif current[name].shape != value.shape:
+            raise ValueError(f"incompatible pretrained module: {name}")
+        else:
+            current[name] = value
         inherited.append(name)
     model.load_state_dict(current, strict=True)
-    model.trained_parameters.update(previous.trained_parameters)
+    model.trained_parameters.update(previous.trained_parameters & set(inherited))
     for category, values in previous.source_label_support.items():
-        model.source_label_support[category] = set(values)
+        if category in model.source_label_support:
+            model.source_label_support[category] = set(values)
     for name in previous.feature_layout:
-        if model.feature_layout.get(name) != previous.feature_layout[name]:
-            raise ValueError(f"incompatible pretrained input feature layout: {name}")
-        model.trained_features[name] = set(previous.trained_features[name])
-        model.exposed_features[name] = set(previous.exposed_features[name])
+        if name not in model.feature_layout:
+            continue
+        old_labels = previous.feature_layout[name][1]
+        new_positions = {label: index for index, label in enumerate(model.feature_layout[name][1])}
+        for attribute in ("trained_features", "exposed_features"):
+            getattr(model, attribute)[name] = {
+                new_positions[old_labels[i]]
+                for i in getattr(previous, attribute)[name]
+                if old_labels[i] in new_positions
+            }
     for name, support in previous.support.items():
-        model.support[name] = {**support, "validation": "requires_requalification_after_finetuning"}
-    return {"inherited_parameters": inherited, "scales": scales, "metadata": payload["metadata"]}
+        if name in model.support:
+            model.support[name] = {
+                **support,
+                "status": "directly_supervised"
+                if support["status"] == "pretrained_frozen"
+                else support["status"],
+                "validation": "requires_requalification_after_finetuning",
+            }
+    return {
+        "inherited_parameters": inherited,
+        "removed_tasks": sorted(removed_tasks),
+        "feature_projection": projected,
+        "scales": {name: scale for name, scale in scales.items() if name in model.config.endpoints},
+        "metadata": payload["metadata"],
+    }

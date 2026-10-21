@@ -11925,6 +11925,22 @@ is memorization with supplied metadata, not held-out qualification or a test of
 auxiliary benefit. Full goal requirements above remain open.
 
 Progress and exact verification: [completion progress](modular_model/completion-progress.md).
+
+Continuation specification: [task subsets and frozen dependencies](modular_model/continuation-spec.md).
+
+- [x] Implement explicit compatible task removal/extension and inherited scalers.
+- [x] Freeze complete trained dependencies, including deterministic encoder behavior.
+- [x] Integrate manifest admission, trainable sampling, coverage and checkpoint persistence.
+- [ ] Verify subset/frozen-function behavior and publish the remaining resume gap accurately.
+- [ ] Implement and verify exact interrupted-run resume.
+
+Review in progress: 91 focused checks pass; pinned repository Ruff and strict
+MkDocs pass. A fresh retained-output comparison uses the same inference mode on
+both sides, avoiding autograd versus inference attention-kernel roundoff. New
+tests cover frozen-function invariance, structural feature projection, unchanged
+scalers, rejection of unsupported states and transfer contracts, and selection
+on trainable task metrics. Full regression/publication remain to record.
+
 Lineage preparation is implemented; source-specific cohort wiring and broader
 biological-independence audits remain part of the unfinished preparation item.
 

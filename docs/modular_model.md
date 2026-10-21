@@ -337,16 +337,53 @@ are rejected. Context vocabularies and feature slots are declared in `ModularCon
 Training makes deterministic shuffled passes over assay observations and uses
 observation-weighted mean losses. A separate identity batch contributes 0.1 times
 mean identity CE by default. Replay exposure counts are reported separately from
-unique labels. A compatible pretrained subset may initialize a larger declared
-subset through a hash-pinned `pretrained` entry with `path` and `sha256`; new heads
-remain unsupported. Existing shared feature vocabularies and scalers cannot be
-silently changed. Exact resume, arbitrary migrations and frozen-submodule training
-are not implemented in this first version.
+unique labels. A hash-pinned `pretrained` entry with `path` and `sha256` initializes
+compatible modules. `allow_task_removal: true` permits explicit task subsetting;
+removed heads/domains/scalers/support entries are omitted. Task-driven changes
+to receptor/cellular feature width copy retained columns by their canonical names.
+New columns and heads remain unsupported until trained. Retained feature meanings,
+units, categorical-output vocabularies and class branches cannot silently change.
+Retained regression endpoints use their checkpoint's original scalers; only new
+endpoints fit new training-only scalers.
+
+`pretrained.freeze` lists output tasks or component targets. For example:
+
+```json
+{
+  "pretrained": {
+    "path": "prior.pt",
+    "sha256": "ACTUAL_CHECKPOINT_SHA256",
+    "allow_task_removal": true,
+    "freeze": ["component:ms_response"]
+  }
+}
+```
+
+Freezing that detector function freezes its shared encoder, MS feature block and
+readout. A quantitative component uses a domain-qualified name such as
+`component:ms_response:declared_domain`. Freezing a complete output such as `ic50`
+also includes its fusion, register pooling, applicable annotation dependencies
+and scalar readout. All frozen dependencies need inherited gradient/update support.
+Encoder dropout stays disabled while sibling modules train. This restricts what
+the other tasks can learn through their shared encoder; head-only freezing would
+not preserve the function. Checkpoints store and verify the dependency declarations
+and parameter sets. `pretrained_frozen` is training support, not scientific validation.
+
+Fully frozen observations remain available for evaluation but are excluded from
+optimization sampling and checkpoint selection. Retained frozen outputs need no
+new labels; a frozen annotation function needs no replay. Unfrozen outputs still
+need their own supervision, and shared-parameter updates invalidate dependent
+validation status. Optimizers contain only trainable parameters. Coverage closure
+requires updates for trainable parameters and inherited support for frozen ones;
+unseen features cannot be activated in a frozen path. Exact interrupted-run resume
+and arbitrary feature/vocabulary migrations remain unimplemented.
 
 Every run saves initial/selected/last checkpoints, optimizer state, resolved config,
 source manifest, source snapshots, admission census, history, parameter gradient
 and update evidence, per-example train/validation/test predictions and metrics.
-Validation exact IC50 RMSE selects checkpoints when available. The test split is
+Validation exact IC50 RMSE selects checkpoints when that output is trainable;
+otherwise selection uses the observation-weighted loss of trainable tasks.
+Frozen-task metrics are still reported. The test split is
 only evaluated after selection. A training-only diagnostic must explicitly declare
 `no_test_training_diagnostic` and explain why no test split exists.
 
