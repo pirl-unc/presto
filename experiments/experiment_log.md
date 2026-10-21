@@ -1678,3 +1678,11 @@ Publication closure: all 23 public downloads, 48 archive members, 9,053 source/p
 - Independent replay verifies all original/native joins, prior cells, annotations, coverage and 11 artifact hashes without importing Presto. Canonical collation agrees on all 9,053 metadata rows.
 - CPU-only, Python 3.12.6, one Torch/BLAS thread; no GPU/cloud, pretraining/training, optimizer, loss weights, synthetic examples or predictions. Builder runtime 2.980692 seconds excluding imports/acquisition; peak process RSS 401,276,928 bytes. Both held-out partitions are used only for metadata preservation, so no new validation/test loss, regression or binding metrics exist and no model winner is selected.
 - [Public evidence](https://github.com/pirl-unc/presto/releases/tag/assay-context-applicability-audit-v1): source-linked observation/IC50 tables, coverage, policy, source pins, code, independent verification and hashes. Original failed IC50 quality result and unknown donor/specimen/acquisition identities persist. This resolves applicability reporting, not broader training readiness; #48/#53/#115 and Hitlist #678/#680 remain open.
+
+### 2026-10-21_0353_codex_modular-memorization-control — registered, preparation pending
+
+- Agent/model: Codex / GPT-6. [Family](2026-10-21_0353_codex_modular-memorization-control/README.md), [prospective contract](agents/codex/plans/modular-assay-only-memorization.md).
+- One supplied-metadata assay-only condition: 32 exact purified IC50 observations, 16 per class, explicit class-II chain pairs, pinned Hitlist v4/catalog; old held-out peptides excluded. No pretraining or synthetic labels.
+- AdamW 0.0003, constant schedule, zero dropout/weight decay, seed 42, full batch; 2,000 updates/20-minute optimization ceiling. Local CPU, one thread, no GPU/Modal.
+- Target/output: direct raw log10(nM) IC50, standardized training squared residual; no auxiliary loss. Fixed overall/per-class RMSE/Spearman/spread and real-update gates are specified before fitting.
+- No validation/test split intentionally: training-only capacity diagnostic, no generalization claim. No results, winner or qualified checkpoint yet.

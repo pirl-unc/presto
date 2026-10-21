@@ -11911,6 +11911,13 @@ not independently identified MS bias or predictive transfer. Full regression and
 strict documentation verification of this slice remain to be recorded.
 
 Completion remains unproven until every requirement has authoritative evidence.
+
+Assay-fitting control: [prospective experiment plan](../experiments/agents/codex/plans/modular-assay-only-memorization.md).
+
+- [ ] Prepare 32 source-pinned exact IC50 observations with explicit class-II pairs.
+- [ ] Freeze membership/recipe and run the supplied-metadata, assay-only gate.
+- [ ] Preserve predictions, coverage, checkpoint replay and complete experiment closure.
+
 Progress and exact verification: [completion progress](modular_model/completion-progress.md).
 Lineage preparation is implemented; source-specific cohort wiring and broader
 biological-independence audits remain part of the unfinished preparation item.

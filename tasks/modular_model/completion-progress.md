@@ -155,3 +155,27 @@ path: `cellular_quantity` means available pMHC, not an arbitrary processing assa
 Real quantity adapters/cohorts, independent anchors and transfer qualification,
 continuation/freezing/resume, broader scientific gates and the other full-goal
 requirements remain open. Full regression for this source slice is pending.
+
+Full regression subsequently completed on immutable application/test source
+`51b5f61`: **2,454 passed, four skipped, 1,052 warnings, 604.90 seconds**.
+Strict MkDocs also passes. During regression only the next experiment's plan,
+launcher and preparation artifacts were added; application/test sources stayed
+unchanged. The warnings are preserved in the local full regression log.
+
+## Prospective assay-only capacity diagnostic
+
+Registered `2026-10-21_0353_codex_modular-memorization-control` before fitting.
+The earlier corrected-human cohort has 976 exact class-II training observations,
+all with beta-only reported restrictions. The pinned v4 binding table contains
+explicit pairs elsewhere. The diagnostic therefore prepares a new, training-only
+cohort from v4 and excludes historical validation/test peptides; it is not a
+replay of the earlier membership. No alpha partner is filled in by convention.
+
+Source preparation scanned 814,268 rows, retained 26,619 eligible candidate rows,
+identified 841 conflicting exact-input groups (excluded only from this diagnostic)
+and selected 16 consistent inputs per class by a label-independent hash. All 32
+raw targets exactly replay as log10(nM). Each class spans over one log10 unit;
+class-I targets include measurements above the historical clipping ceiling.
+Selected catalog groove exports agree with the installed parser. Full source
+and candidate dispositions are hashed local artifacts; small cohort and source
+receipts are reviewable. The fixed fitting gate has not yet run at this entry.
