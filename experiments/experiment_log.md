@@ -2114,3 +2114,47 @@ header audit6.938s. Nine actual Trypsin/P runs have bare experiment
 IDs448–456, without a resolved treatment/specimen map. Candidate quantities remain
 unqualified; do not infer a precursor join from numeric run order. Separate
 receipt/commands preserve this later download without changing the16-input audit.
+
+## 2026-10-22_1745 — Local CPU / Apple GPU IC50 training feasibility
+
+- **Date / agent:** October22,2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1745_codex_local-ic50-feasibility](2026-10-22_1745_codex_local-ic50-feasibility/README.md).
+- **Exact data:** hash-pinned admitted manifest914e0930…; all21,636exact purified
+  human HLA IC50 train observations;2,925validation/2,803test including bounds.
+  Original peptide-disjoint historical splits; shared studies, unresolved specimen
+  identity and prior held-out inspection. No clipping/averaging/generated labels.
+- **Training:** unchanged455,041-parameter modular shared sequence encoder,
+  explicit classII registers/flanks and pooled direct IC50 output. Supplied
+  human species/class. Fresh seed42, AdamW3e-4/wd1e-4, batch64/dropout0.1, one
+  complete epoch339updates. No auxiliary/pretraining/APC/MS/TCR modules; no synthetic
+  data. Exact train-only standardized log10(nM) squared error weight1; one-sided
+  squared error for held-out bounds. Other assay families excluded.
+- **Hardware / reproduction:** local M1 Pro10CPU/16GPU cores,32GiB; no Modal.
+  Frozen launch/source/environment receipts at dirtyef4b4c1. Four CPU threads,
+  inter-op1, no MPS CPU fallback. Canonical trainer/checkpoints/evaluation path.
+  CPU median0.4274s/update versusMPS0.4866s from8measured updates after4warmup,
+  matching batch identities. Preliminary short timing comparison, not a replicated
+  hardware ranking. CPU selected by timing alone.
+- **Runtime / verification:** full fit and evaluation169.97s, full wrapper183.76s,
+  CPU peakRSS2.59GiB. All32allocated tensors have gradient-driven updates and
+  feature coverage passes. Independent82,092-record metric/source replay,
+  ridge refit and fresh-checkpoint training replay pass (zero replay difference).
+  Per-example predictions for all methods/splits, runtime/checkpoint hashes and
+  coverage preserved.35training/resume tests pass. Constant-baseline Pearson
+  reporting bug fixed with failing-before/passing-after regression evidence;
+  seven original numerical artifacts explicitly corrected to undefined/null.
+
+| Condition | Validation RMSE | Validation Spearman | Test RMSE | Test Spearman | Test500nM AUROC |
+|---|---:|---:|---:|---:|---:|
+| Train mean |1.3606|undefined|1.3420|undefined|0.5000|
+| Fixed composition/class ridge |1.2235|0.4581|1.2291|0.4306|0.7067|
+| One-epoch neural fit |1.1431|0.5521|1.1613|0.5117|0.7371|
+
+**Decision:** local training is viable. Neural exact-value RMSE/ranking improve on
+this fixed ridge, and test predictionSD0.6949 (target1.3419) is not constant.
+However test binderF1 is0.6184 versusridge0.6199, classII recall only0.0882,
+and none of203test bounds is satisfied. One seed/epoch is not convergence,
+replication or source-independent qualification. Comparison to the historical
+9,053-row failure is not controlled. Availability/concentration and source-admission
+work remain open. Continue locally; CPU is the measured choice for this current
+small audited loop, with GPU batching/synchronization improvements untested.

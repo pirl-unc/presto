@@ -12137,3 +12137,14 @@ Full regression on immutable application/test source `2214086` passes:
 Log: `/private/tmp/presto-full-ic50-adapter-regression.log`. Source/test files
 remained unchanged; only experiment analysis/artifacts/documentation were added
 while it ran. Repository Ruff and explicit current recipe/analyzer checks pass.
+
+## 2026-10-22 local training request
+
+- [x] Check CPU/MPS execution and register local feasibility specification.
+- [x] Benchmark canonical CPU and MPS updates on identical admitted training batches.
+- [x] Complete one full local IC50 epoch and fixed baselines; preserve all predictions.
+- [x] Independently verify results, checkpoint replay and coverage; prepare report.
+
+Review: Modal is no longer the execution assumption; availability-source admission remains open.
+
+Local-run review: one complete CPU epoch and three-method prediction replay pass;35training/resume tests and strict docs pass. PR publication follows this checkpoint.

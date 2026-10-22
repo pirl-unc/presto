@@ -29,7 +29,7 @@ def _ranks(values):
 
 
 def _correlation(left, right):
-    if len(left) < 2 or np.std(left) == 0 or np.std(right) == 0:
+    if len(left) < 2 or np.ptp(left) == 0 or np.ptp(right) == 0:
         return None
     return float(np.corrcoef(left, right)[0, 1])
 

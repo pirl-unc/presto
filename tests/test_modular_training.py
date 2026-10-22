@@ -224,6 +224,18 @@ def test_metric_ties_and_constant_outputs_are_honest():
     assert regression["sd_ratio"] == 0
 
 
+@pytest.mark.parametrize("constant_target", [False, True])
+def test_correlation_is_undefined_for_constant_float_arrays(constant_target):
+    # A nonrepresentable decimal can have a tiny positive computed standard
+    # deviation despite every element being identical.
+    constant = np.full(2726, 0.1)
+    varying = np.linspace(0, 5, len(constant))
+    targets, predictions = (constant, varying) if constant_target else (varying, constant)
+    metrics = regression_metrics(targets, predictions, binding=False)
+    assert metrics["pearson"] is None
+    assert metrics["spearman"] is None
+
+
 def test_registered_launcher_freezes_manifest_and_closes_software_fixture(tmp_path, monkeypatch):
     from presto.scripts import experiment_registry as registry
 

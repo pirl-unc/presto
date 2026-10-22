@@ -519,3 +519,11 @@ Keep applicability reporting separate from model features and the measured label
 - Check the existing upstream roadmap before inventing a parallel registry.
   Preserve scope, evidence, unknowns and exact versus surrogate material joins;
   separate source ingestion from endpoint-specific training eligibility.
+
+## 2026-10-22 — local training preference
+
+- When the user rules out Modal, use local execution and establish actual hardware
+  support before considering another provider. A sandbox reporting MPS unavailable
+  does not establish absent hardware; verify with a permitted local GPU calculation.
+- Distinguish a local feasibility run from converged predictive performance and
+  biological qualification; preserve the broader availability objective.
