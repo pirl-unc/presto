@@ -114,6 +114,36 @@ Source conflicts (Table 8's M2 description and Table 10's replicate caption),
 unknown specimen links and assay-specific normalization must survive ingestion.
 These are source-audit findings, not a qualified normalized dataset.
 
+The [quantity reconciliation](https://github.com/pirl-unc/presto/blob/codex/modular-presto-model-20261020/experiments/2026-10-22_1601_codex_pxd057588-quantity-reconciliation/README.md)
+reproduces all 200,724 primary log2 fold changes from the original intensity cells.
+These derivations must be represented as shared quantitative evidence, with a
+versioned recipe, input measurement IDs/cell locators, output quantity, denominator
+membership, operation order, normalization universe and source-method citation:
+
+- Tables 7–10 and 12: log2 of treated intensity divided by the arithmetic mean
+  of the same peptide's named control intensities. Table 12 has different control
+  groups for the two tumor lines.
+- Table 11: first divide each channel by its total over all retained digest-peptide
+  rows, then compute the same control-mean ratio. The common mean-total multiplier
+  cancels. Recomputing totals after an arbitrary training subset changes the target
+  and is not the published normalization.
+- Keep original intensity, derived log2FC and calibrated copies/cell as different
+  quantity types. A recipe operating on an unscaled table cannot silently inherit
+  the global-proteome normalization. All 200,724 values disagree under the tested
+  opposite policy.
+- Preserve the 32 contrast definitions and exact channel maps in the frozen
+  [contract](https://github.com/pirl-unc/presto/blob/codex/modular-presto-model-20261020/experiments/2026-10-22_1601_codex_pxd057588-quantity-reconciliation/reproduce/contract.json).
+  The [cell comparison dump](https://github.com/pirl-unc/presto/blob/codex/modular-presto-model-20261020/experiments/2026-10-22_1601_codex_pxd057588-quantity-reconciliation/results/cell_comparisons.csv.gz)
+  supplies acceptance evidence; it is not a separate production curation format.
+
+Raw parent labels also need mapping provenance: the 663 shared labels between
+Tables 9 and 11 are neither verified protein-reference identities nor specimen
+pairs. Only 110 labels have multiple observed ligands and multiple digest peptides
+(258 ligand rows). This support count is a cohort diagnostic, not a rule that
+missing products have zero abundance. A normalized export must retain enough
+evidence to recompute the diagnostics and distinguish a source fact from a
+training recipe's eligibility decision.
+
 ## Cross-study acceptance cases
 
 - **Wolf-Levy MAPP:** proteasome-associated capture and parallel global proteomics;

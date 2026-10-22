@@ -2025,3 +2025,45 @@ full intracellular pool. Wolf-Levy SEARCH.7z remained incomplete after two timed
 downloads and was excluded. Compared with the preceding129synthetic fits, this is
 progress in biological-source definition, not biological model validation. Shared
 metadata implementation, source admission and the availability goal remain open.
+
+## 2026-10-22_1601 — PXD057588 quantity reconciliation
+
+- **Date / agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1601_codex_pxd057588-quantity-reconciliation](2026-10-22_1601_codex_pxd057588-quantity-reconciliation/README.md).
+- **Data / curation:** exact six source workbooks in the preceding immutable
+  17-asset bundle; 10,662 MHC-I and 25,110 digest-peptide rows, 32 contrasts and
+  200,724 primary fold-change cells. Preserve complete-case scope, source q≤0.05
+  policy and quantities; no inferred zeros, parent mapping, aggregation or
+  specimen joins. Source-policy contract and every source-cell comparison frozen.
+- **Training / evaluation:** no model, pretraining, training, loss, head mapping,
+  synthetic data or train/validation/test split: this is complete source arithmetic
+  reconciliation, not predictive evaluation. Source-cell dumps replace prediction
+  dumps; held-out IC50/500 nM metrics do not apply. No Modal/GPU.
+- **Reproduction / runtime:** frozen launch and verifier scripts, input hashes and
+  environment in `reproduce/`; dirty Presto51b895e; local macOS arm64, Python3.12.6,
+  NumPy2.5.4, openpyxl3.1.5; calculation6.432s and final scalar verification5.067s.
+
+| Policy comparison | Cells | Mismatches at 1e-8 log2 | Error |
+|---|---:|---:|---|
+| Published assay-specific calculation | 200,724 | 0 | Maximum absolute error1.63e-14 |
+| Opposite normalization policy | 200,724 | 200,724 | Per-table RMSE0.0826–0.6782 log2 |
+
+**Decision:** all published transformations reconcile; no model winner is selected.
+Independent scalar replay verifies every cell, source coordinates, parent support
+and aggregate errors. Tables9/11 share663 literal parent labels; only110 have
+multiple observed ligands and multiple digest peptides (258ligand rows). Preserve
+normalization and control membership in shared Hitlist evidence. Compared with the
+prior inventory, target arithmetic is now qualified; biological fitting, exact
+material/reference joins, normalized source admission and concentration claims are
+still unresolved. This does not address the earlier IC50 predictive failure.
+
+### Source-audit recovery addendum, October 22, 2026, 16:22 UTC
+
+The previously partial PXD009092 `SEARCH.7z` completed on the third resumed
+request. All51,736,986bytes match the PRIDE size and checksum (SHA-1); derived
+SHA-256 is `ff1c9a2adcef2f1d4f585254c7f8ee0cfdd373dc545439fc3667985d60011237`.
+All13archive entries decode successfully with CRC checks and no filesystem
+extraction. Original archive is now immutable in datacache; separate recovery
+manifest/script/receipt under the1410source-audit directory preserve the original
+17-asset contract. Verification4.754s. This qualifies transfer integrity only;
+processed-table semantics, study/sample curation and model admission remain open.

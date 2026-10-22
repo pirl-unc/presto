@@ -139,3 +139,26 @@ six table/header inventories, **309,126 quantity cells** and **3,240 SDRF cells*
 E4/E7/E9/F checks pass (repo defaults exclude experiments). No workbook was edited
 or recalculated. Full SDRF ontology validation, normalized upstream metadata
 round-trip and biological admission have not been performed.
+
+
+## Later archive recovery: October 22, 2026, 16:22 UTC
+
+The initial audit correctly excluded the partial Wolf-Levy PXD009092 archive.
+A third resumed request subsequently completed. The **51,736,986-byte** original
+matches PRIDE's size and checksum (matching SHA-1); its derived SHA-256 is
+`ff1c9a2adcef2f1d4f585254c7f8ee0cfdd373dc545439fc3667985d60011237`.
+All 13 entries decode with archive CRC checks, without filesystem extraction.
+The [receipt](recovery/receipt.json) gives the immutable datacache path;
+[member inventory](recovery/archive_members.txt), [separate input manifest](reproduce/recovered_archive.json)
+and [invocation](reproduce/recovery_launch.json) freeze this later addition.
+The original 17-input manifest and audit results are unchanged.
+
+```bash
+SOURCE_ARCHIVE=/private/tmp/presto-wolf-search.7z /Users/iskander/code/shared-virtual-env/bin/python experiments/2026-10-22_1410_codex_availability-source-audit/reproduce/source/verify_recovered_archive.py
+```
+
+Omit `SOURCE_ARCHIVE` to download the hash-pinned public original through datacache.
+Verification took 4.754 s on the same local CPU environment. This establishes
+transfer integrity only: processed-table semantics, material/sample curation,
+measurement interpretation and biological admission are still pending. No model,
+new training data, held-out metric or concentration claim is introduced.
