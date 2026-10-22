@@ -1,0 +1,287 @@
+[
+  {
+    "Parameter": "Version",
+    "Value": "1.5.3.30",
+    "source_row": 2
+  },
+  {
+    "Parameter": "Date of writing",
+    "Value": "01/15/2018 04:44:16",
+    "source_row": 5
+  },
+  {
+    "Parameter": "Fixed modifications",
+    "Value": "",
+    "source_row": 6
+  },
+  {
+    "Parameter": "Decoy mode",
+    "Value": "revert",
+    "source_row": 7
+  },
+  {
+    "Parameter": "Special AAs",
+    "Value": "",
+    "source_row": 8
+  },
+  {
+    "Parameter": "Include contaminants",
+    "Value": "True",
+    "source_row": 9
+  },
+  {
+    "Parameter": "MS/MS tol. (FTMS)",
+    "Value": "20 ppm",
+    "source_row": 10
+  },
+  {
+    "Parameter": "Top MS/MS peaks per 100 Da. (FTMS)",
+    "Value": "12",
+    "source_row": 11
+  },
+  {
+    "Parameter": "MS/MS deisotoping (FTMS)",
+    "Value": "True",
+    "source_row": 12
+  },
+  {
+    "Parameter": "MS/MS tol. (ITMS)",
+    "Value": "0.5 Da",
+    "source_row": 13
+  },
+  {
+    "Parameter": "Top MS/MS peaks per 100 Da. (ITMS)",
+    "Value": "8",
+    "source_row": 14
+  },
+  {
+    "Parameter": "MS/MS deisotoping (ITMS)",
+    "Value": "False",
+    "source_row": 15
+  },
+  {
+    "Parameter": "MS/MS tol. (TOF)",
+    "Value": "40 ppm",
+    "source_row": 16
+  },
+  {
+    "Parameter": "Top MS/MS peaks per 100 Da. (TOF)",
+    "Value": "10",
+    "source_row": 17
+  },
+  {
+    "Parameter": "MS/MS deisotoping (TOF)",
+    "Value": "True",
+    "source_row": 18
+  },
+  {
+    "Parameter": "MS/MS tol. (Unknown)",
+    "Value": "0.5 Da",
+    "source_row": 19
+  },
+  {
+    "Parameter": "Top MS/MS peaks per 100 Da. (Unknown)",
+    "Value": "8",
+    "source_row": 20
+  },
+  {
+    "Parameter": "MS/MS deisotoping (Unknown)",
+    "Value": "False",
+    "source_row": 21
+  },
+  {
+    "Parameter": "PSM FDR",
+    "Value": "0.01",
+    "source_row": 22
+  },
+  {
+    "Parameter": "Protein FDR",
+    "Value": "1",
+    "source_row": 23
+  },
+  {
+    "Parameter": "Site FDR",
+    "Value": "0.01",
+    "source_row": 24
+  },
+  {
+    "Parameter": "Use Normalized Ratios For Occupancy",
+    "Value": "True",
+    "source_row": 25
+  },
+  {
+    "Parameter": "Min. peptide Length",
+    "Value": "6",
+    "source_row": 26
+  },
+  {
+    "Parameter": "Min. score for unmodified peptides",
+    "Value": "0",
+    "source_row": 27
+  },
+  {
+    "Parameter": "Min. score for modified peptides",
+    "Value": "40",
+    "source_row": 28
+  },
+  {
+    "Parameter": "Min. delta score for unmodified peptides",
+    "Value": "0",
+    "source_row": 29
+  },
+  {
+    "Parameter": "Min. delta score for modified peptides",
+    "Value": "6",
+    "source_row": 30
+  },
+  {
+    "Parameter": "Min. unique peptides",
+    "Value": "0",
+    "source_row": 31
+  },
+  {
+    "Parameter": "Min. razor peptides",
+    "Value": "1",
+    "source_row": 32
+  },
+  {
+    "Parameter": "Min. peptides",
+    "Value": "1",
+    "source_row": 33
+  },
+  {
+    "Parameter": "Use only unmodified peptides and",
+    "Value": "True",
+    "source_row": 34
+  },
+  {
+    "Parameter": "Modifications included in protein quantification",
+    "Value": "Oxidation (M);Acetyl (Protein N-term)",
+    "source_row": 35
+  },
+  {
+    "Parameter": "Peptides used for protein quantification",
+    "Value": "Razor",
+    "source_row": 36
+  },
+  {
+    "Parameter": "Discard unmodified counterpart peptides",
+    "Value": "True",
+    "source_row": 37
+  },
+  {
+    "Parameter": "Min. ratio count",
+    "Value": "1",
+    "source_row": 38
+  },
+  {
+    "Parameter": "Use delta score",
+    "Value": "False",
+    "source_row": 39
+  },
+  {
+    "Parameter": "iBAQ",
+    "Value": "False",
+    "source_row": 40
+  },
+  {
+    "Parameter": "iBAQ log fit",
+    "Value": "False",
+    "source_row": 41
+  },
+  {
+    "Parameter": "Match between runs",
+    "Value": "True",
+    "source_row": 42
+  },
+  {
+    "Parameter": "Matching time window [min]",
+    "Value": "0.7",
+    "source_row": 43
+  },
+  {
+    "Parameter": "Alignment time window [min]",
+    "Value": "20",
+    "source_row": 44
+  },
+  {
+    "Parameter": "Find dependent peptides",
+    "Value": "False",
+    "source_row": 45
+  },
+  {
+    "Parameter": "Fasta file",
+    "Value": "H:\\Database\\Human_UP_2016_02.fasta",
+    "source_row": 46
+  },
+  {
+    "Parameter": "Site tables",
+    "Value": "Oxidation (M)Sites.txt",
+    "source_row": 47
+  },
+  {
+    "Parameter": "Decoy mode",
+    "Value": "revert",
+    "source_row": 48
+  },
+  {
+    "Parameter": "Special AAs",
+    "Value": "",
+    "source_row": 49
+  },
+  {
+    "Parameter": "Include contaminants",
+    "Value": "True",
+    "source_row": 50
+  },
+  {
+    "Parameter": "RT shift",
+    "Value": "False",
+    "source_row": 51
+  },
+  {
+    "Parameter": "Advanced ratios",
+    "Value": "True",
+    "source_row": 52
+  },
+  {
+    "Parameter": "AIF correlation",
+    "Value": "0",
+    "source_row": 53
+  },
+  {
+    "Parameter": "First pass AIF correlation",
+    "Value": "0",
+    "source_row": 54
+  },
+  {
+    "Parameter": "AIF topx",
+    "Value": "0",
+    "source_row": 55
+  },
+  {
+    "Parameter": "AIF min mass",
+    "Value": "0",
+    "source_row": 56
+  },
+  {
+    "Parameter": "AIF SIL weight",
+    "Value": "0",
+    "source_row": 57
+  },
+  {
+    "Parameter": "AIF ISO weight",
+    "Value": "0",
+    "source_row": 58
+  },
+  {
+    "Parameter": "AIF iterative",
+    "Value": "False",
+    "source_row": 59
+  },
+  {
+    "Parameter": "AIF threshold FDR",
+    "Value": "0",
+    "source_row": 60
+  }
+]

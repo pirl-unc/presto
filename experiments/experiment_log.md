@@ -2067,3 +2067,50 @@ extraction. Original archive is now immutable in datacache; separate recovery
 manifest/script/receipt under the1410source-audit directory preserve the original
 17-asset contract. Verification4.754s. This qualifies transfer integrity only;
 processed-table semantics, study/sample curation and model admission remain open.
+
+## 2026-10-22_1630 — MAPP source and processed-evidence admission
+
+- **Date / agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1630_codex_mapp-source-admission](2026-10-22_1630_codex_mapp-source-admission/README.md).
+- **Exact inputs:** 16 immutable originals, 53,293,496 bytes: seven PRIDE project/file
+  inventories, recovered PXD009092 SEARCH.7z and primary accepted manuscript;
+  five archive-member hashes. All source rows/flags/scales retained. No missing-zero
+  conversion or parent abundance inferred from fragment-derived protein groups.
+- **Contract:** 18 MAPP acquisitions; 10,673 unique peptide rows, 149,959 evidence
+  rows; 2,003 indexable protein groups plus 36 quarantined source records. Preserve
+  run versus aggregate rows, reverse/contaminants, direct versus transferred IDs,
+  source FDR-level distinctions, bead-filtered quantities and reference uncertainty.
+- **Training / evaluation:** no model, pretraining, training, loss/head mapping,
+  synthetic data or train/validation/test split. No predictive metrics or dumps:
+  every source quantity/support comparison is preserved instead. No Modal/GPU.
+- **Reproduction / runtime:** frozen scripts/manifests/launch environment at dirty
+  Presto30cc536; local Python3.12.6/macOS arm64. Initial invalid-ID stop is preserved;
+  revised row-quarantine audit17.170s; independent pandas verification3.008s.
+
+| Source comparison | Count |
+|---|---:|
+| Reported positive and evidence sum agree within declared rounding tolerance | 95,336 |
+| Both zero | 55,483 |
+| Reported zero despite positive underlying evidence | 9,276 |
+| Other quantity discrepancies | 0 |
+| Structural UT/cytokine support | 2,272 peptides / 572 groups |
+| Multiple-peptide support within those groups | 1,971 peptides / 271 groups |
+| Training-admitted rows | 0 |
+
+**Decision:** keep PXD009092 as the concrete cell-line contrast candidate, but resolve
+filtering/confidence/source context before fitting. An independent parser verifies
+all160,095quantity comparisons and10,673support rows against original evidence.
+The paper's4,983enriched-peptide result is not yet reconstructed. The archive's
+protein-group LFQ is not independent precursor measurement. Shared Hitlist metadata
+and actual whole-proteome pairing remain prerequisites; candidate PXD009360 archive
+retrieval is recorded separately. Compared with the prior transfer audit, actual
+biological support is now quantified. No concentration or APC generalization is
+claimed, and the availability goal remains active.
+
+Later source continuation: PXD009360's733,580,954-byte tryptic archive completed;
+deposited checksum/gzip integrity pass, immutable SHA-256
+`45b1f2b278937b43a40913798b96c7fb31a0d1a7753ebcf99951287c0ebe91c7`. Verification8.349s;
+header audit6.938s. Nine actual Trypsin/P runs have bare experiment
+IDs448–456, without a resolved treatment/specimen map. Candidate quantities remain
+unqualified; do not infer a precursor join from numeric run order. Separate
+receipt/commands preserve this later download without changing the16-input audit.

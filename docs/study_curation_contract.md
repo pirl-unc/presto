@@ -149,6 +149,16 @@ training recipe's eligibility decision.
 - **Wolf-Levy MAPP:** proteasome-associated capture and parallel global proteomics;
   no confusion with MHC-II-associated MAPPs, free peptide amount or production flux.
   Keep cell-line observations separate from primary mixed-cell observations.
+  The [processed-source audit](https://github.com/pirl-unc/presto/blob/codex/modular-presto-model-20261020/experiments/2026-10-22_1630_codex_mapp-source-admission/README.md)
+  supplies 18 run mappings, 10,673 peptide records and 160,095 quantity comparisons.
+  Preserve `MAPPbeadFilt` quantities separately from source evidence intensities:
+  9,276 reported zeros have positive underlying signal. Retain direct versus
+  transferred identifications, peptide/PSM/protein confidence levels and the
+  disagreement between project and paper peptide-FDR claims. Quarantine the
+  36 source protein-group records without IDs; never overwrite a shared empty key.
+  Fragment-derived protein-group LFQ is not independent precursor abundance.
+  Source structural support for 2,272 UT/cytokine peptide comparisons is not
+  endpoint admission; all remain deferred pending shared context and source review.
 - **PXD017407:** relative elution quantities versus selected calibrated pMHC
   copies/cell. Retain calibration applicability; melanoma is not a professional
   APC annotation and transcript abundance is not measured precursor protein.
