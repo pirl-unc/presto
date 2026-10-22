@@ -12169,3 +12169,13 @@ Review: all quantity/filter and membership comparisons verified; source imputati
 Continuation audit: the preceding benchmark-status reply was no goal progress; ready source mapping resumes here. No repeated external blocker. Download has complete HTTP200 body and curl completion log; validate its format independently rather than restarting retrieval.
 
 Review: both complete-reference scans independently verified;2,269/2,272contrast peptides map, but1,256have multiple full parent sequences. Shared source ingestion and endpoint admission remain pending. Parent graph components constrain future splits; no homology or concentration claim. Publication/readback pending.
+
+## 2026-10-22 shared PXD057588 sequence admission
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/pxd057588-shared-sequence-admission.md.
+- [x] Inspect current shared generation and register scientific/reference contract.
+- [x] Verify the native package and freeze the mouse reference.
+- [x] Map all primary source sequences and quantify real MHC/digest parent support.
+- [x] Independently verify, report recipe gaps and prepare the biological handoff.
+
+Review: actual shared generation and all mouse-reference mappings independently verified. Source-label support reduces663to661shared parents; exact specimen pairing and aggregate precursor quantities remain unresolved. No biological fit. Publication follows verification.

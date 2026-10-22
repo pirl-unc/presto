@@ -1,0 +1,25 @@
+{
+  "files": 87,
+  "first_hash_pass_seconds": 2.33906675002072,
+  "manifest_bytes": 3932771529,
+  "manifest_sha256": "daff7930e193c6dbde1fe84c065b024187232147fa006d9348e297766e95e69c",
+  "native_checkout": "/private/tmp/hitlist-external-quant-v2",
+  "native_command": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-c",
+    "from pathlib import Path; import hitlist; from hitlist.external_evidence import verify_external_evidence_package; assert Path(hitlist.__file__).resolve().parent == Path('/private/tmp/hitlist-external-quant-v2/hitlist'); m=verify_external_evidence_package('/private/tmp/hitlist-v2-external-18222-audited'); print(m['schema_version'], m['catalog_schema_version'],m['source_ids'])"
+  ],
+  "native_environment_overrides": {
+    "PYTHONPATH": "/private/tmp/hitlist-external-quant-v2"
+  },
+  "native_git_commit": "bac9c7f104d475c7b2f703681f7667102924c1e1",
+  "native_git_dirty": false,
+  "package_path": "/private/tmp/hitlist-v2-external-18222-audited",
+  "passed": true,
+  "presto_commit": "6cd7edc367109379b8e5f649c99b2b3a37591e22",
+  "presto_status": " M experiments/experiment_log.md\n M tasks/todo.md\n?? experiments/2026-10-22_1914_codex_pxd057588-shared-sequence-admission/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? experiments/agents/codex/plans/pxd057588-shared-sequence-admission.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "pyarrow": "26.0.0",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "script_sha256": "42ff59a4a56347340e3cd55af0aee2ddf5d72dc0e2994cbc3910e49e2eea876c",
+  "total_seconds": 10.899243583000498
+}

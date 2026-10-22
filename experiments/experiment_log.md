@@ -2250,3 +2250,41 @@ leading-coordinate conflicts. Shared Hitlist ingestion and endpoint-specific
 admission remain open. Merged PR749 now supplies the common external-source mechanism
 and PXD057588; MAPP is still a contract candidate. Full biological availability,
 APC context and concentration objective remains active.
+
+## 2026-10-22_1914 — Shared PXD057588 mouse sequence and precursor support
+
+- **Date/agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1914_codex_pxd057588-shared-sequence-admission](2026-10-22_1914_codex_pxd057588-shared-sequence-admission/README.md).
+- **Exact data:** shared Hitlist 1.82.22 generation daff7930…, all 87 files verified
+  natively and independently, then rechecked after mapping. All 35,772 primary
+  PXD057588 rows (10,662 MHC-bound; 25,110 digest), 30,587 distinct sequences.
+  Original complete-case selection/quantities retained. No measurement duplicated
+  across parent alternatives; no inferred specimen pairing or biological zeros.
+- **Reference:** official reviewed mouse release2026_03 including isoforms,
+  25,758 entries; SHA25641bc0fa6…. Literal overlapping spans only; no I/L or
+  alias/suffix transformations. Separate model and original search references.
+- **Training/eval:** none; no model/pretraining/loss/synthetic training/GPU/Modal,
+  predictive split or prediction dumps. Native quantities remain observed relative
+  MHC/digest signals; no intracellular concentration label or validation claim.
+- **Runtime/reproduction:** native plus full package hash check10.899s, mapping
+  7.591s, independent replay8.975s, local CPU. Frozen code/commands/inputs at dirty
+  6cd7edc. Independent Biopython/complete character scan reproduces52,277positions,
+  all35,772source mappings,71,544original worksheet cells,26,449support records,
+  all table summaries;36copied input and10output hashes pass.
+
+| Table9/11 parent-support definition | Shared keys | ≥2 ligand and ≥2 digest keys | Distinct ligand/digest rows in multi-peptide support |
+|---|---:|---:|---:|
+| Literal parent label |663|110|258 /1,919|
+| Verified source ID plus peptide occurrence |661|110|258 /1,919|
+| All exact reference identities |1,136|236|277 /2,128|
+| All distinct full-sequence alternatives |1,134|236|277 /2,128|
+
+**Decision:** 35,771rows match the mouse reference;35,747match their reported parent.
+Preserve24missing source IDs, one resolved-ID/absent-peptide case, and11,725rows
+with multiple full parent sequences. Prefer verified occurrence support over
+literal labels; broader alternative support adds uncertainty, not independent
+measurements. The5,374all-table components (largest862sequences) constrain future
+splits but do not establish homology/specimen independence. Use the shared recipe
+path for a prospective observable-signal comparison; exact precursor pairing and
+protein aggregation remain unresolved. MAPP752 and the broader availability goal
+remain open. This is shared-source admission evidence, not another registry.
