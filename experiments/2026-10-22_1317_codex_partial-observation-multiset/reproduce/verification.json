@@ -1,0 +1,27 @@
+{
+  "tests": {
+    "command": "PYTHONPATH=/private/tmp/presto-modular-imports /Users/iskander/code/shared-virtual-env/bin/python -m pytest -q experiments/2026-10-22_1317_codex_partial-observation-multiset/tests",
+    "log": "launch_logs/tests.log",
+    "result": "8 passed"
+  },
+  "independent": {
+    "command": "/Users/iskander/code/shared-virtual-env/bin/python experiments/2026-10-22_1317_codex_partial-observation-multiset/analysis/verify.py",
+    "log": "launch_logs/verify.log",
+    "result": "924 metric sets passed"
+  },
+  "replay": {
+    "command": "OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /Users/iskander/code/shared-virtual-env/bin/python experiments/2026-10-22_1317_codex_partial-observation-multiset/reproduce/source/launch.py replay --output experiments/2026-10-22_1317_codex_partial-observation-multiset/results/run",
+    "log": "launch_logs/replay.log",
+    "result": "60 matched"
+  },
+  "plot": {
+    "command": "MPLCONFIGDIR=/private/tmp/presto-mplcache /Users/iskander/code/shared-virtual-env/bin/python experiments/2026-10-22_1317_codex_partial-observation-multiset/analysis/plot.py",
+    "visual_inspection": "passed"
+  },
+  "package": {
+    "command": "/Users/iskander/code/shared-virtual-env/bin/python experiments/2026-10-22_1317_codex_partial-observation-multiset/analysis/package.py",
+    "log": "launch_logs/package.log",
+    "result": "368 byte-verified files"
+  },
+  "note": "Run analyzers from analysis/; reproduce/source copies are archival snapshots."
+}

@@ -1925,3 +1925,57 @@ agree with reference reconstruction. The retry has its own attempt directory.
   frozen in the reproduction bundle; execution commit recorded at launch.
 - **Status:** eight mathematical/data-boundary tests passed before fitting;
   held-out metrics and conclusions pending. Full predictions/counts required.
+
+### Closure — partial-observation/multiset family, October 22, 2026
+
+All60 fits completed on frozen source `942cb62c925f01b6aaaadd96d3a1b41270e02fa0`;
+Codex / GPT-6. Full contract and artifacts are in the [report](2026-10-22_1317_codex_partial-observation-multiset/README.md).
+Same synthetic parent-disjoint integer dataset, positive/blind known observation
+weights and nested32/256 empirical counts. No biological assays/qualifiers/censoring
+or molecular units. Counts supervise conditional observed distributions; oracle
+latent probabilities are excluded from fitting and selection. Exact CE, exact L2,
+corrected multiset L2 K16/K64/G4, and naive histogram MSE K16/G4; naive expectation
+adds `(1-sum q²)/K`. No additional entropy/RL penalties. All loss weights1.
+Seed-matched two83→32→1 MLPs; Adam.003, batch16,1,440updates, no pretraining;
+minimum validation count CE checkpoint. Every trainable tensor updates.
+
+| Condition | Val count CE | Val observed TV | Test count CE | Test observed TV | Test latent TV | Seconds |
+|---|---:|---:|---:|---:|---:|---:|
+| blind-n256-ce | 1.29438 | 0.02280 | 1.20015 | 0.02335 | 0.04418 | 1.004 |
+| blind-n256-l2 | 1.29542 | 0.02638 | 1.20277 | 0.02990 | 0.05116 | 0.995 |
+| blind-n256-multiset16 | 1.30260 | 0.04744 | 1.21093 | 0.05012 | 0.07811 | 1.108 |
+| blind-n256-multiset64 | 1.29975 | 0.04082 | 1.20675 | 0.04131 | 0.06072 | 1.249 |
+| blind-n256-naive | 1.30539 | 0.05182 | 1.21413 | 0.05532 | 0.08041 | 1.157 |
+| blind-n32-ce | 1.29282 | 0.04440 | 1.19440 | 0.04457 | 0.06841 | 0.996 |
+| blind-n32-l2 | 1.29768 | 0.05421 | 1.20044 | 0.05786 | 0.08080 | 1.009 |
+| blind-n32-multiset16 | 1.30294 | 0.06471 | 1.20735 | 0.06725 | 0.08601 | 1.311 |
+| blind-n32-multiset64 | 1.30318 | 0.06274 | 1.20814 | 0.06734 | 0.08703 | 1.202 |
+| blind-n32-naive | 1.30715 | 0.07072 | 1.21110 | 0.07482 | 0.10067 | 1.107 |
+| positive-n256-ce | 1.55126 | 0.02244 | 1.57073 | 0.02472 | 0.02678 | 1.069 |
+| positive-n256-l2 | 1.55322 | 0.02773 | 1.57358 | 0.03175 | 0.03324 | 1.003 |
+| positive-n256-multiset16 | 1.56509 | 0.05427 | 1.58678 | 0.05745 | 0.05978 | 1.109 |
+| positive-n256-multiset64 | 1.55826 | 0.04355 | 1.58095 | 0.04855 | 0.05035 | 1.197 |
+| positive-n256-naive | 1.56890 | 0.06080 | 1.59170 | 0.06634 | 0.07324 | 1.102 |
+| positive-n32-ce | 1.55552 | 0.04870 | 1.60337 | 0.05059 | 0.05336 | 1.175 |
+| positive-n32-l2 | 1.56347 | 0.06223 | 1.61056 | 0.06127 | 0.06784 | 1.174 |
+| positive-n32-multiset16 | 1.57235 | 0.07194 | 1.62774 | 0.07808 | 0.08470 | 1.320 |
+| positive-n32-multiset64 | 1.56796 | 0.06919 | 1.61918 | 0.07357 | 0.08194 | 1.240 |
+| positive-n32-naive | 1.57884 | 0.07845 | 1.63527 | 0.08342 | 0.09448 | 1.111 |
+
+Preferred condition is exact CE for every data contract here; exact L2 is the
+objective-matched reference and beats corrected sampled multiset objectives.
+K64 usually helps relative to K16 but not at blind/n32; naive MSE is worse than
+corrected K16 in all means. Three seeds, no significance claim. Uniform test
+latent TV0.83159, observed TV0.82462 positive/0.76559 blind. Blind invisible mass
+is0.73125; low hidden-mass error under this teacher does not prove identifiability.
+The exact counterexample preserves identical observations despite different mass.
+
+No Modal/GPU: one-thread local macOSarm64 CPU; family72.504s, peakRSS436,043,776bytes.
+All methods score1,612,800 span logits/access count cells; sampled variants add
+1,474,560 or5,898,240 draws. No expensive-oracle or large-support speedup is tested.
+Eight pre-fit tests, independent924metric sets/1,152observation rows/576teacher rows,
+all60checkpoint replays, and368archive members pass. All split predictions/counts,
+checkpoints, invocation/env, source snapshots, logs, plot, full RMSE/correlation/KL/
+entropy/context metrics are retained. These synthetic outcomes do not resolve
+real-data IC50 quality or qualify a biological concentration model; continue
+source-qualified biological admission and held-out evaluation under the active goal.
