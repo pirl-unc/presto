@@ -178,6 +178,19 @@ training recipe's eligibility decision.
   selected 131-gene Data3 summary establishes unique origin or a precursor
   specimen/run map. External source generations are owned by
   [Hitlist #746](https://github.com/pirl-unc/hitlist/issues/746).
+  The subsequent [parent-reference audit](https://github.com/pirl-unc/presto/blob/codex/modular-presto-model-20261020/experiments/2026-10-22_1845_codex_mapp-parent-reference/README.md)
+  verifies literal spans against separate hash-pinned 2023 canonical and 2026_03
+  isoform-inclusive reviewed-human references. Neither replaces the unavailable
+  original 2016 search FASTA. Preserve reference IDs/sequence hashes, recorded
+  secondary aliases, missing IDs, sequence-negative candidates, every exact
+  occurrence, and source-coordinate/flank disagreements. Never strip isoform
+  suffixes or duplicate a single quantity through a one-to-many parent join.
+  Of 2,272 frozen contrast peptides, 2,269 match the current reference but 1,256 have
+  multiple full-sequence alternatives; 1,676 agree with leading-parent coordinates
+  and flanks. The 542 exact parent-sharing components are split constraints, not
+  homology independence. Keep flags even when reverse/contaminant peptides match
+  a reviewed human sequence. Source assignment, reference occurrence, biological
+  origin and precursor-mixture weight are distinct facts.
 - **PXD017407:** relative elution quantities versus selected calibrated pMHC
   copies/cell. Retain calibration applicability; melanoma is not a professional
   APC annotation and transcript abundance is not measured precursor protein.

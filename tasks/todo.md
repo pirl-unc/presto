@@ -12158,3 +12158,14 @@ Local-run review: one complete CPU epoch and three-method prediction replay pass
 - [ ] Publish evidence into the shared curation requirements and design issue.
 
 Review: all quantity/filter and membership comparisons verified; source imputation conflict and parent ambiguity retained. Shared ingestion belongs to Hitlist746. No biological fit or concentration claim.
+
+## 2026-10-22 MAPP parent sequence context
+
+- [x] Revalidate source reconciliation and register reference-mapping specification.
+- [x] Retrieve/freeze official isoform-inclusive reference and historical DAT.
+- [x] Audit all source-listed and additional exact parent/position mappings.
+- [x] Independently verify mapping receipts and prepare shared ingestion evidence.
+
+Continuation audit: the preceding benchmark-status reply was no goal progress; ready source mapping resumes here. No repeated external blocker. Download has complete HTTP200 body and curl completion log; validate its format independently rather than restarting retrieval.
+
+Review: both complete-reference scans independently verified;2,269/2,272contrast peptides map, but1,256have multiple full parent sequences. Shared source ingestion and endpoint admission remain pending. Parent graph components constrain future splits; no homology or concentration claim. Publication/readback pending.

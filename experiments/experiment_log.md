@@ -2201,3 +2201,52 @@ replication or source-independent qualification. Comparison to the historical
 9,053-row failure is not controlled. Availability/concentration and source-admission
 work remain open. Continue locally; CPU is the measured choice for this current
 small audited loop, with GPU batching/synchronization improvements untested.
+
+## 2026-10-22_1845 — MAPP parent-reference and exact-span audit
+
+- **Date / agent:** October22,2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1845_codex_mapp-parent-reference](2026-10-22_1845_codex_mapp-parent-reference/README.md).
+- **Exact data:** all10,673 original PXD009092 peptide records, five pinned table
+  members, frozen publisher/support ledgers; unchanged2,272 structurally supported
+  untreated/TNF+IFN contrast peptides. No new training admission.
+- **Reference conditions:** local2023 reviewed-human canonical DAT20,422entries,
+  SHA256defd9fd7… with recorded secondary aliases; official UniProt2026_03 reviewed
+  human isoform-inclusive FASTA42,562entries, SHA2568c4459cc… with exact IDs only.
+  Different releases, scopes and alias policies; not a controlled isoform ablation.
+  The original2016 search FASTA remains unavailable. No suffix stripping, I/L
+  conflation, approximate matching or source-coordinate repair.
+- **Contract:** exact peptide/position alternatives, original parent/group/razor
+  fields, source flags, leading-coordinate/flank comparisons, reference inventory
+  and full matched parent sequences. Uniqueness is reference-scoped. Every missing
+  accession and sequence-negative resolved candidate remains represented.
+- **Training/evaluation:** none. Relative captured MAPP signal is not fitted here
+  and is not intracellular concentration. No pretraining, loss terms, assay-output
+  mapping, synthetic training data, GPU/Modal, predictive split or prediction dumps.
+  Synthetic strings test scanner software only. Flags and prior selection remain
+  unchanged; missing/filtered signal is not relabeled as a biological zero.
+- **Runtime / reproduction:** producer11.537s; independent verifier17.734s, local
+  CPU. Dirty4d938e0, frozen code/commands/input receipts, Biopython1.88. Complete
+  independent Aho-Corasick scan matches37,721 positions; source replay verifies
+  64,538accession rows,26,978positive and14negative resolved candidates. All62,984
+  reference records,10,673source records,14subset summaries and graph components
+  checked. No predictive validation/test metrics apply.
+
+| Contrast-subset result | 2023 canonical | 2026_03 with isoforms |
+|---|---:|---:|
+| Exact-matched peptides /2,272 |2,262|2,269|
+| Source-leading coordinate and flank agreement |1,678|1,676|
+| One distinct possible full parent sequence |2,030|1,013|
+| Multiple distinct possible parent sequences |232|1,256|
+| Peptides with additional non-source-listed matches |18|1,114|
+| Exact position alternatives |2,613|4,529|
+| All-source components intersecting subset |540|542|
+
+**Decision:** use the isoform-inclusive generation as the broader prospective
+reference, preserving ambiguity; do not duplicate one peptide observation into
+independent alternative-parent labels. The542components (largest175subset
+peptides) constrain future splitting but are not homology clusters or proof of
+independent specimens. Three contrast peptides remain unmatched;26have resolved
+leading-coordinate conflicts. Shared Hitlist ingestion and endpoint-specific
+admission remain open. Merged PR749 now supplies the common external-source mechanism
+and PXD057588; MAPP is still a contract candidate. Full biological availability,
+APC context and concentration objective remains active.
