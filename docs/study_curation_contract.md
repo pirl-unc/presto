@@ -159,6 +159,25 @@ training recipe's eligibility decision.
   Fragment-derived protein-group LFQ is not independent precursor abundance.
   Source structural support for 2,272 UT/cytokine peptide comparisons is not
   endpoint admission; all remain deferred pending shared context and source review.
+  The subsequent
+  [publisher reconciliation](https://github.com/pirl-unc/presto/blob/codex/modular-presto-model-20261020/experiments/2026-10-22_1736_codex_mapp-publisher-reconciliation/README.md)
+  supplies a complete arithmetic acceptance case: each run's evidence sum is
+  retained when it is at least twice the median of the three bead controls,
+  reproducing all 160,095 deposited cells. Store this as an empirically verified
+  reconstruction alongside the paper's stated twofold criterion. Background
+  removal is a processing/selection event, not a measured biological zero.
+  The 4,983 untreated and 5,311 TNF+IFN log medians and sequence memberships
+  reproduce exactly. Their source medians include the filter's reported zeros;
+  a positive-only median is a different derivation.
+  Preserve the Data2 E/F imputed-column conflict: both agree with only two rows
+  under their own condition headers, but thousands under other conditions.
+  Keep original headers and all values; exclude these columns from measured
+  training quantities without silently correcting labels. Preserve leading-razor
+  assignments separately from all mapping alternatives: 559/604 publisher rows
+  have multiple listed protein groups. Neither those assignments nor the
+  selected 131-gene Data3 summary establishes unique origin or a precursor
+  specimen/run map. External source generations are owned by
+  [Hitlist #746](https://github.com/pirl-unc/hitlist/issues/746).
 - **PXD017407:** relative elution quantities versus selected calibrated pMHC
   copies/cell. Retain calibration applicability; melanoma is not a professional
   APC annotation and transcript abundance is not measured precursor protein.

@@ -2115,6 +2115,49 @@ IDs448–456, without a resolved treatment/specimen map. Candidate quantities re
 unqualified; do not infer a precursor join from numeric run order. Separate
 receipt/commands preserve this later download without changing the16-input audit.
 
+## 2026-10-22_1736 — MAPP publisher/deposit quantity reconciliation
+
+- **Date / agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1736_codex_mapp-publisher-reconciliation](2026-10-22_1736_codex_mapp-publisher-reconciliation/README.md).
+- **Source contract:** three hash-pinned original publisher assets, plus five
+  original PXD009092 member tables from the prior source audit. Original cells,
+  source IDs, condition columns, alternatives, missingness and quantities retained.
+  All 6,311 publisher sequences match the deposit. No invented specimen mapping.
+- **Training / eval:** no model/pretraining/loss/head mapping, synthetic data,
+  GPU/Modal or predictive split. This is source reconciliation, with complete
+  per-cell and mapping evidence instead of predictive metrics/dumps.
+- **Reproduction / runtime:** dirty e80fd42, frozen scripts/manifest/commands;
+  local Python 3.12.6, pandas 3.0.6, NumPy 2.5.4, openpyxl 3.1.5. Audit 57.791s;
+  independent scalar replay 5.958s. Membership 0.416s; independent check 0.276s.
+  Interrupted verifier with repeated NPZ decompression is preserved; cached
+  immutable arrays resolve that I/O problem without changing numerical policy.
+
+| Comparison | Verified result |
+|---|---|
+| Run intensity versus 2× median bead control |160,095/160,095 deposited cells|
+| Other eight prespecified filter rules |2,357–22,851 mismatching cells|
+| Publisher UT / TNF+IFN log medians |4,983/4,983 and 5,311/5,311 matches|
+| Publisher membership without imposing unique group IDs |Both sets match exactly|
+| Imputed E / F versus their named conditions |Only 2/6,311 matches each|
+| Imputed E / F versus unexpected CHX / UT conditions |4,868 / 4,913 matches|
+| Publisher UT / TNF+IFN rows with multiple group IDs |559 / 604|
+
+**Decision:** the exact background reconstruction and publisher medians now resolve
+an arithmetic admission gap. Keep the twofold criterion's stated provenance
+separate from the empirically reconstructed run/median algorithm. Filtered zeros
+are not biological absence. Imputed E/F columns have unresolved condition-label
+conflicts and cannot provide measured targets. Preserve leading-razor assignments
+and alternative parent mappings separately; do not identify unique origin from an
+assignment. The selected 131-gene Data3 panel supplies no precursor acquisition map.
+Original reference, confidence-setting discrepancy, parent mapping, shared Hitlist
+import and endpoint-specific eligibility remain open. New inputs belong in
+[Hitlist #746](https://github.com/pirl-unc/hitlist/issues/746), not a parallel registry.
+
+Independent checks cover eight input hashes, 160,095 quantity cells, 1,440,855 rule
+decisions, 229,160 publisher-cell comparisons, 10,294 membership rows with six
+mapping fields, and 524 Data3 quantity cells. No biological fit or concentration
+claim is made; the full availability goal stays active.
+
 ## 2026-10-22_1745 — Local CPU / Apple GPU IC50 training feasibility
 
 - **Date / agent:** October22,2026; Codex / GPT-6.

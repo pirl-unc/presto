@@ -12148,3 +12148,13 @@ while it ran. Repository Ruff and explicit current recipe/analyzer checks pass.
 Review: Modal is no longer the execution assumption; availability-source admission remains open.
 
 Local-run review: one complete CPU epoch and three-method prediction replay pass;35training/resume tests and strict docs pass. PR publication follows this checkpoint.
+
+## 2026-10-22 MAPP publisher reconciliation continuation
+
+- [x] Revalidate prior local-training progress and shared Hitlist ownership.
+- [x] Freeze cell comparison and nine background-rule diagnostics before computation.
+- [x] Reconcile publisher peptide/protein summaries and deposited background masks.
+- [x] Independently replay source comparisons and record remaining admission gaps.
+- [ ] Publish evidence into the shared curation requirements and design issue.
+
+Review: all quantity/filter and membership comparisons verified; source imputation conflict and parent ambiguity retained. Shared ingestion belongs to Hitlist746. No biological fit or concentration claim.
