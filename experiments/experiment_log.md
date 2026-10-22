@@ -1910,3 +1910,18 @@ agree with reference reconstruction. The retry has its own attempt directory.
 - **Hardware/runtime:** local CPU/one Torch/BLAS thread, no requested/observed GPU/Modal. Python 3.12.6, Torch 2.14.1, NumPy 2.5.4, macOS 26.5 arm64. Whole family 108.284 seconds, peak RSS 392,314,880 bytes. Dense policy logits are evaluated in all methods; logical target terms are not external-oracle runtime savings. One sequential execution, not a repeated isolated runtime study.
 - **Verification/artifacts:** 16 pre-fit tests plus a post-run active-clipping test pass. Independent reconstruction of 576 teacher rows, 1,035 split/context metric sets, all 423 raw hashes, source/plan/selection/budget checks, 69 fresh-process checkpoint replays, nine initial-reference split replays and 18 bitwise matches to prior exact/RL predictions pass. All 424 original files retained in a verified 18,320,086-byte compressed bundle, with complete train/validation/test arrays, references, checkpoints and histories. Archive SHA256 `c2849f8f25d737c3e85ebdaab15ef9388c72cf61ad33607a5e97ac556502de36`.
 - **Decision:** retain exact/original REINFORCE as fixed references for the next partial-observation and multiset studies. No synthetic checkpoint is promoted. The biological availability/concentration goal, precursor normalization and real-source qualification remain open.
+
+## 2026-10-22_1317 — Partial observations and whole-multiset objectives (registered)
+
+- **Date / agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1317_codex_partial-observation-multiset](2026-10-22_1317_codex_partial-observation-multiset/README.md).
+- **Contract:** Same synthetic integer strings/70 spans, 384/96/96 parent-disjoint
+  rows as prior algorithm families. Known positive or partially blind observation
+  weights; 32/256 nested counts per row. No biological assays, censoring or units.
+- **Training:** 60 fits; exact CE, exact L2, unbiased multiset L2 K16/K64/G4 and
+  naive MSE K16/G4; seeds42/43/44, Adam .003, batch16, 1,440 steps, no pretraining.
+  Selection uses validation count CE only. Oracle is excluded from fitting.
+- **Hardware:** local one-thread CPU; no Modal/GPU. Exact invocation/source hashes
+  frozen in the reproduction bundle; execution commit recorded at launch.
+- **Status:** eight mathematical/data-boundary tests passed before fitting;
+  held-out metrics and conclusions pending. Full predictions/counts required.
