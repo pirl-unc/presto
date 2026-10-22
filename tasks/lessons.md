@@ -510,3 +510,12 @@ Keep applicability reporting separate from model features and the measured label
   missing observations, and expose the ligand repertoire as a downstream
   conditional distribution. Rewards, data contracts and evaluation must retain
   the broader support rather than assigning every nonbinder zero value.
+
+## 2026-10-22 — homogeneous study curation
+
+- When admitting a new biological dataset, capture what distinguishes its studies,
+  samples, measured populations and observation scopes in the shared Hitlist
+  metadata system. Per-study prose or a one-off adapter is not sufficient.
+- Check the existing upstream roadmap before inventing a parallel registry.
+  Preserve scope, evidence, unknowns and exact versus surrogate material joins;
+  separate source ingestion from endpoint-specific training eligibility.

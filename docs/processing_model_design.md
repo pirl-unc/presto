@@ -4,6 +4,11 @@ Proposed extension to [issue 130](https://github.com/pirl-unc/presto/issues/130)
 [issue 132](https://github.com/pirl-unc/presto/issues/132) and the
 [modular model](modular_model.md) in draft PR 131, October 21, 2026.
 
+Biological source admission follows the shared
+[study and sample curation contract](study_curation_contract.md), implemented
+through Hitlist's unified catalog. The complete new-source metadata path remains
+pending qualification; per-study experiment notes do not replace it.
+
 **Start with a differentiable model over discrete peptide spans.** Predict
 nonnegative weights for processing products, including short fragments and
 nonbinders, condition those weights on APC machinery, and connect them to pMHC
