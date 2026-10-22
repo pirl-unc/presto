@@ -69,6 +69,12 @@ version and preserve its source names, factors, channels, fractions and run link
 SDRF does not replace the measured-pool, calibration, uncertainty and task-eligibility
 relations above. Do not claim SDRF validation without running its validator.
 
+Scope multiplex channel identities to an assay/plex: a channel label can refer
+to different samples in different measurements. Preserve source-table blocks and
+cell coordinates; independently sorted panels on the same spreadsheet row are
+not joined observations. Repeated SDRF column names must remain distinct ordered
+fields rather than being overwritten in a dictionary.
+
 ## PXD057588 acceptance case
 
 The [primary study](https://pmc.ncbi.nlm.nih.gov/articles/PMC12616400/) is a source
@@ -98,6 +104,15 @@ Final sample/run/channel IDs, numbers of independent specimens, pairings and
 admitted quantities require inspection of deposited tables/file maps. The paper
 alone does not establish them. Ingest candidate source records with an explicit
 pending status; they cannot become training examples through membership alone.
+
+The [initial deposited-source audit](https://github.com/pirl-unc/presto/blob/codex/modular-presto-model-20261020/experiments/2026-10-22_1410_codex_availability-source-audit/README.md)
+found these concrete acceptance cases: the community SDRF covers only six of fifty
+raw files; eight of nine channel-to-sample mappings differ between Tables 9 and 11;
+Table 10 describes a tumor-partner MHC-I loss, not loss in the measured macrophage;
+and Table 11 contains digest-peptide rows despite its protein-expression title.
+Source conflicts (Table 8's M2 description and Table 10's replicate caption),
+unknown specimen links and assay-specific normalization must survive ingestion.
+These are source-audit findings, not a qualified normalized dataset.
 
 ## Cross-study acceptance cases
 

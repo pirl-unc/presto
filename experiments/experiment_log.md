@@ -1979,3 +1979,49 @@ checkpoints, invocation/env, source snapshots, logs, plot, full RMSE/correlation
 entropy/context metrics are retained. These synthetic outcomes do not resolve
 real-data IC50 quality or qualify a biological concentration model; continue
 source-qualified biological admission and held-out evaluation under the active goal.
+
+## 2026-10-22_1410 — PXD057588 source inventory and shared-curation acceptance cases
+
+- **Date / agent:** October22,2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1410_codex_availability-source-audit](2026-10-22_1410_codex_availability-source-audit/README.md).
+- **Sources / curation:** publisher Tables7–12 and community SDRF for mouse
+  PXD057588, with project/file metadata; PXD009092 discovery metadata only.
+  Seventeen original assets,11,532,567bytes, frozen URL/size/SHA-256 receipts and
+  six publisher-MD5 checks; immutable datacache inputs under `data/availability_sources/`.
+  Preserve native labels/scales, table blocks, scope, complete-case filtering and
+  reported q≤.05 policy. No missing-to-zero conversion, no admitted training rows.
+- **Training contract:** no model/pretraining/training/loss/head mapping/synthetic
+  data; no train/validation/test split or prediction dumps because this is a source
+  inventory, not predictive evaluation. No held-out loss/regression/binding metrics.
+- **Reproduction:** source snapshot and exact invocation in the directory's
+  `reproduce/`; base932ccef, dirty audit additions. Python3.12.6, datacache1.29.2,
+  openpyxl3.1.5; local macOSarm64 CPU, no Modal or requested/observed GPU. Recorded
+  inspection runtime excludes acquisition; not an optimizer benchmark.
+
+| Source block | Peptide rows | Channels | Distinct parent labels |
+|---|---:|---:|---:|
+| Table7 pro-inflammatory macrophage MHC-I |2,824|6|2,139|
+| Table8 anti-inflammatory macrophage MHC-I |3,554|6|2,562|
+| Table9 macrophage MHC-I, ordinary tumor coculture |1,309|9|1,096|
+| Table10 macrophage MHC-I, MHC-I-loss tumor partners |2,613|11|1,997|
+| Table11 macrophage proteomics digest peptides |25,110|9|4,495|
+| Table12 tumor-cell MHC-I |362|12|348|
+
+All309,126quantities are positive numeric values in explicitly complete-case tables.
+Parent counts are literal labels, not validated protein identities. Eight of nine
+Table9/11channel assignments differ; matching TMT labels would mix conditions.
+663parent labels overlap,433Table9labels lack an exactTable11match; no specimen or
+precursor-normalization join is established. SDRF72rows×45columns covers6/50rawfiles,
+not the macrophage/proteomics arms. Repeated headings, independently sorted panels,
+Table8's M2-description conflict and Table10's n=3-versus-four-labeled-channel
+conflict require preserved source assertions. Table10's loss is in the tumor
+partner, not the measured macrophage. Independent OOXML/TSV verification of17hashes,
+six inventories,309,126quantity cells and3,240SDRFcells passes.
+
+**Decision:** use these actual cases to qualify existing Hitlist materials/protocols
+and cross-modality work, then freeze biological eligibility. No preferred model is
+selected here. The sources support observed presentation/digest signals, not the
+full intracellular pool. Wolf-Levy SEARCH.7z remained incomplete after two timed-out
+downloads and was excluded. Compared with the preceding129synthetic fits, this is
+progress in biological-source definition, not biological model validation. Shared
+metadata implementation, source admission and the availability goal remain open.

@@ -102,3 +102,28 @@ only from verified matched loss/control cohorts. None of these initial sources
 alone validates class-II lysosomal processing or all APC knockout effects.
 The full concentration goal remains open until independent quantity evidence
 supports its stated precursor-normalized interpretation.
+
+## October 22 source-audit execution specification
+
+Audit PXD057588 publisher Tables 7–12 and the deposited community SDRF first.
+Freeze original bytes, URLs, file sizes and hashes in a datacache input bundle;
+source API responses are retrieval snapshots, not silently refreshed metadata.
+Publisher MD5 checks and XLSX ZIP integrity must pass before inspection. Keep
+Wolf-Levy project/file discovery, but exclude its incomplete SEARCH.7z download.
+
+Use a read-only workbook inventory, retaining sheet/cell coordinates and separate
+horizontal result blocks. Report primary-table rows, distinct sequence/parent
+labels, quantitative channel coverage, blanks/zeros/formulas, scale labels and
+explicit sample-to-channel labels. Never join adjacent independent result blocks
+by row number or turn a digest-peptide table into protein-level quantities.
+Compare Table 9 and 11 channel maps; identical TMT labels do not identify paired
+specimens. Check Table 12 channel coverage against the SDRF without upgrading
+channel compatibility to a verified sample join. Preserve duplicated SDRF column
+names positionally. Compare SDRF file coverage to the full deposit inventory.
+
+Generate audit summaries and source-linked gaps, independently reconstruct key
+counts/channel maps from OOXML, and publish the evidence into the existing
+Hitlist material/protocol and cross-modality issues. This is acceptance-fixture
+evidence for the shared system, not an implemented parallel metadata registry.
+A successful inventory alone does not establish eligibility for a biological
+endpoint or support fitting effects of machinery loss.
