@@ -98,6 +98,16 @@ def test_regularization_has_declared_optimum(experiment):
     assert not torch.allclose(optimum, target)
 
 
+def test_clipping_stops_updates_beyond_active_bounds(experiment):
+    current = torch.tensor([[-2.0, -1.0]], dtype=torch.float64, requires_grad=True)
+    old = current.detach() - torch.tensor([[0.5, 2.0]], dtype=torch.float64).log()
+    target = current.detach() - torch.tensor([[1.0, -1.0]], dtype=torch.float64)
+    loss, diagnostic = experiment.importance_surrogate(current, old, target, old, 0, True, False)
+    gradient = torch.autograd.grad(loss, current)[0]
+    torch.testing.assert_close(gradient, torch.zeros_like(gradient), atol=0, rtol=0)
+    assert diagnostic["active_clip_fraction"] == 1
+
+
 def test_frozen_reference_and_original_gradient_parity(experiment):
     rows, _ = experiment.base.make_dataset()
     x, starts, target = experiment.base.tensors(rows[:4])
