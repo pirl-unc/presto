@@ -1,0 +1,817 @@
+[
+  {
+    "archive": "aSPIRE_H4.zip",
+    "member": "aSPIRE_H4/H4_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 2250,
+    "unique_peptides": 1143,
+    "values": 13320,
+    "zeros": 4428,
+    "negatives": 0,
+    "missing": 36,
+    "product_types": {
+      "PCP": 1978,
+      "PSP": 236,
+      "NA": 36
+    },
+    "schedules": {
+      "0;1;2;4;24;0": 2214,
+      "NA": 36
+    },
+    "biological_replicates": {
+      "1": 1107,
+      "2": 1107,
+      "NA": 36
+    },
+    "rows_per_peptide": {
+      "2": 1107,
+      "1": 36
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_CaM.zip",
+    "member": "aSPIRE_CaM/CaM_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 727,
+    "unique_peptides": 371,
+    "values": 3575,
+    "zeros": 712,
+    "negatives": 0,
+    "missing": 15,
+    "product_types": {
+      "PCP": 692,
+      "NA": 15,
+      "PSP": 20
+    },
+    "schedules": {
+      "0;1;2;4;24": 712,
+      "NA": 15
+    },
+    "biological_replicates": {
+      "b1": 356,
+      "b2": 356,
+      "NA": 15
+    },
+    "rows_per_peptide": {
+      "2": 356,
+      "1": 15
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_UBE2K.zip",
+    "member": "aSPIRE_UBE2K/UBE2K_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 1568,
+    "unique_peptides": 789,
+    "values": 9350,
+    "zeros": 3108,
+    "negatives": 0,
+    "missing": 10,
+    "product_types": {
+      "PCP": 1298,
+      "PSP": 260,
+      "NA": 10
+    },
+    "schedules": {
+      "0;1;2;4;24;0": 1550,
+      "0;1;2;4;24": 8,
+      "NA": 10
+    },
+    "biological_replicates": {
+      "1": 779,
+      "2": 779,
+      "NA": 10
+    },
+    "rows_per_peptide": {
+      "2": 779,
+      "1": 10
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_IF2.zip",
+    "member": "aSPIRE_IF2/IF2_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 3376,
+    "unique_peptides": 1691,
+    "values": 16856,
+    "zeros": 3370,
+    "negatives": 0,
+    "missing": 6,
+    "product_types": {
+      "PCP": 3112,
+      "PSP": 258,
+      "NA": 6
+    },
+    "schedules": {
+      "0;1;2;4;24": 3370,
+      "NA": 6
+    },
+    "biological_replicates": {
+      "b1": 1685,
+      "b2": 1685,
+      "NA": 6
+    },
+    "rows_per_peptide": {
+      "2": 1685,
+      "1": 6
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_IL37b.zip",
+    "member": "aSPIRE_IL37b/IL37b_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 1439,
+    "unique_peptides": 723,
+    "values": 7167,
+    "zeros": 1432,
+    "negatives": 0,
+    "missing": 7,
+    "product_types": {
+      "PCP": 1228,
+      "PSP": 204,
+      "NA": 7
+    },
+    "schedules": {
+      "0;1;2;4;24": 1432,
+      "NA": 7
+    },
+    "biological_replicates": {
+      "G1": 716,
+      "G2": 716,
+      "NA": 7
+    },
+    "rows_per_peptide": {
+      "2": 716,
+      "1": 7
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_AnnexinA1.zip",
+    "member": "aSPIRE_AnnexinA1/AnnexinA1_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 2047,
+    "unique_peptides": 1027,
+    "values": 10207,
+    "zeros": 2040,
+    "negatives": 0,
+    "missing": 7,
+    "product_types": {
+      "PSP": 184,
+      "PCP": 1856,
+      "NA": 7
+    },
+    "schedules": {
+      "0;1;2;4;24": 2040,
+      "NA": 7
+    },
+    "biological_replicates": {
+      "M1": 1020,
+      "M2": 1020,
+      "NA": 7
+    },
+    "rows_per_peptide": {
+      "2": 1020,
+      "1": 7
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_H2A.zip",
+    "member": "aSPIRE_H2A/H2A_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 1574,
+    "unique_peptides": 789,
+    "values": 8639,
+    "zeros": 2355,
+    "negatives": 0,
+    "missing": 4,
+    "product_types": {
+      "PCP": 1456,
+      "PSP": 114,
+      "NA": 4
+    },
+    "schedules": {
+      "0;1;2;4;24": 785,
+      "0;1;2;4;24;0": 785,
+      "NA": 4
+    },
+    "biological_replicates": {
+      "1": 785,
+      "2": 785,
+      "NA": 4
+    },
+    "rows_per_peptide": {
+      "2": 785,
+      "1": 4
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_LEDGF.zip",
+    "member": "aSPIRE_LEDGF/LEDGF_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 4953,
+    "unique_peptides": 2482,
+    "values": 27192,
+    "zeros": 7413,
+    "negatives": 0,
+    "missing": 11,
+    "product_types": {
+      "PSP": 860,
+      "PCP": 4082,
+      "NA": 11
+    },
+    "schedules": {
+      "0;1;2;4;24": 2471,
+      "0;1;2;4;24;0": 2471,
+      "NA": 11
+    },
+    "biological_replicates": {
+      "1": 2471,
+      "2": 2471,
+      "NA": 11
+    },
+    "rows_per_peptide": {
+      "2": 2471,
+      "1": 11
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_H2B.zip",
+    "member": "aSPIRE_H2B/H2B_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 1757,
+    "unique_peptides": 882,
+    "values": 10507,
+    "zeros": 3500,
+    "negatives": 0,
+    "missing": 7,
+    "product_types": {
+      "PSP": 150,
+      "PCP": 1600,
+      "NA": 7
+    },
+    "schedules": {
+      "0;1;2;4;24;0": 1750,
+      "NA": 7
+    },
+    "biological_replicates": {
+      "1": 875,
+      "2": 875,
+      "NA": 7
+    },
+    "rows_per_peptide": {
+      "2": 875,
+      "1": 7
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_UBE2S.zip",
+    "member": "aSPIRE_UBE2S/UBE2S_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 1397,
+    "unique_peptides": 699,
+    "values": 6981,
+    "zeros": 1396,
+    "negatives": 0,
+    "missing": 1,
+    "product_types": {
+      "PCP": 1244,
+      "PSP": 152,
+      "NA": 1
+    },
+    "schedules": {
+      "0;1;2;4;24": 1396,
+      "NA": 1
+    },
+    "biological_replicates": {
+      "1": 698,
+      "2": 698,
+      "NA": 1
+    },
+    "rows_per_peptide": {
+      "2": 698,
+      "1": 1
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_FFH_25.zip",
+    "member": "aSPIRE_FFH_25/FFH_25_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 6541,
+    "unique_peptides": 3281,
+    "values": 32621,
+    "zeros": 6520,
+    "negatives": 0,
+    "missing": 21,
+    "product_types": {
+      "PSP": 1086,
+      "PCP": 5434,
+      "NA": 21
+    },
+    "schedules": {
+      "0;1;2;4;24": 6520,
+      "NA": 21
+    },
+    "biological_replicates": {
+      "b1": 3260,
+      "b2": 3260,
+      "NA": 21
+    },
+    "rows_per_peptide": {
+      "2": 3260,
+      "1": 21
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_hTau.zip",
+    "member": "aSPIRE_hTau/hTau_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 6219,
+    "unique_peptides": 3113,
+    "values": 31067,
+    "zeros": 6212,
+    "negatives": 0,
+    "missing": 7,
+    "product_types": {
+      "PCP": 5284,
+      "PSP": 928,
+      "NA": 7
+    },
+    "schedules": {
+      "0;1;2;4;24": 6212,
+      "NA": 7
+    },
+    "biological_replicates": {
+      "L1": 3106,
+      "L2": 3106,
+      "NA": 7
+    },
+    "rows_per_peptide": {
+      "2": 3106,
+      "1": 7
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_RF1.zip",
+    "member": "aSPIRE_RF1/RF1_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 2278,
+    "unique_peptides": 1139,
+    "values": 11390,
+    "zeros": 2278,
+    "negatives": 0,
+    "missing": 0,
+    "product_types": {
+      "PSP": 156,
+      "PCP": 2122
+    },
+    "schedules": {
+      "0;1;2;4;24": 2278
+    },
+    "biological_replicates": {
+      "b1": 1139,
+      "b2": 1139
+    },
+    "rows_per_peptide": {
+      "2": 1139
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_FFH_6p25.zip",
+    "member": "aSPIRE_FFH_6p25/FFH_6p25_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 7164,
+    "unique_peptides": 3634,
+    "values": 35404,
+    "zeros": 7060,
+    "negatives": 0,
+    "missing": 104,
+    "product_types": {
+      "PCP": 6116,
+      "PSP": 944,
+      "NA": 104
+    },
+    "schedules": {
+      "0;1;2;4;24": 7060,
+      "NA": 104
+    },
+    "biological_replicates": {
+      "b1": 3530,
+      "b2": 3530,
+      "NA": 104
+    },
+    "rows_per_peptide": {
+      "2": 3530,
+      "1": 104
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_H3.zip",
+    "member": "aSPIRE_H3/H3_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 948,
+    "unique_peptides": 475,
+    "values": 5678,
+    "zeros": 1892,
+    "negatives": 0,
+    "missing": 2,
+    "product_types": {
+      "PCP": 762,
+      "PSP": 184,
+      "NA": 2
+    },
+    "schedules": {
+      "0;1;2;4;24;0": 946,
+      "NA": 2
+    },
+    "biological_replicates": {
+      "1": 473,
+      "2": 473,
+      "NA": 2
+    },
+    "rows_per_peptide": {
+      "2": 473,
+      "1": 2
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_FFH_12p5.zip",
+    "member": "aSPIRE_FFH_12p5/FFH_12p5_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 6556,
+    "unique_peptides": 3291,
+    "values": 32676,
+    "zeros": 6530,
+    "negatives": 0,
+    "missing": 26,
+    "product_types": {
+      "PSP": 1076,
+      "PCP": 5454,
+      "NA": 26
+    },
+    "schedules": {
+      "0;1;2;4;24": 6530,
+      "NA": 26
+    },
+    "biological_replicates": {
+      "b1": 3265,
+      "b2": 3265,
+      "NA": 26
+    },
+    "rows_per_peptide": {
+      "2": 3265,
+      "1": 26
+    },
+    "substrate_sequence_count": 1
+  },
+  {
+    "archive": "aSPIRE_aSyn.zip",
+    "member": "aSPIRE_aSyn/aSyn_finalKinetics.csv",
+    "columns": [
+      "substrateID",
+      "pepSeq",
+      "biological_replicate",
+      "digestTimes",
+      "intensities",
+      "substrateSeq",
+      "productType",
+      "spliceType",
+      "positions",
+      "noScans",
+      "assignedScans",
+      "spectralAngles",
+      "qValues",
+      "ionScores",
+      "deltaRTs",
+      "charges",
+      "modifications"
+    ],
+    "rows": 2619,
+    "unique_peptides": 1312,
+    "values": 18303,
+    "zeros": 2614,
+    "negatives": 0,
+    "missing": 5,
+    "product_types": {
+      "PCP": 2538,
+      "PSP": 76,
+      "NA": 5
+    },
+    "schedules": {
+      "0;0.25;0.5;1;3;6;24": 2614,
+      "NA": 5
+    },
+    "biological_replicates": {
+      "A1": 1307,
+      "A2": 1307,
+      "NA": 5
+    },
+    "rows_per_peptide": {
+      "2": 1307,
+      "1": 5
+    },
+    "substrate_sequence_count": 1
+  }
+]

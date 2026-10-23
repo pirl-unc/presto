@@ -1,0 +1,47 @@
+Project title
+
+Digestion of protein substrates by 20S proteasomes
+
+
+Keywords
+Mass Spectrometry, antigen processing, 20S proteasomes, MHC-I presentation 
+
+
+Project description
+The proteasome is the central protease in generating peptide repertoires for antigen presentation on human leukocyte antigen class I (HLA-I). Proteasomes not only can catalyze peptide hydrolysis but are also capable of mediating transpeptidation, resulting in spliced peptides generation, a process known as proteasome-catalyzed peptide splicing (PCPS). Despite its immunological importance, it is still unclear what are the determinants of PCPS that favor transpeptidation over hydrolysis. Hence, we sought to characterize the processing of many protein substrates and their peptide products by using a simplistic in vitro antigen processing system and analyzed by mass spectrometry followed by a refined downstream data analysis pipeline.
+
+Sample processing protocol
+Purified recombinant proteins were individually incubated with purified human 20S proteasomes at 37o C for 0-24 hours in a buffer containing 50 mM HEPES, pH 7.2, 20 mM KCl, 5 mM MgCl2 using the proteasome to substrate molar ratio: Annexin A1 (1:5), -Synuclein (1:35), CaM (1:100), Ffh (1:25), H2A (1:100), H2B (1:100), H3 (1:25), H4 (1:25), IF2 (1:25), IL-37b (1:5), LEDGF (1:25), RF1 (1:25), tau (1:25), Ube2K (1:25), and Ube2S (1:25). The reactions were stop by acidification (for MS measurement) or (SDS loading buffer for SDS-PAGE visualization). All samples were subjected to SP3 beads clean-up prior to MS measurements. Depending on the presence of cysteine residues in the amino acid composition of the protein substrate, additional steps of reducing and carbamidomethylation were done using 2 mM DTT and 4 mM iodoacetamide, respectively during the SP3 peptide clean-up.
+
+Data processing protocol
+All samples were loaded into ThermoFisherScientiﬁc UltiMateTM 3000 RSLCnano liquid chromatography system coupled to Q Exactive HF-X or Obitrap Fusion mass spectrometer. Briefly, peptides were loaded and separated by a nanoflow HPLC (RSLC Ultimate 3000) on an Easy-spray C18 nano column (30 cm length, 75 m internal diameter). Peptides were eluted with a linear gradient of 5%–55% buffer B (80% ACN, 0.1% formic acid) at a flow rate of 300 nl/min over 88 min at 50°C. The instruments were programmed within either Xcalibur 3.1.66.10 (for Q Exactive HF-X) or 4.4 (for Orbitrap Fusion) to acquire MS data in a Data Dependent Acquisition mode, using either Top 20 (for Q Exactive HF-X) or Top 30 (for Orbitrap Fusion) precursor ions.  We acquired one full-scan MS spectrum at a resolution of either 60,000 (for Q Exactive HF-X) or 120,000 (for Orbitrap Fusion) with a normalized automatic gain control (AGC) target value of 1,000,000 and a scan range of 300-1,600 m/z. The MS/MS fragmentation was conducted using HCD collision energy (35%) with an orbitrap resolution of either 15,000 (for Q Exactive HF-X) or 30,000 (for Orbitrap Fusion). The AGC target value was set up at 100,000 with a max injection time of 128 ms.  A dynamic exclusion of 30 s and either 1-6 (for Q Exactive HF-X) or 7 (for Orbitrap Fusion) included charged states were defined within this method.
+Databases searches were done using MSFragger/PEAKS 10.6 with a 6 ppm tolerance on precursor masses and 20 ppm/0.03Da for fragment ions. All possible non-spliced and spliced sequences database of a protein substrate was generated as described in Database size computation section (Liepe et al., 2016). Contaminant databases were generated from trypsin and/or chymotrypsin digestion of 20S proteasomes and protein substrates, and searched against the host where the protein was derived from. N-term acetylation, deamidation, and oxidation (M) were set as variable modifications. Depending on whether carbamidomethylation was performed, carboxymethyl (c) was set as fixed modification. Decoy database option was enabled for the searches.
+
+Experiment type
+Shotgun proteomics
+
+
+Contact
+Juliane Liepe, Head of research group Quantitative and Systems Biology; Max Planck Institute for Multidisciplinary Sciences; Goettingen (D); Germany (lab head). Email: jliepe@mpinat.mpg.de
+Michele Mishto, Head of the research group Molecular Immunology at King’s College London and the Francis Crick Institute, London (UK). Email: michele.mishto@kcl.ac.uk
+
+
+Properties
+Organism
+Unknown
+Organism part
+Unknown
+Diseases
+Unknown
+Modification
+oxidated residue
+carbamidomethylated residue
+Instrument
+Q Exactive HF-X, Obitrap Fusion
+Software
+PEAKS 10.6
+Skyline 21.2
+Experiment Type
+Shotgun proteomics
+Quantification
+Label-free

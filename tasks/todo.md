@@ -12335,8 +12335,22 @@ Previous goal turn: progress. Plan: experiments/agents/codex/plans/controlled-ma
 - [x] Mathematical gradient checks and immutable local fitting bundle.
 - [x] Run exact/sampled/control fits and all-split evaluation once.
 - [x] Independently replay source, checkpoints, metrics, sampling work and conclusions.
-- [ ] Publish report and upstream findings; preserve unresolved concentration goal.
+- [x] Publish report and upstream findings; preserve unresolved concentration goal.
 
 Review: registered before implementation or held-out response evaluation.
 
 Review: all7 policy fits/1 ridge/2 controls completed,14,000 updates. No fitted method improves both val/test response RMSE; exact test.64789 vs common.63536, ridge.62374 but worse validation. Independent NumPy Adam replay matches28checkpoints to8.60e-16 and all870predictions/30metric sets/gates/bootstrap. Exact gradient converges while train response RMSE worsens, exposing objective/measurement mismatch. Published shared code0be964d;50focused tests/format/lint/docs pass, full local guard refuses.64/2.5GiB. Full concentration goal active; next source770 under frozen kinetics plan, no rescue tuning on14test peptides.
+
+
+## Digestion time-course source audit
+
+Previous goal turn: no experimental progress; architecture explanation only. Revalidated completed fit and advancing source770.
+Plan: experiments/agents/codex/plans/digestion-source-audit.md.
+- [x] Publish completed controlled MAPP fit and issue evidence.
+- [x] Retrieve and verify original processed digestion outputs and metadata.
+- [x] Inspect source layers and identify the constraints on a temporal endpoint.
+- [ ] Preserve audit/registry/source-gap evidence and next action.
+
+Review: pending; full concentration objective remains active.
+
+Source audit review:18 original files/17 condition archives recovered; all CRCs and545,664 raw run joins checked. H4 independent arithmetic reproduces27,432 raw quantities and13,284 final entries to5.04e-15. RF1 has2,278 contradictory time labels, requiring explicit shared-source reconciliation. Final forced zeros/censoring/control joins preclude naive direct kinetic fitting. No new biological fit; concentration objective active. Publication and Hitlist770 update pending.
