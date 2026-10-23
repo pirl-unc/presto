@@ -1,0 +1,124 @@
+{
+  "biopython_version": "1.88",
+  "n_package_files": 120,
+  "peak_process_rss_bytes": 1060028416,
+  "prior_output_hashes": {
+    "input_paths.json": "7c929f253ba46add0d4450f738e8474d48bd15da9f756e04983b277c5ad61286",
+    "reviewed_2023_canonical_entries.jsonl.gz": "b04d6271364c94c22b3b6963d8070cd026c86affc8907ed95a2ae45b305be7d7",
+    "reviewed_2023_canonical_matched_parents.jsonl.gz": "b027969f2edab56180687c1478f4badafce1e7556d3cba30fc43e5fefef95d1a",
+    "reviewed_2023_canonical_matches.csv.gz": "85ce15abe349917e4193f72653bb965c87a3db8931fa14a6d930e5277161c31f",
+    "reviewed_2023_canonical_peptides.csv.gz": "0ec7181f715501752294a2bf841d73f7c9b6199194764f1d040efed528c4d23c",
+    "reviewed_2023_canonical_source_mappings.jsonl.gz": "7dca7cc842b86eacba8b89ae03f6c5d49374718cb281034e52cfc16f7297b3ab",
+    "reviewed_2026_03_isoforms_entries.jsonl.gz": "c1bebc727491d202982b7e0f25e21485609836d8ad6eae86c10e0a8102f6fdf4",
+    "reviewed_2026_03_isoforms_matched_parents.jsonl.gz": "38abac4b5de7614d7d7cf62e1c9c858c38e271069bed02d41e1100f6d8c5d892",
+    "reviewed_2026_03_isoforms_matches.csv.gz": "15ae51abc6a1f506ea892e8d7c14d076751b46854aab20ae7f3ec468ef59098f",
+    "reviewed_2026_03_isoforms_peptides.csv.gz": "84f8f23e2fbb6c6d74dae4f7da3b935002dde162cdfdc725a754cd813be46dd7",
+    "reviewed_2026_03_isoforms_source_mappings.jsonl.gz": "3faa6a56e44bd56903feca804c84ed906039cd14fde0b6077558cf3eccef8903",
+    "scanner_checks.json": "74b07521164689089ee259c66ccff6d7d52664b4f76da0ce9d2044993f4331ee",
+    "source_peptides.jsonl.gz": "be19848f6de89391a5ccf04a133a3ec4a3e7f337300170fd104ae9177c073f55",
+    "subset_summary.csv.gz": "0ce795bc4dae2584bfa11282002fdba12d7d36749042d21a461d1fbae1156161",
+    "summary.json": "ca8b8e26b05604c16f16618db7b6057d880459153fd05057db4670e4ac529340"
+  },
+  "references": [
+    {
+      "candidate_occurrence_status": {
+        "exact_occurrence": 13802,
+        "resolved_sequence_absent": 9
+      },
+      "coordinate_status": {
+        "not_leading_source_claim": 7388,
+        "out_of_range": 6,
+        "peptide_and_flanks_match": 6333,
+        "peptide_match_flank_mismatch": 2,
+        "peptide_mismatch": 82
+      },
+      "n_accession_claims": 90852,
+      "n_mapped_peptides": 8753,
+      "n_occurrences": 14258,
+      "n_proteins": 20422,
+      "n_sequence_components_including_unmatched": 3436,
+      "n_source_claims": 32269,
+      "n_source_resolutions": 13811,
+      "reference_id": "reviewed_2023_canonical",
+      "source_resolution_status": {
+        "missing_id": 18730,
+        "resolved": 13539
+      }
+    },
+    {
+      "candidate_occurrence_status": {
+        "exact_occurrence": 13176,
+        "resolved_sequence_absent": 5
+      },
+      "coordinate_status": {
+        "not_leading_source_claim": 6773,
+        "out_of_range": 5,
+        "peptide_and_flanks_match": 6318,
+        "peptide_match_flank_mismatch": 2,
+        "peptide_mismatch": 83
+      },
+      "n_accession_claims": 42562,
+      "n_mapped_peptides": 8790,
+      "n_occurrences": 23463,
+      "n_proteins": 42562,
+      "n_sequence_components_including_unmatched": 3407,
+      "n_source_claims": 32269,
+      "n_source_resolutions": 13181,
+      "reference_id": "reviewed_2026_03_isoforms",
+      "source_resolution_status": {
+        "missing_id": 19088,
+        "resolved": 13181
+      }
+    }
+  ],
+  "scope": "All reference sequences/aliases/occurrences/source resolutions/coverage independently checked; all eleven original MAPP typed tables and PXD057588 source artifacts byte-identical. No fit, split, precursor or concentration claims.",
+  "seconds": 20.224688791990047,
+  "status": "passed",
+  "unchanged_prior_source_artifacts": {
+    "external/pxd009092/typed/channels.parquet": "5c3330473961938daab11b105efe3c64b0352d5cab4b9ee50417ecbafdb3272e",
+    "external/pxd009092/typed/derivation_inputs.parquet": "9e765bd088b724a5a4ffa57ff0d5dd9335cdc18d1f55df9d2e8c921b802e618c",
+    "external/pxd009092/typed/evidence.parquet": "ef6bd04c8f445cbb25031bef5f4cca2f929107c6b0dff20b6bfb7395ee4c41c3",
+    "external/pxd009092/typed/groups.parquet": "e2df357983bb769d1869e927961fd888a55b31211ff7a477553d245e7fa39044",
+    "external/pxd009092/typed/peptide_rows.parquet": "7f1776274c516274a3c58da9365bcfcfa72b82bcdd50be2aa61023ffb787f4f8",
+    "external/pxd009092/typed/publisher_cells.parquet": "41a1d4b00d4b21203c5be822aa5e81a546484d3ba565258d7b73731ef793d6eb",
+    "external/pxd009092/typed/publisher_quantities.parquet": "012de15fa315f99fa8d0c966bb59053a9086ffde66f42c046a77ced4d0f9e279",
+    "external/pxd009092/typed/quantity_measurements.parquet": "49744a94d955458c77541f1decc1ec2dc93490b6923a540228ecd158b97f4f3c",
+    "external/pxd009092/typed/quantity_results.parquet": "aa75f3c4a1150eb8cf1d16085581825d2fae1c9f61d1197893fb803f8aac65d6",
+    "external/pxd009092/typed/source_assertions.parquet": "08cb553a6c06626e702f2f10bb933dde6ddd65115002a8490a1f774206bfb5ff",
+    "external/pxd009092/typed/source_records.parquet": "df9fb24819e1c21345c1bd4f485e6adebcf4bae16d8c411d156a2f0a848f839f",
+    "external/pxd057588/assets/PXD009092/files.json": "e7350ef7f6445856a944bc48a93d58c2b3abd3b06bd89ff8222e7abed94fe666",
+    "external/pxd057588/assets/PXD009092/project.json": "998f54e5c155f38495a976e5e303dbe7cf4435ed633160d37a75f9190f0253f6",
+    "external/pxd057588/assets/PXD057588/community.sdrf.tsv": "aee9a69ca50680d5b28f14cb9d690a959cc52f092706360f7da3bf4dd22f2b36",
+    "external/pxd057588/assets/PXD057588/files.json": "c917212a934ca63cdf175d914d052fbf09e15dc4d888394866c925b8feacfaa1",
+    "external/pxd057588/assets/PXD057588/project.json": "850033757534f5bc1917f62581d7be6562fc81607432edf0568eeed9cf438389",
+    "external/pxd057588/assets/PXD057588/table10.metadata.json": "e84d8c2a3903a0e3ef8a57ac43816f69935919f90de84bfe71d9b6f540ec02af",
+    "external/pxd057588/assets/PXD057588/table10.xlsx": "e3fb52b188af1910caddb040f502172f6c72f4847d33b9d67c16947d8201e427",
+    "external/pxd057588/assets/PXD057588/table11.metadata.json": "a8edab2989b7c583c3e8aaae7ba77fd415637f311ed99c379f0e8e5388725ddf",
+    "external/pxd057588/assets/PXD057588/table11.xlsx": "7f5a4055a777b21bb163f963b936535dd5d39ebac59be1ed9d2783d62012b27f",
+    "external/pxd057588/assets/PXD057588/table12.metadata.json": "6d53b36cff3940d5135c80f0419967a6227d7e214096e923f02f9f92be149f24",
+    "external/pxd057588/assets/PXD057588/table12.xlsx": "1e26a5a592111a1e5ac8aac6539c0bdbecc1faffca0c7221cb9e1dbd03d7976e",
+    "external/pxd057588/assets/PXD057588/table7.metadata.json": "bbb8a9d3786f890cee8ea301313ad655817191dffc863e8fb41a78cf560b6e10",
+    "external/pxd057588/assets/PXD057588/table7.xlsx": "e9f25e1b6e98fea35f5f16f64f6ad0ed836f9e376b82fc866bf0db7a66f45ec9",
+    "external/pxd057588/assets/PXD057588/table8.metadata.json": "327cd6123f9033c25b7846f87516658d83803aab813b2295d81bc725ff059476",
+    "external/pxd057588/assets/PXD057588/table8.xlsx": "e52118c3d46157f0a125c071e4ae7f0c9a16fd7675125d91cc028f056c37a99a",
+    "external/pxd057588/assets/PXD057588/table9.metadata.json": "6ba57d9fcd88d5c55b62d0b821dd9f5827b0edb1caee89c97e36e855d7a8afd6",
+    "external/pxd057588/assets/PXD057588/table9.xlsx": "1ef503226f3b0ccd4f1fc8b33aed10e83502396d4c01f52c558bfc159c6fc07f",
+    "external/pxd057588/contracts/contrasts.json": "3093f0ef61be0229cab72ab53017034bf26724f34e189d0b677e03adde9e9fe2",
+    "external/pxd057588/contracts/retrieval_receipts.json": "52e8b27af9056ec72f7d85bd6e11ae11f5647b892fa39d370eeaff9606b305cb",
+    "external/pxd057588/contracts/source_assets.json": "14419b00aeff8caebdc67917522e329b63b07d1ea85bbb59e15ef0c07bc3a27c",
+    "external/pxd057588/contracts/workbook_inventory.json": "82777479f3540e80179097877ffa779cab8b69d6646d6fe7e89e71bdbefecd34",
+    "external/pxd057588/typed/channels.parquet": "903580e51583780a720d66f7b63f76b4a7f6bc8d0da33a1dfb7587926cfd3d1b",
+    "external/pxd057588/typed/contrasts.parquet": "491985f1c4bd612398bf09a12d6cf1cc160f8f6b373e3b4251c4f2c345675cab",
+    "external/pxd057588/typed/deposited_files.parquet": "72117d6ba39c6b1e29017911ee0cb99c67345e145e1c6eb774a0e99e7de400c3",
+    "external/pxd057588/typed/derivation_inputs.parquet": "0181cdb8c1c4995161c76b65116f5bb59bedfd894b6209b9322ce084e715fde7",
+    "external/pxd057588/typed/panel_records.parquet": "5ee177c45ed23724b24322b74cec9231ea311660663e65394e6e5684058e28a6",
+    "external/pxd057588/typed/panels.parquet": "4ae9bba535110a08a82e3370d4b02e57f1e45584a8f928b2c4c495816e9d51b6",
+    "external/pxd057588/typed/peptide_rows.parquet": "5b6ea23935a65d6247671cfdccb50a5bd33a5f294a3f75d448d5d04106f25349",
+    "external/pxd057588/typed/quantity_measurements.parquet": "5d71e827e525165b03c890ab55d45af898da29d15d852629b8189f52c7aff16e",
+    "external/pxd057588/typed/quantity_results.parquet": "2beb2992fb4a9c555d3e18948ef2913bdca1f13d6d2bee72809a70fed0985a76",
+    "external/pxd057588/typed/sdrf_cells.parquet": "a1b344ddb1e08a4b9529f0acc1fb2d0486489e54f31d1399800b409f984384a9",
+    "external/pxd057588/typed/source_assertions.parquet": "e2b62fda964d798c83664390a49daca95691a6af6677af8af5879ac1f7360524",
+    "external/pxd057588/typed/source_assets.parquet": "1807dd9a0ef5a3713e3110680943bc6be2b7379333de2f9be6db076d85ac2617",
+    "external/pxd057588/typed/source_cells.parquet": "f70e96dcb6f7cd7174b89339f0b7b4708419ab0c04dd33cf166e4e1b30528ba9"
+  }
+}

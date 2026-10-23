@@ -1,0 +1,24 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-22_2251_codex_shared-mapp-references/code/launch.py"
+  ],
+  "device": "local CPU",
+  "environment_overrides": {
+    "PYTHONPATH": "/private/tmp/hitlist-mapp-source"
+  },
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "hitlist_commit": "fa54fbf5b06588ce9dc438c619b52ff63b43ea8b",
+  "hitlist_dirty": " M docs/mapp-evidence.md\n M hitlist/data/evidence_revisions/mapp_assets.json\n M hitlist/data/evidence_revisions/mapp_contract.json\n M hitlist/evidence_catalog.py\n M hitlist/mapp_evidence.py\n M tests/test_evidence_catalog.py\n?? hitlist/sequence_reference_evidence.py\n?? tasks/mapp-reference-plan.md\n?? tests/test_sequence_reference_evidence.py\n",
+  "model": null,
+  "no_predictive_metrics_reason": "source importer verification; no model fit or split",
+  "output": "/private/tmp/hitlist-v2-mapp-reference-second",
+  "parent": "/private/tmp/hitlist-v2-supporting-18221-audited",
+  "parent_manifest_sha256": "70f1cdb2124aea18f1ec4051dfecb58c73c34324dd06cb8d0b225b2b6a9fdb9c",
+  "presto_commit": "396f77168bd4225719efba8a646d117d42fcba5b",
+  "presto_dirty": "M tasks/todo.md\n?? experiments/2026-10-22_2251_codex_shared-mapp-references/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? experiments/agents/codex/plans/mapp-shared-references.md\n?? tasks/modular_model/trajectory-sampling-issue.md",
+  "pretraining": null,
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "source_receipt_sha256": "1bb665ba3f4fdf385f3bb6f93416ff1b44e67bf9d117f0d065a8e96499f283bb",
+  "training": null
+}

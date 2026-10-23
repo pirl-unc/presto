@@ -2380,3 +2380,54 @@ suite passes3,224tests in356.83s (10warnings). Missing parallel-proteome run met
 and independent precursor estimates are tracked in Hitlist757. Reference join/query/deployment and biological fitting
 remain open in Hitlist752/739. No model winner applies; decision is to carry the
 verified shared importer forward in [Hitlist draftPR758](https://github.com/pirl-unc/hitlist/pull/758), commitd012527, retaining uncertainty and the full goal.
+
+## 2026-10-22_2251 — Shared MAPP reference alternatives
+
+- **Date/agent:** October22,2026,22:51America/New_York; Codex / GPT-6.
+- **Directory:** [shared-mapp-references](2026-10-22_2251_codex_shared-mapp-references/README.md).
+- **Data/curation:** thirteen pinned inputs: eleven original MAPP assets plus
+  historical reviewed-human canonical DAT and modern2026_03isoform-inclusive
+  FASTA. Original2016search reference unavailable; later references explicitly
+  distinguished. Shared adapter schema2 preserves exact literal sequences,
+  reference-local aliases, all occurrences, source claims, negative candidates,
+  coordinates/flanks and coverage. Quantity observations remain unduplicated.
+- **Assay/label contract:** captured proteasome-associated HEK293 fragments,
+  search6–40, original contexts/confidence/missingness/filtering preserved. No
+  affinity filter or biological negatives from missing/filtered quantities.
+  No precursor denominator, origin assignment or free concentration claim.
+- **Training:** no model, pretraining, optimizer, synthetic biological labels,
+  loss terms, assay heads or predictive split. Held-out regression/binding
+  metrics and prediction dumps do not apply to this source-conservation audit.
+- **Runtime/reproduction:** producer54.80s; independent replay20.22s,
+  peakRSS0.987GiB; localCPU, no Modal/GPU. Frozen code/commands/input receipts and
+  dirtyGit state: Hitlistfa54fbf, Presto396f771. The completed producer's outer
+  timing wrapper exited1 on a sandbox-denied kernel resource query; independent
+  verification exits0. Full producer memory profile unavailable, recorded as such.
+
+| Reference condition | Full proteins | Mapped source peptides | All exact positions | Resolved candidates lacking peptide |
+|---|---:|---:|---:|---:|
+| Historical canonical, recorded secondary aliases |20,422|8,753|14,258|9|
+| Modern isoform-inclusive, primary FASTA IDs |42,562|8,790|23,463|5|
+
+Independent BioPython parsing, complete Aho-Corasick scanning and graph traversal
+verify all62,984proteinrecords/133,414accessionclaims/37,721positions,
+64,538originalsourceclaims,26,992candidate resolutions and21,346coverage rows.
+All120packagefiles verify. All eleven original MAPP typed tables and PXD057588
+source artifacts are byte-identical to the previous independently audited
+source generation. Unmatched singletons are explicit components; exact sharing
+establishes neither homology nor specimen independence. Historical alias support
+and modern isoform coverage are different contracts, not a model-winner comparison.
+
+**Decision:** use the shared reference relations for the next declared endpoint
+recipe; preserve ambiguity without multiplying measurements.21focused tests and
+format/lint pass. The initial full-suite preflight refused0.77GiBavailable; a
+normal one-worker retry admitted3.89GiB and passed3,236tests/10warnings in320.81s.
+Indexed-corpus integration CI remains separate.
+Release/query/endpoint admission and biological fitting remain open under
+Hitlist752/739; independent precursor/pairing gap is in757. The full availability
+goal remains active. This is an external-source generation, not a rebuilt later
+T-cell/numeric/query export or a trained concentration model.
+
+Shared reference implementation committed as1ad9aae in Hitlist draft758.
+Presto formatting/lint and strict docs pass. Final publication does not close
+source/recipe issues or the persistent biological availability objective.

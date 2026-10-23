@@ -12199,3 +12199,14 @@ Prior turn: progress. Plan: experiments/agents/codex/plans/mapp-shared-import.md
 - [ ] Publish and use shared generation for next biological comparison.
 
 MAPP import review: first shared generation and original TSV/XML replay verified;3,224full/16focused Hitlist tests and lint pass. DraftHitlist758published atd012527; issue757filed/read back for missing parallel-proteome/precursor metadata. No biological fit; source-reference/query/release work remains.
+
+## 2026-10-22 shared MAPP reference integration
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/mapp-shared-references.md.
+- [x] Integrate explicit reference-scoped alternatives into shared adapter.
+- [x] Verify complete original mapping evidence without changing measurements.
+- [ ] Publish and advance the biological recipe.
+
+Reference integration review: shared adapter schema2 verifies all37,721occurrences and64,538sourceclaims against independent complete-reference scans;62,984full sequences/133,414aliases and21,346coverage rows checked. All eleven original quantity/source tables and PXD057588 artifacts byte-identical.120files verified; producer54.80s/replay20.22s.21focused tests/format/lint pass; normal full-suite retry running after originalmemoryguard refusal. Broader endpoint/precursor/concentration goal stays active.
+
+Reference software closure: normal full suite passes3,236tests/10warnings in320.81s with one worker and intact memoryguard. Format/lint and21focused tests pass; independent complete source/reference replay passes. Indexed-corpus integration CI remains separate. No source code changed after validation.
