@@ -12487,6 +12487,27 @@ Review: independent mask-generator/Frechet replay passes all numerical cases, 43
 Previous turn recovered terminal numerical/runtime evidence; original mathematical gates pass but four long-parent runtime cases fail. New family experiments/2026-10-23_1846_codex_fragment-rational-solver.
 - [x] Qualify full-support triangular shifted solve and its gradients.
 - [x] Compare fixed CRAM16/48 exponential grids and full-parent runtime without biological targets.
-- [ ] Independently verify all outcomes, publish, and determine biological-loss qualification next.
+- [x] Independently verify all outcomes, publish, and determine biological-loss qualification next.
 
 Review: all27 shifted solves/270 exponential cases pass numerical accuracy; all50 runtime cases complete. Both orders fail strict positivity. Independent replay and48 directional finite differences pass; full-parent CRAM48 reference parity within3.78e-15 counts/2.39e-15 gradients. New positive boundary-importance plan frozen. No biological fit admitted. Published at556e2ee; all186 closure hashes and immutable remote README match. PR131 body-only update reads back exactly and remains open/draft. Prior2903e11CI passes;556e2eeCI is in progress. All local qualification/runtime/verification/publication handles are terminal. Goal-turn classification: progress. Next available action is the frozen positive boundary-importance estimator; no biological fit admitted and full APC availability objective active.
+
+
+## Positive fragment boundary importance
+
+Previous goal turn: progress (two completed numerical families published with verified artifacts and PR state; CRAM runtime improves but strict positivity fails). Active family experiments/2026-10-23_1909_codex_boundary-importance.
+- [x] Implement complete conditioned paths and exact likelihood ratio/scores.
+- [x] Qualify fixed ordinary/rare numerical means and gradients without data targets.
+- [x] Freeze and run actual-parent or biological comparisons only after appropriate gates.
+- [x] Independently verify, publish all outcomes and preserve the full APC goal.
+
+Review: 45/45 ordinary and 2/3 rare primary checks pass; fast-boundary failure retained. Independent 2,304-group/48-raw/384-history replay passes. No full-parent run admitted for this proposal. Report, CSV and registry complete; publication pending.
+
+
+## Truncated boundary proposal and variance control
+
+Uniform proposal45/45ordinary and2/3rare primary cases pass; fast-boundary failure preserved. Registered experiments/2026-10-23_1920_codex_boundary-exponential.
+- [x] Qualify truncated-time density and original/proposal scores with fixed controls.
+- [x] Run the same ordinary/rare matrix, then prospectively gate actual-parent work.
+- [x] Independently verify and publish both proposal families.
+
+Review: all48 small-system checks pass, but original mean-absolute criterion admits only8/21 full-parent cases. Independent arrays,63directional derivatives,63raw groups and504saved paths replay. Three primary gate-reporting decisions corrected; original outputs retained. Reports/plot/registry and next state-adaptive specification complete; publication pending. Previous goal turn was no experimental progress (architecture explanation); this turn closes authoritative evidence and changes the next action. Full APC goal remains active.

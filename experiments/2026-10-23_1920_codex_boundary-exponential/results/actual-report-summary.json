@@ -1,0 +1,42 @@
+{
+  "by_eta": [
+    {
+      "eta": -1.0,
+      "pass_count": 0,
+      "total": 7,
+      "max_probability_relative_error": 0.10104339858837705,
+      "max_mean_absolute_log_error": 0.18581387583918252,
+      "max_mean_gradient_error": 0.3392499395135025,
+      "max_rms_gradient_error": 0.7490079262257539,
+      "minimum_ess": 17.11498339184631
+    },
+    {
+      "eta": 0.0,
+      "pass_count": 7,
+      "total": 7,
+      "max_probability_relative_error": 7.105427357601027e-15,
+      "max_mean_absolute_log_error": 5.773159728050814e-15,
+      "max_mean_gradient_error": 0.011552957328676705,
+      "max_rms_gradient_error": 0.022798313444375277,
+      "minimum_ess": 511.99999999999943
+    },
+    {
+      "eta": 1.0,
+      "pass_count": 1,
+      "total": 7,
+      "max_probability_relative_error": 0.20292428840894802,
+      "max_mean_absolute_log_error": 0.5294411461377413,
+      "max_mean_gradient_error": 0.5940193315096943,
+      "max_rms_gradient_error": 1.3584989235427791,
+      "minimum_ess": 2.758704342327598
+    }
+  ],
+  "primary_pass": 8,
+  "primary_total": 21,
+  "primary_gate_decisions_changed": 3,
+  "all_count_gate_decisions_changed": 5,
+  "total_sampled_paths": 290304,
+  "suite_seconds": 467.4474717910052,
+  "peak_worker_rss_bytes": 2124644352,
+  "max_fd_error": 1.6946482928048567e-07
+}

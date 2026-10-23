@@ -2858,3 +2858,38 @@ Publication closure: report/artifacts committed and pushed at `eb96219`; all59 r
 - **Decision:** CRAM48 is the more accurate numerical candidate and fixes the observed runtime limitation, but neither method is admitted to biological log training under the frozen positivity rule. Next: positive boundary-conditioned full-path importance means/scores, including rare-product log and finite-sample bias/variance qualification. No new Hitlist data gap; machinery/observation/clearance and the full APC concentration objective remain open.
 
 Publication closure: report/code/artifacts at556e2ee; all186 closure hashes and immutable remote README match. PR131 body-only update reads back exactly and preserves open/draft state. Prior2903e11CI succeeds;556e2eeCI runs40037397437/40037390050 are in progress. All local experiment handles terminal. Full goal remains active; next is the prospectively frozen boundary-importance qualification.
+
+## 2026-10-23_1909 — Positive boundary-conditioned importance sampling
+
+- **Date/agent:** October 23, 2026; Codex / GPT-6. [Full report](2026-10-23_1909_codex_boundary-importance/README.md).
+- **Data/curation:** Fixed six-residue numerical system, five bond rates, eta=-1/0/+1, three times/five target spans and three prescribed rare stresses. No biological targets, source changes or new curation. Full fragment support, including monomers and nonbinding products, remains intact.
+- **Model/estimator:** Original fragment-length hazard; independently uniform forced target-boundary times with all other allowed cuts sampled under original hazards. Exact complete path density ratio restores forbidden-event survival. No floor/clipping; positive log-space count estimates and original-path score gradients.
+- **Training/assays:** Zero optimization or pretraining, no assay labels/loss weights or synthetic biological labels. Numerical reference probabilities/gradients only. No held-out validation/test split because this is estimator qualification; complete group/raw/path numerical dumps replace predictive assay dumps. Binding/nM metrics do not apply.
+- **Contract/reproduction:** Same registered45 ordinary/3 rare states, K256/2048/16384,16groups, fixed seeds and K16384 gates. Source702d66b with dirty status, code hashes, frozen source and launchers in reproduce/. CPU float64 one thread, OMP/OpenBLAS/MKL=1; no Modal/GPU or environment changes.
+
+| Primary scope | Passed | Worst probability relative error | Worst absolute mean log bias | Worst RMS gradient error |
+|---|---:|---:|---:|---:|
+| Ordinary |45/45|0.002009|0.002004|0.244641|
+| Rare |2/3|0.066063|0.053024|0.100319|
+
+- **Runtime/verification:** 14,352,384paths/2,304groups,24.81s/318MB. Independent21-fragment generator/Frechet and closed rare-eta reference verify all groups,48raw primary groups and384full event histories; max trace error9.10e-13. Three focused tests pass; initial import-path collection failure and corrected launcher retained.
+- **Decision:** Uniform boundary proposal fails fast-boundary stress; ESS34.55/16384. Log estimates remain accurate near log probability-1682 despite all linear weights underflowing. No full-parent/biological fit admitted. Existing unconditional zero-hit reference retained at its different K; no matched-cost claim. The separately registered truncated-time proposal is the next comparison; full APC availability/concentration goal stays open.
+
+## 2026-10-23_1920 — Truncated boundary proposal, score control and full-parent failure
+
+- **Date/agent:** October23,2026; Codex / GPT-6. [Full report and tables](2026-10-23_1920_codex_boundary-exponential/README.md).
+- **Data/curation:** Same numerical matrix plus frozen canonical training-input projection74f615a7… from shared purified human20S digestion package5f616170… and original40-coefficient initializer2400f214…. Seven conditions/six full constructs,123–533residues; no quantity/development/test tables read, no new source/exclusions or biological fitting.
+- **Model/estimator:** Same complete branching process. Required boundary times use initial-fragment truncated exponentials; exact original/proposal density scores retained. Primary leave-one-out proposal-score control has unbiased unnormalized numerator, but normalized log-gradient estimates retain finite-K bias. Plain scores preserved; no clipping or probability floor.
+- **Training/assays:** Zero new optimizer/pretraining steps; no measured assay losses/labels or synthetic biological training labels. No held-out predictive validation/test split: fixed-state numerical qualification using training-parent inputs only. Numerical arrays/path/group dumps retained; regression/binder metrics inapplicable. No APC, MS-response or pMHC validation implied.
+- **Reproduction:** Source702d66b/recorded dirty state, exact launch/source hashes and commands in reproduce/. CPU float64 one thread, OMP/OpenBLAS/MKL=1; no Modal/GPU or environment mutation. Small qualification14,352,384paths/18.25s/320MB; all48primary states pass. Fast-boundary controlled/plain RMS gradient error0.000496/0.005915; ESS16384. All48raw groups/384saved histories independently replay.
+- **Full-parent contract:** eta=-1/0/+1,24h, centered lengths1/9/40 selected from parent length, fixed signed log readout and all41parameter gradients, K64/512×8groups; primary512. CRAM48 two/fourstep target references positive and agreeing within1e-5; full-output tiny-tail negativity remains unresolved. Every case retains its original status.
+
+| eta | Primary passed / 7 | Worst mean absolute log error | Worst mean gradient error | Worst RMS gradient error | Minimum ESS / 512 |
+|---|---:|---:|---:|---:|---:|
+| -1 |0/7|0.185814|0.339250|0.749008|17.11|
+| 0 |7/7|5.77e-15|0.011553|0.022798|512|
+| +1 |1/7|0.529441|0.594019|1.358499|2.76|
+
+- **Verification/runtime:** All21workers complete,290,304paths/467.45s/maximum1.98GiB. Independent full-array replay,63directional finite differences (max1.70e-7), all group algebra,63raw groups and504saved full histories pass in85.20s. This is not every-component or every-unsaved-path verification. Three focused tests pass.
+- **Reporting correction:** Worker used absolute signed mean log error; registered plan required mean absolute log error. Independent closure enforces original criterion without changing outputs/seeds/thresholds. Three primary decisions change11/21→8/21; five change across both K. Both gates and reductions retained.
+- **Decision:** No full-parent/biological admission. Initial-rate proposal mismatch under changing fragment lengths is a hypothesis; larger states/lower K also differ from toy checks. One [prospective state-adaptive proposal](agents/codex/plans/fragment-boundary-adaptive.md) is frozen with unchanged physical law/cases/counts/gates and a defined biological next-stage gate. No new Hitlist data gap arose; original MAPP failures, independent observation calibration and full APC concentration objective remain unresolved.

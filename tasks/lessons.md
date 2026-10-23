@@ -552,3 +552,13 @@ Keep applicability reporting separate from model features and the measured label
 ## 2026-10-23 — metric weighting labels
 
 - Check the actual reduction for each diagnostic before labeling it weighted. Sharing a dataset or retaining weight columns does not imply every summary uses those weights. Report pooled counts and equal-parent reductions separately; preserve numerical artifacts when correcting prose.
+
+
+## 2026-10-23 — preserve metric reductions in acceptance gates
+
+- Mean absolute error and absolute mean signed error are different gates. Store
+  both with explicit reduction names, test a cancellation counterexample, and
+  compare gate implementation with the registered mathematical definition before
+  launch. If a discrepancy is found afterward, preserve original outputs and
+  decisions, enforce the original contract in independent closure, and disclose
+  changed decisions without changing seeds, thresholds or data.

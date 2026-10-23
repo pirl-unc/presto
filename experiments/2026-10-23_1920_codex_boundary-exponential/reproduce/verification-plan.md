@@ -1,0 +1,3 @@
+# Independent truncated-proposal verification
+
+Reuse the independent21-fragment and closed rare eta references from the preceding verifier. Independently add truncated-time log densities and their parameter scores before event-history replay; verify all384 traces including original/proposal ratio and terminal survival. Reconstruct plain and leave-one-out controlled statistics, gates and unnormalized-gradient diagnostics for all2304 groups, and all48 retained full raw primary groups. Other raw paths are not retained or claimed independently replayed. No producer implementation imported. Preserve unchanged unconditional references at their original K and reuse contract. No biological targets or fitting.
