@@ -12319,8 +12319,24 @@ Previous goal turn: progress. Plan: experiments/agents/codex/plans/controlled-ma
 - [x] Register source/diagnostic scope before generation.
 - [x] Original-source, reference, metadata and canonical recipe verification.
 - [x] Training-only repeated-measurement signal; no held-out tuning.
-- [ ] Publish actual evidence and freeze the next exact/sampled biological comparison.
+- [x] Publish actual evidence and freeze the next exact/sampled biological comparison.
 
 Review: pending. Full local Hitlist runner refused2.10/2.5GiB before collection, without bypass.
 
 Review: real source and independent original/reference/recipe audit pass; all146,832 quantities and183 prior files preserved. Training-only59-peptide/40-component response is repeatable (RMSE0.6761 vs0.9031 common shift), but only2.56% of training positive support survives. No held-out response evaluation or new model fit. Four-feature exact/sampled follow-up frozen. Publication/current CI and upstream stack reconciliation remain pending; availability goal active.
+
+Publication: report80ffa7e pushed to Presto131; Hitlist draft772 opened at1da88e6, exact head/body/open/draft readback passes. Hitlist759 updated with selected-support findings and remaining metadata needs, exact body/open-state verified. New draft checks, parent767/main stack reconciliation and version allocation remain pending. Main760 merged as2.0.5 during execution. No live local handles. User now prioritizes understanding the failed MAPP model: two fixed-feature32-unit MLPs (49/118 inputs;5472parameters), conditional captured-composition supervision, not trajectory simulation. Goal-turn classification: progress; next fit frozen but not launched.
+
+
+## Controlled inhibitor response fitting
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/controlled-mapp-exact-sampled-fit.md.
+- [x] Shared complete-case contrast recipe with identical frozen eligibility and targets.
+- [x] Mathematical gradient checks and immutable local fitting bundle.
+- [x] Run exact/sampled/control fits and all-split evaluation once.
+- [x] Independently replay source, checkpoints, metrics, sampling work and conclusions.
+- [ ] Publish report and upstream findings; preserve unresolved concentration goal.
+
+Review: registered before implementation or held-out response evaluation.
+
+Review: all7 policy fits/1 ridge/2 controls completed,14,000 updates. No fitted method improves both val/test response RMSE; exact test.64789 vs common.63536, ridge.62374 but worse validation. Independent NumPy Adam replay matches28checkpoints to8.60e-16 and all870predictions/30metric sets/gates/bootstrap. Exact gradient converges while train response RMSE worsens, exposing objective/measurement mismatch. Published shared code0be964d;50focused tests/format/lint/docs pass, full local guard refuses.64/2.5GiB. Full concentration goal active; next source770 under frozen kinetics plan, no rescue tuning on14test peptides.

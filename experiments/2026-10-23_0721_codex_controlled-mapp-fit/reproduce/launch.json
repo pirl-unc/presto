@@ -1,0 +1,62 @@
+{
+  "registered_at": "2026-10-23T07:24:03.565714-04:00",
+  "agent_model": "Codex / GPT-6",
+  "presto_commit": "80ffa7ec5a28dd003efae79990f9e5565ddc0a6a",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_0645_codex_controlled-mapp-signal/results/publication/\n?? experiments/2026-10-23_0721_codex_controlled-mapp-fit/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "run_recipe": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0645_codex_controlled-mapp-signal/recipe",
+  "run_recipe_manifest_sha256": "f8bcf7a7b1fd74b998e79854ee8a1eaa10ea8e2c840392872513c2a1e6d20264",
+  "source_package": "/private/tmp/hitlist-v2-controlled-206-canonical",
+  "source_manifest_sha256": "3b14b05532c6ed24132c37ef7f297eaf0047325e3c822d4293344a44a92cec30",
+  "hitlist_root": "/private/tmp/hitlist-mapp-controls",
+  "shared_contrast_recipe": "mapp_controlled_complete_alpha6_response_v1",
+  "contrast_output": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0721_codex_controlled-mapp-fit/contrast",
+  "scope": "Frozen controlled inhibitor response; no redefinition as intracellular concentration.",
+  "plan_sha256": "73700c0e8af5996cc216fad859f29095a1fb39c6224d75d82571e46da2aede5d",
+  "device": "CPU",
+  "dtype": "float64",
+  "environment": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "features": [
+    "log_length",
+    "fraction_AVILMFYW",
+    "fraction_KR",
+    "fraction_DE"
+  ],
+  "scaling": "train mean/population SD with floor1e-8",
+  "steps": 2000,
+  "adam": {
+    "lr": 0.03,
+    "betas": [
+      0.9,
+      0.999
+    ],
+    "eps": 1e-08
+  },
+  "policy_l2_half_weight": 0.1,
+  "ridge_mse_l2_weight": 0.1,
+  "seeds": [
+    20261023,
+    20261024,
+    20261025
+  ],
+  "sample_counts": [
+    32,
+    128
+  ],
+  "probe_updates": [
+    0,
+    100,
+    500,
+    2000
+  ],
+  "probe_groups": 64,
+  "bootstrap": {
+    "draws": 1000,
+    "seed": 20261023
+  },
+  "selection": "final fixed checkpoint; no validation hyperparameter selection",
+  "stage": "registered before implementation/materialization/fitting"
+}
