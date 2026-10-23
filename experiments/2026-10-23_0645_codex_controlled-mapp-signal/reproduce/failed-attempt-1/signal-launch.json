@@ -1,0 +1,38 @@
+{
+  "frozen_at": "2026-10-23T06:59:25.242853-04:00",
+  "script_sha256": "f4950d08d9e2cb80af6f3076725cb72f383ee8701c699533af77492141b83caf",
+  "recipe_manifest_sha256": "f8bcf7a7b1fd74b998e79854ee8a1eaa10ea8e2c840392872513c2a1e6d20264",
+  "source_manifest_sha256": "3b14b05532c6ed24132c37ef7f297eaf0047325e3c822d4293344a44a92cec30",
+  "contract": {
+    "source_project": "PXD009508",
+    "capture_label_raw": "alpha6",
+    "conditions": [
+      "ut",
+      "epoxo"
+    ],
+    "n_positive_runs_per_condition": 3,
+    "min_direct_msms_evidence_per_condition": 1,
+    "replicate_pairing": "unpaired; numbering is not a biological material match",
+    "effect": "mean_log10_epoxo_minus_mean_log10_untreated",
+    "within_source_repeatability": "all9 leave-one-UT-run/one-epoxo-run-out contrasts; compare remaining-two-run peptide estimate against common-shift estimate",
+    "bootstrap_unit": "sequence_parent_component",
+    "bootstrap_draws": 1000,
+    "bootstrap_seed": 20261023,
+    "new_model_training": "none; empirical nuisance means only",
+    "forbidden_interpretations": [
+      "molar_concentration",
+      "assured_treatment_effect_on_production",
+      "independent_biological_replication",
+      "missing_peptide_negative",
+      "predictive_test_performance"
+    ]
+  },
+  "gate": "raw-signal nine-fold mean squared error improvement cluster-bootstrap lower 2.5% quantile > 0",
+  "composition": "secondary diagnostic on fixed complete-case support, normalized separately within every run; not a rescue selection",
+  "unit": "training peptide/parent components; acquisition repeatability only",
+  "environment": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  },
+  "held_out": "none"
+}

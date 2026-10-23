@@ -12310,3 +12310,17 @@ Review: pending. No new model fit in this compatibility study.
 Review: actual schema9 source and both historical readers pass; independent verifier checks183files/32queries/1,853,840mixed-grain rows, all9reviews and four unchanged recipe payloads. Normal Hitlist3,317tests pass with intact memoryguard. Initial standalone/canonical recipe-envelope comparison error is preserved and corrected; no source or target rerun. Publication closure pending; broader biological goal stays active.
 
 Publication review: Presto82feaf2 report bytes match the immutable GitHub file. Hitlist771 and draft767 plus Presto131 updates read back exactly, preserving open/draft states. Hitlist source0219827 and documentation46df42d pushed. Hosted tests/release-build for0219827 were superseded/cancelled by46df42d; latter tests/build are running, docs pass. Earlier Presto7d4c7a5CI passes. No new model fit or concentration qualification. Unrelated later edit in Hitlist docs/ms-calibration-evidence.md is preserved unstaged. Goal-turn classification: progress; controls admission759 and local biological fit remain next.
+
+
+## Controlled MAPP integration and signal
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/controlled-mapp-signal.md.
+- [x] Shared controlled source and run-level recipe implementation; focused fixtures.
+- [x] Register source/diagnostic scope before generation.
+- [x] Original-source, reference, metadata and canonical recipe verification.
+- [x] Training-only repeated-measurement signal; no held-out tuning.
+- [ ] Publish actual evidence and freeze the next exact/sampled biological comparison.
+
+Review: pending. Full local Hitlist runner refused2.10/2.5GiB before collection, without bypass.
+
+Review: real source and independent original/reference/recipe audit pass; all146,832 quantities and183 prior files preserved. Training-only59-peptide/40-component response is repeatable (RMSE0.6761 vs0.9031 common shift), but only2.56% of training positive support survives. No held-out response evaluation or new model fit. Four-feature exact/sampled follow-up frozen. Publication/current CI and upstream stack reconciliation remain pending; availability goal active.
