@@ -12210,3 +12210,13 @@ Previous goal turn: progress. Plan: experiments/agents/codex/plans/mapp-shared-r
 Reference integration review: shared adapter schema2 verifies all37,721occurrences and64,538sourceclaims against independent complete-reference scans;62,984full sequences/133,414aliases and21,346coverage rows checked. All eleven original quantity/source tables and PXD057588 artifacts byte-identical.120files verified; producer54.80s/replay20.22s.21focused tests/format/lint pass; normal full-suite retry running after originalmemoryguard refusal. Broader endpoint/precursor/concentration goal stays active.
 
 Reference software closure: normal full suite passes3,236tests/10warnings in320.81s with one worker and intact memoryguard. Format/lint and21focused tests pass; independent complete source/reference replay passes. Indexed-corpus integration CI remains separate. No source code changed after validation.
+
+## 2026-10-22 first biological MAPP distribution comparison
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/mapp-biological-comparison.md.
+- [x] Shared recipe with source-faithful positive quantities, mapping alternatives and explicit exclusions.
+- [x] Independently verified cohort and fixed connected-component holdouts.
+- [x] Local exact/REINFORCE/context-control fits under one observable objective.
+- [x] Independent metrics, report, publication and next concentration-relevant step.
+
+Review: 616 peptides/101 parents admitted by shared Hitlist recipe; original/extended source replay passes. All nine local fits and independent NumPy/checkpoint/metric replay pass. Uniform wins held-out KL/RMSE; condition predictions remain near zero. Full report/checkpoints/predictions archived; shared Hitlist760 draft published, new data issue759 read back exactly, precursor issue757 remains open. Full Hitlist tests pass3,243/10warnings, format/lint and strict docs pass. Presto publication/readback and final CI remain pending; concentration goal remains active.

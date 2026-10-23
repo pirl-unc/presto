@@ -34,7 +34,9 @@ Save predictions on all train/validation/test rows for selected checkpoints, inc
 
 Independent source replay must reconstruct admission, quantities, positions, grouping/splits and target arithmetic without importing the recipe producer; independently recompute all final metrics and checkpoint selection. Compare exact versus sampled at matched updates, record all scored candidates/draws/runtime and gradient variation. A nonconstant fit or good observed-distribution score is not identification of latent availability. Keep biology/confidence/specimen/precursor/response limitations visible. Register under experiments/ before real materialization/training and close out the complete family with raw artifact hashes, launch/env/git receipts, report and canonical log.
 
-- [ ] Build and test shared recipe and freeze real admitted cohort.
-- [ ] Independently verify source admission and holdouts; check support gate.
-- [ ] Run registered local exact/sampled/no-context fits and preserve every output.
-- [ ] Independently verify results, report limitations and advance the next biological hypothesis.
+- [x] Build and test shared recipe and freeze real admitted cohort.
+- [x] Independently verify source admission and holdouts; check support gate.
+- [x] Run registered local exact/sampled/no-context fits and preserve every output.
+- [x] Independently verify results, report limitations and advance the next biological hypothesis.
+
+Review October 23: both recipes independently verified; original support gate failed without fitting and min2 amendment retained all old partitions/targets. All nine fits completed; independent NumPy/checkpoint/metric replay passed. Uniform remains the held-out reference; no fitted model improves reverse KL/RMSE. Report and complete prediction/checkpoint archive live in experiments/2026-10-22_2330_codex_mapp-biological-comparison. Shared recipe draft Hitlist760; new data issue759 and existing precursor issue757. Publication/readback and CI are distinct from completed fitting; availability concentration goal remains open.

@@ -531,3 +531,7 @@ Keep applicability reporting separate from model features and the measured label
 ## 2026-10-22 — file upstream data gaps as they appear
 
 - When a biological experiment hits missing data, metadata, pairing or representation limits, file a concrete Hitlist issue with source evidence, the blocked modeling use and acceptance criteria. Search existing issues first; link or extend an existing owner instead of creating duplicates. Do not leave actionable gaps only in Presto experiment prose.
+
+## 2026-10-23 — constant-predictor metrics
+
+- Centering exactly equal predictions can leave floating-point residuals that produce spurious correlation ranks. Preserve raw artifacts, explicitly identify mathematical constant controls, and report their correlation as undefined; never interpret roundoff as predictive spread. Keep macro distribution error and pooled peptide correlation weighting distinct.

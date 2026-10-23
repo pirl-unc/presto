@@ -2431,3 +2431,30 @@ T-cell/numeric/query export or a trained concentration model.
 Shared reference implementation committed as1ad9aae in Hitlist draft758.
 Presto formatting/lint and strict docs pass. Final publication does not close
 source/recipe issues or the persistent biological availability objective.
+
+## 2026-10-22_2330 — First biological MAPP exact-versus-sampled fits
+
+- **Date/agent:** Registered October 22, fitted October 23, 2026; Codex / GPT-6.
+- **Directory:** [mapp-biological-comparison](2026-10-22_2330_codex_mapp-biological-comparison/README.md).
+- **Source/curation:** Verified shared Hitlist MAPP package, manifest `55f7a3d5…`; recipe `mapp_captured_composition_min2_v1`, manifest `df78d02f…`. Human HEK293 PXD009092 UT/TNF+IFN, original nonimputed median of three filtered runs including zeros; canonical20, no reverse/contaminant, one source group/full reference sequence, replicated positive quantities, direct MS/MS, peptide PEP ≤0.01, source-leading coordinates/flanks. Original global-FDR/reference/specimen limitations remain. Duplicate aliases/positions do not multiply labels.
+- **Admission/splits:** Original ≥3-peptide recipe failed prospective support gate at 51/7/7 parents; no fit. Pre-fit ≥2-peptide amendment preserves all old partitions/targets and source graph. Admitted 616 peptides / 101 parents, 72/15/14 train/validation/test, 144/30/28 condition distributions. Fixed all-source full-sequence/protein-group components, including excluded bridges; no homology/specimen-independence claim. Both immutable cohorts and every exclusion archived.
+- **Label/output:** Within-parent observed captured-intensity composition → full-parent start/length policy, marginalized over each peptide's positions and normalized among admitted candidates. Conditional signal only; peptide-specific MS/capture response and outside-set mass unidentified. No unreported negatives, concentration, precursor denominator, MHC-affinity filter, binding-threshold metric or synthetic biological labels.
+- **Training:** Hidden32 two-tanh-MLP policy, support1–40, optional treatment0/1. Three seeds42/43/44, Adam lr0.003/no decay, batch8,40epochs/720updates; no pretraining/dropout. Unit-weight mean reverse KL per parent/condition. Exact and fresh REINFORCE64 share initial weights/order/objective; leave-one-out baseline, no clipping/std/reuse/reference penalty. Separate no-context architecture and uniform controls. Best validation KL selects; test once after selection, no refit.
+- **Runtime/reproduction:** Local CPU4/interop1, no Modal/GPU. Nine fits54.98s, peakRSS0.466GiB; training commit8242200 with dirty status and exact overrides frozen in reproduce/training.json. Raw artifacts, all-split prediction dumps, initial/selected/final states, histories and masks archived in results/training-artifacts.tar.gz. Shared source and recipes pinned, frozen commands/sources in reproduce/.
+
+| Method | Validation KL | Test KL | Test TV | Test log10 RMSE | Test Spearman | Condition-change RMSE | Seconds/fit |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| exact-context | 0.1668 ± 0.0076 | 0.3039 ± 0.0078 | 0.2759 ± 0.0059 | 0.3341 ± 0.0062 | 0.0090 ± 0.0412 | 0.1565 ± 0.0001 | 6.09 |
+| reinforce64-context | 0.1673 ± 0.0082 | 0.3119 ± 0.0034 | 0.2804 ± 0.0033 | 0.3394 ± 0.0028 | -0.0011 ± 0.0395 | 0.1565 ± 0.0001 | 6.18 |
+| exact-no-context | 0.1645 ± 0.0037 | 0.3079 ± 0.0082 | 0.2783 ± 0.0054 | 0.3362 ± 0.0052 | -0.0182 ± 0.0106 | 0.1566 ± 0.0000 | 6.00 |
+| Uniform | 0.2031 | 0.2890 | 0.2705 | 0.3213 | undefined | 0.1566 | unfitted |
+
+Means ± population SD across seeds, not biological confidence intervals. Validation15/test14 parents. Full held-out Pearson/Spearman/RMSE, forward/reverse KL, TV, spread, condition contrasts and two-versus-larger-set strata are in the linked report/JSON/CSV. Uniform correlations are undefined; raw near-zero centering artifacts are preserved but not interpreted as ranks.
+
+**Winner/decision:** uniform remains the held-out reference. Every fitted model improves validation initially but fails test reverse KL and RMSE; selected epochs2–3, later validation worsens. Context response is nearly flat (predicted changeSD≈0.001 versus target0.176). Nonconstant composition and all six tensors updating do not establish useful biology:704parameter elements have no nonzero gradients, and the conditional objective leaves total selected mass unidentifiable. No conclusion about earlier IC50-collapse causes.
+
+Independent original-source replay verifies all10,673dispositions/1,232contributors and old/new partition conservation. Independent NumPy forward/metric/checkpoint/work replay checks11,088prediction values, maximum logq error1.35e-6. Exact score-function expectation error5.55e-17; position-marginalization gradient error8.33e-17. Each fit scores36,720selected candidates; REINFORCE draws368,640terms and saves no network scores here. This is different from the earlier synthetic full-oracle and lazy full-protein compute experiments.
+
+Shared recipe [Hitlist760](https://github.com/pirl-unc/hitlist/pull/760) passes3,243normal tests/10warnings in327.51s,14focused tests,format/lint and strict docs; hosted recipe CI remains separate. [Hitlist759](https://github.com/pirl-unc/hitlist/issues/759) requests controlled proteasome-inhibition/reporter panels; precursor/specimen mapping remains in757. Next: training-only capacity/interaction and replicate-variation diagnostics, followed by untouched biological evaluation. Existing test is now observed. This completed negative family advances, but does not complete, the full availability/concentration goal.
+
+Posthoc training-only saved-checkpoint replay (registered before execution, no fit/reselection/additional test checkpoints): initial trainKL0.329–0.338 falls to final0.0227–0.0304, training Spearman0.729–0.784. This policy can fit the training objective while validation deteriorates; generalization failure is established for this family, but its biological/statistical cause and historical IC50 behavior remain unresolved. All diagnostic predictions and exact source/invocation are retained.
