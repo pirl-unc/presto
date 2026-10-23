@@ -12392,6 +12392,8 @@ Current continuation: previous goal turn was no experimental progress (answered 
 - [x] Reviewed source metadata/zero-support conservation with no admitted label change.
 - [x] Prespecified training-only temporal repeatability and independent prediction replay.
 - [x] Freeze ordered sequence-to-rate and exact/sampled qualification specification.
-- [ ] Publish current reports and update shared issue775/770; preserve active concentration goal.
+- [x] Publish current reports and update shared issue775/770; preserve active concentration goal.
 
 Review:30,566curves/125,423positive measurements from6/3/2 train/val/test parents. Repeatability passes5/6 train parents; equal-parent RMSE.673 vs.986 flat. No biological model fit yet. Frozen3e0b999 passes3,350 normal guarded tests. Concurrent Hitlist review is preserved; it has exposed descriptive held-out repeatability, explicitly documented without any split/outcome tuning. All current local admission/replay/diagnostic/test handles are terminal. Goal-turn classification: progress.
+
+Publication closure: Presto1d585b9 pushed; all87 closure-file hashes match tracked blobs and all three immutable remote README hashes match. Hitlist775/770 and Presto131 updates read back exactly, open/draft preserved. Connector writes403; authenticated CLI fallback succeeded with fresh GET/compare/PATCH/readback. Hosted Presto CI39982266193 is confirmed in progress for1d585b9; prior5a10094CI passed. No live local experiment/test handles. Full APC concentration objective remains active. Next action: implement and qualify the frozen ordered sequence-to-bond-rate model on the shared reviewed recipe, then real exact fit and matched sampled-gradient experiments.
