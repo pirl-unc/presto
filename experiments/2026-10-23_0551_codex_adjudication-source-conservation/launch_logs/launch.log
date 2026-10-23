@@ -1,0 +1,14 @@
+Combined package built {'build_seconds': 72.2234211670002}
+All source/review queries streamed 32
+Recipe verified mapp_captured_composition_v1
+Recipe verified mapp_captured_composition_min2_v1
+Recipe verified mapp_complete_run_composition_v1
+Recipe verified ms_calibration_raw_s4_nominal_response_v1
+{"environment": {"OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1", "PYTHONPATH": "/private/tmp/hitlist-successor-compat"}, "passed": true, "peak_rss_bytes": 3518824448, "platform": "macOS-26.5-arm64-arm-64bit", "pyarrow": "26.0.0", "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]", "stages": {"build_seconds": 72.2234211670002, "historical_read_seconds": 32.72469362500124, "open_catalog_audit_seconds": 24.242488750023767, "query_seconds": 9.069527291052509, "recipe_seconds": 9.73645370802842}, "wall_seconds": 148.010535584006}
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_0551_codex_adjudication-source-conservation/code/verify.py", line 169, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_0551_codex_adjudication-source-conservation/code/verify.py", line 134, in main
+    assert set(a["files"]) == set(b["files"])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,20 @@
+{
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/hitlist-successor-compat"
+  },
+  "passed": true,
+  "peak_rss_bytes": 3518824448,
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "pyarrow": "26.0.0",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "stages": {
+    "build_seconds": 72.2234211670002,
+    "historical_read_seconds": 32.72469362500124,
+    "open_catalog_audit_seconds": 24.242488750023767,
+    "query_seconds": 9.069527291052509,
+    "recipe_seconds": 9.73645370802842
+  },
+  "wall_seconds": 148.010535584006
+}

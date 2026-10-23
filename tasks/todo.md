@@ -12295,3 +12295,16 @@ Previous goal turn: progress. Registered 2026-10-23_0434_codex_mapp-controlled-a
 Controlled-source review: all146,832 peptide/run arithmetic comparisons and ten original extracted tables independently verify. PXD009508 has actual UT/epoxomicin capture-control arms; unique punctuation aliases are derived and recorded, not supplied specimen identities. All143 recovered HTTP ranges and whole PRIDE checksums pass; failed full downloads and literal-label attempt preserved. Hitlist770 created with exact body/open-state readback. Full goal remains active; source integration and biological fitting still required.
 
 Controlled-source publication: Presto dfe3af2 publishes the complete audit; remote immutable README bytes match local. Hitlist759 and Presto131 bodies exactly read back with open/draft states preserved. Hitlist770 source-specific request is open and verified. Source and both starting-code hosted workflows pass; current publication CI is being checked separately. No live local download/analysis/training handles remain. Goal-turn classification: progress. Next action is shared Hitlist controls source/recipe admission, then repeatability and a frozen local biological comparison; full concentration objective remains unachieved.
+
+## Adjudication and external-source conservation
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/adjudication-source-conservation.md.
+- [x] Identify and file upstream collision as Hitlist771; isolate compatibility work.
+- [x] Write implementation spec and regress both package families.
+- [x] Register, freeze and run actual combined source conservation.
+- [x] Verify all predecessor files, source queries and recipe targets independently.
+- [ ] Publish report/issue/PR readbacks and retain unresolved biological goal.
+
+Review: pending. No new model fit in this compatibility study.
+
+Review: actual schema9 source and both historical readers pass; independent verifier checks183files/32queries/1,853,840mixed-grain rows, all9reviews and four unchanged recipe payloads. Normal Hitlist3,317tests pass with intact memoryguard. Initial standalone/canonical recipe-envelope comparison error is preserved and corrected; no source or target rerun. Publication closure pending; broader biological goal stays active.

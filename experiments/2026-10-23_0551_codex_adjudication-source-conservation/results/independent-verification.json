@@ -1,0 +1,210 @@
+{
+  "n_files": 183,
+  "n_materialized_relations": 85,
+  "n_predecessor_files": 126,
+  "n_reviews": 9,
+  "n_source_files": {
+    "pxd004886": 23,
+    "pxd009092": 33
+  },
+  "n_verified_query_relations": 32,
+  "n_verified_query_rows": 1853840,
+  "passed": true,
+  "peak_rss_bytes": 682033152,
+  "recipes": {
+    "mapp_captured_composition_min2_v1": {
+      "coverage": {
+        "mapp_peptide": {
+          "grain": "source_peptide_row",
+          "n_accepted": 616,
+          "n_ambiguous": 0,
+          "n_candidates": 10673,
+          "n_contributor_links": 1232,
+          "n_examples": 202,
+          "n_excluded": 10057,
+          "n_filtered_by_query": 0,
+          "n_limit_omitted": 0,
+          "n_parent_sequences": 101,
+          "n_query_matches": 10673,
+          "n_run_observations": 0,
+          "n_source_rows": 10673,
+          "reason_counts": {
+            "ambiguous_source_group": 1100,
+            "fewer_than_two_eligible_peptides_per_parent": 105,
+            "insufficient_positive_runs:TNF+IFN": 4249,
+            "insufficient_positive_runs:UT": 4422,
+            "missing_direct_msms:TNF+IFN": 4473,
+            "missing_direct_msms:UT": 5549,
+            "missing_nonimputed_quantity:TNF+IFN": 5362,
+            "missing_nonimputed_quantity:UT": 5690,
+            "multiple_parent_sequences": 5354,
+            "peptide_pep_above_threshold": 3826,
+            "reference_unmapped": 1883,
+            "source_contaminant": 1562,
+            "source_leading_coordinate_or_flank_unconfirmed": 4355,
+            "source_reverse": 396
+          }
+        }
+      },
+      "unchanged_content_files": [
+        "contributors.jsonl",
+        "coverage.json",
+        "examples.jsonl",
+        "parents.jsonl",
+        "peptide_dispositions.jsonl",
+        "recipe.json",
+        "summary.json"
+      ],
+      "unchanged_standalone_content_files": [
+        "contributors.jsonl",
+        "examples.jsonl",
+        "parents.jsonl",
+        "peptide_dispositions.jsonl",
+        "recipe.json",
+        "summary.json"
+      ]
+    },
+    "mapp_captured_composition_v1": {
+      "coverage": {
+        "mapp_peptide": {
+          "grain": "source_peptide_row",
+          "n_accepted": 544,
+          "n_ambiguous": 0,
+          "n_candidates": 10673,
+          "n_contributor_links": 1088,
+          "n_examples": 130,
+          "n_excluded": 10129,
+          "n_filtered_by_query": 0,
+          "n_limit_omitted": 0,
+          "n_parent_sequences": 65,
+          "n_query_matches": 10673,
+          "n_run_observations": 0,
+          "n_source_rows": 10673,
+          "reason_counts": {
+            "ambiguous_source_group": 1100,
+            "fewer_than_three_eligible_peptides_per_parent": 177,
+            "insufficient_positive_runs:TNF+IFN": 4249,
+            "insufficient_positive_runs:UT": 4422,
+            "missing_direct_msms:TNF+IFN": 4473,
+            "missing_direct_msms:UT": 5549,
+            "missing_nonimputed_quantity:TNF+IFN": 5362,
+            "missing_nonimputed_quantity:UT": 5690,
+            "multiple_parent_sequences": 5354,
+            "peptide_pep_above_threshold": 3826,
+            "reference_unmapped": 1883,
+            "source_contaminant": 1562,
+            "source_leading_coordinate_or_flank_unconfirmed": 4355,
+            "source_reverse": 396
+          }
+        }
+      },
+      "unchanged_content_files": [
+        "contributors.jsonl",
+        "coverage.json",
+        "examples.jsonl",
+        "parents.jsonl",
+        "peptide_dispositions.jsonl",
+        "recipe.json",
+        "summary.json"
+      ],
+      "unchanged_standalone_content_files": [
+        "contributors.jsonl",
+        "examples.jsonl",
+        "parents.jsonl",
+        "peptide_dispositions.jsonl",
+        "recipe.json",
+        "summary.json"
+      ]
+    },
+    "mapp_complete_run_composition_v1": {
+      "coverage": {
+        "mapp_peptide": {
+          "grain": "source_peptide_row",
+          "n_accepted": 369,
+          "n_ambiguous": 0,
+          "n_candidates": 10673,
+          "n_contributor_links": 738,
+          "n_examples": 142,
+          "n_excluded": 10304,
+          "n_filtered_by_query": 0,
+          "n_limit_omitted": 0,
+          "n_parent_sequences": 71,
+          "n_query_matches": 10673,
+          "n_run_observations": 3696,
+          "n_source_rows": 10673,
+          "reason_counts": {
+            "ambiguous_source_group": 1100,
+            "fewer_than_two_complete_peptides_per_parent": 22,
+            "fewer_than_two_eligible_peptides_per_parent": 105,
+            "incomplete_positive_filtered_runs": 225,
+            "insufficient_positive_runs:TNF+IFN": 4249,
+            "insufficient_positive_runs:UT": 4422,
+            "missing_direct_msms:TNF+IFN": 4473,
+            "missing_direct_msms:UT": 5549,
+            "missing_nonimputed_quantity:TNF+IFN": 5362,
+            "missing_nonimputed_quantity:UT": 5690,
+            "multiple_parent_sequences": 5354,
+            "peptide_pep_above_threshold": 3826,
+            "reference_unmapped": 1883,
+            "source_contaminant": 1562,
+            "source_leading_coordinate_or_flank_unconfirmed": 4355,
+            "source_reverse": 396
+          }
+        }
+      },
+      "unchanged_content_files": [
+        "contributors.jsonl",
+        "coverage.json",
+        "examples.jsonl",
+        "parents.jsonl",
+        "peptide_dispositions.jsonl",
+        "recipe.json",
+        "run_observations.jsonl",
+        "summary.json"
+      ],
+      "unchanged_standalone_content_files": [
+        "contributors.jsonl",
+        "examples.jsonl",
+        "parents.jsonl",
+        "peptide_dispositions.jsonl",
+        "recipe.json",
+        "run_observations.jsonl",
+        "summary.json"
+      ]
+    },
+    "ms_calibration_raw_s4_nominal_response_v1": {
+      "coverage": {
+        "examples_per_fold": {
+          "0": 51,
+          "1": 45,
+          "2": 33,
+          "3": 42,
+          "4": 53
+        },
+        "n_admitted_measurements": 1974,
+        "n_admitted_sequences": 22,
+        "n_examples": 224,
+        "n_excluded_measurements": 1095,
+        "n_out_of_scope_normalized_rows": 3069,
+        "n_raw_source_slots": 3069,
+        "n_source_measurements": 6138,
+        "reason_counts": {
+          "multiple_raw_reporters_for_nominal_standard": 198,
+          "response_not_reported_positive_finite": 697,
+          "unresolved_nominal_isotope_annotation": 396,
+          "unresolved_reporter_aggregation": 198
+        }
+      },
+      "unchanged_content_files": [
+        "contributors.json",
+        "dispositions.json",
+        "examples.json",
+        "recipe.json",
+        "source_tables.json",
+        "summary.json"
+      ],
+      "unchanged_standalone_content_files": []
+    }
+  },
+  "wall_seconds": 12.831116374989506
+}
