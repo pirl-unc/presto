@@ -12289,7 +12289,9 @@ Raw-S4 review: shared recipe96b9232 and independent original XML replay admit1,9
 Previous goal turn: progress. Registered 2026-10-23_0434_codex_mapp-controlled-admission.
 - [x] Verify public-source inventory and original study metadata.
 - [x] Recover and independently replay inhibitor/time-course quantities; record unresolved reporter/Velcade assets.
-- [ ] Publish audit and update shared Hitlist ownership.
+- [x] Publish audit and update shared Hitlist ownership.
 - [ ] Implement shared controls admission, assess repeatability and freeze the next supported biological comparison.
 
 Controlled-source review: all146,832 peptide/run arithmetic comparisons and ten original extracted tables independently verify. PXD009508 has actual UT/epoxomicin capture-control arms; unique punctuation aliases are derived and recorded, not supplied specimen identities. All143 recovered HTTP ranges and whole PRIDE checksums pass; failed full downloads and literal-label attempt preserved. Hitlist770 created with exact body/open-state readback. Full goal remains active; source integration and biological fitting still required.
+
+Controlled-source publication: Presto dfe3af2 publishes the complete audit; remote immutable README bytes match local. Hitlist759 and Presto131 bodies exactly read back with open/draft states preserved. Hitlist770 source-specific request is open and verified. Source and both starting-code hosted workflows pass; current publication CI is being checked separately. No live local download/analysis/training handles remain. Goal-turn classification: progress. Next action is shared Hitlist controls source/recipe admission, then repeatability and a frozen local biological comparison; full concentration objective remains unachieved.
