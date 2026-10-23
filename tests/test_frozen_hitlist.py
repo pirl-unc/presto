@@ -35,7 +35,8 @@ def test_corpus_qualification_requires_an_explicit_complete_pin():
 
 @pytest.fixture
 def frozen_bundle(tmp_path, monkeypatch, request):
-    from hitlist import builder, curation, downloads, supplement, write_training_bundle
+    from hitlist import builder, curation, downloads, supplement
+    from hitlist.training_bundle import write_training_bundle
     from hitlist.parquet_io import atomic_write_parquet
 
     monkeypatch.setattr(downloads, "_override_data_dir", tmp_path / "shared-data")
@@ -162,12 +163,12 @@ def test_verified_bundle_reuses_shared_bytes_and_rejects_damage(frozen_bundle, t
 
 def test_frozen_labels_match_live_and_never_read_mutable_indexes(frozen_bundle, monkeypatch):
     live = load_records_from_hitlist(include_flanks=False)
-    import hitlist
+    import hitlist.export
 
     def forbidden(*args, **kwargs):
         raise AssertionError("frozen input consulted a mutable index")
 
-    monkeypatch.setattr(hitlist, "generate_training_table", forbidden)
+    monkeypatch.setattr(hitlist.export, "generate_training_table", forbidden)
     frozen = load_records_from_hitlist(bundle_dir=frozen_bundle, include_flanks=False)
     for old_group, new_group in zip(live[:-1], frozen[:-1], strict=True):
         assert len(old_group) == len(new_group)
@@ -266,7 +267,8 @@ def test_bundle_lineage_survives_samples_and_host_batch_metadata(frozen_bundle):
 
 @pytest.fixture
 def mapped_bundle(frozen_bundle, tmp_path, monkeypatch):
-    from hitlist import mappings, write_training_bundle
+    from hitlist import mappings
+    from hitlist.training_bundle import write_training_bundle
     from hitlist.dataset import update_dataset
     from hitlist.proteome import DEFAULT_FLANK
 

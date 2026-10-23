@@ -1,4 +1,7 @@
-"""Verified Hitlist training artifacts shared through datacache.
+"""Verified historical Hitlist training artifacts shared through datacache.
+
+This module preserves pre-v2 frozen receipts. New evidence generations are
+materialized through Hitlist EvidenceStore; their manifests are a distinct contract.
 
 Only manifest identity and observation IDs travel with model records. The
 immutable identity/contributor sidecars remain the authority for source and
@@ -86,7 +89,7 @@ def load_frozen_hitlist_bundle(
     try:
         import hitlist
         from datacache import inspect_bundle, install_bundle
-        from hitlist import verify_training_bundle
+        from hitlist.training_bundle import verify_training_bundle
         from hitlist.downloads import data_dir
     except ImportError as exc:
         raise ImportError(

@@ -12230,3 +12230,21 @@ Previous goal turn: progress. Plan: mapp-run-repeatability (Presto) / tasks/mapp
 - [x] Publish complete artifacts, report and canonical registry; verify remote readback.
 
 Review: shared source and every run/feature/metric/checkpoint replay pass; all 186 archived fitting files and nine recipe files match original bytes. Baseline repeats (r=0.914); treatment-change repeatability is weak (r=0.172). Thirty regularized fits complete in 25.81s; all allocated weights train, but none beats uniform. Hitlist b94289d: 20 focused tests and strict docs pass; normal local full-suite memory preflight refused twice. Hosted Python 3.10–3.14 unit CI and integration/coverage/lint/docs all pass (3.11: 3,247 passed/2 optional skips; integration: 96 passed). Calibration data request #762 filed and read back exactly; precursor #757 and perturbation #759 remain open. Artifacts/report published at6845eb9 and independently read back. PR/issue bodies match intended edits; #739 was already closed by concurrent2.0 release761, preserved. Final current-head CI is being checked. Full concentration goal remains active; next integration spec is experiments/agents/codex/plans/mapp-v2-integration.md.
+
+## 2026-10-23 canonical MAPP integration audit
+
+Previous goal turn: progress. Registered 2026-10-23_0149_codex_mapp-v2-integration.
+- [x] Materialize source-preserving schema8 successor from actual latest reference generation.
+- [x] Independently verify complete source/query/recipe conservation and report.
+- [ ] Publish full receipts and confirm current-head CI.
+
+Review: independently checked124 predecessor files/inode isolation,33 MAPP source files,18 queried relations/1,829,008 rows,32 baseline audits and3,058 target values. All original targets/splits are byte-identical. Three complete recipe exports archived and hashed; source execution1442c03, final Hitlist6e275fe changes executable code only by import order.55 focused Hitlist tests/format/lint and strict docs pass; normal full suite refused by memory guard (0.67/2.5GiB), not bypassed. PR763 is now merged; source758 fully included in integrated760 against main. Concentration goal remains active.
+
+## Hitlist 2.0 archival verification imports
+
+Spec: tasks/modular_model/hitlist-2-archival-imports-spec.md. c06fcb7 CI root cause identified from actual log; new MAPP materialization already uses EvidenceStore.
+- [x] Repair retired top-level imports for historical frozen receipts without aliases or dependency downgrade.
+- [x] Verify affected regression families with actual Hitlist2.0:159 tests pass.
+- [ ] Publish and confirm current-head full CI.
+
+Review: five affected families pass17.32s; Ruff and strict docs pass. Frozen manifests/labels and v4 parity semantics unchanged; new MAPP uses EvidenceStore. First86-pass/1-failure run exposed remaining retired export call, repaired with explicit source-module import. Shared environment unchanged.
