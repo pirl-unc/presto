@@ -548,3 +548,7 @@ Keep applicability reporting separate from model features and the measured label
 ## 2026-10-23 — per-peptide temporal references
 
 - When a temporal endpoint uses the earliest common positive reference, retain the reference time per peptide. Group sampled plug-in diagnostics by target and reference time; do not assume one reference per condition. Verify this separately from the gradient estimator and preserve failed diagnostic attempts.
+
+## 2026-10-23 — metric weighting labels
+
+- Check the actual reduction for each diagnostic before labeling it weighted. Sharing a dataset or retaining weight columns does not imply every summary uses those weights. Report pooled counts and equal-parent reductions separately; preserve numerical artifacts when correcting prose.

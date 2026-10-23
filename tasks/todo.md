@@ -12409,3 +12409,14 @@ Plan: experiments/agents/codex/plans/biological-independent-cut-fit.md plus regi
 - [x] Publish biological outcomes and retain full APC availability goal.
 
 Review: 8,000 real exact/hybrid updates independently replayed; 562,404 predictions verified. All 1/39/40 coefficients trained, 18 focused tests pass. Exact and hybrid outputs vary, but no sequence model beats all controls on both held-out splits. Conditional reference-signal calibration and restrictive kinetic shapes remain limitations. Reports/registry and biological experiment1497d9b are pushed to draft131. All87 closure files match committed hashes and immutable remote README bytes match; Hitlist770/Presto131 body readbacks are exact and states preserved. Recipe775 remains closed. CI for1497d9b is in progress. No local training/test handles remain. Next work is source-linked observation diagnostics; this turn made biological fitting/verification progress. Full APC concentration goal remains active; preserve unrelated work and concurrent Hitlist review.
+
+## Digestion observation-effects diagnostic
+
+Previous goal turn: progress (published real exact/hybrid fits and independent verification).
+Plan: experiments/agents/codex/plans/digestion-observation-effects.md.
+- [x] Replay admitted training observations with original baseline/contributor provenance.
+- [x] Compare fixed observation layers, shape sensitivity and repeated-label signal.
+- [x] Independently verify all calculations and preserve per-example outcomes.
+- [ ] Publish evidence and specify next model step; retain full APC concentration goal.
+
+Review: all91,226 training points and three observation layers independently replay;94.73% of weight has small baseline fraction, and93%/99% of original growth/concavity violations persist after baseline restoration. Reporting-weight label correction preserves all numeric fits. No new fit or held-out evaluation; next entry-process specification frozen. Publication pending; full concentration goal active.
