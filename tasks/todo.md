@@ -12349,8 +12349,10 @@ Plan: experiments/agents/codex/plans/digestion-source-audit.md.
 - [x] Publish completed controlled MAPP fit and issue evidence.
 - [x] Retrieve and verify original processed digestion outputs and metadata.
 - [x] Inspect source layers and identify the constraints on a temporal endpoint.
-- [ ] Preserve audit/registry/source-gap evidence and next action.
+- [x] Preserve audit/registry/source-gap evidence and next action.
 
 Review: pending; full concentration objective remains active.
 
 Source audit review:18 original files/17 condition archives recovered; all CRCs and545,664 raw run joins checked. H4 independent arithmetic reproduces27,432 raw quantities and13,284 final entries to5.04e-15. RF1 has2,278 contradictory time labels, requiring explicit shared-source reconciliation. Final forced zeros/censoring/control joins preclude naive direct kinetic fitting. No new biological fit; concentration objective active. Publication and Hitlist770 update pending.
+
+Publication closure: controlled-response report1110d49 and source audit0b92401 are pushed to Presto131. All53 source-audit closure files are tracked with exact hashes and immutable remote README bytes match. Hitlist759/770 and Presto131 updates read back exactly; issues remain open and PR remains draft. All local transfer/audit/replay handles are terminal. Authoritative progress this turn: recovered full processed source, established H4 arithmetic correctness, and found the RF1 timing conflict that changes admission. No kinetic fit or concentration qualification. Next action: isolated shared Hitlist770 adapter with source-conflict handling, then frozen exact/sampled kinetics; unrelated checkout work preserved.
