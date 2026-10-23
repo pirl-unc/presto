@@ -12248,3 +12248,16 @@ Spec: tasks/modular_model/hitlist-2-archival-imports-spec.md. c06fcb7 CI root ca
 - [ ] Publish and confirm current-head full CI.
 
 Review: five affected families pass17.32s; Ruff and strict docs pass. Frozen manifests/labels and v4 parity semantics unchanged; new MAPP uses EvidenceStore. First86-pass/1-failure run exposed remaining retired export call, repaired with explicit source-module import. Shared environment unchanged.
+
+## Known-load MS-response source admission
+
+Plan: experiments/agents/codex/plans/ms-calibration-admission.md.
+- [x] Pin public source files and independently audit actual workbook schemas.
+- [x] Verify source joins/selection limits and specify shared Hitlist admission.
+- [ ] Publish the complete source audit into Hitlist762.
+
+No new fit or biological concentration claim; availability goal remains active.
+
+MS source admission review: all4 original files retrieved; publisher/archive copies of2/8 identical.12,941 source cells/formulas independently replay; precise report and shared Hitlist contract written. Raw S4 and curve cohorts remain unadmitted pending source/form/normalization reconciliation. No biological fit. All Hitlist6e275fe CI now passes; latest normal local test runner still refuses0.65GiB/2.5GiB before workers. Presto7020b62 has one lint-test success/one live job at last check. Integration report53 hashes and immutable remote bytes verify; source758 consolidated and closed,752/132 remain open.
+
+Final integration CI verification: Hitlist6e275fe passes allPython3.10–3.14unit, corpus integration, coverage, lint and docs checks. Presto7020b62 passes both full lint/test/distribution jobs and both docs jobs (last job completed06:31:09Z). No live training/download/test handles remain. The normal local Hitlist runner refusal is still disclosed; release/review remain separate.

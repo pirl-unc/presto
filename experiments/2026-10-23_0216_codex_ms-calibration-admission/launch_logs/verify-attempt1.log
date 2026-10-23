@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_0216_codex_ms-calibration-admission/code/verify.py", line 116, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_0216_codex_ms-calibration-admission/code/verify.py", line 51, in main
+    if c['data_type']=='f':assert c['formula_or_value']=='='+x['formula']
+                                                         ~~~^~~~~~~~~~~~~
+TypeError: can only concatenate str (not "NoneType") to str
