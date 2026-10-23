@@ -12462,8 +12462,10 @@ Previous goal turn: progress (verified numerical audit exposed abundance ambigui
 - [x] Query canonical acquisition/form context and establish aggregate applicability without changing labels.
 - [x] Implement minimal profiled observation model and qualify exact/sampled gradients.
 - [x] Freeze and execute supported training/development comparisons and fixed sensitivity probes.
-- [ ] Independently verify, publish all outcomes and retain full APC concentration goal.
+- [x] Independently verify, publish all outcomes and retain full APC concentration goal.
 
-Review: all843,616predictions and6,000Adam updates independently replay; conditional proposal passes and2,000-step hybrid completes. Exact/sample development shape RMSE1.26510/1.26279 versus1.28060constant, with original-ratio degradation and unresolved calibration. Every allocated coefficient trains. New fragment-state qualification spec frozen. No environment/Hitlist source mutation or new test evaluation. Publication pending; full APC goal active.
+Review: all843,616predictions and6,000Adam updates independently replay; conditional proposal passes and2,000-step hybrid completes. Exact/sample development shape RMSE1.26510/1.26279 versus1.28060constant, with original-ratio degradation and unresolved calibration. Every allocated coefficient trains. New fragment-state qualification spec frozen. No environment/Hitlist source mutation or new test evaluation. Published at d92dad0; full APC goal active.
 
 Continuation 2026-10-23T17:57:59.749605-04:00: previous goal turn was no experimental progress (architecture explanation). Exact fit session3273 is terminal success; conditional qualification finished with both prespecified states passing. Prior ce86bdb CI is successful. Running the prospectively gated matched conditional-hybrid fit; source/target/test policy unchanged.
+
+Publication closure: all115 closure-file hashes match committed blobs and immutable remote README bytes match. Hitlist770/762 and Presto131 body-only updates read back exactly, with open/draft states preserved;775 remains closed. Prior ce86bdb CI passed; report commit d92dad0 CI40032238888 is in progress. All local experiment/verification/publication handles are terminal. Goal-turn classification: progress. Next action: implement and qualify the frozen single fragment-state length effect before biological fitting. No APC-concentration promotion.
