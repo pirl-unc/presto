@@ -12469,3 +12469,14 @@ Review: all843,616predictions and6,000Adam updates independently replay; conditi
 Continuation 2026-10-23T17:57:59.749605-04:00: previous goal turn was no experimental progress (architecture explanation). Exact fit session3273 is terminal success; conditional qualification finished with both prespecified states passing. Prior ce86bdb CI is successful. Running the prospectively gated matched conditional-hybrid fit; source/target/test policy unchanged.
 
 Publication closure: all115 closure-file hashes match committed blobs and immutable remote README bytes match. Hitlist770/762 and Presto131 body-only updates read back exactly, with open/draft states preserved;775 remains closed. Prior ce86bdb CI passed; report commit d92dad0 CI40032238888 is in progress. All local experiment/verification/publication handles are terminal. Goal-turn classification: progress. Next action: implement and qualify the frozen single fragment-state length effect before biological fitting. No APC-concentration promotion.
+
+## Fragment-state length effect qualification
+
+Previous goal turn: progress (completed/published shared-observation and conditional-hybrid biological comparison; all115 artifact hashes and remote bodies verified). Current report-head CI0361e0d remains in progress.
+Plan: experiments/agents/codex/plans/fragment-state-length-qualification.md; registered family2026-10-23_1816_codex_fragment-state-qualification.
+- [x] Implement the one-parameter fragment-state expectation operator and full-path sampled score.
+- [x] Qualify dense/exact/independent-cut limits, mass, gradients and fixed Monte Carlo laws.
+- [x] Measure actual-parent runtime/precision with source targets closed before freezing biological settings.
+- [x] Independently verify, publish all positive/negative evidence and preserve the full APC goal.
+
+Review: independent mask-generator/Frechet replay passes all numerical cases, 432 Monte Carlo groups and288 event histories. All42 actual-parent workers are terminal:17/21 exact and21/21 sampled complete; four positive-eta exact cases exceed60s. All38 successful arrays replay; no biological fit admitted. New structured-resolvent/CRAM qualification plan frozen. No new measurement labels, test exposure or shared-environment changes. Publication pending. Previous architecture-answer turn made no experimental change; current turn closes terminal evidence and changes the next numerical action. Goal remains active.
