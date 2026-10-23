@@ -1,0 +1,21 @@
+{
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/hitlist-ms-calibration"
+  },
+  "finished_utc": "2026-10-23T07:29:23Z",
+  "launcher_sha256": "ab69ae3a9d456ea49651d091d774a78be02fbbe7445a5c9ed6486e5081d0ea44",
+  "passed": true,
+  "peak_rss_bytes": 3457449984,
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "pyarrow": "26.0.0",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "stages": {
+    "build_seconds": 65.72185345797334,
+    "open_catalog_audit_seconds": 22.04064933297923,
+    "query_all_added_sources_seconds": 8.904810542007908,
+    "recipe_seconds": 27.766454167023767
+  },
+  "started_utc": "2026-10-23T07:27:18Z"
+}

@@ -1,0 +1,9 @@
+{
+  "format": "PATH=/private/tmp/presto-pr66-tools/bin:/Users/iskander/code/shared-virtual-env/bin:$PATH ./format.sh",
+  "lint": "PATH=/private/tmp/presto-pr66-tools/bin:/Users/iskander/code/shared-virtual-env/bin:$PATH ./lint.sh",
+  "focused_tests": "PYTHONPATH=/private/tmp/hitlist-ms-calibration /Users/iskander/code/shared-virtual-env/bin/python -m pytest tests/test_ms_calibration_evidence.py tests/test_evidence_store.py tests/test_evidence_catalog.py tests/test_external_successor.py tests/test_evidence_recipes.py -q",
+  "normal_full_tests": "PATH=/private/tmp/presto-pr66-tools/bin:/Users/iskander/code/shared-virtual-env/bin:$PATH PYTHONPATH=/private/tmp/hitlist-ms-calibration TEST_SH_MAX=1 ./test.sh",
+  "strict_docs": "PYTHONPATH=/private/tmp/hitlist-ms-calibration /Users/iskander/code/shared-virtual-env/bin/python -m mkdocs build --strict",
+  "cwd": "/private/tmp/hitlist-ms-calibration",
+  "executed_code_commit": "04f7369d64e6d099cc5b8ce5163e6825389e1c1c"
+}

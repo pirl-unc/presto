@@ -12261,3 +12261,14 @@ No new fit or biological concentration claim; availability goal remains active.
 MS source admission review: all4 original files retrieved; publisher/archive copies of2/8 identical.12,941 source cells/formulas independently replay; precise report and shared Hitlist contract written. Raw S4 and curve cohorts remain unadmitted pending source/form/normalization reconciliation. No biological fit. All Hitlist6e275fe CI now passes; latest normal local test runner still refuses0.65GiB/2.5GiB before workers. Presto7020b62 has one lint-test success/one live job at last check. Integration report53 hashes and immutable remote bytes verify; source758 consolidated and closed,752/132 remain open.
 
 Final integration CI verification: Hitlist6e275fe passes allPython3.10–3.14unit, corpus integration, coverage, lint and docs checks. Presto7020b62 passes both full lint/test/distribution jobs and both docs jobs (last job completed06:31:09Z). No live training/download/test handles remain. The normal local Hitlist runner refusal is still disclosed; release/review remain separate.
+
+## Shared MS calibration source integration
+
+Previous goal turn: progress. Registered 2026-10-23_0316_codex_shared-ms-calibration. Plan: Hitlist tasks/ms-calibration-source-spec.md.
+- [x] Produce canonical combined source generation with protocol context.
+- [x] Independently verify source/old-generation/recipe conservation and close report.
+- [ ] Publish shared source and establish the bounded nominal-response recipe.
+
+Goal remains full APC availability/concentration modulo precursor abundance; this is a necessary observation-response data stage, not a substitute objective.
+
+Shared calibration review: attempt1 preserved; corrected04f7369 retains32 cross-asset reporter IDs rather than31. Full independent source/query/157-file/3-recipe conservation passes;28 archive files match original bytes. Format/lint56 focused tests and strict docs pass. Normal full-suite refuses0.65GiB/2.5GiB, not bypassed. Hitlist762 updated and exact body/state read back. Presto3f1ae1b all CI passes. Publication and bounded raw-S4 recipe remain pending; no model fit or concentration claim.
