@@ -12272,3 +12272,14 @@ Previous goal turn: progress. Registered 2026-10-23_0316_codex_shared-ms-calibra
 Goal remains full APC availability/concentration modulo precursor abundance; this is a necessary observation-response data stage, not a substitute objective.
 
 Shared calibration review: attempt1 preserved; corrected04f7369 retains32 cross-asset reporter IDs rather than31. Full independent source/query/157-file/3-recipe conservation passes;28 archive files match original bytes. Format/lint56 focused tests and strict docs pass. Normal full-suite refuses0.65GiB/2.5GiB, not bypassed. Hitlist762 updated and exact body/state read back. Presto3f1ae1b all CI passes. Publication and bounded raw-S4 recipe remain pending; no model fit or concentration claim.
+
+## Bounded raw-S4 response diagnostic
+
+Previous goal turn: progress. Registered 2026-10-23_0359_codex_raw-s4-response.
+- [x] Shared recipe materialization and independent original-source admission.
+- [x] Fixed nested grouped local response fits and independent replay.
+- [ ] Full report, artifacts, registry and issue/PR publication.
+
+Full APC availability goal remains active; this measures only the observation component.
+
+Raw-S4 review: shared recipe96b9232 and independent original XML replay admit1,974 observations/224 summaries/22 peptides.295 local fits and all12,544 validation/672 outer-test predictions independently replay. Context RMSE0.8084 beats mean1.1796; sequence1.2762 worsens and shrinks context under a shared penalty. No transferable detector/concentration claim. All8 recipe files archived exactly; source/full fit receipts retained.61 focused tests/format/lint/docs pass; normal full runner refuses0.30/2.5GiB. Publication remains; next biological data target is controlled processing#759.

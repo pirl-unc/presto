@@ -1,0 +1,25 @@
+{
+  "coverage": {
+    "examples_per_fold": {
+      "0": 51,
+      "1": 45,
+      "2": 33,
+      "3": 42,
+      "4": 53
+    },
+    "n_admitted_measurements": 1974,
+    "n_admitted_sequences": 22,
+    "n_examples": 224,
+    "n_excluded_measurements": 1095,
+    "n_out_of_scope_normalized_rows": 3069,
+    "n_raw_source_slots": 3069,
+    "n_source_measurements": 6138,
+    "reason_counts": {
+      "multiple_raw_reporters_for_nominal_standard": 198,
+      "response_not_reported_positive_finite": 697,
+      "unresolved_nominal_isotope_annotation": 396,
+      "unresolved_reporter_aggregation": 198
+    }
+  },
+  "recipe": "ms_calibration_raw_s4_nominal_response_v1"
+}

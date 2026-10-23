@@ -1,0 +1,112 @@
+[
+  {
+    "outer_fold": 0,
+    "condition": "context",
+    "alpha": 0.1,
+    "allocated_features": 12,
+    "dropped_features": [],
+    "raw_log_load_coefficient": 0.5887597700247941,
+    "train_rmse": 0.6099576899569467,
+    "outer_test_rmse": 0.5263017869173053
+  },
+  {
+    "outer_fold": 0,
+    "condition": "sequence",
+    "alpha": 100,
+    "allocated_features": 32,
+    "dropped_features": [
+      "fraction:M"
+    ],
+    "raw_log_load_coefficient": 0.00543517274524473,
+    "train_rmse": 1.0405186337701695,
+    "outer_test_rmse": 1.3924435004855442
+  },
+  {
+    "outer_fold": 1,
+    "condition": "context",
+    "alpha": 0.0001,
+    "allocated_features": 12,
+    "dropped_features": [],
+    "raw_log_load_coefficient": 0.8365060099772531,
+    "train_rmse": 0.32315012263249937,
+    "outer_test_rmse": 1.339801524033555
+  },
+  {
+    "outer_fold": 1,
+    "condition": "sequence",
+    "alpha": 1,
+    "allocated_features": 32,
+    "dropped_features": [
+      "fraction:M"
+    ],
+    "raw_log_load_coefficient": 0.2705747379768594,
+    "train_rmse": 0.4889906470021805,
+    "outer_test_rmse": 1.3046423664111664
+  },
+  {
+    "outer_fold": 2,
+    "condition": "context",
+    "alpha": 0.1,
+    "allocated_features": 12,
+    "dropped_features": [],
+    "raw_log_load_coefficient": 0.6418161805425913,
+    "train_rmse": 0.6050028269998351,
+    "outer_test_rmse": 0.31072081788071887
+  },
+  {
+    "outer_fold": 2,
+    "condition": "sequence",
+    "alpha": 10,
+    "allocated_features": 32,
+    "dropped_features": [
+      "fraction:M"
+    ],
+    "raw_log_load_coefficient": 0.05161358480427556,
+    "train_rmse": 1.036582452185665,
+    "outer_test_rmse": 0.8033147511221111
+  },
+  {
+    "outer_fold": 3,
+    "condition": "context",
+    "alpha": 0.1,
+    "allocated_features": 12,
+    "dropped_features": [],
+    "raw_log_load_coefficient": 0.5893078295340678,
+    "train_rmse": 0.5630099743922592,
+    "outer_test_rmse": 0.7296934284549256
+  },
+  {
+    "outer_fold": 3,
+    "condition": "sequence",
+    "alpha": 10,
+    "allocated_features": 32,
+    "dropped_features": [
+      "fraction:M"
+    ],
+    "raw_log_load_coefficient": 0.04551282718799381,
+    "train_rmse": 0.9496516502399255,
+    "outer_test_rmse": 1.3286193196939473
+  },
+  {
+    "outer_fold": 4,
+    "condition": "context",
+    "alpha": 0.1,
+    "allocated_features": 12,
+    "dropped_features": [],
+    "raw_log_load_coefficient": 0.5982055629870132,
+    "train_rmse": 0.5910386773720692,
+    "outer_test_rmse": 0.5655248744928236
+  },
+  {
+    "outer_fold": 4,
+    "condition": "sequence",
+    "alpha": 100,
+    "allocated_features": 32,
+    "dropped_features": [
+      "fraction:M"
+    ],
+    "raw_log_load_coefficient": 0.005661753780174276,
+    "train_rmse": 1.0635479514398323,
+    "outer_test_rmse": 1.3135544801996404
+  }
+]

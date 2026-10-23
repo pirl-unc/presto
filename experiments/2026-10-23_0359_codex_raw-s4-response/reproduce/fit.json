@@ -1,0 +1,16 @@
+{
+  "registered_utc": "2026-10-23T08:08:55.221960+00:00",
+  "recipe_manifest_sha256": "fca137691f11275c070c8f3f5feb210fd6d0dd93306ff57dbc5fed755825bbe8",
+  "code_hashes": {
+    "fit.py": "00e4ac98bc0d6917bf4ebfd96aa03c7ad147eb15fa7fb594588437be04b32d2d",
+    "verify_fit.py": "9e359f7196cb41ab273e606498daabdceffffd81931a4a5f1434729b7a7216aa"
+  },
+  "commands": [
+    "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /Users/iskander/code/shared-virtual-env/bin/python /private/tmp/presto-modular-model/experiments/2026-10-23_0359_codex_raw-s4-response/code/fit.py",
+    "OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /Users/iskander/code/shared-virtual-env/bin/python /private/tmp/presto-modular-model/experiments/2026-10-23_0359_codex_raw-s4-response/code/verify_fit.py"
+  ],
+  "environment": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  }
+}

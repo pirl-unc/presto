@@ -1,0 +1,62 @@
+{
+  "registered_at": "2026-10-23T03:59:16.401753-04:00",
+  "agent_model": "Codex / GPT-6",
+  "presto_commit": "50dbfade667533139b8f9785488e4fe13c8eb60f",
+  "presto_dirty": " M experiments/agents/codex/plans/raw-s4-nominal-response.md\n M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "hitlist_commit": "96b923283de3250883244098067a2601a6f074e4",
+  "hitlist_dirty": "",
+  "hitlist_root": "/private/tmp/hitlist-ms-calibration",
+  "source_package": "/private/tmp/hitlist-v2-calibration-203-canonical",
+  "source_manifest_sha256": "bce500f34f111aaf3b41573e96fa630252204a3403d5a2e93e9c50caa97b8552",
+  "original_assets": "/private/tmp/hitlist-pxd004886-assets",
+  "recipe_id": "ms_calibration_raw_s4_nominal_response_v1",
+  "recipe_output": "/private/tmp/presto-modular-model/artifacts/2026-10-23_0359_codex_raw-s4-response/recipe",
+  "environment": {
+    "PYTHONPATH": "/private/tmp/hitlist-ms-calibration",
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1"
+  },
+  "device": "local CPU only; no Modal",
+  "alphas": [
+    0.0001,
+    0.001,
+    0.01,
+    0.1,
+    1,
+    10,
+    100
+  ],
+  "bootstrap_draws": 1000,
+  "bootstrap_seed": 20261023,
+  "held_out_policy": "Nested fivefold canonical peptide-grouped diagnostic CV; no untouched external biological test",
+  "folds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "conditions": [
+    "mean",
+    "context",
+    "sequence"
+  ],
+  "target": "median_log10_raw_positive_MS_peak_area_at_nominal_S4_load",
+  "source_hashes": {
+    "hitlist/ms_calibration_response.py": "a2e3108de803e4b6211223bc3f2aea15176764ab9236c92dcd01ef1602d31cbf",
+    "hitlist/evidence_recipe.py": "c510402dc27f4ddd6267bbef68364bd529d1977f7e52e3cad8c8a2d65652b555",
+    "hitlist/distribution_recipe.py": "bc291d1868720e6980d27a2177abde77d8b3ab2cc09cc805939ac4d121be4b34",
+    "hitlist/evidence_store.py": "eded37376ea4315284009018a5ec834f5b861763d0e4e10c41365d1f9f6f0deb",
+    "hitlist/evidence_bindings.py": "52d356873ddb9aa4c12502dbbe0754f619456c2385382992fb07500d53438d0e",
+    "hitlist/evidence_catalog.py": "5b527c7a6b5cbc84a3d3f4816758ecb7e6024c050abc0a57fd60882c9b84f577",
+    "hitlist/ms_calibration_evidence.py": "35d34fa30631084f69de94dc84a8f25b8650e5a7807c7b10045ff0b32befda27",
+    "hitlist/version.py": "fc610a11ae81623055df849991294047ceda08ce58f46d1a488d0b5cbe768898"
+  },
+  "admission_source_hashes": {
+    "admit.py": "7e0ab829ecd4d6d53d998ef6b41ece6f617acd0a2af73c0b11747560c89b2811",
+    "verify_source.py": "1c7389f04780507611628acc76ef19b839a0970e1e3150567f8c922cee4f5c28",
+    "xml_reference.py": "a958dbf674cb34321fc559ba83e6aad3063afd76c706b1fa9882d1370007fc46"
+  },
+  "admission_frozen_utc": "2026-10-23T08:01:38.070221+00:00",
+  "verifier_amended_utc": "2026-10-23T08:05:30.253821+00:00"
+}

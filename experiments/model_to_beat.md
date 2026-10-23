@@ -225,3 +225,12 @@ explicit species-context limitations; it is not an external validation result.
 
 ### Open Questions
 - Whether the legacy groove encoder still has an advantage once paired with a canonical no-assay-input output contract
+
+
+## PXD004886 raw-S4 conditional-response diagnostic reference
+
+- Status: `diagnostic_only`; [full contract and report](2026-10-23_0359_codex_raw-s4-response/README.md). This is separate from MHC/availability baselines.
+- Canonical shared recipe96b9232:22 selected peptides,224 peptide×site summaries,nominal load/site inputs; median positive log10 raw peak area, no imputation or certified molar interpretation.
+- Reference: load/site ridge, nested fivefold peptide-grouped CV; inner alpha grid1e-4..100,training-only scaling,equal peptide weights. Outer pooled RMSE0.8084456,MAE0.5149689,Pearson0.8805007,Spearman0.9013222. Exact per-fold inner-validation/train/test metrics and predictions in the linked report.
+- Controls: weighted mean RMSE1.1796061; same model plus length/AA fractions with shared regularization RMSE1.2761615. Sequence arm shrinks useful context coefficients too; a separate-penalty ablation remains untested.
+- No untouched external test,homology/specimen independence,detector transfer,processing or concentration claim. These outer folds are now development data for any follow-up changes. No full-data production model fitted.
