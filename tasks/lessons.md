@@ -543,3 +543,8 @@ Keep applicability reporting separate from model features and the measured label
 ## 2026-10-23 — analytic ties in distribution controls
 
 - Mathematical ties can occur within a nonconstant predictor. Before interpreting rank metrics, preserve the raw values and evaluate equivalent spans through their exact analytic class (time, length and boundary type for a uniform cut-rate control). Do not widen numerical tolerances or let summation roundoff turn those ties into ranks.
+
+
+## 2026-10-23 — per-peptide temporal references
+
+- When a temporal endpoint uses the earliest common positive reference, retain the reference time per peptide. Group sampled plug-in diagnostics by target and reference time; do not assume one reference per condition. Verify this separately from the gradient estimator and preserve failed diagnostic attempts.

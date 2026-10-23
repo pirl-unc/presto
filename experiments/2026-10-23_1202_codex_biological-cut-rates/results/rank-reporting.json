@@ -1,0 +1,79 @@
+{
+  "changes": [
+    {
+      "canonical_spearman": 0.2886865554160635,
+      "raw_spearman": 0.2894110151657257,
+      "split": "val",
+      "variant": "constant"
+    },
+    {
+      "canonical_spearman": 0.13269680395484823,
+      "raw_spearman": 0.1324242410954315,
+      "split": "train",
+      "variant": "constant"
+    },
+    {
+      "canonical_spearman": 0.35373080701292015,
+      "raw_spearman": 0.35336372247375586,
+      "split": "test",
+      "variant": "constant"
+    },
+    {
+      "canonical_spearman": 0.37243400294782053,
+      "raw_spearman": 0.37243400294782053,
+      "split": "val",
+      "variant": "sequence"
+    },
+    {
+      "canonical_spearman": 0.26661952243887826,
+      "raw_spearman": 0.26661952243887826,
+      "split": "train",
+      "variant": "sequence"
+    },
+    {
+      "canonical_spearman": 0.3843421296185434,
+      "raw_spearman": 0.3843421296185434,
+      "split": "test",
+      "variant": "sequence"
+    },
+    {
+      "canonical_spearman": 0.3616509983273072,
+      "raw_spearman": 0.3616509983273072,
+      "split": "val",
+      "variant": "sequence_context"
+    },
+    {
+      "canonical_spearman": 0.2662091725577476,
+      "raw_spearman": 0.2662091725577476,
+      "split": "train",
+      "variant": "sequence_context"
+    },
+    {
+      "canonical_spearman": 0.38691989002933774,
+      "raw_spearman": 0.38691989002933774,
+      "split": "test",
+      "variant": "sequence_context"
+    },
+    {
+      "canonical_spearman": 0.07327166626144645,
+      "raw_spearman": 0.07327166626144646,
+      "split": "val",
+      "variant": "shared_time"
+    },
+    {
+      "canonical_spearman": 0.12609418206261597,
+      "raw_spearman": 0.12609418206261597,
+      "split": "train",
+      "variant": "shared_time"
+    },
+    {
+      "canonical_spearman": 0.1294284488120418,
+      "raw_spearman": 0.12942844881204177,
+      "split": "test",
+      "variant": "shared_time"
+    }
+  ],
+  "maximum_prediction_difference": 8.260059303211165e-14,
+  "only_reported_spearman_changed": true,
+  "raw_fits_predictions_metrics_retained": true
+}
