@@ -12303,8 +12303,10 @@ Previous goal turn: progress. Plan: experiments/agents/codex/plans/adjudication-
 - [x] Write implementation spec and regress both package families.
 - [x] Register, freeze and run actual combined source conservation.
 - [x] Verify all predecessor files, source queries and recipe targets independently.
-- [ ] Publish report/issue/PR readbacks and retain unresolved biological goal.
+- [x] Publish report/issue/PR readbacks and retain unresolved biological goal.
 
 Review: pending. No new model fit in this compatibility study.
 
 Review: actual schema9 source and both historical readers pass; independent verifier checks183files/32queries/1,853,840mixed-grain rows, all9reviews and four unchanged recipe payloads. Normal Hitlist3,317tests pass with intact memoryguard. Initial standalone/canonical recipe-envelope comparison error is preserved and corrected; no source or target rerun. Publication closure pending; broader biological goal stays active.
+
+Publication review: Presto82feaf2 report bytes match the immutable GitHub file. Hitlist771 and draft767 plus Presto131 updates read back exactly, preserving open/draft states. Hitlist source0219827 and documentation46df42d pushed. Hosted tests/release-build for0219827 were superseded/cancelled by46df42d; latter tests/build are running, docs pass. Earlier Presto7d4c7a5CI passes. No new model fit or concentration qualification. Unrelated later edit in Hitlist docs/ms-calibration-evidence.md is preserved unstaged. Goal-turn classification: progress; controls admission759 and local biological fit remain next.
