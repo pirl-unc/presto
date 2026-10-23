@@ -1,0 +1,19 @@
+{
+  "registered_at": "2026-10-23T13:57:09.872359-04:00",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1324_codex_substrate-entry/code/verify_exact.py"
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "source_hashes": {
+    "code/verify_exact.py": "1fb41a2c0795cc17e7ea63b9c1667d4712e1a6880e0cc6a8bfb65d403f16cd13",
+    "code/independent.py": "78e86f17cf93d57a921eff0598bcad759bc308ba3fa8d73c948e2706eb9df581"
+  },
+  "scope": "Four completed final deterministic forward/gradient checks and every existing entry prediction; train/val only; no optimizer rerun",
+  "runtime_context": "Concurrent sampled training, not an isolated hardware benchmark"
+}

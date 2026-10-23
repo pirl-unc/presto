@@ -2730,3 +2730,47 @@ Publication follow-up: both reports and frozen artifacts are pushed at Presto150
 - Verification: independent original-field Pandas replay checks all91,226 points/195,586 contributor occurrences, ratios/triplets/weights, stored-model residuals, aggregate/per-parent statistics and shape/stratum reductions. Maximum layer relative error5.11e-15; metric discrepancy zero. Actual baseline/contributor perturbations detected. Read-only-array verifier failure preserved; outputs unchanged.
 - Runtime: local CPU, OMP/OPENBLAS/MKL1, no GPU/Modal/env change. Layer replay10.915s/1.318GiB; analysis10.543s/1.087GiB; independent verification10.931s/1.857GiB. Exact commands/source hashes, full prediction/provenance dumps, figures and logs in the family.
 - Decision: no model winner/promotion. Baseline subtraction alone is insufficient to account for the shape discrepancy; other measurement explanations remain. Next qualify a parsimonious substrate-entry delay, explicitly verifying which restrictions it relaxes and retaining exact/sampled references. [Next specification](agents/codex/plans/substrate-entry-comparison.md). Full APC concentration objective remains active.
+
+
+## 2026-10-23_1324 — Substrate-entry differentiable versus sampled comparison
+
+- **Date/agent:** October 23, 2026, registered13:24 America/New_York; Codex / GPT-6. [Report, all artifacts and frozen phases](2026-10-23_1324_codex_substrate-entry/README.md).
+- **Source/curation:** unchanged canonical Hitlist2.0.9 digestion recipe, manifest5f616170b5514cb4d8f0c7b7843d232959e9514eebbca6483f976e17b0846615; original positive corrected MS signal, source/contributor/reference identities, contiguous construct mapping and exclusions.6training parents/7conditions/67,576ratios;3development parents/10,990ratios. Previous2test parents excluded before target construction; no new test metrics/dump because known test outcomes must not drive development.
+- **Model/training:** exponential substrate-entry event followed by the complete independent-cut process, every product retained and residue mass conserved.40sequence/protocol coefficients+1entry rate, versus2-parameter one-rate+entry and saved immediate controls. Same fixed2,000full-batch Adam.03updates, float64, original initializer, no pretraining. Hierarchical log10 temporal-ratio MSE+.01/2 shared nonintercept coefficient penalty; entry unpenalized. Assay mapping: measured same-peptide time/reference MS signal ratio maps to expected fragment amount ratio. No binding/elution/TCR/stability or synthetic biological training labels; binder/nM metrics inapplicable.
+
+| Condition | Parameters | Train RMSE | Development RMSE | Development Pearson / Spearman | Prediction SD | Seconds |
+|---|---:|---:|---:|---:|---:|---:|
+| Immediate one-rate |1|0.990008|1.181136|.31469/.28869|.46325|8.49|
+| Entry one-rate |2|0.990313|1.181390|.31478/.28861|.46345|238.85|
+| Immediate sequence/context |40|0.902566|1.095559|.42877/.36165|.45384|8.68|
+| Entry sequence/context |41|0.902838|1.095745|.42881/.36162|.45408|239.46|
+| Entry sampled hybrid K512/seed42 |41|0.949424|1.113748|.40369/.34697|.44399|1295.28|
+
+**Decision:** shared entry delay earns no gain; retain the immediate sequence model. Fitted mean delays6.10/5.92/2.85seconds approach immediate entry against hour-scale measurements. The sampled final loss worsens; exact final gradient norm.3233, no convergence or earlier-checkpoint substitution. All allocated coefficients train, but finite delay is not identified. No promotion, APC concentration or cross-peptide MS calibration.
+
+**Qualification/verification:** original fixed-age fit stops at500 on its numerical guard; preserved source/config/log/checkpoint. Registered positive fast-entry quadrature amendment changes integration only, qualifies32nodes throughlambda1e6/hour and all actual checkpoints; initial probe values/gradients bitwise unchanged. Entry relaxes early growth power but preserves log-concavity. Initial integrated/full-score RMS relative gradient errors.35946/.47690. The sampled estimator uses continuous entry/partition draws with irrelevant-bond scores integrated out and quadrature residuals/denominators, with no clipping/std/reuse/reference penalty or score-saving claim. Actual work28.67million partitions/9.42billion bond draws/46.40billion presence terms.
+
+Independent source/NumPy/SciPy replay verifies392,830predictions(max3.11e-15error), final objectives/gradients, all2,000sampled Adam arithmetic updates and five independently rebuilt sampled gradients(max3.99e-15). Exact-entry optimizer trajectory and every sampled gradient were not independently rerun. Raw and structural-tie-adjusted metrics retained.22focused tests pass; figure inspected. Local CPU only, unchanged environment, OMP/OPENBLAS/MKL=1; no Modal/GPU. Sampled fit overlaps read-only/capacity work, so observed wall times are not an isolated hardware benchmark. Expanded qualification64.56s/2.61GB; independent closure9.89s/1.81GB.10,000successful updates plus500preserved failed updates. Execution base311744e with frozen dirty-source snapshots and exact phase commands. Next: training-only capacity/optimization decomposition, retaining full APC availability goal.
+
+## 2026-10-23_1401 — Training-only kinetic capacity decomposition
+
+- **Date/agent:** October23,2026, registered14:01 America/New_York; Codex / GPT-6. [Report and reproducibility bundle](2026-10-23_1401_codex_kinetic-capacity/README.md).
+- **Data/curation:** same pinned shared digestion manifest5f616170…; only6training parents/7conditions/11,527condition-span groups/67,576ratios. Both previous held-out strata are filtered before target construction. Original corrected positive values, source labels, reference times and hierarchical weights retained. No missing negatives, relabeling, binding/TCR/elution/synthetic labels or pretraining. No held-out metrics/dumps by design: this is a capacity diagnostic, not predictive evaluation. Every training prediction is preserved.
+- **Fixed comparisons:** saved regularized40-feature reference; same40features without penalty; free supported condition-specific bond-rate groups; per-curve necessary-shape quadratic programs and unconstrained replicate/time means. Assay mapping is unchanged log10 fragment/time-reference ratio versus observed same-peptide MS ratio. Free groups are diagnostic identities, not a transferable model.
+
+| Condition | Kind | Parameters | Training MSE | Training RMSE |
+|---|---|---:|---:|---:|
+| Saved regularized sequence |Fixed reference|40|.814625|.902566|
+| No-penalty sequence |Nonstationary capacity fit|40|.779949|.883147|
+| Free condition rates |Nonstationary capacity fit|2,121|.635750|.797339|
+| Immediate necessary shapes |Per-curve lower bound|—|.197476|.444383|
+| Entry necessary shapes |Per-curve lower bound|—|.166156|.407622|
+| Replicate/time means |Disagreement floor|—|.113122|.336336|
+
+**Training/support:** same saved initial rate field; no-penalty hierarchical MSE;2,000Adam.01updates per fit then L-BFGS-B with explicit500-evaluation cap. Both fits exhaust that cap above gradient tolerance; final states are not proven optima. All40/2,121allocated parameters change and receive gradients. Among2,299bonds,15unsupported remain fixed; identical incidence groups preserve initial observed hazards. Additional nonlinear equivalences remain possible. Numerical preflight key mismatch is preserved; correction pins the older metrics artifact, with no optimizer updates in the failed attempt.
+
+**Shape evidence:** common per-curve log response must have nonincreasing physical-time slopes and growth power≤b(immediate) or≤b+1(entry). These necessary constraints are not a sufficient characterization of any globally consistent rate process. Their excess MSE over source-label/time means is.08435/.05303; neither means nor projections are a biological noise ceiling or predictive concentration model.50independent SLSQP checks agree to4.45e-16.
+
+**Verification/runtime:** independent original-field replay verifies23,054KKTcertificates and67,576predictions(max3.81e-15KKT,1.78e-15prediction); actual per-curve perturbations are rejected. Separate direct-sum verification checks135,152fitted predictions(max1.68e-13), all incidence allocations and finite differences of all40sequence/48free coordinates(max1.71e-10/6.24e-12). No complete optimizer replay/global-optimum claim. Stable rank predictions/raw artifacts retained. Shape projection3.36s/1.05GB; verification2.64s/.94GB; fits24.15/24.20s; fit verification9.39s/1.05GB.4,000Adamupdates and1,000polishing evaluations. Local CPU one thread, unchanged environment, no Modal/GPU; overlaps prior sampled fit, not isolated runtime comparison. Base311744e plus exact source/config snapshots.
+
+**Decision:** regularization and sequence/context sharing account for part of the observed training gap. Neither unconverged fit proves the remaining error is caused by process misspecification. No promotion. Next [rate-space optimization audit](agents/codex/plans/digestion-rate-space-optimization.md) examines conditioning and rate-boundary limits before expanding the biological model. APC machinery, independent MS response, transfer and full concentration validation remain unresolved.

@@ -12420,3 +12420,25 @@ Plan: experiments/agents/codex/plans/digestion-observation-effects.md.
 - [x] Publish evidence and specify next model step; retain full APC concentration goal.
 
 Review: all91,226 training points and three observation layers independently replay;94.73% of weight has small baseline fraction, and93%/99% of original growth/concavity violations persist after baseline restoration. Reporting-weight label correction preserves all numeric fits. No new fit or held-out evaluation; next entry-process specification frozen. Published3de2666 to draft131; all36 closure files match committed hashes and immutable remote README bytes match. Hitlist770 and Presto131 exact body/state readback pass; source support already exists, no new import needed. Previousaa4c809CI passed; current3de2666CI is in progress. All local analysis/verification handles terminal. Goal-turn classification: progress. Next action: implement/qualify frozen substrate-entry process before matched biological fitting. Full concentration goal active.
+
+## Substrate-entry process and development comparison
+
+Previous goal turn: progress (independent observation-layer diagnostic ruled out baseline subtraction as sole explanation).
+Plan: experiments/agents/codex/plans/substrate-entry-comparison.md and registered family execution contract.
+- [x] Implement entry-time process with explicit complete-fragment sampling and mass-conserving differentiable quadrature.
+- [x] Independently qualify amounts, gradients, shape restrictions and actual training-domain runtime.
+- [x] Freeze and run matched biological development comparisons if numerical/runtime gate passes.
+- [x] Independently verify and report all fits; publication pending; retain full APC concentration goal.
+
+Review: both entry fits and the K512 sampled fit completed. No development gain; sampled final RMSE1.11375 vs differentiable1.09575, immediate1.09556. All392,830predictions/final gradients, all2,000sampled Adam arithmetic updates and five sampled gradients independently verified;22focused tests pass. Failed original500-update numerical attempt preserved. Reports/registry ready; publication pending. Full APC goal active, no new test evaluation.
+
+
+## Training-only kinetic capacity decomposition
+
+Previous goal turn: progress (qualified entry quadrature; completed deterministic fits; launched sampled fit). Plan: experiments/agents/codex/plans/digestion-capacity-decomposition.md.
+- [x] Register fixed source/reference and qualify necessary-shape projection.
+- [x] Audit/free supported condition bond rates; fit unregularized reference and capacity diagnostic.
+- [x] Independently verify all outcomes; publication pending alongside completed entry comparison.
+- [x] Freeze rate-space optimization audit before a new biological hypothesis; keep full APC objective active.
+
+Review: verified training RMSE.88315(no penalty),.79734(free2,121rate groups),.44438/.40762(necessary immediate/entry shape bounds),.33634(replicate/time means). Both fits exhaust500polishing evaluations and are not proven optima. All23,054KKTcertificates/67,576shape predictions and135,152fit predictions independently verify; every allocated coefficient trains. Preserved zero-update reference-schema preflight failure. Next plan: experiments/agents/codex/plans/digestion-rate-space-optimization.md. Both prior held-out strata remain excluded; reports/registry ready, publication pending.

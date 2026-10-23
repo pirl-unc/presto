@@ -1,0 +1,39 @@
+{
+  "all_allocated_parameters_have_gradients": {
+    "entry_constant": true,
+    "entry_sampled": true,
+    "entry_sequence": true,
+    "immediate_constant": true,
+    "immediate_sequence": true
+  },
+  "entry_rates_per_hour": {
+    "entry_constant": 589.7840153533489,
+    "entry_sampled": 1265.2268001949847,
+    "entry_sequence": 608.1529247090945
+  },
+  "final_gradient_norm": {
+    "entry_constant": 0.0006044583020313316,
+    "entry_sampled": 0.3232994315606515,
+    "entry_sequence": 0.0004939686649885898,
+    "immediate_constant": 1.6653345369377348e-16,
+    "immediate_sequence": 1.7340768872234728e-15
+  },
+  "fit_seconds": {
+    "entry_constant": 238.8464349579881,
+    "entry_sampled": 1295.2754534590058,
+    "entry_sequence": 239.45525579201058,
+    "immediate_constant": 8.493021500005852,
+    "immediate_sequence": 8.678929499990772
+  },
+  "parameters": {
+    "entry_constant": 2,
+    "entry_sampled": 41,
+    "entry_sequence": 41,
+    "immediate_constant": 1,
+    "immediate_sequence": 40
+  },
+  "prediction_count": 392830,
+  "promotion": false,
+  "reason": "Development-only; no independent test and no absolute-concentration calibration",
+  "test_not_evaluated": true
+}
