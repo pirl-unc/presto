@@ -505,10 +505,55 @@ or peptide identity outside the library, and a lineage prior is not an allele-le
 restriction claim. No trained TCRvdb checkpoint is included.
 
 The assay-only 32-example fitting gate has passed. Supervised annotation
-qualification, matched pretraining/replay comparisons, mean/ridge baselines and
-held-out IC50 qualification remain pending. Other data gates cover matched APC
+qualification, matched pretraining/replay comparisons, replicated convergence and
+held-out IC50 qualification remain pending. A later local one-epoch IC50 fit
+improves ranking and RMSE over a fixed composition ridge baseline, with varying
+predictions; it leaves class-II sensitivity and censored observations unresolved. Other data gates cover matched APC
 perturbations, quantitative MS component anchors/transfer and authorized paired
 TCR records. Noncanonical or short class-II cores, PTMs, direct biochemical
 cleavage/transport supervision and automatic full-cohort Hitlist preparation
 remain unsupported. The training-only diagnostic does not qualify a serving model
 or complete the full architecture and data plan.
+
+
+## Experimental peptide-product distribution
+
+`presto.models.peptide_availability.PeptideAvailabilityPolicy` provides a small
+variable-length span policy for the availability learning program. It takes a
+full parent sequence and a declared numeric context vector, then represents
+`p(start, length | parent, context)`. Default support includes lengths 1–40 and
+all valid protein positions. MHC binding does not filter this product pool.
+
+Fixed residue/composition/flank features feed separate start and conditional
+length MLPs. Exact enumeration exposes every valid span. Sampling evaluates all
+start scores, draws starts, then scores lengths only at distinct sampled starts.
+Repeated sampled products remain repeated observations. Selected log probabilities
+retain the exact gradient; sampling choices themselves are discrete.
+
+```python
+from presto.models.peptide_availability import PeptideAvailabilityPolicy
+
+policy = PeptideAvailabilityPolicy(min_length=1, max_length=40, context_size=0)
+state = policy.prepare("ACDEFGHIKLMNPQRSTVWY")
+samples = policy.sample(state, 64)  # zero-based starts, lengths, log probabilities
+all_spans = list(policy.enumerate(state, chunk_size=256))
+```
+
+These are untrained scores until a qualified fit supplies weights. The state
+contains an autograd graph and must be rebuilt after optimizer updates. Chunked
+enumeration bounds inference working tensors; retaining every output for backward
+still retains its graph. The policy saves conditional-network work during
+sampling, while start scoring remains linear in parent length.
+
+The [computational comparison](https://github.com/pirl-unc/presto/blob/codex/modular-presto-model-20261020/experiments/2026-10-22_1938_codex_variable-span-computation/README.md)
+verifies the same probabilities and gradients against full enumeration and an
+independent NumPy implementation. Its full-protein fixtures use synthetic
+mathematical costs and fixed weights, with no biological training or predictive
+validation. This primitive is not yet wired into the mixed-assay trainer.
+
+Per-precursor product yield, clearance/residence time, calibrated concentration,
+MS/capture response and MHC selection remain separate model/data requirements.
+Biological context must come from the shared curation/override path; the numeric
+vector does not infer species, assign gene knockouts, or establish feature-training
+support. A future trained integration must enforce the same tensor/feature
+coverage and source-admission gates as the canonical model.

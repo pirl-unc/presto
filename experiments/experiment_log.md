@@ -2288,3 +2288,55 @@ splits but do not establish homology/specimen independence. Use the shared recip
 path for a prospective observable-signal comparison; exact precursor pairing and
 protein aggregation remain unresolved. MAPP752 and the broader availability goal
 remain open. This is shared-source admission evidence, not another registry.
+
+## 2026-10-22_1938 — Full-protein exact versus lazy span computation
+
+- **Date/agent:** October 22, 2026; Codex / GPT-6.
+- **Directory:** [2026-10-22_1938_codex_variable-span-computation](2026-10-22_1938_codex_variable-span-computation/README.md).
+- **Inputs:** eight full proteins, four predeclared length bands per human/mouse
+  verified reference source, selected by sequence hash without assay labels.
+  Span lengths 1–40 and 1–53; all valid positions, no MHC/nonbinder filtering.
+- **Model:** new variable-length policy, fixed one-hot/prefix composition and
+  boundary/length/position features; two hidden32 tanh heads, 5,536parameters in
+  six tensors. Synthetic numeric context[0.25,-0.5], not biological metadata.
+  Start prior uses valid-length counts; no structurally cancelled output bias.
+- **Objective/training:** fixed seed42 weights; zero optimizer updates. Synthetic
+  span energy only. Exact expectation sum q*(logq+energy); fresh REINFORCE with
+  leave-one-out baseline, 8/64draws. No clipping, normalization, sample reuse,
+  reference KL, pretraining or biological training labels. No predictive split,
+  held-out assay metrics or predictive dumps apply; full mathematical references
+  and sample traces are preserved.
+- **Conditions/runtime:** exact, dense8/lazy8, dense64/lazy64 across16cases;
+  4warmups+12measured calls, seeded interleaving, CPU4threads/interop1/float32.
+  1,280calls; no Modal/GPU. Whole benchmark13.45s, family peakRSS0.719GiB;
+  independent replay1.141s. Exact source/config/model/checkpoint hashes and
+  executed recipes frozen at dirty24f1d2b.
+
+| Human2,240residues, lengths1–40 | Median forward/backward | Conditional-network rows | Cost queries |
+|---|---:|---:|---:|
+| Exact expected cost |31.371ms|89,600|88,820|
+| Dense REINFORCE8 |17.296ms|89,600|8|
+| Lazy REINFORCE8 |2.374ms|320|8|
+| Dense REINFORCE64 |17.309ms|89,600|64|
+| Lazy REINFORCE64 |3.364ms|2,513.3mean|64|
+
+All conditions also score2,240starts. Actual hook counts verify network work;
+query counts alone do not establish savings. Across16cases, dense/lazy runtime
+ratios are2.06–8.79×(8draws),1.33–6.91×(64draws). All512paired sample traces agree;
+max selected-gradient difference1.77e-8. Independent NumPy MLP/normalization and
+analytic backprop reproduce678,190span probabilities and all16exact gradients,
+source selection and raw timing/work summaries. Fourteen unit tests, Ruff and
+strict docs pass. Scope is this local fixed-weight workload, not convergence or
+a hardware ranking.
+
+Mean-gradient probes,128fresh estimates each: human relative L2error0.341/0.106
+for8/64draws; mouse0.279/0.104. Corresponding64-draw cosines0.9946/0.9949. Sampling
+still introduces estimator noise even though dense/lazy selected gradients agree.
+
+**Decision:** retain exact enumeration as reference and use lazy conditional
+scoring for sampled comparisons. It reduces actual network work without changing
+the policy/objective. The O(L) start calculation remains, and chunked enumeration
+does not automatically bound autograd storage. The primitive is not yet wired
+into the canonical mixed-assay trainer or biologically fitted; precursor yield,
+clearance, MS response, APC context and calibrated concentration remain separate
+requirements. Shared recipe739/MAPP752 and the broader availability goal stay open.

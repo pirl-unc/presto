@@ -12179,3 +12179,14 @@ Previous goal turn: progress. Plan: experiments/agents/codex/plans/pxd057588-sha
 - [x] Independently verify, report recipe gaps and prepare the biological handoff.
 
 Review: actual shared generation and all mouse-reference mappings independently verified. Source-label support reduces663to661shared parents; exact specimen pairing and aggregate precursor quantities remain unresolved. No biological fit. Publication follows verification.
+
+## 2026-10-22 variable-length availability policy
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/variable-span-policy.md.
+- [x] Revalidate shared recipe status and specify exact/lazy policy equivalence.
+- [x] Implement variable-length support and lazy conditional scoring.
+- [x] Verify probability, support, gradients and boundary behavior.
+- [x] Register and run a bounded real-sequence computational comparison.
+- [x] Prepare publication without implying biological training or calibration.
+
+Review: exact/lazy computation and independently derived NumPy gradients agree; actual CPU/network savings measured on full proteins.14unit tests, formatting/lint and strict docs pass. Source admission and biological training remain open.
