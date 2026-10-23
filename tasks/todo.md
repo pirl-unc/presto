@@ -12479,4 +12479,14 @@ Plan: experiments/agents/codex/plans/fragment-state-length-qualification.md; reg
 - [x] Measure actual-parent runtime/precision with source targets closed before freezing biological settings.
 - [x] Independently verify, publish all positive/negative evidence and preserve the full APC goal.
 
-Review: independent mask-generator/Frechet replay passes all numerical cases, 432 Monte Carlo groups and288 event histories. All42 actual-parent workers are terminal:17/21 exact and21/21 sampled complete; four positive-eta exact cases exceed60s. All38 successful arrays replay; no biological fit admitted. New structured-resolvent/CRAM qualification plan frozen. No new measurement labels, test exposure or shared-environment changes. Publication pending. Previous architecture-answer turn made no experimental change; current turn closes terminal evidence and changes the next numerical action. Goal remains active.
+Review: independent mask-generator/Frechet replay passes all numerical cases, 432 Monte Carlo groups and288 event histories. All42 actual-parent workers are terminal:17/21 exact and21/21 sampled complete; four positive-eta exact cases exceed60s. All38 successful arrays replay; no biological fit admitted. New structured-resolvent/CRAM qualification plan frozen. No new measurement labels, test exposure or shared-environment changes. Published at2903e11; all165 artifact hashes and immutable remote README match. Prior0361e0dCI passed;2903e11CI pending. Previous architecture-answer turn made no experimental change; current turn closes terminal evidence and changes the next numerical action. Goal remains active.
+
+
+## Structured fragment-state rational solver
+
+Previous turn recovered terminal numerical/runtime evidence; original mathematical gates pass but four long-parent runtime cases fail. New family experiments/2026-10-23_1846_codex_fragment-rational-solver.
+- [x] Qualify full-support triangular shifted solve and its gradients.
+- [x] Compare fixed CRAM16/48 exponential grids and full-parent runtime without biological targets.
+- [ ] Independently verify all outcomes, publish, and determine biological-loss qualification next.
+
+Review: all27 shifted solves/270 exponential cases pass numerical accuracy; all50 runtime cases complete. Both orders fail strict positivity. Independent replay and48 directional finite differences pass; full-parent CRAM48 reference parity within3.78e-15 counts/2.39e-15 gradients. New positive boundary-importance plan frozen. No biological fit admitted. Publication pending; full APC availability objective active.

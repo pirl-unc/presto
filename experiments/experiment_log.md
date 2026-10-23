@@ -2837,3 +2837,22 @@ Publication closure: report/artifacts committed and pushed at `eb96219`; all59 r
 - **Precision/runtime:** K512 one-group tagged-residue TV0.146–0.744 and40-feature/eta gradient relative error0.0346–0.185 across17 matched cases; artificial readout, no biological variance guarantee. All38 successful full outputs replay. Qualification10.565s/424MB;42-worker suite332.458s; independent verification0.634s/199MB. CPUfloat64/complex-free reference, one thread, no Modal/GPU or environment mutation.
 - **Reproduction:** HEAD0361e0d plus explicitly frozen dirty module/test sources; launch/runtime/verify scripts and hash configs under reproduce/, all worker arrays and failures under results/ and launch_logs/. Nine focused production tests pass1.59s; no full-suite claim.
 - **Winner/decision:** mathematical formulations qualify, but differentiable runtime gate fails. No biological model promoted or new fit admitted. Preserve full support and qualify a structured triangular shifted solve/CRAM exponential under the next frozen plan. Sampling speed does not establish distribution fidelity. The full APC concentration goal remains active; no new Hitlist data gap arose from this numerical experiment.
+
+
+## 2026-10-23_1846 — Structured full-fragment rational solver
+
+- **Date/agent:** October23,2026; Codex / GPT-6; [family](2026-10-23_1846_codex_fragment-rational-solver/README.md).
+- **Model/source:** same complete-fragment length-dependent cut model and canonical frozen training-parent inputs74f615a7…; manifest5f616170…/40-coefficient initializer2400f214…. All lengths1..L, eta=-1/0/+1, no new measured quantities, source recipes or labels. The O(L²) decreasing-length shifted solve feeds fixed IPF CRAM16/48; positive uniformization and discrete full-path references remain unchanged.
+- **Training/evaluation:** no fitting/pretraining/optimizer/biological loss or synthetic biological labels; arbitrary numerical count readout only. No validation/test split or assay metrics because this is input-only numerical/runtime qualification. No binding/stability/TCR/MS-response head trained. Full270 numerical predicted/reference count/gradient records and50 full-parent outputs retained.
+- **Numerical gates:** all27 shifted-solve value/gradient probes and270 dense exponential/Frechet cases pass accuracy. CRAM16/48 maximum count error1.73e-13/5.47e-15, gradient2.44e-12/2.70e-13. Strict positivity fails24/19 numerical cases, minimum−9.53e-15/−9.13e-45. Values are not clipped or floored.
+
+| Actual-parent variant | Completed | Seconds/case | PeakRSS | Cases with negatives |
+|---|---:|---:|---:|---:|
+|CRAM16, one step|21/21|0.182–1.363|554MB|13|
+|CRAM48, one step|21/21|0.552–4.156|1,180MB|10|
+|CRAM16, two steps on prior timeouts|4/4|1.960–2.757|874MB|4|
+|CRAM48, two steps on prior timeouts|4/4|6.082–8.458|2,100MB|4|
+
+- **Verification/runtime:** 50-worker suite138.279s; qualification4.244s/256MB; independent replay23.178s/169MB. All50 full arrays/readouts and negativity records replay. CRAM48 matches17 preceding uniformization count/gradient arrays to3.78e-15/2.39e-15; eta0 independent formulas pass. Three independent FD directions on16 formerly-timed-out variant cases agree within1.11e-10. Those directions and cross-order agreement are not a universal true-error certificate. All original failures preserved.
+- **Reproduction:** HEAD2903e11 plus frozen dirty experiment sources, full stage commands/configs/hashes/source copies. Float64/complex128 one-thread local CPU, no Modal/GPU or environment mutation. Production fragment module unchanged; separate prior nine-test evidence remains. Original family165 closure hashes and immutable remote README verified at2903e11.
+- **Decision:** CRAM48 is the more accurate numerical candidate and fixes the observed runtime limitation, but neither method is admitted to biological log training under the frozen positivity rule. Next: positive boundary-conditioned full-path importance means/scores, including rare-product log and finite-sample bias/variance qualification. No new Hitlist data gap; machinery/observation/clearance and the full APC concentration objective remain open.
