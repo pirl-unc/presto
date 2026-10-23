@@ -12356,3 +12356,16 @@ Review: pending; full concentration objective remains active.
 Source audit review:18 original files/17 condition archives recovered; all CRCs and545,664 raw run joins checked. H4 independent arithmetic reproduces27,432 raw quantities and13,284 final entries to5.04e-15. RF1 has2,278 contradictory time labels, requiring explicit shared-source reconciliation. Final forced zeros/censoring/control joins preclude naive direct kinetic fitting. No new biological fit; concentration objective active. Publication and Hitlist770 update pending.
 
 Publication closure: controlled-response report1110d49 and source audit0b92401 are pushed to Presto131. All53 source-audit closure files are tracked with exact hashes and immutable remote README bytes match. Hitlist759/770 and Presto131 updates read back exactly; issues remain open and PR remains draft. All local transfer/audit/replay handles are terminal. Authoritative progress this turn: recovered full processed source, established H4 arithmetic correctness, and found the RF1 timing conflict that changes admission. No kinetic fit or concentration qualification. Next action: isolated shared Hitlist770 adapter with source-conflict handling, then frozen exact/sampled kinetics; unrelated checkout work preserved.
+
+## Shared digestion admission and kinetic mathematics
+
+Previous goal turn: progress (recovered source, H4 replay and RF1 conflict).
+Plan: experiments/agents/codex/plans/shared-digestion-admission.md and controlled-fragment-kinetics.md.
+- [x] Shared Hitlist source adapter in isolated branch; actual source replay passes.
+- [x] Register and verify identical exact/sampled fragment process, rate recovery and independent optimizer replay.
+- [ ] Source-backed observation/recipe gates before biological fitting.
+- [ ] Publish code/evidence and unresolved limitations.
+
+Review: pending.
+
+Review: shared source retains all218 old payloads and all original typed values; synthetic exact and sampled cuts conserve mass, agree mathematically and recover known rates. All10,000 updates independently replay. Full biological objective remains active. Recipe/preprocessing arithmetic, biological likelihood and sequence-to-rate fit remain next; publication/software closure in progress.

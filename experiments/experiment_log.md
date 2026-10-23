@@ -2615,3 +2615,34 @@ Integration publication review: source execution remains pinned to1442c03. Publi
 - **Runtime:** local CPU, no Modal/GPU/install. Full963,763,954byte download258.56s; archive audit32.69s; H4 replay1.98s. Memory not recorded. Presto1110d49 plus frozen dirty-state/source bundle. Source tag aSPIRE1.0/c3d6c9112b2fd88d7e9453b1f23dc338f52c172b is a reference, not an asserted deposited execution version.
 - **Decision:** source supports a richer kinetic experiment after shared Hitlist#770 admission; quarantine/reconcile RF1 time conflict, preserve control/censor provenance and group all Ffh ratios. No predictive winner; previous common-shift and uniform controls remain. Follow the frozen exact bond-cut/discrete-partition design only after a coherent observation likelihood and source recipe exist. Full availability/concentration goal remains active.
 - **Reproduction/artifacts:** `reproduce/launch.sh`, source hashes/config and retained failure logs; raw `/private/tmp/presto-digestion-assets`, source-assets.json/member inventory; report/results linked above.
+
+
+## 2026-10-23_1018 — Shared purified-proteasome digestion source
+
+- Date/agent: October23,2026; Codex / GPT-6. [Report](2026-10-23_1018_codex_shared-digestion-source/README.md), [exact source/launch contract](2026-10-23_1018_codex_shared-digestion-source/reproduce/launch.json).
+- Source: all18 pinned MSV000092631/PXD044463 originals,17 condition archives/15 literal constructs,388 acquisitions. Shared Hitlist candidate2.0.8/catalog14; producer b1c5de4 plus frozen adapter/catalog changes. All218 previous source payloads retained byte-identically;250 package files verify and33 baseline audits match.
+- Curation: no training selection. Separate raw, filtered and final layers; full original fields, modifications, splice/position claims, enzyme/substrate species, physical protocol, controls and replicate labels. Preserve2,278 RF1 time conflicts, six enzyme-label conflicts,269 annotation-only rows,62,860 forced zeros and4,782 final missing slots. No implicit negatives or concentration conversion.
+- Training/pretraining/synthetic labels/loss weights/assay mapping: none. No predictive split or validation/test predictions because this is source qualification. Binding thresholds do not apply.
+- Condition/outcome: shared source generation and all11 canonical relation queries pass. Independent no-Hitlist verifier replays every selected original CSV/workbook/FASTA/RData record and typed numeric state against canonical query hashes. This is typing/source conservation, not independent all-substrate preprocessing arithmetic.
+- Runtime: local CPU, no Modal/GPU;379.52s build/open/query,3.884GiB process peak. Independent replay183.15s/1.001GiB. R child memory not separately measured. Exact environment/git/dirty/source receipts and verification commands retained.
+- Software: Hitlist977adc2;37 focused tests and the normal guarded suite3,341 tests pass, with format/lint and strict docs. Source bytes remain exact to the frozen execution.
+- Decision: source support qualified for review; no training-ready recipe yet. H4-only arithmetic proof remains narrower than the source. Next replay admitted quantitative transformations, exclude/reconcile RF1, inspect temporal repeatability and freeze canonical recipe/splits/observation likelihood. Hitlist770 and full APC concentration objective remain open.
+
+## 2026-10-23_1021 — Independent-cut exact versus sampled kinetic qualification
+
+- Date/agent: October23,2026; Codex / GPT-6. [Report](2026-10-23_1021_codex_independent-cut-qualification/README.md), [prospective plan](2026-10-23_1021_codex_independent-cut-qualification/reproduce/plan.md), [launch/source/environment contract](2026-10-23_1021_codex_independent-cut-qualification/reproduce/launch.json).
+- Synthetic data: one six-residue substrate/five irreversible independent cuts, rates0.08/0.18/0.45/0.9/1.4 per hour. All21 contiguous products, complete fragment partitions, conserved residue mass, unit MS response, no noise/missingness/selection. Outputs are expected copies per initial molecule. No biological assay labels or binding-threshold metrics.
+- Training: five directly learned log rates (no sequence encoder); matched seeds42/43/44, Adam lr0.03,1,000 full-time updates, no pretraining/regularization/GRPO modifications. Exact MSE of expected amounts versus unbiased two-independent-group score gradients with leave-one-out baselines. One-rate exact control shares same budget. Fixed final checkpoint; no validation/test selection.
+- Splits: train times0.2/0.7/1.5/4/12, validation0.4/1/2.5/8, test0.1/0.6/2/6/20 hours. Temporal holdouts on one known synthetic substrate, not biological generalization. All2,940 per-span train/validation/test predictions and targets preserved.
+
+| Variant | Median relative rate error | Median validation RMSE | Median test RMSE | Median fit seconds |
+| --- | ---: | ---: | ---: | ---: |
+| exact | 1.542e-16 | 4.7256e-17 | 5.0678e-17 | 0.1745 |
+| sampled32 | 0.03431 | 0.0071473 | 0.0063282 | 0.2809 |
+| sampled128 | 0.016633 | 0.0031173 | 0.0027702 | 0.4626 |
+| constant | 0.72036 | 0.16516 | 0.14176 | 0.1685 |
+
+- Mathematics: exact span expectations versus all32 cut states error1.11e-16, residue mass error0, two-group gradient expectation error1.82e-17. Gradient RMS relative error0.788/0.344/0.170 for groups8/32/128 at fixed initial probe. All stored probes/SE retained.
+- Verification: independent NumPy state sums/analytic derivatives/Adam replay all10,000 updates and match30 noninitial checkpoints (max3.46e-14 log-rate error),2,940 prediction values and metrics (max1.93e-15). Torch used only for uniform RNG stream. Preserved initial verifier failure reveals analytically tied control ranks; explicit mathematical-class correction changes no fit or gate.
+- Winner/decision: exact preferred reference while enumerable. Both sampled sizes pass frozen recovery criteria; median relative rate errors3.43%/1.66%. Synthetic success does not resolve biological production/MS identifiability, learn sequence-to-rate transfer or establish APC concentrations.
+- Runtime/work: local CPU float64/one thread, no Modal/GPU. Complete checks/fits4.26s/338.2MiB; first exact fit includes startup1.068s versus0.174s later, so runtime medians are descriptive. Per-run exact105,000 span expectations versus320,000/1,280,000 sampled partitions; all25,000 bond-probability evaluations. No compute-saving claim. Code, checkpoints, predictions, raw gradient probes, both verifier attempts, source snapshots and original launch are in the family directory.

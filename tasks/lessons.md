@@ -539,3 +539,7 @@ Keep applicability reporting separate from model features and the measured label
 ## 2026-10-23 — concurrent upstream release state
 
 - Before editing an issue or reporting a dependency as open, inspect its actual current state and latest upstream release. A body can contain stale open-work language even after another change closed it. Preserve legitimate closure and reconcile draft data adapters with the new canonical interface; do not relabel pinned experimental inputs as a newer release.
+
+## 2026-10-23 — analytic ties in distribution controls
+
+- Mathematical ties can occur within a nonconstant predictor. Before interpreting rank metrics, preserve the raw values and evaluate equivalent spans through their exact analytic class (time, length and boundary type for a uniform cut-rate control). Do not widen numerical tolerances or let summation roundoff turn those ties into ranks.
