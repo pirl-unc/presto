@@ -1,0 +1,166 @@
+{
+  "manifest_sha256": "9f6cc39a03f835dd3cb43f7335f1c6487fb3eaf4301946ff23dac6585b4c6319",
+  "n_package_files": 111,
+  "output": "/private/tmp/hitlist-v2-mapp-external-first",
+  "seconds": 43.29313420900144,
+  "sources": {
+    "pxd009092": {
+      "adapter_schema_version": 1,
+      "asset_receipt_sha256": "70956e64c898963d48de904a96d1baee549eb9056bc013d55492a530ea3139f6",
+      "reconciliation": {
+        "maximum_absolute_filter_replay_error": 393010.0,
+        "n_channels_rows": 18,
+        "n_derivation_inputs_rows": 540034,
+        "n_evidence_rows": 149959,
+        "n_filtered_zeros_with_positive_evidence": 9276,
+        "n_groups_rows": 2039,
+        "n_peptide_rows_rows": 10673,
+        "n_publisher_TNF_IFN_numeric": 5311,
+        "n_publisher_UT_numeric": 4983,
+        "n_publisher_cells_rows": 36207,
+        "n_publisher_quantities_rows": 25244,
+        "n_quantity_measurements_rows": 362882,
+        "n_quantity_results_rows": 192114,
+        "n_quarantined_groups": 36,
+        "n_source_assertions_rows": 74,
+        "n_source_records_rows": 162767
+      },
+      "registry": {
+        "dataset_accession": "PXD009092",
+        "limitations": [
+          "captured_pool_not_free_concentration",
+          "unresolved_specimens",
+          "source_FDR_conflict",
+          "search_scope_6_to_40",
+          "imputed_header_conflict",
+          "parallel_tryptic_specimen_and_condition_map_unresolved"
+        ],
+        "measured_pools": [
+          "proteasome_associated_fragment"
+        ],
+        "measurement_grain": "peptide_by_source_acquisition_run",
+        "n_primary_peptide_rows": 10673,
+        "organism_scope": "human_HEK293_measured_cells",
+        "quantity_artifact": "typed/quantity_measurements.parquet",
+        "rights": {
+          "PRIDE_deposit": "EBI terms of use",
+          "publisher_workbooks": "unverified_not_bundled_in_distribution"
+        },
+        "source_id": "pxd009092",
+        "training_admission": "deferred_pending_endpoint_recipe_and_parent_reference_join"
+      }
+    },
+    "pxd057588": {
+      "adapter_schema_version": 1,
+      "asset_receipt_sha256": "14419b00aeff8caebdc67917522e329b63b07d1ea85bbb59e15ef0c07bc3a27c",
+      "reconciliation": {
+        "maximum_absolute_replay_error_log2": 2.550737399076297e-14,
+        "n_channels": 53,
+        "n_contrasts": 32,
+        "n_deposited_files": 65,
+        "n_deposited_raw_files": 50,
+        "n_derivation_inputs": 802896,
+        "n_fold_change_measurements": 200724,
+        "n_intensity_results": 309126,
+        "n_panel_records": 62911,
+        "n_panels": 15,
+        "n_primary_peptide_rows": 35772,
+        "n_quantity_measurements": 509850,
+        "n_sdrf_annotated_raw_files": 6,
+        "n_sdrf_cells": 3240,
+        "n_sdrf_rows": 72,
+        "n_source_assertions": 37,
+        "n_source_assets": 17,
+        "n_source_cells": 851830,
+        "table_counts": [
+          {
+            "maximum_absolute_replay_error_log2": 1.6209256159527285e-14,
+            "n_channels": 6,
+            "n_fold_change_measurements": 8472,
+            "n_intensity_results": 16944,
+            "n_panel_records": 3540,
+            "n_primary_peptide_rows": 2824,
+            "n_source_cells": 47408,
+            "table_number": 7
+          },
+          {
+            "maximum_absolute_replay_error_log2": 1.4654943925052066e-14,
+            "n_channels": 6,
+            "n_fold_change_measurements": 10662,
+            "n_intensity_results": 21324,
+            "n_panel_records": 3711,
+            "n_primary_peptide_rows": 3554,
+            "n_source_cells": 54446,
+            "table_number": 8
+          },
+          {
+            "maximum_absolute_replay_error_log2": 1.4127587988355117e-14,
+            "n_channels": 9,
+            "n_fold_change_measurements": 7854,
+            "n_intensity_results": 11781,
+            "n_panel_records": 1444,
+            "n_primary_peptide_rows": 1309,
+            "n_source_cells": 31108,
+            "table_number": 9
+          },
+          {
+            "maximum_absolute_replay_error_log2": 1.532107773982716e-14,
+            "n_channels": 11,
+            "n_fold_change_measurements": 20904,
+            "n_intensity_results": 28743,
+            "n_panel_records": 3478,
+            "n_primary_peptide_rows": 2613,
+            "n_source_cells": 80149,
+            "table_number": 10
+          },
+          {
+            "maximum_absolute_replay_error_log2": 2.550737399076297e-14,
+            "n_channels": 9,
+            "n_fold_change_measurements": 150660,
+            "n_intensity_results": 225990,
+            "n_panel_records": 50220,
+            "n_primary_peptide_rows": 25110,
+            "n_source_cells": 627790,
+            "table_number": 11
+          },
+          {
+            "maximum_absolute_replay_error_log2": 1.532107773982716e-14,
+            "n_channels": 12,
+            "n_fold_change_measurements": 2172,
+            "n_intensity_results": 4344,
+            "n_panel_records": 518,
+            "n_primary_peptide_rows": 362,
+            "n_source_cells": 10929,
+            "table_number": 12
+          }
+        ]
+      },
+      "registry": {
+        "candidate_sources": {
+          "PXD009092": "discovery_snapshots_only_no_verified_measurement_table",
+          "PXD013455": "contract_only_fraction_independence_unresolved",
+          "PXD017407": "contract_only_absolute_calibration_scope_unreviewed",
+          "PXD056426": "contract_only_control_loss_quantities_unreviewed"
+        },
+        "dataset_accession": "PXD057588",
+        "measured_pools": [
+          "mhc_bound",
+          "bulk_digest_peptide"
+        ],
+        "measurement_grain": "peptide_row_by_assay_scoped_channel",
+        "n_fold_change_measurements": 200724,
+        "n_intensity_results": 309126,
+        "n_primary_peptide_rows": 35772,
+        "organism_scope": "mouse_tables_7_to_12_only",
+        "rights": {
+          "API_and_SDRF_snapshots": "unverified",
+          "PRIDE_deposit": "CC0",
+          "publisher_workbooks": "CC BY 4.0"
+        },
+        "source_cells_artifact": "typed/source_cells.parquet",
+        "source_id": "pxd057588",
+        "training_admission": "deferred_pending_material_mapping_and_selection_review"
+      }
+    }
+  }
+}

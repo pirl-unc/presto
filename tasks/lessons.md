@@ -527,3 +527,7 @@ Keep applicability reporting separate from model features and the measured label
   does not establish absent hardware; verify with a permitted local GPU calculation.
 - Distinguish a local feasibility run from converged predictive performance and
   biological qualification; preserve the broader availability objective.
+
+## 2026-10-22 — file upstream data gaps as they appear
+
+- When a biological experiment hits missing data, metadata, pairing or representation limits, file a concrete Hitlist issue with source evidence, the blocked modeling use and acceptance criteria. Search existing issues first; link or extend an existing owner instead of creating duplicates. Do not leave actionable gaps only in Presto experiment prose.

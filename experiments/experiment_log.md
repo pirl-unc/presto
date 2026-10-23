@@ -2340,3 +2340,43 @@ does not automatically bound autograd storage. The primitive is not yet wired
 into the canonical mixed-assay trainer or biologically fitted; precursor yield,
 clearance, MS response, APC context and calibrated concentration remain separate
 requirements. Shared recipe739/MAPP752 and the broader availability goal stay open.
+
+## 2026-10-22_2212 — Shared MAPP source ingestion
+
+- **Date/agent:** October22,2026,22:12America/New_York; Codex / GPT-6.
+- **Directory:** [shared-mapp-import](2026-10-22_2212_codex_shared-mapp-import/README.md).
+- **Source:** eleven pinned PXD009092 original tables/publisher workbooks and
+  PRIDE project/file snapshots; shared Hitlist source adapter with existing
+  PXD057588 and verified supporting predecessor. Proteasome-associated HEK293
+  fragments, not free concentration, flux or MHC-selected ligands.
+- **Curation:** preserve every raw field/row, flags, quarantined group IDs,
+  actual six conditions, unresolved specimens, parent claims, confidence conflict,
+  search6–40scope and publisher imputation conflict. No negative labels from
+  missing/filtered zeros; no inferred precursor denominator or gene knockouts.
+- **Training contract:** no model, pretraining, optimizer, synthetic biological
+  labels, assay heads, loss or predictive split; held-out predictive metrics do
+  not apply. This is a source-integration experiment, not a fit.
+- **Runtime:** producer43.29s, independent replay9.46s, local CPU; no Modal/GPU.
+  Frozen dirtyHitlistca0c729/Presto80d5f9c, exact commands and source snapshots.
+  First completed package is development1.82.24; pending source PR reserves1.82.25.
+
+| Verified item | Count |
+|---|---:|
+| Original TSV records |162,767|
+| Peptides / evidence / source runs |10,673 /149,959 /18|
+| Quantity representations |362,882|
+| Derivation edges |540,034|
+| Workbook XML cells |36,207|
+| Missing evidence PEP NaN values |74,573|
+| Filtered zeros with positive evidence |9,276|
+| Reproduced publisher numeric UT /TNF+IFN |4,983 /5,311|
+
+Independent original TSV/XML and relation replay verifies111package files and
+all listed values/edges. All160,095filtered values reproduce within frozen
+relative1e-4/absolute1rounding tolerance; maximumrelative8.16e-5. Two failed
+attempts are preserved (launcher path type, explicit source PEPNaN), followed by
+successful source generation.16focused tests and format/lint pass; full normal
+suite passes3,224tests in356.83s (10warnings). Missing parallel-proteome run metadata
+and independent precursor estimates are tracked in Hitlist757. Reference join/query/deployment and biological fitting
+remain open in Hitlist752/739. No model winner applies; decision is to carry the
+verified shared importer forward in [Hitlist draftPR758](https://github.com/pirl-unc/hitlist/pull/758), commitd012527, retaining uncertainty and the full goal.

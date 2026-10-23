@@ -12190,3 +12190,12 @@ Previous goal turn: progress. Plan: experiments/agents/codex/plans/variable-span
 - [x] Prepare publication without implying biological training or calibration.
 
 Review: exact/lazy computation and independently derived NumPy gradients agree; actual CPU/network savings measured on full proteins.14unit tests, formatting/lint and strict docs pass. Source admission and biological training remain open.
+
+## 2026-10-22 MAPP shared import
+
+Prior turn: progress. Plan: experiments/agents/codex/plans/mapp-shared-import.md.
+- [ ] Implement missing shared source adapter in isolated Hitlist worktree.
+- [ ] Verify source conservation and package integration.
+- [ ] Publish and use shared generation for next biological comparison.
+
+MAPP import review: first shared generation and original TSV/XML replay verified;3,224full/16focused Hitlist tests and lint pass. DraftHitlist758published atd012527; issue757filed/read back for missing parallel-proteome/precursor metadata. No biological fit; source-reference/query/release work remains.
