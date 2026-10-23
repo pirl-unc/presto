@@ -2648,3 +2648,42 @@ Integration publication review: source execution remains pinned to1442c03. Publi
 - Runtime/work: local CPU float64/one thread, no Modal/GPU. Complete checks/fits4.26s/338.2MiB; first exact fit includes startup1.068s versus0.174s later, so runtime medians are descriptive. Per-run exact105,000 span expectations versus320,000/1,280,000 sampled partitions; all25,000 bond-probability evaluations. No compute-saving claim. Code, checkpoints, predictions, raw gradient probes, both verifier attempts, source snapshots and original launch are in the family directory.
 
 Publication follow-up: both reports and frozen artifacts are pushed at Presto1503d67. All77 closure artifacts match tracked hashes and remote README blob hashes match local files. Hitlist draft773 and issue770 retain the source/recipe distinction; Presto131 remains draft. Local3,341 Hitlist tests pass; hosted checks remain in progress. The independent-cut recovery is synthetic and does not promote any biological availability baseline.
+
+
+## 2026-10-23 — All-substrate digestion arithmetic
+
+- Agent/model: Codex / GPT-6; [report/reproduction](2026-10-23_1057_codex_digestion-arithmetic/README.md). Registered before replay, Presto5a10094 plus recorded dirty state/source hashes. Local CPU only, OMP/OPENBLAS1; no Modal/GPU.
+- Data: original Soh2024 MSV000092631/PXD04446317-condition archive, source package b3cfffc4, original CSV and independently decoded RData. Source faithfulness, no predictive split or synthetic labels; no fitting/pretraining/losses/assay heads or nM/binding metrics. Exact recipe and aSPIRE reference pinned in launch.json.
+- All17 conditions pass:545,664 raw quantities,1,187,416 distinct precursor rows,280,664 final slots. Maximum relative error9.30e-15 across raw/technical/biological/final layers; all4,782 missing slots and62,860 zeros match. Complete per-condition CSV/JSON and empty discrepancy ledger retained.
+- New admission-relevant finding:10,746 mock zero rows inserted for CaM(b1,b2), IF2(b1), UBE2S(2), RF1(b1,b2). This means missing filtered baselines, not proof that original raw zero controls are absent. RF1 time conflict remains despite arithmetic agreement. Search/synthesis filtering not independently qualified.
+- Verifier checks prior independent H4 invariants and detects deliberate in-memory raw/final perturbations plus downstream mean errors; originals unchanged. Runtime58.247s/1.332GiB peakRSS. No model winner; decision is actual-baseline-aware shared admission, preserving exclusions and short/nonbinding products. Full concentration objective stays open.
+
+## 2026-10-23 — Shared contiguous digestion time-course admission
+
+- Agent/model: Codex / GPT-6; [report/reproduction](2026-10-23_1123_codex_digestion-timecourse-admission/README.md). Frozen initial recipe/source and reviewed3e0b999 full archive retained. Local CPU only; no training, pretraining, synthetic labels, predictive metrics or binding thresholds because this is source/eligibility verification, not a model evaluation.
+- Data: original source PCP/no splice alternative, canonical20, unique I/L-equivalent contiguous span, actual filtered and metadata-agreeing raw zero evidence, no RF1 time conflict, at least three positive nonzero times and repeated source biological labels sharing three times. Preserve raw arbitrary MS targets, all slots/aliases/reasons; no normalization or negative imputation. No MHC affinity/length cut. Original selection remains a limitation.
+- Fixed components over all source final peptides and identical constructs before eligibility; all Ffh conditions grouped. Sorted component hashes round-robin5; folds0/1=test/val, others train. No response-based resplit.15 source groups;11 admitted parents.
+
+| Partition | Parents | Conditions | Curves | Positive measurements |
+|---|---:|---:|---:|---:|
+| Train |6|7|23,054|91,226|
+| Validation |3|3|3,832|15,037|
+| Test |2|2|3,680|19,160|
+
+- Independent Hitlist-free replay checks all50,372 curve dispositions,280,664 source slots and125,423 targets, grouping, spans and zero provenance. Admission50.335s/3.235GiB; verification7.867s/2.001GiB. Canonical original/reviewed derived exports archived, full raw paths/hash receipts explicit.
+- Reviewed source migration retains every quantitative/mapping column;17 context JSON strings add exactly nine inventory counts. Original failed over-strict comparison preserved. Verification-only amendment confirms unchanged numerical targets/eligibility/partitions; explicit unit/scale and source slot statuses added. Reviewed manifest42cda75e. Subsequent raw-zero cardinality strengthening changes one already-excluded curve reason only; admitted examples/components byte-identical, receipt retained.
+-35 initial focused tests; immutable3e0b999 normal guarded suite3,350passed/10warnings/176.08s, two workers, no memory override; not an integration-suite or later-head claim. Source773 merged; later recipe review/deployment remains separate. No biological predictive winner. Next train-only repeatability then frozen kinetics. Upstream review independently inspected held-out descriptive repeatability; record exposure, preserve splits and require external validation.
+
+## 2026-10-23 — Training-only digestion temporal repeatability
+
+- Agent/model: Codex / GPT-6; [report/reproduction](2026-10-23_1138_codex_digestion-temporal-signal/README.md). Presto5a10094/dirty state, exact source/code/configuration hashes and commands retained. Shared reviewed recipe42cda75e; no extra selection. Local CPU only,1.347s/0.936GiB, one-thread overrides, no Modal/GPU.
+- Endpoint: log10 positive MS signal ratio to each peptide/condition's earliest common positive time. Matched other source biological-label response predicts each label in both directions; no-change predicts0. No learned parameter, optimizer/pretraining/synthetic biological label or nM/binding metrics. These are supplied-measurement comparisons, not zero-shot sequence predictions. No validation/test responses evaluated by this family; all67,576 train predictions are retained.
+- Weight times within curve, curves within condition, conditions within parent, parents equally. Training23,054curves/11,527pairs/seven conditions/six parents. Gate frozen before outcomes: lower equal-parent MSE and improvement in at least half the parents.
+
+| Condition | Equal-parent log10 RMSE | Pooled log10 RMSE | Pooled Pearson | Pooled Spearman |
+|---|---:|---:|---:|---:|
+| No change |0.98579|1.08604|undefined|undefined|
+| Other biological label |0.67267|0.61799|0.81557|0.75792|
+
+- Gate passes5/6 parents; LEDGF worsens and remains included. Ffh ratios count as one parent. Pooled prediction/target SD1.01755 are equal by the bidirectional design, not independent confirmation. Independent scalar log-ratio/source/ID and hierarchical-statistic replay checks every prediction and gate. Plot/CSV expose each parent.
+- Decision: proceed to a small ordered sequence-to-cut-rate model, fixed exact expectation reference and explicitly qualified sampled/hybrid gradients. Original selection/background processing, reference noise, only six training parents and missing MS calibration remain. Subsequent upstream held-out descriptive repeatability was seen; no held-out kinetic model fit exists, and future transfer is exploratory same-study evidence. Full APC concentration objective remains active. [Next model specification](agents/codex/plans/biological-independent-cut-fit.md).

@@ -12371,3 +12371,27 @@ Review: pending.
 Review: shared source retains all218 old payloads and all original typed values; synthetic exact and sampled cuts conserve mass, agree mathematically and recover known rates. All10,000 updates independently replay. Full biological objective remains active. Recipe/preprocessing arithmetic, biological likelihood and sequence-to-rate fit remain next; publication/software closure in progress.
 
 Publication closure: Presto1503d67 reports have exact remote/local README blobs and all77 closure artifacts are tracked with matching hashes. Hitlist draft773 opened; issue770 and Presto131 body updates read back exactly, both open and PRs draft. Source code977adc2 and documentation623afcb published; local3,341 tests pass. Hosted CI is in progress. The merge hook refreshed existing editable Hitlist metadata with no dependencies; pip check passes. Goal-turn classification: progress. No live local fitting/audit process remains. Next: all-admitted-substrate arithmetic, source-backed temporal observation recipe and parsimonious sequence-to-rate fitting, while checking final-head CI.
+
+## Digestion arithmetic and biological observation contract
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/digestion-arithmetic.md.
+- [x] Independently replay all-substrate raw and corrected quantity derivations.
+- [x] Resolve or document discrepancies without changing original source values.
+- [x] Freeze the next shared time-course admission and observation contract.
+- [ ] Publish reports/issue evidence and retain full concentration goal.
+
+Review: pending. Concurrent Hitlist source-review edits preserved.
+
+Current continuation: previous goal turn was no experimental progress (answered the architecture question). Revalidated the frozen recipe worktree; the old focused-test handle is missing, so a new focused run is recorded. Registered1123 admission now has a pinned launcher, source snapshot and existing prospective contract. Next: actual canonical admission, independent row/target/group replay, training-only signal, then a frozen biological fit. No change to original cohort/split rules.
+
+
+## Digestion admission and temporal signal closure
+
+- [x] All17 original arithmetic conditions and real-value perturbation checks pass.
+- [x] Canonical admission and independent full target/exclusion/component replay.
+- [x] Reviewed source metadata/zero-support conservation with no admitted label change.
+- [x] Prespecified training-only temporal repeatability and independent prediction replay.
+- [x] Freeze ordered sequence-to-rate and exact/sampled qualification specification.
+- [ ] Publish current reports and update shared issue775/770; preserve active concentration goal.
+
+Review:30,566curves/125,423positive measurements from6/3/2 train/val/test parents. Repeatability passes5/6 train parents; equal-parent RMSE.673 vs.986 flat. No biological model fit yet. Frozen3e0b999 passes3,350 normal guarded tests. Concurrent Hitlist review is preserved; it has exposed descriptive held-out repeatability, explicitly documented without any split/outcome tuning. All current local admission/replay/diagnostic/test handles are terminal. Goal-turn classification: progress.

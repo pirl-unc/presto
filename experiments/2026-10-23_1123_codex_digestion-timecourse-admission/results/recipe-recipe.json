@@ -1,0 +1,22 @@
+{
+  "baseline": "actual_filtered_zero_in_every_source_technical_label_and_raw_metadata_agreeing_zero;no_mock_zero",
+  "duplicates": "IL_alias_and_repeated_slot_collapse_only_if_values_agree_relative1e-10;otherwise_exclude_curve",
+  "endpoint": "source_selected_contiguous_corrected_positive_MS_timecourse",
+  "limitations": [
+    "source_search_and_synthesis_filter_not_independently_validated",
+    "observed_positive_selection_not_prospective_detection",
+    "MS_response_not_molar_concentration",
+    "technical_indices_not_assured_acquisition_pairs",
+    "source_biological_labels_not_independent_studies",
+    "exact_product_groups_not_homology_clusters",
+    "no_APC_transport_clearance_or_machinery_supervision"
+  ],
+  "mapping": "exactly_one_IL_equivalent_span_in_literal_construct;canonical20;source_PCP_without_splice_alternative",
+  "recipe_id": "digestion_contiguous_timecourses_v1",
+  "replication": "at_least_two_source_biological_labels_share_at_least_three_positive_nonzero_times",
+  "schema_version": 1,
+  "source_id": "soh2024_digestion",
+  "split": "all_source_final_peptide_IL_components_and_identical_constructs;sorted_component_hash_round_robin5;fold0_test,1_val,2to4_train",
+  "target": "original_positive_signal_in_arbitrary_units;no_normalization",
+  "zero_missing_policy": "retain_source_slots_and_dispositions;never_negative_or_imputed_target"
+}
