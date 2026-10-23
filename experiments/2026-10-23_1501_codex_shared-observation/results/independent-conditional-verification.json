@@ -1,0 +1,82 @@
+{
+  "mode": "conditional",
+  "all_checks_pass": true,
+  "variants": {
+    "conditional_sequence_response": {
+      "count": 105452,
+      "maximum_numeric_error": 7.105427357601002e-15,
+      "independent_metrics": {
+        "train": {
+          "n_observations": 90630,
+          "shape_mse": 1.2974611720596887,
+          "shape_rmse": 1.1390615312877916,
+          "shape_pearson": 0.3220107853079658,
+          "shape_spearman": 0.31088353901183924,
+          "prediction_sd": 0.5905545966389874,
+          "target_sd": 1.2595713416152294,
+          "ratio_rmse": 0.9570485744079391,
+          "ratio_pearson": 0.25734243383187005,
+          "ratio_spearman": 0.19899819768250887,
+          "minimum_log10_amount": -5.69547302260039,
+          "amount_below_1e_20_count": 0
+        },
+        "val": {
+          "n_observations": 14822,
+          "shape_mse": 1.5946359594272932,
+          "shape_rmse": 1.2627889607639486,
+          "shape_pearson": 0.25724479436621617,
+          "shape_spearman": 0.2463524849063954,
+          "prediction_sd": 0.5934187426465359,
+          "target_sd": 1.2523925434074963,
+          "ratio_rmse": 1.1564371958125195,
+          "ratio_pearson": 0.33449253893711256,
+          "ratio_spearman": 0.30416377594838134,
+          "minimum_log10_amount": -5.219323012103483,
+          "amount_below_1e_20_count": 0
+        }
+      },
+      "raw_rank_discrepancies": {
+        "train:shape_spearman": 0.0,
+        "train:ratio_spearman": 0.0,
+        "val:shape_spearman": 0.0,
+        "val:ratio_spearman": 0.0
+      },
+      "optimizer": {
+        "updates": 2000,
+        "maximum_adam_error": 8.881784197001252e-16,
+        "replayed_gradients": [
+          {
+            "step": 1,
+            "gradient_error": 4.062722380737682e-15
+          },
+          {
+            "step": 100,
+            "gradient_error": 4.122570340658882e-15
+          },
+          {
+            "step": 500,
+            "gradient_error": 6.163689350580093e-15
+          },
+          {
+            "step": 1000,
+            "gradient_error": 6.594551293925832e-15
+          },
+          {
+            "step": 2000,
+            "gradient_error": 6.130512764102036e-15
+          }
+        ],
+        "final_gradient_norm": 0.048148134547978165,
+        "coverage": 78,
+        "parameters": 78
+      }
+    }
+  },
+  "conditional_toy": {
+    "states": 32,
+    "maximum_expectation_error": 5.551115123125783e-17
+  },
+  "seconds": 6.937279208039399,
+  "peak_rss_bytes": 1311358976,
+  "scope": "All final predictions/metrics/gradients, source inputs and weights, ridge controls, every Adam arithmetic update, five selected gradient replays per trained variant; independent candidate form replay and every stochastic gradient not claimed"
+}

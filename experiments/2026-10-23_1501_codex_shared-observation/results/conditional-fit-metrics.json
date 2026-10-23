@@ -1,0 +1,30 @@
+{
+  "train": {
+    "n_observations": 90630,
+    "shape_mse": 1.297461172059689,
+    "shape_rmse": 1.1390615312877916,
+    "shape_pearson": 0.3220107853079658,
+    "shape_spearman": 0.31088353901183924,
+    "prediction_sd": 0.5905545966389874,
+    "target_sd": 1.2595713416152294,
+    "ratio_rmse": 0.9570485744079391,
+    "ratio_pearson": 0.25734243383187005,
+    "ratio_spearman": 0.19899819768250887,
+    "minimum_log10_amount": -5.69547302260039,
+    "amount_below_1e_20_count": 0
+  },
+  "val": {
+    "n_observations": 14822,
+    "shape_mse": 1.5946359594272932,
+    "shape_rmse": 1.2627889607639486,
+    "shape_pearson": 0.25724479436621617,
+    "shape_spearman": 0.2463524849063954,
+    "prediction_sd": 0.5934187426465359,
+    "target_sd": 1.2523925434074963,
+    "ratio_rmse": 1.1564371958125195,
+    "ratio_pearson": 0.33449253893711267,
+    "ratio_spearman": 0.30416377594838134,
+    "minimum_log10_amount": -5.219323012103483,
+    "amount_below_1e_20_count": 0
+  }
+}

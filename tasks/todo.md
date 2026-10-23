@@ -12454,3 +12454,16 @@ Plan: experiments/agents/codex/plans/digestion-rate-space-optimization.md and fa
 - [x] Independently verify predictions/optimality, report numerical vs biological limitations, and publish.
 
 Review: all675 sparse solver evaluations completed; RMSE0.797339→0.797292, but1,288rates approach zero and reference amounts collapse. Independent source/prediction/gradient verification passes; original rank-reporting failure preserved. Report and next shared-observation specification published at eb96219; all59 artifact hashes and immutable README bytes match, and Hitlist770/762 plus Presto131 body/state readbacks pass.775 remains closed. Prior e1f7403CI passes; current eb96219CI run40007342075 is in progress. All local analysis/fitting/verification/publication handles are terminal. Goal-turn classification: progress. Next action: canonical run/form contributor preflight and the frozen shared-observation experiment, preserving simultaneous exact/sampled qualification and full APC scope. Full APC concentration objective remains active.
+
+
+## Shared observation and cross-peptide signal experiment
+
+Previous goal turn: progress (verified numerical audit exposed abundance ambiguity). Plan: experiments/agents/codex/plans/digestion-shared-observation.md; registered family2026-10-23_1501_codex_shared-observation.
+- [x] Query canonical acquisition/form context and establish aggregate applicability without changing labels.
+- [x] Implement minimal profiled observation model and qualify exact/sampled gradients.
+- [x] Freeze and execute supported training/development comparisons and fixed sensitivity probes.
+- [ ] Independently verify, publish all outcomes and retain full APC concentration goal.
+
+Review: all843,616predictions and6,000Adam updates independently replay; conditional proposal passes and2,000-step hybrid completes. Exact/sample development shape RMSE1.26510/1.26279 versus1.28060constant, with original-ratio degradation and unresolved calibration. Every allocated coefficient trains. New fragment-state qualification spec frozen. No environment/Hitlist source mutation or new test evaluation. Publication pending; full APC goal active.
+
+Continuation 2026-10-23T17:57:59.749605-04:00: previous goal turn was no experimental progress (architecture explanation). Exact fit session3273 is terminal success; conditional qualification finished with both prespecified states passing. Prior ce86bdb CI is successful. Running the prospectively gated matched conditional-hybrid fit; source/target/test policy unchanged.

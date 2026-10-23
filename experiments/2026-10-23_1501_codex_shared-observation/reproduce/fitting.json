@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-10-23T17:49:37.626263-04:00",
+  "source_hashes": {
+    "code/fit.py": "91a43a32345bbfad42b79b392cd628f7aeb224791ecf21d36049ba32e67d30ec",
+    "code/observation.py": "bf612679f2280bee81bdcfaddd02771bada80f1db0978a86925ab48f9b07420f",
+    "code/qualify.py": "8b586248fda2784cb9ad3cee5cc0faa7c14d421cbd1a949f58686835324f0f86"
+  },
+  "qualification_sha256": "09bc51bc98995d711a12e4b21c411834cd8c8bf2f4e604e2b929545c131682d7",
+  "initialization": "Fixed old ratio-trained 40 coefficients, zero response coefficients; no checkpoint selection",
+  "initial_fits_path": "/private/tmp/presto-modular-model/experiments/2026-10-23_1202_codex_biological-cut-rates/results/fits.json",
+  "initial_fits_sha256": "2400f214141b6ab421cc0b5168ec08b3209507b62b7cf0a590fd719937bd267f",
+  "steps": 2000,
+  "optimizer": "Adam",
+  "learning_rate": 0.03,
+  "betas": [
+    0.9,
+    0.999
+  ],
+  "epsilon": 1e-08,
+  "penalty": 0.01,
+  "sample_count": 512,
+  "sample_seed": 42,
+  "log10_rate_scale_shifts": [
+    -2,
+    -1,
+    0,
+    1,
+    2
+  ],
+  "selection": "Fixed final checkpoint only; no development selection",
+  "sampling_gate": "Unconditional hybrid gate failed; this invocation runs exact variants and controls only",
+  "runtime": "Local float64 CPU, one thread. Qualification/context verification terminal before this fit."
+}
