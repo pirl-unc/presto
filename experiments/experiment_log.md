@@ -2458,3 +2458,45 @@ Independent original-source replay verifies all10,673dispositions/1,232contribut
 Shared recipe [Hitlist760](https://github.com/pirl-unc/hitlist/pull/760) passes3,243normal tests/10warnings in327.51s,14focused tests,format/lint and strict docs; hosted recipe CI remains separate. [Hitlist759](https://github.com/pirl-unc/hitlist/issues/759) requests controlled proteasome-inhibition/reporter panels; precursor/specimen mapping remains in757. Next: training-only capacity/interaction and replicate-variation diagnostics, followed by untouched biological evaluation. Existing test is now observed. This completed negative family advances, but does not complete, the full availability/concentration goal.
 
 Posthoc training-only saved-checkpoint replay (registered before execution, no fit/reselection/additional test checkpoints): initial trainKL0.329–0.338 falls to final0.0227–0.0304, training Spearman0.729–0.784. This policy can fit the training objective while validation deteriorates; generalization failure is established for this family, but its biological/statistical cause and historical IC50 behavior remain unresolved. All diagnostic predictions and exact source/invocation are retained.
+
+## 2026-10-23_0037 — MAPP repeatability and parsimonious sequence scores
+
+- **Date/agent:** October 23, 2026, 00:37 America/New_York; Codex / GPT-6.
+- **Directory:** [mapp-run-repeatability](2026-10-23_0037_codex_mapp-run-repeatability/README.md).
+- **Data/curation:** shared PXD009092 human HEK293 UT/TNF+IFN MAPP generation, manifest `55f7a3d…`. Original min2 recipe unchanged (`df78d02f…`): canonical20, no reverse/contaminant, one full reference sequence/source group, replicated positive quantities/direct evidence, PEP≤0.01, source-leading coordinates/flanks, ≥2 peptides per parent. Fixed all-source sequence/group components, no homology/specimen-independence claim. No MHC affinity filter or synthetic biological labels.
+- **Stage A:** new shared `mapp_complete_run_composition_v1` preserves all 3,696 run records and source metadata from 616 base peptides. Complete positive six-run profiles and ≥2 complete peptides leave 369 peptides / 71 parents (55/7/9 inherited strata). Keep 50 background-filtered and 234 no-positive-evidence zeros; no pseudocount/imputation or biological-negative labels. Both old eight-file recipe generations replay byte-identically. Manifest `23bcfeb4…`.
+- **Observation endpoint:** centered log10 captured-intensity composition, held-out acquisition predicted from the other runs; condition differences use all nine UT/TNF run combinations without asserting specimen pairing. No model fitting in Stage A. Macro parent MSE; pooled correlations/spread. Previously observed validation/test strata are descriptive/development data, not a new biological test.
+
+| Scope | Parents | Composition RMSE: other runs / uniform | Composition Pearson | Change RMSE: other runs / zero | Change Pearson |
+|---|---:|---:|---:|---:|---:|
+| all | 71 | 0.1553 / 0.3547 | 0.9136 | 0.2197 / 0.1916 | 0.1719 |
+| train | 55 | 0.1461 / 0.3538 | 0.9230 | 0.2066 / 0.1759 | 0.1881 |
+| validation | 7 | 0.2030 / 0.3399 | 0.8327 | 0.2871 / 0.2500 | 0.1746 |
+| test | 9 | 0.1670 / 0.3716 | 0.9072 | 0.2362 / 0.2283 | 0.1263 |
+
+Baseline composition repeats well (Pearson 0.914, Spearman 0.909); unshrunk condition differences repeat weakly (0.172/0.178) and lose to zero-change RMSE. Macro condition-mean RMS change 0.1236 versus estimated sampling-noise RMS 0.1036; adjusted mean square +0.004554, with negative parent estimates retained. This is not a calibrated biological noise ceiling. Within-parent normalization also removes genuine parent-wide processing-yield changes.
+
+- **Stage B data/training:** the original 616-peptide / 101-parent median cohort, 72/15/14 parents, not the smaller complete-case subset. Captured-intensity composition → observed-set linear softmax score. Length-only (1 parameter), sequence (92 train-supported directions) and explicit treatment×sequence interactions (184). Training-only centering/RMS/QR. Original 105 features are length, composition, termini, adjacent residues/boundary and relative position. Every final/selected parameter changes; omitted contrast directions remain unidentifiable.
+- **Fixed comparison:** 15 deterministic exact fits (three representations × five L2 weights 0/0.001/0.01/0.1/1) and 15 interaction REINFORCE64 fits (same weights × seeds42/43/44). Zero initialization, Adam lr0.03, 1,000 full-batch updates, no decay/dropout/pretraining. Unit-weight mean reverse KL plus L2 sum of squared weights; fresh replacement draws/leave-one-out, no clipping/std/reuse/reference penalty. Validate at 0 and every25 updates; choose regularizer/checkpoint by validation only. Evaluate six selected models on development-test; unselected fits intentionally preserve validation dumps only.
+
+| Model | Parameters | L2 / selected update | Validation KL | Development-test KL | Test log10 RMSE | Test Spearman | Change RMSE |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| length / exact | 1 | 0 / 25 | 0.1919 | 0.2972 | 0.3258 | -0.0663 | 0.1566 |
+| sequence / exact | 92 | 1 / 875 | 0.1694 | 0.2928 | 0.3246 | -0.0225 | 0.1566 |
+| interaction / exact | 184 | 1 / 25 | 0.1646 | 0.2908 | 0.3241 | 0.0500 | 0.1712 |
+| interaction / reinforce64 / seed42 | 184 | 1 / 500 | 0.1601 | 0.2971 | 0.3290 | 0.0524 | 0.1749 |
+| interaction / reinforce64 / seed43 | 184 | 1 / 475 | 0.1594 | 0.2940 | 0.3269 | -0.0042 | 0.1717 |
+| interaction / reinforce64 / seed44 | 184 | 1 / 625 | 0.1533 | 0.3095 | 0.3358 | -0.0422 | 0.1768 |
+| Uniform | 0 | — | 0.2031 | 0.2890 | 0.3213 | undefined | 0.1566 |
+
+**Winner/decision:** interaction exact is best exact architecture by validation; uniform remains the development-test reference. Every model fails test KL/RMSE. Explicit interactions increase condition-change SD to0.062–0.074 but worsen change RMSE to0.171–0.177 versus zero-change0.1566. No model promotion or further hyperparameter tuning. 144/202 development-test and12/112 validation centered feature rows lie outside the training contrast span, versus zero train rows. All allocated weights training does not establish coverage of absent contrasts.
+
+**Verification/runtime:** independent source replay verifies all3,696 run quantities/metadata and10,673 dispositions; scalar replay checks1,065 fold records/5,535 prediction values (max difference1.78e-15). Independent sequence-feature/QR/NumPy-score/metric/checkpoint replay checks30 fits and10,080 prediction values (max logq error4.14e-7). Analytic gradient error1.25e-16; finite differences7.97e-12; mean128 sampled gradients relative error0.01374. An initial verifier compared differently padded validation batches; corrected checks match each metric to its actual dump and retain the measured ≤2.39e-7 logq discrepancy, without rerunning fits.
+
+Local CPU only, no Modal/GPU: source materialization plus old recipe replay27.18s/2.13GiB; independent source replay3.66s/3.49GiB; analysis0.097s/148MiB; 30 actual fits25.81s/427MiB, 30,000 optimizer updates. Exact/sampled each score918,000 valid candidates per fit; sampled target terms9,216,000 versus918,000 exact, no score saving. These differ from the earlier nonlinear model's batch/thread/training budget and are contextual, not a controlled causal representation comparison.
+
+**Artifacts/reproduction:** stage-specific plans, exact commands/env/dirty Git receipts, source snapshots, all run predictions, all initial/selected/final model states/optimizers/masks/histories and selected train/validation/test dumps in the experiment directory; portable complete-run recipe and linear-artifact archives with hashes. Execution commits Presto `dccafe1`, Hitlist `b94289d`. nM/binder metrics do not apply. Full Pearson/Spearman/loss/RMSE/TV/dispersion and condition contrasts are retained.
+
+Twenty focused Hitlist tests, format/lint/strict docs pass. Normal local full tests were refused twice by the unchanged memory guard before workers launched; no local full-suite pass is claimed. Python3.10–3.14 unit CI passes; retrieved3.11 log:3,247passed/2optional-data-package skips/397warnings in217.11s. Indexed-corpus integration remains separate. Shared recipe stays in Hitlist760/739; precursor/yield metadata in757 and controlled perturbation/reporter data in759. Next: explicitly separate MS-response transfer and processing/yield supervision, broaden source coverage and preserve untouched evaluation. Full concentration/availability goal remains active.
+
+Current-family closure: Hitlist b94289d integration/coverage and all Python unit, lint and docs checks pass. All 186 linear-fitting artifact files and complete-run recipe archive members independently match their original files/hashes. Independent MS-response calibration is tracked in [Hitlist #762](https://github.com/pirl-unc/hitlist/issues/762), separate from precursor #757 and processing-panel #759.

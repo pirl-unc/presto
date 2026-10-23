@@ -12220,3 +12220,13 @@ Previous goal turn: progress. Plan: experiments/agents/codex/plans/mapp-biologic
 - [x] Independent metrics, report, publication and next concentration-relevant step.
 
 Review: 616 peptides/101 parents admitted by shared Hitlist recipe; original/extended source replay passes. All nine local fits and independent NumPy/checkpoint/metric replay pass. Uniform wins held-out KL/RMSE; condition predictions remain near zero. Full report/checkpoints/predictions archived; shared Hitlist760 draft published, new data issue759 read back exactly, precursor issue757 remains open. Full Hitlist tests pass3,243/10warnings, format/lint and strict docs pass. Presto publication/readback and final CI remain pending; concentration goal remains active.
+
+## 2026-10-23 MAPP run repeatability and representation
+
+Previous goal turn: progress. Plan: mapp-run-repeatability (Presto) / tasks/mapp-run-recipe-plan.md (Hitlist).
+- [x] Shared complete-run recipe with all original observations/status and fixed source partitions.
+- [x] Independent original-source replay and local software checks.
+- [x] Registered run-repeatability diagnostics, then evidence-led fixed representation comparison.
+- [ ] Publish complete artifacts, report and canonical registry; verify remote readback.
+
+Review: shared source and every run/feature/metric/checkpoint replay pass; all 186 archived fitting files and nine recipe files match original bytes. Baseline repeats (r=0.914); treatment-change repeatability is weak (r=0.172). Thirty regularized fits complete in 25.81s; all allocated weights train, but none beats uniform. Hitlist b94289d: 20 focused tests and strict docs pass; normal local full-suite memory preflight refused twice. Hosted Python 3.10–3.14 unit CI and integration/coverage/lint/docs all pass (3.11: 3,247 passed/2 optional skips; integration: 96 passed). Calibration data request #762 filed and read back exactly; precursor #757 and perturbation #759 remain open. Complete artifact and report publication is the remaining closure step; full concentration goal remains active.
