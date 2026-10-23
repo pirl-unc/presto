@@ -1,0 +1,27 @@
+{
+  "registered_at": "2026-10-23T04:34:04.791821-04:00",
+  "agent_model": "Codex / GPT-6",
+  "stage": "source inventory and conditional admission; no fit before original-source qualification",
+  "presto_commit": "9f8e4e0761a6acf76c3db94a55bea640b2f6bd65",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? experiments/agents/codex/plans/mapp-controlled-panels-admission.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "hitlist_commit": "e186dd7831976f505b06571fe7b5419ee16e003b",
+  "hitlist_dirty": "",
+  "source_package": "/private/tmp/hitlist-v2-calibration-203-canonical",
+  "source_manifest_sha256": "bce500f34f111aaf3b41573e96fa630252204a3403d5a2e93e9c50caa97b8552",
+  "existing_assets": "/private/tmp/hitlist-v2-calibration-203-canonical/external/pxd009092/assets",
+  "additional_assets": "/private/tmp/presto-mapp-controlled-assets",
+  "source_projects": [
+    "PXD009092",
+    "PXD009360",
+    "PXD009438",
+    "PXD009181",
+    "PXD007263",
+    "PXD009112",
+    "PXD009508"
+  ],
+  "primary_publication": "https://www.nature.com/articles/nbt.4279",
+  "device": "local CPU; no Modal or GPU",
+  "training_policy": "No training/synthetic targets/validation or test predictions in source inventory; qualification must precede a frozen biological experiment",
+  "author_outreach": false,
+  "retriever_sha256": "f30ef6484fb4f8af408f94df9f81e21846bca7038ec0365009162f1a01b7b041"
+}

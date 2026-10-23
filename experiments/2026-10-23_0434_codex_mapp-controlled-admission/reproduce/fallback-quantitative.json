@@ -1,0 +1,18 @@
+{
+  "registered_utc": "2026-10-23T08:53:21.921147+00:00",
+  "scope": "Fallback literature and repository inventory, no quantitative source admission or fitting. ProteasomeDB Table1 lacks an intensity/concentration column, so inspect explicitly quantitative studies instead of relabeling identification counts.",
+  "requests": [
+    {
+      "path": "proteasomedb-figshare-v1.json",
+      "url": "https://api.figshare.com/v2/articles/17143865/versions/1"
+    },
+    {
+      "path": "proteasome-2024-article.xml",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC10850103/fullTextXML"
+    },
+    {
+      "path": "proteasome-2015-article.xml",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC4611054/fullTextXML"
+    }
+  ]
+}

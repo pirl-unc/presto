@@ -12283,3 +12283,13 @@ Previous goal turn: progress. Registered 2026-10-23_0359_codex_raw-s4-response.
 Full APC availability goal remains active; this measures only the observation component.
 
 Raw-S4 review: shared recipe96b9232 and independent original XML replay admit1,974 observations/224 summaries/22 peptides.295 local fits and all12,544 validation/672 outer-test predictions independently replay. Context RMSE0.8084 beats mean1.1796; sequence1.2762 worsens and shrinks context under a shared penalty. No transferable detector/concentration claim. All8 recipe files archived exactly; source/full fit receipts retained.61 focused tests/format/lint/docs pass; normal full runner refuses0.30/2.5GiB. Publication remains; next biological data target is controlled processing#759.
+
+## Controlled processing source admission
+
+Previous goal turn: progress. Registered 2026-10-23_0434_codex_mapp-controlled-admission.
+- [x] Verify public-source inventory and original study metadata.
+- [x] Recover and independently replay inhibitor/time-course quantities; record unresolved reporter/Velcade assets.
+- [ ] Publish audit and update shared Hitlist ownership.
+- [ ] Implement shared controls admission, assess repeatability and freeze the next supported biological comparison.
+
+Controlled-source review: all146,832 peptide/run arithmetic comparisons and ten original extracted tables independently verify. PXD009508 has actual UT/epoxomicin capture-control arms; unique punctuation aliases are derived and recorded, not supplied specimen identities. All143 recovered HTTP ranges and whole PRIDE checksums pass; failed full downloads and literal-label attempt preserved. Hitlist770 created with exact body/open-state readback. Full goal remains active; source integration and biological fitting still required.

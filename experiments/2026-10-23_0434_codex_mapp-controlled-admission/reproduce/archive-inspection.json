@@ -1,0 +1,34 @@
+{
+  "registered_utc": "2026-10-23T08:50:13.428590+00:00",
+  "asset_root": "/private/tmp/presto-mapp-controlled-assets",
+  "projects": [
+    "PXD009508",
+    "PXD007263"
+  ],
+  "source_sha256": "ccb5a60d3490a61738d4b3bf8bb7d577dd7a274fc4839c124ba212c55f4a5f4e",
+  "purpose": "Inventory full archives and retain original selected tables, literal run assignments and metadata; no inferred biological conditions or model input adapter.",
+  "extract_leaves": [
+    "parameters.txt",
+    "summary.txt",
+    "experimentalDesignTemplate.txt",
+    "experimentalDesign.txt",
+    "mqpar.xml",
+    "peptides.txt",
+    "evidence.txt",
+    "proteinGroups.txt"
+  ],
+  "retain_all_rows_leaves": [
+    "parameters.txt",
+    "summary.txt",
+    "experimentalDesignTemplate.txt",
+    "experimentalDesign.txt"
+  ],
+  "figure_reporter_sequences": [
+    "VVEGGPLPFAEDILSA",
+    "EGGPLPFAEDILSA",
+    "AFNYGNRVFTEYPQDIVDYF",
+    "GNRVFTEYPQDIVDYF"
+  ],
+  "reporter_sequence_source": "Visual inspection of accepted manuscript Figure1G (PDF page14); lookup aids only, not numeric measurements or validated construct sequence.",
+  "model_admission": "Pending shared Hitlist source/recipe and independent replay; counts alone are not training qualification."
+}
