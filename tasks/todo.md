@@ -12417,6 +12417,6 @@ Plan: experiments/agents/codex/plans/digestion-observation-effects.md.
 - [x] Replay admitted training observations with original baseline/contributor provenance.
 - [x] Compare fixed observation layers, shape sensitivity and repeated-label signal.
 - [x] Independently verify all calculations and preserve per-example outcomes.
-- [ ] Publish evidence and specify next model step; retain full APC concentration goal.
+- [x] Publish evidence and specify next model step; retain full APC concentration goal.
 
-Review: all91,226 training points and three observation layers independently replay;94.73% of weight has small baseline fraction, and93%/99% of original growth/concavity violations persist after baseline restoration. Reporting-weight label correction preserves all numeric fits. No new fit or held-out evaluation; next entry-process specification frozen. Publication pending; full concentration goal active.
+Review: all91,226 training points and three observation layers independently replay;94.73% of weight has small baseline fraction, and93%/99% of original growth/concavity violations persist after baseline restoration. Reporting-weight label correction preserves all numeric fits. No new fit or held-out evaluation; next entry-process specification frozen. Published3de2666 to draft131; all36 closure files match committed hashes and immutable remote README bytes match. Hitlist770 and Presto131 exact body/state readback pass; source support already exists, no new import needed. Previousaa4c809CI passed; current3de2666CI is in progress. All local analysis/verification handles terminal. Goal-turn classification: progress. Next action: implement/qualify frozen substrate-entry process before matched biological fitting. Full concentration goal active.
