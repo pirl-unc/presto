@@ -31,3 +31,7 @@ Retain the previous log-rate fits unchanged. This is a diagnostic coordinate com
 Only once numerical limitations are characterized, select between a richer but parsimonious transferable sequence-to-rate mapping and a process whose cutting rates depend on the current fragment/processing state. The latter has a genuine discrete trajectory and can be compared with matrix-free expected-fragment evolution, but requires its own prospective mathematics/runtime/data contract. Independent MS response, APC machinery/transport/clearance and concentration validation remain part of the full goal.
 
 Register this work as a new family before execution; unchanged shared environment, local CPU, canonical Hitlist recipe, all predictions and independent verification. Current two experiment families must retain their original artifacts, failed attempts and explicit absence of new held-out evaluations.
+
+## Outcome amendment, 2026-10-23
+
+Family1438 completes the coordinate audit: negligible loss improvement and strong reference-amount collapse. Before choosing richer sequence rates or fragment-state kinetics, the next registered hypothesis must test the observation objective itself; see digestion-shared-observation.md. This evidence-driven ordering preserves the full availability goal and does not claim that a global kinetic optimum or MS calibration has been found.

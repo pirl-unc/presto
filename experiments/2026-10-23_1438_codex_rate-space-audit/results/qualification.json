@@ -1,0 +1,269 @@
+{
+  "decimal_scalar_checks": [
+    {
+      "rate": 0.0,
+      "t": 2.0,
+      "ref": 1.0,
+      "value_error": 0.0,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 0.0,
+      "t": 24.0,
+      "ref": 1.0,
+      "value_error": 0.0,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 0.0,
+      "t": 24.0,
+      "ref": 4.0,
+      "value_error": 0.0,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 1e-14,
+      "t": 2.0,
+      "ref": 1.0,
+      "value_error": 0.0,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 1e-14,
+      "t": 24.0,
+      "ref": 1.0,
+      "value_error": 0.0,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 1e-14,
+      "t": 24.0,
+      "ref": 4.0,
+      "value_error": 0.0,
+      "derivative_error": 1.7763568394002505e-15
+    },
+    {
+      "rate": 1e-09,
+      "t": 2.0,
+      "ref": 1.0,
+      "value_error": 0.0,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 1e-09,
+      "t": 24.0,
+      "ref": 1.0,
+      "value_error": 0.0,
+      "derivative_error": 1.7763568394002505e-15
+    },
+    {
+      "rate": 1e-09,
+      "t": 24.0,
+      "ref": 4.0,
+      "value_error": 0.0,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 1e-05,
+      "t": 2.0,
+      "ref": 1.0,
+      "value_error": 1.1102230246251565e-16,
+      "derivative_error": 5.551115123125783e-17
+    },
+    {
+      "rate": 1e-05,
+      "t": 24.0,
+      "ref": 1.0,
+      "value_error": 0.0,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 1e-05,
+      "t": 24.0,
+      "ref": 4.0,
+      "value_error": 0.0,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 0.000999,
+      "t": 2.0,
+      "ref": 1.0,
+      "value_error": 1.1102230246251565e-16,
+      "derivative_error": 5.545564008002657e-14
+    },
+    {
+      "rate": 0.000999,
+      "t": 24.0,
+      "ref": 1.0,
+      "value_error": 0.0,
+      "derivative_error": 9.947598300641403e-14
+    },
+    {
+      "rate": 0.000999,
+      "t": 24.0,
+      "ref": 4.0,
+      "value_error": 2.220446049250313e-16,
+      "derivative_error": 3.730349362740526e-14
+    },
+    {
+      "rate": 0.001001,
+      "t": 2.0,
+      "ref": 1.0,
+      "value_error": 1.3322676295501878e-15,
+      "derivative_error": 6.106226635438361e-16
+    },
+    {
+      "rate": 0.001001,
+      "t": 24.0,
+      "ref": 1.0,
+      "value_error": 8.881784197001252e-16,
+      "derivative_error": 1.7763568394002505e-15
+    },
+    {
+      "rate": 0.001001,
+      "t": 24.0,
+      "ref": 4.0,
+      "value_error": 2.220446049250313e-16,
+      "derivative_error": 7.105427357601002e-14
+    },
+    {
+      "rate": 0.01,
+      "t": 2.0,
+      "ref": 1.0,
+      "value_error": 2.220446049250313e-16,
+      "derivative_error": 4.496403249731884e-15
+    },
+    {
+      "rate": 0.01,
+      "t": 24.0,
+      "ref": 1.0,
+      "value_error": 4.440892098500626e-16,
+      "derivative_error": 1.7763568394002505e-15
+    },
+    {
+      "rate": 0.01,
+      "t": 24.0,
+      "ref": 4.0,
+      "value_error": 0.0,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 1.0,
+      "t": 2.0,
+      "ref": 1.0,
+      "value_error": 5.551115123125783e-17,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 1.0,
+      "t": 24.0,
+      "ref": 1.0,
+      "value_error": 2.220446049250313e-16,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 1.0,
+      "t": 24.0,
+      "ref": 4.0,
+      "value_error": 4.198030811863873e-16,
+      "derivative_error": 5.551115123125783e-17
+    },
+    {
+      "rate": 100.0,
+      "t": 2.0,
+      "ref": 1.0,
+      "value_error": 8.881784197001252e-16,
+      "derivative_error": 3.720075976020836e-44
+    },
+    {
+      "rate": 100.0,
+      "t": 24.0,
+      "ref": 1.0,
+      "value_error": 3.720075976020836e-44,
+      "derivative_error": 3.720075976020836e-44
+    },
+    {
+      "rate": 100.0,
+      "t": 24.0,
+      "ref": 4.0,
+      "value_error": 8.881784197001252e-16,
+      "derivative_error": 7.660678386856023e-174
+    },
+    {
+      "rate": 10000.0,
+      "t": 2.0,
+      "ref": 1.0,
+      "value_error": 1.7763568394002505e-15,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 10000.0,
+      "t": 24.0,
+      "ref": 1.0,
+      "value_error": 0.0,
+      "derivative_error": 0.0
+    },
+    {
+      "rate": 10000.0,
+      "t": 24.0,
+      "ref": 4.0,
+      "value_error": 1.7763568394002505e-15,
+      "derivative_error": 0.0
+    }
+  ],
+  "block_checks": [
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_12p5",
+      "positive_prediction_error": 3.1086244689504383e-15,
+      "finite_difference_jvp_error": 2.5847494145025962e-09,
+      "zero_one_sided_jvp_error": 1.8187193973062676e-09
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_6p25",
+      "positive_prediction_error": 3.1086244689504383e-15,
+      "finite_difference_jvp_error": 2.5847494145025962e-09,
+      "zero_one_sided_jvp_error": 1.9808794604614377e-09
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_H2A",
+      "positive_prediction_error": 2.220446049250313e-15,
+      "finite_difference_jvp_error": 2.788262065678282e-09,
+      "zero_one_sided_jvp_error": 1.7396359908161685e-09
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_H2B",
+      "positive_prediction_error": 2.3314683517128287e-15,
+      "finite_difference_jvp_error": 1.920172465474934e-09,
+      "zero_one_sided_jvp_error": 1.938900595632731e-09
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_IL37b",
+      "positive_prediction_error": 1.5543122344752192e-15,
+      "finite_difference_jvp_error": 1.2685648087540358e-09,
+      "zero_one_sided_jvp_error": 1.8036558913081535e-09
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_LEDGF",
+      "positive_prediction_error": 2.4424906541753444e-15,
+      "finite_difference_jvp_error": 2.621993289153579e-09,
+      "zero_one_sided_jvp_error": 1.745306121847534e-09
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_hTau",
+      "positive_prediction_error": 2.9976021664879227e-15,
+      "finite_difference_jvp_error": 2.734690696115649e-09,
+      "zero_one_sided_jvp_error": 1.9109336335532134e-09
+    }
+  ],
+  "constrained_toy": {
+    "rate": [
+      2.2040573353370676e-14
+    ],
+    "residual": [
+      -0.10000000000025366
+    ],
+    "status": 1,
+    "nfev": 9,
+    "optimality": 2.5346659356438242e-14
+  }
+}

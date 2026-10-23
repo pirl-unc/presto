@@ -12428,9 +12428,9 @@ Plan: experiments/agents/codex/plans/substrate-entry-comparison.md and registere
 - [x] Implement entry-time process with explicit complete-fragment sampling and mass-conserving differentiable quadrature.
 - [x] Independently qualify amounts, gradients, shape restrictions and actual training-domain runtime.
 - [x] Freeze and run matched biological development comparisons if numerical/runtime gate passes.
-- [x] Independently verify and report all fits; publication pending; retain full APC concentration goal.
+- [x] Independently verify and report all fits; publication verified at e1f7403; retain full APC concentration goal.
 
-Review: both entry fits and the K512 sampled fit completed. No development gain; sampled final RMSE1.11375 vs differentiable1.09575, immediate1.09556. All392,830predictions/final gradients, all2,000sampled Adam arithmetic updates and five sampled gradients independently verified;22focused tests pass. Failed original500-update numerical attempt preserved. Reports/registry ready; publication pending. Full APC goal active, no new test evaluation.
+Review: both entry fits and the K512 sampled fit completed. No development gain; sampled final RMSE1.11375 vs differentiable1.09575, immediate1.09556. All392,830predictions/final gradients, all2,000sampled Adam arithmetic updates and five sampled gradients independently verified;22focused tests pass. Failed original500-update numerical attempt preserved. Reports/registry published at e1f7403; immutable README and body/state readbacks verified. Full APC goal active, no new test evaluation.
 
 
 ## Training-only kinetic capacity decomposition
@@ -12438,7 +12438,19 @@ Review: both entry fits and the K512 sampled fit completed. No development gain;
 Previous goal turn: progress (qualified entry quadrature; completed deterministic fits; launched sampled fit). Plan: experiments/agents/codex/plans/digestion-capacity-decomposition.md.
 - [x] Register fixed source/reference and qualify necessary-shape projection.
 - [x] Audit/free supported condition bond rates; fit unregularized reference and capacity diagnostic.
-- [x] Independently verify all outcomes; publication pending alongside completed entry comparison.
+- [x] Independently verify all outcomes; publication verified alongside the completed entry comparison.
 - [x] Freeze rate-space optimization audit before a new biological hypothesis; keep full APC objective active.
 
-Review: verified training RMSE.88315(no penalty),.79734(free2,121rate groups),.44438/.40762(necessary immediate/entry shape bounds),.33634(replicate/time means). Both fits exhaust500polishing evaluations and are not proven optima. All23,054KKTcertificates/67,576shape predictions and135,152fit predictions independently verify; every allocated coefficient trains. Preserved zero-update reference-schema preflight failure. Next plan: experiments/agents/codex/plans/digestion-rate-space-optimization.md. Both prior held-out strata remain excluded; reports/registry ready, publication pending.
+Review: verified training RMSE.88315(no penalty),.79734(free2,121rate groups),.44438/.40762(necessary immediate/entry shape bounds),.33634(replicate/time means). Both fits exhaust500polishing evaluations and are not proven optima. All23,054KKTcertificates/67,576shape predictions and135,152fit predictions independently verify; every allocated coefficient trains. Preserved zero-update reference-schema preflight failure. Next plan: experiments/agents/codex/plans/digestion-rate-space-optimization.md. Both prior held-out strata remain excluded; reports/registry published at e1f7403; immutable remote reports and issue/PR body/state readbacks verified.
+
+
+## Direct-rate optimization and boundary audit
+
+Previous goal turn: no experimental progress (architecture explanation). Current authoritative state confirms completed/published entry and capacity families; CI run40003886187 is in progress.
+Plan: experiments/agents/codex/plans/digestion-rate-space-optimization.md and family2026-10-23_1438.
+- [x] Reconstruct training-only rate fields, sparse Jacobians and reference-mass diagnostics.
+- [x] Qualify zero-limit ratios/derivatives, positive-rate parity and bounded toy fits.
+- [x] Freeze bounded solver settings and fit independent condition blocks if qualification passes.
+- [ ] Independently verify predictions/optimality, report numerical vs biological limitations, and publish.
+
+Review: all675 sparse solver evaluations completed; RMSE0.797339→0.797292, but1,288rates approach zero and reference amounts collapse. Independent source/prediction/gradient verification passes; original rank-reporting failure preserved. Report and next shared-observation specification complete; publication pending. Full APC concentration objective remains active.
