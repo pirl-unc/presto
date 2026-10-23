@@ -535,3 +535,7 @@ Keep applicability reporting separate from model features and the measured label
 ## 2026-10-23 — constant-predictor metrics
 
 - Centering exactly equal predictions can leave floating-point residuals that produce spurious correlation ranks. Preserve raw artifacts, explicitly identify mathematical constant controls, and report their correlation as undefined; never interpret roundoff as predictive spread. Keep macro distribution error and pooled peptide correlation weighting distinct.
+
+## 2026-10-23 — concurrent upstream release state
+
+- Before editing an issue or reporting a dependency as open, inspect its actual current state and latest upstream release. A body can contain stale open-work language even after another change closed it. Preserve legitimate closure and reconcile draft data adapters with the new canonical interface; do not relabel pinned experimental inputs as a newer release.
