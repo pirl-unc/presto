@@ -12364,8 +12364,10 @@ Plan: experiments/agents/codex/plans/shared-digestion-admission.md and controlle
 - [x] Shared Hitlist source adapter in isolated branch; actual source replay passes.
 - [x] Register and verify identical exact/sampled fragment process, rate recovery and independent optimizer replay.
 - [ ] Source-backed observation/recipe gates before biological fitting.
-- [ ] Publish code/evidence and unresolved limitations.
+- [x] Publish code/evidence and unresolved limitations.
 
 Review: pending.
 
 Review: shared source retains all218 old payloads and all original typed values; synthetic exact and sampled cuts conserve mass, agree mathematically and recover known rates. All10,000 updates independently replay. Full biological objective remains active. Recipe/preprocessing arithmetic, biological likelihood and sequence-to-rate fit remain next; publication/software closure in progress.
+
+Publication closure: Presto1503d67 reports have exact remote/local README blobs and all77 closure artifacts are tracked with matching hashes. Hitlist draft773 opened; issue770 and Presto131 body updates read back exactly, both open and PRs draft. Source code977adc2 and documentation623afcb published; local3,341 tests pass. Hosted CI is in progress. The merge hook refreshed existing editable Hitlist metadata with no dependencies; pip check passes. Goal-turn classification: progress. No live local fitting/audit process remains. Next: all-admitted-substrate arithmetic, source-backed temporal observation recipe and parsimonious sequence-to-rate fitting, while checking final-head CI.
