@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "position_marginalization_max_abs_probability_difference": 0.0,
+  "parameter_gradient_max_abs_difference": 8.326672684688674e-17,
+  "unobserved_mass_nonidentifiability": {
+    "original_selected_mass": 0.007216325892150137,
+    "changed_selected_mass": 0.0018040814730375342,
+    "observable_probabilities_unchanged": true
+  },
+  "score_estimator": {
+    "max_abs_gradient_error": 5.551115123125783e-17,
+    "n_exhaustive_pairs": 9,
+    "exact_gradient": [
+      -0.09285371453099577,
+      -0.23259694367281528,
+      0.3254506582038109
+    ],
+    "expected_score_gradient": [
+      -0.09285371453099572,
+      -0.23259694367281522,
+      0.3254506582038109
+    ]
+  }
+}
