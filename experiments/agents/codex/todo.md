@@ -111,3 +111,8 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [x] Run [exactly profiled condition-offset comparison](plans/fragment-profiled-minibatches.md) with unchanged physical models/data/schedule; retain joint-offset results.
 
 - [x] Training-only residual decomposition (2026-10-23_2214): persistent curve means account for ~77% of remaining error; independent replay passes. Paired fit now complete: weak improvement, no concentration validation. Next hypothesis should address persistent cross-peptide prediction error.
+
+- [x] Run [nested sequence-context/response comparison](plans/digestion-sequence-context.md): four exact fits plus one prospectively gated conditional sampled hybrid; biological error and source scope remain primary.
+
+- [ ] After2358closure, qualify and run [frozen cleavage-prior cellular transfer](plans/digestion-to-mapp-transfer.md), with an explicit input/removal bridge and unchanged canonical MAPP targets.
+- [ ] Admit native intracellular peptidome panels through Hitlist788 before any workbook-based fit; preserve censored ratios and reused-measurement lineage.

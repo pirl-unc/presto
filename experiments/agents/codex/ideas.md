@@ -26,3 +26,34 @@ Goal-directed source reconnaissance, not source admission or a biological fit:
 
 Neither source has been downloaded or schema-qualified in this program yet.
 The earlier generic optimizer study does not establish any biological endpoint.
+
+
+## October24: transfer a digestion-trained cleavage prior to cellular MAPP
+
+The nested sequence-context comparison has a stronger digestion development gain
+from wider cleavage context than from fragment-length dependence. Before adding
+more mechanistic state, test whether frozen digestion-trained rates transfer to
+the existing cellular captured-composition endpoint that defeated direct fitting.
+This is a candidate next experiment, not a launched or qualified result.
+
+- Reuse canonical MAPP min2 manifestdf78d02f8200809c659e43adfae29866c48b712122b740379106994622f4ac80; parent and example files are JSONL. No new consumer curator.
+- Audit cross-source parent/construct and peptide overlap before claiming transfer; exact separation is not homology/specimen separation.
+- Compare frozen adjacent versus wider-context digestion rates, plus uniform-cut and uniform-composition controls. Fit at most one global effective exposure scalar initially; do not silently call it known intracellular digestion time. Enzyme-context reference and MS capture/response remain explicit assumptions.
+- Preserve all-fragment physical support; normalize only for the observed-set MAPP evaluation. This endpoint still cannot identify total yield, clearance or concentration. Do not transfer instrument-specific MS coefficients without support.
+- Use an observation-aligned centered-log10 loss, retain earlier KL-based results as different-objective references, and qualify a matched sampled-gradient counterpart for the same new loss. Freeze the full specification and verification scope before any new fit.
+- Treat prior MAPP held-outs as previously exposed; original digestion test remains closed. Independent cellular concentration validation remains an unmet objective.
+
+
+## October24: native intracellular peptidome perturbations
+
+[Hitlist788](https://github.com/pirl-unc/hitlist/issues/788) now owns admission of
+Dasgupta2014 (10.1371/journal.pone.0103604) and related Gelman2013
+(10.1371/journal.pone.0053263) TMAB-labeled cellular peptide extracts. These are
+a distinct candidate measured population beyond proteasome capture/MHC elution.
+Primary articles describe public supplementary ratios, censoring and reused
+epoxomicin/bortezomib measurements. No workbook has been schema-qualified or fitted
+in this program; do not treat literature row counts as admitted examples.
+Curation must preserve drug/vehicle/exposure, cell/species, extraction/labeling,
+channel/control covariance, PTMs/charge/identification, original mappings and
+cross-paper measurement lineage. No drug-to-KO inference or absolute-concentration
+claim. Shared canonical admission must precede any consumer fitting.

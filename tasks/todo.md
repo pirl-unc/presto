@@ -12584,7 +12584,7 @@ Latest authoritative poll: suite80633 remains live; fragment checkpoint 20/200, 
 Registered 2026-10-23_2214_codex_residual-decomposition before arithmetic. Plan availability-residual-decomposition.md.
 - [x] Decompose fixed verified training residuals into curve-mean and temporal MSE without changing data/models.
 - [x] Independently replay every component and record diagnostic scope/decision.
-- [ ] Publish the diagnostic with the completed paired-fit evidence.
+- [x] Publish the diagnostic with the completed paired-fit evidence.
 This work does not inspect or alter the live fragment fit or close the APC goal.
 
 
@@ -12594,3 +12594,27 @@ Goal-turn handoff: progress. Residual decomposition completed, independently ver
 
 
 Final paired-fit review: both arms complete all 200 updates and independent checks. Fragment development shape RMSE1.262718, Spearman.242653, temporal-ratio RMSE1.130980; analytical1.264868/.245122/1.144171. Constant shape RMSE1.28060; prior hybrid1.26279. This is weak relative-signal prediction on three inspected development parents, not absolute concentration validation. Both exact nuisance-offset gaps are below3e-29; all78/79 parameters materially train. Final fragment runtime3051.87s, peak2.364GiB; independent verifier13078 terminal success in75.73s. The old fit suite80633 is terminal with both child returncodes0. Next scientific priority is persistent cross-peptide signal error and independent response support, not another sampler extension. Report/archive/publication closure follows; original test remains excluded and full APC goal remains active.
+
+
+Publication review: 010be23818400d47a55d6ce0f386b95c222ce8ec is pushed to open draft PR131. Both immutable remote reports match local bytes; all92 closure-file hashes match committed blobs; the body-only PR update reads back exactly. Prior a6c6559 CI passed. New CI40056708162 is in progress, not yet passed. Fitting, independent verification, reporting, archiving, commit, push and PR-update handles are terminal. The latest biological comparison is complete, but APC availability remains unvalidated and the goal remains active. No new fit is running. Next scientific work should target persistent cross-peptide error and independent response evidence; do not launch another sampler extension without a focused prospective plan.
+
+
+## Sequence context and response representation experiment
+
+Previous goal turn: progress; paired biological fits and residual analysis are complete, independently verified and published at010be23. No fit is live. New prospective spec: experiments/agents/codex/plans/digestion-sequence-context.md.
+- [x] Register and qualify nested kinetic-context/response-termini features without changing source observations.
+- [x] Run the fixed four-arm exact factorial and gated full-feature conditional sampled hybrid locally.
+- [ ] Independently verify all outcomes, close the canonical registry and publish the evidence.
+- [x] Use biological outcomes to choose the next transfer/calibration hypothesis; retain full APC concentration objective.
+
+
+Current sequence-context family2026-10-23_2358: four exact fits complete; base/rate_context independently verify. Wider rate context yields development1.228529/.348720Spearman versus base1.265099/.245165; response_termini1.271934 and both1.246593. Keep all outcomes, no selection/retry. Fit suite40785 is live, hybrid last200/2000 at82.49s; verifiers49682/93346 are live. First invocation18816 failed missing freeze receipt before qualification, preserved; corrected qualification50699 passes in16.56s. Prior PR010be23 CI40056708162 all jobs pass. Full goal active.
+
+
+Goal-turn handoff: progress. Four actual sequence-context biological fits are complete and independently verified; all2,000Adam updates and105,452predictions per arm verify, plus four fixed gradients. All78/158/150/230coefficients materially train. Wider rates are best exact: developmentRMSE1.228529,Spearman.348720,ratioRMSE1.098476 versusbase1.265099/.245165/1.163914; added terminal response worsens development. Gain is mainlyH4. Interim README and canonical entry are current. Verifiers39773/94182/49682/93346 and qualification50699 are terminal success. Fit suite40785 is confirmed live, both_hybrid last1000/2000 at551.76s, cap1800s; do not restart. No other fit runs. Report/package/close scripts are prepared but not executed; they require all five terminal verified outcomes. Next: poll40785; when hybrid completes run sh reproduce/verify.sh both_hybrid (independent NumPy sampler/RNG replay), then report, inspect plot, package/unpack/close, update canonical log/task state, commit only owned files/tail and publish to draftPR131. Frozen execution-code/config/source hashes must remain unchanged. New family2358 and sequence-context plan/ideas remain uncommitted until full closure. Previous010be23 CI40056708162 passes all jobs. Candidate subsequent transfer idea is recorded, not launched. Full APC concentration goal remains active.
+
+
+All five sequence-context fits now terminal: suite40785 completes with all child returncodes0. Hybrid2000updates completes1104.58s,1.466GiB; developmentRMSE1.248605,Spearman.340120,ratioRMSE1.101178 versusmatchedboth-exact1.246593/.342622/1.097103. No sampled advantage. Wider-rate-only exact remains best1.228529; hybrid independently verifying, so no final family closure yet. Hitlist788 is created and read back open for native intracellular TMAB peptidomics; this is source discovery only, not an admitted workbook or new fit. Full goal remains active.
+
+
+Final sequence-context review: all five fits and independent checks complete, including hybrid2000updates. Matched hybridRMSE1.248605 versusboth-exact1.246593; wider-rate-only remains preferred1.228529/.348720Spearman. All10,000optimizer updates and527,260final predictions verify, with four fixed gradient states per arm, source/physical/metric/per-parent/error-component checks and complete material parameter coverage. Report/plot/archive closure and publication follow. The next prospective frozen-rate cellular transfer specification is recorded; it has not been launched. Hitlist788 covers separate native intracellular peptidome admission. No APC concentration validation; full goal active.
