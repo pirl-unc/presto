@@ -12949,3 +12949,43 @@ then register a biological comparison with strong condition/precursor controls.
 Hosted validation: Hitlist40088549411 is confirmed in progress at2f4bbe0;
 docs40088549372, lint and Python3.14 units pass. Other unit versions and integration
 remain live. Poll this exact handle; do not dispatch a duplicate.
+
+Publication: Presto6045dd2 is pushed to draftPR131. Exact-head CI40088982542 and
+40088975800 are confirmed live. HitlistPR806 at2f4bbe0 has all Python3.10–3.14
+unit checks passing; integration remains live in40088549411. Next source/response
+plan: experiments/agents/codex/plans/hap1-response-comparison.md. Define the
+endpoint recipe and strong controls before another sampler extension. Keep late
+APPM effects distinct from cleavage and preserve the broader APC concentration goal.
+
+## HAP1 response recipe and biological baselines
+
+Previous status-only goal turn: no progress. Revalidated shared source CI40088549411 succeeds at2f4bbe0, including integration and Python3.10–3.14 units.
+- [x] Freeze response/precursor/split and local baseline contracts before fitting.
+- [ ] Implement registered Hitlist recipe, source-conserving dispositions and meaningful tests.
+- [ ] Materialize and independently verify real HAP1 response dataset.
+- [ ] Run local complete-precursor controls and sequence baselines, training-only grouped CV.
+- [ ] Independently verify, publish report/artifacts and specify physical follow-up from evidence.
+
+### HAP1 biological baseline review
+
+Canonical recipe+independent source closure passes; 220,271responses/129,728complete
+precursor responses. Training-only5foldcomparison completes42fits on87,260cells/
+6,317peptides/1,798components. Sequence ridge.1 CVRMSE.574832 versuscalibrated
+precursor.638745:10.0%gain;alltenKOconditionsimprove. Predictionsvarywithincondition.
+Independent1,221,640prediction/augmentedLS/globalmetric/gatereplay passes,max2.94e-12.
+Fit214.21s/1.027GiB; source424.19s/1.802GiB;noModal/environmentchange. No outer
+validation/test model score or newRLrun. FullAPCavailability/concentrationgoalactive.
+
+- [x] Implement canonical recipe and preserve all source dispositions/alternatives.
+- [x] Verify original response/precursor arithmetic and all-source component split.
+- [x] Fit/verify fixed real-data controls and sequence models locally.
+- [x] Record report,predictions,coefficients,plots and canonical registry.
+- [ ] Publish report and recipe; reconcile upstream concurrent schema/version changes.
+- [ ] Specify and test matched physical exact/sampled model against this reference.
+
+Hitlistformat/lint/43focused/3,439fullunitchecks pass. SourcePR806 allhostedchecks
+passedat2f4bbe0 butnewmain6416616 schema20/catalog25 conflicts needintegration.
+Presto6045dd2bothCI40088982542/40088975800passed. Recipepublishedabbc376,
+stackeddraftrequested;merge/releasepending,notshipped.
+
+Publication update: Hitlist PR807 is OPEN DRAFT atabbc376, stacked on806. Its body/readback agrees with the actual source contract. Docs40091493963 passes; Tests40091493921 is confirmed live. Follow-up design is experiments/agents/codex/plans/hap1-availability-presentation-followup.md. It preserves the full availability/presentation objective and requires a measurable physical contribution beyond the new direct baseline.

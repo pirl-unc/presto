@@ -1,0 +1,57 @@
+{
+  "status": "passed",
+  "manifest_sha256": "a1eec392c06485966e131663f85e7599dcd9e5ff621841eb0d44eeaafe779309",
+  "coverage": {
+    "absolute_concentration_claim": false,
+    "complete_precursor_responses_by_split": {
+      "test": 22724,
+      "train": 87260,
+      "validation": 19744
+    },
+    "dispositions": {
+      "admitted:primary_response": 220271,
+      "deferred:B2M_background_only": 62088,
+      "deferred:WT_reference_only": 62088,
+      "deferred:insufficient_positive_WT_replicates": 16064,
+      "deferred:nonprimary_quantity_kind": 1414904,
+      "deferred:protein_covariate_only": 231732,
+      "deferred:source_missing_NA": 366935,
+      "deferred:unsupported_candidate_parent_groups": 2010,
+      "excluded:positive_B2M_background_sequence": 15600
+    },
+    "n_background_sequences": 520,
+    "n_response_components": 5541,
+    "n_response_parents": 6818,
+    "n_response_peptides": 16063,
+    "n_rows_by_relation": {
+      "components": 27735,
+      "dispositions": 2391692,
+      "parents": 6818,
+      "precursor_inputs": 45981,
+      "protein_groups": 7753,
+      "responses": 220271
+    },
+    "n_source_peptide_sequences": 27735,
+    "n_source_quantity_cells": 2391692,
+    "responses_by_condition": {
+      "hap1_calr_ko": 42061,
+      "hap1_canx_ko": 40187,
+      "hap1_erap1_ko": 20480,
+      "hap1_ganab_ko": 25050,
+      "hap1_irf2_ko": 11804,
+      "hap1_pdia3_ko": 15561,
+      "hap1_sppl3_ko": 34217,
+      "hap1_tap1_ko": 17053,
+      "hap1_tap2_ko": 5099,
+      "hap1_tapbp_ko": 8759
+    },
+    "responses_by_split": {
+      "test": 35560,
+      "train": 150871,
+      "validation": 33840
+    },
+    "specimen_independence": "unresolved"
+  },
+  "seconds": 424.1875421250006,
+  "peak_gib": 1.8016510009765625
+}
