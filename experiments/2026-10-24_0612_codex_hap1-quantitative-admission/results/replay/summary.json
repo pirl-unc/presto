@@ -1,0 +1,1346 @@
+{
+  "purpose": "source derivation replay, not predictive evaluation",
+  "archive_members": [
+    {
+      "name": "2024-02-24-decoys-contam-uniprotkb_Human_AND_reviewed_true_AND_m_2024_02_24_wiRT.fasta.fas",
+      "size_bytes": 27084560,
+      "crc32": 3597257865
+    },
+    {
+      "name": "DDA_library_log_2024-07-10_10-56-12.txt",
+      "size_bytes": 1085341,
+      "crc32": 1984860954
+    },
+    {
+      "name": "DIA_log_2024-07-12_10-05-55.txt",
+      "size_bytes": 83346,
+      "crc32": 3633712770
+    },
+    {
+      "name": "Proteomics_log_2024-07-23_12-13-18.txt",
+      "size_bytes": 870914,
+      "crc32": 913736885
+    },
+    {
+      "name": "Raw_file_list.xlsx",
+      "size_bytes": 15068,
+      "crc32": 568893525
+    },
+    {
+      "name": "Search_results_DDA_library.tsv",
+      "size_bytes": 70278288,
+      "crc32": 417555151
+    },
+    {
+      "name": "Search_results_DIA.tsv",
+      "size_bytes": 447234495,
+      "crc32": 1360795948
+    },
+    {
+      "name": "search_results_proteomics.tsv",
+      "size_bytes": 8731108,
+      "crc32": 3777733486
+    }
+  ],
+  "dia_headers": [
+    "File.Name",
+    "Run",
+    "Protein.Group",
+    "Protein.Ids",
+    "Protein.Names",
+    "Genes",
+    "PG.Quantity",
+    "PG.Normalised",
+    "PG.MaxLFQ",
+    "Genes.Quantity",
+    "Genes.Normalised",
+    "Genes.MaxLFQ",
+    "Genes.MaxLFQ.Unique",
+    "Modified.Sequence",
+    "Stripped.Sequence",
+    "Precursor.Id",
+    "Precursor.Charge",
+    "Q.Value",
+    "PEP",
+    "Global.Q.Value",
+    "Protein.Q.Value",
+    "PG.Q.Value",
+    "Global.PG.Q.Value",
+    "GG.Q.Value",
+    "Translated.Q.Value",
+    "Proteotypic",
+    "Precursor.Quantity",
+    "Precursor.Normalised",
+    "Precursor.Translated",
+    "Translated.Quality",
+    "Ms1.Translated",
+    "Quantity.Quality",
+    "RT",
+    "RT.Start",
+    "RT.Stop",
+    "iRT",
+    "Predicted.RT",
+    "Predicted.iRT",
+    "Lib.Q.Value",
+    "Lib.PG.Q.Value",
+    "Ms1.Profile.Corr",
+    "Ms1.Area",
+    "Evidence",
+    "Spectrum.Similarity",
+    "Averagine",
+    "Mass.Evidence",
+    "CScore",
+    "Decoy.Evidence",
+    "Decoy.CScore",
+    "Fragment.Quant.Raw",
+    "Fragment.Quant.Corrected",
+    "Fragment.Correlations",
+    "MS2.Scan",
+    "IM",
+    "iIM",
+    "Predicted.IM",
+    "Predicted.iIM"
+  ],
+  "n_dia_rows": 607928,
+  "n_dia_runs": 69,
+  "n_unique_precursor_run_keys": 567399,
+  "n_duplicate_precursor_run_keys": 0,
+  "unknown_runs": {
+    "20210117_DIA_COL032-00289_00290_00291_00292_00293-HLAIp_R02": 20256,
+    "20210117_DIA_COL032-00289_00290_00291_00292_00293-HLAIp_R03": 20273
+  },
+  "confidence_counts": {
+    "Q.Value:above_0.01": 0,
+    "Global.Q.Value:above_0.01": 2059,
+    "Lib.Q.Value:above_0.01": 0
+  },
+  "n_run_peptide_aggregates": 489076,
+  "proteomics_headers": [
+    "Protein",
+    "Protein ID",
+    "Entry Name",
+    "Gene",
+    "Protein Length",
+    "Organism",
+    "Protein Existence",
+    "Description",
+    "Protein Probability",
+    "Top Peptide Probability",
+    "Combined Total Peptides",
+    "Combined Spectral Count",
+    "Combined Unique Spectral Count",
+    "Combined Total Spectral Count",
+    "20201218_COL032_00295_PROT_R01 Spectral Count",
+    "20201218_COL032_00296_PROT_R01 Spectral Count",
+    "20201218_COL032_00297_PROT_R01 Spectral Count",
+    "20201220_COL032_00130_PROT_R01 Spectral Count",
+    "20201220_COL032_00131_PROT_R01 Spectral Count",
+    "20201220_COL032_00132_PROT_R01 Spectral Count",
+    "20201220_COL032_00315_PROT_R01 Spectral Count",
+    "20201220_COL032_00316_PROT_R01 Spectral Count",
+    "20201220_COL032_00317_PROT_R01 Spectral Count",
+    "20201222_COL032_00421_PROT_R01 Spectral Count",
+    "20201222_COL032_00422_PROT_R01 Spectral Count",
+    "20201222_COL032_00423_PROT_R01 Spectral Count",
+    "20201222_COL032_00456_PROT_R01 Spectral Count",
+    "20201222_COL032_00457_PROT_R01 Spectral Count",
+    "20201222_COL032_00458_PROT_R01 Spectral Count",
+    "20201224_COL032_00246_PROT_R01 Spectral Count",
+    "20201224_COL032_00247_PROT_R01 Spectral Count",
+    "20201224_COL032_00269_PROT_R01 Spectral Count",
+    "20201224_COL032_00270_PROT_R01 Spectral Count",
+    "20201224_COL032_00271_PROT_R01 Spectral Count",
+    "20201224_COL032_00342_PROT_R01 Spectral Count",
+    "20201224_COL032_00343_PROT_R01 Spectral Count",
+    "20201224_COL032_00344_PROT_R01 Spectral Count",
+    "20201224_COL032_00366_PROT_R01 Spectral Count",
+    "20201224_COL032_00367_PROT_R01 Spectral Count",
+    "20201224_COL032_00368_PROT_R01 Spectral Count",
+    "20201224_COL032_00389_PROT_R01 Spectral Count",
+    "20201224_COL032_00390_PROT_R01 Spectral Count",
+    "20201224_COL032_00391_PROT_R01 Spectral Count",
+    "20201224_COL032_00402_PROT_R01 Spectral Count",
+    "20201224_COL032_00403_PROT_R01 Spectral Count",
+    "20201224_COL032_00404_PROT_R01 Spectral Count",
+    "20201224_COL032_00436_PROT_R01 Spectral Count",
+    "20201224_COL032_00437_PROT_R01 Spectral Count",
+    "20201224_COL032_00438_PROT_R01 Spectral Count",
+    "20201224_COL032_00515_PROT_R01 Spectral Count",
+    "20201218_COL032_00295_PROT_R01 Unique Spectral Count",
+    "20201218_COL032_00296_PROT_R01 Unique Spectral Count",
+    "20201218_COL032_00297_PROT_R01 Unique Spectral Count",
+    "20201220_COL032_00130_PROT_R01 Unique Spectral Count",
+    "20201220_COL032_00131_PROT_R01 Unique Spectral Count",
+    "20201220_COL032_00132_PROT_R01 Unique Spectral Count",
+    "20201220_COL032_00315_PROT_R01 Unique Spectral Count",
+    "20201220_COL032_00316_PROT_R01 Unique Spectral Count",
+    "20201220_COL032_00317_PROT_R01 Unique Spectral Count",
+    "20201222_COL032_00421_PROT_R01 Unique Spectral Count",
+    "20201222_COL032_00422_PROT_R01 Unique Spectral Count",
+    "20201222_COL032_00423_PROT_R01 Unique Spectral Count",
+    "20201222_COL032_00456_PROT_R01 Unique Spectral Count",
+    "20201222_COL032_00457_PROT_R01 Unique Spectral Count",
+    "20201222_COL032_00458_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00246_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00247_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00269_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00270_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00271_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00342_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00343_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00344_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00366_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00367_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00368_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00389_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00390_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00391_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00402_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00403_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00404_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00436_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00437_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00438_PROT_R01 Unique Spectral Count",
+    "20201224_COL032_00515_PROT_R01 Unique Spectral Count",
+    "20201218_COL032_00295_PROT_R01 Total Spectral Count",
+    "20201218_COL032_00296_PROT_R01 Total Spectral Count",
+    "20201218_COL032_00297_PROT_R01 Total Spectral Count",
+    "20201220_COL032_00130_PROT_R01 Total Spectral Count",
+    "20201220_COL032_00131_PROT_R01 Total Spectral Count",
+    "20201220_COL032_00132_PROT_R01 Total Spectral Count",
+    "20201220_COL032_00315_PROT_R01 Total Spectral Count",
+    "20201220_COL032_00316_PROT_R01 Total Spectral Count",
+    "20201220_COL032_00317_PROT_R01 Total Spectral Count",
+    "20201222_COL032_00421_PROT_R01 Total Spectral Count",
+    "20201222_COL032_00422_PROT_R01 Total Spectral Count",
+    "20201222_COL032_00423_PROT_R01 Total Spectral Count",
+    "20201222_COL032_00456_PROT_R01 Total Spectral Count",
+    "20201222_COL032_00457_PROT_R01 Total Spectral Count",
+    "20201222_COL032_00458_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00246_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00247_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00269_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00270_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00271_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00342_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00343_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00344_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00366_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00367_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00368_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00389_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00390_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00391_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00402_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00403_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00404_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00436_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00437_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00438_PROT_R01 Total Spectral Count",
+    "20201224_COL032_00515_PROT_R01 Total Spectral Count",
+    "20201218_COL032_00295_PROT_R01 Intensity",
+    "20201218_COL032_00296_PROT_R01 Intensity",
+    "20201218_COL032_00297_PROT_R01 Intensity",
+    "20201220_COL032_00130_PROT_R01 Intensity",
+    "20201220_COL032_00131_PROT_R01 Intensity",
+    "20201220_COL032_00132_PROT_R01 Intensity",
+    "20201220_COL032_00315_PROT_R01 Intensity",
+    "20201220_COL032_00316_PROT_R01 Intensity",
+    "20201220_COL032_00317_PROT_R01 Intensity",
+    "20201222_COL032_00421_PROT_R01 Intensity",
+    "20201222_COL032_00422_PROT_R01 Intensity",
+    "20201222_COL032_00423_PROT_R01 Intensity",
+    "20201222_COL032_00456_PROT_R01 Intensity",
+    "20201222_COL032_00457_PROT_R01 Intensity",
+    "20201222_COL032_00458_PROT_R01 Intensity",
+    "20201224_COL032_00246_PROT_R01 Intensity",
+    "20201224_COL032_00247_PROT_R01 Intensity",
+    "20201224_COL032_00269_PROT_R01 Intensity",
+    "20201224_COL032_00270_PROT_R01 Intensity",
+    "20201224_COL032_00271_PROT_R01 Intensity",
+    "20201224_COL032_00342_PROT_R01 Intensity",
+    "20201224_COL032_00343_PROT_R01 Intensity",
+    "20201224_COL032_00344_PROT_R01 Intensity",
+    "20201224_COL032_00366_PROT_R01 Intensity",
+    "20201224_COL032_00367_PROT_R01 Intensity",
+    "20201224_COL032_00368_PROT_R01 Intensity",
+    "20201224_COL032_00389_PROT_R01 Intensity",
+    "20201224_COL032_00390_PROT_R01 Intensity",
+    "20201224_COL032_00391_PROT_R01 Intensity",
+    "20201224_COL032_00402_PROT_R01 Intensity",
+    "20201224_COL032_00403_PROT_R01 Intensity",
+    "20201224_COL032_00404_PROT_R01 Intensity",
+    "20201224_COL032_00436_PROT_R01 Intensity",
+    "20201224_COL032_00437_PROT_R01 Intensity",
+    "20201224_COL032_00438_PROT_R01 Intensity",
+    "20201224_COL032_00515_PROT_R01 Intensity",
+    "20201218_COL032_00295_PROT_R01 MaxLFQ Intensity",
+    "20201218_COL032_00296_PROT_R01 MaxLFQ Intensity",
+    "20201218_COL032_00297_PROT_R01 MaxLFQ Intensity",
+    "20201220_COL032_00130_PROT_R01 MaxLFQ Intensity",
+    "20201220_COL032_00131_PROT_R01 MaxLFQ Intensity",
+    "20201220_COL032_00132_PROT_R01 MaxLFQ Intensity",
+    "20201220_COL032_00315_PROT_R01 MaxLFQ Intensity",
+    "20201220_COL032_00316_PROT_R01 MaxLFQ Intensity",
+    "20201220_COL032_00317_PROT_R01 MaxLFQ Intensity",
+    "20201222_COL032_00421_PROT_R01 MaxLFQ Intensity",
+    "20201222_COL032_00422_PROT_R01 MaxLFQ Intensity",
+    "20201222_COL032_00423_PROT_R01 MaxLFQ Intensity",
+    "20201222_COL032_00456_PROT_R01 MaxLFQ Intensity",
+    "20201222_COL032_00457_PROT_R01 MaxLFQ Intensity",
+    "20201222_COL032_00458_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00246_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00247_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00269_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00270_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00271_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00342_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00343_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00344_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00366_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00367_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00368_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00389_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00390_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00391_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00402_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00403_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00404_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00436_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00437_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00438_PROT_R01 MaxLFQ Intensity",
+    "20201224_COL032_00515_PROT_R01 MaxLFQ Intensity",
+    "Indistinguishable Proteins"
+  ],
+  "n_proteomics_rows": 7753,
+  "protein_duplicate_ids": {},
+  "deposited_sample_sheets": {
+    "immunopep_library_generation": [
+      [
+        "knockout_condition",
+        "biological_replicate",
+        "raw_file",
+        "technical_replicate"
+      ],
+      [
+        "B2M",
+        1,
+        "20201218_COL032-00398_00399_00400_00401_00178-HLAIp_R01",
+        1
+      ],
+      [
+        "B2M",
+        1,
+        "20201218_COL032-00398_00399_00400_00401_00178-HLAIp_R02",
+        2
+      ],
+      [
+        "CALR",
+        1,
+        "20201202_COL032-00345_00346-HLAIp_R01",
+        1
+      ],
+      [
+        "CALR",
+        1,
+        "20201202_COL032-00345_00346-HLAIp_R02",
+        2
+      ],
+      [
+        "CALR",
+        2,
+        "20201202_COL032-00347_00348-HLAIp_R01",
+        1
+      ],
+      [
+        "CALR",
+        2,
+        "20201202_COL032-00347_00348-HLAIp_R02",
+        2
+      ],
+      [
+        "CALR",
+        3,
+        "20201202_COL032-00349_00350-HLAIp_R01",
+        1
+      ],
+      [
+        "CALR",
+        3,
+        "20201202_COL032-00349_00350-HLAIp_R02",
+        2
+      ],
+      [
+        "CANX",
+        1,
+        "20201009_COL032-00056-HLAIp_R01",
+        1
+      ],
+      [
+        "CANX",
+        1,
+        "20201009_COL032-00056-HLAIp_R02",
+        2
+      ],
+      [
+        "CANX",
+        2,
+        "20210114_COL032-00133_00134_00135_00136_00137-HLAIp_R01",
+        1
+      ],
+      [
+        "CANX",
+        3,
+        "20210122_COL032-00306_00307_00308_00309_00310-HLAIp_R01",
+        1
+      ],
+      [
+        "ERAP1",
+        1,
+        "20210114_COL032-00413_00414-HLAIp_R01",
+        1
+      ],
+      [
+        "ERAP1",
+        2,
+        "20210122_COL032-00417_00418_00183_00184_00185-HLAIp_R01",
+        1
+      ],
+      [
+        "GANAB",
+        1,
+        "20210122_COL032-00326_00327_00328_00329_00330-HLAIp_R01",
+        1
+      ],
+      [
+        "GANAB",
+        2,
+        "20210122_COL032-00331_00332_00333_00334_00335-HLAIp_R01",
+        1
+      ],
+      [
+        "GANAB",
+        3,
+        "20210122_COL032-00336_00337_00338_00339_00340-HLAIp_R01",
+        1
+      ],
+      [
+        "IRF2",
+        1,
+        "20210122_COL032-00207_00208_00209_00210_00211-HLAIp_R01",
+        1
+      ],
+      [
+        "IRF2",
+        2,
+        "20210122_COL032-00212_00213_00214_00447_00448-HLAIp_R01",
+        1
+      ],
+      [
+        "IRF2",
+        3,
+        "20210122_COL032-00449_00450_00451_00452_00453-HLAIp_R01",
+        1
+      ],
+      [
+        "PDIA3",
+        1,
+        "20210126_COL032-00145_00146_00147_00148_00149-HLAIp_R01",
+        1
+      ],
+      [
+        "PDIA3",
+        2,
+        "20210126_COL032-00150_00151_00152_00358_00359-HLAIp_R01",
+        1
+      ],
+      [
+        "PDIA3",
+        3,
+        "20210126_COL032-00360_00361_00362_00363_00364-HLAIp_R01",
+        1
+      ],
+      [
+        "SPPL3",
+        1,
+        "20210128_COL032-00560_00561-HLAIp_R01",
+        1
+      ],
+      [
+        "SPPL3",
+        2,
+        "20210128_COL032-00562_00563-HLAIp_R01",
+        1
+      ],
+      [
+        "SPPL3",
+        3,
+        "20210128_COL032-00564_00565-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP1",
+        1,
+        "20201127_COL032-00231_00232_00233_00234_00235-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP1",
+        1,
+        "20201127_COL032-00231_00232_00233_00234_00235-HLAIp_R02",
+        2
+      ],
+      [
+        "TAP1",
+        2,
+        "20201127_COL032-00236_00237_00238_00239_00240-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP1",
+        2,
+        "20201127_COL032-00236_00237_00238_00239_00240-HLAIp_R02",
+        2
+      ],
+      [
+        "TAP1",
+        3,
+        "20201127_COL032-00241_00242_00243_00244_00245-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP1",
+        3,
+        "20201127_COL032-00241_00242_00243_00244_00245-HLAIp_R02",
+        2
+      ],
+      [
+        "TAP1",
+        4,
+        "20210127_COL032-00575_00576-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP1",
+        5,
+        "20210127_COL032-00577_00578-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP1",
+        6,
+        "20210127_COL032-00579_00580-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP2",
+        1,
+        "20201127_COL032-00250_00251_00264-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP2",
+        1,
+        "20201127_COL032-00250_00251_00264-HLAIp_R02",
+        2
+      ],
+      [
+        "TAP2",
+        2,
+        "20201127_COL032-00263_00248_00249-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP2",
+        2,
+        "20201127_COL032-00263_00248_00249-HLAIp_R02",
+        2
+      ],
+      [
+        "TAP2",
+        3,
+        "20201127_COL032-00265_00252_00253-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP2",
+        3,
+        "20201127_COL032-00265_00252_00253-HLAIp_R02",
+        2
+      ],
+      [
+        "TAP2",
+        4,
+        "20210127_COL032-00266_00254_00255-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP2",
+        5,
+        "20210127_COL032-00267_00256_00257-HLAIp_R01",
+        1
+      ],
+      [
+        "TAP2",
+        6,
+        "20210127_COL032-00268_00258_00259-HLAIp_R01",
+        1
+      ],
+      [
+        "TAPBP",
+        1,
+        "20210126_COL032-00377_00378_00379_00380_00381-HLAIp_R01",
+        1
+      ],
+      [
+        "TAPBP",
+        2,
+        "20210126_COL032-00382_00383_00384_00385_00386-HLAIp_R01",
+        1
+      ],
+      [
+        "TAPBP",
+        3,
+        "20210126_COL032-00387_00168_00169_00170_00171-HLAIp_R01",
+        1
+      ],
+      [
+        "wt",
+        1,
+        "20201009_COL032-00057-HLAIp_R01",
+        1
+      ],
+      [
+        "wt",
+        1,
+        "20201009_COL032-00057-HLAIp_R02",
+        2
+      ],
+      [
+        "wt",
+        2,
+        "20201027_COL032-00120_00118_00119-HLAIp_R01",
+        1
+      ],
+      [
+        "wt",
+        2,
+        "20201027_COL032-00120_00118_00119-HLAIp_R02",
+        2
+      ],
+      [
+        "wt",
+        3,
+        "20201027_COL032-00121_00122_00123-HLAIp_R01",
+        1
+      ],
+      [
+        "wt",
+        3,
+        "20201027_COL032-00121_00122_00123-HLAIp_R02",
+        2
+      ],
+      [
+        "wt",
+        4,
+        "20201127_COL032-00274_00275_00276_00277_00278-HLAIp_R01",
+        1
+      ],
+      [
+        "wt",
+        4,
+        "20201127_COL032-00274_00275_00276_00277_00278-HLAIp_R02",
+        2
+      ],
+      [
+        "wt",
+        5,
+        "20201127_COL032-00279_00280_00281_00282_00283-HLAIp_R01",
+        1
+      ],
+      [
+        "wt",
+        5,
+        "20201127_COL032-00279_00280_00281_00282_00283-HLAIp_R02",
+        2
+      ],
+      [
+        "wt",
+        6,
+        "20201127_COL032-00284_00285_00286_00287_00288-HLAIp_R01",
+        1
+      ],
+      [
+        "wt",
+        6,
+        "20201127_COL032-00284_00285_00286_00287_00288-HLAIp_R02",
+        2
+      ],
+      [
+        "wt",
+        7,
+        "20210114_COL032-00289_00290_00291_00292_00293-HLAIp_R01",
+        1
+      ],
+      [
+        "wt",
+        8,
+        "20210122_COL032-00547_00548-HLAIp_R01",
+        1
+      ]
+    ],
+    "immunopep_library_search": [
+      [
+        "knockout_condition",
+        "biological_replicate",
+        "raw_file",
+        "technical_replicate"
+      ],
+      [
+        "B2M",
+        1,
+        "20201218_DIA_COL032-00395_00394-HLAIp_R04",
+        1
+      ],
+      [
+        "B2M",
+        1,
+        "20201218_DIA_COL032-00395_00394-HLAIp_R03",
+        2
+      ],
+      [
+        "B2M",
+        2,
+        "20201218_DIA_COL032-00396_00397-HLAIp_R04",
+        1
+      ],
+      [
+        "B2M",
+        2,
+        "20201218_DIA_COL032-00396_00397-HLAIp_R03",
+        2
+      ],
+      [
+        "B2M",
+        3,
+        "20201218_DIA_COL032-00398_00399_00400_00401_00178-HLAIp_R04",
+        1
+      ],
+      [
+        "B2M",
+        3,
+        "20201218_DIA_COL032-00398_00399_00400_00401_00178-HLAIp_R03",
+        2
+      ],
+      [
+        "CALR",
+        1,
+        "20201202_DIA_COL032-00345_00346-HLAIp_R03",
+        1
+      ],
+      [
+        "CALR",
+        1,
+        "20201202_DIA_COL032-00345_00346-HLAIp_R04",
+        2
+      ],
+      [
+        "CALR",
+        2,
+        "20201202_DIA_COL032-00347_00348-HLAIp_R03",
+        1
+      ],
+      [
+        "CALR",
+        2,
+        "20201202_DIA_COL032-00347_00348-HLAIp_R04",
+        2
+      ],
+      [
+        "CALR",
+        3,
+        "20201202_DIA_COL032-00349_00350-HLAIp_R03",
+        1
+      ],
+      [
+        "CALR",
+        3,
+        "20201202_DIA_COL032-00349_00350-HLAIp_R04",
+        2
+      ],
+      [
+        "CANX",
+        1,
+        "20201204_DIA_COL032-00300_00301-HLAIp_R03",
+        1
+      ],
+      [
+        "CANX",
+        1,
+        "20201204_DIA_COL032-00300_00301-HLAIp_R04",
+        2
+      ],
+      [
+        "CANX",
+        2,
+        "20201204_DIA_COL032-00302_00303-HLAIp_R03",
+        1
+      ],
+      [
+        "CANX",
+        2,
+        "20201204_DIA_COL032-00302_00303-HLAIp_R04",
+        2
+      ],
+      [
+        "CANX",
+        3,
+        "20201204_DIA_COL032-00304_00305-HLAIp_R03",
+        1
+      ],
+      [
+        "CANX",
+        3,
+        "20201204_DIA_COL032-00304_00305-HLAIp_R04",
+        2
+      ],
+      [
+        "ERAP1",
+        1,
+        "20201211_DIA_COL032-00407_00408-HLAIp_R04",
+        1
+      ],
+      [
+        "ERAP1",
+        1,
+        "20201211_DIA_COL032-00407_00408-HLAIp_R03",
+        2
+      ],
+      [
+        "ERAP1",
+        2,
+        "20201211_DIA_COL032-00409_00410-HLAIp_R03",
+        1
+      ],
+      [
+        "ERAP1",
+        2,
+        "20201211_DIA_COL032-00409_00410-HLAIp_R04",
+        2
+      ],
+      [
+        "ERAP1",
+        3,
+        "20201211_DIA_COL032-00411_00412-HLAIp_R03",
+        1
+      ],
+      [
+        "ERAP1",
+        3,
+        "20201211_DIA_COL032-00411_00412-HLAIp_R04",
+        2
+      ],
+      [
+        "ERp57",
+        1,
+        "20201207_DIA_COL032-00352_00353-HLAIp_R03",
+        1
+      ],
+      [
+        "ERp57",
+        1,
+        "20201207_DIA_COL032-00352_00353-HLAIp_R04",
+        2
+      ],
+      [
+        "ERp57",
+        2,
+        "20201207_DIA_COL032-00354_00355-HLAIp_R03",
+        1
+      ],
+      [
+        "ERp57",
+        3,
+        "20201207_DIA_COL032-00356_00357-HLAIp_R04",
+        1
+      ],
+      [
+        "ERp57",
+        3,
+        "20201207_DIA_COL032-00356_00357-HLAIp_R03",
+        2
+      ],
+      [
+        "GIIa",
+        1,
+        "20201204_DIA_COL032-00320_00321-HLAIp_R03",
+        1
+      ],
+      [
+        "GIIa",
+        1,
+        "20201204_DIA_COL032-00320_00321-HLAIp_R04",
+        2
+      ],
+      [
+        "GIIa",
+        2,
+        "20201204_DIA_COL032-00322_00323-HLAIp_R03",
+        1
+      ],
+      [
+        "GIIa",
+        2,
+        "20201204_DIA_COL032-00322_00323-HLAIp_R04",
+        2
+      ],
+      [
+        "GIIa",
+        3,
+        "20201204_DIA_COL032-00324_00325-HLAIp_R03",
+        1
+      ],
+      [
+        "GIIa",
+        3,
+        "20201204_DIA_COL032-00324_00325-HLAIp_R04",
+        2
+      ],
+      [
+        "IRF2",
+        1,
+        "20201214_DIA_COL032-00441_00442-HLAIp_R04",
+        1
+      ],
+      [
+        "IRF2",
+        1,
+        "20201214_DIA_COL032-00441_00442-HLAIp_R03",
+        2
+      ],
+      [
+        "IRF2",
+        2,
+        "20201214_DIA_COL032-00443_00444-HLAIp_R03",
+        1
+      ],
+      [
+        "IRF2",
+        2,
+        "20201214_DIA_COL032-00443_00444-HLAIp_R04",
+        2
+      ],
+      [
+        "IRF2",
+        3,
+        "20201214_DIA_COL032-00445_00446-HLAIp_R03",
+        1
+      ],
+      [
+        "IRF2",
+        3,
+        "20201214_DIA_COL032-00445_00446-HLAIp_R04",
+        2
+      ],
+      [
+        "SPPL3",
+        1,
+        "20201211_DIA_COL032-00426_00427-HLAIp_R03",
+        1
+      ],
+      [
+        "SPPL3",
+        1,
+        "20201211_DIA_COL032-00426_00427-HLAIp_R04",
+        2
+      ],
+      [
+        "SPPL3",
+        2,
+        "20201211_DIA_COL032-00428_00429-HLAIp_R03",
+        1
+      ],
+      [
+        "SPPL3",
+        2,
+        "20201211_DIA_COL032-00428_00429-HLAIp_R04",
+        2
+      ],
+      [
+        "SPPL3",
+        3,
+        "20201211_DIA_COL032-00430_00431-HLAIp_R03",
+        1
+      ],
+      [
+        "SPPL3",
+        3,
+        "20201211_DIA_COL032-00430_00431-HLAIp_R04",
+        2
+      ],
+      [
+        "TAP1",
+        1,
+        "20201127_DIA_COL032-00241_00242_00243_00244_00245-HLAIp_R03",
+        1
+      ],
+      [
+        "TAP1",
+        1,
+        "20201127_DIA_COL032-00241_00242_00243_00244_00245-HLAIp_R04",
+        2
+      ],
+      [
+        "TAP1",
+        2,
+        "20201127_DIA_COL032-00236_00237_00238_00239_00240-HLAIp_R03",
+        1
+      ],
+      [
+        "TAP1",
+        3,
+        "20201127_DIA_COL032-00231_00232_00233_00234_00235-HLAIp_R03",
+        1
+      ],
+      [
+        "TAP1",
+        3,
+        "20201127_DIA_COL032-00231_00232_00233_00234_00235-HLAIp_R04",
+        2
+      ],
+      [
+        "TAP2",
+        1,
+        "20201127_DIA_COL032-00265_00252_00253-HLAIp_R03",
+        1
+      ],
+      [
+        "TAP2",
+        2,
+        "20201127_DIA_COL032-00263_00248_00249-HLAIp_R03",
+        1
+      ],
+      [
+        "TAP2",
+        3,
+        "20201127_DIA_COL032-00250_00251_00264-HLAIp_R03",
+        1
+      ],
+      [
+        "TAPBP",
+        1,
+        "20201209_DIA_COL032-00371_00372-HLAIp_R03",
+        1
+      ],
+      [
+        "TAPBP",
+        1,
+        "20201209_DIA_COL032-00371_00372-HLAIp_R04",
+        2
+      ],
+      [
+        "TAPBP",
+        2,
+        "20201209_DIA_COL032-00373_00374-HLAIp_R03",
+        1
+      ],
+      [
+        "TAPBP",
+        2,
+        "20201209_DIA_COL032-00373_00374-HLAIp_R04",
+        2
+      ],
+      [
+        "TAPBP",
+        3,
+        "20201209_DIA_COL032-00375_00376-HLAIp_R03",
+        1
+      ],
+      [
+        "TAPBP",
+        3,
+        "20201209_DIA_COL032-00375_00376-HLAIp_R04",
+        2
+      ],
+      [
+        "wt",
+        1,
+        "20201127_DIA_COL032-00274_00275_00276_00277_00278-HLAIp_R03",
+        1
+      ],
+      [
+        "wt",
+        1,
+        "20201127_DIA_COL032-00274_00275_00276_00277_00278-HLAIp_R04",
+        2
+      ],
+      [
+        "wt",
+        2,
+        "20201127_DIA_COL032-00284_00285_00286_00287_00288-HLAIp_R04",
+        1
+      ],
+      [
+        "wt",
+        2,
+        "20201127_DIA_COL032-00284_00285_00286_00287_00288-HLAIp_R03",
+        2
+      ],
+      [
+        "wt",
+        3,
+        "20201127_DIA_COL032-00279_00280_00281_00282_00283-HLAIp_R04",
+        1
+      ],
+      [
+        "wt",
+        3,
+        "20201127_DIA_COL032-00279_00280_00281_00282_00283-HLAIp_R03",
+        2
+      ]
+    ],
+    "proteomics": [
+      [
+        "knockout_condition",
+        "biological_replicate",
+        "raw_file"
+      ],
+      [
+        "wt",
+        3,
+        "20201218_COL032_00297_PROT_R01"
+      ],
+      [
+        "TAP1",
+        2,
+        "20201224_COL032_00246_PROT_R01"
+      ],
+      [
+        "TAP1",
+        1,
+        "20201224_COL032_00515_PROT_R01"
+      ],
+      [
+        "TAP1",
+        3,
+        "20201224_COL032_00247_PROT_R01"
+      ],
+      [
+        "SPPL3",
+        2,
+        "20201224_COL032_00437_PROT_R01"
+      ],
+      [
+        "wt",
+        2,
+        "20201218_COL032_00296_PROT_R01"
+      ],
+      [
+        "wt",
+        1,
+        "20201218_COL032_00295_PROT_R01"
+      ],
+      [
+        "CALR",
+        1,
+        "20201220_COL032_00130_PROT_R01"
+      ],
+      [
+        "CALR",
+        2,
+        "20201220_COL032_00131_PROT_R01"
+      ],
+      [
+        "CALR",
+        3,
+        "20201220_COL032_00132_PROT_R01"
+      ],
+      [
+        "CANX",
+        1,
+        "20201220_COL032_00315_PROT_R01"
+      ],
+      [
+        "CANX",
+        2,
+        "20201220_COL032_00316_PROT_R01"
+      ],
+      [
+        "CANX",
+        3,
+        "20201220_COL032_00317_PROT_R01"
+      ],
+      [
+        "ERp57",
+        1,
+        "20201224_COL032_00366_PROT_R01"
+      ],
+      [
+        "ERp57",
+        2,
+        "20201224_COL032_00367_PROT_R01"
+      ],
+      [
+        "ERp57",
+        3,
+        "20201224_COL032_00368_PROT_R01"
+      ],
+      [
+        "GIIa",
+        1,
+        "20201224_COL032_00342_PROT_R01"
+      ],
+      [
+        "GIIa",
+        2,
+        "20201224_COL032_00343_PROT_R01"
+      ],
+      [
+        "GIIa",
+        3,
+        "20201224_COL032_00344_PROT_R01"
+      ],
+      [
+        "SPPL3",
+        1,
+        "20201224_COL032_00436_PROT_R01"
+      ],
+      [
+        "SPPL3",
+        3,
+        "20201224_COL032_00438_PROT_R01"
+      ],
+      [
+        "TAP2",
+        1,
+        "20201224_COL032_00269_PROT_R01"
+      ],
+      [
+        "TAP2",
+        3,
+        "20201224_COL032_00271_PROT_R01"
+      ],
+      [
+        "ERAP1",
+        3,
+        "20201222_COL032_00423_PROT_R01"
+      ],
+      [
+        "TAP2",
+        2,
+        "20201224_COL032_00270_PROT_R01"
+      ],
+      [
+        "TAPBP",
+        1,
+        "20201224_COL032_00389_PROT_R01"
+      ],
+      [
+        "TAPBP",
+        2,
+        "20201224_COL032_00390_PROT_R01"
+      ],
+      [
+        "TAPBP",
+        3,
+        "20201224_COL032_00391_PROT_R01"
+      ],
+      [
+        "ERAP1",
+        1,
+        "20201222_COL032_00421_PROT_R01"
+      ],
+      [
+        "ERAP1",
+        2,
+        "20201222_COL032_00422_PROT_R01"
+      ],
+      [
+        "IRF2",
+        3,
+        "20201222_COL032_00458_PROT_R01"
+      ],
+      [
+        "IRF2",
+        2,
+        "20201222_COL032_00457_PROT_R01"
+      ],
+      [
+        "IRF2",
+        1,
+        "20201222_COL032_00456_PROT_R01"
+      ],
+      [
+        "B2M",
+        1,
+        "20201224_COL032_00402_PROT_R01"
+      ],
+      [
+        "B2M",
+        2,
+        "20201224_COL032_00403_PROT_R01"
+      ],
+      [
+        "B2M",
+        3,
+        "20201224_COL032_00404_PROT_R01"
+      ]
+    ]
+  },
+  "comparisons": {
+    "Precursor.Quantity:observed_technical_runs": {
+      "n_compared": 296483,
+      "n_exact": 0,
+      "n_close_rtol_1e-6_atol_1e-6": 0,
+      "n_source_NA": 448573,
+      "n_NA_with_deposit_value": 36,
+      "max_absolute_difference": 4534186905.0
+    },
+    "Precursor.Quantity:all_declared_technical_runs": {
+      "n_compared": 296483,
+      "n_exact": 0,
+      "n_close_rtol_1e-6_atol_1e-6": 0,
+      "n_source_NA": 448573,
+      "n_NA_with_deposit_value": 36,
+      "max_absolute_difference": 4534186905.0
+    },
+    "Precursor.Normalised:observed_technical_runs": {
+      "n_compared": 296483,
+      "n_exact": 209349,
+      "n_close_rtol_1e-6_atol_1e-6": 212472,
+      "n_source_NA": 448573,
+      "n_NA_with_deposit_value": 36,
+      "max_absolute_difference": 232653500.0
+    },
+    "Precursor.Normalised:all_declared_technical_runs": {
+      "n_compared": 296483,
+      "n_exact": 293292,
+      "n_close_rtol_1e-6_atol_1e-6": 296483,
+      "n_source_NA": 448573,
+      "n_NA_with_deposit_value": 36,
+      "max_absolute_difference": 7.450580596923828e-09
+    },
+    "Intensity": {
+      "n_compared": 166028,
+      "n_exact": 1033,
+      "n_close_rtol_1e-6_atol_1e-6": 1033,
+      "n_source_NA": 65704,
+      "n_NA_with_deposit_value": 65704,
+      "max_absolute_difference": 1003448684000.0
+    },
+    "MaxLFQ Intensity": {
+      "n_compared": 166028,
+      "n_exact": 166028,
+      "n_close_rtol_1e-6_atol_1e-6": 166028,
+      "n_source_NA": 65704,
+      "n_NA_with_deposit_value": 65704,
+      "max_absolute_difference": 0.0
+    }
+  },
+  "elapsed_seconds": 55.0266953749815,
+  "peak_rss_gib": 0.6348876953125,
+  "invocation": [
+    "experiments/2026-10-24_0612_codex_hap1-quantitative-admission/analysis/replay.py"
+  ],
+  "source_semantics": "No training admission; inspect replay differences before assigning units"
+}

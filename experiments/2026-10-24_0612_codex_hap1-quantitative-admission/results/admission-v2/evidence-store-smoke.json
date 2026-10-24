@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "package_manifest_sha256": "88cad10d7bc2a638305cb0d37ad96ac2826c3badaf7b3e0aad7928820df5c4b8",
+  "scope": "query-only after writer source replay and independent cell check; no extra open/replay",
+  "evidence_store_sha256": "4a99b253528ca33fdc32475e65aebc0e0dae52c688712fdacafd5b492f30c5f1",
+  "n_bindings": 10,
+  "quantities": [
+    {
+      "quantitative_value": 2219264430.0,
+      "value_status": "source_positive",
+      "context.condition_knockout_genes": "B2M",
+      "context.mhc_genotype": "HLA-A*02:01 HLA-B*40:01 HLA-C*03:04",
+      "context.measured_pool": "HLA_I_immunoprecipitated_peptides"
+    },
+    {
+      "quantitative_value": 1839307650.0,
+      "value_status": "source_positive",
+      "context.condition_knockout_genes": "B2M",
+      "context.mhc_genotype": "HLA-A*02:01 HLA-B*40:01 HLA-C*03:04",
+      "context.measured_pool": "HLA_I_immunoprecipitated_peptides"
+    },
+    {
+      "quantitative_value": 1788280275.0,
+      "value_status": "source_positive",
+      "context.condition_knockout_genes": "B2M",
+      "context.mhc_genotype": "HLA-A*02:01 HLA-B*40:01 HLA-C*03:04",
+      "context.measured_pool": "HLA_I_immunoprecipitated_peptides"
+    }
+  ],
+  "unmapped": [
+    {
+      "sample_id": null,
+      "context.condition_knockout_genes": null
+    },
+    {
+      "sample_id": null,
+      "context.condition_knockout_genes": null
+    }
+  ],
+  "prior_failure": "all-null optional join raised ArrowTypeError; Hitlist805 regression fails before correction"
+}

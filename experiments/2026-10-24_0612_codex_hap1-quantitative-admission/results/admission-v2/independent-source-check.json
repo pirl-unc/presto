@@ -1,0 +1,19 @@
+{
+  "status": "all_checked_source_cells_equal",
+  "package_manifest_sha256": "88cad10d7bc2a638305cb0d37ad96ac2826c3badaf7b3e0aad7928820df5c4b8",
+  "counts": {
+    "quantities:n_cells": 2391692,
+    "protein_quantities:n_cells": 558216,
+    "precursors:n_rows": 607928,
+    "precursors:n_unmapped_rows": 40529,
+    "occurrences:n_exact_matches": 59726,
+    "occurrences:n_unmapped_rows": 721
+  },
+  "elapsed_seconds": 96.90024416695815,
+  "peak_rss_gib": 0.9873199462890625,
+  "scope": "every supplement and deposited protein quantity; every DIA source row; sample/run links; validity of every emitted exact occurrence",
+  "limitations": [
+    "does_not_independently_prove_exhaustiveness_of_reference_search",
+    "not_predictive_evaluation_or_specimen_independence_validation"
+  ]
+}

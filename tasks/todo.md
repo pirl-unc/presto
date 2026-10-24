@@ -12887,3 +12887,65 @@ broadmouse13. Sourceassets/schema not yet admitted. Need sharedcanonical source
 work and prospective independent biological evaluation; stop expanding current
 sourcefeatures. Hitlist2.0.17publicationverification remains separate pendingwork.
 Full APCavailability/concentration goal remains active and unachieved.
+
+### Independent DC machinery source admission
+
+Previous goal turn: progress;0527diagnostic publishedc7d538c andHitlist798filed.
+- [x] Register source admission and preserve previous datasets/tests.
+- [ ] Retrieve original public quantitative assets and qualify their source scope.
+- [ ] Implement/reuse current canonical Hitlist admission with homogeneous metadata.
+- [ ] Independently verify source quantities/lineage, test and publish shared support.
+- [ ] Preregister the resulting biological comparison; no concentration promotion from elution alone.
+
+### Quantitative HAP1 machinery source admission
+
+Previous status-only turn: no progress. Current DC retrieval attempt establishes
+verified public-source access limits, not unavailable biological data in general.
+Plan: experiments/agents/codex/plans/hap1-quantitative-admission.md.
+- [x] Revalidate existing Hitlist726 and register quantitative source admission.
+- [x] Retrieve actual source quantities, run identities and original proteome.
+- [ ] Implement canonical typed source support and independently verify it.
+- [ ] Publish shared support; preregister and run the biological comparison.
+- [ ] Validate transfer to actual APCs and precursor-relative availability.
+
+DC0602review:13retrievalattempts/10bodies verified. EuropePMCdeclines nonOA
+supplements; currentPMCpubliclistingempty; publisher403. Quantitative admission
+remains pending under798. No data/labels invented. Existing726HAP1 has accessible
+source XML and14.9MBsupplementarchive; schema qualification proceeds separately.
+
+### HAP1 source replay review
+
+Canonical Search.zip, original supplements and SDRF are now available. All 296,483
+numeric canonical peptide cells replay as normalized precursor sums averaged over
+declared technical runs. All 166,028 numeric protein cells replay as MaxLFQ. These
+are source reconstructions, not predictive results. Two DIA runs remain unmapped;
+23,096 protein supplement NA cells have positive deposited MaxLFQ and require
+source-filter lineage before filling or training admission. Full per-cell comparisons
+and hashes are preserved; README and canonical log now record the result.
+
+Latest exact-head Presto CI40084041491 is completed/success at c7d538c. Full APC
+availability objective remains active. Next work is canonical Hitlist726 admission,
+then a prospective biological comparison; no rerun of inspected APC/native tests.
+
+### Shared HAP1 source implementation
+
+Previous goal turn: progress (recovered source semantics, updated Hitlist726).
+Current progress: Hitlist PR806 draft at2f4bbe0 implements the shared source package,
+with source-faithful quantity/context/reference relations and no Presto curator.
+Actual manifest88cad10d7bc2a638305cb0d37ad96ac2826c3badaf7b3e0aad7928820df5c4b8.
+Independent checks pass2,391,692 supplement cells,558,216 deposited protein cells,
+607,928DIA rows and59,726 emitted exact matches;721 peptide rows remain unmapped.
+Build/source replay379.92s/1.163GiB; independent checker96.90s/.987GiB. Source v1
+SDRF failure preserved; positional repeated-header correction tested.
+
+Hitlist805 tracks the actual null-context join failure. Three regressions fail
+before the fix;55 focused tests and actual original-package queries pass afterward.
+Format/lint pass. Full test.sh refuses the actual memory capacity; no override.
+Hosted/full-suite validation, upstream merge/release and endpoint recipe remain
+pending. No new model training or held-out scoring. The full APC availability goal
+remains active. Next: materialize source-linked HAP1 response eligibility/recipe,
+then register a biological comparison with strong condition/precursor controls.
+
+Hosted validation: Hitlist40088549411 is confirmed in progress at2f4bbe0;
+docs40088549372, lint and Python3.14 units pass. Other unit versions and integration
+remain live. Poll this exact handle; do not dispatch a duplicate.

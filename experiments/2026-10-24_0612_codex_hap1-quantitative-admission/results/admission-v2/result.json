@@ -1,0 +1,37 @@
+{
+  "started_at": "2026-10-24T10:48:25.618549+00:00",
+  "command": [
+    "experiments/2026-10-24_0612_codex_hap1-quantitative-admission/code/admit.py",
+    "--experiment",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0612_codex_hap1-quantitative-admission",
+    "--attempt",
+    "v2"
+  ],
+  "hitlist_base_commit": "e8faa7fd437d9f8b47d67a4c7836ad3df073f948",
+  "hitlist_dirty_state": " M hitlist/__init__.py\n M hitlist/evidence_bindings.py\n M hitlist/evidence_catalog.py\n M hitlist/evidence_package.py\n M hitlist/evidence_store.py\n M hitlist/version.py\n M tasks/todo.md\n M tests/test_binding_context_availability.py\n M tests/test_digestion_processing_package.py\n M tests/test_evidence_catalog.py\n M tests/test_gomez_prediction_panel.py\n M tests/test_tcell_processing_package.py\n M tests/test_tmab_peptidomics.py\n?? hitlist/data/evidence_revisions/hap1_assets.json\n?? hitlist/data/evidence_revisions/hap1_contract.json\n?? hitlist/hap1_quantitative.py\n?? tasks/hap1-quantitative-726.md\n?? tests/test_hap1_quantitative.py\n",
+  "source_hashes": {
+    "hitlist/hap1_quantitative.py": "04e867525b705c29f05607fb219563f9584a800360c72c46856d1f92afea91de",
+    "hitlist/evidence_catalog.py": "8d4e10be2a2910370de699038fb51d7d481980eca1fd08ca38740704cf301295",
+    "hitlist/evidence_bindings.py": "2d1e83c54060b75deaafb7261e9e42aee2f03801240ee186b03e3ddea3830c64",
+    "hitlist/evidence_package.py": "de0b4d9b096c3437aeb80b5a5b99513362019612140992e649783491237459d9",
+    "hitlist/evidence_store.py": "83f65e24c31baa594f8249d675d2eaf23d04519cab3285bd16f9387a9ec2e4fc",
+    "hitlist/version.py": "a8c6e88afea28dddce762d7ae86d46e03c93cf932b8cf6ce19366883c7f228bb",
+    "hitlist/__init__.py": "57aa0e6b82771816669b33474f749c75f527746ca736128d1f2ca89dc52d63eb",
+    "hitlist/data/evidence_revisions/hap1_assets.json": "205589dd32e389d38d413801c304c3b9f199936306549fe0062c553586a1c510",
+    "hitlist/data/evidence_revisions/hap1_contract.json": "8b771b15b9c367622dfbe794a9d43a6aa20e5ce145148f1871332a5a5f23a54f"
+  },
+  "environment": {
+    "PYTHONPATH": "/private/tmp/hitlist-dc798:/private/tmp/presto-native-import",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "source_root": "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission",
+  "destination": "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission/canonical-package-v2",
+  "contract": "shared source admission, no predictive fitting",
+  "manifest_sha256": "88cad10d7bc2a638305cb0d37ad96ac2826c3badaf7b3e0aad7928820df5c4b8",
+  "status": "source_package_built_and_replayed",
+  "elapsed_seconds": 379.92138412501663,
+  "peak_rss_gib": 1.162811279296875
+}
