@@ -13193,3 +13193,8 @@ observer. Full APC availability goal stays active and unachieved.
 - [ ] Prospectively select additional pools and test held-out relative MS response.
 
 Review:1,147source-backed targets; no new fitted model or concentration claim.
+
+Next biological constraint: [grouped MS1 observer plan](../experiments/agents/codex/plans/ms1-grouped-observer.md),
+frozen before new pool selection or quantities. Sixteen train/four validation/four
+test pools; simple sequence/length controls and a bounded nonlinear control. No
+new predictive claim until held-out evaluation and independent closure.
