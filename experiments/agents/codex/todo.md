@@ -180,9 +180,13 @@ A static peptide MS response cancels from same-peptide condition ratios; do not
 claim that simply adding it can remedy the prior response-model failures.
 
 - [x]1938independent lymph composition:21fits, numerical/data/prediction replay and report closed; no biological promotion.
-- [ ] Finish Hitlist818source release40126246020 and819recipeCI/merge/release.
+- [x] Finish Hitlist818/819 source and recipe releases:2.0.27/2.0.28 bytes independently verified.
 - [ ] After this failed transfer, specify a training-only or new-cohort test of separately calibrated observation and processing/selection assumptions; keep1938heldoutsclosed and preserve the full APCavailability objective.
 
 - [x] 2018 HAP1 context diagnostic: frozen nine-arm training-only comparison; retain old outer sets closed. Plan: plans/hap1-context-ablation.md.
 
 - [x] 2041 frozen MHC-score diagnostic: qualify available predictor, then fixed six-arm training-only comparison (plans/hap1-affinity-control.md).
+
+- [x] Execute2106 shared TAP-route response exact/conditional-sampled comparison (plans/hap1-tap-route-response.md); independent concentration qualification remains required.
+
+- [ ] After2106 failed its matched-feature gate, qualify baseline peptide amounts and their observation/selection contract before another response-only mechanism fit. Preserve old test closures and the full precursor-relative APC availability goal.

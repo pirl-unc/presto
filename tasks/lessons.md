@@ -607,3 +607,7 @@ Keep applicability reporting separate from model features and the measured label
 ## 2026-10-24 — Independent regression replay and rank ties
 
 - Agreement of predictions to a numerical tolerance does not imply agreement of raw Spearman to that tolerance. Verify coefficients/predictions independently, recompute published metrics from the exact archived values, and separately audit rank discrepancies on mathematically identical inputs. Preserve raw values and failed checks; explicitly record any revised verification contract rather than silently loosening a tolerance or rounding biological results.
+
+## 2026-10-24 — Production boundary coverage
+
+- A reference-algebra identity is not a test of the production implementation at that boundary. Invoke the actual function for every named boundary/monotonicity gate before fitting. If closure finds missing coverage, preserve original checks and fits, register a post-fit amendment, and disclose its timing rather than retroactively claiming the prospective gate ran.

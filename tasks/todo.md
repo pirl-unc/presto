@@ -13348,3 +13348,17 @@ Plan: experiments/agents/codex/plans/hap1-context-ablation.md.
 2041 review: sequence+frozen MHC scores CV RMSE0.562644 versus0.574832; shuffled0.575043, allfive folds improve. Both bundled-training exposure strata improve but no sample/teacher-disjoint claim. Static affinity cancels in same-peptide ratios; fitted condition associations are not causal affinity changes. All old outer tests remain closed. Next mechanistic comparisons must beat this frozen development control and require independent biology before promotion.
 
 2041 closure: full logs inspected and byte-equivalent gzip copies retained; artifact manifest, executed snapshots, independent numerical checks and plot review pass. Default Ruff/100-column formatting pass; broader style findings are explicitly recorded without rewriting frozen code. Hitlist recipe release 2.0.28 succeeded and both published distributions are byte-identical to the tested artifact (release40129209653).
+
+## Shared TAP-route response comparison (2106)
+
+Previous goal turn made progress:2041 published59a8db6 and recipe2.0.28 release verified.
+Plan: experiments/agents/codex/plans/hap1-tap-route-response.md.
+
+- [x] Freeze biological question, two-route interpretation, matched controls and gates.
+- [x] Qualify source subgroup/features and exact/sampled mathematical identities; 9,168 observations, all source/fold/gradient gates pass.
+- [x] Fit fixed30-model family locally; all outer sets remain closed.
+- [x] Independently verify predictions/metrics, close report/registry and publish.
+
+The full APC availability/concentration goal remains active and unachieved.
+
+2106 review: exact shared route+scores CV RMSE0.711942 vs0.720640original but0.707492expanded; primary gate fails. Sampled0.712170,1.37x runtime, no accuracy benefit. All109coordinates receive gradients, exact gradient5.71e-7. Independent replay checks91,680final predictions/30fits and825,120history values. Post-fit production-boundary check coverage correction is preserved explicitly; all checks pass without refitting. Ratio invariance means baseline pool quantities still need separate supervision.
