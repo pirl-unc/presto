@@ -1,0 +1,148 @@
+{
+  "status": "passed",
+  "n_assets": 19,
+  "n_source_rows": 4384,
+  "n_original_cells": 121346,
+  "n_quantity_cells": 32995,
+  "n_reference_entries": 3430,
+  "n_identification_alternatives": 23455,
+  "blocks": [
+    {
+      "block": "human_native",
+      "n_source_rows": 1783,
+      "quantity_states": {
+        "area:positive": 1783
+      }
+    },
+    {
+      "block": "dc_dia_database",
+      "n_source_rows": 1581,
+      "quantity_states": {
+        "area:missing": 6950,
+        "area:positive": 2536,
+        "intensity:missing": 6950,
+        "intensity:positive": 2536
+      }
+    },
+    {
+      "block": "dc_dia_library",
+      "n_source_rows": 1020,
+      "quantity_states": {
+        "area:missing": 1488,
+        "area:positive": 4632,
+        "intensity:missing": 1488,
+        "intensity:positive": 4632
+      }
+    }
+  ],
+  "repository_inventories": {
+    "PXD051024": {
+      "n_files": 4,
+      "names": [
+        "20220810_ZKhan_sample_C.mgf",
+        "20220810_ZKhan_sample_C.raw.raw",
+        "PXD051024_community_annotated.sdrf.tsv",
+        "peptides.mzid.gz"
+      ]
+    },
+    "PXD044801": {
+      "n_files": 13,
+      "names": [
+        "20230220_ZKhan_sample_AP.mgf",
+        "20230220_ZKhan_sample_AP.raw.raw",
+        "20230220_ZKhan_sample_BP.mgf",
+        "20230220_ZKhan_sample_BP.raw.raw",
+        "20230220_ZKhan_sample_CP.mgf",
+        "20230220_ZKhan_sample_CP.raw.raw",
+        "20230220_ZKhan_sample_DP.mgf",
+        "20230220_ZKhan_sample_DP.raw.raw",
+        "20230220_ZKhan_sample_EP.mgf",
+        "20230220_ZKhan_sample_EP.raw.raw",
+        "20230220_ZKhan_sample_FP.mgf",
+        "20230220_ZKhan_sample_FP.raw.raw",
+        "peptides_1_1.mzid.gz"
+      ]
+    },
+    "PXD044885": {
+      "n_files": 50,
+      "names": [
+        "20220104_LSantambrogio_lymph_Afferent_C1.mgf",
+        "20220104_LSantambrogio_lymph_Afferent_C1.mzxml",
+        "20220104_LSantambrogio_lymph_Afferent_C1.raw",
+        "20220104_LSantambrogio_lymph_Afferent_C2.mgf",
+        "20220104_LSantambrogio_lymph_Afferent_C2.mzxml",
+        "20220104_LSantambrogio_lymph_Afferent_C2.raw",
+        "20220104_LSantambrogio_lymph_Afferent_C3.mgf",
+        "20220104_LSantambrogio_lymph_Afferent_C3.mzxml",
+        "20220104_LSantambrogio_lymph_Afferent_C3.raw",
+        "20220104_LSantambrogio_lymph_Afferent_C4.mgf",
+        "20220104_LSantambrogio_lymph_Afferent_C4.mzxml",
+        "20220104_LSantambrogio_lymph_Afferent_C4.raw",
+        "20220104_LSantambrogio_lymph_Afferent_DSS1.mgf",
+        "20220104_LSantambrogio_lymph_Afferent_DSS1.mzxml",
+        "20220104_LSantambrogio_lymph_Afferent_DSS1.raw",
+        "20220104_LSantambrogio_lymph_Afferent_DSS2.mgf",
+        "20220104_LSantambrogio_lymph_Afferent_DSS2.mzxml",
+        "20220104_LSantambrogio_lymph_Afferent_DSS2.raw",
+        "20220104_LSantambrogio_lymph_Afferent_DSS3.mgf",
+        "20220104_LSantambrogio_lymph_Afferent_DSS3.mzxml",
+        "20220104_LSantambrogio_lymph_Afferent_DSS3.raw",
+        "20220104_LSantambrogio_lymph_Afferent_DSS4.mgf",
+        "20220104_LSantambrogio_lymph_Afferent_DSS4.mzxml",
+        "20220104_LSantambrogio_lymph_Afferent_DSS4.raw",
+        "20220104_LSantambrogio_lymph_Efferent_C1.mgf",
+        "20220104_LSantambrogio_lymph_Efferent_C1.mzxml",
+        "20220104_LSantambrogio_lymph_Efferent_C1.raw",
+        "20220104_LSantambrogio_lymph_Efferent_C2.mgf",
+        "20220104_LSantambrogio_lymph_Efferent_C2.mzxml",
+        "20220104_LSantambrogio_lymph_Efferent_C2.raw",
+        "20220104_LSantambrogio_lymph_Efferent_C3.mgf",
+        "20220104_LSantambrogio_lymph_Efferent_C3.mzxml",
+        "20220104_LSantambrogio_lymph_Efferent_C3.raw",
+        "20220104_LSantambrogio_lymph_Efferent_C4.mgf",
+        "20220104_LSantambrogio_lymph_Efferent_C4.mzxml",
+        "20220104_LSantambrogio_lymph_Efferent_C4.raw",
+        "20220104_LSantambrogio_lymph_Efferent_DSS1.mgf",
+        "20220104_LSantambrogio_lymph_Efferent_DSS1.mzxml",
+        "20220104_LSantambrogio_lymph_Efferent_DSS1.raw",
+        "20220104_LSantambrogio_lymph_Efferent_DSS2.mgf",
+        "20220104_LSantambrogio_lymph_Efferent_DSS2.mzxml",
+        "20220104_LSantambrogio_lymph_Efferent_DSS2.raw",
+        "20220104_LSantambrogio_lymph_Efferent_DSS3.mgf",
+        "20220104_LSantambrogio_lymph_Efferent_DSS3.mzxml",
+        "20220104_LSantambrogio_lymph_Efferent_DSS3.raw",
+        "20220104_LSantambrogio_lymph_Efferent_DSS4.mgf",
+        "20220104_LSantambrogio_lymph_Efferent_DSS4.mzxml",
+        "20220104_LSantambrogio_lymph_Efferent_DSS4.raw",
+        "peptides.pep.xml",
+        "peptides_1_1_0.mzid.gz"
+      ]
+    },
+    "MSV000094586": {
+      "n_files": 132,
+      "collections": {
+        "ccms_parameters": 1,
+        "ccms_result": 14,
+        "ccms_statistics": 1,
+        "methods": 1,
+        "peak": 14,
+        "raw": 87,
+        "result": 14
+      }
+    },
+    "MSV000094761": {
+      "n_files": 44,
+      "collections": {
+        "ccms_parameters": 1,
+        "ccms_result": 8,
+        "ccms_statistics": 1,
+        "peak": 10,
+        "raw": 16,
+        "result": 8
+      }
+    }
+  },
+  "model_training_or_predictions": false,
+  "seconds": 2.266958791995421,
+  "peak_rss_gib": 0.557037353515625
+}

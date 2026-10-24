@@ -1,0 +1,22 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "presto_git": "e8d5daf362151b84c81da92d95b962b733391338",
+  "presto_dirty": true,
+  "hitlist_git": "68dea0be320906e311763db553cee54dccb6fa07",
+  "hitlist_dirty": true,
+  "hitlist_changed_sources": {
+    "/private/tmp/hitlist-lymph-20261024/hitlist/nanaware_lymph.py": "62cfc5a381f11e824336877eef05702912da6fc617cf9b9b6177f1640bc947db",
+    "/private/tmp/hitlist-lymph-20261024/hitlist/evidence_package.py": "c840dbebad0eff29185af12d20840b85ffec7bda62cc0a36de1ffccb8da2ae24",
+    "/private/tmp/hitlist-lymph-20261024/hitlist/evidence_store.py": "1bae0e7f1855e0d2a6f132e50f7d72d9f8d05470a965b1da9f596ad863ebb6f6",
+    "/private/tmp/hitlist-lymph-20261024/hitlist/evidence_catalog.py": "5a3c5720d2d66344c1d7690935a65894ecdcdb49192f3075509fbe7819767fb6",
+    "/private/tmp/hitlist-lymph-20261024/hitlist/evidence_bindings.py": "00c5e34e796972edca6b0e6bc60b41a2d097ca9a48806b3e40a6786fd5efd35b",
+    "/private/tmp/hitlist-lymph-20261024/hitlist/version.py": "3334837e9171fde5de9f3b321ba30ce338643c87b3b1323c9bcd267fe74dbb9f",
+    "/private/tmp/hitlist-lymph-20261024/hitlist/data/evidence_revisions/nanaware_lymph.json": "9c9df7eb7b8568bd8932ecc9a240270d611599902b1f2075175b959d64ac74a3"
+  },
+  "command": "PYTHONPATH=/private/tmp/hitlist-lymph-20261024 OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 /Users/iskander/code/shared-virtual-env/bin/python experiments/2026-10-24_1903_codex_lymph-canonical-admission/code/launch.py",
+  "dataset": "Nanaware2024 original19assets and three reviewed blocks; no synthetic biological labels",
+  "training": null,
+  "prediction_split": null,
+  "source": "../2026-10-24_1829_codex_lymph-source-qualification",
+  "output": "data/lymph_source_qualification/2026-10-24_1903_canonical"
+}

@@ -1,0 +1,32 @@
+{
+  "status": "completed_source_structure_only",
+  "blocks": {
+    "human_native": {
+      "n_source_rows": 1783,
+      "sequence_parse:recognized_source_notation": 1681,
+      "length_status:matches": 1681,
+      "mapping:no_exact_accession_label_match": 1681,
+      "sequence_parse:unsupported_or_noncanonical_sequence": 102,
+      "length_status:unresolved": 102,
+      "mapping:unparsed_peptide": 102
+    },
+    "dc_dia_database": {
+      "n_source_rows": 1581,
+      "sequence_parse:recognized_source_notation": 1581,
+      "length_status:conflicting": 1581,
+      "mapping:no_exact_accession_label_match": 1581
+    },
+    "dc_dia_library": {
+      "n_source_rows": 1020,
+      "sequence_parse:recognized_source_notation": 1020,
+      "length_status:conflicting": 1020,
+      "mapping:no_exact_accession_label_match": 1020
+    }
+  },
+  "exact_accession_matching_only": true,
+  "candidate_mappings_are_not_measured_origins": true,
+  "aggregation_or_training_admission": false,
+  "model_training_or_predictions": false,
+  "seconds": 5.282023333013058,
+  "peak_rss_gib": 0.4359130859375
+}

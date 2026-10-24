@@ -13247,7 +13247,7 @@ screen, artifacts/issues were published, and Hitlist2.0.26 was released and veri
 - [x] Register source/overlap/support gates before new counts or predictive scores.
 - [x] Inspect primary TMT context and canonical source relationships.
 - [x] Inventory eligibility, all-source dependency exclusions and prospective splits.
-- [ ] Independently verify admission, record limitations and update shared source owner.
+- [x] Independently verify admission, record limitations and update shared source owner.
 
 Specification: experiments/agents/codex/plans/apc-composition-source-admission.md.
 No new fit before this gate and a separate numerical comparison plan pass.
@@ -13256,3 +13256,48 @@ No new fit before this gate and a separate numerical comparison plan pass.
 - [x] Close independent admission verification and report support failure without a new biological fit.
 
 Review: independent source-cell/graph reconstruction passes; 45/5/7 supported parents fail 100/25/25 minima. No new biological fit or predictive improvement. Report/registry closed; shared source-owner update pending.
+
+## Independent HLA-DO quantitative source qualification (1818)
+
+Previous goal turn made progress:1755 independently verified and published a failed prospective support screen, preventing an unsupported transfer fit. Continue toward independent biological prediction with the architecture's original class-II DO source; do not redefine the goal as source collection.
+
+- [x] Freeze source identity, measurement distinctions, public access/resource bounds and no-fit scope before new quantities.
+- [x] Retrieve available primary/repository/processed source assets with provenance; preserve inaccessible supplements.
+- [x] Inventory repository and two processed schemas; original quantitative tables remain inaccessible through tested routes.
+- [x] Independently verify source evidence and file exact-body-verified Hitlist816; publish the report bundle.
+- [ ] If quantitative support is real, implement canonical source/recipe and specify a fresh matched differentiable/sampled biological comparison.
+
+Specification: experiments/agents/codex/plans/do-source-qualification.md.
+
+1818 corrected review: value-level parsing recovered4,256positive intensities in spectrum titles. The initial field-name-only absence claim is preserved as a failed audit. Units, integration and peptide aggregation remain unresolved; Hitlist816 now records the correction and exact body verification. No new biological model claimed.
+
+Publication receipts:1755Hitlist762comment6387774608 and1818Hitlist816 both exactly match submitted bodies after final-newline normalization.
+
+## Independent lymph/DC source qualification (1829)
+
+- [x] Freeze source systems, quantitative distinctions, limits and no-fit scope.
+- [x] Retrieve primary source, original processed supplements and repository metadata;19quantitative/protocol/reference assets recovered.
+- [ ] Establish usable native/precursor/presentation quantities and actual material pairing.
+- [x] Independently verify original cells and full repository inventories; record unresolved sample/preparation claims in Hitlist817 and shared typed assertions.
+- [ ] Admit canonical source/recipe before a fresh differentiable/sampled comparison.
+
+Specification: experiments/agents/codex/plans/lymph-source-qualification.md.
+
+### Biological-prediction status and current source verification
+
+- [x] Recheck actual held-out HAP1, native-cell, macrophage, IC50 and measured-MS results against archived reports.
+- [x] Recover the interrupted source-verifier result; preserve the explicit time-of-day serialization failure.
+- [x] Reconcile the observed Excel format20 representation without changing raw quantities or source eligibility, and rerun the original checks. All14,567cells and source hashes pass; source admission remains pending.
+- [x] Report biological gains, failures and generalization limits separately from source acquisition; strongest HAP1 test gain9.167%, no demonstrated biological RL advantage or validated APC concentration model.
+
+## Canonical lymph/DC source admission (1903)
+
+- [x] Freeze exact source/API context and local resource contract before materialization.
+- [x] Implement shared Hitlist source and focused identity/missingness/tamper tests.
+- [x] Materialize actual source, independently reconcile every quantity/reference and repository inventory;32995cells/3430references/23455identification alternatives pass.
+- [ ] Close source report/registry, publish shared issue/PR and required verification.
+- [ ] Define the endpoint-specific recipe and fresh matched exact/sampled biological comparison.
+
+Spec: experiments/agents/codex/plans/lymph-canonical-admission.md. No source-only result counts as predictive improvement.
+
+1903review: shared source PR818published at8657c9a, local format/lint/3466tests pass. Exact-source counts and identity mappings reconcile; DC mass/length/coordinate forensic checks support retaining full literal sequences. Endpoint-specific aggregation/confidence/parent-dependence recipe, independent biological fits, CI merge and PyPI release remain pending. No new biological prediction claim.

@@ -586,3 +586,7 @@ Keep applicability reporting separate from model features and the measured label
 - Aggregate prediction agreement can hide larger errors in low-probability paths. Execute every registered path-level numerical gate before launching biological fits; do not substitute response-level equality. If a later check fails, stop the live fit, preserve its artifacts, diagnose producer versus verifier arithmetic, and freeze a numerical recovery before rerunning unchanged scientific conditions.
 - For ragged kinetic paths, avoid global prefix accumulation across unrelated origins. Use local sums with bounded padding and test long multi-origin populations; preserve original tolerances. Make reference arithmetic explicitly float64 rather than relying on integer-tensor promotion.
 - Reused qualification code must implement the registered reduction and denominator floor exactly, even when that floor happens to be inactive in the observed probes.
+
+## 2026-10-24 — numeric evidence embedded in metadata values
+
+- A quantitative source audit must inspect values as well as field names. mzIdentML can encode numeric intensity in spectrum-title/name strings even when no CV term is named intensity. Preserve raw values, verify duplicate representations, establish their measurement grain and aggregation, and correct public claims before calling an identification export quantity-free. A schema-name check alone cannot prove absence of numeric observations.

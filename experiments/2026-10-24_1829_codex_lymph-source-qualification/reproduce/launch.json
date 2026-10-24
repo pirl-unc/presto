@@ -1,0 +1,19 @@
+{
+  "agent": "Codex / GPT-6",
+  "registered_utc": "2026-10-24T18:29:15.660992+00:00",
+  "git_commit": "e8d5daf362151b84c81da92d95b962b733391338",
+  "git_dirty": true,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "experiments/2026-10-24_1829_codex_lymph-source-qualification/code/retrieve.py",
+    "experiments/2026-10-24_1829_codex_lymph-source-qualification/reproduce/metadata.json",
+    "experiments/2026-10-24_1829_codex_lymph-source-qualification/results/metadata.json"
+  ],
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "plan_sha256": "e3896f8ce20056e4608fad37118ab49868d440ffc0ae9c638a2b4a2a8b292540",
+  "raw_root": "data/lymph_source_qualification/2026-10-24_1829_v1"
+}
