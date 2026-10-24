@@ -273,6 +273,9 @@ explicit species-context limitations; it is not an external validation result.
 - Source-positive, complete-case MHC elution responses; no imputed negatives. Candidate origins retained and ambiguous protein groups deferred. Shared controls/study and unresolved specimen/clone/homology independence remain. HAP1 is not a professional APC. This does not validate free-peptide abundance, causal processing, independent MS detectability, unseen KOs, external cohorts or APC concentrations. Use a new prospective biological cohort for subsequent model qualification.
 
 
+- **New development-only control, not a held-out replacement:** [2041 frozen MHC-score comparison](2026-10-24_2041_codex_hap1-affinity-control/README.md) adds three MHCflurry log10-score features to the original sequence ridge. Reused inner-CV RMSE **0.562644** versus **0.574832**, a **2.120%** gain across all five folds; fixed shuffled-score control **0.575043**. Use its frozen full/fold checkpoints for future development comparisons under this exact contract. No new outer scoring; 4,925/6,317 peptides occur in the external predictor training table and full teacher/sample lineage is unresolved. This is neither independent binding evidence nor an APC-concentration result.
+
+
 ### PXD021013 conditional non-MHC MS1 response — pool-held-out sequence reference
 
 - [Registered comparison and independent reconstruction](2026-10-24_1702_codex_ms1-grouped-observer/README.md). Canonical source e373789b…/recipe0183d91b…, positive intended variable-Unmodified forms under fixedCAM. Metadata-selected, intended-sequence-disjoint 16/4/4 pools; 8,712/2,104/2,061 examples. Test now inspected and closed.

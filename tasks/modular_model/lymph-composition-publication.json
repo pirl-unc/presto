@@ -48,7 +48,30 @@
     "version": "2.0.28",
     "run": 40129209653,
     "job": 120977112368,
-    "last_observed_status": "in_progress",
-    "url": "https://github.com/pirl-unc/hitlist/actions/runs/40129209653"
+    "last_observed_status": "completed",
+    "url": "https://github.com/pirl-unc/hitlist/actions/runs/40129209653",
+    "conclusion": "success",
+    "commit": "c7abcced9825f0e8c8c8360eb40b78ac37eeabdc",
+    "pypi_bytes_match_tested_artifacts": true,
+    "verified_at_utc": "2026-10-24T20:59:57.703661+00:00",
+    "artifact_directory": "/private/tmp/hitlist-release-2026/release-artifacts-2.0.28",
+    "distributions": [
+      {
+        "filename": "hitlist-2.0.28-py3-none-any.whl",
+        "sha256": "44ee374048f6ebd736adbecad73d03935e975a815b0c90a51ff2c3939b89fc3b",
+        "size_bytes": 3104095,
+        "upload_time_iso_8601": "2026-10-24T20:59:29.020580Z",
+        "url": "https://files.pythonhosted.org/packages/3b/92/32f55685cc0db0d9ed3819dfed1421f2a73655271b1d133cf123cefda443/hitlist-2.0.28-py3-none-any.whl",
+        "byte_equal": true
+      },
+      {
+        "filename": "hitlist-2.0.28.tar.gz",
+        "sha256": "54782833826cc11645bd2465a91522768ebd361f0190c83a5d5825dcfc6b8f13",
+        "size_bytes": 3530515,
+        "upload_time_iso_8601": "2026-10-24T20:59:31.805672Z",
+        "url": "https://files.pythonhosted.org/packages/33/be/e52d45867b034023e9c6c072b7cf30947aea52ff955b36a2ee6f48d39fb5/hitlist-2.0.28.tar.gz",
+        "byte_equal": true
+      }
+    ]
   }
 }

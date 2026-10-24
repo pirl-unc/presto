@@ -184,3 +184,5 @@ claim that simply adding it can remedy the prior response-model failures.
 - [ ] After this failed transfer, specify a training-only or new-cohort test of separately calibrated observation and processing/selection assumptions; keep1938heldoutsclosed and preserve the full APCavailability objective.
 
 - [x] 2018 HAP1 context diagnostic: frozen nine-arm training-only comparison; retain old outer sets closed. Plan: plans/hap1-context-ablation.md.
+
+- [x] 2041 frozen MHC-score diagnostic: qualify available predictor, then fixed six-arm training-only comparison (plans/hap1-affinity-control.md).

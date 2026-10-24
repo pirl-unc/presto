@@ -1,0 +1,28 @@
+{
+  "ruff_version": "0.16.0",
+  "default_isolated_check": "passed",
+  "isolated_format_check_line_length_100": "passed",
+  "format_line_length": "100, matching repository ruff.toml",
+  "extra_checks": [
+    {
+      "scope": "Default isolated 88-column format diagnostic",
+      "status": "failed; repository uses 100 columns, no file changed"
+    },
+    {
+      "scope": "Expanded E,F,I style diagnostic, isolated, 100 columns",
+      "status": "7 findings retained in executed frozen scripts; no scientific code changed",
+      "findings": [
+        "report.py:87 E731 assigned lambda",
+        "verify.py:23 E402 import after prerequisite path setup",
+        "verify.py:120 E501 fixed source path",
+        "launch.py:223 E731 assigned lambda",
+        "qualify.py:24 E501 fixed bundle path",
+        "qualify.py:112 E501 provenance text",
+        "qualify.py:113 E501 provenance text"
+      ]
+    }
+  ],
+  "executed_snapshots_equal": true,
+  "visual_plot_review": "passed after wrapped title, axis margin and tight export; all labels visible",
+  "numerical_verification": "Independent prediction and report receipts pass; style diagnostics did not change code, results or scientific gates."
+}

@@ -13312,7 +13312,7 @@ Plan: experiments/agents/codex/plans/lymph-composition-comparison.md.
 - [x] Fit21controls/models, including matched discreteREINFORCE64/exact3seeds.
 - [x] Seal/evaluate held-outs and independently replay14,028predictions; report/registrycomplete.
 - [x] Publish Presto artifacts to draftPR131 as8033462; CSV-only publication correction follows.
-- [ ] Finish source/recipe CI, merge and PyPI releases.
+- [x] Finish source/recipe CI, merge and PyPI releases; 2.0.27 and 2.0.28 published bytes match successful tested artifacts.
 
 No new APC-concentration claim; native lymph and MHC-selected DC remain distinct.
 
@@ -13337,3 +13337,14 @@ Plan: experiments/agents/codex/plans/hap1-context-ablation.md.
 - [x] Reconcile publications: source 2.0.27 PyPI bytes match tested artifacts; recipe 819 merged, release 40129209653 remains live.
 
 2018 review: nine fixed arms / 54 fits finish in 60.62 s. Context CV RMSE 0.573501 versus 0.574832 sequence, only 0.232% improvement / three of five folds; gate fails. Independent SVD reconstructs 1,570,680 predictions within 1.57e-13. Tiny raw Spearman discrepancy is explained by exact-input ties and preserved explicitly; no biological outcome or gate changed. Keep existing reference, stop this context sweep, request original selection-score provenance before the next mechanistic hypothesis.
+
+## HAP1 frozen MHC-score control (2041)
+
+- [x] Freeze predictor semantics, lineage limits, six-arm design and gates.
+- [x] Qualify predictor provenance/exposure and all18,951training-peptide/allele scores; full lineage unresolved.
+- [x] Fit36fixed models and independently verify1,047,120predictions; primary development gate passes2.120%.
+- [x] Close report/registry and publish qualified artifacts; continue full availability goal.
+
+2041 review: sequence+frozen MHC scores CV RMSE0.562644 versus0.574832; shuffled0.575043, allfive folds improve. Both bundled-training exposure strata improve but no sample/teacher-disjoint claim. Static affinity cancels in same-peptide ratios; fitted condition associations are not causal affinity changes. All old outer tests remain closed. Next mechanistic comparisons must beat this frozen development control and require independent biology before promotion.
+
+2041 closure: full logs inspected and byte-equivalent gzip copies retained; artifact manifest, executed snapshots, independent numerical checks and plot review pass. Default Ruff/100-column formatting pass; broader style findings are explicitly recorded without rewriting frozen code. Hitlist recipe release 2.0.28 succeeded and both published distributions are byte-identical to the tested artifact (release40129209653).
