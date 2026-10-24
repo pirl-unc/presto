@@ -13190,7 +13190,7 @@ observer. Full APC availability goal stays active and unachieved.
 - [x] Implement source/recipe in isolated Hitlist feature worktree under issue762.
 - [x] Independently qualify original rows, targets and intended-product dependence in1635.
 - [ ] Publish/release canonical Hitlist implementation after required gates.
-- [ ] Prospectively select additional pools and test held-out relative MS response.
+- [x] Prospectively select additional pools and test held-out relative MS response.
 
 Review:1,147source-backed targets; no new fitted model or concentration claim.
 
@@ -13198,3 +13198,29 @@ Next biological constraint: [grouped MS1 observer plan](../experiments/agents/co
 frozen before new pool selection or quantities. Sixteen train/four validation/four
 test pools; simple sequence/length controls and a bounded nonlinear control. No
 new predictive claim until held-out evaluation and independent closure.
+
+## Grouped measured MS1 observer (1702)
+
+- [x] Freeze 24-pool metadata-only selection and split before new quantities.
+- [x] Acquire and canonically admit all selected runs with preserved source/context receipts.
+- [x] Fit prespecified controls and models; seal test predictions before test outcomes.
+- [x] Independently verify held-out predictions/metrics, report failures and close registry.
+
+Specification: experiments/agents/codex/plans/ms1-grouped-observer.md.
+
+Continuation: prior status turn established that acquisition session15103 terminated
+at TUM_HLA_112 (HTTPS403 and official S3 endpoint500). The actual resume executable
+did not include the FTP fallback described in the earlier handoff. Recover the same
+public deposited asset over anonymous FTP, as already qualified for HLA_63; preserve
+all attempts, cohort, byte/disk limits and frozen scientific settings. Complete
+admission, numerical checks, sealed evaluation and independent replay before making
+any predictive claim. Hitlist814 is merged at68dea0b; release-build40115753764 is
+confirmed live, separate from the biological result.
+
+Review: 12,877 measured responses; sequence ridge testRMSE0.449828 versus length
+0.520456 (13.57%gain), validation11.98%gain, testSpearman0.52564/R²0.25329 and
+positive correlations in4/4pools. Primary screen passes. Independent replay verifies
+167,401predictions/182metric records, max1.0814e-13. All fits5.42s/.393GiB; no RL
+in this continuous observer. Pool-fixed C termini prevent direct terminal-effect
+identification; synthesis/handling/load remain confounded. No APC concentration or
+biological-transfer claim. Publication and Hitlist2.0.26 release remain pending.

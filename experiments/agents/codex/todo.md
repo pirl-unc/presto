@@ -161,3 +161,13 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 
 - [x] Close 1635 canonical PXD021013 admission against original source quantities and intended-product groups.
 - [ ] Freeze additional pool selection and held-out relative-response evaluation.
+
+- [x] Run 1702 grouped nontryptic MS1 observer from the frozen 24-pool plan; preserve
+  prospective selection, canonical admission, sealed test predictions and all outcomes.
+
+- [ ] Publish1702 and complete Hitlist814 clean-main release. Primary sequence
+  observer passes held-out screen (13.57%test gain; Spearman0.52564), but pool-fixed
+  C termini and unknown purity/load prevent pure detector/molar interpretation.
+- [ ] Qualify a new prospective biological transfer test before treating this
+  observer as a processing correction; exact/sampled arms must share its frozen
+  parameters/objective. Previously inspected biological held-outs remain closed.
