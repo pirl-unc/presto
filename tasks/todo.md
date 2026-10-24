@@ -13238,3 +13238,21 @@ Release closure: Hitlist2.0.26 published after clean-main build40115753764 passe
 wheel/sdist hashes match tested artifacts; merge68dea0b and runtimeb9b1047 have
 identical source trees. The shared editable remains the user's Hitlist1.82.2
 checkout, with pipcheck passing. See tasks/modular_model/ms1-release-verification.json.
+
+## Prospective APC composition admission (1755)
+
+Previous goal turn made progress: measured MS1 observer passed its frozen held-out
+screen, artifacts/issues were published, and Hitlist2.0.26 was released and verified.
+
+- [x] Register source/overlap/support gates before new counts or predictive scores.
+- [x] Inspect primary TMT context and canonical source relationships.
+- [x] Inventory eligibility, all-source dependency exclusions and prospective splits.
+- [ ] Independently verify admission, record limitations and update shared source owner.
+
+Specification: experiments/agents/codex/plans/apc-composition-source-admission.md.
+No new fit before this gate and a separate numerical comparison plan pass.
+
+- [x] Diagnose admission verifier failure: integral numeric channel-header rendering only; preserve failed source/log and freeze the correction plan.
+- [x] Close independent admission verification and report support failure without a new biological fit.
+
+Review: independent source-cell/graph reconstruction passes; 45/5/7 supported parents fail 100/25/25 minima. No new biological fit or predictive improvement. Report/registry closed; shared source-owner update pending.
