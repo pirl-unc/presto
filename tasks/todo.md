@@ -13184,3 +13184,12 @@ All local retrieval/inspection handles are terminal. Prior2bf8ca1 CI40108371279 
 40108364515 both pass. Next concrete work: canonical source/recipe, then prospective
 pool/sequence-grouped response fitting; exact/sampled processing will share that
 observer. Full APC availability goal stays active and unachieved.
+
+## Canonical measured MS1 observation constraint
+
+- [x] Implement source/recipe in isolated Hitlist feature worktree under issue762.
+- [x] Independently qualify original rows, targets and intended-product dependence in1635.
+- [ ] Publish/release canonical Hitlist implementation after required gates.
+- [ ] Prospectively select additional pools and test held-out relative MS response.
+
+Review:1,147source-backed targets; no new fitted model or concentration claim.
