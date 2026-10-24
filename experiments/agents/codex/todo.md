@@ -151,3 +151,7 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [x] Enforce predeclared sampled biological gate: candidate worsens innerCVRMSE10.77%,so no sampled run. Preserve unexecuted path and failure, do not claim a new RLcomparison.
 - [x] File/readback Hitlist798 for independent primaryDC immunoproteasome-loss sourcePMID20484733; existingbroadmouse13does not admit its quantitative contract.
 - [ ] Admit that source through shared Hitlist APIs with original measurements/replicate/context and explicit RNA-versus-protein/machinery uncertainties; freeze independent evaluation before fitting. No Presto workbook curator or APC-concentration claim from elution alone.
+
+
+- [ ] After independently closing1007, execute the [frozen HAP1 outer evaluation](plans/hap1-frozen-outer-evaluation.md), without further fitting or selecting on held-out outcomes. This confirms elution-response generalization; APC concentration qualification remains separate.
+- [ ] Qualify original APC-derived endolysosomal numeric source under Hitlist812; reject the linked software demonstration data as synthetic.

@@ -579,3 +579,10 @@ Keep applicability reporting separate from model features and the measured label
   Unmatched inventory entries can legitimately omit full sequences while every
   observed occurrence remains supported. Keep source uncertainty intact and fix
   consumer assumptions; do not file an upstream bug without a reachable failure.
+
+
+## 2026-10-24 — Gate every declared representation before biological fitting
+
+- Aggregate prediction agreement can hide larger errors in low-probability paths. Execute every registered path-level numerical gate before launching biological fits; do not substitute response-level equality. If a later check fails, stop the live fit, preserve its artifacts, diagnose producer versus verifier arithmetic, and freeze a numerical recovery before rerunning unchanged scientific conditions.
+- For ragged kinetic paths, avoid global prefix accumulation across unrelated origins. Use local sums with bounded padding and test long multi-origin populations; preserve original tolerances. Make reference arithmetic explicitly float64 rather than relying on integer-tensor promotion.
+- Reused qualification code must implement the registered reduction and denominator floor exactly, even when that floor happens to be inactive in the observed probes.

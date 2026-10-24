@@ -1,0 +1,110 @@
+{
+  "reason": "Lossless compression retains original failed-test whitespace and passes source diff checks without rewriting logs.",
+  "files": [
+    {
+      "original": "launch_logs/attempt-global-prefix/path-equivalence.log",
+      "original_sha256": "f89a56c03b2326d8ccdd45f01b8facdd06088b2e3f70f3d65fc2fd029d5c57fe",
+      "original_bytes": 475,
+      "archive": "launch_logs/attempt-global-prefix/path-equivalence.log.gz",
+      "archive_sha256": "a566c8a75d7346f8180b92e05adeaef48107cc1bd53efd0c2489b9b33fd654dd"
+    },
+    {
+      "original": "launch_logs/attempt-global-prefix/physical-tests-v2.log",
+      "original_sha256": "f61ba8de186692cdcd4d94681ef42a1c1cf8228af6db60783726a59f0e3116b7",
+      "original_bytes": 99,
+      "archive": "launch_logs/attempt-global-prefix/physical-tests-v2.log.gz",
+      "archive_sha256": "21798b0d661f4645b92101abb162114f73d484fed476b65ac9271ba4c40a7cd6"
+    },
+    {
+      "original": "launch_logs/attempt-global-prefix/physical-tests.log",
+      "original_sha256": "6dd36701285a50366927edc7c7cb889314a4254c34ecce2745363656709361e6",
+      "original_bytes": 2301,
+      "archive": "launch_logs/attempt-global-prefix/physical-tests.log.gz",
+      "archive_sha256": "9993caf9f07d78162be43139d37abd8515a22fbfc94daba4b05fa86f09c8941b"
+    },
+    {
+      "original": "launch_logs/attempt-global-prefix/qualification.log",
+      "original_sha256": "fd4b46cbb8db4c873c248a570331c32a8572927f9220c0ba7430e8cc09afb05a",
+      "original_bytes": 591,
+      "archive": "launch_logs/attempt-global-prefix/qualification.log.gz",
+      "archive_sha256": "4613265f31210c4dda7f83d61d2449b405bfcfaed1524dbd32102e6cd52ca3ed"
+    },
+    {
+      "original": "launch_logs/attempt-global-prefix/training.log",
+      "original_sha256": "d0a95cf3bf238585de33238ccb95ed0c49969e40bb6a6fc2aec989c07dba8a55",
+      "original_bytes": 10575,
+      "archive": "launch_logs/attempt-global-prefix/training.log.gz",
+      "archive_sha256": "603b28021e373b9f81335e08e6a1681e198d4c778950832be1b6a95c23945e08"
+    },
+    {
+      "original": "launch_logs/docs.log",
+      "original_sha256": "09d90066084d1195c7e181eef2b4bd347555561244f4c095577a39081b647818",
+      "original_bytes": 377,
+      "archive": "launch_logs/docs.log.gz",
+      "archive_sha256": "a9ddf44fd1844d8eeef66b976821acb5c76da3236eb78f444c1eb47984c12477"
+    },
+    {
+      "original": "launch_logs/physical-tests-local-v2.log",
+      "original_sha256": "6883e8fae84c1924e51cc7f2b151ce8b0349abf1f82b268ce34c0609541202e7",
+      "original_bytes": 99,
+      "archive": "launch_logs/physical-tests-local-v2.log.gz",
+      "archive_sha256": "85fd4e030831f7f7735ede49c0944e45f3408dca9b54974ef9827b3e0ea96207"
+    },
+    {
+      "original": "launch_logs/physical-tests-local.log",
+      "original_sha256": "553ed955b688eb6719d3530a6d0b0be843473793607b4cd85dcda43be164d705",
+      "original_bytes": 1431,
+      "archive": "launch_logs/physical-tests-local.log.gz",
+      "archive_sha256": "c3d1f8f3243065c1c9680e48ec7f12a4769cf3d2ba09a017c3cd5d2641274037"
+    },
+    {
+      "original": "launch_logs/qualification-local.log",
+      "original_sha256": "89f72573b7c3353a9d2dcb22db44088d2a8fe4badb6262534d7bfb768961e6bc",
+      "original_bytes": 1675,
+      "archive": "launch_logs/qualification-local.log.gz",
+      "archive_sha256": "919d8f22c30aded8e333340328933d4c7bafbffc04b4d7d65c4d0c462627e18a"
+    },
+    {
+      "original": "launch_logs/repository-lint.log",
+      "original_sha256": "5a92f9aad7f0a9c965e95daaebf6d2ae58543d432bfc9b6e5a4fdf30ec80deae",
+      "original_bytes": 1218,
+      "archive": "launch_logs/repository-lint.log.gz",
+      "archive_sha256": "9bb09ec6eed3136d9065dfd4789bec400cf7549bf6ccdae18772d1753f12c559"
+    },
+    {
+      "original": "launch_logs/tracked-source-format.log",
+      "original_sha256": "25e582585adc043a48c8944445ac28475fbc1153ec3efd3217105486ff89dad9",
+      "original_bytes": 28,
+      "archive": "launch_logs/tracked-source-format.log.gz",
+      "archive_sha256": "de95dd6fa28962d79f605fc78cce844cfd686b6a32cc5289f7144f5e4ab4eb0c"
+    },
+    {
+      "original": "launch_logs/tracked-source-lint.log",
+      "original_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "original_bytes": 19,
+      "archive": "launch_logs/tracked-source-lint.log.gz",
+      "archive_sha256": "7162964741fdb747d7ab27df2d1a1b64fa0636c4b7fe50ea8493de14cb62cbd4"
+    },
+    {
+      "original": "launch_logs/training-local.log",
+      "original_sha256": "a7e424c5f3ee02a6bb646c2fd41b45b313d4c24a2b733ec70551ccdb1cad1c69",
+      "original_bytes": 21893,
+      "archive": "launch_logs/training-local.log.gz",
+      "archive_sha256": "a7a7906b15f47a0e660f2daf18f0c148b06c59fdb89d5cb73b42b29c2017c383"
+    },
+    {
+      "original": "launch_logs/verification-v2.log",
+      "original_sha256": "91210490efe1f20e5873fd3fcd988521d0026293b1f286318b288f39e6ef7f96",
+      "original_bytes": 2281,
+      "archive": "launch_logs/verification-v2.log.gz",
+      "archive_sha256": "2567e3b06d0f1c9c799d6057a910dbb04c73956150624d3660d33dbd64c643a1"
+    },
+    {
+      "original": "launch_logs/verification.log",
+      "original_sha256": "2d3b3f32a6f4998cee5dbecb563b63691b94271f6b1800dfbda16798125b7a63",
+      "original_bytes": 1731,
+      "archive": "launch_logs/verification.log.gz",
+      "archive_sha256": "71372d70d9948e6b99b2169f32c470c5beee411e79efd522223040a5acb44155"
+    }
+  ]
+}

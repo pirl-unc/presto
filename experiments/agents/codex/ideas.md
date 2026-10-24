@@ -57,3 +57,8 @@ Curation must preserve drug/vehicle/exposure, cell/species, extraction/labeling,
 channel/control covariance, PTMs/charge/identification, original mappings and
 cross-paper measurement lineage. No drug-to-KO inference or absolute-concentration
 claim. Shared canonical admission must precede any consumer fitting.
+
+
+## October24: APC-derived endolysosomal component measurements
+
+Primary source lead: Öztemiz2026, PMID42846314, DOI10.3389/falgy.2026.1936335 ([paper](https://www.frontiersin.org/journals/allergy/articles/10.3389/falgy.2026.1936335/full)). Extracted dendritic-cell endolysosomal preparation and peptide time-course signals could help separate processing from MHC capture, but are not native intact-cell concentrations. Original quantitative files and dependencies remain unqualified. Public PeptideStudio sample_data at18dd99da4a619abd8a28c7622e0809eb2c03e0ff is explicitly synthetic; do not use it as biology. [Hitlist812](https://github.com/pirl-unc/hitlist/issues/812) filed and body read back, including source identity, activity/sample context, quantity/modification/detection semantics and demo exclusion. No numeric assets admitted, no experiment or training claim. Register an original-source audit before numeric inspection/admission.

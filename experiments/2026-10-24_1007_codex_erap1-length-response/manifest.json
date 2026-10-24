@@ -1,0 +1,30 @@
+{
+  "registered_at": "2026-10-24T14:06:30.988055+00:00",
+  "training_launched_at": "2026-10-24T14:10:50.754635+00:00",
+  "status": "complete_independently_verified",
+  "source_sha256": {
+    "reproduce/source/close.py": "254469b7e49f33f3ac2b24d626b82e273975e15ede423287e52484f3a5efcb35",
+    "reproduce/source/core.py": "ae32c12ffdb758334275142ec9d153c3d7134524bb285372ab412e486c949e70",
+    "reproduce/source/launch.py": "b22cf4e097adaac1e8412cd14a98ebc9c65afc1b2e5eb8b2881f3618d91b673d",
+    "reproduce/source/n_terminal_trimming.py": "4d9e7ccfbd69084937ad1b62a2f75e140bc13972aecfd837a5df73e12cb6f4ed",
+    "reproduce/source/report.py": "624143e5a7bf6d1d1c9cfc0b0e5d003af43af878d66988c04400d209950b7056",
+    "reproduce/source/verify.py": "6bde43a20805de61ca986f8e6b1e54738e622442f301fe43816d6d43e5623995",
+    "reproduce/source/verify_path_equivalence.py": "ba8be651e755fac6af85293846ee2421474f340546be03484be048479ba820b0"
+  },
+  "qualification": "results/qualification.json",
+  "outer_validation_test_scored": false,
+  "training_session": 14762,
+  "training_exit_code": 143,
+  "recovery_launched_at": "2026-10-24T14:22:43.172048+00:00",
+  "preserved_attempt": "results/attempt-global-prefix",
+  "executed_phase_receipts": [
+    "reproduce/qualification/execution.json",
+    "reproduce/training/execution.json",
+    "reproduce/verification/execution.json",
+    "reproduce/verification-v2/execution.json"
+  ],
+  "biological_gate": false,
+  "n_qualified_fits": 24,
+  "preserved_unqualified_attempt": "results/attempt-global-prefix",
+  "broader_availability_goal": "unachieved"
+}

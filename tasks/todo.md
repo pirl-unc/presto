@@ -13091,7 +13091,7 @@ unchanged. Pending exact-head Presto CI40098933707/40098926299 is live.
 - [x] Inspect all151project/3,992sample rows and verify63,761populated cells independently.
 - [x] Review capture-versus-compartment cases in original primary literature.
 - [x] File concrete shared metadata/source requirements as Hitlist811.
-- [ ] Publish the closed metadata audit and current release handoff.
+- [x] Publish the closed metadata audit and current release handoff.
 
 Outcome: no native APC free-peptide cohort qualified.20solely intracellular-tagged
 samples are enteroendocrine. JY's mixed intracellular/MHC tag refers to HLA-purified
@@ -13103,3 +13103,33 @@ Source2.0.22 releasebuild40098309564 is live in the full test/build phase. Recip
 dc2c4cb Tests40098555299 is live; Docs40098555411 passes. Its previous identical
 tree fda50b6 passed all hosted checks. Source merged; recipe merge and both PyPI
 deployment confirmations remain pending. Do not restart confirmed live runs.
+
+Native metadata audit published as0248f11; ERAP1 source audit as eb4e8d8. Hitlist811
+request is posted and read back. No new biological model was fitted in these source
+families. Their negative admission decisions change the next-data search, while the
+HAP1 development sequence baseline and all held-out policies remain unchanged.
+
+Final release handoff (2026-10-24 13:51 UTC): recipe PR807 passed Tests40098555299
+and merged as c7eed83ee58e97460fb549959bd3a6c132c87ae2. Source release gate40098309564
+is confirmed in progress on41d4d09; recipe release gate40099959477 is confirmed
+queued on c7eed83. Both use the existing release-build workflow with full tests;
+neither version2.0.22 nor2.0.23 is yet confirmed deployed to PyPI. Do not redispatch
+or restart based on elapsed observation. Download/verify each completed artifact
+and finish the authorized upload/registry verification when its gate passes.
+Presto0248f11 is pushed; exact-head CI40099847313/40099839777 are live. Hitlist811
+report comment6385019990 is read back. The few newest task-handoff lines remain
+working-tree changes in addition to the preserved unrelated prefix. No local
+training, retrieval or verification process remains live. Full goal is active.
+
+
+## ERAP1 remaining-length diagnostic (October24)
+
+Previous goal turn was a status report: no experimental progress. Revalidated unchanged0248f11, active goal, successful Hitlist2.0.22 release build40098309564 and running2.0.23 build40099959477.
+
+- [x] Inspect model/source limits and freeze [detailed plan](../experiments/agents/codex/plans/erap1-length-response.md), including explicit source-gate revision.
+- [x] Implement/test length-dependent state paths and qualify estimator. Initial aggregate checks passed, but late full-path checking failed; terminated session14762/exit143 and preserved11 complete plus1 incomplete fits. Origin-local recovery now passes11 tests, all full-path/response/finite-difference checks and K512 estimator gates before the new launch.
+- [x] Run all24fixed exact/sampled fits. Augmented exact/sampled inner-CV RMSE0.596442/0.596422 vs baseline0.596370; gate fails. Outer outcomes remain unscored.
+- [ ] Independently verify, report and push results.
+- [x] Verify both Hitlist releases are merged and deployed. Successful builds40098309564/40099959477; PyPI2.0.22/2.0.23 hashes match tested artifacts. Already published when checked; no duplicate upload or shared-environment changes. Receipt: tasks/modular_model/hap1-release-verification.json.
+
+Review: negative biological comparison independently reconstructs198,744predictions (max1.52e-13). No improvement beyond frozen sequence baseline; local1319.54s/1.979GiB, matched sampled1.52x exact time. Numerical failure/recovery and checker-name fix preserved. Both Hitlist releases verified deployed; new source gap812 filed/read back. Outer evaluation is prospectively specified and not executed. Publication still pending; broader APC availability objective unachieved.
