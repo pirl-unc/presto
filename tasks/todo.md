@@ -13371,3 +13371,19 @@ The full APC availability/concentration goal remains active and unachieved.
 - [x] Record Hitlist owner, close report and registry.
 
 Review: source availability advances; no new predictive result. Recovered baseline quantities, numeric pooled entries, organism/selection conflicts and exact source checks; shared ingestion pending Hitlist825.
+
+## Goldberg2025 canonical MAPP admission
+
+- [x] Freeze source, context and candidate-export specification.
+- [x] Implement shared source/query interfaces and explicit dispositions.
+- [x] Verify fixtures and original-source replay.
+- [x] Register baseline candidates and qualification axes.
+- [ ] Complete checks, publication/release and experiment registry.
+
+### Goldberg2025 admission review
+
+Original source and registered candidate export independently pass. All394,732
+peptide-cell decisions retained;94,034baseline review candidates, including19,058
+omitted publisher cells. Source/publisher/pooled values and material precision
+reconcile. Format/lint and3,489unit tests pass; full-corpus CI, PR/merge and verified
+release remain pending. No model fit or predictive improvement in this family.

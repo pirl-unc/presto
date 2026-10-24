@@ -1,0 +1,85 @@
+{
+  "scope": "independent original-row, all search-intensity, literal workbook-cell, pooled-slot and material checks; compiler replay separately covers every typed relation",
+  "original_search_tables": {
+    "parameters.txt": {
+      "n_rows": 104,
+      "n_literal_fields": 208
+    },
+    "summary.txt": {
+      "n_rows": 25,
+      "n_literal_fields": 1275
+    },
+    "proteinGroups.txt": {
+      "n_rows": 3323,
+      "n_literal_fields": 431990
+    },
+    "peptides.txt": {
+      "n_rows": 30364,
+      "n_literal_fields": 2793488
+    },
+    "modificationSpecificPeptides.txt": {
+      "n_rows": 32636,
+      "n_literal_fields": 2219248
+    },
+    "evidence.txt": {
+      "n_rows": 294756,
+      "n_literal_fields": 18274872
+    }
+  },
+  "baseline_cell_dispositions_from_verified_original_values": {
+    "flagged|mixed_or_unresolved|positive": 7314,
+    "unflagged|source_human_only|positive": 94034,
+    "unflagged|source_human_only|zero": 66076,
+    "unflagged|mixed_or_unresolved|zero": 2377,
+    "unflagged|mixed_or_unresolved|positive": 3863,
+    "unflagged|source_nonhuman_only|positive": 492,
+    "flagged|mixed_or_unresolved|zero": 7476,
+    "unflagged|source_nonhuman_only|zero": 552
+  },
+  "publisher_workbooks": {
+    "2024-04-08499C-s5/2024-04-08499C-Supplementary Table 3- Data from multiple MAPP experiments_correct.xlsx!Ext Table 3- Data from multiple": {
+      "n_cells": 15,
+      "n_date_styled_cells": 0
+    },
+    "2024-04-08499C-s5/2024-04-08499C-Supplementary Table 3- Data from multiple MAPP experiments_correct.xlsx!MAPP database": {
+      "n_cells": 1195682,
+      "n_date_styled_cells": 202
+    },
+    "2024-04-08499C-s5/2024-04-08499C-Supplementary Table 5 - proteomics.xlsx!ReadMe": {
+      "n_cells": 304,
+      "n_date_styled_cells": 0
+    },
+    "2024-04-08499C-s5/2024-04-08499C-Supplementary Table 5 - proteomics.xlsx!Shotgun_proteomics": {
+      "n_cells": 783542,
+      "n_date_styled_cells": 0
+    },
+    "2024-04-08499C-s5/2024-04-08499C-Supplementary Table 5 - proteomics.xlsx!MAPP_peptidomics": {
+      "n_cells": 1487339,
+      "n_date_styled_cells": 0
+    },
+    "2024-04-08499C-s5/2024-04-08499C-Supplementary Table 5 - proteomics.xlsx!MAPP_proteomics": {
+      "n_cells": 299538,
+      "n_date_styled_cells": 0
+    },
+    "2024-04-08499C-s5/2024-04-08499C-Supplementary Table 5 - proteomics.xlsx!A549_secretome": {
+      "n_cells": 56172,
+      "n_date_styled_cells": 0
+    },
+    "2024-04-08499C-s5/2024-04-08499C-Supplementary Table 5 - proteomics.xlsx!dTAG_A549_secretome": {
+      "n_cells": 28527,
+      "n_date_styled_cells": 0
+    }
+  },
+  "n_pooled_slots_checked": 3095695,
+  "n_material_contexts": 73,
+  "n_material_links": 72,
+  "publisher_reconciliation": {
+    "exact_native_id_and_sequence": 21082,
+    "exact_source_value_agreement": 231902,
+    "unresolved_exact_column_name": 42164
+  },
+  "runtime": {
+    "wall_seconds": 41.90983412502101,
+    "peak_rss_bytes": 2077589504
+  }
+}
