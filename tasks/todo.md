@@ -12989,3 +12989,32 @@ Presto6045dd2bothCI40088982542/40088975800passed. Recipepublishedabbc376,
 stackeddraftrequested;merge/releasepending,notshipped.
 
 Publication update: Hitlist PR807 is OPEN DRAFT atabbc376, stacked on806. Its body/readback agrees with the actual source contract. Docs40091493963 passes; Tests40091493921 is confirmed live. Follow-up design is experiments/agents/codex/plans/hap1-availability-presentation-followup.md. It preserves the full availability/presentation objective and requires a measurable physical contribution beyond the new direct baseline.
+
+Publication verified: Presto5699b9f4e73a31c65eddc414f5d6a41f2fae24d2 is pushed to
+OPEN DRAFT PR131. All portable artifact hashes and decompressed log hashes match.
+New exact-head CI40092027986 and40092020339 are confirmed in progress; poll those
+handles without redispatch. Hitlist807 atabbc376 remains clean/pushed; its Tests
+40091493921 is confirmed live and Docs40091493963 succeeded. Full objective remains
+unachieved: relative HAP1 response signal does not identify APC free-peptide amounts.
+Next work: reconcile source/recipe schema/version branches, then freeze and execute
+the physical availability/selection comparison described in the follow-up plan.
+
+## ERAP1 physical trimming comparison
+
+Previous turn: progress; HAP1 sequence baseline passes biological development gate.
+Primary article identifies ERAP1 as direct N-terminal trimming intervention; do not
+map the other KOs to cleavage. Spec: experiments/agents/codex/plans/erap1-trimming.md.
+- [x] Freeze mechanism, cohort, exact/sampled objective and resource limits.
+- [x] Implement and verify all-span progressive trimming and sampled path gradients.
+- [x] Run the fixed matched biological comparison on outer-training inner folds.
+- [x] Independently reconstruct predictions/metrics; report physical contribution.
+- [ ] Publish artifacts; reconcile pending upstream source schema/version integration.
+
+ERAP1 closure: all24fits finish888.29s/2.280GiB. BaselineCVRMSE.596370,
+exactaugmentation.596436,sampled.596417: biological gate fails. Independent
+scalar recurrence reconstructs198,744predictions withmaxerror9.05e-15; checks
+all1,741,916birth paths,weights/folds/source lineage and final objectives/metrics.
+Full report,comparison plot and28,512component metric rows preserved. No outer
+validation/test scored. Previous status turn made progress by independently
+confirming the exact biological null result. Publication and upstream release
+remain pending; full APC concentration objective remains unachieved.

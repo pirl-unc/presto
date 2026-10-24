@@ -1,0 +1,33 @@
+{
+  "registered_at": "2026-10-24T12:09:02.620428+00:00",
+  "agent": "Codex / GPT-6",
+  "presto_commit": "5699b9f4e73a31c65eddc414f5d6a41f2fae24d2",
+  "recipe_directory": "/private/tmp/presto-modular-model/data/hap1_response_recipes/2026-10-24_0730_v1",
+  "recipe_manifest_sha256": "a1eec392c06485966e131663f85e7599dcd9e5ff621841eb0d44eeaafe779309",
+  "baseline_directory": "/private/tmp/presto-modular-model/experiments/2026-10-24_0730_codex_hap1-response-baselines",
+  "steps": 150,
+  "lr": 0.03,
+  "rate_penalty": 0.01,
+  "loss_penalty": 0.01,
+  "seed": 42,
+  "sample_sizes": [
+    128,
+    512
+  ],
+  "probe_repetitions": 8,
+  "mean_gradient_relative_limit": 0.1,
+  "rms_gradient_relative_limit": 0.25,
+  "resource_limits": {
+    "build_qualification_seconds": 900,
+    "exact_fit_seconds": 600,
+    "sampled_fit_seconds": 1200,
+    "total_fit_seconds": 7200,
+    "peak_gib": 4
+  },
+  "outer_test": "intentionally_unscored_development_family",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  }
+}
