@@ -13060,7 +13060,7 @@ in experiments/2026-10-24_0924_codex_erap1-source-qualification/reproduce/plan.m
 - [x] Inventory source cells/formulas and verify original ZIP/workbook integrity.
 - [x] Classify panels, assay endpoints, context, units and replicate semantics.
 - [x] Independently verify the inventory and decide source admission suitability.
-- [ ] Publish the result and concrete Hitlist809 follow-up; preserve held-out data.
+- [x] Publish the result and concrete Hitlist809 follow-up; preserve held-out data.
 
 Current CI readback: source806/a3b80a8 Tests40096473199 succeeded. Recipe807/fda50b6
 Tests40097020357 and Presto/e6ce3b2 runs40097219307/40097211801 are live. Upstream
@@ -13080,3 +13080,26 @@ as fully validated fda50b6; all original data/package checks remain applicable.
 Version2.0.23 and full recipe task history preserved. New-head hosted checks and
 merge/deploy pending. Native PeptidomicsDB is a new public metadata lead, not
 admitted data or a claimed APC concentration cohort.
+
+Publication: Prestoeb4e8d8 is pushed; Hitlist809 comment6384888767 is posted/read
+back with the exact source-admission limitations. All original source data remain
+unchanged. Pending exact-head Presto CI40098933707/40098926299 is live.
+
+## Native APC metadata search
+
+- [x] Register prospective scope before metadata retrieval; preserve source exports.
+- [x] Inspect all151project/3,992sample rows and verify63,761populated cells independently.
+- [x] Review capture-versus-compartment cases in original primary literature.
+- [x] File concrete shared metadata/source requirements as Hitlist811.
+- [ ] Publish the closed metadata audit and current release handoff.
+
+Outcome: no native APC free-peptide cohort qualified.20solely intracellular-tagged
+samples are enteroendocrine. JY's mixed intracellular/MHC tag refers to HLA-purified
+ligands; genericPPD070 is also HLA/source-proteome evidence. The29immune-term and
+35human/mouse non-MHC-label candidate lists are retained; neither proves eligibility
+or exhaustive absence. No peptide CSVs, new model fits or outer-test scores.
+
+Source2.0.22 releasebuild40098309564 is live in the full test/build phase. Recipe
+dc2c4cb Tests40098555299 is live; Docs40098555411 passes. Its previous identical
+tree fda50b6 passed all hosted checks. Source merged; recipe merge and both PyPI
+deployment confirmations remain pending. Do not restart confirmed live runs.
