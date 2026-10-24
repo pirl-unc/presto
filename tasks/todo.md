@@ -13333,7 +13333,7 @@ Plan: experiments/agents/codex/plans/hap1-context-ablation.md.
 - [x] Freeze training-only question, nine arms, support/verification and decision gates.
 - [x] Qualify all-parent features and reproduce original full/fold reference predictions.
 - [x] Fit the fixed family and independently verify predictions/metrics; primary gate fails.
-- [ ] Close report/registry, publish artifacts, and choose the next biological hypothesis.
+- [x] Close report/registry, publish artifacts as 4b135ad, and file selection-covariate follow-up on Hitlist726 (comment6389204773).
 - [x] Reconcile publications: source 2.0.27 PyPI bytes match tested artifacts; recipe 819 merged, release 40129209653 remains live.
 
 2018 review: nine fixed arms / 54 fits finish in 60.62 s. Context CV RMSE 0.573501 versus 0.574832 sequence, only 0.232% improvement / three of five folds; gate fails. Independent SVD reconstructs 1,570,680 predictions within 1.57e-13. Tiny raw Spearman discrepancy is explained by exact-input ties and preserved explicitly; no biological outcome or gate changed. Keep existing reference, stop this context sweep, request original selection-score provenance before the next mechanistic hypothesis.
