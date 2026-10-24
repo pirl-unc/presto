@@ -1,0 +1,35 @@
+{
+  "frozen_at": "2026-10-24T04:50:10.198787+00:00",
+  "argv": [
+    "sh",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0043_codex_digestion-cellular-transfer/reproduce/fit.sh"
+  ],
+  "files": {
+    "code/core.py": "6bd4fb18e95271b4fc8c96d88fbf625cd2b92920e2c0af20951d542aaf83b95f",
+    "code/fit.py": "2c2550d472b042dd122abdbaa8209e3e3457a1c5246303491f49663a9d065554",
+    "code/run_fits.py": "8dc92bb330cc874e358095dd630f8f8f6c87410fdc45ac278654171d35b2aada",
+    "reproduce/launch.json": "67771078f10473841b25af74c169971c33fff1a3db8d2b368838c63d99345dc0",
+    "reproduce/fit.sh": "d022e8d391a3752b48ea57417cb038fbfa2fcc04c15fb5b673c204f588f84b05",
+    "results/qualification.json": "7d78b4674086c6b0f876f7fd04bf6f222b804762ba036016eacac2dd2bf75a2c",
+    "results/preflight.json": "0b24c48c4da414ec6fa8b1547dd8ba4bd5866356845309bb6ebe772e66de46d7",
+    "results/exposure.json": "1511dff038e9c95035891db7cefa5795be46e25ecdde644be169466649082dbe"
+  },
+  "fit_caps": {
+    "uniform_rates": {
+      "seconds": 690,
+      "admitted": true
+    },
+    "adjacent_rates": {
+      "seconds": 517,
+      "admitted": true
+    },
+    "wider_rates": {
+      "seconds": 525,
+      "admitted": true
+    },
+    "wider_hybrid": {
+      "seconds": 8598,
+      "admitted": false
+    }
+  }
+}

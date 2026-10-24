@@ -12604,7 +12604,7 @@ Publication review: 010be23818400d47a55d6ce0f386b95c222ce8ec is pushed to open d
 Previous goal turn: progress; paired biological fits and residual analysis are complete, independently verified and published at010be23. No fit is live. New prospective spec: experiments/agents/codex/plans/digestion-sequence-context.md.
 - [x] Register and qualify nested kinetic-context/response-termini features without changing source observations.
 - [x] Run the fixed four-arm exact factorial and gated full-feature conditional sampled hybrid locally.
-- [ ] Independently verify all outcomes, close the canonical registry and publish the evidence.
+- [x] Independently verify all outcomes, close the canonical registry and publish the evidence.
 - [x] Use biological outcomes to choose the next transfer/calibration hypothesis; retain full APC concentration objective.
 
 
@@ -12618,3 +12618,19 @@ All five sequence-context fits now terminal: suite40785 completes with all child
 
 
 Final sequence-context review: all five fits and independent checks complete, including hybrid2000updates. Matched hybridRMSE1.248605 versusboth-exact1.246593; wider-rate-only remains preferred1.228529/.348720Spearman. All10,000optimizer updates and527,260final predictions verify, with four fixed gradient states per arm, source/physical/metric/per-parent/error-component checks and complete material parameter coverage. Report/plot/archive closure and publication follow. The next prospective frozen-rate cellular transfer specification is recorded; it has not been launched. Hitlist788 covers separate native intracellular peptidome admission. No APC concentration validation; full goal active.
+
+
+Publication handoff: 5b888cccf97796d205e519f6371c7556076cf4f2 is pushed to open draftPR131. All91closure-file hashes match committed blobs; the immutable remote report and body-only PR update read back exactly. All10raw artifacts restore byte-for-byte. Fit40785, hybrid verifier87551, report73963, archive60604, closure94196, commit26112, push5963, issue87851 and PR update51444 are terminal success. No local experiment is running. Prior010be23 CI40056708162 fully passes; new5b888cc CI40062987301 is in progress at publication and must be rechecked. Goal-turn classification: progress (five-arm biological comparison closed/published, source request788created/read back, precise next transfer spec recorded). Next: recheck CI; read digestion-to-mapp-transfer.md; register source/exposure/mathematical qualification before implementation/probes. No model promotion to APC concentrations. All raw source/feature/fitting hashes remain unchanged; preserve unrelated tasks prefix/untracked work. Full availability goal remains active.
+
+
+## Frozen digestion-to-cellular transfer
+
+Previous goal turn: no progress (status report only; CI was still live but no goal work completed). Current family 2026-10-24_0043_codex_digestion-cellular-transfer, registered before probes. Prior five-arm results published at5b888cc.
+- [x] Verify sources/exposure and qualify continuous-input/removal physics and sampled estimator.
+- [x] Freeze resource caps and run the admitted exact/sample biological comparisons.
+- [ ] Independently verify outcomes and close/publish the canonical experiment record.
+Full APC concentration goal remains active; no test-parent reuse or new source curation.
+
+Qualification completes: no training construct/peptide overlap for72train/15validationparents; math/toy/threegradientgates pass. Initial serialization failure preserved and fixed without changing scientific settings or original cost admission. Exact caps690/517/525seconds; hybrid cost8598 exceeds7200 ceiling and remains unlaunched. Fitting/verification source receipts frozen before biological updates.
+
+Final transfer review: all3exact2000updatefits complete and independently verify; baseline plus fits reproduce4120source-linkedtrain/validationpredictions and6000Adamupdates. ValidationRMSE uniformcomposition.286029, uniformcleavage.369717, adjacent.393065, wider.556267. WiderpredictionSD.570883 vs target.351303, so this is not constant-outputcollapse. Every trained scalar updates; final checked gradients are stationary. Sampled gradient gates pass but original8598s costprojection exceeds7200ceiling; no sampled fit launched and no accuracy comparison claimed. Prior5b888ccCI40062987301 fully passes. New bounded amplitude-calibration plan is prospective/unexecuted; independent nativecellular/response support remains needed. Full APC concentration goal active. Publication closure follows.

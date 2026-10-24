@@ -116,3 +116,10 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 
 - [ ] After2358closure, qualify and run [frozen cleavage-prior cellular transfer](plans/digestion-to-mapp-transfer.md), with an explicit input/removal bridge and unchanged canonical MAPP targets.
 - [ ] Admit native intracellular peptidome panels through Hitlist788 before any workbook-based fit; preserve censored ratios and reused-measurement lineage.
+
+## Frozen digestion-to-cellular transfer closure
+
+- [x] Complete the registered0043 transfer comparison on unchanged MAPP data: all3exact2000stepfits independently verified; no method beats uniform composition.
+- [x] Preserve sampled numerical success and original cost rejection; do not report an unperformed biological RL comparison.
+- [ ] Execute the bounded train-only monotone amplitude diagnostic in plans/cellular-transfer-amplitude.md, with controls and stop rule fixed before arithmetic.
+- [ ] Prioritize canonical native cellular source788 and independent response/precursor evidence; do not repeatedly tune the same MAPP development set.
