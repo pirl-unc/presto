@@ -16,7 +16,16 @@
     "seconds": 314.19,
     "warnings": 392
   },
-  "rebased_checks": "running",
+  "rebased_checks": {
+    "passed": 3481,
+    "errors": 15,
+    "warnings": 373,
+    "seconds": 309.6,
+    "cause": "disk reserve guard: approximately0.84GiB available versus1GiB reserve",
+    "status": "unresolved; no guard relaxation or immediate retry"
+  },
   "publication_precheck_recovery": "Initial hash check ran from wrong cwd before the shell fail-fast line and did not execute; corrected check here confirms all four files identical. No scientific artifact changed.",
-  "recipe_PR": "https://github.com/pirl-unc/hitlist/pull/829"
+  "recipe_PR": "https://github.com/pirl-unc/hitlist/pull/829",
+  "recipe_CI_run": 40140838953,
+  "issue_comment": "https://github.com/pirl-unc/hitlist/issues/825#issuecomment-6390645752"
 }

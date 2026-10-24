@@ -13405,3 +13405,7 @@ primarysequence-versus-lengthgatefails(test4.334%gain,required5%). No testrefit,
 RLadvantage or APCconcentration claim. SharedrecipePR829published;source827merged;
 release40140479531andpost-rebasechecksremainlive. Logs preserve initialfixture/import
 failures and16disk-reserve failures;unchanged serialsuitepasses3493tests.
+
+Post-rebase closure:3,481passes/15fixture setup errors at unchanged disk reserve
+(~0.84GiBfreevs1GiB). Do not retry large materialization/full suites without
+verified headroom. HostedrecipeCI40140838953andrelease40140479531remainlive.

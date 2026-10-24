@@ -131,7 +131,9 @@ Initial fixture import/lint failures were corrected before source admission;
 13focusedtests pass. The first full Hitlist suite had16disk-reserve failures and
 3,477passes while source materialization occupied temporary space. Original logs
 are retained; disk and memory guards remain unchanged. The unchanged serial rerun passed3,493tests/392warnings in314.19seconds after
-materialization finished. Rebased-main full checks are running. No scientific gate or outcome was changed.
+materialization finished. The post-rebase full run later had3,481passes and15
+setup errors at the unchanged disk-reserve guard (about0.84GiB free versus1GiB
+reserve),309.60seconds. This remains unresolved; hosted CI40140838953is running. No scientific gate or outcome was changed.
 
 The post-fit provenance audit finds3testpeptides in prior MAPP,2inHAP1 and2inlymph/DC
 cohorts. No prior outcomes or pretrained weights enter this fit. Literal accession
@@ -164,7 +166,7 @@ published here. Affinity/nM/500nM binding metrics are inapplicable to this endpo
 
 Status: biological comparison and independent outcome verification complete;
 [Recipe PR829](https://github.com/pirl-unc/hitlist/pull/829) published at5d648602;
-post-rebase tests/CI and verified release remain pending. Source827merged5a8b1aa;
+post-rebase local disk-guard errors, CI and verified release remain pending. Source827merged5a8b1aa;
 release40140479531is running. All four recipe runtime files are byte-identical
 after rebasing over concurrent PBMC source828. The primary gate fails; the narrower
 distribution-versus-uniform gate passes. Full APC availability goal remains active.
