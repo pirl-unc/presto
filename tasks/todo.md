@@ -12644,7 +12644,40 @@ Publication handoff: ebb70e3f4a86fd6ba33f9e2422dd0df63d56479b is pushed to open 
 Previous goal turn: progress (three cellular fits, independent verification and publication). Registered 2026-10-24_0106_codex_cellular-amplitude before coefficient/metric arithmetic. Prior ebb70e3 CI40064750638 remains live.
 - [x] Freeze and run the three planned scalar calibrations against unchanged controls.
 - [x] Independently reconstruct inputs and verify least-squares/KKT, predictions and metrics.
-- [ ] Close/publish all outcomes and enforce the planned transfer stop rule.
+- [x] Close/publish all outcomes and enforce the planned transfer stop rule.
 Full APC concentration goal remains active; this diagnostic does not redefine success.
 
 Amplitude review: producer43322 completes0.935s/104.14MiB, verifier59585 independently verifies4120source/physicalinputs and7210outputrows plus allscalarLS/KKT and metrics/strata/decisions. Beta uniform.302123/adjacent.265903/wider.113527. ValidationRMSE .267107/.275897/.286965 versus uniformcomposition.286029. Calibrateduniform improves10/15parents (4worse,1tie); neither sequenceprior beats bothcontrols. The prospective stop rule is enforced: stop tuning this bridge on the same MAPPdevelopmentset. Report/plot/registry closed; publication follows. New nativecellularadmission plan788 is prospective and unexecuted; full APC concentration goal remains active.
+
+
+Amplitude publication handoff:132404d1d0a2b714dcff9804e7e052b909f28f6d is pushed to open draftPR131. All39closure-file hashes match committed blobs; immutable remote README and body-only PR update read back exactly. Producer43322, independent verifier59585, report26763/21610, commit43262, push29664 and PRupdate17826 are terminal success. No local experiment is live. NewCI40065534409 is in progress; prior ebb70e3CI40064750638 is cancelled (not passed). Earlier5b888ccCI passed. Goal-turn classification: progress (three actual train-only scalar fits, independent reconstruction/verification, enforced stop decision, canonical registry/control update and publication). Next: recheck currentCI; read plans/native-cellular-peptidome-admission.md; register public-source/lineage qualification before any source-count/schema audit. Hitlist788 remains open/unimplemented at last authoritative read; localHitlist8a10b5a is only a locator, recheck upstream before edits. No more MAPPtransferbridge tuning on the same development set. Preserve unrelated tasks prefix/untracked raw work; full APC availability/concentration goal stays active and is not achieved.
+
+
+## Native cellular peptidomics source admission
+
+Previous goal turn: progress (calibration fits, independent verification and enforced stop rule, published132404d). Registered 2026-10-24_0117_codex_native-peptidome-admission before retrieval/schema arithmetic. No local fit live.
+- [x] Retrieve available public sources and identify reuse evidence; preserve unresolved original2012 access/lineage.
+- [x] Independently audit available workbooks and metadata/quantity contract; record semantic failures.
+- [ ] Publish source evidence and concrete shared Hitlist admission requirements; no Presto-only curator or premature training.
+Full APC availability/concentration objective remains active.
+
+Current continuation: previous status-only turn was no progress. Public PLOS
+assets are retrieved; the original epoxomicin archive request failed HTTP500.
+Hitlist PR790 is now merged at f4d3a6d; reconcile its canonical package instead
+of building another importer. Prospective audit addendum is registered under
+0117/reproduce/upstream-audit-plan.md. No training is admitted yet. Read-only
+inspection identifies candidate lineage/identity/instrument concerns to verify
+against actual source rows before filing concrete upstream findings.
+
+Audit review: six workbooks /271,778explicit cells independently agree with
+openpyxl. Canonical f4d3a6dHitlist package replays10,564rows/328,880values and
+61,908ratio slots; all quantity parses verify. Semantic failures are real:
+830possible reuse groups versus0canonical matches, tentative sequence corruption,
+540Moxslots lose modification,173wrong heatmap sequence projections, inaccurate
+instrument scope.213exact slots have tentative identities;16,807lack sequences.
+Full Methods resolve2014total35min exposure with inhibitor retained during wash.
+Hitlist791filed/read back; source value preservation passes but training admission
+remains deferred. All audit handles79539/23233/51582 and issue25532are terminal
+success. Current132404dCI docs/lint/tests/distribution jobs pass. Close/publish
+available-source audit, then follow native-peptidome-semantic-corrections.md using
+current upstream state. Goal remains active; no fit or source repair was run.

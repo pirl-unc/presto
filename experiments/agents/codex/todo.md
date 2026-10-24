@@ -130,3 +130,10 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [x] Enforce the stop rule: neither sequence prior beats calibrated uniform cleavage; no more tuning of this MAPP transfer bridge.
 - [x] Record calibrated uniform cleavage as a provisional development control, with historical exposure and measurement limits explicit.
 - [ ] Execute plans/native-cellular-peptidome-admission.md through the canonical Hitlist system, beginning with registered public-source/lineage audit. No Presto-only source adapter or shared-environment change.
+
+## Native intracellular source audit and corrections
+
+- [x] Complete available-source0117audit through the merged canonical package; all raw cells/ratios replay, semantic admission fails.
+- [x] File concrete upstream findings as Hitlist791, including reuse matching, sequence/modification errors, heatmap projection and protocol provenance.
+- [ ] Execute plans/native-peptidome-semantic-corrections.md against current upstream; preserve source values and explicit unknowns.
+- [ ] Admit a canonical native-response recipe and preregister the next bounded real-data exact-versus-sampled comparison. No APC concentration claim from source admission alone.
