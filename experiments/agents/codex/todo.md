@@ -108,4 +108,6 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [x] Qualify [matched minibatch objective](plans/fragment-minibatch-objective.md), freeze and run a bounded biological length-effect comparison under [full-observation plan](plans/fragment-observation-domain.md).
 
 - [x] Close 2026-10-23_2108: both real biological fits independently verify; small matched gain, no new best model.
-- [ ] Run [exactly profiled condition-offset comparison](plans/fragment-profiled-minibatches.md) with unchanged physical models/data/schedule; retain joint-offset results.
+- [x] Run [exactly profiled condition-offset comparison](plans/fragment-profiled-minibatches.md) with unchanged physical models/data/schedule; retain joint-offset results.
+
+- [x] Training-only residual decomposition (2026-10-23_2214): persistent curve means account for ~77% of remaining error; independent replay passes. Paired fit now complete: weak improvement, no concentration validation. Next hypothesis should address persistent cross-peptide prediction error.

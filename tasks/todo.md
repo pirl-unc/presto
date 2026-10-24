@@ -12549,7 +12549,7 @@ Family:experiments/2026-10-23_2108_codex_fragment-biological-fit; plans fragment
 - [x] Qualify nuisance-offset optimum, envelope gradients, and probability-weighted minibatches.
 - [x] Freeze a matched bounded fitting receipt after qualification; then run both arms.
 - [x] Verify all outputs/updates and report biological and numerical limits.
-- [ ] Publish the complete biological comparison and verify PR state.
+- [x] Publish the complete biological comparison and verify PR state.
 
 Original test parents remain excluded; full APC objective active.
 
@@ -12557,3 +12557,40 @@ Live fitting: session84647 runs the frozen200-update arms. Analytical completes 
 
 
 Review: both 200-update fits complete; all 85/86 coordinates materially train. Independent optimizer/source/physical-prediction/metric checks pass for both arms. Fragment development shape RMSE 1.27630 versus matched analytical 1.28894, constant 1.28060, old exact 1.26510 and old hybrid 1.26279; Spearman .23544 and temporal-ratio RMSE 1.20013. This is weak biological performance, not a new best model. Joint-offset MSE gaps .196090/.129245 motivate the prospective profiled-minibatch plan. All fitting/verification handles terminal; archives restore exact raw bytes. Prior 120d55a CI 40048135508 passes. Full APC availability objective remains active; next comparison changes nuisance optimization only.
+
+
+Publication: a6c655905247bef41459221a1a2c402361c09a75 is pushed to draft PR 131. All 71 closure-file hashes match committed blobs, the immutable remote README matches exactly, and the body-only results update reads back exactly with open/draft/head state preserved. All 9 raw checkpoint/reference files restore byte-for-byte. All local fitting, verification, report, archive, commit, push and PR-update handles are terminal. New-head CI 40052237814 remains in progress (checkout at latest poll); do not claim it passed. Previous-head CI passed. Goal-turn classification: progress, with actual biological fits but no new best model or concentration validation. Next: check this CI, then the registered fragment-profiled-minibatches plan. Full APC availability goal remains active.
+
+
+## Profiled-offset biological comparison
+
+Previous goal turn: progress (two actual fits, independently verified and published; no new best biological model). Current family experiments/2026-10-23_2201_codex_profiled-fragment-fit, source a6c6559. Prior-head CI 40052237814: docs pass, lint/test job installing dependencies at latest authoritative poll.
+- [x] Qualify exact-offset block estimator at predetermined toy/actual states and bound runtime.
+- [x] Freeze and run both 200-update biological arms without changing data/physics/schedule.
+- [x] Independently verify all predictions/updates and report comparison against prior controls.
+- [ ] Publish complete evidence, check CI, choose the next biological hypothesis.
+Full APC availability objective remains active; original test exclusion preserved.
+
+Qualified both fixed analytical states and all 28 blocks; envelope/expected-gradient errors <3e-14. Eta-zero actual-block parity passes. Longest-parent target-free cost 26.086 s; prospective per-arm cap 8400 s / 4 GiB. Both 200-update schedules frozen before launch.
+
+
+Live progress: analytical 200-step profiled fit completes and independently verifies all 200 gradients/updates and 105,452 predictions. Development shape RMSE1.264868 (prior joint1.288941), Spearman.245122, ratioRMSE1.144171; training objective1.378363 versus initial1.595535, offset gap1.95e-29. All78coordinates train. Fragment suite exec80633 is authoritatively live; latest saved checkpoint10/200, elapsed202.135s. Do not restart from a quiet status file or unexpired observation timeout. Qualification exec68864 and analytical verification exec85401 are terminal success. Core/fitting hashes unchanged. Final report/packager are prepared and gated on terminal verified outcomes, not yet run. Full goal remains active.
+
+Latest authoritative poll: suite80633 remains live; fragment checkpoint 20/200, elapsed 326.46456195798237 s. CI40052237814 docs/lint pass, tests still running. Scoped code F/E9 checks and registry whitespace check pass. No paired-model conclusion or final publication yet.
+
+
+## Training residual decomposition while paired fit runs
+
+Registered 2026-10-23_2214_codex_residual-decomposition before arithmetic. Plan availability-residual-decomposition.md.
+- [x] Decompose fixed verified training residuals into curve-mean and temporal MSE without changing data/models.
+- [x] Independently replay every component and record diagnostic scope/decision.
+- [ ] Publish the diagnostic with the completed paired-fit evidence.
+This work does not inspect or alter the live fragment fit or close the APC goal.
+
+
+Residual diagnostic review: six fixed models/90,630 training rows each,138,324 curve records independently verify (max8.88e-16). Persistent curve-mean error is76.89% in the new analytical fit; solving offsets improves temporal MSE .045156 while persistent error worsens .003925. Report/CSV/plot/source snapshots are complete locally. Existing native bulk intensity issue95 remains open; preceding comment already captures needed scale/lineage limits, so no duplicate request. a6c6559 CI40052237814 now passes docs, lint, tests and distribution checks. Fragment suite80633 remains live; last observed80/200 at1160.42s. Full goal active.
+
+Goal-turn handoff: progress. Residual decomposition completed, independently verified and registered; publication waits for paired-fit closure. Producer88105 and verifier48397 are terminal success. Live fit suite80633 was re-polled successfully; latest fragment checkpoint 90/200 at 1308.4432757910108 s, unchanged settings. Original a6c6559 CI40052237814 fully passes. Next: re-poll80633, finish fixed fragment fit, run registered independent verifier, final paired report/archive, then publish both families together with exact PR/body/head verification. Do not restart a live process or claim concentration validation. Full goal remains active.
+
+
+Final paired-fit review: both arms complete all 200 updates and independent checks. Fragment development shape RMSE1.262718, Spearman.242653, temporal-ratio RMSE1.130980; analytical1.264868/.245122/1.144171. Constant shape RMSE1.28060; prior hybrid1.26279. This is weak relative-signal prediction on three inspected development parents, not absolute concentration validation. Both exact nuisance-offset gaps are below3e-29; all78/79 parameters materially train. Final fragment runtime3051.87s, peak2.364GiB; independent verifier13078 terminal success in75.73s. The old fit suite80633 is terminal with both child returncodes0. Next scientific priority is persistent cross-peptide signal error and independent response support, not another sampler extension. Report/archive/publication closure follows; original test remains excluded and full APC goal remains active.

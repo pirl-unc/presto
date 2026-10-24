@@ -1,0 +1,14 @@
+{
+  "registered_at": "2026-10-24T02:05:28.466271+00:00",
+  "fragment_gradient_steps": [
+    1,
+    100,
+    200
+  ],
+  "fd_step": 1e-05,
+  "reference_hashes": {
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain/code/reference.py": "046db70c2638629cde227dc9a6a58b499e1a5029fb88a2b442d36154b416985a",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_2029_codex_observation-domain/reproduce/coefficients.json": "fdd57fa2eb3ebf5b0612203f5081b5c4c3e3cb51e2096961b4fc6d1f140bc218"
+  },
+  "scope": "Before either fit: all optimizer arithmetic and analytical gradients, fixed fragment steps1/100/200 with independent NumPy full-condition offset and fixed-offset block directional derivatives, every final physical prediction/source/metric. Offsets must be held fixed under each sampled-block finite difference; only the block expectation equals the profiled full gradient."
+}
