@@ -13050,3 +13050,33 @@ Source discovery under Hitlist809 retrieved the Maben2021 Source Data ZIP, hash
 a9d7bcba… (479,402 bytes, two XLSX workbooks). The linked correction affects an
 acknowledgment. Original numeric measurement semantics remain unqualified; no
 new labels or fits. The next source plan and inventory are in the Codex plan area.
+
+## Independent ERAP1 workbook qualification
+
+Previous goal turn: no progress (status report only). Current next action is safe
+and available: inspect the two retrieved original workbooks under the frozen plan
+in experiments/2026-10-24_0924_codex_erap1-source-qualification/reproduce/plan.md.
+- [x] Freeze the read-only qualification plan and register the audit family.
+- [x] Inventory source cells/formulas and verify original ZIP/workbook integrity.
+- [x] Classify panels, assay endpoints, context, units and replicate semantics.
+- [x] Independently verify the inventory and decide source admission suitability.
+- [ ] Publish the result and concrete Hitlist809 follow-up; preserve held-out data.
+
+Current CI readback: source806/a3b80a8 Tests40096473199 succeeded. Recipe807/fda50b6
+Tests40097020357 and Presto/e6ce3b2 runs40097219307/40097211801 are live. Upstream
+main remains897c98c; merge/release pending. No biological fit currently running.
+
+Qualification review: all3,726cells in34sheets independently verified. Only two
+peptide-assay panels,105numeric response cells with three missing slots, one
+unmodified and one BPA-modified probe sharing their N-terminal residue. Missing
+rate-scale/normalization/experiment identity retained; no training cohort admitted.
+Report and canonical registry close this source gate; no new predictive result.
+
+Source PR806 merged as41d4d096e03f5a2254836e7f0a73adbcf2a06625. Required release
+build40098309564 is confirmed live on that exact main head; PyPI upload pending.
+Recipe807 retargeted to main via REST after gh-pr-edit's known ProjectsClassic
+failure. Its ancestry-only merge dc2c4cb has exactly the same tree15866197ef9a7054c5e6da05c5635e93b70f01ad
+as fully validated fda50b6; all original data/package checks remain applicable.
+Version2.0.23 and full recipe task history preserved. New-head hosted checks and
+merge/deploy pending. Native PeptidomicsDB is a new public metadata lead, not
+admitted data or a claimed APC concentration cohort.

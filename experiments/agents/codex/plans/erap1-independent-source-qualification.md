@@ -88,3 +88,17 @@ assays, replication and non-pathogen model-substrate provenance before admission
 
 Upstream record: https://github.com/pirl-unc/hitlist/issues/809#issuecomment-6384618997
 Original local archive: /private/tmp/hitlist-erap1-809-assets/maben2021-source-data.zip.
+
+## Maben source qualification outcome
+
+The registered 0924 audit inspected both workbooks and independently checked every
+populated cell with openpyxl: 34 sheets, 3,726 values, 3,390 numeric cells, no
+formulas. Only two panels directly assay peptides: one unmodified substrate plus
+one BPA-modified probe, both starting with the same residue. Their response units,
+normalization and independent-experiment grouping are not fully established.
+The 70 concentration-response and 35 time-course cells are not a sequence-diverse,
+product-resolved training cohort. No rates or cellular amounts were inferred.
+This source fails the proposed training-admission gate; avoid more fitting on it
+merely because the numeric archive is accessible. Preserve the detailed source
+limitations under Hitlist809, then seek broader independently measured substrates
+or native intracellular peptidomics closer to the actual APC availability endpoint.
