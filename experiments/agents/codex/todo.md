@@ -103,3 +103,6 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [ ] Complete the separate prospective effective-target fit after #110 software release, preserving raw-measurement evaluation.
 
 - [x] Native-presenter audit published: all 18 public assets and source/target joins independently verify; initial failed packaging evidence preserved.
+
+- [x] Qualify fragment solver on complete required training support (2026-10-23_2029); all84fixed states pass, with unobserved-tail limitations retained.
+- [ ] Qualify [matched minibatch objective](plans/fragment-minibatch-objective.md), freeze and run a bounded biological length-effect comparison under [full-observation plan](plans/fragment-observation-domain.md).

@@ -1,0 +1,71 @@
+{
+  "case_id": 6,
+  "block_id": 2,
+  "eta": -1.0,
+  "status": "completed",
+  "accepted": true,
+  "condition": "soh2024_digestion:condition:aSPIRE_FFH_12p5",
+  "time_hours": 4.0,
+  "n_residues": 453,
+  "n_required_spans": 2522,
+  "n_measurements": 5044,
+  "phase": "complete",
+  "forwards": [
+    {
+      "substeps": 2,
+      "seconds": 1.1424730000435375,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 1.105719877924939e-07,
+      "full_mass": 453.0000000000007,
+      "required_minimum": 1.5286126143828217e-06,
+      "required_maximum": 0.00827346135503998
+    },
+    {
+      "substeps": 4,
+      "seconds": 2.217496040975675,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 1.1057198779249403e-07,
+      "full_mass": 453.00000000000216,
+      "required_minimum": 1.5286126143828215e-06,
+      "required_maximum": 0.008273461355040002
+    },
+    {
+      "substeps": 8,
+      "seconds": 4.428306000016164,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 1.1057198779249484e-07,
+      "full_mass": 453.00000000000244,
+      "required_minimum": 1.5286126143828253e-06,
+      "required_maximum": 0.008273461355040009
+    }
+  ],
+  "required_positive_finite": true,
+  "max_log_disagreement": 7.993605777301127e-15,
+  "n_unresolved_precision": 0,
+  "forward_pass": true,
+  "autograd_seconds": 6.990524833032396,
+  "independent_fd_seconds": 9.093736125039868,
+  "gradient_error": [
+    2.3143121533758526e-11,
+    8.504075698842484e-12,
+    5.4573144614433744e-11
+  ],
+  "gradient_tolerance": [
+    1.0003240287252405e-05,
+    1.0001681355943362e-05,
+    1.0001228127177733e-05
+  ],
+  "gradient_pass": true,
+  "gradient_status": "evaluated",
+  "seconds": 24.270486000052188,
+  "peak_rss_bytes": 1805238272
+}

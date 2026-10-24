@@ -12519,6 +12519,22 @@ Previous goal turn: progress (published two numerical families, corrected origin
 - [x] Implement event-state boundary hazards with exact proposal density/scores.
 - [x] Qualify fixed small-system matrix and independently replay full saved paths.
 - [x] If admitted, compare all21 full-parent cases under unchanged counts and gates.
-- [ ] Close all evidence, publish and choose the next biological step without narrowing the APC objective.
+- [x] Close all evidence, publish and choose the next biological step without narrowing the APC objective.
 
-Review: all48 small-system cases pass; all21full-parent workers finish,7/21pass, every length-dependent case fails. Positive-eta worst gradient RMS improves1.3585→.2290 but log accuracy remains insufficient. Independent2,304-group/48raw/384small-history and63raw/504full-parent-history replay passes. All seven focused tests pass, including the mean-absolute cancellation gate. Numerical source and original-gate decisions agree; no biological fit admitted. Stop proposal extension as registered. Full-observation numerical admission and coherent minibatch biological-fit plan frozen. Reports/plot/registry and197-byte-verified raw artifacts packaged; publication pending. Prior2c6cb97 CI40042470727 completes successfully, including lint/tests/distributions/docs. Full APC goal remains active.
+Review: all48 small-system cases pass; all21full-parent workers finish,7/21pass, every length-dependent case fails. Positive-eta worst gradient RMS improves1.3585→.2290 but log accuracy remains insufficient. Independent2,304-group/48raw/384small-history and63raw/504full-parent-history replay passes. All seven focused tests pass, including the mean-absolute cancellation gate. Numerical source and original-gate decisions agree; no biological fit admitted. Stop proposal extension as registered. Full-observation numerical admission and coherent minibatch biological-fit plan frozen. Reports/plot/registry and197 raw artifacts verified byte for byte are published at6347987636c2de32a4f20001c356fb1d24febbc7. All95 closure-file hashes match committed blobs; immutable remote README and PR131 body read back exactly, with open/draft state preserved. All local run/verification/packaging/push handles are terminal. Current CI40044771065 is in progress. Goal-turn classification: progress. Next available action is the frozen full-observation numerical admission plan, followed only if qualified by a separately frozen bounded biological fit. Prior2c6cb97 CI40042470727 completes successfully, including lint/tests/distributions/docs. Full APC goal remains active.
+
+
+## Full-observation fragment numerical admission
+
+Previous goal turn: progress. Current HEAD6347987 verified; CI40044771065 live.
+Plan: experiments/agents/codex/plans/fragment-observation-domain.md; registered family2026-10-23_2029_codex_observation-domain.
+- [x] Freeze canonical training support without using quantities or selecting easy spans.
+- [x] Execute full required-output precision and independent directional-gradient gates.
+- [x] Independently verify artifacts and report failures, coverage and runtime.
+- [ ] Publish evidence and determine whether a biological fit is admissible.
+
+Full APC availability objective remains active; no concentration claim.
+
+Continuation 2026-10-24T00:48:49.371034+00:00: 84-case numerical family is live in exec session44779; 64 cases terminal, 64 passed. Canonical training projection covers90,630 measurements/45,315 span-time queries,28 blocks,seven conditions/six constructs. Two numerical oracle tests and one closure-counterexample test pass; original import-path failure preserved. Independent closure checks all three refinements against analytical eta0, whereas worker scalar covers eight steps only. No measured intensities consulted or biological fit launched. Previous6347987 CI40044771065 passes all jobs. Re-poll session44779, finish numerical closure/publication, then use the registered minibatch-objective companion plan only if admitted. Current turn: progress; full APC objective active.
+
+Review: all84cases pass with252directional checks and independent full-array recomputation. All90,630source support rows and135,945span/eta prediction records replay; no gate disagreements. Full-output tiny-tail negativity remains explicit. Three focused tests pass; all168raw arrays restore byte-for-byte. Suite1464.95s, peak2.055GiB. Numerically admits a separately frozen biological comparison, not an APC concentration model. No new biological fit yet. Publication pending; full goal active.
