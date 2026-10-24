@@ -13143,3 +13143,16 @@ Review: negative biological comparison independently reconstructs198,744predicti
 - [x] Independently reconstruct predictions/weights/metrics and publish scoped results.
 
 Review: frozen sequence test RMSE0.573380 versus calibrated-precursor0.631249,9.167%gain; testR²0.24986/Spearman0.46623. All ten conditions improve. ERAP1 physical augmentation0.585337 versus baseline0.585327 fails its gate. Independent scalar/affine closure verifies361,281prediction values and50,995stratum metric records. Five near-constant control-stratum correlations are marked undefined in a qualified derivative; raw scores/predictions preserved, no primary changes. Outer sets now inspected; no retuning. No APC concentration claim. Published as371974e89fca9e9993492e75a734d7a74da55175 on draftPR131; issue130 comment6385912964 posted and exact-body verified. CI40106306307/40106297919 running; no local jobs remain. Unrelated task changes intact.
+
+## APC-derived endolysosomal source qualification (October24,15:21UTC)
+
+Previous goal turn made progress: frozen HAP1 outer evaluation passes for the simple
+sequence model, fails for processing augmentation, and is published with independent
+verification. All inspected outer sets remain closed to tuning.
+
+- [x] Revalidate current branch, goal, issue812 and live CI; register source-audit plan.
+- [x] Inventory official supplementary/deposit assets and exclude synthetic examples.
+- [x] Independently qualify numeric measurement/context/replicate evidence.
+- [ ] Record admission decision and update Hitlist812 plus the canonical registry.
+
+Review: five official PDFs/15 asset hashes and61 repository entries independently checked; no original numeric peptide cohort admitted. Eight literal aggregate protein half-life values are valid separate evidence. Figshare404 and pypdf extraction limits retained. No new training or APC concentration claim. Prior-headbf7b3e6 CI40106425787/40106415603 both pass; publication/upstream readback pending.

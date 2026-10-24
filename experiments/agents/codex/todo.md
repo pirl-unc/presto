@@ -153,5 +153,6 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [ ] Admit that source through shared Hitlist APIs with original measurements/replicate/context and explicit RNA-versus-protein/machinery uncertainties; freeze independent evaluation before fitting. No Presto workbook curator or APC-concentration claim from elution alone.
 
 
-- [ ] After independently closing1007, execute the [frozen HAP1 outer evaluation](plans/hap1-frozen-outer-evaluation.md), without further fitting or selecting on held-out outcomes. This confirms elution-response generalization; APC concentration qualification remains separate.
-- [ ] Qualify original APC-derived endolysosomal numeric source under Hitlist812; reject the linked software demonstration data as synthetic.
+- [x] After independently closing1007, execute the [frozen HAP1 outer evaluation](plans/hap1-frozen-outer-evaluation.md), without further fitting or selecting on held-out outcomes. This confirms elution-response generalization; APC concentration qualification remains separate.
+- [x] Qualify original APC-derived endolysosomal numeric source under Hitlist812: no numeric peptide cohort in five official supplements; synthetic demo excluded. Source gap remains upstream.
+- [ ] Qualify broader measured non-MHC peptide MS1-response data under existing Hitlist762; require original measurements, pool/form/acquisition lineage and explicit load uncertainty before a new shared recipe.
