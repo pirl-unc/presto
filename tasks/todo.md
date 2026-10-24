@@ -12500,7 +12500,7 @@ Previous goal turn: progress (two completed numerical families published with ve
 - [x] Freeze and run actual-parent or biological comparisons only after appropriate gates.
 - [x] Independently verify, publish all outcomes and preserve the full APC goal.
 
-Review: 45/45 ordinary and 2/3 rare primary checks pass; fast-boundary failure retained. Independent 2,304-group/48-raw/384-history replay passes. No full-parent run admitted for this proposal. Report, CSV and registry complete; publication pending.
+Review: 45/45 ordinary and 2/3 rare primary checks pass; fast-boundary failure retained. Independent 2,304-group/48-raw/384-history replay passes. No full-parent run admitted for this proposal. Report, CSV and registry published at2c6cb9748b5804450a02b60bc7c4b5a96ad31d48; all33 published file hashes and immutable remote README bytes match.
 
 
 ## Truncated boundary proposal and variance control
@@ -12510,4 +12510,15 @@ Uniform proposal45/45ordinary and2/3rare primary cases pass; fast-boundary failu
 - [x] Run the same ordinary/rare matrix, then prospectively gate actual-parent work.
 - [x] Independently verify and publish both proposal families.
 
-Review: all48 small-system checks pass, but original mean-absolute criterion admits only8/21 full-parent cases. Independent arrays,63directional derivatives,63raw groups and504saved paths replay. Three primary gate-reporting decisions corrected; original outputs retained. Reports/plot/registry and next state-adaptive specification complete; publication pending. Previous goal turn was no experimental progress (architecture explanation); this turn closes authoritative evidence and changes the next action. Full APC goal remains active.
+Review: all48 small-system checks pass, but original mean-absolute criterion admits only8/21 full-parent cases. Independent arrays,63directional derivatives,63raw groups and504saved paths replay. Three primary gate-reporting decisions corrected; original outputs retained. Reports/plot/registry and next state-adaptive specification published at2c6cb9748b5804450a02b60bc7c4b5a96ad31d48; all79 published file hashes and immutable remote README bytes match. All268 archived raw files verify byte-for-byte after restoration. PR131 body-only update reads back exactly and remains open/draft; connector write scope returned403, authenticated CLI succeeded after fresh body/state comparison. Previous702d66bCI passes; report-head CI40042470727 is in progress. All local qualification/runtime/verification/report/archive/push handles are terminal. Previous goal turn was no experimental progress (architecture explanation); this turn closes authoritative evidence and changes the next action. Full APC goal remains active.
+
+
+## State-adaptive boundary proposal
+
+Previous goal turn: progress (published two numerical families, corrected original gate to8/21, independently verified all saved full-parent records). Current HEAD2c6cb97; CI40042470727 remains live. Plan: experiments/agents/codex/plans/fragment-boundary-adaptive.md; registered family2026-10-23_2000_codex_boundary-adaptive.
+- [x] Implement event-state boundary hazards with exact proposal density/scores.
+- [x] Qualify fixed small-system matrix and independently replay full saved paths.
+- [x] If admitted, compare all21 full-parent cases under unchanged counts and gates.
+- [ ] Close all evidence, publish and choose the next biological step without narrowing the APC objective.
+
+Review: all48 small-system cases pass; all21full-parent workers finish,7/21pass, every length-dependent case fails. Positive-eta worst gradient RMS improves1.3585→.2290 but log accuracy remains insufficient. Independent2,304-group/48raw/384small-history and63raw/504full-parent-history replay passes. All seven focused tests pass, including the mean-absolute cancellation gate. Numerical source and original-gate decisions agree; no biological fit admitted. Stop proposal extension as registered. Full-observation numerical admission and coherent minibatch biological-fit plan frozen. Reports/plot/registry and197-byte-verified raw artifacts packaged; publication pending. Prior2c6cb97 CI40042470727 completes successfully, including lint/tests/distributions/docs. Full APC goal remains active.

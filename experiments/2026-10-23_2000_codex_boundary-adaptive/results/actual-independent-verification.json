@@ -1,0 +1,1216 @@
+{
+  "all_replay_checks_pass": true,
+  "cases": [
+    {
+      "case_id": 0,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.2926257190666549,
+            0.17313383700025242,
+            0.23665323345625788
+          ],
+          "mean_log_probability_bias": [
+            -0.1168087510871092,
+            -0.026405866483220297,
+            -0.037179275135385215
+          ],
+          "mean_relative_probability_error": [
+            -0.06469422576466784,
+            -0.0024838175194858555,
+            0.002432259296156683
+          ],
+          "mean_gradient_relative_error": 0.9238617353174312,
+          "rms_gradient_relative_error": 2.219662006402478
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.07080224485845721,
+            0.10135873089132219,
+            0.06957139593798867
+          ],
+          "mean_log_probability_bias": [
+            0.015148896026367042,
+            -0.020588677824206814,
+            -0.0016386509632531077
+          ],
+          "mean_relative_probability_error": [
+            0.019364901498224098,
+            -0.014533011283806314,
+            0.0023942027922663964
+          ],
+          "mean_gradient_relative_error": 0.14229341432977657,
+          "rms_gradient_relative_error": 0.8151619063513825
+        }
+      ]
+    },
+    {
+      "case_id": 1,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.46930237317331597,
+            0.21122065690827185,
+            0.22512399741774725
+          ],
+          "mean_log_probability_bias": [
+            -0.1961233705914613,
+            0.00641889667881157,
+            -0.15616226133092304
+          ],
+          "mean_relative_probability_error": [
+            -0.07332673166932407,
+            0.033664649800331896,
+            -0.12410553855608215
+          ],
+          "mean_gradient_relative_error": 0.35264944220319533,
+          "rms_gradient_relative_error": 1.538421930576443
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.15053840257757523,
+            0.0781164191753666,
+            0.04874354576218054
+          ],
+          "mean_log_probability_bias": [
+            0.1229641624291623,
+            0.0588138165075166,
+            0.012686397072711353
+          ],
+          "mean_relative_probability_error": [
+            0.14002098087205692,
+            0.06406518643730305,
+            0.014590464341916815
+          ],
+          "mean_gradient_relative_error": 0.2527324902049328,
+          "rms_gradient_relative_error": 0.6340070142651064
+        }
+      ]
+    },
+    {
+      "case_id": 2,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.1410689044631228,
+            0.1964195561276122,
+            0.10914476213045798
+          ],
+          "mean_log_probability_bias": [
+            -0.019183717878542672,
+            -0.12353507600747304,
+            0.03961797357549601
+          ],
+          "mean_relative_probability_error": [
+            -0.000500712744277502,
+            -0.10167169384164604,
+            0.05105051289293589
+          ],
+          "mean_gradient_relative_error": 0.3597508086613244,
+          "rms_gradient_relative_error": 0.8850046780122979
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.0477164452855707,
+            0.0901551896112891,
+            0.04183486134450032
+          ],
+          "mean_log_probability_bias": [
+            -0.03839659342008131,
+            -0.019628787039702722,
+            -0.02811430607228127
+          ],
+          "mean_relative_probability_error": [
+            -0.03649542556318918,
+            -0.014074800141775494,
+            -0.02674334056521171
+          ],
+          "mean_gradient_relative_error": 0.13658895764662646,
+          "rms_gradient_relative_error": 0.37263405595009563
+        }
+      ]
+    },
+    {
+      "case_id": 3,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.22754954611074057,
+            0.21460940826387476,
+            0.09207146388000997
+          ],
+          "mean_log_probability_bias": [
+            0.035284921594264496,
+            0.0015799967248577573,
+            0.029152394210492316
+          ],
+          "mean_relative_probability_error": [
+            0.07319778890629165,
+            0.045432156774300084,
+            0.03698608524426874
+          ],
+          "mean_gradient_relative_error": 0.2190435542307599,
+          "rms_gradient_relative_error": 0.8790000655516694
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.0694329413765725,
+            0.05823350510740177,
+            0.03282828014903272
+          ],
+          "mean_log_probability_bias": [
+            -0.018610480557878034,
+            0.017039682352861907,
+            -0.007026068326912327
+          ],
+          "mean_relative_probability_error": [
+            -0.015009218026073076,
+            0.020773265980160473,
+            -0.006252449012857912
+          ],
+          "mean_gradient_relative_error": 0.060036767457649666,
+          "rms_gradient_relative_error": 0.20755313932586614
+        }
+      ]
+    },
+    {
+      "case_id": 4,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.1075411735257435,
+            0.14785950564277672,
+            0.11575330992434818
+          ],
+          "mean_log_probability_bias": [
+            -0.09837700446231584,
+            0.021189616661679844,
+            -0.031029779758243503
+          ],
+          "mean_relative_probability_error": [
+            -0.08977173169416539,
+            0.03674070483914604,
+            -0.020425418477984313
+          ],
+          "mean_gradient_relative_error": 0.24870055829084387,
+          "rms_gradient_relative_error": 1.0370758236581137
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.10389883294272195,
+            0.05527285283866534,
+            0.048235286534228816
+          ],
+          "mean_log_probability_bias": [
+            -0.020925169551677003,
+            -0.007713033425732818,
+            -0.013687026497809729
+          ],
+          "mean_relative_probability_error": [
+            -0.013952458289301698,
+            -0.005718391961620698,
+            -0.011860134694146193
+          ],
+          "mean_gradient_relative_error": 0.19200694637422522,
+          "rms_gradient_relative_error": 0.38931445791295927
+        }
+      ]
+    },
+    {
+      "case_id": 5,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.31446195967954965,
+            0.24456055629405105,
+            0.11079675198975214
+          ],
+          "mean_log_probability_bias": [
+            -0.17491696272250984,
+            0.07201570615581943,
+            0.050648766007052926
+          ],
+          "mean_relative_probability_error": [
+            -0.11899263931437955,
+            0.12276603698746426,
+            0.05949242632906578
+          ],
+          "mean_gradient_relative_error": 0.4764802020718335,
+          "rms_gradient_relative_error": 1.6321415162199064
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.10859706555399923,
+            0.07745800051902996,
+            0.04888208919636927
+          ],
+          "mean_log_probability_bias": [
+            0.08991401473841337,
+            -0.028779686916849068,
+            0.008462998224706197
+          ],
+          "mean_relative_probability_error": [
+            0.09913252145455947,
+            -0.023477210581852904,
+            0.009834050543207736
+          ],
+          "mean_gradient_relative_error": 0.3524754828199355,
+          "rms_gradient_relative_error": 0.7419722960060466
+        }
+      ]
+    },
+    {
+      "case_id": 6,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.6933237545835247,
+            0.23769468881722866,
+            0.1474014447345513
+          ],
+          "mean_log_probability_bias": [
+            0.013599072347649732,
+            -0.046833559803417524,
+            -0.07586434367500638
+          ],
+          "mean_relative_probability_error": [
+            0.326308630965637,
+            -0.013233852727088033,
+            -0.0606638106377604
+          ],
+          "mean_gradient_relative_error": 0.7235668348299512,
+          "rms_gradient_relative_error": 2.0416641189538955
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.17552316935073303,
+            0.13199690299430278,
+            0.02837756447255302
+          ],
+          "mean_log_probability_bias": [
+            0.036805114138922346,
+            -0.021540657387225992,
+            -0.012061740977053148
+          ],
+          "mean_relative_probability_error": [
+            0.05699445878890414,
+            -0.010626673094199679,
+            -0.01150849517341366
+          ],
+          "mean_gradient_relative_error": 0.3599267413436986,
+          "rms_gradient_relative_error": 0.8005919926968097
+        }
+      ]
+    },
+    {
+      "case_id": 7,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false,
+        "analytic_log_probability_error": 0.0
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            6.106226635438361e-16,
+            8.881784197001252e-16,
+            5.329070518200751e-15
+          ],
+          "mean_log_probability_bias": [
+            4.996003610813204e-16,
+            -8.881784197001252e-16,
+            5.329070518200751e-15
+          ],
+          "mean_relative_probability_error": [
+            4.440892098500627e-16,
+            -8.881784197001248e-16,
+            7.105427357601027e-15
+          ],
+          "mean_gradient_relative_error": 0.027946449105453613,
+          "rms_gradient_relative_error": 0.04500848488803902
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            1.1102230246251565e-16,
+            6.661338147750939e-16,
+            5.773159728050814e-15
+          ],
+          "mean_log_probability_bias": [
+            1.1102230246251565e-16,
+            -6.661338147750939e-16,
+            5.773159728050814e-15
+          ],
+          "mean_relative_probability_error": [
+            4.440892098500627e-16,
+            -8.881784197001248e-16,
+            7.105427357601027e-15
+          ],
+          "mean_gradient_relative_error": 0.0010467502380279408,
+          "rms_gradient_relative_error": 0.009533366291868038
+        }
+      ]
+    },
+    {
+      "case_id": 8,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false,
+        "analytic_log_probability_error": 0.0
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            3.3306690738754696e-16,
+            1.1102230246251565e-16,
+            4.440892098500626e-16
+          ],
+          "mean_log_probability_bias": [
+            -3.3306690738754696e-16,
+            1.1102230246251565e-16,
+            4.440892098500626e-16
+          ],
+          "mean_relative_probability_error": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "mean_gradient_relative_error": 0.005578343654885413,
+          "rms_gradient_relative_error": 0.015698324201371728
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            1.5709655798445965e-14,
+            6.661338147750939e-16,
+            4.440892098500626e-15
+          ],
+          "mean_log_probability_bias": [
+            -1.5709655798445965e-14,
+            -6.661338147750939e-16,
+            -8.881784197001252e-16
+          ],
+          "mean_relative_probability_error": [
+            -1.5543122344752072e-14,
+            0.0,
+            0.0
+          ],
+          "mean_gradient_relative_error": 0.0013624971350012485,
+          "rms_gradient_relative_error": 0.008962411284809523
+        }
+      ]
+    },
+    {
+      "case_id": 9,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false,
+        "analytic_log_probability_error": 0.0
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            3.0531133177191805e-16,
+            1.1102230246251565e-16,
+            3.552713678800501e-15
+          ],
+          "mean_log_probability_bias": [
+            -3.0531133177191805e-16,
+            1.1102230246251565e-16,
+            -3.552713678800501e-15
+          ],
+          "mean_relative_probability_error": [
+            -2.2204460492503128e-16,
+            0.0,
+            -3.5527136788004946e-15
+          ],
+          "mean_gradient_relative_error": 0.0016082135841687312,
+          "rms_gradient_relative_error": 0.03195914033769158
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            3.608224830031759e-16,
+            1.1102230246251565e-16,
+            4.440892098500626e-16
+          ],
+          "mean_log_probability_bias": [
+            -8.326672684688674e-17,
+            1.1102230246251565e-16,
+            -4.440892098500626e-16
+          ],
+          "mean_relative_probability_error": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "mean_gradient_relative_error": 0.0005510810875397177,
+          "rms_gradient_relative_error": 0.009593357615301326
+        }
+      ]
+    },
+    {
+      "case_id": 10,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false,
+        "analytic_log_probability_error": 0.0
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            2.220446049250313e-16,
+            6.661338147750939e-16,
+            3.1086244689504383e-15
+          ],
+          "mean_log_probability_bias": [
+            2.220446049250313e-16,
+            0.0,
+            3.1086244689504383e-15
+          ],
+          "mean_relative_probability_error": [
+            4.440892098500627e-16,
+            0.0,
+            3.552713678800507e-15
+          ],
+          "mean_gradient_relative_error": 0.007247372736424521,
+          "rms_gradient_relative_error": 0.048398312535392035
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            4.440892098500626e-16,
+            4.440892098500626e-16,
+            2.220446049250313e-15
+          ],
+          "mean_log_probability_bias": [
+            -1.1102230246251565e-16,
+            -4.440892098500626e-16,
+            2.220446049250313e-15
+          ],
+          "mean_relative_probability_error": [
+            0.0,
+            0.0,
+            3.552713678800507e-15
+          ],
+          "mean_gradient_relative_error": 0.0032597044259486457,
+          "rms_gradient_relative_error": 0.015602957163487079
+        }
+      ]
+    },
+    {
+      "case_id": 11,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false,
+        "analytic_log_probability_error": 0.0
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            3.885780586188048e-16,
+            3.3306690738754696e-16,
+            1.7763568394002505e-15
+          ],
+          "mean_log_probability_bias": [
+            5.551115123125783e-17,
+            -1.1102230246251565e-16,
+            1.3322676295501878e-15
+          ],
+          "mean_relative_probability_error": [
+            0.0,
+            0.0,
+            1.776356839400252e-15
+          ],
+          "mean_gradient_relative_error": 0.018062774632846418,
+          "rms_gradient_relative_error": 0.028096433052383987
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            1.1102230246251565e-15,
+            1.1102230246251565e-16,
+            1.3322676295501878e-15
+          ],
+          "mean_log_probability_bias": [
+            -1.1102230246251565e-15,
+            -1.1102230246251565e-16,
+            8.881784197001252e-16
+          ],
+          "mean_relative_probability_error": [
+            -8.881784197001248e-16,
+            0.0,
+            0.0
+          ],
+          "mean_gradient_relative_error": 0.0019973539195420084,
+          "rms_gradient_relative_error": 0.017353738523647372
+        }
+      ]
+    },
+    {
+      "case_id": 12,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false,
+        "analytic_log_probability_error": 0.0
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            2.220446049250313e-16,
+            6.661338147750939e-16,
+            1.7763568394002505e-15
+          ],
+          "mean_log_probability_bias": [
+            -5.551115123125783e-17,
+            -6.661338147750939e-16,
+            1.7763568394002505e-15
+          ],
+          "mean_relative_probability_error": [
+            0.0,
+            0.0,
+            1.776356839400252e-15
+          ],
+          "mean_gradient_relative_error": 0.007692276797213862,
+          "rms_gradient_relative_error": 0.04335027011316745
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            5.551115123125783e-17,
+            9.992007221626409e-16,
+            1.7763568394002505e-15
+          ],
+          "mean_log_probability_bias": [
+            0.0,
+            -9.992007221626409e-16,
+            1.7763568394002505e-15
+          ],
+          "mean_relative_probability_error": [
+            2.2204460492503136e-16,
+            -1.7763568394002489e-15,
+            1.776356839400252e-15
+          ],
+          "mean_gradient_relative_error": 0.0017311978736245814,
+          "rms_gradient_relative_error": 0.009224372774754446
+        }
+      ]
+    },
+    {
+      "case_id": 13,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false,
+        "analytic_log_probability_error": 0.0
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            1.609823385706477e-15,
+            9.992007221626409e-16,
+            2.6645352591003757e-15
+          ],
+          "mean_log_probability_bias": [
+            -4.996003610813204e-16,
+            -9.992007221626409e-16,
+            2.6645352591003757e-15
+          ],
+          "mean_relative_probability_error": [
+            -4.440892098500625e-16,
+            -8.881784197001248e-16,
+            1.776356839400252e-15
+          ],
+          "mean_gradient_relative_error": 0.02483526548857055,
+          "rms_gradient_relative_error": 0.06915548519389154
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": true,
+          "verified_gate": true,
+          "mean_absolute_log_probability_error": [
+            1.1102230246251565e-16,
+            4.440892098500626e-16,
+            3.3306690738754696e-15
+          ],
+          "mean_log_probability_bias": [
+            1.1102230246251565e-16,
+            -2.220446049250313e-16,
+            3.3306690738754696e-15
+          ],
+          "mean_relative_probability_error": [
+            4.440892098500627e-16,
+            0.0,
+            3.552713678800507e-15
+          ],
+          "mean_gradient_relative_error": 0.008050283727278432,
+          "rms_gradient_relative_error": 0.021197564938399305
+        }
+      ]
+    },
+    {
+      "case_id": 14,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.1746602161101966,
+            0.1626151234343286,
+            0.22837879173000886
+          ],
+          "mean_log_probability_bias": [
+            0.01744600445042782,
+            0.10959821975784279,
+            -0.059565180548744934
+          ],
+          "mean_relative_probability_error": [
+            0.04010394404051095,
+            0.13399787765333443,
+            -0.02513399491052475
+          ],
+          "mean_gradient_relative_error": 0.08898412891536409,
+          "rms_gradient_relative_error": 0.47350312371533804
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.061069687781679316,
+            0.03652919286814216,
+            0.05537547157098288
+          ],
+          "mean_log_probability_bias": [
+            -0.016589914020530894,
+            -0.013442464011522937,
+            -0.008603386989200601
+          ],
+          "mean_relative_probability_error": [
+            -0.013723724423029889,
+            -0.012529157645886487,
+            -0.006388712373154824
+          ],
+          "mean_gradient_relative_error": 0.025997118484398854,
+          "rms_gradient_relative_error": 0.140925045294676
+        }
+      ]
+    },
+    {
+      "case_id": 15,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.16135075672896443,
+            0.1341662651027017,
+            0.26239846517424503
+          ],
+          "mean_log_probability_bias": [
+            0.08436900443881318,
+            -0.03541825012033872,
+            0.18600720675767946
+          ],
+          "mean_relative_probability_error": [
+            0.1103486054141655,
+            -0.023298555367737516,
+            0.24878367818267205
+          ],
+          "mean_gradient_relative_error": 0.18915815173266678,
+          "rms_gradient_relative_error": 0.3538526234133221
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.0590348371320083,
+            0.07453252390366638,
+            0.09504600153971232
+          ],
+          "mean_log_probability_bias": [
+            -0.0060279221142734984,
+            -0.009521232155293657,
+            -0.015554809984791973
+          ],
+          "mean_relative_probability_error": [
+            -0.0034285932532948427,
+            -0.00586040988573511,
+            -0.0094080283662633
+          ],
+          "mean_gradient_relative_error": 0.03512157670570785,
+          "rms_gradient_relative_error": 0.1361243688553237
+        }
+      ]
+    },
+    {
+      "case_id": 16,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.06379065271050427,
+            0.07135204987455734,
+            0.10838527933765985
+          ],
+          "mean_log_probability_bias": [
+            -0.0379696460950249,
+            -0.003102940766100404,
+            0.03460089472326633
+          ],
+          "mean_relative_probability_error": [
+            -0.035049421680338255,
+            0.001769768566824838,
+            0.04307430176949694
+          ],
+          "mean_gradient_relative_error": 0.06993826447133135,
+          "rms_gradient_relative_error": 0.15415740497440347
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.035641169842812015,
+            0.06612926277914355,
+            0.06328891355058897
+          ],
+          "mean_log_probability_bias": [
+            0.00614408869743438,
+            -0.018841255760876474,
+            -0.009475051438374571
+          ],
+          "mean_relative_probability_error": [
+            0.006979161881490559,
+            -0.01493757144287409,
+            -0.006853756626974026
+          ],
+          "mean_gradient_relative_error": 0.018133253974513187,
+          "rms_gradient_relative_error": 0.05282358651248653
+        }
+      ]
+    },
+    {
+      "case_id": 17,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.20733122720903896,
+            0.11036101481169336,
+            0.13157906619355852
+          ],
+          "mean_log_probability_bias": [
+            -0.1534575455056565,
+            0.0059699209396404385,
+            0.08298700772806367
+          ],
+          "mean_relative_probability_error": [
+            -0.12789688479540387,
+            0.013747420526630152,
+            0.10007156878395118
+          ],
+          "mean_gradient_relative_error": 0.06081077505074463,
+          "rms_gradient_relative_error": 0.20627150559081606
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.06604414407436787,
+            0.03696436174025619,
+            0.0775502278526865
+          ],
+          "mean_log_probability_bias": [
+            -0.015707586020795694,
+            -0.014616248264179177,
+            -0.0027780118663240927
+          ],
+          "mean_relative_probability_error": [
+            -0.012481238043001334,
+            -0.013078478340067054,
+            0.0011933695111998343
+          ],
+          "mean_gradient_relative_error": 0.025614355828200992,
+          "rms_gradient_relative_error": 0.09434498322650965
+        }
+      ]
+    },
+    {
+      "case_id": 18,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.12990170443479215,
+            0.06081071301975016,
+            0.05160979427299006
+          ],
+          "mean_log_probability_bias": [
+            0.014519028503689413,
+            -0.008595671395261295,
+            -0.008633663045033213
+          ],
+          "mean_relative_probability_error": [
+            0.02778494509060449,
+            -0.004513266989456833,
+            -0.005221136109344827
+          ],
+          "mean_gradient_relative_error": 0.12397455488428494,
+          "rms_gradient_relative_error": 0.20705959099622429
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.023315487198176776,
+            0.0718948714070945,
+            0.05325333043750158
+          ],
+          "mean_log_probability_bias": [
+            0.001202049558212015,
+            0.05056708744976046,
+            0.03926053128178575
+          ],
+          "mean_relative_probability_error": [
+            0.0015597862580442746,
+            0.05379841034894232,
+            0.04118636884643388
+          ],
+          "mean_gradient_relative_error": 0.024721916850554145,
+          "rms_gradient_relative_error": 0.06869671219395478
+        }
+      ]
+    },
+    {
+      "case_id": 19,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.08691732706968869,
+            0.11037624952058034,
+            0.16987637576524506
+          ],
+          "mean_log_probability_bias": [
+            -0.04486177043696893,
+            0.009848876650777938,
+            -0.16987637576524506
+          ],
+          "mean_relative_probability_error": [
+            -0.03869209686184553,
+            0.018138146317155043,
+            -0.15259253432180006
+          ],
+          "mean_gradient_relative_error": 0.1652249224620995,
+          "rms_gradient_relative_error": 0.5032319321356263
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.02348149670257088,
+            0.05119935621121097,
+            0.0747825274052949
+          ],
+          "mean_log_probability_bias": [
+            0.0061903135348823635,
+            -0.01754523033951627,
+            0.013686239530919853
+          ],
+          "mean_relative_probability_error": [
+            0.006567908741672482,
+            -0.015467754464602301,
+            0.017848951089475505
+          ],
+          "mean_gradient_relative_error": 0.08490814690803918,
+          "rms_gradient_relative_error": 0.21348351820060274
+        }
+      ]
+    },
+    {
+      "case_id": 20,
+      "status": "verified",
+      "reference_eligible": true,
+      "checks": {
+        "reference_reused_by_verified_hash": true,
+        "independent_reference_recomputed": false
+      },
+      "rows": [
+        {
+          "count": 64,
+          "primary": false,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.2066362441227595,
+            0.1517309563612168,
+            0.17314797887271638
+          ],
+          "mean_log_probability_bias": [
+            0.01686726110209047,
+            0.00658870428440439,
+            0.06339680721667929
+          ],
+          "mean_relative_probability_error": [
+            0.0425104980642018,
+            0.021075210626365172,
+            0.08748444172212518
+          ],
+          "mean_gradient_relative_error": 0.18396490585492956,
+          "rms_gradient_relative_error": 0.516516359826825
+        },
+        {
+          "count": 512,
+          "primary": true,
+          "original_worker_gate": false,
+          "verified_gate": false,
+          "mean_absolute_log_probability_error": [
+            0.03860571448115507,
+            0.06668954377665415,
+            0.052532974102395436
+          ],
+          "mean_log_probability_bias": [
+            -0.0007278957342328751,
+            0.038634341987692666,
+            -0.010707065926755632
+          ],
+          "mean_relative_probability_error": [
+            0.00020425616427720107,
+            0.04277096661338002,
+            -0.008618786593953138
+          ],
+          "mean_gradient_relative_error": 0.07524750479177247,
+          "rms_gradient_relative_error": 0.2289544218440536
+        }
+      ]
+    }
+  ],
+  "n_raw_groups": 63,
+  "n_traces": 504,
+  "maximum_trace_error": 8.668621376273222e-13,
+  "gate_decisions_changed_by_registered_mean_absolute_criterion": 0,
+  "seconds": 3.2379591669887304,
+  "peak_rss_bytes": 78938112,
+  "scope": "Reused previously independently checked exact references by hash, no new reference recomputation; all retained raw statistics and complete504 paths if all cases complete; unsaved individual paths not replayed; original mean-absolute gate verified"
+}
