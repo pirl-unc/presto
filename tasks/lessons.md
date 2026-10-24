@@ -603,3 +603,7 @@ Keep applicability reporting separate from model features and the measured label
   failure must prevent commit/push. CSV's valid default CRLF can trip Git whitespace
   checks. Publish an LF derivative with parsed-cell equality and preserve original
   bytes, instead of changing frozen numerical results or ignoring the check.
+
+## 2026-10-24 — Independent regression replay and rank ties
+
+- Agreement of predictions to a numerical tolerance does not imply agreement of raw Spearman to that tolerance. Verify coefficients/predictions independently, recompute published metrics from the exact archived values, and separately audit rank discrepancies on mathematically identical inputs. Preserve raw values and failed checks; explicitly record any revised verification contract rather than silently loosening a tolerance or rounding biological results.

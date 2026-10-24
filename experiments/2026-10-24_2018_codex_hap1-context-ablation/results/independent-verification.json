@@ -1,0 +1,99 @@
+{
+  "status": "passed",
+  "n_prediction_values": 1570680,
+  "n_condition_systems": 540,
+  "max_prediction_error": 1.5681900222830336e-13,
+  "max_coefficient_error": 2.3358051604027708e-14,
+  "max_metric_error": 2.7755575615628914e-15,
+  "donor_counts": {
+    "0:fit": {
+      "n_keys": 5053,
+      "unchanged": 0,
+      "same_component": 28
+    },
+    "0:eval": {
+      "n_keys": 1264,
+      "unchanged": 0,
+      "same_component": 11
+    },
+    "1:fit": {
+      "n_keys": 5079,
+      "unchanged": 0,
+      "same_component": 41
+    },
+    "1:eval": {
+      "n_keys": 1238,
+      "unchanged": 0,
+      "same_component": 3
+    },
+    "2:fit": {
+      "n_keys": 5078,
+      "unchanged": 0,
+      "same_component": 34
+    },
+    "2:eval": {
+      "n_keys": 1239,
+      "unchanged": 0,
+      "same_component": 9
+    },
+    "3:fit": {
+      "n_keys": 5143,
+      "unchanged": 0,
+      "same_component": 35
+    },
+    "3:eval": {
+      "n_keys": 1174,
+      "unchanged": 1,
+      "same_component": 8
+    },
+    "4:fit": {
+      "n_keys": 4915,
+      "unchanged": 0,
+      "same_component": 7
+    },
+    "4:eval": {
+      "n_keys": 1402,
+      "unchanged": 0,
+      "same_component": 145
+    },
+    "full:fit": {
+      "n_keys": 6317,
+      "unchanged": 0,
+      "same_component": 28
+    },
+    "full:eval": {
+      "n_keys": 6317,
+      "unchanged": 0,
+      "same_component": 28
+    }
+  },
+  "rank_diagnostics": {
+    "sequence_geometry:train": {
+      "raw_difference": 2.49794466777864e-08,
+      "raw_archived_spearman": 0.4917169375924061,
+      "raw_replayed_spearman": 0.4917169126129594,
+      "canonical_archived_spearman": 0.4917169387469096,
+      "canonical_replayed_spearman": 0.4917169387469096,
+      "max_identical_input_original_spread": 3.3306690738754696e-16,
+      "max_identical_input_replay_spread": 4.440892098500626e-16,
+      "n_input_groups": 34367
+    },
+    "sequence_geometry:inner_cv": {
+      "raw_difference": 1.2478786226566285e-08,
+      "raw_archived_spearman": 0.4646586389732504,
+      "raw_replayed_spearman": 0.46465862649446416,
+      "canonical_archived_spearman": 0.4646586427692477,
+      "canonical_replayed_spearman": 0.4646586427692477,
+      "max_identical_input_original_spread": 4.440892098500626e-16,
+      "max_identical_input_replay_spread": 4.440892098500626e-16,
+      "n_input_groups": 34367
+    }
+  },
+  "seconds": 77.04484195896657,
+  "peak_gib": 2.1358795166015625,
+  "argv": [
+    "experiments/2026-10-24_2018_codex_hap1-context-ablation/analysis/verify.py"
+  ],
+  "source_sha256": "c61ad9b8df8fdbbf1376ade71e28192df13aaaa3594486ac49df2f5cd5fb3947",
+  "outer_validation_test_scored": false
+}
