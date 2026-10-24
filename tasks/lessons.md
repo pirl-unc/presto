@@ -598,3 +598,8 @@ Keep applicability reporting separate from model features and the measured label
   split, producing a false training-integrity failure. Preserve the failed verifier,
   inspect the production fitter separately, and require numerical replay after a
   verifier-only correction; never alter a frozen model to satisfy a broken checker.
+
+- Every multi-command publication shell must begin with `set -e`; verification
+  failure must prevent commit/push. CSV's valid default CRLF can trip Git whitespace
+  checks. Publish an LF derivative with parsed-cell equality and preserve original
+  bytes, instead of changing frozen numerical results or ignoring the check.

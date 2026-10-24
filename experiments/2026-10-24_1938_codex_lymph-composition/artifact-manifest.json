@@ -2,8 +2,8 @@
   "created_utc": "2026-10-24T20:01:11.723296+00:00",
   "files": {
     "README.md": {
-      "sha256": "b9cdef4627dd7804019dd09a1fae4d39e916fc7705dac50885bf85d77c7b17b3",
-      "size_bytes": 16066
+      "sha256": "9bd2e9f8f3306dbfde9fbb5e8401e543b67df1294db2b17f944f88644332cb77",
+      "size_bytes": 16542
     },
     "analysis/observer_exposure.py": {
       "sha256": "91641abb4adb37b8718a94289332f7b289609859fc3949599523f8f90a2d0de1",
@@ -221,6 +221,10 @@
       "sha256": "e743d8dcf7e37e80d25460af209479cc191f629c833071f26eb18d0275a21563",
       "size_bytes": 107283
     },
+    "results/csv-publication-normalization.json": {
+      "sha256": "aedafcceb2ee9fca9a33c42373b71608373afd694ec2b190f62c9ca642a19990",
+      "size_bytes": 553
+    },
     "results/evaluation/comparisons.json": {
       "sha256": "167ffd2c202738f68e86cd05d77561d8ed06f7e5f06c5593d8efb90e48003ce0",
       "size_bytes": 1151
@@ -345,17 +349,22 @@
       "sha256": "296076221d5aa25aa8cb8a1476580c34e96120a9a307df4c0cebc07186361348",
       "size_bytes": 554
     },
+    "results/summary-original.csv.gz": {
+      "sha256": "84bde4d39e18568fe7c29cba343f40489f98091e2f19438d62d5008189925c9f",
+      "size_bytes": 6012
+    },
     "results/summary.csv": {
-      "sha256": "24198d5a3d454ab59e4ea156af0db987a9384d3b9f82a45a6eb49763f462bc95",
-      "size_bytes": 15620
+      "sha256": "0112fd26ade8114b0c080f0080124015414bacb29a19da329ca35a9660ef133b",
+      "size_bytes": 15556
     }
   },
-  "total_publication_bytes": 8380112,
+  "total_publication_bytes": 8387089,
   "raw_logs": "identical content preserved in .log.gz; plain .log not staged",
   "raw_data_directories": [
     "data/lymph_source_qualification/2026-10-24_1903_canonical",
     "data/lymph_composition_recipes/2026-10-24_1938_v1",
     "data/lymph_composition_recipes/2026-10-24_1938_v1_prepared"
   ],
-  "free_disk_bytes": 8352346112
+  "free_disk_bytes": 8352346112,
+  "updated_utc": "2026-10-24T20:03:09.187510+00:00"
 }

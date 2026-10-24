@@ -13311,7 +13311,8 @@ Plan: experiments/agents/codex/plans/lymph-composition-comparison.md.
 - [x] Admit actual cohorts and independently verify original area targets; human supported, DCvalidation supportfails.
 - [x] Fit21controls/models, including matched discreteREINFORCE64/exact3seeds.
 - [x] Seal/evaluate held-outs and independently replay14,028predictions; report/registrycomplete.
-- [ ] Publish Presto artifacts and finish source/recipe CI, merge and PyPI releases.
+- [x] Publish Presto artifacts to draftPR131 as8033462; CSV-only publication correction follows.
+- [ ] Finish source/recipe CI, merge and PyPI releases.
 
 No new APC-concentration claim; native lymph and MHC-selected DC remain distinct.
 

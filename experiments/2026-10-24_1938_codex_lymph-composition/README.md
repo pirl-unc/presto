@@ -237,3 +237,10 @@ including short/nonbinding products modulo precursor abundance; that is still
 **active and unachieved**. This extracellular conditional-signal experiment does not
 substitute for it. Unresolved original-reference, quantity-grain and specimen/
 precursor requirements are recorded on [Hitlist817](https://github.com/pirl-unc/hitlist/issues/817#issuecomment-6388815228).
+
+Publication-only follow-up: CSV CRLF line endings triggered Git whitespace checks.
+The summary is normalized to LF with every parsed cell unchanged; the original is
+retained as `results/summary-original.csv.gz` with a byte-hash receipt. The first
+publication shell continued after the check because it lacked fail-fast mode;
+the corrective publication requires the check to pass before committing. No fitted
+model, numerical outcome or frozen executed report script changes.
