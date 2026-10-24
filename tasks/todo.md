@@ -12762,3 +12762,70 @@ PriorPR794release-build40071541566passed; no duplicate release was launched.
 - Hitlist merge and clean-main release/PyPI verification remain outstanding; 2.0.16 was absent from PyPI before PR publication. Do not claim delivery complete.
 - Parent reference assets already exist in the old immutable MAPP package. Next work can reuse the shared Hitlist reference parser rather than fetch or guess a new source.
 - No native-response model has trained; proceed from the prospective native-response-recipe plan, retaining the full APC concentration objective.
+
+
+### Native biological publication and next execution handoff
+
+This goal turn is progress: canonical admission completed, six real biological
+fits completed and independently closed, registry/control/next physical spec
+published. Presto2cb7db0fff076180e3235ea11ef9d30b6cb2872e is pushed to draftPR131;
+108frozen artifact hashes match committed blobs. Both PR descriptions were rewritten
+around the current implementation/results and read back exactly. Issue791follow-up:
+https://github.com/pirl-unc/hitlist/issues/791#issuecomment-6381741297.
+
+HitlistPR793 passed Docs40075205042 and all Tests40075205049 jobs (Python3.10–3.14,
+integration, coverage, lint), then merged as35f4ee0ac5217bc458e0bb2a8c31fe53c2d86810.
+Clean-main release-build40076517694 was dispatched once for that exact head and
+confirmed in progress installing release dependencies; do not duplicate.
+Publication toPyPI2.0.17 is NOT verified yet.
+Issue791was closed by the concurrent2.0.16release; its closure and792were preserved,
+with concrete remaining metadata/source limits in the follow-up comment.
+
+Presto current-headCI40076131102:docs passed, lint-test still running at last read.
+All local experiment/verification/report handles73370/42012/27203/78275/77273/22069
+are terminal. Failed source-verifier taxonomy check and slow scalar baseline
+verification remain preserved; their corrected closures pass. Commit40629,
+artifactcheck91095, pushes95154/52162, PRupdate18769 and merge/release-dispatch67374
+are terminal success. No local fit is currently live.
+
+Next: implement experiments/agents/codex/plans/native-processing-comparison.md
+without another source-audit or feature-sweep detour. Source admission and baselines
+are ready. Register the mapped-subset matched controls and four physical exact/
+conditional-score arms before launch; preserve all eligible source quantities and
+fixed test reservation. Reuse existing processing primitives and verification
+helpers where applicable. Monitor the two specific hosted run IDs while doing
+useful model work. After Hitlist release-build succeeds, verify/download its exact
+source-bound artifacts and publish/verify2.0.17 using the repository release flow,
+without changing the shared Python environment. Full APC concentration objective
+remains active and unachieved.
+
+### Native physical comparison implementation
+
+Previous goal turn: progress (six actual biological fits, independent closure,
+published2cb7db0, shared recipe merge and exact-head release dispatch). Revalidated
+the current worktree and specific hosted runs; both are still live. The source
+and baseline admission are complete; no local fit is running at this checkpoint.
+
+- [x] Register the mapped-subset experiment and freeze the implementation addendum.
+- [x] Add/reuse steady-state amount and conditional-age score primitives with
+  independent small-system physical/gradient checks.
+- [x] Fit the matched controls and admitted exact/sampled physical arms locally.
+- [x] Freeze checkpoints, evaluate all completed models on the reserved test once,
+  and close the source-linked prediction/metric report.
+
+
+### Native physical biological outcome
+
+0410completed all six matched controls and four fixed physical fits. Exact sequence
+processing validation/test loss.070384/.129789 versuscondition.073514/.130557;
+testexactRMSE.243207 versus.250953,Spearman.5373 versus.5324. Small held-out gain,
+not APC concentration qualification. Sampled counterpart nearlymatches at25xruntime.
+All100,860source-linked predictions and2,180metricrecords independently verify;
+9physical/substrate tests pass. No test-driven retry. Test now inspected; preserve
+it from tuning. Report, comparison plot/CSV, registry and provisional baseline updated.
+Full APC availability goal remains active; biological calibration is still missing.
+
+Hosted state checked: Presto40076131102passes docs/lint/tests/distribution. Hitlist
+release-build40076517694for35f4ee0passes all required build/artifact steps. PyPI2.0.17
+publication remains unverified; exact release artifact verification/publication is
+separate pending delivery work. No duplicate workflow dispatched.

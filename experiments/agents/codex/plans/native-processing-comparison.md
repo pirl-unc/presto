@@ -146,3 +146,56 @@ perturbation dynamics and typed APC machinery conditioning using the existing
 source timing/handling fields. Actual APC validation, precursor support, independent
 MS response, transport, pMHC selection and concentration calibration remain required
 before the persistent objective can be complete.
+
+## Implementation contract, fixed before code and execution
+
+Reuse the stable steady-state formulas and conditional waiting-time construction
+already checked in0043, exposing them as a small reusable model module. Preserve
+the full-state resolvent/mass and score-gradient checks; do not build another source
+curator or add a new fragment-length process. Register the experiment before source
+subset arithmetic or numerical qualification.
+
+Use the0314training-only standardized condition design for both a and b. Parameter
+order:rho, supported adjacent-bond coordinates w (none for uniform), a's global
+intercept and condition contrasts, b's global intercept and condition contrasts.
+Penalty.01 applies to every coordinate except b's global intercept. The bond
+feature basis uses40left/right residue indicators, weighted centering/scaling and
+SVD relative threshold1e-10. Supported training bonds are the union of internal
+and boundary bonds reachable from admitted training spans across all candidate
+origins. Give each distinct training parent sequence equal total feature weight,
+then its reachable bonds equal weight. Bonds outside supervised spans have no
+individual parameter; they use the shared learned feature map. Report any held-out
+feature direction outside its training support instead of inventing a coefficient.
+
+Use direct gathers and interval sums for queried internal rates, avoiding long
+prefix-subtraction cancellation. Fold duplicate reference accessions by full
+sequence hash and repeated occurrence coordinates. The same peptide/condition input
+gets one exact forward evaluation, broadcast across form/source groups. Uniform
+model inputs additionally collapse exact analytic ties using length and the reduced
+integer counts of whole-parent/one-boundary/two-boundary occurrences. Multiplicity
+scales cancel in treated/control ratios. Keep unnormalized component amounts as
+separate outputs and do not apply this ratio tie reduction to those amounts.
+
+Sampling still uses512draws for every training response group, including groups
+sharing forward inputs. Draw five independent uniform arrays per group/iteration:
+origin, boundary order and three waiting times. Reuse the same uniforms for the
+treated/control pair, not across different groups. Save RNG states and selected
+fixed trace probes. The per-group score estimate may differ across form groups
+because their draws differ; the exact forward readout remains tied. Score gradients
+are a surrogate with exact forward values; stop gradients through origin choices,
+waiting times and conditional probabilities. Record that these are analytically
+conditioned partial histories, not sampled complete intracellular trajectories.
+
+For the predetermined nonzero gradient state, use a NumPy703generator to draw
+0.03*standard-normal coordinates in the declared order; reset b's global intercept
+to0. The zero-state shared-rate blocks must cancel exactly under paired draws.
+Report errors on the full unregularized data gradient and each parameter block;
+the .10mean/.25RMS admission gates apply to the full nonzero data-gradient norm,
+with zero-block absolute errors also retained. Do not let exact penalty gradients
+hide kinetic estimator error. Use16independent seed42+probe*100+rep groups.
+
+Train all four physical arms to their fixed200updates when admitted, preserving
+partial runs if a gate fails. Refit the six matched controls with the unchanged0314
+hyperparameters. Do not inspect test metrics until all training attempts terminate
+and a separate final-evaluation command verifies the frozen configuration and
+checkpoint hashes. Evaluate every completed fixed model, without selecting by test.
