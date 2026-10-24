@@ -1,0 +1,700 @@
+diff --git a/docs/evidence-store.md b/docs/evidence-store.md
+index 439830e..0461fe8 100644
+--- a/docs/evidence-store.md
++++ b/docs/evidence-store.md
+@@ -494,7 +494,7 @@ so adding context cannot multiply assay or training-example weights.
+ 
+ # Native cellular peptide measurements
+ 
+-Schema 16 / catalog 21 exposes corrected revision `tmab_native_peptidomics_v2` of the
++Schema 17 / catalog 22 exposes corrected revision `tmab_native_peptidomics_v3` of the
+ standalone `tmab_peptidomics` package family for the
+ Dasgupta 2014 and Gelman 2013 TMAB native-peptide supplements. It is not an
+ MHC-elution package and does not infer processing, knockout, absolute
+@@ -521,14 +521,14 @@ for cell line, treatment, extraction, labeling and instrument details.
+ `tmab_measurement_lineage` flags possible cross-paper reuse but leaves
+ independence `unknown` until source reconciliation establishes it.
+ 
+-The superseded schema-15 revision is rejected by this corrected reader; rebuild
++The superseded schema-15 and schema-16 revisions are rejected by this corrected reader; rebuild
+ from the same pinned original workbooks instead of relabeling old packages.
+ Source row/measurement IDs and raw quantities are preserved. Tentative or
+ unsupported identities, unknown sequences, nonpositive ratios, controls and
+ derived averages have explicit deferred source eligibility. Exact and censored
+ positive treated-ratio candidates still need an independence-qualified recipe.
+ 
+-`identification_status` is separate from `value_status`; supported acetylation
++`sequence_identity_status` is separate from `value_status`; supported acetylation
+ and methionine oxidation retain source tokens and position-bearing JSON.
+ Unsupported pyroglutamate/dehydration notation remains unresolved until a parent
+ mapping or source adjudication establishes its identity. Source-independent
+@@ -541,3 +541,43 @@ original acquisition for reused measurements. It retains both source timing labe
+ parsed incubation/harvest intervals, compound presence during harvesting and
+ primary Methods links. The 2014 protocol retains inhibitor during its harvest wash;
+ 20 minutes incubation plus 15 minutes handling supports 35 minutes total exposure.
++
++## Native response recipe
++
++`tmab_native_response_v1` is registered in the common store catalog and materializes
++grouped exact/censored treated-control responses. Supply a hash-pinned reviewed
++human FASTA as an explicitly modern model reference:
++
++```python
++store.materialize({
++    "schema_version": 1,
++    "name": "native-response",
++    "registered_recipe": "tmab_native_response_v1",
++    "reference": {
++        "path": "/path/to/human-reviewed.fasta",
++        "sha256": "<sha256 of the exact input>",
++        "source_url": "<original public reference URL>",
++        "generation_label": "<recorded reference generation>",
++        "license": "CC BY 4.0",
++        "role": "model_reference_not_original_search",
++    },
++}, "native-response-recipe")
++```
++
++The immutable recipe snapshots the reference and native tables, retains every
++exact sequence occurrence/parent alternative and all source dispositions, and
++never treats a protein description as an accession or measured origin. Its
++components connect all source sequences, reference alternatives, source parent
++assertions and possible reuse before eligibility or split assignment. Charge
++states and reported ratios contribute within a peptide-form/condition group;
++matching source copies share one observation weight. Different-label candidate
++reuse remains deferred. Exact and bounded observations remain separate, with
++condition/component/form/observation weights normalized within each split.
++
++These are peptide/parent component splits within the same studies. Shared-control
++label proxies may cross them; physical denominator, donor and specimen identities
++remain unknown. They do not establish homology or external biological independence.
++Chemical exposure remains separate from genetic loss, and native extract ratios
++are not absolute APC concentrations. Full-parent model support is reported
++separately from sequence-response admission. Use `verify_recipe_package` with the
++source package to replay every quantity, contributor, split and reference occurrence.
+diff --git a/hitlist/distribution_recipe.py b/hitlist/distribution_recipe.py
+index 8eca37a..b9073e9 100644
+--- a/hitlist/distribution_recipe.py
++++ b/hitlist/distribution_recipe.py
+@@ -36,6 +36,7 @@ def describe_registered_recipes(store):
+     from .digestion_recipe import describe as describe_digestion
+     from .mapp_controlled_recipe import describe as describe_controlled
+     from .ms_calibration_response import describe
++    from .tmab_response_recipe import describe as describe_native_response
+ 
+     available = set(TABLE_BINDINGS.values()) <= store.bindings.keys()
+     return [
+@@ -46,6 +47,7 @@ def describe_registered_recipes(store):
+         describe_controlled(store),
+         describe_controlled(store, contrast=True),
+         describe_digestion(store),
++        describe_native_response(store),
+     ]
+ 
+ 
+diff --git a/hitlist/evidence_catalog.py b/hitlist/evidence_catalog.py
+index 629ac8f..1165e4b 100644
+--- a/hitlist/evidence_catalog.py
++++ b/hitlist/evidence_catalog.py
+@@ -8,7 +8,7 @@ from __future__ import annotations
+ 
+ from dataclasses import asdict, dataclass, replace
+ 
+-SCHEMA_VERSION = 21
++SCHEMA_VERSION = 22
+ FIELD_ROLES = frozenset(
+     {
+         "identity",
+@@ -88,6 +88,40 @@ def _field(name, role, value_kind, meaning, *null_states):
+ 
+ 
+ FIELDS = (
++    _field("source_handling_raw", "provenance", "text", "Unmodified source wash or handling cell"),
++    _field(
++        "source_observed_mass_raw", "provenance", "text", "Unmodified source observed mass cell"
++    ),
++    _field(
++        "candidate_reuse_key", "lineage", "text", "Source-independent candidate-reuse fingerprint"
++    ),
++    _field("observed_mass_raw", "molecular_input", "text", "Unmodified observed mass cell"),
++    _field("theoretical_mass_raw", "molecular_input", "text", "Unmodified theoretical mass cell"),
++    _field(
++        "acquisition_provenance_status",
++        "provenance",
++        "category",
++        "Row-level acquisition provenance scope",
++    ),
++    _field("wash_interval_raw", "protocol", "text", "Unmodified source wash or harvest interval"),
++    _field(
++        "wash_presence_status",
++        "protocol",
++        "category",
++        "Source scope for compound presence during washing",
++    ),
++    _field(
++        "exposure_interval_status", "provenance", "category", "Evidence scope for exposure timing"
++    ),
++    _field(
++        "acquisition_source_scope", "provenance", "category", "Scope of an acquisition assertion"
++    ),
++    _field(
++        "source_study_inheritance_status",
++        "provenance",
++        "category",
++        "Whether acquisition inheritance is resolved",
++    ),
+     _field(
+         "reference_id",
+         "provenance",
+@@ -372,7 +406,7 @@ FIELDS = (
+         "Whether a shared-control group is a source-label proxy or a resolved physical denominator",
+     ),
+     _field(
+-        "identification_status",
++        "sequence_identity_status",
+         "annotation",
+         "category",
+         "Reported, tentative, unidentified or unresolved sequence identity; separate from numeric exactness",
+@@ -1738,7 +1772,7 @@ EVIDENCE = (
+         ("source_asset_id",),
+         status="v2_materialized",
+         materialized_artifact="tmab/source_assets.parquet",
+-        min_package_schema_version=16,
++        min_package_schema_version=17,
+     ),
+     Evidence(
+         "tmab_source_row",
+@@ -1758,6 +1792,8 @@ EVIDENCE = (
+             "source_row_json",
+             "source_row_disposition",
+             "source_sequence_raw",
++            "source_handling_raw",
++            "source_observed_mass_raw",
+             "source_experiment_raw",
+             "source_cell_raw",
+             "source_comments_raw",
+@@ -1766,7 +1802,7 @@ EVIDENCE = (
+         ("source_record_id",),
+         status="v2_materialized",
+         materialized_artifact="tmab/source_rows.parquet",
+-        min_package_schema_version=16,
++        min_package_schema_version=17,
+     ),
+     Evidence(
+         "tmab_protocol_context",
+@@ -1813,11 +1849,16 @@ EVIDENCE = (
+             "normalization_policy",
+             "context_scope",
+             "context_status",
++            "wash_interval_raw",
++            "wash_presence_status",
++            "exposure_interval_status",
++            "acquisition_source_scope",
++            "source_study_inheritance_status",
+         ),
+         ("context_id",),
+         status="v2_materialized",
+         materialized_artifact="tmab/protocol_context.parquet",
+-        min_package_schema_version=16,
++        min_package_schema_version=17,
+     ),
+     Evidence(
+         "tmab_measurement",
+@@ -1832,6 +1873,7 @@ EVIDENCE = (
+             "source_record_id",
+             "context_id",
+             "lineage_group_id",
++            "candidate_reuse_key",
+             "source_asset_id",
+             "source_id",
+             "source_file",
+@@ -1844,13 +1886,15 @@ EVIDENCE = (
+             "peptide_sequence",
+             "peptide_modifications_raw",
+             "peptide_modifications_json",
+-            "identification_status",
++            "sequence_identity_status",
+             "modification_status",
+             "parent_label_raw",
+             "gene_name",
+             "cell_line_name",
+             "subcellular_location_raw",
+             "charge_raw",
++            "observed_mass_raw",
++            "theoretical_mass_raw",
+             "measured_pool",
+             "quantitative_raw",
+             "quantitative_value",
+@@ -1861,6 +1905,7 @@ EVIDENCE = (
+             "peak_overlap_status",
+             "eligibility_status",
+             "source_reuse_status",
++            "acquisition_provenance_status",
+             "shared_control_group_id",
+             "shared_control_group_status",
+             "source_comments_raw",
+@@ -1868,7 +1913,7 @@ EVIDENCE = (
+         ("measurement_id", "source_record_id", "source_cell"),
+         status="v2_materialized",
+         materialized_artifact="tmab/measurements.parquet",
+-        min_package_schema_version=16,
++        min_package_schema_version=17,
+     ),
+     Evidence(
+         "tmab_measurement_lineage",
+@@ -1894,7 +1939,7 @@ EVIDENCE = (
+         ("measurement_id", "lineage_group_id"),
+         status="v2_materialized",
+         materialized_artifact="tmab/lineage.parquet",
+-        min_package_schema_version=16,
++        min_package_schema_version=17,
+     ),
+     Evidence(
+         "gomez_source_result",
+diff --git a/hitlist/evidence_package.py b/hitlist/evidence_package.py
+index 2d400b5..7223f4a 100644
+--- a/hitlist/evidence_package.py
++++ b/hitlist/evidence_package.py
+@@ -47,9 +47,9 @@ def package_family(manifest):
+     ):
+         return "binding_context_availability"
+     if (
+-        schema == 16
++        schema == 17
+         and manifest.get("package_family") == "tmab_peptidomics"
+-        and manifest.get("revision") == "tmab_native_peptidomics_v2"
++        and manifest.get("revision") == "tmab_native_peptidomics_v3"
+     ):
+         return "tmab_peptidomics"
+     raise ValueError(f"Unknown or ambiguous evidence package family: schema {schema}")
+diff --git a/hitlist/evidence_recipe.py b/hitlist/evidence_recipe.py
+index 4461c97..696e947 100644
+--- a/hitlist/evidence_recipe.py
++++ b/hitlist/evidence_recipe.py
+@@ -525,7 +525,11 @@ def materialize_recipe(store, recipe, destination):
+         from .mapp_controlled_recipe import RECIPE_ID as CONTROLLED_ID
+         from .mapp_controlled_recipe import materialize_controlled
+         from .ms_calibration_response import RECIPE_ID, materialize_response
++        from .tmab_response_recipe import RECIPE_ID as NATIVE_RESPONSE_ID
++        from .tmab_response_recipe import materialize_responses
+ 
++        if recipe["registered_recipe"] == NATIVE_RESPONSE_ID:
++            return materialize_responses(store, recipe, destination)
+         if recipe["registered_recipe"] == DIGESTION_ID:
+             return materialize_timecourses(store, recipe, destination)
+         if recipe["registered_recipe"] in (CONTROLLED_ID, CONTROLLED_CONTRAST_ID):
+@@ -764,6 +768,10 @@ def verify_recipe_package(directory, *, source_package=None):
+     ):
+         raise RecipeError("Source package manifest changed")
+     output_kind = manifest.get("output_kind", "row_decisions")
++    if output_kind == "registered_native_response":
++        from .tmab_response_recipe import verify_response_contents
++
++        return verify_response_contents(directory, manifest, source_package)
+     if output_kind == "registered_digestion_timecourses":
+         from .digestion_recipe import verify_timecourse_contents
+ 
+diff --git a/hitlist/tmab_peptidomics.py b/hitlist/tmab_peptidomics.py
+index c03ca48..ace30ef 100644
+--- a/hitlist/tmab_peptidomics.py
++++ b/hitlist/tmab_peptidomics.py
+@@ -25,9 +25,9 @@ import pyarrow.parquet as pq
+ from .evidence_snapshot import snapshot_file
+ from .provenance import file_digest
+ 
+-PACKAGE_SCHEMA_VERSION = 16
+-CATALOG_SCHEMA_VERSION = 21
+-REVISION = "tmab_native_peptidomics_v2"
++PACKAGE_SCHEMA_VERSION = 17
++CATALOG_SCHEMA_VERSION = 22
++REVISION = "tmab_native_peptidomics_v3"
+ ROOT = Path("tmab")
+ SOURCE_ROOT = ROOT / "source_assets"
+ SOURCE_TABLE = ROOT / "source_assets.parquet"
+@@ -46,6 +46,8 @@ _PRIMARY = {
+         "cell": 1,
+         "experiment": 2,
+         "charge": 3,
++        "observed_mass": 5,
++        "theoretical_mass": 6,
+         "protein": 7,
+         "gene": 8,
+         "location": 9,
+@@ -72,6 +74,8 @@ _PRIMARY = {
+         "cell": 1,
+         "experiment": 2,
+         "charge": 3,
++        "observed_mass": 5,
++        "theoretical_mass": 6,
+         "protein": 7,
+         "gene": None,
+         "location": 8,
+@@ -151,6 +155,8 @@ ROW_COLUMNS = (
+     "source_row_json",
+     "source_row_disposition",
+     "source_sequence_raw",
++    "source_handling_raw",
++    "source_observed_mass_raw",
+     "source_experiment_raw",
+     "source_cell_raw",
+     "source_comments_raw",
+@@ -193,12 +199,18 @@ CONTEXT_COLUMNS = (
+     "normalization_policy",
+     "context_scope",
+     "context_status",
++    "wash_interval_raw",
++    "wash_presence_status",
++    "exposure_interval_status",
++    "acquisition_source_scope",
++    "source_study_inheritance_status",
+ )
+ MEASUREMENT_COLUMNS = (
+     "measurement_id",
+     "source_record_id",
+     "context_id",
+     "lineage_group_id",
++    "candidate_reuse_key",
+     "source_asset_id",
+     "source_id",
+     "source_file",
+@@ -211,13 +223,15 @@ MEASUREMENT_COLUMNS = (
+     "peptide_sequence",
+     "peptide_modifications_raw",
+     "peptide_modifications_json",
+-    "identification_status",
++    "sequence_identity_status",
+     "modification_status",
+     "parent_label_raw",
+     "gene_name",
+     "cell_line_name",
+     "subcellular_location_raw",
+     "charge_raw",
++    "observed_mass_raw",
++    "theoretical_mass_raw",
+     "measured_pool",
+     "quantitative_raw",
+     "quantitative_value",
+@@ -228,6 +242,7 @@ MEASUREMENT_COLUMNS = (
+     "peak_overlap_status",
+     "eligibility_status",
+     "source_reuse_status",
++    "acquisition_provenance_status",
+     "shared_control_group_id",
+     "shared_control_group_status",
+     "source_comments_raw",
+@@ -501,6 +516,15 @@ def _context_for(
+         "normalization_policy": "treated_or_control_channel_relative_to_source_control_average",
+         "context_scope": "study_and_experiment_context",
+         "context_status": "reported_source_scope",
++        "wash_interval_raw": annotation,
++        "wash_presence_status": harvest_presence,
++        "exposure_interval_status": "source_experiment_label_plus_methods_scope",
++        "acquisition_source_scope": "original_acquisition_unresolved"
++        if reused
++        else "reported_study_protocol",
++        "source_study_inheritance_status": "unresolved_for_reused_rows"
++        if reused
++        else "reported_study_protocol",
+     }
+ 
+ 
+@@ -520,13 +544,17 @@ def _asset_rows():
+ 
+ def _candidate_fingerprint(cell, sequence, charge, mass, ratios):
+     """Candidate reuse only: source-independent identity and exact ratio vector."""
+-    if not sequence or not all(
+-        isinstance(v, (int, float)) and math.isfinite(v) for v in (charge, mass)
+-    ):
++
++    def is_number(value):
++        return (
++            isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
++        )
++
++    if not all(is_number(v) for v in (charge, mass)):
+         return None
+-    if sum(isinstance(v, (int, float)) and math.isfinite(v) for v in ratios) < 2:
++    if sum(is_number(v) for v in ratios) < 2:
+         return None
+-    values = [float(v) if isinstance(v, (int, float)) else v for v in ratios]
++    values = [float(v) if is_number(v) else v for v in ratios]
+     payload = json.dumps([cell, sequence, float(charge), float(mass), values], ensure_ascii=False)
+     return _id("reuse-candidate", payload)
+ 
+@@ -581,6 +609,10 @@ def _compile(directory):
+                     "source_row_json": _row_json(values),
+                     "source_row_disposition": "primary_ratio_panel",
+                     "source_sequence_raw": sequence_raw,
++                    "source_handling_raw": _text(values[config["average_annotation"] - 1])
++                    if len(values) >= config["average_annotation"]
++                    else None,
++                    "source_observed_mass_raw": _text(values[config["observed_mass"] - 1]),
+                     "source_experiment_raw": experiment,
+                     "source_cell_raw": cell,
+                     "source_comments_raw": _text(values[config["comments"] - 1]),
+@@ -611,6 +643,7 @@ def _compile(directory):
+                         "source_record_id": source_record_id,
+                         "context_id": context["context_id"],
+                         "lineage_group_id": _id("lineage", f"{source_record_id}|{source_cell}"),
++                        "candidate_reuse_key": candidate,
+                         "source_asset_id": asset["source_asset_id"],
+                         "source_id": asset["source_id"],
+                         "source_file": source_file,
+@@ -625,13 +658,15 @@ def _compile(directory):
+                         "peptide_modifications_json": json.dumps(
+                             identity["modifications"], sort_keys=True
+                         ),
+-                        "identification_status": identity["identification"],
++                        "sequence_identity_status": identity["identification"],
+                         "modification_status": identity["modification_status"],
+                         "parent_label_raw": _text(values[config["protein"] - 1]),
+                         "gene_name": _text(values[config["gene"] - 1]) if config["gene"] else None,
+                         "cell_line_name": cell,
+                         "subcellular_location_raw": _text(values[config["location"] - 1]),
+                         "charge_raw": _text(values[config["charge"] - 1]),
++                        "observed_mass_raw": _text(values[config["observed_mass"] - 1]),
++                        "theoretical_mass_raw": _text(values[config["theoretical_mass"] - 1]),
+                         "measured_pool": "native_cellular_peptide_extract",
+                         "quantitative_raw": _text(raw),
+                         "quantitative_value": value,
+@@ -642,6 +677,7 @@ def _compile(directory):
+                         "peak_overlap_status": overlap,
+                         "eligibility_status": _eligibility(identity, role, value, censoring),
+                         "source_reuse_status": "unresolved_cross_paper_reuse",
++                        "acquisition_provenance_status": context["instrument_status"],
+                         "shared_control_group_id": shared_control,
+                         "shared_control_group_status": "source_label_proxy_unresolved_denominator",
+                         "source_comments_raw": _text(values[config["comments"] - 1]),
+@@ -675,6 +711,8 @@ def _compile(directory):
+                     "source_sequence_raw": _text(values[config["sequence"] - 1])
+                     if len(values) >= config["sequence"]
+                     else None,
++                    "source_handling_raw": None,
++                    "source_observed_mass_raw": None,
+                     "source_experiment_raw": None,
+                     "source_cell_raw": None,
+                     "source_comments_raw": None,
+@@ -751,7 +789,7 @@ def _compile(directory):
+             len(candidate_labels[group]) == 1 for group in cross_paper_groups
+         ),
+         "by_identification_status": dict(
+-            sorted(Counter(row["identification_status"] for row in measurements).items())
++            sorted(Counter(row["sequence_identity_status"] for row in measurements).items())
+         ),
+         "by_eligibility_status": dict(
+             sorted(Counter(row["eligibility_status"] for row in measurements).items())
+diff --git a/hitlist/version.py b/hitlist/version.py
+index f7d7e4b..521eb45 100644
+--- a/hitlist/version.py
++++ b/hitlist/version.py
+@@ -1 +1 @@
+-__version__ = "2.0.16"
++__version__ = "2.0.17"
+diff --git a/tasks/tmab-provenance-corrections-792.md b/tasks/tmab-provenance-corrections-792.md
+new file mode 100644
+index 0000000..49e7ef8
+--- /dev/null
++++ b/tasks/tmab-provenance-corrections-792.md
+@@ -0,0 +1,32 @@
++# TMAB reuse, identity and protocol provenance corrections (#792)
++
++## Specification
++
++The independent audit of the schema-15 package found semantic labeling defects,
++not source-value corruption. This successor keeps all four hash-pinned
++workbooks, source rows and ratio cells byte-for-byte while separating candidate
++reuse, tentative identification, modification annotations, publishing-study
++protocol and original acquisition provenance.
++
++## Plan
++
++- [x] Derive source-independent candidate reuse keys from cell, experiment,
++      sequence text, charge, observed mass and the first five ratio values;
++      retain source-specific IDs and unknown specimen independence.
++- [x] Parse tentative parentheses and known/unresolved modifications without
++      converting annotation text into biological sequence; defer tentative or
++      unresolved identities from confident sequence recipes.
++- [x] Correct source-specific instrument metadata and expose publishing-study
++      versus inherited-acquisition scope.
++- [x] Preserve exposure and wash/harvest intervals as separate raw assertions,
++      including the source-supported inhibitor-presence scope.
++- [x] Correct Gelman heatmap sequence projection to column F and add regression
++      tests for all cited real examples plus a two-source reuse fixture.
++- [x] Bump schema/catalog and version and run format/lint/full tests.
++- [ ] Pass hosted gates, merge, and publish 2.0.16.
++
++## Review
++
++The local replay preserves 10,564 source rows and 61,908 measurement slots;
++candidate reuse is conservative and never asserts specimen independence.
++Hosted review and release evidence are pending.
+diff --git a/tasks/todo.md b/tasks/todo.md
+index 1978a93..eca8fdf 100644
+--- a/tasks/todo.md
++++ b/tasks/todo.md
+@@ -8017,13 +8017,36 @@ and sdist SHA-256
+ 
+ Plan: [tmab-native-measurements-789.md](tmab-native-measurements-789.md).
+ 
+-- [ ] Pin and audit Dasgupta 2014 and Gelman 2013 native-peptide workbooks.
+-- [ ] Materialize common measurement, protocol, source-row and lineage
++- [x] Pin and audit Dasgupta 2014 and Gelman 2013 native-peptide workbooks.
++- [x] Materialize common measurement, protocol, source-row and lineage
+       relations without dropping unidentified, censored or reused entries.
+-- [ ] Register the package in the catalog/query/recipe contract and run the
++- [x] Register the package in the catalog/query/recipe contract and run the
+       required gates, review, merge and publish 2.0.15.
+ 
+-Review: pending implementation.
++Review: PR #790 merged as `f4d3a6d`; clean-main release workflow `40066109622`
++passed the complete gate. Hitlist 2.0.15 was published to PyPI with wheel
++SHA-256 `0b29abe8c3d4c4addc61d5b656eac2085c9fa842a45a8dd44c3a6b79fb9d3840`
++and sdist SHA-256
++`b3304a026264f9ccc4bed8c5166714e78385f37f92b0b22c22a2e2863ef22ab2`.
++
++## TMAB reuse, identity and protocol provenance corrections (#792 / #791)
++
++Plan: [tmab-provenance-corrections-792.md](tmab-provenance-corrections-792.md).
++
++- [x] Make cross-paper reuse candidates source-independent while preserving
++      source-specific rows and unresolved specimen independence.
++- [x] Separate tentative/modification identity from numeric exactness and
++      correct acquisition and exposure/wash provenance.
++- [x] Correct Gelman heatmap sequence projection and run the local required
++      gates.
++- [ ] Open the PR, pass hosted gates, merge and publish 2.0.16.
++
++Review: implementation is complete locally. The rebuilt package preserves
++10,564 source rows, 61,908 measurements, 33 protocol contexts and all prior
++censoring/value-status counts. It records 971 conservative possible
++cross-paper candidate groups (1,942 source rows) without asserting specimen
++independence; tentative/unresolved identities are deferred. Local format,
++lint and full tests pass (3,389 tests).
+ 
+ ## TMAB semantic corrections (#791 / #792)
+ 
+diff --git a/tests/test_binding_context_availability.py b/tests/test_binding_context_availability.py
+index 2bcd8cb..db4ac10 100644
+--- a/tests/test_binding_context_availability.py
++++ b/tests/test_binding_context_availability.py
+@@ -37,7 +37,7 @@ def test_binding_context_availability_is_a_registered_successor_relation():
+         "revision": "binding_assay_context_availability_v1",
+     }
+     assert package_family(envelope) == "binding_context_availability"
+-    assert SCHEMA_VERSION == 21
++    assert SCHEMA_VERSION == 22
+     fields = {
+         field["name"] for field in describe_evidence("binding_context_availability")["fields"]
+     }
+diff --git a/tests/test_evidence_catalog.py b/tests/test_evidence_catalog.py
+index d506f22..f83b5a8 100644
+--- a/tests/test_evidence_catalog.py
++++ b/tests/test_evidence_catalog.py
+@@ -266,7 +266,7 @@ def test_catalog_import_does_not_build_or_download(tmp_path):
+         text=True,
+         cwd=Path(__file__).parents[1],
+     )
+-    assert probe.stdout.strip() == "21"
++    assert probe.stdout.strip() == "22"
+     assert not data_root.exists()
+ 
+ 
+diff --git a/tests/test_gomez_prediction_panel.py b/tests/test_gomez_prediction_panel.py
+index ddbc209..5686ffb 100644
+--- a/tests/test_gomez_prediction_panel.py
++++ b/tests/test_gomez_prediction_panel.py
+@@ -28,7 +28,7 @@ def test_prediction_panel_family_and_catalog_contract():
+     }
+     assert package_family(envelope) == "gomez_prediction_panel"
+     assert adjudication_manifest_path(envelope) == "manifests/adjudication.json"
+-    assert SCHEMA_VERSION == 21
++    assert SCHEMA_VERSION == 22
+     assert "prediction_id" in {
+         field["name"] for field in describe_evidence("gomez_prediction_row")["fields"]
+     }
+diff --git a/tests/test_tmab_peptidomics.py b/tests/test_tmab_peptidomics.py
+index 3295b81..ae1a987 100644
+--- a/tests/test_tmab_peptidomics.py
++++ b/tests/test_tmab_peptidomics.py
+@@ -45,12 +45,12 @@ def test_treatment_parser_keeps_dose_and_duration_scoped_to_raw_label():
+ 
+ def test_tmab_package_is_standalone_and_queryable():
+     envelope = {
+-        "schema_version": 16,
++        "schema_version": 17,
+         "package_family": "tmab_peptidomics",
+-        "revision": "tmab_native_peptidomics_v2",
++        "revision": "tmab_native_peptidomics_v3",
+     }
+     assert package_family(envelope) == "tmab_peptidomics"
+-    assert SCHEMA_VERSION == 21
++    assert SCHEMA_VERSION == 22
+     fields = {field["name"] for field in describe_evidence("tmab_measurement")["fields"]}
+     assert {
+         "peptide_sequence_raw",
+@@ -62,7 +62,7 @@ def test_tmab_package_is_standalone_and_queryable():
+         field["name"] for field in describe_evidence("tmab_protocol_context")["fields"]
+     }
+     assert {"instrument", "cell_line_name", "treatment_name"} <= context_fields
+-    bindings = materialized_bindings(16)
++    bindings = materialized_bindings(17)
+     assert {
+         "tmab_measurement",
+         "tmab_source_row",
+diff --git a/tests/test_tmab_semantics.py b/tests/test_tmab_semantics.py
+index fb46a4e..9fb6275 100644
+--- a/tests/test_tmab_semantics.py
++++ b/tests/test_tmab_semantics.py
+@@ -131,7 +131,7 @@ def test_raw_numeric_exactness_does_not_override_identity_or_role(source_package
+             assert row["eligibility_status"].startswith("deferred_")
+     tentative = next(row for row in rows if row["peptide_sequence_raw"] == "(Ac-AGKQAVSASGK)")
+     assert tentative["peptide_sequence"] == "AGKQAVSASGK"
+-    assert tentative["identification_status"] == "tentative"
++    assert tentative["sequence_identity_status"] == "tentative"
+     assert tentative["quantitative_value"] == 1.2
+ 
+ 
+@@ -194,7 +194,7 @@ def test_public_package_rejects_mutated_raw_sources(source_package):
+ def test_manifest_keeps_correction_revision_explicit(source_package):
+     root, _ = source_package
+     manifest = json.loads((root / "manifest.json").read_text())
+-    assert manifest["revision"] == "tmab_native_peptidomics_v2"
++    assert manifest["revision"] == "tmab_native_peptidomics_v3"
+ 
+ 
+ def test_numeric_zero_stays_exact_but_is_deferred_from_log_ratio_candidates():
+@@ -215,3 +215,34 @@ def test_unknown_original_acquisition_is_not_filled_from_republishing_protocol()
+     assert context["instrument"] is None
+     assert context["publishing_protocol_instrument"] == "Waters Synapt G1"
+     assert context["harvest_compound_status"] == "unresolved"
++
++
++def test_handling_variants_do_not_overwrite_one_source_context():
++    first = tmab._context_for(
++        "dasgupta_2014",
++        "asset",
++        "file",
++        "HEK293T",
++        "MG132 35min 2.5uM",
++        "20min+15'wash",
++    )
++    second = tmab._context_for(
++        "dasgupta_2014",
++        "asset",
++        "file",
++        "HEK293T",
++        "MG132 35min 2.5uM",
++        "20min+10'wash",
++    )
++    assert first["context_id"] != second["context_id"]
++    assert first["harvest_duration_hours"] == 0.25
++    assert second["harvest_duration_hours"] == pytest.approx(1 / 6)
++
++
++def test_unidentified_peaks_can_have_candidate_reuse_without_sequence_labels():
++    key = tmab._candidate_fingerprint("HEK293T", None, 2, 1234.5, [1.1, 0.9, None, None, None])
++    assert key is not None
++    assert (
++        tmab._candidate_fingerprint("HEK293T", None, 2, 1234.5, [True, False, None, None, None])
++        is None
++    )

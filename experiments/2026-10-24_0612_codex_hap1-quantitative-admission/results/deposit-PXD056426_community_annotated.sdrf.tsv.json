@@ -1,0 +1,61 @@
+{
+  "started_at": "2026-10-24T10:17:23.722020+00:00",
+  "command": [
+    "experiments/2026-10-24_0612_codex_hap1-quantitative-admission/code/fetch_deposit.py",
+    "PXD056426_community_annotated.sdrf.tsv"
+  ],
+  "source_record": {
+    "projectAccessions": [
+      "PXD056426"
+    ],
+    "accession": "dfa4bf7de9f27470cfb610440d25d982237d3809f9f40f4a8a4478890df89e1a",
+    "fileCategory": {
+      "@type": "CvParam",
+      "cvLabel": "PRIDE",
+      "accession": "PRIDE:0000584",
+      "name": "Experimental design file URI",
+      "value": "EXPERIMENTAL DESIGN"
+    },
+    "checksum": "",
+    "publicFileLocations": [
+      {
+        "@type": "CvParam",
+        "cvLabel": "PRIDE",
+        "accession": "PRIDE:0000468",
+        "name": "Aspera Protocol",
+        "value": "prd_ascp@fasp.ebi.ac.uk:pride/data/archive/2025/04/PXD056426/PXD056426_community_annotated.sdrf.tsv"
+      },
+      {
+        "@type": "CvParam",
+        "cvLabel": "PRIDE",
+        "accession": "PRIDE:0000469",
+        "name": "FTP Protocol",
+        "value": "ftp://ftp.pride.ebi.ac.uk/pride/data/archive/2025/04/PXD056426/PXD056426_community_annotated.sdrf.tsv"
+      }
+    ],
+    "fileSizeBytes": 46722,
+    "fileName": "PXD056426_community_annotated.sdrf.tsv",
+    "compress": false,
+    "submissionDate": "2024-10-01T14:44:19.564+00:00",
+    "publicationDate": "2025-04-04T09:48:19.198+00:00",
+    "updatedDate": "2024-10-01T14:44:19.564+00:00",
+    "additionalAttributes": [],
+    "totalDownloads": 0
+  },
+  "requested_url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2025/04/PXD056426/PXD056426_community_annotated.sdrf.tsv",
+  "url_derivation": "HTTPS transport for the exact deposited FTP hostname/path",
+  "destination": "/private/tmp/presto-modular-model/data/hap1_quantitative_source_admission/2026-10-24_0612_codex_hap1-quantitative-admission/deposits/PXD056426_community_annotated.sdrf.tsv",
+  "launcher_sha256": "ec49697d1d60443e8cd6b25c0edacd997d747476618ce570a85577ff6725e2a4",
+  "presto_commit": "c7d538cfc64f2295e70c2bf693e333f08d1f34b6",
+  "hitlist_commit": "fda1eff79d7a77f195e6a5f3a4c5abbee5cfd7c4",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "actual": {
+    "sha256": "fa3f78d329b75638314462366d8bb4a58f5f0784b184ec33a28258865175b970",
+    "size_bytes": 46722
+  },
+  "elapsed_seconds": 0.6394427909981459
+}

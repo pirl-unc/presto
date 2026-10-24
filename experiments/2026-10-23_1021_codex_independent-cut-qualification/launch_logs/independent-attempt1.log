@@ -1,0 +1,16 @@
+Independent replay passed exact_seed42
+Independent replay passed exact_seed43
+Independent replay passed exact_seed44
+Independent replay passed sampled32_seed42
+Independent replay passed sampled32_seed43
+Independent replay passed sampled32_seed44
+Independent replay passed sampled128_seed42
+Independent replay passed sampled128_seed43
+Independent replay passed sampled128_seed44
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_1021_codex_independent-cut-qualification/code/verify.py", line 154, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_1021_codex_independent-cut-qualification/code/verify.py", line 135, in main
+    assert delta < 1e-11, (name, split, key, delta)
+           ^^^^^^^^^^^^^
+AssertionError: ('constant_seed42', 'test', 'spearman', 0.001836838424021936)

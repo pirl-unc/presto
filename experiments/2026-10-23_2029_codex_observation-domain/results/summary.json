@@ -1,0 +1,42 @@
+{
+  "n_cases": 84,
+  "passed": 84,
+  "by_eta": {
+    "-1.0": {
+      "cases": 28,
+      "passed": 28,
+      "unresolved_span_queries": 0
+    },
+    "0.0": {
+      "cases": 28,
+      "passed": 28,
+      "unresolved_span_queries": 0
+    },
+    "1.0": {
+      "cases": 28,
+      "passed": 28,
+      "unresolved_span_queries": 0
+    }
+  },
+  "biological_fit_admitted": true,
+  "n_training_measurements": 90630,
+  "n_unique_span_times": 45315,
+  "n_span_eta_predictions": 135945,
+  "unresolved_span_eta_queries": 0,
+  "worker_gate_disagreements": 0,
+  "full_arrays_verified": 252,
+  "derivative_cases": 84,
+  "directional_checks": 252,
+  "max_gradient_error": 2.0071584845571255e-10,
+  "max_log_disagreement_resolved": 1.509903313490213e-14,
+  "independent_full_arrays": 84,
+  "independent_reference_seconds": 83.25581200001761,
+  "independent_max_log_error": 1.2434497875801753e-14,
+  "independent_max_full_error": 9.43689570931383e-16,
+  "max_full_negative_count": 41297,
+  "maximum_residue_mass_error": 5.115907697472721e-12,
+  "max_rss_bytes": 2206597120,
+  "suite_seconds": 1464.9527830409934,
+  "verification_seconds": 4.399488332972396,
+  "scope": "Rebuilt all 90,630 training support identities/weights from canonical recipe; every primary array checked against freshly recomputed independent NumPy full arrays; per-span logs, analytical eta0 counts and gates recomputed. Replayed saved NumPy finite-difference reductions, not a second execution of every perturbed matrix solve. Producer independently computed six NumPy perturbations per gradient-admitted case; variable-time oracle tests pass. No target values used or predictive quality measured."
+}

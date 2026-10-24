@@ -1,0 +1,77 @@
+{
+  "maximum_metric_error_including_rank_ties": 4.091636957553879e-05,
+  "maximum_prediction_error": 5.7870375158586285e-15,
+  "no_producer_imports": true,
+  "optimizer_replay": [
+    {
+      "checkpoint_errors": [
+        {
+          "max_coefficient_error": 1.7763568394002505e-15,
+          "step": 100
+        },
+        {
+          "max_coefficient_error": 8.881784197001252e-16,
+          "step": 500
+        },
+        {
+          "max_coefficient_error": 8.881784197001252e-16,
+          "step": 1000
+        },
+        {
+          "max_coefficient_error": 8.881784197001252e-16,
+          "step": 2000
+        }
+      ],
+      "updates": 2000,
+      "variant": "constant"
+    },
+    {
+      "checkpoint_errors": [
+        {
+          "max_coefficient_error": 8.881784197001252e-16,
+          "step": 100
+        },
+        {
+          "max_coefficient_error": 1.2073675392798577e-15,
+          "step": 500
+        },
+        {
+          "max_coefficient_error": 1.7208456881689926e-15,
+          "step": 1000
+        },
+        {
+          "max_coefficient_error": 2.2620794126737565e-15,
+          "step": 2000
+        }
+      ],
+      "updates": 2000,
+      "variant": "sequence"
+    },
+    {
+      "checkpoint_errors": [
+        {
+          "max_coefficient_error": 8.673617379884035e-16,
+          "step": 100
+        },
+        {
+          "max_coefficient_error": 1.3183898417423734e-15,
+          "step": 500
+        },
+        {
+          "max_coefficient_error": 2.275957200481571e-15,
+          "step": 1000
+        },
+        {
+          "max_coefficient_error": 1.6653345369377348e-15,
+          "step": 2000
+        }
+      ],
+      "updates": 2000,
+      "variant": "sequence_context"
+    }
+  ],
+  "passed": true,
+  "peak_rss_bytes": 992378880,
+  "predictions_verified": 468670,
+  "wall_seconds": 41.18536183302058
+}

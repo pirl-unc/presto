@@ -116,7 +116,9 @@ def _install_stub_hitlist(monkeypatch, binding_rows, ms_rows):
                 frame[column] = ""
         return frame
 
-    module.generate_training_table = generate_training_table
+    export = types.ModuleType("hitlist.export")
+    export.generate_training_table = generate_training_table
+    monkeypatch.setitem(sys.modules, "hitlist.export", export)
     monkeypatch.setitem(sys.modules, "hitlist", module)
 
 

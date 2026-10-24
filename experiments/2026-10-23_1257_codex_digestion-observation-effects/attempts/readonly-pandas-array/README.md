@@ -1,0 +1,1 @@
+Independent source/point/ratio replay reached metric reduction, then failed because Pandas exposed a read-only NumPy weight view. Replace in-place normalization with an allocated normalized array. No source values, analyses or fits change; failed script/config/log preserved. The corrected verifier also checks all reported shape/stratum reductions explicitly.

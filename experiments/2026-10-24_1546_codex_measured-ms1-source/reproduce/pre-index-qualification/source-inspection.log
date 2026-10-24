@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_1546_codex_measured-ms1-source/analysis/inspect_sources.py", line 87, in <module>
+    assert all(r["NAME"] in directory_names for r in readme)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

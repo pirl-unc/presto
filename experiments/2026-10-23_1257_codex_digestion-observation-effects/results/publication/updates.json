@@ -1,0 +1,27 @@
+[
+  {
+    "repository": "pirl-unc/hitlist",
+    "kind": "issues",
+    "number": 770,
+    "marker": "## Observation-layer replay completed (2026-10-23)",
+    "replacements": [
+      [
+        "7.47% of weighted ratios",
+        "7.47% of pooled ratio observations"
+      ],
+      [
+        "Next shared recipe/query acceptance should expose the already curated raw/filtered/corrected/time-zero/noise contributors alongside each admitted curve, retaining units, charges/modifications, actual acquisition/biological labels, per-peptide reference time, background rule and selection/censor disposition.",
+        "Reinspection confirms that the existing registered recipe already preserves full raw/filtered/corrected source-table snapshots and curve identifiers needed for the observation diagnostic below. No additional source import is required; source units, modification/charge provenance, labels, per-peptide references and censor states remain available through the shared tables."
+      ]
+    ],
+    "section": "\n\n## Observation-layer replay completed (2026-10-23)\n\n[Registered training-only report and independent proof](https://github.com/pirl-unc/presto/blob/3de26662ba8fdde9ef8689b57c7e63fb50c724fb/experiments/2026-10-23_1257_codex_digestion-observation-effects/README.md). The complete source_tables already exported by the existing shared recipe suffice; the earlier request for another import/projection was unnecessary. No Hitlist code or source value changed. No missing-column blocker was found for this diagnostic; remaining process/measurement-model development is Presto work, while broader known-load response calibration remains #762.\n\nAll 91,226 positive training points and 195,586 contributor occurrences replay independently, along with 202,728 three-layer ratio records and 133,566 triplets. Restoring baseline while retaining the same contributors changes pooled growth violations from7.4745% to6.9344%, and concavity from9.5863% to9.5301%. About93%/99% of the original violations remain. Other-label temporal RMSE changes0.67267 to0.61972, with a changed measurement layer/dynamic range; this is not predictive-model improvement.94.73% of equal-parent training weight has <25% reference baseline subtraction, so near-baseline points do not explain the full model gap. No causal assignment to processing versus remaining measurement effects is made.\n\nReporting correction: the prior7.47%/9.59% figures were pooled, not equal-parent-weighted; the new report gives both. No fit, numerical source target or promotion gate changed. No new fitting, exclusion or held-out evaluation. The next Presto hypothesis is a minimal entry delay, qualified mathematically before fitting. Source/recipe support is present; full APC concentration qualification is still open, and no author outreach is requested.\n"
+  },
+  {
+    "repository": "pirl-unc/presto",
+    "kind": "pulls",
+    "number": 131,
+    "marker": "### Training-only observation diagnostic (2026-10-23)",
+    "replacements": [],
+    "section": "\n\n### Training-only observation diagnostic (2026-10-23)\n\n[Source-linked observation report](https://github.com/pirl-unc/presto/blob/3de26662ba8fdde9ef8689b57c7e63fb50c724fb/experiments/2026-10-23_1257_codex_digestion-observation-effects/README.md) independently replays all91,226 positive training measurements across corrected, baseline-restored and pre-censoring layers. Baseline restoration leaves93% of original growth-envelope violations and99% of concavity violations; most weight has small reference baseline subtraction. No new fitting, row exclusion or held-out evaluation. Corrects earlier prose labeling pooled shape percentages as weighted, without changing numerical fits or gates. Existing shared recipe tables already provide the required contributors. A prospective substrate-entry specification retains exact/sampled references, explicit numerical qualification and a closed previously-used test set. No biological model promotion; draft status and full APC availability scope remain unchanged.\n"
+  }
+]

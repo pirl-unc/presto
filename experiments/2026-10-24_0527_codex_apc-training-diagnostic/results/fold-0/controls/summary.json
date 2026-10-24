@@ -1,0 +1,46 @@
+[
+  {
+    "variant": "no_change",
+    "gamma": 0.0,
+    "offsets": [
+      0.0,
+      0.0
+    ],
+    "train_mse": 0.01410692457839766,
+    "seconds": 0.00017308298265561461,
+    "n_fitted_parameters": 0
+  },
+  {
+    "variant": "condition",
+    "gamma": 0.0,
+    "offsets": [
+      -0.016192240967752805,
+      0.02563574689700554
+    ],
+    "train_mse": 0.01364723448513512,
+    "seconds": 0.000376791984308511,
+    "n_fitted_parameters": 2
+  },
+  {
+    "variant": "precursor_fixed",
+    "gamma": 1.0,
+    "offsets": [
+      -0.000423278390075201,
+      0.03615491034311745
+    ],
+    "train_mse": 0.020125439385859777,
+    "seconds": 0.00038312497781589627,
+    "n_fitted_parameters": 2
+  },
+  {
+    "variant": "precursor_calibrated",
+    "gamma": 0.0016517800695137023,
+    "offsets": [
+      -0.01616619410965006,
+      0.025653122241533797
+    ],
+    "train_mse": 0.013647216751563367,
+    "seconds": 0.0003780829720199108,
+    "n_fitted_parameters": 3
+  }
+]

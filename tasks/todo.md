@@ -11824,3 +11824,1541 @@ Review results:
   pins the fully resolved baseline commit.
 - Final-head CI/merge are pending at publication; their definitive outcomes
   are recorded in PR #66's checks and completion handoff.
+
+## Modular model implementation — 2026-10-20
+
+Specification: [frozen issue](modular_model/issue130.md),
+[implementation handoff](modular_model/implementation-handoff.md).
+
+- [x] Publish and verify the holistic specification in issue #130.
+- [x] Establish isolated worktree and self-contained implementation handoff.
+- [x] Implement typed observations, identity/context resolution and target contract.
+- [x] Implement subset-allocated shared encoder, register and optional context/MS/TCR paths.
+- [x] Implement one loss/training/checkpoint path and canonical CLI dispatch.
+- [x] Add source preparation and explicit capability/admission reports.
+- [x] Verify gradients, invariances, missingness, censoring, subsets and round trips.
+- [x] Pass focused/full regression, pinned lint and strict documentation.
+- [x] Publish implementation PR with precise supported/deferred scope: #131.
+
+Review: software foundation implemented and published in #131. Local software
+checks pass; exact-head remote checks are recorded on the PR. Source-specific cellular cohort
+qualification, real-data fitting and TCRvdb access remain tracked in #130.
+No new predictive quality claim.
+
+Software review update: full parallel regression completed with 2,418 passed and
+four explicit skips in 291.12 seconds. Subsequent allocation review removes the
+unreachable attention layer from a single-core class-II subset and rejects
+unsupported declared assay branches; focused checks cover this amendment.
+At this review checkpoint, PR #131 is a draft awaiting exact-head CI. Its live
+review/CI status is authoritative on GitHub. See
+[implementation review](modular_model/implementation-review.md).
+
+## Review PR #131 against the frozen plan — 2026-10-20
+
+Review specification: compare the published head `6f935093` with every major
+requirement in frozen issue #130, using executable paths and tests as evidence.
+Separate implemented software, incomplete implementation, deliberately deferred
+experiments/data, and unsupported features. Do not equate passing software tests
+with trained coverage or predictive quality. Preserve the frozen issue and avoid
+model changes during this review.
+
+- [x] Inspect architecture, source preparation, training, inference and tests.
+- [x] Identify material deviations and their user-visible consequences.
+- [x] Record a requirement/status matrix with precise code references.
+- [x] Reconcile the earlier completion wording and report the next priorities.
+
+Review results: [plan-conformance audit](modular_model/plan-conformance-review.md).
+Architecture broadly follows the spec; milestone A is partial and real-data
+milestones remain unperformed. Three synthetic software counterexamples confirm
+unused feature columns escaping training guards, accepted untrained-head closure,
+and duplicate source lineage counted under different export IDs. All four checks
+on the reviewed GitHub head have succeeded. No model implementation was changed.
+
+## Complete the holistic model — active goal, 2026-10-20
+
+Specification: [completion addendum](modular_model/completion-spec.md). Read the
+user attachment and preserve the full requested architecture and evidence scope.
+
+- [x] Revalidate PR/worktree and read the attachment, local instructions and lessons.
+- [x] Write the complete scope, decisions, evidence requirements and delivery order.
+- [x] Fix feature/category training support and enforce run-closure gates.
+- [ ] Implement source lineage deduplication, dispositions and leakage reports.
+- [ ] Complete peptide-source/MHC/TCR pretraining outputs and override semantics.
+- [ ] Complete cell-type/cytokine/profile context and quantitative processing/MS outputs.
+- [ ] Wire and pin actual Hitlist/Weirdo/identity/MS/TCR sources and qualified cohorts.
+- [ ] Complete subset continuation, freezing, resume and qualified-serving gates.
+- [ ] Complete diagnostics, baselines and executable scientific gates.
+- [ ] Run/close registered real-data fitting, validation and transfer experiments.
+- [ ] Verify final code/docs/checkpoints, update PR and inspect final-head CI.
+
+Current implementation slice: [APC context spec](modular_model/cellular-context-spec.md).
+
+- [x] Add typed cell/cytokine observations and sourced profile resolution.
+- [x] Wire cellular-only features, training support and checkpoint contracts.
+- [x] Verify precedence, masking, contrast admission and persistence.
+
+Next slice: [quantitative measurements](modular_model/quantitative-spec.md).
+
+- [x] Add explicit quantity domains, raw encodings and endpoint routing.
+- [x] Share domain readouts across observation/anchor paths and add digest preparation.
+- [x] Integrate losses, admission, coverage, checkpoint and physical-unit inference.
+- [x] Verify quantitative/censored paths and document actual remaining data gates.
+
+Review: 84 focused checks pass, including artificial streaming fit/closure,
+quantitative/binary coexistence, domain rejection, censoring, component sharing,
+preparation isolation and checkpoint inference. This verifies software contracts,
+not independently identified MS bias or predictive transfer. Source `51b5f61`
+also passed full regression (2,454 passed, four skipped) and strict documentation.
+
+Completion remains unproven until every requirement has authoritative evidence.
+
+Assay-fitting control: [prospective experiment plan](../experiments/agents/codex/plans/modular-assay-only-memorization.md).
+
+- [x] Prepare 32 source-pinned exact IC50 observations with explicit class-II pairs.
+- [x] Freeze membership/recipe and run the supplied-metadata, assay-only gate.
+- [x] Preserve predictions, coverage, checkpoint replay and complete experiment closure.
+
+Review: the fixed training-only gate passed at 100 steps. Overall/class-I/class-II
+RMSE is 0.03294/0.04333/0.01711 log10(nM); all allocated parameters and exposed
+features have update evidence. Fresh-process predictions match exactly. This
+is memorization with supplied metadata, not held-out qualification or a test of
+auxiliary benefit. Full goal requirements above remain open.
+
+Progress and exact verification: [completion progress](modular_model/completion-progress.md).
+
+Continuation specification: [task subsets and frozen dependencies](modular_model/continuation-spec.md).
+
+- [x] Implement explicit compatible task removal/extension and inherited scalers.
+- [x] Freeze complete trained dependencies, including deterministic encoder behavior.
+- [x] Integrate manifest admission, trainable sampling, coverage and checkpoint persistence.
+- [x] Verify subset/frozen-function behavior and document the remaining resume gap accurately.
+- [x] Implement and verify exact interrupted-run resume on deterministic CPU fixtures.
+
+Resume specification: [durable training and evaluation continuation](modular_model/resume-spec.md).
+
+- [x] Persist optimizer, sampler/RNG, partial epoch and selection/coverage state.
+- [x] Pin execution contracts and enforce evaluation/closure reuse.
+- [x] Wire explicit registered CLI resume and verify interrupted-run equivalence.
+- [x] Complete final regression and document resume support with its tested scope.
+
+Review: 91 focused checks pass; pinned repository Ruff and strict
+MkDocs pass. A fresh retained-output comparison uses the same inference mode on
+both sides, avoiding autograd versus inference attention-kernel roundoff. New
+tests cover frozen-function invariance, structural feature projection, unchanged
+scalers, rejection of unsupported states and transfer contracts, and selection
+on trainable task metrics. Full regression on immutable application/test source
+`1108838` passes: 2,461 passed, four skipped, 1,056 warnings in 394.35 seconds
+with four workers. The subsequent resume slice passes 128 focused modular/CLI/docs
+checks, including fresh-process CPU equivalence with dropout/replay, replay of
+uncommitted updates, frozen-function retention, earlier selection/patience,
+changed-contract rejection, test-cache reuse and persistent failed coverage.
+Full regression on immutable application/test source `4b8f4df` passes: 2,476
+passed, four skipped, 1,056 warnings in 770.15 seconds with four workers.
+Strict MkDocs also passes. No GPU/MPS bitwise claim is established.
+
+Next data preparation: [auxiliary admission specification](modular_model/auxiliary-data-admission-spec.md)
+and [actual reference inventory](modular_model/auxiliary-source-inventory.json).
+
+- [x] Reverify reference hashes and raw MHC/Weirdo annotation availability.
+- [ ] Admit genuine chain annotations and audit selected source memberships/splits.
+- [ ] Freeze/register auxiliary pretraining and held-out qualification controls.
+
+First bounded auxiliary family: [peptide-source reference pretraining](../experiments/agents/codex/plans/weirdo-reference-pretraining.md).
+
+- [x] Register/freeze selection and independently audit all selected reference memberships.
+- [x] Fit the declared prior/composition/network conditions only if admission passes.
+- [x] Preserve held-out reports, checkpoint replay and complete experiment closure.
+
+Preparation review: the pinned archive lacks the adapter's assumed family-bucket
+arrays. The first attempt stopped before scanning or training and is preserved.
+An explicit amended path leaves absent groups unknown until a full reference
+audit reconstructs them; the fixed selection, labels and recipe are unchanged.
+Focused modular/CLI/documentation checks pass (133 in 15.24 seconds), along with
+repository and explicit experiment-script Ruff checks and strict MkDocs. A fresh,
+separately preserved preparation attempt follows. No auxiliary model has been fitted.
+
+The amended preparation on frozen source `de3cdfc` passes: all 7,000 selected
+memberships were reconstructed against 569,516 reference proteins with no
+discrepancies. Train/validation/test have 3,486/705/723 connected mnemonic-family
+components. This establishes the selected reference-label contract, not homology
+independence or species of origin. The experiment launcher will call the canonical
+trainer in a bounded child process, preserve baseline coefficients and all
+prediction dumps, and compute the prospectively declared paired validation screen.
+
+Closure: frozen source `1d3c96b` completes the registered reference comparison.
+The network's validation/test CE is 0.285826/0.302032, versus composition
+0.286331/0.300864 and prior 0.292560/0.308435. Its paired validation advantage
+over composition has 95% interval [-0.001971, 0.001117], so the required joint
+screen fails. All 29 allocated tensors/exposed features updated; first-training-
+batch fresh-process replay is exact. All prediction dumps and per-category
+metrics, baseline coefficients, history, coverage and raw hashes are retained;
+independent sklearn AP/AUROC/CE matches all 90 condition/split/category cases.
+This closes that auxiliary family only. No affinity-transfer or qualified-model
+claim follows. Full regression on immutable application/test source `1d3c96b`
+passes: 2,484 passed, four skipped, 1,056 warnings in 370.10 seconds with four
+workers. Repository Ruff and explicit experiment-code checks pass, as does strict
+MkDocs. The next single-chain admission spec is written; implementation remains
+pending. The full biological/data objective is unchanged.
+
+Lineage preparation is implemented; source-specific cohort wiring and broader
+biological-independence audits remain part of the unfinished preparation item.
+
+### Clarify auxiliary supervision versus assay learning — 2026-10-20
+
+The user questioned the meaning and justification of "identity plus IC50."
+Review the actual forward/loss paths before changing the architecture. Preserve
+the frozen issue and the full completion objective; this is a clarification of
+the proposed diagnostic, not a replacement milestone or a predictive result.
+
+- [x] Trace sequence inputs, annotation outputs, assay targets and gradient paths.
+- [x] Document the optional auxiliary branch, supplied-metadata control and shared-encoder drift.
+- [x] State a controlled test of auxiliary benefit separately from full-system completion.
+- [x] Verify current modular regressions and record the evidence and limitations.
+
+Review: 63 modular/model/training/documentation checks pass; pinned Ruff lint and
+format checks pass for all ten changed/new Python files, and `git diff --check`
+passes. The first test command named a nonexistent docs test and ran no tests;
+the successful rerun used the actual `tests/test_docs_match_code.py`. This proves
+software contracts only. No auxiliary-benefit comparison or real-data fit ran.
+The clarification is in `docs/modular_model.md` and the completion addendum; the
+frozen issue and full-goal checklist remain unchanged.
+
+### CI correction: optional baseline dependency
+
+Exact published head `d8015b9` fails test collection because the new reference
+experiment test imports a launcher that imports scikit-learn globally. CI's
+normal test environment does not install that optional baseline library.
+Local success used the broader shared environment. Keep the baseline recipe and
+frozen executed source unchanged; move optional baseline imports inside the
+actual launch path, so dependency-free report checks and canonical network/replay
+modes do not require scikit-learn. Add a fresh-process import-blocking regression;
+do not skip the metric tests or broaden runtime dependencies for this helper.
+
+- [x] Reproduce collection/import failure with scikit-learn deliberately unavailable.
+- [x] Isolate optional imports, verify missing-dependency boundary and focused checks.
+- [x] Publish correction and inspect exact-head CI; preserve the original fit evidence.
+
+The fresh-process blocked-import reproduction fails before the correction and
+passes afterward. Optional sklearn/scipy baseline imports now occur only on the
+comparison-launch path. All 137 focused modular/CLI/documentation tests pass in
+17.15 seconds, including the new dependency-boundary regression. Repository and
+explicit launcher Ruff checks pass. Recorded fit sources/results remain frozen;
+the canonical model/trainer code did not change in this CI correction.
+
+Published correction `07ce4482c93b4a65f710170878ed2148db20235a` has four successful
+GitHub jobs (two lint-test, two docs). That evidence covers the optional-import
+correction, not the subsequent single-chain application change.
+
+### Genuine single-chain auxiliary inputs
+
+Implement [the prospective specification](modular_model/single-chain-auxiliary-spec.md).
+Reuse existing species heads/sequence slots and allocate no invented partners.
+Pair-level and assay requirements remain strict. Before preparing a real catalog
+cohort, verify canonical loading/training, support checks and checkpoint behavior.
+
+- [x] Admit explicit partial MHC/TCR auxiliary observations with target-specific requirements.
+- [x] Encode only present chains and mask unavailable pair outputs in forward/inference.
+- [x] Guard annotated-chain overlap across splits and verify full/partial training/transfer.
+- [x] Run focused/broad verification and document the exact supported scope.
+- [x] Publish the single-chain source and inspect its exact-head CI.
+
+Focused verification: 154 modular/CLI/docs checks pass in 17.13 seconds, including
+17 new single-chain cases. The original MHC single-chain case fails before this
+change. A direct old/new model comparison with identical weights gives exact
+complete-pair output/diagnostic equality on nine class-I/class-II/inferred-class
+annotation, IC50 and TCR-binding requests. Inference still rejects untrained
+annotation heads used inside multi-MHC bags. The added bag fixture initially used
+an invalid endpoint spelling; the corrected canonical endpoint passes. Pinned
+Ruff lint/format and diff checks pass. Real catalog cohorts/calibration remain
+separate work; this change adds no parameters or scientific performance claim.
+
+Full regression on immutable application/test source `e6cb835` passes: 2,502
+passed, four skipped, 1,056 warnings in 323.68 seconds with four workers.
+Strict MkDocs passes. Only the next data-only admission recipe and planning
+documents were added while regression ran; application/test sources were fixed.
+The next [MHC reference admission](../experiments/agents/codex/plans/mhc-reference-admission.md)
+is registered before execution. Its artificial recipe checks pass for actual
+domain-slot preservation, alias collapse, connected original chains, cross-species
+conflict deferral and quality/source-member guards. No real cohort has yet been
+admitted or used for training under this new contract.
+
+### MHC reference admission closure
+
+- [x] Execute the frozen data-only recipe and conserve every raw-row disposition.
+- [x] Independently replay species labels, every alias and component/split assignment.
+- [x] Preserve cohort hashes, concentration diagnostics, full writeup and canonical log.
+- [x] Publish the admission bundle with the single-chain implementation.
+
+Clean recipe `1b218e7` admits 13,218 unique single-groove species annotations from
+56,440 raw rows; all 33,696 source-domain aliases replay independently. There are
+3,687 exact-domain/original-chain components and no species conflicts. Canonical
+preflight and the frozen mechanical minimum pass. A human B/C component accounts
+for 91.95% of human test annotations, so this is explicitly not a statistical
+qualification. No model was fitted, no paired labels were fabricated, and the
+frozen split was not adjusted. The separate registered family is closed with all
+artifacts and limitations; its source data do not prove auxiliary affinity benefit.
+
+Published head `42eefec3a5aaba008fb7cc1740a9c6bae1362017` has all four successful
+CI jobs, including both test/distribution-build jobs and both documentation jobs.
+
+### Full eligible purified IC50 source admission
+
+Follow the [prospective data contract](../experiments/agents/codex/plans/full-ic50-admission.md).
+The supplied-metadata assay-only comparison must proceed independently of
+auxiliary qualification. Preserve all independent measurements, raw units/bounds,
+original assay lineage and earlier partition exposure; no 32-row consistency filter.
+
+- [x] Implement strict pinned-catalog and raw Hitlist IC50 conversion with targeted checks.
+- [x] Register/freeze the full-cohort admission recipe before execution.
+- [x] Prepare exact-only/exact-plus-censored manifests with identical held-out observations.
+- [x] Independently replay source labels, aliases and grouping; close the data family.
+- [ ] Register and execute the subsequent matched fitting/baseline comparison.
+
+The adapter and recipe have 45 new contract checks; all 199 modular/CLI/docs
+checks pass in 14.61 seconds. Cases cover raw exact/censored values and units,
+ambiguous catalog assignments, actual alpha/beta inputs, original-outcome copies
+versus independent disagreement, target-blind grouping and historical exposure.
+Repository Ruff passes for 346 Python files; the experiment launcher is separately
+linted/formatted despite repository experiment exclusions. Real preparation has
+not yet executed; prospective registration and source freezing precede it.
+
+Closure: clean `2214086` admits 29,283 measurements after independently verified
+dispositions for 814,268 raw rows. Exact-only training has 21,636 rows; adding 1,919
+censored training values leaves both held-out partitions identical. All 84 used
+catalog names and all raw labels/units/bounds/assignments replay. Retain 1,002 sets
+of nonidentical independent same-input outcomes; do not filter them for easier
+fitting. The frozen mechanical readiness screen passes for both classes. Shared
+studies, unknown donors/specimens and previously inspected held-outs remain
+explicit limitations. One posthoc verifier setup failure is preserved; corrected
+replay passed without regenerating the cohort. No full-cohort model fit ran.
+
+Full regression on immutable application/test source `2214086` passes:
+2,547 passed, four skipped, 1,055 warnings in 292.06 seconds with four workers.
+Log: `/private/tmp/presto-full-ic50-adapter-regression.log`. Source/test files
+remained unchanged; only experiment analysis/artifacts/documentation were added
+while it ran. Repository Ruff and explicit current recipe/analyzer checks pass.
+
+## 2026-10-22 local training request
+
+- [x] Check CPU/MPS execution and register local feasibility specification.
+- [x] Benchmark canonical CPU and MPS updates on identical admitted training batches.
+- [x] Complete one full local IC50 epoch and fixed baselines; preserve all predictions.
+- [x] Independently verify results, checkpoint replay and coverage; prepare report.
+
+Review: Modal is no longer the execution assumption; availability-source admission remains open.
+
+Local-run review: one complete CPU epoch and three-method prediction replay pass;35training/resume tests and strict docs pass. PR publication follows this checkpoint.
+
+## 2026-10-22 MAPP publisher reconciliation continuation
+
+- [x] Revalidate prior local-training progress and shared Hitlist ownership.
+- [x] Freeze cell comparison and nine background-rule diagnostics before computation.
+- [x] Reconcile publisher peptide/protein summaries and deposited background masks.
+- [x] Independently replay source comparisons and record remaining admission gaps.
+- [ ] Publish evidence into the shared curation requirements and design issue.
+
+Review: all quantity/filter and membership comparisons verified; source imputation conflict and parent ambiguity retained. Shared ingestion belongs to Hitlist746. No biological fit or concentration claim.
+
+## 2026-10-22 MAPP parent sequence context
+
+- [x] Revalidate source reconciliation and register reference-mapping specification.
+- [x] Retrieve/freeze official isoform-inclusive reference and historical DAT.
+- [x] Audit all source-listed and additional exact parent/position mappings.
+- [x] Independently verify mapping receipts and prepare shared ingestion evidence.
+
+Continuation audit: the preceding benchmark-status reply was no goal progress; ready source mapping resumes here. No repeated external blocker. Download has complete HTTP200 body and curl completion log; validate its format independently rather than restarting retrieval.
+
+Review: both complete-reference scans independently verified;2,269/2,272contrast peptides map, but1,256have multiple full parent sequences. Shared source ingestion and endpoint admission remain pending. Parent graph components constrain future splits; no homology or concentration claim. Publication/readback pending.
+
+## 2026-10-22 shared PXD057588 sequence admission
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/pxd057588-shared-sequence-admission.md.
+- [x] Inspect current shared generation and register scientific/reference contract.
+- [x] Verify the native package and freeze the mouse reference.
+- [x] Map all primary source sequences and quantify real MHC/digest parent support.
+- [x] Independently verify, report recipe gaps and prepare the biological handoff.
+
+Review: actual shared generation and all mouse-reference mappings independently verified. Source-label support reduces663to661shared parents; exact specimen pairing and aggregate precursor quantities remain unresolved. No biological fit. Publication follows verification.
+
+## 2026-10-22 variable-length availability policy
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/variable-span-policy.md.
+- [x] Revalidate shared recipe status and specify exact/lazy policy equivalence.
+- [x] Implement variable-length support and lazy conditional scoring.
+- [x] Verify probability, support, gradients and boundary behavior.
+- [x] Register and run a bounded real-sequence computational comparison.
+- [x] Prepare publication without implying biological training or calibration.
+
+Review: exact/lazy computation and independently derived NumPy gradients agree; actual CPU/network savings measured on full proteins.14unit tests, formatting/lint and strict docs pass. Source admission and biological training remain open.
+
+## 2026-10-22 MAPP shared import
+
+Prior turn: progress. Plan: experiments/agents/codex/plans/mapp-shared-import.md.
+- [ ] Implement missing shared source adapter in isolated Hitlist worktree.
+- [ ] Verify source conservation and package integration.
+- [ ] Publish and use shared generation for next biological comparison.
+
+MAPP import review: first shared generation and original TSV/XML replay verified;3,224full/16focused Hitlist tests and lint pass. DraftHitlist758published atd012527; issue757filed/read back for missing parallel-proteome/precursor metadata. No biological fit; source-reference/query/release work remains.
+
+## 2026-10-22 shared MAPP reference integration
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/mapp-shared-references.md.
+- [x] Integrate explicit reference-scoped alternatives into shared adapter.
+- [x] Verify complete original mapping evidence without changing measurements.
+- [ ] Publish and advance the biological recipe.
+
+Reference integration review: shared adapter schema2 verifies all37,721occurrences and64,538sourceclaims against independent complete-reference scans;62,984full sequences/133,414aliases and21,346coverage rows checked. All eleven original quantity/source tables and PXD057588 artifacts byte-identical.120files verified; producer54.80s/replay20.22s.21focused tests/format/lint pass; normal full-suite retry running after originalmemoryguard refusal. Broader endpoint/precursor/concentration goal stays active.
+
+Reference software closure: normal full suite passes3,236tests/10warnings in320.81s with one worker and intact memoryguard. Format/lint and21focused tests pass; independent complete source/reference replay passes. Indexed-corpus integration CI remains separate. No source code changed after validation.
+
+## 2026-10-22 first biological MAPP distribution comparison
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/mapp-biological-comparison.md.
+- [x] Shared recipe with source-faithful positive quantities, mapping alternatives and explicit exclusions.
+- [x] Independently verified cohort and fixed connected-component holdouts.
+- [x] Local exact/REINFORCE/context-control fits under one observable objective.
+- [x] Independent metrics, report, publication and next concentration-relevant step.
+
+Review: 616 peptides/101 parents admitted by shared Hitlist recipe; original/extended source replay passes. All nine local fits and independent NumPy/checkpoint/metric replay pass. Uniform wins held-out KL/RMSE; condition predictions remain near zero. Full report/checkpoints/predictions archived; shared Hitlist760 draft published, new data issue759 read back exactly, precursor issue757 remains open. Full Hitlist tests pass3,243/10warnings, format/lint and strict docs pass. Presto publication/readback and final CI remain pending; concentration goal remains active.
+
+## 2026-10-23 MAPP run repeatability and representation
+
+Previous goal turn: progress. Plan: mapp-run-repeatability (Presto) / tasks/mapp-run-recipe-plan.md (Hitlist).
+- [x] Shared complete-run recipe with all original observations/status and fixed source partitions.
+- [x] Independent original-source replay and local software checks.
+- [x] Registered run-repeatability diagnostics, then evidence-led fixed representation comparison.
+- [x] Publish complete artifacts, report and canonical registry; verify remote readback.
+
+Review: shared source and every run/feature/metric/checkpoint replay pass; all 186 archived fitting files and nine recipe files match original bytes. Baseline repeats (r=0.914); treatment-change repeatability is weak (r=0.172). Thirty regularized fits complete in 25.81s; all allocated weights train, but none beats uniform. Hitlist b94289d: 20 focused tests and strict docs pass; normal local full-suite memory preflight refused twice. Hosted Python 3.10–3.14 unit CI and integration/coverage/lint/docs all pass (3.11: 3,247 passed/2 optional skips; integration: 96 passed). Calibration data request #762 filed and read back exactly; precursor #757 and perturbation #759 remain open. Artifacts/report published at6845eb9 and independently read back. PR/issue bodies match intended edits; #739 was already closed by concurrent2.0 release761, preserved. Final current-head CI is being checked. Full concentration goal remains active; next integration spec is experiments/agents/codex/plans/mapp-v2-integration.md.
+
+## 2026-10-23 canonical MAPP integration audit
+
+Previous goal turn: progress. Registered 2026-10-23_0149_codex_mapp-v2-integration.
+- [x] Materialize source-preserving schema8 successor from actual latest reference generation.
+- [x] Independently verify complete source/query/recipe conservation and report.
+- [ ] Publish full receipts and confirm current-head CI.
+
+Review: independently checked124 predecessor files/inode isolation,33 MAPP source files,18 queried relations/1,829,008 rows,32 baseline audits and3,058 target values. All original targets/splits are byte-identical. Three complete recipe exports archived and hashed; source execution1442c03, final Hitlist6e275fe changes executable code only by import order.55 focused Hitlist tests/format/lint and strict docs pass; normal full suite refused by memory guard (0.67/2.5GiB), not bypassed. PR763 is now merged; source758 fully included in integrated760 against main. Concentration goal remains active.
+
+## Hitlist 2.0 archival verification imports
+
+Spec: tasks/modular_model/hitlist-2-archival-imports-spec.md. c06fcb7 CI root cause identified from actual log; new MAPP materialization already uses EvidenceStore.
+- [x] Repair retired top-level imports for historical frozen receipts without aliases or dependency downgrade.
+- [x] Verify affected regression families with actual Hitlist2.0:159 tests pass.
+- [ ] Publish and confirm current-head full CI.
+
+Review: five affected families pass17.32s; Ruff and strict docs pass. Frozen manifests/labels and v4 parity semantics unchanged; new MAPP uses EvidenceStore. First86-pass/1-failure run exposed remaining retired export call, repaired with explicit source-module import. Shared environment unchanged.
+
+## Known-load MS-response source admission
+
+Plan: experiments/agents/codex/plans/ms-calibration-admission.md.
+- [x] Pin public source files and independently audit actual workbook schemas.
+- [x] Verify source joins/selection limits and specify shared Hitlist admission.
+- [ ] Publish the complete source audit into Hitlist762.
+
+No new fit or biological concentration claim; availability goal remains active.
+
+MS source admission review: all4 original files retrieved; publisher/archive copies of2/8 identical.12,941 source cells/formulas independently replay; precise report and shared Hitlist contract written. Raw S4 and curve cohorts remain unadmitted pending source/form/normalization reconciliation. No biological fit. All Hitlist6e275fe CI now passes; latest normal local test runner still refuses0.65GiB/2.5GiB before workers. Presto7020b62 has one lint-test success/one live job at last check. Integration report53 hashes and immutable remote bytes verify; source758 consolidated and closed,752/132 remain open.
+
+Final integration CI verification: Hitlist6e275fe passes allPython3.10–3.14unit, corpus integration, coverage, lint and docs checks. Presto7020b62 passes both full lint/test/distribution jobs and both docs jobs (last job completed06:31:09Z). No live training/download/test handles remain. The normal local Hitlist runner refusal is still disclosed; release/review remain separate.
+
+## Shared MS calibration source integration
+
+Previous goal turn: progress. Registered 2026-10-23_0316_codex_shared-ms-calibration. Plan: Hitlist tasks/ms-calibration-source-spec.md.
+- [x] Produce canonical combined source generation with protocol context.
+- [x] Independently verify source/old-generation/recipe conservation and close report.
+- [ ] Publish shared source and establish the bounded nominal-response recipe.
+
+Goal remains full APC availability/concentration modulo precursor abundance; this is a necessary observation-response data stage, not a substitute objective.
+
+Shared calibration review: attempt1 preserved; corrected04f7369 retains32 cross-asset reporter IDs rather than31. Full independent source/query/157-file/3-recipe conservation passes;28 archive files match original bytes. Format/lint56 focused tests and strict docs pass. Normal full-suite refuses0.65GiB/2.5GiB, not bypassed. Hitlist762 updated and exact body/state read back. Presto3f1ae1b all CI passes. Publication and bounded raw-S4 recipe remain pending; no model fit or concentration claim.
+
+## Bounded raw-S4 response diagnostic
+
+Previous goal turn: progress. Registered 2026-10-23_0359_codex_raw-s4-response.
+- [x] Shared recipe materialization and independent original-source admission.
+- [x] Fixed nested grouped local response fits and independent replay.
+- [ ] Full report, artifacts, registry and issue/PR publication.
+
+Full APC availability goal remains active; this measures only the observation component.
+
+Raw-S4 review: shared recipe96b9232 and independent original XML replay admit1,974 observations/224 summaries/22 peptides.295 local fits and all12,544 validation/672 outer-test predictions independently replay. Context RMSE0.8084 beats mean1.1796; sequence1.2762 worsens and shrinks context under a shared penalty. No transferable detector/concentration claim. All8 recipe files archived exactly; source/full fit receipts retained.61 focused tests/format/lint/docs pass; normal full runner refuses0.30/2.5GiB. Publication remains; next biological data target is controlled processing#759.
+
+## Controlled processing source admission
+
+Previous goal turn: progress. Registered 2026-10-23_0434_codex_mapp-controlled-admission.
+- [x] Verify public-source inventory and original study metadata.
+- [x] Recover and independently replay inhibitor/time-course quantities; record unresolved reporter/Velcade assets.
+- [x] Publish audit and update shared Hitlist ownership.
+- [ ] Implement shared controls admission, assess repeatability and freeze the next supported biological comparison.
+
+Controlled-source review: all146,832 peptide/run arithmetic comparisons and ten original extracted tables independently verify. PXD009508 has actual UT/epoxomicin capture-control arms; unique punctuation aliases are derived and recorded, not supplied specimen identities. All143 recovered HTTP ranges and whole PRIDE checksums pass; failed full downloads and literal-label attempt preserved. Hitlist770 created with exact body/open-state readback. Full goal remains active; source integration and biological fitting still required.
+
+Controlled-source publication: Presto dfe3af2 publishes the complete audit; remote immutable README bytes match local. Hitlist759 and Presto131 bodies exactly read back with open/draft states preserved. Hitlist770 source-specific request is open and verified. Source and both starting-code hosted workflows pass; current publication CI is being checked separately. No live local download/analysis/training handles remain. Goal-turn classification: progress. Next action is shared Hitlist controls source/recipe admission, then repeatability and a frozen local biological comparison; full concentration objective remains unachieved.
+
+## Adjudication and external-source conservation
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/adjudication-source-conservation.md.
+- [x] Identify and file upstream collision as Hitlist771; isolate compatibility work.
+- [x] Write implementation spec and regress both package families.
+- [x] Register, freeze and run actual combined source conservation.
+- [x] Verify all predecessor files, source queries and recipe targets independently.
+- [x] Publish report/issue/PR readbacks and retain unresolved biological goal.
+
+Review: pending. No new model fit in this compatibility study.
+
+Review: actual schema9 source and both historical readers pass; independent verifier checks183files/32queries/1,853,840mixed-grain rows, all9reviews and four unchanged recipe payloads. Normal Hitlist3,317tests pass with intact memoryguard. Initial standalone/canonical recipe-envelope comparison error is preserved and corrected; no source or target rerun. Publication closure pending; broader biological goal stays active.
+
+Publication review: Presto82feaf2 report bytes match the immutable GitHub file. Hitlist771 and draft767 plus Presto131 updates read back exactly, preserving open/draft states. Hitlist source0219827 and documentation46df42d pushed. Hosted tests/release-build for0219827 were superseded/cancelled by46df42d; latter tests/build are running, docs pass. Earlier Presto7d4c7a5CI passes. No new model fit or concentration qualification. Unrelated later edit in Hitlist docs/ms-calibration-evidence.md is preserved unstaged. Goal-turn classification: progress; controls admission759 and local biological fit remain next.
+
+
+## Controlled MAPP integration and signal
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/controlled-mapp-signal.md.
+- [x] Shared controlled source and run-level recipe implementation; focused fixtures.
+- [x] Register source/diagnostic scope before generation.
+- [x] Original-source, reference, metadata and canonical recipe verification.
+- [x] Training-only repeated-measurement signal; no held-out tuning.
+- [x] Publish actual evidence and freeze the next exact/sampled biological comparison.
+
+Review: pending. Full local Hitlist runner refused2.10/2.5GiB before collection, without bypass.
+
+Review: real source and independent original/reference/recipe audit pass; all146,832 quantities and183 prior files preserved. Training-only59-peptide/40-component response is repeatable (RMSE0.6761 vs0.9031 common shift), but only2.56% of training positive support survives. No held-out response evaluation or new model fit. Four-feature exact/sampled follow-up frozen. Publication/current CI and upstream stack reconciliation remain pending; availability goal active.
+
+Publication: report80ffa7e pushed to Presto131; Hitlist draft772 opened at1da88e6, exact head/body/open/draft readback passes. Hitlist759 updated with selected-support findings and remaining metadata needs, exact body/open-state verified. New draft checks, parent767/main stack reconciliation and version allocation remain pending. Main760 merged as2.0.5 during execution. No live local handles. User now prioritizes understanding the failed MAPP model: two fixed-feature32-unit MLPs (49/118 inputs;5472parameters), conditional captured-composition supervision, not trajectory simulation. Goal-turn classification: progress; next fit frozen but not launched.
+
+
+## Controlled inhibitor response fitting
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/controlled-mapp-exact-sampled-fit.md.
+- [x] Shared complete-case contrast recipe with identical frozen eligibility and targets.
+- [x] Mathematical gradient checks and immutable local fitting bundle.
+- [x] Run exact/sampled/control fits and all-split evaluation once.
+- [x] Independently replay source, checkpoints, metrics, sampling work and conclusions.
+- [x] Publish report and upstream findings; preserve unresolved concentration goal.
+
+Review: registered before implementation or held-out response evaluation.
+
+Review: all7 policy fits/1 ridge/2 controls completed,14,000 updates. No fitted method improves both val/test response RMSE; exact test.64789 vs common.63536, ridge.62374 but worse validation. Independent NumPy Adam replay matches28checkpoints to8.60e-16 and all870predictions/30metric sets/gates/bootstrap. Exact gradient converges while train response RMSE worsens, exposing objective/measurement mismatch. Published shared code0be964d;50focused tests/format/lint/docs pass, full local guard refuses.64/2.5GiB. Full concentration goal active; next source770 under frozen kinetics plan, no rescue tuning on14test peptides.
+
+
+## Digestion time-course source audit
+
+Previous goal turn: no experimental progress; architecture explanation only. Revalidated completed fit and advancing source770.
+Plan: experiments/agents/codex/plans/digestion-source-audit.md.
+- [x] Publish completed controlled MAPP fit and issue evidence.
+- [x] Retrieve and verify original processed digestion outputs and metadata.
+- [x] Inspect source layers and identify the constraints on a temporal endpoint.
+- [x] Preserve audit/registry/source-gap evidence and next action.
+
+Review: pending; full concentration objective remains active.
+
+Source audit review:18 original files/17 condition archives recovered; all CRCs and545,664 raw run joins checked. H4 independent arithmetic reproduces27,432 raw quantities and13,284 final entries to5.04e-15. RF1 has2,278 contradictory time labels, requiring explicit shared-source reconciliation. Final forced zeros/censoring/control joins preclude naive direct kinetic fitting. No new biological fit; concentration objective active. Publication and Hitlist770 update pending.
+
+Publication closure: controlled-response report1110d49 and source audit0b92401 are pushed to Presto131. All53 source-audit closure files are tracked with exact hashes and immutable remote README bytes match. Hitlist759/770 and Presto131 updates read back exactly; issues remain open and PR remains draft. All local transfer/audit/replay handles are terminal. Authoritative progress this turn: recovered full processed source, established H4 arithmetic correctness, and found the RF1 timing conflict that changes admission. No kinetic fit or concentration qualification. Next action: isolated shared Hitlist770 adapter with source-conflict handling, then frozen exact/sampled kinetics; unrelated checkout work preserved.
+
+## Shared digestion admission and kinetic mathematics
+
+Previous goal turn: progress (recovered source, H4 replay and RF1 conflict).
+Plan: experiments/agents/codex/plans/shared-digestion-admission.md and controlled-fragment-kinetics.md.
+- [x] Shared Hitlist source adapter in isolated branch; actual source replay passes.
+- [x] Register and verify identical exact/sampled fragment process, rate recovery and independent optimizer replay.
+- [ ] Source-backed observation/recipe gates before biological fitting.
+- [x] Publish code/evidence and unresolved limitations.
+
+Review: pending.
+
+Review: shared source retains all218 old payloads and all original typed values; synthetic exact and sampled cuts conserve mass, agree mathematically and recover known rates. All10,000 updates independently replay. Full biological objective remains active. Recipe/preprocessing arithmetic, biological likelihood and sequence-to-rate fit remain next; publication/software closure in progress.
+
+Publication closure: Presto1503d67 reports have exact remote/local README blobs and all77 closure artifacts are tracked with matching hashes. Hitlist draft773 opened; issue770 and Presto131 body updates read back exactly, both open and PRs draft. Source code977adc2 and documentation623afcb published; local3,341 tests pass. Hosted CI is in progress. The merge hook refreshed existing editable Hitlist metadata with no dependencies; pip check passes. Goal-turn classification: progress. No live local fitting/audit process remains. Next: all-admitted-substrate arithmetic, source-backed temporal observation recipe and parsimonious sequence-to-rate fitting, while checking final-head CI.
+
+## Digestion arithmetic and biological observation contract
+
+Previous goal turn: progress. Plan: experiments/agents/codex/plans/digestion-arithmetic.md.
+- [x] Independently replay all-substrate raw and corrected quantity derivations.
+- [x] Resolve or document discrepancies without changing original source values.
+- [x] Freeze the next shared time-course admission and observation contract.
+- [ ] Publish reports/issue evidence and retain full concentration goal.
+
+Review: pending. Concurrent Hitlist source-review edits preserved.
+
+Current continuation: previous goal turn was no experimental progress (answered the architecture question). Revalidated the frozen recipe worktree; the old focused-test handle is missing, so a new focused run is recorded. Registered1123 admission now has a pinned launcher, source snapshot and existing prospective contract. Next: actual canonical admission, independent row/target/group replay, training-only signal, then a frozen biological fit. No change to original cohort/split rules.
+
+
+## Digestion admission and temporal signal closure
+
+- [x] All17 original arithmetic conditions and real-value perturbation checks pass.
+- [x] Canonical admission and independent full target/exclusion/component replay.
+- [x] Reviewed source metadata/zero-support conservation with no admitted label change.
+- [x] Prespecified training-only temporal repeatability and independent prediction replay.
+- [x] Freeze ordered sequence-to-rate and exact/sampled qualification specification.
+- [x] Publish current reports and update shared issue775/770; preserve active concentration goal.
+
+Review:30,566curves/125,423positive measurements from6/3/2 train/val/test parents. Repeatability passes5/6 train parents; equal-parent RMSE.673 vs.986 flat. No biological model fit yet. Frozen3e0b999 passes3,350 normal guarded tests. Concurrent Hitlist review is preserved; it has exposed descriptive held-out repeatability, explicitly documented without any split/outcome tuning. All current local admission/replay/diagnostic/test handles are terminal. Goal-turn classification: progress.
+
+Publication closure: Presto1d585b9 pushed; all87 closure-file hashes match tracked blobs and all three immutable remote README hashes match. Hitlist775/770 and Presto131 updates read back exactly, open/draft preserved. Connector writes403; authenticated CLI fallback succeeded with fresh GET/compare/PATCH/readback. Hosted Presto CI39982266193 is confirmed in progress for1d585b9; prior5a10094CI passed. No live local experiment/test handles. Full APC concentration objective remains active. Next action: implement and qualify the frozen ordered sequence-to-bond-rate model on the shared reviewed recipe, then real exact fit and matched sampled-gradient experiments.
+
+## Biological sequence-to-cut-rate qualification
+
+Previous goal turn: progress (shared admission, arithmetic, temporal signal and publication).
+Plan: experiments/agents/codex/plans/biological-independent-cut-fit.md plus registered family's frozen execution contract.
+- [x] Implement reusable ordered-rate/fragment expectation primitive and mathematical checks.
+- [x] Freeze source/rank/coverage and run prespecified exact fits/controls once.
+- [x] Qualify unconditional sampled/hybrid gradients on training data.
+- [x] Independently verify predictions, metrics, parameter support and optimizer results.
+- [x] Publish biological outcomes and retain full APC availability goal.
+
+Review: 8,000 real exact/hybrid updates independently replayed; 562,404 predictions verified. All 1/39/40 coefficients trained, 18 focused tests pass. Exact and hybrid outputs vary, but no sequence model beats all controls on both held-out splits. Conditional reference-signal calibration and restrictive kinetic shapes remain limitations. Reports/registry and biological experiment1497d9b are pushed to draft131. All87 closure files match committed hashes and immutable remote README bytes match; Hitlist770/Presto131 body readbacks are exact and states preserved. Recipe775 remains closed. CI for1497d9b is in progress. No local training/test handles remain. Next work is source-linked observation diagnostics; this turn made biological fitting/verification progress. Full APC concentration goal remains active; preserve unrelated work and concurrent Hitlist review.
+
+## Digestion observation-effects diagnostic
+
+Previous goal turn: progress (published real exact/hybrid fits and independent verification).
+Plan: experiments/agents/codex/plans/digestion-observation-effects.md.
+- [x] Replay admitted training observations with original baseline/contributor provenance.
+- [x] Compare fixed observation layers, shape sensitivity and repeated-label signal.
+- [x] Independently verify all calculations and preserve per-example outcomes.
+- [x] Publish evidence and specify next model step; retain full APC concentration goal.
+
+Review: all91,226 training points and three observation layers independently replay;94.73% of weight has small baseline fraction, and93%/99% of original growth/concavity violations persist after baseline restoration. Reporting-weight label correction preserves all numeric fits. No new fit or held-out evaluation; next entry-process specification frozen. Published3de2666 to draft131; all36 closure files match committed hashes and immutable remote README bytes match. Hitlist770 and Presto131 exact body/state readback pass; source support already exists, no new import needed. Previousaa4c809CI passed; current3de2666CI is in progress. All local analysis/verification handles terminal. Goal-turn classification: progress. Next action: implement/qualify frozen substrate-entry process before matched biological fitting. Full concentration goal active.
+
+## Substrate-entry process and development comparison
+
+Previous goal turn: progress (independent observation-layer diagnostic ruled out baseline subtraction as sole explanation).
+Plan: experiments/agents/codex/plans/substrate-entry-comparison.md and registered family execution contract.
+- [x] Implement entry-time process with explicit complete-fragment sampling and mass-conserving differentiable quadrature.
+- [x] Independently qualify amounts, gradients, shape restrictions and actual training-domain runtime.
+- [x] Freeze and run matched biological development comparisons if numerical/runtime gate passes.
+- [x] Independently verify and report all fits; publication verified at e1f7403; retain full APC concentration goal.
+
+Review: both entry fits and the K512 sampled fit completed. No development gain; sampled final RMSE1.11375 vs differentiable1.09575, immediate1.09556. All392,830predictions/final gradients, all2,000sampled Adam arithmetic updates and five sampled gradients independently verified;22focused tests pass. Failed original500-update numerical attempt preserved. Reports/registry published at e1f7403; immutable README and body/state readbacks verified. Full APC goal active, no new test evaluation.
+
+
+## Training-only kinetic capacity decomposition
+
+Previous goal turn: progress (qualified entry quadrature; completed deterministic fits; launched sampled fit). Plan: experiments/agents/codex/plans/digestion-capacity-decomposition.md.
+- [x] Register fixed source/reference and qualify necessary-shape projection.
+- [x] Audit/free supported condition bond rates; fit unregularized reference and capacity diagnostic.
+- [x] Independently verify all outcomes; publication verified alongside the completed entry comparison.
+- [x] Freeze rate-space optimization audit before a new biological hypothesis; keep full APC objective active.
+
+Review: verified training RMSE.88315(no penalty),.79734(free2,121rate groups),.44438/.40762(necessary immediate/entry shape bounds),.33634(replicate/time means). Both fits exhaust500polishing evaluations and are not proven optima. All23,054KKTcertificates/67,576shape predictions and135,152fit predictions independently verify; every allocated coefficient trains. Preserved zero-update reference-schema preflight failure. Next plan: experiments/agents/codex/plans/digestion-rate-space-optimization.md. Both prior held-out strata remain excluded; reports/registry published at e1f7403; immutable remote reports and issue/PR body/state readbacks verified.
+
+
+## Direct-rate optimization and boundary audit
+
+Previous goal turn: no experimental progress (architecture explanation). Current authoritative state confirms completed/published entry and capacity families; CI run40003886187 is in progress.
+Plan: experiments/agents/codex/plans/digestion-rate-space-optimization.md and family2026-10-23_1438.
+- [x] Reconstruct training-only rate fields, sparse Jacobians and reference-mass diagnostics.
+- [x] Qualify zero-limit ratios/derivatives, positive-rate parity and bounded toy fits.
+- [x] Freeze bounded solver settings and fit independent condition blocks if qualification passes.
+- [x] Independently verify predictions/optimality, report numerical vs biological limitations, and publish.
+
+Review: all675 sparse solver evaluations completed; RMSE0.797339→0.797292, but1,288rates approach zero and reference amounts collapse. Independent source/prediction/gradient verification passes; original rank-reporting failure preserved. Report and next shared-observation specification published at eb96219; all59 artifact hashes and immutable README bytes match, and Hitlist770/762 plus Presto131 body/state readbacks pass.775 remains closed. Prior e1f7403CI passes; current eb96219CI run40007342075 is in progress. All local analysis/fitting/verification/publication handles are terminal. Goal-turn classification: progress. Next action: canonical run/form contributor preflight and the frozen shared-observation experiment, preserving simultaneous exact/sampled qualification and full APC scope. Full APC concentration objective remains active.
+
+
+## Shared observation and cross-peptide signal experiment
+
+Previous goal turn: progress (verified numerical audit exposed abundance ambiguity). Plan: experiments/agents/codex/plans/digestion-shared-observation.md; registered family2026-10-23_1501_codex_shared-observation.
+- [x] Query canonical acquisition/form context and establish aggregate applicability without changing labels.
+- [x] Implement minimal profiled observation model and qualify exact/sampled gradients.
+- [x] Freeze and execute supported training/development comparisons and fixed sensitivity probes.
+- [x] Independently verify, publish all outcomes and retain full APC concentration goal.
+
+Review: all843,616predictions and6,000Adam updates independently replay; conditional proposal passes and2,000-step hybrid completes. Exact/sample development shape RMSE1.26510/1.26279 versus1.28060constant, with original-ratio degradation and unresolved calibration. Every allocated coefficient trains. New fragment-state qualification spec frozen. No environment/Hitlist source mutation or new test evaluation. Published at d92dad0; full APC goal active.
+
+Continuation 2026-10-23T17:57:59.749605-04:00: previous goal turn was no experimental progress (architecture explanation). Exact fit session3273 is terminal success; conditional qualification finished with both prespecified states passing. Prior ce86bdb CI is successful. Running the prospectively gated matched conditional-hybrid fit; source/target/test policy unchanged.
+
+Publication closure: all115 closure-file hashes match committed blobs and immutable remote README bytes match. Hitlist770/762 and Presto131 body-only updates read back exactly, with open/draft states preserved;775 remains closed. Prior ce86bdb CI passed; report commit d92dad0 CI40032238888 is in progress. All local experiment/verification/publication handles are terminal. Goal-turn classification: progress. Next action: implement and qualify the frozen single fragment-state length effect before biological fitting. No APC-concentration promotion.
+
+## Fragment-state length effect qualification
+
+Previous goal turn: progress (completed/published shared-observation and conditional-hybrid biological comparison; all115 artifact hashes and remote bodies verified). Current report-head CI0361e0d remains in progress.
+Plan: experiments/agents/codex/plans/fragment-state-length-qualification.md; registered family2026-10-23_1816_codex_fragment-state-qualification.
+- [x] Implement the one-parameter fragment-state expectation operator and full-path sampled score.
+- [x] Qualify dense/exact/independent-cut limits, mass, gradients and fixed Monte Carlo laws.
+- [x] Measure actual-parent runtime/precision with source targets closed before freezing biological settings.
+- [x] Independently verify, publish all positive/negative evidence and preserve the full APC goal.
+
+Review: independent mask-generator/Frechet replay passes all numerical cases, 432 Monte Carlo groups and288 event histories. All42 actual-parent workers are terminal:17/21 exact and21/21 sampled complete; four positive-eta exact cases exceed60s. All38 successful arrays replay; no biological fit admitted. New structured-resolvent/CRAM qualification plan frozen. No new measurement labels, test exposure or shared-environment changes. Published at2903e11; all165 artifact hashes and immutable remote README match. Prior0361e0dCI passed;2903e11CI pending. Previous architecture-answer turn made no experimental change; current turn closes terminal evidence and changes the next numerical action. Goal remains active.
+
+
+## Structured fragment-state rational solver
+
+Previous turn recovered terminal numerical/runtime evidence; original mathematical gates pass but four long-parent runtime cases fail. New family experiments/2026-10-23_1846_codex_fragment-rational-solver.
+- [x] Qualify full-support triangular shifted solve and its gradients.
+- [x] Compare fixed CRAM16/48 exponential grids and full-parent runtime without biological targets.
+- [x] Independently verify all outcomes, publish, and determine biological-loss qualification next.
+
+Review: all27 shifted solves/270 exponential cases pass numerical accuracy; all50 runtime cases complete. Both orders fail strict positivity. Independent replay and48 directional finite differences pass; full-parent CRAM48 reference parity within3.78e-15 counts/2.39e-15 gradients. New positive boundary-importance plan frozen. No biological fit admitted. Published at556e2ee; all186 closure hashes and immutable remote README match. PR131 body-only update reads back exactly and remains open/draft. Prior2903e11CI passes;556e2eeCI is in progress. All local qualification/runtime/verification/publication handles are terminal. Goal-turn classification: progress. Next available action is the frozen positive boundary-importance estimator; no biological fit admitted and full APC availability objective active.
+
+
+## Positive fragment boundary importance
+
+Previous goal turn: progress (two completed numerical families published with verified artifacts and PR state; CRAM runtime improves but strict positivity fails). Active family experiments/2026-10-23_1909_codex_boundary-importance.
+- [x] Implement complete conditioned paths and exact likelihood ratio/scores.
+- [x] Qualify fixed ordinary/rare numerical means and gradients without data targets.
+- [x] Freeze and run actual-parent or biological comparisons only after appropriate gates.
+- [x] Independently verify, publish all outcomes and preserve the full APC goal.
+
+Review: 45/45 ordinary and 2/3 rare primary checks pass; fast-boundary failure retained. Independent 2,304-group/48-raw/384-history replay passes. No full-parent run admitted for this proposal. Report, CSV and registry published at2c6cb9748b5804450a02b60bc7c4b5a96ad31d48; all33 published file hashes and immutable remote README bytes match.
+
+
+## Truncated boundary proposal and variance control
+
+Uniform proposal45/45ordinary and2/3rare primary cases pass; fast-boundary failure preserved. Registered experiments/2026-10-23_1920_codex_boundary-exponential.
+- [x] Qualify truncated-time density and original/proposal scores with fixed controls.
+- [x] Run the same ordinary/rare matrix, then prospectively gate actual-parent work.
+- [x] Independently verify and publish both proposal families.
+
+Review: all48 small-system checks pass, but original mean-absolute criterion admits only8/21 full-parent cases. Independent arrays,63directional derivatives,63raw groups and504saved paths replay. Three primary gate-reporting decisions corrected; original outputs retained. Reports/plot/registry and next state-adaptive specification published at2c6cb9748b5804450a02b60bc7c4b5a96ad31d48; all79 published file hashes and immutable remote README bytes match. All268 archived raw files verify byte-for-byte after restoration. PR131 body-only update reads back exactly and remains open/draft; connector write scope returned403, authenticated CLI succeeded after fresh body/state comparison. Previous702d66bCI passes; report-head CI40042470727 is in progress. All local qualification/runtime/verification/report/archive/push handles are terminal. Previous goal turn was no experimental progress (architecture explanation); this turn closes authoritative evidence and changes the next action. Full APC goal remains active.
+
+
+## State-adaptive boundary proposal
+
+Previous goal turn: progress (published two numerical families, corrected original gate to8/21, independently verified all saved full-parent records). Current HEAD2c6cb97; CI40042470727 remains live. Plan: experiments/agents/codex/plans/fragment-boundary-adaptive.md; registered family2026-10-23_2000_codex_boundary-adaptive.
+- [x] Implement event-state boundary hazards with exact proposal density/scores.
+- [x] Qualify fixed small-system matrix and independently replay full saved paths.
+- [x] If admitted, compare all21 full-parent cases under unchanged counts and gates.
+- [x] Close all evidence, publish and choose the next biological step without narrowing the APC objective.
+
+Review: all48 small-system cases pass; all21full-parent workers finish,7/21pass, every length-dependent case fails. Positive-eta worst gradient RMS improves1.3585→.2290 but log accuracy remains insufficient. Independent2,304-group/48raw/384small-history and63raw/504full-parent-history replay passes. All seven focused tests pass, including the mean-absolute cancellation gate. Numerical source and original-gate decisions agree; no biological fit admitted. Stop proposal extension as registered. Full-observation numerical admission and coherent minibatch biological-fit plan frozen. Reports/plot/registry and197 raw artifacts verified byte for byte are published at6347987636c2de32a4f20001c356fb1d24febbc7. All95 closure-file hashes match committed blobs; immutable remote README and PR131 body read back exactly, with open/draft state preserved. All local run/verification/packaging/push handles are terminal. Current CI40044771065 is in progress. Goal-turn classification: progress. Next available action is the frozen full-observation numerical admission plan, followed only if qualified by a separately frozen bounded biological fit. Prior2c6cb97 CI40042470727 completes successfully, including lint/tests/distributions/docs. Full APC goal remains active.
+
+
+## Full-observation fragment numerical admission
+
+Previous goal turn: progress. Current HEAD6347987 verified; CI40044771065 live.
+Plan: experiments/agents/codex/plans/fragment-observation-domain.md; registered family2026-10-23_2029_codex_observation-domain.
+- [x] Freeze canonical training support without using quantities or selecting easy spans.
+- [x] Execute full required-output precision and independent directional-gradient gates.
+- [x] Independently verify artifacts and report failures, coverage and runtime.
+- [x] Publish evidence and determine whether a biological fit is admissible.
+
+Full APC availability objective remains active; no concentration claim.
+
+Continuation 2026-10-24T00:48:49.371034+00:00: 84-case numerical family is live in exec session44779; 64 cases terminal, 64 passed. Canonical training projection covers90,630 measurements/45,315 span-time queries,28 blocks,seven conditions/six constructs. Two numerical oracle tests and one closure-counterexample test pass; original import-path failure preserved. Independent closure checks all three refinements against analytical eta0, whereas worker scalar covers eight steps only. No measured intensities consulted or biological fit launched. Previous6347987 CI40044771065 passes all jobs. Re-poll session44779, finish numerical closure/publication, then use the registered minibatch-objective companion plan only if admitted. Current turn: progress; full APC objective active.
+
+Review: all84cases pass with252directional checks and independent full-array recomputation. All90,630source support rows and135,945span/eta prediction records replay; no gate disagreements. Full-output tiny-tail negativity remains explicit. Three focused tests pass; all168raw arrays restore byte-for-byte. Suite1464.95s, peak2.055GiB. Numerically admits a separately frozen biological comparison, not an APC concentration model. No new biological fit yet. Publication pending; full goal active.
+
+Publication:120d55ac26b1906c0d22c465254c4ab0051470da pushed to existing draftPR131. All233 closure hashes match committed blobs, remote immutable README bytes match, all168 archived raw arrays verify, and fresh body-only update reads back exactly with open/draft state preserved. Standard CSV CRLF triggered default whitespace diagnostics; CSV-aware whitespace check passes without changing artifact bytes. Ignored worker logs were explicitly included. All local numerical/reference/verification/packaging/push/update handles are terminal. Next: registered matched biological objective qualification and separately frozen fit. Full APC goal remains active.
+
+
+## Matched biological fragment-length comparison
+
+Previous goal turn: progress (registered/launched numerical admission); current turn closed/published all84cases at120d55a.
+Family:experiments/2026-10-23_2108_codex_fragment-biological-fit; plans fragment-observation-domain.md and fragment-minibatch-objective.md.
+- [x] Qualify nuisance-offset optimum, envelope gradients, and probability-weighted minibatches.
+- [x] Freeze a matched bounded fitting receipt after qualification; then run both arms.
+- [x] Verify all outputs/updates and report biological and numerical limits.
+- [x] Publish the complete biological comparison and verify PR state.
+
+Original test parents remain excluded; full APC objective active.
+
+Live fitting: session84647 runs the frozen200-update arms. Analytical completes and independently replays all200 gradients/updates plus105,452predictions; developmentRMSE1.28894, Spearman0.22829, worse than constant1.28060. Joint-offset optimization gap0.196090MSE is verified. Fragment arm continues with no setting changes; numerical and optimizer correctness do not imply biological improvement.
+
+
+Review: both 200-update fits complete; all 85/86 coordinates materially train. Independent optimizer/source/physical-prediction/metric checks pass for both arms. Fragment development shape RMSE 1.27630 versus matched analytical 1.28894, constant 1.28060, old exact 1.26510 and old hybrid 1.26279; Spearman .23544 and temporal-ratio RMSE 1.20013. This is weak biological performance, not a new best model. Joint-offset MSE gaps .196090/.129245 motivate the prospective profiled-minibatch plan. All fitting/verification handles terminal; archives restore exact raw bytes. Prior 120d55a CI 40048135508 passes. Full APC availability objective remains active; next comparison changes nuisance optimization only.
+
+
+Publication: a6c655905247bef41459221a1a2c402361c09a75 is pushed to draft PR 131. All 71 closure-file hashes match committed blobs, the immutable remote README matches exactly, and the body-only results update reads back exactly with open/draft/head state preserved. All 9 raw checkpoint/reference files restore byte-for-byte. All local fitting, verification, report, archive, commit, push and PR-update handles are terminal. New-head CI 40052237814 remains in progress (checkout at latest poll); do not claim it passed. Previous-head CI passed. Goal-turn classification: progress, with actual biological fits but no new best model or concentration validation. Next: check this CI, then the registered fragment-profiled-minibatches plan. Full APC availability goal remains active.
+
+
+## Profiled-offset biological comparison
+
+Previous goal turn: progress (two actual fits, independently verified and published; no new best biological model). Current family experiments/2026-10-23_2201_codex_profiled-fragment-fit, source a6c6559. Prior-head CI 40052237814: docs pass, lint/test job installing dependencies at latest authoritative poll.
+- [x] Qualify exact-offset block estimator at predetermined toy/actual states and bound runtime.
+- [x] Freeze and run both 200-update biological arms without changing data/physics/schedule.
+- [x] Independently verify all predictions/updates and report comparison against prior controls.
+- [ ] Publish complete evidence, check CI, choose the next biological hypothesis.
+Full APC availability objective remains active; original test exclusion preserved.
+
+Qualified both fixed analytical states and all 28 blocks; envelope/expected-gradient errors <3e-14. Eta-zero actual-block parity passes. Longest-parent target-free cost 26.086 s; prospective per-arm cap 8400 s / 4 GiB. Both 200-update schedules frozen before launch.
+
+
+Live progress: analytical 200-step profiled fit completes and independently verifies all 200 gradients/updates and 105,452 predictions. Development shape RMSE1.264868 (prior joint1.288941), Spearman.245122, ratioRMSE1.144171; training objective1.378363 versus initial1.595535, offset gap1.95e-29. All78coordinates train. Fragment suite exec80633 is authoritatively live; latest saved checkpoint10/200, elapsed202.135s. Do not restart from a quiet status file or unexpired observation timeout. Qualification exec68864 and analytical verification exec85401 are terminal success. Core/fitting hashes unchanged. Final report/packager are prepared and gated on terminal verified outcomes, not yet run. Full goal remains active.
+
+Latest authoritative poll: suite80633 remains live; fragment checkpoint 20/200, elapsed 326.46456195798237 s. CI40052237814 docs/lint pass, tests still running. Scoped code F/E9 checks and registry whitespace check pass. No paired-model conclusion or final publication yet.
+
+
+## Training residual decomposition while paired fit runs
+
+Registered 2026-10-23_2214_codex_residual-decomposition before arithmetic. Plan availability-residual-decomposition.md.
+- [x] Decompose fixed verified training residuals into curve-mean and temporal MSE without changing data/models.
+- [x] Independently replay every component and record diagnostic scope/decision.
+- [x] Publish the diagnostic with the completed paired-fit evidence.
+This work does not inspect or alter the live fragment fit or close the APC goal.
+
+
+Residual diagnostic review: six fixed models/90,630 training rows each,138,324 curve records independently verify (max8.88e-16). Persistent curve-mean error is76.89% in the new analytical fit; solving offsets improves temporal MSE .045156 while persistent error worsens .003925. Report/CSV/plot/source snapshots are complete locally. Existing native bulk intensity issue95 remains open; preceding comment already captures needed scale/lineage limits, so no duplicate request. a6c6559 CI40052237814 now passes docs, lint, tests and distribution checks. Fragment suite80633 remains live; last observed80/200 at1160.42s. Full goal active.
+
+Goal-turn handoff: progress. Residual decomposition completed, independently verified and registered; publication waits for paired-fit closure. Producer88105 and verifier48397 are terminal success. Live fit suite80633 was re-polled successfully; latest fragment checkpoint 90/200 at 1308.4432757910108 s, unchanged settings. Original a6c6559 CI40052237814 fully passes. Next: re-poll80633, finish fixed fragment fit, run registered independent verifier, final paired report/archive, then publish both families together with exact PR/body/head verification. Do not restart a live process or claim concentration validation. Full goal remains active.
+
+
+Final paired-fit review: both arms complete all 200 updates and independent checks. Fragment development shape RMSE1.262718, Spearman.242653, temporal-ratio RMSE1.130980; analytical1.264868/.245122/1.144171. Constant shape RMSE1.28060; prior hybrid1.26279. This is weak relative-signal prediction on three inspected development parents, not absolute concentration validation. Both exact nuisance-offset gaps are below3e-29; all78/79 parameters materially train. Final fragment runtime3051.87s, peak2.364GiB; independent verifier13078 terminal success in75.73s. The old fit suite80633 is terminal with both child returncodes0. Next scientific priority is persistent cross-peptide signal error and independent response support, not another sampler extension. Report/archive/publication closure follows; original test remains excluded and full APC goal remains active.
+
+
+Publication review: 010be23818400d47a55d6ce0f386b95c222ce8ec is pushed to open draft PR131. Both immutable remote reports match local bytes; all92 closure-file hashes match committed blobs; the body-only PR update reads back exactly. Prior a6c6559 CI passed. New CI40056708162 is in progress, not yet passed. Fitting, independent verification, reporting, archiving, commit, push and PR-update handles are terminal. The latest biological comparison is complete, but APC availability remains unvalidated and the goal remains active. No new fit is running. Next scientific work should target persistent cross-peptide error and independent response evidence; do not launch another sampler extension without a focused prospective plan.
+
+
+## Sequence context and response representation experiment
+
+Previous goal turn: progress; paired biological fits and residual analysis are complete, independently verified and published at010be23. No fit is live. New prospective spec: experiments/agents/codex/plans/digestion-sequence-context.md.
+- [x] Register and qualify nested kinetic-context/response-termini features without changing source observations.
+- [x] Run the fixed four-arm exact factorial and gated full-feature conditional sampled hybrid locally.
+- [x] Independently verify all outcomes, close the canonical registry and publish the evidence.
+- [x] Use biological outcomes to choose the next transfer/calibration hypothesis; retain full APC concentration objective.
+
+
+Current sequence-context family2026-10-23_2358: four exact fits complete; base/rate_context independently verify. Wider rate context yields development1.228529/.348720Spearman versus base1.265099/.245165; response_termini1.271934 and both1.246593. Keep all outcomes, no selection/retry. Fit suite40785 is live, hybrid last200/2000 at82.49s; verifiers49682/93346 are live. First invocation18816 failed missing freeze receipt before qualification, preserved; corrected qualification50699 passes in16.56s. Prior PR010be23 CI40056708162 all jobs pass. Full goal active.
+
+
+Goal-turn handoff: progress. Four actual sequence-context biological fits are complete and independently verified; all2,000Adam updates and105,452predictions per arm verify, plus four fixed gradients. All78/158/150/230coefficients materially train. Wider rates are best exact: developmentRMSE1.228529,Spearman.348720,ratioRMSE1.098476 versusbase1.265099/.245165/1.163914; added terminal response worsens development. Gain is mainlyH4. Interim README and canonical entry are current. Verifiers39773/94182/49682/93346 and qualification50699 are terminal success. Fit suite40785 is confirmed live, both_hybrid last1000/2000 at551.76s, cap1800s; do not restart. No other fit runs. Report/package/close scripts are prepared but not executed; they require all five terminal verified outcomes. Next: poll40785; when hybrid completes run sh reproduce/verify.sh both_hybrid (independent NumPy sampler/RNG replay), then report, inspect plot, package/unpack/close, update canonical log/task state, commit only owned files/tail and publish to draftPR131. Frozen execution-code/config/source hashes must remain unchanged. New family2358 and sequence-context plan/ideas remain uncommitted until full closure. Previous010be23 CI40056708162 passes all jobs. Candidate subsequent transfer idea is recorded, not launched. Full APC concentration goal remains active.
+
+
+All five sequence-context fits now terminal: suite40785 completes with all child returncodes0. Hybrid2000updates completes1104.58s,1.466GiB; developmentRMSE1.248605,Spearman.340120,ratioRMSE1.101178 versusmatchedboth-exact1.246593/.342622/1.097103. No sampled advantage. Wider-rate-only exact remains best1.228529; hybrid independently verifying, so no final family closure yet. Hitlist788 is created and read back open for native intracellular TMAB peptidomics; this is source discovery only, not an admitted workbook or new fit. Full goal remains active.
+
+
+Final sequence-context review: all five fits and independent checks complete, including hybrid2000updates. Matched hybridRMSE1.248605 versusboth-exact1.246593; wider-rate-only remains preferred1.228529/.348720Spearman. All10,000optimizer updates and527,260final predictions verify, with four fixed gradient states per arm, source/physical/metric/per-parent/error-component checks and complete material parameter coverage. Report/plot/archive closure and publication follow. The next prospective frozen-rate cellular transfer specification is recorded; it has not been launched. Hitlist788 covers separate native intracellular peptidome admission. No APC concentration validation; full goal active.
+
+
+Publication handoff: 5b888cccf97796d205e519f6371c7556076cf4f2 is pushed to open draftPR131. All91closure-file hashes match committed blobs; the immutable remote report and body-only PR update read back exactly. All10raw artifacts restore byte-for-byte. Fit40785, hybrid verifier87551, report73963, archive60604, closure94196, commit26112, push5963, issue87851 and PR update51444 are terminal success. No local experiment is running. Prior010be23 CI40056708162 fully passes; new5b888cc CI40062987301 is in progress at publication and must be rechecked. Goal-turn classification: progress (five-arm biological comparison closed/published, source request788created/read back, precise next transfer spec recorded). Next: recheck CI; read digestion-to-mapp-transfer.md; register source/exposure/mathematical qualification before implementation/probes. No model promotion to APC concentrations. All raw source/feature/fitting hashes remain unchanged; preserve unrelated tasks prefix/untracked work. Full availability goal remains active.
+
+
+## Frozen digestion-to-cellular transfer
+
+Previous goal turn: no progress (status report only; CI was still live but no goal work completed). Current family 2026-10-24_0043_codex_digestion-cellular-transfer, registered before probes. Prior five-arm results published at5b888cc.
+- [x] Verify sources/exposure and qualify continuous-input/removal physics and sampled estimator.
+- [x] Freeze resource caps and run the admitted exact/sample biological comparisons.
+- [x] Independently verify outcomes and close/publish the canonical experiment record.
+Full APC concentration goal remains active; no test-parent reuse or new source curation.
+
+Qualification completes: no training construct/peptide overlap for72train/15validationparents; math/toy/threegradientgates pass. Initial serialization failure preserved and fixed without changing scientific settings or original cost admission. Exact caps690/517/525seconds; hybrid cost8598 exceeds7200 ceiling and remains unlaunched. Fitting/verification source receipts frozen before biological updates.
+
+Final transfer review: all3exact2000updatefits complete and independently verify; baseline plus fits reproduce4120source-linkedtrain/validationpredictions and6000Adamupdates. ValidationRMSE uniformcomposition.286029, uniformcleavage.369717, adjacent.393065, wider.556267. WiderpredictionSD.570883 vs target.351303, so this is not constant-outputcollapse. Every trained scalar updates; final checked gradients are stationary. Sampled gradient gates pass but original8598s costprojection exceeds7200ceiling; no sampled fit launched and no accuracy comparison claimed. Prior5b888ccCI40062987301 fully passes. New bounded amplitude-calibration plan is prospective/unexecuted; independent nativecellular/response support remains needed. Full APC concentration goal active. Publication closure follows.
+
+
+Publication handoff: ebb70e3f4a86fd6ba33f9e2422dd0df63d56479b is pushed to open draft PR131. All84 closure-file hashes match committed blobs, immutable remote README and body-only update read back exactly. Source/exposure/mathematical qualification49518, biological suite89945, all4verifiers46309/32019/45526/78553, finalreport/closure82581/78247/13244, commit20271, push14555 and PRupdate30921 are terminal success; firstqualification14039 terminal serialization failure is preserved. No local experiment is running. Prior5b888cc CI40062987301 passes; newebb70e3 CI40064750638 is in progress, not passed. Goal-turn classification: progress (three actual cellular fits, independent source/physics/metric/update verification and full publication). No model beats uniform observed composition; wider rates transfer worst. Sampled gradient gates pass but original preflight cost gate rejects biological sampled training. Next: recheck CI; read plans/cellular-transfer-amplitude.md and register that bounded diagnostic before computing any calibration. Its stop rule prevents continued tuning of this same cellular development set if sequence priors fail calibrated controls. Nativecellular/source788 and independent response/precursor gaps95/762 remain open. Full APC concentration objective stays active; no completion claim. Preserve unrelated tasks prefix and raw untracked work.
+
+
+## Train-only amplitude calibration
+
+Previous goal turn: progress (three cellular fits, independent verification and publication). Registered 2026-10-24_0106_codex_cellular-amplitude before coefficient/metric arithmetic. Prior ebb70e3 CI40064750638 remains live.
+- [x] Freeze and run the three planned scalar calibrations against unchanged controls.
+- [x] Independently reconstruct inputs and verify least-squares/KKT, predictions and metrics.
+- [x] Close/publish all outcomes and enforce the planned transfer stop rule.
+Full APC concentration goal remains active; this diagnostic does not redefine success.
+
+Amplitude review: producer43322 completes0.935s/104.14MiB, verifier59585 independently verifies4120source/physicalinputs and7210outputrows plus allscalarLS/KKT and metrics/strata/decisions. Beta uniform.302123/adjacent.265903/wider.113527. ValidationRMSE .267107/.275897/.286965 versus uniformcomposition.286029. Calibrateduniform improves10/15parents (4worse,1tie); neither sequenceprior beats bothcontrols. The prospective stop rule is enforced: stop tuning this bridge on the same MAPPdevelopmentset. Report/plot/registry closed; publication follows. New nativecellularadmission plan788 is prospective and unexecuted; full APC concentration goal remains active.
+
+
+Amplitude publication handoff:132404d1d0a2b714dcff9804e7e052b909f28f6d is pushed to open draftPR131. All39closure-file hashes match committed blobs; immutable remote README and body-only PR update read back exactly. Producer43322, independent verifier59585, report26763/21610, commit43262, push29664 and PRupdate17826 are terminal success. No local experiment is live. NewCI40065534409 is in progress; prior ebb70e3CI40064750638 is cancelled (not passed). Earlier5b888ccCI passed. Goal-turn classification: progress (three actual train-only scalar fits, independent reconstruction/verification, enforced stop decision, canonical registry/control update and publication). Next: recheck currentCI; read plans/native-cellular-peptidome-admission.md; register public-source/lineage qualification before any source-count/schema audit. Hitlist788 remains open/unimplemented at last authoritative read; localHitlist8a10b5a is only a locator, recheck upstream before edits. No more MAPPtransferbridge tuning on the same development set. Preserve unrelated tasks prefix/untracked raw work; full APC availability/concentration goal stays active and is not achieved.
+
+
+## Native cellular peptidomics source admission
+
+Previous goal turn: progress (calibration fits, independent verification and enforced stop rule, published132404d). Registered 2026-10-24_0117_codex_native-peptidome-admission before retrieval/schema arithmetic. No local fit live.
+- [x] Retrieve available public sources and identify reuse evidence; preserve unresolved original2012 access/lineage.
+- [x] Independently audit available workbooks and metadata/quantity contract; record semantic failures.
+- [x] Publish source evidence and concrete shared Hitlist admission requirements; no Presto-only curator or premature training.
+Full APC availability/concentration objective remains active.
+
+Current continuation: previous status-only turn was no progress. Public PLOS
+assets are retrieved; the original epoxomicin archive request failed HTTP500.
+Hitlist PR790 is now merged at f4d3a6d; reconcile its canonical package instead
+of building another importer. Prospective audit addendum is registered under
+0117/reproduce/upstream-audit-plan.md. No training is admitted yet. Read-only
+inspection identifies candidate lineage/identity/instrument concerns to verify
+against actual source rows before filing concrete upstream findings.
+
+Audit review: six workbooks /271,778explicit cells independently agree with
+openpyxl. Canonical f4d3a6dHitlist package replays10,564rows/328,880values and
+61,908ratio slots; all quantity parses verify. Semantic failures are real:
+830possible reuse groups versus0canonical matches, tentative sequence corruption,
+540Moxslots lose modification,173wrong heatmap sequence projections, inaccurate
+instrument scope.213exact slots have tentative identities;16,807lack sequences.
+Full Methods resolve2014total35min exposure with inhibitor retained during wash.
+Hitlist791filed/read back; source value preservation passes but training admission
+remains deferred. All audit handles79539/23233/51582 and issue25532are terminal
+success. Current132404dCI docs/lint/tests/distribution jobs pass. Close/publish
+available-source audit, then follow native-peptidome-semantic-corrections.md using
+current upstream state. Goal remains active; no fit or source repair was run.
+
+Publication review: b298ea991f7b1ed603ab0c5d700f6b8c3e827107 is pushed to open
+draftPR131. All53frozen audit-file hashes match committed blobs; remote report and
+body-only PR update read back exactly. Commit69336, push21196 and PRupdate48527are
+terminal success. Source-extract XML whitespace was preserved; authored files pass
+whitespace checks and experiment Python passes explicit lint. NewCI40067385524is
+in progress, not passed; prior132404djobs allpassed. No experiment is live. Current
+goal turn is progress: complete source/quantity replay revealed six concrete
+shared-source problems and produced Hitlist791 plus published evidence. Next:
+recheck upstream791/main/release, implement shared corrections on an isolated
+branch, then qualify a native-response recipe before a new biological fit. The
+original2012source and specimen/reuse adjudication remain unresolved, but do not
+block correction of the verified shared-code errors. Full APC goal stays active.
+
+
+## Corrected TMAB source replay
+
+Registered 2026-10-24_0156_codex_tmab-semantic-replay before rebuilding full assets; correction code/source diff frozen.
+- [x] Replay all source rows/quantities/IDs and independently verify corrected semantics.
+- [ ] Close/publish the evidence and finish shared correction checks/release.
+- [ ] Qualify canonical native-response recipe before the next biological comparison.
+Full APC concentration goal remains active.
+
+Review: full-source semantics verify after a documented whitespace-comparator correction; 10,564 rows and 61,908 measurement slots preserved. All 830 prior reuse candidates recovered. Hitlist format/lint and all 3,403 local tests pass; publication and release pending. No new biological fit or concentration claim.
+
+## Native response recipe and biological comparison
+
+Plan: experiments/agents/codex/plans/native-response-recipe.md. Source correction replay is complete; delivery is Hitlist PR793.
+
+- [x] Qualify shared full-parent occurrences and source dependence groups through Hitlist.
+- [x] Materialize the source-preserving exact/censored response recipe and frozen split components.
+- [ ] Run the preregistered biological controls and matched differentiable/sampled comparison locally.
+- [ ] Preserve validation/test predictions and report improvement or failure against the same controls.
+
+Review: source admission0259 and first biological baselines0314 are now complete;
+the matched physical differentiable/sampled comparison remains next, and test is reserved.
+
+### Native response prediction execution
+
+Previous status turn: verified wait (live full-test handle84811 polled); source
+materialization was confirmed terminal. This continuation confirms all3,414
+Hitlist local tests passed. Source/recipe generation took54.87s with1.42GiB RSS;
+the independent admission check is still pending. Full goal stays active.
+
+Plan: experiments/agents/codex/plans/native-response-baselines.md.
+- [x] Independently qualify the immutable0259 recipe without changing its splits.
+- [x] Register and fit the six fixed real-response baselines locally.
+- [x] Verify source-linked predictions, feature support, losses and convergence.
+- [x] Close the reports and registry; then use these controls for the matched
+  differentiable/sampled full-parent processing comparison.
+
+Review:0259source/reference/group/split/weight admission passes. Allsix0314fits
+complete4.639s and train supported parameters. Condition-only validationloss.073495
+beatsnochange.186297; sharedsequence.129189 andcompoundsequence.153178 fail despite
+training gains. All46,002source-linked predictions and final metrics verify.
+Exact-input roundoffties are corrected inqualified-v2 with raw outputs preserved;
+149correlation records change, primaryloss/RMSE/decisions do not. Initial scalar
+verifier failed180sresourcegate after mathematical checks; equivalent vectorized
+closure passes6.956s and matches the preserved scalar reference. No fit retry.
+Test remains reserved; no APC concentration claim. Full goal active.
+
+Next detailed specification: experiments/agents/codex/plans/native-processing-comparison.md.
+- [ ] Implement the minimal full-parent independent-cut/input/removal response model.
+- [ ] Run matched biological differentiable/conditional-score arms and matched controls.
+- [ ] Open the fixed test comparison only after all model/settings choices are frozen.
+- [ ] Continue toward actual APC machinery and precursor-relative concentration validation.
+
+Shared source delivery: resolved Hitlistmerge b3f1079 is pushed toPR793; format/lint
+and3,414full localtests pass. New-head hosted gates/merge/release remain outstanding.
+PriorPR794release-build40071541566passed; no duplicate release was launched.
+
+### Native source delivery checkpoint
+
+- Presto replay commit 593e3b5c2bc08ff9242b363145096f2ba6234e95 is pushed to draft PR131; description and head read back.
+- Hitlist PR793 is open at ddc658186f1d16885e42637ec7b0086c357e17d0; correction worktree is clean.
+- All 3,403 local tests pass. Hosted Tests run40070430939 remains live; docs/lint and Python3.10/3.12/3.14 pass, remaining Python/integration gates pending at last read.
+- Presto current-head CI run40070396473 is live. Predecessor b298ea9 CI40067385524 passes docs/lint/tests/distributions.
+- Issue791 result/recipe comment: https://github.com/pirl-unc/hitlist/issues/791#issuecomment-6380936934.
+- Hitlist merge and clean-main release/PyPI verification remain outstanding; 2.0.16 was absent from PyPI before PR publication. Do not claim delivery complete.
+- Parent reference assets already exist in the old immutable MAPP package. Next work can reuse the shared Hitlist reference parser rather than fetch or guess a new source.
+- No native-response model has trained; proceed from the prospective native-response-recipe plan, retaining the full APC concentration objective.
+
+
+### Native biological publication and next execution handoff
+
+This goal turn is progress: canonical admission completed, six real biological
+fits completed and independently closed, registry/control/next physical spec
+published. Presto2cb7db0fff076180e3235ea11ef9d30b6cb2872e is pushed to draftPR131;
+108frozen artifact hashes match committed blobs. Both PR descriptions were rewritten
+around the current implementation/results and read back exactly. Issue791follow-up:
+https://github.com/pirl-unc/hitlist/issues/791#issuecomment-6381741297.
+
+HitlistPR793 passed Docs40075205042 and all Tests40075205049 jobs (Python3.10–3.14,
+integration, coverage, lint), then merged as35f4ee0ac5217bc458e0bb2a8c31fe53c2d86810.
+Clean-main release-build40076517694 was dispatched once for that exact head and
+confirmed in progress installing release dependencies; do not duplicate.
+Publication toPyPI2.0.17 is NOT verified yet.
+Issue791was closed by the concurrent2.0.16release; its closure and792were preserved,
+with concrete remaining metadata/source limits in the follow-up comment.
+
+Presto current-headCI40076131102:docs passed, lint-test still running at last read.
+All local experiment/verification/report handles73370/42012/27203/78275/77273/22069
+are terminal. Failed source-verifier taxonomy check and slow scalar baseline
+verification remain preserved; their corrected closures pass. Commit40629,
+artifactcheck91095, pushes95154/52162, PRupdate18769 and merge/release-dispatch67374
+are terminal success. No local fit is currently live.
+
+Next: implement experiments/agents/codex/plans/native-processing-comparison.md
+without another source-audit or feature-sweep detour. Source admission and baselines
+are ready. Register the mapped-subset matched controls and four physical exact/
+conditional-score arms before launch; preserve all eligible source quantities and
+fixed test reservation. Reuse existing processing primitives and verification
+helpers where applicable. Monitor the two specific hosted run IDs while doing
+useful model work. After Hitlist release-build succeeds, verify/download its exact
+source-bound artifacts and publish/verify2.0.17 using the repository release flow,
+without changing the shared Python environment. Full APC concentration objective
+remains active and unachieved.
+
+### Native physical comparison implementation
+
+Previous goal turn: progress (six actual biological fits, independent closure,
+published2cb7db0, shared recipe merge and exact-head release dispatch). Revalidated
+the current worktree and specific hosted runs; both are still live. The source
+and baseline admission are complete; no local fit is running at this checkpoint.
+
+- [x] Register the mapped-subset experiment and freeze the implementation addendum.
+- [x] Add/reuse steady-state amount and conditional-age score primitives with
+  independent small-system physical/gradient checks.
+- [x] Fit the matched controls and admitted exact/sampled physical arms locally.
+- [x] Freeze checkpoints, evaluate all completed models on the reserved test once,
+  and close the source-linked prediction/metric report.
+
+
+### Native physical biological outcome
+
+0410completed all six matched controls and four fixed physical fits. Exact sequence
+processing validation/test loss.070384/.129789 versuscondition.073514/.130557;
+testexactRMSE.243207 versus.250953,Spearman.5373 versus.5324. Small held-out gain,
+not APC concentration qualification. Sampled counterpart nearlymatches at25xruntime.
+All100,860source-linked predictions and2,180metricrecords independently verify;
+9physical/substrate tests pass. No test-driven retry. Test now inspected; preserve
+it from tuning. Report, comparison plot/CSV, registry and provisional baseline updated.
+Full APC availability goal remains active; biological calibration is still missing.
+
+Hosted state checked: Presto40076131102passes docs/lint/tests/distribution. Hitlist
+release-build40076517694for35f4ee0passes all required build/artifact steps. PyPI2.0.17
+publication remains unverified; exact release artifact verification/publication is
+separate pending delivery work. No duplicate workflow dispatched.
+
+### Actual APC response and precursor comparison
+
+Previous goal turn: progress (0410completed/published atf7b76a3; held-out gains small).
+The native test is now inspected and excluded from further tuning. New detailed
+specification: experiments/agents/codex/plans/apc-precursor-response.md.
+- [x] Register canonical PXD057588 response exports and fixed precursor/split policy.
+- [x] Verify the selected source-to-export contract and precursor lineage.
+- [x] Fit fixed precursor/condition controls and matched exact/sampled processing arms.
+- [x] Seal checkpoints, evaluate once and independently verify biological results.
+- [ ] Continue toward independent APC concentration and machinery validation.
+
+### Actual APC comparison review
+
+0449 completed all four controls and five fixed200step physical fits. TestRMSE
+condition.120011,sequence+precursor.139278,sampled.139298,no-precursor.120008.
+Negative: no useful processing gain; no-precursor predictions nearlyconstant within
+condition, surrogate inputs vary but worsen error. Native positive result does not
+transfer usefully under this contract. Exact/sampled agree; sampled35times slower.
+Independent source and final prediction/metric closures pass:38,718predictions,
+4,743metricrecords,maxerror3.55e-15. Full report, checkpoints,predictions,CSV/plots,
+registry and condition-only reference updated. All model hashes preserved; newly
+authored current code formatted/linted. No held-out retry. Priorheadf7b76a3 CI
+40079015687 passes docs/lint/tests/distribution; new publication CI separate.
+
+Future work must diagnose training-only precursor calibration/kinetic identifiability
+and establish independent biological evaluation. No APC concentration or machinery
+causal validation. Existing Hitlist2.0.17 release delivery remains separate pending
+work; no new source bug was found or filed in this cohort. Full goal stays active.
+
+### APC training-only calibration and kinetic diagnosis
+
+Previous goal turn: progress;0449completed/published34568ca,negativebiologicalresult.
+Detailed spec: experiments/agents/codex/plans/apc-training-diagnostic.md.
+- [x] Register original-training-only grouped-CV diagnostic before arithmetic.
+- [x] Verify calibrated precursor/profiled-offset calculations and new kinetic gradients.
+- [x] Complete fixed penalty/condition-specificity factorial; sampled arm rejected by frozen biological gate.
+- [x] Independently close source-linked predictions/metrics and document diagnostic.
+- [ ] Require independent prospective biological validation; full APC concentration goal unchanged.
+
+### APC diagnostic review
+
+0527completes24physicalfits+24control evaluations on originaltraining only.
+Gammafull.0516255,foldrange.00165–.14445. Initial Jacobianranks5/41shared and
+81/117condition-specific; expandedkinetics learnsvariation but overfits. Condition
+innerCVRMSE.114185,calibratedprecursor.114738,flexibleunpenalized.127096 despite
+training.098916. No useful new biological predictor. Fixedsamplegate fails10.77%
+worsening; no sampled fit/qualification or outervalidation/test evaluation ran.
+Independent47,232prediction/5,824metric closure passes,maxerror2.84e-14.
+All400steps/fit andresourcecaps pass; fits100.02s plusdiagnostic/closureoverhead.
+Report/CSV/plots/registry/checkpoints/source-linkedpredictionbundles complete.
+
+Both priorhead34568ca CI40081524686/40081518202pass. Hitlist798filed/readback
+for deVerteuil2010primaryDC immunoproteasome-loss quantitative source, extending
+broadmouse13. Sourceassets/schema not yet admitted. Need sharedcanonical source
+work and prospective independent biological evaluation; stop expanding current
+sourcefeatures. Hitlist2.0.17publicationverification remains separate pendingwork.
+Full APCavailability/concentration goal remains active and unachieved.
+
+### Independent DC machinery source admission
+
+Previous goal turn: progress;0527diagnostic publishedc7d538c andHitlist798filed.
+- [x] Register source admission and preserve previous datasets/tests.
+- [ ] Retrieve original public quantitative assets and qualify their source scope.
+- [ ] Implement/reuse current canonical Hitlist admission with homogeneous metadata.
+- [ ] Independently verify source quantities/lineage, test and publish shared support.
+- [ ] Preregister the resulting biological comparison; no concentration promotion from elution alone.
+
+### Quantitative HAP1 machinery source admission
+
+Previous status-only turn: no progress. Current DC retrieval attempt establishes
+verified public-source access limits, not unavailable biological data in general.
+Plan: experiments/agents/codex/plans/hap1-quantitative-admission.md.
+- [x] Revalidate existing Hitlist726 and register quantitative source admission.
+- [x] Retrieve actual source quantities, run identities and original proteome.
+- [ ] Implement canonical typed source support and independently verify it.
+- [ ] Publish shared support; preregister and run the biological comparison.
+- [ ] Validate transfer to actual APCs and precursor-relative availability.
+
+DC0602review:13retrievalattempts/10bodies verified. EuropePMCdeclines nonOA
+supplements; currentPMCpubliclistingempty; publisher403. Quantitative admission
+remains pending under798. No data/labels invented. Existing726HAP1 has accessible
+source XML and14.9MBsupplementarchive; schema qualification proceeds separately.
+
+### HAP1 source replay review
+
+Canonical Search.zip, original supplements and SDRF are now available. All 296,483
+numeric canonical peptide cells replay as normalized precursor sums averaged over
+declared technical runs. All 166,028 numeric protein cells replay as MaxLFQ. These
+are source reconstructions, not predictive results. Two DIA runs remain unmapped;
+23,096 protein supplement NA cells have positive deposited MaxLFQ and require
+source-filter lineage before filling or training admission. Full per-cell comparisons
+and hashes are preserved; README and canonical log now record the result.
+
+Latest exact-head Presto CI40084041491 is completed/success at c7d538c. Full APC
+availability objective remains active. Next work is canonical Hitlist726 admission,
+then a prospective biological comparison; no rerun of inspected APC/native tests.
+
+### Shared HAP1 source implementation
+
+Previous goal turn: progress (recovered source semantics, updated Hitlist726).
+Current progress: Hitlist PR806 draft at2f4bbe0 implements the shared source package,
+with source-faithful quantity/context/reference relations and no Presto curator.
+Actual manifest88cad10d7bc2a638305cb0d37ad96ac2826c3badaf7b3e0aad7928820df5c4b8.
+Independent checks pass2,391,692 supplement cells,558,216 deposited protein cells,
+607,928DIA rows and59,726 emitted exact matches;721 peptide rows remain unmapped.
+Build/source replay379.92s/1.163GiB; independent checker96.90s/.987GiB. Source v1
+SDRF failure preserved; positional repeated-header correction tested.
+
+Hitlist805 tracks the actual null-context join failure. Three regressions fail
+before the fix;55 focused tests and actual original-package queries pass afterward.
+Format/lint pass. Full test.sh refuses the actual memory capacity; no override.
+Hosted/full-suite validation, upstream merge/release and endpoint recipe remain
+pending. No new model training or held-out scoring. The full APC availability goal
+remains active. Next: materialize source-linked HAP1 response eligibility/recipe,
+then register a biological comparison with strong condition/precursor controls.
+
+Hosted validation: Hitlist40088549411 is confirmed in progress at2f4bbe0;
+docs40088549372, lint and Python3.14 units pass. Other unit versions and integration
+remain live. Poll this exact handle; do not dispatch a duplicate.
+
+Publication: Presto6045dd2 is pushed to draftPR131. Exact-head CI40088982542 and
+40088975800 are confirmed live. HitlistPR806 at2f4bbe0 has all Python3.10–3.14
+unit checks passing; integration remains live in40088549411. Next source/response
+plan: experiments/agents/codex/plans/hap1-response-comparison.md. Define the
+endpoint recipe and strong controls before another sampler extension. Keep late
+APPM effects distinct from cleavage and preserve the broader APC concentration goal.
+
+## HAP1 response recipe and biological baselines
+
+Previous status-only goal turn: no progress. Revalidated shared source CI40088549411 succeeds at2f4bbe0, including integration and Python3.10–3.14 units.
+- [x] Freeze response/precursor/split and local baseline contracts before fitting.
+- [ ] Implement registered Hitlist recipe, source-conserving dispositions and meaningful tests.
+- [ ] Materialize and independently verify real HAP1 response dataset.
+- [ ] Run local complete-precursor controls and sequence baselines, training-only grouped CV.
+- [ ] Independently verify, publish report/artifacts and specify physical follow-up from evidence.
+
+### HAP1 biological baseline review
+
+Canonical recipe+independent source closure passes; 220,271responses/129,728complete
+precursor responses. Training-only5foldcomparison completes42fits on87,260cells/
+6,317peptides/1,798components. Sequence ridge.1 CVRMSE.574832 versuscalibrated
+precursor.638745:10.0%gain;alltenKOconditionsimprove. Predictionsvarywithincondition.
+Independent1,221,640prediction/augmentedLS/globalmetric/gatereplay passes,max2.94e-12.
+Fit214.21s/1.027GiB; source424.19s/1.802GiB;noModal/environmentchange. No outer
+validation/test model score or newRLrun. FullAPCavailability/concentrationgoalactive.
+
+- [x] Implement canonical recipe and preserve all source dispositions/alternatives.
+- [x] Verify original response/precursor arithmetic and all-source component split.
+- [x] Fit/verify fixed real-data controls and sequence models locally.
+- [x] Record report,predictions,coefficients,plots and canonical registry.
+- [ ] Publish report and recipe; reconcile upstream concurrent schema/version changes.
+- [ ] Specify and test matched physical exact/sampled model against this reference.
+
+Hitlistformat/lint/43focused/3,439fullunitchecks pass. SourcePR806 allhostedchecks
+passedat2f4bbe0 butnewmain6416616 schema20/catalog25 conflicts needintegration.
+Presto6045dd2bothCI40088982542/40088975800passed. Recipepublishedabbc376,
+stackeddraftrequested;merge/releasepending,notshipped.
+
+Publication update: Hitlist PR807 is OPEN DRAFT atabbc376, stacked on806. Its body/readback agrees with the actual source contract. Docs40091493963 passes; Tests40091493921 is confirmed live. Follow-up design is experiments/agents/codex/plans/hap1-availability-presentation-followup.md. It preserves the full availability/presentation objective and requires a measurable physical contribution beyond the new direct baseline.
+
+Publication verified: Presto5699b9f4e73a31c65eddc414f5d6a41f2fae24d2 is pushed to
+OPEN DRAFT PR131. All portable artifact hashes and decompressed log hashes match.
+New exact-head CI40092027986 and40092020339 are confirmed in progress; poll those
+handles without redispatch. Hitlist807 atabbc376 remains clean/pushed; its Tests
+40091493921 is confirmed live and Docs40091493963 succeeded. Full objective remains
+unachieved: relative HAP1 response signal does not identify APC free-peptide amounts.
+Next work: reconcile source/recipe schema/version branches, then freeze and execute
+the physical availability/selection comparison described in the follow-up plan.
+
+## ERAP1 physical trimming comparison
+
+Previous turn: progress; HAP1 sequence baseline passes biological development gate.
+Primary article identifies ERAP1 as direct N-terminal trimming intervention; do not
+map the other KOs to cleavage. Spec: experiments/agents/codex/plans/erap1-trimming.md.
+- [x] Freeze mechanism, cohort, exact/sampled objective and resource limits.
+- [x] Implement and verify all-span progressive trimming and sampled path gradients.
+- [x] Run the fixed matched biological comparison on outer-training inner folds.
+- [x] Independently reconstruct predictions/metrics; report physical contribution.
+- [ ] Publish artifacts; reconcile pending upstream source schema/version integration.
+
+ERAP1 closure: all24fits finish888.29s/2.280GiB. BaselineCVRMSE.596370,
+exactaugmentation.596436,sampled.596417: biological gate fails. Independent
+scalar recurrence reconstructs198,744predictions withmaxerror9.05e-15; checks
+all1,741,916birth paths,weights/folds/source lineage and final objectives/metrics.
+Full report,comparison plot and28,512component metric rows preserved. No outer
+validation/test scored. Previous status turn made progress by independently
+confirming the exact biological null result. Publication and upstream release
+remain pending; full APC concentration objective remains unachieved.
+
+### ERAP1 publication and independent-data follow-up
+
+The completed biological experiment is pushed at87f23dfe47bcf0de0f713be4083d5e6fa5ebf263
+in draft PR131. Design issue130 records the negative exact/sampled comparison:
+https://github.com/pirl-unc/presto/issues/130#issuecomment-6384410756
+The source-data gap is filed/read back as Hitlist809. Next source qualification
+spec: experiments/agents/codex/plans/erap1-independent-source-qualification.md.
+No new numeric source was admitted; the goal remains active and unachieved.
+
+Upstream integration is moving: source a3e76c8 passed3,442local tests and original
+HAP1 package replay; recipe865acb8 passed49focused and subsequently3,446full tests
+(after an initial guarded preflight refusal). Main then advanced to897c98c/PR808,
+so source/recipe release versions must reconcile again. Current source integration
+preserves HAP1schema20/catalog25 and adds precursorv2/schema21/catalog26, with
+combinedcatalog27/sourceversion2.0.22 (recipe will2.0.23).70focused tests pass;
+new fullsuite session25635 is confirmed live. The first precursorv1 package now
+requires its historical consumer under upstream's v2 dispatch; it is not relabeled.
+
+### Final source integration and next data lead
+
+Presto experiment code head 87f23df passes both hosted CI runs 40095274467 and
+40095267351. All 227 portable artifact hashes and original log payloads verify.
+Source PR806 is pushed at a3b80a8 (version 2.0.22, catalog 27): 3,443 local tests
+and original HAP1 source replay pass. Recipe PR807 is pushed at fda50b6 (2.0.23):
+3,447 local tests and the original response-package replay pass. Their hosted
+checks, upstream merge and PyPI release remain pending, with no local fit running.
+
+Source discovery under Hitlist809 retrieved the Maben2021 Source Data ZIP, hash
+a9d7bcba… (479,402 bytes, two XLSX workbooks). The linked correction affects an
+acknowledgment. Original numeric measurement semantics remain unqualified; no
+new labels or fits. The next source plan and inventory are in the Codex plan area.
+
+## Independent ERAP1 workbook qualification
+
+Previous goal turn: no progress (status report only). Current next action is safe
+and available: inspect the two retrieved original workbooks under the frozen plan
+in experiments/2026-10-24_0924_codex_erap1-source-qualification/reproduce/plan.md.
+- [x] Freeze the read-only qualification plan and register the audit family.
+- [x] Inventory source cells/formulas and verify original ZIP/workbook integrity.
+- [x] Classify panels, assay endpoints, context, units and replicate semantics.
+- [x] Independently verify the inventory and decide source admission suitability.
+- [x] Publish the result and concrete Hitlist809 follow-up; preserve held-out data.
+
+Current CI readback: source806/a3b80a8 Tests40096473199 succeeded. Recipe807/fda50b6
+Tests40097020357 and Presto/e6ce3b2 runs40097219307/40097211801 are live. Upstream
+main remains897c98c; merge/release pending. No biological fit currently running.
+
+Qualification review: all3,726cells in34sheets independently verified. Only two
+peptide-assay panels,105numeric response cells with three missing slots, one
+unmodified and one BPA-modified probe sharing their N-terminal residue. Missing
+rate-scale/normalization/experiment identity retained; no training cohort admitted.
+Report and canonical registry close this source gate; no new predictive result.
+
+Source PR806 merged as41d4d096e03f5a2254836e7f0a73adbcf2a06625. Required release
+build40098309564 is confirmed live on that exact main head; PyPI upload pending.
+Recipe807 retargeted to main via REST after gh-pr-edit's known ProjectsClassic
+failure. Its ancestry-only merge dc2c4cb has exactly the same tree15866197ef9a7054c5e6da05c5635e93b70f01ad
+as fully validated fda50b6; all original data/package checks remain applicable.
+Version2.0.23 and full recipe task history preserved. New-head hosted checks and
+merge/deploy pending. Native PeptidomicsDB is a new public metadata lead, not
+admitted data or a claimed APC concentration cohort.
+
+Publication: Prestoeb4e8d8 is pushed; Hitlist809 comment6384888767 is posted/read
+back with the exact source-admission limitations. All original source data remain
+unchanged. Pending exact-head Presto CI40098933707/40098926299 is live.
+
+## Native APC metadata search
+
+- [x] Register prospective scope before metadata retrieval; preserve source exports.
+- [x] Inspect all151project/3,992sample rows and verify63,761populated cells independently.
+- [x] Review capture-versus-compartment cases in original primary literature.
+- [x] File concrete shared metadata/source requirements as Hitlist811.
+- [x] Publish the closed metadata audit and current release handoff.
+
+Outcome: no native APC free-peptide cohort qualified.20solely intracellular-tagged
+samples are enteroendocrine. JY's mixed intracellular/MHC tag refers to HLA-purified
+ligands; genericPPD070 is also HLA/source-proteome evidence. The29immune-term and
+35human/mouse non-MHC-label candidate lists are retained; neither proves eligibility
+or exhaustive absence. No peptide CSVs, new model fits or outer-test scores.
+
+Source2.0.22 releasebuild40098309564 is live in the full test/build phase. Recipe
+dc2c4cb Tests40098555299 is live; Docs40098555411 passes. Its previous identical
+tree fda50b6 passed all hosted checks. Source merged; recipe merge and both PyPI
+deployment confirmations remain pending. Do not restart confirmed live runs.
+
+Native metadata audit published as0248f11; ERAP1 source audit as eb4e8d8. Hitlist811
+request is posted and read back. No new biological model was fitted in these source
+families. Their negative admission decisions change the next-data search, while the
+HAP1 development sequence baseline and all held-out policies remain unchanged.
+
+Final release handoff (2026-10-24 13:51 UTC): recipe PR807 passed Tests40098555299
+and merged as c7eed83ee58e97460fb549959bd3a6c132c87ae2. Source release gate40098309564
+is confirmed in progress on41d4d09; recipe release gate40099959477 is confirmed
+queued on c7eed83. Both use the existing release-build workflow with full tests;
+neither version2.0.22 nor2.0.23 is yet confirmed deployed to PyPI. Do not redispatch
+or restart based on elapsed observation. Download/verify each completed artifact
+and finish the authorized upload/registry verification when its gate passes.
+Presto0248f11 is pushed; exact-head CI40099847313/40099839777 are live. Hitlist811
+report comment6385019990 is read back. The few newest task-handoff lines remain
+working-tree changes in addition to the preserved unrelated prefix. No local
+training, retrieval or verification process remains live. Full goal is active.
+
+
+## ERAP1 remaining-length diagnostic (October24)
+
+Previous goal turn was a status report: no experimental progress. Revalidated unchanged0248f11, active goal, successful Hitlist2.0.22 release build40098309564 and running2.0.23 build40099959477.
+
+- [x] Inspect model/source limits and freeze [detailed plan](../experiments/agents/codex/plans/erap1-length-response.md), including explicit source-gate revision.
+- [x] Implement/test length-dependent state paths and qualify estimator. Initial aggregate checks passed, but late full-path checking failed; terminated session14762/exit143 and preserved11 complete plus1 incomplete fits. Origin-local recovery now passes11 tests, all full-path/response/finite-difference checks and K512 estimator gates before the new launch.
+- [x] Run all24fixed exact/sampled fits. Augmented exact/sampled inner-CV RMSE0.596442/0.596422 vs baseline0.596370; gate fails. Outer outcomes remain unscored.
+- [x] Independently verify, report and push results (59a4618c2222dbbc6d3307f3ad2df7268e37b825); failed numerical attempt and all qualified artifacts are published.
+- [x] Verify both Hitlist releases are merged and deployed. Successful builds40098309564/40099959477; PyPI2.0.22/2.0.23 hashes match tested artifacts. Already published when checked; no duplicate upload or shared-environment changes. Receipt: tasks/modular_model/hap1-release-verification.json.
+
+Review: negative biological comparison independently reconstructs198,744predictions (max1.52e-13). No improvement beyond frozen sequence baseline; local1319.54s/1.979GiB, matched sampled1.52x exact time. Numerical failure/recovery and checker-name fix preserved. Both Hitlist releases verified deployed; new source gap812 filed/read back. Outer evaluation is prospectively specified and not executed. Published on draftPR131 at59a4618; broader APC availability objective unachieved.
+
+## Frozen HAP1 outer evaluation (October24,15:03UTC)
+
+- [x] Register the existing prospective outer-evaluation contract before outcome access.
+- [x] Freeze all seven direct and eight physical full-training predictors and source hashes.
+- [x] Replay training predictions independently and prove target-independent inference.
+- [x] Predict both outer splits from covariates, then evaluate once with no refitting.
+- [x] Independently reconstruct predictions/weights/metrics and publish scoped results.
+
+Review: frozen sequence test RMSE0.573380 versus calibrated-precursor0.631249,9.167%gain; testR²0.24986/Spearman0.46623. All ten conditions improve. ERAP1 physical augmentation0.585337 versus baseline0.585327 fails its gate. Independent scalar/affine closure verifies361,281prediction values and50,995stratum metric records. Five near-constant control-stratum correlations are marked undefined in a qualified derivative; raw scores/predictions preserved, no primary changes. Outer sets now inspected; no retuning. No APC concentration claim. Published as371974e89fca9e9993492e75a734d7a74da55175 on draftPR131; issue130 comment6385912964 posted and exact-body verified. CI40106306307/40106297919 running; no local jobs remain. Unrelated task changes intact.
+
+## APC-derived endolysosomal source qualification (October24,15:21UTC)
+
+Previous goal turn made progress: frozen HAP1 outer evaluation passes for the simple
+sequence model, fails for processing augmentation, and is published with independent
+verification. All inspected outer sets remain closed to tuning.
+
+- [x] Revalidate current branch, goal, issue812 and live CI; register source-audit plan.
+- [x] Inventory official supplementary/deposit assets and exclude synthetic examples.
+- [x] Independently qualify numeric measurement/context/replicate evidence.
+- [x] Record admission decision and update Hitlist812 plus the canonical registry.
+
+Review: five official PDFs/15 asset hashes and61 repository entries independently checked; no original numeric peptide cohort admitted. Eight literal aggregate protein half-life values are valid separate evidence. Figshare404 and pypdf extraction limits retained. No new training or APC concentration claim. Prior-headbf7b3e6 CI40106425787/40106415603 both pass; publication/upstream readback pending.
+
+Published source audit as2bf8ca1 on draftPR131; Hitlist812 comment6386203016 exact-body
+readback passes. The GitHub connector lacked write permission, so the authorized
+comment used the authenticated CLI. No auto-review rejection occurred.
+
+## Independent measured MS1-response source (October24,15:46UTC)
+
+- [x] Freeze plans/measured-ms1-source-qualification.md before original data retrieval.
+- [x] Inspect public article/deposit/index assets, load/form/pool/acquisition metadata.
+- [x] Verify two original processed-source samples and610,670 populated intended-map cells; preserve selection/unknowns.
+- [x] Record scientific admission and concrete shared Hitlist762 requirements.
+
+No training planned until canonical admission; all existing test partitions remain closed.
+
+Review: public original nontryptic MS1 quantities and intended-product lists recovered.
+980,218 literal cells independently verify.2,298/3,649 sample identifications fall
+outside their planned pool;1,243 planned positive quality sequences (1,147 corresponding
+unmodified quality form rows) survive the scoped source checks. Crude synthesis,
+estimated load and conflicting/incomplete SDRF annotations retained. No model fit,
+canonical training recipe or true molarity claim. Shared issue update/publication pending.
+
+Published1546source report and verified artifacts as911aa8717bc2c00529e60450be46e6f65c617a1e.
+Hitlist762 comment6386493718 posted and exact-body readback passes. Scientific source
+scope remains conditional intended-product response, not pure detector calibration.
+All local retrieval/inspection handles are terminal. Prior2bf8ca1 CI40108371279 and
+40108364515 both pass. Next concrete work: canonical source/recipe, then prospective
+pool/sequence-grouped response fitting; exact/sampled processing will share that
+observer. Full APC availability goal stays active and unachieved.
+
+## Canonical measured MS1 observation constraint
+
+- [x] Implement source/recipe in isolated Hitlist feature worktree under issue762.
+- [x] Independently qualify original rows, targets and intended-product dependence in1635.
+- [x] Publish/release canonical Hitlist implementation after required gates.
+- [x] Prospectively select additional pools and test held-out relative MS response.
+
+Review:1,147source-backed targets; no new fitted model or concentration claim.
+
+Next biological constraint: [grouped MS1 observer plan](../experiments/agents/codex/plans/ms1-grouped-observer.md),
+frozen before new pool selection or quantities. Sixteen train/four validation/four
+test pools; simple sequence/length controls and a bounded nonlinear control. No
+new predictive claim until held-out evaluation and independent closure.
+
+## Grouped measured MS1 observer (1702)
+
+- [x] Freeze 24-pool metadata-only selection and split before new quantities.
+- [x] Acquire and canonically admit all selected runs with preserved source/context receipts.
+- [x] Fit prespecified controls and models; seal test predictions before test outcomes.
+- [x] Independently verify held-out predictions/metrics, report failures and close registry.
+
+Specification: experiments/agents/codex/plans/ms1-grouped-observer.md.
+
+Continuation: prior status turn established that acquisition session15103 terminated
+at TUM_HLA_112 (HTTPS403 and official S3 endpoint500). The actual resume executable
+did not include the FTP fallback described in the earlier handoff. Recover the same
+public deposited asset over anonymous FTP, as already qualified for HLA_63; preserve
+all attempts, cohort, byte/disk limits and frozen scientific settings. Complete
+admission, numerical checks, sealed evaluation and independent replay before making
+any predictive claim. Hitlist814 is merged at68dea0b; release-build40115753764 is
+confirmed live, separate from the biological result.
+
+Review: 12,877 measured responses; sequence ridge testRMSE0.449828 versus length
+0.520456 (13.57%gain), validation11.98%gain, testSpearman0.52564/R²0.25329 and
+positive correlations in4/4pools. Primary screen passes. Independent replay verifies
+167,401predictions/182metric records, max1.0814e-13. All fits5.42s/.393GiB; no RL
+in this continuous observer. Pool-fixed C termini prevent direct terminal-effect
+identification; synthesis/handling/load remain confounded. No APC concentration or
+biological-transfer claim. Publication and Hitlist2.0.26 release remain pending.
+
+Published1702 as03f03c5 on draftPR131; Hitlist762 comment6387480811 and Presto130
+comment6387481109 both exactly match their submitted bodies. Unrelated task dirt
+remains346additions/4deletions. Release40115753764 is still running. The next
+admission plan explicitly requires within-condition compositions: a static MS
+response cancels in same-peptide fold changes. Tables7/8 are only a candidate;
+TMT/MS1 chemistry, prior-component overlap and comparable cross-peptide intensity
+must be checked before a new biological fit.
+
+Release closure: Hitlist2.0.26 published after clean-main build40115753764 passed
+3,457unit tests (one missing-Ensembl-data skip) and96integration tests. Published
+wheel/sdist hashes match tested artifacts; merge68dea0b and runtimeb9b1047 have
+identical source trees. The shared editable remains the user's Hitlist1.82.2
+checkout, with pipcheck passing. See tasks/modular_model/ms1-release-verification.json.
+
+## Prospective APC composition admission (1755)
+
+Previous goal turn made progress: measured MS1 observer passed its frozen held-out
+screen, artifacts/issues were published, and Hitlist2.0.26 was released and verified.
+
+- [x] Register source/overlap/support gates before new counts or predictive scores.
+- [x] Inspect primary TMT context and canonical source relationships.
+- [x] Inventory eligibility, all-source dependency exclusions and prospective splits.
+- [x] Independently verify admission, record limitations and update shared source owner.
+
+Specification: experiments/agents/codex/plans/apc-composition-source-admission.md.
+No new fit before this gate and a separate numerical comparison plan pass.
+
+- [x] Diagnose admission verifier failure: integral numeric channel-header rendering only; preserve failed source/log and freeze the correction plan.
+- [x] Close independent admission verification and report support failure without a new biological fit.
+
+Review: independent source-cell/graph reconstruction passes; 45/5/7 supported parents fail 100/25/25 minima. No new biological fit or predictive improvement. Report/registry closed; shared source-owner update pending.
+
+## Independent HLA-DO quantitative source qualification (1818)
+
+Previous goal turn made progress:1755 independently verified and published a failed prospective support screen, preventing an unsupported transfer fit. Continue toward independent biological prediction with the architecture's original class-II DO source; do not redefine the goal as source collection.
+
+- [x] Freeze source identity, measurement distinctions, public access/resource bounds and no-fit scope before new quantities.
+- [x] Retrieve available primary/repository/processed source assets with provenance; preserve inaccessible supplements.
+- [x] Inventory repository and two processed schemas; original quantitative tables remain inaccessible through tested routes.
+- [x] Independently verify source evidence and file exact-body-verified Hitlist816; publish the report bundle.
+- [ ] If quantitative support is real, implement canonical source/recipe and specify a fresh matched differentiable/sampled biological comparison.
+
+Specification: experiments/agents/codex/plans/do-source-qualification.md.
+
+1818 corrected review: value-level parsing recovered4,256positive intensities in spectrum titles. The initial field-name-only absence claim is preserved as a failed audit. Units, integration and peptide aggregation remain unresolved; Hitlist816 now records the correction and exact body verification. No new biological model claimed.
+
+Publication receipts:1755Hitlist762comment6387774608 and1818Hitlist816 both exactly match submitted bodies after final-newline normalization.
+
+## Independent lymph/DC source qualification (1829)
+
+- [x] Freeze source systems, quantitative distinctions, limits and no-fit scope.
+- [x] Retrieve primary source, original processed supplements and repository metadata;19quantitative/protocol/reference assets recovered.
+- [ ] Establish usable native/precursor/presentation quantities and actual material pairing.
+- [x] Independently verify original cells and full repository inventories; record unresolved sample/preparation claims in Hitlist817 and shared typed assertions.
+- [ ] Admit canonical source/recipe before a fresh differentiable/sampled comparison.
+
+Specification: experiments/agents/codex/plans/lymph-source-qualification.md.
+
+### Biological-prediction status and current source verification
+
+- [x] Recheck actual held-out HAP1, native-cell, macrophage, IC50 and measured-MS results against archived reports.
+- [x] Recover the interrupted source-verifier result; preserve the explicit time-of-day serialization failure.
+- [x] Reconcile the observed Excel format20 representation without changing raw quantities or source eligibility, and rerun the original checks. All14,567cells and source hashes pass; source admission remains pending.
+- [x] Report biological gains, failures and generalization limits separately from source acquisition; strongest HAP1 test gain9.167%, no demonstrated biological RL advantage or validated APC concentration model.
+
+## Canonical lymph/DC source admission (1903)
+
+- [x] Freeze exact source/API context and local resource contract before materialization.
+- [x] Implement shared Hitlist source and focused identity/missingness/tamper tests.
+- [x] Materialize actual source, independently reconcile every quantity/reference and repository inventory;32995cells/3430references/23455identification alternatives pass.
+- [x] Close source report/registry, publish shared issue/PR and required verification; source818merged, release40126246020pending.
+- [x] Define and execute the1938canonical composition recipe and matched exact/REINFORCE biological comparison.
+
+Spec: experiments/agents/codex/plans/lymph-canonical-admission.md. No source-only result counts as predictive improvement.
+
+1903review: shared source PR818published at8657c9a, local format/lint/3466tests pass. Exact-source counts and identity mappings reconcile; DC mass/length/coordinate forensic checks support retaining full literal sequences. Endpoint-specific aggregation/confidence/parent-dependence recipe, independent biological fits, CI merge and PyPI release remain pending. No new biological prediction claim.
+
+## Independent lymph/DC composition comparison
+
+Previous goal turn was a status-only response; no new scientific progress.
+Plan: experiments/agents/codex/plans/lymph-composition-comparison.md.
+
+- [x] Register canonical feature/chemistry/origin/dependence recipe in Hitlist819.
+- [x] Admit actual cohorts and independently verify original area targets; human supported, DCvalidation supportfails.
+- [x] Fit21controls/models, including matched discreteREINFORCE64/exact3seeds.
+- [x] Seal/evaluate held-outs and independently replay14,028predictions; report/registrycomplete.
+- [x] Publish Presto artifacts to draftPR131 as8033462; CSV-only publication correction follows.
+- [x] Finish source/recipe CI, merge and PyPI releases; 2.0.27 and 2.0.28 published bytes match successful tested artifacts.
+
+No new APC-concentration claim; native lymph and MHC-selected DC remain distinct.
+
+1938review: primaryprocessing+MS testRMSE.48463vssequence.46704/calibratedMS.47913;
+allpredictivegatesfail. Exact/RLtestreverseKL.70626/.71020vsuniform.54365;noRLadvantage.
+Human34/14/12components; DCdatabase36/1/6/library32/3/11failvalidationminima.
+All39allocatedsequencecoordinatesupdate,predictionsvary;unchangedheldoutsnowclosed.
+Source818merged9133736d,release40126246020live;recipe819headc61ad506CIpending.
+Independentverifierweightbindingfailurepreservedandcorrectedwithoutmodelchanges.
+Fullavailabilitygoalremainsactive;nextworkmustaddressnewbiologicalevidenceortraining-only
+model/observationassumptions,notrepeatthisheldoutasa tuningtarget.
+
+## HAP1 sequence and parent-context diagnostic (2018)
+
+Previous goal turn was a status-only response: no scientific progress.
+Plan: experiments/agents/codex/plans/hap1-context-ablation.md.
+
+- [x] Freeze training-only question, nine arms, support/verification and decision gates.
+- [x] Qualify all-parent features and reproduce original full/fold reference predictions.
+- [x] Fit the fixed family and independently verify predictions/metrics; primary gate fails.
+- [x] Close report/registry, publish artifacts as 4b135ad, and file selection-covariate follow-up on Hitlist726 (comment6389204773).
+- [x] Reconcile publications: source 2.0.27 PyPI bytes match tested artifacts; recipe 819 merged, release 40129209653 remains live.
+
+2018 review: nine fixed arms / 54 fits finish in 60.62 s. Context CV RMSE 0.573501 versus 0.574832 sequence, only 0.232% improvement / three of five folds; gate fails. Independent SVD reconstructs 1,570,680 predictions within 1.57e-13. Tiny raw Spearman discrepancy is explained by exact-input ties and preserved explicitly; no biological outcome or gate changed. Keep existing reference, stop this context sweep, request original selection-score provenance before the next mechanistic hypothesis.
+
+## HAP1 frozen MHC-score control (2041)
+
+- [x] Freeze predictor semantics, lineage limits, six-arm design and gates.
+- [x] Qualify predictor provenance/exposure and all18,951training-peptide/allele scores; full lineage unresolved.
+- [x] Fit36fixed models and independently verify1,047,120predictions; primary development gate passes2.120%.
+- [x] Close report/registry and publish qualified artifacts; continue full availability goal.
+
+2041 review: sequence+frozen MHC scores CV RMSE0.562644 versus0.574832; shuffled0.575043, allfive folds improve. Both bundled-training exposure strata improve but no sample/teacher-disjoint claim. Static affinity cancels in same-peptide ratios; fitted condition associations are not causal affinity changes. All old outer tests remain closed. Next mechanistic comparisons must beat this frozen development control and require independent biology before promotion.
+
+2041 closure: full logs inspected and byte-equivalent gzip copies retained; artifact manifest, executed snapshots, independent numerical checks and plot review pass. Default Ruff/100-column formatting pass; broader style findings are explicitly recorded without rewriting frozen code. Hitlist recipe release 2.0.28 succeeded and both published distributions are byte-identical to the tested artifact (release40129209653).
+
+## Shared TAP-route response comparison (2106)
+
+Previous goal turn made progress:2041 published59a8db6 and recipe2.0.28 release verified.
+Plan: experiments/agents/codex/plans/hap1-tap-route-response.md.
+
+- [x] Freeze biological question, two-route interpretation, matched controls and gates.
+- [x] Qualify source subgroup/features and exact/sampled mathematical identities; 9,168 observations, all source/fold/gradient gates pass.
+- [x] Fit fixed30-model family locally; all outer sets remain closed.
+- [x] Independently verify predictions/metrics, close report/registry and publish.
+
+The full APC availability/concentration goal remains active and unachieved.
+
+2106 review: exact shared route+scores CV RMSE0.711942 vs0.720640original but0.707492expanded; primary gate fails. Sampled0.712170,1.37x runtime, no accuracy benefit. All109coordinates receive gradients, exact gradient5.71e-7. Independent replay checks91,680final predictions/30fits and825,120history values. Post-fit production-boundary check coverage correction is preserved explicitly; all checks pass without refitting. Ratio invariance means baseline pool quantities still need separate supervision.

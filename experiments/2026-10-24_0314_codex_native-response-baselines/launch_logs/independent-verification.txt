@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0314_codex_native-response-baselines/analysis/verify.py", line 371, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0314_codex_native-response-baselines/analysis/verify.py", line 365, in main
+    assert receipt["seconds"] < 180 and receipt["peak_rss_bytes"] < 4 * 1024**3
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

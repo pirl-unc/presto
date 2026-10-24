@@ -1,0 +1,1 @@
+Attempt 1 stopped before package ingestion: datacache returns string paths; the launcher compared Path objects directly to strings. Normalize returned paths in the assertion. No source or model contract changed; no output package was created.

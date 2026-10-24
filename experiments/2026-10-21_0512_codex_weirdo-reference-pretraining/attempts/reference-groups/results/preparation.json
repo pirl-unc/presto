@@ -1,0 +1,205 @@
+{
+  "bucket_count": 20,
+  "categories": [
+    "archaea",
+    "bacteria",
+    "fungi",
+    "human",
+    "invertebrates",
+    "mammals",
+    "plants",
+    "rodents",
+    "vertebrates",
+    "viruses"
+  ],
+  "components": 4914,
+  "components_by_split": {
+    "test": 723,
+    "train": 3486,
+    "validation": 705
+  },
+  "discrepancies": [],
+  "elapsed_seconds": 8.96346691600047,
+  "fold_policy": [
+    70,
+    15,
+    15
+  ],
+  "full_audit": {
+    "path": "/private/tmp/presto-modular-model/artifacts/2026-10-21_0512_codex_weirdo-reference-pretraining/attempts/reference-groups/reference-audit.json.gz",
+    "sha256": "0ad31cb3848c5848930ca68a45f1ee2137adc77cc9c8a39906fedd93f7a555e9"
+  },
+  "independence": "source mnemonic-prefix groups; homology independence unverified",
+  "k": 8,
+  "label_counts": {
+    "test": {
+      "archaea": {
+        "absent": 967,
+        "present": 33
+      },
+      "bacteria": {
+        "absent": 610,
+        "present": 390
+      },
+      "fungi": {
+        "absent": 882,
+        "present": 118
+      },
+      "human": {
+        "absent": 896,
+        "present": 104
+      },
+      "invertebrates": {
+        "absent": 893,
+        "present": 107
+      },
+      "mammals": {
+        "absent": 950,
+        "present": 50
+      },
+      "plants": {
+        "absent": 912,
+        "present": 88
+      },
+      "rodents": {
+        "absent": 892,
+        "present": 108
+      },
+      "vertebrates": {
+        "absent": 958,
+        "present": 42
+      },
+      "viruses": {
+        "absent": 946,
+        "present": 54
+      }
+    },
+    "train": {
+      "archaea": {
+        "absent": 4791,
+        "present": 209
+      },
+      "bacteria": {
+        "absent": 3008,
+        "present": 1992
+      },
+      "fungi": {
+        "absent": 4336,
+        "present": 664
+      },
+      "human": {
+        "absent": 4541,
+        "present": 459
+      },
+      "invertebrates": {
+        "absent": 4597,
+        "present": 403
+      },
+      "mammals": {
+        "absent": 4784,
+        "present": 216
+      },
+      "plants": {
+        "absent": 4465,
+        "present": 535
+      },
+      "rodents": {
+        "absent": 4477,
+        "present": 523
+      },
+      "vertebrates": {
+        "absent": 4799,
+        "present": 201
+      },
+      "viruses": {
+        "absent": 4769,
+        "present": 231
+      }
+    },
+    "validation": {
+      "archaea": {
+        "absent": 960,
+        "present": 40
+      },
+      "bacteria": {
+        "absent": 574,
+        "present": 426
+      },
+      "fungi": {
+        "absent": 889,
+        "present": 111
+      },
+      "human": {
+        "absent": 907,
+        "present": 93
+      },
+      "invertebrates": {
+        "absent": 913,
+        "present": 87
+      },
+      "mammals": {
+        "absent": 962,
+        "present": 38
+      },
+      "plants": {
+        "absent": 896,
+        "present": 104
+      },
+      "rodents": {
+        "absent": 913,
+        "present": 87
+      },
+      "vertebrates": {
+        "absent": 956,
+        "present": 44
+      },
+      "viruses": {
+        "absent": 968,
+        "present": 32
+      }
+    }
+  },
+  "manifest": {
+    "path": "/private/tmp/presto-modular-model/data/modular_cohorts/2026-10-21-weirdo-reference/manifest.json",
+    "sha256": "ca008ea769c6dc5332cb14f4ef1d7bd125c79064223692596608588b8e4cff8f"
+  },
+  "missing_buckets_reconstructed": 7000,
+  "normalized_observations": {
+    "counts": {
+      "identity": 7000
+    },
+    "path": "/private/tmp/presto-modular-model/data/modular_cohorts/2026-10-21-weirdo-reference/observations.jsonl",
+    "sha256": "8cbd609b018cb7b8c7816de7289be368c6ac775ee92fe92932590018ad67c38e"
+  },
+  "original_table_verification": {
+    "found_fraction": 0.9987766666666666,
+    "label_match_fraction_of_found": 0.9983746783565228,
+    "rows": 300000.0
+  },
+  "original_table_verification_scope": "comparison against another k-mer table; not this selected-row reference audit",
+  "peak_rss_bytes": 561709056,
+  "pins": {
+    "archive": "99b21eb93196cf2b0a0b1ae4bbb63066224a6864e48dd3a8d47fe67bd34fcf79",
+    "metadata": "571356e92fd1da71cf173be9f5e59c6aa128467f347de37aa30815d78923fc1f",
+    "reference": "e9c44a34fcd3f8fb1f4151d489985dd5578a947eda3e62213d5109ace36e115d"
+  },
+  "reference_path": "/Users/iskander/code/weirdo/data/swissprot-sequences.csv",
+  "reference_proteins": 569516,
+  "reference_sha256": "e9c44a34fcd3f8fb1f4151d489985dd5578a947eda3e62213d5109ace36e115d",
+  "salt": "category-predictor-v1",
+  "selected": 7000,
+  "selection": {
+    "limits": {
+      "test": 1000,
+      "train": 5000,
+      "validation": 1000
+    },
+    "seeds": {
+      "test": 44,
+      "train": 42,
+      "validation": 43
+    }
+  },
+  "status": "passed",
+  "supplied_bucket_comparisons": 0
+}

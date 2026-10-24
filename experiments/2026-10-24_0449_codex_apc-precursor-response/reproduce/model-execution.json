@@ -1,0 +1,78 @@
+{
+  "frozen_at": "2026-10-24T05:09:09.874753-04:00",
+  "presto_commit": "f7b76a30fbbffce6f2d36752ee16d85b6b3fa1a6",
+  "dirty_tracked": " M tasks/lessons.md\n M tasks/todo.md\n",
+  "new_experiment_code_frozen": true,
+  "python": "3.12.6",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "torch": "2.14.1",
+  "device": "cpu",
+  "threads": 1,
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/hitlist-native-fix:/private/tmp/presto-native-import"
+  },
+  "commands": [
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/reproduce/model-launch.sh",
+      "qualify"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/reproduce/model-launch.sh",
+      "baselines"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/reproduce/model-launch.sh",
+      "train",
+      "uniform_exact"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/reproduce/model-launch.sh",
+      "train",
+      "sequence_exact"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/reproduce/model-launch.sh",
+      "train",
+      "sequence_hybrid"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/reproduce/model-launch.sh",
+      "train",
+      "sequence_no_precursor"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/reproduce/model-launch.sh",
+      "train",
+      "prior_exact"
+    ],
+    [
+      "sh",
+      "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/reproduce/model-launch.sh",
+      "evaluate"
+    ]
+  ],
+  "source_sha256": {
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/code/core.py": "c00be1dadd5b41e2f6ec89ac7af41684db1d916b9d9a63f29a62a1143774800a",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/code/launch.py": "9461b0d04d9921486523571bc62855aa63c69a2fb602873376916882ad59a1d4",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/reproduce/model-config.json": "53e9a49e442fe9ce7455e484b6c26d4a6d68d8fe88836af97a849857da887164",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/reproduce/model-launch.sh": "7405eb0b32bdcdd9aaaa491be99d4224e4e388c0c7fcd514f1c192fd090fce82",
+    "/private/tmp/presto-modular-model/models/steady_processing.py": "1c6dc0038eea7cd685a0a058f871193993ce3258c580a0b3083d69b836e56bc2",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0314_codex_native-response-baselines/analysis/verify.py": "d16e1c5df0d0136dc5861a8085b26dc9451e4f3fb2b3853fd0bc998af849504e",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/results/feature-transforms.npz": "285cfeeca325cf491b5eb20592591ba9f63a3a9812775d85cd14cb22e9eb3289",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0410_codex_native-processing/results/arms/sequence_exact/fit.npz": "5ca4e2b0d7b04bb9ccff872a7e2f7b7a7f2565aa7ee20ec57354f644ba5baa96"
+  },
+  "held_out_evaluated": false,
+  "pre_execution_correction": "Ruff B023: explicitly bind baseline offset in immediate optimization closure; no qualification or fit had run. Original source/receipt retained."
+}

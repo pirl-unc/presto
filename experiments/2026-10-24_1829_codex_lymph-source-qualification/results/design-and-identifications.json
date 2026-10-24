@@ -1,0 +1,44 @@
+{
+  "manifest": "experiments/2026-10-24_1829_codex_lymph-source-qualification/reproduce/design-and-identifications.json",
+  "assets": [
+    {
+      "name": "PXD051024-peptides.mzid.gz",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2024/08/PXD051024/peptides.mzid.gz",
+      "expected_bytes": 347247,
+      "started_utc": "2026-10-24T18:53:01.420549+00:00",
+      "status_code": 200,
+      "final_url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2024/08/PXD051024/peptides.mzid.gz",
+      "headers": {
+        "Last-Modified": "Sat, 10 Aug 2024 22:57:55 GMT",
+        "ETag": "\"54c6f-61f5c30b6c2c0\"",
+        "Content-Length": "347247",
+        "Content-Type": "application/x-gzip"
+      },
+      "status": "retrieved",
+      "bytes": 347247,
+      "sha256": "dbec4791a8ad78c8a718eec41c2c9e7ffbe430d6398934ae05cb0195a2417e5e",
+      "path": "/private/tmp/presto-modular-model/data/lymph_source_qualification/2026-10-24_1829_v1/PXD051024-peptides.mzid.gz",
+      "seconds": 1.4034785410040058
+    },
+    {
+      "name": "PXD051024_community_annotated.sdrf.tsv",
+      "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2024/08/PXD051024/PXD051024_community_annotated.sdrf.tsv",
+      "expected_bytes": 1087,
+      "started_utc": "2026-10-24T18:53:02.825141+00:00",
+      "status_code": 200,
+      "final_url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2024/08/PXD051024/PXD051024_community_annotated.sdrf.tsv",
+      "headers": {
+        "Last-Modified": "Mon, 28 Sep 2026 15:43:05 GMT",
+        "ETag": "\"43f-65c8cec021440\"",
+        "Content-Length": "1087",
+        "Content-Type": "text/tab-separated-values"
+      },
+      "status": "retrieved",
+      "bytes": 1087,
+      "sha256": "327d1012ee5a3475dbefb95fa074ce4e71ebd6569b75639cb0bf026756f027ac",
+      "path": "/private/tmp/presto-modular-model/data/lymph_source_qualification/2026-10-24_1829_v1/PXD051024_community_annotated.sdrf.tsv",
+      "seconds": 0.38937145803356543
+    }
+  ],
+  "total_stored_bytes": 81364461
+}

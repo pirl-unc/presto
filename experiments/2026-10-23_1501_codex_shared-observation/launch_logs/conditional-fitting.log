@@ -1,0 +1,21 @@
+conditional_sequence_response {'step': 100, 'preupdate_loss': 1.3179799055482133, 'preupdate_mse': 1.2962986688780929, 'seconds': 23.59677337500034}
+conditional_sequence_response {'step': 200, 'preupdate_loss': 1.3182220367566573, 'preupdate_mse': 1.296731677351607, 'seconds': 46.77308545802953}
+conditional_sequence_response {'step': 300, 'preupdate_loss': 1.31813760971391, 'preupdate_mse': 1.2970592241588883, 'seconds': 70.07827241701307}
+conditional_sequence_response {'step': 400, 'preupdate_loss': 1.3181323216739707, 'preupdate_mse': 1.2962958513287959, 'seconds': 92.00691562501015}
+conditional_sequence_response {'step': 500, 'preupdate_loss': 1.318355045297529, 'preupdate_mse': 1.2960452402605542, 'seconds': 113.18724516703514}
+conditional_sequence_response {'step': 600, 'preupdate_loss': 1.3181034726207397, 'preupdate_mse': 1.296140140830425, 'seconds': 134.44268037501024}
+conditional_sequence_response {'step': 700, 'preupdate_loss': 1.31816742397915, 'preupdate_mse': 1.2961424886029937, 'seconds': 155.86529929202516}
+conditional_sequence_response {'step': 800, 'preupdate_loss': 1.3182685620797974, 'preupdate_mse': 1.2964066535756327, 'seconds': 177.64332683302928}
+conditional_sequence_response {'step': 900, 'preupdate_loss': 1.318693224310316, 'preupdate_mse': 1.296739405518659, 'seconds': 199.09841712500202}
+conditional_sequence_response {'step': 1000, 'preupdate_loss': 1.3181989085284245, 'preupdate_mse': 1.2959775010445251, 'seconds': 220.9217252919916}
+conditional_sequence_response {'step': 1100, 'preupdate_loss': 1.3189025152656915, 'preupdate_mse': 1.2973165608621509, 'seconds': 242.3534244170296}
+conditional_sequence_response {'step': 1200, 'preupdate_loss': 1.3188567547949523, 'preupdate_mse': 1.2973297480769665, 'seconds': 264.15946158301085}
+conditional_sequence_response {'step': 1300, 'preupdate_loss': 1.3180967971858304, 'preupdate_mse': 1.2963449208976168, 'seconds': 285.98621658299817}
+conditional_sequence_response {'step': 1400, 'preupdate_loss': 1.3181641326233775, 'preupdate_mse': 1.2962755879245003, 'seconds': 307.6726343749906}
+conditional_sequence_response {'step': 1500, 'preupdate_loss': 1.3182782694874726, 'preupdate_mse': 1.2961590492946509, 'seconds': 329.1723190420307}
+conditional_sequence_response {'step': 1600, 'preupdate_loss': 1.3188628978855452, 'preupdate_mse': 1.2971340288275104, 'seconds': 350.7964841250214}
+conditional_sequence_response {'step': 1700, 'preupdate_loss': 1.318124029568086, 'preupdate_mse': 1.296027858407, 'seconds': 372.33122458303114}
+conditional_sequence_response {'step': 1800, 'preupdate_loss': 1.3186181427093084, 'preupdate_mse': 1.2969069193643652, 'seconds': 393.9016825419967}
+conditional_sequence_response {'step': 1900, 'preupdate_loss': 1.3181491100702625, 'preupdate_mse': 1.2963074111878397, 'seconds': 415.52138900000136}
+conditional_sequence_response {'step': 2000, 'preupdate_loss': 1.31871761023621, 'preupdate_mse': 1.297253901929012, 'seconds': 437.4320790829952}
+{"metrics": {"train": {"n_observations": 90630, "shape_mse": 1.297461172059689, "shape_rmse": 1.1390615312877916, "shape_pearson": 0.3220107853079658, "shape_spearman": 0.31088353901183924, "prediction_sd": 0.5905545966389874, "target_sd": 1.2595713416152294, "ratio_rmse": 0.9570485744079391, "ratio_pearson": 0.25734243383187005, "ratio_spearman": 0.19899819768250887, "minimum_log10_amount": -5.69547302260039, "amount_below_1e_20_count": 0}, "val": {"n_observations": 14822, "shape_mse": 1.5946359594272932, "shape_rmse": 1.2627889607639486, "shape_pearson": 0.25724479436621617, "shape_spearman": 0.2463524849063954, "prediction_sd": 0.5934187426465359, "target_sd": 1.2523925434074963, "ratio_rmse": 1.1564371958125195, "ratio_pearson": 0.33449253893711267, "ratio_spearman": 0.30416377594838134, "minimum_log10_amount": -5.219323012103483, "amount_below_1e_20_count": 0}}, "runtime": {"seconds": 444.33899370901054, "peak_rss_bytes": 1136623616, "complete": true, "sampled_fit_performed": true, "variant": "conditional_sequence_response", "scope": "Conditional-importance hybrid; exact forward values, response gradients and conditional scores retained"}}

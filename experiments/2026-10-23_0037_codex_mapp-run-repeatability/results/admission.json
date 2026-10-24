@@ -1,0 +1,44 @@
+{
+  "output": "/private/tmp/presto-modular-model/data/availability_recipes/2026-10-23-mapp-complete-run-composition-v1",
+  "peak_process_rss_bytes": 2282209280,
+  "recipe_manifest_sha256": "23bcfeb4067fa4f47f0b1db702d6ae79f97a9c32a1366ff3de322c99f210b9bf",
+  "seconds": 27.175818582996726,
+  "summary": {
+    "base_recipe_id": "mapp_captured_composition_min2_v1",
+    "exclusion_reasons": {
+      "ambiguous_source_group": 1100,
+      "fewer_than_two_complete_peptides_per_parent": 22,
+      "fewer_than_two_eligible_peptides_per_parent": 105,
+      "incomplete_positive_filtered_runs": 225,
+      "insufficient_positive_runs:TNF+IFN": 4249,
+      "insufficient_positive_runs:UT": 4422,
+      "missing_direct_msms:TNF+IFN": 4473,
+      "missing_direct_msms:UT": 5549,
+      "missing_nonimputed_quantity:TNF+IFN": 5362,
+      "missing_nonimputed_quantity:UT": 5690,
+      "multiple_parent_sequences": 5354,
+      "peptide_pep_above_threshold": 3826,
+      "reference_unmapped": 1883,
+      "source_contaminant": 1562,
+      "source_leading_coordinate_or_flank_unconfirmed": 4355,
+      "source_reverse": 396
+    },
+    "largest_source_component_n_peptides": 1410,
+    "n_admitted_peptides": 369,
+    "n_all_source_components": 1938,
+    "n_base_admitted_peptides": 616,
+    "n_complete_positive_peptides_before_parent_gate": 391,
+    "n_contributor_rows": 738,
+    "n_examples": 142,
+    "n_nonpositive_or_missing_runs": 284,
+    "n_parent_sequences": 71,
+    "n_parents_by_split": {
+      "test": 9,
+      "train": 55,
+      "validation": 7
+    },
+    "n_run_observations": 3696,
+    "n_source_peptides": 10673,
+    "n_structurally_supported_peptides": 2272
+  }
+}

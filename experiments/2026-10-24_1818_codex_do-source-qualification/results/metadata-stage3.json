@@ -1,0 +1,39 @@
+{
+  "manifest": "experiments/2026-10-24_1818_codex_do-source-qualification/reproduce/metadata-stage3.json",
+  "assets": [
+    {
+      "name": "pmc-cloud-readme.txt",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/README.txt",
+      "started_utc": "2026-10-24T18:19:55.311889+00:00",
+      "status_code": 200,
+      "final_url": "https://pmc-oa-opendata.s3.amazonaws.com/README.txt",
+      "headers": {
+        "Last-Modified": "Tue, 01 Sep 2026 11:05:21 GMT",
+        "ETag": "\"21882f479527d57cebddbfcceadf305d\"",
+        "Content-Type": "text/plain",
+        "Content-Length": "14524"
+      },
+      "status": "retrieved",
+      "bytes": 14524,
+      "sha256": "257a001b400485176702ed49ca7607d73cd83c581bffb6dd3c9be127a2e42634",
+      "path": "/private/tmp/presto-modular-model/data/do_source_qualification/2026-10-24_1818_v1/pmc-cloud-readme.txt",
+      "seconds": 0.28475262504071
+    },
+    {
+      "name": "pmc-cloud-list.xml",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC6398211.&max-keys=1000",
+      "started_utc": "2026-10-24T18:19:55.597303+00:00",
+      "status_code": 200,
+      "final_url": "https://pmc-oa-opendata.s3.amazonaws.com/?list-type=2&prefix=PMC6398211.&max-keys=1000",
+      "headers": {
+        "Content-Type": "application/xml"
+      },
+      "status": "retrieved",
+      "bytes": 257,
+      "sha256": "76da0a9015052dc9da95e1aa3d11a815ed6ae2100279e4e116c27cf9b9e6c4c7",
+      "path": "/private/tmp/presto-modular-model/data/do_source_qualification/2026-10-24_1818_v1/pmc-cloud-list.xml",
+      "seconds": 0.18167845899006352
+    }
+  ],
+  "total_stored_bytes": 251802
+}

@@ -1,4 +1,7 @@
-"""Load Presto training records from the ``hitlist`` curated indexes.
+"""Load legacy v4-index and frozen-bundle records for Presto audits.
+
+Hitlist 2.0 evidence-package materialization uses EvidenceStore and a distinct
+recipe contract. This adapter preserves existing v4 table and checkpoint semantics.
 
 ``hitlist`` is the upstream curation layer for MHC ligand mass spectrometry and
 in-vitro binding evidence (IEDB + CEDAR + supplementary deposits, harmonized
@@ -10,7 +13,7 @@ against curated per-sample metadata). It is preferred over the legacy
 The merged TSV has no flank columns, so every Presto model trained through that
 path saw a single ``<MISSING>`` token in the ``nflank`` / ``cflank`` segments
 (``data/collate.py`` only tokenizes flanks when at least one sample has them).
-``hitlist.generate_training_table(map_source_proteins=True)`` attaches
+``hitlist.export.generate_training_table(map_source_proteins=True)`` attaches
 ``n_flank`` / ``c_flank`` from ``peptide_mappings.parquet``, which is ~98%
 populated. Junction context is the substrate for the antigen-processing
 pathway, so this is a prerequisite for any excision modeling.
@@ -438,7 +441,7 @@ def _lineage_fields(row) -> Dict[str, Any]:
 
 
 def training_columns(evidence: str, *, include_flanks: bool) -> List[str]:
-    """Columns to request from ``hitlist.generate_training_table``.
+    """Columns to request from ``hitlist.export.generate_training_table``.
 
     Parameters
     ----------
@@ -1068,12 +1071,14 @@ def load_records_from_hitlist(
     else:
         if bundle_sha256 is not None:
             raise ValueError("bundle_sha256 requires bundle_dir")
-        binding_frame = hitlist.generate_training_table(
+        from hitlist.export import generate_training_table
+
+        binding_frame = generate_training_table(
             include_evidence="binding",
             columns=training_columns("binding", include_flanks=include_flanks),
             **shared_filters,
         )
-        ms_frame = hitlist.generate_training_table(
+        ms_frame = generate_training_table(
             include_evidence="ms",
             columns=training_columns("ms", include_flanks=include_flanks),
             **shared_filters,

@@ -3,6 +3,29 @@
 
 def add_training_source_arguments(parser):
     parser.add_argument(
+        "--model-kind",
+        choices=("legacy", "modular"),
+        default="legacy",
+        help="Select the existing model or the versioned small modular model",
+    )
+    parser.add_argument(
+        "--observations-manifest",
+        help="Hash-pinned normalized source/model/training manifest for modular mode",
+    )
+    parser.add_argument(
+        "--modular-preflight",
+        action="store_true",
+        help="Validate modular source and label support without fitting",
+    )
+    parser.add_argument(
+        "--modular-resume",
+        action="store_true",
+        help=(
+            "Resume the same frozen modular experiment at its last durable update; "
+            "requires --run-dir"
+        ),
+    )
+    parser.add_argument(
         "--data-source",
         dest="data_source",
         type=str,

@@ -1,0 +1,39 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-24_2018_codex_hap1-context-ablation/code/launch.py"
+  ],
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1"
+  },
+  "git_commit": "d96f958c4ed8990cd0b529c278f211bef92ceb41",
+  "git_dirty": " M experiments/agents/codex/todo.md\n M tasks/todo.md\n",
+  "numpy": "2.5.4",
+  "outer_validation_test": "not_loaded_or_scored",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "sources": {
+    "data/hap1_response_recipes/2026-10-24_0730_v1/derived/parents.parquet": "6c3b04226b0d1de551bc05e70d3482ef49b01d6a04767af74328c127878b84f9",
+    "data/hap1_response_recipes/2026-10-24_0730_v1/derived/responses.parquet": "c929bad7494577b40f9b39797e0db560374677a44032e244be27332917690a2e",
+    "data/hap1_response_recipes/2026-10-24_0730_v1/manifest.json": "a1eec392c06485966e131663f85e7599dcd9e5ff621841eb0d44eeaafe779309",
+    "data/hap1_response_recipes/2026-10-24_0730_v1/source/occurrences.parquet": "521dc8030d9263503398ed168cd9cd7b3f818525178eb309779b6654d6107c51",
+    "experiments/2026-10-24_2018_codex_hap1-context-ablation/code/core.py": "b3e5e21b8f56f2cb649eb4fd64f5d73da81ce02daf805413b8d775aa7f78ba89",
+    "experiments/2026-10-24_2018_codex_hap1-context-ablation/code/independent_features.py": "81d5269f81fdf26a61fd62bfee2867dd62ca51e6a6ad7bba35c8ace044618e5a",
+    "experiments/2026-10-24_2018_codex_hap1-context-ablation/code/launch.py": "ed63b4a62dd2c879118e2f6a5ae1cde2403b0838e8025a798ca3ab823166bd79",
+    "experiments/2026-10-24_2018_codex_hap1-context-ablation/reproduce/plan.md": "2b1edfebde4bc01271a9c97d04dc1cc0a04dd9f6832bf7e7921d01ee4cff96e8"
+  },
+  "variants": [
+    "calibrated_precursor",
+    "sequence",
+    "length",
+    "position_p2_c",
+    "position_p1_p2_c",
+    "sequence_geometry",
+    "sequence_flanks",
+    "sequence_context",
+    "sequence_shuffled_context"
+  ]
+}

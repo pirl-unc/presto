@@ -1,0 +1,70 @@
+{
+  "registered_at": "2026-10-23T18:46:49.616747-04:00",
+  "agent_model": "Codex / GPT-6",
+  "git_commit": "2903e113c6486f045a834fd5ca62c504f6576ae0",
+  "dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_1846_codex_fragment-rational-solver/\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "plan_sha256": "ab248fd8fd63636083b482414c51b27cfa03d0fab731fdfe00f92795ade1d94b",
+  "prior_family": "experiments/2026-10-23_1816_codex_fragment-state-qualification",
+  "prior_inputs_sha256": "74f615a77ea376439e68141ec41c17cf1d382aa96dbca456c9fad3f8d1fe601c",
+  "scope": "Full-support numerical solver qualification; no biological targets or fitting",
+  "sizes": [
+    2,
+    6,
+    12
+  ],
+  "eta": [
+    -1.0,
+    0.0,
+    1.0
+  ],
+  "rate_scales": [
+    0.01,
+    1.0,
+    100.0
+  ],
+  "times_hours": [
+    0.0,
+    0.5,
+    2.0,
+    8.0,
+    24.0
+  ],
+  "orders": [
+    16,
+    48
+  ],
+  "shifted_solve_shifts": [
+    [
+      1,
+      0
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      -5,
+      16
+    ]
+  ],
+  "fixture_rates": "(0.02 + 0.13*(1+sin(arange(L-1)+0.3))/2) * scale",
+  "gates": {
+    "resolvent": 1e-10,
+    "resolvent_gradient": 1e-09,
+    "exponential": 1e-10,
+    "mass": 1e-08,
+    "exponential_gradient": 1e-08,
+    "negative_counts_for_log_admission": 0
+  },
+  "runtime_limits": {
+    "seconds": 60,
+    "rss_bytes": 4294967296
+  },
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python"
+}

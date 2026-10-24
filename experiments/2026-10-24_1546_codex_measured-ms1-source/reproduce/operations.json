@@ -1,0 +1,20 @@
+{
+  "commands": [
+    "code/launch.py --initialize",
+    "per-asset actual argv in retrievals.json",
+    "analysis/inspect_sources.py (failed original, preserved; then qualified index version)",
+    "code/retrieve_supplement_bundle.py",
+    "analysis/audit_planned_products.py"
+  ],
+  "extraction": {
+    "kind": "posthoc exact operation description, executed via Python heredoc",
+    "archive": "data/measured_ms1_source_qualification/2026-10-24_1546_v1/article-2021-supplements-expanded.zip",
+    "member": "41467_2021_23713_MOESM4_ESM.xlsx",
+    "destination": "data/measured_ms1_source_qualification/2026-10-24_1546_v1/article-2021-planned-peptides.xlsx",
+    "method": "zipfile.ZipFile.read; CRC checked; bytes written without modification",
+    "receipt": "data/measured_ms1_source_qualification/2026-10-24_1546_v1/article-2021-planned-peptides.extraction.json"
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment_overrides": {},
+  "inspection_output_already_exists_policy": "use fresh copy, do not overwrite prior audit results"
+}

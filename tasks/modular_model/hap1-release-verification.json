@@ -1,0 +1,39 @@
+{
+  "verified_at": "2026-10-24T14:28:16.258750+00:00",
+  "scope": "Both merged HAP1 changes are deployed; published wheel/sdist hashes match their successful manual release-build artifacts. No shared environment changes. Existing experimental source and recipe manifests retain their original versions.",
+  "source_2.0.22": {
+    "version": "2.0.22",
+    "source_commit": "41d4d096e03f5a2254836e7f0a73adbcf2a06625",
+    "files": {
+      "hitlist-2.0.22-py3-none-any.whl": {
+        "sha256": "03830e75a059ff330246702cc2336326a67d1394b623993d56b850d7be7cfff7",
+        "upload_time": "2026-10-24T13:58:07.237749Z"
+      },
+      "hitlist-2.0.22.tar.gz": {
+        "sha256": "42e5c5f305a02c903cede85e72775b5d67be68bab9cb403e0f1aa9a1b92f3c44",
+        "upload_time": "2026-10-24T13:58:09.525065Z"
+      }
+    }
+  },
+  "recipe_2.0.23": {
+    "version": "2.0.23",
+    "source_commit": "c7eed83ee58e97460fb549959bd3a6c132c87ae2",
+    "workflow_run_id": "40099959477",
+    "verified_at": "2026-10-24T14:27:34.379185+00:00",
+    "uploaded_this_turn": false,
+    "files": {
+      "hitlist-2.0.23-py3-none-any.whl": {
+        "sha256": "fddbe9328b95d15d430ca7d68207dcf60b98a8719326bb172e25be48d0e43bf3",
+        "upload_time": "2026-10-24T14:25:59.881109Z"
+      },
+      "hitlist-2.0.23.tar.gz": {
+        "sha256": "1a1b0c26b14b8419cd21539611c6b98911ad15d820019fade04f43935c44ef55",
+        "upload_time": "2026-10-24T14:26:02.135291Z"
+      }
+    },
+    "status": "published_hash_verified"
+  },
+  "source_release_build": "https://github.com/pirl-unc/hitlist/actions/runs/40098309564",
+  "recipe_release_build": "https://github.com/pirl-unc/hitlist/actions/runs/40099959477",
+  "publication_attribution": "Already published when verified in this turn; no duplicate upload."
+}

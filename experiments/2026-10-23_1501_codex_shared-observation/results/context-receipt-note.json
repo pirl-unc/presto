@@ -1,0 +1,5 @@
+{
+  "original_receipt": "results/context-summary.json",
+  "original_sha256": "050c284cc04b0e11286b4a10e28573648bc9e8426ae68bbb9da54fa9332a50df",
+  "note": "The empty acquisition_relationships list is a receipt-variable reuse defect: it belongs to the later MS1 query. The recorded raw-quantity query joins acquisition and saved joined columns are independently replayed in context-verification.json. Original query/results/targets are unchanged. No claim of resolved technical pairing or form contribution follows."
+}

@@ -1,0 +1,31 @@
+{
+  "status": "passed",
+  "n_strata": 174,
+  "max_metric_error": 1.7763568394002505e-15,
+  "development_gate_pass": true,
+  "relative_gain": 0.021203040062132028,
+  "gain_vs_shuffled": 0.021562201645214274,
+  "folds_improved": 5,
+  "condition_gains_percent": {
+    "hap1_calr_ko": 1.289606957144973,
+    "hap1_canx_ko": 0.47344681970000746,
+    "hap1_erap1_ko": 0.43867716042658156,
+    "hap1_ganab_ko": 0.4072740970476274,
+    "hap1_irf2_ko": -0.06328262519950112,
+    "hap1_pdia3_ko": 0.8541229904251102,
+    "hap1_sppl3_ko": 0.5552495423436055,
+    "hap1_tap1_ko": 3.606940643095935,
+    "hap1_tap2_ko": 5.889047945172344,
+    "hap1_tapbp_ko": 0.6390611768464671
+  },
+  "exposure_gains_percent": {
+    "sequence_affinity": [
+      2.0026640958819786,
+      2.537453596440453
+    ],
+    "sequence_affinity_geometry": [
+      2.8557011558694168,
+      2.7319972567369732
+    ]
+  }
+}

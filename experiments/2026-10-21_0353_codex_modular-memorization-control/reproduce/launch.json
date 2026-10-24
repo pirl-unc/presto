@@ -1,0 +1,26 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "experiments/2026-10-21_0353_codex_modular-memorization-control/code/launch.py",
+    "fit"
+  ],
+  "device": "cpu",
+  "environment": {
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/presto-modular-imports"
+  },
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "git_commit": "122b611124563b653fbddbbce30f921ea0f14fff",
+  "git_status": "?? experiments/2026-10-21_0353_codex_modular-memorization-control/launch_logs/\n",
+  "gpu": null,
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "versions": {
+    "mhcgnomes": "3.64.6",
+    "mhcseqs": "2.6.13",
+    "numpy": "2.5.4",
+    "pyarrow": "26.0.0",
+    "torch": "2.14.1"
+  }
+}

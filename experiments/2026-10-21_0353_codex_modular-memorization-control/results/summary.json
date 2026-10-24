@@ -1,0 +1,165 @@
+{
+  "checkpoint_sha256": "4c6c9a5397fd3643e3dcfa556b3e6bafe074c9190458767f5c052a7058739515",
+  "coverage": {
+    "exposed_features_without_updates": {},
+    "untrained_parameters": []
+  },
+  "decision": "passed_training_only_gate",
+  "device": "cpu",
+  "elapsed_seconds": 33.051812624995364,
+  "fresh_checkpoint_replay": "identical",
+  "gpu": null,
+  "mean_target_training_comparator": {
+    "binding_at_500_nM": {
+      "accuracy": 0.5625,
+      "auprc": 0.4375,
+      "auroc": 0.5,
+      "balanced_accuracy": 0.5,
+      "f1": 0.0,
+      "fn": 14,
+      "fp": 0,
+      "n": 32,
+      "precision": 0.0,
+      "recall": 0.0,
+      "tn": 18,
+      "tp": 0
+    },
+    "n": 32,
+    "pearson": null,
+    "prediction_quantiles": [
+      3.0179999811646323,
+      3.0179999811646323,
+      3.0179999811646323,
+      3.0179999811646323,
+      3.0179999811646323
+    ],
+    "prediction_range": [
+      3.0179999811646323,
+      3.0179999811646323
+    ],
+    "prediction_sd": 0.0,
+    "rmse": 1.425464520251835,
+    "sd_ratio": 0.0,
+    "spearman": null,
+    "target_sd": 1.425464520251835
+  },
+  "metrics": {
+    "ic50": {
+      "by_class": {
+        "I": {
+          "binding_at_500_nM": {
+            "accuracy": 0.9375,
+            "auprc": 1.0,
+            "auroc": 1.0,
+            "balanced_accuracy": 0.9285714285714286,
+            "f1": 0.9230769230769231,
+            "fn": 1,
+            "fp": 0,
+            "n": 16,
+            "precision": 1.0,
+            "recall": 0.8571428571428571,
+            "tn": 9,
+            "tp": 6
+          },
+          "n": 16,
+          "pearson": 0.9997290258629341,
+          "prediction_quantiles": [
+            -0.014023001506737742,
+            1.7134603364441672,
+            2.983389170904589,
+            4.80124303562636,
+            5.919712867299823
+          ],
+          "prediction_range": [
+            -0.014023001506737742,
+            5.919712867299823
+          ],
+          "prediction_sd": 1.7631716796281383,
+          "rmse": 0.04333084638386614,
+          "sd_ratio": 0.9999951175349482,
+          "spearman": 1.0,
+          "target_sd": 1.763180288294276
+        },
+        "II": {
+          "binding_at_500_nM": {
+            "accuracy": 1.0,
+            "auprc": 1.0,
+            "auroc": 1.0,
+            "balanced_accuracy": 1.0,
+            "f1": 1.0,
+            "fn": 0,
+            "fp": 0,
+            "n": 16,
+            "precision": 1.0,
+            "recall": 1.0,
+            "tn": 9,
+            "tp": 7
+          },
+          "n": 16,
+          "pearson": 0.9998689006876044,
+          "prediction_quantiles": [
+            0.9385475222107744,
+            2.4139038159799417,
+            3.01172375812769,
+            3.758925713421309,
+            4.466411321423525
+          ],
+          "prediction_range": [
+            0.9385475222107744,
+            4.466411321423525
+          ],
+          "prediction_sd": 0.9761339361208011,
+          "rmse": 0.017111240171909223,
+          "sd_ratio": 0.9989657555794655,
+          "spearman": 0.9970588235294118,
+          "target_sd": 0.9771445424118462
+        }
+      },
+      "exact": {
+        "binding_at_500_nM": {
+          "accuracy": 0.96875,
+          "auprc": 1.0,
+          "auroc": 1.0,
+          "balanced_accuracy": 0.9642857142857143,
+          "f1": 0.9629629629629629,
+          "fn": 1,
+          "fp": 0,
+          "n": 32,
+          "precision": 1.0,
+          "recall": 0.9285714285714286,
+          "tn": 18,
+          "tp": 13
+        },
+        "n": 32,
+        "pearson": 0.9997583925450831,
+        "prediction_quantiles": [
+          -0.014023001506737742,
+          2.0854952652716463,
+          2.983389170904589,
+          3.944680924882901,
+          5.919712867299823
+        ],
+        "prediction_range": [
+          -0.014023001506737742,
+          5.919712867299823
+        ],
+        "prediction_sd": 1.4251487341144655,
+        "rmse": 0.03294204599416197,
+        "sd_ratio": 0.9997784679079114,
+        "spearman": 0.999266862170088,
+        "target_sd": 1.425464520251835
+      },
+      "loss": 0.0005340579592871819,
+      "n": 32
+    }
+  },
+  "no_test_reason": "Registered 32-example capacity diagnostic; all rows are fit targets, historical held-out peptides excluded.",
+  "peak_rss_bytes": 716193792,
+  "qualification": "not_qualified_for_generalization",
+  "raw_artifacts": "/private/tmp/presto-modular-model/artifacts/2026-10-21_0353_codex_modular-memorization-control",
+  "source_manifest_sha256": "74f6ff7e208a239bb5d83c295bcb950e07effd999f571d7a615ff1410a2f94ee",
+  "steps": 100,
+  "stopping_reason": "fixed_training_gate_passed",
+  "test": null,
+  "validation": null
+}

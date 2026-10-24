@@ -1,0 +1,22 @@
+{
+  "count": 32,
+  "classes": {
+    "I": 16,
+    "II": 16
+  },
+  "target_range_by_class": {
+    "I": [
+      0.0,
+      5.893451488447329
+    ],
+    "II": [
+      0.9380190974762103,
+      4.481442628502305
+    ]
+  },
+  "gate_check": "exact predictions pass; class-II spread failure rejected",
+  "unique_canonical_inputs": 32,
+  "raw_target_replay": "all32 equal log10(raw nM)",
+  "class_II_explicit_partners": true,
+  "heldout_rows": 0
+}

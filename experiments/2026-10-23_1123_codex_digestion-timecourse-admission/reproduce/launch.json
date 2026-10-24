@@ -1,0 +1,41 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-modular-model/experiments/2026-10-23_1123_codex_digestion-timecourse-admission/code/admit.py"
+  ],
+  "device": "local CPU; no Modal/GPU",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/hitlist-digestion-recipe"
+  },
+  "hitlist_commit": "623afcb5e044e6901b4ead3bafc25f2b3cb70c0d",
+  "hitlist_dirty": " M hitlist/distribution_recipe.py\n M hitlist/evidence_recipe.py\n M hitlist/version.py\n M tasks/todo.md\n?? hitlist/digestion_recipe.py\n?? tasks/digestion-contiguous-recipe.md\n?? tests/test_digestion_recipe.py\n",
+  "hitlist_root": "/private/tmp/hitlist-digestion-recipe",
+  "launcher_sha256": "0ea776386b49f6e8900b9b73c791cbe7f8485ccb6999ab253b6072afa6a11c6f",
+  "output_recipe": "/private/tmp/presto-modular-model/artifacts/2026-10-23_1123_codex_digestion-timecourse-admission/recipe",
+  "package": "/private/tmp/hitlist-v2-digestion-208-candidate",
+  "package_manifest_sha256": "b3cfffc444f922803625735bd1e712a2f734513fc4bd8e83f8fd83759f55410c",
+  "presto_commit": "5a10094a66a7db25673d5c2c58e93576935764e6",
+  "presto_dirty": " M tasks/todo.md\n?? data/availability_recipes/\n?? experiments/2026-10-23_1057_codex_digestion-arithmetic/\n?? experiments/2026-10-23_1123_codex_digestion-timecourse-admission/\n?? experiments/agents/codex/plans/digestion-arithmetic.md\n?? experiments/agents/codex/plans/digestion-contiguous-recipe.md\n?? experiments/agents/codex/plans/full-ic50-fitting.md\n?? tasks/modular_model/trajectory-sampling-issue.md\n",
+  "recipe": {
+    "name": "digestion_contiguous_timecourses_v1",
+    "registered_recipe": "digestion_contiguous_timecourses_v1",
+    "schema_version": 1
+  },
+  "registered_at": "2026-10-23T11:23:29.734770-04:00",
+  "scope": "Canonical source-linked admission only; no outcome repeatability, fitting or held-out quality metrics",
+  "source_hashes": {
+    "hitlist/data/evidence_revisions/digestion_contract.json": "d572f5a03e9f9edc27fb68f1ff23e4dc33a8e218c55815dcc39c255398e0ffbf",
+    "hitlist/digestion_evidence.py": "c7cd78131f7dca0fa2952a76f49141caf7a0106196db794cbf59f5a51208939d",
+    "hitlist/digestion_recipe.py": "3f467376ac9ff7399f9e53c30a81d44953a4e94d7e0016d3677d83560e999a62",
+    "hitlist/distribution_recipe.py": "5448213e5e7f0eff75ac88a46370749ff7ee4cd90496d388844dc3b16db63841",
+    "hitlist/evidence_bindings.py": "44f50e0730f6484bb8de5850ca4d5b0797d4e4cf794f1a08d6a863a65243a2b8",
+    "hitlist/evidence_catalog.py": "870c5762f5e1bf37b9c84b0be569283f5fd18b3092c13afc934eb73de8e59fb1",
+    "hitlist/evidence_recipe.py": "dd17c69795a9572d763ae7232a206b2c8faa1a21d98f2c00f926d3fcf0568568",
+    "hitlist/evidence_store.py": "340a57a89a7db80293b1c8484337a22eef6c4cbb64057f94594f970b2cc4458a",
+    "hitlist/version.py": "a5989be79a92b4b7817d969b9e2d45d4e08dc5d4f4db13fee5edf82e3201b304",
+    "tests/test_digestion_recipe.py": "cec33a6532c7be70bf3913e914a1c10545cf38bf22dfa2cc9e2d4ebcdb81c19e"
+  }
+}

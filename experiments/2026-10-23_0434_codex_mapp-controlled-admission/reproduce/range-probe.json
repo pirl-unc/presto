@@ -1,0 +1,8 @@
+{
+  "registered_utc": "2026-10-23T08:47:28.243781+00:00",
+  "purpose": "Determine whether public processed archives support byte-range retrieval before changing the slow bounded streamer. No data labels or training.",
+  "url": "https://ftp.pride.ebi.ac.uk/pride/data/archive/2018/10/PXD009508/search.tar.gz",
+  "range": "bytes=0-1048575",
+  "record": "results/range-probe.json",
+  "download_policy": "Stop after requested byte count even if server ignores range; only HTTP206 with exact Content-Range qualifies range retrieval."
+}

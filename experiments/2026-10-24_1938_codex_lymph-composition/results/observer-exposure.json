@@ -1,0 +1,53 @@
+{
+  "scope": "Post-evaluation covariate-only diagnostic; no new fit or exclusion",
+  "observer_train_length_range": [
+    8,
+    25
+  ],
+  "source_hashes": {
+    "train.jsonl": "e946fa17d48067a75c9cb583d7bebd8abc5fa390d43e87fae1ea3830616123cb",
+    "validation.jsonl": "9b629ad8052ee63c30f03acf375f4c8df2fbe8dc4696a5940b1b51749c870956",
+    "test-covariates.jsonl": "3735b55b7251e93a3b608558cfd09efe62b3d5c4b59aec7433e7d9a883abadb5"
+  },
+  "cohorts": {
+    "train": {
+      "n_rows": 459,
+      "n_exact_sequence_overlap": {
+        "train": 7,
+        "validation": 1,
+        "test": 1
+      },
+      "n_outside_any_active_observer_training_feature_range": 22,
+      "length_range": [
+        7,
+        28
+      ]
+    },
+    "val": {
+      "n_rows": 135,
+      "n_exact_sequence_overlap": {
+        "train": 0,
+        "validation": 0,
+        "test": 0
+      },
+      "n_outside_any_active_observer_training_feature_range": 12,
+      "length_range": [
+        7,
+        29
+      ]
+    },
+    "test": {
+      "n_rows": 74,
+      "n_exact_sequence_overlap": {
+        "train": 1,
+        "validation": 1,
+        "test": 0
+      },
+      "n_outside_any_active_observer_training_feature_range": 5,
+      "length_range": [
+        7,
+        20
+      ]
+    }
+  }
+}

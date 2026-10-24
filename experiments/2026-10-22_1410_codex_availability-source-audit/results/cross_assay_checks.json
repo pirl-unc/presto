@@ -1,0 +1,124 @@
+{
+  "interpretation": "Label overlaps only; no verified specimen/aliquot or sequence-to-reference join.",
+  "table12_sdrf_channel_label_compatibility": [
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "129C",
+      "table12_sample_label": "G_ctrl_1"
+    },
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "130N",
+      "table12_sample_label": "G_ctrl_2"
+    },
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "130C",
+      "table12_sample_label": "C3-"
+    },
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "131N",
+      "table12_sample_label": "C_ctrl_3"
+    },
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "131C",
+      "table12_sample_label": "C2-"
+    },
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "132N",
+      "table12_sample_label": "C1-"
+    },
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "132C",
+      "table12_sample_label": "C_ctrl_2"
+    },
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "133N",
+      "table12_sample_label": "G3-"
+    },
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "133C",
+      "table12_sample_label": "G2-"
+    },
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "134N",
+      "table12_sample_label": "C_ctrl_1"
+    },
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "134C",
+      "table12_sample_label": "G_ctrl_3"
+    },
+    {
+      "prefixed_label_present_in_sdrf": true,
+      "source_channel_label": "135N",
+      "table12_sample_label": "G1-"
+    }
+  ],
+  "table9_parent_labels_without_table11_exact_label_match": 433,
+  "table9_table11_channel_label_to_sample_label": [
+    {
+      "channel": "128N",
+      "same_sample_label": false,
+      "table11_sample": "C2+",
+      "table9_sample": "G3+"
+    },
+    {
+      "channel": "128C",
+      "same_sample_label": false,
+      "table11_sample": "R_ctrl_3",
+      "table9_sample": "G2+"
+    },
+    {
+      "channel": "129N",
+      "same_sample_label": false,
+      "table11_sample": "C3+",
+      "table9_sample": "R_ctrl_1"
+    },
+    {
+      "channel": "132C",
+      "same_sample_label": false,
+      "table11_sample": "R_ctrl_2",
+      "table9_sample": "R_ctrl_3"
+    },
+    {
+      "channel": "133N",
+      "same_sample_label": true,
+      "table11_sample": "G1+",
+      "table9_sample": "G1+"
+    },
+    {
+      "channel": "133C",
+      "same_sample_label": false,
+      "table11_sample": "G2+",
+      "table9_sample": "C3+"
+    },
+    {
+      "channel": "134N",
+      "same_sample_label": false,
+      "table11_sample": "G3+",
+      "table9_sample": "R_ctrl_2"
+    },
+    {
+      "channel": "134C",
+      "same_sample_label": false,
+      "table11_sample": "R_ctrl_1",
+      "table9_sample": "C1+"
+    },
+    {
+      "channel": "135N",
+      "same_sample_label": false,
+      "table11_sample": "C1+",
+      "table9_sample": "C2+"
+    }
+  ],
+  "table9_table11_shared_parent_labels": 663,
+  "training_admission": "deferred_pending_Hitlist_curation_and_endpoint_contract"
+}

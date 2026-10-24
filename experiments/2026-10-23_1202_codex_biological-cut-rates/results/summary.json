@@ -1,0 +1,18 @@
+{
+  "all_allocated_parameters_trained": {
+    "constant": 1,
+    "sampled_hybrid": 40,
+    "sequence": 39,
+    "sequence_context": 40
+  },
+  "all_predictions_verified": 562404,
+  "concentration_qualification": false,
+  "exact_vs_sampled": "Same model/objective/initialization/Adam budget; one sampled seed, exact residuals/probabilities retained",
+  "promotion_gates": {
+    "sampled_rb512": false,
+    "sequence": false,
+    "sequence_context": false
+  },
+  "raw_predictions_and_canonical_rank_corrections_retained": true,
+  "total_optimizer_updates": 8000
+}

@@ -1,0 +1,105 @@
+{
+  "catalog_schema_version": 20,
+  "files": {
+    "tmab/coverage.json": {
+      "sha256": "ad9c6d6a20ab0cf109c6ccbaf3f4f64ba7bcefb38edec2a117d8f281a7e5cc08",
+      "size_bytes": 907
+    },
+    "tmab/lineage.parquet": {
+      "sha256": "a3cc8a268f1b107082077ead17e1a3278a3c8f3ae51ed09f8baf0c29c18ff57a",
+      "size_bytes": 2249439
+    },
+    "tmab/measurements.parquet": {
+      "sha256": "a2db84ef77252c89ccb38a55bf2974369f0b0b3e1d6f57e8f142bfc04bee485b",
+      "size_bytes": 2220711
+    },
+    "tmab/protocol_context.parquet": {
+      "sha256": "730dd32e4dc3f9e82ffbd8f8616a88e1b278e351573810e6e31048c81bf423e1",
+      "size_bytes": 11318
+    },
+    "tmab/source_assets.parquet": {
+      "sha256": "01a9dff2babfb828b858efc5f6d81ab16c8438da7cac11a277d04c640edca4c6",
+      "size_bytes": 3137
+    },
+    "tmab/source_assets/dasgupta_s1.xlsx": {
+      "sha256": "dbdd837f2f7d40be8aa69c6f3ce845d2a7babc6c38432b539aabcebe3ed9b8a2",
+      "size_bytes": 1028093
+    },
+    "tmab/source_assets/dasgupta_s2.xlsx": {
+      "sha256": "3c722c0e4fdb1e1aeff35648ade3ca3fef18020b111abe0f90a34e6c64ad924b",
+      "size_bytes": 47865
+    },
+    "tmab/source_assets/gelman_s1.xlsx": {
+      "sha256": "5f2a7c922a4fc86cfdc4ca3dff853f895f52ae9fe15a0f1fd9866314d1c7de70",
+      "size_bytes": 608788
+    },
+    "tmab/source_assets/gelman_s2.xlsx": {
+      "sha256": "9ebd25dfeb8d5539adb1f99cc7a29b794d3f84edb71638c27e66c32d7783f081",
+      "size_bytes": 64457
+    },
+    "tmab/source_rows.parquet": {
+      "sha256": "79c3d271cf7d53e248e9c675bc79290ad51604796ef9fcf00e28259bbb5cd2af",
+      "size_bytes": 657100
+    }
+  },
+  "hitlist_version": "2.0.15",
+  "limitations": [
+    "native_cellular_extract_not_MHC_elution",
+    "relative_ratio_not_absolute_concentration",
+    "treatment_is_not_genetic_perturbation",
+    "cross_paper_reuse_and_specimen_independence_unresolved",
+    "heatmap_republications_deferred_from_training"
+  ],
+  "package_family": "tmab_peptidomics",
+  "reconciliation": {
+    "absolute_quantity_claim": false,
+    "by_censoring_status": {
+      "exact": 34763,
+      "missing_signal": 11330,
+      "overlapping_peak": 60,
+      "source_declared_bound": 15753,
+      "unresolved_text": 2
+    },
+    "by_source_file": {
+      "dasgupta_s1.xlsx": 6073,
+      "dasgupta_s2.xlsx": 73,
+      "gelman_s1.xlsx": 4245,
+      "gelman_s2.xlsx": 173
+    },
+    "by_value_status": {
+      "missing_source_value": 4113,
+      "reported_bound": 15753,
+      "reported_exact": 34763,
+      "reported_nonnumeric": 2,
+      "reported_not_detected": 7217,
+      "reported_overlap": 60
+    },
+    "n_contexts": 33,
+    "n_deferred_heatmap_rows": 246,
+    "n_lineage_rows": 61908,
+    "n_measurements": 61908,
+    "n_possible_cross_paper_reuse_groups": 0,
+    "n_primary_ratio_rows": 10318,
+    "n_source_assets": 4,
+    "n_source_rows": 10564,
+    "native_rows_preserved": true,
+    "processing_or_MHC_label_claim": false,
+    "source_assets_snapshotted": true
+  },
+  "revision": "tmab_native_peptidomics_v1",
+  "schema_version": 15,
+  "source_registry": {
+    "dasgupta_2014": {
+      "cells": "HEK293T and SH-SY5Y",
+      "doi": "10.1371/journal.pone.0103604",
+      "source_role": "native_cellular_peptidomics",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0103604"
+    },
+    "gelman_2013": {
+      "cells": "HEK293T and SH-SY5Y",
+      "doi": "10.1371/journal.pone.0053263",
+      "source_role": "native_cellular_peptidomics",
+      "url": "https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0053263"
+    }
+  }
+}

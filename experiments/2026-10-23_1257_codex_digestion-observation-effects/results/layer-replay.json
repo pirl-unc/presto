@@ -1,0 +1,52 @@
+{
+  "conditions": [
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_12p5",
+      "curves": 5058,
+      "expanded_filtered_slots": 65300,
+      "global_noise": 45684.36767578125
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_FFH_6p25",
+      "curves": 5400,
+      "expanded_filtered_slots": 70600,
+      "global_noise": 221221.4921875
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_H2A",
+      "curves": 1394,
+      "expanded_filtered_slots": 16474,
+      "global_noise": 9106.3447265625
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_H2B",
+      "curves": 1500,
+      "expanded_filtered_slots": 20117,
+      "global_noise": 18737.9006347656
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_IL37b",
+      "curves": 1140,
+      "expanded_filtered_slots": 14320,
+      "global_noise": 140859.3255004885
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_LEDGF",
+      "curves": 3888,
+      "expanded_filtered_slots": 54362,
+      "global_noise": 27948.8564453125
+    },
+    {
+      "condition": "soh2024_digestion:condition:aSPIRE_hTau",
+      "curves": 4674,
+      "expanded_filtered_slots": 62120,
+      "global_noise": 24581.711303710952
+    }
+  ],
+  "curves": 23054,
+  "maximum_relative_corrected_replay_error": 5.10702591327572e-15,
+  "peak_rss_bytes": 1415200768,
+  "positive_observations": 91226,
+  "training_only": true,
+  "wall_seconds": 10.9146424169885
+}

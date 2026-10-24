@@ -1,0 +1,27 @@
+Traceback (most recent call last):
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/scipy/__init__.py", line 83, in <module>
+    from scipy._lib._ccallback import LowLevelCallable
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/scipy/_lib/__init__.py", line 12, in <module>
+    from scipy._lib._testutils import PytestTester
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/scipy/_lib/_testutils.py", line 10, in <module>
+    import subprocess
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/subprocess.py", line 49, in <module>
+    import signal
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_0645_codex_controlled-mapp-signal/code/signal.py", line 13, in <module>
+    from scipy.stats import spearmanr
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/scipy/stats/__init__.py", line 600, in <module>
+    from ._stats_py import *
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/scipy/stats/_stats_py.py", line 39, in <module>
+    from scipy import sparse
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/scipy/sparse/__init__.py", line 294, in <module>
+    from scipy._lib._testutils import PytestTester
+ImportError: cannot import name 'PytestTester' from partially initialized module 'scipy._lib._testutils' (most likely due to a circular import) (/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/scipy/_lib/_testutils.py)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-23_0645_codex_controlled-mapp-signal/code/signal.py", line 13, in <module>
+    from scipy.stats import spearmanr
+  File "/Users/iskander/code/shared-virtual-env/lib/python3.12/site-packages/scipy/__init__.py", line 88, in <module>
+    raise ImportError(msg) from e
+ImportError: The `scipy` install you are using seems to be broken, (extension modules cannot be imported), please try reinstalling.

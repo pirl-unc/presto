@@ -225,3 +225,60 @@ explicit species-context limitations; it is not an external validation result.
 
 ### Open Questions
 - Whether the legacy groove encoder still has an advantage once paired with a canonical no-assay-input output contract
+
+
+## PXD004886 raw-S4 conditional-response diagnostic reference
+
+- Status: `diagnostic_only`; [full contract and report](2026-10-23_0359_codex_raw-s4-response/README.md). This is separate from MHC/availability baselines.
+- Canonical shared recipe96b9232:22 selected peptides,224 peptide×site summaries,nominal load/site inputs; median positive log10 raw peak area, no imputation or certified molar interpretation.
+- Reference: load/site ridge, nested fivefold peptide-grouped CV; inner alpha grid1e-4..100,training-only scaling,equal peptide weights. Outer pooled RMSE0.8084456,MAE0.5149689,Pearson0.8805007,Spearman0.9013222. Exact per-fold inner-validation/train/test metrics and predictions in the linked report.
+- Controls: weighted mean RMSE1.1796061; same model plus length/AA fractions with shared regularization RMSE1.2761615. Sequence arm shrinks useful context coefficients too; a separate-penalty ablation remains untested.
+- No untouched external test,homology/specimen independence,detector transfer,processing or concentration claim. These outer folds are now development data for any follow-up changes. No full-data production model fitted.
+
+### Cellular MAPP captured composition — provisional development control
+
+- Source: unchanged Hitlist MAPPmin2 manifest `df78d02f8200809c659e43adfae29866c48b712122b740379106994622f4ac80`, PXD009092 human HEK293 proteasome-associated fragments. Training 72 parents / 144 examples / 918 measurements; historically inspected validation 15 parents / 30 examples / 112 measurements. The 14 historical test parents are excluded from this diagnostic.
+- Control: uniform independent cleavage with the earlier training-fitted common removal parameter, followed by one nonnegative training-only amplitude coefficient, beta = 0.3021227141. Uses span geometry and occurrence multiplicity, with no learned amino-acid preference.
+- Primary validation metric: hierarchical-weighted centered-log10 RMSE **0.267107**, versus **0.286029** for uniform observed composition. Pooled Pearson/Spearman **0.441603 / 0.372251**; weighted R2 **0.127933**. Helps 10/15 validation parents, worsens 4, ties 1.
+- [Registered comparison and independent verification](2026-10-24_0106_codex_cellular-amplitude/README.md). Calibrated adjacent/wider sequence priors score 0.275897 / 0.286965 and fail the predeclared comparison against both controls. Stop further tuning of this bridge on the same MAPP development set.
+- This is a provisional control for this development contract, not a new blind test result or a replacement for historical test-set baselines. Calibration was motivated by prior development failures. Captured MS composition is not free-peptide abundance, measured clearance, or APC concentration; treatment response remains unmodeled. Independent cellular/source validation is still required.
+
+### Native-cell chemical peptide response — provisional validation control
+
+- Canonical Hitlist native response recipe manifest `c72980c070cb1296609bbe7d296e27b6a2a22d3ff354ef846c1c99ad7959ccfc`; Dasgupta2014/Gelman2013 HEK293T/SH-SY5Y native extract treated/control isotope ratios. Train1,861groups/6,735observations, validation245groups/932observations, all exact and source-declared bounds. Components retain all candidate parent/reuse/source-assertion links; weights average condition/component/form/observation.
+- **Condition-only** linear model,28supported parameters, training-only scaling/SVD, penalty.01, fixed L-BFGS-B. Validation exact/censored weighted loss **0.073495** versus nochange **0.186297**; exact-value RMSE **0.247726 log10ratio**, pooled Pearson/Spearman **0.4518/0.4279**. Explicit bound satisfaction remains zero.
+- [Registered comparison, source-linked predictions and independent closure](2026-10-24_0314_codex_native-response-baselines/README.md). Shared/compound-dependent sequence loss.129189/.153178; neither passes biological comparison. Training improvements do not generalize. Canonical outputs are `results/qualified-v2`, with exact input ties retained.
+- This0314family did not evaluate the reserved631testgroups. The matched full-parent subset was subsequently evaluated once in0410 below. Same studies and treatment categories across partitions, unresolved specimen/shared-denominator/homology independence. Native ratios are not APC concentrations or genetic KO effects. These0314metrics apply to the original admitted set.
+
+
+### Native-cell response, full-parent-supported subset — provisional processing reference
+
+- [Fixed ten-model comparison and independent closure](2026-10-24_0410_codex_native-processing/README.md), same canonical recipec72980c0… but omit six unsupported training groups and renormalize original split weights once. Train1,855groups/6,707observations; val245/932; test631/2,447 across19/16held-out components. All six controls refitted; test opened only after all fixed fits completed and checkpoints were sealed.
+- **Exact sequence-dependent independent cleavage/input/removal**,95supported parameters,200zero-init full-batch Adamsteps,lr.02, penalty.01 except sharedoffsetintercept. Predict native treated/control log10ratio; no per-peptide offsets. Validation primaryloss **0.070384**, test **0.129789** versus condition-only **0.073514 / 0.130557**. Validation/test exactRMSE **0.245952 / 0.243207** versus **0.247717 / 0.250953**. TestPearson/Spearman **0.5578 / 0.5373**; weighted exactR2 **0.0929**. Testloss improvement only0.59%, exactRMSE3.09%; small, single-seed provisional gains.
+- Sampled conditional-score hybrid is close (testloss.129336/RMSE.242887) but about25times slower (138.74s versus5.55s); validation slightly favors exact. Keep exact as the practical reference, not a statistically established winner. Direct sequence regressions generalize worse. Testbound satisfaction remains14.92% for exactprocessing, validation1.30%.
+- Parent-component holdout under seen treatments, same studies and unresolved specimen/shared-control/homology dependence. Test is now inspected; no further tuning against it. No causal machinery/APC concentration or independently calibrated detector claim. Preserve the simpler condition-only comparator because most predictive signal is treatment-level.
+
+### PXD057588 macrophage MHC-I response — context reference after negative processing result
+
+- [Fixed nine-model comparison and independent closure](2026-10-24_0449_codex_apc-precursor-response/README.md). Table9 MHC ligand log10 fold changes, Table11 condition-level digest-derived parent input. Canonical recipe93ef0b23…; all candidate parents require ≥2distinct digest sequences. Train492peptides/2,952observations; validation96/576; test129/774. Fixed all-source dependency-component split, condition/component/peptide/channel weights.
+- **Condition-only**,2supported coordinates, fixed L-BFGS-B/.01penalty excluding globaloffset. Validation/test MSE **.017034817/.014402625**, RMSE **.130517497/.120010938**; testPearson/Spearman **.18099/.25118**, weightedR2 **.001305**. Only a weak reference: nochange testRMSE.120611.
+- Sequence processing plus precursor testRMSE.139278; conditional sampled.139298 at35×cost. Removing precursor gives.120008, a negligible.0052%MSE gain and nearly constant within-condition predictions. Frozenhuman-native prior does not rescue precursor transfer. Keep simpler context reference rather than promoting numerical differences.
+- Same study/conditions/shared controls; no exact aliquot matching or independent concentration/machinery validation. MHC-bound response combines processing, selection and observation. Test is now inspected; do not tune against it. Precursor calibration and an independent prospective biological population remain required.
+
+### HAP1 machinery elution response — frozen held-out sequence reference
+
+- [Training development](2026-10-24_0730_codex_hap1-response-baselines/README.md) and [once-only frozen outer evaluation](2026-10-24_1503_codex_hap1-frozen-outer/README.md). Canonical recipe a1eec392…; training 87,260 positive response cells / 6,317 peptides / 1,798 molecular components across ten KO conditions. Validation 19,744 and test 22,724 complete-precursor response cells; same-study molecular-component splits, now inspected and closed to further tuning.
+- **Preselected condition-specific sequence ridge, lambda 0.1:** length, composition and terminal features plus calibrated protein response and condition offsets. Frozen validation/test RMSE **0.577617 / 0.573380 log10 elution ratio** versus calibrated precursor **0.648257 / 0.631249**; gains **10.897% / 9.167%**. Test weighted R² **0.24986**, unweighted Spearman **0.46623**. All ten KOs improve test RMSE (4.25–16.61%); within-condition prediction SD 0.126–0.474. Both prespecified direct-model gates pass, without refitting or outer model selection.
+- **ERAP1 processing fails its gate:** preselected sequence baseline test RMSE **0.585327**; residue/length physical augmentation exact **0.585337**, sampled-trained **0.585335**. The physical-only residue/length model scores **0.698824**. Keep the simpler sequence reference; numerical correctness and nonzero correction variance do not establish additional biological signal.
+- Source-positive, complete-case MHC elution responses; no imputed negatives. Candidate origins retained and ambiguous protein groups deferred. Shared controls/study and unresolved specimen/clone/homology independence remain. HAP1 is not a professional APC. This does not validate free-peptide abundance, causal processing, independent MS detectability, unseen KOs, external cohorts or APC concentrations. Use a new prospective biological cohort for subsequent model qualification.
+
+
+- **New development-only control, not a held-out replacement:** [2041 frozen MHC-score comparison](2026-10-24_2041_codex_hap1-affinity-control/README.md) adds three MHCflurry log10-score features to the original sequence ridge. Reused inner-CV RMSE **0.562644** versus **0.574832**, a **2.120%** gain across all five folds; fixed shuffled-score control **0.575043**. Use its frozen full/fold checkpoints for future development comparisons under this exact contract. No new outer scoring; 4,925/6,317 peptides occur in the external predictor training table and full teacher/sample lineage is unresolved. This is neither independent binding evidence nor an APC-concentration result.
+
+
+### PXD021013 conditional non-MHC MS1 response — pool-held-out sequence reference
+
+- [Registered comparison and independent reconstruction](2026-10-24_1702_codex_ms1-grouped-observer/README.md). Canonical source e373789b…/recipe0183d91b…, positive intended variable-Unmodified forms under fixedCAM. Metadata-selected, intended-sequence-disjoint 16/4/4 pools; 8,712/2,104/2,061 examples. Test now inspected and closed.
+- **Preselected sequence ridge alpha0.1**, 42 within-pool-supported standardized length/composition/N-terminal features, no intercept. Equal-pool MSE + alpha*mean(coefficient²). Validation/test centered-log10-signal RMSE **0.470624 / 0.449828** against length **0.534663 / 0.520456**; gains **11.98% / 13.57%**. Test weightedR² **0.253294**, unweightedSpearman **0.525644**, positive Pearson/Spearman in all4test pools; all prespecified gates pass.
+- Prespecified neural ensemble is a secondary result: testRMSE0.443033,Spearman0.547499. Keep the primary sequence reference for future fixed comparisons; no post-test selection or refitting.
+- This predicts measured conditional signal, not pure detectability or molarity. Crude synthesis, purity/load/handling confounded. All C-terminal main effects cancel under pool centering; missing category support is explicit. No biological elution transfer, unconditional detection, specimen independence or intracellular availability claim. Any biological use requires prospective transfer evaluation with a shared frozen observer for exact and sampled arms.

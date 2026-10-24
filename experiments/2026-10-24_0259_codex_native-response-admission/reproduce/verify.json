@@ -1,0 +1,17 @@
+{
+  "registered_at": "2026-10-24T03:12:49.039526-04:00",
+  "command": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "experiments/2026-10-24_0259_codex_native-response-admission/analysis/verify.py"
+  ],
+  "source_sha256": "27ce262e2257bcb53ba84f2f5ceadc4b33d0d51e2be0d9a79c44d77de62f0533",
+  "seconds_cap": 180,
+  "rss_bytes_cap": 4294967296,
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "source_snapshot": "reproduce/source/verify.py",
+  "local_lint": "ruff 0.17.2 --isolated; repository pins0.16.0 and excludes frozen experiments; no package/environment change"
+}

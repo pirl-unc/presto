@@ -1,0 +1,77 @@
+{
+  "recipe_pr": {
+    "url": "https://github.com/pirl-unc/hitlist/pull/819",
+    "body_sha256": "b81eb0a93005aed4f4cef2e7c9dd4cbee4a42d36aab97ca9ce641edcce0feb6a",
+    "exact_body_verified": true,
+    "body": "## Problem and behavior\n\nThe original Nanaware lymph/DC source preserves quantitative cells but lacked a reproducible training endpoint. Add `nanaware2024_observed_composition_v1` through the registered recipe API: select representative source features before intensity, preserve chemistry and parent ambiguity, connect all source dependencies before deterministic splits, and emit within-parent/sample log-area targets and area fractions with every exclusion.\n\nOriginal same-study identification alternatives remain candidate parents. Exact sequence occurrences supersede inconsistent reported coordinates for derived positions, without rewriting the source. Missing measurements are never negatives; DC database/library searches remain dependent and human lymph remains extracellular. The older source-only manifest stays unchanged; registered recipe discovery reflects the new consumer capability. Version2.0.28.\n\n## Validation\n\n- Required format/lint and full local test runner: **3,477 passed**; focused recipe/source tests:19passed.\n- Actual pinned source:32,995quantity cells and2,472admitted feature measurements independently reconstructed from original areas, original-reference-backed candidates, all-source graph and target arithmetic.\n- Prespecified pilot component support: human34/14/12train/validation/test; DCdatabase36/1/6 andDClibrary32/3/11fail validation support, so neither DC cohort is fitted.\n- Downstream human modeling does not pass predictive gates; source admission is not a biological accuracy claim. Frozen specification, tests and review notes are included. Rebased onto merged source9133736d without changing the tested source tree.\n\nFollow-up to #817 and merged #818. This does not close unresolved acquisition/specimen/precursor and quantitative aggregation metadata needs.\n",
+    "state": "MERGED",
+    "merge_commit": "c7abcced9825f0e8c8c8360eb40b78ac37eeabdc",
+    "merged_at": "2026-10-24T20:18:43Z",
+    "ci_all_required_passed": true
+  },
+  "source_issue_comment": {
+    "url": "https://github.com/pirl-unc/hitlist/issues/817#issuecomment-6388815228",
+    "body_sha256": "2a1ad99cacf890a7a26415e2ccf5cb01e83852c5d7dd976bef5d2e48871dc133",
+    "exact_body_verified": true,
+    "body": "The canonical endpoint is now in [PR819](https://github.com/pirl-unc/hitlist/pull/819), following merged source PR818. It retains source-feature selection, chemistry, all original parent alternatives, excluded-row dependency bridges and sample/source lineage. Independent replay reconciles all32,995quantity cells and2,472derived representative-feature measurements; required local tests pass3,477cases.\n\nThis reveals concrete downstream limits:\n\n- A representative confidence-selected charge feature is measurable, but the exports do not establish a safely summed, total peptide quantity. We still need documentation of PEAKS area integration, feature/charge aggregation, normalization and algorithm-specific identification confidence/FDR.\n- Complete original search-FASTA/accession/isoform relationships would resolve more parent origins. Current original deposited alternatives are preserved; ambiguous or unsupported sequences are not replaced by a modern reference.\n- Exported DC channels still lack exact specimen/acquisition/precursor joins. Database and library outputs share acquisitions. Under the frozen all-source component split, database has36/1/6train/validation/test components and library32/3/11; both fail the predeclared five-component validation minimum, so no DC prediction result is claimed. These counts are not numbers of biological specimens.\n\nHuman native lymph passes support with34/14/12components and668positive features. The completed local model comparison **fails** its predictive gates: processing+frozen MS testRMSE0.48463 versus0.46704sequence ridge and0.47913calibrated MS. Exact reverse-KL and fresh REINFORCE64 are close but both worse than uniform. This is an extracellular conditional-signal endpoint, not free APC concentration. Full report/checkpoints/predictions are in Presto experiment `2026-10-24_1938_codex_lymph-composition` on PR131; independent inference reproduces14,028predictions within9.6e-13.\n\nPlease retain this issue for the unresolved quantitative grain, original references and sample/precursor metadata; the source and recipe PRs do not resolve them by inference.\n"
+  },
+  "source_release": {
+    "version": "2.0.27",
+    "commit": "9133736d3762f3b8c4046bbffcef9c58f65b2469",
+    "run": 40126246020,
+    "artifact": 12574135401,
+    "pypi_bytes_match_tested_artifacts": true,
+    "distributions": [
+      {
+        "digests": {
+          "blake2b_256": "63025ccd448e3dd180e5be0803789855c52b5bf56255f8364561b10b65f43f43",
+          "md5": "03209cd7eb5edbfaf761c45a791aac80",
+          "sha256": "2ba1b8fa728c3dde32aa104a648317587259506887ed90ac7ceb56cde22d2bfa"
+        },
+        "filename": "hitlist-2.0.27-py3-none-any.whl",
+        "upload_time_iso_8601": "2026-10-24T20:12:56.373551Z",
+        "url": "https://files.pythonhosted.org/packages/63/02/5ccd448e3dd180e5be0803789855c52b5bf56255f8364561b10b65f43f43/hitlist-2.0.27-py3-none-any.whl"
+      },
+      {
+        "digests": {
+          "blake2b_256": "22523c81537b78d885b8f6c4014863473abc62807c5a53d988b3246bb44cd2df",
+          "md5": "c6ef88da675fae25e2206293b8b8fb94",
+          "sha256": "1129dc907f6331905e9fbcb186547df867e869f80340aa0304e87a723c1c5e81"
+        },
+        "filename": "hitlist-2.0.27.tar.gz",
+        "upload_time_iso_8601": "2026-10-24T20:12:58.667407Z",
+        "url": "https://files.pythonhosted.org/packages/22/52/3c81537b78d885b8f6c4014863473abc62807c5a53d988b3246bb44cd2df/hitlist-2.0.27.tar.gz"
+      }
+    ]
+  },
+  "recipe_release": {
+    "version": "2.0.28",
+    "run": 40129209653,
+    "job": 120977112368,
+    "last_observed_status": "completed",
+    "url": "https://github.com/pirl-unc/hitlist/actions/runs/40129209653",
+    "conclusion": "success",
+    "commit": "c7abcced9825f0e8c8c8360eb40b78ac37eeabdc",
+    "pypi_bytes_match_tested_artifacts": true,
+    "verified_at_utc": "2026-10-24T20:59:57.703661+00:00",
+    "artifact_directory": "/private/tmp/hitlist-release-2026/release-artifacts-2.0.28",
+    "distributions": [
+      {
+        "filename": "hitlist-2.0.28-py3-none-any.whl",
+        "sha256": "44ee374048f6ebd736adbecad73d03935e975a815b0c90a51ff2c3939b89fc3b",
+        "size_bytes": 3104095,
+        "upload_time_iso_8601": "2026-10-24T20:59:29.020580Z",
+        "url": "https://files.pythonhosted.org/packages/3b/92/32f55685cc0db0d9ed3819dfed1421f2a73655271b1d133cf123cefda443/hitlist-2.0.28-py3-none-any.whl",
+        "byte_equal": true
+      },
+      {
+        "filename": "hitlist-2.0.28.tar.gz",
+        "sha256": "54782833826cc11645bd2465a91522768ebd361f0190c83a5d5825dcfc6b8f13",
+        "size_bytes": 3530515,
+        "upload_time_iso_8601": "2026-10-24T20:59:31.805672Z",
+        "url": "https://files.pythonhosted.org/packages/33/be/e52d45867b034023e9c6c072b7cf30947aea52ff955b36a2ee6f48d39fb5/hitlist-2.0.28.tar.gz",
+        "byte_equal": true
+      }
+    ]
+  }
+}

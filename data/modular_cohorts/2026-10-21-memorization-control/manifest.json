@@ -1,0 +1,62 @@
+{
+  "model": {
+    "acquisition_features": [],
+    "acquisition_units": {},
+    "auxiliary_context": [],
+    "cell_types": [],
+    "component_activity_units": {},
+    "components": [],
+    "context_species": [],
+    "cytokine_dose_units": {},
+    "cytokine_duration_features": [],
+    "cytokines": [],
+    "dropout": 0,
+    "endpoints": [
+      "ic50"
+    ],
+    "enzymes": [],
+    "identity_tasks": [],
+    "identity_threshold": 0.8,
+    "machinery_profiles": {},
+    "machinery_references": [],
+    "max_length": 512,
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "observation_features": [],
+    "observation_units": {},
+    "preparation_features": [],
+    "preparation_units": {},
+    "quantity_domains": {},
+    "register_pooling": true,
+    "source_categories": [],
+    "source_context": false,
+    "species": [
+      "human"
+    ],
+    "species_defaults": true
+  },
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "label_policy": "raw exact log10(nM); no generated labels or clipping",
+      "path": "/private/tmp/presto-modular-model/data/modular_cohorts/2026-10-21-memorization-control/observations.jsonl",
+      "population": "32 consistent exact purified IC50 inputs, 16 I and 16 explicitly paired II",
+      "sha256": "145957e201c596ba82db4c900eb3715c34c81605ffadf887d0811f6f1d282ad5",
+      "source": "hitlist-v4-iedb",
+      "split_policy": "training-only, no held-out inference"
+    }
+  ],
+  "training": {
+    "batch_size": 32,
+    "identity_weight": 0,
+    "learning_rate": 0.0003,
+    "max_epochs": 2000,
+    "max_steps": 2000,
+    "no_test_reason": "Registered 32-example capacity diagnostic; all rows are fit targets, historical held-out peptides excluded.",
+    "seed": 42,
+    "test_policy": "no_test_training_diagnostic",
+    "weight_decay": 0
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "status": "passed",
+  "prediction_records_verified": 82092,
+  "split_sizes": {
+    "test:assay": 2803,
+    "train:assay": 21636,
+    "validation:assay": 2925
+  },
+  "baseline_refit": "independent augmented least squares agrees",
+  "fresh_process_training_replay_max_abs_error": 0.0,
+  "all_allocated_tensors_updated": true,
+  "original_metric_corrections": [
+    {
+      "metric": "mean/train/I/pearson",
+      "original": -7.626234442079562e-17,
+      "corrected": null,
+      "reason": "undefined correlation: zero input range"
+    },
+    {
+      "metric": "mean/train/II/pearson",
+      "original": -1.457252453726565e-16,
+      "corrected": null,
+      "reason": "undefined correlation: zero input range"
+    },
+    {
+      "metric": "mean/validation/exact/pearson",
+      "original": -1.1450351793994042e-16,
+      "corrected": null,
+      "reason": "undefined correlation: zero input range"
+    },
+    {
+      "metric": "mean/validation/I/pearson",
+      "original": 6.955528852990372e-17,
+      "corrected": null,
+      "reason": "undefined correlation: zero input range"
+    },
+    {
+      "metric": "mean/validation/II/pearson",
+      "original": -4.030024264072192e-16,
+      "corrected": null,
+      "reason": "undefined correlation: zero input range"
+    },
+    {
+      "metric": "mean/test/I/pearson",
+      "original": 4.291406337343726e-17,
+      "corrected": null,
+      "reason": "undefined correlation: zero input range"
+    },
+    {
+      "metric": "mean/test/II/pearson",
+      "original": 2.0743748578420442e-16,
+      "corrected": null,
+      "reason": "undefined correlation: zero input range"
+    }
+  ],
+  "elapsed_seconds": 4.836613416002365
+}

@@ -1,0 +1,71 @@
+{
+  "case_id": 63,
+  "block_id": 21,
+  "eta": -1.0,
+  "status": "completed",
+  "accepted": true,
+  "condition": "soh2024_digestion:condition:aSPIRE_LEDGF",
+  "time_hours": 2.0,
+  "n_residues": 533,
+  "n_required_spans": 1940,
+  "n_measurements": 3880,
+  "phase": "complete",
+  "forwards": [
+    {
+      "substeps": 2,
+      "seconds": 1.3635072089964524,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 3.40113677376465e-08,
+      "full_mass": 532.9999999999972,
+      "required_minimum": 2.787448870160168e-07,
+      "required_maximum": 0.003218283137245175
+    },
+    {
+      "substeps": 4,
+      "seconds": 2.6711454580072314,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 3.4011367737646603e-08,
+      "full_mass": 533.0000000000003,
+      "required_minimum": 2.787448870160172e-07,
+      "required_maximum": 0.0032182831372451768
+    },
+    {
+      "substeps": 8,
+      "seconds": 5.266364166978747,
+      "required_nonpositive": 0,
+      "required_nonfinite": 0,
+      "full_negative_count": 0,
+      "full_zero_count": 0,
+      "full_minimum": 3.401136773764676e-08,
+      "full_mass": 533.0,
+      "required_minimum": 2.787448870160177e-07,
+      "required_maximum": 0.0032182831372451863
+    }
+  ],
+  "required_positive_finite": true,
+  "max_log_disagreement": 1.0658141036401503e-14,
+  "n_unresolved_precision": 0,
+  "forward_pass": true,
+  "autograd_seconds": 9.120443957974203,
+  "independent_fd_seconds": 10.638810750038829,
+  "gradient_error": [
+    1.265628574165234e-11,
+    6.996663404895687e-11,
+    2.402827329467394e-11
+  ],
+  "gradient_tolerance": [
+    1.0008900439141258e-05,
+    1.000583733783255e-05,
+    1.0001956985776209e-05
+  ],
+  "gradient_pass": true,
+  "gradient_status": "evaluated",
+  "seconds": 29.561459415999707,
+  "peak_rss_bytes": 2206400512
+}

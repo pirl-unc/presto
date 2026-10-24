@@ -1,0 +1,27 @@
+{
+  "registered_utc": "2026-10-24T17:58:37.023447+00:00",
+  "agent_model": "Codex / GPT-6",
+  "presto_commit": "534ae42c2808a74199d3090ba48303c1a30f6cd5",
+  "tracked_dirty": " M tasks/todo.md\n",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "source_package": "/private/tmp/hitlist-v2-reference-200-final",
+  "source_manifest_sha256": "d99f67e625c6c33a2054a56dea4f98fb8248ca5f717cc98af3662f228655fa6a",
+  "hitlist_checkout": "/private/tmp/hitlist-release-2026",
+  "hitlist_commit": "68dea0be320906e311763db553cee54dccb6fa07",
+  "environment": {
+    "PYTHONPATH": "/private/tmp/hitlist-release-2026",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "plan_sha256": "3fd70ff0299287bae3e8c6c5e0a47e70551bf62394d040d4fb4f7019f54bb2da",
+  "stage": "admission before predictive scoring",
+  "split_salt": "pxd057588_polarization_composition_v1:",
+  "support_gate": {
+    "train_min_parents": 100,
+    "validation_min_parents": 25,
+    "test_min_parents": 25,
+    "min_peptides_per_parent_channel": 3
+  }
+}

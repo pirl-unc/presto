@@ -1,0 +1,21 @@
+{
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "PYTHONPATH": "/private/tmp/hitlist-mapp-recipe"
+  },
+  "finished_utc": "2026-10-23T05:52:59Z",
+  "launcher_sha256": "3c236aad7d28dffa63ec8beffce326f79c4f7f2dae77490143af39f3f84ad506",
+  "passed": true,
+  "peak_rss_bytes": 3246424064,
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "pyarrow": "26.0.0",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "stages": {
+    "build_seconds": 64.26032979099546,
+    "open_catalog_audit_seconds": 21.135002541996073,
+    "query_all_mapp_seconds": 8.87747899995884,
+    "recipe_seconds": 26.923820666968822
+  },
+  "started_utc": "2026-10-23T05:50:57Z"
+}

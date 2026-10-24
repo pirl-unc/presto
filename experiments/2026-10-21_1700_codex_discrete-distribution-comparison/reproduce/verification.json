@@ -1,0 +1,20 @@
+{
+  "scope": "Post-run verification; does not launch fitting or alter the original run.",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "audit_command": "python experiments/2026-10-21_1700_codex_discrete-distribution-comparison/analysis/verify.py",
+  "audit_environment": {},
+  "audit_receipt": "../results/independent-verification.json",
+  "audit_log": "../launch_logs/verify.log",
+  "replay_command": "python experiments/2026-10-21_1700_codex_discrete-distribution-comparison/reproduce/source/launch.py replay --output experiments/2026-10-21_1700_codex_discrete-distribution-comparison/results/run",
+  "replay_environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "replay_receipt": "../results/fresh-process-replay.json",
+  "replay_log": "../launch_logs/replay.log",
+  "package_command": "python experiments/2026-10-21_1700_codex_discrete-distribution-comparison/analysis/package.py",
+  "package_receipt": "../results/package-verification.json",
+  "package_log": "../launch_logs/package.log",
+  "note": "Relative commands are from repository root; interpreter is recorded above. Analysis source snapshot is byte-identical, but execute analysis/verify.py so family-relative paths resolve correctly."
+}

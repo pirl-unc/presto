@@ -1,0 +1,32 @@
+{
+  "argv": [
+    "experiments/2026-10-24_0730_codex_hap1-response-baselines/code/fit.py",
+    "--experiment",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0730_codex_hap1-response-baselines",
+    "--recipe",
+    "/private/tmp/presto-modular-model/data/hap1_response_recipes/2026-10-24_0730_v1"
+  ],
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "numpy": "2.5.4",
+  "recipe_manifest_sha256": "a1eec392c06485966e131663f85e7599dcd9e5ff621841eb0d44eeaafe779309",
+  "git_commit": "6045dd27511b96782c9c2422ca2f1a8b81df5b7d",
+  "git_dirty": " M tasks/todo.md\n",
+  "environment": {
+    "PYTHONPATH": "/private/tmp/hitlist-hap1-recipe",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "n_observations": 87260,
+  "n_peptides": 6317,
+  "n_components": 1798,
+  "observations_per_fold": {
+    "3": 15481,
+    "2": 17778,
+    "4": 19441,
+    "1": 17065,
+    "0": 17495
+  },
+  "outer_validation_test": "never_loaded_or_scored"
+}

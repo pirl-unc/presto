@@ -466,3 +466,148 @@ Prioritize source lineage and donor/specimen independence before more fitting wh
 the user identifies those as blockers. Interpret missing context against the assay:
 a purified-MHC binding reaction does not require a cellular processing assignment.
 Keep applicability reporting separate from model features and the measured label.
+
+## 2026-10-20 — modular model requirements
+
+- Keep explicit class-II registers and within-peptide flanks; one whole-peptide measurement gives one loss after aggregation.
+- Species defaults are user-authorized inference assumptions with explicit overrides, never molecular supervision or source facts. Preserve APC/MHC/TCR/repertoire/antigen roles.
+- Retain concurrent component losses, unknown/control distinctions and matched cellular outcomes. Keep purified binding invariant to APC state.
+- Separate digestion from shared MS response; a combined observation fit does not establish independently calibrated detectability.
+- Compile only modules reachable from a declared subset; preserve labels, missingness, evidence tiers and coverage in one canonical path.
+- Audit a PR against the frozen issue, not a narrower implementation handoff.
+  Separate executable architecture, source preparation, enforced training gates
+  and demonstrated predictive quality before declaring a milestone delivered.
+- A nonzero gradient for a named weight tensor does not establish support for
+  every input column or category. Audit feature/state exposure and guard unseen
+  effects; an untrained-parameter report is not an enforced closure gate.
+- The full requested pretraining/context/MS/TCR architecture remains the objective.
+  An IC50 diagnostic isolates a failure mode; it must not replace the requested
+  system or silently remove explicitly requested auxiliary supervision.
+- Define "identity" as supervised sequence annotations whenever discussing the
+  model; ambiguous "identity plus IC50" shorthand obscures both information flow
+  and the full objective. Auxiliary classification success does not establish
+  assay learning. Use a supplied-metadata assay-only control to test transfer,
+  and distinguish detached classifier inputs from freezing their shared encoder.
+- Build focused pytest commands from actual `rg --files tests` results or a
+  verified file glob. A plausible test filename can stop collection entirely;
+  an invocation reporting no tests supplies no verification evidence.
+- Inspect actual archive array names, shapes and dtypes before calling an adapter
+  source-ready. A synthetic fixture with newer `*_groups` arrays did not establish
+  that the pinned Weirdo archive contains them. Missing grouping remains unknown
+  until an explicit reference audit reconstructs it; never invent supplied buckets.
+- An experiment launcher imported by normal tests must not import optional
+  baseline libraries globally. Keep real fitting imports inside that execution
+  path and verify report-helper imports with the optional library deliberately
+  unavailable in a fresh process. The broad shared environment can hide a clean
+  CI collection failure; do not solve that by skipping the new tests.
+
+## 2026-10-21 — processing products before MHC selection
+
+- A request to sample antigen-processing trajectories includes the broader
+  peptide-product pool, including sub-ligand fragments and nonbinders. Do not
+  narrow the target to successfully presented pMHCs. Preserve nonbinding product
+  identities and quantities, distinguish them from degradation/removal and
+  missing observations, and expose the ligand repertoire as a downstream
+  conditional distribution. Rewards, data contracts and evaluation must retain
+  the broader support rather than assigning every nonbinder zero value.
+
+## 2026-10-22 — homogeneous study curation
+
+- When admitting a new biological dataset, capture what distinguishes its studies,
+  samples, measured populations and observation scopes in the shared Hitlist
+  metadata system. Per-study prose or a one-off adapter is not sufficient.
+- Check the existing upstream roadmap before inventing a parallel registry.
+  Preserve scope, evidence, unknowns and exact versus surrogate material joins;
+  separate source ingestion from endpoint-specific training eligibility.
+
+## 2026-10-22 — local training preference
+
+- When the user rules out Modal, use local execution and establish actual hardware
+  support before considering another provider. A sandbox reporting MPS unavailable
+  does not establish absent hardware; verify with a permitted local GPU calculation.
+- Distinguish a local feasibility run from converged predictive performance and
+  biological qualification; preserve the broader availability objective.
+
+## 2026-10-22 — file upstream data gaps as they appear
+
+- When a biological experiment hits missing data, metadata, pairing or representation limits, file a concrete Hitlist issue with source evidence, the blocked modeling use and acceptance criteria. Search existing issues first; link or extend an existing owner instead of creating duplicates. Do not leave actionable gaps only in Presto experiment prose.
+
+## 2026-10-23 — constant-predictor metrics
+
+- Centering exactly equal predictions can leave floating-point residuals that produce spurious correlation ranks. Preserve raw artifacts, explicitly identify mathematical constant controls, and report their correlation as undefined; never interpret roundoff as predictive spread. Keep macro distribution error and pooled peptide correlation weighting distinct.
+
+## 2026-10-23 — concurrent upstream release state
+
+- Before editing an issue or reporting a dependency as open, inspect its actual current state and latest upstream release. A body can contain stale open-work language even after another change closed it. Preserve legitimate closure and reconcile draft data adapters with the new canonical interface; do not relabel pinned experimental inputs as a newer release.
+
+## 2026-10-23 — analytic ties in distribution controls
+
+- Mathematical ties can occur within a nonconstant predictor. Before interpreting rank metrics, preserve the raw values and evaluate equivalent spans through their exact analytic class (time, length and boundary type for a uniform cut-rate control). Do not widen numerical tolerances or let summation roundoff turn those ties into ranks.
+
+
+## 2026-10-23 — per-peptide temporal references
+
+- When a temporal endpoint uses the earliest common positive reference, retain the reference time per peptide. Group sampled plug-in diagnostics by target and reference time; do not assume one reference per condition. Verify this separately from the gradient estimator and preserve failed diagnostic attempts.
+
+## 2026-10-23 — metric weighting labels
+
+- Check the actual reduction for each diagnostic before labeling it weighted. Sharing a dataset or retaining weight columns does not imply every summary uses those weights. Report pooled counts and equal-parent reductions separately; preserve numerical artifacts when correcting prose.
+
+
+## 2026-10-23 — preserve metric reductions in acceptance gates
+
+- Mean absolute error and absolute mean signed error are different gates. Store
+  both with explicit reduction names, test a cancellation counterexample, and
+  compare gate implementation with the registered mathematical definition before
+  launch. If a discrepancy is found afterward, preserve original outputs and
+  decisions, enforce the original contract in independent closure, and disclose
+  changed decisions without changing seeds, thresholds or data.
+
+## 2026-10-23 — biological outcomes before numerical qualification
+
+- When asked about biological prediction, lead with actual development/test
+  scores against biological controls. Numerical gates, parameter updates and
+  optimizer replay do not establish predictive improvement. After a bounded
+  numerical/gradient prerequisite passes, run the matched biological comparison
+  before extending sampler or solver machinery. Keep nuisance-optimization gaps,
+  biological generalization and absolute concentration calibration distinct.
+
+## 2026-10-24 — reference inventories versus model inputs
+
+- Before calling a nullable reference field an upstream blocker, inspect its
+  explicit status and the rows actually reachable from the modeling cohort.
+  Unmatched inventory entries can legitimately omit full sequences while every
+  observed occurrence remains supported. Keep source uncertainty intact and fix
+  consumer assumptions; do not file an upstream bug without a reachable failure.
+
+
+## 2026-10-24 — Gate every declared representation before biological fitting
+
+- Aggregate prediction agreement can hide larger errors in low-probability paths. Execute every registered path-level numerical gate before launching biological fits; do not substitute response-level equality. If a later check fails, stop the live fit, preserve its artifacts, diagnose producer versus verifier arithmetic, and freeze a numerical recovery before rerunning unchanged scientific conditions.
+- For ragged kinetic paths, avoid global prefix accumulation across unrelated origins. Use local sums with bounded padding and test long multi-origin populations; preserve original tolerances. Make reference arithmetic explicitly float64 rather than relying on integer-tensor promotion.
+- Reused qualification code must implement the registered reduction and denominator floor exactly, even when that floor happens to be inactive in the observed probes.
+
+## 2026-10-24 — numeric evidence embedded in metadata values
+
+- A quantitative source audit must inspect values as well as field names. mzIdentML can encode numeric intensity in spectrum-title/name strings even when no CV term is named intensity. Preserve raw values, verify duplicate representations, establish their measurement grain and aggregation, and correct public claims before calling an identification export quantity-free. A schema-name check alone cannot prove absence of numeric observations.
+
+## 2026-10-24 — Independent verifier scope
+
+- Keep training weights in a distinct binding from per-split evaluation weights.
+  A verifier can accidentally reconstruct a later model using the last evaluated
+  split, producing a false training-integrity failure. Preserve the failed verifier,
+  inspect the production fitter separately, and require numerical replay after a
+  verifier-only correction; never alter a frozen model to satisfy a broken checker.
+
+- Every multi-command publication shell must begin with `set -e`; verification
+  failure must prevent commit/push. CSV's valid default CRLF can trip Git whitespace
+  checks. Publish an LF derivative with parsed-cell equality and preserve original
+  bytes, instead of changing frozen numerical results or ignoring the check.
+
+## 2026-10-24 — Independent regression replay and rank ties
+
+- Agreement of predictions to a numerical tolerance does not imply agreement of raw Spearman to that tolerance. Verify coefficients/predictions independently, recompute published metrics from the exact archived values, and separately audit rank discrepancies on mathematically identical inputs. Preserve raw values and failed checks; explicitly record any revised verification contract rather than silently loosening a tolerance or rounding biological results.
+
+## 2026-10-24 — Production boundary coverage
+
+- A reference-algebra identity is not a test of the production implementation at that boundary. Invoke the actual function for every named boundary/monotonicity gate before fitting. If closure finds missing coverage, preserve original checks and fits, register a post-fit amendment, and disclose its timing rather than retroactively claiming the prospective gate ran.

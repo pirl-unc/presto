@@ -1,0 +1,76 @@
+{
+  "note": "Original model receipts counted sampled probe rows but omitted four exact-reference gradients. This adds236 policy/target rows per fit without changing fits, predictions or recorded elapsed time.",
+  "variants": {
+    "exact": {
+      "training_policy_rows": 118000,
+      "training_target_terms": 118000,
+      "history_policy_rows": 5959,
+      "sampled_probe_policy_rows": 30208,
+      "sampled_probe_target_terms": 40960,
+      "exact_probe_reference_policy_rows": 236,
+      "exact_probe_reference_target_terms": 236,
+      "total_training_and_diagnostic_policy_rows": 154403
+    },
+    "reinforce32_seed20261023": {
+      "training_policy_rows": 118000,
+      "training_target_terms": 64000,
+      "history_policy_rows": 5959,
+      "sampled_probe_policy_rows": 15104,
+      "sampled_probe_target_terms": 8192,
+      "exact_probe_reference_policy_rows": 236,
+      "exact_probe_reference_target_terms": 236,
+      "total_training_and_diagnostic_policy_rows": 139299
+    },
+    "reinforce32_seed20261024": {
+      "training_policy_rows": 118000,
+      "training_target_terms": 64000,
+      "history_policy_rows": 5959,
+      "sampled_probe_policy_rows": 15104,
+      "sampled_probe_target_terms": 8192,
+      "exact_probe_reference_policy_rows": 236,
+      "exact_probe_reference_target_terms": 236,
+      "total_training_and_diagnostic_policy_rows": 139299
+    },
+    "reinforce32_seed20261025": {
+      "training_policy_rows": 118000,
+      "training_target_terms": 64000,
+      "history_policy_rows": 5959,
+      "sampled_probe_policy_rows": 15104,
+      "sampled_probe_target_terms": 8192,
+      "exact_probe_reference_policy_rows": 236,
+      "exact_probe_reference_target_terms": 236,
+      "total_training_and_diagnostic_policy_rows": 139299
+    },
+    "reinforce128_seed20261023": {
+      "training_policy_rows": 118000,
+      "training_target_terms": 256000,
+      "history_policy_rows": 5959,
+      "sampled_probe_policy_rows": 15104,
+      "sampled_probe_target_terms": 32768,
+      "exact_probe_reference_policy_rows": 236,
+      "exact_probe_reference_target_terms": 236,
+      "total_training_and_diagnostic_policy_rows": 139299
+    },
+    "reinforce128_seed20261024": {
+      "training_policy_rows": 118000,
+      "training_target_terms": 256000,
+      "history_policy_rows": 5959,
+      "sampled_probe_policy_rows": 15104,
+      "sampled_probe_target_terms": 32768,
+      "exact_probe_reference_policy_rows": 236,
+      "exact_probe_reference_target_terms": 236,
+      "total_training_and_diagnostic_policy_rows": 139299
+    },
+    "reinforce128_seed20261025": {
+      "training_policy_rows": 118000,
+      "training_target_terms": 256000,
+      "history_policy_rows": 5959,
+      "sampled_probe_policy_rows": 15104,
+      "sampled_probe_target_terms": 32768,
+      "exact_probe_reference_policy_rows": 236,
+      "exact_probe_reference_target_terms": 236,
+      "total_training_and_diagnostic_policy_rows": 139299
+    }
+  },
+  "terminal_evaluation_rows_all_models_splits": 870
+}

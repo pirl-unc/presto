@@ -1,0 +1,10 @@
+{
+  "registered_utc": "2026-10-23T09:15:47.651221+00:00",
+  "failure": "Initial arithmetic audit correctly stopped: controls peptide-column experiment labels differ from evidence/summary labels. No quantities were compared.",
+  "amendment": "Permit only a unique candidate alias formed by removing underscores and hyphens from the full literal experiment ID in both sources. Preserve both originals and the candidate relation. Compare every peptide quantity with linked evidence under that alias; disagreements remain reported and cannot be silently repaired. This is not a specimen identity or supplied source crosswalk. The shared Hitlist adapter must carry the derived alias evidence explicitly.",
+  "examples": {
+    "peptide_column": "1511_7181-300a_alpha6-ut_1",
+    "evidence_and_summary": "1511_7181-300a_alpha6_ut1"
+  },
+  "tolerance_change": false
+}

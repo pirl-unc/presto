@@ -1,0 +1,27 @@
+{
+  "status": "original processed measurements recovered; quantitative training eligibility pending",
+  "directory_files": 3732,
+  "directory_extensions": {
+    ".raw": 1865,
+    ".tsv": 1,
+    ".txt": 1,
+    ".zip": 1865
+  },
+  "literal_source_cells_independently_verified": 369548,
+  "sampled_processed_archives": 2,
+  "sample_selection": "first HLA1/HLA2 pool DDA archives by name, before quantity inspection",
+  "peptide_rows_inspected": 3649,
+  "form_rows_inspected": 3738,
+  "admitted_training_rows": 0,
+  "optimizer_updates": 0,
+  "seconds": 0.2790052909986116,
+  "peak_gib": 0.2237091064453125,
+  "limits": [
+    "Two processed archives inspected; not a full cohort audit",
+    "Crude synthesis and estimated injections do not certify per-peptide equimolarity",
+    "No original intended-product/pool membership table admitted; byproducts not known-load standards",
+    "Community SDRF values conflict with primary synthetic-material and instrument descriptions",
+    "No planned-zero universe or detector failure mechanism inferred from missing identifications",
+    "No cross-instrument/matrix or APC concentration validation"
+  ]
+}

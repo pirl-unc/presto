@@ -1,0 +1,1 @@
+Attempt2 reached shared source ingestion but rejected a literal NaN in evidence PEP. This is missing confidence, not an invalid intensity. Preserve raw confidence and typed missing status; retain strict finite intensity validation. Atomic package writer removed uncommitted staging.

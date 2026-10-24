@@ -1,0 +1,8 @@
+response_only None 5.329070518200751e-15
+time_only None 1.0658141036401503e-14
+fixed_ratio_with_response None 1.0658141036401503e-14
+fixed_ratio None 8.881784197001252e-15
+constant_signal None 1.0658141036401503e-14
+constant_response {'updates': 2000, 'maximum_adam_error': 1.1102230246251565e-16, 'replayed_gradients': [{'step': 1, 'gradient_error': 1.3877787807814457e-16}, {'step': 100, 'gradient_error': 4.334911336140168e-16}, {'step': 500, 'gradient_error': 6.836911137057811e-16}, {'step': 1000, 'gradient_error': 5.46776708111596e-16}, {'step': 2000, 'gradient_error': 7.863921644944705e-16}], 'final_gradient_norm': 3.113663447173844e-15, 'coverage': 40, 'parameters': 40} 7.105427357601002e-15
+sequence_response {'updates': 2000, 'maximum_adam_error': 2.220446049250313e-16, 'replayed_gradients': [{'step': 1, 'gradient_error': 4.062722380737682e-15}, {'step': 100, 'gradient_error': 5.651620664515189e-15}, {'step': 500, 'gradient_error': 6.336728017308779e-15}, {'step': 1000, 'gradient_error': 7.437193222381566e-15}, {'step': 2000, 'gradient_error': 5.2692225582795515e-15}], 'final_gradient_norm': 0.018024440409548818, 'coverage': 78, 'parameters': 78} 8.881784197001252e-15
+VERIFIED exact 18.879953915951774

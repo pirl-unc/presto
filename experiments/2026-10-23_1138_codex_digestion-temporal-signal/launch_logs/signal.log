@@ -1,0 +1,106 @@
+{
+  "by_parent": [
+    {
+      "conditions": [
+        {
+          "condition_id": "soh2024_digestion:condition:aSPIRE_H2B",
+          "cross_replicate_mse": 0.4752108470803551,
+          "curves": 1500,
+          "no_change_mse": 0.49512061255455275
+        }
+      ],
+      "construct_id": "soh2024_digestion:construct:50d8b307581e0a39b20cd381c16a12dfbf6642e27d4df233f9b0f26f46bd82b5",
+      "cross_replicate_mse": 0.4752108470803551,
+      "no_change_mse": 0.49512061255455275
+    },
+    {
+      "conditions": [
+        {
+          "condition_id": "soh2024_digestion:condition:aSPIRE_LEDGF",
+          "cross_replicate_mse": 0.8828019411385589,
+          "curves": 3888,
+          "no_change_mse": 0.7007975450331538
+        }
+      ],
+      "construct_id": "soh2024_digestion:construct:5c44f6a3ee6e96b468205cf19c495bb0fd42bfae7f025a9744f6c09386070ba7",
+      "cross_replicate_mse": 0.8828019411385589,
+      "no_change_mse": 0.7007975450331538
+    },
+    {
+      "conditions": [
+        {
+          "condition_id": "soh2024_digestion:condition:aSPIRE_FFH_12p5",
+          "cross_replicate_mse": 0.1811258136364658,
+          "curves": 5058,
+          "no_change_mse": 1.4000238895667887
+        },
+        {
+          "condition_id": "soh2024_digestion:condition:aSPIRE_FFH_6p25",
+          "cross_replicate_mse": 0.23220409924059873,
+          "curves": 5400,
+          "no_change_mse": 1.1996504579573612
+        }
+      ],
+      "construct_id": "soh2024_digestion:construct:7fa7636cad66d6fbc4e373829ee78bb9ab66adb141e99f051d21cad9084a6bea",
+      "cross_replicate_mse": 0.20666495643853228,
+      "no_change_mse": 1.299837173762075
+    },
+    {
+      "conditions": [
+        {
+          "condition_id": "soh2024_digestion:condition:aSPIRE_H2A",
+          "cross_replicate_mse": 0.4422977750611425,
+          "curves": 1394,
+          "no_change_mse": 0.7158563228247125
+        }
+      ],
+      "construct_id": "soh2024_digestion:construct:af62ea1fde21fcc684bef6605aeee01ac2b3e3c59796d64c34c624f0f272aeec",
+      "cross_replicate_mse": 0.4422977750611425,
+      "no_change_mse": 0.7158563228247125
+    },
+    {
+      "conditions": [
+        {
+          "condition_id": "soh2024_digestion:condition:aSPIRE_hTau",
+          "cross_replicate_mse": 0.37345618588161555,
+          "curves": 4674,
+          "no_change_mse": 1.874595251675109
+        }
+      ],
+      "construct_id": "soh2024_digestion:construct:e7599d914ddf8ec9d8cdc94c7497b3a247e94d7396c93a8b7aaba6041628384b",
+      "cross_replicate_mse": 0.37345618588161555,
+      "no_change_mse": 1.874595251675109
+    },
+    {
+      "conditions": [
+        {
+          "condition_id": "soh2024_digestion:condition:aSPIRE_IL37b",
+          "cross_replicate_mse": 0.3344897071711804,
+          "curves": 1140,
+          "no_change_mse": 0.7445166196905629
+        }
+      ],
+      "construct_id": "soh2024_digestion:construct:f3df12ae52a6c6fc2cd28a85b9081abbf0ecc3e0da0265e151972558abf931d7",
+      "cross_replicate_mse": 0.3344897071711804,
+      "no_change_mse": 0.7445166196905629
+    }
+  ],
+  "descriptive_gate_passed": true,
+  "n_curves": 23054,
+  "n_parent_constructs": 6,
+  "n_peptide_condition_pairs": 11527,
+  "n_predictions": 67576,
+  "no_validation_or_test_response_evaluation": true,
+  "parent_weighted_cross_replicate_rmse": 0.6726714667120675,
+  "parent_weighted_no_change_rmse": 0.9857927034913042,
+  "parents_improved": 5,
+  "peak_rss_bytes": 1004716032,
+  "pooled_cross_replicate_rmse": 0.6179910821316982,
+  "pooled_no_change_rmse": 1.086043095213741,
+  "pooled_pearson": 0.815573398618005,
+  "pooled_prediction_sd": 1.017549226945896,
+  "pooled_spearman": 0.75791770607028,
+  "pooled_target_sd": 1.017549226945896,
+  "training": "none; matched-label repeatability only",
+  "wall_seconds": 1.3471978749730624
+}

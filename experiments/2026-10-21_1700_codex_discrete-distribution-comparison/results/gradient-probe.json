@@ -1,0 +1,22 @@
+{
+  "reference_norm": 1.2020981311798096,
+  "repeats": 128,
+  "conditions": {
+    "8": {
+      "mean_relative_error": 0.08415993303060532,
+      "single_relative_error_mean": 1.0921283960342407,
+      "single_cosine_mean": 0.6625513434410095,
+      "mean_cosine": 0.996640682220459,
+      "sum_parameter_variances": 1.768517255783081,
+      "reward_queries": 4096
+    },
+    "64": {
+      "mean_relative_error": 0.04070678725838661,
+      "single_relative_error_mean": 0.37595638632774353,
+      "single_cosine_mean": 0.9377365708351135,
+      "mean_cosine": 0.9991942644119263,
+      "sum_parameter_variances": 0.20771268010139465,
+      "reward_queries": 32768
+    }
+  }
+}

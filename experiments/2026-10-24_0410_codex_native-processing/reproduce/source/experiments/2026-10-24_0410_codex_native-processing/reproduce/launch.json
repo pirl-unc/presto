@@ -1,0 +1,45 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "registered_at": "2026-10-24T04:10:36.520445-04:00",
+  "presto_commit": "2cb7db0fff076180e3235ea11ef9d30b6cb2872e",
+  "presto_dirty": " M experiments/agents/codex/plans/native-processing-comparison.md\n M tasks/todo.md\n",
+  "recipe_directory": "/private/tmp/presto-modular-model/data/native_peptidome_recipes/2026-10-24_0259_codex_native-response-admission/response-recipe",
+  "recipe_manifest_sha256": "c72980c070cb1296609bbe7d296e27b6a2a22d3ff354ef846c1c99ad7959ccfc",
+  "admission_receipt": "/private/tmp/presto-modular-model/experiments/2026-10-24_0259_codex_native-response-admission/results/independent-verification.json",
+  "baseline_family": "/private/tmp/presto-modular-model/experiments/2026-10-24_0314_codex_native-response-baselines",
+  "arms": [
+    "uniform_exact",
+    "uniform_hybrid",
+    "sequence_exact",
+    "sequence_hybrid"
+  ],
+  "steps": 200,
+  "lr": 0.02,
+  "betas": [
+    0.9,
+    0.999
+  ],
+  "eps": 1e-08,
+  "penalty": 0.01,
+  "seed": 42,
+  "sample_count": 512,
+  "gradient_repeats": 16,
+  "gradient_mean_gate": 0.1,
+  "gradient_rms_gate": 0.25,
+  "gradient_state_seed": 703,
+  "gradient_state_scale": 0.03,
+  "rank_relative_threshold": 1e-10,
+  "exact_seconds_cap": 300,
+  "hybrid_seconds_cap": 1800,
+  "rss_bytes_cap": 4294967296,
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "test_policy": "separate final command after all training attempts terminate; evaluate all completed fixed models",
+  "synthetic_biological_targets": "none",
+  "pretraining": "none",
+  "input_scaling": "unit precursor input per distinct candidate full sequence; removal rate fixed to1 time-unit^-1; source condition offset shared across peptides"
+}

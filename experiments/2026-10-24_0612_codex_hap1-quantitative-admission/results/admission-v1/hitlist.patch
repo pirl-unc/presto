@@ -1,0 +1,466 @@
+diff --git a/hitlist/__init__.py b/hitlist/__init__.py
+index e9679a1..32b7e2d 100644
+--- a/hitlist/__init__.py
++++ b/hitlist/__init__.py
+@@ -77,6 +77,8 @@ _PUBLIC_API: dict[str, str] = {
+     "write_supporting_numeric_evidence_package": ".supporting_numeric_evidence",
+     "verify_supporting_numeric_evidence_package": ".supporting_numeric_evidence",
+     "write_tmab_peptidomics_package": ".tmab_peptidomics",
++    "write_hap1_quantitative_package": ".hap1_quantitative",
++    "verify_hap1_quantitative_package": ".hap1_quantitative",
+     "verify_tmab_peptidomics_package": ".tmab_peptidomics",
+     "write_tcell_processing_package": ".tcell_processing_package",
+     "verify_tcell_processing_package": ".tcell_processing_package",
+diff --git a/hitlist/evidence_bindings.py b/hitlist/evidence_bindings.py
+index 17dc3c0..678be93 100644
+--- a/hitlist/evidence_bindings.py
++++ b/hitlist/evidence_bindings.py
+@@ -50,6 +50,9 @@ SELECTORS = {
+ # These are exact same-grain aliases. Related values are declared as links below;
+ # a raw field with an uncertain role is intentionally left under native.*.
+ ALIASES = {
++    "hap1_assets": {"source_asset_role": "source_role"},
++    "hap1_runs": {"acquisition_id": "run_id"},
++    "hap1_occurrences": {"mapping_position": "start_1based"},
+     "tmab_source_asset": {"source_asset_role": "source_role"},
+     "calibration_protocol_parameter": {
+         "source_record_id": "parameter_id",
+@@ -1086,6 +1089,61 @@ LINKS += (
+ )
+ 
+ 
++for _table in ("quantities", "protein_quantities", "occurrences"):
++    LINKS += (
++        Link(
++            "source_row",
++            "hap1_" + _table,
++            "hap1_source_records",
++            "source_record_id",
++            "source_record_id",
++            "one",
++            "exact_original_source_row",
++        ),
++    )
++for _table in ("quantities", "protein_quantities", "precursors", "runs"):
++    LINKS += (
++        Link(
++            "sample",
++            "hap1_" + _table,
++            "hap1_samples",
++            "sample_id",
++            "sample_id",
++            "optional_one" if _table in ("precursors", "runs", "protein_quantities") else "one",
++            "declared_modality_sample_not_cross_modality_specimen_pair",
++        ),
++    )
++for _table in ("quantities", "protein_quantities", "precursors", "runs", "samples"):
++    LINKS += (
++        Link(
++            "context",
++            "hap1_" + _table,
++            "hap1_contexts",
++            "context_id",
++            "context_id",
++            "optional_one" if _table in ("precursors", "runs", "protein_quantities") else "one",
++            "source_condition_and_protocol_scope",
++        ),
++    )
++for _table in ("protein_quantities", "precursors"):
++    LINKS += (
++        Link(
++            "run", "hap1_" + _table, "hap1_runs", "run_id", "run_id", "one", "original_source_run"
++        ),
++    )
++LINKS += (
++    Link(
++        "reference",
++        "hap1_occurrences",
++        "hap1_references",
++        "reference_record_id",
++        "reference_record_id",
++        "optional_one",
++        "exact_sequence_candidate_not_measured_origin",
++    ),
++)
++
++
+ def materialized_bindings(
+     package_schema_version=None, *, appended_source_ids=(), include_adjudications=False
+ ):
+diff --git a/hitlist/evidence_catalog.py b/hitlist/evidence_catalog.py
+index 01a5cfd..7010e27 100644
+--- a/hitlist/evidence_catalog.py
++++ b/hitlist/evidence_catalog.py
+@@ -8,7 +8,7 @@ from __future__ import annotations
+ 
+ from dataclasses import asdict, dataclass, replace
+ 
+-SCHEMA_VERSION = 24
++SCHEMA_VERSION = 25
+ FIELD_ROLES = frozenset(
+     {
+         "identity",
+@@ -1200,6 +1200,51 @@ FIELDS += (
+     _field("audit_reason", "annotation", "category", "Reason code for endpoint/audit treatment"),
+ )
+ 
++FIELDS += (
++    _field(
++        "sample_id",
++        "identity",
++        "identifier",
++        "Source-scoped sample group; not proof of a physical specimen",
++    ),
++    _field(
++        "biological_replicate_raw",
++        "lineage",
++        "text",
++        "Literal source biological replicate label; independence not inferred",
++    ),
++    _field(
++        "mhc_class",
++        "biological_context",
++        "category",
++        "Contextual MHC class with evidence scope retained",
++    ),
++    _field(
++        "mhc_genotype",
++        "biological_context",
++        "set",
++        "Supplied contextual allele set; not a peptide-specific restriction",
++    ),
++    _field(
++        "condition_knockout_genes",
++        "biological_context",
++        "set",
++        "Source-asserted knockout genes; not measured residual activity",
++    ),
++    _field(
++        "component_state_status",
++        "provenance",
++        "category",
++        "Evidence basis for machinery component state",
++    ),
++    _field(
++        "control_condition_id",
++        "relation",
++        "identifier",
++        "Comparator condition, without implied specimen pairing",
++    ),
++)
++
+ _FIELD_BY_NAME = {field.name: field for field in FIELDS}
+ 
+ _SOURCE = ("observation_id", "source_record_id", "source_dataset", "source_reference_id")
+@@ -3920,6 +3965,151 @@ EVIDENCE += tuple(
+     for table, (grain, aliases) in DIGESTION_RELATIONS.items()
+ )
+ 
++HAP1_RELATIONS = {
++    "assets": (
++        "one_original_asset_or_archive_member",
++        ("source_asset_id", "source_file", "asset_sha256", "source_asset_url", "source_asset_role"),
++    ),
++    "source_records": (
++        "one_original_supplement_or_metadata_or_protein_report_row",
++        (
++            "source_record_id",
++            "source_file",
++            "source_locator",
++            "source_row_json",
++            "source_row_index",
++        ),
++    ),
++    "contexts": (
++        "one_source_condition_and_measurement_modality",
++        (
++            "context_id",
++            "condition_id",
++            "control_condition_id",
++            "condition_text",
++            "condition_knockout_genes",
++            "component_state_status",
++            "organism_name",
++            "organism_taxon_id",
++            "cell_line_name",
++            "mhc_class",
++            "mhc_genotype",
++            "measured_pool",
++            "digestion_enzyme",
++            "instrument",
++            "normalization_policy",
++            "context_scope",
++            "source_row_json",
++        ),
++    ),
++    "samples": (
++        "one_modality_condition_biological_replicate_group",
++        (
++            "sample_id",
++            "context_id",
++            "condition_id",
++            "sample_label_raw",
++            "biological_replicate_raw",
++            "specimen_id",
++            "aliquot_id",
++            "material_link_precision",
++        ),
++    ),
++    "runs": (
++        "one_declared_or_unmapped_MS_acquisition",
++        ("acquisition_id", "sample_id", "context_id", "source_record_id", "acquisition_mode"),
++    ),
++    "quantities": (
++        "one_original_supplement_quantity_cell_including_missing",
++        (
++            "measurement_id",
++            "source_record_id",
++            "sample_id",
++            "context_id",
++            "peptide_sequence",
++            "parent_label_raw",
++            "quantitative_raw",
++            "quantitative_value",
++            "value_status",
++            "measurement_unit",
++            "quantity_scale",
++            "eligibility_status",
++        ),
++    ),
++    "precursors": (
++        "one_original_deposited_DIA_precursor_run_row",
++        (
++            "source_record_id",
++            "source_file",
++            "source_locator",
++            "source_row_json",
++            "source_row_index",
++            "sample_id",
++            "context_id",
++            "peptide_sequence",
++            "peptide_modifications_raw",
++            "parent_label_raw",
++        ),
++    ),
++    "protein_quantities": (
++        "one_original_deposited_protein_run_quantity_cell",
++        (
++            "measurement_id",
++            "source_record_id",
++            "sample_id",
++            "context_id",
++            "parent_label_raw",
++            "quantitative_raw",
++            "quantitative_value",
++            "value_status",
++            "measurement_unit",
++            "quantity_scale",
++        ),
++    ),
++    "references": (
++        "one_original_search_FASTA_entry_including_decoys_and_standards",
++        (
++            "reference_record_id",
++            "accession_raw",
++            "reference_sequence",
++            "sequence_sha256",
++            "reference_role",
++            "organism_taxon_id",
++            "source_locator",
++        ),
++    ),
++    "occurrences": (
++        "one_all_candidate_reference_occurrence_or_unmapped_peptide_row",
++        (
++            "occurrence_id",
++            "source_record_id",
++            "peptide_sequence",
++            "parent_label_raw",
++            "reference_record_id",
++            "mapping_position",
++            "mapping_status",
++        ),
++    ),
++}
++
++EVIDENCE += tuple(
++    Evidence(
++        "hap1_" + name,
++        "context" if name in ("contexts", "samples", "runs") else "relation",
++        "mhc_elution_and_proteomics",
++        grain,
++        f"hap1/typed/{name}.parquet",
++        "shapiro2025_hap1",
++        (),
++        fields,
++        (fields[0],),
++        status="v2_materialized",
++        materialized_artifact=f"hap1/typed/{name}.parquet",
++        min_package_schema_version=20,
++    )
++    for name, (grain, fields) in HAP1_RELATIONS.items()
++)
++
+ _EVIDENCE_BY_NAME = {item.name: item for item in EVIDENCE}
+ 
+ TASKS = (
+diff --git a/hitlist/evidence_package.py b/hitlist/evidence_package.py
+index 893230f..553fbe0 100644
+--- a/hitlist/evidence_package.py
++++ b/hitlist/evidence_package.py
+@@ -6,6 +6,12 @@ from __future__ import annotations
+ def package_family(manifest):
+     """Classify the envelope; the family's verifier still validates all content."""
+     schema = manifest.get("schema_version")
++    if (
++        schema == 20
++        and manifest.get("package_family") == "hap1_quantitative"
++        and manifest.get("revision") == "shapiro2025_hap1_quantitative_v1"
++    ):
++        return "hap1_quantitative"
+     if schema in (6, 7):
+         return {6: "supporting", 7: "reference"}[schema]
+     if schema in (8, 9):
+diff --git a/hitlist/evidence_store.py b/hitlist/evidence_store.py
+index 7ffa5d4..6be0590 100644
+--- a/hitlist/evidence_store.py
++++ b/hitlist/evidence_store.py
+@@ -125,7 +125,11 @@ class EvidenceStore:
+             appended_source_ids=manifest.get("appended_sources", {}),
+             include_adjudications=adjudication_manifest_path(manifest) is not None,
+         )
+-        if family == "tmab_peptidomics":
++        if family == "hap1_quantitative":
++            self.bindings = {
++                name: binding for name, binding in self.bindings.items() if name.startswith("hap1_")
++            }
++        elif family == "tmab_peptidomics":
+             self.bindings = {
+                 name: binding for name, binding in self.bindings.items() if name.startswith("tmab_")
+             }
+@@ -178,7 +182,11 @@ class EvidenceStore:
+             family = package_family(envelope)
+         except ValueError as exc:
+             raise EvidenceQueryError(str(exc)) from exc
+-        if family == "external":
++        if family == "hap1_quantitative":
++            from .hap1_quantitative import verify_hap1_quantitative_package
++
++            manifest = verify_hap1_quantitative_package(directory)
++        elif family == "external":
+             from .external_successor import verify_external_successor
+ 
+             manifest = verify_external_successor(directory)
+@@ -337,6 +345,8 @@ class EvidenceStore:
+     def _source_registry(self):
+         """Expose verified source revisions and rights evidence at source scope."""
+         family = package_family(self.manifest)
++        if family == "hap1_quantitative":
++            return self.manifest.get("source_registry", {})
+         if family == "tmab_peptidomics":
+             return self.manifest.get("source_registry", {})
+         if family == "tcell_processing":
+diff --git a/hitlist/version.py b/hitlist/version.py
+index 25fef38..6f7f903 100644
+--- a/hitlist/version.py
++++ b/hitlist/version.py
+@@ -1 +1 @@
+-__version__ = "2.0.19"
++__version__ = "2.0.20"
+diff --git a/tasks/todo.md b/tasks/todo.md
+index f9790fa..2d9e37f 100644
+--- a/tasks/todo.md
++++ b/tasks/todo.md
+@@ -8118,3 +8118,14 @@ Review: the real package replay verifies schema 19/catalog 24 and preserves
+ 280,664 final values and 2,284 conflicts. EvidenceStore exposes 14 bindings;
+ aliases return those source counts and five family/five availability rows.
+ Hosted review and release evidence are pending.
++# Quantitative HAP1 admission — issue 726
++
++Previous goal turn: progress (source arithmetic verified and issue updated).
++Plan: [hap1-quantitative-726.md](hap1-quantitative-726.md).
++- [x] Revalidate current main and existing issue; pin actual source semantics.
++- [ ] Implement immutable typed source/context/quantity/reference package.
++- [ ] Connect the package to EvidenceStore and test source-faithful query behavior.
++- [ ] Build on original assets and independently verify all admitted quantities.
++- [ ] Run format/lint/tests, bump version, publish and track merge/release.
++- [ ] Register the downstream biological comparison after source admission.
++
+diff --git a/tests/test_binding_context_availability.py b/tests/test_binding_context_availability.py
+index d1d8d9c..cfb04cb 100644
+--- a/tests/test_binding_context_availability.py
++++ b/tests/test_binding_context_availability.py
+@@ -37,7 +37,7 @@ def test_binding_context_availability_is_a_registered_successor_relation():
+         "revision": "binding_assay_context_availability_v1",
+     }
+     assert package_family(envelope) == "binding_context_availability"
+-    assert SCHEMA_VERSION == 24
++    assert SCHEMA_VERSION == 25
+     fields = {
+         field["name"] for field in describe_evidence("binding_context_availability")["fields"]
+     }
+diff --git a/tests/test_digestion_processing_package.py b/tests/test_digestion_processing_package.py
+index 6956d93..07cd1d3 100644
+--- a/tests/test_digestion_processing_package.py
++++ b/tests/test_digestion_processing_package.py
+@@ -35,7 +35,7 @@ def test_processing_family_ledger_preserves_unavailable_apc_scope():
+ 
+ 
+ def test_processing_package_family_and_aliases_are_versioned():
+-    assert SCHEMA_VERSION == 24
++    assert SCHEMA_VERSION == 25
+     assert (
+         package_family(
+             {
+diff --git a/tests/test_evidence_catalog.py b/tests/test_evidence_catalog.py
+index a6ace65..95e0870 100644
+--- a/tests/test_evidence_catalog.py
++++ b/tests/test_evidence_catalog.py
+@@ -266,7 +266,7 @@ def test_catalog_import_does_not_build_or_download(tmp_path):
+         text=True,
+         cwd=Path(__file__).parents[1],
+     )
+-    assert probe.stdout.strip() == "24"
++    assert probe.stdout.strip() == "25"
+     assert not data_root.exists()
+ 
+ 
+diff --git a/tests/test_gomez_prediction_panel.py b/tests/test_gomez_prediction_panel.py
+index f63e679..ef5c735 100644
+--- a/tests/test_gomez_prediction_panel.py
++++ b/tests/test_gomez_prediction_panel.py
+@@ -28,7 +28,7 @@ def test_prediction_panel_family_and_catalog_contract():
+     }
+     assert package_family(envelope) == "gomez_prediction_panel"
+     assert adjudication_manifest_path(envelope) == "manifests/adjudication.json"
+-    assert SCHEMA_VERSION == 24
++    assert SCHEMA_VERSION == 25
+     assert "prediction_id" in {
+         field["name"] for field in describe_evidence("gomez_prediction_row")["fields"]
+     }
+diff --git a/tests/test_tcell_processing_package.py b/tests/test_tcell_processing_package.py
+index e1be9ce..7cd4655 100644
+--- a/tests/test_tcell_processing_package.py
++++ b/tests/test_tcell_processing_package.py
+@@ -40,7 +40,7 @@ def test_family_ledger_keeps_unavailable_families_explicit():
+ 
+ 
+ def test_package_family_and_query_alias_contract_are_versioned():
+-    assert SCHEMA_VERSION == 24
++    assert SCHEMA_VERSION == 25
+     assert (
+         package_family(
+             {
+diff --git a/tests/test_tmab_peptidomics.py b/tests/test_tmab_peptidomics.py
+index bba7927..bb8dc5a 100644
+--- a/tests/test_tmab_peptidomics.py
++++ b/tests/test_tmab_peptidomics.py
+@@ -50,7 +50,7 @@ def test_tmab_package_is_standalone_and_queryable():
+         "revision": "tmab_native_peptidomics_v3",
+     }
+     assert package_family(envelope) == "tmab_peptidomics"
+-    assert SCHEMA_VERSION == 24
++    assert SCHEMA_VERSION == 25
+     fields = {field["name"] for field in describe_evidence("tmab_measurement")["fields"]}
+     assert {
+         "peptide_sequence_raw",

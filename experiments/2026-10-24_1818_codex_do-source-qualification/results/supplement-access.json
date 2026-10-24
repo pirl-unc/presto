@@ -1,0 +1,49 @@
+{
+  "manifest": "experiments/2026-10-24_1818_codex_do-source-qualification/reproduce/supplement-access.json",
+  "assets": [
+    {
+      "name": "supplement-index.html",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/instance/6398211/bin/RA118.000956_index.html",
+      "started_utc": "2026-10-24T18:21:08.354914+00:00",
+      "status_code": 200,
+      "final_url": "https://pmc.ncbi.nlm.nih.gov/articles/instance/6398211/bin/RA118.000956_index.html",
+      "headers": {
+        "content-type": "text/html; charset=utf-8"
+      },
+      "status": "retrieved",
+      "bytes": 21410,
+      "sha256": "f65019f9e42501f8b6d9242764a6acb09a082fdf7ddc9f9f7efa789d4d86c38f",
+      "path": "/private/tmp/presto-modular-model/data/do_source_qualification/2026-10-24_1818_v1/supplement-index.html",
+      "seconds": 0.24074637499870732
+    },
+    {
+      "name": "supplements.zip",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6398211/supplementaryFiles",
+      "started_utc": "2026-10-24T18:21:08.596251+00:00",
+      "status_code": 200,
+      "final_url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6398211/supplementaryFiles",
+      "headers": {
+        "Content-Type": "application/xml"
+      },
+      "status": "retrieved",
+      "bytes": 296,
+      "sha256": "f16a91305d9b01c0a3393491ceb111ba24f4c5a8c2751d68fdf6f04268e6adf5",
+      "path": "/private/tmp/presto-modular-model/data/do_source_qualification/2026-10-24_1818_v1/supplements.zip",
+      "seconds": 0.734945832984522
+    },
+    {
+      "name": "publisher-mmc1.pdf",
+      "url": "https://ars.els-cdn.com/content/image/1-s2.0-S1535947620318533-mmc1.pdf",
+      "started_utc": "2026-10-24T18:21:09.331893+00:00",
+      "status_code": 404,
+      "final_url": "https://ars.els-cdn.com/content/image/1-s2.0-S1535947620318533-mmc1.pdf",
+      "headers": {
+        "Content-Type": "text/xml"
+      },
+      "status": "failed",
+      "error": "HTTPError: 404 Client Error: Not Found for url: https://ars.els-cdn.com/content/image/1-s2.0-S1535947620318533-mmc1.pdf",
+      "seconds": 0.4373651249916293
+    }
+  ],
+  "total_stored_bytes": 273508
+}

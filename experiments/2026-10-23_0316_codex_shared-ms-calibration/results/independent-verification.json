@@ -1,0 +1,61 @@
+{
+  "conserved_recipe_files": {
+    "mapp_captured_composition_min2_v1": [
+      "contributors.jsonl",
+      "coverage.json",
+      "examples.jsonl",
+      "parents.jsonl",
+      "peptide_dispositions.jsonl",
+      "recipe.json",
+      "summary.json"
+    ],
+    "mapp_captured_composition_v1": [
+      "contributors.jsonl",
+      "coverage.json",
+      "examples.jsonl",
+      "parents.jsonl",
+      "peptide_dispositions.jsonl",
+      "recipe.json",
+      "summary.json"
+    ],
+    "mapp_complete_run_composition_v1": [
+      "contributors.jsonl",
+      "coverage.json",
+      "examples.jsonl",
+      "parents.jsonl",
+      "peptide_dispositions.jsonl",
+      "recipe.json",
+      "run_observations.jsonl",
+      "summary.json"
+    ]
+  },
+  "distinct_cross_asset_reporters": 32,
+  "full_query_rows": 1853831,
+  "materialized_evidence_types": 84,
+  "new_generation_inventory_files": 180,
+  "nonuniform_ratio_columns": 39,
+  "normalized_only_values": 26,
+  "passed": true,
+  "peak_rss_bytes": 691044352,
+  "prior_files_identical_with_independent_inodes": 157,
+  "queried_relations": 31,
+  "relation_rows": {
+    "curve_measurements": 3410,
+    "curve_rows": 682,
+    "nominal_loads": 25,
+    "nominal_standards": 30,
+    "normalization_diagnostics": 99,
+    "protocol_parameters": 520,
+    "reporter_forms": 32,
+    "s4_measurements": 6138,
+    "source_assertions": 34,
+    "source_cells": 13561,
+    "source_sheets": 7,
+    "source_slots": 99,
+    "summary_measurements": 186
+  },
+  "source_cells_verified": 13561,
+  "source_summary_arithmetic_checks": 162,
+  "verifier_sha256": "75ecf1d032b61882e1aed06a678a4acc78a630ff100a6ad5a154c496c445077a",
+  "wall_seconds": 13.663282624969725
+}

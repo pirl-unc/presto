@@ -1,0 +1,15 @@
+# Known-load MS-response source admission
+
+Prospective source-only audit for Hitlist #762. Goal: determine whether public PXD004886 supplementary files supply sequence × nominal load × acquisition response with recoverable selection/censoring and sufficient protocol context. This is an observation-response anchor candidate, not intracellular concentration or processing supervision. Prior goal turn made progress by completing canonical MAPP source/query/recipe conservation and publishing it.
+
+## Scope and fixed checks
+
+1. Pin original Supplementary Data1/2/4/8 from the Collins2017 publication. Save the original bytes in a shared Hitlist source-assets directory, with exact URL, retrieval time, response metadata, size and SHA256. No author outreach, private files or raw-MS reprocessing. Retain failed requests. Record article CC-BY4.0 and any file-specific credit restrictions; do not assume a third-party grant.
+2. Independently inventory all XLSX sheets/cells using both openpyxl and ZIP/XML. Preserve formula text separately from cached values, labels, row/column coordinates, blanks, merged ranges and hidden sheets. No corrected source cells or inferred zero values. Report exact sequence, dilution, site/day/run and response tables, source-defined universes, units and missing/censored statuses where available.
+3. Audit joins using explicit supplied identities. Check the nominal threefold dilution only against exact source amounts and rounding. Keep on-column amount separate from concentration/volume. Determine whether Data4 covers all acquisitions and whether Data8 is a selected curve summary. Keep response-informed concentration grouping, lower-limit omission, saturation and normalization explicit. Unknown specimen/standard lot or exclusion mappings remain unknown, not inferred from acquisition names.
+4. This audit produces evidence and a precise Hitlist adapter specification, not a Presto-only curation/training path. Shared reusable relations, source registry, typed query bindings and recipes will be implemented in Hitlist after inspecting the actual schema. Compare with its existing calibration/context/quantity contracts. Update #762 with verified gaps and criteria; do not create a duplicate data request.
+5. No fitting, pretraining, synthetic labels, model checkpoint, held-out predictive split or prediction dump. Acquisition completeness is not predictive accuracy. Any later calibrated-response experiment must freeze separate peptide/site/preparation grouping and account for selection before fitting. Thirty response-selected standards cannot establish broad sequence transfer or calibration for MAPP/MHC elution.
+
+## Closure
+
+Retain original-source hashes, exact invocation/environment/Git state, frozen analysis code, independent inventory checks, joins/dispositions and failed attempts. Publish a canonical report and experiment-log entry even if admission fails. Continue the concentration goal with identifiable components; no new tuning on the exposed MAPP test.

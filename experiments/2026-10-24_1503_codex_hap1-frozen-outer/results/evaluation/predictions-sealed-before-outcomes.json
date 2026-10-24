@@ -1,0 +1,34 @@
+{
+  "utc": "2026-10-24T15:08:53.560507+00:00",
+  "status": "both_split_predictions_sealed_before_outcome_access",
+  "sha256": {
+    "test/erap1-predictions-only.npz": "977bd9432e18df9797e703d71a80a9f0209bcc8d06923ded3c5d9f91557fe35d",
+    "test/parents.json": "6afa834acc6a0949bd76063a9269686a622616de95277cad4727fe5e894134f7",
+    "test/direct-predictions-only.npz": "ee1db0dab440464ff483bb5d6f391344a03d499eef5c0c00c9070c0669b88734",
+    "test/corrections-only.npz": "e5b6d4da16083bae47fdbc36af12ebf22c9cc12913d2403c57996edeaeb8f0a8",
+    "test/origins.json": "186b772bc7c641cd05581754b95ca57a0d222b8c15272fd38d59b8941b5428b0",
+    "test/covariates.parquet": "105a2d4ff4ecc925afb7a93f38ae62a039770a7aec83849dcc381f644ab2d199",
+    "validation/erap1-predictions-only.npz": "faf58ad80645332a714103b228117777b9cb360f0c30e94e8ed5585efde1868b",
+    "validation/parents.json": "06486833413c846215bd9df206ff083390924621defd3f3b709ec2416a1de895",
+    "validation/direct-predictions-only.npz": "63ed6e2bad4ac1ceaf1d2c28f22b9aeedf5a157f4e7831b92bf519578f66ae5c",
+    "validation/corrections-only.npz": "4f7ee42810fa4c3244a53031187549c4321fa601b00ba7527d190f4f59570025",
+    "validation/origins.json": "a78d8305f96791733c96ab2012a64c3ec88719efd40971f4af3ac6dc73bcd1d3",
+    "validation/covariates.parquet": "7da675e8dfc3c2ae6020a3edbcd3336d8898338d71882d2dbd7f99acf01e4b7f"
+  },
+  "population": {
+    "validation": {
+      "n_observations": 19744,
+      "n_erap1_observations": 1970,
+      "n_erap1_peptides": 774,
+      "n_erap1_origins": 795,
+      "n_erap1_paths": 425963
+    },
+    "test": {
+      "n_observations": 22724,
+      "n_erap1_observations": 2297,
+      "n_erap1_peptides": 888,
+      "n_erap1_origins": 929,
+      "n_erap1_paths": 554402
+    }
+  }
+}

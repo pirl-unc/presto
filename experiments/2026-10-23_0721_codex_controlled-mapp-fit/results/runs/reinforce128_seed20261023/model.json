@@ -1,0 +1,50 @@
+{
+  "all_four_weights_changed": true,
+  "beta": -0.3398663581708335,
+  "checkpoint_selection": "final_update_2000;no_validation_selection",
+  "feature_mean": [
+    2.786329623904242,
+    0.3820966581805747,
+    0.10478497080635749,
+    0.15597522894373186
+  ],
+  "feature_names": [
+    "log_length",
+    "fraction_AVILMFYW",
+    "fraction_KR",
+    "fraction_DE"
+  ],
+  "feature_scale": [
+    0.3173432927746418,
+    0.09078843168323217,
+    0.0662992855605915,
+    0.10625277781629
+  ],
+  "gradient_covered_weights": [
+    true,
+    true,
+    true,
+    true
+  ],
+  "history_eval_seconds": 0.001734869962092489,
+  "history_policy_rows": 5959,
+  "kind": "policy",
+  "n_trainable_coefficients": 5,
+  "optimizer_seconds": 0.24971040553646162,
+  "probe_policy_rows": 15104,
+  "probe_seconds": 0.01998941699275747,
+  "probe_target_terms": 32768,
+  "sample_count": 128,
+  "scale_fit": "closed_form_train_log_total_ratio",
+  "seed": 20261023,
+  "total_fit_wall_seconds": 0.2738872499903664,
+  "training_policy_rows": 118000,
+  "training_target_terms": 256000,
+  "variant": "reinforce128_seed20261023",
+  "weights": [
+    0.5814982196239593,
+    0.057896709432370914,
+    -0.1988462194287246,
+    0.150365945376885
+  ]
+}

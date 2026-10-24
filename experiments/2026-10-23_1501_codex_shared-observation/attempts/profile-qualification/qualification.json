@@ -1,0 +1,23 @@
+{
+  "registered_at": "2026-10-23T17:44:11.054323-04:00",
+  "source_hashes": {
+    "code/qualify.py": "501f7a60f7f3895941052fbb8cd0c2be6773f3a3220ce495e172b3c6392858ad",
+    "code/observation.py": "bf612679f2280bee81bdcfaddd02771bada80f1db0978a86925ab48f9b07420f"
+  },
+  "sample_counts": [
+    32,
+    128,
+    512
+  ],
+  "groups": 16,
+  "seed": 42,
+  "max_mean_relative_error": 0.2,
+  "gradient_gate": "Kinetic block only; exact response gradients must not mask sampling error",
+  "response_scope": "Separate length/composition slopes for each observed training instrument, rank-reduced within-condition training contrasts; candidate-form ambiguity remains a limitation",
+  "coefficient_penalty": 0.01,
+  "states": [
+    "uniform_0p01",
+    "saved_ratio_initialization"
+  ],
+  "known_source_context_hash": "050c284cc04b0e11286b4a10e28573648bc9e8426ae68bbb9da54fa9332a50df"
+}
