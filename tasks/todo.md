@@ -13018,3 +13018,35 @@ Full report,comparison plot and28,512component metric rows preserved. No outer
 validation/test scored. Previous status turn made progress by independently
 confirming the exact biological null result. Publication and upstream release
 remain pending; full APC concentration objective remains unachieved.
+
+### ERAP1 publication and independent-data follow-up
+
+The completed biological experiment is pushed at87f23dfe47bcf0de0f713be4083d5e6fa5ebf263
+in draft PR131. Design issue130 records the negative exact/sampled comparison:
+https://github.com/pirl-unc/presto/issues/130#issuecomment-6384410756
+The source-data gap is filed/read back as Hitlist809. Next source qualification
+spec: experiments/agents/codex/plans/erap1-independent-source-qualification.md.
+No new numeric source was admitted; the goal remains active and unachieved.
+
+Upstream integration is moving: source a3e76c8 passed3,442local tests and original
+HAP1 package replay; recipe865acb8 passed49focused and subsequently3,446full tests
+(after an initial guarded preflight refusal). Main then advanced to897c98c/PR808,
+so source/recipe release versions must reconcile again. Current source integration
+preserves HAP1schema20/catalog25 and adds precursorv2/schema21/catalog26, with
+combinedcatalog27/sourceversion2.0.22 (recipe will2.0.23).70focused tests pass;
+new fullsuite session25635 is confirmed live. The first precursorv1 package now
+requires its historical consumer under upstream's v2 dispatch; it is not relabeled.
+
+### Final source integration and next data lead
+
+Presto experiment code head 87f23df passes both hosted CI runs 40095274467 and
+40095267351. All 227 portable artifact hashes and original log payloads verify.
+Source PR806 is pushed at a3b80a8 (version 2.0.22, catalog 27): 3,443 local tests
+and original HAP1 source replay pass. Recipe PR807 is pushed at fda50b6 (2.0.23):
+3,447 local tests and the original response-package replay pass. Their hosted
+checks, upstream merge and PyPI release remain pending, with no local fit running.
+
+Source discovery under Hitlist809 retrieved the Maben2021 Source Data ZIP, hash
+a9d7bcba… (479,402 bytes, two XLSX workbooks). The linked correction affects an
+acknowledgment. Original numeric measurement semantics remain unqualified; no
+new labels or fits. The next source plan and inventory are in the Codex plan area.
