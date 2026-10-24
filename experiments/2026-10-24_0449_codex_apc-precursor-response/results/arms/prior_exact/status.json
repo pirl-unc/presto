@@ -1,0 +1,21 @@
+{
+  "arm": "prior_exact",
+  "status": "completed",
+  "steps": 200,
+  "settings": {
+    "kind": "prior",
+    "precursor": true,
+    "method": "exact"
+  },
+  "n_parameters": 4,
+  "n_parameters_changed": 4,
+  "training_data_loss": 0.01855245870010597,
+  "training_objective": 0.018555905945542742,
+  "final_exact_gradient_inf": 1.6670212055335952e-06,
+  "seconds": 1.343684541003313,
+  "runtime_projection_after_20_steps": null,
+  "peak_rss_bytes": 446398464,
+  "n_score_evaluations": 0,
+  "fit_sha256": "d02dbce9a83f1523c9795f5c6127c9cfd2cd7f5c79de77b71fbf88fcdad67f8b",
+  "test_evaluated": false
+}

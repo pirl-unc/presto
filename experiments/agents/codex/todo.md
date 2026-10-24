@@ -137,3 +137,10 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [x] File concrete upstream findings as Hitlist791, including reuse matching, sequence/modification errors, heatmap projection and protocol provenance.
 - [ ] Execute plans/native-peptidome-semantic-corrections.md against current upstream; preserve source values and explicit unknowns.
 - [ ] Admit a canonical native-response recipe and preregister the next bounded real-data exact-versus-sampled comparison. No APC concentration claim from source admission alone.
+
+## Native-to-APC response outcome
+
+- [x] Canonical native recipe admitted0259; native controls0314 and exact/sampled processing0410 completed. Native processing gain small: testexactRMSE.243207 versus condition.250953.
+- [x] Actual macrophage precursor/processing family0449 completed and independently verified: condition testRMSE.120011, precursor+sequence.139278, withoutprecursor.120008. Negative; no useful processing increment, no concentration claim.
+- [x] Preserve all fixed outcomes and stop tuning inspected native/MAPP/APC test partitions. Exact and conditional sampled agree; no sampling advantage.
+- [ ] Diagnose precursor calibration and kinetic identifiability using training data only; preregister independent biological evaluation before any new predictive claim. Do not conflate context offsets or nonconstant surrogate inputs with learned peptide-specific biology.

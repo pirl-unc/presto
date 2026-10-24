@@ -1,0 +1,27 @@
+{
+  "scope": "exact sequence overlap only; no homology-independent claim or posthoc filtering",
+  "prior_recipe_manifest_sha256": "c72980c070cb1296609bbe7d296e27b6a2a22d3ff354ef846c1c99ad7959ccfc",
+  "splits": [
+    {
+      "split": "train",
+      "n_unique_peptides": 492,
+      "n_exact_peptide_overlaps_with_prior_training": 0,
+      "n_parent_sequences": 651,
+      "n_exact_parent_overlaps_with_prior_training": 4
+    },
+    {
+      "split": "val",
+      "n_unique_peptides": 96,
+      "n_exact_peptide_overlaps_with_prior_training": 0,
+      "n_parent_sequences": 133,
+      "n_exact_parent_overlaps_with_prior_training": 0
+    },
+    {
+      "split": "test",
+      "n_unique_peptides": 129,
+      "n_exact_peptide_overlaps_with_prior_training": 0,
+      "n_parent_sequences": 136,
+      "n_exact_parent_overlaps_with_prior_training": 0
+    }
+  ]
+}

@@ -12829,3 +12829,32 @@ Hosted state checked: Presto40076131102passes docs/lint/tests/distribution. Hitl
 release-build40076517694for35f4ee0passes all required build/artifact steps. PyPI2.0.17
 publication remains unverified; exact release artifact verification/publication is
 separate pending delivery work. No duplicate workflow dispatched.
+
+### Actual APC response and precursor comparison
+
+Previous goal turn: progress (0410completed/published atf7b76a3; held-out gains small).
+The native test is now inspected and excluded from further tuning. New detailed
+specification: experiments/agents/codex/plans/apc-precursor-response.md.
+- [x] Register canonical PXD057588 response exports and fixed precursor/split policy.
+- [x] Verify the selected source-to-export contract and precursor lineage.
+- [x] Fit fixed precursor/condition controls and matched exact/sampled processing arms.
+- [x] Seal checkpoints, evaluate once and independently verify biological results.
+- [ ] Continue toward independent APC concentration and machinery validation.
+
+### Actual APC comparison review
+
+0449 completed all four controls and five fixed200step physical fits. TestRMSE
+condition.120011,sequence+precursor.139278,sampled.139298,no-precursor.120008.
+Negative: no useful processing gain; no-precursor predictions nearlyconstant within
+condition, surrogate inputs vary but worsen error. Native positive result does not
+transfer usefully under this contract. Exact/sampled agree; sampled35times slower.
+Independent source and final prediction/metric closures pass:38,718predictions,
+4,743metricrecords,maxerror3.55e-15. Full report, checkpoints,predictions,CSV/plots,
+registry and condition-only reference updated. All model hashes preserved; newly
+authored current code formatted/linted. No held-out retry. Priorheadf7b76a3 CI
+40079015687 passes docs/lint/tests/distribution; new publication CI separate.
+
+Future work must diagnose training-only precursor calibration/kinetic identifiability
+and establish independent biological evaluation. No APC concentration or machinery
+causal validation. Existing Hitlist2.0.17 release delivery remains separate pending
+work; no new source bug was found or filed in this cohort. Full goal stays active.

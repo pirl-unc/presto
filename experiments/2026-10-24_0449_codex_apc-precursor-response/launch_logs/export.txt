@@ -1,0 +1,21 @@
+Canonical source package verified
+Traceback (most recent call last):
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/code/export.py", line 143, in <module>
+    main()
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/code/export.py", line 90, in main
+    write(FAMILY / "results/recipe-manifest.json", manifest)
+  File "/private/tmp/presto-modular-model/experiments/2026-10-24_0449_codex_apc-precursor-response/code/export.py", line 21, in write
+    path.write_text(json.dumps(obj, indent=2, allow_nan=False) + "\n")
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/json/encoder.py", line 202, in encode
+    chunks = list(chunks)
+             ^^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/json/encoder.py", line 439, in _iterencode
+    o = _default(o)
+        ^^^^^^^^^^^
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+TypeError: Object of type PosixPath is not JSON serializable

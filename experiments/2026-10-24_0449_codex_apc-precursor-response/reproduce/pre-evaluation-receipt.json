@@ -1,0 +1,125 @@
+{
+  "checkpoints_and_constants": {
+    "results/arms/prior_exact/fit.npz": "d02dbce9a83f1523c9795f5c6127c9cfd2cd7f5c79de77b71fbf88fcdad67f8b",
+    "results/arms/sequence_exact/fit.npz": "a2a1c1d2cae2860e25c425070419c81ac507b93197ed6c158135f2ac50093629",
+    "results/arms/sequence_hybrid/fit.npz": "54d6c4142b3b4ce79ec3456aa523f71bff941821326784b4e07f52eb5e2b9a40",
+    "results/arms/sequence_no_precursor/fit.npz": "59fe061df7ff2e19b45cc68ca44e05f91653b57b5b18e02416a8edd41261ccb1",
+    "results/arms/uniform_exact/fit.npz": "12db900bc62cf9685332397f52e7ba04c19a02fb40455200b3f0e5325a3f36f6",
+    "results/baselines/condition.npz": "141f59a7691140363026616115f85570c3e6c165bab0fc8fd79af6d7a5875bc3",
+    "results/baselines/condition_precursor.npz": "7006b9a4e3a9f3b1bd720fcfc9d497219a2ae8c82b1156f28c3174272300da76",
+    "results/baselines/no_change.npz": "ef1316c80c446196ad32949367284a639a0748db23bd96248e328aabeec130cc",
+    "results/baselines/precursor.npz": "ef1316c80c446196ad32949367284a639a0748db23bd96248e328aabeec130cc",
+    "results/baselines/summary.json": "467817e20a6cf41e6d5dcc069ff27b2927f93c7f9fcc0b61e012bfbd8b6009ec",
+    "results/feature-transforms.npz": "3b9c0e843ee89c90813caba374b8c502940d9e7650d9c5f00d18e4828f978f03",
+    "results/prior-rate-coefficients.json": "0de44762da4d600f7ac7a4ab610d5d5432ec7e9b9b3e6144969e4af56f78f3fb"
+  },
+  "attempts": [
+    {
+      "arm": "uniform_exact",
+      "status": "completed",
+      "steps": 200,
+      "settings": {
+        "kind": "uniform",
+        "precursor": true,
+        "method": "exact"
+      },
+      "n_parameters": 5,
+      "n_parameters_changed": 5,
+      "training_data_loss": 0.018548763485634112,
+      "training_objective": 0.01855259588095513,
+      "final_exact_gradient_inf": 1.8611248929720236e-06,
+      "seconds": 2.5849792910157703,
+      "runtime_projection_after_20_steps": null,
+      "peak_rss_bytes": 447610880,
+      "n_score_evaluations": 0,
+      "fit_sha256": "12db900bc62cf9685332397f52e7ba04c19a02fb40455200b3f0e5325a3f36f6",
+      "test_evaluated": false
+    },
+    {
+      "arm": "sequence_exact",
+      "status": "completed",
+      "steps": 200,
+      "settings": {
+        "kind": "sequence",
+        "precursor": true,
+        "method": "exact"
+      },
+      "n_parameters": 43,
+      "n_parameters_changed": 43,
+      "training_data_loss": 0.01854791947302708,
+      "training_objective": 0.018552369338510007,
+      "final_exact_gradient_inf": 1.8542813527972065e-06,
+      "seconds": 1.9238374999840744,
+      "runtime_projection_after_20_steps": null,
+      "peak_rss_bytes": 449413120,
+      "n_score_evaluations": 0,
+      "fit_sha256": "a2a1c1d2cae2860e25c425070419c81ac507b93197ed6c158135f2ac50093629",
+      "test_evaluated": false
+    },
+    {
+      "arm": "sequence_hybrid",
+      "status": "completed",
+      "steps": 200,
+      "settings": {
+        "kind": "sequence",
+        "precursor": true,
+        "method": "hybrid"
+      },
+      "n_parameters": 43,
+      "n_parameters_changed": 43,
+      "training_data_loss": 0.018548329056931757,
+      "training_objective": 0.018552678161119097,
+      "final_exact_gradient_inf": 0.0005907500375926745,
+      "seconds": 67.48149933299283,
+      "runtime_projection_after_20_steps": 50.272369169979356,
+      "peak_rss_bytes": 580239360,
+      "n_score_evaluations": 201523200,
+      "fit_sha256": "54d6c4142b3b4ce79ec3456aa523f71bff941821326784b4e07f52eb5e2b9a40",
+      "test_evaluated": false
+    },
+    {
+      "arm": "sequence_no_precursor",
+      "status": "completed",
+      "steps": 200,
+      "settings": {
+        "kind": "sequence",
+        "precursor": false,
+        "method": "exact"
+      },
+      "n_parameters": 43,
+      "n_parameters_changed": 43,
+      "training_data_loss": 0.01302638456987407,
+      "training_objective": 0.01303130653381596,
+      "final_exact_gradient_inf": 1.4058950871016643e-06,
+      "seconds": 1.8980262500117533,
+      "runtime_projection_after_20_steps": null,
+      "peak_rss_bytes": 447447040,
+      "n_score_evaluations": 0,
+      "fit_sha256": "59fe061df7ff2e19b45cc68ca44e05f91653b57b5b18e02416a8edd41261ccb1",
+      "test_evaluated": false
+    },
+    {
+      "arm": "prior_exact",
+      "status": "completed",
+      "steps": 200,
+      "settings": {
+        "kind": "prior",
+        "precursor": true,
+        "method": "exact"
+      },
+      "n_parameters": 4,
+      "n_parameters_changed": 4,
+      "training_data_loss": 0.01855245870010597,
+      "training_objective": 0.018555905945542742,
+      "final_exact_gradient_inf": 1.6670212055335952e-06,
+      "seconds": 1.343684541003313,
+      "runtime_projection_after_20_steps": null,
+      "peak_rss_bytes": 446398464,
+      "n_score_evaluations": 0,
+      "fit_sha256": "d02dbce9a83f1523c9795f5c6127c9cfd2cd7f5c79de77b71fbf88fcdad67f8b",
+      "test_evaluated": false
+    }
+  ],
+  "model_execution_sha256": "dfccf7cbdb04d648850cd27d3b6eac13572896c537647f86ae19902ff5d39295",
+  "test_policy": "all fixed attempts terminal; seal all checkpoints/constants/transforms before once-only held-out evaluation"
+}

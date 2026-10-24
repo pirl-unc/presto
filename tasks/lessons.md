@@ -571,3 +571,11 @@ Keep applicability reporting separate from model features and the measured label
   numerical/gradient prerequisite passes, run the matched biological comparison
   before extending sampler or solver machinery. Keep nuisance-optimization gaps,
   biological generalization and absolute concentration calibration distinct.
+
+## 2026-10-24 — reference inventories versus model inputs
+
+- Before calling a nullable reference field an upstream blocker, inspect its
+  explicit status and the rows actually reachable from the modeling cohort.
+  Unmatched inventory entries can legitimately omit full sequences while every
+  observed occurrence remains supported. Keep source uncertainty intact and fix
+  consumer assumptions; do not file an upstream bug without a reachable failure.
