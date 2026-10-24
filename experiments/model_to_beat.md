@@ -282,3 +282,13 @@ explicit species-context limitations; it is not an external validation result.
 - **Preselected sequence ridge alpha0.1**, 42 within-pool-supported standardized length/composition/N-terminal features, no intercept. Equal-pool MSE + alpha*mean(coefficient²). Validation/test centered-log10-signal RMSE **0.470624 / 0.449828** against length **0.534663 / 0.520456**; gains **11.98% / 13.57%**. Test weightedR² **0.253294**, unweightedSpearman **0.525644**, positive Pearson/Spearman in all4test pools; all prespecified gates pass.
 - Prespecified neural ensemble is a secondary result: testRMSE0.443033,Spearman0.547499. Keep the primary sequence reference for future fixed comparisons; no post-test selection or refitting.
 - This predicts measured conditional signal, not pure detectability or molarity. Crude synthesis, purity/load/handling confounded. All C-terminal main effects cancel under pool centering; missing category support is explicit. No biological elution transfer, unconditional detection, specimen independence or intracellular availability claim. Any biological use requires prospective transfer evaluation with a shared frozen observer for exact and sampled arms.
+
+
+## Goldberg2025 conditional baseline MAPP distribution
+
+- Status: provisional measured-signal reference, not an APC availability model.
+- Source: [2244 original baseline comparison](2026-10-24_2244_codex_mapp2025-baseline-prediction/README.md).
+- Contract: PXD052314 six A549 controls; source-human-only, unflagged positive canonical peptide PEP<.01/directMSMS; one supplied parent accession and>=3observed sequences/group. All-source dependency split;40,701cells/458admitted components. Positive observed-set conditioning, unknown physical/homology independence.
+- Distribution reference:61raw sequence features→training-scaled/centered58supported coordinates→linearlog10score→groupsoftmax. Exact reverseKL+.01mean(beta²),500Adamstepslr.02. Validation/testreverseKL.376448/.422502 versusuniform.431589/.477545. AllRLseedsalso beatuniform but addno clear gain and cost~1.41×.
+- Separate regression control: validation-selectedsequence ridgealpha1;testRMSE.415585 versuslength.434413. Primary>=5%bothheldoutgatefails(testgain4.334%);do not relabelthis as a fully qualified sequence predictor.
+- Held-outs closed; a future model must use prospective development/evaluation rather than tuning these outcomes. No absolute/missing-mass calibration, measured precursor pairing or separated processing/capture/MS model is established.

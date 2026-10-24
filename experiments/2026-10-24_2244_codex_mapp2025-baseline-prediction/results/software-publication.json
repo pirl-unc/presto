@@ -1,0 +1,22 @@
+{
+  "experiment_base": "176a62e3e86a98d986d80fcb7dd3120da5e7f92d",
+  "recipe_rebased_commit": "5d648602326412cbad79bc47b1ea70fc3bb1c45d",
+  "runtime_changed_files_identical": {
+    "hitlist/goldberg_composition.py": true,
+    "hitlist/evidence_recipe.py": true,
+    "hitlist/distribution_recipe.py": true,
+    "hitlist/version.py": true
+  },
+  "upstream_added_PBMC_source": "f34a69a",
+  "source_PR827_merge": "5a8b1aa176f41536ad48a29de17bb34f3f1a8c9a",
+  "source_release_run": 40140479531,
+  "source_release_status": "in_progress",
+  "local_tests_before_rebase": {
+    "passed": 3493,
+    "seconds": 314.19,
+    "warnings": 392
+  },
+  "rebased_checks": "running",
+  "publication_precheck_recovery": "Initial hash check ran from wrong cwd before the shell fail-fast line and did not execute; corrected check here confirms all four files identical. No scientific artifact changed.",
+  "recipe_PR": "https://github.com/pirl-unc/hitlist/pull/829"
+}

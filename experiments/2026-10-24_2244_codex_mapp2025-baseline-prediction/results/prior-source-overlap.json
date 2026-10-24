@@ -1,0 +1,78 @@
+{
+  "timing": "postfit_covariate_audit_no_refit_or_exclusion",
+  "scope": "literal_sequence_and_accession_matches; inventories_not_verified_origins_or_teacher_lineage",
+  "studies": {
+    "prior_MAPP": {
+      "manifest_sha256": "23bcfeb4067fa4f47f0b1db702d6ae79f97a9c32a1366ff3de322c99f210b9bf",
+      "sources": [
+        "examples.jsonl",
+        "parents.jsonl"
+      ],
+      "overlap": {
+        "train": {
+          "n_observations_with_previous_peptide": 17,
+          "n_unique_peptides_previously_observed": 4,
+          "n_supplied_accessions_in_previous_inventory": 0
+        },
+        "val": {
+          "n_observations_with_previous_peptide": 0,
+          "n_unique_peptides_previously_observed": 0,
+          "n_supplied_accessions_in_previous_inventory": 0
+        },
+        "test": {
+          "n_observations_with_previous_peptide": 12,
+          "n_unique_peptides_previously_observed": 3,
+          "n_supplied_accessions_in_previous_inventory": 0
+        }
+      }
+    },
+    "HAP1": {
+      "manifest_sha256": "a1eec392c06485966e131663f85e7599dcd9e5ff621841eb0d44eeaafe779309",
+      "sources": [
+        "derived/responses.parquet",
+        "source/references.parquet"
+      ],
+      "overlap": {
+        "train": {
+          "n_observations_with_previous_peptide": 65,
+          "n_unique_peptides_previously_observed": 15,
+          "n_supplied_accessions_in_previous_inventory": 0
+        },
+        "val": {
+          "n_observations_with_previous_peptide": 19,
+          "n_unique_peptides_previously_observed": 5,
+          "n_supplied_accessions_in_previous_inventory": 0
+        },
+        "test": {
+          "n_observations_with_previous_peptide": 11,
+          "n_unique_peptides_previously_observed": 2,
+          "n_supplied_accessions_in_previous_inventory": 0
+        }
+      }
+    },
+    "lymph_DC": {
+      "manifest_sha256": "f50e744b6653d082810b146ca194dc88e532c530b37d35a7899e84dab82103de",
+      "sources": [
+        "examples.json",
+        "source_tables/references.parquet"
+      ],
+      "overlap": {
+        "train": {
+          "n_observations_with_previous_peptide": 0,
+          "n_unique_peptides_previously_observed": 0,
+          "n_supplied_accessions_in_previous_inventory": 0
+        },
+        "val": {
+          "n_observations_with_previous_peptide": 0,
+          "n_unique_peptides_previously_observed": 0,
+          "n_supplied_accessions_in_previous_inventory": 0
+        },
+        "test": {
+          "n_observations_with_previous_peptide": 3,
+          "n_unique_peptides_previously_observed": 2,
+          "n_supplied_accessions_in_previous_inventory": 0
+        }
+      }
+    }
+  }
+}

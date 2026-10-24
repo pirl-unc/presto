@@ -13387,3 +13387,21 @@ peptide-cell decisions retained;94,034baseline review candidates, including19,05
 omitted publisher cells. Source/publisher/pooled values and material precision
 reconcile. Format/lint and3,489unit tests pass; full-corpus CI, PR/merge and verified
 release remain pending. No model fit or predictive improvement in this family.
+
+## Goldberg2025 baseline prediction
+
+- [x] Freeze cohort, dependence, feature, optimizer and numerical gates.
+- [x] Implement shared composition recipe and verify original-source cohort.
+- [x] Qualify exact/sampled gradients and feature support.
+- [x] Fit all frozen arms and seal covariate predictions.
+- [x] Evaluate held-outs once and independently reconstruct outputs/metrics.
+- [ ] Publish results and complete dependency release checks.
+
+### Baseline prediction review
+
+Registered2244cohort and58-coordinate exact/RLcomparison complete with independent
+source/feature/prediction/metric/bootstrap replay. Exact/RLbeatuniform onbothheldouts;
+primarysequence-versus-lengthgatefails(test4.334%gain,required5%). No testrefit, no
+RLadvantage or APCconcentration claim. SharedrecipePR829published;source827merged;
+release40140479531andpost-rebasechecksremainlive. Logs preserve initialfixture/import
+failures and16disk-reserve failures;unchanged serialsuitepasses3493tests.

@@ -190,3 +190,10 @@ claim that simply adding it can remedy the prior response-model failures.
 - [x] Execute2106 shared TAP-route response exact/conditional-sampled comparison (plans/hap1-tap-route-response.md); independent concentration qualification remains required.
 
 - [ ] After2106 failed its matched-feature gate, qualify baseline peptide amounts and their observation/selection contract before another response-only mechanism fit. Preserve old test closures and the full precursor-relative APC availability goal.
+
+- [x]2210 baseline source and candidate decisions independently verify; Hitlist827 CI/release pending.
+- [ ] Execute2244 prospective baseline-composition comparison from the shared recipe; preserve full APC availability goal and prior test closures.
+
+- [x] 2244: original baseline MAPP model and exact/REINFORCE comparison; modest signal, primary testgatefails, outcomes independently verified.
+- [ ] Finish Hitlist829CI/merge/release and827testedrelease40140479531; preserve existing running handles.
+- [ ] Qualify newly merged PXD009438 PBMC source828 for a prospective primary-cell baseline endpoint; source-only985peptide rows/14acquisitions are not an admitted cohort. Preserve PBMC-versus-serum conflict and unknown specimen/precursor links.

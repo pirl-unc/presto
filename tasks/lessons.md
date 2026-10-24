@@ -611,3 +611,12 @@ Keep applicability reporting separate from model features and the measured label
 ## 2026-10-24 — Production boundary coverage
 
 - A reference-algebra identity is not a test of the production implementation at that boundary. Invoke the actual function for every named boundary/monotonicity gate before fitting. If closure finds missing coverage, preserve original checks and fits, register a post-fit amendment, and disclose its timing rather than retroactively claiming the prospective gate ran.
+
+## 2026-10-24 — shared disk headroom during source verification
+
+- Memory-safe jobs can still exhaust a shared disk reserve. Large source replay
+  creates temporary copies that compete with tests' provenance scratch space.
+  Check free-space headroom for simultaneous temporary outputs before launching;
+  serialize source materialization and the full suite on a near-full volume.
+  Preserve disk-guard failures, never lower the reserve to make checks pass, and
+  rerun only after authoritative capacity has recovered.

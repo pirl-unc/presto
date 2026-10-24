@@ -98,3 +98,44 @@ resource gates fail, preserve evidence and re-plan before extending this family.
 Success is a measured-signal baseline only; next steps toward the full goal still
 require independently constrained processing, selection and detection and an APC
 population with appropriate measurements.
+
+## Implementation precision, frozen before cohort construction (22:37 UTC)
+
+The shared Hitlist recipe is `goldberg2025_observed_baseline_composition_v1`.
+It reuses the existing baseline-candidate compiler, retains its complete decisions,
+and adds composition decisions, examples, label-free covariates, dependency nodes
+and group summaries. No private Presto source curator. A duplicate sequence within
+one eligible accession/acquisition group stops admission rather than being selected
+or summed by its measured value.
+
+Dependency nodes are literal `peptide:`+sequence and `parent:`+each supplied parent
+label. Connect every original peptide row, including excluded bridges. Sort every
+component's nodes; JSON encode with separators(',',':') and ensure_ascii=True.
+Component ID is SHA256 of `goldberg2025_baseline_v1:` followed by that JSON; split
+is int(component_id,16)%10. No accession alias, homology or specimen identity is
+inferred. All group support gates refer to admitted components/groups.
+
+Use natural log length. Feature means/scales are weighted fitting-only moments;
+constant scales become1. Center standardized features within each observed group,
+then SVD the sqrt(training_weight)-weighted training design. Retain singular
+values >1e-10 times the largest; project without whitening. Ridge objective is
+weightedMSE+alpha*mean(beta²). The exact and sampled arms use the identical supported
+sequence design and .01mean(beta²), Adam betas(.9,.999),epsilon1e-8. No intercept.
+For padded categorical sampling, masked positions have zero probability and never
+become observations. Log softmax uses ln10 times the log10 score.
+
+Before fitting, check exact autograd versus independent analytic gradients at
+zero, a fixed[-.15,.15] coordinate ramp and a seed53N(0,.1) point; max absolute
+error<=1e-10. Central finite differences epsilon1e-5 require<=1e-6. For each point,
+256independent64-sample REINFORCE estimates require relative mean L2 error<=.10
+(denominator floor1e-8) and maximum absolute coordinate error/estimated standard
+error<=5 (SE floor1e-8). Fixed qualification seed9017. Preserve any failed gate.
+
+Fit code reads training and validation label files only. All covariate predictions,
+checkpoint hashes and validation-only ridge choices are sealed before the once-only
+test evaluator reads its label file. Save exact archived predictions; independent
+metric reconstruction uses those exact bytes for ranks and separately checks
+prediction arithmetic tolerances to avoid spurious rank disagreements on ties.
+Uniform correlations are undefined. Bootstrap paired test-component RMSE gains
+with2000resamples,seed20261024; this quantifies component variation, not independent
+study uncertainty. Record both exact and RL score evaluations, updates and runtime.

@@ -1,0 +1,54 @@
+{
+  "primary_sequence_gate_passed": false,
+  "primary_rmse_relative_gains": {
+    "val": 0.053856991037033564,
+    "test": 0.04334076809680398
+  },
+  "validation_choices": {
+    "length": "length_ridge_0.001",
+    "sequence": "sequence_ridge_1"
+  },
+  "distribution_gate": {
+    "exact": true,
+    "reinforce_42": true,
+    "reinforce_43": true,
+    "reinforce_44": true
+  },
+  "paired_component_bootstrap": {
+    "sequence_ridge_1_vs_length_ridge_0.001": {
+      "rmse_relative_gain": 0.04334076809680398,
+      "component_bootstrap_95": [
+        0.02287997539828316,
+        0.06642937895238714
+      ]
+    },
+    "exact_vs_uniform": {
+      "rmse_relative_gain": 0.05637060376627512,
+      "component_bootstrap_95": [
+        0.032197506024721614,
+        0.08117755790333389
+      ]
+    },
+    "reinforce_42_vs_uniform": {
+      "rmse_relative_gain": 0.05573094795468081,
+      "component_bootstrap_95": [
+        0.03167753465057418,
+        0.08002766255370955
+      ]
+    },
+    "reinforce_43_vs_uniform": {
+      "rmse_relative_gain": 0.05344609931813449,
+      "component_bootstrap_95": [
+        0.030008528264980766,
+        0.07828088333284905
+      ]
+    },
+    "reinforce_44_vs_uniform": {
+      "rmse_relative_gain": 0.058187615381436575,
+      "component_bootstrap_95": [
+        0.03448625891285379,
+        0.08256496871689346
+      ]
+    }
+  }
+}
