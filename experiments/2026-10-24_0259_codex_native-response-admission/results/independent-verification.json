@@ -1,0 +1,24 @@
+{
+  "status": "passed",
+  "recipe_manifest_sha256": "c72980c070cb1296609bbe7d296e27b6a2a22d3ff354ef846c1c99ad7959ccfc",
+  "source_manifest_sha256": "7f80844bc39748bb4fbd06e5747bac0769e06d1f7a1038f82daeae29b41b406f",
+  "verifier_sha256": "a983001047c04fca59662d2e38c3ea45362c9ec8cfdc6f7eaf21bad20fc1fa69",
+  "n_source_rows": 10564,
+  "n_measurement_slots": 61908,
+  "n_reference_proteins": 42562,
+  "n_reference_occurrences": 1155,
+  "n_split_components": 4843,
+  "n_effective_observations": 10114,
+  "n_response_groups": 2737,
+  "n_admitted_source_slots": 11495,
+  "split_weight_sums": {
+    "val": 0.999999999999997,
+    "train": 0.999999999999997,
+    "test": 0.9999999999999991
+  },
+  "n_shared_control_proxies_crossing_splits": 33,
+  "specimen_independence": "unresolved",
+  "biological_training": false,
+  "seconds": 10.594353292020969,
+  "peak_rss_bytes": 1147830272
+}

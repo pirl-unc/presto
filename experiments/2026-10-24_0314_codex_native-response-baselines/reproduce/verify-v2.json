@@ -1,0 +1,17 @@
+{
+  "registered_at": "2026-10-24T03:43:19.755112-04:00",
+  "source_sha256": "d16e1c5df0d0136dc5861a8085b26dc9451e4f3fb2b3853fd0bc998af849504e",
+  "seconds_cap": 180,
+  "rss_bytes_cap": 4294967296,
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "command": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-modular-model/experiments/2026-10-24_0314_codex_native-response-baselines/analysis/verify.py"
+  ],
+  "source_snapshot": "reproduce/source/verify-v2.py",
+  "supersedes": "verify.json: vectorized coordinate multiplication only; original scalar results retained as independent reference"
+}

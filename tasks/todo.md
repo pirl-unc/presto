@@ -12705,3 +12705,60 @@ Registered 2026-10-24_0156_codex_tmab-semantic-replay before rebuilding full ass
 Full APC concentration goal remains active.
 
 Review: full-source semantics verify after a documented whitespace-comparator correction; 10,564 rows and 61,908 measurement slots preserved. All 830 prior reuse candidates recovered. Hitlist format/lint and all 3,403 local tests pass; publication and release pending. No new biological fit or concentration claim.
+
+## Native response recipe and biological comparison
+
+Plan: experiments/agents/codex/plans/native-response-recipe.md. Source correction replay is complete; delivery is Hitlist PR793.
+
+- [x] Qualify shared full-parent occurrences and source dependence groups through Hitlist.
+- [x] Materialize the source-preserving exact/censored response recipe and frozen split components.
+- [ ] Run the preregistered biological controls and matched differentiable/sampled comparison locally.
+- [ ] Preserve validation/test predictions and report improvement or failure against the same controls.
+
+Review: source admission0259 and first biological baselines0314 are now complete;
+the matched physical differentiable/sampled comparison remains next, and test is reserved.
+
+### Native response prediction execution
+
+Previous status turn: verified wait (live full-test handle84811 polled); source
+materialization was confirmed terminal. This continuation confirms all3,414
+Hitlist local tests passed. Source/recipe generation took54.87s with1.42GiB RSS;
+the independent admission check is still pending. Full goal stays active.
+
+Plan: experiments/agents/codex/plans/native-response-baselines.md.
+- [x] Independently qualify the immutable0259 recipe without changing its splits.
+- [x] Register and fit the six fixed real-response baselines locally.
+- [x] Verify source-linked predictions, feature support, losses and convergence.
+- [x] Close the reports and registry; then use these controls for the matched
+  differentiable/sampled full-parent processing comparison.
+
+Review:0259source/reference/group/split/weight admission passes. Allsix0314fits
+complete4.639s and train supported parameters. Condition-only validationloss.073495
+beatsnochange.186297; sharedsequence.129189 andcompoundsequence.153178 fail despite
+training gains. All46,002source-linked predictions and final metrics verify.
+Exact-input roundoffties are corrected inqualified-v2 with raw outputs preserved;
+149correlation records change, primaryloss/RMSE/decisions do not. Initial scalar
+verifier failed180sresourcegate after mathematical checks; equivalent vectorized
+closure passes6.956s and matches the preserved scalar reference. No fit retry.
+Test remains reserved; no APC concentration claim. Full goal active.
+
+Next detailed specification: experiments/agents/codex/plans/native-processing-comparison.md.
+- [ ] Implement the minimal full-parent independent-cut/input/removal response model.
+- [ ] Run matched biological differentiable/conditional-score arms and matched controls.
+- [ ] Open the fixed test comparison only after all model/settings choices are frozen.
+- [ ] Continue toward actual APC machinery and precursor-relative concentration validation.
+
+Shared source delivery: resolved Hitlistmerge b3f1079 is pushed toPR793; format/lint
+and3,414full localtests pass. New-head hosted gates/merge/release remain outstanding.
+PriorPR794release-build40071541566passed; no duplicate release was launched.
+
+### Native source delivery checkpoint
+
+- Presto replay commit 593e3b5c2bc08ff9242b363145096f2ba6234e95 is pushed to draft PR131; description and head read back.
+- Hitlist PR793 is open at ddc658186f1d16885e42637ec7b0086c357e17d0; correction worktree is clean.
+- All 3,403 local tests pass. Hosted Tests run40070430939 remains live; docs/lint and Python3.10/3.12/3.14 pass, remaining Python/integration gates pending at last read.
+- Presto current-head CI run40070396473 is live. Predecessor b298ea9 CI40067385524 passes docs/lint/tests/distributions.
+- Issue791 result/recipe comment: https://github.com/pirl-unc/hitlist/issues/791#issuecomment-6380936934.
+- Hitlist merge and clean-main release/PyPI verification remain outstanding; 2.0.16 was absent from PyPI before PR publication. Do not claim delivery complete.
+- Parent reference assets already exist in the old immutable MAPP package. Next work can reuse the shared Hitlist reference parser rather than fetch or guess a new source.
+- No native-response model has trained; proceed from the prospective native-response-recipe plan, retaining the full APC concentration objective.
