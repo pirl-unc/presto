@@ -121,5 +121,12 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 
 - [x] Complete the registered0043 transfer comparison on unchanged MAPP data: all3exact2000stepfits independently verified; no method beats uniform composition.
 - [x] Preserve sampled numerical success and original cost rejection; do not report an unperformed biological RL comparison.
-- [ ] Execute the bounded train-only monotone amplitude diagnostic in plans/cellular-transfer-amplitude.md, with controls and stop rule fixed before arithmetic.
+- [x] Execute the bounded train-only monotone amplitude diagnostic in plans/cellular-transfer-amplitude.md, with controls and stop rule fixed before arithmetic.
 - [ ] Prioritize canonical native cellular source788 and independent response/precursor evidence; do not repeatedly tune the same MAPP development set.
+
+## Cellular amplitude diagnostic decision
+
+- [x] Execute0106 and independently verify all scalar fits and prediction/metric outputs.
+- [x] Enforce the stop rule: neither sequence prior beats calibrated uniform cleavage; no more tuning of this MAPP transfer bridge.
+- [x] Record calibrated uniform cleavage as a provisional development control, with historical exposure and measurement limits explicit.
+- [ ] Execute plans/native-cellular-peptidome-admission.md through the canonical Hitlist system, beginning with registered public-source/lineage audit. No Presto-only source adapter or shared-environment change.

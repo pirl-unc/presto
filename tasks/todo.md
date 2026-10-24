@@ -12628,9 +12628,23 @@ Publication handoff: 5b888cccf97796d205e519f6371c7556076cf4f2 is pushed to open 
 Previous goal turn: no progress (status report only; CI was still live but no goal work completed). Current family 2026-10-24_0043_codex_digestion-cellular-transfer, registered before probes. Prior five-arm results published at5b888cc.
 - [x] Verify sources/exposure and qualify continuous-input/removal physics and sampled estimator.
 - [x] Freeze resource caps and run the admitted exact/sample biological comparisons.
-- [ ] Independently verify outcomes and close/publish the canonical experiment record.
+- [x] Independently verify outcomes and close/publish the canonical experiment record.
 Full APC concentration goal remains active; no test-parent reuse or new source curation.
 
 Qualification completes: no training construct/peptide overlap for72train/15validationparents; math/toy/threegradientgates pass. Initial serialization failure preserved and fixed without changing scientific settings or original cost admission. Exact caps690/517/525seconds; hybrid cost8598 exceeds7200 ceiling and remains unlaunched. Fitting/verification source receipts frozen before biological updates.
 
 Final transfer review: all3exact2000updatefits complete and independently verify; baseline plus fits reproduce4120source-linkedtrain/validationpredictions and6000Adamupdates. ValidationRMSE uniformcomposition.286029, uniformcleavage.369717, adjacent.393065, wider.556267. WiderpredictionSD.570883 vs target.351303, so this is not constant-outputcollapse. Every trained scalar updates; final checked gradients are stationary. Sampled gradient gates pass but original8598s costprojection exceeds7200ceiling; no sampled fit launched and no accuracy comparison claimed. Prior5b888ccCI40062987301 fully passes. New bounded amplitude-calibration plan is prospective/unexecuted; independent nativecellular/response support remains needed. Full APC concentration goal active. Publication closure follows.
+
+
+Publication handoff: ebb70e3f4a86fd6ba33f9e2422dd0df63d56479b is pushed to open draft PR131. All84 closure-file hashes match committed blobs, immutable remote README and body-only update read back exactly. Source/exposure/mathematical qualification49518, biological suite89945, all4verifiers46309/32019/45526/78553, finalreport/closure82581/78247/13244, commit20271, push14555 and PRupdate30921 are terminal success; firstqualification14039 terminal serialization failure is preserved. No local experiment is running. Prior5b888cc CI40062987301 passes; newebb70e3 CI40064750638 is in progress, not passed. Goal-turn classification: progress (three actual cellular fits, independent source/physics/metric/update verification and full publication). No model beats uniform observed composition; wider rates transfer worst. Sampled gradient gates pass but original preflight cost gate rejects biological sampled training. Next: recheck CI; read plans/cellular-transfer-amplitude.md and register that bounded diagnostic before computing any calibration. Its stop rule prevents continued tuning of this same cellular development set if sequence priors fail calibrated controls. Nativecellular/source788 and independent response/precursor gaps95/762 remain open. Full APC concentration objective stays active; no completion claim. Preserve unrelated tasks prefix and raw untracked work.
+
+
+## Train-only amplitude calibration
+
+Previous goal turn: progress (three cellular fits, independent verification and publication). Registered 2026-10-24_0106_codex_cellular-amplitude before coefficient/metric arithmetic. Prior ebb70e3 CI40064750638 remains live.
+- [x] Freeze and run the three planned scalar calibrations against unchanged controls.
+- [x] Independently reconstruct inputs and verify least-squares/KKT, predictions and metrics.
+- [ ] Close/publish all outcomes and enforce the planned transfer stop rule.
+Full APC concentration goal remains active; this diagnostic does not redefine success.
+
+Amplitude review: producer43322 completes0.935s/104.14MiB, verifier59585 independently verifies4120source/physicalinputs and7210outputrows plus allscalarLS/KKT and metrics/strata/decisions. Beta uniform.302123/adjacent.265903/wider.113527. ValidationRMSE .267107/.275897/.286965 versus uniformcomposition.286029. Calibrateduniform improves10/15parents (4worse,1tie); neither sequenceprior beats bothcontrols. The prospective stop rule is enforced: stop tuning this bridge on the same MAPPdevelopmentset. Report/plot/registry closed; publication follows. New nativecellularadmission plan788 is prospective and unexecuted; full APC concentration goal remains active.
