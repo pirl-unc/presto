@@ -590,3 +590,11 @@ Keep applicability reporting separate from model features and the measured label
 ## 2026-10-24 — numeric evidence embedded in metadata values
 
 - A quantitative source audit must inspect values as well as field names. mzIdentML can encode numeric intensity in spectrum-title/name strings even when no CV term is named intensity. Preserve raw values, verify duplicate representations, establish their measurement grain and aggregation, and correct public claims before calling an identification export quantity-free. A schema-name check alone cannot prove absence of numeric observations.
+
+## 2026-10-24 — Independent verifier scope
+
+- Keep training weights in a distinct binding from per-split evaluation weights.
+  A verifier can accidentally reconstruct a later model using the last evaluated
+  split, producing a false training-integrity failure. Preserve the failed verifier,
+  inspect the production fitter separately, and require numerical replay after a
+  verifier-only correction; never alter a frozen model to satisfy a broken checker.

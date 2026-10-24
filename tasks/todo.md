@@ -13295,9 +13295,31 @@ Specification: experiments/agents/codex/plans/lymph-source-qualification.md.
 - [x] Freeze exact source/API context and local resource contract before materialization.
 - [x] Implement shared Hitlist source and focused identity/missingness/tamper tests.
 - [x] Materialize actual source, independently reconcile every quantity/reference and repository inventory;32995cells/3430references/23455identification alternatives pass.
-- [ ] Close source report/registry, publish shared issue/PR and required verification.
-- [ ] Define the endpoint-specific recipe and fresh matched exact/sampled biological comparison.
+- [x] Close source report/registry, publish shared issue/PR and required verification; source818merged, release40126246020pending.
+- [x] Define and execute the1938canonical composition recipe and matched exact/REINFORCE biological comparison.
 
 Spec: experiments/agents/codex/plans/lymph-canonical-admission.md. No source-only result counts as predictive improvement.
 
 1903review: shared source PR818published at8657c9a, local format/lint/3466tests pass. Exact-source counts and identity mappings reconcile; DC mass/length/coordinate forensic checks support retaining full literal sequences. Endpoint-specific aggregation/confidence/parent-dependence recipe, independent biological fits, CI merge and PyPI release remain pending. No new biological prediction claim.
+
+## Independent lymph/DC composition comparison
+
+Previous goal turn was a status-only response; no new scientific progress.
+Plan: experiments/agents/codex/plans/lymph-composition-comparison.md.
+
+- [x] Register canonical feature/chemistry/origin/dependence recipe in Hitlist819.
+- [x] Admit actual cohorts and independently verify original area targets; human supported, DCvalidation supportfails.
+- [x] Fit21controls/models, including matched discreteREINFORCE64/exact3seeds.
+- [x] Seal/evaluate held-outs and independently replay14,028predictions; report/registrycomplete.
+- [ ] Publish Presto artifacts and finish source/recipe CI, merge and PyPI releases.
+
+No new APC-concentration claim; native lymph and MHC-selected DC remain distinct.
+
+1938review: primaryprocessing+MS testRMSE.48463vssequence.46704/calibratedMS.47913;
+allpredictivegatesfail. Exact/RLtestreverseKL.70626/.71020vsuniform.54365;noRLadvantage.
+Human34/14/12components; DCdatabase36/1/6/library32/3/11failvalidationminima.
+All39allocatedsequencecoordinatesupdate,predictionsvary;unchangedheldoutsnowclosed.
+Source818merged9133736d,release40126246020live;recipe819headc61ad506CIpending.
+Independentverifierweightbindingfailurepreservedandcorrectedwithoutmodelchanges.
+Fullavailabilitygoalremainsactive;nextworkmustaddressnewbiologicalevidenceortraining-only
+model/observationassumptions,notrepeatthisheldoutasa tuningtarget.

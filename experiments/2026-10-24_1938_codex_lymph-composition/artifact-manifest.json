@@ -1,0 +1,361 @@
+{
+  "created_utc": "2026-10-24T20:01:11.723296+00:00",
+  "files": {
+    "README.md": {
+      "sha256": "b9cdef4627dd7804019dd09a1fae4d39e916fc7705dac50885bf85d77c7b17b3",
+      "size_bytes": 16066
+    },
+    "analysis/observer_exposure.py": {
+      "sha256": "91641abb4adb37b8718a94289332f7b289609859fc3949599523f8f90a2d0de1",
+      "size_bytes": 2437
+    },
+    "analysis/report.py": {
+      "sha256": "cbaecf70b25fbe206a0ad333cb008c265c6b5c19d3f1cdd9eb78d160d0747d2d",
+      "size_bytes": 6920
+    },
+    "analysis/verify_admission.py": {
+      "sha256": "54427b90fb5629b2727b57728c7d90d6f50070c3ae791b4008f6444d8d38c025",
+      "size_bytes": 14445
+    },
+    "analysis/verify_predictions.py": {
+      "sha256": "3a772fd46962bc9fe58c23d93ddb3083e8904808f0acfb0fd9b07422b7efe1c8",
+      "size_bytes": 12369
+    },
+    "code/admit.py": {
+      "sha256": "a877924f2e7aa7e3b8987d22167f78ab6207a428695350bd65682b475da25c45",
+      "size_bytes": 2398
+    },
+    "code/core.py": {
+      "sha256": "b32cf63bc4a979a7ff3389d5d9b8dd852bde068e79439d4711fe17e5edd4e86d",
+      "size_bytes": 9753
+    },
+    "code/evaluate.py": {
+      "sha256": "7fc96b14912f911f1752bc9db32210f9d89d7d35766095a73eb235e47b2185c9",
+      "size_bytes": 8214
+    },
+    "code/fit.py": {
+      "sha256": "cc3f695619f12c1d6c608ae17321daa4a763ad5e6313b056b0ec25fe48829474",
+      "size_bytes": 10173
+    },
+    "code/qualify.py": {
+      "sha256": "de8a004d7251450f4d7b51f169ec2ccf0ca8a7afd560bdbe4b732e022e6f0cf0",
+      "size_bytes": 4994
+    },
+    "launch_logs/admission.log.gz": {
+      "sha256": "838e0b80ffbded2f48b8655cfb029eac3e156e675b897afd2f3d72a40ba588c6",
+      "size_bytes": 765
+    },
+    "launch_logs/evaluate.log.gz": {
+      "sha256": "e21d0edcfce4aafcaf499448b991eb25f9cad9af1b469ccbb44a6d92d18706b7",
+      "size_bytes": 421
+    },
+    "launch_logs/fit.log.gz": {
+      "sha256": "8072b90240954ada7cbe9d1eab86b29715ffa09c4ff0a28fc0dae37172b83f91",
+      "size_bytes": 1121
+    },
+    "launch_logs/hitlist-focused.log.gz": {
+      "sha256": "7e23df614081002704b78c757425036eb00203511f299c61c20b0993cbff3da1",
+      "size_bytes": 83
+    },
+    "launch_logs/lymph-recipe-format.log.gz": {
+      "sha256": "749f8775d8c073def232cf145fdd748e42ff85f24a099f4955bcdd0a1fedc27f",
+      "size_bytes": 108
+    },
+    "launch_logs/lymph-recipe-lint.log.gz": {
+      "sha256": "7b064ff924d9dc8fcf1dc4c1a624687dbe033533f2d08a952d3005c4381b9b3d",
+      "size_bytes": 114
+    },
+    "launch_logs/lymph-recipe-tests-full.log.gz": {
+      "sha256": "7fbd7e8f4122fb0457d054241209cd662c9da898e7e099d1ac08e436f80ec0ca",
+      "size_bytes": 8856
+    },
+    "launch_logs/lymph-recipe-tests.log.gz": {
+      "sha256": "46636ad3be529b9b5faaec5e1c58e5514ef8747d80a2ab82b8bf45001571ba9e",
+      "size_bytes": 199
+    },
+    "launch_logs/observer-exposure.log.gz": {
+      "sha256": "7f661d792bdabf09615f7ef5a21dca657086fbc2cbc589955bd79dc98bfd5d35",
+      "size_bytes": 459
+    },
+    "launch_logs/qualification.log.gz": {
+      "sha256": "c42236cf2c0214409eedd1a6fe9124844db7ca6a7957df4fcd4b24e0f10529b2",
+      "size_bytes": 1152
+    },
+    "launch_logs/report.log.gz": {
+      "sha256": "48b09d3bb3452f36ec081436f8fcaa31538106374070ee0fd95103d85c68c874",
+      "size_bytes": 557
+    },
+    "launch_logs/steady-tests.log.gz": {
+      "sha256": "0e85645bb171fd82fd5ade1081df9fbe57e920b9f7dee83c1d1ca876712df704",
+      "size_bytes": 68
+    },
+    "launch_logs/verify-admission.log.gz": {
+      "sha256": "b7535a07fd5fdf8705b9f5bbb32cf4e3978dde5a288dd3e47d72ba4c05aff8d2",
+      "size_bytes": 401
+    },
+    "launch_logs/verify-predictions.log.gz": {
+      "sha256": "7c50a0a3ee45fdb8ab60656870290de9c3406d904b0f27f9142082f2ef7d63bf",
+      "size_bytes": 380
+    },
+    "reproduce/all.sh": {
+      "sha256": "336e108f9f977f0140b0ed05d76c9e6e1b676f27bd2f9c72bcb4fe2869408320",
+      "size_bytes": 937
+    },
+    "reproduce/environment.json": {
+      "sha256": "97808b3e0d71a45090a90ef1f44fac07a95a743e2e3ec977745a95210c6936a2",
+      "size_bytes": 1013
+    },
+    "reproduce/evaluate.sh": {
+      "sha256": "70dbd6d6862911ca2f9dd7428a64b1640b6f6b088ccb1668b8ab4e058340b6ca",
+      "size_bytes": 241
+    },
+    "reproduce/fit.sh": {
+      "sha256": "b99917a06abf91f3a90af30979bcec1da8be479870fc82717d1058196bfa256f",
+      "size_bytes": 236
+    },
+    "reproduce/fitting.json": {
+      "sha256": "3df20064959052592d8830154b8892734b3c3a63565bda6b87f15f6448491642",
+      "size_bytes": 1895
+    },
+    "reproduce/hitlist-source/hitlist/distribution_recipe.py": {
+      "sha256": "289472c805d9d5e1c7e2421a42d5c05965f99817dcc92a181ea84e07e73ec267",
+      "size_bytes": 14426
+    },
+    "reproduce/hitlist-source/hitlist/evidence_recipe.py": {
+      "sha256": "4317cf38396bea7f2627b6ef3747f55e98b045ceb791425bb418329f0307e45a",
+      "size_bytes": 37281
+    },
+    "reproduce/hitlist-source/hitlist/lymph_composition.py": {
+      "sha256": "36a4c15fed4bd749e1e2b84c01eb3e26c1410d09cc14a7e48b7ad620d2cb98dc",
+      "size_bytes": 20262
+    },
+    "reproduce/hitlist-source/hitlist/version.py": {
+      "sha256": "56ab7fc65881d1813da8fc2be8cd7c3508df2909b508e68e965886d6ed0a7390",
+      "size_bytes": 23
+    },
+    "reproduce/hitlist-source/tasks/lymph-composition-recipe-spec.md": {
+      "sha256": "8d5256a720aab7edffd0b516405ff40a3a04bdec82f7fcaa9d7700fd2a9bab67",
+      "size_bytes": 8903
+    },
+    "reproduce/hitlist-source/tests/test_lymph_composition.py": {
+      "sha256": "a7e2ea581e340443ed3af99aa5d502971f42e4d1bcfabba11ffa0a771787d611",
+      "size_bytes": 6277
+    },
+    "reproduce/hitlist-tracked.diff.gz": {
+      "sha256": "a64f775fd0b43bd94ddf6205864779ae4a57cec699459d363828ec64fec4e357",
+      "size_bytes": 861
+    },
+    "reproduce/launch.json": {
+      "sha256": "8dfd9aa2caba345ef05c47f8a23bf702988c37f799d23f866799f2b499a66501",
+      "size_bytes": 2287
+    },
+    "reproduce/launch.sh": {
+      "sha256": "d1ce966912836868d7c53ccb73a4deb294992614e9ca538873f9ce8fcf83eba8",
+      "size_bytes": 299
+    },
+    "reproduce/plan.md": {
+      "sha256": "8d5256a720aab7edffd0b516405ff40a3a04bdec82f7fcaa9d7700fd2a9bab67",
+      "size_bytes": 8903
+    },
+    "reproduce/source/admit.py": {
+      "sha256": "a877924f2e7aa7e3b8987d22167f78ab6207a428695350bd65682b475da25c45",
+      "size_bytes": 2398
+    },
+    "reproduce/source/core.py": {
+      "sha256": "b32cf63bc4a979a7ff3389d5d9b8dd852bde068e79439d4711fe17e5edd4e86d",
+      "size_bytes": 9753
+    },
+    "reproduce/source/evaluate.py": {
+      "sha256": "7fc96b14912f911f1752bc9db32210f9d89d7d35766095a73eb235e47b2185c9",
+      "size_bytes": 8214
+    },
+    "reproduce/source/fit.py": {
+      "sha256": "cc3f695619f12c1d6c608ae17321daa4a763ad5e6313b056b0ec25fe48829474",
+      "size_bytes": 10173
+    },
+    "reproduce/source/observer_exposure.py": {
+      "sha256": "91641abb4adb37b8718a94289332f7b289609859fc3949599523f8f90a2d0de1",
+      "size_bytes": 2437
+    },
+    "reproduce/source/original_xml_decoder.py": {
+      "sha256": "024fa11a9b0a56390d4217da936377b89a52348b12163b6341f57c80bab01d38",
+      "size_bytes": 11174
+    },
+    "reproduce/source/qualify.py": {
+      "sha256": "de8a004d7251450f4d7b51f169ec2ccf0ca8a7afd560bdbe4b732e022e6f0cf0",
+      "size_bytes": 4994
+    },
+    "reproduce/source/report.py": {
+      "sha256": "cbaecf70b25fbe206a0ad333cb008c265c6b5c19d3f1cdd9eb78d160d0747d2d",
+      "size_bytes": 6920
+    },
+    "reproduce/source/verify_admission.py": {
+      "sha256": "54427b90fb5629b2727b57728c7d90d6f50070c3ae791b4008f6444d8d38c025",
+      "size_bytes": 14445
+    },
+    "reproduce/source/verify_predictions.py": {
+      "sha256": "3a772fd46962bc9fe58c23d93ddb3083e8904808f0acfb0fd9b07422b7efe1c8",
+      "size_bytes": 12369
+    },
+    "reproduce/verifier-correction.md": {
+      "sha256": "54a71c6fa6de0ff26528e5606f209fa3c3e3787f2387986f30481f7ee143eb93",
+      "size_bytes": 690
+    },
+    "results/admission.json": {
+      "sha256": "32434b6814e69c422571ef2bcab7efd5b9926895bc1b9213742890b039c65834",
+      "size_bytes": 3071
+    },
+    "results/attempt-verifier-weight-shadowing/failure.log.gz": {
+      "sha256": "ce3cd523151808dcf04b4708346ddb5e1cd438c2c3049b665bf4fe7f9e35d31d",
+      "size_bytes": 255
+    },
+    "results/attempt-verifier-weight-shadowing/verify_predictions.py": {
+      "sha256": "61f9a7ae97afa402afd1a39f3b1b336d8d1f58d1ba2285abc18c78b629fcd6f2",
+      "size_bytes": 12230
+    },
+    "results/comparison-table.md": {
+      "sha256": "e6f4ba049bed18b8ea4bb3744672926b4a9b0e3469dd814bc29a8801fd00c38f",
+      "size_bytes": 1420
+    },
+    "results/comparison.png": {
+      "sha256": "e743d8dcf7e37e80d25460af209479cc191f629c833071f26eb18d0275a21563",
+      "size_bytes": 107283
+    },
+    "results/evaluation/comparisons.json": {
+      "sha256": "167ffd2c202738f68e86cd05d77561d8ed06f7e5f06c5593d8efb90e48003ce0",
+      "size_bytes": 1151
+    },
+    "results/evaluation/component-strata.json": {
+      "sha256": "32aa559c916a920f061a08178c8e4a3798183f17ef4a08db46fcad9ba6df99cb",
+      "size_bytes": 318331
+    },
+    "results/evaluation/human_native-predictions.csv.gz": {
+      "sha256": "92e2754003176d57aa7363df2524f26ef418e41ef4d34ce6cd1b76586a4e1f38",
+      "size_bytes": 2523771
+    },
+    "results/evaluation/metrics.json": {
+      "sha256": "d48e41f3588d7a65472bb047fead922ac4e6c0c01171a41e6cbcc9cc9b5bcd27",
+      "size_bytes": 40912
+    },
+    "results/evaluation/outcome-access.json": {
+      "sha256": "713379008b725bbe57221c8eb5f6b3df0750947658ad78fb8d64539e1464bed4",
+      "size_bytes": 506
+    },
+    "results/evaluation-complete.json": {
+      "sha256": "d4b411b2607e27c117bf59c587f619d24f45f78f0cb78a9322387c8d3c0d60df",
+      "size_bytes": 603
+    },
+    "results/fit/human_native/row-identities.json": {
+      "sha256": "6eb503286dbf37b14a7a531f6d9c75581f256d3c2eabdd72e4f79f1fee19ce9c",
+      "size_bytes": 96519
+    },
+    "results/fit/human_native/sealed-predictions.npz": {
+      "sha256": "ba7ee78a8fa70b550dccdaf603db6c262ac4a1e49ac7230a6950afd728fd0fb9",
+      "size_bytes": 117860
+    },
+    "results/fit/human_native/sequence_alone_mse-optimizer.pt": {
+      "sha256": "c583ad226453368cdba4d7dc59629a9c69916d6829799f29fcc4e75068338c2f",
+      "size_bytes": 8687
+    },
+    "results/fit/human_native/sequence_observer_exact_42-optimizer.pt": {
+      "sha256": "f1e4e211b18a02380876ecc13b1ad6d18a121b2e3590ebecba9a1ea51230fd2e",
+      "size_bytes": 8767
+    },
+    "results/fit/human_native/sequence_observer_exact_43-optimizer.pt": {
+      "sha256": "e0f45e627c2d671f28cecebc0e2b8755346d7ab7a4a8410857880e316104f56c",
+      "size_bytes": 8767
+    },
+    "results/fit/human_native/sequence_observer_exact_44-optimizer.pt": {
+      "sha256": "db8a1e3c8547f34d37f4aae51b87c8602fca2517d9338998a6e933e884d8d51c",
+      "size_bytes": 8767
+    },
+    "results/fit/human_native/sequence_observer_mse-optimizer.pt": {
+      "sha256": "826b2ea536fef252e69cff1ced892cae4ae38546dbe7be5e76f6cae034975927",
+      "size_bytes": 8717
+    },
+    "results/fit/human_native/sequence_observer_reinforce_42-optimizer.pt": {
+      "sha256": "47fae5a29351857e9e399c971652d30948d3f2410c139ce003f57f878cd68ff6",
+      "size_bytes": 8807
+    },
+    "results/fit/human_native/sequence_observer_reinforce_43-optimizer.pt": {
+      "sha256": "56f0eef33934e4c85cd516d19089c4eea9429bd084abc6e1d97fc3d914f81e9c",
+      "size_bytes": 8807
+    },
+    "results/fit/human_native/sequence_observer_reinforce_44-optimizer.pt": {
+      "sha256": "7c3a3a898ff241599a3571da318c7951f157f449d336742542e6a728060cb935",
+      "size_bytes": 8807
+    },
+    "results/fit/human_native/states.json": {
+      "sha256": "1e8e7623dd77d7a4fe1b27e71f6bc035408e327ed4f1b690625d89bb69b7fe9b",
+      "size_bytes": 4690315
+    },
+    "results/fit/human_native/train-validation-metrics.json": {
+      "sha256": "ba02b7bc68a8ed3367206b5189505010be88a1c31836cf8af46b4bb2aa7450d7",
+      "size_bytes": 26913
+    },
+    "results/fit/human_native/transforms.npz": {
+      "sha256": "1924cd0afe25e8eac2871ecb473e1c9052af0528e12649fd2e7288300fd248ec",
+      "size_bytes": 29844
+    },
+    "results/fit/human_native/uniform_alone_mse-optimizer.pt": {
+      "sha256": "a25920502d029d0bea005fc966080974d4764b5339990208d284d03262088717",
+      "size_bytes": 8037
+    },
+    "results/fit/human_native/uniform_observer_mse-optimizer.pt": {
+      "sha256": "01ce5f09c86306f4e32008e1ad5e94b320f25a170e2266c1c3fa329563525300",
+      "size_bytes": 8067
+    },
+    "results/fit/human_native/validation-selection.json": {
+      "sha256": "b0ea9ea2b41ecf7044217406750570a50685e1aeb476d835e2202227845411e7",
+      "size_bytes": 55
+    },
+    "results/fit-complete.json": {
+      "sha256": "263658b9e085314453e4653f01f71ad415f9f5e90abfb19a74c1d3688dd861a2",
+      "size_bytes": 2165
+    },
+    "results/independent-admission.json": {
+      "sha256": "e92992d052baa8ad9ae886e6008db616518ef5770ae61bb6dbf63d9d15168fcc",
+      "size_bytes": 1111
+    },
+    "results/independent-predictions.json": {
+      "sha256": "57dc88edd2003644fa40dd23bd10bc4718692134323896696680f5a5164a5d11",
+      "size_bytes": 530
+    },
+    "results/matched-summary.json": {
+      "sha256": "f751454bc03481d3c5d39dedb6511e894933affa61869d832172ecb7634ef70a",
+      "size_bytes": 3431
+    },
+    "results/observer-exposure.json": {
+      "sha256": "8b05858f47d86e0cc26ca476fc1e9910584b8a592a15b7302bb85695b3290edc",
+      "size_bytes": 1266
+    },
+    "results/qualification.json": {
+      "sha256": "e5ebaa1fddb29e559b1a1a4511040963a70d2a84b43700b829c342be1dc208ff",
+      "size_bytes": 2915
+    },
+    "results/rebase-equivalence.json": {
+      "sha256": "ef7f6aad994acdc81853de09633bd82c46f30c040513f528e46d4f90565a0774",
+      "size_bytes": 178
+    },
+    "results/recipe-manifest.json": {
+      "sha256": "f50e744b6653d082810b146ca194dc88e532c530b37d35a7899e84dab82103de",
+      "size_bytes": 5209
+    },
+    "results/source-publication.json": {
+      "sha256": "296076221d5aa25aa8cb8a1476580c34e96120a9a307df4c0cebc07186361348",
+      "size_bytes": 554
+    },
+    "results/summary.csv": {
+      "sha256": "24198d5a3d454ab59e4ea156af0db987a9384d3b9f82a45a6eb49763f462bc95",
+      "size_bytes": 15620
+    }
+  },
+  "total_publication_bytes": 8380112,
+  "raw_logs": "identical content preserved in .log.gz; plain .log not staged",
+  "raw_data_directories": [
+    "data/lymph_source_qualification/2026-10-24_1903_canonical",
+    "data/lymph_composition_recipes/2026-10-24_1938_v1",
+    "data/lymph_composition_recipes/2026-10-24_1938_v1_prepared"
+  ],
+  "free_disk_bytes": 8352346112
+}

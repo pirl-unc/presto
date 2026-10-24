@@ -178,3 +178,7 @@ passed and2.0.26 is verified on PyPI; shared editables unchanged. Next admission
 [observer composition transfer](plans/observer-composition-transfer-admission.md).
 A static peptide MS response cancels from same-peptide condition ratios; do not
 claim that simply adding it can remedy the prior response-model failures.
+
+- [x]1938independent lymph composition:21fits, numerical/data/prediction replay and report closed; no biological promotion.
+- [ ] Finish Hitlist818source release40126246020 and819recipeCI/merge/release.
+- [ ] After this failed transfer, specify a training-only or new-cohort test of separately calibrated observation and processing/selection assumptions; keep1938heldoutsclosed and preserve the full APCavailability objective.

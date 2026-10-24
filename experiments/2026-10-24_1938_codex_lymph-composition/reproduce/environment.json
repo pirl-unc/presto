@@ -1,0 +1,34 @@
+{
+  "checked_utc": "2026-10-24T20:01:11.688558+00:00",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "platform": "macOS-26.5-arm64-arm-64bit",
+  "machine": "arm64",
+  "hardware_probe": {
+    "returncode": 1,
+    "stdout": "",
+    "stderr": "sysctl: sysctl fmt -1 1024 1: Operation not permitted\n"
+  },
+  "distribution_versions": {
+    "torch": "2.14.1",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pyarrow": "26.0.0",
+    "networkx": "3.7",
+    "openpyxl": "3.1.5",
+    "lxml": "6.1.3",
+    "matplotlib": "3.11.2",
+    "hitlist": "1.82.2"
+  },
+  "hitlist_runtime": "2.0.28 from isolated source; distribution metadata belongs to unchanged shared editable",
+  "training_overrides": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "torch_num_threads": 1,
+    "torch_interop_threads": 1
+  },
+  "gpu": "none",
+  "cloud": "none",
+  "shared_environment_modified": false
+}
