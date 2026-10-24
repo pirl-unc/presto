@@ -10,7 +10,7 @@
   "upstream_added_PBMC_source": "f34a69a",
   "source_PR827_merge": "5a8b1aa176f41536ad48a29de17bb34f3f1a8c9a",
   "source_release_run": 40140479531,
-  "source_release_status": "in_progress",
+  "source_release_status": "success; PyPI2.0.30 wheel/sdist verified byte-identical",
   "local_tests_before_rebase": {
     "passed": 3493,
     "seconds": 314.19,
@@ -27,5 +27,10 @@
   "publication_precheck_recovery": "Initial hash check ran from wrong cwd before the shell fail-fast line and did not execute; corrected check here confirms all four files identical. No scientific artifact changed.",
   "recipe_PR": "https://github.com/pirl-unc/hitlist/pull/829",
   "recipe_CI_run": 40140838953,
-  "issue_comment": "https://github.com/pirl-unc/hitlist/issues/825#issuecomment-6390645752"
+  "issue_comment": "https://github.com/pirl-unc/hitlist/issues/825#issuecomment-6390645752",
+  "source_release_receipt": "../../../tasks/modular_model/mapp-2030-release.json",
+  "recipe_CI_status": "success on all unit3.10-3.14/integration/lint/docs/coverage checks",
+  "recipe_merge_commit": "58f67cd278d75d43432f3c20231de9c21c66ad46",
+  "recipe_release_run": 40143097533,
+  "recipe_release_status": "queued"
 }

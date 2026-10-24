@@ -164,13 +164,17 @@ field and double exactly, verified by Arrow equality. Numerical summaries,
 checkpoints, gradients, trajectories, environment, closed-out logs and figure are
 published here. Affinity/nM/500nM binding metrics are inapplicable to this endpoint.
 
-Status: biological comparison and independent outcome verification complete;
-[Recipe PR829](https://github.com/pirl-unc/hitlist/pull/829) published at5d648602;
-post-rebase local disk-guard errors, CI and verified release remain pending. Source827merged5a8b1aa;
-release40140479531is running. All four recipe runtime files are byte-identical
-after rebasing over concurrent PBMC source828. The primary gate fails; the narrower
-distribution-versus-uniform gate passes. Full APC availability goal remains active.
-Next: preserve this test as closed; qualify independent baseline biology and the
-processing/capture/observation contributions rather than expanding RL on optimizer
-agreement alone. Hitlist825 continues to own source-reference, physical precursor
-pairing and pooled-run recovery requirements.
+Status: biological comparison and independent outcome verification complete.
+[Recipe PR829](https://github.com/pirl-unc/hitlist/pull/829) passed all hosted unit
+(Python 3.10–3.14), integration, lint, docs and coverage checks and merged as
+`58f67cd278d75d43432f3c20231de9c21c66ad46`. The original local post-rebase disk-guard
+errors remain preserved. Source Hitlist2.0.30 is published; both PyPI distributions
+are byte-identical to successful clean-main build40140479531. Recipe2.0.31 release
+build40143097533 is pending. See the updated software-publication receipt.
+
+The primary gate fails; the narrower distribution-versus-uniform gate passes.
+All four frozen runtime files remained byte-identical after the earlier rebase.
+Full APC availability remains unachieved. The next registered PBMC transfer family
+2315 fails its minimum component support before scoring, so it adds no external
+predictive validation. Hitlist825 continues to own source-reference, physical
+precursor pairing and pooled-run recovery requirements.

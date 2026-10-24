@@ -1,0 +1,27 @@
+{
+  "hitlist_recipe_commit": "1619c374f421cc7775b4c6619e748384e81be346",
+  "runtime_identical_after_rebase": {
+    "hitlist/pbmc_composition.py": true,
+    "hitlist/evidence_recipe.py": true,
+    "hitlist/distribution_recipe.py": true,
+    "hitlist/version.py": true
+  },
+  "recipe_pr": "https://github.com/pirl-unc/hitlist/pull/830",
+  "recipe_state": "draft; hosted CI pending; full local suite deferred by registered disk headroom",
+  "issue_update": "https://github.com/pirl-unc/hitlist/issues/820#issuecomment-6390908317",
+  "MAPP_recipe829_merge": "58f67cd278d75d43432f3c20231de9c21c66ad46",
+  "MAPP_recipe_release_run": 40143097533,
+  "MAPP_recipe_release_status": "queued",
+  "source2030_release_receipt": "../../tasks/modular_model/mapp-2030-release.json",
+  "focused_tests": {
+    "passed": 28,
+    "warnings": 1,
+    "seconds": 1.22
+  },
+  "preserved_development_failures": [
+    "two lint findings fixed before admission",
+    "four fixture setup errors from incomplete reciprocal peptide/group IDs; fixed fixture before admission",
+    "additional verification invocation named nonexistent test_distribution_recipe.py; no tests ran; corrected to test_evidence_recipes.py and all28pass"
+  ],
+  "release_network_retry": "provenance verifier first lacked sandbox GitHub network; repeated unchanged with authorized network and passed"
+}

@@ -13409,3 +13409,29 @@ failures and16disk-reserve failures;unchanged serialsuitepasses3493tests.
 Post-rebase closure:3,481passes/15fixture setup errors at unchanged disk reserve
 (~0.84GiBfreevs1GiB). Do not retry large materialization/full suites without
 verified headroom. HostedrecipeCI40140838953andrelease40140479531remainlive.
+
+## Primary-PBMC transfer prerequisites
+
+- [x] Revalidate completed MAPP model, source PRs and CI/release handles.
+- [x] Verify independent CoW snapshots preserve all bytes; headroom remains insufficient for the full suite.
+- [x] Qualify original PBMC source and freeze the target/curation contract.
+- [x] Run registered admission and independent original-source replay; both support gates fail.
+- [x] Stop before frozen-model scoring; record no external-validation claim.
+- [x] Publish PBMC recipe PR830 and original-source support findings on Hitlist820.
+- [x] Verify source2.0.30 release bytes; merge MAPP recipe829 after hosted checks pass.
+- [ ] Complete MAPP2.0.31 and PBMC2.0.32 recipe releases.
+
+### PBMC transfer review
+
+CTRL6components/27groups/234measurements and LUPUS7/20/161 fail the frozen minimum
+of20components. No predictions, fitting or weakened eligibility. Original692,452
+cells and13,790decisions independently agree; target/weight error<=1.78e-15.
+Source/admission/audit/closure finish within resource caps. Twenty-eight focused tests,
+format/lint pass; full local suite remains deferred below2GiBfree space. CoW
+maintenance preserves62package files and independent inodes but frees only~6MiB;
+existing snapshots already used CoW. Previous source/model manifests are unchanged.
+Existing MAPP recipe CI40140838953now passes all unit/integration/lint/docs jobs.
+Source2.0.30clean-main release40140479531succeeded and published PyPI bytes match.
+MAPP recipe829merged58f67cd; release40143097533queued. PBMC830published1619c37;
+all frozen recipe runtime bytes unchanged after rebase, hosted checks pending.
+Full APC availability goal remains active and unachieved.
