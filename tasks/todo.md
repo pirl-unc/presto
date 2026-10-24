@@ -12531,10 +12531,29 @@ Plan: experiments/agents/codex/plans/fragment-observation-domain.md; registered 
 - [x] Freeze canonical training support without using quantities or selecting easy spans.
 - [x] Execute full required-output precision and independent directional-gradient gates.
 - [x] Independently verify artifacts and report failures, coverage and runtime.
-- [ ] Publish evidence and determine whether a biological fit is admissible.
+- [x] Publish evidence and determine whether a biological fit is admissible.
 
 Full APC availability objective remains active; no concentration claim.
 
 Continuation 2026-10-24T00:48:49.371034+00:00: 84-case numerical family is live in exec session44779; 64 cases terminal, 64 passed. Canonical training projection covers90,630 measurements/45,315 span-time queries,28 blocks,seven conditions/six constructs. Two numerical oracle tests and one closure-counterexample test pass; original import-path failure preserved. Independent closure checks all three refinements against analytical eta0, whereas worker scalar covers eight steps only. No measured intensities consulted or biological fit launched. Previous6347987 CI40044771065 passes all jobs. Re-poll session44779, finish numerical closure/publication, then use the registered minibatch-objective companion plan only if admitted. Current turn: progress; full APC objective active.
 
 Review: all84cases pass with252directional checks and independent full-array recomputation. All90,630source support rows and135,945span/eta prediction records replay; no gate disagreements. Full-output tiny-tail negativity remains explicit. Three focused tests pass; all168raw arrays restore byte-for-byte. Suite1464.95s, peak2.055GiB. Numerically admits a separately frozen biological comparison, not an APC concentration model. No new biological fit yet. Publication pending; full goal active.
+
+Publication:120d55ac26b1906c0d22c465254c4ab0051470da pushed to existing draftPR131. All233 closure hashes match committed blobs, remote immutable README bytes match, all168 archived raw arrays verify, and fresh body-only update reads back exactly with open/draft state preserved. Standard CSV CRLF triggered default whitespace diagnostics; CSV-aware whitespace check passes without changing artifact bytes. Ignored worker logs were explicitly included. All local numerical/reference/verification/packaging/push/update handles are terminal. Next: registered matched biological objective qualification and separately frozen fit. Full APC goal remains active.
+
+
+## Matched biological fragment-length comparison
+
+Previous goal turn: progress (registered/launched numerical admission); current turn closed/published all84cases at120d55a.
+Family:experiments/2026-10-23_2108_codex_fragment-biological-fit; plans fragment-observation-domain.md and fragment-minibatch-objective.md.
+- [x] Qualify nuisance-offset optimum, envelope gradients, and probability-weighted minibatches.
+- [x] Freeze a matched bounded fitting receipt after qualification; then run both arms.
+- [x] Verify all outputs/updates and report biological and numerical limits.
+- [ ] Publish the complete biological comparison and verify PR state.
+
+Original test parents remain excluded; full APC objective active.
+
+Live fitting: session84647 runs the frozen200-update arms. Analytical completes and independently replays all200 gradients/updates plus105,452predictions; developmentRMSE1.28894, Spearman0.22829, worse than constant1.28060. Joint-offset optimization gap0.196090MSE is verified. Fragment arm continues with no setting changes; numerical and optimizer correctness do not imply biological improvement.
+
+
+Review: both 200-update fits complete; all 85/86 coordinates materially train. Independent optimizer/source/physical-prediction/metric checks pass for both arms. Fragment development shape RMSE 1.27630 versus matched analytical 1.28894, constant 1.28060, old exact 1.26510 and old hybrid 1.26279; Spearman .23544 and temporal-ratio RMSE 1.20013. This is weak biological performance, not a new best model. Joint-offset MSE gaps .196090/.129245 motivate the prospective profiled-minibatch plan. All fitting/verification handles terminal; archives restore exact raw bytes. Prior 120d55a CI 40048135508 passes. Full APC availability objective remains active; next comparison changes nuisance optimization only.

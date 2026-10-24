@@ -562,3 +562,12 @@ Keep applicability reporting separate from model features and the measured label
   launch. If a discrepancy is found afterward, preserve original outputs and
   decisions, enforce the original contract in independent closure, and disclose
   changed decisions without changing seeds, thresholds or data.
+
+## 2026-10-23 — biological outcomes before numerical qualification
+
+- When asked about biological prediction, lead with actual development/test
+  scores against biological controls. Numerical gates, parameter updates and
+  optimizer replay do not establish predictive improvement. After a bounded
+  numerical/gradient prerequisite passes, run the matched biological comparison
+  before extending sampler or solver machinery. Keep nuisance-optimization gaps,
+  biological generalization and absolute concentration calibration distinct.

@@ -1,0 +1,58 @@
+{
+  "files": {
+    "results/analytical/checkpoint.pt": {
+      "bytes": 9018,
+      "sha256": "8f8c7d27d9840cad1892eea2046a55f757aab5ee9efbfd5d51cbfae643f51b17"
+    },
+    "results/analytical/independent-amounts.npz": {
+      "bytes": 596391,
+      "sha256": "9da56df89499322fbc248a386fd4f7b212c37b17673bd5bb8d2541ba8d3f35af"
+    },
+    "results/analytical/updates.npz": {
+      "bytes": 643200,
+      "sha256": "5763ea2d7f4129abecb797805965d8cd858c5df7e630e41d2854aedbcf3547ed"
+    },
+    "results/fragment/checkpoint.pt": {
+      "bytes": 9018,
+      "sha256": "3723fe1c6295f9338c8248eb23c4cafa03e36dfc792b42a264b9d1cdcea8c14c"
+    },
+    "results/fragment/independent-amounts.npz": {
+      "bytes": 596553,
+      "sha256": "f043a6ccfd874c1c002868aec0f144dcb311d8d689696ed4c5b97bc306086674"
+    },
+    "results/fragment/independent-reference-arrays.npz": {
+      "bytes": 17231643,
+      "sha256": "89a1d6b51a7593fff90f8d602fceb623927748eecd2766d6cd9509145c150153"
+    },
+    "results/fragment/updates.npz": {
+      "bytes": 650706,
+      "sha256": "efc0b3c5fdc84212fc6952cb4d015d0083ff53596bc4f3ad48d9561fc475cc2c"
+    },
+    "results/initial-training.npz": {
+      "bytes": 3852233,
+      "sha256": "1c7888d0da8ba24b3a8f30d7ede28bf649c4f4f630c1969550b54970ea34f9cc"
+    },
+    "results/objective-qualification.npz": {
+      "bytes": 4182,
+      "sha256": "cb14f299f6552038b4f5043437dedc10b4240f83de3fdb7c2068a522a487ace1"
+    }
+  },
+  "archives": [
+    {
+      "path": "results/raw-training-00.tar.gz",
+      "sha256": "57d75189fb203ff32da34bc44fee51a3141395b8fd1ad5cd8c8f95edeeefc2a5",
+      "members": [
+        "results/analytical/checkpoint.pt",
+        "results/analytical/independent-amounts.npz",
+        "results/analytical/updates.npz",
+        "results/fragment/checkpoint.pt",
+        "results/fragment/independent-amounts.npz",
+        "results/fragment/independent-reference-arrays.npz",
+        "results/fragment/updates.npz",
+        "results/initial-training.npz",
+        "results/objective-qualification.npz"
+      ]
+    }
+  ],
+  "scope": "Exact executed checkpoints/arrays; prediction gzip files are kept directly. Restore original paths with reproduce/unpack.py."
+}
