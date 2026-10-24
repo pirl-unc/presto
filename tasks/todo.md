@@ -13133,3 +13133,13 @@ Previous goal turn was a status report: no experimental progress. Revalidated un
 - [x] Verify both Hitlist releases are merged and deployed. Successful builds40098309564/40099959477; PyPI2.0.22/2.0.23 hashes match tested artifacts. Already published when checked; no duplicate upload or shared-environment changes. Receipt: tasks/modular_model/hap1-release-verification.json.
 
 Review: negative biological comparison independently reconstructs198,744predictions (max1.52e-13). No improvement beyond frozen sequence baseline; local1319.54s/1.979GiB, matched sampled1.52x exact time. Numerical failure/recovery and checker-name fix preserved. Both Hitlist releases verified deployed; new source gap812 filed/read back. Outer evaluation is prospectively specified and not executed. Published on draftPR131 at59a4618; broader APC availability objective unachieved.
+
+## Frozen HAP1 outer evaluation (October24,15:03UTC)
+
+- [x] Register the existing prospective outer-evaluation contract before outcome access.
+- [x] Freeze all seven direct and eight physical full-training predictors and source hashes.
+- [x] Replay training predictions independently and prove target-independent inference.
+- [x] Predict both outer splits from covariates, then evaluate once with no refitting.
+- [ ] Independently reconstruct predictions/weights/metrics and publish scoped results.
+
+Review: frozen sequence test RMSE0.573380 versus calibrated-precursor0.631249,9.167%gain; testR²0.24986/Spearman0.46623. All ten conditions improve. ERAP1 physical augmentation0.585337 versus baseline0.585327 fails its gate. Independent scalar/affine closure verifies361,281prediction values and50,995stratum metric records. Five near-constant control-stratum correlations are marked undefined in a qualified derivative; raw scores/predictions preserved, no primary changes. Outer sets now inspected; no retuning. No APC concentration claim. Publication pending; unrelated task changes intact.
