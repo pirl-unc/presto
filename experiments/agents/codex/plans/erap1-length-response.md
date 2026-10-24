@@ -119,7 +119,7 @@ review and PR. Update model_to_beat only if this contract's baseline actually ch
 - [x] Freeze this revision and comparison before implementation.
 - [x] Implement and qualify the state-length extension, including preserved numerical recovery.
 - [x] Run all24qualified fits locally; the registered accuracy gate fails.
-- [ ] Independently verify and publish the outcomes, including failures.
+- [x] Independently verify and publish the outcomes, including failures (59a4618).
 
 ## Numerical stop and prospective recovery
 
