@@ -12658,7 +12658,7 @@ Amplitude publication handoff:132404d1d0a2b714dcff9804e7e052b909f28f6d is pushed
 Previous goal turn: progress (calibration fits, independent verification and enforced stop rule, published132404d). Registered 2026-10-24_0117_codex_native-peptidome-admission before retrieval/schema arithmetic. No local fit live.
 - [x] Retrieve available public sources and identify reuse evidence; preserve unresolved original2012 access/lineage.
 - [x] Independently audit available workbooks and metadata/quantity contract; record semantic failures.
-- [ ] Publish source evidence and concrete shared Hitlist admission requirements; no Presto-only curator or premature training.
+- [x] Publish source evidence and concrete shared Hitlist admission requirements; no Presto-only curator or premature training.
 Full APC availability/concentration objective remains active.
 
 Current continuation: previous status-only turn was no progress. Public PLOS
@@ -12681,3 +12681,27 @@ remains deferred. All audit handles79539/23233/51582 and issue25532are terminal
 success. Current132404dCI docs/lint/tests/distribution jobs pass. Close/publish
 available-source audit, then follow native-peptidome-semantic-corrections.md using
 current upstream state. Goal remains active; no fit or source repair was run.
+
+Publication review: b298ea991f7b1ed603ab0c5d700f6b8c3e827107 is pushed to open
+draftPR131. All53frozen audit-file hashes match committed blobs; remote report and
+body-only PR update read back exactly. Commit69336, push21196 and PRupdate48527are
+terminal success. Source-extract XML whitespace was preserved; authored files pass
+whitespace checks and experiment Python passes explicit lint. NewCI40067385524is
+in progress, not passed; prior132404djobs allpassed. No experiment is live. Current
+goal turn is progress: complete source/quantity replay revealed six concrete
+shared-source problems and produced Hitlist791 plus published evidence. Next:
+recheck upstream791/main/release, implement shared corrections on an isolated
+branch, then qualify a native-response recipe before a new biological fit. The
+original2012source and specimen/reuse adjudication remain unresolved, but do not
+block correction of the verified shared-code errors. Full APC goal stays active.
+
+
+## Corrected TMAB source replay
+
+Registered 2026-10-24_0156_codex_tmab-semantic-replay before rebuilding full assets; correction code/source diff frozen.
+- [x] Replay all source rows/quantities/IDs and independently verify corrected semantics.
+- [ ] Close/publish the evidence and finish shared correction checks/release.
+- [ ] Qualify canonical native-response recipe before the next biological comparison.
+Full APC concentration goal remains active.
+
+Review: full-source semantics verify after a documented whitespace-comparator correction; 10,564 rows and 61,908 measurement slots preserved. All 830 prior reuse candidates recovered. Hitlist format/lint and all 3,403 local tests pass; publication and release pending. No new biological fit or concentration claim.
