@@ -13189,7 +13189,7 @@ observer. Full APC availability goal stays active and unachieved.
 
 - [x] Implement source/recipe in isolated Hitlist feature worktree under issue762.
 - [x] Independently qualify original rows, targets and intended-product dependence in1635.
-- [ ] Publish/release canonical Hitlist implementation after required gates.
+- [x] Publish/release canonical Hitlist implementation after required gates.
 - [x] Prospectively select additional pools and test held-out relative MS response.
 
 Review:1,147source-backed targets; no new fitted model or concentration claim.
@@ -13224,3 +13224,17 @@ positive correlations in4/4pools. Primary screen passes. Independent replay veri
 in this continuous observer. Pool-fixed C termini prevent direct terminal-effect
 identification; synthesis/handling/load remain confounded. No APC concentration or
 biological-transfer claim. Publication and Hitlist2.0.26 release remain pending.
+
+Published1702 as03f03c5 on draftPR131; Hitlist762 comment6387480811 and Presto130
+comment6387481109 both exactly match their submitted bodies. Unrelated task dirt
+remains346additions/4deletions. Release40115753764 is still running. The next
+admission plan explicitly requires within-condition compositions: a static MS
+response cancels in same-peptide fold changes. Tables7/8 are only a candidate;
+TMT/MS1 chemistry, prior-component overlap and comparable cross-peptide intensity
+must be checked before a new biological fit.
+
+Release closure: Hitlist2.0.26 published after clean-main build40115753764 passed
+3,457unit tests (one missing-Ensembl-data skip) and96integration tests. Published
+wheel/sdist hashes match tested artifacts; merge68dea0b and runtimeb9b1047 have
+identical source trees. The shared editable remains the user's Hitlist1.82.2
+checkout, with pipcheck passing. See tasks/modular_model/ms1-release-verification.json.

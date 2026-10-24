@@ -156,18 +156,25 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [x] After independently closing1007, execute the [frozen HAP1 outer evaluation](plans/hap1-frozen-outer-evaluation.md), without further fitting or selecting on held-out outcomes. This confirms elution-response generalization; APC concentration qualification remains separate.
 - [x] Qualify original APC-derived endolysosomal numeric source under Hitlist812: no numeric peptide cohort in five official supplements; synthetic demo excluded. Source gap remains upstream.
 - [x] Qualify broader measured non-MHC peptide MS1-response data underHitlist762: PXD021013 original samples and full intended-pool mapping recovered/verified in1546.
-- [x] Implement and independently qualify canonical PXD021013 source/recipe in 1635; Hitlist PR814 passes 3,458 local tests. Release pending.
-- [ ] Preregister a larger grouped relative-MS1 predictive comparison. This is an observation prior until independent transfer, not calibrated molarity.
+- [x] Implement and independently qualify canonical PXD021013 source/recipe in1635; Hitlist814 is merged and2.0.26 is published with matching tested artifact hashes.
+- [x] Preregister a larger grouped relative-MS1 predictive comparison. This is an observation prior until independent transfer, not calibrated molarity.
 
 - [x] Close 1635 canonical PXD021013 admission against original source quantities and intended-product groups.
-- [ ] Freeze additional pool selection and held-out relative-response evaluation.
+- [x] Freeze additional pool selection and held-out relative-response evaluation.
 
 - [x] Run 1702 grouped nontryptic MS1 observer from the frozen 24-pool plan; preserve
   prospective selection, canonical admission, sealed test predictions and all outcomes.
 
-- [ ] Publish1702 and complete Hitlist814 clean-main release. Primary sequence
+- [x] Publish1702 and complete Hitlist814 clean-main release. Primary sequence
   observer passes held-out screen (13.57%test gain; Spearman0.52564), but pool-fixed
   C termini and unknown purity/load prevent pure detector/molar interpretation.
 - [ ] Qualify a new prospective biological transfer test before treating this
   observer as a processing correction; exact/sampled arms must share its frozen
   parameters/objective. Previously inspected biological held-outs remain closed.
+
+1702 is published at03f03c5; Hitlist762 and Presto130 comments are exact-body
+verified in tasks/modular_model/ms1-observer-publication.json. Release40115753764
+passed and2.0.26 is verified on PyPI; shared editables unchanged. Next admission specification:
+[observer composition transfer](plans/observer-composition-transfer-admission.md).
+A static peptide MS response cancels from same-peptide condition ratios; do not
+claim that simply adding it can remedy the prior response-model failures.
