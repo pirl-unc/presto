@@ -13166,7 +13166,7 @@ comment used the authenticated CLI. No auto-review rejection occurred.
 - [x] Freeze plans/measured-ms1-source-qualification.md before original data retrieval.
 - [x] Inspect public article/deposit/index assets, load/form/pool/acquisition metadata.
 - [x] Verify two original processed-source samples and610,670 populated intended-map cells; preserve selection/unknowns.
-- [ ] Record scientific admission and concrete shared Hitlist762 requirements.
+- [x] Record scientific admission and concrete shared Hitlist762 requirements.
 
 No training planned until canonical admission; all existing test partitions remain closed.
 
@@ -13176,3 +13176,11 @@ outside their planned pool;1,243 planned positive quality sequences (1,147 corre
 unmodified quality form rows) survive the scoped source checks. Crude synthesis,
 estimated load and conflicting/incomplete SDRF annotations retained. No model fit,
 canonical training recipe or true molarity claim. Shared issue update/publication pending.
+
+Published1546source report and verified artifacts as911aa8717bc2c00529e60450be46e6f65c617a1e.
+Hitlist762 comment6386493718 posted and exact-body readback passes. Scientific source
+scope remains conditional intended-product response, not pure detector calibration.
+All local retrieval/inspection handles are terminal. Prior2bf8ca1 CI40108371279 and
+40108364515 both pass. Next concrete work: canonical source/recipe, then prospective
+pool/sequence-grouped response fitting; exact/sampled processing will share that
+observer. Full APC availability goal stays active and unachieved.
