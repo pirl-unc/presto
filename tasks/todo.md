@@ -13362,3 +13362,12 @@ Plan: experiments/agents/codex/plans/hap1-tap-route-response.md.
 The full APC availability/concentration goal remains active and unachieved.
 
 2106 review: exact shared route+scores CV RMSE0.711942 vs0.720640original but0.707492expanded; primary gate fails. Sampled0.712170,1.37x runtime, no accuracy benefit. All109coordinates receive gradients, exact gradient5.71e-7. Independent replay checks91,680final predictions/30fits and825,120history values. Post-fit production-boundary check coverage correction is preserved explicitly; all checks pass without refitting. Ratio invariance means baseline pool quantities still need separate supervision.
+
+## Newer MAPP baseline source qualification
+
+- [x] Freeze prospective source contract and bounded retrieval plan.
+- [x] Retrieve and audit publisher/PRIDE assets.
+- [x] Independently verify quantitative coverage and metadata.
+- [x] Record Hitlist owner, close report and registry.
+
+Review: source availability advances; no new predictive result. Recovered baseline quantities, numeric pooled entries, organism/selection conflicts and exact source checks; shared ingestion pending Hitlist825.

@@ -1,0 +1,16 @@
+{
+  "python": "Python 3.12.6",
+  "versions": {
+    "openpyxl": "3.1.5",
+    "requests": "2.34.2"
+  },
+  "machine": "arm64",
+  "execution": "Local CPU; no environment overrides or installs",
+  "actual_order": "fetch.py; fetch_metadata.py; inventory.py; fetch_archive.py in background; audit_workbooks.py (preserved recovery passes); verify_xml.py; summarize.py; verify_archive.py (preserved header recovery); source_dispositions.py (preserved parser/taxonomy recoveries)",
+  "source_snapshots": "reproduce/source; initial and final executed versions retained",
+  "large_derived_files": [
+    "/private/tmp/presto-modular-model/data/mapp2025_source/2026-10-24_2130/workbook-audit-expanded.json",
+    "/private/tmp/presto-modular-model/data/mapp2025_source/2026-10-24_2130/captions.txt"
+  ],
+  "utc_closed": "2026-10-24T21:50:27.865487+00:00"
+}
