@@ -13153,6 +13153,26 @@ verification. All inspected outer sets remain closed to tuning.
 - [x] Revalidate current branch, goal, issue812 and live CI; register source-audit plan.
 - [x] Inventory official supplementary/deposit assets and exclude synthetic examples.
 - [x] Independently qualify numeric measurement/context/replicate evidence.
-- [ ] Record admission decision and update Hitlist812 plus the canonical registry.
+- [x] Record admission decision and update Hitlist812 plus the canonical registry.
 
 Review: five official PDFs/15 asset hashes and61 repository entries independently checked; no original numeric peptide cohort admitted. Eight literal aggregate protein half-life values are valid separate evidence. Figshare404 and pypdf extraction limits retained. No new training or APC concentration claim. Prior-headbf7b3e6 CI40106425787/40106415603 both pass; publication/upstream readback pending.
+
+Published source audit as2bf8ca1 on draftPR131; Hitlist812 comment6386203016 exact-body
+readback passes. The GitHub connector lacked write permission, so the authorized
+comment used the authenticated CLI. No auto-review rejection occurred.
+
+## Independent measured MS1-response source (October24,15:46UTC)
+
+- [x] Freeze plans/measured-ms1-source-qualification.md before original data retrieval.
+- [x] Inspect public article/deposit/index assets, load/form/pool/acquisition metadata.
+- [x] Verify two original processed-source samples and610,670 populated intended-map cells; preserve selection/unknowns.
+- [ ] Record scientific admission and concrete shared Hitlist762 requirements.
+
+No training planned until canonical admission; all existing test partitions remain closed.
+
+Review: public original nontryptic MS1 quantities and intended-product lists recovered.
+980,218 literal cells independently verify.2,298/3,649 sample identifications fall
+outside their planned pool;1,243 planned positive quality sequences (1,147 corresponding
+unmodified quality form rows) survive the scoped source checks. Crude synthesis,
+estimated load and conflicting/incomplete SDRF annotations retained. No model fit,
+canonical training recipe or true molarity claim. Shared issue update/publication pending.

@@ -155,4 +155,5 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 
 - [x] After independently closing1007, execute the [frozen HAP1 outer evaluation](plans/hap1-frozen-outer-evaluation.md), without further fitting or selecting on held-out outcomes. This confirms elution-response generalization; APC concentration qualification remains separate.
 - [x] Qualify original APC-derived endolysosomal numeric source under Hitlist812: no numeric peptide cohort in five official supplements; synthetic demo excluded. Source gap remains upstream.
-- [ ] Qualify broader measured non-MHC peptide MS1-response data under existing Hitlist762; require original measurements, pool/form/acquisition lineage and explicit load uncertainty before a new shared recipe.
+- [x] Qualify broader measured non-MHC peptide MS1-response data underHitlist762: PXD021013 original samples and full intended-pool mapping recovered/verified in1546.
+- [ ] Implement canonical PXD021013 intended-product relative-response source/recipe with uncertainty/conflict/disposition preservation, then preregister a grouped predictive comparison. This is an observation prior until independent transfer, not calibrated molarity.
