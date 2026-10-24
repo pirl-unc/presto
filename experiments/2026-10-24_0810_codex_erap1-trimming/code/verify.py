@@ -334,7 +334,7 @@ def main():
     )
     assert not summary["outer_validation_test_scored"]
     with (ROOT / "results/component-metrics.csv").open("w") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(component_metrics[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(component_metrics[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(component_metrics)
     output = {

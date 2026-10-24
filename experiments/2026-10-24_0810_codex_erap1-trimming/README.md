@@ -202,3 +202,7 @@ for independently measured ERAP1 substrate/product evidence. Primary
 report substrate-context effects absent from this minimal model. This motivates
 source qualification, not a claim that those omissions caused the observed failure.
 No new biochemical numeric dataset was admitted or used in these fits.
+
+Publication check: CSV writers now emit LF line endings. The original verification
+receipt/code remain in `reproduce/verification-v1/`; a second verification matches
+all original metrics and fit checks exactly. Parsed CSV cells are unchanged.

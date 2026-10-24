@@ -22,7 +22,7 @@ def main():
         for population, metrics in populations.items():
             rows.append({"model": name, "population": population, **metrics})
     with (ROOT / "results/comparison.csv").open("w") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     methods = [
