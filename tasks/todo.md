@@ -12858,3 +12858,32 @@ Future work must diagnose training-only precursor calibration/kinetic identifiab
 and establish independent biological evaluation. No APC concentration or machinery
 causal validation. Existing Hitlist2.0.17 release delivery remains separate pending
 work; no new source bug was found or filed in this cohort. Full goal stays active.
+
+### APC training-only calibration and kinetic diagnosis
+
+Previous goal turn: progress;0449completed/published34568ca,negativebiologicalresult.
+Detailed spec: experiments/agents/codex/plans/apc-training-diagnostic.md.
+- [x] Register original-training-only grouped-CV diagnostic before arithmetic.
+- [x] Verify calibrated precursor/profiled-offset calculations and new kinetic gradients.
+- [x] Complete fixed penalty/condition-specificity factorial; sampled arm rejected by frozen biological gate.
+- [x] Independently close source-linked predictions/metrics and document diagnostic.
+- [ ] Require independent prospective biological validation; full APC concentration goal unchanged.
+
+### APC diagnostic review
+
+0527completes24physicalfits+24control evaluations on originaltraining only.
+Gammafull.0516255,foldrange.00165–.14445. Initial Jacobianranks5/41shared and
+81/117condition-specific; expandedkinetics learnsvariation but overfits. Condition
+innerCVRMSE.114185,calibratedprecursor.114738,flexibleunpenalized.127096 despite
+training.098916. No useful new biological predictor. Fixedsamplegate fails10.77%
+worsening; no sampled fit/qualification or outervalidation/test evaluation ran.
+Independent47,232prediction/5,824metric closure passes,maxerror2.84e-14.
+All400steps/fit andresourcecaps pass; fits100.02s plusdiagnostic/closureoverhead.
+Report/CSV/plots/registry/checkpoints/source-linkedpredictionbundles complete.
+
+Both priorhead34568ca CI40081524686/40081518202pass. Hitlist798filed/readback
+for deVerteuil2010primaryDC immunoproteasome-loss quantitative source, extending
+broadmouse13. Sourceassets/schema not yet admitted. Need sharedcanonical source
+work and prospective independent biological evaluation; stop expanding current
+sourcefeatures. Hitlist2.0.17publicationverification remains separate pendingwork.
+Full APCavailability/concentration goal remains active and unachieved.

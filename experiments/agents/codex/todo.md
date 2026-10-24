@@ -143,4 +143,11 @@ Use this file for coarse-grained, agent-specific experimental backlog items.
 - [x] Canonical native recipe admitted0259; native controls0314 and exact/sampled processing0410 completed. Native processing gain small: testexactRMSE.243207 versus condition.250953.
 - [x] Actual macrophage precursor/processing family0449 completed and independently verified: condition testRMSE.120011, precursor+sequence.139278, withoutprecursor.120008. Negative; no useful processing increment, no concentration claim.
 - [x] Preserve all fixed outcomes and stop tuning inspected native/MAPP/APC test partitions. Exact and conditional sampled agree; no sampling advantage.
-- [ ] Diagnose precursor calibration and kinetic identifiability using training data only; preregister independent biological evaluation before any new predictive claim. Do not conflate context offsets or nonconstant surrogate inputs with learned peptide-specific biology.
+- [x] Diagnose precursor calibration and kinetic identifiability using training data only (0527); independent biological evaluation remains required. Do not conflate context offsets or nonconstant surrogate inputs with learned peptide-specific biology.
+
+## APC diagnostic closure and independent machinery source
+
+- [x] Complete0527training-only calibration/penalty/condition-preference factorial and independent closure. Gamma.0516; flexible models fit training but worsen innerCV. No outertest use or baseline promotion.
+- [x] Enforce predeclared sampled biological gate: candidate worsens innerCVRMSE10.77%,so no sampled run. Preserve unexecuted path and failure, do not claim a new RLcomparison.
+- [x] File/readback Hitlist798 for independent primaryDC immunoproteasome-loss sourcePMID20484733; existingbroadmouse13does not admit its quantitative contract.
+- [ ] Admit that source through shared Hitlist APIs with original measurements/replicate/context and explicit RNA-versus-protein/machinery uncertainties; freeze independent evaluation before fitting. No Presto workbook curator or APC-concentration claim from elution alone.
