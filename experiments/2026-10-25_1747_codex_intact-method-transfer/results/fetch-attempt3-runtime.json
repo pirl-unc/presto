@@ -1,0 +1,61 @@
+{
+  "stage": "fetch",
+  "attempt": 3,
+  "started_utc": "2026-10-25T17:58:17.267441+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 17015259136
+  },
+  "disk_free_before_bytes": 15558631424,
+  "request_set_sha256": "304a138c6719e8f9f05840e8cb88bc0065e170bcd2f00843ce251905c9a3f0d4",
+  "request_set": {
+    "action": "score_preverified_frozen_predictions",
+    "task_source": "analysis/score.py",
+    "sd_contract": "population SD under registered observation weights; unweighted SD also reported",
+    "input_sha256": {
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1747_codex_intact-method-transfer/results/prediction-verification.json": "031efbb5f92e9e50a092cb2bdaa4be34b4b4918ed6e18fd2bc596157c4c52e82",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1747_codex_intact-method-transfer/results/frozen-predictions.parquet": "39c85608a9839af2c308181f9e1a64b983c4eb5724ed4b87c6f46b7aab24b1c8",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1747_codex_intact-method-transfer/results/admission.json": "9862d4bafd6f2fb8b168eb742b96447b94b9ca4fa43df50c26598bc5dc492be4",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/intact_organ_recipes/2026-10-25_1747_codex_intact-method-transfer/typed/examples.parquet": "b973980446c29caae2bf820cf921b40280852734c52143a42b631807fba7d7c5"
+    },
+    "source_sha256": {
+      "analysis/score.py": "97b197021ca1c9a20eedb0eaf722562ff6adb228f38d4d47137db9c256c65bc5",
+      "reproduce/source/score.py": "97b197021ca1c9a20eedb0eaf722562ff6adb228f38d4d47137db9c256c65bc5"
+    }
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1",
+      "PYTHONPATH": "/Users/iskander/code/presto/.worktrees/hitlist-dilution-release"
+    }
+  },
+  "child_pid": 60077,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1747_codex_intact-method-transfer/code/fetch.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1747_codex_intact-method-transfer/reproduce/requests/fetch-3.json"
+  ],
+  "elapsed_seconds": 1.1639040000154637,
+  "peak_observed_process_tree_rss_bytes": 195215360,
+  "peak_child_process_rss_bytes": 203046912,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 15553384448
+}

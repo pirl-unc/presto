@@ -13998,3 +13998,29 @@ Review precursor scale: original Methods do not establish per-acquisition gain c
 Plan: experiments/agents/codex/plans/intact-organ-frozen-transfer.md. Calibration gaps remain open; this prospective relative-endpoint test does not claim APC concentrations or reopen old F2 held-outs.
 
 Review1655: previous resource follow-up made no scientific progress. This turn verified metadata, implemented/tested shared admission and independently established that all4,198F3 assignments lack original Unlocalized Mod cells. All8,138 dispositions replay; zero examples admitted, no model scoring. Source request: https://github.com/pirl-unc/hitlist/issues/831#issuecomment-6400806453. Hitlist847/PR848 own the shared recipe; PR remains draft and unreleased. Full availability goal remains active.
+
+
+## Qualify intact search-modification semantics
+
+- [x] Locate the original no-additional-modification search declaration.
+- [x] Verify primary software/documentation and source scope without predictor access.
+- [x] If justified, add provenance-bearing shared interpretation without rewriting raw nulls or strict recipes.
+- [x] Register a new fixed-model comparison before any changed-cohort numeric admission.
+
+Plan: experiments/agents/codex/plans/intact-search-modification-contract.md. Family1655 remains closed.
+
+
+## Method-supported frozen organ transfer
+
+- [x] Register unchanged21arms/31model hashes and original support/quality gates before new numeric admission.
+- [x] Freeze tested shared policy commit and independently verify source admission.
+- [x] If support passes, run fixed predictions and independent metrics/quality-gate replay.
+- [x] Close report, predictions and canonical registry without refitting this evaluation.
+
+Plan: experiments/agents/codex/plans/intact-method-supported-transfer.md. Family: 2026-10-25_1747_codex_intact-method-transfer.
+
+Review1747: method-supported admission and all8,925predictions independently verify.
+Primary sequenceRMSE0.288802 loses to no-change0.216691 despite preserved output
+variation; exact/score models also lose. All fixed gates/bootstrap/strata replay;
+no F3 refit or secondary rescue. Source policy qualified; Hitlist848CI/release
+pending. Full precursor-relative APC availability remains active and unachieved.

@@ -118,6 +118,19 @@ previously inspected. No fresh biological test or APC concentration qualificatio
 Unpenalized physical RMSE **0.380755** improves only 1.362% over penalized
 **0.386013**; retain the existing physical references without claiming promotion.
 
+### PXD058121 frozen organ transfer — no learned comparator promoted
+
+[1747 fixed-model transfer](2026-10-25_1747_codex_intact-method-transfer/README.md)
+admits 236 primary cells across Brain/Liver/Spleen using a separately qualified
+study-method search policy. The frozen0143sequence ensemble has RMSE **0.288802**,
+versus **0.216691 for no change** and **0.348240 for length**. Prediction SD remains
+0.208033 versus target SD0.208481; poor transfer is not constant-output collapse.
+The sequence model fails the fixed no-change gate, with a peptide-bootstrap95%
+gain interval **[-70.50%,-5.62%]**. All physical/exact/conditional-score arms also
+lose to no change; no RL advantage. Do not refit or tune on this inspected F3
+cohort. These relative changes from supplied baselines do not calibrate APC
+concentrations; the0143model remains a development-only comparator.
+
 ### Frozen human-source/HLA IC50 cohort — provisional
 
 Train-only alpha=1 ridge (length, composition, MHC class) is the baseline to beat

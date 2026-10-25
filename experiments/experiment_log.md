@@ -4094,3 +4094,37 @@ The full APC availability goal remains active and unachieved.
 - **Decision:** close this family at its fixed gate. Qualify original blank-field
   semantics or obtain explicit annotations before separately registering another
   cohort. This neither validates the frozen models nor completes APC availability.
+
+
+## 2026-10-25_1735_codex_intact-search-contract — Methods support unmodified search assignments
+
+- **Agent/model:** Codex/GPT-6; [report and reproduction](2026-10-25_1735_codex_intact-search-contract/README.md). Starting b8150780 with unrelated task dirt preserved.
+- **Source/curation:** original PMC11874349 Methods/s15 explicitly declares no additional ClipsMS search modifications. Two XML parsers agree. Official ClipsMS commit8ad829b (2022-07-22) and CSV/AST/Git-blob checks support the zero-mass None convention. Raw F3 nulls remain unchanged; biochemical purity, exact study version and blank-export conversion are not established.
+- **Conditions/resources:** original article plus four pinned software/documentation assets;8 inclusive discovery operations, 710,944bytes downloaded. Two guarded localCPU stages passed, 1.266s total/96.30MiB peak; one numerical thread, no Modal/GPU. Browser operations have no local timing/byte guard. External code was never executed.
+- **Training/evaluation:** source-only; no fits/pretraining, synthetic labels, loss terms/weights, assay-label mapping, model predictions, validation/test split or metrics. No F3 quantitative outcomes queried. No model winner.
+- **Decision:** qualify a separately named method-supported policy with typed provenance; keep strict family1655 closed. New family1747 freezes the same21comparators and support/quality gates before changed-cohort admission. Full APC availability and concentration calibration remain unachieved.
+
+
+## 2026-10-25_1747_codex_intact-method-transfer — Frozen predictors fail organ transfer
+
+- **Agent/model:** Codex/GPT-6; [report, full comparison table and reproduction](2026-10-25_1747_codex_intact-method-transfer/README.md). Starting Presto b8150780 with unrelated task dirt preserved; Hitlist5a5a416, source generation unchanged.
+- **Dataset/curation:** original PXD058121 F3, one human alpha-synuclein substrate and purified mouse20S from one source animal; not APCs/new proteins/independent animals. Forty-four acquisitions; no recorded F2 reuse. Separately registered method-supported unmodified-search policy retains raw nulls and a typed original-Methods assertion. Original mass/span/link/duplicate/positive-quantity/normalizer/baseline gates stay fixed. No imputation or inferred censoring.
+- **Endpoint:** change in log10(product/intact) from supplied organ/peptide zero-time mean. Primary30/60min:236cells (Brain20sequences/92cells, Liver23/79, Spleen21/65); later90/120min:189cells. All organs pass20sequence/40cell minimum.155baseline cells; every8,138source disposition independently replayed. Weights balance organ/curve/time/replicate. Shared run-gain and fixed MS-response cancellation assumed; no concentration interpretation.
+- **Training/pretraining:** none newly run.31files freeze21arms: zero; shared/length/sequence five-fold0143ensembles; three0143physical ensembles; fourteen0046exact or exact-forward/REINFORCE-gradient checkpoints. Saved transforms/selection/parameters fixed; no F3 fitting, organ adaptation, new synthetic labels, observation/MHC/TCR/machinery heads or old F2 held-out outcome access. Evaluation loss is weighted squared log-ratio change error. Original physical penalties/optimizers remain documented in the report.
+- **Validation/test:** no new validation split or target-cohort selection. Full425-cell transfer prediction dumps contain8,925rows.252stratum metric records include weightedMSE/RMSE/MAE/R²/SD and unweighted Pearson/Spearman. Binding/IC50 cutoff metrics are inapplicable. All model algebra/zero-time checks, prediction joins, rank ties,1,000bootstrap draws and12exact/score pairs independently replay.
+
+| Fixed condition | Primary RMSE | Later-time RMSE | Primary Pearson | Primary Spearman |
+|---|---:|---:|---:|---:|
+| No change |0.216691|0.356673|undefined|undefined|
+| Sequence + time |0.288802|0.418738|0.071599|0.119131|
+| Length + time |0.348240|0.799320|−0.012281|0.081901|
+| Shared time slope |0.347949|see full table|−0.027582|0.041167|
+| Physical uniform ensemble |0.388405|see full table|0.009522|0.102252|
+| Physical residue, penalty.01 |0.391007|see full table|0.009155|0.098203|
+| Physical residue, no penalty |0.405819|see full table|−0.027621|0.070708|
+| Original exact/score checkpoints,14arms |0.416352–0.417609|see full table|near zero|~0.104|
+
+- **Gate/uncertainty:** sequence beats length17.07% but is33.28% worse than no change. PredictionSD0.208033 versus targetSD0.208481 rules out constant-output collapse on this endpoint. Positive pooled correlations and all organ-versus-length gates pass; the no-change gate fails. Peptide-bootstrap95% gain intervals:−70.50% to−5.62% versus zero,−1.35% to33.25% versus length; no invalid draws. Not animal-level uncertainty. Secondary times cannot rescue failure.
+- **Winner/preferred condition:** no change is the best fixed primary comparator; no learned model promoted. Exact/conditional-score checkpoints differ by at most0.000646primaryRMSE with mixed seed direction; no demonstrated RL advantage.
+- **Resources:** seven successful guarded localCPU/float64 stages, 17.844s total/738.36MiB peak; one numerical thread, no Modal/GPU or shared environment changes. First figure title clipped; sources/both renders retained and corrected v2 visually checked. Training costs were not rerun.
+- **Decision:** close F3 evaluation without refitting or feature/optimizer expansion.0143development gain does not transfer; observation/calibration and processing-context assumptions need qualified broader data. [Hitlist831 clarification](https://github.com/pirl-unc/hitlist/issues/831#issuecomment-6401211175), [PR848](https://github.com/pirl-unc/hitlist/pull/848) record source and software work; new CI/release pending. Full precursor-relative APC availability remains active and unachieved.

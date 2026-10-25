@@ -1,0 +1,288 @@
+{
+  "status": "passed",
+  "n_arms": 21,
+  "n_query_cells": 425,
+  "n_predictions": 8925,
+  "future_outcomes_read": false,
+  "fitting_or_selection": false,
+  "checks": [
+    {
+      "model": "shared_slope-fold0",
+      "independent_max_absolute_error": 0.0,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "shared_slope-fold1",
+      "independent_max_absolute_error": 0.0,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "shared_slope-fold2",
+      "independent_max_absolute_error": 0.0,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "shared_slope-fold3",
+      "independent_max_absolute_error": 0.0,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "shared_slope-fold4",
+      "independent_max_absolute_error": 0.0,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "length-fold0",
+      "independent_max_absolute_error": 2.220446049250313e-16,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "length-fold1",
+      "independent_max_absolute_error": 1.1102230246251565e-16,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "length-fold2",
+      "independent_max_absolute_error": 2.220446049250313e-16,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "length-fold3",
+      "independent_max_absolute_error": 1.1102230246251565e-16,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "length-fold4",
+      "independent_max_absolute_error": 1.1102230246251565e-16,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "sequence-fold0",
+      "independent_max_absolute_error": 6.661338147750939e-16,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "sequence-fold1",
+      "independent_max_absolute_error": 6.661338147750939e-16,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "sequence-fold2",
+      "independent_max_absolute_error": 4.440892098500626e-16,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "sequence-fold3",
+      "independent_max_absolute_error": 3.3306690738754696e-16,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "sequence-fold4",
+      "independent_max_absolute_error": 4.996003610813204e-16,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_residue_penalized-fold0",
+      "independent_max_absolute_error": 1.9984014443252818e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_residue_penalized-fold1",
+      "independent_max_absolute_error": 2.4980018054066022e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_residue_penalized-fold2",
+      "independent_max_absolute_error": 2.55351295663786e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_residue_penalized-fold3",
+      "independent_max_absolute_error": 3.3584246494910985e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_residue_penalized-fold4",
+      "independent_max_absolute_error": 1.6653345369377348e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_residue_unpenalized-fold0",
+      "independent_max_absolute_error": 1.0658141036401503e-14,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_residue_unpenalized-fold1",
+      "independent_max_absolute_error": 1.1657341758564144e-14,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_residue_unpenalized-fold2",
+      "independent_max_absolute_error": 6.106226635438361e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_residue_unpenalized-fold3",
+      "independent_max_absolute_error": 1.2101430968414206e-14,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_residue_unpenalized-fold4",
+      "independent_max_absolute_error": 1.2434497875801753e-14,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_uniform-fold0",
+      "independent_max_absolute_error": 4.496403249731884e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_uniform-fold1",
+      "independent_max_absolute_error": 2.7200464103316335e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_uniform-fold2",
+      "independent_max_absolute_error": 6.2450045135165055e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_uniform-fold3",
+      "independent_max_absolute_error": 3.774758283725532e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "physical_uniform-fold4",
+      "independent_max_absolute_error": 2.6645352591003757e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_residue-exact-0-42",
+      "independent_max_absolute_error": 2.3314683517128287e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_residue-score-16-42",
+      "independent_max_absolute_error": 2.1094237467877974e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_residue-score-16-43",
+      "independent_max_absolute_error": 2.581268532253489e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_residue-score-16-44",
+      "independent_max_absolute_error": 2.3314683517128287e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_residue-score-64-42",
+      "independent_max_absolute_error": 2.3592239273284576e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_residue-score-64-43",
+      "independent_max_absolute_error": 2.3314683517128287e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_residue-score-64-44",
+      "independent_max_absolute_error": 1.7763568394002505e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_uniform-exact-0-42",
+      "independent_max_absolute_error": 5.495603971894525e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_uniform-score-16-42",
+      "independent_max_absolute_error": 5.773159728050814e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_uniform-score-16-43",
+      "independent_max_absolute_error": 5.551115123125783e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_uniform-score-16-44",
+      "independent_max_absolute_error": 3.552713678800501e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_uniform-score-64-42",
+      "independent_max_absolute_error": 4.3298697960381105e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_uniform-score-64-43",
+      "independent_max_absolute_error": 5.578870698741412e-15,
+      "zero_time_change_exactly_zero": true
+    },
+    {
+      "model": "original_uniform-score-64-44",
+      "independent_max_absolute_error": 5.467848396278896e-15,
+      "zero_time_change_exactly_zero": true
+    }
+  ],
+  "prediction_sha256": "39c85608a9839af2c308181f9e1a64b983c4eb5724ed4b87c6f46b7aab24b1c8",
+  "inference_and_verification_seconds_by_arm": {
+    "zero": 0.0,
+    "shared_slope": 0.0012212079600431025,
+    "length": 0.011431542050559074,
+    "sequence": 0.19441766699310392,
+    "physical_residue_penalized": 0.05215941701317206,
+    "physical_residue_unpenalized": 0.03770754096331075,
+    "physical_uniform": 0.039908082981128246,
+    "original_residue-exact-0-42": 0.042283082962967455,
+    "original_residue-score-16-42": 0.041021957993507385,
+    "original_residue-score-16-43": 0.04113737499574199,
+    "original_residue-score-16-44": 0.04083420801907778,
+    "original_residue-score-64-42": 0.04089112498331815,
+    "original_residue-score-64-43": 0.04096570803085342,
+    "original_residue-score-64-44": 0.041028750012628734,
+    "original_uniform-exact-0-42": 0.04069258295930922,
+    "original_uniform-score-16-42": 0.04045104200486094,
+    "original_uniform-score-16-43": 0.040817458007950336,
+    "original_uniform-score-16-44": 0.04059587500523776,
+    "original_uniform-score-64-42": 0.040720000048168004,
+    "original_uniform-score-64-43": 0.040864249982405454,
+    "original_uniform-score-64-44": 0.04094558395445347
+  },
+  "timing_scope": "includes independent prediction checks and checkpoint loading, not prior training",
+  "model_input_sha256": {
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0143_codex_intact-temporal-representation/results/direct-fits.json": "d64b63e2a790de1a80ff0173ffbd260059de051ac6b381e6587bd0b924bc90ba",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0143_codex_intact-temporal-representation/results/physical-fits.json": "7285df978d8e27661beea1b3c93b0a7295cf389ebce380ac51b445a3a95b3cd2",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0143_codex_intact-temporal-representation/results/selected-models.json": "ff424e9c18ffa2f6a1b75211f3dddf0fa71c970aef934ecaa1aa1066e90a2ab1",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-exact-0-42/summary.json": "2b4bc510e467904417f44955bddd26a94580641dbfa58df333e4f098fc266361",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-exact-0-42/checkpoints.npz": "ef868d4ce5135f7177cf8f410967ad85c4a20291e7dc0ab7ff0c59e619fea25b",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-16-42/summary.json": "76454fa93bb9a87de7c65dc99659e9d6eb73962f794b59602f2b526b4fde331e",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-16-42/checkpoints.npz": "b85e19df865a5cc90a2b894dd625e2c0e177fe6a9f65976e65ec86b000cd508f",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-16-43/summary.json": "119546104de39827dd77cd35e21851b5dd7c12c1ab3c841e282f561db76a6a88",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-16-43/checkpoints.npz": "cadf62e05b0ae40c7f2b8984c3fae8d1b415acd758dc947e727eca6e3f236544",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-16-44/summary.json": "e1a67b41b359dcda54a5bc31a647843982432bf5af42bf22b43321da5444dce2",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-16-44/checkpoints.npz": "8cf4549d65d74f6a7a10e703f9d3ac63c782881968b9010c7a734960eb65300b",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-64-42/summary.json": "9e501f6420c8d257aa629ebe56bb8db30946b79c386220f93d0e79d47932aede",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-64-42/checkpoints.npz": "97faedf63aa5590192978c1bc1df9919eccf36d82fc2a4ed90943e3e60f00728",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-64-43/summary.json": "c1861ea029e99fc4a3f88e162540b6802ce9f8060da90cc04424594013d8c409",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-64-43/checkpoints.npz": "8215ff6086bf129347975b9c4669c08a09b2574cacaa04be4beca9b7d44c30a4",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-64-44/summary.json": "f1c35eeae05156b7ed1a39c8f92b1f3511bf43a229b34687809023d04650bb0b",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-residue-score-64-44/checkpoints.npz": "bc5950fd524af7ba88ddfb61ef02670d81a51b317c5ce6d1e27dc810911c4cfe",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-exact-0-42/summary.json": "67538d50e21132ef5e450d621a4f2b6cf90754b042644a79365d81fc8e77aaed",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-exact-0-42/checkpoints.npz": "63149a958f566542fbf629e875b024300f0547c6bbf2d52410d85e64ee39defb",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-16-42/summary.json": "fb785ce06df6857ce906346caf8aab3e2f25c4eeef5b221ba78e29d689142923",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-16-42/checkpoints.npz": "f24a26acd003d492ec62a47f709703fd806f71014fedd9400b5250215c1d28c6",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-16-43/summary.json": "14a77ed1f35d1b375476d1d44a5f7ffbdc8ae7d7184fbde7e52c1460736493b9",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-16-43/checkpoints.npz": "8838933f888d6e954120cccf6a6a64bd9840104b360bbd18e85f7d3595bcb1b9",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-16-44/summary.json": "fa9d82b73230ca682aa41d21344ffe85634ea3e92a2d1df728156d8c4bc22358",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-16-44/checkpoints.npz": "456ad5828e749ae662a28234d3b7ee8cd73b1aa18ac200246c53f1e0d93414c1",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-64-42/summary.json": "47082062d3b833c28d9495d0cff0662b7e167f5d05970ef1864ba9d5ef86d662",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-64-42/checkpoints.npz": "da4c190f5557c59ed3eb9a7f9e015b5ee079542a809776e42e8770a800cec47f",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-64-43/summary.json": "85fdeb2d1f7f3c18029056fae474c2dc7d9af07a2053beaadf7ce9f125979cd4",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-64-43/checkpoints.npz": "b6177179683798dd3608534d0a28d8b59dd4fa208d92f2c5b62ae4714a9b74b2",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-64-44/summary.json": "cfad5a79df39bcd34b66553823a9f0831a8d548db4083a4b9364d7010eab2e3f",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0046_codex_intact-kinetic-forecast/results/fits/fit-uniform-score-64-44/checkpoints.npz": "eb5feeb5af62b2afe9da361ca365d5eeb620b196c5a442595c3623aa5b485055"
+  }
+}

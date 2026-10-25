@@ -1,0 +1,63 @@
+[
+  {
+    "operation": 1,
+    "kind": "web_search",
+    "query": "ClipsMS 2021 Lantz GitHub source code modifications unlocalized",
+    "outcome": "official repository and original paper located"
+  },
+  {
+    "operation": 2,
+    "kind": "web_open",
+    "url": "https://github.com/loolab2020/ClipsMS",
+    "outcome": "official source filenames and modification CSV instructions"
+  },
+  {
+    "operation": 3,
+    "kind": "web_open",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8174100/",
+    "outcome": "original paper explains optional modifications and unmodified theoretical mass search; DOI and original repository link verified"
+  },
+  {
+    "operation": 4,
+    "kind": "github_api",
+    "url": "https://api.github.com/repos/loolab2020/ClipsMS/commits/main",
+    "outcome": "8ad829bdb5d2b644a290551442a8728b3b8ac5b5",
+    "date": "2022-07-22T18:58:17Z"
+  },
+  {
+    "operation": 5,
+    "kind": "processed_source_retrieval",
+    "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/ClipsMS_v2.0.1.py",
+    "status": "retrieved_validated_payload",
+    "sha256": "c6930aac46be78fa62c0831ae8ef488021ac8dbe580bb4a80fe463c14cadc882",
+    "bytes": 704570,
+    "receipt": "results/ClipsMS_v2.0.1.py.receipt.json"
+  },
+  {
+    "operation": 6,
+    "kind": "processed_source_retrieval",
+    "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/No_Unlocalized_Modifications.csv",
+    "status": "retrieved_validated_payload",
+    "sha256": "9aa1771666d23de3344dd9ace0b5f521f84bf7ef7520e8daf9bedbda8e963cb1",
+    "bytes": 37,
+    "receipt": "results/No_Unlocalized_Modifications.csv.receipt.json"
+  },
+  {
+    "operation": 7,
+    "kind": "processed_source_retrieval",
+    "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/README.md",
+    "status": "retrieved_validated_payload",
+    "sha256": "7a8aa0c3f7cd98c4f26033eb84926ae9e0b2f4f079363ef15f98141ed2dd41ea",
+    "bytes": 4875,
+    "receipt": "results/README.md.receipt.json"
+  },
+  {
+    "operation": 8,
+    "kind": "processed_source_retrieval",
+    "url": "https://raw.githubusercontent.com/loolab2020/ClipsMS/8ad829bdb5d2b644a290551442a8728b3b8ac5b5/LICENSE",
+    "status": "retrieved_validated_payload",
+    "sha256": "3726c6239dc7a72f55f745a2a573d2c31c5f6b2b492f7656c01644a07b1e5dcf",
+    "bytes": 1462,
+    "receipt": "results/LICENSE.receipt.json"
+  }
+]

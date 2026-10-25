@@ -260,3 +260,11 @@ claim that simply adding it can remedy the prior response-model failures.
 - [x] Shared source/reconciliation under Hitlist #845: source family0959 passes full independent replay; PR846 merged and tested PyPI2.0.40 verified byte-for-byte. Dilution conflict and amount/certification limits remain explicit.
 - [x] family1423 executes the conditional-dose plan through the generic shared recipe: 24 verified fits; unit slope gives 49.75% lower development RMSE than constant. No native/APC calibration claim.
 - [ ] Qualify independent peptide amount/response anchors and protocol transfer beyond nine selected standards, then resume the native-baseline/full-candidate comparison under the broader observation-admission plan.
+
+
+## Frozen organ transfer decision
+
+- [x]1735qualifies original no-additional-modification search declaration without rewriting raw nulls.
+- [x]1747new method-supported cohort passes source gates;21fixed models/8,925predictions and all metrics replay. SequenceRMSE0.288802 loses to no-change0.216691; no learned model is promoted.
+- [ ] Finish Hitlist848 new-head CI, merge and tested2.0.41publication; preserve original source generation and strict endpoints.
+- [ ] Qualify broader amount/processing-context support before another matched exact/discrete biological comparison. Do not refit/tune F3, reopen old native/F2 held-outs, or mistake this one-substrate transfer for APC concentration validation.
