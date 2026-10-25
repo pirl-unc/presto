@@ -1,0 +1,57 @@
+{
+  "agent": "codex",
+  "model": "GPT-6",
+  "registered_utc": "2026-10-25T06:13:47.276713+00:00",
+  "git_commit": "a23bc160a8c31408b82cab663ea968093a624f36",
+  "git_dirty": true,
+  "hitlist_base": "90a7a62a5f1e052d87e797d86bac6d59cf3b0700",
+  "hitlist_dirty": false,
+  "hitlist_repo": "/Users/iskander/code/presto/.worktrees/hitlist-native-contrast",
+  "hitlist_overlay_sha256": {
+    "hitlist/native_contrast.py": "22d0fdd1685cc5d3a59b660726314ab0f458b19e317df7a2ec00e1e830024d1e",
+    "hitlist/native_contrast_compiler.py": "3342feeef87761686c2e2456ee906ea00f148fb5f8244e361bcfd6fb162e6d0a",
+    "hitlist/native_contrast_schema.py": "c9d05d99229183efadca545d6d9a803aba5bcb7b1a149f91f4b38adb7d47df99",
+    "hitlist/distribution_recipe.py": "134bd012446978c91def8d3446c511d12edb3962b316ff14ca4fec3f1c2cb79e",
+    "hitlist/evidence_recipe.py": "8f60a84067422d11973ba6ca6dfee7a4a77bc8d987be0d4a97d1f618326ce9e9",
+    "hitlist/version.py": "cfe9e289255644045467723b9a0518caeeef40bf2a8ce742694dc883a85b0452"
+  },
+  "source_package": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_peptidomics_packages/2026-10-25_0519_codex_native-source-canonical",
+  "package": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_contrast_recipes/2026-10-25_0612_codex_native-contrast-admission",
+  "recipe": {
+    "schema_version": 1,
+    "name": "2026-10-25_0612_codex_native-contrast-admission",
+    "registered_recipe": "pxd018722_native_contrast_v1"
+  },
+  "original_assets": {
+    "peptides.txt": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_psmd2_sources/2026-10-25_0424_codex_native-psmd2-source/processed-members/peptides.txt",
+    "evidence.txt": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_psmd2_sources/2026-10-25_0424_codex_native-psmd2-source/processed-members/evidence.txt",
+    "modificationSpecificPeptides.txt": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_psmd2_sources/2026-10-25_0424_codex_native-psmd2-source/processed-members/modificationSpecificPeptides.txt",
+    "HUMAN_NS3_Cyclin.fasta": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_psmd2_sources/2026-10-25_0424_codex_native-psmd2-source/HUMAN_NS3_Cyclin.fasta"
+  },
+  "origin_audit": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0424_codex_native-psmd2-source/results/reference-origins.csv.gz",
+  "input_sha256": {
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_peptidomics_packages/2026-10-25_0519_codex_native-source-canonical/manifest.json": "8a8ff3f5c9149ccd885605002cc2b3c84c3dc8a567fa35b20213a2b21451a93f",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0424_codex_native-psmd2-source/results/reference-origins.csv.gz": "95a6ea016f00782f3cdf651aec665117eafdc91cd3f5a3ad4a107691ecdf6251",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0519_codex_native-source-canonical/results/independent-verification.json": "3fe5f89420dab361da41fa7d2630f0c83e9b2601d003a3c3d9913635c65482d4",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_psmd2_sources/2026-10-25_0424_codex_native-psmd2-source/processed-members/peptides.txt": "b7ffff93a4354e1597b4f0d166221471e4694547af5b7f3324780d1e26dffdab",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_psmd2_sources/2026-10-25_0424_codex_native-psmd2-source/processed-members/evidence.txt": "5d079d5120a1efd75b0bf9179d31772aa131bca7e651733c8c400ecb4f4aea83",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_psmd2_sources/2026-10-25_0424_codex_native-psmd2-source/processed-members/modificationSpecificPeptides.txt": "5e16d09d1594725fd4247e8651bc7b2919aa77c512766f8bd329988d0617272e",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_psmd2_sources/2026-10-25_0424_codex_native-psmd2-source/HUMAN_NS3_Cyclin.fasta": "70d892190223b0491c48446bfda48845865822f975beb518aaa3334a56873cba"
+  },
+  "source_replay_0519": "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0519_codex_native-source-canonical/results/independent-verification.json",
+  "limits": {
+    "stage_seconds": 1200,
+    "rss_bytes": 3221225472,
+    "disk_floor_bytes": 1073741824,
+    "start_margin_bytes": 33554432
+  },
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "non_default_environment_overrides": {
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONPATH": "/Users/iskander/code/presto/.worktrees/hitlist-native-contrast"
+  },
+  "training": "none; source recipe admission",
+  "validation": "partitions assigned, no predictor or effect summaries",
+  "test": "partitions assigned, no predictor or effect summaries",
+  "amendment": "post-admission current-main public API compatibility; no new targets or fit"
+}

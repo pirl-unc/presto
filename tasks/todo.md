@@ -13735,3 +13735,20 @@ experiments/2026-10-25_0424_codex_native-psmd2-source/README.md.
 - [x] Build public native source package and independently verify original values/links.
 - [ ] Close experiments/2026-10-25_0519_codex_native-source-canonical and pass Hitlist software/release gates.
 - [ ] Use the admitted source in the planned biological contrast; availability goal remains open.
+
+
+## Native same-parent contrast admission 0612
+
+- [x] Register fixed eligibility, reference/split hashes, support gates and independent replay before real targets.
+- [x] Finish unchanged-guard local recipe tests (3,544 pass).
+- [ ] Finish current-main source release40168710669; prior40167325306succeeded and exact artifacts verified, retained unuploaded.
+- [x] Materialize the public recipe and independently replay original-value eligibility, target, lineage, annotations and weights.
+- [x] Close source-support results and publish recipe PR841; final90a7a62local3547tests/publicreplay pass.
+- [ ] Finish recipe final-head hosted gates and tested release.
+- [ ] After tested releases, register the first three-condition biological fit if support passes.
+
+Previous goal turn: verified wait on source release40167325306, confirmed live again this turn; cleanup is already closed and was not rerun. No biological predictive result yet.
+
+Review: all10,647decisions,228contrasts/82parents/81components and2,736contributors independently verified. Support gates pass at55/8/18components and158/38/32contrasts; validationexactlyatminimum. Build29.36s/2,483.3MiB;verify4.04s/1,866.1MiB;resourcecapsunchanged. No fitted predictor or held-out effect summary. Recipe45d79d97 is based on merged identical-tree sourcee755be4; published PR and tested releases pending. Next: finish release gates, register the fixed zero/length/sequence fit without altering cohort or held-outs. Full APC goal active/unachieved.
+
+Current handoff: source40168710669 and recipeTests40168839728 confirmed live; recipeDocs40168839820passes. Original sourceartifactse755 verified, notuploaded after concurrentPR840same-version mainadvance. Finalrecipe90a7a62 basedond2e0cb6;3,547localtests andregistered unchanged-package publicreplay pass. First-fit numericalplan nowpins61features,3innerhashfolds,alpha[.01,.1,1,10,100],training-onlyweightedRMS,nocenter/intercept,and2,000componentbootstrapPCG64seed20261025. No biologicalfitbeforetestedreleases.
