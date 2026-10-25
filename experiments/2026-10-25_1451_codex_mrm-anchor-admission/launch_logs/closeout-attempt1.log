@@ -1,0 +1,10 @@
+Ignoring wrong pointing object 6 0 (offset 0)
+Ignoring wrong pointing object 8 0 (offset 0)
+Ignoring wrong pointing object 10 0 (offset 0)
+Ignoring wrong pointing object 12 0 (offset 0)
+Ignoring wrong pointing object 14 0 (offset 0)
+Ignoring wrong pointing object 16 0 (offset 0)
+Ignoring wrong pointing object 18 0 (offset 0)
+Ignoring wrong pointing object 32 0 (offset 0)
+Ignoring wrong pointing object 34 0 (offset 0)
+{"status": "supporting_metadata_verified_processed_skyline_access_unresolved", "http_requests": 35, "metadata_requests": 20, "retrieval_status_counts": {"retrieved_validated_payload": 25, "failed": 10}, "received_http_bytes_including_failed": 2481660, "primary": {"workbooks": 8, "sheets": 10, "stock_sequences": 500, "stock_unit": "pmol/uL solution; not injected amount", "stock_correction_checks": 500, "stock_correction_discrepancies": [{"row": 115, "peptide": "ESGIDLADSNQR", "stock": 10.64, "purity": 59.06, "reported_adjusted": 6.284, "recomputed_adjusted": 6.283984}, {"row": 255, "peptide": "IVVVTAGVR", "stock": 7.7, "purity": 89.8, "reported_adjusted": 6.915, "recomputed_adjusted": 6.9146}], "maximum_absolute_stock_correction_difference": 0.00039999999999995595, "cell_checks": 60825}, "fallback": {"workbooks": 2, "sheets": 5, "cell_checks": 14507, "independently_matched_pdf_assay_links": 48, "reported_title_assay_count": 53, "unreconciled_title_vs_link_count": true, "processed_candidate": "PASS05890/CPTAC_Exp1_Curves_CS.sky", "listed_size": "7.8M", "downloaded_bytes": 0}, "unverified_spreadsheet_cells": 0, "resource_summary_before_closeout": {"stages": 21, "statuses": {"passed": 13, "failed": 8}, "total_elapsed_seconds": 110.99447604391025, "peak_child_rss_bytes": 74940416}, "versions": {"openpyxl": "3.1.5", "pypdf": "6.21.2", "requests": "2.34.2", "psutil": "7.2.2"}, "model_fits": 0, "predictions": 0, "native_outer_partitions_opened": false, "training_admission": "Not admitted: no verified raw isotope areas joined to known loads in the retrieved scope."}

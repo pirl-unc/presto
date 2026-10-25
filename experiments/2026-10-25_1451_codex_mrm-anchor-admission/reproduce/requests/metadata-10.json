@@ -1,0 +1,14 @@
+{
+  "phase": "metadata",
+  "scope": "Fixed fallback article metadata and both XLSX supplements; audit all fields without training. No MS raw files.",
+  "requests": [
+    {
+      "name": "s3-PMC11812018.1.json",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC11812018.1/PMC11812018.1.json",
+      "expected_kind": "json",
+      "expected_bytes": 2206,
+      "expected_inventory_etag": "d27d17fee18f8f2a5c75a89777d08cd8",
+      "discovery_provenance": "Exact object key/size/ETag in archived sobsey2025-s3-inventory.xml; XLSX names match archived paper supplements."
+    }
+  ]
+}

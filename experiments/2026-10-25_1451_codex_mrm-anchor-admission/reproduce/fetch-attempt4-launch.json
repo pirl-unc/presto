@@ -1,0 +1,91 @@
+{
+  "argv": [
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/launch.py",
+    "fetch",
+    "--attempt",
+    "4",
+    "--requests",
+    "experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/processed-1.json"
+  ],
+  "configuration": {
+    "agent_model": "Codex / GPT-6",
+    "created_utc": "2026-10-25T14:54:41.644897+00:00",
+    "experiment_id": "2026-10-25_1451_codex_mrm-anchor-admission",
+    "presto_commit": "22241241daaae1b223d4ed6e0543f8fa1afcad9a",
+    "dirty_tracked": true,
+    "dirty_scope": "Preserved unrelated task changes and this newly registered source audit; all executed source frozen",
+    "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "data_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/mrm_anchor_sources/2026-10-25_1451_codex_mrm-anchor-admission",
+    "public_hosts": [
+      "assays.cancer.gov",
+      "panoramaweb.org",
+      "www.ebi.ac.uk",
+      "europepmc.org",
+      "pmc.ncbi.nlm.nih.gov",
+      "www.ncbi.nlm.nih.gov",
+      "www.peptideatlas.org",
+      "db.systemsbiology.net",
+      "peptideatlas.org",
+      "ftp.peptideatlas.org",
+      "pubs.acs.org",
+      "acs.figshare.com",
+      "api.figshare.com",
+      "www.nature.com",
+      "static-content.springer-cdn.com",
+      "ftp.ncbi.nlm.nih.gov"
+    ],
+    "limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "environment_overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "frozen_code_sha256": {
+      "code/fetch.py": "4bd1e7a00dac4e3cca64a422c7b2156b382a5bdba8a25d5eb92af7b4ea36e566",
+      "code/launch.py": "269256f34e97d6c3d9124eb536c527cf01a32e305a67d9ac3cd32ecaea3e4acf",
+      "reproduce/source/fetch.py": "4bd1e7a00dac4e3cca64a422c7b2156b382a5bdba8a25d5eb92af7b4ea36e566",
+      "reproduce/source/launch.py": "269256f34e97d6c3d9124eb536c527cf01a32e305a67d9ac3cd32ecaea3e4acf",
+      "reproduce/launch.sh": "af09263c9fe4d2a90b55a8dd40ec25147d9da4d4c2d4c1f7c1461a657d64b8f8"
+    },
+    "plan_sha256": "b7e6242fdafa0d07f78687a3a91a3e6011dc88940f676892a99ba40b03cd6423",
+    "input_sha256": {},
+    "network_limits": {
+      "metadata_requests": 20,
+      "metadata_bytes_each": 5242880,
+      "processed_bytes_each": 268435456,
+      "total_bytes": 536870912,
+      "connect_seconds": 10,
+      "read_seconds": 30,
+      "request_wall_seconds": 120
+    },
+    "training_contract": null,
+    "test_split": null,
+    "reason_no_predictions": "Public source access/schema/semantic admission only; no model fitting or outer-data access.",
+    "extension_policy": "Every discovered request set is an immutable JSON file under reproduce/requests, citing observed source links/API documentation and its stage/scope before execution."
+  },
+  "request_set": {
+    "phase": "processed",
+    "scope": "Retrieve the primary paper's official supplement archive only. Inspect archive inventory before any member reading; audit all eight named XLSX supplementary datasets without fitting or selecting on response values. Preserve formulas, cached values and literal coordinates. No extraction of vendor MS data.",
+    "prospective_decision": "The specific Panorama peptide page requires Login to view this data. Do not query that restricted folder through alternate APIs. Supplement Data1-8 and their descriptions are explicitly named in the archived JATS XML; use the documented public supplementaryFiles endpoint instead of incorrectly resolving relative JATS hrefs against the fullTextXML URL.",
+    "size_contract": "Previously published supplement sizes total under 2 MiB excluding inline figures. Inspect response Content-Length before streaming when present; unchanged 256 MiB per-asset and 512 MiB family limits. Before reading members require safe relative paths, at most 256 MiB individual expanded size and 512 MiB total expansion. Do not extract the archive to disk.",
+    "requests": [
+      {
+        "name": "michaud2018-supplements.zip",
+        "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6123701/supplementaryFiles",
+        "expected_kind": "zip",
+        "discovery_provenance": "Official Europe PMC REST documentation https://europepmc.org/RestfulWebService lists GET /{id}/supplementaryFiles as the per-article ZIP retrieval route; PMC6123701 and MOESM1-10 filenames are verified in archived michaud2018.xml."
+      }
+    ]
+  },
+  "request_set_sha256": "665938ce0ecbe729f96b2b423b316ace40372b1749555166965ea15ca5eacf78"
+}

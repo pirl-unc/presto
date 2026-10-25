@@ -13929,3 +13929,20 @@ shared slope0.340878 passes all four fixed gates. All24fits/696predictions repla
 independently. This supports protocol-scoped dose response, not native/APC amounts.
 No further complexity is justified on this panel; next qualify broader independent
 amount/response anchors and transfer, keeping original native outer data closed.
+
+
+## Broader absolute-response source admission
+
+- [x] Revalidate completed dose diagnostic and stop expansion on the nine-standard panel.
+- [x] Register the bounded MRM source-access/admission specification before code or retrieval.
+- [x] Retrieve public metadata and identify exact processed Skyline candidate; access remains unresolved.
+- [x] Freeze processed endpoints; independently verify75,332 spreadsheet positions, stock arithmetic and48 PDF assay links.
+- [x] Record verified metadata, remaining raw-area/access requirements in the canonical registry and Hitlist#762 (comment6399609459).
+
+Plan: experiments/agents/codex/plans/mrm-absolute-response-admission.md.
+Family2026-10-25_1451_codex_mrm-anchor-admission is source admission only, with no
+new model or reopened native outer outcomes. The previous goal turn was progress:
+24real-data dose fits completed and independently verified, changing the next
+action to broader peptide/protocol calibration.
+
+Review (2026-10-25): family1451 verifies500 standard-stock records and both studies' supporting tables. Separate raw isotope areas remain unverified; PASS05890 lists a7.8M Skyline response-curve file, but its published FTPS hostname fails certificate verification. Preserve source rounding,48-vs53 assay membership discrepancy and all access failures. No model or native outer outcome was opened. Full availability goal remains active.

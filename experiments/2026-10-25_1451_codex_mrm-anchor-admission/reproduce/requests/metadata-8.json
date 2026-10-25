@@ -1,0 +1,14 @@
+{
+  "phase": "metadata",
+  "scope": "Article-version metadata and all eight named XLSX datasets plus DOCX descriptions. Verify sizes/checksums before parsing, retain formulas and cached values, no model or native outcome access.",
+  "requests": [
+    {
+      "name": "s3-PMC6123701.1.json",
+      "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC6123701.1/PMC6123701.1.json",
+      "expected_kind": "json",
+      "expected_bytes": 2110,
+      "expected_inventory_etag": "f5adfbeeea17d7e27af68f4662f03474",
+      "discovery_provenance": "Exact key/size/ETag in archived untruncated michaud2018-s3-inventory.xml; matches source publication supplement names."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "phase": "metadata",
+  "scope": "Discover exact public Panorama folder, document links and schema pointers; do not query quantitative rows",
+  "requests": [
+    {
+      "name": "panorama-mouse-response-peptide.html",
+      "url": "https://panoramaweb.org/targetedms/CPTAC%20Assay%20Portal/UVicPC_Borchers/MousePlasma_Agilent6490_directMRM/ResponseCurve/showPeptide.view?id=2835391",
+      "expected_kind": "html",
+      "discovery_provenance": "Exact View Peptide in Panorama href for non-CPTAC-3588 in archived cptac-non-CPTAC-3588.html (source sha in its receipt)."
+    }
+  ]
+}

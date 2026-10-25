@@ -4017,3 +4017,15 @@ The full APC availability goal remains active and unachieved.
   or native/APC amounts. Stop expansion on this panel; qualify broader independent
   amount/response anchors and protocol transfer for the next availability model.
   No new RL advantage or complete biological concentration model is claimed.
+
+
+## 2026-10-25 — Broader MRM source audit: stock metadata verified, raw-area access pending
+
+- **Agent/model:** Codex / GPT-6; [family1451 and reproduction](2026-10-25_1451_codex_mrm-anchor-admission/README.md).
+- **Source/curation:** dirty Presto22241241daaae1b223d4ed6e0543f8fa1afcad9a; fixed Michaud2018/PASS01163/PASS01200 primary and Sobsey2025/PASS05890 fallback. Official public article/supplement inventories; raw inputs once under data/mrm_anchor_sources. All source files, requests, amendments and attempts are hashed; unrelated work preserved.
+- **Training/pretraining:** none. No synthetic data, loss terms/weights, assay-to-model output mapping, learned parameters or model winner. All assays excluded from raw-response training because separate isotope-area/known-load joins are unverified. No validation/test split, predictions or binding metrics; native outer partitions remain closed.
+- **Primary condition:** eight workbooks/ten sheets plus descriptions;60,825 stored-cell positions independently replay.500 unique stock standards with AAA concentrations/CZE purity;498 stock corrections agree at1e-12, two differences match three-decimal rounding. These are stock concentrations, not injected doses. The table labeled raw data reports inferred plasma concentrations.
+- **Fallback condition:** two workbooks/five sheets;14,507 cell positions independently replay. Two PDF parsers and visual review agree on48 assay/peptide links versus53 in the title; membership remains unresolved. Method/characterization tables lack separate raw isotope signals.
+- **Access result:** both exact Panorama routes require login. PASS05890 publicly lists a7.8M CPTAC_Exp1_Curves_CS.sky response-curve document; its content remains uninspected. Public FTP requires TLS; verified FTPS fails hostname validation. Zero Skyline bytes downloaded, no disabled TLS checks. Current anonymous PMC S3 works; retired OA lookup, partial ZIP and legacy-encoding failures preserved.
+- **Resources:** local CPU only, one BLAS thread, no Modal/GPU or environment changes.22 bounded stages,14 passed/8 failed;111.49s combined measured stage time,112.19MiB maximum child RSS.20 metadata plus15 processed HTTP requests,2,481,660 bytes including failed payloads. Source/conservation audits pass.
+- **Decision:** admit supporting metadata only, not calibration training. [Hitlist#762 update](https://github.com/pirl-unc/hitlist/issues/762#issuecomment-6399609459) records the exact small processed asset, available fields and remaining joins/access requirements. Obtain a verifiable repository-supported route, qualify actual Skyline quantities, then implement a shared recipe and preregister response/transfer tests before the native exact/RL comparison. Full APC concentration/availability goal remains unachieved.

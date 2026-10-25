@@ -1,0 +1,18 @@
+{
+  "phase": "metadata",
+  "scope": "Michaud2018 exact public source routes; no quantitative values queried",
+  "requests": [
+    {
+      "name": "cptac-non-CPTAC-3588.html",
+      "url": "https://assays.cancer.gov/non-CPTAC-3588",
+      "expected_kind": "html",
+      "discovery_provenance": "Official CPTAC record linked to DOI10.1038/s42003-018-0087-6; public web inspection shows Panorama links41/28."
+    },
+    {
+      "name": "michaud2018.xml",
+      "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/PMC6123701/fullTextXML",
+      "expected_kind": "xml",
+      "discovery_provenance": "PMCID verified via PMID30271959 and official PMC article; official EuropePMC fullTextXML endpoint."
+    }
+  ]
+}

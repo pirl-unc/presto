@@ -1,0 +1,1473 @@
+{
+  "article": {
+    "pmcid": "PMC11812018",
+    "version": 1,
+    "pmid": 39804228,
+    "doi": "10.1021/acs.jproteome.4c00576",
+    "mid": null,
+    "title": "Characterization of 53 Multiplexed Targeted Proteomics Assays for Verification Studies in Cancer Cell Lines",
+    "citation": "J Proteome Res. 2025 Jan 13;24(2):459\u201371. doi: 10.1021/acs.jproteome.4c00576",
+    "is_pmc_openaccess": true,
+    "is_manuscript": false,
+    "is_historical_ocr": false,
+    "is_retracted": false,
+    "license_code": "CC BY-NC-ND",
+    "pdf_url": "s3://pmc-oa-opendata/PMC11812018.1/PMC11812018.1.pdf?md5=466293c8a7bb59a19b5a0c01213f5bd3",
+    "text_url": "s3://pmc-oa-opendata/PMC11812018.1/PMC11812018.1.txt?md5=325e6f7e776b6996a264eb74e5bcaa14",
+    "xml_url": "s3://pmc-oa-opendata/PMC11812018.1/PMC11812018.1.xml?md5=72eb45af87c441e7cb919f590580eac1",
+    "media_urls": [
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_0001.jpg?md5=c01a6ff81c071584dd5d35fa0f155b43",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_0002.jpg?md5=a99da1d70d3480be50b73cab98b39975",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_0003.jpg?md5=c6e4e65d7766c1dd099d54f986e06480",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_0004.jpg?md5=735154a5a2a1ce22ac947decf220b2b6",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_0005.jpg?md5=39d50e0a5bc85aa12804ca79f8a5297f",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_0006.jpg?md5=7b06553cb913e1582a5a1a360bc19e3f",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_0007.jpg?md5=79d46b3537cadb999ef55ce56faf5d2c",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_0008.jpg?md5=03c6154e33270189c93d964a4f305803",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_0009.jpg?md5=7807fb4303962b99d94cf7bf0cedf90d",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_0010.jpg?md5=c5c1a5f91656887aa3d342eb7df5aa6f",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_0011.jpg?md5=66fba7d69e8a37fd70c675349d01c269",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_m001.jpg?md5=dff3efa242f9b5370bd17394f762bd1f",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_si_001.xlsx?md5=2b052df2652922e560873fbf328040e1",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_si_002.pdf?md5=06b920ba04ca44f8d70142515d9d03b3",
+      "s3://pmc-oa-opendata/PMC11812018.1/pr4c00576_si_003.xlsx?md5=070cace3c109b7358483925761ab1e70"
+    ]
+  },
+  "assets": [
+    {
+      "file": "s3-pr4c00576_si_001.xlsx",
+      "bytes": 69469,
+      "sha256": "37772eccd447cdc083daa568025118d7ca2fbdd3723a026d3832298f8099d826",
+      "archive_members": [
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 1508
+        },
+        {
+          "name": "_rels/.rels",
+          "bytes": 588
+        },
+        {
+          "name": "xl/workbook.xml",
+          "bytes": 1785
+        },
+        {
+          "name": "xl/_rels/workbook.xml.rels",
+          "bytes": 698
+        },
+        {
+          "name": "xl/worksheets/sheet1.xml",
+          "bytes": 406673
+        },
+        {
+          "name": "xl/theme/theme1.xml",
+          "bytes": 6798
+        },
+        {
+          "name": "xl/styles.xml",
+          "bytes": 3801
+        },
+        {
+          "name": "xl/sharedStrings.xml",
+          "bytes": 6991
+        },
+        {
+          "name": "xl/drawings/vmlDrawing1.vml",
+          "bytes": 1164
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet1.xml.rels",
+          "bytes": 605
+        },
+        {
+          "name": "xl/printerSettings/printerSettings1.bin",
+          "bytes": 8632
+        },
+        {
+          "name": "xl/comments1.xml",
+          "bytes": 739
+        },
+        {
+          "name": "docProps/core.xml",
+          "bytes": 621
+        },
+        {
+          "name": "docProps/app.xml",
+          "bytes": 797
+        }
+      ],
+      "sheets": [
+        {
+          "name": "method 1",
+          "dimensions": "A1:Y520",
+          "nonempty_cached_cells": 12976,
+          "header_rows": [
+            [
+              "A1",
+              "Dynamic MRM"
+            ],
+            [
+              "A2",
+              "Protein"
+            ],
+            [
+              "B2",
+              "Peptide Name (Compound Group)"
+            ],
+            [
+              "C2",
+              "Analyte (Compound Name)"
+            ],
+            [
+              "D2",
+              "ISTD?"
+            ],
+            [
+              "E2",
+              "Precursor Ion"
+            ],
+            [
+              "F2",
+              "MS1 Res"
+            ],
+            [
+              "G2",
+              "Product Ion"
+            ],
+            [
+              "H2",
+              "MS2 Res"
+            ],
+            [
+              "I2",
+              "Primary"
+            ],
+            [
+              "J2",
+              "Trigger"
+            ],
+            [
+              "K2",
+              "Threshold"
+            ],
+            [
+              "L2",
+              "Ret Time (min)"
+            ],
+            [
+              "M2",
+              "Delta Ret Time"
+            ],
+            [
+              "N2",
+              "Fragmentor"
+            ],
+            [
+              "O2",
+              "Collision Energy"
+            ],
+            [
+              "P2",
+              "Cell Accelerator Voltage"
+            ],
+            [
+              "Q2",
+              "Polarity"
+            ],
+            [
+              "R2",
+              "Trigger Entrance Delay (cycles)"
+            ],
+            [
+              "S2",
+              "Trigger Delay (cycles)"
+            ],
+            [
+              "T2",
+              "Trigger Window"
+            ],
+            [
+              "U2",
+              "IsLogicEnabled"
+            ],
+            [
+              "V2",
+              "Trigger Logic Flag"
+            ],
+            [
+              "W2",
+              "Trigger Ratio"
+            ],
+            [
+              "X2",
+              "Trigger Ratio Window"
+            ],
+            [
+              "Y2",
+              "Ignore MRM"
+            ],
+            [
+              "A3",
+              "PIK3CB"
+            ],
+            [
+              "B3",
+              "AAEIASSDSANVSSR"
+            ],
+            [
+              "C3",
+              "AAEIASSDSANVSSR.heavy"
+            ],
+            [
+              "D3",
+              true
+            ],
+            [
+              "E3",
+              737.85
+            ],
+            [
+              "F3",
+              "Unit"
+            ],
+            [
+              "G3",
+              272.14
+            ],
+            [
+              "H3",
+              "Unit"
+            ],
+            [
+              "I3",
+              true
+            ],
+            [
+              "J3",
+              false
+            ],
+            [
+              "K3",
+              0.0
+            ],
+            [
+              "L3",
+              5.55
+            ],
+            [
+              "M3",
+              1.0
+            ],
+            [
+              "N3",
+              380.0
+            ],
+            [
+              "O3",
+              33.0
+            ],
+            [
+              "P3",
+              5.0
+            ],
+            [
+              "Q3",
+              "Positive"
+            ],
+            [
+              "R3",
+              0.0
+            ],
+            [
+              "S3",
+              0.0
+            ],
+            [
+              "T3",
+              0.0
+            ],
+            [
+              "U3",
+              false
+            ],
+            [
+              "V3",
+              "AND"
+            ],
+            [
+              "W3",
+              1.0
+            ],
+            [
+              "X3",
+              1.0
+            ],
+            [
+              "Y3",
+              false
+            ],
+            [
+              "A4",
+              "PIK3CB"
+            ],
+            [
+              "B4",
+              "AAEIASSDSANVSSR"
+            ],
+            [
+              "C4",
+              "AAEIASSDSANVSSR.heavy"
+            ],
+            [
+              "D4",
+              true
+            ],
+            [
+              "E4",
+              737.85
+            ],
+            [
+              "F4",
+              "Unit"
+            ],
+            [
+              "G4",
+              359.19
+            ],
+            [
+              "H4",
+              "Unit"
+            ],
+            [
+              "I4",
+              true
+            ],
+            [
+              "J4",
+              false
+            ],
+            [
+              "K4",
+              0.0
+            ],
+            [
+              "L4",
+              5.55
+            ],
+            [
+              "M4",
+              1.0
+            ],
+            [
+              "N4",
+              380.0
+            ],
+            [
+              "O4",
+              17.0
+            ],
+            [
+              "P4",
+              5.0
+            ],
+            [
+              "Q4",
+              "Positive"
+            ],
+            [
+              "R4",
+              0.0
+            ],
+            [
+              "S4",
+              0.0
+            ],
+            [
+              "T4",
+              0.0
+            ],
+            [
+              "U4",
+              false
+            ],
+            [
+              "V4",
+              "AND"
+            ],
+            [
+              "W4",
+              1.0
+            ],
+            [
+              "X4",
+              1.0
+            ],
+            [
+              "Y4",
+              false
+            ],
+            [
+              "A5",
+              "PIK3CB"
+            ],
+            [
+              "B5",
+              "AAEIASSDSANVSSR"
+            ],
+            [
+              "C5",
+              "AAEIASSDSANVSSR.heavy"
+            ],
+            [
+              "D5",
+              true
+            ],
+            [
+              "E5",
+              737.85
+            ],
+            [
+              "F5",
+              "Unit"
+            ],
+            [
+              "G5",
+              932.43
+            ],
+            [
+              "H5",
+              "Unit"
+            ],
+            [
+              "I5",
+              true
+            ],
+            [
+              "J5",
+              false
+            ],
+            [
+              "K5",
+              0.0
+            ],
+            [
+              "L5",
+              5.55
+            ],
+            [
+              "M5",
+              1.0
+            ],
+            [
+              "N5",
+              380.0
+            ],
+            [
+              "O5",
+              25.0
+            ],
+            [
+              "P5",
+              5.0
+            ],
+            [
+              "Q5",
+              "Positive"
+            ],
+            [
+              "R5",
+              0.0
+            ],
+            [
+              "S5",
+              0.0
+            ],
+            [
+              "T5",
+              0.0
+            ],
+            [
+              "U5",
+              false
+            ],
+            [
+              "V5",
+              "AND"
+            ],
+            [
+              "W5",
+              1.0
+            ],
+            [
+              "X5",
+              1.0
+            ],
+            [
+              "Y5",
+              false
+            ],
+            [
+              "A6",
+              "PIK3CB"
+            ],
+            [
+              "B6",
+              "AAEIASSDSANVSSR"
+            ],
+            [
+              "C6",
+              "AAEIASSDSANVSSR.heavy"
+            ],
+            [
+              "D6",
+              true
+            ],
+            [
+              "E6",
+              737.85
+            ],
+            [
+              "F6",
+              "Unit"
+            ],
+            [
+              "G6",
+              1019.46
+            ],
+            [
+              "H6",
+              "Unit"
+            ],
+            [
+              "I6",
+              true
+            ],
+            [
+              "J6",
+              false
+            ],
+            [
+              "K6",
+              0.0
+            ],
+            [
+              "L6",
+              5.55
+            ],
+            [
+              "M6",
+              1.0
+            ],
+            [
+              "N6",
+              380.0
+            ],
+            [
+              "O6",
+              25.0
+            ],
+            [
+              "P6",
+              5.0
+            ],
+            [
+              "Q6",
+              "Positive"
+            ],
+            [
+              "R6",
+              0.0
+            ],
+            [
+              "S6",
+              0.0
+            ],
+            [
+              "T6",
+              0.0
+            ],
+            [
+              "U6",
+              false
+            ],
+            [
+              "V6",
+              "AND"
+            ],
+            [
+              "W6",
+              1.0
+            ],
+            [
+              "X6",
+              1.0
+            ],
+            [
+              "Y6",
+              false
+            ]
+          ],
+          "semantic_text_cells": [
+            [
+              "W2",
+              "Trigger Ratio"
+            ],
+            [
+              "X2",
+              "Trigger Ratio Window"
+            ]
+          ],
+          "formula_cells": 0,
+          "types": {
+            "s": 3652,
+            "b": 2590,
+            "n": 6734
+          }
+        }
+      ]
+    },
+    {
+      "file": "s3-pr4c00576_si_003.xlsx",
+      "bytes": 65070,
+      "sha256": "ab487edc2265d49e1b82b9dc924767b62d9240464f900c353a91b1e5d2d539ae",
+      "archive_members": [
+        {
+          "name": "[Content_Types].xml",
+          "bytes": 2832
+        },
+        {
+          "name": "_rels/.rels",
+          "bytes": 588
+        },
+        {
+          "name": "xl/_rels/workbook.xml.rels",
+          "bytes": 1121
+        },
+        {
+          "name": "xl/workbook.xml",
+          "bytes": 2269
+        },
+        {
+          "name": "xl/drawings/_rels/drawing2.xml.rels",
+          "bytes": 293
+        },
+        {
+          "name": "xl/theme/theme1.xml",
+          "bytes": 6798
+        },
+        {
+          "name": "xl/styles.xml",
+          "bytes": 53733
+        },
+        {
+          "name": "xl/sharedStrings.xml",
+          "bytes": 6149
+        },
+        {
+          "name": "xl/drawings/drawing1.xml",
+          "bytes": 1276
+        },
+        {
+          "name": "xl/charts/chart1.xml",
+          "bytes": 35774
+        },
+        {
+          "name": "xl/drawings/drawing2.xml",
+          "bytes": 1276
+        },
+        {
+          "name": "xl/charts/chart2.xml",
+          "bytes": 26025
+        },
+        {
+          "name": "xl/charts/style1.xml",
+          "bytes": 9946
+        },
+        {
+          "name": "xl/charts/colors1.xml",
+          "bytes": 878
+        },
+        {
+          "name": "xl/charts/_rels/chart3.xml.rels",
+          "bytes": 399
+        },
+        {
+          "name": "xl/drawings/drawing3.xml",
+          "bytes": 4020
+        },
+        {
+          "name": "xl/charts/chart3.xml",
+          "bytes": 105716
+        },
+        {
+          "name": "xl/charts/style2.xml",
+          "bytes": 9666
+        },
+        {
+          "name": "xl/charts/colors2.xml",
+          "bytes": 230
+        },
+        {
+          "name": "xl/drawings/_rels/drawing3.xml.rels",
+          "bytes": 293
+        },
+        {
+          "name": "xl/charts/_rels/chart2.xml.rels",
+          "bytes": 399
+        },
+        {
+          "name": "xl/worksheets/sheet2.xml",
+          "bytes": 19066
+        },
+        {
+          "name": "xl/worksheets/sheet1.xml",
+          "bytes": 22378
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet1.xml.rels",
+          "bytes": 299
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet2.xml.rels",
+          "bytes": 299
+        },
+        {
+          "name": "xl/worksheets/_rels/sheet3.xml.rels",
+          "bytes": 464
+        },
+        {
+          "name": "xl/drawings/_rels/drawing1.xml.rels",
+          "bytes": 293
+        },
+        {
+          "name": "xl/worksheets/sheet4.xml",
+          "bytes": 15738
+        },
+        {
+          "name": "xl/worksheets/sheet3.xml",
+          "bytes": 20934
+        },
+        {
+          "name": "docProps/core.xml",
+          "bytes": 621
+        },
+        {
+          "name": "xl/printerSettings/printerSettings1.bin",
+          "bytes": 8632
+        },
+        {
+          "name": "docProps/app.xml",
+          "bytes": 876
+        }
+      ],
+      "sheets": [
+        {
+          "name": "Exp 1_Range",
+          "dimensions": "A1:H55",
+          "nonempty_cached_cells": 428,
+          "header_rows": [
+            [
+              "A1",
+              "Gene name"
+            ],
+            [
+              "B1",
+              "Protein name"
+            ],
+            [
+              "C1",
+              "Peptide"
+            ],
+            [
+              "D1",
+              "LLOQ"
+            ],
+            [
+              "E1",
+              "ULOQ"
+            ],
+            [
+              "F1",
+              "Endogenous Low"
+            ],
+            [
+              "G1",
+              "Endogenous average"
+            ],
+            [
+              "H1",
+              "Endogenous high"
+            ],
+            [
+              "A2",
+              "MAPK1"
+            ],
+            [
+              "B2",
+              "Mitogen-activated protein kinase 1"
+            ],
+            [
+              "C2",
+              "ELIFEETAR"
+            ],
+            [
+              "D2",
+              0.7906013333333335
+            ],
+            [
+              "E2",
+              1164.4966666666667
+            ],
+            [
+              "F2",
+              1.1582146666666666
+            ],
+            [
+              "G2",
+              9.815190425531915
+            ],
+            [
+              "H2",
+              19.572850666666668
+            ],
+            [
+              "A3",
+              "IGKV4-1"
+            ],
+            [
+              "B3",
+              "Immunoglobulin kappa variable 4-1"
+            ],
+            [
+              "C3",
+              "LLIYWASTR"
+            ],
+            [
+              "D3",
+              0.8332368000000001
+            ],
+            [
+              "E3",
+              498.386
+            ],
+            [
+              "F3",
+              0.0
+            ],
+            [
+              "H3",
+              0.0
+            ],
+            [
+              "A4",
+              "PHB2"
+            ],
+            [
+              "B4",
+              "Prohibitin-2"
+            ],
+            [
+              "C4",
+              "IVQAEGEAEAAK"
+            ],
+            [
+              "D4",
+              0.8352269999999999
+            ],
+            [
+              "E4",
+              1226.958
+            ],
+            [
+              "F4",
+              1.171164
+            ],
+            [
+              "G4",
+              32.98233191489362
+            ],
+            [
+              "H4",
+              176.613
+            ],
+            [
+              "A5",
+              "EIF5"
+            ],
+            [
+              "B5",
+              "Eukaryotic translation initiation factor 5"
+            ],
+            [
+              "C5",
+              "VLTLSDDLER"
+            ],
+            [
+              "D5",
+              0.9442004666666669
+            ],
+            [
+              "E5",
+              1308.7346000000002
+            ],
+            [
+              "F5",
+              2.2432236666666667
+            ],
+            [
+              "G5",
+              17.946375
+            ],
+            [
+              "H5",
+              43.89882000000001
+            ],
+            [
+              "A6",
+              "EIF3E"
+            ],
+            [
+              "B6",
+              "Eukaryotic translation initiation factor 3 subunit E"
+            ],
+            [
+              "C6",
+              "YLTTAVITNK"
+            ],
+            [
+              "D6",
+              1.0022921999999999
+            ],
+            [
+              "E6",
+              1505.3372999999997
+            ],
+            [
+              "F6",
+              1.0274222999999998
+            ],
+            [
+              "G6",
+              14.086525
+            ],
+            [
+              "H6",
+              121.78286999999997
+            ]
+          ],
+          "semantic_text_cells": [],
+          "formula_cells": 0,
+          "types": {
+            "s": 168,
+            "n": 271,
+            "e": 1
+          }
+        },
+        {
+          "name": "Exp2_Repeat",
+          "dimensions": "A1:G53",
+          "nonempty_cached_cells": 357,
+          "header_rows": [
+            [
+              "A1",
+              "Total Variability by Peptide"
+            ],
+            [
+              "B1",
+              "QC Level High"
+            ],
+            [
+              "C1",
+              "QC Level Med"
+            ],
+            [
+              "D1",
+              "QC Level Med-Low"
+            ],
+            [
+              "E1",
+              "QC Level Low"
+            ],
+            [
+              "B2",
+              1200.0
+            ],
+            [
+              "C2",
+              600.0
+            ],
+            [
+              "D2",
+              300.0
+            ],
+            [
+              "E2",
+              15.0
+            ],
+            [
+              "F2",
+              " LLOQ "
+            ],
+            [
+              "G2",
+              " ULOQ "
+            ],
+            [
+              "A3",
+              "ELIFEETAR"
+            ],
+            [
+              "B3",
+              0.11675008528115707
+            ],
+            [
+              "C3",
+              0.16381719129378228
+            ],
+            [
+              "D3",
+              0.1671649590515082
+            ],
+            [
+              "E3",
+              0.2008187064560579
+            ],
+            [
+              "F3",
+              0.7906013333333335
+            ],
+            [
+              "G3",
+              1164.4966666666667
+            ],
+            [
+              "A4",
+              "LLIYWASTR"
+            ],
+            [
+              "C4",
+              0.11954939694115904
+            ],
+            [
+              "D4",
+              0.22739348652787017
+            ],
+            [
+              "E4",
+              0.23073785493662613
+            ],
+            [
+              "F4",
+              0.8332368000000001
+            ],
+            [
+              "G4",
+              498.386
+            ],
+            [
+              "A5",
+              "IVQAEGEAEAAK"
+            ],
+            [
+              "B5",
+              0.14514245763240466
+            ],
+            [
+              "C5",
+              0.12492699053348542
+            ],
+            [
+              "D5",
+              0.20087042976782105
+            ],
+            [
+              "E5",
+              0.16957464488126714
+            ],
+            [
+              "F5",
+              0.8352269999999999
+            ],
+            [
+              "G5",
+              1226.958
+            ],
+            [
+              "A6",
+              "VLTLSDDLER"
+            ],
+            [
+              "B6",
+              0.1269741012948065
+            ],
+            [
+              "C6",
+              0.16041456968502643
+            ],
+            [
+              "D6",
+              0.1789320910284269
+            ],
+            [
+              "E6",
+              0.20712132620416973
+            ],
+            [
+              "F6",
+              0.9442004666666669
+            ],
+            [
+              "G6",
+              1308.7346000000002
+            ]
+          ],
+          "semantic_text_cells": [],
+          "formula_cells": 0,
+          "types": {
+            "s": 58,
+            "n": 306,
+            "e": 5
+          }
+        },
+        {
+          "name": "Exp4_Stability",
+          "dimensions": "A1:G56",
+          "nonempty_cached_cells": 386,
+          "header_rows": [
+            [
+              "A1",
+              "Stability by Peptide"
+            ],
+            [
+              "A2",
+              "Peptide"
+            ],
+            [
+              "B2",
+              "Baseline"
+            ],
+            [
+              "C2",
+              "8 hr \n(4\u00baC)"
+            ],
+            [
+              "D2",
+              "24 hr \n(4\u00baC)"
+            ],
+            [
+              "E2",
+              "Freeze-Thaw x 1 \n(-80\u00baC)"
+            ],
+            [
+              "F2",
+              "Freeze-Thaw x 2 \n(-80\u00baC)"
+            ],
+            [
+              "G2",
+              "4 weeks\n(-80\u00baC)"
+            ],
+            [
+              "A3",
+              "AAEIASSDSANVSSR"
+            ],
+            [
+              "B3",
+              1.0
+            ],
+            [
+              "C3",
+              1.0278682591386175
+            ],
+            [
+              "D3",
+              1.0007238508867173
+            ],
+            [
+              "E3",
+              0.9909518639160333
+            ],
+            [
+              "F3",
+              0.9580166485703945
+            ],
+            [
+              "G3",
+              1.0408975750995293
+            ],
+            [
+              "A4",
+              "AGSSEWLAVDGLVSPSNNSK"
+            ],
+            [
+              "B4",
+              1.0
+            ],
+            [
+              "C4",
+              0.9537038264257974
+            ],
+            [
+              "D4",
+              0.965393842198041
+            ],
+            [
+              "E4",
+              0.947103341329905
+            ],
+            [
+              "F4",
+              1.0021338917679492
+            ],
+            [
+              "G4",
+              0.9487600895969462
+            ],
+            [
+              "A5",
+              "AINPINTFTK"
+            ],
+            [
+              "B5",
+              1.0
+            ],
+            [
+              "C5",
+              1.012009230745483
+            ],
+            [
+              "D5",
+              1.0248288530258476
+            ],
+            [
+              "E5",
+              0.9957010658578187
+            ],
+            [
+              "F5",
+              1.0029868716571348
+            ],
+            [
+              "G5",
+              0.9839658246312718
+            ],
+            [
+              "A6",
+              "DQIYDIFQK"
+            ],
+            [
+              "B6",
+              1.0
+            ],
+            [
+              "C6",
+              1.000327904689037
+            ],
+            [
+              "D6",
+              0.9898106654036265
+            ],
+            [
+              "E6",
+              1.0075660970840772
+            ],
+            [
+              "F6",
+              0.97994923549629
+            ],
+            [
+              "G6",
+              0.997109580889229
+            ]
+          ],
+          "semantic_text_cells": [],
+          "formula_cells": 0,
+          "types": {
+            "s": 62,
+            "n": 318,
+            "e": 6
+          }
+        },
+        {
+          "name": "Exp5_QC",
+          "dimensions": "A1:G48",
+          "nonempty_cached_cells": 328,
+          "header_rows": [
+            [
+              "A1",
+              "Peptide"
+            ],
+            [
+              "B1",
+              " QC 1 "
+            ],
+            [
+              "C1",
+              " QC 2 "
+            ],
+            [
+              "D1",
+              " QC 3 "
+            ],
+            [
+              "E1",
+              " QC 3B "
+            ],
+            [
+              "F1",
+              " QC4 "
+            ],
+            [
+              "G1",
+              " QC5 "
+            ],
+            [
+              "A2",
+              "AAEIASSDSANVSSR"
+            ],
+            [
+              "C2",
+              16.83
+            ],
+            [
+              "D2",
+              22.4
+            ],
+            [
+              "E2",
+              24.22
+            ],
+            [
+              "F2",
+              28.67
+            ],
+            [
+              "G2",
+              20.83
+            ],
+            [
+              "A3",
+              "AGSSEWLAVDGLVSPSNNSK"
+            ],
+            [
+              "B3",
+              18.36
+            ],
+            [
+              "C3",
+              16.32
+            ],
+            [
+              "D3",
+              14.35
+            ],
+            [
+              "E3",
+              14.42
+            ],
+            [
+              "F3",
+              15.44
+            ],
+            [
+              "G3",
+              14.33
+            ],
+            [
+              "A4",
+              "AINPINTFTK"
+            ],
+            [
+              "B4",
+              2.9
+            ],
+            [
+              "C4",
+              3.02
+            ],
+            [
+              "D4",
+              3.11
+            ],
+            [
+              "E4",
+              2.75
+            ],
+            [
+              "F4",
+              3.09
+            ],
+            [
+              "G4",
+              2.06
+            ],
+            [
+              "A5",
+              "DQIYDIFQK"
+            ],
+            [
+              "B5",
+              2.87
+            ],
+            [
+              "C5",
+              3.24
+            ],
+            [
+              "D5",
+              4.82
+            ],
+            [
+              "E5",
+              4.64
+            ],
+            [
+              "F5",
+              4.45
+            ],
+            [
+              "G5",
+              4.76
+            ],
+            [
+              "A6",
+              "EAGLDLR"
+            ],
+            [
+              "B6",
+              2.61
+            ],
+            [
+              "C6",
+              4.07
+            ],
+            [
+              "D6",
+              5.03
+            ],
+            [
+              "E6",
+              6.67
+            ],
+            [
+              "F6",
+              4.53
+            ],
+            [
+              "G6",
+              4.01
+            ]
+          ],
+          "semantic_text_cells": [],
+          "formula_cells": 0,
+          "types": {
+            "s": 54,
+            "n": 282
+          }
+        }
+      ]
+    }
+  ],
+  "cell_checks": 14507,
+  "unverified_cells": [],
+  "status": "verified"
+}

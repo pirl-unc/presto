@@ -1,0 +1,65 @@
+{
+  "stage": "fetch",
+  "attempt": 6,
+  "started_utc": "2026-10-25T15:06:16.763714+00:00",
+  "status": "failed",
+  "child_launched": true,
+  "exit_code": 1,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 7966785536
+  },
+  "disk_free_before_bytes": 19481567232,
+  "request_set_sha256": "14db56db52f48c2e5158ca11f5e8b0d611a2fad6948606537d3df33713b16058",
+  "request_set": {
+    "phase": "metadata",
+    "scope": "Public experiment-directory listing only; reversible Latin-1 metadata view, no files or credentials requested.",
+    "requests": [
+      {
+        "name": "pass01163-experiment1.html",
+        "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS01163&browseArea=&path=/Mouse_500_Assays_CPTAC_Experiment1",
+        "expected_kind": "html",
+        "encoding": "latin-1",
+        "discovery_provenance": "Exact public directory href in archived pass01163-sbeams.html, recovered with byte-reversible Latin-1 decoding; see metadata-decoding-amendment.md."
+      },
+      {
+        "name": "pass01163-experiment2.html",
+        "url": "https://db.systemsbiology.net/sbeams/cgi/PeptideAtlas/PASS_View?identifier=PASS01163&browseArea=&path=/Mouse_500_Assays_CPTAC_Experiment2",
+        "expected_kind": "html",
+        "encoding": "latin-1",
+        "discovery_provenance": "Exact public directory href in archived pass01163-sbeams.html, recovered with byte-reversible Latin-1 decoding; see metadata-decoding-amendment.md."
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 97597,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/fetch_v2.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-5.json"
+  ],
+  "elapsed_seconds": 29.482609416998457,
+  "peak_observed_process_tree_rss_bytes": 46104576,
+  "peak_child_process_rss_bytes": 46284800,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 19464445952
+}

@@ -1,0 +1,59 @@
+{
+  "stage": "fetch",
+  "attempt": 10,
+  "started_utc": "2026-10-25T15:09:16.791067+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 6605897728
+  },
+  "disk_free_before_bytes": 19445465088,
+  "request_set_sha256": "43570dec73e2aef11e2f43cfa7b52e4cbda7aebbf1b3592afd9b65883a7bd9d2",
+  "request_set": {
+    "phase": "metadata",
+    "scope": "Article-version metadata and all eight named XLSX datasets plus DOCX descriptions. Verify sizes/checksums before parsing, retain formulas and cached values, no model or native outcome access.",
+    "requests": [
+      {
+        "name": "s3-PMC6123701.1.json",
+        "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC6123701.1/PMC6123701.1.json",
+        "expected_kind": "json",
+        "expected_bytes": 2110,
+        "expected_inventory_etag": "f5adfbeeea17d7e27af68f4662f03474",
+        "discovery_provenance": "Exact key/size/ETag in archived untruncated michaud2018-s3-inventory.xml; matches source publication supplement names."
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 97792,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/code/fetch_v3.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1451_codex_mrm-anchor-admission/reproduce/requests/metadata-8.json"
+  ],
+  "elapsed_seconds": 0.3829810839961283,
+  "peak_observed_process_tree_rss_bytes": 45449216,
+  "peak_child_process_rss_bytes": 45465600,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 19445399552
+}
