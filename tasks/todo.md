@@ -13846,3 +13846,25 @@ charge/target membership for all rows. Ten aligned labels are empty versus liter
 NA, not a different molecule.87of90standard slots link exactly;three lackIDs/scores.
 Tenth standard absentfromlibrary,notnegative. Shared Hitlist implementation and
 nominal-dose likelihood/selection contract still pending; no fit or outer access.
+
+## Canonical nominal-dose source verification
+
+- [x] Revalidate prior publication, memory guard and scientific stopping decision.
+- [x] Publish Hitlist draft846 and correct six stale global catalog assertions.
+- [x] Prepare a registered independent canonical-source replay with frozen code.
+- [ ] Run full local software checks and source stages only after memory admission.
+- [ ] Close source artifacts, hosted gates and tested release before calibration.
+
+Previous cleanup follow-up was no scientific progress. This continuation publishes
+Hitlist846 and verifies48focused tests; full-suite/source launch remains refused
+by0.063GiB free+speculative memory. Plan: experiments/agents/codex/plans/
+dilution-canonical-materialization.md. No model fit or original native outer
+partition access is authorized by the source-verification work.
+
+Canonical preparation review: family0959 freezes17source locations/hashes,15Hitlist
+source files and independent literal/rational replay.13software boundary tests pass.
+Buildattempt1 refuses at69.88MiB free+speculative memory before child launch;3GiB
+floor remains. No canonical package or model fit exists. Hitlist latest1b3ad56
+fixes the remaining subprocess catalog assertion;26focused tests pass, and fresh
+Tests40183613623 is live (docs40183613700 passes). This is meaningful source/code
+progress; memory admission and real source verification remain unfinished.

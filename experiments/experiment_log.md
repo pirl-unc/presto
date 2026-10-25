@@ -3917,3 +3917,38 @@ The full APC availability goal remains active and unachieved.
 - **Source interpretation:** pinned nf-core1.2.2export uses parameterized peakgroup/global q-value filters; no exported ID does not prove no internal candidate existed. Actual overrides and zero/missing integration reasons remain unqualified. Keep cross-dilution library selection, twofold-versus1:10protocol conflict, nominal solution concentration versus injected/certified amount, and post-isolation standards versus HLA matrix/native peptide roles.
 - **Verification/runtime:** independent pandas literal parser and Fraction arithmetic replay all29,039,248cells,12,851library memberships,76,561scored rows,64,070aligned links,297,876numeric comparisons and90standard slots, including failed and amended namespace predicates. Allfive stages pass first execution: retrieval251.608s/35.0MiB, inventory13.520s/229.2MiB, lineage4.272s/268.2MiB, membership1.685s/59.4MiB, independent replay49.529s/783.2MiB OSchildpeak. Original20min/3GiB/1GiBdisk+32MiBstartup/50msmonitor limits unchanged. Per-stage configs, exact code, inputs, logs, receipts, compressed all-slot comparison dump and explicit exceptions retained.
 - **Decision:** source lineage is sufficiently qualified for canonical Hitlist ingestion under[#845](https://github.com/pirl-unc/hitlist/issues/845); implementation/tested publication and a separately registered nominal-dose likelihood/selection contract remain pending. No calibration training admitted and no general sequence/native-MS1 transfer established. Do not restart stopped native response-only fitting. Full precursor-relative APC availability and matched differentiable/discrete biological modeling remain active and unachieved.
+
+## 2026-10-25 — Canonical nominal-dose source: draft publication, execution refused
+
+- **Agent/model:** Codex / GPT-6; [family0959 and frozen reproduction](2026-10-25_0959_codex_dilution-canonical/README.md).
+- **Source contract:**17pinned PXD024809 originals,402,761,771bytes; expected conservation
+  of1,031,853tabular rows and29,039,248literal cells from independently verified0813/0844.
+  Preserve distinct library/scored namespaces, missingness, the intended ten-standard
+  panel, nominal-dose conflict, matrix/standard roles and nonexchangeable DIA methods.
+  No filtering, imputation or quantitative training labels.
+- **Reproduction/code:**Presto50a2af4 with unrelated task edits preserved; Hitlist
+  candidate2.0.40/1b3ad56, [draft846](https://github.com/pirl-unc/hitlist/pull/846).
+  Exact local invocation,17asset hashes,15Hitlist source snapshots and independent
+  checker/launcher snapshots are frozen in reproduce/. No shared installation.
+- **Training/evaluation:**none:source-conservation family, no assay loss/weights,
+  pretraining, model or train/validation/test split. Software fixtures are synthetic
+  tests only. No prediction dumps or held-out metrics apply; original native outer
+  partitions remain closed. No new exact/RL or biological performance comparison.
+
+| Condition | Outcome | Runtime / scope |
+| --- | --- | --- |
+| Catalog/source software checks |48pass; correction26pass (overlapping)|1.63s /1.68s|
+| Independent checker/launcher boundaries |13pass|0.13s, synthetic software fixtures|
+| Canonical build attempt1 |Preflight refused; no child launched|69.88MiB free+speculative versus3GiB floor|
+| Original-source replay |Not launched|No canonical-package results yet|
+
+- **Resources:**local CPU only, no Modal/GPU/cloud training;20min/stage,3GiB RSS,
+  1GiB disk reserve+32MiB startup margin,50ms monitoring and OS child peak unchanged.
+  Disk headroom14,606,356,480bytes; inactive pages excluded from memory admission.
+- **Decision/preferred condition:**no model winner. The native response-only stopping
+  rule remains. Draft shared ingestion and an independent full-cell/rational replay
+  are implemented; local full-suite/source execution, full hosted gates and tested
+  release remain pending. The full APC concentration objective is unachieved.
+- **Evidence:**family README, summary.json, software-boundaries.log and exact
+  build-attempt1-runtime.json; production CI's stale catalog failure is preserved
+  in Hitlist846. No biological success is inferred from source/software work.
