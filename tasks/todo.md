@@ -13728,3 +13728,10 @@ selected. The initial EmptyCell verifier failure and narrow successful recovery
 are preserved. An isolated durable Hitlist branch now has the implementation spec;
 production admission code and release remain pending. Full report:
 experiments/2026-10-25_0424_codex_native-psmd2-source/README.md.
+
+## Canonical native-source verification 2026-10-25
+
+- [x] Freeze source replay spec and adapter overlay.
+- [x] Build public native source package and independently verify original values/links.
+- [ ] Close experiments/2026-10-25_0519_codex_native-source-canonical and pass Hitlist software/release gates.
+- [ ] Use the admitted source in the planned biological contrast; availability goal remains open.

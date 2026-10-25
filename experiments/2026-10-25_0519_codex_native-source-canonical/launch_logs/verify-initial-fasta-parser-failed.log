@@ -1,0 +1,7 @@
+All public primary keys and foreign keys verified
+Original rows, entity identities and every quantity reconciled
+Traceback (most recent call last):
+  File "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_0519_codex_native-source-canonical/code/verify.py", line 213, in <module>
+    assert (row["header_raw"], row["reference_sequence"]) == (header, sequence)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
