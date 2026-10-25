@@ -156,3 +156,9 @@ closed source-admission issue #822 is not reopened by this endpoint failure.
 
 [Hitlist820 follow-up](https://github.com/pirl-unc/hitlist/issues/820#issuecomment-6390908317)
 records support and unresolved reference/material needs. The source issue stays closed.
+
+
+Software closure update, October24,23:56UTC: all hosted unit3.10–3.14, integration,
+lint, docs and coverage checks pass for1619c374. PR830mergededf061a2; clean-main
+release40144589370is pending behind MAPP2.0.31run40143097533. The original local
+headroom deferral and biological support failure remain unchanged.

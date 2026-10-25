@@ -13435,3 +13435,27 @@ Source2.0.30clean-main release40140479531succeeded and published PyPI bytes matc
 MAPP recipe829merged58f67cd; release40143097533queued. PBMC830published1619c37;
 all frozen recipe runtime bytes unchanged after rebase, hosted checks pending.
 Full APC availability goal remains active and unachieved.
+
+
+## Intact-degradomics kinetic source
+
+- [x] Register prospective source/quantity/context qualification and resource limits.
+- [x] Retrieve public original metadata and processed quantitative assets.
+- [x] Independently verify source cells and qualify quantity/material identity limits.
+- [x] File shared Hitlist831 admission/gaps and close the source report before fitting.
+
+### Intact-degradomics source review
+
+The preceding user-status turn was no progress toward the goal; this continuation
+revalidated the available assets and completed original-source qualification.
+Eight workbooks/133sheets/325,718cells and2,991formula caches independently agree.
+Published3,427positive quantities reconcile except one preserved disagreement.
+Two original header/body shifts are documented; all interpreted spans validate.
+Missing spleen30minuteR3, unresolved material independence and MS scaling remain.
+No fitting or predictive gain. Source report2338and Hitlist831record the next
+shared admission requirement before any exact-versus-sampled kinetic experiment.
+PBMC830now passes all hosted checks and mergededf061a2; its clean-main2.0.32
+release40144589370is pending behind running MAPP2.0.31 release40143097533.
+
+- [ ] Implement shared intact-degradomics source admission with explicit exceptions.
+- [ ] Independently replay canonical quantities, then freeze the kinetic experiment.

@@ -620,3 +620,12 @@ Keep applicability reporting separate from model features and the measured label
   serialize source materialization and the full suite on a near-full volume.
   Preserve disk-guard failures, never lower the reserve to make checks pass, and
   rerun only after authoritative capacity has recovered.
+
+
+## 2026-10-24 — source headers versus data layout
+
+- Audit field types and structural invariants against actual worksheet bodies before
+  labeling a discrepancy biological. An inserted unlabeled column or missing ID
+  column can invalidate an otherwise exact literal-cell replay. Preserve original
+  coordinates, register the interpretation, and verify it independently against
+  source spans and alternate views. Never manufacture missing IDs from row order.
