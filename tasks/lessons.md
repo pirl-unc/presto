@@ -604,6 +604,17 @@ Keep applicability reporting separate from model features and the measured label
   checks. Publish an LF derivative with parsed-cell equality and preserve original
   bytes, instead of changing frozen numerical results or ignoring the check.
 
+## 2026-10-25 — warm starts and historical outcome exposure
+
+- An initializer fitted on the full original training cohort leaks information
+  into a new cross-validation split of that cohort. Use data-free fixed starts or
+  refit strictly inside the fold; an inspected-development label does not excuse
+  invalid comparisons. Check warm-start provenance before registering the runner.
+- A later fit's exclusion of test parents does not prove the partition was never
+  inspected. Read earlier admission/review exposure notes before claiming a fresh
+  test; descriptive response summaries count as prior outcome exposure even when
+  no predictor was evaluated.
+
 ## 2026-10-24 — Independent regression replay and rank ties
 
 - Agreement of predictions to a numerical tolerance does not imply agreement of raw Spearman to that tolerance. Verify coefficients/predictions independently, recompute published metrics from the exact archived values, and separately audit rank discrepancies on mathematically identical inputs. Preserve raw values and failed checks; explicitly record any revised verification contract rather than silently loosening a tolerance or rounding biological results.

@@ -13478,7 +13478,8 @@ Review: source build/replay and descriptive support pass in family0021; draft Hi
 - [x] Admit and independently verify temporal targets and support.
 - [x] Qualify exact/sampled process numerics, then fit all frozen conditions.
 - [x] Evaluate once, independently replay, and close scientific report and registry.
-- [ ] Publish all outcomes and complete shared source/recipe CI and releases.
+- [x] Publish all outcomes to draft PR131 atd67fb48 and verify the public description/issue updates.
+- [ ] Complete shared source/recipe releases after successful hosted full checks and merges.
 
 Previous goal turn made progress: canonical source replay, support census and published prospective model plan. No biological fit was claimed.
 
@@ -13502,7 +13503,8 @@ The full availability goal remains active and unachieved.
 - [x] Execute all six optimizer conditions using training outcomes only.
 - [x] Independently replay and close report/registry; identify representation as the next hypothesis.
 - [ ] Specify a fresh biological evaluation after training-only representation qualification.
-- [ ] Complete pending canonical source/recipe and experiment publication.
+- [x] Publish completed experiments and shared source/recipe PRs; both shared PRs pass hosted checks and merge.
+- [ ] Finish source2.0.33 release40149903223 and queued recipe2.0.34 release40151233071.
 
 Previous goal turn was progress: 0046 evaluation, independent prediction/optimizer
 replay and scientific registry closure. No concentration success was claimed.
@@ -13514,3 +13516,42 @@ Preserve these negative diagnoses; rate sharing/features/regularization remain
 testable alternatives. Source832merged18bbf81d after fullCI;release40149903223live.
 Recipe833publishedfbd4f1a with frozen runtime hashes unchanged;CI40150207226live.
 Hitlist2.0.32PyPIwheel/sdist exactly match successful release40144589370 artifacts.
+
+Publication update: PrestoPR131head d67fb48488960882481627c6f3a8bdaeb6e58bd3 is
+remote-verified. PRdescription and issue130/Hitlist831comments exactly match their
+reviewed bodies. Recipe833allhostedchecks pass and it merges759ceae4; release40151233071
+queues behind source40149903223. PrestoCI40150595924 is still running.
+
+Storage maintenance preserves339byte-identical tracked files as independent APFS
+clones across seven task-created clean checkouts. Source/data/checkpoints and all
+frozen hashes are unchanged. Two observed free-space gains total436,641,792bytes;
+other shared-volume activity subsequently consumes the headroom. New local
+training remains gated by current free space, without relaxing the1GiBreserve.
+Requested that the user make at least3GiBavailable or identify the filling job.
+The next frozen development specification is
+experiments/agents/codex/plans/intact-temporal-representation-development.md;
+it has not launched and makes no new predictive claim.
+
+## Intact temporal representation development
+
+- [x] Freeze the nested, original-training-only specification and data-free starts.
+- [x] Implement seven arms, inner selection and retention of every physical start.
+- [x] Implement independent coverage, objective, metric, bootstrap and decision replay.
+- [x] Implement automatic report/table/manifest closure and stage prerequisites.
+- [x] Pass isolated Ruff E9/F, AST parsing and all pinned input/model hash checks.
+- [ ] Run numerical qualification and fitting above the existing disk reserve.
+- [ ] Independently replay outcomes and close the canonical registry.
+- [ ] Require a fresh biological evaluation before any new generalization claim.
+
+Review: the preceding status turn was no progress. This continuation completes
+the registered runner while the resource gate defers execution. Presto CI40150595924
+and source release40149903223 now pass; recipe release40151233071 is confirmed
+running. No experiment stage, new test read or predictive gain is claimed.
+
+The source2.0.33 artifact download failed during sdist extraction with no space
+left on device, despite the small6.7MBarchive and pre-download headroom. Partial
+bytes remain untouched at/private/tmp/hitlist-tested-release-2033-20261025; checksum
+receipt is tasks/modular_model/intact-2033-release-download-failure.json. Verification
+and PyPI upload did not execute. Clean release main advanced only to18bbf81d.
+Later free space recovered to~0.74GiBbut remains below the1GiB+32MiBexperiment
+startup gate. Do not retry over the failed files or weaken the resource policy.
