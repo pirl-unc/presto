@@ -1,0 +1,50 @@
+{
+  "registered_utc": "2026-10-25T07:11:53.378028+00:00",
+  "agent": "Codex",
+  "model": "GPT-6 (system identity)",
+  "git_commit": "c728d6179075569a82cac70649460cbf34b1bd2d",
+  "dirty": true,
+  "dirty_scope": "Pre-existing tasks/todo.md (346 additions/4 deletions), untracked historical evidence; new experiment source/config frozen before execution. Primary checkout untouched.",
+  "package": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/native_contrast_recipes/2026-10-25_0612_codex_native-contrast-admission",
+  "manifest_sha256": "5f1f388876e2b5b3f65d254ff4939d2559077c2e6af1dffe603b05a1283b836a",
+  "plan_sha256": "83fa166478d274d379d4415aababa521df216c9a29409eeca8acc87d8d783107",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "stages": [
+    "qualify",
+    "diagnose",
+    "replay"
+  ],
+  "labels": [
+    "Cont1",
+    "Cont2",
+    "Cont3",
+    "KD1",
+    "KD2",
+    "KD3"
+  ],
+  "expected_training_contrasts": 158,
+  "expected_training_components": 55,
+  "expected_training_parents": 56,
+  "non_default_environment_overrides": {
+    "OPENBLAS_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "MPLBACKEND": "Agg"
+  },
+  "limits": {
+    "stage_seconds": 1200,
+    "rss_bytes": 3221225472,
+    "disk_floor_bytes": 1073741824,
+    "start_margin_bytes": 33554432
+  },
+  "rtol": 2e-13,
+  "atol": 2e-12,
+  "training_only": true,
+  "no_model_fit": true,
+  "decision": "median defined weighted Pearson across nine complementary comparisons <= 0 or none: observation stability; otherwise preregister training-only boundary-context comparison",
+  "acquisition_order": "Control labels Cont1,Cont2,Cont3 then KD1,KD2,KD3; no paired biological specimen assertion",
+  "metric_conventions": "weights normalize to 1; correlations use weighted covariance, average ranks unweighted; zero signs excluded with eligible mass reported; constant arrays correlation undefined; exact-zero tests (no tuned tolerance)",
+  "posthoc_analysis": false
+}

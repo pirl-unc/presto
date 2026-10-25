@@ -13767,3 +13767,17 @@ Previous goal turn was progress: verified cohort and recipe published as84b1e59/
 
 
 Screen0630 review: the frozen biological gate fails. Sequence alpha100 yields validationRMSE0.317328 versuszero0.317216 andtest0.423308 versuszero0.424407 (gain0.259%,95%CI[-0.247%,0.449%]); spreadbelow1%ofobservedSD. All59activecoefficients solved; independentSVDreplay32fits/1,580inner/684finalpredictions andbootstrapmetrics pass. Numericalcodeunchangedfromqualification. Source2.0.37publishedverified; mergedrecipe2.0.38release40169827556stilllive. Beforefit, explicitengineering-orderamendmentboundidenticalmerged/full-CItreeinsteadofwaitingforpackaging; releasecompletionstillrequired. Nextplan: native-contrast-training-reliability.md, train-onlyacquisitionsensitivity, noouterretuning. Fullgoalactive/unachieved.
+
+
+## Native training acquisition sensitivity 2026-10-25_0711
+
+- [x] Revalidate current worktree and prior failed screen; freeze training-only diagnostic plan.
+- [x] Finish tested Hitlist2.0.38 publication and byte verification.
+- [x] Qualify diagnostic arithmetic, run fixed training analyses and independently replay source contributors.
+- [x] Close artifacts, runtime, plots and canonical log; choose next hypothesis using fixed decision.
+
+Previous scientific goal turn: progress (closed biological screen0630, negative result).
+Intervening cleanup follow-up: no scientific progress; no experiment was launched.
+Current family: experiments/2026-10-25_0711_codex_native-acquisition-sensitivity; full availability goal remains active/unachieved.
+
+Review0711: all3numerical stages pass unchanged resource limits; data-free checks and independent scalar replay8520values/1896contributors pass. Median complementary acquisitionPearson.838178,all9positive; omissionchangeRMS.04474–.09121 versusresponseRMS.43160. Fixed decision advances boundary-context hypothesis, not RL or a biological success claim. Hitlist2.0.38published and both distributions byte-match release40169827556. Nextspec: experiments/agents/codex/plans/native-boundary-context-development.md. Fullgoalactive.

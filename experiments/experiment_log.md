@@ -3796,3 +3796,29 @@ The full APC availability goal remains active and unachieved.
 - **Verification / runtime:** independent augmented-SVD replay verifies32 coefficient sets,1,580 inner predictions, all684 training/validation/test predictions, all metrics and4,000 bootstrap draws. Maximum prediction discrepancy3.30e-17. Prepare1.175s/227.2MiB OS peak, fit1.022s/170.2MiB, evaluate0.936s/169.5MiB, replay1.114s/175.3MiB; core model selection/fits0.0260s length/0.0428s sequence. Unchanged20min/3GiB/1GiBdisk+32MiBstartup limits pass. Qualification1.013s has no reliable peak estimate from its original coarse poll; the prospective execution amendment adds50ms polling and OS peak accounting before fitting.
 - **Execution amendments / publication:** the original release-first launcher is preserved. Before any biological fit, an explicit engineering-order amendment allowed exact merged/full-CI source and recipe code while serialized PyPI builds finish; no scientific criterion changed. Merged d02ca1a tree matches tested90a7a62; eight test jobs and docs build pass, PR docs deployment is intentionally skipped. Source2.0.37 is now published with exact tested bytes verified; recipe2.0.38 release40169827556 remains live. A monitor-template registration assertion failed before any stage and was repaired without running data/model code. All actual stages passed without retry. Hitlist work is not called complete before publication.
 - **Artifacts:** validation/test Parquet dumps, training/inner predictions, all scales/coefficients/selection records, JSON/CSV metrics, per-component errors, bootstrap arrays, visualized scatter/CV curves, raw logs, amendments and frozen source. Large input package remains once under data/. The full precursor-relative APC availability and exact-versus-RL goal remains active and unachieved.
+
+
+## 2026-10-25 — Native acquisition sensitivity (0711)
+
+- **Agent/model:** Codex / GPT-6 (system identity).
+- **Directory:** [2026-10-25_0711_codex_native-acquisition-sensitivity](2026-10-25_0711_codex_native-acquisition-sensitivity/README.md).
+- **Question:** did unstable acquisitions cause the nearly constant sequence predictions in the failed native screen0630?
+- **Dataset/curation:** PXD018722 native HEK293T control/PSMD2, original recipe0612, only158training contrasts/56complete human parents/55dependency components. Six positive raw-intensity acquisitions per endpoint, PEP<=.01, no reverse/contaminants,8–25residues, literal unique complete-parent sequence with all declared parents resolved. Original hash reference, split and component/parent/contrast weights unchanged. Acquisitions have unresolved physical replication/pairing.
+- **Assay/output:** same-parent peptide/reference log10 intensity ratio, KD arm mean minus control arm mean. Raw non-MHC native sequence intensities only; LFQ, affinity/stability/TCR/MHC-elution excluded. No missing-value imputation/censor substitution. Conditional relative response, not concentration or APC calibration.
+- **Training/pretraining/loss:** none; no fitted parameters. Synthetic qualification checks software identities only. Six omissions and nine complementary views are dependent diagnostics, never extra labels.
+- **Provenance:** basec728d6179075569a82cac70649460cbf34b1bd2d, dirty with preserved unrelated work. Manifest5f1f388876e2b5b3f65d254ff4939d2559077c2e6af1dffe603b05a1283b836a; five executed sources/invocations frozen before launch. No duplicated shared raw input.
+- **Hardware:** local CPU, oneBLASthread, noModalGPU.20min/3GiB/1GiBreserve+32MiBstartup limits unchanged;50ms RSSpoll andOSpeak. Stage-start environment recorded; no installs. Qualification/diagnose/replay0.631/0.981/0.582s; OSpeak97.6/175.1/422.0MiB. Sandbox process-monitoring preflight refused before any numerical child; original attempt preserved, unchanged command passed with monitoring permission.
+- **Held-out validation/test:** intentionally absent; training-only diagnosis after outer screen. No outer rows materialized, model fitting, predictive test score or500nMclassification.
+
+| Condition/diagnostic | Fixed result | Interpretation |
+|---|---:|---|
+| Original mean response | WeightedRMS0.431604;SD0.429782 | Reference response scale |
+| Within-arm residuals | RMS0.129776 (control0.106151,KD0.149718) | 30.07%of responseRMS; not biological noise variance |
+| Six leave-one-acquisition responses | ChangeRMS0.044737–0.091215;73.207%retain sign under all omissions | Moderate sensitivity; all cases preserved |
+| Nine complementary acquisition comparisons | Pearson0.7669–0.8700;median0.838178;Spearman0.7184–0.8318 | All positive; dependent views, no replicate pooling |
+| Component contributions | Top1/top5:22.03%/49.50%of squared response | Pattern partly concentrated; no group exclusion |
+
+- **Verification:** independent scalar original-cell replay imports no productioncore, checks1,896contributors/1,284quantitycells,8,520numeric values and all decisions;maxdifference3.33e-15within frozen2e-12absolute/2e-13relative tolerance. Per-contrast Parquet, complete component/partition/omissionJSON/CSV, plot andruntime retained.
+- **Preferred next step:** fixed positive-correlation branch selects separately preregistered training-only parent-boundary-context comparison versus61features. No new model winner or exact/RL advantage.
+- **Takeaway:** acquisition instability is a weaker explanation for screen0630's collapse than it was before this diagnostic. Concordance can reflect shared-reference/observer effects; it neither validates biological replication nor resolves earlier full-model IC50underfit. Preserve inspected outer failures and require independent confirmation for any new representation.
+- **Shared data release:** Hitlist2.0.38 tested release40169827556passed, exact artifacts published and independently byte-verified; receipt in family results. Full APC availability/concentration goal remains active.

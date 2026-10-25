@@ -246,3 +246,6 @@ claim that simply adding it can remedy the prior response-model failures.
   `tasks/native_psmd2_source_spec.md`. Then register and run the biological comparison.
 
 - Native contrast screen0630 failed the fixed outer gate. Next: register training-only acquisition sensitivity per plans/native-contrast-training-reliability.md; preserve inspected outer partitions and finish recipe2.0.38 tested publication.
+
+- [x] 0711 acquisition sensitivity: median training Pearson0.8382, all9positive; independently replayed. Hitlist2.0.38published/byte-verified.
+- [ ] Execute plans/native-boundary-context-development.md with fixed training-only nestedCV; outer groups remain closed and full APC availability goal unachieved.
