@@ -13973,3 +13973,15 @@ Review1548: both guarded stages pass (9.777s total,43.30MiB peak). Inventory has
 Plan: experiments/agents/codex/plans/esp-response-source-qualification.md. No new biological fit or reopened outer data is authorized by this source screen.
 
 Review ESP1628: original article and82paragraphs independently verify; digest-derived training response is not independent detector calibration. Selected MRM raw records remain unqualified. Six discovery operations honored; one HTTP500 retained. No fit, teacher-derived target or reopened outer outcome. Full availability goal remains active.
+
+
+## Intact-precursor scale qualification
+
+- [x] Review existing source and original Methods without reading new time-course outcomes.
+- [x] Identify the per-acquisition gain ambiguity and write a narrow admission requirement.
+- [x] Extend existing Hitlist831 with source-backed scan/normalizer metadata requirements; exact readback verified.
+- [x] Batch-publish source report and metadata assessment after preceding hosted CI completes.
+
+Spec: tasks/intact-precursor-scale-assessment.md. No new precursor-decay target or kinetic fit is admitted.
+
+Review precursor scale: original Methods do not establish per-acquisition gain comparability, so no precursor-decay target was added. Hitlist831 comment6400322499 requests actual scan/normalization/reference metadata, with exact readback verified. Both e176f7d hosted runs passed before batch publication. No numerical outcomes or model parameters changed.
