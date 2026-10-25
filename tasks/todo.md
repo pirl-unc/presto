@@ -13960,3 +13960,16 @@ Plan: experiments/agents/codex/plans/skyline-response-qualification.md. No new f
 or reopened native outer partition is authorized by source admission alone.
 
 Review1548: both guarded stages pass (9.777s total,43.30MiB peak). Inventory has15files and no target download link; FTPS certificate also expired. Browser discovery exceeded the inclusive operation ceiling and is disclosed. Source remains unadmitted, no model or outer data access. Stop unchanged route retries; Hitlist762 owns the exact file dependency.
+
+
+## Independent ESP response-source qualification
+
+- [x] Revalidate access dependency and existing contrast-model stopping decisions.
+- [x] Freeze one distinct candidate and one discovery budget across tools.
+- [x] Verify primary bibliography/article; supporting numerical data remain unqualified.
+- [x] Register bounded retrieval and independently verify article contract; no raw amount/signal pairs admitted.
+- [x] Close evidence/registry; existing Hitlist calibration request is unchanged, so no duplicate comment.
+
+Plan: experiments/agents/codex/plans/esp-response-source-qualification.md. No new biological fit or reopened outer data is authorized by this source screen.
+
+Review ESP1628: original article and82paragraphs independently verify; digest-derived training response is not independent detector calibration. Selected MRM raw records remain unqualified. Six discovery operations honored; one HTTP500 retained. No fit, teacher-derived target or reopened outer outcome. Full availability goal remains active.

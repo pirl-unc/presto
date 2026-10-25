@@ -4053,3 +4053,13 @@ The full APC availability goal remains active and unachieved.
   needs a supported raw-response download. Ratios/LLOQ summaries do not calibrate
   absolute MS response. Full APC availability and biological exact/RL goal remain
   active and unachieved.
+
+
+## 2026-10-25_1628_codex_esp-response-source — original ESP article verified; calibration remains unadmitted
+
+- Date2026-10-25; Codex/GPT-6; [report/reproduction](2026-10-25_1628_codex_esp-response-source/README.md). Startinge176f7d with preserved task dirt.
+- Fixed source: DOI10.1038/nbt.1524 / PMC2753399; article-only qualification, no numerical supplements or raw MS. Digest-response training and selected MRM validation remain distinct; no raw known-amount signal pairs admitted.
+- Six discovery operations across tools; public EuropePMC failsHTTP500. Official PMC article111,323bytes passesMD5 and82-paragraph independent XML-parser agreement. Original TDM article remains local.
+- Five guarded stages: one failed HTTP request, four passes; 2.242s total,44.81MiB peak. LocalCPU/one thread, no Modal/GPU. Browser discovery has no local byte/time receipts.
+- Training/pretraining, synthetic labels, loss weights, assay-label/output mapping, qualifiers/censoring, validation/test predictions and metrics: not applicable to source screen. No model fit or reopened native outer outcomes.
+- Winner:none. Decision: ESP response scores are not independent concentration targets; seek actual calibrated observations. No global claim that its supplements lack usable data. Existing Hitlist762 request is unchanged. Full APC availability, machinery/short-product modeling and biological exact/RL validation remain unachieved.
