@@ -1,0 +1,53 @@
+{
+  "passed": true,
+  "n_svd_coefficient_sets": 32,
+  "n_inner_predictions": 1580,
+  "n_predictions": 684,
+  "max_prediction_abs_difference": 3.2959746043559335e-17,
+  "all_metrics_and_bootstrap_draws_verified": true,
+  "final_decision": {
+    "val": {
+      "gains": {
+        "zero": -0.00035521987358344553,
+        "length": 0.010812200787447157
+      },
+      "spread_ratio": 0.009490608778423388,
+      "gain_and_spread_pass": false,
+      "paired_gain_intervals": {
+        "zero": [
+          -0.002829460352733565,
+          0.001167179756736694
+        ],
+        "length": [
+          -0.010569624492779827,
+          0.030987639099780234
+        ]
+      }
+    },
+    "test": {
+      "gains": {
+        "zero": 0.0025880356560367135,
+        "length": 0.00965691740273944
+      },
+      "spread_ratio": 0.008876717393670906,
+      "gain_and_spread_pass": false,
+      "paired_gain_intervals": {
+        "zero": [
+          -0.0024685866729446393,
+          0.004489063702571713
+        ],
+        "length": [
+          -0.026172971564004666,
+          0.031136258627821815
+        ]
+      }
+    },
+    "advance_physical_comparison": false,
+    "test_transfer_supported": false,
+    "complete_APC_concentration_model": false
+  },
+  "numerical_tolerance": {
+    "rtol": 2e-09,
+    "atol": 2e-10
+  }
+}

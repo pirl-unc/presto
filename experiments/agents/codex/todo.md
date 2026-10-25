@@ -244,3 +244,5 @@ claim that simply adding it can remedy the prior response-model failures.
 - [ ] Implement/release the canonical source in the durable isolated checkout
   `/Users/iskander/code/presto/.worktrees/hitlist-native-psmd2`, following
   `tasks/native_psmd2_source_spec.md`. Then register and run the biological comparison.
+
+- Native contrast screen0630 failed the fixed outer gate. Next: register training-only acquisition sensitivity per plans/native-contrast-training-reliability.md; preserve inspected outer partitions and finish recipe2.0.38 tested publication.

@@ -13752,3 +13752,18 @@ Previous goal turn: verified wait on source release40167325306, confirmed live a
 Review: all10,647decisions,228contrasts/82parents/81components and2,736contributors independently verified. Support gates pass at55/8/18components and158/38/32contrasts; validationexactlyatminimum. Build29.36s/2,483.3MiB;verify4.04s/1,866.1MiB;resourcecapsunchanged. No fitted predictor or held-out effect summary. Recipe45d79d97 is based on merged identical-tree sourcee755be4; published PR and tested releases pending. Next: finish release gates, register the fixed zero/length/sequence fit without altering cohort or held-outs. Full APC goal active/unachieved.
 
 Current handoff: source40168710669 and recipeTests40168839728 confirmed live; recipeDocs40168839820passes. Original sourceartifactse755 verified, notuploaded after concurrentPR840same-version mainadvance. Finalrecipe90a7a62 basedond2e0cb6;3,547localtests andregistered unchanged-package publicreplay pass. First-fit numericalplan nowpins61features,3innerhashfolds,alpha[.01,.1,1,10,100],training-onlyweightedRMS,nocenter/intercept,and2,000componentbootstrapPCG64seed20261025. No biologicalfitbeforetestedreleases.
+
+
+## Native contrast prospective screen 0630
+
+- [x] Register the fixed zero/length/sequence comparison and release prerequisites before fitting.
+- [x] Qualify actual fitting/statistics code with data-free invariants.
+- [x] Preregister local execution-order amendment: exact merged/full-CI tree and source hashes gate fitting; publications remain outstanding.
+- [ ] Finish both tested source/recipe publications.
+- [x] Fit training only, evaluate frozen validation/test once, independently replay every output.
+- [x] Close the report/prediction artifacts; gate fails, so next is training-only source sensitivity, not an immediate RL extension.
+
+Previous goal turn was progress: verified cohort and recipe published as84b1e59/HitlistPR841. The full biological goal remains active; this stage is a conditional response screen, not concentration calibration.
+
+
+Screen0630 review: the frozen biological gate fails. Sequence alpha100 yields validationRMSE0.317328 versuszero0.317216 andtest0.423308 versuszero0.424407 (gain0.259%,95%CI[-0.247%,0.449%]); spreadbelow1%ofobservedSD. All59activecoefficients solved; independentSVDreplay32fits/1,580inner/684finalpredictions andbootstrapmetrics pass. Numericalcodeunchangedfromqualification. Source2.0.37publishedverified; mergedrecipe2.0.38release40169827556stilllive. Beforefit, explicitengineering-orderamendmentboundidenticalmerged/full-CItreeinsteadofwaitingforpackaging; releasecompletionstillrequired. Nextplan: native-contrast-training-reliability.md, train-onlyacquisitionsensitivity, noouterretuning. Fullgoalactive/unachieved.

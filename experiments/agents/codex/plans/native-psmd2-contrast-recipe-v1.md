@@ -207,3 +207,14 @@ No rules above are relaxed because of these counts.
   manifest/checksum, tested-release receipts, runtime caps and environment in a
   new timestamped family before any first-fit stage. This document is not a
   launched experiment or a claim of biological predictive quality.
+
+
+## Execution-order amendment for family0630
+
+The release-before-fitting engineering sequence above was superseded prospectively
+by `experiments/2026-10-25_0630_codex_native-contrast-screen/reproduce/local-execution-amendment.md`.
+Exact merged/full-CI code and pinned source hashes permitted the local fit while
+serialized packaging completed. All scientific criteria above remained unchanged;
+Hitlist publication remains required for upstream completion. The resulting
+biological screen failed its fixed gate and must not be tuned on its inspected
+outer partitions.
