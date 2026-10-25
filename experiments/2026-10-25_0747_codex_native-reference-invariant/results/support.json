@@ -1,0 +1,1148 @@
+{
+  "passed": true,
+  "n_parents": 56,
+  "n_components": 55,
+  "n_endpoints": 214,
+  "n_pairs": 449,
+  "n_reference_degrees": 158,
+  "strata": {
+    "n2": {
+      "n_parents": 24,
+      "n_endpoints": 48,
+      "n_pairs": 24,
+      "component_parent_weight": 0.42727272727272736,
+      "hierarchical_endpoint_weight": 0.42727272727272736,
+      "unweighted_parent_fraction": 0.42857142857142855,
+      "unweighted_endpoint_fraction": 0.22429906542056074
+    },
+    "n3": {
+      "n_parents": 6,
+      "n_endpoints": 18,
+      "n_pairs": 18,
+      "component_parent_weight": 0.1,
+      "hierarchical_endpoint_weight": 0.1,
+      "unweighted_parent_fraction": 0.10714285714285714,
+      "unweighted_endpoint_fraction": 0.08411214953271028
+    },
+    "n4plus": {
+      "n_parents": 26,
+      "n_endpoints": 148,
+      "n_pairs": 407,
+      "component_parent_weight": 0.47272727272727283,
+      "hierarchical_endpoint_weight": 0.47272727272727283,
+      "unweighted_parent_fraction": 0.4642857142857143,
+      "unweighted_endpoint_fraction": 0.6915887850467289
+    }
+  },
+  "parents": [
+    {
+      "parent_sequence_sha256": "00054e79d2c1f21a1744d2060bc18390be7446bb9a9477d37dabba316f3ebfcb",
+      "dependency_group_id": "9a7b47576b496c601020c25e7c38736b0772c5c1a6acbe777b83d3cfdd11b148",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:11606307632a3ac64c25e2c2b52dbc25840e5dc78d2eb2c2203929f79d4492c3",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:11606307632a3ac64c25e2c2b52dbc25840e5dc78d2eb2c2203929f79d4492c3",
+        "pxd018722:hi20s:peptide:f4a604ee988b19906876455a686edaef678509b206886b6f9899af160b32f9d2"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "002e9e4cc7eb3aa3f79b93053cf19ce2c274ea4810c21c48ec1bf0b6c1d78ab8",
+      "dependency_group_id": "ead54e81218a4560160e2da394e9f8e7a22766909489da6320d3130f945779c3",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:23b8a5ff648481f07b4444449d5b4918703aaad8314f2770f3c02c076e58d32d",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:0c6d5d4b938ba64b81cc4071ff8d6fd720bb3c6a28bd4ab56fad80fca8b6b12b",
+        "pxd018722:hi20s:peptide:23b8a5ff648481f07b4444449d5b4918703aaad8314f2770f3c02c076e58d32d",
+        "pxd018722:hi20s:peptide:cbc65a9ef8d166c2ef04ce3d42b79727ce222a855cf086b0229fa2fc336ecf34"
+      ],
+      "n_endpoints": 3,
+      "n_pairs": 3,
+      "parent_weight": 0.00909090909090909
+    },
+    {
+      "parent_sequence_sha256": "0457c1e6c728cb48f481e7993bd74598af5d7f176913012e582d952294ec0b8c",
+      "dependency_group_id": "3ba95a5de6f5d888647adcc209b2d1d5cb19914259e16feef813b11ca862efb0",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:90942d384d61c1f775316dcbaa28ab9f7caff0adac13f2ffbfcc437eb4391554",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:0ecd453c20368e81360b2966643df0bbffbfe89e1c9cb5034a0b07702f4faf9d",
+        "pxd018722:hi20s:peptide:38eafefe232598006d4bdc6e3a9640cc5e603c95f89b90d54cafb75ef275c186",
+        "pxd018722:hi20s:peptide:90942d384d61c1f775316dcbaa28ab9f7caff0adac13f2ffbfcc437eb4391554",
+        "pxd018722:hi20s:peptide:bf8eb40f47113d2f55f07058fe44bbf3a7c916d1cab9486f4434bd4ceed5677d",
+        "pxd018722:hi20s:peptide:f04b9d0e112ce8aac8d09d72d746c34cad0136d187fdc83d80f334d95e47982c",
+        "pxd018722:hi20s:peptide:f628a352eb2eb58e9e8e0f585ef842a309848505395e064a0510e7315fa29251"
+      ],
+      "n_endpoints": 6,
+      "n_pairs": 15,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "0c775ef7351acbb4690195ef3f0c22a55e87e1bcab088764e8f51744a1833e4a",
+      "dependency_group_id": "6ec1d5584a77e8908b64537f62cb272e2080b8fbc3ea60e88197454ce603ebba",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:db230ca995165d2448f6e034e9bc9366761fcfe62c7ba0093ae9ea69edc55522",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:cc8f4c6513cf4be3f47440f135c947ed70c16235a48f7c22510dce8473126c35",
+        "pxd018722:hi20s:peptide:db230ca995165d2448f6e034e9bc9366761fcfe62c7ba0093ae9ea69edc55522",
+        "pxd018722:hi20s:peptide:fbf27d3b01abf96fa90b05b0216ca02dc6f0bc045c638ae8e33823b7550782f6",
+        "pxd018722:hi20s:peptide:fde206f19882966bf1498cb36edb74907774c943c770570648702779ae5ba40b"
+      ],
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "0e1edddd1d7bd0516639edae0e5dafa039b630b492b517ec3d9e0bd20c571638",
+      "dependency_group_id": "92c85589503b029a6b86b41fd7f84f3c58793bbbe44460e05fd2d9032f48dc7d",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:3add1c17985dcffd8a4037b04153d531c3ef69d11c8d55ad9069b54fc89435d8",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:2c50fb47009e7106fc958a5f64ba1a8e03a69752c2cc2034d86e1bc4a2b8c2ca",
+        "pxd018722:hi20s:peptide:3add1c17985dcffd8a4037b04153d531c3ef69d11c8d55ad9069b54fc89435d8",
+        "pxd018722:hi20s:peptide:b6838832f3b9a5142cc092427524165f5217a6ad147bba9b76f400ef519c6cd8"
+      ],
+      "n_endpoints": 3,
+      "n_pairs": 3,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "13f7773edf55938a8fd07f165007b380dec6ca038472181aac060857640addd3",
+      "dependency_group_id": "b54235a8ee0b4a0b974155ea645cda574a08c0e99e4c72b5be940f5163819bb7",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:c28b44c23335b224ba553d06203a4f69bf35908ca53cc045e8219635d8b6dc9b",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:244897a08cfe9868f8b9fc8cfcc72a640f35a7e98b5940782af5bbe6b71bba3f",
+        "pxd018722:hi20s:peptide:381377ab09cd7fb2a870a4349dc8927898c7200ef97665cc9d7ce779ee73063d",
+        "pxd018722:hi20s:peptide:88ce3ea140c981c8e323ce997afc609a8fa377750eb2a847f342a1134d1c3fed",
+        "pxd018722:hi20s:peptide:c28b44c23335b224ba553d06203a4f69bf35908ca53cc045e8219635d8b6dc9b"
+      ],
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "150a4be8793028f7301ff8f73e3976f48700fb6ca91c95368cae796f6cdf7dad",
+      "dependency_group_id": "47f402a28c07436321d078bb897adc04a97d5f1572b659fcd8e1044c8c6d9128",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:fd37f4ec95e4eaf3241c1461290873c1460caf5582d858d4b9ca71b3ec4cff49",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:5efa3092ff6900ba43cbce89204d83026c9c5fb28fd1778622ea3dba1ef61a42",
+        "pxd018722:hi20s:peptide:fd37f4ec95e4eaf3241c1461290873c1460caf5582d858d4b9ca71b3ec4cff49"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "16b6e887222cc7fc9fac569c56b449cbba8066218bed4fc91ca5089af3396082",
+      "dependency_group_id": "a5cb9843aefc9c5acfbce47db4f948734e51e39bcc2aa527a309b661a543519e",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:ead386f6a66498811ac6651324adc1c3375d9c68500dc5b6741189a507ae0545",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:ead386f6a66498811ac6651324adc1c3375d9c68500dc5b6741189a507ae0545",
+        "pxd018722:hi20s:peptide:ece597a4b4da05fccf68f7e7df7324e67fbb00745957da9fb052e9778468c46b"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "206f1c6daf801865972dc8203924fcc645fd8cee727bbff38d6bb6d952ee589a",
+      "dependency_group_id": "c4046e59368cc305dc0e84de11b4d97ed5db08a8c666b4915d86f5c1b1fc8092",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:c084e90696b733e70d93ff34e2c2f3d08c49df6af1404fb18766666a80b95d2d",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:a8b5fbff1123acefafbff2be1bfcab3896110bb23d7c6caeb078e6a29386a7d5",
+        "pxd018722:hi20s:peptide:c084e90696b733e70d93ff34e2c2f3d08c49df6af1404fb18766666a80b95d2d",
+        "pxd018722:hi20s:peptide:eacd9fac80e30e6d2c73f69c1be21f892b4ffd29c55ca1c9ff215749872920b6",
+        "pxd018722:hi20s:peptide:f32560a2f26ec64b6366469da4e9e54aaecdac3d7545713af92c1131ccbb3464"
+      ],
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "22d0d0fd43ee46226bc35ee4e99d27ae5d7061bd55a6123cc515efb47c6979db",
+      "dependency_group_id": "1fb31554aa1e6fbbdb8eb33aa4f1c84aa56d32b1f38fffb19fe5c9517c8bb6be",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:fc91ba25a5a7625c404486a82860e0aff79687bf096315452dec75698545ba8b",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:5c69984e4128cec137934f7e115aadd2e4d67ccb0f95be191a504e11c0a1bf6c",
+        "pxd018722:hi20s:peptide:fc91ba25a5a7625c404486a82860e0aff79687bf096315452dec75698545ba8b"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "24705929b6a38a40b0ae70d4d147c59956feaac43ac9dc760f5a08f88617ec43",
+      "dependency_group_id": "90a3c2c6fe351c127cb7ab249c35f79c50def32f5d32c0583aac0ad946fd5bbc",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:af60baf85d915eace280fece35173c1846fcefd73c40b6f5845121568cf75be5",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:33fc6c1449d4c16f3570f87f851d219fc6a3f96540731b763720099f1a68a4d7",
+        "pxd018722:hi20s:peptide:af60baf85d915eace280fece35173c1846fcefd73c40b6f5845121568cf75be5"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "2736f746a9c6e0bb516e131ae38a4bf7ef29f86f8059339735f8507ae8f2e3ac",
+      "dependency_group_id": "4d33b22864fa5c6b637994d6d1cd9738238f70251013a16ccd4c5dec1ed83901",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:f2ed1fc989e0012c7aa86e1ea0ef333b1463eca92dfbc420a17674c1b72d7953",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:8ec7fc2b0a4893cfa645432d80259a9a81f4c0feb117df468078c6a720e9789f",
+        "pxd018722:hi20s:peptide:f2ed1fc989e0012c7aa86e1ea0ef333b1463eca92dfbc420a17674c1b72d7953"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "28e083beca9d33c94f7e295839174332572b195698223ab23949c772cca7f79a",
+      "dependency_group_id": "5754318effb29fad40615d746cf46126c764ecf4a54b6c2c64c0eef4794008f8",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:97e7829c853e7a2bfbaae94822fb3453e27b3a9592f1ed656c78471a943c95a3",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:79e97c789a810e5488ec17d6b935c31ba79baa33c33201a341c8b6394a235a98",
+        "pxd018722:hi20s:peptide:8667480c1cf001008fa07940bbcf5e45fd390148662b63a078482a040035a910",
+        "pxd018722:hi20s:peptide:97e7829c853e7a2bfbaae94822fb3453e27b3a9592f1ed656c78471a943c95a3",
+        "pxd018722:hi20s:peptide:b80deb13367e6aff9bd6c8fd5ae69f1dfa9d54fa581448de0b8f1ea26c4fa38f",
+        "pxd018722:hi20s:peptide:cf766ff059c8039d87a2ba7fb9c3f9d51d1ed515d5300978d351c0ad8591ce99",
+        "pxd018722:hi20s:peptide:dca4305e8b933d078c504554e92a39fc0fdb33e6374fe3fde28a030e229943ca"
+      ],
+      "n_endpoints": 6,
+      "n_pairs": 15,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "3864761589c6a6f7be03aebe83c4a99d26e92e84a416a9631548561862bce815",
+      "dependency_group_id": "3012f0003cb0ff184bf6836b6809c4d1947994159f5494ce1358c53eb7310438",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:7f65f2ec1eabf6dd7a632dbcb53b4e156025d5febb16197b94a421c41097f3bb",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:0604618ddfd60866d775647ee54b52cfae5551ef905ca50766b805b0f272e4e2",
+        "pxd018722:hi20s:peptide:7f65f2ec1eabf6dd7a632dbcb53b4e156025d5febb16197b94a421c41097f3bb",
+        "pxd018722:hi20s:peptide:adc26a66634e230ea8de5e01a1acf48863371903de0d1990c673dee67699bd3b",
+        "pxd018722:hi20s:peptide:f922a02685a7a6673ed7822dd6d07ee5504dadac2492224376af99d081fec6bb"
+      ],
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "47ffa56716d1412aff523a178b99eb7383c9708247f37f2b795d522e8467f2c0",
+      "dependency_group_id": "16615b5d17a0e7451939bfa9abb0c952a6ddcccabca5b788df6b514c004407ec",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:383f8a7a1b2ff1d0a68aee0e8a3bff3f9588f3092d1bab5993c5ca730c5d8ed5",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:383f8a7a1b2ff1d0a68aee0e8a3bff3f9588f3092d1bab5993c5ca730c5d8ed5",
+        "pxd018722:hi20s:peptide:587a26b73bba405596a0b87c92fad38c049002b1c65d7fbac020f10482b811fc",
+        "pxd018722:hi20s:peptide:95dede52a61f08be9adb4de4c6ba93a7563d7cdd32eca79c745387ac5c2f2090",
+        "pxd018722:hi20s:peptide:c0b103acbce33b730a10e947df3eab4ce8426ffeaa7268688777a3b005c6dbe4",
+        "pxd018722:hi20s:peptide:d51f1e875a4f8474c3358fa5b3319bde0f31394a073bbe8d62c593bdd6348e63"
+      ],
+      "n_endpoints": 5,
+      "n_pairs": 10,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "53ac420f0cb32da72acfa16d6c1d762f240d63a9437f8be4b438214f380d2907",
+      "dependency_group_id": "820476dcd91b7ac496074866ee38472b07d9bc63efb17f7744679aab84b15543",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:d5c8a82839724254d3d5b855ec718a2f09b53ed700df9b58032acf5cfd84a8b2",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:0217f823f908bfd2d871fdc1bb16f34f5a8c1da8bb107e93f6ae5bc5c00cc3bd",
+        "pxd018722:hi20s:peptide:34991d7d1f842ab45225957122431fb6cb7258846c00fd2c3636e2ec951b98fe",
+        "pxd018722:hi20s:peptide:36122ce25835c551c9b1ce28a3cbc386301b0a0cbce2f363bccaa209b7584f07",
+        "pxd018722:hi20s:peptide:59d682ed9bd2270f9199fb57a3165666328b1f4cb9c916a3f97ebe89e25d9e17",
+        "pxd018722:hi20s:peptide:6a4b3cbaeb9c3dcd7a21e49ab20aa287f4b57ca8c3a65c669858887c2fd8df4b",
+        "pxd018722:hi20s:peptide:79e0f3e80c68e69ec25a5b9276689695a8e4abdd5213d9cde4d7b825e7c203f5",
+        "pxd018722:hi20s:peptide:8eaffa9d8ef54bc0021a2509aca4b77fc2d96b268bf5ff7f30d8030a93bc8eb6",
+        "pxd018722:hi20s:peptide:d5c8a82839724254d3d5b855ec718a2f09b53ed700df9b58032acf5cfd84a8b2"
+      ],
+      "n_endpoints": 8,
+      "n_pairs": 28,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "5503484d63010153cee172dbe0596eebcafe73414affcdc09a7d88eb37ffce8e",
+      "dependency_group_id": "52c73146c872f67c8e3dcd7065a5b958ee85de26f9714bd7e8486bcc35459b68",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:70d7a1e534a5b2d8195b2484c687d769f631f443f895439d3ea1c7c5d7745a46",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:0c0c61155409883e2f4b14eedc5b3b8ddc1e81cd328eab555918363cc9c21b0e",
+        "pxd018722:hi20s:peptide:70d7a1e534a5b2d8195b2484c687d769f631f443f895439d3ea1c7c5d7745a46",
+        "pxd018722:hi20s:peptide:892e714fc5f449bce12591dd39942a650b411c5644182d68e9e90669bb195c95"
+      ],
+      "n_endpoints": 3,
+      "n_pairs": 3,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "55a971df58ae78e35ec1b0b795b872cd171f258428b7d4df0966044513113f5d",
+      "dependency_group_id": "09c475e33631f65257fab9a06a6d1b28f5737c5a28fa9453549daf56d76d847e",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:06a79d914cac027fb1acc12d30cf4a1c569903bfbe961c35a1292c8ca89ba026",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:06a79d914cac027fb1acc12d30cf4a1c569903bfbe961c35a1292c8ca89ba026",
+        "pxd018722:hi20s:peptide:4ce4a7e2e49ae89c5d98ac3ecb3d81a824c6914c8066ed5c00fc10235742358a",
+        "pxd018722:hi20s:peptide:51fa43cc6b519ff8e01ed21469187e1a0e6276a2477e2ee9aa8aa427034f4ab6",
+        "pxd018722:hi20s:peptide:7824fc3098bc4bea75be4346c6550a2e4393ce35b91c8737e8b1b1e84693e816",
+        "pxd018722:hi20s:peptide:9c252d9ee25df4fe477a8949af30aa859ec73f733ce76e3c76c7452652b486d3",
+        "pxd018722:hi20s:peptide:e81135cfe941b924699886cf5188143b90057c20c2bf39b65211c2ef0a031ac6"
+      ],
+      "n_endpoints": 6,
+      "n_pairs": 15,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "5e7fe8420d821b439b7c0323e70a046980c0264ac0b57440fdc6e6b8d8f969db",
+      "dependency_group_id": "4bbea0b68d40bf85a009b216fa27e482aea6865410552cafaeeb67862b15a64b",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:e085cc599c5a27f52bd14ef0805822086d111852a091cc31d2b068c986c8b092",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:2a11e7d8dda9becb4ed1f5327b884cfeefc44b9118f9b187c94ca34907ea690a",
+        "pxd018722:hi20s:peptide:56ddc6b4d94246477b835311df120c2cb308f4f40cb06e1b7c2899ca1f13ef2d",
+        "pxd018722:hi20s:peptide:5f0d1b07c43cba5f3c4062fc1d91f2f0ede632815924c61dbd673b0c4f1d0082",
+        "pxd018722:hi20s:peptide:67622e223200233ff831857965404c0e587a151cc87061557badae76093cd883",
+        "pxd018722:hi20s:peptide:e085cc599c5a27f52bd14ef0805822086d111852a091cc31d2b068c986c8b092",
+        "pxd018722:hi20s:peptide:fa5ae56a6a8d3759ce29d5292cfbb4993df7c3efab8a5da96415d63781c299f4"
+      ],
+      "n_endpoints": 6,
+      "n_pairs": 15,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "5f7f1efc939f6221ada52dcd5c6e2027b2d1652bd92506944fc2e3c25140ee04",
+      "dependency_group_id": "60fb80ba9b3f197bd9cf1d3ec6b141343fe9fb8ea4d2c3b1e9f4de7028f81e2e",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:f7e3f56b474558b7077144edf20660daf1e24fb0394ea311338a9edaca8e5b4d",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:dd88d922242e71f52c903754ae9077a49fbc75af5814a113669e00b2a4abc68a",
+        "pxd018722:hi20s:peptide:f7e3f56b474558b7077144edf20660daf1e24fb0394ea311338a9edaca8e5b4d"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "5fc250cef72681e7da7bf7b7726f2cc2c6ba56be463807649b0e4877aacc8d74",
+      "dependency_group_id": "b92cf3b4c6d5565a97dd24a4a4b1fcc3b47a5137670279e1feefabcf91135b12",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:79183bc2141f594d372b00e67cc74d62b1a14fc9f10513501af6d3015709c9cb",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:79183bc2141f594d372b00e67cc74d62b1a14fc9f10513501af6d3015709c9cb",
+        "pxd018722:hi20s:peptide:831fa69d856134d5a1bf81fa8f2ec84c1c6cfd2e6f656ad337a3483375b6897c"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "636b2837a9e630ff9fd5d28959d96686e90a4d06d6527c96e3a1e13e188f63f9",
+      "dependency_group_id": "4052082db2b0414162668d5914148c4f799164a5dd8a53ad3c829c1d184f30de",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:7660e4fa11d231b4e0f4000017692a618777c18e539b88160f7c107f90abf599",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:7660e4fa11d231b4e0f4000017692a618777c18e539b88160f7c107f90abf599",
+        "pxd018722:hi20s:peptide:83c11acc1141f1799aa32361b83bfb062d694ce94240d8b6a027a53a9ab8cde1",
+        "pxd018722:hi20s:peptide:8988149bde5591cea0c32616d11b109f948b2fdff6cf9bee1137b8e062ba4d84",
+        "pxd018722:hi20s:peptide:f2bf5c2de0b367e91635a9a18de78c3247a5b24f07a0c355b6f623ec65a82585"
+      ],
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "6518feb7ef47eaa3f757dc29ce752405eb9da543341fcbe34a41aff337b57aad",
+      "dependency_group_id": "224f7a5dda81d8606bbbb699a1bad290e4dc6886773ef0824dd30950645cadb8",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:a4719a0a29d69d238f9d012bb0f82b8bf8b5e04543c84ef8e62245e4a099aad2",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:4d1f060914c032f09f4a7d56d6679b3f052db3269389fb1ed7425bf3022995c6",
+        "pxd018722:hi20s:peptide:a4719a0a29d69d238f9d012bb0f82b8bf8b5e04543c84ef8e62245e4a099aad2"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "65ba2c7bba058e5fa572b6149cb092649c304c54fbad9b6d2c5007748b93b093",
+      "dependency_group_id": "93292fc394bb9a816dde87f8afc6e569fde9d04d640aec587c9f353b61625dad",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:05cb8a628d7c9811fa34b11c4eee4eeadc7635ab19d3ffd76d7997dbf6d80219",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:05cb8a628d7c9811fa34b11c4eee4eeadc7635ab19d3ffd76d7997dbf6d80219",
+        "pxd018722:hi20s:peptide:8efb928d229f049c783758ef2ad5cd0badefc3eba35f2e1a90a7b61be8408483",
+        "pxd018722:hi20s:peptide:8f002f3e74551f039857d7a3eebf878de188347904d4be7646f93262bb188b6e",
+        "pxd018722:hi20s:peptide:a32c06b0055da742a033a906cd66b47439ebbf4fc121573f7ea484caabc5cb04",
+        "pxd018722:hi20s:peptide:e36a4302249750933af3d6b03858c10508152595b9ca7f7c984b3719345b4e83"
+      ],
+      "n_endpoints": 5,
+      "n_pairs": 10,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "6fcd7510546f6916475197b4cc685730be47749ee22261b24813a38c97516602",
+      "dependency_group_id": "05084e2c0b85340f6e547029a77b2eb7b78178cb3e9b8ab7cdf9bdcf83e90eb7",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:c7b778a657d3911d3bce1dc8369fa81f8d6375d93fbef7b1a43d8bafea5890e9",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:39c78f5ef2d8a819cd43d9d2bacb802adc57e326686c83c6d2ce412b4065fb9a",
+        "pxd018722:hi20s:peptide:5562692c3cd1ef12cb119ec2651353d8b13053fba74841d25b5406dd753d0a1e",
+        "pxd018722:hi20s:peptide:c7b778a657d3911d3bce1dc8369fa81f8d6375d93fbef7b1a43d8bafea5890e9",
+        "pxd018722:hi20s:peptide:e0071626975fabb059abf00ccc57becc3c1312c09518be99a9c388c421b009c1"
+      ],
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "71376b3a50a1cc063e09d51d93e09c4aacc3b77edd60a922db188157a62b0de4",
+      "dependency_group_id": "549a9a58f7350a3e81644d0c448a67b0eba7a5de7ec6a333ec8e03450884899c",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:f679fa14042af6accae2780cfe59f074673e4734b67828a3b3a65a006ce66eed",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:449cd3f93f45b72819fd6d6e0b36cec32896c1e92b6aed6145664f6d4eccacb2",
+        "pxd018722:hi20s:peptide:a24abbaf6fb50c11f948701a6ddcf16693c3e2677dd4ba466b333eef8d990ba7",
+        "pxd018722:hi20s:peptide:c550a989ccfd7ad1fc5be7b0084416f7344ef5316f033b775a15bfb028ac8fb8",
+        "pxd018722:hi20s:peptide:d01eaa7161a92c2744a9962bb5fbe747e7ee813814b30e69a64e6dc51767c8d1",
+        "pxd018722:hi20s:peptide:f679fa14042af6accae2780cfe59f074673e4734b67828a3b3a65a006ce66eed"
+      ],
+      "n_endpoints": 5,
+      "n_pairs": 10,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "76cbcea37e59bfdb67e7eb17fb49350058cfb96becc32735b77f5296b506913a",
+      "dependency_group_id": "b2811e283a11cb574ac7abcb8c8f8577855581866ca54d9fbd22d2863eb611f0",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:8987ac61d252ec83b2f1388d6fc6271aad29992c3dd4fbdedbbc5708f9c071cc",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:0fe1a1db9c374422445fa9a7a9ef77acdaaaa93a01a2b65064d39f74ae0172e3",
+        "pxd018722:hi20s:peptide:3a25cb7495298f363abb5b03e67ef7cfb6e751637cb6a79437919afa53de1cc5",
+        "pxd018722:hi20s:peptide:8987ac61d252ec83b2f1388d6fc6271aad29992c3dd4fbdedbbc5708f9c071cc",
+        "pxd018722:hi20s:peptide:d1d227ab5ac3b5c2afeaa6945e9b60d0d8119464cd522c12318ae6052594c91e",
+        "pxd018722:hi20s:peptide:e9b641fcbc3a998a363f5052f9d93d48b20ff4fd530e41781748836725620fb6"
+      ],
+      "n_endpoints": 5,
+      "n_pairs": 10,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "7f2445dfc796573c91651a564a83aac7627bb4ec0ea4c907802ef7cf9489984f",
+      "dependency_group_id": "d0c7daa5a73cdf089ee82e2723fcd2ea14b8c34e1c54c1779f78d7998ba76fe4",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:7a03f84d820e6f6bea0f2c6c10530b92fc62d46883ac1c2b1966554cf58c7a92",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:211079997775919cb291b0254ebebeaf0060a4329489fd2fdb8ae2df27105076",
+        "pxd018722:hi20s:peptide:7a03f84d820e6f6bea0f2c6c10530b92fc62d46883ac1c2b1966554cf58c7a92"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "84f93c810a987631b145759c0438a04158cc64e792505cb38bde8daabe3e438f",
+      "dependency_group_id": "68039ed4c823708ee2ab46f4139fbc47fe1b1e8d9549887e95fbf72c335fefc3",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:5f3fa8ff22b6a6cb63681263f892fc20322feada1dc9eb25e05aa3b815b3fade",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:30b503be62afb66f0c7f10f1df36458d44191017a8bc6945ecf31b95b85d2474",
+        "pxd018722:hi20s:peptide:5f3fa8ff22b6a6cb63681263f892fc20322feada1dc9eb25e05aa3b815b3fade"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "8e05a40e7e57f9ae1ce2f5691eebe8b62685ce75183a3a514c3ec49d0fb91d7a",
+      "dependency_group_id": "eb771a4b5edb4899e18a02837ef665f7ac975a852a89839e301381f7867e6f38",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:25ef2d8264aec2e1b461c7e0949990aa097613296e201344fcc99dbf3ba2c84b",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:25ef2d8264aec2e1b461c7e0949990aa097613296e201344fcc99dbf3ba2c84b",
+        "pxd018722:hi20s:peptide:487fbfd7ceacd777d1d4cdd54b4a1f7aca51470d29c0a4c8f732d3d7bb7a4afb",
+        "pxd018722:hi20s:peptide:523e4b23f288f47958bf729a7e532177982ce743bdf9ed3290492da7a59c9185",
+        "pxd018722:hi20s:peptide:94eaa5457d3882914564763acbeb2eb9c8c2bb39fade87fb566479640777ff93"
+      ],
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "8fbf1fe9d2a159a1c151661e6f9c139a9a985070a4525ee2c4ecb85b9540f8f1",
+      "dependency_group_id": "4e567b7fa2d1e27e807ba835117db71663b6888b238ff0ffb325a50e13077f43",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:d6f67365c2d892c5583abb12ecb4f78977b11168ff058a735ca93c83c0e64de0",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:425b5641e94b122a7fe5a2f9c471c1b6845729573802c18e23e842eddccfaecc",
+        "pxd018722:hi20s:peptide:4ad3b9a0658572af50330a9ecbce0662b474454d20f078105e8ab084706f02b4",
+        "pxd018722:hi20s:peptide:5ec1eb02613ba69442aad73a7df74d51e89d8918bceca2138c78a4b58e5de4ff",
+        "pxd018722:hi20s:peptide:d6f67365c2d892c5583abb12ecb4f78977b11168ff058a735ca93c83c0e64de0"
+      ],
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "91bf185c62aa57b27b4cf026fa9d1d7e66426c3a1019e9fb53c96ab4d5453dd4",
+      "dependency_group_id": "ead54e81218a4560160e2da394e9f8e7a22766909489da6320d3130f945779c3",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:8bcaf85108490a3bafbe71f3be7f9e310f371bdc725f3be090b380954b8647dc",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:8bcaf85108490a3bafbe71f3be7f9e310f371bdc725f3be090b380954b8647dc",
+        "pxd018722:hi20s:peptide:9b39a9d9f6c5a80bfc92afcf7538664756e1ead40f4ac4c70cd700ff7441a184"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.00909090909090909
+    },
+    {
+      "parent_sequence_sha256": "93d61060d4871f80bdfecfdf749566c1bf837f198c48fc96592f3d32593fa07d",
+      "dependency_group_id": "6ae92fe6a5d49047cc5501a72917206efc14b36b496c373b4628ea9e28e5f296",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:57b919b25940d691a3d7823aa1afe8de754d040ecf7d2a7094e49e7d2eee2cc1",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:57b919b25940d691a3d7823aa1afe8de754d040ecf7d2a7094e49e7d2eee2cc1",
+        "pxd018722:hi20s:peptide:eaf1c1a370a0d5aee84ef8c7a35214e6d4ce9e07869d77e6e99b91d75393d8d1"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "9e21948aa58101512bd339f5962097e4769b003691f8a5220f5cf6b91da45c65",
+      "dependency_group_id": "f415d2f73629237713066acf5eae95659a42b7abd850de99d39cee7e22f53c84",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:78f6ccfed976d910476ebdc400a95923dc45845cf7c6c5738e3dc588b9c5f88c",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:78f6ccfed976d910476ebdc400a95923dc45845cf7c6c5738e3dc588b9c5f88c",
+        "pxd018722:hi20s:peptide:a3aac9a8938e600bea5860d81181cf1c16649483143eb0fb00e24aa7fd38b176"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "a2fbc2564ceece0c93720a40505df08d8ee5546b27d0e3b72a33c9cda1cce5fa",
+      "dependency_group_id": "e6fb7dab882812697da1f40cf8a9e0fc2bc4c0f0137b546d1ff581df0eb0edd7",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:b7a9d3e36eacf43a3677640ad3a75afa05336e180ed26afe30b93a4170180725",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:735fcc956103af7418eccdd72255180557dabb87ab90dcac1ca57caabba2b493",
+        "pxd018722:hi20s:peptide:b7a9d3e36eacf43a3677640ad3a75afa05336e180ed26afe30b93a4170180725"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "ad8131d16e675cacfa8f416b75b9afc9823a82cfab1708a08275fe87839572c5",
+      "dependency_group_id": "69916a577b9bb386349592421d8dbfc7600a6d19d6364459cdb4c84fc69a8556",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:7c7df0cf3015d42dbe385481b79b59972fcfa9dec450ef5e77da41398cca9862",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:7c7df0cf3015d42dbe385481b79b59972fcfa9dec450ef5e77da41398cca9862",
+        "pxd018722:hi20s:peptide:d0d42c934f0fe73a080912f2631a3315e49944874a90377b0e9ffc17c8a842dd"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "adfda39bd406d785b7eaa7ef3033440570bcc2f0363de51c2c7b72f438d18a2a",
+      "dependency_group_id": "ff776f404062a7ce7b75b59ac070172b902e54ba8de6a729ec879a089fdb103a",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:1287b66fbb1ed2de7d6f78b23a37980bc5bacc5163304cc547a06d9b8344df79",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:1287b66fbb1ed2de7d6f78b23a37980bc5bacc5163304cc547a06d9b8344df79",
+        "pxd018722:hi20s:peptide:bab7f1d7f0d2ef86e9705d0ec2212e58b2739f0c2f8e54935f538f57b2a3cc2f"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "b303a5d5cbbf70859143da016f4536b89593bda0ea0dd11fb0e4ec22f7ec4833",
+      "dependency_group_id": "1be4d13a66047b2f77844809fb46b455a320ffcc57cf56709fe84c61eb9fec07",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:ae43036074a1fa77a818e0ae2ec40fa220de3574481043d24dde62ddf0a76543",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:573f33e63772d5425e526cca95adc6ce18c032e550fc726d51f6e7331b78b617",
+        "pxd018722:hi20s:peptide:ae43036074a1fa77a818e0ae2ec40fa220de3574481043d24dde62ddf0a76543"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "ba1a72a85a48a2bbc985402740b9cf958086f7022788f09087606c58d89963e2",
+      "dependency_group_id": "da9e560860d6023d25e3bfe086c4c7f2c300b2495192ea1cee68b3a78f6302af",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:da6af2b9aa746a918a4ef6f94f7fca765aada7abf7a977b32837a2391540c828",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:0b1b4cdf4a2000342480edd7b45248030ba19815a463ee26248ed5a7292e0072",
+        "pxd018722:hi20s:peptide:4456e0053a2a91788785b7895b86ad25502c0c77dcb6232f239142688297086a",
+        "pxd018722:hi20s:peptide:57cadc7e93d3fb87542835eb6aee7f8066751b07be368bb430f6ca56a403894d",
+        "pxd018722:hi20s:peptide:818519d277c93c65655097ae7223949e777b0f5cf11c5b49ade722eab7774087",
+        "pxd018722:hi20s:peptide:9ce5d2ac1f1477de59d950cf2a8d7aa8a079bd7995a8db54311ad3b68d435409",
+        "pxd018722:hi20s:peptide:aeac757a8a445834abd2464838c11996611e41a5c4ea1babc9e3e021d41b6aca",
+        "pxd018722:hi20s:peptide:b93356f77eb640111697068484009964692b4fd49df061bff55087911c8dcb6b",
+        "pxd018722:hi20s:peptide:da6af2b9aa746a918a4ef6f94f7fca765aada7abf7a977b32837a2391540c828",
+        "pxd018722:hi20s:peptide:e6e9c1334d66630261e9b08307d2875911ae62f79153bfea6b71c2a051415ebf",
+        "pxd018722:hi20s:peptide:e88b987959c49dee276efc0afc3271298689e7beaf5a40ebb3f7c8ef15b0f8c0"
+      ],
+      "n_endpoints": 10,
+      "n_pairs": 45,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "bbcc184b64e18f7dd928eebea26190ebde99027509367a89e6aa849695848ee9",
+      "dependency_group_id": "a5d0b70b663de2d2aa55145d995c40c785ec4ff7e48683e8afc9bd430139f8ec",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:f4fae5e9bfdd044bbce5e6a898f11166244ffc8f40b080a223c317df395a85bb",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:063da357e47c7463ddf677e0ba9007608350b9da2ad24269a8544ccce35195d4",
+        "pxd018722:hi20s:peptide:27c4c433593789daff436512d92dc9a68ef90c3c9568bbabddaae1445fb85767",
+        "pxd018722:hi20s:peptide:4b8a86e77cca897e3127c9376108064905dfd22651eab8e08b55e43f9a56d82a",
+        "pxd018722:hi20s:peptide:501c55f152233f3e9515e102157e3a0946c851a404390c18e64cee72d7dc916f",
+        "pxd018722:hi20s:peptide:7cabe46d3dc75c47d4e104a9447be9a6cc493c44f16166dbf9fdfe232e0d366e",
+        "pxd018722:hi20s:peptide:8dc2b9c392daa41eeb2941a784f06debb8a13d79328b1ca8ad5788813ade1c07",
+        "pxd018722:hi20s:peptide:b82a30ebfa8445904b4494f48cd5b067098ed99b63aba09ae097381f6ae2ff71",
+        "pxd018722:hi20s:peptide:d368c160e3a6e7af787aa87c8d8a4ac6a910a435094b88d44dd2c80f988f2458",
+        "pxd018722:hi20s:peptide:dd26c2c9c10fcb16dc00bbe9e622957cc6fda5da9da2c978649826a8c47b36d3",
+        "pxd018722:hi20s:peptide:e42d3e067515d8d92e7bd6f9ada45270535481313dd5085c87f5552ebc9f0b1c",
+        "pxd018722:hi20s:peptide:e5255a1e84f9bbd8a08c6b7ca9a3ec4eddf2cb10e48270f9a1f069058b7144a3",
+        "pxd018722:hi20s:peptide:f4fae5e9bfdd044bbce5e6a898f11166244ffc8f40b080a223c317df395a85bb"
+      ],
+      "n_endpoints": 12,
+      "n_pairs": 66,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "bc067242a074d09cee77488d9ae72a5d8e05c008149d5f898596c1ad8d695c81",
+      "dependency_group_id": "e71794ed1a358192793be7dc5a9398fa435c4b8aad1888bcd9422b3ddaae1fc2",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:ac2f4dd33fd6ac219d94962bc92e753a306b6fef8dde65f78720932329a4ad1e",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:57449423be29ba014ec9b6e86edb2f1bbff313e814aa69e843d7acaf97f25975",
+        "pxd018722:hi20s:peptide:ac2f4dd33fd6ac219d94962bc92e753a306b6fef8dde65f78720932329a4ad1e",
+        "pxd018722:hi20s:peptide:ad671d0330f3a481025595748749548f26e2ce856d01c640e16e31ce490c2569"
+      ],
+      "n_endpoints": 3,
+      "n_pairs": 3,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "c0bfddde73232af25275e5753a115e1f5177473bbbfe129a9979c1bb2b8d9b50",
+      "dependency_group_id": "fda822c1f313e430e7b0fe8cc16f45623be7329d37454cd80cd5c0bfc34545c1",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:6c0e48d94d5c79403ecf4dc182cd1df126fc22ec333e2f143de1244b2e96f187",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:6c0e48d94d5c79403ecf4dc182cd1df126fc22ec333e2f143de1244b2e96f187",
+        "pxd018722:hi20s:peptide:e118309d9cefe15b31d444b485f4dd5243e91fab5ec06831c0b0313ff835b7b6"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "c1179b708563ec0df96931e73ef0a95ebbc661a7fe0020f9b224a2fd34873938",
+      "dependency_group_id": "f49ad690e5f7d2059507a65bcdf882b13235b8ab8d582370b4b9a3a68d8fd7ee",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:0a0ab20b3c6e26fd7ae7181acb4cf9c8903b1013f7a1d51e8454eaef4f423b0d",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:0a0ab20b3c6e26fd7ae7181acb4cf9c8903b1013f7a1d51e8454eaef4f423b0d",
+        "pxd018722:hi20s:peptide:42cc222758b07a6d17689d08f699e445eab77b7d399834935f0d2bb7d31d8344",
+        "pxd018722:hi20s:peptide:c7f55c94833a1b8e673d712f778f1aff0367494212f2abae833de3cba56cc527",
+        "pxd018722:hi20s:peptide:fc2459688991185e2ace3518d71206e05f4e8c3dbda54ded18b28b4a4ef7a15f"
+      ],
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "c46466894cfb79037a4964fd73012f5ca6d99793805f66cedc37dfe2e0078269",
+      "dependency_group_id": "3d09ac7b87bb44497b4407ad39dfb6b163dcfab74b0f356201431cf65d037380",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:b1a18091a957c21d4766ab8dccfd58e9603c0aeca31a4a5e96ad4d0b005dcbe9",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:b1a18091a957c21d4766ab8dccfd58e9603c0aeca31a4a5e96ad4d0b005dcbe9",
+        "pxd018722:hi20s:peptide:ebcd2bacdfdaae166dda5a36a561f76ff82dad18863bd91ba1ee99eec882c8b4"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "ccc93deed84a4c1ffb280e74b2fc8e7fd9516e86d47b685fcda2e98e0c9f760a",
+      "dependency_group_id": "7cb33709bbc50aefe4b41f166405555c5755b693508dc4e58a9af583bf5b45a9",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:92537e6baf330ae48c40ba8dd2675222a93199c0366ad2897b8b0cdf3beebbba",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:92537e6baf330ae48c40ba8dd2675222a93199c0366ad2897b8b0cdf3beebbba",
+        "pxd018722:hi20s:peptide:bcbac022ea8de0e42718fc54dc11134b9118b5c2b02b8418c86a3023d8930770"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "d030009dc765d2f6e375e2c149c8c70175bfef4452b98cc5830880e970536508",
+      "dependency_group_id": "1da86e090c41c2141df0e5aab772d3b760192a7e789cbbe19e0a50b21eb33896",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:f3e6045e9b2a0f408344b77b20a7d65a9c2d80c8ec924edffe20394db225812c",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:286a8cac83dfd6ca202d3d371d78d6229f09bf4af97a7ea8328f166042a4f331",
+        "pxd018722:hi20s:peptide:f3e6045e9b2a0f408344b77b20a7d65a9c2d80c8ec924edffe20394db225812c"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "d25ca147d658515cdc0d3667be00edb3e0ed37339f10343e7e59b75014661369",
+      "dependency_group_id": "ea4695c9ef08cdc3a016e0d41c9d87cf9e4efa15b30f52aa93f858e1f2262bfe",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:47264a7ccea0e912c71faf77f4611ddc5528a3e3b52bca5a5a443287c1921f43",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:47264a7ccea0e912c71faf77f4611ddc5528a3e3b52bca5a5a443287c1921f43",
+        "pxd018722:hi20s:peptide:4aa94f504c8a5c7f70b29ddb4b8aee2be66aa604ef296e6459c2b1b8e0a2143a",
+        "pxd018722:hi20s:peptide:69e848a93a8cdbbc65d0545feb4918dae61ebb1e2f44c10cca8abe74db7e0cb7",
+        "pxd018722:hi20s:peptide:b49b17430fcfe4c845f7491eac168e485f2f22180ebc887b9121d4879ab0ca53",
+        "pxd018722:hi20s:peptide:ec775606fd7d3ed0056d25e57ca7967a3404ee69d8212e848668acaad030b641"
+      ],
+      "n_endpoints": 5,
+      "n_pairs": 10,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "d839c1e7bbfddd8a991606764ce2993b78e0eb29cf1b0a10f239de93296c3067",
+      "dependency_group_id": "3e90ef2dfb66842ea31aac2dbbdd850d1d05efee43b4ded5913e17070d547bc4",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:cbc5b4fb0f9f01442ba34073bf5b8d2bd4358c5eea94b0d06f164c5e3120025d",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:0991b762b90f3acfa4469e4c1fa67591d4ed316eb878315a73f22cd11d71844a",
+        "pxd018722:hi20s:peptide:5ac5a6dd316a166f59b7b74db9c0201ef9ef56e21e9b9d05e9ccf2cb0382c3a5",
+        "pxd018722:hi20s:peptide:cbc5b4fb0f9f01442ba34073bf5b8d2bd4358c5eea94b0d06f164c5e3120025d"
+      ],
+      "n_endpoints": 3,
+      "n_pairs": 3,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "dd267de63ea8560991af6a344f5f6e396a3458ef2be997b4f0f115e5a33859ad",
+      "dependency_group_id": "6c695581d8c9793d5f4be71f5ad8c7c26ae806d16d2932e9285f44831db43827",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:31a6f9264165485e72ba5164d59324770816eb2506fcdc5ee4d96417f99389bb",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:31a6f9264165485e72ba5164d59324770816eb2506fcdc5ee4d96417f99389bb",
+        "pxd018722:hi20s:peptide:41533784db8db7655290d9b2381719dfbdbcc2e410691eaa29a5f65d39b73678"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "df0840f502a444bee4667bc8d09dd57d9f389865d7dd6bef60beb28bc14ecd55",
+      "dependency_group_id": "7d8b48edfd9392ad194d94e0a12b0614b9f35a87b84e0bb6eab0be5e4b6b451d",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:b4a4801372359e4197de85b93b8235e5d9590fbca1ecea26b5f0324b3196a002",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:50d59bdd095d500b0962a4f5bd618a04bc621233819be6a0432884267ea805a6",
+        "pxd018722:hi20s:peptide:5a8a8b6b6f33d560a04cbd429da11d6122f28e9eddc3877f4fbba969a8140e30",
+        "pxd018722:hi20s:peptide:719198ac07ceac7682c8cdc06588473d92baa19cef3587f78841caa6155a40ae",
+        "pxd018722:hi20s:peptide:7c72787b306f78552395283a5268d902cef6a3b3d5bdfa658a42578c71408272",
+        "pxd018722:hi20s:peptide:b4a4801372359e4197de85b93b8235e5d9590fbca1ecea26b5f0324b3196a002",
+        "pxd018722:hi20s:peptide:ed9e1f6365bf4d1b44644b7c50da3edfd64826a1abab2c0f60ec5c5e61b99b16"
+      ],
+      "n_endpoints": 6,
+      "n_pairs": 15,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "e0a03956bb5e87b45869b0e730fb2ce0f4ffc0105d121f71a0e0019de67f8b19",
+      "dependency_group_id": "3004668e2a0dddf3c6308238751b1bb2b23872e7ae03cf109e795bc6ff53b786",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:25651b7e7b284af79dfaa49ec08c550875fd87dc561e1593e690c27e58c04a06",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:15ef31c514e7ed41e01e62c99dc818241698a7bf949c3f6195ce46faba4a1163",
+        "pxd018722:hi20s:peptide:25651b7e7b284af79dfaa49ec08c550875fd87dc561e1593e690c27e58c04a06",
+        "pxd018722:hi20s:peptide:84cfd6d1ae94d2eac5adf6c73e374e768aebd46816c325dccc0352106b88d726",
+        "pxd018722:hi20s:peptide:854bf78383a68f341a1a3fa8cc0a3167f9ade1b72294ad891b2456803107a7bd",
+        "pxd018722:hi20s:peptide:b0996a1280caab05bf1a78523edbf25d1275ec6798d3ebd99532479668d994ea",
+        "pxd018722:hi20s:peptide:d430fc793f642b5d4b35a5eb7b78bcb38fc0c627d18fe399444260740b95e1cc",
+        "pxd018722:hi20s:peptide:fc98bef6d91fd7b809d66f17440734a7caaea88da56637ed22c1a9be58f56010",
+        "pxd018722:hi20s:peptide:fd1a0c8bede72773abd232605c433e88c14359c532b315010543b2099e65896d"
+      ],
+      "n_endpoints": 8,
+      "n_pairs": 28,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "f35de76e2d8b6968825e9d0c972481b1784043516c6fedf20255ab8cdd506ed1",
+      "dependency_group_id": "a8465e531f5e71cb75dd0175a39b8966c8f0a2dd8623735a0f4210e418fb4e82",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:7a178d374adfd0de88859bfa542069c2784c831f04e05f49fcc0d4056c63cc29",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:091d154c4ab045cb6669bff1b61e5845a00c7e85265c443300dd170081e7008f",
+        "pxd018722:hi20s:peptide:11ff4f2d6947639fa50ac9236198507604e384f1c9399275665fa44e05f84245",
+        "pxd018722:hi20s:peptide:22cde286c904c116b9ccd7283be9b70ffc4564bff0bb1c9a9a8a72cc88dd25ab",
+        "pxd018722:hi20s:peptide:72eb03f8c3c4893a966a7680f8717fac061bf421324db4e6f595132cdc000a8a",
+        "pxd018722:hi20s:peptide:7a178d374adfd0de88859bfa542069c2784c831f04e05f49fcc0d4056c63cc29",
+        "pxd018722:hi20s:peptide:7cb2a314cd46ac990344d79bc34ef9e5570b9a25d0aa1bc385a444ccc460c123",
+        "pxd018722:hi20s:peptide:8ede4ac8a34ab1f08c63e40daf0232b2e5fd560cb54840780ff1cdedf8a1e3ee",
+        "pxd018722:hi20s:peptide:9708710fa89f81ee4b34986e6d7fd9490178668f910eca22c14d08bced0c42b5",
+        "pxd018722:hi20s:peptide:9cbda1afd6f4094d4dc91157048f3252d3619239db7bb33c2a59a0d4c3e72be3",
+        "pxd018722:hi20s:peptide:e0a4a5f9851b26b002ea618c464f89f95a3ed14deda18d5535b8d1f6ae762c5d"
+      ],
+      "n_endpoints": 10,
+      "n_pairs": 45,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "f49dc4dcf7beceeb6e0e3f0e26bffc213c5af10106b607f2a5146af391652739",
+      "dependency_group_id": "4f3072d6d2a81c12894e2b52537cd57b9ca92128cce04d51d364c8f1c6e941f3",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:e2ac36e66f3a3c9be613dc8e99e51b9f5a6b7066464754f21ab4fb1a5feaab4a",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:2fce33980e7e1d296f7ab6e1f39b17a62d6aa74120ce4a1d38da3bbbcac8e0dc",
+        "pxd018722:hi20s:peptide:70db272de750b4cd6bc43be1d50c03f18e7c9addb4ef5cb6b033a7afc10c292e",
+        "pxd018722:hi20s:peptide:e2ac36e66f3a3c9be613dc8e99e51b9f5a6b7066464754f21ab4fb1a5feaab4a"
+      ],
+      "n_endpoints": 3,
+      "n_pairs": 3,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "f6e6d3486fcf907cbb9722498b51d81a3fecad0697f71ddfd29c789bbb33d136",
+      "dependency_group_id": "9161217bf44cc77fa432fa985936e96dd8bba3ce7d7f75161fd7ac41626dc04c",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:90b9414b0662e2ddc42e1521fc9ee1667ed0f44b8dd055ee57f8b34bc00386d4",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:30f40f4aed587c176fcccaf3718a6b9ca9132ec5a8fb8cdea765cdd4b93b67c0",
+        "pxd018722:hi20s:peptide:322a8df31b5ea91267e044a86ddfc7a79dcfe73d0d7896091ff650de77fdef86",
+        "pxd018722:hi20s:peptide:63318ec5e828d2eff3bf4d9b5f7c91a23ee26aeb69fdf06825c9b39e88d07ed2",
+        "pxd018722:hi20s:peptide:90b9414b0662e2ddc42e1521fc9ee1667ed0f44b8dd055ee57f8b34bc00386d4",
+        "pxd018722:hi20s:peptide:c2d5716f23b4e521176ef0f9429c9c581ae1ac8dfa265c7d7c8db7b1d67f5a7e"
+      ],
+      "n_endpoints": 5,
+      "n_pairs": 10,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "f76df5433f06962603d6d45ebca8ba2375fcca1c1473c5de7c1b31fb5667a1d7",
+      "dependency_group_id": "a33b1288b715b467273a2550ef1cef43a385c1c64187770566b4b752db33de97",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:eb150bbdbd8a32df520681f699b5b3ae989f15ebf672d628c86480ae4346f231",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:0127fe86cf9afc53d7e557ef6cef4d13a893f605d460dd932bd38e501bede3b1",
+        "pxd018722:hi20s:peptide:eb150bbdbd8a32df520681f699b5b3ae989f15ebf672d628c86480ae4346f231"
+      ],
+      "n_endpoints": 2,
+      "n_pairs": 1,
+      "parent_weight": 0.01818181818181818
+    },
+    {
+      "parent_sequence_sha256": "f9981a99db16bebb8265e88f63a075b7a3c67796c8e1a8faf6c5e3a7fb6ae189",
+      "dependency_group_id": "ba21d22a3ddc1327804f7416d96c09ac9316628f86bea5ddabe0b1f567f113fb",
+      "reference_peptide_id": "pxd018722:hi20s:peptide:fbae3cdfe072d7b29fc06e2a0458154d27e1af98f8860f1f4b649020bb039de6",
+      "endpoint_ids": [
+        "pxd018722:hi20s:peptide:363519d3ff29395754b5dd209f21223d10da4f134e7dcbdbb24775dd9992fa5f",
+        "pxd018722:hi20s:peptide:3a6e1e04dfdb2826f3e6b491eb7cecbd01cc48fa6dc80955dbd21ac646132783",
+        "pxd018722:hi20s:peptide:b424473729f7a3f5443f0ccc425a3f07440e91253a1bc0b9d51f4043918f9b20",
+        "pxd018722:hi20s:peptide:fbae3cdfe072d7b29fc06e2a0458154d27e1af98f8860f1f4b649020bb039de6"
+      ],
+      "n_endpoints": 4,
+      "n_pairs": 6,
+      "parent_weight": 0.01818181818181818
+    }
+  ],
+  "folds": {
+    "0": {
+      "development_components": [
+        "224f7a5dda81d8606bbbb699a1bad290e4dc6886773ef0824dd30950645cadb8",
+        "4bbea0b68d40bf85a009b216fa27e482aea6865410552cafaeeb67862b15a64b",
+        "4e567b7fa2d1e27e807ba835117db71663b6888b238ff0ffb325a50e13077f43",
+        "549a9a58f7350a3e81644d0c448a67b0eba7a5de7ec6a333ec8e03450884899c",
+        "6ae92fe6a5d49047cc5501a72917206efc14b36b496c373b4628ea9e28e5f296",
+        "6ec1d5584a77e8908b64537f62cb272e2080b8fbc3ea60e88197454ce603ebba",
+        "820476dcd91b7ac496074866ee38472b07d9bc63efb17f7744679aab84b15543",
+        "a5cb9843aefc9c5acfbce47db4f948734e51e39bcc2aa527a309b661a543519e",
+        "b2811e283a11cb574ac7abcb8c8f8577855581866ca54d9fbd22d2863eb611f0",
+        "ba21d22a3ddc1327804f7416d96c09ac9316628f86bea5ddabe0b1f567f113fb",
+        "e6fb7dab882812697da1f40cf8a9e0fc2bc4c0f0137b546d1ff581df0eb0edd7",
+        "fda822c1f313e430e7b0fe8cc16f45623be7329d37454cd80cd5c0bfc34545c1"
+      ],
+      "fitting_components": [
+        "05084e2c0b85340f6e547029a77b2eb7b78178cb3e9b8ab7cdf9bdcf83e90eb7",
+        "09c475e33631f65257fab9a06a6d1b28f5737c5a28fa9453549daf56d76d847e",
+        "16615b5d17a0e7451939bfa9abb0c952a6ddcccabca5b788df6b514c004407ec",
+        "1be4d13a66047b2f77844809fb46b455a320ffcc57cf56709fe84c61eb9fec07",
+        "1da86e090c41c2141df0e5aab772d3b760192a7e789cbbe19e0a50b21eb33896",
+        "1fb31554aa1e6fbbdb8eb33aa4f1c84aa56d32b1f38fffb19fe5c9517c8bb6be",
+        "3004668e2a0dddf3c6308238751b1bb2b23872e7ae03cf109e795bc6ff53b786",
+        "3012f0003cb0ff184bf6836b6809c4d1947994159f5494ce1358c53eb7310438",
+        "3ba95a5de6f5d888647adcc209b2d1d5cb19914259e16feef813b11ca862efb0",
+        "3d09ac7b87bb44497b4407ad39dfb6b163dcfab74b0f356201431cf65d037380",
+        "3e90ef2dfb66842ea31aac2dbbdd850d1d05efee43b4ded5913e17070d547bc4",
+        "4052082db2b0414162668d5914148c4f799164a5dd8a53ad3c829c1d184f30de",
+        "47f402a28c07436321d078bb897adc04a97d5f1572b659fcd8e1044c8c6d9128",
+        "4d33b22864fa5c6b637994d6d1cd9738238f70251013a16ccd4c5dec1ed83901",
+        "4f3072d6d2a81c12894e2b52537cd57b9ca92128cce04d51d364c8f1c6e941f3",
+        "52c73146c872f67c8e3dcd7065a5b958ee85de26f9714bd7e8486bcc35459b68",
+        "5754318effb29fad40615d746cf46126c764ecf4a54b6c2c64c0eef4794008f8",
+        "60fb80ba9b3f197bd9cf1d3ec6b141343fe9fb8ea4d2c3b1e9f4de7028f81e2e",
+        "68039ed4c823708ee2ab46f4139fbc47fe1b1e8d9549887e95fbf72c335fefc3",
+        "69916a577b9bb386349592421d8dbfc7600a6d19d6364459cdb4c84fc69a8556",
+        "6c695581d8c9793d5f4be71f5ad8c7c26ae806d16d2932e9285f44831db43827",
+        "7cb33709bbc50aefe4b41f166405555c5755b693508dc4e58a9af583bf5b45a9",
+        "7d8b48edfd9392ad194d94e0a12b0614b9f35a87b84e0bb6eab0be5e4b6b451d",
+        "90a3c2c6fe351c127cb7ab249c35f79c50def32f5d32c0583aac0ad946fd5bbc",
+        "9161217bf44cc77fa432fa985936e96dd8bba3ce7d7f75161fd7ac41626dc04c",
+        "92c85589503b029a6b86b41fd7f84f3c58793bbbe44460e05fd2d9032f48dc7d",
+        "93292fc394bb9a816dde87f8afc6e569fde9d04d640aec587c9f353b61625dad",
+        "9a7b47576b496c601020c25e7c38736b0772c5c1a6acbe777b83d3cfdd11b148",
+        "a33b1288b715b467273a2550ef1cef43a385c1c64187770566b4b752db33de97",
+        "a5d0b70b663de2d2aa55145d995c40c785ec4ff7e48683e8afc9bd430139f8ec",
+        "a8465e531f5e71cb75dd0175a39b8966c8f0a2dd8623735a0f4210e418fb4e82",
+        "b54235a8ee0b4a0b974155ea645cda574a08c0e99e4c72b5be940f5163819bb7",
+        "b92cf3b4c6d5565a97dd24a4a4b1fcc3b47a5137670279e1feefabcf91135b12",
+        "c4046e59368cc305dc0e84de11b4d97ed5db08a8c666b4915d86f5c1b1fc8092",
+        "d0c7daa5a73cdf089ee82e2723fcd2ea14b8c34e1c54c1779f78d7998ba76fe4",
+        "da9e560860d6023d25e3bfe086c4c7f2c300b2495192ea1cee68b3a78f6302af",
+        "e71794ed1a358192793be7dc5a9398fa435c4b8aad1888bcd9422b3ddaae1fc2",
+        "ea4695c9ef08cdc3a016e0d41c9d87cf9e4efa15b30f52aa93f858e1f2262bfe",
+        "ead54e81218a4560160e2da394e9f8e7a22766909489da6320d3130f945779c3",
+        "eb771a4b5edb4899e18a02837ef665f7ac975a852a89839e301381f7867e6f38",
+        "f415d2f73629237713066acf5eae95659a42b7abd850de99d39cee7e22f53c84",
+        "f49ad690e5f7d2059507a65bcdf882b13235b8ab8d582370b4b9a3a68d8fd7ee",
+        "ff776f404062a7ce7b75b59ac070172b902e54ba8de6a729ec879a089fdb103a"
+      ],
+      "inner_counts": {
+        "0": 17,
+        "1": 7,
+        "2": 19
+      }
+    },
+    "1": {
+      "development_components": [
+        "3ba95a5de6f5d888647adcc209b2d1d5cb19914259e16feef813b11ca862efb0",
+        "4d33b22864fa5c6b637994d6d1cd9738238f70251013a16ccd4c5dec1ed83901",
+        "60fb80ba9b3f197bd9cf1d3ec6b141343fe9fb8ea4d2c3b1e9f4de7028f81e2e",
+        "6c695581d8c9793d5f4be71f5ad8c7c26ae806d16d2932e9285f44831db43827",
+        "b54235a8ee0b4a0b974155ea645cda574a08c0e99e4c72b5be940f5163819bb7",
+        "b92cf3b4c6d5565a97dd24a4a4b1fcc3b47a5137670279e1feefabcf91135b12",
+        "d0c7daa5a73cdf089ee82e2723fcd2ea14b8c34e1c54c1779f78d7998ba76fe4",
+        "f415d2f73629237713066acf5eae95659a42b7abd850de99d39cee7e22f53c84"
+      ],
+      "fitting_components": [
+        "05084e2c0b85340f6e547029a77b2eb7b78178cb3e9b8ab7cdf9bdcf83e90eb7",
+        "09c475e33631f65257fab9a06a6d1b28f5737c5a28fa9453549daf56d76d847e",
+        "16615b5d17a0e7451939bfa9abb0c952a6ddcccabca5b788df6b514c004407ec",
+        "1be4d13a66047b2f77844809fb46b455a320ffcc57cf56709fe84c61eb9fec07",
+        "1da86e090c41c2141df0e5aab772d3b760192a7e789cbbe19e0a50b21eb33896",
+        "1fb31554aa1e6fbbdb8eb33aa4f1c84aa56d32b1f38fffb19fe5c9517c8bb6be",
+        "224f7a5dda81d8606bbbb699a1bad290e4dc6886773ef0824dd30950645cadb8",
+        "3004668e2a0dddf3c6308238751b1bb2b23872e7ae03cf109e795bc6ff53b786",
+        "3012f0003cb0ff184bf6836b6809c4d1947994159f5494ce1358c53eb7310438",
+        "3d09ac7b87bb44497b4407ad39dfb6b163dcfab74b0f356201431cf65d037380",
+        "3e90ef2dfb66842ea31aac2dbbdd850d1d05efee43b4ded5913e17070d547bc4",
+        "4052082db2b0414162668d5914148c4f799164a5dd8a53ad3c829c1d184f30de",
+        "47f402a28c07436321d078bb897adc04a97d5f1572b659fcd8e1044c8c6d9128",
+        "4bbea0b68d40bf85a009b216fa27e482aea6865410552cafaeeb67862b15a64b",
+        "4e567b7fa2d1e27e807ba835117db71663b6888b238ff0ffb325a50e13077f43",
+        "4f3072d6d2a81c12894e2b52537cd57b9ca92128cce04d51d364c8f1c6e941f3",
+        "52c73146c872f67c8e3dcd7065a5b958ee85de26f9714bd7e8486bcc35459b68",
+        "549a9a58f7350a3e81644d0c448a67b0eba7a5de7ec6a333ec8e03450884899c",
+        "5754318effb29fad40615d746cf46126c764ecf4a54b6c2c64c0eef4794008f8",
+        "68039ed4c823708ee2ab46f4139fbc47fe1b1e8d9549887e95fbf72c335fefc3",
+        "69916a577b9bb386349592421d8dbfc7600a6d19d6364459cdb4c84fc69a8556",
+        "6ae92fe6a5d49047cc5501a72917206efc14b36b496c373b4628ea9e28e5f296",
+        "6ec1d5584a77e8908b64537f62cb272e2080b8fbc3ea60e88197454ce603ebba",
+        "7cb33709bbc50aefe4b41f166405555c5755b693508dc4e58a9af583bf5b45a9",
+        "7d8b48edfd9392ad194d94e0a12b0614b9f35a87b84e0bb6eab0be5e4b6b451d",
+        "820476dcd91b7ac496074866ee38472b07d9bc63efb17f7744679aab84b15543",
+        "90a3c2c6fe351c127cb7ab249c35f79c50def32f5d32c0583aac0ad946fd5bbc",
+        "9161217bf44cc77fa432fa985936e96dd8bba3ce7d7f75161fd7ac41626dc04c",
+        "92c85589503b029a6b86b41fd7f84f3c58793bbbe44460e05fd2d9032f48dc7d",
+        "93292fc394bb9a816dde87f8afc6e569fde9d04d640aec587c9f353b61625dad",
+        "9a7b47576b496c601020c25e7c38736b0772c5c1a6acbe777b83d3cfdd11b148",
+        "a33b1288b715b467273a2550ef1cef43a385c1c64187770566b4b752db33de97",
+        "a5cb9843aefc9c5acfbce47db4f948734e51e39bcc2aa527a309b661a543519e",
+        "a5d0b70b663de2d2aa55145d995c40c785ec4ff7e48683e8afc9bd430139f8ec",
+        "a8465e531f5e71cb75dd0175a39b8966c8f0a2dd8623735a0f4210e418fb4e82",
+        "b2811e283a11cb574ac7abcb8c8f8577855581866ca54d9fbd22d2863eb611f0",
+        "ba21d22a3ddc1327804f7416d96c09ac9316628f86bea5ddabe0b1f567f113fb",
+        "c4046e59368cc305dc0e84de11b4d97ed5db08a8c666b4915d86f5c1b1fc8092",
+        "da9e560860d6023d25e3bfe086c4c7f2c300b2495192ea1cee68b3a78f6302af",
+        "e6fb7dab882812697da1f40cf8a9e0fc2bc4c0f0137b546d1ff581df0eb0edd7",
+        "e71794ed1a358192793be7dc5a9398fa435c4b8aad1888bcd9422b3ddaae1fc2",
+        "ea4695c9ef08cdc3a016e0d41c9d87cf9e4efa15b30f52aa93f858e1f2262bfe",
+        "ead54e81218a4560160e2da394e9f8e7a22766909489da6320d3130f945779c3",
+        "eb771a4b5edb4899e18a02837ef665f7ac975a852a89839e301381f7867e6f38",
+        "f49ad690e5f7d2059507a65bcdf882b13235b8ab8d582370b4b9a3a68d8fd7ee",
+        "fda822c1f313e430e7b0fe8cc16f45623be7329d37454cd80cd5c0bfc34545c1",
+        "ff776f404062a7ce7b75b59ac070172b902e54ba8de6a729ec879a089fdb103a"
+      ],
+      "inner_counts": {
+        "0": 16,
+        "1": 11,
+        "2": 20
+      }
+    },
+    "2": {
+      "development_components": [
+        "3004668e2a0dddf3c6308238751b1bb2b23872e7ae03cf109e795bc6ff53b786",
+        "5754318effb29fad40615d746cf46126c764ecf4a54b6c2c64c0eef4794008f8",
+        "68039ed4c823708ee2ab46f4139fbc47fe1b1e8d9549887e95fbf72c335fefc3",
+        "69916a577b9bb386349592421d8dbfc7600a6d19d6364459cdb4c84fc69a8556",
+        "7cb33709bbc50aefe4b41f166405555c5755b693508dc4e58a9af583bf5b45a9",
+        "7d8b48edfd9392ad194d94e0a12b0614b9f35a87b84e0bb6eab0be5e4b6b451d",
+        "90a3c2c6fe351c127cb7ab249c35f79c50def32f5d32c0583aac0ad946fd5bbc",
+        "92c85589503b029a6b86b41fd7f84f3c58793bbbe44460e05fd2d9032f48dc7d",
+        "93292fc394bb9a816dde87f8afc6e569fde9d04d640aec587c9f353b61625dad",
+        "9a7b47576b496c601020c25e7c38736b0772c5c1a6acbe777b83d3cfdd11b148",
+        "c4046e59368cc305dc0e84de11b4d97ed5db08a8c666b4915d86f5c1b1fc8092",
+        "e71794ed1a358192793be7dc5a9398fa435c4b8aad1888bcd9422b3ddaae1fc2"
+      ],
+      "fitting_components": [
+        "05084e2c0b85340f6e547029a77b2eb7b78178cb3e9b8ab7cdf9bdcf83e90eb7",
+        "09c475e33631f65257fab9a06a6d1b28f5737c5a28fa9453549daf56d76d847e",
+        "16615b5d17a0e7451939bfa9abb0c952a6ddcccabca5b788df6b514c004407ec",
+        "1be4d13a66047b2f77844809fb46b455a320ffcc57cf56709fe84c61eb9fec07",
+        "1da86e090c41c2141df0e5aab772d3b760192a7e789cbbe19e0a50b21eb33896",
+        "1fb31554aa1e6fbbdb8eb33aa4f1c84aa56d32b1f38fffb19fe5c9517c8bb6be",
+        "224f7a5dda81d8606bbbb699a1bad290e4dc6886773ef0824dd30950645cadb8",
+        "3012f0003cb0ff184bf6836b6809c4d1947994159f5494ce1358c53eb7310438",
+        "3ba95a5de6f5d888647adcc209b2d1d5cb19914259e16feef813b11ca862efb0",
+        "3d09ac7b87bb44497b4407ad39dfb6b163dcfab74b0f356201431cf65d037380",
+        "3e90ef2dfb66842ea31aac2dbbdd850d1d05efee43b4ded5913e17070d547bc4",
+        "4052082db2b0414162668d5914148c4f799164a5dd8a53ad3c829c1d184f30de",
+        "47f402a28c07436321d078bb897adc04a97d5f1572b659fcd8e1044c8c6d9128",
+        "4bbea0b68d40bf85a009b216fa27e482aea6865410552cafaeeb67862b15a64b",
+        "4d33b22864fa5c6b637994d6d1cd9738238f70251013a16ccd4c5dec1ed83901",
+        "4e567b7fa2d1e27e807ba835117db71663b6888b238ff0ffb325a50e13077f43",
+        "4f3072d6d2a81c12894e2b52537cd57b9ca92128cce04d51d364c8f1c6e941f3",
+        "52c73146c872f67c8e3dcd7065a5b958ee85de26f9714bd7e8486bcc35459b68",
+        "549a9a58f7350a3e81644d0c448a67b0eba7a5de7ec6a333ec8e03450884899c",
+        "60fb80ba9b3f197bd9cf1d3ec6b141343fe9fb8ea4d2c3b1e9f4de7028f81e2e",
+        "6ae92fe6a5d49047cc5501a72917206efc14b36b496c373b4628ea9e28e5f296",
+        "6c695581d8c9793d5f4be71f5ad8c7c26ae806d16d2932e9285f44831db43827",
+        "6ec1d5584a77e8908b64537f62cb272e2080b8fbc3ea60e88197454ce603ebba",
+        "820476dcd91b7ac496074866ee38472b07d9bc63efb17f7744679aab84b15543",
+        "9161217bf44cc77fa432fa985936e96dd8bba3ce7d7f75161fd7ac41626dc04c",
+        "a33b1288b715b467273a2550ef1cef43a385c1c64187770566b4b752db33de97",
+        "a5cb9843aefc9c5acfbce47db4f948734e51e39bcc2aa527a309b661a543519e",
+        "a5d0b70b663de2d2aa55145d995c40c785ec4ff7e48683e8afc9bd430139f8ec",
+        "a8465e531f5e71cb75dd0175a39b8966c8f0a2dd8623735a0f4210e418fb4e82",
+        "b2811e283a11cb574ac7abcb8c8f8577855581866ca54d9fbd22d2863eb611f0",
+        "b54235a8ee0b4a0b974155ea645cda574a08c0e99e4c72b5be940f5163819bb7",
+        "b92cf3b4c6d5565a97dd24a4a4b1fcc3b47a5137670279e1feefabcf91135b12",
+        "ba21d22a3ddc1327804f7416d96c09ac9316628f86bea5ddabe0b1f567f113fb",
+        "d0c7daa5a73cdf089ee82e2723fcd2ea14b8c34e1c54c1779f78d7998ba76fe4",
+        "da9e560860d6023d25e3bfe086c4c7f2c300b2495192ea1cee68b3a78f6302af",
+        "e6fb7dab882812697da1f40cf8a9e0fc2bc4c0f0137b546d1ff581df0eb0edd7",
+        "ea4695c9ef08cdc3a016e0d41c9d87cf9e4efa15b30f52aa93f858e1f2262bfe",
+        "ead54e81218a4560160e2da394e9f8e7a22766909489da6320d3130f945779c3",
+        "eb771a4b5edb4899e18a02837ef665f7ac975a852a89839e301381f7867e6f38",
+        "f415d2f73629237713066acf5eae95659a42b7abd850de99d39cee7e22f53c84",
+        "f49ad690e5f7d2059507a65bcdf882b13235b8ab8d582370b4b9a3a68d8fd7ee",
+        "fda822c1f313e430e7b0fe8cc16f45623be7329d37454cd80cd5c0bfc34545c1",
+        "ff776f404062a7ce7b75b59ac070172b902e54ba8de6a729ec879a089fdb103a"
+      ],
+      "inner_counts": {
+        "0": 13,
+        "1": 11,
+        "2": 19
+      }
+    },
+    "3": {
+      "development_components": [
+        "05084e2c0b85340f6e547029a77b2eb7b78178cb3e9b8ab7cdf9bdcf83e90eb7",
+        "09c475e33631f65257fab9a06a6d1b28f5737c5a28fa9453549daf56d76d847e",
+        "16615b5d17a0e7451939bfa9abb0c952a6ddcccabca5b788df6b514c004407ec",
+        "1fb31554aa1e6fbbdb8eb33aa4f1c84aa56d32b1f38fffb19fe5c9517c8bb6be",
+        "3d09ac7b87bb44497b4407ad39dfb6b163dcfab74b0f356201431cf65d037380",
+        "4052082db2b0414162668d5914148c4f799164a5dd8a53ad3c829c1d184f30de",
+        "47f402a28c07436321d078bb897adc04a97d5f1572b659fcd8e1044c8c6d9128",
+        "52c73146c872f67c8e3dcd7065a5b958ee85de26f9714bd7e8486bcc35459b68",
+        "a33b1288b715b467273a2550ef1cef43a385c1c64187770566b4b752db33de97",
+        "a5d0b70b663de2d2aa55145d995c40c785ec4ff7e48683e8afc9bd430139f8ec",
+        "a8465e531f5e71cb75dd0175a39b8966c8f0a2dd8623735a0f4210e418fb4e82",
+        "ead54e81218a4560160e2da394e9f8e7a22766909489da6320d3130f945779c3",
+        "eb771a4b5edb4899e18a02837ef665f7ac975a852a89839e301381f7867e6f38",
+        "f49ad690e5f7d2059507a65bcdf882b13235b8ab8d582370b4b9a3a68d8fd7ee"
+      ],
+      "fitting_components": [
+        "1be4d13a66047b2f77844809fb46b455a320ffcc57cf56709fe84c61eb9fec07",
+        "1da86e090c41c2141df0e5aab772d3b760192a7e789cbbe19e0a50b21eb33896",
+        "224f7a5dda81d8606bbbb699a1bad290e4dc6886773ef0824dd30950645cadb8",
+        "3004668e2a0dddf3c6308238751b1bb2b23872e7ae03cf109e795bc6ff53b786",
+        "3012f0003cb0ff184bf6836b6809c4d1947994159f5494ce1358c53eb7310438",
+        "3ba95a5de6f5d888647adcc209b2d1d5cb19914259e16feef813b11ca862efb0",
+        "3e90ef2dfb66842ea31aac2dbbdd850d1d05efee43b4ded5913e17070d547bc4",
+        "4bbea0b68d40bf85a009b216fa27e482aea6865410552cafaeeb67862b15a64b",
+        "4d33b22864fa5c6b637994d6d1cd9738238f70251013a16ccd4c5dec1ed83901",
+        "4e567b7fa2d1e27e807ba835117db71663b6888b238ff0ffb325a50e13077f43",
+        "4f3072d6d2a81c12894e2b52537cd57b9ca92128cce04d51d364c8f1c6e941f3",
+        "549a9a58f7350a3e81644d0c448a67b0eba7a5de7ec6a333ec8e03450884899c",
+        "5754318effb29fad40615d746cf46126c764ecf4a54b6c2c64c0eef4794008f8",
+        "60fb80ba9b3f197bd9cf1d3ec6b141343fe9fb8ea4d2c3b1e9f4de7028f81e2e",
+        "68039ed4c823708ee2ab46f4139fbc47fe1b1e8d9549887e95fbf72c335fefc3",
+        "69916a577b9bb386349592421d8dbfc7600a6d19d6364459cdb4c84fc69a8556",
+        "6ae92fe6a5d49047cc5501a72917206efc14b36b496c373b4628ea9e28e5f296",
+        "6c695581d8c9793d5f4be71f5ad8c7c26ae806d16d2932e9285f44831db43827",
+        "6ec1d5584a77e8908b64537f62cb272e2080b8fbc3ea60e88197454ce603ebba",
+        "7cb33709bbc50aefe4b41f166405555c5755b693508dc4e58a9af583bf5b45a9",
+        "7d8b48edfd9392ad194d94e0a12b0614b9f35a87b84e0bb6eab0be5e4b6b451d",
+        "820476dcd91b7ac496074866ee38472b07d9bc63efb17f7744679aab84b15543",
+        "90a3c2c6fe351c127cb7ab249c35f79c50def32f5d32c0583aac0ad946fd5bbc",
+        "9161217bf44cc77fa432fa985936e96dd8bba3ce7d7f75161fd7ac41626dc04c",
+        "92c85589503b029a6b86b41fd7f84f3c58793bbbe44460e05fd2d9032f48dc7d",
+        "93292fc394bb9a816dde87f8afc6e569fde9d04d640aec587c9f353b61625dad",
+        "9a7b47576b496c601020c25e7c38736b0772c5c1a6acbe777b83d3cfdd11b148",
+        "a5cb9843aefc9c5acfbce47db4f948734e51e39bcc2aa527a309b661a543519e",
+        "b2811e283a11cb574ac7abcb8c8f8577855581866ca54d9fbd22d2863eb611f0",
+        "b54235a8ee0b4a0b974155ea645cda574a08c0e99e4c72b5be940f5163819bb7",
+        "b92cf3b4c6d5565a97dd24a4a4b1fcc3b47a5137670279e1feefabcf91135b12",
+        "ba21d22a3ddc1327804f7416d96c09ac9316628f86bea5ddabe0b1f567f113fb",
+        "c4046e59368cc305dc0e84de11b4d97ed5db08a8c666b4915d86f5c1b1fc8092",
+        "d0c7daa5a73cdf089ee82e2723fcd2ea14b8c34e1c54c1779f78d7998ba76fe4",
+        "da9e560860d6023d25e3bfe086c4c7f2c300b2495192ea1cee68b3a78f6302af",
+        "e6fb7dab882812697da1f40cf8a9e0fc2bc4c0f0137b546d1ff581df0eb0edd7",
+        "e71794ed1a358192793be7dc5a9398fa435c4b8aad1888bcd9422b3ddaae1fc2",
+        "ea4695c9ef08cdc3a016e0d41c9d87cf9e4efa15b30f52aa93f858e1f2262bfe",
+        "f415d2f73629237713066acf5eae95659a42b7abd850de99d39cee7e22f53c84",
+        "fda822c1f313e430e7b0fe8cc16f45623be7329d37454cd80cd5c0bfc34545c1",
+        "ff776f404062a7ce7b75b59ac070172b902e54ba8de6a729ec879a089fdb103a"
+      ],
+      "inner_counts": {
+        "0": 15,
+        "1": 9,
+        "2": 17
+      }
+    },
+    "4": {
+      "development_components": [
+        "1be4d13a66047b2f77844809fb46b455a320ffcc57cf56709fe84c61eb9fec07",
+        "1da86e090c41c2141df0e5aab772d3b760192a7e789cbbe19e0a50b21eb33896",
+        "3012f0003cb0ff184bf6836b6809c4d1947994159f5494ce1358c53eb7310438",
+        "3e90ef2dfb66842ea31aac2dbbdd850d1d05efee43b4ded5913e17070d547bc4",
+        "4f3072d6d2a81c12894e2b52537cd57b9ca92128cce04d51d364c8f1c6e941f3",
+        "9161217bf44cc77fa432fa985936e96dd8bba3ce7d7f75161fd7ac41626dc04c",
+        "da9e560860d6023d25e3bfe086c4c7f2c300b2495192ea1cee68b3a78f6302af",
+        "ea4695c9ef08cdc3a016e0d41c9d87cf9e4efa15b30f52aa93f858e1f2262bfe",
+        "ff776f404062a7ce7b75b59ac070172b902e54ba8de6a729ec879a089fdb103a"
+      ],
+      "fitting_components": [
+        "05084e2c0b85340f6e547029a77b2eb7b78178cb3e9b8ab7cdf9bdcf83e90eb7",
+        "09c475e33631f65257fab9a06a6d1b28f5737c5a28fa9453549daf56d76d847e",
+        "16615b5d17a0e7451939bfa9abb0c952a6ddcccabca5b788df6b514c004407ec",
+        "1fb31554aa1e6fbbdb8eb33aa4f1c84aa56d32b1f38fffb19fe5c9517c8bb6be",
+        "224f7a5dda81d8606bbbb699a1bad290e4dc6886773ef0824dd30950645cadb8",
+        "3004668e2a0dddf3c6308238751b1bb2b23872e7ae03cf109e795bc6ff53b786",
+        "3ba95a5de6f5d888647adcc209b2d1d5cb19914259e16feef813b11ca862efb0",
+        "3d09ac7b87bb44497b4407ad39dfb6b163dcfab74b0f356201431cf65d037380",
+        "4052082db2b0414162668d5914148c4f799164a5dd8a53ad3c829c1d184f30de",
+        "47f402a28c07436321d078bb897adc04a97d5f1572b659fcd8e1044c8c6d9128",
+        "4bbea0b68d40bf85a009b216fa27e482aea6865410552cafaeeb67862b15a64b",
+        "4d33b22864fa5c6b637994d6d1cd9738238f70251013a16ccd4c5dec1ed83901",
+        "4e567b7fa2d1e27e807ba835117db71663b6888b238ff0ffb325a50e13077f43",
+        "52c73146c872f67c8e3dcd7065a5b958ee85de26f9714bd7e8486bcc35459b68",
+        "549a9a58f7350a3e81644d0c448a67b0eba7a5de7ec6a333ec8e03450884899c",
+        "5754318effb29fad40615d746cf46126c764ecf4a54b6c2c64c0eef4794008f8",
+        "60fb80ba9b3f197bd9cf1d3ec6b141343fe9fb8ea4d2c3b1e9f4de7028f81e2e",
+        "68039ed4c823708ee2ab46f4139fbc47fe1b1e8d9549887e95fbf72c335fefc3",
+        "69916a577b9bb386349592421d8dbfc7600a6d19d6364459cdb4c84fc69a8556",
+        "6ae92fe6a5d49047cc5501a72917206efc14b36b496c373b4628ea9e28e5f296",
+        "6c695581d8c9793d5f4be71f5ad8c7c26ae806d16d2932e9285f44831db43827",
+        "6ec1d5584a77e8908b64537f62cb272e2080b8fbc3ea60e88197454ce603ebba",
+        "7cb33709bbc50aefe4b41f166405555c5755b693508dc4e58a9af583bf5b45a9",
+        "7d8b48edfd9392ad194d94e0a12b0614b9f35a87b84e0bb6eab0be5e4b6b451d",
+        "820476dcd91b7ac496074866ee38472b07d9bc63efb17f7744679aab84b15543",
+        "90a3c2c6fe351c127cb7ab249c35f79c50def32f5d32c0583aac0ad946fd5bbc",
+        "92c85589503b029a6b86b41fd7f84f3c58793bbbe44460e05fd2d9032f48dc7d",
+        "93292fc394bb9a816dde87f8afc6e569fde9d04d640aec587c9f353b61625dad",
+        "9a7b47576b496c601020c25e7c38736b0772c5c1a6acbe777b83d3cfdd11b148",
+        "a33b1288b715b467273a2550ef1cef43a385c1c64187770566b4b752db33de97",
+        "a5cb9843aefc9c5acfbce47db4f948734e51e39bcc2aa527a309b661a543519e",
+        "a5d0b70b663de2d2aa55145d995c40c785ec4ff7e48683e8afc9bd430139f8ec",
+        "a8465e531f5e71cb75dd0175a39b8966c8f0a2dd8623735a0f4210e418fb4e82",
+        "b2811e283a11cb574ac7abcb8c8f8577855581866ca54d9fbd22d2863eb611f0",
+        "b54235a8ee0b4a0b974155ea645cda574a08c0e99e4c72b5be940f5163819bb7",
+        "b92cf3b4c6d5565a97dd24a4a4b1fcc3b47a5137670279e1feefabcf91135b12",
+        "ba21d22a3ddc1327804f7416d96c09ac9316628f86bea5ddabe0b1f567f113fb",
+        "c4046e59368cc305dc0e84de11b4d97ed5db08a8c666b4915d86f5c1b1fc8092",
+        "d0c7daa5a73cdf089ee82e2723fcd2ea14b8c34e1c54c1779f78d7998ba76fe4",
+        "e6fb7dab882812697da1f40cf8a9e0fc2bc4c0f0137b546d1ff581df0eb0edd7",
+        "e71794ed1a358192793be7dc5a9398fa435c4b8aad1888bcd9422b3ddaae1fc2",
+        "ead54e81218a4560160e2da394e9f8e7a22766909489da6320d3130f945779c3",
+        "eb771a4b5edb4899e18a02837ef665f7ac975a852a89839e301381f7867e6f38",
+        "f415d2f73629237713066acf5eae95659a42b7abd850de99d39cee7e22f53c84",
+        "f49ad690e5f7d2059507a65bcdf882b13235b8ab8d582370b4b9a3a68d8fd7ee",
+        "fda822c1f313e430e7b0fe8cc16f45623be7329d37454cd80cd5c0bfc34545c1"
+      ],
+      "inner_counts": {
+        "0": 15,
+        "1": 10,
+        "2": 21
+      }
+    }
+  },
+  "targets_read": false,
+  "no_outer_rows_materialized": true,
+  "interpretation": "Dependent pairs do not increase independent biological sample count."
+}

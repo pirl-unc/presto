@@ -251,4 +251,7 @@ claim that simply adding it can remedy the prior response-model failures.
 - [ ] Execute plans/native-boundary-context-development.md with fixed training-only nestedCV; outer groups remain closed and full APC availability goal unachieved.
 
 - [x] 0726 boundary-context development completed: all4gatesfail; all240fits/632OOFpredictions independently verified. Original outer groups stay closed.
-- [ ] Execute plans/native-reference-invariant-development.md: compare unchanged features with an all-pairs response loss, retaining frozen0726controls. If it fails, stop response-only feature/optimizer expansion and move to native baseline quantity/observation contract.
+- [x] Execute plans/native-reference-invariant-development.md: compare unchanged features with an all-pairs response loss, retaining frozen0726controls. If it fails, stop response-only feature/optimizer expansion and move to native baseline quantity/observation contract.
+
+- [x] 0747 all-pair comparison fails all four gates; independently replayed. Stop expanding the native response-only cohort's features/optimizer.
+- [ ] Execute plans/native-baseline-observation-admission.md: qualify dose/response/protocol support, then register an identifiable native baseline. PXD024809 is an unqualified calibration candidate; no concentration claim or new fit yet.

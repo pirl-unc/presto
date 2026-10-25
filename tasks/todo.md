@@ -13794,3 +13794,24 @@ Review0711: all3numerical stages pass unchanged resource limits; data-free check
 Family: experiments/2026-10-25_0726_codex_native-boundary-context. Plan: experiments/agents/codex/plans/native-boundary-context-development.md.
 
 Review0726: fixed boundary149feature model fails all four development gates. RMSE.431426 versussequence.432811/length.429931; spread1.386%ofobservedSD; all5alphas100. IndependentSVD/context/metric/bootstrap replay149250numeric valuespasses; maxdifference8.32e-14. Five localstages passunchangedlimits. Nextplan native-reference-invariant-development.md preservesfeaturemaps and originalmodels and sets stoppingrule for response-only searches. Fullgoalactive/unachieved.
+
+## Native reference-invariant development 2026-10-25_0747
+
+- [x] Revalidate prior goalturn asprogress:0726negative modelcomparison closed/published; currentCI40173877564live.
+- [x] Register fixed endpoint/support/objective comparison before analysis; originalmodels pinned for reuse.
+- [x] Qualify pair algebra and actual training; audit support beforeeffects and reconcile raw-source quantities.
+- [x] Fit only all-pair models, score bothspaces, independently replayallnewfits/metrics andexactoriginalpredictions.
+- [x] Close numerical artifacts/report and follow fixedgate/stoppingrule; full APCavailabilitygoal remains active.
+- [ ] Publish canonical registry, frozen artifacts and updated PR evidence.
+
+Family:experiments/2026-10-25_0747_codex_native-reference-invariant. Plan:experiments/agents/codex/plans/native-reference-invariant-development.md.
+
+Review0747: all four gates fail; all-pair boundary RMSE0.477868 versus matched original-boundary0.477484 and zero0.477414. Spread1.367%; one of five folds improves. Stop response-only feature/optimizer expansion. Independent replay verifies240new fits,4,856OOF predictions and2,000bootstrap draws per space;354,449numeric checks,maxerror7.79e-14. All632original control predictions match exactly. Six numerical stages pass original limits. Next: plans/native-baseline-observation-admission.md; no calibrated availability predictor yet.
+
+## Baseline observation admission continuation
+
+- [x] Classify preceding cleanup follow-up as no scientific progress; revalidate completed0747 evidence and take next available action.
+- [x] Confirm prior-head CI40173877564 passes both jobs; no local numerical process remains live.
+- [x] Specify baseline/MS identifiability, admission gates and full-goal constraints before new code.
+- [ ] Qualify public processed calibration assets and preserve source conflicts; use the shared Hitlist metadata system.
+- [ ] Register a direct biological baseline only after its target/observer contract is justified; retain original outer partitions closed.
