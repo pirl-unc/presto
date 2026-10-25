@@ -13781,3 +13781,16 @@ Intervening cleanup follow-up: no scientific progress; no experiment was launche
 Current family: experiments/2026-10-25_0711_codex_native-acquisition-sensitivity; full availability goal remains active/unachieved.
 
 Review0711: all3numerical stages pass unchanged resource limits; data-free checks and independent scalar replay8520values/1896contributors pass. Median complementary acquisitionPearson.838178,all9positive; omissionchangeRMS.04474–.09121 versusresponseRMS.43160. Fixed decision advances boundary-context hypothesis, not RL or a biological success claim. Hitlist2.0.38published and both distributions byte-match release40169827556. Nextspec: experiments/agents/codex/plans/native-boundary-context-development.md. Fullgoalactive.
+
+
+## Native boundary-context development 2026-10-25_0726
+
+- [x] Revalidate lastturn: progress (closed0711diagnostic and verified2.0.38publication). Prior PrestoCI40172565872confirmed live; docs pass.
+- [x] Register same-cohort,149feature boundary comparison and fixed nestedcomponentCV/gates.
+- [x] Qualify actual fitter, independently reconcile all boundary contexts and check fold support before fits.
+- [x] Fit only original training components; evaluate developmentOOF once and independently replay every fit, selection, metric and bootstrap draw.
+- [x] Close report/artifacts/registry, publish evidence and choose next scientific action; full availabilitygoal remains unachieved.
+
+Family: experiments/2026-10-25_0726_codex_native-boundary-context. Plan: experiments/agents/codex/plans/native-boundary-context-development.md.
+
+Review0726: fixed boundary149feature model fails all four development gates. RMSE.431426 versussequence.432811/length.429931; spread1.386%ofobservedSD; all5alphas100. IndependentSVD/context/metric/bootstrap replay149250numeric valuespasses; maxdifference8.32e-14. Five localstages passunchangedlimits. Nextplan native-reference-invariant-development.md preservesfeaturemaps and originalmodels and sets stoppingrule for response-only searches. Fullgoalactive/unachieved.

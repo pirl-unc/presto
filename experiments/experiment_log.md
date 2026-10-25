@@ -3822,3 +3822,29 @@ The full APC availability goal remains active and unachieved.
 - **Preferred next step:** fixed positive-correlation branch selects separately preregistered training-only parent-boundary-context comparison versus61features. No new model winner or exact/RL advantage.
 - **Takeaway:** acquisition instability is a weaker explanation for screen0630's collapse than it was before this diagnostic. Concordance can reflect shared-reference/observer effects; it neither validates biological replication nor resolves earlier full-model IC50underfit. Preserve inspected outer failures and require independent confirmation for any new representation.
 - **Shared data release:** Hitlist2.0.38 tested release40169827556passed, exact artifacts published and independently byte-verified; receipt in family results. Full APC availability/concentration goal remains active.
+
+
+## 2026-10-25 — Native parent-boundary context (0726)
+
+- **Agent/model:** Codex / GPT-6 (system identity).
+- **Directory:** [2026-10-25_0726_codex_native-boundary-context](2026-10-25_0726_codex_native-boundary-context/README.md).
+- **Question:** does immediate external parent context resolve the failed native response predictor after training acquisitions showed concordance?
+- **Dataset/curation:** fixed recipe0612, only158training contrasts/214endpoints/56human parents/55dependency components. PXD018722 nativeHEK293T control/PSMD2; six positive raw intensities perendpoint, PEP<=.01, no reverse/contaminants,8–25residues, all declared parents resolved to one literal nonengineered complete sequence. Same reference, graph, weights and acquisitions; no outlier/reliability filtering. Unresolved physical replication remains explicit.
+- **Assays and target:** raw non-MHC native sequence intensity only; meanKD-minus-control log10(peptide/reference ratio). No LFQ, MHC-elution, affinity/stability orTCRlabels, imputation/censor substitution. This is a conditional response, not APC concentration or full-pool abundance.
+- **Representations:** fixed zero, ln(length),61peptide features,149features including four external parent residues with20AA+OTHER+BOUNDARY. All exact overlapping occurrences averaged; all214actual endpoints have a single occurrence, independently reconciled to source spans.
+- **Training/pretraining:** no pretraining; qualification-only60synthetic known-context examples. Weighted ridge, no intercept/centering, training-only RMS, exact-zero coordinate removal, alpha[.01,.1,1,10,100], equal component/parent/contrast weight. Five fixed component development folds and three inner selection folds, with all scaling nested. Loss weightedMSE+alpha||beta||², no rank normalization. All surviving coefficients solved; no untrained encoder/head.
+- **Provenance:** base`0de1ef166c93eb3e9f92cd2e7e2eb82e17c49f4b`, dirty with unrelated work preserved. Shared manifest`5f1f388876e2b5b3f65d254ff4939d2559077c2e6af1dffe603b05a1283b836a`; ten numerical/launcher sources and exact invocation frozen before execution. Original61feature function byte-identical to0630. Raw input retained once underdata/.
+- **Hardware/runtime:** localCPU/oneBLASthread; noModalGPU/install. Qualification/prepare/fit/evaluate/replay0.678/1.032/1.187/1.003/0.810s; highest OSchildRSS207.6MiB. All first numerical attempts pass unchanged20minute/3GiB/1GiBreserve+32MiBstartup limits;50ms polling plusOSpeak, stage-start environment captured.
+- **Held-out validation/test:** intentionally not used; original inspected outer groups stay closed. Training-only nested developmentOOF predictions are retained, not relabeled a blind test. No IC50/500nMmetrics apply.
+
+| Condition | Weighted OOF RMSE | Pearson | Spearman | Prediction SD / target SD |
+|---|---:|---:|---:|---:|
+| zero | 0.431604 | undefined | undefined | 0.000% |
+| length | 0.429931 | 0.0900 | 0.1660 | 9.497% |
+| sequence | 0.432811 | -0.0961 | -0.0747 | 2.607% |
+| boundary | 0.431426 | 0.0475 | 0.0326 | 1.386% |
+
+- **Model support:** boundary alpha100 in every fold;130–137active/solved/nonzero coefficients, rank108–129. Largest inner stationarity residual2.78e-16. SVD replay verifies all240fits,9,480inner and632OOF predictions,2,000component-bootstrap draws and fixed decision;149,250numerical checks,maxdifference8.32e-14. Complete scales/coefficients/dropped coordinates, contexts and all metrics preserved.
+- **Uncertainty/decision:** boundary gain versus61features0.3201%, paired95%interval[-0.0373%,0.7336%]; versuslength-0.3476%. Only3of5folds improve. Every fixed gate fails (>=5%over allcontrols,>=25%spread,4of5folds,positive interval lowerbound). Bootstrap has overlapping development fit sets; not prospective transfer confidence.
+- **Winner/preferred condition:** length has lowest developmentRMSE, but no model qualifies. Do not promote boundary or extend the alpha grid.
+- **Takeaway:** immediate boundary context does not resolve the nearly constant predictor; acquisition repeatability is not evidence of sequence-generalizable response. This does not diagnose older neuralIC50underfit. Next is the separately fixed reference-invariant all-pairs objective/support comparison with the same feature maps and original models retained as controls. If that fails, stop expanding this response-only cohort and address baseline quantities/observation support before another generative comparison. Full precursor-relative APC availability remains unachieved.

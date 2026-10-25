@@ -249,3 +249,6 @@ claim that simply adding it can remedy the prior response-model failures.
 
 - [x] 0711 acquisition sensitivity: median training Pearson0.8382, all9positive; independently replayed. Hitlist2.0.38published/byte-verified.
 - [ ] Execute plans/native-boundary-context-development.md with fixed training-only nestedCV; outer groups remain closed and full APC availability goal unachieved.
+
+- [x] 0726 boundary-context development completed: all4gatesfail; all240fits/632OOFpredictions independently verified. Original outer groups stay closed.
+- [ ] Execute plans/native-reference-invariant-development.md: compare unchanged features with an all-pairs response loss, retaining frozen0726controls. If it fails, stop response-only feature/optimizer expansion and move to native baseline quantity/observation contract.
