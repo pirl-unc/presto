@@ -1,0 +1,19 @@
+{
+  "status": "canonical_source_and_support_verified_no_training",
+  "hitlist_pr": 832,
+  "hitlist_commit": "7ece0885b8423f4aae205bfdf36b801d2106c842",
+  "source_manifest_sha256": "fd91bb6ff3178a2246b760f6b0f99bc3824d83815a65719c34587816f3459974",
+  "independent_replay_passed": true,
+  "n_candidate_rows": 1278,
+  "n_candidate_sequences": 237,
+  "n_acquisitions_with_intact_substrate": 21,
+  "training": null,
+  "heldout_metrics": null,
+  "initial_verifier_failure_preserved": true,
+  "pending": [
+    "hosted_full_tests",
+    "source_release",
+    "shared_kinetic_recipe",
+    "prospective_fit"
+  ]
+}

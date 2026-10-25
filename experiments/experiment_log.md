@@ -3603,3 +3603,47 @@ The next [prospective admission plan](agents/codex/plans/observer-composition-tr
 - **Verification / runtime:** Independent OOXML/openpyxl replay verifies every populated cell and2,991stored formula caches; source hashes, CRCs and advertised sizes agree. Final positional discrepancies zero. Retrieval4,718,213bytes/44.07active seconds including failed bundle timeout; cell audit9.11s/84.94MiB, final quantity audit1.17s/64.88MiB, closure.013s/53.41MiB. All1GiBfree-disk/3GiBRSS/20minute/256MiBdownload gates pass. Original wrong-route empty response, formula-reader failure, abbreviated header and superseded header-driven findings retained; final scripts pass isolated lint/format. SI figures/captions visually inspected; no plot digitization or RAW reprocessing.
 - **Training / evaluation:** none: no pretraining, optimizer, loss, synthetic biological targets, assay-head mapping, validation/test partition or prediction dumps. Source qualification precedes shared admission; regression/binder metrics inapplicable. Prior biological held-outs remain closed and no predictive baseline changes.
 - **Decision / next:** original kinetic quantities are available with explicit exceptions. [Hitlist831](https://github.com/pirl-unc/hitlist/issues/831) owns homogeneous source ingestion, conflicts, missing acquisition/replicate/material and machinery values. Admit/replay through shared APIs before a separately registered matched exact/sampled generation-destruction comparison. One substrate/purified preparation does not establish APC concentrations or new-protein transfer; full goal remains active and unachieved.
+
+
+## 2026-10-25_0021_codex_intact-canonical
+
+**Date/agent/model:** October25,2026; Codex/GPT-6.
+**Directory:** [canonical intact-degradomics admission](2026-10-25_0021_codex_intact-canonical/).
+**Status:** source build, independent public-query replay and prospective support
+census complete; no biological fit or prediction. Shared source[Hitlist832](https://github.com/pirl-unc/hitlist/pull/832)
+is draft at7ece0885; full hosted gates/release pending.
+
+**Data/curation:** original PXD058121 human alpha-synuclein/mouse-organ purified20S;
+14pinned assets/eight workbooks. Source schema26/catalog32; standalone manifest
+fd91bb6ff3178a2246b760f6b0f99bc3824d83815a65719c34587816f3459974.
+All410,349XML cells/325,718populated values,2,991formulas,17,862input-mass rows,
+8,138assignments and44,457quantities are retained. Independent original OOXML,
+openpyxl and public joined-query checks pass. Publisher3,427links retain one
+quantity conflict; nine repeated views remain non-independent. Unknown molarity,
+initial product pool, physical specimen/replicate identity and mass-match
+confidence are not imputed or promoted to negative/censor labels.
+
+**Training/pretraining/synthetic/loss/output contract:** none; source qualification
+only. Software fixtures are synthetic tests, not training labels. No affinity,
+stability, MHC/TCR or other assay family trains. No validation/test split or
+prediction dump exists because a separate kinetic model contract must precede
+fitting. Binding/500nM metrics are inapplicable. Local CPU/one numerical thread;
+no Modal/GPU/installations. Exact git state, runtime snapshots, invocation/env and
+resource caps are in `reproduce/launch.json`, scripts and copied plan.
+
+| Condition | Wall seconds | Peak polled RSS | Outcome |
+|---|---:|---:|---|
+| Build with deterministic producer replay |13.37|659.4MiB|Pass|
+| Initial independent source replay |12.14|943.2MiB|Verifier omitted substrate-only control grammar; preserved failure|
+| Explicit control-grammar amendment |12.25|946.7MiB|Pass; canonical bytes unchanged|
+| Prospective kinetic support census |8.12|748.5MiB|1,278candidate cells/237sequences; intact parent in all21acquisitions|
+
+**Decision:** source package can support a separately qualified kinetic recipe.
+No winning predictive model. Unlike the MAPP/lymph composition targets, these
+measurements include ordered substrate/product time courses and short products;
+they remain purified-mixture signal, not APC concentrations.80sequences recur at
+at least two early and one late time, enabling a prospective temporal forecast.
+The next frozen plan compares direct controls with exact expected fragmentation
+and conditional trajectory score gradients. Artifacts include every candidate
+disposition, source/build/replay summaries, resource receipts and failed audit.
+The full APC availability goal remains active and unachieved.

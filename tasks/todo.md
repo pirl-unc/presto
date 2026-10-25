@@ -13459,3 +13459,14 @@ release40144589370is pending behind running MAPP2.0.31 release40143097533.
 
 - [ ] Implement shared intact-degradomics source admission with explicit exceptions.
 - [ ] Independently replay canonical quantities, then freeze the kinetic experiment.
+
+## Intact-degradomics canonical source
+
+- [x] Freeze source implementation and 45-test local verification in family0021.
+- [x] Build shared canonical source under the registered resource caps.
+- [x] Independently compare public queries with original cells/quantities/links.
+- [ ] Close source admission, publish shared changes and freeze kinetic fitting.
+
+Previous goal turn made progress: fixed acquisition-label and public-join bugs; six fixtures passed. No biological fit or source admission was claimed.
+
+Review: source build/replay and descriptive support pass in family0021; draft Hitlist832published.45relevant tests pass; hosted full gates pending. Intact substrate in all21kinetic acquisitions and80early/late recurrent sequences permit a prospective forecast. Frozen model plan distinguishes exact span expectations from hybrid conditional score gradients. No biological training run yet. Hitlist2.0.31 is published with exact PyPI byte verification;2.0.32 release build remains active.

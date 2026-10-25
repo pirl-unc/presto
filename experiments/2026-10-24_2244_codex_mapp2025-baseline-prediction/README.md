@@ -170,7 +170,8 @@ Status: biological comparison and independent outcome verification complete.
 `58f67cd278d75d43432f3c20231de9c21c66ad46`. The original local post-rebase disk-guard
 errors remain preserved. Source Hitlist2.0.30 is published; both PyPI distributions
 are byte-identical to successful clean-main build40140479531. Recipe2.0.31 release
-build40143097533 is pending. See the updated software-publication receipt.
+build40143097533 passed; both published PyPI distributions are byte-identical
+to its tested artifacts (receipt `results/recipe-2031-release.json`). See the updated software-publication receipt.
 
 The primary gate fails; the narrower distribution-versus-uniform gate passes.
 All four frozen runtime files remained byte-identical after the earlier rebase.
