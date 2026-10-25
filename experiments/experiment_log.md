@@ -3968,3 +3968,52 @@ The full APC availability goal remains active and unachieved.
   manifest is reproduce/closure-released.json; source replay at d614b8c and the
   earlier preparation closure remain historical. No executable/configuration
   snapshot was rewritten.
+
+## 2026-10-25 — Conditional nominal-dose diagnostic: proportional response beats constant
+
+- **Agent/model:** Codex / GPT-6; [family1423 and complete reproduction](2026-10-25_1423_codex_dilution-dose-diagnostic/README.md).
+- **Source/curation:** PXD024809, released Hitlist2.0.40/d76c225 and canonical
+  family0959; generic shared recipe admits 87 positive exact-linked standard
+  signals from 90 slots across nine standards, five nominal levels and two
+  distinct DIA methods. Preserve one unmatched positive, two zeros and the absent
+  tenth intended standard. Nominal solution amounts, filename-derived joins and
+  twofold-versus-1:10 conflict remain qualified; no imputation or inferred LOD.
+- **Representation/output:** Standard/form/charge/method intercepts plus supplied
+  log relative nominal dose; target log10 aligned arbitrary signal. No sequence
+  encoder, auxiliary/species/APC/TCR/affinity or availability parameters allocated.
+- **Training:** Equal-group weighted least squares; 18/18/19/20 fitted coefficients
+  for constant/unit/shared/method-slope arms. No pretraining, regularization,
+  hyperparameter search or biological synthetic training; only software fixtures.
+- **Evaluation:** Five leave-level-out development folds hold both methods at each
+  dose together; 20 fold fits and four descriptive full fits. No independent test:
+  selected outcomes previously inspected, no independent preparation/biological
+  replication. Original native outer data remain closed. Binding metrics do not
+  apply. All development and descriptive per-example predictions are retained.
+
+| Arm | Fitted coefficients | Equal-group RMSE | Pooled RMSE | Pearson | Spearman | Centered prediction / target SD |
+| --- | --- | --- | --- | --- | --- | --- |
+| Per-group constant | 18 | 0.665914 | 0.653779 | 0.5316 | 0.5038 | 0.2757 |
+| Fixed unit dose slope | 18 | 0.334620 | 0.321510 | 0.9028 | 0.9400 | 0.8022 |
+| Learned shared slope | 19 | 0.340878 | 0.330683 | 0.9003 | 0.9348 | 0.9226 |
+| Learned slope per DIA method | 20 | 0.343272 | 0.332993 | 0.8989 | 0.9366 | 0.9237 |
+
+- **Fixed gates:** Shared slope improves macro RMSE48.81%, all five slopes positive
+  (1.01096–1.23128), centered prediction SD92.26% of observed, both methods improve;
+  all four gates pass. No outcome-driven exclusions or further fitting occurred.
+- **Preferred condition:** Fixed unit slope, RMSE0.334620 versus constant0.665914
+  (49.75% gain). Full-data shared slope1.098346 and method slopes1.139477/1.055775
+  provide descriptive checks; added slopes do not improve held-level error.
+- **Verification:** Six software tests; independent pre-fit replay of12canonical
+  tables,4,936metadata cells,90slots and261transforms. All24fits and696predictions
+  independently reconstruct;4,075numerical checks differ by at most2.66e-14.
+  Copied-source-field and CSV bookkeeping passes; frozen source/plan unchanged.
+- **Runtime/reproduction:** Exact invocations and code snapshots in family1423;
+  execution from ca12f5d with complete new code snapshots and unrelated task edits
+  preserved. Local CPU, one BLAS thread, no GPU/Modal/shared install. All five
+  stages pass first attempts in41.01s total. Fits take1.02s/139.41MiB; largest
+  stage peak is1,854.28MiB. Unchanged20min/3GiB/1GiB guards pass.
+- **Decision/limits:** Rough proportional signal-to-dose behavior is supported for
+  this selected panel/protocol. The observer cannot infer unseen-peptide offsets
+  or native/APC amounts. Stop expansion on this panel; qualify broader independent
+  amount/response anchors and protocol transfer for the next availability model.
+  No new RL advantage or complete biological concentration model is claimed.

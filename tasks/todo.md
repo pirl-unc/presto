@@ -13911,12 +13911,21 @@ produced. The original objective remains active and unachieved.
 
 - [x] Close tested Hitlist2.0.40 publication and independently verified PyPI artifacts.
 - [x] Register the simple four-arm dose-response specification before code or fits.
-- [ ] Freeze a timestamped family, public-API recipe, launch code and source-backed metadata.
-- [ ] Verify admission and fitting boundaries, then run the 24 fixed fits under unchanged guards.
-- [ ] Independently replay predictions/metrics and publish the canonical experimental closure.
+- [x] Freeze a timestamped family, public-API recipe, launch code and source-backed metadata.
+- [x] Verify admission and fitting boundaries, then run the 24 fixed fits under unchanged guards.
+- [x] Independently replay predictions/metrics; prepare canonical closure for publication.
 
 Review: experiments/agents/codex/plans/dilution-conditional-dose-diagnostic.md
 prespecifies conditional positive-signal targets, all intended-standard and
 missingness dispositions, separate DIA methods, leave-level-out development
 evaluation and simple constants/unit/shared/method-slope controls. No new model
 fit or biological result has occurred. This is not APC concentration validation.
+
+
+Execution review: family2026-10-25_1423_codex_dilution-dose-diagnostic passes all
+five stages on first attempts. Shared recipe admits87of90standard slots; full
+panel/missingness retained. Unit slope macroRMSE0.334620 versus constant0.665914;
+shared slope0.340878 passes all four fixed gates. All24fits/696predictions replay
+independently. This supports protocol-scoped dose response, not native/APC amounts.
+No further complexity is justified on this panel; next qualify broader independent
+amount/response anchors and transfer, keeping original native outer data closed.

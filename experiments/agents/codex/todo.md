@@ -258,4 +258,5 @@ claim that simply adding it can remedy the prior response-model failures.
 
 - [x] 0813 source audit independently verifies PXD024809 complete quantity grid and nominal standard panel. Source materialization supported; calibration fitting unadmitted.
 - [x] Shared source/reconciliation under Hitlist #845: source family0959 passes full independent replay; PR846 merged and tested PyPI2.0.40 verified byte-for-byte. Dilution conflict and amount/certification limits remain explicit.
-- [ ] Implement and run plans/dilution-conditional-dose-diagnostic.md through the existing declarative Hitlist recipe API; keep it separate from broad sequence response and native/APC validation.
+- [x] family1423 executes the conditional-dose plan through the generic shared recipe: 24 verified fits; unit slope gives 49.75% lower development RMSE than constant. No native/APC calibration claim.
+- [ ] Qualify independent peptide amount/response anchors and protocol transfer beyond nine selected standards, then resume the native-baseline/full-candidate comparison under the broader observation-admission plan.
