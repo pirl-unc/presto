@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/analyze.py", line 353, in <module>
+    main()
+  File "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/analyze.py", line 206, in main
+    semantic(root, data)
+  File "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/analyze.py", line 253, in semantic
+    assert [r[1] for r in current_rows] == expected_doses
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

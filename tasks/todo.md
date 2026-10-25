@@ -14024,3 +14024,22 @@ Primary sequenceRMSE0.288802 loses to no-change0.216691 despite preserved output
 variation; exact/score models also lose. All fixed gates/bootstrap/strata replay;
 no F3 refit or secondary rescue. Source policy qualified; Hitlist848CI/release
 pending. Full precursor-relative APC availability remains active and unachieved.
+
+
+## Broader nontryptic calibration qualification
+
+- [x] Register candidate-selection criteria and a single inclusive discovery budget.
+- [x] Verify primary-study design and exact public processed-asset availability.
+- [x] Freeze numerical-inspection requests only if source support qualifies.
+- [x] Close source evidence and canonical registry; keep biological goal and prior test closures intact.
+
+Plan: experiments/agents/codex/plans/nontryptic-known-amount-screen.md.
+
+Review1816: source qualification closes with18 nontryptic sequences and348 original
+response slots independently verified. Exact acquisition joins and isotope metadata
+remain unresolved; no training admitted. Hitlist849 is filed and its exact body
+verified. All three guarded failures remain preserved. Existing Presto CI is green;
+Hitlist848 is merged and exact release40220737944 passed. Tested distributions
+are independently verified; public PyPI upload is awaiting explicit user approval
+after automatic review rejected that separate irreversible action. No upload ran. Full APC
+availability and biological exact/RL validation remain active and unachieved.

@@ -1,0 +1,29 @@
+{
+  "repository": "pirl-unc/hitlist",
+  "pull_request": 848,
+  "version": "2.0.41",
+  "source_commit": "85ff2c81cc7160444a701917fc4c09c419a876a1",
+  "workflow_run": 40220737944,
+  "workflow_url": "https://github.com/pirl-unc/hitlist/actions/runs/40220737944",
+  "workflow_conclusion": "success",
+  "artifact_id": 12610450520,
+  "artifact_zip_sha256": "9e7acd4417ff8d5a84f074a49a6b1ed67ae2d5d0f48e786e8562bdeac7f3b4c9",
+  "local_distributions": "data/tested_releases/hitlist-2.0.41-85ff2c8",
+  "canonical_release_verifier": "passed: both distributions match clean main and the successful workflow artifact",
+  "files": {
+    "hitlist-2.0.41-py3-none-any.whl": {
+      "sha256": "a6089a75e1b20bc981580724e9bf3006560116880f1219467388e6dae1a1f4a4",
+      "size_bytes": 3231856
+    },
+    "hitlist-2.0.41.tar.gz": {
+      "sha256": "f4fdc6dcbc2280f020ad47f1bf0e60931f55866efd62a03f40ab4f62553a3659",
+      "size_bytes": 3671108
+    }
+  },
+  "upload_status": "blocked_by_automatic_approval_review_before_command_execution",
+  "upload_attempt_executed": false,
+  "approval_required": "Explicit user authorization to publish the verified artifacts to public PyPI",
+  "review_reason": "Public package publication is an irreversible side effect not explicitly authorized by finishing a PR",
+  "pending_user_question": true,
+  "shared_environment_changed": false
+}

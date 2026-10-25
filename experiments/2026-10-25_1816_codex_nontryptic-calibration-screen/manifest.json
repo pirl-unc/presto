@@ -1,0 +1,555 @@
+{
+  "experiment_id": "2026-10-25_1816_codex_nontryptic-calibration-screen",
+  "status": "closed_source_screen_training_metadata_incomplete",
+  "source_commit": "a9ae724b026ae3f278ef11e11b31e3f26ef9e11d",
+  "n_model_fits": 0,
+  "required_artifacts": [
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/README.md",
+      "sha256": "d96bb1dcf25e94f9ecebdc8d23f326381cd96840d235100b36a53cc774cbb5de",
+      "bytes": 9353
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/analyze.py",
+      "sha256": "197b6bb0e98bf7cdc2f30fc89f38a85f6424a0813f90633bf5dd7bf8ee9de3e5",
+      "bytes": 14891
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/audit.py",
+      "sha256": "02acfce12a821ddad371acf5b037e60df4be4ea2da901d15011c39e775549ccb",
+      "bytes": 3941
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/diagnose.py",
+      "sha256": "07362a1258415c0d1492d5b292ff81865a298e00a2c86553c0c49998b82a8ae8",
+      "bytes": 2496
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/fetch.py",
+      "sha256": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "bytes": 8422
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/inspect.py",
+      "sha256": "23072b8b0b6e409aeb8db8afdbd1543540da35c8ce9767e751327cad70361138",
+      "bytes": 9958
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/launch.py",
+      "sha256": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "bytes": 7676
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/launch_analysis.py",
+      "sha256": "74e4b76eee0f7abcdefa56faa7e5d8f4ef0e89f32a11d446c0221a6b90dfc568",
+      "bytes": 7658
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/launch_audit.py",
+      "sha256": "2602e8ad8c3e2fe99ea8f72ff0755470e35f5ad12bc77f0e6efa67b926f0ecb6",
+      "bytes": 7656
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/launch_diagnose.py",
+      "sha256": "4ed9f0e9203c98f6615f742def8dddacad0def473a9fe9a442adb8c4a2230b98",
+      "bytes": 7659
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/launch_reconcile.py",
+      "sha256": "2365692205f84c5315b43bc4d77cc97b69a4efc4468612230b6928e989487405",
+      "bytes": 7660
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/reconcile.py",
+      "sha256": "b3979960d17feca63e69ecc83d4d18917cb7bedc336e2ee993e18fcd9058f45a",
+      "bytes": 10565
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/verify.py",
+      "sha256": "1ff381d4d624a648ec080868055e6600d81360d9b184e79ee2c2c4f80c6dcaa0",
+      "bytes": 10187
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/launch_logs/analyze-attempt1.log",
+      "sha256": "3eea2058e7a0ec74da7898c277fd8e7b707b47c7c207d12bab36f7fe27c17c89",
+      "bytes": 714
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/launch_logs/audit-attempt1.log",
+      "sha256": "030a1e8ab3ca3518dbfd485638efccff336693cb97a4121a5638f51d21941e2e",
+      "bytes": 302
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/launch_logs/diagnose-attempt1.log",
+      "sha256": "06043cad9d31f678c6fb6a0e4428b9080d494ee890a0aba86e1fd5938b33c455",
+      "bytes": 1288
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/launch_logs/fetch-attempt1.log",
+      "sha256": "e2a12c0c35bc19d4ad4eefb3a048a433f41d7c592f4e15334bfa12dc0e559735",
+      "bytes": 721
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/launch_logs/fetch-attempt2.log",
+      "sha256": "273502ab06968ffb66d7fd351fce9bba766b4ee39188c0e85eefc87eb8002647",
+      "bytes": 1523
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/launch_logs/fetch-attempt3.log",
+      "sha256": "59d146fc80d57d0b1382575acb50396da27ad2f12de0e986f6b4b02c8e22e11e",
+      "bytes": 2502
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/launch_logs/fetch-attempt4.log",
+      "sha256": "03494ecaa77f11437ee79f7b0a47c96b0f21fbbe8d7acbf8d032058acf09ac0c",
+      "bytes": 626
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/launch_logs/inspect-attempt1.log",
+      "sha256": "e22cc6c00d2373c9dd40233f221f07e89cae979985b44bf3f3bef14dc80bfbc7",
+      "bytes": 266
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/launch_logs/reconcile-attempt1.log",
+      "sha256": "1598808dd22dcb775a487914f73d00de1edfd7827dc73e29bfea7218447cafd3",
+      "bytes": 2795
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/launch_logs/verify-attempt1.log",
+      "sha256": "fff16ea0986879e7c27a000aa5e29dbc129f7a77bd34d00ef634b252ce66af09",
+      "bytes": 1925
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/analyze-attempt1-launch.json",
+      "sha256": "5b99713a786744b9a533dbc3d6e8dbdb5c71ad53caf889eadf0d79ca005fe887",
+      "bytes": 5392
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/audit-attempt1-launch.json",
+      "sha256": "0d07b07e19777244615ab59c5aadfdaa3ddb61b948cd65a20f56a8f15929cee2",
+      "bytes": 5607
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/dependency-recovery.md",
+      "sha256": "54626efeb92dca14426854436eda5734bee8e2367453215ecffb4bb55c0400cc",
+      "bytes": 1044
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/diagnose-attempt1-launch.json",
+      "sha256": "85cd1bc3666c58b17908a1b734eee75cb556184c614975afbae35a2bd84b0732",
+      "bytes": 5396
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/fetch-attempt1-launch.json",
+      "sha256": "10c7f7246ab8d3eccb9d281a8330d85fb511c99bb186920afb1705a2a3b694bc",
+      "bytes": 3533
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/fetch-attempt2-launch.json",
+      "sha256": "3f0008d6ac55cd3d9373ba92d6b993aae13c61953002b7170ab91f283e5286bf",
+      "bytes": 3694
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/fetch-attempt3-launch.json",
+      "sha256": "bcc5f7ba566c71295b0fda81d77ae94fcdbf61599cb96bd7bd6562670a3fd36f",
+      "bytes": 4904
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/fetch-attempt4-launch.json",
+      "sha256": "b019702e473ad2f03dc8cb9af87f9447eb7e311f1cfdfe566dde41e912489a6c",
+      "bytes": 3589
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/identity-audit-recovery.md",
+      "sha256": "f09be6c295814ca7876454dc0c88899c418773661e4257f669ea0e2ab5ae17fd",
+      "bytes": 650
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/inspect-attempt1-launch.json",
+      "sha256": "2200d777c3f4d1d13349b9d6802b69d7ca9383aab1d3510f42472361a741e7fa",
+      "bytes": 6162
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/launch.json",
+      "sha256": "eb28c83d7046a1c3aa57df0c92b21b6686149635abed805e9d50c2846d0b6e6e",
+      "bytes": 2492
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/launch.sh",
+      "sha256": "b44ae41c582274953b5c1c92f22f989feabeb541cc1578dab2d3c85637f6c471",
+      "bytes": 247
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/layout-recovery.md",
+      "sha256": "c4f109c80088d32118a4197afcd66fa66f0d67f1e91857adae343cdd28cf5794",
+      "bytes": 932
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/plan.md",
+      "sha256": "7ad517e8c7cd74c2453e7bc916cfbdc0263fc2f325c5eae4ff6ecec4584cae2c",
+      "bytes": 3708
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/reconcile-attempt1-launch.json",
+      "sha256": "78ed8835a158a5535f8a3fe40d066971810b609c9fa68466681900abdebca3ce",
+      "bytes": 5403
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/analyze-1.json",
+      "sha256": "ee7fcc24a9eff8009baecfa0eaced3c3ba1fdb3e769c46bb40114abfe8ed8a64",
+      "bytes": 2331
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/audit-1.json",
+      "sha256": "f99b8511e59b956035e0867e686be170b8a708d91b03201d311f350542af88c1",
+      "bytes": 2551
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/diagnose-1.json",
+      "sha256": "add3f40e77c322d3feff9eacc73c2bac49661dc05e77eb045bcff1ecfe34e05c",
+      "bytes": 2333
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/inspect-1.json",
+      "sha256": "238099449e2fb6c676421e091e43e1fecde88d04781ebbbe32b4d3510157be97",
+      "bytes": 3040
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/inspection-scope-1.json",
+      "sha256": "afba41f5185ebeda0f43df7af13338390e1f3d36872dc731daa68d9a0bec8cad",
+      "bytes": 1241
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/inspection-scope-2.json",
+      "sha256": "69ba1b5f08a076e225c329c5d4eab653bdba7326982bc83fc374783a299805b3",
+      "bytes": 420
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/metadata-1.json",
+      "sha256": "bf8db4db418a888492ed7421c5773707dfca665e48f5b9819bf25c7cbc957094",
+      "bytes": 442
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/metadata-2.json",
+      "sha256": "3d600e5925412f40dfd7cb75cdfcefb227a16188c7f471e715ac787f3a508c18",
+      "bytes": 591
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/processed-1.json",
+      "sha256": "1576f7686eaf67aeab7b0d23b9466a52efe4a6ba4d1ed395d30655aacafd1ba6",
+      "bytes": 1768
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/processed-2.json",
+      "sha256": "da44798be6466cf06c1e51ab2fc15e458c00dfebafb0559a4c44cd836bd1ca23",
+      "bytes": 495
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/reconcile-1.json",
+      "sha256": "acf64a769b35dcdeee328e5d5e98f1f56042450c927ed4cabecda6e9f9df5805",
+      "bytes": 2337
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/verify-1.json",
+      "sha256": "fb70f69eb6ce44dbfe554c69e235b248fe9f5a40482292cdff205037a51061c4",
+      "bytes": 3138
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/semantic-recovery.md",
+      "sha256": "8d0b9815ec5d75933624e04440ed903ef4eecf8fe83924564c71c61f16b61ef4",
+      "bytes": 1449
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/analyze.py",
+      "sha256": "197b6bb0e98bf7cdc2f30fc89f38a85f6424a0813f90633bf5dd7bf8ee9de3e5",
+      "bytes": 14891
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/audit.py",
+      "sha256": "02acfce12a821ddad371acf5b037e60df4be4ea2da901d15011c39e775549ccb",
+      "bytes": 3941
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/diagnose.py",
+      "sha256": "07362a1258415c0d1492d5b292ff81865a298e00a2c86553c0c49998b82a8ae8",
+      "bytes": 2496
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/fetch.py",
+      "sha256": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "bytes": 8422
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/inspect.py",
+      "sha256": "23072b8b0b6e409aeb8db8afdbd1543540da35c8ce9767e751327cad70361138",
+      "bytes": 9958
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/launch.py",
+      "sha256": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "bytes": 7676
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/launch_analysis.py",
+      "sha256": "74e4b76eee0f7abcdefa56faa7e5d8f4ef0e89f32a11d446c0221a6b90dfc568",
+      "bytes": 7658
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/launch_audit.py",
+      "sha256": "2602e8ad8c3e2fe99ea8f72ff0755470e35f5ad12bc77f0e6efa67b926f0ecb6",
+      "bytes": 7656
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/launch_diagnose.py",
+      "sha256": "4ed9f0e9203c98f6615f742def8dddacad0def473a9fe9a442adb8c4a2230b98",
+      "bytes": 7659
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/launch_reconcile.py",
+      "sha256": "2365692205f84c5315b43bc4d77cc97b69a4efc4468612230b6928e989487405",
+      "bytes": 7660
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/reconcile.py",
+      "sha256": "b3979960d17feca63e69ecc83d4d18917cb7bedc336e2ee993e18fcd9058f45a",
+      "bytes": 10565
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/source/verify.py",
+      "sha256": "1ff381d4d624a648ec080868055e6600d81360d9b184e79ee2c2c4f80c6dcaa0",
+      "bytes": 10187
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/verify-attempt1-launch.json",
+      "sha256": "c8d80ecb5ed12f208022feb8443ab8a351412bb2e2388bd4d43ea12491eea568",
+      "bytes": 6260
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/PMC8449407-inventory.xml.links.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/PMC8449407-inventory.xml.receipt.json",
+      "sha256": "8f8d70992038fe60b112c17e1bdda70709bc2bf70a5e5b4b352f979adcc56fdf",
+      "bytes": 1146
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/PMC8449407.1.json.links.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/PMC8449407.1.json.receipt.json",
+      "sha256": "24091a5e2664115766dd23218ce6ba98dc7ea923958c356820f81705bbbe5e7f",
+      "bytes": 1230
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/PMC8449407.1.xml.links.json",
+      "sha256": "fe9a347b36f16dd137cb2992a77ac44313c1365e91e1d54c6f02b776baa011bf",
+      "bytes": 3172
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/PMC8449407.1.xml.receipt.json",
+      "sha256": "a4002ed2681922ea90fbacd4c8cb7bd68913ab0e9fef9ffc75b49a316eecbf90",
+      "bytes": 964
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/analyze-attempt1-process.json",
+      "sha256": "84f98624640f27f10bc3b8fd530fd35cd235c0b4139f5e536ca3ab7373cf513e",
+      "bytes": 3490
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/analyze-attempt1-runtime.json",
+      "sha256": "d967febaef03a8a565f8c9e78db2c9e32d68cb029a4aedfd3e8d2b3d095c627d",
+      "bytes": 3966
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/audit-attempt1-process.json",
+      "sha256": "d9f8594aaa44be2cdc047039e0e37232918d29eb718c9034392a6dab29343fb7",
+      "bytes": 3699
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/audit-attempt1-runtime.json",
+      "sha256": "d1ee95f815c37e5d40314352d54b0afcede6e1b499e9950fe93af7ebd63d3a78",
+      "bytes": 4181
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/candidate-selection.json",
+      "sha256": "3330be1bba7c2fce9f05c93f0c483babb276c06b69103fcd8e2535a797351350",
+      "bytes": 478
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/closure-summary.json",
+      "sha256": "eac66fddecde67f97e747d6d5eddf90fc6867e379bb3a1daf1648b907cf870aa",
+      "bytes": 1213
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/diagnose-attempt1-process.json",
+      "sha256": "8d28bce80918cd511624f5dfed1ea39e8550ddf146875968223f65f37ffe149a",
+      "bytes": 3495
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/diagnose-attempt1-runtime.json",
+      "sha256": "b89e6709afbb17e7aa564f651035f8c95c858f6a76a9f6d790ed2fbd64eca90b",
+      "bytes": 3971
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/discovery-ledger.json",
+      "sha256": "1f42bee02c5dc2438ad9684698d1021029d55d757cb752f39707d493f2f02738",
+      "bytes": 4193
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/dose-signal-cells.json",
+      "sha256": "b123848c362ddb27e7498caf7f1beeb3a5c84ee90d23ed59511fd6406584196f",
+      "bytes": 171573
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/fetch-attempt1-process.json",
+      "sha256": "f87e4c9d3ec3c47b0f3557c17d566dc2df6759a7d121d48545d846a061ff029f",
+      "bytes": 1624
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/fetch-attempt1-runtime.json",
+      "sha256": "f6c30f923eee087f2c654ae4bae917a26fb983131e8c82963272d60bb49e926e",
+      "bytes": 2054
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/fetch-attempt2-process.json",
+      "sha256": "99020dd2c991ffdec6604251bcec6ebe30e4941a6586f8e353fce1a55d268b6d",
+      "bytes": 1739
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/fetch-attempt2-runtime.json",
+      "sha256": "3ecc03e9000b649b737fa6ece0475dbefab97c6d7a2ec03cb2717e1706ecb098",
+      "bytes": 2215
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/fetch-attempt3-process.json",
+      "sha256": "b5d930ba306444cc7b06e0638a5c97a58692d132ef3ef134802d3f37d517d218",
+      "bytes": 2825
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/fetch-attempt3-runtime.json",
+      "sha256": "5750ccb22402bca7070212d97cf1a3728f0d9553f64996aa00d06b2f4e7299bd",
+      "bytes": 3424
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/fetch-attempt4-process.json",
+      "sha256": "06082f53371f0b5b86eed9c9e7c6ad14a34caca1b2d6ae90bee0b9733b8e1236",
+      "bytes": 1671
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/fetch-attempt4-runtime.json",
+      "sha256": "189ee8e72f0d6020eaac5705a1a29f3d0b5f5d526d65b5bb3c85ddaae87d7d0a",
+      "bytes": 2109
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/hitlist-2.0.41-tested-release-manifest.json",
+      "sha256": "7d20178bbd56431df6e404bb451c4b873d2903199acb5384f27213a39b11977d",
+      "bytes": 20807
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/hitlist-issue-body.md",
+      "sha256": "6a404cea9305a855db8f1ddb5b75b8b1442fa8ec979a14141d01427b30afa199",
+      "bytes": 6587
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/hitlist-issue-readback.json",
+      "sha256": "83f2e4440cb0a11ac0905aef39141347d38a658b6e793dc8c70b04a5e0998ebb",
+      "bytes": 7267
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/inspect-attempt1-process.json",
+      "sha256": "3fd030fc69ab93a74dd55f45c64f7d677cf48e5997d776121e16b8e849ee3cef",
+      "bytes": 4180
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/inspect-attempt1-runtime.json",
+      "sha256": "af24c45c0e8b67b00e554d6f40e170710d2660b17bcaa9d72de9c09491e980d4",
+      "bytes": 4683
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/isotope-inventory.json",
+      "sha256": "ca9de8c7d0cecfe0ba42bec5545f0f18081d1383120c5e1f58c2f21aecb28f05",
+      "bytes": 15158
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/layout-diagnosis.json",
+      "sha256": "77d954c5259b981ceb99b52d32540252cfb24c9b0db05404c9086826e9dcda4e",
+      "bytes": 111819
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/pnas.2111173118.sapp.pdf.receipt.json",
+      "sha256": "56f63fb5053934cc20cfc919e11de55f8a143802b909199cc266a005edf5e823",
+      "bytes": 1077
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/pnas.2111173118.sd01.xlsx.receipt.json",
+      "sha256": "ed0a3f663206fecf005978eabaa76dae7ca9130238a10b9dafb1bcd78b5bd89f",
+      "bytes": 1079
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/pnas.2111173118.sd03.xlsx.receipt.json",
+      "sha256": "2e69084716a018c407d91d2bab8597e578aa0fd38df1c56796a757ab38e30f96",
+      "bytes": 1079
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/pnas.2111173118.sd06.xlsx.receipt.json",
+      "sha256": "46a20c637b8091fcdd032b308ea18e1d326081e5fc7bedc205e0d24bd4c88439",
+      "bytes": 1097
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/pnas.2111173118.sd07.xlsx.receipt.json",
+      "sha256": "171df93350399af12a221db7a0fb41c66cc0d9626854666b2d44b9b5c88001c4",
+      "bytes": 1080
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/reconcile-attempt1-process.json",
+      "sha256": "7aba7b3a9210311ca349eb3d980155ce78890984021780f6ff8883c47b52ee41",
+      "bytes": 3501
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/reconcile-attempt1-runtime.json",
+      "sha256": "4a23cca9c9c73ff90cbf0ce34dbfbddcbf1b30315f8f4b4cc9bd1737313cc7e8",
+      "bytes": 3977
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/related-software-release.json",
+      "sha256": "3af79effad57b4fb475c1f159bdb220e9f919c6b4823d54bd8508225a74b0370",
+      "bytes": 1354
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/semantic-independent-audit.json",
+      "sha256": "95e26ebfdf3bf8cbc574d0b3cf027858cc1578c7d7100a322e4dc3148be945a4",
+      "bytes": 30559
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/semantic-qualification.json",
+      "sha256": "c843b31deedadfb44d7be49c174e02b80aa0a3cd527f3de9030cedcc0c2b711a",
+      "bytes": 2186
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/source-inventory.json",
+      "sha256": "b4680ab482ef1dd073ecf191119997c511ae59751f8e060fb3a1cecb579b3325",
+      "bytes": 29969
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/verification-summary.json",
+      "sha256": "515afb2249da6a85ac6f7d6c00e768e1b914cbfb8297177254158e5e1e3599e3",
+      "bytes": 864
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/verify-attempt1-process.json",
+      "sha256": "e49d3f9fe3854ab81ae6ae0bbea12ffe72f62b80de8cf69bf1bfd703ed2989c2",
+      "bytes": 4274
+    },
+    {
+      "path": "experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/results/verify-attempt1-runtime.json",
+      "sha256": "a3ade47d353dccba13e44db69d469458381bce01627cb30589c129318d234eb8",
+      "bytes": 4784
+    }
+  ],
+  "excluded": "manifest itself and tool caches; raw inputs stored once under data with published receipts",
+  "full_goal_complete": false
+}

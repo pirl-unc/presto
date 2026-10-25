@@ -1,0 +1,63 @@
+{
+  "stage": "fetch",
+  "attempt": 2,
+  "started_utc": "2026-10-25T18:21:32.376893+00:00",
+  "status": "passed",
+  "child_launched": true,
+  "exit_code": 0,
+  "resource_violation": null,
+  "memory_admission": {
+    "metric": "macos_free_plus_speculative",
+    "bytes": 13483425792
+  },
+  "disk_free_before_bytes": 15404118016,
+  "request_set_sha256": "3d600e5925412f40dfd7cb75cdfcefb227a16188c7f471e715ac787f3a508c18",
+  "request_set": {
+    "phase": "metadata",
+    "requests": [
+      {
+        "name": "PMC8449407.1.json",
+        "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC8449407.1/PMC8449407.1.json",
+        "expected_kind": "json",
+        "discovery_provenance": "Exact versioned object name and size in official S3 inventory, operation5."
+      },
+      {
+        "name": "PMC8449407.1.xml",
+        "url": "https://pmc-oa-opendata.s3.amazonaws.com/PMC8449407.1/PMC8449407.1.xml",
+        "expected_kind": "xml",
+        "discovery_provenance": "Exact versioned object name and size in official S3 inventory, operation5."
+      }
+    ]
+  },
+  "environment": {
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "versions": {
+      "requests": "2.34.2",
+      "psutil": "7.2.2"
+    },
+    "overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    }
+  },
+  "child_pid": 63742,
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "-B",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/code/fetch.py",
+    "--requests",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1816_codex_nontryptic-calibration-screen/reproduce/requests/metadata-2.json"
+  ],
+  "elapsed_seconds": 0.5028569169808179,
+  "peak_observed_process_tree_rss_bytes": 46366720,
+  "peak_child_process_rss_bytes": 46972928,
+  "rss_poll_interval_seconds": 0.05,
+  "disk_free_after_bytes": 15404015616
+}

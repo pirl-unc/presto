@@ -266,5 +266,22 @@ claim that simply adding it can remedy the prior response-model failures.
 
 - [x]1735qualifies original no-additional-modification search declaration without rewriting raw nulls.
 - [x]1747new method-supported cohort passes source gates;21fixed models/8,925predictions and all metrics replay. SequenceRMSE0.288802 loses to no-change0.216691; no learned model is promoted.
-- [ ] Finish Hitlist848 new-head CI, merge and tested2.0.41publication; preserve original source generation and strict endpoints.
+- [x] Hitlist848 new-head CI passed and merged as85ff2c81; preserve original source generation and strict endpoints.
+- [x] Exact tested2.0.41 release40220737944 passed; both distributions match clean main and Actions.
+- [ ] Publish those exact artifacts only after the pending explicit user approval. Automatic review rejected public PyPI publication before execution; do not retry or bypass. Then independently verify PyPI bytes.
 - [ ] Qualify broader amount/processing-context support before another matched exact/discrete biological comparison. Do not refit/tune F3, reopen old native/F2 held-outs, or mistake this one-substrate transfer for APC concentration validation.
+
+
+## Broader nontryptic response calibration
+
+- [x] 1816 closes the bounded original-source screen. PXD024917 supplies separate
+  nominal doses and339 positive signals across348 original slots, but acquisition
+  joins and chemical-form assertions remain unresolved. No fitting admitted.
+- [x] File and verify Hitlist849 with exact sources, omitted-dose/missing-cell rules,
+  isotope conflicts and transition-export requirements; extends existing24/436.
+- [ ] Implement shared source ingestion and a documented empirical-response recipe
+  retaining metadata uncertainty. Then preregister peptide-grouped validation of
+  sequence-dependent response against dose-only and constant baselines.
+- [ ] Qualify transfer to the native observation contract before claiming that this
+  calibration improves machinery-conditioned APC amounts or exact/RL processing.
+  Keep prior biological held-outs closed; the full goal remains unchanged.
