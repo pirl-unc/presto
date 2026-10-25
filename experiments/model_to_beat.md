@@ -102,6 +102,22 @@ new-peptide, independent-specimen or APC-concentration claims. These inspected
 held-outs must not be reused as blind tests for revisions.
 [Frozen contract and all outcomes](2026-10-25_0046_codex_intact-kinetic-forecast/README.md).
 
+### Intact temporal changes — development comparator only
+
+[0143 nested development comparison](2026-10-25_0143_codex_intact-temporal-representation/README.md)
+uses only the original training cohort: 463 changes for 96 same-parent peptides,
+conditioned on each peptide's measured first-time baseline. Sequence-conditioned
+slopes with nested ridge selection score RMSE **0.345792**, versus length
+**0.379042** (8.772% gain), R² **0.085610**, Pearson/Spearman **0.599177/0.599769**.
+Four of five peptide folds improve; the paired peptide bootstrap gain interval
+**[-4.259%,20.109%]** includes zero. All selected alpha values are 1. Preserve the
+frozen folds, feature transforms and selection procedure for this narrow comparator.
+This does not replace 0046's future-time benchmark: units are change from the
+supplied first-time baseline, the split differs and the development data were
+previously inspected. No fresh biological test or APC concentration qualification.
+Unpenalized physical RMSE **0.380755** improves only 1.362% over penalized
+**0.386013**; retain the existing physical references without claiming promotion.
+
 ### Frozen human-source/HLA IC50 cohort — provisional
 
 Train-only alpha=1 ridge (length, composition, MHC class) is the baseline to beat

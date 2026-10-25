@@ -195,18 +195,18 @@ claim that simply adding it can remedy the prior response-model failures.
 - [x] Execute2244 prospective baseline-composition comparison from the shared recipe; preserve full APC availability goal and prior test closures.
 
 - [x] 2244: original baseline MAPP model and exact/REINFORCE comparison; modest signal, primary testgatefails, outcomes independently verified.
-- [ ] Finish Hitlist829CI/merge/release and827testedrelease40140479531; preserve existing running handles.
-- [ ] Qualify newly merged PXD009438 PBMC source828 for a prospective primary-cell baseline endpoint; source-only985peptide rows/14acquisitions are not an admitted cohort. Preserve PBMC-versus-serum conflict and unknown specimen/precursor links.
+- [x] Finish Hitlist829CI/merge/release and827testedrelease40140479531; published bytes verified.
+- [x] Qualify newly merged PXD009438 PBMC source828: support fails in2315 before scoring. Preserve PBMC-versus-serum conflict and unknown specimen/precursor links.
 
 
 ## Intact-degradomics constraint and recent source closure
 
 - [x] 2315 PBMC qualification: support fails before scoring; no external-validation result.
 - [x] Hitlist827 source2.0.30 published;829and830passed hosted checks and merged.
-- [ ] Finish exact existing recipe release jobs40143097533and40144589370; do not duplicate.
+- [x] Finish exact existing recipe release jobs40143097533and40144589370; published bytes verified.
 - [x] 2338 PXD058121 original kinetic-source audit and Hitlist831 with concrete exceptions.
-- [ ] Shared intact-degradomics source adapter and independent canonical replay.
-- [ ] Separately register generation/destruction exact-versus-sampled prediction,
+- [x] Shared intact-degradomics source adapter and independent canonical replay.
+- [x] Separately register generation/destruction exact-versus-sampled prediction,
   constrained by original quantitative time courses and honest holdout scope.
   Full precursor-relative APC availability/concentration remains the objective.
 
@@ -216,6 +216,7 @@ claim that simply adding it can remedy the prior response-model failures.
 - [x]0046 measured temporal exact/conditional-score comparison completed and independently closed; physical testRMSE.359038 loses to direct.228184. No concentration result or RL advantage.
 - [x]0116 training-only shape/optimizer diagnosis: six fits and independent replay; both registered materiality thresholds fail. No new held-out access.
 - [x]2.0.31 and2.0.32 published artifacts independently byte-verified.
-- [ ] Finish exact source release40149903223, then recipe833fullCI40150207226/merge/release; no duplicate launches.
-- [ ] Test whether parsimonious peptide sequence features can predict temporal changes before enlarging the shared processing model. Separate feature capacity, rate sharing and regularization in training-only development; require fresh biological evaluation before promotion.
+- [x] Finish exact source release40149903223 and recipe833 merge/release40151233071; Hitlist2.0.33/2.0.34 published bytes match successful builds.
+- [x] Test parsimonious sequence features in0143:8.772%development RMSE gain overlength; paired uncertainty includeszero. Removing physical penalty gains1.362%, failing5%gate. All predictions/selection/metrics independently replay.
+- [ ] Qualify broader prospective biological transfer of the frozen direct sequence comparator, then a matched exact/discrete processing comparison; do not tune original100/120minute outcomes or claim blind transfer from same-parent development CV.
 - [ ] Extend to precursor-relative intracellular/APC quantities with measured initial/observation calibration; do not substitute observed-set or response-only success for the full availability goal.

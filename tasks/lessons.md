@@ -637,6 +637,16 @@ Keep applicability reporting separate from model features and the measured label
   Preserve disk-guard failures, never lower the reserve to make checks pass, and
   rerun only after authoritative capacity has recovered.
 
+- Before handing a storage blocker back to the user, audit project-owned duplicate
+  datasets, per-run split copies, assembled-download fragments and ignored caches.
+  Directory size is not reclaimable space on APFS; measure capacity after cleanup.
+  Preserve unique evidence while eliminating verified redundant storage. Keep
+  immutable inputs once per content hash and avoid recopied source tables per fit.
+- APFS cloning can assign different macOS provenance metadata. Preserve the
+  original and skip that candidate; do not remove or rewrite security metadata to
+  force a storage optimization. Record successful operations so recovery never
+  repeats deletion or replaces an already processed file blindly.
+
 
 ## 2026-10-24 — source headers versus data layout
 

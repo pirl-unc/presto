@@ -13539,8 +13539,8 @@ it has not launched and makes no new predictive claim.
 - [x] Implement independent coverage, objective, metric, bootstrap and decision replay.
 - [x] Implement automatic report/table/manifest closure and stage prerequisites.
 - [x] Pass isolated Ruff E9/F, AST parsing and all pinned input/model hash checks.
-- [ ] Run numerical qualification and fitting above the existing disk reserve.
-- [ ] Independently replay outcomes and close the canonical registry.
+- [x] Run numerical qualification and fitting above the existing disk reserve.
+- [x] Independently replay outcomes and close the canonical registry.
 - [ ] Require a fresh biological evaluation before any new generalization claim.
 
 Review: the preceding status turn was no progress. This continuation completes
@@ -13600,3 +13600,50 @@ work is now complete. Preserve the final local provenance/release follow-up with
 cancelling live19b158bCI; tasks/modular_model/intact-resource-blocked-handoff.json
 records both live run IDs and exact resume commands. The full biological goal is
 unachieved and needs a stable disk-capacity change before further local fitting.
+
+## User-requested Presto storage cleanup
+
+- [x] Inventory Presto-owned storage and classify large logs, data and artifacts.
+- [x] Freeze exact safe cleanup/duplicate-sharing candidates and exclude live use.
+- [x] Remove disposable copies/caches and share identical immutable file storage.
+- [x] Verify preserved content and worktree state, then report measured space recovery.
+
+Plan: tasks/presto-storage-cleanup-spec.md. The user's cleanup request authorizes
+bounded removal of waste; unique scientific evidence and unrelated working changes
+remain preserved. This work is separate from the still-blocked biological goal.
+
+Review:7.9GiBof logical duplicate copies were identified. Cleanup removed145download
+pieces whose630,651,294bytes are exactly reconstructible from two retained complete
+archives, plus1967ignored cache files. APFS clone sharing consolidated529files
+(7,082,421,026logical bytes);24originals were left unchanged because macOS changed
+temporary-clone provenance metadata. The first guarded interruption and recovery
+are preserved. Independent verification confirms all retained content hashes,
+metadata/inodes, archive-piece reconstruction and unchanged working/staged diffs
+and HEADs for four worktrees. Four pending-experiment input hashes remain unchanged;
+no numerical experiment ran. Observed free space rose from1.20GiB at inventory to
+5.52GiB at verification, with concurrent shared-volume movement disclosed.
+Report: tasks/storage_cleanup_2026-10-25/README.md.
+
+## Resumed temporal comparison after storage cleanup
+
+- [x] Recheck code/input hashes and unchanged resource limits; both existing
+  Presto CI runs at19b158b finish successfully before further publication.
+- [x] Execute prepare/qualify/fit/evaluate/replay/closure sequentially; all pass.
+- [x] Record all seven arms, predictions, nested selection and uncertainty in the
+  canonical experiment registry and development baseline reference.
+- [ ] Publish owned cleanup and experiment records, preserving unrelated edits.
+- [ ] Qualify broader biological transfer before enlarging the processing model
+  or repeating the exact-versus-discrete comparison on a new representation.
+
+Review:0143uses463later changes from96peptides in original training only. Sequence
+slopes improve pooled development RMSE8.772%over length (.345792vs.379042), with
+Pearson/Spearman.59918/.59977 and predictionSD.30450versustarget.36162. Four of five
+folds improve; the paired peptide bootstrap interval[-4.26%,20.11%]includes no
+gain. All ten selected ridge models choose the largest preregistered alpha1;
+do not extend that grid against these results. Removing the physical penalty
+gains1.362%, below5%; all15selected physical optimizers converge but push effective
+pre-exposure to its120-minute upper bound. No causal interpretation of that bound.
+Independent replay checks135directrecords/45physicalstarts,749metricrecords,
+selection andbootstrap.231artifact hashes verify. No original100/120minute
+outcomes read, new biological test, RL advantage or APC concentration success.
+The full goal is active and remains unachieved; disk capacity now permits work.
