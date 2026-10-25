@@ -13479,7 +13479,7 @@ Review: source build/replay and descriptive support pass in family0021; draft Hi
 - [x] Qualify exact/sampled process numerics, then fit all frozen conditions.
 - [x] Evaluate once, independently replay, and close scientific report and registry.
 - [x] Publish all outcomes to draft PR131 atd67fb48 and verify the public description/issue updates.
-- [ ] Complete shared source/recipe releases after successful hosted full checks and merges.
+- [x] Complete shared source/recipe releases after successful hosted full checks and merges.
 
 Previous goal turn made progress: canonical source replay, support census and published prospective model plan. No biological fit was claimed.
 
@@ -13504,7 +13504,7 @@ The full availability goal remains active and unachieved.
 - [x] Independently replay and close report/registry; identify representation as the next hypothesis.
 - [ ] Specify a fresh biological evaluation after training-only representation qualification.
 - [x] Publish completed experiments and shared source/recipe PRs; both shared PRs pass hosted checks and merge.
-- [ ] Finish source2.0.33 release40149903223 and queued recipe2.0.34 release40151233071.
+- [x] Finish source2.0.33 release40149903223 and queued recipe2.0.34 release40151233071.
 
 Previous goal turn was progress: 0046 evaluation, independent prediction/optimizer
 replay and scientific registry closure. No concentration success was claimed.
@@ -13568,3 +13568,35 @@ Python files pass Ruff formatting and all tracked Python files pass scoped Ruff
 checks. A whole-worktree check also sees two old untracked data-snapshot line-length
 errors; those frozen artifacts were not altered or added to the PR. Hosted CI must
 verify the corrected commit. This does not validate the unrun biological experiment.
+
+Before any stage launch, the experiment launcher was also amended to record each
+stage's actual git revision, tracked dirty state, argv, package versions and env;
+package-version changes between stages stop execution. The original registration
+revision remains intact. Static review is repeated and preserved separately; no
+scientific condition, data selection or biological outcome has changed.
+
+The next continuation revalidates the same live CI/release handles. At02:12UTC,
+observed free space briefly exceeds the unchanged experiment startup threshold,
+but `prepare` refuses before spawning when space falls again. The exact command,
+exit status, source hash and before/after capacity are preserved in the0143family;
+there is still no stage receipt or biological result. No resource gate is relaxed.
+
+Release closure: recipe build40151233071 passes every full release gate at759ceae4.
+The clean release checkout first lacked that merge object; the attempt stopped
+before mutation, then fetching the exact commit allowed a fast-forward. Artifact
+provenance/license/Twine checks pass. Hitlist2.0.34 is published and downloaded
+wheel/sdist bytes exactly match the tested artifacts. Receipt:
+tasks/modular_model/intact-2034-release.json. Hitlist831's five implementation
+acceptance checks are updated and independently read back; the issue remains open
+for original missing/conflicting data, material links, machinery measurements and
+calibration. Source and recipe publication are complete; the biological objective
+is not. Presto19b158b passes hosted lint/docs and its tests remain live.
+
+Resource handoff: the same local capacity condition has prevented numerical work
+across registration, the status turn, the preceding continuation and this turn.
+The concrete prepare attempt also refused before execution. Code/input hashes
+remain verified and no stages have started. All independent source/recipe release
+work is now complete. Preserve the final local provenance/release follow-up without
+cancelling live19b158bCI; tasks/modular_model/intact-resource-blocked-handoff.json
+records both live run IDs and exact resume commands. The full biological goal is
+unachieved and needs a stable disk-capacity change before further local fitting.

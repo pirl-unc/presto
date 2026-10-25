@@ -1,6 +1,7 @@
 """Bounded, non-overwriting launcher for the training-only diagnostic."""
 
 import hashlib
+import importlib.metadata
 import json
 import os
 import shutil
@@ -27,8 +28,20 @@ for directory in ("results", "launch_logs", "reproduce/source"):
 position = config["stages"].index(stage)
 for prerequisite in config["stages"][:position]:
     assert json.loads((ROOT / f"results/{prerequisite}-resource.json").read_text())["passed"]
+packages = {name: importlib.metadata.version(name) for name in
+            ("numpy", "scipy", "torch", "pyarrow", "psutil")}
+if position:
+    initial_run = json.loads((ROOT / "results/prepare-started.json").read_text())
+    assert packages == initial_run["packages"], "Package versions changed between stages"
+execution = {
+    "stage": stage, "started_epoch": time.time(), "argv": sys.argv,
+    "git_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+    "tracked_dirty_status": subprocess.check_output(
+        ["git", "status", "--porcelain", "--untracked-files=no"], cwd=ROOT, text=True),
+    "packages": packages, "environment_overrides": config["environment_overrides"],
+}
 with (ROOT / f"results/{stage}-started.json").open("x") as stream:
-    json.dump({"stage": stage, "started_epoch": time.time()}, stream)
+    json.dump(execution, stream, indent=2)
 snapshot = ROOT / f"reproduce/source/{stage}"
 snapshot.mkdir()
 for p in (ROOT / "code").glob("*.py"):

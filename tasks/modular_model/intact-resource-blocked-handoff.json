@@ -1,0 +1,52 @@
+{
+  "observed_utc": "2026-10-25T02:21:05.977883+00:00",
+  "goal": "Working precursor-relative peptide availability/concentration model in antigen presenting cells; matched differentiable and RL biological experiments.",
+  "goal_achieved": false,
+  "next_experiment": "experiments/2026-10-25_0143_codex_intact-temporal-representation",
+  "stages_started": [],
+  "last_attempt": "reproduce/prepare-preflight-refusal-01.json",
+  "static_code_and_input_hashes_verified": true,
+  "free_bytes": 586309632,
+  "required_startup_free_bytes": 1107296256,
+  "resource_blocker_recurrence": [
+    "0143 registration/preparation turn: below unchanged startup reserve",
+    "biological-status turn: about0.54GiBfree, no launch",
+    "preceding goal continuation: about0.82GiBfree, implementation/release progress only",
+    "current continuation: prepare preflight refused before a stage started; free capacity still inadequate"
+  ],
+  "needed_external_change": "Free stable local disk space; requested3GiBheadroom, existing1GiB+32MiBstartup gate remains unchanged.",
+  "next_commands_in_experiment_directory": [
+    "sh reproduce/launch.sh prepare",
+    "sh reproduce/launch.sh qualify",
+    "sh reproduce/launch.sh fit",
+    "sh reproduce/launch.sh evaluate",
+    "sh reproduce/launch.sh replay",
+    "sh reproduce/launch.sh closure"
+  ],
+  "preserve": [
+    "original held-out outcome exclusions",
+    "all failed/source/raw/checkpoint artifacts",
+    "unrelated346additions4deletions in tasks/todo.md",
+    "shared Python installation"
+  ],
+  "releases": {
+    "2.0.33": "intact-2033-release.json",
+    "2.0.34": "intact-2034-release.json"
+  },
+  "source_and_recipe_releases_complete": true,
+  "metadata_issue": "https://github.com/pirl-unc/hitlist/issues/831",
+  "live_ci": [
+    {
+      "run": 40153189450,
+      "head": "19b158b91cbfa8a5ef33019381b60356799f0f82",
+      "status": "in_progress"
+    },
+    {
+      "run": 40153182097,
+      "head": "19b158b91cbfa8a5ef33019381b60356799f0f82",
+      "status": "in_progress"
+    }
+  ],
+  "publication": "PR131contains the complete comparison. Launcher execution-provenance addition and final release/refusal receipts are committed locally; defer push until existingCIends to avoid cancellation.",
+  "resume": "Inspect real disk/jobs/worktree first. Do not repeat completed uploads or restart liveCI. Publish the local follow-up after currentCI, then run unchanged staged comparison only above reserve."
+}
