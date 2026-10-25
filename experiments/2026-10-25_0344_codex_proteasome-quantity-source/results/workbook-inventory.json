@@ -1,0 +1,722 @@
+{
+  "files": [
+    {
+      "file": "41467_2021_26427_MOESM10_ESM.xlsx",
+      "sha256": "f29811e09144f6d526ce1f2955681bb5f07a7ed0a4957e1a9f596740fc492ea5",
+      "sheets": [
+        {
+          "sheet": "peptides",
+          "xml_cells": 292449,
+          "nonempty_cells": 292449,
+          "reported_rows": 10648,
+          "reported_columns": 35,
+          "value_types": {
+            "s": 110257,
+            "n": 182192
+          },
+          "formulas": 0,
+          "formulas_without_cache": 0,
+          "error_values": {},
+          "first_rows_text_only": [
+            {
+              "A1": "Sequence",
+              "B1": "Length",
+              "C1": "Mass",
+              "D1": "Proteins",
+              "E1": "Leading razor protein",
+              "F1": "Start position",
+              "G1": "End position",
+              "H1": "Gene names",
+              "I1": "Protein names",
+              "J1": "Unique (Groups)",
+              "K1": "Unique (Proteins)",
+              "L1": "Charges",
+              "M1": "PEP",
+              "N1": "Score",
+              "O1": "Identification type Cont1",
+              "P1": "Identification type Cont2",
+              "Q1": "Identification type Cont3",
+              "R1": "Identification type KD1",
+              "S1": "Identification type KD2",
+              "T1": "Identification type KD3",
+              "U1": "Experiment Cont1",
+              "V1": "Experiment Cont2",
+              "W1": "Experiment Cont3",
+              "X1": "Experiment KD1",
+              "Y1": "Experiment KD2",
+              "Z1": "Experiment KD3",
+              "AA1": "Intensity",
+              "AB1": "Intensity Cont1",
+              "AC1": "Intensity Cont2",
+              "AD1": "Intensity Cont3",
+              "AE1": "Intensity KD1",
+              "AF1": "Intensity KD2",
+              "AG1": "Intensity KD3",
+              "AH1": "Reverse",
+              "AI1": "Potential contaminant"
+            },
+            {
+              "A2": "AAAAAAAAAAAVPPPH",
+              "D2": "A0A0U1RQK7",
+              "E2": "A0A0U1RQK7",
+              "J2": "yes",
+              "K2": "yes",
+              "R2": "By matching",
+              "S2": "By MS/MS",
+              "T2": "By MS/MS"
+            },
+            {
+              "A3": "AAAAAAAAAAGAAGGR",
+              "D3": "Q86U42",
+              "E3": "Q86U42",
+              "H3": "PABPN1",
+              "I3": "Polyadenylate-binding protein 2",
+              "J3": "yes",
+              "K3": "yes",
+              "P3": "By matching",
+              "R3": "By MS/MS",
+              "S3": "By MS/MS",
+              "T3": "By MS/MS"
+            },
+            {
+              "A4": "AAAAAAAAAAGAAGGRGSGPGR",
+              "D4": "Q86U42",
+              "E4": "Q86U42",
+              "H4": "PABPN1",
+              "I4": "Polyadenylate-binding protein 2",
+              "J4": "yes",
+              "K4": "yes",
+              "R4": "By MS/MS",
+              "S4": "By MS/MS",
+              "T4": "By MS/MS"
+            },
+            {
+              "A5": "AAAAAAAAAAGAAGGRGSGPGRR",
+              "D5": "Q86U42",
+              "E5": "Q86U42",
+              "H5": "PABPN1",
+              "I5": "Polyadenylate-binding protein 2",
+              "J5": "yes",
+              "K5": "yes",
+              "R5": "By MS/MS",
+              "S5": "By MS/MS",
+              "T5": "By MS/MS"
+            },
+            {
+              "A6": "AAAAAAAAAAGAAGGRGSGPGRRR",
+              "D6": "Q86U42",
+              "E6": "Q86U42",
+              "H6": "PABPN1",
+              "I6": "Polyadenylate-binding protein 2",
+              "J6": "yes",
+              "K6": "yes",
+              "R6": "By MS/MS",
+              "S6": "By MS/MS",
+              "T6": "By MS/MS"
+            },
+            {
+              "A7": "AAAAAAALESWQAAAPR",
+              "D7": "Q9UH36",
+              "E7": "Q9UH36",
+              "H7": "SRRD",
+              "I7": "SRR1-like protein",
+              "J7": "yes",
+              "K7": "yes",
+              "Q7": "By matching",
+              "S7": "By MS/MS",
+              "T7": "By MS/MS"
+            },
+            {
+              "A8": "AAAAAAGAGPEMVR",
+              "D8": "P28482",
+              "E8": "P28482",
+              "H8": "MAPK1",
+              "I8": "Mitogen-activated protein kinase 1",
+              "J8": "yes",
+              "K8": "yes",
+              "S8": "By matching",
+              "T8": "By MS/MS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "file": "41467_2021_26427_MOESM9_ESM.xlsx",
+      "sha256": "efbd683113c4ec204af209065eeb68a6a4af340c7cbfe693a1e2f6706d043f25",
+      "sheets": [
+        {
+          "sheet": "GG_Mono",
+          "xml_cells": 98,
+          "nonempty_cells": 98,
+          "reported_rows": 7,
+          "reported_columns": 14,
+          "value_types": {
+            "s": 44,
+            "n": 54
+          },
+          "formulas": 0,
+          "formulas_without_cache": 0,
+          "error_values": {},
+          "first_rows_text_only": [
+            {
+              "A1": "probability",
+              "B1": "ptm_peptide",
+              "C1": "mean_best_prob_K:114.0429",
+              "D1": "norm_info_gain_K:114.0429",
+              "E1": "localized_mods_K:114.0429",
+              "F1": "spectrum",
+              "G1": "expect",
+              "H1": "ions",
+              "I1": "peptide",
+              "J1": "protein",
+              "K1": "assumed_charge",
+              "L1": "calc_neutral_pep_mass",
+              "M1": "precursor_neutral_mass",
+              "N1": "massdiff"
+            },
+            {
+              "B2": "RLPLRK(1.000)EARPSATGR",
+              "F2": "Seq69575_QE3.05466.05466.4",
+              "H2": "11/56",
+              "I2": "A.RLPLRK[242.14]EARPSATGR.V",
+              "J2": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B3": "RLPLRK(1.000)EARPSATGR",
+              "F3": "Seq69575_QE3.05642.05642.4",
+              "H3": "15/56",
+              "I3": "A.RLPLRK[242.14]EARPSATGR.V",
+              "J3": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B4": "RLPLRK(1.000)EARPSATGR",
+              "F4": "Seq69575_QE3.05643.05643.5",
+              "H4": "15/56",
+              "I4": "A.RLPLRK[242.14]EARPSATGR.V",
+              "J4": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B5": "PLRK(1.000)EARPSATGRVID",
+              "F5": "Seq69575_QE3.06797.06797.4",
+              "H5": "18/60",
+              "I5": "L.PLRK[242.14]EARPSATGRVID.R",
+              "J5": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B6": "RLPLRK(1.000)EARPSATGRVI",
+              "F6": "Seq69575_QE3.08078.08078.5",
+              "H6": "15/64",
+              "I6": "A.RLPLRK[242.14]EARPSATGRVI.D",
+              "J6": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B7": "QARLPLRK(1.000)EARPSATGRVI",
+              "F7": "Seq69575_QE3.08732.08732.5",
+              "H7": "14/72",
+              "I7": "L.QARLPLRK[242.14]EARPSATGRVI.D",
+              "J7": "sp|P22222|CCNB1m_HUMAN"
+            }
+          ]
+        },
+        {
+          "sheet": "GG_Di",
+          "xml_cells": 84,
+          "nonempty_cells": 84,
+          "reported_rows": 6,
+          "reported_columns": 14,
+          "value_types": {
+            "s": 39,
+            "n": 45
+          },
+          "formulas": 0,
+          "formulas_without_cache": 0,
+          "error_values": {},
+          "first_rows_text_only": [
+            {
+              "A1": "probability",
+              "B1": "ptm_peptide",
+              "C1": "mean_best_prob_K:114.0429",
+              "D1": "norm_info_gain_K:114.0429",
+              "E1": "localized_mods_K:114.0429",
+              "F1": "spectrum",
+              "G1": "expect",
+              "H1": "ions",
+              "I1": "peptide",
+              "J1": "protein",
+              "K1": "assumed_charge",
+              "L1": "calc_neutral_pep_mass",
+              "M1": "precursor_neutral_mass",
+              "N1": "massdiff"
+            },
+            {
+              "B2": "PLRK(1.000)EARPSA",
+              "F2": "Seq69576_QE3.04232.04232.3",
+              "H2": "9/36",
+              "I2": "L.PLRK[242.14]EARPSA.T",
+              "J2": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B3": "PLRK(1.000)EARPSATGRVID",
+              "F3": "Seq69576_QE3.06448.06448.4",
+              "H3": "17/60",
+              "I3": "L.PLRK[242.14]EARPSATGRVID.R",
+              "J3": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B4": "PLRK(1.000)EARPSATGRVIDR",
+              "F4": "Seq69576_QE3.05477.05477.5",
+              "H4": "11/64",
+              "I4": "L.PLRK[242.14]EARPSATGRVIDR.R",
+              "J4": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B5": "RLPLRK(1.000)EARPSATGR",
+              "F5": "Seq69576_QE3.05100.05100.4",
+              "H5": "15/56",
+              "I5": "A.RLPLRK[242.14]EARPSATGR.V",
+              "J5": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B6": "RLPLRK(1.000)EARPSATGRVID",
+              "F6": "Seq69576_QE3.07397.07397.4",
+              "H6": "10/68",
+              "I6": "A.RLPLRK[242.14]EARPSATGRVID.R",
+              "J6": "sp|P22222|CCNB1m_HUMAN"
+            }
+          ]
+        },
+        {
+          "sheet": "RGG_Mono",
+          "xml_cells": 238,
+          "nonempty_cells": 238,
+          "reported_rows": 17,
+          "reported_columns": 14,
+          "value_types": {
+            "s": 94,
+            "n": 144
+          },
+          "formulas": 0,
+          "formulas_without_cache": 0,
+          "error_values": {},
+          "first_rows_text_only": [
+            {
+              "A1": "probability",
+              "B1": "ptm_peptide",
+              "C1": "mean_best_prob_K:270.144039",
+              "D1": "norm_info_gain_K:270.144039",
+              "E1": "localized_mods_K:270.144039",
+              "F1": "spectrum",
+              "G1": "expect",
+              "H1": "ions",
+              "I1": "peptide",
+              "J1": "protein",
+              "K1": "assumed_charge",
+              "L1": "calc_neutral_pep_mass",
+              "M1": "precursor_neutral_mass",
+              "N1": "massdiff"
+            },
+            {
+              "B2": "ARLPLRK(1.000)E",
+              "F2": "Seq69575_QE3.06090.06090.4",
+              "H2": "11/28",
+              "I2": "Q.ARLPLRK[398.24]E.A",
+              "J2": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B3": "ARLPLRK(1.000)EA",
+              "F3": "Seq69575_QE3.06244.06244.4",
+              "H3": "10/32",
+              "I3": "Q.ARLPLRK[398.24]EA.R",
+              "J3": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B4": "LPLRK(1.000)EARPSATGRVI",
+              "F4": "Seq69575_QE3.08078.08078.5",
+              "H4": "12/60",
+              "I4": "R.LPLRK[398.24]EARPSATGRVI.D",
+              "J4": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B5": "PLRK(1.000)EARPSA",
+              "F5": "Seq69575_QE3.03784.03784.4",
+              "H5": "10/36",
+              "I5": "L.PLRK[398.24]EARPSA.T",
+              "J5": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B6": "PLRK(1.000)EARPSATGR",
+              "F6": "Seq69575_QE3.03582.03582.5",
+              "H6": "14/48",
+              "I6": "L.PLRK[398.24]EARPSATGR.V",
+              "J6": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B7": "PLRK(1.000)EARPSATGRVIDR",
+              "F7": "Seq69575_QE3.05368.05368.5",
+              "H7": "11/64",
+              "I7": "L.PLRK[398.24]EARPSATGRVIDR.R",
+              "J7": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B8": "PLRK(1.000)EARPSATGRVIDR",
+              "F8": "Seq69575_QE3.05423.05423.6",
+              "H8": "20/64",
+              "I8": "L.PLRK[398.24]EARPSATGRVIDR.R",
+              "J8": "sp|P22222|CCNB1m_HUMAN"
+            }
+          ]
+        },
+        {
+          "sheet": "RGG_Di",
+          "xml_cells": 70,
+          "nonempty_cells": 70,
+          "reported_rows": 5,
+          "reported_columns": 14,
+          "value_types": {
+            "s": 34,
+            "n": 36
+          },
+          "formulas": 0,
+          "formulas_without_cache": 0,
+          "error_values": {},
+          "first_rows_text_only": [
+            {
+              "A1": "probability",
+              "B1": "ptm_peptide",
+              "C1": "mean_best_prob_K:270.144039",
+              "D1": "norm_info_gain_K:270.144039",
+              "E1": "localized_mods_K:270.144039",
+              "F1": "spectrum",
+              "G1": "expect",
+              "H1": "ions",
+              "I1": "peptide",
+              "J1": "protein",
+              "K1": "assumed_charge",
+              "L1": "calc_neutral_pep_mass",
+              "M1": "precursor_neutral_mass",
+              "N1": "massdiff"
+            },
+            {
+              "B2": "PLRK(1.000)EARPSATGR",
+              "F2": "Seq69576_QE3.03405.03405.5",
+              "H2": "15/48",
+              "I2": "L.PLRK[398.24]EARPSATGR.V",
+              "J2": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B3": "RLPLRK(1.000)EARPSATGR",
+              "F3": "Seq69576_QE3.04567.04567.5",
+              "H3": "14/56",
+              "I3": "A.RLPLRK[398.24]EARPSATGR.V",
+              "J3": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B4": "PLRK(1.000)EARPSATGRVIDR",
+              "F4": "Seq69576_QE3.05084.05084.5",
+              "H4": "15/64",
+              "I4": "L.PLRK[398.24]EARPSATGRVIDR.R",
+              "J4": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B5": "PLRK(1.000)EARPSATGRVI",
+              "F5": "Seq69576_QE3.05843.05843.5",
+              "H5": "15/56",
+              "I5": "L.PLRK[398.24]EARPSATGRVI.D",
+              "J5": "sp|P22222|CCNB1m_HUMAN"
+            }
+          ]
+        },
+        {
+          "sheet": "LRGG_Mono",
+          "xml_cells": 42,
+          "nonempty_cells": 42,
+          "reported_rows": 3,
+          "reported_columns": 14,
+          "value_types": {
+            "s": 24,
+            "n": 18
+          },
+          "formulas": 0,
+          "formulas_without_cache": 0,
+          "error_values": {},
+          "first_rows_text_only": [
+            {
+              "A1": "probability",
+              "B1": "ptm_peptide",
+              "C1": "mean_best_prob_K:383.228103",
+              "D1": "norm_info_gain_K:383.228103",
+              "E1": "localized_mods_K:383.228103",
+              "F1": "spectrum",
+              "G1": "expect",
+              "H1": "ions",
+              "I1": "peptide",
+              "J1": "protein",
+              "K1": "assumed_charge",
+              "L1": "calc_neutral_pep_mass",
+              "M1": "precursor_neutral_mass",
+              "N1": "massdiff"
+            },
+            {
+              "B2": "PLRK(1.000)EARPSATGR",
+              "F2": "Seq69575_QE3.05643.05643.5",
+              "H2": "11/48",
+              "I2": "L.PLRK[511.32]EARPSATGR.V",
+              "J2": "sp|P22222|CCNB1m_HUMAN"
+            },
+            {
+              "B3": "PLRK(1.000)EARPSATGRVI",
+              "F3": "Seq69575_QE3.08078.08078.5",
+              "H3": "12/56",
+              "I3": "L.PLRK[511.32]EARPSATGRVI.D",
+              "J3": "sp|P22222|CCNB1m_HUMAN"
+            }
+          ]
+        },
+        {
+          "sheet": "LRGG_Di",
+          "xml_cells": 28,
+          "nonempty_cells": 28,
+          "reported_rows": 2,
+          "reported_columns": 14,
+          "value_types": {
+            "s": 19,
+            "n": 9
+          },
+          "formulas": 0,
+          "formulas_without_cache": 0,
+          "error_values": {},
+          "first_rows_text_only": [
+            {
+              "A1": "probability",
+              "B1": "ptm_peptide",
+              "C1": "mean_best_prob_K:383.228103",
+              "D1": "norm_info_gain_K:383.228103",
+              "E1": "localized_mods_K:383.228103",
+              "F1": "spectrum",
+              "G1": "expect",
+              "H1": "ions",
+              "I1": "peptide",
+              "J1": "protein",
+              "K1": "assumed_charge",
+              "L1": "calc_neutral_pep_mass",
+              "M1": "precursor_neutral_mass",
+              "N1": "massdiff"
+            },
+            {
+              "B2": "PLRK(1.000)EARPSATGR",
+              "F2": "Seq69576_QE3.05100.05100.4",
+              "H2": "10/48",
+              "I2": "L.PLRK[511.32]EARPSATGR.V",
+              "J2": "sp|P22222|CCNB1m_HUMAN"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "mismatches": [],
+  "date_cells": [
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H338",
+      "2008-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "39692",
+        "style": "2",
+        "value": 39692.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H339",
+      "2008-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "39692",
+        "style": "2",
+        "value": 39692.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H569",
+      "2015-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "42248",
+        "style": "2",
+        "value": 42248.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H3963",
+      "2002-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "37500",
+        "style": "2",
+        "value": 37500.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H5723",
+      "2002-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "37500",
+        "style": "2",
+        "value": 37500.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H6309",
+      "2015-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "42248",
+        "style": "2",
+        "value": 42248.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H7109",
+      "2011-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "40787",
+        "style": "2",
+        "value": 40787.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H8348",
+      "2002-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "37500",
+        "style": "2",
+        "value": 37500.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H8349",
+      "2002-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "37500",
+        "style": "2",
+        "value": 37500.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H8686",
+      "2011-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "40787",
+        "style": "2",
+        "value": 40787.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H9867",
+      "2007-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "39326",
+        "style": "2",
+        "value": 39326.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H9868",
+      "2007-09-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "39326",
+        "style": "2",
+        "value": 39326.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ],
+    [
+      "41467_2021_26427_MOESM10_ESM.xlsx",
+      "peptides",
+      "H10138",
+      "2001-03-01 00:00:00",
+      {
+        "xml_type": "n",
+        "raw_value": "36951",
+        "style": "2",
+        "value": 36951.0,
+        "formula": null,
+        "formula_attributes": null,
+        "resolved_formula": null
+      }
+    ]
+  ],
+  "source_only": true,
+  "seconds": 35.03383783303434,
+  "peak_rss_bytes": 315588608,
+  "independent_original_cells": "/private/tmp/presto-modular-model/data/proteasome_quantity_sources/2026-10-25_0344_codex_proteasome-quantity-source/independent-original-cells-shared-formula.jsonl.gz",
+  "independent_original_cells_sha256": "68a380caba7b5f654e8182b3d603758ae2ddca0ece875da34e2914707369b761",
+  "all_cells_match": false
+}

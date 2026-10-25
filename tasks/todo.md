@@ -13631,7 +13631,7 @@ Report: tasks/storage_cleanup_2026-10-25/README.md.
 - [x] Execute prepare/qualify/fit/evaluate/replay/closure sequentially; all pass.
 - [x] Record all seven arms, predictions, nested selection and uncertainty in the
   canonical experiment registry and development baseline reference.
-- [ ] Publish owned cleanup and experiment records, preserving unrelated edits.
+- [x] Publish owned cleanup and experiment records, preserving unrelated edits.
 - [ ] Qualify broader biological transfer before enlarging the processing model
   or repeating the exact-versus-discrete comparison on a new representation.
 
@@ -13647,3 +13647,84 @@ Independent replay checks135directrecords/45physicalstarts,749metricrecords,
 selection andbootstrap.231artifact hashes verify. No original100/120minute
 outcomes read, new biological test, RL advantage or APC concentration success.
 The full goal is active and remains unachieved; disk capacity now permits work.
+
+Publication:8454ef9c40913c89d56bca5cd02f923701af91f6 is remote-verified onPR131.
+The PR body and issue130comment6393034723 exactly match reviewed local bodies.
+CI40158866759(PR)and40158859251(push)are running; preserve these handles rather
+than relaunching jobs. Both earlier19b158b runs finished successfully. All288
+eligible tracked/new maintenance Python files pass local lint/format. Publication
+receipt:tasks/modular_model/temporal-representation-publication.json.
+
+## Independent processing quantity sources
+
+- [x] Register the focused source-admission specification after0143.
+- [x] Retrieve bounded original Sahu2021 assets; preserve Liepe403/401 access limits.
+- [x] Verify workbook fidelity and classify quantitative targets/context support.
+- [x] Record Hitlist837 requirements and close source evidence in registry.
+- [ ] Preregister the next biological comparison from admitted source semantics.
+
+Plan:experiments/agents/codex/plans/proteasome-quantity-source-admission.md.
+Prior goal turn is progress; currentCI40158866759/40158859251remain live.
+Preserve the full APC availability objective and exact/sampled references.
+
+Review:0344recovers two complete original workbooks from the bounded partial
+EuropePMC bundle. Independent ZIP and literal-cell verification covers293,009cells;
+13date-shaped gene annotations remain flagged and original audit failure retained.
+Dataset7 supplies10,647native intracellular peptide sequences and34,036positive
+intensity cells across six control/PSMD2-knockdown acquisitions. All six run IDs
+reconcile to deposited design/configuration; the actual search is8–25 residues,
+with matching-between-runs enabled. Raw zero, matching, parent ambiguity, source
+gene defects, knockdown scope and missing precursor/calibration remain explicit.
+No model trains yet. The next plan is native-psmd2-canonical-and-contrast.md:
+shared Hitlist admission followed by same-parent relative-product changes, with
+full availability/APC validation still required. Both8454ef9CIruns now pass.
+
+## Verify durable workspace recovery after storage cleanup
+
+- [x] Confirm the recorded restoration finished; do not rerun it.
+- [x] Independently verify every restored Git blob, mode and independent inode.
+- [x] Verify recent experiment manifests and source assets at their recorded paths.
+- [x] Confirm primary checkout fingerprints and surviving tracked edits are unchanged.
+- [x] Record recovery results and distinguish them from the earlier cleanup savings.
+
+Plan: tasks/workspace-recovery-spec-2026-10-25.md. No additional scientific
+artifacts, checkpoints, worktrees or Git history will be deleted in this closure.
+
+Review: all 1,396 restored files match their recorded Git blob IDs, sizes, modes
+and independent inodes. There are no remaining tracked deletions in the active
+worktree. The primary checkout's HEAD, tracked status, working diff and staged
+diff match the pre-recovery fingerprints. The 51 source-audit artifacts, 231
+temporal-comparison artifacts and 46 original source assets match their recorded
+hashes. The active worktree now lives under the durable project `.worktrees/`
+directory, with the old absolute path preserved by a symlink. Both maintenance
+helpers pass Ruff lint/format; their exact executed source is archived, with AST
+equality verified after formatting. This recovery is separate from the earlier
+cleanup; no further space-saving deletion occurred and the cause of the missing
+temporary-worktree files remains unverified. Report:
+tasks/workspace_recovery_2026-10-25/README.md.
+
+## Native PSMD2 reference and quantity reconciliation
+
+- [x] Revalidate current source evidence, Hitlist #837 and shared interfaces.
+- [x] Freeze reference/quantity qualification scope and unchanged resource bounds.
+- [x] Retrieve and verify the original reference and selected processed ZIP members.
+- [x] Reconcile source rows, quantity grain and complete parent alternatives.
+- [x] Close the source qualification with independent quantity/reference/graph replay.
+- [ ] Implement and release canonical admission before the next registered fit.
+
+Plan: experiments/agents/codex/plans/native-psmd2-reference-reconciliation.md.
+The previous turn completed recovery verification. The biological goal is active
+and remains unachieved; no calibrated APC concentration model is demonstrated.
+
+Review: 0424 verifies all 74,529 publisher intensity cells, 40,679 evidence and
+10,935 form rows, and the complete 73,113-record deposited reference. All original
+ID/run links reconcile. Raw versus LFQ differs in 30,170 cells; modified evidence
+contributes to 5,765 positive sequence/acquisition cells. Small aggregation residuals
+remain explicit. All 38,641 candidate spans and 10,647 dependency assignments
+independently replay. Original text supplies the actual 13 date-corrupted gene
+annotations. Complete-acquisition strict-origin support has 82 parents/81 components
+and 228 potential contrasts; no response, reference peptide, split or model is
+selected. The initial EmptyCell verifier failure and narrow successful recovery
+are preserved. An isolated durable Hitlist branch now has the implementation spec;
+production admission code and release remain pending. Full report:
+experiments/2026-10-25_0424_codex_native-psmd2-source/README.md.

@@ -655,3 +655,12 @@ Keep applicability reporting separate from model features and the measured label
   column can invalidate an otherwise exact literal-cell replay. Preserve original
   coordinates, register the interpretation, and verify it independently against
   source spans and alternate views. Never manufacture missing IDs from row order.
+
+- Gene-name columns can contain date-formatted Excel serials. Preserve literal
+  serial/style and rendered date, verify the representation, and flag the gene
+  annotation as unusable; never infer the intended gene symbol from that date.
+- A200response is not a successful data retrieval. Require the completed receipt,
+  expected payload type and checksums before parsing; distinguish a resource-floor
+  refusal from authentication, client challenges and absent data. Fetch commands
+  must return a failing exit code when retrieval fails. Reuse successful recorded
+  API routes, not historical failed defaults retained in an old launcher.

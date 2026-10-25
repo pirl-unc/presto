@@ -79,3 +79,14 @@ Restoration is not required for model training or source replay.
   for experiments whose registered diagnostic actually needs them.
 - Periodically remove stale ignored caches. Check clean branches, untracked evidence
   and live use before retiring worktrees; no whole worktree was removed here.
+
+## Subsequent workspace recovery
+
+The preservation checks above describe the completed cleanup at its verification
+time. Later, the active worktree's `.git` pointer and 1,396 tracked files were found
+missing from temporary storage; the cause is unverified. All recorded missing
+tracked files were restored from verified Git content, and the active worktree
+was moved into the durable project directory. Primary-checkout fingerprints,
+282 recent experiment artifacts and 46 source assets passed independent checks.
+See the [recovery report](../workspace_recovery_2026-10-25/README.md). This later
+recovery is separate from the cleanup and its measured capacity change.

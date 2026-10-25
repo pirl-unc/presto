@@ -220,3 +220,27 @@ claim that simply adding it can remedy the prior response-model failures.
 - [x] Test parsimonious sequence features in0143:8.772%development RMSE gain overlength; paired uncertainty includeszero. Removing physical penalty gains1.362%, failing5%gate. All predictions/selection/metrics independently replay.
 - [ ] Qualify broader prospective biological transfer of the frozen direct sequence comparator, then a matched exact/discrete processing comparison; do not tune original100/120minute outcomes or claim blind transfer from same-parent development CV.
 - [ ] Extend to precursor-relative intracellular/APC quantities with measured initial/observation calibration; do not substitute observed-set or response-only success for the full availability goal.
+
+## Native PSMD2 processing constraint after temporal development
+
+- [x]0344recovers Sahu2021/PXD018722 native intracellular peptide quantities:
+  10,647sequences,34,036positive cells; original run/search metadata and293,009
+  source cells independently verified with13date-shaped gene annotations flagged.
+- [ ] Implement shared Hitlist admission of the native Hi20S panel, exact reference,
+  quantity aggregation and homogeneous preparation/machinery/search metadata.
+- [ ] Register same-parent control/KD contrasts to test sequence-dependent relative
+  product changes while cancelling shared precursor/run scale and fixed MS response.
+  Plan:plans/native-psmd2-canonical-and-contrast.md. Model assumptions, source zeros,
+  unsearched short products and APC/general concentration limits stay explicit.
+- [ ] Follow a qualified direct representation with a matched exact/discrete
+  generative comparison; preserve prior references and simulator/hybrid distinctions.
+
+- [x] 0424 verifies the exact deposited reference, five original processed members,
+  all quantities/IDs and all candidate origins. Raw/LFQ and modified-form quantities
+  remain separate; original text resolves the 13 date-corrupted gene annotations.
+- [x] Replay all 10,647 dependence assignments and descriptive support strata:
+  complete-acquisition support has 82 parents, 81 components and 228 potential
+  contrasts, before choosing a recipe or computing effects.
+- [ ] Implement/release the canonical source in the durable isolated checkout
+  `/Users/iskander/code/presto/.worktrees/hitlist-native-psmd2`, following
+  `tasks/native_psmd2_source_spec.md`. Then register and run the biological comparison.

@@ -1,0 +1,24 @@
+{
+  "passed": true,
+  "source_fidelity_with_explicit_exceptions": true,
+  "source_peptide_rows": 10647,
+  "positive_signal_cells": 34036,
+  "source_zero_cells": 29846,
+  "run_maps_verified": 6,
+  "original_file_inventory_rows": 48,
+  "validated_apc_concentration_model": false,
+  "training_rows_admitted": 0,
+  "heldout_predictions": null,
+  "test_absence_reason": "Source qualification precedes shared canonical admission and prospective modeling.",
+  "synthetic_labels": false,
+  "pretraining": null,
+  "training": null,
+  "next_action": "Admit native PSMD2-knockdown source and source-supported context through Hitlist; verify original reference and sequence-level quantitative aggregation before a frozen biological comparison.",
+  "dryad_status": "Metadata verified; public file403 and API401 prevent numerical admission.",
+  "seconds": 0.89322395803174,
+  "peak_rss_bytes": 69926912,
+  "packages": {
+    "openpyxl": "3.1.5",
+    "numpy": "2.5.4"
+  }
+}
