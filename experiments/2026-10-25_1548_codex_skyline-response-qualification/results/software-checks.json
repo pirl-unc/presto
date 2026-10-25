@@ -1,0 +1,112 @@
+[
+  {
+    "file": "code/fetch.py",
+    "check": "optional_isolated_check",
+    "returncode": 1,
+    "output": "I001 [*] Import block is un-sorted or un-formatted\n  --> fetch.py:3:1\n   |\n 1 |   \"\"\"Bounded anonymous public retrieval with immutable request and response receipts.\"\"\"\n 2 |\n 3 | / import argparse\n 4 | | from datetime import datetime, timezone\n 5 | | import hashlib\n 6 | | from html.parser import HTMLParser\n 7 | | import json\n 8 | | from pathlib import Path\n 9 | | import shutil\n10 | | import time\n11 | | from urllib.parse import urljoin, urlparse\n12 | | import xml.etree.ElementTree as ET\n13 | |\n14 | | import requests\n   | |_______________^\n15 |\n16 |   ROOT = Path(__file__).resolve().parents[1]\n   |\nhelp: Organize imports\n   |\n3  | import argparse\n   - from datetime import datetime, timezone\n4  | import hashlib\n   - from html.parser import HTMLParser\n5  | import json\n   - from pathlib import Path\n6  | import shutil\n7  | import time\n8  + import xml.etree.ElementTree as ET\n9  + from datetime import datetime, timezone\n10 + from html.parser import HTMLParser\n11 + from pathlib import Path\n12 | from urllib.parse import urljoin, urlparse\n   - import xml.etree.ElementTree as ET\n13 |\n   |\n\nBLE001 Do not catch blind exception: `Exception`\n   --> fetch.py:182:16\n    |\n180 |                 raise ValueError(\"not_zip_container\")\n181 |             receipt[\"status\"] = \"retrieved_validated_payload\"\n182 |         except Exception as error:\n    |                ^^^^^^^^^\n183 |             receipt.update(\n184 |                 status=\"failed\",\n    |\n\nFound 2 errors.\n[*] 1 fixable with the `--fix` option.\n"
+  },
+  {
+    "file": "code/fetch.py",
+    "check": "optional_isolated_format",
+    "returncode": 0,
+    "output": ""
+  },
+  {
+    "file": "code/launch.py",
+    "check": "optional_isolated_check",
+    "returncode": 1,
+    "output": "I001 [*] Import block is un-sorted or un-formatted\n  --> launch.py:3:1\n   |\n 1 |   \"\"\"Bounded, non-overwriting local stages with durable preflight and exit receipts.\"\"\"\n 2 |\n 3 | / import argparse\n 4 | | from datetime import datetime, timezone\n 5 | | import hashlib\n 6 | | import importlib.metadata\n 7 | | import json\n 8 | | import os\n 9 | | from pathlib import Path\n10 | | import platform\n11 | | import re\n12 | | import resource\n13 | | import shutil\n14 | | import subprocess\n15 | | import sys\n16 | | import time\n17 | |\n18 | | import psutil\n   | |_____________^\n   |\nhelp: Organize imports\n   |\n3  | import argparse\n   - from datetime import datetime, timezone\n4  | import hashlib\n5  | import importlib.metadata\n6  | import json\n7  | import os\n   - from pathlib import Path\n8  | import platform\n--------------------------------------------------------------------------------\n14 | import time\n15 + from datetime import datetime, timezone\n16 + from pathlib import Path\n17 |\n   |\n\nFURB167 [*] Use of regular expression alias `re.M`\n  --> launch.py:35:73\n   |\n33 |         counts = {}\n34 |         for key in (\"free\", \"speculative\"):\n35 |             match = re.search(r\"^Pages \" + key + r\":\\s+(\\d+)\\.\", stats, re.M)\n   |                                                                         ^^^^\n36 |             if match is None:\n37 |                 raise RuntimeError(\"Missing macOS memory counter: \" + key)\n   |\nhelp: Replace with `re.MULTILINE`\n   |\n34 |         for key in (\"free\", \"speculative\"):\n   -             match = re.search(r\"^Pages \" + key + r\":\\s+(\\d+)\\.\", stats, re.M)\n35 +             match = re.search(r\"^Pages \" + key + r\":\\s+(\\d+)\\.\", stats, re.MULTILINE)\n36 |             if match is None:\n   |\n\nFURB167 [*] Use of regular expression alias `re.M`\n  --> launch.py:45:78\n   |\n43 |     if sys.platform.startswith(\"linux\"):\n44 |         match = re.search(\n45 |             r\"^MemAvailable:\\s+(\\d+) kB\", Path(\"/proc/meminfo\").read_text(), re.M\n   |                                                                              ^^^^\n46 |         )\n47 |         if match is None:\n   |\nhelp: Replace with `re.MULTILINE`\n   |\n44 |         match = re.search(\n   -             r\"^MemAvailable:\\s+(\\d+) kB\", Path(\"/proc/meminfo\").read_text(), re.M\n45 +             r\"^MemAvailable:\\s+(\\d+) kB\", Path(\"/proc/meminfo\").read_text(), re.MULTILINE\n46 |         )\n   |\n\nBLE001 Do not catch blind exception: `Exception`\n   --> launch.py:117:12\n    |\n115 |         probe.memory_info()\n116 |         probe.children(recursive=True)\n117 |     except Exception as error:\n    |            ^^^^^^^^^\n118 |         result.update(status=\"preflight_refused\", refusal=str(error))\n119 |         receipt.write_text(json.dumps(result, indent=2) + \"\\n\")\n    |\n\nBLE001 Do not catch blind exception: `Exception`\n   --> launch.py:158:20\n    |\n156 |             except psutil.NoSuchProcess:\n157 |                 rss = 0\n158 |             except Exception as error:\n    |                    ^^^^^^^^^\n159 |                 violation, rss = \"monitor_error:\" + repr(error), 0\n160 |             if time.monotonic() - started > limits[\"stage_seconds\"]:\n    |\n\nFound 5 errors.\n[*] 3 fixable with the `--fix` option.\n"
+  },
+  {
+    "file": "code/launch.py",
+    "check": "optional_isolated_format",
+    "returncode": 0,
+    "output": ""
+  },
+  {
+    "file": "code/verify.py",
+    "check": "optional_isolated_check",
+    "returncode": 0,
+    "output": "All checks passed!\n"
+  },
+  {
+    "file": "code/verify.py",
+    "check": "optional_isolated_format",
+    "returncode": 0,
+    "output": ""
+  },
+  {
+    "file": "reproduce/source/fetch.py",
+    "check": "optional_isolated_check",
+    "returncode": 1,
+    "output": "I001 [*] Import block is un-sorted or un-formatted\n  --> fetch.py:3:1\n   |\n 1 |   \"\"\"Bounded anonymous public retrieval with immutable request and response receipts.\"\"\"\n 2 |\n 3 | / import argparse\n 4 | | from datetime import datetime, timezone\n 5 | | import hashlib\n 6 | | from html.parser import HTMLParser\n 7 | | import json\n 8 | | from pathlib import Path\n 9 | | import shutil\n10 | | import time\n11 | | from urllib.parse import urljoin, urlparse\n12 | | import xml.etree.ElementTree as ET\n13 | |\n14 | | import requests\n   | |_______________^\n15 |\n16 |   ROOT = Path(__file__).resolve().parents[1]\n   |\nhelp: Organize imports\n   |\n3  | import argparse\n   - from datetime import datetime, timezone\n4  | import hashlib\n   - from html.parser import HTMLParser\n5  | import json\n   - from pathlib import Path\n6  | import shutil\n7  | import time\n8  + import xml.etree.ElementTree as ET\n9  + from datetime import datetime, timezone\n10 + from html.parser import HTMLParser\n11 + from pathlib import Path\n12 | from urllib.parse import urljoin, urlparse\n   - import xml.etree.ElementTree as ET\n13 |\n   |\n\nBLE001 Do not catch blind exception: `Exception`\n   --> fetch.py:182:16\n    |\n180 |                 raise ValueError(\"not_zip_container\")\n181 |             receipt[\"status\"] = \"retrieved_validated_payload\"\n182 |         except Exception as error:\n    |                ^^^^^^^^^\n183 |             receipt.update(\n184 |                 status=\"failed\",\n    |\n\nFound 2 errors.\n[*] 1 fixable with the `--fix` option.\n"
+  },
+  {
+    "file": "reproduce/source/fetch.py",
+    "check": "optional_isolated_format",
+    "returncode": 0,
+    "output": ""
+  },
+  {
+    "file": "reproduce/source/launch.py",
+    "check": "optional_isolated_check",
+    "returncode": 1,
+    "output": "I001 [*] Import block is un-sorted or un-formatted\n  --> launch.py:3:1\n   |\n 1 |   \"\"\"Bounded, non-overwriting local stages with durable preflight and exit receipts.\"\"\"\n 2 |\n 3 | / import argparse\n 4 | | from datetime import datetime, timezone\n 5 | | import hashlib\n 6 | | import importlib.metadata\n 7 | | import json\n 8 | | import os\n 9 | | from pathlib import Path\n10 | | import platform\n11 | | import re\n12 | | import resource\n13 | | import shutil\n14 | | import subprocess\n15 | | import sys\n16 | | import time\n17 | |\n18 | | import psutil\n   | |_____________^\n   |\nhelp: Organize imports\n   |\n3  | import argparse\n   - from datetime import datetime, timezone\n4  | import hashlib\n5  | import importlib.metadata\n6  | import json\n7  | import os\n   - from pathlib import Path\n8  | import platform\n--------------------------------------------------------------------------------\n14 | import time\n15 + from datetime import datetime, timezone\n16 + from pathlib import Path\n17 |\n   |\n\nFURB167 [*] Use of regular expression alias `re.M`\n  --> launch.py:35:73\n   |\n33 |         counts = {}\n34 |         for key in (\"free\", \"speculative\"):\n35 |             match = re.search(r\"^Pages \" + key + r\":\\s+(\\d+)\\.\", stats, re.M)\n   |                                                                         ^^^^\n36 |             if match is None:\n37 |                 raise RuntimeError(\"Missing macOS memory counter: \" + key)\n   |\nhelp: Replace with `re.MULTILINE`\n   |\n34 |         for key in (\"free\", \"speculative\"):\n   -             match = re.search(r\"^Pages \" + key + r\":\\s+(\\d+)\\.\", stats, re.M)\n35 +             match = re.search(r\"^Pages \" + key + r\":\\s+(\\d+)\\.\", stats, re.MULTILINE)\n36 |             if match is None:\n   |\n\nFURB167 [*] Use of regular expression alias `re.M`\n  --> launch.py:45:78\n   |\n43 |     if sys.platform.startswith(\"linux\"):\n44 |         match = re.search(\n45 |             r\"^MemAvailable:\\s+(\\d+) kB\", Path(\"/proc/meminfo\").read_text(), re.M\n   |                                                                              ^^^^\n46 |         )\n47 |         if match is None:\n   |\nhelp: Replace with `re.MULTILINE`\n   |\n44 |         match = re.search(\n   -             r\"^MemAvailable:\\s+(\\d+) kB\", Path(\"/proc/meminfo\").read_text(), re.M\n45 +             r\"^MemAvailable:\\s+(\\d+) kB\", Path(\"/proc/meminfo\").read_text(), re.MULTILINE\n46 |         )\n   |\n\nBLE001 Do not catch blind exception: `Exception`\n   --> launch.py:117:12\n    |\n115 |         probe.memory_info()\n116 |         probe.children(recursive=True)\n117 |     except Exception as error:\n    |            ^^^^^^^^^\n118 |         result.update(status=\"preflight_refused\", refusal=str(error))\n119 |         receipt.write_text(json.dumps(result, indent=2) + \"\\n\")\n    |\n\nBLE001 Do not catch blind exception: `Exception`\n   --> launch.py:158:20\n    |\n156 |             except psutil.NoSuchProcess:\n157 |                 rss = 0\n158 |             except Exception as error:\n    |                    ^^^^^^^^^\n159 |                 violation, rss = \"monitor_error:\" + repr(error), 0\n160 |             if time.monotonic() - started > limits[\"stage_seconds\"]:\n    |\n\nFound 5 errors.\n[*] 3 fixable with the `--fix` option.\n"
+  },
+  {
+    "file": "reproduce/source/launch.py",
+    "check": "optional_isolated_format",
+    "returncode": 0,
+    "output": ""
+  },
+  {
+    "file": "reproduce/source/verify.py",
+    "check": "optional_isolated_check",
+    "returncode": 0,
+    "output": "All checks passed!\n"
+  },
+  {
+    "file": "reproduce/source/verify.py",
+    "check": "optional_isolated_format",
+    "returncode": 0,
+    "output": ""
+  },
+  {
+    "check": "repository_policy",
+    "argv": [
+      "check",
+      "."
+    ],
+    "returncode": 1,
+    "output": "E501 Line too long (104 > 100)\n   --> data/erap1_source_qualification/2026-10-24_0924_maben-v1/executed-launch.py:100:101\n    |\n 98 |     shutil.copyfile(__file__, args.out / \"executed-launch.py\")\n 99 |     git = subprocess.check_output([\"git\", \"rev-parse\", \"HEAD\"], text=True).strip()\n100 |     dirty = subprocess.check_output([\"git\", \"status\", \"--porcelain\", \"--untracked-files=no\"], text=True)\n    |                                                                                                     ^^^^\n101 |     record = {\"argv\": sys.argv, \"utc\": datetime.now(timezone.utc).isoformat(),\n102 |               \"python\": sys.executable, \"python_version\": platform.python_version(),\n    |\n\nE501 Line too long (104 > 100)\n   --> data/erap1_source_qualification/2026-10-24_0924_maben-v1/executed-launch.py:117:101\n    |\n115 |     write_json(args.out / \"inventory.json\", record)\n116 |     print(json.dumps({\"out\": str(args.out), \"elapsed_seconds\": record[\"elapsed_seconds\"],\n117 |                       \"sheets\": [[book[\"name\"], len(book[\"sheets\"])] for book in record[\"workbooks\"]]}))\n    |                                                                                                     ^^^^\n    |\n\nFound 2 errors.\n"
+  },
+  {
+    "check": "repository_policy",
+    "argv": [
+      "format",
+      "--check",
+      "."
+    ],
+    "returncode": 1,
+    "output": "unformatted: File would be reformatted\n   --> data/erap1_source_qualification/2026-10-24_0924_maben-v1/executed-launch.py:1:1\n    |\n62  |                 record = {\n    -                     \"workbook\": name, \"sheet\": sheet.get(\"name\"),\n    -                     \"address\": cell.get(\"r\"), \"type\": kind, \"raw_value\": raw,\n    -                     \"value\": value, \"formula\": formula.text if formula is not None else None,\n63  +                     \"workbook\": name,\n64  +                     \"sheet\": sheet.get(\"name\"),\n65  +                     \"address\": cell.get(\"r\"),\n66  +                     \"type\": kind,\n67  +                     \"raw_value\": raw,\n68  +                     \"value\": value,\n69  +                     \"formula\": formula.text if formula is not None else None,\n70  |                     \"formula_attributes\": formula.attrib if formula is not None else None,\n--------------------------------------------------------------------------------\n81  |             dim = root.find(\"s:dimension\", NS)\n    -             result[\"sheets\"].append({\n    -                 \"name\": sheet.get(\"name\"), \"state\": sheet.get(\"state\", \"visible\"),\n    -                 \"dimension\": dim.get(\"ref\") if dim is not None else None,\n    -                 \"occupied_cells\": len(occupied), \"cell_types\": dict(counts),\n    -                 \"formulas\": formulas, \"labels\": labels,\n    -                 \"merged_ranges\": [item.get(\"ref\") for item in merges] if merges is not None else [],\n    -             })\n82  +             result[\"sheets\"].append(\n83  +                 {\n84  +                     \"name\": sheet.get(\"name\"),\n85  +                     \"state\": sheet.get(\"state\", \"visible\"),\n86  +                     \"dimension\": dim.get(\"ref\") if dim is not None else None,\n87  +                     \"occupied_cells\": len(occupied),\n88  +                     \"cell_types\": dict(counts),\n89  +                     \"formulas\": formulas,\n90  +                     \"labels\": labels,\n91  +                     \"merged_ranges\": [item.get(\"ref\") for item in merges]\n92  +                     if merges is not None\n93  +                     else [],\n94  +                 }\n95  +             )\n96  |         return result\n--------------------------------------------------------------------------------\n110 |     git = subprocess.check_output([\"git\", \"rev-parse\", \"HEAD\"], text=True).strip()\n    -     dirty = subprocess.check_output([\"git\", \"status\", \"--porcelain\", \"--untracked-files=no\"], text=True)\n    -     record = {\"argv\": sys.argv, \"utc\": datetime.now(timezone.utc).isoformat(),\n    -               \"python\": sys.executable, \"python_version\": platform.python_version(),\n    -               \"git_commit\": git, \"tracked_dirty\": dirty, \"archive_sha256\": sha(source),\n    -               \"training\": None, \"evaluation\": None, \"workbooks\": []}\n111 +     dirty = subprocess.check_output(\n112 +         [\"git\", \"status\", \"--porcelain\", \"--untracked-files=no\"], text=True\n113 +     )\n114 +     record = {\n115 +         \"argv\": sys.argv,\n116 +         \"utc\": datetime.now(timezone.utc).isoformat(),\n117 +         \"python\": sys.executable,\n118 +         \"python_version\": platform.python_version(),\n119 +         \"git_commit\": git,\n120 +         \"tracked_dirty\": dirty,\n121 +         \"archive_sha256\": sha(source),\n122 +         \"training\": None,\n123 +         \"evaluation\": None,\n124 +         \"workbooks\": [],\n125 +     }\n126 |     with ZipFile(BytesIO(source)) as archive, gzip.open(args.out / \"cells.jsonl.gz\", \"wt\") as cells:\n127 |         assert archive.testzip() is None\n128 |         for member in archive.infolist():\n129 |             assert member.filename in {\n    -                 \"Source Data_Main Figures.xlsx\", \"Source Data_Supplementary Figures.xlsx\"}\n130 +                 \"Source Data_Main Figures.xlsx\",\n131 +                 \"Source Data_Supplementary Figures.xlsx\",\n132 +             }\n133 |             data = archive.read(member.filename)\n--------------------------------------------------------------------------------\n138 |     write_json(args.out / \"inventory.json\", record)\n    -     print(json.dumps({\"out\": str(args.out), \"elapsed_seconds\": record[\"elapsed_seconds\"],\n    -                       \"sheets\": [[book[\"name\"], len(book[\"sheets\"])] for book in record[\"workbooks\"]]}))\n139 +     print(\n140 +         json.dumps(\n141 +             {\n142 +                 \"out\": str(args.out),\n143 +                 \"elapsed_seconds\": record[\"elapsed_seconds\"],\n144 +                 \"sheets\": [[book[\"name\"], len(book[\"sheets\"])] for book in record[\"workbooks\"]],\n145 +             }\n146 +         )\n147 +     )\n148 |\n    |\n\n1 file would be reformatted, 392 files already formatted\n"
+  },
+  {
+    "check": "tracked_repository_policy",
+    "argv_prefix": [
+      "check"
+    ],
+    "tracked_python_count": 2469,
+    "returncode": 0,
+    "output": "All checks passed!\n"
+  },
+  {
+    "check": "tracked_repository_policy",
+    "argv_prefix": [
+      "format",
+      "--check"
+    ],
+    "tracked_python_count": 2469,
+    "returncode": 0,
+    "output": "290 files already formatted\n"
+  }
+]

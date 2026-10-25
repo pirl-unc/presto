@@ -679,3 +679,7 @@ Keep applicability reporting separate from model features and the measured label
   credential values, rewrite user credentials or ask for a token before checking
   the supported configuration path. Preserve failed upload receipts; independently
   compare published distribution bytes before declaring a tested release complete.
+
+## 2026-10-25 — One network budget across discovery tools
+
+- Count search queries, documentation opens and retries against a single prospective discovery budget, including tools outside the guarded fetcher. A local fetch receipt cannot establish time/byte compliance for separate browser calls. Freeze the scope before switching tools; disclose deviations and stop rather than reset the budget.

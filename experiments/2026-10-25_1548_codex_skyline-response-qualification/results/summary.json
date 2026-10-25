@@ -1,0 +1,29 @@
+{
+  "stages": [
+    {
+      "stage": "fetch",
+      "attempt": 1,
+      "status": "passed",
+      "elapsed_seconds": 9.583648833038751,
+      "peak_observed_process_tree_rss_bytes": 45236224,
+      "peak_child_process_rss_bytes": 45400064
+    },
+    {
+      "stage": "verify",
+      "attempt": 1,
+      "status": "passed",
+      "elapsed_seconds": 0.19301208399701864,
+      "peak_observed_process_tree_rss_bytes": 42008576,
+      "peak_child_process_rss_bytes": 42237952
+    }
+  ],
+  "elapsed_seconds_sum": 9.77666091703577,
+  "peak_bytes": 45400064,
+  "guarded_http_requests": 1,
+  "guarded_http_bytes": 26747,
+  "scientific_document_bytes": 0,
+  "scientific_admission": "unresolved_access",
+  "new_fits": 0,
+  "new_predictions": 0,
+  "native_outer_access": false
+}

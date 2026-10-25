@@ -4029,3 +4029,27 @@ The full APC availability goal remains active and unachieved.
 - **Access result:** both exact Panorama routes require login. PASS05890 publicly lists a7.8M CPTAC_Exp1_Curves_CS.sky response-curve document; its content remains uninspected. Public FTP requires TLS; verified FTPS fails hostname validation. Zero Skyline bytes downloaded, no disabled TLS checks. Current anonymous PMC S3 works; retired OA lookup, partial ZIP and legacy-encoding failures preserved.
 - **Resources:** local CPU only, one BLAS thread, no Modal/GPU or environment changes.22 bounded stages,14 passed/8 failed;111.49s combined measured stage time,112.19MiB maximum child RSS.20 metadata plus15 processed HTTP requests,2,481,660 bytes including failed payloads. Source/conservation audits pass.
 - **Decision:** admit supporting metadata only, not calibration training. [Hitlist#762 update](https://github.com/pirl-unc/hitlist/issues/762#issuecomment-6399609459) records the exact small processed asset, available fields and remaining joins/access requirements. Obtain a verifiable repository-supported route, qualify actual Skyline quantities, then implement a shared recipe and preregister response/transfer tests before the native exact/RL comparison. Full APC concentration/availability goal remains unachieved.
+
+
+## 2026-10-25_1548_codex_skyline-response-qualification — listed Skyline file still inaccessible
+
+- Date: 2026-10-25. Agent/model: Codex / GPT-6.
+- [Experiment, exact reproduction bundle and results](2026-10-25_1548_codex_skyline-response-qualification/README.md).
+- Contract: fixed PASS05890 response-curve Skyline candidate; public HTTPS upload
+  inventory, no scientific file retrieval, no vendor spectra or private access.
+  Starting d40f51d, dirty task edits preserved. One guarded 26,747-byte request.
+- HTTPS returns 15 plain-text file entries, including the 7.8M target, with no
+  target download link. Independent HTML parsers agree. Earlier no-login FTPS
+  diagnosis confirms hostname mismatch **and expiry**. Official documentation
+  browsing yielded no supported alternative; this is not global absence proof.
+- Both guarded fetch/replay stages pass: 9.584 / 0.193 seconds, maximum43.30MiB.
+  Local CPU/one BLAS thread; no Modal hardware. Browser discovery was outside the
+  fetch guard and exceeded the six-operation ceiling under an inclusive count;
+  the exact protocol deviation is preserved, not described as full guard compliance.
+- Training/pretraining, synthetic data, loss weights, assay-label/output mapping,
+  qualifiers/censoring and held-out validation/test metrics: not applicable, source
+  access only. No model dataset, predictions or new native outer exposure.
+- Winner: none. Decision: stop these unchanged access retries; existing Hitlist762
+  needs a supported raw-response download. Ratios/LLOQ summaries do not calibrate
+  absolute MS response. Full APC availability and biological exact/RL goal remain
+  active and unachieved.

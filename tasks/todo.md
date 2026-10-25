@@ -13946,3 +13946,17 @@ new model or reopened native outer outcomes. The previous goal turn was progress
 action to broader peptide/protocol calibration.
 
 Review (2026-10-25): family1451 verifies500 standard-stock records and both studies' supporting tables. Separate raw isotope areas remain unverified; PASS05890 lists a7.8M Skyline response-curve file, but its published FTPS hostname fails certificate verification. Preserve source rounding,48-vs53 assay membership discrepancy and all access failures. No model or native outer outcome was opened. Full availability goal remains active.
+
+
+## PASS05890 processed response-curve qualification
+
+- [x] Revalidate published source audit, live CI handles and the FTPS certificate failure.
+- [x] Register the fixed file, bounded HTTPS route search and semantic-admission plan.
+- [x] Execute the observed public HTTPS browsing route: target is plain text, no download link.
+- [x] Independently verify inventory and preserve unresolved access; no Skyline semantic admission.
+- [x] Close the source-family registry and update Hitlist#762 with changed evidence (exact readback verified).
+
+Plan: experiments/agents/codex/plans/skyline-response-qualification.md. No new fit
+or reopened native outer partition is authorized by source admission alone.
+
+Review1548: both guarded stages pass (9.777s total,43.30MiB peak). Inventory has15files and no target download link; FTPS certificate also expired. Browser discovery exceeded the inclusive operation ceiling and is disclosed. Source remains unadmitted, no model or outer data access. Stop unchanged route retries; Hitlist762 owns the exact file dependency.
