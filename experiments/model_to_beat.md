@@ -86,6 +86,22 @@ promoting any post-migration result. See `tasks/todo.md` Stage 0.
 
 ## Active Baselines
 
+### PXD058121 same-peptide temporal product/substrate ratios — provisional
+
+Direct peptide-specific linear slopes shrunk toward a jointly fitted shared slope
+(penalty 0.1, selected on validation) are the reference for training at 0–80 minutes,
+validation at 100 and test at 120. Validation/test RMSE **0.206085 / 0.228184** in
+log10 product/intact-substrate intensity ratio, versus persistence **0.229625 /
+0.364187**. Minimal independent-bond fragmentation fails at **0.304593 / 0.359038**;
+conditional-score training gives no advantage over exact gradients.
+
+Training-only peptide anchors are essential: test change-from-last Spearman is
+only **0.23071** despite raw-ratio Spearman **0.90998**. One substrate/purified
+preparation, unresolved replicate independence and unknown MS response prevent
+new-peptide, independent-specimen or APC-concentration claims. These inspected
+held-outs must not be reused as blind tests for revisions.
+[Frozen contract and all outcomes](2026-10-25_0046_codex_intact-kinetic-forecast/README.md).
+
 ### Frozen human-source/HLA IC50 cohort — provisional
 
 Train-only alpha=1 ridge (length, composition, MHC class) is the baseline to beat

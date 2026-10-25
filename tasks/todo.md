@@ -13470,3 +13470,47 @@ release40144589370is pending behind running MAPP2.0.31 release40143097533.
 Previous goal turn made progress: fixed acquisition-label and public-join bugs; six fixtures passed. No biological fit or source admission was claimed.
 
 Review: source build/replay and descriptive support pass in family0021; draft Hitlist832published.45relevant tests pass; hosted full gates pending. Intact substrate in all21kinetic acquisitions and80early/late recurrent sequences permit a prospective forecast. Frozen model plan distinguishes exact span expectations from hybrid conditional score gradients. No biological training run yet. Hitlist2.0.31 is published with exact PyPI byte verification;2.0.32 release build remains active.
+
+## Intact kinetic forecast experiment
+
+- [x] Implement and freeze the shared recipe;32focused source/recipe/interface tests pass.
+- [x] Register family0046before materialization/fitting; preserve the full availability objective.
+- [x] Admit and independently verify temporal targets and support.
+- [x] Qualify exact/sampled process numerics, then fit all frozen conditions.
+- [x] Evaluate once, independently replay, and close scientific report and registry.
+- [ ] Publish all outcomes and complete shared source/recipe CI and releases.
+
+Previous goal turn made progress: canonical source replay, support census and published prospective model plan. No biological fit was claimed.
+
+### Intact kinetic forecast review
+
+Fourteen physical fits and seven controls complete. Independent replay verifies
+993 source targets, 13,902 physical predictions and seven controls, all 126 overall
+metrics, every Adam recurrence and exact gradients. Closure/bootstrap replay passes.
+Selected physical test RMSE0.359038 loses to direct0.228184; primary gate fails.
+Raw correlations largely reflect known peptide levels: temporal-change Spearman
+is0.23071direct and-0.13886physical. Conditional-score fits match exact while taking
+1.8–2.5× core time. All checkpoints/predictions and failed biological gates remain;
+no retuning or concentration claim. Scientific report and canonical registry are
+complete locally; publication/source-recipe release work remains outstanding.
+The full availability goal remains active and unachieved.
+
+## Intact kinetics training-only failure diagnosis
+
+- [x] Freeze shape-bound and unchanged-objective optimizer diagnostic specification.
+- [x] Qualify actual shape solvers and production shape identities.
+- [x] Execute all six optimizer conditions using training outcomes only.
+- [x] Independently replay and close report/registry; identify representation as the next hypothesis.
+- [ ] Specify a fresh biological evaluation after training-only representation qualification.
+- [ ] Complete pending canonical source/recipe and experiment publication.
+
+Previous goal turn was progress: 0046 evaluation, independent prediction/optimizer
+replay and scientific registry closure. No concentration success was claimed.
+
+Review: 0116 diagnostic completes without held-out reads. Optimizer gain2.29–2.32%
+misses5%materiality; shape floor adds7.98–7.99%of originalMSE, below10%threshold.
+All six fits,3756predictions,246objectiveevaluations and shape certificates replay.
+Preserve these negative diagnoses; rate sharing/features/regularization remain
+testable alternatives. Source832merged18bbf81d after fullCI;release40149903223live.
+Recipe833publishedfbd4f1a with frozen runtime hashes unchanged;CI40150207226live.
+Hitlist2.0.32PyPIwheel/sdist exactly match successful release40144589370 artifacts.

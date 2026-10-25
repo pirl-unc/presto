@@ -1,0 +1,65 @@
+{
+  "passed": true,
+  "solver_fixtures": [
+    [
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0
+    ],
+    [
+      4.440892098500626e-16,
+      1.1102230246251565e-15
+    ],
+    [
+      4.440892098500626e-16,
+      2.6645352591003757e-15
+    ]
+  ],
+  "production_shape": [
+    {
+      "kind": "uniform",
+      "state": "initial",
+      "analytic_derivative_max_error": 5.551115123125783e-17,
+      "minimum_first_derivative": 0.005045898253296981,
+      "maximum_second_derivative": -5.3580426150008665e-05
+    },
+    {
+      "kind": "uniform",
+      "state": "adam_final",
+      "analytic_derivative_max_error": 5.204170427930421e-18,
+      "minimum_first_derivative": 0.002403537925621928,
+      "maximum_second_derivative": -1.3080931962368093e-05
+    },
+    {
+      "kind": "uniform",
+      "state": "mixed",
+      "analytic_derivative_max_error": 2.7755575615628914e-17,
+      "minimum_first_derivative": 0.0048629370135826605,
+      "maximum_second_derivative": -4.958895538541051e-05
+    },
+    {
+      "kind": "residue",
+      "state": "initial",
+      "analytic_derivative_max_error": 5.551115123125783e-17,
+      "minimum_first_derivative": 0.005045898253296981,
+      "maximum_second_derivative": -5.3580426150008665e-05
+    },
+    {
+      "kind": "residue",
+      "state": "adam_final",
+      "analytic_derivative_max_error": 5.204170427930421e-18,
+      "minimum_first_derivative": 0.0024016634606362996,
+      "maximum_second_derivative": -1.3080195493195837e-05
+    },
+    {
+      "kind": "residue",
+      "state": "mixed",
+      "analytic_derivative_max_error": 2.7755575615628914e-17,
+      "minimum_first_derivative": 0.0052526322381374335,
+      "maximum_second_derivative": -5.730637524741986e-05
+    }
+  ]
+}

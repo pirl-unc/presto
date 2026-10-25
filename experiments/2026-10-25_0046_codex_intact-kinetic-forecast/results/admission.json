@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "output_kind": "registered_intact_kinetics",
+  "catalog_schema_version": 32,
+  "hitlist_version": "2.0.34",
+  "recipe": {
+    "schema_version": 1,
+    "name": "intact_kinetic_forecast",
+    "registered_recipe": "pxd058121_product_substrate_forecast_v1"
+  },
+  "recipe_sha256": "28361f61c926775112a777e489e6450597ad11b23a285cec40c25d6bd8a44a72",
+  "source_package_manifest_sha256": "fd91bb6ff3178a2246b760f6b0f99bc3824d83815a65719c34587816f3459974",
+  "source_package_schema_version": 26,
+  "coverage": {
+    "cohort_support": {
+      "train": {
+        "n_sequences": 96,
+        "n_observations": 626,
+        "n_acquisitions": 15
+      },
+      "val": {
+        "n_sequences": 75,
+        "n_observations": 181,
+        "n_acquisitions": 3
+      },
+      "test": {
+        "n_sequences": 74,
+        "n_observations": 186,
+        "n_acquisitions": 3
+      }
+    },
+    "support_passed": true,
+    "reason_counts": {
+      "ambiguous_mass_assignment": 4038,
+      "fewer_than_two_fitting_times": 264,
+      "input_link_or_quantity_conflict": 42,
+      "multiple_masses_for_sequence_acquisition": 10,
+      "not_explicit_unmodified": 4198,
+      "outside_declared_times": 1536,
+      "outside_kinetics_view": 5521
+    },
+    "output_counts": {
+      "n_decisions_rows": 8138,
+      "n_examples_rows": 993,
+      "n_covariates_rows": 993,
+      "n_trajectories_rows": 236
+    }
+  },
+  "files": {
+    "contract.json": {
+      "sha256": "81425b42ea75547a8470025884dd1732ffd7d1306d71145c6bd2308f7ad863d7",
+      "size_bytes": 1413
+    },
+    "source_manifest.json": {
+      "sha256": "fd91bb6ff3178a2246b760f6b0f99bc3824d83815a65719c34587816f3459974",
+      "size_bytes": 6336
+    },
+    "source_tables/acquisitions.parquet": {
+      "sha256": "49a3895b18b70b64d84b947277e754ae3619824b42e4bbaba8f3e884f643d8d2",
+      "size_bytes": 19608
+    },
+    "source_tables/assertions.parquet": {
+      "sha256": "7b2e3490d89e5b6b0316993d7b4142f543ee26f5cb62294b69f30bea1803140c",
+      "size_bytes": 5701
+    },
+    "source_tables/assignments.parquet": {
+      "sha256": "bf72e96a94fe266e7e3c351d24ad8dca89d656f9bf2a04a239768714a5c267e1",
+      "size_bytes": 1279164
+    },
+    "source_tables/material_contexts.parquet": {
+      "sha256": "253725e5e2f83625b393bd8a089421c8552c69cb5cde0f6d3656b7b5f5eda4d5",
+      "size_bytes": 10353
+    },
+    "source_tables/material_links.parquet": {
+      "sha256": "76a4a31491dcf7a41376d08a5d5d138d9ef97f7993b4d308b9d66b80bbf15847",
+      "size_bytes": 11589
+    },
+    "source_tables/quantities.parquet": {
+      "sha256": "eed95613683e61e1b885adb6d04bdbbaed2726cd390b872ee21fffb58df07010",
+      "size_bytes": 4520233
+    },
+    "source_tables/reconciliations.parquet": {
+      "sha256": "354109a7fc6521597529197ba34bf5a8c314d64029575dcc495868c1444cfed2",
+      "size_bytes": 847301
+    },
+    "source_tables/source_views.parquet": {
+      "sha256": "1676b32c0751b73deafba3839cb30d91d241765832142eaffa193ce64be2b3fc",
+      "size_bytes": 20135
+    },
+    "summary.json": {
+      "sha256": "fd6fa440bed5003b75db78c9f32997e45e70150eed0ee73be622a84adfdc192a",
+      "size_bytes": 812
+    },
+    "typed/covariates.parquet": {
+      "sha256": "a65c314a955b7656aa33966af911656011ab3fba16c1aaeadf1165a08f664623",
+      "size_bytes": 124658
+    },
+    "typed/decisions.parquet": {
+      "sha256": "a90991afc2f6a764027017c219a62a8c4a16ea3322a4bb524b7859aba3fed789",
+      "size_bytes": 942099
+    },
+    "typed/examples.parquet": {
+      "sha256": "6d95623f7fa66aa893337ad34b6ecd3602b09d5698ae3ab290c1646e48b86eaf",
+      "size_bytes": 139351
+    },
+    "typed/trajectories.parquet": {
+      "sha256": "86a31bce1fcc989004405f3aff4c660825141c113f26b6b74744fd5b7d9f2860",
+      "size_bytes": 5307
+    }
+  }
+}

@@ -209,3 +209,13 @@ claim that simply adding it can remedy the prior response-model failures.
 - [ ] Separately register generation/destruction exact-versus-sampled prediction,
   constrained by original quantitative time courses and honest holdout scope.
   Full precursor-relative APC availability/concentration remains the objective.
+
+## Current intact-kinetic outcome and next representation question
+
+- [x]0021 canonical source independently verified; source832merged18bbf81d with all hosted checks passing.
+- [x]0046 measured temporal exact/conditional-score comparison completed and independently closed; physical testRMSE.359038 loses to direct.228184. No concentration result or RL advantage.
+- [x]0116 training-only shape/optimizer diagnosis: six fits and independent replay; both registered materiality thresholds fail. No new held-out access.
+- [x]2.0.31 and2.0.32 published artifacts independently byte-verified.
+- [ ] Finish exact source release40149903223, then recipe833fullCI40150207226/merge/release; no duplicate launches.
+- [ ] Test whether parsimonious peptide sequence features can predict temporal changes before enlarging the shared processing model. Separate feature capacity, rate sharing and regularization in training-only development; require fresh biological evaluation before promotion.
+- [ ] Extend to precursor-relative intracellular/APC quantities with measured initial/observation calibration; do not substitute observed-set or response-only success for the full availability goal.

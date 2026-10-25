@@ -1,0 +1,26 @@
+{
+  "observed_utc": "2026-10-25T01:25:22.742110+00:00",
+  "source": {
+    "pr": 832,
+    "state": "MERGED",
+    "head": "97d3311a239cd901aa11b8ff8b627a7ce910cbd4",
+    "merge": "18bbf81d34084e6118b49a1cc4727ea4aec8a422",
+    "tests_run": 40147468788,
+    "tests_conclusion": "success",
+    "release_run": 40149903223,
+    "release_state": "in_progress"
+  },
+  "recipe": {
+    "pr": 833,
+    "state": "OPEN_DRAFT",
+    "head": "fbd4f1a84205e59ad201299f41e279a4e1ef4618",
+    "tests_run": 40150207226,
+    "tests_state": "in_progress",
+    "final_focused_tests": 27,
+    "prior_broader_focused_tests": 32,
+    "full_local_suite": "deferred_under_unchanged_2GiB_disk_prerequisite"
+  },
+  "pbmc_release": "pbmc-2032-release.json",
+  "goal_complete": false,
+  "frozen_recipe_runtime_unchanged_after_rebase": true
+}
