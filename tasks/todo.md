@@ -13802,7 +13802,7 @@ Review0726: fixed boundary149feature model fails all four development gates. RMS
 - [x] Qualify pair algebra and actual training; audit support beforeeffects and reconcile raw-source quantities.
 - [x] Fit only all-pair models, score bothspaces, independently replayallnewfits/metrics andexactoriginalpredictions.
 - [x] Close numerical artifacts/report and follow fixedgate/stoppingrule; full APCavailabilitygoal remains active.
-- [ ] Publish canonical registry, frozen artifacts and updated PR evidence.
+- [x] Publish canonical registry, frozen artifacts and updated PR evidence.
 
 Family:experiments/2026-10-25_0747_codex_native-reference-invariant. Plan:experiments/agents/codex/plans/native-reference-invariant-development.md.
 
@@ -13813,5 +13813,9 @@ Review0747: all four gates fail; all-pair boundary RMSE0.477868 versus matched o
 - [x] Classify preceding cleanup follow-up as no scientific progress; revalidate completed0747 evidence and take next available action.
 - [x] Confirm prior-head CI40173877564 passes both jobs; no local numerical process remains live.
 - [x] Specify baseline/MS identifiability, admission gates and full-goal constraints before new code.
-- [ ] Qualify public processed calibration assets and preserve source conflicts; use the shared Hitlist metadata system.
+- [x] Audit public processed calibration assets and preserve source conflicts; shared Hitlist ingestion and training admission remain pending under#845.
 - [ ] Register a direct biological baseline only after its target/observer contract is justified; retain original outer partitions closed.
+
+- [x] Register source family0813 and bounded metadata retrieval before inspecting deposited quantitative assets.
+
+Review0813: independent source audit verifies64,070rows/896,980cells,68-file inventory andfive nominal doses. Nine standards supply90slots; missing tenth query,2literal standardzeros and3missing scores remain explicit. Pinned pipeline confirms aligned output. Source ingestion supported, calibration training not admitted. Hitlist#845posted/readback verified. All failed route/format/Unicode stages preserved. No new predictor or outer access. 0747published869b2ac and CI40175717772passes both jobs; PRbody readback matches.

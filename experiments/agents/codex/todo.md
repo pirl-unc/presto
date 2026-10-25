@@ -255,3 +255,6 @@ claim that simply adding it can remedy the prior response-model failures.
 
 - [x] 0747 all-pair comparison fails all four gates; independently replayed. Stop expanding the native response-only cohort's features/optimizer.
 - [ ] Execute plans/native-baseline-observation-admission.md: qualify dose/response/protocol support, then register an identifiable native baseline. PXD024809 is an unqualified calibration candidate; no concentration claim or new fit yet.
+
+- [x] 0813 source audit independently verifies PXD024809 complete quantity grid and nominal standard panel. Source materialization supported; calibration fitting unadmitted.
+- [ ] Implement shared source and scored/aligned/query reconciliation under Hitlist#845 using the frozen admission contract. Retain dilution conflict and unknown amount/certification fields.
