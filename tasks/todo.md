@@ -13868,3 +13868,40 @@ floor remains. No canonical package or model fit exists. Hitlist latest1b3ad56
 fixes the remaining subprocess catalog assertion;26focused tests pass, and fresh
 Tests40183613623 is live (docs40183613700 passes). This is meaningful source/code
 progress; memory admission and real source verification remain unfinished.
+
+
+## Close quantitative-anchor source screen while local execution waits
+
+- [x] Revalidate exact live CI handles and local memory; both hosted suites now finish successfully.
+- [x] Check source ownership and primary papers; distinguish publication availability from retrieved processed files.
+- [x] Extend Hitlist #762 with separate absolute-area/known-amount requirements and source-specific qualification criteria.
+- [x] Update both draft PR descriptions and verify exact remote readback.
+- [x] Resume the frozen canonical build/replay after unchanged local memory admission passes (see source closure below).
+
+Review: tasks/quantitative-anchor-source-screen.md closes the bounded read-only
+screen. The concrete data request is Hitlist #762 comment 6396605227; ratios alone
+cannot identify the absolute peptide response coefficient. Candidate processed
+access and trainable coverage remain unverified. Presto CI40184204117 and Hitlist
+CI40183613623 now pass; no live job remains from those runs. At10:40UTC memory
+admission is82,100,224bytes, below2.5GiB/3GiB; no local stage was launched and no
+new model result exists. Preserve family0959 and its pending build2/verify1, all
+original source bytes and unrelated working edits. The biological goal remains
+active and unachieved.
+
+
+## Resume and close canonical nominal-dose source replay
+
+- [x] Revalidate recovered capacity and exact frozen source/software state.
+- [x] Pass required format/lint/full default local suite and preserve the complete log.
+- [x] Preserve refused build2; admit build3 only after capacity recovers.
+- [x] Pass canonical build and independent full-source replay under unchanged guards.
+- [x] Close report, summaries and canonical registry; verify frozen code and primary checkout preservation.
+- [ ] Publish closure and finish source PR review, merge and tested PyPI release.
+- [ ] Register the next bounded nominal-dose observation diagnostic after shared release.
+
+Review: family0959 now reconciles all29,039,248literal cells and297,876numeric
+comparisons. Build3 takes80.89s/1.70GiB; independent verify1 takes83.24s/2.23GiB.
+The full default suite passes3,571tests; code/configuration/resource limits are
+unchanged. All15tables and metadata links reconcile; source absence remains
+explicit. No model, new biological prediction or native/APC calibration was
+produced. The original objective remains active and unachieved.

@@ -3918,37 +3918,49 @@ The full APC availability goal remains active and unachieved.
 - **Verification/runtime:** independent pandas literal parser and Fraction arithmetic replay all29,039,248cells,12,851library memberships,76,561scored rows,64,070aligned links,297,876numeric comparisons and90standard slots, including failed and amended namespace predicates. Allfive stages pass first execution: retrieval251.608s/35.0MiB, inventory13.520s/229.2MiB, lineage4.272s/268.2MiB, membership1.685s/59.4MiB, independent replay49.529s/783.2MiB OSchildpeak. Original20min/3GiB/1GiBdisk+32MiBstartup/50msmonitor limits unchanged. Per-stage configs, exact code, inputs, logs, receipts, compressed all-slot comparison dump and explicit exceptions retained.
 - **Decision:** source lineage is sufficiently qualified for canonical Hitlist ingestion under[#845](https://github.com/pirl-unc/hitlist/issues/845); implementation/tested publication and a separately registered nominal-dose likelihood/selection contract remain pending. No calibration training admitted and no general sequence/native-MS1 transfer established. Do not restart stopped native response-only fitting. Full precursor-relative APC availability and matched differentiable/discrete biological modeling remain active and unachieved.
 
-## 2026-10-25 — Canonical nominal-dose source: draft publication, execution refused
+## 2026-10-25 — Canonical nominal-dose source: full local tests and independent replay pass
 
 - **Agent/model:** Codex / GPT-6; [family0959 and frozen reproduction](2026-10-25_0959_codex_dilution-canonical/README.md).
-- **Source contract:**17pinned PXD024809 originals,402,761,771bytes; expected conservation
-  of1,031,853tabular rows and29,039,248literal cells from independently verified0813/0844.
-  Preserve distinct library/scored namespaces, missingness, the intended ten-standard
-  panel, nominal-dose conflict, matrix/standard roles and nonexchangeable DIA methods.
+- **Source contract:** 17 pinned PXD024809 originals, 402,761,771 bytes. Preserve
+  distinct library/scored namespaces, all missingness, the ten-standard panel,
+  nominal-dose conflict, matrix/standard roles and nonexchangeable DIA methods.
   No filtering, imputation or quantitative training labels.
-- **Reproduction/code:**Presto50a2af4 with unrelated task edits preserved; Hitlist
-  candidate2.0.40/1b3ad56, [draft846](https://github.com/pirl-unc/hitlist/pull/846).
-  Exact local invocation,17asset hashes,15Hitlist source snapshots and independent
-  checker/launcher snapshots are frozen in reproduce/. No shared installation.
-- **Training/evaluation:**none:source-conservation family, no assay loss/weights,
-  pretraining, model or train/validation/test split. Software fixtures are synthetic
-  tests only. No prediction dumps or held-out metrics apply; original native outer
-  partitions remain closed. No new exact/RL or biological performance comparison.
+- **Reproduction/code:** Execution at Presto d92606a with unrelated task edits
+  preserved; Hitlist candidate 2.0.40 / 1b3ad56, [PR846](https://github.com/pirl-unc/hitlist/pull/846).
+  Exact per-attempt invocation, source hashes and independent checker snapshots
+  remain frozen. No shared installation or code/resource-policy changes.
+- **Training/evaluation:** None: this is source conservation, with no model,
+  pretraining, assay loss/weights, output mapping or train/validation/test split.
+  Software fixtures are synthetic tests only. No prediction dumps or predictive
+  metrics apply; original native outer partitions remain closed.
 
 | Condition | Outcome | Runtime / scope |
 | --- | --- | --- |
-| Catalog/source software checks |48pass; correction26pass (overlapping)|1.63s /1.68s|
-| Independent checker/launcher boundaries |13pass|0.13s, synthetic software fixtures|
-| Canonical build attempt1 |Preflight refused; no child launched|69.88MiB free+speculative versus3GiB floor|
-| Original-source replay |Not launched|No canonical-package results yet|
+| Catalog/source software fixtures | 48 pass; correction 26 pass (overlap) | 1.63 s / 1.68 s |
+| Checker/launcher boundaries | 13 pass | 0.13 s; synthetic software fixtures |
+| Full default local suite | 3,571 pass | 379.80 s pytest / 388.38 s wrapper; 901,644,288-byte maximum RSS |
+| Build attempt 1 | Preflight refusal; no child | 69.88 MiB free+speculative versus 3 GiB floor |
+| Build attempt 2 | Preflight refusal; no child | 774.23 MiB free+speculative versus 3 GiB floor |
+| Build attempt 3 | Pass; all 15 tables materialized | 80.89 s; 1.70 GiB OS peak RSS |
+| Independent source replay attempt 1 | Pass | 83.24 s; 2.23 GiB OS peak RSS |
 
-- **Resources:**local CPU only, no Modal/GPU/cloud training;20min/stage,3GiB RSS,
-  1GiB disk reserve+32MiB startup margin,50ms monitoring and OS child peak unchanged.
-  Disk headroom14,606,356,480bytes; inactive pages excluded from memory admission.
-- **Decision/preferred condition:**no model winner. The native response-only stopping
-  rule remains. Draft shared ingestion and an independent full-cell/rational replay
-  are implemented; local full-suite/source execution, full hosted gates and tested
-  release remain pending. The full APC concentration objective is unachieved.
-- **Evidence:**family README, summary.json, software-boundaries.log and exact
-  build-attempt1-runtime.json; production CI's stale catalog failure is preserved
-  in Hitlist846. No biological success is inferred from source/software work.
+- **Reconciliation:** All 17 originals/snapshots, 1,031,853 tabular rows,
+  29,039,248 literal cells, 297,876 numeric comparisons and metadata/material
+  relationships pass. Feature-link dispositions remain 49,646 exact matches,
+  10,939 missing IDs and 3,485 IDs absent from deposited score exports. Public
+  queries pass after independent replay; missing observations are not negatives.
+- **Resources:** Local CPU only, no Modal/GPU/cloud training; 20 minutes/stage,
+  3 GiB process-tree RSS, 1 GiB disk reserve plus 32 MiB startup margin, 50 ms
+  monitoring and OS child peak. Inactive memory remains excluded. The successful
+  stages passed every unchanged guard; previous refusals stay archived.
+- **Software scope:** Format/lint and the full default non-integration local suite
+  pass on the exact source commit. Hosted workflow40183613623 separately passes
+  unit/lint/integration/coverage; docs build40183613700 passes.
+- **Decision:** No model winner or new biological result. Source conservation is
+  complete; review, merge and tested PyPI release remain pending. Only then register
+  a nominal-dose observation/selection diagnostic. Nine selected standards do not
+  establish general response transfer, native MS1 calibration or APC concentrations.
+- **Evidence:** Full README, build.json, verification.json, summary.json, all runtime
+  receipts, stage logs and byte-restorable full local test log. The current closure
+  manifest is reproduce/closure-source-replay.json; the earlier preparation closure
+  remains historical. No executable/configuration snapshot was rewritten.

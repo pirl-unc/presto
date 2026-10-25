@@ -1,0 +1,43 @@
+{
+  "started_at_utc": "2026-10-25T12:32:10.327563+00:00",
+  "finished_at_utc": "2026-10-25T12:38:38.691963+00:00",
+  "command": [
+    "./test.sh"
+  ],
+  "env_overrides": {
+    "PATH": "/private/tmp/presto-pr66-tools/bin:/Users/iskander/code/shared-virtual-env/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/TeX/texbin:/Applications/Wireshark.app/Contents/MacOS:/usr/local/share/dotnet:/Applications/quarto/bin:/Users/iskander/.codex/packages/app-server-daemon/releases/0.164.0-aarch64-apple-darwin/codex-path:/Users/iskander/.codex/tmp/arg0-macos/codex-arg0FjXcBd:/Users/iskander/.codex/tmp/arg0-macos/codex-arg07NQVAY:/Users/iskander/.codex/packages/app-server-daemon/releases/0.163.0-aarch64-apple-darwin/codex-path:/Users/iskander/.codex/tmp/arg0/codex-arg0B2ujLf:/opt/homebrew/Caskroom/codex/0.162.1/codex-path:/Users/iskander/tools/google-cloud-sdk/bin:/Users/iskander/code/shared-virtual-env/bin:/opt/homebrew/opt/openjdk/bin:/Users/iskander/micromamba/condabin:/opt/homebrew/Cellar/openjdk/23.0.2/libexec/openjdk.jdk/Contents/Home/bin:/Users/iskander/code/netmhc-bundle/bin:/Users/iskander/.cargo/bin:/Users/iskander/.nimble/bin:/opt/homebrew/bin:/opt/homebrew/sbin:/Applications/iTerm.app/Contents/Resources/utilities:/Users/iskander/.local/bin:/Users/iskander/code/astring/bin:/Users/iskander/.foundry/bin:/Users/iskander/.local/bin",
+    "TEST_SH_MAX": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "VECLIB_MAXIMUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "hitlist_commit": "1b3ad5639a7bbbea7a24fdde41c25e12a1bc2511",
+  "full_default_suite_exit_code": 0,
+  "elapsed_seconds": 388.3778298749821,
+  "log_path": "/Users/iskander/code/presto/.worktrees/hitlist-dilution-observer/tasks/dilution_observer-tests-attempt3.log",
+  "log_sha256": "7bcb73805d077ac1db859bc6e379afc7d7c3cf0cd4391c72be0790b44056b326",
+  "published_log_gzip": "results/local-full-default-tests-attempt3.log.gz",
+  "gzip_sha256": "2ccce2542db33438c8b9221fc06e4b09ce8e9388aabab87c1fe2015bf1d16a79",
+  "test_summary": {
+    "passed": 3571,
+    "warnings": 392,
+    "pytest_elapsed_seconds": 379.8,
+    "maximum_resident_set_size_bytes": 901644288,
+    "scope": "Full default non-integration suite; hosted integration checked separately"
+  },
+  "format_lint": {
+    "format": {
+      "exit_code": 0,
+      "log": "results/local-format-resume.log",
+      "sha256": "4da6f0fba5a819027f5458b8dca92457823a675f4c0bec4c6dfaaaef58b1d07b"
+    },
+    "lint": {
+      "exit_code": 0,
+      "log": "results/local-lint-resume.log",
+      "sha256": "c115884c422d5f4f17e7ec0f04aeb47aa1d089a6bb589a2401d1a465a95d72c4"
+    }
+  }
+}
