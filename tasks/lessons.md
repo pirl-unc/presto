@@ -664,3 +664,8 @@ Keep applicability reporting separate from model features and the measured label
   refusal from authentication, client challenges and absent data. Fetch commands
   must return a failing exit code when retrieval fails. Reuse successful recorded
   API routes, not historical failed defaults retained in an old launcher.
+
+- Scientific artifact manifests must explicitly exclude tool caches. Before
+  pushing, verify every required published manifest entry against the committed
+  Git tree, not only the local filesystem. Retain required ignored experiment
+  logs through an exact reviewed whitelist; never force-add entire raw directories.

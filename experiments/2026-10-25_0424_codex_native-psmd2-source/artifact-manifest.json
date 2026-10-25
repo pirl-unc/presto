@@ -1,17 +1,5 @@
 {
   "files": {
-    ".ruff_cache/.gitignore": {
-      "sha256": "9e3a60f1e6ec4ae60215c11d54b171392745ec25e9dded433d5bd921363af316",
-      "size_bytes": 35
-    },
-    ".ruff_cache/0.16.0/17356435427713478057": {
-      "sha256": "a10bea21d0cd34c7a3d60fd84f1fa234aef2f6936ac317f2c946564854233625",
-      "size_bytes": 564
-    },
-    ".ruff_cache/CACHEDIR.TAG": {
-      "sha256": "5953156d7e0c564a427251316eaf26f8870e6483ae2197f916b630e4f93e31ae",
-      "size_bytes": 43
-    },
     "README.md": {
       "sha256": "5d4e07c8653a4ef0a1090703f41151088e2dcc7232d76697c77efc528eed4c40",
       "size_bytes": 9176
@@ -277,5 +265,8 @@
     }
   ],
   "original_source_assets_manifest": "results/source-assets.json",
-  "model_fitted": false
+  "model_fitted": false,
+  "excluded_disposable_paths": [
+    ".ruff_cache/"
+  ]
 }
