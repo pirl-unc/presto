@@ -257,4 +257,5 @@ claim that simply adding it can remedy the prior response-model failures.
 - [ ] Execute plans/native-baseline-observation-admission.md: qualify dose/response/protocol support, then register an identifiable native baseline. PXD024809 is an unqualified calibration candidate; no concentration claim or new fit yet.
 
 - [x] 0813 source audit independently verifies PXD024809 complete quantity grid and nominal standard panel. Source materialization supported; calibration fitting unadmitted.
-- [ ] Implement shared source and scored/aligned/query reconciliation under Hitlist#845 using the frozen admission contract. Retain dilution conflict and unknown amount/certification fields.
+- [x] Shared source/reconciliation under Hitlist #845: source family0959 passes full independent replay; PR846 merged and tested PyPI2.0.40 verified byte-for-byte. Dilution conflict and amount/certification limits remain explicit.
+- [ ] Implement and run plans/dilution-conditional-dose-diagnostic.md through the existing declarative Hitlist recipe API; keep it separate from broad sequence response and native/APC validation.

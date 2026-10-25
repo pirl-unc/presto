@@ -13896,8 +13896,8 @@ active and unachieved.
 - [x] Preserve refused build2; admit build3 only after capacity recovers.
 - [x] Pass canonical build and independent full-source replay under unchanged guards.
 - [x] Close report, summaries and canonical registry; verify frozen code and primary checkout preservation.
-- [ ] Publish closure and finish source PR review, merge and tested PyPI release.
-- [ ] Register the next bounded nominal-dose observation diagnostic after shared release.
+- [x] Publish closure and finish source PR review, merge and tested PyPI release.
+- [x] Register the next bounded nominal-dose observation diagnostic after shared release.
 
 Review: family0959 now reconciles all29,039,248literal cells and297,876numeric
 comparisons. Build3 takes80.89s/1.70GiB; independent verify1 takes83.24s/2.23GiB.
@@ -13905,3 +13905,18 @@ The full default suite passes3,571tests; code/configuration/resource limits are
 unchanged. All15tables and metadata links reconcile; source absence remains
 explicit. No model, new biological prediction or native/APC calibration was
 produced. The original objective remains active and unachieved.
+
+
+## Conditional nominal-dose diagnostic: prospective registration
+
+- [x] Close tested Hitlist2.0.40 publication and independently verified PyPI artifacts.
+- [x] Register the simple four-arm dose-response specification before code or fits.
+- [ ] Freeze a timestamped family, public-API recipe, launch code and source-backed metadata.
+- [ ] Verify admission and fitting boundaries, then run the 24 fixed fits under unchanged guards.
+- [ ] Independently replay predictions/metrics and publish the canonical experimental closure.
+
+Review: experiments/agents/codex/plans/dilution-conditional-dose-diagnostic.md
+prespecifies conditional positive-signal targets, all intended-standard and
+missingness dispositions, separate DIA methods, leave-level-out development
+evaluation and simple constants/unit/shared/method-slope controls. No new model
+fit or biological result has occurred. This is not APC concentration validation.

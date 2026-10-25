@@ -1,5 +1,5 @@
 {
-  "status": "source_conservation_complete_release_pending",
+  "status": "source_conservation_and_tested_release_complete",
   "agent_model": "Codex / GPT-6",
   "presto_execution_commit": "d92606a4ec2cde5cd9f9edd255a62108203f6556",
   "hitlist_commit": "1b3ad5639a7bbbea7a24fdde41c25e12a1bc2511",
@@ -374,5 +374,30 @@
   "full_goal_achieved": false,
   "new_predictive_metrics": null,
   "validation_test_split": null,
-  "reason_no_predictions": "Source-conservation experiment only; no fit, loss, pretraining, synthetic biological data or predictive evaluation. Original native outer partitions remained closed."
+  "reason_no_predictions": "Source-conservation experiment only; no fit, loss, pretraining, synthetic biological data or predictive evaluation. Original native outer partitions remained closed.",
+  "tested_release": {
+    "verified_utc": "2026-10-25T13:42:49.530113+00:00",
+    "version": "2.0.40",
+    "source_commit": "d76c225a0aa741a1a1b0aee707bff328ca467c7c",
+    "successful_release_run": 40197014151,
+    "verified_artifacts": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/tested_releases/hitlist-2.0.40-d76c225",
+    "files": [
+      {
+        "filename": "hitlist-2.0.40-py3-none-any.whl",
+        "size": 3224701,
+        "sha256": "3d6ea13dc263903771231c043d00489251a537f227d6fb60f3ce953d6368132e",
+        "byte_equal": true
+      },
+      {
+        "filename": "hitlist-2.0.40.tar.gz",
+        "size": 3663531,
+        "sha256": "73941a5430f6cfdbf0e1448f8c19f12be406df32875926608910eb17f42c90cb",
+        "byte_equal": true
+      }
+    ],
+    "shared_environment_changed": false,
+    "uploaded_by_this_invocation": true,
+    "upload_failure_preserved": "tasks/modular_model/dilution-source-upload-attempt.json",
+    "successful_upload_receipt": "tasks/modular_model/dilution-source-upload-attempt2.json"
+  }
 }

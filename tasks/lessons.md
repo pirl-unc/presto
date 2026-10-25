@@ -669,3 +669,13 @@ Keep applicability reporting separate from model features and the measured label
   pushing, verify every required published manifest entry against the committed
   Git tree, not only the local filesystem. Retain required ignored experiment
   logs through an exact reviewed whitelist; never force-add entire raw directories.
+
+
+## 2026-10-25 — Preserve named release authentication
+
+- Twine's explicit repository URL bypasses named `.pypirc` credentials. When an
+  existing named release configuration is available, verify its resolved endpoint
+  is the intended official registry, then use that repository name. Do not expose
+  credential values, rewrite user credentials or ask for a token before checking
+  the supported configuration path. Preserve failed upload receipts; independently
+  compare published distribution bytes before declaring a tested release complete.

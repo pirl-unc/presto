@@ -3957,10 +3957,14 @@ The full APC availability goal remains active and unachieved.
   pass on the exact source commit. Hosted workflow40183613623 separately passes
   unit/lint/integration/coverage; docs build40183613700 passes.
 - **Decision:** No model winner or new biological result. Source conservation is
-  complete; review, merge and tested PyPI release remain pending. Only then register
-  a nominal-dose observation/selection diagnostic. Nine selected standards do not
+  complete. Hitlist PR846 merged as d76c225; release workflow40197014151 passed.
+  Both PyPI2.0.40 distributions independently match the tested artifacts byte-for-byte;
+  receipt: family0959/results/release-2.0.40.json. No shared installation changed.
+  The prospective conditional-dose plan is registered; its numerical execution has
+  not started. Nine selected standards do not
   establish general response transfer, native MS1 calibration or APC concentrations.
 - **Evidence:** Full README, build.json, verification.json, summary.json, all runtime
   receipts, stage logs and byte-restorable full local test log. The current closure
-  manifest is reproduce/closure-source-replay.json; the earlier preparation closure
-  remains historical. No executable/configuration snapshot was rewritten.
+  manifest is reproduce/closure-released.json; source replay at d614b8c and the
+  earlier preparation closure remain historical. No executable/configuration
+  snapshot was rewritten.

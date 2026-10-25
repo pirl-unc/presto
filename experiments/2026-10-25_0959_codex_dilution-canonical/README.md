@@ -8,8 +8,9 @@ independent replay attempt 1 passed in 83.24 seconds with 2.23 GiB peak RSS.
 All 29,039,248 literal source cells and 297,876 numeric comparisons reconcile.
 The required full default local Hitlist suite passes 3,571 tests. No predictor
 was trained, and source validation does not establish peptide concentrations.
-Shared Hitlist release and the separately registered training contract remain
-pending. The full peptide-availability objective is unachieved.
+Hitlist 2.0.40 is merged and published: both PyPI distributions match the exact
+successful tested release artifacts byte-for-byte. The next training contract
+remains separate. The full peptide-availability objective is unachieved.
 
 ## Source and scientific contract
 
@@ -125,17 +126,26 @@ run does not claim an additional full-size corruption experiment.
 
 ## Decision and retained evidence
 
-Source conservation is complete for this pinned revision. No model, pretraining,
-loss weights, assay-output mapping, synthetic biological training or train/val/test
+Source conservation and tested publication are complete for this pinned revision.
+Merge commit `d76c225a0aa741a1a1b0aee707bff328ca467c7c` passed release workflow
+40197014151; `results/release-2.0.40.json` records independent PyPI byte comparison
+for the wheel and sdist. All 15 pinned implementation files match the clean main
+publication checkout. The shared environment was not installed or modified.
+Presto source-closure commit d614b8c also passes CI40196800816 (tests, lint,
+distribution validation and docs).
+
+No model, pretraining, loss weights, assay-output mapping, synthetic biological training or train/val/test
 partition applies. There are no prediction dumps or held-out metrics because no
 predictor was fitted; original native outer partitions remain closed. No exact/RL
-comparison or model winner is claimed. Next: review, merge and verify the tested
-PyPI release, then register a nominal-dose observation/selection diagnostic with
-its limited standard support and separate biological-transfer requirements.
+comparison or model winner is claimed. The next prospective
+[conditional dose diagnostic](../agents/codex/plans/dilution-conditional-dose-diagnostic.md)
+retains limited standard support and separate biological-transfer requirements;
+its implementation and numerical execution have not started.
 
 `results/build.json`, `results/verification.json`, both successful runtime receipts,
 all refused attempts and `results/summary.json` retain the full results. Stage logs
-are under `launch_logs/`. Current closure is `reproduce/closure-source-replay.json`;
+are under `launch_logs/`. Current release closure is `reproduce/closure-released.json`;
+`reproduce/closure-source-replay.json` describes source closure at d614b8c;
 the original `reproduce/closure.json` describes preparation at commitd92606a.
 The original source data are kept outside this experiment directory, with exact
 paths in the frozen configuration. Earlier audits: [0813](../2026-10-25_0813_codex_dilution-observer-admission/README.md),
