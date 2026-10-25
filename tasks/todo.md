@@ -13985,3 +13985,16 @@ Review ESP1628: original article and82paragraphs independently verify; digest-de
 Spec: tasks/intact-precursor-scale-assessment.md. No new precursor-decay target or kinetic fit is admitted.
 
 Review precursor scale: original Methods do not establish per-acquisition gain comparability, so no precursor-decay target was added. Hitlist831 comment6400322499 requests actual scan/normalization/reference metadata, with exact readback verified. Both e176f7d hosted runs passed before batch publication. No numerical outcomes or model parameters changed.
+
+
+## Frozen organ-condition temporal transfer
+
+- [x] Review the F2 stopping rules, existing F3 source and shared recipe interface.
+- [x] Freeze the relative endpoint, 21 predictor arms, support/quality gates and explicit concentration limits.
+- [x] Register metadata-only feasibility and verify source/acquisition reuse and organ/time coverage.
+- [x] Implement and test the shared F3 recipe on an isolated branch; independently verify failed quantitative admission (release pending).
+- [x] Apply the support stop before scoring; replay all dispositions and original missing modification cells; close this family.
+
+Plan: experiments/agents/codex/plans/intact-organ-frozen-transfer.md. Calibration gaps remain open; this prospective relative-endpoint test does not claim APC concentrations or reopen old F2 held-outs.
+
+Review1655: previous resource follow-up made no scientific progress. This turn verified metadata, implemented/tested shared admission and independently established that all4,198F3 assignments lack original Unlocalized Mod cells. All8,138 dispositions replay; zero examples admitted, no model scoring. Source request: https://github.com/pirl-unc/hitlist/issues/831#issuecomment-6400806453. Hitlist847/PR848 own the shared recipe; PR remains draft and unreleased. Full availability goal remains active.

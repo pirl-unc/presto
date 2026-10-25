@@ -4063,3 +4063,34 @@ The full APC availability goal remains active and unachieved.
 - Five guarded stages: one failed HTTP request, four passes; 2.242s total,44.81MiB peak. LocalCPU/one thread, no Modal/GPU. Browser discovery has no local byte/time receipts.
 - Training/pretraining, synthetic labels, loss weights, assay-label/output mapping, qualifiers/censoring, validation/test predictions and metrics: not applicable to source screen. No model fit or reopened native outer outcomes.
 - Winner:none. Decision: ESP response scores are not independent concentration targets; seek actual calibrated observations. No global claim that its supplements lack usable data. Existing Hitlist762 request is unchanged. Full APC availability, machinery/short-product modeling and biological exact/RL validation remain unachieved.
+
+
+## 2026-10-25 — Frozen organ transfer stopped at source admission
+
+- **Experiment:** `2026-10-25_1655_codex_intact-organ-transfer`; Codex/GPT-6.
+  [Report and reproduction](2026-10-25_1655_codex_intact-organ-transfer/README.md).
+- **Dataset/curation:** original PXD058121 F3 mouse-organ 20S time courses,
+  human alpha-synuclein, one source animal, 44 acquisitions. Explicit-unmodified,
+  unambiguous <=10ppm source-linked positive measurements and a unique intact
+  normalizer; no imputation/censor inference. Primary30/60 and descriptive90/120
+  relative log-ratio changes from supplied zero-time baselines. Not APC concentrations.
+- **Training contract:** none newly run; 31 frozen input files for21 preselected
+  direct/physical/exact-forward–REINFORCE-gradient comparators. No new synthetic
+  training labels, pretraining, updates, organ adaptation or old F2 held-out access.
+  Planned loss: organ/peptide/time/replicate-balanced squared log-ratio-change error.
+- **Results:** metadata gate passed; quantitative support was0sequences/0cells in
+  each organ. Every4,198F3 assignment has null Unlocalized Mod. Independent source
+  replay agrees on8,138decisions; independent original OOXML finds all4,198Kcells
+  absent. Header names are correct; this is faithful missingness, not a parser bug.
+- **Validation/test metrics:** none, because support failed before all model
+  scoring. No prediction dumps or bootstrap; no winner. No separate validation
+  selection split was planned for these fixed models. IC50/500nM metrics inapplicable.
+- **Runtime:** five successful localCPU stages19.561s total,745.73MiB maximum child
+  RSS. One prior import-bootstrap failure and one memory-floor refusal are preserved;
+  neither opened the dataset. No Modal/GPU or shared-environment modification.
+- **Shared implementation:** Hitlist7c427e3 (2.0.41unreleased), draftPR848/issue847.
+  Format/lint,17focused checks including unchanged-F2 parity, and3,582default-suite
+  tests passed. Exact environment/commands and failed fixture attempts are recorded.
+- **Decision:** close this family at its fixed gate. Qualify original blank-field
+  semantics or obtain explicit annotations before separately registering another
+  cohort. This neither validates the frozen models nor completes APC availability.
