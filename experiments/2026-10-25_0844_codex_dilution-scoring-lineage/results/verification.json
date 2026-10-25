@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "parser": "pandas C parser with literal strings; no audit imports",
+  "arithmetic": "fractions.Fraction versus audit decimal.Decimal",
+  "n_tables": 12,
+  "n_source_rows": 1031853,
+  "n_literal_cells": 29039248,
+  "n_library_memberships": 12851,
+  "n_scored_candidates": 76561,
+  "n_aligned_links": 64070,
+  "n_numeric_comparisons": 297876,
+  "n_standard_slots": 90,
+  "original_namespace_hypothesis_replayed": true,
+  "amended_membership_replayed": true,
+  "original_native_outer_partitions_accessed": false
+}

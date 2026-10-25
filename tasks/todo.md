@@ -13819,3 +13819,30 @@ Review0747: all four gates fail; all-pair boundary RMSE0.477868 versus matched o
 - [x] Register source family0813 and bounded metadata retrieval before inspecting deposited quantitative assets.
 
 Review0813: independent source audit verifies64,070rows/896,980cells,68-file inventory andfive nominal doses. Nine standards supply90slots; missing tenth query,2literal standardzeros and3missing scores remain explicit. Pinned pipeline confirms aligned output. Source ingestion supported, calibration training not admitted. Hitlist#845posted/readback verified. All failed route/format/Unicode stages preserved. No new predictor or outer access. 0747published869b2ac and CI40175717772passes both jobs; PRbody readback matches.
+
+
+## PXD024809 scoring/library lineage and shared ingestion
+
+- [x] Revalidate prior goal turn as progress; current PrestoCI40177226189 remains live.
+- [x] Register family0844 and complete-source selection before additional table inspection.
+- [x] Retrieve/audit all scored run tables and master query library under unchanged resource limits.
+- [x] Independently reconcile feature/form/run links, quantity/score differences and all ten nominal standard memberships.
+- [ ] Implement shared source under Hitlist#845, verify real-source conservation, and finish PR/tested publication.
+- [ ] Register a bounded nominal-dose diagnostic only after its training contract is justified; full APC goal remains unachieved.
+
+Plan: experiments/agents/codex/plans/dilution-scoring-lineage.md. All raw inputs remain under data/; no native response search or outer partition access.
+
+Continuation: preceding cleanup follow-up was no scientific progress. Retrieval
+session14150 is now absent and its authoritative runtime/result receipts prove
+successful completion (11 files,389,468,698bytes,251.61s). No restart. CI40177226189
+passed both jobs. Structural inventory contract frozen before complete scans.
+
+Review0844: all five stages pass unchanged limits. Independent pandas/Fraction
+replay verifies29,039,248cells,76,561scoredrows,64,070alignedlinks and297,876numeric
+comparisons.49,646exactfeaturematches have identical intensities;10,939missingIDs
+and3,485IDsabsentfromexportremainexplicit. Library numeric-ID equivalence fails;
+preserved original test and prospective amendment establish exact full-form/
+charge/target membership for all rows. Ten aligned labels are empty versus literal
+NA, not a different molecule.87of90standard slots link exactly;three lackIDs/scores.
+Tenth standard absentfromlibrary,notnegative. Shared Hitlist implementation and
+nominal-dose likelihood/selection contract still pending; no fit or outer access.
