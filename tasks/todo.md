@@ -13555,3 +13555,16 @@ receipt is tasks/modular_model/intact-2033-release-download-failure.json. Verifi
 and PyPI upload did not execute. Clean release main advanced only to18bbf81d.
 Later free space recovered to~0.74GiBbut remains below the1GiB+32MiBexperiment
 startup gate. Do not retry over the failed files or weaken the resource policy.
+
+Recovery: after capacity returned, a fresh6.7MBsource-artifact download completed
+without overwriting the failed attempt. Provenance/license/Twine checks passed;
+Hitlist2.0.33 is published, and downloaded PyPI wheel/sdist bytes exactly match
+successful build40149903223. The shared Python installation is unchanged.
+
+Presto3201c44 CI caught19formatting findings in the three archived storage helpers.
+Exact executed bytes are now retained as text snapshots; formatted working copies
+have independently equal ASTs and no helper was rerun. All281eligible tracked
+Python files pass Ruff formatting and all tracked Python files pass scoped Ruff
+checks. A whole-worktree check also sees two old untracked data-snapshot line-length
+errors; those frozen artifacts were not altered or added to the PR. Hosted CI must
+verify the corrected commit. This does not validate the unrun biological experiment.

@@ -1,5 +1,5 @@
 {
-  "observed_utc": "2026-10-25T01:59:20.546749+00:00",
+  "observed_utc": "2026-10-25T02:06:18.110849+00:00",
   "source": {
     "pr": 832,
     "state": "MERGED",
@@ -10,8 +10,10 @@
     "release_run": 40149903223,
     "release_state": "completed",
     "release_conclusion": "success",
-    "deployed": false,
-    "release_download_state": "failed_no_space_partial_preserved"
+    "deployed": true,
+    "release_download_state": "fresh_retry_verified_first_failure_preserved",
+    "pypi_bytes_verified": true,
+    "release_receipt": "intact-2033-release.json"
   },
   "recipe": {
     "pr": 833,
@@ -32,12 +34,13 @@
   "goal_complete": false,
   "frozen_recipe_runtime_unchanged_after_rebase": true,
   "presto": {
-    "head": "d67fb48488960882481627c6f3a8bdaeb6e58bd3",
-    "ci_run": 40150595924,
+    "head": "3201c44992d04f2856a608cb622cef01260a66f2",
+    "ci_run": 40152836732,
     "ci_state": "completed",
     "draft": true,
-    "ci_conclusion": "success"
+    "ci_conclusion": "failure",
+    "ci_failure": "task helper formatting; corrected working copies AST-equal; followup commit pending"
   },
-  "local_free_bytes": 778248192,
+  "local_free_bytes": 1015668736,
   "new_training_requires_free_bytes": 1107296256
 }

@@ -615,6 +615,11 @@ Keep applicability reporting separate from model features and the measured label
   test; descriptive response summaries count as prior outcome exposure even when
   no predictor was evaluated.
 
+- An isolated experiment syntax check does not cover other newly published Python
+  files. Run repository lint/format over the tracked checkout before publication,
+  including task helpers. Preserve exact executed source when formatting archived
+  helpers, and prove AST equality rather than silently rewriting provenance.
+
 ## 2026-10-24 — Independent regression replay and rank ties
 
 - Agreement of predictions to a numerical tolerance does not imply agreement of raw Spearman to that tolerance. Verify coefficients/predictions independently, recompute published metrics from the exact archived values, and separately audit rank discrepancies on mathematically identical inputs. Preserve raw values and failed checks; explicitly record any revised verification contract rather than silently loosening a tolerance or rounding biological results.
