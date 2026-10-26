@@ -33,3 +33,4 @@ from .affinity import (
     normalize_binding_target_log10,
 )
 from .presto import Presto
+from .tcr_specificity import TCRSpecificityModel, functional_response_loss

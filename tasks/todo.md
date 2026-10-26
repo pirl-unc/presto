@@ -11795,9 +11795,9 @@ preserve later local target-validity, training, and showcase work.
 - [x] Inspect current remote PR/base state and isolate the coverage-only changes.
 - [x] Review implementation and verify source/artifact provenance and parity.
 - [x] Pass focused/full local tests, pinned lint and strict docs.
-- [ ] Verify final-head PR and push CI before merge.
-- [ ] Publish and merge #66; verify the merge and preserve original local work.
-- [ ] Summarize implemented purpose, data, predictions, quality, and remaining gaps.
+- [x] Verify final-head PR and push CI before merge.
+- [x] Publish and merge #66; verify the merge and preserve original local work.
+- [x] Summarize implemented purpose, data, predictions, quality, and remaining gaps.
 
 Review results:
 
@@ -11822,5 +11822,67 @@ Review results:
   subsequent edits only record evidence and require explicit baseline/output
   arguments in the software verifier. The repeated differential check also
   pins the fully resolved baseline commit.
-- Final-head CI/merge are pending at publication; their definitive outcomes
-  are recorded in PR #66's checks and completion handoff.
+- Both final CI runs passed (2,380 tests, three skips); #66 merged as
+  `ee4ad60f9750996a4a8e0ecda73e84f583085dd1` on 2026-10-20. Original dirty
+  checkout remains preserved.
+
+# TCR specificity and IC50 investigation — 2026-10-20
+
+Spec: `tasks/tcr_specificity_and_fit_spec.md`.
+
+- [x] Inspect TCRvdb paper/access, Hitlist releases and executed fit provenance.
+- [x] Implement separate paired-chain wrapper and strict normalized input contract.
+- [x] Diagnose the IC50 path with preserved training-only evidence.
+- [x] File concrete nonduplicate Hitlist data issues.
+- [x] Verify code, document results and publish a reviewable PR.
+- [ ] Admit actual TCRvdb data when an authorized file is available.
+
+## Model information flow and training support — 2026-10-20
+
+Spec: `tasks/model_training_path_audit_spec.md`.
+
+- [x] Trace canonical inputs, latent graph, heads, and the separate TCR wrapper.
+- [x] Map assay labels to effective losses and actual historical batch support.
+- [x] Compare initial/selected parameters and preserve a training-only audit.
+- [x] Write a code-linked report separating trainability, learning and quality.
+- [x] Verify report/table consistency and publish the audit with PR #129.
+
+Plan check-in: proceed with read-only source/checkpoint analysis and a documented
+diagnostic extension. No production architecture changes or new fitting.
+Final wrapper regression result: 2,396 passed, four skipped, 905 warnings in
+669.59 seconds; source was frozen during that run. Draft PR #129 is published;
+author dataset acquisition/adaptation and trained weights remain pending.
+
+Audit review: source model matches v0.1.16 apart from a docstring. Checkpoint
+hashes match the original replay. All 476 parameter tensors, 7,241 training
+source observations, selected-epoch versus full-ledger windows and frozen
+analysis hashes reconcile. Verified loss couplings include generic KD/probe
+reuse and duplicate elution/MS objectives. No production model changed and no
+new fitting or held-out inference occurred. Strict MkDocs and explicitly scoped
+analysis-script Ruff checks pass; module evidence is in the registered family.
+Nine documentation-contract tests pass. Audit commit `0492967` is pushed and
+PR #129's description now records the completed report and final local suite.
+Remote CI for the updated head is separate from these completed local checks.
+
+Review so far:
+
+- Separate wrapper and local interchange loader; canonical Presto behavior and
+  checkpoint format unchanged. Full-chain tail sensitivity, pMHC sensitivity,
+  padding, gradients, stale-gradient freezing, checkpoint/config round-trip and
+  strict label admission are tested with artificial fixtures.
+- First full suite: 2,394 passed, four skips in 340.87 seconds. Review then
+  hardened re-freezing and direct construction of unknown-outcome records;
+  30 focused wrapper/checkpoint/document-contract checks pass afterward. Final
+  full suite: 2,396 passed, four skipped. Pinned Ruff 0.16.0 and strict docs pass.
+- IC50 diagnostic is registered and closed in
+  `experiments/2026-10-20_1458_codex_ic50-collapse-audit/`; training-only replay
+  matches both historical checkpoints within 1.67e-6 log10(nM). No new fit.
+- Hitlist #721, #722 and #723 filed; existing #678 updated with freshness
+  evidence and a versioned-export refresh request. Installed 1.82.2, published
+  PyPI/main 1.82.11 at check time; local observations cache fails currentness.
+  Historical fit already used the newest found corrected human bundle, produced
+  with 1.78.0. No shared environment or live cache was changed.
+- TCRvdb search: author repository has one main branch, README-only tree and
+  no releases. Analysis repositories point back to controlled access; a small
+  15-record derivative is not a full cohort. See `tasks/tcrvdb_discovery.md`.
+  No TCRvdb file, training run or qualified receptor predictions are claimed.
