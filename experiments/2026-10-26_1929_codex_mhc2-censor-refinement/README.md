@@ -1,6 +1,6 @@
 # Fixed-budget MHC-II censor refinement
 
-Status: prospectively registered; software checks passed, preparation and fits pending.
+Status: prepared and running; exact-only continuation started at19:48:46UTC.
 Codex / GPT-6, 2026-10-26.
 
 [Plan](../agents/codex/plans/2026-10-26_mhc2-censor-refinement.md).
@@ -17,6 +17,15 @@ protects its memory reserve. No cloud/GPU or package installation.
 No new outcome is available yet. Historical validation/test sets are development
 data, and this bounded comparison cannot independently qualify MHC-II prediction.
 Full binding/MS/pathway improvement remains the objective.
+
+Preparation completed in13.695seconds, peakRSS265,420,800bytes, from clean
+commit `37edb56560a65651da63b2d9ef95fa3fc014b1ac`. Both manifests pass canonical
+preflight and have the same original holdout files. All33parent state tensors
+are hash-pinned; inherited IC50 scale has mean2.768232837778882,
+SD1.3434766242663534 and21,636exact training measurements. The preparation
+receipt began clean; `launch.json` additionally records the generated untracked
+manifests/source snapshots. The controller proceeds serially through both fits,
+fixed-final scoring and independent comparison, stopping on any failure.
 
 ## Frozen comparison
 

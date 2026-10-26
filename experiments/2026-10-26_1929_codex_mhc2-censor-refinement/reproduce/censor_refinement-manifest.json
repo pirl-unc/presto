@@ -1,0 +1,68 @@
+{
+  "model": {
+    "dropout": 0.1,
+    "endpoints": [
+      "ic50"
+    ],
+    "identity_tasks": [],
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "species": [
+      "human"
+    ]
+  },
+  "pretrained": {
+    "freeze": [],
+    "path": "/Users/iskander/code/presto/artifacts/2026-10-26_1610_codex_ic50-convergence/seed42/selected.pt",
+    "sha256": "db2585e63489cb5aac8c7a32fd7e522bcbc51035846c05f8cd2794c4449e3dc5"
+  },
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "label_policy": "physical unclipped IC50; exact/censored raw bounds; absent export qualifier means exact with missingness retained",
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/modular_cohorts/2026-10-21-full-ic50/hitlist-v4-iedb-test.jsonl",
+      "population": "all source-admitted direct IEDB/CEDAR purified human HLA IC50 within canonical sequence scope",
+      "sha256": "0ade7b1ed2436bcdc9fd145831a1718db36c00056321b9815cad418c293fbd75",
+      "source": "hitlist-v4-iedb",
+      "split_policy": "exact-peptide/original-assay components; preserve historical and memorization assignments; novel fixed hash80/10/10; not study/donor qualified"
+    },
+    {
+      "label_policy": "physical unclipped IC50; exact/censored raw bounds; absent export qualifier means exact with missingness retained",
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/modular_cohorts/2026-10-21-full-ic50/hitlist-v4-iedb-train-censored.jsonl",
+      "population": "all source-admitted direct IEDB/CEDAR purified human HLA IC50 within canonical sequence scope",
+      "sha256": "89370f01cafa23ab7755d5f110bd746afd5718ce800bd2e43f06088b634933e3",
+      "source": "hitlist-v4-iedb",
+      "split_policy": "exact-peptide/original-assay components; preserve historical and memorization assignments; novel fixed hash80/10/10; not study/donor qualified"
+    },
+    {
+      "label_policy": "physical unclipped IC50; exact/censored raw bounds; absent export qualifier means exact with missingness retained",
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/modular_cohorts/2026-10-21-full-ic50/hitlist-v4-iedb-train-exact.jsonl",
+      "population": "all source-admitted direct IEDB/CEDAR purified human HLA IC50 within canonical sequence scope",
+      "sha256": "79e44788883a4668fb790191e2079b46bb28e3ea06314e75ace3aa25c65b096c",
+      "source": "hitlist-v4-iedb",
+      "split_policy": "exact-peptide/original-assay components; preserve historical and memorization assignments; novel fixed hash80/10/10; not study/donor qualified"
+    },
+    {
+      "label_policy": "physical unclipped IC50; exact/censored raw bounds; absent export qualifier means exact with missingness retained",
+      "path": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/modular_cohorts/2026-10-21-full-ic50/hitlist-v4-iedb-validation.jsonl",
+      "population": "all source-admitted direct IEDB/CEDAR purified human HLA IC50 within canonical sequence scope",
+      "sha256": "12b88ebf0573e98b434f20e1a5fa8645128d5a14b05dfda3985ef57440d1719b",
+      "source": "hitlist-v4-iedb",
+      "split_policy": "exact-peptide/original-assay components; preserve historical and memorization assignments; novel fixed hash80/10/10; not study/donor qualified"
+    }
+  ],
+  "training": {
+    "batch_size": 64,
+    "checkpoint_every_steps": 50,
+    "identity_weight": 0,
+    "learning_rate": 0.0001,
+    "max_epochs": 5,
+    "max_steps": 1476,
+    "min_epochs": 5,
+    "patience": 100,
+    "seed": 101,
+    "weight_decay": 0.0001
+  }
+}

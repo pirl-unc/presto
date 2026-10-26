@@ -4613,3 +4613,10 @@ MHC-II accuracy improvement or full-goal completion.
 - **Conditions / evaluation:** `exact_continuation` versus `censor_refinement`. Require class-II exact and bound improvement with retained class-I performance on both original holdouts, with paired exact-peptide bootstrap intervals. All validation/test loss, exact regression/binding metrics and per-example predictions remain pending; no claim that fixture tests establish prediction quality.
 - **Resources / reproducibility:** local CPU2threads/interop1, no Modal/GPU/installations; older4thread family may coexist. StartRAM13GiB/floor10GiB, RSS4GiB, disk15GiB/floor10GiB, per-action2h. Runtime/source hashes, parent tensors/scalers, exact invocation/environment and git state will be frozen before fitting. Raw artifacts at `/private/tmp/presto-mhc2-20261026/censor-refinement/`; portable results and frozen sources under the family.
 - **Verification / next:**46focused tests pass; pinned lint/format and shell syntax pass. Preserve two failures from an existing inference-mode equality test, now corrected without numerical tolerance changes or model edits. Execute the real comparison, independently replay source joins/losses/metrics/checkpoint probes, and report all outcomes before any replication decision. Full MHC-II binding/MS/pathway goal remains active.
+
+Preparation completed from clean37edb56 in13.695seconds/265,420,800bytes peakRSS.
+Both source manifests/counts, shared holdout hashes,33initializer tensors and the
+inherited21,636-example scaler are pinned in `reproduce/launch.json` and pass
+preflight. The serial controller started exact-only fitting at19:48:46UTC, with
+censor refinement and independent scoring/verification queued. Metrics remain
+pending; no model or scientific milestone is promoted.

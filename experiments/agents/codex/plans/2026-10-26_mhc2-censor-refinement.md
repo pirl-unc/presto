@@ -123,7 +123,7 @@ Record exact commands/environment, source contract and selected/final distinctio
 in README, launch.json and the canonical experiment log. Do not call the family
 complete until both conditions and independent verification are terminal.
 
-- [ ] Prepare immutable source manifests and verify the common parent/scalers.
+- [x] Prepare immutable source manifests and verify the common parent/scalers.
 - [ ] Launch both canonical refinements under the resource guard.
 - [ ] Evaluate and independently verify both fixed-update checkpoints.
 - [ ] Close all outcomes and decide replication without changing the full goal.

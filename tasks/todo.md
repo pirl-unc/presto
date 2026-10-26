@@ -14328,7 +14328,7 @@ are preserved and repaired without changing source admission or criteria.
 
 Plan: `experiments/agents/codex/plans/2026-10-26_mhc2-censor-refinement.md`.
 
-- [ ] Freeze exact/censored sources and common parent checkpoint/scalers.
+- [x] Freeze exact/censored sources and common parent checkpoint/scalers.
 - [ ] Execute both1,476-update canonical conditions under a separate memory guard.
 - [ ] Independently verify fixed-final validation/test predictions and retained class I.
 - [ ] Report the complete comparison and replication decision; preserve wider goals.
@@ -14339,3 +14339,19 @@ Torch attention kernels. Preserve the two-thread failure; compare every retained
 parameter exactly and evaluate both outputs under the same no-grad inference mode.
 Keep bitwise equality and all scientific thresholds unchanged. Rerun the affected
 continuation tests and the new artificial fixed-update/source/gate/controller tests.
+
+Review:46focused tests pass; repository pinned lint/format and shell syntax pass.
+Preparation verifies the same held-out source hashes,33initializer tensor hashes
+and unchanged exact-trained scaler in13.695seconds/265,420,800bytes peakRSS.
+The serial controller started exact-only fitting at19:48:46UTC. Runtime/code
+snapshots are frozen; keep the new and older active fits unchanged. No predictive
+outcome from the new comparison is available yet.
+
+MS source-policy follow-up: current Hitlist notes forPMID33592498 explicitly
+retain the authors' assessment that many parental class-II identifications are
+probable background. Preserve the admitted observations as source detections;
+do not interpret the CIITA count contrast as validated processing or assign those
+background qualifications to all rows without original evidence. Before fitting,
+audit this qualification and the restriction-assignment policies of the20retained
+studies, including the large DP/DQ cohorts. These source notes are not a new
+predictive experiment or grounds to silently alter the frozen admission cohort.
