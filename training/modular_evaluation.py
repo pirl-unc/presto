@@ -14,6 +14,17 @@ from ..data.modular import endpoint_spec, observation_target
 from .modular import identity_targets, observation_loss
 
 
+def _plain(value):
+    """Detach report-only diagnostics without changing model or loss tensors."""
+    if isinstance(value, torch.Tensor):
+        return value.detach().cpu().tolist()
+    if isinstance(value, dict):
+        return {key: _plain(item) for key, item in value.items()}
+    if isinstance(value, (tuple, list)):
+        return [_plain(item) for item in value]
+    return value
+
+
 def _ranks(values):
     values = np.asarray(values)
     order = np.argsort(values, kind="stable")
@@ -116,6 +127,9 @@ def evaluate(model, index, indices, scales, *, batch_size=64):
                         "peptide": row.peptide,
                         "qualifier": row.qualifier,
                         "mhc_classes": [x.class_override or x.mhc_class for x in row.mhc],
+                        "observation": row.to_dict(),
+                        "diagnostics": _plain(output.diagnostics),
+                        "component_scores": _plain(output.components),
                     }
                     if row.endpoint == "identity":
                         for name, target in identity_targets(row, model).items():

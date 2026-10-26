@@ -458,6 +458,9 @@ new model selection using test results.
 Every run saves initial/selected/last checkpoints, optimizer state, resolved config,
 source manifest, source snapshots, admission census, history, parameter gradient
 and update evidence, per-example train/validation/test predictions and metrics.
+Prediction records retain the complete normalized observation, including source
+and MHC provenance, plus resolved-field and register diagnostics in JSON form.
+These reporting fields preserve input identity without changing the fitted loss.
 Validation exact IC50 RMSE selects checkpoints when that output is trainable;
 otherwise selection uses the observation-weighted loss of trainable tasks.
 Frozen-task metrics are still reported. The test split is

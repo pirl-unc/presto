@@ -14207,3 +14207,19 @@ candidate qualifies the requested broad nontryptic response endpoint. No trainin
 or held-out evaluation occurred. Next: original APC-derived endolysosomal assets,
 with response/run-scale identifiability explicit. Full availability goal remains
 active. Focused new-file lint passes; unrelated task edits remain unstaged.
+
+## Scientific completion of PR 131 — 2026-10-26
+
+Specification: `tasks/pr131_scientific_completion_spec.md`. The user explicitly
+requires scientific milestones before merging; retain draft status.
+
+- [x] Integrate PR 129 in an isolated candidate and preserve both appended histories.
+- [x] Verify current software baseline: 125 focused checks, Ruff 0.16.0 and strict docs.
+- [x] Inventory qualified full IC50 data and prior local execution decision.
+- [x] Confirm authorized TCRvdb release remains an external input; request location.
+- [ ] Preserve full input/resolved/register evidence in canonical prediction dumps.
+- [ ] Run registered local convergence/replication with matched controls and independent verification.
+- [ ] Complete censoring, auxiliary, APC/MS transfer, TCR and serving qualification gates.
+- [ ] Verify all acceptance criteria and final-head CI before merge.
+
+Review: active; no scientific promotion or merge authorized before these gates pass.
