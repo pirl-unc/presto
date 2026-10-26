@@ -4496,3 +4496,38 @@ binding/MS comparisons. Stražar is substantial single-context ligand evidence;
 MAPTAC DM-response learning needs source repair. Nonempty fields and candidate
 sets do not prove real flanks, full pairs or per-row conditions. No predictive
 improvement is claimed and the full three-track MHC-II goal remains active.
+
+## 2026-10-26 18:25 — Corrected human MHC-II MS source acquisition
+
+Agent/model: Codex / GPT-6. [Experiment directory](2026-10-26_1825_codex_mhc2-ms-admission/README.md).
+Status: source bytes verified; molecular/context admission is still in progress.
+Execution commit `2ff983d667c28ad644cbe0ad4a1665db8ddc450d`, with the concurrent
+context extension and new experiment files recorded in the verification receipt.
+
+Downloaded Hitlist's `human-cohort-corrected-v1` training table, manifest,
+qualification report and checksums. This is the Oct16 export produced by
+Hitlist1.78.0, not the separately inspected current2.0.42 source. All three content
+files match published SHA256SUMS:188,213,823bytes,4,071,463rows/161columns.
+The Parquet SHA256 is `f902341e90c1c57defc93f4bc540ffcbea1b41061afb4492ddd8aaa7642c65bd`.
+Raw files remain at `/private/tmp/presto-mhc2-20261026/ms-source/`; exact commands,
+hashes, schema and source snapshot are under the experiment's `reproduce/`.
+
+| Stage | Result | Training rows admitted |
+|---|---|---:|
+| Published-content verification | All three checksums match |0|
+| Molecular pairing and context qualification | Pending |0|
+
+Upstream qualification limits peptides to8–25residues and leaves donor, specimen
+and acquisition identity unresolved. It supplies no real parent flanks. Selected
+source-row inspection retains exact Stražar condition IDs and added-DM annotation,
+while MAPTAC DM arms remain unresolved. `matched_sample_count` counts curated
+study samples; it must not be interpreted as row-specific arm ambiguity.
+Neither missing peptides nor unknown conditions become negative/control labels.
+
+This stage creates no model, splits, pretraining, loss, synthetic data, assay-output
+mapping or selected condition. Held-out metrics and prediction dumps do not apply
+to byte verification. Local CPU, existing Python environment, no cloud/GPU or
+installation. Acquisition stayed below256MiB; elapsed download/hash times were
+not instrumented and no performance claim is made. Next: independently qualify
+explicit candidate pairs and source-scoped context before a separately registered
+binding/MS predictive comparison. Full MHC-II improvement remains unproven.

@@ -14282,6 +14282,8 @@ Full specification: `tasks/mhc2_improvement_spec.md`.
 - [ ] File evidence-backed issues for confirmed missing/under-annotated sources.
 - [x] Close the first literal MHC-II inventory and file/read back MAPTAC DM gap #853.
 - [ ] Implement and verify source-backed pathway/cell-context distinctions.
+- [x] Add separate concurrent pathway/intervention assertions with endpoint masks and coverage gates.
+- [ ] Fit and ablate those assertions on qualified source contrasts; software fixtures are insufficient.
 - [ ] Improve MHC-II binding with matched controls and retained class-I evidence.
 - [ ] Fit/evaluate MHC-II MS ligand prediction with explicit observation/contrast semantics.
 - [ ] Verify route/context contributions, transfer, reproducibility and final-head software checks.
@@ -14296,3 +14298,17 @@ defect was isolated and corrected in a separate verified artifact; originals sta
 preserved. Fullpair/parent/context qualification, actual predictive improvement,
 and pathway/cell-condition learning remain incomplete. Old IC50 trainer and both
 controllers were confirmed live through their tool handles during this work.
+
+Context representation review: five new artificial-fixture tests and 101 existing
+focused tests pass. The complete repository suite passes 2,629 tests with four
+skips (597.22 seconds); pinned Ruff and strict documentation build pass. Separate
+old/new runtime checks agree exactly on default predictions, feature layout,
+40 parameter tensors and semantic fingerprints. Evidence is under
+`tasks/verification/`. These are software results, not learned pathway effects.
+
+The corrected human Hitlist source was downloaded and its three content-file
+checksums verified: 4,071,463 rows, 161 columns. Source qualification retains the
+8–25 residue limit and unresolved donor/specimen/acquisition identities. No rows
+are admitted yet; explicit molecular pairing and condition provenance are next.
+The first old IC50 seed is independently verified (41 epochs, selected epoch 26);
+its serial controller has started seed43. Existing frozen fits are unchanged.

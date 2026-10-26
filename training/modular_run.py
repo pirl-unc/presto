@@ -159,6 +159,7 @@ def preflight(index: ObservationIndex):
     observed_features = {"acquisition": set(), "observation": set(), "preparation": set()}
     preparation_values = defaultdict(set)
     cell_types, cytokine_states, cytokine_numeric = set(), defaultdict(set), defaultdict(set)
+    assertion_states = {"pathway": defaultdict(set), "intervention": defaultdict(set)}
     assay_classes, has_multi_register = set(), False
     heldout_multi_register = False
     # Label and capability inspection is sequence-only; no training or random model scores.
@@ -188,8 +189,16 @@ def preflight(index: ObservationIndex):
                     config.cytokines,
                     config.cytokine_dose_units,
                     config.cytokine_duration_features,
+                    processing_pathways=config.processing_pathways,
+                    interventions=config.interventions,
                 )
                 if row.split == "train":
+                    for family, assertions in (
+                        ("pathway", cell.processing_pathways),
+                        ("intervention", cell.interventions),
+                    ):
+                        for name, assertion in assertions.items():
+                            assertion_states[family][name].add(assertion.state)
                     if cell.cell_type.value is not None:
                         cell_types.add(cell.cell_type.value)
                     for name, exposure in cell.cytokines.items():
@@ -285,6 +294,16 @@ def preflight(index: ObservationIndex):
             and "context_fusion.0.weight" not in validator.frozen_parameters
         ):
             raise ValueError(f"cytokine effect lacks present/absent training contrast: {name}")
+    for family, configured in (
+        ("pathway", config.processing_pathways),
+        ("intervention", config.interventions),
+    ):
+        for name in configured:
+            if (
+                not {"present", "absent"} <= assertion_states[family][name]
+                and "context_fusion.0.weight" not in validator.frozen_parameters
+            ):
+                raise ValueError(f"{family} lacks present/absent training contrast: {name}")
     for suffix, names in (
         ("dose", config.cytokine_dose_units),
         ("duration_hours", config.cytokine_duration_features),
@@ -353,6 +372,10 @@ def preflight(index: ObservationIndex):
             "cell_types": sorted(cell_types),
             "cytokine_states": {key: sorted(value) for key, value in cytokine_states.items()},
             "cytokine_numeric": {key: sorted(value) for key, value in cytokine_numeric.items()},
+            "context_assertion_states": {
+                family: {name: sorted(states) for name, states in values.items()}
+                for family, values in assertion_states.items()
+            },
             "observed_numeric_features": {
                 key: sorted(value) for key, value in observed_features.items()
             },

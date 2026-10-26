@@ -198,6 +198,20 @@ class Exposure:
 
 
 @dataclass(frozen=True)
+class ContextAssertion:
+    """A scoped claim, separate from measured activity or exposure dose."""
+
+    state: str = "unknown"
+    evidence: dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self):
+        if self.state not in EXPOSURE_STATES:
+            raise ValueError("unsupported context assertion state")
+        if not isinstance(self.evidence, dict):
+            raise ValueError("context assertion evidence must be a mapping")
+
+
+@dataclass(frozen=True)
 class MachineryProfile:
     profile_id: str
     species: str
@@ -253,10 +267,27 @@ class Context:
     cell_type_override: str | None = None
     cytokines: dict[str, Exposure] = field(default_factory=dict)
     cytokine_overrides: dict[str, Exposure] = field(default_factory=dict)
+    processing_pathways: dict[str, ContextAssertion] = field(default_factory=dict)
+    pathway_overrides: dict[str, ContextAssertion] = field(default_factory=dict)
+    interventions: dict[str, ContextAssertion] = field(default_factory=dict)
+    intervention_overrides: dict[str, ContextAssertion] = field(default_factory=dict)
     preparation: dict[str, float] = field(default_factory=dict)
     preparation_units: dict[str, str] = field(default_factory=dict)
 
     def validate(self, max_length: int = 512) -> None:
+        for values in (
+            self.processing_pathways,
+            self.pathway_overrides,
+            self.interventions,
+            self.intervention_overrides,
+        ):
+            if any(
+                not isinstance(name, str)
+                or not name.strip()
+                or not isinstance(value, ContextAssertion)
+                for name, value in values.items()
+            ):
+                raise ValueError("pathways/interventions require named context assertions")
         for value in (self.cell_type, self.cell_type_override):
             if value is not None and (not isinstance(value, str) or not value.strip()):
                 raise ValueError("cell type must be a nonempty vocabulary label")
@@ -376,6 +407,15 @@ class Observation:
             }
         for key in ("cytokines", "cytokine_overrides"):
             context[key] = {name: Exposure(**value) for name, value in context.get(key, {}).items()}
+        for key in (
+            "processing_pathways",
+            "pathway_overrides",
+            "interventions",
+            "intervention_overrides",
+        ):
+            context[key] = {
+                name: ContextAssertion(**value) for name, value in context.get(key, {}).items()
+            }
         data["context"] = Context(**context)
         if data.get("quantity_contract") is not None:
             data["quantity_contract"] = QuantitativeDomain(**data["quantity_contract"])

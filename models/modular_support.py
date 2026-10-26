@@ -65,6 +65,13 @@ def feature_layout(model):
                     f"cytokine:{cytokine}:log1p_duration_hours",
                     f"cytokine:{cytokine}:duration_known",
                 ]
+        for family, configured in (
+            ("pathway", config.processing_pathways),
+            ("intervention", config.interventions),
+        ):
+            names += [
+                f"{family}:{name}:{state}" for name in configured for state in EXPOSURE_STATES
+            ]
         if model.has_cellular:
             names += [f"delivery:{value}" for value in DELIVERY]
         if model.has_coreceptor:

@@ -5,7 +5,15 @@ from __future__ import annotations
 from dataclasses import dataclass, field, replace
 from typing import Mapping, Sequence
 
-from .modular import Component, Context, Exposure, MachineryProfile, MHCInput, ROLES
+from .modular import (
+    Component,
+    Context,
+    ContextAssertion,
+    Exposure,
+    MachineryProfile,
+    MHCInput,
+    ROLES,
+)
 
 
 @dataclass(frozen=True)
@@ -157,6 +165,28 @@ class ResolvedCellContext:
     supplied_cytokines: dict[str, Exposure]
     cytokine_overrides: dict[str, Exposure]
     ignored_fields: list[str] = field(default_factory=list)
+    processing_pathways: dict[str, ContextAssertion] = field(default_factory=dict)
+    pathway_sources: dict[str, str] = field(default_factory=dict)
+    supplied_pathways: dict[str, ContextAssertion] = field(default_factory=dict)
+    pathway_overrides: dict[str, ContextAssertion] = field(default_factory=dict)
+    interventions: dict[str, ContextAssertion] = field(default_factory=dict)
+    intervention_sources: dict[str, str] = field(default_factory=dict)
+    supplied_interventions: dict[str, ContextAssertion] = field(default_factory=dict)
+    intervention_overrides: dict[str, ContextAssertion] = field(default_factory=dict)
+
+
+def _assertions(supplied, overrides, vocabulary, *, family, strict, ignored):
+    unsupported = (set(supplied) | set(overrides)) - set(vocabulary)
+    if strict and vocabulary and unsupported:
+        raise ValueError(f"{family} outside checkpoint vocabulary: {sorted(unsupported)}")
+    ignored.extend(f"{family}:{name}" for name in sorted(unsupported))
+    values, sources = {}, {}
+    for name in vocabulary:
+        values[name] = overrides.get(name) or supplied.get(name) or ContextAssertion()
+        sources[name] = (
+            "override" if name in overrides else "supplied" if name in supplied else "unknown"
+        )
+    return values, sources
 
 
 def resolve_cell_context(
@@ -167,6 +197,8 @@ def resolve_cell_context(
     duration_features: Sequence[str],
     *,
     strict: bool = True,
+    processing_pathways: Sequence[str] = (),
+    interventions: Sequence[str] = (),
 ) -> ResolvedCellContext:
     """Resolve annotations without treating missing exposures as negative controls."""
     cell = resolve_field(
@@ -200,6 +232,35 @@ def resolve_cell_context(
         if value.duration_hours is not None and name not in duration_features:
             ignored.append(f"cytokine:{name}:duration_hours")
         resolved[name] = value
+    pathways, pathway_sources = _assertions(
+        context.processing_pathways,
+        context.pathway_overrides,
+        processing_pathways,
+        family="pathway",
+        strict=strict,
+        ignored=ignored,
+    )
+    factors, factor_sources = _assertions(
+        context.interventions,
+        context.intervention_overrides,
+        interventions,
+        family="intervention",
+        strict=strict,
+        ignored=ignored,
+    )
     return ResolvedCellContext(
-        cell, resolved, sources, context.cytokines, context.cytokine_overrides, ignored
+        cell,
+        resolved,
+        sources,
+        context.cytokines,
+        context.cytokine_overrides,
+        ignored,
+        pathways,
+        pathway_sources,
+        context.processing_pathways,
+        context.pathway_overrides,
+        factors,
+        factor_sources,
+        context.interventions,
+        context.intervention_overrides,
     )

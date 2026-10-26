@@ -168,6 +168,22 @@ purified affinity/stability, fixed receptor binding, digestion and shared MS
 response. Unallocated context families are listed as ignored; unsupported values
 within an allocated family are rejected on cellular requests.
 
+`processing_pathways` and `interventions` allocate separate named cellular
+assertions. Each uses a `ContextAssertion` with `present`, `absent` or `unknown`
+state and retained evidence. Multiple pathways or interventions can be present
+at once. `pathway_overrides` and `intervention_overrides` replace individual
+claims, including replacing a supplied claim with explicit unknown. Diagnostics
+retain the supplied claim, override and source of the effective value.
+
+These fields distinguish, for example, a reported added-DM intervention from
+measured DM activity or loss, and a source-supported processing-pathway claim
+from antigen delivery. The model supplies no pathway default from MHC class,
+cell identity, species or gene expression. Evidence text is provenance, not a
+predictive input. The independent categorical inputs enter cellular context
+fusion; they do not assert independent physical yields or a causal mechanism.
+They are masked from purified binding, fixed molecular receptor binding,
+laboratory digestion and the separate MS-response component.
+
 `machinery_references` contains typed `MachineryProfile` records with an ID,
 species, optional cell type, component priors, reference and version. Species-wide
 defaults are followed by a matching cell-specific profile, sample annotations
@@ -179,6 +195,11 @@ The older `machinery_profiles` name lists remain unverified reference priors.
 
 Preflight requires training examples for each configured cell category, actual
 present/absent cytokine contrasts and varied values for declared numeric channels.
+Every allocated trainable pathway/intervention likewise requires present and
+absent training examples. Unknown and held-out examples cannot supply that
+contrast. This check does not establish matched biological arms; source-specific
+qualification and predictive ablations are still required. A uniformly annotated
+intervention cannot establish an intervention effect.
 Profile defaults do not substitute for sample-attested machinery contrasts. Input
 column support is saved in checkpoints; unseen states remain unsupported at
 inference. These checks establish input support, not causal identification or

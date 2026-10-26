@@ -1,0 +1,31 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "utc": "2026-10-26T18:43:21.171127+00:00",
+  "base_commit": "2ff983d667c28ad644cbe0ad4a1665db8ddc450d",
+  "focused_tests": 106,
+  "full_tests": {
+    "passed": 2629,
+    "skipped": 4,
+    "elapsed_seconds": 597.22
+  },
+  "ruff": "passed",
+  "strict_docs": "passed",
+  "old_new_default_comparison": "exact equality",
+  "biological_improvement_demonstrated": false,
+  "files": {
+    "data/modular.py": "688dbc2dc49098abc7e66f186d5889fcd76e3ae2729d3b29b4e5b732237f13e8",
+    "data/modular_context.py": "4bb7e5a2432462e33e9c2632e85a78445282a604c095b0bff2ee6596b6617dc0",
+    "data/modular_lineage.py": "c10e7151af1a4f76fbc106a6621db69b024750ac042488df93a7a7d11e0cc4b9",
+    "models/modular.py": "df5464f933796bf8f101fdb7d50a522e423339477b06df358d38cdeda50f2a37",
+    "models/modular_support.py": "d3cb1cb165d5cee236409c51c8d0e93eaa7bb9ef430dd682e726d72889e9619d",
+    "training/modular.py": "aab95991b75b0460baeb2be60d43096fb1c278953c260ea8d86662f7d9b3ade6",
+    "training/modular_run.py": "132b09b19ce911ad96a04bc2f8894fb1f26de5293146f35feb1d3f3c133339a6",
+    "tests/test_modular_context_assertions.py": "fb2805102e91853a54bca6a07d2d912d23ee603e75092e0e9f98b453ecb7ea5b",
+    "docs/modular_model.md": "5190fa60a970a459485818007a01408319ecdbc3ea3be9764a45127174787064"
+  },
+  "logs": {
+    "context-docs.log": "69f421c93d9065eef29c8ec19a243d682c2eb3c317803ec1981444f7c89b2ab1",
+    "context-full-tests.log": "7f27b1ca994fef8c1f59742c56d3ce86c2a68804ea8d56daa56525427eef1990",
+    "context-lint.log": "3975c4d95f7f54fc413382e48fd6bd6f86bc703f74b4c9296f08084e6bb4004b"
+  }
+}

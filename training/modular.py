@@ -386,6 +386,8 @@ def initialize_from_checkpoint(
                 "cytokines",
                 "cytokine_dose_units",
                 "cytokine_duration_features",
+                "processing_pathways",
+                "interventions",
             }
         )
     if previous.has_digest and model.has_digest:

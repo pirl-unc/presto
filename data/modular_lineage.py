@@ -49,6 +49,19 @@ def semantic_fingerprint(row: Observation, *, include_target=True) -> str:
     for family in ("components", "component_overrides", "cytokines", "cytokine_overrides"):
         for component in data["context"][family].values():
             component.pop("evidence", None)
+    for family in (
+        "processing_pathways",
+        "pathway_overrides",
+        "interventions",
+        "intervention_overrides",
+    ):
+        # An absent optional extension must not change historical input identity.
+        values = data["context"].get(family)
+        if not values:
+            data["context"].pop(family, None)
+        else:
+            for assertion in values.values():
+                assertion.pop("evidence", None)
     value = data.pop("value")
     data.pop("unit")
     data.pop("value_encoding")

@@ -60,6 +60,8 @@ class ModularConfig:
     cytokines: tuple[str, ...] = ()
     cytokine_dose_units: dict[str, str] = field(default_factory=dict)
     cytokine_duration_features: tuple[str, ...] = ()
+    processing_pathways: tuple[str, ...] = ()
+    interventions: tuple[str, ...] = ()
     context_species: tuple[str, ...] = ()
     enzymes: tuple[str, ...] = ()
     acquisition_features: tuple[str, ...] = ()
@@ -87,6 +89,8 @@ class ModularConfig:
             "cell_types",
             "cytokines",
             "cytokine_duration_features",
+            "processing_pathways",
+            "interventions",
             "context_species",
             "enzymes",
             "acquisition_features",
@@ -139,6 +143,11 @@ class ModularConfig:
                 raise ValueError("reference profile outside declared vocabulary")
         if any(not name or name == "unknown" for name in (*self.cell_types, *self.cytokines)):
             raise ValueError("cell/cytokine vocabulary requires nonempty, nonreserved labels")
+        if any(
+            not isinstance(name, str) or not name.strip() or name == "unknown"
+            for name in (*self.processing_pathways, *self.interventions)
+        ):
+            raise ValueError("pathway/intervention vocabulary requires nonempty named claims")
         if (set(self.cytokine_dose_units) | set(self.cytokine_duration_features)) - set(
             self.cytokines
         ):
@@ -171,6 +180,8 @@ class ModularConfig:
             raise ValueError("machinery slots need a cellular outcome")
         if (self.cell_types or self.cytokines or self.machinery_references) and not cellular:
             raise ValueError("APC cell/cytokine context requires a cellular outcome")
+        if (self.processing_pathways or self.interventions) and not cellular:
+            raise ValueError("pathway/intervention context requires a cellular outcome")
         if self.context_species and not contextual:
             raise ValueError("context species slots need a contextual outcome")
         receptor = bool(routes & {"tcr", "tcr_cellular"})
@@ -217,6 +228,8 @@ class ModularConfig:
             "cell_types",
             "cytokines",
             "cytokine_duration_features",
+            "processing_pathways",
+            "interventions",
             "context_species",
             "enzymes",
             "acquisition_features",
@@ -333,6 +346,7 @@ class ModularPresto(nn.Module):
             + (len(config.cell_types) + 1 if config.cell_types else 0)
             + len(EXPOSURE_STATES) * len(config.cytokines)
             + 2 * (len(config.cytokine_dose_units) + len(config.cytokine_duration_features))
+            + len(EXPOSURE_STATES) * (len(config.processing_pathways) + len(config.interventions))
             + (len(DELIVERY) if self.has_cellular else 0)
             + (len(CORECEPTORS) if self.has_coreceptor else 0)
             + 2 * sum(name != "mhc_pairing" for name in config.auxiliary_context)
@@ -563,6 +577,8 @@ class ModularPresto(nn.Module):
             self.config.cytokine_duration_features,
             strict=row.endpoint != "identity"
             and endpoint_spec(row.endpoint).route in ("cellular", "tcr_cellular"),
+            processing_pathways=self.config.processing_pathways,
+            interventions=self.config.interventions,
         )
         components = resolve_components(
             row.context,
@@ -648,6 +664,13 @@ class ModularPresto(nn.Module):
                     ]
                 )
             values.append(self._tensor(features) if cellular else self._zero(len(features)))
+        for configured, resolved in (
+            (self.config.processing_pathways, cell.processing_pathways),
+            (self.config.interventions, cell.interventions),
+        ):
+            for name in configured:
+                features = [float(resolved[name].state == state) for state in EXPOSURE_STATES]
+                values.append(self._tensor(features) if cellular else self._zero(len(features)))
         if self.has_cellular:
             values.append(
                 self._tensor([float(row.context.delivery == value) for value in DELIVERY])
