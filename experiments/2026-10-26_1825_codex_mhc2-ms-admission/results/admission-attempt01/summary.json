@@ -1,0 +1,76 @@
+{
+  "status": "admitted evidence; independent verification pending; no training split",
+  "source_rows": 4071463,
+  "class_ii_ms_rows": 1339673,
+  "admitted_rows": 98220,
+  "admitted_studies": 20,
+  "candidate_sets": 84,
+  "contexts": 25,
+  "dispositions": [
+    {
+      "disposition": "deferred",
+      "reason": "unresolved_candidate_scope",
+      "rows": 618756
+    },
+    {
+      "disposition": "deferred",
+      "reason": "unspecified_peptidoform",
+      "rows": 293282
+    },
+    {
+      "disposition": "deferred",
+      "reason": "missing_explicit_mhc_partner",
+      "rows": 209466
+    },
+    {
+      "disposition": "admitted",
+      "reason": "positive_ms_complete_candidates",
+      "rows": 98220
+    },
+    {
+      "disposition": "deferred",
+      "reason": "predicted_restriction",
+      "rows": 78744
+    },
+    {
+      "disposition": "excluded",
+      "reason": "modified_peptidoform",
+      "rows": 40937
+    },
+    {
+      "disposition": "excluded",
+      "reason": "unsupported_peptide",
+      "rows": 268
+    }
+  ],
+  "all_source_contributor_links": 9381101,
+  "retained_contributor_links": 196304,
+  "provenance_ids": 98220,
+  "unknown_contributor_study_ids": 0,
+  "unresolved_overlap_ids": 0,
+  "elapsed_seconds": 132.52832241700162,
+  "peak_rss_bytes": 981123072,
+  "model_training_rows": 0,
+  "artifacts": [
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-admitted/attempt01/contributor-links.parquet",
+      "bytes": 1959317,
+      "sha256": "e783eef7969d19de5689f0ca584197d7a4d9fea090df7d59a30b7c9cca47b6c5"
+    },
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-admitted/attempt01/contributor-summary.parquet",
+      "bytes": 222623,
+      "sha256": "0b5075387af4e210560aa2d9f8a7a208bd8cd13750292bfbbca2b83fb164540e"
+    },
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-admitted/attempt01/dispositions.parquet",
+      "bytes": 10242944,
+      "sha256": "9c65fcd9ac3f73c42225c2888bafbe390f944813fb3323f48ada1d32085429b8"
+    },
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-admitted/attempt01/observations.jsonl",
+      "bytes": 709704569,
+      "sha256": "532977c4a5e9b6530fca36d039b73a3b832c7b15197dc7a6def0bd66191aecef"
+    }
+  ]
+}

@@ -4500,7 +4500,8 @@ improvement is claimed and the full three-track MHC-II goal remains active.
 ## 2026-10-26 18:25 — Corrected human MHC-II MS source acquisition
 
 Agent/model: Codex / GPT-6. [Experiment directory](2026-10-26_1825_codex_mhc2-ms-admission/README.md).
-Status: source bytes verified; molecular/context admission is still in progress.
+Status: source bytes and positive-evidence admission verified; predictive
+partitioning, source-policy review and training remain open.
 Execution commit `2ff983d667c28ad644cbe0ad4a1665db8ddc450d`, with the concurrent
 context extension and new experiment files recorded in the verification receipt.
 
@@ -4515,7 +4516,7 @@ hashes, schema and source snapshot are under the experiment's `reproduce/`.
 | Stage | Result | Training rows admitted |
 |---|---|---:|
 | Published-content verification | All three checksums match |0|
-| Molecular pairing and context qualification | Pending |0|
+| Molecular pairing and context qualification |98,220positive evidence rows verified; no training split|0|
 
 Upstream qualification limits peptides to8–25residues and leaves donor, specimen
 and acquisition identity unresolved. It supplies no real parent flanks. Selected
@@ -4531,3 +4532,75 @@ installation. Acquisition stayed below256MiB; elapsed download/hash times were
 not instrumented and no performance claim is made. Next: independently qualify
 explicit candidate pairs and source-scoped context before a separately registered
 binding/MS predictive comparison. Full MHC-II improvement remains unproven.
+
+### Admission closure at19:10UTC
+
+Execution base `7560af3` plus the new frozen adapter and experiment sources;
+exact dirty state, source/module hashes, argv and environment are in the
+experiment's `reproduce/admission-launch-attempt01.json`. The unchanged human
+catalog is pinned by SHA256 `ddc3493c64f4328de174a6c2cda1f007ec2f93a1ef649add25d2ef9c1720add1`.
+All eligible aliases must agree on complete grooves; no alpha-chain default,
+best-binder assignment or silently dropped candidate is permitted.
+
+The explicit source contract requires human class-II positive MS, known
+unmodified canonical peptide, indexed source identity, complete supported
+candidate sets and retained raw source/condition evidence. Predicted
+restrictions, unresolved candidate scope, unknown chemistry and partial chains
+remain dispositions. Condition claims require resolved annotated context; only
+literal `none` establishes absent factors within the study's declared vocabulary.
+No processing route or enzyme activity is inferred from an intervention.
+
+| Disposition / evidence family | Observations |
+|---|---:|
+| Admitted positive MS, complete candidates |98,220|
+| Deferred unresolved candidate scope |618,756|
+| Deferred unspecified peptidoform |293,282|
+| Deferred missing explicit MHC partner |209,466|
+| Deferred predicted restriction |78,744|
+| Excluded modified peptidoform |40,937|
+| Excluded unsupported peptide |268|
+| All class-II MS source rows |1,339,673|
+
+Retained evidence has56,853distinct peptide sequences,20displayed studies and
+84candidate sets:63,730DP,28,508DQ and5,982DR observations. The exact cached parent
+contributor file matches the native release input hash; all196,304links for
+98,220retained provenance IDs are independently conserved, with no unresolved
+overlap flag or unknown contributor PMID among those retained links. That does
+not establish donor/specimen/parent-protein or homology independence. No evidence
+row is treated as an independent replicate merely because it has an ID.
+
+CIITA transduction supplies4,612present and208explicitly absent observations
+across HROG02, HROG17 and RA in PMID33592498. This enables a future real condition
+ablation; observed counts alone are not treatment effects or negative labels.
+No processing-pathway factor is activated. TAX1BP1 and drug/cytokine contrasts in
+the broader source fail this full-pair admission, so their rows are not guessed.
+
+The independent checker imports neither production adapter nor catalog resolver.
+It verifies all4,071,463source rows/1,339,673MS dispositions, every retained source
+record/groove/context and all196,304contributor links. All group and categorical
+profile counts also replay. Two initial verifier failures are preserved: empty
+Arrow indices had a null type, and numeric native PMIDs were compared with text
+profile keys. Reader-only repairs pass without changing admitted data or criteria.
+
+| Operation | Seconds | Peak RSS bytes |
+|---|---:|---:|
+| Profile |3.902|209,338,368|
+| Admission and links |132.528|981,123,072|
+| Final independent replay |132.118|668,254,208|
+
+The existing local CPU environment uses one numerical thread; no GPU/cloud or
+installation.85focused software tests, repository lint and strict docs pass.
+No model, optimizer, pretraining,
+loss, selected condition or generated training labels apply. The sole endpoint
+mapping is recorded positive MS to `elution_observation=1`; all rows remain
+unpartitioned `predict` evidence. No held-out prediction dump or predictive metric
+exists because this is admission, not evaluation. Large JSONL/Parquet artifacts
+remain under `/private/tmp/presto-mhc2-20261026/ms-admitted/attempt01/`, with hashes
+and complete summary tables in the experiment directory.
+
+A separate artificial fixture reproduces supplied PTM-field loss in current
+Hitlist2.0.42; [#854](https://github.com/pirl-unc/hitlist/issues/854) is filed and
+its body read back exactly. Unknown chemistry is not filled with False.
+Next: source-aware predictive partitioning and actual binding/MS/context controls,
+including the CIITA contrast. This is concrete data/adapter progress, not an
+MHC-II accuracy improvement or full-goal completion.

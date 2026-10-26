@@ -58,3 +58,28 @@ Independently verify source IDs, pairs, sample attribution and exported context
 against original canonical rows before training admission. Preserve failed
 attempts; update README and canonical experiment log when materially informative.
 No predictive split/metric/dump applies until a predictive family is registered.
+
+## 18:49 UTC admission preparation amendment
+
+Before implementing a row adapter, freeze a one-pass profile of class-II MS rows:
+literal outcome/chemistry/provenance distributions; joint restriction, candidate-set,
+sample-MHC and attribution groups; and joint study/condition/context records.
+Preserve null versus empty values. Count all source rows and do not use model
+scores, fitted outcomes or guessed alpha partners. This determines which source
+contracts can actually be admitted rather than assuming column semantics.
+The profile uses Arrow batches and grouped counters, with the original one-thread,
+300-second/3-GiB ceilings, and saves the executed source, hashes and runtime.
+
+The already cached v4 `observation_contributors.parquet` is a pinned input to this
+native release: its declared SHA256 is
+`41ff93e08bc6ea4af692fee16044726af26c4e20ec650ec6c7cd851974b71db1`.
+Verify the local bytes before reusing contributor study/record links for admission.
+This permits an exact lineage join without downloading the redundant 2-GB native
+subset. Do not infer study independence from the displayed PMID alone. Any omitted
+or unresolved contributor membership is an explicit disposition; no extra download
+is authorized by this amendment and the existing acquisition ceiling is unchanged.
+
+- [x] Profile actual source molecular and condition contracts.
+- [x] Implement explicit, source-backed positive-MS admission and dispositions.
+- [x] Independently replay all admitted pairs, context and source/contributor joins.
+- [ ] Freeze the subsequent predictive comparison before fitting.

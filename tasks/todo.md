@@ -14308,7 +14308,18 @@ old/new runtime checks agree exactly on default predictions, feature layout,
 
 The corrected human Hitlist source was downloaded and its three content-file
 checksums verified: 4,071,463 rows, 161 columns. Source qualification retains the
-8–25 residue limit and unresolved donor/specimen/acquisition identities. No rows
-are admitted yet; explicit molecular pairing and condition provenance are next.
+8–25 residue limit and unresolved donor/specimen/acquisition identities.
 The first old IC50 seed is independently verified (41 epochs, selected epoch 26);
 its serial controller has started seed43. Existing frozen fits are unchanged.
+
+Positive-MS admission review:98,220source observations/56,853distinct peptides
+from20displayed studies pass the explicit-pair/chemistry contract. Independent
+replay checks every source disposition, candidate groove, context assertion and
+196,304contributor links. All observations remain unpartitioned prediction rows;
+there is no fitted MS performance result. CIITA transduction has4,612present and
+208explicitly absent observations across three curated materials, enabling the
+next real context comparison. Source-policy, specimen/parent independence and
+distinct processing-route evidence still require work. Upstream supplied-PTM
+column loss is reproduced on current Hitlist2.0.42 and filed/read back as #854.
+The final adapter/context/training suite passes85tests; failures in two independent-reader attempts
+are preserved and repaired without changing source admission or criteria.

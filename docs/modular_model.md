@@ -207,6 +207,15 @@ predictive value for perturbations.
 
 ## MS observation
 
+The native Hitlist positive-MS adapter (`data/modular_hitlist_ms.py`) retains
+complete class-II candidate pairs, original observations and source-scoped
+intervention/cytokine claims. It preserves unknown chemistry, missing partners
+and pooled conditions as explicit dispositions. Its admitted rows remain
+unpartitioned `predict` evidence until a separate contributor-aware cohort
+contract supplies training membership and any declared contrast sampling.
+Positive ligand lists alone do not provide measured negatives or calibrated
+detection probabilities.
+
 The proposed [processing distribution and MS design](processing_model_design.md)
 extends this observation model with source-coordinate spans and machinery-conditioned
 product pools, including nonbinders. It separates the proposed abundance/sampling

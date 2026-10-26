@@ -1,6 +1,6 @@
 {
   "agent_model": "Codex / GPT-6",
-  "status": "source-bytes-verified; molecular/context admission pending",
+  "status": "positive-evidence-admission-independently-verified; predictive partitioning and training pending",
   "source_release": "https://github.com/pirl-unc/hitlist/releases/tag/human-cohort-corrected-v1",
   "raw_directory": "/private/tmp/presto-mhc2-20261026/ms-source",
   "files": [
@@ -29,5 +29,9 @@
   "verification_command": "/Users/iskander/code/shared-virtual-env/bin/python experiments/2026-10-26_1825_codex_mhc2-ms-admission/code/verify_source.py",
   "verification_receipt": "reproduce/source-verification.json",
   "acquisition_elapsed_seconds": null,
-  "verification_elapsed_seconds": null
+  "verification_elapsed_seconds": null,
+  "source_admission_receipt": "results/admission-attempt01/summary.json",
+  "independent_verification": "results/admission-attempt01/independent-verification.json",
+  "admitted_positive_evidence_rows": 98220,
+  "model_training_rows": 0
 }

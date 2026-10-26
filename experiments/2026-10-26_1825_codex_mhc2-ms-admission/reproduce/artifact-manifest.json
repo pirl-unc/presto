@@ -2,8 +2,28 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 2069,
-      "sha256": "b43f4e4d9c3698c68a474f1db4969f0c461b44960dd43599f6aab1349f90ba27"
+      "bytes": 8706,
+      "sha256": "83ca411633ea0879eba5bbb040f38b8a49a993060a8057f656c5e41e2d99b1f6"
+    },
+    {
+      "path": "code/admit.py",
+      "bytes": 11882,
+      "sha256": "6dc87f9c03f09bd4a5fa980d9e498883e6e03eda99aa1c0034c34bdc4fc1d334"
+    },
+    {
+      "path": "code/check_supplement_chemistry.py",
+      "bytes": 2706,
+      "sha256": "1935d85f060ca9a8543a0834b0784efe529138c32d2b8d2e6bef6c04010d4309"
+    },
+    {
+      "path": "code/profile_inputs.py",
+      "bytes": 7003,
+      "sha256": "986c08ba625c297789b3f2bba48314315cce77be3076076523bc34cfbc36358b"
+    },
+    {
+      "path": "code/verify_admission.py",
+      "bytes": 16368,
+      "sha256": "6a697aced6ff429e5242928d14ad80fac4df8814c4beb4a633f40b7758edf800"
     },
     {
       "path": "code/verify_source.py",
@@ -16,14 +36,64 @@
       "sha256": "6f2869afcf7d5ba99aa8401256eb7b82cae2ada175be74e1298ffff05bf53407"
     },
     {
+      "path": "reproduce/admission-launch-attempt01.json",
+      "bytes": 2271,
+      "sha256": "57bacb3dc0d0633b7fdba25eb30fd698cdd75ec37a8455d58bba15bb5f1bca00"
+    },
+    {
+      "path": "reproduce/hitlist-854.json",
+      "bytes": 3206,
+      "sha256": "291c8d00750ed2c9bde0a2b9d8cbc9728d63c0c32306e2dc4f5c5898c32aee79"
+    },
+    {
       "path": "reproduce/launch.json",
-      "bytes": 1235,
-      "sha256": "4e15b808bebc6ddd802bde99269ff63c191fc1fe98b6b50cc9051208c0dd964f"
+      "bytes": 1510,
+      "sha256": "f17257c01a315834e648d7e62fd4b21c6cfb5b1c7dc4307e5985735654425024"
     },
     {
       "path": "reproduce/launch.sh",
       "bytes": 287,
       "sha256": "68ee43bd1a1d09a794751292f4adf7b789df1d60e2bbcd570a6afc979d28c5c2"
+    },
+    {
+      "path": "reproduce/profile-launch.json",
+      "bytes": 1380,
+      "sha256": "d41942e8ab413cb66bd28b55c28ed4962c00f825e865c9b4212b227b4403d978"
+    },
+    {
+      "path": "reproduce/qualify.sh",
+      "bytes": 699,
+      "sha256": "e2c455e8dd4974be4aebad19f6991ce5063cda52e3b23d039bf1a8931acb4a38"
+    },
+    {
+      "path": "reproduce/source/admit.py",
+      "bytes": 11882,
+      "sha256": "6dc87f9c03f09bd4a5fa980d9e498883e6e03eda99aa1c0034c34bdc4fc1d334"
+    },
+    {
+      "path": "reproduce/source/check_supplement_chemistry.py",
+      "bytes": 2706,
+      "sha256": "1935d85f060ca9a8543a0834b0784efe529138c32d2b8d2e6bef6c04010d4309"
+    },
+    {
+      "path": "reproduce/source/modular_hitlist.py",
+      "bytes": 8774,
+      "sha256": "ad10998adc4d342dc63f30bf66fa6dc9bc2684b33273b95937cf9a6dad4e70b7"
+    },
+    {
+      "path": "reproduce/source/modular_hitlist_ms.py",
+      "bytes": 8778,
+      "sha256": "7369f1afd59b2c1d6e3f4815f2897eb2b5ba1e80b6b22d3ac99e84ff0033b0f4"
+    },
+    {
+      "path": "reproduce/source/profile_inputs.py",
+      "bytes": 7003,
+      "sha256": "986c08ba625c297789b3f2bba48314315cce77be3076076523bc34cfbc36358b"
+    },
+    {
+      "path": "reproduce/source/verify_admission.py",
+      "bytes": 16368,
+      "sha256": "6a697aced6ff429e5242928d14ad80fac4df8814c4beb4a633f40b7758edf800"
     },
     {
       "path": "reproduce/source/verify_source.py",
@@ -34,6 +104,96 @@
       "path": "reproduce/source-verification.json",
       "bytes": 9583,
       "sha256": "ae39bcbc4dc9987c0fbadf539991adee90f40cf0959617409ca5d40ffe1bbe2a"
+    },
+    {
+      "path": "reproduce/supplement-chemistry-issue.md",
+      "bytes": 2833,
+      "sha256": "3b1f822cbe334362d82976013e5260ef5d8ec4527b57be7e4510d3c6d1c2a43a"
+    },
+    {
+      "path": "reproduce/supplement-fixture-launch.json",
+      "bytes": 602,
+      "sha256": "7c035971266b99ea5afea58b5f0d6a77d6fb7d75aaa9cbbeec1f564dffac7f26"
+    },
+    {
+      "path": "reproduce/verification-attempt01/failure.json",
+      "bytes": 474,
+      "sha256": "af2d0545534d85c3e327979b18c852b34bebfbb9a6e23f506634e6367428ebbb"
+    },
+    {
+      "path": "reproduce/verification-attempt01/verify_admission.py",
+      "bytes": 16309,
+      "sha256": "aaf63427f83c487d8bac3a397ba2f5eb8196b2c5544c9ef3a0f8498cff43b7c7"
+    },
+    {
+      "path": "reproduce/verification-attempt02/failure.json",
+      "bytes": 553,
+      "sha256": "e10449e284ad4062a4917138c6b5da9e9ee2296ef1e400d44ad6774d4911fbe8"
+    },
+    {
+      "path": "reproduce/verification-attempt02/verify_admission.py",
+      "bytes": 16358,
+      "sha256": "05dc96ab86f840c454ac7b742674ac35801866da0a346cf91e951e27190f7690"
+    },
+    {
+      "path": "results/admission-attempt01/by-study.json",
+      "bytes": 380,
+      "sha256": "528e82c3bd8983bfc02daec4e6a92764f9e98062bc6ef5e7a32bcc5f4e8906b9"
+    },
+    {
+      "path": "results/admission-attempt01/candidate-sets.json",
+      "bytes": 7171,
+      "sha256": "f036d62069b46697d69e8e969ac7fcf6ea20519aca317ccef72b5fad0b5db046"
+    },
+    {
+      "path": "results/admission-attempt01/contexts.json",
+      "bytes": 2931,
+      "sha256": "44a36d8259e66e51b99818498ffda6e28fe518d2b8a2da6133315f90fce55817"
+    },
+    {
+      "path": "results/admission-attempt01/independent-verification.json",
+      "bytes": 939,
+      "sha256": "c63c14cd47edbb8b690958c6b58558ae235f4b519852874dcfc0a8248a0ba07a"
+    },
+    {
+      "path": "results/admission-attempt01/study-factor-vocabulary.json",
+      "bytes": 7729,
+      "sha256": "ea499b51aefe984c6370072795be8e472bb06b29fd316013ddde970fa56ebd60"
+    },
+    {
+      "path": "results/admission-attempt01/summary.json",
+      "bytes": 2203,
+      "sha256": "0f322b6da96afe6943bc9d12414b7bab7936f16f5cf9b1c3464380cb4f421b83"
+    },
+    {
+      "path": "results/context-verification-diagnostic.json",
+      "bytes": 583,
+      "sha256": "288aa406539facb96d00d6c051297521d2503a89261f460dfe959d672dae5ea6"
+    },
+    {
+      "path": "results/input-profile/categorical-fields.json",
+      "bytes": 165401,
+      "sha256": "fc3fc44ca8e805295b901291d515699719334a9655003c5daf126a0db20d347a"
+    },
+    {
+      "path": "results/input-profile/context-groups.json",
+      "bytes": 264471,
+      "sha256": "48b33414115c473da7d524ddd5e942f9dbebef9158cd55bd861d330dee26b490"
+    },
+    {
+      "path": "results/input-profile/molecular-groups.json",
+      "bytes": 250692,
+      "sha256": "0d404101552d8f4552b4b2b24846112df9985da663218518bfb10f518aa5601a"
+    },
+    {
+      "path": "results/input-profile/summary.json",
+      "bytes": 308,
+      "sha256": "1a2efb8dc9961df23e73b0856b25d266120b4fd75fc5f89920f4df2c4119418b"
+    },
+    {
+      "path": "results/supplement-chemistry-fixture.json",
+      "bytes": 490,
+      "sha256": "1f90a09b8d90e6df558b89bc1a3eb0fb16476218da69a1ace47d238dfd82d29b"
     }
   ]
 }
