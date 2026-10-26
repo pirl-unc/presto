@@ -14258,3 +14258,11 @@ Specification: `experiments/agents/codex/plans/2026-10-26_mhc-species-evaluation
 - [ ] Execute three canonical neural conditions serially after the IC50 family.
 - [ ] Independently verify predictions, source joins, selected checkpoint and metrics.
 - [ ] Close narrow classification results; retain transfer and all wider gates open.
+
+### Direct-assay inventory before head expansion
+
+Plan: `experiments/agents/codex/plans/2026-10-26_direct-assay-inventory.md`.
+
+- [x] Freeze two existing sources and literal metadata-only census scope.
+- [ ] Stream bounded census and independently replay every source row/count.
+- [ ] Close source inventory and select the next strict admission step.
