@@ -1,0 +1,17 @@
+{
+  "phase": "metadata",
+  "requests": [
+    {
+      "name": "project.json",
+      "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD024917",
+      "expected_kind": "json",
+      "discovery_provenance": "Fixed article accession and exact retrieval plan; official PRIDE v2 route used by existing Hitlist ingestion"
+    },
+    {
+      "name": "files-page0.json",
+      "url": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD024917/files?pageSize=100&page=0",
+      "expected_kind": "json",
+      "discovery_provenance": "Locate two exact deposited filenames already named in original Dataset S7; no raw files requested"
+    }
+  ]
+}

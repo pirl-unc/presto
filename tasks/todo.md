@@ -14043,3 +14043,50 @@ Hitlist848 is merged and exact release40220737944 passed. Tested distributions
 are independently verified; public PyPI upload is awaiting explicit user approval
 after automatic review rejected that separate irreversible action. No upload ran. Full APC
 availability and biological exact/RL validation remain active and unachieved.
+
+
+## Nontryptic transition lineage and shared ingestion
+
+- [x] Register exact-file retrieval scope and resource limits after source screen1816.
+- [x] Locate both original transition exports in the official PRIDE inventory.
+- [x] Download and qualify the literal export schemas under the unchanged startup guards; retain unresolved quantitative joins.
+- [ ] Freeze the shared source/recipe contract from supported identities and unknowns.
+- [ ] Implement/test shared Hitlist ingestion and independently replay original data.
+- [ ] Close source evidence and register a peptide-held-out calibration comparison.
+
+Plan: experiments/agents/codex/plans/nontryptic-transition-lineage-and-canonical.md.
+PyPI2.0.41 publication remains pending explicit user approval.
+
+Review: literal reader and malformed-source regression fixtures published in
+Hitlist draft PR850/head0263dc6; local format/lint pass, initial local tests refused
+before launch. Hosted Tests40226053061 passes all five unit versions;3.11 reports
+3,621passed/two optional skips and99% reader coverage. All96 integration tests,
+lint and combined coverage now pass. Exact-head PR description/readback verified.
+Both numeric exports are now retrieved, all 42,941 source cells replay, and
+verify attempt 2 completes. S3A correspondence is partial; S3B has a confirmed
+bare-versus-modified lookup defect under correction. No fit.
+Presto717ed59 push/PR CI passes. Keep original resource floors and source scope.
+
+Resource decision pending: a concrete source-only1GiB startup/RSS proposal with
+normal-pressure admission is in
+experiments/agents/codex/plans/nontryptic-readonly-resource-proposal.md.
+It is not active; the original3GiB contract continues to govern until approved.
+
+### Transition mapping closure — 2026-10-26
+
+Plan: experiments/agents/codex/plans/nontryptic-transition-mapping-audit.md.
+Original source verification completed in verify attempt 2. Correct its S3B
+bare-versus-modified lookup through source-declared S6B forms while preserving
+all executed evidence, guards and scientific limitations.
+
+- [x] Register the source identity audit and immutable companion launcher.
+- [x] Replay original sums and source-declared standard correspondences.
+- [x] Report remaining disagreements and define shared ingestion boundaries.
+- [x] Reconcile README, canonical registry and handoff with terminal receipts.
+
+Review: mapping audit attempt 2 passes (1.189s, 103,596,032 bytes peak RSS).
+All 54 reported forms have unique S6B correspondences; all 684 group sums replay.
+Product-only S3B sums agree within relative 1e-6 for 105/117 numeric ordinal
+candidates; precursor-inclusive sums for only 1/117. Source C/D observations
+at 100 fmol cannot be assigned blindly to export labels 1/3. S3A remains partial
+(144/213). No model fit, isotope atom repair or acquisition linkage is claimed.

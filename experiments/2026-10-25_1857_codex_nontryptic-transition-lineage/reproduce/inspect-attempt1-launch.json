@@ -1,0 +1,110 @@
+{
+  "argv": [
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/code/launch.py",
+    "inspect",
+    "--attempt",
+    "1",
+    "--requests",
+    "experiments/2026-10-25_1857_codex_nontryptic-transition-lineage/reproduce/requests/inspect-1.json"
+  ],
+  "configuration": {
+    "experiment_id": "2026-10-25_1857_codex_nontryptic-transition-lineage",
+    "agent_model": "Codex/GPT-6",
+    "created_utc": "2026-10-25T18:58:53.446877+00:00",
+    "presto_commit": "717ed59e0938b10f3bedc2c5fad760ce65d65613",
+    "dirty_tracked": true,
+    "dirty_scope": "preserved unrelated task notes; no model changes",
+    "source_scope": "exact already-named PXD024917 processed transition export lineage; no broad source discovery",
+    "discovery_operation_limit": 8,
+    "n_initial_queries_max": 0,
+    "n_primary_candidates_max": 1,
+    "n_model_fits": 0,
+    "new_numeric_data_admitted": false,
+    "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "plan_sha256": "dea107f5515519d1d3e9dce6d68ae4f694bfaf556371739ed9924be0a91e60a4",
+    "validation_test_split": null,
+    "reason_no_predictions": "source qualification only; no model dataset admitted",
+    "local_inspection_limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "limits": {
+      "stage_seconds": 1200,
+      "rss_bytes": 3221225472,
+      "startup_memory_bytes": 3221225472,
+      "disk_floor_bytes": 1073741824,
+      "start_margin_bytes": 33554432
+    },
+    "environment_overrides": {
+      "PYTHONSAFEPATH": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "PYTHONUNBUFFERED": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1",
+      "NUMEXPR_NUM_THREADS": "1"
+    },
+    "network_limits": {
+      "metadata_requests": 8,
+      "metadata_bytes_each": 4194304,
+      "processed_bytes_each": 16777216,
+      "total_bytes": 41943040,
+      "connect_seconds": 10,
+      "read_seconds": 30,
+      "request_wall_seconds": 120
+    },
+    "public_hosts": [
+      "www.ebi.ac.uk",
+      "ftp.pride.ebi.ac.uk"
+    ],
+    "data_directory": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage",
+    "frozen_code_sha256": {
+      "code/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "code/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "reproduce/source/launch.py": "337b0957f12bced683299134c33465d6b26145fbaa4d9bc1e233832b437a9e27",
+      "reproduce/source/fetch.py": "1bda902de950a889bab3a23487ca45cb430713afb42f7dc5b4a577dd37578dbb",
+      "reproduce/launch.sh": "48381d83f937b30b045c8a3d61751e997e02fbc37b1aec11853b25346904a864"
+    }
+  },
+  "request_set": {
+    "scope": "Literal-cell/schema inventory of two original transition exports only",
+    "registered_before_numeric_export_access": true,
+    "files": [
+      "Iso18_DirectSpike_TransitionResults.xlsx",
+      "Iso18_hipMHCspikein_TransitionResults.xlsx"
+    ],
+    "checks": [
+      "official byte counts and fetched SHA256",
+      "record opaque inventory checksum and compare with computed SHA1 without asserting a declared algorithm",
+      "independent OOXML/openpyxl agreement on all stored cells",
+      "preserve original headers, forms, quantities, blanks, formulas, merged ranges and coordinates"
+    ],
+    "semantic_questions": [
+      "explicit acquisition/dose links",
+      "isotope labels and competing assertions",
+      "raw versus normalized signal",
+      "quantification versus trigger transitions",
+      "aggregation and missingness"
+    ],
+    "no_fitting_or_heldout_access": true,
+    "next_step": "Freeze a specific lineage-replay request after schema inspection; no empirical acquisition identities from similar intensities",
+    "source_sha256": {
+      "code/inspect.py": "83b6a06a285a6d199a8842b303be839ebc699933681207c6139340fef79e0492",
+      "reproduce/source/inspect.py": "83b6a06a285a6d199a8842b303be839ebc699933681207c6139340fef79e0492",
+      "reproduce/requests/inspection-scope-1.json": "2c4f0ba8c3d5a9db19ef081b3cfb7fe23f2f8bac2e2f98658c4487edc3093256"
+    },
+    "input_sha256": {
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/files-page0.json": "4c9d293a5eb88b74ddfc807e5c779ad4360cbeb877784c733aa0c2a1bf601da6",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_DirectSpike_TransitionResults.xlsx": "d359bf7b8afd0ade9df9539d941c0f7931b8c39657a444d3bf8025e54ff1d995",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_DirectSpike_TransitionResults.xlsx.receipt.json": "ecba78194ca94b6b33c8e0ec843d00ad785f37569e52289ed693821fd9af48ad",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_hipMHCspikein_TransitionResults.xlsx": "8426f43364ea1d84244403811956f501664abf8001e7043ec8fc1ae546175308",
+      "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/nontryptic_transition_sources/2026-10-25_1857_codex_nontryptic-transition-lineage/Iso18_hipMHCspikein_TransitionResults.xlsx.receipt.json": "ad01ab0b779d8e99efeb4cc09ef989269aab6127b977337cbe97ad78f5d4b708"
+    },
+    "request_note": "Frozen before numeric inspection after successful fetch attempt4; original resource contract unchanged."
+  },
+  "request_set_sha256": "116a9bb1604975c994253e5416541eda34aeba1d237a6bbcfb7d6686c12cea26"
+}
