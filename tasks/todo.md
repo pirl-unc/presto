@@ -14271,3 +14271,17 @@ Direct-assay inventory review: all840,805 source rows/384 joint cells independen
 replay. The source distinguishes directKD from two KD proxy labels and reports
 half-life, EC50 and50% dissociation-temperature outcomes. Zero rows admitted;
 strict directKD source admission is the next candidate before incremental fitting.
+
+## MHC-II performance and distinct processing/cell contexts — 2026-10-26
+
+Full specification: `tasks/mhc2_improvement_spec.md`.
+
+- [x] Verify the prior trainer/controllers are live; isolate from their frozen code.
+- [x] Preserve the full three-track predictive goal and upstream issue deliverable.
+- [ ] Audit current Hitlist binding/MS pairing, provenance, pathway and condition support.
+- [ ] File evidence-backed issues for confirmed missing/under-annotated sources.
+- [ ] Implement and verify source-backed pathway/cell-context distinctions.
+- [ ] Improve MHC-II binding with matched controls and retained class-I evidence.
+- [ ] Fit/evaluate MHC-II MS ligand prediction with explicit observation/contrast semantics.
+- [ ] Verify route/context contributions, transfer, reproducibility and final-head software checks.
+- [ ] Reconcile all goal requirements with authoritative evidence before completion.
