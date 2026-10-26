@@ -4276,7 +4276,7 @@ TCRvdb is not yet available (confirmed by the user October 26). Auxiliary, censo
 Status: fixed comparison active. Next Step: finish and verify the remaining declared arms. Open Questions: authorized TCRvdb input and the separately scoped biological milestones.
 <!-- ic50-convergence-status:end -->
 
-## 2026-10-26_1642_codex_endolysosomal-source-audit — registered source admission
+## 2026-10-26_1642_codex_endolysosomal-source-audit — originals inspected; quantitative peptide table unavailable
 
 - Date/agent/model:2026-10-26,Codex/GPT-6;
   [family](2026-10-26_1642_codex_endolysosomal-source-audit/README.md),
@@ -4285,7 +4285,23 @@ Status: fixed comparison active. Next Step: finish and verify the remaining decl
   deposits; measured peptide time-course/context admission. Exclude synthetic
   software examples; isolated preparation is not native APC concentration.
 - Source-only: no training/pretraining, losses, synthetic supervision, predictive
-  splits or predictions. Earlier biological held-outs remain closed. Local CPU,
-  no GPU/Modal, package changes or author outreach. Twelve-operation combined
-  discovery/retrieval ceiling, original-asset budget10minutes; exact guards in plan.
-- Data/metrics/decision: pending original-asset audit; no biological qualification.
+  splits or predictions; no cohort is admitted, so validation/test metrics do not
+  apply. Earlier biological held-outs remain closed. Local CPU, no GPU/Modal,
+  package changes or author outreach.
+- Data: original article plus all5 publisher-listed version1 PDFs. Independent
+  pypdf/Poppler replay verifies5 single pages/no embedded files,8 protein-level
+  aggregate cells and both9-time peptide-map label sets. Rendered pages were
+  inspected. No original individual peptide intensities/sample lineage; no graph
+  digitization, color-to-label conversion or inferred zeros. Protein degradation
+  summaries are not pMHC dissociation labels. Zero peptide-quantity rows admitted.
+- Reproduction/resources: starting7e0c8e9 with registered planning notes;1db2705
+  registration. Original12-call budget explicitly amended to15 after9 calls,
+  before the exact API plus5 downloads. No source expansion;10min/byte limits
+  unchanged. Local HTTP18,347,804bytes; final asset at424.420s; browser bytes/time
+  unmeasured. Independent replay2.006s/116,047,872bytes parent peak and33,816,576bytes
+  maximum child RSS. Initial pypdf form-limit warning and unmeasured preliminary
+  extraction are disclosed. Source pins, code, ledger and offline replay retained.
+- Decision/next: scoped negative admission; await original intensity tables with
+  acquisition/replicate links before shared ingestion. This does not establish
+  absence elsewhere. Continue qualified IC50 work. Full APC availability,
+  calibrated observation and biological transfer remain unachieved.

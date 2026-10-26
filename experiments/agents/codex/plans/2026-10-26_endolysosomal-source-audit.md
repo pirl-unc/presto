@@ -42,3 +42,13 @@ numeric table identities/counts if present. Record every scientific call in one
 ledger and update README/canonical log on terminal admission. No optimizer,
 pretraining, synthetic supervision, assay loss or validation/test split applies
 to this source audit; no prediction dumps or predictive quality claim.
+
+## Prospective retrieval amendment after operation9
+
+The original publisher download links required following the linked UI module
+chain to its public supplemental-data API. Before reading that API or any PDF,
+`reproduce/retrieval-amendment.json` raised the operation limit from12 to15 for
+one exact API read and the five named files. No additional sources or searches
+were admitted. Time, per-file/total-byte and resource limits were unchanged.
+All15 operations are retained in one ledger; this is an explicit amendment,
+not an unchanged-budget claim.

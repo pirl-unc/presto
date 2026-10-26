@@ -1,0 +1,17 @@
+{
+  "utc": "2026-10-26T16:49:43.342370+00:00",
+  "operations_already_used": 9,
+  "original_limit": 12,
+  "amended_limit": 15,
+  "reason": "The publisher stores supplement links behind its public supplemental-data API, located through the page-linked module chain. One API request plus the five named original PDFs requires six remaining operations. Freeze this exact extension before fetching the API or any supplement; no new sources or generic search.",
+  "unchanged_limits": [
+    "10-minute original-asset window",
+    "60-second local requests",
+    "32MiB/file",
+    "64MiB total",
+    "4GiB RSS",
+    "10GiB disk reserve",
+    "5GiB available RAM"
+  ],
+  "numeric_tables_inspected": false
+}
