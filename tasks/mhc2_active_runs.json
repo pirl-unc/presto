@@ -1,10 +1,20 @@
 {
-  "updated_utc": "2026-10-26T19:50:10.430077+00:00",
+  "updated_utc": "2026-10-26T20:46:35.467246+00:00",
   "status": "active",
   "new_refinement_controller_session": 76453,
   "new_refinement_state": "experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/continuation-state.json",
   "old_ic50_controller_session": 12902,
   "old_species_controller_session": 29950,
   "old_checkout": "/private/tmp/presto-pr-completion-20261026/pr131/presto",
-  "instruction": "Poll authoritative sessions; do not restart from silent logs or stale state. Keep frozen runtime/code unchanged while live."
+  "instruction": "Poll authoritative sessions; do not restart from silent logs or stale state. Keep frozen runtime/code unchanged while live.",
+  "new_refinement_controller_status": "terminal_exit1_available_ram",
+  "new_refinement_recovery_session": 39568,
+  "new_refinement_recovery_state": "experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-state-attempt03.json",
+  "new_refinement_recovery_status": "terminal_exit1_available_ram",
+  "next_recovery": "Deferred until demonstrably improved headroom; newest preserved snapshot150updates in interruption02.json, original100-step snapshot retained. New registered helper required; no automatic retry.",
+  "ms_native_controller_session": 78532,
+  "ms_native_controller_state": "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native-controller-state.json",
+  "ms_logistic_controller_session": 47037,
+  "ms_logistic_controller_state": "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/logistic-controller-state.json",
+  "old_ic50_current_action": "fitting seed44 after seed43 verification at20:03UTC"
 }

@@ -4620,3 +4620,110 @@ inherited21,636-example scaler are pinned in `reproduce/launch.json` and pass
 preflight. The serial controller started exact-only fitting at19:48:46UTC, with
 censor refinement and independent scoring/verification queued. Metrics remain
 pending; no model or scientific milestone is promoted.
+
+
+## 2026-10-26 19:54 — MHC-II MS source and transfer dependencies
+
+Codex / GPT-6. [Experiment](2026-10-26_1954_codex_mhc2-ms-transfer-cohort/README.md);
+[reproducibility](2026-10-26_1954_codex_mhc2-ms-transfer-cohort/reproduce/launch.json).
+Registered at aa5eb5ed41e2916b8f94c9e4a30e9d069bf3a5fc with recorded task/experiment dirt.
+The98,220 earlier admitted native class-II positive MS rows contain56,853 peptides,
+20 contributor studies and213 joint policy groups. All196,304 original contributor
+links and400 directed study-overlap entries independently verify. Input sources
+remain Hitlist1.78.0 exports; current2.0.42 curation is a separate pinned reference.
+Only reported unmodified detections with explicit complete candidate pairs enter;
+no synthetic outcome, other assay family, loss or model training occurs here.
+
+| Reviewed source | Admitted rows | Decision |
+|---|---:|---|
+| DP35251023 |39,293| Initial training candidate; preserve engineered-arm qualification |
+| Atlas33858848 |24,399| Named associations need computational-provenance joins |
+| DQ25502872 |17,105| Full Methods unresolved within this retrieval budget |
+| DO30573663 |5,164| Full Methods/quantitative qualification still open |
+| CIITA33592498 |4,820| Background and40 ambiguous old arm assignments preserved |
+| DQ834433824 |4,659| External-study candidate with pair/origin qualification |
+
+DP/DQ8 share182 exact peptides;1,114 DQ8 peptides share a nine-residue segment
+with DP. DP also has297/61/25 source rows sharing such segments with initializer
+train/validation/test inputs; DQ8 has119/70/29. Overlapping counts cannot be added.
+Absence of these dependencies does not prove donor, parent, homology or search
+independence. The next predictive recipe must freeze exclusions before fitting.
+
+Current Hitlist replay still classifies all24,399 Atlas rows as unknown restriction.
+Primary Methods distinguish detected peptides from predicted allele associations;
+Hitlist855 requests exact source joins/provenance, without blanket study relabeling.
+Hitlist856 requests defined engineered DP/K562 arms currently collapsed to one
+generic arm. Existing Atlas primary loader702 and DO quantity issue817 remain
+separate. All208 parental CIITA rows already preserve probable-background notes.
+
+Inventory6.772s/390,758,400bytesRSS; independent replay8.717s/452,820,992bytes;
+current-classifier replay3.350s/172,195,840bytes. LocalCPU/one thread; no Modal/GPU.
+Two earlier replay failures and failed primary retrievals are preserved. Primary
+retrieval stopped at24 logical operations under a prospective amendment.
+
+No training/validation/test predictive loss, binding metrics or prediction dumps
+apply because this family audits sources without fitting or defining a predictive
+split. No predictive winner is selected. Preferred next source is DP, with qualified
+DQ8 transfer testing; actual detection-enrichment fitting remains required.
+Full binding/MS/pathway goal active.
+
+### 1929 censor-refinement interruption update
+
+Exact continuation completed and was scored. Censor fitting stopped on the original
+10GiB available-RAM floor. Recovery02 failed the exact environment contract before
+updates;03 restored it but again hit the RAM floor. All attempts and the100-step
+snapshot are preserved. No retries or guard reductions; paired comparison and
+independent outcome closure remain pending better resource headroom. See the
+[updated family README](2026-10-26_1929_codex_mhc2-censor-refinement/README.md).
+
+
+## 2026-10-26 20:30 — MS permutation-background preparation stopped
+
+Codex / GPT-6. [Family](2026-10-26_2030_codex_mhc2-ms-prediction/README.md).
+Frozen qualified DP/DQ8 positive sources and component partitions passed count gates,
+but a length15 homopolymer permits no distinct exact-composition permutation.
+The registered control generator stopped after1,000 attempts without dropping
+the positive. Runtime8.395s/863,846,400bytesRSS, localCPU/one thread; no Modal/GPU.
+Source/curation/initializer/code/git hashes and exact invocation/failure are in
+the reproducibility bundle. No model training, loss, validation/test scores or
+prediction dumps exist; this is failed preparation, not a predictive comparison.
+No winner or scientific improvement is claimed. A new2036 family prospectively
+changes only the background distribution and retains all positive partitions.
+
+
+## 2026-10-26 20:36 — Qualified DP/DQ8 MS prediction, running
+
+Codex / GPT-6. [Family](2026-10-26_2036_codex_mhc2-ms-length-background/README.md).
+Qualified native human DP35251023/DQ834433824 positive MS observations, collapsed
+by study/peptide/complete pair, with exact source lineage and nine-residue
+component/initializer exclusions. The new background changes the failed2030
+permutation policy before predictions: fixed-length draws from DP training-only
+residue frequencies; controls are generated, not measured nondetections.
+
+| Partition | Positive/control examples | Peptides | Components |
+|---|---:|---:|---:|
+| DP train |27,648/27,648|18,906|5,986|
+| DP validation |5,520/5,520|3,853|1,303|
+| DP test |5,904/5,904|4,062|1,317|
+| DQ8 external |3,453/3,453|3,453|1,189|
+
+All85,050examples independently verify against original sources, graph-component
+reconstruction and inverse-CDF control replay. Preparation14.509s/874,315,776bytes;
+verification14.810s/858,882,048bytes; ten boundary tests pass. LocalCPU, no Modal/GPU.
+Native-manifest preflight used the fit guard/two threads rather than the stricter
+one-thread preparation guard; actual55.881s/307,363,840bytes stayed within its
+stricter time/RSS limits. Deviation disclosed in the family README.
+
+Original seed42 IC50 parent/dependency tensors/scaler are frozen; new native MS
+logit trains by BCE for3epochs/2,592updates, batch64, AdamW3e-4,weight decay1e-4,
+dropout.1,identity loss0. Two true-label seeds101/102 plus one paired training-label
+permutation diagnostic. Fixed-final native ensemble is primary. Binding-only,
+sequence and combined logistic controls are frozen and queued after native fits.
+Full provenance, data/code/runtime hashes, git status and invocation are in the
+reproducibility bundle. No outcome/predictive winner is available yet.
+
+Validation/test losses, classification scores, per-example dumps, independent
+comparison and confidence intervals remain pending; binding-regression metrics
+are inapplicable to MS labels. Generated-background enrichment and transfer
+across these studies cannot isolate processing, detector or donor mechanisms.
+Full goal remains active.

@@ -1,0 +1,15 @@
+{
+  "utc": "2026-10-26T20:20:10.515918+00:00",
+  "agent_model": "Codex / GPT-6",
+  "git_commit": "aa5eb5ed41e2916b8f94c9e4a30e9d069bf3a5fc",
+  "dirty_status": " M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/continuation-state.json\n M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/fit-exact_continuation-1793044126975529000.json\n M tasks/todo.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/recover.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/resume_censor.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/fit-censor_refinement-1793045035192116000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/interruption01.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-plan.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/score-exact_continuation-1793045003405002000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/recover.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/resume_censor.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/results/exact_continuation-fit.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/results/exact_continuation/\n?? experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/\n?? experiments/agents/codex/plans/2026-10-26_mhc2-ms-transfer-cohort.md\n",
+  "code_sha256": {
+    "recover.py": "3df53598edcf6e5f04fbfb23592b8c3a45fe6358c64d043c5b266c860ab31263",
+    "resume_censor.py": "94c9b328e04cc893b118d90810e5ddc883bdc0fcc86f1a59bc279d81f2bc4ea6"
+  },
+  "invocation": "env PYTHONPATH=/private/tmp/presto-mhc2-20261026:/private/tmp/presto-pr-completion-20261026/dependencies OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 /Users/iskander/code/shared-virtual-env/bin/python /private/tmp/presto-mhc2-20261026/presto/experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/recover.py",
+  "available_ram_bytes": 18608029696,
+  "free_disk_bytes": 75766333440,
+  "original_contract": "runtime, launcher, sources, optimizer, RNG and final logical step budget unchanged; up to49 rolled-back updates may repeat",
+  "original_source_scan": "current-source-qualification.json completed"
+}

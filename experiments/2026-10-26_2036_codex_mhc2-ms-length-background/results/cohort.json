@@ -1,0 +1,111 @@
+{
+  "status": "prepared_pending_independent_verification",
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/external-control.jsonl",
+      "sha256": "3950374ba22579fd52b921e4b01258bf58c6412e2cba3a3a987a4f57453e941e",
+      "partition": "external",
+      "source": "generated_mhc2_ms_background",
+      "population": "DQ8 external detection enrichment",
+      "label_policy": "explicit_generated_sequence_background_not_measured_nondetection",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/external-positive.jsonl",
+      "sha256": "69eb2bc8c6b119bfe7951d38bd4cb735cda564adbb0d5d9557bf8db553ee206e",
+      "partition": "external",
+      "source": "hitlist_native_ms",
+      "population": "DQ8 external detection enrichment",
+      "label_policy": "reported_positive_ms_detection",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/test-control.jsonl",
+      "sha256": "1f19e0be53c7818a55c760b93fc7d7bedcc54c666067cff184e11a2f96c1977a",
+      "partition": "test",
+      "source": "generated_mhc2_ms_background",
+      "population": "qualified DP/K562 detection enrichment",
+      "label_policy": "explicit_generated_sequence_background_not_measured_nondetection",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/test-positive.jsonl",
+      "sha256": "784ea55996e83cd5f50c10c9e7b812b911dc6b9a89dc4471804e4e1379a780cd",
+      "partition": "test",
+      "source": "hitlist_native_ms",
+      "population": "qualified DP/K562 detection enrichment",
+      "label_policy": "reported_positive_ms_detection",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/train-control.jsonl",
+      "sha256": "acdae56f76032884cb1c9567fc34c94c5dee46fe7d31047836fc1226572d47d6",
+      "partition": "train",
+      "source": "generated_mhc2_ms_background",
+      "population": "qualified DP/K562 detection enrichment",
+      "label_policy": "explicit_generated_sequence_background_not_measured_nondetection",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/train-positive.jsonl",
+      "sha256": "5d796bda94bb417eaed8a4734236eb1c4bccb3bff684971d4a4bd189f65c0cd9",
+      "partition": "train",
+      "source": "hitlist_native_ms",
+      "population": "qualified DP/K562 detection enrichment",
+      "label_policy": "reported_positive_ms_detection",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/validation-control.jsonl",
+      "sha256": "6b145b7645651665f8b7f4012558659695e2642fadb0e0e781f579802a8036c8",
+      "partition": "validation",
+      "source": "generated_mhc2_ms_background",
+      "population": "qualified DP/K562 detection enrichment",
+      "label_policy": "explicit_generated_sequence_background_not_measured_nondetection",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    },
+    {
+      "path": "/private/tmp/presto-mhc2-20261026/ms-length-background/cohort/validation-positive.jsonl",
+      "sha256": "624f9db8ef71924cba155afd8d5725d9d5dec723ca56c062bdc1ce986c99dcaa",
+      "partition": "validation",
+      "source": "hitlist_native_ms",
+      "population": "qualified DP/K562 detection enrichment",
+      "label_policy": "reported_positive_ms_detection",
+      "split_policy": "frozen_nine_residue_components_and_initializer_exclusion_v1"
+    }
+  ],
+  "counts": {
+    "train": {
+      "peptides": 18906,
+      "components": 5986
+    },
+    "validation": {
+      "peptides": 3853,
+      "components": 1303
+    },
+    "test": {
+      "peptides": 4062,
+      "components": 1317
+    },
+    "external": {
+      "peptides": 3453,
+      "components": 1189
+    }
+  },
+  "row_counts": {
+    "external": 6906,
+    "validation": 11040,
+    "test": 11808,
+    "train": 55296
+  },
+  "known_positive_sequences": 1106409,
+  "initializer_segments": 16874,
+  "output_bytes": 201259710,
+  "training_steps_per_epoch": 864,
+  "native_final_steps": 2592,
+  "initialization": {
+    "path": "/Users/iskander/code/presto/artifacts/2026-10-26_1610_codex_ic50-convergence/seed42/selected.pt",
+    "sha256": "db2585e63489cb5aac8c7a32fd7e522bcbc51035846c05f8cd2794c4449e3dc5"
+  }
+}

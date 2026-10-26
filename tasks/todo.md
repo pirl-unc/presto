@@ -14355,3 +14355,46 @@ background qualifications to all rows without original evidence. Before fitting,
 audit this qualification and the restriction-assignment policies of the20retained
 studies, including the large DP/DQ cohorts. These source notes are not a new
 predictive experiment or grounds to silently alter the frozen admission cohort.
+
+### MHC-II MS transfer-cohort qualification
+
+Plan: `experiments/agents/codex/plans/2026-10-26_mhc2-ms-transfer-cohort.md`.
+
+- [ ] Verify literal restriction/background policies and all contributor studies.
+- [ ] Measure exact/9-mer dependencies and affinity-initializer exposure.
+- [ ] Independently replay the inventory and resolve concrete annotation gaps.
+- [ ] Freeze the qualified MS predictive recipe and execute it when resources permit.
+
+Binding recovery review: original new-family controller76453 is terminal after
+the10GiB available-RAM floor stopped censor fitting. Exact-only fitting/scoring
+completed. Preserve the100-step censor snapshot and failed receipt, then use the
+registered explicit canonical resume without changing limits, gates or data.
+The recovery plan is in the1929family's `reproduce/recovery-plan.md`.
+
+
+## MHC-II continuation, 2026-10-26 20:29UTC
+
+- [x] Independently verify98,220-row MS source/dependency inventory and current restriction replay.
+- [x] Preserve primary retrieval and classifier failures; close1954 family in canonical registry.
+- [x] File/read back Hitlist855 Atlas assignment provenance and856 DP engineered-arm metadata.
+- [x] Preserve exact-arm completion, RAM interruption and both recovery attempts.
+- [ ] Recover censor arm only after demonstrably improved resource headroom; retain original limits.
+- [ ] Freeze and implement first actual DP/DQ8 MS prediction comparison, then validate and fit.
+
+Review: source admission is not predictive validation. No newly trained MS or
+isolated processing result is claimed. Historical binding holdouts stay development.
+
+
+## MHC-II predictive continuation, 2026-10-26 20:49UTC
+
+- [x] Preserve2030 infeasible permutation control failure; no silent positive exclusions.
+- [x] Register2036 length-background contract before predictive access.
+- [x] Prepare and independently verify85,050source-linked examples; ten boundary tests pass.
+- [x] Freeze native manifests,2,592updates/arm and retained IC50 dependencies.
+- [x] Start native seed101 and serially queue seed102/null; queue comparators afterward.
+- [ ] Follow native session78532 and comparator session47037 through terminal receipts.
+- [ ] Independently verify completed predictions/metrics/ensemble/bootstrap, then close outcomes.
+
+Review: first native fit active; no MS performance improvement claimed. Older
+convergence is fitting seed44 after seed43 verified. Censor recovery is terminal
+after RAM-floor failure, with a new150-step snapshot preserved separately.

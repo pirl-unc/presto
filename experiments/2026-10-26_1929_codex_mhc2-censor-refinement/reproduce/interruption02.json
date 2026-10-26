@@ -1,0 +1,18 @@
+{
+  "utc": "2026-10-26T20:49:47.062015+00:00",
+  "reason": "attempt03 RAM floor",
+  "source_snapshot": "/private/tmp/presto-mhc2-20261026/censor-refinement/censor_refinement/resume.pt",
+  "preserved_snapshot": "/private/tmp/presto-mhc2-20261026/censor-refinement/interruption02/resume.pt",
+  "snapshot_sha256": "587fd1d8c24611dc78a59809616501c160be4c42e4825be3ac232e1c6c8478d2",
+  "state": {
+    "phase": "training",
+    "epoch": 1,
+    "steps": 150,
+    "position": 9600,
+    "exposures": {
+      "ic50": 9600
+    },
+    "elapsed_seconds": 111.39119324999774
+  },
+  "next_recovery": "Register a new helper against this150-step snapshot; do not reuse frozen100-step attempt02/03 helpers. No automatic retry."
+}

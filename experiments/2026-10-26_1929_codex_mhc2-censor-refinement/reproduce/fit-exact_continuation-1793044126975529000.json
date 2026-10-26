@@ -7,6 +7,7 @@
   ],
   "device": "cpu",
   "dirty_status": "?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/censor_refinement-manifest.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/continuation-state.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/exact_continuation-manifest.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/launch.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/prepare-family-1793044070144727000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/\n",
+  "elapsed_seconds": 874.6687351250002,
   "environment": {
     "MKL_NUM_THREADS": "2",
     "OMP_NUM_THREADS": "2",
@@ -26,7 +27,9 @@
     "startup_disk": 16106127360,
     "startup_ram": 13958643712
   },
+  "peak_polled_rss_bytes": 3515301888,
   "platform": "macOS-26.5-arm64-arm-64bit",
+  "process_peak_rss_bytes": 3515301888,
   "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
   "requested_modal_gpu": null,
   "runtime_hashes": {
@@ -51,7 +54,7 @@
   },
   "startup_disk": 80556609536,
   "startup_ram": 17666850816,
-  "status": "starting",
+  "status": "completed",
   "threads": 2,
   "torch": "2.14.1",
   "utc": "2026-10-26T19:48:46.975533+00:00"
