@@ -254,7 +254,12 @@ def test_streamed_new_task_retains_frozen_output_and_original_scaler(tmp_path):
     )
     previous.eval()
     final.eval()
-    assert torch.equal(previous([row()])[0].value, final([row()])[0].value)
+    for name in parameter_dependencies(final, "ic50"):
+        assert torch.equal(previous.state_dict()[name], final.state_dict()[name])
+    # Match inference modes: trainable and frozen attention otherwise select
+    # different float32 kernels even when the retained tensors are identical.
+    with torch.no_grad():
+        assert torch.equal(previous([row()])[0].value, final([row()])[0].value)
     assert final.support["ic50"]["status"] == "pretrained_frozen"
     assert parameter_dependencies(final, "ic50") <= final.frozen_parameters
 

@@ -1,0 +1,78 @@
+.........F.                                                              [100%]
+=================================== FAILURES ===================================
+_______ test_streamed_new_task_retains_frozen_output_and_original_scaler _______
+
+tmp_path = PosixPath('/private/var/folders/qm/qf74v01n2s12j3w0h1yrx4l00000gn/T/pytest-of-iskander/pytest-144/test_streamed_new_task_retains0')
+
+    def test_streamed_new_task_retains_frozen_output_and_original_scaler(tmp_path):
+        previous, path = trained_affinity(tmp_path)
+        peptides = [AA[i:] + AA[:i] for i in range(6)]
+        rows = [
+            row(
+                "kd",
+                observation_id=f"new-{i}",
+                peptide=peptide,
+                value=10 if i % 2 else 1000,
+                split=("train", "validation", "test")[i // 2],
+                group_id=f"g{i}",
+                provenance={"original_measurement_id": f"k{i}"},
+            )
+            for i, peptide in enumerate(peptides)
+        ]
+        # A retained frozen label is evaluable but must not create a zero-gradient batch.
+        rows.append(row(observation_id="retained", value=1e6, group_id="g0"))
+        rows.append(
+            row(
+                observation_id="retained-val",
+                value=1e6,
+                peptide=peptides[2],
+                group_id="g2",
+                split="validation",
+                provenance={"original_measurement_id": "retained-val"},
+            )
+        )
+        written = write_observations(tmp_path / "data.jsonl", rows)
+        manifest = {
+            "schema": MANIFEST_VERSION,
+            "model": asdict(model(("ic50", "kd")).config),
+            "pretrained": {"path": str(path), "sha256": file_sha256(path), "freeze": ["ic50"]},
+            "training": {"max_epochs": 2, "max_steps": 2, "batch_size": 1},
+            "sources": [
+                {
+                    "path": written["path"],
+                    "sha256": written["sha256"],
+                    "source": "software",
+                    "population": "artificial",
+                    "label_policy": "software-only",
+                    "split_policy": "disjoint artificial inputs",
+                }
+            ],
+        }
+        manifest_path = tmp_path / "manifest.json"
+        manifest_path.write_text(json.dumps(manifest))
+        index = ObservationIndex(manifest_path)
+        _, _, scales, admission = preflight(index)
+        assert scales["ic50"] == SCALE  # one radically different current value cannot refit it
+        assert admission["inherited_scalers"] == ["ic50"]
+        summary = fit_index(index, tmp_path / "fit")
+        assert summary["coverage_gate"]["status"] == "passed"
+        assert summary["training_exposures"] == {"kd": 2}
+        final, _, selected = load_checkpoint(tmp_path / "fit/selected.pt")
+        assert selected["metadata"]["selection_metric"] == pytest.approx(
+            summary["metrics"]["validation"]["kd"]["loss"]
+        )
+        previous.eval()
+        final.eval()
+>       assert torch.equal(previous([row()])[0].value, final([row()])[0].value)
+E       AssertionError: assert False
+E        +  where False = <built-in method equal of type object at 0x117e013a0>(tensor(0.7443, grad_fn=<SqueezeBackward1>), tensor(0.7443))
+E        +    where <built-in method equal of type object at 0x117e013a0> = torch.equal
+E        +    and   tensor(0.7443, grad_fn=<SqueezeBackward1>) = Prediction(observation_id='ic50', endpoint='ic50', value=tensor(0.7443, grad_fn=<SqueezeBackward1>), identity={}, diag...probability': 1.0, 'starts': [0], 'weights': tensor([1.]), 'entropy': tensor(-0.)}], 'auxiliary': {}}]}, components={}).value
+E        +    and   tensor(0.7443) = Prediction(observation_id='ic50', endpoint='ic50', value=tensor(0.7443), identity={}, diagnostics={'candidates': [{'mh...probability': 1.0, 'starts': [0], 'weights': tensor([1.]), 'entropy': tensor(-0.)}], 'auxiliary': {}}]}, components={}).value
+
+tests/test_modular_continuation.py:257: AssertionError
+----------------------------- Captured stdout call -----------------------------
+modular epoch=1 steps=2 loss=1.005458 validation=1.0006701350212097
+=========================== short test summary info ============================
+FAILED tests/test_modular_continuation.py::test_streamed_new_task_retains_frozen_output_and_original_scaler
+1 failed, 10 passed in 2.77s

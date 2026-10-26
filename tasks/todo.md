@@ -14323,3 +14323,19 @@ distinct processing-route evidence still require work. Upstream supplied-PTM
 column loss is reproduced on current Hitlist2.0.42 and filed/read back as #854.
 The final adapter/context/training suite passes85tests; failures in two independent-reader attempts
 are preserved and repaired without changing source admission or criteria.
+
+### Fixed-budget MHC-II censor refinement
+
+Plan: `experiments/agents/codex/plans/2026-10-26_mhc2-censor-refinement.md`.
+
+- [ ] Freeze exact/censored sources and common parent checkpoint/scalers.
+- [ ] Execute both1,476-update canonical conditions under a separate memory guard.
+- [ ] Independently verify fixed-final validation/test predictions and retained class I.
+- [ ] Report the complete comparison and replication decision; preserve wider goals.
+
+Verification follow-up before fitting: the existing frozen-affinity continuation
+test compares an autograd-enabled parent with a frozen model, selecting different
+Torch attention kernels. Preserve the two-thread failure; compare every retained
+parameter exactly and evaluate both outputs under the same no-grad inference mode.
+Keep bitwise equality and all scientific thresholds unchanged. Rerun the affected
+continuation tests and the new artificial fixed-update/source/gate/controller tests.
