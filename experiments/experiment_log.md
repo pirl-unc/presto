@@ -4275,3 +4275,17 @@ TCRvdb is not yet available (confirmed by the user October 26). Auxiliary, censo
 
 Status: fixed comparison active. Next Step: finish and verify the remaining declared arms. Open Questions: authorized TCRvdb input and the separately scoped biological milestones.
 <!-- ic50-convergence-status:end -->
+
+## 2026-10-26_1642_codex_endolysosomal-source-audit — registered source admission
+
+- Date/agent/model:2026-10-26,Codex/GPT-6;
+  [family](2026-10-26_1642_codex_endolysosomal-source-audit/README.md),
+  [plan](agents/codex/plans/2026-10-26_endolysosomal-source-audit.md).
+- Scope: original public Öztemiz2026 article/supplements and explicitly linked
+  deposits; measured peptide time-course/context admission. Exclude synthetic
+  software examples; isolated preparation is not native APC concentration.
+- Source-only: no training/pretraining, losses, synthetic supervision, predictive
+  splits or predictions. Earlier biological held-outs remain closed. Local CPU,
+  no GPU/Modal, package changes or author outreach. Twelve-operation combined
+  discovery/retrieval ceiling, original-asset budget10minutes; exact guards in plan.
+- Data/metrics/decision: pending original-asset audit; no biological qualification.

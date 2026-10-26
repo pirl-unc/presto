@@ -711,3 +711,11 @@ Keep applicability reporting separate from model features and the measured label
   must remain draft until its scientific milestones pass. Preserve failed gates,
   external-data blockers and the full accepted scope while making independent
   progress; passing CI does not authorize biological promotion or early merge.
+
+## 2026-10-26 — Follow scientific work through its terminal evidence
+
+- When asked to finish research work, do not stop after queuing experiments and
+  reporting progress while independent authorized work remains. Follow terminal
+  runs through verification and closure, address failures, and use waiting time
+  for the next qualified source or integration requirement. An external blocker
+  for one assay does not block the rest of the accepted scope.

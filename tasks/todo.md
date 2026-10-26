@@ -14232,3 +14232,13 @@ The fixed IC50 convergence family is running locally. Mean/ridge controls and
 consumed yet. The user confirms authorized TCRvdb input is not yet available.
 Original checkout file hashes/staged patches are preserved except intended root
 task notes; no shared-environment change. PR131 remains draft.
+
+### Continued execution after the user's request to finish
+
+- [ ] Follow all four IC50 arms through terminal verification and family closure.
+- [ ] Complete the registered original endolysosomal asset admission while fits run.
+- [ ] Inspect and execute the next eligible gates from their frozen specifications.
+- [ ] Verify/publish terminal evidence and reconcile remaining scientific blockers.
+
+Do not stop at queued work while independent authorized work remains. TCR source
+access remains unavailable; no substitutes or outreach are authorized.
