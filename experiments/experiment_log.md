@@ -4233,3 +4233,19 @@ The full APC availability goal remains active and unachieved.
 - **Training/evaluation:** none; no pretraining, synthetic labels, loss terms, assay-output mapping, validation/test split, predictions or predictive metrics. This is a source admission decision, not an evaluation experiment. Published aggregate article results were encountered; sources are not labeled wholly uninspected.
 - **Resources/reproduction:**5 search queries+7 opens exhaust the12-operation prospective budget. Exact tool receipts total116,567 bytes retained locally under data/diverse_quantity_anchor_sources/2026-10-26_0344_codex_diverse-quantity-anchors; these are saved response sizes, not network-transfer measurements. Browser time/memory/bytes are unmeasured. No numerical stage, GPU/Modal, install or raw-MS transfer. Offline standard-library replay checks requests, budget, decisions and artifact hashes.
 - **Next:** audit the existing APC-derived endolysosomal source lead for original quantitative assets and matched measurement scale, rather than automatically launch another generic calibration search. Within-peptide changes can help constrain processing if response/run scaling are controlled; baseline concentration, yield, clearance and APC transfer still require independent evidence. The full exact-versus-RL availability goal remains active and unachieved.
+
+## 2026-10-26_1610_codex_ic50-convergence — registered, not yet run
+
+- Date/agent/model: 2026-10-26; Codex / GPT-6.
+- [Family](2026-10-26_1610_codex_ic50-convergence/README.md), [frozen plan](agents/codex/plans/2026-10-26_ic50-convergence.md).
+- Complete previously qualified exact-IC50 training cohort: 21,636 train,
+  2,925 validation, 2,803 test; original source pins, raw bounds and historical
+  partition exposure preserved. Shared studies; no independent-donor claim.
+- Direct log10(nM) IC50, train-only scaling, squared standardized error; no
+  auxiliary pretraining/replay or other assay families. Mean/ridge controls,
+  seeds 42/43/44 and within-class permuted-label seed 42 fixed prospectively.
+- Local CPU/four numerical threads/one interop; no GPU/Modal. Full-epoch AdamW
+  3e-4, weight decay 1e-4, dropout .1, batch 64, max 100 epochs, patience 15/min 10.
+- Validation selects checkpoints; held-out validation/test predictions, exact
+  regression, censoring and 500 nM metrics will be preserved for every condition.
+- Runtime/metrics/winner: pending. No scientific success, promotion or PR merge.
