@@ -1,0 +1,10 @@
+waiting for seed42
+{"utc": "2026-10-26T16:30:23.559768+00:00", "complete": false, "ic50_comparison_screen_passed": false, "full_model_qualified": false}
+Traceback (most recent call last):
+  File "/private/tmp/presto-pr-completion-20261026/pr131/presto/experiments/2026-10-26_1610_codex_ic50-convergence/code/continue.py", line 121, in <module>
+    main()
+  File "/private/tmp/presto-pr-completion-20261026/pr131/presto/experiments/2026-10-26_1610_codex_ic50-convergence/code/continue.py", line 97, in main
+    wait_for_receipt(args.wait_receipt, args.pid)
+  File "/private/tmp/presto-pr-completion-20261026/pr131/presto/experiments/2026-10-26_1610_codex_ic50-convergence/code/continue.py", line 47, in wait_for_receipt
+    os.kill(pid, 0)
+PermissionError: [Errno 1] Operation not permitted

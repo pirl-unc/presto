@@ -4234,7 +4234,7 @@ The full APC availability goal remains active and unachieved.
 - **Resources/reproduction:**5 search queries+7 opens exhaust the12-operation prospective budget. Exact tool receipts total116,567 bytes retained locally under data/diverse_quantity_anchor_sources/2026-10-26_0344_codex_diverse-quantity-anchors; these are saved response sizes, not network-transfer measurements. Browser time/memory/bytes are unmeasured. No numerical stage, GPU/Modal, install or raw-MS transfer. Offline standard-library replay checks requests, budget, decisions and artifact hashes.
 - **Next:** audit the existing APC-derived endolysosomal source lead for original quantitative assets and matched measurement scale, rather than automatically launch another generic calibration search. Within-peptide changes can help constrain processing if response/run scaling are controlled; baseline concentration, yield, clearance and APC transfer still require independent evidence. The full exact-versus-RL availability goal remains active and unachieved.
 
-## 2026-10-26_1610_codex_ic50-convergence — registered, not yet run
+## 2026-10-26_1610_codex_ic50-convergence — active; controls independently verified
 
 - Date/agent/model: 2026-10-26; Codex / GPT-6.
 - [Family](2026-10-26_1610_codex_ic50-convergence/README.md), [frozen plan](agents/codex/plans/2026-10-26_ic50-convergence.md).
@@ -4248,4 +4248,30 @@ The full APC availability goal remains active and unachieved.
   3e-4, weight decay 1e-4, dropout .1, batch 64, max 100 epochs, patience 15/min 10.
 - Validation selects checkpoints; held-out validation/test predictions, exact
   regression, censoring and 500 nM metrics will be preserved for every condition.
-- Runtime/metrics/winner: pending. No scientific success, promotion or PR merge.
+- Controls: all54,728 saved prediction/source joins and metrics independently
+  verify; ridge refit differs by at most3.35e-10. The frozen neural comparison
+  is active. No completed neural result, winner, promotion or PR merge.
+- Reporting support flags and sandbox-compatible continuation are documented in
+  the family README, with both original attempts retained. The user confirms the
+  TCRvdb release is not yet available; no full-model completion is claimed.
+
+<!-- ic50-convergence-status:begin -->
+### IC50 convergence saved-output status
+
+As of 2026-10-26T16:30:23.559768+00:00.
+
+| Condition | State | Selected / completed epochs | Validation RMSE | Test RMSE |
+| --- | --- | --- | --- | --- |
+| mean | verified | n/a | 1.360611 | 1.342001 |
+| ridge | verified | n/a | 1.223458 | 1.229134 |
+| seed42 | starting | pending | pending | pending |
+| seed43 | not_started | pending | pending | pending |
+| seed44 | not_started | pending | pending | pending |
+| permuted42 | not_started | pending | pending | pending |
+
+All fixed conditions verified: **False**. IC50 comparison screen passes: **False**.
+No best-seed selection, test-based retuning, or full-model promotion. All class-specific, 500 nM, censoring, allele/study and paired-bootstrap details remain in `results/`.
+TCRvdb is not yet available (confirmed by the user October 26). Auxiliary, censor-training, APC/MS transfer and serving gates remain open. PR 131 stays draft.
+
+Status: fixed comparison active. Next Step: finish and verify the remaining declared arms. Open Questions: authorized TCRvdb input and the separately scoped biological milestones.
+<!-- ic50-convergence-status:end -->

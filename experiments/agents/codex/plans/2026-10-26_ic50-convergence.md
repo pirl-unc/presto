@@ -67,3 +67,38 @@ Freeze `reproduce/launch.sh`, `launch.json`, manifests and runtime/launcher sour
 Update README and the canonical experiment log for each terminal result and final
 family closure. A failed or incomplete gate keeps PR 131 draft. No APC quantity,
 MS transfer, TCR or independent-study qualification follows from this family.
+
+## Reporting and sequential continuation, before neural completion
+
+Preserve the already frozen launcher, runtime and independent verifier. Add a
+companion report of all catalog-allele-pair and reported-study strata, without
+minimum-count selection: each observation contributes once per axis; keep
+unknown labels explicit and retain counts when correlations are undefined.
+Retain the original support rule (at least 20 exact measurements and nonzero
+target spread); label smaller/constant strata unsupported even when displaying
+descriptive estimates. Include class-specific bound/threshold metrics as well.
+Study keys use original reference IRI, otherwise PMID, otherwise unknown.
+These are descriptive strata, not newly independent holdouts or promotion gates.
+Also retain prediction range/quantiles and threshold confusion counts.
+
+A sequential continuation may wait for the currently running seed-42 action's
+terminal receipt, then verify it and run the remaining declared conditions in
+their original order. Each foreground trainer retains its own resource monitor;
+never overlap trainers, change the recipe, automatically retry failed actions,
+or rescore a completed test partition. Stop on execution, source-pin or numeric
+verification failure. A scientific gate failure is a result: preserve it and
+finish the other declared arms. Record each transition durably and refresh the
+family README and canonical log from terminal saved outputs. No automatic merge
+or checkpoint qualification follows from the continuation.
+
+The user confirmed on October 26 that the authorized TCRvdb release is not yet
+available. That is an external blocker for TCR qualification; it does not change
+this independent IC50 contract or authorize substituting a different TCR cohort.
+
+Continuation attempt 1 stopped before any training/verification action because
+the sandbox rejects signal-zero process probes. Preserve its source, contract,
+state and log. Attempt 2 waits on the atomic terminal receipt and original
+six-hour deadline plus 120 seconds for finalization; it does not infer liveness
+from a PID or restart training. A stale starting receipt eventually stops this
+continuation rather than authorizing another fit. Keep a distinct attempt state
+and log. No runtime/model/data/fit-recipe changes.

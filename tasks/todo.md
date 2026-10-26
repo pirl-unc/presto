@@ -14217,9 +14217,18 @@ requires scientific milestones before merging; retain draft status.
 - [x] Verify current software baseline: 125 focused checks, Ruff 0.16.0 and strict docs.
 - [x] Inventory qualified full IC50 data and prior local execution decision.
 - [x] Confirm authorized TCRvdb release remains an external input; request location.
-- [ ] Preserve full input/resolved/register evidence in canonical prediction dumps.
+- [x] Preserve full input/resolved/register evidence in canonical prediction dumps.
 - [ ] Run registered local convergence/replication with matched controls and independent verification.
 - [ ] Complete censoring, auxiliary, APC/MS transfer, TCR and serving qualification gates.
 - [ ] Verify all acceptance criteria and final-head CI before merge.
 
 Review: active; no scientific promotion or merge authorized before these gates pass.
+
+PR129 merged as 16df727 after final-head CI40354851771; merged tree exactly
+matches tested34f5fd1. Integrated #131 runtime passes2,624 tests/four skips,
+pinned Ruff and strict docs. All frozen runtime hashes match after the main merge.
+The fixed IC50 convergence family is running locally. Mean/ridge controls and
+54,728 prediction/source joins independently verify; no new neural test has been
+consumed yet. The user confirms authorized TCRvdb input is not yet available.
+Original checkout file hashes/staged patches are preserved except intended root
+task notes; no shared-environment change. PR131 remains draft.

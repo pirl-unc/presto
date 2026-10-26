@@ -703,3 +703,11 @@ Keep applicability reporting separate from model features and the measured label
 ## 2026-10-25 — One network budget across discovery tools
 
 - Count search queries, documentation opens and retries against a single prospective discovery budget, including tools outside the guarded fetcher. A local fetch receipt cannot establish time/byte compliance for separate browser calls. Freeze the scope before switching tools; disclose deviations and stop rather than reset the budget.
+
+## 2026-10-26 — PR completion includes the agreed scientific gates
+
+- When a research PR explicitly retains scientific completion criteria, do not
+  replace them with software-only merge readiness. The user confirmed that #131
+  must remain draft until its scientific milestones pass. Preserve failed gates,
+  external-data blockers and the full accepted scope while making independent
+  progress; passing CI does not authorize biological promotion or early merge.

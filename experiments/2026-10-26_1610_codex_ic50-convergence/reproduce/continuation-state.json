@@ -1,0 +1,45 @@
+{
+  "status": "failed",
+  "pid": 17847,
+  "argv": [
+    "/private/tmp/presto-pr-completion-20261026/pr131/presto/experiments/2026-10-26_1610_codex_ic50-convergence/code/continue.py",
+    "--wait-receipt",
+    "/private/tmp/presto-pr-completion-20261026/pr131/presto/experiments/2026-10-26_1610_codex_ic50-convergence/reproduce/seed42-1793031157825971000.json",
+    "--pid",
+    "12942"
+  ],
+  "started_utc": "2026-10-26T16:30:20.987427+00:00",
+  "contract": {
+    "source_hashes": {
+      "code/launch.py": "076ec847fb438bfe9c87c4197ea153d38952a0732cebabbff3693e8bec243153",
+      "code/verify.py": "4dd77e02fe91632d92d28bdb9224a0105521521f02d9e5bc5f7604bd49a46e31",
+      "code/report.py": "cf28e31868110b14dd1fb8234c24f98757cb35876f06f39e7e1134322ce50fc4",
+      "code/continue.py": "c2f36cb23b650bafd2f1228348366edc92df8e1470645dc3c0d8c0c3cd735560"
+    },
+    "condition_order": [
+      "seed42",
+      "seed43",
+      "seed44",
+      "permuted42"
+    ],
+    "first_condition_receipt": "reproduce/seed42-1793031157825971000.json",
+    "first_condition_pid": 12942,
+    "test_rescore": false,
+    "automatic_retry": false,
+    "automatic_merge": false,
+    "resource_contract": "reproduce/launch.json",
+    "stop_on_execution_or_verification_failure": true
+  },
+  "events": [
+    {
+      "utc": "2026-10-26T16:30:20.987840+00:00",
+      "action": "waiting for seed42"
+    }
+  ],
+  "current_action": "waiting for seed42",
+  "failure": {
+    "type": "PermissionError",
+    "message": "[Errno 1] Operation not permitted"
+  },
+  "finished_utc": "2026-10-26T16:30:20.988339+00:00"
+}

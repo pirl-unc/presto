@@ -24,6 +24,8 @@ draft; software integration and green CI do not complete issues 130/132.
    still requires requesting access; no file was found in project/attachments.
    A local path/connected source has been requested from the user. Do not invent
    a parser, substitute a restricted derivative, or contact authors implicitly.
+   The user subsequently confirmed the release is not yet available. Preserve
+   this external blocker and continue independent qualification work.
 6. Verify integrated training/inference/support, full software regression and
    final-head CI, then reconcile all scientific criteria before merging.
 
