@@ -14127,3 +14127,21 @@ Review: shared recipe admits213/348slots across13genes, with full exclusions.
 All663fits/10,863predictions independently replay. Sequence ridge fails the
 primary gate: RMSE0.682183 vs0.677664; at1fmol predictedSD0.043784 vs observed
 0.478409. Stop tuning these folds. Full availability goal remains unachieved.
+
+## 2026-10-26 — Diverse quantity anchors after0308
+
+Plan: `experiments/agents/codex/plans/diverse-nontryptic-quantity-anchors.md`.
+Source-only bounded discovery prompted by failed sequence-response generalization;
+do not refit closed panels or treat raw intensity residuals as intracellular amounts.
+
+- [x] Execute the two initial queries and at-most12-operation discovery; preserve receipts.
+- [x] Evaluate at most2 primary studies against independent amount/sequence coverage.
+- [x] Close evidence table, artifact replay and canonical log; choose the next action.
+
+Review: all12 scientific discovery operations and both source decisions recorded.
+Offline replay verifies8 published artifacts and all5 original local receipts;
+the receipt total116,567 bytes is saved text, not a network measurement. Neither
+candidate qualifies the requested broad nontryptic response endpoint. No training
+or held-out evaluation occurred. Next: original APC-derived endolysosomal assets,
+with response/run-scale identifiability explicit. Full availability goal remains
+active. Focused new-file lint passes; unrelated task edits remain unstaged.

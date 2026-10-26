@@ -296,3 +296,13 @@ claim that simply adding it can remedy the prior response-model failures.
 - [ ] Resume native-baseline-observation-admission.md with independent diverse
   amount/response anchors and source-matched protocol evidence. Do not promote
   this failed18-standard MS2 observer or relabel residual intensity as availability.
+
+- [x]0344 completes a12-operation primary-source screen; neither candidate admits
+  a broad independently quantified nontryptic response panel. Requests/hashes and
+  explicit exclusions/unknowns are preserved; no numerical fit or model promotion.
+- [ ] Audit original APC-derived endolysosomal time-course source assets already
+  identified under Hitlist812. First qualify measured sample/run/precursor/spike
+  scale, response normalization and original numeric accessibility; synthetic
+  PeptideStudio sample_data is excluded. Matched within-peptide effects could
+  cancel response only with verified protocol/run-scale comparability. No new
+  generic calibration search or relaxation of native concentration requirements.

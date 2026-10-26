@@ -1,0 +1,117 @@
+{
+  "operation_limit": 12,
+  "calls": [
+    {
+      "operations": [
+        1,
+        2
+      ],
+      "request": {
+        "search_query": [
+          {
+            "q": "synthetic non-tryptic peptides known concentrations mass spectrometry response library"
+          },
+          {
+            "q": "equimolar synthetic peptide library mass spectrometry ionization efficiency quantified peptides"
+          }
+        ],
+        "response_length": "long"
+      },
+      "receipt_name": "discovery-01.json",
+      "receipt_bytes": 36329,
+      "receipt_sha256": "0acd0b881f2e098d8c1c8252519d59e3920d07ddfd16e41aee98e27d1bc81977"
+    },
+    {
+      "operations": [
+        3,
+        4
+      ],
+      "request": {
+        "open": [
+          {
+            "ref_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC2927099/"
+          },
+          {
+            "ref_id": "https://pmc.ncbi.nlm.nih.gov/articles/PMC7704033/"
+          }
+        ],
+        "response_length": "long"
+      },
+      "receipt_name": "discovery-02.json",
+      "receipt_bytes": 1269,
+      "receipt_sha256": "16f4c194d93a80d3a7d9cffe1d84f9db26030620f46ed81bf28140a7acb2602a"
+    },
+    {
+      "operations": [
+        5,
+        6
+      ],
+      "request": {
+        "search_query": [
+          {
+            "q": "\"Combinatorial Libraries of Synthetic Peptides as a Model for Shotgun Proteomics\" concentration synthesis"
+          },
+          {
+            "q": "\"Mass Spectral Analysis of Synthetic Peptides: Implications in Proteomics\" concentration purity"
+          }
+        ],
+        "response_length": "long"
+      },
+      "receipt_name": "discovery-03.json",
+      "receipt_bytes": 37603,
+      "receipt_sha256": "9f934a38688e86ab8fa6bc53599136610c5a918523ef8e7b57f39bcb15755d76"
+    },
+    {
+      "operations": [
+        7,
+        8,
+        9
+      ],
+      "request": {
+        "open": [
+          {
+            "ref_id": "https://www.ccs.neu.edu/home/radivojac/papers/bohrer_analchem_2010.pdf"
+          },
+          {
+            "ref_id": "https://jbt.abrf.org/article/151894-mass-spectral-analysis-of-synthetic-peptides-implications-in-proteomics"
+          },
+          {
+            "ref_id": "https://proteomecentral.proteomexchange.org/cgi/GetDataset?ID=PXD017992-1&test=no"
+          }
+        ],
+        "response_length": "long"
+      },
+      "receipt_name": "discovery-04.json",
+      "receipt_bytes": 6169,
+      "receipt_sha256": "8f3702492266deefc64375b2bfaacee41c16d666d303cf5535a869f405619a72"
+    },
+    {
+      "operations": [
+        10,
+        11,
+        12
+      ],
+      "request": {
+        "search_query": [
+          {
+            "q": "\"Combinatorial Libraries of Synthetic Peptides\" \"synthesis\" \"equimolar\" \"arginine\""
+          }
+        ],
+        "open": [
+          {
+            "ref_id": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD017992"
+          },
+          {
+            "ref_id": "https://www.ebi.ac.uk/pride/ws/archive/v2/projects/PXD017992/files?pageSize=100&page=0"
+          }
+        ],
+        "response_length": "long"
+      },
+      "receipt_name": "discovery-05.json",
+      "receipt_bytes": 35197,
+      "receipt_sha256": "71618bcf90229fdb2368ce7fe777255f81b1b90bcb9421d1e0f56863a5d18954"
+    }
+  ],
+  "local_receipts_directory": "data/diverse_quantity_anchor_sources/2026-10-26_0344_codex_diverse-quantity-anchors",
+  "raw_receipts_published": false
+}
