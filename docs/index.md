@@ -10,6 +10,7 @@ Unified immunoinformatics for pMHC presentation and T-cell recognition.
 - Assay source inventory and supervision map: `assay_learning_scheme.md`
 - Training specification: `training_spec.md`
 - TCR encoder specification: `tcr_spec.md`
+- Experimental paired-chain wrapper: [tcr_specificity.md](tcr_specificity.md)
 - CLI usage: `cli.md`
 - Repo inventory and retention guide: [repo_inventory.md](repo_inventory.md)
 - Mouse overlay provenance notes: `notes/mouse_mhc_overlay_sources.md`
@@ -26,7 +27,8 @@ Presto is organized around one shared biological latent path:
 - output-side assay-specific readout heads.
 
 The canonical production training strategy is unified mixed-source training with time-varying task/regularizer weight schedules.
-The TCR-conditioned pathway is currently future work and is not active in canonical training/inference.
+The separate [TCR specificity wrapper](tcr_specificity.md) is experimental and
+has no qualified weights; it is not part of canonical training/inference.
 For canonical assay modeling, assay-selector metadata is not a model input.
 
 Sequence-only encoding permits downstream biological conditioning. The target

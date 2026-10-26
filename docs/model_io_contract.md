@@ -58,7 +58,7 @@ These are roles, not a claim that every field is already accepted by the API.
 | Assay descriptors | Family, method, prep, geometry, readout, protocol | Output tracks and supervision only | Binding and T-cell per-axis panels |
 | Acquisition descriptors | Instrument, fragmentation, depth, FDR, labeling | Observation tracks only | Mostly pending |
 | Explicit annotations | Role-specific class/species information and its provenance | Typed overrides; conflicts reported | Legacy overrides only |
-| Optional TCR sequences | Paired alpha/beta or other explicitly supported receptor chains | Sequence-only receptor encoder and specific matcher | Future, not active canonical matching |
+| Optional TCR sequences | Paired alpha/beta chains | Separate sequence-only receptor encoder and functional-response wrapper | Experimental [TCR specificity wrapper](tcr_specificity.md); no qualified weights |
 
 Do not infer APC species from MHC species, TCR species from repertoire species,
 or selection-system MHC from the presenting molecule. A human MHC in a mouse APC
@@ -84,7 +84,8 @@ declared unknown context, not a claim of calibration for that missingness patter
 
 Recognition may use presented pMHC plus repertoire context. This supersedes the
 old peptide-plus-foreignness-only restriction. A specific-TCR matcher is a
-separate future capability; pMHC-only receptor evidence is not that matcher.
+separate capability in the experimental [TCR wrapper](tcr_specificity.md);
+pMHC-only receptor evidence is not that matcher.
 
 ## 2. Implemented sequence and forwarding interface
 
