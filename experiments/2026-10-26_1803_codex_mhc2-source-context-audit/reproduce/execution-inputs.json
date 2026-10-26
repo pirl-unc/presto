@@ -1,0 +1,39 @@
+{
+  "dirty_status": "?? experiments/2026-10-26_1803_codex_mhc2-source-context-audit/\n?? experiments/agents/codex/plans/2026-10-26_mhc2-source-context-audit.md\n",
+  "hitlist_commit": "13b91424295e01286db46e8e9818fcc2fe816834",
+  "inputs": [
+    {
+      "bytes": 17096569,
+      "path": "/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z/binding.parquet",
+      "sha256": "2b3f6ea2dd647e7fc54d214eef420feaebc4e81fab97ffc0565a2de1f8695ba0"
+    },
+    {
+      "bytes": 145685701,
+      "path": "/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z/observations.parquet",
+      "sha256": "a665f37c0b5917fefb6d12eade530d7e2001de1f0ee73479b21d2c393d173ab4"
+    },
+    {
+      "bytes": 1259717,
+      "path": "/Users/iskander/.hitlist/corrected-corpus/public-downloads/v4/bundles/2026-10-16T07-20-43Z/other_assays.parquet",
+      "sha256": "c40f5227ded408830885ecba8336dbdd701172df9573b0d32e5e8a5f8fc947c2"
+    },
+    {
+      "bytes": 746730,
+      "path": "/private/tmp/presto-mhc2-20261026/hitlist-current/hitlist/data/pmid_overrides.yaml",
+      "sha256": "e6c68558da6cdb78ae2c3f11ae48fa96a4b9a6b3979cd43ea16abf87148e5afe"
+    },
+    {
+      "bytes": 15474,
+      "path": "/private/tmp/presto-mhc2-20261026/hitlist-current/hitlist/data/supplementary.yaml",
+      "sha256": "2850ba7dffd98babd146a622302882e0e492ca56ebe283fc80d6445a0078879d"
+    },
+    {
+      "bytes": 23,
+      "path": "/private/tmp/presto-mhc2-20261026/hitlist-current/hitlist/version.py",
+      "sha256": "eb89350b117a0701f3c546d4e481dab3e55ef24496e604b7f4b6dcf0fdcd9ae9"
+    }
+  ],
+  "presto_commit": "ddfd7a13f02311ace954a9b46bb3efd3b5f67486",
+  "scope": "Literal metadata only; no biological admission or inferred negatives",
+  "script_sha256": "763aa6f62e1ed227a727a17cf3433b9828ffe14f49c33654aac77fc68439ed50"
+}

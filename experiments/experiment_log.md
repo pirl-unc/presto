@@ -4455,3 +4455,44 @@ paths; no new large cohort was materialized alongside IC50 training.
 Status: closed source inventory. Next step: strict direct-KD admission.
 Open questions: original-assay interpretation, deduplication, explicit partner
 coverage, leakage control and useful retained-task fitting. PR131 remains draft.
+
+## 2026-10-26 18:03 — MHC-II literal coverage and lost MAPTAC DM conditions
+
+Agent/model: Codex / GPT-6. [Experiment directory](2026-10-26_1803_codex_mhc2-source-context-audit/README.md).
+Presto `ddfd7a1` plus frozen audit sources; exact git dirt/input hashes in the
+reproducibility bundle. Read the existing Oct16 publicv4 binding, observation and
+other-assay Parquets. Current Hitlist2.0.42 source was separately pinned at
+`13b91424295e01286db46e8e9818fcc2fe816834`; no claim of regenerating v4 with it.
+
+Literal `mhc_class == II`, all species/assay labels/qualifiers/units/PTMs retained;
+no training admission, deduplication, censor reinterpretation or generated negatives.
+Binding includes46,551explicitIC50/nM rows among mostly other/qualitative labels.
+No model/pretraining/loss/output mapping, synthetic data or GPU applies. No held-out
+metrics or prediction dumps exist because this is metadata inventory, not an eval.
+
+| Condition/partition | Class-II rows | Distinct peptides | Known PMIDs |
+|---|---:|---:|---:|
+| Binding export |590,479|109,636|863|
+| MS observation export |1,444,135|576,894|178|
+| Other assays |832|689|156|
+
+Independent row/Arrow aggregation reconciles5,327,796total rows/177joint cells;
+additional Arrow kernels verify29nonzero coverage counts and peptide/PMID counts.
+Inventory88.42s/504.9MBpeakRSS; follow-up3.85s/445.2MB, local single-thread CPU.
+The first categorical-label serializer truncated scalar strings; preserve that
+failure and use the separately corrected, verified `inventory-corrected.json`.
+Original joint and coverage counts were unaffected. All source hashes preserved.
+
+Current MAPTAC import has43,503rows but no DM/sample discriminator;11,184rows use
+restrictions with both curated DM arms. Independent CSV/Arrow counts support
+[Hitlist #853](https://github.com/pirl-unc/hitlist/issues/853), filed and read back.
+The original workbook fetch returned403, so original arm sizes were not recovered.
+Seven of eight declared primary-source operations used, including failures;
+source/current-issue receipts and exact commands are retained. #817 remains the
+Nanaware source owner; no duplicate ticket or author outreach.
+
+Preferred direction: qualify actual class-II pair/parent/context joins and freeze
+binding/MS comparisons. Stražar is substantial single-context ligand evidence;
+MAPTAC DM-response learning needs source repair. Nonempty fields and candidate
+sets do not prove real flanks, full pairs or per-row conditions. No predictive
+improvement is claimed and the full three-track MHC-II goal remains active.

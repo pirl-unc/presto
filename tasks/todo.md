@@ -14280,8 +14280,19 @@ Full specification: `tasks/mhc2_improvement_spec.md`.
 - [x] Preserve the full three-track predictive goal and upstream issue deliverable.
 - [ ] Audit current Hitlist binding/MS pairing, provenance, pathway and condition support.
 - [ ] File evidence-backed issues for confirmed missing/under-annotated sources.
+- [x] Close the first literal MHC-II inventory and file/read back MAPTAC DM gap #853.
 - [ ] Implement and verify source-backed pathway/cell-context distinctions.
 - [ ] Improve MHC-II binding with matched controls and retained class-I evidence.
 - [ ] Fit/evaluate MHC-II MS ligand prediction with explicit observation/contrast semantics.
 - [ ] Verify route/context contributions, transfer, reproducibility and final-head software checks.
 - [ ] Reconcile all goal requirements with authoritative evidence before completion.
+
+MHC-II initial audit review:5,327,796export rows independently reconciled;
+590,479literal class-II binding rows and1,444,135MS rows. Current Hitlist2.0.42
+still merges the MAPTAC DM conditions; issue853 records11,184affected merged
+import rows with independent CSV counts. Original workbook retrieval failed403,
+so no original per-arm counts were inferred. An audit categorical-label serializer
+defect was isolated and corrected in a separate verified artifact; originals stay
+preserved. Fullpair/parent/context qualification, actual predictive improvement,
+and pathway/cell-condition learning remain incomplete. Old IC50 trainer and both
+controllers were confirmed live through their tool handles during this work.
