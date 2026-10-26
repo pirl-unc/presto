@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/private/tmp/presto-pr-completion-20261026/pr131/presto/experiments/2026-10-26_1720_codex_mhc-species-evaluation/code/verify.py", line 315, in <module>
+    main()
+  File "/private/tmp/presto-pr-completion-20261026/pr131/presto/experiments/2026-10-26_1720_codex_mhc-species-evaluation/code/verify.py", line 168, in main
+    assert record["observation"] == original
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

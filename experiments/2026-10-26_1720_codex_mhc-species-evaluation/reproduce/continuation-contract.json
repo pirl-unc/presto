@@ -1,0 +1,29 @@
+{
+  "hashes": {
+    "code/close.py": "ccdde1f13a2f72a56db17844d44e711cdd8415bffd02459e0cff9e01c2bfa718",
+    "code/common.py": "0f1188b688a49b7504eeea3b363ed0df833f1573f9c07197090d2f483c4dd70a",
+    "code/continue.py": "cbe3ba11b3eab45478bb4efea3d6c3a6e67be2c013e394085848f2762d9a4172",
+    "code/launch.py": "779a5071ac8a2a0ff20cf5c1af428982943b0919790a5bbb87557c515cecbef4",
+    "code/report.py": "4c7362ff853730e06a42c2862c285c9ff5e8897ee29dc4a95b2379e5b35af7c2",
+    "code/test_continuation.py": "7af6511bafda510726c6aea226f021ba0609a87c8e4d3f389494abb68ded3b4a",
+    "code/test_reporting.py": "1c90ea598fd24dd4bbbf59555b39abd4ac4f37c3010c8bc3312bfdcf75a796fa",
+    "code/verify.py": "6d637d41f9fbb09fd6d1624bf3637911888511c3c57c50112945aa835d5e2b08",
+    "code/verify_v2.py": "26208ad8e32172e2c92bf2139d1a25ad03d9d4ead64a64f77f2f7b21bbf88a82",
+    "reproduce/continue.sh": "526fc110b0c78da2e62b513755995e9ae3ae5a8f5cbfbfcf74edfed0f1aa2d4d",
+    "reproduce/launch.sh": "7fb04387b1240f4c423533ee86c46baa62e3536d42fb31ee3f860f0ba3638887",
+    "reproduce/verify-v2.sh": "5276f529e81b8b82fb90de0f36527f33bafaa0ec1624b680036d266855726330",
+    "results/baselines/independent-verification.json": "da904fbf777af0acc3f9ee7b4139c18a3968441ba1093ccdd2c6f8410153bbf2"
+  },
+  "predecessor": "/private/tmp/presto-pr-completion-20261026/pr131/presto/experiments/2026-10-26_1610_codex_ic50-convergence/reproduce/continuation-state-attempt02.json",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "condition_order": [
+    "seed42",
+    "seed43",
+    "seed44"
+  ],
+  "verification": "verify_v2.py; source amendment recorded",
+  "automatic_retry": false,
+  "automatic_merge": false,
+  "test_rescore": false,
+  "wait_deadline_hours": 25
+}
