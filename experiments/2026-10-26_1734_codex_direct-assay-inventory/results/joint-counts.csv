@@ -1,0 +1,385 @@
+file,source,response_measured,assay_method,measurement_units,measurement_inequality,mhc_class,has_ptm,is_binding_assay,is_ms_observation,numeric_state,rows
+binding.parquet,"""cedar""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""=""","""I""",false,true,false,positive_finite,149
+binding.parquet,"""cedar""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""=""","""I""",true,true,false,positive_finite,1
+binding.parquet,"""cedar""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""=""","""non-classical""",false,true,false,positive_finite,10
+binding.parquet,"""cedar""","""half life""","""cellular MHC/direct/fluorescence""","""min""","""=""","""non-classical""",false,true,false,positive_finite,5
+binding.parquet,"""cedar""","""half life""","""purified MHC/direct/fluorescence""","""min""","""""","""I""",false,true,false,positive_finite,19
+binding.parquet,"""cedar""","""half maximal effective concentration (EC50)""","""purified MHC/direct/fluorescence""","""nM""","""""","""I""",false,true,false,positive_finite,16
+binding.parquet,"""cedar""","""half maximal effective concentration (EC50)""","""purified MHC/direct/fluorescence""","""nM""","""=""","""II""",false,true,false,positive_finite,7
+binding.parquet,"""cedar""","""half maximal effective concentration (EC50)""","""purified MHC/direct/fluorescence""","""nM""","""=""","""II""",true,true,false,positive_finite,13
+binding.parquet,"""cedar""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""=""","""II""",false,true,false,positive_finite,6
+binding.parquet,"""cedar""","""qualitative binding""","""cellular MHC/competitive/fluorescence""","""""","""""","""I""",false,true,false,missing,30
+binding.parquet,"""cedar""","""qualitative binding""","""cellular MHC/competitive/fluorescence""","""""","""""","""non-classical""",false,true,false,missing,20
+binding.parquet,"""cedar""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""I""",false,true,false,missing,188
+binding.parquet,"""cedar""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""II""",false,true,false,missing,134
+binding.parquet,"""cedar""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""non-classical""",false,true,false,missing,6
+binding.parquet,"""cedar""","""qualitative binding""","""cellular MHC/direct/radioactivity""","""""","""""","""I""",false,true,false,missing,1
+binding.parquet,"""cedar""","""qualitative binding""","""purified MHC""","""""","""""","""I""",false,true,false,missing,266
+binding.parquet,"""cedar""","""qualitative binding""","""purified MHC""","""""","""""","""non-classical""",false,true,false,missing,2
+binding.parquet,"""cedar""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""","""""","""I""",false,true,false,missing,16
+binding.parquet,"""cedar""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""I""",false,true,false,missing,612
+binding.parquet,"""cedar""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""I""",false,true,false,positive_finite,1
+binding.parquet,"""cedar""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""II""",false,true,false,missing,6
+binding.parquet,"""cedar""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""II""",true,true,false,missing,61
+binding.parquet,"""cedar""","""qualitative binding""","""purified MHC/direct/radioactivity""","""""","""""","""I""",false,true,false,missing,2
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""""","""I""",false,true,false,missing,6
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""""","""I""",false,true,false,positive_finite,791
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""""","""I""",true,true,false,missing,3
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""""","""I""",true,true,false,positive_finite,32
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""""","""II""",false,true,false,missing,3
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""""","""II""",false,true,false,positive_finite,10
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""""","""II""",true,true,false,positive_finite,6
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""""","""non-classical""",false,true,false,positive_finite,40
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""=""","""I""",false,true,false,positive_finite,85
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""=""","""I""",true,true,false,positive_finite,8
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""","""=""","""II""",false,true,false,positive_finite,6
+binding.parquet,"""iedb""","""50% dissociation temperature""","""purified MHC/direct/fluorescence""","""\u00b0C""",""">=""","""II""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""MHC binding""","""High throughput multiplexed assay""","""""","""""","""I""",false,true,false,missing,345
+binding.parquet,"""iedb""","""MHC binding""","""High throughput multiplexed assay""","""""","""""","""II""",false,true,false,missing,468203
+binding.parquet,"""iedb""","""association constant KA""","""binding assay""","""1/M""","""""","""I""",false,true,false,positive_finite,3
+binding.parquet,"""iedb""","""association constant KA""","""binding assay""","""1/M""","""=""","""I""",false,true,false,positive_finite,1
+binding.parquet,"""iedb""","""dissociation constant KD (~EC50)""","""purified MHC/direct/fluorescence""","""nM""","""""","""I""",false,true,false,positive_finite,773
+binding.parquet,"""iedb""","""dissociation constant KD (~EC50)""","""purified MHC/direct/fluorescence""","""nM""","""=""","""I""",false,true,false,positive_finite,10861
+binding.parquet,"""iedb""","""dissociation constant KD (~EC50)""","""purified MHC/direct/fluorescence""","""nM""","""=""","""I""",true,true,false,positive_finite,5
+binding.parquet,"""iedb""","""dissociation constant KD (~EC50)""","""purified MHC/direct/fluorescence""","""nM""","""=""","""II""",false,true,false,positive_finite,14945
+binding.parquet,"""iedb""","""dissociation constant KD (~EC50)""","""purified MHC/direct/fluorescence""","""nM""",""">""","""I""",false,true,false,positive_finite,27234
+binding.parquet,"""iedb""","""dissociation constant KD (~EC50)""","""purified MHC/direct/fluorescence""","""nM""",""">""","""II""",false,true,false,positive_finite,3705
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""I""",false,true,false,positive_finite,73
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""II""",false,true,false,missing,8
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""II""",false,true,false,positive_finite,438
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""II""",true,true,false,missing,4
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""II""",true,true,false,positive_finite,14
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""non-classical""",false,true,false,positive_finite,45
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""=""","""I""",false,true,false,positive_finite,195
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""=""","""II""",false,true,false,positive_finite,257
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""=""","""II""",true,true,false,positive_finite,42
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""",""">""","""I""",false,true,false,positive_finite,78
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""",""">""","""II""",false,true,false,positive_finite,152
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""",""">""","""II""",true,true,false,positive_finite,7
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/fluorescence""","""nM""",""">""","""non-classical""",false,true,false,positive_finite,10
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""""","""I""",false,true,false,positive_finite,59376
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""""","""I""",true,true,false,positive_finite,4
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""""","""II""",false,true,false,positive_finite,19482
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""""","""II""",true,true,false,positive_finite,26
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""=""","""I""",false,true,false,positive_finite,1424
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""=""","""I""",true,true,false,positive_finite,47
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""=""","""II""",false,true,false,positive_finite,632
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""=""","""II""",true,true,false,positive_finite,5
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""",""">""","""I""",false,true,false,positive_finite,3454
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""",""">""","""I""",true,true,false,positive_finite,3
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""",""">""","""II""",false,true,false,positive_finite,2843
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""",""">""","""II""",true,true,false,positive_finite,12
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""",""">=""","""I""",false,true,false,positive_finite,8
+binding.parquet,"""iedb""","""dissociation constant KD (~IC50)""","""purified MHC/competitive/radioactivity""","""nM""",""">=""","""II""",false,true,false,positive_finite,6
+binding.parquet,"""iedb""","""dissociation constant KD""","""binding assay""","""nM""","""""","""I""",false,true,false,positive_finite,7
+binding.parquet,"""iedb""","""dissociation constant KD""","""binding assay""","""nM""","""""","""non-classical""",false,true,false,positive_finite,1
+binding.parquet,"""iedb""","""dissociation constant KD""","""binding assay""","""nM""","""=""","""I""",false,true,false,positive_finite,25
+binding.parquet,"""iedb""","""dissociation constant KD""","""cellular MHC/competitive/fluorescence""","""nM""","""""","""I""",false,true,false,positive_finite,56
+binding.parquet,"""iedb""","""dissociation constant KD""","""cellular MHC/competitive/fluorescence""","""nM""","""""","""I""",true,true,false,positive_finite,2
+binding.parquet,"""iedb""","""dissociation constant KD""","""cellular MHC/competitive/fluorescence""","""nM""","""=""","""I""",false,true,false,positive_finite,8
+binding.parquet,"""iedb""","""dissociation constant KD""","""cellular MHC/competitive/fluorescence""","""nM""","""=""","""II""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""dissociation constant KD""","""cellular MHC/competitive/fluorescence""","""nM""",""">""","""I""",false,true,false,positive_finite,5
+binding.parquet,"""iedb""","""dissociation constant KD""","""cellular MHC/competitive/radioactivity""","""nM""","""""","""I""",false,true,false,positive_finite,1
+binding.parquet,"""iedb""","""dissociation constant KD""","""cellular MHC/competitive/radioactivity""","""nM""","""""","""II""",false,true,false,positive_finite,355
+binding.parquet,"""iedb""","""dissociation constant KD""","""cellular MHC/competitive/radioactivity""","""nM""",""">""","""II""",false,true,false,positive_finite,205
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/fluorescence""","""nM""","""""","""I""",false,true,false,positive_finite,47
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/fluorescence""","""nM""","""""","""I""",true,true,false,positive_finite,1
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/fluorescence""","""nM""","""""","""II""",false,true,false,missing,5
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/fluorescence""","""nM""","""""","""II""",false,true,false,positive_finite,1
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/fluorescence""","""nM""","""""","""non-classical""",false,true,false,positive_finite,3
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/fluorescence""","""nM""","""""","""non-classical""",true,true,false,positive_finite,1
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/fluorescence""","""nM""","""=""","""I""",false,true,false,positive_finite,5392
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/fluorescence""","""nM""","""=""","""II""",false,true,false,positive_finite,22
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/fluorescence""","""nM""","""=""","""non-classical""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/fluorescence""","""nM""",""">""","""I""",false,true,false,positive_finite,13405
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/fluorescence""","""nM""",""">""","""II""",false,true,false,positive_finite,5
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/radioactivity""","""nM""","""=""","""II""",false,true,false,positive_finite,1238
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/competitive/radioactivity""","""nM""",""">""","""II""",false,true,false,positive_finite,226
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/direct/radioactivity""","""nM""","""""","""I""",false,true,false,positive_finite,6
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/direct/radioactivity""","""nM""","""""","""II""",false,true,false,positive_finite,1
+binding.parquet,"""iedb""","""dissociation constant KD""","""purified MHC/direct/radioactivity""","""nM""","""=""","""II""",false,true,false,positive_finite,1
+binding.parquet,"""iedb""","""half life""","""binding assay""","""min""","""""","""I""",false,true,false,missing,72
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/fluorescence""","""min""","""""","""I""",false,true,false,positive_finite,202
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/fluorescence""","""min""","""""","""I""",true,true,false,positive_finite,2
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/fluorescence""","""min""","""=""","""I""",false,true,false,positive_finite,145
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/fluorescence""","""min""","""=""","""II""",false,true,false,positive_finite,20
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/fluorescence""","""min""","""=""","""II""",true,true,false,positive_finite,10
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/fluorescence""","""min""",""">""","""I""",false,true,false,positive_finite,106
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/fluorescence""","""min""",""">=""","""I""",false,true,false,positive_finite,6
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/radioactivity""","""min""","""""","""I""",false,true,false,missing,2
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/radioactivity""","""min""","""""","""I""",false,true,false,positive_finite,7
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/radioactivity""","""min""","""""","""I""",true,true,false,missing,1
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/radioactivity""","""min""","""""","""II""",false,true,false,missing,2
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/radioactivity""","""min""","""=""","""II""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""half life""","""cellular MHC/direct/radioactivity""","""min""",""">""","""I""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""half life""","""lysate MHC/direct/radioactivity""","""min""","""""","""I""",false,true,false,missing,1
+binding.parquet,"""iedb""","""half life""","""lysate MHC/direct/radioactivity""","""min""","""""","""I""",false,true,false,positive_finite,10
+binding.parquet,"""iedb""","""half life""","""lysate MHC/direct/radioactivity""","""min""",""">""","""I""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""""","""I""",false,true,false,missing,4
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""""","""I""",false,true,false,nonpositive,41
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""""","""I""",false,true,false,positive_finite,3247
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""""","""I""",true,true,false,positive_finite,4
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""""","""II""",false,true,false,missing,40
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""""","""II""",false,true,false,positive_finite,51
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""""","""II""",true,true,false,missing,2
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""""","""II""",true,true,false,positive_finite,9
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""""","""non-classical""",false,true,false,missing,3
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""""","""non-classical""",false,true,false,positive_finite,20
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""=""","""I""",false,true,false,positive_finite,100
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""=""","""II""",false,true,false,positive_finite,271
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""","""=""","""II""",true,true,false,positive_finite,1
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""",""">""","""I""",false,true,false,positive_finite,4
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""",""">""","""II""",false,true,false,positive_finite,14
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""",""">""","""II""",true,true,false,positive_finite,1
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/fluorescence""","""min""",""">""","""non-classical""",false,true,false,positive_finite,3
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/radioactivity""","""min""","""""","""I""",false,true,false,missing,39
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/radioactivity""","""min""","""""","""I""",false,true,false,positive_finite,341
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/radioactivity""","""min""","""=""","""I""",false,true,false,missing,48
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/radioactivity""","""min""","""=""","""I""",false,true,false,nonpositive,492
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/radioactivity""","""min""","""=""","""I""",false,true,false,positive_finite,5995
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/radioactivity""","""min""",""">""","""I""",false,true,false,positive_finite,10
+binding.parquet,"""iedb""","""half life""","""purified MHC/direct/radioactivity""","""min""",""">""","""non-classical""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""cellular MHC/direct/fluorescence""","""nM""","""""","""I""",false,true,false,missing,24
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""cellular MHC/direct/fluorescence""","""nM""","""""","""I""",false,true,false,positive_finite,452
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""cellular MHC/direct/fluorescence""","""nM""","""""","""II""",false,true,false,positive_finite,5
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""cellular MHC/direct/fluorescence""","""nM""","""=""","""I""",false,true,false,positive_finite,473
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""cellular MHC/direct/fluorescence""","""nM""","""=""","""II""",false,true,false,positive_finite,8
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""cellular MHC/direct/fluorescence""","""nM""","""=""","""non-classical""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""cellular MHC/direct/fluorescence""","""nM""",""">""","""I""",false,true,false,positive_finite,72
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""cellular MHC/direct/fluorescence""","""nM""",""">""","""II""",false,true,false,positive_finite,12
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""lysate MHC/direct/radioactivity""","""nM""","""""","""I""",false,true,false,positive_finite,16
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""lysate MHC/direct/radioactivity""","""nM""","""""","""I""",true,true,false,positive_finite,1
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""purified MHC/direct/fluorescence""","""nM""","""""","""I""",false,true,false,missing,5
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""purified MHC/direct/fluorescence""","""nM""","""""","""I""",false,true,false,positive_finite,264
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""purified MHC/direct/fluorescence""","""nM""","""""","""II""",false,true,false,missing,30
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""purified MHC/direct/fluorescence""","""nM""","""""","""II""",false,true,false,positive_finite,148
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""purified MHC/direct/fluorescence""","""nM""","""=""","""I""",false,true,false,positive_finite,107
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""purified MHC/direct/fluorescence""","""nM""","""=""","""II""",false,true,false,positive_finite,128
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""purified MHC/direct/fluorescence""","""nM""","""=""","""II""",true,true,false,positive_finite,58
+binding.parquet,"""iedb""","""half maximal effective concentration (EC50)""","""purified MHC/direct/fluorescence""","""nM""",""">""","""II""",false,true,false,positive_finite,13
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""binding assay""","""nM""","""=""","""II""",false,true,false,positive_finite,152
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""binding assay""","""nM""",""">""","""II""",false,true,false,positive_finite,86
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/T cell inhibition""","""nM""","""""","""I""",false,true,false,positive_finite,15
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/T cell inhibition""","""nM""","""""","""II""",false,true,false,positive_finite,115
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/T cell inhibition""","""nM""","""=""","""I""",false,true,false,positive_finite,4
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/T cell inhibition""","""nM""","""=""","""II""",false,true,false,positive_finite,4
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/T cell inhibition""","""nM""",""">""","""I""",false,true,false,positive_finite,5
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/T cell inhibition""","""nM""",""">""","""II""",false,true,false,positive_finite,32
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/fluorescence""","""nM""","""""","""I""",false,true,false,missing,8
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/fluorescence""","""nM""","""""","""I""",false,true,false,positive_finite,248
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/fluorescence""","""nM""","""""","""I""",true,true,false,positive_finite,21
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/fluorescence""","""nM""","""""","""II""",false,true,false,missing,5
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/fluorescence""","""nM""","""""","""II""",false,true,false,positive_finite,104
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/fluorescence""","""nM""","""""","""II""",true,true,false,positive_finite,3
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/fluorescence""","""nM""","""=""","""I""",false,true,false,positive_finite,4489
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/fluorescence""","""nM""","""=""","""II""",false,true,false,positive_finite,86
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/fluorescence""","""nM""",""">""","""I""",false,true,false,positive_finite,1467
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/fluorescence""","""nM""",""">""","""II""",false,true,false,positive_finite,143
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/radioactivity""","""nM""","""""","""I""",false,true,false,positive_finite,243
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/radioactivity""","""nM""","""""","""II""",false,true,false,positive_finite,37
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/radioactivity""","""nM""","""""","""II""",true,true,false,positive_finite,19
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/radioactivity""","""nM""","""=""","""I""",false,true,false,positive_finite,4
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/radioactivity""","""nM""","""=""","""II""",false,true,false,positive_finite,21
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/radioactivity""","""nM""","""=""","""II""",true,true,false,positive_finite,1
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/radioactivity""","""nM""",""">""","""I""",false,true,false,positive_finite,30
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""cellular MHC/competitive/radioactivity""","""nM""",""">""","""II""",false,true,false,positive_finite,7
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""I""",false,true,false,missing,4
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""I""",false,true,false,positive_finite,3391
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""I""",true,true,false,positive_finite,8
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""II""",false,true,false,missing,53
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""II""",false,true,false,positive_finite,4803
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""II""",true,true,false,missing,12
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""II""",true,true,false,positive_finite,223
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""""","""non-classical""",false,true,false,positive_finite,51
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""=""","""I""",false,true,false,positive_finite,369
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""=""","""I""",true,true,false,positive_finite,9
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""=""","""II""",false,true,false,positive_finite,2484
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""","""=""","""II""",true,true,false,positive_finite,46
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""",""">""","""I""",false,true,false,positive_finite,564
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""",""">""","""II""",false,true,false,positive_finite,2356
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""",""">""","""II""",true,true,false,positive_finite,69
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""",""">""","""non-classical""",false,true,false,positive_finite,31
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""",""">=""","""I""",false,true,false,positive_finite,175
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""",""">=""","""II""",false,true,false,positive_finite,6
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/fluorescence""","""nM""",""">=""","""II""",true,true,false,positive_finite,2
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""""","""I""",false,true,false,missing,11
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""""","""I""",false,true,false,positive_finite,3237
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""""","""I""",true,true,false,positive_finite,21
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""""","""II""",false,true,false,missing,89
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""""","""II""",false,true,false,positive_finite,27568
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""""","""II""",true,true,false,missing,58
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""""","""II""",true,true,false,positive_finite,465
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""=""","""I""",false,true,false,positive_finite,12557
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""=""","""I""",true,true,false,positive_finite,89
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""=""","""II""",false,true,false,positive_finite,4420
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""","""=""","""II""",true,true,false,positive_finite,16
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""",""">""","""I""",false,true,false,positive_finite,557
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""",""">""","""I""",true,true,false,positive_finite,108
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""",""">""","""II""",false,true,false,positive_finite,2920
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""",""">""","""II""",true,true,false,positive_finite,133
+binding.parquet,"""iedb""","""half maximal inhibitory concentration (IC50)""","""purified MHC/competitive/radioactivity""","""nM""",""">=""","""II""",false,true,false,positive_finite,7
+binding.parquet,"""iedb""","""off rate""","""binding assay""","""1/s""","""""","""I""",false,true,false,positive_finite,3
+binding.parquet,"""iedb""","""off rate""","""cellular MHC/direct/fluorescence""","""1/s""","""""","""I""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""off rate""","""cellular MHC/direct/fluorescence""","""1/s""","""""","""II""",false,true,false,positive_finite,1
+binding.parquet,"""iedb""","""off rate""","""lysate MHC/direct/radioactivity""","""1/s""","""""","""I""",false,true,false,missing,1
+binding.parquet,"""iedb""","""off rate""","""lysate MHC/direct/radioactivity""","""1/s""","""""","""I""",false,true,false,positive_finite,9
+binding.parquet,"""iedb""","""off rate""","""lysate MHC/direct/radioactivity""","""1/s""","""""","""II""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""off rate""","""purified MHC/direct/fluorescence""","""1/s""","""""","""I""",false,true,false,positive_finite,23
+binding.parquet,"""iedb""","""off rate""","""purified MHC/direct/fluorescence""","""1/s""","""""","""I""",true,true,false,positive_finite,1
+binding.parquet,"""iedb""","""off rate""","""purified MHC/direct/fluorescence""","""1/s""","""""","""II""",false,true,false,missing,1
+binding.parquet,"""iedb""","""off rate""","""purified MHC/direct/fluorescence""","""1/s""","""""","""non-classical""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""off rate""","""purified MHC/direct/fluorescence""","""1/s""","""=""","""I""",false,true,false,positive_finite,10
+binding.parquet,"""iedb""","""off rate""","""purified MHC/direct/fluorescence""","""1/s""","""=""","""II""",false,true,false,positive_finite,16
+binding.parquet,"""iedb""","""on rate""","""cellular MHC/direct/fluorescence""","""nM^-1s^-1""","""""","""I""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""on rate""","""purified MHC/direct/fluorescence""","""nM^-1s^-1""","""""","""I""",false,true,false,positive_finite,13
+binding.parquet,"""iedb""","""on rate""","""purified MHC/direct/fluorescence""","""nM^-1s^-1""","""""","""I""",true,true,false,positive_finite,1
+binding.parquet,"""iedb""","""on rate""","""purified MHC/direct/fluorescence""","""nM^-1s^-1""","""""","""II""",false,true,false,positive_finite,1
+binding.parquet,"""iedb""","""on rate""","""purified MHC/direct/fluorescence""","""nM^-1s^-1""","""""","""non-classical""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""on rate""","""purified MHC/direct/fluorescence""","""nM^-1s^-1""","""=""","""I""",false,true,false,positive_finite,10
+binding.parquet,"""iedb""","""on rate""","""purified MHC/direct/fluorescence""","""nM^-1s^-1""","""=""","""II""",false,true,false,positive_finite,6
+binding.parquet,"""iedb""","""on rate""","""purified MHC/direct/fluorescence""","""nM^-1s^-1""","""=""","""II""",true,true,false,positive_finite,1
+binding.parquet,"""iedb""","""qualitative binding""","""binding assay""","""""","""""","""I""",false,true,false,missing,220
+binding.parquet,"""iedb""","""qualitative binding""","""binding assay""","""""","""""","""I""",true,true,false,missing,3
+binding.parquet,"""iedb""","""qualitative binding""","""binding assay""","""""","""""","""non-classical""",false,true,false,missing,7
+binding.parquet,"""iedb""","""qualitative binding""","""binding assay""","""""","""""","""non-classical""",true,true,false,missing,1
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC""","""""","""""","""I""",false,true,false,missing,356
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC""","""""","""""","""I""",false,true,false,positive_finite,3
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC""","""""","""""","""I""",true,true,false,missing,111
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC""","""""","""""","""II""",false,true,false,missing,207
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC""","""""","""""","""II""",true,true,false,missing,72
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC""","""""","""""","""non-classical""",false,true,false,missing,14
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/T cell inhibition""","""""","""""","""I""",false,true,false,missing,664
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/T cell inhibition""","""""","""""","""I""",false,true,false,positive_finite,29
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/T cell inhibition""","""""","""""","""I""",true,true,false,missing,3
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/T cell inhibition""","""""","""""","""II""",false,true,false,missing,364
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/T cell inhibition""","""""","""""","""II""",true,true,false,missing,15
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/T cell inhibition""","""""","""""","""non-classical""",false,true,false,missing,25
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/T cell inhibition""","""""","""""","""non-classical""",true,true,false,missing,6
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/T cell inhibition""","""""",""">""","""II""",false,true,false,positive_finite,1
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/competitive/fluorescence""","""""","""""","""I""",false,true,false,missing,331
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/competitive/fluorescence""","""""","""""","""I""",false,true,false,positive_finite,21
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/competitive/fluorescence""","""""","""""","""I""",true,true,false,missing,8
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/competitive/fluorescence""","""""","""""","""II""",false,true,false,missing,2831
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/competitive/fluorescence""","""""","""""","""II""",true,true,false,missing,46
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/competitive/fluorescence""","""""","""""","""non-classical""",false,true,false,missing,19
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/competitive/fluorescence""","""""",""">""","""I""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/competitive/radioactivity""","""""","""""","""I""",false,true,false,missing,36
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/competitive/radioactivity""","""""","""""","""I""",false,true,false,positive_finite,14
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/competitive/radioactivity""","""""","""""","""I""",true,true,false,positive_finite,2
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/competitive/radioactivity""","""""","""""","""II""",false,true,false,missing,39
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""I""",false,true,false,missing,10850
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""I""",false,true,false,nonpositive,2
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""I""",false,true,false,positive_finite,297
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""I""",true,true,false,missing,74
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""I""",true,true,false,nonpositive,1
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""I""",true,true,false,positive_finite,8
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""II""",false,true,false,missing,1417
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""II""",false,true,false,nonpositive,7
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""II""",false,true,false,positive_finite,255
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""II""",true,true,false,missing,143
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""non-classical""",false,true,false,missing,378
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""""","""non-classical""",true,true,false,missing,22
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""=""","""I""",false,true,false,missing,1
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""","""=""","""I""",false,true,false,positive_finite,83
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/fluorescence""","""""",""">""","""I""",false,true,false,positive_finite,30
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/radioactivity""","""""","""""","""I""",false,true,false,missing,66
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/radioactivity""","""""","""""","""I""",true,true,false,missing,3
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/radioactivity""","""""","""""","""II""",false,true,false,missing,20
+binding.parquet,"""iedb""","""qualitative binding""","""cellular MHC/direct/radioactivity""","""""","""""","""non-classical""",false,true,false,missing,32
+binding.parquet,"""iedb""","""qualitative binding""","""lysate MHC""","""""","""""","""I""",false,true,false,missing,10
+binding.parquet,"""iedb""","""qualitative binding""","""lysate MHC""","""""","""""","""I""",true,true,false,missing,1
+binding.parquet,"""iedb""","""qualitative binding""","""lysate MHC/direct/fluorescence""","""""","""""","""I""",false,true,false,missing,6
+binding.parquet,"""iedb""","""qualitative binding""","""lysate MHC/direct/fluorescence""","""""","""""","""I""",false,true,false,positive_finite,3
+binding.parquet,"""iedb""","""qualitative binding""","""lysate MHC/direct/fluorescence""","""""","""""","""I""",true,true,false,positive_finite,1
+binding.parquet,"""iedb""","""qualitative binding""","""lysate MHC/direct/fluorescence""","""""","""""","""II""",false,true,false,missing,88
+binding.parquet,"""iedb""","""qualitative binding""","""lysate MHC/direct/fluorescence""","""""","""""","""II""",true,true,false,missing,20
+binding.parquet,"""iedb""","""qualitative binding""","""lysate MHC/direct/fluorescence""","""""","""""","""non-classical""",false,true,false,missing,16
+binding.parquet,"""iedb""","""qualitative binding""","""lysate MHC/direct/radioactivity""","""""","""""","""I""",false,true,false,missing,199
+binding.parquet,"""iedb""","""qualitative binding""","""lysate MHC/direct/radioactivity""","""""","""""","""II""",false,true,false,missing,2
+binding.parquet,"""iedb""","""qualitative binding""","""lysate MHC/direct/radioactivity""","""""","""""","""non-classical""",false,true,false,missing,7
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC""","""""","""""","""I""",false,true,false,missing,14062
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC""","""""","""""","""I""",true,true,false,missing,2
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC""","""""","""""","""II""",false,true,false,missing,921
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC""","""""","""""","""II""",true,true,false,missing,195
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC""","""""","""""","""non-classical""",false,true,false,missing,185
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC""","""""","""=""","""I""",false,true,false,positive_finite,69
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC""","""""","""=""","""II""",false,true,false,positive_finite,6
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC""","""""",""">""","""I""",false,true,false,positive_finite,9
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""","""""","""I""",false,true,false,missing,592
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""","""""","""I""",true,true,false,missing,47
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""","""""","""II""",false,true,false,missing,14314
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""","""""","""II""",false,true,false,nonpositive,40
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""","""""","""II""",false,true,false,positive_finite,1610
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""","""""","""II""",true,true,false,missing,66
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""","""""","""II""",true,true,false,positive_finite,1
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""","""""","""non-classical""",false,true,false,missing,153
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""","""=""","""II""",false,true,false,nonpositive,3
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""","""=""","""II""",false,true,false,positive_finite,190
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/fluorescence""","""""",""">""","""II""",false,true,false,positive_finite,153
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""","""""","""I""",false,true,false,missing,840
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""","""""","""I""",false,true,false,positive_finite,19
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""","""""","""I""",true,true,false,missing,42
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""","""""","""II""",false,true,false,missing,1587
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""","""""","""II""",false,true,false,nonpositive,1
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""","""""","""II""",false,true,false,positive_finite,39
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""","""""","""II""",true,true,false,missing,15
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""","""=""","""I""",false,true,false,missing,2
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""","""=""","""I""",false,true,false,positive_finite,31
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""","""=""","""II""",false,true,false,positive_finite,17
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""",""">""","""I""",false,true,false,positive_finite,2
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/competitive/radioactivity""","""""",""">""","""II""",false,true,false,positive_finite,1
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""I""",false,true,false,missing,24023
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""I""",false,true,false,nonpositive,33
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""I""",false,true,false,positive_finite,3203
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""I""",true,true,false,missing,86
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""II""",false,true,false,missing,4822
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""II""",false,true,false,positive_finite,11
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""II""",true,true,false,missing,206
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""non-classical""",false,true,false,missing,584
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""""","""non-classical""",false,true,false,positive_finite,8
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""=""","""I""",false,true,false,missing,9
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""","""=""","""I""",false,true,false,positive_finite,40
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""",""">""","""II""",false,true,false,positive_finite,3
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/fluorescence""","""""",""">""","""non-classical""",false,true,false,positive_finite,1
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/phage display""","""""","""""","""I""",false,true,false,missing,4
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/phage display""","""""","""""","""II""",false,true,false,missing,159
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/radioactivity""","""""","""""","""I""",false,true,false,missing,364
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/radioactivity""","""""","""""","""I""",false,true,false,nonpositive,8
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/radioactivity""","""""","""""","""I""",false,true,false,positive_finite,68
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/radioactivity""","""""","""""","""I""",true,true,false,missing,2
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/radioactivity""","""""","""""","""II""",false,true,false,missing,97
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/radioactivity""","""""","""""","""II""",true,true,false,missing,1
+binding.parquet,"""iedb""","""qualitative binding""","""purified MHC/direct/radioactivity""","""""","""""","""non-classical""",false,true,false,missing,4
+other_assays.parquet,"""cedar""","""3D structure""","""x-ray crystallography""","""angstroms""","""""","""I""",false,false,false,missing,1
+other_assays.parquet,"""cedar""","""3D structure""","""x-ray crystallography""","""angstroms""","""=""","""I""",false,false,false,positive_finite,6
+other_assays.parquet,"""cedar""","""3D structure""","""x-ray crystallography""","""angstroms""","""=""","""I""",true,false,false,positive_finite,1
+other_assays.parquet,"""cedar""","""3D structure""","""x-ray crystallography""","""angstroms""","""=""","""non-classical""",false,false,false,positive_finite,3
+other_assays.parquet,"""cedar""","""ligand presentation""","""T cell recognition""","""""","""""","""I""",false,false,false,missing,1
+other_assays.parquet,"""cedar""","""ligand presentation""","""cellular MHC/mass spectrometry""","""""","""""","""I""",false,false,false,missing,6
+other_assays.parquet,"""iedb""","""3D structure""","""any method""","""""","""""","""I""",false,false,false,missing,2
+other_assays.parquet,"""iedb""","""3D structure""","""electron microscopy""","""""","""""","""I""",false,false,false,missing,4
+other_assays.parquet,"""iedb""","""3D structure""","""x-ray crystallography""","""angstroms""","""""","""I""",false,false,false,missing,11
+other_assays.parquet,"""iedb""","""3D structure""","""x-ray crystallography""","""angstroms""","""""","""I""",false,false,false,positive_finite,5
+other_assays.parquet,"""iedb""","""3D structure""","""x-ray crystallography""","""angstroms""","""""","""I""",true,false,false,positive_finite,3
+other_assays.parquet,"""iedb""","""3D structure""","""x-ray crystallography""","""angstroms""","""""","""II""",false,false,false,missing,4
+other_assays.parquet,"""iedb""","""3D structure""","""x-ray crystallography""","""angstroms""","""=""","""I""",false,false,false,missing,1
+other_assays.parquet,"""iedb""","""3D structure""","""x-ray crystallography""","""angstroms""","""=""","""I""",false,false,false,positive_finite,1005
+other_assays.parquet,"""iedb""","""3D structure""","""x-ray crystallography""","""angstroms""","""=""","""I""",true,false,false,positive_finite,59
+other_assays.parquet,"""iedb""","""3D structure""","""x-ray crystallography""","""angstroms""","""=""","""II""",false,false,false,positive_finite,186
+other_assays.parquet,"""iedb""","""3D structure""","""x-ray crystallography""","""angstroms""","""=""","""II""",true,false,false,positive_finite,45
+other_assays.parquet,"""iedb""","""3D structure""","""x-ray crystallography""","""angstroms""","""=""","""non-classical""",false,false,false,positive_finite,222
+other_assays.parquet,"""iedb""","""3D structure""","""x-ray crystallography""","""angstroms""","""=""","""non-classical""",true,false,false,positive_finite,2
+other_assays.parquet,"""iedb""","""ligand presentation""","""Edman degradation""","""""","""""","""I""",false,false,false,missing,570
+other_assays.parquet,"""iedb""","""ligand presentation""","""Edman degradation""","""""","""""","""II""",false,false,false,missing,519
+other_assays.parquet,"""iedb""","""ligand presentation""","""Edman degradation""","""""","""""","""II""",true,false,false,missing,2
+other_assays.parquet,"""iedb""","""ligand presentation""","""Edman degradation""","""""","""""","""non-classical""",false,false,false,missing,46
+other_assays.parquet,"""iedb""","""ligand presentation""","""T cell recognition""","""""","""""","""I""",false,false,false,missing,123
+other_assays.parquet,"""iedb""","""ligand presentation""","""T cell recognition""","""""","""""","""II""",false,false,false,missing,28
+other_assays.parquet,"""iedb""","""ligand presentation""","""T cell recognition""","""""","""""","""non-classical""",false,false,false,missing,1
+other_assays.parquet,"""iedb""","""ligand presentation""","""cellular MHC/mass spectrometry""","""""","""""","""I""",false,false,false,missing,23495
+other_assays.parquet,"""iedb""","""ligand presentation""","""coelution""","""""","""""","""I""",false,false,false,missing,92
+other_assays.parquet,"""iedb""","""ligand presentation""","""coelution""","""""","""""","""I""",true,false,false,missing,6
+other_assays.parquet,"""iedb""","""ligand presentation""","""coelution""","""""","""""","""II""",false,false,false,missing,48
+other_assays.parquet,"""iedb""","""ligand presentation""","""coelution""","""""","""""","""non-classical""",false,false,false,missing,4
+other_assays.parquet,"""iedb""","""ligand presentation""","""mass spectrometry""","""""","""""","""I""",false,false,false,missing,30
+other_assays.parquet,"""iedb""","""ligand presentation""","""mass spectrometry""","""""","""""","""non-classical""",false,false,false,missing,6

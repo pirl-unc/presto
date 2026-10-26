@@ -14264,5 +14264,10 @@ Specification: `experiments/agents/codex/plans/2026-10-26_mhc-species-evaluation
 Plan: `experiments/agents/codex/plans/2026-10-26_direct-assay-inventory.md`.
 
 - [x] Freeze two existing sources and literal metadata-only census scope.
-- [ ] Stream bounded census and independently replay every source row/count.
-- [ ] Close source inventory and select the next strict admission step.
+- [x] Stream bounded census and independently replay every source row/count.
+- [x] Close source inventory and select the next strict admission step.
+
+Direct-assay inventory review: all840,805 source rows/384 joint cells independently
+replay. The source distinguishes directKD from two KD proxy labels and reports
+half-life, EC50 and50% dissociation-temperature outcomes. Zero rows admitted;
+strict directKD source admission is the next candidate before incremental fitting.
