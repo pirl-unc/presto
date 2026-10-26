@@ -285,3 +285,14 @@ claim that simply adding it can remedy the prior response-model failures.
 - [ ] Qualify transfer to the native observation contract before claiming that this
   calibration improves machinery-conditioned APC amounts or exact/RL processing.
   Keep prior biological held-outs closed; the full goal remains unchanged.
+
+
+## Nontryptic response calibration decision
+
+- [x]0236qualifies shared source package; Hitlistac3e048 exact-head CI passes.
+- [x]0308 runs fixed precursor-grouped response comparison: all663fits/10,863
+  predictions independently verified; sequence ridge fails improvement gate.
+  Fixed-dose predictions remain nearly constant. Close these folds to retuning.
+- [ ] Resume native-baseline-observation-admission.md with independent diverse
+  amount/response anchors and source-matched protocol evidence. Do not promote
+  this failed18-standard MS2 observer or relabel residual intensity as availability.

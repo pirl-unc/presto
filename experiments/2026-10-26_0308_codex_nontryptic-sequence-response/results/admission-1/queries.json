@@ -1,0 +1,149 @@
+{
+  "assets": {
+    "evidence_type": "nontryptic_assets",
+    "limit": null,
+    "select": [
+      "source_asset_id",
+      "source_file",
+      "source_asset_url",
+      "source_asset_role",
+      "asset_sha256",
+      "license_status",
+      "size_bytes"
+    ]
+  },
+  "isotope_assertions": {
+    "evidence_type": "nontryptic_isotope_assertions",
+    "limit": null,
+    "select": [
+      "claim_id",
+      "residue_symbol",
+      "isotope_atoms_raw",
+      "mass_offset_raw",
+      "source_asset_id",
+      "source_locator",
+      "mass_offset_da"
+    ]
+  },
+  "material_contexts": {
+    "evidence_type": "nontryptic_material_contexts",
+    "limit": null,
+    "select": [
+      "context_id",
+      "context_kind",
+      "sample_label_raw",
+      "condition_id",
+      "condition_text",
+      "condition_status",
+      "specimen_id",
+      "aliquot_id",
+      "material_link_precision",
+      "context_status",
+      "source_locator",
+      "notes"
+    ]
+  },
+  "material_links": {
+    "evidence_type": "nontryptic_material_links",
+    "limit": null,
+    "select": [
+      "claim_id",
+      "source_context_id",
+      "target_context_id",
+      "assertion_predicate",
+      "assertion_status",
+      "material_link_precision",
+      "source_locator",
+      "notes"
+    ]
+  },
+  "nominal_amounts": {
+    "evidence_type": "nontryptic_nominal_amounts",
+    "limit": null,
+    "select": [
+      "nominal_amount_id",
+      "standard_id",
+      "context_id",
+      "reported_form_label",
+      "isotopologue_label",
+      "nominal_amount_raw",
+      "measurement_unit",
+      "nominal_status",
+      "source_asset_id",
+      "source_locator",
+      "nominal_amount_fmol"
+    ]
+  },
+  "protocol_assertions": {
+    "evidence_type": "nontryptic_protocol_assertions",
+    "limit": null,
+    "select": [
+      "claim_id",
+      "context_id",
+      "assertion_predicate",
+      "assertion_value",
+      "assertion_status",
+      "source_scope",
+      "measurement_unit",
+      "source_asset_id",
+      "source_locator",
+      "evidence_text"
+    ]
+  },
+  "reported_forms": {
+    "evidence_type": "nontryptic_reported_forms",
+    "limit": null,
+    "select": [
+      "form_id",
+      "standard_id",
+      "peptide_sequence",
+      "isotopologue_label",
+      "reported_form",
+      "labeled_positions_json",
+      "nominal_mass_shift_raw",
+      "heavy_amino_acid_raw",
+      "s6a_consistency_status",
+      "s6a_sum_raw",
+      "canonical_isotope_status",
+      "source_asset_id",
+      "source_locator",
+      "nominal_mass_shift_da"
+    ]
+  },
+  "source_slots": {
+    "evidence_type": "nontryptic_source_slots",
+    "limit": null,
+    "select": [
+      "slot_id",
+      "context_id",
+      "sheet_id",
+      "source_column",
+      "acquisition_id",
+      "specimen_id",
+      "aliquot_id",
+      "material_link_precision",
+      "source_locator",
+      "source_slot_ordinal"
+    ]
+  },
+  "standards": {
+    "evidence_type": "nontryptic_standards",
+    "limit": null,
+    "select": [
+      "standard_id",
+      "peptide_sequence",
+      "gene_symbol_raw",
+      "annotated_gene_raw",
+      "predicted_affinity_raw",
+      "prediction_status",
+      "reported_length_raw",
+      "reported_length_status",
+      "length_consistency_status",
+      "source_asset_id",
+      "source_locator",
+      "peptide_length",
+      "predicted_affinity_nm",
+      "reported_length_value"
+    ]
+  }
+}

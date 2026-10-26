@@ -14112,3 +14112,18 @@ confirmed S1 length annotation conflict. Full default Hitlist suite3649passed;
 shared implementation published at ac3e048 with exact frozen-source/Git parity.
 Source family0236 is closed; hosted CI/integration and response-model experiment
 remain pending. Full biological availability goal is not achieved.
+
+## Nontryptic sequence-response diagnostic — 2026-10-26
+
+Plan: experiments/agents/codex/plans/nontryptic-sequence-response.md.
+Family: experiments/2026-10-26_0308_codex_nontryptic-sequence-response/.
+
+- [x] Implement/test three fixed models and nested precursor grouping.
+- [x] Admit source through shared recipe; freeze metadata-only folds.
+- [x] Fit under unchanged resource guards; preserve inner/outer predictions.
+- [x] Independently replay coefficients/predictions/metrics and close report.
+
+Review: shared recipe admits213/348slots across13genes, with full exclusions.
+All663fits/10,863predictions independently replay. Sequence ridge fails the
+primary gate: RMSE0.682183 vs0.677664; at1fmol predictedSD0.043784 vs observed
+0.478409. Stop tuning these folds. Full availability goal remains unachieved.
