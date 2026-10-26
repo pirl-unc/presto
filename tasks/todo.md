@@ -14248,3 +14248,13 @@ visually inspected; independent reader/metadata replay passes. They supply plots
 and two protein-level summaries, but no original peptide intensity/sample table.
 Zero peptide-quantity rows admitted. Exact access scope and15-operation amended
 budget are documented; no graph-derived labels, author outreach or fitting.
+
+### MHC species reference evaluation
+
+Specification: `experiments/agents/codex/plans/2026-10-26_mhc-species-evaluation.md`.
+
+- [x] Freeze source, fixed controls/three seeds, component-aware metrics and scope.
+- [ ] Implement/freeze guarded runner and independently verified fixed controls.
+- [ ] Execute three canonical neural conditions serially after the IC50 family.
+- [ ] Independently verify predictions, source joins, selected checkpoint and metrics.
+- [ ] Close narrow classification results; retain transfer and all wider gates open.
