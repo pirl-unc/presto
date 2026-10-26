@@ -14090,3 +14090,25 @@ Product-only S3B sums agree within relative 1e-6 for 105/117 numeric ordinal
 candidates; precursor-inclusive sums for only 1/117. Source C/D observations
 at 100 fmol cannot be assigned blindly to export labels 1/3. S3A remains partial
 (144/213). No model fit, isotope atom repair or acquisition linkage is claimed.
+
+## Shared nontryptic source package — 2026-10-26
+
+Plan: experiments/agents/codex/plans/nontryptic-shared-source-package.md.
+
+- [x] Implement and verify shared compiler/package with synthetic software fixtures.
+- [x] Finish full software regression; freeze exact source implementation.
+- [x] Materialize original package under unchanged resource guards.
+- [x] Independently replay source quantities/links and close the source report.
+
+Source-package recovery: verify-1 failed on panel length consistency. Preserve
+its immutable source and staging; inspect original claims under the same guards
+before changing typed semantics (reproduce/amendment-1.md).
+
+Next registered modeling plan: experiments/agents/codex/plans/nontryptic-sequence-response.md.
+Source-only qualification is passing; no response fit or biological promotion yet.
+
+Review: original source package and independent replay pass after preserving a
+confirmed S1 length annotation conflict. Full default Hitlist suite3649passed;
+shared implementation published at ac3e048 with exact frozen-source/Git parity.
+Source family0236 is closed; hosted CI/integration and response-model experiment
+remain pending. Full biological availability goal is not achieved.
