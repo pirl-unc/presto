@@ -14448,3 +14448,13 @@ admission; permutation follows serially, no new censor overlap. Old controller
 12902 is fitting permuted42;29950 remains waiting. Verified controls and three
 true binding seeds are documented with source-linked predictions. Publication
 and final-head CI remain to be verified; full goal stays active.
+
+## Ordinal cellular context —2026-10-27
+
+- [x] Isolate code from the pending evaluation runtime.
+- [x] Implement typed relative scales, context resolution, endpoint masking and training support.
+- [x] Verify219modular tests, default-behavior parity and source/checkpoint contracts.
+- [x] Document the representation and local implementation handoff.
+- [ ] Complete prospective biological condition comparison and original binding/MS gates.
+
+Review: tasks/mhc2_ordinal_context_20261027/verification.json and the matching spec record exact source hashes/commands. This is software qualification; full biological goal remains active. Publication approval remains pending.

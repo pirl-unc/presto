@@ -11,6 +11,7 @@ import math
 from typing import Any, Iterable, Mapping
 
 from .modular_quantitative import QuantitativeDomain, QUANTITY_PARTS, quantity_domain
+from .modular_ordinal import OrdinalValue
 
 SCHEMA = "presto.modular.observation.v1"
 AA = "ACDEFGHIKLMNPQRSTVWY"
@@ -271,10 +272,18 @@ class Context:
     pathway_overrides: dict[str, ContextAssertion] = field(default_factory=dict)
     interventions: dict[str, ContextAssertion] = field(default_factory=dict)
     intervention_overrides: dict[str, ContextAssertion] = field(default_factory=dict)
+    ordinal_values: dict[str, OrdinalValue] = field(default_factory=dict)
+    ordinal_overrides: dict[str, OrdinalValue] = field(default_factory=dict)
     preparation: dict[str, float] = field(default_factory=dict)
     preparation_units: dict[str, str] = field(default_factory=dict)
 
     def validate(self, max_length: int = 512) -> None:
+        for values in (self.ordinal_values, self.ordinal_overrides):
+            if any(
+                not isinstance(name, str) or not name.strip() or not isinstance(value, OrdinalValue)
+                for name, value in values.items()
+            ):
+                raise ValueError("ordinal context requires named typed values")
         for values in (
             self.processing_pathways,
             self.pathway_overrides,
@@ -407,6 +416,10 @@ class Observation:
             }
         for key in ("cytokines", "cytokine_overrides"):
             context[key] = {name: Exposure(**value) for name, value in context.get(key, {}).items()}
+        for key in ("ordinal_values", "ordinal_overrides"):
+            context[key] = {
+                name: OrdinalValue(**value) for name, value in context.get(key, {}).items()
+            }
         for key in (
             "processing_pathways",
             "pathway_overrides",

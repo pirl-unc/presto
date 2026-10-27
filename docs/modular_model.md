@@ -184,6 +184,43 @@ fusion; they do not assert independent physical yields or a causal mechanism.
 They are masked from purified binding, fixed molecular receptor binding,
 laboratory digestion and the separate MS-response component.
 
+`ordinal_scales` adds source-relative ordered cellular observations, such as a
+reported low/medium/high DO:DM ratio. Each `OrdinalScale` declares ordered labels
+and an explicit comparison or calibration reference. A supplied `OrdinalValue`
+must match that reference; equally named levels from unrelated scales are not
+silently combined. The model uses separate columns for each level and unknown,
+retaining the order without assuming numerical spacing or a monotonic response.
+
+```python
+from presto.data.modular_ordinal import OrdinalScale, OrdinalValue
+
+scale = OrdinalScale(
+    ("low", "medium", "high"),
+    "PXD024392:T2-series:reported-DO-DM-ratio:v1",
+)
+# Configure ordinal_scales={"do_dm_ratio": scale} on a cellular model.
+# Supply this in Context.ordinal_values; evidence stays out of tensors.
+reported = OrdinalValue("medium", scale.reference, {"source_label": "DR4DMDO++"})
+```
+
+`Context.ordinal_overrides` takes precedence, including `OrdinalValue()` to
+replace a supplied level with explicit unknown. Diagnostics retain supplied,
+override and effective values. No level is inferred from cell type, MHC class or
+species. Scale references and evidence are provenance/validation fields, never
+learned identifiers. These inputs affect cellular outcomes only; purified
+binding, fixed-pMHC receptor binding, digestion and independent MS response stay
+invariant. Preflight requires all declared levels in training cellular rows;
+held-out levels and unknowns do not establish training support. Strict prediction
+also rejects levels whose input weights have not been trained.
+
+For the cited DO:DM source, this field represents the graded series only. DOKO's
+reported reduction relative to its parent does not identify one of these three
+levels, and DO absence is separate from an unknown or lowest ratio. DM also varies
+across that series. This representation supplies neither absolute activities nor
+an isolated DO effect. Exact paired-MHC typing and predictive qualification remain
+separate requirements. Empty ordinal fields preserve existing model shapes and
+historical semantic fingerprints.
+
 `machinery_references` contains typed `MachineryProfile` records with an ID,
 species, optional cell type, component priors, reference and version. Species-wide
 defaults are followed by a matching cell-specific profile, sample annotations

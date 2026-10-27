@@ -54,6 +54,8 @@ def semantic_fingerprint(row: Observation, *, include_target=True) -> str:
         "pathway_overrides",
         "interventions",
         "intervention_overrides",
+        "ordinal_values",
+        "ordinal_overrides",
     ):
         # An absent optional extension must not change historical input identity.
         values = data["context"].get(family)

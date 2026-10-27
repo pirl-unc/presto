@@ -160,6 +160,7 @@ def preflight(index: ObservationIndex):
     preparation_values = defaultdict(set)
     cell_types, cytokine_states, cytokine_numeric = set(), defaultdict(set), defaultdict(set)
     assertion_states = {"pathway": defaultdict(set), "intervention": defaultdict(set)}
+    ordinal_levels = defaultdict(set)
     assay_classes, has_multi_register = set(), False
     heldout_multi_register = False
     # Label and capability inspection is sequence-only; no training or random model scores.
@@ -191,8 +192,11 @@ def preflight(index: ObservationIndex):
                     config.cytokine_duration_features,
                     processing_pathways=config.processing_pathways,
                     interventions=config.interventions,
+                    ordinal_scales=config.ordinal_scales,
                 )
                 if row.split == "train":
+                    for name, value in cell.ordinal_values.items():
+                        ordinal_levels[name].add(value.level or "unknown")
                     for family, assertions in (
                         ("pathway", cell.processing_pathways),
                         ("intervention", cell.interventions),
@@ -288,6 +292,10 @@ def preflight(index: ObservationIndex):
     missing_cells = set(config.cell_types) - cell_types
     if missing_cells and "context_fusion.0.weight" not in validator.frozen_parameters:
         raise ValueError(f"cell types have no observed training labels: {sorted(missing_cells)}")
+    for name, scale in config.ordinal_scales.items():
+        missing = set(scale.levels) - ordinal_levels[name]
+        if missing and "context_fusion.0.weight" not in validator.frozen_parameters:
+            raise ValueError(f"ordinal levels lack training support: {name}: {sorted(missing)}")
     for name in config.cytokines:
         if (
             not {"present", "absent"} <= cytokine_states[name]
@@ -370,6 +378,7 @@ def preflight(index: ObservationIndex):
                 key: sorted(value) for key, value in source_label_values.items()
             },
             "cell_types": sorted(cell_types),
+            "ordinal_levels": {key: sorted(value) for key, value in ordinal_levels.items()},
             "cytokine_states": {key: sorted(value) for key, value in cytokine_states.items()},
             "cytokine_numeric": {key: sorted(value) for key, value in cytokine_numeric.items()},
             "context_assertion_states": {

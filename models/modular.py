@@ -30,6 +30,7 @@ from ..data.modular import (
     is_endpoint,
 )
 from ..data.modular_quantitative import QuantitativeDomain, quantity_domain
+from ..data.modular_ordinal import OrdinalScale
 from ..data.modular_context import (
     resolve_cell_context,
     resolve_components,
@@ -62,6 +63,7 @@ class ModularConfig:
     cytokine_duration_features: tuple[str, ...] = ()
     processing_pathways: tuple[str, ...] = ()
     interventions: tuple[str, ...] = ()
+    ordinal_scales: dict[str, OrdinalScale] = field(default_factory=dict)
     context_species: tuple[str, ...] = ()
     enzymes: tuple[str, ...] = ()
     acquisition_features: tuple[str, ...] = ()
@@ -182,6 +184,16 @@ class ModularConfig:
             raise ValueError("APC cell/cytokine context requires a cellular outcome")
         if (self.processing_pathways or self.interventions) and not cellular:
             raise ValueError("pathway/intervention context requires a cellular outcome")
+        if self.ordinal_scales and not cellular:
+            raise ValueError("ordinal context requires a cellular outcome")
+        if any(
+            not isinstance(name, str)
+            or not name.strip()
+            or name == "unknown"
+            or not isinstance(scale, OrdinalScale)
+            for name, scale in self.ordinal_scales.items()
+        ):
+            raise ValueError("ordinal context requires named typed scales")
         if self.context_species and not contextual:
             raise ValueError("context species slots need a contextual outcome")
         receptor = bool(routes & {"tcr", "tcr_cellular"})
@@ -250,6 +262,11 @@ class ModularConfig:
             data["quantity_domains"] = {
                 name: QuantitativeDomain(**value)
                 for name, value in data["quantity_domains"].items()
+            }
+        if "ordinal_scales" in data:
+            data["ordinal_scales"] = {
+                name: OrdinalScale.from_dict(value)
+                for name, value in data["ordinal_scales"].items()
             }
         return cls(**data)
 
@@ -347,6 +364,7 @@ class ModularPresto(nn.Module):
             + len(EXPOSURE_STATES) * len(config.cytokines)
             + 2 * (len(config.cytokine_dose_units) + len(config.cytokine_duration_features))
             + len(EXPOSURE_STATES) * (len(config.processing_pathways) + len(config.interventions))
+            + sum(len(scale.levels) + 1 for scale in config.ordinal_scales.values())
             + (len(DELIVERY) if self.has_cellular else 0)
             + (len(CORECEPTORS) if self.has_coreceptor else 0)
             + 2 * sum(name != "mhc_pairing" for name in config.auxiliary_context)
@@ -579,6 +597,7 @@ class ModularPresto(nn.Module):
             and endpoint_spec(row.endpoint).route in ("cellular", "tcr_cellular"),
             processing_pathways=self.config.processing_pathways,
             interventions=self.config.interventions,
+            ordinal_scales=self.config.ordinal_scales,
         )
         components = resolve_components(
             row.context,
@@ -671,6 +690,11 @@ class ModularPresto(nn.Module):
             for name in configured:
                 features = [float(resolved[name].state == state) for state in EXPOSURE_STATES]
                 values.append(self._tensor(features) if cellular else self._zero(len(features)))
+        for name in sorted(self.config.ordinal_scales):
+            scale = self.config.ordinal_scales[name]
+            level = cell.ordinal_values[name].level
+            features = [float(level == label) for label in (*scale.levels, None)]
+            values.append(self._tensor(features) if cellular else self._zero(len(features)))
         if self.has_cellular:
             values.append(
                 self._tensor([float(row.context.delivery == value) for value in DELIVERY])

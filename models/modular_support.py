@@ -72,6 +72,11 @@ def feature_layout(model):
             names += [
                 f"{family}:{name}:{state}" for name in configured for state in EXPOSURE_STATES
             ]
+        for name in sorted(config.ordinal_scales):
+            names += [
+                f"ordinal:{name}:{level}"
+                for level in (*config.ordinal_scales[name].levels, "unknown")
+            ]
         if model.has_cellular:
             names += [f"delivery:{value}" for value in DELIVERY]
         if model.has_coreceptor:

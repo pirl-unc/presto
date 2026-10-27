@@ -14,6 +14,7 @@ from .modular import (
     MHCInput,
     ROLES,
 )
+from .modular_ordinal import OrdinalScale, OrdinalValue
 
 
 @dataclass(frozen=True)
@@ -173,6 +174,10 @@ class ResolvedCellContext:
     intervention_sources: dict[str, str] = field(default_factory=dict)
     supplied_interventions: dict[str, ContextAssertion] = field(default_factory=dict)
     intervention_overrides: dict[str, ContextAssertion] = field(default_factory=dict)
+    ordinal_values: dict[str, OrdinalValue] = field(default_factory=dict)
+    ordinal_sources: dict[str, str] = field(default_factory=dict)
+    supplied_ordinals: dict[str, OrdinalValue] = field(default_factory=dict)
+    ordinal_overrides: dict[str, OrdinalValue] = field(default_factory=dict)
 
 
 def _assertions(supplied, overrides, vocabulary, *, family, strict, ignored):
@@ -199,6 +204,7 @@ def resolve_cell_context(
     strict: bool = True,
     processing_pathways: Sequence[str] = (),
     interventions: Sequence[str] = (),
+    ordinal_scales: Mapping[str, OrdinalScale] | None = None,
 ) -> ResolvedCellContext:
     """Resolve annotations without treating missing exposures as negative controls."""
     cell = resolve_field(
@@ -248,6 +254,34 @@ def resolve_cell_context(
         strict=strict,
         ignored=ignored,
     )
+    ordinal_scales = ordinal_scales or {}
+    unsupported = (set(context.ordinal_values) | set(context.ordinal_overrides)) - set(
+        ordinal_scales
+    )
+    if strict and ordinal_scales and unsupported:
+        raise ValueError(f"ordinal context outside checkpoint vocabulary: {sorted(unsupported)}")
+    ignored.extend(f"ordinal:{name}" for name in sorted(unsupported))
+    ordinals, ordinal_sources = {}, {}
+    for name in sorted(ordinal_scales):
+        value = (
+            context.ordinal_overrides.get(name)
+            or context.ordinal_values.get(name)
+            or OrdinalValue()
+        )
+        scale = ordinal_scales[name]
+        if strict and value.level is not None:
+            if value.scale != scale.reference:
+                raise ValueError(f"ordinal scale reference mismatch: {name}")
+            if value.level not in scale.levels:
+                raise ValueError(f"ordinal level outside checkpoint vocabulary: {name}")
+        ordinals[name] = value
+        ordinal_sources[name] = (
+            "override"
+            if name in context.ordinal_overrides
+            else "supplied"
+            if name in context.ordinal_values
+            else "unknown"
+        )
     return ResolvedCellContext(
         cell,
         resolved,
@@ -263,4 +297,8 @@ def resolve_cell_context(
         factor_sources,
         context.interventions,
         context.intervention_overrides,
+        ordinals,
+        ordinal_sources,
+        context.ordinal_values,
+        context.ordinal_overrides,
     )
