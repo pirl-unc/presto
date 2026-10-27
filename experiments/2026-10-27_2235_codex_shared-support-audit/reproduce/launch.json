@@ -1,0 +1,50 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "git_commit": "2f5705184f6997d50883639f5d38f6c133b81995",
+  "git_dirty": " M tasks/todo.md\n?? experiments/2026-10-27_2235_codex_shared-support-audit/\n?? experiments/agents/codex/plans/2026-10-27_scale-shared-model.md\n",
+  "command": "sh experiments/2026-10-27_2235_codex_shared-support-audit/reproduce/launch.sh",
+  "hardware": "local CPU; no predictive fits; no GPU",
+  "environment": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1"
+  },
+  "python": "3.12.6",
+  "existing_evaluation_family": "2026-10-27_2100_codex_transfer-improvements",
+  "scope": "saved validation/test failure analysis; checkpoint/feature audit; training-only gradient probes",
+  "no_new_test_inference": true,
+  "initial_python_field_correction": "Initial field3.14.6 was not corroborated; actual interpreter/version recorded below.",
+  "environment_observed": {
+    "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+    "version": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "torch": "2.14.1",
+    "numpy": "2.5.4"
+  },
+  "additional_commands": [
+    {
+      "command": "python code/prepare_data.py",
+      "scope": "source admission, no fitting",
+      "log": "launch_logs/data-admission.log"
+    },
+    {
+      "command": "python analysis/verify_admission.py",
+      "scope": "independent immutable raw-source/lineage/catalog check",
+      "log": "launch_logs/independent-admission-v3.log"
+    },
+    {
+      "command": "MPLCONFIGDIR=/private/tmp/presto-scale-mpl python analysis/failure_summary.py",
+      "scope": "saved predictions only",
+      "log": "launch_logs/failure-summary.log"
+    }
+  ],
+  "analysis_debugging": [
+    "Catalog uses HomoSapiens prefix; verifier normalizes the documented HLA alias.",
+    "Original preparer uses one-based ordinals; new scanner zero-based. v3 verifies all records exactly."
+  ],
+  "source_preparation_runtime": {
+    "commit": "0c4c984b",
+    "snapshot": "../2026-10-27_2255_codex_shared-multi-assay-scale/reproduce/source/runtimes/shared/presto",
+    "adapter": "data/modular_hitlist.py",
+    "initial_audit_commit": "2f5705184f6997d50883639f5d38f6c133b81995"
+  }
+}

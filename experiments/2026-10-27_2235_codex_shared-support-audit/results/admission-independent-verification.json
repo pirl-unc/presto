@@ -1,0 +1,530 @@
+{
+  "source_ordinal_conventions": {
+    "frozen_original_ic50": "one-based; verified from pinned original preparer",
+    "new_quantitative_sources": "zero-based"
+  },
+  "status": "passed",
+  "rows": 168210,
+  "raw_source_rows_verified": 168210,
+  "unique_peptides": 31011,
+  "unique_groove_pairs": 147,
+  "cross_endpoint_assay_leaks": 0,
+  "peptide_leaks": 0,
+  "original_outcome_duplicates": 0,
+  "census": [
+    {
+      "endpoint": "ec50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 47
+    },
+    {
+      "endpoint": "ec50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 288
+    },
+    {
+      "endpoint": "ec50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 19
+    },
+    {
+      "endpoint": "ec50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 31
+    },
+    {
+      "endpoint": "ec50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 3
+    },
+    {
+      "endpoint": "half_life",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 934
+    },
+    {
+      "endpoint": "half_life",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 2
+    },
+    {
+      "endpoint": "half_life",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 7650
+    },
+    {
+      "endpoint": "half_life",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 9
+    },
+    {
+      "endpoint": "half_life",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 12
+    },
+    {
+      "endpoint": "half_life",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 968
+    },
+    {
+      "endpoint": "ic50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 1758
+    },
+    {
+      "endpoint": "ic50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 82
+    },
+    {
+      "endpoint": "ic50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 16
+    },
+    {
+      "endpoint": "ic50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 842
+    },
+    {
+      "endpoint": "ic50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 126
+    },
+    {
+      "endpoint": "ic50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 1
+    },
+    {
+      "endpoint": "ic50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 14375
+    },
+    {
+      "endpoint": "ic50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 737
+    },
+    {
+      "endpoint": "ic50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 134
+    },
+    {
+      "endpoint": "ic50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 7261
+    },
+    {
+      "endpoint": "ic50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 1004
+    },
+    {
+      "endpoint": "ic50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 1
+    },
+    {
+      "endpoint": "ic50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 1968
+    },
+    {
+      "endpoint": "ic50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 67
+    },
+    {
+      "endpoint": "ic50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 25
+    },
+    {
+      "endpoint": "ic50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 758
+    },
+    {
+      "endpoint": "ic50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 128
+    },
+    {
+      "endpoint": "kd",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 561
+    },
+    {
+      "endpoint": "kd",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 1045
+    },
+    {
+      "endpoint": "kd",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 82
+    },
+    {
+      "endpoint": "kd",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 14
+    },
+    {
+      "endpoint": "kd",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 4097
+    },
+    {
+      "endpoint": "kd",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 10662
+    },
+    {
+      "endpoint": "kd",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 350
+    },
+    {
+      "endpoint": "kd",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 72
+    },
+    {
+      "endpoint": "kd",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 567
+    },
+    {
+      "endpoint": "kd",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 1331
+    },
+    {
+      "endpoint": "kd",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 32
+    },
+    {
+      "endpoint": "kd",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 4
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 1154
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2665
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 1231
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 339
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 9113
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 21515
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 11307
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 2911
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 1175
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2845
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 1529
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 406
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 4808
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "test",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 261
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 123
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "test",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 45
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 39835
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2103
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 2
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 886
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 216
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "train",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 2
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 5182
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "validation",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 277
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 183
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "split": "validation",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 24
+    },
+    {
+      "endpoint": "koff",
+      "split": "train",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 10
+    }
+  ],
+  "repeated_input_training_assays": {
+    "ic50": {
+      "groups": 1223,
+      "groups_over_1log": 138,
+      "median_range": 0.038918066030369625,
+      "interpretation": "Independent readouts; assay conditions are not matched. Not an irreducible-noise estimate."
+    },
+    "half_life": {
+      "groups": 186,
+      "groups_over_1log": 22,
+      "median_range": 0.0,
+      "interpretation": "Independent readouts; assay conditions are not matched. Not an irreducible-noise estimate."
+    },
+    "kd_via_ec50": {
+      "groups": 1352,
+      "groups_over_1log": 5,
+      "median_range": 0.0,
+      "interpretation": "Independent readouts; assay conditions are not matched. Not an irreducible-noise estimate."
+    },
+    "kd_via_ic50": {
+      "groups": 855,
+      "groups_over_1log": 142,
+      "median_range": 0.09364268611193349,
+      "interpretation": "Independent readouts; assay conditions are not matched. Not an irreducible-noise estimate."
+    },
+    "kd": {
+      "groups": 27,
+      "groups_over_1log": 13,
+      "median_range": 0.9746493598002037,
+      "interpretation": "Independent readouts; assay conditions are not matched. Not an irreducible-noise estimate."
+    },
+    "koff": {
+      "groups": 2,
+      "groups_over_1log": 0,
+      "median_range": 0.14622435293018343,
+      "interpretation": "Independent readouts; assay conditions are not matched. Not an irreducible-noise estimate."
+    },
+    "ec50": {
+      "groups": 3,
+      "groups_over_1log": 0,
+      "median_range": 0.0,
+      "interpretation": "Independent readouts; assay conditions are not matched. Not an irreducible-noise estimate."
+    }
+  },
+  "seconds": 52.10158820799552
+}
