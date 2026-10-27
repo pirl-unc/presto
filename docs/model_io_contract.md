@@ -1,5 +1,13 @@
 # Model input/output contract
 
+> **Historical specification.** This page documents the former default model,
+> its APIs or proposed extensions. New training uses the
+> [shared observation model](modular_model.md) and
+> [one manifest interface](unified_training.md). Statements about a default,
+> canonical path or runnable training command below apply to the historical
+> implementation at commit `9dd71348124faa49a4c6a60872385c86895d50b0`, not new training.
+
+
 This page describes the default model. The optional versioned
 [modular model](modular_model.md) has a separate data and checkpoint contract.
 

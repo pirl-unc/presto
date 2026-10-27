@@ -117,6 +117,10 @@ def train_step(
     identity_weight: float = 0.1,
 ) -> dict[str, Any]:
     """One measured vote per row/bag; identity replay is a separate mean CE."""
+    if type(model) is not ModularPresto:
+        raise ValueError(
+            "new training requires the shared Presto model; historical models are inference-only"
+        )
     if any(row.split != "train" for row in (*rows, *identity_rows)):
         raise ValueError("training may not consume held-out observations")
     if identity_weight < 0:
@@ -257,6 +261,8 @@ def save_checkpoint(
     optimizer: torch.optim.Optimizer | None = None,
     metadata: dict[str, Any] | None = None,
 ) -> None:
+    if type(model) is not ModularPresto:
+        raise ValueError("cannot save a historical model as a current training checkpoint")
     validate_freezing(model)
     payload = {
         "format": MODEL_VERSION,
@@ -288,9 +294,15 @@ def load_checkpoint(
     path: str | Path, *, device: str = "cpu"
 ) -> tuple[ModularPresto, dict[str, TargetScale], dict[str, Any]]:
     payload = torch.load(path, map_location=device, weights_only=True)
-    if payload.get("format") != MODEL_VERSION:
+    if payload.get("format") == "presto.modular.v2":
+        from ..legacy.modular_v2 import ModularConfig as HistoricalConfig
+        from ..legacy.modular_v2 import ModularPresto as HistoricalPresto
+
+        model = HistoricalPresto(HistoricalConfig.from_dict(payload["config"])).to(device)
+    elif payload.get("format") == MODEL_VERSION:
+        model = ModularPresto(ModularConfig.from_dict(payload["config"])).to(device)
+    else:
         raise ValueError("incompatible checkpoint format")
-    model = ModularPresto(ModularConfig.from_dict(payload["config"])).to(device)
     model.load_state_dict(payload["state_dict"], strict=True)
     if set(payload["support"]) != set(model.support):
         raise ValueError("checkpoint support/module mismatch")
@@ -344,10 +356,16 @@ def initialize_from_checkpoint(
 ) -> dict[str, Any]:
     """Transfer compatible tasks; retained scalers keep learned output meanings."""
     previous, scales, payload = load_checkpoint(path, device=str(model.device))
+    if type(model) is not ModularPresto or type(previous) is not ModularPresto:
+        raise ValueError(
+            "historical checkpoint feature contracts require frozen-code reproduction, "
+            "not warm-start"
+        )
     old, new = asdict(previous.config), asdict(model.config)
     # Endpoint/identity unions may grow; feature slots may not silently change meaning.
     shared_contract = {
         "max_length",
+        "peptide_context",
         "species_defaults",
         "identity_threshold",
     }

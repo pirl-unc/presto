@@ -18,7 +18,7 @@ from presto.data.vocab import (
     apm_group_for_genes,
     stimulus_for_condition,
 )
-from presto.models.presto import Presto
+from presto.legacy.presto import Presto
 
 
 def _encode(seq):
@@ -158,7 +158,7 @@ class TestInVivoGradient:
         """
         from presto.data.collate import PrestoCollator
         from presto.data.loaders import ElutionRecord, PrestoDataset
-        from presto.scripts.train_synthetic import compute_loss
+        from presto.legacy.scripts.train_synthetic import compute_loss
 
         mhc_seq = "GSHSMRYFYTAMSRPGRGEPRFIAVGYVDDTQFVRFDSDAASPR"
         dataset = PrestoDataset(

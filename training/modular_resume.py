@@ -23,6 +23,7 @@ RESUME_VERSION = "presto.modular.resume.v1"
 SOURCE_FILES = (
     "data/modular.py",
     "data/modular_context.py",
+    "data/modular_ordinal.py",
     "data/modular_quantitative.py",
     "data/modular_sources.py",
     "data/modular_lineage.py",
@@ -31,6 +32,9 @@ SOURCE_FILES = (
     "data/vocab.py",
     "models/modular_dependencies.py",
     "models/modular.py",
+    "models/presto.py",
+    "cli/train.py",
+    "training/trainer.py",
     "models/modular_support.py",
     "models/encoders.py",
     "training/modular.py",

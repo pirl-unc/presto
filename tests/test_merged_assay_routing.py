@@ -11,7 +11,7 @@ from presto.data.cross_source_dedup import (
     classify_assay_type,
     write_assay_csvs,
 )
-from presto.scripts.train_iedb import (
+from presto.legacy.scripts.train_iedb import (
     _record_source_loader_funnel,
     load_binding_records_for_alleles_from_merged_tsv,
     load_records_from_merged_tsv,
@@ -172,7 +172,7 @@ def test_loader_partitions_unsupported_and_missing_labels_without_false_targets(
     # Panel selectors obey the same inclusion and measurement fallback policy.
     selected, _ = load_binding_records_for_alleles_from_merged_tsv(path, alleles=["HLA-A*02:01"])
     assert [(r.value, r.measurement_type) for r in selected] == [(42, "IC50"), (7, "KD")]
-    from presto.scripts.focused_binding_probe import _load_binding_records_from_merged_tsv
+    from presto.legacy.scripts.focused_binding_probe import _load_binding_records_from_merged_tsv
 
     focused, _ = _load_binding_records_from_merged_tsv(path, alleles=["HLA-A*02:01"])
     assert [(r.value, r.measurement_type) for r in focused] == [(42, "IC50"), (7, "KD")]

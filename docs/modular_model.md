@@ -1,10 +1,13 @@
-# Modular directly supervised model
+# Shared directly supervised model
 
-The optional `modular` model implements the software foundation of
+The canonical `Presto` model implements the software foundation of
 [issue #130](https://github.com/pirl-unc/presto/issues/130). It has no qualified
 biological checkpoint yet. Passing software tests does not establish improved
 IC50 accuracy, useful TCR specificity or separately calibrated MS detectability.
-The default model and its checkpoint format remain unchanged.
+All new training uses this model and the observation-manifest interface. See
+[training migration](unified_training.md) for retired APIs and historical readers.
+Earlier experiments below describe their pinned historical model versions; their
+results do not qualify the new full-flank checkpoint contract.
 
 ## Auxiliary annotations are not the affinity model
 
@@ -190,12 +193,15 @@ detector. Probabilities are detached from assay gradients; rich shared encoder
 representations remain trainable by all admitted objectives.
 
 The assay representation uses one linear/GELU fusion of sequence vectors, class,
-molecular species and 43 fixed peptide-flank features:
+molecular species, 256 contextual flank features and three length features:
 
 - Class I contributes one full-peptide candidate.
 - Class II contributes every contiguous nine-residue core, with positions reset
-  in each core and up to three neighboring residues on each side summarized by
-  composition. Full flank lengths and total peptide length are retained.
+  in each core. The full ordered peptide is encoded once by the same Transformer;
+  token states outside each core are pooled separately into N- and C-flank
+  vectors. Every flank residue contributes, with zeros for empty flanks and no
+  padding in the averages. Full flank lengths and total peptide length are retained.
+  This removes the three-residue composition cutoff; accuracy benefit is unmeasured.
 - An endpoint consumes learned register-weighted features, normalized separately
   within each class, then mixed by effective class probability.
 - TCR sequence vectors and the full peptide enter the optional context fusion
@@ -445,16 +451,13 @@ candidate representation for the entire corpus. Inputs changed after admission f
 Both commands use the same dispatch:
 
 ```bash
-presto train unified --model-kind modular \
-  --observations-manifest /absolute/path/manifest.json --modular-preflight
+presto train --manifest /absolute/path/manifest.json --preflight
 
-python -m presto.scripts.train_iedb --model-kind modular \
-  --observations-manifest /absolute/path/manifest.json --modular-preflight
+python -m presto.scripts.train_iedb --manifest /absolute/path/manifest.json --preflight
 ```
 
-Remove `--modular-preflight` to run a registered fit. Model and optimization settings
-are in the manifest. Explicit legacy CLI training options are rejected in modular
-mode, rather than silently ignored. CPU is the default; `--device` is explicit.
+Remove `--preflight` to run a registered fit. Model and optimization settings
+are in the manifest. Explicit legacy CLI training options are rejected, rather than silently ignored. CPU is the default; `--device` is explicit.
 A new timestamped directory under `experiments/` is mandatory for fitting.
 
 The manifest shape is:
@@ -497,7 +500,7 @@ Identity-only and receptor-auxiliary-only pretraining allocate no assay model.
 Bulk-only runs allocate no MHC or APC modules. A class-II subset containing only
 nine-residue training peptides omits register attention entirely; longer-peptide
 requests then fail explicitly. Declared MHC branches without assay training support
-are rejected. Context vocabularies and feature slots are declared in `ModularConfig`.
+are rejected. Context vocabularies and feature slots are declared in `PrestoConfig`.
 
 Training makes deterministic shuffled passes over assay observations and uses
 observation-weighted mean losses. A separate identity batch contributes 0.1 times
@@ -543,15 +546,15 @@ requires updates for trainable parameters and inherited support for frozen ones;
 unseen features cannot be activated in a frozen path. Arbitrary feature/vocabulary
 migrations remain unimplemented.
 
-An interrupted modular fit resumes with the same frozen manifest and run directory:
+An interrupted shared-model fit resumes with the same frozen manifest and run directory:
 
 ```bash
-python -m presto.cli.main train unified --model-kind modular \
+python -m presto.cli.main train \
   --observations-manifest experiments/RUN/reproduce/source-manifest.json \
-  --run-dir experiments/RUN --modular-resume --device cpu
+  --run-dir experiments/RUN --resume --device cpu
 ```
 
-The original hash-pinned manifest is also accepted. `--modular-resume` cannot be
+The original hash-pinned manifest is also accepted. `--resume` cannot be
 combined with preflight or legacy training. It reuses the registered experiment;
 an ordinary launch still refuses to overwrite a prior run. Resume attempts and
 failures are recorded separately without replacing the original launch recipe.
@@ -593,9 +596,11 @@ only evaluated after selection. A training-only diagnostic must explicitly decla
 
 ## Inference and current limits
 
-`presto.inference.modular.ModularPredictor` loads the new strict
-`presto.modular.v2` format. Version 2 requires input-feature training evidence;
-version 1 experimental checkpoints require an explicit migration and are rejected.
+`presto.inference.modular.ModularPredictor` loads `presto.shared.v3` checkpoints
+and dispatches historical `presto.modular.v2` checkpoints to their original model.
+Both require input-feature training evidence. Version 1 experimental checkpoints
+are rejected. Historical v2 checkpoints cannot warm-start or resume v3 training;
+the full-context feature layout changed.
 Its `predict()` returns physical units and transformed
 values for regression, logits and explicitly uncalibrated scores for binary
 outcomes, identity probabilities, effective context, register diagnostics and

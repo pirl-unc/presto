@@ -1,4 +1,8 @@
-"""Checkpoint serialization helpers for Presto."""
+"""Historical default-model checkpoint compatibility.
+
+New manifest training uses training.modular checkpoint serialization.
+The serialized MODEL_CLASS remains unchanged to preserve old checkpoint metadata.
+"""
 
 from __future__ import annotations
 
@@ -9,7 +13,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 
 import torch
 
-from ..models.presto import Presto
+from ..legacy.presto import LegacyPresto as Presto
 from ..models.heads import validate_excision_scoring_version
 from ..data.vocab import EXCISION_MACHINERY_VOCABULARIES, excision_machinery_vocabulary
 from ..models.affinity import (

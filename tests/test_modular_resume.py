@@ -379,10 +379,33 @@ def test_registered_cli_resume_preserves_recipe_and_closes_once(tmp_path, monkey
     assert (output / "failure.json").read_bytes() == failure
     assert registry.REGISTRY_MD.read_text().count(f"#### Closure: {output.name}") == 1
     assert len(list((output / "reproduce").glob("resume-attempt-*.json"))) == 2
-    with pytest.raises(ValueError, match="require --model-kind"):
+    with pytest.raises(SystemExit, match="2"):
         script_main(["--modular-resume"])
     with pytest.raises(ValueError, match="requires --run-dir"):
         runner.run_manifest(SimpleNamespace(observations_manifest=str(path), modular_resume=True))
     args.modular_resume, args.modular_preflight = True, True
     with pytest.raises(ValueError, match="cannot be combined"):
         runner.run_manifest(args)
+
+
+@pytest.mark.parametrize(
+    "source", ["models/presto.py", "cli/train.py", "training/trainer.py", "data/modular_ordinal.py"]
+)
+def test_promoted_core_and_context_source_changes_reject_resume(tmp_path, monkeypatch, source):
+    from presto.training import modular_resume
+
+    path = manifest_fixture(tmp_path, replay=False)
+    output = tmp_path / "fit"
+    interrupt(monkeypatch, before_step=3)
+    with pytest.raises(RuntimeError, match="interruption"):
+        runner.fit_index(ObservationIndex(path), output)
+    original = modular_resume.file_sha256
+    root = Path(modular_resume.__file__).resolve().parents[1]
+    monkeypatch.setattr(
+        modular_resume,
+        "file_sha256",
+        lambda path: "0" * 64 if Path(path) == root / source else original(path),
+    )
+    monkeypatch.setattr(runner, "train_step", lambda *a, **k: pytest.fail("unexpected update"))
+    with pytest.raises(ValueError, match="contract changed"):
+        runner.fit_index(ObservationIndex(path), output, resume=True)

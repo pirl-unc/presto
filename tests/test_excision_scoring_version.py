@@ -6,7 +6,7 @@ import pytest
 import torch
 
 from presto.data.vocab import AA_TO_IDX, EXCISION_MACHINERY_TO_IDX
-from presto.models.presto import Presto
+from presto.legacy.presto import Presto
 from presto.training.checkpointing import load_model_from_checkpoint, save_model_checkpoint
 
 
@@ -107,7 +107,7 @@ def test_unknown_scoring_version_fails(version, tmp_path):
 
 
 def test_trainer_semantic_mismatch_fails_before_weights_are_loaded(tmp_path):
-    from presto.training.trainer import Trainer
+    from presto.legacy.trainer import Trainer
 
     path = tmp_path / "old.pt"
     legacy = Trainer(Presto(d_model=32, n_layers=1, n_heads=4, excision_scoring_version=1))

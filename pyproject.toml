@@ -65,10 +65,13 @@ packages = [
   "presto.data",
   "presto.inference",
   "presto.models",
+  "presto.legacy",
   "presto.training",
   "presto.scripts",
   "presto.scripts.distributional_ba",
-  "presto.scripts.distributional_ba.heads",
+  "presto.legacy.scripts",
+  "presto.legacy.scripts.distributional_ba",
+  "presto.legacy.scripts.distributional_ba.heads",
 ]
 package-dir = { "presto" = "." }
 

@@ -7,7 +7,7 @@ from typing import Tuple
 import torch
 import torch.nn as nn
 
-from presto.scripts.groove_baseline_probe import GrooveTransformerModel
+from presto.legacy.scripts.groove_baseline_probe import GrooveTransformerModel
 
 
 ENCODER_BACKBONES: Tuple[str, ...] = (

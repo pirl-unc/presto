@@ -100,7 +100,9 @@ class TestDeclaredDependencyAgrees:
         wanted = ".".join(
             map(str, max(MINIMUM_FROZEN_HITLIST_VERSION, MINIMUM_SCOPED_HITLIST_VERSION))
         )
-        launcher = (Path(__file__).resolve().parents[1] / "scripts" / "train_remote.py").read_text()
+        launcher = (
+            Path(__file__).resolve().parents[1] / "legacy" / "scripts" / "train_remote.py"
+        ).read_text()
         assert f'"hitlist>={wanted}"' in launcher
 
 

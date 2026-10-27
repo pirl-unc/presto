@@ -1,38 +1,24 @@
 # Presto
 
-Unified immunoinformatics for pMHC presentation and T-cell recognition.
+Presto uses one shared sequence model and one observation-manifest interface for
+new identity pretraining, MHC-I/MHC-II binding, cellular/MS endpoints and paired
+TCR tasks. Endpoint configuration selects readouts within that same model.
 
-## Start Here
+## Start here
 
-- Single authoritative I/O design: [model_io_contract.md](model_io_contract.md)
-- Current architecture: [design.md](design.md)
-- Assay policy summary: [assay_modeling_contract.md](assay_modeling_contract.md)
-- Assay source inventory and supervision map: `assay_learning_scheme.md`
-- Training specification: `training_spec.md`
-- TCR encoder specification: `tcr_spec.md`
-- Experimental paired-chain wrapper: [tcr_specificity.md](tcr_specificity.md)
-- CLI usage: `cli.md`
-- Repo inventory and retention guide: [repo_inventory.md](repo_inventory.md)
-- Mouse overlay provenance notes: `notes/mouse_mhc_overlay_sources.md`
-- Implementation-status audit: `../TODO.md`
+- [Shared model and observation contract](modular_model.md)
+- [One training interface, migration and capability limits](unified_training.md)
+- [CLI](cli.md)
+- [Study curation](study_curation_contract.md)
+- [Frozen Hitlist inputs](frozen_hitlist.md)
+- [Scoped proteomics inputs](scoped_proteomics.md)
+- [Repository inventory](repo_inventory.md)
 
-## Summary
+The full ordered peptide supplies class-II flank context around every nine-residue
+register; class I uses the whole peptide. Both classes share the encoder, fusion
+and trainer. Shared software does not establish predictive transfer or improved
+accuracy. The new checkpoint contract has not been scientifically qualified.
 
-Presto is organized around one shared biological latent path:
-- class/species inference from MHC sequence,
-- class-specific processing,
-- class-symmetric binding/stability latents with class-probability-calibrated class-compatible readouts,
-- class-specific presentation,
-- CD8/CD4 recognition and immunogenicity branches,
-- output-side assay-specific readout heads.
-
-The canonical production training strategy is unified mixed-source training with time-varying task/regularizer weight schedules.
-The separate [TCR specificity wrapper](tcr_specificity.md) is experimental and
-has no qualified weights; it is not part of canonical training/inference.
-For canonical assay modeling, assay-selector metadata is not a model input.
-
-Sequence-only encoding permits downstream biological conditioning. The target
-keeps presenting versus repertoire-selection MHC and all species roles distinct.
-These richer context roles are not all implemented: see the I/O contract and
-[issue #46](https://github.com/pirl-unc/presto/issues/46). Output availability
-does not imply label support, calibration or a validated complete corpus.
+Historical default-model design, training and TCR-wrapper pages are retained with
+scope banners. Their outputs and claims must not be treated as a description of
+the current model. Existing experiment records retain their source/version pins.

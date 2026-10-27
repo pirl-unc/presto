@@ -730,3 +730,17 @@ Keep applicability reporting separate from model features and the measured label
 - Verify shared gradients, mixed-class training/checkpoint behavior and endpoint
   isolation. Shared architecture does not establish MHC-I predictive improvement;
   that requires a measured transfer/regression comparison.
+
+
+## 2026-10-27 — Sharing inside an optional model is not repository consolidation
+
+- When the user asks for a common core, inventory ALL default factories, CLIs,
+  synthetic/pretraining scripts, receptor wrappers, sweeps and remote launchers.
+  Sharing classes within an optional model does not satisfy one training path
+  while the default and older scripts still train other architectures.
+- The user explicitly chose one observation-manifest interface. Retain old
+  checkpoint inference and frozen reproduction, but do not preserve competing
+  training APIs by adding another backend. Test executed entry-point identity.
+- A flank encoding borrowed from a published baseline is not validated for all
+  Presto tasks. Preserve ordered full context when feasible; distinguish richer
+  input representation from demonstrated accuracy improvement.

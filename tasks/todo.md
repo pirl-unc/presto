@@ -14482,3 +14482,21 @@ This completes the shared-software audit/integration only. MHC-I predictive
 transfer is unmeasured; the native DO comparison remains negative, and PR #131's
 scientific milestones remain open. Future native experiments use the shared
 resolver for explicit reference assumptions; frozen prior experiments remain intact.
+
+
+## 2026-10-27 — One training interface and model
+
+Spec: [unified_training_core_20261027_spec.md](unified_training_core_20261027_spec.md).
+
+- [x] Audit the competing model/training paths and confirm interface simplification.
+- [x] Promote one canonical model; retain explicit historical inference compatibility.
+- [x] Replace fixed flank composition with full ordered peptide context.
+- [x] Route all active training entry points through one manifest trainer.
+- [x] Verify cross-task execution, historical parity, migration failures and resume.
+- [x] Complete docs, broader checks and local commit/patch handoff.
+
+Review: [software review](unified_training_core_20261027_review.md) and
+[verification](unified_training_core_20261027_verification.json). Full suite:
+2,724 passed / four skips; final resume/shared-core follow-up: 38 passed.
+Docs, distributions, wheel execution and repository lint pass. Old predictions
+replay exactly; full-flank accuracy and scientific PR qualification remain open.

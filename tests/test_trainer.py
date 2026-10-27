@@ -48,16 +48,16 @@ class TestTrainerSmoke:
     """Smoke tests to verify training loop works."""
 
     def test_trainer_init(self):
-        from presto.training.trainer import Trainer
-        from presto.models.presto import Presto
+        from presto.legacy.trainer import Trainer
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         trainer = Trainer(model, lr=1e-3)
         assert trainer is not None
 
     def test_trainer_init_with_pcgrad(self):
-        from presto.training.trainer import Trainer
-        from presto.models.presto import Presto
+        from presto.legacy.trainer import Trainer
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         trainer = Trainer(model, lr=1e-3, use_pcgrad=True)
@@ -65,8 +65,8 @@ class TestTrainerSmoke:
 
     def test_trainer_single_step(self, tiny_dataset, tokenizer):
         """Test that a single training step runs without error."""
-        from presto.training.trainer import Trainer
-        from presto.models.presto import Presto
+        from presto.legacy.trainer import Trainer
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         trainer = Trainer(model, lr=1e-3)
@@ -93,8 +93,8 @@ class TestTrainerSmoke:
         That made this flake intermittently under xdist.
         """
         torch.manual_seed(0)
-        from presto.training.trainer import Trainer
-        from presto.models.presto import Presto
+        from presto.legacy.trainer import Trainer
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         trainer = Trainer(model, lr=1e-2)  # Higher LR for faster convergence
@@ -134,8 +134,8 @@ class TestTrainerSmoke:
 
     def test_trainer_step_with_pcgrad(self, tiny_dataset, tokenizer):
         """PCGrad path should run on multi-task batches without error."""
-        from presto.training.trainer import Trainer
-        from presto.models.presto import Presto
+        from presto.legacy.trainer import Trainer
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         trainer = Trainer(model, lr=1e-3, use_pcgrad=True)
@@ -156,8 +156,8 @@ class TestTrainerSmoke:
 
     def test_trainer_step_with_stability_targets(self, tokenizer):
         """Stability losses should be consumed when targets are provided."""
-        from presto.training.trainer import Trainer
-        from presto.models.presto import Presto
+        from presto.legacy.trainer import Trainer
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         trainer = Trainer(model, lr=1e-3)
@@ -187,8 +187,8 @@ class TestTrainerEval:
     """Test trainer evaluation mode."""
 
     def test_eval_mode(self, tiny_dataset, tokenizer):
-        from presto.training.trainer import Trainer
-        from presto.models.presto import Presto
+        from presto.legacy.trainer import Trainer
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         trainer = Trainer(model, lr=1e-3)
@@ -215,8 +215,8 @@ class TestTrainerCheckpoint:
     """Test checkpoint save/load."""
 
     def test_save_load_checkpoint(self, tmp_path, tiny_dataset, tokenizer):
-        from presto.training.trainer import Trainer
-        from presto.models.presto import Presto
+        from presto.legacy.trainer import Trainer
+        from presto.legacy.presto import Presto
 
         model = Presto(d_model=64, n_layers=2, n_heads=4)
         trainer = Trainer(model, lr=1e-3)

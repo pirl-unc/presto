@@ -14,7 +14,7 @@ from presto.data.vocab import (
     TCELL_CULTURE_CONTEXTS,
     TCELL_STIM_CONTEXTS,
 )
-from presto.scripts.train_synthetic import (
+from presto.legacy.scripts.train_synthetic import (
     build_warmup_cosine_scheduler,
     compute_loss,
     train_epoch,
@@ -833,7 +833,7 @@ def test_train_epoch_steps_scheduler(monkeypatch):
         loss = model.weight.square()
         return loss, {"toy": loss}, {}
 
-    monkeypatch.setattr("presto.scripts.train_synthetic.compute_loss", _fake_compute_loss)
+    monkeypatch.setattr("presto.legacy.scripts.train_synthetic.compute_loss", _fake_compute_loss)
     initial_lr = float(optimizer.param_groups[0]["lr"])
 
     train_loss, metrics = train_epoch(

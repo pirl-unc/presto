@@ -39,7 +39,8 @@ def test_single_chain_encodes_only_present_input_and_predicts_only_species(slot)
             endpoints=(), identity_tasks=(task, *paired), species=("human", "mouse"), dropout=0
         )
     )
-    assert set(model._encode([row])) == {AA}
+    pooled, states = model._encode([row])
+    assert set(pooled) == set(states) == {AA}
     output = model([row])[0]
     assert set(output.identity) == {slot}
     assert output.value is None and output.diagnostics["class"] is None

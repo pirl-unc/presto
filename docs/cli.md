@@ -33,24 +33,30 @@ Useful flags:
 
 ## Training
 
-Canonical production path:
+All new training uses one manifest:
 
 ```bash
-python -m presto train unified --data-dir ./data --epochs 5 --checkpoint presto.pt
+python -m presto train --manifest /absolute/path/manifest.json --preflight
+python -m presto train --manifest /absolute/path/manifest.json \
+  --run-dir experiments/YYYY-MM-DD_HHMM_codex_description --device cpu
 ```
 
-Unified training defaults:
-- reads merged input from `./data/merged_deduped.tsv` (required by default),
-- uses balanced mini-batches (`--balanced-batches`) across assay/source/label/allele/synthetic strata,
-- uses `tqdm` with running loss + samples/sec.
+The manifest supplies model/optimizer settings and hash-pinned observation files.
+Use `--resume` with the same run directory and frozen manifest for continuation.
+The optional `unified`, `synthetic`, `pretrain` and `finetune` names are aliases;
+they do not select different code or generate inputs. Old training flags are
+rejected. See the [manifest schema](modular_model.md) and
+[migration guide](unified_training.md).
 
-Optional synthetic path:
+## Shared-model prediction
 
-```bash
-python -m presto train synthetic --epochs 5 --batch_size 16 --checkpoint presto.pt
-```
+Use `presto.inference.modular.ModularPredictor(checkpoint).predict(observations)`
+with `presto.data.modular.Observation` inputs. It returns declared units and support
+diagnostics for shared-v3 and historical modular-v2 checkpoints.
 
-## Prediction
+## Historical default-model prediction
+
+These commands read historical default-model checkpoints, not shared-v3 files.
 
 ```bash
 python -m presto predict presentation \
@@ -77,7 +83,7 @@ The full role-specific biological context API remains pending; see the
 [model I/O contract](model_io_contract.md) for actual inputs, output units and
 the difference between implemented and desired behavior.
 
-## Evaluation
+## Historical default-model evaluation
 
 ```bash
 python -m presto evaluate synthetic --checkpoint presto.pt

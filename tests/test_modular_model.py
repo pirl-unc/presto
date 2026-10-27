@@ -98,11 +98,11 @@ def test_censored_loss(qualifier, prediction, expected):
 def test_candidates_preserve_register_positions_and_pfrs():
     whole = candidates("ACDEFGHIKLMNPQR", "I")
     assert len(whole) == 1 and whole[0][1] == "ACDEFGHIKLMNPQR"
-    assert whole[0][2][:42] == [0] * 42
+    assert whole[0][2][:2] == [0, 0]
     cores = candidates("ACDEFGHIKLMNPQR", "II")
     assert len(cores) == 7 and [x[0] for x in cores] == list(range(7))
     assert cores[0][1] == "ACDEFGHIK" and cores[-1][1] == "HIKLMNPQR"
-    assert len(cores[3][2]) == 43 and sum(cores[3][2][:20]) == 1
+    assert len(cores[3][2]) == 3
     assert len(candidates("ACDEFGHIK", "II")) == 1
     with pytest.raises(ValueError, match="at least 9"):
         candidates("ACDE", "II")

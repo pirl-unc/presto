@@ -4,19 +4,20 @@ theme:
   name: readthedocs
 nav:
   - Home: index.md
-  - Model I/O Contract: model_io_contract.md
+  - Historical I/O Contract: model_io_contract.md
   - Assay Policy: assay_modeling_contract.md
   - Assay Sources: assay_learning_scheme.md
   - Model Training Audit: model_training_audit.md
-  - Design: design.md
-  - Training Spec: training_spec.md
-  - Modular Model: modular_model.md
+  - Historical Design: design.md
+  - Historical Training Spec: training_spec.md
+  - Shared Model: modular_model.md
+  - Training Migration: unified_training.md
   - Processing Design: processing_model_design.md
   - Frozen Hitlist Inputs: frozen_hitlist.md
   - Scoped Proteomics Inputs: scoped_proteomics.md
   - Study Curation Contract: study_curation_contract.md
   - TCR Spec: tcr_spec.md
-  - TCR Specificity Wrapper: tcr_specificity.md
+  - Historical TCR Wrapper: tcr_specificity.md
   - CLI: cli.md
   - Notes:
       - Ablation Backlog: notes/ablation_backlog.md

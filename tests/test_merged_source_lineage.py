@@ -10,14 +10,14 @@ import torch
 from presto.data.collate import PrestoCollator
 from presto.data.loaders import PrestoDataset
 from presto.data.source_lineage import SOURCE_LINEAGE_FIELDS, source_lineage_fields
-from presto.models.presto import Presto
-from presto.scripts.focused_binding_probe import _load_binding_records_from_merged_tsv
-from presto.scripts.train_iedb import (
+from presto.legacy.presto import Presto
+from presto.legacy.scripts.focused_binding_probe import _load_binding_records_from_merged_tsv
+from presto.legacy.scripts.train_iedb import (
     load_binding_records_for_alleles_from_merged_tsv,
     load_probe_allele_binding_bootstrap_from_merged_tsv,
     load_records_from_merged_tsv,
 )
-from presto.scripts.train_synthetic import (
+from presto.legacy.scripts.train_synthetic import (
     LOSS_TASK_SPECS,
     _get_batch_mask,
     _get_batch_qual,

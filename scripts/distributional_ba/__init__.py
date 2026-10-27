@@ -1,1 +1,1 @@
-"""Distributional vs regression output heads for binding affinity prediction."""
+"""Retired distributional experiment entrypoints; new runs use Presto."""
