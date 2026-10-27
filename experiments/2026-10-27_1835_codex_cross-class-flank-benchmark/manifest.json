@@ -1,0 +1,105 @@
+{
+  "conditions": {
+    "full-joint-s42": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "path": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/full-joint-s42-manifest.json",
+      "runtime": "full",
+      "seed": 42,
+      "sha256": "a30b6308a4201a6dfbb68f8387b733689526ce7728e0558b7b1401c5e6de7b8f"
+    },
+    "full-joint-s43": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "path": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/full-joint-s43-manifest.json",
+      "runtime": "full",
+      "seed": 43,
+      "sha256": "98a54a12d83102413be8994d327e8d91cdb73a125c042d9406cde5ec0ba9f430"
+    },
+    "shared-I-s42": {
+      "classes": [
+        "I"
+      ],
+      "path": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-I-s42-manifest.json",
+      "runtime": "shared",
+      "seed": 42,
+      "sha256": "13d158a0db579fc2304ab168f08ab0d25a04eaf36765358c11d1685837b6583b"
+    },
+    "shared-I-s43": {
+      "classes": [
+        "I"
+      ],
+      "path": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-I-s43-manifest.json",
+      "runtime": "shared",
+      "seed": 43,
+      "sha256": "06ced8d74960c7d7938eedf413a5ae6a66c1aa594f557c506b59533e37f96c18"
+    },
+    "shared-II-s42": {
+      "classes": [
+        "II"
+      ],
+      "path": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-II-s42-manifest.json",
+      "runtime": "shared",
+      "seed": 42,
+      "sha256": "e77a9b2e1a085ce53eb46a6ca8bbd24f93d1d31a7b6771c2c6effff9cd919387"
+    },
+    "shared-II-s43": {
+      "classes": [
+        "II"
+      ],
+      "path": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-II-s43-manifest.json",
+      "runtime": "shared",
+      "seed": 43,
+      "sha256": "836827fd62aad91bda1265e3675c7ebde84da33e45dcd14cc45c3f4897fea0fa"
+    },
+    "shared-joint-s42": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "path": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-joint-s42-manifest.json",
+      "runtime": "shared",
+      "seed": 42,
+      "sha256": "a30b6308a4201a6dfbb68f8387b733689526ce7728e0558b7b1401c5e6de7b8f"
+    },
+    "shared-joint-s43": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "path": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-joint-s43-manifest.json",
+      "runtime": "shared",
+      "seed": 43,
+      "sha256": "98a54a12d83102413be8994d327e8d91cdb73a125c042d9406cde5ec0ba9f430"
+    },
+    "three-aa-joint-s42": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "path": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/three-aa-joint-s42-manifest.json",
+      "runtime": "three_aa",
+      "seed": 42,
+      "sha256": "a30b6308a4201a6dfbb68f8387b733689526ce7728e0558b7b1401c5e6de7b8f"
+    },
+    "three-aa-joint-s43": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "path": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/three-aa-joint-s43-manifest.json",
+      "runtime": "three_aa",
+      "seed": 43,
+      "sha256": "98a54a12d83102413be8994d327e8d91cdb73a125c042d9406cde5ec0ba9f430"
+    }
+  },
+  "evaluation_scope": "fixed-budget, previously inspected development holdouts",
+  "source_commit": "f24f7dfd6404c6eb450545daf72769269f55a5bf",
+  "source_manifest": "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/modular_cohorts/2026-10-21-full-ic50/manifest-exact.json",
+  "source_sha256": "914e0930283a9e5f7a41024576976f3e92e280f0719feda261ffcf48bf01d7be",
+  "steps": 1000
+}

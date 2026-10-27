@@ -168,7 +168,7 @@ def test_assay_loss_does_not_train_identity_classifiers():
     loss.backward()
     assert all(p.grad is None for p in network.identity_heads.parameters())
     assert network.encoder.embedding.weight.grad.norm() > 0
-    assert network.register_score.weight.grad.norm() > 0
+    assert network.heads["ic50"].weight.grad.norm() > 0
 
 
 def test_defaults_overrides_conflicting_species_and_multiple_losses():
@@ -416,14 +416,15 @@ def test_inference_units_and_candidate_library_ranking(tmp_path):
     assert ranked[0]["score"] >= ranked[1]["score"]
 
 
-def test_untrained_register_pooling_cannot_hide_behind_a_trained_affinity_head():
+def test_single_core_training_updates_the_readout_used_for_multiple_registers():
     network = model()
     optimizer = torch.optim.AdamW(network.parameters(), lr=3e-4)
     one_core = row(peptide="ACDEFGHIK")
     train_step(network, optimizer, [one_core], scale())
     network.predict([one_core])
-    with pytest.raises(ValueError, match="register_score"):
-        network.predict([row()])
+    assert not hasattr(network, "register_score")
+    longer = replace(one_core, peptide=one_core.peptide + "ACD")
+    network.predict([longer])
 
 
 def test_numeric_acquisition_features_require_declared_units_and_known_masks():

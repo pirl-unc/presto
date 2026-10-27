@@ -281,17 +281,10 @@ def test_both_mhc_classes_update_the_same_quantity_core():
             assert optimizer.state[parameter]["step"] == (1 if mhc_class == "I" else 2)
         assert model.heads["ic50"].weight.grad is None
         assert model.digest_fusion[0].weight.grad is None
-        if mhc_class == "I":
-            assert model.register_score.weight.grad is None
-        else:
-            assert model.register_score.weight.grad.norm() > 0
+        assert not hasattr(model, "register_score")
         labels = model.feature_layout["pmhc_fusion.0.weight"][1]
-        # The existing feature-coverage gate must see both class channels after both updates.
-        if mhc_class == "II":
-            assert all(
-                labels.index(name) in model.trained_features["pmhc_fusion.0.weight"]
-                for name in ("class:I", "class:II")
-            )
+        assert not any(label.startswith(("class:", "pfr_")) for label in labels)
+        assert len(model.trained_features["pmhc_fusion.0.weight"]) == len(labels)
         model.eval()
         bulk = sample(peptide=rows[0].peptide)
         low, high, bulk_output = model([*rows, bulk])

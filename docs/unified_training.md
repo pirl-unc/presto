@@ -45,18 +45,25 @@ repertoire-level recognition probabilities.
 
 MHC-I contributes the entire peptide as one candidate. MHC-II contributes every
 contiguous nine-residue core, giving `L - 8` registers for a length-`L` ligand.
-Learned weights use a softmax over that ligand's candidates. Register enumeration
-is discrete; the encoder, candidate scoring and weighted pooling are differentiable.
-This is a sequence-level approximation, not an explicit open/closed-groove structure
-or a model of class-I peptide bulging.
+Each candidate uses the same encoder and endpoint readout. Its peptide
+representation averages an independently encoded core (positions restart at the
+core) with contextual states at those core positions in the full peptide. All
+flanks can affect those states through attention; there is no flank-only projection
+or class-one-hot input. For MHC-I, both views reduce to the full peptide encoding.
+The rule is fixed across training runs, with no selectable alternate backend.
 
-Each class-II register combines the encoded core and MHC grooves with separate
-128-dimensional N- and C-flank summaries and three length features. Summaries
-pool contextual token states from one encoding of the **entire ordered peptide**.
-Every residue outside the candidate core contributes; there is no three-residue
-cutoff. Sinusoidal positions and self-attention preserve order before pooling.
-Empty flanks are zero vectors; padding does not enter the averages. Class-I
-candidates use the full peptide representation and empty flank vectors.
+The endpoint readout scores each candidate before pooling. A normalized log-sum-exp
+uses soft-min for affinity/concentration/off-rate outputs and soft-max for
+stability/cellular/receptor outputs, with temperature one in model target units.
+The derivative weights are a variable-length softmax. One candidate returns its
+score exactly, and duplicating equal candidates does not change the prediction.
+There is no independently learned register-attention head. This is a statistical
+pooling assumption, not a physical occupancy equation or a mechanistic kinetic model.
+
+Register enumeration is discrete; the encoder, scores and pooling are differentiable.
+This is a sequence-level approximation, not an explicit open/closed-groove structure
+or a model of class-I peptide bulging. Shared parameters permit cross-class scoring
+without newly initialized modules, but accuracy on an untrained class needs testing.
 
 These are peptide residues outside the proposed binding core, distinct from
 source-protein residues outside the observed ligand. Source-protein context keeps
@@ -71,19 +78,19 @@ No scientific qualification is transferred from an older architecture by this ch
 
 ## Migration and historical checkpoints
 
-The current checkpoint format is `presto.shared.v3`; its fixed peptide-context
-contract is `full_peptide_contextual_tokens_v1`. New fits must use this contract.
-Old modular-v2 checkpoints dispatch to the historical implementation for inference;
-they cannot silently initialize or resume a v3 training run. Their input feature
+The current checkpoint format is `presto.shared.v4`; its fixed peptide-context
+contract is `shared_core_context_v2`. New fits must use this contract.
+Old shared-v3 and modular-v2 checkpoints dispatch to the historical implementation for inference;
+they cannot silently initialize or resume a v4 training run. Their input feature
 layout differs. A new model requires new training and scientific qualification.
 
 `presto.inference.ObservationPredictor` (also named
-`presto.inference.modular.ModularPredictor`) reads shared-v3 and modular-v2 checkpoints
+`presto.inference.modular.ModularPredictor`) reads shared-v4, shared-v3 and modular-v2 checkpoints
 and returns observation predictions in declared units, with support diagnostics.
 The older default-model predictor remains at `presto.inference.predictor.Predictor`
 for historical checkpoints. The older `predict presentation`, `predict recognition`,
 `predict tile` and `evaluate synthetic` CLI commands are historical-model interfaces;
-they are not readers for shared-v3 checkpoints.
+they are not readers for shared-v4 checkpoints.
 
 Old training flags such as `--epochs`, `--data-dir` and `--config` are rejected.
 Use manifest model/training/source fields instead. The optional command names

@@ -744,3 +744,29 @@ Keep applicability reporting separate from model features and the measured label
 - A flank encoding borrowed from a published baseline is not validated for all
   Presto tasks. Preserve ordered full context when feasible; distinguish richer
   input representation from demonstrated accuracy improvement.
+
+## 2026-10-27 — Architecture changes need measured comparisons
+
+- Do not stop at software verification when the user's purpose is better prediction.
+  Once benchmarking is requested, execute a frozen accuracy/runtime comparison and
+  show its evidence, rather than merely repeating that gains are unmeasured.
+- Sharing parameters does not prove cross-class transfer. Test both directions,
+  identify untrained class-specific paths, and keep zero-shot diagnostics distinct
+  from target-class fine-tuning and supported serving.
+- When the user asks to watch comparisons, create a live side-by-side view before
+  fitting. Stream training/validation progress; reserve test evaluation for the
+  prespecified selected checkpoint.
+
+## 2026-10-27 — Cross-class transfer needs trained candidate evaluation
+
+- Sharing an encoder is insufficient when register selection or flank projections
+  are class-specific and untrained in source-only fits. Prefer a common candidate
+  representation and supervised readout before testing cross-class generalization.
+  Record remaining distribution shift; architectural sharing is not accuracy.
+
+## 2026-10-27 — A live dashboard is not a result
+
+- When opening an empty experiment dashboard, explicitly say that training has not
+  started and name the current preparation stage. Surface failed admission and
+  recovery, not a vague preparing label. Do not let optional presentation or new
+  architecture ideas indefinitely delay the already agreed predictive comparison.

@@ -19,7 +19,7 @@ complete processing, MS and receptor system requested in issue #130.
 
 The assay path retains the rich sequence vectors. For affinity, each peptide/core
 and each MHC groove contributes a 128-dimensional vector to a learned fusion,
-followed by register aggregation and an assay-specific scalar readout. Supplied
+followed by an assay-specific scalar readout per candidate and register aggregation. Supplied
 or inferred class/species values provide additional inputs and class routing;
 the annotation predictions do not replace the sequence vectors. IC50 targets
 are standardized log10(nM), with one-sided losses for censored bounds.
@@ -28,7 +28,7 @@ Auxiliary-only pretraining is supported, as is assay fitting with auxiliary
 replay: mean assay loss plus `identity_weight` times mean auxiliary-label loss
 (default weight 0.1). The weight is a configurable software default, not a
 validated scientific choice. Annotation labels train their classifiers and the
-shared encoder; assay labels train the encoder, fusion, active register pooling
+shared encoder; assay labels train the encoder, fusion, candidate readouts
 and assay readouts. Detaching categorical probabilities blocks the direct assay
 gradient into classifier weights. It does not freeze classifier behavior: assay
 updates to the shared encoder can still change its annotation predictions.
@@ -94,7 +94,7 @@ study/sample IDs and cell-line names are provenance, never learned embeddings.
 Both MHC classes use the same `SequenceEncoder`, `pmhc_fusion`, cellular
 `context_fusion`, trainer, observation schema, checkpoint and inference API.
 Class-specific candidate construction retains whole peptides for class I and
-nine-residue registers with flanking features for class II. This routing does
+nine-residue registers with shared full context for class II. This routing does
 not allocate another encoder or class-specific training pipeline. Ordinal
 context scales, quantitative domains, censoring and coverage checks apply to
 either class. The MS feature block is also shared with bulk and component assays;
@@ -192,21 +192,25 @@ TCR–pMHC compatibility unchanged; none of these metadata enter the shared MS
 detector. Probabilities are detached from assay gradients; rich shared encoder
 representations remain trainable by all admitted objectives.
 
-The assay representation uses one linear/GELU fusion of sequence vectors, class,
-molecular species, 256 contextual flank features and three length features:
+The assay representation uses one linear/GELU fusion of a shared candidate
+representation, both MHC groove vectors, and optional molecular species/pairing.
 
-- Class I contributes one full-peptide candidate.
-- Class II contributes every contiguous nine-residue core, with positions reset
-  in each core. The full ordered peptide is encoded once by the same Transformer;
-  token states outside each core are pooled separately into N- and C-flank
-  vectors. Every flank residue contributes, with zeros for empty flanks and no
-  padding in the averages. Full flank lengths and total peptide length are retained.
-  This removes the three-residue composition cutoff; accuracy benefit is unmeasured.
-- An endpoint consumes learned register-weighted features, normalized separately
-  within each class, then mixed by effective class probability.
-- TCR sequence vectors and the full peptide enter the optional context fusion
-  **before** register pooling. Binding of a fixed pMHC is unchanged when TCR inputs
-  are supplied to a separate receptor request.
+- Class I contributes one full-peptide candidate. Class II contributes every
+  contiguous nine-residue core, with positions reset within the core.
+- The candidate representation averages its independently encoded core and the
+  contextual token states at its core positions in the complete ordered peptide.
+  Both views use the same Transformer. Distal flanks can influence core states;
+  no flank-only projection, class-one-hot or independent register scorer remains.
+- The endpoint head scores every candidate. Normalized log-sum-exp in model units
+  uses soft-min for IC50/KD/EC50/proxy affinity/koff and soft-max for stability and
+  cellular/receptor readouts. Temperature is fixed at one. Derivative weights form
+  a variable-length softmax; singleton pooling is identity. Class results are mixed
+  by effective class probability. This statistical rule is not physical occupancy.
+- TCR sequence vectors and the full peptide enter optional context fusion before
+  candidate scoring. Purified binding excludes receptor and APC context.
+
+The same candidate parameters are trained by either class; cross-class predictive
+accuracy and full-context benefit require the registered comparative benchmark.
 
 The optional cellular/receptor context fusion is one linear/GELU layer. Machinery
 components retain independent `reference`, `intact`, `reduced`, `lost` or `unknown`
@@ -596,7 +600,7 @@ only evaluated after selection. A training-only diagnostic must explicitly decla
 
 ## Inference and current limits
 
-`presto.inference.modular.ModularPredictor` loads `presto.shared.v3` checkpoints
+`presto.inference.modular.ModularPredictor` loads `presto.shared.v4` checkpoints
 and dispatches historical `presto.modular.v2` checkpoints to their original model.
 Both require input-feature training evidence. Version 1 experimental checkpoints
 are rejected. Historical v2 checkpoints cannot warm-start or resume v3 training;

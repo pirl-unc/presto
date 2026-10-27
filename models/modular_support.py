@@ -31,8 +31,6 @@ def feature_layout(model):
     result = {"encoder.embedding.weight": (0, ["padding", *AA])}
     if model.has_pmhc:
         names = vector("peptide") + vector("mhc1") + vector("mhc2")
-        names += vector("pfr_n") + vector("pfr_c")
-        names += ["pfr_n:length", "pfr_c:length", "peptide:length", "class:I", "class:II"]
         names += [
             f"{role}:species:{species}" for role in ("mhc1", "mhc2") for species in config.species
         ]

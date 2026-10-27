@@ -306,3 +306,9 @@ claim that simply adding it can remedy the prior response-model failures.
   PeptideStudio sample_data is excluded. Matched within-peptide effects could
   cancel response only with verified protocol/run-scale comparability. No new
   generic calibration search or relaxation of native concentration requirements.
+
+## 2026-10-27 — Cross-class/flank benchmark
+
+- [ ] Complete the eight-condition local fixed-budget comparison and live dashboard.
+  Plan: plans/2026-10-27_cross-class-flank-benchmark.md. Prioritize zero-shot I↔II;
+  keep historical references, matched-budget results and qualified serving distinct.

@@ -41,7 +41,7 @@ from .encoders import SequenceEncoder
 from .modular_support import feature_inputs, feature_layout
 from .modular_dependencies import frozen_output
 
-MODEL_VERSION = "presto.shared.v3"
+MODEL_VERSION = "presto.shared.v4"
 
 
 @dataclass(frozen=True)
@@ -78,11 +78,13 @@ class PrestoConfig:
     identity_threshold: float = 0.8
     dropout: float = 0.1
     max_length: int = 512
-    peptide_context: str = "full_peptide_contextual_tokens_v1"
+    peptide_context: str = "shared_core_context_v2"
 
     def __post_init__(self):
-        if self.peptide_context != "full_peptide_contextual_tokens_v1":
-            raise ValueError("new training requires the full ordered peptide context contract")
+        if self.peptide_context != "shared_core_context_v2":
+            raise ValueError("new training requires the shared core/full ordered context contract")
+        if not self.register_pooling:
+            raise ValueError("new training requires shared candidate register pooling")
         for name in (
             "endpoints",
             "identity_tasks",
@@ -347,10 +349,8 @@ class Presto(nn.Module):
             self.identity_heads[name] = nn.Linear(width, classes)
         if self.has_pmhc:
             self.pmhc_fusion = self._fusion(
-                645 + 2 * len(config.species) + 2 * ("mhc_pairing" in config.auxiliary_context)
+                384 + 2 * len(config.species) + 2 * ("mhc_pairing" in config.auxiliary_context)
             )
-            if "II" in config.mhc_classes and config.register_pooling:
-                self.register_score = nn.Linear(128, 1, bias=False)
         source_width = 262 if config.source_context else 0
         self.context_width = (
             (384 if self.has_tcr else 0)
@@ -510,14 +510,24 @@ class Presto(nn.Module):
             name: states[index, : len(name)] for index, name in enumerate(names)
         }
 
-    def _flanks(self, states, start, length, mhc_class):
-        """Pool complete, ordered contextual flanks from one full-peptide encoding."""
-        if mhc_class == "I":
-            return self._zero(256)
-        left, right = states[:start], states[start + length :]
-        return torch.cat(
-            [flank.mean(0) if len(flank) else self._zero(128) for flank in (left, right)]
-        )
+    @staticmethod
+    def _candidate_representation(core, states, start, length):
+        """Shared core-relative and full-context views; no flank-only weights."""
+        return (core + states[start : start + length].mean(0)) * 0.5
+
+    @staticmethod
+    def _pool_registers(scores, direction):
+        """Normalized smooth extremum in model units, not physical occupancy.
+
+        The reported weights are derivatives of the pooled score with respect to
+        candidate scores. A singleton trains the very same readout as many cores.
+        """
+        signed = direction * scores
+        weights = signed.softmax(0)
+        if len(scores) == 1:
+            return scores[0], weights
+        value = direction * (torch.logsumexp(signed, 0) - math.log(len(scores)))
+        return value, weights
 
     def _identity(self, row, mhc, encoded):
         result = {}
@@ -755,12 +765,11 @@ class Presto(nn.Module):
             features = [
                 torch.cat(
                     [
-                        encoded[core],
+                        self._candidate_representation(
+                            encoded[core], token_states[row.peptide], start, len(core)
+                        ),
                         encoded[mhc.groove1],
                         encoded[mhc.groove2],
-                        self._flanks(token_states[row.peptide], start, len(core), mhc_class),
-                        self._tensor(pfr),
-                        self._tensor([float(index == 0), float(index == 1)]),
                         self._tensor(species["mhc1"].probabilities + species["mhc2"].probabilities),
                         *(
                             [self._tensor(auxiliary["mhc_pairing"].probabilities)]
@@ -769,20 +778,21 @@ class Presto(nn.Module):
                         ),
                     ]
                 )
-                for start, core, pfr in register_candidates
+                for start, core, _ in register_candidates
             ]
             hidden = self.pmhc_fusion(torch.stack(features))
             if contextual:
                 hidden = self.context_fusion(
                     torch.cat([hidden, context.expand(len(hidden), -1)], -1)
                 )
-            if len(hidden) == 1:
-                attention = hidden.new_ones(1)
-            else:
-                if not hasattr(self, "register_score"):
-                    raise ValueError("checkpoint has no multi-register pooling capability")
-                attention = self.register_score(hidden).squeeze(-1).softmax(0)
-            pooled.append(weight * (attention[:, None] * hidden).sum(0))
+            spec = endpoint_spec(row.endpoint)
+            scores = (
+                self._component_score(row.endpoint, "cellular", hidden)
+                if "cellular" in spec.parts
+                else self.heads[row.endpoint](hidden).squeeze(-1)
+            )
+            value, attention = self._pool_registers(scores, spec.register_direction)
+            pooled.append(weight * value)
             register_info.append(
                 {
                     "class": mhc_class,
@@ -790,6 +800,9 @@ class Presto(nn.Module):
                     "flank_representation": self.config.peptide_context,
                     "starts": [x[0] for x in register_candidates],
                     "weights": attention,
+                    "candidate_scores": scores,
+                    "pooling": "normalized_logsumexp_model_units",
+                    "direction": spec.register_direction,
                     "entropy": -(attention * attention.clamp_min(1e-12).log()).sum(),
                 }
             )
@@ -906,10 +919,10 @@ class Presto(nn.Module):
                         output.identity = identity
                 output.diagnostics["candidates"] = diagnostics
                 if "cellular" in spec.parts:
-                    scores = self._component_score(row.endpoint, "cellular", torch.stack(vectors))
+                    scores = torch.stack(vectors)
                     output.components["cellular"] = self._candidate_mean(row.endpoint, scores)
                 else:
-                    output.value = self.heads[row.endpoint](vectors[0]).squeeze(-1)
+                    output.value = vectors[0]
             if row.endpoint in self.offsets:
                 if not spec.observation_covariates:
                     covariates = self._zero(0)

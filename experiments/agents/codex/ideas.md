@@ -62,3 +62,40 @@ claim. Shared canonical admission must precede any consumer fitting.
 ## October24: APC-derived endolysosomal component measurements
 
 Primary source lead: Öztemiz2026, PMID42846314, DOI10.3389/falgy.2026.1936335 ([paper](https://www.frontiersin.org/journals/allergy/articles/10.3389/falgy.2026.1936335/full)). Extracted dendritic-cell endolysosomal preparation and peptide time-course signals could help separate processing from MHC capture, but are not native intact-cell concentrations. Original quantitative files and dependencies remain unqualified. Public PeptideStudio sample_data at18dd99da4a619abd8a28c7622e0809eb2c03e0ff is explicitly synthetic; do not use it as biology. [Hitlist812](https://github.com/pirl-unc/hitlist/issues/812) filed and body read back, including source identity, activity/sample context, quantity/modification/detection semantics and demo exclusion. No numeric assets admitted, no experiment or training claim. Register an original-source audit before numeric inspection/admission.
+
+## 2026-10-27 — Stronger cross-class sharing, after the frozen v4 benchmark
+
+User welcomes simpler representations and additional data that make both classes
+train the same machinery. These are prospective hypotheses, not demonstrated wins.
+Do not add them to the already frozen ten-condition comparison after seeing results.
+
+1. **Interaction before pooling.** Current v4 still pools independently encoded
+   peptide and MHC sequences before fusion. Replace that bottleneck with one shared
+   residue-pair interaction/cross-attention block, conditioned on both MHC grooves.
+   Use the same scorer for every candidate and endpoint, with geometry carried by
+   alignment/masks instead of class-specific parameters. Compare against v4 under
+   a fresh fixed budget and held-out cross-class protocol.
+2. **Shared pocket coordinates.** Align the binding grooves across classes using
+   verified structural correspondence; do not assume equal sequence indices or
+   pretend the two groove topologies are identical. Represent terminal constraints
+   and peptide-to-pocket alignments explicitly. One differentiable alignment rule
+   could permit internal bulges and open-ended overhangs with different allowed
+   geometry. Validate recovered contacts/registers against independent structures.
+3. **Structural auxiliary supervision.** Curate pMHC contacts/core annotations for
+   both classes with structure/peptide/allele-family split controls. Train the same
+   interaction representation on contacts and affinity, preserving assay-specific
+   readouts. Structures are generally positive complexes and are not affinity
+   labels or evidence of universal negative pairs. Structural target-class exposure
+   means zero-shot affinity labels, not no exposure to that class.
+4. **Unlabeled sequence pretraining.** Masked-residue objectives over both groove
+   chains and peptides can initialize the same encoder; document exact corpora,
+   near-duplicate exclusions and whether target-class sequences were seen.
+5. **Empirical bridging.** Prioritize direct comparable binding assays containing
+   overlapping peptide series across classes, keeping global peptide-family splits.
+   Shared peptide does not mean equal affinity. Do not force cross-class equality,
+   fabricate negative labels, or call teacher predictions independent measurements.
+
+Primary-source leads (scope-limited evidence, not proof of cross-class transfer):
+- pMHChat (class II residue contact/affinity modeling): https://pubmed.ncbi.nlm.nih.gov/40619811/
+- MHCnuggets (transfer among alleles; separate class baselines): https://www.cs.jhu.edu/~rohit/research/mhcnuggets_paper.pdf
+- MHCSeqNet2 (class I, structural embedding/low-data allele generalization): https://academic.oup.com/bioinformatics/article/40/1/btad780/7505244

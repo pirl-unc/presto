@@ -1,0 +1,128 @@
+{
+  "counts": {
+    "test:I": 1845,
+    "test:II": 958,
+    "train:I": 14375,
+    "train:II": 7261,
+    "validation:I": 2051,
+    "validation:II": 874
+  },
+  "derived_files": {
+    "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1835_codex_cross-class-flank-benchmark/inputs/I-test.jsonl": "a4e349eca1111bf8ae7576c0e76dc58e3705bc849ed2e8d99bff404f22262455",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1835_codex_cross-class-flank-benchmark/inputs/I-train.jsonl": "4451bbcfe71e764447a656df73aba1040b1ab01e0489dcacc24157fc6002094f",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1835_codex_cross-class-flank-benchmark/inputs/I-validation.jsonl": "f24126793c8ef2b9609bdfc201cf9e97ac585bc71f36cd32ffc0c74ecb1d2ec4",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1835_codex_cross-class-flank-benchmark/inputs/II-test.jsonl": "11399a9752a12a701ab819bc202728294e6ebfa52f4e2250f2e44c4d4663df02",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1835_codex_cross-class-flank-benchmark/inputs/II-train.jsonl": "b50f449ac3f9659c6e8538a50ec32972f3f39238ecc77c39f32dc91b4505e247",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1835_codex_cross-class-flank-benchmark/inputs/II-validation.jsonl": "bff374fc0aa2b1e05a53c78f2822bb8e803ca6ab7ca5c3ee0f3eea654a1a61d1",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1835_codex_cross-class-flank-benchmark/inputs/joint-test.jsonl": "0ade7b1ed2436bcdc9fd145831a1718db36c00056321b9815cad418c293fbd75",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1835_codex_cross-class-flank-benchmark/inputs/joint-train.jsonl": "79e44788883a4668fb790191e2079b46bb28e3ea06314e75ace3aa25c65b096c",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1835_codex_cross-class-flank-benchmark/inputs/joint-validation.jsonl": "12b88ebf0573e98b434f20e1a5fa8645128d5a14b05dfda3985ef57440d1719b",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/full-joint-s42-manifest.json": "a30b6308a4201a6dfbb68f8387b733689526ce7728e0558b7b1401c5e6de7b8f",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/full-joint-s43-manifest.json": "98a54a12d83102413be8994d327e8d91cdb73a125c042d9406cde5ec0ba9f430",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-I-s42-manifest.json": "13d158a0db579fc2304ab168f08ab0d25a04eaf36765358c11d1685837b6583b",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-I-s43-manifest.json": "06ced8d74960c7d7938eedf413a5ae6a66c1aa594f557c506b59533e37f96c18",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-II-s42-manifest.json": "e77a9b2e1a085ce53eb46a6ca8bbd24f93d1d31a7b6771c2c6effff9cd919387",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-II-s43-manifest.json": "836827fd62aad91bda1265e3675c7ebde84da33e45dcd14cc45c3f4897fea0fa",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-joint-s42-manifest.json": "a30b6308a4201a6dfbb68f8387b733689526ce7728e0558b7b1401c5e6de7b8f",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/shared-joint-s43-manifest.json": "98a54a12d83102413be8994d327e8d91cdb73a125c042d9406cde5ec0ba9f430",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/three-aa-joint-s42-manifest.json": "a30b6308a4201a6dfbb68f8387b733689526ce7728e0558b7b1401c5e6de7b8f",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/three-aa-joint-s43-manifest.json": "98a54a12d83102413be8994d327e8d91cdb73a125c042d9406cde5ec0ba9f430"
+  },
+  "exact_peptide_cross_split_overlap": 0,
+  "lengths": {
+    "test:I:10": 597,
+    "test:I:11": 56,
+    "test:I:15": 1,
+    "test:I:20": 10,
+    "test:I:8": 8,
+    "test:I:9": 1173,
+    "test:II:13": 10,
+    "test:II:14": 3,
+    "test:II:15": 915,
+    "test:II:16": 10,
+    "test:II:17": 6,
+    "test:II:19": 2,
+    "test:II:20": 10,
+    "test:II:21": 2,
+    "train:I:10": 4212,
+    "train:I:11": 268,
+    "train:I:12": 26,
+    "train:I:13": 3,
+    "train:I:14": 1,
+    "train:I:15": 6,
+    "train:I:16": 6,
+    "train:I:18": 5,
+    "train:I:20": 10,
+    "train:I:21": 5,
+    "train:I:8": 144,
+    "train:I:9": 9689,
+    "train:II:12": 12,
+    "train:II:13": 78,
+    "train:II:14": 33,
+    "train:II:15": 6870,
+    "train:II:16": 62,
+    "train:II:17": 49,
+    "train:II:18": 12,
+    "train:II:19": 26,
+    "train:II:20": 91,
+    "train:II:21": 7,
+    "train:II:22": 1,
+    "train:II:24": 10,
+    "train:II:39": 10,
+    "validation:I:10": 672,
+    "validation:I:11": 35,
+    "validation:I:12": 3,
+    "validation:I:13": 2,
+    "validation:I:15": 1,
+    "validation:I:8": 24,
+    "validation:I:9": 1314,
+    "validation:II:12": 1,
+    "validation:II:13": 8,
+    "validation:II:14": 4,
+    "validation:II:15": 809,
+    "validation:II:16": 7,
+    "validation:II:17": 9,
+    "validation:II:18": 3,
+    "validation:II:19": 4,
+    "validation:II:20": 29
+  },
+  "measurement_root_cross_split_overlap": 0,
+  "original_files": {
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/modular_cohorts/2026-10-21-full-ic50/hitlist-v4-iedb-test.jsonl": "0ade7b1ed2436bcdc9fd145831a1718db36c00056321b9815cad418c293fbd75",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/modular_cohorts/2026-10-21-full-ic50/hitlist-v4-iedb-train-exact.jsonl": "79e44788883a4668fb790191e2079b46bb28e3ea06314e75ace3aa25c65b096c",
+    "/Users/iskander/code/presto/.worktrees/presto-modular-model/data/modular_cohorts/2026-10-21-full-ic50/hitlist-v4-iedb-validation.jsonl": "12b88ebf0573e98b434f20e1a5fa8645128d5a14b05dfda3985ef57440d1719b"
+  },
+  "status": "passed",
+  "training_labels": {
+    "full-joint-s42": {
+      "ic50": 21636
+    },
+    "full-joint-s43": {
+      "ic50": 21636
+    },
+    "shared-I-s42": {
+      "ic50": 14375
+    },
+    "shared-I-s43": {
+      "ic50": 14375
+    },
+    "shared-II-s42": {
+      "ic50": 7261
+    },
+    "shared-II-s43": {
+      "ic50": 7261
+    },
+    "shared-joint-s42": {
+      "ic50": 21636
+    },
+    "shared-joint-s43": {
+      "ic50": 21636
+    },
+    "three-aa-joint-s42": {
+      "ic50": 21636
+    },
+    "three-aa-joint-s43": {
+      "ic50": 21636
+    }
+  }
+}

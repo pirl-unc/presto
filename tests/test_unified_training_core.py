@@ -43,7 +43,7 @@ def test_public_names_are_the_same_model_and_config():
     assert Presto is ModularPresto
     assert PrestoConfig is ModularConfig
     assert Presto.__module__ == "presto.models.presto"
-    assert MODEL_VERSION == "presto.shared.v3"
+    assert MODEL_VERSION == "presto.shared.v4"
     with pytest.raises(ValueError, match="full ordered"):
         PrestoConfig(peptide_context="three_residue_composition")
 
@@ -60,35 +60,92 @@ def test_full_context_keeps_variable_register_softmax(length):
         assert registers["flank_representation"] == model.config.peptide_context
 
 
-def test_full_ordered_flanks_keep_distal_residues_without_extra_encoders():
+def test_full_ordered_context_keeps_distal_residues_without_extra_encoders():
     torch.manual_seed(211)
     model = Presto(PrestoConfig(dropout=0)).eval()
     peptide = "ACDEFGHIKLMNPQRSTVWYACDEFGHIKLM"
     original = row(peptide=peptide)
-    # Same length/composition/nearest-three residues for the register starting at 8.
     reordered = replace(original, peptide="CA" + peptide[2:])
-    _, states = model._encode([original, reordered])
+    encoded, states = model._encode([original, reordered])
     start = 8
-    first = model._flanks(states[peptide], start, 9, "II")
-    second = model._flanks(states[reordered.peptide], start, 9, "II")
+    core = peptide[start : start + 9]
+    first = model._candidate_representation(encoded[core], states[peptide], start, 9)
+    second = model._candidate_representation(encoded[core], states[reordered.peptide], start, 9)
     assert not torch.allclose(first, second, rtol=1e-6, atol=1e-6)
     assert candidates(peptide, "II")[start][1:] == candidates(reordered.peptide, "II")[start][1:]
-    states[peptide].retain_grad()
-    first.sum().backward()
-    gradients = states[peptide].grad.abs().sum(-1)
-    assert torch.all(gradients[:start] > 0)
-    assert torch.all(gradients[start + 9 :] > 0)
-    assert not gradients[start : start + 9].any()
     assert len([name for name, _ in model.named_modules() if name.endswith("encoder")]) == 1
 
 
-def test_empty_flanks_and_padding_do_not_become_residues():
+def test_whole_peptide_candidate_reduces_to_shared_encoding_without_padding():
     model = Presto(PrestoConfig(dropout=0)).eval()
     peptide = "ACDEFGHIK"
-    _, states = model._encode([row(peptide=peptide), row(peptide=AA)])
+    encoded, states = model._encode([row(peptide=peptide), row(peptide=AA)])
     assert states[peptide].shape == (9, 128)
-    assert torch.equal(model._flanks(states[peptide], 0, 9, "II"), torch.zeros(256))
-    assert torch.equal(model._flanks(states[AA], 0, len(AA), "I"), torch.zeros(256))
+    for sequence in (peptide, AA):
+        actual = model._candidate_representation(
+            encoded[sequence], states[sequence], 0, len(sequence)
+        )
+        torch.testing.assert_close(actual, encoded[sequence])
+
+
+@pytest.mark.parametrize("direction", [-1, 1])
+def test_register_pool_is_normalized_monotone_and_has_softmax_derivatives(direction):
+    scores = torch.tensor([-2.0, 0.7, 3.0], requires_grad=True)
+    pooled, weights = Presto._pool_registers(scores, direction)
+    gradient = torch.autograd.grad(pooled, scores)[0]
+    torch.testing.assert_close(gradient, weights)
+    assert torch.all(gradient > 0)
+    assert weights.argmax() == (0 if direction == -1 else 2)
+    duplicate, _ = Presto._pool_registers(scores.repeat(2), direction)
+    torch.testing.assert_close(duplicate, pooled)
+    singleton, singleton_weights = Presto._pool_registers(scores[:1], direction)
+    assert torch.equal(singleton, scores[0])
+    assert torch.equal(singleton_weights, torch.ones(1))
+
+
+def test_i_only_training_learns_exact_parameters_used_by_ii_registers():
+    torch.manual_seed(231)
+    source = Presto(PrestoConfig(mhc_classes=("I",), dropout=0))
+    rows = [row(mhc_class="I", peptide=AA[:10], value=10), row(mhc_class="I", value=100)]
+    result = train_step(
+        source, torch.optim.AdamW(source.parameters(), lr=0.001), rows, fit_target_scales(rows)
+    )
+    assert all(value["gradient_and_update"] for value in result["coverage"].values())
+    assert not hasattr(source, "register_score")
+    expanded = Presto(replace(source.config, mhc_classes=("I", "II"))).eval()
+    expanded.load_state_dict(source.state_dict(), strict=True)
+    assert set(dict(expanded.named_parameters())) == set(dict(source.named_parameters()))
+    for name, tensor in source.state_dict().items():
+        assert torch.equal(tensor, expanded.state_dict()[name])
+    candidate = expanded([row()])[0]
+    registers = candidate.diagnostics["candidates"][0]["registers"][0]
+    expected, weights = Presto._pool_registers(registers["candidate_scores"], -1)
+    torch.testing.assert_close(candidate.value, expected)
+    torch.testing.assert_close(registers["weights"], weights)
+    # Retain the original model's supported-class boundary.
+    with pytest.raises(ValueError, match="supported branches"):
+        source([row()])
+
+
+def test_distal_flanks_receive_gradient_through_contextual_core_attention():
+    torch.manual_seed(233)
+    model = Presto(PrestoConfig(dropout=0)).eval()
+    captured = []
+
+    def capture(_module, _args, result):
+        result.retain_grad()
+        captured.append(result)
+
+    hook = model.encoder.embedding.register_forward_hook(capture)
+    observation = row(peptide="ACDEFGHIKLMNPQRSTVWYACDEFGHIKLM")
+    output = model([observation])[0]
+    registers = output.diagnostics["candidates"][0]["registers"][0]
+    registers["candidate_scores"][8].backward()
+    hook.remove()
+    # Full peptide is the first sequence inserted into _encode, before core views.
+    gradient = captured[0].grad[0, : len(observation.peptide)].abs().sum(-1)
+    assert gradient[0] > 0 and gradient[-1] > 0
+    assert torch.all(gradient[8:17] > 0)
 
 
 @pytest.mark.parametrize(
@@ -149,9 +206,14 @@ def test_identity_pretraining_transfers_into_the_same_binding_model(tmp_path):
     )
 
 
-def test_historical_modular_checkpoint_replays_but_cannot_train(tmp_path):
-    from presto.legacy.modular_v2 import ModularConfig as OldConfig
-    from presto.legacy.modular_v2 import ModularPresto as OldModel
+@pytest.mark.parametrize("version", ["v2", "v3"])
+def test_historical_modular_checkpoint_replays_but_cannot_train(tmp_path, version):
+    if version == "v2":
+        from presto.legacy.modular_v2 import ModularConfig as OldConfig
+        from presto.legacy.modular_v2 import ModularPresto as OldModel
+    else:
+        from presto.legacy.shared_v3 import PrestoConfig as OldConfig
+        from presto.legacy.shared_v3 import Presto as OldModel
 
     torch.manual_seed(229)
     old = OldModel(OldConfig(dropout=0)).eval()
@@ -159,7 +221,7 @@ def test_historical_modular_checkpoint_replays_but_cannot_train(tmp_path):
     with torch.no_grad():
         expected = old(rows)[0].value
     payload = {
-        "format": "presto.modular.v2",
+        "format": "presto.modular.v2" if version == "v2" else "presto.shared.v3",
         "config": asdict(old.config),
         "state_dict": old.state_dict(),
         "scales": {"ic50": asdict(TargetScale(2.0, 1.0, 2))},

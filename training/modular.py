@@ -299,6 +299,11 @@ def load_checkpoint(
         from ..legacy.modular_v2 import ModularPresto as HistoricalPresto
 
         model = HistoricalPresto(HistoricalConfig.from_dict(payload["config"])).to(device)
+    elif payload.get("format") == "presto.shared.v3":
+        from ..legacy.shared_v3 import PrestoConfig as HistoricalConfig
+        from ..legacy.shared_v3 import Presto as HistoricalPresto
+
+        model = HistoricalPresto(HistoricalConfig.from_dict(payload["config"])).to(device)
     elif payload.get("format") == MODEL_VERSION:
         model = ModularPresto(ModularConfig.from_dict(payload["config"])).to(device)
     else:

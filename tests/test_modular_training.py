@@ -265,7 +265,7 @@ def test_registered_launcher_freezes_manifest_and_closes_software_fixture(tmp_pa
     assert (output / "reproduce/source/models/modular.py").exists()
 
 
-def test_single_core_classii_subset_prunes_unreachable_pooling(tmp_path):
+def test_single_core_classii_subset_keeps_shared_parameter_free_pooling(tmp_path):
     path, observations = fixture_manifest(tmp_path)
     data = tmp_path / "rows.jsonl"
     data.unlink()
@@ -278,14 +278,13 @@ def test_single_core_classii_subset_prunes_unreachable_pooling(tmp_path):
     manifest["model"]["mhc_classes"] = ["II"]
     path.write_text(json.dumps(manifest))
     config, _, _, report = preflight(ObservationIndex(path))
-    assert config.register_pooling is False
-    assert report["module_pruning"]
+    assert config.register_pooling is True
+    assert not report["module_pruning"]
     from presto.models.modular import ModularPresto
 
     network = ModularPresto(config)
     assert not hasattr(network, "register_score")
-    with pytest.raises(ValueError, match="multi-register pooling capability"):
-        network([replace(observations[0], peptide="ACDEFGHIKLMN")])
+    assert network([replace(observations[0], peptide="ACDEFGHIKLMN")])[0].value.isfinite()
     manifest["model"]["mhc_classes"] = ["I", "II"]
     path.write_text(json.dumps(manifest))
     with pytest.raises(ValueError, match="no admitted assay training support"):

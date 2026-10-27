@@ -4877,3 +4877,22 @@ Replicated class-II rank/RMSE signal is present, with test binder recall below50
 No best-seed selection, test retuning or full-model promotion. Permutation,
 censored training, independent-study transfer, fitted condition/pathway effects
 and broader scientific gates remain open; PR131 stays draft. Full goal active.
+
+## 2026-10-27_1835_codex_cross-class-flank-benchmark — registered, preparing
+
+Codex / GPT-6. [Family](2026-10-27_1835_codex_cross-class-flank-benchmark/README.md),
+[prospective plan](agents/codex/plans/2026-10-27_cross-class-flank-benchmark.md).
+Fixed-budget local comparison: seeds42/43, shared-v4 I-only / II-only / joint,
+full-context-v3 joint and historical three-residue-v2 joint, 1,000 updates each.
+Ten serial fits. The revised prospective plan precedes all predictive fitting and
+uses a common candidate representation/readout with no class-specific unused path.
+Same exact IC50 cohort, original historically inspected development splits, train-
+only scaling, standardized squared/one-sided censor loss, no pretraining, auxiliary
+or synthetic biological data. Source-class validation alone selects checkpoints;
+zero-shot evaluation expands routing with every tensor unchanged, without fitting.
+Live dashboard shows both classes and only selected-checkpoint test results.
+Local CPU/four numerical threads/one interop; no Modal GPU requested. Startup
+admission attempt1 refused at 5.76GiB available RAM during software tests; zero
+cohort processing/profiles/fits. Receipt retained. Tests finished and available RAM
+recovered to 9.13GiB; manually reviewed attempt2 retains the 6GiB startup threshold.
+No new accuracy, runtime winner or scientific qualification claimed yet.

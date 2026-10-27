@@ -14500,3 +14500,23 @@ Review: [software review](unified_training_core_20261027_review.md) and
 2,724 passed / four skips; final resume/shared-core follow-up: 38 passed.
 Docs, distributions, wheel execution and repository lint pass. Old predictions
 replay exactly; full-flank accuracy and scientific PR qualification remain open.
+
+## 2026-10-27 — Live cross-class and flank benchmark
+
+Spec: experiments/agents/codex/plans/2026-10-27_cross-class-flank-benchmark.md.
+
+- [x] Recover historical class-I/II Spearman and audit transfer limitations.
+- [x] Freeze paired conditions, data contract, diagnostic scope and local limits.
+- [ ] Implement/verify family launcher, diagnostic transfer and live dashboard.
+- [ ] Verify source admission and profile training-only runtime.
+- [ ] Run all eight serial fits and selected-checkpoint evaluations.
+- [ ] Independently verify predictions/metrics and close canonical records.
+
+### Shared candidate revision (before launch)
+
+- [x] Replace the prospective neutralization plan with a common candidate-scoring spec.
+- [ ] Implement v4 shared representation/pooling and preserve v3 inference.
+- [ ] Verify gradients, pooling, transfer identity, checkpoint and common-training contracts.
+- [ ] Adapt the live benchmark to all ten prespecified runs and execute/close it.
+
+Review pending. No new predictive fit or profile has run.

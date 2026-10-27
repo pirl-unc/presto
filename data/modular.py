@@ -89,6 +89,7 @@ class Endpoint:
     binary: bool = False
     parts: tuple[str, ...] = ()
     quantitative: bool = False
+    register_direction: int = 1
 
     @property
     def observation_covariates(self):
@@ -96,12 +97,12 @@ class Endpoint:
 
 
 ENDPOINTS = {
-    "ic50": Endpoint("pmhc", "nM", True),
-    "kd": Endpoint("pmhc", "nM", True),
-    "ec50": Endpoint("pmhc", "nM", True),
-    "kd_via_ic50": Endpoint("pmhc", "nM", True),
-    "kd_via_ec50": Endpoint("pmhc", "nM", True),
-    "koff": Endpoint("pmhc", "1/s", True),
+    "ic50": Endpoint("pmhc", "nM", True, register_direction=-1),
+    "kd": Endpoint("pmhc", "nM", True, register_direction=-1),
+    "ec50": Endpoint("pmhc", "nM", True, register_direction=-1),
+    "kd_via_ic50": Endpoint("pmhc", "nM", True, register_direction=-1),
+    "kd_via_ec50": Endpoint("pmhc", "nM", True, register_direction=-1),
+    "koff": Endpoint("pmhc", "1/s", True, register_direction=-1),
     "half_life": Endpoint("pmhc", "min", True),
     "tm": Endpoint("pmhc", "C"),
     "bulk_observation": Endpoint("bulk", "binary", binary=True, parts=("digest", "ms_response")),

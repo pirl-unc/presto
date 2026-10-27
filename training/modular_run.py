@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter, defaultdict
-from dataclasses import asdict, replace
+from dataclasses import asdict
 import json
 import math
 from pathlib import Path
@@ -161,8 +161,7 @@ def preflight(index: ObservationIndex):
     cell_types, cytokine_states, cytokine_numeric = set(), defaultdict(set), defaultdict(set)
     assertion_states = {"pathway": defaultdict(set), "intervention": defaultdict(set)}
     ordinal_levels = defaultdict(set)
-    assay_classes, has_multi_register = set(), False
-    heldout_multi_register = False
+    assay_classes = set()
     # Label and capability inspection is sequence-only; no training or random model scores.
     for row in index:
         if row.endpoint == "identity":
@@ -252,9 +251,6 @@ def preflight(index: ObservationIndex):
                     raise ValueError("class-II/uncertain class requires complete 9-residue cores")
                 if row.split == "train":
                     assay_classes.update((known,) if known else config.mhc_classes)
-                    has_multi_register |= known != "I" and len(row.peptide) > 9
-                else:
-                    heldout_multi_register |= known != "I" and len(row.peptide) > 9
             if row.split == "train":
                 counts[row.endpoint] += 1
                 if endpoint_spec(row.endpoint).route in ("cellular", "tcr_cellular"):
@@ -353,13 +349,6 @@ def preflight(index: ObservationIndex):
     if validator.has_pmhc and "pmhc_fusion.0.weight" not in validator.frozen_parameters:
         if set(config.mhc_classes) - assay_classes:
             raise ValueError("declared MHC branch has no admitted assay training support")
-        if has_multi_register and not config.register_pooling:
-            raise ValueError("multi-register training observations require register pooling")
-        if "II" in config.mhc_classes and not has_multi_register:
-            if heldout_multi_register:
-                raise ValueError("held-out multi-register peptides lack training-path support")
-            config = replace(config, register_pooling=False)
-            pruning.append("register pooling: all admitted class-II peptides have one core")
     if training["test_policy"] == "evaluate_selected_once" and not any(
         row.split == "validation" and row_has_trainable_loss(validator, row) for row in index
     ):

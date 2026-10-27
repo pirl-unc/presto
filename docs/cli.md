@@ -52,11 +52,11 @@ rejected. See the [manifest schema](modular_model.md) and
 
 Use `presto.inference.modular.ModularPredictor(checkpoint).predict(observations)`
 with `presto.data.modular.Observation` inputs. It returns declared units and support
-diagnostics for shared-v3 and historical modular-v2 checkpoints.
+diagnostics for shared-v4 and historical shared-v3/modular-v2 checkpoints.
 
 ## Historical default-model prediction
 
-These commands read historical default-model checkpoints, not shared-v3 files.
+These commands read historical default-model checkpoints, not shared-v4 files.
 
 ```bash
 python -m presto predict presentation \
