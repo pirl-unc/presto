@@ -622,8 +622,10 @@ and update evidence, per-example train/validation/test predictions and metrics.
 Prediction records retain the complete normalized observation, including source
 and MHC provenance, plus resolved-field and register diagnostics in JSON form.
 These reporting fields preserve input identity without changing the fitted loss.
-Validation exact IC50 RMSE selects checkpoints when that output is trainable;
-otherwise selection uses the observation-weighted loss of trainable tasks.
+Checkpoint priority is explicit through `training.selection_endpoint`: a named
+assay uses exact-value RMSE when available, otherwise its validation loss. With
+null, selection uses the observation-weighted loss of trainable assay tasks
+(identity tasks for an identity-only run). The IC50 recipe explicitly names IC50.
 Frozen-task metrics are still reported. The test split is
 only evaluated after selection. A training-only diagnostic must explicitly declare
 `no_test_training_diagnostic` and explain why no test split exists.

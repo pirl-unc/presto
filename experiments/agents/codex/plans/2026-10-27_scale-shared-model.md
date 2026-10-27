@@ -131,3 +131,17 @@ sampler module. Add it and verify that changing a copied sampler source invalida
 resume before any update. This is a provenance-only correction after the predictive
 runtime was frozen at0c4c984b; do not mutate or restart the running comparison.
 Its Modal worker already pins and verifies the sampler in its full runtime bundle.
+
+## Post-freeze correction — explicit generic checkpoint selection
+
+The common selector implicitly prioritizes IC50 whenever present, so adding outputs
+still selects solely for IC50. Make `training.selection_endpoint` explicit: when
+named, select that active endpoint's exact RMSE if present, otherwise its validation
+loss. With null, use the observation-weighted mean validation assay loss (identity
+loss for an identity-only run). Reject absent/frozen primary endpoints or missing
+validation outcomes before fitting. No endpoint-specific implementation branch.
+The carried-forward IC50 recipe explicitly names IC50 to retain its existing
+selection semantics. The current eight-fit benchmark remains on frozen0c4c984b
+with its predeclared IC50 selection policy; no models or validation gates change.
+Do not claim this software generalization improves predictive quality. Document
+that pooled objectives can trade one class against another; preserve that finding.

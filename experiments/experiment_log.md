@@ -5105,3 +5105,9 @@ six measured outputs and shared capacity. Off-rate's10training-only rows are
 excluded from that predictive family. No cellular/MS/TCR capability is newly
 qualified, and no absent module is claimed trained. This audit is closed; the
 separate prospective eight-fit comparison owns new validation/test results.
+
+Register-diagnostic closure addendum: joint class-II normalized register entropy
+was0.990/0.989 across958multi-register test rows, median maximum weight0.182/0.185
+and top-start agreement63.3% between seeds. No weights exceeded0.5. These saved
+statistical weights do not identify validated physical binding cores; no measured
+register truth or new inference was added. The audit retains per-example diagnostics.

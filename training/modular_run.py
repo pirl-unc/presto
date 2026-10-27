@@ -67,6 +67,7 @@ DEFAULT_TRAINING = {
     "coverage_exception_reason": None,
     "checkpoint_every_steps": 100,
     "validation_every_steps": None,
+    "selection_endpoint": None,
 }
 
 
@@ -163,6 +164,14 @@ def preflight(index: ObservationIndex):
                 "selected-checkpoint evaluation requires validation and test partitions"
             )
     validator, inherited = initialized_model(config, index)
+    primary = training["selection_endpoint"]
+    if primary is not None:
+        if not isinstance(primary, str) or primary not in config.endpoints:
+            raise ValueError("selection_endpoint must name an active assay endpoint or be null")
+        if frozen_output(validator, primary):
+            raise ValueError("selection_endpoint cannot name a frozen outcome")
+        if not any(row.split == "validation" and row.endpoint == primary for row in index):
+            raise ValueError("selection_endpoint has no validation outcomes")
     inherited_scales = inherited["scales"] if inherited else {}
     scales = {
         **inherited_scales,
@@ -398,15 +407,18 @@ def preflight(index: ObservationIndex):
     )
 
 
-def _selection_score(metrics, model=None):
+def _selection_score(metrics, model=None, primary_endpoint=None):
     if model is not None:
         metrics = {
             key: value
             for key, value in metrics.items()
             if not frozen_output(model, key if is_endpoint(key) else identity_head(key))
         }
-    if "ic50" in metrics and "exact" in metrics["ic50"]:
-        return metrics["ic50"]["exact"]["rmse"]
+    if primary_endpoint is not None:
+        if primary_endpoint not in metrics:
+            raise ValueError("selection_endpoint has no evaluated validation outcomes")
+        primary = metrics[primary_endpoint]
+        return primary["exact"]["rmse"] if "exact" in primary else primary["loss"]
     assays = {key: value for key, value in metrics.items() if is_endpoint(key)}
     metrics = assays or metrics
     count = sum(value["n"] for value in metrics.values())
@@ -640,7 +652,7 @@ def _fit_index(index, output_dir, *, device, resume):
         validation_metrics, _ = evaluate(
             model, index, validation, scales, batch_size=training["batch_size"]
         )
-        score = _selection_score(validation_metrics, model)
+        score = _selection_score(validation_metrics, model, training["selection_endpoint"])
         if score is None:
             # A declared training-only diagnostic selects its last executed update.
             improved = True

@@ -573,3 +573,33 @@ def test_pairing_labels_require_evidence_and_do_not_turn_observed_pairs_into_neg
         ).identity_labels["mhc_pairing"]
         == "matched"
     )
+
+
+def test_selection_is_generic_and_primary_endpoint_is_explicit():
+    from presto.training.modular_run import _selection_score
+
+    metrics = {
+        'ic50': {'n': 10, 'loss': 2.0, 'exact': {'rmse': 1.2}},
+        'half_life': {'n': 30, 'loss': 6.0, 'exact': {'rmse': 0.4}},
+    }
+    assert _selection_score(metrics) == 5.0
+    assert _selection_score(metrics, primary_endpoint='ic50') == 1.2
+    assert _selection_score(metrics, primary_endpoint='half_life') == 0.4
+    assert (
+        _selection_score(
+            {'digest_observation': {'n': 5, 'loss': 0.7}}, primary_endpoint='digest_observation'
+        )
+        == 0.7
+    )
+    with pytest.raises(ValueError, match='no evaluated validation'):
+        _selection_score(metrics, primary_endpoint='kd')
+
+
+@pytest.mark.parametrize('endpoint', ['kd', True])
+def test_invalid_selection_endpoint_rejected_before_training(tmp_path, endpoint):
+    path, _ = fixture_manifest(tmp_path)
+    document = json.loads(path.read_text())
+    document['training']['selection_endpoint'] = endpoint
+    path.write_text(json.dumps(document))
+    with pytest.raises(ValueError, match='selection_endpoint must name'):
+        preflight(ObservationIndex(path))

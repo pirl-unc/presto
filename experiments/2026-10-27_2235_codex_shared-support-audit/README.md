@@ -161,3 +161,22 @@ A subsequent provenance-only fix adds the shared sampler module to generic resum
 fingerprints. Its dedicated changed-source test passes before any resumed update.
 The running comparison remains pinned to0c4c984b; its full Modal runtime bundle
 already independently hashes/verifies the sampler. No running fit was modified.
+
+## Register identifiability addendum
+
+Posthoc analysis of the already saved predictions found diffuse class-II register
+weights. For the two joint-training seeds, mean normalized entropy on the958
+multi-register test observations was0.990/0.989 (uniform=1); median maximum weight
+was0.182/0.185, only1.28/1.30times the uniform weight. No example assigned a register
+more than half the total weight. The top start agreed between seeds on63.3% of
+examples, compared with a14.2% uniform-random agreement reference. Class-II-only
+fits were also diffuse (entropy0.984/0.983). This is weak statistical preference,
+not established physical core identification: no measured register truth was used.
+It does not establish that the preferred registers are wrong, nor does numerical
+movement of all relevant weights establish learned register discrimination.
+
+Reproduce with the recorded Python executable and
+`analysis/register_diagnostics.py`; `results/register-diagnostics.json` retains
+per-example diagnostics and both validation/test summaries. This consumes saved
+outputs only, performs no new inference and does not alter the next family's
+prespecified selection gates.

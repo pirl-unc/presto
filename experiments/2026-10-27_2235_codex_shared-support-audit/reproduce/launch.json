@@ -35,6 +35,11 @@
       "command": "MPLCONFIGDIR=/private/tmp/presto-scale-mpl python analysis/failure_summary.py",
       "scope": "saved predictions only",
       "log": "launch_logs/failure-summary.log"
+    },
+    {
+      "command": "python analysis/register_diagnostics.py",
+      "scope": "saved register distributions only; no new inference",
+      "artifact": "results/register-diagnostics.json"
     }
   ],
   "analysis_debugging": [

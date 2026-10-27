@@ -175,3 +175,12 @@ Coordinate-level gradient/update masks are checkpointed and summarized in
 historical coordinate coverage. Fixed padding and redundant attention key biases
 are distinguished from ordinary weights without relaxing existing output support
 and input-exposure checks.
+
+`training.selection_endpoint` makes checkpoint priority explicit. Name a supervised
+assay endpoint to select its exact-value RMSE when available, or its validation
+loss otherwise. With null (the general default), select the observation-weighted
+mean validation assay loss; identity-only runs use identity loss. Frozen or absent
+primary endpoints are rejected. The carried-forward IC50 recipe explicitly names
+`ic50`, preserving its measured selection contract. Pooled objectives can trade
+performance between classes; inspect the class/output tables as well as the scalar
+selection score. This option does not create a separate model or training path.
