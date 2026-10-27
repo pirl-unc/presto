@@ -98,4 +98,91 @@ Do not add them to the already frozen ten-condition comparison after seeing resu
 Primary-source leads (scope-limited evidence, not proof of cross-class transfer):
 - pMHChat (class II residue contact/affinity modeling): https://pubmed.ncbi.nlm.nih.gov/40619811/
 - MHCnuggets (transfer among alleles; separate class baselines): https://www.cs.jhu.edu/~rohit/research/mhcnuggets_paper.pdf
-- MHCSeqNet2 (class I, structural embedding/low-data allele generalization): https://academic.oup.com/bioinformatics/article/40/1/btad780/7505244
+- MHCSeqNet2 (class I, structural embedding/low-data allele generalization): https://academic.oup.com/bioinformatics/advance-article-pdf/doi/10.1093/bioinformatics/btad780/54913538/btad780.pdf
+
+Sequence-only evidence from the current benchmark: zero exact training peptides
+shared across classes, only22 shared9mer substrings. Direct comparable assays of
+overlapping peptide series could provide a much stronger empirical bridge. About
+85% of the original II test rows have a9mer seen in II training, so a prospective
+peptide-family/core-disjoint benchmark belongs in the backlog before broad claims
+of new-core generalization. Cross-class overlaps are only1/958 and8/1845 test rows.
+
+## 2026-10-27 — Ranked transfer brainstorm after the fixed-budget comparison
+
+User asks about MHC-I terminal overhangs, species differences, nonclassical
+molecules, short/fixed-register class II, homogeneous flank summaries and class
+classification. These are hypotheses for prospective tests, not changes to the
+completed benchmark. The present human purified-IC50 runs do not qualify MS or
+processing prediction. Both transfer directions are modest; same-class models
+outperform the joint model at1000updates, with unequal per-class exposure.
+
+Biological distinctions: a central peptide bulge, terminal overhang, transient
+opening during loading and complete dissociation are different phenomena. Natural
+class-I overhangs exist and vary by molecule; there is no justified single species
+openness ranking. One dominant class-II binding register does not make the groove
+closed, and enumerating registers does not assert physical sliding. Class-II
+length preferences can reflect binding plus processing/selection in MS. Chicken
+BL2*02 has a structurally supported10-residue core, illustrating why9 is a strong
+human default rather than a universal law.
+
+Ranked candidates:
+
+1. **Residue interactions before pooling.** Replace independent peptide/MHC mean
+   compression with one shared residue-to-groove interaction block and structurally
+   corresponding groove coordinates. Current v4 still compresses these sequences
+   before interaction. Contacts learned from either class should train the same
+   local compatibility function. Geometry/masks preserve genuine differences.
+   Test within-class and both transfer directions at matched capacity/exposure.
+2. **One alignment and boundary representation.** Use one candidate-alignment
+   interface for both classes, permitting terminally anchored, bulged and overhang
+   configurations with MHC-conditioned costs. Do not force every class-I ligand
+   into a nine-residue core. Each residue carries distance to peptide termini,
+   candidate groove coordinate and contact/overhang role; shared weighted summaries
+   cover N-overhang, groove contacts, internal insertion and C-overhang, with an
+   explicit empty region. Preserve ordered nearby context. Typical class-I flanks
+   are empty, but the same position/contact machinery is trained on all residues;
+   auxiliary structures and actual extended class-I examples supply missing
+   overhang supervision. Cropping must not inherit unchanged affinity labels.
+3. **Measured peptide series and rank-aware supervision.** Prioritize existing
+   matched truncation/extension/substitution binding series on the same molecule
+   and assay. Fit measured absolute affinity and within-assay affinity differences
+   with a generic ranking term; keep assay/censor uncertainty explicit. Series
+   split together. No assumed monotone length effect or fabricated binding labels.
+   This directly addresses Spearman and gives boundary/core effects empirical
+   anchors. Kd, stability and IC50 remain distinct measured outputs.
+4. **Structural and noncanonical bridge data.** Curate verified peptide contacts,
+   terminal anchoring, occupied groove positions and backbone/register annotations
+   across classical I/II, extended class-I examples, avian examples and peptide-
+   binding HLA-E/HLA-G. Prefer complementary geometry over raw sequence count;
+   structures are positive complexes, not affinity measurements. Supervise the
+   shared representation, not a parallel predictor. PDZ/SH3 peptide-binding data
+   are a lower-priority broader contact-pretraining ablation. CD1/MR1 require lipid/
+   metabolite chemistry and are not a first-line peptide-affinity bridge; DM/DO
+   editing measurements do not supply ordinary presentation-affinity labels.
+   Target-class structural/pretraining exposure must be disclosed: this tests
+   zero target-class affinity labels, not total class blindness.
+5. **Balance optimization and supervise anatomy.** Compare equal total updates
+   and equal per-class example exposure; use balanced batches and inspect gradient
+   contributions before declaring negative transfer. Preserve regression calibration
+   while measuring per-MHC/within-assay rank. An existing mhc_class auxiliary can
+   be ablated at low weight, but class discrimination could encourage separation
+   and is weaker supervision than contact/terminal-anchoring geometry. No class-
+   specific expert or independently trained register head. Freeze objective weights
+   on training/validation only and use fresh family-disjoint evaluation.
+
+Recommended execution sequence: balanced-exposure control first to resolve the
+current confound; residue-interaction representation next; add shared alignment/
+boundary features and structural supervision as separate measured ablations.
+Paired affinity-series data are the preferred empirical acquisition in parallel.
+
+Primary literature, scope-limited:
+- Natural class-I C-terminal extensions,2018: https://pmc.ncbi.nlm.nih.gov/articles/PMC5960288/
+- Songbird alternative N-terminal anchoring,2023: https://www.frontiersin.org/journals/immunology/articles/10.3389/fimmu.2023.1209059/full
+- Chicken class-II decamer core,2021: https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3001057
+- Class-II measured elongation-series analysis: https://pmc.ncbi.nlm.nih.gov/articles/PMC2640366/
+- HLA-E/Mamu-E/Qa-1 binding comparisons: https://pmc.ncbi.nlm.nih.gov/articles/PMC7653511/
+- Joint structural/binding training with transfer to PDZ/SH3,2023: https://pmc.ncbi.nlm.nih.gov/articles/PMC9992841/
+- Historical latent-register/shared binding-model precedent: https://pubmed.ncbi.nlm.nih.gov/18771399/
+
+The cited work supports structural/data precedents; it does not demonstrate that
+these changes improve Presto. Do not mine exceptions for pathogen-specific design.

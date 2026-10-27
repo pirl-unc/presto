@@ -1,0 +1,20 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/analysis/bounded_run.py"
+  ],
+  "cwd": "/private/tmp/presto-flank-benchmark-20261027/presto",
+  "limits": {
+    "disk_floor": 10737418240,
+    "ram_floor": 3221225472,
+    "rss": 2147483648,
+    "seconds": 3600,
+    "startup_disk": 16106127360,
+    "startup_ram": 5905580032
+  },
+  "original_launch": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/reproduce/launch.json",
+  "original_runtime_pins_sha256": "db7ebe9f20e00d82412075862d4e7cf11d59ca27910d87f864666174a1cb44cd",
+  "reason": "explicit bounded profiling-first resource revision before optimizer updates",
+  "source_sha256": "0afe3d170af5c24bc576dc2d3591b0d2d7a83f0833982fabca430d995d62c421"
+}

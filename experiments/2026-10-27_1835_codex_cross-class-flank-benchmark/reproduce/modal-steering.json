@@ -1,0 +1,9 @@
+{
+  "reason": "user reauthorized Modal; allow in-flight CPU reference to finish, skip other CPU workers",
+  "successor": "2026-10-27_1930_codex_modal-cross-class",
+  "worker_source_sha256": "858672c6528c808b0694ad70dba17bb41f2fae11ac751a84d27efe514199f15d",
+  "worker_exit_code": 75,
+  "controller_exit_code": 1,
+  "interpretation": "user-directed migration after one completed CPU reference; no remaining CPU fits launched",
+  "original_controller": "reproduce/controller.json"
+}

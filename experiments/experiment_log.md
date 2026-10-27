@@ -4878,21 +4878,101 @@ No best-seed selection, test retuning or full-model promotion. Permutation,
 censored training, independent-study transfer, fitted condition/pathway effects
 and broader scientific gates remain open; PR131 stays draft. Full goal active.
 
-## 2026-10-27_1835_codex_cross-class-flank-benchmark — registered, preparing
+## 2026-10-27_1835_codex_cross-class-flank-benchmark — CPU reference closed; remaining fits migrated
 
-Codex / GPT-6. [Family](2026-10-27_1835_codex_cross-class-flank-benchmark/README.md),
-[prospective plan](agents/codex/plans/2026-10-27_cross-class-flank-benchmark.md).
-Fixed-budget local comparison: seeds42/43, shared-v4 I-only / II-only / joint,
-full-context-v3 joint and historical three-residue-v2 joint, 1,000 updates each.
-Ten serial fits. The revised prospective plan precedes all predictive fitting and
-uses a common candidate representation/readout with no class-specific unused path.
-Same exact IC50 cohort, original historically inspected development splits, train-
-only scaling, standardized squared/one-sided censor loss, no pretraining, auxiliary
-or synthetic biological data. Source-class validation alone selects checkpoints;
-zero-shot evaluation expands routing with every tensor unchanged, without fitting.
-Live dashboard shows both classes and only selected-checkpoint test results.
-Local CPU/four numerical threads/one interop; no Modal GPU requested. Startup
-admission attempt1 refused at 5.76GiB available RAM during software tests; zero
-cohort processing/profiles/fits. Receipt retained. Tests finished and available RAM
-recovered to 9.13GiB; manually reviewed attempt2 retains the 6GiB startup threshold.
-No new accuracy, runtime winner or scientific qualification claimed yet.
+October27,2026; Codex / GPT-6. [Family, exact launch/source pins and failure receipts](2026-10-27_1835_codex_cross-class-flank-benchmark/README.md).
+One shared-v4 I-only seed42 fit completed; remaining nine CPU fits superseded by
+the user's approved matched H100 family below. Three training-only profiles completed.
+Shared commit0659b43; frozen v3f24f7df/v29dd7134, all full hashes/dirty status in pins.
+Local macOS arm64CPU,Python3.12.6,Torch2.14.1,four threads/one interop; no Modal GPU.
+
+Original purified human direct IC50 manifest914e0930283a9e5f7a41024576976f3e92e280f0719feda261ffcf48bf01d7be;
+train21636exact(I14375/II7261),val2925,test2803. Lossless I-only training filter;
+physical unclipped log10(nM), source-train mean/scale and squared error weight1,
+original one-sided heldout bounds. Missing qualifier follows retained source exact
+policy. No KD/MS/TCR proxies, pretraining, synthetic biology or identity loss.
+1000updates,batch64,AdamW3e-4,weight decay1e-4,dropout.1; source validation selects
+epoch5; target-class diagnostic strict-loads every unchanged tensor after selection.
+
+| Scope | Validation Spearman | Test Spearman | Test RMSE log10(nM) |
+|---|---:|---:|---:|
+| I in-class |.572624|.503549|1.205548|
+| II zero-shot |.346956|.235506|1.105225|
+
+CPU fit1106.911s. II source-mean testRMSE1.253872. Profiles median seconds/update:
+v2 2.896772,v3 3.410,v4 2.013634;parameters455041/482689/449153.
+All per-example val/test predictions and independent loss/Pearson/Spearman/RMSE,
+500nM classification metrics, subgroup metrics and raw paths are retained.
+Admission/wait/cap revisions and deliberate workerexit75/parentexit1 remain explicit;
+no remaining CPU fit launched. Preferred runtime for requested comparison is H100.
+Takeaway: modest positive transfer in a separate CPU reference, no biological promotion.
+
+## 2026-10-27_1930_codex_modal-cross-class — ten H100 fits complete; transfer is modest
+
+October27,2026; Codex / GPT-6. [Full report, exact launch, source bundle, figures and all predictions](2026-10-27_1930_codex_modal-cross-class/README.md).
+User explicitly approved requiredsource/data upload and10runs with at most2H100s.
+RequestedPRESTO_MODAL_GPU=H100!; actualNVIDIAH10080GBHBM3,81559MiB nvidia-smi,
+85009367040CUDA-visible bytes. Python3.12.1,torch2.14.1+cu130,numpy2.5.4;
+4CPU/16GiBhost,threads4/interop1,noAMP/compile/TF32,retries0. Shared0659b43 with
+recorded task/experiment dirt; fullf24f7df and three-aa9dd7134 clean, immutable hashes.
+Raw/source/input artifacts persist on Modalvolume presto-checkpoints and in local
+artifacts/2026-10-27_1930_codex_modal-cross-class; compressed val/test dumps are in
+the experiment results. Launch.sh/.json and source pins preserve exact invocation.
+
+Same direct purified human IEDB IC50 cohort/hash as CPU family, exact train21636,
+val2925,test2803; exact metrics1968/1758I and758/842II val/test. Original peptide/
+measurement components, shared studies and previously inspected development holdouts.
+MHC groove sequences verified through mhcseqs2.6.13; no assumed missing partner.
+Original missing-qualifier exact policy retained, bound labels remain in holdouts.
+No proxy assays, pretraining, synthetic labels, identity or other endpoint loss.
+IC50 maps to standardized physical log10(nM) readout; squared error weight1 and
+one-sided original censor loss. AdamW3e-4,wd1e-4,dropout.1,batch64,1000updates,
+min/maxepochs100,patience100. Source-only validation selects before target-class
+validation/test; expanded routing preserves all tensors and adds no target labels.
+
+Five conditions × seeds42/43: common candidate/readout v4 trained I-only, II-only
+or jointly; frozen full-context-v3 joint; frozen three-residue-v2 joint. ClassI one
+whole-peptide candidate, classII every9mer. V4 removes class/flank-specific scoring
+paths and shares endpoint scoring before normalized logsumexp statistical pooling.
+Equal updates are not equal per-class exposure; architectural versions differ in
+more than flanks. New production training stays on one model/manifest interface.
+
+| Condition | I val ρ / RMSE | I test ρ / RMSE | II val ρ / RMSE | II test ρ / RMSE |
+|---|---:|---:|---:|---:|
+| shared-I | 0.5756 / 1.1441 | 0.4905 / 1.2114 | 0.2611 / 1.1608 † | 0.1871 / 1.2151 † |
+| shared-II | 0.2282 / 1.5849 † | 0.1652 / 1.6483 † | 0.6414 / 0.7916 | 0.6050 / 0.7416 |
+| shared-joint | 0.5355 / 1.1905 | 0.4477 / 1.2553 | 0.5032 / 0.8784 | 0.3948 / 0.8605 |
+| full-joint | 0.5380 / 1.1873 | 0.4557 / 1.2406 | 0.5258 / 0.8538 | 0.4517 / 0.8400 |
+| three-aa-joint | 0.5411 / 1.1853 | 0.4443 / 1.2547 | 0.4941 / 0.8770 | 0.4127 / 0.8547 |
+
+Values are two-seed means; †zero target-class training labels; RMSElog10(nM).
+Source-only shared fits win in their own class at this budget. Preferred joint
+predictive reference here is full-context-v3; shared-v4 has no demonstrated accuracy
+win. Test shared-v4 minus full-v3 Spearman delta I−.00793[−.02053,.00343],
+II−.05693[−.10080,−.01087], paired2000peptide-clusterbootstrap,seed4272026.
+These intervals capture heldout peptide sampling, not two-seed population uncertainty;
+no multiplicity adjustment or fresh scientific qualification. Historical converged
+v2joint≈.603I/.621II used38–44epochs, a different budget.
+
+Sequence-only prespecified strata:85.0%II test rows share some9mer with IItraining;
+these are not assigned cores. II-only no-seen9mer exact subset(n130)rho.4811/.4808;
+shared-joint.0199/−.0340. Cross-class transfer persists on no-overlap subsets but is
+modest and poorly calibrated; per-MHC metrics are retained and weaker than pooled
+scores in several conditions. All requested regression/loss/500nM classification
+metrics, baselines, confidence intervals and per-example predictions are preserved.
+
+Fit118.4–179.3s; whole worker161.5–227.8s, excluding build/queue/archive/download.
+SampledRSS4.80–5.01GiB; GPU allocatedpeak.277–1.195GiB/reserved.643–2.729GiB.
+All original-source row/target/hash and independent metric checks pass. FreshH100
+replays exactly reproduce640training probes from all10checkpoints. Strict CPU
+replay failed by9.0077e-5 on2/64probes; disabledCUDAtransformerfastpath agrees with
+CPU within5.12e-7. Original tolerance/failures preserved, no result recalculation.
+272model/trainer tests,4launcher fixtures,5analysis tests,wheel smoke and lint pass.
+Failed first container import executedzero updates; failed source/receipts retained.
+
+Takeaway: sharing improves structural consistency but has not delivered strong
+cross-class affinity transfer or a joint-accuracy gain. Prefer a matched-exposure
+control, shared residue interactions and contact/boundary supervision next.
+These are IC50 fits; same-protein MS ligand ranking remains unmeasured, and earlier
+synthetic-background MS enrichment does not answer it. Scientific PR131 gates remain
+open. The two apps are finished; this family is closed, with future work recorded.

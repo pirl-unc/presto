@@ -14507,16 +14507,33 @@ Spec: experiments/agents/codex/plans/2026-10-27_cross-class-flank-benchmark.md.
 
 - [x] Recover historical class-I/II Spearman and audit transfer limitations.
 - [x] Freeze paired conditions, data contract, diagnostic scope and local limits.
-- [ ] Implement/verify family launcher, diagnostic transfer and live dashboard.
-- [ ] Verify source admission and profile training-only runtime.
-- [ ] Run all eight serial fits and selected-checkpoint evaluations.
-- [ ] Independently verify predictions/metrics and close canonical records.
+- [x] Implement/verify family launcher, diagnostic transfer and live dashboard.
+- [x] Verify source admission and profile training-only runtime.
+- [x] Complete the superseding ten-condition H100 comparison and selected evaluations.
+- [x] Independently verify predictions/metrics and close canonical records.
 
 ### Shared candidate revision (before launch)
 
 - [x] Replace the prospective neutralization plan with a common candidate-scoring spec.
-- [ ] Implement v4 shared representation/pooling and preserve v3 inference.
-- [ ] Verify gradients, pooling, transfer identity, checkpoint and common-training contracts.
-- [ ] Adapt the live benchmark to all ten prespecified runs and execute/close it.
+- [x] Implement v4 shared representation/pooling and preserve v3 inference.
+- [x] Verify gradients, pooling, transfer identity, checkpoint and common-training contracts.
+- [x] Adapt the live benchmark to all ten prespecified runs and execute/close it.
 
-Review pending. No new predictive fit or profile has run.
+Review: shared-v4 implementation, 272 shared/model/trainer tests, four
+benchmark fixtures and wheel smoke pass. Admission and three runtime profiles
+completed. One CPU I-only reference completed; remaining CPU conditions were
+superseded by the user's authorized Modal H100! comparison. All ten GPU jobs are
+launched with a maximum of two concurrent workers. Source-only transfer is modest
+in the first seed; independent verification and final closure remain active.
+
+- [x] Launch the approved ten-condition H100! family and live reporting.
+- [x] Verify every saved prediction file and replay selected training probes.
+- [x] Finish paired comparisons, plots, canonical registry and local handoff.
+
+Final review: all ten H100 fits completed; independent source/metric checks pass,
+640 training probes replay exactly on fresh H100 processes, five analysis tests
+and pinned Ruff pass, figures and paired bootstrap are complete. CPU replay's
+strict tolerance failure is retained and localized to the CUDA transformer
+fastpath. CPU family and H100 canonical entries are closed. Shared-v4 transfer
+means rho.1871 I→II/.1652 II→I; no joint-accuracy promotion. Same-protein MS
+follow-up and five ranked transfer ideas remain prospective, not launched.

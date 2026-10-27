@@ -770,3 +770,10 @@ Keep applicability reporting separate from model features and the measured label
   started and name the current preparation stage. Surface failed admission and
   recovery, not a vague preparing label. Do not let optional presentation or new
   architecture ideas indefinitely delay the already agreed predictive comparison.
+
+## 2026-10-27 — Use authorized compute and avoid arbitrary startup blockers
+
+- The user explicitly reauthorized Modal, overriding the earlier local-only
+  preference. Use requested H100! and record hardware, rather than delaying
+  prediction runs behind invented laptop RAM caps. Keep active useful work running,
+  show actual metrics promptly, and distinguish CPU references from GPU comparisons.

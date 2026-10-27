@@ -1,0 +1,50 @@
+{
+  "condition": "shared-I-s42",
+  "finished_unix": 1793130035.313644,
+  "report": "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/results/shared-I-s42/report.json",
+  "runtime": {
+    "commit": "0659b43cbd296f9d590a215b6f4358c2780439b1",
+    "device": "cpu",
+    "dirty": true,
+    "environment": {
+      "MKL_NUM_THREADS": "4",
+      "OMP_NUM_THREADS": "4",
+      "OPENBLAS_NUM_THREADS": "4",
+      "PYTHONPATH": "/private/tmp/presto-flank-benchmark-20261027",
+      "PYTORCH_ENABLE_MPS_FALLBACK": "0"
+    },
+    "interop_threads": 1,
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+    "requested_modal_gpu": null,
+    "runtime": "/private/tmp/presto-flank-benchmark-20261027/presto",
+    "source_hashes": {
+      "cli/train.py": "64b852afbb3c09fe4d394836980362e1ec27d723efbec59c5eb854c796476133",
+      "cli/training_sources.py": "90a21da60c464f2925dd7087e34d7fe913105deb54574b735f2d09c147b3996c",
+      "data/modular.py": "ccf2486efeddfd4937a93e6b7a21c143626bf2481dfd579030e35cad2669b827",
+      "data/modular_auxiliary.py": "7e2f6e9f560fe62650809ec6be6a781c5d3040270c73b8ec02cfa4bdb4cdb34f",
+      "data/modular_context.py": "fe98a9b7716f1fae2197133e08f1ff4dbc56c9bd156efb41e0586c1272c01935",
+      "data/modular_lineage.py": "174832268ee01099fcd608dd82d3e60359905936e5de6f18f3c35d000112bdc7",
+      "data/modular_ordinal.py": "530667626cca2ba535585e1bd5aa0b1dbf5c77b8be0540b1da911e27be1b9520",
+      "data/modular_preparation.py": "e0268e9a9f5a531af378158f164ef5bce99361f6923be74f39bcd1f97bfc6962",
+      "data/modular_quantitative.py": "751a66c8aa68fd697d395ec3fc63951e262278a0fb6c3f26c185e8963f7d148d",
+      "data/modular_sources.py": "1f179c5f3b7791f6c79df7e77aa1ceafe4940ae1fcda50fd6e43e9fb4d886edf",
+      "data/vocab.py": "ecc2e1c5154d25d80cddae4f0708317e2cf40e39c171d9eaeb777ad88541e4f7",
+      "models/encoders.py": "c49f2461052b308f89289a3c44072c62edd09a1c1d41fb55426a5679db2b14c2",
+      "models/modular.py": "0bd99a93a6eabdba27ca79b3e22360f5e0c84be26f0f6b38321d665e07b83172",
+      "models/modular_dependencies.py": "17918102c6d7965e48b7c2c367e371da46d858624725fd81193d3a726a2b07a0",
+      "models/modular_support.py": "2b15a8a735424433b2039e195239202968410dcaaf6d88ff3de95702ee34a149",
+      "models/presto.py": "6195107a0715dc35b776aa138aff99bf0844f4410a2db0d1e5e8c2c2753c259a",
+      "scripts/train_iedb.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+      "training/modular.py": "34a989cecbc320912e20fd603162eb74f56e988400a1521a9695443713c12805",
+      "training/modular_evaluation.py": "ca75a674691a27e8c34ddf195ff31c29b76d134ec852320fa09aeeb9e69789ab",
+      "training/modular_resume.py": "0a70a61904da315166013b2e5c9cfb36c03d7f5fa7acb5ffb009e27ab43d069b",
+      "training/modular_run.py": "4213b7a15c06e2451e29af1b6826b90c7ab125b7822b1fc12159f5b02e524355",
+      "training/trainer.py": "b0aa1f1299b376c3dc8222874d24382ded01c226ab70bf641d80ae8a6f27e331"
+    },
+    "threads": 4,
+    "torch": "2.14.1",
+    "version": "presto.shared.v4"
+  },
+  "status": "completed"
+}

@@ -1,0 +1,110 @@
+{
+  "agent_model": "Codex / GPT-6",
+  "argv": [
+    "/Users/iskander/code/shared-virtual-env/bin/python",
+    "/private/tmp/presto-flank-benchmark-20261027/presto/experiments/2026-10-27_1835_codex_cross-class-flank-benchmark/code/launch.py",
+    "all"
+  ],
+  "conditions": {
+    "full-joint-s42": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "runtime": "full",
+      "seed": 42
+    },
+    "full-joint-s43": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "runtime": "full",
+      "seed": 43
+    },
+    "shared-I-s42": {
+      "classes": [
+        "I"
+      ],
+      "runtime": "shared",
+      "seed": 42
+    },
+    "shared-I-s43": {
+      "classes": [
+        "I"
+      ],
+      "runtime": "shared",
+      "seed": 43
+    },
+    "shared-II-s42": {
+      "classes": [
+        "II"
+      ],
+      "runtime": "shared",
+      "seed": 42
+    },
+    "shared-II-s43": {
+      "classes": [
+        "II"
+      ],
+      "runtime": "shared",
+      "seed": 43
+    },
+    "shared-joint-s42": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "runtime": "shared",
+      "seed": 42
+    },
+    "shared-joint-s43": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "runtime": "shared",
+      "seed": 43
+    },
+    "three-aa-joint-s42": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "runtime": "three_aa",
+      "seed": 42
+    },
+    "three-aa-joint-s43": {
+      "classes": [
+        "I",
+        "II"
+      ],
+      "runtime": "three_aa",
+      "seed": 43
+    }
+  },
+  "cwd": "/private/tmp/presto-flank-benchmark-20261027/presto",
+  "environment": {
+    "MKL_NUM_THREADS": "4",
+    "OMP_NUM_THREADS": "4",
+    "OPENBLAS_NUM_THREADS": "4",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTORCH_ENABLE_MPS_FALLBACK": "0"
+  },
+  "git_commit": "0659b43cbd296f9d590a215b6f4358c2780439b1",
+  "git_dirty": true,
+  "raw_artifacts": "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1835_codex_cross-class-flank-benchmark",
+  "runtime_commits": {
+    "full": "f24f7dfd6404c6eb450545daf72769269f55a5bf",
+    "shared": "0659b43cbd296f9d590a215b6f4358c2780439b1",
+    "three_aa": "9dd71348124faa49a4c6a60872385c86895d50b0"
+  },
+  "source_pins": {
+    "code/dashboard.html": "aea81b7a9a43d9377f58330ce6066b8fb2d318b2320d5202fb0b09b4aa458c7f",
+    "code/dashboard.py": "b59d751b576abd16f81818d84db128374583bc04fcb75ae47f6ebd9c1d5ec5b8",
+    "code/launch.py": "00f70a57d5ab0c3c1344b94718fe5f1b4e3e70820c815f4bd6d98c621f8df07f",
+    "code/support.py": "ed5777db4ba50e8c506785a05064546bfbcd5c38ae26365ba60e17b762b85b56",
+    "code/test_family.py": "8153d4ffe3702b5393a7d072c8c0f461512193905646c150155960b3943f2751"
+  },
+  "utc": "2026-10-27T19:03:53.443434+00:00"
+}

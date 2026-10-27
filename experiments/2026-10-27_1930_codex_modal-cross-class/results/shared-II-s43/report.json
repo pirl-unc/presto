@@ -1,0 +1,1035 @@
+{
+  "condition": "shared-II-s43",
+  "training_classes": [
+    "II"
+  ],
+  "runtime": {
+    "requested_gpu": "H100!",
+    "actual_gpu": "NVIDIA H100 80GB HBM3",
+    "total_gpu_bytes": 85009367040,
+    "python": "3.12.1 (main, Jan 11 2024, 10:22:40) [GCC 10.2.1 20210110]",
+    "torch": "2.14.1+cu130",
+    "numpy": "2.5.4",
+    "cuda": "13.0",
+    "platform": "Linux-4.19.0-gvisor-x86_64-with-glibc2.31",
+    "threads": 4,
+    "interop_threads": 1,
+    "tf32": false,
+    "amp": false,
+    "compile": false,
+    "model_version": "presto.shared.v4",
+    "source": {
+      "local_runtime": "/private/tmp/presto-flank-benchmark-20261027/presto",
+      "files": {
+        "__init__.py": "e3217291a1ed38cdbbeac7c0c60dc8a5d6c9165d0b5ddc8bf0eaaa52def05b33",
+        "__main__.py": "ff3afdd30f5ba68d326878bab7eff846d6b526a02a22e72140b64df27f1b188c",
+        "models/modular_support.py": "2b15a8a735424433b2039e195239202968410dcaaf6d88ff3de95702ee34a149",
+        "models/pmhc.py": "bf89abbdbafa25d89ccf4c6b0a29be582c517b57c87098b04e850e4cdd533aa7",
+        "models/independent_cut.py": "6b6a2afa884ed3d0fa4ba553a1f6c94d884e9299f3ece68d62cd34bcc6f3771f",
+        "models/affinity.py": "7ffee5f72d632137ceafbb886a79aa1058aebb552cc30dc83854afe5f211ecab",
+        "models/__init__.py": "ff494e641cc810c13d18685100d1b8f7ccb0e2f36a395284ed6c6293fb267072",
+        "models/encoders.py": "c49f2461052b308f89289a3c44072c62edd09a1c1d41fb55426a5679db2b14c2",
+        "models/steady_processing.py": "1c6dc0038eea7cd685a0a058f871193993ce3258c580a0b3083d69b836e56bc2",
+        "models/presto_modules.py": "82fc28a40308040bccbd0e079fb512afd32207f156a25b319cf5f70ae7ea03a4",
+        "models/presto.py": "6195107a0715dc35b776aa138aff99bf0844f4410a2db0d1e5e8c2c2753c259a",
+        "models/fragment_state.py": "797145eb74c408febd5a118abbac8f543ff42884f0076b754489fb59c970ada6",
+        "models/modular.py": "0bd99a93a6eabdba27ca79b3e22360f5e0c84be26f0f6b38321d665e07b83172",
+        "models/modular_dependencies.py": "17918102c6d7965e48b7c2c367e371da46d858624725fd81193d3a726a2b07a0",
+        "models/tcr_specificity.py": "5cda80a2d3582ae4dd24aab33c6cb337dcc7bd97ac5214f87c544d91ed7959d0",
+        "models/n_terminal_trimming.py": "4d9e7ccfbd69084937ad1b62a2f75e140bc13972aecfd837a5df73e12cb6f4ed",
+        "models/heads.py": "2ca63c65a60ec1d7cdde852efb598096ea9ab0c0932db46993b5341cbdc61320",
+        "models/substrate_entry.py": "28765cb0f8812417c767d23550935d064a2ee794e13d95109e9e6372e1bd56d5",
+        "models/peptide_availability.py": "6c1260d04c24d191d7d760145e626fe95d015e590feb7dbfb734da1ec8e9809a",
+        "data/hitlist_source.py": "343dfec0600d47704b6336869d504a8a704c9cbc864a5056211d2718ba544637",
+        "data/flank_selection.py": "dd64f6548431ded176e759424a10767b0076059a86aff62428e61bc403cfced2",
+        "data/modular_auxiliary.py": "7e2f6e9f560fe62650809ec6be6a781c5d3040270c73b8ec02cfa4bdb4cdb34f",
+        "data/scoped_partitions.py": "0c0c6fad751edb80d3ec07fc086885433eefdd9c698c420ee84f00201abfc9ff",
+        "data/collate.py": "eda1ce224382d78415d85c2f730fb0a6e2ae757974f0321491675fb405013bf3",
+        "data/vocab.py": "ecc2e1c5154d25d80cddae4f0708317e2cf40e39c171d9eaeb777ad88541e4f7",
+        "data/scoped_bulk.py": "157ad482be8744cbb8f326f93239fdb34d65232293d39d7cd3939d3d33cb09c6",
+        "data/modular_ordinal.py": "530667626cca2ba535585e1bd5aa0b1dbf5c77b8be0540b1da911e27be1b9520",
+        "data/modular_quantitative.py": "751a66c8aa68fd697d395ec3fc63951e262278a0fb6c3f26c185e8963f7d148d",
+        "data/modular_reference.py": "5786b8440bc5cf65f699ed847be95149ac40d5a09626b2cfc315947fc83ebf2e",
+        "data/loaders.py": "5c8e6cd14d9c0947f755844b77a777c867bb2136466c60719b1610f9777b2912",
+        "data/modular_preparation.py": "e0268e9a9f5a531af378158f164ef5bce99361f6923be74f39bcd1f97bfc6962",
+        "data/__init__.py": "358a6d6d32c9684de124c74da1637a9ed166686bd3916ffb9d4434792d2d41c7",
+        "data/modular_sources.py": "1f179c5f3b7791f6c79df7e77aa1ceafe4940ae1fcda50fd6e43e9fb4d886edf",
+        "data/modular_context.py": "fe98a9b7716f1fae2197133e08f1ff4dbc56c9bd156efb41e0586c1272c01935",
+        "data/modular_hitlist.py": "481b3215ac04f6e26397c6be69f2c4977ac3d46c6e653d9ef6c612b4e4c653b5",
+        "data/tokenizer.py": "fd9e40f4d67f38e2a277afcbfec70cdc6d8610742d7fa51f473b1fba9532f2a0",
+        "data/label_provenance.py": "52df2d517668a4cd7a38b4586ae6da4d5da0538c6e4a22d627dd2057fa6ddf2a",
+        "data/mouse_mhc_overlay.py": "d474f5c4c578a5295ae4916ce4d7aaeecc069c9373e51babad1f38da1b839d2e",
+        "data/downloaders.py": "fc6d832e3dcb883bc4b09acdde7af7ed2af3cab724a66ed248034b7c93ce86f1",
+        "data/bulk_ms.py": "f0dcc2ad76c918f21ee1c9cee7846d20df44a0858c6ad4909f52f13b33f56d32",
+        "data/modular_lineage.py": "174832268ee01099fcd608dd82d3e60359905936e5de6f18f3c35d000112bdc7",
+        "data/assay_context.py": "163ad9a580753a501d6070cbe1ddbf3c8292c716bd7826417356227ca194a873",
+        "data/allele_resolver.py": "86e33caccceaec557ebae8a98513ddfa7c0d0d1efffc9588aa9cc2879854ab21",
+        "data/modular.py": "ccf2486efeddfd4937a93e6b7a21c143626bf2481dfd579030e35cad2669b827",
+        "data/assay_types.py": "0729cc38dc2ecbdb93699d6321d5cf4e6d23a3ab910d973b97cfc97a29acc7b1",
+        "data/frozen_partitions.py": "7d936e259ca652ebccdb6d76632a8a787a3bf1b30ed46bffea639e878e8afccc",
+        "data/cross_source_dedup.py": "04a80d129b40d480f5d37135cc6047bd7395d03ccc78552c7606c70c219c8f8f",
+        "data/sequence_augmentation.py": "7b10c0bce9e2f51027e92f292ebed35b108a29684f392dee72da9df0f64b081c",
+        "data/groove.py": "120f0435cf2e2eb4b05583bcc3b8e43ef018352103e06785f81c27e9ebda309e",
+        "data/source_lineage.py": "ef7045de1ea842e44cd5452bbd767c4c5ec5bccafc53a030e988a22ed4fb2df3",
+        "data/species_context.py": "a6086ff6082563b47248c7542bcde013b655ccd6fc66dab3e5c6a547af5c5ca0",
+        "data/tcr_specificity.py": "eec2a1109b6c6d4c5fa025a505655d43521ab4ec32235459ef82ca62a61a70d3",
+        "data/mhc_index.py": "b189ed36c9741e70b89b04df94138075f7194f26aafbf2e984e41c2fcf73213a",
+        "data/modular_hitlist_ms.py": "7369f1afd59b2c1d6e3f4815f2897eb2b5ba1e80b6b22d3ac99e84ff0033b0f4",
+        "data/mhc_sequence_resolver.py": "c5eb521ba10a33a6e42f78b99ec6f74a9d04b97215c899796148aa0f366334b4",
+        "data/frozen_hitlist.py": "a6ce86cd39ed8e8701e4ceab59905322e52d1f2ba15575bde0444def7d3d1399",
+        "training/data_support.py": "722424a6dab266235a2a64674ce041211ae9c6b893402fb6b1a9b7a82154e7a1",
+        "training/output_contract.py": "24ce65d93f871a89b219774dede737b146b364f352125ca28c26db09845ad99c",
+        "training/supported_outputs.py": "6e3017bc54566db9adaa1dbcd06a54bc211e1434f2683643e676fc472ace40b4",
+        "training/coverage_preflight.py": "6e9e504274280e206e3664bd62c203006bdab28fe457e21c63e1918d797811f3",
+        "training/tasks.py": "7dafa4f9435bcf99ce53c4c646453300021781fc5e0cdb167deb9b8fb14764b7",
+        "training/modular_run.py": "4213b7a15c06e2451e29af1b6826b90c7ab125b7822b1fc12159f5b02e524355",
+        "training/config.py": "928ad18e6a2becf0eeafdd7919fd4e33192b726c13cd3059ea12d6fa6d0013ad",
+        "training/config_io.py": "cbb636a60fa4ea27573cfd5f54f9fdda9463114580f3a2e82e9f6983d689094a",
+        "training/evaluation_ledger.py": "27c2dd0f32c831b511ef39e9c9d09b716afa461186152e867a608cd50ea8a0bd",
+        "training/mil.py": "8c510ac96a0c3698acf1ff2071bc6317ddc96880b7f101e5e1dafc5c3d1970aa",
+        "training/__init__.py": "f4f625c78b8fb8f501258e73e50bad051c3b23d7640dee3bf02a7c1c4ba520d8",
+        "training/modular_resume.py": "0a70a61904da315166013b2e5c9cfb36c03d7f5fa7acb5ffb009e27ab43d069b",
+        "training/run_logger.py": "c3af193faa4064ea2bb7470abc82849d857ef3b82c802260b68eaa27cf15c33c",
+        "training/supervision.py": "522acbed4eea5b42314d61e0c89af5806dacb294fb0614a88611ff91c3d81950",
+        "training/output_updates.py": "50555a3218817e0bc86a312e24e279c029242e98209a80d2b18b5d2e5a3fc2de",
+        "training/modular_evaluation.py": "ca75a674691a27e8c34ddf195ff31c29b76d134ec852320fa09aeeb9e69789ab",
+        "training/holdout_eval.py": "cdec9e5b9159505cd38f694066ae26ffdddb2b026a11c3e6a60f793ad43c9c25",
+        "training/output_coverage.py": "63309274d9dd6bea35885f04fe54542f64012775635e47926f726cf8eeb56510",
+        "training/losses.py": "91f508db27a76f35e41f1468aeba433203db5e0b99b7f41d3bc41197bfbd74dc",
+        "training/trainer.py": "b0aa1f1299b376c3dc8222874d24382ded01c226ab70bf641d80ae8a6f27e331",
+        "training/modular.py": "34a989cecbc320912e20fd603162eb74f56e988400a1521a9695443713c12805",
+        "training/target_policy.py": "5111aa9bfd143241dd698fb6a94250f7e5c231a7ed427d93b3eb72c156aa98e5",
+        "training/checkpointing.py": "d98cee31013750f4b7ee624c23f2272e10d43ecac821ae2b5a766280480fde25",
+        "cli/predict.py": "e96636a11580412dff91bee47f2e95c9ee741b8b1bc446c0ddcaef6e8a36e9d1",
+        "cli/__init__.py": "fcbe77ba38aba1b6959b35e9d913abf2f38737e1c9ac9dab1ad65adf2a64d1a2",
+        "cli/train.py": "64b852afbb3c09fe4d394836980362e1ec27d723efbec59c5eb854c796476133",
+        "cli/evaluate.py": "c2a24aafc9fd4c614e39bcbbad7787c684f62e31dc4e6987d59d5e5cf7815654",
+        "cli/training_sources.py": "90a21da60c464f2925dd7087e34d7fe913105deb54574b735f2d09c147b3996c",
+        "cli/main.py": "9d6f450e61b9b42a42bb20eb4c82bb545455a11995e155d217eed125e6aff127",
+        "cli/weights.py": "51aa8c17382d13a156b86eaccfcdac824af25bb74f6fa9e55d3a1914cd1d92e1",
+        "cli/data.py": "3f4536f630f26245ce6105598283ad4cc60fe7b44989c43690d74bb4c313c892",
+        "scripts/focused_binding_probe.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/experiment_registry.py": "3c1ebb0bf2bcc66fba3e23f5e8ec41dd84bfb959fa0ad3479f246601c5585a21",
+        "scripts/train_modal.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/train_remote.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_broad_frontier_5ep.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_lr_schedule_bakeoff.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_positional_composition.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/train_synthetic.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/probe_training.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/audit_mhc_groove.py": "410fc9c4e3de9b886d731d100b7caffd48f975fef6956116eec0e79915500e5e",
+        "scripts/benchmark_directness_designs.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/train_iedb.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/assay_ablation_probe.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/sweep_20m_models.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_distributional_ba_heads_v3.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_runtime_variants.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_design_round3.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_lr_stability_7allele.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_binding_latents.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/pretrain_mhc_encoder.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_h100_batchsize.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_design_round2.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/__init__.py": "99879d42283a570e00d820e9dac887020c0583a570ed008ae2a263f656ce61d9",
+        "scripts/benchmark_register_designs.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_assay_head_bakeoff.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/aggregate_summary_runs.py": "e6f9c94d8b3606fb21c74564391f0d4f6f1003fc59a5bf8331320997221645cf",
+        "scripts/collect_modal_runs.py": "d851a40de8aaa9fde54726e321b73a69b076e523d840fadfdb19cdc4056ca08b",
+        "scripts/benchmark_distributional_ba_heads_v2.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_presto_bakeoff.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_runtime_multiallele.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/train_class1.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_hardware_generalization.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_distributional_ba_heads_v4.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/fetch_experiment_modal_runs.py": "9d7f15fd527976fbdb5fa7d7d83ec25d8cd37b12a7921c9995b3f1c0792febb4",
+        "scripts/benchmark_distributional_ba_heads.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/check_wheel.py": "a35c902642499eccc36037b43667204b78964d741781f5f31bed3365a040eaca",
+        "scripts/benchmark_factorized_multioutput.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/sanity_check_modal.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_factorized_ablation.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/groove_baseline_probe.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_target_space_bakeoff.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_assay_ablation.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/benchmark_modal_hardware.py": "45f4fb7f11c81c22af2835148c7a5933cb8c9936d5f915f6fd233b59f7a2ad10",
+        "scripts/distributional_ba/__init__.py": "79321b43fe360b7fc2790a4a74816961f14728a1758f00652fdf433cf10d4678",
+        "scripts/distributional_ba/pretrain_mhc.py": "a95938e6abeff928a771747bbfefbe090e4ca40ef28ee779a5cfd08b7b9c6ada",
+        "scripts/distributional_ba/train.py": "a95938e6abeff928a771747bbfefbe090e4ca40ef28ee779a5cfd08b7b9c6ada",
+        "legacy/pcgrad.py": "54c99ff8c585e36889b6b8ca6b43eb1ea84e3c6d34f984c895d0ae0797885e76",
+        "legacy/shared_v3_support.py": "3eae9ab29bad5aac6b86387458c4de23c4a40d246b90d9d6b60183fb3878b9e4",
+        "legacy/__init__.py": "6c21ec12141cd4c765da293169c936ba3dadd28d92ea64e76d2bc754c93f613e",
+        "legacy/modular_v2.py": "0eb6d2421a7fd13991f1e29a5bd0fd7dbe78d16978bce109f79f3950a79aa4b3",
+        "legacy/modular_support_v2.py": "da5d2c5db89a53a0cfce870dd93a4adbf393b1ef5d9c41d2784ebe36c0d1368d",
+        "legacy/shared_v3.py": "bcf97ee3043c3d91ea39f9667fd8912a0238bde1b6abb2507b04fa5323c4f96a",
+        "legacy/presto.py": "dd89f27e641afb11bf042e4c5ebc044a4e1f0f5908c4a859b1b71d896e668162",
+        "legacy/training_sources.py": "4cdd18e26dab978e976fd9ebacfc02e1a7d1a0035bac20f69db173d8676223d4",
+        "legacy/trainer.py": "e70a09c0bfce653d0575c277636199c55247dfddf039ede9615e63e74c66fd62",
+        "legacy/tcr_specificity.py": "c7aa973323903049310368913ae8dbff4fcd3530b836b02b4d9382c868568d34",
+        "legacy/scripts/focused_binding_probe.py": "d4625e94ce0504854f5cf88afada1fcc1dc051fc3864aafcb1917813533a2465",
+        "legacy/scripts/train_modal.py": "63196fb37ee29797de4ef01453f4e55bf73c1c95ac69cb029146bc589d56e12d",
+        "legacy/scripts/train_remote.py": "fa341355ef3c00d35082be0d40c397c8714d95f3191531cd0a9205a0f69b34e2",
+        "legacy/scripts/benchmark_broad_frontier_5ep.py": "79a1ba5a4c0765094fd21d90b0d90663dae675790fdf743f563c1a3e4d83ee03",
+        "legacy/scripts/benchmark_lr_schedule_bakeoff.py": "b6de3fcbb2e976c69f58b2ee2c09ad03ef1bc47a6cf9b1b8a138eed8b7fb171b",
+        "legacy/scripts/benchmark_positional_composition.py": "da7e8b6467e5bf77c554eac04d560e93ad87c699b29349fcccac52cfb778c4cd",
+        "legacy/scripts/train_synthetic.py": "c19d1ef47a03e0187b1deef5aa5780bfbde53501a8ccfcf49adf4724e3afa17f",
+        "legacy/scripts/probe_training.py": "bf23fdb57daf335edc2574069b158aa8c49018eb20380d6cdafeeced58d90f34",
+        "legacy/scripts/benchmark_directness_designs.py": "b4ce722b276bf125a2407f2249e7619eb8a96e19fccfe49df7a279dc4fe7bbeb",
+        "legacy/scripts/train_iedb.py": "69d5a84f84053a68a73b00b7ac0acbc1351553a6e36a11f0c45e89022ef6579e",
+        "legacy/scripts/assay_ablation_probe.py": "07c672a594fdf4bfa9faf60abf87e397937a3700a5f9c78d5df7ed22d6c8cd42",
+        "legacy/scripts/sweep_20m_models.py": "de644683541474e0e8dc53641d7b18fb0410b178fd1b5e17980379510107a07c",
+        "legacy/scripts/benchmark_distributional_ba_heads_v3.py": "f1eb0c79c24f677e55f9e89d3e5f82551ac412b488490a5e817b79b8e5dccadd",
+        "legacy/scripts/benchmark_runtime_variants.py": "db48e364e1c55a5c25ae8f3a0d9a1237e1ab5e2ee49f336d31fcf778b519075e",
+        "legacy/scripts/benchmark_design_round3.py": "738b8b00fda9a0adfdbf9d629a35369c040c24c3ec7e12e7323b97b0faeb6dae",
+        "legacy/scripts/benchmark_lr_stability_7allele.py": "3c9dc52680714648a0d9a1161d6f87f857217c12b6db333a6731ceaffc7ea4d3",
+        "legacy/scripts/benchmark_binding_latents.py": "a8bb5ae958f2ad0b7b8c839910c65ee741d31716d3790bccb999ef58281832e2",
+        "legacy/scripts/pretrain_mhc_encoder.py": "338095dd035ffdfeaef4bdcabdd9b9f8d358de5d1182442a5e6ce09b80f9b048",
+        "legacy/scripts/benchmark_h100_batchsize.py": "6605f4455a0567355735dd9a8a2632c3cb78525912474a698590092c2bb51d5c",
+        "legacy/scripts/benchmark_design_round2.py": "c077ed76704f43aa809fffc96d63d998179dda4aa32de78b539baa473319d033",
+        "legacy/scripts/__init__.py": "95f9780a4af7dc455720a624fa922d74785059f0a9ee5dabfab1ab3cf8e70756",
+        "legacy/scripts/benchmark_register_designs.py": "d21ed86ac2275ab8501741a6494080f6a4d17ffa2cff49ebf83091b73eb1dfa4",
+        "legacy/scripts/benchmark_assay_head_bakeoff.py": "4d8fb911b83c73bd7b5dd5774cd239da51ccf2863ebd3cd22a137599529a950b",
+        "legacy/scripts/benchmark_distributional_ba_heads_v2.py": "c77799e6938a8e01dea4cc1585e9bfac24a972e7f1805c3c9760a41cf78ce304",
+        "legacy/scripts/benchmark_presto_bakeoff.py": "0fc3da63ac1d5f02d801240fed4c9a714e485a40f92448cfea2738fddf0e6b68",
+        "legacy/scripts/benchmark_runtime_multiallele.py": "7e5323398e40312cfcdf15fb76d25144bc06ddb8b8614cb00bd3cbaa4cd42bff",
+        "legacy/scripts/train_class1.py": "c265b8395bc040400c7c913ae8e80e783c4813ffe18ee72e0cbafac3c3e13258",
+        "legacy/scripts/benchmark_hardware_generalization.py": "23367bbc57e98e3131f1e3118b51b268878aa9b202f02ef5e01c737d846128af",
+        "legacy/scripts/benchmark_distributional_ba_heads_v4.py": "a4f2f56a0f1a3805b123cb3ae1e3d5382c259a221cb28bebaec07715f8d18a4b",
+        "legacy/scripts/benchmark_distributional_ba_heads.py": "2c6b34e5974d53d3c6ac103ae3b18e77589b75b25d86ce84e0f3fdee4fb6cd5c",
+        "legacy/scripts/benchmark_factorized_multioutput.py": "b4915d619d2457fd2b29a68428272b46f0c237da9ef89e3b4faaa5788c1621cb",
+        "legacy/scripts/sanity_check_modal.py": "fa36c9b385c7be8179d7957d26b826722527d4ba07d9916a144a8a994275d9f3",
+        "legacy/scripts/benchmark_factorized_ablation.py": "04c0ea33c108656427eaea47e1a9b42a2a3e8ffef56658f64a7183245dc8c289",
+        "legacy/scripts/groove_baseline_probe.py": "93cf102fd4e15729292d7da3e37924014eda7c6e5d9ae6dfc7a405f6f09d88e3",
+        "legacy/scripts/benchmark_target_space_bakeoff.py": "cf2f8d72ce59e11f8757cf606b26bf8d10a950de4b54c7f5da5807dd0f7878cf",
+        "legacy/scripts/benchmark_assay_ablation.py": "03967a05abb04ee18c9d59eaa8c3527a58b00a42d642c51f02b0d8fc214d26c9",
+        "legacy/scripts/benchmark_modal_hardware.py": "851f10008f3c335827a08cc54509244eddd45981560104198add0ba922edbb1b",
+        "legacy/scripts/distributional_ba/assay_combos.py": "012c29c84d2e390837e95df7e553bcfe20992d55ab5c344c12b40625279b04a2",
+        "legacy/scripts/distributional_ba/metrics.py": "7543def21a47a75f665b3aeaec9021a4b009e59d207738b44ce9c20ef7cff7ac",
+        "legacy/scripts/distributional_ba/config.py": "49a6dfa166981c080f7c3b02f93526bd6b685d7aeffe73d83320cd88a83b9e3d",
+        "legacy/scripts/distributional_ba/config_v5.py": "033fa4bd3531c5c79138b439c72c27b2235d2524bf9d3d106c3d6ec7b061fa85",
+        "legacy/scripts/distributional_ba/__init__.py": "c29148ef4dcd74413a707c8dfe75cdf6a21f52933e28755310ef465f04267e74",
+        "legacy/scripts/distributional_ba/encoders.py": "42f4052c0b0a18a22384fa3dcbaf7af91243a8df80b51b66b2b6d9fe643cb716",
+        "legacy/scripts/distributional_ba/config_v4.py": "fef83ffb9327b76e1c4afd5b35b58a69ce51d1264fc25ef62b66a19bc0fbf25e",
+        "legacy/scripts/distributional_ba/config_v3.py": "0bb8ec99e49ac1d8e9be6addcc346ef0b19346618a6abce95a41ef003347b435",
+        "legacy/scripts/distributional_ba/config_v6.py": "b79975fb1048d1cff508aeae6e14a1ee3af908a50d05be36656ff4ad7791113d",
+        "legacy/scripts/distributional_ba/pretrain_mhc.py": "1e4654b3c43aa3db1b1df70dfc2d7ab0700c487e777103467aeceaad03ed2bb3",
+        "legacy/scripts/distributional_ba/train.py": "720e8b3ef81061beb7c71ad97030813799794dc3abec0f492a821eb500db735a",
+        "legacy/scripts/distributional_ba/config_v2.py": "fadb57a5b4c5f0697f86a8b7dc0e98172db70a52b5daa1ea9e2c789ddec8a858",
+        "legacy/scripts/distributional_ba/evaluate.py": "6fafeca0c3a8e216fd1d7c78feb0cf4fe14bb710c84539401825a8ac116508c9",
+        "legacy/scripts/distributional_ba/losses.py": "f297c7c5420b7a9cd33746f53cf265f9a331f5d2a650ef18851a83502e0f09ba",
+        "legacy/scripts/distributional_ba/assay_context.py": "dfd968b96f15ad22bb300fde3de73be442e1681254f6798356a12e18a97ba69b",
+        "legacy/scripts/distributional_ba/heads/regression.py": "458116f978b84bbd5e9dd8734450f4755113c0b0e6e8128cfabb83d3bf74f85e",
+        "legacy/scripts/distributional_ba/heads/quantile.py": "33ea819138c72e23be54ca6610caf00c7865f6ede94d6b325f420b6b8b932368",
+        "legacy/scripts/distributional_ba/heads/hlgauss.py": "29dfee1703bed6f750574a8d9d731c488c9e5cf56d38d93a4601daf071188c1d",
+        "legacy/scripts/distributional_ba/heads/__init__.py": "b3737fadabfef73e203a88a3cd21a66adbaf49e00e3d35282e859c152c260d78",
+        "legacy/scripts/distributional_ba/heads/distributional.py": "8b7439d2b3086badb7ec8abc2522d9456ff6683c6d7bc7f2ab2b7220b53de7ac",
+        "legacy/scripts/distributional_ba/heads/twohot.py": "05df27580f96667e24bc1ab9cc7b7351472ae3c1899d9e98d660717ef6668312",
+        "legacy/scripts/distributional_ba/heads/base.py": "72bcc1e2e51fbb983686bcf4233a606abbeb9e4504520c1994a9258ac2803302",
+        "legacy/scripts/distributional_ba/heads/gaussian.py": "34c1e9c1587e8e478ed9be909051f2f92387e61ce8d7d4116b70fe919047019f",
+        "data/b2m_sequences.csv": "2d4dd2eecf1aed35a0ad4a058b6623f085a9aa12b1406d9bd3f51a12f8f43fe6"
+      },
+      "commit": "0659b43cbd296f9d590a215b6f4358c2780439b1",
+      "dirty": true
+    },
+    "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 610.57.04"
+  },
+  "summary": {
+    "metrics": {
+      "train": {
+        "ic50": {
+          "n": 7261,
+          "loss": 0.5146699267848325,
+          "exact": {
+            "n": 7261,
+            "rmse": 0.6985401447871477,
+            "pearson": 0.7017785689850233,
+            "spearman": 0.6812050754647312,
+            "prediction_sd": 0.7282329768876445,
+            "target_sd": 0.9737040446382063,
+            "prediction_range": [
+              0.1007279049491645,
+              5.391305005448589
+            ],
+            "prediction_quantiles": [
+              0.1007279049491645,
+              2.8764474733119165,
+              3.4042957560143536,
+              3.8607172054471643,
+              5.391305005448589
+            ],
+            "sd_ratio": 0.7478997143924055,
+            "binding_at_500_nM": {
+              "n": 7261,
+              "accuracy": 0.8283982922462471,
+              "precision": 0.697742170429716,
+              "recall": 0.5354946897708217,
+              "f1": 0.6059456040480709,
+              "tp": 958,
+              "tn": 5057,
+              "fp": 415,
+              "fn": 831,
+              "auroc": 0.8622975975666761,
+              "auprc": 0.692568776896855,
+              "balanced_accuracy": 0.729827023247984
+            }
+          },
+          "by_class": {
+            "II": {
+              "n": 7261,
+              "rmse": 0.6985401447871477,
+              "pearson": 0.7017785689850233,
+              "spearman": 0.6812050754647312,
+              "prediction_sd": 0.7282329768876445,
+              "target_sd": 0.9737040446382063,
+              "prediction_range": [
+                0.1007279049491645,
+                5.391305005448589
+              ],
+              "prediction_quantiles": [
+                0.1007279049491645,
+                2.8764474733119165,
+                3.4042957560143536,
+                3.8607172054471643,
+                5.391305005448589
+              ],
+              "sd_ratio": 0.7478997143924055,
+              "binding_at_500_nM": {
+                "n": 7261,
+                "accuracy": 0.8283982922462471,
+                "precision": 0.697742170429716,
+                "recall": 0.5354946897708217,
+                "f1": 0.6059456040480709,
+                "tp": 958,
+                "tn": 5057,
+                "fp": 415,
+                "fn": 831,
+                "auroc": 0.8622975975666761,
+                "auprc": 0.692568776896855,
+                "balanced_accuracy": 0.729827023247984
+              }
+            }
+          }
+        }
+      },
+      "validation": {
+        "ic50": {
+          "n": 874,
+          "loss": 0.6319062561779749,
+          "exact": {
+            "n": 758,
+            "rmse": 0.7903021916553559,
+            "pearson": 0.630007966815774,
+            "spearman": 0.6453913345192859,
+            "prediction_sd": 0.7175050509608678,
+            "target_sd": 1.0060034011340269,
+            "prediction_range": [
+              0.8374230048116305,
+              5.166529739703345
+            ],
+            "prediction_quantiles": [
+              0.8374230048116305,
+              2.837253967034779,
+              3.3583795009801714,
+              3.8601809989830875,
+              5.166529739703345
+            ],
+            "sd_ratio": 0.7132232854800028,
+            "binding_at_500_nM": {
+              "n": 758,
+              "accuracy": 0.7730870712401056,
+              "precision": 0.636986301369863,
+              "recall": 0.4386792452830189,
+              "f1": 0.5195530726256983,
+              "tp": 93,
+              "tn": 493,
+              "fp": 53,
+              "fn": 119,
+              "auroc": 0.8096145206994264,
+              "auprc": 0.6157955847818309,
+              "balanced_accuracy": 0.6708048241067109
+            }
+          },
+          "by_class": {
+            "II": {
+              "n": 758,
+              "rmse": 0.7903021916553559,
+              "pearson": 0.630007966815774,
+              "spearman": 0.6453913345192859,
+              "prediction_sd": 0.7175050509608678,
+              "target_sd": 1.0060034011340269,
+              "prediction_range": [
+                0.8374230048116305,
+                5.166529739703345
+              ],
+              "prediction_quantiles": [
+                0.8374230048116305,
+                2.837253967034779,
+                3.3583795009801714,
+                3.8601809989830875,
+                5.166529739703345
+              ],
+              "sd_ratio": 0.7132232854800028,
+              "binding_at_500_nM": {
+                "n": 758,
+                "accuracy": 0.7730870712401056,
+                "precision": 0.636986301369863,
+                "recall": 0.4386792452830189,
+                "f1": 0.5195530726256983,
+                "tp": 93,
+                "tn": 493,
+                "fp": 53,
+                "fn": 119,
+                "auroc": 0.8096145206994264,
+                "auprc": 0.6157955847818309,
+                "balanced_accuracy": 0.6708048241067109
+              }
+            }
+          },
+          "censored": {
+            "n": 116,
+            "satisfaction": 0.08620689655172414
+          }
+        }
+      },
+      "test": {
+        "ic50": {
+          "n": 958,
+          "loss": 0.5974880103126241,
+          "exact": {
+            "n": 842,
+            "rmse": 0.7346431796911211,
+            "pearson": 0.6412141500376443,
+            "spearman": 0.6011269410458269,
+            "prediction_sd": 0.7463300852017372,
+            "target_sd": 0.9382039472708004,
+            "prediction_range": [
+              0.22170917645608812,
+              5.371721368736136
+            ],
+            "prediction_quantiles": [
+              0.22170917645608812,
+              2.823279053418806,
+              3.437218623974447,
+              3.881559902992141,
+              5.371721368736136
+            ],
+            "sd_ratio": 0.7954881104186174,
+            "binding_at_500_nM": {
+              "n": 842,
+              "accuracy": 0.7909738717339667,
+              "precision": 0.5853658536585366,
+              "recall": 0.47058823529411764,
+              "f1": 0.5217391304347826,
+              "tp": 96,
+              "tn": 570,
+              "fp": 68,
+              "fn": 108,
+              "auroc": 0.8241133443973201,
+              "auprc": 0.6368635580224123,
+              "balanced_accuracy": 0.6820025815969021
+            }
+          },
+          "by_class": {
+            "II": {
+              "n": 842,
+              "rmse": 0.7346431796911211,
+              "pearson": 0.6412141500376443,
+              "spearman": 0.6011269410458269,
+              "prediction_sd": 0.7463300852017372,
+              "target_sd": 0.9382039472708004,
+              "prediction_range": [
+                0.22170917645608812,
+                5.371721368736136
+              ],
+              "prediction_quantiles": [
+                0.22170917645608812,
+                2.823279053418806,
+                3.437218623974447,
+                3.881559902992141,
+                5.371721368736136
+              ],
+              "sd_ratio": 0.7954881104186174,
+              "binding_at_500_nM": {
+                "n": 842,
+                "accuracy": 0.7909738717339667,
+                "precision": 0.5853658536585366,
+                "recall": 0.47058823529411764,
+                "f1": 0.5217391304347826,
+                "tp": 96,
+                "tn": 570,
+                "fp": 68,
+                "fn": 108,
+                "auroc": 0.8241133443973201,
+                "auprc": 0.6368635580224123,
+                "balanced_accuracy": 0.6820025815969021
+              }
+            }
+          },
+          "censored": {
+            "n": 116,
+            "satisfaction": 0.20689655172413793
+          }
+        }
+      }
+    },
+    "overall_losses": {
+      "train": {
+        "assay_observation_mean": 0.5146699267848325,
+        "identity_label_mean": null,
+        "combined": 0.5146699267848325
+      },
+      "validation": {
+        "assay_observation_mean": 0.6319062561779749,
+        "identity_label_mean": null,
+        "combined": 0.6319062561779749
+      },
+      "test": {
+        "assay_observation_mean": 0.5974880103126241,
+        "identity_label_mean": null,
+        "combined": 0.5974880103126241
+      }
+    },
+    "elapsed_seconds": 164.55404183099995,
+    "steps": 1000,
+    "selected_epoch": 9,
+    "training_exposures": {
+      "ic50": 63720
+    },
+    "unique_training_labels": {
+      "ic50": 7261
+    },
+    "support": {
+      "ic50": {
+        "status": "directly_supervised",
+        "observations": 63720,
+        "validation": "not_evaluated"
+      }
+    },
+    "untrained_selected_parameters": [],
+    "coverage_gate": {
+      "status": "passed",
+      "untrained_parameters": [],
+      "exposed_features_without_updates": {},
+      "policy": "required",
+      "exception_reason": null,
+      "untrained_auxiliary_outputs": [],
+      "frozen_dependencies_with_inherited_support": []
+    },
+    "qualification": "not_qualified",
+    "test_policy": "evaluate_selected_once",
+    "device": "cuda",
+    "gpu": "NVIDIA H100 80GB HBM3"
+  },
+  "checkpoint": "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1930_codex_modal-cross-class/runs/shared-II-s43/raw/selected.pt",
+  "checkpoint_sha256": "505b67145ca7ad8ec5b7a49c2e227db4fe0dd9837f905d44101219c7cf17fa04",
+  "parameters": 449153,
+  "transfer": {
+    "identical_weights_expanded_routing": {
+      "target_class": "I",
+      "contract": {
+        "protocol": "identical_weights_expanded_routing",
+        "all_weights_preserved": true,
+        "new_parameters": [],
+        "target_class_labels_used": 0,
+        "capability_status": "unsupported_class_transfer_diagnostic"
+      },
+      "metrics": {
+        "validation": {
+          "ic50": {
+            "n": 2051,
+            "loss": 2.89352236722206,
+            "exact": {
+              "n": 1968,
+              "rmse": 1.6650093945256408,
+              "pearson": 0.2505229872670916,
+              "spearman": 0.23468290426879773,
+              "prediction_sd": 0.5804319258676708,
+              "target_sd": 1.4274721602501983,
+              "prediction_range": [
+                1.881245838419498,
+                5.113669613861233
+              ],
+              "prediction_quantiles": [
+                1.881245838419498,
+                3.0541542807117326,
+                3.4295209939445015,
+                3.8663801063479757,
+                5.113669613861233
+              ],
+              "sd_ratio": 0.4066152335790117,
+              "binding_at_500_nM": {
+                "n": 1968,
+                "accuracy": 0.4842479674796748,
+                "precision": 0.5694444444444444,
+                "recall": 0.11770334928229666,
+                "f1": 0.1950832672482157,
+                "tp": 123,
+                "tn": 830,
+                "fp": 93,
+                "fn": 922,
+                "auroc": 0.5866438231894125,
+                "auprc": 0.5754456468804163,
+                "balanced_accuracy": 0.5084724763746261
+              }
+            },
+            "by_class": {
+              "I": {
+                "n": 1968,
+                "rmse": 1.6650093945256408,
+                "pearson": 0.2505229872670916,
+                "spearman": 0.23468290426879773,
+                "prediction_sd": 0.5804319258676708,
+                "target_sd": 1.4274721602501983,
+                "prediction_range": [
+                  1.881245838419498,
+                  5.113669613861233
+                ],
+                "prediction_quantiles": [
+                  1.881245838419498,
+                  3.0541542807117326,
+                  3.4295209939445015,
+                  3.8663801063479757,
+                  5.113669613861233
+                ],
+                "sd_ratio": 0.4066152335790117,
+                "binding_at_500_nM": {
+                  "n": 1968,
+                  "accuracy": 0.4842479674796748,
+                  "precision": 0.5694444444444444,
+                  "recall": 0.11770334928229666,
+                  "f1": 0.1950832672482157,
+                  "tp": 123,
+                  "tn": 830,
+                  "fp": 93,
+                  "fn": 922,
+                  "auroc": 0.5866438231894125,
+                  "auprc": 0.5754456468804163,
+                  "balanced_accuracy": 0.5084724763746261
+                }
+              }
+            },
+            "censored": {
+              "n": 83,
+              "satisfaction": 0.13253012048192772
+            }
+          }
+        },
+        "test": {
+          "ic50": {
+            "n": 1845,
+            "loss": 3.145794763450556,
+            "exact": {
+              "n": 1758,
+              "rmse": 1.7517349376149791,
+              "pearson": 0.1658482765363577,
+              "spearman": 0.15586969180999866,
+              "prediction_sd": 0.5672620255728805,
+              "target_sd": 1.4127423162551709,
+              "prediction_range": [
+                1.8310828212253538,
+                5.085134422585918
+              ],
+              "prediction_quantiles": [
+                1.8310828212253538,
+                3.087844532146188,
+                3.506807982332904,
+                3.896960734631266,
+                5.085134422585918
+              ],
+              "sd_ratio": 0.4015325505903662,
+              "binding_at_500_nM": {
+                "n": 1758,
+                "accuracy": 0.4533560864618885,
+                "precision": 0.5882352941176471,
+                "recall": 0.10090817356205853,
+                "f1": 0.17226528854435832,
+                "tp": 100,
+                "tn": 697,
+                "fp": 70,
+                "fn": 891,
+                "auroc": 0.5805541924254405,
+                "auprc": 0.611866267231096,
+                "balanced_accuracy": 0.5048217530131023
+              }
+            },
+            "by_class": {
+              "I": {
+                "n": 1758,
+                "rmse": 1.7517349376149791,
+                "pearson": 0.1658482765363577,
+                "spearman": 0.15586969180999866,
+                "prediction_sd": 0.5672620255728805,
+                "target_sd": 1.4127423162551709,
+                "prediction_range": [
+                  1.8310828212253538,
+                  5.085134422585918
+                ],
+                "prediction_quantiles": [
+                  1.8310828212253538,
+                  3.087844532146188,
+                  3.506807982332904,
+                  3.896960734631266,
+                  5.085134422585918
+                ],
+                "sd_ratio": 0.4015325505903662,
+                "binding_at_500_nM": {
+                  "n": 1758,
+                  "accuracy": 0.4533560864618885,
+                  "precision": 0.5882352941176471,
+                  "recall": 0.10090817356205853,
+                  "f1": 0.17226528854435832,
+                  "tp": 100,
+                  "tn": 697,
+                  "fp": 70,
+                  "fn": 891,
+                  "auroc": 0.5805541924254405,
+                  "auprc": 0.611866267231096,
+                  "balanced_accuracy": 0.5048217530131023
+                }
+              }
+            },
+            "censored": {
+              "n": 87,
+              "satisfaction": 0.011494252873563218
+            }
+          }
+        }
+      }
+    }
+  },
+  "mean_baselines": {
+    "validation": {
+      "ic50": {
+        "n": 874,
+        "loss": 1.206144855853641,
+        "exact": {
+          "n": 758,
+          "rmse": 1.0067767054739534,
+          "pearson": null,
+          "spearman": null,
+          "prediction_sd": 4.440892098500626e-16,
+          "target_sd": 1.0060034011340269,
+          "prediction_range": [
+            3.2749805627176727,
+            3.2749805627176727
+          ],
+          "prediction_quantiles": [
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727
+          ],
+          "sd_ratio": 4.41439074012532e-16,
+          "binding_at_500_nM": {
+            "n": 758,
+            "accuracy": 0.7203166226912929,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "tn": 546,
+            "fp": 0,
+            "fn": 212,
+            "auroc": 0.5,
+            "auprc": 0.2796833773087071,
+            "balanced_accuracy": 0.5
+          }
+        },
+        "by_class": {
+          "II": {
+            "n": 758,
+            "rmse": 1.0067767054739534,
+            "pearson": null,
+            "spearman": null,
+            "prediction_sd": 4.440892098500626e-16,
+            "target_sd": 1.0060034011340269,
+            "prediction_range": [
+              3.2749805627176727,
+              3.2749805627176727
+            ],
+            "prediction_quantiles": [
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727
+            ],
+            "sd_ratio": 4.41439074012532e-16,
+            "binding_at_500_nM": {
+              "n": 758,
+              "accuracy": 0.7203166226912929,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "tn": 546,
+              "fp": 0,
+              "fn": 212,
+              "auroc": 0.5,
+              "auprc": 0.2796833773087071,
+              "balanced_accuracy": 0.5
+            }
+          }
+        },
+        "censored": {
+          "n": 116,
+          "satisfaction": 0.0
+        }
+      }
+    },
+    "test": {
+      "ic50": {
+        "n": 958,
+        "loss": 1.0925312568377483,
+        "exact": {
+          "n": 842,
+          "rmse": 0.940747597199373,
+          "pearson": null,
+          "spearman": null,
+          "prediction_sd": 4.440892098500626e-16,
+          "target_sd": 0.9382039472708004,
+          "prediction_range": [
+            3.2749805627176727,
+            3.2749805627176727
+          ],
+          "prediction_quantiles": [
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727
+          ],
+          "sd_ratio": 4.733397372094855e-16,
+          "binding_at_500_nM": {
+            "n": 842,
+            "accuracy": 0.7577197149643705,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "tn": 638,
+            "fp": 0,
+            "fn": 204,
+            "auroc": 0.5,
+            "auprc": 0.24228028503562946,
+            "balanced_accuracy": 0.5
+          }
+        },
+        "by_class": {
+          "II": {
+            "n": 842,
+            "rmse": 0.940747597199373,
+            "pearson": null,
+            "spearman": null,
+            "prediction_sd": 4.440892098500626e-16,
+            "target_sd": 0.9382039472708004,
+            "prediction_range": [
+              3.2749805627176727,
+              3.2749805627176727
+            ],
+            "prediction_quantiles": [
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727
+            ],
+            "sd_ratio": 4.733397372094855e-16,
+            "binding_at_500_nM": {
+              "n": 842,
+              "accuracy": 0.7577197149643705,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "tn": 638,
+              "fp": 0,
+              "fn": 204,
+              "auroc": 0.5,
+              "auprc": 0.24228028503562946,
+              "balanced_accuracy": 0.5
+            }
+          }
+        },
+        "censored": {
+          "n": 116,
+          "satisfaction": 0.0
+        }
+      }
+    },
+    "validation:transfer": {
+      "ic50": {
+        "n": 2051,
+        "loss": 2.6950256529445165,
+        "exact": {
+          "n": 1968,
+          "rmse": 1.6062011373029115,
+          "pearson": null,
+          "spearman": null,
+          "prediction_sd": 4.440892098500626e-16,
+          "target_sd": 1.4274721602501983,
+          "prediction_range": [
+            3.2749805627176727,
+            3.2749805627176727
+          ],
+          "prediction_quantiles": [
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727
+          ],
+          "sd_ratio": 3.111018359701148e-16,
+          "binding_at_500_nM": {
+            "n": 1968,
+            "accuracy": 0.4690040650406504,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "tn": 923,
+            "fp": 0,
+            "fn": 1045,
+            "auroc": 0.5,
+            "auprc": 0.5309959349593496,
+            "balanced_accuracy": 0.5
+          }
+        },
+        "by_class": {
+          "I": {
+            "n": 1968,
+            "rmse": 1.6062011373029115,
+            "pearson": null,
+            "spearman": null,
+            "prediction_sd": 4.440892098500626e-16,
+            "target_sd": 1.4274721602501983,
+            "prediction_range": [
+              3.2749805627176727,
+              3.2749805627176727
+            ],
+            "prediction_quantiles": [
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727
+            ],
+            "sd_ratio": 3.111018359701148e-16,
+            "binding_at_500_nM": {
+              "n": 1968,
+              "accuracy": 0.4690040650406504,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "tn": 923,
+              "fp": 0,
+              "fn": 1045,
+              "auroc": 0.5,
+              "auprc": 0.5309959349593496,
+              "balanced_accuracy": 0.5
+            }
+          }
+        },
+        "censored": {
+          "n": 83,
+          "satisfaction": 0.024096385542168676
+        }
+      }
+    },
+    "test:transfer": {
+      "ic50": {
+        "n": 1845,
+        "loss": 2.7347715136247115,
+        "exact": {
+          "n": 1758,
+          "rmse": 1.624600104058864,
+          "pearson": null,
+          "spearman": null,
+          "prediction_sd": 0.0,
+          "target_sd": 1.4127423162551709,
+          "prediction_range": [
+            3.2749805627176727,
+            3.2749805627176727
+          ],
+          "prediction_quantiles": [
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727,
+            3.2749805627176727
+          ],
+          "sd_ratio": 0.0,
+          "binding_at_500_nM": {
+            "n": 1758,
+            "accuracy": 0.43629124004550623,
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "tn": 767,
+            "fp": 0,
+            "fn": 991,
+            "auroc": 0.5,
+            "auprc": 0.5637087599544938,
+            "balanced_accuracy": 0.5
+          }
+        },
+        "by_class": {
+          "I": {
+            "n": 1758,
+            "rmse": 1.624600104058864,
+            "pearson": null,
+            "spearman": null,
+            "prediction_sd": 0.0,
+            "target_sd": 1.4127423162551709,
+            "prediction_range": [
+              3.2749805627176727,
+              3.2749805627176727
+            ],
+            "prediction_quantiles": [
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727,
+              3.2749805627176727
+            ],
+            "sd_ratio": 0.0,
+            "binding_at_500_nM": {
+              "n": 1758,
+              "accuracy": 0.43629124004550623,
+              "precision": 0.0,
+              "recall": 0.0,
+              "f1": 0.0,
+              "tp": 0,
+              "tn": 767,
+              "fp": 0,
+              "fn": 991,
+              "auroc": 0.5,
+              "auprc": 0.5637087599544938,
+              "balanced_accuracy": 0.5
+            }
+          }
+        },
+        "censored": {
+          "n": 87,
+          "satisfaction": 0.0
+        }
+      }
+    }
+  },
+  "resources": {
+    "wall_seconds": 195.02147463799997,
+    "peak_rss": 5157531648,
+    "peak_gpu_allocated": 1283005440,
+    "peak_gpu_reserved": 2929721344
+  },
+  "remote_checkpoint": "/runs/2026-10-27_1930_codex_modal-cross-class/shared-II-s43/raw/selected.pt",
+  "archive": {
+    "condition": "shared-II-s43",
+    "archive": "2026-10-27_1930_codex_modal-cross-class/shared-II-s43.tar.gz",
+    "sha256": "753ab842e33bc07de134953a73ad7e8db94dde995b31b0331d45c472ad99adf7",
+    "bytes": 44949477,
+    "local_archive": "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1930_codex_modal-cross-class/downloads/shared-II-s43.tar.gz",
+    "raw_directory": "/private/tmp/presto-flank-benchmark-20261027/presto/artifacts/2026-10-27_1930_codex_modal-cross-class/runs/shared-II-s43"
+  }
+}
