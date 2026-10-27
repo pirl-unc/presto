@@ -17,10 +17,11 @@ sequence-annotation classification and measured IC50 regression share an encoder
 IDs, allele-ID embeddings or a peptide match lookup. It does not describe the
 complete processing, MS and receptor system requested in issue #130.
 
-The assay path retains the rich sequence vectors. For affinity, each peptide/core
-and each MHC groove contributes a 128-dimensional vector to a learned fusion,
-followed by an assay-specific scalar readout per candidate and register aggregation. Supplied
-or inferred class/species values provide additional inputs and class routing;
+The assay path retains residue states. For affinity, each peptide/core attends
+to both groove sequences through the same shared interaction, then contributes a
+128-dimensional vector alongside the two pooled grooves to the learned fusion.
+An assay-specific scalar readout scores each candidate before register aggregation.
+Species values supply additional inputs; MHC class determines candidate enumeration;
 the annotation predictions do not replace the sequence vectors. IC50 targets
 are standardized log10(nM), with one-sided losses for censored bounds.
 
@@ -502,9 +503,10 @@ The source files must include real identity supervision for those allocated task
 An assay-only subset may instead omit identity tasks and supply class/species.
 Identity-only and receptor-auxiliary-only pretraining allocate no assay model.
 Bulk-only runs allocate no MHC or APC modules. A class-II subset containing only
-nine-residue training peptides omits register attention entirely; longer-peptide
-requests then fail explicitly. Declared MHC branches without assay training support
-are rejected. Context vocabularies and feature slots are declared in `PrestoConfig`.
+nine-residue training peptides trains the same candidate scorer used for longer
+ligands. There is no independent register-attention head to leave untrained;
+longer-ligand accuracy still requires validation. Declared MHC classes without
+assay training support are rejected. Context vocabularies and feature slots are declared in `PrestoConfig`.
 
 Training makes deterministic shuffled passes over assay observations and uses
 observation-weighted mean losses. A separate identity batch contributes 0.1 times
@@ -600,11 +602,12 @@ only evaluated after selection. A training-only diagnostic must explicitly decla
 
 ## Inference and current limits
 
-`presto.inference.modular.ModularPredictor` loads `presto.shared.v4` checkpoints
-and dispatches historical `presto.modular.v2` checkpoints to their original model.
-Both require input-feature training evidence. Version 1 experimental checkpoints
-are rejected. Historical v2 checkpoints cannot warm-start or resume v3 training;
-the full-context feature layout changed.
+`presto.inference.modular.ModularPredictor` loads current `presto.shared.v5` checkpoints
+and dispatches historical shared-v4, shared-v3 and modular-v2 checkpoints to their
+original models for inference. All require input-feature training evidence.
+Version 1 experimental checkpoints are rejected. Historical checkpoints cannot
+warm-start or resume current training; v5 adds a shared residue interaction before
+candidate pooling. A new architecture requires a new fit and qualification.
 Its `predict()` returns physical units and transformed
 values for regression, logits and explicitly uncalibrated scores for binary
 outcomes, identity probabilities, effective context, register diagnostics and

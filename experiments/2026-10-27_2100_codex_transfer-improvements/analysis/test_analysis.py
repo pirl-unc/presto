@@ -51,3 +51,15 @@ def test_paired_score_sign_and_ties():
     np.testing.assert_allclose(rho, [spearmanr(y, row).statistic for row in p])
     np.testing.assert_allclose(rho, [1, -1])
     assert rmse[0] == 0
+
+
+def test_selection_gate_rejects_class_regression_despite_macro_gain():
+    import numpy as np
+    from selection import gate
+
+    reference = np.array([[[0.5, 1.0], [0.5, 1.0]], [[0.5, 1.0], [0.5, 1.0]]])
+    candidate = reference.copy()
+    candidate[:, :, 0] += 0.04
+    assert gate(candidate, reference)["passed"]
+    candidate[:, 0, 0] = 0.48
+    assert not gate(candidate, reference)["passed"]

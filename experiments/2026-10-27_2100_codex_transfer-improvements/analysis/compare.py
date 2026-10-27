@@ -8,7 +8,14 @@ from scipy.stats import rankdata
 
 from verify import CONDITIONS, FAMILY, load, read, atomic
 
-VARIANTS = ["shared-I", "shared-II", "shared-joint", "full-joint", "three-aa-joint"]
+VARIANTS = [
+    "pooled-natural-joint",
+    "pooled-balanced-joint",
+    "interaction-natural-joint",
+    "interaction-balanced-joint",
+    "interaction-I",
+    "interaction-II",
+]
 SEEDS = [42, 43]
 BOOTSTRAP_DRAWS = 2000
 BOOTSTRAP_SEED = 4272026
@@ -62,25 +69,24 @@ def bootstrap(split, kind):
     for i, row in enumerate(reference):
         peptide_groups.setdefault(row["peptide"], []).append(i)
     groups = [np.array(v) for _, v in sorted(peptide_groups.items())]
-    own = "shared-I" if kind == "I" else "shared-II"
-    opposite = "shared-II" if kind == "I" else "shared-I"
+    own = "interaction-I" if kind == "I" else "interaction-II"
     contrasts = [
-        ("shared-joint", "full-joint"),
-        ("shared-joint", "three-aa-joint"),
-        ("full-joint", "three-aa-joint"),
-        ("shared-joint", own),
-        (opposite, own),
+        ("pooled-balanced-joint", "pooled-natural-joint"),
+        ("interaction-natural-joint", "pooled-natural-joint"),
+        ("interaction-balanced-joint", "pooled-balanced-joint"),
+        ("interaction-balanced-joint", "interaction-natural-joint"),
+        ("interaction-balanced-joint", own),
     ]
     rho, rmse = scores(y, p)
-    rho = rho.reshape(5, 2).mean(axis=1)
-    rmse = rmse.reshape(5, 2).mean(axis=1)
-    draws = np.empty((BOOTSTRAP_DRAWS, 2, 5))
+    rho = rho.reshape(len(VARIANTS), 2).mean(axis=1)
+    rmse = rmse.reshape(len(VARIANTS), 2).mean(axis=1)
+    draws = np.empty((BOOTSTRAP_DRAWS, 2, len(VARIANTS)))
     rng = np.random.default_rng(BOOTSTRAP_SEED)
     for i in range(BOOTSTRAP_DRAWS):
         index = np.concatenate([groups[j] for j in rng.integers(len(groups), size=len(groups))])
         a, b = scores(y[index], p[:, index])
-        draws[i, 0] = a.reshape(5, 2).mean(axis=1)
-        draws[i, 1] = b.reshape(5, 2).mean(axis=1)
+        draws[i, 0] = a.reshape(len(VARIANTS), 2).mean(axis=1)
+        draws[i, 1] = b.reshape(len(VARIANTS), 2).mean(axis=1)
     result = []
     for a, b in contrasts:
         ia, ib = VARIANTS.index(a), VARIANTS.index(b)
@@ -121,6 +127,7 @@ def main():
 
     plt.rcParams.update({"font.size": 10, "axes.spines.top": False, "axes.spines.right": False})
     results = FAMILY / "results"
+    assert read(results / "validation-decision.json")["test_used_for_decision"] is False
     all_rows = []
     runtime = []
     baselines = []
@@ -195,13 +202,14 @@ def main():
                 )
     table_csv(results / "seed-summary.csv", aggregate)
     atomic(results / "seed-summary.json", aggregate)
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.5), sharey=True)
+    fig, axes = plt.subplots(1, 2, figsize=(13, 5), sharey=True)
     labels = [
-        "Shared / I only",
-        "Shared / II only",
-        "Shared / joint",
-        "Full context / joint",
-        "3-aa / joint",
+        "Pooled / natural",
+        "Pooled / balanced",
+        "Interaction / natural",
+        "Interaction / balanced",
+        "Interaction / I only",
+        "Interaction / II only",
     ]
     for ax, kind in zip(axes, ("I", "II")):
         for i, variant in enumerate(VARIANTS):
@@ -222,18 +230,18 @@ def main():
                 ha="center",
                 fontsize=9,
             )
-        ax.set(title=f"MHC-{kind}", ylim=(0, 0.8), xticks=range(5), xticklabels=labels)
+        ax.set(title=f"MHC-{kind}", ylim=(0, 0.8), xticks=range(len(VARIANTS)), xticklabels=labels)
         ax.tick_params(axis="x", labelrotation=28)
         ax.grid(axis="y", alpha=0.15)
     axes[0].set_ylabel("Test Spearman ρ")
-    fig.suptitle("1,000 updates per run · H100 · dots are seeds 42 and 43")
+    fig.suptitle("Joint: 2,000 updates; source-only: 1,000 · H100 · seeds 42 / 43")
     fig.tight_layout()
     fig.savefig(results / "test-comparison.png", dpi=180)
     fig.savefig(results / "test-comparison.pdf")
     plt.close(fig)
 
     fig, axes = plt.subplots(2, 2, figsize=(11, 7), sharey=True)
-    colors = dict(zip(VARIANTS, ("#2d6f98", "#ba7a22", "#22866b", "#9462a9", "#af5557")))
+    colors = dict(zip(VARIANTS, ("#2d6f98", "#ba7a22", "#22866b", "#9462a9", "#af5557", "#708443")))
     for name, spec in CONDITIONS.items():
         directory = results / name
         history = read(directory / "history.json")
@@ -272,7 +280,7 @@ def main():
     handles, labels = axes[0, 0].get_legend_handles_labels()
     handles2, labels2 = axes[0, 1].get_legend_handles_labels()
     merged = dict(zip(labels + labels2, handles + handles2))
-    fig.legend(merged.values(), merged.keys(), loc="lower center", ncol=5)
+    fig.legend(merged.values(), merged.keys(), loc="lower center", ncol=3)
     fig.suptitle("Source-class validation only · solid seed 42, dashed seed 43")
     fig.tight_layout(rect=(0, 0.05, 1, 1))
     fig.savefig(results / "validation-curves.png", dpi=180)

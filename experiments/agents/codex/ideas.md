@@ -186,3 +186,30 @@ Primary literature, scope-limited:
 
 The cited work supports structural/data precedents; it does not demonstrate that
 these changes improve Presto. Do not mine exceptions for pathogen-specific design.
+
+
+## 2026-10-27 — Follow-ups from the shared transfer comparison
+
+The registered `2026-10-27_2100_codex_transfer-improvements` comparison supports
+a modest fixed-budget joint-affinity gain; zero-shot transfer remains weak.
+These follow-ups remain untested:
+- Keep sampling and architecture effects separate; neither need be additive.
+- Compare validation selection by pooled RMSE with a declared balanced group
+  objective prospectively, holding training and checkpoint availability fixed.
+- Audit cross-class structural coordinate correspondence. Shared token attention
+  does not itself establish aligned MHC groove positions or physical contacts.
+- Curate explicit panel/condition membership for real peptide series before
+  constructing pairwise affinity losses. The training-only inventory identifies
+  candidates, not validated paired measurements; no synthetic crop labels.
+- If residue interactions are retained, batch their computation across observations
+  in a separate software/performance study and verify checkpoint parity. Do not
+  silently change the execution contract of a running predictive benchmark.
+
+- A further shared-core hypothesis: register pooling currently has temperature1
+  in standardized model units, so its effective temperature in log10(nM) is
+  the source-training target standard deviation. Source-only and joint fits
+  therefore use different physical-unit pooling strengths despite identical code.
+  A prospectively fixed assay-unit temperature could make this more homogeneous.
+  This is a mathematical observation, not an accuracy result or physical occupancy
+  claim. Test it with frozen source-only checkpoints and then matched new fits
+  before changing the common training or checkpoint contract.

@@ -1,0 +1,55 @@
+{
+  "model": {
+    "dropout": 0.1,
+    "endpoints": [
+      "ic50"
+    ],
+    "identity_tasks": [],
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "species": [
+      "human"
+    ]
+  },
+  "schema": "presto.modular.manifest.v1",
+  "sources": [
+    {
+      "path": "/runs/2026-10-27_2100_codex_transfer-improvements/interaction-II-s42/inputs/joint-train.jsonl",
+      "sha256": "79e44788883a4668fb790191e2079b46bb28e3ea06314e75ace3aa25c65b096c",
+      "source": "hitlist-v4-iedb",
+      "population": "lossless class subset of admitted human direct IC50 cohort",
+      "label_policy": "physical unclipped exact IC50 training; exact and original bounds in holdouts",
+      "split_policy": "original exact-peptide/original-assay components; historically inspected; shared studies"
+    },
+    {
+      "path": "/runs/2026-10-27_2100_codex_transfer-improvements/interaction-II-s42/inputs/joint-validation.jsonl",
+      "sha256": "12b88ebf0573e98b434f20e1a5fa8645128d5a14b05dfda3985ef57440d1719b",
+      "source": "hitlist-v4-iedb",
+      "population": "lossless class subset of admitted human direct IC50 cohort",
+      "label_policy": "physical unclipped exact IC50 training; exact and original bounds in holdouts",
+      "split_policy": "original exact-peptide/original-assay components; historically inspected; shared studies"
+    },
+    {
+      "path": "/runs/2026-10-27_2100_codex_transfer-improvements/interaction-II-s42/inputs/joint-test.jsonl",
+      "sha256": "0ade7b1ed2436bcdc9fd145831a1718db36c00056321b9815cad418c293fbd75",
+      "source": "hitlist-v4-iedb",
+      "population": "lossless class subset of admitted human direct IC50 cohort",
+      "label_policy": "physical unclipped exact IC50 training; exact and original bounds in holdouts",
+      "split_policy": "original exact-peptide/original-assay components; historically inspected; shared studies"
+    }
+  ],
+  "training": {
+    "batch_size": 64,
+    "checkpoint_every_steps": 50,
+    "identity_weight": 0,
+    "learning_rate": 0.0003,
+    "max_epochs": 100,
+    "max_steps": 1000,
+    "min_epochs": 100,
+    "patience": 100,
+    "seed": 42,
+    "weight_decay": 0.0001
+  }
+}

@@ -309,6 +309,17 @@ claim that simply adding it can remedy the prior response-model failures.
 
 ## 2026-10-27 — Cross-class/flank benchmark
 
-- [ ] Complete the eight-condition local fixed-budget comparison and live dashboard.
-  Plan: plans/2026-10-27_cross-class-flank-benchmark.md. Prioritize zero-shot I↔II;
-  keep historical references, matched-budget results and qualified serving distinct.
+- [x] Close the superseding ten-condition H100 comparison and live dashboard.
+  Records: 2026-10-27_1930_codex_modal-cross-class; weak transfer, no v4 affinity promotion.
+
+## 2026-10-27 — Shared interaction and exposure comparison
+
+- [x] Complete twelve fits and promote validation-selected common v5 interaction.
+- [x] Keep natural sampling default; balancing fails class-I validation protection.
+- [x] Retain complete predictions, runtime, independent metrics and H100 replay.
+- [ ] Prospectively compare convergence budgets and checkpoint-selection objectives
+  before making broader accuracy claims. The 2,000-update recipe remains bounded.
+- [ ] Curate matched peptide-series conditions; audit fixed assay-unit pooling and
+  aligned groove coordinates as separate future hypotheses.
+
+Results belong to 2026-10-27_2100_codex_transfer-improvements, not this backlog.

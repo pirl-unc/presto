@@ -66,26 +66,28 @@ def test_full_ordered_context_keeps_distal_residues_without_extra_encoders():
     peptide = "ACDEFGHIKLMNPQRSTVWYACDEFGHIKLM"
     original = row(peptide=peptide)
     reordered = replace(original, peptide="CA" + peptide[2:])
-    encoded, states = model._encode([original, reordered])
+    _, states = model._encode([original, reordered])
     start = 8
     core = peptide[start : start + 9]
-    first = model._candidate_representation(encoded[core], states[peptide], start, 9)
-    second = model._candidate_representation(encoded[core], states[reordered.peptide], start, 9)
+    registers = [(start, core, [])]
+    first = model._interaction_candidates(peptide, original.mhc[0], registers, states)
+    second = model._interaction_candidates(reordered.peptide, reordered.mhc[0], registers, states)
     assert not torch.allclose(first, second, rtol=1e-6, atol=1e-6)
     assert candidates(peptide, "II")[start][1:] == candidates(reordered.peptide, "II")[start][1:]
     assert len([name for name, _ in model.named_modules() if name.endswith("encoder")]) == 1
 
 
-def test_whole_peptide_candidate_reduces_to_shared_encoding_without_padding():
+def test_single_nine_mer_uses_identical_interaction_for_both_classes():
     model = Presto(PrestoConfig(dropout=0)).eval()
     peptide = "ACDEFGHIK"
-    encoded, states = model._encode([row(peptide=peptide), row(peptide=AA)])
+    first = row(peptide=peptide, mhc_class="I")
+    second = row(peptide=peptide, mhc_class="II")
+    a, b = model([first, second])
+    # Same sequence/grooves with one candidate must have one computation;
+    # no hidden class-specific scoring path is allowed.
+    torch.testing.assert_close(a.value, b.value, rtol=0, atol=0)
+    _, states = model._encode([first, row(peptide=AA)])
     assert states[peptide].shape == (9, 128)
-    for sequence in (peptide, AA):
-        actual = model._candidate_representation(
-            encoded[sequence], states[sequence], 0, len(sequence)
-        )
-        torch.testing.assert_close(actual, encoded[sequence])
 
 
 @pytest.mark.parametrize("direction", [-1, 1])

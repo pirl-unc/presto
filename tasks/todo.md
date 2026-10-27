@@ -14544,6 +14544,8 @@ follow-up and five ranked transfer ideas remain prospective, not launched.
 Spec: experiments/agents/codex/plans/2026-10-27_transfer-improvements.md
 
 - [x] Implement and verify shared interaction and balanced observation sampling.
-- [ ] Freeze and execute twelve H100 fits with live validation.
-- [ ] Seal validation decisions and independently verify metrics.
-- [ ] Integrate supported wins, verify compatibility, close registry/handoff.
+- [x] Freeze and execute twelve H100 fits with live validation.
+- [x] Seal validation decisions and independently verify metrics.
+- [x] Integrate supported wins, verify compatibility, close registry/handoff.
+
+Review: twelve H100 fits closed; validation-selected common v5 interaction model, natural sampling default. All independent metrics, H100 training probes, final integration/wheel/docs checks and reproducibility records are retained in the experiment and handoff. No target-label calibration or scientific PR qualification.

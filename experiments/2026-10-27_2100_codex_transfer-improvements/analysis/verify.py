@@ -149,6 +149,9 @@ def subgroup_metrics(rows, scale, cores):
 
 
 def verify(condition):
+    decision = read(FAMILY / "results/validation-decision.json")
+    if not decision or decision.get("test_used_for_decision") is not False:
+        raise ValueError("seal validation-only decisions before opening test predictions")
     spec = CONDITIONS[condition]
     directory = FAMILY / "results" / condition
     report = read(directory / "report.json")

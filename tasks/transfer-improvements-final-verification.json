@@ -1,0 +1,36 @@
+{
+  "status": "passed",
+  "source_checkout": "/private/tmp/presto-transfer-improvements-20261027/presto",
+  "test_suites": {
+    "transfer-improvements-suite.xml": {
+      "tests": "136",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "40.142"
+    },
+    "transfer-improvements-additional.xml": {
+      "tests": "143",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "11.850"
+    },
+    "transfer-improvements-final.xml": {
+      "tests": "38",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "8.312"
+    }
+  },
+  "analysis_fixtures_passed": 6,
+  "ruff": "0.16.0",
+  "strict_docs": "passed",
+  "manifest_preflight": "passed",
+  "installed_wheel": "tasks/transfer-improvements-wheel.json",
+  "wheel": "/private/tmp/presto-transfer-distributions/presto-0.1.22-py3-none-any.whl",
+  "wheel_sha256": "e3b711dcfd02ed2449fb959bc54cc50a9ded7956efcc4599748da696c682cb95",
+  "completed_unix": 1793138765.359821,
+  "production_change_after_frozen_runtime": "remove unused pooled-only private helper; update tests/documentation; no v5 prediction behavior changed"
+}

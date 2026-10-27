@@ -65,10 +65,22 @@ def snapshot():
     meta = read(FAMILY / "reproduce/source-pins.json")
     live = read(FAMILY / "results/live-status.json", {})
     rows = []
+    decision = read(FAMILY / "results/validation-decision.json", {})
+    verified = 0
     for name in ORDER:
         spec = meta["conditions"][name]
         state = live.get("conditions", {}).get(name, {})
         report = read(FAMILY / "results" / name / "report.json", {})
+        verification = read(FAMILY / "results" / f"{name}-independent-verification.json", {})
+        if (
+            decision.get("test_used_for_decision") is False
+            and verification.get("status") == "passed"
+        ):
+            state = dict(state)
+            state["metrics"] = report["summary"]["metrics"]
+            state["transfer"] = report.get("transfer", {})
+            state["selected_epoch"] = report["summary"]["selected_epoch"]
+            verified += 1
         rows.append(
             dict(
                 name=name,
@@ -99,6 +111,8 @@ def snapshot():
     )
     return dict(
         updated_unix=time.time(),
+        verified=verified,
+        preferred_variant=decision.get("preferred_variant"),
         rows=rows,
         cpu_reference=cpu,
         controller=read(

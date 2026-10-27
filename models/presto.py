@@ -518,11 +518,6 @@ class Presto(nn.Module):
             name: states[index, : len(name)] for index, name in enumerate(names)
         }
 
-    @staticmethod
-    def _candidate_representation(core, states, start, length):
-        """Shared core-relative and full-context views; no flank-only weights."""
-        return (core + states[start : start + length].mean(0)) * 0.5
-
     def _interaction_candidates(self, peptide, mhc, register_candidates, states):
         """One residue interaction for either class, before any candidate pooling."""
         queries = torch.stack(

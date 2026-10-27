@@ -41,13 +41,32 @@ identified antigen processing. Component scores require independent anchors and
 validation for a mechanistic interpretation. Paired receptor scores do not replace
 repertoire-level recognition probabilities.
 
+## Observation sampling
+
+The manifest `training.balance_by` field defaults to `[]`, preserving shuffled
+passes over observations. An explicit `["mhc_class"]`, `["endpoint"]`, or their
+combination groups training rows by those declared fields. Each epoch cycles
+smaller shuffled groups to the largest group's size and interleaves groups.
+This changes population weights and epoch length; comparisons must record actual
+exposures, optimizer updates, validation cadence and runtime. Validation/test
+observations and train-derived target scalers are not rebalanced. MHC-class
+balancing requires one explicit class per sampled observation; unknown or mixed
+class bags fail admission. Single-group sampling is identical to ordinary shuffling.
+The durable order and RNG state support exact interrupted-run continuation.
+
+This is an option in the common trainer, not a class-specific model or optimizer.
+Do not assume that equal class exposure improves every endpoint or population.
+
 ## Binding registers and flanks
 
 MHC-I contributes the entire peptide as one candidate. MHC-II contributes every
 contiguous nine-residue core, giving `L - 8` registers for a length-`L` ligand.
 Each candidate uses the same encoder and endpoint readout. Its peptide
 representation averages an independently encoded core (positions restart at the
-core) with contextual states at those core positions in the full peptide. All
+core) with contextual token states at those core positions in the full peptide.
+One shared four-head cross-attention then reads both groove token sequences,
+followed by residual normalization and residue pooling. Either class trains every
+interaction parameter; the endpoint readout is also shared. All
 flanks can affect those states through attention; there is no flank-only projection
 or class-one-hot input. For MHC-I, both views reduce to the full peptide encoding.
 The rule is fixed across training runs, with no selectable alternate backend.
@@ -63,7 +82,10 @@ pooling assumption, not a physical occupancy equation or a mechanistic kinetic m
 Register enumeration is discrete; the encoder, scores and pooling are differentiable.
 This is a sequence-level approximation, not an explicit open/closed-groove structure
 or a model of class-I peptide bulging. Shared parameters permit cross-class scoring
-without newly initialized modules, but accuracy on an untrained class needs testing.
+without newly initialized modules. The fixed-budget development comparison in
+`experiments/2026-10-27_2100_codex_transfer-improvements/README.md` supports the
+shared interaction package for joint IC50; zero-shot transfer remains modest.
+This is not evidence of generalization to other assay families.
 
 These are peptide residues outside the proposed binding core, distinct from
 source-protein residues outside the observed ligand. Source-protein context keeps
@@ -73,24 +95,34 @@ Three-residue flank composition has precedent in
 [NetMHCIIpan (2008)](https://pmc.ncbi.nlm.nih.gov/articles/PMC2430535/) and the
 [2015 core-identification study](https://pmc.ncbi.nlm.nih.gov/articles/PMC4637192/).
 That does not establish sufficiency for Presto's endpoints. Full context removes
-that input restriction, but its accuracy benefit has **not** been measured.
-No scientific qualification is transferred from an older architecture by this change.
+that input restriction. The fixed-budget H100 comparison recorded in
+`experiments/2026-10-27_1930_codex_modal-cross-class/README.md` measured modest
+cross-class transfer and no shared-v4 joint-affinity improvement.
+Those architectures differ beyond flank context, so the comparison does not isolate
+its causal benefit. No scientific qualification transfers from an older architecture.
 
 ## Migration and historical checkpoints
 
-The current checkpoint format is `presto.shared.v4`; its fixed peptide-context
+The current checkpoint format is `presto.shared.v5`; its fixed peptide-context
 contract is `shared_core_context_v2`. New fits must use this contract.
-Old shared-v3 and modular-v2 checkpoints dispatch to the historical implementation for inference;
-they cannot silently initialize or resume a v4 training run. Their input feature
+Old shared-v4, shared-v3 and modular-v2 checkpoints dispatch to the historical implementation for inference;
+they cannot silently initialize or resume a v5 training run. Their input feature
 layout differs. A new model requires new training and scientific qualification.
 
+`configs/ic50_joint_development.json` provides the tested natural-sampling,
+2,000-update recipe for the frozen human IC50 development cohort. It expects the
+checksummed inputs preserved under `artifacts/2026-10-27_2100_codex_transfer-improvements/upload`.
+Run it through `presto train --observations-manifest configs/ic50_joint_development.json`.
+It is a bounded comparison recipe, not a convergence claim or a new general-purpose
+training default. The frozen experiment contains the exact H100 source/runtime contract.
+
 `presto.inference.ObservationPredictor` (also named
-`presto.inference.modular.ModularPredictor`) reads shared-v4, shared-v3 and modular-v2 checkpoints
+`presto.inference.modular.ModularPredictor`) reads shared-v5, shared-v4, shared-v3 and modular-v2 checkpoints
 and returns observation predictions in declared units, with support diagnostics.
 The older default-model predictor remains at `presto.inference.predictor.Predictor`
 for historical checkpoints. The older `predict presentation`, `predict recognition`,
 `predict tile` and `evaluate synthetic` CLI commands are historical-model interfaces;
-they are not readers for shared-v4 checkpoints.
+they are not readers for shared-v5 checkpoints.
 
 Old training flags such as `--epochs`, `--data-dir` and `--config` are rejected.
 Use manifest model/training/source fields instead. The optional command names
