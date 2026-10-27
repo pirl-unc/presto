@@ -409,3 +409,67 @@ def test_promoted_core_and_context_source_changes_reject_resume(tmp_path, monkey
     monkeypatch.setattr(runner, "train_step", lambda *a, **k: pytest.fail("unexpected update"))
     with pytest.raises(ValueError, match="contract changed"):
         runner.fit_index(ObservationIndex(path), output, resume=True)
+
+
+def test_step_validation_preserves_all_batches_and_exact_resume(tmp_path, monkeypatch):
+    path = manifest_fixture(tmp_path)
+    document = json.loads(path.read_text())
+    document['training']['validation_every_steps'] = 2
+    path.write_text(json.dumps(document))
+    reference, resumed = tmp_path / 'interval-reference', tmp_path / 'interval-resumed'
+    original, trace = interrupt(monkeypatch, before_step=100)
+    runner.fit_index(ObservationIndex(path), reference)
+    expected_trace = list(trace)
+    monkeypatch.setattr(runner, 'train_step', original)
+    original, before = interrupt(monkeypatch, before_step=6)
+    with pytest.raises(RuntimeError, match='interruption'):
+        runner.fit_index(ObservationIndex(path), resumed)
+    monkeypatch.setattr(runner, 'train_step', original)
+    original, after = interrupt(monkeypatch, before_step=100)
+    runner.fit_index(ObservationIndex(path), resumed, resume=True)
+    assert before[:4] + after == expected_trace
+    assert len(expected_trace) == 8
+    for epoch in (expected_trace[:3], expected_trace[3:6]):
+        assert {name for batch in epoch for name in batch[0]} == {f'a{i}' for i in range(6)}
+    history = json.loads((reference / 'history.json').read_text())
+    assert [r['steps'] for r in history] == [2, 4, 6, 8]
+    assert [r['epoch'] for r in history] == [1, 2, 2, 3]
+    for name in ('last.pt', 'selected.pt'):
+        assert_same(
+            torch.load(reference / name, weights_only=True),
+            torch.load(resumed / name, weights_only=True),
+        )
+    for name in (
+        'history.json',
+        'coverage.json',
+        'validation-predictions.jsonl',
+        'test-predictions.jsonl',
+    ):
+        assert (reference / name).read_bytes() == (resumed / name).read_bytes()
+
+
+def test_resume_retries_pending_interval_validation_without_extra_updates(tmp_path, monkeypatch):
+    path = manifest_fixture(tmp_path, replay=False)
+    document = json.loads(path.read_text())
+    document['training']['validation_every_steps'] = 2
+    path.write_text(json.dumps(document))
+    reference, resumed = tmp_path / 'reference', tmp_path / 'resumed'
+    runner.fit_index(ObservationIndex(path), reference)
+    original = runner.evaluate
+
+    def fail(*args, **kwargs):
+        raise RuntimeError('interrupted interval validation')
+
+    monkeypatch.setattr(runner, 'evaluate', fail)
+    with pytest.raises(RuntimeError, match='interval validation'):
+        runner.fit_index(ObservationIndex(path), resumed)
+    state = torch.load(resumed / 'resume.pt', weights_only=True)['metadata']['resume']['state']
+    assert state['steps'] == 2 and state['validation_pending']
+    monkeypatch.setattr(runner, 'evaluate', original)
+    runner.fit_index(ObservationIndex(path), resumed, resume=True)
+    for name in ('last.pt', 'selected.pt'):
+        assert_same(
+            torch.load(reference / name, weights_only=True),
+            torch.load(resumed / name, weights_only=True),
+        )
+    assert (reference / 'history.json').read_bytes() == (resumed / 'history.json').read_bytes()

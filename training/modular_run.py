@@ -20,7 +20,7 @@ from ..data.modular_quantitative import quantity_domain
 from ..data.modular_context import resolve_cell_context
 from ..data.modular_sources import ObservationIndex, file_sha256
 from ..models.modular import ModularConfig, ModularPresto
-from ..models.modular_support import feature_report
+from ..models.modular_support import feature_report, parameter_report
 from ..models.modular_dependencies import freeze_dependencies, frozen_output, row_has_trainable_loss
 from .modular import (
     identity_targets,
@@ -66,6 +66,7 @@ DEFAULT_TRAINING = {
     "coverage_policy": "required",
     "coverage_exception_reason": None,
     "checkpoint_every_steps": 100,
+    "validation_every_steps": None,
 }
 
 
@@ -123,6 +124,9 @@ def preflight(index: ObservationIndex):
     ):
         if type(training[key]) is not int or training[key] <= 0:
             raise ValueError(f"{key} must be a positive integer")
+    interval = training["validation_every_steps"]
+    if interval is not None and (type(interval) is not int or interval <= 0):
+        raise ValueError("validation_every_steps must be a positive integer or null")
     if training["max_steps"] is not None and (
         not isinstance(training["max_steps"], int) or training["max_steps"] <= 0
     ):
@@ -580,14 +584,17 @@ def _fit_index(index, output_dir, *, device, resume):
         snapshot()
     coverage, history = state["coverage"], state["history"]
     exposures = Counter(state["exposures"])
+    validation_interval = training["validation_every_steps"]
     while state["phase"] == "training":
         epoch = state["epoch"]
         if not state["order"]:
             state["order"] = epoch_order(index, base_indices, training["balance_by"], rng)
         order = state["order"]
         epoch_exposures = Counter(state["epoch_exposures"])
-        while state["position"] < len(order) and (
-            training["max_steps"] is None or state["steps"] < training["max_steps"]
+        while (
+            not state.get("validation_pending", False)
+            and state["position"] < len(order)
+            and (training["max_steps"] is None or state["steps"] < training["max_steps"])
         ):
             selected = order[state["position"] : state["position"] + training["batch_size"]]
             rows = [index[i] for i in selected]
@@ -616,8 +623,20 @@ def _fit_index(index, output_dir, *, device, resume):
             state["position"] += len(selected)
             state["epoch_losses"].append(step["loss"])
             state["steps"] += 1
+            if validation_interval and state["steps"] % validation_interval == 0:
+                state["validation_pending"] = True
             if state["steps"] % training["checkpoint_every_steps"] == 0:
                 snapshot()
+            if validation_interval and state["steps"] % validation_interval == 0:
+                break
+        complete_epoch = state["position"] == len(order)
+        budget_done = (complete_epoch and epoch == training["max_epochs"]) or (
+            training["max_steps"] is not None and state["steps"] >= training["max_steps"]
+        )
+        if validation_interval and not budget_done and state["steps"] % validation_interval:
+            # Reaching a data epoch is not a validation event in step-cadence mode.
+            state.update(epoch=epoch + 1, order=[], position=0)
+            continue
         validation_metrics, _ = evaluate(
             model, index, validation, scales, batch_size=training["batch_size"]
         )
@@ -653,7 +672,7 @@ def _fit_index(index, output_dir, *, device, resume):
                 "training_loss": sum(state["epoch_losses"]) / len(state["epoch_losses"]),
                 "validation": validation_metrics,
                 "selected": improved,
-                "complete_epoch": state["position"] == len(order),
+                "complete_epoch": complete_epoch,
                 "label_exposures": dict(epoch_exposures),
             }
         )
@@ -664,14 +683,16 @@ def _fit_index(index, output_dir, *, device, resume):
             flush=True,
         )
         state["last_epoch"] = epoch
-        if (
-            epoch == training["max_epochs"]
-            or (training["max_steps"] is not None and state["steps"] >= training["max_steps"])
-            or (epoch >= training["min_epochs"] and state["stale"] >= training["patience"])
+        if validation_interval:
+            state["validation_pending"] = False
+        if budget_done or (
+            epoch >= training["min_epochs"] and state["stale"] >= training["patience"]
         ):
             state["phase"] = "evaluation"
         else:
-            state.update(epoch=epoch + 1, order=[], position=0, epoch_losses=[], epoch_exposures={})
+            state.update(epoch_losses=[], epoch_exposures={})
+            if complete_epoch:
+                state.update(epoch=epoch + 1, order=[], position=0)
         snapshot()
     save_checkpoint(
         output_dir / "last.pt",
@@ -771,6 +792,7 @@ def _fit_index(index, output_dir, *, device, resume):
             "all_steps": coverage,
             "selected": selected_coverage,
             "input_features": features,
+            "parameter_elements": parameter_report(selected),
         },
     )
     complete_run(output_dir, contract)

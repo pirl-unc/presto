@@ -1,4 +1,4 @@
-"""Strict raw Hitlist IC50 admission against a caller-pinned human catalog.
+"""Strict raw Hitlist quantitative-assay admission against a caller-pinned human catalog.
 
 This adapter preserves physical measurements and source identity. Partitioning,
 original-outcome deduplication and experiment qualification remain explicit steps.
@@ -192,12 +192,32 @@ class HumanMHCCatalog:
 _NUMBER = re.compile(r"\s*(<=|>=|=|<|>)?\s*([+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)\s*")
 
 
+PURIFIED_ASSAYS = {
+    "half maximal inhibitory concentration (IC50)": ("ic50", "concentration"),
+    "dissociation constant KD": ("kd", "concentration"),
+    "half maximal effective concentration (EC50)": ("ec50", "concentration"),
+    "dissociation constant KD (~IC50)": ("kd_via_ic50", "concentration"),
+    "dissociation constant KD (~EC50)": ("kd_via_ec50", "concentration"),
+    "half life": ("half_life", "min"),
+    "off rate": ("koff", "1/s"),
+}
+
+
 def purified_ic50_observation(raw, catalog: HumanMHCCatalog, *, source_sha256, ordinal):
-    """Convert one actual export row; do not assign groups or invent missing facts."""
+    """Historical strict IC50 contract, preserved without admitting proxies."""
     if raw.get("source") not in ("iedb", "cedar") or raw.get("response_measured") != (
         "half maximal inhibitory concentration (IC50)"
     ):
         raise AdmissionError("outside_direct_iedb_cedar_ic50")
+    return purified_assay_observation(raw, catalog, source_sha256=source_sha256, ordinal=ordinal)
+
+
+def purified_assay_observation(raw, catalog: HumanMHCCatalog, *, source_sha256, ordinal):
+    """Preserve literal assay identity; no relabeling between measured endpoints."""
+    assay = PURIFIED_ASSAYS.get(raw.get("response_measured"))
+    if raw.get("source") not in ("iedb", "cedar") or assay is None:
+        raise AdmissionError("outside_supported_purified_quantitative_assay")
+    endpoint, domain = assay
     if not isinstance(raw.get("assay_method"), str) or not raw["assay_method"].startswith(
         "purified MHC/"
     ):
@@ -215,8 +235,11 @@ def purified_ic50_observation(raw, catalog: HumanMHCCatalog, *, source_sha256, o
     ):
         raise AdmissionError("unsupported_peptide_or_class")
     unit, value = raw.get("measurement_units"), raw.get("quantitative_value")
-    if unit not in ("pM", "nM", "uM", "mM", "M"):
-        raise AdmissionError("unsupported_concentration_unit")
+    if domain == "concentration":
+        if unit not in ("pM", "nM", "uM", "mM", "M"):
+            raise AdmissionError("unsupported_concentration_unit")
+    elif unit != domain:
+        raise AdmissionError("unsupported_assay_unit")
     if (
         isinstance(value, bool)
         or not isinstance(value, (int, float))
@@ -240,7 +263,7 @@ def purified_ic50_observation(raw, catalog: HumanMHCCatalog, *, source_sha256, o
     result = Observation(
         f"hitlist-v4-row:{ordinal}",
         f"hitlist-v4-{raw['source']}",
-        "ic50",
+        endpoint,
         peptide,
         (pair,),
         value=float(value),

@@ -11,7 +11,7 @@ def feature_layout(model):
     config = model.config
 
     def vector(name):
-        return [f"{name}:representation:{i}" for i in range(128)]
+        return [f"{name}:representation:{i}" for i in range(getattr(config, "d_model", 128))]
 
     def numeric(prefix, names):
         return [f"{prefix}:{name}:{part}" for name in names for part in ("value", "known")]
@@ -173,3 +173,22 @@ def feature_report(model):
             "fixed": [labels[i] for i in sorted(fixed)],
         }
     return report
+
+
+def parameter_report(model):
+    """Coordinate update evidence; nonzero updates do not prove identifiability."""
+    result = {}
+    for name, parameter in model.named_parameters():
+        mask = model.trained_elements[name]
+        fixed = parameter.shape[1] if name == "encoder.embedding.weight" else 0
+        redundant = parameter.numel() // 3 if name.endswith("in_proj_bias") else 0
+        result[name] = {
+            "elements": parameter.numel(),
+            "elements_with_gradient_and_update": int(mask.sum()),
+            "complete_history": name in model.element_history_complete,
+            "elements_without_recorded_update": parameter.numel() - int(mask.sum()),
+            "fixed_padding_elements": fixed,
+            "structurally_redundant_key_bias_elements": redundant,
+            "frozen": name in model.frozen_parameters,
+        }
+    return result

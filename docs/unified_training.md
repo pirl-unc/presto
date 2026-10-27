@@ -158,3 +158,20 @@ Software checks cover shared execution, full-flank order sensitivity and gradien
 variable register counts, endpoint isolation, checkpoint replay, transfer and
 resume. They do not measure improved MHC-I/MHC-II binding, processing or TCR
 accuracy. Prospective predictive comparisons remain separate registered work.
+
+### Scaling the shared model
+
+The observation manifest accepts `d_model`, `n_layers`, `n_heads` and `d_ff` in
+`model`; defaults128/2/4/512 preserve the shared-v5 checkpoint contract. Every
+reachable task uses these shared dimensions. In `training`, optional
+`validation_every_steps` schedules validation and checkpoint selection on update
+counts across data-epoch boundaries. Unset preserves epoch-based validation.
+The final budget is always evaluated; interval-mode patience counts validation
+events, with `min_epochs` retaining its epoch gate. Partial epochs and pending
+validation survive exact resume without dropping data or skipping evaluation.
+
+Coordinate-level gradient/update masks are checkpointed and summarized in
+`coverage.json`. Historical checkpoints without this evidence retain unknown
+historical coordinate coverage. Fixed padding and redundant attention key biases
+are distinguished from ordinary weights without relaxing existing output support
+and input-exposure checks.

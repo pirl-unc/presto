@@ -9,6 +9,34 @@ All new training uses this model and the observation-manifest interface. See
 Earlier experiments below describe their pinned historical model versions; their
 results do not qualify the new full-flank checkpoint contract.
 
+## Current development architecture
+
+Shared-v5 is the sole architecture for new training. The two-seed, matched2000-update
+comparison selected its shared residue interaction on validation. Test mean
+Spearman was0.5248 for MHC-I and0.5039 for MHC-II, versus0.5070/0.4893 for the
+pooled shared-v4 control. These are previously inspected development holdouts,
+not a qualification population. Source-only transfer remains weak and its RMSE
+did not improve. See the [registered comparison](../experiments/2026-10-27_2100_codex_transfer-improvements/README.md).
+
+Capacity is configured by `d_model`, `n_layers`, `n_heads` and `d_ff`; defaults
+128/2/4/512 preserve existing v5 checkpoints. Every reachable sequence, interaction,
+context and output module uses that same width. There is no separate class-I,
+class-II or assay-specific encoder. Latent dimension changes require a new fit;
+warm starts cannot silently change their meaning.
+
+New checkpoints preserve cumulative element masks for nonzero gradient and actual
+movement on the same coordinate in the same update. `coverage.json` reports these
+alongside tensor and input-feature evidence. Historical checkpoints without masks
+have **unknown** historical element coverage. Fixed padding and attention key biases
+are reported separately: the latter cancel in attention softmax and are structurally
+redundant, even when numerical gradients move them. Update evidence does not prove
+an identified biological effect; constant human-species inputs are one example.
+
+The strict purified-assay adapter accepts literal IC50, KD, EC50, separately named
+KD(~IC50)/KD(~EC50), half-life and off-rate measurements. These remain distinct
+outputs with their own target scales. An allocated output is supported only after
+its actual supervision and coverage checks; this adapter alone does not train it.
+
 ## Auxiliary annotations are not the affinity model
 
 The earlier shorthand "identity plus IC50" describes one diagnostic subset:
@@ -19,7 +47,7 @@ complete processing, MS and receptor system requested in issue #130.
 
 The assay path retains residue states. For affinity, each peptide/core attends
 to both groove sequences through the same shared interaction, then contributes a
-128-dimensional vector alongside the two pooled grooves to the learned fusion.
+configurable-width vector alongside the two pooled grooves to the learned fusion.
 An assay-specific scalar readout scores each candidate before register aggregation.
 Species values supply additional inputs; MHC class determines candidate enumeration;
 the annotation predictions do not replace the sequence vectors. IC50 targets
@@ -68,9 +96,9 @@ establishes a useful affinity representation.
 
 ## Shape and information flow
 
-One shared sequence encoder uses 20 canonical residues plus padding, width 128,
-two Transformer layers, four attention heads, feed-forward width 512, sinusoidal
-positions and masked mean pooling. It encodes each sequence independently.
+One shared sequence encoder uses 20 canonical residues plus padding, sinusoidal
+positions and masked mean pooling. Its defaults are width128, two Transformer
+layers, four attention heads and feed-forward width512. It encodes each sequence independently.
 
 | Requested outcome | Required sequences | Additional admitted inputs |
 | --- | --- | --- |

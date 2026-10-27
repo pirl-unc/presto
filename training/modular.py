@@ -171,7 +171,15 @@ def train_step(
             raise ValueError(f"nonfinite parameter after optimizer update: {name}")
         change = (parameter.detach() - before[name]).norm().item()
         coverage[name]["update_norm"] = change
-        coverage[name]["gradient_and_update"] = coverage[name]["gradient_norm"] > 0 and change > 0
+        evidence = (
+            (parameter.grad.ne(0) & parameter.detach().ne(before[name]))
+            if parameter.grad is not None
+            else torch.zeros_like(parameter, dtype=torch.bool)
+        )
+        model.trained_elements[name] = model.trained_elements[name].to(parameter.device) | evidence
+        count = int(evidence.sum())
+        coverage[name]["gradient_and_update"] = count > 0
+        coverage[name]["gradient_and_update_elements"] = count
     model.trained_parameters.update(
         name for name, evidence in coverage.items() if evidence["gradient_and_update"]
     )
@@ -271,6 +279,10 @@ def save_checkpoint(
         "scales": {key: asdict(value) for key, value in scales.items()},
         "support": model.support,
         "trained_parameters": sorted(model.trained_parameters),
+        "element_coverage": {
+            "masks": {name: value.cpu() for name, value in model.trained_elements.items()},
+            "complete_history": sorted(model.element_history_complete),
+        },
         "frozen_targets": list(model.frozen_targets),
         "frozen_parameters": sorted(model.frozen_parameters),
         "trained_features": {key: sorted(value) for key, value in model.trained_features.items()},
@@ -325,6 +337,29 @@ def load_checkpoint(
     if trained - dict(model.named_parameters()).keys():
         raise ValueError("checkpoint training coverage refers to absent parameters")
     model.trained_parameters = trained
+    if type(model) is ModularPresto:
+        evidence = payload.get("element_coverage")
+        if evidence is None:
+            model.element_history_complete = set()
+        else:
+            masks, complete = evidence.get("masks"), evidence.get("complete_history")
+            parameters = dict(model.named_parameters())
+            if (
+                not isinstance(masks, dict)
+                or set(masks) != set(parameters)
+                or not isinstance(complete, list)
+                or set(complete) - set(parameters)
+            ):
+                raise ValueError("invalid checkpoint element coverage names")
+            for name, mask in masks.items():
+                if (
+                    not isinstance(mask, torch.Tensor)
+                    or mask.dtype != torch.bool
+                    or mask.shape != parameters[name].shape
+                ):
+                    raise ValueError("invalid checkpoint element coverage mask")
+            model.trained_elements = masks
+            model.element_history_complete = set(complete)
     source_support = payload.get("source_label_support", {})
     if set(source_support) != set(model.config.source_categories) or any(
         not isinstance(values, list) or set(values) - {"present", "absent"}
@@ -375,6 +410,10 @@ def initialize_from_checkpoint(
     # Endpoint/identity unions may grow; feature slots may not silently change meaning.
     shared_contract = {
         "max_length",
+        "d_model",
+        "n_layers",
+        "n_heads",
+        "d_ff",
         "peptide_context",
         "species_defaults",
         "identity_threshold",
@@ -500,6 +539,26 @@ def initialize_from_checkpoint(
         inherited.append(name)
     model.load_state_dict(current, strict=True)
     model.trained_parameters.update(previous.trained_parameters & set(inherited))
+    for name in inherited:
+        if name not in model.trained_elements:
+            continue
+        if name not in previous.element_history_complete:
+            model.element_history_complete.discard(name)
+        old_mask = previous.trained_elements[name].to(model.device)
+        if name in projected:
+            model.trained_elements[name] = model.trained_elements[name].to(model.device)
+            axis, old_labels = previous.feature_layout[name]
+            new_positions = {label: i for i, label in enumerate(model.feature_layout[name][1])}
+            for i, label in enumerate(old_labels):
+                if label not in new_positions:
+                    continue
+                j = new_positions[label]
+                if axis == 1:
+                    model.trained_elements[name][:, j] = old_mask[:, i]
+                else:
+                    model.trained_elements[name][j] = old_mask[i]
+        else:
+            model.trained_elements[name] = old_mask.clone()
     for category, values in previous.source_label_support.items():
         if category in model.source_label_support:
             model.source_label_support[category] = set(values)

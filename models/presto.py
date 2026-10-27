@@ -78,9 +78,18 @@ class PrestoConfig:
     identity_threshold: float = 0.8
     dropout: float = 0.1
     max_length: int = 512
+    d_model: int = 128
+    n_layers: int = 2
+    n_heads: int = 4
+    d_ff: int = 512
     peptide_context: str = "shared_core_context_v2"
 
     def __post_init__(self):
+        for name in ("d_model", "n_layers", "n_heads", "d_ff"):
+            if type(getattr(self, name)) is not int or getattr(self, name) <= 0:
+                raise ValueError(f"{name} must be a positive integer")
+        if self.d_model % 2 or self.d_model % self.n_heads:
+            raise ValueError("model width must be even and divisible by attention heads")
         if self.peptide_context != "shared_core_context_v2":
             raise ValueError("new training requires the shared core/full ordered context contract")
         if not self.register_pooling:
@@ -319,10 +328,10 @@ class Presto(nn.Module):
         super().__init__()
         self.config = config
         self.encoder = SequenceEncoder(
-            d_model=128,
-            n_layers=2,
-            n_heads=4,
-            d_ff=512,
+            d_model=config.d_model,
+            n_layers=config.n_layers,
+            n_heads=config.n_heads,
+            d_ff=config.d_ff,
             vocab_size=21,
             max_len=config.max_length,
             dropout=config.dropout,
@@ -338,26 +347,28 @@ class Presto(nn.Module):
         self.identity_heads = nn.ModuleDict()
         for name in config.identity_tasks:
             width, classes = {
-                "mhc_class": (256, 2),
-                "mhc_species": (128, len(config.species)),
-                "tcr_species": (128, len(config.species)),
-                "tcr_lineage": (256, 2),
-                "mhc_pairing": (256, 2),
-                "tcr_pairing": (256, 2),
-                "peptide_source": (128, len(config.source_categories)),
+                "mhc_class": (2 * config.d_model, 2),
+                "mhc_species": (config.d_model, len(config.species)),
+                "tcr_species": (config.d_model, len(config.species)),
+                "tcr_lineage": (2 * config.d_model, 2),
+                "mhc_pairing": (2 * config.d_model, 2),
+                "tcr_pairing": (2 * config.d_model, 2),
+                "peptide_source": (config.d_model, len(config.source_categories)),
             }[name]
             self.identity_heads[name] = nn.Linear(width, classes)
         if self.has_pmhc:
             self.residue_interaction = nn.MultiheadAttention(
-                128, 4, dropout=config.dropout, batch_first=True
+                config.d_model, config.n_heads, dropout=config.dropout, batch_first=True
             )
-            self.interaction_norm = nn.LayerNorm(128)
+            self.interaction_norm = nn.LayerNorm(config.d_model)
             self.pmhc_fusion = self._fusion(
-                384 + 2 * len(config.species) + 2 * ("mhc_pairing" in config.auxiliary_context)
+                3 * config.d_model
+                + 2 * len(config.species)
+                + 2 * ("mhc_pairing" in config.auxiliary_context)
             )
-        source_width = 262 if config.source_context else 0
+        source_width = (2 * config.d_model + 6) if config.source_context else 0
         self.context_width = (
-            (384 if self.has_tcr else 0)
+            (3 * config.d_model if self.has_tcr else 0)
             + (source_width if self.has_cellular else 0)
             + len(config.context_species) * len(config.species)
             + sum(
@@ -374,13 +385,17 @@ class Presto(nn.Module):
             + 2 * sum(name != "mhc_pairing" for name in config.auxiliary_context)
         )
         if self.has_context:
-            self.context_fusion = self._fusion(128 + self.context_width)
+            self.context_fusion = self._fusion(config.d_model + self.context_width)
         if self.has_digest:
             self.digest_fusion = self._fusion(
-                128 + source_width + len(config.enzymes) + 1 + 2 * len(config.preparation_features)
+                config.d_model
+                + source_width
+                + len(config.enzymes)
+                + 1
+                + 2 * len(config.preparation_features)
             )
         if self.has_ms:
-            self.ms_fusion = self._fusion(128 + 2 * len(config.acquisition_features))
+            self.ms_fusion = self._fusion(config.d_model + 2 * len(config.acquisition_features))
         binary_parts = {
             part
             for name in config.endpoints
@@ -391,7 +406,7 @@ class Presto(nn.Module):
             setattr(
                 self,
                 "ms_score" if part == "ms_response" else f"{part}_score",
-                nn.Linear(128, 1, bias=False),
+                nn.Linear(config.d_model, 1, bias=False),
             )
         self.quantity_scores = nn.ModuleDict()
         for domain in config.quantity_domains:
@@ -402,7 +417,7 @@ class Presto(nn.Module):
                 for part in endpoint_spec(name).parts
             }
             self.quantity_scores[domain] = nn.ModuleDict(
-                {part: nn.Linear(128, 1, bias=False) for part in sorted(parts)}
+                {part: nn.Linear(config.d_model, 1, bias=False) for part in sorted(parts)}
             )
         self.heads = nn.ModuleDict()
         self.offsets = nn.ModuleDict()
@@ -413,7 +428,11 @@ class Presto(nn.Module):
                     2 * len(config.observation_features) if spec.observation_covariates else 0
                 )
             else:
-                self.heads[name] = nn.Linear(128, 1)
+                self.heads[name] = nn.Linear(config.d_model, 1)
+        self.trained_elements = {
+            name: torch.zeros_like(p, dtype=torch.bool) for name, p in self.named_parameters()
+        }
+        self.element_history_complete = set(self.trained_elements)
         self.trained_parameters: set[str] = set()
         self.frozen_targets: tuple[str, ...] = ()
         self.frozen_parameters: set[str] = set()
@@ -426,9 +445,8 @@ class Presto(nn.Module):
             for name in (*config.endpoints, *config.identity_tasks)
         }
 
-    @staticmethod
-    def _fusion(width: int) -> nn.Sequential:
-        return nn.Sequential(nn.Linear(width, 128), nn.GELU())
+    def _fusion(self, width: int) -> nn.Sequential:
+        return nn.Sequential(nn.Linear(width, self.config.d_model), nn.GELU())
 
     def train(self, mode=True):
         super().train(mode)
@@ -649,8 +667,8 @@ class Presto(nn.Module):
     def _source(self, row, encoded):
         context = row.context
         values = [
-            encoded.get(context.source_n, self._zero(128)),
-            encoded.get(context.source_c, self._zero(128)),
+            encoded.get(context.source_n, self._zero(self.config.d_model)),
+            encoded.get(context.source_c, self._zero(self.config.d_model)),
         ]
         flags = [float(context.source_n is not None), float(context.source_c is not None)]
         for value in (context.n_terminus, context.c_terminus):
@@ -678,10 +696,12 @@ class Presto(nn.Module):
             values.append(
                 torch.cat([encoded[row.peptide], encoded[row.tcr_a], encoded[row.tcr_b]])
                 if receptor
-                else self._zero(384)
+                else self._zero(3 * self.config.d_model)
             )
         if self.config.source_context and self.has_cellular:
-            values.append(self._source(row, encoded) if cellular else self._zero(262))
+            values.append(
+                self._source(row, encoded) if cellular else self._zero(2 * self.config.d_model + 6)
+            )
         allowed_roles = set()
         if cellular:
             allowed_roles.update(("apc", "immune"))

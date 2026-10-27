@@ -14549,3 +14549,13 @@ Spec: experiments/agents/codex/plans/2026-10-27_transfer-improvements.md
 - [x] Integrate supported wins, verify compatibility, close registry/handoff.
 
 Review: twelve H100 fits closed; validation-selected common v5 interaction model, natural sampling default. All independent metrics, H100 training probes, final integration/wheel/docs checks and reproducibility records are retained in the experiment and handoff. No target-label calibration or scientific PR qualification.
+
+## 2026-10-27 — Scale the shared architecture and audit failures
+
+Spec: experiments/agents/codex/plans/2026-10-27_scale-shared-model.md.
+
+- [ ] Audit element-level weight/input/output support and existing predictive failures.
+- [ ] Admit larger, richer data with preserved split and measurement provenance.
+- [ ] Fix common-core defects and freeze the concrete scaling comparisons.
+- [ ] Run and independently verify scaled multi-output training on Modal.
+- [ ] Promote supported changes, document limits and close canonical records.
