@@ -323,3 +323,13 @@ claim that simply adding it can remedy the prior response-model failures.
   aligned groove coordinates as separate future hypotheses.
 
 Results belong to 2026-10-27_2100_codex_transfer-improvements, not this backlog.
+
+## Shared-v5 scale-up (2026-10-27)
+
+- [x] Audit old checkpoint coordinates, constant inputs and heldout failures.
+- [x] Generalize strict source admission; independently verify168,210 observations.
+- [x] Make shared capacity configurable; preserve element masks and exact step-cadence resume.
+- [x] Freeze and launch eight H100! comparisons, six outputs,134,561training observations.
+- [ ] Seal validation decisions, independently verify every new heldout dump and replay checkpoints.
+- [ ] Apply supported recipe/capacity wins; close canonical experiment and update practical baseline.
+- [ ] Later: real same-protein ligand ranking and source-qualified cell/TCR inputs remain separate gaps.

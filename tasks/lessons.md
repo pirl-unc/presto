@@ -777,3 +777,16 @@ Keep applicability reporting separate from model features and the measured label
   preference. Use requested H100! and record hardware, rather than delaying
   prediction runs behind invented laptop RAM caps. Keep active useful work running,
   show actual metrics promptly, and distinguish CPU references from GPU comparisons.
+
+## 2026-10-27 — shared-model scale-up
+
+- Record interpreter and package versions by running the actual executable; do not
+  infer them from an environment name or an older reproduction receipt.
+- Verify producer conventions for source aliases and zero/one-based row ordinals
+  before declaring a provenance conflict. Cross-check immutable raw fingerprints
+  and original assay identities, and preserve frozen original observation files.
+- For data-size comparisons, match validation opportunities by update count. Keep
+  partially consumed data epochs and pending validation durable across interruption.
+- Tensor movement plus a gradient elsewhere is not coordinate-level training
+  evidence. Preserve same-coordinate masks, fixed padding, structural redundancy
+  and unknown historical coverage separately.

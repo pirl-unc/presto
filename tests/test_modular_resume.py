@@ -473,3 +473,27 @@ def test_resume_retries_pending_interval_validation_without_extra_updates(tmp_pa
             torch.load(resumed / name, weights_only=True),
         )
     assert (reference / 'history.json').read_bytes() == (resumed / 'history.json').read_bytes()
+
+
+def test_changed_sampler_source_invalidates_resume_before_updates(tmp_path, monkeypatch):
+    import shutil
+    from presto.training import modular_resume
+
+    root = Path(modular_resume.__file__).resolve().parent.parent
+    copied = tmp_path / 'frozen-source'
+    for relative in modular_resume.SOURCE_FILES:
+        destination = copied / relative
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(root / relative, destination)
+    monkeypatch.setattr(modular_resume, '__file__', str(copied / 'training/modular_resume.py'))
+    path = manifest_fixture(tmp_path, replay=False)
+    output = tmp_path / 'fit'
+    interrupt(monkeypatch, before_step=3)
+    with pytest.raises(RuntimeError, match='interruption'):
+        runner.fit_index(ObservationIndex(path), output)
+    sampler = copied / 'training/modular_sampling.py'
+    assert sampler.exists()
+    sampler.write_text(sampler.read_text() + '\n# Changed sampler implementation.\n')
+    monkeypatch.setattr(runner, 'train_step', lambda *a, **k: pytest.fail('unexpected update'))
+    with pytest.raises(ValueError, match='contract changed'):
+        runner.fit_index(ObservationIndex(path), output, resume=True)

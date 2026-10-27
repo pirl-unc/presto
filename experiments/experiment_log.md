@@ -5043,3 +5043,65 @@ evidence retained. Apply winning v5 to the single common training path; archive
 v4 for inference. No new labels admitted from exploratory nested-peptide audit.
 Takeaway: a useful fixed-budget joint-affinity architecture gain, without a strong
 zero-shot-transfer claim. Scientific PR131 and same-protein MS/TCR gates remain open.
+
+## 2026-10-27_2235_codex_shared-support-audit — parameter evidence, calibration failures and six-output source expansion
+
+October27,2026; Codex / GPT-6. [Report, reproducibility bundle and audit tables](2026-10-27_2235_codex_shared-support-audit/README.md).
+Baseline2f5705184f6997d50883639f5d38f6c133b81995; common implementation fixes0c4c984b.
+Local CPU analysis, Python3.12.6/Torch2.14.1/NumPy2.5.4, threads1; no GPU requested,
+new predictive fitting or new heldout inference. Six existing v5 checkpoints:
+joint2000updates and source-only1000updates, seeds42/43, natural sampling,
+AdamW3e-4/decay1e-4/batch64/dropout.1, no pretraining/synthetic labels/identity loss.
+Original fits requestedH100! and observedH10080GBHBM3; see their pinned runtime.
+Reproduction: experiment reproduce/launch.sh,launch.json,source; raw checkpoints
+artifacts/2026-10-27_2100_codex_transfer-improvements/runs. Original per-example
+validation/test dumps remain in that completed family; exact paths/hashes are
+recorded in this audit's failure files. Gradient probes use64TRAIN rows, eval mode,
+no optimizer step; these do not reconstruct historical elementwise gradients.
+
+Audited dataset: original27,364-row purified human directIC50 cohort,
+train21,636exact/val2,925/test2,803. IC50 maps to unclipped log10(nM), train-only
+standardization, squared lossweight1 and one-sided censor loss; bounds excluded
+from original training. Shared-study, previously inspected development holdouts.
+
+| Existing condition, two-seed means | I val rho / RMSE | I test rho / RMSE | II val rho / RMSE | II test rho / RMSE |
+|---|---:|---:|---:|---:|
+| interaction-natural-joint |.6115/1.1122|.5248/1.1899|.5832/.8288|.5039/.8059|
+| interaction-I |.5896/1.1357|.5068/1.2112|.2260/1.2226 zero-shot|.2010/1.2717 zero-shot|
+| interaction-II |.2388/1.6104 zero-shot|.1702/1.6822 zero-shot|.6496/.7793|.6037/.7352|
+
+All six515,457-parameter models had no uncovered tensors;128unchanged coordinates
+are fixed padding.384attention K-bias coordinates are structurally redundant under
+softmax despite numerical gradient/update evidence. Constant human-species inputs
+are updated but confounded with the fusion intercept. New software requires gradient
+and movement on the same coordinate and checkpoints cumulative masks; old element
+history stays unknown. Width/depth/head/FF dimensions now configure every common
+route, and fixed-step validation preserves partial-epoch data and exact resume.
+296focused tests pass, including pending-validation recovery and scaled route checks.
+
+The joint models satisfy only3/87 and1/87 class-I test bounds,13/116 and12/116
+class-II bounds. Prediction/target SD ratios are.63–.65I/.59–.66II. Within-groove
+macro test rho for groups>=20exact values is.332/.311I and.528/.503II. Strong and
+weak binders regress toward the middle; per-groove, length,9mer novelty, study,
+register-count and qualifier diagnostics are preserved. No causal explanation or
+new biological qualification is claimed.
+
+Source extension scanned840,805 pinned Hitlistv4 binding/other-assay rows, preserving
+the original IC50 files byte-for-byte. Added140,846 qualified outcomes; total168,210,
+31,011peptides,147verified groove pairs. Literal IC50, KD, EC50, KD(~IC50), KD(~EC50),
+half-life and off-rate remain distinct outputs with physical units and original
+qualifiers. No source-missing partner was guessed:55,371missing-partner and1,832
+unresolved-catalog rows are deferred. All raw-record fingerprints, target/unit
+mappings, catalog assignments, original identities and cross-endpoint partitions
+were independently checked: no peptide/assay leaks or duplicate original outcomes.
+Source admission719.2s; hashes and exact curation/disposition contract are in the
+report/cohort manifest. Original ordinals are one-based, new ordinals zero-based;
+verification accounts for both without rewriting original data.2,172independent
+same-input disagreement groups remain; unmatched assay conditions preclude treating
+them as an irreducible-noise estimate.
+
+Preferred architecture remains shared-v5. Follow-up compares original bounds,
+six measured outputs and shared capacity. Off-rate's10training-only rows are
+excluded from that predictive family. No cellular/MS/TCR capability is newly
+qualified, and no absent module is claimed trained. This audit is closed; the
+separate prospective eight-fit comparison owns new validation/test results.

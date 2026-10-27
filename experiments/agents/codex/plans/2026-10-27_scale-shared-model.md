@@ -123,3 +123,11 @@ loss/exposure accumulation and coordinate coverage through interruption/resume.
 Unset keeps the historical epoch behavior. In interval mode, patience counts
 validation events; minimum-epoch gating remains unchanged. The scaling comparison
 will use a fixed update interval and disabled early stopping across all conditions.
+
+## Post-freeze correction — sampler implementation receipt
+
+Review found that the generic resume implementation fingerprint omitted the shared
+sampler module. Add it and verify that changing a copied sampler source invalidates
+resume before any update. This is a provenance-only correction after the predictive
+runtime was frozen at0c4c984b; do not mutate or restart the running comparison.
+Its Modal worker already pins and verifies the sampler in its full runtime bundle.
