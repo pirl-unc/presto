@@ -766,9 +766,14 @@
       "path": "experiments/agents/codex/plans/2026-10-27_mhc2-human-cell-contrast.md",
       "sha256": "b22159703832d9f80d62e176886e2f953ba90c96e814e91d6526ad13f7a67ea1",
       "bytes": 2798
+    },
+    {
+      "path": "experiments/2026-10-27_0107_codex_mhc2-human-cell-contrast/reproduce/source/export-SHA256SUMS",
+      "sha256": "30e07e1b3f73a9ba3e64b5edc37ee542d1c7541b7a260947db5d476c703de50f",
+      "bytes": 1511
     }
   ],
-  "artifact_bytes": 37898849,
+  "artifact_bytes": 37900360,
   "source_runtime_frozen": true,
   "excluded_live_state": "remaining-controller-state.json; frozen publication snapshot included",
   "verification": "Every listed artifact compared to Git index bytes before commit",
@@ -780,5 +785,6 @@
     "lint": "repository plus active experiment scripts pass",
     "historical_failed_sources": "preserved unchanged; active v2 scripts separately checked"
   },
-  "scope": "Serializer fix and recovered first MS model; full biological goal remains active"
+  "scope": "Serializer fix and recovered first MS model; full biological goal remains active",
+  "publication_followup": "Explicitly include the extensionless export checksum manifest; cache exclusions remain unchanged."
 }
