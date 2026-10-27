@@ -4798,3 +4798,82 @@ corrections. Discovery closed at13/16operations; direct payloads465357bytes, too
 network bytes unmeasured. No training/pretraining, loss, synthetic controls,
 validation/test partition, metrics or prediction dumps apply to this source-only
 audit. No predictive winner; full binding/MS/fitted-pathway goal remains active.
+
+
+## 2026-10-27 — Verified MHC-II MS controls and first-seed transfer gap
+
+Codex / GPT-6. [2036 family](2026-10-26_2036_codex_mhc2-ms-length-background/README.md).
+Same human DP35251023 train/validation/test and DQ834433824 external complete-pair
+source contract, nine-residue component/initializer exclusions and 85,050 balanced
+positive/synthetic-background examples. Controls use DP training-only composition
+and fixed lengths; generated controls are not measured nondetections. No condition
+or pathway labels, censor targets, identity loss or changed acquisition policy.
+
+The failed all-arm controller launched nothing before its 1,802.965-second admission
+deadline. A separately frozen comparator-only schedule used original 13/10 GiB
+startup/runtime RAM limits, two threads/one interop and 4 GiB/2 h caps. Features
+completed in 190.526 s / 1,644,609,536 bytes RSS; fits in 6.380 s / 950,861,824 bytes.
+One-thread independent verification took 15.081 s / 1,315,536,896 bytes. Local CPU;
+no Modal/GPU or package changes. Reproduction: comparator-only-launch.json/.sh,
+comparator-verification-launch.json, verify-comparators.sh and frozen sources in
+that family's reproduce directory. Git e04dfcf plus recorded metadata/task dirt.
+
+Frozen IC50 parent, training-only scaling and mean BCE + .01 squared slope norm;
+unpenalized intercept, float64 L-BFGS-B max300/ftol1e-12/gtol1e-8. Binding-only,
+61 sequence features and their 62-feature combination map MS1/0 to logistic
+probability. All 85,050 source rows and 255,150 control predictions independently
+replayed, 80 fresh parent probes checked, independent Newton objectives agree to
+5.44e-15. Native101 metrics are independently reduced; full native model replay,
+second seed, permutation, fixed ensemble and bootstrap remain pending.
+
+| Condition | DP validation BCE / AUROC | DP test BCE / AUROC | DQ8 external BCE / AUROC |
+|---|---:|---:|---:|
+| Binding logistic | .671782 / .617169 | .674997 / .606370 | .661982 / .726061 |
+| Sequence logistic | .647567 / .670653 | .654715 / .656213 | .679688 / .609729 |
+| Combined logistic | .624406 / .708389 | .630023 / .700584 | .593876 / .794303 |
+| Native101 diagnostic | .567887 / .774720 | .567756 / .775586 | .699868 / .633184 |
+
+The combined control is strongest among the three controls on both test sets.
+Native101 beats it on DP test but transfers worse to DQ8; no overall native win
+or completed comparison is claimed. Full train/validation/test/external metrics,
+source-linked prediction dumps, features and coefficients are retained under
+results/logistic-controls. IC50 regression metrics do not apply to these MS labels.
+The inspected DQ8 cohort is development evidence for later revisions, requiring
+fresh qualification data. Native-only continuation retains 20 GiB/60-second/30-minute
+admission and original action guards; old failed state is preserved. No causal
+processing or condition-effect qualification follows. Full goal remains active.
+
+## 2026-10-27 — Three independently verified IC50 replications
+
+Codex / GPT-6. [1610 family](2026-10-26_1610_codex_ic50-convergence/README.md).
+Frozen runtime 4d4c029; all 21,636 exact IC50 training observations, 2,925 validation
+and 2,803 test observations, including original held-out bounds. Same historically
+inspected peptide-disjoint partitions/shared studies. Direct log10(nM) IC50;
+training-only standardization; no pretraining or auxiliary/MS/APC/TCR losses.
+Seeds42/43/44 use AdamW3e-4, weight decay1e-4, dropout.1, batch64, max100epochs,
+validation patience15 after minimum10; validation-selected checkpoint, test once.
+No synthetic labels in these true arms; permuted42 remains a separate synthetic
+label diagnostic and is still running. All three true seeds pass the prespecified
+independent screen, with 27,364 source-linked predictions checked per seed.
+
+| Seed | Selected / completed epochs | II validation RMSE | II test RMSE | II test Spearman | II test AUROC | II test recall |
+|---|---:|---:|---:|---:|---:|---:|
+| seed42 | 26 / 41 | 0.797476 | 0.731948 | 0.619303 | 0.824459 | 0.460784 |
+| seed43 | 23 / 38 | 0.762530 | 0.734982 | 0.621880 | 0.823476 | 0.495098 |
+| seed44 | 29 / 44 | 0.771376 | 0.740212 | 0.620564 | 0.836483 | 0.470588 |
+
+
+Exact class-II n=758 validation/842 test; RMSE in log10(nM), binding threshold500nM.
+All losses, Pearson, classification metrics, censor satisfaction and allele/study
+support remain in the per-seed summaries/strata. Class-I exact test n=1,758;
+RMSE for seeds42/43/44 is1.092928/1.138833/1.131756 and AUROC
+.807057/.785056/.783803. Runtime7,746.178/6,062.245/8,327.909seconds, localCPU,
+four threads/one interop; no Modal/GPU. Original launch/runtime/guard contracts
+remain frozen in reproduce; immutable evidence copy receipt lists33files and
+28,448,826bytes verified against source before/after copy. The live runner is
+unchanged. Each seed's full train/validation/test predictions are retained.
+
+Replicated class-II rank/RMSE signal is present, with test binder recall below50%.
+No best-seed selection, test retuning or full-model promotion. Permutation,
+censored training, independent-study transfer, fitted condition/pathway effects
+and broader scientific gates remain open; PR131 stays draft. Full goal active.

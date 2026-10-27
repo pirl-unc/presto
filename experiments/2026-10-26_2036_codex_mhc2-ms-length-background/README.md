@@ -1,6 +1,7 @@
 # MHC-II MS prediction with length-matched backgrounds
 
-Status: native101 fixed-final evaluation recovered; remaining arms awaiting sustained RAM headroom.
+Status: native101 recovered and all logistic controls independently verified;
+native102/permuted101 continuation active. Full comparison remains incomplete.
 Codex / GPT-6,2026-10-26. Registered at
 `aa5eb5ed41e2916b8f94c9e4a30e9d069bf3a5fc` with recorded experiment/task dirt.
 [Full amended plan](../agents/codex/plans/2026-10-26_mhc2-ms-length-background.md)
@@ -62,7 +63,7 @@ dropout.1, checkpoint every50steps. Primary predictions use fixed-final checkpoi
 the two true-label logits form the prespecified ensemble. Canonical selected
 outputs are secondary. No seed or checkpoint is chosen from test outcomes.
 
-Queued logistic controls use binding-only,61sequence features, and their
+Verified logistic controls use binding-only,61sequence features, and their
 62feature combination. Standardization and coefficients use DP training only.
 Objective: meanBCE +.01squared slope norm, unpenalized intercept; float64
 L-BFGS-B,300iteration cap/ftol1e-12/gtol1e-8; fail on nonconvergence.
@@ -159,3 +160,57 @@ missing code-directory import-path failure is preserved. Live status belongs to
 The original canonical fit remains failed; recovered evaluation is explicitly
 separate. Full comparison, binding refinement and fitted pathway/condition
 qualification are still required. No serving or baseline promotion.
+
+## 2026-10-27 verified comparator closure
+
+The additional all-arm admission controller reached its 1,802.965-second deadline
+without launching any action. Its failed state is preserved. A separately frozen
+comparator-only schedule then ran the already planned independent controls before
+the remaining native fits: original 13 GiB startup/10 GiB runtime RAM limits,
+4 GiB RSS/2 h action caps, two numerical threads/one interop. The comparator schedule
+required 13 GiB continuously for 30 seconds with a 15-minute admission deadline;
+this explicitly differs from the failed extra 20 GiB all-arm scheduling gate.
+No source, feature, optimizer, split or predictive gate changed.
+
+Feature extraction took 190.526 s / 1,644,609,536 bytes peak RSS; all three logistic
+fits took 6.380 s / 950,861,824 bytes. Independent verification took 15.081 s /
+1,315,536,896 bytes using one thread. It replays all 85,050 original source rows,
+255,150 control predictions and 80 fresh parent probes. An independently implemented
+Newton solver agrees with the frozen fitted convex objectives to 5.44e-15 and
+coefficients to 6.58e-8. Three artificial derivative/solver tests pass. Original
+saved predictions, not the verification refit, determine the reported metrics.
+Native101 metrics are independently reduced from its saved predictions; full
+native inference replay remains part of the final all-arm verification.
+
+| Condition | DP validation BCE / AUROC | DP test BCE / AUROC | DQ8 external BCE / AUROC |
+|---|---:|---:|---:|
+| Binding-only logistic | .671782 / .617169 | .674997 / .606370 | .661982 / .726061 |
+| Sequence logistic | .647567 / .670653 | .654715 / .656213 | .679688 / .609729 |
+| Combined logistic | .624406 / .708389 | .630023 / .700584 | .593876 / .794303 |
+| Native101, single-seed diagnostic | .567887 / .774720 | .567756 / .775586 | .699868 / .633184 |
+
+The single native seed improves DP-test BCE by 9.88% relative to the combined
+control, but worsens DQ8-external BCE by 17.85%. This does not establish the
+prespecified native ensemble's success or failure: native102, permutation,
+ensemble and paired bootstrap are still required. The combined control is the
+strongest of the three controls on both test sets; it is the current transfer
+reference, not a substitute for completing the planned comparison.
+
+All four partitions' loss, Brier, accuracy, balanced accuracy, precision, recall,
+F1, AUROC and AUPRC are in `results/logistic-controls/verified-point-metrics.csv`
+and `independent-verification.json`. Full source-linked prediction dumps, training
+features, standardization and coefficients are retained in that directory.
+`comparator-only-launch.json`/`.sh`, `comparator-verification-launch.json`,
+`verify-comparators.sh` and source snapshots freeze the executed recipes.
+
+`native-remainder-plan.md` and `native-remainder-launch.json`/`.sh` now continue
+only native102 and permuted101. Their action/admission loop is AST-identical to
+the previous controller: 20 GiB for 60 seconds, at most 30 minutes before each
+action, original action floors and no retries. Comparator evidence and original
+recovery/failure receipts are hash-pinned. Both intended fit directories were
+absent at launch. Its separate state is `native-remainder-controller-state.json`;
+the failed older state remains failed. No new censor fit overlaps it.
+
+The DQ8 cohort is now inspected development evidence. Any later model revision
+requires a new prospective recipe and a fresh qualification cohort. No isolated
+processing, condition-effect, natural prevalence or calibration claim follows.

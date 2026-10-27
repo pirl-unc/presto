@@ -1,0 +1,14 @@
+{
+  "utc": "2026-10-27T02:01:09.148969+00:00",
+  "wheel": "/private/tmp/presto-ci-deps-final-build-20261027/presto-0.1.22-py3-none-any.whl",
+  "sha256": "c1bf5d2f61ed720ac1fade6f60b3f4982424d108ef5a7714aa41e3f22703d304",
+  "psutil_requirement": [
+    "psutil>=5.9; extra == \"dev\""
+  ],
+  "affected_tests": "11 passed in 2.62 seconds",
+  "build": "wheel and sdist passed",
+  "offline_wheel_smoke": "passed with temporary environment and wheel-origin assertion",
+  "shared_environment_installs": false,
+  "earlier_local_failures_preserved": true,
+  "final_head_ci": "pending publication"
+}

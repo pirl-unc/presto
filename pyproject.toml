@@ -28,6 +28,8 @@ hitlist = [
 ]
 dev = [
   "pytest>=7.0",
+  # Resource-guarded experiment helpers are exercised by the test suite.
+  "psutil>=5.9",
   # Pinned, not a floor, and matching CI (.github/workflows/ci.yml) and
   # `required-version` in ruff.toml.
   #

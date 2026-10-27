@@ -14425,3 +14425,26 @@ BCE.699868. These first-seed reported outcomes are pending independent all-arm
 closure and do not establish improvement. Source-only audit exposes absent
 original per-run measurements and unresolved molecule/replicate evidence; no
 condition effect or isolated processing performance is claimed. Full goal active.
+
+## 2026-10-27 — Comparator closure and remaining native fits
+
+- [x] Preserve the failed all-arm admission controller with zero launches.
+- [x] Fit and independently verify all three fixed logistic controls.
+- [x] Diagnose missing clean-CI dependency and local wheel-interpreter failure.
+- [ ] Verify the minimal dependency/wheel-helper fixes and publish evidence.
+- [x] Launch the planned native-only remainder with original numerical settings and limits.
+- [x] Import verified immutable binding seeds and update the canonical registry.
+- [ ] Follow final-head CI and all scientific comparisons to terminal evidence.
+
+Plans: `mhc2_ci_dependency_spec.md`, `mhc2_continuation_20261027_spec.md`, and
+the2036family's `reproduce/native-remainder-plan.md`. Independent comparator
+verification passed for85050source rows and255150predictions. First native seed
+transfers worse than the combined control to DQ8; no complete-comparison win.
+
+Review:11 affected/packaging tests, repository lint/format, rebuilt wheel/sdist,
+metadata and offline installed-wheel smoke all pass. All prior failures are
+preserved. Native-only session80216 is fitting native102 after sustained RAM
+admission; permutation follows serially, no new censor overlap. Old controller
+12902 is fitting permuted42;29950 remains waiting. Verified controls and three
+true binding seeds are documented with source-linked predictions. Publication
+and final-head CI remain to be verified; full goal stays active.

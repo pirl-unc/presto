@@ -1,0 +1,124 @@
+{
+  "status": "comparators_fitted_independent_verification_pending",
+  "events": [
+    {
+      "utc": "2026-10-27T01:40:45.692445+00:00",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/logistic_controls_streaming.py",
+        "features"
+      ]
+    },
+    {
+      "utc": "2026-10-27T01:44:28.298272+00:00",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/logistic_controls_streaming.py",
+        "fit"
+      ]
+    }
+  ],
+  "admission_samples": [
+    {
+      "action": "logistic-features",
+      "utc": "2026-10-27T01:40:15.641640+00:00",
+      "elapsed_seconds": 1.6599733498878777e-07,
+      "available_ram_bytes": 23660871680,
+      "sufficient_seconds": 0.0
+    },
+    {
+      "action": "logistic-features",
+      "utc": "2026-10-27T01:40:20.651739+00:00",
+      "elapsed_seconds": 5.010066999999253,
+      "available_ram_bytes": 23434117120,
+      "sufficient_seconds": 5.010066834001918
+    },
+    {
+      "action": "logistic-features",
+      "utc": "2026-10-27T01:40:25.653504+00:00",
+      "elapsed_seconds": 10.011824665998574,
+      "available_ram_bytes": 23469899776,
+      "sufficient_seconds": 10.01182450000124
+    },
+    {
+      "action": "logistic-features",
+      "utc": "2026-10-27T01:40:30.663950+00:00",
+      "elapsed_seconds": 15.022245957999985,
+      "available_ram_bytes": 23309647872,
+      "sufficient_seconds": 15.02224579200265
+    },
+    {
+      "action": "logistic-features",
+      "utc": "2026-10-27T01:40:35.669473+00:00",
+      "elapsed_seconds": 20.027778290997958,
+      "available_ram_bytes": 23290200064,
+      "sufficient_seconds": 20.027778125000623
+    },
+    {
+      "action": "logistic-features",
+      "utc": "2026-10-27T01:40:40.679952+00:00",
+      "elapsed_seconds": 25.038261207999312,
+      "available_ram_bytes": 23088971776,
+      "sufficient_seconds": 25.038261042001977
+    },
+    {
+      "action": "logistic-features",
+      "utc": "2026-10-27T01:40:45.690342+00:00",
+      "elapsed_seconds": 30.04863750000004,
+      "available_ram_bytes": 23276601344,
+      "sufficient_seconds": 30.048637334002706
+    },
+    {
+      "action": "logistic-fit",
+      "utc": "2026-10-27T01:43:58.229010+00:00",
+      "elapsed_seconds": 1.6700141713954508e-07,
+      "available_ram_bytes": 21730492416,
+      "sufficient_seconds": 0.0
+    },
+    {
+      "action": "logistic-fit",
+      "utc": "2026-10-27T01:44:03.238010+00:00",
+      "elapsed_seconds": 5.0090536669995345,
+      "available_ram_bytes": 21577760768,
+      "sufficient_seconds": 5.009053499998117
+    },
+    {
+      "action": "logistic-fit",
+      "utc": "2026-10-27T01:44:08.239347+00:00",
+      "elapsed_seconds": 10.010400667000795,
+      "available_ram_bytes": 21877653504,
+      "sufficient_seconds": 10.010400499999378
+    },
+    {
+      "action": "logistic-fit",
+      "utc": "2026-10-27T01:44:13.253681+00:00",
+      "elapsed_seconds": 15.02084916700187,
+      "available_ram_bytes": 21877538816,
+      "sufficient_seconds": 15.020849000000453
+    },
+    {
+      "action": "logistic-fit",
+      "utc": "2026-10-27T01:44:18.272297+00:00",
+      "elapsed_seconds": 20.031353000002127,
+      "available_ram_bytes": 21870723072,
+      "sufficient_seconds": 20.03135283300071
+    },
+    {
+      "action": "logistic-fit",
+      "utc": "2026-10-27T01:44:23.283374+00:00",
+      "elapsed_seconds": 25.03653887499968,
+      "available_ram_bytes": 21462646784,
+      "sufficient_seconds": 25.03653870799826
+    },
+    {
+      "action": "logistic-fit",
+      "utc": "2026-10-27T01:44:28.297456+00:00",
+      "elapsed_seconds": 30.046344166999916,
+      "available_ram_bytes": 21425274880,
+      "sufficient_seconds": 30.0463439999985
+    }
+  ],
+  "current_action": "logistic-fit",
+  "pid": 48426,
+  "updated_utc": "2026-10-27T01:44:36.261249+00:00"
+}

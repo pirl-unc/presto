@@ -4,6 +4,7 @@ import argparse
 import os
 from pathlib import Path
 import subprocess
+import sysconfig
 import tempfile
 import venv
 
@@ -16,10 +17,28 @@ def check_wheel(wheel):
         # CI already installed the tested dependency set. Keep this package's
         # files in a separate environment so editable source cannot mask a
         # missing module or runtime resource in the wheel.
-        venv.EnvBuilder(with_pip=True, system_site_packages=True).create(environment)
+        # POSIX standalone Python builds may locate libpython relative to their
+        # executable; copying that executable alone breaks the new interpreter.
+        venv.EnvBuilder(with_pip=True, system_site_packages=True, symlinks=os.name != "nt").create(
+            environment
+        )
         python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
         env = dict(os.environ)
         env.pop("PYTHONPATH", None)
+        # A nested venv inherits base-Python packages, not its caller's venv.
+        # Append the caller's dependency paths; this wheel's own package remains
+        # first, and the import-origin assertion below rejects an editable copy.
+        target_site = Path(
+            subprocess.check_output(
+                [str(python), "-I", "-c", "import sysconfig; print(sysconfig.get_path('purelib'))"],
+                text=True,
+                env=env,
+            ).strip()
+        )
+        dependency_sites = sorted({sysconfig.get_path("purelib"), sysconfig.get_path("platlib")})
+        (target_site / "presto_smoke_dependencies.pth").write_text(
+            "".join(f"import site; site.addsitedir({path!r})\n" for path in dependency_sites)
+        )
         subprocess.run(
             [
                 str(python),

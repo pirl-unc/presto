@@ -1,7 +1,7 @@
 # Local full-cohort IC50 convergence and replication
 
-Status: active; fixed controls verified, first neural condition running.
-Agent/model: Codex / GPT-6; date 2026-10-26. No completed new neural result yet.
+Status: active; all three true-label seeds independently verified; permutation pending.
+Agent/model: Codex / GPT-6; date 2026-10-26; evidence updated 2026-10-27.
 
 Prospective contract: [local convergence plan](../agents/codex/plans/2026-10-26_ic50-convergence.md).
 Frozen runtime commit: `4d4c029777af357c35eea47762ce07a9f66f488a`.
@@ -41,9 +41,8 @@ Fixed mean/ridge baselines are complete. Independent verification checks all
 54,728 train/validation/test predictions and source joins, rederives all reported
 metrics, and refits ridge using augmented least squares (maximum coefficient
 difference 3.35e-10). This is verification, not a learned-model quality result.
-See `results/baselines-independent-verification.json`. Seed 42 is running; other
-conditions have not started. No test prediction has been produced by the new
-neural condition yet. Raw checkpoints persist at
+See `results/baselines-independent-verification.json`. All three true-label seeds are now verified; the permutation is running.
+Each completed seed has train/validation/test predictions. Raw checkpoints persist at
 `/Users/iskander/code/presto/artifacts/2026-10-26_1610_codex_ic50-convergence/`.
 
 ## Reporting and continuation audit
@@ -76,15 +75,15 @@ TCR cohort is authorized. This blocker does not alter the independent IC50 work.
 <!-- ic50-convergence-status:begin -->
 ## Current saved-output status
 
-As of 2026-10-26T16:30:23.559768+00:00.
+As of 2026-10-27T01:41:50.502022+00:00.
 
 | Condition | State | Selected / completed epochs | Validation RMSE | Test RMSE |
 | --- | --- | --- | --- | --- |
 | mean | verified | n/a | 1.360611 | 1.342001 |
 | ridge | verified | n/a | 1.223458 | 1.229134 |
-| seed42 | starting | pending | pending | pending |
-| seed43 | not_started | pending | pending | pending |
-| seed44 | not_started | pending | pending | pending |
+| seed42 | verified | 26 / 41 | 0.981908 | 0.990536 |
+| seed43 | verified | 23 / 38 | 0.970887 | 1.025608 |
+| seed44 | verified | 29 / 44 | 0.977051 | 1.021521 |
 | permuted42 | not_started | pending | pending | pending |
 
 All fixed conditions verified: **False**. IC50 comparison screen passes: **False**.
@@ -93,3 +92,39 @@ TCRvdb is not yet available (confirmed by the user October 26). Auxiliary, censo
 
 Status: fixed comparison active. Next Step: finish and verify the remaining declared arms. Open Questions: authorized TCRvdb input and the separately scoped biological milestones.
 <!-- ic50-convergence-status:end -->
+
+
+## 2026-10-27 immutable replication evidence
+
+All three true-label seeds passed the original independent scientific screen.
+Each verifier checks 27,364 source-linked predictions; original source/allele/study
+strata, coverage, runtime, selected checkpoint and train/validation/test metrics
+are retained. No best-seed selection or test-driven training change is made.
+
+| Seed | Selected / completed epochs | II validation RMSE | II test RMSE | II test Spearman | II test AUROC | II test recall |
+|---|---:|---:|---:|---:|---:|---:|
+| seed42 | 26 / 41 | 0.797476 | 0.731948 | 0.619303 | 0.824459 | 0.460784 |
+| seed43 | 23 / 38 | 0.762530 | 0.734982 | 0.621880 | 0.823476 | 0.495098 |
+| seed44 | 29 / 44 | 0.771376 | 0.740212 | 0.620564 | 0.836483 | 0.470588 |
+
+RMSE is log10(nM); binding classification uses the original 500 nM threshold.
+Exact class-II support is 758 validation / 842 test measurements. The replicated
+rank/RMSE signal does not remove the sensitivity gap: test binder recall remains
+46.1–49.5%. Class-I exact test support is 1,758; seed42/43/44 test RMSE is
+1.092928/1.138833/1.131756, AUROC .807057/.785056/.783803 and recall
+.808274/.774975/.748739. Full metrics, including Pearson, precision, F1, AUPRC,
+all-label loss and censored-bound satisfaction, remain in each summary and
+independent verification. These are historically inspected same-study holdouts.
+
+Fit times for seeds42/43/44 are 7,746.178 / 6,062.245 / 8,327.909 seconds on local
+CPU, four numerical threads/one interop; no Modal/GPU. Exact-only training, fixed
+early-stopping policy, no pretraining/auxiliary loss and all resource limits above
+remain unchanged. Censored training and independent study transfer are separate
+unfinished requirements. The permuted42 arm is still running; the overall family
+and PR131 scientific qualification remain incomplete.
+
+`code/import_verified_seeds_20261027.py` copied 33 immutable result files,
+28,448,826 bytes, into this publication checkout. Source hashes were checked before
+and after copying and against each destination; the original running checkout
+was not changed. `reproduce/verified-seeds-import-20261027.json` preserves the
+complete checksum list and source path.
