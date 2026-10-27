@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-10-26T20:46:35.467246+00:00",
+  "updated_utc": "2026-10-27T01:26:47.573432+00:00",
   "status": "active",
   "new_refinement_controller_session": 76453,
   "new_refinement_state": "experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/continuation-state.json",
@@ -16,5 +16,21 @@
   "ms_native_controller_state": "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native-controller-state.json",
   "ms_logistic_controller_session": 47037,
   "ms_logistic_controller_state": "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/logistic-controller-state.json",
-  "old_ic50_current_action": "fitting seed44 after seed43 verification at20:03UTC"
+  "old_ic50_current_action": "fitting seed44 after seed43 verification at20:03UTC",
+  "evaluation_checkout": "/private/tmp/presto-mhc2-evaluation-20261027/presto",
+  "ms_native_controller_status": "terminal_exit1_RSS_during_train_cache_serialization",
+  "ms_logistic_controller_status": "terminal_exit1_upstream_native_failure",
+  "ms_streaming_controller_session": 85403,
+  "ms_streaming_controller_status": "terminal_exit1_native102_preflight_RAM_floor_after_native101_recovered",
+  "ms_remaining_controller_session": 96044,
+  "ms_remaining_controller_state": "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining-controller-state.json",
+  "ms_remaining_current_action": "admission:fit-native102",
+  "full_suite": {
+    "session": 49459,
+    "status": "terminal_exit0",
+    "passed": 2666,
+    "skipped": 4
+  },
+  "comparison_code": "frozen;9 artificial tests pass; actual full comparison not yet executed",
+  "latest_hitlist_issue": "https://github.com/pirl-unc/hitlist/issues/858"
 }

@@ -1,0 +1,27 @@
+{
+  "status": "stopped_on_failure",
+  "events": [
+    {
+      "utc": "2026-10-27T00:57:35.347017+00:00",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/streaming_recovery.py",
+        "score",
+        "native101"
+      ]
+    },
+    {
+      "utc": "2026-10-27T01:01:09.461099+00:00",
+      "argv": [
+        "/Users/iskander/code/shared-virtual-env/bin/python",
+        "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/streaming_recovery.py",
+        "fit",
+        "native102"
+      ]
+    }
+  ],
+  "current_action": "fit-native102",
+  "pid": 41216,
+  "error": "RuntimeError('fit-native102 exited1; no next action or automatic retry')",
+  "updated_utc": "2026-10-27T01:01:30.711856+00:00"
+}

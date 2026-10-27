@@ -8,6 +8,7 @@
   "code_sha256": "2da54d915d75028c3cd1273b00fbd6fd957c01026309af13aa004bbff6f57541",
   "device": "cpu",
   "dirty_status": " M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/README.md\n M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/continuation-state.json\n M experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/fit-exact_continuation-1793044126975529000.json\n M experiments/experiment_log.md\n M tasks/mhc2_active_runs.json\n M tasks/todo.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/recover.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/recover_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/resume_censor.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/code/resume_censor_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/fit-censor_refinement-1793045035192116000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/interruption01.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recover.sh\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recover_attempt03.sh\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-attempt02-contract-diff.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-launch-attempt02.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-launch-attempt03.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-plan-attempt03.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-plan.md\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-state-attempt02.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/recovery-state-attempt03.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/resume-censor-refinement-attempt02-1793046019686482000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/resume-censor-refinement-attempt03-1793046271185216000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/score-exact_continuation-1793045003405002000.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/recover.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/recover_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/resume_censor.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/reproduce/source/resume_censor_attempt03.py\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/results/exact_continuation-fit.json\n?? experiments/2026-10-26_1929_codex_mhc2-censor-refinement/results/exact_continuation/\n?? experiments/2026-10-26_1954_codex_mhc2-ms-transfer-cohort/\n?? experiments/2026-10-26_2030_codex_mhc2-ms-prediction/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/\n?? experiments/agents/codex/plans/2026-10-26_mhc2-ms-length-background.md\n?? experiments/agents/codex/plans/2026-10-26_mhc2-ms-prediction.md\n?? experiments/agents/codex/plans/2026-10-26_mhc2-ms-transfer-cohort.md\n?? tests/test_mhc2_ms_length_background.py\n?? tests/test_mhc2_ms_prediction_cohort.py\n",
+  "elapsed_seconds": 2092.293272374998,
   "environment": {
     "MKL_NUM_THREADS": "2",
     "OMP_NUM_THREADS": "2",
@@ -15,6 +16,7 @@
     "PYTHONPATH": "/private/tmp/presto-mhc2-20261026:/private/tmp/presto-pr-completion-20261026/dependencies",
     "PYTORCH_ENABLE_MPS_FALLBACK": "0"
   },
+  "error": "RuntimeError('resource guard: rss')",
   "git_commit": "aa5eb5ed41e2916b8f94c9e4a30e9d069bf3a5fc",
   "interop_threads": 1,
   "limits": {
@@ -24,6 +26,8 @@
     "seconds": 7200,
     "startup_ram": 13958643712
   },
+  "peak_polled_rss_bytes": 4315594752,
+  "peak_rss_bytes": 4315611136,
   "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
   "requested_modal_gpu": null,
   "runtime_hashes": {
@@ -47,7 +51,7 @@
     "training/modular_run.py": "132b09b19ce911ad96a04bc2f8894fb1f26de5293146f35feb1d3f3c133339a6"
   },
   "startup_ram": 14391279616,
-  "status": "starting",
+  "status": "failed",
   "threads": 2,
   "torch": "2.14.1",
   "utc": "2026-10-26T20:43:04.367809+00:00"

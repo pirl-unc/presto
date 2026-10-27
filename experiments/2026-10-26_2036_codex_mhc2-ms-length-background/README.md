@@ -1,6 +1,6 @@
 # MHC-II MS prediction with length-matched backgrounds
 
-Status: cohort independently verified; first native fit active, comparators queued.
+Status: native101 fixed-final evaluation recovered; remaining arms awaiting sustained RAM headroom.
 Codex / GPT-6,2026-10-26. Registered at
 `aa5eb5ed41e2916b8f94c9e4a30e9d069bf3a5fc` with recorded experiment/task dirt.
 [Full amended plan](../agents/codex/plans/2026-10-26_mhc2-ms-length-background.md)
@@ -73,7 +73,7 @@ metrics do not apply to these labels. Binding retention is checked by exact
 parameter/scaler comparison and fresh no-grad probes to2e-5log10(nM).
 The plan freezes2% BCE improvements against all three controls on both test
 sets, AUROC retention, separation from the permuted diagnostic and2,000 paired
-component-bootstrap draws. No predictive metric or success claim is available yet.
+component-bootstrap draws. First-seed reported metrics are below; no complete-comparison success is claimed.
 
 ## Verification, artifacts and runtime
 
@@ -106,3 +106,56 @@ validation/test predictions and full comparison closure are pending.
 **Next:** follow all native/control jobs, independently verify scores/metrics and
 retained IC50 behavior, close plots/README/canonical log. The broader goal remains
 active; distinct processing-pathway/condition learning is still unqualified.
+
+## 2026-10-27 recovery and available outcomes
+
+Original native101 finished3epochs/2,592updates, then exceeded4GiB RSS while
+serializing its training evaluation cache (2,092.293s,4,315,611,136bytes peakRSS).
+No final validation/test cache evaluation had started. Original failed receipts,
+logs and all checkpoint bytes are preserved. A separate checkout at2ed1bd8 changes
+only JSON persistence/hashing in `training/modular_resume.py`, streaming identical
+bytes/hashes with unchanged model mathematics and strict resume contracts.
+
+The memory regression failed before the fix and passed afterward. Focused suite:
+50passed; full suite:2,666passed,4skipped,33warnings in609.05s. Byte/digest identity,
+atomic failure preservation and bounded serializer allocations are covered.
+Only `atomic_json`/`digest` ASTs differ; old/new runtime maps and source snapshots
+are frozen in `reproduce/serialization-transition.json` and `serialization-fix/`.
+
+Evaluation-only recovery completed in213.045s/2,188,427,264bytesRSS, with zero new
+optimizer updates. Selected/final tensors agree; all32retained IC50 dependency
+tensors and scaler match the parent exactly, and20fresh probes have zero error.
+Parameter/exposed-feature coverage passes. All four per-example prediction dumps
+are retained. These first-seed metrics are reported by the canonical evaluator;
+the independent all-arm replay, ensemble and bootstrap remain pending.
+
+| Fixed native101 partition | n | BCE | AUROC | AUPRC | Balanced accuracy | Recall | F1 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| DP train |55296|.555176|.791221|.780887|.714753|.764612|.728300|
+| DP validation |11040|.567887|.774720|.773374|.699728|.739855|.711312|
+| DP test |11808|.567756|.775586|.772586|.701558|.748645|.714979|
+| DQ8 external |6906|.699868|.633184|.649963|.593976|.448016|.524585|
+
+The first seed has weaker external discrimination and external BCE above the
+constant0.5 reference's log(2). This does not establish a native-model advantage,
+calibration, processing identification or a completed MS qualification. Keep the
+frozen remaining conditions and all prospective success gates.
+
+Native102's first attempt stopped before initial checkpoint/training on the10GiB
+available-RAM floor:19.736s/290,471,936bytesRSS. Admission/config and the empty
+lock are hash-preserved under raw `native102-preflight-attempt01`; no state was
+overwritten or falsely resumed. A new explicit controller requires20GiB available
+RAM continuously for60seconds before each action, with a30minute admission
+deadline. Original action guards remain unchanged; failed actions never retry
+automatically. Native101 evaluation is not repeated.
+
+`remaining-arms-plan.md`, `remaining-launch.json`/`remaining.sh` freeze this state
+chain. `comparison-plan.md`, `comparison-launch.json`/`comparison.sh` and source
+snapshots freeze independent source/metric/coefficient replay, the fixed ensemble
+and2,000component bootstrap. Nine artificial reducer tests pass; the initial
+missing code-directory import-path failure is preserved. Live status belongs to
+`reproduce/remaining-controller-state.json`; publication uses a separate snapshot.
+
+The original canonical fit remains failed; recovered evaluation is explicitly
+separate. Full comparison, binding refinement and fitted pathway/condition
+qualification are still required. No serving or baseline promotion.

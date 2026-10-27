@@ -4653,7 +4653,7 @@ Current Hitlist replay still classifies all24,399 Atlas rows as unknown restrict
 Primary Methods distinguish detected peptides from predicted allele associations;
 Hitlist855 requests exact source joins/provenance, without blanket study relabeling.
 Hitlist856 requests defined engineered DP/K562 arms currently collapsed to one
-generic arm. Existing Atlas primary loader702 and DO quantity issue817 remain
+generic arm. Existing Atlas primary loader702 and DO quantity issue816 remain
 separate. All208 parental CIITA rows already preserve probable-background notes.
 
 Inventory6.772s/390,758,400bytesRSS; independent replay8.717s/452,820,992bytes;
@@ -4727,3 +4727,74 @@ comparison and confidence intervals remain pending; binding-regression metrics
 are inapplicable to MS labels. Generated-background enrichment and transfer
 across these studies cannot isolate processing, detector or donor mechanisms.
 Full goal remains active.
+
+
+## 2026-10-27 — MS serializer recovery and first fixed native result
+
+Codex / GPT-6. [2036family](2026-10-26_2036_codex_mhc2-ms-length-background/README.md).
+Qualified human DP35251023train/validation/test and DQ834433824external, original
+complete source-paired molecules, unchanged nine-residue component and IC50
+initializer exclusions. Balanced positives versus frozen length-matched
+training-composition backgrounds remain artificial labels, not nondetections.
+No assay censoring, identity task or condition/pathway assertion is added.
+
+Original native101 completed3epochs/2592updates before4GiB RSS failure in training
+evaluation JSON serialization. The isolated2ed1bd8-based recovery changes only
+streaming JSON persistence/hashing, with byte/hash identity and unchanged strict
+resume contracts.50focused tests and2666full-suite tests pass (4skipped). Runtime
+transition, original checkpoint hashes, failures and invocation are frozen in
+`reproduce/serialization-transition.json`/`streaming-recovery-launch.json`.
+
+Fixed-final native101 recovery added zero optimizer updates:213.045s/
+2188427264bytesRSS. All32IC50dependency tensors/scaler match the original seed42
+parent;20fresh prediction probes have zero error. Selected/final tensors agree.
+Training contract unchanged: batch64, AdamW3e-4,weight decay1e-4,dropout.1,identity0;
+MS1/0 maps to joint elution logit with BCE. Component scores remain unidentified.
+
+| Partition | n | BCE | AUROC | AUPRC | Balanced accuracy | Recall | F1 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| DP validation |11040|.567887|.774720|.773374|.699728|.739855|.711312|
+| DP test |11808|.567756|.775586|.772586|.701558|.748645|.714979|
+| DQ8 external |6906|.699868|.633184|.649963|.593976|.448016|.524585|
+
+All train/validation/test/external per-example dumps are retained. These are
+canonical first-seed metrics pending independent all-arm replay. DQ8transfer is
+weaker; its BCE exceeds log(2). No native advantage or winner is established.
+Native102's first preflight stopped on the10GiB RAM floor before training; all
+files preserved. Remaining native102/null and binding/sequence/combined logistic
+controls have a new explicit controller with sustained20GiB/60second admission.
+Original action limits and all scientific gates remain unchanged. Nine artificial
+independent comparison/bootstrap tests pass; complete ensemble/bootstrap closure
+is still pending. LocalCPU, no Modal/GPU/install. Full goal remains active.
+
+
+## 2026-10-27 01:07 — Human MHC-II condition-source qualification
+
+Codex / GPT-6. [Family](2026-10-27_0107_codex_mhc2-human-cell-contrast/README.md).
+Sarango2022/PMID36215666human endogenous immunopeptidome; corrected-v4 export
+SHA256a665f37c... separately pinned from current2.0.42curation13b9142. Primary
+XML, PRIDE PXD024417 inventory, community SDRF and current-curation readback are
+archived by source/hash. Current Sarango curation lines agree exactly; terminal
+newline omission is a connector representation difference, separately recorded.
+
+Independent projected-source/count/row-position replay finds14903observations:
+3028classI,11875classII/distinct peptides. All class-II rows retain class-only
+restriction, empty candidate allele sets and no quantitative values.5980have one
+literal condition;5895have shared condition memberships. No invented alpha chain,
+independent observation expansion or missing-as-negative policy is applied.
+
+PRIDE inventory:40raw,40MSF,one community SDRF; all40SDRF filenames join, with
+eight source/capture groups and five technical runs each. Original biological
+replicate mapping, per-run quantities/scales and primary provenance for extended
+SDRF typing remain unqualified. Broad class-II capture and computational DR
+affinity estimates are separate evidence types. Source cannot yet supply the
+requested paired-MHC condition fit. [Hitlist858](https://github.com/pirl-unc/hitlist/issues/858)
+requests primary measurement import and explicit sample/replicate qualification;
+creation/body readback verified. Existing control/engineering fixes are preserved.
+
+Audit6.770s/386514944bytesRSS, localCPU/one thread; no Modal/GPU. Wrong-export hash
+and terminal-newline assertion failures are preserved with source-specific
+corrections. Discovery closed at13/16operations; direct payloads465357bytes, tool
+network bytes unmeasured. No training/pretraining, loss, synthetic controls,
+validation/test partition, metrics or prediction dumps apply to this source-only
+audit. No predictive winner; full binding/MS/fitted-pathway goal remains active.

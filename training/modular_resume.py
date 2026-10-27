@@ -58,13 +58,29 @@ def canonical(value):
 
 
 def digest(value):
-    return hashlib.sha256(canonical(value)).hexdigest()
+    result = hashlib.sha256()
+    for chunk in json.JSONEncoder(sort_keys=True, allow_nan=False).iterencode(value):
+        result.update(chunk.encode())
+    return result.hexdigest()
 
 
 def atomic_json(path, value):
-    atomic_bytes(
-        path, json.dumps(value, indent=2, sort_keys=True, allow_nan=False).encode() + b"\n"
-    )
+    """Persist large evaluation caches without allocating another full JSON copy."""
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    encoder = json.JSONEncoder(indent=2, sort_keys=True, allow_nan=False)
+    try:
+        with temporary.open("w", encoding="utf-8", newline="") as stream:
+            for chunk in encoder.iterencode(value):
+                stream.write(chunk)
+            stream.write("\n")
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary.replace(path)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
 
 
 @contextmanager

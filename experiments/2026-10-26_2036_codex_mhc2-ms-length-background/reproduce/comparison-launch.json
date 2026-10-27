@@ -1,0 +1,37 @@
+{
+  "utc": "2026-10-27T01:06:32.175290+00:00",
+  "agent_model": "Codex / GPT-6",
+  "cwd": "/private/tmp/presto-mhc2-evaluation-20261027/presto",
+  "git_commit": "2ed1bd8cdd36c94236d55c3fdd9927f6f79d4780",
+  "dirty_status": " M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/fit-native101-1793047384363865000.json\n M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/logistic-controller-state.json\n M experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native-controller-state.json\n M tasks/todo.md\n M training/modular_resume.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_remaining.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/continue_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/logistic_controls_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/streaming_recovery.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/test_compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/comparison-plan.md\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/evaluation-recovery-original.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native102-preflight-preservation.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/remaining-arms-plan.md\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/serialization-fix/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/serialization-transition.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/continue_remaining.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/continue_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/logistic_controls_streaming.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/streaming_recovery.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/test_compare.py\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-controller-state.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-fit-native102-1793062870276035000.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-recovery-launch.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-recovery.sh\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-score-native101-1793062656089722000.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/failure-attempt01/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/native101-fit-recovered.json\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/native101/\n?? experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/software-json/\n?? tasks/mhc2_json_recovery_spec.md\n?? tests/test_modular_json_streaming.py\n",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "device": "cpu",
+  "requested_modal_gpu": null,
+  "environment": {
+    "PYTHONPATH": "/private/tmp/presto-mhc2-evaluation-20261027:/private/tmp/presto-pr-completion-20261026/dependencies",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "PYTORCH_ENABLE_MPS_FALLBACK": "0"
+  },
+  "code_sha256": "53d153be387d409b2750ed73f578277cba0c453d4ecb21981087881e9af4868c",
+  "tests_sha256": "0518d092fff35254d9b4f03b3f500342d8105e78d66d87b8b8be88faecb43e01",
+  "tests": "9 passed in1.71s; initial missing code-dir PYTHONPATH collection failure preserved",
+  "test_extra_pythonpath": "/private/tmp/presto-mhc2-evaluation-20261027/presto/experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code",
+  "plan_sha256": "cdc30f9251d99ccd262dc1170b310659231339a2f3ed09012984c6ba29ec9d9c",
+  "remaining_plan_sha256": "8f5329db50ffed5824b1e1e2935947d75e2e8aba812cd3adae1fbc182e97e944",
+  "actions": [
+    "verify",
+    "compare"
+  ],
+  "limits": {
+    "rss_bytes": 2147483648,
+    "seconds_per_action": 300,
+    "numerical_threads": 1,
+    "interop_threads": 1
+  },
+  "state_chain": [
+    "streaming-controller-state.json (native101 recovered;102 failed before updates)",
+    "remaining-controller-state.json (must complete all remaining actions)"
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "status": "running",
+  "status": "stopped_on_failure",
   "events": [
     {
       "utc": "2026-10-26T20:43:03.450922+00:00",
@@ -12,5 +12,7 @@
     }
   ],
   "current_action": "fit-native101",
-  "pid": 30039
+  "pid": 30039,
+  "error": "RuntimeError('fit-native101 exited1; stopped without retry')",
+  "updated_utc": "2026-10-27T00:36:37.566657+00:00"
 }

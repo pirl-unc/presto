@@ -1,0 +1,26 @@
+{
+  "utc": "2026-10-27T01:06:32.172848+00:00",
+  "reason": "available_ram guard before initial checkpoint or optimizer updates",
+  "artifacts": {
+    "resolved-config.json": {
+      "original_path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native102/resolved-config.json",
+      "preserved_path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native102-preflight-attempt01/resolved-config.json",
+      "sha256": "e84e832f43bd5dcf3599989699c3e4e7a75ae4ce074f3b00209237358cb05ec2",
+      "bytes": 1564
+    },
+    ".training.lock": {
+      "original_path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native102/.training.lock",
+      "preserved_path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native102-preflight-attempt01/.training.lock",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "admission.json": {
+      "original_path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native102/admission.json",
+      "preserved_path": "/private/tmp/presto-mhc2-20261026/ms-length-background/native/native102-preflight-attempt01/admission.json",
+      "sha256": "d6481b1aa530e35ab666cb155fcf8b6d28359f406ab66a6826b0cd0ec214a9a9",
+      "bytes": 2227
+    }
+  },
+  "plan": "remaining-arms-plan.md",
+  "prior_preservation_failure": "Two-file inventory assertion excluded empty lock; no mutation occurred; corrected inventory includes the lock."
+}

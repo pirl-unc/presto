@@ -14398,3 +14398,30 @@ isolated processing result is claimed. Historical binding holdouts stay developm
 Review: first native fit active; no MS performance improvement claimed. Older
 convergence is fitting seed44 after seed43 verified. Censor recovery is terminal
 after RAM-floor failure, with a new150-step snapshot preserved separately.
+
+
+## 2026-10-27 — MS JSON serialization recovery
+
+- [x] Inspect authoritative terminal handles and preserve trained checkpoint/failure evidence.
+- [x] Register `tasks/mhc2_json_recovery_spec.md` before code changes.
+- [ ] Fix and verify bounded-memory JSON persistence without changing model math.
+- [ ] Recover fixed native101 evaluation, then finish remaining native/control comparisons.
+
+
+## 2026-10-27 — Verified serializer fix, explicit MS recovery and source gap
+
+- [x] Preserve original MS failure and checkpoints; stream JSON with identical bytes/hashes.
+- [x] Pass50focused tests and full2666-test suite (4skipped), repository lint/format.
+- [x] Recover native101 full evaluation with zero new updates and exact retained IC50 tensors.
+- [x] Preserve zero-update native102 RAM-floor failure and freeze stricter admission continuation.
+- [x] Freeze independent all-arm replay/ensemble/bootstrap; nine artificial tests pass.
+- [x] Qualify14903Sarango source rows and deposited metadata; file/read back Hitlist858.
+- [ ] Follow remaining controller96044 through terminal state; finish all comparisons.
+- [ ] Resume150-step binding refinement from its unchanged old runtime when resources permit.
+- [ ] Obtain qualified primary condition measurements and fit distinct pathway/condition effects.
+
+Review: first fixed native101 DPtestAUROC.775586, DQ8external.633184; external
+BCE.699868. These first-seed reported outcomes are pending independent all-arm
+closure and do not establish improvement. Source-only audit exposes absent
+original per-run measurements and unresolved molecule/replicate evidence; no
+condition effect or isolated processing performance is claimed. Full goal active.

@@ -1,0 +1,182 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "number": 70,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "issue": {
+            "url": "https://github.com/pirl-unc/hitlist/issues/70",
+            "title": "Improve Sarango 2022 (PMID 36215666) — more siRNAs than T6BP; MHC-I also profiled",
+            "issue_number": 70,
+            "body": "## Imprecision\n\n`hitlist/data/pmid_overrides.yaml` entry for PMID 36215666 (Sarango 2022, \\\"The Autophagy Receptor TAX1BP1 (T6BP) improves antigen presentation by MHC-II molecules\\\") currently frames the study as HeLa-CIITA + T6BP siRNA + class II only. This is imprecise but not wrong:\n\n1. **More siRNAs than just T6BP**: Paper also uses siRNAs against NDP52, OPTN, p62, and later CANX (calnexin). Verbatim: *\\\"HeLa cells modified to express CIITA (HeLa-CIITA) were silenced for the expression of ARs using siRNAs targeting NDP52, OPTN, and T6BP\\\"*.\n2. **MHC-I immunopeptidome ALSO profiled** (Fig EV2): W6/32 IP captured HLA-A*68:02, B*15:09, C*12:03 ligandomes. YAML framing as \\\"forced HLA-II expression\\\" implicitly treats this as class II only.\n3. Additional plasmid-encoded antigens (Gag, Gag-LC3, Gag-LC3 G120A, pp65, GFP-T6BP) were transfected in some experiments.\n\nCore claim (HeLa-CIITA cancer line, IEDB 'healthy cervix' is wrong) is **accurate**.\n\n## Fix\n\n- Expand note to list all siRNAs used.\n- Indicate both class I (W6/32) and class II (TÜ39) IPs were performed.\n- If class I ms_samples entries should exist for this PMID, add them.\n- Perturbations list should include all siRNAs, not only T6BP.\n\n## Discovery\n\nFound while verifying \\\"IEDB is WRONG\\\" claims against source papers.",
+            "state": "closed",
+            "user": {
+              "login": "iskandr",
+              "name": "iskandr",
+              "email": null,
+              "avatar_url": "https://avatars.githubusercontent.com/u/48441?v=4",
+              "id": 48441
+            },
+            "assignees": null,
+            "labels": null,
+            "milestone": null,
+            "state_reason": "completed",
+            "comments": 0,
+            "created_at": "2026-04-18T13:24:05Z",
+            "updated_at": "2026-04-18T21:41:22Z",
+            "closed_at": "2026-04-18T21:41:22Z",
+            "display_url": "https://github.com/pirl-unc/hitlist/issues/70",
+            "display_title": "Improve Sarango 2022 (PMID 36215666) — more siRNAs than T6BP; MHC-I also profiled"
+          },
+          "url": "https://github.com/pirl-unc/hitlist/issues/70",
+          "title": "Improve Sarango 2022 (PMID 36215666) — more siRNAs than T6BP; MHC-I also profiled",
+          "display_url": "https://github.com/pirl-unc/hitlist/issues/70",
+          "display_title": "Improve Sarango 2022 (PMID 36215666) — more siRNAs than T6BP; MHC-I also profiled"
+        },
+        "isError": false
+      }
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "number": 140,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "issue": {
+            "url": "https://github.com/pirl-unc/hitlist/issues/140",
+            "title": "Add line-expression anchors for line-like human ms_samples",
+            "issue_number": 140,
+            "body": "## Problem\n\n`hitlist` now has enough curated sample structure that a downstream sample-aware export can preserve candidate peptide mappings and then rank them with expression evidence. The biggest immediate gap is the large set of **line-like human MS samples** that do not map cleanly onto the current `pirlygenes` tumor/normal tissue references.\n\nFrom a local audit of `generate_ms_samples_table()` + `generate_observations_table()`:\n\n- `621` curated `ms_samples` rows total\n- `579` are human\n- about `434 / 621` already look matchable to current `pirlygenes` tumor / normal / tissue references\n- **another `111 / 621` are mostly line-like human systems that need a dedicated line-expression backend or anchor registry**\n\nThose `111` rows are not random. They cluster into a manageable set of line systems:\n\n- `49` `C1R`-derived rows\n- `21` EBV-LCL / donor LCL rows\n- `12` `HAP1` KO-panel rows\n- `7` `721.221`-derived rows\n- `4` `HeLa`-derived rows\n- `3` `HEK293`-derived rows\n- `2` `SaOS-2` rows\n- singletons / small groups including `THP-1`, `A375`, `K562 DPB1 transfectants`, plus a handful of grouped or underspecified labels\n\nRepresentative sample labels:\n\n- `C1R-HLA-B*27:02`, `C1R-HLA-C*07:02`, `C1R HLA-E*01:01 transfectant`\n- `721.221-HLA-A*11:01`, `721.221-B*51:01 ERAP1 KO`\n- `JY (EBV-LCL)`, `HHC (EBV-LCL)`, `GR (EBV-LCL)`, `EBV-LCLs (multiple donors)`\n- `HAP1 wildtype`, `HAP1 TAP1 KO`, `HAP1 CALR KO`\n- `HeLa.ABC-KO-HLA-B*51:01 (ERAP1 shRNA)`, `HeLa-CIITA + T6BP siRNA`\n- `HEK293T-ACE2-TMPRSS2 (SARS-CoV-2-infected)`\n- `THP-1 cell line`, `A375 + ERAP1 inhibitor`, `K562 DPB1 transfectants`\n\n## Current state in hitlist\n\n`hitlist` does **not** currently appear to curate per-sample RNA expression for these systems.\n\nWhat *does* exist already:\n\n- `monoallelic_lines.yaml` — host-line metadata for mono-allelic assignment (`721.221`, `C1R`, `K562`, `T2`)\n- `bulk_proteomics` / `bulk_proteomics.parquet` — a separate non-MHC proteomics surface with CCLE + Bekker-Jensen protein / peptide detectability\n- HPA downloads in `downloads.py` (`hpa_rna`, `hpa_bulk`, `hpa_protein`) for normal-tissue / CTA-style analysis\n\nSo the repo already has the beginnings of:\n\n1. a line-host registry\n2. expression-adjacent references\n3. a separate detectability modality\n\nbut not a first-class **sample-expression anchor** layer for `ms_samples`.\n\n## Proposal\n\nAdd a small curated registry for line-like human samples that maps a `hitlist` sample onto an expression backend / anchor key, without forcing the canonical MS evidence rows to carry expression values.\n\nPossible shapes:\n\n### Option A: extend `monoallelic_lines.yaml`\n\nAdd fields like:\n\n- `lineage_tissue`\n- `cancer_type`\n- `expression_backend` (`depmap_rnaseq`, `ccle_protein`, `pirlygenes_cancer_type`, `none`)\n- `expression_key` (e.g. `C1R`, `JY`, `HAP1`, `HELA`, `HEK293T`, `THP1`)\n- `parent_line`\n- `notes`\n\n### Option B: add a new `line_expression_anchors.yaml`\n\nKeep `monoallelic_lines.yaml` focused on mono-allelic host semantics and create a separate registry that covers:\n\n- mono-allelic hosts (`C1R`, `721.221`, `K562`, `T2`)\n- EBV-LCL donor lines (`JY`, `HHC`, `GR`, donor IDs)\n- non-mono-allelic expression systems (`HAP1`, `HeLa`, `HEK293T`, `THP-1`, `SaOS-2`, `A375`, etc.)\n- grouped labels / aliases used in `ms_samples`\n\nI slightly prefer **Option B** because the problem here is broader than mono-allelic host curation.\n\n## API / CLI surface\n\nA minimal first step could be:\n\n- `load_line_expression_anchors()`\n- `resolve_sample_expression_anchor(sample_label, pmid=None, study_label=None)`\n- optional export surface such as `hitlist export samples --with-expression-anchors`\n\nThis should return the **anchor**, not the full expression matrix. The actual values can continue to live in an external backend such as `pirlygenes`, DepMap/CCLE RNA, or later bundled optional references.\n\n## Why this matters\n\nWithout a curated anchor layer, downstream sample-aware mapping selection is stuck doing weak regex matching over labels like:\n\n- `C1R-HLA-B*27:02`\n- `B-LCLs (JY, CD165, PD42, CM467, RA957)`\n- `HAP1 GANAB KO`\n- `HEK293T-ACE2-TMPRSS2`\n\nThat is brittle and will drift across papers. The curation burden is small enough that it belongs upstream in `hitlist`, where the sample semantics already live.\n\n## Acceptance criteria\n\n- the common human line-like `ms_samples` rows above resolve to stable expression anchors\n- aliases / grouped labels are normalized once upstream\n- the registry is queryable from Python\n- future sample-aware training exports can attach `expression_backend` / `expression_key` without changing canonical MS evidence storage\n",
+            "state": "closed",
+            "user": {
+              "login": "iskandr",
+              "name": "iskandr",
+              "email": null,
+              "avatar_url": "https://avatars.githubusercontent.com/u/48441?v=4",
+              "id": 48441
+            },
+            "assignees": null,
+            "labels": null,
+            "milestone": null,
+            "state_reason": "completed",
+            "comments": 2,
+            "created_at": "2026-04-23T17:07:51Z",
+            "updated_at": "2026-09-24T04:49:16Z",
+            "closed_at": "2026-09-24T04:49:16Z",
+            "display_url": "https://github.com/pirl-unc/hitlist/issues/140",
+            "display_title": "Add line-expression anchors for line-like human ms_samples"
+          },
+          "url": "https://github.com/pirl-unc/hitlist/issues/140",
+          "title": "Add line-expression anchors for line-like human ms_samples",
+          "display_url": "https://github.com/pirl-unc/hitlist/issues/140",
+          "display_title": "Add line-expression anchors for line-like human ms_samples"
+        },
+        "isError": false
+      }
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "number": 576,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "issue": {
+            "url": "https://github.com/pirl-unc/hitlist/issues/576",
+            "title": "Curated engineered samples resolve to parental exact-line RNA (tier 1) when their label matches the parent's alias",
+            "issue_number": 576,
+            "body": "Found while reviewing #575 (HAP1 reference RNA, #358).\n\n`resolve_sample_expression_anchor` decides \"exact line\" from the label alone. When an engineered sample's label matches the **parental** registry entry's alias instead of an engineered-derivative entry, it resolves at tier 1 with `expression_parent_key=None` — presenting parental RNA as RNA measured in the engineered sample. Tier 2 exists precisely to keep that distinction visible.\n\nEleven curated samples carry curated engineering (`condition_knockout_genes`, `condition_knockdown_genes`, `condition_transduction`, `condition_transfection`, `condition_genetic_variants`) yet match a parental entry (no `parent_line`):\n\n| PMID | sample_label | matched entry | curated engineering |\n| --- | --- | --- | --- |\n| 31092671 | 721.221-B*51:01 ERAP1 KO | 721.221 | KO ERAP1 |\n| 31092671 | 721.221-B*51:01 ERAP2 KO | 721.221 | KO ERAP2 |\n| 31092671 | 721.221-B*51:01 ERAP1+ERAP2 double KO (clone 1) | 721.221 | KO ERAP1;ERAP2 |\n| 31092671 | 721.221-B*51:01 ERAP1+ERAP2 double KO (clone 19) | 721.221 | KO ERAP1;ERAP2 |\n| 36010968 | SaOS-2 + TP53 R175H | SaOS-2 | transfection TP53, variant R175H |\n| 36010968 | SaOS-2 + TP53 R273H | SaOS-2 | transfection TP53, variant R273H |\n| 36215666 | HeLa-CIITA (Mock) | HeLa | transduction CIITA |\n| 36215666 | HeLa-CIITA (control siRNA) | HeLa | transduction CIITA |\n| 36215666 | HeLa-CIITA + T6BP siRNA | HeLa | transduction CIITA, knockdown TAX1BP1 |\n| 39438697 | THP-1 TAP1 knockout + mock infection | THP-1 | KO TAP1 |\n| 39438697 | THP-1 TAP1 knockout + Mtb H37Rv infection | THP-1 | KO TAP1 |\n\nWith the DepMap bundle installed, the SaOS-2, HeLa and THP-1 rows export as tier-1 exact-line RNA today (721.221 has no data yet, so it falls through). The 12 Shapiro HAP1 arms are correct after #575 because each KO label is a `HAP1-KO` alias, but any HAP1 label outside that list (`HAP1 B2M-KO`, `HAP1 sgB2M`, `HAP1 HLA-A KO`, …) would also resolve at tier 1. `cell_name_parser`'s `genetic_modification` misses most of those spellings, so a label heuristic is not a fix.\n\nProposed fix: the curated condition columns already say whether a sample is engineered. Pass that into the resolver from both export call sites (`export.py` sample anchors and observations anchors), and demote a tier-1 hit on an engineered sample to tier 2 with `expression_parent_key` = the matched line (same data, honest provenance). Add a corpus drift guard: no curated engineered sample resolves at tier 1, independent of which optional expression data is installed.\n",
+            "state": "closed",
+            "user": {
+              "login": "iskandr",
+              "name": "iskandr",
+              "email": null,
+              "avatar_url": "https://avatars.githubusercontent.com/u/48441?v=4",
+              "id": 48441
+            },
+            "assignees": null,
+            "labels": null,
+            "milestone": null,
+            "state_reason": "completed",
+            "comments": 0,
+            "created_at": "2026-09-27T03:00:08Z",
+            "updated_at": "2026-09-27T18:48:05Z",
+            "closed_at": "2026-09-27T18:48:05Z",
+            "display_url": "https://github.com/pirl-unc/hitlist/issues/576",
+            "display_title": "Curated engineered samples resolve to parental exact-line RNA (tier 1) when their label matches the parent's alias"
+          },
+          "url": "https://github.com/pirl-unc/hitlist/issues/576",
+          "title": "Curated engineered samples resolve to parental exact-line RNA (tier 1) when their label matches the parent's alias",
+          "display_url": "https://github.com/pirl-unc/hitlist/issues/576",
+          "display_title": "Curated engineered samples resolve to parental exact-line RNA (tier 1) when their label matches the parent's alias"
+        },
+        "isError": false
+      }
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "number": 716,
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "Action completed."
+          }
+        ],
+        "structuredContent": {
+          "issue": {
+            "url": "https://github.com/pirl-unc/hitlist/pull/716",
+            "title": "Curate verified engineering-control absences (#593)",
+            "issue_number": 716,
+            "body": "## Summary\n\nPartially addresses #593 by recording seven source-backed control absences across five studies: two WT ERAAP BMDC scopes (PMID 27371725), WT H2-O splenic cells (30573663), WT 721.221-B*51:01 (31092671), non-targeting HeLa.ABC-KO.B51 shRNA (32161166), and Mock/siCTRL HeLa-CIITA (36215666). Each `none` applies only to the sibling's knockout or knockdown axis; other engineered facts and arm identity remain intact. The engineering-drift baseline falls from 66 to 59 findings (47 to 43 errors; 19 to 16 warnings). Bumps Hitlist to 1.82.9.\n\nPrimary papers: [Nagarajan](https://pmc.ncbi.nlm.nih.gov/articles/PMC4976029/), [Nanaware](https://pmc.ncbi.nlm.nih.gov/articles/PMC6398211/), [Guasp](https://pmc.ncbi.nlm.nih.gov/articles/PMC6682995/), [Chen](https://pmc.ncbi.nlm.nih.gov/articles/PMC7196583/), [Sarango](https://pmc.ncbi.nlm.nih.gov/articles/PMC9724678/).\n\n## Scope boundary\n\nPMID 29769354 remains in #593. Its paper compares PF-GFP with PF-ERAP2, while the current baseline arm does not distinguish PF from PF-GFP; `overexpression_genes: none` would be unsafe. The new arm-identity issue #715 records the needed review. The remaining 59 audit findings stay open.\n\n## Dependency\n\nDepends on #714, merged and published as 1.82.8. This PR is now based on `main`.\n\n## Verification\n\n- Seven parameterized source-backed control assertions fail on the parent and pass here. Baseline equality passes at 59 findings, with no new findings.\n- Structured before/after comparison finds only seven added `none` fields and unchanged `is_engineered_material` verdicts, so expression-anchor tier selection is unchanged.\n- Existing Chen and Sarango export tests now assert the intended metadata: direct control rows carry `none`; a shared Mock+siCTRL statement also carries `none`; shared statements including siT6BP stay blank.\n- `./format.sh`, `./lint.sh`, 553 focused tests and the full local `./test.sh` unit suite pass (3,129 tests, 89% coverage). CI integration remains required.\n- `scripts/check_dev_install.py` reports that the shared editable environment still points to the original checkout at 1.82.2; this isolated PR checkout does not repoint it.\n\nRefs #593. See #715 for the unresolved PF-GFP case.\n\n",
+            "state": "closed",
+            "user": {
+              "login": "iskandr",
+              "name": "iskandr",
+              "email": null,
+              "avatar_url": "https://avatars.githubusercontent.com/u/48441?v=4",
+              "id": 48441
+            },
+            "assignees": null,
+            "labels": null,
+            "milestone": null,
+            "state_reason": null,
+            "comments": 1,
+            "created_at": "2026-10-19T18:22:35Z",
+            "updated_at": "2026-10-19T19:57:51Z",
+            "closed_at": "2026-10-19T19:57:51Z",
+            "display_url": "https://github.com/pirl-unc/hitlist/pull/716",
+            "display_title": "Curate verified engineering-control absences (#593)"
+          },
+          "url": "https://github.com/pirl-unc/hitlist/pull/716",
+          "title": "Curate verified engineering-control absences (#593)",
+          "display_url": "https://github.com/pirl-unc/hitlist/pull/716",
+          "display_title": "Curate verified engineering-control absences (#593)"
+        },
+        "isError": false
+      }
+    }
+  }
+]
