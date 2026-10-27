@@ -168,10 +168,12 @@ def test_levels_are_distinct_without_numerical_spacing():
     assert all(SCALE.reference not in name for name in names)
 
 
-def test_noncellular_outputs_and_ms_component_ignore_ordinal_inputs():
+@pytest.mark.parametrize("mhc_class", ["I", "II"])
+def test_noncellular_outputs_and_ms_component_ignore_ordinal_inputs(mhc_class):
     torch.manual_seed(79)
     model = ModularPresto(
         settings(
+            mhc_classes=("I", "II"),
             endpoints=(
                 "ic50",
                 "tcr_binding",
@@ -179,12 +181,13 @@ def test_noncellular_outputs_and_ms_component_ignore_ordinal_inputs():
                 "bulk_observation",
                 "ms_response",
                 "digest_observation",
-            )
+            ),
         )
     ).eval()
     for endpoint in model.config.endpoints:
         row = observation(
             endpoint=endpoint,
+            mhc=(replace(observation().mhc[0], mhc_class=mhc_class),),
             tcr_a="ACDEFGHIKLM",
             tcr_b="NPQRSTVWYAC",
             value=10 if endpoint == "ic50" else 1,

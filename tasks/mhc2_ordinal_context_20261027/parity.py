@@ -29,14 +29,19 @@ def main():
     model = ModularPresto(config).eval()
     rows = [
         Observation(
-            observation_id=f"fixture-{endpoint}", source="artificial-parity-fixture",
-            endpoint=endpoint, peptide="ACDEFGHIKLMNP",
+            observation_id=f"fixture-{endpoint}",
+            source="artificial-parity-fixture",
+            endpoint=endpoint,
+            peptide="ACDEFGHIKLMNP",
             mhc=(MHCInput("ACDEFGHIKLM", "NPQRSTVWYAC", "II"),),
-            tcr_a="ACDEFGHIKLM", tcr_b="NPQRSTVWYAC",
+            tcr_a="ACDEFGHIKLM",
+            tcr_b="NPQRSTVWYAC",
             value=100 if endpoint == "ic50" else 1,
             unit="nM" if endpoint == "ic50" else "binary",
-            context=Context(processing_pathways={"fixture_route": ContextAssertion("present")},
-                            interventions={"fixture_intervention": ContextAssertion("absent")}),
+            context=Context(
+                processing_pathways={"fixture_route": ContextAssertion("present")},
+                interventions={"fixture_intervention": ContextAssertion("absent")},
+            ),
         )
         for endpoint in config.endpoints
     ]
@@ -46,20 +51,30 @@ def main():
     assert not config_values.pop("ordinal_scales", {})
     report = {
         "config": config_values,
-        "state": {name: {"shape": list(value.shape), "dtype": str(value.dtype),
-                         "sha256": hashlib.sha256(value.detach().cpu().numpy().tobytes()).hexdigest()}
-                  for name, value in model.state_dict().items()},
+        "state": {
+            name: {
+                "shape": list(value.shape),
+                "dtype": str(value.dtype),
+                "sha256": hashlib.sha256(value.detach().cpu().numpy().tobytes()).hexdigest(),
+            }
+            for name, value in model.state_dict().items()
+        },
         "feature_layout": model.feature_layout,
         "fingerprints": [semantic_fingerprint(row) for row in rows],
         "values": [float(value.value) for value in values],
-        "components": [{key: float(value) for key, value in prediction.components.items()}
-                       for prediction in values],
+        "components": [
+            {key: float(value) for key, value in prediction.components.items()}
+            for prediction in values
+        ],
     }
     with output.open("x") as stream:
         json.dump(report, stream, indent=2, sort_keys=True, allow_nan=False)
         stream.write("\n")
-    print(json.dumps({"fixture_only": True, "state_tensors": len(report["state"]),
-                      "output": str(output)}))
+    print(
+        json.dumps(
+            {"fixture_only": True, "state_tensors": len(report["state"]), "output": str(output)}
+        )
+    )
 
 
 if __name__ == "__main__":

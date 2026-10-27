@@ -719,3 +719,14 @@ Keep applicability reporting separate from model features and the measured label
   runs through verification and closure, address failures, and use waiting time
   for the next qualified source or integration requirement. An external blocker
   for one assay does not block the rest of the accepted scope.
+
+
+## 2026-10-27 — MHC-II development must strengthen the common core
+
+- The user requires reusable machinery across MHC-I, MHC-II and other Presto
+  endpoints. Keep shared behavior in the existing input/model/trainer path;
+  adapters translate source evidence and experiment code configures comparisons.
+  Do not promote diagnostic controls into task-specific production predictors.
+- Verify shared gradients, mixed-class training/checkpoint behavior and endpoint
+  isolation. Shared architecture does not establish MHC-I predictive improvement;
+  that requires a measured transfer/regression comparison.

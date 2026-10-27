@@ -4,10 +4,19 @@ from dataclasses import replace
 import json
 
 import pytest
+import torch
 
-from presto.data.modular import observation_target
-from presto.data.modular_hitlist import AdmissionError, HumanMHCCatalog, purified_ic50_observation
+from presto.data.modular import Observation, fit_target_scales, observation_target
+from presto.data.modular_hitlist import (
+    AdmissionError,
+    HumanMHCCatalog,
+    MHCReferenceAssumption,
+    purified_ic50_observation,
+)
 from presto.data.modular_preparation import prepare_observations
+from presto.inference.modular import ModularPredictor
+from presto.models.modular import ModularConfig, ModularPresto
+from presto.training.modular import save_checkpoint, train_step
 
 
 def reference(name="A*02:01", cls="I", chain="alpha", first="A" * 70, second="C" * 70):
@@ -140,6 +149,94 @@ def test_class_ii_requires_actual_order_independent_alpha_beta_pair():
         convert(raw(mhc_class="II", mhc_restriction="HLA-DRB1*01:01"), catalog=catalog)
     with pytest.raises(AdmissionError, match="class_ii_not_alpha_beta_pair"):
         convert(raw(mhc_class="II", mhc_restriction="HLA-DRB1*01:01/DRB1*01:01"), catalog=catalog)
+
+
+@pytest.mark.parametrize("mhc_class", ["I", "II"])
+def test_explicit_reference_retains_unknown_typing_through_checkpoint_inference(
+    tmp_path, mhc_class
+):
+    catalog = HumanMHCCatalog(
+        [
+            reference(),
+            reference("DRA*01:01", "II", "alpha", second=""),
+            reference("DRB1*01:01", "II", "beta", first=""),
+        ]
+    )
+    reported = None if mhc_class == "I" else "HLA-DRB1*01:01"
+    selected = "HLA-A*02:01" if mhc_class == "I" else "HLA-DRA*01:01/DRB1*01:01"
+    assumption = MHCReferenceAssumption(selected, "software fixture reference", "fixture:v1")
+    pair = catalog.resolve(reported, mhc_class, reference_assumption=assumption)
+    assert pair.provenance["reported_restriction"] == reported
+    assert pair.provenance["assumed_alleles"] == [
+        "HLA-A*02:01" if mhc_class == "I" else "HLA-DRA*01:01"
+    ]
+    assert pair.provenance["partner_imputation"] is (mhc_class == "II")
+    assert pair.provenance["reference_assumption"]["reference"] == "fixture:v1"
+    # Strict resolution still fails: explicitly modeling a reference is not typing evidence.
+    with pytest.raises(AdmissionError):
+        catalog.resolve(reported, mhc_class)
+    row = replace(convert(raw()), mhc=(pair,))
+    row = Observation.from_dict(json.loads(json.dumps(row.to_dict())))
+    torch.manual_seed(101)
+    model = ModularPresto(ModularConfig(mhc_classes=(mhc_class,), dropout=0))
+    scales = fit_target_scales([row, replace(row, value=100)])
+    train_step(model, torch.optim.AdamW(model.parameters(), lr=0.001), [row], scales)
+    expected = model.eval().predict([row])[0]
+    checkpoint = tmp_path / "reference.pt"
+    save_checkpoint(checkpoint, model, scales)
+    result = ModularPredictor(checkpoint).predict([replace(row, value=None, split="predict")])[0]
+    assert result["diagnostics"]["candidates"][0]["mhc"]["provenance"] == pair.provenance
+    assert result["transformed_value"] == scales["ic50"].decode(float(expected.value))
+    # Evidence is retained for audit, never encoded as a predictive source identifier.
+    alternate = replace(pair, provenance={"source": "other", "assumed_alleles": []})
+    torch.testing.assert_close(
+        model.predict([replace(row, mhc=(alternate,))])[0].value, expected.value, rtol=0, atol=0
+    )
+
+
+@pytest.mark.parametrize(
+    "reported,selected,reason",
+    [
+        ("HLA-A*03:01", "HLA-A*02:01", "changes_reported_typing"),
+        ("HLA-DRB1*02:01", "HLA-DRA*01:01/DRB1*01:01", "changes_reported_typing"),
+        ("HLA-DRB1*01:01/DRB1*01:01", "HLA-DRA*01:01/DRB1*01:01", "changes_reported_typing"),
+        ("", "HLA-A*02:01", "not_explicit_human"),
+        (None, "HLA-A*03:01", "unresolved_catalog_name"),
+        (None, "HLA-DRB1*01:01", "missing_explicit_mhc_partner"),
+        (None, "HLA-DRB1*01:01/DRB1*01:01", "class_ii_not_alpha_beta_pair"),
+    ],
+)
+def test_reference_assumptions_cannot_bypass_source_or_catalog_checks(reported, selected, reason):
+    catalog = HumanMHCCatalog([reference(), reference("DRB1*01:01", "II", "beta", first="")])
+    with pytest.raises(AdmissionError, match=reason):
+        catalog.resolve(
+            reported,
+            "II" if "DR" in selected else "I",
+            reference_assumption=MHCReferenceAssumption(
+                selected, "explicit reference", "fixture:v1"
+            ),
+        )
+    assert not catalog.used
+
+
+@pytest.mark.parametrize("field", ["restriction", "reason", "reference"])
+@pytest.mark.parametrize("value", [None, "", " ", 1])
+def test_reference_assumption_requires_explicit_typed_metadata(field, value):
+    supplied = dict(restriction="HLA-A*02:01", reason="explicit reference", reference="fixture:v1")
+    supplied[field] = value
+    with pytest.raises(AdmissionError, match="requires_restriction_reason_reference"):
+        MHCReferenceAssumption(**supplied)
+
+
+def test_untyped_assumption_is_rejected_and_strict_provenance_is_unchanged():
+    catalog = HumanMHCCatalog([reference()])
+    with pytest.raises(AdmissionError, match="untyped_reference_assumption"):
+        catalog.resolve(None, "I", reference_assumption={"restriction": "HLA-A*02:01"})
+    assert catalog.resolve("HLA-A*02:01", "I").provenance == {
+        "reported_restriction": "HLA-A*02:01",
+        "catalog_alleles": ["HLA-A*02:01"],
+        "partner_imputation": False,
+    }
 
 
 @pytest.mark.parametrize(

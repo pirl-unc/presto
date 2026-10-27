@@ -44,3 +44,15 @@ The implementation remains in this isolated checkout. The original goal workspac
 records its commit and reviewable patch under tasks/ after local closure; integrate
 only when the pending old-runtime scoring contract is preserved. Remote publication
 requires the separately pending explicit export approval.
+
+
+## Formatting-only derivative — 2026-10-27
+
+The shared-core integration repaired the inherited E501/format failure in
+`parity.py`. The exact executed bytes pinned by this folder's original
+`verification.json` remain preserved as
+[parity.executed.py.txt](../mhc_shared_core_20261027_archive/parity.executed.py.txt).
+The current `parity.py` is an AST-identical formatted derivative, not the
+originally executed byte stream. [Repair receipt](../mhc_shared_core_20261027_archive/formatting-repair.json)
+records both hashes. Historical reports and the original runtime checkout are
+unchanged; no scientific fit or evaluation was rerun for this style repair.

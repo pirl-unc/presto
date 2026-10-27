@@ -86,6 +86,62 @@ uses alpha1 of the alpha chain and beta1 of the beta chain. Full-MHC preparation
 uses the existing strict `mhcseqs` extraction; no partner is guessed. Allele IDs,
 study/sample IDs and cell-line names are provenance, never learned embeddings.
 
+### Common core across MHC classes and assays
+
+Both MHC classes use the same `SequenceEncoder`, `pmhc_fusion`, cellular
+`context_fusion`, trainer, observation schema, checkpoint and inference API.
+Class-specific candidate construction retains whole peptides for class I and
+nine-residue registers with flanking features for class II. This routing does
+not allocate another encoder or class-specific training pipeline. Ordinal
+context scales, quantitative domains, censoring and coverage checks apply to
+either class. The MS feature block is also shared with bulk and component assays;
+domain-specific scalar readouts preserve distinct measurement scales.
+
+New source adapters should translate evidence into these common inputs. Source
+parsing, source-relative scale definitions and experiment controls belong in
+curation/configuration; study-specific predictors or trainer branches do not.
+Different biological routes may retain different candidate construction and
+readouts. Cellular context affects cellular outcomes, while purified binding and
+the MS detector remain invariant to that context.
+
+Software regressions exercise both classes updating the same parameters, one
+mixed-class quantity fit including bulk observations, and replay from one
+checkpoint. They establish reuse and routing, not biological transfer. MHC-II
+development has not yet demonstrated an MHC-I accuracy gain. Such a claim needs
+a matched predictive comparison with retained MHC-I evaluation and controls for
+negative transfer; shared parameters alone are insufficient.
+
+### Explicit reference assumptions
+
+`HumanMHCCatalog.resolve(reported_restriction, mhc_class)` remains strict by
+default: missing or ambiguous typing is deferred. When a caller intentionally
+models an unverified reference, pass an explicit `MHCReferenceAssumption`:
+
+```python
+from presto.data.modular_hitlist import MHCReferenceAssumption
+
+pair = catalog.resolve(
+    "HLA-DRB1*04:01",  # Actual source-reported typing; alpha remains unknown.
+    "II",
+    reference_assumption=MHCReferenceAssumption(
+        restriction="HLA-DRA*01:01/DRB1*04:01",
+        reason="Explicit reference alpha; source alpha identity unresolved",
+        reference="curation-record:reference-choice-v1",
+    ),
+)
+```
+
+The same API permits a declared class-I reference when reported identity is
+`None`. The catalog's existing sequence, class, chain and alias checks still
+apply. Every reported allele must be retained; broader or conflicting source
+typing is not silently reinterpreted. Reason and reference are required, and
+there is no automatic reference allele. `MHCInput.provenance` records the actual
+`reported_restriction`, selected `catalog_alleles`, `assumed_alleles` and complete
+`reference_assumption`. These survive observation serialization, evaluation
+records and prediction diagnostics after checkpoint reload; they never become
+learned IDs or source-verified typing. Source evidence stays unchanged, and
+predictive conclusions remain conditional on the assumption.
+
 Auxiliary observations may contain a single MHC groove or TCR chain. Missing
 partners are not encoded or fabricated; the existing shared species readout
 supervises the present input. Class/pairing/lineage outputs require their full
@@ -217,9 +273,10 @@ For the cited DO:DM source, this field represents the graded series only. DOKO's
 reported reduction relative to its parent does not identify one of these three
 levels, and DO absence is separate from an unknown or lowest ratio. DM also varies
 across that series. This representation supplies neither absolute activities nor
-an isolated DO effect. Exact paired-MHC typing and predictive qualification remain
-separate requirements. Empty ordinal fields preserve existing model shapes and
-historical semantic fingerprints.
+an isolated DO effect. Resolving the paired MHC requires either reported typing
+or an explicitly documented reference assumption through the common catalog
+adapter; predictive qualification remains separate. Empty ordinal fields preserve
+existing model shapes and historical semantic fingerprints.
 
 `machinery_references` contains typed `MachineryProfile` records with an ID,
 species, optional cell type, component priors, reference and version. Species-wide

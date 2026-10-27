@@ -5,6 +5,7 @@ original-outcome deduplication and experiment qualification remain explicit step
 """
 
 from collections import Counter, defaultdict
+from dataclasses import asdict, dataclass
 import math
 import re
 
@@ -18,6 +19,28 @@ class AdmissionError(ValueError):
         super().__init__(reason)
         self.reason = reason
         self.disposition = "deferred" if deferred else "excluded"
+
+
+@dataclass(frozen=True)
+class MHCReferenceAssumption:
+    """Explicit modeled restriction, never a replacement for reported typing."""
+
+    restriction: str
+    reason: str
+    reference: str
+
+    def __post_init__(self):
+        if any(
+            not isinstance(value, str) or not value.strip()
+            for value in (self.restriction, self.reason, self.reference)
+        ):
+            raise AdmissionError("reference_assumption_requires_restriction_reason_reference")
+
+
+def _restriction_names(restriction):
+    if not isinstance(restriction, str) or not restriction.startswith("HLA-"):
+        raise AdmissionError("not_explicit_human_restriction")
+    return [part if part.startswith("HLA-") else "HLA-" + part for part in restriction.split("/")]
 
 
 def _reference_assignment(row):
@@ -85,12 +108,33 @@ class HumanMHCCatalog:
             self.assignments[name][assignment].append({"source_row": ordinal, **row})
             self.dispositions["eligible_alias"] += 1
 
-    def resolve(self, restriction: str, mhc_class: str) -> MHCInput:
-        if not isinstance(restriction, str) or not restriction.startswith("HLA-"):
-            raise AdmissionError("not_explicit_human_restriction")
-        names = [
-            part if part.startswith("HLA-") else "HLA-" + part for part in restriction.split("/")
-        ]
+    def resolve(
+        self,
+        restriction: str | None,
+        mhc_class: str,
+        *,
+        reference_assumption: MHCReferenceAssumption | None = None,
+    ) -> MHCInput:
+        """Resolve reported typing, or an explicit reference completing unknown typing.
+
+        The default requires a complete source-reported restriction. With an
+        assumption, ``restriction`` remains the actual reported typing (possibly
+        partial, or None for unknown); every reported allele must be retained.
+        No reference is inferred from class, source, or missingness.
+        """
+        if reference_assumption is not None and not isinstance(
+            reference_assumption, MHCReferenceAssumption
+        ):
+            raise AdmissionError("untyped_reference_assumption")
+        names = _restriction_names(
+            restriction if reference_assumption is None else reference_assumption.restriction
+        )
+        assumed = []
+        if reference_assumption is not None:
+            reported = [] if restriction is None else _restriction_names(restriction)
+            if len(reported) != len(set(reported)) or not set(reported) <= set(names):
+                raise AdmissionError("reference_assumption_changes_reported_typing", deferred=True)
+            assumed = [name for name in names if name not in reported]
         if len(names) != (1 if mhc_class == "I" else 2):
             raise AdmissionError("missing_explicit_mhc_partner", deferred=True)
         assignments = []
@@ -122,7 +166,15 @@ class HumanMHCCatalog:
             provenance={
                 "reported_restriction": restriction,
                 "catalog_alleles": names,
-                "partner_imputation": False,
+                "partner_imputation": mhc_class == "II" and bool(assumed),
+                **(
+                    {
+                        "reference_assumption": asdict(reference_assumption),
+                        "assumed_alleles": assumed,
+                    }
+                    if reference_assumption is not None
+                    else {}
+                ),
             },
         )
         pair.validate()

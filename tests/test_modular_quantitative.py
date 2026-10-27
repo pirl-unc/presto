@@ -17,6 +17,7 @@ from presto.data.modular import (
     observation_target,
 )
 from presto.data.modular_quantitative import QuantitativeDomain
+from presto.data.modular_ordinal import OrdinalScale, OrdinalValue
 from presto.data.modular_lineage import semantic_fingerprint
 from presto.data.modular_sources import (
     MANIFEST_VERSION,
@@ -45,6 +46,7 @@ DOMAIN = QuantitativeDomain(
     "software-only:domain-v1",
 )
 PAIR = MHCInput("ACDEFGHIKLM", "NPQRSTVWYAC", "I")
+CONTEXT_SCALE = OrdinalScale(("low", "high"), "software-only:context-v1")
 
 
 def sample(family="bulk_quantity", domain="fixture", **kwargs):
@@ -243,6 +245,63 @@ def test_binary_and_quantity_outputs_share_features_but_keep_distinct_scales():
     assert set(scopes) == {"bulk_quantity:fixture", "ic50"}
 
 
+def test_both_mhc_classes_update_the_same_quantity_core():
+    torch.manual_seed(103)
+    model = network(
+        endpoints=("elution_quantity:fixture", "bulk_quantity:fixture", "ic50"),
+        mhc_classes=("I", "II"),
+        ordinal_scales={"factor_ratio": CONTEXT_SCALE},
+    )
+    optimizer = torch.optim.AdamW(model.parameters(), lr=0.001)
+    for mhc_class in ("I", "II"):
+        rows = [
+            sample(
+                "elution_quantity",
+                observation_id=f"{mhc_class}-{level}",
+                peptide="ACDEFGHIKL",
+                mhc=(replace(PAIR, mhc_class=mhc_class),),
+                context=Context(
+                    ordinal_values={"factor_ratio": OrdinalValue(level, CONTEXT_SCALE.reference)}
+                ),
+                value=value,
+            )
+            for level, value in (("low", 8.0), ("high", 32.0))
+        ]
+        step = train_step(model, optimizer, rows, fit_target_scales(rows))
+        for name in (
+            "encoder.embedding.weight",
+            "pmhc_fusion.0.weight",
+            "context_fusion.0.weight",
+            "ms_fusion.0.weight",
+            "quantity_scores.fixture.cellular.weight",
+            "quantity_scores.fixture.ms_response.weight",
+        ):
+            parameter = model.get_parameter(name)
+            assert step["coverage"][name]["gradient_and_update"]
+            assert optimizer.state[parameter]["step"] == (1 if mhc_class == "I" else 2)
+        assert model.heads["ic50"].weight.grad is None
+        assert model.digest_fusion[0].weight.grad is None
+        if mhc_class == "I":
+            assert model.register_score.weight.grad is None
+        else:
+            assert model.register_score.weight.grad.norm() > 0
+        labels = model.feature_layout["pmhc_fusion.0.weight"][1]
+        # The existing feature-coverage gate must see both class channels after both updates.
+        if mhc_class == "II":
+            assert all(
+                labels.index(name) in model.trained_features["pmhc_fusion.0.weight"]
+                for name in ("class:I", "class:II")
+            )
+        model.eval()
+        bulk = sample(peptide=rows[0].peptide)
+        low, high, bulk_output = model([*rows, bulk])
+        assert not torch.allclose(low.value, high.value)
+        for other in (high, bulk_output):
+            torch.testing.assert_close(
+                low.components["ms_response"], other.components["ms_response"], rtol=0, atol=0
+            )
+
+
 def test_anchor_evidence_and_support_are_separate_from_mixtures():
     anchor = sample("ms_quantity")
     with pytest.raises(ValueError, match="independent measurement evidence"):
@@ -291,7 +350,7 @@ def test_checkpoint_evaluation_and_public_quantity_units(tmp_path):
         initialize_from_checkpoint(incompatible, path)
 
 
-def quantity_index(tmp_path, *, preparation=False):
+def quantity_index(tmp_path, *, preparation=False, mixed_classes=False):
     peptides = ["ACDEFGHIK", "LMNPQRSTV", "WYACDEFGH", "IKLMNPQRS", "TVWYACDEF", "GHIKLMNPQ"]
     rows = []
     for i, peptide in enumerate(peptides):
@@ -313,11 +372,44 @@ def quantity_index(tmp_path, *, preparation=False):
                     provenance={"original_measurement_id": identifier, "measured_outcome": True},
                 )
             )
+    if mixed_classes:
+        rows = [
+            replace(
+                row,
+                # Vary cores with the same trained flanking-residue support in every split.
+                peptide="A" + row.peptide[1:] + "A",
+                context=Context(
+                    ordinal_values={
+                        "factor_ratio": OrdinalValue(
+                            "low" if row.value == 8 else "high", CONTEXT_SCALE.reference
+                        )
+                    }
+                ),
+            )
+            for row in rows
+        ]
+        rows.extend(
+            [
+                replace(
+                    row,
+                    observation_id=row.observation_id + "-II",
+                    mhc=(replace(PAIR, mhc_class="II"),),
+                    provenance={
+                        **row.provenance,
+                        "original_measurement_id": row.observation_id + "-II",
+                    },
+                )
+                for row in rows
+                if row.mhc
+            ]
+        )
     receipt = write_observations(tmp_path / "rows.jsonl", rows)
     settings = network(
         ("bulk_quantity", "elution_quantity"),
         preparation_features=("duration",) if preparation else (),
         preparation_units={"duration": "hours"} if preparation else {},
+        mhc_classes=("I", "II") if mixed_classes else ("I",),
+        ordinal_scales={"factor_ratio": CONTEXT_SCALE} if mixed_classes else {},
     ).config
     manifest = {
         "schema": MANIFEST_VERSION,
@@ -339,13 +431,14 @@ def quantity_index(tmp_path, *, preparation=False):
     return ObservationIndex(path)
 
 
-def test_streamed_quantity_fit_closes_all_active_paths(tmp_path):
-    index = quantity_index(tmp_path)
+@pytest.mark.parametrize("mixed_classes", [False, True])
+def test_streamed_quantity_fit_closes_all_active_paths(tmp_path, mixed_classes):
+    index = quantity_index(tmp_path, mixed_classes=mixed_classes)
     config, _, _, admission = preflight(index)
     assert config.quantity_domains == {"fixture": DOMAIN}
     assert admission["training_labels"] == {
         "bulk_quantity:fixture": 2,
-        "elution_quantity:fixture": 2,
+        "elution_quantity:fixture": 4 if mixed_classes else 2,
     }
     output = tmp_path / "output"
     output.mkdir()
@@ -354,13 +447,42 @@ def test_streamed_quantity_fit_closes_all_active_paths(tmp_path):
     records = [
         json.loads(line) for line in (output / "test-predictions.jsonl").read_text().splitlines()
     ]
-    assert len(records) == 4 and all(row["quantity_contract"] == asdict(DOMAIN) for row in records)
+    assert len(records) == (6 if mixed_classes else 4)
+    assert all(row["quantity_contract"] == asdict(DOMAIN) for row in records)
     model, _, _ = load_checkpoint(output / "selected.pt")
     assert not hasattr(model, "ms_score") and not hasattr(model, "cellular_score")
     assert (
         model.capabilities()["quantity_components"]["fixture"]["ms_response"]["status"]
         == "indirectly_trained"
     )
+    if mixed_classes:
+        assert model.config.mhc_classes == ("I", "II")
+        assert model.config.ordinal_scales == {"factor_ratio": CONTEXT_SCALE}
+        rows = [Observation.from_dict(record["observation"]) for record in records]
+        predictor = ModularPredictor(output / "selected.pt")
+        batch_size = index.manifest["training"]["batch_size"]
+        public = [
+            result
+            for start in range(0, len(rows), batch_size)
+            for result in predictor.predict(
+                [
+                    replace(row, value=None, split="predict")
+                    for row in rows[start : start + batch_size]
+                ]
+            )
+        ]
+        for saved, predicted in zip(records, public, strict=True):
+            assert predicted["transformed_value"] == saved["prediction"]
+        candidates = [
+            result["diagnostics"]["candidates"][0]
+            for result in public
+            if "candidates" in result["diagnostics"]
+        ]
+        assert {row["mhc"]["mhc_class"] for row in candidates} == {"I", "II"}
+        for row in candidates:
+            assert row["registers"][0]["starts"] == (
+                [0] if row["mhc"]["mhc_class"] == "I" else [0, 1]
+            )
 
 
 def test_preparation_admission_requires_variation(tmp_path):

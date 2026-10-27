@@ -14458,3 +14458,27 @@ and final-head CI remain to be verified; full goal stays active.
 - [ ] Complete prospective biological condition comparison and original binding/MS gates.
 
 Review: tasks/mhc2_ordinal_context_20261027/verification.json and the matching spec record exact source hashes/commands. This is software qualification; full biological goal remains active. Publication approval remains pending.
+
+
+## 2026-10-27 — Common MHC core integration
+
+Spec: [mhc_shared_core_20261027_spec.md](mhc_shared_core_20261027_spec.md).
+
+- [x] Audit native DO against the common model, trainer and schema.
+- [x] Integrate explicit reference assumptions into the shared catalog adapter.
+- [x] Add mixed-class shared-module, training and routing regressions.
+- [x] Replay real DO molecular input through the common resolver without refitting.
+- [x] Verify the relevant modular suite and document measured versus unmeasured benefits.
+
+Review: shared resolver supports explicit assumptions for both classes with strict
+source/catalog checks; 244 modular tests passed, including shared gradient updates,
+mixed-class/bulk quantity training, exact checkpoint replay and endpoint context
+isolation. Full pinned-catalog replay preserves actual DO molecular inputs and
+verifies all 168 frozen experiment files. Ruff and whitespace checks pass.
+See [review](mhc_shared_core_20261027_review.md),
+[test report](mhc_shared_core_20261027_tests.xml), and
+[input replay](mhc_shared_core_20261027_replay.json).
+This completes the shared-software audit/integration only. MHC-I predictive
+transfer is unmeasured; the native DO comparison remains negative, and PR #131's
+scientific milestones remain open. Future native experiments use the shared
+resolver for explicit reference assumptions; frozen prior experiments remain intact.
