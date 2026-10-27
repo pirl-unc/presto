@@ -14537,3 +14537,13 @@ strict tolerance failure is retained and localized to the CUDA transformer
 fastpath. CPU family and H100 canonical entries are closed. Shared-v4 transfer
 means rho.1871 I→II/.1652 II→I; no joint-accuracy promotion. Same-protein MS
 follow-up and five ranked transfer ideas remain prospective, not launched.
+
+
+## 2026-10-27 — Validate and apply shared transfer improvements
+
+Spec: experiments/agents/codex/plans/2026-10-27_transfer-improvements.md
+
+- [x] Implement and verify shared interaction and balanced observation sampling.
+- [ ] Freeze and execute twelve H100 fits with live validation.
+- [ ] Seal validation decisions and independently verify metrics.
+- [ ] Integrate supported wins, verify compatibility, close registry/handoff.

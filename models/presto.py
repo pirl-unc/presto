@@ -41,7 +41,7 @@ from .encoders import SequenceEncoder
 from .modular_support import feature_inputs, feature_layout
 from .modular_dependencies import frozen_output
 
-MODEL_VERSION = "presto.shared.v4"
+MODEL_VERSION = "presto.shared.v5"
 
 
 @dataclass(frozen=True)
@@ -348,6 +348,10 @@ class Presto(nn.Module):
             }[name]
             self.identity_heads[name] = nn.Linear(width, classes)
         if self.has_pmhc:
+            self.residue_interaction = nn.MultiheadAttention(
+                128, 4, dropout=config.dropout, batch_first=True
+            )
+            self.interaction_norm = nn.LayerNorm(128)
             self.pmhc_fusion = self._fusion(
                 384 + 2 * len(config.species) + 2 * ("mhc_pairing" in config.auxiliary_context)
             )
@@ -432,6 +436,10 @@ class Presto(nn.Module):
         # must remain disabled for frozen behavior even while sibling heads learn.
         if self.frozen_parameters:
             self.encoder.eval()
+            if hasattr(self, "residue_interaction") and any(
+                name.startswith("residue_interaction.") for name in self.frozen_parameters
+            ):
+                self.residue_interaction.eval()
         return self
 
     @property
@@ -514,6 +522,19 @@ class Presto(nn.Module):
     def _candidate_representation(core, states, start, length):
         """Shared core-relative and full-context views; no flank-only weights."""
         return (core + states[start : start + length].mean(0)) * 0.5
+
+    def _interaction_candidates(self, peptide, mhc, register_candidates, states):
+        """One residue interaction for either class, before any candidate pooling."""
+        queries = torch.stack(
+            [
+                0.5 * (states[core] + states[peptide][start : start + len(core)])
+                for start, core, _ in register_candidates
+            ]
+        )
+        groove = torch.cat([states[mhc.groove1], states[mhc.groove2]], 0)
+        groove = groove.unsqueeze(0).expand(len(queries), -1, -1)
+        interaction, _ = self.residue_interaction(queries, groove, groove, need_weights=False)
+        return self.interaction_norm(queries + interaction).mean(1)
 
     @staticmethod
     def _pool_registers(scores, direction):
@@ -762,12 +783,13 @@ class Presto(nn.Module):
             if mhc_class not in self.config.mhc_classes:
                 raise ValueError("effective class is outside this checkpoint's supported branches")
             register_candidates = candidates(row.peptide, mhc_class)
+            candidate_vectors = self._interaction_candidates(
+                row.peptide, mhc, register_candidates, token_states
+            )
             features = [
                 torch.cat(
                     [
-                        self._candidate_representation(
-                            encoded[core], token_states[row.peptide], start, len(core)
-                        ),
+                        candidate_vectors[candidate_index],
                         encoded[mhc.groove1],
                         encoded[mhc.groove2],
                         self._tensor(species["mhc1"].probabilities + species["mhc2"].probabilities),
@@ -778,7 +800,7 @@ class Presto(nn.Module):
                         ),
                     ]
                 )
-                for start, core, _ in register_candidates
+                for candidate_index in range(len(register_candidates))
             ]
             hidden = self.pmhc_fusion(torch.stack(features))
             if contextual:
@@ -1092,7 +1114,7 @@ class Presto(nn.Module):
                 continue
             route = endpoint_spec(row.endpoint).route
             if route in ("pmhc", "cellular", "tcr", "tcr_cellular"):
-                prefixes.add("pmhc_fusion.")
+                prefixes.update(("pmhc_fusion.", "residue_interaction.", "interaction_norm."))
                 if len(row.peptide) > 9 and any(
                     (mhc.class_override or mhc.mhc_class) != "I" for mhc in row.mhc
                 ):

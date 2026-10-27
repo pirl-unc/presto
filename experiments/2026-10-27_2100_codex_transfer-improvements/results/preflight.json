@@ -1,0 +1,58 @@
+{
+  "status": "passed",
+  "model_version": "presto.shared.v5",
+  "training": {
+    "balance_by": [
+      "mhc_class"
+    ],
+    "seed": 42,
+    "batch_size": 64,
+    "max_epochs": 100,
+    "max_steps": 2000,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "identity_weight": 0,
+    "patience": 100,
+    "min_epochs": 100,
+    "identity_batch_size": 64,
+    "test_policy": "evaluate_selected_once",
+    "no_test_reason": null,
+    "coverage_policy": "required",
+    "coverage_exception_reason": null,
+    "checkpoint_every_steps": 50
+  },
+  "admission": {
+    "census": {
+      "train:ic50:=": 21636,
+      "validation:ic50:=": 2726,
+      "validation:ic50:>": 177,
+      "validation:ic50:>=": 22,
+      "test:ic50:=": 2600,
+      "test:ic50:>": 188,
+      "test:ic50:>=": 15
+    },
+    "training_labels": {
+      "ic50": 21636
+    },
+    "component_states": {},
+    "manifest_sha256": "7df2ebc108b36ad1e826c02512a90d73e430254a2a66aa83f59b9b78b676ccba",
+    "module_pruning": [],
+    "source_label_values": {},
+    "cell_types": [],
+    "ordinal_levels": {},
+    "cytokine_states": {},
+    "cytokine_numeric": {},
+    "context_assertion_states": {
+      "pathway": {},
+      "intervention": {}
+    },
+    "observed_numeric_features": {
+      "acquisition": [],
+      "observation": [],
+      "preparation": []
+    },
+    "frozen_targets": [],
+    "frozen_parameters": [],
+    "inherited_scalers": []
+  }
+}

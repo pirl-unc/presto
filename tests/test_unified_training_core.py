@@ -43,7 +43,7 @@ def test_public_names_are_the_same_model_and_config():
     assert Presto is ModularPresto
     assert PrestoConfig is ModularConfig
     assert Presto.__module__ == "presto.models.presto"
-    assert MODEL_VERSION == "presto.shared.v4"
+    assert MODEL_VERSION == "presto.shared.v5"
     with pytest.raises(ValueError, match="full ordered"):
         PrestoConfig(peptide_context="three_residue_composition")
 
@@ -206,14 +206,17 @@ def test_identity_pretraining_transfers_into_the_same_binding_model(tmp_path):
     )
 
 
-@pytest.mark.parametrize("version", ["v2", "v3"])
+@pytest.mark.parametrize("version", ["v2", "v3", "v4"])
 def test_historical_modular_checkpoint_replays_but_cannot_train(tmp_path, version):
     if version == "v2":
         from presto.legacy.modular_v2 import ModularConfig as OldConfig
         from presto.legacy.modular_v2 import ModularPresto as OldModel
-    else:
+    elif version == "v3":
         from presto.legacy.shared_v3 import PrestoConfig as OldConfig
         from presto.legacy.shared_v3 import Presto as OldModel
+    else:
+        from presto.legacy.shared_v4 import PrestoConfig as OldConfig
+        from presto.legacy.shared_v4 import Presto as OldModel
 
     torch.manual_seed(229)
     old = OldModel(OldConfig(dropout=0)).eval()
@@ -221,7 +224,7 @@ def test_historical_modular_checkpoint_replays_but_cannot_train(tmp_path, versio
     with torch.no_grad():
         expected = old(rows)[0].value
     payload = {
-        "format": "presto.modular.v2" if version == "v2" else "presto.shared.v3",
+        "format": "presto.modular.v2" if version == "v2" else f"presto.shared.{version}",
         "config": asdict(old.config),
         "state_dict": old.state_dict(),
         "scales": {"ic50": asdict(TargetScale(2.0, 1.0, 2))},

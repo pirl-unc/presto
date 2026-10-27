@@ -10,7 +10,7 @@ def parameter_dependencies(model, target):
     prefixes = {"encoder."}
 
     def pmhc(contextual=False, receptor=False):
-        prefixes.add("pmhc_fusion.")
+        prefixes.update(("pmhc_fusion.", "residue_interaction.", "interaction_norm."))
         if hasattr(model, "register_score"):
             prefixes.add("register_score.")
         if contextual:

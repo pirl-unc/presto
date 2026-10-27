@@ -46,7 +46,11 @@ from .modular_resume import (
     save_resume,
 )
 
+from .modular_sampling import epoch_order, stratum, validate_balance_by
+
+
 DEFAULT_TRAINING = {
+    "balance_by": [],
     "seed": 42,
     "batch_size": 64,
     "max_epochs": 100,
@@ -103,6 +107,12 @@ def preflight(index: ObservationIndex):
     if set(supplied) - DEFAULT_TRAINING.keys():
         raise ValueError("unknown modular training option")
     training = {**DEFAULT_TRAINING, **supplied}
+    validate_balance_by(training["balance_by"])
+    if training["balance_by"]:
+        for i in index.partitions.get("train:assay", []) or index.partitions.get(
+            "train:identity", []
+        ):
+            stratum(index[i], training["balance_by"])
     for key in (
         "batch_size",
         "max_epochs",
@@ -573,8 +583,7 @@ def _fit_index(index, output_dir, *, device, resume):
     while state["phase"] == "training":
         epoch = state["epoch"]
         if not state["order"]:
-            state["order"] = list(base_indices)
-            rng.shuffle(state["order"])
+            state["order"] = epoch_order(index, base_indices, training["balance_by"], rng)
         order = state["order"]
         epoch_exposures = Counter(state["epoch_exposures"])
         while state["position"] < len(order) and (
