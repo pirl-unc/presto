@@ -43,7 +43,12 @@ def main():
     )
     figure.tight_layout(rect=(0, 0.08, 1, 0.92))
     for extension in ("png", "svg"):
-        figure.savefig(FAMILY / f"results/logistic-controls/verified-auroc.{extension}", dpi=180)
+        destination = FAMILY / f"results/logistic-controls/verified-auroc.{extension}"
+        figure.savefig(destination, dpi=180)
+        if extension == "svg":
+            destination.write_text(
+                "\n".join(line.rstrip() for line in destination.read_text().splitlines()) + "\n"
+            )
     plt.close(figure)
 
 

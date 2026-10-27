@@ -191,8 +191,8 @@
       "bytes": 4426
     },
     "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/plot_verified_controls.py": {
-      "sha256": "3661a871d7665d5808e1361fd290bf40438f6fbfd4ad8616b708b2838dc64d91",
-      "bytes": 1858
+      "sha256": "f993e89839de6b404d2812c33885a626249d2a3060ae2f6c26900557dddeb134",
+      "bytes": 2070
     },
     "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/code/test_verify_controls.py": {
       "sha256": "8fddb945396b60107c66650ee259ebf9f1eb756a86b0c4778c0faba642e1e681",
@@ -259,8 +259,8 @@
       "bytes": 4426
     },
     "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/plot_verified_controls.py": {
-      "sha256": "3661a871d7665d5808e1361fd290bf40438f6fbfd4ad8616b708b2838dc64d91",
-      "bytes": 1858
+      "sha256": "f993e89839de6b404d2812c33885a626249d2a3060ae2f6c26900557dddeb134",
+      "bytes": 2070
     },
     "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/source/test_verify_controls.py": {
       "sha256": "8fddb945396b60107c66650ee259ebf9f1eb756a86b0c4778c0faba642e1e681",
@@ -327,8 +327,8 @@
       "bytes": 67215
     },
     "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/logistic-controls/verified-auroc.svg": {
-      "sha256": "ea747333c18fe187d557217b27a46e341afc1b773418dddbb1f45f8950178700",
-      "bytes": 53524
+      "sha256": "8fb0e087034395c35f55cf4e9c83ac6c63e4669fc46adf9d37a85ef646489cbc",
+      "bytes": 52544
     },
     "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/results/logistic-controls/verified-point-metrics.csv": {
       "sha256": "dd8054b33bb0e997d93132687bf80dc01c2c5915350a9dca4fa2b71a58a69e4c",
@@ -395,7 +395,7 @@
       "bytes": 1722
     }
   },
-  "artifact_bytes": 72908607,
+  "artifact_bytes": 72908051,
   "excluded_live_state": [
     "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/native-remainder-controller-state.json",
     "experiments/2026-10-26_2036_codex_mhc2-ms-length-background/reproduce/streaming-fit-native102-1793066412642690000.json"
@@ -409,7 +409,8 @@
     "psutil requirement restricted to dev extra",
     "85050source and255150control predictions independently verified",
     "33immutable binding artifacts source/destination hashes agree",
-    "plot visually inspected"
+    "plot visually inspected",
+    "Generated SVG trailing whitespace normalized; whitespace-normalized content identical"
   ],
   "scope": "verified evidence; CI dependency/wheel helper repair; frozen native continuation; no production model/training changes",
   "publication_followup": "verify git object hashes and remote ref; follow final-head CI"
