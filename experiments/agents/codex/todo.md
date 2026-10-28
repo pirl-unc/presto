@@ -344,10 +344,20 @@ Results belong to 2026-10-27_2100_codex_transfer-improvements, not this backlog.
 - [x] Complete the fixed twelve-fit capacity/exposure/auxiliary-permutation comparison.
 - [x] Report allele/species/class/assay/qualifier concentration and source attrition.
 - [x] Apply supported common sampling options; retain one model/training interface. No six-output default passes the validation gates.
-- [ ] Future data curation: verify partners/constructs for the deferred class-II
-  pool (33,165 IC50 and 20,654 KD-via-IC50 source rows, mostly DR). Preserve
-  measured versus explicitly assumed identities, serotype ambiguity and mutant
-  labels; do not bulk-fill DRA or count every deferred row as admissible. Validate
-  any expanded cohort prospectively through the same manifest trainer.
+- [ ] Future data curation: use a declared DRA*01:01 reference for otherwise
+  eligible allele-resolved ordinary human DR observations in the deferred pool
+  (33,165 IC50 and 20,654 KD-via-IC50 class-II source rows, mostly DR). Preserve
+  reported versus assumed identities through the existing reference-assumption
+  contract, and honor reported alpha/construct exceptions. DP/DQ, serotype-only
+  and mutant labels need separate resolution. Freeze and validate the expanded
+  cohort prospectively through the same manifest trainer; the closed strict
+  comparison is unchanged. Basis: NetMHCIIpan-4.0 official instructions specify
+  only the beta chain as variable for DR; see tasks/lessons.md (2026-10-28).
 
 The12-fit follow-up is closed in [2026-10-28_0250_codex_assay-transfer-mechanisms](../../2026-10-28_0250_codex_assay-transfer-mechanisms/README.md): primary exposure explains much of II loss; auxiliary numeric benefit is clearer for I. Preserve these inspected partitions; next data-curation work remains separately prospective.
+
+- [ ] Add a separately scoped microarray/display binding readout to the same shared
+  manifest/model path. Fresh inventory has468,548 multiplexed rows, including
+ 418,890 PMID32903714 microarray labels with curator-confirmed assay comments.
+  Preserve literal qualitative labels and assay modality; do not call these IC50
+  or mass-spectrometry outcomes. Freeze any expanded cohort before its own fit.

@@ -14593,3 +14593,14 @@ II partner rows, bootstrap, loci/novelty/register/coordinate diagnostics and all
 operational recovery receipts are preserved. Source-head CI40648481129 passes;
 final docs and analysis fixtures pass. Final publication/CI receipts are maintained
 in the original workspace handoff; scientific PR131 remains draft.
+
+## 2026-10-28 — Primary multi-output model and temporal studies
+
+Spec: experiments/agents/codex/plans/2026-10-28_temporal-multi-output.md.
+
+- [x] Inventory/fetch current canonical IEDB/Hitlist data and verify 2026 study dates.
+- [x] Expand shared admission including declared DRA and ligand candidate scope.
+- [ ] Freeze study partitions, negative-background contract and per-output recipe.
+- [ ] Verify shared code/source contracts; run two-seed H100 training with live metrics.
+- [ ] Independently verify per-assay and ligand metrics, replay serving and publish common recipe.
+- [ ] Close registry/report and draft PR with evidence and remaining limits.

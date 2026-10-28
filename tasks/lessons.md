@@ -811,3 +811,29 @@ Keep applicability reporting separate from model features and the measured label
   final receipt. Artifact consumers and terminal pollers must require that receipt,
   not only the status string; preserve failed transport attempts and revalidate
   caches when restarting a reader.
+
+## 2026-10-28 — Reference DRA is a declared modeling assumption
+
+- Do not equate missing explicit DRA typing with unusable ordinary human HLA-DR
+  binding data. NetMHCIIpan treats only the DR beta chain as variable. A declared
+  DRA*01:01 reference is reasonable for allele-resolved, otherwise eligible DR
+  observations, retaining reported typing and assumption provenance separately.
+  Preserve reported alpha sequences and construct/mutant exceptions. Do not extend
+  the rule to DP/DQ, ambiguous DR serotypes, nonhuman MHC or mechanistic construct
+  identity without the corresponding evidence. Existing strict-cohort results
+  stay frozen; an expanded cohort needs its own prospective admission/split record.
+- Explain endpoint dilution in optimizer exposures at fixed updates/batch size,
+  separately from unique source examples. Distinguish matched primary label counts
+  from matched mean-loss gradient contribution and compute.
+- Compare published correlations only with explicit model version, target metric,
+  cohort and aggregation. Pearson, Spearman, AUROC and EL ranking metrics are not
+  interchangeable; older per-study averages cannot establish superiority of a
+  newer pooled development score.
+
+## 2026-10-28 — Temporal holdouts need endpoint coverage
+
+- Verify year-by-assay support before promising a recent-study score for every
+  output. New ligand papers do not necessarily contain numerical affinity values.
+  When the user authorizes additional older study holdouts, freeze those papers
+  before fitting and report older-study and recent-study results separately;
+  retain unavailable metrics rather than substituting a proxy assay name.

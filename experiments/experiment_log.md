@@ -5336,3 +5336,43 @@ or quantitative outcome columns were read; no frozen training membership changed
 The common manifest trainer now supports explicit stratum weights with verified
 unweighted compatibility and exact resume. No task-specific trainer or unqualified
 six-output default was introduced. PR131 remains draft until130/132 qualify.
+
+## 2026-10-28 — Expanded multi-output model with temporal and assay-study holdouts (in progress)
+
+- **Agent/model:** Codex / GPT-6; [experiment/reproduction](2026-10-28_1540_codex_temporal-multi-output/README.md).
+- **Status:** CPU source preparation; no predictive fit or new held-out result yet.
+- **Source:** fresh canonical Hitlist2.0.40 IEDB/CEDAR full exports,19.255GB total,
+  exact hashes in the acquisition receipt. Human catalog-resolved MHC, strict
+  peptidoform/candidate scope, declared ordinary-DR DRA*01:01 reference; host,
+  antigen organism and molecular MHC species remain separate.
+- **Material inventory finding:**45distinct2026papers verified against PubMed;
+  no direct IC50/KD/EC50 values in the2026exports. User approved additional older
+  whole-assay-study holdouts. Prespecified2026test PMIDs41534530/42069060/42048449;
+  final admissible components/counts pending. Whole-paper aliases and exact peptide
+  embargoes are part of the prospective contract, not a random row split.
+- **Architecture/training:** shared-v5 wide192/3/6/768, seeds42/43, no pretraining,
+  batch128, AdamW3e-4/decay1e-4, dropout.1. One complete weighted epoch or6000updates,
+  whichever is larger; validate every1000, equal-endpoint selection loss. Frequencies
+  60%EL/20%IC50/15%other physical/5%qualitative, square-root endpoint/class allocation
+  within families. Full held-out evaluation, capped TRAIN diagnostic dumps only.
+- **Assay mapping/loss:** distinct IC50/KD/EC50/KDproxy outputs, half-life/koff/kon/td50;
+  allocate supported heads only. Exact-TRAIN scales, unclipped target-space squared
+  error with one-sided censor residuals. Reported qualitative binding and elution
+  use binary cross-entropy. No component effect is identified from a summed EL label.
+- **Synthetic-data contract:** length-matched unobserved backgrounds, seed20261028,
+  TRAIN1:1/eval5:1, with replacement; known-positive and cross-split exclusion.
+  Same-protein and fallback human-Ensembl112 populations scored separately, including
+  length-only control. Source-reported MS nondetections receive separate study AUCs.
+- **Hardware:** requested two concurrent `H100!` workers, actual GPU/runtime pending.
+  CPU source attempt2 failed at16GiB provenance scratch; attempt4 uses128GiB scratch
+  and512GiB requested disk. Downloads and failed attempts are preserved.
+- **Validation/test metrics, winner:** unavailable; no fit launched. Planned reporting
+  includes exact Spearman/Pearson/RMSE, censor-aware loss,500nM classification and
+  ligand AUROC/AUPRC by class, assay, study and evaluation population. No promotion.
+- **Software:** common source at c8f032a7, complete211-file runtime pinned. Shared
+  2805tests/4skips on the current source;79and89focused source checks also pass.
+  Seven preparation/report fixtures pass through the real common manifest preflight;
+  four additional independent prediction-verification fixtures pass.
+- **Artifacts:** timestamped experiment `reproduce/` and `results/`; large inputs/raw
+  fits on Modal `presto-checkpoints` under the family ID and local `artifacts/`.
+  Final predictive closure, independent verification and serving replay remain open.

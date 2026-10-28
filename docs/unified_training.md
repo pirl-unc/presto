@@ -237,6 +237,11 @@ reported restriction and record the assumed DRA*01:01 separately. Complete typin
 is preserved; this policy does not complete DP/DQ, serotypes or construct names.
 The shared `ms_observation` adapter retains all resolved candidate MHCs for either
 class. The historical class-II wrapper retains its stricter admission contract.
+Explicit source-reported MS negatives require `allow_reported_negatives=True`;
+`indexed_ms_observation` admits canonical other-assay index rows with exact allele
+scope and preserved assay/contributor identity. These labels mean nondetection in
+the reported assay, not non-binding or absence in every cellular condition. Report
+their within-study AUCs separately from generated-background comparisons.
 
 `selection_reduction: "endpoint_mean"` selects checkpoints by the equal-weight mean
 of available validation endpoint losses. The default remains `observation_mean`;

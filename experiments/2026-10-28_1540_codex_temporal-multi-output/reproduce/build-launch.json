@@ -1,0 +1,22 @@
+{
+  "argv": [
+    "modal",
+    "run",
+    "--detach",
+    "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-28_1540_codex_temporal-multi-output/code/build_index.py"
+  ],
+  "source_sha256": "c37660a48c75c00ac2c08a699b050bfd53d02c8e3f43b06ca8858a6b4faa1474",
+  "started_unix": 1793205876.932205,
+  "requested_gpu": null,
+  "cpu": 8,
+  "memory_mib": 98304,
+  "ephemeral_disk_mib": 524288,
+  "environment_overrides": {
+    "HITLIST_PROVENANCE_MAX_GB": "128",
+    "HITLIST_PROVENANCE_MIN_FREE_GB": "16",
+    "TQDM_MININTERVAL": "30"
+  },
+  "requirements": [
+    "hitlist==2.0.40"
+  ]
+}
