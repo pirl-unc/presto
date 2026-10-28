@@ -14575,8 +14575,8 @@ plots and the recovered inference-bundle omission. Scientific PR131 remains draf
 
 Spec: experiments/agents/codex/plans/2026-10-28_assay-transfer-mechanisms.md.
 
-- [ ] Quantify prior training composition and source exclusions independently.
-- [ ] Freeze fresh component partitions, controlled arms and common weighted sampling.
+- [x] Quantify prior training composition and source exclusions independently.
+- [x] Freeze fresh component partitions, controlled arms and common weighted sampling.
 - [ ] Verify source/sampler/resume contracts and execute twelve H100 fits with live results.
 - [ ] Seal selection, independently verify metrics and replay saved training probes.
 - [ ] Integrate supported findings and close experiment, registry and PR handoff.

@@ -1,0 +1,52 @@
+Note that running a local entrypoint in detached mode only keeps the last triggered Modal function alive after the parent process has been killed or disconnected.
+✓ Initialized. View run at 
+https://modal.com/apps/iskandr/main/ap-1AHTEVt9VZBzGnh9yZsvRh
+Building image im-e2QpbXWkc9jOEPpRPYSktX
+
+Using legacy Image Builder version. We suggest upgrading at https://modal.com/settings/image-config.
+
+=> Step 0: FROM base
+
+=> Step 1: COPY . /
+Saving image...
+Image saved, took 2.80s
+
+Built image im-e2QpbXWkc9jOEPpRPYSktX in 5.78s
+
+
+Building image im-2l6AoRq8xhRnW5fJ7G5ob2
+
+Using legacy Image Builder version. We suggest upgrading at https://modal.com/settings/image-config.
+
+=> Step 0: FROM base
+
+=> Step 1: RUN mkdir -p /input && tar -xzf /tmp/presto-inputs.tar.gz -C /input && rm /tmp/presto-inputs.tar.gz
+Saving image...
+Image saved, took 7.93s
+
+Built image im-2l6AoRq8xhRnW5fJ7G5ob2 in 13.29s
+
+
+✓ Created objects.
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-28_0250_codex_assay-transfer-mechanisms/code/launch.py
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/20
+│   26-10-28_0250_codex_assay-transfer-mechanisms/code/worker.py
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026
+│   -10-28_0250_codex_assay-transfer-mechanisms/upload/source-pins.json
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026
+│   -10-28_0250_codex_assay-transfer-mechanisms/upload/runtimes
+├── ✓ Uploaded 
+│   /Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026
+│   -10-28_0250_codex_assay-transfer-mechanisms/upload/inputs.tar.gz
+└── ✓ Created Function run_condition.
+modular epoch=2 steps=500 loss=0.774169 validation=1.1806587612048987
+modular epoch=2 steps=500 loss=0.761450 validation=1.1424082392815809
+modular epoch=4 steps=1000 loss=0.683839 validation=1.1279279227004448
+modular epoch=4 steps=1000 loss=0.644580 validation=1.111137066341859
+modular epoch=6 steps=1500 loss=0.619822 validation=1.0705360087831615
+modular epoch=6 steps=1500 loss=0.564536 validation=1.0573849581453825

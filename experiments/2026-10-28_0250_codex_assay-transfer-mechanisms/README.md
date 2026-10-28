@@ -1,6 +1,6 @@
 # Why do six assay outputs help MHC-I more than MHC-II?
 
-Status: preparing the fixed twelve-fit comparison; no new predictive results yet.
+Status: twelve fixed fits submitted; two H100 workers active. Results pending.
 Agent/model: Codex / GPT-6. Date: 2026-10-28 UTC.
 
 Detailed pre-implementation contract:
@@ -16,6 +16,123 @@ Freeze source/data/manifests/invocation under `reproduce/`; keep live validation
 per-example heldout dumps, independent metrics, plots, replay and support evidence
 under `results/`. Large inputs/checkpoints live in repo-level `data/`/`artifacts/`.
 
-Status: preparation. Next step: inventory, source split and sampler checks.
-Open question: capacity, reduced IC50 exposure, class imbalance or useful auxiliary
-information beyond groove-specific target distributions?
+## What the earlier 134,561 training observations contain
+
+All are human purified pMHC measurements. The six outputs represent five
+concentration-based binding assay families and half-life stability, not six
+interchangeable affinity labels. There are no mass-spectrometry, antigen-processing,
+cell-context or TCR targets, and no nonhuman/nonclassical MHCs in this cohort.
+
+| Output | MHC-I | MHC-II |
+|---|---:|---:|
+| IC50 |15,246|8,266|
+| KD |14,759|422|
+| EC50 |288|19|
+| KD inferred via IC50 |41,940|1,104|
+| KD inferred via EC50 |30,628|14,218|
+| Half-life |7,659|12|
+| **Total** |**110,520 (82.1%)**|**24,041 (17.9%)**|
+
+These are observations, covering 24,792 unique peptide sequences, 117,834 unique
+peptide/groove contexts and 146 groove-sequence pairs (98 class I, 48 class II).
+95,193 are exact values; 39,368 (29.3%) are bounds. Natural row sampling did not
+balance alleles, studies or classes. HLA-A/B/C contribute 73,984/34,908/1,628 rows;
+DQ/DRB1/DP/DRB3/DRB4/DRB5 contribute 10,815/5,687/4,284/1,981/659/615.
+A*02:01 alone contributes 13,723 class-I rows (12.4%). The largest class-II groove,
+DQA1*05:01/DQB1*02:01, contributes 1,142 (4.8%). Sequence-identical catalog names
+are grouped by grooves rather than counted as distinct biological inputs.
+86,240 class-I rows are 9-mers (78.0%); 21,483 class-II rows are 15-mers (89.4%).
+Full allele, study/source, length and qualifier inventories are under `results/`.
+
+![Composition](results/original-training-composition.png)
+
+There was no arbitrary sample cap. Of 840,805 scanned source rows, 168,210 were
+admitted; ten off-rate rows lacked predictive split support and were excluded.
+The predictive cohort is 168,200 rows: 134,561 train, 17,503 validation and 16,136
+test. Main exclusions: 586,064 outside the supported purified quantitative assay
+definitions; 55,371 missing an explicit MHC partner; 16,957 not explicitly human;
+9,696 not explicitly purified; 1,832 unresolved catalog names; 1,519 modified or
+unspecified peptidoforms; 870 invalid measurements; 247 unsupported peptide/class;
+39 non-peptide ligands. Missing DRA partners were not guessed.
+
+The earlier exact-IC50 control had 21,636 training observations, 66.4% class I.
+At the same 6,000-update budget, seed42's exact-IC50 control presented
+254,456/128,524 I/II IC50 labels to the optimizer, versus 43,487/23,546 in the
+natural six-output arm. The earlier wider model also lacked a wider IC50-only
+control. Thus the earlier result cannot isolate useful auxiliary transfer from
+capacity, target exposure and class composition.
+
+## Fixed prospective comparison
+
+Only the prior TRAIN rows enter this family. New connected components join shared
+peptides, measurement identities and group IDs/aliases; fixed salted hashing gives
+107,132 train / 13,425 validation / 14,004 test observations. All 33,639 old heldout
+rows are excluded, and no old fitted weights are reused. These are new development
+partitions of previously trained-on data, not untouched external biological evidence.
+Study and sequence-homology overlap may remain. The independent data audit passes.
+
+| Variant | Width/layers/heads/FF | Sampling | Batch |
+|---|---|---|---:|
+| small-ic50 |128/2/4/512|IC50 exact+bounds, natural|64|
+| wide-ic50 |192/3/6/768|same IC50, natural|64|
+| wide-six-natural |192/3/6/768|six outputs, natural|64|
+| wide-six-class-balanced |192/3/6/768|six outputs, equal class frequency|64|
+| wide-six-primary-matched |192/3/6/768|50% IC50; other 50% natural auxiliary proportions|128|
+| wide-six-primary-shuffled |192/3/6/768|same inputs/sampler as matched; permuted auxiliary TRAIN values|128|
+
+Two seeds (42/43), 6,000 updates each, no pretraining, dropout0.1, AdamW3e-4,
+weight decay1e-4, no schedule/AMP/TF32/compile. All use shared-v5 and the same
+`fit_index` path. Output order puts IC50 first; same-width/seed common-core and
+IC50-head initialization must match. Concentration targets use log10(nM), half-life
+uses log10(minutes), with exact-TRAIN-only means/scales. Loss is mean standardized
+squared error, one-sided for bounds; all endpoint/row loss weights are1.
+Validation every500 updates; select pooled exact-IC50 validation RMSE; no early
+stopping. Each selected checkpoint's test set is evaluated once by the trainer.
+Human inspection/analysis of tests waits for the sealed validation-only decision.
+
+The paired synthetic negative control permutes 88,155 auxiliary TRAIN rows within
+endpoint/class/groove/qualifier, seed73028; 59,943 values change. Singleton/constant
+strata remain unchanged. Original values/donor identities are preserved and
+independently verified. Heldout labels remain measured. The synthetic arm cannot
+be promoted. Primary matching preserves expected IC50 labels per update, not
+identical gradients: total batch, compute and loss normalization also differ.
+Actual endpoint/class optimizer exposures are recorded and checked against a
+frozen simulation of the common sampler.
+
+Promotion uses the prespecified wide-ic50 comparator: macro class rho gain>=.01,
+no class rho loss>.005, no class RMSE deterioration>2%, positive macro gain in
+both seeds, and some seed improvement in each class. Ties within.005 favor lower
+compute. Only real six-output arms are eligible. A winner here is specific to this
+development cohort and does not automatically replace the prior full-cohort recipe.
+
+## Reproduction and current verification
+
+Runtime package: commit `89d3360a307b5485cdc3e3f37abcac1dfa9cf979`, frozen complete
+package including inference in `reproduce/source/runtimes/shared/presto`.
+Launcher commit `fe9ca8b82489b5afc222e3f2237460ef7bd7af63`; launch receipt records
+dirty=true because it creates its source snapshots before recording git status.
+Package and launcher/data hashes are individually pinned; no unfrozen model code
+is used. Exact command/env: `reproduce/launch.sh` and `reproduce/launch.json`.
+Transport gzip is46,652,237bytes, losslessly verified against1,197,269,176expanded
+bytes. No observations were removed to reduce upload size.
+
+Requested GPU `H100!`, at most two concurrent workers,4CPUs/32GiBhost each.
+Observed NVIDIA H10080GB HBM3,81,559MiB,driver610.57.04. Pinned environment:
+Python3.12,Torch2.14.1,NumPy2.5.4,PyYAML6.0.3,mhcgnomes3.64.6,mhcseqs2.6.13,
+tqdm4.70.1,psutil7.2.2. Local source admission/preflight covers all three distinct
+source sets; weighted/unweighted resume and sampler tests pass. Full local suite:2,778passed/4skipped; analysis fixtures:2passed. Lint/format, strict
+docs, wheel/sdist build, twine and installed-wheel checks pass. Per-checkpoint
+scientific verification remains pending.
+
+- [Modal app](https://modal.com/apps/iskandr/main/ap-1AHTEVt9VZBzGnh9yZsvRh)
+- [Local live comparison](http://127.0.0.1:54501/)
+- Durable call IDs/controller: `reproduce/call-ids.json`, `reproduce/controller.json`.
+- Inputs: `data/modular_cohorts/2026-10-28-assay-transfer-mechanisms` and
+  `artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/upload`.
+- Full raw artifacts/checkpoints: `artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/runs`;
+  Modal volume `presto-checkpoints` under this family ID.
+- Canonical prediction dumps/summaries: `results/<condition>/`; full TRAIN dumps
+  remain in the artifact directories, while heldout dumps are versioned here.
+
+Final metrics, mechanistic interpretation, paired peptide-bootstrap intervals,
+failure strata, fresh-H100 serving replay and registry closure remain pending.
