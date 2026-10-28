@@ -25,7 +25,7 @@ ENDPOINTS = ("ic50", "kd", "ec50", "kd_via_ic50", "kd_via_ec50", "half_life")
 def read(path, default=None):
     try:
         return json.loads(Path(path).read_text())
-    except FileNotFoundError:
+    except (FileNotFoundError, json.JSONDecodeError):
         return default
 
 
@@ -63,12 +63,14 @@ def cells(spec, state, endpoint="ic50"):
 def snapshot():
     meta = read(FAMILY / "reproduce/source-pins.json")
     live = read(FAMILY / "results/live-status.json", {})
+    workers = read(FAMILY / "results/live-workers.json", {})
+    states = {**live.get("conditions", {}), **workers.get("conditions", {})}
     rows = []
     decision = read(FAMILY / "results/validation-decision.json", {})
     verified = 0
     for name in ORDER:
         spec = meta["conditions"][name]
-        state = live.get("conditions", {}).get(name, {})
+        state = states.get(name, {})
         report = read(FAMILY / "results" / name / "report.json", {})
         verification = read(
             FAMILY / "results" / f"{name}-independent-verification.json", {}
@@ -101,6 +103,11 @@ def snapshot():
         )
     return dict(
         updated_unix=time.time(),
+        worker_polled_unix=workers.get("updated_unix", live.get("updated_unix")),
+        worker_poll_errors=workers.get("errors", {}),
+        remotely_finished=sum(
+            s.get("status", {}).get("status") == "completed" for s in states.values()
+        ),
         verified=verified,
         preferred_variant=decision.get("preferred_variant"),
         rows=rows,

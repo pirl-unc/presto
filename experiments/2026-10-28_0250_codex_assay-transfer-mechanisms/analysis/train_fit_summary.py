@@ -55,11 +55,15 @@ def main():
             continue
         expected = {}
         for spec in PINS["manifests"][name]["sources"]:
+            # Frozen files are split-homogeneous. Leave heldout files unopened.
+            if "-train-" not in spec["path"]:
+                continue
             source = UPLOAD / "inputs" / spec["path"]
             assert sha(source) == spec["sha256"]
             with source.open() as stream:
                 for line in stream:
                     row = json.loads(line)
+                    assert row["split"] == "train"
                     if row["split"] == "train":
                         assert row["observation_id"] not in expected
                         expected[row["observation_id"]] = identity(row)

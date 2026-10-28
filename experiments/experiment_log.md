@@ -5227,3 +5227,61 @@ does not change these fitted predictions. Takeaway: common architecture scales
 mechanically and improves some outputs, but natural mixed-assay sampling is not a
 joint-affinity win. Retain the tested exactIC50 recipe and pursue matched exposure
 and source-qualified auxiliary evidence prospectively. PR131 scientific gates remain open.
+
+
+## 2026-10-28 — Auxiliary-assay transfer mechanisms (running)
+
+**Agent/model:** Codex / GPT-6. **Experiment:**
+[2026-10-28_0250_codex_assay-transfer-mechanisms](2026-10-28_0250_codex_assay-transfer-mechanisms/README.md).
+Source package `89d3360a307b5485cdc3e3f37abcac1dfa9cf979`, launcher `fe9ca8b8`;
+exact invocation/env, hashes, dirty receipts and 12 call IDs in `reproduce/`.
+All 210 frozen package files independently match the committed git blobs.
+Requested `H100!`, maximum two concurrent workers; observed NVIDIA H100 80GB
+HBM3, 81,559 MiB, driver 610.57.04. `PRESTO_MODAL_GPU=H100!`; Python 3.12.1,
+Torch 2.14.1 / NumPy 2.5.4; full dependency pins in the launch bundle.
+
+The earlier 134,561 TRAIN observations are 110,520 MHC-I / 24,041 MHC-II,
+all human purified pMHC concentration binding assays plus half-life stability.
+No MS, processing, cell, TCR, nonhuman or nonclassical targets. Six separate
+outputs: IC50, KD, EC50, KD-via-IC50 and KD-via-EC50 use log10(nM); half-life
+uses log10(minutes). Exact values and one-sided bounds are retained without
+clipping. The source funnel is 840,805 scanned →168,210 admitted →168,200
+predictive rows (10 unsupported off-rate rows excluded); 33,639 old holdouts
+were never admitted to these new fits. New peptide/measurement/group-connected
+components of prior TRAIN yield 107,132 train /13,425 validation /14,004 test.
+No old fitted weights or old heldout predictions are reused. This is newly
+held-out development data, not untouched external biological qualification.
+
+Frozen conditions, seeds 42/43, 6,000 updates each: small IC50, wide IC50,
+wide six-output natural, wide six-output class-balanced, wide six-output
+IC50-exposure-matched, and its auxiliary-label-permuted control. Small architecture
+128/2/4/512; wide 192/3/6/768. Same shared-v5 model and common trainer, no
+pretraining or identity replay; dropout .1, AdamW3e-4/decay1e-4, mean standardized
+one-sided squared loss, all loss weights1. Training-only exact-value scales.
+Batch64, except exposure-matched/permuted128 with50% IC50. Validation every500;
+checkpoint by pooled exact IC50 validation RMSE. Same-width/seed initial common
+weights and IC50 head must match. All12 fit budgets remain fixed.
+
+Synthetic control: permute auxiliary TRAIN targets within endpoint/class/groove/
+qualifier, seed73028; 59,943 of88,155 values change. Original targets/donors are
+preserved; heldout labels remain measured. Synthetic arm cannot be promoted.
+Tests remain undisclosed until a sealed validation-only decision against wide
+IC50; no class regression and two-seed gains are required by the fixed plan.
+No preferred condition or final predictive conclusion yet; collection, independent
+full metrics/predictions, peptide bootstrap, failure strata and fresh-H100 serving
+replay are pending. Two IC50 controls have completed at this registry update.
+
+Material inventory findings: 24,792 unique peptides,117,834 pMHC contexts,
+146 groove-sequence pairs; 29.3% bounds. Natural sampling was not allele-balanced.
+IC50-class-II data is98.6% DP/DQ, while its dominant KD-via-EC50 auxiliary is61.7%
+DR. Class-I IC50 contains only A/B, no C. On new TRAIN, IC50/KD-via-IC50 exact
+labels overlap5,345 class-I pMHC contexts (rho .9568) but only2 class-II contexts;
+assay conditions are unmatched. These observations motivate the fixed controls,
+not a causal claim. Source/allele/endpoint/length/qualifier tables and exclusions
+are preserved in the experiment. Full local software2778passed/4skipped, two
+analysis fixtures, lint/docs/wheel and hosted source-head CI40626989848 pass.
+
+Raw artifacts: `artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/{upload,downloads,runs}`;
+Modal volume `presto-checkpoints` under the family ID. Canonical summaries,
+heldout prediction dumps and verification receipts will be closed under `results/`.
+Full TRAIN dumps remain in the raw archives. PR131 scientific gates remain open.

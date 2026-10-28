@@ -54,11 +54,11 @@ gene_rows = [
     for c, g in sorted({(c, g) for c, g, e in gene_counts})
 ]
 with (F / "results/original-training-gene-endpoint.csv").open("w") as out:
-    w = csv.DictWriter(out, fieldnames=list(gene_rows[0]))
+    w = csv.DictWriter(out, fieldnames=list(gene_rows[0]), lineterminator="\n")
     w.writeheader()
     w.writerows(gene_rows)
 with (F / "results/original-training-composition.csv").open("w") as out:
-    w = csv.DictWriter(out, fieldnames=list(rows[0]))
+    w = csv.DictWriter(out, fieldnames=list(rows[0]), lineterminator="\n")
     w.writeheader()
     w.writerows(rows)
 plt.rcParams.update(

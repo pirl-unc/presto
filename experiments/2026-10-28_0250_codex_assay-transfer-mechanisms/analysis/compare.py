@@ -571,6 +571,9 @@ def main():
     fig.savefig(F / "results/training-curves.pdf")
     plt.close(fig)
     exposure_curves()
+    from checkpoint_selection import main as checkpoint_selection_diagnostics
+
+    checkpoint_selection_diagnostics()
     failure_audit()
     paired_bootstrap()
     print(

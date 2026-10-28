@@ -155,3 +155,46 @@ quantifies label alignment and coverage, not equivalence or causal transfer.
 See `results/training-assay-overlap.json` and `results/permutation-coverage.csv`.
 All arms train both MHC classes: this family tests auxiliary-label benefit and
 interference, not a source-class-only zero-shot transfer claim.
+
+## Live-report recovery
+
+At approximately 04:26 UTC, remote container inspection confirmed four fits were
+complete and both exposure controls were running, while the local dashboard still
+showed two collected fits and stale export states. Downloading a ~226 MB archive
+blocked the original controller's status polling. A separate read-only poller now
+reads only this family's twelve existing Modal Dict keys every ten seconds and
+writes `results/live-workers.json`; the original controller retains exclusive
+ownership of archive collection. The dashboard merges current worker state,
+shows remote completion separately from downloaded archives and displays poll age.
+Its owned loopback server was restarted; no fit, queued call, input, optimizer,
+checkpoint or selection rule changed. HTTP verification confirms current states
+and continued test-score concealment. Invocation/source hash:
+`reproduce/worker-poller.json`; recovery receipt: `results/live-progress-recovery.json`.
+
+The original Volume API download retained missing byte ranges despite reaching
+the expected logical file size. A separate ordered-read probe timed out at 64 MiB;
+both incomplete files and their failure receipts are preserved. A CPU-only Modal
+function then streamed the already committed archive through mounted-filesystem
+reads in 256 KiB chunks: 225,755,015 bytes in 20.49 seconds, with the original full
+SHA256 verified remotely and locally. One CPU worker, no GPU, now caches each
+completed archive separately (`reproduce/readback-watch.json`). No fit is retried.
+The original controller stays alive until all twelve original function calls
+return. Only then may the guarded `analysis/collection_handoff.py` transfer
+collection ownership, preserving the original controller receipt and failed
+partials. Canonical extraction and report generation reuse the frozen original
+collector with verified local-file transport; predictions, metrics and tolerances
+are unchanged. Final collection/verification is still pending.
+
+Archive headers revealed ~3.20 GB expanded per six-output fit. Collection therefore
+keeps all original checksum-verified archives, checkpoints and gzip predictions,
+but removes six redundant raw JSON/JSONL expansions per run only after each file
+matches its archive member byte-for-byte. Per-file recovery coordinates and hashes
+are retained before removal. The collector checks extraction space plus a 2 GiB
+reserve, and every removed file remains exactly recoverable from the original
+local and remote archives. A software check confirms corrupt expansions fail
+before any deletion; no heldout metrics are parsed during this storage check.
+
+A posthoc descriptive audit added during execution will compare the fixed pooled
+IC50-RMSE checkpoint choice with each class's best validation-history point and
+the minimum unweighted mean class RMSE. This diagnoses selection trade-offs only;
+alternate checkpoints are not selected, promoted or evaluated on test.

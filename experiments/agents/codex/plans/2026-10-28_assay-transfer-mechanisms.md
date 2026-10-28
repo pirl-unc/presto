@@ -103,3 +103,15 @@ predictions, paired peptide-bootstrap intervals, plots, failures and parameter
 coverage. Replay64savedTRAIN probes/checkpoint through evaluation/public predictor
 on freshH100. Preserve failures; no silent fit retries. Close README, canonical log,
 task review, supported common recipes and publication before final handoff.
+# Descriptive checkpoint-selection audit added during execution
+
+After observing seed42's IC50-matched validation trajectory, add an explicitly
+posthoc diagnostic of the fixed pooled-IC50-RMSE selection rule. From saved
+validation histories only, report the actual selected checkpoint and the steps
+that would minimize each class's RMSE, maximize each class's Spearman, or minimize
+the unweighted mean of the two class RMSEs. Verify the original selected step
+against the original pooled-RMSE minimum and report class counts/weights.
+This diagnostic does not select, refit, promote or test any alternate checkpoint;
+all twelve original selected artifacts and promotion rules remain unchanged.
+It assesses whether pooled selection sacrifices one class while improving the
+more numerous class, separately from auxiliary-data interference and exposure.

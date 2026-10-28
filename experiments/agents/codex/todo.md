@@ -342,5 +342,5 @@ Results belong to 2026-10-27_2100_codex_transfer-improvements, not this backlog.
 ## 2026-10-28 — Auxiliary transfer mechanisms
 
 - [ ] Complete the fixed twelve-fit capacity/exposure/auxiliary-permutation comparison.
-- [ ] Report allele/species/class/assay/qualifier concentration and source attrition.
+- [x] Report allele/species/class/assay/qualifier concentration and source attrition.
 - [ ] Apply supported common sampling options; retain one model/training interface.

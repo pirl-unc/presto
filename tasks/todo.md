@@ -14580,3 +14580,6 @@ Spec: experiments/agents/codex/plans/2026-10-28_assay-transfer-mechanisms.md.
 - [ ] Verify source/sampler/resume contracts and execute twelve H100 fits with live results.
 - [ ] Seal selection, independently verify metrics and replay saved training probes.
 - [ ] Integrate supported findings and close experiment, registry and PR handoff.
+
+Live-report recovery spec: experiments/agents/codex/plans/2026-10-28_live-progress-recovery.md.
+- [x] Separate read-only worker polling from blocking archive collection; verify dashboard freshness.

@@ -799,3 +799,11 @@ Keep applicability reporting separate from model features and the measured label
   before attributing gains or losses to transfer. Pair capacity controls and distinguish
   unique outcomes from repeated optimizer labels; report source attrition and allele
   concentration instead of presenting one dataset-size number without context.
+
+## 2026-10-28 — Live progress must survive slow artifact downloads
+
+- Keep worker-status polling independent of archive download/extraction. A blocked
+  collector can make healthy GPU jobs look stalled for minutes. Show remote fit
+  completion, local artifact collection and source poll age separately.
+- Recover observability without killing the original Modal controller or relaunching
+  fits. Use one atomic writer per status file and preserve the validation/test gate.

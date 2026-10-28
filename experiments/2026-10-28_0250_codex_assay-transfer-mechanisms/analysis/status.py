@@ -7,6 +7,16 @@ import sys
 F = Path(__file__).resolve().parents[1]
 live = json.loads((F / "results/live-status.json").read_text())
 controller = json.loads((F / "reproduce/controller.json").read_text())
+worker_path = F / "results/live-workers.json"
+if worker_path.exists():
+    workers = json.loads(worker_path.read_text())
+    live["conditions"].update(workers["conditions"])
+    print(
+        "remote terminal",
+        len(workers["terminal"]),
+        "/12; poll errors",
+        workers["errors"],
+    )
 print(
     f"{controller['status']}: {len(live['completed'])}/12 collected; failures={live['failed']}"
 )
