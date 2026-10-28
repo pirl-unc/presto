@@ -5,6 +5,7 @@ import pytest
 from presto.data.modular_hitlist import AdmissionError, HumanMHCCatalog
 from presto.data.modular_hitlist_ms import (
     class_ii_ms_observation,
+    indexed_ms_observation,
     ms_observation,
     source_condition,
     study_factor_vocabulary,
@@ -148,6 +149,80 @@ def test_ms_dr_reference_is_explicit_for_each_candidate():
     )
     assert row.mhc[0].provenance["assumed_alleles"] == ["HLA-DRA*01:01"]
     assert row.mhc[0].provenance["reported_candidates"] == ["HLA-DRB1*01:01"]
+
+
+def test_reported_ms_negative_requires_explicit_opt_in(catalog):
+    source = raw(
+        is_ms_observation=False, ms_outcome_status="negative", qualitative_measurement="Negative"
+    )
+    arguments = dict(source_sha256="a" * 64, ordinal=0, study_factors={})
+    with pytest.raises(AdmissionError, match="outside_mhc_ms"):
+        ms_observation(source, catalog, **arguments)
+    with pytest.raises(AdmissionError, match="outside_class_ii_ms"):
+        class_ii_ms_observation(source, catalog, **arguments)
+    row = ms_observation(source, catalog, allow_reported_negatives=True, **arguments)
+    assert row.value == 0
+    assert row.provenance["label_kind"] == "reported_nondetection"
+    assert row.provenance["raw_record"] == source
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"ms_outcome_status": "unknown"},
+        {"qualitative_measurement": "Positive"},
+        {"qualitative_measurement": None},
+        {"assay_modality": "binding"},
+        {"is_ms_observation": True},
+    ],
+)
+def test_missing_or_contradictory_negative_evidence_is_not_zero(catalog, changes):
+    source = (
+        raw(
+            is_ms_observation=False,
+            ms_outcome_status="negative",
+            qualitative_measurement="Negative",
+        )
+        | changes
+    )
+    with pytest.raises(AdmissionError):
+        ms_observation(
+            source,
+            catalog,
+            source_sha256="a" * 64,
+            ordinal=0,
+            study_factors={},
+            allow_reported_negatives=True,
+        )
+
+
+def test_indexed_negative_keeps_lineage_without_inventing_sample_scope(catalog):
+    source = raw(
+        is_ms_observation=False,
+        ms_outcome_status="negative",
+        qualitative_measurement="Negative",
+        assay_iri="fixture:assay",
+        condition_status=None,
+        sample_attribution=None,
+    )
+    for key in ("evidence_kind", "evidence_row_id", "evidence_source_id", "provenance_status"):
+        source.pop(key)
+    row = indexed_ms_observation(source, catalog, source_sha256="a" * 64, ordinal=0)
+    assert row.value == 0
+    assert row.provenance["original_measurement_id"] == "ms:fixture:assay"
+    assert row.provenance["raw_record"] == source
+    assert not row.context.interventions and row.context.cell_type is None
+    with pytest.raises(AdmissionError, match="unresolved_candidate_scope"):
+        indexed_ms_observation(
+            source
+            | {
+                "mhc_allele_provenance": "sample_allele_match",
+                "sample_attribution": "elution_conditions",
+            },
+            catalog,
+            source_sha256="a" * 64,
+            ordinal=0,
+        )
 
 
 def test_one_partial_candidate_defers_entire_observation(catalog):
