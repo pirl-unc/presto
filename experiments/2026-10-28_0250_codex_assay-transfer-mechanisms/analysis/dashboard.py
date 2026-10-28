@@ -64,6 +64,7 @@ def snapshot():
     meta = read(FAMILY / "reproduce/source-pins.json")
     live = read(FAMILY / "results/live-status.json", {})
     workers = read(FAMILY / "results/live-workers.json", {})
+    archive_cache = read(FAMILY / "results/artifact-readback-state.json", {})
     states = {**live.get("conditions", {}), **workers.get("conditions", {})}
     rows = []
     decision = read(FAMILY / "results/validation-decision.json", {})
@@ -105,6 +106,7 @@ def snapshot():
         updated_unix=time.time(),
         worker_polled_unix=workers.get("updated_unix", live.get("updated_unix")),
         worker_poll_errors=workers.get("errors", {}),
+        verified_archives=len(archive_cache.get("ready", {})),
         remotely_finished=sum(
             s.get("status", {}).get("status") == "completed" for s in states.values()
         ),

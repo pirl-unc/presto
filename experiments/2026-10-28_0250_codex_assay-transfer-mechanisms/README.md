@@ -198,3 +198,11 @@ A posthoc descriptive audit added during execution will compare the fixed pooled
 IC50-RMSE checkpoint choice with each class's best validation-history point and
 the minimum unweighted mean class RMSE. This diagnoses selection trade-offs only;
 alternate checkpoints are not selected, promoted or evaluated on test.
+
+The CPU watcher later stopped safely on a transient completed status without an
+archive receipt: the worker had finished, while its parent still had to package
+and commit the archive. The failed log and original source/invocation remain
+preserved. The read-only poller and CPU reader were restarted with an explicit
+receipt gate and fresh invocation receipts, rechecking existing archive hashes.
+No training process or call was restarted. Successful terminal collection now
+requires both worker completion and the committed archive receipt.

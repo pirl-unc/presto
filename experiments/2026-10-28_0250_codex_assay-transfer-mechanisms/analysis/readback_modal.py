@@ -105,11 +105,18 @@ def atomic(path, value):
 
 
 @app.local_entrypoint()
-def main(condition: str = "wide-six-natural-s42", watch: bool = False):
+def main(
+    condition: str = "wide-six-natural-s42", watch: bool = False, recovery: bool = False
+):
     family = Path(__file__).resolve().parents[1]
     root = family.parents[1]
     names = NAMES if watch else (condition,)
-    receipt = family / "reproduce/readback-watch.json"
+    assert not recovery or watch
+    receipt = (
+        family
+        / "reproduce"
+        / ("readback-watch-recovery.json" if recovery else "readback-watch.json")
+    )
     if watch:
         if receipt.exists():
             raise ValueError("readback watcher already attempted; inspect its receipt")
@@ -122,7 +129,8 @@ def main(condition: str = "wide-six-natural-s42", watch: bool = False):
                 requested_gpu=None,
                 cpu=1,
                 memory_mib=1024,
-                argv=["modal", "run", str(Path(__file__).resolve()), "--watch"],
+                argv=["modal", "run", str(Path(__file__).resolve()), "--watch"]
+                + (["--recovery"] if recovery else []),
             ),
         )
     ready = {}
@@ -137,7 +145,7 @@ def main(condition: str = "wide-six-natural-s42", watch: bool = False):
             status = state.get("status", {}).get("status")
             if status == "failed":
                 raise RuntimeError(f"Frozen fit failed: {name}; no automatic fit retry")
-            if status != "completed":
+            if status != "completed" or not state.get("artifact"):
                 continue
             expected = state["artifact"]
             cached = None

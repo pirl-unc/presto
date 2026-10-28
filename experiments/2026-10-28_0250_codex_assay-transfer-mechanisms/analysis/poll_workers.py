@@ -28,7 +28,12 @@ def atomic(path, value):
 
 
 def main():
-    receipt = F / "reproduce/worker-poller.json"
+    recovery = "--recovery" in sys.argv
+    receipt = (
+        F
+        / "reproduce"
+        / ("worker-poller-recovery.json" if recovery else "worker-poller.json")
+    )
     if receipt.exists():
         raise ValueError("poller already attempted; inspect existing process/receipt")
     atomic(
@@ -69,8 +74,11 @@ def main():
             terminal = [
                 name
                 for name in NAMES
-                if states.get(name, {}).get("status", {}).get("status")
-                in ("completed", "failed")
+                if states.get(name, {}).get("status", {}).get("status") == "failed"
+                or (
+                    states.get(name, {}).get("status", {}).get("status") == "completed"
+                    and states.get(name, {}).get("artifact")
+                )
             ]
             atomic(
                 F / "results/live-workers.json",

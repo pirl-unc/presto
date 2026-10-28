@@ -75,3 +75,23 @@ have been inspected: local analyses consume canonical gzip files and selected.pt
 fresh-GPU replay consumes original unchanged remote artifacts. Record compacted
 bytes and authoritative archive paths in the handoff/README. This changes storage
 only, never scientific membership, predictions, tolerances or model selection.
+
+The final ownership handoff may be automated by a task-local watcher. Pin the
+original collector PID and its exact `ps` start-time/command identity at watcher
+launch, verify that identity again immediately before a normal SIGTERM, and call
+`--prepare` first. Stop no process unless all twelve original calls have returned
+and their archives pass the original hashes. If the original collector completes
+independently, exit without intervention. Otherwise wait for its verified exit,
+then call `--finish`; never start another closure watcher or any training fit.
+
+## Completion/receipt race recovery
+
+The CPU watcher stopped on `KeyError('artifact')` after five cached archives. The
+worker writes `status=completed` before its parent packages/commits the archive;
+one snapshot can expose that status without the final artifact receipt. Preserve
+the failed watcher log/invocation/source and its five verified archives. Require
+both completed status and an artifact receipt before readback or successful poller
+termination. Restart only the read-only poller and CPU archive watcher, recording
+separate recovery invocations and rechecking every existing cache hash. Do not stop
+the original training controller, any GPU worker, or the guarded handoff/closure
+watchers. Their original terminal-call/hash gates remain unchanged.

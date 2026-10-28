@@ -807,3 +807,7 @@ Keep applicability reporting separate from model features and the measured label
   completion, local artifact collection and source poll age separately.
 - Recover observability without killing the original Modal controller or relaunching
   fits. Use one atomic writer per status file and preserve the validation/test gate.
+- A subprocess's completed status can precede its parent's archive commit and
+  final receipt. Artifact consumers and terminal pollers must require that receipt,
+  not only the status string; preserve failed transport attempts and revalidate
+  caches when restarting a reader.
