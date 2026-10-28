@@ -54,8 +54,13 @@ if modal.is_local():
                 "PYTHONDONTWRITEBYTECODE": "1",
             }
         )
+        .add_local_file(
+            UPLOAD / "inputs.tar.gz", "/tmp/presto-inputs.tar.gz", copy=True
+        )
+        .run_commands(
+            "mkdir -p /input && tar -xzf /tmp/presto-inputs.tar.gz -C /input && rm /tmp/presto-inputs.tar.gz"
+        )
         .add_local_dir(UPLOAD / "runtimes", remote_path="/runtimes")
-        .add_local_dir(UPLOAD / "inputs", remote_path="/input")
         .add_local_file(
             UPLOAD / "source-pins.json", remote_path="/bundle/source-pins.json"
         )
@@ -218,6 +223,19 @@ def main():
     invocation = FAMILY / "reproduce/launch.json"
     if invocation.exists():
         raise ValueError("already launched; use saved call IDs for collection")
+    for receipt in (
+        "results/preflight.json",
+        "results/data-independent-verification.json",
+        "results/transport-verification.json",
+        "reproduce/input-transport.json",
+    ):
+        if read(FAMILY / receipt, {}).get("status") != "passed":
+            raise ValueError(f"missing passed launch prerequisite: {receipt}")
+    if (
+        sha(UPLOAD / "inputs.tar.gz")
+        != read(FAMILY / "reproduce/input-transport.json")["archive_sha256"]
+    ):
+        raise ValueError("input transport archive changed after verification")
     pins = {p.name: sha(p) for p in (FAMILY / "code").glob("*.py")}
     for p in (FAMILY / "code").glob("*.py"):
         shutil.copy2(p, FAMILY / "reproduce/source" / p.name)
@@ -237,6 +255,7 @@ def main():
             ),
             source_pins=pins,
             transport_metadata_sha256=sha(UPLOAD / "source-pins.json"),
+            input_archive_sha256=sha(UPLOAD / "inputs.tar.gz"),
             conditions=CONDITIONS,
             requirements=REQUIREMENTS,
             requested_gpu=GPU,
