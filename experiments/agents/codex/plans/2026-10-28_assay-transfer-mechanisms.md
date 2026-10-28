@@ -115,3 +115,13 @@ This diagnostic does not select, refit, promote or test any alternate checkpoint
 all twelve original selected artifacts and promotion rules remain unchanged.
 It assesses whether pooled selection sacrifices one class while improving the
 more numerous class, separately from auxiliary-data interference and exposure.
+
+## Metadata-only restriction attrition audit
+
+During execution, break down the 55,371 archived missing-partner dispositions by
+reported class, restriction, source and assay family. Rejoin only the recorded
+source-file/ordinal keys to the original checksum-pinned Parquet metadata columns;
+do not read peptide sequences or quantitative outcomes. Preserve raw restriction
+labels and distinguish class-I ambiguity from missing class-II partners. This
+explains admission bias and future curation priorities only. It does not resolve
+unknown partners, admit new observations, change any split, or alter these fits.

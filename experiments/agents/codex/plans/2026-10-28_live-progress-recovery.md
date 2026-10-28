@@ -95,3 +95,19 @@ termination. Restart only the read-only poller and CPU archive watcher, recordin
 separate recovery invocations and rechecking every existing cache hash. Do not stop
 the original training controller, any GPU worker, or the guarded handoff/closure
 watchers. Their original terminal-call/hash gates remain unchanged.
+
+## Local-client disconnect recovery
+
+At 06:56 UTC the reader log explicitly reports a local-client disconnect and
+stopped non-detached CPU app. All eight cached archives remain verified; the next
+read attempt produced zero bytes and failed before accepting an archive. Preserve
+that failed receipt and empty partial under distinct recovery paths. Restart only
+the CPU reader with `modal run --detach`, a new attempt receipt, and revalidation
+of existing caches. The original GPU app was already detached and continues its
+same twelve original calls. No refit, altered tolerance or scientific change.
+
+Before closure starts, restart only the still-waiting local closure watcher to
+pass `--detach` to the one read-only H100 replay. Preserve its original source,
+confirm no decision/verification log exists and collection is incomplete, verify
+the exact owned PID, and stop that watcher before starting its replacement.
+Selection, independent metric checks, replay inputs and tolerances are unchanged.

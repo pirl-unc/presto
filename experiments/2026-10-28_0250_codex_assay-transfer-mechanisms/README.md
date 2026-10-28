@@ -62,6 +62,21 @@ definitions; 55,371 missing an explicit MHC partner; 16,957 not explicitly human
 unspecified peptidoforms; 870 invalid measurements; 247 unsupported peptide/class;
 39 non-peptide ligands. Missing DRA partners were not guessed.
 
+A metadata-only rejoin of the archived missing-partner dispositions finds all
+55,371 are reported as class II, including 33,165 IC50 and 20,654 KD-via-IC50
+measurements. Lexical restriction labels identify 41,637 DRB1, 3,520 DRB3, 2,770
+DRB5, 2,452 DRB4, 1,628 DPB1 and 1,216 DQB1 rows; 2,148 labels remain outside
+that lexical grouping. Thus strict complete-partner admission contributes strongly
+to the class/locus imbalance. These are deferred source rows, not guaranteed
+additional admissible training examples: labels include serotypes and 80 rows
+containing "mutant". Partner/construct identity and remaining admission criteria
+still require verification. No peptide or quantitative outcome column was read
+for this audit, and no row was admitted or used to change the frozen comparison.
+See `results/deferred-restrictions.json` and its reproduction receipt. The initial
+lexical result is preserved; a word-boundary correction prevents mutation suffixes
+such as D57A from being misread as an HLA-A locus, without changing row/class/assay
+totals.
+
 The earlier exact-IC50 control had 21,636 training observations, 66.4% class I.
 At the same 6,000-update budget, seed42's exact-IC50 control presented
 254,456/128,524 I/II IC50 labels to the optimizer, versus 43,487/23,546 in the
@@ -206,3 +221,16 @@ preserved. The read-only poller and CPU reader were restarted with an explicit
 receipt gate and fresh invocation receipts, rechecking existing archive hashes.
 No training process or call was restarted. Successful terminal collection now
 requires both worker completion and the committed archive receipt.
+
+A later local-client disconnect stopped the non-detached CPU reader after eight
+verified archives. The original training app was already detached and continued
+all original fits. The failed next transfer contained zero bytes; its receipt and
+partial were preserved. Reader attempt2 uses detached execution and revalidates
+the caches. Before any verification step began, the waiting local closure watcher
+was replaced to make its one read-only H100 replay detached too. Model inputs,
+selection rules, scientific checks and numerical tolerances remain unchanged.
+
+The two already-collected controls were compacted before the final handoff when
+shared disk headroom fell: 1,053,877,439 redundant expanded bytes were removed
+only after exact archive-member hash checks. Separate before-handoff receipts
+preserve this action; their full archives, gzip predictions and checkpoints remain.

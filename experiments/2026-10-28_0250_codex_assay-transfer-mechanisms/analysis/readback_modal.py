@@ -3,6 +3,7 @@
 from pathlib import Path
 import hashlib
 import json
+import sys
 import time
 
 import modal
@@ -106,16 +107,26 @@ def atomic(path, value):
 
 @app.local_entrypoint()
 def main(
-    condition: str = "wide-six-natural-s42", watch: bool = False, recovery: bool = False
+    condition: str = "wide-six-natural-s42",
+    watch: bool = False,
+    recovery: bool = False,
+    attempt: int = 1,
 ):
     family = Path(__file__).resolve().parents[1]
     root = family.parents[1]
     names = NAMES if watch else (condition,)
     assert not recovery or watch
+    assert attempt >= 1 and (attempt == 1 or recovery)
     receipt = (
         family
         / "reproduce"
-        / ("readback-watch-recovery.json" if recovery else "readback-watch.json")
+        / (
+            f"readback-watch-recovery-{attempt}.json"
+            if attempt > 1
+            else "readback-watch-recovery.json"
+            if recovery
+            else "readback-watch.json"
+        )
     )
     if watch:
         if receipt.exists():
@@ -129,8 +140,7 @@ def main(
                 requested_gpu=None,
                 cpu=1,
                 memory_mib=1024,
-                argv=["modal", "run", str(Path(__file__).resolve()), "--watch"]
-                + (["--recovery"] if recovery else []),
+                argv=list(sys.argv),
             ),
         )
     ready = {}

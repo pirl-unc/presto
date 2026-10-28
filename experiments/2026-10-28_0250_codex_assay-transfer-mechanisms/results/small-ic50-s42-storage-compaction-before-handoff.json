@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "archive": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/downloads/small-ic50-s42.tar.gz",
+  "archive_sha256": "bfaedc62f9d1219a0855bf88ace751c4625f56f307b885ce43de7ee3bb2189c1",
+  "entries": [
+    {
+      "member": "small-ic50-s42/raw/evaluations/train.json",
+      "bytes": 264451479,
+      "sha256": "ba57d988eb7bc4ae2ddf1446eff1b686b903f37e19d87cf52e3ae903a28492cb"
+    },
+    {
+      "member": "small-ic50-s42/raw/train-predictions.jsonl",
+      "bytes": 160957743,
+      "sha256": "daf86f1e68330fe62895bcfa24eeb6c5794f13bb71ada41a935e85f0f74ebed3"
+    },
+    {
+      "member": "small-ic50-s42/raw/evaluations/validation.json",
+      "bytes": 31247092,
+      "sha256": "4acdd24e3aeaf0045a42878902bbcc1c450895545dc6a259eecdbe03474afbe6"
+    },
+    {
+      "member": "small-ic50-s42/raw/validation-predictions.jsonl",
+      "bytes": 19034465,
+      "sha256": "c036a969f0935e9ad344c91c81e8d20397735d31abf41b33c671d8e0643b6c0a"
+    },
+    {
+      "member": "small-ic50-s42/raw/evaluations/test.json",
+      "bytes": 31852889,
+      "sha256": "b07b7e9fc9bec1c662814e5405b0042d1894b617cbc227d871e2525d92167777"
+    },
+    {
+      "member": "small-ic50-s42/raw/test-predictions.jsonl",
+      "bytes": 19391253,
+      "sha256": "961ce6132d70c55d9ccb332a5ff2ebbe1d373925ff782fa9f45b7a5d2a9672b3"
+    }
+  ],
+  "removed_bytes": 526934921,
+  "policy": "Remove only byte-identical expanded exports; retain original archive, all checkpoints and gzip predictions. No metric parsing.",
+  "free_after": 11179982848
+}

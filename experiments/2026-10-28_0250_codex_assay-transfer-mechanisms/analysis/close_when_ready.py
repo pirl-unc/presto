@@ -34,6 +34,7 @@ def main():
             [
                 str(Path(sys.executable).with_name("modal")),
                 "run",
+                "--detach",
                 str(F / "analysis/replay_modal.py"),
             ],
         ),

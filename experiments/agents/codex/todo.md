@@ -344,3 +344,8 @@ Results belong to 2026-10-27_2100_codex_transfer-improvements, not this backlog.
 - [ ] Complete the fixed twelve-fit capacity/exposure/auxiliary-permutation comparison.
 - [x] Report allele/species/class/assay/qualifier concentration and source attrition.
 - [ ] Apply supported common sampling options; retain one model/training interface.
+- [ ] Future data curation: verify partners/constructs for the deferred class-II
+  pool (33,165 IC50 and 20,654 KD-via-IC50 source rows, mostly DR). Preserve
+  measured versus explicitly assumed identities, serotype ambiguity and mutant
+  labels; do not bulk-fill DRA or count every deferred row as admissible. Validate
+  any expanded cohort prospectively through the same manifest trainer.
