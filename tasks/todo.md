@@ -14554,8 +14554,8 @@ Review: twelve H100 fits closed; validation-selected common v5 interaction model
 
 Spec: experiments/agents/codex/plans/2026-10-27_scale-shared-model.md.
 
-- [ ] Audit element-level weight/input/output support and existing predictive failures.
-- [ ] Admit larger, richer data with preserved split and measurement provenance.
-- [ ] Fix common-core defects and freeze the concrete scaling comparisons.
+- [x] Audit element-level weight/input/output support and existing predictive failures.
+- [x] Admit larger, richer data with preserved split and measurement provenance.
+- [x] Fix common-core defects and freeze the concrete scaling comparisons.
 - [ ] Run and independently verify scaled multi-output training on Modal.
 - [ ] Promote supported changes, document limits and close canonical records.

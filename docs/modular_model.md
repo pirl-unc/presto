@@ -16,7 +16,7 @@ comparison selected its shared residue interaction on validation. Test mean
 Spearman was0.5248 for MHC-I and0.5039 for MHC-II, versus0.5070/0.4893 for the
 pooled shared-v4 control. These are previously inspected development holdouts,
 not a qualification population. Source-only transfer remains weak and its RMSE
-did not improve. See the [registered comparison](../experiments/2026-10-27_2100_codex_transfer-improvements/README.md).
+did not improve. See the [registered comparison](https://github.com/pirl-unc/presto/tree/2f5705184f6997d50883639f5d38f6c133b81995/experiments/2026-10-27_2100_codex_transfer-improvements).
 
 Capacity is configured by `d_model`, `n_layers`, `n_heads` and `d_ff`; defaults
 128/2/4/512 preserve existing v5 checkpoints. Every reachable sequence, interaction,

@@ -145,3 +145,10 @@ selection semantics. The current eight-fit benchmark remains on frozen0c4c984b
 with its predeclared IC50 selection policy; no models or validation gates change.
 Do not claim this software generalization improves predictive quality. Document
 that pooled objectives can trade one class against another; preserve that finding.
+
+## Packaging closure
+
+The installed-wheel smoke currently exercises historical loaders only. Extend that
+same smoke to instantiate the canonical model at nondefault width, execute both
+MHC candidate rules on explicit artificial observations, and check that public
+prediction rejects untrained outputs. No fitting or scientific evaluation is added.

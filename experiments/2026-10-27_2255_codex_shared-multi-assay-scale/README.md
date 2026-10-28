@@ -1,6 +1,6 @@
 # Shared architecture: larger data, distinct outputs and capacity
 
-**Status: prospective; preparing and independently verifying inputs.**
+**Status: running eight frozen H100 fits; inputs independently verified.**
 Agent/model: Codex / GPT-6. Date2026-10-27. Follows the validation-selected
 shared-v5 interaction architecture in `2026-10-27_2100_codex_transfer-improvements`.
 Detailed implementation plan: `../agents/codex/plans/2026-10-27_scale-shared-model.md`.

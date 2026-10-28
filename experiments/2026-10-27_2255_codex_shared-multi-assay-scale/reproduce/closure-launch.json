@@ -1,0 +1,37 @@
+{
+  "git_commit": "dbaa942491941fd1e050eb6c8fc28f38092042d1",
+  "git_dirty": " M experiments/2026-10-27_2255_codex_shared-multi-assay-scale/README.md\n M experiments/2026-10-27_2255_codex_shared-multi-assay-scale/reproduce/controller.json\n M tasks/todo.md\n?? experiments/2026-10-27_2255_codex_shared-multi-assay-scale/analysis/\n?? experiments/2026-10-27_2255_codex_shared-multi-assay-scale/results/\n",
+  "python": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "version": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "environment": {
+    "PRESTO_MODAL_GPU": "H100!",
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "MPLCONFIGDIR": "/private/tmp/presto-scale-mpl"
+  },
+  "command": "python experiments/2026-10-27_2255_codex_shared-multi-assay-scale/analysis/close_when_ready.py",
+  "scope": "Seal validation before inspecting test metrics; independent saved-output audit, comparisons and fresh H100 serving/training-probe replay; no new fitting",
+  "sources": {
+    "analysis/close_when_ready.py": "f7bfced138bb0d25eb6762051d26f213c33e12b765f997706a2904e5bc2e23bf",
+    "analysis/compare.py": "a28accc09f20486e6a5314a5c525f2712dbf2dcd21f3c888fc952cd15b9ee357",
+    "analysis/dashboard.html": "d959160a410de6c0fa66794af4a3fc2c16c8ab0d263bdd498d5c3dd563118317",
+    "analysis/dashboard.py": "b2916d3c3709746d47af3a93f9d8a208f81f64bec4c19f96a840348239a80641",
+    "analysis/data_summary.py": "7f7edb4a7f4134171961cc67d2e2dfcfaf9592591fe5fd2b5112b79599958811",
+    "analysis/replay_modal.py": "c7286ea40dff56ae769eaa493923f9a93c21a1699c0c062daf7089c4b5655487",
+    "analysis/replay_remote.py": "48f360c45fee0695185e0b850000efc2bdc31852030a1dd39cdae44cdb3b83b0",
+    "analysis/select_validation.py": "d53eab6ab23a34e8c63e9d4f994aa0a2ea75405cc4e88019cc2fed72fb3bae92",
+    "analysis/test_analysis.py": "94929bf371b067bb8dd330681ca49b8b839238c3389c419363aa09696228903c",
+    "analysis/verify.py": "704a36cabce6adcd62b19f31383cb92dd439a3bcfdfc5d3b6d1aa51a88e1b04e"
+  },
+  "amendments": [
+    {
+      "unix": 1793146632.6797729,
+      "phase": "before validation decision or test inspection",
+      "reason": "Checkpoint complete_history is a list of parameter names, not a Boolean mapping. Verify its type and exact membership; also verify mask dtype and shape. No model, source data or selection policy changes.",
+      "file": "analysis/verify.py",
+      "sha256": "7de161c1719ccb0c5f218c602cd22e751d82a3bf1a120424b7b55d74ff4c3407",
+      "original_sources": "reproduce/source/closure-analysis-at-launch/"
+    }
+  ]
+}

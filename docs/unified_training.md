@@ -64,7 +64,7 @@ contiguous nine-residue core, giving `L - 8` registers for a length-`L` ligand.
 Each candidate uses the same encoder and endpoint readout. Its peptide
 representation averages an independently encoded core (positions restart at the
 core) with contextual token states at those core positions in the full peptide.
-One shared four-head cross-attention then reads both groove token sequences,
+One shared multihead cross-attention (four heads by default) reads both groove token sequences,
 followed by residual normalization and residue pooling. Either class trains every
 interaction parameter; the endpoint readout is also shared. All
 flanks can affect those states through attention; there is no flank-only projection

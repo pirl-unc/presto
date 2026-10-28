@@ -80,6 +80,25 @@ batch = PrestoCollator()(PrestoDataset(bulk_ms_records=records).samples)
 assert 'ms_detectability' not in batch.target_masks
 assert batch.target_masks['excision'].all()
 print('Installed wheel version, B2M resources, bulk loader and masks verified.')
+import torch
+from presto.models import Presto, PrestoConfig
+from presto.data.modular import MHCInput, Observation
+shared = Presto(PrestoConfig(d_model=32, n_layers=1, n_heads=2, d_ff=64,
+                            endpoints=('ic50',), identity_tasks=(), dropout=0))
+rows = [Observation('wheel-'+c, 'artificial-software-fixture', 'ic50', peptide,
+                    (MHCInput('ACDEFGHIK', 'LMNPQRSTV', c),), split='predict')
+        for c, peptide in [('I', 'ACDEFGHIK'), ('II', 'ACDEFGHIKLMN')]]
+predictions = shared(rows)
+assert all(torch.isfinite(p.value) for p in predictions)
+assert [len(p.diagnostics['candidates'][0]['registers'][0]['starts'])
+        for p in predictions] == [1, 4]
+try:
+    shared.predict(rows)
+except ValueError as exc:
+    assert 'no trained output support' in str(exc)
+else:
+    raise AssertionError('Installed shared model served an untrained output')
+print('Installed shared model: capacity, candidate rules and support guard verified.')
 """,
             ],
             cwd=root,

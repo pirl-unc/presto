@@ -1,0 +1,589 @@
+{
+  "scope": "TRAIN ONLY; matched peptide and groove pair, not matched assay conditions; descriptive, not a performance metric",
+  "counts": [
+    {
+      "endpoint": "ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 288
+    },
+    {
+      "endpoint": "ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 19
+    },
+    {
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 7650
+    },
+    {
+      "endpoint": "half_life",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 9
+    },
+    {
+      "endpoint": "half_life",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 12
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 14375
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 737
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 134
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 7261
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 1004
+    },
+    {
+      "endpoint": "ic50",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 1
+    },
+    {
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 4097
+    },
+    {
+      "endpoint": "kd",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 10662
+    },
+    {
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 350
+    },
+    {
+      "endpoint": "kd",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 72
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 9113
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 21515
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 11307
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 2911
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": "=",
+      "n": 39835
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">",
+      "n": 2103
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "I",
+      "qualifier": ">=",
+      "n": 2
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": "=",
+      "n": 886
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">",
+      "n": 216
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "mhc_class": "II",
+      "qualifier": ">=",
+      "n": 2
+    }
+  ],
+  "genes": [
+    {
+      "endpoint": "ec50",
+      "restriction_genes": "HLA-A",
+      "n": 196
+    },
+    {
+      "endpoint": "ec50",
+      "restriction_genes": "HLA-B",
+      "n": 76
+    },
+    {
+      "endpoint": "ec50",
+      "restriction_genes": "HLA-C",
+      "n": 16
+    },
+    {
+      "endpoint": "ec50",
+      "restriction_genes": "HLA-DQA1/HLA-DQB1",
+      "n": 19
+    },
+    {
+      "endpoint": "half_life",
+      "restriction_genes": "HLA-A",
+      "n": 4842
+    },
+    {
+      "endpoint": "half_life",
+      "restriction_genes": "HLA-B",
+      "n": 2777
+    },
+    {
+      "endpoint": "half_life",
+      "restriction_genes": "HLA-C",
+      "n": 40
+    },
+    {
+      "endpoint": "half_life",
+      "restriction_genes": "HLA-DQA1/HLA-DQB1",
+      "n": 3
+    },
+    {
+      "endpoint": "half_life",
+      "restriction_genes": "HLA-DRA/HLA-DRB1",
+      "n": 9
+    },
+    {
+      "endpoint": "ic50",
+      "restriction_genes": "HLA-A",
+      "n": 13120
+    },
+    {
+      "endpoint": "ic50",
+      "restriction_genes": "HLA-B",
+      "n": 2126
+    },
+    {
+      "endpoint": "ic50",
+      "restriction_genes": "HLA-DPA1/HLA-DPB1",
+      "n": 3594
+    },
+    {
+      "endpoint": "ic50",
+      "restriction_genes": "HLA-DQA1/HLA-DQB1",
+      "n": 4554
+    },
+    {
+      "endpoint": "ic50",
+      "restriction_genes": "HLA-DRA/HLA-DRB1",
+      "n": 114
+    },
+    {
+      "endpoint": "ic50",
+      "restriction_genes": "HLA-DRA/HLA-DRB5",
+      "n": 4
+    },
+    {
+      "endpoint": "kd",
+      "restriction_genes": "HLA-A",
+      "n": 7486
+    },
+    {
+      "endpoint": "kd",
+      "restriction_genes": "HLA-B",
+      "n": 6896
+    },
+    {
+      "endpoint": "kd",
+      "restriction_genes": "HLA-C",
+      "n": 377
+    },
+    {
+      "endpoint": "kd",
+      "restriction_genes": "HLA-DPA1/HLA-DPB1",
+      "n": 245
+    },
+    {
+      "endpoint": "kd",
+      "restriction_genes": "HLA-DQA1/HLA-DQB1",
+      "n": 175
+    },
+    {
+      "endpoint": "kd",
+      "restriction_genes": "HLA-DRA/HLA-DRB1",
+      "n": 2
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "restriction_genes": "HLA-A",
+      "n": 15047
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "restriction_genes": "HLA-B",
+      "n": 14386
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "restriction_genes": "HLA-C",
+      "n": 1195
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "restriction_genes": "HLA-DQA1/HLA-DQB1",
+      "n": 5447
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "restriction_genes": "HLA-DRA/HLA-DRB1",
+      "n": 5520
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "restriction_genes": "HLA-DRA/HLA-DRB3",
+      "n": 1981
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "restriction_genes": "HLA-DRA/HLA-DRB4",
+      "n": 659
+    },
+    {
+      "endpoint": "kd_via_ec50",
+      "restriction_genes": "HLA-DRA/HLA-DRB5",
+      "n": 611
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "restriction_genes": "HLA-A",
+      "n": 33293
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "restriction_genes": "HLA-B",
+      "n": 8647
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "restriction_genes": "HLA-DPA1/HLA-DPB1",
+      "n": 445
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "restriction_genes": "HLA-DQA1/HLA-DQB1",
+      "n": 617
+    },
+    {
+      "endpoint": "kd_via_ic50",
+      "restriction_genes": "HLA-DRA/HLA-DRB1",
+      "n": 42
+    }
+  ],
+  "input_diversity": {
+    "ec50": {
+      "peptides": 178,
+      "groove_pairs": 22,
+      "minimum_length": 8,
+      "maximum_length": 19,
+      "median_length": 9.0
+    },
+    "half_life": {
+      "peptides": 5001,
+      "groove_pairs": 49,
+      "minimum_length": 8,
+      "maximum_length": 33,
+      "median_length": 9.0
+    },
+    "ic50": {
+      "peptides": 7909,
+      "groove_pairs": 75,
+      "minimum_length": 7,
+      "maximum_length": 39,
+      "median_length": 10.0
+    },
+    "kd": {
+      "peptides": 2727,
+      "groove_pairs": 71,
+      "minimum_length": 8,
+      "maximum_length": 15,
+      "median_length": 9.0
+    },
+    "kd_via_ec50": {
+      "peptides": 4616,
+      "groove_pairs": 86,
+      "minimum_length": 8,
+      "maximum_length": 24,
+      "median_length": 9.0
+    },
+    "kd_via_ic50": {
+      "peptides": 13134,
+      "groove_pairs": 67,
+      "minimum_length": 8,
+      "maximum_length": 28,
+      "median_length": 9.0
+    }
+  },
+  "overlap": [
+    {
+      "endpoint_a": "ec50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 302,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "endpoint_a": "ec50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 269,
+      "spearman_of_context_means": 0.2081173348017698
+    },
+    {
+      "endpoint_a": "ec50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 8,
+      "spearman_of_context_means": -0.09523809523809526
+    },
+    {
+      "endpoint_a": "ec50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 3,
+      "spearman_of_context_means": -0.5
+    },
+    {
+      "endpoint_a": "ec50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 3,
+      "spearman_of_context_means": 0.5
+    },
+    {
+      "endpoint_a": "ec50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 3,
+      "spearman_of_context_means": -1.0
+    },
+    {
+      "endpoint_a": "half_life",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 269,
+      "spearman_of_context_means": 0.20811733480176983
+    },
+    {
+      "endpoint_a": "half_life",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 7473,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "endpoint_a": "half_life",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 2430,
+      "spearman_of_context_means": -0.1594438145879195
+    },
+    {
+      "endpoint_a": "half_life",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 777,
+      "spearman_of_context_means": -0.36157800756659253
+    },
+    {
+      "endpoint_a": "half_life",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 1576,
+      "spearman_of_context_means": -0.2863157650460447
+    },
+    {
+      "endpoint_a": "half_life",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 291,
+      "spearman_of_context_means": -0.4831456123098712
+    },
+    {
+      "endpoint_a": "ic50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 8,
+      "spearman_of_context_means": -0.09523809523809526
+    },
+    {
+      "endpoint_a": "ic50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 2430,
+      "spearman_of_context_means": -0.1594438145879195
+    },
+    {
+      "endpoint_a": "ic50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 20225,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "endpoint_a": "ic50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 69,
+      "spearman_of_context_means": 0.39050552240396286
+    },
+    {
+      "endpoint_a": "ic50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 91,
+      "spearman_of_context_means": 0.5322126646005693
+    },
+    {
+      "endpoint_a": "ic50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 6678,
+      "spearman_of_context_means": 0.9629553236770366
+    },
+    {
+      "endpoint_a": "kd",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 3,
+      "spearman_of_context_means": -0.5
+    },
+    {
+      "endpoint_a": "kd",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 777,
+      "spearman_of_context_means": -0.3615780075665925
+    },
+    {
+      "endpoint_a": "kd",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 69,
+      "spearman_of_context_means": 0.39050552240396286
+    },
+    {
+      "endpoint_a": "kd",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 4420,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "endpoint_a": "kd",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 135,
+      "spearman_of_context_means": 0.7710947904426894
+    },
+    {
+      "endpoint_a": "kd",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 82,
+      "spearman_of_context_means": 0.310786328944775
+    },
+    {
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 3,
+      "spearman_of_context_means": 0.5
+    },
+    {
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 1576,
+      "spearman_of_context_means": -0.2863157650460447
+    },
+    {
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 91,
+      "spearman_of_context_means": 0.5322126646005693
+    },
+    {
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 135,
+      "spearman_of_context_means": 0.7710947904426894
+    },
+    {
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 19067,
+      "spearman_of_context_means": 1.0
+    },
+    {
+      "endpoint_a": "kd_via_ec50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 214,
+      "spearman_of_context_means": 0.44721599040116355
+    },
+    {
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "ec50",
+      "shared_exact_training_contexts": 3,
+      "spearman_of_context_means": -1.0
+    },
+    {
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "half_life",
+      "shared_exact_training_contexts": 291,
+      "spearman_of_context_means": -0.4831456123098712
+    },
+    {
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "ic50",
+      "shared_exact_training_contexts": 6678,
+      "spearman_of_context_means": 0.9629553236770366
+    },
+    {
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "kd",
+      "shared_exact_training_contexts": 82,
+      "spearman_of_context_means": 0.310786328944775
+    },
+    {
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "kd_via_ec50",
+      "shared_exact_training_contexts": 214,
+      "spearman_of_context_means": 0.4472159904011636
+    },
+    {
+      "endpoint_a": "kd_via_ic50",
+      "endpoint_b": "kd_via_ic50",
+      "shared_exact_training_contexts": 39732,
+      "spearman_of_context_means": 0.9999999999999999
+    }
+  ]
+}
