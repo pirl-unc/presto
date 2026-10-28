@@ -87,7 +87,7 @@ workers. There are no predictive results or preferred new checkpoint yet.
 
 Software evidence: the current shared suite passes2,805 tests/four skips;
 the literal purified-method and reported-MS-negative admission checks passed79
-and89 focused tests, respectively. Seven artificial preparation/report fixtures pass,
+and89 focused tests, respectively. Eighteen preparation/report/controller fixtures pass,
 including the real ObservationIndex/common-trainer preflight, independent source/background audit and separation of
 reported-negative versus generated-background AUCs. Artificial tests are not
 biological performance evidence.
@@ -119,8 +119,8 @@ not a claim that shorter class-II ligands cannot bind.
 
 Admission attempt4 failed during remote launcher import, before data processing;
 local filesystem upload paths are now constructed only locally. All three
-launchers passed remote-path import checks. Attempt5 is running against the
-completed source build. The finished binding pass admitted263,432 candidate
+launchers passed remote-path import checks. Attempt6 is running against the
+completed source build with the verified attempt5 database backup. The finished binding pass admitted263,432 candidate
 physical/qualitative measurements, including I/II direct IC50 counts19,167/38,543.
 61,548 rows across endpoints use the declared reference DRA. Final split totals
 and any lineage-conflict exclusions remain pending.
@@ -135,3 +135,43 @@ readout must preserve its measurement scope instead of converting it to IC50.
 Primary source: https://pubmed.ncbi.nlm.nih.gov/32903714/ ; source assay metadata:
 https://www.iedb.org/assay/17059219 . These rows are explicitly excluded from the
 current frozen admission contract, not silently counted as trained examples.
+
+## Active continuation and operational evidence
+
+As of2026-10-28 19:11 UTC, source build and the binding/other-assay passes are
+complete. The canonical human MS export contains5,440,009rows. Attempt5's measured
+rate of306rows/s would exceed its four-hour limit. A consistent read-only SQLite
+backup was committed to the volume before stopping that worker. The2.57GB backup
+contains406,381retained rows and1,703,850known-positive sequences; its exact hash
+and receipt are in `results/admission-local-recovery-backup.json`.
+
+Attempt6 uses512GiB worker-local disk and a1GiB SQLite page cache, replaying the
+same source rows through the unchanged scientific adapters. All406,381snapshot
+rows matched byte-for-byte. Counters and per-row dispositions are regenerated;
+status counts are never used as a transactional resume ordinal. The metadata-only
+vocabulary pass projects14fields, while actual admission retains all161fields.
+The recent MS processing rate was about1,460rows/s. At19:11UTC925,696MSrows had
+been checked. Active call: `fc-01M61Y051TV4HX19H6F0W50P6N`, app
+`ap-i9Xi2zCOm6fs7EnhbbEF1a`. Completed replacement artifacts will preserve attempt5
+in a separate directory. The earlier stage-guarded backup attempt created nothing;
+its failed receipt remains alongside the successful later backup.
+
+The queued preparation controller depends on attempt6. Local DNS failures are
+retried with bounded saved-call polling; genuine remote timeouts, source hash
+mismatches and disk failures still fail immediately. Profiling found a costly
+full-column Arrow conversion but did not establish its relationship to heartbeat
+transport failures. Diagnostic receipts, original snapshots and logs are retained.
+
+`code/advance.py` owns the local continuation lock. It waits for the queued
+`code/prepare.py` call, requires its independent audit, freezes the exact contract,
+launches at most two H100! fits, collects hash-verified artifacts, freezes seed
+selection from validation only, and checks saved predictions with independent
+SciPy/sklearn calculations. It does not mark the scientific writeup complete.
+The selected checkpoint is also replayed through guarded public serving on TRAIN
+probes only. Final scientific interpretation and common-recipe promotion remain open.
+
+Preparation and GPU workers use512GiB requested local disk for indexed reads,
+with the same canonical manifest paths and hashes; completed datasets and fit
+outputs are durable on the Modal volume. This changes no rows, model code or
+numeric precision. `results/ci-2f6f1ca8.json` records passing CI for the pushed
+shared-source/experiment commit; PR131 remains draft.

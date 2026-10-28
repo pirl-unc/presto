@@ -4,6 +4,7 @@ from pathlib import Path
 import hashlib
 import json
 import shutil
+import sys
 import tarfile
 import time
 import modal
@@ -77,12 +78,15 @@ def collect(condition, receipt):
 
 
 def main():
+    sys.path.insert(0, str(F / 'code'))
+    from control import get_result
+
     calls = json.loads((F / 'reproduce/training-calls.json').read_text())
     pending = dict(calls)
     while pending:
         for name, identifier in list(pending.items()):
             try:
-                receipt = modal.FunctionCall.from_id(identifier).get(timeout=0)
+                receipt = get_result(modal.FunctionCall.from_id(identifier), wait=False)
             except TimeoutError:
                 continue
             write(F / 'results' / (name + '-receipt.json'), receipt)

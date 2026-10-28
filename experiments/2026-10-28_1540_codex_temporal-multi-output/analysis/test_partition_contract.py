@@ -9,8 +9,8 @@ import sys
 C = Path(__file__).resolve().parents[1] / 'code'
 sys.path.insert(0, str(C))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from partition import Components, census_components, select
-from prepare_worker import weights
+from partition import Components, census_components, select  # noqa: E402
+from prepare_worker import weights  # noqa: E402
 
 
 def test_connected_aliases_are_transitive_and_stable():
@@ -57,7 +57,9 @@ def test_single_study_output_is_not_stolen_from_training():
 def test_reported_negative_coverage_requires_both_labels_in_same_study(tmp_path):
     db = sqlite3.connect(':memory:')
     db.executescript(
-        'CREATE TABLE rows(id,study,provenance_id,endpoint,mhc_class,excluded,data); CREATE TABLE aliases(id,study); CREATE TABLE source_studies(provenance_id,study);'
+        'CREATE TABLE rows(id,study,provenance_id,endpoint,mhc_class,excluded,data); '
+        'CREATE TABLE aliases(id,study); '
+        'CREATE TABLE source_studies(provenance_id,study);'
     )
     for i, (study, label) in enumerate(
         [('pmid:a', 1), ('pmid:b', 0), ('pmid:c', 1), ('pmid:c', 0)]
@@ -120,7 +122,10 @@ def test_preparation_through_real_common_index_and_preflight(tmp_path):
     bundle.mkdir()
     db = sqlite3.connect(root / 'admission/admitted.sqlite')
     db.executescript(
-        'CREATE TABLE rows(id,peptide,study,provenance_id,endpoint,mhc_class,excluded,data); CREATE TABLE aliases(id,study); CREATE TABLE source_studies(provenance_id,study); CREATE TABLE positive_peptides(peptide PRIMARY KEY);'
+        'CREATE TABLE rows(id,peptide,study,provenance_id,endpoint,mhc_class,excluded,data); '
+        'CREATE TABLE aliases(id,study); '
+        'CREATE TABLE source_studies(provenance_id,study); '
+        'CREATE TABLE positive_peptides(peptide PRIMARY KEY);'
     )
     references = []
     all_peptides = []
@@ -238,3 +243,36 @@ def test_ligand_report_does_not_mix_synthetic_and_reported_negatives():
     assert report['backgrounds']['same_protein']['length_only']['auroc'] == 0.5
     assert report['source_reported_by_study'][0]['metrics']['elution_observation']['auroc'] == 0.0
     assert 'reference_proteome' not in report['backgrounds']
+
+
+def test_vocabulary_column_projection_preserves_condition_scope():
+    from presto.data.modular_hitlist_ms import FACTOR_FIELDS, study_factor_vocabulary
+
+    fields = {
+        'peptide',
+        'pmid',
+        'sample_attribution',
+        'condition_id',
+        'condition_status',
+        'condition_evidence',
+        'condition_reference',
+        *FACTOR_FIELDS,
+    }
+    base = dict(
+        pmid=123,
+        sample_attribution='curated_sample_label',
+        condition_id='arm1',
+        condition_status='annotated',
+        condition_evidence='primary_source',
+        condition_reference='fixture',
+        irrelevant_outcome=0,
+        irrelevant_description='not a modeling input',
+    )
+    rows = [dict(base, **{field: 'fixture-' + field}) for field in FACTOR_FIELDS]
+    rows += [dict(base, **{field: 'none'}) for field in FACTOR_FIELDS]
+    rows += [dict(base, condition_id='', condition_drugs='unresolved-arm-token')]
+    projected = [{k: v for k, v in row.items() if k in fields} for row in rows]
+    assert study_factor_vocabulary(rows) == study_factor_vocabulary(projected)
+    assert study_factor_vocabulary(projected)['123']['condition_drugs'] == (
+        'fixture-condition_drugs',
+    )

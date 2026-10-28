@@ -6,7 +6,6 @@ import json
 import sys
 import time
 import shutil
-import socket
 import modal
 
 FID = '2026-10-28_1540_codex_temporal-multi-output'
@@ -132,6 +131,9 @@ def run(admission_call_id):
 
 @app.local_entrypoint()
 def main():
+    sys.path.insert(0, str(F / 'code'))
+    from control import get_result
+
     call_id = json.loads((F / 'reproduce/admission-call.json').read_text())['call_id']
     if (F / 'reproduce/prepare-call.json').exists():
         raise ValueError('already attempted; recover by saved call ID')
@@ -139,20 +141,13 @@ def main():
         F / 'code/prepare.py',
         F / 'code/prepare_worker.py',
         F / 'code/partition.py',
+        F / 'code/control.py',
         F / 'analysis/verify_cohort.py',
     ):
         shutil.copyfile(path, F / 'reproduce/source' / path.name)
     print('Waiting for frozen admission call', call_id, flush=True)
     dependency = modal.FunctionCall.from_id(call_id)
-    while True:
-        try:
-            admitted = dependency.get(timeout=30)
-            break
-        except TimeoutError:
-            continue
-        except socket.gaierror as exc:
-            print('Transient admission status lookup failed:', repr(exc), flush=True)
-            time.sleep(5)
+    admitted = get_result(dependency)
     assert admitted['status'] == 'admitted'
     write(F / 'results/admission.json', admitted)
     write(
@@ -172,7 +167,7 @@ def main():
     )
     call = run.spawn(call_id)
     write(F / 'reproduce/prepare-call.json', {'call_id': call.object_id})
-    result = call.get()
+    result = get_result(call)
     write(F / 'results/prepared.json', result)
     write(F / 'results/partition-verification.json', result['verification'])
     for name, value in result['review_metadata'].items():

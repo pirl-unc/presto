@@ -244,3 +244,83 @@ For each GPU, stage and hash-check frozen prepared source files on local disk un
 those same `/runs/FAMILY` paths. The common trainer, source/manifest hashes and data
 membership remain unchanged. Outputs/checkpoints stay on the durable volume. This
 is an I/O placement change, not a dataset cap, precision change, or alternate trainer.
+
+## Admission recovery after extended GIL/heartbeat failure
+
+At18:39 UTC Modal warned that attempt5 may be marked unhealthy after17minutes of
+failed worker heartbeats. Direct profiling found the main thread holding the GIL
+in `RecordBatch.to_pylist()` at admit.py:247 during the metadata-only vocabulary
+pass; the 5,440,009-row canonical export is complete and readable. Preserve a
+consistent read-only SQLite backup of the completed binding/other admission and
+known-positive index, source status, canonical export and failed attempt logs.
+Stop the original only after the backup is durable. Recover from the verified
+stage, not by redownloading sources or rebuilding the canonical indexes.
+
+Investigate Arrow dictionary conversion on a tiny read-only sample. Project only
+fields actually read by the vocabulary collector. Preserve every original field
+for full MS admission, using a semantically identical dictionary-decoded conversion
+if the probe confirms equivalence. Any replacement must match original row values,
+source IDs and curation outputs. Keep the common scientific source snapshot fixed.
+Regenerate early per-row dispositions if the interrupted gzip stream was unclosed;
+check their aggregate counts against the saved stage receipt. No GPU fit or data
+partition has started, so this recovery changes no predictive evaluation contract.
+
+Recovery disposition at18:46 UTC: the original worker advanced to canonical MS
+admission before the snapshot command ran. Its stage assertion prevented creating
+or changing any backup/database; no app was stopped or relaunched. The original
+local admission monitor ended on DNS lookup failure, but the detached remote call
+remains active and publishes counts. The waiting preparation controller uses that
+saved remote call directly, so its dependency remains valid. Profiling established
+a costly full-column conversion but did not prove it caused network heartbeat
+errors; keep these observations distinct. Reconnect logs and continue the existing
+job rather than executing the now-stale recovery plan.
+
+## Local-database recovery justified by measured admission throughput
+
+Between source counters32,768 at1793213191 and131,072 at1793213512, admission
+processed about306rows/s. The remaining5.31million rows would exceed the original
+four-hour CPU invocation timeout. Before hitting that limit, make a consistent
+read-only SQLite backup while the original continues. A snapshot can include a
+partial MS pass. Recover on local512GiB disk with a1GiB SQLite page cache.
+
+Revalidate all source rows in original order with the same frozen canonical
+adapters. If the identical source-derived observation ID already exists, require
+its semantic fingerprint and lineage to match, reuse it, and recompute counters.
+Existing different-ID duplicates/conflicts follow the original rules. This avoids
+inventing a resume ordinal from a nontransactional status file. Regenerate every
+per-row disposition and recompute the metadata vocabulary from only the columns
+its existing pure function actually reads. Reuse the complete canonical MS export
+and known-positive index; do not rebuild sources. Preserve attempt5 as a separate
+durable directory when publishing the successful replacement. The pending
+preparation call must depend on the replacement admission call. No fit has started.
+
+## Saved-prediction reporting specification
+
+The following post-fit analyses do not change the frozen checkpoint or seed
+selection. Require the independent prediction-verification receipt before reporting.
+Use saved validation/test dumps only, with no additional held-out forward passes.
+
+- Show every allocated endpoint and both MHC classes, including zero held-out
+  support. Separate 2026 from older/mixed study components. Keep original counts,
+  generated backgrounds, exact/bounded targets and optimizer exposures distinct.
+- Plot direct IC50 Spearman and ligand AUROC/AUPRC for both seeds. Separate
+  same-protein, fallback-proteome and reported study outcomes. Do not compare pooled
+  scores to the older development cohort as if membership were the same.
+- Tabulate prediction spread, mean error, censor satisfaction and scores by peptide
+  length, candidate count and exact catalog allele set (minimum20 observations for
+  detailed strata). A multi-allelic outcome is one bag, never replicated per allele.
+- Summarize saved class-II register entropy and maximum weights per candidate,
+  explicitly without measured register truth or physical-occupancy claims.
+- Extract selected-checkpoint coordinate coverage, inactive inputs, public-serving
+  replay and runtime. Distinguish structural padding/constant coordinates from
+  exposed coordinates without updates, and quantify selected versus final exposure.
+- Add uncertainty to the validation-selected seed's principal metrics using fixed
+  seed20261028 and500 bootstrap replicates. Whole-study-component intervals require
+  at least4 components; otherwise mark cross-study uncertainty unavailable. A
+  separate within-cohort peptide-cluster interval may be shown with at least20
+  peptide clusters, keeping each generated comparator with its positive parent's
+  peptide. Such intervals are conditional on the observed studies and model;
+  neither they nor a two-seed range establish uncertainty over new training seeds.
+- Preserve JSON/CSV tables plus standalone plots under this experiment directory.
+  Include the exact analysis invocation and source hash. Automated tables are
+  evidence for the final writeup, not automatic claims of scientific qualification.

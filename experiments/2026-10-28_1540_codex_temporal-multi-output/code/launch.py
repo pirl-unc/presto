@@ -202,6 +202,9 @@ def fit(condition):
 
 @app.local_entrypoint()
 def main():
+    sys.path.insert(0, str(F / 'code'))
+    from control import get_result
+
     contract = read(F / 'reproduce/training-contract.json')
     assert contract['status'] == 'frozen'
     assert not (F / 'reproduce/training-calls.json').exists(), 'already launched; use saved calls'
@@ -238,6 +241,6 @@ def main():
     )
     # Independent status polling remains live even if collection or this connection fails.
     for name, call in calls.items():
-        result = call.get()
+        result = get_result(call)
         write(F / 'results' / (name + '-receipt.json'), result)
         print(name, 'finished', result['bytes'], 'review bytes', flush=True)
