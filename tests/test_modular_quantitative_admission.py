@@ -114,3 +114,11 @@ def test_new_units_and_binary_outcomes_keep_their_measured_meaning():
             catalog,
             **kw,
         )
+
+
+def test_explicit_purified_method_does_not_require_an_instrument_suffix():
+    source = raw(assay_method='purified MHC')
+    row = purified_assay_observation(
+        source, HumanMHCCatalog([reference()]), source_sha256='0' * 64, ordinal=0
+    )
+    assert row.endpoint == 'ic50' and row.provenance['raw_record'] == source

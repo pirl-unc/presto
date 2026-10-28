@@ -246,8 +246,9 @@ def purified_assay_observation(
     if raw.get("source") not in ("iedb", "cedar") or assay is None:
         raise AdmissionError("outside_supported_purified_quantitative_assay")
     endpoint, domain = assay
-    if not isinstance(raw.get("assay_method"), str) or not raw["assay_method"].startswith(
-        "purified MHC/"
+    method = raw.get("assay_method")
+    if not isinstance(method, str) or not (
+        method == "purified MHC" or method.startswith("purified MHC/")
     ):
         raise AdmissionError("not_explicit_purified_mhc")
     if raw.get("has_ptm") is not False or raw.get("peptide_modifications"):
