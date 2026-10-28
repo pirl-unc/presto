@@ -11,6 +11,8 @@ from presto.data.modular_hitlist import (
     AdmissionError,
     HumanMHCCatalog,
     MHCReferenceAssumption,
+    human_dr_reference_assumption,
+    purified_assay_observation,
     purified_ic50_observation,
 )
 from presto.data.modular_preparation import prepare_observations
@@ -65,6 +67,50 @@ def raw(**changes):
 def convert(value, ordinal=1, catalog=None):
     catalog = catalog or HumanMHCCatalog([reference()])
     return purified_ic50_observation(value, catalog, source_sha256="0" * 64, ordinal=ordinal)
+
+
+def test_declared_dr_reference_expands_admission_without_overwriting_reported_alpha():
+    catalog = HumanMHCCatalog(
+        [
+            reference("DRA*01:01", "II", "alpha", second=""),
+            reference("DRA*01:02", "II", "alpha", first="D" * 70, second=""),
+            reference("DRB1*01:01", "II", "beta", first=""),
+        ]
+    )
+    source = raw(mhc_class="II", mhc_restriction="HLA-DRB1*01:01")
+    with pytest.raises(AdmissionError, match="missing_explicit_mhc_partner"):
+        purified_assay_observation(source, catalog, source_sha256="a" * 64, ordinal=0)
+    row = purified_assay_observation(
+        source, catalog, source_sha256="a" * 64, ordinal=0, dra_reference="fixture:policy"
+    )
+    assert row.provenance["raw_record"] == source
+    assert row.mhc[0].provenance["reported_restriction"] == source["mhc_restriction"]
+    assert row.mhc[0].provenance["assumed_alleles"] == ["HLA-DRA*01:01"]
+    explicit = purified_assay_observation(
+        {**source, "mhc_restriction": "HLA-DRA*01:02/DRB1*01:01"},
+        catalog,
+        source_sha256="a" * 64,
+        ordinal=1,
+        dra_reference="fixture:policy",
+    )
+    assert explicit.mhc[0].groove1 == "D" * 70
+    assert explicit.mhc[0].provenance["partner_imputation"] is False
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "HLA-DR1",
+        "HLA-DQB1*01:01",
+        "HLA-DRB1*01:01 mutant",
+        "HLA-DRB1*01:01N",
+        "Mamu-DRB1*01:01",
+        "HLA-DRA*01:02/DRB1*01:01",
+        None,
+    ],
+)
+def test_dr_reference_does_not_infer_other_identities(name):
+    assert human_dr_reference_assumption(name, reference="fixture:policy") is None
 
 
 @pytest.mark.parametrize("qualifier", [None, "", "=", "<", "<=", ">", ">="])

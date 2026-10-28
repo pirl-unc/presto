@@ -103,8 +103,11 @@ ENDPOINTS = {
     "kd_via_ic50": Endpoint("pmhc", "nM", True, register_direction=-1),
     "kd_via_ec50": Endpoint("pmhc", "nM", True, register_direction=-1),
     "koff": Endpoint("pmhc", "1/s", True, register_direction=-1),
+    "kon": Endpoint("pmhc", "1/(M*s)", True),
     "half_life": Endpoint("pmhc", "min", True),
     "tm": Endpoint("pmhc", "C"),
+    "td50": Endpoint("pmhc", "C"),
+    "qualitative_binding": Endpoint("pmhc", "binary", binary=True),
     "bulk_observation": Endpoint("bulk", "binary", binary=True, parts=("digest", "ms_response")),
     "elution_observation": Endpoint(
         "cellular", "binary", binary=True, parts=("cellular", "ms_response")
@@ -462,6 +465,7 @@ def transformed_target(
         "nM": {"nM": 1.0, "uM": 1e3, "mM": 1e6, "M": 1e9, "pM": 1e-3},
         "min": {"min": 1.0, "h": 60.0, "s": 1 / 60},
         "1/s": {"1/s": 1.0, "1/min": 1 / 60},
+        "1/(M*s)": {"1/(M*s)": 1.0, "M^-1s^-1": 1.0, "nM^-1s^-1": 1e9},
         "C": {"C": 1.0},
     }
     if unit not in conversions[spec.unit]:

@@ -221,3 +221,33 @@ not independent evidence. The full order and RNG state survive exact resume.
 Omit weights to retain natural sampling or the existing equal-group interleaving.
 The general default remains natural sampling; specific mixtures need evaluation
 on their own class/output/data contract.
+
+## Expanded measured outputs and study evaluation
+
+The shared observation path supports `qualitative_binding` (the source's reported
+purified-MHC binary outcome), `kon` (association rate in `log10(1/(M*s))`) and
+`td50` (50% dissociation temperature in degrees C), alongside the existing affinity,
+kinetics and ligand endpoints. `td50` is distinct from `tm`; qualitative binding
+is not an inferred 500 nM cutoff. Only allocate outputs with admitted training
+labels. All classes and outputs use the same `Presto` model and manifest trainer.
+
+The Hitlist adapters accept an optional `dra_reference` provenance reference for
+ordinary allele-resolved human DR with missing alpha typing. They retain the
+reported restriction and record the assumed DRA*01:01 separately. Complete typing
+is preserved; this policy does not complete DP/DQ, serotypes or construct names.
+The shared `ms_observation` adapter retains all resolved candidate MHCs for either
+class. The historical class-II wrapper retains its stricter admission contract.
+
+`selection_reduction: "endpoint_mean"` selects checkpoints by the equal-weight mean
+of available validation endpoint losses. The default remains `observation_mean`;
+it cannot be combined with an explicit `selection_endpoint` override.
+`train_evaluation_max_rows` optionally samples final TRAIN diagnostics uniformly
+with a reproducible seed. It does not limit training membership or validation/test
+evaluation. The summary records available and evaluated row counts.
+
+`training.modular_evaluation.summarize_strata` reports the same endpoint metrics by
+class, source assay method and study. Multi-allelic observations count once.
+Ligand backgrounds generated with `LigandBackgroundSampler` are explicitly
+unobserved comparators, with frozen source proteins, length matching, positive
+exclusion and split embargoes. Their AUROC/AUPRC measure ligand-versus-background
+discrimination, and depend on the declared background population and ratio.

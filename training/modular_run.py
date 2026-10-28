@@ -75,6 +75,8 @@ DEFAULT_TRAINING = {
     "checkpoint_every_steps": 100,
     "validation_every_steps": None,
     "selection_endpoint": None,
+    "selection_reduction": "observation_mean",
+    "train_evaluation_max_rows": None,
 }
 
 
@@ -144,6 +146,18 @@ def preflight(index: ObservationIndex):
         not isinstance(training["max_steps"], int) or training["max_steps"] <= 0
     ):
         raise ValueError("max_steps must be a positive integer")
+    limit = training["train_evaluation_max_rows"]
+    if limit is not None and (type(limit) is not int or limit <= 0):
+        raise ValueError("train_evaluation_max_rows must be a positive integer or null")
+    if training["selection_reduction"] not in ("observation_mean", "endpoint_mean"):
+        raise ValueError("unsupported selection_reduction")
+    if (
+        training["selection_endpoint"] is not None
+        and training["selection_reduction"] != "observation_mean"
+    ):
+        raise ValueError(
+            "selection_endpoint and selection_reduction cannot both override selection"
+        )
     if (
         not all(
             math.isfinite(training[key])
@@ -419,7 +433,7 @@ def preflight(index: ObservationIndex):
     )
 
 
-def _selection_score(metrics, model=None, primary_endpoint=None):
+def _selection_score(metrics, model=None, primary_endpoint=None, reduction="observation_mean"):
     if model is not None:
         metrics = {
             key: value
@@ -433,8 +447,28 @@ def _selection_score(metrics, model=None, primary_endpoint=None):
         return primary["exact"]["rmse"] if "exact" in primary else primary["loss"]
     assays = {key: value for key, value in metrics.items() if is_endpoint(key)}
     metrics = assays or metrics
+    if reduction == "endpoint_mean":
+        return sum(value["loss"] for value in metrics.values()) / len(metrics) if metrics else None
+    if reduction != "observation_mean":
+        raise ValueError("unsupported selection reduction")
     count = sum(value["n"] for value in metrics.values())
     return sum(value["loss"] * value["n"] for value in metrics.values()) / count if count else None
+
+
+def evaluation_indices(index, split, training):
+    """Optionally sample TRAIN diagnostics; every held-out outcome stays included."""
+    indices = index.partitions.get(f"{split}:assay", []) + index.partitions.get(
+        f"{split}:identity", []
+    )
+    available = len(indices)
+    limit = training.get("train_evaluation_max_rows") if split == "train" else None
+    if limit is not None and available > limit:
+        indices = sorted(random.Random(training["seed"] + 0xA114).sample(indices, limit))
+    return indices, {
+        "available_rows": available,
+        "evaluated_rows": len(indices),
+        "policy": "seeded_uniform_train_diagnostic" if len(indices) < available else "all_rows",
+    }
 
 
 def _accumulate_coverage(total, step):
@@ -666,7 +700,12 @@ def _fit_index(index, output_dir, *, device, resume):
         validation_metrics, _ = evaluate(
             model, index, validation, scales, batch_size=training["batch_size"]
         )
-        score = _selection_score(validation_metrics, model, training["selection_endpoint"])
+        score = _selection_score(
+            validation_metrics,
+            model,
+            training["selection_endpoint"],
+            training["selection_reduction"],
+        )
         if score is None:
             # A declared training-only diagnostic selects its last executed update.
             improved = True
@@ -737,11 +776,9 @@ def _fit_index(index, output_dir, *, device, resume):
         raise ValueError("evaluation phase has no selected checkpoint")
     atomic_bytes(output_dir / "selected.pt", state["selected_bytes"])
     selected, scales, payload = load_checkpoint(output_dir / "selected.pt", device=device)
-    metrics, overall_losses = {}, {}
+    metrics, overall_losses, evaluation_populations = {}, {}, {}
     for split in ("train", "validation", "test"):
-        indices = index.partitions.get(f"{split}:assay", []) + index.partitions.get(
-            f"{split}:identity", []
-        )
+        indices, evaluation_populations[split] = evaluation_indices(index, split, training)
         metrics[split], records = cached_evaluation(
             output_dir,
             split,
@@ -798,6 +835,7 @@ def _fit_index(index, output_dir, *, device, resume):
     summary = {
         "metrics": metrics,
         "overall_losses": overall_losses,
+        "evaluation_populations": evaluation_populations,
         "elapsed_seconds": elapsed_before + time.monotonic() - start_time,
         "steps": state["steps"],
         "selected_epoch": state["best_epoch"],

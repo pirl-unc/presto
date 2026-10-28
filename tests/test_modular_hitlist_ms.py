@@ -5,6 +5,7 @@ import pytest
 from presto.data.modular_hitlist import AdmissionError, HumanMHCCatalog
 from presto.data.modular_hitlist_ms import (
     class_ii_ms_observation,
+    ms_observation,
     source_condition,
     study_factor_vocabulary,
 )
@@ -108,6 +109,45 @@ def test_all_candidates_and_source_identity_survive(catalog):
     }
     assert row.context.cytokines["cytokine_a"].state == "present"
     assert row.context.processing_pathways == {} and row.context.components == {}
+
+
+def test_class_i_uses_shared_ms_admission_and_keeps_all_candidate_alleles():
+    from test_modular_hitlist import reference
+
+    catalog = HumanMHCCatalog([reference(), reference("B*07:02")])
+    source = raw(mhc_class="I", peptide="ACDEFGHI", mhc_allele_set="HLA-A*02:01;HLA-B*07:02")
+    row = ms_observation(source, catalog, source_sha256="a" * 64, ordinal=0, study_factors={})
+    assert row.endpoint == "elution_observation" and row.value == 1
+    # Identical groove sequences are one candidate with both reported aliases.
+    assert len(row.mhc) == 1
+    assert row.mhc[0].mhc_class == "I"
+    assert row.mhc[0].provenance["reported_candidates"] == ["HLA-A*02:01", "HLA-B*07:02"]
+    with pytest.raises(AdmissionError, match="outside_class_ii_ms"):
+        class_ii_ms_observation(
+            source, catalog, source_sha256="a" * 64, ordinal=0, study_factors={}
+        )
+
+
+def test_ms_dr_reference_is_explicit_for_each_candidate():
+    from test_modular_hitlist import reference
+
+    catalog = HumanMHCCatalog(
+        [
+            reference("DRA*01:01", "II", "alpha", second=""),
+            reference("DRB1*01:01", "II", "beta", first=""),
+        ]
+    )
+    source = raw(mhc_allele_set="HLA-DRB1*01:01")
+    row = ms_observation(
+        source,
+        catalog,
+        source_sha256="a" * 64,
+        ordinal=0,
+        study_factors={},
+        dra_reference="fixture:policy",
+    )
+    assert row.mhc[0].provenance["assumed_alleles"] == ["HLA-DRA*01:01"]
+    assert row.mhc[0].provenance["reported_candidates"] == ["HLA-DRB1*01:01"]
 
 
 def test_one_partial_candidate_defers_entire_observation(catalog):

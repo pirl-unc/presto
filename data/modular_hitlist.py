@@ -37,6 +37,29 @@ class MHCReferenceAssumption:
             raise AdmissionError("reference_assumption_requires_restriction_reason_reference")
 
 
+def human_dr_reference_assumption(restriction, *, reference=None):
+    """Optionally complete ordinary, allele-resolved human DR beta typing.
+
+    The caller explicitly supplies the frozen curation-policy reference. Complete
+    pairs, DP/DQ, serotypes, nonhuman names and modified construct names retain the
+    strict resolver behavior. Reported alpha typing is never overwritten.
+    """
+    if reference is None:
+        return None
+    if not isinstance(reference, str) or not reference.strip():
+        raise ValueError("DRA policy requires a nonempty provenance reference")
+    if (
+        not isinstance(restriction, str)
+        or re.fullmatch(r"HLA-DRB[1345]\*[0-9]{2,3}:[0-9]{2,3}", restriction) is None
+    ):
+        return None
+    return MHCReferenceAssumption(
+        f"HLA-DRA*01:01/{restriction}",
+        "Declared DRA*01:01 reference for ordinary human DR with unreported alpha typing",
+        reference,
+    )
+
+
 def _restriction_names(restriction):
     if not isinstance(restriction, str) or not restriction.startswith("HLA-"):
         raise AdmissionError("not_explicit_human_restriction")
@@ -200,6 +223,9 @@ PURIFIED_ASSAYS = {
     "dissociation constant KD (~EC50)": ("kd_via_ec50", "concentration"),
     "half life": ("half_life", "min"),
     "off rate": ("koff", "1/s"),
+    "on rate": ("kon", "association_rate"),
+    "50% dissociation temperature": ("td50", "C"),
+    "qualitative binding": ("qualitative_binding", "binary"),
 }
 
 
@@ -212,7 +238,9 @@ def purified_ic50_observation(raw, catalog: HumanMHCCatalog, *, source_sha256, o
     return purified_assay_observation(raw, catalog, source_sha256=source_sha256, ordinal=ordinal)
 
 
-def purified_assay_observation(raw, catalog: HumanMHCCatalog, *, source_sha256, ordinal):
+def purified_assay_observation(
+    raw, catalog: HumanMHCCatalog, *, source_sha256, ordinal, dra_reference=None
+):
     """Preserve literal assay identity; no relabeling between measured endpoints."""
     assay = PURIFIED_ASSAYS.get(raw.get("response_measured"))
     if raw.get("source") not in ("iedb", "cedar") or assay is None:
@@ -238,28 +266,57 @@ def purified_assay_observation(raw, catalog: HumanMHCCatalog, *, source_sha256, 
     if domain == "concentration":
         if unit not in ("pM", "nM", "uM", "mM", "M"):
             raise AdmissionError("unsupported_concentration_unit")
+    elif domain == "association_rate":
+        if unit not in ("1/(M*s)", "M^-1s^-1", "nM^-1s^-1"):
+            raise AdmissionError("unsupported_assay_unit")
+    elif domain == "C":
+        if unit not in ("C", "°C"):
+            raise AdmissionError("unsupported_assay_unit")
+        unit = "C"
+    elif domain == "binary":
+        outcome = raw.get("qualitative_measurement")
+        outcome = outcome.strip().lower() if isinstance(outcome, str) else ""
+        if re.fullmatch(r"positive(?:[- :].*)?", outcome):
+            value = 1.0
+        elif re.fullmatch(r"negative(?:[- :].*)?", outcome):
+            value = 0.0
+        else:
+            raise AdmissionError("unestablished_qualitative_binding_outcome")
+        unit = "binary"
     elif unit != domain:
         raise AdmissionError("unsupported_assay_unit")
     if (
         isinstance(value, bool)
         or not isinstance(value, (int, float))
         or not math.isfinite(value)
-        or value <= 0
+        or (domain not in ("binary", "C") and value <= 0)
+        or (domain == "C" and value <= -273.15)
     ):
         raise AdmissionError("nonpositive_or_nonfinite_measurement")
     qualifier = raw.get("measurement_inequality")
     if qualifier in (None, ""):
         qualifier = "="
+    if domain == "binary":
+        qualifier = "="
     if qualifier not in ("=", "<", "<=", ">", ">="):
         raise AdmissionError("unsupported_measurement_qualifier")
     text = raw.get("quantitative_measurement")
     match = _NUMBER.fullmatch(text) if isinstance(text, str) else None
-    if match is None or float(match[2]) != value or (match[1] and match[1] != qualifier):
+    if domain != "binary" and (
+        match is None or float(match[2]) != value or (match[1] and match[1] != qualifier)
+    ):
         raise AdmissionError("raw_numeric_or_qualifier_disagreement", deferred=True)
     assay = raw.get("assay_iri")
     if not isinstance(assay, str) or not assay.strip():
         raise AdmissionError("missing_original_assay_iri", deferred=True)
-    pair = catalog.resolve(raw.get("mhc_restriction"), cls)
+    restriction = raw.get("mhc_restriction")
+    pair = catalog.resolve(
+        restriction,
+        cls,
+        reference_assumption=human_dr_reference_assumption(
+            restriction, reference=dra_reference if cls == "II" else None
+        ),
+    )
     result = Observation(
         f"hitlist-v4-row:{ordinal}",
         f"hitlist-v4-{raw['source']}",
@@ -274,7 +331,9 @@ def purified_assay_observation(raw, catalog: HumanMHCCatalog, *, source_sha256, 
             "original_measurement_id": assay,
             "source_sha256": source_sha256,
             "source_ordinal": ordinal,
-            "target_policy": "physical_unclipped_v1",
+            "target_policy": "reported_qualitative_binary_v1"
+            if domain == "binary"
+            else "physical_unclipped_v1",
             "missing_qualifier_convention": "source export exact; raw missingness retained",
             "raw_record": dict(raw),
         },

@@ -10,7 +10,7 @@ from functools import lru_cache
 import re
 
 from .modular import AA, Context, ContextAssertion, Exposure, Observation
-from .modular_hitlist import AdmissionError, HumanMHCCatalog
+from .modular_hitlist import AdmissionError, HumanMHCCatalog, human_dr_reference_assumption
 
 
 UNIQUE_ARM_ATTRIBUTIONS = frozenset(
@@ -126,14 +126,20 @@ def source_condition(raw, vocabulary):
 
 
 @lru_cache(maxsize=4096)
-def _candidate_pairs(value, catalog):
+def _candidate_pairs(value, catalog, mhc_class="II", dra_reference=None):
     if not isinstance(value, str) or not value.strip():
         raise AdmissionError("missing_candidate_set", deferred=True)
     separator = ";" if ";" in value else ","
     names = tuple(dict.fromkeys(part.strip() for part in value.split(separator) if part.strip()))
     pairs, reported = {}, defaultdict(list)
     for name in names:
-        pair = catalog.resolve(name, "II")
+        pair = catalog.resolve(
+            name,
+            mhc_class,
+            reference_assumption=human_dr_reference_assumption(
+                name, reference=dra_reference if mhc_class == "II" else None
+            ),
+        )
         key = (pair.groove1, pair.groove2, pair.species1, pair.species2)
         pairs[key] = pair
         reported[key].append(name)
@@ -148,6 +154,28 @@ def _candidate_pairs(value, catalog):
 def class_ii_ms_observation(
     raw, catalog: HumanMHCCatalog, *, source_sha256, ordinal, study_factors
 ):
+    """Historical class-II-only admission; use the shared adapter for both classes."""
+    if (
+        raw.get("mhc_class") != "II"
+        or raw.get("is_ms_observation") is not True
+        or raw.get("assay_modality") != "ms"
+        or raw.get("evidence_kind") != "ms"
+    ):
+        raise AdmissionError("outside_class_ii_ms")
+    return ms_observation(
+        raw, catalog, source_sha256=source_sha256, ordinal=ordinal, study_factors=study_factors
+    )
+
+
+def ms_observation(
+    raw,
+    catalog: HumanMHCCatalog,
+    *,
+    source_sha256,
+    ordinal,
+    study_factors,
+    dra_reference=None,
+):
     """Admit a positive source row for later partitioning and contributor audit."""
     if (
         not isinstance(source_sha256, str)
@@ -157,12 +185,12 @@ def class_ii_ms_observation(
     ):
         raise ValueError("source SHA256 and nonnegative original ordinal required")
     if (
-        raw.get("mhc_class") != "II"
+        raw.get("mhc_class") not in {"I", "II"}
         or raw.get("is_ms_observation") is not True
         or raw.get("assay_modality") != "ms"
         or raw.get("evidence_kind") != "ms"
     ):
-        raise AdmissionError("outside_class_ii_ms")
+        raise AdmissionError("outside_mhc_ms")
     if raw.get("ms_outcome_status") not in {"positive_result", "curated_ligand_table"}:
         raise AdmissionError("not_explicit_positive_ms")
     if raw.get("mhc_species") != "Homo sapiens":
@@ -176,7 +204,8 @@ def class_ii_ms_observation(
     if raw.get("is_potential_contaminant") is True:
         raise AdmissionError("flagged_contaminant")
     peptide = raw.get("peptide")
-    if not isinstance(peptide, str) or not 9 <= len(peptide) <= 512 or set(peptide) - set(AA):
+    minimum = 9 if raw["mhc_class"] == "II" else 1
+    if not isinstance(peptide, str) or not minimum <= len(peptide) <= 512 or set(peptide) - set(AA):
         raise AdmissionError("unsupported_peptide")
     if raw.get("provenance_status") != "indexed" or any(
         not isinstance(raw.get(name), str) or not raw[name].strip()
@@ -191,7 +220,7 @@ def class_ii_ms_observation(
         and raw.get("sample_attribution") in UNIQUE_ARM_ATTRIBUTIONS
     ):
         raise AdmissionError("unresolved_candidate_scope", deferred=True)
-    pairs = _candidate_pairs(raw.get("mhc_allele_set"), catalog)
+    pairs = _candidate_pairs(raw.get("mhc_allele_set"), catalog, raw["mhc_class"], dra_reference)
     context = source_condition(raw, study_factors.get(str(raw.get("pmid") or ""), {}))
     result = Observation(
         observation_id=raw["evidence_row_id"],

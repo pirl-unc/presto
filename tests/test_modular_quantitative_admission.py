@@ -21,6 +21,8 @@ from presto.tests.test_modular_hitlist import raw, reference
         ('dissociation constant KD (~EC50)', 'nM', 'kd_via_ec50'),
         ('half life', 'min', 'half_life'),
         ('off rate', '1/s', 'koff'),
+        ('on rate', 'nM^-1s^-1', 'kon'),
+        ('50% dissociation temperature', 'C', 'td50'),
     ],
 )
 def test_assay_identity_and_original_bound_survive(response, unit, endpoint):
@@ -40,8 +42,8 @@ def test_assay_identity_and_original_bound_survive(response, unit, endpoint):
 @pytest.mark.parametrize(
     'response,unit',
     [
-        ('50% dissociation temperature', 'C'),
-        ('on rate', 'nM^-1s^-1'),
+        ('50% dissociation temperature', 'nM'),
+        ('on rate', '1/s'),
         ('half life', 'nM'),
         ('off rate', 'min'),
     ],
@@ -65,3 +67,50 @@ def test_existing_ic50_contract_is_unchanged():
     )
     with pytest.raises(AdmissionError, match='outside_direct_iedb_cedar_ic50'):
         purified_ic50_observation(raw(response_measured='dissociation constant KD'), catalog, **kw)
+
+
+def test_new_units_and_binary_outcomes_keep_their_measured_meaning():
+    from presto.data.modular import observation_target
+
+    catalog = HumanMHCCatalog([reference()])
+    kw = dict(source_sha256='0' * 64, ordinal=4)
+    association = purified_assay_observation(
+        raw(response_measured='on rate', measurement_units='nM^-1s^-1'), catalog, **kw
+    )
+    assert observation_target(association) == 10.0  # 10 nM^-1 s^-1 = 1e10 M^-1 s^-1
+    temperature = purified_assay_observation(
+        raw(
+            response_measured='50% dissociation temperature',
+            measurement_units='°C',
+            quantitative_value=-5,
+            quantitative_measurement='-5',
+        ),
+        catalog,
+        **kw,
+    )
+    assert temperature.endpoint == 'td50' and observation_target(temperature) == -5
+    for reported, value in [('Positive-Low', 1), ('Positive-High', 1), ('Negative', 0)]:
+        row = purified_assay_observation(
+            raw(
+                response_measured='qualitative binding',
+                qualitative_measurement=reported,
+                quantitative_value=None,
+                quantitative_measurement=None,
+                measurement_units='',
+            ),
+            catalog,
+            **kw,
+        )
+        assert (row.endpoint, row.value, row.unit, row.qualifier) == (
+            'qualitative_binding',
+            value,
+            'binary',
+            '=',
+        )
+        assert row.provenance['target_policy'] == 'reported_qualitative_binary_v1'
+    with pytest.raises(AdmissionError, match='unestablished_qualitative'):
+        purified_assay_observation(
+            raw(response_measured='qualitative binding', qualitative_measurement='unknown'),
+            catalog,
+            **kw,
+        )

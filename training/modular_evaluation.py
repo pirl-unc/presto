@@ -194,6 +194,15 @@ def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
                     [row["prediction"] >= 0 for row in rows],
                 )
             )
+            metrics["by_class"] = {}
+            for mhc_class in ("I", "II"):
+                subset = [row for row in rows if set(row["mhc_classes"]) == {mhc_class}]
+                if subset:
+                    metrics["by_class"][mhc_class] = binary_metrics(
+                        [row["target"] for row in subset],
+                        [row["prediction"] for row in subset],
+                        [row["prediction"] >= 0 for row in subset],
+                    )
         else:
             exact = [row for row in rows if row["qualifier"] == "="]
             if exact:
@@ -205,7 +214,7 @@ def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
                 )
                 metrics["by_class"] = {}
                 for mhc_class in ("I", "II"):
-                    subset = [row for row in exact if row["mhc_classes"] == [mhc_class]]
+                    subset = [row for row in exact if set(row["mhc_classes"]) == {mhc_class}]
                     if subset:
                         metrics["by_class"][mhc_class] = regression_metrics(
                             [row["target"] for row in subset],
@@ -227,3 +236,32 @@ def summarize(records: list[dict[str, Any]]) -> dict[str, Any]:
                 }
         result[endpoint] = metrics
     return result
+
+
+def summarize_strata(records, *, fields=("mhc_class", "assay_method", "study")):
+    """Reuse endpoint metrics within source-defined strata, including missingness.
+
+    Candidate MHCs remain one outcome. Their count is never a replication weight.
+    Publication identity and assay method are reporting metadata, not model inputs.
+    """
+    supported = {"mhc_class", "assay_method", "study", "background_kind"}
+    if not fields or len(set(fields)) != len(fields) or set(fields) - supported:
+        raise ValueError("distinct supported evaluation stratum fields required")
+    grouped = defaultdict(list)
+    for row in records:
+        provenance = row.get("observation", {}).get("provenance", {})
+        raw = provenance.get("raw_record", {})
+        values = {
+            "mhc_class": ";".join(sorted(set(row.get("mhc_classes", [])))) or "unknown",
+            "assay_method": raw.get("assay_method") or "unknown",
+            "study": provenance.get("study_id")
+            or raw.get("pmid")
+            or raw.get("reference_iri")
+            or "unknown",
+            "background_kind": provenance.get("evaluation_population") or "reported_measurement",
+        }
+        grouped[tuple(str(values[field]) for field in fields)].append(row)
+    return [
+        {**dict(zip(fields, key, strict=True)), "metrics": summarize(rows)}
+        for key, rows in sorted(grouped.items())
+    ]
