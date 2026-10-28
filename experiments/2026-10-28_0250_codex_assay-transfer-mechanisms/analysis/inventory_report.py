@@ -31,6 +31,32 @@ rows = [
     for e in endpoints
     for c in ("I", "II")
 ]
+gene_counts = Counter()
+with (F / "results/original-training-alleles.csv").open() as stream:
+    for row in csv.DictReader(stream):
+        genes = {
+            " / ".join(name.split("*")[0] for name in alias.split(" / "))
+            for alias in row["catalog_names"].split("; ")
+        }
+        assert len(genes) == 1, (
+            "cross-gene identical grooves require original row attribution"
+        )
+        gene = next(iter(genes))
+        for endpoint in endpoints:
+            gene_counts[(row["mhc_class"], gene, endpoint)] += int(row[endpoint])
+for row in x["genes"]:
+    assert (
+        sum(gene_counts[row["mhc_class"], row["genes"], e] for e in endpoints)
+        == row["n"]
+    )
+gene_rows = [
+    dict(mhc_class=c, genes=g, **{e: gene_counts[c, g, e] for e in endpoints})
+    for c, g in sorted({(c, g) for c, g, e in gene_counts})
+]
+with (F / "results/original-training-gene-endpoint.csv").open("w") as out:
+    w = csv.DictWriter(out, fieldnames=list(gene_rows[0]))
+    w.writeheader()
+    w.writerows(gene_rows)
 with (F / "results/original-training-composition.csv").open("w") as out:
     w = csv.DictWriter(out, fieldnames=list(rows[0]))
     w.writeheader()

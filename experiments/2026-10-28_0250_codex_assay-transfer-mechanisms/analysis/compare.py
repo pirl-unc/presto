@@ -162,6 +162,10 @@ def failure_audit():
                     )
                     peptide = r["peptide"]
                     domains = {
+                        "genes": " / ".join(
+                            name.split("*")[0]
+                            for name in mhc["provenance"]["catalog_alleles"]
+                        ),
                         "length": length_bin(len(peptide)),
                         "target_log10_bin": str(math.floor(r["target"])),
                         "groove_seen": str(

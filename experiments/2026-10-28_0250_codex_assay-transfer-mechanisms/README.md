@@ -44,6 +44,13 @@ are grouped by grooves rather than counted as distinct biological inputs.
 86,240 class-I rows are 9-mers (78.0%); 21,483 class-II rows are 15-mers (89.4%).
 Full allele, study/source, length and qualifier inventories are under `results/`.
 
+The class-level totals conceal locus/endpoint mismatches. Class-II IC50 contains
+3,594 DP, 4,554 DQ and only 118 DR observations: 98.6% DP/DQ. Its dominant
+auxiliary KD-via-EC50 endpoint instead contains 5,447 DQ and 8,771 DR observations
+(61.7% DR), with no DP. Class-I IC50 contains 13,120 HLA-A and 2,126 HLA-B rows,
+with no HLA-C. Thus aggregate IC50 scores do not qualify all loci within a class.
+See `results/original-training-gene-endpoint.csv` for the complete cross-tabulation.
+
 ![Composition](results/original-training-composition.png)
 
 There was no arbitrary sample cap. Of 840,805 scanned source rows, 168,210 were
@@ -80,18 +87,18 @@ Study and sequence-homology overlap may remain. The independent data audit passe
 | wide-six-primary-matched |192/3/6/768|50% IC50; other 50% natural auxiliary proportions|128|
 | wide-six-primary-shuffled |192/3/6/768|same inputs/sampler as matched; permuted auxiliary TRAIN values|128|
 
-Two seeds (42/43), 6,000 updates each, no pretraining, dropout0.1, AdamW3e-4,
+Two seeds (42/43), 6,000 updates each, no pretraining, dropout 0.1, AdamW learning rate 3e-4,
 weight decay1e-4, no schedule/AMP/TF32/compile. All use shared-v5 and the same
 `fit_index` path. Output order puts IC50 first; same-width/seed common-core and
 IC50-head initialization must match. Concentration targets use log10(nM), half-life
 uses log10(minutes), with exact-TRAIN-only means/scales. Loss is mean standardized
-squared error, one-sided for bounds; all endpoint/row loss weights are1.
-Validation every500 updates; select pooled exact-IC50 validation RMSE; no early
+squared error, one-sided for bounds; all endpoint/row loss weights are 1.
+Validation every 500 updates; select pooled exact-IC50 validation RMSE; no early
 stopping. Each selected checkpoint's test set is evaluated once by the trainer.
 Human inspection/analysis of tests waits for the sealed validation-only decision.
 
 The paired synthetic negative control permutes 88,155 auxiliary TRAIN rows within
-endpoint/class/groove/qualifier, seed73028; 59,943 values change. Singleton/constant
+endpoint/class/groove/qualifier, seed 73028; 59,943 values change. Singleton/constant
 strata remain unchanged. Original values/donor identities are preserved and
 independently verified. Heldout labels remain measured. The synthetic arm cannot
 be promoted. Primary matching preserves expected IC50 labels per update, not
@@ -99,9 +106,9 @@ identical gradients: total batch, compute and loss normalization also differ.
 Actual endpoint/class optimizer exposures are recorded and checked against a
 frozen simulation of the common sampler.
 
-Promotion uses the prespecified wide-ic50 comparator: macro class rho gain>=.01,
-no class rho loss>.005, no class RMSE deterioration>2%, positive macro gain in
-both seeds, and some seed improvement in each class. Ties within.005 favor lower
+Promotion uses the prespecified wide-ic50 comparator: macro class rho gain ≥0.01,
+no class rho loss >0.005, no class RMSE deterioration >2%, positive macro gain in
+both seeds, and some seed improvement in each class. Ties within 0.005 favor lower
 compute. Only real six-output arms are eligible. A winner here is specific to this
 development cohort and does not automatically replace the prior full-cohort recipe.
 
@@ -113,14 +120,14 @@ Launcher commit `fe9ca8b82489b5afc222e3f2237460ef7bd7af63`; launch receipt recor
 dirty=true because it creates its source snapshots before recording git status.
 Package and launcher/data hashes are individually pinned; no unfrozen model code
 is used. Exact command/env: `reproduce/launch.sh` and `reproduce/launch.json`.
-Transport gzip is46,652,237bytes, losslessly verified against1,197,269,176expanded
+Transport gzip is 46,652,237 bytes, losslessly verified against 1,197,269,176 expanded
 bytes. No observations were removed to reduce upload size.
 
-Requested GPU `H100!`, at most two concurrent workers,4CPUs/32GiBhost each.
-Observed NVIDIA H10080GB HBM3,81,559MiB,driver610.57.04. Pinned environment:
-Python3.12,Torch2.14.1,NumPy2.5.4,PyYAML6.0.3,mhcgnomes3.64.6,mhcseqs2.6.13,
-tqdm4.70.1,psutil7.2.2. Local source admission/preflight covers all three distinct
-source sets; weighted/unweighted resume and sampler tests pass. Full local suite:2,778passed/4skipped; analysis fixtures:2passed. Lint/format, strict
+Requested GPU `H100!`, at most two concurrent workers, 4 CPUs/32 GiB host each.
+Observed NVIDIA H100 80GB HBM3, 81,559 MiB, driver 610.57.04. Pinned environment:
+Python 3.12, Torch 2.14.1, NumPy 2.5.4, PyYAML 6.0.3, mhcgnomes 3.64.6, mhcseqs 2.6.13,
+tqdm 4.70.1, psutil 7.2.2. Local source admission/preflight covers all three distinct
+source sets; weighted/unweighted resume and sampler tests pass. Full local suite: 2,778 passed / 4 skipped; analysis fixtures: 2 passed. Lint/format, strict
 docs, wheel/sdist build, twine and installed-wheel checks pass. Per-checkpoint
 scientific verification remains pending.
 
@@ -136,3 +143,15 @@ scientific verification remains pending.
 
 Final metrics, mechanistic interpretation, paired peptide-bootstrap intervals,
 failure strata, fresh-H100 serving replay and registry closure remain pending.
+
+## Training-only assay overlap
+
+On the new measured TRAIN partition, exact IC50 and KD-via-IC50 labels overlap
+on 5,345 class-I peptide/groove contexts, with Spearman 0.9568 between mean
+log targets; class II has only two overlapping contexts. IC50/half-life overlap
+is 1,940 contexts for I and eight for II. No original measurement IDs overlap
+between these endpoint pairs. Assay conditions/studies are not matched, so this
+quantifies label alignment and coverage, not equivalence or causal transfer.
+See `results/training-assay-overlap.json` and `results/permutation-coverage.csv`.
+All arms train both MHC classes: this family tests auxiliary-label benefit and
+interference, not a source-class-only zero-shot transfer claim.

@@ -2,6 +2,7 @@
 
 from collections import defaultdict
 from itertools import combinations
+import csv
 import json
 import math
 import numpy as np
@@ -13,6 +14,11 @@ def main():
     groups = defaultdict(lambda: defaultdict(list))
     measurement_ids = defaultdict(set)
     peptide_sets = defaultdict(set)
+    permutation = {
+        r["observation_id"]: r["changed"] == "True"
+        for r in csv.DictReader((F / "results/permutation-membership.csv").open())
+    }
+    changed = defaultdict(lambda: [0, 0])
     rows = 0
     for source in PINS["manifests"]["wide-six-natural-s42"]["sources"]:
         # This family's frozen transport files are partitioned by split in the name.
@@ -24,6 +30,10 @@ def main():
             rows += 1
             m = r["mhc"][0]
             cls, endpoint = m["mhc_class"], r["endpoint"]
+            if endpoint != "ic50":
+                key = (endpoint, cls, r["qualifier"])
+                changed[key][0] += 1
+                changed[key][1] += permutation[r["observation_id"]]
             measurement_ids[(cls, endpoint)].add(
                 r["provenance"]["original_measurement_id"]
             )
@@ -34,6 +44,22 @@ def main():
             key = (r["peptide"], m["groove1"], m["groove2"])
             groups[(cls, endpoint)][key].append(math.log10(r["value"]))
     assert rows == 107132
+    assert sum(v[0] for v in changed.values()) == len(permutation) == 88155
+    assert sum(v[1] for v in changed.values()) == 59943
+    csv_write(
+        F / "results/permutation-coverage.csv",
+        [
+            dict(
+                endpoint=e,
+                mhc_class=c,
+                qualifier=q,
+                rows=n,
+                changed=k,
+                changed_fraction=k / n,
+            )
+            for (e, c, q), (n, k) in sorted(changed.items())
+        ],
+    )
     result = []
     for cls in ("I", "II"):
         for a, b in combinations(
