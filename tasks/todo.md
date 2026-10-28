@@ -14570,3 +14570,13 @@ constant species inputs and sparse output/class supervision are reported separat
 Common software passes 2,767 unique tests/four skips, hosted CI, docs and installed
 wheel checks. Canonical report/registry include source pins, full metrics, failures,
 plots and the recovered inference-bundle omission. Scientific PR131 remains draft.
+
+## 2026-10-28 — Explain asymmetric auxiliary-assay transfer
+
+Spec: experiments/agents/codex/plans/2026-10-28_assay-transfer-mechanisms.md.
+
+- [ ] Quantify prior training composition and source exclusions independently.
+- [ ] Freeze fresh component partitions, controlled arms and common weighted sampling.
+- [ ] Verify source/sampler/resume contracts and execute twelve H100 fits with live results.
+- [ ] Seal selection, independently verify metrics and replay saved training probes.
+- [ ] Integrate supported findings and close experiment, registry and PR handoff.

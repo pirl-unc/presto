@@ -795,3 +795,7 @@ Keep applicability reporting separate from model features and the measured label
   the frozen subset is byte-identical, and import the actual public predictor.
   Preserve failed verification attempts without changing fitted artifacts or
   numerical tolerances.
+- When expanding labels at a fixed update budget, quantify endpoint/class exposure
+  before attributing gains or losses to transfer. Pair capacity controls and distinguish
+  unique outcomes from repeated optimizer labels; report source attrition and allele
+  concentration instead of presenting one dataset-size number without context.

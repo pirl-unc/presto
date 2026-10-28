@@ -197,3 +197,15 @@ primary endpoints are rejected. The carried-forward IC50 recipe explicitly names
 `ic50`, preserving its measured selection contract. Pooled objectives can trade
 performance between classes; inspect the class/output tables as well as the scalar
 selection score. This option does not create a separate model or training path.
+
+`training.stratum_weights` optionally assigns relative sampling frequencies to the
+metadata groups named by `balance_by`. Each record supplies `values` in field order
+and a positive finite `weight`; every observed training group must be named exactly
+once. For example, with `balance_by: ["endpoint"]`, records for `ic50` and `kd` with
+weights 3 and 1 target a 75%/25% observation mix. These are sampling frequencies,
+not loss weights. Weighted epochs cover each group's unique rows, cycling smaller
+groups as needed, then shuffle the resulting order. Repetition adds label exposure,
+not independent evidence. The full order and RNG state survive exact resume.
+Omit weights to retain natural sampling or the existing equal-group interleaving.
+The general default remains natural sampling; specific mixtures need evaluation
+on their own class/output/data contract.

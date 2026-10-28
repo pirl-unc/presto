@@ -338,3 +338,9 @@ Results belong to 2026-10-27_2100_codex_transfer-improvements, not this backlog.
   the same trainer; keep these inspected tests closed. Do not assume repeated rare
   class-II labels supply new information. Broader natural sampling regressed II.
 - [ ] Later: real same-protein ligand ranking and source-qualified cell/TCR inputs remain separate gaps.
+
+## 2026-10-28 — Auxiliary transfer mechanisms
+
+- [ ] Complete the fixed twelve-fit capacity/exposure/auxiliary-permutation comparison.
+- [ ] Report allele/species/class/assay/qualifier concentration and source attrition.
+- [ ] Apply supported common sampling options; retain one model/training interface.

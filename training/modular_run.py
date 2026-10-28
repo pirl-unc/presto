@@ -46,11 +46,18 @@ from .modular_resume import (
     save_resume,
 )
 
-from .modular_sampling import epoch_order, stratum, validate_balance_by
+from .modular_sampling import (
+    epoch_order,
+    stratum,
+    validate_balance_by,
+    validate_stratum_weights,
+    weighted_quotas,
+)
 
 
 DEFAULT_TRAINING = {
     "balance_by": [],
+    "stratum_weights": [],
     "seed": 42,
     "batch_size": 64,
     "max_epochs": 100,
@@ -110,11 +117,16 @@ def preflight(index: ObservationIndex):
         raise ValueError("unknown modular training option")
     training = {**DEFAULT_TRAINING, **supplied}
     validate_balance_by(training["balance_by"])
+    weights = validate_stratum_weights(training["balance_by"], training["stratum_weights"])
     if training["balance_by"]:
+        sizes = Counter()
         for i in index.partitions.get("train:assay", []) or index.partitions.get(
             "train:identity", []
         ):
-            stratum(index[i], training["balance_by"])
+            sizes[stratum(index[i], training["balance_by"])] += 1
+        if weights is not None:
+            validate_stratum_weights(training["balance_by"], training["stratum_weights"], sizes)
+            weighted_quotas(sizes, weights)
     for key in (
         "batch_size",
         "max_epochs",
@@ -600,7 +612,9 @@ def _fit_index(index, output_dir, *, device, resume):
     while state["phase"] == "training":
         epoch = state["epoch"]
         if not state["order"]:
-            state["order"] = epoch_order(index, base_indices, training["balance_by"], rng)
+            state["order"] = epoch_order(
+                index, base_indices, training["balance_by"], rng, training["stratum_weights"]
+            )
         order = state["order"]
         epoch_exposures = Counter(state["epoch_exposures"])
         while (

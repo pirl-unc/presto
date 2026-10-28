@@ -80,7 +80,8 @@ def test_interaction_uses_ordered_residues_before_pooling():
     assert not torch.allclose(a, b, atol=1e-6)
 
 
-def test_balanced_resume_replays_identical_order_and_weights(tmp_path, monkeypatch):
+@pytest.mark.parametrize('weighted', [False, True])
+def test_balanced_resume_replays_identical_order_and_weights(tmp_path, monkeypatch, weighted):
     path = manifest_fixture(tmp_path, replay=False)
     index = ObservationIndex(path)
     rows = [
@@ -91,6 +92,12 @@ def test_balanced_resume_replays_identical_order_and_weights(tmp_path, monkeypat
     manifest = json.loads(path.read_text())
     manifest['model']['mhc_classes'] = ['I', 'II']
     manifest['training']['balance_by'] = ['mhc_class']
+    if weighted:
+        manifest['training']['stratum_weights'] = [
+            {'values': ['I'], 'weight': 1},
+            {'values': ['II'], 'weight': 3},
+        ]
+        manifest['training']['validation_every_steps'] = 2
     manifest['sources'][0].update(path=written['path'], sha256=written['sha256'])
     path.write_text(json.dumps(manifest))
     original, trace = interrupt(monkeypatch, before_step=100)
