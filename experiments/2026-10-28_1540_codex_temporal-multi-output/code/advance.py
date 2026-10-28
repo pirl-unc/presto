@@ -67,6 +67,13 @@ def main():
                 stderr=subprocess.STDOUT,
                 check=True,
             )
+        with (F / 'results/reporting.log').open('a') as log:
+            subprocess.run(
+                [sys.executable, str(F / 'analysis/report.py')],
+                stdout=log,
+                stderr=subprocess.STDOUT,
+                check=True,
+            )
         if process is not None:
             # Function receipts and hashes are authoritative if the original
             # launcher's local transport failed after the remote calls started.

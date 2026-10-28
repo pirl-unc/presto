@@ -5,7 +5,7 @@ import sys
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from report import detailed_groups, register_summary, intervals
+from report import detailed_groups, register_summary, intervals, baseline_comparisons
 
 
 def row(identifier, value, source='reported', **extra):
@@ -72,3 +72,14 @@ def test_generated_comparator_resamples_with_positive_parent(monkeypatch):
         for token, clusters in observed
         if token.endswith('study_component')
     )
+
+
+def test_mean_reference_uses_training_scale_not_heldout_mean():
+    rows = [row('a', 0), row('b', 2)]
+    for r in rows:
+        r.update(endpoint='ic50', prediction=1.0, loss=1.0)
+    scores = baseline_comparisons(rows, {'ic50': {'mean': 10.0, 'scale': 1.0}})
+    overall = next(r for r in scores if r['study'] == 'all')
+    assert overall['rmse'] == 1.0
+    assert overall['exact_train_mean'] == 10.0
+    assert overall['train_mean_rmse'] == pytest.approx(82**0.5)

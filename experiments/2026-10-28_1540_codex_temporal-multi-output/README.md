@@ -87,7 +87,7 @@ workers. There are no predictive results or preferred new checkpoint yet.
 
 Software evidence: the current shared suite passes2,805 tests/four skips;
 the literal purified-method and reported-MS-negative admission checks passed79
-and89 focused tests, respectively. Eighteen preparation/report/controller fixtures pass,
+and89 focused tests, respectively. Twenty-nine preparation/report/controller fixtures pass,
 including the real ObservationIndex/common-trainer preflight, independent source/background audit and separation of
 reported-negative versus generated-background AUCs. Artificial tests are not
 biological performance evidence.

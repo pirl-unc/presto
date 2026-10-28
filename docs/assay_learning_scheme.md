@@ -1,5 +1,11 @@
 # Assay sources and supervision
 
+> **Historical source-loader guide.** The merged-TSV defaults, task registry and
+> source-selection APIs below describe the former trainer. New training uses the
+> [shared observation model](modular_model.md) and
+> [one observation-manifest interface](unified_training.md). The historical script
+> names now redirect to that interface; they do not select a second training path.
+
 This is a descriptive guide to current training, subordinate to the
 [model I/O contract](model_io_contract.md). For exact active task definitions
 read `LOSS_TASK_SPECS` in [train_synthetic.py](https://github.com/pirl-unc/presto/blob/main/scripts/train_synthetic.py),

@@ -5371,8 +5371,9 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   ligand AUROC/AUPRC by class, assay, study and evaluation population. No promotion.
 - **Software:** common source at c8f032a7, complete211-file runtime pinned. Shared
   2805tests/4skips on the current source;79and89focused source checks also pass.
-  Eighteen family fixtures pass: eight preparation/projection, four independent
-  prediction checks and six controller checks. Actual cohort audit remains pending.
+  Twenty-nine family fixtures pass: eight preparation/projection, four independent
+  prediction checks, seven controller checks, seven cluster-statistic checks and
+  three reporting checks. Actual cohort audit remains pending.
 - **Recovery:** attempt5's measured306MSrows/s would exceed its four-hour deadline.
   A committed consistent SQLite backup preserves406,381retained rows. Attempt6
   replays source admission on worker-local disk through the same frozen adapters;

@@ -309,6 +309,9 @@ Use saved validation/test dumps only, with no additional held-out forward passes
 - Tabulate prediction spread, mean error, censor satisfaction and scores by peptide
   length, candidate count and exact catalog allele set (minimum20 observations for
   detailed strata). A multi-allelic outcome is one bag, never replicated per allele.
+  Compare exact-value RMSE to the endpoint's exact-TRAIN mean in the same target
+  space. Constant-score ligand AUPRC equals the evaluation prevalence; retain that
+  reference beside AUPRC rather than interpreting raw AP across different ratios.
 - Summarize saved class-II register entropy and maximum weights per candidate,
   explicitly without measured register truth or physical-occupancy claims.
 - Extract selected-checkpoint coordinate coverage, inactive inputs, public-serving

@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 import pytest
 from modal.exception import FunctionTimeoutError
+from modal.exception import ConnectionError as ModalConnectionError
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'code'))
 from control import get_result
@@ -44,6 +45,13 @@ def test_actual_failures_are_not_retried(error):
 def test_nonblocking_timeout_remains_pending():
     with pytest.raises(TimeoutError):
         get_result(Call([TimeoutError()]), wait=False)
+
+
+def test_modal_sdk_connection_error_recovers_without_resubmitting(monkeypatch):
+    monkeypatch.setattr('control.time.sleep', lambda _: None)
+    assert get_result(Call([ModalConnectionError('Deadline exceeded'), {'done': True}])) == {
+        'done': True
+    }
 
 
 def test_transport_retries_are_bounded(monkeypatch):

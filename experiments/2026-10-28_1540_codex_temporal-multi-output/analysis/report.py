@@ -4,7 +4,9 @@ from collections import defaultdict
 from pathlib import Path
 import csv
 import gzip
+import importlib.metadata
 import json
+import shutil
 import sys
 import time
 import numpy as np
@@ -99,6 +101,38 @@ def register_summary(rows):
     ]
 
 
+def baseline_comparisons(rows, scales):
+    result = []
+    for key, subset in groups(rows).items():
+        era, endpoint, cls, population, study, method = key
+        score = metrics(subset, scales.get(endpoint, {}).get('scale', 1.0))
+        comparison = {}
+        if endpoint in BINARY:
+            comparison['constant_score_auprc'] = sum(r['target'] for r in subset) / len(subset)
+        else:
+            exact = [r for r in subset if r['qualifier'] == '=']
+            mean = scales[endpoint]['mean']
+            comparison['exact_train_mean'] = mean
+            comparison['train_mean_rmse'] = (
+                float(np.sqrt(np.mean([(r['target'] - mean) ** 2 for r in exact])))
+                if exact
+                else None
+            )
+        result.append(
+            dict(
+                era=era,
+                endpoint=endpoint,
+                mhc_class=cls,
+                population=population,
+                study=study,
+                assay_method=method,
+                **score,
+                **comparison,
+            )
+        )
+    return result
+
+
 def intervals(rows, token):
     parents = {row['observation_id']: row['peptide'] for row in rows}
     results = []
@@ -150,6 +184,21 @@ def main():
     prepared = read(F / 'results/prepared.json')
     assert verified['status'] == 'passed' and decision['test_used_for_selection'] is False
     strata = read(F / 'results/stratified-metrics.json')
+    bundle = F / 'reproduce' / ('analysis-' + str(time.time_ns()))
+    bundle.mkdir()
+    for name in ('report.py', 'uncertainty.py', 'verify_predictions.py', 'verify_cohort.py'):
+        shutil.copyfile(F / 'analysis' / name, bundle / name)
+    invocation = dict(
+        argv=sys.argv,
+        python=sys.version,
+        environment={
+            name: importlib.metadata.version(name)
+            for name in ('numpy', 'scipy', 'scikit-learn', 'matplotlib')
+        },
+        prediction_verification_sha256=sha(F / 'results/prediction-verification.json'),
+        source_hashes={p.name: sha(p) for p in bundle.glob('*.py')},
+    )
+    (bundle / 'launch.json').write_text(json.dumps(invocation, indent=2) + '\n')
     support, runtime, coverage, features, detailed, registers, uncertainty = (
         [],
         [],
@@ -159,6 +208,7 @@ def main():
         [],
         [],
     )
+    baselines = []
     started = time.time()
     for condition in sorted(verified['conditions']):
         folder = F / 'results' / condition
@@ -211,6 +261,10 @@ def main():
             )
             with gzip.open(path, 'rt') as stream:
                 rows = [json.loads(line) for line in stream]
+            baselines.extend(
+                dict(condition=condition, split=split, **r)
+                for r in baseline_comparisons(rows, resolved['scales'])
+            )
             for key, subset in detailed_groups(rows).items():
                 if len(subset) < 20:
                     continue
@@ -256,6 +310,7 @@ def main():
         ('failure-strata', detailed),
         ('register-diagnostics', registers),
         ('cluster-uncertainty', uncertainty),
+        ('baseline-comparison', baselines),
     ):
         table(name, values)
     draw(strata)
@@ -263,6 +318,7 @@ def main():
         'reporting-receipt.json',
         dict(
             status='completed',
+            reproducibility_bundle=str(bundle.relative_to(F)),
             argv=sys.argv,
             source_sha256=sha(Path(__file__)),
             uncertainty_source_sha256=sha(F / 'analysis/uncertainty.py'),
