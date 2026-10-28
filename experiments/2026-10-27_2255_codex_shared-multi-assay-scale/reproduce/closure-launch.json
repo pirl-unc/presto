@@ -32,6 +32,22 @@
       "file": "analysis/verify.py",
       "sha256": "7de161c1719ccb0c5f218c602cd22e751d82a3bf1a120424b7b55d74ff4c3407",
       "original_sources": "reproduce/source/closure-analysis-at-launch/"
+    },
+    {
+      "unix": 1793148531.331341,
+      "phase": "before validation decision or test inspection",
+      "reason": "Also independently assert training-mean baseline row order/source targets and reported metrics. Copied model diagnostics in raw baseline files are ignored; only constant predictions and recomputed loss are baseline outputs. No models, data or selection policy changed.",
+      "file": "analysis/verify.py",
+      "sha256": "9bfcfea6037126645e6663d31b91ceb61dbf901dc20ab85973ee97fc9b3f59e8",
+      "prior_source": "reproduce/source/closure-analysis-amendment-1/verify.py"
+    },
+    {
+      "unix": 1793148690.769366,
+      "phase": "before validation decision or test inspection",
+      "reason": "Group per-groove analyses by the actual verified groove-sequence pair, preserving catalog and reported-name aliases; raw naming variations must not split identical biological groups. No primary metric, model, data or selection-policy change.",
+      "file": "analysis/verify.py",
+      "sha256": "0c9e479e3d2f465e3f7bc5609bdc49a5e6e7159dfd8b419bf488c34d0818a56c",
+      "prior_source": "reproduce/source/closure-analysis-amendment-2/verify.py"
     }
   ]
 }

@@ -211,6 +211,10 @@ def verify(condition, cache):
         )
         endpoint_results = {}
         all_baselines = load(directory / f"mean-{split}-predictions.jsonl.gz")
+        assert [r["observation_id"] for r in all_baselines] == ids
+        for baseline_row, prediction_row in zip(all_baselines, rows, strict=True):
+            for key in ("target", "qualifier", "endpoint", "mhc_classes", "split"):
+                assert baseline_row[key] == prediction_row[key]
         for endpoint in resolved["model"]["endpoints"]:
             subset = [r for r in rows if r["endpoint"] == endpoint]
             scale = resolved["scales"][endpoint]["scale"]
@@ -262,7 +266,7 @@ def verify(condition, cache):
                 groups = defaultdict(list)
                 for r in rr:
                     mhc = r["observation"]["mhc"][0]
-                    key = mhc["provenance"]["reported_restriction"]
+                    key = (mhc["groove1"], mhc["groove2"])
                     groups[key].append(r)
                 for key, values in groups.items():
                     gm = metrics(values, scale, binding)
@@ -273,7 +277,31 @@ def verify(condition, cache):
                                 split=split,
                                 endpoint=endpoint,
                                 mhc_class=cls,
-                                restriction=key,
+                                groove_id=hashlib.sha256(
+                                    "|".join(key).encode()
+                                ).hexdigest(),
+                                restriction=" | ".join(
+                                    sorted(
+                                        {
+                                            "/".join(
+                                                r["observation"]["mhc"][0][
+                                                    "provenance"
+                                                ]["catalog_alleles"]
+                                            )
+                                            for r in values
+                                        }
+                                    )
+                                ),
+                                reported_restrictions=json.dumps(
+                                    sorted(
+                                        {
+                                            r["observation"]["mhc"][0]["provenance"][
+                                                "reported_restriction"
+                                            ]
+                                            for r in values
+                                        }
+                                    )
+                                ),
                                 **{
                                     k: v
                                     for k, v in gm.items()
@@ -286,11 +314,16 @@ def verify(condition, cache):
                 r["prediction"] == resolved["scales"][endpoint]["mean"]
                 for r in baseline
             )
+            baseline_metrics = metrics(baseline, scale, binding)
+            if baseline_metrics["n"]:
+                assert_metric(
+                    baseline_metrics, report["mean_baselines"][split][endpoint]["exact"]
+                )
             endpoint_results[endpoint] = dict(
                 overall=got,
                 by_class=classes,
                 mean_baseline_by_class=class_baselines,
-                mean_baseline=metrics(baseline, scale, binding),
+                mean_baseline=baseline_metrics,
             )
         results[split] = dict(
             predictions_sha256=sha(path),
@@ -320,7 +353,9 @@ def verify(condition, cache):
     assert set(masks["masks"]) == set(coverage)
     assert all(v["complete_history"] for v in coverage.values())
     for name, mask in masks["masks"].items():
-        assert mask.dtype == torch.bool and mask.shape == payload["state_dict"][name].shape
+        assert (
+            mask.dtype == torch.bool and mask.shape == payload["state_dict"][name].shape
+        )
         assert int(mask.sum()) == coverage[name]["elements_with_gradient_and_update"]
     total = sum(v["elements"] for v in coverage.values())
     updated = sum(v["elements_with_gradient_and_update"] for v in coverage.values())

@@ -152,3 +152,15 @@ The installed-wheel smoke currently exercises historical loaders only. Extend th
 same smoke to instantiate the canonical model at nondefault width, execute both
 MHC candidate rules on explicit artificial observations, and check that public
 prediction rejects untrained outputs. No fitting or scientific evaluation is added.
+
+## Integration contract, before test disclosure
+
+Use the sealed validation decision to choose the development recipe. The updated
+recipe uses the tested 6,000-update budget and 500-update validation cadence; retain
+the prior 2,000-update recipe in its frozen experiment. If all additions fail,
+retain exact-only IC50 data and natural sampling at this enlarged tested budget.
+Do not attribute changes against the older family to budget alone, because
+validation opportunities also changed. Keep the six-output small and wider
+manifests as explicitly experimental options with separate measurement names and
+the same common trainer. All recipes explicitly name IC50 as their checkpoint
+selection endpoint to reproduce this comparison. No model or promotion gate changes.
