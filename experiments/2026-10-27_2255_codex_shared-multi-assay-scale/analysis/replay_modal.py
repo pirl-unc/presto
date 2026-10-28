@@ -12,8 +12,14 @@ if modal.is_local():
     sys.path.insert(0, str(FAMILY / "code"))
     from launch import image as training_image
 
-    image = training_image.add_local_file(
-        FAMILY / "analysis/replay_remote.py", "/bundle/replay_remote.py"
+    image = (
+        training_image.add_local_file(
+            FAMILY / "analysis/replay_remote.py", "/bundle/replay_remote.py"
+        )
+        .add_local_dir(FAMILY / "reproduce/source/serving-runtime", "/verification")
+        .add_local_file(
+            FAMILY / "reproduce/serving-runtime.json", "/bundle/serving-runtime.json"
+        )
     )
 else:
     FAMILY = Path("/bundle")

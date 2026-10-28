@@ -1,0 +1,12 @@
+seal-validation
+independent-verification
+comparison
+gpu-training-replay
+Traceback (most recent call last):
+  File "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-27_2255_codex_shared-multi-assay-scale/analysis/close_when_ready.py", line 63, in <module>
+    main()
+  File "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-27_2255_codex_shared-multi-assay-scale/analysis/close_when_ready.py", line 48, in main
+    subprocess.run(
+  File "/Users/iskander/.local/share/uv/python/cpython-3.12.6-macos-aarch64-none/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/Users/iskander/code/shared-virtual-env/bin/modal', 'run', '/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-27_2255_codex_shared-multi-assay-scale/analysis/replay_modal.py']' returned non-zero exit status 1.

@@ -18,6 +18,18 @@ pooled shared-v4 control. These are previously inspected development holdouts,
 not a qualification population. Source-only transfer remains weak and its RMSE
 did not improve. See the [registered comparison](https://github.com/pirl-unc/presto/tree/2f5705184f6997d50883639f5d38f6c133b81995/experiments/2026-10-27_2100_codex_transfer-improvements).
 
+The subsequent 6,000-update scale comparison retains exact IC50 supervision as
+the joint development recipe: test mean Spearman **0.6025 I / 0.5893 II**, RMSE
+**1.1100 / 0.7618 log10(nM)**. The larger budget and validation cadence changed
+together. A six-output, 1.60-million-parameter fit on 134,561 training observations
+reaches **0.6407 / 0.5679** test Spearman; its class-II validation regression fails
+the predeclared promotion gate. Both six-output manifests remain experimental
+options through the common trainer. No class-specific model was added.
+See the [scale report and failure audit](https://github.com/pirl-unc/presto/tree/codex/scale-shared-model-20261027/experiments/2026-10-27_2255_codex_shared-multi-assay-scale).
+All are inspected development holdouts. Diffuse register weights, weak censoring,
+poor absolute KD calibration and sparse class-II auxiliary labels remain measured
+limits; training-coordinate coverage is not biological identification.
+
 Capacity is configured by `d_model`, `n_layers`, `n_heads` and `d_ff`; defaults
 128/2/4/512 preserve existing v5 checkpoints. Every reachable sequence, interaction,
 context and output module uses that same width. There is no separate class-I,

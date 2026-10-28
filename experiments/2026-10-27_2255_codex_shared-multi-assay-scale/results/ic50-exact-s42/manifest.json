@@ -1,0 +1,57 @@
+{
+  "schema": "presto.modular.manifest.v1",
+  "model": {
+    "endpoints": [
+      "ic50"
+    ],
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "species": [
+      "human"
+    ],
+    "identity_tasks": [],
+    "dropout": 0.1
+  },
+  "training": {
+    "seed": 42,
+    "batch_size": 64,
+    "max_steps": 6000,
+    "max_epochs": 10000,
+    "min_epochs": 10000,
+    "patience": 10000,
+    "identity_weight": 0,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "checkpoint_every_steps": 100,
+    "validation_every_steps": 500,
+    "balance_by": []
+  },
+  "sources": [
+    {
+      "path": "/input/data/ic50-original-train.jsonl",
+      "sha256": "79e44788883a4668fb790191e2079b46bb28e3ea06314e75ace3aa25c65b096c",
+      "source": "hitlist-v4-iedb",
+      "population": "original admitted human IC50 cohort; frozen unchanged",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ic50-original-validation.jsonl",
+      "sha256": "12b88ebf0573e98b434f20e1a5fa8645128d5a14b05dfda3985ef57440d1719b",
+      "source": "hitlist-v4-iedb",
+      "population": "original admitted human IC50 cohort; frozen unchanged",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    },
+    {
+      "path": "/input/data/ic50-original-test.jsonl",
+      "sha256": "0ade7b1ed2436bcdc9fd145831a1718db36c00056321b9815cad418c293fbd75",
+      "source": "hitlist-v4-iedb",
+      "population": "original admitted human IC50 cohort; frozen unchanged",
+      "label_policy": "endpoint-specific physical measurements; original numeric bounds; missing exported qualifier exact with missingness retained",
+      "split_policy": "peptide/original-assay connected components; frozen historical and IC50 splits inherited; conflicting components deferred"
+    }
+  ]
+}

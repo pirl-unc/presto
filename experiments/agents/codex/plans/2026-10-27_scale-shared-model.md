@@ -164,3 +164,18 @@ validation opportunities also changed. Keep the six-output small and wider
 manifests as explicitly experimental options with separate measurement names and
 the same common trainer. All recipes explicitly name IC50 as their checkpoint
 selection endpoint to reproduce this comparison. No model or promotion gate changes.
+# Serving-replay recovery, after sealed validation and numerical closure
+
+The initial fresh-H100 verifier failed before loading a checkpoint: the frozen
+training-only runtime intentionally omitted `presto.inference`. Preserve its log,
+source snapshot and Modal app. Do not change any fitted artifact or tolerance.
+
+1. Export a separate verification package from the same pinned 0c4c984b commit,
+   retaining every frozen training-runtime byte and adding the public inference
+   package and its historical import dependencies. Record all file hashes and
+   prove the frozen subset matches exactly.
+2. Check the actual public predictor import locally before cloud submission.
+3. Replay the same 64 saved TRAIN rows per checkpoint on one H100! with the original
+   numerical tolerance and support guards. No optimizer or heldout inference.
+4. Record the recovery invocation/source hashes and result, then integrate recipes
+   only after all eight checks pass. Keep the original failed evidence intact.

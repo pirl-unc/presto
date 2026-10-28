@@ -5118,3 +5118,112 @@ omissions of historical source files, resolved by restoring tracked files. Full
 pinned lint/format, strict docs and isolated wheel checks pass;209shippedPython
 files match source. Checkpoint priority is now explicit and endpoint-agnostic.
 These post-freeze software changes did not change the eight active predictive fits.
+
+## 2026-10-27_2255_codex_shared-multi-assay-scale — six outputs scale, but joint IC50 keeps exact supervision
+
+October27–28,2026; Codex / GPT-6. [Complete report, tables, source and predictions](2026-10-27_2255_codex_shared-multi-assay-scale/README.md).
+**Closed:** eight6,000-update fits, independent metric/source checks, all full
+training dumps and512fresh-H100 public-serving/evaluation probes passed. Preferred
+recipe remains exact IC50/natural sampling with the common v5 interaction model;
+extend its bounded development recipe to6,000updates. Six-output small/wide
+manifests remain experimental through the same trainer, without class sidecars.
+
+Predictive runtime0c4c984b2628fecf54ef29e756fdfc0a74963dc4; launchGitdirty from the new
+experiment bundle. All launcher/runtime bytes and hashes are frozen in
+`reproduce/source/`, `source-pins.json`, `launch.json` and `launch.sh`. Exact command:
+`PRESTO_MODAL_GPU='H100!' /Users/iskander/code/shared-virtual-env/bin/modal run --detach experiments/2026-10-27_2255_codex_shared-multi-assay-scale/code/launch.py`.
+RequestedH100!, max2workers,4CPU,32GiBhost; actualNVIDIAH10080GBHBM3,81,559MiB by
+nvidia-smi/85,009,367,040bytes byTorch, driver610.57.04. Python3.12.1,
+Torch2.14.1+cu130,NumPy2.5.4; threads4/interop1, noAMP/TF32/compile. Local analysis
+Python3.12.6, singleBLAS/Torchthread, MPLCONFIGDIR in `/private/tmp`; all overrides
+and recovery commands are retained in the reproduction bundle.
+
+Pinned Hitlistv4 binding/other-assay original numeric text, source qualifiers/units,
+canonical unmodified peptides, purified human MHC and complete source-named partners
+resolved through pinned mhcseqs. No guessed DRA. All840,805source rows audited;
+168,210admitted, including10off-rate train-only rows excluded from fitting.
+Six-output cohort **134,561train/17,503validation/16,136test**,24,792training peptides,
+146training groove pairs. Original27,364-row IC50 cohort remains byte-identical:
+21,636exacttrain/2,925validation/2,803test, with exactval1,968I/758II and
+test1,758I/842II. Bounds arm has23,512training rows. Cross-endpoint peptide and
+original-assay components inherit historical partitions; conflicts deferred,
+original measured outcomes counted once. Independent raw fingerprints, identities,
+units, catalog and split checks pass. Independent replicate disagreements retained.
+Shared studies/sequence families and previously inspected development holdouts;
+this is not an external or unseen-groove qualification cohort.
+
+Literal `ic50`, `kd`, `ec50`, `kd_via_ic50`, `kd_via_ec50` map separately to
+log10(nM); `half_life` to log10(minutes). Off-rate excluded. Train-only exact mean/
+populationSD per endpoint; standardized squared residual for exact rows, one-sided
+loss for source bounds. Each endpoint weight1, mean per observed row. No label
+equivalence constraint, cap, synthetic data, pseudo-negatives, identity loss or
+pretraining. AdamW3e-4/decay1e-4/batch64/dropout.1; natural no-replacement shuffle,
+6,000updates, validation every500/final, checkpoint every100, no early stop.
+All use the common peptide/full-context encoder, paired groove interaction and
+direction-aware register pooling. I has one whole-peptide candidate, II all9mers.
+Capacity128/2/4/512 or192/3/6/768; parameters515,457/516,102/1,599,942.
+
+Checkpoint selected by pooled exact IC50 validationRMSE. Condition decision sealed
+before test inspection, using original IC50validationIDs: macro class rank gain
+>=.01, no class rank drop>.005 or RMSE worsening>2%, both seed macro gains positive,
+each class improves in some seed. No added-data condition passed all gates.
+
+| Condition, seeds42/43 mean | I val ρ / RMSE | I test ρ / RMSE | II val ρ / RMSE | II test ρ / RMSE |
+|---|---:|---:|---:|---:|
+| IC50 exact | .6487/1.0516 | .6025/1.1100 | .6511/.7878 | .5893/.7618 |
+| IC50 plus bounds | .6586/1.0455 | .6022/1.1048 | .6500/.8142 | .6023/.7677 |
+| Six outputs,128wide | .6555/1.0430 | .6129/1.0978 | .5750/.8560 | .5448/.8122 |
+| Six outputs,192wide | .6800/1.0094 | .6407/1.0702 | .5966/.8456 | .5679/.7824 |
+
+Means are individual-model metrics, not ensembles. Wider-model test rank effects
+vs exact control: I+.0382, paired peptide-bootstrap95%interval[.0125,.0638];
+II−.0215,[−.0635,.0168]. Conditional on existing splits/two seeds, not independent
+study or new-training-seed uncertainty. Earlier2,000-update v5 test rank.5248/.5039
+is improved by the new practical recipe, but budget and validation cadence changed
+together. No isolated mechanism or new zero-shot-transfer claim.
+
+Added-output highlights for192wide: half-lifeI val/testρ.7404/.6995,RMSE.8049/.8256
+log10minutes (testmeanbaseline1.1847); KD(~IC50)I val/testρ.7063/.6999,
+RMSE1.0342/1.0345. DirectKDI val/testρ.5815/.5586 but testRMSE1.3477 loses to
+mean1.2753. KD(~IC50)II val/testρ.5912/.2772 exposes a holdout drop. EC50II
+19train/3val/0testexact; half-lifeII12/0/2; these strata remain unqualified.
+All six outputs/classes, overall heldout losses, Pearson/RMSE, applicable500nM
+accuracy/balancedaccuracy/precision/recall/F1/AUROC/AUPRC, bounds and baselines are
+preserved in independent112-row tables and per-example val/test dumps. Proxy/EC50
+threshold classification is not calibrated binding probability.
+
+The scale-up changes exposure:82.1%I training vs66.4%original; IC50 is17.5% of
+six-output rows. Seed42II IC50 label exposures23,546vs128,524control; widerII
+trainingρ.5805vscontrol.6883. Auxiliary competition and exposure dilution are
+plausible, not isolated causes. IC50↔KD(~IC50) exact training overlap6,676I
+contexts(correlation.963) but only2II, with unmatched assay conditions. Inputs gain
+peptide/groove diversity, not new TCR,MS,cellular,nonhuman or nonclassical evidence.
+
+All selected-checkpoint non-padding coordinates have same-coordinate gradient and
+movement evidence; only128/192fixed padding coordinates remain untouched.384/768
+attentionK-bias coordinates are structurally redundant despite numerical movement;
+constant human-species columns confound with an intercept. Historical absent masks
+remain unknown. Six outputs add only645parameters at fixed width. Control test
+boundsatisfaction6.9%I/17.2%II, versus27.0%/33.6% with bounds, still poor. Exact
+extremes shrink toward the middle. Control within-groove macroρ.430/.442I and
+.568/.566II; register entropy.979/.983 and top-start agreement51.4%, with no
+measured-core truth. Full subgroup/support/calibration tables preserve the limits.
+
+Workerwall1,287.8–2,279.8s, excludingqueue/build/archive/download; sampledRSS4.96–6.06GiB,
+CUDAallocatedpeak.67–1.42GiB. All6,000updatescomplete; selected5,000–6,000.
+All8heldout/full-training checks pass;512savedtraining examples reproduce exactly
+through evaluation and guarded public predictor on freshH100. First replay failed
+before inference because training bundle omitted inference; separate fullsamecommit
+package preserves all207frozenfilehashes. Failed evidence/recovery kept; no refit,
+newheldout inference or tolerance change. Software full/targeted2,767unique tests,
+4skips, lint/format/docs/wheel and hostedCIbad9f4c1 pass.
+
+Raw archives/checkpoints: `artifacts/2026-10-27_2255_codex_shared-multi-assay-scale/{downloads,runs}`;
+Modalvolume`presto-checkpoints`, family directory. Canonical heldout predictions,
+tables, figures, selection and verification receipts live in experiment`results/`;
+fulltrainingdumps remain in checksummed rawarchives. Source/data hashes, raw-record
+pins and exact env are in`reproduce/`. Post-freeze generic selection/coverage software
+does not change these fitted predictions. Takeaway: common architecture scales
+mechanically and improves some outputs, but natural mixed-assay sampling is not a
+joint-affinity win. Retain the tested exactIC50 recipe and pursue matched exposure
+and source-qualified auxiliary evidence prospectively. PR131 scientific gates remain open.

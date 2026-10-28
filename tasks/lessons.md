@@ -790,3 +790,8 @@ Keep applicability reporting separate from model features and the measured label
 - Tensor movement plus a gradient elsewhere is not coordinate-level training
   evidence. Preserve same-coordinate masks, fixed padding, structural redundancy
   and unknown historical coverage separately.
+- A training-only frozen package may omit public inference imports. Before a remote
+  serving replay, export the complete package from the same pinned commit, prove
+  the frozen subset is byte-identical, and import the actual public predictor.
+  Preserve failed verification attempts without changing fitted artifacts or
+  numerical tolerances.

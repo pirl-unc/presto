@@ -143,6 +143,32 @@ explicit species-context limitations; it is not an external validation result.
 [Full contract and comparison](2026-10-16_1030_codex_effective-target-fit/README.md).
 
 
+### Shared-v5 purified human I/II IC50 — current development recipe
+
+- Status: provisional; new-training architecture and bounded development reference,
+  not external biological qualification. This is a different cohort from the
+  historical 9,053-row ridge comparison above.
+- [Scale comparison and failure audit](2026-10-27_2255_codex_shared-multi-assay-scale/README.md).
+  Frozen 21,636 exact training observations; original validation 2,925 / test 2,803
+  including bounds. Exact validation I/II 1,968/758; test 1,758/842. Purified human
+  IC50, verified mhcseqs paired grooves, peptide/original-assay component partitions;
+  shared studies and sequence-family overlap, previously inspected holdouts.
+- Baseline: common residue-interaction v5, full peptide context, natural sampling,
+  128/2/4/512 capacity, 515,457 parameters. Two seeds, 6,000 updates, validation every
+  500, explicit pooled exact IC50 RMSE checkpoint selection. AdamW3e-4, decay1e-4,
+  batch64, dropout.1; no pretraining/synthetic labels. Standardized squared IC50 loss.
+- Two-seed mean validation rank I/II **.6487/.6511**, RMSE **1.0516/.7878**;
+  test rank **.6025/.5893**, RMSE **1.1100/.7618 log10(nM)**. Individual-model means,
+  not an ensemble. `configs/ic50_joint_development.json` is the integrated recipe.
+- Validation-only candidate gates required macro rank gain >=.01, class rank drop
+  <=.005 and RMSE worsening <=2%, with seed-consistency checks. Neither bounds nor
+  six-output supervision qualified. Wider six-output test rank .6407/.5679 shows a
+  class-I gain with a class-II tradeoff; retain those manifests as experimental.
+- Earlier 2,000-update v5 test rank .5248/.5039 is a historical budget reference;
+  budget and validation cadence changed together. No isolated causal budget claim.
+  Test censor satisfaction is only 6.9% I / 17.2% II; register locations, absolute
+  calibration, unseen species/grooves and same-protein MS ranking remain unqualified.
+
 ## 7-Allele Numeric Class I Binding, Strict Seq-Only
 
 - Status: `active`

@@ -14557,5 +14557,16 @@ Spec: experiments/agents/codex/plans/2026-10-27_scale-shared-model.md.
 - [x] Audit element-level weight/input/output support and existing predictive failures.
 - [x] Admit larger, richer data with preserved split and measurement provenance.
 - [x] Fix common-core defects and freeze the concrete scaling comparisons.
-- [ ] Run and independently verify scaled multi-output training on Modal.
-- [ ] Promote supported changes, document limits and close canonical records.
+- [x] Run and independently verify scaled multi-output training on Modal.
+- [x] Promote supported changes, document limits and close canonical records.
+
+Review: eight 6,000-update H100 fits completed; all heldout/full-training numerical
+checks and 512 fresh-H100 evaluation/public-serving probes pass exactly. Shared-v5
+remains canonical; exact IC50 recipe extends to 6,000 updates, with six-output
+128-/192-wide manifests experimental. Wider-model test rank improves I (.6407 vs
+.6025) but loses II (.5679 vs .5893); no added-data arm passes validation promotion.
+Ordinary untouched weights are absent; fixed padding, redundant key biases,
+constant species inputs and sparse output/class supervision are reported separately.
+Common software passes 2,767 unique tests/four skips, hosted CI, docs and installed
+wheel checks. Canonical report/registry include source pins, full metrics, failures,
+plots and the recovered inference-bundle omission. Scientific PR131 remains draft.

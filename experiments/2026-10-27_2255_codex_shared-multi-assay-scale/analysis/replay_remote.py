@@ -19,7 +19,10 @@ def main():
     mode = sys.argv[2] if len(sys.argv) > 2 else "original_cuda"
     pins = json.loads(Path("/bundle/source-pins.json").read_text())
     runtime = pins["conditions"][name]["runtime"]
-    package = Path("/runtimes") / runtime / "presto"
+    package = Path("/verification/presto")
+    serving_pins = json.loads(Path("/bundle/serving-runtime.json").read_text())
+    for relative, expected in serving_pins["files"].items():
+        assert sha(package / relative) == expected
     for relative, expected in pins["runtimes"][runtime]["files"].items():
         assert sha(package / relative) == expected
     sys.path.insert(0, str(package.parent))
@@ -78,6 +81,7 @@ def main():
         serving_with_untrained_parameter_and_feature_guards=True,
         predictions=a.tolist(),
         checkpoint_sha256=sha(checkpoint),
+        serving_runtime_commit=serving_pins["source_commit"],
         actual_gpu=torch.cuda.get_device_name(0),
         gpu_total_bytes=torch.cuda.get_device_properties(0).total_memory,
         torch=str(torch.__version__),

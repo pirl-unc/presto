@@ -317,8 +317,10 @@ claim that simply adding it can remedy the prior response-model failures.
 - [x] Complete twelve fits and promote validation-selected common v5 interaction.
 - [x] Keep natural sampling default; balancing fails class-I validation protection.
 - [x] Retain complete predictions, runtime, independent metrics and H100 replay.
-- [ ] Prospectively compare convergence budgets and checkpoint-selection objectives
-  before making broader accuracy claims. The 2,000-update recipe remains bounded.
+- [x] Compare a larger bounded budget: the 2255 family completes 6,000 updates with
+  fixed validation cadence. It improves the practical IC50 reference; budget and
+  cadence effects are not isolated. Explicit checkpoint objectives now use the
+  same generic trainer and still require prospective class-protection evaluation.
 - [ ] Curate matched peptide-series conditions; audit fixed assay-unit pooling and
   aligned groove coordinates as separate future hypotheses.
 
@@ -330,6 +332,9 @@ Results belong to 2026-10-27_2100_codex_transfer-improvements, not this backlog.
 - [x] Generalize strict source admission; independently verify168,210 observations.
 - [x] Make shared capacity configurable; preserve element masks and exact step-cadence resume.
 - [x] Freeze and launch eight H100! comparisons, six outputs,134,561training observations.
-- [ ] Seal validation decisions, independently verify every new heldout dump and replay checkpoints.
-- [ ] Apply supported recipe/capacity wins; close canonical experiment and update practical baseline.
+- [x] Seal validation decisions, independently verify every new heldout dump and replay checkpoints.
+- [x] Apply supported recipe/capacity wins; close canonical experiment and update practical baseline.
+- [ ] Prospectively test matched IC50 exposure and class/endpoint-aware sampling in
+  the same trainer; keep these inspected tests closed. Do not assume repeated rare
+  class-II labels supply new information. Broader natural sampling regressed II.
 - [ ] Later: real same-protein ligand ranking and source-qualified cell/TCR inputs remain separate gaps.

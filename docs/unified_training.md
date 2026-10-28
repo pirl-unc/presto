@@ -110,11 +110,24 @@ they cannot silently initialize or resume a v5 training run. Their input feature
 layout differs. A new model requires new training and scientific qualification.
 
 `configs/ic50_joint_development.json` provides the tested natural-sampling,
-2,000-update recipe for the frozen human IC50 development cohort. It expects the
-checksummed inputs preserved under `artifacts/2026-10-27_2100_codex_transfer-improvements/upload`.
+6,000-update recipe for the frozen human IC50 development cohort, with validation
+every 500 updates and explicit IC50 checkpoint selection. It expects the
+checksummed inputs preserved under `artifacts/2026-10-27_2255_codex_shared-multi-assay-scale/upload`.
 Run it through `presto train --observations-manifest configs/ic50_joint_development.json`.
 It is a bounded comparison recipe, not a convergence claim or a new general-purpose
 training default. The frozen experiment contains the exact H100 source/runtime contract.
+The earlier 2,000-update recipe remains frozen in its original experiment; the
+larger budget and changed validation cadence were evaluated together.
+
+`configs/multi_assay_development.json` and
+`configs/multi_assay_wide_development.json` use the same trainer and architecture
+with six distinct assay outputs and 134,561 training observations. They are
+experimental recipes: broader supervision improved MHC-I but regressed MHC-II
+IC50 validation accuracy, so neither replaced the selected IC50 recipe. The wider
+manifest changes shared capacity to 192/3/6/768, not the class-specific path.
+Direct KD, EC50, the two KD proxies and half-life retain separate labels, units
+and train-only target scales. Sparse or missing class-II output strata, nonhuman
+grooves, source-protein context, MS and TCR remain unqualified by these fits.
 
 `presto.inference.ObservationPredictor` (also named
 `presto.inference.modular.ModularPredictor`) reads shared-v5, shared-v4, shared-v3 and modular-v2 checkpoints

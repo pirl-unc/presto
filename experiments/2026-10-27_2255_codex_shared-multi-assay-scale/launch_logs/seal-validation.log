@@ -1,0 +1,198 @@
+{
+  "status": "sealed",
+  "test_used_for_decision": false,
+  "sealed_unix": 1793149993.233448,
+  "comparison": "original IC50 validation IDs; exact values; two seeds; prospective README gates",
+  "preferred_variant": "ic50-exact",
+  "scores": {
+    "ic50-exact": {
+      "42": {
+        "I": {
+          "spearman": 0.6369928835451222,
+          "rmse": 1.068884434395462,
+          "n": 1968
+        },
+        "II": {
+          "spearman": 0.6445129184621026,
+          "rmse": 0.7930257907646668,
+          "n": 758
+        }
+      },
+      "43": {
+        "I": {
+          "spearman": 0.6603191921011983,
+          "rmse": 1.034220146124955,
+          "n": 1968
+        },
+        "II": {
+          "spearman": 0.657697246241726,
+          "rmse": 0.7826614691137274,
+          "n": 758
+        }
+      }
+    },
+    "ic50-bounds": {
+      "42": {
+        "I": {
+          "spearman": 0.6622495530137888,
+          "rmse": 1.0471240816016671,
+          "n": 1968
+        },
+        "II": {
+          "spearman": 0.6529919113909776,
+          "rmse": 0.841502129812566,
+          "n": 758
+        }
+      },
+      "43": {
+        "I": {
+          "spearman": 0.6548853271006159,
+          "rmse": 1.0438745051621832,
+          "n": 1968
+        },
+        "II": {
+          "spearman": 0.6470057844572282,
+          "rmse": 0.7868416367314678,
+          "n": 758
+        }
+      }
+    },
+    "multi-assay": {
+      "42": {
+        "I": {
+          "spearman": 0.658856609929444,
+          "rmse": 1.0372478131334117,
+          "n": 1968
+        },
+        "II": {
+          "spearman": 0.5753240529135667,
+          "rmse": 0.870013520075774,
+          "n": 758
+        }
+      },
+      "43": {
+        "I": {
+          "spearman": 0.6522170198415569,
+          "rmse": 1.0486946278022233,
+          "n": 1968
+        },
+        "II": {
+          "spearman": 0.5746789039111696,
+          "rmse": 0.8420375929383959,
+          "n": 758
+        }
+      }
+    },
+    "multi-assay-wide": {
+      "42": {
+        "I": {
+          "spearman": 0.6844893164592101,
+          "rmse": 1.0043318586285226,
+          "n": 1968
+        },
+        "II": {
+          "spearman": 0.6102106343509458,
+          "rmse": 0.830287675133134,
+          "n": 758
+        }
+      },
+      "43": {
+        "I": {
+          "spearman": 0.6755852871892093,
+          "rmse": 1.0145499206258668,
+          "n": 1968
+        },
+        "II": {
+          "spearman": 0.5829747907435903,
+          "rmse": 0.8609908148568417,
+          "n": 758
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "ic50-bounds": {
+      "class_spearman_deltas": {
+        "I": 0.009911402234042133,
+        "II": -0.0011062344278113811
+      },
+      "class_rmse_ratios": {
+        "I": 0.9942437509438685,
+        "II": 1.0334181204649096
+      },
+      "seed_macro_deltas": {
+        "42": 0.016867831198770833,
+        "43": -0.008062663392540081
+      },
+      "gates": {
+        "macro_gain": false,
+        "no_class_rank_drop": true,
+        "no_class_rmse_regression": false,
+        "both_seeds_macro_improve": false,
+        "each_class_improves_in_some_seed": true
+      },
+      "eligible": false,
+      "mean_macro_spearman": 0.6542831439906527,
+      "parameters": 515457
+    },
+    "multi-assay": {
+      "class_spearman_deltas": {
+        "I": 0.006880777062340193,
+        "II": -0.07610360393954613
+      },
+      "class_rmse_ratios": {
+        "I": 0.9918396166582761,
+        "II": 1.0865424609362517
+      },
+      "seed_macro_deltas": {
+        "42": -0.02366256958210705,
+        "43": -0.04556025729509888
+      },
+      "gates": {
+        "macro_gain": false,
+        "no_class_rank_drop": false,
+        "no_class_rmse_regression": false,
+        "both_seeds_macro_improve": false,
+        "each_class_improves_in_some_seed": false
+      },
+      "eligible": false,
+      "mean_macro_spearman": 0.6152691466489343,
+      "parameters": 516102
+    },
+    "multi-assay-wide": {
+      "class_spearman_deltas": {
+        "I": 0.03138126400104946,
+        "II": -0.054512369804646243
+      },
+      "class_rmse_ratios": {
+        "I": 0.9599531083493783,
+        "II": 1.073359246504603
+      },
+      "seed_macro_deltas": {
+        "42": 0.0065970744014655636,
+        "43": -0.02972818020506235
+      },
+      "gates": {
+        "macro_gain": false,
+        "no_class_rank_drop": false,
+        "no_class_rmse_regression": false,
+        "both_seeds_macro_improve": false,
+        "each_class_improves_in_some_seed": false
+      },
+      "eligible": false,
+      "mean_macro_spearman": 0.6383150071857389,
+      "parameters": 1599942
+    }
+  },
+  "report_sha256": {
+    "ic50-exact-s42": "e26f9e12605925e2b515df7459851c0d9635a5a89e5866344869b32412db945c",
+    "ic50-exact-s43": "29ecf5f5d8143fc182081f6a5681ba0b901bd41638cf50330285769235481c53",
+    "ic50-bounds-s42": "57d7a039932f391653cfded6d3ec20e74c6afab38c6e9b56343869bf12e3e022",
+    "ic50-bounds-s43": "e5726a75d500526a46920f72d1146d3452fecb483e0210366801f14f46449e03",
+    "multi-assay-s42": "533a597823ec65d7f70d16e5d3aaa8e5d48d59e8e970a49873bcab83cd894b1a",
+    "multi-assay-s43": "22eb07642dd17c4200db373080673f032426db4d7881ab79946be3fee140fa88",
+    "multi-assay-wide-s42": "08a2360dcfb2b811bad2aa2f84187bb0ad3cbd2b760e524873482f49de71bbb7",
+    "multi-assay-wide-s43": "c95bb15c29ca7d0c0e6be7c4e62ab3776631a853f2f286e8676a846793f04df0"
+  },
+  "note": "Six-output models are experimental unless they pass the promotion gates. Added-output generalization is reported independently; sparse/missing strata remain unqualified."
+}
