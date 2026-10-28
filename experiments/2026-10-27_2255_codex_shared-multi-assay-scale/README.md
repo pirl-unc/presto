@@ -89,3 +89,50 @@ This checks mixed-output execution and is not a predictive fit or test evaluatio
 The pinned original IC50 preparer numbers source rows from1; the new scanner
 numbers them from0. Independent verification explicitly accounts for both, checks
 raw-record fingerprints and does not rewrite the frozen original observations.
+
+## Expanded data and input support
+
+The predictive six-output cohort contains168,200observations:134,561training,
+17,503validation and16,136test. Training includes24,792distinct peptides and146
+verified groove pairs (147across all partitions). The separately admitted ten
+off-rate rows are excluded. The original IC50 controls use21,636exact training
+rows, with2,925original validation and2,803original test rows. The bounds arm
+uses23,512training rows. Primary comparisons always use original IC50 heldout IDs.
+
+All targets remain separately named. IC50, KD, EC50, KD(~IC50) and KD(~EC50)
+use log10(nM); half-life uses log10(minutes). For each endpoint, exact training
+outcomes fit its mean and population SD. Each observed row contributes squared
+standardized residual; upper/lower bounds contribute only on the violating side.
+All endpoint weights are1before averaging over the sampled rows. There are no
+cross-assay equality constraints, synthetic labels, pseudo-negatives or pretraining.
+For concentration outputs, the500nM table is an endpoint-specific threshold
+classification; an EC50/proxy threshold is not a calibrated binding probability.
+
+Counts below are **all / exact** observations.
+
+| Output | Train I | Train II | Validation I | Validation II | Test I | Test II |
+|---|---:|---:|---:|---:|---:|---:|
+| ic50 | 15,246 / 14,375 | 8,266 / 7,261 | 2,060 / 1,968 | 886 / 758 | 1,856 / 1,758 | 969 / 842 |
+| kd | 14,759 / 4,097 | 422 / 350 | 1,898 / 567 | 36 / 32 | 1,606 / 561 | 96 / 82 |
+| ec50 | 288 / 288 | 19 / 19 | 31 / 31 | 3 / 3 | 47 / 47 | 0 / 0 |
+| kd_via_ic50 | 41,940 / 39,835 | 1,104 / 886 | 5,459 / 5,182 | 207 / 183 | 5,069 / 4,808 | 168 / 123 |
+| kd_via_ec50 | 30,628 / 9,113 | 14,218 / 11,307 | 4,020 / 1,175 | 1,935 / 1,529 | 3,819 / 1,154 | 1,570 / 1,231 |
+| half_life | 7,659 / 7,650 | 12 / 12 | 968 / 968 | 0 / 0 | 934 / 934 | 2 / 2 |
+
+Training class proportions shift from66.4%I/33.6%II in the exact IC50 control
+to82.1%I/17.9%II in the six-output data. About98.6%of class-I training rows are
+9–10mers;89.4%of class-II rows are15mers. Long/unusual ligands have sparse support.
+All observed grooves are classical human HLA-A/B/C or DR/DP/DQ; no nonclassical
+or nonhuman transfer is tested. Peptide and verified groove sequences gain diversity;
+cellular machinery, source-protein context, TCR and MS inputs receive no new data.
+
+Training-only exact pMHC overlap is highly asymmetric. IC50 and KD(~IC50) share
+6,676class-I contexts (correlation of per-context mean measurements0.963), but
+only two class-II contexts. IC50/directKD overlap is69I/zeroII. This is a possible
+source of unequal auxiliary benefit, not a causal finding: assay conditions are
+not matched, and separate original assay IDs are not guaranteed independent studies.
+The two labeled assays remain distinct. `training-output-overlap-by-class.csv`
+and the source-disposition ledger preserve the full accounting.
+
+No new source-only/zero-shot class-transfer experiment is included in this family.
+The earlier single-class comparisons remain the relevant evidence for that question.

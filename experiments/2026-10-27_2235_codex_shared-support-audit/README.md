@@ -180,3 +180,22 @@ Reproduce with the recorded Python executable and
 per-example diagnostics and both validation/test summaries. This consumes saved
 outputs only, performs no new inference and does not alter the next family's
 prespecified selection gates.
+
+## Final software integration
+
+`results/integration-verification.json` records sourceceebfb80 and the final
+installable distributions. The broad suite passed2,767unique cases across its
+initial run and targeted reruns, with four skips. Three initial failures were
+missing historical files in the sparse checkout; restoring those tracked files
+resolved all three. The initial collection failure and subsequent logs are retained.
+All300focused shared-model tests pass. Full pinned Ruff lint/format checks, strict
+MkDocs, distribution metadata checks and isolated installed-wheel execution pass.
+All209Python files in the final wheel match the working source byte-for-byte.
+The smoke now covers configurable shared capacity, both candidate rules and
+untrained-output refusal, in addition to historical resources and loaders.
+
+New training also makes checkpoint priority explicit through
+`training.selection_endpoint`; null means the observation-weighted assay loss,
+and the IC50 recipe explicitly selects IC50. The predictive comparison retains
+its frozen0c4c984b runtime and original selection contract. No running fit or
+selection gate changed, and the shared virtual environment was not modified.

@@ -5111,3 +5111,10 @@ was0.990/0.989 across958multi-register test rows, median maximum weight0.182/0.1
 and top-start agreement63.3% between seeds. No weights exceeded0.5. These saved
 statistical weights do not identify validated physical binding cores; no measured
 register truth or new inference was added. The audit retains per-example diagnostics.
+
+Software integration closure atceebfb80:2,767unique tests passed across the full
+run plus targeted reruns; four skips. Three initial failures were sparse-checkout
+omissions of historical source files, resolved by restoring tracked files. Full
+pinned lint/format, strict docs and isolated wheel checks pass;209shippedPython
+files match source. Checkpoint priority is now explicit and endpoint-agnostic.
+These post-freeze software changes did not change the eight active predictive fits.

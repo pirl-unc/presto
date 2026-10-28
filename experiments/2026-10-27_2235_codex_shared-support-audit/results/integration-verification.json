@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "agent_model": "Codex / GPT-6",
+  "source_commit": "ceebfb8082abdc965b19c93d07d24b40ff43492d",
+  "python": "3.12.6 (main, Sep  9 2024, 21:36:32) [Clang 18.1.8 ]",
+  "executable": "/Users/iskander/code/shared-virtual-env/bin/python",
+  "focused_tests": 300,
+  "full_suite": {
+    "first_run": {
+      "passed": 2764,
+      "failed": 3,
+      "skipped": 4,
+      "seconds": 850.38
+    },
+    "failure_reason": "Three historical source files were absent from sparse checkout; no code defect. Restored tracked files, then both affected test files passed (2 and4 tests).",
+    "unique_test_cases_passed_after_targeted_reruns": 2767,
+    "skipped": 4,
+    "logs": [
+      "launch_logs/full-integration-tests-v2.log",
+      "launch_logs/restored-historical-source-tests.log",
+      "launch_logs/restored-frozen-source-tests.log"
+    ]
+  },
+  "pinned_ruff": "0.16.0; full lint and format check passed (486 files)",
+  "docs": "strict build passed after correcting an external experiment link",
+  "distribution_metadata": "twine check passed for wheel and sdist",
+  "wheel_check": "isolated installed wheel: legacy resources/loaders, configurable shared model, I/II candidate enumeration and untrained-output guard passed",
+  "wheel_python_files_matching_working_source": 209,
+  "artifacts": {
+    "artifacts/2026-10-27_2255_codex_shared-multi-assay-scale/software/ceebfb80/presto-0.1.22-py3-none-any.whl": {
+      "sha256": "4ef0f58188c460091a435e9d61fad6c8601d00c8dd1ae756acad347404958032",
+      "bytes": 867122
+    },
+    "artifacts/2026-10-27_2255_codex_shared-multi-assay-scale/software/ceebfb80/presto-0.1.22.tar.gz": {
+      "sha256": "4cedd20d7250f45e52b17c69a22db984603e81497d73329063bb082abc0f00f7",
+      "bytes": 1097684
+    }
+  },
+  "shared_environment_modified": false,
+  "predictive_runtime_note": "Eight predictive fits remain pinned to0c4c984b; explicit generic selection and sampler fingerprint fixes were made after freezing, without changing running fits."
+}
