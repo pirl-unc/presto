@@ -1,19 +1,20 @@
 {
-  "status": "running",
-  "completed": [],
-  "failed": [],
-  "pending": [
+  "status": "completed",
+  "completed": [
     "small-ic50-s42",
-    "small-ic50-s43",
     "wide-ic50-s42",
-    "wide-ic50-s43",
-    "wide-six-class-balanced-s42",
-    "wide-six-class-balanced-s43",
     "wide-six-natural-s42",
-    "wide-six-natural-s43",
+    "wide-six-class-balanced-s42",
     "wide-six-primary-matched-s42",
-    "wide-six-primary-matched-s43",
     "wide-six-primary-shuffled-s42",
+    "small-ic50-s43",
+    "wide-ic50-s43",
+    "wide-six-natural-s43",
+    "wide-six-class-balanced-s43",
+    "wide-six-primary-matched-s43",
     "wide-six-primary-shuffled-s43"
-  ]
+  ],
+  "pending": [],
+  "failed": [],
+  "collection_transport": "verified CPU readback through original frozen collector"
 }

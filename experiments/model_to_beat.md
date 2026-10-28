@@ -363,3 +363,25 @@ explicit species-context limitations; it is not an external validation result.
 - Distribution reference:61raw sequence features→training-scaled/centered58supported coordinates→linearlog10score→groupsoftmax. Exact reverseKL+.01mean(beta²),500Adamstepslr.02. Validation/testreverseKL.376448/.422502 versusuniform.431589/.477545. AllRLseedsalso beatuniform but addno clear gain and cost~1.41×.
 - Separate regression control: validation-selectedsequence ridgealpha1;testRMSE.415585 versuslength.434413. Primary>=5%bothheldoutgatefails(testgain4.334%);do not relabelthis as a fully qualified sequence predictor.
 - Held-outs closed; a future model must use prospective development/evaluation rather than tuning these outcomes. No absolute/missing-mass calibration, measured precursor pairing or separated processing/capture/MS model is established.
+
+
+## Shared-v5 auxiliary-transfer development reference (2026-10-28)
+
+- Status: `provisional`, separate cohort from the earlier full-cohort IC50 recipe,
+  which remains unchanged. [Controlled comparison](2026-10-28_0250_codex_assay-transfer-mechanisms/README.md).
+- Prior TRAIN only, new peptide/measurement/group components:107132/13425/14004
+  train/validation/test; allold33639holdout rows excluded and fits from scratch.
+  Human purified IC50 exact+bounds; exact heldout counts I/II1433/623 and1476/683.
+- Prespecified reference: wide shared-v5 IC50-only,192/3/6/768, natural batch64,
+  AdamW3e-4/decay1e-4,6000updates, validation each500, select pooled exactIC50RMSE.
+  Two-seed mean validation rho I/II **.6725/.6461**, test **.6853/.6330**;
+  corresponding RMSElog10(nM) **1.0681/.8079** and **1.1096/.7894**.
+- No real six-output arm passes all validation promotion gates. Exposure-matched
+  six-output training reaches validationrho.7158/.6286 and testrho.7253/.6491,
+  but fails II rank protection in both validation seeds. Do not promote it from
+  test outcomes or compare these scores directly with the earlier cohort.
+- Shared study/core overlap remains; this is no external or zero-shot qualification.
+  Preserve conditional-shuffle and exposure controls for future prospective work,
+  and verify deferred class-II partners before expanding the data. These inspected
+  partitions are now closed to tuning. Source pins, all metrics/predictions and
+  768 zero-error fresh-H100 serving probes are in the linked report.

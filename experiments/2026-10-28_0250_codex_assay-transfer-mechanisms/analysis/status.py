@@ -18,7 +18,7 @@ if worker_path.exists():
         workers["errors"],
     )
 print(
-    f"{controller['status']}: {len(live['completed'])}/12 collected; failures={live['failed']}"
+    f"{controller['status']}: {len(controller['completed'])}/12 collected; failures={controller['failed']}"
 )
 for name, state in live["conditions"].items():
     status = state["status"]["status"]

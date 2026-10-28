@@ -1,0 +1,254 @@
+{
+  "status": "sealed",
+  "test_used_for_decision": false,
+  "sealed_unix": 1793171725.18837,
+  "comparison": "new held-out IC50 validation from prior TRAIN only; exact values; two seeds; prospective plan gates; fixed wide-ic50 comparator",
+  "preferred_variant": "wide-ic50",
+  "scores": {
+    "small-ic50": {
+      "42": {
+        "I": {
+          "spearman": 0.6499897747512056,
+          "rmse": 1.0945062392078584,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.63257714111987,
+          "rmse": 0.8173024707711767,
+          "n": 623
+        }
+      },
+      "43": {
+        "I": {
+          "spearman": 0.6406279652731921,
+          "rmse": 1.0945327588957814,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.5999298247900136,
+          "rmse": 0.8560850621099465,
+          "n": 623
+        }
+      }
+    },
+    "wide-ic50": {
+      "42": {
+        "I": {
+          "spearman": 0.6818755219867916,
+          "rmse": 1.061300921928975,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.6538116620530479,
+          "rmse": 0.8038152702141611,
+          "n": 623
+        }
+      },
+      "43": {
+        "I": {
+          "spearman": 0.6631199091648138,
+          "rmse": 1.0748672540512358,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.6383533393440383,
+          "rmse": 0.8119808341251735,
+          "n": 623
+        }
+      }
+    },
+    "wide-six-natural": {
+      "42": {
+        "I": {
+          "spearman": 0.6918352827887108,
+          "rmse": 1.0390056355142452,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.5334821063019055,
+          "rmse": 0.8535145293933499,
+          "n": 623
+        }
+      },
+      "43": {
+        "I": {
+          "spearman": 0.6836530062396936,
+          "rmse": 1.0194519891005642,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.4934328077264381,
+          "rmse": 0.9046675804766408,
+          "n": 623
+        }
+      }
+    },
+    "wide-six-class-balanced": {
+      "42": {
+        "I": {
+          "spearman": 0.618878965658123,
+          "rmse": 1.108532917455563,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.5823936895565297,
+          "rmse": 0.8692844415022316,
+          "n": 623
+        }
+      },
+      "43": {
+        "I": {
+          "spearman": 0.6605634658067219,
+          "rmse": 1.0722057931892814,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.5823072639498952,
+          "rmse": 0.8538528750130931,
+          "n": 623
+        }
+      }
+    },
+    "wide-six-primary-matched": {
+      "42": {
+        "I": {
+          "spearman": 0.7258696874634464,
+          "rmse": 0.9859447122284456,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.6347176823074424,
+          "rmse": 0.8059705704379887,
+          "n": 623
+        }
+      },
+      "43": {
+        "I": {
+          "spearman": 0.7056899810990275,
+          "rmse": 1.0014837157845338,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.6224330378970673,
+          "rmse": 0.8286534293891327,
+          "n": 623
+        }
+      }
+    },
+    "wide-six-primary-shuffled": {
+      "42": {
+        "I": {
+          "spearman": 0.7008868688346251,
+          "rmse": 1.0131366997508717,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.6306329992077816,
+          "rmse": 0.8098811812013736,
+          "n": 623
+        }
+      },
+      "43": {
+        "I": {
+          "spearman": 0.6805082147235801,
+          "rmse": 1.0257492452105474,
+          "n": 1433
+        },
+        "II": {
+          "spearman": 0.6224904564597294,
+          "rmse": 0.8016791410753225,
+          "n": 623
+        }
+      }
+    }
+  },
+  "comparisons": {
+    "wide-six-natural": {
+      "class_spearman_deltas": {
+        "I": 0.015246428938399503,
+        "II": -0.13262504368437125
+      },
+      "class_rmse_ratios": {
+        "I": 0.9636215199537167,
+        "II": 1.088121270467399
+      },
+      "seed_macro_deltas": {
+        "42": -0.05518489747461158,
+        "43": -0.062193717271360166
+      },
+      "gates": {
+        "macro_gain": false,
+        "no_class_rank_drop": false,
+        "no_class_rmse_regression": false,
+        "both_seeds_macro_improve": false,
+        "each_class_improves_in_some_seed": false
+      },
+      "eligible": false,
+      "mean_macro_spearman": 0.600600800764187,
+      "parameters": 1599942
+    },
+    "wide-six-class-balanced": {
+      "class_spearman_deltas": {
+        "I": -0.03277649984338027,
+        "II": -0.06373202394533062
+      },
+      "class_rmse_ratios": {
+        "I": 1.0208647124162784,
+        "II": 1.0664323994145783
+      },
+      "seed_macro_deltas": {
+        "42": -0.06720726441259339,
+        "43": -0.029301259376117494
+      },
+      "gates": {
+        "macro_gain": false,
+        "no_class_rank_drop": false,
+        "no_class_rmse_regression": false,
+        "both_seeds_macro_improve": false,
+        "each_class_improves_in_some_seed": false
+      },
+      "eligible": false,
+      "mean_macro_spearman": 0.6110358462428174,
+      "parameters": 1599942
+    },
+    "wide-six-primary-matched": {
+      "class_spearman_deltas": {
+        "I": 0.04328211870543425,
+        "II": -0.017507140596288218
+      },
+      "class_rmse_ratios": {
+        "I": 0.9303707687251823,
+        "II": 1.0116523956439945
+      },
+      "seed_macro_deltas": {
+        "42": 0.012450092865524676,
+        "43": 0.013324885243621354
+      },
+      "gates": {
+        "macro_gain": true,
+        "no_class_rank_drop": false,
+        "no_class_rmse_regression": true,
+        "both_seeds_macro_improve": true,
+        "each_class_improves_in_some_seed": false
+      },
+      "eligible": false,
+      "mean_macro_spearman": 0.6721775971917459,
+      "parameters": 1599942
+    }
+  },
+  "report_sha256": {
+    "small-ic50-s42": "0e35ca03cf5da4e803d0dd6869db13cee91e7f3c64ef8a1fc4248601f47392c2",
+    "small-ic50-s43": "1f6dc5d0dcc7205e2f8535ea337eaf34dbf1a685efe09db701d9fc683a632b66",
+    "wide-ic50-s42": "d1ef0a012c3b26cb79d53281bfb3e3c751551f7e2be0c713471cb9f80d262214",
+    "wide-ic50-s43": "8bc3b566d6ae540a884fd577c921e28e5239242d56c4393cd59023793614c795",
+    "wide-six-natural-s42": "d0ee6d794f4cef602ccfbbbb33bc28f4e2d8a1529286629456360cddc2c987f2",
+    "wide-six-natural-s43": "b6e3296a87f2fdf3166a9e191ca8a292bb477b9c5cd25911428a76f90de582df",
+    "wide-six-class-balanced-s42": "044ef9c866b5c07ce0152b2ad4781f9a6da6a229d6b44100ffc9a719e2aed98a",
+    "wide-six-class-balanced-s43": "f5d19dfe96f08656f65e259930141c59760ed8a3278b6b8cde594959577b87c7",
+    "wide-six-primary-matched-s42": "7bac62dc1f33f4651ffda5827a43feca619fd5c5a94a249d291b6ef4e1ab6cdd",
+    "wide-six-primary-matched-s43": "73418505483e629c8868356bfddfbef73eae4c189969aa655c2004d2d75ccd7f",
+    "wide-six-primary-shuffled-s42": "4fbb0074501bdbd93976002390bfe3971e45908670d07bd939e432a8e716428d",
+    "wide-six-primary-shuffled-s43": "00c2f6e488893c80969a3eda7df5f2d0fbebb2dbe4d207c3e311238a2ffa931f"
+  },
+  "note": "Shuffled synthetic auxiliary control and small-IC50 capacity control are never promotion candidates. A winner is specific to this new development cohort; no automatic replacement of the prior full-cohort recipe."
+}

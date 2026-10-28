@@ -14577,9 +14577,19 @@ Spec: experiments/agents/codex/plans/2026-10-28_assay-transfer-mechanisms.md.
 
 - [x] Quantify prior training composition and source exclusions independently.
 - [x] Freeze fresh component partitions, controlled arms and common weighted sampling.
-- [ ] Verify source/sampler/resume contracts and execute twelve H100 fits with live results.
-- [ ] Seal selection, independently verify metrics and replay saved training probes.
-- [ ] Integrate supported findings and close experiment, registry and PR handoff.
+- [x] Verify source/sampler/resume contracts and execute twelve H100 fits with live results.
+- [x] Seal selection, independently verify metrics and replay saved training probes.
+- [x] Integrate supported findings and close experiment, registry and PR handoff.
 
 Live-report recovery spec: experiments/agents/codex/plans/2026-10-28_live-progress-recovery.md.
 - [x] Separate read-only worker polling from blocking archive collection; verify dashboard freshness.
+
+Review: all12 fixed fits completed.208 independent metric rows and932,964 TRAIN
+predictions pass;768 fresh-H100 training probes replay exactly in evaluation and
+public serving. Restored IC50 exposure recovers II; real auxiliary values add clear
+I benefit, while II incremental benefit is uncertain. No six-output arm qualifies;
+prior IC50 recipe unchanged. Complete composition/source attrition,55,371deferred
+II partner rows, bootstrap, loci/novelty/register/coordinate diagnostics and all
+operational recovery receipts are preserved. Source-head CI40648481129 passes;
+final docs and analysis fixtures pass. Final publication/CI receipts are maintained
+in the original workspace handoff; scientific PR131 remains draft.

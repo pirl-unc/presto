@@ -5229,7 +5229,7 @@ joint-affinity win. Retain the tested exactIC50 recipe and pursue matched exposu
 and source-qualified auxiliary evidence prospectively. PR131 scientific gates remain open.
 
 
-## 2026-10-28 — Auxiliary-assay transfer mechanisms (running)
+## 2026-10-28 — Auxiliary-assay transfer mechanisms (complete)
 
 **Agent/model:** Codex / GPT-6. **Experiment:**
 [2026-10-28_0250_codex_assay-transfer-mechanisms](2026-10-28_0250_codex_assay-transfer-mechanisms/README.md).
@@ -5260,16 +5260,58 @@ pretraining or identity replay; dropout .1, AdamW3e-4/decay1e-4, mean standardiz
 one-sided squared loss, all loss weights1. Training-only exact-value scales.
 Batch64, except exposure-matched/permuted128 with50% IC50. Validation every500;
 checkpoint by pooled exact IC50 validation RMSE. Same-width/seed initial common
-weights and IC50 head must match. All12 fit budgets remain fixed.
+weights and IC50 head match. All12 fixed fit budgets completed.
 
 Synthetic control: permute auxiliary TRAIN targets within endpoint/class/groove/
 qualifier, seed73028; 59,943 of88,155 values change. Original targets/donors are
 preserved; heldout labels remain measured. Synthetic arm cannot be promoted.
-Tests remain undisclosed until a sealed validation-only decision against wide
-IC50; no class regression and two-seed gains are required by the fixed plan.
-No preferred condition or final predictive conclusion yet; collection, independent
-full metrics/predictions, peptide bootstrap, failure strata and fresh-H100 serving
-replay are pending. Two IC50 controls have completed at this registry update.
+Tests were withheld from inspection until the validation-only decision was sealed.
+**Preferred reference: wide-ic50; no real six-output arm passes every promotion gate.**
+The exposure-matched arm passes macro gain, both-seed macro gains and RMSE gates,
+but loses II validation rank in both seeds; its mean II deficit is0.0175, exceeding
+allowed0.005. Test results do not reverse this decision. The prior full-cohort
+IC50 default remains unchanged. These are two-seed means, not ensembles; RMSE is
+log10(nM). Exact validation counts I/II=1433/623, test1476/683.
+
+| Condition | I validation ρ / RMSE | II validation ρ / RMSE | I test ρ / RMSE | II test ρ / RMSE | Mean worker min |
+|---|---:|---:|---:|---:|---:|
+| Small IC50-only | 0.6453 / 1.0945 | 0.6163 / 0.8367 | 0.6552 / 1.1279 | 0.6454 / 0.7757 | 22.0 |
+| Wide IC50-only | 0.6725 / 1.0681 | 0.6461 / 0.8079 | 0.6853 / 1.1096 | 0.6330 / 0.7894 | 23.1 |
+| Six outputs, natural | 0.6877 / 1.0292 | 0.5135 / 0.8791 | 0.7310 / 1.0177 | 0.6006 / 0.7889 | 33.9 |
+| Six outputs, class-balanced | 0.6397 / 1.0904 | 0.5824 / 0.8616 | 0.6798 / 1.0954 | 0.6498 / 0.7807 | 36.8 |
+| Six outputs, IC50-matched | 0.7158 / 0.9937 | 0.6286 / 0.8173 | 0.7253 / 1.0171 | 0.6491 / 0.7859 | 54.2 |
+| Matched, shuffled auxiliary values | 0.6907 / 1.0194 | 0.6266 / 0.8058 | 0.6956 / 1.0611 | 0.6340 / 0.7831 | 51.5 |
+
+Capacity improves I validation/test Spearman by0.0272/0.0301, but II's validation
+gain does not repeat on test. Natural six-output sampling dilutes primary exposure:
+seed42 sees24,359 II IC50 labels over6000updates versus137,183 in wide IC50.
+Matching restores137,189, improving II over natural by0.1151 validation/0.0485test;
+paired peptide-cluster95% intervals[.0669,.1648]/[.0143,.0797]. Matching changes
+batch/compute/mean-loss normalization too; primary gradients are not exactly matched.
+II TRAIN Spearman moves.7656→.5862→.7289 for wide/natural/matched, supporting
+primary underfitting. Real versus shuffled auxiliary values add I rho.0251/.0297
+(validation/test; intervals excludezero), whereas II.0020/.0151 intervals includezero.
+Class balancing recovers II at I's expense. The II loss concentrates in DQ; only
+eight test exactIC50 DR rows exist. A posthoc equal-class-RMSE history audit does
+not change natural/wide/matched selections; no alternate checkpoint is tested.
+
+All12 heldout/source/loss/scale/initialization/exposure/coordinate checks pass;
+208 metric rows preserve loss, Spearman/Pearson/RMSE and500nM classification
+accuracy/balancedaccuracy/precision/recall/F1/AUROC/AUPRC where defined.
+932,964 full-training predictions independently verified;768 saved training probes
+replay with zero error in evaluation and guarded serving on a fresh H100.
+Every nonpadding coordinate has same-coordinate gradient/update evidence, while
+redundant key biases and constant human input remain unidentifiable effects.
+II EC50 has17/0/2train/val/test rows; half-life11/1/0. Register test entropy stays
+.972–.990, without measured core truth. Nearly all test rows share study with
+training;573/683 II rows share a9mer. No external, MS/processing or zero-shot claim.
+
+Total worker wall time7.384H100-hours excludesqueue/build/packaging/transport;
+not a billing estimate. PeakRSS4.92–5.82GiB, CUDAallocated.79–2.51GiB. The complete
+report preserves source attrition, exposures, failure strata, bootstrap and plots.
+All12 original archives passed hashes; transport failures and guarded recovery are
+preserved, with no refit, new heldout inference or relaxed numerical tolerance.
+
 
 Material inventory findings: 24,792 unique peptides,117,834 pMHC contexts,
 146 groove-sequence pairs; 29.3% bounds. Natural sampling was not allele-balanced.
@@ -5283,5 +5325,14 @@ analysis fixtures, lint/docs/wheel and hosted source-head CI40626989848 pass.
 
 Raw artifacts: `artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/{upload,downloads,runs}`;
 Modal volume `presto-checkpoints` under the family ID. Canonical summaries,
-heldout prediction dumps and verification receipts will be closed under `results/`.
+heldout prediction dumps and verification receipts are complete under `results/`.
 Full TRAIN dumps remain in the raw archives. PR131 scientific gates remain open.
+
+A metadata-only audit of deferred restrictions finds all55,371 missing-partner rows
+are reported classII:33,165IC50 and20,654KD-via-IC50, mostlyDR. This is a major
+curation opportunity, not automatic admission: partner/construct identities,
+mutant/serotype labels and other criteria still require verification. No peptide
+or quantitative outcome columns were read; no frozen training membership changed.
+The common manifest trainer now supports explicit stratum weights with verified
+unweighted compatibility and exact resume. No task-specific trainer or unqualified
+six-output default was introduced. PR131 remains draft until130/132 qualify.

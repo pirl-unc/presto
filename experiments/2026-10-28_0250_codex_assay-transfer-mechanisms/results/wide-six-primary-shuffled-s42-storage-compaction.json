@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "archive": "/Users/iskander/code/presto/.worktrees/shared-training/presto/artifacts/2026-10-28_0250_codex_assay-transfer-mechanisms/downloads/wide-six-primary-shuffled-s42.tar.gz",
+  "archive_sha256": "01b5bb751354122cf401487a15c0dcb37bd1a6c90555320fe5c0ffb7807829ed",
+  "entries": [
+    {
+      "member": "wide-six-primary-shuffled-s42/raw/evaluations/train.json",
+      "bytes": 1545109855,
+      "sha256": "46644581368067332551d0ba3fcef0dccefecdf392d5f06c0487b561f9a7a14d"
+    },
+    {
+      "member": "wide-six-primary-shuffled-s42/raw/train-predictions.jsonl",
+      "bytes": 951974660,
+      "sha256": "3a1196abc44701d03368de97af352e6831ce5d6fbe3e79ff37d548c46fbb48e3"
+    },
+    {
+      "member": "wide-six-primary-shuffled-s42/raw/evaluations/validation.json",
+      "bytes": 188049898,
+      "sha256": "5b98e4785c6147a05f1694403e0eb254aa4e38f1ecf26c2d8ebec1a764224e60"
+    },
+    {
+      "member": "wide-six-primary-shuffled-s42/raw/validation-predictions.jsonl",
+      "bytes": 115711322,
+      "sha256": "e8c99c15bffcef2f2299d04d73dfdab40e13f72057cbc3cfaa0495a2d1caaff1"
+    },
+    {
+      "member": "wide-six-primary-shuffled-s42/raw/evaluations/test.json",
+      "bytes": 196183783,
+      "sha256": "3cdadf1f2350b98b9b0e6a7ae18f17e83d51ba796979f0b1b9d6b7152bdd6688"
+    },
+    {
+      "member": "wide-six-primary-shuffled-s42/raw/test-predictions.jsonl",
+      "bytes": 120674020,
+      "sha256": "84987db303b0e4cf73c37bad0109b7a837d80095b49d79afa71bac9d35793704"
+    }
+  ],
+  "removed_bytes": 3117703538,
+  "policy": "Remove only byte-identical expanded exports; retain original archive, all checkpoints and gzip predictions. No metric parsing.",
+  "free_after": 13728256000
+}

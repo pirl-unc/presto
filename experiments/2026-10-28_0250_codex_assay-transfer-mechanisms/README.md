@@ -1,6 +1,7 @@
 # Why do six assay outputs help MHC-I more than MHC-II?
 
-Status: twelve fixed fits submitted; two H100 workers active. Results pending.
+Status: complete. All twelve fixed fits, independent numerical checks and fresh-H100
+evaluation/public-serving replays passed. No six-output recipe passed promotion.
 Agent/model: Codex / GPT-6. Date: 2026-10-28 UTC.
 
 Detailed pre-implementation contract:
@@ -15,6 +16,129 @@ This remains a development experiment, not external biological qualification.
 Freeze source/data/manifests/invocation under `reproduce/`; keep live validation,
 per-example heldout dumps, independent metrics, plots, replay and support evidence
 under `results/`. Large inputs/checkpoints live in repo-level `data/`/`artifacts/`.
+
+## Completed controlled comparison
+
+All twelve fixed fits, independent heldout/full-training checks and fresh-H100
+evaluation/public-serving replays pass. The validation-only decision retains
+**wide-ic50 as this cohort's prespecified reference**: no real six-output arm
+passes every class-protection gate. The prior full-cohort IC50 recipe remains
+unchanged. These are two-seed means, not ensembles; RMSE is log10(nM).
+Exact IC50 validation counts are I=1,433 / II=623; test counts I=1,476 / II=683.
+
+| Condition | I validation ρ / RMSE | II validation ρ / RMSE | I test ρ / RMSE | II test ρ / RMSE | Mean worker min |
+|---|---:|---:|---:|---:|---:|
+| Small IC50-only | 0.6453 / 1.0945 | 0.6163 / 0.8367 | 0.6552 / 1.1279 | 0.6454 / 0.7757 | 22.0 |
+| Wide IC50-only | 0.6725 / 1.0681 | 0.6461 / 0.8079 | 0.6853 / 1.1096 | 0.6330 / 0.7894 | 23.1 |
+| Six outputs, natural | 0.6877 / 1.0292 | 0.5135 / 0.8791 | 0.7310 / 1.0177 | 0.6006 / 0.7889 | 33.9 |
+| Six outputs, class-balanced | 0.6397 / 1.0904 | 0.5824 / 0.8616 | 0.6798 / 1.0954 | 0.6498 / 0.7807 | 36.8 |
+| Six outputs, IC50-matched | 0.7158 / 0.9937 | 0.6286 / 0.8173 | 0.7253 / 1.0171 | 0.6491 / 0.7859 | 54.2 |
+| Matched, shuffled auxiliary values | 0.6907 / 1.0194 | 0.6266 / 0.8058 | 0.6956 / 1.0611 | 0.6340 / 0.7831 | 51.5 |
+
+Worker time includes setup, fitting and evaluation export, but excludes queue,
+image build, parent archive packaging and transport. Total worker time is
+7.384 H100-hours; this is not a billing estimate. All runs share the same
+model/trainer. Six-output heads add only 965 parameters to the 1,598,977-parameter
+wide IC50 model; the small control has 515,457 parameters.
+
+![IC50 comparison](results/ic50-comparison.png)
+
+## What the controls establish
+
+- **Capacity is a real confound in the earlier comparison.** Wide versus small
+  IC50 improves I Spearman by 0.0272 on validation and 0.0301 on test. II improves
+  by 0.0298 on validation but falls by 0.0124 on test; its paired test interval
+  includes zero. A general class-II capacity gain is therefore not established.
+- **Primary-task dilution explains much of the II deficit.** Matching IC50
+  exposure improves II over the natural six-output mix by 0.1151 validation and
+  0.0485 test Spearman. Paired peptide-bootstrap 95% intervals are [0.0669, 0.1648]
+  and [0.0143, 0.0797]. Mean II training Spearman is 0.7656 for wide IC50, 0.5862
+  for natural six-output training, and 0.7289 after matching. The natural arm is
+  fitting the primary target poorly, rather than showing only a larger train/test
+  gap. Matching counts still changes batch size, compute and mean-loss
+  normalization; it does not match the primary gradient contribution exactly.
+- **Measured auxiliary values help I beyond the conditional shuffle.** Real
+  versus shuffled auxiliary values improve I by 0.0251 validation / 0.0297 test
+  Spearman, with intervals [0.0061, 0.0450] / [0.0120, 0.0493]. II differences are
+  0.0020 / 0.0151, with intervals [-0.0283, 0.0293] / [-0.0139, 0.0443]. This
+  supports peptide-specific quantitative auxiliary benefit for I; additional II
+  benefit is uncertain. The shuffle preserves groove/qualifier groups and many
+  constant bounds, so it retains informative structure.
+- **Class balancing alone is a trade-off.** Relative to the natural mix, it
+  recovers II test Spearman by 0.0492 but loses I by 0.0512. It still supplies
+  fewer II IC50 labels than the primary-matched and IC50-only arms. Equal class
+  totals do not equalize endpoint/locus coverage or primary-task exposure.
+- **Selection is not the main explanation here.** A posthoc equal-class-RMSE
+  history audit changes three of twelve checkpoint choices: both class-balanced
+  runs and small-IC50 seed43. It leaves both natural, wide-IC50 and primary-matched
+  choices unchanged. No alternative checkpoint was promoted or evaluated on test.
+
+The primary-matched arm passes the macro-gain, two-seed macro consistency and
+RMSE gates, but fails the no-class-rank-drop and each-class-improves gates. Its
+II validation Spearman is 0.0175 below the wide control, even though its II test
+point estimate is 0.0161 higher. Test inspection does not reverse the sealed
+decision. All confidence intervals above are conditional paired peptide-cluster
+bootstraps of the mean over two seeds, not uncertainty over new studies or seeds.
+
+![Exposure curves](results/exposure-curves.png)
+
+## Failure modes, support and scope
+
+The II loss is concentrated in DQ. Validation DQ Spearman is 0.6450 for wide
+IC50, 0.4584 for natural six-output and 0.6028 for primary-matched; corresponding
+test values are 0.6490, 0.5757 and 0.6243. DP test values are 0.6076, 0.6224 and
+0.6679. Only 11 validation / eight test exact IC50 rows are DR, which does not
+qualify DR accuracy. The I gains occur in both A and B; no IC50 C outcomes exist.
+Full per-groove, locus, length, target-range, censoring and novelty strata are
+preserved. Novelty groups are defined relative to each arm's training set, so
+some class-I group memberships differ between the IC50-only and six-output arms.
+
+Every non-padding parameter coordinate has same-coordinate gradient and update
+evidence. Only fixed padding remains untouched (128 small / 192 wide coordinates).
+The 384/768 attention key-bias coordinates are structurally redundant despite
+numerical updates; constant human-species input does not identify a species effect.
+The II EC50 head has 17 training / zero validation / two test rows; half-life has
+11 / one / zero. II direct KD has only 35 exact rows in each heldout split, and
+KD-via-IC50 has 54 validation / 58 test. Allocated shared outputs remain unqualified
+where supervision is sparse or absent.
+
+II IC50 register weights remain diffuse: normalized test entropy approximately
+0.972–0.990, with no maximum register weight above 0.5. These are statistical
+weights without measured register truth or physical-occupancy qualification.
+All test peptide strings are absent from training, but 1,475/1,476 I and 683/683 II
+exact IC50 test rows share a study with training; 573/683 II test rows share at
+least one nine-residue substring with training. This is not study- or homology-
+independent biological qualification, MS ligand ranking, processing, nonhuman
+prediction or source-class-only zero-shot transfer.
+
+## Completed verification and retained evidence
+
+Independent checks cover original targets/units, censor-aware losses, exact-only
+training scales, all heldout regression and 500 nM classification metrics,
+initialization equality, sampler exposures, checkpoint hashes and coordinate masks.
+There are 208 endpoint/class/split metric rows, including loss, Pearson, Spearman,
+RMSE, accuracy, balanced accuracy, precision, recall, F1, AUROC and AUPRC where
+defined. Half-life retains log10(minutes) and has no concentration threshold.
+
+All 932,964 saved training
+predictions were independently checked. All 768 saved
+training probes replay exactly through evaluation and the guarded public predictor
+on a fresh H100 (maximum error zero for both paths). No new heldout inference,
+refitting or tolerance relaxation was used for replay. The training app released
+both GPU containers before the separate one-H100 verification run.
+
+Canonical files: `metrics-independent.csv`, `common-ic50-means.csv`,
+`all-output-means.csv`, `training-metrics-independent.csv`,
+`groove-metrics-min20.csv`, `failure-strata.csv`, `output-class-support.csv`,
+`coverage-runtime.csv`, `paired-bootstrap.json`, `register-diagnostics.json`,
+`checkpoint-selection-diagnostics.json`, `validation-decision.json`,
+`verification-summary.json` and `gpu-training-replay.json`, all under `results/`.
+Per-example validation/test dumps are in each condition directory. Full TRAIN
+dumps are retained in checksummed raw archives and local ignored gzip copies.
+The same common manifest trainer now supports explicit stratum sampling weights;
+unweighted behavior and exact resume remain verified. No task-specific training
+path or six-output default was introduced. PR131 stays draft pending #130/#132.
+
 
 ## What the earlier 134,561 training observations contain
 
@@ -105,7 +229,7 @@ Study and sequence-homology overlap may remain. The independent data audit passe
 Two seeds (42/43), 6,000 updates each, no pretraining, dropout 0.1, AdamW learning rate 3e-4,
 weight decay1e-4, no schedule/AMP/TF32/compile. All use shared-v5 and the same
 `fit_index` path. Output order puts IC50 first; same-width/seed common-core and
-IC50-head initialization must match. Concentration targets use log10(nM), half-life
+IC50-head initialization match and were independently verified. Concentration targets use log10(nM), half-life
 uses log10(minutes), with exact-TRAIN-only means/scales. Loss is mean standardized
 squared error, one-sided for bounds; all endpoint/row loss weights are 1.
 Validation every 500 updates; select pooled exact-IC50 validation RMSE; no early
@@ -143,8 +267,8 @@ Observed NVIDIA H100 80GB HBM3, 81,559 MiB, driver 610.57.04. Pinned environment
 Python 3.12, Torch 2.14.1, NumPy 2.5.4, PyYAML 6.0.3, mhcgnomes 3.64.6, mhcseqs 2.6.13,
 tqdm 4.70.1, psutil 7.2.2. Local source admission/preflight covers all three distinct
 source sets; weighted/unweighted resume and sampler tests pass. Full local suite: 2,778 passed / 4 skipped; analysis fixtures: 2 passed. Lint/format, strict
-docs, wheel/sdist build, twine and installed-wheel checks pass. Per-checkpoint
-scientific verification remains pending.
+docs, wheel/sdist build, twine and installed-wheel checks pass. All twelve checkpoints passed independent numerical verification and saved-training-probe replay;
+external scientific qualification remains separate. Hosted source-head CI40648481129 passed.
 
 - [Modal app](https://modal.com/apps/iskandr/main/ap-1AHTEVt9VZBzGnh9yZsvRh)
 - [Local live comparison](http://127.0.0.1:54501/)
@@ -156,8 +280,8 @@ scientific verification remains pending.
 - Canonical prediction dumps/summaries: `results/<condition>/`; full TRAIN dumps
   remain in the artifact directories, while heldout dumps are versioned here.
 
-Final metrics, mechanistic interpretation, paired peptide-bootstrap intervals,
-failure strata, fresh-H100 serving replay and registry closure remain pending.
+Final metrics, paired peptide-bootstrap intervals, failure strata and serving replay
+are complete and recorded above. The canonical registry has been closed.
 
 ## Training-only assay overlap
 
@@ -176,9 +300,9 @@ interference, not a source-class-only zero-shot transfer claim.
 At approximately 04:26 UTC, remote container inspection confirmed four fits were
 complete and both exposure controls were running, while the local dashboard still
 showed two collected fits and stale export states. Downloading a ~226 MB archive
-blocked the original controller's status polling. A separate read-only poller now
-reads only this family's twelve existing Modal Dict keys every ten seconds and
-writes `results/live-workers.json`; the original controller retains exclusive
+blocked the original controller's status polling. A separate read-only poller was added to
+read only this family's twelve existing Modal Dict keys every ten seconds and
+writes `results/live-workers.json`; the original controller initially retained exclusive
 ownership of archive collection. The dashboard merges current worker state,
 shows remote completion separately from downloaded archives and displays poll age.
 Its owned loopback server was restarted; no fit, queued call, input, optimizer,
@@ -191,14 +315,16 @@ the expected logical file size. A separate ordered-read probe timed out at 64 Mi
 both incomplete files and their failure receipts are preserved. A CPU-only Modal
 function then streamed the already committed archive through mounted-filesystem
 reads in 256 KiB chunks: 225,755,015 bytes in 20.49 seconds, with the original full
-SHA256 verified remotely and locally. One CPU worker, no GPU, now caches each
+SHA256 verified remotely and locally. One CPU worker, no GPU, was used to cache each
 completed archive separately (`reproduce/readback-watch.json`). No fit is retried.
-The original controller stays alive until all twelve original function calls
-return. Only then may the guarded `analysis/collection_handoff.py` transfer
-collection ownership, preserving the original controller receipt and failed
-partials. Canonical extraction and report generation reuse the frozen original
-collector with verified local-file transport; predictions, metrics and tolerances
-are unchanged. Final collection/verification is still pending.
+The original local controller later exited on a DNS resolution error; the detached
+training app continued every original fit. After all twelve original function calls
+returned and every archive passed its original SHA256 check, the guarded
+`analysis/collection_handoff.py` transferred collection ownership. The original
+controller receipt, error log and failed partials are preserved. Canonical
+extraction/report generation reused the frozen original collector with verified
+local-file transport; predictions, metrics and tolerances were unchanged.
+Final collection and independent verification are complete for all twelve fits.
 
 Archive headers revealed ~3.20 GB expanded per six-output fit. Collection therefore
 keeps all original checksum-verified archives, checkpoints and gzip predictions,
@@ -209,7 +335,7 @@ reserve, and every removed file remains exactly recoverable from the original
 local and remote archives. A software check confirms corrupt expansions fail
 before any deletion; no heldout metrics are parsed during this storage check.
 
-A posthoc descriptive audit added during execution will compare the fixed pooled
+The completed posthoc descriptive audit compares the fixed pooled
 IC50-RMSE checkpoint choice with each class's best validation-history point and
 the minimum unweighted mean class RMSE. This diagnoses selection trade-offs only;
 alternate checkpoints are not selected, promoted or evaluated on test.
@@ -234,3 +360,11 @@ The two already-collected controls were compacted before the final handoff when
 shared disk headroom fell: 1,053,877,439 redundant expanded bytes were removed
 only after exact archive-member hash checks. Separate before-handoff receipts
 preserve this action; their full archives, gzip predictions and checkpoints remain.
+
+The final handoff, validation sealing, independent metric/full-training checks and
+fresh-H100 replay completed successfully; original invocation/source/failure
+receipts remain under `reproduce/`, `results/` and `launch_logs/`. Training containers
+were confirmed absent before the separate replay app started. No additional fit,
+heldout inference, alternative checkpoint test or selection-rule change occurred.
+The retained training curves show seed42 as solid and seed43 as dashed lines;
+endpoint-count curves distinguish equal update budgets from equal IC50 exposure.

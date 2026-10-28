@@ -1,0 +1,63 @@
+{
+  "schema": "presto.modular.manifest.v1",
+  "model": {
+    "endpoints": [
+      "ic50"
+    ],
+    "mhc_classes": [
+      "I",
+      "II"
+    ],
+    "species": [
+      "human"
+    ],
+    "identity_tasks": [],
+    "dropout": 0.1,
+    "d_model": 192,
+    "n_layers": 3,
+    "n_heads": 6,
+    "d_ff": 768
+  },
+  "training": {
+    "seed": 43,
+    "batch_size": 64,
+    "max_steps": 6000,
+    "max_epochs": 10000,
+    "min_epochs": 10000,
+    "patience": 10000,
+    "identity_weight": 0,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "checkpoint_every_steps": 100,
+    "validation_every_steps": 500,
+    "selection_endpoint": "ic50",
+    "balance_by": [],
+    "stratum_weights": []
+  },
+  "sources": [
+    {
+      "path": "/input/data/ic50-train-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "5a713d1c23bead1fabbf7779646a04354afd7f91025d725fbb1047e36a69f1f1",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/ic50-validation-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "088ea77cc2f5c5e0bd752089a02ea9e78262669e070b3b8a782b1af108e651f1",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    },
+    {
+      "path": "/input/data/ic50-test-measured-hitlist-v4-iedb.jsonl",
+      "sha256": "9623e4a24733f83c186f3ec9495428124279fbca4af64dac1f4cbbb442842675",
+      "source": "hitlist-v4-iedb",
+      "population": "new component split of earlier purified human six-output TRAIN rows",
+      "label_policy": "original physical quantitative measurements and bounds; no clipping; training-only endpoint scales",
+      "split_policy": "2026-10-28-assay-transfer-mechanisms-v1"
+    }
+  ]
+}

@@ -129,6 +129,18 @@ Direct KD, EC50, the two KD proxies and half-life retain separate labels, units
 and train-only target scales. Sparse or missing class-II output strata, nonhuman
 grooves, source-protein context, MS and TCR remain unqualified by these fits.
 
+The controlled twelve-fit follow-up in
+`experiments/2026-10-28_0250_codex_assay-transfer-mechanisms/README.md` separates
+capacity, primary IC50 exposure, class balance and auxiliary target information
+on a new partition of the earlier TRAIN rows. Restoring IC50 exposure recovers
+much of the class-II loss; measured auxiliary values benefit class I more clearly
+than class II. No six-output arm passes the fixed validation class-protection
+gates, so the earlier IC50 recipe remains unchanged. All conditions use the same
+manifest trainer, including optional `training.stratum_weights`; matching label
+counts does not imply matching loss contributions or compute. The new development
+partitions overlap training studies and peptide cores and do not qualify external
+prediction, MS ligand ranking or source-class-only transfer.
+
 `presto.inference.ObservationPredictor` (also named
 `presto.inference.modular.ModularPredictor`) reads shared-v5, shared-v4, shared-v3 and modular-v2 checkpoints
 and returns observation predictions in declared units, with support diagnostics.

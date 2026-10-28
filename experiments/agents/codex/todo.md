@@ -334,18 +334,20 @@ Results belong to 2026-10-27_2100_codex_transfer-improvements, not this backlog.
 - [x] Freeze and launch eight H100! comparisons, six outputs,134,561training observations.
 - [x] Seal validation decisions, independently verify every new heldout dump and replay checkpoints.
 - [x] Apply supported recipe/capacity wins; close canonical experiment and update practical baseline.
-- [ ] Prospectively test matched IC50 exposure and class/endpoint-aware sampling in
+- [x] Prospectively test matched IC50 exposure and class/endpoint-aware sampling in
   the same trainer; keep these inspected tests closed. Do not assume repeated rare
   class-II labels supply new information. Broader natural sampling regressed II.
 - [ ] Later: real same-protein ligand ranking and source-qualified cell/TCR inputs remain separate gaps.
 
 ## 2026-10-28 — Auxiliary transfer mechanisms
 
-- [ ] Complete the fixed twelve-fit capacity/exposure/auxiliary-permutation comparison.
+- [x] Complete the fixed twelve-fit capacity/exposure/auxiliary-permutation comparison.
 - [x] Report allele/species/class/assay/qualifier concentration and source attrition.
-- [ ] Apply supported common sampling options; retain one model/training interface.
+- [x] Apply supported common sampling options; retain one model/training interface. No six-output default passes the validation gates.
 - [ ] Future data curation: verify partners/constructs for the deferred class-II
   pool (33,165 IC50 and 20,654 KD-via-IC50 source rows, mostly DR). Preserve
   measured versus explicitly assumed identities, serotype ambiguity and mutant
   labels; do not bulk-fill DRA or count every deferred row as admissible. Validate
   any expanded cohort prospectively through the same manifest trainer.
+
+The12-fit follow-up is closed in [2026-10-28_0250_codex_assay-transfer-mechanisms](../../2026-10-28_0250_codex_assay-transfer-mechanisms/README.md): primary exposure explains much of II loss; auxiliary numeric benefit is clearer for I. Preserve these inspected partitions; next data-curation work remains separately prospective.
