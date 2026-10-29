@@ -451,3 +451,22 @@ rows separately), rather than leaving superseded pre-partition counts as its mai
 census. Publish only small existing composition summaries, retain two fit columns,
 and label submitted jobs separately from optimizer progress. This is display-only;
 no manifest, training worker or prediction contract changes.
+
+## Readable automatic result publication
+
+After independent prediction verification and the existing reporting analyses,
+write `results/summary.md` from the verified tables. Display both seeds side by
+side, separating validation/test, 2026/older studies, output, MHC class and ligand
+comparison population. Preserve exact-value counts, Spearman/Pearson/RMSE and
+binary AUROC/AUPRC; report the physical target units. Include the full support
+matrix with missing validation/test cells, unique original/generated rows,
+optimizer exposures, selected versus completed coverage, runtime and replay
+checks. Source-reported ligand outcomes remain study-specific; never combine
+them with generated comparators. Link the underlying full tables, predictions,
+plots and uncertainty outputs. Require both verified conditions and matching
+counts before generating a comparison. No new model selection, scoring, fitting
+or qualification claim is introduced. The currently running continuation already
+loads the report program after collection, so this publication step will execute
+without interrupting or resubmitting either fit. Freeze this report source with
+the existing analysis reproducibility bundle before it runs. Manually inspect a
+small constructed cross-seed example and run the existing reporting checks.

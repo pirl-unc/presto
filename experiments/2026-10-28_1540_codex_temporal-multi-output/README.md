@@ -1,6 +1,6 @@
 # Shared multi-output training and 2026 study holdouts
 
-Status: **Reviewed cohort verified; replacement two-seed H100 fits launched. No predictive results yet.**
+Status: **Reviewed cohort and both full preflights verified; both H100 fits are optimizing. Held-out scores pending.**
 Agent/model: Codex / GPT-6. Date: 2026-10-28 UTC.
 
 [Prospective specification](../agents/codex/plans/2026-10-28_temporal-multi-output.md)
@@ -28,6 +28,21 @@ The model, loss and optimizer implementation are unchanged. Source runtime commi
 
 The counts below describe the completed reviewed cohort. No scientific winner or
 final primary recipe is claimed.
+
+Both workers passed the unchanged common preflight (1,824.5 and 1,990.1 seconds),
+matching the independently computed TRAIN scalers. Initial checkpoints and subsequent
+optimizer progress are recorded; see `results/worker-preflight-verification.json`
+and the live report. Repeated admission/dependency/sampler scans accounted for the
+long CPU startup. Current source CI at `dc307af6` passes both hosted runs
+40821271664 and 40821252677. The active H100 runtime remains the pinned `aa2b3f7a`.
+
+After collection and independent verification, the existing continuation generates
+`results/summary.md` with both seeds side by side: quantitative output/class/era
+metrics, generated and source-reported ligand comparisons, 500 nM classification,
+zero-support cells, actual exposures and selected/completed checkpoint coverage.
+This readable report uses the verified tables and introduces no new inference or
+selection. Fifteen existing reporting/metric/uncertainty fixtures and a separate
+cross-seed rendering smoke check pass; these are software checks, not fit outcomes.
 
 ## Source and admission contract
 

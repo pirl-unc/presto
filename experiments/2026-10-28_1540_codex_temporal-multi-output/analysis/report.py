@@ -11,6 +11,7 @@ import sys
 import time
 import numpy as np
 from uncertainty import Metric, bootstrap
+from render_summary import render
 from verify_predictions import F, BINARY, groups, metrics, sha
 
 
@@ -232,6 +233,7 @@ def main():
     bundle.mkdir()
     for name in (
         'report.py',
+        'render_summary.py',
         'uncertainty.py',
         'verify_predictions.py',
         'verify_cohort.py',
@@ -378,6 +380,7 @@ def main():
     ):
         table(name, values)
     draw(strata)
+    (F / 'results/summary.md').write_text(render(F / 'results'))
     write(
         'reporting-receipt.json',
         dict(
@@ -386,6 +389,7 @@ def main():
             argv=sys.argv,
             source_sha256=sha(Path(__file__)),
             uncertainty_source_sha256=sha(F / 'analysis/uncertainty.py'),
+            readable_report_source_sha256=sha(F / 'analysis/render_summary.py'),
             prediction_verification_sha256=sha(F / 'results/prediction-verification.json'),
             selected_condition=decision['winner'],
             started_unix=started,

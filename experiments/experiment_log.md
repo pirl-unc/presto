@@ -5428,6 +5428,17 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   CI runs for 7202c09c pass (40816663407 and 40816681382). Predictive fits continue
   through canonical preflight; no model/trainer or frozen input changes.
 
+- **Optimization started:** both corrected workers passed complete common preflight
+  (1,824.5 / 1,990.1 seconds), with identical expected TRAIN scales and verified
+  manifest hashes. Both wrote initial checkpoints and started optimizer updates.
+  The long startup includes repeated CPU corpus/dependency/sampler scans; no
+  held-out predictive scores are available at this status update. Current source
+  `dc307af6` passes both hosted CI runs 40821271664/40821252677; active runtime stays
+  frozen at `aa2b3f7a`. The post-collection report now generates a readable
+  `results/summary.md` from verified tables, including both seeds and absent
+  support. Fifteen reporting/metric/uncertainty fixtures and a cross-seed rendering
+  smoke check pass. Final fit/verification/interpretation closure remains open.
+
 ## 2026-10-29_0438_codex_shared-input-iteration
 
 - Date: 2026-10-29; agent/model: Codex / GPT-6.
