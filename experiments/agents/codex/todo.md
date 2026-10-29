@@ -344,7 +344,7 @@ Results belong to 2026-10-27_2100_codex_transfer-improvements, not this backlog.
 - [x] Complete the fixed twelve-fit capacity/exposure/auxiliary-permutation comparison.
 - [x] Report allele/species/class/assay/qualifier concentration and source attrition.
 - [x] Apply supported common sampling options; retain one model/training interface. No six-output default passes the validation gates.
-- [ ] Future data curation: use a declared DRA*01:01 reference for otherwise
+- [x] Data curation implemented and expanded cohort independently verified: use a declared DRA*01:01 reference for otherwise
   eligible allele-resolved ordinary human DR observations in the deferred pool
   (33,165 IC50 and 20,654 KD-via-IC50 class-II source rows, mostly DR). Preserve
   reported versus assumed identities through the existing reference-assumption
@@ -361,3 +361,11 @@ The12-fit follow-up is closed in [2026-10-28_0250_codex_assay-transfer-mechanism
  418,890 PMID32903714 microarray labels with curator-confirmed assay comments.
   Preserve literal qualitative labels and assay modality; do not call these IC50
   or mass-spectrometry outcomes. Freeze any expanded cohort before its own fit.
+
+- [ ] General ingestion performance: profile and reduce repeated large-manifest
+  preflight scans and per-observation file open/stat/seek in the shared
+  ObservationIndex. The expanded cohort's H100 startup spent over20minutes before
+  an optimizer update; the recorded probe has93.16GB process read characters
+  and5.71GB RSS. Preserve source mutation guards, exact row ordering, scales,
+  sampler/RNG and resumed results. Any cache belongs in the common path and must
+  bind source/config/code hashes. Current fits remain on their frozen runtime.

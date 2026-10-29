@@ -242,3 +242,22 @@ allocation; its source and invocation are frozen in `reproduce/`.
 The figure describes the frozen sampling design, not predictive performance.
 PNG/PDF and the exact plotting invocation are preserved; actual optimizer
 exposures and selected-checkpoint coverage will be reported after fitting.
+
+## Original-observation support by output
+
+Counts include exact and bounded original outcomes, excluding all generated
+comparators. A zero means that output/class cell has no observations in the split.
+
+| Output | TRAIN I / II | Validation I / II | Test I / II |
+|---|---:|---:|---:|
+| ec50 | 115 / 97 | 69 / 0 | 70 / 107 |
+| elution_observation | 1,348,309 / 292,754 | 1,748 / 694 | 5,305 / 6,611 |
+| half_life | 8,592 / 137 | 71 / 0 | 62 / 148 |
+| ic50 | 18,531 / 36,205 | 141 / 1,129 | 100 / 379 |
+| kd | 16,349 / 1,483 | 532 / 0 | 449 / 30 |
+| kd_via_ec50 | 36,342 / 2,590 | 106 / 422 | 66 / 339 |
+| kd_via_ic50 | 51,437 / 21,488 | 96 / 246 | 604 / 55 |
+| koff | 6 / 16 | 0 / 0 | 0 / 0 |
+| kon | 0 / 6 | 0 / 0 | 0 / 0 |
+| qualitative_binding | 22,181 / 18,279 | 689 / 446 | 290 / 151 |
+| td50 | 496 / 7 | 145 / 0 | 140 / 0 |
