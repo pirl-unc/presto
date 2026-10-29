@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from collections import Counter
 from dataclasses import asdict, replace
+from itertools import groupby
 import hashlib
 import json
 from pathlib import Path
@@ -359,5 +360,18 @@ class ObservationIndex:
             )
 
     def __iter__(self):
-        for index in range(len(self)):
-            yield self[index]
+        # Keep sequential scans sequential without caching rows or relaxing the
+        # per-observation source-mutation check used by random access.
+        for path, offsets in groupby(self.offsets, key=lambda item: item[0]):
+            with path.open("rb") as stream:
+                position = None
+                for _, offset in offsets:
+                    if self._file_state(path) != self.file_states[path]:
+                        raise ValueError("pinned input changed after admission")
+                    if offset != position:
+                        stream.seek(offset)
+                    line = stream.readline()
+                    position = offset + len(line)
+                    yield normalized_observation(
+                        json.loads(line), evidence_policy=self.label_policies[path]
+                    )

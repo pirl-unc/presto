@@ -5427,3 +5427,33 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   pooled scores must retain that limit. Four reporting fixtures pass. Both hosted
   CI runs for 7202c09c pass (40816663407 and 40816681382). Predictive fits continue
   through canonical preflight; no model/trainer or frozen input changes.
+
+## 2026-10-29_0438_codex_shared-input-iteration
+
+- Date: 2026-10-29; agent/model: Codex / GPT-6.
+- [Experiment](2026-10-29_0438_codex_shared-input-iteration/README.md), registered before benchmarking.
+- Shared reader throughput and integrity only; TRAIN-only source slices, no GPU,
+  model training, pretraining, assay loss, validation/test prediction or accuracy claim.
+- Original indexed iteration versus sequential file-handle reuse, preserving source
+  mutation checks and full normalization. Results and decision pending.
+- Existing temporal H100 fits stay on their frozen runtime.
+
+- **Completed reader comparison:** first 5,000 TRAIN rows from each corrected
+  physical, native-MS and background source (15,000 rows, 104,398,183 bytes),
+  preserved byte-for-byte with archive/prefix hashes. No held-out data, synthetic
+  generation, training, pretraining, loss, output allocation or predictive metrics.
+- **Hardware/conditions:** local Apple M1 Pro / Python 3.12.6; no GPU; warm caches.
+  Three paired, alternating repeats for indexed versus sequential iteration.
+  Initial median speedup 1.2812x. A replay with the frozen-baseline launcher gives
+  1.17945s indexed versus 0.92915s sequential, **1.2694x throughput**. All six replay
+  timing rows and the initial comparison are preserved; no full-H100 speed claim.
+- **Verification/decision:** 15,000 complete normalized observations match;
+  28 mutation/order/closure/exact-training/resume tests and the full 2,860-test suite
+  (four skips) pass. Retain the common iterator change; source stats are checked
+  per row and all normalization remains. 212 other runtime files, including model
+  and trainer, match the frozen runtime. No side training path or preflight cache.
+- **Reproduction/artifacts:** frozen source and invocation under the linked
+  experiment's `reproduce/`; prefix data under repository `artifacts/` with explicit
+  paths/hashes. Three failed capture attempts and the SDK PIPE-drain recovery are
+  documented. Validation/test metrics and prediction dumps are inapplicable to
+  this reader-only study. The temporal H100 fits continue on their original pins.

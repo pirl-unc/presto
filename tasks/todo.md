@@ -14606,3 +14606,15 @@ Spec: experiments/agents/codex/plans/2026-10-28_temporal-multi-output.md.
 - [ ] Verify shared code/source contracts; run two-seed H100 training with live metrics.
 - [ ] Independently verify per-assay and ligand metrics, replay serving and publish common recipe.
 - [ ] Close registry/report and draft PR with evidence and remaining limits.
+
+## 2026-10-29 — Shared sequential reader performance
+
+Spec: experiments/agents/codex/plans/2026-10-29_shared-input-iteration.md.
+- [x] Freeze representative TRAIN-only input slices and exact reader comparison.
+- [x] Verify source integrity, iteration/content/order and common-training parity.
+- [x] Benchmark; promote only if the declared throughput gate passes; close registry.
+
+Reader review: 15,000 exact TRAIN-prefix rows match; 1.2694x median warm-cache
+throughput on M1 Pro (initial 1.2812x), 28 integrity/resume tests and full suite
+2,860/four skips pass. Shared iterator retained; model/trainer and active frozen
+H100 fits unchanged. Complete transport failures and source snapshots preserved.

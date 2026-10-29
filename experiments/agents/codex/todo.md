@@ -369,3 +369,9 @@ The12-fit follow-up is closed in [2026-10-28_0250_codex_assay-transfer-mechanism
   and5.71GB RSS. Preserve source mutation guards, exact row ordering, scales,
   sampler/RNG and resumed results. Any cache belongs in the common path and must
   bind source/config/code hashes. Current fits remain on their frozen runtime.
+
+  Sequential file-handle reuse is qualified in
+  [shared-input-iteration](../../2026-10-29_0438_codex_shared-input-iteration/README.md):
+  1.2694x local warm-cache throughput, exact 15,000-row contents and common-fit
+  parity, full 2,860-test suite pass. Repeated full passes and random-access reads
+  remain future work; this does not measure total H100 training speedup.

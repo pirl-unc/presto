@@ -1,0 +1,7 @@
+{
+  "status": "failed",
+  "stage": "bounded stdout transfer",
+  "error": "First chunk was shorter than requested; no sample admitted",
+  "bytes_written": 0,
+  "cause_evidence": "Installed Modal CLI 1.6.1 waits for process completion but uses background STDOUT printer tasks without draining them before return."
+}

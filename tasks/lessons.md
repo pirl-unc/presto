@@ -841,3 +841,13 @@ Keep applicability reporting separate from model features and the measured label
 ## 2026-10-29 — Verify qualifiers before source quarantine
 
 - Inspect the actual raw and admitted inequality fields before claiming an exact/bound conflict. A paper's unresolved lower bound does not justify excluding a row whose export already preserves `>`. Correct the review decision before changing cohort membership.
+
+## 2026-10-29 — Drain remote output and freeze executed source
+
+- A successful remote process exit is not a complete artifact transfer. Modal
+  1.6.1 CLI non-PTY exec can return before its background stdout printer drains.
+  For artifacts, await complete PIPE stdout/stderr and exit status, then verify
+  size/hash. Preserve incomplete attempts; never admit their partial data.
+- Do not format or edit a running launcher before its completion-time source hash
+  is recorded. Freeze executable source before launch, and preserve actual executed
+  snapshots separately from later formatting or reproduction-wrapper corrections.
