@@ -207,3 +207,5 @@ Durable archive: Modal volume `presto-checkpoints`,
 Full archive/file hashes and exact local paths are in the verification receipt.
 No confirmed recensoring, source admission, retraining or predictive improvement
 is claimed by this audit.
+
+Upstream evidence recorded in [Hitlist #854](https://github.com/pirl-unc/hitlist/issues/854#issuecomment-6501030465) and [#721](https://github.com/pirl-unc/hitlist/issues/721#issuecomment-6501033598). Exact comment bodies and links are retained in results/. Audit commit cabf653d was pushed to the existing draft PR #131.

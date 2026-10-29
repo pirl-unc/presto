@@ -873,3 +873,5 @@ Keep applicability reporting separate from model features and the measured label
 - Use experimental preparation, competition/direct mechanism and detection method
   alongside the measured quantity. Fluorescent purified competition and fluorescent
   cellular stabilization are different observations despite their shared readout.
+
+- Git alternates must point to a durable checkout/object store, never a temporary directory. A sparse checkout can appear usable until commit or historical traversal discovers missing borrowed objects. Recover immutable objects by verified hash and check connectivity; do not reset working files or remove refs to hide the failure.
