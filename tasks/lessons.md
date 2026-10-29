@@ -851,3 +851,18 @@ Keep applicability reporting separate from model features and the measured label
 - Do not format or edit a running launcher before its completion-time source hash
   is recorded. Freeze executable source before launch, and preserve actual executed
   snapshots separately from later formatting or reproduction-wrapper corrections.
+
+## 2026-10-29 — Name the assay and distinguish optimization mechanisms
+
+- Every affinity metric needs its literal output, class, exact/bounded population
+  and split. IC50-only counts are not total quantitative affinity supervision.
+  Compare other predictors using matched assay/species/label denominators.
+- Sampling/exposure improvements do not demonstrate opposing shared gradients.
+  Distinguish stationary batch mixture, time-varying curriculum, mean-loss weights,
+  gradient conflict and checkpoint objectives; measure each claimed mechanism.
+- IEDB `KD (~IC50)` and `KD (~EC50)` describe IC50/EC50-based approximations
+  to KD. Do not call them KD-derived measurements. A literal KD response label
+  also does not establish a direct binding technique; inspect the method column.
+- High agreement across separately labeled accession IDs can reflect shared
+  source measurements. Inspect study dominance, publication/submission links and
+  near-identical values before calling it independent assay replication.

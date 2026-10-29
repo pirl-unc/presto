@@ -375,3 +375,9 @@ The12-fit follow-up is closed in [2026-10-28_0250_codex_assay-transfer-mechanism
   1.2694x local warm-cache throughput, exact 15,000-row contents and common-fit
   parity, full 2,860-test suite pass. Repeated full passes and random-access reads
   remain future work; this does not measure total H100 training speedup.
+
+- [ ] Use the assay-overlap audit to qualify publication/submission reuse before
+  endpoint merging or panel ranking. Preserve raw labels while testing a common
+  affinity latent variable with method-aware calibration. Strong IC50/KD(~IC50)
+  agreement is dominated by a few source components and is not independent
+  replication evidence. See the 2026-10-29_1318 family and detailed plan.

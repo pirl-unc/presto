@@ -14625,3 +14625,23 @@ Reader review: 15,000 exact TRAIN-prefix rows match; 1.2694x median warm-cache
 throughput on M1 Pro (initial 1.2812x), 28 integrity/resume tests and full suite
 2,860/four skips pass. Shared iterator retained; model/trainer and active frozen
 H100 fits unchanged. Complete transport failures and source snapshots preserved.
+
+## 2026-10-29 — Affinity objectives and shared geometry
+
+Spec: experiments/agents/codex/plans/2026-10-29_affinity-objectives-geometry.md.
+- [ ] Reconcile affinity counts, assay methods and comparable predictor datasets.
+- [x] Measure within-/cross-study agreement on identical TRAIN pMHCs.
+- [ ] Qualify ranking panels and freeze controlled schedule/ranking/geometry experiments.
+- [ ] Implement and verify common scheduling, ranking, geometry and gradient diagnostics.
+- [ ] Run paired H100 comparisons, independently verify metrics and preserve all outputs.
+- [ ] Apply supported common-path improvements and close both active experiment families.
+
+Assay audit review: 184,637 quantitative TRAIN rows reconcile, including 136,233
+exact and 48,404 bounded rows. Five aggregation tests pass; all 60 correlation
+cells and 40,252 aggregate sides independently recompute from preserved data.
+IC50 versus KD(~IC50) rho is .97088 (I, n=8,310) / .99154 (II, n=1,101), but
+dominant studies account for 90.5% / 93.0% of overlap and source independence is
+not established. Removing each dominant IC50 study gives .77721 / .86147.
+Literal KD is mostly tagged competitive, not direct; source labels and actual
+methods are now documented. Ranking/geometry fits and predictor denominator
+comparison remain open. Current full-scale temporal fits are unchanged.

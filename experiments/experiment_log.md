@@ -5486,3 +5486,46 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   paths/hashes. Three failed capture attempts and the SDK PIPE-drain recovery are
   documented. Validation/test metrics and prediction dumps are inapplicable to
   this reader-only study. The temporal H100 fits continue on their original pins.
+
+## 2026-10-29_1318_codex_affinity-objectives-geometry
+
+- Date: 2026-10-29; agent/model: Codex / GPT-6.
+- [Experiment](2026-10-29_1318_codex_affinity-objectives-geometry/README.md) and
+  prospective spec registered before audit/training.
+- Initial stage: TRAIN-only source/measurement audit of corrected temporal inputs;
+  literal IC50/KD/EC50/proxy outputs retained separately, exact log10(nM) agreement
+  on hashed identical pMHCs, within-/across-study aggregation without Cartesian
+  replicate inflation. Bounds counted separately; no synthetic generation.
+- No model training/pretraining, loss or GPU in this stage. Validation/test metrics
+  and prediction dumps are inapplicable to descriptive source agreement; those
+  splits remain unused. Predictive ranking/geometry controls will be frozen later.
+- **Phase A completed and verified:** 234,337 physical TRAIN rows; 184,637 are
+  concentration observations (136,233 exact; 48,404 bounds). Literal IC50: 54,736;
+  KD: 17,832; EC50: 212; KD(~IC50): 72,925; KD(~EC50): 38,932. Other outputs are excluded
+  from concentration agreement. No generated labels, pretraining, loss or fitting.
+- **Assay-label mapping:** IC50 and KD(~IC50) are competitive radioactivity or
+  fluorescence; EC50 and KD(~EC50) are direct fluorescence. Almost all literal
+  KD rows are also tagged competitive. The latter two approximate-KD labels mean
+  IC50/EC50-based KD estimates, not measurements derived from directly measured KD.
+- **Conditions/results:** pooled exact pMHC agreement after median-within-study
+  aggregation versus same-study and disjoint-study scopes; 60 cells preserved.
+  IC50/KD(~IC50) Spearman I .97088 (8,310), II .99154 (1,101); IC50/KD I .47420
+  (53), II .42857 (6); IC50/KD(~EC50) I .40063 (103), II .94286 (6).
+  Small overlaps remain inconclusive. Full ten-pair tables, Pearson, log RMSE/
+  offsets, overlap counts and repeated-measurement spreads are in the experiment.
+- **Lineage sensitivity:** one IC50 component accounts for 90.5%/93.0% of I/II
+  overlap. Removing it yields .77721 (787) / .86147 (77). Publication/submission
+  links and near-identical values preclude treating large rho as independent
+  replication. Remaining values are not certified independent either.
+- **Hardware/runtime:** CPU only, no requested/observed GPU; 4 requested CPUs,
+  16 GiB audit / 8 GiB lineage; source scans 25.75s/22.53s. Python 3.12.1,
+  NumPy 2.5.4, SciPy 1.18.1. Git 0d96d801 plus frozen dirty source snapshots.
+  Exact argv/env/hashes and Modal apps/calls are recorded in the linked README.
+- **Verification/artifacts:** five aggregation tests pass; all 60 metric cells and
+  40,252 aggregate sides independently recompute from preserved pairs/original
+  overlap rows. Checksummed archives on Modal and local artifacts; summaries,
+  pair dumps, provenance census, PNG/PDF plots under the experiment results.
+  Validation/test deliberately unused; no predictive metrics apply to this audit.
+- **Decision:** keep source labels and actual methods; qualify lineage weighting
+  and shared affinity/calibration experiments before collapsing outputs. No model
+  winner or promotion in Phase A. Ranking/geometry/schedule phases remain pending.
