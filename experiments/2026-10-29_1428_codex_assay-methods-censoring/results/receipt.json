@@ -1,0 +1,36 @@
+{
+  "status": "completed",
+  "archive": "2026-10-29_1428_codex_assay-methods-censoring/audit.tar.gz",
+  "bytes": 10064856,
+  "sha256": "13b61c267b6e1f06afa8f06bfc800b9cf311ea4facaf4daf1999e8162f0d61ec",
+  "counts": {
+    "physical_rows": 234337,
+    "concentration_rows": 184637,
+    "qualifier:=": 136233,
+    "raw_qualifier:missing": 100544,
+    "qualifier:>": 48215,
+    "raw_qualifier:>": 48215,
+    "raw_qualifier:=": 35689,
+    "qualifier:>=": 189,
+    "raw_qualifier:>=": 189
+  },
+  "seconds": 30.08027464,
+  "census": {
+    "rows": 848164,
+    "strata": 557,
+    "sources": {
+      "binding.parquet": {
+        "path": "/volume/2026-10-28_1540_codex_temporal-multi-output/source/dataset/bundles/2026-10-28T17-55-53Z/binding.parquet",
+        "size_bytes": 17306340,
+        "sha256": "c5df3057d56ffb6e70d17d78e95f473c8f2bb6e3af684513567e235d08c6879c",
+        "rows": 821470
+      },
+      "other_assays.parquet": {
+        "path": "/volume/2026-10-28_1540_codex_temporal-multi-output/source/dataset/bundles/2026-10-28T17-55-53Z/other_assays.parquet",
+        "size_bytes": 1271725,
+        "sha256": "41ecb0c4eddf0e27a933e513e9d7ffcadb1bc8bb4145b55e117ceb292f0d2085",
+        "rows": 26694
+      }
+    }
+  }
+}

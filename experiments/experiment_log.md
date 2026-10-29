@@ -5529,3 +5529,52 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
 - **Decision:** keep source labels and actual methods; qualify lineage weighting
   and shared affinity/calibration experiments before collapsing outputs. No model
   winner or promotion in Phase A. Ranking/geometry/schedule phases remain pending.
+
+## 2026-10-29_1428_codex_assay-methods-censoring — methods, hidden bounds and source attribution
+
+- Date/agent/model: 2026-10-29, Codex / GPT-6;
+  [complete contract and artifacts](2026-10-29_1428_codex_assay-methods-censoring/README.md).
+  Starting commit c4b797b9, dirty state and exact commands/source frozen in reproduce/.
+- Frozen corrected physical TRAIN: 234,337 rows, 184,637 concentration labels;
+  original IC50/KD/EC50/KD(~IC50)/KD(~EC50) distinct, explicit inequalities retained,
+  missing inequality currently maps exact. Method comparisons use study-balanced
+  medians on exact-labeled same-pMHC values. No qualifier changes.
+- No training/pretraining, loss terms, synthetic labels, output mapping changes,
+  GPU or predictive evaluation. Validation/test labels and predictions unused;
+  held-out metrics/dumps inapplicable to this descriptive source audit. Main CPU4/
+  16GiB, physical scan30.080s; ledger CPU4/8GiB,263.975s. Source/attempt hashes,
+  pinned dependencies and initial import failure retained in family.
+- Original method tags count117,655 purified competitive radioactivity,
+  27,837 purified competitive fluorescence,39,144 direct fluorescence,1 direct
+  radioactivity. Source comments in20components cite a refolding ELISA despite
+  16,319 of their rows being tagged competitive fluorescence/KD. These tags are
+  not fully verified protocols; use preparation/mechanism/detector/quantity axes.
+
+| Original-tag comparison | I Spearman (n) | II Spearman (n) |
+|---|---:|---:|
+| Competitive fluorescence/radioactivity, IC50 only | .62549 (125) | .30613 (42) |
+| Same pair, pooled concentration labels | .61403 (287) | .19190 (48) |
+| Competitive/direct fluorescence, pooled | .69467 (179) | .80000 (9) |
+| Competitive radioactivity/direct fluorescence, pooled | .34374 (291) | unavailable |
+
+- All IC50 comparison pairs are cross-study; method/lab/study/allele mixture are
+  confounded. No causal detector ranking or model winner follows.
+- Current exact136,233 includes100,544 missing raw inequalities; explicit bounds
+ 48,404. Exact20k/25k/50k counts282/77/88. Prespecified study/MHC/method/endpoint
+ heap screen flags142cells/2,556exactrows;840rows have stronger right-limit review
+ evidence. None are confirmed or automatically relabeled.
+- Full IEDB and CEDAR MHC-ligand exports downloaded2026-10-28 through Hitlist2.0.40;
+  CEDAR added zero unique index assays after assay-IRI deduplication. All original
+  physical/MS training winners are IEDB. mhcseqs2.6.13 supplies groove sequences;
+  Ensembl112 protein context/backgrounds are not measured negatives.
+- Export ledger:4,904,983 IEDB +535,026 supplement MS rows; every supplement row
+  has unknown PTM status, none admitted. Recovery is tracked in Hitlist#854.
+  Already downloaded unused candidates include468,548 multiplexed binding rows,
+  23,384 human cellular rows with specified non-MS methods (7,087 concentration-
+  labeled); these require their own readout/context interpretation, not blanket
+  affinity relabeling. Counts are not additional independent training examples.
+- Six tests pass; independently verified72metriccells/100thresholdcells,
+  989pairrecords/1,978aggregatesides,142heapcells and source-ledger totals.
+  No numerical held-out information entered this audit. Takeaway: prioritize
+  source-reviewed assay categorization, suspected-limit review and existing-data
+  recovery through the shared observation path. Current frozen fits unchanged.

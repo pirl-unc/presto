@@ -381,3 +381,10 @@ The12-fit follow-up is closed in [2026-10-28_0250_codex_assay-transfer-mechanism
   affinity latent variable with method-aware calibration. Strong IC50/KD(~IC50)
   agreement is dominated by a few source components and is not independent
   replication evidence. See the 2026-10-29_1318 family and detailed plan.
+
+- [ ] Use the completed 2026-10-29_1428 source audit to recover qualified data:
+  resolve supplied/unknown supplementary PTM metadata (Hitlist#854;535,026 rows),
+  verify method tags against protocol citations (#721), and review assay-limit
+  candidates before any censor overrides. Original labels and unresolved status
+  must remain queryable. Preserve the common observation/model path and temporal
+  split policy; candidate counts are not promised independent training growth.

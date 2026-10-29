@@ -14645,3 +14645,18 @@ not established. Removing each dominant IC50 study gives .77721 / .86147.
 Literal KD is mostly tagged competitive, not direct; source labels and actual
 methods are now documented. Ranking/geometry fits and predictor denominator
 comparison remain open. Current full-scale temporal fits are unchanged.
+
+## 2026-10-29 — Actual assays, hidden bounds and source expansion
+
+Spec: experiments/agents/codex/plans/2026-10-29_assay-methods-censoring.md.
+- [x] Compare actual methods while preserving measured-quantity strata.
+- [x] Audit missing qualifiers and repeated exact plateaus; review source evidence.
+- [x] Reconcile current sources and census recoverable additional modalities.
+- [x] Verify artifacts, document decisions and feed the common training plan.
+
+Review: six audit tests and independent row-to-aggregate verification pass.
+The audit found method-tag/protocol discrepancies, 840 suspected (unconfirmed)
+right-limit rows, and 535,026 unused supplementary MS rows with unknown PTM.
+All admitted original labels are IEDB in this snapshot; CEDAR adds no unique
+index assays. Source recuration/admission and model experiments remain in the
+common-path backlog; no labels, held-outs or frozen fits changed.

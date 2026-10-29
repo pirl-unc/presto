@@ -866,3 +866,10 @@ Keep applicability reporting separate from model features and the measured label
 - High agreement across separately labeled accession IDs can reflect shared
   source measurements. Inspect study dominance, publication/submission links and
   near-identical values before calling it independent assay replication.
+- Report explicit censoring separately from suspected assay-limit plateaus. Missing
+  inequality metadata mapped to exact is a convention, not proof of an uncensored
+  measurement. Review heaps within study/MHC/method, retain source evidence and
+  never blanket-convert all 20k/25k/50k values to bounds.
+- Use experimental preparation, competition/direct mechanism and detection method
+  alongside the measured quantity. Fluorescent purified competition and fluorescent
+  cellular stabilization are different observations despite their shared readout.
