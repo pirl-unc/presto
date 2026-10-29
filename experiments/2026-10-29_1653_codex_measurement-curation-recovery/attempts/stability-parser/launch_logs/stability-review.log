@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/review_stability.py", line 140, in <module>
+    main()
+  File "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/review_stability.py", line 57, in main
+    rows.append((allele(mhc), peptide, hours, line_number))
+                 ^^^^^^^^^^^
+  File "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-29_1653_codex_measurement-curation-recovery/code/review_stability.py", line 29, in allele
+    return mhcgnomes.parse(name).to_string()
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/mhcgnomes/mhcgnomes/function_api.py", line 797, in parse
+    raise parser_error
+  File "/Users/iskander/code/mhcgnomes/mhcgnomes/function_api.py", line 737, in parse
+    result = parser.parse(
+             ^^^^^^^^^^^^^
+  File "/Users/iskander/code/mhcgnomes/mhcgnomes/parser.py", line 2522, in parse
+    result = self._parse_cached(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/mhcgnomes/mhcgnomes/common.py", line 80, in cached_fn
+    result = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/iskander/code/mhcgnomes/mhcgnomes/parser.py", line 2702, in _parse_cached
+    raise ParseError(f"Could not parse '{name}'")
+mhcgnomes.errors.ParseError: Could not parse 'HLA-B*14:02(C67S)'
