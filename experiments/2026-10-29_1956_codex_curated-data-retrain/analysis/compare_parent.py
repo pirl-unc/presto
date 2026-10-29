@@ -95,7 +95,7 @@ def closeout():
         if row["study"] != "all":
             population += " / " + row["study"]
         label = " / ".join((row["endpoint"], row["mhc_class"], population))
-        count = row.get("n_exact", row["n"])
+        count = row["n_exact"] if row["endpoint"] == "ic50" else row["n"]
         values = " | ".join(number(row.get(k)) for k in ("spearman", "rmse", "auroc", "auprc"))
         lines.append(
             f"| {row['condition']} | {row['split']} / {row['era']} | {label} | {count} | {values} |"
@@ -137,6 +137,10 @@ def closeout():
         "independently verified.",
     )
     original = original.replace("The running continuation", "The completed continuation")
+    original = original.replace(
+        "Runtime/peak memory remain pending.",
+        "Final runtime and peak memory are recorded below.",
+    )
     original = original.replace(
         "No improvement is\nclaimed until measured; "
         "final scientific writeup and promotion remain pending.",

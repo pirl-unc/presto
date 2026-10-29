@@ -61,8 +61,8 @@ preparation verifies exact changed/removed row IDs, raw fields, source hashes,
 held-out exclusion, numerical values, scalers and complete quotas. A second full
 cohort census independently passed. Both GPU workers passed canonical preflight
 and independently reproduced the frozen scalers and manifest hashes: 1,679.08 s
-(seed 42) / 1,723.61 s (seed 43). They are preparing training before the first
-observed update; `results/worker-preflight-verification.json` records the checks.
+(seed 42) / 1,723.61 s (seed 43). No optimizer update had been observed at the
+2026-10-29 21:04 UTC check; `results/worker-preflight-verification.json` records it.
 Hosted CI at `865eac08` passed 2,879 tests / three skips, full lint and docs.
 CPU preparation: eight CPUs / 64 GiB requested,
 246.44 seconds. Requested fit hardware: at most two H100!, eight CPUs / 64 GiB
@@ -95,7 +95,12 @@ The prospective post-run closeout now also writes the measured summary and paire
 deltas to this README and the canonical registry, only after independent prediction,
 cohort and comparison checks pass. Its frozen pre-prediction source and fail-closed
 verification are in `reproduce/analysis-before-predictions/` and
-`results/closeout-readiness.json`. Completion does not automatically promote the
+`results/closeout-readiness.json`. The separately frozen v2 reporting revision
+checks non-null binary counts, removes stale pending wording, preserves unrelated
+registry entries and passes repeated-closeout checks using historical parent
+artifacts only in a temporary directory; see
+`reproduce/analysis-before-predictions-v2/` and `results/closeout-readiness-v2.json`.
+Completion does not automatically promote the
 model or qualify TCR, DO:DM or processing components.
 
 Later source curation, completed after launch but before new validation results,

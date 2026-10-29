@@ -113,3 +113,11 @@ the frozen recipe, append actual validation/test metrics and hardware/exposure,
 link the matched-parent and suspect-label sensitivity analyses, and state that
 validation selection does not automatically promote a model. This allows the
 existing continuation to close the experiment even across client interruptions.
+## Closeout verification amendment before new validation results
+
+Keep initial pre-prediction analyzer snapshots unchanged. Verify a second reporting
+revision using historical parent artifacts only in a temporary directory: binary
+tables must show the total evaluated count, terminal reports must remove stale
+pending wording, failed gates must not publish completion, repeated closeout must
+be idempotent, and unrelated registry entries must remain byte-identical. Freeze
+the revised analyzer and verifier separately before using new prediction outputs.
