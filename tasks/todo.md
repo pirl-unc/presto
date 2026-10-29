@@ -14607,6 +14607,13 @@ Spec: experiments/agents/codex/plans/2026-10-28_temporal-multi-output.md.
 - [ ] Independently verify per-assay and ligand metrics, replay serving and publish common recipe.
 - [ ] Close registry/report and draft PR with evidence and remaining limits.
 
+Progress: reviewed ten-output cohort and both complete common preflights pass;
+two H100 fits are actively optimizing toward 51,099 updates each. First paired
+1,000-update validation snapshots and the seed42 2,000-update result are preserved
+in the experiment. Independent final prediction verification, final serving replay,
+primary-recipe handoff and scientific closure remain pending. The live collector
+will generate a readable side-by-side report after the existing verified analysis.
+
 ## 2026-10-29 — Shared sequential reader performance
 
 Spec: experiments/agents/codex/plans/2026-10-29_shared-input-iteration.md.

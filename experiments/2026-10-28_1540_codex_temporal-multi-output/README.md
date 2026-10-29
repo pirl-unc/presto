@@ -1,11 +1,49 @@
 # Shared multi-output training and 2026 study holdouts
 
-Status: **Reviewed cohort and both full preflights verified; both H100 fits are optimizing. Held-out scores pending.**
+Status: **Both H100 fits are optimizing; first 1,000-update validation results available. Final validation/test verification remains pending.**
 Agent/model: Codex / GPT-6. Date: 2026-10-28 UTC.
 
 [Prospective specification](../agents/codex/plans/2026-10-28_temporal-multi-output.md)
 · [live report](http://127.0.0.1:54502/dashboard.html)
 · [canonical registry](../experiment_log.md).
+
+## First validation checkpoint (provisional)
+
+Both seeds completed their first 1,000-update validation on the same frozen older
+study holdouts. These are worker-reported intermediate results, not final selected
+checkpoint metrics or independently verified prediction dumps. Neither fit has
+completed its 51,099-update weighted epoch; no test result or winner is claimed.
+
+| Metric at 1,000 updates | Seed42 I | Seed42 II | Seed43 I | Seed43 II |
+| --- | ---: | ---: | ---: | ---: |
+| IC50 exact n | 141 | 1,129 | 141 | 1,129 |
+| IC50 Spearman | 0.3731 | 0.3651 | 0.3926 | 0.3640 |
+| IC50 Pearson | 0.4724 | 0.3601 | 0.4356 | 0.3603 |
+| IC50 RMSE log10(nM) | 1.6523 | 0.8536 | 1.8519 | 0.9600 |
+| Same-protein ligand AUROC | 0.9326 | 0.7592 | 0.9422 | 0.7597 |
+| Same-protein ligand AUPRC | 0.6748 | 0.4329 | 0.7538 | 0.4046 |
+
+The ligand comparisons contain 10,116 class-I and 4,152 class-II observations
+including five generated unobserved comparators per positive parent. Their
+constant-score AUPRC is 1/6; these comparators are not measured non-binders.
+The two small class-I studies with source-reported positives and negatives are
+considerably harder: seed42 AUROCs 0.5982 (53 rows) and 0.5619 (52 rows). All 141
+class-I IC50 validation values are <=500 nM, so their threshold binding AUROC is
+undefined. Rank and absolute calibration must both remain visible. This cohort
+differs from previous development benchmarks and cannot establish a comparative
+gain over those models.
+
+[Machine-readable first-checkpoint comparison](results/provisional-first-validation.json)
+and [CSV](results/provisional-first-validation.csv) link hashed worker snapshots;
+the live report continues to advance. Exact staged manifest bytes are preserved
+under `reproduce/manifests/`, verified against the pre-fit frozen contract.
+
+At its second validation (2,000 updates), seed42 improves IC50 Spearman to
+0.4350/0.4196 and same-protein ligand AUROC to 0.9368/0.7746 for I/II. IC50 RMSE
+is 1.6785/0.8626: ranking improves without a corresponding calibration improvement.
+The [second provisional snapshot](results/provisional-validation-s42-step2000.json)
+is retained. Both hosted CI checks for the report source at `22860793` pass
+(40823270821 and 40823252321); final predictive closure is still open.
 
 ## Source-review correction (2026-10-29)
 

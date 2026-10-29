@@ -5439,6 +5439,24 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   support. Fifteen reporting/metric/uncertainty fixtures and a cross-seed rendering
   smoke check pass. Final fit/verification/interpretation closure remains open.
 
+- **First predictive checkpoint, provisional:** both seeds reached 1,000 updates
+  and full validation. Direct IC50 Spearman I/II is 0.3731/0.3651 (seed42) and
+  0.3926/0.3640 (seed43); RMSE log10(nM) 1.6523/0.8536 and 1.8519/0.9600,
+  on 141/1,129 exact measurements. Same-protein ligand AUROC I/II is
+  0.9326/0.7592 and 0.9422/0.7597; AUPRC 0.6748/0.4329 and 0.7538/0.4046.
+  Those populations include 10,116/4,152 rows at five unobserved generated
+  comparators per positive. Seed42 source-reported-negative study AUCs remain
+  only 0.5982/0.5619 on 53/52 class-I rows. Exact class-I IC50 validation contains
+  only <=500nM binders, so threshold AUROC is undefined. Full early worker
+  snapshots and a source-hashed comparison table are retained. These intermediate
+  results are not independently verified final prediction metrics; no test score,
+  winner or promotion is claimed. Both full 51,099-update fits remain active.
+  Exact staged manifest bytes are now captured and match their frozen hashes.
+  Seed42 at 2,000 updates improves validation IC50 Spearman to 0.4350/0.4196
+  and same-protein AUROC to 0.9368/0.7746; RMSE remains 1.6785/0.8626.
+  Ranking gains precede calibration gains. Both hosted report-source CI runs
+  at `22860793` pass (40823270821 and 40823252321).
+
 ## 2026-10-29_0438_codex_shared-input-iteration
 
 - Date: 2026-10-29; agent/model: Codex / GPT-6.
