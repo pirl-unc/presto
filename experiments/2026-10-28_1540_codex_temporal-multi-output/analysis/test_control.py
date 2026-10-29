@@ -5,6 +5,7 @@ import sys
 import pytest
 from modal.exception import FunctionTimeoutError
 from modal.exception import ConnectionError as ModalConnectionError
+from grpclib.exceptions import StreamTerminatedError
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'code'))
 from control import get_result
@@ -58,3 +59,10 @@ def test_transport_retries_are_bounded(monkeypatch):
     monkeypatch.setattr('control.time.sleep', lambda _: None)
     with pytest.raises(ConnectionError):
         get_result(Call([ConnectionError('temporary')] * 10))
+
+
+def test_closed_transport_stream_recovers_same_call(monkeypatch):
+    monkeypatch.setattr('control.time.sleep', lambda _: None)
+    assert get_result(Call([StreamTerminatedError('Connection lost'), {'done': True}])) == {
+        'done': True
+    }

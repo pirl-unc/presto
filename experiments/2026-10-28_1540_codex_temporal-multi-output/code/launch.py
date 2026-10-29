@@ -50,6 +50,9 @@ if modal.is_local():
             F / 'reproduce/training-contract.json', remote_path='/bundle/training-contract.json'
         )
         .add_local_file(F / 'code/worker.py', remote_path='/bundle/worker.py')
+        .add_local_file(
+            F / 'code/checkpoint_observer.py', remote_path='/bundle/checkpoint_observer.py'
+        )
     )
 
 
@@ -95,6 +98,13 @@ def snapshot(path, condition):
     )
 
 
+def publish(key, value):
+    try:
+        live.put(key, value)
+    except Exception as exc:
+        print('Status publication failed; work continues:', repr(exc), flush=True)
+
+
 @app.function(
     image=image,
     gpu=GPU,
@@ -105,6 +115,7 @@ def snapshot(path, condition):
     startup_timeout=1200,
     retries=0,
     max_containers=2,
+    single_use_containers=True,
     volumes={'/volume': volume},
 )
 def fit(condition):
@@ -116,9 +127,25 @@ def fit(condition):
     assert sha(durable / 'prepared/prepared.json') == contract['prepared_record_sha256']
     destination = durable / condition
     destination.mkdir(parents=True, exist_ok=True)
-    assert not (destination / 'status.json').exists(), 'already attempted; recover without relaunch'
+    receipt = read(destination / 'artifact-receipt.json')
+    if receipt:
+        archive = Path('/volume') / receipt['archive']
+        assert sha(archive) == receipt['sha256'] and archive.stat().st_size == receipt['bytes']
+        return receipt
+    if (destination / 'report.json').exists():
+        return package(destination, condition)
+    resume = (destination / 'raw/resume.pt').exists()
+    if not resume and (destination / 'status.json').exists():
+        assert read(destination / 'progress.json', {}).get('steps', 0) == 0, (
+            'training progressed but its durable snapshot is missing'
+        )
+        if (destination / 'raw').exists():
+            (destination / 'raw').rename(destination / ('initialization-' + str(time.time_ns())))
+        (destination / 'status.json').rename(
+            destination / ('initialization-status-' + str(time.time_ns()) + '.json')
+        )
     staged = time.monotonic()
-    live.put(
+    publish(
         FID + ':' + condition,
         dict(
             condition=condition,
@@ -150,17 +177,15 @@ def fit(condition):
         ),
     )
     process = subprocess.Popen(
-        [sys.executable, '-u', '/bundle/worker.py', condition, str(destination)],
+        [sys.executable, '-u', '/bundle/worker.py', condition, str(destination)]
+        + (['--resume'] if resume else []),
         stdout=sys.stdout,
         stderr=subprocess.STDOUT,
     )
     key = FID + ':' + condition
     last_commit = time.monotonic()
     while process.poll() is None:
-        try:
-            live.put(key, snapshot(destination, condition))
-        except Exception as exc:
-            print('Status publication failed; worker continues:', repr(exc), flush=True)
+        publish(key, snapshot(destination, condition))
         if time.monotonic() - last_commit >= 300:
             try:
                 volume.commit()
@@ -171,11 +196,20 @@ def fit(condition):
     value = snapshot(destination, condition)
     if process.returncode:
         value['status'] = dict(status='failed', error='worker exit ' + str(process.returncode))
-        live.put(key, value)
+        publish(key, value)
         volume.commit()
         raise RuntimeError(value['status']['error'])
+    return package(destination, condition)
+
+
+def package(destination, condition):
+    report = read(destination / 'report.json')
+    assert report['condition'] == condition and report['serving_replay']['status'] == 'passed'
+    assert sha(destination / 'raw/selected.pt') == report['checkpoint_sha256']
+    key = FID + ':' + condition
+    value = snapshot(destination, condition)
     value['status'] = {'status': 'packaging'}
-    live.put(key, value)
+    publish(key, value)
     archive = destination.parent / (condition + '-review.tar.gz')
     # Full raw run remains on the volume; compact review bundle preserves every
     # held-out record, selected weights and replay without duplicating plain dumps.
@@ -196,7 +230,7 @@ def fit(condition):
     write(destination / 'artifact-receipt.json', receipt)
     volume.commit()
     value.update(status={'status': 'completed'}, artifact=receipt)
-    live.put(key, value)
+    publish(key, value)
     return receipt
 
 
@@ -207,7 +241,13 @@ def main():
 
     contract = read(F / 'reproduce/training-contract.json')
     assert contract['status'] == 'frozen'
+    assert read(F / 'results/launch-readiness.json', {}).get('status') == 'passed', (
+        'checkpoint recovery integration has not passed its prelaunch checks'
+    )
     assert not (F / 'reproduce/training-calls.json').exists(), 'already launched; use saved calls'
+    assert not (F / 'reproduce/training-call-progress.json').exists(), (
+        'partial submission exists; recover saved calls without resubmitting'
+    )
     assert read(F / 'results/partition-verification.json')['status'] == 'passed'
     invocation = dict(
         argv=['modal', 'run', '--detach', str(Path(__file__).resolve())],
@@ -235,7 +275,19 @@ def main():
         + str(Path(__file__).resolve())
         + '" "$@"\n'
     )
-    calls = {name: fit.spawn(name) for name in CONDITIONS}
+    calls = {}
+    for name in CONDITIONS:
+        calls[name] = fit.spawn(name)
+        write(
+            F / 'reproduce/training-call-progress.json',
+            dict(
+                status='submitting',
+                calls={key: call.object_id for key, call in calls.items()},
+                pending=[key for key in CONDITIONS if key not in calls],
+                training_contract_sha256=sha(F / 'reproduce/training-contract.json'),
+                worker_sha256=sha(F / 'code/worker.py'),
+            ),
+        )
     write(
         F / 'reproduce/training-calls.json', {name: call.object_id for name, call in calls.items()}
     )

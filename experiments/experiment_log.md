@@ -5340,7 +5340,7 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
 ## 2026-10-28 — Expanded multi-output model with temporal and assay-study holdouts (in progress)
 
 - **Agent/model:** Codex / GPT-6; [experiment/reproduction](2026-10-28_1540_codex_temporal-multi-output/README.md).
-- **Status:** CPU source preparation; no predictive fit or new held-out result yet.
+- **Status:** cohort independently verified; two H100! calls launched2026-10-29 03:00UTC. No held-out result yet.
 - **Source:** fresh canonical Hitlist2.0.40 IEDB/CEDAR full exports,19.255GB total,
   exact hashes in the acquisition receipt. Human catalog-resolved MHC, strict
   peptidoform/candidate scope, declared ordinary-DR DRA*01:01 reference; host,
@@ -5348,11 +5348,10 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
 - **Material inventory finding:**45distinct2026papers verified against PubMed;
   no direct IC50/KD/EC50 values in the2026exports. User approved additional older
   whole-assay-study holdouts. Prespecified2026test PMIDs41534530/42069060/42048449;
-  final admissible components/counts pending. Whole-paper aliases and exact peptide
+  all three retained; final partitions and peptide embargo verified. Whole-paper aliases and exact peptide
   embargoes are part of the prospective contract, not a random row split.
 - **Architecture/training:** shared-v5 wide192/3/6/768, seeds42/43, no pretraining,
-  batch128, AdamW3e-4/decay1e-4, dropout.1. One complete weighted epoch or6000updates,
-  whichever is larger; validate every1000, equal-endpoint selection loss. Frequencies
+  batch128, AdamW3e-4/decay1e-4, dropout.1. 51,099updates per seed, one6,540,642-example weighted epoch; validate every1000, equal-endpoint selection loss. Frequencies
   60%EL/20%IC50/15%other physical/5%qualitative, square-root endpoint/class allocation
   within families. Full held-out evaluation, capped TRAIN diagnostic dumps only.
 - **Assay mapping/loss:** distinct IC50/KD/EC50/KDproxy outputs, half-life/koff/kon/td50;
@@ -5363,17 +5362,17 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
   TRAIN1:1/eval5:1, with replacement; known-positive and cross-split exclusion.
   Same-protein and fallback human-Ensembl112 populations scored separately, including
   length-only control. Source-reported MS nondetections receive separate study AUCs.
-- **Hardware:** requested two concurrent `H100!` workers, actual GPU/runtime pending.
+- **Hardware:** requested two concurrent `H100!` workers; both report NVIDIA H10080GB HBM3,85,009,367,040device bytes. Runtime pending.
   CPU source attempt2 failed at16GiB provenance scratch; attempt4 uses128GiB scratch
   and512GiB requested disk. Downloads and failed attempts are preserved.
-- **Validation/test metrics, winner:** unavailable; no fit launched. Planned reporting
+- **Validation/test metrics, winner:** unavailable; fits launched. Planned reporting
   includes exact Spearman/Pearson/RMSE, censor-aware loss,500nM classification and
   ligand AUROC/AUPRC by class, assay, study and evaluation population. No promotion.
 - **Software:** common source at c8f032a7, complete211-file runtime pinned. Shared
   2805tests/4skips on the current source;79and89focused source checks also pass.
-  Twenty-nine family fixtures pass: eight preparation/projection, four independent
-  prediction checks, seven controller checks, seven cluster-statistic checks and
-  three reporting checks. Actual cohort audit remains pending.
+  Thirty-two family fixtures passed before launch, including three exact checkpoint
+  interruption/recovery fixtures. Independent actual cohort audit passed. A later
+  transport-stream regression check raises controller coverage from7to8tests.
 - **Recovery:** attempt5's measured306MSrows/s would exceed its four-hour deadline.
   A committed consistent SQLite backup preserves406,381retained rows. Attempt6
   replays source admission on worker-local disk through the same frozen adapters;
@@ -5382,3 +5381,13 @@ six-output default was introduced. PR131 remains draft until130/132 qualify.
 - **Artifacts:** timestamped experiment `reproduce/` and `results/`; large inputs/raw
   fits on Modal `presto-checkpoints` under the family ID and local `artifacts/`.
   Final predictive closure, independent verification and serving replay remain open.
+
+- **Final cohort:**1,875,420original TRAIN/6,534validation/14,906test observations;
+  generated comparators1,617,732/12,050/59,250respectively.127,096original rows
+  excluded by exact-peptide embargo. TRAIN direct IC50 I/II18,531/36,205;11outputs.
+  koff22 andkon6TRAIN labels have no held-out support and remain unvalidated.
+- **Active calls:** `fc-01M62SMM6TFPHZKNMQJ45MP221` (seed42),
+  `fc-01M62SMM9W381JKPPKCKJP0SDK` (seed43), app`ap-Du3wtmTBI9AvARUgRQ9w3v`.
+  Preparation survived automatic CPU preemption retry; final source/target/group/
+  background/scaler audit passed before both GPU submissions. The complete
+  materialization backup and atomic observer/common-checkpoint recovery are recorded.

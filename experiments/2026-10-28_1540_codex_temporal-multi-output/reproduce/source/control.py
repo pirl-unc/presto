@@ -2,6 +2,7 @@
 
 import time
 from modal.exception import FunctionTimeoutError
+from modal.exception import ConnectionError as ModalConnectionError
 
 
 def get_result(call, *, wait=True):
@@ -17,7 +18,7 @@ def get_result(call, *, wait=True):
             failures = 0
         except Exception as exc:
             message = str(exc).lower()
-            transport = isinstance(exc, ConnectionError) or any(
+            transport = isinstance(exc, (ConnectionError, ModalConnectionError)) or any(
                 token in message
                 for token in (
                     'nodename nor servname provided',

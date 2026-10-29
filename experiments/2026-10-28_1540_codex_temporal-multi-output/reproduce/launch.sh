@@ -1,4 +1,4 @@
 #!/bin/sh
 set -eu
-echo 'No predictive launch yet: source/date inventory must complete first.' >&2
-exit 1
+export PRESTO_MODAL_GPU="H100!"
+exec modal run --detach "/Users/iskander/code/presto/.worktrees/shared-training/presto/experiments/2026-10-28_1540_codex_temporal-multi-output/code/launch.py" "$@"

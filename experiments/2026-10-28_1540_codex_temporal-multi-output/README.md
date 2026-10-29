@@ -1,6 +1,6 @@
 # Shared multi-output training and 2026 study holdouts
 
-Status: **CPU source preparation is running; predictive training has not started.**
+Status: **Cohort independently verified; two H100! fit calls launched on 2026-10-29 at 03:00 UTC. No validation results yet.**
 Agent/model: Codex / GPT-6. Date: 2026-10-28 UTC.
 
 [Prospective specification](../agents/codex/plans/2026-10-28_temporal-multi-output.md)
@@ -37,18 +37,19 @@ Shared source implementation is pinned at `c8f032a7a200a1ea87121b016eb9dbb22c90e
 ## Frozen selection and model recipe
 
 Prespecified 2026 test PMIDs: 41534530 (class-II MS), 42069060 (class-I MS),
-42048449 (class-I KD-via-IC50), subject to actual source admission. A deterministic
+42048449 (class-I KD-via-IC50); all three have eligible observations. A deterministic
 metadata-count rule adds older assay studies for test and validation. Source-study
 alias components remain whole; exact peptides are disjoint, with test > validation
-> train priority. Final membership, exclusions and numerical budgets are pending
-canonical admission and will be hashed before any fit.
+> train priority. Final membership, exclusions and numerical budgets were frozen and independently
+verified before any fit; see `results/partition-verification.json` and
+`reproduce/training-contract.json`.
 
 One shared-v5 wide 192/3/6/768 model and the canonical observation-manifest trainer,
 seeds 42/43, no pretrained weights, dropout .1, AdamW 3e-4/decay1e-4, batch128.
 Relative label frequencies: 60% elution,20% IC50,15% other physical outputs,5%
 qualitative binding; within families, endpoint/class frequencies use square-root
-counts. Canonical weighted quotas cover all unique TRAIN rows. Budget is one full
-weighted epoch or6,000 updates, whichever is larger. Validate every1,000 updates;
+counts. Canonical weighted quotas cover all unique TRAIN rows. The resulting budget is51,099updates per seed: one complete weighted epoch
+of6,540,642examples, batch128 (final batch may be partial). Validate every1,000 updates;
 equal-endpoint loss selects the checkpoint. Full validation/test dumps; a fixed
 16,384-row cap applies only to post-fit TRAIN diagnostic predictions.
 
@@ -81,13 +82,14 @@ request was rejected before a worker started. Attempt4 asserts128GiB scratch,
 16GiB reserve and512GiB requested ephemeral disk. All attempt receipts/logs are
 preserved. Dropped local log/controller connections do not restart the remote build.
 
-Predictive resources, when launched: requested `H100!`, maximum two workers,
-CPU8/64GiB RAM each. Actual GPU/memory and runtime metrics will be recorded by
-workers. There are no predictive results or preferred new checkpoint yet.
+Predictive resources: requested `H100!`, maximum two workers, CPU8/64GiB RAM each.
+Both workers report NVIDIA H100 80GB HBM3,85,009,367,040device bytes, Torch2.14.1+cu130,
+CUDA13.0; TF32/AMP/compile disabled. Fit runtime and held-out metrics remain pending.
+There is no preferred new checkpoint yet.
 
 Software evidence: the current shared suite passes2,805 tests/four skips;
 the literal purified-method and reported-MS-negative admission checks passed79
-and89 focused tests, respectively. Twenty-nine preparation/report/controller fixtures pass,
+and89 focused tests, respectively. Thirty-two preparation/report/controller/recovery fixtures passed before launch,
 including the real ObservationIndex/common-trainer preflight, independent source/background audit and separation of
 reported-negative versus generated-background AUCs. Artificial tests are not
 biological performance evidence.
@@ -119,11 +121,11 @@ not a claim that shorter class-II ligands cannot bind.
 
 Admission attempt4 failed during remote launcher import, before data processing;
 local filesystem upload paths are now constructed only locally. All three
-launchers passed remote-path import checks. Attempt6 is running against the
-completed source build with the verified attempt5 database backup. The finished binding pass admitted263,432 candidate
-physical/qualitative measurements, including I/II direct IC50 counts19,167/38,543.
-61,548 rows across endpoints use the declared reference DRA. Final split totals
-and any lineage-conflict exclusions remain pending.
+launchers passed remote-path import checks. Attempt6 completed against the source build with the verified attempt5 database backup.
+Admission retained2,023,956 original observations:263,432 physical/qualitative
+measurements and1,760,524MS observations. Direct IC50 I/II counts before partitioning
+are19,167/38,543;279,583rows across all outputs use declared reference DRA.
+The complete receipt is `results/admission.json`.
 
 The source also contains468,548 high-throughput multiplexed binding records not
 covered by the frozen soluble-affinity/qualitative-purified adapter. Of these,
@@ -136,7 +138,7 @@ Primary source: https://pubmed.ncbi.nlm.nih.gov/32903714/ ; source assay metadat
 https://www.iedb.org/assay/17059219 . These rows are explicitly excluded from the
 current frozen admission contract, not silently counted as trained examples.
 
-## Active continuation and operational evidence
+## Earlier operational evidence (historical)
 
 As of2026-10-28 19:11 UTC, source build and the binding/other-assay passes are
 complete. The canonical human MS export contains5,440,009rows. Attempt5's measured
@@ -175,3 +177,45 @@ with the same canonical manifest paths and hashes; completed datasets and fit
 outputs are durable on the Modal volume. This changes no rows, model code or
 numeric precision. `results/ci-2f6f1ca8.json` records passing CI for the pushed
 shared-source/experiment commit; PR131 remains draft.
+
+## Verified cohort and active fits
+
+Preparation call `fc-01M627VM7J2SPPR71V2MRSHT08` completed after Modal preempted
+its first CPU container and automatically retried the same input. A closed-file
+materialization backup was also committed, with hashes in
+`results/materialization-backup-completed.json`. The completed cohort passed both
+canonical preflight and independent original-target, study-alias, exact-peptide,
+background-lineage/blacklist/ratio and TRAIN-scale checks. No duplicate preparation
+was submitted. The verified audit removes127,096original rows by peptide embargo.
+
+| Partition | Original observations | Generated comparators | Total rows |
+|---|---:|---:|---:|
+| TRAIN | 1,875,420 | 1,617,732 | 3,493,152 |
+| Validation | 6,534 | 12,050 | 18,584 |
+| Test | 14,906 | 59,250 | 74,156 |
+
+TRAIN includes54,736direct IC50 measurements (18,531I/36,205II),17,832KD,212EC50,
+72,925KD-via-IC50,38,932KD-via-EC50,8,729half-life,22koff,6kon,503td50,
+40,460qualitative binding and1,641,063original MS observations. Every allocated
+output has TRAIN support, but koff/kon have no eligible held-out observations;
+they are unvalidated outputs, not evidence of generalization. Some other
+output/class cells have no validation or test support; retain explicit N/A.
+All molecular MHC is human; experimental hosts and peptide organisms vary.
+`results/cohort-strata.json` preserves method, host, source organism, peptide
+length, candidate count and reported allele counts on original observations.
+Reported-allele membership counts can overlap for multi-allelic observations.
+
+[Modal app](https://modal.com/apps/iskandr/main/ap-Du3wtmTBI9AvARUgRQ9w3v):
+seed42 call `fc-01M62SMM6TFPHZKNMQJ45MP221`;
+seed43 call `fc-01M62SMM9W381JKPPKCKJP0SDK`.
+The exact invocation and dirty state are in `reproduce/launch.json`; scientific
+runtime remains the211-filec8f032a7 snapshot. Experiment observer state is bound
+atomically to common resumable model/optimizer/RNG/order/evaluation checkpoints.
+Three interruption tests establish exact restored weights, optimizer, coverage and
+evaluation-cache reuse on artificial CPU fixtures. Recovered elapsed/optimizer
+seconds exclude rolled-back work; per-attempt GPU peaks are not total paid compute.
+
+The local dashboard poller now has a30-second remote-read deadline and retains
+last-known evidence with an explicit poll error. It does not resubmit jobs.
+Validation appears every1,000updates; test reporting remains behind the saved
+validation-only selection and independent-prediction-verification gates.

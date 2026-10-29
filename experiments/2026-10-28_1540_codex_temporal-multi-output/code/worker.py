@@ -33,10 +33,24 @@ def write(path, value):
 
 
 def compress(source, dest):
-    with Path(source).open('rb') as a, Path(dest).open('xb') as b:
+    source, dest = Path(source), Path(dest)
+    if dest.exists():
+        try:
+            digest = hashlib.sha256()
+            with gzip.open(dest, 'rb') as stream:
+                for block in iter(lambda: stream.read(1 << 20), b''):
+                    digest.update(block)
+        except (EOFError, OSError):
+            dest.rename(dest.with_name(dest.name + '.interrupted-' + str(time.time_ns())))
+        else:
+            assert digest.hexdigest() == sha(source), 'completed prediction archive changed'
+            return
+    temporary = dest.with_suffix(dest.suffix + '.tmp')
+    with source.open('rb') as a, temporary.open('wb') as b:
         with gzip.GzipFile(fileobj=b, mode='wb', mtime=0) as z:
             for block in iter(lambda: a.read(1 << 20), b''):
                 z.write(block)
+    temporary.replace(dest)
 
 
 def ligand_reports(records):
@@ -73,10 +87,13 @@ def ligand_reports(records):
     )
 
 
-def run(condition, output):
+def run(condition, output, *, resume=False):
     sys.path.insert(0, '/runtime')
     import psutil
     import torch
+    import modal
+    from checkpoint_observer import save as save_observed, restore as restore_observed
+    from presto.data.modular import Observation
     from presto.data.modular_sources import ObservationIndex
     from presto.models.modular import MODEL_VERSION
     from presto.training import modular_run as runner
@@ -85,7 +102,7 @@ def run(condition, output):
 
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
-    if (output / 'status.json').exists():
+    if (output / 'status.json').exists() and not resume:
         raise ValueError('Already attempted; explicit verified resume required')
     pins = read('/bundle/runtime-pins.json')
     for relative, digest in pins['files'].items():
@@ -94,6 +111,14 @@ def run(condition, output):
     prepared = read(root / 'prepared/prepared.json')
     spec = prepared['manifests'][condition]
     assert sha(spec['path']) == spec['sha256']
+    binding = dict(
+        condition=condition,
+        manifest_sha256=spec['sha256'],
+        runtime_pins_sha256=sha('/bundle/runtime-pins.json'),
+        worker_sha256=sha(__file__),
+        observer_sha256=sha(Path(__file__).with_name('checkpoint_observer.py')),
+    )
+    restored = restore_observed(output / 'raw/resume.pt', binding) if resume else None
     torch.set_num_threads(4)
     torch.set_num_interop_threads(1)
     torch.backends.cuda.matmul.allow_tf32 = False
@@ -137,6 +162,54 @@ def run(condition, output):
     seen = set()
     seen_at_validation = {}
     replay_rows = defaultdict(dict)
+    elapsed_before = 0.0
+    if restored:
+        for key in state:
+            state[key] = restored[key]
+        state['endpoint_class_examples'] = Counter(state['endpoint_class_examples'])
+        seen.update(restored['seen'])
+        seen_at_validation.update(restored['seen_at_validation'])
+        for item in restored['replay_rows']:
+            replay_rows[tuple(item['key'])] = {
+                value['observation_id']: Observation.from_dict(value) for value in item['rows']
+            }
+        elapsed_before = restored['elapsed_seconds']
+    original_save = runner.save_resume
+
+    def observer_state():
+        return dict(
+            **{k: v for k, v in state.items() if k != 'endpoint_class_examples'},
+            endpoint_class_examples=dict(state['endpoint_class_examples']),
+            seen=list(seen),
+            seen_at_validation=dict(seen_at_validation),
+            replay_rows=[
+                dict(key=list(key), rows=[r.to_dict() for r in rows.values()])
+                for key, rows in replay_rows.items()
+            ],
+            elapsed_seconds=elapsed_before + time.monotonic() - start,
+        )
+
+    def observed_snapshot(path, *args, **kwargs):
+        save_observed(
+            original_save,
+            path,
+            args,
+            kwargs,
+            observer_state,
+            binding,
+            modal.Volume.from_name('presto-checkpoints').commit,
+        )
+
+    runner.save_resume = observed_snapshot
+    write(
+        output / ('attempt-' + str(time.time_ns()) + '.json'),
+        dict(
+            resumed=resume,
+            restored_steps=state['steps'],
+            started_unix=time.time(),
+            binding=binding,
+        ),
+    )
 
     def observed(model, optimizer, rows, scales, **kwargs):
         torch.cuda.synchronize()
@@ -161,7 +234,7 @@ def run(condition, output):
                 max_steps=spec['max_steps'],
                 unique_training_rows_seen=len(seen),
                 latest_training_loss=result['loss'],
-                elapsed_seconds=time.monotonic() - start,
+                elapsed_seconds=elapsed_before + time.monotonic() - start,
                 updated_unix=time.time(),
                 gpu_allocated=torch.cuda.max_memory_allocated(),
                 gpu_reserved=torch.cuda.max_memory_reserved(),
@@ -193,7 +266,7 @@ def run(condition, output):
         dict(status='training', condition=condition, started_unix=time.time()),
     )
     try:
-        summary = runner.fit_index(index, output / 'raw', device='cuda')
+        summary = runner.fit_index(index, output / 'raw', device='cuda', resume=resume)
         assert summary['steps'] == spec['max_steps']
         assert len(seen) == len(index.partitions['train:assay'])
         write(
@@ -296,7 +369,7 @@ def run(condition, output):
         )
         assert sha(output / 'raw/selected.pt') == checkpoint_hash
         report['resources'] = dict(
-            wall_seconds=time.monotonic() - start,
+            wall_seconds=elapsed_before + time.monotonic() - start,
             optimizer_seconds=state['optimizer_seconds'],
             peak_rss=state['peak_rss'],
             peak_gpu_allocated=torch.cuda.max_memory_allocated(),
@@ -313,7 +386,8 @@ def run(condition, output):
     finally:
         runner.train_step = original
         runner.evaluate = original_evaluate
+        runner.save_resume = original_save
 
 
 if __name__ == '__main__':
-    run(sys.argv[1], sys.argv[2])
+    run(sys.argv[1], sys.argv[2], resume='--resume' in sys.argv[3:])

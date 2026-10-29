@@ -327,3 +327,52 @@ Use saved validation/test dumps only, with no additional held-out forward passes
 - Preserve JSON/CSV tables plus standalone plots under this experiment directory.
   Include the exact analysis invocation and source hash. Automated tables are
   evidence for the final writeup, not automatic claims of scientific qualification.
+
+## Completed admission and local controller reconnect
+
+The full5,440,009-row MS scan finished. Local admission/preparation CLI controllers
+then exited with DNS errors outside their saved-call retry output; no preparation
+call ID exists. Retrieve the original admission call and require its returned
+`admitted` result (not only live status before final publication). Preserve the
+attempt3 preparation source snapshot and failed log. Start preparation again from
+that saved, completed dependency, without rebuilding or readmitting any source.
+The continuation controller still waits for the single preparation call file.
+There are no predictive fits to restart. The patched transport helper additionally
+recognizes Modal's own ConnectionError class, verified against the installed SDK.
+
+Before GPU submission, persist each successful call ID immediately in a partial
+submission receipt. Publish the canonical two-call file only after both calls
+exist, so the collector cannot mistakenly close a one-seed comparison. Refuse
+automatic resubmission when any partial receipt exists; recover its saved IDs if
+needed. This addresses recurrent local transport failure without changing either
+fit, its inputs, or the maximum of two concurrently requested GPUs.
+
+## Observed CPU preemption: durable stage and fit recovery
+
+Preparation attempt4 materialized the cohort and reached canonical preflight,
+then Modal preempted its worker and automatically restarted the same input.
+Its first call-graph entry reports that attempt's failure; a pending result poll
+is not proof that the overall call failed. Do not submit a second preparation
+while the automatic retry is active. Capture completed, closed materialized files
+if feasible; let the current retry continue while implementing future recovery.
+
+Persist the complete materialization receipt and files before canonical preflight.
+On a retry, validate hashes and reuse that materialization, then rerun the common
+preflight and independent audit. Completed preparation should also return its
+verified durable result idempotently. Preserve exact membership/order/backgrounds;
+no new numerical or cohort policy. New CPU invocations may use Modal's documented
+nonpreemptible option, recording its3x CPU/memory price multiplier, while GPUs
+remain at most two H100! workers (nonpreemptible GPU is unsupported).
+
+Before launching GPUs, bind retry to the existing canonical `resume.pt` machinery.
+Preserve model/optimizer/RNG/order/position/selection/evaluation ledger. Persist
+experiment observer state at the same durable snapshot boundary, including seen
+TRAIN IDs, exposure counters, TRAIN replay probes and selected-exposure diagnostics.
+Preemption recovery must roll those diagnostics back to the matching common
+snapshot, never mix post-checkpoint observations into restored training state.
+Completed artifacts should return the same receipt without another held-out pass.
+Test interruption equivalence and phase recovery before launching actual fits.
+
+Official behavior checked in Modal docs on2026-10-28:
+https://modal.com/docs/guide/preemption and
+https://modal.com/docs/examples/long-training .
